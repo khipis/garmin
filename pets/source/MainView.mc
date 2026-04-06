@@ -27,7 +27,7 @@ class MainView extends WatchUi.View {
         _pet = pet;
         actionIdx = 0;
         confirmReset = false;
-        _actions = ["Feed", "Play", "Clean", "Heal", "Nap", "Hug", "Punish", "Reset", "Debug", "+3h", "Vibe"];
+        _actions = ["Feed", "Play", "Clean", "Heal", "Nap", "Hug", "Punish", "Reset", "Debug", "+3h", "Vibe", "EvNext"];
         _bounceTable = [0, -1, -2, -2, -1, 0, 0, 0];
         _celebType = 0;
         _celebTimer = 0;
@@ -106,6 +106,11 @@ class MainView extends WatchUi.View {
         if (actionIdx == 8) { return _pet.debugMode ? "Dbg:ON" : "Debug"; }
         if (actionIdx == 9) { return "+3h Age"; }
         if (actionIdx == 10) { return _pet.vibeEnabled ? "Vibe:ON" : "Vibe:OFF"; }
+        if (actionIdx == 11) {
+            var idx = _pet.getDebugEventIdx();
+            var next = (idx + 1) % 14;
+            return "Ev:" + (next + 1) + "/14";
+        }
         return _actions[actionIdx];
     }
 

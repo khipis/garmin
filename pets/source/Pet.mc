@@ -82,6 +82,7 @@ class Pet {
     hidden var _dilemmaTime;
     hidden var _bodyCache;
     hidden var _bodyCacheType;
+    hidden var _debugEventIdx;
 
     function initialize() {
         Math.srand(Time.now().value());
@@ -112,6 +113,7 @@ class Pet {
         vibeEnabled = true;
         suggestedAction = -1;
         eventFlashType = 0;
+        _debugEventIdx = -1;
         _lastCareDay = -1;
         _hugStressAcc = 0;
         _actionTime = 0;
@@ -2519,8 +2521,21 @@ class Pet {
     }
 
     hidden function triggerRareEvent() {
+        applyRareEventRoll(Math.rand().abs() % 14);
+    }
+
+    function debugNextEvent() {
+        if (!isAlive) { return; }
+        _debugEventIdx = (_debugEventIdx + 1) % 14;
+        applyRareEventRoll(_debugEventIdx);
+    }
+
+    function getDebugEventIdx() {
+        return _debugEventIdx;
+    }
+
+    hidden function applyRareEventRoll(roll) {
         pendingVibe = 2;
-        var roll = Math.rand().abs() % 14;
         if (roll == 0) {
             eventText = "GOLDEN FEAST!!";
             hunger = 0; happiness += 40; energy += 20; celebType = 2;
