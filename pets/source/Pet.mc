@@ -58,6 +58,7 @@ class Pet {
     var hugStress;
     var careStreak;
     var vibeEnabled;
+    var suggestedAction;
 
     hidden var _lastCareDay;
     hidden var _hugStressAcc;
@@ -107,6 +108,7 @@ class Pet {
         hugStress = 0;
         careStreak = 0;
         vibeEnabled = true;
+        suggestedAction = -1;
         _lastCareDay = -1;
         _hugStressAcc = 0;
         _actionTime = 0;
@@ -160,6 +162,7 @@ class Pet {
         eventText = "";
         celebType = 0;
         pendingVibe = 0;
+        suggestedAction = -1;
         debugMode = false;
         paletteIdx = 0;
         accessory = ACC_NONE;
@@ -379,7 +382,12 @@ class Pet {
         } else { _hugStressAcc = 0; }
 
         var sickInterval = debugMode ? 300 : 1800;
-        if (_sickCheckAcc >= sickInterval) { _sickCheckAcc = 0; if (!isSick) { checkSickness(); } else { checkSickRecovery(); } checkAgeDeath(); }
+        if (_sickCheckAcc >= sickInterval) {
+            _sickCheckAcc = 0;
+            if (!isSick) { checkSickness(); } else { checkSickRecovery(); }
+            checkAgeDeath();
+            checkUrgentNeeds();
+        }
         checkBirthday(now);
         var eventInterval = debugMode ? 300 : 1800;
         if (_eventCheckAcc >= eventInterval) { _eventCheckAcc = 0; if (Math.rand().abs() % 3 == 0) { triggerEvent(); } }
@@ -989,11 +997,13 @@ class Pet {
             happiness -= 30; health -= 12; energy -= 15;
             if (!isSick && Math.rand().abs() % 4 == 0) { isSick = true; _sickTime = Time.now().value(); }
             pendingVibe = 4;
+            suggestedAction = 3;
             eventText = getPunishTrauma();
         } else {
             happiness -= 45; health -= 25; energy -= 20;
             if (!isSick) { isSick = true; _sickTime = Time.now().value(); }
             pendingVibe = 4;
+            suggestedAction = 3;
             eventText = getPunishDevastating();
         }
 
@@ -1017,6 +1027,7 @@ class Pet {
             happiness -= 30; health -= 25; energy -= 20;
             if (!isSick) { isSick = true; _sickTime = Time.now().value(); }
             pendingVibe = 4;
+            suggestedAction = 3;
             eventText = getHugLethalText();
             action = ACT_PLAYING;
             _actionTime = lastInteraction;
@@ -1027,6 +1038,7 @@ class Pet {
         if (hugStress >= 75) {
             happiness -= 15; health -= 10; energy -= 10;
             pendingVibe = 3;
+            suggestedAction = 3;
             eventText = getHugSevereText();
             action = ACT_PLAYING;
             _actionTime = lastInteraction;
@@ -2023,6 +2035,37 @@ class Pet {
         return petName + " is gone...";
     }
 
+    hidden function checkUrgentNeeds() {
+        if (!isAlive) { return; }
+        if (pendingVibe > 0) { return; }
+        if (isSick) {
+            eventText = petName + " needs medicine!";
+            _eventTime = Time.now().value();
+            pendingVibe = 2;
+            suggestedAction = 3;
+        } else if (hunger >= 85) {
+            eventText = petName + " is starving!";
+            _eventTime = Time.now().value();
+            pendingVibe = 2;
+            suggestedAction = 0;
+        } else if (poopCount >= 3) {
+            eventText = "So much poop...";
+            _eventTime = Time.now().value();
+            pendingVibe = 1;
+            suggestedAction = 2;
+        } else if (energy <= 10) {
+            eventText = petName + " is exhausted!";
+            _eventTime = Time.now().value();
+            pendingVibe = 1;
+            suggestedAction = 4;
+        } else if (health <= 30 && !isSick) {
+            eventText = petName + " is very weak!";
+            _eventTime = Time.now().value();
+            pendingVibe = 2;
+            suggestedAction = 3;
+        }
+    }
+
     hidden function checkSickness() {
         if (petType == TYPE_UNDEAD) { isSick = false; return; }
         var chance = 10;
@@ -2039,6 +2082,7 @@ class Pet {
             eventText = petName + " is sick!";
             _eventTime = _sickTime;
             pendingVibe = 3;
+            suggestedAction = 3;
         }
     }
 
@@ -2134,7 +2178,7 @@ class Pet {
         else if (roll == 2) { eventText = "Made a friend!"; happiness += 20; }
         else if (roll == 3) {
             eventText = "Ate something odd...";
-            if (!isSick && Math.rand().abs() % 2 == 0) { isSick = true; health = 80; _sickTime = Time.now().value(); }
+            if (!isSick && Math.rand().abs() % 2 == 0) { isSick = true; health = 80; _sickTime = Time.now().value(); pendingVibe = 3; suggestedAction = 3; }
         }
         else if (roll == 4) { eventText = "Learned a trick!"; happiness += 12; }
         else if (roll == 5) { eventText = "Bad weather!"; energy -= 10; happiness -= 5; }

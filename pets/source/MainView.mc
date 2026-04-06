@@ -47,6 +47,10 @@ class MainView extends WatchUi.View {
         if (_pet.pendingVibe > 0) {
             doVibrate(_pet.pendingVibe);
             _pet.pendingVibe = 0;
+            if (_pet.suggestedAction >= 0 && _pet.isAlive) {
+                actionIdx = _pet.suggestedAction;
+                _pet.suggestedAction = -1;
+            }
         }
         WatchUi.requestUpdate();
     }
