@@ -78,6 +78,7 @@ class Pet {
     hidden var _hardyAcc;
     hidden var _autoAcc;
     hidden var _saveAcc;
+    hidden var _dilemmaTime;
     hidden var _bodyCache;
     hidden var _bodyCacheType;
 
@@ -253,6 +254,7 @@ class Pet {
         _autoAcc = 0;
         _saveAcc = 0;
         _hugStressAcc = 0;
+        _dilemmaTime = 0;
         action = ACT_NONE;
         eventText = "";
     }
@@ -408,6 +410,10 @@ class Pet {
         if (dilemmaType == 0 && action == ACT_NONE && getMoodState() != :calm) {
             var dilemmaChance = debugMode ? 10 : 120;
             if (Math.rand().abs() % dilemmaChance == 0) { triggerDilemma(); }
+        }
+        var dilemmaTimeout = debugMode ? 10 : 15;
+        if (dilemmaType > 0 && _dilemmaTime > 0 && (now - _dilemmaTime) >= dilemmaTimeout) {
+            autoResolveDilemma();
         }
 
         _autoAcc += ge;
@@ -1344,6 +1350,117 @@ class Pet {
         return t[Math.rand().abs() % t.size()];
     }
 
+    hidden function autoResolveDilemma() {
+        var dt = dilemmaType;
+        dilemmaType = 0;
+        dilemmaText = "";
+        _dilemmaTime = 0;
+        _eventTime = Time.now().value();
+
+        var text = getDilemmaIgnoreText(dt);
+        eventText = text;
+
+        var delta = getDilemmaIgnoreDelta();
+        happiness += delta[0];
+        health += delta[1];
+        energy += delta[2];
+        hunger += delta[3];
+
+        if (delta[1] < -5 && !isSick && Math.rand().abs() % 4 == 0) {
+            isSick = true; _sickTime = Time.now().value();
+            suggestedAction = 3;
+        }
+
+        if (delta[0] < -15 || delta[1] < -10) { pendingVibe = 2; }
+        action = ACT_NONE;
+        clamp();
+        checkDeath();
+    }
+
+    hidden function getDilemmaIgnoreText(dt) {
+        if (petType == TYPE_EMILKA) {
+            var t = ["*cries alone*", "Nobody cares...", "You LEFT ME?!", "*sobs quietly*", "I hate you..."];
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (petType == TYPE_VEXOR) {
+            var t = ["*seethes in silence*", "Fine. F*ck you too.", "Ignore me?! BIG MISTAKE.", "*destroys something*"];
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (petType == TYPE_DOGGO) {
+            var t = ["*resolves it alone!*", "*wags tail anyway*", "*figured it out!*", "*waits patiently*"];
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (petType == TYPE_UNDEAD) { return "...handled it."; }
+        if (petType == TYPE_POLACCO) {
+            var t = ["Sam se poradzilem k*rwa", "Gdzie Ciebie nosi?!", "Olal mnie ch*j", "*beka z rozczarowania*"];
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (petType == TYPE_NOSACZ) {
+            var t = ["E E... sam.", "E? Czemu? E.", "*nos smutny*", "EEE!! Zostaw nos!"];
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (petType == TYPE_CHIKKO) {
+            var t = ["BAWK! *hides*", "*panics alone*", "Nobody... *cluck*"];
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (petType == TYPE_FOCZKA) {
+            var t = ["*sad arf...*", "*flopped alone*", "*quiet seal noise*"];
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (petType == TYPE_RAINBOW) {
+            var t = ["*colors flicker*", "*dims alone...*", "*glitter fades*"];
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (dt == 4) {
+            var t = ["*still staring...*", "Gave up waiting.", "*sigh* ok then..."];
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (dt == 1 || dt == 3) {
+            var t = ["*calmed down... barely*", "*still fuming*", "*settles... kinda*"];
+            return t[Math.rand().abs() % t.size()];
+        }
+        var t = ["*worked it out alone*", "Handled it I guess.", "*sighs*", "Fine, whatever."];
+        return t[Math.rand().abs() % t.size()];
+    }
+
+    hidden function getDilemmaIgnoreDelta() {
+        var dHappy = -10;
+        var dHealth = 0;
+        var dEnergy = -5;
+        var dHunger = 0;
+
+        if (petType == TYPE_EMILKA)   { dHappy = -25; dHealth = -5; }
+        else if (petType == TYPE_VEXOR)    { dHappy = -20; dHealth = -8; dEnergy = -8; }
+        else if (petType == TYPE_DOGGO)    { dHappy = 5; dHealth = 0; dEnergy = -3; }
+        else if (petType == TYPE_UNDEAD)   { dHappy = 0; dHealth = 0; dEnergy = 0; }
+        else if (petType == TYPE_POLACCO)  { dHappy = -15; dEnergy = -10; dHunger = 5; }
+        else if (petType == TYPE_NOSACZ)   { dHappy = -12; dHealth = -3; }
+        else if (petType == TYPE_CHIKKO)   { dHappy = -18; dHealth = -5; dEnergy = -8; }
+        else if (petType == TYPE_DZIKKO)   { dHappy = -20; dHealth = -10; }
+        else if (petType == TYPE_ROCKY)    { dHappy = -5; dHealth = 5; dEnergy = 5; }
+        else if (petType == TYPE_FROSTY)   { dHappy = -8; }
+        else if (petType == TYPE_AQUA)     { dHappy = -8; dEnergy = -3; }
+        else if (petType == TYPE_GHOSTY)   { dHappy = -12; dHealth = -5; }
+        else if (petType == TYPE_SPARKY)   { dHappy = -5; dEnergy = -15; }
+        else if (petType == TYPE_RAINBOW)  { dHappy = -15; dHealth = -3; }
+        else if (petType == TYPE_FOCZKA)   { dHappy = -12; dEnergy = -5; }
+        else if (petType == TYPE_CACTUSO)  { dHappy = 0; dHealth = 3; }
+        else if (petType == TYPE_DONUT)    { dHappy = -18; dHealth = -5; }
+        else if (petType == TYPE_PIXELBOT) { dHappy = -5; }
+        else if (petType == TYPE_BATSY)    { dHappy = -8; dEnergy = 10; }
+        else if (petType == TYPE_OCTAVIO)  { dHappy = -10; dHealth = -5; }
+
+        if (hasTrait(TRAIT_CHEERFUL)) { dHappy += 8; dHealth += 2; }
+        if (hasTrait(TRAIT_GRUMPY))   { dHappy -= 8; dHealth -= 3; }
+        if (hasTrait(TRAIT_HARDY))    { dHealth += 5; dEnergy += 3; }
+        if (hasTrait(TRAIT_FRAGILE))  { dHealth -= 5; dHappy -= 5; }
+        if (hasTrait(TRAIT_PLAYFUL))  { dHappy += 5; }
+        if (hasTrait(TRAIT_LAZY))     { dEnergy += 5; dHappy -= 3; }
+        if (hasTrait(TRAIT_HYPER))    { dEnergy -= 10; dHappy += 3; }
+
+        return [dHappy, dHealth, dEnergy, dHunger];
+    }
+
     function triggerDilemma() {
         var mood = getMoodState();
         if (mood == :rage) {
@@ -1389,6 +1506,7 @@ class Pet {
         }
         if (dilemmaType > 0) {
             pendingVibe = 3;
+            _dilemmaTime = Time.now().value();
         }
     }
 
@@ -1397,6 +1515,7 @@ class Pet {
         var dt = dilemmaType;
         dilemmaType = 0;
         dilemmaText = "";
+        _dilemmaTime = 0;
         _eventTime = Time.now().value();
 
         if (choice == 1) {
