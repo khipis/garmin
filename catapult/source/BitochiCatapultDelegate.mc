@@ -22,13 +22,13 @@ class BitochiCatapultDelegate extends WatchUi.BehaviorDelegate {
     }
 
     function onPreviousPage() {
-        _view.doAction();
+        _view.doUp();
         WatchUi.requestUpdate();
         return true;
     }
 
     function onNextPage() {
-        _view.doAction();
+        _view.doDown();
         WatchUi.requestUpdate();
         return true;
     }

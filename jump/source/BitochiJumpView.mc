@@ -163,8 +163,8 @@ class BitochiJumpView extends WatchUi.View {
         _jumperIdx = 0;
         accelMag = 0;
 
-        _kPointDist = 120.0;
-        _hsDist = 145.0;
+        _kPointDist = 140.0;
+        _hsDist = 175.0;
 
         _compStartIdx = 0;
         _jumpOrderSlot = 0;
@@ -309,23 +309,23 @@ class BitochiJumpView extends WatchUi.View {
     }
 
     hidden function buildHill() {
-        _hillProfile = new [100];
-        for (var i = 0; i < 100; i++) {
+        _hillProfile = new [140];
+        for (var i = 0; i < 140; i++) {
             var x = i.toFloat();
-            if (i < 10) {
-                _hillProfile[i] = -x * 3.5;
-            } else if (i < 22) {
-                _hillProfile[i] = -35.0 - (x - 10.0) * 2.4;
+            if (i < 8) {
+                _hillProfile[i] = -x * 4.0;
+            } else if (i < 20) {
+                _hillProfile[i] = -32.0 - (x - 8.0) * 3.0;
             } else if (i < 35) {
-                _hillProfile[i] = -63.8 - (x - 22.0) * 1.3;
-            } else if (i < 50) {
-                _hillProfile[i] = -80.7 - (x - 35.0) * 0.6;
-            } else if (i < 70) {
-                _hillProfile[i] = -89.7 - (x - 50.0) * 0.25;
-            } else if (i < 85) {
-                _hillProfile[i] = -94.7 - (x - 70.0) * 0.1;
+                _hillProfile[i] = -68.0 - (x - 20.0) * 2.0;
+            } else if (i < 55) {
+                _hillProfile[i] = -98.0 - (x - 35.0) * 1.2;
+            } else if (i < 80) {
+                _hillProfile[i] = -122.0 - (x - 55.0) * 0.6;
+            } else if (i < 110) {
+                _hillProfile[i] = -137.0 - (x - 80.0) * 0.25;
             } else {
-                _hillProfile[i] = -96.2 + (x - 85.0) * 0.15;
+                _hillProfile[i] = -144.5 + (x - 110.0) * 0.3;
             }
         }
     }
@@ -333,15 +333,15 @@ class BitochiJumpView extends WatchUi.View {
     hidden function getHillY(dist) {
         var idx = (dist / 3.0).toNumber();
         if (idx < 0) { idx = 0; }
-        if (idx >= 99) { return _hillProfile[99]; }
+        if (idx >= 139) { return _hillProfile[139]; }
         var frac = dist / 3.0 - idx.toFloat();
         return _hillProfile[idx] * (1.0 - frac) + _hillProfile[idx + 1] * frac;
     }
 
     hidden function hillScreenScale() {
         var z = _cameraZoom;
-        if (z < 0.5) { z = 0.5; }
-        if (z > 2.5) { z = 2.5; }
+        if (z < 0.3) { z = 0.3; }
+        if (z > 2.0) { z = 2.0; }
         return z;
     }
 
@@ -398,8 +398,8 @@ class BitochiJumpView extends WatchUi.View {
         vibrate(70, 120);
 
         var speedFactor = _lockedSpeed.toFloat() / 100.0;
-        var baseSpeed = 4.0 + speedFactor * 4.2 + _takeoffQuality * 3.2;
-        var jumpAngle = 18.0 + _takeoffQuality * 18.0;
+        var baseSpeed = 5.0 + speedFactor * 5.5 + _takeoffQuality * 4.0;
+        var jumpAngle = 16.0 + _takeoffQuality * 20.0;
         var rad = jumpAngle * 3.14159 / 180.0;
 
         _flightVx = baseSpeed * Math.cos(rad);
@@ -527,29 +527,29 @@ class BitochiJumpView extends WatchUi.View {
     }
 
     hidden function updateFlight() {
-        var gravity = 0.112;
-        var liftBase = 0.020;
+        var gravity = 0.095;
+        var liftBase = 0.028;
 
         var lr = _statLeanRate[_jumperIdx];
-        _flightLean += _leanInput * 0.38 * lr;
+        _flightLean += _leanInput * 0.42 * lr;
 
-        var accelLift = accelMag.toFloat() / 8000.0;
-        if (accelLift > 1.2) { accelLift = 1.2; }
+        var accelLift = accelMag.toFloat() / 6000.0;
+        if (accelLift > 1.5) { accelLift = 1.5; }
         if (accelLift < 0.0) { accelLift = 0.0; }
-        _flightLean += accelLift * 0.45 * lr;
+        _flightLean += accelLift * 0.55 * lr;
 
-        if (_flightLean > 42.0) { _flightLean = 42.0; }
-        if (_flightLean < -22.0) { _flightLean = -22.0; }
+        if (_flightLean > 45.0) { _flightLean = 45.0; }
+        if (_flightLean < -25.0) { _flightLean = -25.0; }
 
-        if (_leanInput == 0 && accelLift < 0.1) {
-            var dec = 0.16 * lr;
+        if (_leanInput == 0 && accelLift < 0.08) {
+            var dec = 0.12 * lr;
             if (_flightLean > dec) { _flightLean -= dec; }
             else if (_flightLean < -dec) { _flightLean += dec; }
             else { _flightLean = 0.0; }
         }
 
-        _windGustPhase += 0.14;
-        var gust = Math.sin(_windGustPhase) * 0.55 + Math.sin(_windGustPhase * 2.3) * 0.22;
+        _windGustPhase += 0.12;
+        var gust = Math.sin(_windGustPhase) * 0.5 + Math.sin(_windGustPhase * 2.3) * 0.2;
         if ((_tick + _jumperIdx * 7) % 17 == 0) {
             gust += ((Math.rand().abs() % 7).toFloat() - 3.0) / 10.0;
         }
@@ -557,46 +557,45 @@ class BitochiJumpView extends WatchUi.View {
         if (_windCurrent > 2.5) { _windCurrent = 2.5; }
         if (_windCurrent < -2.5) { _windCurrent = -2.5; }
 
-        var distZoom = 1.0 - _distance * 0.0032;
-        if (distZoom < 0.35) { distZoom = 0.35; }
-        if (distZoom > 1.0) { distZoom = 1.0; }
-        _cameraZoom = _cameraZoom * 0.92 + distZoom * 0.08;
+        var distZoom = 1.2 - _distance * 0.0028;
+        if (distZoom < 0.3) { distZoom = 0.3; }
+        if (distZoom > 1.2) { distZoom = 1.2; }
+        _cameraZoom = _cameraZoom * 0.94 + distZoom * 0.06;
 
         var forwardLean = _flightLean;
         if (forwardLean < 0.0) { forwardLean = 0.0; }
 
         var lm = _statLiftMul[_jumperIdx];
         var dm = _statDragLeanMul[_jumperIdx];
-        var liftFromLean = forwardLean * 0.0030 * lm;
-        var accelLiftBonus = accelLift * 0.008 * lm;
-        var dragFromLean = forwardLean * 0.0009 * dm;
+        var liftFromLean = forwardLean * 0.0038 * lm;
+        var accelLiftBonus = accelLift * 0.012 * lm;
+        var dragFromLean = forwardLean * 0.0006 * dm;
 
         var liftForce = (liftBase + liftFromLean + accelLiftBonus) * lm;
         if (liftForce < 0.0) { liftForce = 0.0; }
 
         var speed = Math.sqrt(_flightVx * _flightVx + _flightVy * _flightVy);
-        var drag = 0.0022 * speed * speed + dragFromLean * speed;
+        var drag = 0.0016 * speed * speed + dragFromLean * speed;
         var lift = liftForce * speed;
 
         _flightVy = _flightVy + gravity - lift;
-        _flightVx = _flightVx - drag * 0.28 + _windCurrent * 0.0065;
+        _flightVx = _flightVx - drag * 0.22 + _windCurrent * 0.006;
 
         var hillY = getHillY(_distance);
         var relH = hillY - _flightY;
-        if (relH < 18.0 && relH > -2.0) {
-            var turb = ((Math.rand().abs() % 5).toFloat() - 2.0) * 0.04 * (1.0 - relH / 20.0);
-            if (turb < -0.1) { turb = -0.1; }
-            if (turb > 0.1) { turb = 0.1; }
+        if (relH < 20.0 && relH > -2.0) {
+            var turb = ((Math.rand().abs() % 5).toFloat() - 2.0) * 0.03 * (1.0 - relH / 22.0);
+            if (turb < -0.08) { turb = -0.08; }
+            if (turb > 0.08) { turb = 0.08; }
             _flightVy += turb;
-            _flightVx += turb * 0.3;
         }
 
-        if (_flightVx < 0.8) { _flightVx = 0.8; }
+        if (_flightVx < 0.9) { _flightVx = 0.9; }
 
         _flightX += _flightVx;
         _flightY += _flightVy;
 
-        _distance = _flightX * 0.85;
+        _distance = _flightX * 0.9;
 
         _flightAngle = _flightAngle * 0.94 + _flightLean * 0.06;
 
@@ -701,46 +700,66 @@ class BitochiJumpView extends WatchUi.View {
     }
 
     hidden function drawMountains(dc, w, h) {
-        var par1 = (_distance * 0.08).toNumber();
-        var par2 = (_distance * 0.15).toNumber();
-        var par3 = (_distance * 0.22).toNumber();
+        var par1 = (_distance * 0.06).toNumber() % w;
+        var par2 = (_distance * 0.12).toNumber() % w;
+        var par3 = (_distance * 0.18).toNumber() % w;
 
-        dc.setColor(0x1A2038, Graphics.COLOR_TRANSPARENT);
-        dc.fillPolygon([[0, h * 55 / 100], [w * 20 / 100 - par3, h * 28 / 100], [w * 45 / 100 - par3, h * 32 / 100], [w, h * 50 / 100], [w, h], [0, h]]);
+        dc.setColor(0x0E1525, Graphics.COLOR_TRANSPARENT);
+        dc.fillPolygon([[0, h * 58 / 100], [w * 15 / 100 - par3, h * 22 / 100], [w * 30 / 100 - par3, h * 28 / 100], [w * 55 / 100 - par3, h * 18 / 100], [w * 75 / 100 - par3, h * 26 / 100], [w, h * 50 / 100], [w, h], [0, h]]);
 
-        dc.setColor(0x252B45, Graphics.COLOR_TRANSPARENT);
-        dc.fillPolygon([[0, h * 52 / 100], [w * 25 / 100 - par2, h * 35 / 100], [w * 55 / 100 - par2, h * 30 / 100], [w, h * 48 / 100], [w, h], [0, h]]);
+        dc.setColor(0x18243A, Graphics.COLOR_TRANSPARENT);
+        dc.fillPolygon([[0, h * 54 / 100], [w * 22 / 100 - par2, h * 30 / 100], [w * 42 / 100 - par2, h * 25 / 100], [w * 65 / 100 - par2, h * 32 / 100], [w, h * 46 / 100], [w, h], [0, h]]);
 
-        dc.setColor(0x303650, Graphics.COLOR_TRANSPARENT);
-        dc.fillPolygon([[0, h * 48 / 100], [w * 30 / 100 - par1, h * 38 / 100], [w * 60 / 100 - par1, h * 34 / 100], [w, h * 46 / 100], [w, h], [0, h]]);
+        dc.setColor(0x1E3048, Graphics.COLOR_TRANSPARENT);
+        dc.fillPolygon([[0, h * 50 / 100], [w * 28 / 100 - par1, h * 35 / 100], [w * 50 / 100 - par1, h * 30 / 100], [w * 72 / 100 - par1, h * 38 / 100], [w, h * 44 / 100], [w, h], [0, h]]);
+
+        dc.setColor(0xFFFFDD, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(w * 22 / 100 - par3 / 2, h * 16 / 100, 2);
+        dc.fillCircle(w * 55 / 100 - par3 / 2, h * 14 / 100, 1);
+        dc.fillCircle(w * 78 / 100 - par3 / 2, h * 10 / 100, 2);
     }
 
     hidden function drawTreesAlongHill(dc, w, h, cx, baseY) {
         var sc = hillScreenScale();
-        var spots = [12, 22, 35, 48, 63, 78, 95, 118, 140, 165];
-        for (var ti = 0; ti < 10; ti++) {
+        var spots = [8, 18, 28, 42, 56, 72, 88, 108, 130, 155, 180, 210, 240, 270, 310];
+        for (var ti = 0; ti < 15; ti++) {
             var dm = spots[ti].toFloat();
             var sx = worldToScreenX(cx, dm);
-            if (sx < -8 || sx > w + 8) { continue; }
+            if (sx < -12 || sx > w + 12) { continue; }
             var hy = baseY + (getHillY(dm) * sc).toNumber();
-            dc.setColor(0x2A4A2A, Graphics.COLOR_TRANSPARENT);
-            dc.fillPolygon([[sx, hy - 2], [sx - 3, hy + 4], [sx + 3, hy + 4]]);
-            dc.setColor(0x1A351A, Graphics.COLOR_TRANSPARENT);
-            dc.fillPolygon([[sx, hy - 4], [sx - 2, hy], [sx + 2, hy]]);
+            var treeH = 6 + (ti % 3) * 2;
+            dc.setColor(0x1A3520, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(sx - 1, hy - 1, 2, 4);
+            dc.setColor(0x1B5528, Graphics.COLOR_TRANSPARENT);
+            dc.fillPolygon([[sx, hy - treeH], [sx - 4, hy], [sx + 4, hy]]);
+            dc.setColor(0x22AA44, Graphics.COLOR_TRANSPARENT);
+            dc.fillPolygon([[sx, hy - treeH + 2], [sx - 3, hy - 2], [sx + 3, hy - 2]]);
+            if (ti % 2 == 0) {
+                dc.setColor(0xDDEEFF, Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(sx - 2, hy - treeH + 1, 1, 1);
+                dc.fillRectangle(sx + 1, hy - treeH + 3, 1, 1);
+            }
         }
     }
 
     hidden function drawCrowd(dc, w, h) {
-        var rowY = h - 6;
+        var rowY = h - 5;
         var seed = 17;
-        for (var r = 0; r < 3; r++) {
-            for (var c = 0; c < 24; c++) {
-                var px = 4 + c * w / 24 + (r * 3) % 5;
-                var py = rowY - r * 4;
+        var pal = [0x3366CC, 0xCC3333, 0xEEAA22, 0xAA44AA, 0x44AAAA, 0xDDDDDD, 0x22AA66, 0xFF6644];
+        for (var r = 0; r < 4; r++) {
+            for (var c = 0; c < 28; c++) {
+                var px = 2 + c * w / 28 + (r * 3) % 5;
+                var py = rowY - r * 3;
                 seed = (seed * 13 + c + r * 7) % 200;
-                var pal = [0x3366CC, 0xCC3333, 0xEEEE22, 0xAA44AA, 0x44AAAA, 0xFFFFFF];
-                dc.setColor(pal[seed % 6], Graphics.COLOR_TRANSPARENT);
+                dc.setColor(pal[seed % 8], Graphics.COLOR_TRANSPARENT);
                 dc.fillRectangle(px, py, 2, 2);
+                dc.setColor(0xDDCCAA, Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(px, py - 2, 2, 1);
+                if ((_tick + c + r) % 12 < 3) {
+                    dc.setColor(pal[(seed + 1) % 8], Graphics.COLOR_TRANSPARENT);
+                    dc.fillRectangle(px - 1, py - 3, 1, 2);
+                    dc.fillRectangle(px + 2, py - 3, 1, 2);
+                }
             }
         }
     }
@@ -834,22 +853,30 @@ class BitochiJumpView extends WatchUi.View {
     }
 
     hidden function drawSky(dc, w, h) {
-        dc.setColor(0x152545, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(0, 0, w, h / 3);
-        dc.setColor(0x1E3358, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(0, h / 3, w, h / 6);
-        dc.setColor(0x284060, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(0, h / 2, w, h / 8);
+        dc.setColor(0x080C1A, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, 0, w, h * 15 / 100);
+        dc.setColor(0x101830, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, h * 15 / 100, w, h * 12 / 100);
+        dc.setColor(0x182240, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, h * 27 / 100, w, h * 12 / 100);
+        dc.setColor(0x1E3058, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, h * 39 / 100, w, h * 61 / 100);
 
-        dc.setColor(0xFFFFAA, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(w * 86 / 100, h * 9 / 100, 5);
-        dc.setColor(0xFFFF88, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(w * 84 / 100, h * 11 / 100, 3);
+        dc.setColor(0xDDCCFF, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(w * 82 / 100, h * 8 / 100, 8);
+        dc.setColor(0xEEDDFF, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(w * 82 / 100, h * 8 / 100, 6);
+        dc.setColor(0xFFEEFF, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(w * 82 / 100, h * 8 / 100, 3);
 
-        dc.setColor(0xDDEEFF, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(w * 12 / 100, h * 7 / 100, 2);
-        dc.fillCircle(w * 48 / 100, h * 5 / 100, 2);
-        dc.fillCircle(w * 68 / 100, h * 14 / 100, 1);
+        dc.setColor(0xAABBDD, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(w * 10 / 100, h * 5 / 100, 1);
+        dc.fillCircle(w * 25 / 100, h * 9 / 100, 1);
+        dc.fillCircle(w * 42 / 100, h * 3 / 100, 2);
+        dc.fillCircle(w * 58 / 100, h * 7 / 100, 1);
+        dc.fillCircle(w * 70 / 100, h * 12 / 100, 1);
+        dc.fillCircle(w * 35 / 100, h * 14 / 100, 1);
+        dc.fillCircle(w * 92 / 100, h * 4 / 100, 1);
     }
 
     hidden function drawSnow(dc, w, h) {
@@ -882,106 +909,148 @@ class BitochiJumpView extends WatchUi.View {
     hidden function drawInrun(dc, w, h) {
         drawMountains(dc, w, h);
 
-        var rampTopX = w * 20 / 100;
-        var rampTopY = h * 18 / 100;
-        var rampBotX = w * 62 / 100;
-        var rampBotY = h * 72 / 100;
+        var rampTopX = w * 15 / 100;
+        var rampTopY = h * 12 / 100;
+        var rampBotX = w * 58 / 100;
+        var rampBotY = h * 68 / 100;
+        var launchX = rampBotX + w * 14 / 100;
+        var launchY = rampBotY - h * 10 / 100;
 
+        dc.setColor(0xC0D8EE, Graphics.COLOR_TRANSPARENT);
+        dc.fillPolygon([
+            [rampTopX - 20, rampTopY + 5],
+            [rampBotX + 25, rampBotY],
+            [w, rampBotY - 5],
+            [w, h], [0, h],
+            [0, rampTopY + 20]
+        ]);
         dc.setColor(0xDDEEFF, Graphics.COLOR_TRANSPARENT);
         dc.fillPolygon([
-            [rampTopX - 15, rampTopY],
-            [rampBotX + 20, rampBotY],
-            [w, rampBotY],
-            [w, h],
-            [0, h],
-            [0, rampTopY + 10]
+            [rampTopX - 18, rampTopY],
+            [rampBotX + 22, rampBotY - 3],
+            [w, rampBotY - 8],
+            [w, rampBotY - 5],
+            [rampBotX + 25, rampBotY],
+            [rampTopX - 20, rampTopY + 5]
         ]);
 
-        dc.setColor(0xBBCCDD, Graphics.COLOR_TRANSPARENT);
-        for (var i = 0; i < 8; i++) {
-            var lx = rampTopX + (rampBotX - rampTopX) * i / 8;
-            var ly = rampTopY + (rampBotY - rampTopY) * i / 8;
-            var lx2 = rampTopX + (rampBotX - rampTopX) * (i + 1) / 8;
-            var ly2 = rampTopY + (rampBotY - rampTopY) * (i + 1) / 8;
-            dc.setPenWidth(3);
-            dc.drawLine(lx, ly, lx2, ly2);
-            dc.setPenWidth(1);
+        dc.setColor(0x556688, Graphics.COLOR_TRANSPARENT);
+        dc.setPenWidth(1);
+        for (var i = 0; i < 10; i++) {
+            var lx = rampTopX + (rampBotX - rampTopX) * i / 10;
+            var ly = rampTopY + (rampBotY - rampTopY) * i / 10;
+            dc.drawLine(lx - 12, ly + 3, lx + 12, ly + 3);
         }
 
-        dc.setColor(0x446688, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0x3355AA, Graphics.COLOR_TRANSPARENT);
         dc.setPenWidth(3);
         dc.drawLine(rampTopX, rampTopY, rampBotX, rampBotY);
         dc.setPenWidth(1);
 
-        dc.setColor(0x446688, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0x4466BB, Graphics.COLOR_TRANSPARENT);
         dc.setPenWidth(2);
-        dc.drawLine(rampBotX, rampBotY, rampBotX + w * 12 / 100, rampBotY - h * 8 / 100);
+        dc.drawLine(rampBotX, rampBotY, launchX, launchY);
         dc.setPenWidth(1);
+
+        dc.setColor(0x446688, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(rampTopX - 4, rampTopY - 20, 8, 22);
+        dc.setColor(0xDD3333, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(rampTopX - 6, rampTopY - 22, 12, 4);
 
         var progress = _inrunX / 40.0;
         if (progress > 1.0) { progress = 1.0; }
         var px = rampTopX + (rampBotX - rampTopX) * progress;
         var py = rampTopY + (rampBotY - rampTopY) * progress;
 
+        if (progress > 0.1) {
+            dc.setColor(0xAABBDD, Graphics.COLOR_TRANSPARENT);
+            var trailLen = (progress * 25).toNumber();
+            for (var t = 0; t < trailLen; t++) {
+                var tp = progress - t.toFloat() / 60.0;
+                if (tp < 0.0) { break; }
+                var tx = rampTopX + (rampBotX - rampTopX) * tp;
+                var ty = rampTopY + (rampBotY - rampTopY) * tp;
+                dc.fillRectangle(tx.toNumber(), ty.toNumber() - 8, 1, 1);
+            }
+        }
+
         drawJumperSprite(dc, px.toNumber(), py.toNumber() - 10, _jumperIdx, false, 0.0);
 
         drawCrowd(dc, w, h);
 
-        var barX = w * 80 / 100;
-        var barY = h * 18 / 100;
-        var barH = h * 52 / 100;
-        var barW = 10;
-        dc.setColor(0x1A1A30, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(barX - 1, barY - 1, barW + 2, barH + 2);
-        dc.setColor(0x222244, Graphics.COLOR_TRANSPARENT);
+        var barX = w * 82 / 100;
+        var barY = h * 15 / 100;
+        var barH = h * 55 / 100;
+        var barW = 12;
+        dc.setColor(0x0A0E1A, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(barX - 2, barY - 2, barW + 4, barH + 4);
+        dc.setColor(0x1A1A35, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(barX, barY, barW, barH);
 
         var sweetT = 35;
         var sweetB = 68;
         var sy0 = barY + barH - (barH * sweetB / 100);
         var sy1 = barY + barH - (barH * sweetT / 100);
-        dc.setColor(0x224422, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0x113322, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(barX, sy0, barW, sy1 - sy0);
 
         var fillH = barH * _speedBarTick / 100;
-        var c = 0x44FF44;
-        if (_speedBarTick > 75) { c = 0xFF6644; }
-        else if (_speedBarTick > sweetB) { c = 0xFFCC22; }
+        var c = 0x22FF88;
+        if (_speedBarTick > 75) { c = 0xFF4433; }
+        else if (_speedBarTick > sweetB) { c = 0xFFBB22; }
         dc.setColor(c, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(barX, barY + barH - fillH, barW, fillH);
 
-        dc.setColor(0xFFFFAA, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0x44FF88, Graphics.COLOR_TRANSPARENT);
         dc.drawRectangle(barX - 1, sy0 - 1, barW + 2, sy1 - sy0 + 2);
 
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(barX + barW / 2, barY - 14, Graphics.FONT_XTINY, "SPD", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0xDDEEFF, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(barX + barW / 2, barY - 16, Graphics.FONT_XTINY, "SPD", Graphics.TEXT_JUSTIFY_CENTER);
+
+        dc.setColor(0x667788, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w / 2, h * 88 / 100, Graphics.FONT_XTINY, _jumperNames[_jumperIdx], Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawTakeoff(dc, w, h) {
         drawMountains(dc, w, h);
 
-        var rampBotX = w * 62 / 100;
-        var rampBotY = h * 72 / 100;
-        var launchX = rampBotX + w * 12 / 100;
-        var launchY = rampBotY - h * 8 / 100;
+        var rampBotX = w * 58 / 100;
+        var rampBotY = h * 68 / 100;
+        var launchX = rampBotX + w * 14 / 100;
+        var launchY = rampBotY - h * 10 / 100;
 
+        dc.setColor(0xC0D8EE, Graphics.COLOR_TRANSPARENT);
+        dc.fillPolygon([
+            [0, rampBotY - 5],
+            [rampBotX + 25, rampBotY],
+            [w, rampBotY - 5],
+            [w, h], [0, h]
+        ]);
         dc.setColor(0xDDEEFF, Graphics.COLOR_TRANSPARENT);
         dc.fillPolygon([
             [0, rampBotY - 10],
-            [rampBotX + 20, rampBotY],
-            [w, rampBotY],
-            [w, h],
-            [0, h]
+            [rampBotX + 22, rampBotY - 3],
+            [w, rampBotY - 8],
+            [w, rampBotY - 5],
+            [rampBotX + 25, rampBotY],
+            [0, rampBotY - 5]
         ]);
 
-        dc.setColor(0x446688, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0x3355AA, Graphics.COLOR_TRANSPARENT);
         dc.setPenWidth(3);
-        dc.drawLine(w * 20 / 100, h * 18 / 100, rampBotX, rampBotY);
+        dc.drawLine(w * 15 / 100, h * 12 / 100, rampBotX, rampBotY);
         dc.drawLine(rampBotX, rampBotY, launchX, launchY);
         dc.setPenWidth(1);
 
-        var shake = (_takeoffTick % 4 < 2) ? 2 : -2;
+        var shake = (_takeoffTick % 3 < 2) ? 2 : -2;
         drawJumperSprite(dc, launchX + shake, launchY - 10, _jumperIdx, false, 0.0);
+
+        for (var i = 0; i < 5; i++) {
+            dc.setColor(0xCCDDFF, Graphics.COLOR_TRANSPARENT);
+            var px2 = launchX - 4 - i * 3 + (Math.rand().abs() % 3);
+            var py2 = launchY - 5 + (Math.rand().abs() % 8);
+            dc.fillCircle(px2, py2, 2);
+        }
 
         drawCrowd(dc, w, h);
 
@@ -992,25 +1061,25 @@ class BitochiJumpView extends WatchUi.View {
 
         var perfect = (_takeoffTick >= 6 && _takeoffTick <= 10);
         var good = (_takeoffTick >= 4 && _takeoffTick <= 13);
-        dc.setColor(perfect ? 0x44FF44 : (good ? 0xFFCC22 : 0xFF6644), Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 20 / 100, Graphics.FONT_MEDIUM, "JUMP!", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(perfect ? 0x22FF88 : (good ? 0xFFBB22 : 0xFF4433), Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w / 2, h * 18 / 100, Graphics.FONT_MEDIUM, "JUMP!", Graphics.TEXT_JUSTIFY_CENTER);
 
-        dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 32 / 100, Graphics.FONT_XTINY, "Move wrist in flight!", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x667788, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w / 2, h * 30 / 100, Graphics.FONT_XTINY, "Tilt wrist to fly!", Graphics.TEXT_JUSTIFY_CENTER);
 
-        var barW = w * 52 / 100;
+        var barW = w * 60 / 100;
         var barX = (w - barW) / 2;
-        var barY2 = h * 88 / 100;
-        dc.setColor(0x1A1A30, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(barX - 1, barY2 - 1, barW + 2, 8);
-        dc.setColor(0x222244, Graphics.COLOR_TRANSPARENT);
+        var barY2 = h * 86 / 100;
+        dc.setColor(0x0A0E1A, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(barX - 2, barY2 - 2, barW + 4, 10);
+        dc.setColor(0x1A1A35, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(barX, barY2, barW, 6);
 
         var sweetL = barX + barW * 30 / 100;
         var sweetR = barX + barW * 50 / 100;
-        dc.setColor(0x226622, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0x113322, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(sweetL, barY2, sweetR - sweetL, 6);
-        dc.setColor(0xAAFF66, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0x44FF88, Graphics.COLOR_TRANSPARENT);
         dc.drawRectangle(sweetL - 1, barY2 - 1, sweetR - sweetL + 2, 8);
 
         var markerX = barX + barW * _takeoffTick / 20;
@@ -1019,205 +1088,232 @@ class BitochiJumpView extends WatchUi.View {
     }
 
     hidden function drawFlightScene(dc, w, h) {
-        var baseY = h * 45 / 100;
-        var cx = w * 30 / 100;
+        var baseY = h * 42 / 100;
+        var cx = w * 28 / 100;
         var sc = hillScreenScale();
         var speed = Math.sqrt(_flightVx * _flightVx + _flightVy * _flightVy);
 
-        updateFlightFx(cx, baseY + (_flightY * sc).toNumber() - 6, speed);
+        var jy = baseY + (_flightY * sc).toNumber() - 8;
+        updateFlightFx(cx, jy, speed);
 
         var shx = _screenShakeX;
         var shy = _screenShakeY;
 
         drawSky(dc, w, h);
+        drawMountains(dc, w, h);
+        drawSnow(dc, w, h);
 
-        if (speed > 3.0) {
-            var spdFactor = ((speed - 3.0) * 8.0).toNumber();
-            if (spdFactor > 30) { spdFactor = 30; }
-            dc.setColor(0xAADDFF, Graphics.COLOR_TRANSPARENT);
-            for (var sl = 0; sl < spdFactor / 5; sl++) {
-                var slx = (sl * 41 + _tick * 11) % w;
-                var sly = (sl * 67 + _tick * 7) % h;
-                dc.drawLine(slx + shx, sly + shy, slx + 12 + spdFactor + shx, sly + shy);
+        if (speed > 3.5) {
+            var nlines = ((speed - 3.5) * 4.0).toNumber();
+            if (nlines > 10) { nlines = 10; }
+            for (var sl = 0; sl < nlines; sl++) {
+                var slx = (sl * 37 + _tick * 13) % w;
+                var sly = h * 20 / 100 + (sl * 71 + _tick * 5) % (h * 50 / 100);
+                var slen = 8 + (speed * 2.5).toNumber();
+                if (slen > 35) { slen = 35; }
+                var lc = (sl % 2 == 0) ? 0x4466AA : 0x556688;
+                dc.setColor(lc, Graphics.COLOR_TRANSPARENT);
+                dc.drawLine(slx + shx, sly + shy, slx + slen + shx, sly + shy);
             }
         }
 
-        drawSnow(dc, w, h);
-
-        dc.setColor(0xDDEEFF, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(0, baseY + 10 + shy, w, h - baseY);
-
-        for (var i = 0; i < 98; i++) {
+        var groundTopY = h;
+        for (var i = 0; i < 138; i++) {
             var d1 = i.toFloat() * 3.0;
             var d2 = (i + 1).toFloat() * 3.0;
             var sx1 = cx + ((d1 - _distance) * sc).toNumber() + shx;
             var sx2 = cx + ((d2 - _distance) * sc).toNumber() + shx;
+            if (sx2 < -5 || sx1 > w + 5) { continue; }
+
             var hy1 = baseY + (getHillY(d1) * sc).toNumber() + shy;
             var hy2 = baseY + (getHillY(d2) * sc).toNumber() + shy;
 
-            if (sx2 < -5 || sx1 > w + 5) { continue; }
+            dc.setColor(0xC0D8EE, Graphics.COLOR_TRANSPARENT);
+            if (hy1 < h + 5 || hy2 < h + 5) {
+                var topY = hy1 < hy2 ? hy1 : hy2;
+                if (topY < groundTopY) { groundTopY = topY; }
+                dc.fillRectangle(sx1, topY, sx2 - sx1 + 2, h - topY + 1);
+            }
 
-            dc.setColor(0xBBCCDD, Graphics.COLOR_TRANSPARENT);
+            dc.setColor(0xEEF4FF, Graphics.COLOR_TRANSPARENT);
             dc.setPenWidth(2);
             dc.drawLine(sx1, hy1, sx2, hy2);
             dc.setPenWidth(1);
 
-            dc.setColor(0xDDEEFF, Graphics.COLOR_TRANSPARENT);
-            if (hy1 < h && hy2 < h) {
-                var topY = hy1 < hy2 ? hy1 : hy2;
-                if (topY < h) {
-                    dc.fillRectangle(sx1, topY, sx2 - sx1 + 1, h - topY);
-                }
+            dc.setColor(0x8899AA, Graphics.COLOR_TRANSPARENT);
+            if (hy1 < h && hy1 + 6 < h) {
+                dc.fillRectangle(sx1, hy1 + 3, sx2 - sx1 + 1, 1);
             }
         }
 
-        dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT);
-        for (var i = 0; i < 98; i += 2) {
-            var d1 = i.toFloat() * 3.0;
-            var sx1 = cx + ((d1 - _distance) * sc).toNumber() + shx;
-            var hy1 = baseY + (getHillY(d1) * sc).toNumber() + shy;
-            if (sx1 > 0 && sx1 < w && hy1 < h) {
-                dc.fillRectangle(sx1, hy1 + 1, 1, 2);
+        dc.setColor(0x88AABB, Graphics.COLOR_TRANSPARENT);
+        if (groundTopY < h) {
+            for (var dx = 0; dx < w; dx += 6) {
+                var dotY = groundTopY + 8 + (dx * 3) % 12;
+                if (dotY < h) {
+                    dc.fillRectangle(dx + shx, dotY + shy, 1, 1);
+                }
             }
         }
 
         drawTreesAlongHill(dc, w, h, cx + shx, baseY + shy);
 
-        for (var m = 20; m <= 280; m += 20) {
+        for (var m = 20; m <= 380; m += 20) {
             var mx = cx + ((m.toFloat() - _distance) * sc).toNumber() + shx;
-            if (mx > 5 && mx < w - 5) {
+            if (mx > 3 && mx < w - 3) {
                 var mhy = baseY + (getHillY(m.toFloat()) * sc).toNumber() + shy;
-                dc.setColor(0xFF4444, Graphics.COLOR_TRANSPARENT);
-                dc.fillRectangle(mx - 1, mhy - 8, 2, 8);
-                dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(mx, mhy - 19, Graphics.FONT_XTINY, "" + m, Graphics.TEXT_JUSTIFY_CENTER);
+                var mc = 0xDD4444;
+                if (m % 50 == 0) { mc = 0xFF6622; }
+                dc.setColor(mc, Graphics.COLOR_TRANSPARENT);
+                var flagH = (m % 50 == 0) ? 12 : 8;
+                dc.fillRectangle(mx, mhy - flagH, 2, flagH);
+                if (m % 50 == 0) {
+                    dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+                    dc.drawText(mx + 1, mhy - flagH - 12, Graphics.FONT_XTINY, "" + m, Graphics.TEXT_JUSTIFY_CENTER);
+                }
             }
         }
 
         var kx = cx + ((_kPointDist - _distance) * sc).toNumber() + shx;
-        if (kx > 0 && kx < w) {
+        if (kx > -5 && kx < w + 5) {
             var ky = baseY + (getHillY(_kPointDist) * sc).toNumber() + shy;
-            dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(kx - 2, ky - 14, 4, 14);
-            dc.drawText(kx, ky - 24, Graphics.FONT_XTINY, "K" + _kPointDist.toNumber(), Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(0x22DD44, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(kx - 1, ky - 16, 3, 16);
+            dc.fillRectangle(kx - 4, ky - 16, 9, 3);
+            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(kx, ky - 28, Graphics.FONT_XTINY, "K" + _kPointDist.toNumber(), Graphics.TEXT_JUSTIFY_CENTER);
         }
         var hsx = cx + ((_hsDist - _distance) * sc).toNumber() + shx;
-        if (hsx > 0 && hsx < w) {
+        if (hsx > -5 && hsx < w + 5) {
             var hsy = baseY + (getHillY(_hsDist) * sc).toNumber() + shy;
-            dc.setColor(0xFF6644, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(hsx - 2, hsy - 14, 4, 14);
-            dc.drawText(hsx, hsy - 24, Graphics.FONT_XTINY, "HS" + _hsDist.toNumber(), Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(0xFF4422, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(hsx - 1, hsy - 16, 3, 16);
+            dc.fillRectangle(hsx - 4, hsy - 16, 9, 3);
+            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(hsx, hsy - 28, Graphics.FONT_XTINY, "HS" + _hsDist.toNumber(), Graphics.TEXT_JUSTIFY_CENTER);
         }
 
         var petScreenY = baseY + (_flightY * sc).toNumber() + shy;
-        var jx = cx + shx;
-        var jy = petScreenY - 6;
+        var jx2 = cx + shx;
+        var jy2 = petScreenY - 8;
 
-        pushTrail(jx.toFloat(), jy.toFloat());
+        pushTrail(jx2.toFloat(), jy2.toFloat());
         drawFlightTrail(dc);
+        drawFlightFx(dc, w, h, jx2, jy2, speed);
 
-        drawFlightFx(dc, w, h, jx, jy, speed);
-
-        drawJumperSprite(dc, jx, jy, _jumperIdx, true, _flightLean);
-
-        var altAboveHill = (getHillY(_distance) - _flightY);
+        var altAboveHill = getHillY(_distance) - _flightY;
         if (altAboveHill < 0.0) { altAboveHill = 0.0; }
-        if (altAboveHill > 2.0) {
-            dc.setColor(0x88AACC, Graphics.COLOR_TRANSPARENT);
+
+        if (altAboveHill > 3.0) {
+            var groundSy = baseY + (getHillY(_distance) * sc).toNumber() + shy;
+            dc.setColor(0x445588, Graphics.COLOR_TRANSPARENT);
             dc.setPenWidth(1);
-            var groundSx = baseY + (getHillY(_distance) * sc).toNumber() + shy;
-            dc.drawLine(jx, jy + 12, jx, groundSx);
-            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(jx + 8, (jy + groundSx) / 2, Graphics.FONT_XTINY, altAboveHill.toNumber() + "", Graphics.TEXT_JUSTIFY_LEFT);
+            dc.drawLine(jx2, jy2 + 14, jx2, groundSy);
+            dc.setColor(0x445588, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(jx2, groundSy, 3);
         }
 
-        drawCrowd(dc, w, h);
+        drawJumperSprite(dc, jx2, jy2, _jumperIdx, true, _flightLean);
 
-        var distC = 0xFFFFFF;
+        dc.setColor(0x0A0E1A, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, 0, w, 22);
+        dc.setColor(0x182030, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, 22, w, 2);
+
+        var distC = 0xDDEEFF;
         if (_distance > _hsDist) { distC = 0xFF4444; }
-        else if (_distance > _kPointDist) { distC = 0xFFCC22; }
+        else if (_distance > _kPointDist) { distC = 0x44FF88; }
         dc.setColor(distC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 3 / 100, Graphics.FONT_MEDIUM, _distance.toNumber() + "m", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, 2, Graphics.FONT_MEDIUM, _distance.toNumber() + "m", Graphics.TEXT_JUSTIFY_CENTER);
 
-        if (_distance > _hsDist) {
-            var flash = (_tick % 6 < 3) ? 0xFF4444 : 0xFFAA22;
-            dc.setColor(flash, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w / 2, h * 3 / 100 - 2, Graphics.FONT_MEDIUM, _distance.toNumber() + "m", Graphics.TEXT_JUSTIFY_CENTER);
+        if (_distance > _hsDist && _tick % 6 < 3) {
+            dc.setColor(0xFFAA22, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w / 2, 1, Graphics.FONT_MEDIUM, _distance.toNumber() + "m", Graphics.TEXT_JUSTIFY_CENTER);
         }
 
-        var accelPct = accelMag.toFloat() / 8000.0;
+        var accelPct = accelMag.toFloat() / 6000.0;
         if (accelPct > 1.0) { accelPct = 1.0; }
-        var accelBarW = w * 28 / 100;
-        var accelBarX = w * 62 / 100;
-        var accelBarY = h * 13 / 100;
-        dc.setColor(0x222244, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(accelBarX, accelBarY, accelBarW, 5);
-        var acCol = accelPct > 0.5 ? 0x44FF44 : (accelPct > 0.2 ? 0xFFCC22 : 0xFF6644);
-        dc.setColor(acCol, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(accelBarX, accelBarY, (accelBarW * accelPct).toNumber(), 5);
-        dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(accelBarX + accelBarW / 2, accelBarY + 6, Graphics.FONT_XTINY, "ARM", Graphics.TEXT_JUSTIFY_CENTER);
+        var acBarW = 30;
+        var acBarX = 4;
+        var acBarY = 5;
+        dc.setColor(0x1A2244, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(acBarX, acBarY, acBarW, 4);
+        var acC = accelPct > 0.5 ? 0x22FFAA : (accelPct > 0.2 ? 0xFFCC22 : 0xFF5533);
+        dc.setColor(acC, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(acBarX, acBarY, (acBarW * accelPct).toNumber(), 4);
+        dc.setColor(0x667788, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(acBarX + acBarW / 2, acBarY + 5, Graphics.FONT_XTINY, "LIFT", Graphics.TEXT_JUSTIFY_CENTER);
 
-        drawWindArrows(dc, w, h);
+        var wStr = _windCurrent;
+        if (wStr < 0) { wStr = -wStr; }
+        var wDir = _windCurrent >= 0 ? ">" : "<";
+        var wC = wStr > 1.5 ? 0xFF6644 : 0x66AACC;
+        dc.setColor(wC, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w - 4, 4, Graphics.FONT_XTINY, wDir + wStr.toNumber() + "." + ((wStr * 10).toNumber() % 10), Graphics.TEXT_JUSTIFY_RIGHT);
 
-        var leanPct = ((_flightLean + 22.0) / 64.0 * 100.0).toNumber();
+        dc.setColor(0x0A0E1A, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, h - 20, w, 20);
+        dc.setColor(0x182030, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, h - 20, w, 2);
+
+        var leanPct = ((_flightLean + 25.0) / 70.0 * 100.0).toNumber();
         if (leanPct < 0) { leanPct = 0; }
         if (leanPct > 100) { leanPct = 100; }
-        var lBarY = h * 28 / 100;
-        var lBarH = h * 42 / 100;
-        dc.setColor(0x222244, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(w - 11, lBarY, 7, lBarH);
-
-        var sweetTop2 = lBarY + lBarH * 12 / 100;
-        var sweetBot2 = lBarY + lBarH * 58 / 100;
-        dc.setColor(0x224422, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(w - 11, sweetTop2, 7, sweetBot2 - sweetTop2);
-
-        var markerY = lBarY + lBarH - lBarH * leanPct / 100;
+        var lBarW = w - 12;
+        var lBarX = 6;
+        var lBarY = h - 12;
+        dc.setColor(0x1A2244, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(lBarX, lBarY, lBarW, 5);
+        var sweetL = lBarW * 28 / 100;
+        var sweetR = lBarW * 62 / 100;
+        dc.setColor(0x113322, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(lBarX + sweetL, lBarY, sweetR - sweetL, 5);
+        var mkX = lBarX + lBarW * leanPct / 100;
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(w - 13, markerY - 1, 11, 3);
+        dc.fillRectangle(mkX - 2, lBarY - 2, 4, 9);
+        dc.setColor(0x667788, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(lBarX, lBarY - 2, Graphics.FONT_XTINY, "LEAN", Graphics.TEXT_JUSTIFY_LEFT);
 
-        if (speed > 5.5) {
-            dc.setColor(0x44DDFF, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w / 2, h * 90 / 100, Graphics.FONT_XTINY, "FLYING!", Graphics.TEXT_JUSTIFY_CENTER);
-        } else if (speed > 4.0) {
-            dc.setColor(0x88AACC, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w / 2, h * 90 / 100, Graphics.FONT_XTINY, "GLIDING", Graphics.TEXT_JUSTIFY_CENTER);
+        if (speed > 6.0) {
+            dc.setColor(0x22DDFF, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w / 2, h - 18, Graphics.FONT_XTINY, "SOARING!", Graphics.TEXT_JUSTIFY_CENTER);
+        } else if (speed > 4.5) {
+            dc.setColor(0x44AACC, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w / 2, h - 18, Graphics.FONT_XTINY, "FLYING", Graphics.TEXT_JUSTIFY_CENTER);
+        } else if (speed > 3.0) {
+            dc.setColor(0xCCBB66, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w / 2, h - 18, Graphics.FONT_XTINY, "GLIDING", Graphics.TEXT_JUSTIFY_CENTER);
         } else {
-            dc.setColor(0xFF6644, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w / 2, h * 90 / 100, Graphics.FONT_XTINY, "FALLING", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(0xFF5544, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w / 2, h - 18, Graphics.FONT_XTINY, "FALLING!", Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 
     hidden function drawLanding(dc, w, h) {
-        var baseY = h * 45 / 100;
-        var cx = w * 30 / 100;
+        var baseY = h * 42 / 100;
+        var cx = w * 28 / 100;
         var sc = hillScreenScale();
 
+        drawSky(dc, w, h);
         drawMountains(dc, w, h);
 
-        dc.setColor(0xDDEEFF, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(0, baseY + 10, w, h - baseY);
-
-        for (var i = 0; i < 98; i++) {
+        for (var i = 0; i < 138; i++) {
             var d1 = i.toFloat() * 3.0;
             var d2 = (i + 1).toFloat() * 3.0;
             var sx1 = cx + ((d1 - _distance) * sc).toNumber();
             var sx2 = cx + ((d2 - _distance) * sc).toNumber();
+            if (sx2 < -5 || sx1 > w + 5) { continue; }
             var hy1 = baseY + (getHillY(d1) * sc).toNumber();
             var hy2 = baseY + (getHillY(d2) * sc).toNumber();
-            if (sx2 < -5 || sx1 > w + 5) { continue; }
-            dc.setColor(0xCCDDEE, Graphics.COLOR_TRANSPARENT);
+            dc.setColor(0xC0D8EE, Graphics.COLOR_TRANSPARENT);
+            if (hy1 < h + 5 || hy2 < h + 5) {
+                var topY = hy1 < hy2 ? hy1 : hy2;
+                dc.fillRectangle(sx1, topY, sx2 - sx1 + 2, h - topY + 1);
+            }
+            dc.setColor(0xEEF4FF, Graphics.COLOR_TRANSPARENT);
             dc.setPenWidth(2);
             dc.drawLine(sx1, hy1, sx2, hy2);
             dc.setPenWidth(1);
-            dc.setColor(0xDDEEFF, Graphics.COLOR_TRANSPARENT);
-            if (hy1 < h && hy2 < h) {
-                var topY = hy1 < hy2 ? hy1 : hy2;
-                if (topY < h) {
-                    dc.fillRectangle(sx1, topY, sx2 - sx1 + 1, h - topY);
-                }
-            }
         }
 
         drawTreesAlongHill(dc, w, h, cx, baseY);
@@ -1226,67 +1322,111 @@ class BitochiJumpView extends WatchUi.View {
         var hillYAtDist = getHillY(_distance);
         var petY = baseY + (hillYAtDist * sc).toNumber() - 10;
 
-        var shake = (_landTick < 8) ? ((_landTick % 4 < 2) ? 3 : -3) : 0;
+        if (_landTick < 10) {
+            dc.setColor(0xCCDDFF, Graphics.COLOR_TRANSPARENT);
+            for (var sp = 0; sp < 8; sp++) {
+                var spx = cx - 10 + (Math.rand().abs() % 20);
+                var spy = petY + 5 + (Math.rand().abs() % 8);
+                dc.fillCircle(spx, spy, 2 + Math.rand().abs() % 2);
+            }
+        }
+
+        var shake = (_landTick < 8) ? ((_landTick % 3 < 2) ? 3 : -3) : 0;
         drawJumperSprite(dc, cx + shake, petY, _jumperIdx, false, 0.0);
 
         drawCrowd(dc, w, h);
+        drawSnow(dc, w, h);
 
-        dc.setColor(_landGood ? 0x44FF44 : 0xFFCC22, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0x0A0E1A, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, 0, w, 22);
+        dc.setColor(_landGood ? 0x22FF88 : 0xFFBB22, Graphics.COLOR_TRANSPARENT);
         var landText = _landGood ? "TELEMARK!" : "LANDED";
-        dc.drawText(w / 2, h * 8 / 100, Graphics.FONT_MEDIUM, landText, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, 2, Graphics.FONT_MEDIUM, landText, Graphics.TEXT_JUSTIFY_CENTER);
 
-        dc.setColor(0xFFFF44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 22 / 100, Graphics.FONT_MEDIUM, _distance.toNumber() + "m", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x0A0E1A, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, h - 28, w, 28);
+        dc.setColor(0x182030, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, h - 28, w, 2);
+        dc.setColor(0xFFFF66, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w / 2, h - 25, Graphics.FONT_MEDIUM, _distance.toNumber() + "m", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawJumperSprite(dc, x, y, idx, flying, leanDeg) {
         var bodyC = _jumperColors[idx];
         var accC = _jumperAccents[idx];
         var lean = leanDeg;
-        if (lean > 35.0) { lean = 35.0; }
-        if (lean < -20.0) { lean = -20.0; }
-        var offX = (lean * 0.12).toNumber();
-
-        dc.setColor(0x2A2A33, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(x, y - 7, 7);
-        dc.setColor(0xE8E8F0, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(x, y - 7, 5);
-
-        dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(x + offX, y, 7);
-        dc.setColor(accC, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(x + offX, y, 5);
-
-        var armAy = y - 1 + (flying ? 1 : 0);
-        var armBx = 8 + (flying ? 4 : 0);
-        dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(x + offX - armBx, armAy - 2, 5, 3);
-        dc.fillRectangle(x + offX + armBx - 5, armAy - 2, 5, 3);
-
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(x + offX - 3, y - 3, 2, 2);
-        dc.fillRectangle(x + offX + 1, y - 3, 2, 2);
-        dc.setColor(0x111118, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(x + offX - 3, y - 2, 1, 1);
-        dc.fillRectangle(x + offX + 2, y - 2, 1, 1);
+        if (lean > 40.0) { lean = 40.0; }
+        if (lean < -22.0) { lean = -22.0; }
+        var offX = (lean * 0.18).toNumber();
+        var offY = flying ? (lean * -0.06).toNumber() : 0;
 
         if (flying) {
-            dc.setColor(0xDDDDEE, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(x + offX - 10, y + 5, 20, 3);
             dc.setColor(accC, Graphics.COLOR_TRANSPARENT);
-            dc.drawLine(x + offX - 9, y + 6, x + offX + 9, y + 6);
+            dc.fillCircle(x + offX, y + offY, 9);
+            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(x + offX, y + offY, 7);
+
+            dc.setColor(0x2A2A3A, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(x + offX + 3, y + offY - 6, 5);
+            dc.setColor(0xDDDDEE, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(x + offX + 3, y + offY - 6, 4);
+            dc.setColor(0x88CCFF, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(x + offX, y + offY - 8, 7, 2);
+
+            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
+            var armLen = 12 + (lean * 0.15).toNumber();
+            if (armLen < 6) { armLen = 6; }
+            dc.fillRectangle(x + offX - armLen, y + offY - 2, armLen, 3);
+            dc.fillRectangle(x + offX + 7, y + offY - 2, armLen, 3);
+            dc.setColor(0xFFDDBB, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(x + offX - armLen - 2, y + offY - 2, 3, 3);
+            dc.fillRectangle(x + offX + 7 + armLen - 1, y + offY - 2, 3, 3);
+
+            dc.setColor(0xBBCCDD, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(x + offX - 4, y + offY + 7, 9, 3);
+            dc.setColor(0x8899AA, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(x + offX - 5, y + offY + 10, 11, 2);
 
             dc.setColor(0x555566, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(x + offX - 11, y + 9, 22, 2);
-            dc.setColor(0x888899, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(x + offX - 9, y + 10, 6, 1);
-            dc.fillRectangle(x + offX + 3, y + 10, 6, 1);
+            dc.fillRectangle(x + offX - 8, y + offY + 12, 17, 2);
+            dc.setColor(0x333344, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(x + offX - 9, y + offY + 13, 2, 2);
+            dc.fillRectangle(x + offX + 8, y + offY + 13, 2, 2);
+
+            var sway = (_tick % 6 < 3) ? 1 : -1;
+            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(x + offX + 1, y + offY - 5, 2, 2);
+            dc.fillRectangle(x + offX + 4, y + offY - 5, 2, 2);
+            dc.setColor(0x111118, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(x + offX + 1 + sway, y + offY - 4, 1, 1);
+            dc.fillRectangle(x + offX + 4 + sway, y + offY - 4, 1, 1);
         } else {
+            dc.setColor(0x2A2A3A, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(x, y - 8, 5);
+            dc.setColor(0xDDDDEE, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(x, y - 8, 4);
+
+            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(x - 5, y - 3, 10, 8);
+            dc.setColor(accC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(x - 4, y - 2, 8, 6);
+
+            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(x - 8, y - 1, 4, 3);
+            dc.fillRectangle(x + 4, y - 1, 4, 3);
+
             dc.setColor(0x555566, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(x + offX - 6, y + 8, 12, 2);
-            dc.setColor(0x777788, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(x + offX - 4, y + 9, 3, 1);
-            dc.fillRectangle(x + offX + 1, y + 9, 3, 1);
+            dc.fillRectangle(x - 4, y + 5, 8, 3);
+            dc.setColor(0x333344, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(x - 5, y + 8, 4, 2);
+            dc.fillRectangle(x + 1, y + 8, 4, 2);
+
+            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(x - 2, y - 7, 2, 2);
+            dc.fillRectangle(x + 1, y - 7, 2, 2);
+            dc.setColor(0x111118, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(x - 2, y - 6, 1, 1);
+            dc.fillRectangle(x + 2, y - 6, 1, 1);
         }
     }
 
@@ -1297,28 +1437,37 @@ class BitochiJumpView extends WatchUi.View {
     }
 
     hidden function drawSelect(dc, w, h) {
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 6 / 100, Graphics.FONT_MEDIUM, "BITOCHI JUMP", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x0A0E1A, 0x0A0E1A);
+        dc.clear();
 
-        dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 18 / 100, Graphics.FONT_XTINY, "Choose first jumper", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x182030, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, h * 30 / 100, w, h * 50 / 100);
 
-        var cy = h * 42 / 100;
+        dc.setColor(0x22DDFF, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w / 2, h * 5 / 100, Graphics.FONT_MEDIUM, "BITOCHI JUMP", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x1188AA, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w / 2 + 1, h * 5 / 100 + 1, Graphics.FONT_MEDIUM, "BITOCHI JUMP", Graphics.TEXT_JUSTIFY_CENTER);
+
+        dc.setColor(0x556677, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w / 2, h * 19 / 100, Graphics.FONT_XTINY, "Choose jumper", Graphics.TEXT_JUSTIFY_CENTER);
+
+        var cy = h * 40 / 100;
         drawJumperSprite(dc, w / 2, cy, _jumperIdx, false, 0.0);
 
         dc.setColor(_jumperColors[_jumperIdx], Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, cy + 20, Graphics.FONT_SMALL, _jumperNames[_jumperIdx], Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, cy + 18, Graphics.FONT_SMALL, _jumperNames[_jumperIdx], Graphics.TEXT_JUSTIFY_CENTER);
 
-        dc.setColor(0x888899, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, cy + 38, Graphics.FONT_XTINY, _jumperDescs[_jumperIdx], Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x778899, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w / 2, cy + 36, Graphics.FONT_XTINY, _jumperDescs[_jumperIdx], Graphics.TEXT_JUSTIFY_CENTER);
 
-        dc.setColor(0x555566, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2 - w * 28 / 100, cy, Graphics.FONT_SMALL, "<", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(w / 2 + w * 28 / 100, cy, Graphics.FONT_SMALL, ">", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w / 2 - w * 30 / 100, cy, Graphics.FONT_SMALL, "<", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2 + w * 30 / 100, cy, Graphics.FONT_SMALL, ">", Graphics.TEXT_JUSTIFY_CENTER);
 
-        dc.setColor(0x888888, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 78 / 100, Graphics.FONT_XTINY, "2 rounds  5 jumpers", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(w / 2, h * 86 / 100, Graphics.FONT_XTINY, "SEL to start", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w / 2, h * 78 / 100, Graphics.FONT_XTINY, "2 rounds / 5 jumpers", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x22DDFF, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w / 2, h * 87 / 100, Graphics.FONT_XTINY, "SEL to start", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function rankIndicesByScore() {
@@ -1380,7 +1529,8 @@ class BitochiJumpView extends WatchUi.View {
         dc.drawText(w / 2, h * 48 / 100, Graphics.FONT_XTINY, "Total: " + _cumScores[idx].toNumber(), Graphics.TEXT_JUSTIFY_CENTER);
 
         var grade;
-        if (dist >= 180.0) { grade = "HILL RECORD!"; }
+        if (dist >= 220.0) { grade = "HILL RECORD!"; }
+        else if (dist >= 175.0) { grade = "MONSTER JUMP!"; }
         else if (dist >= 140.0) { grade = "EXCELLENT!"; }
         else if (dist >= 100.0) { grade = "GREAT!"; }
         else if (dist >= 60.0) { grade = "GOOD"; }

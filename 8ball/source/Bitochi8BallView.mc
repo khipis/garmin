@@ -443,6 +443,18 @@ class Bitochi8BallView extends WatchUi.View {
             dc.drawText(cx, ansY, fs, _answer, Graphics.TEXT_JUSTIFY_CENTER);
         }
 
+        if (_ansPhase > 10) {
+            dc.setColor(_themeGlow, Graphics.COLOR_TRANSPARENT);
+            var spk = (_fc + _streak * 7) % 5;
+            if (spk == 0) {
+                dc.fillRectangle(cx - r + 5, cy - 8, 2, 2);
+            } else if (spk == 1) {
+                dc.fillRectangle(cx + r - 8, cy + 3, 2, 2);
+            } else if (spk == 2) {
+                dc.fillRectangle(cx - 3, cy - r + 6, 2, 2);
+            }
+        }
+
         dc.setColor(_themeHint, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, h * 88 / 100, Graphics.FONT_XTINY, "tap to ask", Graphics.TEXT_JUSTIFY_CENTER);
     }

@@ -483,32 +483,52 @@ class BitochiSniperView extends WatchUi.View {
     }
 
     hidden function drawTerrain(dc, offX, offY) {
+        var sway = (_tick % 12 < 6) ? 1 : 0;
         for (var i = 0; i < GRASS_COUNT; i++) {
             var sx = (_grassX[i].toFloat() - _aimX).toNumber() + _cx + offX;
             var sy = (_grassY[i].toFloat() - _aimY).toNumber() + _cy + offY;
             if (sx < -20 || sx > _w + 20 || sy < -20 || sy > _h + 20) { continue; }
             var gh = _grassH[i];
-            var gc = (i % 3 == 0) ? 0x2D5A1E : ((i % 3 == 1) ? 0x3A6B2E : 0x1E4A12);
+            var gc = (i % 5 == 0) ? 0x2D5A1E : ((i % 5 == 1) ? 0x3A6B2E : ((i % 5 == 2) ? 0x1E4A12 : ((i % 5 == 3) ? 0x48822E : 0x265218)));
             dc.setColor(gc, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(sx, sy, 2, gh);
-            dc.fillRectangle(sx - 1, sy + 1, 1, gh - 2);
+            var sw = (gh > 5 && i % 3 == 0) ? sway : 0;
+            dc.fillRectangle(sx + sw, sy, 2, gh);
+            dc.fillRectangle(sx - 1 + sw, sy + 1, 1, gh - 2);
+            dc.fillRectangle(sx + 2 + sw, sy + 2, 1, gh - 3);
 
             if (gh > 5) {
-                dc.setColor(0x4A8B3E, Graphics.COLOR_TRANSPARENT);
-                dc.fillRectangle(sx, sy, 1, 1);
+                dc.setColor(0x5AA848, Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(sx + sw, sy, 1, 2);
+            }
+            if (gh > 7 && i % 4 == 0) {
+                dc.setColor(0xCCDD44, Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(sx + 1 + sw, sy - 1, 1, 1);
             }
         }
 
-        dc.setColor(0x2A4A1E, Graphics.COLOR_TRANSPARENT);
-        var rockCount = 6;
-        for (var i = 0; i < rockCount; i++) {
+        for (var i = 0; i < 8; i++) {
             var rx = ((i * 317 + 51) % _worldW - _aimX.toNumber()) + _cx + offX;
             var ry = ((i * 523 + 97) % _worldH - _aimY.toNumber()) + _cy + offY;
             if (rx < -20 || rx > _w + 20 || ry < -20 || ry > _h + 20) { continue; }
+            var rsz = 3 + i % 4;
             dc.setColor(0x555555, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(rx, ry, 3 + i % 3);
-            dc.setColor(0x777777, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(rx - 1, ry - 1, 2, 1);
+            dc.fillCircle(rx, ry, rsz);
+            dc.setColor(0x666666, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(rx - 1, ry - 1, rsz - 1);
+            dc.setColor(0x888888, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(rx - 1, ry - rsz + 1, 2, 1);
+        }
+
+        for (var i = 0; i < 3; i++) {
+            var bx = ((i * 731 + 199) % _worldW - _aimX.toNumber()) + _cx + offX;
+            var by = ((i * 439 + 311) % _worldH - _aimY.toNumber()) + _cy + offY;
+            if (bx < -20 || bx > _w + 20 || by < -20 || by > _h + 20) { continue; }
+            dc.setColor(0x553311, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(bx, by - 6, 3, 8);
+            dc.setColor(0x226622, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(bx + 1, by - 8, 5);
+            dc.setColor(0x338833, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(bx + 1, by - 9, 3);
         }
     }
 
@@ -645,41 +665,55 @@ class BitochiSniperView extends WatchUi.View {
         r = r - 2;
 
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-        for (var ring = r; ring < r + 30; ring++) {
+        for (var ring = r; ring < r + 35; ring++) {
             dc.drawCircle(_cx, _cy, ring);
         }
 
-        dc.setColor(0x111111, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0x0A0A0A, Graphics.COLOR_TRANSPARENT);
         dc.drawCircle(_cx, _cy, r);
         dc.drawCircle(_cx, _cy, r - 1);
-        dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0x151515, Graphics.COLOR_TRANSPARENT);
         dc.drawCircle(_cx, _cy, r - 2);
+        dc.setColor(0x1A1A1A, Graphics.COLOR_TRANSPARENT);
+        dc.drawCircle(_cx, _cy, r - 3);
 
-        dc.setColor(0x111111, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(_cx - 1, 2, 2, r * 30 / 100);
-        dc.fillRectangle(_cx - 1, _cy + r * 70 / 100, 2, r * 30 / 100);
-        dc.fillRectangle(2, _cy - 1, r * 30 / 100, 2);
-        dc.fillRectangle(_cx + r * 70 / 100, _cy - 1, r * 30 / 100, 2);
+        dc.setColor(0x0A0A0A, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(_cx - 1, 0, 2, _cy - 8);
+        dc.fillRectangle(_cx - 1, _cy + 8, 2, _h - _cy - 8);
+        dc.fillRectangle(0, _cy - 1, _cx - 8, 2);
+        dc.fillRectangle(_cx + 8, _cy - 1, _w - _cx - 8, 2);
+
+        dc.setColor(0x181818, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(_cx, 0, 1, _cy - 8);
+        dc.fillRectangle(_cx, _cy + 8, 1, _h - _cy - 8);
+        dc.fillRectangle(0, _cy, _cx - 8, 1);
+        dc.fillRectangle(_cx + 8, _cy, _w - _cx - 8, 1);
+
+        dc.setColor(0xCC0000, Graphics.COLOR_TRANSPARENT);
+        dc.drawLine(_cx - 8, _cy, _cx - 3, _cy);
+        dc.drawLine(_cx + 3, _cy, _cx + 8, _cy);
+        dc.drawLine(_cx, _cy - 8, _cx, _cy - 3);
+        dc.drawLine(_cx, _cy + 3, _cx, _cy + 8);
 
         dc.setColor(0xFF0000, Graphics.COLOR_TRANSPARENT);
-        dc.drawLine(_cx - 6, _cy, _cx - 2, _cy);
-        dc.drawLine(_cx + 2, _cy, _cx + 6, _cy);
-        dc.drawLine(_cx, _cy - 6, _cx, _cy - 2);
-        dc.drawLine(_cx, _cy + 2, _cx, _cy + 6);
         dc.fillCircle(_cx, _cy, 1);
 
-        dc.setColor(0x880000, Graphics.COLOR_TRANSPARENT);
-        var markLen = 3;
-        for (var i = 1; i <= 3; i++) {
-            var d = r * i * 20 / 100;
-            dc.fillRectangle(_cx - 1, _cy - d, 2, markLen);
-            dc.fillRectangle(_cx - 1, _cy + d - markLen, 2, markLen);
-            dc.fillRectangle(_cx - d, _cy - 1, markLen, 2);
-            dc.fillRectangle(_cx + d - markLen, _cy - 1, markLen, 2);
+        dc.setColor(0x660000, Graphics.COLOR_TRANSPARENT);
+        for (var i = 1; i <= 4; i++) {
+            var d = r * i * 16 / 100;
+            dc.fillRectangle(_cx - 1, _cy - d, 2, 2);
+            dc.fillRectangle(_cx - 1, _cy + d - 1, 2, 2);
+            dc.fillRectangle(_cx - d, _cy - 1, 2, 2);
+            dc.fillRectangle(_cx + d - 1, _cy - 1, 2, 2);
         }
 
-        dc.setColor(0x333333, Graphics.COLOR_TRANSPARENT);
-        dc.drawCircle(_cx, _cy, r * 60 / 100);
+        dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT);
+        dc.drawCircle(_cx, _cy, r * 55 / 100);
+        dc.setColor(0x1A1A1A, Graphics.COLOR_TRANSPARENT);
+        dc.drawCircle(_cx, _cy, r * 30 / 100);
+
+        dc.setColor(0x111111, Graphics.COLOR_TRANSPARENT);
+        dc.drawCircle(_cx, _cy, r - 6);
     }
 
     hidden function drawShotFlash(dc) {
@@ -757,28 +791,36 @@ class BitochiSniperView extends WatchUi.View {
         dc.setColor(0x0A1408, 0x0A1408);
         dc.clear();
 
+        dc.setColor(0x132210, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(_cx, _cy, _cx * 80 / 100);
+        dc.setColor(0x1A3318, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(_cx, _cy, _cx * 60 / 100);
+
         drawScopeOverlay(dc);
 
         var pulse = (_tick % 20 < 10) ? 0xFF4422 : 0xCC2211;
+        dc.setColor(0x551100, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_cx + 1, _h * 12 / 100 + 1, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(pulse, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _h * 14 / 100, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_cx, _h * 12 / 100, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _h * 28 / 100, Graphics.FONT_MEDIUM, "SNIPER", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_cx, _h * 26 / 100, Graphics.FONT_MEDIUM, "SNIPER", Graphics.TEXT_JUSTIFY_CENTER);
 
-        drawCreatureSprite(dc, _cx, _cy + 4, (_tick / 40) % 8, 8, 1.0, false);
+        drawCreatureSprite(dc, _cx - 20, _cy + 4, (_tick / 40) % 8, 8, 1.0, false);
+        drawCreatureSprite(dc, _cx + 20, _cy + 4, ((_tick / 40) + 3) % 8, 7, -1.0, false);
 
-        dc.setColor(0x88AACC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _h * 62 / 100, Graphics.FONT_XTINY, "Hunt the creatures!", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(_cx, _h * 69 / 100, Graphics.FONT_XTINY, "Tilt to aim", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(_cx, _h * 76 / 100, Graphics.FONT_XTINY, "Tap to shoot", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x7799AA, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_cx, _h * 60 / 100, Graphics.FONT_XTINY, "Hunt the creatures!", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_cx, _h * 67 / 100, Graphics.FONT_XTINY, "Tilt to aim", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_cx, _h * 74 / 100, Graphics.FONT_XTINY, "Tap to shoot", Graphics.TEXT_JUSTIFY_CENTER);
 
         if (_bestScore > 0) {
             dc.setColor(0x888888, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_cx, _h * 84 / 100, Graphics.FONT_XTINY, "BEST " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_cx, _h * 83 / 100, Graphics.FONT_XTINY, "BEST " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER);
         }
 
-        dc.setColor(0x666666, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _h * 92 / 100, Graphics.FONT_XTINY, "Press to start", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0xFF4422, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_cx, _h * 91 / 100, Graphics.FONT_XTINY, "Press to start", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawBetween(dc) {

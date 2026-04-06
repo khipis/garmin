@@ -447,14 +447,24 @@ class BitochiParachuteView extends WatchUi.View {
 
     hidden function drawClouds(dc) {
         for (var i = 0; i < 8; i++) {
-            if (_cloudY[i] < -20 || _cloudY[i] > _h + 20) { continue; }
+            if (_cloudY[i] < -25 || _cloudY[i] > _h + 25) { continue; }
             var cw = _cloudW[i];
+            var altPct = _altitude / _maxAlt;
+            if (altPct > 1.0) { altPct = 1.0; }
+            var shadow = (altPct > 0.5) ? 0xBBCCDD : 0x99AABB;
+            dc.setColor(shadow, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(_cloudX[i] + 2, _cloudY[i] + 3, cw / 2);
+            dc.fillCircle(_cloudX[i] - cw / 3 + 2, _cloudY[i] + 5, cw / 3);
+            dc.fillCircle(_cloudX[i] + cw / 3 + 2, _cloudY[i] + 4, cw * 2 / 5);
+
             dc.setColor(0xDDEEFF, Graphics.COLOR_TRANSPARENT);
             dc.fillCircle(_cloudX[i], _cloudY[i], cw / 2);
             dc.fillCircle(_cloudX[i] - cw / 3, _cloudY[i] + 2, cw / 3);
             dc.fillCircle(_cloudX[i] + cw / 3, _cloudY[i] + 1, cw * 2 / 5);
+            dc.setColor(0xEEF4FF, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(_cloudX[i] - cw / 5, _cloudY[i] - cw / 6, cw / 3);
             dc.setColor(0xCCDDEE, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(_cloudX[i], _cloudY[i] + cw / 4, cw / 3);
+            dc.fillCircle(_cloudX[i] + cw / 5, _cloudY[i] + cw / 4, cw / 4);
         }
     }
 
@@ -473,27 +483,47 @@ class BitochiParachuteView extends WatchUi.View {
             var rr = _ringR[i];
 
             if (_ringHit[i]) {
-                dc.setColor(0x44FF44, Graphics.COLOR_TRANSPARENT);
+                dc.setColor(0x22BB44, Graphics.COLOR_TRANSPARENT);
+                dc.drawCircle(rx, ry, rr + 2);
+                dc.setColor(0x44FF66, Graphics.COLOR_TRANSPARENT);
                 dc.drawCircle(rx, ry, rr);
                 dc.drawCircle(rx, ry, rr + 1);
+                dc.setColor(0x88FFAA, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(rx - rr + 3, ry, 2);
+                dc.fillCircle(rx + rr - 3, ry, 2);
             } else {
-                var pulse = (_tick % 16 < 8) ? 2 : 0;
+                var pulse = (_tick % 12 < 6) ? 2 : 0;
 
-                if (altDiff < 0.08) {
-                    dc.setColor(0xFFFF44, Graphics.COLOR_TRANSPARENT);
-                    dc.drawCircle(rx, ry, rr + 3 + pulse);
+                if (altDiff < 0.06) {
+                    dc.setColor(0xFFFF22, Graphics.COLOR_TRANSPARENT);
                     dc.drawCircle(rx, ry, rr + 4 + pulse);
+                    dc.drawCircle(rx, ry, rr + 5 + pulse);
+                    dc.setColor(0xFFDD00, Graphics.COLOR_TRANSPARENT);
+                    dc.drawCircle(rx, ry, rr + 3 + pulse);
                 }
 
-                var ringC = 0xFF6622;
+                var ringC = 0xFF5511;
                 if (proximity > 0.7) { ringC = 0xFFAA22; }
+                if (proximity > 0.9) { ringC = 0xFFCC44; }
                 dc.setColor(ringC, Graphics.COLOR_TRANSPARENT);
                 dc.drawCircle(rx, ry, rr);
                 dc.drawCircle(rx, ry, rr + 1);
+                dc.drawCircle(rx, ry, rr + 2);
 
-                dc.setColor(0xFFDD66, Graphics.COLOR_TRANSPARENT);
+                dc.setColor(0xFFEE88, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(rx - rr + 2, ry, 2);
+                dc.fillCircle(rx + rr - 2, ry, 2);
                 dc.fillCircle(rx, ry - rr + 2, 2);
                 dc.fillCircle(rx, ry + rr - 2, 2);
+
+                if (proximity > 0.5) {
+                    dc.setColor(0xFFCC66, Graphics.COLOR_TRANSPARENT);
+                    var sparkOff = (_tick * 3 + i * 5) % 12;
+                    var sa = sparkOff.toFloat() * 3.14159 / 6.0;
+                    var spx = rx + ((rr + 4) * Math.cos(sa)).toNumber();
+                    var spy = ry + ((rr + 4) * Math.sin(sa)).toNumber();
+                    dc.fillRectangle(spx, spy, 2, 2);
+                }
             }
         }
     }
@@ -524,44 +554,63 @@ class BitochiParachuteView extends WatchUi.View {
 
     hidden function drawPlayer(dc, px, py, chuteOpen) {
         if (chuteOpen) {
+            var chuteWave = (_tick % 8 < 4) ? 1 : -1;
+            dc.setColor(0xCC2222, Graphics.COLOR_TRANSPARENT);
+            dc.fillPolygon([[px, py - 26], [px - 22, py - 10], [px + 22, py - 10]]);
             dc.setColor(0xFF4444, Graphics.COLOR_TRANSPARENT);
-            dc.fillPolygon([[px, py - 22], [px - 18, py - 8], [px + 18, py - 8]]);
+            dc.fillPolygon([[px, py - 24], [px - 18, py - 11], [px + 18, py - 11]]);
             dc.setColor(0xFFAA44, Graphics.COLOR_TRANSPARENT);
-            dc.fillPolygon([[px, py - 20], [px - 14, py - 9], [px + 14, py - 9]]);
+            dc.fillPolygon([[px + chuteWave, py - 22], [px - 12, py - 12], [px + 12, py - 12]]);
             dc.setColor(0xFFDD88, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(px - 6, py - 12, 2, 1);
-            dc.fillRectangle(px + 4, py - 12, 2, 1);
+            dc.fillRectangle(px - 6, py - 16, 2, 2);
+            dc.fillRectangle(px + 4, py - 16, 2, 2);
+            dc.setColor(0xFFFFBB, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(px - 1, py - 18, 2, 2);
 
-            dc.setColor(0x555555, Graphics.COLOR_TRANSPARENT);
-            dc.drawLine(px - 14, py - 9, px - 3, py - 2);
-            dc.drawLine(px + 14, py - 9, px + 3, py - 2);
-            dc.drawLine(px, py - 20, px, py - 4);
+            dc.setColor(0x444444, Graphics.COLOR_TRANSPARENT);
+            dc.drawLine(px - 18, py - 11, px - 3, py - 2);
+            dc.drawLine(px + 18, py - 11, px + 3, py - 2);
+            dc.drawLine(px, py - 24, px, py - 4);
+            dc.drawLine(px - 10, py - 12, px - 2, py - 1);
+            dc.drawLine(px + 10, py - 12, px + 2, py - 1);
         }
 
+        dc.setColor(0xDDBB88, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(px, py - 3, 4);
         dc.setColor(0xFFCC88, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(px, py - 2, 3);
+        dc.fillCircle(px, py - 3, 3);
 
+        dc.setColor(0x553311, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(px - 3, py - 7, 6, 2);
+
+        dc.setColor(0x2244AA, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(px - 4, py + 1, 8, 7);
         dc.setColor(0x3355CC, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(px - 3, py + 1, 6, 6);
+        dc.fillRectangle(px - 3, py + 2, 6, 5);
 
-        dc.setColor(0x222288, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(px - 2, py + 7, 2, 4);
-        dc.fillRectangle(px, py + 7, 2, 4);
+        dc.setColor(0x222266, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(px - 2, py + 8, 2, 5);
+        dc.fillRectangle(px + 1, py + 8, 2, 5);
+        dc.setColor(0x664422, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(px - 3, py + 13, 3, 2);
+        dc.fillRectangle(px + 1, py + 13, 3, 2);
 
-        var armWave = (_tick % 8 < 4) ? 1 : -1;
+        var armWave = (_tick % 8 < 4) ? 2 : -2;
         if (chuteOpen) { armWave = 0; }
         dc.setColor(0xFFCC88, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(px - 5, py + 1 + armWave, 2, 3);
-        dc.fillRectangle(px + 3, py + 1 - armWave, 2, 3);
+        dc.fillRectangle(px - 6, py + 1 + armWave, 2, 4);
+        dc.fillRectangle(px + 4, py + 1 - armWave, 2, 4);
 
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(px - 2, py - 4, 1, 2);
+        dc.fillRectangle(px + 1, py - 4, 1, 2);
         dc.setColor(0x111111, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(px - 2, py - 3, 1, 1);
         dc.fillRectangle(px + 1, py - 3, 1, 1);
 
-        if (!chuteOpen) {
-            var sway = (_tick % 6 < 3) ? 1 : -1;
-            dc.setColor(0x555555, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(px + sway, py + 11, 1, 2);
+        if (!chuteOpen && _fallSpeed > 3.0) {
+            dc.setColor(0x111111, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(px - 1, py - 1, 2, 1);
         }
     }
 
@@ -621,28 +670,41 @@ class BitochiParachuteView extends WatchUi.View {
     }
 
     hidden function drawMenu(dc) {
-        dc.setColor(0x081830, 0x081830);
+        dc.setColor(0x061428, 0x061428);
         dc.clear();
+
+        dc.setColor(0x0A1E3A, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, _h * 30 / 100, _w, _h * 50 / 100);
+        dc.setColor(0x102848, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, _h * 60 / 100, _w, _h * 40 / 100);
 
         drawClouds(dc);
 
+        dc.setColor(0xAADDFF, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(_w * 15 / 100, _h * 8 / 100, 1);
+        dc.fillCircle(_w * 45 / 100, _h * 5 / 100, 1);
+        dc.fillCircle(_w * 75 / 100, _h * 10 / 100, 2);
+        dc.fillCircle(_w * 88 / 100, _h * 6 / 100, 1);
+
         var pulse = (_tick % 30 < 15) ? 0x44AAFF : 0x2288DD;
+        dc.setColor(0x113355, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2 + 1, _h * 10 / 100 + 1, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(pulse, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 12 / 100, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 10 / 100, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 26 / 100, Graphics.FONT_MEDIUM, "PARACHUTE", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 24 / 100, Graphics.FONT_MEDIUM, "PARACHUTE", Graphics.TEXT_JUSTIFY_CENTER);
 
-        drawPlayer(dc, _w / 2, _h * 50 / 100, true);
+        drawPlayer(dc, _w / 2, _h * 46 / 100, true);
 
-        dc.setColor(0x88AACC, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0x7799BB, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w / 2, _h * 62 / 100, Graphics.FONT_XTINY, "Fly through rings!", Graphics.TEXT_JUSTIFY_CENTER);
         dc.drawText(_w / 2, _h * 69 / 100, Graphics.FONT_XTINY, "Tilt to steer", Graphics.TEXT_JUSTIFY_CENTER);
         dc.drawText(_w / 2, _h * 76 / 100, Graphics.FONT_XTINY, "Tap to deploy chute", Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0x888888, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 86 / 100, Graphics.FONT_XTINY, "BEST " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0x666666, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 93 / 100, Graphics.FONT_XTINY, "Press to jump", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 85 / 100, Graphics.FONT_XTINY, "BEST " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x44AAFF, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 92 / 100, Graphics.FONT_XTINY, "Press to jump", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawJumpScene(dc) {
