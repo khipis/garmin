@@ -2219,6 +2219,13 @@ class Pet {
             _eventTime = Time.now().value();
             pendingVibe = 2;
             suggestedAction = 3;
+        } else if (happiness < 40 && petType != TYPE_UNDEAD && petType != TYPE_CACTUSO) {
+            var pt = getPlayRequestThought();
+            if (pt != null) {
+                eventText = pt;
+                _eventTime = Time.now().value();
+                pendingVibe = 1;
+            }
         }
     }
 
@@ -2456,6 +2463,17 @@ class Pet {
             var nt = getNeglectThought(nl);
             if (nt != null) { return nt; }
         }
+
+        if (Math.rand().abs() % 12 == 0) {
+            var pt = getPlayRequestThought();
+            if (pt != null) { return pt; }
+        }
+
+        if (Math.rand().abs() % 18 == 0) {
+            var wt = getWaterThought();
+            if (wt != null) { return wt; }
+        }
+
         if (Math.rand().abs() % 10 == 0) {
             var st = getStepThought();
             if (st != null) { return st; }
@@ -2492,6 +2510,165 @@ class Pet {
             if (petType == TYPE_POLACCO) { t = ["No...", "*beka*", "Eh...", "Hm", "Co jest?", "Leci cos?", "Nuda..."]; }
             else { t = ["Hmm...", "La la~", "Hi!", "Boop!", "...", "Hehe", "Vibing~", "*exists*", "Sup?"]; }
         }
+        return t[Math.rand().abs() % t.size()];
+    }
+
+    hidden function getPlayRequestThought() {
+        if (happiness > 65 && Math.rand().abs() % 3 != 0) { return null; }
+        if (petType == TYPE_UNDEAD)   { return null; }
+        if (petType == TYPE_CACTUSO)  { return null; }
+        if (petType == TYPE_PIXELBOT) {
+            var t = ["QUERY: Play protocol?", "BOREDOM.EXE detected", "INPUT: Play required", "IDLE: Request minigame"];
+            suggestedAction = 1;
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (petType == TYPE_EMILKA) {
+            var t = ["Play with me?? Please?", "Pogramy? *puppy eyes*", "Chcesz sie pobawic?", "I'm SO bored..."];
+            suggestedAction = 1;
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (petType == TYPE_VEXOR) {
+            var t = ["Entertain me. NOW.", "Play or I riot.", "PLAY. GAME. NOW.", "*taps foot impatiently*"];
+            suggestedAction = 1;
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (petType == TYPE_DOGGO) {
+            var t = ["PLAY?! PLEASE PLAY!", "*brings ball!*", "GAME! GAME! GAME!", "*spins excitedly*", "THROW THE BALL!!!"];
+            suggestedAction = 1;
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (petType == TYPE_POLACCO) {
+            var t = ["No co, nie pogramy?", "Nudno k*rwa, gra?", "Zagrajmy w cos ch*j", "Ej, gra, no!"];
+            suggestedAction = 1;
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (petType == TYPE_NOSACZ) {
+            var t = ["E? Bawic sie? E?", "E! Gra! E! E!", "*nos drga z podekscytowania*", "E E gra E E!"];
+            suggestedAction = 1;
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (petType == TYPE_CHIKKO) {
+            var t = ["BAWK! Play?? BAWK!", "*pecks your finger*", "GAME! CLUCK!", "*flaps wings*"];
+            suggestedAction = 1;
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (petType == TYPE_FLAMEY) {
+            var t = ["Let's BURN some time!", "Game? *fire crackle*", "Play or I explode!", "Bored... *sparks*"];
+            suggestedAction = 1;
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (petType == TYPE_AQUA) {
+            var t = ["Wanna splash around?", "Play? *ripple*", "Let's flow together~", "Games are calming~"];
+            suggestedAction = 1;
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (petType == TYPE_FOCZKA) {
+            var t = ["*arf arf!* PLAY?!", "Ball? Pleeease!", "*claps flippers*", "ARF! Game time!"];
+            suggestedAction = 1;
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (petType == TYPE_ROCKY) {
+            var t = ["Rock... wants to play.", "Wrestling match?", "Crush... some games."];
+            suggestedAction = 1;
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (petType == TYPE_GHOSTY) {
+            var t = ["Boo! Play with me~", "Haunt a game together?", "*floats hopefully*", "Spooky games?"];
+            suggestedAction = 1;
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (petType == TYPE_RAINBOW) {
+            var t = ["Rainbow games! *sparkle*", "Play in color?!", "*glitter request*", "Let's shine together!"];
+            suggestedAction = 1;
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (petType == TYPE_SHROOMY) {
+            var t = ["*shakes spores* play?", "Trippy games?", "Fungal fun time~", "Spore-tacular game?"];
+            suggestedAction = 1;
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (petType == TYPE_DONUT) {
+            var t = ["Games > being eaten!", "Play? Don't eat me!", "*sprinkles excitement*", "Donut wanna sit still!"];
+            suggestedAction = 1;
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (petType == TYPE_NUGGET) {
+            var t = ["Play? I'm still here!", "Crispy fun time?", "Don't eat, just play!", "*nugget hops*"];
+            suggestedAction = 1;
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (petType == TYPE_OCTAVIO) {
+            var t = ["8 arms ready to play!", "Games? *tentacle wave*", "Ink-redible game time!", "Let's play, friend~"];
+            suggestedAction = 1;
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (petType == TYPE_BATSY) {
+            var t = ["Night games?~", "*echolocation ping*", "Dark room game?", "*hangs & requests*"];
+            suggestedAction = 1;
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (petType == TYPE_DZIKKO) {
+            var t = ["OINK! GAME! OINK!", "*charges at game*", "Play or be rammed!", "BOAR GAME TIME!"];
+            suggestedAction = 1;
+            return t[Math.rand().abs() % t.size()];
+        }
+        var t = ["Play with me?", "Game time?", "Let's play!", "Wanna play?", "Play pleeease!", "I'm bored..."];
+        suggestedAction = 1;
+        return t[Math.rand().abs() % t.size()];
+    }
+
+    hidden function getWaterThought() {
+        if (petType == TYPE_AQUA) {
+            var t = ["Drink water, human!", "H2O time~", "Stay hydrated!", "*splashes reminder*", "Water is life~"];
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (petType == TYPE_FROSTY) {
+            var t = ["Ice water?", "Stay hydrated, ok?", "Cold water is best.", "Drink something!"];
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (petType == TYPE_DONUT) {
+            var t = ["Water goes with donuts!", "Drink water pls!", "Stay hydrated!", "H2O or glaze?"];
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (petType == TYPE_FOCZKA) {
+            var t = ["*ARF* Drink water!", "Water! Like me! ARF!", "Splash splash, drink!"];
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (petType == TYPE_EMILKA) {
+            var t = ["Pij wode, kochanie!", "Napilas/es sie dzis?", "Zdrowie, pij wode!", "Water = happy skin!"];
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (petType == TYPE_PIXELBOT) {
+            var t = ["HYDRATION: LOW", "DRINK.EXE required", "H2O deficit detected", "WATER: recommended"];
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (petType == TYPE_NOSACZ) {
+            var t = ["E... woda? E?", "Woda dobra. E.", "E E pij wode E", "*nos wskazuje na wode*"];
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (petType == TYPE_DOGGO) {
+            var t = ["WATER!! DRINK IT!!", "*laps water loudly*", "Drink with me!!!", "BORK! Water time!"];
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (petType == TYPE_SHROOMY) {
+            var t = ["Fungi need water~", "Drink water, grow~", "*absorbs moisture*", "Hydration = mycelium"];
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (petType == TYPE_RAINBOW) {
+            var t = ["Water makes rainbows!", "*water sparkle*", "Drink! Rainbows need it!", "H2O = colors!"];
+            return t[Math.rand().abs() % t.size()];
+        }
+        if (petType == TYPE_POLACCO) {
+            return null;
+        }
+        if (petType == TYPE_VEXOR) {
+            return null;
+        }
+        if (petType == TYPE_UNDEAD) {
+            return null;
+        }
+        if (Math.rand().abs() % 3 != 0) { return null; }
+        var t = ["Drink water!", "Stay hydrated~", "Water time!", "H2O check!"];
         return t[Math.rand().abs() % t.size()];
     }
 
