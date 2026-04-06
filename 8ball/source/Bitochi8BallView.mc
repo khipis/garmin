@@ -26,6 +26,13 @@ class Bitochi8BallView extends WatchUi.View {
     hidden var _vibed;
     hidden var _w;
     hidden var _h;
+    hidden var _theme;
+    hidden var _themeBg1;
+    hidden var _themeBg2;
+    hidden var _themeBg3;
+    hidden var _themeGlow;
+    hidden var _themeText;
+    hidden var _themeHint;
 
     function initialize() {
         View.initialize();
@@ -40,6 +47,8 @@ class Bitochi8BallView extends WatchUi.View {
         _vibed = false;
         _w = 260;
         _h = 260;
+        _theme = 0;
+        applyTheme(0);
 
         _answers = [
             "Yes!", "No.", "Absolutely!", "No way.",
@@ -101,6 +110,41 @@ class Bitochi8BallView extends WatchUi.View {
         ];
     }
 
+    hidden function applyTheme(idx) {
+        _theme = idx % 10;
+        if (_theme == 0) {
+            _themeBg1 = 0x1A0820; _themeBg2 = 0x2A1035; _themeBg3 = 0x3A184A;
+            _themeGlow = 0xFF77CC; _themeText = 0xFFAADD; _themeHint = 0x886688;
+        } else if (_theme == 1) {
+            _themeBg1 = 0x08142A; _themeBg2 = 0x102040; _themeBg3 = 0x183058;
+            _themeGlow = 0x44AAFF; _themeText = 0x88CCFF; _themeHint = 0x556688;
+        } else if (_theme == 2) {
+            _themeBg1 = 0x180828; _themeBg2 = 0x281040; _themeBg3 = 0x381858;
+            _themeGlow = 0xBB66FF; _themeText = 0xDD99FF; _themeHint = 0x775588;
+        } else if (_theme == 3) {
+            _themeBg1 = 0x18081A; _themeBg2 = 0x28102A; _themeBg3 = 0x38183A;
+            _themeGlow = 0xCC77FF; _themeText = 0xDDAaFF; _themeHint = 0x776688;
+        } else if (_theme == 4) {
+            _themeBg1 = 0x081A1A; _themeBg2 = 0x102828; _themeBg3 = 0x183838;
+            _themeGlow = 0x44FFCC; _themeText = 0x88FFDD; _themeHint = 0x558877;
+        } else if (_theme == 5) {
+            _themeBg1 = 0x0A1018; _themeBg2 = 0x141C28; _themeBg3 = 0x1E2838;
+            _themeGlow = 0x66CCEE; _themeText = 0x99DDFF; _themeHint = 0x557788;
+        } else if (_theme == 6) {
+            _themeBg1 = 0x200818; _themeBg2 = 0x301028; _themeBg3 = 0x401838;
+            _themeGlow = 0xFF4488; _themeText = 0xFF88AA; _themeHint = 0x885566;
+        } else if (_theme == 7) {
+            _themeBg1 = 0x081020; _themeBg2 = 0x101830; _themeBg3 = 0x1C2844;
+            _themeGlow = 0x6688FF; _themeText = 0x99BBFF; _themeHint = 0x556688;
+        } else if (_theme == 8) {
+            _themeBg1 = 0x180A1A; _themeBg2 = 0x28142A; _themeBg3 = 0x381E3A;
+            _themeGlow = 0xEE66DD; _themeText = 0xFFAAEE; _themeHint = 0x886688;
+        } else {
+            _themeBg1 = 0x0A0A1A; _themeBg2 = 0x14142A; _themeBg3 = 0x1E1E3A;
+            _themeGlow = 0xAAAAFF; _themeText = 0xCCCCFF; _themeHint = 0x666688;
+        }
+    }
+
     hidden function doVibe() {
         if (Toybox has :Attention) {
             if (Toybox.Attention has :vibrate) {
@@ -143,6 +187,7 @@ class Bitochi8BallView extends WatchUi.View {
             state = STATE_ANIM;
             _animTick = 0;
             _streak++;
+            applyTheme(_streak);
             var idx = Math.rand().abs() % _answers.size();
             _answer = _answers[idx];
             _answerCat = (idx < _ansCats.size()) ? _ansCats[idx] : 2;
@@ -164,17 +209,17 @@ class Bitochi8BallView extends WatchUi.View {
         drawBackground(dc, w, h);
 
         if (state == STATE_ASK) {
-            drawBilliardBall(dc, w / 2, h * 36 / 100, w * 30 / 100);
-            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w / 2, h * 68 / 100, Graphics.FONT_SMALL, "Ask me", Graphics.TEXT_JUSTIFY_CENTER);
-            dc.setColor(0x88AA88, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w / 2, h * 80 / 100, Graphics.FONT_XTINY, "shake or tap", Graphics.TEXT_JUSTIFY_CENTER);
+            drawBilliardBall(dc, w / 2, h / 2 - h / 12, w * 28 / 100);
+            dc.setColor(_themeText, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w / 2, h / 2 + w * 28 / 100 - h / 12 + 6, Graphics.FONT_SMALL, "Ask me!", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(_themeHint, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w / 2, h * 85 / 100, Graphics.FONT_XTINY, "shake or tap", Graphics.TEXT_JUSTIFY_CENTER);
         } else if (state == STATE_SHAKE) {
-            drawBilliardBall(dc, w / 2, h * 36 / 100, w * 30 / 100);
-            dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w / 2, h * 68 / 100, Graphics.FONT_SMALL, "Ask again!", Graphics.TEXT_JUSTIFY_CENTER);
-            dc.setColor(0x88AA88, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w / 2, h * 80 / 100, Graphics.FONT_XTINY, "shake or tap", Graphics.TEXT_JUSTIFY_CENTER);
+            drawBilliardBall(dc, w / 2, h / 2 - h / 12, w * 28 / 100);
+            dc.setColor(_themeGlow, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w / 2, h / 2 + w * 28 / 100 - h / 12 + 6, Graphics.FONT_SMALL, "Ask again!", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(_themeHint, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w / 2, h * 85 / 100, Graphics.FONT_XTINY, "shake or tap", Graphics.TEXT_JUSTIFY_CENTER);
         } else if (state == STATE_ANIM) {
             drawAnimScene(dc, w, h);
         } else {
@@ -182,31 +227,45 @@ class Bitochi8BallView extends WatchUi.View {
         }
 
         if (_streak > 0) {
-            dc.setColor(0x446644, Graphics.COLOR_TRANSPARENT);
+            dc.setColor(_themeHint, Graphics.COLOR_TRANSPARENT);
             dc.drawText(w / 2, 4, Graphics.FONT_XTINY, "#" + _streak, Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 
     hidden function drawBackground(dc, w, h) {
-        dc.setColor(0x0A2A12, 0x0A2A12);
+        dc.setColor(_themeBg1, _themeBg1);
         dc.clear();
 
-        dc.setColor(0x0D3316, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(_themeBg2, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(w / 2, h / 2, w * 48 / 100);
-        dc.setColor(0x103D1A, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(w / 2, h / 2, w * 40 / 100);
-        dc.setColor(0x13461E, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(w / 2, h / 2, w * 30 / 100);
+        dc.setColor(_themeBg3, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(w / 2, h / 2, w * 38 / 100);
 
-        dc.setColor(0x082008, Graphics.COLOR_TRANSPARENT);
+        var glow = _themeGlow;
+        var glowR = (glow >> 16) & 0xFF;
+        var glowG = (glow >> 8) & 0xFF;
+        var glowB = glow & 0xFF;
+        var softR = glowR / 12; var softG = glowG / 12; var softB = glowB / 12;
+        dc.setColor((softR << 16) | (softG << 8) | softB, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(w / 2, h / 2, w * 26 / 100);
+
+        var pulse = (_fc % 60);
+        if (pulse > 30) { pulse = 60 - pulse; }
+        var edgeR = glowR / 20 + pulse / 15;
+        var edgeG = glowG / 20 + pulse / 15;
+        var edgeB = glowB / 20 + pulse / 15;
+        if (edgeR > 0xFF) { edgeR = 0xFF; }
+        if (edgeG > 0xFF) { edgeG = 0xFF; }
+        if (edgeB > 0xFF) { edgeB = 0xFF; }
+        dc.setColor((edgeR << 16) | (edgeG << 8) | edgeB, Graphics.COLOR_TRANSPARENT);
         dc.drawCircle(w / 2, h / 2, w * 48 / 100);
-        dc.drawCircle(w / 2, h / 2, w * 49 / 100);
+        dc.drawCircle(w / 2, h / 2, w * 47 / 100);
 
-        var feltSeed = 42;
-        dc.setColor(0x0B2E10, Graphics.COLOR_TRANSPARENT);
-        for (var i = 0; i < 30; i++) {
-            var fx = ((feltSeed + i * 97) % w);
-            var fy = ((feltSeed + i * 53) % h);
+        var sparkSeed = _theme * 13 + 7;
+        dc.setColor(blendColor(_themeBg3, _themeGlow, 1, 6), Graphics.COLOR_TRANSPARENT);
+        for (var i = 0; i < 20; i++) {
+            var fx = ((sparkSeed + i * 97 + (_fc / 8) * (i % 3 + 1)) % w);
+            var fy = ((sparkSeed + i * 53 + (_fc / 12) * ((i + 1) % 2 + 1)) % h);
             dc.fillRectangle(fx, fy, 1, 1);
         }
     }
@@ -281,97 +340,93 @@ class Bitochi8BallView extends WatchUi.View {
         var wr = r * 42 / 100;
         if (wr < 5) { wr = 5; }
 
-        dc.setColor(0xDDDDDD, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0xCCCCCC, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(cx, cy, wr + 2);
 
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(cx, cy, wr);
 
-        dc.setColor(0xF0F0F0, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0xF5F5F5, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(cx + 1, cy + 1, wr - 1);
 
-        dc.setColor(0xE8E8E8, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0xEEEEEE, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(cx + wr / 4, cy + wr / 4, wr * 6 / 10);
 
-        dc.setColor(0xF4F4F4, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0xFAFAFA, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(cx - wr / 5, cy - wr / 5, wr * 4 / 10);
 
-        dc.setColor(0x111111, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
         var fs = Graphics.FONT_MEDIUM;
         if (wr < 12) { fs = Graphics.FONT_XTINY; }
         else if (wr < 18) { fs = Graphics.FONT_TINY; }
         else if (wr < 26) { fs = Graphics.FONT_SMALL; }
         dc.drawText(cx, cy - dc.getFontHeight(fs) / 2, fs, "8", Graphics.TEXT_JUSTIFY_CENTER);
 
-        dc.setColor(0xBBBBBB, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0xAAAAAA, Graphics.COLOR_TRANSPARENT);
         dc.drawCircle(cx, cy, wr + 1);
     }
 
     hidden function drawAnimScene(dc, w, h) {
         var cx = w / 2;
-        var cy = h * 38 / 100;
+        var cy = h / 2;
         var ph = _animTick;
 
         var offX = 0;
-        if (ph < 14) {
-            offX = ((ph % 4 < 2) ? 1 : -1) * (3 + ph / 3);
-        }
         var offY = 0;
         if (ph < 14) {
+            offX = ((ph % 4 < 2) ? 1 : -1) * (3 + ph / 3);
             offY = ((ph % 3 < 1) ? 1 : -1) * (ph / 4);
         }
 
         var baseR = w * 28 / 100;
         var r = baseR;
-
         if (ph >= 14 && ph < 28) {
-            var sc = ph - 14;
-            r = baseR + sc * w / 160;
+            r = baseR + (ph - 14) * w / 200;
         } else if (ph >= 28) {
-            r = baseR + 14 * w / 160;
+            r = baseR + 14 * w / 200;
         }
 
         drawBilliardBall(dc, cx + offX, cy + offY, r);
 
+        var textY = cy + r + 10;
         if (ph >= 18) {
-            dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
+            dc.setColor(_themeGlow, Graphics.COLOR_TRANSPARENT);
             var dots = (ph - 18) / 3;
             if (dots > 3) { dots = 3; }
             var txt = "";
             for (var k = 0; k < dots + 1; k++) { txt = txt + "."; }
-            dc.drawText(cx, h * 75 / 100, Graphics.FONT_SMALL, txt, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(cx, textY, Graphics.FONT_SMALL, txt, Graphics.TEXT_JUSTIFY_CENTER);
         } else {
-            dc.setColor(0x88AA88, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, h * 75 / 100, Graphics.FONT_SMALL, "...", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(_themeHint, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, textY, Graphics.FONT_SMALL, "...", Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 
     hidden function drawAnswerScene(dc, w, h) {
         var cx = w / 2;
-        var cy = h * 30 / 100;
-        var r = w * 28 / 100;
+        var cy = h / 2 - h / 10;
+        var r = w * 26 / 100;
 
         var gc = catColor();
         var pulse = (_fc % 20);
         if (pulse > 10) { pulse = 20 - pulse; }
-        var glowAlpha = pulse;
 
         for (var ring = 2; ring > 0; ring--) {
-            var rr = r + ring * 4 + glowAlpha / 2;
-            var rc = blendColor(gc, 0x0A2A12, ring, 3);
+            var rr = r + ring * 4 + pulse / 2;
+            var rc = blendColor(gc, _themeBg1, ring, 3);
             dc.setColor(rc, Graphics.COLOR_TRANSPARENT);
             dc.drawCircle(cx, cy, rr);
         }
 
         drawBilliardBall(dc, cx, cy, r);
 
-        var ansY = h * 62 / 100;
+        var ansY = cy + r + 8;
         var fade = _ansPhase;
         if (fade > 16) { fade = 16; }
 
         var fs = Graphics.FONT_SMALL;
-        if (_answer.length() > 18) { fs = Graphics.FONT_TINY; }
-        if (_answer.length() > 26) { fs = Graphics.FONT_XTINY; }
+        if (_answer.length() > 16) { fs = Graphics.FONT_TINY; }
+        if (_answer.length() > 24) { fs = Graphics.FONT_XTINY; }
 
         if (fade >= 4) {
             var shadowC = blendColor(gc, 0x000000, 3, 4);
@@ -382,21 +437,21 @@ class Bitochi8BallView extends WatchUi.View {
         if (fade >= 2) {
             var fg = 0xFFFFFF;
             if (fade < 8) {
-                fg = blendColor(0x446644, 0xFFFFFF, fade, 8);
+                fg = blendColor(_themeHint, 0xFFFFFF, fade, 8);
             }
             dc.setColor(fg, Graphics.COLOR_TRANSPARENT);
             dc.drawText(cx, ansY, fs, _answer, Graphics.TEXT_JUSTIFY_CENTER);
         }
 
-        dc.setColor(0x557755, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(_themeHint, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, h * 88 / 100, Graphics.FONT_XTINY, "tap to ask", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function catColor() {
-        if (_answerCat == 0) { return 0x33DD66; }
-        if (_answerCat == 1) { return 0xDD3344; }
-        if (_answerCat == 2) { return 0x8855CC; }
-        return 0xDDAA22;
+        if (_answerCat == 0) { return blendColor(0x44FF88, _themeGlow, 1, 3); }
+        if (_answerCat == 1) { return blendColor(0xFF4466, _themeGlow, 1, 3); }
+        if (_answerCat == 2) { return blendColor(0xAA66FF, _themeGlow, 1, 3); }
+        return blendColor(0xFFBB44, _themeGlow, 1, 3);
     }
 
     hidden function blendColor(c1, c2, t, m) {

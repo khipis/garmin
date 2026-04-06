@@ -1,0 +1,760 @@
+using Toybox.Graphics;
+using Toybox.WatchUi;
+using Toybox.Math;
+using Toybox.Timer;
+using Toybox.Time;
+using Toybox.System;
+
+enum {
+    PS_MENU,
+    PS_JUMP,
+    PS_FREEFALL,
+    PS_CHUTE,
+    PS_LANDED,
+    PS_CRASH
+}
+
+class BitochiParachuteView extends WatchUi.View {
+
+    var accelX;
+    var accelY;
+    var accelZ;
+    var gameState;
+
+    hidden var _w;
+    hidden var _h;
+    hidden var _timer;
+    hidden var _tick;
+
+    hidden var _playerX;
+    hidden var _playerY;
+    hidden var _playerVx;
+    hidden var _playerVy;
+    hidden var _altitude;
+    hidden var _maxAlt;
+    hidden var _fallSpeed;
+    hidden var _chuteOpen;
+
+    hidden var _ringX;
+    hidden var _ringY;
+    hidden var _ringR;
+    hidden var _ringHit;
+    hidden var _ringCount;
+
+    hidden var _landX;
+    hidden var _landY;
+    hidden var _landR;
+
+    hidden var _cloudX;
+    hidden var _cloudY;
+    hidden var _cloudW;
+
+    hidden var _windX;
+    hidden var _windPhase;
+
+    hidden var _score;
+    hidden var _ringsHit;
+    hidden var _level;
+    hidden var _bestScore;
+
+    hidden var _trailX;
+    hidden var _trailY;
+    hidden var _trailLife;
+
+    hidden var _sparkX;
+    hidden var _sparkY;
+    hidden var _sparkLife;
+
+    hidden var _landDist;
+    hidden var _landGrade;
+
+    hidden var _jumpTick;
+    hidden var _crashTick;
+
+    function initialize() {
+        View.initialize();
+        Math.srand(Time.now().value());
+
+        var ds = System.getDeviceSettings();
+        _w = ds.screenWidth;
+        _h = ds.screenHeight;
+
+        accelX = 0;
+        accelY = 0;
+        accelZ = 0;
+        _tick = 0;
+        _level = 1;
+        _bestScore = 0;
+        _score = 0;
+
+        _cloudX = new [8];
+        _cloudY = new [8];
+        _cloudW = new [8];
+        for (var i = 0; i < 8; i++) {
+            _cloudX[i] = Math.rand().abs() % _w;
+            _cloudY[i] = Math.rand().abs() % _h;
+            _cloudW[i] = 12 + Math.rand().abs() % 20;
+        }
+
+        _trailX = new [16];
+        _trailY = new [16];
+        _trailLife = new [16];
+        for (var i = 0; i < 16; i++) {
+            _trailX[i] = 0; _trailY[i] = 0; _trailLife[i] = 0;
+        }
+
+        _sparkX = new [12];
+        _sparkY = new [12];
+        _sparkLife = new [12];
+        for (var i = 0; i < 12; i++) {
+            _sparkX[i] = 0; _sparkY[i] = 0; _sparkLife[i] = 0;
+        }
+
+        _ringCount = 0;
+        _ringX = new [20];
+        _ringY = new [20];
+        _ringR = new [20];
+        _ringHit = new [20];
+        for (var i = 0; i < 20; i++) {
+            _ringX[i] = 0; _ringY[i] = 0; _ringR[i] = 0; _ringHit[i] = false;
+        }
+
+        gameState = PS_MENU;
+    }
+
+    function onShow() {
+        _timer = new Timer.Timer();
+        _timer.start(method(:onTick), 45, true);
+    }
+
+    function onHide() {
+        if (_timer != null) { _timer.stop(); _timer = null; }
+    }
+
+    function onTick() as Void {
+        _tick++;
+        updateClouds();
+
+        if (gameState == PS_JUMP) {
+            _jumpTick++;
+            if (_jumpTick >= 40) {
+                gameState = PS_FREEFALL;
+            }
+        } else if (gameState == PS_FREEFALL) {
+            updateFreefall();
+        } else if (gameState == PS_CHUTE) {
+            updateChute();
+        } else if (gameState == PS_CRASH) {
+            _crashTick++;
+        }
+
+        WatchUi.requestUpdate();
+    }
+
+    hidden function updateClouds() {
+        for (var i = 0; i < 8; i++) {
+            var spd = 1 + (i % 3);
+            if (gameState == PS_FREEFALL || gameState == PS_CHUTE) {
+                _cloudY[i] = _cloudY[i] - spd - (_fallSpeed * 0.3).toNumber();
+            } else {
+                _cloudY[i] = _cloudY[i] - 1;
+            }
+            if (_cloudY[i] < -30) {
+                _cloudY[i] = _h + 10 + Math.rand().abs() % 40;
+                _cloudX[i] = Math.rand().abs() % _w;
+                _cloudW[i] = 12 + Math.rand().abs() % 20;
+            }
+        }
+    }
+
+    hidden function startLevel() {
+        _playerX = (_w / 2).toFloat();
+        _playerY = (_h * 20 / 100).toFloat();
+        _playerVx = 0.0;
+        _playerVy = 0.0;
+        _altitude = 3000.0 + _level * 500.0;
+        _maxAlt = _altitude;
+        _fallSpeed = 0.0;
+        _chuteOpen = false;
+        _ringsHit = 0;
+        _windPhase = 0.0;
+        _windX = 0.0;
+        _jumpTick = 0;
+        _crashTick = 0;
+        _landDist = 0.0;
+
+        _landX = _w / 2 + (Math.rand().abs() % 40) - 20;
+        _landY = _h * 80 / 100;
+        _landR = 22 - _level;
+        if (_landR < 10) { _landR = 10; }
+
+        _ringCount = 5 + _level * 2;
+        if (_ringCount > 20) { _ringCount = 20; }
+
+        for (var i = 0; i < _ringCount; i++) {
+            _ringX[i] = 20 + Math.rand().abs() % (_w - 40);
+            _ringY[i] = _h * 25 / 100 + (i * (_h * 55 / 100)) / _ringCount + Math.rand().abs() % 15;
+            _ringR[i] = 14 + Math.rand().abs() % 8;
+            _ringHit[i] = false;
+        }
+
+        for (var i = 0; i < 16; i++) { _trailLife[i] = 0; }
+        for (var i = 0; i < 12; i++) { _sparkLife[i] = 0; }
+
+        gameState = PS_JUMP;
+    }
+
+    hidden function updateFreefall() {
+        _fallSpeed = _fallSpeed + 0.15;
+        if (_fallSpeed > 8.0) { _fallSpeed = 8.0; }
+
+        _windPhase += 0.07;
+        _windX = Math.sin(_windPhase) * (1.0 + _level.toFloat() * 0.3);
+
+        var steerX = accelX.toFloat() / 350.0;
+        var steerY = accelY.toFloat() / 500.0;
+        if (steerX > 3.0) { steerX = 3.0; }
+        if (steerX < -3.0) { steerX = -3.0; }
+        if (steerY > 2.0) { steerY = 2.0; }
+        if (steerY < -2.0) { steerY = -2.0; }
+
+        _playerVx = _playerVx * 0.88 + steerX + _windX * 0.08;
+        _playerVy = _playerVy * 0.90 + steerY;
+
+        _playerX += _playerVx;
+        _playerY += _playerVy * 0.3;
+
+        if (_playerX < 8.0) { _playerX = 8.0; _playerVx = 0.0; }
+        if (_playerX > (_w - 8).toFloat()) { _playerX = (_w - 8).toFloat(); _playerVx = 0.0; }
+        if (_playerY < 10.0) { _playerY = 10.0; }
+        if (_playerY > (_h - 20).toFloat()) { _playerY = (_h - 20).toFloat(); }
+
+        _altitude = _altitude - _fallSpeed;
+        if (_altitude < 0.0) { _altitude = 0.0; }
+
+        checkRings();
+        updateTrail();
+        updateSparks();
+
+        if (_altitude <= 0.0) {
+            gameState = PS_CRASH;
+            _crashTick = 0;
+            _landGrade = "SPLAT!";
+            doVibe(100, 600);
+            finalScore(false);
+        }
+    }
+
+    hidden function updateChute() {
+        _fallSpeed = _fallSpeed * 0.92;
+        if (_fallSpeed < 1.2) { _fallSpeed = 1.2; }
+
+        _windPhase += 0.05;
+        _windX = Math.sin(_windPhase) * (0.8 + _level.toFloat() * 0.2);
+
+        var steerX = accelX.toFloat() / 250.0;
+        var steerY = accelY.toFloat() / 400.0;
+        if (steerX > 2.5) { steerX = 2.5; }
+        if (steerX < -2.5) { steerX = -2.5; }
+        if (steerY > 1.5) { steerY = 1.5; }
+        if (steerY < -1.5) { steerY = -1.5; }
+
+        _playerVx = _playerVx * 0.90 + steerX * 0.7 + _windX * 0.1;
+        _playerVy = _playerVy * 0.90 + steerY * 0.5;
+
+        _playerX += _playerVx;
+        _playerY += _playerVy * 0.2;
+
+        if (_playerX < 8.0) { _playerX = 8.0; _playerVx = 0.0; }
+        if (_playerX > (_w - 8).toFloat()) { _playerX = (_w - 8).toFloat(); _playerVx = 0.0; }
+        if (_playerY < 10.0) { _playerY = 10.0; }
+        if (_playerY > (_h - 20).toFloat()) { _playerY = (_h - 20).toFloat(); }
+
+        _altitude -= _fallSpeed;
+        if (_altitude < 0.0) { _altitude = 0.0; }
+
+        checkRings();
+        updateTrail();
+
+        if (_altitude <= 0.0) {
+            var dx = _playerX - _landX.toFloat();
+            var dy = _playerY - _landY.toFloat();
+            _landDist = Math.sqrt(dx * dx + dy * dy);
+
+            if (_landDist < _landR.toFloat()) {
+                _landGrade = "BULLSEYE!";
+            } else if (_landDist < _landR.toFloat() * 2.0) {
+                _landGrade = "GREAT!";
+            } else if (_landDist < _landR.toFloat() * 3.5) {
+                _landGrade = "GOOD";
+            } else {
+                _landGrade = "OFF TARGET";
+            }
+
+            gameState = PS_LANDED;
+            doVibe(50, 200);
+            finalScore(true);
+        }
+    }
+
+    hidden function checkRings() {
+        for (var i = 0; i < _ringCount; i++) {
+            if (_ringHit[i]) { continue; }
+            var altPct = _altitude / _maxAlt;
+            var ringAltPct = 1.0 - ((_ringY[i] - _h * 20 / 100).toFloat() / (_h * 60 / 100).toFloat());
+            var altDiff = (altPct - ringAltPct);
+            if (altDiff < 0.0) { altDiff = -altDiff; }
+            if (altDiff > 0.08) { continue; }
+
+            var dx = _playerX - _ringX[i].toFloat();
+            var dy = _playerY - _ringY[i].toFloat();
+            var dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < _ringR[i].toFloat()) {
+                _ringHit[i] = true;
+                _ringsHit++;
+                spawnRingSparks(_ringX[i], _ringY[i]);
+                doVibe(40, 80);
+            }
+        }
+    }
+
+    hidden function spawnRingSparks(rx, ry) {
+        for (var i = 0; i < 12; i++) {
+            if (_sparkLife[i] <= 0) {
+                _sparkX[i] = rx + (Math.rand().abs() % 12) - 6;
+                _sparkY[i] = ry + (Math.rand().abs() % 12) - 6;
+                _sparkLife[i] = 10 + Math.rand().abs() % 8;
+                if (i >= 5) { break; }
+            }
+        }
+    }
+
+    hidden function updateTrail() {
+        for (var i = 0; i < 16; i++) {
+            if (_trailLife[i] > 0) { _trailLife[i]--; }
+        }
+        if (_tick % 2 == 0) {
+            for (var i = 15; i > 0; i--) {
+                _trailX[i] = _trailX[i - 1];
+                _trailY[i] = _trailY[i - 1];
+                _trailLife[i] = _trailLife[i - 1];
+            }
+            _trailX[0] = _playerX.toNumber();
+            _trailY[0] = _playerY.toNumber();
+            _trailLife[0] = 14;
+        }
+    }
+
+    hidden function updateSparks() {
+        for (var i = 0; i < 12; i++) {
+            if (_sparkLife[i] > 0) { _sparkLife[i]--; }
+        }
+    }
+
+    hidden function finalScore(landed) {
+        var ringPts = _ringsHit * 100;
+        var landPts = 0;
+        if (landed) {
+            if (_landDist < _landR.toFloat()) { landPts = 500; }
+            else if (_landDist < _landR.toFloat() * 2.0) { landPts = 300; }
+            else if (_landDist < _landR.toFloat() * 3.5) { landPts = 150; }
+            else { landPts = 50; }
+        }
+        _score = ringPts + landPts;
+        if (_score > _bestScore) { _bestScore = _score; }
+    }
+
+    hidden function doVibe(intensity, duration) {
+        if (Toybox has :Attention) {
+            if (Toybox.Attention has :vibrate) {
+                Toybox.Attention.vibrate([new Toybox.Attention.VibeProfile(intensity, duration)]);
+            }
+        }
+    }
+
+    function doAction() {
+        if (gameState == PS_MENU) {
+            _level = 1;
+            startLevel();
+        } else if (gameState == PS_FREEFALL) {
+            _chuteOpen = true;
+            gameState = PS_CHUTE;
+            doVibe(60, 150);
+        } else if (gameState == PS_LANDED) {
+            _level++;
+            startLevel();
+        } else if (gameState == PS_CRASH) {
+            _level = 1;
+            _bestScore = _bestScore;
+            gameState = PS_MENU;
+        }
+    }
+
+    function onUpdate(dc) {
+        _w = dc.getWidth();
+        _h = dc.getHeight();
+
+        if (gameState == PS_MENU) { drawMenu(dc); return; }
+
+        drawSkyGradient(dc);
+        drawClouds(dc);
+
+        if (gameState == PS_JUMP) { drawJumpScene(dc); }
+        else if (gameState == PS_FREEFALL) { drawFreefallScene(dc); }
+        else if (gameState == PS_CHUTE) { drawChuteScene(dc); }
+        else if (gameState == PS_LANDED) { drawLandedScene(dc); }
+        else if (gameState == PS_CRASH) { drawCrashScene(dc); }
+    }
+
+    hidden function drawSkyGradient(dc) {
+        var altPct = 1.0;
+        if (gameState != PS_JUMP && _maxAlt > 0.0) {
+            altPct = _altitude / _maxAlt;
+        }
+        if (altPct > 1.0) { altPct = 1.0; }
+        if (altPct < 0.0) { altPct = 0.0; }
+
+        var topR = (0x08 + (1.0 - altPct) * 0x30).toNumber();
+        var topG = (0x12 + (1.0 - altPct) * 0x50).toNumber();
+        var topB = (0x40 + (1.0 - altPct) * 0x50).toNumber();
+        if (topR > 0xFF) { topR = 0xFF; }
+        if (topG > 0xFF) { topG = 0xFF; }
+        if (topB > 0xFF) { topB = 0xFF; }
+        var topC = (topR << 16) | (topG << 8) | topB;
+        dc.setColor(topC, topC);
+        dc.clear();
+
+        if (altPct < 0.3) {
+            var groundPct = (0.3 - altPct) / 0.3;
+            var gH = (groundPct * _h * 40 / 100).toNumber();
+            dc.setColor(0x336633, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(0, _h - gH, _w, gH);
+            dc.setColor(0x448844, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(0, _h - gH, _w, 3);
+
+            if (groundPct > 0.2) {
+                dc.setColor(0xFF4422, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(_landX, _landY, _landR + 4);
+                dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(_landX, _landY, _landR);
+                dc.setColor(0xFF4422, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(_landX, _landY, _landR * 2 / 3);
+                dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(_landX, _landY, _landR / 3);
+            }
+        }
+    }
+
+    hidden function drawClouds(dc) {
+        for (var i = 0; i < 8; i++) {
+            if (_cloudY[i] < -20 || _cloudY[i] > _h + 20) { continue; }
+            var cw = _cloudW[i];
+            dc.setColor(0xDDEEFF, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(_cloudX[i], _cloudY[i], cw / 2);
+            dc.fillCircle(_cloudX[i] - cw / 3, _cloudY[i] + 2, cw / 3);
+            dc.fillCircle(_cloudX[i] + cw / 3, _cloudY[i] + 1, cw * 2 / 5);
+            dc.setColor(0xCCDDEE, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(_cloudX[i], _cloudY[i] + cw / 4, cw / 3);
+        }
+    }
+
+    hidden function drawRings(dc) {
+        var altPct = _altitude / _maxAlt;
+
+        for (var i = 0; i < _ringCount; i++) {
+            var ringAltPct = 1.0 - ((_ringY[i] - _h * 20 / 100).toFloat() / (_h * 60 / 100).toFloat());
+            var altDiff = (altPct - ringAltPct);
+            if (altDiff < 0.0) { altDiff = -altDiff; }
+            if (altDiff > 0.25) { continue; }
+
+            var proximity = 1.0 - altDiff / 0.25;
+            var rx = _ringX[i];
+            var ry = _ringY[i];
+            var rr = _ringR[i];
+
+            if (_ringHit[i]) {
+                dc.setColor(0x44FF44, Graphics.COLOR_TRANSPARENT);
+                dc.drawCircle(rx, ry, rr);
+                dc.drawCircle(rx, ry, rr + 1);
+            } else {
+                var pulse = (_tick % 16 < 8) ? 2 : 0;
+
+                if (altDiff < 0.08) {
+                    dc.setColor(0xFFFF44, Graphics.COLOR_TRANSPARENT);
+                    dc.drawCircle(rx, ry, rr + 3 + pulse);
+                    dc.drawCircle(rx, ry, rr + 4 + pulse);
+                }
+
+                var ringC = 0xFF6622;
+                if (proximity > 0.7) { ringC = 0xFFAA22; }
+                dc.setColor(ringC, Graphics.COLOR_TRANSPARENT);
+                dc.drawCircle(rx, ry, rr);
+                dc.drawCircle(rx, ry, rr + 1);
+
+                dc.setColor(0xFFDD66, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(rx, ry - rr + 2, 2);
+                dc.fillCircle(rx, ry + rr - 2, 2);
+            }
+        }
+    }
+
+    hidden function drawTrail(dc) {
+        for (var i = 0; i < 16; i++) {
+            if (_trailLife[i] <= 0) { continue; }
+            var life = _trailLife[i];
+            var c = 0xAABBDD;
+            if (life > 10) { c = 0xDDEEFF; }
+            else if (life > 5) { c = 0x8899BB; }
+            else { c = 0x556688; }
+            dc.setColor(c, Graphics.COLOR_TRANSPARENT);
+            var sz = (life > 8) ? 2 : 1;
+            dc.fillCircle(_trailX[i], _trailY[i], sz);
+        }
+    }
+
+    hidden function drawSparks(dc) {
+        for (var i = 0; i < 12; i++) {
+            if (_sparkLife[i] <= 0) { continue; }
+            var c = 0xFFFF44;
+            if (_sparkLife[i] < 5) { c = 0xFF8822; }
+            dc.setColor(c, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(_sparkX[i], _sparkY[i], 2, 2);
+        }
+    }
+
+    hidden function drawPlayer(dc, px, py, chuteOpen) {
+        if (chuteOpen) {
+            dc.setColor(0xFF4444, Graphics.COLOR_TRANSPARENT);
+            dc.fillPolygon([[px, py - 22], [px - 18, py - 8], [px + 18, py - 8]]);
+            dc.setColor(0xFFAA44, Graphics.COLOR_TRANSPARENT);
+            dc.fillPolygon([[px, py - 20], [px - 14, py - 9], [px + 14, py - 9]]);
+            dc.setColor(0xFFDD88, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(px - 6, py - 12, 2, 1);
+            dc.fillRectangle(px + 4, py - 12, 2, 1);
+
+            dc.setColor(0x555555, Graphics.COLOR_TRANSPARENT);
+            dc.drawLine(px - 14, py - 9, px - 3, py - 2);
+            dc.drawLine(px + 14, py - 9, px + 3, py - 2);
+            dc.drawLine(px, py - 20, px, py - 4);
+        }
+
+        dc.setColor(0xFFCC88, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(px, py - 2, 3);
+
+        dc.setColor(0x3355CC, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(px - 3, py + 1, 6, 6);
+
+        dc.setColor(0x222288, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(px - 2, py + 7, 2, 4);
+        dc.fillRectangle(px, py + 7, 2, 4);
+
+        var armWave = (_tick % 8 < 4) ? 1 : -1;
+        if (chuteOpen) { armWave = 0; }
+        dc.setColor(0xFFCC88, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(px - 5, py + 1 + armWave, 2, 3);
+        dc.fillRectangle(px + 3, py + 1 - armWave, 2, 3);
+
+        dc.setColor(0x111111, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(px - 2, py - 3, 1, 1);
+        dc.fillRectangle(px + 1, py - 3, 1, 1);
+
+        if (!chuteOpen) {
+            var sway = (_tick % 6 < 3) ? 1 : -1;
+            dc.setColor(0x555555, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(px + sway, py + 11, 1, 2);
+        }
+    }
+
+    hidden function drawHUD(dc) {
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, 4, Graphics.FONT_XTINY, _altitude.toNumber() + "m", Graphics.TEXT_JUSTIFY_CENTER);
+
+        var altBarW = _w * 8 / 100;
+        var altBarH = _h * 50 / 100;
+        var altBarX = _w - altBarW - 4;
+        var altBarY = (_h - altBarH) / 2;
+        dc.setColor(0x222244, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(altBarX, altBarY, altBarW, altBarH);
+        var altPct = _altitude / _maxAlt;
+        if (altPct > 1.0) { altPct = 1.0; }
+        var fillH = (altBarH * altPct).toNumber();
+        dc.setColor(altPct > 0.3 ? 0x44AAFF : (altPct > 0.1 ? 0xFFCC22 : 0xFF4444), Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(altBarX, altBarY + altBarH - fillH, altBarW, fillH);
+
+        dc.setColor(0xFFFF44, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(4, 4, Graphics.FONT_XTINY, _ringsHit + "/" + _ringCount, Graphics.TEXT_JUSTIFY_LEFT);
+
+        dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(4, 16, Graphics.FONT_XTINY, "L" + _level, Graphics.TEXT_JUSTIFY_LEFT);
+
+        if (_altitude < 600.0 && !_chuteOpen) {
+            var warn = (_tick % 8 < 4) ? 0xFF0000 : 0xFF8800;
+            dc.setColor(warn, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2, _h * 85 / 100, Graphics.FONT_SMALL, "DEPLOY!", Graphics.TEXT_JUSTIFY_CENTER);
+        }
+
+        if (_chuteOpen) {
+            dc.setColor(0x44FF44, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2, _h * 90 / 100, Graphics.FONT_XTINY, "CHUTE OPEN", Graphics.TEXT_JUSTIFY_CENTER);
+        } else {
+            var speedPct = _fallSpeed / 8.0;
+            if (speedPct > 1.0) { speedPct = 1.0; }
+            var spdBarW = _w * 40 / 100;
+            var spdBarX = (_w - spdBarW) / 2;
+            var spdBarY = _h * 92 / 100;
+            dc.setColor(0x222244, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(spdBarX, spdBarY, spdBarW, 4);
+            var spdC = speedPct > 0.7 ? 0xFF4444 : (speedPct > 0.4 ? 0xFFCC22 : 0x44FF44);
+            dc.setColor(spdC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(spdBarX, spdBarY, (spdBarW * speedPct).toNumber(), 4);
+            dc.setColor(0x888888, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2, spdBarY - 10, Graphics.FONT_XTINY, "SPEED", Graphics.TEXT_JUSTIFY_CENTER);
+        }
+
+        var wx = _windX;
+        if (wx < 0.0) { wx = -wx; }
+        if (wx > 0.3) {
+            var windDir = _windX > 0.0 ? ">>>" : "<<<";
+            dc.setColor(0x88CCFF, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2, 16, Graphics.FONT_XTINY, windDir, Graphics.TEXT_JUSTIFY_CENTER);
+        }
+    }
+
+    hidden function drawMenu(dc) {
+        dc.setColor(0x081830, 0x081830);
+        dc.clear();
+
+        drawClouds(dc);
+
+        var pulse = (_tick % 30 < 15) ? 0x44AAFF : 0x2288DD;
+        dc.setColor(pulse, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 12 / 100, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 26 / 100, Graphics.FONT_MEDIUM, "PARACHUTE", Graphics.TEXT_JUSTIFY_CENTER);
+
+        drawPlayer(dc, _w / 2, _h * 50 / 100, true);
+
+        dc.setColor(0x88AACC, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 62 / 100, Graphics.FONT_XTINY, "Fly through rings!", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 69 / 100, Graphics.FONT_XTINY, "Tilt to steer", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 76 / 100, Graphics.FONT_XTINY, "Tap to deploy chute", Graphics.TEXT_JUSTIFY_CENTER);
+
+        dc.setColor(0x888888, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 86 / 100, Graphics.FONT_XTINY, "BEST " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x666666, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 93 / 100, Graphics.FONT_XTINY, "Press to jump", Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    hidden function drawJumpScene(dc) {
+        var progress = _jumpTick.toFloat() / 40.0;
+        var py = (_h * 10 / 100 + progress * _h * 15 / 100).toNumber();
+
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(_w / 2 - 20, _h * 5 / 100, 40, 6);
+        dc.setColor(0xDDDDDD, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(_w / 2 - 18, _h * 5 / 100 + 6, 36, 3);
+
+        var shake = (_jumpTick % 4 < 2) ? 2 : -2;
+        drawPlayer(dc, _w / 2 + shake, py, false);
+
+        var flash = (_jumpTick % 8 < 4) ? 0xFFFF44 : 0xFFAA22;
+        dc.setColor(flash, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 50 / 100, Graphics.FONT_MEDIUM, "JUMP!", Graphics.TEXT_JUSTIFY_CENTER);
+
+        dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 65 / 100, Graphics.FONT_XTINY, "ALT " + _altitude.toNumber() + "m", Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    hidden function drawFreefallScene(dc) {
+        drawRings(dc);
+        drawTrail(dc);
+        drawSparks(dc);
+
+        var sway = (Math.sin(_tick.toFloat() / 3.0) * 2.0).toNumber();
+        drawPlayer(dc, _playerX.toNumber() + sway, _playerY.toNumber(), false);
+
+        if (_fallSpeed > 5.0) {
+            var lineCount = ((_fallSpeed - 5.0) * 3.0).toNumber();
+            if (lineCount > 8) { lineCount = 8; }
+            dc.setColor(0xAABBDD, Graphics.COLOR_TRANSPARENT);
+            for (var i = 0; i < lineCount; i++) {
+                var lx = _playerX.toNumber() - 15 + (i * 31 / lineCount);
+                var ly = _playerY.toNumber() - 10 - Math.rand().abs() % 8;
+                dc.drawLine(lx, ly, lx, ly - 6 - (i % 4) * 2);
+            }
+        }
+
+        drawHUD(dc);
+    }
+
+    hidden function drawChuteScene(dc) {
+        drawRings(dc);
+        drawTrail(dc);
+        drawSparks(dc);
+
+        drawPlayer(dc, _playerX.toNumber(), _playerY.toNumber(), true);
+
+        drawHUD(dc);
+    }
+
+    hidden function drawLandedScene(dc) {
+        dc.setColor(0xFF4422, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(_landX, _landY, _landR + 4);
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(_landX, _landY, _landR);
+        dc.setColor(0xFF4422, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(_landX, _landY, _landR * 2 / 3);
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(_landX, _landY, _landR / 3);
+
+        drawPlayer(dc, _playerX.toNumber(), _playerY.toNumber(), true);
+
+        var gradeC = 0x44FF44;
+        if (_landDist > _landR.toFloat() * 2.0) { gradeC = 0xFFCC22; }
+        if (_landDist > _landR.toFloat() * 3.5) { gradeC = 0xFF6644; }
+        dc.setColor(gradeC, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 15 / 100, Graphics.FONT_MEDIUM, _landGrade, Graphics.TEXT_JUSTIFY_CENTER);
+
+        dc.setColor(0xFFFF44, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 32 / 100, Graphics.FONT_SMALL, "RINGS " + _ringsHit + "/" + _ringCount, Graphics.TEXT_JUSTIFY_CENTER);
+
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 45 / 100, Graphics.FONT_MEDIUM, _score + " PTS", Graphics.TEXT_JUSTIFY_CENTER);
+
+        dc.setColor(0x888888, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 60 / 100, Graphics.FONT_XTINY, "BEST " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER);
+
+        dc.setColor(0x666666, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 75 / 100, Graphics.FONT_XTINY, "Tap for level " + (_level + 1), Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    hidden function drawCrashScene(dc) {
+        var flashBg = (_crashTick % 4 < 2) ? 0x220000 : 0x110000;
+        dc.setColor(flashBg, flashBg);
+        dc.clear();
+
+        dc.setColor(0xFF0000, Graphics.COLOR_TRANSPARENT);
+        for (var i = 0; i < 8; i++) {
+            var sx = _playerX.toNumber() + (Math.rand().abs() % 40) - 20;
+            var sy = _playerY.toNumber() + (Math.rand().abs() % 30) - 15;
+            dc.fillRectangle(sx, sy, 3 + Math.rand().abs() % 4, 2 + Math.rand().abs() % 3);
+        }
+
+        var flash = (_crashTick % 6 < 3) ? 0xFF2222 : 0xCC0000;
+        dc.setColor(flash, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 25 / 100, Graphics.FONT_MEDIUM, "SPLAT!", Graphics.TEXT_JUSTIFY_CENTER);
+
+        dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 42 / 100, Graphics.FONT_SMALL, "No chute!", Graphics.TEXT_JUSTIFY_CENTER);
+
+        dc.setColor(0xFFFF44, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 55 / 100, Graphics.FONT_XTINY, "RINGS " + _ringsHit + "/" + _ringCount, Graphics.TEXT_JUSTIFY_CENTER);
+
+        dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 65 / 100, Graphics.FONT_XTINY, "SCORE " + _score, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 73 / 100, Graphics.FONT_XTINY, "BEST " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER);
+
+        dc.setColor(0x666666, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 86 / 100, Graphics.FONT_XTINY, "Press to retry", Graphics.TEXT_JUSTIFY_CENTER);
+    }
+}

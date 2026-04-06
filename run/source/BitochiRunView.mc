@@ -128,8 +128,8 @@ class BitochiRunView extends WatchUi.View {
         _cx = _w / 2;
         _cy = _h / 2;
 
-        _monsterNames = ["Vexor", "Undead", "Dzikko", "Rocky", "Batsy", "Emilka", "Polacco"];
-        _monsterColors = [0xFF2222, 0x668866, 0x885522, 0x888888, 0x442266, 0xFF88CC, 0xAA8866];
+        _monsterNames = ["SKINWALKER", "THE HIVE", "MEATGRINDER", "CRAWLMOUTH", "EYEFATHER", "BONEWIDOW", "GUTSPILL"];
+        _monsterColors = [0xCC1111, 0x66AA22, 0x992222, 0x886644, 0xAA33FF, 0xCCBB88, 0x881133];
 
         _particles = new [40];
         for (var i = 0; i < 40; i++) {
@@ -140,13 +140,13 @@ class BitochiRunView extends WatchUi.View {
             ];
         }
 
-        _dripX = new [12];
-        _dripY = new [12];
-        _dripSpd = new [12];
-        for (var di = 0; di < 12; di++) {
-            _dripX[di] = (di % 2 == 0) ? (Math.rand().abs() % (_w / 6)) : (_w - 1 - Math.rand().abs() % (_w / 6));
-            _dripY[di] = Math.rand().abs() % _h;
-            _dripSpd[di] = 2 + Math.rand().abs() % 4;
+        _dripX = new [24];
+        _dripY = new [24];
+        _dripSpd = new [24];
+        for (var di = 0; di < 24; di++) {
+            _dripX[di] = Math.rand().abs() % _w;
+            _dripY[di] = -(Math.rand().abs() % _h);
+            _dripSpd[di] = 1 + Math.rand().abs() % 5;
         }
 
         _footprintsX = new [10];
@@ -168,13 +168,13 @@ class BitochiRunView extends WatchUi.View {
         }
 
         _betweenLevelLines = [
-            "You hear something...",
-            "It's getting closer",
-            "Don't look back",
-            "The walls breathe",
-            "Not alone anymore",
-            "So cute... wait—",
-            "Slow steps... always"
+            "Something wears skin",
+            "Walls are pulsating",
+            "It eats from inside",
+            "A mouth in the dark",
+            "Eyes. Everywhere.",
+            "Bones snap behind you",
+            "The floor is warm..."
         ];
 
         _tick = 0;
@@ -268,16 +268,39 @@ class BitochiRunView extends WatchUi.View {
     }
 
     hidden function updateDrips() {
-        for (var i = 0; i < 12; i++) {
+        for (var i = 0; i < 24; i++) {
             _dripY[i] = _dripY[i] + _dripSpd[i];
-            if (_dripY[i] > _h) {
-                _dripY[i] = 0;
-                if (i % 2 == 0) {
-                    _dripX[i] = Math.rand().abs() % (_w / 6);
-                } else {
-                    _dripX[i] = _w - 1 - Math.rand().abs() % (_w / 6);
-                }
+            if (_dripY[i] > _h + 10) {
+                _dripY[i] = -(Math.rand().abs() % 40);
+                _dripX[i] = Math.rand().abs() % _w;
+                _dripSpd[i] = 1 + Math.rand().abs() % 5;
             }
+        }
+    }
+
+    hidden function drawBlood(dc, w, h, intensity) {
+        var topDrips = 8 + intensity * 2;
+        if (topDrips > 24) { topDrips = 24; }
+        for (var i = 0; i < topDrips; i++) {
+            if (_dripY[i] < 0) { continue; }
+            var dw = 2 + (i % 3);
+            var dh = 4 + _dripSpd[i] * 2 + intensity;
+            var r = 0x660000 + (_dripSpd[i] * 0x110000);
+            if (r > 0xBB0000) { r = 0xBB0000; }
+            dc.setColor(r, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(_dripX[i], _dripY[i], dw, dh);
+            dc.setColor(0xFF0000, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(_dripX[i], _dripY[i] + dh - 2, dw, 3);
+            if (i % 4 == 0) {
+                dc.fillCircle(_dripX[i] + dw / 2, _dripY[i] + dh, dw);
+            }
+        }
+
+        dc.setColor(0x330000, Graphics.COLOR_TRANSPARENT);
+        for (var p = 0; p < 6 + intensity; p++) {
+            var px = ((_tick * 7 + p * 47) % w);
+            var py = h - 1 - (p % 4);
+            dc.fillRectangle(px, py, 3 + p % 5, 2 + p % 3);
         }
     }
 
@@ -840,45 +863,49 @@ class BitochiRunView extends WatchUi.View {
     }
 
     hidden function drawMenu(dc, w, h) {
-        drawDust(dc, w, h, 0x111122);
+        drawDust(dc, w, h, 0x110008);
         drawPulsingDarkness(dc, w, h, 4);
+        drawBlood(dc, w, h, 2);
 
-        var pulse = (_tick % 40 < 20) ? 0xFF2222 : 0xCC1111;
+        var pulse = (_tick % 40 < 20) ? 0xFF0000 : 0xAA0000;
         dc.setColor(pulse, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w / 2, h * 15 / 100, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w / 2, h * 30 / 100, Graphics.FONT_MEDIUM, "RUN", Graphics.TEXT_JUSTIFY_CENTER);
 
-        dc.setColor(0x443344, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 48 / 100, Graphics.FONT_XTINY, "They are coming.", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x664444, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w / 2, h * 48 / 100, Graphics.FONT_XTINY, "They hunger.", Graphics.TEXT_JUSTIFY_CENTER);
         dc.drawText(w / 2, h * 56 / 100, Graphics.FONT_XTINY, "Find the exit.", Graphics.TEXT_JUSTIFY_CENTER);
         dc.drawText(w / 2, h * 64 / 100, Graphics.FONT_XTINY, "Shake to run. UP/DOWN dodge.", Graphics.TEXT_JUSTIFY_CENTER);
 
-        drawMonsterEyes(dc, w / 2, h * 82 / 100, 0xFF2222, false);
+        drawMonsterEyes(dc, w / 2, h * 78 / 100, 0xFF0000, true);
 
+        dc.setColor(0x888888, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w / 2, h * 88 / 100, Graphics.FONT_XTINY, "HI " + _highScore, Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x666666, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 90 / 100, Graphics.FONT_XTINY, "HI " + _highScore, Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(w / 2, h * 95 / 100, Graphics.FONT_XTINY, "Press to start", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 94 / 100, Graphics.FONT_XTINY, "Press to start", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawIntro(dc, w, h) {
-        drawDust(dc, w, h, 0x0A0A15);
+        drawDust(dc, w, h, 0x0A0008);
         drawPulsingDarkness(dc, w, h, 2);
+        drawBlood(dc, w, h, _level);
 
-        dc.setColor(0xFF2222, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 20 / 100, Graphics.FONT_SMALL, "LEVEL " + _level, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0xFF0000, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w / 2, h * 18 / 100, Graphics.FONT_SMALL, "LEVEL " + _level, Graphics.TEXT_JUSTIFY_CENTER);
 
-        dc.setColor(0x665555, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 30 / 100, Graphics.FONT_XTINY, _introMsg, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x776655, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w / 2, h * 28 / 100, Graphics.FONT_XTINY, _introMsg, Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(_monsterColors[_monsterIdx], Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 44 / 100, Graphics.FONT_MEDIUM, _monsterNames[_monsterIdx], Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 42 / 100, Graphics.FONT_MEDIUM, _monsterNames[_monsterIdx], Graphics.TEXT_JUSTIFY_CENTER);
 
-        dc.setColor(0x554444, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 60 / 100, Graphics.FONT_XTINY, "is hunting you...", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x664444, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w / 2, h * 58 / 100, Graphics.FONT_XTINY, "hungers for you...", Graphics.TEXT_JUSTIFY_CENTER);
 
-        if (_introTick > 30) {
-            drawMonsterEyes(dc, w / 2, h * 78 / 100, _monsterColors[_monsterIdx], true);
+        if (_introTick > 20) {
+            drawMonsterSprite(dc, w / 2, h * 74 / 100, 16 + _introTick / 4);
+            drawMonsterEyes(dc, w / 2, h * 70 / 100, _monsterColors[_monsterIdx], true);
         }
     }
 
@@ -887,6 +914,8 @@ class BitochiRunView extends WatchUi.View {
         drawDust(dc, w, h, 0x0A0A12);
         drawPulsingDarkness(dc, w, h, 6);
         drawWallScratches(dc, w, h);
+        var scanUrgency = _scanPhaseTicks * 4 / _scanMaxTicks;
+        drawBlood(dc, w, h, scanUrgency);
 
         var flicker = (_tick % 7 < 5) ? 1 : 0;
         var dim = 0;
@@ -1052,11 +1081,7 @@ class BitochiRunView extends WatchUi.View {
 
         drawPulsingDarkness(dc, w, h, 4 + (dangerLevel * 10.0).toNumber());
 
-        var dripC;
-        for (dripC = 0; dripC < 12; dripC++) {
-            dc.setColor(0x1A1020, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(_dripX[dripC], _dripY[dripC], 2, 4);
-        }
+        drawBlood(dc, w, h, (dangerLevel * 6.0).toNumber());
 
         var flick = (_tick % 5 < 3) ? 1 : 0;
         if (Math.rand().abs() % 8 == 0) { flick = 1 - flick; }
@@ -1217,69 +1242,168 @@ class BitochiRunView extends WatchUi.View {
     }
 
     hidden function drawMonsterSprite(dc, x, y, sz) {
-        dc.setColor(_monsterColors[_monsterIdx], Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(x, y, sz);
-        dc.setColor(0x0A0508, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(x, y, sz - 2);
+        var mc = _monsterColors[_monsterIdx];
+        var mi = _monsterIdx;
+        var wobble = ((_tick % 6) < 3) ? 1 : -1;
 
-        dc.setColor(_monsterColors[_monsterIdx], Graphics.COLOR_TRANSPARENT);
-        var toothSz = sz / 4;
-        if (toothSz < 2) { toothSz = 2; }
-        dc.fillRectangle(x - sz / 2, y + sz / 4, toothSz, toothSz + 1);
-        dc.fillRectangle(x - toothSz / 2, y + sz / 3, toothSz, toothSz + 1);
-        dc.fillRectangle(x + sz / 4, y + sz / 4, toothSz, toothSz + 1);
+        dc.setColor(0x220000, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(x, y + sz / 2, sz * 3 / 4);
 
-        dc.setColor(0xCCCCCC, Graphics.COLOR_TRANSPARENT);
-        var claw = sz / 3;
-        if (claw < 3) { claw = 3; }
-        dc.drawLine(x - sz, y, x - sz + claw, y + claw);
-        dc.drawLine(x + sz, y, x + sz - claw, y + claw);
-        dc.fillRectangle(x - sz - 1, y - 1, 3, 3);
-        dc.fillRectangle(x + sz - 2, y - 1, 3, 3);
+        dc.setColor(mc, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(x + wobble, y, sz);
+
+        dc.setColor(0x0A0205, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(x + wobble, y, sz - 2);
+
+        dc.setColor(mc, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(x + wobble, y - sz / 4, sz * 6 / 10);
+
+        var ts = sz / 4;
+        if (ts < 2) { ts = 2; }
+        dc.setColor(0xDDDDCC, Graphics.COLOR_TRANSPARENT);
+        var mouthY = y + sz / 3;
+        dc.fillRectangle(x - sz / 2, mouthY, ts, ts + 2);
+        dc.fillRectangle(x - ts, mouthY + 1, ts, ts + 2);
+        dc.fillRectangle(x + ts / 2, mouthY, ts, ts + 3);
+        dc.fillRectangle(x + sz / 3, mouthY + 1, ts, ts + 1);
+        if (sz > 12) {
+            dc.fillRectangle(x - 1, mouthY, ts, ts + 4);
+        }
+
+        dc.setColor(0x880000, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(x - sz / 3, mouthY + ts, sz * 2 / 3, 2);
+
+        var eyeOff = sz / 3;
+        var eyeSz = sz / 4;
+        if (eyeSz < 2) { eyeSz = 2; }
+        var pupilSz = eyeSz / 2;
+        if (pupilSz < 1) { pupilSz = 1; }
+
+        dc.setColor(0xFFFF33, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(x - eyeOff + wobble, y - sz / 5, eyeSz);
+        dc.fillCircle(x + eyeOff + wobble, y - sz / 5, eyeSz);
+        dc.setColor(0xFF0000, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(x - eyeOff + wobble, y - sz / 5, pupilSz);
+        dc.fillCircle(x + eyeOff + wobble, y - sz / 5, pupilSz);
+
+        if (mi == 4 || mi == 1) {
+            dc.setColor(0xFFFF33, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(x + wobble, y - sz / 2, eyeSz - 1);
+            dc.setColor(0xFF0000, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(x + wobble - 1, y - sz / 2 - 1, 2, 2);
+            if (mi == 4) {
+                dc.setColor(0xFFFF33, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(x - sz / 2 + wobble, y, eyeSz - 1);
+                dc.fillCircle(x + sz / 2 + wobble, y, eyeSz - 1);
+            }
+        }
+
+        dc.setColor(0xCCCCBB, Graphics.COLOR_TRANSPARENT);
+        var cl = sz / 2;
+        if (cl < 3) { cl = 3; }
+        dc.setPenWidth(2);
+        dc.drawLine(x - sz - 2, y - wobble * 2, x - sz + cl, y + cl / 2);
+        dc.drawLine(x + sz + 2, y + wobble * 2, x + sz - cl, y + cl / 2);
+        dc.drawLine(x - sz - 4, y + 4, x - sz + cl - 2, y + cl);
+        dc.drawLine(x + sz + 4, y + 4, x + sz - cl + 2, y + cl);
+        dc.setPenWidth(1);
+
+        dc.setColor(mc, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(x - sz - 2, y - 2, 4, 4);
+        dc.fillRectangle(x + sz - 1, y - 2, 4, 4);
+
+        if (mi == 0 || mi == 2 || mi == 6) {
+            var hornH = sz / 2;
+            if (hornH < 3) { hornH = 3; }
+            dc.setColor(0xAAAA88, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(x - sz / 3 + wobble, y - sz - hornH, 3, hornH);
+            dc.fillRectangle(x + sz / 3 + wobble - 2, y - sz - hornH + 2, 3, hornH - 2);
+        }
+
+        if (mi == 3 || mi == 5) {
+            dc.setColor(mc, Graphics.COLOR_TRANSPARENT);
+            var tOff = sz + 3;
+            var tLen = sz / 2 + 4;
+            var tWob = (_tick % 8) - 4;
+            dc.setPenWidth(2);
+            dc.drawLine(x, y + sz / 2, x + tWob, y + sz / 2 + tLen);
+            dc.drawLine(x - sz / 2, y + sz / 3, x - sz / 2 + tWob, y + sz / 3 + tLen - 2);
+            dc.drawLine(x + sz / 2, y + sz / 3, x + sz / 2 - tWob, y + sz / 3 + tLen - 2);
+            dc.setPenWidth(1);
+        }
+
+        dc.setColor(0x880000, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(x - 1, y + sz - 1, 3, sz / 3 + 2);
+        if (sz > 14) {
+            dc.fillRectangle(x + sz / 4, y + sz - 2, 2, sz / 4);
+            dc.fillRectangle(x - sz / 4, y + sz, 2, sz / 4);
+        }
     }
 
     hidden function drawMonsterEyes(dc, x, y, color, trailGlow) {
-        var blink = (_tick % 50 < 3);
-        if (!blink) {
-            dc.setColor(color, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(x - 6, y, 3);
-            dc.fillCircle(x + 6, y, 3);
-            dc.setColor(0xFFFF44, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(x - 6, y, 2);
-            dc.fillCircle(x + 6, y, 2);
-            dc.setColor(0xFF2200, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(x - 6, y, 2, 2);
-            dc.fillRectangle(x + 5, y, 2, 2);
-            if (trailGlow) {
-                dc.setColor(0x55AA33, Graphics.COLOR_TRANSPARENT);
-                dc.drawCircle(x - 6, y, 5);
-                dc.drawCircle(x + 6, y, 5);
-            }
+        var blink = (_tick % 60 < 2);
+        if (blink) { return; }
+
+        var flicker = (_tick % 7 < 5) ? 0 : 2;
+        dc.setColor(color, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(x - 7 + flicker, y, 4);
+        dc.fillCircle(x + 7 - flicker, y, 4);
+
+        dc.setColor(0xFFFF22, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(x - 7 + flicker, y, 3);
+        dc.fillCircle(x + 7 - flicker, y, 3);
+
+        dc.setColor(0xFF0000, Graphics.COLOR_TRANSPARENT);
+        var pup = (_tick % 20 < 10) ? 0 : 1;
+        dc.fillRectangle(x - 7 + flicker - 1 + pup, y - 1, 2, 3);
+        dc.fillRectangle(x + 7 - flicker - 1 - pup, y - 1, 2, 3);
+
+        if (trailGlow) {
+            var gc = (_tick % 10 < 5) ? 0x440000 : 0x660000;
+            dc.setColor(gc, Graphics.COLOR_TRANSPARENT);
+            dc.drawCircle(x - 7 + flicker, y, 6);
+            dc.drawCircle(x + 7 - flicker, y, 6);
+            dc.drawCircle(x - 7 + flicker, y, 7);
+            dc.drawCircle(x + 7 - flicker, y, 7);
         }
     }
 
     hidden function drawCaughtScene(dc, w, h) {
-        var flashBg = (_introTick % 4 < 2) ? 0x220000 : 0x110000;
+        var flashBg = (_introTick % 4 < 2) ? 0x330000 : 0x1A0000;
         dc.setColor(flashBg, flashBg);
         dc.clear();
-        drawDust(dc, w, h, 0x1A0000);
+        drawDust(dc, w, h, 0x220000);
 
-        drawMonsterSprite(dc, w / 2, h * 35 / 100, 25);
-        drawMonsterEyes(dc, w / 2, h * 32 / 100, _monsterColors[_monsterIdx], true);
+        drawBlood(dc, w, h, 10);
 
-        dc.setColor(0xFF2222, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 55 / 100, Graphics.FONT_MEDIUM, "CAUGHT!", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x550000, Graphics.COLOR_TRANSPARENT);
+        var bTop = h - (_introTick * 3);
+        if (bTop < h / 2) { bTop = h / 2; }
+        dc.fillRectangle(0, bTop, w, h - bTop);
+        dc.setColor(0x880000, Graphics.COLOR_TRANSPARENT);
+        for (var bp = 0; bp < 12; bp++) {
+            var bx = (bp * 23 + _tick * 3) % w;
+            dc.fillCircle(bx, bTop - 1, 2 + bp % 3);
+        }
+
+        var caughtMsgs = ["DEVOURED", "CONSUMED", "SHREDDED", "TORN APART"];
+        var cmi = _monsterIdx % caughtMsgs.size();
+
+        drawMonsterSprite(dc, w / 2, h * 30 / 100, 30);
+        drawMonsterEyes(dc, w / 2, h * 26 / 100, _monsterColors[_monsterIdx], true);
+
+        var flashC = (_introTick % 6 < 3) ? 0xFF0000 : 0xCC0000;
+        dc.setColor(flashC, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w / 2, h * 50 / 100, Graphics.FONT_MEDIUM, caughtMsgs[cmi], Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(_monsterColors[_monsterIdx], Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 68 / 100, Graphics.FONT_SMALL, _monsterNames[_monsterIdx], Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0x886666, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 78 / 100, Graphics.FONT_XTINY, "got you.", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 63 / 100, Graphics.FONT_SMALL, _monsterNames[_monsterIdx], Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 84 / 100, Graphics.FONT_XTINY, "SCORE " + _sessionScore, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 76 / 100, Graphics.FONT_XTINY, "SCORE " + _sessionScore, Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0x666666, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 92 / 100, Graphics.FONT_XTINY, "Press to retry", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 86 / 100, Graphics.FONT_XTINY, "Press to retry", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawEscapeScene(dc, w, h) {
