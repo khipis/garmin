@@ -398,8 +398,10 @@ class Pet {
         checkDeath();
 
         var actionClear = debugMode ? 2 : 3;
+        var napClear = debugMode ? 5 : 60;
         var eventClear = debugMode ? 2 : 4;
-        if (action != ACT_NONE && now - _actionTime > actionClear) { action = ACT_NONE; }
+        if (action == ACT_SLEEPING && now - _actionTime > napClear) { action = ACT_NONE; }
+        else if (action != ACT_NONE && action != ACT_SLEEPING && now - _actionTime > actionClear) { action = ACT_NONE; }
         if (eventText.length() > 0 && now - _eventTime > eventClear) { eventText = ""; _eventTime = now; }
         if (eventText.length() == 0) {
             _thoughtAcc += ge;
