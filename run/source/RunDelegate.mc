@@ -63,13 +63,21 @@ class RunDelegate extends WatchUi.BehaviorDelegate {
     }
 
     function onPreviousPage() {
-        _view.doAction();
+        if (_view.inRunPhase()) {
+            _view.nudgeDodge(-1);
+        } else {
+            _view.doAction();
+        }
         WatchUi.requestUpdate();
         return true;
     }
 
     function onNextPage() {
-        _view.doAction();
+        if (_view.inRunPhase()) {
+            _view.nudgeDodge(1);
+        } else {
+            _view.doAction();
+        }
         WatchUi.requestUpdate();
         return true;
     }

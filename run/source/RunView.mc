@@ -4,6 +4,8 @@ using Toybox.Math;
 using Toybox.Timer;
 using Toybox.Time;
 using Toybox.System;
+using Toybox.Application as App;
+using Toybox.Application.Storage as BrStore;
 
 enum {
     RS_MENU,
@@ -35,42 +37,86 @@ class RunView extends WatchUi.View {
     hidden var _level;
     hidden var _maxLevels;
 
-    // scan phase
+    // scan
     hidden var _exitAngle;
     hidden var _scanAngle;
     hidden var _scanRadius;
     hidden var _scanFound;
     hidden var _scanTimer;
     hidden var _scanHintTick;
+    hidden var _scanPhaseTicks;
+    hidden var _scanMaxTicks;
+    hidden var _footstepPhase;
+    hidden var _jumpScareLife;
+    hidden var _jumpScareX;
+    hidden var _jumpScareY;
+    hidden var _trapFocusTicks;
+    hidden var _trapAngleIdx;
 
-    // decoys
     hidden var _decoyAngles;
+    hidden var _trapAngles;
     hidden var _decoyCount;
+    hidden var _trapCount;
+    hidden var _lightCount;
+    hidden var _lightAngles;
+    hidden var _lightIsTrap;
 
-    // run phase
+    // run
     hidden var _playerDist;
     hidden var _exitDist;
     hidden var _monsterDist;
     hidden var _monsterSpeed;
+    hidden var _monsterBaseSpeed;
     hidden var _playerSpeed;
     hidden var _runShake;
     hidden var _heartbeatTick;
     hidden var _vibeInterval;
     hidden var _lastVibeTick;
+    hidden var _runTicks;
+    hidden var _stamina;
+    hidden var _shieldActive;
+    hidden var _boostTicks;
+    hidden var _scratchVibeTick;
+    hidden var _lungeWarn;
+    hidden var _lungeBurst;
+    hidden var _monsterWobble;
+    hidden var _tauntFreeze;
+    hidden var _dzikkoBurst;
+    hidden var _emilkaSpike;
 
-    // atmosphere
+    hidden var _dodgeLane;
+    hidden var _nextObstacleDist;
+    hidden var _obstacleOpenLane;
+    hidden var _obstacleWidth;
+
+    hidden var _footprintsX;
+    hidden var _footprintsY;
+    hidden var _footprintLife;
+
+    hidden var _eyeTrailX;
+    hidden var _eyeTrailY;
+    hidden var _eyeTrailAge;
+
+    hidden var _dripX;
+    hidden var _dripY;
+    hidden var _dripSpd;
+
     hidden var _particles;
     hidden var _flashAlpha;
     hidden var _introTick;
+    hidden var _introMsg;
 
-    // monster info
     hidden var _monsterNames;
     hidden var _monsterColors;
     hidden var _monsterIdx;
 
-    // score
     hidden var _survived;
     hidden var _totalDist;
+    hidden var _levelRunScore;
+    hidden var _sessionScore;
+    hidden var _highScore;
+
+    hidden var _betweenLevelLines;
 
     function initialize() {
         View.initialize();
@@ -82,11 +128,11 @@ class RunView extends WatchUi.View {
         _cx = _w / 2;
         _cy = _h / 2;
 
-        _monsterNames = ["Vexor", "Undead", "Dzikko", "Rocky", "Batsy"];
-        _monsterColors = [0xFF2222, 0x668866, 0x885522, 0x888888, 0x442266];
+        _monsterNames = ["Vexor", "Undead", "Dzikko", "Rocky", "Batsy", "Emilka", "Polacco"];
+        _monsterColors = [0xFF2222, 0x668866, 0x885522, 0x888888, 0x442266, 0xFF88CC, 0xAA8866];
 
-        _particles = new [30];
-        for (var i = 0; i < 30; i++) {
+        _particles = new [40];
+        for (var i = 0; i < 40; i++) {
             _particles[i] = [
                 Math.rand().abs() % _w,
                 Math.rand().abs() % _h,
@@ -94,18 +140,81 @@ class RunView extends WatchUi.View {
             ];
         }
 
+        _dripX = new [12];
+        _dripY = new [12];
+        _dripSpd = new [12];
+        for (var di = 0; di < 12; di++) {
+            _dripX[di] = (di % 2 == 0) ? (Math.rand().abs() % (_w / 6)) : (_w - 1 - Math.rand().abs() % (_w / 6));
+            _dripY[di] = Math.rand().abs() % _h;
+            _dripSpd[di] = 2 + Math.rand().abs() % 4;
+        }
+
+        _footprintsX = new [10];
+        _footprintsY = new [10];
+        _footprintLife = new [10];
+        for (var fi = 0; fi < 10; fi++) {
+            _footprintsX[fi] = 0;
+            _footprintsY[fi] = 0;
+            _footprintLife[fi] = 0;
+        }
+
+        _eyeTrailX = new [5];
+        _eyeTrailY = new [5];
+        _eyeTrailAge = new [5];
+        for (var ei = 0; ei < 5; ei++) {
+            _eyeTrailX[ei] = 0;
+            _eyeTrailY[ei] = 0;
+            _eyeTrailAge[ei] = 0;
+        }
+
+        _betweenLevelLines = [
+            "You hear something...",
+            "It's getting closer",
+            "Don't look back",
+            "The walls breathe",
+            "Not alone anymore",
+            "So cute... wait—",
+            "Slow steps... always"
+        ];
+
         _tick = 0;
         _level = 0;
-        _maxLevels = 5;
+        _maxLevels = 7;
         _survived = 0;
         _totalDist = 0.0;
+        _sessionScore = 0;
+        _highScore = loadHighScore();
 
         accelX = 0;
         accelY = 0;
         accelZ = 0;
         shakeMag = 0;
+        _dodgeLane = 1;
 
         gameState = RS_MENU;
+    }
+
+    hidden function loadHighScore() {
+        var v = BrStore.getValue("br_hs");
+        if (v != null) { return v; }
+        return 0;
+    }
+
+    hidden function saveHighScore(sc) {
+        if (sc <= _highScore) { return; }
+        _highScore = sc;
+        BrStore.setValue("br_hs", sc);
+    }
+
+    function inRunPhase() {
+        return gameState == RS_RUN;
+    }
+
+    function nudgeDodge(dir) {
+        if (gameState != RS_RUN) { return; }
+        _dodgeLane = _dodgeLane + dir;
+        if (_dodgeLane < 0) { _dodgeLane = 0; }
+        if (_dodgeLane > 2) { _dodgeLane = 2; }
     }
 
     function onShow() {
@@ -120,6 +229,7 @@ class RunView extends WatchUi.View {
     function onTick() as Void {
         _tick++;
         updateParticles();
+        updateDrips();
 
         if (gameState == RS_INTRO) {
             _introTick++;
@@ -145,7 +255,7 @@ class RunView extends WatchUi.View {
     }
 
     hidden function updateParticles() {
-        for (var i = 0; i < 30; i++) {
+        for (var i = 0; i < 40; i++) {
             var p = _particles[i];
             p[1] = p[1] + p[2];
             if (gameState == RS_RUN || gameState == RS_SCAN) {
@@ -157,11 +267,58 @@ class RunView extends WatchUi.View {
         }
     }
 
+    hidden function updateDrips() {
+        for (var i = 0; i < 12; i++) {
+            _dripY[i] = _dripY[i] + _dripSpd[i];
+            if (_dripY[i] > _h) {
+                _dripY[i] = 0;
+                if (i % 2 == 0) {
+                    _dripX[i] = Math.rand().abs() % (_w / 6);
+                } else {
+                    _dripX[i] = _w - 1 - Math.rand().abs() % (_w / 6);
+                }
+            }
+        }
+    }
+
     function startLevel() {
         _level++;
         _monsterIdx = (_level - 1) % _monsterNames.size();
         gameState = RS_INTRO;
         _introTick = 0;
+        _introMsg = _betweenLevelLines[(_level - 1) % _betweenLevelLines.size()];
+        _dodgeLane = 1;
+    }
+
+    hidden function buildScanLights() {
+        _decoyCount = _level < 3 ? 2 : (_level < 5 ? 3 : 4);
+        _trapCount = _level < 4 ? 1 : 2;
+        _lightCount = 1 + _decoyCount + _trapCount;
+
+        _decoyAngles = new [_decoyCount];
+        _trapAngles = new [_trapCount];
+        _lightAngles = new [_lightCount];
+        _lightIsTrap = new [_lightCount];
+
+        var k;
+        _lightAngles[0] = _exitAngle;
+        _lightIsTrap[0] = false;
+
+        for (k = 0; k < _decoyCount; k++) {
+            var da = _exitAngle + 40.0 + (Math.rand().abs() % 280).toFloat();
+            if (da >= 360.0) { da -= 360.0; }
+            _decoyAngles[k] = da;
+            _lightAngles[1 + k] = da;
+            _lightIsTrap[1 + k] = false;
+        }
+
+        for (k = 0; k < _trapCount; k++) {
+            var ta = _exitAngle + 100.0 + (Math.rand().abs() % 160).toFloat() + (k * 70.0).toFloat();
+            if (ta >= 360.0) { ta -= 360.0; }
+            _trapAngles[k] = ta;
+            _lightAngles[1 + _decoyCount + k] = ta;
+            _lightIsTrap[1 + _decoyCount + k] = true;
+        }
     }
 
     hidden function startScan() {
@@ -172,31 +329,63 @@ class RunView extends WatchUi.View {
         _scanFound = false;
         _scanTimer = 0;
         _scanHintTick = 0;
+        _scanPhaseTicks = 0;
+        _scanMaxTicks = 500;
+        _footstepPhase = 0;
+        _jumpScareLife = 0;
+        _trapFocusTicks = 0;
+        _trapAngleIdx = -1;
         _flashAlpha = 0;
 
-        _decoyCount = _level < 3 ? 1 : (_level < 5 ? 2 : 3);
-        _decoyAngles = new [_decoyCount];
-        for (var i = 0; i < _decoyCount; i++) {
-            var da = _exitAngle + 60.0 + (Math.rand().abs() % 240).toFloat();
-            if (da >= 360.0) { da -= 360.0; }
-            _decoyAngles[i] = da;
-        }
+        buildScanLights();
+    }
+
+    hidden function angleDiff(a, b) {
+        var d = a - b;
+        if (d < 0.0) { d = -d; }
+        if (d > 180.0) { d = 360.0 - d; }
+        return d;
     }
 
     hidden function updateScan() {
-        _scanTimer++;
+        _scanPhaseTicks++;
+        if (_scanPhaseTicks >= _scanMaxTicks) {
+            gameState = RS_CAUGHT;
+            _introTick = 0;
+            doVibe(100, 800);
+            return;
+        }
 
         var rawAngle = Math.atan2(accelX.toFloat(), accelY.toFloat());
         _scanAngle = rawAngle * 180.0 / 3.14159;
         if (_scanAngle < 0.0) { _scanAngle += 360.0; }
 
-        var diff = _scanAngle - _exitAngle;
-        if (diff < 0.0) { diff = -diff; }
-        if (diff > 180.0) { diff = 360.0 - diff; }
+        var diffExit = angleDiff(_scanAngle, _exitAngle);
+        _scanRadius = diffExit;
 
-        _scanRadius = diff;
+        var onTrap = false;
+        var bestTrapDiff = 999.0;
+        var ti;
+        for (ti = 0; ti < _trapCount; ti++) {
+            var td = angleDiff(_scanAngle, _trapAngles[ti]);
+            if (td < bestTrapDiff) { bestTrapDiff = td; }
+            if (td < 18.0) {
+                onTrap = true;
+                _trapAngleIdx = ti;
+            }
+        }
 
-        if (diff < 20.0) {
+        if (onTrap && bestTrapDiff < 18.0) {
+            _trapFocusTicks++;
+            if (_trapFocusTicks > 14 && _trapFocusTicks % 16 == 0) {
+                _scanPhaseTicks = _scanPhaseTicks + 25;
+                doVibe(50, 120);
+            }
+        } else {
+            _trapFocusTicks = 0;
+        }
+
+        if (diffExit < 20.0 && !onTrap) {
             _scanHintTick++;
             if (_scanHintTick >= 15) {
                 _scanFound = true;
@@ -205,44 +394,282 @@ class RunView extends WatchUi.View {
                 doVibe(80, 400);
             }
         } else {
-            _scanHintTick = 0;
+            if (onTrap) {
+            } else {
+                _scanHintTick = 0;
+            }
         }
 
-        if (diff < 40.0 && _tick % 20 == 0) {
+        if (diffExit < 40.0 && _tick % 20 == 0 && !onTrap) {
             doVibe(30, 100);
+        }
+
+        _footstepPhase++;
+        var urgency = _scanPhaseTicks.toFloat() / _scanMaxTicks.toFloat();
+        if (urgency > 1.0) { urgency = 1.0; }
+        var footInterval = (45.0 - urgency * 28.0).toNumber();
+        if (footInterval < 12) { footInterval = 12; }
+        if (_footstepPhase % footInterval == 0) {
+            var fi = 40 + (urgency * 55.0).toNumber();
+            if (fi > 100) { fi = 100; }
+            doVibe(fi, 90 + (urgency * 60.0).toNumber());
+        }
+
+        if (_jumpScareLife > 0) {
+            _jumpScareLife--;
+        } else if (Math.rand().abs() % 170 == 0) {
+            _jumpScareLife = 8;
+            _jumpScareX = 20 + Math.rand().abs() % (_w - 40);
+            _jumpScareY = 25 + Math.rand().abs() % (_h - 50);
+            doVibe(90, 50);
+        }
+
+        if (Math.rand().abs() % 260 == 0) {
+            var st = 15 + Math.rand().abs() % 35;
+            doVibe(st, 25);
         }
     }
 
     hidden function startRun() {
         gameState = RS_RUN;
         _playerDist = 0.0;
-        _exitDist = 60.0 + (_level * 15).toFloat();
-        _monsterDist = -25.0 - (_level * 5).toFloat();
-        _monsterSpeed = 0.6 + _level.toFloat() * 0.12;
+        _exitDist = 58.0 + (_level * 14).toFloat();
+        _monsterDist = -22.0 - (_level * 6).toFloat();
+        _monsterBaseSpeed = 0.52 + _level.toFloat() * 0.11;
+        _monsterSpeed = _monsterBaseSpeed;
         _playerSpeed = 0.0;
         _runShake = 0;
         _heartbeatTick = 0;
         _vibeInterval = 25;
         _lastVibeTick = 0;
+        _runTicks = 0;
+        _stamina = 100.0;
+        _shieldActive = false;
+        _boostTicks = 0;
+        _scratchVibeTick = 0;
+        _lungeWarn = 0;
+        _lungeBurst = 0;
+        _monsterWobble = 0.0;
+        _tauntFreeze = 0;
+        _dzikkoBurst = 0;
+        _emilkaSpike = 0;
+        _dodgeLane = 1;
+        _nextObstacleDist = 12.0 + (Math.rand().abs() % 8).toFloat();
+        _obstacleOpenLane = Math.rand().abs() % 3;
+        _obstacleWidth = 10.0;
+        _levelRunScore = 0;
+
+        for (var ei = 0; ei < 5; ei++) {
+            _eyeTrailAge[ei] = 0;
+        }
+        for (var fi = 0; fi < 10; fi++) {
+            _footprintLife[fi] = 0;
+        }
+    }
+
+    hidden function pushFootprint(px, py) {
+        var i;
+        for (i = 9; i > 0; i--) {
+            _footprintsX[i] = _footprintsX[i - 1];
+            _footprintsY[i] = _footprintsY[i - 1];
+            _footprintLife[i] = _footprintLife[i - 1];
+        }
+        _footprintsX[0] = px;
+        _footprintsY[0] = py;
+        _footprintLife[0] = 18;
+    }
+
+    hidden function decayFootprints() {
+        var i;
+        for (i = 0; i < 10; i++) {
+            if (_footprintLife[i] > 0) {
+                _footprintLife[i] = _footprintLife[i] - 1;
+            }
+        }
+    }
+
+    hidden function pushEyeTrail(ex, ey) {
+        var i;
+        for (i = 4; i > 0; i--) {
+            _eyeTrailX[i] = _eyeTrailX[i - 1];
+            _eyeTrailY[i] = _eyeTrailY[i - 1];
+            _eyeTrailAge[i] = _eyeTrailAge[i - 1];
+        }
+        _eyeTrailX[0] = ex;
+        _eyeTrailY[0] = ey;
+        _eyeTrailAge[0] = 6;
+    }
+
+    hidden function decayEyeTrail() {
+        var i;
+        for (i = 0; i < 5; i++) {
+            if (_eyeTrailAge[i] > 0) {
+                _eyeTrailAge[i] = _eyeTrailAge[i] - 1;
+            }
+        }
+    }
+
+    hidden function spawnPowerupNearObstacle() {
+        var r = Math.rand().abs() % 100;
+        if (r >= 22) { return; }
+        if (r < 11) {
+            _shieldActive = true;
+        } else {
+            _boostTicks = 80 + Math.rand().abs() % 50;
+        }
+    }
+
+    hidden function applyMonsterBehavior() {
+        var mi = _monsterIdx;
+
+        if (mi == 0) {
+            if (_tauntFreeze > 0) {
+                _tauntFreeze--;
+            } else if (Math.rand().abs() % 90 == 0) {
+                _tauntFreeze = 22;
+            }
+        } else if (mi == 4) {
+            _monsterWobble = (Math.rand().abs() % 7 - 3).toFloat() * 0.12;
+        } else if (mi == 2) {
+            if (_dzikkoBurst > 0) {
+                _dzikkoBurst--;
+            } else if (Math.rand().abs() % 70 == 0) {
+                _dzikkoBurst = 18;
+            }
+        } else if (mi == 5) {
+            if (_emilkaSpike > 0) {
+                _emilkaSpike--;
+            } else if (Math.rand().abs() % 100 == 0) {
+                _emilkaSpike = 14;
+            }
+        } else if (mi == 6) {
+            _monsterBaseSpeed = _monsterBaseSpeed + 0.0035;
+        }
+
+        if (mi == 3) {
+            _monsterBaseSpeed = _monsterBaseSpeed + 0.002;
+        }
+
+        if (_monsterBaseSpeed > 2.0) {
+            _monsterBaseSpeed = 2.0;
+        }
+    }
+
+    hidden function monsterSpeedMultiplier() {
+        var mi = _monsterIdx;
+        var m = 1.0;
+
+        if (mi == 0 && _tauntFreeze > 0) {
+            return 0.0;
+        }
+        if (mi == 2 && _dzikkoBurst > 0) {
+            m = m * 1.55;
+        }
+        if (mi == 3) {
+            m = m * (0.75 + (_playerDist / _exitDist) * 0.5);
+            if (m > 1.35) { m = 1.35; }
+        }
+        if (mi == 4) {
+            m = m * (0.85 + (Math.rand().abs() % 40).toFloat() / 100.0);
+        }
+        if (mi == 5) {
+            if (_emilkaSpike > 0) {
+                m = m * 1.65;
+            } else {
+                m = m * 0.72;
+            }
+        }
+        if (mi == 6) {
+            m = m * 0.82;
+        }
+
+        if (_lungeBurst > 0) {
+            m = m * 2.1;
+        }
+
+        return m;
     }
 
     hidden function updateRun() {
-        _playerSpeed = _playerSpeed * 0.85;
+        _runTicks++;
+        applyMonsterBehavior();
+
+        if (_boostTicks > 0) {
+            _boostTicks--;
+        }
+
         var shakeBoost = shakeMag.toFloat() / 3000.0;
-        if (shakeBoost > 2.5) { shakeBoost = 2.5; }
-        _playerSpeed += shakeBoost;
-        if (_playerSpeed < 0.1) { _playerSpeed = 0.1; }
+        if (shakeBoost > 2.8) { shakeBoost = 2.8; }
+
+        var canSprint = _stamina > 4.0;
+        if (!canSprint) {
+            shakeBoost = 0.0;
+        }
+
+        _playerSpeed = _playerSpeed * 0.86;
+        if (canSprint) {
+            _playerSpeed += shakeBoost;
+            _stamina = _stamina - (shakeBoost * 4.5 + 0.35);
+        } else {
+            _stamina = _stamina + 1.8;
+        }
+
+        if (_stamina < 0.0) { _stamina = 0.0; }
+        if (_stamina > 100.0) { _stamina = 100.0; }
+
+        var spdMult = 1.0;
+        if (_boostTicks > 0) {
+            spdMult = 1.45;
+        }
+        _playerSpeed = _playerSpeed * spdMult;
+
+        if (_playerSpeed < 0.08) { _playerSpeed = 0.08; }
 
         _playerDist += _playerSpeed;
-        _monsterDist += _monsterSpeed;
 
-        if (_monsterSpeed < 1.8 + _level.toFloat() * 0.1) {
-            _monsterSpeed += 0.005;
+        var msm = monsterSpeedMultiplier();
+        var monStep = _monsterBaseSpeed * msm;
+        _monsterDist = _monsterDist + monStep + _monsterWobble;
+
+        if (_monsterIdx != 6 && _monsterIdx != 3) {
+            if (_monsterBaseSpeed < 1.65 + _level.toFloat() * 0.09) {
+                _monsterBaseSpeed += 0.0045;
+            }
+        }
+
+        if (_lungeWarn > 0) {
+            _lungeWarn--;
+            if (_lungeWarn == 0) {
+                _lungeBurst = 14;
+            }
+        } else if (_lungeBurst > 0) {
+            _lungeBurst--;
+        } else if (Math.rand().abs() % 130 == 0 && _playerDist > 8.0) {
+            _lungeWarn = 8;
+            doVibeDouble();
+        }
+
+        if (_playerDist >= _nextObstacleDist) {
+            if (_dodgeLane != _obstacleOpenLane) {
+                if (_shieldActive) {
+                    _shieldActive = false;
+                    doVibe(60, 200);
+                } else {
+                    gameState = RS_CAUGHT;
+                    _introTick = 0;
+                    doVibe(100, 1000);
+                    finalizeScore(false);
+                    return;
+                }
+            }
+            _nextObstacleDist = _playerDist + 14.0 + (Math.rand().abs() % 10).toFloat();
+            _obstacleOpenLane = Math.rand().abs() % 3;
+            spawnPowerupNearObstacle();
         }
 
         var gap = _playerDist - _monsterDist;
         if (gap < 60.0) {
-            _vibeInterval = (gap * 0.4).toNumber();
+            _vibeInterval = (gap * 0.42).toNumber();
             if (_vibeInterval < 3) { _vibeInterval = 3; }
         } else {
             _vibeInterval = 30;
@@ -251,16 +678,32 @@ class RunView extends WatchUi.View {
         _heartbeatTick++;
         if (_heartbeatTick >= _vibeInterval) {
             _heartbeatTick = 0;
-            var intensity = 100 - (gap * 1.2).toNumber();
-            if (intensity < 20) { intensity = 20; }
+            var intensity = 100 - (gap * 1.15).toNumber();
+            if (intensity < 22) { intensity = 22; }
             if (intensity > 100) { intensity = 100; }
             doVibe(intensity, 150);
         }
 
+        _scratchVibeTick++;
+        if (_scratchVibeTick > 10 + Math.rand().abs() % 14) {
+            _scratchVibeTick = 0;
+            if (Math.rand().abs() % 2 == 0) {
+                doVibe(25 + Math.rand().abs() % 30, 18);
+            }
+        }
+
         if (_monsterDist >= _playerDist) {
-            gameState = RS_CAUGHT;
-            _introTick = 0;
-            doVibe(100, 1000);
+            if (_shieldActive) {
+                _shieldActive = false;
+                _monsterDist = _monsterDist - 8.0;
+                doVibe(70, 250);
+            } else {
+                gameState = RS_CAUGHT;
+                _introTick = 0;
+                doVibe(100, 1000);
+                finalizeScore(false);
+                return;
+            }
         }
 
         if (_playerDist >= _exitDist) {
@@ -268,8 +711,29 @@ class RunView extends WatchUi.View {
             _introTick = 0;
             _survived++;
             _totalDist = _totalDist + _exitDist;
+            finalizeScore(true);
             doVibe(60, 300);
         }
+
+        var pyBase = _h * 55 / 100;
+        var laneOff = (_dodgeLane - 1) * 14;
+        pushFootprint(_w / 2 + (Math.rand().abs() % 5 - 2), pyBase + laneOff + (_tick % 4));
+        decayFootprints();
+
+        var gapy = _h * 55 / 100 + (gap * 0.45).toNumber();
+        pushEyeTrail(_w / 2, gapy + 8);
+        decayEyeTrail();
+    }
+
+    hidden function finalizeScore(escaped) {
+        var timePts = _runTicks / 5;
+        var distPts = _playerDist.toNumber() * 2;
+        _levelRunScore = timePts + distPts;
+        if (escaped) {
+            _levelRunScore = _levelRunScore + 200;
+        }
+        _sessionScore = _sessionScore + _levelRunScore;
+        saveHighScore(_sessionScore);
     }
 
     hidden function doVibe(intensity, duration) {
@@ -280,15 +744,27 @@ class RunView extends WatchUi.View {
         }
     }
 
+    hidden function doVibeDouble() as Void {
+        if (Toybox has :Attention) {
+            if (Toybox.Attention has :vibrate) {
+                Toybox.Attention.vibrate([
+                    new Toybox.Attention.VibeProfile(100, 45),
+                    new Toybox.Attention.VibeProfile(100, 45)
+                ]);
+            }
+        }
+    }
+
     function doAction() {
         if (gameState == RS_MENU) {
+            _sessionScore = 0;
             startLevel();
         } else if (gameState == RS_SCAN) {
-            // nothing - use accel
         } else if (gameState == RS_CAUGHT) {
             _level = 0;
             _survived = 0;
             _totalDist = 0.0;
+            _sessionScore = 0;
             gameState = RS_MENU;
         } else if (gameState == RS_ESCAPE) {
             if (_level >= _maxLevels) {
@@ -301,11 +777,10 @@ class RunView extends WatchUi.View {
             _level = 0;
             _survived = 0;
             _totalDist = 0.0;
+            _sessionScore = 0;
             gameState = RS_MENU;
         }
     }
-
-    // ===== Drawing =====
 
     function onUpdate(dc) {
         var w = dc.getWidth();
@@ -326,14 +801,47 @@ class RunView extends WatchUi.View {
 
     hidden function drawDust(dc, w, h, color) {
         dc.setColor(color, Graphics.COLOR_TRANSPARENT);
-        for (var i = 0; i < 30; i++) {
+        for (var i = 0; i < 40; i++) {
             var p = _particles[i];
             dc.fillRectangle(p[0], p[1], p[2], p[2]);
         }
     }
 
+    hidden function drawPulsingDarkness(dc, w, h, alphaScale) {
+        var pulse = ((_tick / 3) % 20);
+        if (pulse > 10) { pulse = 20 - pulse; }
+        var margin = 8 + pulse + alphaScale;
+        dc.setColor(0x020208, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, 0, w, margin);
+        dc.fillRectangle(0, h - margin, w, margin);
+        dc.fillRectangle(0, 0, margin, h);
+        dc.fillRectangle(w - margin, 0, margin, h);
+    }
+
+    hidden function drawWallScratches(dc, w, h) {
+        dc.setColor(0x1A1010, Graphics.COLOR_TRANSPARENT);
+        dc.setPenWidth(1);
+        var sx;
+        for (sx = 0; sx < 5; sx++) {
+            var x0 = 3 + sx * 7;
+            var y0 = h * 20 / 100 + (sx * 13) % (h / 2);
+            dc.drawLine(x0, y0, x0 + 4, y0 + 10);
+            dc.drawLine(w - x0, y0 + 5, w - x0 - 3, y0 + 14);
+        }
+        dc.setPenWidth(1);
+    }
+
+    hidden function drawBrokenBits(dc, w, h) {
+        dc.setColor(0x332222, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(w * 8 / 100, h * 70 / 100, 5, 3);
+        dc.fillRectangle(w * 88 / 100, h * 62 / 100, 4, 6);
+        dc.setColor(0x221818, Graphics.COLOR_TRANSPARENT);
+        dc.drawLine(w * 10 / 100, h * 72 / 100, w * 14 / 100, h * 74 / 100);
+    }
+
     hidden function drawMenu(dc, w, h) {
         drawDust(dc, w, h, 0x111122);
+        drawPulsingDarkness(dc, w, h, 4);
 
         var pulse = (_tick % 40 < 20) ? 0xFF2222 : 0xCC1111;
         dc.setColor(pulse, Graphics.COLOR_TRANSPARENT);
@@ -344,88 +852,134 @@ class RunView extends WatchUi.View {
         dc.setColor(0x443344, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w / 2, h * 48 / 100, Graphics.FONT_XTINY, "They are coming.", Graphics.TEXT_JUSTIFY_CENTER);
         dc.drawText(w / 2, h * 56 / 100, Graphics.FONT_XTINY, "Find the exit.", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(w / 2, h * 64 / 100, Graphics.FONT_XTINY, "Shake to run.", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 64 / 100, Graphics.FONT_XTINY, "Shake to run. UP/DOWN dodge.", Graphics.TEXT_JUSTIFY_CENTER);
 
-        drawMonsterEyes(dc, w / 2, h * 82 / 100, 0xFF2222);
+        drawMonsterEyes(dc, w / 2, h * 82 / 100, 0xFF2222, false);
 
         dc.setColor(0x666666, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 92 / 100, Graphics.FONT_XTINY, "Press to start", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 90 / 100, Graphics.FONT_XTINY, "HI " + _highScore, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 95 / 100, Graphics.FONT_XTINY, "Press to start", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawIntro(dc, w, h) {
         drawDust(dc, w, h, 0x0A0A15);
-
-        var fade = _introTick * 4;
-        if (fade > 255) { fade = 255; }
+        drawPulsingDarkness(dc, w, h, 2);
 
         dc.setColor(0xFF2222, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 25 / 100, Graphics.FONT_SMALL, "LEVEL " + _level, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 20 / 100, Graphics.FONT_SMALL, "LEVEL " + _level, Graphics.TEXT_JUSTIFY_CENTER);
+
+        dc.setColor(0x665555, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w / 2, h * 30 / 100, Graphics.FONT_XTINY, _introMsg, Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(_monsterColors[_monsterIdx], Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 42 / 100, Graphics.FONT_MEDIUM, _monsterNames[_monsterIdx], Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 44 / 100, Graphics.FONT_MEDIUM, _monsterNames[_monsterIdx], Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0x554444, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w / 2, h * 60 / 100, Graphics.FONT_XTINY, "is hunting you...", Graphics.TEXT_JUSTIFY_CENTER);
 
         if (_introTick > 30) {
-            drawMonsterEyes(dc, w / 2, h * 78 / 100, _monsterColors[_monsterIdx]);
+            drawMonsterEyes(dc, w / 2, h * 78 / 100, _monsterColors[_monsterIdx], true);
         }
     }
 
     hidden function drawScanScene(dc, w, h) {
         drawDarkness(dc, w, h);
         drawDust(dc, w, h, 0x0A0A12);
+        drawPulsingDarkness(dc, w, h, 6);
+        drawWallScratches(dc, w, h);
 
-        var beamAngle = _scanAngle * 3.14159 / 180.0;
-        var beamLen = w * 35 / 100;
+        var flicker = (_tick % 7 < 5) ? 1 : 0;
+        var dim = 0;
+        if (Math.rand().abs() % 11 == 0) { dim = 1; }
+
+        var rawAngle = _scanAngle * 3.14159 / 180.0;
+        var jitter = (Math.rand().abs() % 9 - 4).toFloat() * 0.03;
+        var beamAngle = rawAngle + jitter;
+        var beamLen = (w * 35 / 100);
+        if (dim == 1) { beamLen = beamLen * 3 / 4; }
+
         var bx = _cx + (beamLen * Math.sin(beamAngle)).toNumber();
         var by = _cy - (beamLen * Math.cos(beamAngle)).toNumber();
 
-        dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT);
-        dc.setPenWidth(6);
+        var beamCol = (flicker == 1) ? 0x334455 : 0x222838;
+        dc.setColor(beamCol, Graphics.COLOR_TRANSPARENT);
+        dc.setPenWidth(dim == 1 ? 3 : 6);
         dc.drawLine(_cx, _cy, bx, by);
         dc.setPenWidth(1);
-        dc.setColor(0x556677, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(bx, by, 12);
-        dc.setColor(0x667788, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(bx, by, 6);
 
-        for (var i = 0; i < _decoyCount; i++) {
-            drawDoorIcon(dc, w, h, _decoyAngles[i], 0x442222, false);
+        var glowCol = (flicker == 1) ? 0x556677 : 0x3A4555;
+        dc.setColor(glowCol, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(bx, by, dim == 1 ? 8 : 12);
+        dc.setColor(0x667788, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(bx, by, dim == 1 ? 4 : 6);
+
+        var li;
+        for (li = 0; li < _lightCount; li++) {
+            var ang = _lightAngles[li];
+            var isT = _lightIsTrap[li];
+            var isReal = (li == 0);
+            if (isReal) {
+                var df = angleDiff(_scanAngle, _exitAngle);
+                var br = df < 40.0;
+                drawDoorIcon(dc, w, h, ang, br ? 0x44FF44 : 0x226622, true, false);
+            } else if (isT) {
+                drawDoorIcon(dc, w, h, ang, 0x662244, false, true);
+            } else {
+                drawDoorIcon(dc, w, h, ang, 0x442222, false, false);
+            }
         }
 
-        var diff = _scanAngle - _exitAngle;
-        if (diff < 0.0) { diff = -diff; }
-        if (diff > 180.0) { diff = 360.0 - diff; }
-        var doorBright = diff < 40.0;
-        drawDoorIcon(dc, w, h, _exitAngle, doorBright ? 0x44FF44 : 0x226622, true);
+        var diff = angleDiff(_scanAngle, _exitAngle);
 
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(_cx, _cy, 3);
 
+        var warmth = 0;
         if (diff < 40.0) {
-            var warmth = ((40.0 - diff) / 40.0 * 100.0).toNumber();
+            warmth = ((40.0 - diff) / 40.0 * 100.0).toNumber();
+        }
+
+        var ring;
+        for (ring = 0; ring < 4; ring++) {
+            var rad = 12 + ring * 14 + ((_tick + ring * 5) % 18);
+            var rc = 0x223322;
+            if (diff < 25.0) {
+                rc = 0x226644;
+            } else if (diff < 55.0) {
+                rc = 0x444422;
+            } else {
+                rc = 0x442222;
+            }
+            dc.setColor(rc, Graphics.COLOR_TRANSPARENT);
+            dc.drawCircle(_cx, _cy, rad);
+        }
+
+        if (diff < 40.0) {
             dc.setColor(0x44FF44, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w / 2, h * 10 / 100, Graphics.FONT_XTINY, "WARM " + warmth + "%", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(w / 2, h * 8 / 100, Graphics.FONT_XTINY, "WARM " + warmth + "%", Graphics.TEXT_JUSTIFY_CENTER);
         } else if (diff < 80.0) {
             dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w / 2, h * 10 / 100, Graphics.FONT_XTINY, "COLD...", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(w / 2, h * 8 / 100, Graphics.FONT_XTINY, "COLD...", Graphics.TEXT_JUSTIFY_CENTER);
         } else {
             dc.setColor(0xFF4444, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w / 2, h * 10 / 100, Graphics.FONT_XTINY, "FREEZING", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(w / 2, h * 8 / 100, Graphics.FONT_XTINY, "FREEZING", Graphics.TEXT_JUSTIFY_CENTER);
         }
+
+        var remain = ((_scanMaxTicks - _scanPhaseTicks) / 20);
+        if (remain < 0) { remain = 0; }
+        dc.setColor(0xAA6666, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w / 2, h * 16 / 100, Graphics.FONT_XTINY, "TIME ~" + remain + "s", Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0x888888, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w / 2, h * 88 / 100, Graphics.FONT_XTINY, "Move wrist to scan", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 93 / 100, Graphics.FONT_XTINY, "Avoid red trap lights", Graphics.TEXT_JUSTIFY_CENTER);
 
-        var monEyeX = _cx - (w * 20 / 100);
-        var monEyeY = _cy + (h * 30 / 100);
-        if (_tick % 60 < 15) {
-            drawMonsterEyes(dc, monEyeX, monEyeY, _monsterColors[_monsterIdx]);
+        if (_jumpScareLife > 0) {
+            drawMonsterEyes(dc, _jumpScareX, _jumpScareY, 0xFF0000, true);
         }
     }
 
-    hidden function drawDoorIcon(dc, w, h, angle, color, real) {
+    hidden function drawDoorIcon(dc, w, h, angle, color, real, trap) {
         var rad = angle * 3.14159 / 180.0;
         var doorR = w * 30 / 100;
         var dx = _cx + (doorR * Math.sin(rad)).toNumber();
@@ -435,6 +989,10 @@ class RunView extends WatchUi.View {
         if (real) {
             dc.fillRectangle(dx - 4, dy - 6, 8, 12);
             dc.setColor(0xFFFF88, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(dx - 2, dy - 4, 4, 8);
+        } else if (trap) {
+            dc.fillRectangle(dx - 4, dy - 6, 8, 12);
+            dc.setColor(0xFF2266, Graphics.COLOR_TRANSPARENT);
             dc.fillRectangle(dx - 2, dy - 4, 4, 8);
         } else {
             dc.fillRectangle(dx - 3, dy - 5, 6, 10);
@@ -467,73 +1025,131 @@ class RunView extends WatchUi.View {
         dc.drawText(w / 2, h * 72 / 100, Graphics.FONT_SMALL, "NOW RUN!", Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0x666666, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 85 / 100, Graphics.FONT_XTINY, "Shake to sprint!", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 85 / 100, Graphics.FONT_XTINY, "Shake! UP/DOWN dodge walls!", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawRunScene(dc, w, h) {
+        var tilt = (Math.sin(_tick.toFloat() / 4.8) * 3.0).toNumber();
+
         drawDust(dc, w, h, 0x0A0A15);
+        drawWallScratches(dc, w, h);
+        drawBrokenBits(dc, w, h);
 
         var gap = _playerDist - _monsterDist;
         var dangerLevel = 1.0 - (gap / 60.0);
         if (dangerLevel < 0.0) { dangerLevel = 0.0; }
         if (dangerLevel > 1.0) { dangerLevel = 1.0; }
 
-        var edgeR = (dangerLevel * 80.0).toNumber();
-        if (edgeR > 15) {
-            dc.setColor(0x330000 + (edgeR * 2) * 0x10000, Graphics.COLOR_TRANSPARENT);
-            dc.drawRectangle(0, 0, w, h);
-            if (edgeR > 40) {
-                dc.drawRectangle(1, 1, w - 2, h - 2);
-            }
-            if (edgeR > 60) {
-                dc.drawRectangle(2, 2, w - 4, h - 4);
-            }
+        var edgeR = (dangerLevel * 95.0).toNumber();
+        var redAmt = edgeR * 2;
+        if (redAmt > 51) { redAmt = 51; }
+        var redDeep = 0x220000 + redAmt * 0x10000;
+        dc.setColor(redDeep, Graphics.COLOR_TRANSPARENT);
+        var v;
+        for (v = 0; v < 4; v++) {
+            dc.drawRectangle(v, v, w - v * 2, h - v * 2);
         }
 
-        // corridor floor lines
-        var corridorFlash = (_tick % 4 < 2 && _playerSpeed > 0.5) ? 1 : 0;
-        dc.setColor(0x111122 + corridorFlash * 0x050505, Graphics.COLOR_TRANSPARENT);
-        for (var i = 0; i < 8; i++) {
+        drawPulsingDarkness(dc, w, h, 4 + (dangerLevel * 10.0).toNumber());
+
+        var dripC;
+        for (dripC = 0; dripC < 12; dripC++) {
+            dc.setColor(0x1A1020, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(_dripX[dripC], _dripY[dripC], 2, 4);
+        }
+
+        var flick = (_tick % 5 < 3) ? 1 : 0;
+        if (Math.rand().abs() % 8 == 0) { flick = 1 - flick; }
+
+        dc.setColor(0x111122 + flick * 0x080810, Graphics.COLOR_TRANSPARENT);
+        var i;
+        for (i = 0; i < 8; i++) {
             var ly = h * 65 / 100 + i * 5;
             var off = (_tick * 3 + i * 7) % w;
-            dc.fillRectangle((w / 2 - 30 + off) % w, ly, 4, 1);
-            dc.fillRectangle((w / 2 + 20 - off + w) % w, ly + 2, 3, 1);
+            dc.fillRectangle((w / 2 - 30 + off + tilt) % w, ly, 4, 1);
+            dc.fillRectangle((w / 2 + 20 - off + w + tilt) % w, ly + 2, 3, 1);
         }
 
         var progressPct = _playerDist / _exitDist;
         if (progressPct > 1.0) { progressPct = 1.0; }
 
-        // door at the end - getting bigger as player approaches
         var doorSize = 4 + (progressPct * 20.0).toNumber();
         var doorY = h * 28 / 100 - (progressPct * h * 8 / 100).toNumber();
         dc.setColor(0x226622, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(w / 2 - doorSize / 2, doorY, doorSize, doorSize * 3 / 2);
+        dc.fillRectangle(w / 2 - doorSize / 2 + tilt, doorY, doorSize, doorSize * 3 / 2);
         dc.setColor(0x88FF88, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(w / 2 - doorSize / 4, doorY + doorSize / 4, doorSize / 2, doorSize);
+        dc.fillRectangle(w / 2 - doorSize / 4 + tilt, doorY + doorSize / 4, doorSize / 2, doorSize);
 
-        // player (running sprite)
-        var playerY = h * 55 / 100;
+        var obsScreen = ((_nextObstacleDist - _playerDist) * 8.0).toNumber();
+        if (obsScreen > -5 && obsScreen < h) {
+            var ox = w / 2 + tilt;
+            var oy = h * 40 / 100 - obsScreen / 2;
+            dc.setColor(0x332211, Graphics.COLOR_TRANSPARENT);
+            var lane;
+            for (lane = 0; lane < 3; lane++) {
+                if (lane != _obstacleOpenLane) {
+                    var ly2 = oy + lane * 12;
+                    dc.fillRectangle(ox - 40, ly2, 80, 8);
+                }
+            }
+            dc.setColor(0xFFAA22, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(ox - 6, oy + _obstacleOpenLane * 12 + 2, 12, 4);
+        }
+
+        var fp;
+        for (fp = 0; fp < 10; fp++) {
+            if (_footprintLife[fp] > 0) {
+                var alpha = _footprintLife[fp];
+                dc.setColor(0x223344 + alpha * 0x010101, Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(_footprintsX[fp], _footprintsY[fp], 2, 2);
+            }
+        }
+
+        var playerY = h * 55 / 100 + (_dodgeLane - 1) * 14;
         var bounce = (_tick % 6 < 3) ? -2 : 2;
-        if (_playerSpeed < 0.3) { bounce = 0; }
-        drawPlayerSprite(dc, w / 2, playerY + bounce);
+        if (_playerSpeed < 0.25) { bounce = 0; }
+        drawPlayerSprite(dc, w / 2 + tilt, playerY + bounce);
 
-        // monster behind
         var monsterScreenY = playerY + 10;
-        var monsterScreenX = w / 2;
-        if (gap < 50.0) {
-            var monSize = (6.0 + (50.0 - gap) * 0.4).toNumber();
-            if (monSize > 25) { monSize = 25; }
-            var monY2 = monsterScreenY + (gap * 0.5).toNumber();
+        var monsterScreenX = w / 2 + tilt;
+        if (gap < 52.0) {
+            var monSize = (6.0 + (52.0 - gap) * 0.38).toNumber();
+            if (monSize > 26) { monSize = 26; }
+            var monY2 = monsterScreenY + (gap * 0.48).toNumber();
             drawMonsterSprite(dc, monsterScreenX, monY2, monSize);
         }
 
-        drawMonsterEyes(dc, monsterScreenX, monsterScreenY + (gap * 0.4).toNumber() + 10, _monsterColors[_monsterIdx]);
+        var et;
+        for (et = 4; et >= 0; et--) {
+            if (_eyeTrailAge[et] > 0) {
+                var tr = _eyeTrailAge[et];
+                var ec = _monsterColors[_monsterIdx];
+                if (tr < 3) {
+                    ec = 0xFF6644;
+                } else if (tr < 5) {
+                    ec = 0xAA4433;
+                } else {
+                    ec = 0x553322;
+                }
+                dc.setColor(ec, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(_eyeTrailX[et], _eyeTrailY[et] - et * 3, 2 + tr / 3);
+            }
+        }
 
-        // HUD
-        // distance bar
+        drawMonsterEyes(dc, monsterScreenX, monsterScreenY + (gap * 0.4).toNumber() + 10, _monsterColors[_monsterIdx], true);
+
+        if (_shieldActive) {
+            dc.setColor(0x22FF66, Graphics.COLOR_TRANSPARENT);
+            dc.drawRectangle(w / 2 - 18 + tilt, playerY - 14, 36, 32);
+        }
+        if (_boostTicks > 0) {
+            dc.setColor(0x2288FF, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w * 75 / 100, h * 40 / 100, Graphics.FONT_XTINY, "BOOST", Graphics.TEXT_JUSTIFY_CENTER);
+        }
+
         var barW = w * 60 / 100;
         var barX = (w - barW) / 2;
-        var barY = h * 12 / 100;
+        var barY = h * 10 / 100;
         dc.setColor(0x222233, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(barX, barY, barW, 6);
         dc.setColor(0x44FF44, Graphics.COLOR_TRANSPARENT);
@@ -542,27 +1158,42 @@ class RunView extends WatchUi.View {
         dc.setColor(0xFF4444, Graphics.COLOR_TRANSPARENT);
         var monPct = (_monsterDist / _exitDist);
         if (monPct < 0.0) { monPct = 0.0; }
+        if (monPct > 1.0) { monPct = 1.0; }
         var monMarker = barX + (barW * monPct).toNumber();
         dc.fillRectangle(monMarker - 1, barY - 2, 3, 10);
 
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, barY + 8, Graphics.FONT_XTINY, (_exitDist - _playerDist).toNumber() + "m", Graphics.TEXT_JUSTIFY_CENTER);
+        var livePts = _runTicks / 5 + _playerDist.toNumber() * 2;
+        dc.drawText(w / 2, barY + 8, Graphics.FONT_XTINY, (_exitDist - _playerDist).toNumber() + "m  +" + livePts, Graphics.TEXT_JUSTIFY_CENTER);
 
-        // speed indicator
-        var spdPct = _playerSpeed / 2.5;
+        var stW = w * 55 / 100;
+        var stX = (w - stW) / 2;
+        var stY = h * 84 / 100;
+        dc.setColor(0x222233, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(stX, stY, stW, 5);
+        dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(stX, stY, (stW * _stamina / 100.0).toNumber(), 5);
+        dc.setColor(0x888888, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w / 2, stY - 11, Graphics.FONT_XTINY, "STAMINA", Graphics.TEXT_JUSTIFY_CENTER);
+
+        var spdPct = _playerSpeed / 2.8;
         if (spdPct > 1.0) { spdPct = 1.0; }
         var spdBarW = w * 30 / 100;
         var spdBarX = (w - spdBarW) / 2;
-        var spdBarY = h * 90 / 100;
+        var spdBarY = h * 92 / 100;
         dc.setColor(0x222233, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(spdBarX, spdBarY, spdBarW, 4);
         var spdC = spdPct > 0.6 ? 0x44CCFF : (spdPct > 0.3 ? 0xFFCC22 : 0xFF4444);
         dc.setColor(spdC, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(spdBarX, spdBarY, (spdBarW * spdPct).toNumber(), 4);
         dc.setColor(0x888888, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, spdBarY - 12, Graphics.FONT_XTINY, "SHAKE!", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, spdBarY - 12, Graphics.FONT_XTINY, "SHAKE", Graphics.TEXT_JUSTIFY_CENTER);
 
-        // heartbeat text
+        if (_lungeWarn > 0) {
+            dc.setColor(0xFF0000, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w / 2, h * 72 / 100, Graphics.FONT_SMALL, "!!", Graphics.TEXT_JUSTIFY_CENTER);
+        }
+
         if (_vibeInterval < 8) {
             var hFlash = (_tick % 4 < 2) ? 0xFF2222 : 0x880000;
             dc.setColor(hFlash, Graphics.COLOR_TRANSPARENT);
@@ -588,28 +1219,42 @@ class RunView extends WatchUi.View {
     hidden function drawMonsterSprite(dc, x, y, sz) {
         dc.setColor(_monsterColors[_monsterIdx], Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(x, y, sz);
-        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0x0A0508, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(x, y, sz - 2);
-        dc.setColor(_monsterColors[_monsterIdx], Graphics.COLOR_TRANSPARENT);
 
+        dc.setColor(_monsterColors[_monsterIdx], Graphics.COLOR_TRANSPARENT);
         var toothSz = sz / 4;
-        if (toothSz < 1) { toothSz = 1; }
-        dc.fillRectangle(x - sz / 2, y + sz / 3, toothSz, toothSz);
-        dc.fillRectangle(x, y + sz / 3, toothSz, toothSz);
-        dc.fillRectangle(x + sz / 3, y + sz / 3, toothSz, toothSz);
+        if (toothSz < 2) { toothSz = 2; }
+        dc.fillRectangle(x - sz / 2, y + sz / 4, toothSz, toothSz + 1);
+        dc.fillRectangle(x - toothSz / 2, y + sz / 3, toothSz, toothSz + 1);
+        dc.fillRectangle(x + sz / 4, y + sz / 4, toothSz, toothSz + 1);
+
+        dc.setColor(0xCCCCCC, Graphics.COLOR_TRANSPARENT);
+        var claw = sz / 3;
+        if (claw < 3) { claw = 3; }
+        dc.drawLine(x - sz, y, x - sz + claw, y + claw);
+        dc.drawLine(x + sz, y, x + sz - claw, y + claw);
+        dc.fillRectangle(x - sz - 1, y - 1, 3, 3);
+        dc.fillRectangle(x + sz - 2, y - 1, 3, 3);
     }
 
-    hidden function drawMonsterEyes(dc, x, y, color) {
-        dc.setColor(color, Graphics.COLOR_TRANSPARENT);
+    hidden function drawMonsterEyes(dc, x, y, color, trailGlow) {
         var blink = (_tick % 50 < 3);
         if (!blink) {
-            dc.fillCircle(x - 5, y, 2);
-            dc.fillCircle(x + 5, y, 2);
-        }
-        dc.setColor(0xFF0000, Graphics.COLOR_TRANSPARENT);
-        if (!blink) {
-            dc.fillRectangle(x - 5, y, 1, 1);
-            dc.fillRectangle(x + 5, y, 1, 1);
+            dc.setColor(color, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(x - 6, y, 3);
+            dc.fillCircle(x + 6, y, 3);
+            dc.setColor(0xFFFF44, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(x - 6, y, 2);
+            dc.fillCircle(x + 6, y, 2);
+            dc.setColor(0xFF2200, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(x - 6, y, 2, 2);
+            dc.fillRectangle(x + 5, y, 2, 2);
+            if (trailGlow) {
+                dc.setColor(0x55AA33, Graphics.COLOR_TRANSPARENT);
+                dc.drawCircle(x - 6, y, 5);
+                dc.drawCircle(x + 6, y, 5);
+            }
         }
     }
 
@@ -620,7 +1265,7 @@ class RunView extends WatchUi.View {
         drawDust(dc, w, h, 0x1A0000);
 
         drawMonsterSprite(dc, w / 2, h * 35 / 100, 25);
-        drawMonsterEyes(dc, w / 2, h * 32 / 100, _monsterColors[_monsterIdx]);
+        drawMonsterEyes(dc, w / 2, h * 32 / 100, _monsterColors[_monsterIdx], true);
 
         dc.setColor(0xFF2222, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w / 2, h * 55 / 100, Graphics.FONT_MEDIUM, "CAUGHT!", Graphics.TEXT_JUSTIFY_CENTER);
@@ -630,8 +1275,11 @@ class RunView extends WatchUi.View {
         dc.setColor(0x886666, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w / 2, h * 78 / 100, Graphics.FONT_XTINY, "got you.", Graphics.TEXT_JUSTIFY_CENTER);
 
+        dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w / 2, h * 84 / 100, Graphics.FONT_XTINY, "SCORE " + _sessionScore, Graphics.TEXT_JUSTIFY_CENTER);
+
         dc.setColor(0x666666, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 90 / 100, Graphics.FONT_XTINY, "Press to retry", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 92 / 100, Graphics.FONT_XTINY, "Press to retry", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawEscapeScene(dc, w, h) {
@@ -646,11 +1294,12 @@ class RunView extends WatchUi.View {
         dc.drawText(w / 2, h * 50 / 100, Graphics.FONT_MEDIUM, "ESCAPED!", Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 64 / 100, Graphics.FONT_XTINY, "Level " + _level + " / " + _maxLevels, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 62 / 100, Graphics.FONT_XTINY, "Level " + _level + " / " + _maxLevels, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 68 / 100, Graphics.FONT_XTINY, "LV +" + _levelRunScore + "  TOT " + _sessionScore, Graphics.TEXT_JUSTIFY_CENTER);
 
         if (_level < _maxLevels) {
             dc.setColor(0xFF4444, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w / 2, h * 74 / 100, Graphics.FONT_XTINY, "Next: " + _monsterNames[_level % _monsterNames.size()], Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(w / 2, h * 76 / 100, Graphics.FONT_XTINY, "Next: " + _monsterNames[_level % _monsterNames.size()], Graphics.TEXT_JUSTIFY_CENTER);
         }
 
         dc.setColor(0x666666, Graphics.COLOR_TRANSPARENT);
@@ -659,29 +1308,33 @@ class RunView extends WatchUi.View {
 
     hidden function drawFinalScene(dc, w, h) {
         drawDust(dc, w, h, 0x0A0A0A);
+        drawPulsingDarkness(dc, w, h, 3);
 
         dc.setColor(0x44FF44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 12 / 100, Graphics.FONT_MEDIUM, "SURVIVED!", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 10 / 100, Graphics.FONT_MEDIUM, "SURVIVED!", Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0xFFFF44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 30 / 100, Graphics.FONT_SMALL, _survived + " / " + _maxLevels, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 26 / 100, Graphics.FONT_SMALL, _survived + " / " + _maxLevels, Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 45 / 100, Graphics.FONT_XTINY, "Total: " + _totalDist.toNumber() + "m", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 38 / 100, Graphics.FONT_XTINY, "Dist: " + _totalDist.toNumber() + "m", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 46 / 100, Graphics.FONT_XTINY, "SCORE " + _sessionScore, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 54 / 100, Graphics.FONT_XTINY, "BEST " + _highScore, Graphics.TEXT_JUSTIFY_CENTER);
 
         var grade;
-        if (_survived >= 5) { grade = "UNTOUCHABLE"; }
+        if (_survived >= 7) { grade = "UNTOUCHABLE"; }
+        else if (_survived >= 5) { grade = "NIGHTMARE"; }
         else if (_survived >= 4) { grade = "FAST LEGS"; }
         else if (_survived >= 3) { grade = "SURVIVOR"; }
         else if (_survived >= 2) { grade = "LUCKY"; }
         else { grade = "ALMOST..."; }
 
         dc.setColor(0x44FFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 58 / 100, Graphics.FONT_MEDIUM, grade, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 64 / 100, Graphics.FONT_MEDIUM, grade, Graphics.TEXT_JUSTIFY_CENTER);
 
-        drawPlayerSprite(dc, w / 2, h * 76 / 100);
+        drawPlayerSprite(dc, w / 2, h * 80 / 100);
 
         dc.setColor(0x666666, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 90 / 100, Graphics.FONT_XTINY, "Press to restart", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 92 / 100, Graphics.FONT_XTINY, "Press to restart", Graphics.TEXT_JUSTIFY_CENTER);
     }
 }
