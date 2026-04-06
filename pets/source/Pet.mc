@@ -391,8 +391,8 @@ class Pet {
             checkUrgentNeeds();
         }
         checkBirthday(now);
-        var eventInterval = debugMode ? 300 : 1800;
-        if (_eventCheckAcc >= eventInterval) { _eventCheckAcc = 0; if (Math.rand().abs() % 3 == 0) { triggerEvent(); } }
+        var eventInterval = debugMode ? 200 : 900;
+        if (_eventCheckAcc >= eventInterval) { _eventCheckAcc = 0; if (Math.rand().abs() % 2 == 0) { triggerEvent(); } }
 
         clamp();
         checkDeath();
@@ -2335,22 +2335,145 @@ class Pet {
     // ===== Events =====
 
     hidden function triggerEvent() {
-        if (Math.rand().abs() % 20 == 0) { triggerRareEvent(); return; }
-        if (Math.rand().abs() % 5 < 2) { triggerTraitEvent(); return; }
-        var roll = Math.rand().abs() % 10;
-        if (roll == 0) { eventText = "Found treasure!"; happiness += 15; }
-        else if (roll == 1) { eventText = "Got spooked!"; happiness -= 10; }
-        else if (roll == 2) { eventText = "Made a friend!"; happiness += 20; }
+        if (Math.rand().abs() % 10 == 0) { triggerRareEvent(); return; }
+        if (Math.rand().abs() % 4 == 0) { triggerTypeEvent(); return; }
+        if (Math.rand().abs() % 5 < 3) { triggerTraitEvent(); return; }
+        triggerGenericEvent();
+    }
+
+    hidden function triggerGenericEvent() {
+        var roll = Math.rand().abs() % 16;
+        if (roll == 0) { eventText = "Found a treasure map!"; happiness += 20; energy += 10; }
+        else if (roll == 1) { eventText = "Ghost sighting!"; happiness -= 15; pendingVibe = 1; }
+        else if (roll == 2) { eventText = "Made a new friend!"; happiness += 25; }
         else if (roll == 3) {
-            eventText = "Ate something odd...";
-            if (!isSick && Math.rand().abs() % 2 == 0) { isSick = true; health = 80; _sickTime = Time.now().value(); pendingVibe = 3; suggestedAction = 3; }
+            eventText = "Ate something weird...";
+            if (!isSick) { isSick = true; health = 80; _sickTime = Time.now().value(); pendingVibe = 3; suggestedAction = 3; }
+            else { eventText = "Still eating weird stuff."; health -= 5; }
         }
-        else if (roll == 4) { eventText = "Learned a trick!"; happiness += 12; }
-        else if (roll == 5) { eventText = "Bad weather!"; energy -= 10; happiness -= 5; }
-        else if (roll == 6) { eventText = "Found snacks!"; hunger -= 15; }
-        else if (roll == 7) { eventText = "Power nap!"; energy += 15; }
-        else if (roll == 8) { eventText = "Did a dance!"; happiness += 8; energy -= 5; }
-        else { eventText = "Feeling lucky!"; happiness += 5; health += 5; }
+        else if (roll == 4) { eventText = "Won a staring contest!"; happiness += 15; energy += 5; }
+        else if (roll == 5) { eventText = "Slipped dramatically!"; health -= 10; happiness -= 10; pendingVibe = 1; }
+        else if (roll == 6) { eventText = "Secret snack stash found!"; hunger -= 25; happiness += 10; }
+        else if (roll == 7) { eventText = "Epic power nap!"; energy += 25; }
+        else if (roll == 8) { eventText = "Street dance win!"; happiness += 20; energy -= 10; }
+        else if (roll == 9) { eventText = "Nightmare last night!"; happiness -= 15; energy -= 10; }
+        else if (roll == 10) { eventText = "Food fell from sky!"; hunger -= 20; happiness += 15; }
+        else if (roll == 11) { eventText = "Dark witch appeared!"; happiness -= 25; health -= 15; pendingVibe = 2; }
+        else if (roll == 12) { eventText = "Butterfly befriended!"; happiness += 15; energy += 5; }
+        else if (roll == 13) { eventText = "STEPPED ON LEGO!!"; health -= 15; happiness -= 20; pendingVibe = 1; }
+        else if (roll == 14) { eventText = "Received nice letter!"; happiness += 20; energy += 5; }
+        else { eventText = "Mysterious wind blew!"; happiness += 5; health += 5; energy += 5; }
+        _eventTime = Time.now().value();
+        clamp();
+    }
+
+    hidden function triggerTypeEvent() {
+        var r = Math.rand().abs() % 4;
+        pendingVibe = 1;
+        if (petType == TYPE_POLACCO) {
+            if (r == 0) { eventText = "Grillowanie!!"; hunger -= 25; happiness += 20; }
+            else if (r == 1) { eventText = "Sasiad! K*rwa!"; happiness -= 25; pendingVibe = 2; }
+            else if (r == 2) { eventText = "Wygrales w karty!"; happiness += 25; energy += 10; }
+            else { eventText = "Piwo za darmo!!"; hunger -= 10; happiness += 30; }
+        } else if (petType == TYPE_NOSACZ) {
+            if (r == 0) { eventText = "E! Nieznany zapach!"; happiness += 20; hunger -= 10; }
+            else if (r == 1) { eventText = "Nos nr 1 w konwencji!"; happiness += 30; celebType = 1; }
+            else if (r == 2) { eventText = "E! Wielkie kichnieccie!"; happiness += 15; energy += 10; }
+            else { eventText = "Nos wyczul skarb!"; hunger -= 20; happiness += 15; }
+        } else if (petType == TYPE_DOGGO) {
+            if (r == 0) { eventText = "SQUIRREL SPOTTED!!"; happiness += 30; energy += 20; hunger += 10; pendingVibe = 2; }
+            else if (r == 1) { eventText = "BELLY RUBS!!"; happiness += 35; celebType = 1; }
+            else if (r == 2) { eventText = "Found the BEST STICK!"; happiness += 20; energy += 15; }
+            else { eventText = "ZOOMIES ACTIVATED!!"; energy -= 25; happiness += 30; pendingVibe = 2; }
+        } else if (petType == TYPE_EMILKA) {
+            if (r == 0) { eventText = "Love letter received!"; happiness += 35; hugStress -= 10; celebType = 1; }
+            else if (r == 1) { eventText = "Ghosted by crush..."; happiness -= 30; pendingVibe = 2; }
+            else if (r == 2) { eventText = "Hair flip = iconic!"; happiness += 20; }
+            else { eventText = "Got NOTICED!"; happiness += 30; celebType = 1; }
+        } else if (petType == TYPE_VEXOR) {
+            if (r == 0) { eventText = "Broke something precious!"; happiness += 25; energy += 10; }
+            else if (r == 1) { eventText = "Made someone CRY!"; happiness += 25; energy += 10; }
+            else if (r == 2) { eventText = "Spread chaos today!"; happiness += 15; health -= 5; pendingVibe = 2; }
+            else { eventText = "Enemies suffered!!"; happiness += 30; celebType = 1; pendingVibe = 2; }
+        } else if (petType == TYPE_CHIKKO) {
+            if (r == 0) { eventText = "ESCAPED PREDATOR!!"; happiness += 20; energy -= 25; pendingVibe = 3; }
+            else if (r == 1) { eventText = "PANIC MOLT!"; energy -= 20; happiness -= 15; health -= 5; pendingVibe = 2; }
+            else if (r == 2) { eventText = "Hidden seeds found!"; hunger -= 25; happiness += 10; }
+            else { eventText = "New safe hiding spot!"; happiness += 20; energy += 10; }
+        } else if (petType == TYPE_DZIKKO) {
+            if (r == 0) { eventText = "*CHARGES WALL*"; health -= 10; happiness += 25; pendingVibe = 2; }
+            else if (r == 1) { eventText = "TERRITORY CLAIMED!"; happiness += 25; energy += 10; }
+            else if (r == 2) { eventText = "Found massive truffles!"; hunger -= 25; happiness += 20; }
+            else { eventText = "HEADBUTT WIN!!"; happiness += 25; health -= 5; pendingVibe = 2; }
+        } else if (petType == TYPE_FLAMEY) {
+            if (r == 0) { eventText = "Accidentally set fire!"; happiness += 20; health -= 5; pendingVibe = 2; }
+            else if (r == 1) { eventText = "Everything is fuel!"; hunger -= 15; happiness += 15; energy += 10; }
+            else { eventText = "Sizzled with PURPOSE!"; happiness += 20; energy += 15; }
+        } else if (petType == TYPE_AQUA) {
+            if (r == 0) { eventText = "Rain dance worked!"; happiness += 25; energy += 15; celebType = 1; }
+            else if (r == 1) { eventText = "Merged with the ocean!"; health += 20; happiness += 15; celebType = 1; }
+            else { eventText = "Tidal wave of JOY!"; happiness += 20; energy += 15; }
+        } else if (petType == TYPE_GHOSTY) {
+            if (r == 0) { eventText = "Haunted someone good!"; happiness += 25; energy += 10; }
+            else if (r == 1) { eventText = "Phase-walked through WALL!"; energy += 20; happiness += 20; }
+            else { eventText = "Spooky dream!"; happiness -= 15; energy -= 10; pendingVibe = 1; }
+        } else if (petType == TYPE_SHROOMY) {
+            if (r == 0) { eventText = "SPORE TRIP!!"; happiness += 30; energy -= 15; celebType = 2; }
+            else if (r == 1) { eventText = "Underground network vision!"; health += 10; happiness += 25; }
+            else { eventText = "Reality dissolving~"; happiness += 15; energy += 10; celebType = 2; }
+        } else if (petType == TYPE_SPARKY) {
+            if (r == 0) { eventText = "OVERCHARGED!!"; energy += 30; happiness += 10; health -= 10; pendingVibe = 2; }
+            else if (r == 1) { eventText = "Zapped something!"; happiness += 20; energy += 10; }
+            else { eventText = "Static explosion!"; happiness -= 10; health -= 5; energy += 20; pendingVibe = 2; }
+        } else if (petType == TYPE_FROSTY) {
+            if (r == 0) { eventText = "Froze an enemy solid!"; happiness += 25; health += 5; }
+            else if (r == 1) { eventText = "Ice palace visit!"; happiness += 20; energy += 15; celebType = 1; }
+            else { eventText = "Inner blizzard!"; happiness -= 15; energy -= 10; health -= 5; pendingVibe = 1; }
+        } else if (petType == TYPE_ROCKY) {
+            if (r == 0) { eventText = "Triggered avalanche!"; happiness += 20; health += 10; }
+            else if (r == 1) { eventText = "Geological patience wins!"; energy += 25; health += 15; }
+            else { eventText = "Ancient mineral found!"; health += 20; happiness += 15; }
+        } else if (petType == TYPE_BLOBBY) {
+            if (r == 0) { eventText = "Absorbed an entire chair!"; hunger -= 20; happiness += 20; }
+            else if (r == 1) { eventText = "SHAPESHIFTED!"; happiness += 25; celebType = 2; }
+            else { eventText = "Briefly split in two!"; happiness += 20; energy -= 10; }
+        } else if (petType == TYPE_PIXELBOT) {
+            if (r == 0) { eventText = "CRITICAL SYSTEM UPDATE!"; health += 25; energy += 20; pendingVibe = 1; }
+            else if (r == 1) { eventText = "BUFFER OVERFLOW!!"; happiness -= 20; energy += 25; pendingVibe = 2; }
+            else { eventText = "NEW ALGORITHM LOADED!"; happiness += 25; health += 10; }
+        } else if (petType == TYPE_OCTAVIO) {
+            if (r == 0) { eventText = "8-arm multitask VICTORY!"; happiness += 25; energy -= 15; }
+            else if (r == 1) { eventText = "INK EXPLOSION!"; happiness += 20; pendingVibe = 1; }
+            else { eventText = "Tentacle tangle!"; happiness -= 10; energy -= 10; health += 5; }
+        } else if (petType == TYPE_BATSY) {
+            if (r == 0) { eventText = "Found a perfect cave!"; happiness += 25; energy += 20; }
+            else if (r == 1) { eventText = "Echolocated treasure!"; hunger -= 10; happiness += 25; }
+            else { eventText = "Touched the sun. OOPS!"; health -= 20; happiness -= 25; pendingVibe = 3; }
+        } else if (petType == TYPE_NUGGET) {
+            if (r == 0) { eventText = "DODGED THE SAUCE!!"; happiness += 25; energy += 15; pendingVibe = 2; }
+            else if (r == 1) { eventText = "WHO PUT KETCHUP NEARBY?!"; happiness -= 25; pendingVibe = 3; }
+            else { eventText = "Another day unchewed!"; health += 5; happiness += 15; }
+        } else if (petType == TYPE_DONUT) {
+            if (r == 0) { eventText = "EXTRA SPRINKLES!!"; happiness += 30; celebType = 1; }
+            else if (r == 1) { eventText = "Someone tried to EAT ME!"; happiness -= 25; health -= 10; pendingVibe = 3; }
+            else { eventText = "Fresh glaze applied!"; happiness += 20; health += 5; }
+        } else if (petType == TYPE_CACTUSO) {
+            if (r == 0) { eventText = "Perfect sunny day."; happiness += 15; health += 15; }
+            else if (r == 1) { eventText = "Spiked intruder. Good."; happiness += 20; }
+            else { eventText = "Bloomed. Once. It counted."; happiness += 25; celebType = 1; }
+        } else if (petType == TYPE_FOCZKA) {
+            if (r == 0) { eventText = "ARF! Caught huge fish!"; hunger -= 25; happiness += 25; celebType = 1; }
+            else if (r == 1) { eventText = "PERFECT belly flop!!"; happiness += 25; energy -= 10; celebType = 1; }
+            else { eventText = "Ball balanced on nose!!"; happiness += 30; celebType = 1; }
+        } else if (petType == TYPE_UNDEAD) {
+            if (r == 0) { eventText = "Tried to die. Failed."; happiness += 5; }
+            else if (r == 1) { eventText = "Dropped a limb. Found it."; energy -= 5; happiness += 3; }
+            else { eventText = "Eternal monday continues."; happiness -= 5; }
+        } else {
+            if (r == 0) { eventText = "DOUBLE RAINBOW!!"; happiness += 35; celebType = 2; }
+            else if (r == 1) { eventText = "Glitter explosion!"; happiness += 25; energy += 10; }
+            else { eventText = "Pure sparkle moment!"; happiness += 20; health += 5; celebType = 1; }
+        }
         _eventTime = Time.now().value();
         clamp();
     }
@@ -2359,35 +2482,35 @@ class Pet {
         var t = (Math.rand().abs() % 2 == 0) ? trait1 : trait2;
         var good = (Math.rand().abs() % 2 == 0);
         if (t == TRAIT_GLUTTON) {
-            if (good) { eventText = "Raided the fridge!"; hunger -= 20; }
-            else { eventText = "Ate too much!"; energy -= 10; }
+            if (good) { eventText = "RAIDED THE FRIDGE!"; hunger -= 30; happiness += 10; }
+            else { eventText = "Ate WAY too much!"; energy -= 15; health -= 5; }
         } else if (t == TRAIT_PICKY) {
-            if (good) { eventText = "Found a delicacy!"; hunger -= 15; happiness += 15; }
-            else { eventText = "Refused to eat!"; happiness -= 5; }
+            if (good) { eventText = "Found a DELICACY!"; hunger -= 20; happiness += 25; }
+            else { eventText = "Everything is WRONG!"; happiness -= 15; energy -= 5; }
         } else if (t == TRAIT_PLAYFUL) {
-            if (good) { eventText = "Invented a game!"; happiness += 20; }
-            else { eventText = "Played too hard!"; energy -= 15; }
+            if (good) { eventText = "INVENTED BEST GAME!!"; happiness += 30; energy += 5; }
+            else { eventText = "Played waaaay too hard!"; energy -= 25; health -= 5; }
         } else if (t == TRAIT_LAZY) {
-            if (good) { eventText = "Surprise energy!"; energy += 20; }
-            else { eventText = "Won't budge!"; happiness -= 5; }
+            if (good) { eventText = "Surprise energy burst!"; energy += 30; happiness += 10; }
+            else { eventText = "Completely immovable!"; happiness -= 15; energy -= 10; }
         } else if (t == TRAIT_HARDY) {
-            if (good) { eventText = "Flexed muscles!"; health += 10; }
-            else { eventText = "Overworked!"; energy -= 10; }
+            if (good) { eventText = "Flexed HARD!"; health += 20; energy += 10; }
+            else { eventText = "Overexerted badly!"; energy -= 20; health -= 10; }
         } else if (t == TRAIT_FRAGILE) {
-            if (good) { eventText = "Extra gentle care!"; happiness += 10; }
-            else { eventText = "Paper cut!"; health -= 5; }
+            if (good) { eventText = "Extra tender care!"; happiness += 20; health += 10; }
+            else { eventText = "Catastrophic paper cut!"; health -= 15; happiness -= 10; pendingVibe = 1; }
         } else if (t == TRAIT_CHEERFUL) {
-            if (good) { eventText = "Spread joy!"; happiness += 15; }
-            else { eventText = "Too enthusiastic!"; energy -= 8; }
+            if (good) { eventText = "Spread JOY EVERYWHERE!"; happiness += 25; energy += 5; }
+            else { eventText = "TOO enthusiastic!!"; energy -= 15; health -= 5; }
         } else if (t == TRAIT_GRUMPY) {
-            if (good) { eventText = "Smiled! Wait no."; happiness += 5; }
-            else { eventText = "Kicked a rock!"; happiness -= 8; }
+            if (good) { eventText = "Smiled. Wait, no."; happiness += 8; }
+            else { eventText = "KICKED A ROCK. Hard."; happiness -= 15; health -= 5; pendingVibe = 1; }
         } else if (t == TRAIT_HYPER) {
-            if (good) { eventText = "Speed boost!"; energy += 10; happiness += 10; }
-            else { eventText = "Crashed hard!"; energy -= 20; }
+            if (good) { eventText = "SPEED BURST!!"; energy += 20; happiness += 20; }
+            else { eventText = "CRASHED HARD!!"; energy -= 30; health -= 10; pendingVibe = 1; }
         } else {
-            if (good) { eventText = "Dream power!"; energy += 25; }
-            else { eventText = "Sleep walked!"; happiness -= 8; }
+            if (good) { eventText = "DREAM POWER SURGE!"; energy += 35; health += 5; }
+            else { eventText = "Sleepwalked into wall!"; happiness -= 15; health -= 10; pendingVibe = 1; }
         }
         _eventTime = Time.now().value();
         clamp();
@@ -2395,36 +2518,60 @@ class Pet {
 
     hidden function triggerRareEvent() {
         pendingVibe = 2;
-        var roll = Math.rand().abs() % 8;
+        var roll = Math.rand().abs() % 14;
         if (roll == 0) {
             eventText = "GOLDEN FEAST!!";
-            hunger = 0; happiness += 30; celebType = 2;
+            hunger = 0; happiness += 40; energy += 20; celebType = 2;
         } else if (roll == 1) {
-            eventText = "GUARDIAN ANGEL!";
-            health = 100; isSick = false; _sickTime = 0; celebType = 1;
+            eventText = "GUARDIAN ANGEL!!";
+            health = 100; isSick = false; _sickTime = 0; hugStress = 0; celebType = 2; pendingVibe = 3;
         } else if (roll == 2) {
-            eventText = "ALIEN VISIT!?";
-            happiness += 40; energy += 20; celebType = 2;
+            eventText = "ALIEN ABDUCTION!?";
+            happiness += 50; energy += 30; celebType = 2; pendingVibe = 3;
         } else if (roll == 3) {
             eventText = "DOUBLE RAINBOW!!";
-            happiness += 25; energy += 25; celebType = 2;
+            happiness += 35; energy += 25; health += 20; celebType = 2;
         } else if (roll == 4) {
-            eventText = "TIME WARP!";
-            var r = Math.rand().abs() % 4;
-            if (r == 0) { hunger -= 30; } else if (r == 1) { happiness += 30; }
-            else if (r == 2) { energy += 30; } else { health += 30; }
+            eventText = "TIME WARP!!";
+            hunger -= 40; happiness += 40; energy += 40; celebType = 2;
         } else if (roll == 5) {
-            eventText = "EARTHQUAKE!!";
-            happiness -= 30; energy -= 15; pendingVibe = 4;
+            eventText = "MASSIVE EARTHQUAKE!!";
+            happiness -= 40; energy -= 30; health -= 25; pendingVibe = 4;
         } else if (roll == 6) {
-            eventText = "TREASURE CHEST!";
-            hunger -= 15; happiness += 15; energy += 15; health += 15; celebType = 2;
-        } else {
-            eventText = "MAGIC POTION!";
-            var r = Math.rand().abs() % 4;
-            if (r == 0) { hunger = 0; } else if (r == 1) { happiness = 100; }
-            else if (r == 2) { energy = 100; } else { health = 100; }
+            eventText = "LEGENDARY TREASURE!!";
+            hunger -= 25; happiness += 30; energy += 30; health += 30; celebType = 2;
+        } else if (roll == 7) {
+            eventText = "LEGENDARY POTION!!";
+            var r2 = Math.rand().abs() % 4;
+            if (r2 == 0) { hunger = 0; happiness += 20; }
+            else if (r2 == 1) { happiness = 100; }
+            else if (r2 == 2) { energy = 100; health += 20; }
+            else { health = 100; isSick = false; _sickTime = 0; }
             celebType = 2;
+        } else if (roll == 8) {
+            eventText = "METEOR SHOWER!!";
+            happiness -= 35; energy -= 25; health -= 30; pendingVibe = 4;
+        } else if (roll == 9) {
+            eventText = "ANCIENT CURSE!!";
+            hugStress += 40; happiness -= 30; health -= 25; pendingVibe = 3;
+        } else if (roll == 10) {
+            eventText = "PET GOD VISITS!!";
+            hunger = 0; happiness = 100; energy = 100; health = 100;
+            isSick = false; _sickTime = 0; hugStress = 0;
+            celebType = 2; pendingVibe = 3;
+        } else if (roll == 11) {
+            eventText = "BLACK HOLE NEARBY!!";
+            happiness = happiness / 2; energy = energy / 2; health = health / 2; pendingVibe = 3;
+        } else if (roll == 12) {
+            eventText = "LOTTERY WIN!!!";
+            happiness = 100; hunger = 0; energy += 30; celebType = 2; pendingVibe = 3;
+        } else {
+            eventText = "IDENTITY CRISIS!!";
+            var temp = happiness;
+            happiness = energy;
+            energy = health;
+            health = temp;
+            pendingVibe = 2;
         }
         _eventTime = Time.now().value();
         clamp();
