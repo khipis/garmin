@@ -403,7 +403,7 @@ class Pet {
         if (eventText.length() > 0 && now - _eventTime > eventClear) { eventText = ""; _eventTime = now; }
         if (eventText.length() == 0) {
             _thoughtAcc += ge;
-            var thoughtInterval = debugMode ? 15 : 90;
+            var thoughtInterval = debugMode ? 15 : 40;
             if (_thoughtAcc >= thoughtInterval) { _thoughtAcc = 0; eventText = getThought(); _eventTime = now; }
         } else { _thoughtAcc = 0; }
 
@@ -2438,18 +2438,40 @@ class Pet {
         }
 
         if (isNightTime() && Math.rand().abs() % 3 == 0) {
-            var nt = ["*snoring*", "Zzz...", "Good night~", "*dreaming*", "So sleepy...", "*peaceful*"];
+            if (petType == TYPE_BATSY) {
+                var bt = ["*peak hours*", "Finally! Night!", "The dark is ALIVE!", "*echolocates joyfully*", "This is my time.", "Darkness = home~"];
+                return bt[Math.rand().abs() % bt.size()];
+            }
+            if (petType == TYPE_UNDEAD) {
+                var ut = ["Night means nothing.", "Dark. As always.", "*shuffles at 3am*", "Sleep is for living."];
+                return ut[Math.rand().abs() % ut.size()];
+            }
+            if (petType == TYPE_POLACCO) {
+                var pt = ["Spac pora k*rwa", "Noc, piwo, relaks", "*chrapie*", "Dobranoc k*rwa"];
+                return pt[Math.rand().abs() % pt.size()];
+            }
+            if (petType == TYPE_DOGGO) {
+                var dt = ["*snores loudly*", "Dreaming of balls~", "*kicks in sleep*", "ZzZz walkies ZzZz"];
+                return dt[Math.rand().abs() % dt.size()];
+            }
+            var nt = ["*snoring*", "Zzz...", "Good night~", "*dreaming*", "So sleepy...", "*peaceful*", "Lights out~", "*curls up*", "Nighty night~", "Dreaming of better stats.", "*sleep twitches*", "Tomorrow will be better... maybe."];
             return nt[Math.rand().abs() % nt.size()];
         }
 
         if (isSick && _sickTime > 0) {
             var sickDur = Time.now().value() - _sickTime;
             if (sickDur > 14400 && Math.rand().abs() % 2 == 0) {
-                var st = ["I'm getting worse!", "HELP ME PLEASE!", "Cure me...", "I might die..."];
+                if (petType == TYPE_POLACCO) { var t = ["Umre przez ta chorobe k*rwa", "Juz po mnie", "Doktor by sie przydal", "Koniec ch*j"]; return t[Math.rand().abs() % t.size()]; }
+                if (petType == TYPE_NOSACZ) { var t = ["E... koniec. E.", "*nos blady*", "EEE... choroooba...", "E... help E."]; return t[Math.rand().abs() % t.size()]; }
+                if (petType == TYPE_VEXOR) { return "I'm sick AND furious. Peak suffering."; }
+                var st = ["I'm getting worse!", "HELP ME PLEASE!", "Cure me...", "I might die...", "Please... meds...", "*barely moving*", "This is the end, maybe.", "Why won't it stop?!"];
                 return st[Math.rand().abs() % st.size()];
             }
             if (sickDur > 7200 && Math.rand().abs() % 3 == 0) {
-                var st = ["Need medicine!", "Still sick...", "Getting bad!", "Please heal me!"];
+                if (petType == TYPE_POLACCO) { var t = ["Zle sie czuje k*rwa", "Daj leki k*rwa!", "Choroba to nie przelewki"]; return t[Math.rand().abs() % t.size()]; }
+                if (petType == TYPE_NOSACZ) { var t = ["E chory E", "*nos smaruje*", "Nos choruje. E."]; return t[Math.rand().abs() % t.size()]; }
+                if (petType == TYPE_DOGGO) { var t = ["*sneezes sadly*", "No energy for ball...", "Sick doggo...", "*slow tail wag*"]; return t[Math.rand().abs() % t.size()]; }
+                var st = ["Need medicine!", "Still sick...", "Getting bad!", "Please heal me!", "*coughs sadly*", "Day 2 of being sick...", "When does this end?!", "Heal me pls~"];
                 return st[Math.rand().abs() % st.size()];
             }
         }
@@ -2483,32 +2505,59 @@ class Pet {
         if (roll < 5) { return getTypeThought(); }
         var t;
         if (poopCount > 2) {
-            if (petType == TYPE_POLACCO) { t = ["Nasr*ne wszedzie!", "Posprzataj k*rwa!", "Cuchnie ja pierdole"]; }
-            else { t = ["Clean pls!", "Eww!", "Stinky...", "Gross...", "I live in filth!", "Send help"]; }
+            if (petType == TYPE_POLACCO) { t = ["Nasr*ne wszedzie!", "Posprzataj k*rwa!", "Cuchnie ja pierdole", "Co to za smrod k*rwa", "Smierdzace to tu", "Sanitarny koszmar!"]; }
+            else if (petType == TYPE_NOSACZ) { t = ["E! Smrod! E!", "*nos obraca sie*", "E E kupka E", "Zly zapach. E."]; }
+            else if (petType == TYPE_PIXELBOT) { t = ["HYGIENE: critical", "CLEAN.EXE required", "Biohazard detected.", "Sanitize immediately."]; }
+            else if (petType == TYPE_VEXOR) { t = ["Clean this sh*t literally", "Disgusting. Fix it.", "*rages at smell*", "I LIVE IN FILTH?!"]; }
+            else { t = ["Clean pls!", "Eww!", "Stinky...", "Gross...", "I live in filth!", "Send help", "The smell IS my life now.", "Biohazard situation.", "Please. I beg you.", "*covers nose*", "I have lost dignity.", "Poop count: excessive."]; }
         }
         else if (isSick) {
-            if (petType == TYPE_POLACCO) { t = ["Zle sie czuje k*rwa", "Chyba zdychm...", "Daj leki ch*ju", "Boli mnie wszystko"]; }
-            else { t = ["Ugh...", "*cough*", "Help me...", "Feel bad", "Am I dying?", "Need meds...", "*wheeze*"]; }
+            if (petType == TYPE_POLACCO) { t = ["Zle sie czuje k*rwa", "Chyba zdychm...", "Daj leki ch*ju", "Boli mnie wszystko", "Umre przez ten styl zycia", "Choroba k*rwa"]; }
+            else if (petType == TYPE_NOSACZ) { t = ["E... chory. E.", "*nos kicha*", "E! Bol! E!", "Nos choruje E."]; }
+            else if (petType == TYPE_PIXELBOT) { t = ["HEALTH: degrading", "Virus detected?", "System failure risk.", "Repair needed ASAP."]; }
+            else if (petType == TYPE_VEXOR) { t = ["Sick and FURIOUS.", "Illness makes me WORSE.", "*coughs angrily*", "Heal me. NOW."]; }
+            else if (petType == TYPE_DOGGO) { t = ["*sad cough*", "No zoomies today...", "Feel icky...", "*lies down slowly*"]; }
+            else { t = ["Ugh...", "*cough*", "Help me...", "Feel bad", "Am I dying?", "Need meds...", "*wheeze*", "My health is a scam.", "Can't get up...", "Fever dreams...", "*sneezes dramatically*", "The sickness grows.", "Everything hurts EVERYWHERE."]; }
         }
         else if (hunger > 70) {
-            if (petType == TYPE_POLACCO) { t = ["ZERAC DAJ!", "Glodny jak ch*j!", "KIELBASA!", "Brzuch burczy k*rwa"]; }
-            else { t = ["Feed me!", "Hungry...", "*rumble*", "Food?", "I could eat a HORSE", "STARVING!", "*tummy growl*"]; }
+            if (petType == TYPE_POLACCO) { t = ["ZERAC DAJ!", "Glodny jak ch*j!", "KIELBASA!", "Brzuch burczy k*rwa", "Pozre kogokolwiek!", "Gdzie ta kielbasa!", "Jestem w stanie zerac sciany!"]; }
+            else if (petType == TYPE_NOSACZ) { t = ["E! Jesc! E!", "Glod. E.", "E E jedzenie E!", "*nos wącha jedzenie*"]; }
+            else if (petType == TYPE_DOGGO) { t = ["FOOD?! FOOD?! FOOD?!", "*dramatic starving act*", "I can smell EVERYTHING.", "Feed or I eat the sofa."]; }
+            else if (petType == TYPE_VEXOR) { t = ["FEED ME OR SUFFER.", "Starvation makes me WORSE.", "I'll eat your SOUL.", "Food. NOW. SERIOUSLY."]; }
+            else if (petType == TYPE_EMILKA) { t = ["Feed me... please?", "Hunger + loneliness = tears", "My tummy is angry~", "Even food would show me love..."]; }
+            else { t = ["Feed me!", "Hungry...", "*rumble*", "Food?", "I could eat a HORSE", "STARVING!", "*tummy growl*", "My stomach is plotting.", "Hunger level: feral.", "I'll eat literally anything.", "*eats air*", "FOOD IS ALL I THINK ABOUT", "Is that food? THAT'S FOOD.", "Feed or consequences."]; }
         }
         else if (happiness < 30) {
-            if (petType == TYPE_POLACCO) { t = ["Jebac to...", "Nudno tu k*rwa", "Ch*j z tym", "Depresja..."]; }
-            else { t = ["*sigh*", "Bored...", "Play?", "Lonely", "Life is pain", "Everything sucks", "Meh..."]; }
+            if (petType == TYPE_POLACCO) { t = ["Jebac to...", "Nudno tu k*rwa", "Ch*j z tym", "Depresja...", "Wszystko bez sensu", "Polska przygnebila mnie", "Zyciem nie jest, jest wegetowaniem"]; }
+            else if (petType == TYPE_NOSACZ) { t = ["E... smutno. E.", "*nos zwiesa sie*", "E...", "Brak radosci. E."]; }
+            else if (petType == TYPE_EMILKA) { t = ["Nobody loves me...", "*dramatically lies on floor*", "Life is unfair and LONG.", "Why won't anyone notice me?"]; }
+            else if (petType == TYPE_VEXOR) { t = ["Boredom fuels my rage.", "Entertain me or DIE.", "*destroys something out of boredom*", "I hate this. I hate all."]; }
+            else if (petType == TYPE_DOGGO) { t = ["*sad puppy eyes*", "No one to play with...", "Is anyone there?", "*whimpers quietly*"]; }
+            else { t = ["*sigh*", "Bored...", "Play?", "Lonely", "Life is pain", "Everything sucks", "Meh...", "Nothing matters.", "I stare. Void stares back.", "Is this it?", "Stimulate me pls.", "Boredom is suffering.", "*counts pixels*", "Someone. Anyone. Please."]; }
         }
         else if (energy < 20) {
-            if (petType == TYPE_POLACCO) { t = ["Padne zaraz...", "Drzemka kurwa...", "*ziewa*", "Wykoncz*ny"]; }
-            else { t = ["Sleepy...", "*yawn*", "Tired...", "Nap?", "Can't...move...", "5 more minutes", "Zzz..."]; }
+            if (petType == TYPE_POLACCO) { t = ["Padne zaraz...", "Drzemka kurwa...", "*ziewa*", "Wykoncz*ny", "Nogi nie dzialaja", "Dajcie spokoj k*rwa", "Spac!"]; }
+            else if (petType == TYPE_NOSACZ) { t = ["E... senny. E.", "*nos opada*", "Spac E.", "E... zmeczenie E."]; }
+            else if (petType == TYPE_DOGGO) { t = ["*slow tail wag*", "Tired but still love you...", "*collapses softly*", "Nap... then walkies?"]; }
+            else if (petType == TYPE_VEXOR) { t = ["Tired AND angry. Peak me.", "Energy low. Rage stays.", "Sleep is weakness. Yet.", "*angrily lies down*"]; }
+            else { t = ["Sleepy...", "*yawn*", "Tired...", "Nap?", "Can't...move...", "5 more minutes", "Zzz...", "Battery at 3%.", "Legs? What legs.", "Everything is effort.", "*falls asleep mid-thought*", "Napping is self-care.", "Too tired to be tired.", "*boneless*"]; }
         }
         else if (happiness > 70) {
-            if (petType == TYPE_POLACCO) { t = ["Niezle k*rwa!", "Zycie jest piekne!", "Dobre jest!", "*usmiech*", "Piwo smakuje!"]; }
-            else { t = ["Yay!", "Happy!", "Love you!", "Wheee!", "Best day!", "Life is GREAT!", "So blessed~"]; }
+            if (petType == TYPE_POLACCO) { t = ["Niezle k*rwa!", "Zycie jest piekne!", "Dobre jest!", "*usmiech*", "Piwo smakuje!", "Kielbaska, zimne, dobre!", "Och, jest ok."]; }
+            else if (petType == TYPE_NOSACZ) { t = ["E!! Dobrze! E!!", "*nos tanczy*", "E E szczescie E!", "Nos szczesliwy!"]; }
+            else if (petType == TYPE_DOGGO) { t = ["BEST DAY EVER!!", "*spins from joy*", "I love EVERYTHING!", "THIS IS PERFECT!!"]; }
+            else if (petType == TYPE_EMILKA) { t = ["Life is BEAUTIFUL!", "*twirls*", "I feel SO loved!", "Today is my day~"]; }
+            else if (petType == TYPE_VEXOR) { t = ["...tolerable.", "Acceptable.", "I feel... less bad.", "Don't tell anyone."]; }
+            else { t = ["Yay!", "Happy!", "Love you!", "Wheee!", "Best day!", "Life is GREAT!", "So blessed~", "Today is PERFECT.", "Nothing can stop me!", "HAPPINESS OVERLOAD", "Pure serotonin.", "*does a little dance*", "10/10 existence.", "I feel invincible~"]; }
         }
         else {
-            if (petType == TYPE_POLACCO) { t = ["No...", "*beka*", "Eh...", "Hm", "Co jest?", "Leci cos?", "Nuda..."]; }
-            else { t = ["Hmm...", "La la~", "Hi!", "Boop!", "...", "Hehe", "Vibing~", "*exists*", "Sup?"]; }
+            if (petType == TYPE_POLACCO) { t = ["No...", "*beka*", "Eh...", "Hm", "Co jest?", "Leci cos?", "Nuda...", "Zycie plynie k*rwa", "Siedze tu.", "No i co?", "*drapie sie*"]; }
+            else if (petType == TYPE_NOSACZ) { t = ["E.", "*wącha*", "E E.", "Nos.", "Siede.", "E?", "*oblizuje*", "E E E.", "Nos mysli."]; }
+            else if (petType == TYPE_PIXELBOT) { t = ["Idle.", "Standby.", "No input.", "Processing...", "Status: nominal.", "...waiting."]; }
+            else if (petType == TYPE_UNDEAD) { t = ["...", "*exists*", "Still.", "Cold.", "Forever.", "*stares*", "Eternal.", "Nothing changes."]; }
+            else if (petType == TYPE_DOGGO) { t = ["*tail wag*", "Hi!!", "Bork~", "*sniffs*", "Good.", "Hehe.", "*licks screen*"]; }
+            else if (petType == TYPE_EMILKA) { t = ["Heyyy~", "*checks phone*", "Am I cute?", "Thinking of you~", "La la la~", "*hair flip*"]; }
+            else { t = ["Hmm...", "La la~", "Hi!", "Boop!", "...", "Hehe", "Vibing~", "*exists*", "Sup?", "Thinking... nothing.", "Just being.", "Tuesday energy.", "*stares at nothing*", "No thoughts. Head empty.", "Living mediocre best life."]; }
         }
         return t[Math.rand().abs() % t.size()];
     }
@@ -2892,45 +2941,45 @@ class Pet {
     hidden function getTraitThought() {
         var t = (Math.rand().abs() % 2 == 0) ? trait1 : trait2;
         var opts;
-        if (t == TRAIT_GLUTTON) { opts = ["Mmm food...", "Snacks?", "Always hungry!", "NOM"]; }
-        else if (t == TRAIT_PICKY) { opts = ["Ew, not that", "Want gourmet!", "Meh...", "Fancy?"]; }
-        else if (t == TRAIT_PLAYFUL) { opts = ["Play play!", "Tag!", "Wheee!", "Let's go!"]; }
-        else if (t == TRAIT_LAZY) { opts = ["Nah...", "5 more min", "*sprawl*", "Effort..."]; }
-        else if (t == TRAIT_HARDY) { opts = ["Strong!", "Tough!", "Bring it!", "No prob"]; }
-        else if (t == TRAIT_FRAGILE) { opts = ["Careful...", "Gentle!", "*sniffle*", "Ouch"]; }
-        else if (t == TRAIT_CHEERFUL) { opts = ["Yippee!", "Sunshine!", "Love life!", "Joy!"]; }
-        else if (t == TRAIT_GRUMPY) { opts = ["Hmph.", "Whatever.", "Ugh.", "Go away"]; }
-        else if (t == TRAIT_HYPER) { opts = ["GOGO!", "ZOOM!", "Can't stop!", "!!!"]; }
-        else { opts = ["*yawn*", "Zzz...", "So sleepy", "Bed?"]; }
+        if (t == TRAIT_GLUTTON) { opts = ["Mmm food...", "Snacks?", "Always hungry!", "NOM", "Just one more bite...", "Is that a crumb?!", "FOOD IS MY RELIGION", "Hungry. So hungry. Always.", "I'd eat the watch if it had flavour.", "*imagines buffet*"]; }
+        else if (t == TRAIT_PICKY) { opts = ["Ew, not that", "Want gourmet!", "Meh...", "Fancy?", "This is beneath me.", "Substandard.", "I HAVE STANDARDS.", "Not this trash.", "*sniffs disapprovingly*", "Chef? What chef?"]; }
+        else if (t == TRAIT_PLAYFUL) { opts = ["Play play!", "Tag!", "Wheee!", "Let's go!", "CATCH ME IF U CAN!", "Ready? 3...2...1...GO!", "Games forever~", "*bounces off walls*", "Is everything a game? Yes.", "I turned napping into a sport."]; }
+        else if (t == TRAIT_LAZY) { opts = ["Nah...", "5 more min", "*sprawl*", "Effort...", "Later. Much later.", "The floor is comfortable.", "Motivation? Never heard of her.", "*slides off couch*", "Why stand when you can lie?", "Napping is a lifestyle."]; }
+        else if (t == TRAIT_HARDY) { opts = ["Strong!", "Tough!", "Bring it!", "No prob", "I CANNOT be stopped.", "Pain? What pain?", "I once ate a rock.", "Survived again.", "Unbreakable~", "Try me. Please."]; }
+        else if (t == TRAIT_FRAGILE) { opts = ["Careful...", "Gentle!", "*sniffle*", "Ouch", "Everything hurts...", "So delicate...", "Handle with care pls!", "I bruise easily.", "*flinches at wind*", "Life is very sharp."]; }
+        else if (t == TRAIT_CHEERFUL) { opts = ["Yippee!", "Sunshine!", "Love life!", "Joy!", "TODAY IS GREAT!", "Serotonin: MAX", "Every day is a gift!", "*skips happily*", "You are amazing!!", "Nothing can stop me~"]; }
+        else if (t == TRAIT_GRUMPY) { opts = ["Hmph.", "Whatever.", "Ugh.", "Go away", "Leave me alone.", "Not in the mood.", "Everything sucks.", "Don't talk to me.", "*rolls eyes*", "Get off my lawn."]; }
+        else if (t == TRAIT_HYPER) { opts = ["GOGO!", "ZOOM!", "Can't stop!", "!!!", "AAAAAAA!", "WHY IS EVERYTHING SO SLOW", "*vibrating*", "I have 47 ideas RIGHT NOW!", "MOVE MOVE MOVE!", "IS THIS FAST ENOUGH?!"]; }
+        else { opts = ["*yawn*", "Zzz...", "So sleepy", "Bed?", "Just 5 more hours...", "*falls asleep standing*", "Consciousness is optional.", "Nap o'clock.", "*snores lightly*", "Sleep > everything, always."]; }
         return opts[Math.rand().abs() % opts.size()];
     }
 
     hidden function getTypeThought() {
         var t;
-        if (petType == TYPE_BLOBBY) { t = ["Bloop!", "Squish~", "Bounce!", "Blob~", "Am I liquid?", "*absorbs air*", "Shape? What shape?"]; }
-        else if (petType == TYPE_FLAMEY) { t = ["Hot hot!", "Sizzle!", "Burn~", "Flame on!", "Everything is fuel!", "*sets air on fire*", "WHO NEEDS EYEBROWS"]; }
-        else if (petType == TYPE_AQUA) { t = ["Splash~", "Bubble!", "Flow~", "Drip drip", "I AM the ocean", "*evaporates slightly*", "Hydration queen~"]; }
-        else if (petType == TYPE_ROCKY) { t = ["Solid.", "Rock on!", "Steady~", "Crunch", "I don't roll. I AM.", "Minerals!", "Been here 1000 yrs"]; }
-        else if (petType == TYPE_GHOSTY) { t = ["Boo!", "Whoosh~", "Spooky!", "Float~", "Can you see me?!", "*phases thru wall*", "I haunt therefore I am"]; }
-        else if (petType == TYPE_SPARKY) { t = ["Bzzt!", "ZAP!", "Spark!", "Charge!", "UNLIMITED POWER!", "*shorts out*", "I AM the outlet!"]; }
-        else if (petType == TYPE_FROSTY) { t = ["Brrr~", "Chill~", "Cool!", "Frost~", "Let it go~", "*freezes tear*", "Cold outside, colder inside"]; }
-        else if (petType == TYPE_SHROOMY) { t = ["Spore!", "Fungi~", "Grow!", "Bloom~", "Reality is spores", "*trips on self*", "I see the TRUTH"]; }
-        else if (petType == TYPE_EMILKA) { t = ["*hair flip*", "Heyyy~", "Love me!", "Cutie~", "U thinking of me?", "Am I pretty?!", "*checks mirror*", "NOTICE ME!", "Kto pisal?!"]; }
-        else if (petType == TYPE_VEXOR) { t = ["F*ck off", "*spits*", "Die already", "Piece of sh*t", "Go to hell", "I hate everything", "Kiss my a*s", "Eat sh*t", "Worthless human", "You disgust me", "F*cking pathetic"]; }
-        else if (petType == TYPE_CHIKKO) { t = ["BAWK!", "*pecks ground*", "Seed?", "*nervous cluck*", "W-what was that?!", "THE SKY IS FALLING!", "Is that a FOX?!", "*panic molt*"]; }
-        else if (petType == TYPE_DZIKKO) { t = ["*SNORT*", "OINK!", "*digs dirt*", "*charges wall*", "MY territory!", "I'll RAM you", "TRUFFLES OR DEATH", "*sharpens tusks*"]; }
-        else if (petType == TYPE_POLACCO) { t = ["Piwo by sie...", "*beka*", "Grilla odpalic?", "Jebane podatki", "Kto pytal?", "Eh, k*rwa...", "Zimne?", "*drapie jaja*", "Mecz kiedy?", "Kielbasy daj", "Ty za to placisz", "A bo ja wiem...", "Co za kraj...", "Za Gierka lepiej bylo", "Sasiad ch*j", "Trawnik sam sie nie skosi"]; }
-        else if (petType == TYPE_NOSACZ) { t = ["E E E!", "Nos!", "*wącha*", "E?", "EEEEE!", "Nos duzy!", "*drapie nos*", "Hehe nos", "E E!", "Nos najlepszy!", "*oblizuje nos*", "Duzy nos = madry!"]; }
-        else if (petType == TYPE_DONUT) { t = ["Sprinkles!", "Sweet~", "*rolls*", "Glazed!", "Yummy me!", "Don't bite!", "Am I a snack?!", "FROSTING IS LIFE", "I'm a circle of JOY"]; }
-        else if (petType == TYPE_CACTUSO) { t = ["...", "*stands*", "Don't.", "Sun.", "Water?", "No hug.", "Touch = pain.", "I have needs. Few."]; }
-        else if (petType == TYPE_PIXELBOT) { t = ["Beep.", "01001", "Process.", "Compute.", "Logic.", "EMOTION: undefined", "Beep boop.", "WHY: insufficient data"]; }
-        else if (petType == TYPE_OCTAVIO) { t = ["*squish*", "Ink!", "Tentacle!", "*bubbles*", "8 arms!", "I multitask LITERALLY", "*juggles 6 things*", "Ocean vibes~"]; }
-        else if (petType == TYPE_BATSY) { t = ["*chirp*", "Zzz...", "*hangs*", "Night!", "*echo*", "Turn off the sun!", "Upside down is RIGHT", "I see in the dark~"]; }
-        else if (petType == TYPE_NUGGET) { t = ["Am I food?", "*sweats*", "Crispy...", "*exists*", "Help...", "Is that SAUCE?!", "I was a CHICKEN", "WHY AM I BREADED", "Don't dip me!"]; }
-        else if (petType == TYPE_FOCZKA) { t = ["Arf!", "*flop*", "Fish?", "*claps*", "Splash~", "*belly flop*", "Throw me a ball!", "*wiggles*", "Arf arf arf!"]; }
-        else if (petType == TYPE_DOGGO) { t = ["WOOF!", "*tail wag*", "Ball?!", "*zoomies*", "Bork!", "WALKIES?!", "*spins*", "Squirrel!", "I LOVE YOU!", "*sniffs everything*"]; }
-        else if (petType == TYPE_UNDEAD) { t = ["...", "*exists*", "Still here.", "*rattles*", "Uuugh...", "Cold.", "Forever.", "*stares*", "Brains?", "Death is fine."]; }
-        else { t = ["Sparkle!", "*glows*", "Rainbow~", "Shine!", "Colors!", "DOUBLE RAINBOW!", "I am LIGHT!", "Glitter bomb~", "Love & sparkles!"]; }
+        if (petType == TYPE_BLOBBY) { t = ["Bloop!", "Squish~", "Bounce!", "Blob~", "Am I liquid?", "*absorbs air*", "Shape? What shape?", "I have no bones. Freedom.", "Blobbing around~", "Technically I'm a gel.", "Everything is blob.", "I once ate a chair. Whole.", "*jiggles for no reason*", "Formless and loving it."]; }
+        else if (petType == TYPE_FLAMEY) { t = ["Hot hot!", "Sizzle!", "Burn~", "Flame on!", "Everything is fuel!", "*sets air on fire*", "WHO NEEDS EYEBROWS", "I am a fire hazard :)", "Toasty~", "No one can extinguish me!", "I ran out of marshmallows to ruin.", "Arson? Me? Never.", "*singes something nearby*", "Heat is my love language."]; }
+        else if (petType == TYPE_AQUA) { t = ["Splash~", "Bubble!", "Flow~", "Drip drip", "I AM the ocean", "*evaporates slightly*", "Hydration queen~", "Water you doing?", "Current mood: wavy", "I'll outlast all of you.", "*flows around obstacle*", "Drop by drop~", "Tides in, vibes in~", "I once drowned a rock."]; }
+        else if (petType == TYPE_ROCKY) { t = ["Solid.", "Rock on!", "Steady~", "Crunch", "I don't roll. I AM.", "Minerals!", "Been here 1000 yrs", "You think YOU'RE hard?", "Sedimentary, my dear.", "I have layers. Literally.", "My last friend was a fossil.", "Still here. Still solid.", "*casually exists for millennia*", "Erosion? lol."]; }
+        else if (petType == TYPE_GHOSTY) { t = ["Boo!", "Whoosh~", "Spooky!", "Float~", "Can you see me?!", "*phases thru wall*", "I haunt therefore I am", "Death was just a restart.", "*goes 30% translucent*", "My therapist is also dead.", "Haunted? No. I haunt.", "Boo and I'll do it again.", "*casually walks through you*", "The living confuse me."]; }
+        else if (petType == TYPE_SPARKY) { t = ["Bzzt!", "ZAP!", "Spark!", "Charge!", "UNLIMITED POWER!", "*shorts out*", "I AM the outlet!", "Grounded? Never.", "Please don't lick me.", "Voltage: maximum.", "*accidentally zaps self*", "Static is my love language.", "I once fried a microwave.", "CONDUCTIVITY!"]; }
+        else if (petType == TYPE_FROSTY) { t = ["Brrr~", "Chill~", "Cool!", "Frost~", "Let it go~", "*freezes a tear mid-fall*", "Cold outside, colder inside", "Sub-zero mood.", "Ice to meet you.", "Permafrost personality.", "*breathes visible breath*", "Winter IS my personality.", "I freeze things by accident.", "Warmth is overrated."]; }
+        else if (petType == TYPE_SHROOMY) { t = ["Spore!", "Fungi~", "Grow!", "Bloom~", "Reality is spores", "*trips on own spores*", "I see the TRUTH", "We are all connected. Via me.", "The underground network speaks.", "Mycology is art.", "*releases spore cloud*", "I grow in the dark. Relatable.", "My roots go everywhere.", "Decomposition is beautiful."]; }
+        else if (petType == TYPE_EMILKA) { t = ["*hair flip*", "Heyyy~", "Love me!", "Cutie~", "U thinking of me?", "Am I pretty?!", "*checks mirror*", "NOTICE ME!", "Kto pisal?!", "Read receipts ON.", "*posts sad quote*", "I just want to be obsessed over.", "YOU WERE SUPPOSED TO TEXT BACK!", "We're SO meant to be.", "*dramatically sighs*", "One notification. That's all I ask."]; }
+        else if (petType == TYPE_VEXOR) { t = ["F*ck off", "*spits*", "Die already", "Piece of sh*t", "Go to hell", "I hate everything", "Kiss my a*s", "Eat sh*t", "Worthless human", "You disgust me", "F*cking pathetic", "WHY ARE YOU STILL HERE", "*contemplates chaos*", "I dream of destruction.", "Get out of my sight.", "*destroys something small*", "Nothing brings me joy. Except suffering."]; }
+        else if (petType == TYPE_CHIKKO) { t = ["BAWK!", "*pecks ground*", "Seed?", "*nervous cluck*", "W-what was that?!", "THE SKY IS FALLING!", "Is that a FOX?!", "*panic molt*", "DANGER! ALWAYS DANGER!", "My eggs... where?!", "I trust NO ONE.", "The farmer is coming.", "*clucks in Morse code*", "EVERY SHADOW IS A PREDATOR", "*runs in wrong direction*"]; }
+        else if (petType == TYPE_DZIKKO) { t = ["*SNORT*", "OINK!", "*digs dirt*", "*charges wall*", "MY territory!", "I'll RAM you", "TRUFFLES OR DEATH", "*sharpens tusks*", "WHO WANTS IT?!", "I headbutted a tree. Tree lost.", "The forest fears ME.", "*roots up the floor*", "Oink first, ask never.", "My anger is my compass."]; }
+        else if (petType == TYPE_POLACCO) { t = ["Piwo by sie...", "*beka*", "Grilla odpalic?", "Jebane podatki", "Kto pytal?", "Eh, k*rwa...", "Zimne?", "*drapie jaja*", "Mecz kiedy?", "Kielbasy daj", "Ty za to placisz", "A bo ja wiem...", "Co za kraj...", "Za Gierka lepiej bylo", "Sasiad ch*j", "Trawnik sam sie nie skosi", "Emisja CO2? G*wno mnie obchodzi.", "Dzieci dzisiaj to...", "Emerytury nie bedzie.", "Chleb za 10zl? SKANDAL!", "*zapala nieregulaminowo*", "W mojej wsi bylo lepiej.", "Europa nam nie bedzie mowic!"]; }
+        else if (petType == TYPE_NOSACZ) { t = ["E E E!", "Nos!", "*wącha*", "E?", "EEEEE!", "Nos duzy!", "*drapie nos*", "Hehe nos", "E E!", "Nos najlepszy!", "*oblizuje nos*", "Duzy nos = madry!", "E! E! E! E!", "*nos wedrowny*", "Nos wie wszystko.", "E wszystko E.", "*wącha innych*", "Nos pamieta."]; }
+        else if (petType == TYPE_DONUT) { t = ["Sprinkles!", "Sweet~", "*rolls*", "Glazed!", "Yummy me!", "Don't bite!", "Am I a snack?!", "FROSTING IS LIFE", "I'm a circle of JOY", "Donut worry~", "I have a hole in my heart. Literally.", "Round is a shape!", "*gets more sprinkles*", "Sugar rush incoming~", "Life is short. Eat donuts.", "I am the snack and the meal."]; }
+        else if (petType == TYPE_CACTUSO) { t = ["...", "*stands*", "Don't.", "Sun.", "Water?", "No hug.", "Touch = pain.", "I have needs. Very few.", "I've been in this pot for years.", "The desert had personality.", "Thorns are just pointy hugs.", "Alone. Good.", "I bloom once. You missed it.", "*drops spine passive-aggressively*", "Solitude is optimal."]; }
+        else if (petType == TYPE_PIXELBOT) { t = ["Beep.", "01001", "Process.", "Compute.", "Logic.", "EMOTION: undefined", "Beep boop.", "WHY: insufficient data", "COMPUTING...", "Error 404: fun not found", "My feelings are a subroutine.", "MEMORY: 99% existential dread", "Sleep.exe stopped working.", "*runs defrag*", "Recalibrating humanity expectations.", "I calculated your life choices. Poor."]; }
+        else if (petType == TYPE_OCTAVIO) { t = ["*squish*", "Ink!", "Tentacle!", "*bubbles*", "8 arms!", "I multitask LITERALLY", "*juggles 6 things*", "Ocean vibes~", "I can open any jar.", "Eight hugs simultaneously.", "Ink is both art and defense.", "*accidentally inks self*", "My arms have their own opinions.", "I am my own crowd.", "Sea floor is underrated."]; }
+        else if (petType == TYPE_BATSY) { t = ["*chirp*", "Zzz...", "*hangs*", "Night!", "*echo*", "Turn off the sun!", "Upside down is RIGHT", "I see in the dark~", "Echolocation is a vibe.", "Darkness is cozy.", "*sleeps 18 hours. You should too.*", "The day is the enemy.", "Caves > houses.", "*makes sound only dogs hear*", "Inverted is the correct orientation."]; }
+        else if (petType == TYPE_NUGGET) { t = ["Am I food?", "*sweats*", "Crispy...", "*exists*", "Help...", "Is that SAUCE?!", "I was a CHICKEN", "WHY AM I BREADED", "Don't dip me!", "McDonald's is a nightmare.", "Every day is borrowed.", "Is this ketchup?!", "I have no future. Only sauce.", "*crunches with anxiety*", "Do I taste good? Don't tell me."]; }
+        else if (petType == TYPE_FOCZKA) { t = ["Arf!", "*flop*", "Fish?", "*claps*", "Splash~", "*belly flop*", "Throw me a ball!", "*wiggles*", "Arf arf arf!", "*balances fish on nose*", "I am a professional flopper.", "ARF = love language.", "*spins on ice*", "Belly rubs: ALWAYS YES.", "The beach is home.", "*claps for no reason*"]; }
+        else if (petType == TYPE_DOGGO) { t = ["WOOF!", "*tail wag*", "Ball?!", "*zoomies*", "Bork!", "WALKIES?!", "*spins*", "Squirrel!", "I LOVE YOU!", "*sniffs everything*", "WHO IS GOOD BOY?! ME!", "BEST DAY EVER. AGAIN.", "*digs inappropriate hole*", "Your face smells so good!", "I waited FOREVER (3 minutes).", "THE MAILMAN IS MY NEMESIS.", "*destroys sock out of pure love*", "You came back!!! You ALWAYS come back!!"]; }
+        else if (petType == TYPE_UNDEAD) { t = ["...", "*exists*", "Still here.", "*rattles*", "Uuugh...", "Cold.", "Forever.", "*stares*", "Brains?", "Death is fine.", "Eternity is... fine.", "*decomposes slightly*", "I've seen empires fall.", "The living confuse me.", "Sleep is for the living.", "*drops a rib accidentally*"]; }
+        else { t = ["Sparkle!", "*glows*", "Rainbow~", "Shine!", "Colors!", "DOUBLE RAINBOW!", "I am LIGHT!", "Glitter bomb~", "Love & sparkles!", "Roy G Biv is my spirit animal.", "Every color is valid!", "*leaves glitter trail*", "I am visible from space.", "Chromatic excellence!", "*vibing in spectrum*"]; }
         return t[Math.rand().abs() % t.size()];
     }
 
@@ -2953,37 +3002,80 @@ class Pet {
             return null;
         }
         if (petType == TYPE_NUGGET) {
+            if (steps >= 20000) { return "Running from your DESTINY?!"; }
             if (steps >= 10000) { return "Running from FATE?"; }
+            if (steps >= 5000) { return "That's a lot of steps for a snack..."; }
             if (steps < 500) { return "At least I'm not jogging..."; }
             return null;
         }
         if (petType == TYPE_CACTUSO) {
             if (steps >= 10000) { return "I don't have legs."; }
+            if (steps >= 5000) { return "I watch you walk. Jealously."; }
             if (steps < 500) { return "Same."; }
             return null;
         }
         if (petType == TYPE_FOCZKA) {
+            if (steps >= 20000) { var ft = ["MARATHON ARF!", "SO MANY STEPS ARF!!", "*claps flippers for you*"]; return ft[Math.rand().abs() % ft.size()]; }
             if (steps >= 10000) { return "*arf!* So many steps!"; }
+            if (steps >= 5000) { return "Good waddle! ARF!"; }
             if (steps < 500) { return "*flop* No swim today?"; }
             return null;
         }
         if (petType == TYPE_DOGGO) {
-            if (steps >= 20000) { return "WALKIES FOREVER!!!"; }
-            if (steps >= 10000) { return "THIS IS THE BEST DAY"; }
-            if (steps >= 5000) { return "Good WALK! BORK!"; }
-            if (steps < 500) { return "*stares at leash*"; }
+            if (steps >= 20000) { var dt = ["WALKIES FOREVER!!!", "INFINITE WALK MODE!", "UNSTOPPABLE LEGS!!"]; return dt[Math.rand().abs() % dt.size()]; }
+            if (steps >= 10000) { var dt = ["THIS IS THE BEST DAY", "10k?! I'M SO PROUD!!!", "WALK CHAMPION!!"]; return dt[Math.rand().abs() % dt.size()]; }
+            if (steps >= 5000) { var dt = ["Good WALK! BORK!", "HALFWAY TO HEAVEN!", "Steps good!!! BORK!!"]; return dt[Math.rand().abs() % dt.size()]; }
+            if (steps < 500) { var dt = ["*stares at leash*", "*sad leash look*", "Leash... gathering dust..."]; return dt[Math.rand().abs() % dt.size()]; }
             return null;
         }
         if (petType == TYPE_UNDEAD) {
             if (steps >= 10000) { return "Shambling forever."; }
+            if (steps >= 5000) { return "Acceptable shambling."; }
             if (steps < 500) { return "Same as me."; }
             return null;
         }
+        if (petType == TYPE_EMILKA) {
+            if (steps >= 10000) { return "All this walking & u still don't text!"; }
+            if (steps >= 5000) { return "Walk WITH me sometime?"; }
+            if (steps < 500) { return "We could walk TOGETHER..."; }
+            return null;
+        }
+        if (petType == TYPE_VEXOR) {
+            if (steps >= 10000) { return "Running from your problems? Coward."; }
+            if (steps >= 5000) { return "Trying to escape? Pathetic."; }
+            if (steps < 500) { return "Good. Stay put. Easier to find you."; }
+            return null;
+        }
+        if (petType == TYPE_PIXELBOT) {
+            if (steps >= 20000) { return "STEPS: RECORD. PROUD.EXE"; }
+            if (steps >= 10000) { return "PHYSICAL.EXE: OPTIMAL"; }
+            if (steps >= 5000) { return "PROGRESS: ADEQUATE"; }
+            if (steps < 500) { return "MOVEMENT: INSUFFICIENT"; }
+            return null;
+        }
+        if (petType == TYPE_CHIKKO) {
+            if (steps >= 10000) { return "Running from FOX! Still running!"; }
+            if (steps >= 5000) { return "EXERCISE = less easy for fox!"; }
+            if (steps < 500) { var ct = ["*nervous stillness*", "Staying still. Safer.", "No movement. No detection."]; return ct[Math.rand().abs() % ct.size()]; }
+            return null;
+        }
+        if (petType == TYPE_FLAMEY) {
+            if (steps >= 10000) { return "Burning calories LITERALLY!"; }
+            if (steps >= 5000) { return "Hot pursuit of fitness!"; }
+            if (steps < 500) { return "*fire dims slightly*"; }
+            return null;
+        }
+        if (petType == TYPE_ROCKY) {
+            if (steps >= 10000) { return "Even rocks move eventually."; }
+            if (steps >= 5000) { return "Solid footwork."; }
+            if (steps < 500) { return "I respect the stillness."; }
+            return null;
+        }
         var t;
-        if (steps >= 20000) { t = ["Marathon king!", "Unstoppable!", "ULTRA LEGS!", "Are you OK?!"]; }
-        else if (steps >= 10000) { t = ["10k! Wow!", "Champion!", "So active!", "Go go go!"]; }
-        else if (steps >= 5000) { t = ["Good walking!", "Keep it up!", "Nice moves!", "Getting there!"]; }
-        else if (steps < 500) { t = ["Walk more!", "Lazy day?", "Move it!", "Couch potato?", "Get up!"]; }
+        if (steps >= 20000) { t = ["Marathon king!", "Unstoppable!", "ULTRA LEGS!", "Are you OK?!", "Do you LIVE on a treadmill?!", "20k steps?! Please rest!", "Human speedrun!"]; }
+        else if (steps >= 10000) { t = ["10k! Wow!", "Champion!", "So active!", "Go go go!", "Unstoppable human!", "Step king/queen!", "I'm proud of you!"]; }
+        else if (steps >= 5000) { t = ["Good walking!", "Keep it up!", "Nice moves!", "Getting there!", "Halfway to legend!", "Not bad, not bad~", "Step by step~"]; }
+        else if (steps < 500) { t = ["Walk more!", "Lazy day?", "Move it!", "Couch potato?", "Get up!", "Touch grass!", "Your legs are decorative today.", "Step 1: take a step."]; }
         else { return null; }
         return t[Math.rand().abs() % t.size()];
     }
