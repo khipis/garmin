@@ -48,7 +48,7 @@ class MainView extends WatchUi.View {
         if (_timer != null) { _timer.stop(); _timer = null; }
     }
 
-    function onTimer() as Void {
+    function onTimer() {
         _pet.update();
         if (_pet.celebType > 0 && _celebTimer <= 0) {
             _celebType = _pet.celebType;

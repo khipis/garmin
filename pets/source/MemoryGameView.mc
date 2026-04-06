@@ -49,13 +49,13 @@ class MemoryGameView extends WatchUi.View {
     }
 
     // Speed increases with sequence length
-    hidden function getShowOn() as Number {
+    hidden function getShowOn() {
         if (_seqLen >= 10) { return 6; }
         if (_seqLen >= 6)  { return 10; }
         return 14;
     }
 
-    hidden function getShowGap() as Number {
+    hidden function getShowGap() {
         if (_seqLen >= 10) { return 3; }
         if (_seqLen >= 6)  { return 4; }
         return 5;
@@ -70,7 +70,7 @@ class MemoryGameView extends WatchUi.View {
         if (_timer != null) { _timer.stop(); _timer = null; }
     }
 
-    hidden function bestToPlayResult() as Number {
+    hidden function bestToPlayResult() {
         if (_bestLen <= 3) { return 0; }
         if (_bestLen == 4) { return 1; }
         if (_bestLen <= 6) { return 2; }
@@ -97,7 +97,7 @@ class MemoryGameView extends WatchUi.View {
         }
     }
 
-    function onGameTimer() as Void {
+    function onGameTimer() {
         _sparkle = (_sparkle + 1) % 8;
 
         if (_state == MEM_STATE_SHOW) {
@@ -139,7 +139,7 @@ class MemoryGameView extends WatchUi.View {
         WatchUi.requestUpdate();
     }
 
-    function inputDirection(dir as Number) {
+    function inputDirection(dir) {
         if (_state != MEM_STATE_INPUT) { return; }
         if (_seq[_inputIndex] != dir) {
             _state = MEM_STATE_WRONG;
@@ -163,21 +163,21 @@ class MemoryGameView extends WatchUi.View {
         WatchUi.requestUpdate();
     }
 
-    hidden function dirSymbol(dir as Number) as String {
+    hidden function dirSymbol(dir) {
         if (dir == MEM_DIR_UP)   { return "^"; }
         if (dir == MEM_DIR_DOWN) { return "v"; }
         if (dir == MEM_DIR_LEFT) { return "<"; }
         return ">";
     }
 
-    hidden function dirBtnName(dir as Number) as String {
+    hidden function dirBtnName(dir) {
         if (dir == MEM_DIR_UP)   { return "UP"; }
         if (dir == MEM_DIR_DOWN) { return "DOWN"; }
         if (dir == MEM_DIR_LEFT) { return "MENU"; }
         return "SEL";
     }
 
-    hidden function dirColor(dir as Number) as Number {
+    hidden function dirColor(dir) {
         if (dir == MEM_DIR_UP)   { return 0x33DD66; }
         if (dir == MEM_DIR_DOWN) { return 0x3388FF; }
         if (dir == MEM_DIR_LEFT) { return 0xFF8833; }

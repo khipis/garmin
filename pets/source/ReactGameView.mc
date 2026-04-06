@@ -40,7 +40,7 @@ class ReactGameView extends WatchUi.View {
         if (_timer != null) { _timer.stop(); _timer = null; }
     }
 
-    function onGameTimer() as Void {
+    function onGameTimer() {
         if (_state == 0) {
             _waitTicks++;
             if (_waitTicks >= _targetWait) {

@@ -109,7 +109,7 @@ class DodgeGameView extends WatchUi.View {
         return false;
     }
 
-    function onGameTimer() as Void {
+    function onGameTimer() {
         if (_state == 0) {
             _sparkles = (_sparkles + 1) % 8;
             _survivalTicks++;
