@@ -10,7 +10,7 @@ enum {
     TYPE_GHOSTY, TYPE_SPARKY, TYPE_FROSTY, TYPE_SHROOMY,
     TYPE_EMILKA, TYPE_VEXOR, TYPE_CHIKKO, TYPE_DZIKKO,
     TYPE_POLACCO, TYPE_NOSACZ, TYPE_DONUT, TYPE_CACTUSO, TYPE_PIXELBOT, TYPE_OCTAVIO, TYPE_BATSY, TYPE_NUGGET,
-    TYPE_FOCZKA, TYPE_RAINBOW,
+    TYPE_FOCZKA, TYPE_RAINBOW, TYPE_DOGGO, TYPE_UNDEAD,
     TYPE_COUNT
 }
 
@@ -57,6 +57,7 @@ class Pet {
     var dilemmaText;
     var hugStress;
     var careStreak;
+    var vibeEnabled;
 
     hidden var _lastCareDay;
     hidden var _hugStressAcc;
@@ -105,6 +106,7 @@ class Pet {
         dilemmaText = "";
         hugStress = 0;
         careStreak = 0;
+        vibeEnabled = true;
         _lastCareDay = -1;
         _hugStressAcc = 0;
         _actionTime = 0;
@@ -226,6 +228,8 @@ class Pet {
             careStreak = (cs != null) ? cs : 0;
             var lcd = Application.Storage.getValue("lastCareDay");
             _lastCareDay = (lcd != null) ? lcd : -1;
+            var ve = Application.Storage.getValue("vibeEnabled");
+            vibeEnabled = (ve != null) ? ve : true;
             var saved = Application.Storage.getValue("lastUpdate");
             if (saved != null && isAlive) {
                 var elapsed = Time.now().value() - saved;
@@ -272,6 +276,7 @@ class Pet {
         Application.Storage.setValue("hugStress", hugStress);
         Application.Storage.setValue("careStreak", careStreak);
         Application.Storage.setValue("lastCareDay", _lastCareDay);
+        Application.Storage.setValue("vibeEnabled", vibeEnabled);
     }
 
     function resetPet() {
@@ -288,6 +293,13 @@ class Pet {
         dilemmaText = "";
         _bodyCache = null;
         _bodyCacheType = -1;
+    }
+
+    function toggleVibe() {
+        vibeEnabled = !vibeEnabled;
+        eventText = vibeEnabled ? "Vibe: ON" : "Vibe: OFF";
+        _eventTime = Time.now().value();
+        save();
     }
 
     function toggleDebug() {
@@ -627,6 +639,19 @@ class Pet {
             if (mood == :love) { eventText = "*paints hearts*"; happiness += 12; return true; }
             if (mood == :party) { eventText = "*prismatic dance!*"; happiness += 10; energy -= 5; return true; }
             if (mood == :existential) { eventText = "*colors dim slowly*"; happiness -= 5; return true; }
+        } else if (petType == TYPE_DOGGO) {
+            if (mood == :party) {
+                var da = ["*ZOOMIES!!*", "*chases own tail*", "*BORKS loudly*", "*brings stick*"];
+                eventText = da[Math.rand().abs() % da.size()]; happiness += 15; energy -= 8; return true;
+            }
+            if (mood == :love) { eventText = "*licks your face!!*"; happiness += 12; energy -= 4; return true; }
+            if (mood == :sugar_high) { eventText = "*MAXIMUM ZOOMIES*"; happiness += 18; energy -= 12; return true; }
+            if (mood == :feral) { eventText = "*digs up the couch*"; hunger -= 8; energy -= 6; return true; }
+        } else if (petType == TYPE_UNDEAD) {
+            if (mood == :existential) {
+                var ua = ["*shambles forward*", "*rattles bones*", "*stares vacantly*", "*moans softly*"];
+                eventText = ua[Math.rand().abs() % ua.size()]; happiness -= 2; return true;
+            }
         }
         return false;
     }
@@ -691,6 +716,18 @@ class Pet {
             if (level >= 3) { return "UPTIME: restored"; }
             return "INPUT: detected";
         }
+        if (petType == TYPE_DOGGO) {
+            if (level >= 4) { return "*ZOOMS INTO YOU!!!*"; }
+            if (level >= 3) { return "YOOOU'RE BACK!!!! WOOF"; }
+            if (level >= 2) { return "*tail blur* BORK!!!"; }
+            return "*wags furiously*";
+        }
+        if (petType == TYPE_UNDEAD) {
+            if (level >= 4) { return "Still here. As always."; }
+            if (level >= 3) { return "Time means nothing."; }
+            if (level >= 2) { return "You returned. Good."; }
+            return "...";
+        }
         if (level >= 4) { return "YOU'RE BACK!!!"; }
         if (level >= 3) { return "Missed you SO much!"; }
         if (level >= 2) { return "Yay, you're here!"; }
@@ -706,6 +743,15 @@ class Pet {
         var wasHungry = hunger > 60;
 
         if (hunger < 10) {
+            if (petType == TYPE_UNDEAD) {
+                hunger = 50;
+                eventText = "*undead absorb food*";
+                _eventTime = lastInteraction;
+                action = ACT_EATING;
+                _actionTime = lastInteraction;
+                pendingVibe = 1;
+                return;
+            }
             hunger = 15;
             happiness -= 15;
             health -= 5;
@@ -775,6 +821,8 @@ class Pet {
         if (petType == TYPE_NUGGET) { return "*crumbs falling off*"; }
         if (petType == TYPE_FOCZKA) { return "*barfs fish*"; }
         if (petType == TYPE_RAINBOW) { return "*rainbow vomit!*"; }
+        if (petType == TYPE_DOGGO) { return "*barfs & wags tail*"; }
+        if (petType == TYPE_UNDEAD) { return "*rises from barf*"; }
         return "*BLEARGH!*";
     }
 
@@ -801,6 +849,8 @@ class Pet {
         if (petType == TYPE_NUGGET) { return "*getting soggy*"; }
         if (petType == TYPE_FOCZKA) { return "*happy belly flop*"; }
         if (petType == TYPE_RAINBOW) { return "*glitter burp~*"; }
+        if (petType == TYPE_DOGGO) { return "*happy belch*"; }
+        if (petType == TYPE_UNDEAD) { return "...undead dont eat"; }
         return "*urp* ...too full";
     }
 
@@ -1079,6 +1129,8 @@ class Pet {
         else if (petType == TYPE_NUGGET) { rate = 15; }
         else if (petType == TYPE_FOCZKA) { rate = -3; }
         else if (petType == TYPE_RAINBOW) { rate = -8; }
+        else if (petType == TYPE_DOGGO) { rate = -5; }
+        else if (petType == TYPE_UNDEAD) { rate = -15; }
         if (hasTrait(TRAIT_CHEERFUL)) { rate -= 3; }
         if (hasTrait(TRAIT_GRUMPY)) { rate += 5; }
         if (hasTrait(TRAIT_PLAYFUL)) { rate -= 2; }
@@ -1107,6 +1159,8 @@ class Pet {
         if (petType == TYPE_NUGGET) { return "U trying to EAT me?!"; }
         if (petType == TYPE_FOCZKA) { return "*arf arf!* gentle!"; }
         if (petType == TYPE_RAINBOW) { return "*sparkles dimming*"; }
+        if (petType == TYPE_DOGGO) { return "*too excited to care*"; }
+        if (petType == TYPE_UNDEAD) { return "*bones rattle...*"; }
         return "That's enough...";
     }
 
@@ -1132,6 +1186,8 @@ class Pet {
         if (petType == TYPE_NUGGET) { return "*BREAKING APART!*"; }
         if (petType == TYPE_FOCZKA) { return "*LOUD BARKING!*"; }
         if (petType == TYPE_RAINBOW) { return "*COLORS FADING!*"; }
+        if (petType == TYPE_DOGGO) { return "*LICKS YOU TO DEATH*"; }
+        if (petType == TYPE_UNDEAD) { return "*UNDEAD SQUEEZE*"; }
         return "*pushes you HARD*";
     }
 
@@ -1157,6 +1213,8 @@ class Pet {
         if (petType == TYPE_NUGGET) { return "*EATEN ALIVE!*"; }
         if (petType == TYPE_FOCZKA) { return "*FLOPS INTO OCEAN*"; }
         if (petType == TYPE_RAINBOW) { return "*RAINBOW SHATTERED*"; }
+        if (petType == TYPE_DOGGO) { return "*DIES OF HAPPINESS*"; }
+        if (petType == TYPE_UNDEAD) { return "*BONES FLY OFF*"; }
         return "*CAN'T TAKE IT!*";
     }
 
@@ -1178,6 +1236,8 @@ class Pet {
         if (petType == TYPE_NUGGET) { return "I'm NOT food! I'm LOVED!"; }
         if (petType == TYPE_FOCZKA) { return "*ARF ARF ARF!!* LOVE!"; }
         if (petType == TYPE_RAINBOW) { return "*DOUBLE RAINBOW!!!*"; }
+        if (petType == TYPE_DOGGO) { return "*EXPLODES WITH JOY!!*"; }
+        if (petType == TYPE_UNDEAD) { return "*FEELS ALIVE AGAIN*"; }
         var t = ["PURE LOVE!", "*crying happy*", "I'll NEVER forget!", "BEST HUG EVER!"];
         return t[Math.rand().abs() % t.size()];
     }
@@ -1199,6 +1259,8 @@ class Pet {
         if (petType == TYPE_NUGGET) { return "*warm & crispy*"; }
         if (petType == TYPE_FOCZKA) { return "*nuzzles your hand*"; }
         if (petType == TYPE_RAINBOW) { return "*glows brighter*"; }
+        if (petType == TYPE_DOGGO) { return "*spins in circles*"; }
+        if (petType == TYPE_UNDEAD) { return "*cold but cozy*"; }
         var t = ["So warm...", "*nuzzles*", "I love this!", "*purrs*"];
         return t[Math.rand().abs() % t.size()];
     }
@@ -1219,6 +1281,8 @@ class Pet {
         if (petType == TYPE_NUGGET) { return "*warm crunch*"; }
         if (petType == TYPE_FOCZKA) { return "*happy flop*"; }
         if (petType == TYPE_RAINBOW) { return "*soft glow*"; }
+        if (petType == TYPE_DOGGO) { return "*tail wagging*"; }
+        if (petType == TYPE_UNDEAD) { return "*skull nod*"; }
         var t = ["*small smile*", "Thanks...", "That's nice", "*relaxes*"];
         return t[Math.rand().abs() % t.size()];
     }
@@ -1240,6 +1304,8 @@ class Pet {
         if (petType == TYPE_NUGGET) { return "*cold nugget*"; }
         if (petType == TYPE_FOCZKA) { return "*rolls over*"; }
         if (petType == TYPE_RAINBOW) { return "*dim glow*"; }
+        if (petType == TYPE_DOGGO) { return "*too distracted*"; }
+        if (petType == TYPE_UNDEAD) { return "..."; }
         var t = ["*stiff*", "...ok", "*doesn't react*", "Hmph."];
         return t[Math.rand().abs() % t.size()];
     }
@@ -1446,6 +1512,8 @@ class Pet {
         if (petType == TYPE_NUGGET) { return "*absorbs the lesson*"; }
         if (petType == TYPE_FOCZKA) { return "*sad arf* ...ok"; }
         if (petType == TYPE_RAINBOW) { return "*colors dim* sorry!"; }
+        if (petType == TYPE_DOGGO) { return "*immediately forgives*"; }
+        if (petType == TYPE_UNDEAD) { return "You can't hurt me."; }
         var t = ["I understand now!", "...lesson learned", "I'll be better!", "OK OK I get it!"];
         return t[Math.rand().abs() % t.size()];
     }
@@ -1468,6 +1536,8 @@ class Pet {
         if (petType == TYPE_NUGGET) { return "*crack in crust*"; }
         if (petType == TYPE_FOCZKA) { return "*whimpers softly*"; }
         if (petType == TYPE_RAINBOW) { return "*flickers*"; }
+        if (petType == TYPE_DOGGO) { return "*still wags tail*"; }
+        if (petType == TYPE_UNDEAD) { return "Noted. Still here."; }
         var t = ["*whimper* ...OK", "*flinches*", "...I'm sorry", "*lowers head*"];
         return t[Math.rand().abs() % t.size()];
     }
@@ -1490,6 +1560,8 @@ class Pet {
         if (petType == TYPE_NUGGET) { return "Is this how I DIE?!"; }
         if (petType == TYPE_FOCZKA) { return "*LOUD SAD BARK!*"; }
         if (petType == TYPE_RAINBOW) { return "*colors bleeding!*"; }
+        if (petType == TYPE_DOGGO) { return "*confused but loves u*"; }
+        if (petType == TYPE_UNDEAD) { return "Pain is irrelevant."; }
         var t = ["That HURT!", "I didn't deserve that!", "STOP!", "*shaking*"];
         return t[Math.rand().abs() % t.size()];
     }
@@ -1512,6 +1584,8 @@ class Pet {
         if (petType == TYPE_NUGGET) { return "*going stale...*"; }
         if (petType == TYPE_FOCZKA) { return "*won't come out of water*"; }
         if (petType == TYPE_RAINBOW) { return "*turning grey...*"; }
+        if (petType == TYPE_DOGGO) { return "*licks your hand anyway*"; }
+        if (petType == TYPE_UNDEAD) { return "I've survived worse."; }
         var t = ["*traumatized*", "*can't stop shaking*", "I'm scared of you...", "*silent*"];
         return t[Math.rand().abs() % t.size()];
     }
@@ -1535,6 +1609,8 @@ class Pet {
         if (petType == TYPE_NUGGET) { return "*accepts being food*"; }
         if (petType == TYPE_FOCZKA) { return "*drifts away...*"; }
         if (petType == TYPE_RAINBOW) { return "*goes colorless*"; }
+        if (petType == TYPE_DOGGO) { return "*whimpers but stays*"; }
+        if (petType == TYPE_UNDEAD) { return "Death? Already been."; }
         var t = ["YOU MONSTER!", "Why do I exist?", "*broken*", "..."];
         return t[Math.rand().abs() % t.size()];
     }
@@ -1649,6 +1725,11 @@ class Pet {
         if (petType == TYPE_RAINBOW && happiness > 80 && hunger < 30) { return :love; }
         if (petType == TYPE_RAINBOW && happiness > 85 && energy > 70) { return :party; }
         if (petType == TYPE_RAINBOW && happiness < 15 && energy < 20) { return :existential; }
+        if (petType == TYPE_DOGGO && happiness > 50) { return :party; }
+        if (petType == TYPE_DOGGO && happiness > 80 && energy > 60) { return :sugar_high; }
+        if (petType == TYPE_DOGGO && happiness > 85 && hunger < 30) { return :love; }
+        if (petType == TYPE_DOGGO && hunger > 70 && happiness < 30) { return :feral; }
+        if (petType == TYPE_UNDEAD) { return :existential; }
 
         if (hunger > 90 && happiness < 15) { return :rage; }
         if (hunger > 95 && energy < 10) { return :feral; }
@@ -1700,6 +1781,8 @@ class Pet {
         if (t == TYPE_NUGGET) { return "Nugget"; }
         if (t == TYPE_FOCZKA) { return "Foczka"; }
         if (t == TYPE_RAINBOW) { return "Rainbow"; }
+        if (t == TYPE_DOGGO) { return "Doggo"; }
+        if (t == TYPE_UNDEAD) { return "Undead"; }
         return "???";
     }
 
@@ -1726,6 +1809,8 @@ class Pet {
         if (t == TYPE_NUGGET) { return "Existential snack"; }
         if (t == TYPE_FOCZKA) { return "Adorable flopper"; }
         if (t == TYPE_RAINBOW) { return "Pure sparkle joy"; }
+        if (t == TYPE_DOGGO) { return "Loyal chaos puppy"; }
+        if (t == TYPE_UNDEAD) { return "Cannot be killed"; }
         return "???";
     }
 
@@ -1782,6 +1867,8 @@ class Pet {
         else if (petType == TYPE_NUGGET) { r = r * 4 / 5; }
         else if (petType == TYPE_FOCZKA) { r = r; }
         else if (petType == TYPE_RAINBOW) { r = r * 6 / 5; }
+        else if (petType == TYPE_DOGGO) { r = r * 3 / 4; }
+        else if (petType == TYPE_UNDEAD) { r = r * 3; }
         if (isSick) { r = r * 2 / 3; }
         var nl = getNeglectLevel();
         if (nl >= 4) { r = r / 2; }
@@ -1815,6 +1902,9 @@ class Pet {
         else if (petType == TYPE_NUGGET) { r = r * 2 / 3; }
         else if (petType == TYPE_FOCZKA) { r = r * 6 / 5; }
         else if (petType == TYPE_RAINBOW) { r = r * 3 / 2; }
+        else if (petType == TYPE_DOGGO) { r = r * 3 / 4; }
+        else if (petType == TYPE_UNDEAD) { r = r * 4; }
+        if (petType == TYPE_UNDEAD) { return r; }
         if (isSick) { r = r * 3 / 4; }
         var nl = getNeglectLevel();
         if (nl >= 4) { r = r / 2; }
@@ -1849,6 +1939,8 @@ class Pet {
         else if (petType == TYPE_NUGGET) { r = r * 4 / 5; }
         else if (petType == TYPE_FOCZKA) { r = r * 6 / 5; }
         else if (petType == TYPE_RAINBOW) { r = r; }
+        else if (petType == TYPE_DOGGO) { r = r * 3 / 4; }
+        else if (petType == TYPE_UNDEAD) { r = r * 3; }
         if (isSick) { r = r * 2 / 3; }
         var nl = getNeglectLevel();
         if (nl >= 4) { r = r / 2; }
@@ -1868,12 +1960,18 @@ class Pet {
     }
 
     hidden function checkDeath() {
+        if (petType == TYPE_UNDEAD) {
+            if (health < 5) { health = 5; }
+            isAlive = true; isSick = false;
+            return;
+        }
         if (health <= 0) { eventText = deathCause(:health); isAlive = false; save(); pendingVibe = 4; return; }
         if (hunger >= 100 && happiness <= 0 && energy <= 0) { eventText = deathCause(:starvation); isAlive = false; save(); pendingVibe = 4; return; }
     }
 
     hidden function checkAgeDeath() {
         if (!isAlive) { return; }
+        if (petType == TYPE_UNDEAD) { return; }
         var days = getAgeDays();
         var stage = getAgeStage();
         var wellbeing = getWellbeing();
@@ -1926,6 +2024,7 @@ class Pet {
     }
 
     hidden function checkSickness() {
+        if (petType == TYPE_UNDEAD) { isSick = false; return; }
         var chance = 10;
         if (hunger > 70) { chance += 15; }
         if (happiness < 30) { chance += 10; }
@@ -2224,6 +2323,16 @@ class Pet {
             if (nl >= 3 && Math.rand().abs() % 4 < 3) { var t = ["*whimper*", "Come swim...", "*waits by shore*"]; return t[Math.rand().abs() % t.size()]; }
             return null;
         }
+        if (petType == TYPE_DOGGO) {
+            if (nl >= 4) { var t = ["*howls*", "WHY DID YOU LEAVE?!", "*paws at door*", "*sad eyes*"]; return t[Math.rand().abs() % t.size()]; }
+            if (nl >= 3 && Math.rand().abs() % 4 < 3) { var t = ["*whines*", "No walkies...", "*stares at leash*", "Where did u go?"]; return t[Math.rand().abs() % t.size()]; }
+            if (nl >= 2 && Math.rand().abs() % 3 < 2) { var t = ["*puppy eyes*", "Bork? Please?", "*sits by door*"]; return t[Math.rand().abs() % t.size()]; }
+            return null;
+        }
+        if (petType == TYPE_UNDEAD) {
+            if (nl >= 4) { var t = ["Alone. Dead. Fine.", "The void is my friend.", "I do not need you.", "Eternity. Alone."]; return t[Math.rand().abs() % t.size()]; }
+            return null;
+        }
         if (nl >= 4) {
             var t = ["Don't let me die!", "I need you!", "Please...", "Help...", "*crying*", "Anyone..."];
             return t[Math.rand().abs() % t.size()];
@@ -2391,6 +2500,13 @@ class Pet {
             else if (mood == :love) { t = ["LOVE IS COLORFUL!", "*heart rainbows*", "You complete my spectrum!", "Double rainbow of love!"]; }
             else if (mood == :party) { t = ["RAINBOW RAVE!", "*prismatic dance*", "COLOR EXPLOSION!", "SPARKLE PARTY!"]; }
             else if (mood == :existential) { t = ["What if colors fade?", "Am I just light?", "After rain... what?", "Spectrum of sadness..."]; }
+        } else if (petType == TYPE_DOGGO) {
+            if (mood == :party) { t = ["WOOF WOOF WOOF!!", "*full zoomies*", "IS THAT A BALL?!", "WALKIES!! NOW!!", "BEST DAY EVERRR!", "PLAY PLAY PLAY!"]; }
+            else if (mood == :love) { t = ["I LOVE YOU I LOVE YOU!", "*lick attack*", "BEST HUMAN ALIVE!", "Never leave me!!", "YOU'RE BACK!!! YESSS!"]; }
+            else if (mood == :sugar_high) { t = ["*VIBRATING WITH JOY*", "TOO HAPPY TO THINK!", "ZOOM ZOOM ZOOM!", "BORK BORK BORK!!", "INFINITE ENERGY!!"]; }
+            else if (mood == :feral) { t = ["FOOD NOW!!!", "HUNGRY BAD DOG!", "MUST EAT SHOE...", "FERAL MODE ACTIVATED"]; }
+        } else if (petType == TYPE_UNDEAD) {
+            if (mood == :existential) { t = ["Why do I still walk?", "Death was easier...", "The living exhaust me.", "Eternity is boring.", "Brains... just kidding.", "*decomposes slightly*"]; }
         }
         if (t == null) { return null; }
         return t[Math.rand().abs() % t.size()];
@@ -2435,6 +2551,8 @@ class Pet {
         else if (petType == TYPE_BATSY) { t = ["*chirp*", "Zzz...", "*hangs*", "Night!", "*echo*", "Turn off the sun!", "Upside down is RIGHT", "I see in the dark~"]; }
         else if (petType == TYPE_NUGGET) { t = ["Am I food?", "*sweats*", "Crispy...", "*exists*", "Help...", "Is that SAUCE?!", "I was a CHICKEN", "WHY AM I BREADED", "Don't dip me!"]; }
         else if (petType == TYPE_FOCZKA) { t = ["Arf!", "*flop*", "Fish?", "*claps*", "Splash~", "*belly flop*", "Throw me a ball!", "*wiggles*", "Arf arf arf!"]; }
+        else if (petType == TYPE_DOGGO) { t = ["WOOF!", "*tail wag*", "Ball?!", "*zoomies*", "Bork!", "WALKIES?!", "*spins*", "Squirrel!", "I LOVE YOU!", "*sniffs everything*"]; }
+        else if (petType == TYPE_UNDEAD) { t = ["...", "*exists*", "Still here.", "*rattles*", "Uuugh...", "Cold.", "Forever.", "*stares*", "Brains?", "Death is fine."]; }
         else { t = ["Sparkle!", "*glows*", "Rainbow~", "Shine!", "Colors!", "DOUBLE RAINBOW!", "I am LIGHT!", "Glitter bomb~", "Love & sparkles!"]; }
         return t[Math.rand().abs() % t.size()];
     }
@@ -2470,6 +2588,18 @@ class Pet {
         if (petType == TYPE_FOCZKA) {
             if (steps >= 10000) { return "*arf!* So many steps!"; }
             if (steps < 500) { return "*flop* No swim today?"; }
+            return null;
+        }
+        if (petType == TYPE_DOGGO) {
+            if (steps >= 20000) { return "WALKIES FOREVER!!!"; }
+            if (steps >= 10000) { return "THIS IS THE BEST DAY"; }
+            if (steps >= 5000) { return "Good WALK! BORK!"; }
+            if (steps < 500) { return "*stares at leash*"; }
+            return null;
+        }
+        if (petType == TYPE_UNDEAD) {
+            if (steps >= 10000) { return "Shambling forever."; }
+            if (steps < 500) { return "Same as me."; }
             return null;
         }
         var t;
@@ -2744,6 +2874,8 @@ class Pet {
         else if (type == TYPE_BATSY) { b = bodyBatsy(); }
         else if (type == TYPE_NUGGET) { b = bodyNugget(); }
         else if (type == TYPE_FOCZKA) { b = bodyFoczka(); }
+        else if (type == TYPE_DOGGO) { b = bodyDoggo(); }
+        else if (type == TYPE_UNDEAD) { b = bodyUndead(); }
         else { b = bodyRainbow(); }
         if (type == petType) { _bodyCache = b; _bodyCacheType = type; }
         return b;
@@ -2773,6 +2905,8 @@ class Pet {
         else if (type == TYPE_NUGGET) { base = [0xDAA520, 0xB8860B, 0xFFF8DC, 0xFF4444]; }
         else if (type == TYPE_FOCZKA) { base = [0x7A8EA0, 0xBBCCDD, 0x1A1A1A, 0x5D6D7E]; }
         else if (type == TYPE_RAINBOW) { base = [0xFFFFFF, 0xFF4488, 0x44BBFF, 0xFFDD44]; }
+        else if (type == TYPE_DOGGO) { base = [0xC68642, 0xFFDFBA, 0x222222, 0xFF4444]; }
+        else if (type == TYPE_UNDEAD) { base = [0x4A7A4A, 0x8FBF8F, 0xFF0000, 0x1A1A1A]; }
         else { base = [0x1B5E20, 0x388E3C, 0x66BB6A, 0xA5D6A7]; }
         if (paletteIdx > 0 && type == petType) { base = applyPalette(base, paletteIdx); }
         return base;
@@ -2963,12 +3097,12 @@ class Pet {
         0,0,0,3,0,0,0,0,3,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0]; }
 
     hidden function bodyBatsy() { return [
-        0,0,0,0,0,0,0,0,0,0,0,0, 0,3,0,0,0,0,0,0,0,0,3,0,
-        0,1,3,0,0,0,0,0,0,3,1,0, 1,1,1,0,1,1,1,1,0,1,1,1,
-        1,1,1,1,1,1,1,1,1,1,1,1, 0,1,1,2,2,1,1,2,2,1,1,0,
+        0,0,0,0,3,3,3,3,0,0,0,0, 3,0,0,3,3,3,3,3,3,0,0,3,
+        3,0,3,3,3,3,3,3,3,3,0,3, 3,3,3,3,1,1,1,1,3,3,3,3,
+        0,3,3,1,1,1,1,1,1,1,3,0, 0,0,1,1,2,2,1,2,2,1,0,0,
         0,0,1,1,1,1,1,1,1,1,0,0, 0,0,1,1,4,1,1,4,1,1,0,0,
-        0,0,0,1,1,1,1,1,1,0,0,0, 0,0,0,0,1,1,1,1,0,0,0,0,
-        0,0,0,0,0,1,1,0,0,0,0,0, 0,0,0,0,0,0,0,0,0,0,0,0]; }
+        0,0,0,1,1,1,1,1,1,0,0,0, 0,0,0,1,1,3,3,1,1,0,0,0,
+        0,0,0,0,1,1,1,1,0,0,0,0, 0,0,0,0,0,1,1,0,0,0,0,0]; }
 
     hidden function bodyFoczka() { return [
         0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,1,1,1,1,1,1,0,0,0,
@@ -3001,4 +3135,20 @@ class Pet {
         3,2,1,1,1,1,1,1,1,1,2,3, 3,3,2,1,1,1,1,1,1,2,3,3,
         3,3,3,2,1,1,1,1,2,3,3,3, 3,2,3,3,0,0,0,0,3,3,2,3,
         0,3,2,3,0,0,0,0,3,2,3,0, 0,3,3,0,0,0,0,0,0,3,3,0]; }
+
+    hidden function bodyDoggo() { return [
+        0,0,2,2,0,0,0,0,2,2,0,0, 0,2,2,2,0,0,0,0,2,2,2,0,
+        0,1,1,1,1,1,1,1,1,1,1,0, 0,1,4,4,1,1,1,1,4,4,1,0,
+        0,1,1,1,1,1,1,1,1,1,1,0, 0,1,1,3,1,1,1,1,3,1,1,0,
+        0,1,1,1,1,3,3,1,1,1,1,0, 0,0,1,1,1,3,3,1,1,1,0,0,
+        0,0,1,1,1,1,1,1,1,1,0,0, 0,3,1,1,1,1,1,1,1,1,3,0,
+        0,0,1,2,0,0,0,0,2,1,0,0, 0,0,0,0,0,0,0,0,0,0,0,0]; }
+
+    hidden function bodyUndead() { return [
+        0,0,0,0,0,0,0,0,0,0,0,0, 0,0,0,1,1,1,1,1,1,0,0,0,
+        0,0,1,1,1,1,1,1,1,1,0,0, 0,1,1,3,3,1,1,3,3,1,1,0,
+        0,1,1,4,4,1,1,4,4,1,1,0, 0,1,1,1,1,1,1,1,1,1,1,0,
+        0,1,1,2,2,2,2,2,2,1,1,0, 0,0,1,2,1,1,1,1,2,1,0,0,
+        0,0,0,1,1,1,1,1,1,0,0,0, 0,0,3,0,1,1,1,1,0,3,0,0,
+        0,0,3,0,0,0,0,0,0,3,0,0, 0,0,0,0,0,0,0,0,0,0,0,0]; }
 }

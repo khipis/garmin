@@ -21,7 +21,7 @@ class MainView extends WatchUi.View {
         _pet = pet;
         actionIdx = 0;
         confirmReset = false;
-        _actions = ["Feed", "Play", "Clean", "Heal", "Nap", "Hug", "Punish", "Reset", "Debug", "+3h"];
+        _actions = ["Feed", "Play", "Clean", "Heal", "Nap", "Hug", "Punish", "Reset", "Debug", "+3h", "Vibe"];
         _bounceTable = [0, -1, -2, -2, -1, 0, 0, 0];
         _celebType = 0;
         _celebTimer = 0;
@@ -58,6 +58,7 @@ class MainView extends WatchUi.View {
     function getActionName() {
         if (actionIdx == 8) { return _pet.debugMode ? "Dbg:ON" : "Debug"; }
         if (actionIdx == 9) { return "+3h Age"; }
+        if (actionIdx == 10) { return _pet.vibeEnabled ? "Vibe:ON" : "Vibe:OFF"; }
         return _actions[actionIdx];
     }
 
@@ -117,6 +118,7 @@ class MainView extends WatchUi.View {
     }
 
     hidden function doVibrate(type) {
+        if (!_pet.vibeEnabled) { return; }
         if (Attention has :vibrate) {
             var p;
             if (type == 1) {

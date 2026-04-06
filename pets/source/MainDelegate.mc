@@ -90,6 +90,9 @@ class MainDelegate extends WatchUi.BehaviorDelegate {
         else if (idx == 9) {
             _pet.debugAddHours();
         }
+        else if (idx == 10) {
+            _pet.toggleVibe();
+        }
 
         WatchUi.requestUpdate();
         return true;
