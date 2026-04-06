@@ -39,14 +39,35 @@ class SetupView extends WatchUi.View {
 
         var ps = w / 30;
         if (ps < 3) { ps = 3; }
-        _pet.drawPreview(dc, w / 2, h * 42 / 100, ps, selectedType);
+        var locked = _pet.isTypeLocked(selectedType);
 
-        var colors = _pet.getColors(selectedType);
-        dc.setColor(colors[1], Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 62 / 100, Graphics.FONT_MEDIUM, _pet.getTypeName(selectedType), Graphics.TEXT_JUSTIFY_CENTER);
+        if (locked) {
+            dc.setColor(0x0A0A15, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(w / 2, h * 42 / 100, ps * 7);
+            _pet.drawPreview(dc, w / 2, h * 42 / 100, ps, selectedType);
 
-        dc.setColor(0xAAAAAA, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 72 / 100, Graphics.FONT_XTINY, _pet.getTypeDesc(selectedType), Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(0xFF2222, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(w / 2 - 5, h * 33 / 100 - ps * 2, 10, 8);
+            dc.drawCircle(w / 2, h * 33 / 100 - ps * 2 - 2, 4);
+
+            dc.setColor(0xFF4444, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w / 2, h * 56 / 100, Graphics.FONT_TINY, "LOCKED", Graphics.TEXT_JUSTIFY_CENTER);
+
+            dc.setColor(0x555555, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w / 2, h * 63 / 100, Graphics.FONT_SMALL, _pet.getTypeName(selectedType), Graphics.TEXT_JUSTIFY_CENTER);
+
+            dc.setColor(0x999999, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w / 2, h * 72 / 100, Graphics.FONT_XTINY, _pet.getLockReason(selectedType), Graphics.TEXT_JUSTIFY_CENTER);
+        } else {
+            _pet.drawPreview(dc, w / 2, h * 42 / 100, ps, selectedType);
+
+            var colors = _pet.getColors(selectedType);
+            dc.setColor(colors[1], Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w / 2, h * 62 / 100, Graphics.FONT_MEDIUM, _pet.getTypeName(selectedType), Graphics.TEXT_JUSTIFY_CENTER);
+
+            dc.setColor(0xAAAAAA, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w / 2, h * 72 / 100, Graphics.FONT_XTINY, _pet.getTypeDesc(selectedType), Graphics.TEXT_JUSTIFY_CENTER);
+        }
 
         dc.setColor(0x444444, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w / 2 - w * 22 / 100, h * 63 / 100, Graphics.FONT_SMALL, "<", Graphics.TEXT_JUSTIFY_CENTER);
@@ -125,6 +146,10 @@ class SetupDelegate extends WatchUi.BehaviorDelegate {
 
     function onSelect() {
         if (_view.phase == 1) {
+            if (_pet.isTypeLocked(_view.selectedType)) {
+                WatchUi.requestUpdate();
+                return true;
+            }
             _view.selectedName = 0;
             _view.setPhase(2);
         } else {

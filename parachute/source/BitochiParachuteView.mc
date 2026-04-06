@@ -414,9 +414,9 @@ class BitochiParachuteView extends WatchUi.View {
         if (altPct > 1.0) { altPct = 1.0; }
         if (altPct < 0.0) { altPct = 0.0; }
 
-        var topR = (0x08 + (1.0 - altPct) * 0x30).toNumber();
-        var topG = (0x12 + (1.0 - altPct) * 0x50).toNumber();
-        var topB = (0x40 + (1.0 - altPct) * 0x50).toNumber();
+        var topR = (0x08 + (1.0 - altPct) * 0x40).toNumber();
+        var topG = (0x15 + (1.0 - altPct) * 0x60).toNumber();
+        var topB = (0x45 + (1.0 - altPct) * 0x50).toNumber();
         if (topR > 0xFF) { topR = 0xFF; }
         if (topG > 0xFF) { topG = 0xFF; }
         if (topB > 0xFF) { topB = 0xFF; }
@@ -424,25 +424,88 @@ class BitochiParachuteView extends WatchUi.View {
         dc.setColor(topC, topC);
         dc.clear();
 
-        if (altPct < 0.3) {
-            var groundPct = (0.3 - altPct) / 0.3;
-            var gH = (groundPct * _h * 40 / 100).toNumber();
-            dc.setColor(0x336633, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(0, _h - gH, _w, gH);
-            dc.setColor(0x448844, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(0, _h - gH, _w, 3);
+        var gPct = (1.0 - altPct) * 0.72 + 0.10;
+        if (gPct > 0.82) { gPct = 0.82; }
+        var gH = (_h.toFloat() * gPct).toNumber();
+        var gTop = _h - gH;
 
-            if (groundPct > 0.2) {
-                dc.setColor(0xFF4422, Graphics.COLOR_TRANSPARENT);
-                dc.fillCircle(_landX, _landY, _landR + 4);
-                dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-                dc.fillCircle(_landX, _landY, _landR);
-                dc.setColor(0xFF4422, Graphics.COLOR_TRANSPARENT);
-                dc.fillCircle(_landX, _landY, _landR * 2 / 3);
-                dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-                dc.fillCircle(_landX, _landY, _landR / 3);
+        dc.setColor(0x336633, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, gTop, _w, gH);
+
+        var pSz = (2 + (1.0 - altPct) * 12.0).toNumber();
+        var i;
+        var px;
+        var py;
+        dc.setColor(0x448844, Graphics.COLOR_TRANSPARENT);
+        for (i = 0; i < 7; i++) {
+            px = (i * 41 + 15) % _w;
+            py = gTop + 4 + (i * 29 + 3) % (gH > 10 ? gH : 10);
+            dc.fillRectangle(px, py, pSz + i * 3, pSz + i);
+        }
+        dc.setColor(0x225522, Graphics.COLOR_TRANSPARENT);
+        for (i = 0; i < 5; i++) {
+            px = (i * 53 + 30) % _w;
+            py = gTop + 6 + (i * 37 + 5) % (gH > 10 ? gH : 10);
+            dc.fillRectangle(px, py, pSz + i * 2, pSz);
+        }
+
+        if (altPct < 0.7) {
+            dc.setColor(0x667744, Graphics.COLOR_TRANSPARENT);
+            for (i = 0; i < 3; i++) {
+                px = (i * 67 + 50) % _w;
+                py = gTop + 10 + (i * 43 + 8) % (gH > 15 ? gH : 15);
+                dc.fillRectangle(px, py, pSz * 2, pSz);
             }
         }
+
+        var vx = _w / 2;
+        dc.setColor(0x2D5D2D, Graphics.COLOR_TRANSPARENT);
+        for (i = -3; i <= 3; i++) {
+            dc.drawLine(vx, gTop, vx + i * _w / 4, _h);
+        }
+        var by = gTop + 5;
+        var step = 3;
+        for (i = 0; i < 6; i++) {
+            if (by >= _h) { break; }
+            dc.drawLine(0, by, _w, by);
+            step = step + 2 + i * 2;
+            by = by + step;
+        }
+
+        if (altPct < 0.55) {
+            var rW = (1 + (0.55 - altPct) * 5.0).toNumber();
+            dc.setColor(0x555544, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(_w * 30 / 100, gTop, rW, gH);
+            dc.fillRectangle(0, gTop + gH * 45 / 100, _w, rW);
+        }
+
+        if (altPct < 0.35) {
+            var tSz = (1 + (0.35 - altPct) * 10.0).toNumber();
+            dc.setColor(0x1A5C1A, Graphics.COLOR_TRANSPARENT);
+            for (i = 0; i < 8; i++) {
+                px = (i * 31 + 8) % _w;
+                py = gTop + 10 + (i * 23 + 4) % (gH > 15 ? gH : 15);
+                dc.fillCircle(px, py, tSz);
+            }
+        }
+
+        if (altPct < 0.55) {
+            var tScale = (0.55 - altPct) / 0.55;
+            var tR = (_landR.toFloat() * tScale * 2.5 + 1.0).toNumber();
+            dc.setColor(0xFF4422, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(_landX, _landY, tR + 2);
+            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(_landX, _landY, tR);
+            if (tR > 4) {
+                dc.setColor(0xFF4422, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(_landX, _landY, tR * 2 / 3);
+                dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(_landX, _landY, tR / 3);
+            }
+        }
+
+        dc.setColor(0x88BB88, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, gTop, _w, 2);
     }
 
     hidden function drawClouds(dc) {
@@ -554,63 +617,90 @@ class BitochiParachuteView extends WatchUi.View {
 
     hidden function drawPlayer(dc, px, py, chuteOpen) {
         if (chuteOpen) {
-            var chuteWave = (_tick % 8 < 4) ? 1 : -1;
-            dc.setColor(0xCC2222, Graphics.COLOR_TRANSPARENT);
-            dc.fillPolygon([[px, py - 26], [px - 22, py - 10], [px + 22, py - 10]]);
-            dc.setColor(0xFF4444, Graphics.COLOR_TRANSPARENT);
-            dc.fillPolygon([[px, py - 24], [px - 18, py - 11], [px + 18, py - 11]]);
-            dc.setColor(0xFFAA44, Graphics.COLOR_TRANSPARENT);
-            dc.fillPolygon([[px + chuteWave, py - 22], [px - 12, py - 12], [px + 12, py - 12]]);
-            dc.setColor(0xFFDD88, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(px - 6, py - 16, 2, 2);
-            dc.fillRectangle(px + 4, py - 16, 2, 2);
-            dc.setColor(0xFFFFBB, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(px - 1, py - 18, 2, 2);
+            var cw = (_tick % 8 < 4) ? 1 : -1;
 
-            dc.setColor(0x444444, Graphics.COLOR_TRANSPARENT);
-            dc.drawLine(px - 18, py - 11, px - 3, py - 2);
-            dc.drawLine(px + 18, py - 11, px + 3, py - 2);
-            dc.drawLine(px, py - 24, px, py - 4);
-            dc.drawLine(px - 10, py - 12, px - 2, py - 1);
-            dc.drawLine(px + 10, py - 12, px + 2, py - 1);
+            dc.setColor(0xAA1818, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(px + cw, py - 34, 25);
+            dc.setColor(0xDD3333, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(px + cw, py - 34, 22);
+            dc.setColor(0xFF5544, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(px + cw, py - 34, 16);
+
+            dc.setColor(0xFFAA44, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(px - 2 + cw, py - 52, 4, 22);
+            dc.setColor(0xFFDD88, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(px - 12 + cw, py - 46, 4, 14);
+            dc.fillRectangle(px + 8 + cw, py - 46, 4, 14);
+
+            dc.setColor(0x991515, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(px - 23 + cw, py - 13, 46, 3);
+
+            dc.setColor(0x555555, Graphics.COLOR_TRANSPARENT);
+            dc.drawLine(px - 22 + cw, py - 13, px - 6, py - 2);
+            dc.drawLine(px + 22 + cw, py - 13, px + 6, py - 2);
+            dc.drawLine(px - 14 + cw, py - 15, px - 3, py - 1);
+            dc.drawLine(px + 14 + cw, py - 15, px + 3, py - 1);
+            dc.drawLine(px + cw, py - 18, px, py - 4);
         }
 
-        dc.setColor(0xDDBB88, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(px, py - 3, 4);
-        dc.setColor(0xFFCC88, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(px, py - 3, 3);
-
-        dc.setColor(0x553311, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(px - 3, py - 7, 6, 2);
+        dc.setColor(0x553322, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(px, py - 5, 5);
+        dc.setColor(0x442211, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(px - 4, py - 9, 8, 3);
+        dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(px - 5, py - 6, 10, 1);
 
         dc.setColor(0x2244AA, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(px - 4, py + 1, 8, 7);
+        dc.fillRectangle(px - 7, py, 14, 9);
         dc.setColor(0x3355CC, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(px - 3, py + 2, 6, 5);
+        dc.fillRectangle(px - 6, py + 1, 12, 7);
 
-        dc.setColor(0x222266, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(px - 2, py + 8, 2, 5);
-        dc.fillRectangle(px + 1, py + 8, 2, 5);
-        dc.setColor(0x664422, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(px - 3, py + 13, 3, 2);
-        dc.fillRectangle(px + 1, py + 13, 3, 2);
+        dc.setColor(0x333333, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(px - 4, py, 2, 8);
+        dc.fillRectangle(px + 2, py, 2, 8);
+        dc.setColor(0x444444, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(px - 3, py + 2, 6, 4);
 
-        var armWave = (_tick % 8 < 4) ? 2 : -2;
-        if (chuteOpen) { armWave = 0; }
-        dc.setColor(0xFFCC88, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(px - 6, py + 1 + armWave, 2, 4);
-        dc.fillRectangle(px + 4, py + 1 - armWave, 2, 4);
+        if (chuteOpen) {
+            dc.setColor(0x2244AA, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(px - 9, py - 2, 2, 5);
+            dc.fillRectangle(px + 7, py - 2, 2, 5);
+            dc.setColor(0xFFCC88, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(px - 9, py - 3, 2, 2);
+            dc.fillRectangle(px + 7, py - 3, 2, 2);
 
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(px - 2, py - 4, 1, 2);
-        dc.fillRectangle(px + 1, py - 4, 1, 2);
-        dc.setColor(0x111111, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(px - 2, py - 3, 1, 1);
-        dc.fillRectangle(px + 1, py - 3, 1, 1);
+            dc.setColor(0x222266, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(px - 3, py + 9, 3, 6);
+            dc.fillRectangle(px, py + 9, 3, 6);
+            dc.setColor(0x664422, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(px - 3, py + 15, 3, 2);
+            dc.fillRectangle(px, py + 15, 3, 2);
+        } else {
+            var aw = (_tick % 6 < 3) ? 1 : -1;
+
+            dc.setColor(0x2244AA, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(px - 14, py + 1 + aw, 7, 3);
+            dc.fillRectangle(px + 7, py + 1 - aw, 7, 3);
+            dc.setColor(0xFFCC88, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(px - 16, py + 1 + aw, 2, 3);
+            dc.fillRectangle(px + 14, py + 1 - aw, 2, 3);
+
+            dc.setColor(0x222266, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(px - 7, py + 9, 3, 5);
+            dc.fillRectangle(px + 4, py + 9, 3, 5);
+            dc.setColor(0x664422, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(px - 8, py + 14, 4, 2);
+            dc.fillRectangle(px + 4, py + 14, 4, 2);
+        }
 
         if (!chuteOpen && _fallSpeed > 3.0) {
-            dc.setColor(0x111111, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(px - 1, py - 1, 2, 1);
+            var lc = ((_fallSpeed - 3.0) * 2.0).toNumber();
+            if (lc > 8) { lc = 8; }
+            dc.setColor(0xAABBDD, Graphics.COLOR_TRANSPARENT);
+            for (var li = 0; li < lc; li++) {
+                var lx = px - 18 + (li * 36 / (lc > 0 ? lc : 1));
+                dc.drawLine(lx, py - 12, lx, py - 18 - Math.rand().abs() % 5);
+            }
         }
     }
 
@@ -670,13 +760,28 @@ class BitochiParachuteView extends WatchUi.View {
     }
 
     hidden function drawMenu(dc) {
-        dc.setColor(0x061428, 0x061428);
+        dc.setColor(0x081530, 0x081530);
         dc.clear();
 
         dc.setColor(0x0A1E3A, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(0, _h * 30 / 100, _w, _h * 50 / 100);
-        dc.setColor(0x102848, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(0, _h * 60 / 100, _w, _h * 40 / 100);
+        dc.fillRectangle(0, _h * 30 / 100, _w, _h * 30 / 100);
+        dc.setColor(0x152848, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, _h * 60 / 100, _w, _h * 18 / 100);
+
+        dc.setColor(0x336633, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, _h * 78 / 100, _w, _h * 22 / 100);
+        dc.setColor(0x448844, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, _h * 78 / 100, _w, 2);
+        dc.setColor(0x225522, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(_w * 18 / 100, _h * 83 / 100, _w * 25 / 100, _h * 6 / 100);
+        dc.setColor(0x448844, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(_w * 55 / 100, _h * 85 / 100, _w * 18 / 100, _h * 5 / 100);
+        dc.setColor(0xFF4422, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(_w / 2, _h * 88 / 100, 5);
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(_w / 2, _h * 88 / 100, 3);
+        dc.setColor(0xFF4422, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(_w / 2, _h * 88 / 100, 1);
 
         drawClouds(dc);
 
@@ -684,37 +789,37 @@ class BitochiParachuteView extends WatchUi.View {
         dc.fillCircle(_w * 15 / 100, _h * 8 / 100, 1);
         dc.fillCircle(_w * 45 / 100, _h * 5 / 100, 1);
         dc.fillCircle(_w * 75 / 100, _h * 10 / 100, 2);
-        dc.fillCircle(_w * 88 / 100, _h * 6 / 100, 1);
 
         var pulse = (_tick % 30 < 15) ? 0x44AAFF : 0x2288DD;
         dc.setColor(0x113355, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2 + 1, _h * 10 / 100 + 1, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2 + 1, _h * 10 / 100 + 1, Graphics.FONT_SMALL, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(pulse, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 10 / 100, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 10 / 100, Graphics.FONT_SMALL, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 24 / 100, Graphics.FONT_MEDIUM, "PARACHUTE", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 22 / 100, Graphics.FONT_SMALL, "PARACHUTE", Graphics.TEXT_JUSTIFY_CENTER);
 
         drawPlayer(dc, _w / 2, _h * 46 / 100, true);
 
         dc.setColor(0x7799BB, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w / 2, _h * 62 / 100, Graphics.FONT_XTINY, "Fly through rings!", Graphics.TEXT_JUSTIFY_CENTER);
         dc.drawText(_w / 2, _h * 69 / 100, Graphics.FONT_XTINY, "Tilt to steer", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(_w / 2, _h * 76 / 100, Graphics.FONT_XTINY, "Tap to deploy chute", Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0x888888, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 85 / 100, Graphics.FONT_XTINY, "BEST " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 76 / 100, Graphics.FONT_XTINY, "BEST " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x44AAFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 92 / 100, Graphics.FONT_XTINY, "Press to jump", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 83 / 100, Graphics.FONT_XTINY, "Tap to jump", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawJumpScene(dc) {
         var progress = _jumpTick.toFloat() / 40.0;
-        var py = (_h * 10 / 100 + progress * _h * 15 / 100).toNumber();
+        var py = (_h * 12 / 100 + progress * _h * 18 / 100).toNumber();
 
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(_w / 2 - 20, _h * 5 / 100, 40, 6);
-        dc.setColor(0xDDDDDD, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(_w / 2 - 18, _h * 5 / 100 + 6, 36, 3);
+        dc.setColor(0xBBBBBB, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, 0, _w, _h * 6 / 100);
+        dc.setColor(0x999999, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, _h * 6 / 100, _w, 3);
+        dc.setColor(0x666666, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(_w / 2 - 25, 0, 50, _h * 6 / 100 + 3);
 
         var shake = (_jumpTick % 4 < 2) ? 2 : -2;
         drawPlayer(dc, _w / 2 + shake, py, false);
@@ -724,7 +829,7 @@ class BitochiParachuteView extends WatchUi.View {
         dc.drawText(_w / 2, _h * 50 / 100, Graphics.FONT_MEDIUM, "JUMP!", Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 65 / 100, Graphics.FONT_XTINY, "ALT " + _altitude.toNumber() + "m", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 65 / 100, Graphics.FONT_XTINY, _altitude.toNumber() + "m", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawFreefallScene(dc) {
@@ -734,17 +839,6 @@ class BitochiParachuteView extends WatchUi.View {
 
         var sway = (Math.sin(_tick.toFloat() / 3.0) * 2.0).toNumber();
         drawPlayer(dc, _playerX.toNumber() + sway, _playerY.toNumber(), false);
-
-        if (_fallSpeed > 5.0) {
-            var lineCount = ((_fallSpeed - 5.0) * 3.0).toNumber();
-            if (lineCount > 8) { lineCount = 8; }
-            dc.setColor(0xAABBDD, Graphics.COLOR_TRANSPARENT);
-            for (var i = 0; i < lineCount; i++) {
-                var lx = _playerX.toNumber() - 15 + (i * 31 / lineCount);
-                var ly = _playerY.toNumber() - 10 - Math.rand().abs() % 8;
-                dc.drawLine(lx, ly, lx, ly - 6 - (i % 4) * 2);
-            }
-        }
 
         drawHUD(dc);
     }
@@ -760,63 +854,62 @@ class BitochiParachuteView extends WatchUi.View {
     }
 
     hidden function drawLandedScene(dc) {
-        dc.setColor(0xFF4422, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(_landX, _landY, _landR + 4);
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(_landX, _landY, _landR);
-        dc.setColor(0xFF4422, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(_landX, _landY, _landR * 2 / 3);
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(_landX, _landY, _landR / 3);
-
         drawPlayer(dc, _playerX.toNumber(), _playerY.toNumber(), true);
 
         var gradeC = 0x44FF44;
         if (_landDist > _landR.toFloat() * 2.0) { gradeC = 0xFFCC22; }
         if (_landDist > _landR.toFloat() * 3.5) { gradeC = 0xFF6644; }
         dc.setColor(gradeC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 15 / 100, Graphics.FONT_MEDIUM, _landGrade, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 12 / 100, Graphics.FONT_SMALL, _landGrade, Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0xFFFF44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 32 / 100, Graphics.FONT_SMALL, "RINGS " + _ringsHit + "/" + _ringCount, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 26 / 100, Graphics.FONT_XTINY, "RINGS " + _ringsHit + "/" + _ringCount, Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 45 / 100, Graphics.FONT_MEDIUM, _score + " PTS", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 36 / 100, Graphics.FONT_SMALL, _score + " PTS", Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0x888888, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 60 / 100, Graphics.FONT_XTINY, "BEST " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 48 / 100, Graphics.FONT_XTINY, "BEST " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0x666666, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 75 / 100, Graphics.FONT_XTINY, "Tap for level " + (_level + 1), Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 58 / 100, Graphics.FONT_XTINY, "Tap: level " + (_level + 1), Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawCrashScene(dc) {
-        var flashBg = (_crashTick % 4 < 2) ? 0x220000 : 0x110000;
+        var flashBg = (_crashTick % 4 < 2) ? 0x220800 : 0x110400;
         dc.setColor(flashBg, flashBg);
         dc.clear();
 
-        dc.setColor(0xFF0000, Graphics.COLOR_TRANSPARENT);
-        for (var i = 0; i < 8; i++) {
-            var sx = _playerX.toNumber() + (Math.rand().abs() % 40) - 20;
-            var sy = _playerY.toNumber() + (Math.rand().abs() % 30) - 15;
-            dc.fillRectangle(sx, sy, 3 + Math.rand().abs() % 4, 2 + Math.rand().abs() % 3);
+        dc.setColor(0x334422, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, _h * 50 / 100, _w, _h * 50 / 100);
+
+        dc.setColor(0x221100, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(_w / 2, _h * 55 / 100, 18);
+        dc.setColor(0x443311, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(_w / 2, _h * 55 / 100, 12);
+
+        dc.setColor(0x886644, Graphics.COLOR_TRANSPARENT);
+        for (var di = 0; di < 10; di++) {
+            var sx = _w / 2 + (Math.rand().abs() % 50) - 25;
+            var sy = _h * 55 / 100 + (Math.rand().abs() % 30) - 15;
+            dc.fillRectangle(sx, sy, 2 + Math.rand().abs() % 4, 2 + Math.rand().abs() % 3);
         }
 
         var flash = (_crashTick % 6 < 3) ? 0xFF2222 : 0xCC0000;
         dc.setColor(flash, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 25 / 100, Graphics.FONT_MEDIUM, "SPLAT!", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 18 / 100, Graphics.FONT_SMALL, "SPLAT!", Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 42 / 100, Graphics.FONT_SMALL, "No chute!", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 32 / 100, Graphics.FONT_XTINY, "No chute!", Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0xFFFF44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 55 / 100, Graphics.FONT_XTINY, "RINGS " + _ringsHit + "/" + _ringCount, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 42 / 100, Graphics.FONT_XTINY, "RINGS " + _ringsHit + "/" + _ringCount, Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 65 / 100, Graphics.FONT_XTINY, "SCORE " + _score, Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(_w / 2, _h * 73 / 100, Graphics.FONT_XTINY, "BEST " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 68 / 100, Graphics.FONT_XTINY, "" + _score + " pts", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 76 / 100, Graphics.FONT_XTINY, "BEST " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0x666666, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 86 / 100, Graphics.FONT_XTINY, "Press to retry", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 84 / 100, Graphics.FONT_XTINY, "Tap to retry", Graphics.TEXT_JUSTIFY_CENTER);
     }
 }

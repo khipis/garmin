@@ -772,6 +772,7 @@ class Pet {
                 pendingVibe = 1;
                 return;
             }
+            Application.Storage.setValue("unlockDzikko", true);
             hunger = 15;
             happiness -= 15;
             health -= 5;
@@ -1988,6 +1989,24 @@ class Pet {
         return "???";
     }
 
+    function isTypeLocked(type) {
+        if (type == TYPE_UNDEAD) {
+            var u = Application.Storage.getValue("unlockUndead");
+            return (u == null || !u);
+        }
+        if (type == TYPE_DZIKKO) {
+            var u = Application.Storage.getValue("unlockDzikko");
+            return (u == null || !u);
+        }
+        return false;
+    }
+
+    function getLockReason(type) {
+        if (type == TYPE_UNDEAD) { return "Kill a pet to unlock"; }
+        if (type == TYPE_DZIKKO) { return "Overfeed a pet to unlock"; }
+        return "";
+    }
+
     function getTraitName(t) {
         if (t == TRAIT_GLUTTON) { return "Glutton"; }
         if (t == TRAIT_PICKY) { return "Picky"; }
@@ -2139,8 +2158,8 @@ class Pet {
             isAlive = true; isSick = false;
             return;
         }
-        if (health <= 0) { eventText = deathCause(:health); isAlive = false; save(); pendingVibe = 4; return; }
-        if (hunger >= 100 && happiness <= 0 && energy <= 0) { eventText = deathCause(:starvation); isAlive = false; save(); pendingVibe = 4; return; }
+        if (health <= 0) { eventText = deathCause(:health); isAlive = false; Application.Storage.setValue("unlockUndead", true); save(); pendingVibe = 4; return; }
+        if (hunger >= 100 && happiness <= 0 && energy <= 0) { eventText = deathCause(:starvation); isAlive = false; Application.Storage.setValue("unlockUndead", true); save(); pendingVibe = 4; return; }
     }
 
     hidden function checkAgeDeath() {
@@ -2181,6 +2200,7 @@ class Pet {
             else if (wellbeing < 20) { cause = :neglect; }
             eventText = deathCause(cause);
             isAlive = false;
+            Application.Storage.setValue("unlockUndead", true);
             save();
             pendingVibe = 4;
         }
