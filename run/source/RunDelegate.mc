@@ -19,10 +19,6 @@ class RunDelegate extends WatchUi.BehaviorDelegate {
         if (Toybox has :Sensor) {
             if (Sensor has :enableSensorEvents) {
                 try {
-                    var opts = {};
-                    if (Sensor has :SENSOR_ACCELEROMETER) {
-                        opts.put(:enableAccelerometer, true);
-                    }
                     Sensor.enableSensorEvents(method(:onSensor));
                     _sensorEnabled = true;
                 } catch (e) {
@@ -32,7 +28,7 @@ class RunDelegate extends WatchUi.BehaviorDelegate {
         }
     }
 
-    function onSensor(sensorInfo) {
+    function onSensor(sensorInfo as Sensor.Info) as Void {
         if (sensorInfo == null) { return; }
         var accel = sensorInfo.accel;
         if (accel == null) { return; }

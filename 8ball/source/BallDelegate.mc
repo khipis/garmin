@@ -19,17 +19,18 @@ class BallDelegate extends WatchUi.BehaviorDelegate {
 
     hidden function enableAccel() {
         if (Toybox has :Sensor) {
-            try {
-                Sensor.setEnabledSensors([Sensor.SENSOR_ACCELEROMETER]);
-                Sensor.enableSensorEvents(method(:onSensor));
-                _sensorEnabled = true;
-            } catch (e) {
-                _sensorEnabled = false;
+            if (Sensor has :enableSensorEvents) {
+                try {
+                    Sensor.enableSensorEvents(method(:onSensor));
+                    _sensorEnabled = true;
+                } catch (e) {
+                    _sensorEnabled = false;
+                }
             }
         }
     }
 
-    function onSensor(sensorInfo) {
+    function onSensor(sensorInfo as Sensor.Info) as Void {
         if (sensorInfo == null) { return; }
         if (!(sensorInfo has :accel) || sensorInfo.accel == null) { return; }
         var accel = sensorInfo.accel;
