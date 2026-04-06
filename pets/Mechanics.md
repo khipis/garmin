@@ -1,4 +1,4 @@
-# Garmagochi - Mechanika Gry
+# BitochiPets - Mechanika Gry
 
 ## Spis treści
 1. [Staty](#staty)
@@ -20,6 +20,10 @@
 17. [Zaniedbanie](#zaniedbanie)
 18. [Kupki](#kupki)
 19. [Przekarmienie](#przekarmienie)
+20. [Animacje Idle](#animacje-idle-autonomiczne)
+21. [Specjalne Animacje Eventów](#specjalne-animacje-eventów)
+22. [Wibracje](#wibracje)
+23. [Persistence (zapis)](#persistence-zapis)
 
 ---
 
@@ -35,9 +39,9 @@ Stworek ma 4 główne staty (0-100):
 | **Health** | Zdrowie | Śmierć gdy = 0 | Pełnia zdrowia |
 
 ### Tempo spadku statów
-Każdy stworek ma inne tempo zmian statów (rate). Im niższy rate = tym szybciej stat się zmienia.
+Każdy stworek ma inne tempo zmian statów (rate). **Im WYŻSZY rate = tym WOLNIEJ stat się zmienia** (rate = interwał w game-sekundach między każdą zmianą o 1 punkt).
 - Bazowy hunger rate: **600** game-seconds na +1 głód
-- Bazowy happiness rate: **300** na -1 szczęście
+- Bazowy happiness rate: **360** na -1 szczęście
 - Bazowy energy rate: **480** na -1 energię
 - Modyfikowane przez: typ stworka, cechy, chorobę, zaniedbanie, tryb nocny, wiek
 
@@ -191,6 +195,8 @@ Każdy hug dodaje stres. Poziom stresu determinuje reakcję:
 - **Donut**: -5 (miękki, uwielbia)
 - **Rainbow**: -8 (czysty uścisk)
 - **Emilka**: -10 (najbardziej kochliwa)
+- **Doggo**: +0 (pies zawsze chętny, ale może się za bardzo nakręcić)
+- **Undead**: +0 (nie czuje niczego)
 
 ### Regeneracja hugStress
 - Spada o 1 co 900 game-seconds
@@ -248,14 +254,14 @@ Każdy stworek ma 2 losowe cechy (nie mogą być sprzeczne):
 |-------|-------|
 | **GLUTTON** | Szybszy głód (rate 400 vs 600), jada więcej |
 | **PICKY** | Wolniejszy głód, ale mniejsze porcje |
-| **PLAYFUL** | Wolniejszy spadek happiness (420 vs 300), bonus z gry |
-| **LAZY** | Wolniejszy spadek energii (320 vs 480) |
+| **PLAYFUL** | Wolniejszy spadek happiness (rate 480 vs 360), bonus z gry |
+| **LAZY** | Wolniejszy spadek energii (rate 720 vs 480), duży bonus z drzemki |
 | **HARDY** | Odporniejszy na choroby (/3), regeneruje health |
 | **FRAGILE** | Łatwiej choruje (+25%), gorsze wyniki punisha |
-| **CHEERFUL** | Wolniejszy spadek happiness (380), bonus z karmienia |
-| **GRUMPY** | Szybszy spadek happiness (210), gorszy w hugach |
-| **HYPER** | Bonus z zabawy, ale szybszy spadek energii |
-| **SLEEPY** | Szybszy spadek energii (380) |
+| **CHEERFUL** | Wolniejszy spadek happiness (rate 440), bonus z karmienia |
+| **GRUMPY** | Szybszy spadek happiness (rate 250), gorszy w hugach |
+| **HYPER** | Bonus z zabawy, ale szybszy spadek energii (rate 280 vs 480) |
+| **SLEEPY** | Szybszy spadek energii (rate 350), potrzebuje więcej drzemek |
 
 ### Sprzeczne cechy (nie mogą współistnieć):
 - GLUTTON ↔ PICKY
@@ -266,7 +272,7 @@ Każdy stworek ma 2 losowe cechy (nie mogą być sprzeczne):
 
 ---
 
-## Stworki (22 typy)
+## Stworki (24 typy)
 
 | Typ | Opis | Unikalna cecha |
 |-----|------|---------------|
@@ -278,20 +284,22 @@ Każdy stworek ma 2 losowe cechy (nie mogą być sprzeczne):
 | **Sparky** | Iskra elektryczna | Szybki energy drain, sugar_high łatwo |
 | **Frosty** | Lodowy kryształ | Slow happiness, rage gdy głodny |
 | **Shroomy** | Grzybek | Losowe modyfikatory, quirky |
-| **Emilka** | Blondynka z emocjami | ULTRA kochliwa, hugStress -10, zazdrosna |
-| **Vexor** | Demon | Odwrócona mechanika — lubi karanie, nienawidzi hugów |
+| **Emilka** | Blondynka z emocjami | ULTRA kochliwa, hugStress -10, zazdrosna, szybki spadek happiness |
+| **Vexor** | Demon — najgorszy na świecie | Odwrócona mechanika: KOCHA karanie, NIENAWIDZI hugów, wulgarny EN |
 | **Chikko** | Neurotyczny kurczak | Paranoid przy happiness<30, łatwy do złamania |
 | **Dzikko** | Dziki dzik | Respektuje siłę (punish +4), nienawidzi hugów |
-| **Polacco** | Polski Janusz | Mówi po polsku, wulgarny, leniwy, impreza = grill |
-| **Nosacz** | Małpa nosacz | Dumny z nosa, dramatyczny, judgmental |
+| **Polacco** | Polski Janusz | Mówi po polsku, wulgarny, leniwy (rate 7/5), impreza = grill |
+| **Nosacz** | Małpa nosacz | Dumny z nosa, mówi "E E E", dramatyczny |
 | **Donut** | Pączek | Sugar-obsessed, hugStress -5, boi się być zjedzonym |
-| **Cactuso** | Kaktus | hugStress +50 (!), stoik, ultra low maintenance |
+| **Cactuso** | Kaktus | hugStress +50 (!), stoik, ultra low maintenance, wolny hunger ×2 |
 | **Pixelbot** | Robot | Logiczny, "ERROR: EMOTION NOT FOUND" |
 | **Octavio** | Ośmiornica | 8 ramion chaosu, szybki energy drain |
-| **Batsy** | Nietoperz | Nocny marek, paranoid w dzień |
+| **Batsy** | Nietoperz (do góry nogami) | Nocny marek, paranoid w dzień |
 | **Nugget** | Nuggets | Egzystencjalny kryzys, boi się ketchupu |
 | **Foczka** | Słodka foczka | Kocha przytulasy (hugStress -3), *arf arf!* |
-| **Rainbow** | Tęczowy slodziaczek | Czysta radość, hugStress -8, sparkle |
+| **Rainbow** | Tęczowy słodziaczek | Czysta radość, hugStress -8, sparkle |
+| **Doggo** | Szalony wesołek — pies | Zawsze szczęśliwy (wolny spadek happiness ×6/5), lojalny, bork! |
+| **Undead** | Nieśmiertelny nieumarły | Nie można zabić, nie potrzebuje nic, zdrowie min=5, isSick=false |
 
 ---
 
@@ -360,10 +368,11 @@ Aktywowany przyciskiem "Debug" w action bar.
 
 Efekty:
 - Czas gry × 300 (5 minut realnych = 25h gry)
-- Interwały zdarzeń: 300 vs 1800 game-sec
-- Interwały myśli: 15 vs 90 game-sec
-- Szybsze czyszczenie akcji/eventów: 2 vs 3-4 sec
+- Interwały zdarzeń: 200 vs 900 game-sec (częstsze eventy)
+- Interwały myśli: 15 vs 40 game-sec
+- Szybsze czyszczenie akcji/eventów: 2 vs 3 sec
 - Szansa na dylemat: 1/10 vs 1/120
+- Drzemka: 5 sekund vs 60 sekund
 
 ### +3h Age
 Osobna akcja — przesuwa `_birthTime` o 3 godziny w przeszłość.
@@ -434,6 +443,39 @@ Jeśli hunger < 10 PRZED karmieniem:
 
 ---
 
+## Animacje Idle (autonomiczne)
+
+Gdy gracz nie wchodzi w interakcję przez kilka sekund, stworek "ożywa":
+
+| Czas idle | Efekt |
+|-----------|-------|
+| > 4s | Subtelne sparkle wokół stworka |
+| > 15s | Animacje specyficzne dla typu (ogon Doggo, dziobanie Chikko, etc.) |
+| > 20s | Losowe idle animacje: rozglądanie, zabawa, kółko uwagi, wirujące gwiazdy |
+
+Stworek też **wędruje** po ekranie (lekki ruch poziomy) — szybkość zależy od typu:
+- Doggo / HYPER: szybkie wędrowanie
+- Cactuso / Undead: stacjonarny (nie wędruje)
+- LAZY: wolne wędrowanie
+
+---
+
+## Specjalne Animacje Eventów
+
+Przy rzadkich eventach (`triggerRareEvent`) wyświetlana jest dramatyczna pełnoekranowa animacja przez 6 sekund:
+
+| Typ | Zdarzenie | Opis |
+|-----|-----------|------|
+| 1 (GOLDEN) | GOLDEN FEAST!!, LOTTERY WIN!!! | Złoty deszcz cząsteczek, złote krawędzie ekranu |
+| 2 (DIVINE) | PET GOD VISITS!! | Białe promienie, centralna poświata |
+| 3 (DANGER) | MASSIVE EARTHQUAKE!!, STEPPED ON LEGO | Czerwona pulsująca ramka, lecące iskry |
+| 4 (ALIEN) | ALIEN ABDUCTION!! | Wiązka z góry, unoszące się cząstki |
+| 5 (DARK) | ANCIENT CURSE!! | Ciemne macki z narożników ekranu |
+| 6 (RAINBOW) | TIME WARP!!, LUCKY STAR!! | Tęczowe pasy na krawędziach |
+| 7 (CHAOS) | IDENTITY CRISIS!! | Losowe kolorowe kwadraty |
+
+---
+
 ## Persistence (zapis)
 
 Cały stan gry zapisywany przez `Application.Storage`:
@@ -442,6 +484,7 @@ Cały stan gry zapisywany przez `Application.Storage`:
 - `hugStress`, `careStreak`, `_lastCareDay`
 - `debugMode`, `paletteIdx`, `accessory`
 - `dilemmaType`, `dilemmaText`
+- `vibeEnabled` (włączone/wyłączone wibracje)
 
 Zapis automatyczny:
 - Co ~60 game-seconds w update()

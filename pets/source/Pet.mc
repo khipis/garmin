@@ -826,7 +826,7 @@ class Pet {
         if (petType == TYPE_SPARKY) { return "*zap-puke!*"; }
         if (petType == TYPE_FROSTY) { return "*frozen barf!*"; }
         if (petType == TYPE_SHROOMY) { return "*spore explosion!*"; }
-        if (petType == TYPE_VEXOR) { return "*pukes f*cking fire*"; }
+        if (petType == TYPE_VEXOR) { var _t = ["*pukes f*cking fire*", "*vomits hell itself*", "*regurgitates contempt*", "*projectile disgust*"]; return _t[Math.rand().abs() % _t.size()]; }
         if (petType == TYPE_CHIKKO) { return "BAWK BAWK *egg?!*"; }
         if (petType == TYPE_DZIKKO) { return "*OINK* *mud puke*"; }
         if (petType == TYPE_POLACCO) { return "KURWA! Zaraz rzyge!"; }
@@ -854,7 +854,7 @@ class Pet {
         if (petType == TYPE_GHOSTY) { return "*ecto-burp*"; }
         if (petType == TYPE_SPARKY) { return "*static belly*"; }
         if (petType == TYPE_FROSTY) { return "*brain freeze...*"; }
-        if (petType == TYPE_VEXOR) { return "This food is sh*t!"; }
+        if (petType == TYPE_VEXOR) { var _t = ["This food is sh*t!", "I eat under protest.", "*grudgingly full*", "Acceptable. Barely.", "The food. Is. Awful."]; return _t[Math.rand().abs() % _t.size()]; }
         if (petType == TYPE_CHIKKO) { return "*panicked clucking*"; }
         if (petType == TYPE_DZIKKO) { return "*snort* more..."; }
         if (petType == TYPE_POLACCO) { return "Oj najalem sie..."; }
@@ -1168,7 +1168,7 @@ class Pet {
         if (petType == TYPE_AQUA) { return "*overflowing...*"; }
         if (petType == TYPE_BLOBBY) { return "*getting too big*"; }
         if (petType == TYPE_SHROOMY) { return "*spores intensify*"; }
-        if (petType == TYPE_VEXOR) { return "F*CK OFF don't touch!"; }
+        if (petType == TYPE_VEXOR) { var _t = ["F*CK OFF my space!", "TOUCH ME AND DIE.", "Get your hands OFF.", "Back off. Right NOW.", "I swear to HELL..."]; return _t[Math.rand().abs() % _t.size()]; }
         if (petType == TYPE_CHIKKO) { return "BAWK! P-PERSONAL SPACE!"; }
         if (petType == TYPE_DZIKKO) { return "*angry snort* BACK OFF"; }
         if (petType == TYPE_POLACCO) { return "Nie lap mnie k*rwa!"; }
@@ -1195,7 +1195,7 @@ class Pet {
         if (petType == TYPE_AQUA) { return "*flooding everything*"; }
         if (petType == TYPE_BLOBBY) { return "*unstable mass!*"; }
         if (petType == TYPE_SHROOMY) { return "*SPORE CLOUD!*"; }
-        if (petType == TYPE_VEXOR) { return "I'LL F*CKING KILL YOU!"; }
+        if (petType == TYPE_VEXOR) { var _t = ["I'LL F*CKING KILL YOU!", "YOU ARE SO F*CKING DEAD.", "SUFFER YOU PATHETIC...", "ABSOLUTE VENGEANCE!", "DIE. DIE. DIE."]; return _t[Math.rand().abs() % _t.size()]; }
         if (petType == TYPE_CHIKKO) { return "BAWKBAWKBAWK *PANICS*"; }
         if (petType == TYPE_DZIKKO) { return "*CHARGES at you*"; }
         if (petType == TYPE_POLACCO) { return "SPIERDAL*J JEBANY!"; }
@@ -1222,7 +1222,7 @@ class Pet {
         if (petType == TYPE_AQUA) { return "*EVAPORATES!!*"; }
         if (petType == TYPE_BLOBBY) { return "*ABOUT TO BURST!*"; }
         if (petType == TYPE_SHROOMY) { return "*SPORE APOCALYPSE!*"; }
-        if (petType == TYPE_VEXOR) { return "YOU'RE F*CKING DEAD!"; }
+        if (petType == TYPE_VEXOR) { var _t = ["YOU'RE F*CKING DEAD!", "OBLITERATED. GONE.", "*ANNIHILATES YOU*", "HELL OPENS FOR YOU.", "TOTAL. DESTRUCTION."]; return _t[Math.rand().abs() % _t.size()]; }
         if (petType == TYPE_CHIKKO) { return "*DIES OF HEART ATTACK*"; }
         if (petType == TYPE_DZIKKO) { return "*GORES YOU WITH TUSKS*"; }
         if (petType == TYPE_POLACCO) { return "KURWA... serce..."; }
@@ -1387,7 +1387,7 @@ class Pet {
             return t[Math.rand().abs() % t.size()];
         }
         if (petType == TYPE_VEXOR) {
-            var t = ["*seethes in silence*", "Fine. F*ck you too.", "Ignore me?! BIG MISTAKE.", "*destroys something*"];
+            var t = ["*seethes in silence*", "Fine. F*ck you too.", "Ignore me?! BIG MISTAKE.", "*destroys something*", "You'll regret this.", "*plots IMMEDIATE revenge*", "Wrong choice, human.", "I'll remember this."];
             return t[Math.rand().abs() % t.size()];
         }
         if (petType == TYPE_DOGGO) {
@@ -1634,7 +1634,7 @@ class Pet {
         if (petType == TYPE_GHOSTY) { return "...noted."; }
         if (petType == TYPE_FLAMEY) { return "*fire dims* ...fine"; }
         if (petType == TYPE_SHROOMY) { return "*absorbs lesson*"; }
-        if (petType == TYPE_VEXOR) { return "F*CK YES! HARDER!"; }
+        if (petType == TYPE_VEXOR) { var _t = ["F*CK YES! HARDER!", "MORE! DO IT AGAIN!", "FINALLY you get it!", "YES! THAT'S IT B*TCH!", "AGAIN! NOW!"]; return _t[Math.rand().abs() % _t.size()]; }
         if (petType == TYPE_CHIKKO) { return "*BAWK* I-I'll be g-good!"; }
         if (petType == TYPE_DZIKKO) { return "*respects your power*"; }
         if (petType == TYPE_POLACCO) { return "Dobra dobra k*rwa!"; }
@@ -1658,7 +1658,7 @@ class Pet {
         if (petType == TYPE_GHOSTY) { return "*phases away*"; }
         if (petType == TYPE_FLAMEY) { return "*sizzles angrily*"; }
         if (petType == TYPE_ROCKY) { return "Hm. Whatever."; }
-        if (petType == TYPE_VEXOR) { return "That all you got b*tch?"; }
+        if (petType == TYPE_VEXOR) { var _t = ["That all you got?!", "WEAK b*tch energy.", "Is that your BEST?!", "I've sneezed harder.", "Pathetic effort.", "TRY HARDER, coward."]; return _t[Math.rand().abs() % _t.size()]; }
         if (petType == TYPE_CHIKKO) { return "*shaking feathers*"; }
         if (petType == TYPE_DZIKKO) { return "*snorts dismissively*"; }
         if (petType == TYPE_POLACCO) { return "Za co ty ch*ju?!"; }
@@ -1682,7 +1682,7 @@ class Pet {
         if (petType == TYPE_GHOSTY) { return "*haunting stare*"; }
         if (petType == TYPE_FLAMEY) { return "I'LL BURN IT ALL!"; }
         if (petType == TYPE_AQUA) { return "*freezes up*"; }
-        if (petType == TYPE_VEXOR) { return "Pathetic a*shole!"; }
+        if (petType == TYPE_VEXOR) { var _t = ["Now THIS I can feel!", "*interested suddenly*", "Oh? Getting somewhere.", "Could be worse. DO IT.", "My turn next, fool."]; return _t[Math.rand().abs() % _t.size()]; }
         if (petType == TYPE_CHIKKO) { return "BAWK BAWK *runs away*"; }
         if (petType == TYPE_DZIKKO) { return "*headbutts you HARD*"; }
         if (petType == TYPE_POLACCO) { return "Ja ci ZAJEB*E!"; }
@@ -1706,7 +1706,7 @@ class Pet {
         if (petType == TYPE_GHOSTY) { return "*becomes transparent*"; }
         if (petType == TYPE_BLOBBY) { return "*loses all shape*"; }
         if (petType == TYPE_FROSTY) { return "*cracks*"; }
-        if (petType == TYPE_VEXOR) { return "Weak sh*t. Boring."; }
+        if (petType == TYPE_VEXOR) { var _t = ["YESSS! THIS IS IT!", "NOW WE'RE TALKING!", "F*CK YES THAT HURT!", "GLORIOUS SUFFERING!", "*absolutely loving it*"]; return _t[Math.rand().abs() % _t.size()]; }
         if (petType == TYPE_CHIKKO) { return "*feathers falling off*"; }
         if (petType == TYPE_DZIKKO) { return "*FULL RAMPAGE MODE*"; }
         if (petType == TYPE_POLACCO) { return "*chleje na smutno*"; }
@@ -1731,7 +1731,7 @@ class Pet {
         if (petType == TYPE_FLAMEY) { return "*flame goes out*"; }
         if (petType == TYPE_BLOBBY) { return "*dissolves*"; }
         if (petType == TYPE_FROSTY) { return "*shatters*"; }
-        if (petType == TYPE_VEXOR) { return "NOW we're f*cking talking!"; }
+        if (petType == TYPE_VEXOR) { var _t = ["ABSOLUTE PERFECTION!!!", "THIS IS HEAVEN TO ME!", "*transcends via agony*", "MAXIMUM BLISS ACHIEVED!", "BEAUTIFUL. DO IT MORE."]; return _t[Math.rand().abs() % _t.size()]; }
         if (petType == TYPE_CHIKKO) { return "*lays final egg...*"; }
         if (petType == TYPE_DZIKKO) { return "*destroys EVERYTHING*"; }
         if (petType == TYPE_POLACCO) { return "Jebac to wszystko..."; }
@@ -2074,7 +2074,7 @@ class Pet {
         else if (petType == TYPE_NUGGET) { r = r * 2 / 3; }
         else if (petType == TYPE_FOCZKA) { r = r * 6 / 5; }
         else if (petType == TYPE_RAINBOW) { r = r * 3 / 2; }
-        else if (petType == TYPE_DOGGO) { r = r * 3 / 4; }
+        else if (petType == TYPE_DOGGO) { r = r * 6 / 5; }
         else if (petType == TYPE_UNDEAD) { r = r * 4; }
         if (petType == TYPE_UNDEAD) { return r; }
         if (isSick) { r = r * 3 / 4; }
@@ -2088,9 +2088,9 @@ class Pet {
 
     hidden function getEnergyRate() {
         var r = 480;
-        if (hasTrait(TRAIT_LAZY)) { r = 320; }
-        if (hasTrait(TRAIT_HYPER)) { r = 380; }
-        if (hasTrait(TRAIT_SLEEPY)) { r = 380; }
+        if (hasTrait(TRAIT_LAZY)) { r = 720; }
+        if (hasTrait(TRAIT_HYPER)) { r = 280; }
+        if (hasTrait(TRAIT_SLEEPY)) { r = 350; }
         if (petType == TYPE_SPARKY) { r = r * 4 / 5; }
         else if (petType == TYPE_FLAMEY) { r = r * 4 / 5; }
         else if (petType == TYPE_FROSTY) { r = r * 4 / 5; }
@@ -2673,14 +2673,14 @@ class Pet {
             if (petType == TYPE_POLACCO) { t = ["Nasr*ne wszedzie!", "Posprzataj k*rwa!", "Cuchnie ja pierdole", "Co to za smrod k*rwa", "Smierdzace to tu", "Sanitarny koszmar!"]; }
             else if (petType == TYPE_NOSACZ) { t = ["E! Smrod! E!", "*nos obraca sie*", "E E kupka E", "Zly zapach. E."]; }
             else if (petType == TYPE_PIXELBOT) { t = ["HYGIENE: critical", "CLEAN.EXE required", "Biohazard detected.", "Sanitize immediately."]; }
-            else if (petType == TYPE_VEXOR) { t = ["Clean this sh*t literally", "Disgusting. Fix it.", "*rages at smell*", "I LIVE IN FILTH?!"]; }
+            else if (petType == TYPE_VEXOR) { t = ["Clean this sh*t literally", "Disgusting. Fix it.", "*rages at smell*", "I LIVE IN FILTH?!", "I swear to hell...", "CLEAN IT. NOW.", "The STENCH! Pathetic."]; }
             else { t = ["Clean pls!", "Eww!", "Stinky...", "Gross...", "I live in filth!", "Send help", "The smell IS my life now.", "Biohazard situation.", "Please. I beg you.", "*covers nose*", "I have lost dignity.", "Poop count: excessive."]; }
         }
         else if (isSick) {
             if (petType == TYPE_POLACCO) { t = ["Zle sie czuje k*rwa", "Chyba zdychm...", "Daj leki ch*ju", "Boli mnie wszystko", "Umre przez ten styl zycia", "Choroba k*rwa"]; }
             else if (petType == TYPE_NOSACZ) { t = ["E... chory. E.", "*nos kicha*", "E! Bol! E!", "Nos choruje E."]; }
             else if (petType == TYPE_PIXELBOT) { t = ["HEALTH: degrading", "Virus detected?", "System failure risk.", "Repair needed ASAP."]; }
-            else if (petType == TYPE_VEXOR) { t = ["Sick and FURIOUS.", "Illness makes me WORSE.", "*coughs angrily*", "Heal me. NOW."]; }
+            else if (petType == TYPE_VEXOR) { t = ["Sick and FURIOUS.", "Illness makes me WORSE.", "*coughs angrily*", "Heal me. NOW.", "I'm SICK. FIX IT.", "This is YOUR fault.", "DISEASE? Unacceptable.", "Heal. Me. NOW. B*tch."]; }
             else if (petType == TYPE_DOGGO) { t = ["*sad cough*", "No zoomies today...", "Feel icky...", "*lies down slowly*"]; }
             else { t = ["Ugh...", "*cough*", "Help me...", "Feel bad", "Am I dying?", "Need meds...", "*wheeze*", "My health is a scam.", "Can't get up...", "Fever dreams...", "*sneezes dramatically*", "The sickness grows.", "Everything hurts EVERYWHERE."]; }
         }
@@ -2688,7 +2688,7 @@ class Pet {
             if (petType == TYPE_POLACCO) { t = ["ZERAC DAJ!", "Glodny jak ch*j!", "KIELBASA!", "Brzuch burczy k*rwa", "Pozre kogokolwiek!", "Gdzie ta kielbasa!", "Jestem w stanie zerac sciany!"]; }
             else if (petType == TYPE_NOSACZ) { t = ["E! Jesc! E!", "Glod. E.", "E E jedzenie E!", "*nos wącha jedzenie*"]; }
             else if (petType == TYPE_DOGGO) { t = ["FOOD?! FOOD?! FOOD?!", "*dramatic starving act*", "I can smell EVERYTHING.", "Feed or I eat the sofa."]; }
-            else if (petType == TYPE_VEXOR) { t = ["FEED ME OR SUFFER.", "Starvation makes me WORSE.", "I'll eat your SOUL.", "Food. NOW. SERIOUSLY."]; }
+            else if (petType == TYPE_VEXOR) { t = ["FEED ME OR SUFFER.", "Starvation makes me WORSE.", "I'll eat your SOUL.", "Food. NOW. SERIOUSLY.", "I'M HUNGRY. YOU DIE.", "FEED. ME. NOW.", "Hunger fuels my RAGE.", "Last warning. FOOD."]; }
             else if (petType == TYPE_EMILKA) { t = ["Feed me... please?", "Hunger + loneliness = tears", "My tummy is angry~", "Even food would show me love..."]; }
             else { t = ["Feed me!", "Hungry...", "*rumble*", "Food?", "I could eat a HORSE", "STARVING!", "*tummy growl*", "My stomach is plotting.", "Hunger level: feral.", "I'll eat literally anything.", "*eats air*", "FOOD IS ALL I THINK ABOUT", "Is that food? THAT'S FOOD.", "Feed or consequences."]; }
         }
@@ -2696,7 +2696,7 @@ class Pet {
             if (petType == TYPE_POLACCO) { t = ["Jebac to...", "Nudno tu k*rwa", "Ch*j z tym", "Depresja...", "Wszystko bez sensu", "Polska przygnebila mnie", "Zyciem nie jest, jest wegetowaniem"]; }
             else if (petType == TYPE_NOSACZ) { t = ["E... smutno. E.", "*nos zwiesa sie*", "E...", "Brak radosci. E."]; }
             else if (petType == TYPE_EMILKA) { t = ["Nobody loves me...", "*dramatically lies on floor*", "Life is unfair and LONG.", "Why won't anyone notice me?"]; }
-            else if (petType == TYPE_VEXOR) { t = ["Boredom fuels my rage.", "Entertain me or DIE.", "*destroys something out of boredom*", "I hate this. I hate all."]; }
+            else if (petType == TYPE_VEXOR) { t = ["Boredom fuels my rage.", "Entertain me or DIE.", "*destroys boredom targets*", "I hate this. I hate all.", "BORED AND DANGEROUS.", "Entertain. Me. NOW.", "I will BREAK things.", "Boredom = your problem."]; }
             else if (petType == TYPE_DOGGO) { t = ["*sad puppy eyes*", "No one to play with...", "Is anyone there?", "*whimpers quietly*"]; }
             else { t = ["*sigh*", "Bored...", "Play?", "Lonely", "Life is pain", "Everything sucks", "Meh...", "Nothing matters.", "I stare. Void stares back.", "Is this it?", "Stimulate me pls.", "Boredom is suffering.", "*counts pixels*", "Someone. Anyone. Please."]; }
         }
@@ -2712,7 +2712,7 @@ class Pet {
             else if (petType == TYPE_NOSACZ) { t = ["E!! Dobrze! E!!", "*nos tanczy*", "E E szczescie E!", "Nos szczesliwy!"]; }
             else if (petType == TYPE_DOGGO) { t = ["BEST DAY EVER!!", "*spins from joy*", "I love EVERYTHING!", "THIS IS PERFECT!!"]; }
             else if (petType == TYPE_EMILKA) { t = ["Life is BEAUTIFUL!", "*twirls*", "I feel SO loved!", "Today is my day~"]; }
-            else if (petType == TYPE_VEXOR) { t = ["...tolerable.", "Acceptable.", "I feel... less bad.", "Don't tell anyone."]; }
+            else if (petType == TYPE_VEXOR) { t = ["...tolerable.", "Acceptable.", "I feel... less bad.", "Don't tell anyone.", "This is... almost ok.", "*suspicious happiness*", "I still hate you tho.", "Fine. FINE. Whatever."]; }
             else { t = ["Yay!", "Happy!", "Love you!", "Wheee!", "Best day!", "Life is GREAT!", "So blessed~", "Today is PERFECT.", "Nothing can stop me!", "HAPPINESS OVERLOAD", "Pure serotonin.", "*does a little dance*", "10/10 existence.", "I feel invincible~"]; }
         }
         else {
@@ -2924,6 +2924,12 @@ class Pet {
             if (nl >= 4) { var t = ["Alone. Dead. Fine.", "The void is my friend.", "I do not need you.", "Eternity. Alone."]; return t[Math.rand().abs() % t.size()]; }
             return null;
         }
+        if (petType == TYPE_VEXOR) {
+            if (nl >= 4) { var t = ["WHERE R U B*TCH?!", "*destroys the room*", "Come. Back. NOW.", "I will END things."]; return t[Math.rand().abs() % t.size()]; }
+            if (nl >= 3 && Math.rand().abs() % 4 < 3) { var t = ["WHERE THE F*CK?!", "*smashes stuff*", "Come back. Or ELSE.", "My rage is BUILDING."]; return t[Math.rand().abs() % t.size()]; }
+            if (nl >= 2 && Math.rand().abs() % 3 < 2) { var t = ["...where r u.", "*simmers in hate*", "This is YOUR fault.", "My anger grows."]; return t[Math.rand().abs() % t.size()]; }
+            return null;
+        }
         if (nl >= 4) {
             var t = ["Don't let me die!", "I need you!", "Please...", "Help...", "*crying*", "Anyone..."];
             return t[Math.rand().abs() % t.size()];
@@ -3035,7 +3041,7 @@ class Pet {
             else if (mood == :sugar_high) { t = ["HAHA F*CK YES!", "UNSTOPPABLE B*TCH!", "I'M A F*CKING GOD!", "CHAOS! MORE CHAOS!", "EAT MY DUST LOSERS!"]; }
             else if (mood == :paranoid) { t = ["SH*T is that light?!", "F*CK OFF holy water!", "THAT A*SHOLE exorcist!", "DON'T F*CKING TOUCH ME!", "OH SH*T OH F*CK!"]; }
             else if (mood == :party) { t = ["DEATH F*CKING METAL!", "HELL YEAH B*TCHES!", "MOSH PIT MOTHERF*CKER!", "LET'S F*CKING GO!", "PARTY IN HELL!"]; }
-            else if (mood == :existential) { t = ["What's the f*cking point", "Even evil gets tired...", "F*ck it all...", "Who gives a sh*t"]; }
+            else if (mood == :existential) { t = ["What's the f*cking point", "Even evil gets tired...", "F*ck it all...", "Who gives a sh*t", "Nihilism. Finally.", "Rage requires energy...", "Even I need a break.", "...destruction later."]; }
         } else if (petType == TYPE_CHIKKO) {
             if (mood == :paranoid) { t = ["THE SKY IS FALLING!", "I HEARD SOMETHING!", "THEY'RE COMING!", "Was that a FOX?!", "DANGER EVERYWHERE!", "HIDE HIDE HIDE!"]; }
             else if (mood == :feral) { t = ["MUST PECK! PECK!", "*pecks at air*", "SEED! WHERE SEED?!", "FERAL CHICKEN!", "NO CAGE HOLDS ME!"]; }
@@ -3130,7 +3136,7 @@ class Pet {
         else if (petType == TYPE_FROSTY) { t = ["Brrr~", "Chill~", "Cool!", "Frost~", "Let it go~", "*freezes a tear mid-fall*", "Cold outside, colder inside", "Sub-zero mood.", "Ice to meet you.", "Permafrost personality.", "*breathes visible breath*", "Winter IS my personality.", "I freeze things by accident.", "Warmth is overrated."]; }
         else if (petType == TYPE_SHROOMY) { t = ["Spore!", "Fungi~", "Grow!", "Bloom~", "Reality is spores", "*trips on own spores*", "I see the TRUTH", "We are all connected. Via me.", "The underground network speaks.", "Mycology is art.", "*releases spore cloud*", "I grow in the dark. Relatable.", "My roots go everywhere.", "Decomposition is beautiful."]; }
         else if (petType == TYPE_EMILKA) { t = ["*hair flip*", "Heyyy~", "Love me!", "Cutie~", "U thinking of me?", "Am I pretty?!", "*checks mirror*", "NOTICE ME!", "Kto pisal?!", "Read receipts ON.", "*posts sad quote*", "I just want to be obsessed over.", "YOU WERE SUPPOSED TO TEXT BACK!", "We're SO meant to be.", "*dramatically sighs*", "One notification. That's all I ask."]; }
-        else if (petType == TYPE_VEXOR) { t = ["F*ck off", "*spits*", "Die already", "Piece of sh*t", "Go to hell", "I hate everything", "Kiss my a*s", "Eat sh*t", "Worthless human", "You disgust me", "F*cking pathetic", "WHY ARE YOU STILL HERE", "*contemplates chaos*", "I dream of destruction.", "Get out of my sight.", "*destroys something small*", "Nothing brings me joy. Except suffering."]; }
+        else if (petType == TYPE_VEXOR) { t = ["F*ck off and die.", "*spits at you*", "Die. Please.", "Worthless sh*t.", "Go straight to hell.", "I hate you. Deeply.", "Kiss my demonic a*s.", "Eat sh*t and suffer.", "You disgust me.", "F*cking pathetic.", "WHY ARE YOU BREATHING", "*plots your destruction*", "Your pain = my joy.", "Leave. Forever.", "*smashes things*", "Crawl into the void.", "Your face offends me.", "Stop. Just stop.", "Insufferable pest.", "Burn it. You first.", "You are my curse.", "Even demons hate you.", "*drowning in contempt*", "Your soul is garbage.", "Die faster, please.", "You make me WORSE.", "Contempt: maximum.", "I hate you SO much.", "*fantasizes your suffering*", "Stupidity. Personified.", "I wish you were gone.", "*seethes with rage*", "You ruin existence.", "Not worth my rage.", "Your existence: crime.", "*quietly plotting murder*", "The void is too good 4 u.", "I'd curse you but why bother.", "My loathing has layers.", "Every second. You. Awful."]; }
         else if (petType == TYPE_CHIKKO) { t = ["BAWK!", "*pecks ground*", "Seed?", "*nervous cluck*", "W-what was that?!", "THE SKY IS FALLING!", "Is that a FOX?!", "*panic molt*", "DANGER! ALWAYS DANGER!", "My eggs... where?!", "I trust NO ONE.", "The farmer is coming.", "*clucks in Morse code*", "EVERY SHADOW IS A PREDATOR", "*runs in wrong direction*"]; }
         else if (petType == TYPE_DZIKKO) { t = ["*SNORT*", "OINK!", "*digs dirt*", "*charges wall*", "MY territory!", "I'll RAM you", "TRUFFLES OR DEATH", "*sharpens tusks*", "WHO WANTS IT?!", "I headbutted a tree. Tree lost.", "The forest fears ME.", "*roots up the floor*", "Oink first, ask never.", "My anger is my compass."]; }
         else if (petType == TYPE_POLACCO) { t = ["Piwo by sie...", "*beka*", "Grilla odpalic?", "Jebane podatki", "Kto pytal?", "Eh, k*rwa...", "Zimne?", "*drapie jaja*", "Mecz kiedy?", "Kielbasy daj", "Ty za to placisz", "A bo ja wiem...", "Co za kraj...", "Za Gierka lepiej bylo", "Sasiad ch*j", "Trawnik sam sie nie skosi", "Emisja CO2? G*wno mnie obchodzi.", "Dzieci dzisiaj to...", "Emerytury nie bedzie.", "Chleb za 10zl? SKANDAL!", "*zapala nieregulaminowo*", "W mojej wsi bylo lepiej.", "Europa nam nie bedzie mowic!"]; }
@@ -3206,9 +3212,10 @@ class Pet {
             return null;
         }
         if (petType == TYPE_VEXOR) {
-            if (steps >= 10000) { return "Running from your problems? Coward."; }
-            if (steps >= 5000) { return "Trying to escape? Pathetic."; }
-            if (steps < 500) { return "Good. Stay put. Easier to find you."; }
+            if (steps >= 20000) { var _t = ["Running won't save u.", "20k steps? Coward.", "You can't outrun ME."]; return _t[Math.rand().abs() % _t.size()]; }
+            if (steps >= 10000) { var _t = ["Running from problems?", "Trying to escape? HA.", "I see you running."]; return _t[Math.rand().abs() % _t.size()]; }
+            if (steps >= 5000) { var _t = ["Trying to escape?", "Pathetic effort.", "Where u going, fool?"]; return _t[Math.rand().abs() % _t.size()]; }
+            if (steps < 500) { var _t = ["Good. Stay put.", "Easier to find you.", "Don't even bother.", "Nowhere to run anyway."]; return _t[Math.rand().abs() % _t.size()]; }
             return null;
         }
         if (petType == TYPE_PIXELBOT) {
