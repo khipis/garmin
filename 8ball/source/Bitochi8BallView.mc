@@ -11,7 +11,7 @@ enum {
     STATE_ANSWER
 }
 
-class BallView extends WatchUi.View {
+class Bitochi8BallView extends WatchUi.View {
 
     var state;
     hidden var _answer;

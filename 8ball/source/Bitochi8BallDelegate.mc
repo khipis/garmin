@@ -1,7 +1,7 @@
 using Toybox.WatchUi;
 using Toybox.Sensor;
 
-class BallDelegate extends WatchUi.BehaviorDelegate {
+class Bitochi8BallDelegate extends WatchUi.BehaviorDelegate {
 
     hidden var _view;
     hidden var _shakeThreshold;

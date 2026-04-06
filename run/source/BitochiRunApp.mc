@@ -14,7 +14,7 @@ class BitochiRunApp extends Application.AppBase {
     }
 
     function getInitialView() {
-        var view = new RunView();
-        return [view, new RunDelegate(view)];
+        var view = new BitochiRunView();
+        return [view, new BitochiRunDelegate(view)];
     }
 }

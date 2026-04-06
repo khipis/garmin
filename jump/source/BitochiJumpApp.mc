@@ -14,7 +14,7 @@ class BitochiJumpApp extends Application.AppBase {
     }
 
     function getInitialView() {
-        var view = new JumpView();
-        return [view, new JumpDelegate(view)];
+        var view = new BitochiJumpView();
+        return [view, new BitochiJumpDelegate(view)];
     }
 }

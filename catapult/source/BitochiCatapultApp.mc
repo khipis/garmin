@@ -14,7 +14,7 @@ class BitochiCatapultApp extends Application.AppBase {
     }
 
     function getInitialView() {
-        var view = new CatapultView();
-        return [view, new CatapultDelegate(view)];
+        var view = new BitochiCatapultView();
+        return [view, new BitochiCatapultDelegate(view)];
     }
 }

@@ -18,7 +18,7 @@ enum {
 const NUM_JUMPERS = 5;
 const TRAIL_LEN = 14;
 
-class JumpView extends WatchUi.View {
+class BitochiJumpView extends WatchUi.View {
 
     var gameState;
     var accelMag;
@@ -157,6 +157,10 @@ class JumpView extends WatchUi.View {
         _jumpOrderSlot = 0;
         _currentRound = 1;
         _showRoundStandings = false;
+        _windBase = 0.0;
+        _windCurrent = 0.0;
+        _windGustPhase = 0.0;
+        _takeoffFlashTicks = 0;
 
         gameState = JS_SELECT;
     }

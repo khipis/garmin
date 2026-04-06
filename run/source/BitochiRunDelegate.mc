@@ -1,7 +1,7 @@
 using Toybox.WatchUi;
 using Toybox.Sensor;
 
-class RunDelegate extends WatchUi.BehaviorDelegate {
+class BitochiRunDelegate extends WatchUi.BehaviorDelegate {
 
     hidden var _view;
     hidden var _sensorEnabled;

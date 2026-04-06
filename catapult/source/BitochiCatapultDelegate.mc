@@ -1,6 +1,6 @@
 using Toybox.WatchUi;
 
-class CatapultDelegate extends WatchUi.BehaviorDelegate {
+class BitochiCatapultDelegate extends WatchUi.BehaviorDelegate {
 
     hidden var _view;
 

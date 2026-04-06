@@ -14,7 +14,7 @@ class Bitochi8BallApp extends Application.AppBase {
     }
 
     function getInitialView() {
-        var view = new BallView();
-        return [view, new BallDelegate(view)];
+        var view = new Bitochi8BallView();
+        return [view, new Bitochi8BallDelegate(view)];
     }
 }

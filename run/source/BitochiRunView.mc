@@ -18,7 +18,7 @@ enum {
     RS_LEVELS
 }
 
-class RunView extends WatchUi.View {
+class BitochiRunView extends WatchUi.View {
 
     var gameState;
     var accelX;

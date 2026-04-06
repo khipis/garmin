@@ -19,7 +19,7 @@ const MAX_BLOCKS = 50;
 const MAX_PARTS = 30;
 const TRAIL_LEN = 14;
 
-class CatapultView extends WatchUi.View {
+class BitochiCatapultView extends WatchUi.View {
 
     var gameState;
 
