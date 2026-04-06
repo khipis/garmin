@@ -59,6 +59,7 @@ class Pet {
     var careStreak;
     var vibeEnabled;
     var suggestedAction;
+    var eventFlashType;
 
     hidden var _lastCareDay;
     hidden var _hugStressAcc;
@@ -110,6 +111,7 @@ class Pet {
         careStreak = 0;
         vibeEnabled = true;
         suggestedAction = -1;
+        eventFlashType = 0;
         _lastCareDay = -1;
         _hugStressAcc = 0;
         _actionTime = 0;
@@ -2522,24 +2524,31 @@ class Pet {
         if (roll == 0) {
             eventText = "GOLDEN FEAST!!";
             hunger = 0; happiness += 40; energy += 20; celebType = 2;
+            eventFlashType = 1;
         } else if (roll == 1) {
             eventText = "GUARDIAN ANGEL!!";
             health = 100; isSick = false; _sickTime = 0; hugStress = 0; celebType = 2; pendingVibe = 3;
+            eventFlashType = 2;
         } else if (roll == 2) {
             eventText = "ALIEN ABDUCTION!?";
             happiness += 50; energy += 30; celebType = 2; pendingVibe = 3;
+            eventFlashType = 4;
         } else if (roll == 3) {
             eventText = "DOUBLE RAINBOW!!";
             happiness += 35; energy += 25; health += 20; celebType = 2;
+            eventFlashType = 6;
         } else if (roll == 4) {
             eventText = "TIME WARP!!";
             hunger -= 40; happiness += 40; energy += 40; celebType = 2;
+            eventFlashType = 6;
         } else if (roll == 5) {
             eventText = "MASSIVE EARTHQUAKE!!";
             happiness -= 40; energy -= 30; health -= 25; pendingVibe = 4;
+            eventFlashType = 3;
         } else if (roll == 6) {
             eventText = "LEGENDARY TREASURE!!";
             hunger -= 25; happiness += 30; energy += 30; health += 30; celebType = 2;
+            eventFlashType = 1;
         } else if (roll == 7) {
             eventText = "LEGENDARY POTION!!";
             var r2 = Math.rand().abs() % 4;
@@ -2548,23 +2557,29 @@ class Pet {
             else if (r2 == 2) { energy = 100; health += 20; }
             else { health = 100; isSick = false; _sickTime = 0; }
             celebType = 2;
+            eventFlashType = 2;
         } else if (roll == 8) {
             eventText = "METEOR SHOWER!!";
             happiness -= 35; energy -= 25; health -= 30; pendingVibe = 4;
+            eventFlashType = 3;
         } else if (roll == 9) {
             eventText = "ANCIENT CURSE!!";
             hugStress += 40; happiness -= 30; health -= 25; pendingVibe = 3;
+            eventFlashType = 5;
         } else if (roll == 10) {
             eventText = "PET GOD VISITS!!";
             hunger = 0; happiness = 100; energy = 100; health = 100;
             isSick = false; _sickTime = 0; hugStress = 0;
             celebType = 2; pendingVibe = 3;
+            eventFlashType = 2;
         } else if (roll == 11) {
             eventText = "BLACK HOLE NEARBY!!";
             happiness = happiness / 2; energy = energy / 2; health = health / 2; pendingVibe = 3;
+            eventFlashType = 5;
         } else if (roll == 12) {
             eventText = "LOTTERY WIN!!!";
             happiness = 100; hunger = 0; energy += 30; celebType = 2; pendingVibe = 3;
+            eventFlashType = 1;
         } else {
             eventText = "IDENTITY CRISIS!!";
             var temp = happiness;
@@ -2572,6 +2587,7 @@ class Pet {
             energy = health;
             health = temp;
             pendingVibe = 2;
+            eventFlashType = 7;
         }
         _eventTime = Time.now().value();
         clamp();

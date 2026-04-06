@@ -15,6 +15,12 @@ class MainView extends WatchUi.View {
     hidden var _actions;
     hidden var _celebType;
     hidden var _celebTimer;
+    hidden var _wanderLookup;
+    hidden var _wanderPhase;
+    hidden var _idleTick;
+    hidden var _idleAnim;
+    hidden var _flashType;
+    hidden var _flashTimer;
 
     function initialize(pet) {
         View.initialize();
@@ -25,6 +31,12 @@ class MainView extends WatchUi.View {
         _bounceTable = [0, -1, -2, -2, -1, 0, 0, 0];
         _celebType = 0;
         _celebTimer = 0;
+        _wanderLookup = [0, 1, 2, 3, 2, 1, 0, -1, -2, -3, -2, -1];
+        _wanderPhase = 0;
+        _idleTick = 0;
+        _idleAnim = 0;
+        _flashType = 0;
+        _flashTimer = 0;
     }
 
     function onShow() {
@@ -52,6 +64,37 @@ class MainView extends WatchUi.View {
                 _pet.suggestedAction = -1;
             }
         }
+
+        // Event flash: pick up from pet when not already flashing
+        if (_pet.eventFlashType > 0 && _flashTimer <= 0) {
+            _flashType = _pet.eventFlashType;
+            _flashTimer = 24;
+            _pet.eventFlashType = 0;
+        }
+        if (_flashTimer > 0) { _flashTimer--; }
+
+        // Idle tracking: reset when pet is acting or recently interacted
+        var idleSecs = Time.now().value() - _pet.lastInteraction;
+        if (!_pet.isAlive || _pet.action != ACT_NONE || idleSecs < 4) {
+            _idleTick = 0;
+            _idleAnim = 0;
+        } else {
+            _idleTick++;
+            // Pick a new idle animation every ~20 seconds (80 ticks at 4fps)
+            if (_idleTick == 80 || (_idleTick > 80 && _idleTick % 80 == 0)) {
+                _idleAnim = Math.rand().abs() % 4 + 1;
+            }
+            // Advance wander: speed depends on type/trait
+            if (_idleTick > 16) {
+                var spd = 1;
+                if (_pet.petType == TYPE_DOGGO || _pet.hasTrait(TRAIT_HYPER)) { spd = 3; }
+                else if (_pet.petType == TYPE_CHIKKO) { spd = 2; }
+                else if (_pet.petType == TYPE_CACTUSO || _pet.petType == TYPE_UNDEAD) { spd = 0; }
+                else if (_pet.hasTrait(TRAIT_LAZY) && _idleTick % 3 != 0) { spd = 0; }
+                _wanderPhase = (_wanderPhase + spd) % 12;
+            }
+        }
+
         WatchUi.requestUpdate();
     }
 
@@ -83,7 +126,9 @@ class MainView extends WatchUi.View {
         drawPetArea(dc, w, h);
         drawNeglectEffects(dc, w, h);
         drawMoodEffects(dc, w, h);
+        drawIdleEffects(dc, w, h);
         drawEffects(dc, w, h);
+        drawEventFlash(dc, w, h);
         drawEvent(dc, w, h);
 
         if (_pet.dilemmaType > 0) {
@@ -390,20 +435,24 @@ class MainView extends WatchUi.View {
         else if (mood == :paranoid) { tremble = (_pet.animFrame % 3) - 1; }
         else if (mood == :feral) { tremble = (_pet.animFrame % 2 == 0) ? 2 : -2; }
 
-        _pet.draw(dc, cx + tremble, cy + bounce, ps);
+        // Wander offset: pet moves left/right when idle
+        var wx = (_idleTick > 16) ? _wanderLookup[_wanderPhase] * ps / 2 : 0;
+        var pcx = cx + wx;  // pet center X with wander applied
 
-        if (_pet.getState() == :stuffed) { drawVomit(dc, cx, cy, ps); }
+        _pet.draw(dc, pcx + tremble, cy + bounce, ps);
+
+        if (_pet.getState() == :stuffed) { drawVomit(dc, pcx, cy, ps); }
         if (_pet.poopCount > 0) { drawPoop(dc, cx, cy + 7 * ps + bounce, ps); }
 
         if (_pet.isSick) {
             dc.setColor(0x00FF00, Graphics.COLOR_TRANSPARENT);
             var wobble = (_pet.animFrame % 4 < 2) ? 1 : -1;
-            dc.drawText(cx + 7 * ps + wobble, cy - 4 * ps, Graphics.FONT_XTINY, "SICK", Graphics.TEXT_JUSTIFY_LEFT);
+            dc.drawText(pcx + 7 * ps + wobble, cy - 4 * ps, Graphics.FONT_XTINY, "SICK", Graphics.TEXT_JUSTIFY_LEFT);
         }
 
         if (_pet.hasTrait(TRAIT_SLEEPY) && _pet.action == ACT_NONE && !_pet.isSick && _pet.animFrame % 8 < 2) {
             dc.setColor(0x7986CB, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx + 6 * ps, cy - 5 * ps + bounce, Graphics.FONT_XTINY, "z", Graphics.TEXT_JUSTIFY_LEFT);
+            dc.drawText(pcx + 6 * ps, cy - 5 * ps + bounce, Graphics.FONT_XTINY, "z", Graphics.TEXT_JUSTIFY_LEFT);
         }
     }
 
@@ -753,6 +802,256 @@ class MainView extends WatchUi.View {
         if (actionIdx == 8) { nameColor = _pet.debugMode ? 0xFF8800 : 0x88AAFF; }
         dc.setColor(nameColor, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w / 2, y, Graphics.FONT_SMALL, name, Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    // --- Idle effects: pet does things when no interaction ---
+
+    hidden function drawIdleEffects(dc, w, h) {
+        if (_idleTick < 40 || !_pet.isAlive || _pet.action != ACT_NONE) { return; }
+        var cx = w / 2;
+        var cy = h / 2;
+        var ps = w / 30;
+        if (ps < 3) { ps = 3; }
+        var f = _pet.animFrame;
+        var wx = _wanderLookup[_wanderPhase] * ps / 2;
+        var pcx = cx + wx;
+
+        // Idle level 1 (5-20s): subtle sparkle around pet
+        if (_idleTick > 16) {
+            if (f % 6 == 0) {
+                var sc = _pet.getColors(_pet.petType);
+                dc.setColor(sc[2], sc[2]);
+                dc.fillRectangle(pcx + (5 + f % 3) * ps, cy - (3 + f % 4) * ps, ps/3, ps/3);
+                dc.fillRectangle(pcx - (6 + f % 3) * ps, cy - (2 + f % 3) * ps, ps/3, ps/3);
+            }
+        }
+
+        // Idle level 2 (20s+): idle animation
+        if (_idleTick > 80 && _idleAnim > 0) {
+            if (_idleAnim == 1) {
+                // Looking around: curious eye-tracking dot
+                var lookDir = ((_idleTick / 20) % 3) - 1;
+                dc.setColor(0x99BBDD, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(pcx + lookDir * 4 * ps, cy - 9 * ps, Graphics.FONT_XTINY, ".", Graphics.TEXT_JUSTIFY_CENTER);
+                if (f % 8 < 4) {
+                    dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT);
+                    dc.drawText(pcx + lookDir * 6 * ps, cy - 7 * ps, Graphics.FONT_XTINY, "?", Graphics.TEXT_JUSTIFY_CENTER);
+                }
+            } else if (_idleAnim == 2) {
+                // Playing alone: pet bounces a tiny dot
+                var ballX = pcx + ((f * 3 + 5) % 12 - 6) * ps / 2;
+                var ballY = cy - 3 * ps - ((f % 4) < 2 ? 1 : 0) * ps;
+                var bsc = _pet.getColors(_pet.petType);
+                dc.setColor(bsc[3], bsc[3]);
+                var bsz = ps / 2;
+                if (bsz < 2) { bsz = 2; }
+                dc.fillRectangle(ballX, ballY, bsz, bsz);
+                // Trail
+                dc.setColor(bsc[1], bsc[1]);
+                dc.fillRectangle(ballX - ps / 3, ballY + bsz, ps / 3, ps / 3);
+            } else if (_idleAnim == 3) {
+                // Attention: pulsing ring segments around pet
+                var rp = ps * 8;
+                var rc = (f % 2 == 0) ? 0x223344 : 0x334455;
+                dc.setColor(rc, rc);
+                var rs = ps / 2;
+                if (rs < 1) { rs = 1; }
+                dc.fillRectangle(pcx - rp, cy - rs, rs, rs * 2);
+                dc.fillRectangle(pcx + rp - rs, cy - rs, rs, rs * 2);
+                dc.fillRectangle(pcx - rs, cy - rp, rs * 2, rs);
+                dc.fillRectangle(pcx - rs, cy + rp - rs, rs * 2, rs);
+            } else {
+                // Spin: stars circling around pet (clockwise)
+                var angle = (f * 3) % 12;
+                for (var i = 0; i < 3; i++) {
+                    var a = (angle + i * 4) % 12;
+                    var sx = pcx + _wanderLookup[a] * ps * 2;
+                    var sy = cy + _wanderLookup[(a + 3) % 12] * ps;
+                    var sc2 = _pet.getColors(_pet.petType);
+                    dc.setColor((i == 0) ? sc2[3] : ((i == 1) ? sc2[2] : sc2[1]), Graphics.COLOR_TRANSPARENT);
+                    dc.drawText(sx, sy, Graphics.FONT_XTINY, "*", Graphics.TEXT_JUSTIFY_CENTER);
+                }
+            }
+        }
+
+        // Type-specific idle flavour (always when idle > 60 frames = 15s)
+        if (_idleTick > 60) {
+            if (_pet.petType == TYPE_DOGGO) {
+                // Tail wag: fast wiggle behind the pet
+                dc.setColor(0xFFBB44, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(pcx + (f % 2 == 0 ? 7 : 8) * ps, cy + ps, Graphics.FONT_XTINY, "~", Graphics.TEXT_JUSTIFY_CENTER);
+            } else if (_pet.petType == TYPE_CHIKKO) {
+                // Nervous peck at ground
+                if (f % 6 < 2) {
+                    dc.setColor(0xFFEEAA, 0xFFEEAA);
+                    var pp = ps / 3;
+                    if (pp < 1) { pp = 1; }
+                    dc.fillRectangle(pcx + 5 * ps, cy + 5 * ps, pp * 2, pp);
+                }
+            } else if (_pet.petType == TYPE_NOSACZ) {
+                // Sniff sniff
+                dc.setColor(0xFFAAAA, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(pcx + (f % 4 < 2 ? 7 : 6) * ps, cy - 2 * ps, Graphics.FONT_XTINY, "~", Graphics.TEXT_JUSTIFY_CENTER);
+            } else if (_pet.petType == TYPE_FOCZKA) {
+                // Flipper wave
+                if (f % 6 < 3) {
+                    dc.setColor(0x88BBDD, 0x88BBDD);
+                    var fp = ps / 2;
+                    if (fp < 1) { fp = 1; }
+                    dc.fillRectangle(pcx - 7 * ps, cy + (f % 3 - 1) * fp, fp * 2, fp * 2);
+                }
+            } else if (_pet.petType == TYPE_PIXELBOT) {
+                // Scanning laser
+                var scanY = cy - 6 * ps + (f % 12) * ps;
+                dc.setColor(0x33FF33, 0x33FF33);
+                dc.fillRectangle(pcx - 7 * ps, scanY, 14 * ps, ps / 4 + 1);
+            } else if (_pet.petType == TYPE_BATSY) {
+                // Hanging sway
+                dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(pcx + 7 * ps, cy - (8 + f % 2) * ps, Graphics.FONT_XTINY, "|", Graphics.TEXT_JUSTIFY_CENTER);
+            } else if (_pet.petType == TYPE_EMILKA) {
+                // Heart bubble
+                if (f % 8 < 4) {
+                    dc.setColor(0xFF88BB, 0xFF88BB);
+                    drawPixelHeart(dc, pcx + 5 * ps, cy - 7 * ps, ps / 3 + 1);
+                }
+            } else if (_pet.petType == TYPE_VEXOR) {
+                // Menacing glow
+                dc.setColor(0x330011, 0x330011);
+                var vp = ps / 2;
+                if (vp < 1) { vp = 1; }
+                dc.fillRectangle(pcx - 8 * ps, cy - vp, vp, vp * 2);
+                dc.fillRectangle(pcx + 8 * ps, cy - vp, vp, vp * 2);
+            } else if (_pet.petType == TYPE_SHROOMY) {
+                // Spore puff
+                if (f % 4 == 0) {
+                    dc.setColor(0x7744AA, 0x7744AA);
+                    var sp2 = ps / 3;
+                    if (sp2 < 1) { sp2 = 1; }
+                    dc.fillRectangle(pcx + (f % 5 - 2) * ps, cy - (7 + f % 3) * ps, sp2, sp2);
+                }
+            }
+        }
+    }
+
+    // --- Event flash: dramatic overlay for rare/special events ---
+
+    hidden function drawEventFlash(dc, w, h) {
+        if (_flashTimer <= 0) { return; }
+        var f = _pet.animFrame;
+        var cx = w / 2;
+        var cy = h / 2;
+        var ps = w / 30;
+        if (ps < 3) { ps = 3; }
+        // Fade out: stronger in first half of timer
+        var bright = (_flashTimer > 12);
+
+        if (_flashType == 1) {
+            // GOLDEN: rain of gold particles + golden top/bottom edge
+            var edgeCol = bright ? 0x332200 : 0x221500;
+            dc.setColor(edgeCol, edgeCol);
+            dc.fillRectangle(0, 0, w, ps * 2);
+            dc.fillRectangle(0, h - ps * 2, w, ps * 2);
+            for (var i = 0; i < 10; i++) {
+                var gx = (w * ((i * 31 + 7) % 97)) / 100;
+                var gy = h - (24 - _flashTimer + i * 2) * h / 24;
+                if (gy < -5 || gy > h + 5) { continue; }
+                var col = (i % 2 == 0) ? 0xFFDD33 : 0xFFAA11;
+                dc.setColor(col, col);
+                var gsz = ps / 2 + 1;
+                dc.fillRectangle(gx, gy, gsz, gsz);
+                if (bright) { dc.fillRectangle(gx, gy + gsz + 1, gsz / 2 + 1, gsz / 2); }
+            }
+        } else if (_flashType == 2) {
+            // DIVINE: white rays emanating from pet
+            var rayDirs = [[0,-1],[1,-1],[1,0],[1,1],[0,1],[-1,1],[-1,0],[-1,-1]];
+            var rayLen = (24 - _flashTimer) * ps * 2;
+            for (var i = 0; i < 8; i++) {
+                var rx = cx + rayDirs[i][0] * rayLen;
+                var ry = cy + rayDirs[i][1] * rayLen;
+                var rc = (i % 2 == 0) ? 0x8888AA : 0x555577;
+                if (!bright) { rc = (i % 2 == 0) ? 0x444455 : 0x333344; }
+                dc.setColor(rc, rc);
+                var rsz = ps / 2 + 1;
+                dc.fillRectangle(rx - rsz / 2, ry - rsz / 2, rsz, rsz);
+            }
+            if (bright && _flashTimer > 20) {
+                dc.setColor(0x555566, 0x555566);
+                dc.fillRectangle(cx - ps, cy - ps, ps * 2, ps * 2);
+            }
+        } else if (_flashType == 3) {
+            // DANGER: red border pulses + flying sparks
+            var edgeC = (_flashTimer % 2 == 0) ? 0x440000 : 0x550000;
+            dc.setColor(edgeC, edgeC);
+            dc.fillRectangle(0, 0, w, ps);
+            dc.fillRectangle(0, h - ps, w, ps);
+            dc.fillRectangle(0, 0, ps, h);
+            dc.fillRectangle(w - ps, 0, ps, h);
+            for (var i = 0; i < 6; i++) {
+                var sx = (w * ((i * 43 + 11) % 97)) / 100;
+                var sy = (h * ((i * 37 + f * 7) % 97)) / 100;
+                dc.setColor((i % 2 == 0) ? 0xFF2211 : 0xFF6622, Graphics.COLOR_TRANSPARENT);
+                var ssz = ps / 3 + 1;
+                dc.fillRectangle(sx, sy, ssz, ssz);
+            }
+        } else if (_flashType == 4) {
+            // ALIEN: teal/purple beam from top + floating particles
+            if (bright) {
+                var beamH = (24 - _flashTimer) * h / 24;
+                dc.setColor(0x112211, 0x112211);
+                dc.fillRectangle(cx - ps, 0, ps * 2, beamH);
+            }
+            for (var i = 0; i < 12; i++) {
+                var ax = (w * ((i * 23 + f * 7) % 97)) / 100;
+                var ay = (h * ((i * 41 + (24 - _flashTimer) * 3) % 97)) / 100;
+                var ac = (i % 3 == 0) ? 0x33FF77 : ((i % 3 == 1) ? 0xAA33FF : 0x33AAFF);
+                dc.setColor(ac, ac);
+                var asz = ps / 3 + 1;
+                dc.fillRectangle(ax, ay, asz, asz);
+            }
+        } else if (_flashType == 5) {
+            // DARK CURSE: corner tendrils creeping inward
+            var reach = (24 - _flashTimer) * ps;
+            if (reach < ps) { reach = ps; }
+            dc.setColor(0x110022, 0x110022);
+            dc.fillRectangle(0, 0, reach, ps / 2 + 1);
+            dc.fillRectangle(0, 0, ps / 2 + 1, reach);
+            dc.fillRectangle(w - reach, 0, reach, ps / 2 + 1);
+            dc.fillRectangle(w - ps / 2 - 1, 0, ps / 2 + 1, reach);
+            dc.fillRectangle(0, h - ps / 2 - 1, reach, ps / 2 + 1);
+            dc.fillRectangle(0, h - reach, ps / 2 + 1, reach);
+            dc.fillRectangle(w - reach, h - ps / 2 - 1, reach, ps / 2 + 1);
+            dc.fillRectangle(w - ps / 2 - 1, h - reach, ps / 2 + 1, reach);
+            for (var i = 0; i < 5; i++) {
+                if ((_flashTimer + i) % 3 == 0) {
+                    var px2 = (w * ((i * 29 + 5) % 97)) / 100;
+                    var py2 = (h * ((i * 41 + 7) % 97)) / 100;
+                    dc.setColor(0x7733AA, 0x7733AA);
+                    var psz = ps / 3 + 1;
+                    dc.fillRectangle(px2, py2, psz, psz);
+                }
+            }
+        } else if (_flashType == 6) {
+            // RAINBOW TIME WARP: colored strips on screen edges
+            var cols6 = [0x440000, 0x443300, 0x444400, 0x004400, 0x004444, 0x110044];
+            for (var i = 0; i < 6; i++) {
+                var stripH = h / 6;
+                var sy2 = i * stripH;
+                var ph2 = (f + i + (24 - _flashTimer)) % 6;
+                dc.setColor(cols6[ph2], cols6[ph2]);
+                dc.fillRectangle(0, sy2, ps / 2 + 1, stripH);
+                dc.fillRectangle(w - ps / 2 - 1, sy2, ps / 2 + 1, stripH);
+            }
+        } else if (_flashType == 7) {
+            // CHAOS IDENTITY CRISIS: random quadrant color shifts
+            var cols7 = [0x330000, 0x003300, 0x000033, 0x333300, 0x330033, 0x003333];
+            var q = (f * 3 + _flashTimer) % 6;
+            dc.setColor(cols7[q], cols7[q]);
+            var qw = w / 3;
+            var qx2 = (q % 3) * qw;
+            var qy2 = (q / 3 % 2) * h / 2;
+            dc.fillRectangle(qx2, qy2, qw, h / 2);
+        }
     }
 
     // --- Death screen ---
