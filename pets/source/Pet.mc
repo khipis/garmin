@@ -1764,8 +1764,9 @@ class Pet {
         if (mood == :sugar_high || mood == :party) { return :happy; }
         if (isSick) { return :sick; }
         var nl = getNeglectLevel();
-        if (nl >= 3) { return :desperate; }
-        if (nl >= 2 && happiness < 50) { return :sad; }
+        var st = getNeglectSadThreshold();
+        if (nl >= st + 1) { return :desperate; }
+        if (nl >= st) { return :sad; }
         if (hunger > 80) { return :hungry; }
         if (happiness < 20 || energy < 15) { return :sad; }
         if (happiness > 60 && hunger < 40) { return :happy; }
@@ -1788,6 +1789,42 @@ class Pet {
         if (since > 3600) { return 2; }
         if (since > 1800) { return 1; }
         return 0;
+    }
+
+    function getNeglectSadThreshold() {
+        var t = 2;
+        if (petType == TYPE_EMILKA)   { t = 1; }
+        else if (petType == TYPE_DOGGO)    { t = 1; }
+        else if (petType == TYPE_DONUT)    { t = 1; }
+        else if (petType == TYPE_RAINBOW)  { t = 1; }
+        else if (petType == TYPE_FOCZKA)   { t = 1; }
+        else if (petType == TYPE_CHIKKO)   { t = 1; }
+        else if (petType == TYPE_NUGGET)   { t = 2; }
+        else if (petType == TYPE_AQUA)     { t = 2; }
+        else if (petType == TYPE_NOSACZ)   { t = 2; }
+        else if (petType == TYPE_GHOSTY)   { t = 2; }
+        else if (petType == TYPE_OCTAVIO)  { t = 2; }
+        else if (petType == TYPE_SHROOMY)  { t = 2; }
+        else if (petType == TYPE_FLAMEY)   { t = 2; }
+        else if (petType == TYPE_SPARKY)   { t = 3; }
+        else if (petType == TYPE_FROSTY)   { t = 3; }
+        else if (petType == TYPE_ROCKY)    { t = 3; }
+        else if (petType == TYPE_DZIKKO)   { t = 3; }
+        else if (petType == TYPE_POLACCO)  { t = 3; }
+        else if (petType == TYPE_BATSY)    { t = 3; }
+        else if (petType == TYPE_PIXELBOT) { t = 3; }
+        else if (petType == TYPE_VEXOR)    { t = 4; }
+        else if (petType == TYPE_CACTUSO)  { t = 99; }
+        else if (petType == TYPE_UNDEAD)   { t = 99; }
+
+        if (hasTrait(TRAIT_CHEERFUL)) { t += 1; }
+        if (hasTrait(TRAIT_GRUMPY))   { t -= 1; }
+        if (hasTrait(TRAIT_FRAGILE))  { t -= 1; }
+        if (hasTrait(TRAIT_HARDY))    { t += 1; }
+        if (hasTrait(TRAIT_PLAYFUL))  { t += 1; }
+        if (hasTrait(TRAIT_SLEEPY))   { t += 1; }
+        if (t < 1)  { t = 1; }
+        return t;
     }
 
     function getMoodState() {

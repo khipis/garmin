@@ -283,21 +283,82 @@ class MainView extends WatchUi.View {
 
     hidden function drawNeglectWarning(dc, w, h) {
         var nl = _pet.getNeglectLevel();
-        if (nl < 2) { return; }
+        var st = _pet.getNeglectSadThreshold();
+        if (nl < st) { return; }
         var msg;
         var nlColor;
         if (nl >= 4) {
-            msg = "I NEED YOU!";
+            msg = getNeglectMsg(3);
             nlColor = (_pet.animFrame % 2 == 0) ? 0xFF0000 : 0xFF3333;
-        } else if (nl >= 3) {
-            msg = "Please come back!";
+        } else if (nl >= st + 1) {
+            msg = getNeglectMsg(2);
             nlColor = (_pet.animFrame % 4 < 2) ? 0xFF3333 : 0xFF5555;
         } else {
-            msg = "Missing you...";
+            msg = getNeglectMsg(1);
             nlColor = 0xFFAA33;
         }
         dc.setColor(nlColor, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w / 2, h * 33 / 100, Graphics.FONT_XTINY, msg, Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    hidden function getNeglectMsg(severity) {
+        var t = _pet.petType;
+        if (t == TYPE_EMILKA) {
+            if (severity >= 3) { return "ZOSTAWILES MNIE!!!"; }
+            if (severity >= 2) { return "Gdzie jestes??"; }
+            return "Tesknie za Toba...";
+        }
+        if (t == TYPE_DOGGO) {
+            if (severity >= 3) { return "*HOWLING*"; }
+            if (severity >= 2) { return "COME BACK PLZ!"; }
+            return "*stares at door*";
+        }
+        if (t == TYPE_VEXOR) {
+            if (severity >= 3) { return "YOU'RE DEAD TO ME"; }
+            if (severity >= 2) { return "WHERE THE F*CK R U"; }
+            return "*seething*";
+        }
+        if (t == TYPE_POLACCO) {
+            if (severity >= 3) { return "CH*J Z TYM WSZYSTKIM!"; }
+            if (severity >= 2) { return "No gdzie lazisz k*rwa?"; }
+            return "Ej.. jest tam ktos?";
+        }
+        if (t == TYPE_NOSACZ) {
+            if (severity >= 3) { return "EEE!! ZOSTAW NOS!!"; }
+            if (severity >= 2) { return "E E... gdzie?"; }
+            return "E?";
+        }
+        if (t == TYPE_CHIKKO) {
+            if (severity >= 3) { return "*PANICS LOUDLY*"; }
+            if (severity >= 2) { return "ABANDONED! CLUCK!"; }
+            return "Hello?? BAWK??";
+        }
+        if (t == TYPE_FOCZKA) {
+            if (severity >= 3) { return "*sad seal sounds*"; }
+            if (severity >= 2) { return "*ARF... ARF...*"; }
+            return "*quiet arf*";
+        }
+        if (t == TYPE_DONUT) {
+            if (severity >= 3) { return "AM I GOING STALE?!"; }
+            if (severity >= 2) { return "Still here... alone.."; }
+            return "Hello?";
+        }
+        if (t == TYPE_RAINBOW) {
+            if (severity >= 3) { return "*colors fading...*"; }
+            if (severity >= 2) { return "Sparkle... dimming..."; }
+            return "Where did u go?";
+        }
+        if (t == TYPE_ROCKY) {
+            if (severity >= 3) { return "EVEN ROCKS CRY."; }
+            return "...you gone?";
+        }
+        if (t == TYPE_PIXELBOT) {
+            if (severity >= 3) { return "USER: DISCONNECTED"; }
+            return "IDLE: TIMEOUT WARN";
+        }
+        if (severity >= 3) { return "I NEED YOU!"; }
+        if (severity >= 2) { return "Please come back!"; }
+        return "Missing you...";
     }
 
     // --- Pet ---
@@ -407,7 +468,10 @@ class MainView extends WatchUi.View {
     }
 
     hidden function drawTears(dc, cx, cy, ps, f) {
-        var show = (_pet.happiness < 30) || (_pet.getNeglectLevel() >= 2);
+        var nl = _pet.getNeglectLevel();
+        var st = _pet.getNeglectSadThreshold();
+        var showFromNeglect = (st < 99) && (nl >= st);
+        var show = (_pet.happiness < 30) || showFromNeglect;
         if (!show || _pet.action != ACT_NONE) { return; }
         dc.setColor(0x42A5F5, 0x42A5F5);
         var dotSz = ps / 2;
@@ -416,7 +480,7 @@ class MainView extends WatchUi.View {
         var t2y = cy - ps + ((f + 4) % 8) * ps * 3 / 4;
         dc.fillRectangle(cx - 3 * ps, t1y, dotSz, dotSz + 1);
         dc.fillRectangle(cx + 2 * ps, t2y, dotSz, dotSz + 1);
-        if (_pet.getNeglectLevel() >= 3) {
+        if (nl >= st + 1) {
             var t3y = cy - ps + ((f + 2) % 8) * ps * 3 / 4;
             dc.fillRectangle(cx - 2 * ps, t3y, dotSz, dotSz + 1);
             dc.fillRectangle(cx + 3 * ps, t3y, dotSz, dotSz + 1);
