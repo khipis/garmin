@@ -33,7 +33,7 @@ class RushGameView extends WatchUi.View {
         if (_timer != null) { _timer.stop(); _timer = null; }
     }
 
-    function onGameTimer() {
+    function onGameTimer() as Void {
         if (_state == 0) {
             _countdownTicks++;
             if (_countdownTicks >= 12) {

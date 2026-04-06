@@ -97,7 +97,7 @@ class MemoryGameView extends WatchUi.View {
         }
     }
 
-    function onGameTimer() {
+    function onGameTimer() as Void {
         _sparkle = (_sparkle + 1) % 8;
 
         if (_state == MEM_STATE_SHOW) {

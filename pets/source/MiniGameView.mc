@@ -54,7 +54,7 @@ class MiniGameView extends WatchUi.View {
         if (_timer != null) { _timer.stop(); _timer = null; }
     }
 
-    function onGameTimer() {
+    function onGameTimer() as Void {
         _sparkles = (_sparkles + 1) % 8;
         if (_state == 0) {
             _barPos = _barPos + _barDir * _barSpeed;
