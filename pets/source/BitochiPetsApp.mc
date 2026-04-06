@@ -1,7 +1,7 @@
 using Toybox.Application;
 using Toybox.WatchUi;
 
-class GarmagochiApp extends Application.AppBase {
+class BitochiPetsApp extends Application.AppBase {
 
     hidden var _pet;
 
