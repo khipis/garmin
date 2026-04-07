@@ -6,7 +6,7 @@ using Toybox.Time;
 using Toybox.System;
 using Toybox.Application;
 
-enum { GS_MENU, GS_INTRO, GS_FIGHT, GS_KO, GS_WIN, GS_LOSE }
+enum { GS_MENU, GS_INTRO, GS_FIGHT, GS_KO, GS_WIN, GS_LOSE, GS_CHAMPION }
 enum { PS_IDLE, PS_JAB, PS_CROSS, PS_HOOK, PS_UPPER, PS_BODY, PS_DODGE_L, PS_DODGE_R, PS_BLOCK, PS_HIT_STUN, PS_SUPER, PS_EXHAUSTED }
 
 enum { ES_IDLE, ES_WINDUP, ES_JAB, ES_HOOK, ES_UPPER, ES_COMBO, ES_STUNNED, ES_DODGE }
@@ -112,6 +112,7 @@ class BitochiBoxingView extends WatchUi.View {
     hidden var _enemySkin;
     hidden var _enemyHairCol;
     hidden var _enemyHairStyle;
+    hidden var _lastPunchSide;
 
     function initialize() {
         View.initialize();
@@ -121,7 +122,7 @@ class BitochiBoxingView extends WatchUi.View {
         _h = ds.screenHeight;
 
         accelX = 0; accelY = 0; accelZ = 0;
-        _tick = 0; _round = 1; _wins = 0; _bestRound = 0; _rematchUsed = false;
+        _tick = 0; _round = 1; _wins = 0; _bestRound = 0; _rematchUsed = false; _lastPunchSide = 0;
         _prevAccelMag = 0; _accelSmooth = 0; _crowdPhase = 0; _crowdHype = 0;
         _score = 0;
         var bs = Application.Storage.getValue("boxBest");
@@ -184,7 +185,7 @@ class BitochiBoxingView extends WatchUi.View {
             _playerMaxHp += 4;
             if (_playerMaxHp > 142) { _playerMaxHp = 142; }
         }
-        _enemyFace = (_round - 1) % 8;
+        _enemyFace = (_round - 1) % 20;
         _enemyState = ES_IDLE; _enemyStateTick = 0;
         _enemyAttackTimer = 0; _enemyComboLeft = 0; _enemyPunchType = 0;
         var baseDelay = (18.0 / _enemySpeed).toNumber();
@@ -215,17 +216,27 @@ class BitochiBoxingView extends WatchUi.View {
 
     function doAction() {
         if (gameState == GS_MENU) {
-            _round = 1; _wins = 0; _score = 0; _playerMaxHp = 100; initFight();
+            _round = 1; _wins = 0; _score = 0; _playerMaxHp = 100; _rematchUsed = false; initFight();
             gameState = GS_INTRO; _introTick = 0;
         } else if (gameState == GS_FIGHT) {
             if (_comboMeter >= 100) {
                 doSuperPunch();
             } else {
-                doPlayerPunch(PS_JAB);
+                var ax = (accelX != null) ? accelX : 0;
+                var pType;
+                if (ax > 150) { pType = PS_CROSS; _lastPunchSide = 1; }
+                else if (ax < -150) { pType = PS_JAB; _lastPunchSide = 0; }
+                else { _lastPunchSide = 1 - _lastPunchSide; pType = (_lastPunchSide == 0) ? PS_JAB : PS_CROSS; }
+                doPlayerPunch(pType);
             }
         } else if (gameState == GS_WIN) {
-            _round++; initFight();
-            gameState = GS_INTRO; _introTick = 0;
+            _rematchUsed = false;
+            if (_wins >= 20) {
+                gameState = GS_CHAMPION;
+            } else {
+                _round++; initFight();
+                gameState = GS_INTRO; _introTick = 0;
+            }
         } else if (gameState == GS_LOSE) {
             if (!_rematchUsed) {
                 _rematchUsed = true;
@@ -236,6 +247,9 @@ class BitochiBoxingView extends WatchUi.View {
                 _round = 1; _wins = 0; _score = 0; _playerMaxHp = 100; _rematchUsed = false; initFight();
                 gameState = GS_INTRO; _introTick = 0;
             }
+        } else if (gameState == GS_CHAMPION) {
+            _round = 1; _wins = 0; _score = 0; _playerMaxHp = 100; _rematchUsed = false; initFight();
+            gameState = GS_INTRO; _introTick = 0;
         }
     }
 
@@ -308,8 +322,7 @@ class BitochiBoxingView extends WatchUi.View {
                 var pPct = _playerHp * 100 / _playerMaxHp;
                 var ePct = _enemyHp * 100 / _enemyMaxHp;
                 if (pPct >= ePct) {
-                    _enemyHp = 0; _wins++;
-                    if (_round > _bestRound) { _bestRound = _round; }
+                    _enemyHp = 0;
                     gameState = GS_KO; _koTick = 0; _shakeLeft = 10;
                 } else {
                     _playerHp = 0;
@@ -327,6 +340,8 @@ class BitochiBoxingView extends WatchUi.View {
                     gameState = GS_WIN;
                 } else { gameState = GS_LOSE; }
             }
+        } else if (gameState == GS_CHAMPION) {
+            // idle – just re-render at tick rate
         }
         WatchUi.requestUpdate();
     }
@@ -342,14 +357,19 @@ class BitochiBoxingView extends WatchUi.View {
         if (_punchCooldown > 0) { _punchCooldown--; }
 
         if ((_playerState == PS_IDLE || _playerState == PS_BLOCK) && _playerState != PS_EXHAUSTED) {
-            if (ax > 220) { _playerState = PS_DODGE_L; _playerStateTick = 0; _stamina -= 7; if (_stamina < 0) { _stamina = 0; } _staminaRegenDelay = 4; }
-            else if (ax < -220) { _playerState = PS_DODGE_R; _playerStateTick = 0; _stamina -= 7; if (_stamina < 0) { _stamina = 0; } _staminaRegenDelay = 4; }
+            if (ax < -220) { _playerState = PS_DODGE_L; _playerStateTick = 0; _stamina -= 7; if (_stamina < 0) { _stamina = 0; } _staminaRegenDelay = 4; }
+            else if (ax > 220) { _playerState = PS_DODGE_R; _playerStateTick = 0; _stamina -= 7; if (_stamina < 0) { _stamina = 0; } _staminaRegenDelay = 4; }
             else if (delta > 500 && _punchCooldown <= 0) {
                 var pType = PS_JAB;
                 if (delta > 1400) { pType = PS_UPPER; }
                 else if (delta > 1100) { pType = PS_HOOK; }
-                else if (delta > 800) { pType = PS_CROSS; }
-                else if (ay < -300) { pType = PS_BODY; }
+                else if (delta > 800) {
+                    pType = (ax > 100) ? PS_CROSS : PS_JAB;
+                } else if (ay < -300) { pType = PS_BODY; }
+                else {
+                    _lastPunchSide = 1 - _lastPunchSide;
+                    pType = (_lastPunchSide == 0) ? PS_JAB : PS_CROSS;
+                }
                 doPlayerPunch(pType);
             } else if (ax > -80 && ax < 80 && delta < 150) {
                 if (_playerState != PS_BLOCK) { _playerState = PS_BLOCK; _playerStateTick = 0; }
@@ -374,7 +394,7 @@ class BitochiBoxingView extends WatchUi.View {
         }
 
         _playerState = pType; _playerStateTick = 0;
-        _punchCooldown = 10;
+        _punchCooldown = 8;
         _stamina -= cost;
         _staminaRegenDelay = 4;
         if (_stamina <= 0) { _stamina = 0; _playerState = PS_EXHAUSTED; _playerStateTick = 0; _punchLabel = "TIRED!"; _punchLabelTick = 18; return; }
@@ -454,7 +474,7 @@ class BitochiBoxingView extends WatchUi.View {
         } else if (_playerState == PS_EXHAUSTED) {
             if (_playerStateTick >= 20) { _playerState = PS_IDLE; _playerStateTick = 0; _stamina = 45; }
         } else if (_playerState >= PS_JAB && _playerState <= PS_BODY) {
-            if (_playerStateTick >= 7) { _playerState = PS_IDLE; _playerStateTick = 0; }
+            if (_playerStateTick >= 5) { _playerState = PS_IDLE; _playerStateTick = 0; }
         } else if (_playerState == PS_DODGE_L || _playerState == PS_DODGE_R) {
             if (_playerStateTick >= 10) { _playerState = PS_IDLE; _playerStateTick = 0; }
         } else if (_playerState == PS_HIT_STUN) {
@@ -629,6 +649,7 @@ class BitochiBoxingView extends WatchUi.View {
         if (gameState == GS_KO) { drawKO(dc); }
         else if (gameState == GS_WIN) { drawWin(dc); }
         else if (gameState == GS_LOSE) { drawLose(dc); }
+        else if (gameState == GS_CHAMPION) { drawChampion(dc); }
 
         if (_punchLabelTick > 0 && gameState == GS_FIGHT) {
             var lc = 0xFFFFFF;
@@ -878,14 +899,16 @@ class BitochiBoxingView extends WatchUi.View {
             dc.fillCircle(cx + bodyW / 2 + 4, baseY + 2, glR - 1);
         } else if (_playerState == PS_JAB) {
             var ext = _playerStateTick < 3 ? _playerStateTick * 6 : 18 - (_playerStateTick - 3) * 5;
+            if (ext < 0) { ext = 0; }
             dc.setColor(0xCC3333, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(cx, baseY - ext - headR, glR);
-            dc.fillCircle(cx + bodyW / 2 + 4, baseY + 2, glR - 1);
+            dc.fillCircle(cx - bodyW / 4, baseY - ext - headR, glR);
+            dc.fillCircle(cx + bodyW / 2 + 4, baseY - 2, glR - 1);
         } else if (_playerState == PS_CROSS) {
-            var ext = _playerStateTick < 3 ? _playerStateTick * 7 : 21 - (_playerStateTick - 3) * 5;
+            var ext = _playerStateTick < 3 ? _playerStateTick * 7 : 21 - (_playerStateTick - 3) * 6;
+            if (ext < 0) { ext = 0; }
             dc.setColor(0xCC3333, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(cx + 3, baseY - ext - headR, glR);
-            dc.fillCircle(cx - bodyW / 2 - 4, baseY + 2, glR - 1);
+            dc.fillCircle(cx + bodyW / 4, baseY - ext - headR, glR + 1);
+            dc.fillCircle(cx - bodyW / 2 - 4, baseY - 2, glR - 1);
         } else if (_playerState == PS_HOOK) {
             var ext = _playerStateTick < 3 ? _playerStateTick * 5 : 15 - (_playerStateTick - 3) * 4;
             dc.setColor(0xCC3333, Graphics.COLOR_TRANSPARENT);
@@ -1140,9 +1163,13 @@ class BitochiBoxingView extends WatchUi.View {
         dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w / 2, _h * 8 / 100, Graphics.FONT_MEDIUM, "ROUND " + _round, Graphics.TEXT_JUSTIFY_CENTER);
 
-        var names = ["ROOKIE JOE", "IRON MIKE", "MAD BULL", "SHADOW", "CHAMPION", "VIPER", "TITAN", "NIGHTMARE"];
+        var names = ["ROOKIE JOE", "IRON MIKE", "MAD BULL", "SHADOW",
+                     "STEEL JACK", "VIPER", "TITAN", "CRUSHER",
+                     "THUNDER", "BLAZE", "COBRA", "THE PHANTOM",
+                     "NIGHTMARE", "WARLORD", "DRAGON", "ICE MAN",
+                     "DARK KNIGHT", "RAGING BULL", "THE BUTCHER", "CHAMPION MAX"];
         dc.setColor(0xFF6644, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 26 / 100, Graphics.FONT_SMALL, names[_enemyFace % 8], Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 26 / 100, Graphics.FONT_SMALL, names[_enemyFace % 20], Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w / 2, _h * 38 / 100, Graphics.FONT_XTINY, "HP " + _enemyMaxHp + "  DMG " + _enemyDmg, Graphics.TEXT_JUSTIFY_CENTER);
@@ -1210,5 +1237,158 @@ class BitochiBoxingView extends WatchUi.View {
         } else {
             dc.drawText(_w / 2, _h * 72 / 100, Graphics.FONT_XTINY, "Tap to play again", Graphics.TEXT_JUSTIFY_CENTER);
         }
+    }
+
+    hidden function drawChampion(dc) {
+        var cx = _w / 2;
+        dc.setColor(0x080812, 0x080812); dc.clear();
+
+        // Animated gold sparkles across background
+        dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
+        for (var i = 0; i < 10; i++) {
+            var sx = ((i * _w * 11 / 100) + _tick * 3) % _w;
+            var sy = (i * _h * 9 / 100 + _tick) % (_h * 70 / 100);
+            if (_tick % 6 < 3) { dc.fillRectangle(sx, sy, 2, 2); } else { dc.fillRectangle(sx + 1, sy + 1, 1, 1); }
+        }
+        // Confetti
+        var confC = [0xFF4444, 0x44FF44, 0x4488FF, 0xFFDD44, 0xFF44FF];
+        for (var i = 0; i < 8; i++) {
+            dc.setColor(confC[i % 5], Graphics.COLOR_TRANSPARENT);
+            var confX = ((i * _w * 13 / 100) + _tick * 2 + i * 17) % _w;
+            var confY = ((_tick * (i + 1)) % (_h * 80 / 100)) + _h * 5 / 100;
+            dc.fillRectangle(confX, confY, 3, 2);
+        }
+
+        // Title
+        var titleC = (_tick % 20 < 10) ? 0xFFDD44 : 0xFFBB22;
+        dc.setColor(0x221100, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx + 1, _h * 4 / 100 + 1, Graphics.FONT_SMALL, "WORLD", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(titleC, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, _h * 4 / 100, Graphics.FONT_SMALL, "WORLD", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x221100, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx + 1, _h * 14 / 100 + 1, Graphics.FONT_MEDIUM, "CHAMPION!", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(titleC, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, _h * 14 / 100, Graphics.FONT_MEDIUM, "CHAMPION!", Graphics.TEXT_JUSTIFY_CENTER);
+
+        // Victory boxer with arms raised
+        drawVictoryBoxer(dc, cx, _h * 52 / 100);
+
+        // Championship belt
+        drawChampionBelt(dc, cx, _h * 70 / 100);
+
+        // Stats
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, _h * 78 / 100, Graphics.FONT_XTINY, "Score: " + _score, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x88CCFF, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, _h * 84 / 100, Graphics.FONT_XTINY, "20 Wins! Hits: " + _totalHits, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor((_tick % 20 < 10) ? 0x44FF44 : 0x22BB44, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, _h * 91 / 100, Graphics.FONT_XTINY, "Tap to restart", Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    hidden function drawVictoryBoxer(dc, cx, baseY) {
+        var headR = _w * 5 / 100;
+        if (headR < 5) { headR = 5; }
+        var bodyW = (headR * 1.8).toNumber();
+        var bodyH = (headR * 1.6).toNumber();
+        var glR = (headR * 0.75).toNumber();
+        if (glR < 4) { glR = 4; }
+        var armAnim = (_tick % 16 < 8) ? -4 : -1;
+
+        // Body
+        dc.setColor(0x2244AA, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(cx - bodyW / 2, baseY, bodyW, bodyH);
+        dc.setColor(0x3355CC, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(cx - bodyW / 2 + 1, baseY + 1, bodyW - 2, 3);
+
+        // Belt stripe on body
+        dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(cx - bodyW / 2, baseY + bodyH * 2 / 5, bodyW, 3);
+        dc.setColor(0xFFCC00, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(cx - 3, baseY + bodyH * 2 / 5 - 1, 6, 5);
+
+        // Head
+        var headY = baseY - headR - 1;
+        dc.setColor(0xDDAA77, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(cx, headY, headR);
+        dc.setColor(0x553311, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(cx - headR + 2, headY - headR, headR * 2 - 4, headR / 2 + 2);
+        // Eyes (happy)
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(cx - headR / 4, headY - 1, 2); dc.fillCircle(cx + headR / 4, headY - 1, 2);
+        dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(cx - headR / 4, headY - 1, 1); dc.fillCircle(cx + headR / 4, headY - 1, 1);
+        // Big smile
+        dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT);
+        dc.drawLine(cx - 4, headY + headR / 3, cx - 2, headY + headR / 2);
+        dc.drawLine(cx - 2, headY + headR / 2, cx + 2, headY + headR / 2);
+        dc.drawLine(cx + 2, headY + headR / 2, cx + 4, headY + headR / 3);
+
+        // Arms raised
+        dc.setColor(0x2244AA, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(cx - bodyW / 2 - 5, baseY - bodyH / 3 + armAnim, 5, bodyH / 2);
+        dc.fillRectangle(cx + bodyW / 2, baseY - bodyH / 3 + armAnim, 5, bodyH / 2);
+        // Gloves up
+        dc.setColor(0xCC3333, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(cx - bodyW / 2 - 7, baseY - bodyH / 2 - 3 + armAnim, glR + 1);
+        dc.fillCircle(cx + bodyW / 2 + 7, baseY - bodyH / 2 - 3 + armAnim, glR + 1);
+        dc.setColor(0xFF5555, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(cx - bodyW / 2 - 7, baseY - bodyH / 2 - 4 + armAnim, glR / 2);
+        dc.fillCircle(cx + bodyW / 2 + 7, baseY - bodyH / 2 - 4 + armAnim, glR / 2);
+    }
+
+    hidden function drawChampionBelt(dc, cx, cy) {
+        var bW = _w * 70 / 100;
+        var bH = _h * 5 / 100;
+        if (bH < 8) { bH = 8; }
+        var pW = _w * 22 / 100;
+        var pH = bH + 6;
+
+        // Belt body
+        dc.setColor(0xAA8822, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(cx - bW / 2, cy - bH / 2, bW, bH);
+        dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(cx - bW / 2 + 1, cy - bH / 2 + 1, bW - 2, bH - 2);
+        dc.setColor(0xFFEE88, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(cx - bW / 2 + 1, cy - bH / 2 + 1, bW - 2, 1);
+
+        // Center plate
+        dc.setColor(0xFFCC00, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(cx - pW / 2, cy - pH / 2, pW, pH);
+        dc.setColor(0xAA8800, Graphics.COLOR_TRANSPARENT);
+        dc.drawRectangle(cx - pW / 2, cy - pH / 2, pW, pH);
+        dc.setColor(0xFFEE66, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(cx - pW / 2 + 1, cy - pH / 2 + 1, pW - 2, 2);
+
+        // Star on plate
+        dc.setColor(0xFFDD00, Graphics.COLOR_TRANSPARENT);
+        var starR = pH / 3;
+        if (starR < 3) { starR = 3; }
+        for (var si = 0; si < 5; si++) {
+            var a1 = ((si * 72 - 90)).toFloat() * 3.14159 / 180.0;
+            var a2 = (((si * 2 + 1) * 36 - 90)).toFloat() * 3.14159 / 180.0;
+            var ox1 = (starR * Math.cos(a1)).toNumber();
+            var oy1 = (starR * Math.sin(a1)).toNumber();
+            var ox2 = (starR / 2 * Math.cos(a2)).toNumber();
+            var oy2 = (starR / 2 * Math.sin(a2)).toNumber();
+            dc.fillPolygon([[cx, cy], [cx + ox1, cy + oy1], [cx + ox2, cy + oy2]]);
+        }
+
+        // Gems left and right (pulsing)
+        var gemCols = [0x4488FF, 0xFF4488, 0x44FF88];
+        var gemPulse = (_tick % 12 < 6);
+        for (var gi = 0; gi < 3; gi++) {
+            var gcol = gemPulse ? gemCols[gi % 3] : 0x224466;
+            if (gi == 1 && !gemPulse) { gcol = 0x442244; }
+            if (gi == 2 && !gemPulse) { gcol = 0x224433; }
+            dc.setColor(gcol, Graphics.COLOR_TRANSPARENT);
+            var gx1 = cx - pW / 2 - 6 - gi * 11;
+            var gx2 = cx + pW / 2 + 6 + gi * 11;
+            if (gx1 > cx - bW / 2 + 4) { dc.fillCircle(gx1, cy, 3); }
+            if (gx2 < cx + bW / 2 - 4) { dc.fillCircle(gx2, cy, 3); }
+        }
+
+        // "BC" lettering on plate
+        dc.setColor(0xAA7700, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, cy + pH / 4, Graphics.FONT_XTINY, "BC", Graphics.TEXT_JUSTIFY_CENTER);
     }
 }
