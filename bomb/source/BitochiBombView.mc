@@ -55,7 +55,7 @@ class BitochiBombView extends WatchUi.View {
     hidden var _bldgMaxHp;
     hidden var _bldgColor;
 
-    hidden const MAX_PARTS = 80;
+    hidden const MAX_PARTS = 64;
     hidden var _partX;
     hidden var _partY;
     hidden var _partVx;
@@ -135,7 +135,7 @@ class BitochiBombView extends WatchUi.View {
         _planeY = _h * 12 / 100;
         _planeX = (_w / 2).toFloat();
         _planeDir = 1;
-        _planeSpeed = 1.6;
+        _planeSpeed = 2.2;
 
         _bombX = new [MAX_BOMBS];
         _bombY = new [MAX_BOMBS];
@@ -284,9 +284,9 @@ class BitochiBombView extends WatchUi.View {
         _planeX += _planeDir.toFloat() * _planeSpeed;
         if (_planeX > (_w - 20).toFloat()) { _planeDir = -1; }
         if (_planeX < 20.0) { _planeDir = 1; }
-        var steer = accelX.toFloat() / 150.0;
-        if (steer > 3.5) { steer = 3.5; }
-        if (steer < -3.5) { steer = -3.5; }
+        var steer = accelX.toFloat() / 95.0;
+        if (steer > 5.5) { steer = 5.5; }
+        if (steer < -5.5) { steer = -5.5; }
         _planeX += steer;
         if (_planeX < 16.0) { _planeX = 16.0; }
         if (_planeX > (_w - 16).toFloat()) { _planeX = (_w - 16).toFloat(); }
@@ -302,7 +302,7 @@ class BitochiBombView extends WatchUi.View {
             }
             _bombTrailX[base] = _bombX[i];
             _bombTrailY[base] = _bombY[i];
-            _bombVy[i] += 0.28;
+            _bombVy[i] += 0.38;
             _bombVx[i] += _wind * 0.035;
             _bombX[i] += _bombVx[i];
             _bombY[i] += _bombVy[i];
@@ -409,8 +409,8 @@ class BitochiBombView extends WatchUi.View {
     }
 
     hidden function bombsForWave(w) {
-        var b = 10 + w * 3;
-        if (b > 40) { b = 40; }
+        var b = 16 + w * 4;
+        if (b > 60) { b = 60; }
         return b;
     }
 
@@ -493,8 +493,8 @@ class BitochiBombView extends WatchUi.View {
         _chainCount = 0; _chainMax = 0;
         _combo = 0; _maxCombo = 0;
         _perfectStreak = 0;
-        _planeSpeed = 1.5 + _wave * 0.14;
-        if (_planeSpeed > 3.5) { _planeSpeed = 3.5; }
+        _planeSpeed = 2.2 + _wave * 0.18;
+        if (_planeSpeed > 5.0) { _planeSpeed = 5.0; }
         _windDir = (Math.rand().abs() % 21) - 10;
         _wind = _windDir.toFloat() * 0.06;
         _waveTheme = _wave % 6;
@@ -581,7 +581,7 @@ class BitochiBombView extends WatchUi.View {
             _bombX[i] = _planeX;
             _bombY[i] = (_planeY + 6).toFloat();
             _bombVx[i] = _planeDir.toFloat() * _planeSpeed * 0.3 + _wind * 0.3;
-            _bombVy[i] = 0.8;
+            _bombVy[i] = 1.4;
             _bombAlive[i] = true;
             var base = i * 6;
             for (var t = 0; t < 6; t++) { _bombTrailX[base + t] = _bombX[i]; _bombTrailY[base + t] = _bombY[i]; }
@@ -827,8 +827,8 @@ class BitochiBombView extends WatchUi.View {
 
     hidden function spawnFireParticles(ex, ey, chain) {
         var pal = [0xFF6622, 0xFFAA22, 0xFFFF44, 0xFF4400, 0xFFCC00, 0xFF8800, 0xFFFFAA, 0xFF2200, 0xFF3300, 0xFFDD00];
-        var fireN = 24 + chain * 10;
-        if (fireN > 50) { fireN = 50; }
+        var fireN = 16 + chain * 8;
+        if (fireN > 40) { fireN = 40; }
         var spawned = 0;
         for (var i = 0; i < MAX_PARTS; i++) {
             if (spawned >= fireN) { break; }
@@ -846,7 +846,7 @@ class BitochiBombView extends WatchUi.View {
         }
         var smokeN = 0;
         for (var i = 0; i < MAX_PARTS; i++) {
-            if (smokeN >= 12) { break; }
+            if (smokeN >= 8) { break; }
             if (_partLife[i] > 0) { continue; }
             _partX[i] = ex.toFloat() + ((Math.rand().abs() % 22) - 11).toFloat();
             _partY[i] = ey.toFloat();
@@ -1455,8 +1455,8 @@ class BitochiBombView extends WatchUi.View {
 
             if (phase < 5) {
                 dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
-                for (var sp = 0; sp < 10; sp++) {
-                    var sa = (sp * 36 + _tick * 12).toFloat() * 3.14159 / 180.0;
+                for (var sp = 0; sp < 6; sp++) {
+                    var sa = (sp * 60 + _tick * 12).toFloat() * 3.14159 / 180.0;
                     var sr = r + 5 + phase * 2;
                     var spx = exx + (sr.toFloat() * Math.cos(sa)).toNumber();
                     var spy = exy + (sr.toFloat() * Math.sin(sa)).toNumber();
@@ -1519,7 +1519,7 @@ class BitochiBombView extends WatchUi.View {
 
         dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
         var bombsToDraw = _bombsLeft;
-        if (bombsToDraw > 20) { bombsToDraw = 20; }
+        if (bombsToDraw > 30) { bombsToDraw = 30; }
         for (var i = 0; i < bombsToDraw; i++) {
             dc.fillCircle(7 + i * 5, _h - 8, 2);
         }
