@@ -52,7 +52,7 @@ class BitochiAxeView extends WatchUi.View {
     hidden var _partLife;
     hidden var _partColor;
 
-    hidden const SNOW_N = 20;
+    hidden const SNOW_N = 10;
     hidden var _snowX;
     hidden var _snowY;
     hidden var _snowSpd;
@@ -97,7 +97,7 @@ class BitochiAxeView extends WatchUi.View {
         _lives = 3;
 
         _axeX = 0.0; _axeY = 0.0; _axeVy = 0.0;
-        _axeAngle = 0.0; _axeAngVel = 8.0; _aimOff = 0.0;
+        _axeAngle = 0.0; _axeAngVel = 12.0; _aimOff = 0.0;
 
         _targetX = _cx;
         _targetY = _h * 20 / 100;
@@ -141,7 +141,7 @@ class BitochiAxeView extends WatchUi.View {
 
     function onShow() {
         _timer = new Timer.Timer();
-        _timer.start(method(:onTick), 33, true);
+        _timer.start(method(:onTick), 28, true);
     }
 
     function onHide() {
@@ -159,7 +159,7 @@ class BitochiAxeView extends WatchUi.View {
 
         for (var i = 0; i < SNOW_N; i++) {
             _snowY[i] += _snowSpd[i];
-            _snowX[i] += Math.sin((_tick + i * 20).toFloat() * 0.05) * 0.3;
+            if ((_tick + i) % 6 < 3) { _snowX[i] += 0.3; } else { _snowX[i] -= 0.2; }
             if (_snowY[i] > _h.toFloat()) {
                 _snowY[i] = -2.0;
                 _snowX[i] = (Math.rand().abs() % _w).toFloat();
@@ -181,10 +181,10 @@ class BitochiAxeView extends WatchUi.View {
             _axeAngle += _axeAngVel;
             if (_axeAngle >= 360.0) { _axeAngle -= 360.0; }
             updateTarget();
-            var steer = accelX.toFloat() / 220.0;
-            if (steer > 3.0) { steer = 3.0; }
-            if (steer < -3.0) { steer = -3.0; }
-            _aimOff = _aimOff * 0.88 + steer * 0.12;
+            var steer = accelX.toFloat() / 160.0;
+            if (steer > 4.0) { steer = 4.0; }
+            if (steer < -4.0) { steer = -4.0; }
+            _aimOff = _aimOff * 0.78 + steer * 0.22;
         } else if (gameState == GS_THROW) {
             _axeAngle += _axeAngVel;
             if (_axeAngle >= 360.0) { _axeAngle -= 360.0; }
@@ -201,7 +201,7 @@ class BitochiAxeView extends WatchUi.View {
                 _missAxeY += _missAxeVy;
                 _missAxeAng += 13.0;
             }
-            if (_resultTick > 50) { advanceAfterResult(); }
+            if (_resultTick > 30) { advanceAfterResult(); }
         } else if (gameState == GS_BETWEEN) {
             _betweenTick++;
         } else if (gameState == GS_GAMEOVER) {
@@ -214,13 +214,12 @@ class BitochiAxeView extends WatchUi.View {
     hidden function updateTarget() {
         if (_tgtSpd <= 0) { return; }
         var step = 1;
-        if (_tgtSpd >= 3) { step = 2; }
-        if (_tgtSpd >= 5) { step = 3; }
-        var interval = 3 - _tgtSpd / 2;
+        if (_tgtSpd >= 4) { step = 2; }
+        var interval = 4 - _tgtSpd / 2;
         if (interval < 1) { interval = 1; }
         if (_tick % interval == 0) {
             _targetX += _tgtDir * step;
-            var maxOff = _w * 25 / 100;
+            var maxOff = _w * 12 / 100;
             if (_targetX > _cx + maxOff) { _tgtDir = -1; }
             if (_targetX < _cx - maxOff) { _tgtDir = 1; }
         }
@@ -307,7 +306,7 @@ class BitochiAxeView extends WatchUi.View {
         _showMiss = true;
         _missAxeX = _axeX;
         _missAxeY = (_targetY + _targetR / 2).toFloat();
-        _missAxeVy = -1.8;
+        _missAxeVy = -3.0;
         _missAxeAng = _axeAngle;
         spawnSparks(_axeX.toNumber(), _targetY + _targetR / 2);
         doVibe(30, 50);
@@ -345,15 +344,14 @@ class BitochiAxeView extends WatchUi.View {
         _throwsLeft = _throwsTotal;
         _tolerance = 50.0 - _wave.toFloat() * 1.15;
         if (_tolerance < 22.0) { _tolerance = 22.0; }
-        _axeAngVel = 7.2 + _wave.toFloat() * 0.22;
-        if (_axeAngVel > 11.2) { _axeAngVel = 11.2; }
+        _axeAngVel = 12.0 + _wave.toFloat() * 0.35;
+        if (_axeAngVel > 18.0) { _axeAngVel = 18.0; }
         _tgtDir = (Math.rand().abs() % 2 == 0) ? 1 : -1;
-        _tgtSpd = 1;
-        if (_wave >= 2) { _tgtSpd = 2; }
-        if (_wave >= 4) { _tgtSpd = 3; }
-        if (_wave >= 7) { _tgtSpd = 4; }
-        if (_wave >= 10) { _tgtSpd = 5; }
-        if (_wave >= 14) { _tgtSpd = 6; }
+        _tgtSpd = 0;
+        if (_wave >= 2) { _tgtSpd = 1; }
+        if (_wave >= 4) { _tgtSpd = 2; }
+        if (_wave >= 8) { _tgtSpd = 3; }
+        if (_wave >= 14) { _tgtSpd = 4; }
         _targetX = _cx;
         _combo = 0;
         if (_wave == 6 || _wave == 12 || _wave == 18 || _wave == 24) {
@@ -377,17 +375,17 @@ class BitochiAxeView extends WatchUi.View {
             var tgtOff = (_targetX - _cx).toFloat();
             _axeX = _cx.toFloat() + _aimOff * 5.0 + tgtOff * 0.5;
             _axeY = (_h * 82 / 100).toFloat();
-            _axeVy = -4.2;
+            _axeVy = -8.5;
             gameState = GS_THROW;
             doVibe(20, 25);
             return;
         }
         if (gameState == GS_RESULT) {
-            if (_resultTick > 15) { advanceAfterResult(); }
+            if (_resultTick > 8) { advanceAfterResult(); }
             return;
         }
         if (gameState == GS_BETWEEN) {
-            if (_betweenTick > 20) { _wave++; startRound(); }
+            if (_betweenTick > 10) { _wave++; startRound(); }
             return;
         }
         if (gameState == GS_GAMEOVER) {
@@ -490,7 +488,7 @@ class BitochiAxeView extends WatchUi.View {
         drawTorches(dc, ox, oy);
         drawHUD(dc);
 
-        if (gameState == GS_RESULT && _resultTick < 42) {
+        if (gameState == GS_RESULT && _resultTick < 28) {
             var mc = 0xFFFF44;
             if (_resultType == 0) { mc = 0xFF4444; }
             else if (_resultType == 2) { mc = 0x44FF44; }
@@ -528,46 +526,30 @@ class BitochiAxeView extends WatchUi.View {
         dc.setColor(0x1A1408, 0x1A1408);
         dc.clear();
 
-        for (var p = 0; p < _w; p += 16) {
+        for (var p = 0; p < _w; p += 24) {
             dc.setColor(0x2A1A0C, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(p + ox, oy, 14, _h);
+            dc.fillRectangle(p + ox, oy, 22, _h);
             dc.setColor(0x352215, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(p + 1 + ox, oy, 12, _h);
-            dc.setColor(0x2A1A0C, Graphics.COLOR_TRANSPARENT);
-            dc.drawLine(p + 6 + ox, oy, p + 6 + ox, _h + oy);
-            dc.drawLine(p + 11 + ox, oy, p + 11 + ox, _h + oy);
-            if (p % 32 == 0) {
-                dc.setColor(0x1E0E06, Graphics.COLOR_TRANSPARENT);
-                dc.fillCircle(p + 7 + ox, _h * 40 / 100 + oy, 2);
-            }
+            dc.fillRectangle(p + 1 + ox, oy, 20, _h);
         }
 
         dc.setColor(0x8A6644, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(ox, oy, _w, 5);
         dc.setColor(0xAA7744, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(ox, 1 + oy, _w, 3);
-        for (var k = 0; k < _w; k += 10) {
+        for (var k = 0; k < _w; k += 20) {
             dc.setColor(0xBB8855, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(k + 2 + ox, oy, 3, 5);
-            dc.setColor(0x6A4422, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(k + 7 + ox, oy, 2, 5);
+            dc.fillRectangle(k + 2 + ox, oy, 4, 5);
         }
 
         dc.setColor(0x8A6644, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(ox, _h - 5 + oy, _w, 5);
         dc.setColor(0xAA7744, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(ox, _h - 4 + oy, _w, 3);
-        for (var k = 0; k < _w; k += 10) {
+        for (var k = 0; k < _w; k += 20) {
             dc.setColor(0xBB8855, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(k + 2 + ox, _h - 5 + oy, 3, 5);
-            dc.setColor(0x6A4422, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(k + 7 + ox, _h - 5 + oy, 2, 5);
+            dc.fillRectangle(k + 2 + ox, _h - 5 + oy, 4, 5);
         }
-
-        drawRune(dc, 10 + ox, _cy - 25 + oy);
-        drawRune(dc, _w - 14 + ox, _cy + 20 + oy);
-        drawRune(dc, 10 + ox, _cy + 30 + oy);
-        drawRune(dc, _w - 14 + ox, _cy - 35 + oy);
     }
 
     hidden function drawRune(dc, rx, ry) {
@@ -589,23 +571,13 @@ class BitochiAxeView extends WatchUi.View {
         dc.setColor(0x666655, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(tx - 3, ty - 1, 7, 3);
 
-        var fh = 5 + (_tick % 4);
+        var fh = 4 + (_tick % 3);
         dc.setColor(0xFF5511, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(tx, ty - fh, 5);
         dc.setColor(0xFF8822, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(tx, ty - fh - 1, 4);
-        dc.setColor(0xFFBB33, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(tx, ty - fh, 3);
+        dc.fillCircle(tx, ty - fh - 1, 3);
         dc.setColor(0xFFFF55, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(tx, ty - fh + 1, 2);
-
-        dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(tx + ((_tick * 3) % 5) - 2, ty - fh - 5, 1);
-        if (_tick % 6 < 3) {
-            dc.setColor(0xFF9933, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(tx - 2, ty - fh - 3, 1);
-            dc.fillCircle(tx + 2, ty - fh - 4, 1);
-        }
     }
 
     hidden function drawSnow(dc, ox, oy) {
@@ -628,15 +600,10 @@ class BitochiAxeView extends WatchUi.View {
         dc.setColor(0x9A7A55, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(tx, ty, r - 3);
         dc.setColor(0x8A6A44, Graphics.COLOR_TRANSPARENT);
-        dc.drawCircle(tx, ty, r - 6);
-        dc.drawCircle(tx, ty, r - 9);
-        dc.drawCircle(tx, ty, r - 12);
+        dc.drawCircle(tx, ty, r - 7);
+        dc.drawCircle(tx, ty, r - 14);
         dc.setColor(0x7A5A33, Graphics.COLOR_TRANSPARENT);
-        dc.drawCircle(tx, ty, r - 15);
         dc.drawCircle(tx, ty, r - 18);
-        if (r > 22) {
-            dc.drawCircle(tx, ty, r - 21);
-        }
 
         dc.setColor(0x7A5A33, Graphics.COLOR_TRANSPARENT);
         dc.drawLine(tx - r + 4, ty, tx + r - 4, ty);
@@ -646,14 +613,6 @@ class BitochiAxeView extends WatchUi.View {
         dc.fillCircle(tx, ty, 4);
         dc.setColor(0xFF4444, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(tx, ty, 2);
-
-        for (var b = 0; b < 8; b++) {
-            var ba = (b * 45).toFloat() * 3.14159 / 180.0;
-            var bx = tx + ((r - 1).toFloat() * Math.cos(ba)).toNumber();
-            var by = ty + ((r - 1).toFloat() * Math.sin(ba)).toNumber();
-            dc.setColor(0x4A2A10, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(bx - 1, by - 1, 2, 2);
-        }
 
         dc.setColor(0x3A2A14, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(tx - 4, ty + r, 8, 8);
