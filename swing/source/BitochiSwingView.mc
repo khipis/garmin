@@ -60,7 +60,7 @@ class BitochiSwingView extends WatchUi.View {
     hidden var _catchMsg;
     hidden var _catchMsgTick;
 
-    hidden const MAX_PARTS = 30;
+    hidden const MAX_PARTS = 20;
     hidden var _partX;
     hidden var _partY;
     hidden var _partVx;
@@ -68,7 +68,7 @@ class BitochiSwingView extends WatchUi.View {
     hidden var _partLife;
     hidden var _partColor;
 
-    hidden const FLY_N = 8;
+    hidden const FLY_N = 5;
     hidden var _flyWX;
     hidden var _flyY;
     hidden var _flyPh;
@@ -185,7 +185,10 @@ class BitochiSwingView extends WatchUi.View {
             _catchTick++;
             updateCamera(true);
             if (_catchTick > 18) {
-                _swingPhase = 90.0;
+                var sv = 2.8 + _combo.toFloat() * 0.07;
+                if (sv > 4.2) { sv = 4.2; }
+                _swingPhase = -_maxAngle * 0.65;
+                _swingSpeed = sv;
                 gameState = GS_SWING;
             }
         } else if (gameState == GS_GAMEOVER) {
@@ -197,18 +200,36 @@ class BitochiSwingView extends WatchUi.View {
     }
 
     hidden function updateSwing() {
-        var tiltFactor = accelX.toFloat() / 500.0;
-        if (tiltFactor > 2.5) { tiltFactor = 2.5; }
-        if (tiltFactor < -2.5) { tiltFactor = -2.5; }
-        var effectiveSpeed = _swingSpeed + tiltFactor;
-        if (effectiveSpeed < 0.5) { effectiveSpeed = 0.5; }
-        if (effectiveSpeed > 7.5) { effectiveSpeed = 7.5; }
-        _swingPhase += effectiveSpeed;
-        var phRad = _swingPhase * 3.14159 / 180.0;
-        var angDeg = _maxAngle * Math.sin(phRad);
-        var angRad = angDeg * 3.14159 / 180.0;
-        _charX = _curAX + _ropeLen * Math.sin(angRad);
-        _charY = _curAY + _ropeLen * Math.cos(angRad);
+        // Pendulum physics: _swingPhase = current angle (degrees from vertical)
+        //                   _swingSpeed = angular velocity (degrees/tick)
+        var aRad = _swingPhase * 3.14159 / 180.0;
+        // Gravity restoring force
+        var gravAcc = -0.28 * Math.sin(aRad);
+        // Tilt input: directly adds angular acceleration (main control)
+        var tilt = accelX.toFloat() / 195.0;
+        if (tilt > 4.0) { tilt = 4.0; }
+        if (tilt < -4.0) { tilt = -4.0; }
+        _swingSpeed += gravAcc + tilt * 0.18;
+        // Small damping
+        _swingSpeed *= 0.994;
+        // Angular velocity cap
+        if (_swingSpeed > 5.5) { _swingSpeed = 5.5; }
+        if (_swingSpeed < -5.5) { _swingSpeed = -5.5; }
+        // Update angle
+        _swingPhase += _swingSpeed;
+        // Hard angle limit (prevents flipping over anchor)
+        if (_swingPhase > _maxAngle) {
+            _swingPhase = _maxAngle;
+            if (_swingSpeed > 0.0) { _swingSpeed = -_swingSpeed * 0.3; }
+        }
+        if (_swingPhase < -_maxAngle) {
+            _swingPhase = -_maxAngle;
+            if (_swingSpeed < 0.0) { _swingSpeed = -_swingSpeed * 0.3; }
+        }
+        // Character position from actual angle
+        aRad = _swingPhase * 3.14159 / 180.0;
+        _charX = _curAX + _ropeLen * Math.sin(aRad);
+        _charY = _curAY + _ropeLen * Math.cos(aRad);
         if (_charX > _distance + _startX) { _distance = _charX - _startX; }
     }
 
@@ -229,7 +250,7 @@ class BitochiSwingView extends WatchUi.View {
         var dx = _charX - _nextAX;
         var dy = _charY - _nextAY.toFloat();
         var dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 24.0) { doCatch(); return; }
+        if (dist < 30.0) { doCatch(); return; }
 
         if (_charY >= _groundY.toFloat()) { doLand(); }
         if (_charY > (_h + 30).toFloat()) { doLand(); }
@@ -257,18 +278,15 @@ class BitochiSwingView extends WatchUi.View {
     }
 
     hidden function releaseSwing() {
-        var phRad = _swingPhase * 3.14159 / 180.0;
-        var angDeg = _maxAngle * Math.sin(phRad);
-        var angRad = angDeg * 3.14159 / 180.0;
-        var maxRad = _maxAngle * 3.14159 / 180.0;
-        var spdRad = _swingSpeed * 3.14159 / 180.0;
-        var angVel = maxRad * spdRad * Math.cos(phRad);
-        var tangV = _ropeLen * angVel;
-
-        _charVx = tangV * Math.cos(angRad);
-        _charVy = -tangV * Math.sin(angRad);
-
-        if (_charVx < 0.5) { _charVx = 0.5; }
+        // Velocity perpendicular to rope: v = ropeLen * angVel_rad
+        // dX/dt = ropeLen * cos(angle) * angVel_rad
+        // dY/dt = -ropeLen * sin(angle) * angVel_rad
+        var aRad = _swingPhase * 3.14159 / 180.0;
+        var velRad = _swingSpeed * 3.14159 / 180.0;
+        _charVx = _ropeLen.toFloat() * Math.cos(aRad) * velRad;
+        _charVy = -_ropeLen.toFloat() * Math.sin(aRad) * velRad;
+        // Ensure minimum forward (rightward) progress
+        if (_charVx < 1.0) { _charVx = 1.0; }
 
         for (var i = 0; i < TRAIL_N; i++) {
             _trailX[i] = _charX; _trailY[i] = _charY; _trailLife[i] = 0;
@@ -309,8 +327,7 @@ class BitochiSwingView extends WatchUi.View {
         _ropeLen = 45.0 + (Math.rand().abs() % 25).toFloat();
         _maxAngle = 50.0 + _combo.toFloat() * 0.95 + (_combo / 4).toFloat() * 0.35;
         if (_maxAngle > 68.0) { _maxAngle = 68.0; }
-        _swingSpeed = 2.75 + _combo.toFloat() * 0.085 + (_combo / 5).toFloat() * 0.05;
-        if (_swingSpeed > 4.35) { _swingSpeed = 4.35; }
+        // _swingSpeed (angular velocity) is set on GS_CATCH → GS_SWING transition
 
         spawnMagic(_charX.toNumber(), _charY.toNumber());
         doVibe(60, 80);
@@ -350,8 +367,9 @@ class BitochiSwingView extends WatchUi.View {
         _nextAY = _h * 20 / 100 + Math.rand().abs() % (_h * 18 / 100);
         _nextAType = Math.rand().abs() % 3;
         genFarAnchor();
-        _ropeLen = 55.0; _maxAngle = 55.0; _swingSpeed = 3.0;
-        _swingPhase = 0.0;
+        _ropeLen = 55.0; _maxAngle = 55.0;
+        // Start pulled to left side so the swing immediately heads toward next anchor (right)
+        _swingPhase = -40.0; _swingSpeed = 2.8;
         _camX = _curAX - _w.toFloat() * 0.35;
         for (var i = 0; i < MAX_PARTS; i++) { _partLife[i] = 0; }
         for (var i = 0; i < TRAIL_N; i++) { _trailLife[i] = 0; }
@@ -366,7 +384,13 @@ class BitochiSwingView extends WatchUi.View {
         if (gameState == GS_MENU) { startGame(); return; }
         if (gameState == GS_SWING) { releaseSwing(); return; }
         if (gameState == GS_CATCH) {
-            if (_catchTick > 8) { _swingPhase = 90.0; gameState = GS_SWING; }
+            if (_catchTick > 8) {
+                var sv = 2.8 + _combo.toFloat() * 0.07;
+                if (sv > 4.2) { sv = 4.2; }
+                _swingPhase = -_maxAngle * 0.65;
+                _swingSpeed = sv;
+                gameState = GS_SWING;
+            }
             return;
         }
         if (gameState == GS_GAMEOVER) {
@@ -379,7 +403,7 @@ class BitochiSwingView extends WatchUi.View {
         var mc = [0x88FF88, 0x44FFAA, 0xAAFFCC, 0xFFFF88, 0x66FFDD, 0xCCFF66];
         var spawned = 0;
         for (var i = 0; i < MAX_PARTS; i++) {
-            if (spawned >= 12) { break; }
+            if (spawned >= 8) { break; }
             if (_partLife[i] > 0) { continue; }
             _partX[i] = ex.toFloat();
             _partY[i] = ey.toFloat();
@@ -486,7 +510,7 @@ class BitochiSwingView extends WatchUi.View {
         dc.setColor(0x080820, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(_w * 82 / 100 + 4 + ox, _h * 10 / 100 - 3 + oy, 9);
 
-        for (var s = 0; s < 18; s++) {
+        for (var s = 0; s < 12; s++) {
             var sx = (s * 53 + 17) % _w;
             var sy = (s * 37 + 11) % (_h * 55 / 100);
             dc.setColor((s % 4 == 0) ? 0x8888AA : 0x556688, Graphics.COLOR_TRANSPARENT);
@@ -501,7 +525,7 @@ class BitochiSwingView extends WatchUi.View {
     hidden function drawMountains(dc, ox, oy) {
         var mOff = (_camX * 0.12).toNumber();
         var gy = _groundY + oy;
-        for (var m = -80; m < _w + 80; m += 75) {
+        for (var m = -90; m < _w + 90; m += 95) {
             var mx = m - (mOff % 75) + ox;
             var mh = 30 + ((m + mOff).abs() % 35);
             dc.setColor(0x1A1540, Graphics.COLOR_TRANSPARENT);
@@ -516,7 +540,7 @@ class BitochiSwingView extends WatchUi.View {
     hidden function drawBgTrees(dc, ox, oy) {
         var tOff = (_camX * 0.35).toNumber();
         var gy = _groundY + oy;
-        for (var t = -40; t < _w + 50; t += 38) {
+        for (var t = -40; t < _w + 55; t += 50) {
             var tx = t - (tOff % 38) + ox;
             var th = 22 + ((t + tOff).abs() % 20);
             dc.setColor(0x2A1A10, Graphics.COLOR_TRANSPARENT);
@@ -539,15 +563,15 @@ class BitochiSwingView extends WatchUi.View {
         dc.setColor(0x2A4A1A, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, gy + 3, _w, 2);
 
-        for (var g = 0; g < _w; g += 4) {
+        for (var g = 0; g < _w; g += 6) {
             var wg = g + wOff;
             dc.setColor((wg % 3 == 0) ? 0x4A9A35 : 0x3A7A28, Graphics.COLOR_TRANSPARENT);
             var gh = 3 + (wg.abs() % 6);
             dc.drawLine(g + ox, gy, g + ((wg % 2 == 0) ? 1 : -1) + ox, gy - gh);
         }
 
-        var fStart = (wOff / 25) * 25;
-        for (var fw = fStart; fw < fStart + _w + 30; fw += 25) {
+        var fStart = (wOff / 36) * 36;
+        for (var fw = fStart; fw < fStart + _w + 40; fw += 36) {
             var fsx = fw - wOff + ox;
             if (fsx < -10 || fsx > _w + 10) { continue; }
             var ft = (fw / 25).abs() % 5;
@@ -750,6 +774,28 @@ class BitochiSwingView extends WatchUi.View {
 
         dc.setColor(0x77AACC, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_cx, 5, Graphics.FONT_XTINY, "CATCH " + _catches, Graphics.TEXT_JUSTIFY_CENTER);
+
+        // Tilt indicator during swing — helps player feel the control
+        if (gameState == GS_SWING || gameState == GS_CATCH) {
+            var tilt = accelX.toFloat() / 195.0;
+            if (tilt > 4.0) { tilt = 4.0; }
+            if (tilt < -4.0) { tilt = -4.0; }
+            var bHalf = _w * 11 / 100;
+            var bY = _h - 30;
+            dc.setColor(0x222233, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(_cx - bHalf, bY, bHalf * 2, 4);
+            var fill = (tilt / 4.0 * bHalf.toFloat()).toNumber();
+            var barCol = (tilt > 0) ? 0x44FFAA : 0xFF7744;
+            if (fill > 0) {
+                dc.setColor(barCol, Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(_cx, bY, fill, 4);
+            } else if (fill < 0) {
+                dc.setColor(barCol, Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(_cx + fill, bY, -fill, 4);
+            }
+            dc.setColor(0x667788, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(_cx - 1, bY - 1, 2, 6);
+        }
     }
 
     hidden function drawMenu(dc) {
