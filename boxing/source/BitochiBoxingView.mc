@@ -36,6 +36,7 @@ class BitochiBoxingView extends WatchUi.View {
     hidden var _maxCombo;
     hidden var _stamina;
     hidden var _staminaMax;
+    hidden var _staminaRegenDelay;
     hidden var _score;
     hidden var _bestScore;
     hidden var _roundTimer;
@@ -53,6 +54,8 @@ class BitochiBoxingView extends WatchUi.View {
     hidden var _enemyFace;
     hidden var _enemyComboLeft;
     hidden var _enemyPunchType;
+    hidden var _enemyStamina;
+    hidden var _enemyStaminaMax;
 
     hidden var _round;
     hidden var _wins;
@@ -140,7 +143,7 @@ class BitochiBoxingView extends WatchUi.View {
         _playerHp = 100; _playerMaxHp = 100;
         _playerState = PS_IDLE; _playerStateTick = 0; _punchCooldown = 0;
         _comboCount = 0; _comboTimer = 0; _comboMeter = 0; _totalHits = 0; _perfectHits = 0; _maxCombo = 0;
-        _stamina = 100; _staminaMax = 100;
+        _stamina = 100; _staminaMax = 100; _staminaRegenDelay = 0;
         _playerBruise = 0; _playerSwellL = 0; _playerSwellR = 0;
         _punchLabel = ""; _punchLabelTick = 0;
         _roundTimer = 1800;
@@ -150,6 +153,7 @@ class BitochiBoxingView extends WatchUi.View {
         _enemyAttackTimer = 0; _enemyNextAttack = 30;
         _enemySpeed = 1.0; _enemyDmg = 8; _enemyFace = 0;
         _enemyComboLeft = 0; _enemyPunchType = 0;
+        _enemyStamina = 100; _enemyStaminaMax = 100;
         _enemyBruise = 0; _enemyCuts = 0; _enemySwellL = 0; _enemySwellR = 0; _enemyNoseBleed = 0;
         _enemySkin = 0xDDAA77; _enemyHairCol = 0x222222; _enemyHairStyle = 0;
 
@@ -167,10 +171,13 @@ class BitochiBoxingView extends WatchUi.View {
         _enemyMaxHp = 78 + r * 14 + (r / 4) * 8;
         if (_enemyMaxHp > 410) { _enemyMaxHp = 410; }
         _enemyHp = _enemyMaxHp;
-        _enemyDmg = 6 + (r * 3) / 2 + r / 6;
-        if (_enemyDmg > 34) { _enemyDmg = 34; }
-        _enemySpeed = 1.0 + (r - 1) * 0.14 + (r / 8) * 0.06;
-        if (_enemySpeed > 3.0) { _enemySpeed = 3.0; }
+        _enemyDmg = 8 + r * 2 + r / 4;
+        if (_enemyDmg > 38) { _enemyDmg = 38; }
+        _enemySpeed = 1.0 + (r - 1) * 0.16 + (r / 6) * 0.08;
+        if (_enemySpeed > 3.2) { _enemySpeed = 3.2; }
+        _enemyStaminaMax = 80 + r * 5;
+        if (_enemyStaminaMax > 160) { _enemyStaminaMax = 160; }
+        _enemyStamina = _enemyStaminaMax;
 
         if (r > 1 && r % 3 == 1) {
             _playerMaxHp += 4;
@@ -179,9 +186,9 @@ class BitochiBoxingView extends WatchUi.View {
         _enemyFace = (_round - 1) % 8;
         _enemyState = ES_IDLE; _enemyStateTick = 0;
         _enemyAttackTimer = 0; _enemyComboLeft = 0; _enemyPunchType = 0;
-        var baseDelay = (25.0 / _enemySpeed).toNumber();
-        if (baseDelay < 8) { baseDelay = 8; }
-        _enemyNextAttack = baseDelay + Math.rand().abs() % 12;
+        var baseDelay = (18.0 / _enemySpeed).toNumber();
+        if (baseDelay < 5) { baseDelay = 5; }
+        _enemyNextAttack = baseDelay + Math.rand().abs() % 10;
         _enemyBruise = 0; _enemyCuts = 0; _enemySwellL = 0; _enemySwellR = 0; _enemyNoseBleed = 0;
 
         var skins = [0xDDAA77, 0xBB8855, 0x8B6842, 0xE8C39E, 0xA0734A, 0xC9956B, 0xD4A574, 0x6B4226];
@@ -193,7 +200,7 @@ class BitochiBoxingView extends WatchUi.View {
         _playerHp = _playerMaxHp; _playerState = PS_IDLE; _playerStateTick = 0;
         _punchCooldown = 0; _comboCount = 0; _comboTimer = 0; _comboMeter = 0;
         _totalHits = 0; _perfectHits = 0; _maxCombo = 0;
-        _stamina = _staminaMax;
+        _stamina = _staminaMax; _staminaRegenDelay = 0;
         _playerBruise = 0; _playerSwellL = 0; _playerSwellR = 0;
         _punchLabel = ""; _punchLabelTick = 0;
         _roundTimer = 1800;
@@ -226,14 +233,15 @@ class BitochiBoxingView extends WatchUi.View {
 
     hidden function doSuperPunch() {
         _playerState = PS_SUPER; _playerStateTick = 0;
-        _punchCooldown = 12;
+        _punchCooldown = 14;
         _comboMeter = 0;
         _superFlash = 8;
+        _staminaRegenDelay = 20;
         doVibe(100, 300);
 
         if (_enemyState == ES_DODGE) { spawnSweat(_w / 2, eBaseY(), 3); return; }
 
-        var dmg = 50 + _comboCount * 5;
+        var dmg = 45 + _comboCount * 4;
         _enemyHp -= dmg;
         _enemyState = ES_STUNNED; _enemyStateTick = 0;
         _flashTick = 8;
@@ -259,8 +267,8 @@ class BitochiBoxingView extends WatchUi.View {
         }
     }
 
-    hidden function eBaseY() { return _h * 32 / 100; }
-    hidden function pBaseY() { return _h * 62 / 100; }
+    hidden function eBaseY() { return _h * 34 / 100; }
+    hidden function pBaseY() { return _h * 64 / 100; }
 
     function onTick() as Void {
         _tick++;
@@ -280,8 +288,12 @@ class BitochiBoxingView extends WatchUi.View {
             updateBlood(); updateSweat(); updateStars(); updatePops();
             if (_comboTimer > 0) { _comboTimer--; }
             if (_comboTimer == 0 && _comboCount > 0) { _comboCount = 0; }
-            if (_comboMeter > 0 && _tick % 4 == 0) { _comboMeter--; }
-            if (_stamina < _staminaMax && _tick % 4 == 0) { _stamina++; }
+            if (_comboMeter > 0 && _tick % 5 == 0) { _comboMeter--; }
+
+            if (_staminaRegenDelay > 0) { _staminaRegenDelay--; }
+            else if (_stamina < _staminaMax && _tick % 8 == 0) { _stamina++; }
+
+            if (_enemyStamina < _enemyStaminaMax && _tick % 6 == 0) { _enemyStamina++; }
 
             _roundTimer--;
             if (_roundTimer <= 0) {
@@ -322,8 +334,8 @@ class BitochiBoxingView extends WatchUi.View {
         if (_punchCooldown > 0) { _punchCooldown--; }
 
         if ((_playerState == PS_IDLE || _playerState == PS_BLOCK) && _playerState != PS_EXHAUSTED) {
-            if (ax > 350) { _playerState = PS_DODGE_L; _playerStateTick = 0; _stamina -= 8; if (_stamina < 0) { _stamina = 0; } }
-            else if (ax < -350) { _playerState = PS_DODGE_R; _playerStateTick = 0; _stamina -= 8; if (_stamina < 0) { _stamina = 0; } }
+            if (ax > 350) { _playerState = PS_DODGE_L; _playerStateTick = 0; _stamina -= 10; if (_stamina < 0) { _stamina = 0; } _staminaRegenDelay = 8; }
+            else if (ax < -350) { _playerState = PS_DODGE_R; _playerStateTick = 0; _stamina -= 10; if (_stamina < 0) { _stamina = 0; } _staminaRegenDelay = 8; }
             else if (delta > 500 && _punchCooldown <= 0) {
                 var pType = PS_JAB;
                 if (delta > 1400) { pType = PS_UPPER; }
@@ -342,17 +354,22 @@ class BitochiBoxingView extends WatchUi.View {
         if (_punchCooldown > 0 || _playerState == PS_HIT_STUN || _playerState == PS_EXHAUSTED) { return; }
         if (_playerState >= PS_JAB && _playerState <= PS_BODY) { return; }
 
-        var cost = 15;
-        if (pType == PS_CROSS) { cost = 20; }
-        else if (pType == PS_HOOK) { cost = 28; }
-        else if (pType == PS_UPPER) { cost = 35; }
-        else if (pType == PS_BODY) { cost = 18; }
-        if (_stamina < cost) { return; }
+        var cost = 18;
+        if (pType == PS_CROSS) { cost = 24; }
+        else if (pType == PS_HOOK) { cost = 32; }
+        else if (pType == PS_UPPER) { cost = 40; }
+        else if (pType == PS_BODY) { cost = 20; }
+        if (_stamina < cost) {
+            _playerState = PS_EXHAUSTED; _playerStateTick = 0;
+            _punchLabel = "TIRED!"; _punchLabelTick = 18;
+            return;
+        }
 
         _playerState = pType; _playerStateTick = 0;
-        _punchCooldown = 8;
+        _punchCooldown = 10;
         _stamina -= cost;
-        if (_stamina <= 0) { _stamina = 0; _playerState = PS_EXHAUSTED; _playerStateTick = 0; return; }
+        _staminaRegenDelay = 12;
+        if (_stamina <= 0) { _stamina = 0; _playerState = PS_EXHAUSTED; _playerStateTick = 0; _punchLabel = "TIRED!"; _punchLabelTick = 18; return; }
         doVibe(25, 40);
 
         if (pType == PS_JAB) { _punchLabel = "JAB!"; }
@@ -364,32 +381,34 @@ class BitochiBoxingView extends WatchUi.View {
 
         if (_enemyState == ES_DODGE) { spawnSweat(_w / 2, eBaseY(), 3); return; }
 
-        var dmg = 10;
+        var dmg = 8;
         var isCounter = false;
-        if (pType == PS_CROSS) { dmg = 14; }
-        else if (pType == PS_HOOK) { dmg = 18; }
-        else if (pType == PS_UPPER) { dmg = 24; }
-        else if (pType == PS_BODY) { dmg = 12; }
+        if (pType == PS_CROSS) { dmg = 12; }
+        else if (pType == PS_HOOK) { dmg = 16; }
+        else if (pType == PS_UPPER) { dmg = 22; }
+        else if (pType == PS_BODY) { dmg = 10; }
+
+        if (_stamina < 25) { dmg = (dmg * 0.6).toNumber(); if (dmg < 3) { dmg = 3; } }
 
         if (_enemyState == ES_WINDUP || _enemyState == ES_JAB || _enemyState == ES_HOOK || _enemyState == ES_UPPER || _enemyState == ES_COMBO) {
-            dmg = (dmg * 2.0).toNumber();
+            dmg = (dmg * 1.8).toNumber();
             isCounter = true;
             _enemyState = ES_STUNNED; _enemyStateTick = 0;
             _flashTick = 5;
             _comboMeter += 15;
             _punchLabel = "COUNTER!"; _punchLabelTick = 22;
             _crowdHype = 40;
-            _stamina += 14;
+            _stamina += 12;
             if (_stamina > _staminaMax) { _stamina = _staminaMax; }
         }
 
-        _comboCount++; _comboTimer = 40;
+        _comboCount++; _comboTimer = 35;
         if (_comboCount > _maxCombo) { _maxCombo = _comboCount; }
-        _comboMeter += 5;
+        _comboMeter += 4;
         if (_comboMeter > 100) { _comboMeter = 100; }
 
-        if (_comboCount > 3) { dmg = dmg + _comboCount * 3; }
-        if (_comboMeter >= 80) { dmg = (dmg * 1.3).toNumber(); }
+        if (_comboCount > 4) { dmg = dmg + _comboCount * 2; }
+        if (_comboMeter >= 80) { dmg = (dmg * 1.2).toNumber(); }
 
         _enemyHp -= dmg; _totalHits++;
         if (isCounter) { _perfectHits++; }
@@ -409,7 +428,7 @@ class BitochiBoxingView extends WatchUi.View {
         spawnBlood(bx, by, dmg > 16 ? 10 : 5);
         spawnPop(bx, by - 8, dmg, isCounter ? 2 : (pType == PS_UPPER ? 1 : 0));
 
-        if (dmg >= 30) { _crowdHype = 30; }
+        if (dmg >= 25) { _crowdHype = 30; }
 
         if (_enemyHp <= 0) {
             _enemyHp = 0; _enemyState = ES_STUNNED; _enemyStateTick = 0;
@@ -425,17 +444,17 @@ class BitochiBoxingView extends WatchUi.View {
         if (_playerState == PS_SUPER) {
             if (_playerStateTick >= 10) { _playerState = PS_IDLE; _playerStateTick = 0; }
         } else if (_playerState == PS_EXHAUSTED) {
-            if (_playerStateTick >= 25) { _playerState = PS_IDLE; _playerStateTick = 0; _stamina = 20; }
+            if (_playerStateTick >= 30) { _playerState = PS_IDLE; _playerStateTick = 0; _stamina = 15; }
         } else if (_playerState >= PS_JAB && _playerState <= PS_BODY) {
             if (_playerStateTick >= 7) { _playerState = PS_IDLE; _playerStateTick = 0; }
         } else if (_playerState == PS_DODGE_L || _playerState == PS_DODGE_R) {
             if (_playerStateTick >= 10) { _playerState = PS_IDLE; _playerStateTick = 0; }
         } else if (_playerState == PS_HIT_STUN) {
-            if (_playerStateTick >= 12) { _playerState = PS_IDLE; _playerStateTick = 0; }
+            if (_playerStateTick >= 14) { _playerState = PS_IDLE; _playerStateTick = 0; }
         } else if (_playerState == PS_BLOCK) {
             var ax = (accelX != null) ? accelX : 0;
             if (ax > 150 || ax < -150) { _playerState = PS_IDLE; _playerStateTick = 0; }
-            if (_tick % 5 == 0) { _stamina--; if (_stamina < 0) { _stamina = 0; } }
+            if (_tick % 4 == 0) { _stamina--; if (_stamina < 0) { _stamina = 0; } }
         }
     }
 
@@ -443,23 +462,25 @@ class BitochiBoxingView extends WatchUi.View {
         _enemyStateTick++;
         if (_enemyState == ES_IDLE) {
             _enemyAttackTimer++;
-            if (_enemyAttackTimer >= _enemyNextAttack) {
+            if (_enemyAttackTimer >= _enemyNextAttack && _enemyStamina > 15) {
                 var atkType = Math.rand().abs() % 100;
-                if (atkType < 35) { _enemyState = ES_WINDUP; _enemyPunchType = 0; }
-                else if (atkType < 55) { _enemyState = ES_WINDUP; _enemyPunchType = 1; }
-                else if (atkType < 70) { _enemyState = ES_WINDUP; _enemyPunchType = 2; }
-                else { _enemyState = ES_WINDUP; _enemyPunchType = 3; _enemyComboLeft = 2 + Math.rand().abs() % 2; }
+                if (atkType < 25) { _enemyState = ES_WINDUP; _enemyPunchType = 0; _enemyStamina -= 8; }
+                else if (atkType < 42) { _enemyState = ES_WINDUP; _enemyPunchType = 1; _enemyStamina -= 14; }
+                else if (atkType < 56) { _enemyState = ES_WINDUP; _enemyPunchType = 2; _enemyStamina -= 18; }
+                else { _enemyState = ES_WINDUP; _enemyPunchType = 3; _enemyComboLeft = 2 + Math.rand().abs() % 3; _enemyStamina -= 10 * _enemyComboLeft; }
                 _enemyStateTick = 0; _enemyAttackTimer = 0;
-                var bd = (20.0 / _enemySpeed).toNumber();
-                if (bd < 6) { bd = 6; }
-                _enemyNextAttack = bd + Math.rand().abs() % 10;
+                var bd = (14.0 / _enemySpeed).toNumber();
+                if (bd < 4) { bd = 4; }
+                _enemyNextAttack = bd + Math.rand().abs() % 8;
             }
-            if (Math.rand().abs() % 120 < (3.0 * _enemySpeed).toNumber()) {
+            var dodgeChance = (4.0 * _enemySpeed).toNumber();
+            if (dodgeChance > 12) { dodgeChance = 12; }
+            if (Math.rand().abs() % 100 < dodgeChance) {
                 _enemyState = ES_DODGE; _enemyStateTick = 0;
             }
         } else if (_enemyState == ES_WINDUP) {
-            var wt = (8.0 / _enemySpeed).toNumber();
-            if (wt < 3) { wt = 3; }
+            var wt = (7.0 / _enemySpeed).toNumber();
+            if (wt < 2) { wt = 2; }
             if (_enemyStateTick >= wt) {
                 if (_enemyPunchType == 0) { _enemyState = ES_JAB; }
                 else if (_enemyPunchType == 1) { _enemyState = ES_HOOK; }
@@ -469,24 +490,30 @@ class BitochiBoxingView extends WatchUi.View {
             }
         } else if (_enemyState == ES_JAB) {
             if (_enemyStateTick == 2) { enemyHitPlayer(1.0); }
-            if (_enemyStateTick >= 8) { _enemyState = ES_IDLE; _enemyStateTick = 0; }
+            if (_enemyStateTick >= 7) { _enemyState = ES_IDLE; _enemyStateTick = 0; }
         } else if (_enemyState == ES_HOOK) {
-            if (_enemyStateTick == 3) { enemyHitPlayer(1.5); }
-            if (_enemyStateTick >= 10) { _enemyState = ES_IDLE; _enemyStateTick = 0; }
+            if (_enemyStateTick == 3) { enemyHitPlayer(1.6); }
+            if (_enemyStateTick >= 9) { _enemyState = ES_IDLE; _enemyStateTick = 0; }
         } else if (_enemyState == ES_UPPER) {
-            if (_enemyStateTick == 3) { enemyHitPlayer(2.0); }
-            if (_enemyStateTick >= 12) { _enemyState = ES_IDLE; _enemyStateTick = 0; }
+            if (_enemyStateTick == 3) { enemyHitPlayer(2.2); }
+            if (_enemyStateTick >= 11) { _enemyState = ES_IDLE; _enemyStateTick = 0; }
         } else if (_enemyState == ES_COMBO) {
-            if (_enemyStateTick == 2) { enemyHitPlayer(0.8); }
-            if (_enemyStateTick >= 6) {
+            if (_enemyStateTick == 2) {
+                var cMult = 0.9;
+                if (_enemyComboLeft <= 1) { cMult = 1.4; }
+                enemyHitPlayer(cMult);
+            }
+            var comboSpeed = (5.0 / _enemySpeed).toNumber();
+            if (comboSpeed < 3) { comboSpeed = 3; }
+            if (_enemyStateTick >= comboSpeed + 2) {
                 _enemyComboLeft--;
                 if (_enemyComboLeft > 0) { _enemyStateTick = 0; }
                 else { _enemyState = ES_IDLE; _enemyStateTick = 0; }
             }
         } else if (_enemyState == ES_STUNNED) {
-            if (_enemyStateTick >= 18) { _enemyState = ES_IDLE; _enemyStateTick = 0; }
+            if (_enemyStateTick >= 16) { _enemyState = ES_IDLE; _enemyStateTick = 0; }
         } else if (_enemyState == ES_DODGE) {
-            if (_enemyStateTick >= 12) { _enemyState = ES_IDLE; _enemyStateTick = 0; }
+            if (_enemyStateTick >= 10) { _enemyState = ES_IDLE; _enemyStateTick = 0; }
         }
     }
 
@@ -495,10 +522,11 @@ class BitochiBoxingView extends WatchUi.View {
         var dmg = (_enemyDmg.toFloat() * mult).toNumber();
         if (_playerState == PS_BLOCK) {
             dmg = (dmg * 0.25).toNumber(); if (dmg < 1) { dmg = 1; }
-            _stamina -= 5; if (_stamina < 0) { _stamina = 0; }
+            _stamina -= 8; if (_stamina < 0) { _stamina = 0; }
             doVibe(20, 40); _shakeLeft = 2;
         } else {
-            _stamina -= 15; if (_stamina < 0) { _stamina = 0; }
+            _stamina -= 18; if (_stamina < 0) { _stamina = 0; }
+            _staminaRegenDelay = 15;
             _playerState = PS_HIT_STUN; _playerStateTick = 0;
             doVibe(70, 180); _shakeLeft = 7; _hitFlash = 5;
             _playerBruise += 3; if (_playerBruise > 25) { _playerBruise = 25; }
@@ -598,10 +626,11 @@ class BitochiBoxingView extends WatchUi.View {
             var lc = 0xFFFFFF;
             if (_punchLabel.equals("COUNTER!")) { lc = 0xFF4444; }
             else if (_punchLabel.equals("SUPER!")) { lc = 0xFFDD00; }
+            else if (_punchLabel.equals("TIRED!")) { lc = 0xFF6622; }
             dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2 + 1, _h * 47 / 100 + 1, Graphics.FONT_SMALL, _punchLabel, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_w / 2 + 1, _h * 48 / 100 + 1, Graphics.FONT_SMALL, _punchLabel, Graphics.TEXT_JUSTIFY_CENTER);
             dc.setColor(lc, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 47 / 100, Graphics.FONT_SMALL, _punchLabel, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_w / 2, _h * 48 / 100, Graphics.FONT_SMALL, _punchLabel, Graphics.TEXT_JUSTIFY_CENTER);
         }
 
         if (_comboCount >= 3 && _comboTimer > 0 && gameState == GS_FIGHT) {
@@ -609,17 +638,17 @@ class BitochiBoxingView extends WatchUi.View {
             if (_comboCount >= 8) { comboC = 0xFF2222; }
             else if (_comboCount >= 5) { comboC = 0xFF6622; }
             dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2 + 1, _h * 42 / 100 + 1, Graphics.FONT_XTINY, "" + _comboCount + "x COMBO!", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_w / 2 + 1, _h * 43 / 100 + 1, Graphics.FONT_XTINY, "" + _comboCount + "x COMBO!", Graphics.TEXT_JUSTIFY_CENTER);
             dc.setColor(comboC, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 42 / 100, Graphics.FONT_XTINY, "" + _comboCount + "x COMBO!", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_w / 2, _h * 43 / 100, Graphics.FONT_XTINY, "" + _comboCount + "x COMBO!", Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 
     hidden function drawArena(dc, ox, oy) {
         dc.setColor(0x0A0A18, 0x0A0A18); dc.clear();
         dc.setColor(0x121222, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(0, _h * 20 / 100 + oy, _w, _h * 80 / 100);
-        var floorY = _h * 76 / 100 + oy;
+        dc.fillRectangle(0, _h * 22 / 100 + oy, _w, _h * 78 / 100);
+        var floorY = _h * 78 / 100 + oy;
         dc.setColor(0x334488, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, floorY, _w, _h - floorY + 10);
         dc.setColor(0x2A3A6A, Graphics.COLOR_TRANSPARENT);
@@ -630,12 +659,12 @@ class BitochiBoxingView extends WatchUi.View {
         dc.fillRectangle(_w * 4 / 100 + ox, floorY + 2, _w * 92 / 100, 4);
 
         dc.setColor(0x181830, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(0, _h * 20 / 100 + oy, _w, 3);
+        dc.fillRectangle(0, _h * 22 / 100 + oy, _w, 3);
     }
 
     hidden function drawRopes(dc, ox, oy) {
         var lx = _w * 6 / 100 + ox; var rx = _w * 94 / 100 + ox;
-        var ty = _h * 18 / 100 + oy; var my = _h * 37 / 100 + oy; var by = _h * 55 / 100 + oy;
+        var ty = _h * 20 / 100 + oy; var my = _h * 39 / 100 + oy; var by = _h * 57 / 100 + oy;
         dc.setColor(0x554433, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(lx - 2, ty, 4, by - ty + 4);
         dc.fillRectangle(rx - 2, ty, 4, by - ty + 4);
@@ -645,7 +674,7 @@ class BitochiBoxingView extends WatchUi.View {
     }
 
     hidden function drawCrowd(dc, ox, oy) {
-        var cy = _h * 9 / 100 + oy;
+        var cy = _h * 10 / 100 + oy;
         var headC = [0xDDAA77, 0xCC9966, 0xBB8855, 0xAA7744, 0xDD9988, 0xCCAA88, 0x8B6842, 0xE8C39E];
         var shirtC = [0xDD3333, 0x3333DD, 0x33DD33, 0xDDDD33, 0xDD33DD, 0x33DDDD, 0xDD6633, 0x3366DD];
         for (var i = 0; i < 16; i++) {
@@ -673,13 +702,13 @@ class BitochiBoxingView extends WatchUi.View {
         var cx = _w / 2 + ox;
         var baseY = eBaseY() + oy;
         var dodgeOff = 0;
-        if (_enemyState == ES_DODGE) { dodgeOff = (_enemyStateTick < 6) ? -14 : 14; }
+        if (_enemyState == ES_DODGE) { dodgeOff = (_enemyStateTick < 5) ? -14 : 14; }
         cx += dodgeOff;
 
-        var headR = _w * 7 / 100;
-        if (headR < 8) { headR = 8; }
-        var bodyW = (headR * 2.0).toNumber();
-        var bodyH = (headR * 2.2).toNumber();
+        var headR = _w * 6 / 100;
+        if (headR < 7) { headR = 7; }
+        var bodyW = (headR * 1.8).toNumber();
+        var bodyH = (headR * 2.0).toNumber();
         var headY = baseY - bodyH / 2 - headR + 2;
         var bobOff = (_enemyState == ES_IDLE) ? ((_tick % 14 < 7) ? -1 : 1) : 0;
         headY += bobOff;
@@ -756,8 +785,8 @@ class BitochiBoxingView extends WatchUi.View {
 
         var gColors = [0xCC3333, 0x3333CC, 0xCC8833, 0x33CC33, 0xCC33CC, 0xCCCC33, 0x33CCCC, 0xCC6633];
         var gc = gColors[_enemyFace % 8];
-        var glR = (headR * 0.7).toNumber();
-        if (glR < 5) { glR = 5; }
+        var glR = (headR * 0.65).toNumber();
+        if (glR < 4) { glR = 4; }
 
         if (_enemyState == ES_WINDUP) {
             dc.setColor(gc, Graphics.COLOR_TRANSPARENT);
@@ -793,10 +822,10 @@ class BitochiBoxingView extends WatchUi.View {
         else if (_playerState == PS_DODGE_R) { cx += _w * 12 / 100; }
         if (_playerState == PS_HIT_STUN) { cx += ((_playerStateTick % 4 < 2) ? -3 : 3); }
 
-        var headR = _w * 6 / 100;
-        if (headR < 7) { headR = 7; }
-        var bodyW = (headR * 2.0).toNumber();
-        var bodyH = (headR * 1.8).toNumber();
+        var headR = _w * 5 / 100;
+        if (headR < 6) { headR = 6; }
+        var bodyW = (headR * 1.8).toNumber();
+        var bodyH = (headR * 1.6).toNumber();
 
         var skin = 0xDDAA77;
         if (_playerBruise > 0) {
@@ -829,8 +858,8 @@ class BitochiBoxingView extends WatchUi.View {
         dc.setColor(skin, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(cx - 2, headY + headR, 4, 3);
 
-        var glR = (headR * 0.8).toNumber();
-        if (glR < 5) { glR = 5; }
+        var glR = (headR * 0.75).toNumber();
+        if (glR < 4) { glR = 4; }
 
         if (_playerState == PS_SUPER) {
             var ext = _playerStateTick < 4 ? _playerStateTick * 10 : 40 - (_playerStateTick - 4) * 7;
@@ -933,86 +962,110 @@ class BitochiBoxingView extends WatchUi.View {
     }
 
     hidden function drawHUD(dc) {
-        var barW = _w * 35 / 100;
-        var barH = 7;
-        var barY = 3;
+        var barW = _w * 34 / 100;
+        var barH = 10;
+        var barY = 2;
+        var gap = 2;
 
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w * 3 / 100, barY - 1, Graphics.FONT_XTINY, "YOU", Graphics.TEXT_JUSTIFY_LEFT);
+        dc.drawText(_w * 97 / 100, barY - 1, Graphics.FONT_XTINY, "OPP", Graphics.TEXT_JUSTIFY_RIGHT);
+
+        var hpBarY = barY + 12;
         var pFill = (_playerHp.toFloat() / _playerMaxHp * barW).toNumber();
         if (pFill < 0) { pFill = 0; }
-        dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(_w * 3 / 100, barY, barW, barH);
+        dc.setColor(0x333333, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(_w * 3 / 100, hpBarY, barW, barH);
         var pCol = 0x44CC44;
         if (_playerHp < _playerMaxHp / 4) { pCol = (_tick % 6 < 3) ? 0xFF2222 : 0xCC0000; }
         else if (_playerHp < _playerMaxHp / 2) { pCol = 0xFFAA22; }
         dc.setColor(pCol, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(_w * 3 / 100, barY, pFill, barH);
+        dc.fillRectangle(_w * 3 / 100, hpBarY, pFill, barH);
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawRectangle(_w * 3 / 100, barY, barW, barH);
+        dc.drawRectangle(_w * 3 / 100, hpBarY, barW, barH);
+        dc.drawText(_w * 3 / 100 + barW / 2, hpBarY - 1, Graphics.FONT_XTINY, "" + _playerHp, Graphics.TEXT_JUSTIFY_CENTER);
 
         var eFill = (_enemyHp.toFloat() / _enemyMaxHp * barW).toNumber();
         if (eFill < 0) { eFill = 0; }
         var eBarX = _w * 97 / 100 - barW;
-        dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(eBarX, barY, barW, barH);
+        dc.setColor(0x333333, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(eBarX, hpBarY, barW, barH);
         var eCol = 0xCC4444;
         if (_enemyHp < _enemyMaxHp / 4) { eCol = (_tick % 6 < 3) ? 0xFF2222 : 0xAA0000; }
         dc.setColor(eCol, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(eBarX + barW - eFill, barY, eFill, barH);
+        dc.fillRectangle(eBarX + barW - eFill, hpBarY, eFill, barH);
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawRectangle(eBarX, barY, barW, barH);
+        dc.drawRectangle(eBarX, hpBarY, barW, barH);
+        dc.drawText(eBarX + barW / 2, hpBarY - 1, Graphics.FONT_XTINY, "" + _enemyHp, Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, barY - 1, Graphics.FONT_XTINY, "R" + _round, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, hpBarY - 2, Graphics.FONT_XTINY, "R" + _round, Graphics.TEXT_JUSTIFY_CENTER);
 
         var sec = _roundTimer / 30;
         var timerCol = (sec <= 10) ? ((_tick % 8 < 4) ? 0xFF4444 : 0xCC2222) : 0xAABBCC;
         dc.setColor(timerCol, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, barY + barH + 1, Graphics.FONT_XTINY, "" + sec + "s", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, hpBarY + barH, Graphics.FONT_XTINY, "" + sec + "s", Graphics.TEXT_JUSTIFY_CENTER);
 
-        var stW = _w * 28 / 100;
+        var stBarY = hpBarY + barH + gap;
+        var stW = _w * 34 / 100;
         var stX = _w * 3 / 100;
-        var stY = barY + barH + 2;
-        dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(stX, stY, stW, 3);
+        dc.setColor(0x222233, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(stX, stBarY, stW, 5);
         var stFill = (_stamina * stW / _staminaMax);
-        var stCol = (_stamina < 20) ? 0xFF6622 : 0x44AAFF;
+        var stCol = 0x44AAFF;
+        if (_stamina < 20) { stCol = (_tick % 6 < 3) ? 0xFF4422 : 0xCC3311; }
+        else if (_stamina < 40) { stCol = 0xFF8844; }
         dc.setColor(stCol, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(stX, stY, stFill, 3);
+        dc.fillRectangle(stX, stBarY, stFill, 5);
+        dc.setColor(0x88AACC, Graphics.COLOR_TRANSPARENT);
+        dc.drawRectangle(stX, stBarY, stW, 5);
+
+        var eStW = _w * 34 / 100;
+        var eStX = _w * 97 / 100 - eStW;
+        dc.setColor(0x222233, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(eStX, stBarY, eStW, 5);
+        var eStFill = (_enemyStamina * eStW / _enemyStaminaMax);
+        var eStCol = 0xCC6644;
+        if (_enemyStamina < _enemyStaminaMax / 4) { eStCol = 0xFF4422; }
+        dc.setColor(eStCol, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(eStX + eStW - eStFill, stBarY, eStFill, 5);
+        dc.setColor(0x88AACC, Graphics.COLOR_TRANSPARENT);
+        dc.drawRectangle(eStX, stBarY, eStW, 5);
 
         if (_comboMeter > 0) {
-            var mW = _w * 28 / 100;
-            var mX = _w * 97 / 100 - mW;
-            var mY = barY + barH + 2;
-            dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(mX, mY, mW, 3);
+            var mW = _w * 40 / 100;
+            var mX = (_w - mW) / 2;
+            var mY = _h * 82 / 100;
+            dc.setColor(0x222244, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(mX, mY, mW, 4);
             var mFill = (_comboMeter * mW / 100);
             var mCol = (_comboMeter >= 100) ? ((_tick % 4 < 2) ? 0xFFDD00 : 0xFF4400) : ((_comboMeter >= 60) ? 0xFFAA22 : 0x4488FF);
             dc.setColor(mCol, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(mX, mY, mFill, 3);
+            dc.fillRectangle(mX, mY, mFill, 4);
             if (_comboMeter >= 100) {
                 dc.setColor((_tick % 6 < 3) ? 0xFFDD00 : 0xFF8800, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(_w - 5, mY + 3, Graphics.FONT_XTINY, "TAP!", Graphics.TEXT_JUSTIFY_RIGHT);
+                dc.drawText(_w / 2, mY + 4, Graphics.FONT_XTINY, "TAP: SUPER!", Graphics.TEXT_JUSTIFY_CENTER);
             }
         }
 
         if (_playerState == PS_EXHAUSTED) {
             dc.setColor((_tick % 6 < 3) ? 0xFF6622 : 0xCC4400, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 86 / 100, Graphics.FONT_XTINY, "EXHAUSTED!", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_w / 2, _h * 88 / 100, Graphics.FONT_XTINY, "EXHAUSTED!", Graphics.TEXT_JUSTIFY_CENTER);
         } else if (_playerState == PS_BLOCK) {
             dc.setColor(0x4488FF, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 86 / 100, Graphics.FONT_XTINY, "BLOCK", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_w / 2, _h * 88 / 100, Graphics.FONT_XTINY, "BLOCK", Graphics.TEXT_JUSTIFY_CENTER);
         } else if (_playerState == PS_DODGE_L || _playerState == PS_DODGE_R) {
             dc.setColor(0x44FF88, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 86 / 100, Graphics.FONT_XTINY, "DODGE!", Graphics.TEXT_JUSTIFY_CENTER);
-        } else if (_stamina < 20 && gameState == GS_FIGHT) {
+            dc.drawText(_w / 2, _h * 88 / 100, Graphics.FONT_XTINY, "DODGE!", Graphics.TEXT_JUSTIFY_CENTER);
+        } else if (_stamina < 25 && gameState == GS_FIGHT) {
             dc.setColor(0xFF8844, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 86 / 100, Graphics.FONT_XTINY, "LOW STAMINA", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_w / 2, _h * 88 / 100, Graphics.FONT_XTINY, "LOW STAMINA", Graphics.TEXT_JUSTIFY_CENTER);
         }
 
-        if (_enemyState == ES_WINDUP && _enemyStateTick > 2) {
+        if (_enemyState == ES_WINDUP && _enemyStateTick > 1) {
             if (_tick % 4 < 2) {
                 dc.setColor(0xFF4444, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(_w / 2, _h * 16 / 100, Graphics.FONT_XTINY, "!! WARNING !!", Graphics.TEXT_JUSTIFY_CENTER);
+                dc.drawText(_w / 2, _h * 18 / 100, Graphics.FONT_XTINY, "!! WARNING !!", Graphics.TEXT_JUSTIFY_CENTER);
             }
         }
 
