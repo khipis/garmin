@@ -8,8 +8,6 @@ using Toybox.System;
 enum {
     SS_MENU,
     SS_HUNT,
-    SS_SHOT,
-    SS_MISS,
     SS_BETWEEN,
     SS_GAMEOVER
 }
@@ -86,7 +84,6 @@ class BitochiSniperView extends WatchUi.View {
     hidden const CREAT_MAX = 8;
     hidden const GRASS_COUNT = 30;
 
-    hidden var _creatureNames;
 
     function initialize() {
         View.initialize();
@@ -157,17 +154,6 @@ class BitochiSniperView extends WatchUi.View {
         _kills = 0;
         _timeLeft = 0;
 
-        _creatureNames = [
-            "EMILKA",
-            "NOSACZ",
-            "VEXOR",
-            "BATSO",
-            "DOGGO",
-            "POLACCO",
-            "FOCZKA",
-            "UNDEAD"
-        ];
-
         gameState = SS_MENU;
     }
 
@@ -211,12 +197,6 @@ class BitochiSniperView extends WatchUi.View {
                     _shellX[i] = _shellX[i] + 1;
                 }
             }
-        } else if (gameState == SS_SHOT) {
-            _shotFlash--;
-            if (_shotFlash <= 0) { gameState = SS_HUNT; }
-        } else if (gameState == SS_MISS) {
-            _shotFlash--;
-            if (_shotFlash <= 0) { gameState = SS_HUNT; }
         } else if (gameState == SS_BETWEEN) {
             _betweenTick++;
             if (_betweenTick > 80) {

@@ -9,7 +9,6 @@ enum {
     GS_MENU,
     GS_READY,
     GS_THROW,
-    GS_STICK,
     GS_FAIL,
     GS_OVER
 }
@@ -36,7 +35,6 @@ class BitochiAxeArcadeView extends WatchUi.View {
 
     hidden var _axeY;
     hidden var _axeVy;
-    hidden var _axeFlying;
     hidden var _axeAngle;
     hidden var _axeSpin;
 
@@ -103,7 +101,6 @@ class BitochiAxeArcadeView extends WatchUi.View {
 
         _axeY = 0.0;
         _axeVy = 0.0;
-        _axeFlying = false;
         _axeAngle = 0.0;
         _axeSpin = 0.0;
 
@@ -172,7 +169,7 @@ class BitochiAxeArcadeView extends WatchUi.View {
             _chipLife[i]--;
         }
 
-        if (gameState == GS_READY || gameState == GS_THROW || gameState == GS_STICK) {
+        if (gameState == GS_READY || gameState == GS_THROW) {
             _logAngle += _logSpeed * _logDir.toFloat();
             if (_logAngle >= 360.0) { _logAngle -= 360.0; }
             if (_logAngle < 0.0) { _logAngle += 360.0; }
@@ -272,7 +269,6 @@ class BitochiAxeArcadeView extends WatchUi.View {
     hidden function resetAxe() {
         _axeY = _h.toFloat() - 25.0;
         _axeVy = 0.0;
-        _axeFlying = false;
         _axeAngle = 0.0;
         _axeSpin = 0.0;
     }
@@ -325,8 +321,8 @@ class BitochiAxeArcadeView extends WatchUi.View {
 
     hidden function doVibe(intensity, duration) {
         if (Toybox has :Attention) {
-            var vp = new Attention.VibeProfile(intensity, duration);
-            Attention.vibrate([vp]);
+            var vp = new Toybox.Attention.VibeProfile(intensity, duration);
+            Toybox.Attention.vibrate([vp]);
         }
     }
 
@@ -336,7 +332,6 @@ class BitochiAxeArcadeView extends WatchUi.View {
             return;
         }
         if (gameState == GS_READY) {
-            _axeFlying = true;
             _axeVy = -8.0;
             gameState = GS_THROW;
             return;
@@ -624,7 +619,6 @@ class BitochiAxeArcadeView extends WatchUi.View {
     }
 
     hidden function drawCombo(dc) {
-        var alpha = _comboTimer.toFloat() / 40.0;
         var cy = _h * 25 / 100 - ((40 - _comboTimer) / 2);
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_cx + 1, cy + 1, Graphics.FONT_SMALL, _comboMsg, Graphics.TEXT_JUSTIFY_CENTER);

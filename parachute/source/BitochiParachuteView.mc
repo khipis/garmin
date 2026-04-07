@@ -110,6 +110,19 @@ class BitochiParachuteView extends WatchUi.View {
             _sparkX[i] = 0; _sparkY[i] = 0; _sparkLife[i] = 0;
         }
 
+        _altitude = 3000.0;
+        _maxAlt = 3000.0;
+        _fallSpeed = 0.0;
+        _chuteOpen = false;
+        _playerX = 0.0;
+        _playerY = 0.0;
+        _playerVx = 0.0;
+        _playerVy = 0.0;
+        _landDist = 0.0;
+        _landGrade = "";
+        _jumpTick = 0;
+        _crashTick = 0;
+
         _ringCount = 0;
         _ringX = new [20];
         _ringY = new [20];
@@ -385,7 +398,7 @@ class BitochiParachuteView extends WatchUi.View {
             startLevel();
         } else if (gameState == PS_CRASH) {
             _level = 1;
-            _bestScore = _bestScore;
+            if (_score > _bestScore) { _bestScore = _score; }
             gameState = PS_MENU;
         }
     }

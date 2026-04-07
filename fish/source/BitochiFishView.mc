@@ -205,9 +205,10 @@ class BitochiFishView extends WatchUi.View {
             _biteTick++;
             _bobY = _waterY.toFloat() + Math.sin(_tick.toFloat() * 0.5) * 3.0;
             if (_biteTick > 50) {
-                gameState = GS_IDLE;
+                gameState = GS_LOST;
                 _resultMsg = "TOO SLOW!";
-                _resultTick = 40;
+                _resultTick = 0;
+                _combo = 0;
             }
         } else if (gameState == GS_FIGHT) {
             updateFight();
@@ -230,7 +231,13 @@ class BitochiFishView extends WatchUi.View {
             }
         } else if (gameState == GS_CAUGHT || gameState == GS_LOST || gameState == GS_SNAP) {
             _resultTick++;
-            if (_resultTick > 60) { gameState = GS_IDLE; }
+            if (_resultTick > 60) {
+                if (gameState == GS_CAUGHT) {
+                    _level = 1 + _fishCaught / 3;
+                    if (_level > 6) { _level = 6; }
+                }
+                gameState = GS_IDLE;
+            }
         }
 
         WatchUi.requestUpdate();
@@ -407,8 +414,8 @@ class BitochiFishView extends WatchUi.View {
 
     hidden function doVibe(intensity, duration) {
         if (Toybox has :Attention) {
-            var vp = new Attention.VibeProfile(intensity, duration);
-            Attention.vibrate([vp]);
+            var vp = new Toybox.Attention.VibeProfile(intensity, duration);
+            Toybox.Attention.vibrate([vp]);
         }
     }
 
@@ -693,7 +700,8 @@ class BitochiFishView extends WatchUi.View {
         }
         if (_fishType == 7) {
             dc.setColor(0x6677BB, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(fx + dir * sz, fy - 1, dir * 6, 2);
+            var swordX = (dir >= 0) ? fx + sz : fx - sz - 6;
+            dc.fillRectangle(swordX, fy - 1, 6, 2);
         }
     }
 

@@ -280,7 +280,7 @@ class BitochiRunView extends WatchUi.View {
 
     hidden function drawBlood(dc, w, h, intensity) {
         var topDrips = 8 + intensity * 3;
-        if (topDrips > 28) { topDrips = 28; }
+        if (topDrips > 24) { topDrips = 24; }
         for (var i = 0; i < topDrips; i++) {
             if (_dripY[i] < 0) { continue; }
             var dw = 2 + (i % 3);

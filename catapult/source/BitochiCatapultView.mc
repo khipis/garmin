@@ -236,7 +236,7 @@ class BitochiCatapultView extends WatchUi.View {
         resetShot();
         _camX = _catWX;
         _camTargetX = _catWX;
-        gameState = GS_PREVIEW;
+        gameState = GS_READY;
         _previewTick = 0;
     }
 
@@ -877,10 +877,10 @@ class BitochiCatapultView extends WatchUi.View {
 
         var t = (_round - 1) % 16;
         var i;
-        var mx;
-        var my;
-        var ccx;
-        var ccy;
+        var mx = 0;
+        var my = 0;
+        var ccx = 0;
+        var ccy = 0;
         var g;
         var gc;
         var gh;

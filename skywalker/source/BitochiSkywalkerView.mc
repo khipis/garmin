@@ -8,8 +8,6 @@ using Toybox.System;
 enum {
     SS_MENU,
     SS_HUNT,
-    SS_SHOT,
-    SS_MISS,
     SS_BETWEEN,
     SS_GAMEOVER
 }
@@ -198,14 +196,6 @@ class BitochiSkywalkerView extends WatchUi.View {
             if (_recoilTick > 0) { _recoilTick--; }
             if (_laserShow > 0) { _laserShow--; }
             if (_enemyFireShow > 0) { _enemyFireShow--; }
-        } else if (gameState == SS_SHOT) {
-            _shotFlash--;
-            if (_laserShow > 0) { _laserShow--; }
-            if (_shotFlash <= 0) { gameState = SS_HUNT; }
-        } else if (gameState == SS_MISS) {
-            _shotFlash--;
-            if (_laserShow > 0) { _laserShow--; }
-            if (_shotFlash <= 0) { gameState = SS_HUNT; }
         } else if (gameState == SS_BETWEEN) {
             _betweenTick++;
             if (_betweenTick > 80) {

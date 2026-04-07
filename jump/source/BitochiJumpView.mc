@@ -764,35 +764,6 @@ class BitochiJumpView extends WatchUi.View {
         }
     }
 
-    hidden function drawWindArrows(dc, w, h) {
-        var cy = h * 18 / 100;
-        var strength = _windCurrent;
-        var dir = 1;
-        if (strength < 0) { dir = -1; }
-        var ax = w / 2;
-        var smag = strength;
-        if (smag < 0) { smag = -smag; }
-        var alen = (16 + smag * 8).toNumber();
-        if (alen > 28) { alen = 28; }
-        if (alen < 8) { alen = 8; }
-
-        dc.setColor(0x88CCFF, Graphics.COLOR_TRANSPARENT);
-        var x1 = ax - dir * alen / 2;
-        var x2 = ax + dir * alen / 2;
-        dc.setPenWidth(2);
-        dc.drawLine(x1, cy, x2, cy);
-        dc.setPenWidth(1);
-        var hx = x2;
-        var hy = cy;
-        if (dir > 0) {
-            dc.fillPolygon([[hx, hy], [hx - 5, hy - 3], [hx - 5, hy + 3]]);
-        } else {
-            dc.fillPolygon([[hx, hy], [hx + 5, hy - 3], [hx + 5, hy + 3]]);
-        }
-        dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, cy + 8, Graphics.FONT_XTINY, "WIND", Graphics.TEXT_JUSTIFY_CENTER);
-    }
-
     hidden function drawFlightTrail(dc) {
         for (var i = TRAIL_LEN - 1; i >= 0; i--) {
             if (_trailAge[i] > 50) { continue; }

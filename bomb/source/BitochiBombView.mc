@@ -563,8 +563,8 @@ class BitochiBombView extends WatchUi.View {
 
     hidden function doVibe(intensity, duration) {
         if (Toybox has :Attention) {
-            var vp = new Attention.VibeProfile(intensity, duration);
-            Attention.vibrate([vp]);
+            var vp = new Toybox.Attention.VibeProfile(intensity, duration);
+            Toybox.Attention.vibrate([vp]);
         }
     }
 

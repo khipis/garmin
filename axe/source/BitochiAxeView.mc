@@ -202,6 +202,8 @@ class BitochiAxeView extends WatchUi.View {
             if (_resultTick > 50) { advanceAfterResult(); }
         } else if (gameState == GS_BETWEEN) {
             _betweenTick++;
+        } else if (gameState == GS_GAMEOVER) {
+            _resultTick++;
         }
 
         WatchUi.requestUpdate();
@@ -412,8 +414,8 @@ class BitochiAxeView extends WatchUi.View {
 
     hidden function doVibe(intensity, duration) {
         if (Toybox has :Attention) {
-            var vp = new Attention.VibeProfile(intensity, duration);
-            Attention.vibrate([vp]);
+            var vp = new Toybox.Attention.VibeProfile(intensity, duration);
+            Toybox.Attention.vibrate([vp]);
         }
     }
 
@@ -459,7 +461,7 @@ class BitochiAxeView extends WatchUi.View {
             if (_showMiss && _missAxeY < (_h + 40).toFloat()) {
                 drawRotAxe(dc, _missAxeX.toNumber() + ox, _missAxeY.toNumber() + oy, _missAxeAng, 14);
             }
-            if (_resultType > 0 && _resultTick < 4) {
+            if (_resultType > 0 && _resultTick < 4 && _stuckCount > 0) {
                 dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
                 dc.fillCircle(_targetX + _stuckOff[_stuckCount - 1].toNumber() + ox, _targetY + _targetR + oy, 6 - _resultTick);
             }
