@@ -27,7 +27,7 @@ class MainView extends WatchUi.View {
         _pet = pet;
         actionIdx = 0;
         confirmReset = false;
-        _actions = ["Feed", "Play", "Clean", "Heal", "Nap", "Hug", "Punish", "Reset", "Debug", "+3h", "Vibe", "EvNext"];
+        _actions = ["Feed", "Play", "Clean", "Heal", "Nap", "Hug", "Punish", "Reset", "Vibe"];
         _bounceTable = [0, -1, -2, -2, -1, 0, 0, 0];
         _celebType = 0;
         _celebTimer = 0;
@@ -103,14 +103,7 @@ class MainView extends WatchUi.View {
     }
 
     function getActionName() {
-        if (actionIdx == 8) { return _pet.debugMode ? "Dbg:ON" : "Debug"; }
-        if (actionIdx == 9) { return "+3h Age"; }
-        if (actionIdx == 10) { return _pet.vibeEnabled ? "Vibe:ON" : "Vibe:OFF"; }
-        if (actionIdx == 11) {
-            var idx = _pet.getDebugEventIdx();
-            var next = (idx + 1) % 14;
-            return "Ev:" + (next + 1) + "/14";
-        }
+        if (actionIdx == 8) { return _pet.vibeEnabled ? "Vibe:ON" : "Vibe:OFF"; }
         return _actions[actionIdx];
     }
 
@@ -148,20 +141,15 @@ class MainView extends WatchUi.View {
         drawCelebration(dc, w, h);
     }
 
-    // --- Bottom info (steps / debug) ---
+    // --- Bottom info (steps) ---
 
     hidden function drawBottomInfo(dc, w, h) {
         if (confirmReset || _pet.dilemmaType > 0) { return; }
         var y = h * 93 / 100;
-        if (_pet.debugMode) {
-            dc.setColor(0xFF3333, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w / 2, y, Graphics.FONT_XTINY, "DBG x300", Graphics.TEXT_JUSTIFY_CENTER);
-        } else {
-            var steps = _pet.getSteps();
-            if (steps >= 0) {
-                dc.setColor(0x555566, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(w / 2, y, Graphics.FONT_XTINY, formatSteps(steps), Graphics.TEXT_JUSTIFY_CENTER);
-            }
+        var steps = _pet.getSteps();
+        if (steps >= 0) {
+            dc.setColor(0x555566, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w / 2, y, Graphics.FONT_XTINY, formatSteps(steps), Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 
@@ -804,7 +792,7 @@ class MainView extends WatchUi.View {
         if (actionIdx == 5) { nameColor = 0xFF88CC; }
         if (actionIdx == 6) { nameColor = 0xFF8844; }
         if (actionIdx == 7) { nameColor = 0xFF6666; }
-        if (actionIdx == 8) { nameColor = _pet.debugMode ? 0xFF8800 : 0x88AAFF; }
+        if (actionIdx == 8) { nameColor = 0x88AAFF; }
         dc.setColor(nameColor, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w / 2, y, Graphics.FONT_SMALL, name, Graphics.TEXT_JUSTIFY_CENTER);
     }

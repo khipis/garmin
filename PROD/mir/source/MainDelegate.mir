@@ -1,0 +1,790 @@
+[ @file = "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc"; @line = 1; @symbol_usingdef<0> = [Toybox,1,6,12]; @symbol_usingdef<1> = [WatchUi,1,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc"; @line = 2; @symbol_usingdef<0> = [Toybox,2,6,12]; @symbol_usingdef<1> = [Math,2,13,17]; ]
+using Toybox.Math;
+[ @file = "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc"; @line = 4; @symbol_classdef = [MainDelegate,4,6,18]; @symbol_extends<0> = [WatchUi,4,27,34]; @symbol_extends<1> = [BehaviorDelegate,4,35,51]; ]
+class MainDelegate extends WatchUi.BehaviorDelegate {
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc"; @line = 4; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc"; @line = 4; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc"; @line = 6; @position = 15; @symbol_vardef = [_pet,6,15,19]; ]
+    protected
+    var _pet;
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc"; @line = 7; @position = 15; @symbol_vardef = [_view,7,15,20]; ]
+    protected
+    var _view;
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc"; @line = 9; @symbol_functiondef = [initialize,9,13,23]; @symbol_param<0> = [pet,9,24,27]; @symbol_param<1> = [view,9,29,33]; ]
+    function initialize(pet, view) as Void {
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_9_35_13_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 10 8 ]
+        symbol [ BehaviorDelegate %tmp.2 10 8 24 ];
+        %tmp.2 = getv ? :BehaviorDelegate;
+        symbol [ initialize %tmp.3 10 25 35 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 11 8 ]
+        %tmp.4 = lgetv %pet;
+        symbol [ pet %tmp.4 11 15 18 ];
+        symbol [ _pet ? 11 8 12 ];
+        putv self :_pet %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 12 8 ]
+        %tmp.5 = lgetv %view;
+        symbol [ view %tmp.5 12 16 20 ];
+        symbol [ _view ? 12 8 13 ];
+        putv self :_view %tmp.5;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_9_35_13_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc"; @line = 15; @symbol_functiondef = [onPreviousPage,15,13,27]; ]
+    function onPreviousPage() {
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_15_30_21_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 16 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_16_8_16_100_if_stmt:
+        symbol [ _view %tmp.2 16 12 17 ];
+        %tmp.2 = getv ? :_view;
+        symbol [ confirmReset %tmp.3 16 18 30 ];
+        %tmp.3 = getv %tmp.2 :confirmReset;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_16_8_16_100_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_16_8_16_100_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_16_32_16_100_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 16 34 ]
+        symbol [ _view %tmp.4 16 34 39 ];
+        %tmp.4 = getv self :_view;
+        %tmp.5 = false;
+        symbol [ confirmReset ? 16 40 52 ];
+        putv %tmp.4 :confirmReset %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 16 62 ]
+        symbol [ WatchUi %tmp.6 16 62 69 ];
+        %tmp.6 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.7 16 70 83 ];
+        %tmp.7 = getv function %tmp.6 :requestUpdate;
+        invoke %tmp.6 %tmp.7();
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 16 87 ]
+        %tmp.8 = true;
+        ret %tmp.8;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_16_32_16_100_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_16_8_16_100_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_16_8_16_100_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 17 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_17_8_17_98_if_stmt:
+        symbol [ _pet %tmp.10 17 12 16 ];
+        %tmp.10 = getv ? :_pet;
+        symbol [ dilemmaType %tmp.11 17 17 28 ];
+        %tmp.11 = getv %tmp.10 :dilemmaType;
+        %tmp.12 = 0;
+        %tmp.13 = gt %tmp.11 %tmp.12;
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_17_8_17_98_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_17_8_17_98_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_17_34_17_98_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 17 36 ]
+        symbol [ _pet %tmp.15 17 36 40 ];
+        %tmp.15 = getv ? :_pet;
+        symbol [ resolveDilemma %tmp.16 17 41 55 ];
+        %tmp.16 = getv function %tmp.15 :resolveDilemma;
+        %tmp.17 = 1;
+        invoke %tmp.15 %tmp.16(%tmp.17);
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 17 60 ]
+        symbol [ WatchUi %tmp.18 17 60 67 ];
+        %tmp.18 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.19 17 68 81 ];
+        %tmp.19 = getv function %tmp.18 :requestUpdate;
+        invoke %tmp.18 %tmp.19();
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 17 85 ]
+        %tmp.20 = true;
+        ret %tmp.20;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_17_34_17_98_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_17_8_17_98_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_17_8_17_98_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 18 8 ]
+        symbol [ _view %tmp.22 18 8 13 ];
+        %tmp.22 = getv ? :_view;
+        symbol [ cycleAction %tmp.23 18 14 25 ];
+        %tmp.23 = getv function %tmp.22 :cycleAction;
+        %tmp.24 = -1;
+        invoke %tmp.22 %tmp.23(%tmp.24);
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 19 8 ]
+        symbol [ WatchUi %tmp.25 19 8 15 ];
+        %tmp.25 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.26 19 16 29 ];
+        %tmp.26 = getv function %tmp.25 :requestUpdate;
+        invoke %tmp.25 %tmp.26();
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 20 8 ]
+        %tmp.27 = true;
+        ret %tmp.27;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_15_30_21_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc"; @line = 23; @symbol_functiondef = [onNextPage,23,13,23]; ]
+    function onNextPage() {
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_23_26_29_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 24 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_24_8_24_100_if_stmt:
+        symbol [ _view %tmp.2 24 12 17 ];
+        %tmp.2 = getv ? :_view;
+        symbol [ confirmReset %tmp.3 24 18 30 ];
+        %tmp.3 = getv %tmp.2 :confirmReset;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_24_8_24_100_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_24_8_24_100_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_24_32_24_100_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 24 34 ]
+        symbol [ _view %tmp.4 24 34 39 ];
+        %tmp.4 = getv self :_view;
+        %tmp.5 = false;
+        symbol [ confirmReset ? 24 40 52 ];
+        putv %tmp.4 :confirmReset %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 24 62 ]
+        symbol [ WatchUi %tmp.6 24 62 69 ];
+        %tmp.6 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.7 24 70 83 ];
+        %tmp.7 = getv function %tmp.6 :requestUpdate;
+        invoke %tmp.6 %tmp.7();
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 24 87 ]
+        %tmp.8 = true;
+        ret %tmp.8;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_24_32_24_100_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_24_8_24_100_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_24_8_24_100_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 25 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_25_8_25_98_if_stmt:
+        symbol [ _pet %tmp.10 25 12 16 ];
+        %tmp.10 = getv ? :_pet;
+        symbol [ dilemmaType %tmp.11 25 17 28 ];
+        %tmp.11 = getv %tmp.10 :dilemmaType;
+        %tmp.12 = 0;
+        %tmp.13 = gt %tmp.11 %tmp.12;
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_25_8_25_98_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_25_8_25_98_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_25_34_25_98_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 25 36 ]
+        symbol [ _pet %tmp.15 25 36 40 ];
+        %tmp.15 = getv ? :_pet;
+        symbol [ resolveDilemma %tmp.16 25 41 55 ];
+        %tmp.16 = getv function %tmp.15 :resolveDilemma;
+        %tmp.17 = 2;
+        invoke %tmp.15 %tmp.16(%tmp.17);
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 25 60 ]
+        symbol [ WatchUi %tmp.18 25 60 67 ];
+        %tmp.18 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.19 25 68 81 ];
+        %tmp.19 = getv function %tmp.18 :requestUpdate;
+        invoke %tmp.18 %tmp.19();
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 25 85 ]
+        %tmp.20 = true;
+        ret %tmp.20;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_25_34_25_98_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_25_8_25_98_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_25_8_25_98_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 26 8 ]
+        symbol [ _view %tmp.22 26 8 13 ];
+        %tmp.22 = getv ? :_view;
+        symbol [ cycleAction %tmp.23 26 14 25 ];
+        %tmp.23 = getv function %tmp.22 :cycleAction;
+        %tmp.24 = 1;
+        invoke %tmp.22 %tmp.23(%tmp.24);
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 27 8 ]
+        symbol [ WatchUi %tmp.25 27 8 15 ];
+        %tmp.25 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.26 27 16 29 ];
+        %tmp.26 = getv function %tmp.25 :requestUpdate;
+        invoke %tmp.25 %tmp.26();
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 28 8 ]
+        %tmp.27 = true;
+        ret %tmp.27;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_23_26_29_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc"; @line = 31; @symbol_functiondef = [onSelect,31,13,21]; ]
+    function onSelect() {
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_31_24_97_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 32 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_32_8_37_8_if_stmt:
+        symbol [ _pet %tmp.2 32 13 17 ];
+        %tmp.2 = getv ? :_pet;
+        symbol [ isAlive %tmp.3 32 18 25 ];
+        %tmp.3 = getv %tmp.2 :isAlive;
+        %tmp.4 = not %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_32_8_37_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_32_8_37_8_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_32_27_37_8_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 33 12 ]
+        symbol [ _pet %tmp.6 33 12 16 ];
+        %tmp.6 = getv ? :_pet;
+        symbol [ resetPet %tmp.7 33 17 25 ];
+        %tmp.7 = getv function %tmp.6 :resetPet;
+        invoke %tmp.6 %tmp.7();
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 34 12 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_32_27_37_8_start" "_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_32_27_37_8_stop" ]
+        %view.1 = local;
+        symbol [ view %view.1 34 16 20 ];
+        symbol [ SetupView %tmp.11 34 27 36 ];
+        %tmp.11 = getv ? :SetupView;
+        symbol [ _pet %tmp.13 34 37 41 ];
+        %tmp.13 = getv ? :_pet;
+        %tmp.8 = newc %tmp.11 (%tmp.13);
+        lputv %view.1 %tmp.8;
+        symbol [ view %view.1 34 16 20 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 35 12 ]
+        symbol [ WatchUi %tmp.14 35 12 19 ];
+        %tmp.14 = getm $.Toybox.WatchUi;
+        symbol [ switchToView %tmp.15 35 20 32 ];
+        %tmp.15 = getv function %tmp.14 :switchToView;
+        %tmp.16 = lgetv %view.1;
+        symbol [ view %tmp.16 35 33 37 ];
+        symbol [ SetupDelegate %tmp.20 35 43 56 ];
+        %tmp.20 = getv ? :SetupDelegate;
+        symbol [ _pet %tmp.22 35 57 61 ];
+        %tmp.22 = getv ? :_pet;
+        %tmp.23 = lgetv %view.1;
+        symbol [ view %tmp.23 35 63 67 ];
+        %tmp.17 = newc %tmp.20 (%tmp.22, %tmp.23);
+        symbol [ WatchUi %tmp.24 35 70 77 ];
+        %tmp.24 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_UP %tmp.25 35 78 86 ];
+        %tmp.25 = getv %tmp.24 :SLIDE_UP;
+        invoke %tmp.14 %tmp.15(%tmp.16, %tmp.17, %tmp.25);
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 36 12 ]
+        %tmp.26 = true;
+        ret %tmp.26;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_32_27_37_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_32_8_37_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_32_8_37_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 39 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_39_8_45_8_if_stmt:
+        symbol [ _view %tmp.28 39 12 17 ];
+        %tmp.28 = getv ? :_view;
+        symbol [ confirmReset %tmp.29 39 18 30 ];
+        %tmp.29 = getv %tmp.28 :confirmReset;
+        bf %tmp.29 @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_39_8_45_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_39_8_45_8_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_39_32_45_8_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 40 12 ]
+        symbol [ _pet %tmp.31 40 12 16 ];
+        %tmp.31 = getv ? :_pet;
+        symbol [ resetPet %tmp.32 40 17 25 ];
+        %tmp.32 = getv function %tmp.31 :resetPet;
+        invoke %tmp.31 %tmp.32();
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 41 12 ]
+        symbol [ _view %tmp.33 41 12 17 ];
+        %tmp.33 = getv self :_view;
+        %tmp.34 = false;
+        symbol [ confirmReset ? 41 18 30 ];
+        putv %tmp.33 :confirmReset %tmp.34;
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 42 12 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_39_32_45_8_start" "_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_39_32_45_8_stop" ]
+        %sv.2 = local;
+        symbol [ sv %sv.2 42 16 18 ];
+        symbol [ SetupView %tmp.38 42 25 34 ];
+        %tmp.38 = getv ? :SetupView;
+        symbol [ _pet %tmp.40 42 35 39 ];
+        %tmp.40 = getv ? :_pet;
+        %tmp.35 = newc %tmp.38 (%tmp.40);
+        lputv %sv.2 %tmp.35;
+        symbol [ sv %sv.2 42 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 43 12 ]
+        symbol [ WatchUi %tmp.41 43 12 19 ];
+        %tmp.41 = getm $.Toybox.WatchUi;
+        symbol [ switchToView %tmp.42 43 20 32 ];
+        %tmp.42 = getv function %tmp.41 :switchToView;
+        %tmp.43 = lgetv %sv.2;
+        symbol [ sv %tmp.43 43 33 35 ];
+        symbol [ SetupDelegate %tmp.47 43 41 54 ];
+        %tmp.47 = getv ? :SetupDelegate;
+        symbol [ _pet %tmp.49 43 55 59 ];
+        %tmp.49 = getv ? :_pet;
+        %tmp.50 = lgetv %sv.2;
+        symbol [ sv %tmp.50 43 61 63 ];
+        %tmp.44 = newc %tmp.47 (%tmp.49, %tmp.50);
+        symbol [ WatchUi %tmp.51 43 66 73 ];
+        %tmp.51 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_UP %tmp.52 43 74 82 ];
+        %tmp.52 = getv %tmp.51 :SLIDE_UP;
+        invoke %tmp.41 %tmp.42(%tmp.43, %tmp.44, %tmp.52);
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 44 12 ]
+        %tmp.53 = true;
+        ret %tmp.53;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_39_32_45_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_39_8_45_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_39_8_45_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 47 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_47_8_51_8_if_stmt:
+        symbol [ _pet %tmp.55 47 12 16 ];
+        %tmp.55 = getv ? :_pet;
+        symbol [ dilemmaType %tmp.56 47 17 28 ];
+        %tmp.56 = getv %tmp.55 :dilemmaType;
+        %tmp.57 = 0;
+        %tmp.58 = gt %tmp.56 %tmp.57;
+        bf %tmp.58 @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_47_8_51_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_47_8_51_8_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_47_34_51_8_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 48 12 ]
+        symbol [ _pet %tmp.60 48 12 16 ];
+        %tmp.60 = getv ? :_pet;
+        symbol [ resolveDilemma %tmp.61 48 17 31 ];
+        %tmp.61 = getv function %tmp.60 :resolveDilemma;
+        %tmp.62 = 1;
+        invoke %tmp.60 %tmp.61(%tmp.62);
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 49 12 ]
+        symbol [ WatchUi %tmp.63 49 12 19 ];
+        %tmp.63 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.64 49 20 33 ];
+        %tmp.64 = getv function %tmp.63 :requestUpdate;
+        invoke %tmp.63 %tmp.64();
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 50 12 ]
+        %tmp.65 = true;
+        ret %tmp.65;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_47_34_51_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_47_8_51_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_47_8_51_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 53 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_31_24_97_4_start" "_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_31_24_97_4_stop" ]
+        %idx.3 = local;
+        symbol [ idx %idx.3 53 12 15 ];
+        symbol [ _view %tmp.67 53 18 23 ];
+        %tmp.67 = getv ? :_view;
+        symbol [ actionIdx %tmp.68 53 24 33 ];
+        %tmp.68 = getv %tmp.67 :actionIdx;
+        lputv %idx.3 %tmp.68;
+        symbol [ idx %idx.3 53 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 54 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_54_8_89_8_if_stmt:
+        %tmp.69 = lgetv %idx.3;
+        symbol [ idx %tmp.69 54 12 15 ];
+        %tmp.70 = 0;
+        %tmp.71 = eq %tmp.69 %tmp.70;
+        bf %tmp.71 @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_54_8_89_8_if_false;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_54_8_89_8_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_54_22_56_8_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 55 12 ]
+        symbol [ _pet %tmp.73 55 12 16 ];
+        %tmp.73 = getv ? :_pet;
+        symbol [ feed %tmp.74 55 17 21 ];
+        %tmp.74 = getv function %tmp.73 :feed;
+        invoke %tmp.73 %tmp.74();
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_54_22_56_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_54_8_89_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_54_8_89_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 57 13 ]
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_57_13_89_8_if_stmt:
+        %tmp.75 = lgetv %idx.3;
+        symbol [ idx %tmp.75 57 17 20 ];
+        %tmp.76 = 1;
+        %tmp.77 = eq %tmp.75 %tmp.76;
+        bf %tmp.77 @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_57_13_89_8_if_false;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_57_13_89_8_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_57_27_76_8_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 58 12 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_57_27_76_8_start" "_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_57_27_76_8_stop" ]
+        %gt.4 = local;
+        symbol [ gt %gt.4 58 16 18 ];
+        symbol [ Math %tmp.78 58 21 25 ];
+        %tmp.78 = getm $.Toybox.Math;
+        symbol [ rand %tmp.79 58 26 30 ];
+        %tmp.79 = getv function %tmp.78 :rand;
+        %tmp.80 = invoke %tmp.78 %tmp.79();
+        symbol [ abs %tmp.81 58 33 36 ];
+        %tmp.81 = getv function %tmp.80 :abs;
+        %tmp.82 = invoke %tmp.80 %tmp.81();
+        %tmp.83 = 5;
+        %tmp.84 = mod %tmp.82 %tmp.83;
+        lputv %gt.4 %tmp.84;
+        symbol [ gt %gt.4 58 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 59 12 ]
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_59_12_74_12_if_stmt:
+        %tmp.85 = lgetv %gt.4;
+        symbol [ gt %tmp.85 59 16 18 ];
+        %tmp.86 = 0;
+        %tmp.87 = eq %tmp.85 %tmp.86;
+        bf %tmp.87 @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_59_12_74_12_if_false;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_59_12_74_12_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_59_25_62_12_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 60 16 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_59_25_62_12_start" "_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_59_25_62_12_stop" ]
+        %gv.5 = local;
+        symbol [ gv %gv.5 60 20 22 ];
+        symbol [ MiniGameView %tmp.91 60 29 41 ];
+        %tmp.91 = getv ? :MiniGameView;
+        symbol [ _pet %tmp.93 60 42 46 ];
+        %tmp.93 = getv ? :_pet;
+        %tmp.88 = newc %tmp.91 (%tmp.93);
+        lputv %gv.5 %tmp.88;
+        symbol [ gv %gv.5 60 20 22 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 61 16 ]
+        symbol [ WatchUi %tmp.94 61 16 23 ];
+        %tmp.94 = getm $.Toybox.WatchUi;
+        symbol [ pushView %tmp.95 61 24 32 ];
+        %tmp.95 = getv function %tmp.94 :pushView;
+        %tmp.96 = lgetv %gv.5;
+        symbol [ gv %tmp.96 61 33 35 ];
+        symbol [ MiniGameDelegate %tmp.100 61 41 57 ];
+        %tmp.100 = getv ? :MiniGameDelegate;
+        %tmp.101 = lgetv %gv.5;
+        symbol [ gv %tmp.101 61 58 60 ];
+        %tmp.97 = newc %tmp.100 (%tmp.101);
+        symbol [ WatchUi %tmp.102 61 63 70 ];
+        %tmp.102 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_UP %tmp.103 61 71 79 ];
+        %tmp.103 = getv %tmp.102 :SLIDE_UP;
+        invoke %tmp.94 %tmp.95(%tmp.96, %tmp.97, %tmp.103);
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_59_25_62_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_59_12_74_12_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_59_12_74_12_if_false:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 62 19 ]
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_62_19_74_12_if_stmt:
+        %tmp.104 = lgetv %gt.4;
+        symbol [ gt %tmp.104 62 23 25 ];
+        %tmp.105 = 1;
+        %tmp.106 = eq %tmp.104 %tmp.105;
+        bf %tmp.106 @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_62_19_74_12_if_false;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_62_19_74_12_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_62_32_65_12_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 63 16 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_62_32_65_12_start" "_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_62_32_65_12_stop" ]
+        %gv.6 = local;
+        symbol [ gv %gv.6 63 20 22 ];
+        symbol [ RushGameView %tmp.110 63 29 41 ];
+        %tmp.110 = getv ? :RushGameView;
+        symbol [ _pet %tmp.112 63 42 46 ];
+        %tmp.112 = getv ? :_pet;
+        %tmp.107 = newc %tmp.110 (%tmp.112);
+        lputv %gv.6 %tmp.107;
+        symbol [ gv %gv.6 63 20 22 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 64 16 ]
+        symbol [ WatchUi %tmp.113 64 16 23 ];
+        %tmp.113 = getm $.Toybox.WatchUi;
+        symbol [ pushView %tmp.114 64 24 32 ];
+        %tmp.114 = getv function %tmp.113 :pushView;
+        %tmp.115 = lgetv %gv.6;
+        symbol [ gv %tmp.115 64 33 35 ];
+        symbol [ RushGameDelegate %tmp.119 64 41 57 ];
+        %tmp.119 = getv ? :RushGameDelegate;
+        %tmp.120 = lgetv %gv.6;
+        symbol [ gv %tmp.120 64 58 60 ];
+        %tmp.116 = newc %tmp.119 (%tmp.120);
+        symbol [ WatchUi %tmp.121 64 63 70 ];
+        %tmp.121 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_UP %tmp.122 64 71 79 ];
+        %tmp.122 = getv %tmp.121 :SLIDE_UP;
+        invoke %tmp.113 %tmp.114(%tmp.115, %tmp.116, %tmp.122);
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_62_32_65_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_62_19_74_12_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_62_19_74_12_if_false:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 65 19 ]
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_65_19_74_12_if_stmt:
+        %tmp.123 = lgetv %gt.4;
+        symbol [ gt %tmp.123 65 23 25 ];
+        %tmp.124 = 2;
+        %tmp.125 = eq %tmp.123 %tmp.124;
+        bf %tmp.125 @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_65_19_74_12_if_false;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_65_19_74_12_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_65_32_68_12_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 66 16 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_65_32_68_12_start" "_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_65_32_68_12_stop" ]
+        %gv.7 = local;
+        symbol [ gv %gv.7 66 20 22 ];
+        symbol [ ReactGameView %tmp.129 66 29 42 ];
+        %tmp.129 = getv ? :ReactGameView;
+        symbol [ _pet %tmp.131 66 43 47 ];
+        %tmp.131 = getv ? :_pet;
+        %tmp.126 = newc %tmp.129 (%tmp.131);
+        lputv %gv.7 %tmp.126;
+        symbol [ gv %gv.7 66 20 22 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 67 16 ]
+        symbol [ WatchUi %tmp.132 67 16 23 ];
+        %tmp.132 = getm $.Toybox.WatchUi;
+        symbol [ pushView %tmp.133 67 24 32 ];
+        %tmp.133 = getv function %tmp.132 :pushView;
+        %tmp.134 = lgetv %gv.7;
+        symbol [ gv %tmp.134 67 33 35 ];
+        symbol [ ReactGameDelegate %tmp.138 67 41 58 ];
+        %tmp.138 = getv ? :ReactGameDelegate;
+        %tmp.139 = lgetv %gv.7;
+        symbol [ gv %tmp.139 67 59 61 ];
+        %tmp.135 = newc %tmp.138 (%tmp.139);
+        symbol [ WatchUi %tmp.140 67 64 71 ];
+        %tmp.140 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_UP %tmp.141 67 72 80 ];
+        %tmp.141 = getv %tmp.140 :SLIDE_UP;
+        invoke %tmp.132 %tmp.133(%tmp.134, %tmp.135, %tmp.141);
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_65_32_68_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_65_19_74_12_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_65_19_74_12_if_false:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 68 19 ]
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_68_19_74_12_if_stmt:
+        %tmp.142 = lgetv %gt.4;
+        symbol [ gt %tmp.142 68 23 25 ];
+        %tmp.143 = 3;
+        %tmp.144 = eq %tmp.142 %tmp.143;
+        bf %tmp.144 @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_68_19_74_12_if_else_false;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_68_19_74_12_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_68_32_71_12_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 69 16 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_68_32_71_12_start" "_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_68_32_71_12_stop" ]
+        %gv.8 = local;
+        symbol [ gv %gv.8 69 20 22 ];
+        symbol [ DodgeGameView %tmp.148 69 29 42 ];
+        %tmp.148 = getv ? :DodgeGameView;
+        symbol [ _pet %tmp.150 69 43 47 ];
+        %tmp.150 = getv ? :_pet;
+        %tmp.145 = newc %tmp.148 (%tmp.150);
+        lputv %gv.8 %tmp.145;
+        symbol [ gv %gv.8 69 20 22 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 70 16 ]
+        symbol [ WatchUi %tmp.151 70 16 23 ];
+        %tmp.151 = getm $.Toybox.WatchUi;
+        symbol [ pushView %tmp.152 70 24 32 ];
+        %tmp.152 = getv function %tmp.151 :pushView;
+        %tmp.153 = lgetv %gv.8;
+        symbol [ gv %tmp.153 70 33 35 ];
+        symbol [ DodgeGameDelegate %tmp.157 70 41 58 ];
+        %tmp.157 = getv ? :DodgeGameDelegate;
+        %tmp.158 = lgetv %gv.8;
+        symbol [ gv %tmp.158 70 59 61 ];
+        %tmp.154 = newc %tmp.157 (%tmp.158);
+        symbol [ WatchUi %tmp.159 70 64 71 ];
+        %tmp.159 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_UP %tmp.160 70 72 80 ];
+        %tmp.160 = getv %tmp.159 :SLIDE_UP;
+        invoke %tmp.151 %tmp.152(%tmp.153, %tmp.154, %tmp.160);
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_68_32_71_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_68_19_74_12_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_68_19_74_12_if_else_false:
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_71_19_74_12_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 72 16 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_71_19_74_12_start" "_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_71_19_74_12_stop" ]
+        %gv.9 = local;
+        symbol [ gv %gv.9 72 20 22 ];
+        symbol [ MemoryGameView %tmp.164 72 29 43 ];
+        %tmp.164 = getv ? :MemoryGameView;
+        symbol [ _pet %tmp.166 72 44 48 ];
+        %tmp.166 = getv ? :_pet;
+        %tmp.161 = newc %tmp.164 (%tmp.166);
+        lputv %gv.9 %tmp.161;
+        symbol [ gv %gv.9 72 20 22 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 73 16 ]
+        symbol [ WatchUi %tmp.167 73 16 23 ];
+        %tmp.167 = getm $.Toybox.WatchUi;
+        symbol [ pushView %tmp.168 73 24 32 ];
+        %tmp.168 = getv function %tmp.167 :pushView;
+        %tmp.169 = lgetv %gv.9;
+        symbol [ gv %tmp.169 73 33 35 ];
+        symbol [ MemoryGameDelegate %tmp.173 73 41 59 ];
+        %tmp.173 = getv ? :MemoryGameDelegate;
+        %tmp.174 = lgetv %gv.9;
+        symbol [ gv %tmp.174 73 60 62 ];
+        %tmp.170 = newc %tmp.173 (%tmp.174);
+        symbol [ WatchUi %tmp.175 73 65 72 ];
+        %tmp.175 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_UP %tmp.176 73 73 81 ];
+        %tmp.176 = getv %tmp.175 :SLIDE_UP;
+        invoke %tmp.167 %tmp.168(%tmp.169, %tmp.170, %tmp.176);
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_71_19_74_12_stop:
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_68_19_74_12_if_end:
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_65_19_74_12_if_end:
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_62_19_74_12_if_end:
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_59_12_74_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 75 12 ]
+        %tmp.177 = true;
+        ret %tmp.177;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_57_27_76_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_57_13_89_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_57_13_89_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 77 13 ]
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_77_13_89_8_if_stmt:
+        %tmp.178 = lgetv %idx.3;
+        symbol [ idx %tmp.178 77 17 20 ];
+        %tmp.179 = 2;
+        %tmp.180 = eq %tmp.178 %tmp.179;
+        bf %tmp.180 @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_77_13_89_8_if_false;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_77_13_89_8_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_77_27_77_43_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 77 29 ]
+        symbol [ _pet %tmp.182 77 29 33 ];
+        %tmp.182 = getv ? :_pet;
+        symbol [ clean %tmp.183 77 34 39 ];
+        %tmp.183 = getv function %tmp.182 :clean;
+        invoke %tmp.182 %tmp.183();
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_77_27_77_43_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_77_13_89_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_77_13_89_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 78 13 ]
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_78_13_89_8_if_stmt:
+        %tmp.184 = lgetv %idx.3;
+        symbol [ idx %tmp.184 78 17 20 ];
+        %tmp.185 = 3;
+        %tmp.186 = eq %tmp.184 %tmp.185;
+        bf %tmp.186 @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_78_13_89_8_if_false;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_78_13_89_8_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_78_27_78_42_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 78 29 ]
+        symbol [ _pet %tmp.188 78 29 33 ];
+        %tmp.188 = getv ? :_pet;
+        symbol [ heal %tmp.189 78 34 38 ];
+        %tmp.189 = getv function %tmp.188 :heal;
+        invoke %tmp.188 %tmp.189();
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_78_27_78_42_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_78_13_89_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_78_13_89_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 79 13 ]
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_79_13_89_8_if_stmt:
+        %tmp.190 = lgetv %idx.3;
+        symbol [ idx %tmp.190 79 17 20 ];
+        %tmp.191 = 4;
+        %tmp.192 = eq %tmp.190 %tmp.191;
+        bf %tmp.192 @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_79_13_89_8_if_false;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_79_13_89_8_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_79_27_79_41_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 79 29 ]
+        symbol [ _pet %tmp.194 79 29 33 ];
+        %tmp.194 = getv ? :_pet;
+        symbol [ nap %tmp.195 79 34 37 ];
+        %tmp.195 = getv function %tmp.194 :nap;
+        invoke %tmp.194 %tmp.195();
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_79_27_79_41_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_79_13_89_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_79_13_89_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 80 13 ]
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_80_13_89_8_if_stmt:
+        %tmp.196 = lgetv %idx.3;
+        symbol [ idx %tmp.196 80 17 20 ];
+        %tmp.197 = 5;
+        %tmp.198 = eq %tmp.196 %tmp.197;
+        bf %tmp.198 @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_80_13_89_8_if_false;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_80_13_89_8_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_80_27_80_41_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 80 29 ]
+        symbol [ _pet %tmp.200 80 29 33 ];
+        %tmp.200 = getv ? :_pet;
+        symbol [ hug %tmp.201 80 34 37 ];
+        %tmp.201 = getv function %tmp.200 :hug;
+        invoke %tmp.200 %tmp.201();
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_80_27_80_41_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_80_13_89_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_80_13_89_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 81 13 ]
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_81_13_89_8_if_stmt:
+        %tmp.202 = lgetv %idx.3;
+        symbol [ idx %tmp.202 81 17 20 ];
+        %tmp.203 = 6;
+        %tmp.204 = eq %tmp.202 %tmp.203;
+        bf %tmp.204 @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_81_13_89_8_if_false;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_81_13_89_8_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_81_27_81_44_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 81 29 ]
+        symbol [ _pet %tmp.206 81 29 33 ];
+        %tmp.206 = getv ? :_pet;
+        symbol [ punish %tmp.207 81 34 40 ];
+        %tmp.207 = getv function %tmp.206 :punish;
+        invoke %tmp.206 %tmp.207();
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_81_27_81_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_81_13_89_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_81_13_89_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 82 13 ]
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_82_13_89_8_if_stmt:
+        %tmp.208 = lgetv %idx.3;
+        symbol [ idx %tmp.208 82 17 20 ];
+        %tmp.209 = 7;
+        %tmp.210 = eq %tmp.208 %tmp.209;
+        bf %tmp.210 @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_82_13_89_8_if_false;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_82_13_89_8_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_82_27_86_8_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 83 12 ]
+        symbol [ _view %tmp.211 83 12 17 ];
+        %tmp.211 = getv self :_view;
+        %tmp.212 = true;
+        symbol [ confirmReset ? 83 18 30 ];
+        putv %tmp.211 :confirmReset %tmp.212;
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 84 12 ]
+        symbol [ WatchUi %tmp.213 84 12 19 ];
+        %tmp.213 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.214 84 20 33 ];
+        %tmp.214 = getv function %tmp.213 :requestUpdate;
+        invoke %tmp.213 %tmp.214();
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 85 12 ]
+        %tmp.215 = true;
+        ret %tmp.215;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_82_27_86_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_82_13_89_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_82_13_89_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 87 13 ]
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_87_13_89_8_if_stmt:
+        %tmp.216 = lgetv %idx.3;
+        symbol [ idx %tmp.216 87 17 20 ];
+        %tmp.217 = 8;
+        %tmp.218 = eq %tmp.216 %tmp.217;
+        bf %tmp.218 @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_87_13_89_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_87_13_89_8_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_87_27_89_8_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 88 12 ]
+        symbol [ _pet %tmp.220 88 12 16 ];
+        %tmp.220 = getv ? :_pet;
+        symbol [ toggleVibe %tmp.221 88 17 27 ];
+        %tmp.221 = getv function %tmp.220 :toggleVibe;
+        invoke %tmp.220 %tmp.221();
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_87_27_89_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_87_13_89_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_87_13_89_8_if_end:
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_82_13_89_8_if_end:
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_81_13_89_8_if_end:
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_80_13_89_8_if_end:
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_79_13_89_8_if_end:
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_78_13_89_8_if_end:
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_77_13_89_8_if_end:
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_57_13_89_8_if_end:
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_54_8_89_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 95 8 ]
+        symbol [ WatchUi %tmp.222 95 8 15 ];
+        %tmp.222 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.223 95 16 29 ];
+        %tmp.223 = getv function %tmp.222 :requestUpdate;
+        invoke %tmp.222 %tmp.223();
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 96 8 ]
+        %tmp.224 = true;
+        ret %tmp.224;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_31_24_97_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc"; @line = 99; @symbol_functiondef = [onBack,99,13,19]; ]
+    function onBack() {
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_99_22_103_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 100 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_100_8_100_100_if_stmt:
+        symbol [ _view %tmp.2 100 12 17 ];
+        %tmp.2 = getv ? :_view;
+        symbol [ confirmReset %tmp.3 100 18 30 ];
+        %tmp.3 = getv %tmp.2 :confirmReset;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_100_8_100_100_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_100_8_100_100_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_100_32_100_100_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 100 34 ]
+        symbol [ _view %tmp.4 100 34 39 ];
+        %tmp.4 = getv self :_view;
+        %tmp.5 = false;
+        symbol [ confirmReset ? 100 40 52 ];
+        putv %tmp.4 :confirmReset %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 100 62 ]
+        symbol [ WatchUi %tmp.6 100 62 69 ];
+        %tmp.6 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.7 100 70 83 ];
+        %tmp.7 = getv function %tmp.6 :requestUpdate;
+        invoke %tmp.6 %tmp.7();
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 100 87 ]
+        %tmp.8 = true;
+        ret %tmp.8;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_100_32_100_100_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_100_8_100_100_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_100_8_100_100_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 101 8 ]
+        symbol [ _pet %tmp.10 101 8 12 ];
+        %tmp.10 = getv ? :_pet;
+        symbol [ save %tmp.11 101 13 17 ];
+        %tmp.11 = getv function %tmp.10 :save;
+        invoke %tmp.10 %tmp.11();
+[ "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc" 102 8 ]
+        %tmp.12 = false;
+        ret %tmp.12;
+_Users_kkorolczuk_work_garmin_pets_source_MainDelegate_mc_99_22_103_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/pets/source/MainDelegate.mc"; @line = 1; ]
+<init> {
+}

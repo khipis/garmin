@@ -85,17 +85,12 @@ class MainDelegate extends WatchUi.BehaviorDelegate {
             return true;
         }
         else if (idx == 8) {
-            _pet.toggleDebug();
-        }
-        else if (idx == 9) {
-            _pet.debugAddHours();
-        }
-        else if (idx == 10) {
             _pet.toggleVibe();
         }
-        else if (idx == 11) {
-            _pet.debugNextEvent();
-        }
+        // DEBUG ONLY — do not enable in production:
+        // else if (idx == X) { _pet.toggleDebug(); }
+        // else if (idx == X) { _pet.debugAddHours(); }
+        // else if (idx == X) { _pet.debugNextEvent(); }
 
         WatchUi.requestUpdate();
         return true;
