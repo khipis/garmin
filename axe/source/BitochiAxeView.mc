@@ -213,10 +213,13 @@ class BitochiAxeView extends WatchUi.View {
 
     hidden function updateTarget() {
         if (_tgtSpd <= 0) { return; }
-        var interval = 4 - _tgtSpd;
+        var step = 1;
+        if (_tgtSpd >= 3) { step = 2; }
+        if (_tgtSpd >= 5) { step = 3; }
+        var interval = 3 - _tgtSpd / 2;
         if (interval < 1) { interval = 1; }
         if (_tick % interval == 0) {
-            _targetX += _tgtDir;
+            _targetX += _tgtDir * step;
             var maxOff = _w * 25 / 100;
             if (_targetX > _cx + maxOff) { _tgtDir = -1; }
             if (_targetX < _cx - maxOff) { _tgtDir = 1; }
@@ -344,10 +347,13 @@ class BitochiAxeView extends WatchUi.View {
         if (_tolerance < 22.0) { _tolerance = 22.0; }
         _axeAngVel = 7.2 + _wave.toFloat() * 0.22;
         if (_axeAngVel > 11.2) { _axeAngVel = 11.2; }
-        _tgtDir = 1; _tgtSpd = 1;
-        if (_wave >= 6) { _tgtSpd = 2; }
-        if (_wave >= 11) { _tgtSpd = 3; }
-        if (_wave >= 18) { _tgtSpd = 4; }
+        _tgtDir = (Math.rand().abs() % 2 == 0) ? 1 : -1;
+        _tgtSpd = 1;
+        if (_wave >= 2) { _tgtSpd = 2; }
+        if (_wave >= 4) { _tgtSpd = 3; }
+        if (_wave >= 7) { _tgtSpd = 4; }
+        if (_wave >= 10) { _tgtSpd = 5; }
+        if (_wave >= 14) { _tgtSpd = 6; }
         _targetX = _cx;
         _combo = 0;
         if (_wave == 6 || _wave == 12 || _wave == 18 || _wave == 24) {

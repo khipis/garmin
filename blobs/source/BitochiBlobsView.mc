@@ -128,8 +128,8 @@ class BitochiBlobsView extends WatchUi.View {
         _bX = new [MAX_BLOBS]; _bY = new [MAX_BLOBS];
         _bHp = new [MAX_BLOBS]; _bMaxHp = new [MAX_BLOBS];
         _bAlive = new [MAX_BLOBS];
-        _bCol = [0x4488FF, 0xFF4444, 0xFF8844, 0xAA44FF, 0x44CCCC];
-        _bDark = [0x2266DD, 0xCC2222, 0xCC6622, 0x7722CC, 0x228888];
+        _bCol = [0x44AAFF, 0xFF3333, 0xFFAA22, 0xCC44FF, 0x44EEDD];
+        _bDark = [0x2277DD, 0xDD1111, 0xDD7700, 0x9922DD, 0x22AABB];
         for (var i = 0; i < MAX_BLOBS; i++) {
             _bX[i] = 0.0; _bY[i] = 0.0; _bHp[i] = 0; _bMaxHp[i] = 0; _bAlive[i] = false;
         }
@@ -210,7 +210,7 @@ class BitochiBlobsView extends WatchUi.View {
             _partLife[i]--;
         }
 
-        _camX += (_camTarget - _camX) * 0.10;
+        _camX += (_camTarget - _camX) * 0.16;
         if (_camX < 0.0) { _camX = 0.0; }
         var maxCam = (_mapW - _w).toFloat();
         if (maxCam < 0.0) { maxCam = 0.0; }
@@ -822,6 +822,7 @@ class BitochiBlobsView extends WatchUi.View {
         if (gameState == GS_MOVE && _activeIdx == 0) { drawMoveBar(dc); }
         if (gameState == GS_TURN) { drawTurnLabel(dc); }
 
+        drawOffscreenArrows(dc);
         drawHUD(dc);
         drawMinimap(dc);
 
@@ -895,6 +896,9 @@ class BitochiBlobsView extends WatchUi.View {
     hidden function drawBlob(dc, bx, by, hp, maxHp, col, darkCol, isActive) {
         if (bx < -15 || bx > _w + 15) { return; }
         var r = (hp > 0) ? 8 : 6;
+
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+        dc.drawCircle(bx, by - r, r + 1);
 
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(bx + 1, by - r + 1, r);
@@ -1170,11 +1174,38 @@ class BitochiBlobsView extends WatchUi.View {
         dc.drawText(_w / 2, _h - 6, Graphics.FONT_XTINY, "R" + _round, Graphics.TEXT_JUSTIFY_CENTER);
     }
 
+    hidden function drawOffscreenArrows(dc) {
+        for (var i = 0; i < _blobCount; i++) {
+            if (!_bAlive[i] || _bHp[i] <= 0) { continue; }
+            var bsx = sx(_bX[i]);
+            if (bsx >= -10 && bsx <= _w + 10) { continue; }
+            var ay = _bY[i].toNumber();
+            if (ay < 20) { ay = 20; }
+            if (ay > _h - 20) { ay = _h - 20; }
+            dc.setColor(_bCol[i], Graphics.COLOR_TRANSPARENT);
+            if (bsx < -10) {
+                dc.fillPolygon([[4, ay], [12, ay - 5], [12, ay + 5]]);
+                dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+                dc.fillPolygon([[5, ay], [10, ay - 3], [10, ay + 3]]);
+                dc.setColor(_bCol[i], Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(15, ay, 3);
+            } else {
+                dc.fillPolygon([[_w - 4, ay], [_w - 12, ay - 5], [_w - 12, ay + 5]]);
+                dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+                dc.fillPolygon([[_w - 5, ay], [_w - 10, ay - 3], [_w - 10, ay + 3]]);
+                dc.setColor(_bCol[i], Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(_w - 15, ay, 3);
+            }
+        }
+    }
+
     hidden function drawMinimap(dc) {
-        var mW = _w * 40 / 100;
-        var mH = 4;
+        var mW = _w * 50 / 100;
+        var mH = 6;
         var mx = (_w - mW) / 2;
-        var my = _h - 5;
+        var my = _h - 8;
+        dc.setColor(0x111111, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(mx - 1, my - 1, mW + 2, mH + 2);
         dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(mx, my, mW, mH);
 
@@ -1182,17 +1213,19 @@ class BitochiBlobsView extends WatchUi.View {
         if (camFrac < 0.0) { camFrac = 0.0; }
         if (camFrac > 1.0) { camFrac = 1.0; }
         var viewW = mW * _w / _mapW;
-        if (viewW < 4) { viewW = 4; }
+        if (viewW < 6) { viewW = 6; }
         var viewX = mx + (camFrac * (mW - viewW).toFloat()).toNumber();
-        dc.setColor(0x444444, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0x333344, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(viewX, my, viewW, mH);
 
         for (var i = 0; i < _blobCount; i++) {
-            if (!_bAlive[i]) { continue; }
+            if (!_bAlive[i] || _bHp[i] <= 0) { continue; }
             var bFrac = _bX[i] / _mapW.toFloat();
             var dotX = mx + (bFrac * mW.toFloat()).toNumber();
             dc.setColor(_bCol[i], Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(dotX, my, 2, mH);
+            dc.fillRectangle(dotX - 1, my, 3, mH);
+            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(dotX, my + 1, 1, mH - 2);
         }
     }
 

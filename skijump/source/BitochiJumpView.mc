@@ -259,19 +259,19 @@ class BitochiJumpView extends WatchUi.View {
             if (dist < 0.0) { dist = 0.0; }
             var zoneLen = edgeX - zoneStartX;
             var ratio = dist / (zoneLen + 0.01);
-            if (ratio < 0.08) { _takeoffQuality = 1.0; _takeoffFlash = 8; }
-            else if (ratio < 0.20) { _takeoffQuality = 0.85; _takeoffFlash = 5; }
-            else if (ratio < 0.40) { _takeoffQuality = 0.6; }
-            else if (ratio < 0.65) { _takeoffQuality = 0.35; }
-            else { _takeoffQuality = 0.15; }
+            if (ratio < 0.12) { _takeoffQuality = 1.0; _takeoffFlash = 8; }
+            else if (ratio < 0.28) { _takeoffQuality = 0.88; _takeoffFlash = 5; }
+            else if (ratio < 0.48) { _takeoffQuality = 0.72; }
+            else if (ratio < 0.70) { _takeoffQuality = 0.55; }
+            else { _takeoffQuality = 0.38; }
         } else if (manual) {
-            _takeoffQuality = 0.05;
+            _takeoffQuality = 0.25;
         } else {
-            _takeoffQuality = 0.0;
+            _takeoffQuality = 0.12;
         }
-        var la = 2.0 + _takeoffQuality * 26.0;
+        var la = 12.0 + _takeoffQuality * 18.0;
         var lr = la * 3.14159 / 180.0;
-        var boost = 0.2 + _takeoffQuality * 1.6;
+        var boost = 0.7 + _takeoffQuality * 1.0;
         _vx = _speed * boost * Math.cos(lr); _vy = -_speed * boost * Math.sin(lr);
         _onHill = false; _bodyAngle = la; _skiAngle = la;
         _windBase = -0.8 + (Math.rand().abs() % 20).toFloat() / 10.0;
@@ -312,20 +312,20 @@ class BitochiJumpView extends WatchUi.View {
         var aoa = _bodyAngle - fDeg;
         if (aoa < -10.0) { aoa = -10.0; } if (aoa > 40.0) { aoa = 40.0; }
 
-        var tqLift = 0.35 + _takeoffQuality * 0.9;
+        var tqLift = 0.55 + _takeoffQuality * 0.7;
         var sweetSpot = 0.0;
-        if (_bodyAngle > 14.0 && _bodyAngle < 30.0) {
+        if (_bodyAngle > 12.0 && _bodyAngle < 32.0) {
             var optAngle = 22.0;
             var dev = _bodyAngle - optAngle; if (dev < 0.0) { dev = -dev; }
-            sweetSpot = 1.0 - dev / 10.0;
+            sweetSpot = 1.0 - dev / 12.0;
             if (sweetSpot < 0.0) { sweetSpot = 0.0; }
         }
-        var liftMul = 1.0 + sweetSpot * 0.5;
+        var liftMul = 1.0 + sweetSpot * 0.6;
         var lC = 0.0;
-        if (aoa > 0.0 && aoa < 30.0) { lC = (aoa * 0.016 - aoa * aoa * 0.00013) * tqLift * liftMul; }
-        else if (aoa >= 30.0) { lC = 0.22 * tqLift; }
-        var dC = 0.007 + aoa * aoa * 0.00008;
-        if (sweetSpot > 0.3) { dC = dC * (1.0 - sweetSpot * 0.35); }
+        if (aoa > 0.0 && aoa < 30.0) { lC = (aoa * 0.020 - aoa * aoa * 0.00015) * tqLift * liftMul; }
+        else if (aoa >= 30.0) { lC = 0.28 * tqLift; }
+        var dC = 0.006 + aoa * aoa * 0.00006;
+        if (sweetSpot > 0.3) { dC = dC * (1.0 - sweetSpot * 0.4); }
 
         var lift = lC * speed * speed * 0.5;
         var drag = dC * speed * speed * 0.5;
@@ -335,7 +335,7 @@ class BitochiJumpView extends WatchUi.View {
 
         _vx += ax * dt; _vy += ay * dt;
         if (_vx < 0.8) { _vx = 0.8; }
-        _posX += _vx * dt * 28.0; _posY += _vy * dt * 28.0;
+        _posX += _vx * dt * 32.0; _posY += _vy * dt * 32.0;
 
         _skiAngle = _skiAngle * 0.9 + _bodyAngle * 0.1;
         _distance = distFromTableEnd(_posX);
@@ -350,13 +350,13 @@ class BitochiJumpView extends WatchUi.View {
         var hY = hillYAtX(_posX);
         var heightAbove = hY - _posY;
 
-        if (!_landReady && heightAbove < 22.0 && _distance > 8.0) {
+        if (!_landReady && heightAbove < 35.0 && _distance > 8.0) {
             _landReady = true;
             _landReadyTick = 0;
         }
         if (_landReady) {
             _landReadyTick++;
-            if (_landReadyTick > 32 && !_landTapDone) {
+            if (_landReadyTick > 50 && !_landTapDone) {
                 _landCrash = true;
                 _posY = hY;
                 doLanding();
@@ -366,7 +366,10 @@ class BitochiJumpView extends WatchUi.View {
 
         if (_posY >= hY - 2.0 && _posX > _hillX[_tableIdx + 4]) {
             _posY = hY;
-            if (!_landTapDone) { _landCrash = true; }
+            if (!_landTapDone) {
+                if (heightAbove < 5.0) { _landTapDone = true; _landQuality = 0.3; }
+                else { _landCrash = true; }
+            }
             doLanding();
         }
         updateCamera();
@@ -383,11 +386,11 @@ class BitochiJumpView extends WatchUi.View {
             var hY = hillYAtX(_posX);
             var heightAtTap = hY - _posY;
             if (heightAtTap < 0.0) { heightAtTap = -heightAtTap; }
-            if (heightAtTap < 5.0) { _landQuality = 1.0; }
-            else if (heightAtTap < 10.0) { _landQuality = 0.8; }
-            else if (heightAtTap < 16.0) { _landQuality = 0.55; }
-            else { _landQuality = 0.3; }
-            _landGood = (_landQuality > 0.7 && _bodyAngle > 10.0 && _bodyAngle < 40.0);
+            if (heightAtTap < 8.0) { _landQuality = 1.0; }
+            else if (heightAtTap < 15.0) { _landQuality = 0.85; }
+            else if (heightAtTap < 22.0) { _landQuality = 0.65; }
+            else { _landQuality = 0.45; }
+            _landGood = (_landQuality > 0.6 && _bodyAngle > 8.0 && _bodyAngle < 42.0);
             _shakeTick = _landGood ? 5 : 8;
             doVibe(_landGood ? 40 : 70, _landGood ? 120 : 200);
             _crowdCheer = _landGood ? 50 : 25;
@@ -400,7 +403,7 @@ class BitochiJumpView extends WatchUi.View {
         _landTapDone = true;
         var hY = hillYAtX(_posX);
         var heightAbove = hY - _posY;
-        if (heightAbove < 8.0) {
+        if (heightAbove < 25.0) {
             _posY = hY;
             doLanding();
         }
@@ -681,14 +684,16 @@ class BitochiJumpView extends WatchUi.View {
                 var zoneX = _hillX[_tableIdx];
                 var ratio = (edgeX - _posX) / (edgeX - zoneX + 0.01);
                 if (ratio < 0.0) { ratio = 0.0; } if (ratio > 1.0) { ratio = 1.0; }
-                var barW = _w * 30 / 100; var barX = (_w - barW) / 2; var barY = _h - 16;
-                dc.setColor(0x333355, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(barX, barY, barW, 6);
-                var goodZone = barX + barW * 75 / 100;
-                dc.setColor(0x226622, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(goodZone, barY, barX + barW - goodZone, 6);
-                var perfZone = barX + barW * 90 / 100;
-                dc.setColor(0x44AA44, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(perfZone, barY, barX + barW - perfZone, 6);
+                var barW = _w * 40 / 100; var barX = (_w - barW) / 2; var barY = _h - 18;
+                dc.setColor(0x333355, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(barX, barY, barW, 8);
+                var okZone = barX + barW * 50 / 100;
+                dc.setColor(0x224422, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(okZone, barY, barX + barW - okZone, 8);
+                var goodZone = barX + barW * 70 / 100;
+                dc.setColor(0x226622, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(goodZone, barY, barX + barW - goodZone, 8);
+                var perfZone = barX + barW * 88 / 100;
+                dc.setColor(0x44AA44, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(perfZone, barY, barX + barW - perfZone, 8);
                 var markerPos = barX + ((1.0 - ratio) * barW.toFloat()).toNumber();
-                dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(markerPos - 1, barY - 2, 3, 10);
+                dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(markerPos - 1, barY - 3, 3, 14);
                 dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2 + 1, _h - 31, Graphics.FONT_SMALL, "TAP!", Graphics.TEXT_JUSTIFY_CENTER);
                 dc.setColor((_tick % 4 < 2) ? 0xFF4444 : 0xFFAA22, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h - 32, Graphics.FONT_SMALL, "TAP!", Graphics.TEXT_JUSTIFY_CENTER);
             }
@@ -720,12 +725,17 @@ class BitochiJumpView extends WatchUi.View {
             }
 
             if (_landReady && !_landTapDone) {
-                var urgency = _landReadyTick.toFloat() / 32.0;
+                var urgency = _landReadyTick.toFloat() / 50.0;
                 if (urgency > 1.0) { urgency = 1.0; }
-                var tapCol = (urgency > 0.7) ? 0xFF2222 : ((_tick % 4 < 2) ? 0x44FF44 : 0xFFFF44);
-                dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2 + 1, _h - 25, Graphics.FONT_SMALL, "LAND!", Graphics.TEXT_JUSTIFY_CENTER);
+                var tapCol = (urgency > 0.7) ? 0xFF2222 : (urgency > 0.4 ? ((_tick % 3 < 2) ? 0xFFFF44 : 0xFFAA22) : ((_tick % 4 < 2) ? 0x44FF44 : 0xFFFF44));
+                dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2 + 1, _h - 25, Graphics.FONT_MEDIUM, "LAND!", Graphics.TEXT_JUSTIFY_CENTER);
                 dc.setColor(tapCol, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(_w / 2, _h - 26, Graphics.FONT_SMALL, "LAND!", Graphics.TEXT_JUSTIFY_CENTER);
+                dc.drawText(_w / 2, _h - 26, Graphics.FONT_MEDIUM, "LAND!", Graphics.TEXT_JUSTIFY_CENTER);
+                var pctLeft = 1.0 - urgency;
+                var bW = _w * 30 / 100; var bX = (_w - bW) / 2; var bY = _h - 10;
+                dc.setColor(0x333355, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX, bY, bW, 4);
+                var fillW = (pctLeft * bW.toFloat()).toNumber();
+                dc.setColor(tapCol, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX, bY, fillW, 4);
             } else if (!_landReady) {
                 var bW = _w * 30 / 100; var bX = (_w - bW) / 2; var bY = _h - 12;
                 dc.setColor(0x222244, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX, bY, bW, 6);

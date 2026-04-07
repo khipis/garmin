@@ -673,7 +673,7 @@ class BitochiFishView extends WatchUi.View {
     }
 
     hidden function drawPowerBar(dc) {
-        var bW = _w * 55 / 100; var bH = 10; var bX = (_w - bW) / 2; var bY = _h - 28;
+        var bW = _w * 50 / 100; var bH = 10; var bX = (_w - bW) / 2; var bY = _h * 76 / 100;
         dc.setColor(0x333333, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX - 1, bY - 1, bW + 2, bH + 2);
         dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX, bY, bW, bH);
         var fill = (_power / 100.0 * bW.toFloat()).toNumber();
@@ -693,35 +693,38 @@ class BitochiFishView extends WatchUi.View {
         var fc = (_tick % 3 < 2) ? 0xFF4444 : 0xFFAA22;
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + 1, 6, Graphics.FONT_SMALL, "BITE!", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(fc, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, 5, Graphics.FONT_SMALL, "BITE!", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h - 22, Graphics.FONT_XTINY, "TAP NOW!", Graphics.TEXT_JUSTIFY_CENTER);
+        var tlY = _h * 80 / 100;
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, tlY - 14, Graphics.FONT_XTINY, "TAP NOW!", Graphics.TEXT_JUSTIFY_CENTER);
         var timeLeft = 60 - _biteTick;
         var tlW = _w * 40 / 100; var tlX = (_w - tlW) / 2;
-        dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(tlX, _h - 14, tlW, 4);
-        dc.setColor(0xFF4444, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(tlX, _h - 14, timeLeft * tlW / 60, 4);
+        dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(tlX, tlY, tlW, 5);
+        dc.setColor(0xFF4444, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(tlX, tlY, timeLeft * tlW / 60, 5);
     }
 
     hidden function drawFightHUD(dc) {
+        var tBarY = _h * 12 / 100;
         var bW = _w * 50 / 100; var bX = (_w - bW) / 2;
-        dc.setColor(0x333333, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX - 1, 4, bW + 2, 9);
-        dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX, 5, bW, 7);
+        dc.setColor(0x333333, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX - 1, tBarY - 1, bW + 2, 10);
+        dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX, tBarY, bW, 8);
         var tf = (_tension / _maxTension * bW.toFloat()).toNumber();
         var tc = 0x44AA44;
         if (_tension > 80.0) { tc = (_tick % 4 < 2) ? 0xFF2222 : 0xCC0000; }
         else if (_tension > 60.0) { tc = 0xFF8822; }
         else if (_tension > 40.0) { tc = 0xFFCC44; }
-        dc.setColor(tc, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX, 5, tf, 7);
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(bX - 3, 3, Graphics.FONT_XTINY, "T", Graphics.TEXT_JUSTIFY_RIGHT);
+        dc.setColor(tc, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX, tBarY, tf, 8);
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(bX - 3, tBarY - 2, Graphics.FONT_XTINY, "T", Graphics.TEXT_JUSTIFY_RIGHT);
 
+        var botY = _h * 78 / 100;
         dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _h - 20, Graphics.FONT_XTINY, _fishNames[_fishType], Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_cx, botY, Graphics.FONT_XTINY, _fishNames[_fishType], Graphics.TEXT_JUSTIFY_CENTER);
 
         if (_tension > 75.0) {
             dc.setColor((_tick % 3 < 2) ? 0xFF2222 : 0x000000, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_cx, _h - 32, Graphics.FONT_XTINY, "DANGER!", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_cx, botY - 14, Graphics.FONT_XTINY, "DANGER!", Graphics.TEXT_JUSTIFY_CENTER);
         }
 
         dc.setColor(0x44CCFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _h - 10, Graphics.FONT_XTINY, "Tap to reel!", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_cx, botY + 12, Graphics.FONT_XTINY, "Tap to reel!", Graphics.TEXT_JUSTIFY_CENTER);
 
         var arrowRad = _fishPullDir * 3.14159 / 180.0;
         var ax2 = _cx + (14.0 * Math.cos(arrowRad)).toNumber();

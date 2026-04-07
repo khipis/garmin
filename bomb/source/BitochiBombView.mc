@@ -47,7 +47,7 @@ class BitochiBombView extends WatchUi.View {
     hidden var _enemAlive;
     hidden var _enemSize;
 
-    hidden const MAX_BLDG = 12;
+    hidden const MAX_BLDG = 22;
     hidden var _bldgX;
     hidden var _bldgW;
     hidden var _bldgH;
@@ -55,7 +55,7 @@ class BitochiBombView extends WatchUi.View {
     hidden var _bldgMaxHp;
     hidden var _bldgColor;
 
-    hidden const MAX_PARTS = 120;
+    hidden const MAX_PARTS = 180;
     hidden var _partX;
     hidden var _partY;
     hidden var _partVx;
@@ -64,19 +64,19 @@ class BitochiBombView extends WatchUi.View {
     hidden var _partColor;
     hidden var _partSize;
 
-    hidden const MAX_EXPL = 18;
+    hidden const MAX_EXPL = 30;
     hidden var _explX;
     hidden var _explY;
     hidden var _explR;
     hidden var _explLife;
     hidden var _explMax;
 
-    hidden const MAX_CRATERS = 18;
+    hidden const MAX_CRATERS = 28;
     hidden var _craterX;
     hidden var _craterR;
     hidden var _craterLife;
 
-    hidden const MAX_DEBRIS = 35;
+    hidden const MAX_DEBRIS = 55;
     hidden var _debX;
     hidden var _debY;
     hidden var _debVx;
@@ -111,6 +111,10 @@ class BitochiBombView extends WatchUi.View {
     hidden var _perfectStreak;
     hidden var _cloudX;
     hidden var _cloudY;
+    hidden var _waveTheme;
+    hidden var _nightMode;
+    hidden var _hasAirstrike;
+    hidden var _airstrikeTimer;
 
     function initialize() {
         View.initialize();
@@ -131,7 +135,7 @@ class BitochiBombView extends WatchUi.View {
         _planeY = _h * 12 / 100;
         _planeX = (_w / 2).toFloat();
         _planeDir = 1;
-        _planeSpeed = 1.2;
+        _planeSpeed = 1.6;
 
         _bombX = new [MAX_BOMBS];
         _bombY = new [MAX_BOMBS];
@@ -208,6 +212,10 @@ class BitochiBombView extends WatchUi.View {
         _spawnTimer = 0; _spawnCount = 0; _totalSpawns = 0;
         _hitMsg = ""; _hitMsgTick = 0;
         _perfectStreak = 0;
+        _waveTheme = 0;
+        _nightMode = false;
+        _hasAirstrike = false;
+        _airstrikeTimer = 0;
         gameState = GS_MENU;
     }
 
@@ -242,6 +250,13 @@ class BitochiBombView extends WatchUi.View {
                 if (_wind > 0.8) { _wind = 0.8; }
                 if (_wind < -0.8) { _wind = -0.8; }
             }
+            if (_hasAirstrike) {
+                _airstrikeTimer++;
+                if (_airstrikeTimer % 80 == 0) {
+                    var ax = Math.rand().abs() % _w;
+                    doExplosion(ax, _groundY, 1);
+                }
+            }
             updatePlane();
             updateBombs();
             updateEnemies();
@@ -269,9 +284,9 @@ class BitochiBombView extends WatchUi.View {
         _planeX += _planeDir.toFloat() * _planeSpeed;
         if (_planeX > (_w - 20).toFloat()) { _planeDir = -1; }
         if (_planeX < 20.0) { _planeDir = 1; }
-        var steer = accelX.toFloat() / 200.0;
-        if (steer > 3.0) { steer = 3.0; }
-        if (steer < -3.0) { steer = -3.0; }
+        var steer = accelX.toFloat() / 150.0;
+        if (steer > 3.5) { steer = 3.5; }
+        if (steer < -3.5) { steer = -3.5; }
         _planeX += steer;
         if (_planeX < 16.0) { _planeX = 16.0; }
         if (_planeX > (_w - 16).toFloat()) { _planeX = (_w - 16).toFloat(); }
@@ -337,7 +352,7 @@ class BitochiBombView extends WatchUi.View {
         for (var i = 0; i < MAX_EXPL; i++) {
             if (_explLife[i] <= 0) { continue; }
             _explLife[i]--;
-            _explR[i] += 1.4;
+            _explR[i] += 1.8;
             for (var j = 0; j < MAX_ENEMIES; j++) {
                 if (!_enemAlive[j]) { continue; }
                 var dx = _explX[i].toFloat() - _enemX[j];
@@ -394,14 +409,14 @@ class BitochiBombView extends WatchUi.View {
     }
 
     hidden function bombsForWave(w) {
-        var b = 9 + (w * 5) / 2;
-        if (b > 32) { b = 32; }
+        var b = 10 + w * 3;
+        if (b > 40) { b = 40; }
         return b;
     }
 
     hidden function spawnsForWave(w) {
-        var s = 5 + (w * 5) / 2;
-        if (s > 48) { s = 48; }
+        var s = 6 + w * 3;
+        if (s > 55) { s = 55; }
         return s;
     }
 
@@ -478,10 +493,14 @@ class BitochiBombView extends WatchUi.View {
         _chainCount = 0; _chainMax = 0;
         _combo = 0; _maxCombo = 0;
         _perfectStreak = 0;
-        _planeSpeed = 1.15 + _wave * 0.11;
-        if (_planeSpeed > 2.75) { _planeSpeed = 2.75; }
+        _planeSpeed = 1.5 + _wave * 0.14;
+        if (_planeSpeed > 3.5) { _planeSpeed = 3.5; }
         _windDir = (Math.rand().abs() % 21) - 10;
         _wind = _windDir.toFloat() * 0.06;
+        _waveTheme = _wave % 6;
+        _nightMode = (_wave % 4 == 3);
+        _hasAirstrike = (_wave >= 5 && _wave % 3 == 0);
+        _airstrikeTimer = 0;
         for (var i = 0; i < MAX_ENEMIES; i++) { _enemAlive[i] = false; }
         for (var i = 0; i < MAX_BOMBS; i++) { _bombAlive[i] = false; }
         for (var i = 0; i < MAX_EXPL; i++) { _explLife[i] = 0; }
@@ -496,20 +515,38 @@ class BitochiBombView extends WatchUi.View {
     }
 
     hidden function spawnBuildings() {
-        var numBldg = 3 + _wave;
+        var numBldg = 6 + _wave * 2;
         if (numBldg > MAX_BLDG) { numBldg = MAX_BLDG; }
-        var bColors = [0x665544, 0x556655, 0x554455, 0x555566, 0x666644, 0x664444, 0x446666, 0x556644, 0x776655, 0x557766, 0x665577, 0x667755];
+        var bColors;
+        if (_waveTheme == 0) {
+            bColors = [0x665544, 0x556655, 0x554455, 0x555566, 0x666644, 0x664444, 0x446666, 0x556644, 0x776655, 0x557766, 0x665577, 0x667755, 0x555544, 0x445566, 0x665566, 0x556666, 0x664455, 0x554466, 0x667744, 0x556633, 0x775544, 0x446655];
+        } else if (_waveTheme == 1) {
+            bColors = [0x445577, 0x556688, 0x334466, 0x446677, 0x557799, 0x3A5577, 0x4A6688, 0x3A4A66, 0x5577AA, 0x4466AA, 0x3A5588, 0x5588AA, 0x446688, 0x556699, 0x3A4477, 0x4A5588, 0x3355AA, 0x4466BB, 0x5577CC, 0x334488, 0x445599, 0x5566AA];
+        } else if (_waveTheme == 2) {
+            bColors = [0x886644, 0x997755, 0x775533, 0xAA8855, 0x996644, 0x887744, 0x776644, 0x998866, 0x887755, 0xAA9966, 0x886655, 0x997766, 0x775544, 0x886633, 0x997744, 0xAA8844, 0x776633, 0x887744, 0x998855, 0x886644, 0x775533, 0x997755];
+        } else if (_waveTheme == 3) {
+            bColors = [0x555555, 0x666666, 0x444444, 0x777777, 0x333333, 0x888888, 0x505050, 0x606060, 0x707070, 0x404040, 0x585858, 0x686868, 0x484848, 0x787878, 0x383838, 0x989898, 0x525252, 0x626262, 0x727272, 0x424242, 0x565656, 0x676767];
+        } else if (_waveTheme == 4) {
+            bColors = [0x664444, 0x774444, 0x553333, 0x885555, 0x663333, 0x884444, 0x773333, 0x993333, 0x884444, 0x774444, 0x663333, 0x885555, 0x553333, 0x994444, 0x773333, 0x884444, 0x663333, 0x775555, 0x884455, 0x664444, 0x553344, 0x773344];
+        } else {
+            bColors = [0x446655, 0x557755, 0x338844, 0x449955, 0x557744, 0x336644, 0x448855, 0x559955, 0x337744, 0x446644, 0x558855, 0x339944, 0x447755, 0x556644, 0x448844, 0x557744, 0x336655, 0x449955, 0x558844, 0x447744, 0x336655, 0x559944];
+        }
+        var curX = 8 + Math.rand().abs() % 6;
         for (var i = 0; i < MAX_BLDG; i++) {
-            if (i < numBldg) {
-                var spacing = _w / (numBldg + 1);
-                _bldgX[i] = spacing * (i + 1);
-                _bldgW[i] = 10 + Math.rand().abs() % 12;
-                _bldgH[i] = 14 + Math.rand().abs() % 22 + _wave * 2;
-                if (_bldgH[i] > 60) { _bldgH[i] = 60; }
-                _bldgMaxHp[i] = 3 + _wave / 2;
+            if (i < numBldg && curX < _w - 8) {
+                var bw = 8 + Math.rand().abs() % 10;
+                _bldgW[i] = bw;
+                _bldgX[i] = curX + bw / 2;
+                var baseH = 18 + Math.rand().abs() % 30 + _wave * 3;
+                if (_waveTheme == 1 || _waveTheme == 3) { baseH += 10 + Math.rand().abs() % 15; }
+                if (i % 4 == 0) { baseH += 15 + Math.rand().abs() % 10; }
+                if (baseH > 80) { baseH = 80; }
+                _bldgH[i] = baseH;
+                _bldgMaxHp[i] = 2 + _wave / 2;
                 if (_bldgMaxHp[i] > 8) { _bldgMaxHp[i] = 8; }
                 _bldgHp[i] = _bldgMaxHp[i];
-                _bldgColor[i] = bColors[i % 12];
+                _bldgColor[i] = bColors[i % bColors.size()];
+                curX += bw + 1 + Math.rand().abs() % 3;
             } else {
                 _bldgHp[i] = 0;
             }
@@ -556,25 +593,38 @@ class BitochiBombView extends WatchUi.View {
 
     hidden function hitBuilding(bIdx, bx, by) {
         _bldgHp[bIdx] -= 2;
-        _shakeTimer = 10;
-        doVibe(70, 160);
+        _shakeTimer = 14;
+        doVibe(80, 200);
         spawnBuildingDebris(bx, by, _bldgColor[bIdx]);
-        spawnFireParticles(bx, by, 2);
+        spawnBuildingDebris(bx, by + 8, _bldgColor[bIdx]);
+        spawnFireParticles(bx, by, 3);
         spawnDirtEruption(bx, by);
-        _score += 40;
+        spawnGroundDebris(bx);
+        _score += 60;
 
         if (_bldgHp[bIdx] <= 0) {
             destroyBuilding(bIdx);
         }
 
-        for (var i = 0; i < MAX_EXPL; i++) {
-            if (_explLife[i] > 0) { continue; }
-            _explX[i] = bx;
-            _explY[i] = by;
-            _explR[i] = 9.0;
-            _explLife[i] = 16;
-            _explMax[i] = 16;
-            break;
+        for (var s = 0; s < 2; s++) {
+            for (var i = 0; i < MAX_EXPL; i++) {
+                if (_explLife[i] > 0) { continue; }
+                _explX[i] = bx + ((Math.rand().abs() % 12) - 6);
+                _explY[i] = by + s * 8;
+                _explR[i] = 10.0 + s.toFloat() * 3.0;
+                _explLife[i] = 18;
+                _explMax[i] = 18;
+                break;
+            }
+        }
+
+        for (var nb = 0; nb < MAX_BLDG; nb++) {
+            if (nb == bIdx || _bldgHp[nb] <= 0) { continue; }
+            var ndx = (_bldgX[bIdx] - _bldgX[nb]).abs();
+            if (ndx < _bldgW[bIdx] / 2 + _bldgW[nb] / 2 + 10) {
+                _bldgHp[nb] -= 1;
+                if (_bldgHp[nb] <= 0) { destroyBuilding(nb); }
+            }
         }
     }
 
@@ -582,75 +632,80 @@ class BitochiBombView extends WatchUi.View {
         _bldgHp[bIdx] = 0;
         var bx = _bldgX[bIdx];
         var bh = _bldgH[bIdx];
+        var bw = _bldgW[bIdx];
         var by = _groundY - bh;
-        _score += 200;
-        _shakeTimer = 18;
-        doVibe(100, 350);
+        _score += 300;
+        _shakeTimer = 22;
+        doVibe(100, 450);
         _hitMsg = "DESTROYED!";
-        _hitMsgTick = 40;
+        _hitMsgTick = 45;
 
-        spawnBuildingDebris(bx, by, _bldgColor[bIdx]);
-        spawnBuildingDebris(bx, by + bh / 3, _bldgColor[bIdx]);
-        spawnBuildingDebris(bx, by + bh * 2 / 3, _bldgColor[bIdx]);
-        spawnFireParticles(bx, by, 3);
-        spawnFireParticles(bx, by + bh / 3, 2);
-        spawnFireParticles(bx, by + bh * 2 / 3, 1);
+        for (var s = 0; s < 4; s++) {
+            spawnBuildingDebris(bx + ((Math.rand().abs() % 8) - 4), by + s * bh / 4, _bldgColor[bIdx]);
+        }
+        spawnFireParticles(bx, by, 4);
+        spawnFireParticles(bx, by + bh / 3, 3);
+        spawnFireParticles(bx, by + bh * 2 / 3, 2);
+        spawnFireParticles(bx, _groundY, 2);
         spawnGroundDebris(bx);
+        spawnGroundDebris(bx + ((Math.rand().abs() % 10) - 5));
         spawnDirtEruption(bx, _groundY);
+        spawnDirtEruption(bx, by + bh / 2);
 
         for (var i = 0; i < MAX_CRATERS; i++) {
             if (_craterLife[i] > 0) { continue; }
             _craterX[i] = bx;
-            _craterR[i] = _bldgW[bIdx] / 2 + 5;
-            _craterLife[i] = 500;
+            _craterR[i] = bw / 2 + 8;
+            _craterLife[i] = 600;
             break;
         }
 
-        for (var i = 0; i < MAX_EXPL; i++) {
-            if (_explLife[i] > 0) { continue; }
-            _explX[i] = bx;
-            _explY[i] = by + bh / 4;
-            _explR[i] = 12.0;
-            _explLife[i] = 22;
-            _explMax[i] = 22;
-            break;
+        for (var e = 0; e < 3; e++) {
+            for (var i = 0; i < MAX_EXPL; i++) {
+                if (_explLife[i] > 0) { continue; }
+                _explX[i] = bx + ((Math.rand().abs() % 14) - 7);
+                _explY[i] = by + e * bh / 3 + ((Math.rand().abs() % 6) - 3);
+                _explR[i] = 14.0 - e.toFloat() * 2.0;
+                _explLife[i] = 24 - e * 3;
+                _explMax[i] = _explLife[i];
+                break;
+            }
         }
-        for (var i = 0; i < MAX_EXPL; i++) {
-            if (_explLife[i] > 0) { continue; }
-            _explX[i] = bx + ((Math.rand().abs() % 10) - 5);
-            _explY[i] = by + bh * 2 / 3;
-            _explR[i] = 8.0;
-            _explLife[i] = 16;
-            _explMax[i] = 16;
-            break;
+
+        for (var j = 0; j < MAX_ENEMIES; j++) {
+            if (!_enemAlive[j]) { continue; }
+            var edx = (bx - _enemX[j].toNumber()).abs();
+            if (edx < bw / 2 + 15) {
+                killEnemy(j, true);
+            }
         }
     }
 
     hidden function doExplosion(ex, ey, chainLevel) {
-        _shakeTimer = 8 + chainLevel * 6;
+        _shakeTimer = 12 + chainLevel * 8;
         _chainCount = chainLevel;
         if (_chainCount > _chainMax) { _chainMax = _chainCount; }
-        doVibe(60 + chainLevel * 30, 120 + chainLevel * 60);
+        doVibe(80 + chainLevel * 40, 180 + chainLevel * 80);
 
         for (var i = 0; i < MAX_EXPL; i++) {
             if (_explLife[i] > 0) { continue; }
             _explX[i] = ex;
             _explY[i] = ey;
-            _explR[i] = 8.0 + chainLevel.toFloat() * 4.0;
-            _explLife[i] = 20 + chainLevel * 5;
+            _explR[i] = 12.0 + chainLevel.toFloat() * 6.0;
+            _explLife[i] = 24 + chainLevel * 6;
             _explMax[i] = _explLife[i];
             break;
         }
 
-        if (chainLevel > 0 || Math.rand().abs() % 3 == 0) {
-            var offX = ((Math.rand().abs() % 16) - 8);
-            var offY = -((Math.rand().abs() % 8));
+        for (var s = 0; s < 2; s++) {
+            var offX = ((Math.rand().abs() % 22) - 11);
+            var offY = -((Math.rand().abs() % 12));
             for (var i = 0; i < MAX_EXPL; i++) {
                 if (_explLife[i] > 0) { continue; }
                 _explX[i] = ex + offX;
                 _explY[i] = ey + offY;
-                _explR[i] = 4.0 + chainLevel.toFloat() * 2.0;
-                _explLife[i] = 14 + chainLevel * 3;
+                _explR[i] = 6.0 + chainLevel.toFloat() * 3.0;
+                _explLife[i] = 16 + chainLevel * 4;
                 _explMax[i] = _explLife[i];
                 break;
             }
@@ -659,15 +714,16 @@ class BitochiBombView extends WatchUi.View {
         for (var i = 0; i < MAX_CRATERS; i++) {
             if (_craterLife[i] > 0) { continue; }
             _craterX[i] = ex;
-            _craterR[i] = 8 + chainLevel * 4;
-            _craterLife[i] = 400;
+            _craterR[i] = 10 + chainLevel * 5;
+            _craterLife[i] = 500;
             break;
         }
 
-        spawnFireParticles(ex, ey, chainLevel);
+        spawnFireParticles(ex, ey, chainLevel + 1);
         spawnGroundDebris(ex);
         spawnDirtEruption(ex, ey);
-        if (Math.rand().abs() % 2 == 0) { spawnWaterParticles(ex, ey - 5); }
+        spawnDirtEruption(ex + ((Math.rand().abs() % 10) - 5), ey);
+        spawnWaterParticles(ex, ey - 5);
 
         var hitAny = false;
         for (var j = 0; j < MAX_ENEMIES; j++) {
@@ -675,10 +731,23 @@ class BitochiBombView extends WatchUi.View {
             var dx = ex - _enemX[j].toNumber();
             var dy = ey - _enemY[j];
             var dist = Math.sqrt((dx * dx + dy * dy).toFloat());
-            var hitR = 20.0 + chainLevel.toFloat() * 5.0 + _enemSize[j].toFloat();
+            var hitR = 26.0 + chainLevel.toFloat() * 7.0 + _enemSize[j].toFloat();
             if (dist < hitR) {
                 killEnemy(j, chainLevel > 0);
                 hitAny = true;
+            }
+        }
+
+        for (var b = 0; b < MAX_BLDG; b++) {
+            if (_bldgHp[b] <= 0) { continue; }
+            var bdx = (ex - _bldgX[b]).abs();
+            if (bdx < 18 + chainLevel * 6 + _bldgW[b] / 2) {
+                var bTop = _groundY - _bldgH[b];
+                if (ey > bTop - 12) {
+                    _bldgHp[b] -= 1 + chainLevel;
+                    if (_bldgHp[b] <= 0) { destroyBuilding(b); }
+                    else { spawnBuildingDebris(_bldgX[b], bTop, _bldgColor[b]); }
+                }
             }
         }
 
@@ -757,35 +826,35 @@ class BitochiBombView extends WatchUi.View {
     }
 
     hidden function spawnFireParticles(ex, ey, chain) {
-        var pal = [0xFF6622, 0xFFAA22, 0xFFFF44, 0xFF4400, 0xFFCC00, 0xFF8800, 0xFFFFAA, 0xFF2200];
-        var fireN = 18 + chain * 7;
-        if (fireN > 35) { fireN = 35; }
+        var pal = [0xFF6622, 0xFFAA22, 0xFFFF44, 0xFF4400, 0xFFCC00, 0xFF8800, 0xFFFFAA, 0xFF2200, 0xFF3300, 0xFFDD00];
+        var fireN = 24 + chain * 10;
+        if (fireN > 50) { fireN = 50; }
         var spawned = 0;
         for (var i = 0; i < MAX_PARTS; i++) {
             if (spawned >= fireN) { break; }
             if (_partLife[i] > 0) { continue; }
-            _partX[i] = ex.toFloat() + ((Math.rand().abs() % 11) - 5).toFloat();
+            _partX[i] = ex.toFloat() + ((Math.rand().abs() % 16) - 8).toFloat();
             _partY[i] = ey.toFloat();
             var a = (Math.rand().abs() % 360).toFloat() * 3.14159 / 180.0;
-            var spd = 2.2 + (Math.rand().abs() % 50).toFloat() / 10.0;
+            var spd = 2.8 + (Math.rand().abs() % 60).toFloat() / 10.0;
             _partVx[i] = spd * Math.cos(a);
-            _partVy[i] = -spd * Math.sin(a) - 2.0;
-            _partLife[i] = 12 + Math.rand().abs() % 18;
-            _partColor[i] = pal[Math.rand().abs() % 8];
-            _partSize[i] = 1 + Math.rand().abs() % 3;
+            _partVy[i] = -spd * Math.sin(a) - 2.5;
+            _partLife[i] = 14 + Math.rand().abs() % 22;
+            _partColor[i] = pal[Math.rand().abs() % 10];
+            _partSize[i] = 1 + Math.rand().abs() % 4;
             spawned++;
         }
         var smokeN = 0;
         for (var i = 0; i < MAX_PARTS; i++) {
-            if (smokeN >= 8) { break; }
+            if (smokeN >= 12) { break; }
             if (_partLife[i] > 0) { continue; }
-            _partX[i] = ex.toFloat() + ((Math.rand().abs() % 18) - 9).toFloat();
+            _partX[i] = ex.toFloat() + ((Math.rand().abs() % 22) - 11).toFloat();
             _partY[i] = ey.toFloat();
-            _partVx[i] = ((Math.rand().abs() % 12) - 6).toFloat() * 0.16 + _wind * 0.4;
-            _partVy[i] = -1.0 - (Math.rand().abs() % 14).toFloat() * 0.08;
-            _partLife[i] = 28 + Math.rand().abs() % 22;
-            _partColor[i] = (Math.rand().abs() % 3 == 0) ? 0x444444 : 0x333333;
-            _partSize[i] = 2 + Math.rand().abs() % 3;
+            _partVx[i] = ((Math.rand().abs() % 16) - 8).toFloat() * 0.18 + _wind * 0.5;
+            _partVy[i] = -1.2 - (Math.rand().abs() % 18).toFloat() * 0.1;
+            _partLife[i] = 32 + Math.rand().abs() % 26;
+            _partColor[i] = (Math.rand().abs() % 3 == 0) ? 0x555555 : 0x333333;
+            _partSize[i] = 2 + Math.rand().abs() % 4;
             smokeN++;
         }
     }
@@ -929,14 +998,38 @@ class BitochiBombView extends WatchUi.View {
         var h = _h;
         var gy = _groundY;
 
-        dc.setColor(0x101830, 0x101830);
+        var skyTop; var skyMid; var skyBot; var bgCol;
+        if (_nightMode) {
+            bgCol = 0x060610; skyTop = 0x0A0A1A; skyMid = 0x101028; skyBot = 0x181838;
+        } else if (_waveTheme == 1) {
+            bgCol = 0x182040; skyTop = 0x203060; skyMid = 0x2A4078; skyBot = 0x3A5090;
+        } else if (_waveTheme == 2) {
+            bgCol = 0x201008; skyTop = 0x301810; skyMid = 0x4A2818; skyBot = 0x5A3828;
+        } else if (_waveTheme == 4) {
+            bgCol = 0x180808; skyTop = 0x281010; skyMid = 0x381818; skyBot = 0x482020;
+        } else if (_waveTheme == 5) {
+            bgCol = 0x081810; skyTop = 0x102818; skyMid = 0x183828; skyBot = 0x204830;
+        } else {
+            bgCol = 0x101830; skyTop = 0x182040; skyMid = 0x203058; skyBot = 0x2A4070;
+        }
+        dc.setColor(bgCol, bgCol);
         dc.clear();
-        dc.setColor(0x182040, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(skyTop, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, 0, w, gy * 35 / 100 + oy);
-        dc.setColor(0x203058, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(skyMid, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, gy * 35 / 100 + oy, w, gy * 25 / 100);
-        dc.setColor(0x2A4070, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(skyBot, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, gy * 60 / 100 + oy, w, gy - gy * 60 / 100);
+
+        if (_nightMode) {
+            for (var st = 0; st < 18; st++) {
+                var stx = ((st * 47 + 13) % w);
+                var sty = ((st * 31 + 7) % (gy * 60 / 100));
+                var bright = ((_tick + st * 5) % 12 < 6) ? 0xBBBBCC : 0x777788;
+                dc.setColor(bright, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(stx + ox, sty + oy, 1);
+            }
+        }
 
         for (var i = 0; i < 5; i++) {
             var ccx = _cloudX[i].toNumber() + ox;
@@ -949,20 +1042,40 @@ class BitochiBombView extends WatchUi.View {
             dc.fillCircle(ccx + 5, ccy - 3, 5 + i);
         }
 
-        dc.setColor(0x2A3052, Graphics.COLOR_TRANSPARENT);
+        var silC = _nightMode ? 0x0A0A18 : (_waveTheme == 2 ? 0x3A2818 : (_waveTheme == 4 ? 0x2A1818 : 0x2A3052));
+        dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
         for (var hx = 0; hx < w; hx += 3) {
-            var mh = 8 + ((hx * 7 + 13) % 15);
+            var mh = 10 + ((hx * 7 + 13) % 20) + _wave;
+            if (mh > 35) { mh = 35; }
             dc.fillRectangle(hx + ox, gy - mh + oy, 3, mh);
         }
+        if (_nightMode) {
+            dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
+            for (var wx = 5; wx < w; wx += 11) {
+                if ((wx * 3 + _tick) % 13 < 5) {
+                    dc.fillRectangle(wx + ox, gy - 8 - ((wx * 7 + 13) % 20) + oy, 1, 1);
+                }
+            }
+        }
 
-        dc.setColor(0x3A5A28, Graphics.COLOR_TRANSPARENT);
+        var gndC1; var gndC2; var gndC3; var grsC1; var grsC2;
+        if (_waveTheme == 2) {
+            gndC1 = 0x5A4A28; gndC2 = 0x6A5A30; gndC3 = 0x5A4A2A; grsC1 = 0x7A6A38; grsC2 = 0x5A4A20;
+        } else if (_waveTheme == 3 || _nightMode) {
+            gndC1 = 0x2A2A28; gndC2 = 0x3A3A30; gndC3 = 0x2A2A2A; grsC1 = 0x3A3A38; grsC2 = 0x2A2A20;
+        } else if (_waveTheme == 4) {
+            gndC1 = 0x3A2A18; gndC2 = 0x4A3A20; gndC3 = 0x3A2A1A; grsC1 = 0x5A3A28; grsC2 = 0x3A2A10;
+        } else {
+            gndC1 = 0x3A5A28; gndC2 = 0x4A7A30; gndC3 = 0x4A6A2A; grsC1 = 0x5A8A38; grsC2 = 0x3A5A20;
+        }
+        dc.setColor(gndC1, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, gy + oy, w, h - gy);
-        dc.setColor(0x4A7A30, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(gndC2, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, gy + oy, w, 2);
-        dc.setColor(0x4A6A2A, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(gndC3, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, gy + 2 + oy, w, 2);
         for (var g = 0; g < w; g += 5) {
-            dc.setColor((g % 3 == 0) ? 0x5A8A38 : 0x3A5A20, Graphics.COLOR_TRANSPARENT);
+            dc.setColor((g % 3 == 0) ? grsC1 : grsC2, Graphics.COLOR_TRANSPARENT);
             var gh = 2 + (g % 7);
             dc.drawLine(g + ox, gy + oy, g + ((g % 2 == 0) ? 1 : -1) + ox, gy - gh + oy);
         }
@@ -1060,6 +1173,17 @@ class BitochiBombView extends WatchUi.View {
 
             dc.setColor(darker, Graphics.COLOR_TRANSPARENT);
             dc.fillRectangle(bx - bw / 2 - 1, by - 2, bw + 2, 3);
+
+            if (bh > 40) {
+                dc.setColor(0x888888, Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(bx, by - 6, 1, 6);
+                if ((_tick + b * 7) % 20 < 10) {
+                    dc.setColor(0xFF2222, Graphics.COLOR_TRANSPARENT);
+                } else {
+                    dc.setColor(0x882222, Graphics.COLOR_TRANSPARENT);
+                }
+                dc.fillCircle(bx, by - 7, 1);
+            }
         }
     }
 
@@ -1419,6 +1543,12 @@ class BitochiBombView extends WatchUi.View {
             dc.setColor(0xFF9922, Graphics.COLOR_TRANSPARENT);
             dc.drawText(_cx, _cy + 10, Graphics.FONT_XTINY, "STREAK x" + _combo, Graphics.TEXT_JUSTIFY_CENTER);
         }
+
+        if (_hasAirstrike && _airstrikeTimer % 80 > 60) {
+            var warn = (_tick % 4 < 2) ? 0xFF2222 : 0xCC0000;
+            dc.setColor(warn, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_cx, _h * 70 / 100, Graphics.FONT_XTINY, "AIRSTRIKE!", Graphics.TEXT_JUSTIFY_CENTER);
+        }
     }
 
     hidden function drawMenu(dc) {
@@ -1523,9 +1653,13 @@ class BitochiBombView extends WatchUi.View {
         dc.setColor(0x88AACC, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_cx, _h * 66 / 100, Graphics.FONT_XTINY, "BOMBS +" + bombsForWave(_wave + 1), Graphics.TEXT_JUSTIFY_CENTER);
 
-        var msgs = ["Arming payload...", "Targets incoming!", "Wind shifting...", "New zone ahead!", "Structures detected!", "Reinforcements!"];
+        var msgs = ["Arming payload...", "Urban zone ahead!", "Desert sector!", "Industrial district!", "Warzone detected!", "Green zone!", "Night assault!", "Massive structures!", "Reinforcements!", "Total annihilation!"];
         dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _h * 76 / 100, Graphics.FONT_XTINY, msgs[_wave % msgs.size()], Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_cx, _h * 72 / 100, Graphics.FONT_XTINY, msgs[_wave % msgs.size()], Graphics.TEXT_JUSTIFY_CENTER);
+        if (_wave >= 5 && (_wave + 1) % 3 == 0) {
+            dc.setColor(0xFF4444, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_cx, _h * 79 / 100, Graphics.FONT_XTINY, "AIRSTRIKE INCOMING", Graphics.TEXT_JUSTIFY_CENTER);
+        }
 
         if (_betweenTick > 30) {
             dc.setColor(0x88AACC, Graphics.COLOR_TRANSPARENT);
