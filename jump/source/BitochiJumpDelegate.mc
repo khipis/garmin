@@ -5,28 +5,16 @@ class BitochiJumpDelegate extends WatchUi.BehaviorDelegate {
 
     hidden var _view;
     hidden var _sensorEnabled;
-    hidden var _lastMag;
-    hidden var _shakeThreshold;
 
     function initialize(view) {
         BehaviorDelegate.initialize();
         _view = view;
         _sensorEnabled = false;
-        _lastMag = 0;
-        _shakeThreshold = 2500;
-        enableAccel();
-    }
-
-    hidden function enableAccel() {
-        if (Toybox has :Sensor) {
-            if (Sensor has :enableSensorEvents) {
-                try {
-                    Sensor.enableSensorEvents(method(:onSensor));
-                    _sensorEnabled = true;
-                } catch (e) {
-                    _sensorEnabled = false;
-                }
-            }
+        if (Toybox has :Sensor && Sensor has :enableSensorEvents) {
+            try {
+                Sensor.enableSensorEvents(method(:onSensor));
+                _sensorEnabled = true;
+            } catch (e) {}
         }
     }
 
@@ -34,52 +22,16 @@ class BitochiJumpDelegate extends WatchUi.BehaviorDelegate {
         if (sensorInfo == null) { return; }
         var accel = sensorInfo.accel;
         if (accel == null) { return; }
-
-        var ax = accel[0];
-        var ay = accel[1];
-        var az = accel[2];
-        var mag = ax * ax + ay * ay + az * az;
-
-        if (_lastMag > 0) {
-            var diff = mag - _lastMag;
-            if (diff < 0) { diff = -diff; }
-            _view.accelMag = diff;
-
-            if (_view.gameState == JS_TAKEOFF && diff > _shakeThreshold) {
-                _view.executeTakeoff(true);
-                WatchUi.requestUpdate();
-            }
-
-            if (_view.gameState == JS_FLIGHT) {
-                if (az < -200) {
-                    _view.setLean(1);
-                } else if (az > 200) {
-                    _view.setLean(-1);
-                } else {
-                    _view.setLean(0);
-                }
-            }
-        }
-        _lastMag = mag;
+        _view.accelX = accel[0];
+        _view.accelY = accel[1];
     }
 
-    function onSelect() {
-        _view.doAction();
-        WatchUi.requestUpdate();
-        return true;
-    }
-
-    function onMenu() {
-        _view.doAction();
-        WatchUi.requestUpdate();
-        return true;
-    }
+    function onSelect() { _view.doAction(); WatchUi.requestUpdate(); return true; }
+    function onMenu() { _view.doAction(); WatchUi.requestUpdate(); return true; }
 
     function onPreviousPage() {
-        if (_view.gameState == JS_SELECT) {
+        if (_view.gameState == JS_MENU) {
             _view.cycleJumper(-1);
-        } else if (_view.gameState == JS_FLIGHT) {
-            _view.setLean(1);
         } else {
             _view.doAction();
         }
@@ -88,10 +40,8 @@ class BitochiJumpDelegate extends WatchUi.BehaviorDelegate {
     }
 
     function onNextPage() {
-        if (_view.gameState == JS_SELECT) {
+        if (_view.gameState == JS_MENU) {
             _view.cycleJumper(1);
-        } else if (_view.gameState == JS_FLIGHT) {
-            _view.setLean(-1);
         } else {
             _view.doAction();
         }
@@ -100,9 +50,7 @@ class BitochiJumpDelegate extends WatchUi.BehaviorDelegate {
     }
 
     function onBack() {
-        if (_sensorEnabled) {
-            Sensor.enableSensorEvents(null);
-        }
+        if (_sensorEnabled) { Sensor.enableSensorEvents(null); }
         return false;
     }
 }
