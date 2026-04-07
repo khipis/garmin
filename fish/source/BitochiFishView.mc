@@ -155,7 +155,7 @@ class BitochiFishView extends WatchUi.View {
         for (var i = 0; i < RIPPLE_N; i++) { if (_ripLife[i] <= 0) { continue; } _ripR[i] += 0.45; _ripLife[i]--; }
 
         if (gameState == GS_POWER) {
-            _power += _powerDir.toFloat() * 3.8;
+            _power += _powerDir.toFloat() * 6.0;
             if (_power >= 100.0) { _power = 100.0; _powerDir = -1; }
             if (_power <= 0.0) { _power = 0.0; _powerDir = 1; }
         } else if (gameState == GS_CAST) {
@@ -418,8 +418,8 @@ class BitochiFishView extends WatchUi.View {
         dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT); dc.fillCircle(30 + ox, 22 + oy, 14);
         dc.setColor(0xFFEE66, Graphics.COLOR_TRANSPARENT); dc.fillCircle(30 + ox, 22 + oy, 10);
         dc.setColor(0xFFFFAA, Graphics.COLOR_TRANSPARENT); dc.fillCircle(30 + ox, 22 + oy, 6);
-        for (var r = 0; r < 8; r++) {
-            var ra = (r * 45 + _tick * 2) % 360;
+        for (var r = 0; r < 4; r++) {
+            var ra = (r * 90 + _tick * 2) % 360;
             var rr = ra.toFloat() * 3.14159 / 180.0;
             dc.setColor(0xFFDD66, Graphics.COLOR_TRANSPARENT);
             dc.drawLine(30 + ox + (15.0 * Math.cos(rr)).toNumber(), 22 + oy + (15.0 * Math.sin(rr)).toNumber(),
@@ -440,12 +440,12 @@ class BitochiFishView extends WatchUi.View {
         var gy = _waterY + oy;
         dc.setColor(0x3A8A22, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(_w * 65 / 100, gy - 28, _w * 35 / 100, 28);
         dc.setColor(0x4A9A30, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(_w * 65 / 100, gy - 28, _w * 35 / 100, 3);
-        for (var g = _w * 65 / 100; g < _w; g += 3) {
+        for (var g = _w * 65 / 100; g < _w; g += 5) {
             dc.setColor(0x5AAA38, Graphics.COLOR_TRANSPARENT);
             dc.drawLine(g + ox, gy - 28, g + 1 + ox, gy - 31 - (g % 5));
         }
-        for (var f = 0; f < 5; f++) {
-            var fx = _w * 67 / 100 + f * 8; var ftop = gy - 28 - 3 - (f % 3) * 2;
+        for (var f = 0; f < 3; f++) {
+            var fx = _w * 67 / 100 + f * 12; var ftop = gy - 28 - 3 - (f % 3) * 2;
             dc.setColor((f % 2 == 0) ? 0xFF4466 : 0xFFCC44, Graphics.COLOR_TRANSPARENT);
             dc.fillCircle(fx + ox, ftop, 2);
             dc.setColor(0x33AA33, Graphics.COLOR_TRANSPARENT);
@@ -470,14 +470,14 @@ class BitochiFishView extends WatchUi.View {
     hidden function drawWater(dc, ox, oy) {
         var wy = _waterY + oy;
         dc.setColor(0x2266AA, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, wy, _w, _h - wy);
-        for (var x = 0; x < _w; x += 3) {
+        for (var x = 0; x < _w; x += 5) {
             var wh = (Math.sin((x.toFloat() + _waveOff * 20.0) * 0.08) * 2.5).toNumber();
-            dc.setColor(0x3388BB, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(x + ox, wy + wh, 3, 3);
-            dc.setColor(0x44AABB, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(x + ox, wy + wh, 3, 1);
+            dc.setColor(0x3388BB, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(x + ox, wy + wh, 5, 3);
+            dc.setColor(0x44AABB, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(x + ox, wy + wh, 5, 1);
         }
         dc.setColor(0x1A5599, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, wy + 5, _w, _h - wy - 5);
-        for (var d = 0; d < 5; d++) {
-            var dy = wy + 14 + d * 15;
+        for (var d = 0; d < 3; d++) {
+            var dy = wy + 14 + d * 20;
             dc.setColor((d % 2 == 0) ? 0x1A4488 : 0x1A5599, Graphics.COLOR_TRANSPARENT);
             for (var x = 0; x < _w; x += 18) { dc.fillRectangle((x + (_tick / 2 + d * 7) % 18 - 9) + ox, dy, 10, 1); }
         }
@@ -687,15 +687,16 @@ class BitochiFishView extends WatchUi.View {
         dc.setColor(0x88CCFF, Graphics.COLOR_TRANSPARENT);
         var dots = (_tick / 8) % 4; var txt = "Waiting";
         for (var d = 0; d < dots; d++) { txt += "."; }
-        dc.drawText(_cx, 5, Graphics.FONT_XTINY, txt, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_cx, _h * 84 / 100, Graphics.FONT_XTINY, txt, Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawBiteAlert(dc) {
         var fc = (_tick % 3 < 2) ? 0xFF4444 : 0xFFAA22;
-        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + 1, 6, Graphics.FONT_SMALL, "BITE!", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(fc, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, 5, Graphics.FONT_SMALL, "BITE!", Graphics.TEXT_JUSTIFY_CENTER);
-        var tlY = _h * 80 / 100;
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, tlY - 14, Graphics.FONT_XTINY, "TAP NOW!", Graphics.TEXT_JUSTIFY_CENTER);
+        var biteY = _waterY * 28 / 100;
+        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + 1, biteY + 1, Graphics.FONT_SMALL, "BITE!", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(fc, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, biteY, Graphics.FONT_SMALL, "BITE!", Graphics.TEXT_JUSTIFY_CENTER);
+        var tlY = _h * 84 / 100;
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, tlY - 13, Graphics.FONT_XTINY, "TAP NOW!", Graphics.TEXT_JUSTIFY_CENTER);
         var timeLeft = 80 - _biteTick;
         var tlW = _w * 40 / 100; var tlX = (_w - tlW) / 2;
         dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(tlX, tlY, tlW, 5);
@@ -714,18 +715,16 @@ class BitochiFishView extends WatchUi.View {
         else if (_tension > 40.0) { tc = 0xFFCC44; }
         dc.setColor(tc, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX, tBarY, tf, 8);
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(bX - 3, tBarY - 2, Graphics.FONT_XTINY, "T", Graphics.TEXT_JUSTIFY_RIGHT);
-
-        var botY = _h * 78 / 100;
-        dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, botY, Graphics.FONT_XTINY, _fishNames[_fishType], Graphics.TEXT_JUSTIFY_CENTER);
-
         if (_tension > 75.0) {
             dc.setColor((_tick % 3 < 2) ? 0xFF2222 : 0x000000, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_cx, botY - 14, Graphics.FONT_XTINY, "DANGER!", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(bX + bW + 4, tBarY - 2, Graphics.FONT_XTINY, "!", Graphics.TEXT_JUSTIFY_LEFT);
         }
 
+        dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_cx, _h * 22 / 100, Graphics.FONT_XTINY, _fishNames[_fishType], Graphics.TEXT_JUSTIFY_CENTER);
+
         dc.setColor(0x44CCFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, botY + 12, Graphics.FONT_XTINY, "Tap to reel!", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_cx, _h * 88 / 100, Graphics.FONT_XTINY, "Tap to reel!", Graphics.TEXT_JUSTIFY_CENTER);
 
         var arrowRad = _fishPullDir * 3.14159 / 180.0;
         var ax2 = _cx + (14.0 * Math.cos(arrowRad)).toNumber();
@@ -735,9 +734,10 @@ class BitochiFishView extends WatchUi.View {
     }
 
     hidden function drawReelAnim(dc) {
-        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + 1, 6, Graphics.FONT_SMALL, "REELING!", Graphics.TEXT_JUSTIFY_CENTER);
+        var ry = _waterY * 28 / 100;
+        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + 1, ry + 1, Graphics.FONT_SMALL, "REELING!", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor((_tick % 6 < 3) ? 0x44FF88 : 0x22CC66, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, 5, Graphics.FONT_SMALL, "REELING!", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_cx, ry, Graphics.FONT_SMALL, "REELING!", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawResultMsg(dc) {
@@ -789,12 +789,10 @@ class BitochiFishView extends WatchUi.View {
     hidden function drawHUD(dc) {
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w - 5, 2, Graphics.FONT_XTINY, "" + _score, Graphics.TEXT_JUSTIFY_RIGHT);
-        if (_fishCaught > 0) {
-            dc.setColor(0x88CCFF, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(5, 2, Graphics.FONT_XTINY, "" + _fishCaught + " fish", Graphics.TEXT_JUSTIFY_LEFT);
-        }
+        dc.setColor(0x88CCFF, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(5, 2, Graphics.FONT_XTINY, (_fishCaught > 0 ? "" + _fishCaught + " fish" : ""), Graphics.TEXT_JUSTIFY_LEFT);
         dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(5, _waterY - 16, Graphics.FONT_XTINY, "Lv" + _level, Graphics.TEXT_JUSTIFY_LEFT);
+        dc.drawText(5, 14, Graphics.FONT_XTINY, "Lv" + _level, Graphics.TEXT_JUSTIFY_LEFT);
     }
 
     hidden function drawMenu(dc) {
