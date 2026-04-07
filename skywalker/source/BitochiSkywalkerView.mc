@@ -73,6 +73,14 @@ class BitochiSkywalkerView extends WatchUi.View {
     hidden var _starX;
     hidden var _starY;
     hidden var _starB;
+    hidden var _starPhase;
+
+    hidden var _cometActive;
+    hidden var _cometX;
+    hidden var _cometY;
+    hidden var _cometVx;
+    hidden var _cometVy;
+    hidden var _cometLife;
 
     hidden var _betweenTick;
     hidden var _shotMsg;
@@ -133,11 +141,17 @@ class BitochiSkywalkerView extends WatchUi.View {
         _starX = new [STAR_COUNT];
         _starY = new [STAR_COUNT];
         _starB = new [STAR_COUNT];
+        _starPhase = new [STAR_COUNT];
         for (var i = 0; i < STAR_COUNT; i++) {
             _starX[i] = Math.rand().abs() % _worldW;
             _starY[i] = Math.rand().abs() % _worldH;
             _starB[i] = Math.rand().abs() % 4;
+            _starPhase[i] = (Math.rand().abs() % 628).toFloat() / 100.0;
         }
+        _cometActive = false;
+        _cometX = 0.0; _cometY = 0.0;
+        _cometVx = 0.0; _cometVy = 0.0;
+        _cometLife = 0;
 
         _shotFlash = 0;
         _hitX = 0.0; _hitY = 0.0; _hitShow = 0;
@@ -179,6 +193,25 @@ class BitochiSkywalkerView extends WatchUi.View {
         _tick++;
         _swayPhase += 0.1;
         _driftPhase += 0.03;
+
+        for (var si = 0; si < STAR_COUNT; si++) {
+            _starPhase[si] += 0.04 + (si % 5).toFloat() * 0.015;
+        }
+
+        if (_cometActive) {
+            _cometX += _cometVx;
+            _cometY += _cometVy;
+            _cometLife--;
+            if (_cometLife <= 0) { _cometActive = false; }
+        } else if (_tick % 180 == 0 && Math.rand().abs() % 3 == 0) {
+            _cometActive = true;
+            _cometX = (Math.rand().abs() % _worldW).toFloat();
+            _cometY = (Math.rand().abs() % (_worldH / 3)).toFloat();
+            _cometVx = 3.0 + (Math.rand().abs() % 30).toFloat() / 10.0;
+            _cometVy = 1.0 + (Math.rand().abs() % 15).toFloat() / 10.0;
+            if (Math.rand().abs() % 2 == 0) { _cometVx = -_cometVx; }
+            _cometLife = 40 + Math.rand().abs() % 30;
+        }
 
         if (gameState == SS_HUNT) {
             updateAim();
@@ -517,13 +550,54 @@ class BitochiSkywalkerView extends WatchUi.View {
             sx = (_starX[i].toFloat() - _aimX * parallax).toNumber() + _cx + offX;
             sy = (_starY[i].toFloat() - _aimY * parallax).toNumber() + _cy + offY;
             if (sx < -10 || sx > _w + 10 || sy < -10 || sy > _h + 10) { continue; }
+
+            var twinkle = Math.sin(_starPhase[i]);
             var sc;
-            if (_starB[i] == 0) { sc = 0x444455; }
-            else if (_starB[i] == 1) { sc = 0x7788AA; }
-            else if (_starB[i] == 2) { sc = 0xAABBDD; }
-            else { sc = 0xDDEEFF; }
+            if (twinkle < -0.3) {
+                if (_starB[i] >= 2) { sc = 0x667788; } else { sc = 0x333344; }
+            } else if (twinkle < 0.3) {
+                if (_starB[i] == 0) { sc = 0x444455; }
+                else if (_starB[i] == 1) { sc = 0x7788AA; }
+                else if (_starB[i] == 2) { sc = 0xAABBDD; }
+                else { sc = 0xDDEEFF; }
+            } else {
+                if (_starB[i] <= 1) { sc = 0x99AACC; }
+                else { sc = 0xFFFFFF; }
+            }
             dc.setColor(sc, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(sx, sy, (_starB[i] > 2) ? 2 : 1);
+            var sr = (_starB[i] > 2) ? 2 : 1;
+            if (twinkle > 0.7 && _starB[i] >= 2) { sr = 3; }
+            dc.fillCircle(sx, sy, sr);
+
+            if (twinkle > 0.85 && _starB[i] == 3) {
+                dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+                dc.drawLine(sx - 3, sy, sx + 3, sy);
+                dc.drawLine(sx, sy - 3, sx, sy + 3);
+            }
+        }
+
+        if (_cometActive) {
+            var cp = 0.5;
+            var ccx = (_cometX - _aimX * cp).toNumber() + _cx + offX;
+            var ccy = (_cometY - _aimY * cp).toNumber() + _cy + offY;
+            if (ccx > -50 && ccx < _w + 50 && ccy > -50 && ccy < _h + 50) {
+                dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(ccx, ccy, 2);
+                dc.setColor(0xCCDDFF, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(ccx, ccy, 1);
+                var tailLen = 5;
+                if (tailLen > _cometLife) { tailLen = _cometLife; }
+                for (var ct = 1; ct <= tailLen; ct++) {
+                    var tx = ccx - (_cometVx * ct.toFloat() * 0.7).toNumber();
+                    var ty = ccy - (_cometVy * ct.toFloat() * 0.7).toNumber();
+                    var ta;
+                    if (ct <= 2) { ta = 0xAABBDD; }
+                    else if (ct <= 4) { ta = 0x667788; }
+                    else { ta = 0x334455; }
+                    dc.setColor(ta, Graphics.COLOR_TRANSPARENT);
+                    dc.fillCircle(tx, ty, 1);
+                }
+            }
         }
 
         for (i = 0; i < 3; i++) {
