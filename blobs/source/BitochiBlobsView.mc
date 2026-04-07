@@ -10,8 +10,8 @@ enum {
     GS_MENU, GS_INTRO, GS_TURN, GS_MOVE,
     GS_AIM, GS_FLY, GS_BOOM, GS_WIN, GS_OVER
 }
-enum { WPN_ROCKET, WPN_GRENADE, WPN_MEGA, WPN_SNIPER, WPN_MIRV, WPN_QUAKE }
-const WPN_COUNT = 6;
+enum { WPN_ROCKET, WPN_GRENADE, WPN_MEGA, WPN_SNIPER, WPN_MIRV, WPN_QUAKE, WPN_CLUSTER, WPN_PLASMA }
+const WPN_COUNT = 8;
 
 class BitochiBlobsView extends WatchUi.View {
 
@@ -138,13 +138,13 @@ class BitochiBlobsView extends WatchUi.View {
         }
         _blobCount = 3; _activeIdx = 0; _kills = 0;
 
-        _wpnNames = ["ROCKET", "GRENADE", "MEGA", "SNIPER", "MIRV", "QUAKE"];
-        _wpnSpd   = [6.8, 5.6, 4.8, 10.0, 5.4, 5.8];
-        _wpnGrv   = [0.10, 0.12, 0.14, 0.07, 0.11, 0.15];
-        _wpnRad   = [20, 26, 36, 12, 16, 50];
-        _wpnDmg   = [1, 1, 2, 1, 1, 1];
-        _wpnWind  = [1.0, 1.0, 1.0, 0.25, 1.0, 0.8];
-        _wpnBounce = [0, 2, 0, 0, 0, 0];
+        _wpnNames  = ["ROCKET", "GRENADE", "MEGA", "SNIPER", "MIRV", "QUAKE", "CLUSTER", "PLASMA"];
+        _wpnSpd    = [8.5, 7.0, 6.0, 13.0, 7.0, 7.5, 7.0, 14.0];
+        _wpnGrv    = [0.10, 0.12, 0.14, 0.06, 0.11, 0.15, 0.09, 0.03];
+        _wpnRad    = [20, 26, 36, 12, 16, 50, 12, 7];
+        _wpnDmg    = [1, 1, 2, 1, 1, 1, 1, 3];
+        _wpnWind   = [1.0, 1.0, 1.0, 0.2, 1.0, 0.8, 0.9, 0.1];
+        _wpnBounce = [0, 2, 0, 0, 0, 0, 0, 0];
         _weapon = WPN_ROCKET;
 
         _aimAngle = 45.0; _powerPhase = 0.0; _power = 60.0;
@@ -152,8 +152,8 @@ class BitochiBlobsView extends WatchUi.View {
         _projBounces = 0; _projAlive = false; _projWeapon = 0;
         _wind = 0.0;
 
-        _boomXs = new [3]; _boomYs = new [3];
-        for (var i = 0; i < 3; i++) { _boomXs[i] = 0.0; _boomYs[i] = 0.0; }
+        _boomXs = new [5]; _boomYs = new [5];
+        for (var i = 0; i < 5; i++) { _boomXs[i] = 0.0; _boomYs[i] = 0.0; }
         _boomCount = 1; _boomTick = 0; _boomMaxR = 20;
         _hitMsg = ""; _hitMsgTick = 0;
 
@@ -222,11 +222,11 @@ class BitochiBlobsView extends WatchUi.View {
 
         if (gameState == GS_INTRO) {
             _introTick++;
-            if (_introTick > 55) { beginTurn(); }
+            if (_introTick > 28) { beginTurn(); }
         } else if (gameState == GS_TURN) {
             _turnTick++;
             _camTarget = _bX[_activeIdx] - _w.toFloat() / 2.0;
-            if (_turnTick > 28) {
+            if (_turnTick > 14) {
                 gameState = GS_MOVE;
                 _moveDist = 0.0;
                 _moveTick = 0;
@@ -242,18 +242,18 @@ class BitochiBlobsView extends WatchUi.View {
                         var nx = _bX[0] + 20.0;
                         if (nx > _mapW.toFloat() - 10.0) { nx = _mapW.toFloat() - 10.0; }
                         _bX[0] = nx; updateBlobY(0);
-                        _hopCount++; _hopCooldown = 20; doVibe(25, 40);
+                        _hopCount++; _hopCooldown = 11; doVibe(25, 40);
                     } else if (steer < -1.8) {
                         var nx = _bX[0] - 20.0;
                         if (nx < 10.0) { nx = 10.0; }
                         _bX[0] = nx; updateBlobY(0);
-                        _hopCount++; _hopCooldown = 20; doVibe(25, 40);
+                        _hopCount++; _hopCooldown = 11; doVibe(25, 40);
                     }
                 }
                 if (_hopCount >= 2) {
                     gameState = GS_AIM; _powerPhase = 0.0;
                 }
-                if (_moveTick > 90) { gameState = GS_AIM; _powerPhase = 0.0; }
+                if (_moveTick > 55) { gameState = GS_AIM; _powerPhase = 0.0; }
             } else {
                 if (_moveTick == 1) { aiDecideMove(); }
                 var dx = _aiMoveTarget - _bX[_activeIdx];
@@ -263,7 +263,7 @@ class BitochiBlobsView extends WatchUi.View {
                     _bX[_activeIdx] += step;
                     updateBlobY(_activeIdx);
                 }
-                if (_moveTick >= 18) {
+                if (_moveTick >= 11) {
                     _bX[_activeIdx] = _aiMoveTarget;
                     updateBlobY(_activeIdx);
                     gameState = GS_AIM;
@@ -273,25 +273,29 @@ class BitochiBlobsView extends WatchUi.View {
             }
         } else if (gameState == GS_AIM) {
             if (_activeIdx == 0) {
-                var pSpeed = (_weapon == WPN_MEGA) ? 0.14 : 0.09;
+                var pSpeed = (_weapon == WPN_MEGA) ? 0.16 : 0.11;
                 _powerPhase += pSpeed;
                 _power = 55.0 + 40.0 * Math.sin(_powerPhase);
-                var steer = accelX.toFloat() / 250.0;
-                if (steer > 2.5) { steer = 2.5; }
-                if (steer < -2.5) { steer = -2.5; }
-                _aimAngle += steer;
+                var steer = accelX.toFloat() / 195.0;
+                if (steer > 3.2) { steer = 3.2; }
+                if (steer < -3.2) { steer = -3.2; }
+                var facingRight = true;
+                for (var j = 1; j < _blobCount; j++) {
+                    if (_bAlive[j] && _bHp[j] > 0 && _bX[j] < _bX[0]) { facingRight = false; break; }
+                }
+                _aimAngle += steer * (facingRight ? -1.0 : 1.0);
                 if (_aimAngle < 10.0) { _aimAngle = 10.0; }
                 if (_aimAngle > 80.0) { _aimAngle = 80.0; }
             } else {
                 _aiTick++;
-                if (_aiTick >= 30) { aiFireShot(); }
+                if (_aiTick >= 18) { aiFireShot(); }
             }
         } else if (gameState == GS_FLY) {
             updateProjectile();
             _camTarget = _projX - _w.toFloat() / 2.0;
         } else if (gameState == GS_BOOM) {
             _boomTick++;
-            if (_boomTick > 24) { afterBoom(); }
+            if (_boomTick > 18) { afterBoom(); }
         } else if (gameState == GS_WIN || gameState == GS_OVER) {
             _resultTick++;
         }
@@ -478,13 +482,15 @@ class BitochiBlobsView extends WatchUi.View {
 
         var r = Math.rand().abs() % 100;
         if (_bHp[_aiTarget] <= 1 && _round >= 4) {
-            _aiWpn = (r < 30) ? WPN_MEGA : ((r < 60) ? WPN_ROCKET : WPN_MIRV);
+            _aiWpn = (r < 25) ? WPN_PLASMA : ((r < 50) ? WPN_MEGA : ((r < 75) ? WPN_ROCKET : WPN_MIRV));
         } else {
-            if (r < 40) { _aiWpn = WPN_ROCKET; }
-            else if (r < 60) { _aiWpn = WPN_GRENADE; }
-            else if (r < 75) { _aiWpn = WPN_SNIPER; }
-            else if (r < 88) { _aiWpn = WPN_MIRV; }
-            else { _aiWpn = WPN_QUAKE; }
+            if (r < 30) { _aiWpn = WPN_ROCKET; }
+            else if (r < 46) { _aiWpn = WPN_GRENADE; }
+            else if (r < 58) { _aiWpn = WPN_SNIPER; }
+            else if (r < 70) { _aiWpn = WPN_MIRV; }
+            else if (r < 82) { _aiWpn = WPN_CLUSTER; }
+            else if (r < 91) { _aiWpn = WPN_QUAKE; }
+            else { _aiWpn = WPN_PLASMA; }
         }
 
         var dx = (_bX[_aiTarget] - _bX[_activeIdx]).toFloat();
@@ -545,7 +551,7 @@ class BitochiBlobsView extends WatchUi.View {
         _projX += _projVx;
         _projY += _projVy;
 
-        if (_tick % 2 == 0) { spawnSmoke(_projX, _projY); }
+        if (_tick % 3 == 0) { spawnSmoke(_projX, _projY); }
 
         if (_projX < -20.0 || _projX > (_mapW + 20).toFloat() || _projY > (_h + 40).toFloat()) {
             _projAlive = false;
@@ -619,6 +625,28 @@ class BitochiBlobsView extends WatchUi.View {
             }
             _shakeT = 16;
             doVibe(100, 300);
+        } else if (_projWeapon == WPN_CLUSTER) {
+            _boomCount = 5;
+            var spread = 20;
+            for (var e = 0; e < 5; e++) {
+                _boomXs[e] = hx + ((e - 2) * spread).toFloat();
+                _boomYs[e] = hy;
+                var ey2 = terrYAtWorld(_boomXs[e]).toFloat();
+                if (_boomYs[e] > ey2) { _boomYs[e] = ey2; }
+                carveCrater(_boomXs[e], _boomMaxR);
+                spawnBoom(_boomXs[e].toNumber(), _boomYs[e].toNumber());
+                applyDmgAt(_boomXs[e], _boomYs[e], _boomMaxR.toFloat(), dmg);
+            }
+            _shakeT = 14;
+            doVibe(90, 230);
+        } else if (_projWeapon == WPN_PLASMA) {
+            _boomCount = 1;
+            _boomXs[0] = hx; _boomYs[0] = hy;
+            carveCrater(hx, _boomMaxR);
+            spawnBoom(hx.toNumber(), hy.toNumber());
+            applyDmgAt(hx, hy, _boomMaxR.toFloat(), dmg);
+            _shakeT = 6;
+            doVibe(80, 140);
         } else {
             _boomCount = 1;
             _boomXs[0] = hx; _boomYs[0] = hy;
@@ -719,7 +747,7 @@ class BitochiBlobsView extends WatchUi.View {
         var colors = [0xFF4422, 0xFFAA22, 0xFFDD44, 0xFF6622, 0xFFFFAA, 0xFF2211];
         var spawned = 0;
         for (var i = 0; i < MAX_PARTS; i++) {
-            if (spawned >= 18) { break; }
+            if (spawned >= 12) { break; }
             if (_partLife[i] > 0) { continue; }
             _partX[i] = ex.toFloat() + ((Math.rand().abs() % 7) - 3).toFloat();
             _partY[i] = ey.toFloat();
@@ -833,8 +861,8 @@ class BitochiBlobsView extends WatchUi.View {
         if (gameState == GS_BOOM) {
             var phase = _boomTick;
             for (var e = 0; e < _boomCount; e++) {
-                var eTick = phase - e * 4;
-                if (eTick > 0 && eTick < 22) {
+                var eTick = phase - e * 3;
+                if (eTick > 0 && eTick < 18) {
                     var r = eTick * _boomMaxR / 12;
                     if (r > _boomMaxR) { r = _boomMaxR; }
                     drawExplosion(dc, sx(_boomXs[e]) + ox, _boomYs[e].toNumber() + oy, r, eTick);
@@ -880,9 +908,8 @@ class BitochiBlobsView extends WatchUi.View {
             if (csx < -30 || csx > _w + 30) { continue; }
             dc.setColor(0x88AABB, Graphics.COLOR_TRANSPARENT);
             var cy = _h * 12 / 100 + (i * 6);
-            dc.fillCircle(csx, cy + oy, 8);
-            dc.fillCircle(csx + 5, cy - 2 + oy, 6);
-            dc.fillCircle(csx - 4, cy + 1 + oy, 5);
+            dc.fillCircle(csx, cy + oy, 7);
+            dc.fillCircle(csx + 5, cy - 2 + oy, 5);
         }
     }
 
@@ -912,11 +939,11 @@ class BitochiBlobsView extends WatchUi.View {
                 dc.setColor(gH, Graphics.COLOR_TRANSPARENT);
                 dc.fillRectangle(screenX, tY - 1, 1, 2);
             }
-            if (i % 25 == 7 && _terrH[i] > 35) {
+            if (i % 30 == 7 && _terrH[i] > 40) {
                 dc.setColor(0x664422, Graphics.COLOR_TRANSPARENT);
-                dc.fillRectangle(screenX + 1, tY - 8, 2, 8);
+                dc.fillRectangle(screenX + 1, tY - 7, 2, 7);
                 dc.setColor(0x228822, Graphics.COLOR_TRANSPARENT);
-                dc.fillCircle(screenX + 2, tY - 10, 4);
+                dc.fillCircle(screenX + 2, tY - 9, 3);
             }
         }
     }
@@ -1015,6 +1042,24 @@ class BitochiBlobsView extends WatchUi.View {
             if (_tick % 4 < 2) {
                 dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
                 dc.fillCircle(px, py - 6, 2);
+            }
+        } else if (_projWeapon == WPN_CLUSTER) {
+            dc.setColor(0xFF8822, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(px, py, 4);
+            dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(px - 3, py - 2, 2);
+            dc.fillCircle(px + 3, py - 2, 2);
+            dc.fillCircle(px, py - 4, 2);
+        } else if (_projWeapon == WPN_PLASMA) {
+            dc.setColor(0x001144, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(px, py, 5);
+            dc.setColor(0x22CCFF, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(px, py, 4);
+            dc.setColor(0xAAFFFF, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(px, py, 2);
+            if (_tick % 3 < 2) {
+                dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(px, py, 1);
             }
         } else {
             dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
@@ -1185,7 +1230,9 @@ class BitochiBlobsView extends WatchUi.View {
             else if (_weapon == WPN_MEGA) { wpnC = 0xFF2222; }
             else if (_weapon == WPN_SNIPER) { wpnC = 0xCCDDFF; }
             else if (_weapon == WPN_MIRV) { wpnC = 0xFFCC44; }
-            else { wpnC = 0xBB8844; }
+            else if (_weapon == WPN_QUAKE) { wpnC = 0xBB8844; }
+            else if (_weapon == WPN_CLUSTER) { wpnC = 0xFF8822; }
+            else { wpnC = 0x22CCFF; }
             dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
             dc.fillRectangle(_w / 2 - 36, 13, 72, 12);
             dc.setColor(wpnC, Graphics.COLOR_TRANSPARENT);
@@ -1374,7 +1421,7 @@ class BitochiBlobsView extends WatchUi.View {
 
         dc.setColor(0x7799AA, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w / 2, _h * 58 / 100, Graphics.FONT_XTINY, "Tilt=aim/move  Tap=fire", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(_w / 2, _h * 65 / 100, Graphics.FONT_XTINY, "Up/Down=weapon (6 types)", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 65 / 100, Graphics.FONT_XTINY, "Up/Down=weapon (8 types)", Graphics.TEXT_JUSTIFY_CENTER);
         dc.drawText(_w / 2, _h * 72 / 100, Graphics.FONT_XTINY, "Scrolling map + 3-5 blobs", Graphics.TEXT_JUSTIFY_CENTER);
 
         if (_bestStreak > 0) {
