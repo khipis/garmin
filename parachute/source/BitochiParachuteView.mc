@@ -6,7 +6,7 @@ using Toybox.Time;
 using Toybox.System;
 using Toybox.Application;
 
-enum { PS_MENU, PS_JUMP, PS_FREE, PS_CHUTE, PS_LAND, PS_CRASH }
+enum { PS_MENU, PS_JUMP, PS_FREE, PS_CHUTE, PS_LAND, PS_CRASH, PS_GAMEOVER }
 
 class BitochiParachuteView extends WatchUi.View {
 
@@ -48,8 +48,15 @@ class BitochiParachuteView extends WatchUi.View {
     hidden var _totalScore;
     hidden var _bestScore;
     hidden var _level;
+    hidden var _bestLevel;
     hidden var _landDist;
     hidden var _landGrade;
+    hidden var _lives;
+    hidden var _lifeLost;
+    hidden var _gustX;
+    hidden var _gustDecay;
+    hidden var _gustSpawnTimer;
+    hidden var _landVx;
 
     hidden const MAX_PARTS = 30;
     hidden var _partX;
@@ -81,10 +88,14 @@ class BitochiParachuteView extends WatchUi.View {
         var ds = System.getDeviceSettings();
         _w = ds.screenWidth; _h = ds.screenHeight;
         accelX = 0; accelY = 0; accelZ = 0;
-        _tick = 0; _level = 1;
+        _tick = 0; _level = 1; _lives = 3; _lifeLost = false;
         var bs = Application.Storage.getValue("paraBest");
         _bestScore = (bs != null) ? bs : 0;
+        var bl = Application.Storage.getValue("paraLevel");
+        _bestLevel = (bl != null) ? bl : 0;
         _totalScore = 0;
+        _gustX = 0.0; _gustDecay = 0; _gustSpawnTimer = 80;
+        _landVx = 0.0;
 
         _ringX = new [MAX_RINGS]; _ringY = new [MAX_RINGS];
         _ringR = new [MAX_RINGS]; _ringType = new [MAX_RINGS]; _ringActive = new [MAX_RINGS];
@@ -131,25 +142,62 @@ class BitochiParachuteView extends WatchUi.View {
         if (gameState == PS_JUMP) { _jumpTick++; if (_jumpTick >= 35) { gameState = PS_FREE; } }
         else if (gameState == PS_FREE) { updateFreefall(); }
         else if (gameState == PS_CHUTE) { updateChute(); }
-        else if (gameState == PS_LAND || gameState == PS_CRASH) { _resultTick++; }
+        else if (gameState == PS_LAND || gameState == PS_CRASH || gameState == PS_GAMEOVER) { _resultTick++; }
 
         WatchUi.requestUpdate();
     }
 
     hidden function startLevel() {
         _playerX = (_w / 2).toFloat(); _playerVx = 0.0;
-        _altitude = 3200.0 + _level * 420.0 + (_level / 3) * 120.0; _maxAlt = _altitude;
-        _fallSpeed = 0.0; _chuteOpen = false;
+        _altitude = 3000.0 + _level * 380.0 + (_level / 3) * 100.0; _maxAlt = _altitude;
+        _fallSpeed = 0.0; _chuteOpen = false; _lifeLost = false;
         _ringsHit = 0; _ringStreak = 0; _ringTotal = 0; _ringSpawnAcc = 0.0;
         _windPhase = 0.0; _windX = 0.0;
         _jumpTick = 0; _resultTick = 0; _score = 0;
-        _landX = _w / 2 + (Math.rand().abs() % 50) - 25;
-        _landR = 26 - (_level / 2) - (_level / 5);
-        if (_landR < 11) { _landR = 11; }
+        _gustX = 0.0; _gustDecay = 0;
+        _gustSpawnTimer = 120 - _level * 4;
+        if (_gustSpawnTimer < 40) { _gustSpawnTimer = 40; }
+
+        _landX = _w / 2 + (Math.rand().abs() % 40) - 20;
+        _landR = 28 - _level / 2;
+        if (_landR < 10) { _landR = 10; }
+
+        _landVx = 0.0;
+        if (_level >= 6) {
+            var driftSpd = 0.25 + (_level - 6).toFloat() * 0.04;
+            if (driftSpd > 0.9) { driftSpd = 0.9; }
+            _landVx = (Math.rand().abs() % 2 == 0) ? driftSpd : -driftSpd;
+        }
+
+        if (_level == 5 || _level == 10 || _level == 15) {
+            if (_lives < 3) { _lives++; doVibe(80, 200); }
+        }
+
+        if (_level > _bestLevel) {
+            _bestLevel = _level;
+            Application.Storage.setValue("paraLevel", _bestLevel);
+        }
+
         for (var i = 0; i < MAX_RINGS; i++) { _ringActive[i] = false; }
         for (var i = 0; i < MAX_PARTS; i++) { _partLife[i] = 0; }
         for (var i = 0; i < MAX_LINES; i++) { _lineLife[i] = 0; }
         gameState = PS_JUMP;
+    }
+
+    hidden function updateGusts() {
+        if (_level < 4) { _gustX = 0.0; return; }
+        _gustSpawnTimer--;
+        if (_gustSpawnTimer <= 0) {
+            var maxForce = 0.5 + (_level - 4).toFloat() * 0.12;
+            if (maxForce > 2.4) { maxForce = 2.4; }
+            _gustX = (Math.rand().abs() % 2 == 0 ? 1.0 : -1.0) * (0.4 + (Math.rand().abs() % 10).toFloat() / 10.0 * maxForce);
+            _gustDecay = 20 + Math.rand().abs() % 35;
+            _gustSpawnTimer = 50 + Math.rand().abs() % 90;
+        }
+        if (_gustDecay > 0) {
+            _gustDecay--;
+            if (_gustDecay == 0) { _gustX = 0.0; }
+        }
     }
 
     hidden function updateFreefall() {
@@ -163,13 +211,15 @@ class BitochiParachuteView extends WatchUi.View {
         if (_altitude < 0.0) { _altitude = 0.0; }
 
         _windPhase += 0.06;
-        var wAmp = 0.65 + _level.toFloat() * 0.16 + (_level / 4).toFloat() * 0.05;
-        if (wAmp > 1.85) { wAmp = 1.85; }
+        var wAmp = 0.55 + _level.toFloat() * 0.14 + (_level / 4).toFloat() * 0.05;
+        if (wAmp > 1.8) { wAmp = 1.8; }
         _windX = Math.sin(_windPhase) * wAmp;
+
+        updateGusts();
 
         var steerX = accelX.toFloat() / 280.0;
         if (steerX > 3.5) { steerX = 3.5; } if (steerX < -3.5) { steerX = -3.5; }
-        _playerVx = _playerVx * 0.85 + steerX + _windX * 0.06;
+        _playerVx = _playerVx * 0.85 + steerX + _windX * 0.06 + _gustX * 0.05;
         _playerX += _playerVx;
         if (_playerX < 12.0) { _playerX = 12.0; _playerVx = 0.0; }
         if (_playerX > (_w - 12).toFloat()) { _playerX = (_w - 12).toFloat(); _playerVx = 0.0; }
@@ -180,9 +230,13 @@ class BitochiParachuteView extends WatchUi.View {
         spawnSpeedLines();
 
         if (_altitude <= 0.0) {
-            gameState = PS_CRASH; _resultTick = 0; _landGrade = "SPLAT!";
+            _lives--;
+            if (_lives < 0) { _lives = 0; }
+            _landGrade = "SPLAT!";
             doVibe(100, 500); _shakeT = 15; _flashT = 8;
             finalScore(false);
+            if (_lives <= 0) { gameState = PS_GAMEOVER; _resultTick = 0; }
+            else { gameState = PS_CRASH; _resultTick = 0; }
         }
     }
 
@@ -193,16 +247,25 @@ class BitochiParachuteView extends WatchUi.View {
         if (_altitude < 0.0) { _altitude = 0.0; }
 
         _windPhase += 0.04;
-        var wAmpC = 0.52 + _level.toFloat() * 0.11 + (_level / 4).toFloat() * 0.04;
-        if (wAmpC > 1.45) { wAmpC = 1.45; }
+        var wAmpC = 0.45 + _level.toFloat() * 0.10 + (_level / 4).toFloat() * 0.04;
+        if (wAmpC > 1.4) { wAmpC = 1.4; }
         _windX = Math.sin(_windPhase) * wAmpC;
+
+        updateGusts();
 
         var steerX = accelX.toFloat() / 200.0;
         if (steerX > 2.5) { steerX = 2.5; } if (steerX < -2.5) { steerX = -2.5; }
-        _playerVx = _playerVx * 0.88 + steerX * 0.6 + _windX * 0.08;
+        _playerVx = _playerVx * 0.88 + steerX * 0.6 + _windX * 0.08 + _gustX * 0.06;
         _playerX += _playerVx;
         if (_playerX < 12.0) { _playerX = 12.0; _playerVx = 0.0; }
         if (_playerX > (_w - 12).toFloat()) { _playerX = (_w - 12).toFloat(); _playerVx = 0.0; }
+
+        if (_landVx != 0.0) {
+            _landX += _landVx.toNumber();
+            var margin = _landR + 8;
+            if (_landX < margin) { _landX = margin; _landVx = -_landVx; }
+            else if (_landX > _w - margin) { _landX = _w - margin; _landVx = -_landVx; }
+        }
 
         moveRings(_fallSpeed);
         checkRingHits();
@@ -210,16 +273,30 @@ class BitochiParachuteView extends WatchUi.View {
         if (_altitude <= 0.0) {
             var dx = _playerX - _landX.toFloat();
             _landDist = dx; if (_landDist < 0.0) { _landDist = -_landDist; }
-            if (_landDist < _landR.toFloat()) {
-                if (_landDist < _landR.toFloat() * 0.28) { _landGrade = "PERFECT!"; }
-                else { _landGrade = "BULLSEYE!"; }
-            } else if (_landDist < _landR.toFloat() * 2.0) { _landGrade = "GREAT!"; }
-            else if (_landDist < _landR.toFloat() * 3.5) { _landGrade = "GOOD"; }
-            else { _landGrade = "OFF TARGET"; }
-            gameState = PS_LAND; _resultTick = 0;
-            _landAnimY = (_h * 10 / 100).toFloat();
-            doVibe(50, 200); _shakeT = 4;
+            var lr = _landR.toFloat();
+            if (_landDist < lr * 0.28) { _landGrade = "PERFECT!"; }
+            else if (_landDist < lr) { _landGrade = "BULLSEYE!"; }
+            else if (_landDist < lr * 2.0) { _landGrade = "GREAT!"; }
+            else if (_landDist < lr * 3.5) { _landGrade = "GOOD"; }
+            else { _landGrade = "MISSED!"; }
+
+            var lifeThresh = 9999.0;
+            if (_level >= 3) { lifeThresh = lr * 5.0; }
+            if (_level >= 6) { lifeThresh = lr * 3.8; }
+            if (_level >= 10) { lifeThresh = lr * 2.8; }
+            if (_landDist > lifeThresh) {
+                _lives--;
+                if (_lives < 0) { _lives = 0; }
+                _lifeLost = true;
+                doVibe(90, 400); _shakeT = 10;
+            } else {
+                doVibe(50, 200); _shakeT = 4;
+            }
+
             finalScore(true);
+            _landAnimY = (_h * 10 / 100).toFloat();
+            if (_lives <= 0) { gameState = PS_GAMEOVER; _resultTick = 0; }
+            else { gameState = PS_LAND; _resultTick = 0; }
         }
     }
 
@@ -335,10 +412,17 @@ class BitochiParachuteView extends WatchUi.View {
     }
 
     function doAction() {
-        if (gameState == PS_MENU) { _level = 1; _totalScore = 0; startLevel(); }
+        if (gameState == PS_MENU) { _level = 1; _totalScore = 0; _lives = 3; startLevel(); }
         else if (gameState == PS_FREE) { _chuteOpen = true; gameState = PS_CHUTE; doVibe(60, 150); }
-        else if (gameState == PS_LAND) { if (_resultTick > 20) { _level++; startLevel(); } }
-        else if (gameState == PS_CRASH) { if (_resultTick > 20) { _level = 1; _totalScore = 0; startLevel(); } }
+        else if (gameState == PS_LAND) {
+            if (_resultTick > 20) { _level++; startLevel(); }
+        }
+        else if (gameState == PS_CRASH) {
+            if (_resultTick > 20) { startLevel(); }
+        }
+        else if (gameState == PS_GAMEOVER) {
+            if (_resultTick > 25) { _level = 1; _totalScore = 0; _lives = 3; startLevel(); }
+        }
     }
 
     function onUpdate(dc) {
@@ -356,6 +440,7 @@ class BitochiParachuteView extends WatchUi.View {
         else if (gameState == PS_CHUTE) { drawChuteScene(dc, ox, oy); }
         else if (gameState == PS_LAND) { drawLanded(dc, ox, oy); }
         else if (gameState == PS_CRASH) { drawCrash(dc, ox, oy); }
+        else if (gameState == PS_GAMEOVER) { drawGameOver(dc, ox, oy); }
 
         if (_flashT > 0) {
             dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
@@ -589,6 +674,18 @@ class BitochiParachuteView extends WatchUi.View {
         dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT);
         dc.drawText(4, _h - 16, Graphics.FONT_XTINY, "L" + _level, Graphics.TEXT_JUSTIFY_LEFT);
 
+        var heartStr = "";
+        for (var li = 0; li < _lives; li++) { heartStr = heartStr + "*"; }
+        dc.setColor(0xFF4466, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w - 5, _h - 16, Graphics.FONT_XTINY, heartStr, Graphics.TEXT_JUSTIFY_RIGHT);
+
+        var gustAbs = _gustX; if (gustAbs < 0.0) { gustAbs = -gustAbs; }
+        if (gustAbs > 0.5) {
+            var gc2 = (_tick % 4 < 2) ? 0xFF8800 : 0xFFCC44;
+            dc.setColor(gc2, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2, _h * 60 / 100, Graphics.FONT_XTINY, _gustX > 0.0 ? "GUST>>>" : "<<<GUST", Graphics.TEXT_JUSTIFY_CENTER);
+        }
+
         if (_altitude < 600.0 && !_chuteOpen) {
             var wc = (_tick % 6 < 3) ? 0xFF0000 : 0xFF8800;
             dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2 + 1, _h * 82 / 100 + 1, Graphics.FONT_SMALL, "DEPLOY!", Graphics.TEXT_JUSTIFY_CENTER);
@@ -639,7 +736,12 @@ class BitochiParachuteView extends WatchUi.View {
         dc.setColor(0x7799BB, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w / 2, _h * 60 / 100, Graphics.FONT_XTINY, "Fly through rings!", Graphics.TEXT_JUSTIFY_CENTER);
         dc.drawText(_w / 2, _h * 67 / 100, Graphics.FONT_XTINY, "Tap to deploy chute", Graphics.TEXT_JUSTIFY_CENTER);
-        if (_bestScore > 0) { dc.setColor(0x888888, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 74 / 100, Graphics.FONT_XTINY, "BEST " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER); }
+        if (_bestScore > 0) {
+            dc.setColor(0x888888, Graphics.COLOR_TRANSPARENT);
+            var bTxt = "BEST " + _bestScore;
+            if (_bestLevel > 0) { bTxt = bTxt + "  L" + _bestLevel; }
+            dc.drawText(_w / 2, _h * 74 / 100, Graphics.FONT_XTINY, bTxt, Graphics.TEXT_JUSTIFY_CENTER);
+        }
         dc.setColor((_tick % 10 < 5) ? 0x44AAFF : 0x33AADD, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w / 2, _h * 82 / 100, Graphics.FONT_XTINY, "Tap to jump", Graphics.TEXT_JUSTIFY_CENTER);
     }
@@ -688,14 +790,45 @@ class BitochiParachuteView extends WatchUi.View {
         var gc = 0x44FF44;
         if (_landDist > _landR.toFloat() * 2.0) { gc = 0xFFCC22; }
         if (_landDist > _landR.toFloat() * 3.5) { gc = 0xFF6644; }
+        if (_lifeLost) { gc = (_resultTick % 6 < 3) ? 0xFF2222 : 0xCC0000; }
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2 + 1, _h * 8 / 100 + 1, Graphics.FONT_SMALL, _landGrade, Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(gc, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 8 / 100, Graphics.FONT_SMALL, _landGrade, Graphics.TEXT_JUSTIFY_CENTER);
 
-        dc.setColor(0xFFFF44, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 22 / 100, Graphics.FONT_XTINY, "RINGS " + _ringsHit, Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 32 / 100, Graphics.FONT_SMALL, "+" + _score, Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0x88CCFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 44 / 100, Graphics.FONT_XTINY, "TOTAL " + _totalScore, Graphics.TEXT_JUSTIFY_CENTER);
-        if (_totalScore >= _bestScore && _totalScore > 0) { dc.setColor(0xFFAA22, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 53 / 100, Graphics.FONT_XTINY, "NEW BEST!", Graphics.TEXT_JUSTIFY_CENTER); }
+        if (_lifeLost) {
+            dc.setColor(0xFF4444, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2, _h * 20 / 100, Graphics.FONT_XTINY, "LIFE LOST!", Graphics.TEXT_JUSTIFY_CENTER);
+            var heartStr = "";
+            for (var li = 0; li < _lives; li++) { heartStr = heartStr + "*"; }
+            dc.setColor(0xFF4466, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2, _h * 28 / 100, Graphics.FONT_XTINY, heartStr, Graphics.TEXT_JUSTIFY_CENTER);
+        } else {
+            dc.setColor(0xFFFF44, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 22 / 100, Graphics.FONT_XTINY, "RINGS " + _ringsHit, Graphics.TEXT_JUSTIFY_CENTER);
+        }
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 35 / 100, Graphics.FONT_SMALL, "+" + _score, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x88CCFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 46 / 100, Graphics.FONT_XTINY, "TOTAL " + _totalScore, Graphics.TEXT_JUSTIFY_CENTER);
+        if (_totalScore >= _bestScore && _totalScore > 0) { dc.setColor(0xFFAA22, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 55 / 100, Graphics.FONT_XTINY, "NEW BEST!", Graphics.TEXT_JUSTIFY_CENTER); }
         dc.setColor(0x666666, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 86 / 100, Graphics.FONT_XTINY, "Tap: level " + (_level + 1), Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    hidden function drawGameOver(dc, ox, oy) {
+        var fb = (_resultTick % 6 < 3) ? 0x1A0A0A : 0x0A0505;
+        dc.setColor(fb, fb); dc.clear();
+        dc.setColor(0x441111, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h * 40 / 100, _w, _h * 20 / 100);
+
+        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2 + 2, _h * 10 / 100 + 2, Graphics.FONT_SMALL, "GAME", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor((_resultTick % 8 < 4) ? 0xFF2222 : 0xCC0000, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 10 / 100, Graphics.FONT_SMALL, "GAME", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2 + 2, _h * 24 / 100 + 2, Graphics.FONT_SMALL, "OVER", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor((_resultTick % 8 < 4) ? 0xFF2222 : 0xCC0000, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 24 / 100, Graphics.FONT_SMALL, "OVER", Graphics.TEXT_JUSTIFY_CENTER);
+
+        dc.setColor(0xFFFF44, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 42 / 100, Graphics.FONT_XTINY, "Level " + _level + " reached", Graphics.TEXT_JUSTIFY_CENTER);
+        if (_level >= _bestLevel) {
+            dc.setColor(0xFFAA22, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 50 / 100, Graphics.FONT_XTINY, "BEST LEVEL!", Graphics.TEXT_JUSTIFY_CENTER);
+        } else {
+            dc.setColor(0x888888, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 50 / 100, Graphics.FONT_XTINY, "Best L" + _bestLevel, Graphics.TEXT_JUSTIFY_CENTER);
+        }
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 60 / 100, Graphics.FONT_XTINY, "Score " + _totalScore, Graphics.TEXT_JUSTIFY_CENTER);
+        if (_totalScore >= _bestScore && _totalScore > 0) { dc.setColor(0xFFAA22, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 68 / 100, Graphics.FONT_XTINY, "NEW BEST!", Graphics.TEXT_JUSTIFY_CENTER); }
+        dc.setColor((_tick % 10 < 5) ? 0xFFAA44 : 0xDD8833, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 84 / 100, Graphics.FONT_XTINY, "Tap to restart", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawCrash(dc, ox, oy) {
@@ -714,8 +847,10 @@ class BitochiParachuteView extends WatchUi.View {
         dc.setColor((_resultTick % 6 < 3) ? 0xFF2222 : 0xCC0000, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 14 / 100, Graphics.FONT_SMALL, "SPLAT!", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 28 / 100, Graphics.FONT_XTINY, "No chute deployed!", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFFF44, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 36 / 100, Graphics.FONT_XTINY, "RINGS " + _ringsHit, Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 64 / 100, Graphics.FONT_XTINY, _totalScore + " pts total", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(_w / 2, _h * 72 / 100, Graphics.FONT_XTINY, "BEST " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor((_tick % 10 < 5) ? 0xFFAA44 : 0xDD8833, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 82 / 100, Graphics.FONT_XTINY, "Tap to retry", Graphics.TEXT_JUSTIFY_CENTER);
+        var heartStr = "";
+        for (var li = 0; li < _lives; li++) { heartStr = heartStr + "*"; }
+        dc.setColor(0xFF4466, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 47 / 100, Graphics.FONT_XTINY, _lives > 0 ? heartStr : "---", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 58 / 100, Graphics.FONT_XTINY, _totalScore + " pts", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor((_tick % 10 < 5) ? 0xFFAA44 : 0xDD8833, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 82 / 100, Graphics.FONT_XTINY, "Tap: try again", Graphics.TEXT_JUSTIFY_CENTER);
     }
 }
