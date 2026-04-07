@@ -95,6 +95,9 @@ class BitochiBlobsView extends WatchUi.View {
     hidden var _moveDist;
     hidden const MOVE_MAX = 40.0;
     hidden var _moveTick;
+    hidden var _hopCount;
+    hidden var _hopCooldown;
+    hidden var _aiMoveTarget;
 
     hidden var _aiTick;
     hidden var _aiAngle;
@@ -136,8 +139,8 @@ class BitochiBlobsView extends WatchUi.View {
         _blobCount = 3; _activeIdx = 0; _kills = 0;
 
         _wpnNames = ["ROCKET", "GRENADE", "MEGA", "SNIPER", "MIRV", "QUAKE"];
-        _wpnSpd   = [5.2, 4.2, 3.6, 7.5, 4.0, 4.5];
-        _wpnGrv   = [0.14, 0.17, 0.19, 0.10, 0.15, 0.20];
+        _wpnSpd   = [6.8, 5.6, 4.8, 10.0, 5.4, 5.8];
+        _wpnGrv   = [0.10, 0.12, 0.14, 0.07, 0.11, 0.15];
         _wpnRad   = [20, 26, 36, 12, 16, 50];
         _wpnDmg   = [1, 1, 2, 1, 1, 1];
         _wpnWind  = [1.0, 1.0, 1.0, 0.25, 1.0, 0.8];
@@ -170,6 +173,7 @@ class BitochiBlobsView extends WatchUi.View {
         _shakeT = 0; _shakeOx = 0; _shakeOy = 0;
         _camX = 0.0; _camTarget = 0.0;
         _moveDist = 0.0; _moveTick = 0;
+        _hopCount = 0; _hopCooldown = 0; _aiMoveTarget = 0.0;
         _aiTick = 0; _aiAngle = 45.0; _aiPower = 60.0; _aiTarget = 1; _aiWpn = 0;
         _dmgFloatX = 0.0; _dmgFloatY = 0.0; _dmgFloatV = 0; _dmgFloatT = 0;
         _wobble = 0.0;
@@ -231,21 +235,37 @@ class BitochiBlobsView extends WatchUi.View {
             _moveTick++;
             _camTarget = _bX[_activeIdx] - _w.toFloat() / 2.0;
             if (_activeIdx == 0) {
-                var steer = accelX.toFloat() / 350.0;
-                if (steer > 1.5) { steer = 1.5; }
-                if (steer < -1.5) { steer = -1.5; }
-                if (steer.abs() > 0.25 && _moveDist < MOVE_MAX) {
-                    var mv = (steer > 0.0) ? 1.5 : -1.5;
-                    var nx = _bX[0] + mv;
-                    if (nx < 10.0) { nx = 10.0; }
-                    if (nx > _mapW.toFloat() - 10.0) { nx = _mapW.toFloat() - 10.0; }
-                    _bX[0] = nx;
-                    _moveDist += mv.abs();
-                    updateBlobY(0);
+                if (_hopCooldown > 0) { _hopCooldown--; }
+                if (_hopCount < 2 && _hopCooldown == 0) {
+                    var steer = accelX.toFloat() / 280.0;
+                    if (steer > 1.8) {
+                        var nx = _bX[0] + 20.0;
+                        if (nx > _mapW.toFloat() - 10.0) { nx = _mapW.toFloat() - 10.0; }
+                        _bX[0] = nx; updateBlobY(0);
+                        _hopCount++; _hopCooldown = 20; doVibe(25, 40);
+                    } else if (steer < -1.8) {
+                        var nx = _bX[0] - 20.0;
+                        if (nx < 10.0) { nx = 10.0; }
+                        _bX[0] = nx; updateBlobY(0);
+                        _hopCount++; _hopCooldown = 20; doVibe(25, 40);
+                    }
                 }
+                if (_hopCount >= 2) {
+                    gameState = GS_AIM; _powerPhase = 0.0;
+                }
+                if (_moveTick > 90) { gameState = GS_AIM; _powerPhase = 0.0; }
             } else {
                 if (_moveTick == 1) { aiDecideMove(); }
-                if (_moveTick >= 15) {
+                var dx = _aiMoveTarget - _bX[_activeIdx];
+                if (dx.abs() > 2.0 && _moveTick >= 2 && _moveTick <= 14) {
+                    var step = (dx > 0.0) ? 4.0 : -4.0;
+                    if (dx.abs() < 4.0) { step = dx; }
+                    _bX[_activeIdx] += step;
+                    updateBlobY(_activeIdx);
+                }
+                if (_moveTick >= 18) {
+                    _bX[_activeIdx] = _aiMoveTarget;
+                    updateBlobY(_activeIdx);
                     gameState = GS_AIM;
                     _aiTick = 0;
                     aiCalcShot();
@@ -381,13 +401,14 @@ class BitochiBlobsView extends WatchUi.View {
     hidden function beginTurn() {
         gameState = GS_TURN;
         _turnTick = 0;
+        _hopCount = 0; _hopCooldown = 0;
         _camTarget = _bX[_activeIdx] - _w.toFloat() / 2.0;
     }
 
     hidden function nextTurn() {
         _wind = _wind * 0.6 + (-0.8 + (Math.rand().abs() % 16).toFloat() / 10.0) * 0.4;
         var start = _activeIdx;
-        for (var i = 1; i <= _blobCount; i++) {
+        for (var i = 1; i < _blobCount; i++) {
             var idx = (start + i) % _blobCount;
             if (_bAlive[idx] && _bHp[idx] > 0) {
                 _activeIdx = idx;
@@ -395,7 +416,14 @@ class BitochiBlobsView extends WatchUi.View {
                 return;
             }
         }
-        beginTurn();
+        // no other alive blob found - loop including current
+        for (var i = 0; i < _blobCount; i++) {
+            if (_bAlive[i] && _bHp[i] > 0) {
+                _activeIdx = i;
+                beginTurn();
+                return;
+            }
+        }
     }
 
     hidden function fireShot() {
@@ -425,14 +453,13 @@ class BitochiBlobsView extends WatchUi.View {
     }
 
     hidden function aiDecideMove() {
-        var hops = Math.rand().abs() % 3;
-        var dir = (Math.rand().abs() % 2 == 0) ? 1.0 : -1.0;
-        var moveAmt = hops.toFloat() * 12.0 * dir;
-        var nx = _bX[_activeIdx] + moveAmt;
-        if (nx < 10.0) { nx = 10.0; }
-        if (nx > _mapW.toFloat() - 10.0) { nx = _mapW.toFloat() - 10.0; }
-        _bX[_activeIdx] = nx;
-        updateBlobY(_activeIdx);
+        var numHops = Math.rand().abs() % 3;
+        var dir = (_bX[0] < _bX[_activeIdx]) ? -1.0 : 1.0;
+        if (Math.rand().abs() % 4 == 0) { dir = -dir; }
+        var moveAmt = numHops.toFloat() * 20.0 * dir;
+        _aiMoveTarget = _bX[_activeIdx] + moveAmt;
+        if (_aiMoveTarget < 10.0) { _aiMoveTarget = 10.0; }
+        if (_aiMoveTarget > _mapW.toFloat() - 10.0) { _aiMoveTarget = _mapW.toFloat() - 10.0; }
     }
 
     hidden function aiCalcShot() {
@@ -764,6 +791,7 @@ class BitochiBlobsView extends WatchUi.View {
         else if (gameState == GS_MOVE && _activeIdx == 0) {
             gameState = GS_AIM;
             _powerPhase = 0.0;
+            _hopCooldown = 0;
         }
         else if (gameState == GS_AIM && _activeIdx == 0) { fireShot(); }
         else if (gameState == GS_WIN) { if (_resultTick > 30) { startRound(); } }
@@ -894,7 +922,7 @@ class BitochiBlobsView extends WatchUi.View {
     }
 
     hidden function drawBlob(dc, bx, by, hp, maxHp, col, darkCol, isActive) {
-        if (bx < -15 || bx > _w + 15) { return; }
+        if (bx < -_w || bx > _w * 2) { return; }
         var r = (hp > 0) ? 8 : 6;
 
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
@@ -1068,19 +1096,15 @@ class BitochiBlobsView extends WatchUi.View {
     }
 
     hidden function drawMoveBar(dc) {
-        var remain = MOVE_MAX - _moveDist;
-        if (remain < 0.0) { remain = 0.0; }
-        var bW = _w * 24 / 100;
-        var bx = (_w - bW) / 2;
-        var by = _h - 12;
-        dc.setColor(0x111111, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(bx - 1, by - 1, bW + 2, 5);
-        var fill = (remain / MOVE_MAX * bW.toFloat()).toNumber();
-        dc.setColor(0x44BBFF, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(bx, by, fill, 3);
-
+        var hopsLeft = 2 - _hopCount;
+        var hopStr;
+        if (hopsLeft == 2) { hopStr = "HOPS: oo  Tilt=jump"; }
+        else if (hopsLeft == 1) { hopStr = "HOP: o  Tilt=jump"; }
+        else { hopStr = "No hops left"; }
         dc.setColor(0x44DDFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h - 26, Graphics.FONT_XTINY, "MOVE  Tap=done", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h - 26, Graphics.FONT_XTINY, hopStr, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x448888, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h - 14, Graphics.FONT_XTINY, "Tap=aim now", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawAiThinking(dc) {
@@ -1178,23 +1202,33 @@ class BitochiBlobsView extends WatchUi.View {
         for (var i = 0; i < _blobCount; i++) {
             if (!_bAlive[i] || _bHp[i] <= 0) { continue; }
             var bsx = sx(_bX[i]);
-            if (bsx >= -10 && bsx <= _w + 10) { continue; }
+            if (bsx >= 0 && bsx <= _w) { continue; }
             var ay = _bY[i].toNumber();
-            if (ay < 20) { ay = 20; }
-            if (ay > _h - 20) { ay = _h - 20; }
-            dc.setColor(_bCol[i], Graphics.COLOR_TRANSPARENT);
-            if (bsx < -10) {
-                dc.fillPolygon([[4, ay], [12, ay - 5], [12, ay + 5]]);
-                dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-                dc.fillPolygon([[5, ay], [10, ay - 3], [10, ay + 3]]);
+            if (ay < 28) { ay = 28; }
+            if (ay > _h - 28) { ay = _h - 28; }
+            var pulse = (_tick % 6 < 3);
+            var arrowCol = pulse ? _bCol[i] : 0xFFFFFF;
+            dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
+            if (bsx < 0) {
+                dc.fillPolygon([[2, ay], [14, ay - 7], [14, ay + 7]]);
+                dc.setColor(arrowCol, Graphics.COLOR_TRANSPARENT);
+                dc.fillPolygon([[3, ay], [12, ay - 5], [12, ay + 5]]);
                 dc.setColor(_bCol[i], Graphics.COLOR_TRANSPARENT);
-                dc.fillCircle(15, ay, 3);
+                dc.fillCircle(18, ay, 5);
+                dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(18, ay, 3);
+                dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(18, ay - 6, Graphics.FONT_XTINY, "" + _bHp[i], Graphics.TEXT_JUSTIFY_CENTER);
             } else {
-                dc.fillPolygon([[_w - 4, ay], [_w - 12, ay - 5], [_w - 12, ay + 5]]);
-                dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-                dc.fillPolygon([[_w - 5, ay], [_w - 10, ay - 3], [_w - 10, ay + 3]]);
+                dc.fillPolygon([[_w - 2, ay], [_w - 14, ay - 7], [_w - 14, ay + 7]]);
+                dc.setColor(arrowCol, Graphics.COLOR_TRANSPARENT);
+                dc.fillPolygon([[_w - 3, ay], [_w - 12, ay - 5], [_w - 12, ay + 5]]);
                 dc.setColor(_bCol[i], Graphics.COLOR_TRANSPARENT);
-                dc.fillCircle(_w - 15, ay, 3);
+                dc.fillCircle(_w - 18, ay, 5);
+                dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(_w - 18, ay, 3);
+                dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(_w - 18, ay - 6, Graphics.FONT_XTINY, "" + _bHp[i], Graphics.TEXT_JUSTIFY_CENTER);
             }
         }
     }
