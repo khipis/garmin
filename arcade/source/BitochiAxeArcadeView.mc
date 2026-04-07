@@ -56,6 +56,8 @@ class BitochiAxeArcadeView extends WatchUi.View {
     hidden var _hitMinDeg;
     hidden var _isBoss;
 
+    hidden var _lives;
+
     hidden var _combo;
     hidden var _comboMult;
 
@@ -75,7 +77,7 @@ class BitochiAxeArcadeView extends WatchUi.View {
     hidden var _dirChangeTimer;
     hidden var _dirWarnTimer;
 
-    hidden const MAX_SPARKS = 14;
+    hidden const MAX_SPARKS = 10;
     hidden var _spkX;
     hidden var _spkY;
     hidden var _spkVx;
@@ -83,7 +85,7 @@ class BitochiAxeArcadeView extends WatchUi.View {
     hidden var _spkLife;
     hidden var _spkColor;
 
-    hidden const CHIP_N = 14;
+    hidden const CHIP_N = 10;
     hidden var _chipX;
     hidden var _chipY;
     hidden var _chipVx;
@@ -144,6 +146,8 @@ class BitochiAxeArcadeView extends WatchUi.View {
         _hitMinDeg = 14.0;
         _isBoss = false;
 
+        _lives = 3;
+
         _combo = 0;
         _comboMult = 1;
 
@@ -174,8 +178,8 @@ class BitochiAxeArcadeView extends WatchUi.View {
 
         _comboMsg = ""; _comboTimer = 0;
 
-        _bgStars = new [24];
-        for (var i = 0; i < 24; i++) {
+        _bgStars = new [16];
+        for (var i = 0; i < 16; i++) {
             _bgStars[i] = [Math.rand().abs() % _w, Math.rand().abs() % _h, 1 + Math.rand().abs() % 3];
         }
 
@@ -268,7 +272,12 @@ class BitochiAxeArcadeView extends WatchUi.View {
             _failAxeX += _failAxeVx;
             _failAxeY += _failAxeVy;
             _failAxeRot += ((Math.rand().abs() % 2 == 0) ? 1.0 : -1.0) * 2.0;
-            if (_failAnim > 50) {
+            if (_lives > 0 && _failAnim > 26) {
+                _stuckCount = 0;
+                spawnApple();
+                resetAxe();
+                gameState = GS_READY;
+            } else if (_lives <= 0 && _failAnim > 50) {
                 gameState = GS_OVER;
                 if (_score > _bestScore) {
                     _bestScore = _score;
@@ -374,6 +383,7 @@ class BitochiAxeArcadeView extends WatchUi.View {
     }
 
     hidden function doFail(hitAngle, sparkCol) {
+        _lives--;
         gameState = GS_FAIL;
         _failAnim = 0;
         _combo = 0;
@@ -385,10 +395,20 @@ class BitochiAxeArcadeView extends WatchUi.View {
         _failAxeVy = -3.0 - (Math.rand().abs() % 15).toFloat() / 10.0;
         _failAxeRot = ((Math.rand().abs() % 2 == 0) ? 1.0 : -1.0) * 8.0;
         spawnSparks(_failAxeX.toNumber(), _failAxeY.toNumber(), sparkCol);
-        doVibe(100, 200);
-        _shakeTimer = 14;
-        _comboMsg = "CLANG!";
-        _comboTimer = 30;
+        if (_lives <= 0) {
+            _comboMsg = "CLANG!";
+            doVibe(100, 300);
+            _shakeTimer = 16;
+        } else if (_lives == 1) {
+            _comboMsg = "LAST LIFE!";
+            doVibe(100, 200);
+            _shakeTimer = 14;
+        } else {
+            _comboMsg = _lives + " LIVES LEFT";
+            doVibe(80, 150);
+            _shakeTimer = 10;
+        }
+        _comboTimer = 38;
     }
 
     hidden function setupLevel() {
@@ -552,6 +572,7 @@ class BitochiAxeArcadeView extends WatchUi.View {
 
     hidden function startGame() {
         _score = 0; _level = 1;
+        _lives = 3;
         _combo = 0; _comboMult = 1;
         _logAngle = 0.0;
         _logSpeed = 1.2;
@@ -642,7 +663,7 @@ class BitochiAxeArcadeView extends WatchUi.View {
         dc.setColor(bg2, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, 0, _w, _h * 35 / 100);
 
-        for (var i = 0; i < 24; i++) {
+        for (var i = 0; i < 16; i++) {
             var st = _bgStars[i];
             var blink = ((_tick + i * 7) % 22 < 2) ? 0x444466 : 0x7777AA;
             if (theme == 4) { blink = ((_tick + i * 7) % 22 < 2) ? 0x665522 : 0xAA9955; }
@@ -712,8 +733,8 @@ class BitochiAxeArcadeView extends WatchUi.View {
         dc.fillCircle(lcx, lcy, 2);
 
         var grainOff = _logAngle * 3.14159 / 180.0;
-        for (var g = 0; g < 6; g++) {
-            var ga = grainOff + g.toFloat() * 1.047;
+        for (var g = 0; g < 4; g++) {
+            var ga = grainOff + g.toFloat() * 1.571;
             var gx = lcx + (Math.cos(ga) * (r - 5).toFloat()).toNumber();
             var gy = lcy + (Math.sin(ga) * (r - 5).toFloat()).toNumber();
             var gx2 = lcx + (Math.cos(ga) * (r - 10).toFloat()).toNumber();
@@ -980,6 +1001,23 @@ class BitochiAxeArcadeView extends WatchUi.View {
                 dc.fillCircle(_cx - (_hazCount * 5) + i * 10 + 5, _h - 30, 2);
             }
         }
+
+        for (var l = 0; l < 3; l++) {
+            var lox = 6 + l * 13;
+            var loy = _h - 52;
+            if (l < _lives) {
+                dc.setColor(0xDDDDDD, Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(lox - 3, loy, 7, 3);
+                dc.setColor(0x7A5A33, Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(lox, loy + 3, 2, 5);
+                dc.setColor(0xCC2222, Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(lox - 1, loy + 7, 4, 1);
+            } else {
+                dc.setColor(0x333333, Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(lox - 3, loy, 7, 3);
+                dc.fillRectangle(lox, loy + 3, 2, 5);
+            }
+        }
     }
 
     hidden function drawCombo(dc) {
@@ -991,6 +1029,8 @@ class BitochiAxeArcadeView extends WatchUi.View {
         else if (_comboMsg.find("LEVEL") != null) { mc = 0x44FFAA; }
         else if (_comboMsg.find("BOSS") != null) { mc = 0xFF4444; }
         else if (_comboMsg.find("CLANG") != null) { mc = 0xFF2222; }
+        else if (_comboMsg.find("LAST") != null) { mc = 0xFF4444; }
+        else if (_comboMsg.find("LIFE") != null) { mc = 0xFF8844; }
         dc.setColor(mc, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_cx, cy, Graphics.FONT_SMALL, _comboMsg, Graphics.TEXT_JUSTIFY_CENTER);
     }
@@ -1028,7 +1068,7 @@ class BitochiAxeArcadeView extends WatchUi.View {
         dc.setColor(0x14182A, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, 0, _w, _h / 2);
 
-        for (var i = 0; i < 24; i++) {
+        for (var i = 0; i < 16; i++) {
             var st = _bgStars[i];
             var blink = ((_tick + i * 7) % 20 < 3) ? 0x444466 : 0x7777AA;
             dc.setColor(blink, Graphics.COLOR_TRANSPARENT);
