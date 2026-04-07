@@ -4,6 +4,7 @@ using Toybox.Math;
 using Toybox.Timer;
 using Toybox.Time;
 using Toybox.System;
+using Toybox.Application;
 
 enum {
     SS_MENU,
@@ -100,7 +101,8 @@ class BitochiSniperView extends WatchUi.View {
         _tick = 0;
         _level = 1;
         _score = 0;
-        _bestScore = 0;
+        var bs = Application.Storage.getValue("snipBest");
+        _bestScore = (bs != null) ? bs : 0;
         _combo = 0;
         _maxCombo = 0;
 
@@ -172,7 +174,9 @@ class BitochiSniperView extends WatchUi.View {
         _swayPhase += 0.13;
         _breathPhase += 0.04;
         _windPhase += 0.02;
-        _windX = Math.sin(_windPhase) * (0.5 + _level.toFloat() * 0.15);
+        var windAmp = 0.45 + _level.toFloat() * 0.11 + (_level / 4).toFloat() * 0.04;
+        if (windAmp > 1.35) { windAmp = 1.35; }
+        _windX = Math.sin(_windPhase) * windAmp;
 
         if (gameState == SS_HUNT) {
             updateAim();
@@ -184,7 +188,7 @@ class BitochiSniperView extends WatchUi.View {
                     _betweenTick = 0;
                 } else {
                     gameState = SS_GAMEOVER;
-                    if (_score > _bestScore) { _bestScore = _score; }
+                    if (_score > _bestScore) { _bestScore = _score; Application.Storage.setValue("snipBest", _bestScore); }
                 }
             }
             if (_shotFlash > 0) { _shotFlash--; }
@@ -233,20 +237,20 @@ class BitochiSniperView extends WatchUi.View {
     hidden function startLevel() {
         _aimX = (_worldW / 2).toFloat();
         _aimY = (_worldH / 2).toFloat();
-        _swayAmp = 2.5 + _level.toFloat() * 0.6;
-        if (_swayAmp > 7.0) { _swayAmp = 7.0; }
-        _ammo = 5 + _level;
-        if (_ammo > 12) { _ammo = 12; }
+        _swayAmp = 2.4 + _level.toFloat() * 0.42;
+        if (_swayAmp > 6.5) { _swayAmp = 6.5; }
+        _ammo = 6 + (_level / 2) + (_level / 3);
+        if (_ammo > 14) { _ammo = 14; }
         _maxAmmo = _ammo;
-        _killTarget = 2 + _level;
+        _killTarget = 3 + (_level - 1) / 2;
         if (_killTarget > CREAT_MAX) { _killTarget = CREAT_MAX; }
         _kills = 0;
         _combo = 0;
         _shotFlash = 0;
         _hitShow = 0;
         _recoilTick = 0;
-        _timeLeft = 600 + _level * 100;
-        if (_timeLeft > 1400) { _timeLeft = 1400; }
+        _timeLeft = 620 + _level * 78 + (_level / 3) * 35;
+        if (_timeLeft > 1750) { _timeLeft = 1750; }
 
         _creatCount = _killTarget;
         if (_creatCount > CREAT_MAX) { _creatCount = CREAT_MAX; }
@@ -283,7 +287,8 @@ class BitochiSniperView extends WatchUi.View {
                     _creatVy[i] = ((Math.rand().abs() % 40) - 20).toFloat() / 10.0;
                 }
                 var speed = _creatVx[i] * _creatVx[i] + _creatVy[i] * _creatVy[i];
-                var maxSpd = (1.0 + _level.toFloat() * 0.3);
+                var maxSpd = 1.0 + _level.toFloat() * 0.2 + (_level / 4).toFloat() * 0.06;
+                if (maxSpd > 2.65) { maxSpd = 2.65; }
                 if (speed > maxSpd * maxSpd) {
                     _creatVx[i] = _creatVx[i] * 0.85;
                     _creatVy[i] = _creatVy[i] * 0.85;
@@ -310,7 +315,11 @@ class BitochiSniperView extends WatchUi.View {
             return;
         }
         if (gameState == SS_GAMEOVER) {
-            gameState = SS_MENU;
+            _level = 1;
+            _score = 0;
+            _combo = 0;
+            _maxCombo = 0;
+            startLevel();
             return;
         }
         if (gameState == SS_BETWEEN) {
@@ -351,9 +360,21 @@ class BitochiSniperView extends WatchUi.View {
             if (_combo > _maxCombo) { _maxCombo = _combo; }
 
             var pts = 100 + (_combo - 1) * 50;
-            if (bestDist < 3.0) { pts = pts + 200; _shotMsg = "HEADSHOT!"; }
-            else if (bestDist < _creatSize[bestIdx].toFloat() * 0.5) { pts = pts + 100; _shotMsg = "CLEAN!"; }
-            else { _shotMsg = "HIT!"; }
+            if (bestDist < 3.0) {
+                pts = pts + 200;
+                _shotMsg = "HEADSHOT!";
+                _ammo++;
+                if (_ammo > _maxAmmo) { _maxAmmo = _ammo; }
+                if (_maxAmmo > 15) { _maxAmmo = 15; _ammo = 15; }
+            } else if (bestDist < _creatSize[bestIdx].toFloat() * 0.5) {
+                pts = pts + 100;
+                _shotMsg = "CLEAN!";
+                if (_combo >= 3) {
+                    _ammo++;
+                    if (_ammo > _maxAmmo) { _maxAmmo = _ammo; }
+                    if (_maxAmmo > 15) { _maxAmmo = 15; _ammo = 15; }
+                }
+            } else { _shotMsg = "HIT!"; }
             _score += pts;
 
             _hitX = _creatX[bestIdx]; _hitY = _creatY[bestIdx];
@@ -404,7 +425,7 @@ class BitochiSniperView extends WatchUi.View {
             }
             if (anyAlive) {
                 gameState = SS_GAMEOVER;
-                if (_score > _bestScore) { _bestScore = _score; }
+                if (_score > _bestScore) { _bestScore = _score; Application.Storage.setValue("snipBest", _bestScore); }
             }
         }
     }
@@ -854,7 +875,7 @@ class BitochiSniperView extends WatchUi.View {
         dc.setColor(0x888888, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_cx, _h * 72 / 100, Graphics.FONT_XTINY, "BEST " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER);
 
-        dc.setColor(0x666666, Graphics.COLOR_TRANSPARENT);
+        dc.setColor((_tick % 10 < 5) ? 0xFFAA44 : 0xDD8833, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_cx, _h * 86 / 100, Graphics.FONT_XTINY, "Press to retry", Graphics.TEXT_JUSTIFY_CENTER);
     }
 }

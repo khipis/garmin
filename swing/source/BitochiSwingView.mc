@@ -4,6 +4,7 @@ using Toybox.Math;
 using Toybox.Timer;
 using Toybox.Time;
 using Toybox.System;
+using Toybox.Application;
 
 enum {
     GS_MENU,
@@ -100,8 +101,12 @@ class BitochiSwingView extends WatchUi.View {
         _farAX = 0.0; _farAY = 0.0; _farAType = 0;
         _groundY = _h * 85 / 100;
         _startX = 0.0;
-        _score = 0; _bestScore = 0;
-        _distance = 0.0; _bestDist = 0.0;
+        _score = 0;
+        var sbs = Application.Storage.getValue("swingBest");
+        _bestScore = (sbs != null) ? sbs : 0;
+        _distance = 0.0;
+        var sbd = Application.Storage.getValue("swingDist");
+        _bestDist = (sbd != null) ? sbd : 0.0;
         _combo = 0; _maxCombo = 0; _catches = 0;
         _catchTick = 0; _resultTick = 0;
         _catchMsg = ""; _catchMsgTick = 0;
@@ -203,7 +208,9 @@ class BitochiSwingView extends WatchUi.View {
     }
 
     hidden function updateFlight() {
-        _charVy += 0.13;
+        var g = 0.125 + (_catches / 6).toFloat() * 0.006;
+        if (g > 0.145) { g = 0.145; }
+        _charVy += g;
         _charX += _charVx;
         _charY += _charVy;
         if (_charX - _startX > _distance) { _distance = _charX - _startX; }
@@ -267,7 +274,7 @@ class BitochiSwingView extends WatchUi.View {
         var dx = _charX - _nextAX;
         var dy = _charY - _nextAY.toFloat();
         var dist = Math.sqrt(dx * dx + dy * dy);
-        var pts = 100 + _combo * 40;
+        var pts = 100 + _combo * 34 + (_catches / 4) * 8;
         if (dist < 8.0) {
             pts += 100;
             _catchMsg = "PERFECT!";
@@ -277,6 +284,10 @@ class BitochiSwingView extends WatchUi.View {
         } else {
             _catchMsg = "NICE!";
         }
+        if (_catches % 5 == 0) {
+            pts += 220;
+            _catchMsg = "MILESTONE!";
+        }
         _catchMsgTick = 30;
         _score += pts;
 
@@ -285,10 +296,10 @@ class BitochiSwingView extends WatchUi.View {
         genFarAnchor();
 
         _ropeLen = 45.0 + (Math.rand().abs() % 25).toFloat();
-        _maxAngle = 50.0 + _combo.toFloat() * 1.2;
-        if (_maxAngle > 70.0) { _maxAngle = 70.0; }
-        _swingSpeed = 2.8 + _combo.toFloat() * 0.1;
-        if (_swingSpeed > 4.8) { _swingSpeed = 4.8; }
+        _maxAngle = 50.0 + _combo.toFloat() * 0.95 + (_combo / 4).toFloat() * 0.35;
+        if (_maxAngle > 68.0) { _maxAngle = 68.0; }
+        _swingSpeed = 2.75 + _combo.toFloat() * 0.085 + (_combo / 5).toFloat() * 0.05;
+        if (_swingSpeed > 4.35) { _swingSpeed = 4.35; }
 
         spawnMagic(_charX.toNumber(), _charY.toNumber());
         doVibe(60, 80);
@@ -298,8 +309,8 @@ class BitochiSwingView extends WatchUi.View {
     }
 
     hidden function doLand() {
-        if (_score > _bestScore) { _bestScore = _score; }
-        if (_distance > _bestDist) { _bestDist = _distance; }
+        if (_score > _bestScore) { _bestScore = _score; Application.Storage.setValue("swingBest", _bestScore); }
+        if (_distance > _bestDist) { _bestDist = _distance; Application.Storage.setValue("swingDist", _bestDist); }
         _charY = _groundY.toFloat();
         spawnDust(_charX.toNumber(), _groundY);
         doVibe(80, 120);
@@ -309,9 +320,9 @@ class BitochiSwingView extends WatchUi.View {
     }
 
     hidden function genFarAnchor() {
-        var gap = 80.0 + _catches.toFloat() * 3.5;
-        if (gap > 155.0) { gap = 155.0; }
-        gap += (Math.rand().abs() % 35).toFloat();
+        var gap = 78.0 + _catches.toFloat() * 2.45 + (_catches / 3).toFloat() * 2.0;
+        if (gap > 148.0) { gap = 148.0; }
+        gap += (Math.rand().abs() % 32).toFloat();
         _farAX = _nextAX + gap;
         _farAY = _h * 18 / 100 + Math.rand().abs() % (_h * 22 / 100);
         _farAType = Math.rand().abs() % 3;
@@ -324,7 +335,7 @@ class BitochiSwingView extends WatchUi.View {
         _curAX = _startX;
         _curAY = (_h * 28 / 100).toFloat();
         _curAType = 0;
-        _nextAX = _curAX + 95.0 + (Math.rand().abs() % 25).toFloat();
+        _nextAX = _curAX + 88.0 + (Math.rand().abs() % 28).toFloat();
         _nextAY = _h * 20 / 100 + Math.rand().abs() % (_h * 18 / 100);
         _nextAType = Math.rand().abs() % 3;
         genFarAnchor();
@@ -348,7 +359,7 @@ class BitochiSwingView extends WatchUi.View {
             return;
         }
         if (gameState == GS_GAMEOVER) {
-            if (_resultTick > 20) { gameState = GS_MENU; }
+            if (_resultTick > 20) { startGame(); }
             return;
         }
     }
@@ -441,6 +452,7 @@ class BitochiSwingView extends WatchUi.View {
         if (_catchMsgTick > 0) {
             var mc = 0x44FF88;
             if (_catchMsg.equals("PERFECT!")) { mc = 0xFFFF44; }
+            else if (_catchMsg.equals("MILESTONE!")) { mc = 0xFFAA22; }
             dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
             dc.drawText(_cx + 1, _cy - 14, Graphics.FONT_SMALL, _catchMsg, Graphics.TEXT_JUSTIFY_CENTER);
             dc.setColor(mc, Graphics.COLOR_TRANSPARENT);
@@ -855,7 +867,7 @@ class BitochiSwingView extends WatchUi.View {
         dc.drawText(_cx, _h * 62 / 100, Graphics.FONT_XTINY, "BEST " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER);
 
         if (_resultTick > 25) {
-            dc.setColor((_resultTick % 10 < 5) ? 0x777777 : 0x666666, Graphics.COLOR_TRANSPARENT);
+            dc.setColor((_resultTick % 10 < 5) ? 0xFFAA44 : 0xDD8833, Graphics.COLOR_TRANSPARENT);
             dc.drawText(_cx, _h * 85 / 100, Graphics.FONT_XTINY, "Tap to retry", Graphics.TEXT_JUSTIFY_CENTER);
         }
     }

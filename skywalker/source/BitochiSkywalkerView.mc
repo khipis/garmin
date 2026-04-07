@@ -4,6 +4,7 @@ using Toybox.Math;
 using Toybox.Timer;
 using Toybox.Time;
 using Toybox.System;
+using Toybox.Application;
 
 enum {
     SS_MENU,
@@ -96,7 +97,8 @@ class BitochiSkywalkerView extends WatchUi.View {
         _tick = 0;
         _level = 1;
         _score = 0;
-        _bestScore = 0;
+        var bs = Application.Storage.getValue("skyBest");
+        _bestScore = (bs != null) ? bs : 0;
         _combo = 0;
         _maxCombo = 0;
         _shield = 100;
@@ -188,7 +190,7 @@ class BitochiSkywalkerView extends WatchUi.View {
                     _betweenTick = 0;
                 } else {
                     gameState = SS_GAMEOVER;
-                    if (_score > _bestScore) { _bestScore = _score; }
+                    if (_score > _bestScore) { _bestScore = _score; Application.Storage.setValue("skyBest", _bestScore); }
                 }
             }
             if (_shotFlash > 0) { _shotFlash--; }
@@ -232,12 +234,12 @@ class BitochiSkywalkerView extends WatchUi.View {
     hidden function startLevel() {
         _aimX = (_worldW / 2).toFloat();
         _aimY = (_worldH / 2).toFloat();
-        _swayAmp = 1.8 + _level.toFloat() * 0.5;
-        if (_swayAmp > 6.0) { _swayAmp = 6.0; }
-        _ammo = 6 + _level;
-        if (_ammo > 14) { _ammo = 14; }
+        _swayAmp = 1.8 + _level.toFloat() * 0.35;
+        if (_swayAmp > 5.5) { _swayAmp = 5.5; }
+        _ammo = 7 + (_level / 2) + (_level / 4);
+        if (_ammo > 16) { _ammo = 16; }
         _maxAmmo = _ammo;
-        _killTarget = 2 + _level;
+        _killTarget = 3 + (_level - 1) / 2;
         if (_killTarget > SHIP_MAX) { _killTarget = SHIP_MAX; }
         _kills = 0;
         _combo = 0;
@@ -246,12 +248,16 @@ class BitochiSkywalkerView extends WatchUi.View {
         _recoilTick = 0;
         _laserShow = 0;
         _enemyFireShow = 0;
-        _timeLeft = 600 + _level * 120;
-        if (_timeLeft > 1600) { _timeLeft = 1600; }
+        _timeLeft = 620 + _level * 95 + (_level / 3) * 40;
+        if (_timeLeft > 2000) { _timeLeft = 2000; }
 
-        var shieldRegen = 20 + _level * 5;
+        var shieldRegen = 15 + _level * 4 + (_level / 3) * 3;
         _shield += shieldRegen;
         if (_shield > _maxShield) { _shield = _maxShield; }
+        if (_level % 4 == 0) {
+            _shield += 18;
+            if (_shield > _maxShield) { _shield = _maxShield; }
+        }
 
         _shipCount = _killTarget;
         if (_shipCount > SHIP_MAX) { _shipCount = SHIP_MAX; }
@@ -268,9 +274,19 @@ class BitochiSkywalkerView extends WatchUi.View {
         _shipY[idx] = (120 + Math.rand().abs() % (_worldH - 240)).toFloat();
         _shipVx[idx] = ((Math.rand().abs() % 40) - 20).toFloat() / 10.0;
         _shipVy[idx] = ((Math.rand().abs() % 40) - 20).toFloat() / 10.0;
-        _shipType[idx] = Math.rand().abs() % 8;
+        var eliteRoll = Math.rand().abs() % 100;
+        var maxType = 4;
+        if (_level >= 5) { maxType = 6; }
+        if (_level >= 9) { maxType = 8; }
+        if (_level >= 12 && eliteRoll < 22) {
+            _shipType[idx] = 6 + Math.rand().abs() % 2;
+        } else {
+            _shipType[idx] = Math.rand().abs() % maxType;
+        }
         _shipAlive[idx] = true;
         _shipSize[idx] = 7 + Math.rand().abs() % 5;
+        if (_level >= 10 && Math.rand().abs() % 5 == 0) { _shipSize[idx] += 1; }
+        if (_shipSize[idx] > 12) { _shipSize[idx] = 12; }
         _shipFlee[idx] = 0;
     }
 
@@ -288,15 +304,18 @@ class BitochiSkywalkerView extends WatchUi.View {
                     _shipVy[i] = ((Math.rand().abs() % 50) - 25).toFloat() / 10.0;
                 }
                 var speed = _shipVx[i] * _shipVx[i] + _shipVy[i] * _shipVy[i];
-                var maxSpd = 1.2 + _level.toFloat() * 0.35;
+                var maxSpd = 1.15 + _level.toFloat() * 0.22 + (_level / 5).toFloat() * 0.08;
+                if (maxSpd > 3.15) { maxSpd = 3.15; }
                 if (speed > maxSpd * maxSpd) {
                     _shipVx[i] = _shipVx[i] * 0.82;
                     _shipVy[i] = _shipVy[i] * 0.82;
                 }
 
-                if (_tick % 60 == (i * 13) % 60 && _level >= 2) {
-                    var dmg = 4 + _level * 2;
-                    if (dmg > 18) { dmg = 18; }
+                var fireEvery = 62 + (_level / 2) * 4;
+                if (fireEvery > 88) { fireEvery = 88; }
+                if (_tick % fireEvery == (i * 13) % fireEvery && _level >= 2) {
+                    var dmg = 4 + (_level * 3) / 2;
+                    if (dmg > 16) { dmg = 16; }
                     _shield -= dmg;
                     _enemyFireShow = 6;
                     _enemyFireIdx = i;
@@ -304,7 +323,7 @@ class BitochiSkywalkerView extends WatchUi.View {
                     if (_shield <= 0) {
                         _shield = 0;
                         gameState = SS_GAMEOVER;
-                        if (_score > _bestScore) { _bestScore = _score; }
+                        if (_score > _bestScore) { _bestScore = _score; Application.Storage.setValue("skyBest", _bestScore); }
                     }
                 }
             }
@@ -330,7 +349,12 @@ class BitochiSkywalkerView extends WatchUi.View {
             return;
         }
         if (gameState == SS_GAMEOVER) {
-            gameState = SS_MENU;
+            _level = 1;
+            _score = 0;
+            _combo = 0;
+            _maxCombo = 0;
+            _shield = _maxShield;
+            startLevel();
             return;
         }
         if (gameState == SS_BETWEEN) {
@@ -428,7 +452,7 @@ class BitochiSkywalkerView extends WatchUi.View {
             }
             if (anyAlive) {
                 gameState = SS_GAMEOVER;
-                if (_score > _bestScore) { _bestScore = _score; }
+                if (_score > _bestScore) { _bestScore = _score; Application.Storage.setValue("skyBest", _bestScore); }
             }
         }
     }

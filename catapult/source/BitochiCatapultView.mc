@@ -4,6 +4,7 @@ using Toybox.Math;
 using Toybox.Timer;
 using Toybox.Time;
 using Toybox.System;
+using Toybox.Application;
 
 enum {
     GS_READY,
@@ -135,6 +136,8 @@ class BitochiCatapultView extends WatchUi.View {
     hidden var _shopCosts;
     hidden var _shopPows;
     hidden var _roundGold;
+    hidden var _enemyBaseX;
+    hidden var _accBonusShots;
 
     function initialize() {
         View.initialize();
@@ -178,7 +181,8 @@ class BitochiCatapultView extends WatchUi.View {
         _resultTick = 0;
         _flashTick = 0;
         _previewTick = 0;
-        _bestShots = 99;
+        var catBs = Application.Storage.getValue("catBest");
+        _bestShots = (catBs != null) ? catBs : 99;
         _totalShots = 0;
         _enemyVy = 0.0;
         _enemyOnGround = true;
@@ -190,6 +194,8 @@ class BitochiCatapultView extends WatchUi.View {
         _shopSel = 0;
         _activePow = PW_NONE;
         _roundGold = 0;
+        _enemyBaseX = 0.0;
+        _accBonusShots = 0;
 
         _shopNames = ["MEGA BOMB", "FIRE SHOT", "PIERCER", "TRIPLE", "AMMO +3"];
         _shopCosts = [120, 180, 220, 250, 80];
@@ -200,15 +206,20 @@ class BitochiCatapultView extends WatchUi.View {
 
     hidden function initRound() {
         _round++;
-        _shots = 4 + _round;
-        if (_shots > 14) { _shots = 14; }
+        _shots = 4 + _round + (_round / 6);
+        if (_shots > 15) { _shots = 15; }
         _totalShots = 0;
-        _windDisplay = (Math.rand().abs() % 19) - 9;
-        _wind = _windDisplay.toFloat() * 0.018;
+        _accBonusShots = 0;
+        var windSpan = 7 + _round / 3;
+        if (windSpan > 11) { windSpan = 11; }
+        _windDisplay = (Math.rand().abs() % (windSpan * 2 + 1)) - windSpan;
+        _wind = _windDisplay.toFloat() * (0.016 + _round.toFloat() * 0.00012);
+        if (_wind > 0.22) { _wind = 0.22; }
+        if (_wind < -0.22) { _wind = -0.22; }
         _windGust = 0.0;
 
-        _castleWX = 220.0 + (_round * 42).toFloat();
-        if (_castleWX > 850.0) { _castleWX = 850.0; }
+        _castleWX = 218.0 + (_round * 36).toFloat() + ((_round / 4) * 14).toFloat();
+        if (_castleWX > 880.0) { _castleWX = 880.0; }
 
         _enemyIdx = _round - 1;
         if (_enemyIdx == 0)       { _enemyName = "GRUMBLOR";   _enemyColor = 0x44BB66; _enemyColor2 = 0x228844; _enemyMaxHp = 80; }
@@ -230,6 +241,7 @@ class BitochiCatapultView extends WatchUi.View {
         _enemyHp = _enemyMaxHp;
         _enemyVy = 0.0;
         _enemyOnGround = true;
+        _enemyBaseX = _castleWX;
 
         applyTheme();
         buildCastle();
@@ -310,10 +322,17 @@ class BitochiCatapultView extends WatchUi.View {
 
         var tier = _round;
         if (tier > 12) { tier = 12; }
+        var sizeVar = _round % 3;
         var cols = 3 + tier / 2;
-        if (cols > 7) { cols = 7; }
         var rows = 2 + tier / 2;
-        if (rows > 6) { rows = 6; }
+        if (sizeVar == 0) {
+            if (cols > 3) { cols--; }
+        } else if (sizeVar == 2) {
+            rows++;
+            if (rows > 7) { rows = 7; }
+        }
+        if (cols > 7) { cols = 7; }
+        if (rows > 6 && sizeVar != 2) { rows = 6; }
 
         var startX = cx - (cols * bw) / 2.0;
 
@@ -347,6 +366,7 @@ class BitochiCatapultView extends WatchUi.View {
             }
         }
 
+        _enemyBaseX = cx;
         _enemyWX = cx;
         _enemyWY = gy - (rows + 1).toFloat() * bw - bw * 1.5;
     }
@@ -387,6 +407,12 @@ class BitochiCatapultView extends WatchUi.View {
 
     function onTick() as Void {
         _tick++;
+
+        if (_round >= 6 && _enemyHp > 0) {
+            var amp = (_round >= 11) ? 22.0 : ((_round >= 8) ? 16.0 : 11.0);
+            var spd = (_round >= 11) ? 0.095 : 0.078;
+            _enemyWX = _enemyBaseX + Math.sin(_tick.toFloat() * spd) * amp;
+        }
 
         if (_shakeLeft > 0) {
             _shakeOx = (Math.rand().abs() % 9) - 4;
@@ -432,7 +458,7 @@ class BitochiCatapultView extends WatchUi.View {
                 if (_enemyHp <= 0) {
                     _beatGame = (_round >= 16);
                     _score += 200 + _shots * 60;
-                    if (_totalShots < _bestShots) { _bestShots = _totalShots; }
+                    if (_totalShots < _bestShots) { _bestShots = _totalShots; Application.Storage.setValue("catBest", _bestShots); }
                     _roundGold = 50 + _round * 20 + _shots * 15;
                     _gold += _roundGold;
                     gameState = GS_RESULT;
@@ -457,6 +483,7 @@ class BitochiCatapultView extends WatchUi.View {
 
         if (gameState == GS_FLIGHT || gameState == GS_HIT) {
             var dist = _castleWX - _catWX;
+            if (dist < 1.0) { dist = 1.0; }
             var projProgress = (_px - _catWX) / dist;
             if (projProgress < 0.0) { projProgress = 0.0; }
             if (projProgress > 1.0) { projProgress = 1.0; }
@@ -642,6 +669,13 @@ class BitochiCatapultView extends WatchUi.View {
 
         if (hitSomething) { _combo++; } else { _combo = 0; }
 
+        if (_hitEnemyDirect && _accBonusShots < 2 && _round >= 3) {
+            _shots += 2;
+            if (_shots > 17) { _shots = 17; }
+            _accBonusShots++;
+            _score += 25 + _round * 2;
+        }
+
         spawnImpactParticles(hx, hy, _critHit || _activePow == PW_MEGA);
         var shk = _critHit ? 14 : 8;
         if (_activePow == PW_MEGA) { shk = 18; }
@@ -778,7 +812,10 @@ class BitochiCatapultView extends WatchUi.View {
         } else if (gameState == GS_SHOP) {
             shopBuy();
         } else if (gameState == GS_GAMEOVER) {
-            _score = 0; _round = 0; _combo = 0; _beatGame = false; _bestShots = 99; _gold = 0;
+            _score = 0; _round = 0; _combo = 0; _beatGame = false;
+            var catBsGo = Application.Storage.getValue("catBest");
+            _bestShots = (catBsGo != null) ? catBsGo : 99;
+            _gold = 0;
             _activePow = PW_NONE;
             initRound();
         }

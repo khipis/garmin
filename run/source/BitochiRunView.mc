@@ -179,7 +179,7 @@ class BitochiRunView extends WatchUi.View {
 
         _tick = 0;
         _level = 0;
-        _maxLevels = 7;
+        _maxLevels = 12;
         _survived = 0;
         _totalDist = 0.0;
         _sessionScore = 0;
@@ -322,8 +322,10 @@ class BitochiRunView extends WatchUi.View {
     }
 
     hidden function buildScanLights() {
-        _decoyCount = _level < 3 ? 2 : (_level < 5 ? 3 : 4);
-        _trapCount = _level < 4 ? 1 : 2;
+        _decoyCount = 2 + _level / 3;
+        if (_decoyCount > 6) { _decoyCount = 6; }
+        _trapCount = 1 + _level / 4;
+        if (_trapCount > 4) { _trapCount = 4; }
         _lightCount = 1 + _decoyCount + _trapCount;
 
         _decoyAngles = new [_decoyCount];
@@ -361,7 +363,8 @@ class BitochiRunView extends WatchUi.View {
         _scanTimer = 0;
         _scanHintTick = 0;
         _scanPhaseTicks = 0;
-        _scanMaxTicks = 500;
+        _scanMaxTicks = 550 - _level * 12;
+        if (_scanMaxTicks < 300) { _scanMaxTicks = 300; }
         _footstepPhase = 0;
         _jumpScareLife = 0;
         _trapFocusTicks = 0;
@@ -464,9 +467,10 @@ class BitochiRunView extends WatchUi.View {
     hidden function startRun() {
         gameState = RS_RUN;
         _playerDist = 0.0;
-        _exitDist = 58.0 + (_level * 14).toFloat();
-        _monsterDist = -22.0 - (_level * 6).toFloat();
-        _monsterBaseSpeed = 0.52 + _level.toFloat() * 0.11;
+        _exitDist = 62.0 + (_level * 10).toFloat() + (_level / 3 * 6).toFloat();
+        _monsterDist = -24.0 - (_level * 4).toFloat();
+        _monsterBaseSpeed = 0.48 + _level.toFloat() * 0.075 + (_level / 5).toFloat() * 0.04;
+        if (_monsterBaseSpeed > 1.8) { _monsterBaseSpeed = 1.8; }
         _monsterSpeed = _monsterBaseSpeed;
         _playerSpeed = 0.0;
         _runShake = 0;
@@ -796,7 +800,7 @@ class BitochiRunView extends WatchUi.View {
             _survived = 0;
             _totalDist = 0.0;
             _sessionScore = 0;
-            gameState = RS_MENU;
+            startLevel();
         } else if (gameState == RS_ESCAPE) {
             if (_level >= _maxLevels) {
                 gameState = RS_LEVELS;
@@ -1080,7 +1084,7 @@ class BitochiRunView extends WatchUi.View {
 
         dc.setColor(0x888888, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w / 2, h * 83 / 100, Graphics.FONT_XTINY, "HI " + _highScore, Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0x555555, Graphics.COLOR_TRANSPARENT);
+        dc.setColor((_tick % 10 < 5) ? 0xFFAA44 : 0xDD8833, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w / 2, h * 89 / 100, Graphics.FONT_XTINY, "Tap to start", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
@@ -1722,7 +1726,7 @@ class BitochiRunView extends WatchUi.View {
         dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w / 2, h * 74 / 100, Graphics.FONT_XTINY, "" + _sessionScore + " pts", Graphics.TEXT_JUSTIFY_CENTER);
 
-        dc.setColor(0x555555, Graphics.COLOR_TRANSPARENT);
+        dc.setColor((_tick % 10 < 5) ? 0xFFAA44 : 0xDD8833, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w / 2, h * 82 / 100, Graphics.FONT_XTINY, "Tap to retry", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
@@ -1782,7 +1786,7 @@ class BitochiRunView extends WatchUi.View {
             dc.drawText(w / 2, h * 77 / 100, Graphics.FONT_XTINY, "Next: " + _monsterNames[_level % _monsterNames.size()], Graphics.TEXT_JUSTIFY_CENTER);
         }
 
-        dc.setColor(0x555555, Graphics.COLOR_TRANSPARENT);
+        dc.setColor((_tick % 10 < 5) ? 0xFFAA44 : 0xDD8833, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w / 2, h * 85 / 100, Graphics.FONT_XTINY, "Tap to continue", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
@@ -1816,7 +1820,7 @@ class BitochiRunView extends WatchUi.View {
 
         drawPlayerSprite(dc, w / 2, h * 76 / 100);
 
-        dc.setColor(0x555555, Graphics.COLOR_TRANSPARENT);
+        dc.setColor((_tick % 10 < 5) ? 0xFFAA44 : 0xDD8833, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w / 2, h * 85 / 100, Graphics.FONT_XTINY, "Tap to restart", Graphics.TEXT_JUSTIFY_CENTER);
     }
 }

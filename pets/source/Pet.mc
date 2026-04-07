@@ -760,6 +760,11 @@ class Pet {
         if (!isAlive) { return; }
         checkReturn();
         lastInteraction = Time.now().value();
+        var sf = Application.Storage.getValue("statFeed");
+        if (sf == null) { sf = 0; }
+        sf++;
+        Application.Storage.setValue("statFeed", sf);
+        if (sf >= 300) { Application.Storage.setValue("unlockRainbow", true); }
         var wasHungry = hunger > 60;
 
         if (hunger < 10) {
@@ -956,6 +961,11 @@ class Pet {
         if (!isAlive) { return; }
         updateCareStreak();
         lastInteraction = Time.now().value();
+        var sp = Application.Storage.getValue("statPunish");
+        if (sp == null) { sp = 0; }
+        sp++;
+        Application.Storage.setValue("statPunish", sp);
+        if (sp >= 100) { Application.Storage.setValue("unlockVexor", true); }
         var roll = Math.rand().abs() % 10;
 
         if (petType == TYPE_EMILKA) { roll -= 2; }
@@ -1031,6 +1041,11 @@ class Pet {
         if (!isAlive) { return; }
         checkReturn();
         lastInteraction = Time.now().value();
+        var sh = Application.Storage.getValue("statHug");
+        if (sh == null) { sh = 0; }
+        sh++;
+        Application.Storage.setValue("statHug", sh);
+        if (sh >= 200) { Application.Storage.setValue("unlockOctavio", true); }
 
         hugStress += getHugStressRate();
         if (hugStress < 0) { hugStress = 0; }
@@ -1990,20 +2005,34 @@ class Pet {
     }
 
     function isTypeLocked(type) {
-        if (type == TYPE_UNDEAD) {
-            var u = Application.Storage.getValue("unlockUndead");
-            return (u == null || !u);
-        }
-        if (type == TYPE_DZIKKO) {
-            var u = Application.Storage.getValue("unlockDzikko");
-            return (u == null || !u);
-        }
+        if (type == TYPE_UNDEAD) { var u = Application.Storage.getValue("unlockUndead"); return (u == null || !u); }
+        if (type == TYPE_DZIKKO) { var u = Application.Storage.getValue("unlockDzikko"); return (u == null || !u); }
+        if (type == TYPE_VEXOR) { var u = Application.Storage.getValue("unlockVexor"); return (u == null || !u); }
+        if (type == TYPE_RAINBOW) { var u = Application.Storage.getValue("unlockRainbow"); return (u == null || !u); }
+        if (type == TYPE_PIXELBOT) { var u = Application.Storage.getValue("unlockPixelbot"); return (u == null || !u); }
+        if (type == TYPE_OCTAVIO) { var u = Application.Storage.getValue("unlockOctavio"); return (u == null || !u); }
         return false;
     }
 
     function getLockReason(type) {
         if (type == TYPE_UNDEAD) { return "Kill a pet to unlock"; }
         if (type == TYPE_DZIKKO) { return "Overfeed a pet to unlock"; }
+        if (type == TYPE_VEXOR) {
+            var sp = Application.Storage.getValue("statPunish");
+            if (sp == null) { sp = 0; }
+            return "Punish 100x (" + sp + "/100)";
+        }
+        if (type == TYPE_RAINBOW) {
+            var sf = Application.Storage.getValue("statFeed");
+            if (sf == null) { sf = 0; }
+            return "Feed 300x (" + sf + "/300)";
+        }
+        if (type == TYPE_PIXELBOT) { return "14-day care streak"; }
+        if (type == TYPE_OCTAVIO) {
+            var sh = Application.Storage.getValue("statHug");
+            if (sh == null) { sh = 0; }
+            return "Give 200 hugs (" + sh + "/200)";
+        }
         return "";
     }
 
@@ -2327,7 +2356,7 @@ class Pet {
             _eventTime = Time.now().value();
             if (careStreak == 3) { eventText = "3-day streak!"; happiness += 10; celebType = 1; pendingVibe = 2; }
             else if (careStreak == 7) { eventText = "WEEK STREAK!"; happiness += 15; energy += 10; celebType = 2; pendingVibe = 2; }
-            else if (careStreak == 14) { eventText = "2-WEEK STREAK!!"; happiness += 20; energy += 15; health += 10; celebType = 2; pendingVibe = 2; }
+            else if (careStreak == 14) { eventText = "2-WEEK STREAK!!"; happiness += 20; energy += 15; health += 10; celebType = 2; pendingVibe = 2; Application.Storage.setValue("unlockPixelbot", true); }
             else if (careStreak == 30) { eventText = "MONTH STREAK!!!"; happiness += 30; energy += 20; health += 20; hunger -= 20; celebType = 2; pendingVibe = 2; }
         } else if (today > _lastCareDay + 1) {
             careStreak = 1;

@@ -4,6 +4,7 @@ using Toybox.Math;
 using Toybox.Timer;
 using Toybox.Time;
 using Toybox.System;
+using Toybox.Application;
 
 enum {
     GS_MENU,
@@ -91,7 +92,8 @@ class BitochiAxeView extends WatchUi.View {
         _tick = 0;
         _wave = 0;
         _score = 0;
-        _bestScore = 0;
+        var bs = Application.Storage.getValue("axeBest");
+        _bestScore = (bs != null) ? bs : 0;
         _lives = 3;
 
         _axeX = 0.0; _axeY = 0.0; _axeVy = 0.0;
@@ -188,7 +190,7 @@ class BitochiAxeView extends WatchUi.View {
             if (_axeAngle >= 360.0) { _axeAngle -= 360.0; }
             _axeY += _axeVy;
             updateTarget();
-            if (_axeY <= (_targetY + _targetR).toFloat()) {
+            if (_axeY <= (_targetY + _targetR / 2).toFloat()) {
                 checkHit();
             }
         } else if (gameState == GS_RESULT) {
@@ -215,7 +217,7 @@ class BitochiAxeView extends WatchUi.View {
         if (interval < 1) { interval = 1; }
         if (_tick % interval == 0) {
             _targetX += _tgtDir;
-            var maxOff = _w * 20 / 100;
+            var maxOff = _w * 25 / 100;
             if (_targetX > _cx + maxOff) { _tgtDir = -1; }
             if (_targetX < _cx - maxOff) { _tgtDir = 1; }
         }
@@ -224,11 +226,15 @@ class BitochiAxeView extends WatchUi.View {
     hidden function checkHit() {
         var normAng = _axeAngle - ((_axeAngle / 360.0).toNumber() * 360.0);
         if (normAng < 0.0) { normAng += 360.0; }
-        var diff = normAng - 90.0;
-        if (diff > 180.0) { diff -= 360.0; }
-        if (diff < -180.0) { diff += 360.0; }
-        var absDiff = diff;
-        if (absDiff < 0.0) { absDiff = -absDiff; }
+        var diff1 = normAng - 90.0;
+        if (diff1 > 180.0) { diff1 -= 360.0; }
+        if (diff1 < -180.0) { diff1 += 360.0; }
+        if (diff1 < 0.0) { diff1 = -diff1; }
+        var diff2 = normAng - 270.0;
+        if (diff2 > 180.0) { diff2 -= 360.0; }
+        if (diff2 < -180.0) { diff2 += 360.0; }
+        if (diff2 < 0.0) { diff2 = -diff2; }
+        var absDiff = (diff1 < diff2) ? diff1 : diff2;
 
         var xRel = _axeX - _targetX.toFloat();
         var absXRel = xRel;
@@ -283,7 +289,7 @@ class BitochiAxeView extends WatchUi.View {
             _shakeTimer = 5;
         }
 
-        spawnWoodChips(_axeX.toNumber(), _targetY + _targetR);
+        spawnWoodChips(_axeX.toNumber(), _targetY + _targetR / 2);
         gameState = GS_RESULT;
         _resultTick = 0;
     }
@@ -297,10 +303,10 @@ class BitochiAxeView extends WatchUi.View {
         _combo = 0;
         _showMiss = true;
         _missAxeX = _axeX;
-        _missAxeY = (_targetY + _targetR).toFloat();
+        _missAxeY = (_targetY + _targetR / 2).toFloat();
         _missAxeVy = -1.8;
         _missAxeAng = _axeAngle;
-        spawnSparks(_axeX.toNumber(), _targetY + _targetR);
+        spawnSparks(_axeX.toNumber(), _targetY + _targetR / 2);
         doVibe(30, 50);
         _shakeTimer = 4;
         gameState = GS_RESULT;
@@ -308,7 +314,7 @@ class BitochiAxeView extends WatchUi.View {
 
     hidden function advanceAfterResult() {
         if (_lives <= 0) {
-            if (_score > _bestScore) { _bestScore = _score; }
+            if (_score > _bestScore) { _bestScore = _score; Application.Storage.setValue("axeBest", _bestScore); }
             gameState = GS_GAMEOVER;
             _resultTick = 0;
             return;
@@ -331,19 +337,25 @@ class BitochiAxeView extends WatchUi.View {
 
     hidden function startRound() {
         _stuckCount = 0;
-        _throwsTotal = 3 + _wave / 2;
-        if (_throwsTotal > 8) { _throwsTotal = 8; }
+        _throwsTotal = 3 + (_wave * 3) / 7;
+        if (_throwsTotal > 11) { _throwsTotal = 11; }
         _throwsLeft = _throwsTotal;
-        _tolerance = 36.0 - _wave.toFloat() * 2.0;
-        if (_tolerance < 14.0) { _tolerance = 14.0; }
-        _axeAngVel = 7.5 + _wave.toFloat() * 0.35;
-        if (_axeAngVel > 12.5) { _axeAngVel = 12.5; }
-        if (_wave >= 3) { _tgtDir = 1; _tgtSpd = 1; }
-        else { _tgtDir = 0; _tgtSpd = 0; }
+        _tolerance = 50.0 - _wave.toFloat() * 1.15;
+        if (_tolerance < 22.0) { _tolerance = 22.0; }
+        _axeAngVel = 7.2 + _wave.toFloat() * 0.22;
+        if (_axeAngVel > 11.2) { _axeAngVel = 11.2; }
+        _tgtDir = 1; _tgtSpd = 1;
         if (_wave >= 6) { _tgtSpd = 2; }
-        if (_wave >= 9) { _tgtSpd = 3; }
+        if (_wave >= 11) { _tgtSpd = 3; }
+        if (_wave >= 18) { _tgtSpd = 4; }
         _targetX = _cx;
         _combo = 0;
+        if (_wave == 6 || _wave == 12 || _wave == 18 || _wave == 24) {
+            if (_lives < 5) {
+                _lives++;
+                doVibe(90, 120);
+            }
+        }
         resetAxePos();
         gameState = GS_AIM;
     }
@@ -356,7 +368,8 @@ class BitochiAxeView extends WatchUi.View {
             return;
         }
         if (gameState == GS_AIM) {
-            _axeX = _cx.toFloat() + _aimOff * 5.0;
+            var tgtOff = (_targetX - _cx).toFloat();
+            _axeX = _cx.toFloat() + _aimOff * 5.0 + tgtOff * 0.5;
             _axeY = (_h * 82 / 100).toFloat();
             _axeVy = -4.2;
             gameState = GS_THROW;
@@ -372,7 +385,7 @@ class BitochiAxeView extends WatchUi.View {
             return;
         }
         if (gameState == GS_GAMEOVER) {
-            if (_resultTick > 20) { gameState = GS_MENU; }
+            if (_resultTick > 20) { _wave = 1; _score = 0; _lives = 3; _combo = 0; _maxCombo = 0; startRound(); }
             return;
         }
     }
@@ -464,7 +477,7 @@ class BitochiAxeView extends WatchUi.View {
             }
             if (_resultType > 0 && _resultTick < 4 && _stuckCount > 0) {
                 dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-                dc.fillCircle(_targetX + _stuckOff[_stuckCount - 1].toNumber() + ox, _targetY + _targetR + oy, 6 - _resultTick);
+                dc.fillCircle(_targetX + _stuckOff[_stuckCount - 1].toNumber() + ox, _targetY + _targetR / 2 + oy, 6 - _resultTick);
             }
         }
 
@@ -649,20 +662,19 @@ class BitochiAxeView extends WatchUi.View {
         var tr = _targetR;
         for (var i = 0; i < _stuckCount; i++) {
             var ax = tx + _stuckOff[i].toNumber();
-            var ay = ty + tr;
+            var ay = ty + tr / 2;
 
             dc.setColor(0x7A4422, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(ax - 1, ay - 1, 3, 16);
-            dc.setColor(0x5A3311, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(ax - 1, ay + 10, 3, 5);
+            dc.fillRectangle(ax - 1, ay, 3, 18);
 
             dc.setColor(0x8899AA, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(ax - 5, ay - 3, 11, 3);
+            dc.fillRectangle(ax - 5, ay - 2, 11, 2);
+            dc.fillRectangle(ax - 4, ay - 5, 9, 4);
             dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(ax - 4, ay - 3, 9, 1);
+            dc.fillRectangle(ax - 3, ay - 5, 7, 1);
 
-            dc.setColor(0x444444, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(ax, ay, 2);
+            dc.setColor(0x555544, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(ax, ay + 17, 2);
         }
     }
 
@@ -686,48 +698,50 @@ class BitochiAxeView extends WatchUi.View {
             dc.drawLine(hx + tpx, hy + tpy, bx + tpx, by + tpy);
         }
 
-        dc.setColor(0x5A3311, Graphics.COLOR_TRANSPARENT);
-        var gx = cx + (szf * 0.6 * cs).toNumber();
-        var gy = cy + (szf * 0.6 * sn).toNumber();
-        for (var t = -1; t <= 1; t++) {
-            var tpx = (t.toFloat() * perpX).toNumber();
-            var tpy = (t.toFloat() * perpY).toNumber();
-            dc.drawLine(gx + tpx, gy + tpy, hx + tpx, hy + tpy);
-        }
         dc.setColor(0x8A5533, Graphics.COLOR_TRANSPARENT);
-        var wrapOff = szf * 0.4;
+        var wrapOff = szf * 0.3;
         for (var w = 0; w < 3; w++) {
-            var wx = cx + ((wrapOff + w.toFloat() * 4.0) * cs).toNumber();
-            var wy = cy + ((wrapOff + w.toFloat() * 4.0) * sn).toNumber();
+            var wx = cx + ((wrapOff + w.toFloat() * 3.5) * cs).toNumber();
+            var wy = cy + ((wrapOff + w.toFloat() * 3.5) * sn).toNumber();
             dc.drawLine(wx + (2.0 * perpX).toNumber(), wy + (2.0 * perpY).toNumber(),
                         wx - (2.0 * perpX).toNumber(), wy - (2.0 * perpY).toNumber());
         }
 
-        var bw = szf * 0.55;
-        var bd = szf * 0.4;
-        var b1x = bx + (bw * perpX).toNumber();
-        var b1y = by + (bw * perpY).toNumber();
-        var b2x = bx - (bw * 0.35 * perpX).toNumber();
-        var b2y = by - (bw * 0.35 * perpY).toNumber();
-        var tipX = bx - (bd * cs).toNumber();
-        var tipY = by - (bd * sn).toNumber();
-        var t1x = tipX + (bw * 0.5 * perpX).toNumber();
-        var t1y = tipY + (bw * 0.5 * perpY).toNumber();
-        var t2x = tipX - (bw * 0.15 * perpX).toNumber();
-        var t2y = tipY - (bw * 0.15 * perpY).toNumber();
+        drawBlade(dc, bx, by, cs, sn, perpX, perpY, szf, 1.0);
+        drawBlade(dc, bx, by, cs, sn, perpX, perpY, szf, -1.0);
 
-        dc.setColor(0x778899, Graphics.COLOR_TRANSPARENT);
-        dc.fillPolygon([[b1x, b1y], [t1x, t1y], [t2x, t2y], [b2x, b2y]]);
-
-        dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT);
-        dc.drawLine(t1x, t1y, t2x, t2y);
-        dc.setColor(0x99AABB, Graphics.COLOR_TRANSPARENT);
-        dc.drawLine(b1x, b1y, t1x, t1y);
+        var pommelX = hx + (szf * 0.08 * cs).toNumber();
+        var pommelY = hy + (szf * 0.08 * sn).toNumber();
+        dc.setColor(0x555544, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(pommelX, pommelY, 2);
 
         dc.setColor(0x444444, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(bx, by, 2);
         dc.setColor(0x555555, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(bx, by, 1);
+    }
+
+    hidden function drawBlade(dc, ex, ey, cs, sn, perpX, perpY, szf, side) {
+        var bw = szf * 0.52;
+        var bd = szf * 0.3;
+        var baseX = ex + (bw * side * perpX).toNumber();
+        var baseY = ey + (bw * side * perpY).toNumber();
+        var innerX = ex + (bw * 0.1 * side * perpX).toNumber();
+        var innerY = ey + (bw * 0.1 * side * perpY).toNumber();
+        var tipFwdX = ex - (bd * cs).toNumber() + (bw * 0.55 * side * perpX).toNumber();
+        var tipFwdY = ey - (bd * sn).toNumber() + (bw * 0.55 * side * perpY).toNumber();
+        var tipBkX = ex + (bd * 0.5 * cs).toNumber() + (bw * 0.4 * side * perpX).toNumber();
+        var tipBkY = ey + (bd * 0.5 * sn).toNumber() + (bw * 0.4 * side * perpY).toNumber();
+
+        dc.setColor(0x778899, Graphics.COLOR_TRANSPARENT);
+        dc.fillPolygon([[innerX, innerY], [tipFwdX, tipFwdY], [baseX, baseY], [tipBkX, tipBkY]]);
+
+        dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT);
+        dc.drawLine(tipFwdX, tipFwdY, baseX, baseY);
+        dc.setColor(0x99AABB, Graphics.COLOR_TRANSPARENT);
+        dc.drawLine(baseX, baseY, tipBkX, tipBkY);
+        dc.setColor(0x667788, Graphics.COLOR_TRANSPARENT);
+        dc.drawLine(innerX, innerY, tipFwdX, tipFwdY);
     }
 
     hidden function drawParticles(dc, ox, oy) {
@@ -877,8 +891,8 @@ class BitochiAxeView extends WatchUi.View {
 
         if (_wave >= 2) {
             var hint = "Target moves!";
-            if (_wave >= 5) { hint = "Faster target!"; }
-            if (_wave >= 8) { hint = "Expert mode!"; }
+            if (_wave >= 8) { hint = "Faster target!"; }
+            if (_wave >= 14) { hint = "Expert mode!"; }
             dc.setColor(0x5588AA, Graphics.COLOR_TRANSPARENT);
             dc.drawText(_cx, _h * 72 / 100, Graphics.FONT_XTINY, hint, Graphics.TEXT_JUSTIFY_CENTER);
         }
@@ -934,8 +948,8 @@ class BitochiAxeView extends WatchUi.View {
         }
 
         if (_resultTick > 25) {
-            dc.setColor((_resultTick % 10 < 5) ? 0x777777 : 0x666666, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_cx, _h * 88 / 100, Graphics.FONT_XTINY, "Tap to retry", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor((_resultTick % 10 < 5) ? 0xDD8833 : 0xBB6622, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_cx, _h * 86 / 100, Graphics.FONT_XTINY, "Tap to play again", Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 }

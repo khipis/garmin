@@ -4,34 +4,12 @@ using Toybox.Math;
 using Toybox.Timer;
 using Toybox.Time;
 using Toybox.System;
+using Toybox.Application;
 
-enum {
-    GS_MENU,
-    GS_INTRO,
-    GS_FIGHT,
-    GS_KO,
-    GS_WIN,
-    GS_LOSE
-}
+enum { GS_MENU, GS_INTRO, GS_FIGHT, GS_KO, GS_WIN, GS_LOSE }
+enum { PS_IDLE, PS_JAB, PS_CROSS, PS_HOOK, PS_UPPER, PS_BODY, PS_DODGE_L, PS_DODGE_R, PS_BLOCK, PS_HIT_STUN, PS_SUPER, PS_EXHAUSTED }
 
-enum {
-    PS_IDLE,
-    PS_PUNCH_JAB,
-    PS_PUNCH_HOOK,
-    PS_PUNCH_UPPER,
-    PS_DODGE_L,
-    PS_DODGE_R,
-    PS_BLOCK,
-    PS_HIT_STUN
-}
-
-enum {
-    ES_IDLE,
-    ES_WINDUP,
-    ES_PUNCH,
-    ES_STUNNED,
-    ES_DODGE
-}
+enum { ES_IDLE, ES_WINDUP, ES_JAB, ES_HOOK, ES_UPPER, ES_COMBO, ES_STUNNED, ES_DODGE }
 
 class BitochiBoxingView extends WatchUi.View {
 
@@ -52,8 +30,17 @@ class BitochiBoxingView extends WatchUi.View {
     hidden var _punchCooldown;
     hidden var _comboCount;
     hidden var _comboTimer;
+    hidden var _comboMeter;
     hidden var _totalHits;
     hidden var _perfectHits;
+    hidden var _maxCombo;
+    hidden var _stamina;
+    hidden var _staminaMax;
+    hidden var _score;
+    hidden var _bestScore;
+    hidden var _roundTimer;
+    hidden var _punchLabel;
+    hidden var _punchLabelTick;
 
     hidden var _enemyHp;
     hidden var _enemyMaxHp;
@@ -64,6 +51,8 @@ class BitochiBoxingView extends WatchUi.View {
     hidden var _enemySpeed;
     hidden var _enemyDmg;
     hidden var _enemyFace;
+    hidden var _enemyComboLeft;
+    hidden var _enemyPunchType;
 
     hidden var _round;
     hidden var _wins;
@@ -76,16 +65,18 @@ class BitochiBoxingView extends WatchUi.View {
     hidden var _shakeLeft;
     hidden var _flashTick;
     hidden var _hitFlash;
+    hidden var _superFlash;
 
     hidden var _prevAccelMag;
     hidden var _accelSmooth;
 
+    hidden const BLOOD_MAX = 40;
     hidden var _bloodX;
     hidden var _bloodY;
     hidden var _bloodVx;
     hidden var _bloodVy;
     hidden var _bloodLife;
-    hidden var _bloodCount;
+    hidden var _bloodIdx;
 
     hidden var _sweatX;
     hidden var _sweatY;
@@ -97,17 +88,26 @@ class BitochiBoxingView extends WatchUi.View {
     hidden var _starY;
     hidden var _starLife;
 
+    hidden var _dmgPopX;
+    hidden var _dmgPopY;
+    hidden var _dmgPopVal;
+    hidden var _dmgPopLife;
+    hidden var _dmgPopType;
+
     hidden var _enemyBruise;
     hidden var _enemyCuts;
     hidden var _enemySwellL;
     hidden var _enemySwellR;
     hidden var _enemyNoseBleed;
-
     hidden var _playerBruise;
     hidden var _playerSwellL;
     hidden var _playerSwellR;
-
     hidden var _crowdPhase;
+    hidden var _crowdHype;
+
+    hidden var _enemySkin;
+    hidden var _enemyHairCol;
+    hidden var _enemyHairStyle;
 
     function initialize() {
         View.initialize();
@@ -116,778 +116,617 @@ class BitochiBoxingView extends WatchUi.View {
         _w = ds.screenWidth;
         _h = ds.screenHeight;
 
-        accelX = 0;
-        accelY = 0;
-        accelZ = 0;
-        _tick = 0;
-        _round = 1;
-        _wins = 0;
-        _bestRound = 0;
-        _prevAccelMag = 0;
-        _accelSmooth = 0;
-        _crowdPhase = 0;
+        accelX = 0; accelY = 0; accelZ = 0;
+        _tick = 0; _round = 1; _wins = 0; _bestRound = 0;
+        _prevAccelMag = 0; _accelSmooth = 0; _crowdPhase = 0; _crowdHype = 0;
+        _score = 0;
+        var bs = Application.Storage.getValue("boxBest");
+        _bestScore = (bs != null) ? bs : 0;
 
-        _bloodX = new [30];
-        _bloodY = new [30];
-        _bloodVx = new [30];
-        _bloodVy = new [30];
-        _bloodLife = new [30];
-        _bloodCount = 0;
-        for (var i = 0; i < 30; i++) {
-            _bloodX[i] = 0; _bloodY[i] = 0;
-            _bloodVx[i] = 0; _bloodVy[i] = 0;
-            _bloodLife[i] = 0;
-        }
+        _bloodX = new [BLOOD_MAX]; _bloodY = new [BLOOD_MAX];
+        _bloodVx = new [BLOOD_MAX]; _bloodVy = new [BLOOD_MAX];
+        _bloodLife = new [BLOOD_MAX]; _bloodIdx = 0;
+        for (var i = 0; i < BLOOD_MAX; i++) { _bloodX[i] = 0; _bloodY[i] = 0; _bloodVx[i] = 0; _bloodVy[i] = 0; _bloodLife[i] = 0; }
 
-        _sweatX = new [6];
-        _sweatY = new [6];
-        _sweatVx = new [6];
-        _sweatVy = new [6];
-        _sweatLife = new [6];
-        for (var i = 0; i < 6; i++) {
-            _sweatX[i] = 0; _sweatY[i] = 0;
-            _sweatVx[i] = 0; _sweatVy[i] = 0;
-            _sweatLife[i] = 0;
-        }
+        _sweatX = new [8]; _sweatY = new [8]; _sweatVx = new [8]; _sweatVy = new [8]; _sweatLife = new [8];
+        for (var i = 0; i < 8; i++) { _sweatX[i] = 0; _sweatY[i] = 0; _sweatVx[i] = 0; _sweatVy[i] = 0; _sweatLife[i] = 0; }
 
-        _starX = new [5];
-        _starY = new [5];
-        _starLife = new [5];
-        for (var i = 0; i < 5; i++) {
-            _starX[i] = 0; _starY[i] = 0; _starLife[i] = 0;
-        }
+        _starX = new [6]; _starY = new [6]; _starLife = new [6];
+        for (var i = 0; i < 6; i++) { _starX[i] = 0; _starY[i] = 0; _starLife[i] = 0; }
 
-        _playerHp = 100;
-        _playerMaxHp = 100;
-        _playerState = PS_IDLE;
-        _playerStateTick = 0;
-        _punchCooldown = 0;
-        _comboCount = 0;
-        _comboTimer = 0;
-        _totalHits = 0;
-        _perfectHits = 0;
-        _playerBruise = 0;
-        _playerSwellL = 0;
-        _playerSwellR = 0;
+        _dmgPopX = new [6]; _dmgPopY = new [6]; _dmgPopVal = new [6]; _dmgPopLife = new [6]; _dmgPopType = new [6];
+        for (var i = 0; i < 6; i++) { _dmgPopX[i] = 0; _dmgPopY[i] = 0; _dmgPopVal[i] = 0; _dmgPopLife[i] = 0; _dmgPopType[i] = 0; }
 
-        _enemyHp = 80;
-        _enemyMaxHp = 80;
-        _enemyState = ES_IDLE;
-        _enemyStateTick = 0;
-        _enemyAttackTimer = 0;
-        _enemyNextAttack = 45;
-        _enemySpeed = 1.0;
-        _enemyDmg = 8;
-        _enemyFace = 0;
-        _enemyBruise = 0;
-        _enemyCuts = 0;
-        _enemySwellL = 0;
-        _enemySwellR = 0;
-        _enemyNoseBleed = 0;
+        _playerHp = 100; _playerMaxHp = 100;
+        _playerState = PS_IDLE; _playerStateTick = 0; _punchCooldown = 0;
+        _comboCount = 0; _comboTimer = 0; _comboMeter = 0; _totalHits = 0; _perfectHits = 0; _maxCombo = 0;
+        _stamina = 100; _staminaMax = 100;
+        _playerBruise = 0; _playerSwellL = 0; _playerSwellR = 0;
+        _punchLabel = ""; _punchLabelTick = 0;
+        _roundTimer = 1800;
+
+        _enemyHp = 80; _enemyMaxHp = 80;
+        _enemyState = ES_IDLE; _enemyStateTick = 0;
+        _enemyAttackTimer = 0; _enemyNextAttack = 30;
+        _enemySpeed = 1.0; _enemyDmg = 8; _enemyFace = 0;
+        _enemyComboLeft = 0; _enemyPunchType = 0;
+        _enemyBruise = 0; _enemyCuts = 0; _enemySwellL = 0; _enemySwellR = 0; _enemyNoseBleed = 0;
+        _enemySkin = 0xDDAA77; _enemyHairCol = 0x222222; _enemyHairStyle = 0;
 
         _shakeX = 0; _shakeY = 0; _shakeLeft = 0;
-        _flashTick = 0;
-        _hitFlash = 0;
-        _introTick = 0;
-        _koTick = 0;
-
+        _flashTick = 0; _hitFlash = 0; _superFlash = 0; _introTick = 0; _koTick = 0;
         gameState = GS_MENU;
     }
 
-    function onShow() {
-        _timer = new Timer.Timer();
-        _timer.start(method(:onTick), 33, true);
-    }
-
-    function onHide() {
-        if (_timer != null) { _timer.stop(); _timer = null; }
-    }
+    function onShow() { _timer = new Timer.Timer(); _timer.start(method(:onTick), 33, true); }
+    function onHide() { if (_timer != null) { _timer.stop(); _timer = null; } }
 
     hidden function initFight() {
-        _enemyMaxHp = 60 + _round * 20;
-        if (_enemyMaxHp > 200) { _enemyMaxHp = 200; }
+        var r = _round;
+        if (r < 1) { r = 1; }
+        _enemyMaxHp = 78 + r * 14 + (r / 4) * 8;
+        if (_enemyMaxHp > 410) { _enemyMaxHp = 410; }
         _enemyHp = _enemyMaxHp;
-        _enemyDmg = 6 + _round * 2;
-        if (_enemyDmg > 25) { _enemyDmg = 25; }
-        _enemySpeed = 1.0 + (_round - 1) * 0.15;
-        if (_enemySpeed > 2.5) { _enemySpeed = 2.5; }
-        _enemyFace = (_round - 1) % 5;
-        _enemyState = ES_IDLE;
-        _enemyStateTick = 0;
-        _enemyAttackTimer = 0;
-        _enemyNextAttack = (40.0 / _enemySpeed).toNumber() + 20;
-        _enemyBruise = 0;
-        _enemyCuts = 0;
-        _enemySwellL = 0;
-        _enemySwellR = 0;
-        _enemyNoseBleed = 0;
+        _enemyDmg = 6 + (r * 3) / 2 + r / 6;
+        if (_enemyDmg > 34) { _enemyDmg = 34; }
+        _enemySpeed = 1.0 + (r - 1) * 0.14 + (r / 8) * 0.06;
+        if (_enemySpeed > 3.0) { _enemySpeed = 3.0; }
 
-        _playerHp = _playerMaxHp;
-        _playerState = PS_IDLE;
-        _playerStateTick = 0;
-        _punchCooldown = 0;
-        _comboCount = 0;
-        _comboTimer = 0;
-        _totalHits = 0;
-        _perfectHits = 0;
-        _playerBruise = 0;
-        _playerSwellL = 0;
-        _playerSwellR = 0;
+        if (r > 1 && r % 3 == 1) {
+            _playerMaxHp += 4;
+            if (_playerMaxHp > 142) { _playerMaxHp = 142; }
+        }
+        _enemyFace = (_round - 1) % 8;
+        _enemyState = ES_IDLE; _enemyStateTick = 0;
+        _enemyAttackTimer = 0; _enemyComboLeft = 0; _enemyPunchType = 0;
+        var baseDelay = (25.0 / _enemySpeed).toNumber();
+        if (baseDelay < 8) { baseDelay = 8; }
+        _enemyNextAttack = baseDelay + Math.rand().abs() % 12;
+        _enemyBruise = 0; _enemyCuts = 0; _enemySwellL = 0; _enemySwellR = 0; _enemyNoseBleed = 0;
 
-        _bloodCount = 0;
-        for (var i = 0; i < 30; i++) { _bloodLife[i] = 0; }
-        for (var i = 0; i < 6; i++) { _sweatLife[i] = 0; }
-        for (var i = 0; i < 5; i++) { _starLife[i] = 0; }
+        var skins = [0xDDAA77, 0xBB8855, 0x8B6842, 0xE8C39E, 0xA0734A, 0xC9956B, 0xD4A574, 0x6B4226];
+        _enemySkin = skins[_enemyFace % 8];
+        var hairs = [0x222222, 0x553311, 0xAA6633, 0xFF4422, 0x888888, 0x111111, 0xDDBB44, 0x221100];
+        _enemyHairCol = hairs[_enemyFace % 8];
+        _enemyHairStyle = _enemyFace % 4;
+
+        _playerHp = _playerMaxHp; _playerState = PS_IDLE; _playerStateTick = 0;
+        _punchCooldown = 0; _comboCount = 0; _comboTimer = 0; _comboMeter = 0;
+        _totalHits = 0; _perfectHits = 0; _maxCombo = 0;
+        _stamina = _staminaMax;
+        _playerBruise = 0; _playerSwellL = 0; _playerSwellR = 0;
+        _punchLabel = ""; _punchLabelTick = 0;
+        _roundTimer = 1800;
+
+        _bloodIdx = 0;
+        for (var i = 0; i < BLOOD_MAX; i++) { _bloodLife[i] = 0; }
+        for (var i = 0; i < 8; i++) { _sweatLife[i] = 0; }
+        for (var i = 0; i < 6; i++) { _starLife[i] = 0; }
+        for (var i = 0; i < 6; i++) { _dmgPopLife[i] = 0; }
     }
 
     function doAction() {
         if (gameState == GS_MENU) {
-            _round = 1;
-            _wins = 0;
-            initFight();
-            gameState = GS_INTRO;
-            _introTick = 0;
+            _round = 1; _wins = 0; _score = 0; _playerMaxHp = 100; initFight();
+            gameState = GS_INTRO; _introTick = 0;
         } else if (gameState == GS_FIGHT) {
-            doPlayerPunch(PS_PUNCH_JAB);
+            if (_comboMeter >= 100) {
+                doSuperPunch();
+            } else {
+                doPlayerPunch(PS_JAB);
+            }
         } else if (gameState == GS_WIN) {
-            _round++;
-            initFight();
-            gameState = GS_INTRO;
-            _introTick = 0;
+            _round++; initFight();
+            gameState = GS_INTRO; _introTick = 0;
         } else if (gameState == GS_LOSE) {
-            gameState = GS_MENU;
+            _round = 1; _wins = 0; _score = 0; _playerMaxHp = 100; initFight();
+            gameState = GS_INTRO; _introTick = 0;
         }
     }
+
+    hidden function doSuperPunch() {
+        _playerState = PS_SUPER; _playerStateTick = 0;
+        _punchCooldown = 12;
+        _comboMeter = 0;
+        _superFlash = 8;
+        doVibe(100, 300);
+
+        if (_enemyState == ES_DODGE) { spawnSweat(_w / 2, eBaseY(), 3); return; }
+
+        var dmg = 50 + _comboCount * 5;
+        _enemyHp -= dmg;
+        _enemyState = ES_STUNNED; _enemyStateTick = 0;
+        _flashTick = 8;
+        _shakeLeft = 12;
+        _crowdHype = 60;
+        _totalHits++;
+
+        _enemyBruise += 10; if (_enemyBruise > 35) { _enemyBruise = 35; }
+        _enemyNoseBleed += 8; if (_enemyNoseBleed > 25) { _enemyNoseBleed = 25; }
+        _enemyCuts += 2; if (_enemyCuts > 6) { _enemyCuts = 6; }
+
+        var bx = _w / 2;
+        var by = eBaseY();
+        spawnBlood(bx, by - 10, 15);
+        spawnPop(bx, by - 20, dmg, 4);
+        _punchLabel = "SUPER!"; _punchLabelTick = 30;
+
+        if (_enemyHp <= 0) {
+            _enemyHp = 0; _enemyState = ES_STUNNED; _enemyStateTick = 0;
+            gameState = GS_KO; _koTick = 0; _shakeLeft = 18;
+            doVibe(100, 500); spawnBlood(_w / 2, eBaseY() - 10, 25);
+            spawnStars(_w / 2, eBaseY() - 20);
+        }
+    }
+
+    hidden function eBaseY() { return _h * 32 / 100; }
+    hidden function pBaseY() { return _h * 62 / 100; }
 
     function onTick() as Void {
         _tick++;
         _crowdPhase = (_crowdPhase + 1) % 120;
-
-        if (_shakeLeft > 0) {
-            _shakeX = (Math.rand().abs() % 9) - 4;
-            _shakeY = (Math.rand().abs() % 7) - 3;
-            _shakeLeft--;
-        } else { _shakeX = 0; _shakeY = 0; }
+        if (_crowdHype > 0) { _crowdHype--; }
+        if (_shakeLeft > 0) { _shakeX = (Math.rand().abs() % 9) - 4; _shakeY = (Math.rand().abs() % 7) - 3; _shakeLeft--; } else { _shakeX = 0; _shakeY = 0; }
         if (_flashTick > 0) { _flashTick--; }
         if (_hitFlash > 0) { _hitFlash--; }
+        if (_superFlash > 0) { _superFlash--; }
+        if (_punchLabelTick > 0) { _punchLabelTick--; }
 
         if (gameState == GS_INTRO) {
             _introTick++;
-            if (_introTick >= 60) {
-                gameState = GS_FIGHT;
-            }
+            if (_introTick >= 50) { gameState = GS_FIGHT; }
         } else if (gameState == GS_FIGHT) {
-            updateAccel();
-            updatePlayer();
-            updateEnemy();
-            updateBlood();
-            updateSweat();
-            updateStars();
+            updateAccel(); updatePlayer(); updateEnemy();
+            updateBlood(); updateSweat(); updateStars(); updatePops();
             if (_comboTimer > 0) { _comboTimer--; }
-            if (_comboTimer == 0) { _comboCount = 0; }
+            if (_comboTimer == 0 && _comboCount > 0) { _comboCount = 0; }
+            if (_comboMeter > 0 && _tick % 4 == 0) { _comboMeter--; }
+            if (_stamina < _staminaMax && _tick % 4 == 0) { _stamina++; }
+
+            _roundTimer--;
+            if (_roundTimer <= 0) {
+                var pPct = _playerHp * 100 / _playerMaxHp;
+                var ePct = _enemyHp * 100 / _enemyMaxHp;
+                if (pPct >= ePct) {
+                    _enemyHp = 0; _wins++;
+                    if (_round > _bestRound) { _bestRound = _round; }
+                    gameState = GS_KO; _koTick = 0; _shakeLeft = 10;
+                } else {
+                    _playerHp = 0;
+                    gameState = GS_KO; _koTick = 0; _shakeLeft = 10;
+                }
+            }
         } else if (gameState == GS_KO) {
-            _koTick++;
-            updateBlood();
-            if (_koTick >= 75) {
+            _koTick++; updateBlood(); updateStars(); updatePops();
+            if (_koTick >= 65) {
                 if (_enemyHp <= 0) {
                     _wins++;
                     if (_round > _bestRound) { _bestRound = _round; }
+                    _score += 100 + _round * 50 + _perfectHits * 20 + _maxCombo * 10;
+                    if (_score > _bestScore) { _bestScore = _score; Application.Storage.setValue("boxBest", _bestScore); }
                     gameState = GS_WIN;
-                } else {
-                    gameState = GS_LOSE;
-                }
+                } else { gameState = GS_LOSE; }
             }
         }
-
         WatchUi.requestUpdate();
     }
 
     hidden function updateAccel() {
-        var ax = accelX;
-        var ay = accelY;
-        var az = accelZ;
-        if (ax == null) { ax = 0; }
-        if (ay == null) { ay = 0; }
-        if (az == null) { az = 0; }
+        var ax = (accelX != null) ? accelX : 0;
+        var ay = (accelY != null) ? accelY : 0;
+        var az = (accelZ != null) ? accelZ : 0;
         var mag = Math.sqrt(ax * ax + ay * ay + az * az).toNumber();
         var delta = (mag - _accelSmooth);
         if (delta < 0) { delta = -delta; }
         _accelSmooth = _accelSmooth + (mag - _accelSmooth) * 0.3;
-
         if (_punchCooldown > 0) { _punchCooldown--; }
 
-        if (_playerState == PS_IDLE || _playerState == PS_BLOCK) {
-            var tiltX = ax;
-            if (tiltX > 350) {
-                _playerState = PS_DODGE_L;
-                _playerStateTick = 0;
-            } else if (tiltX < -350) {
-                _playerState = PS_DODGE_R;
-                _playerStateTick = 0;
-            } else if (delta > 600 && _punchCooldown <= 0) {
-                var pType = PS_PUNCH_JAB;
-                if (delta > 1200) {
-                    pType = PS_PUNCH_UPPER;
-                } else if (delta > 900) {
-                    pType = PS_PUNCH_HOOK;
-                }
+        if ((_playerState == PS_IDLE || _playerState == PS_BLOCK) && _playerState != PS_EXHAUSTED) {
+            if (ax > 350) { _playerState = PS_DODGE_L; _playerStateTick = 0; _stamina -= 8; if (_stamina < 0) { _stamina = 0; } }
+            else if (ax < -350) { _playerState = PS_DODGE_R; _playerStateTick = 0; _stamina -= 8; if (_stamina < 0) { _stamina = 0; } }
+            else if (delta > 500 && _punchCooldown <= 0) {
+                var pType = PS_JAB;
+                if (delta > 1400) { pType = PS_UPPER; }
+                else if (delta > 1100) { pType = PS_HOOK; }
+                else if (delta > 800) { pType = PS_CROSS; }
+                else if (ay < -300) { pType = PS_BODY; }
                 doPlayerPunch(pType);
-            } else if (tiltX > -100 && tiltX < 100 && delta < 200) {
-                if (_playerState != PS_BLOCK) {
-                    _playerState = PS_BLOCK;
-                    _playerStateTick = 0;
-                }
+            } else if (ax > -80 && ax < 80 && delta < 150) {
+                if (_playerState != PS_BLOCK) { _playerState = PS_BLOCK; _playerStateTick = 0; }
             }
         }
-
         _prevAccelMag = mag;
     }
 
     hidden function doPlayerPunch(pType) {
-        if (_punchCooldown > 0) { return; }
-        if (_playerState == PS_HIT_STUN) { return; }
-        if (_playerState == PS_PUNCH_JAB || _playerState == PS_PUNCH_HOOK || _playerState == PS_PUNCH_UPPER) { return; }
+        if (_punchCooldown > 0 || _playerState == PS_HIT_STUN || _playerState == PS_EXHAUSTED) { return; }
+        if (_playerState >= PS_JAB && _playerState <= PS_BODY) { return; }
 
-        _playerState = pType;
-        _playerStateTick = 0;
-        _punchCooldown = 10;
-        doVibe(30, 50);
+        var cost = 15;
+        if (pType == PS_CROSS) { cost = 20; }
+        else if (pType == PS_HOOK) { cost = 28; }
+        else if (pType == PS_UPPER) { cost = 35; }
+        else if (pType == PS_BODY) { cost = 18; }
+        if (_stamina < cost) { return; }
 
-        if (_enemyState == ES_DODGE) {
-            spawnSweat(_w / 2, _h * 35 / 100, 3);
-            return;
-        }
+        _playerState = pType; _playerStateTick = 0;
+        _punchCooldown = 8;
+        _stamina -= cost;
+        if (_stamina <= 0) { _stamina = 0; _playerState = PS_EXHAUSTED; _playerStateTick = 0; return; }
+        doVibe(25, 40);
 
-        var dmg = 8;
+        if (pType == PS_JAB) { _punchLabel = "JAB!"; }
+        else if (pType == PS_CROSS) { _punchLabel = "CROSS!"; }
+        else if (pType == PS_HOOK) { _punchLabel = "HOOK!"; }
+        else if (pType == PS_UPPER) { _punchLabel = "UPPER!"; }
+        else if (pType == PS_BODY) { _punchLabel = "BODY!"; }
+        _punchLabelTick = 18;
+
+        if (_enemyState == ES_DODGE) { spawnSweat(_w / 2, eBaseY(), 3); return; }
+
+        var dmg = 10;
         var isCounter = false;
-        if (pType == PS_PUNCH_HOOK) { dmg = 12; }
-        else if (pType == PS_PUNCH_UPPER) { dmg = 18; }
+        if (pType == PS_CROSS) { dmg = 14; }
+        else if (pType == PS_HOOK) { dmg = 18; }
+        else if (pType == PS_UPPER) { dmg = 24; }
+        else if (pType == PS_BODY) { dmg = 12; }
 
-        if (_enemyState == ES_WINDUP || _enemyState == ES_PUNCH) {
-            dmg = (dmg * 1.8).toNumber();
+        if (_enemyState == ES_WINDUP || _enemyState == ES_JAB || _enemyState == ES_HOOK || _enemyState == ES_UPPER || _enemyState == ES_COMBO) {
+            dmg = (dmg * 2.0).toNumber();
             isCounter = true;
-            _enemyState = ES_STUNNED;
-            _enemyStateTick = 0;
-            _flashTick = 4;
+            _enemyState = ES_STUNNED; _enemyStateTick = 0;
+            _flashTick = 5;
+            _comboMeter += 15;
+            _punchLabel = "COUNTER!"; _punchLabelTick = 22;
+            _crowdHype = 40;
+            _stamina += 14;
+            if (_stamina > _staminaMax) { _stamina = _staminaMax; }
         }
 
-        _comboCount++;
-        _comboTimer = 30;
-        if (_comboCount > 2) {
-            dmg = dmg + _comboCount * 2;
-        }
+        _comboCount++; _comboTimer = 40;
+        if (_comboCount > _maxCombo) { _maxCombo = _comboCount; }
+        _comboMeter += 5;
+        if (_comboMeter > 100) { _comboMeter = 100; }
 
-        _enemyHp -= dmg;
-        _totalHits++;
+        if (_comboCount > 3) { dmg = dmg + _comboCount * 3; }
+        if (_comboMeter >= 80) { dmg = (dmg * 1.3).toNumber(); }
+
+        _enemyHp -= dmg; _totalHits++;
         if (isCounter) { _perfectHits++; }
-        _shakeLeft = 4;
+        _shakeLeft = 5;
 
-        _enemyBruise += 3;
-        if (_enemyBruise > 30) { _enemyBruise = 30; }
-        if (pType == PS_PUNCH_HOOK) {
+        _enemyBruise += 3; if (_enemyBruise > 35) { _enemyBruise = 35; }
+        if (pType == PS_HOOK || pType == PS_CROSS) {
             var side = Math.rand().abs() % 2;
-            if (side == 0) { _enemySwellL += 4; if (_enemySwellL > 12) { _enemySwellL = 12; } }
-            else { _enemySwellR += 4; if (_enemySwellR > 12) { _enemySwellR = 12; } }
+            if (side == 0) { _enemySwellL += 4; if (_enemySwellL > 14) { _enemySwellL = 14; } }
+            else { _enemySwellR += 4; if (_enemySwellR > 14) { _enemySwellR = 14; } }
         }
-        if (pType == PS_PUNCH_UPPER) {
-            _enemyNoseBleed += 5;
-            if (_enemyNoseBleed > 20) { _enemyNoseBleed = 20; }
-        }
-        if (dmg > 12) {
-            _enemyCuts++;
-            if (_enemyCuts > 5) { _enemyCuts = 5; }
-        }
+        if (pType == PS_UPPER) { _enemyNoseBleed += 6; if (_enemyNoseBleed > 25) { _enemyNoseBleed = 25; } }
+        if (dmg > 15) { _enemyCuts++; if (_enemyCuts > 6) { _enemyCuts = 6; } }
 
         var bx = _w / 2 + (Math.rand().abs() % 20) - 10;
-        var by = _h * 32 / 100 + (Math.rand().abs() % 16) - 8;
-        spawnBlood(bx, by, dmg > 14 ? 8 : 4);
+        var by = eBaseY() + (Math.rand().abs() % 14) - 7;
+        spawnBlood(bx, by, dmg > 16 ? 10 : 5);
+        spawnPop(bx, by - 8, dmg, isCounter ? 2 : (pType == PS_UPPER ? 1 : 0));
+
+        if (dmg >= 30) { _crowdHype = 30; }
 
         if (_enemyHp <= 0) {
-            _enemyHp = 0;
-            _enemyState = ES_STUNNED;
-            _enemyStateTick = 0;
-            gameState = GS_KO;
-            _koTick = 0;
-            _shakeLeft = 12;
-            doVibe(80, 300);
-            spawnBlood(_w / 2, _h * 30 / 100, 15);
-            spawnStars(_w / 2, _h * 25 / 100);
+            _enemyHp = 0; _enemyState = ES_STUNNED; _enemyStateTick = 0;
+            gameState = GS_KO; _koTick = 0; _shakeLeft = 15;
+            doVibe(100, 400); spawnBlood(_w / 2, eBaseY() - 5, 20);
+            spawnStars(_w / 2, eBaseY() - 15);
+            _crowdHype = 60;
         }
     }
 
     hidden function updatePlayer() {
         _playerStateTick++;
-
-        if (_playerState == PS_PUNCH_JAB || _playerState == PS_PUNCH_HOOK || _playerState == PS_PUNCH_UPPER) {
-            if (_playerStateTick >= 8) {
-                _playerState = PS_IDLE;
-                _playerStateTick = 0;
-            }
+        if (_playerState == PS_SUPER) {
+            if (_playerStateTick >= 10) { _playerState = PS_IDLE; _playerStateTick = 0; }
+        } else if (_playerState == PS_EXHAUSTED) {
+            if (_playerStateTick >= 25) { _playerState = PS_IDLE; _playerStateTick = 0; _stamina = 20; }
+        } else if (_playerState >= PS_JAB && _playerState <= PS_BODY) {
+            if (_playerStateTick >= 7) { _playerState = PS_IDLE; _playerStateTick = 0; }
         } else if (_playerState == PS_DODGE_L || _playerState == PS_DODGE_R) {
-            if (_playerStateTick >= 12) {
-                _playerState = PS_IDLE;
-                _playerStateTick = 0;
-            }
+            if (_playerStateTick >= 10) { _playerState = PS_IDLE; _playerStateTick = 0; }
         } else if (_playerState == PS_HIT_STUN) {
-            if (_playerStateTick >= 15) {
-                _playerState = PS_IDLE;
-                _playerStateTick = 0;
-            }
+            if (_playerStateTick >= 12) { _playerState = PS_IDLE; _playerStateTick = 0; }
         } else if (_playerState == PS_BLOCK) {
-            var ax = accelX;
-            if (ax == null) { ax = 0; }
-            if (ax > 150 || ax < -150) {
-                _playerState = PS_IDLE;
-                _playerStateTick = 0;
-            }
+            var ax = (accelX != null) ? accelX : 0;
+            if (ax > 150 || ax < -150) { _playerState = PS_IDLE; _playerStateTick = 0; }
+            if (_tick % 5 == 0) { _stamina--; if (_stamina < 0) { _stamina = 0; } }
         }
     }
 
     hidden function updateEnemy() {
         _enemyStateTick++;
-
         if (_enemyState == ES_IDLE) {
             _enemyAttackTimer++;
             if (_enemyAttackTimer >= _enemyNextAttack) {
-                _enemyState = ES_WINDUP;
-                _enemyStateTick = 0;
-                _enemyAttackTimer = 0;
-                var baseDelay = (35.0 / _enemySpeed).toNumber();
-                if (baseDelay < 15) { baseDelay = 15; }
-                _enemyNextAttack = baseDelay + Math.rand().abs() % 20;
+                var atkType = Math.rand().abs() % 100;
+                if (atkType < 35) { _enemyState = ES_WINDUP; _enemyPunchType = 0; }
+                else if (atkType < 55) { _enemyState = ES_WINDUP; _enemyPunchType = 1; }
+                else if (atkType < 70) { _enemyState = ES_WINDUP; _enemyPunchType = 2; }
+                else { _enemyState = ES_WINDUP; _enemyPunchType = 3; _enemyComboLeft = 2 + Math.rand().abs() % 2; }
+                _enemyStateTick = 0; _enemyAttackTimer = 0;
+                var bd = (20.0 / _enemySpeed).toNumber();
+                if (bd < 6) { bd = 6; }
+                _enemyNextAttack = bd + Math.rand().abs() % 10;
             }
-            if (Math.rand().abs() % 200 < 2 * _enemySpeed.toNumber()) {
-                _enemyState = ES_DODGE;
-                _enemyStateTick = 0;
+            if (Math.rand().abs() % 120 < (3.0 * _enemySpeed).toNumber()) {
+                _enemyState = ES_DODGE; _enemyStateTick = 0;
             }
         } else if (_enemyState == ES_WINDUP) {
-            var windupTime = (12.0 / _enemySpeed).toNumber();
-            if (windupTime < 5) { windupTime = 5; }
-            if (_enemyStateTick >= windupTime) {
-                _enemyState = ES_PUNCH;
+            var wt = (8.0 / _enemySpeed).toNumber();
+            if (wt < 3) { wt = 3; }
+            if (_enemyStateTick >= wt) {
+                if (_enemyPunchType == 0) { _enemyState = ES_JAB; }
+                else if (_enemyPunchType == 1) { _enemyState = ES_HOOK; }
+                else if (_enemyPunchType == 2) { _enemyState = ES_UPPER; }
+                else { _enemyState = ES_COMBO; }
                 _enemyStateTick = 0;
             }
-        } else if (_enemyState == ES_PUNCH) {
-            if (_enemyStateTick == 3) {
-                enemyHitPlayer();
-            }
-            if (_enemyStateTick >= 10) {
-                _enemyState = ES_IDLE;
-                _enemyStateTick = 0;
+        } else if (_enemyState == ES_JAB) {
+            if (_enemyStateTick == 2) { enemyHitPlayer(1.0); }
+            if (_enemyStateTick >= 8) { _enemyState = ES_IDLE; _enemyStateTick = 0; }
+        } else if (_enemyState == ES_HOOK) {
+            if (_enemyStateTick == 3) { enemyHitPlayer(1.5); }
+            if (_enemyStateTick >= 10) { _enemyState = ES_IDLE; _enemyStateTick = 0; }
+        } else if (_enemyState == ES_UPPER) {
+            if (_enemyStateTick == 3) { enemyHitPlayer(2.0); }
+            if (_enemyStateTick >= 12) { _enemyState = ES_IDLE; _enemyStateTick = 0; }
+        } else if (_enemyState == ES_COMBO) {
+            if (_enemyStateTick == 2) { enemyHitPlayer(0.8); }
+            if (_enemyStateTick >= 6) {
+                _enemyComboLeft--;
+                if (_enemyComboLeft > 0) { _enemyStateTick = 0; }
+                else { _enemyState = ES_IDLE; _enemyStateTick = 0; }
             }
         } else if (_enemyState == ES_STUNNED) {
-            if (_enemyStateTick >= 20) {
-                _enemyState = ES_IDLE;
-                _enemyStateTick = 0;
-            }
+            if (_enemyStateTick >= 18) { _enemyState = ES_IDLE; _enemyStateTick = 0; }
         } else if (_enemyState == ES_DODGE) {
-            if (_enemyStateTick >= 15) {
-                _enemyState = ES_IDLE;
-                _enemyStateTick = 0;
-            }
+            if (_enemyStateTick >= 12) { _enemyState = ES_IDLE; _enemyStateTick = 0; }
         }
     }
 
-    hidden function enemyHitPlayer() {
-        if (_playerState == PS_DODGE_L || _playerState == PS_DODGE_R) {
-            spawnSweat(_w / 2, _h * 60 / 100, 2);
-            return;
-        }
-
-        var dmg = _enemyDmg;
+    hidden function enemyHitPlayer(mult) {
+        if (_playerState == PS_DODGE_L || _playerState == PS_DODGE_R) { spawnSweat(_w / 2, pBaseY(), 3); return; }
+        var dmg = (_enemyDmg.toFloat() * mult).toNumber();
         if (_playerState == PS_BLOCK) {
-            dmg = (dmg * 0.3).toNumber();
-            if (dmg < 1) { dmg = 1; }
-            doVibe(20, 40);
-            _shakeLeft = 2;
+            dmg = (dmg * 0.25).toNumber(); if (dmg < 1) { dmg = 1; }
+            _stamina -= 5; if (_stamina < 0) { _stamina = 0; }
+            doVibe(20, 40); _shakeLeft = 2;
         } else {
-            _playerState = PS_HIT_STUN;
-            _playerStateTick = 0;
-            doVibe(60, 150);
-            _shakeLeft = 6;
-            _hitFlash = 4;
-            _playerBruise += 2;
-            if (_playerBruise > 20) { _playerBruise = 20; }
+            _stamina -= 15; if (_stamina < 0) { _stamina = 0; }
+            _playerState = PS_HIT_STUN; _playerStateTick = 0;
+            doVibe(70, 180); _shakeLeft = 7; _hitFlash = 5;
+            _playerBruise += 3; if (_playerBruise > 25) { _playerBruise = 25; }
             if (Math.rand().abs() % 3 == 0) {
                 var side = Math.rand().abs() % 2;
-                if (side == 0) { _playerSwellL += 3; if (_playerSwellL > 10) { _playerSwellL = 10; } }
-                else { _playerSwellR += 3; if (_playerSwellR > 10) { _playerSwellR = 10; } }
+                if (side == 0) { _playerSwellL += 3; if (_playerSwellL > 12) { _playerSwellL = 12; } }
+                else { _playerSwellR += 3; if (_playerSwellR > 12) { _playerSwellR = 12; } }
             }
-            var bx = _w / 2 + (Math.rand().abs() % 16) - 8;
-            var by = _h * 62 / 100;
-            spawnBlood(bx, by, 3);
+            spawnBlood(_w / 2 + (Math.rand().abs() % 12) - 6, pBaseY(), 4);
         }
-
-        _playerHp -= dmg;
-        _comboCount = 0;
-        _comboTimer = 0;
+        _playerHp -= dmg; _comboCount = 0; _comboTimer = 0;
+        spawnPop(_w / 2, pBaseY() - 5, dmg, 3);
 
         if (_playerHp <= 0) {
-            _playerHp = 0;
-            gameState = GS_KO;
-            _koTick = 0;
-            _shakeLeft = 12;
-            doVibe(100, 400);
-            spawnBlood(_w / 2, _h * 65 / 100, 10);
-            spawnStars(_w / 2, _h * 55 / 100);
+            _playerHp = 0; gameState = GS_KO; _koTick = 0; _shakeLeft = 15;
+            doVibe(100, 500); spawnBlood(_w / 2, pBaseY(), 15); spawnStars(_w / 2, pBaseY() - 10);
         }
     }
 
     hidden function spawnBlood(bx, by, count) {
         for (var i = 0; i < count; i++) {
-            var slot = -1;
-            for (var j = 0; j < 30; j++) {
-                if (_bloodLife[j] <= 0) { slot = j; break; }
-            }
-            if (slot < 0) { slot = _bloodCount % 30; }
-            _bloodX[slot] = bx + (Math.rand().abs() % 10) - 5;
-            _bloodY[slot] = by + (Math.rand().abs() % 6) - 3;
-            _bloodVx[slot] = (Math.rand().abs() % 7) - 3;
-            _bloodVy[slot] = -(Math.rand().abs() % 5) - 2;
-            _bloodLife[slot] = 20 + Math.rand().abs() % 15;
-            _bloodCount++;
+            var s = _bloodIdx % BLOOD_MAX;
+            _bloodX[s] = bx + (Math.rand().abs() % 12) - 6;
+            _bloodY[s] = by + (Math.rand().abs() % 8) - 4;
+            _bloodVx[s] = (Math.rand().abs() % 9) - 4;
+            _bloodVy[s] = -(Math.rand().abs() % 6) - 2;
+            _bloodLife[s] = 22 + Math.rand().abs() % 18;
+            _bloodIdx++;
         }
     }
-
     hidden function spawnSweat(sx, sy, count) {
-        for (var i = 0; i < count && i < 6; i++) {
+        for (var i = 0; i < count && i < 8; i++) {
             _sweatX[i] = sx + (Math.rand().abs() % 20) - 10;
-            _sweatY[i] = sy;
-            _sweatVx[i] = (Math.rand().abs() % 5) - 2;
-            _sweatVy[i] = -(Math.rand().abs() % 4) - 1;
-            _sweatLife[i] = 12 + Math.rand().abs() % 8;
+            _sweatY[i] = sy; _sweatVx[i] = (Math.rand().abs() % 7) - 3;
+            _sweatVy[i] = -(Math.rand().abs() % 5) - 1;
+            _sweatLife[i] = 14 + Math.rand().abs() % 8;
         }
     }
-
     hidden function spawnStars(sx, sy) {
-        for (var i = 0; i < 5; i++) {
-            var a = i * 72;
-            var r = 12 + Math.rand().abs() % 8;
+        for (var i = 0; i < 6; i++) {
+            var a = i * 60; var r = 10 + Math.rand().abs() % 8;
             _starX[i] = sx + (r * Math.cos(a * 0.01745)).toNumber();
             _starY[i] = sy + (r * Math.sin(a * 0.01745)).toNumber();
-            _starLife[i] = 25 + Math.rand().abs() % 10;
+            _starLife[i] = 30 + Math.rand().abs() % 12;
         }
     }
-
-    hidden function updateBlood() {
-        for (var i = 0; i < 30; i++) {
-            if (_bloodLife[i] <= 0) { continue; }
-            _bloodX[i] += _bloodVx[i];
-            _bloodY[i] += _bloodVy[i];
-            _bloodVy[i] += 1;
-            _bloodLife[i]--;
-        }
-    }
-
-    hidden function updateSweat() {
+    hidden function spawnPop(px, py, val, type) {
         for (var i = 0; i < 6; i++) {
-            if (_sweatLife[i] <= 0) { continue; }
-            _sweatX[i] += _sweatVx[i];
-            _sweatY[i] += _sweatVy[i];
-            _sweatVy[i] += 1;
-            _sweatLife[i]--;
-        }
-    }
-
-    hidden function updateStars() {
-        for (var i = 0; i < 5; i++) {
-            if (_starLife[i] <= 0) { continue; }
-            _starLife[i]--;
-        }
-    }
-
-    hidden function doVibe(intensity, duration) {
-        if (Toybox has :Attention) {
-            if (Toybox.Attention has :vibrate) {
-                Toybox.Attention.vibrate([new Toybox.Attention.VibeProfile(intensity, duration)]);
+            if (_dmgPopLife[i] <= 0) {
+                _dmgPopX[i] = px; _dmgPopY[i] = py; _dmgPopVal[i] = val; _dmgPopLife[i] = 28; _dmgPopType[i] = type;
+                return;
             }
         }
+        _dmgPopX[0] = px; _dmgPopY[0] = py; _dmgPopVal[0] = val; _dmgPopLife[0] = 28; _dmgPopType[0] = type;
     }
 
-    // =========== RENDERING ===========
+    hidden function updateBlood() { for (var i = 0; i < BLOOD_MAX; i++) { if (_bloodLife[i] <= 0) { continue; } _bloodX[i] += _bloodVx[i]; _bloodY[i] += _bloodVy[i]; _bloodVy[i] += 1; _bloodLife[i]--; } }
+    hidden function updateSweat() { for (var i = 0; i < 8; i++) { if (_sweatLife[i] <= 0) { continue; } _sweatX[i] += _sweatVx[i]; _sweatY[i] += _sweatVy[i]; _sweatVy[i] += 1; _sweatLife[i]--; } }
+    hidden function updateStars() { for (var i = 0; i < 6; i++) { if (_starLife[i] > 0) { _starLife[i]--; } } }
+    hidden function updatePops() { for (var i = 0; i < 6; i++) { if (_dmgPopLife[i] > 0) { _dmgPopY[i]--; _dmgPopLife[i]--; } } }
+
+    hidden function doVibe(intensity, duration) {
+        if (Toybox has :Attention) { if (Toybox.Attention has :vibrate) {
+            Toybox.Attention.vibrate([new Toybox.Attention.VibeProfile(intensity, duration)]);
+        } }
+    }
 
     function onUpdate(dc) {
-        _w = dc.getWidth();
-        _h = dc.getHeight();
-
+        _w = dc.getWidth(); _h = dc.getHeight();
         if (gameState == GS_MENU) { drawMenu(dc); return; }
         if (gameState == GS_INTRO) { drawIntro(dc); return; }
 
-        var ox = _shakeX;
-        var oy = _shakeY;
-
+        var ox = _shakeX; var oy = _shakeY;
         drawArena(dc, ox, oy);
         drawRopes(dc, ox, oy);
         drawCrowd(dc, ox, oy);
         drawEnemy(dc, ox, oy);
         drawPlayer(dc, ox, oy);
-        drawBloodParticles(dc, ox, oy);
-        drawSweatParticles(dc, ox, oy);
-        drawStarParticles(dc, ox, oy);
+        drawBloodParts(dc, ox, oy);
+        drawSweatParts(dc, ox, oy);
+        drawStarParts(dc, ox, oy);
+        drawPops(dc, ox, oy);
         drawHUD(dc);
 
-        if (_hitFlash > 0) {
-            dc.setColor(0xFF2200, Graphics.COLOR_TRANSPARENT);
-            dc.setPenWidth(3);
-            dc.drawRectangle(2, 2, _w - 4, _h - 4);
-            dc.setPenWidth(1);
-        }
-
-        if (_flashTick > 0 && _flashTick % 2 == 0) {
-            dc.setColor(0xFFFF88, Graphics.COLOR_TRANSPARENT);
-            dc.setPenWidth(2);
-            dc.drawRectangle(4, 4, _w - 8, _h - 8);
-            dc.setPenWidth(1);
+        if (_hitFlash > 0) { dc.setColor(0xFF2200, Graphics.COLOR_TRANSPARENT); dc.setPenWidth(3); dc.drawRectangle(1, 1, _w - 2, _h - 2); dc.setPenWidth(1); }
+        if (_flashTick > 0 && _flashTick % 2 == 0) { dc.setColor(0xFFFF88, Graphics.COLOR_TRANSPARENT); dc.setPenWidth(2); dc.drawRectangle(2, 2, _w - 4, _h - 4); dc.setPenWidth(1); }
+        if (_superFlash > 0) {
+            var sc = (_superFlash % 2 == 0) ? 0xFFDD00 : 0xFF4400;
+            dc.setColor(sc, Graphics.COLOR_TRANSPARENT); dc.setPenWidth(4); dc.drawRectangle(0, 0, _w, _h); dc.setPenWidth(1);
         }
 
         if (gameState == GS_KO) { drawKO(dc); }
         else if (gameState == GS_WIN) { drawWin(dc); }
         else if (gameState == GS_LOSE) { drawLose(dc); }
 
+        if (_punchLabelTick > 0 && gameState == GS_FIGHT) {
+            var lc = 0xFFFFFF;
+            if (_punchLabel.equals("COUNTER!")) { lc = 0xFF4444; }
+            else if (_punchLabel.equals("SUPER!")) { lc = 0xFFDD00; }
+            dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2 + 1, _h * 47 / 100 + 1, Graphics.FONT_SMALL, _punchLabel, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(lc, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2, _h * 47 / 100, Graphics.FONT_SMALL, _punchLabel, Graphics.TEXT_JUSTIFY_CENTER);
+        }
+
         if (_comboCount >= 3 && _comboTimer > 0 && gameState == GS_FIGHT) {
-            dc.setColor(0xFFDD00, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 48 / 100, Graphics.FONT_SMALL,
-                "" + _comboCount + "x COMBO!", Graphics.TEXT_JUSTIFY_CENTER);
+            var comboC = 0xFFDD00;
+            if (_comboCount >= 8) { comboC = 0xFF2222; }
+            else if (_comboCount >= 5) { comboC = 0xFF6622; }
+            dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2 + 1, _h * 42 / 100 + 1, Graphics.FONT_XTINY, "" + _comboCount + "x COMBO!", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(comboC, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2, _h * 42 / 100, Graphics.FONT_XTINY, "" + _comboCount + "x COMBO!", Graphics.TEXT_JUSTIFY_CENTER);
         }
-    }
-
-    hidden function drawMenu(dc) {
-        dc.setColor(0x0A0A14, 0x0A0A14);
-        dc.clear();
-
-        dc.setColor(0x1A1A2A, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(0, _h * 70 / 100, _w, _h * 30 / 100);
-
-        dc.setColor(0x220808, Graphics.COLOR_TRANSPARENT);
-        for (var i = 0; i < _w; i += 4) {
-            var rh = 3 + (i * 7 + 13) % 5;
-            dc.fillRectangle(i, _h * 70 / 100 - rh, 3, rh);
-        }
-
-        drawMenuBoxer(dc, _w * 25 / 100, _h * 48 / 100, 0xDD4444, true);
-        drawMenuBoxer(dc, _w * 75 / 100, _h * 48 / 100, 0x4444DD, false);
-
-        dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(_w * 38 / 100, _h * 38 / 100, _w * 24 / 100, 2);
-        dc.setColor(0xFFAA22, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 40 / 100, Graphics.FONT_XTINY, "VS", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(_w * 38 / 100, _h * 50 / 100, _w * 24 / 100, 2);
-
-        var pulse = (_tick % 20 < 10) ? 0xFF4444 : 0xDD2222;
-        dc.setColor(0x110000, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2 + 1, _h * 8 / 100 + 1, Graphics.FONT_SMALL, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(pulse, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 8 / 100, Graphics.FONT_SMALL, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 20 / 100, Graphics.FONT_SMALL, "BOXING", Graphics.TEXT_JUSTIFY_CENTER);
-
-        dc.setColor(0x888888, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 60 / 100, Graphics.FONT_XTINY, "Shake to punch!", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(_w / 2, _h * 67 / 100, Graphics.FONT_XTINY, "Tilt to dodge", Graphics.TEXT_JUSTIFY_CENTER);
-
-        if (_bestRound > 0) {
-            dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 76 / 100, Graphics.FONT_XTINY, "Best: Round " + _bestRound, Graphics.TEXT_JUSTIFY_CENTER);
-        }
-
-        dc.setColor((_tick % 30 < 15) ? 0x44FF44 : 0x22AA22, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 86 / 100, Graphics.FONT_XTINY, "Tap to fight", Graphics.TEXT_JUSTIFY_CENTER);
-    }
-
-    hidden function drawMenuBoxer(dc, cx, cy, col, leftFacing) {
-        var headR = _w * 6 / 100;
-        dc.setColor(0xDDAA77, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(cx, cy - headR * 2, headR);
-
-        dc.setColor(col, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(cx - headR, cy, headR * 2, headR * 3);
-
-        var dir = leftFacing ? 1 : -1;
-        dc.setColor(col - 0x222200, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(cx + dir * headR * 2, cy - headR, headR * 3 / 4);
-
-        dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT);
-        var ex = leftFacing ? cx + 2 : cx - 2;
-        dc.fillCircle(ex, cy - headR * 2 - 1, 2);
-    }
-
-    hidden function drawIntro(dc) {
-        dc.setColor(0x0A0A14, 0x0A0A14);
-        dc.clear();
-
-        dc.setColor(0x332211, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(0, _h * 55 / 100, _w, _h * 45 / 100);
-        dc.setColor(0x443322, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(0, _h * 55 / 100, _w, 3);
-
-        dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 12 / 100, Graphics.FONT_SMALL, "ROUND " + _round, Graphics.TEXT_JUSTIFY_CENTER);
-
-        var enemyNames = ["ROOKIE JOE", "IRON MIKE", "MAD BULL", "SHADOW", "CHAMPION"];
-        var idx = _enemyFace;
-        if (idx > 4) { idx = 4; }
-        dc.setColor(0xFF6644, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 28 / 100, Graphics.FONT_XTINY, enemyNames[idx], Graphics.TEXT_JUSTIFY_CENTER);
-
-        dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 38 / 100, Graphics.FONT_XTINY, "HP: " + _enemyMaxHp, Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(_w / 2, _h * 45 / 100, Graphics.FONT_XTINY, "DMG: " + _enemyDmg, Graphics.TEXT_JUSTIFY_CENTER);
-
-        if (_introTick > 20) {
-            var flash = (_introTick % 6 < 3);
-            dc.setColor(flash ? 0xFF4444 : 0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 62 / 100, Graphics.FONT_MEDIUM, "FIGHT!", Graphics.TEXT_JUSTIFY_CENTER);
-        }
-
-        var barY = _h * 78 / 100;
-        var barW = _w * 60 / 100;
-        var barX = (_w - barW) / 2;
-        var fill = (_introTick * barW / 60);
-        if (fill > barW) { fill = barW; }
-        dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(barX, barY, barW, 6);
-        dc.setColor(0xFF4444, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(barX, barY, fill, 6);
     }
 
     hidden function drawArena(dc, ox, oy) {
-        var skyTop = 0x0A0A18;
-        var skyBot = 0x151525;
-        dc.setColor(skyTop, skyTop);
-        dc.clear();
-
-        dc.setColor(skyBot, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(0, _h * 25 / 100 + oy, _w, _h * 75 / 100);
-
-        var floorY = _h * 75 / 100 + oy;
+        dc.setColor(0x0A0A18, 0x0A0A18); dc.clear();
+        dc.setColor(0x121222, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, _h * 20 / 100 + oy, _w, _h * 80 / 100);
+        var floorY = _h * 76 / 100 + oy;
         dc.setColor(0x334488, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(0, floorY, _w, _h * 25 / 100);
+        dc.fillRectangle(0, floorY, _w, _h - floorY + 10);
         dc.setColor(0x2A3A6A, Graphics.COLOR_TRANSPARENT);
-        for (var i = 0; i < _w; i += 8) {
-            dc.fillRectangle(i + ox, floorY, 4, _h - floorY);
-        }
+        for (var i = 0; i < _w; i += 7) { dc.fillRectangle(i + ox, floorY, 3, _h - floorY + 10); }
         dc.setColor(0x445599, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, floorY, _w, 2);
-
         dc.setColor(0x553322, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(_w * 5 / 100 + ox, floorY + 2, _w * 90 / 100, 4);
+        dc.fillRectangle(_w * 4 / 100 + ox, floorY + 2, _w * 92 / 100, 4);
+
+        dc.setColor(0x181830, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, _h * 20 / 100 + oy, _w, 3);
     }
 
     hidden function drawRopes(dc, ox, oy) {
-        var leftX = _w * 8 / 100 + ox;
-        var rightX = _w * 92 / 100 + ox;
-        var topY = _h * 20 / 100 + oy;
-        var midY = _h * 40 / 100 + oy;
-        var botY = _h * 60 / 100 + oy;
-
+        var lx = _w * 6 / 100 + ox; var rx = _w * 94 / 100 + ox;
+        var ty = _h * 18 / 100 + oy; var my = _h * 37 / 100 + oy; var by = _h * 55 / 100 + oy;
         dc.setColor(0x554433, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(leftX - 2, topY, 4, botY - topY + 4);
-        dc.fillRectangle(rightX - 2, topY, 4, botY - topY + 4);
-
-        dc.setColor(0xFF4444, Graphics.COLOR_TRANSPARENT);
-        dc.drawLine(leftX, topY, rightX, topY);
-        dc.drawLine(leftX, topY + 1, rightX, topY + 1);
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawLine(leftX, midY, rightX, midY);
-        dc.drawLine(leftX, midY + 1, rightX, midY + 1);
-        dc.setColor(0x4444FF, Graphics.COLOR_TRANSPARENT);
-        dc.drawLine(leftX, botY, rightX, botY);
-        dc.drawLine(leftX, botY + 1, rightX, botY + 1);
+        dc.fillRectangle(lx - 2, ty, 4, by - ty + 4);
+        dc.fillRectangle(rx - 2, ty, 4, by - ty + 4);
+        dc.setColor(0xFF4444, Graphics.COLOR_TRANSPARENT); dc.drawLine(lx, ty, rx, ty); dc.drawLine(lx, ty + 1, rx, ty + 1);
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawLine(lx, my, rx, my); dc.drawLine(lx, my + 1, rx, my + 1);
+        dc.setColor(0x4444FF, Graphics.COLOR_TRANSPARENT); dc.drawLine(lx, by, rx, by); dc.drawLine(lx, by + 1, rx, by + 1);
     }
 
     hidden function drawCrowd(dc, ox, oy) {
-        var crowdY = _h * 10 / 100 + oy;
-        for (var i = 0; i < 12; i++) {
-            var cx = (i * _w / 12) + _w / 24 + ox;
-            var bounce = ((_crowdPhase + i * 10) % 20 < 10) ? -2 : 0;
-            var headC = [0xDDAA77, 0xCC9966, 0xBB8855, 0xAA7744, 0xDD9988, 0xCCAA88];
-            var ci = (i * 3 + 7) % 6;
-            dc.setColor(headC[ci], Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(cx, crowdY + bounce, 4);
-            var shirtC = [0xDD3333, 0x3333DD, 0x33DD33, 0xDDDD33, 0xDD33DD, 0x33DDDD];
-            var si = (i * 5 + 2) % 6;
-            dc.setColor(shirtC[si], Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(cx - 3, crowdY + 4 + bounce, 6, 6);
+        var cy = _h * 9 / 100 + oy;
+        var headC = [0xDDAA77, 0xCC9966, 0xBB8855, 0xAA7744, 0xDD9988, 0xCCAA88, 0x8B6842, 0xE8C39E];
+        var shirtC = [0xDD3333, 0x3333DD, 0x33DD33, 0xDDDD33, 0xDD33DD, 0x33DDDD, 0xDD6633, 0x3366DD];
+        for (var i = 0; i < 16; i++) {
+            var cx = (i * _w / 16) + _w / 32 + ox;
+            var bounce = 0;
+            if (_crowdHype > 0) {
+                bounce = ((_crowdPhase + i * 7) % 10 < 5) ? -3 : 0;
+            } else {
+                bounce = ((_crowdPhase + i * 9) % 24 < 12) ? -1 : 0;
+            }
+            dc.setColor(headC[(i * 3 + 5) % 8], Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(cx, cy + bounce, 3);
+            dc.setColor(shirtC[(i * 5 + 1) % 8], Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(cx - 2, cy + 3 + bounce, 4, 4);
+
+            if (_crowdHype > 30 && i % 3 == 0) {
+                dc.setColor(shirtC[(i * 5 + 1) % 8], Graphics.COLOR_TRANSPARENT);
+                var armUp = ((_tick + i * 5) % 8 < 4) ? -5 : -3;
+                dc.fillRectangle(cx - 1, cy + armUp + bounce, 2, 3);
+            }
         }
     }
 
     hidden function drawEnemy(dc, ox, oy) {
         var cx = _w / 2 + ox;
-        var baseY = _h * 32 / 100 + oy;
-
+        var baseY = eBaseY() + oy;
         var dodgeOff = 0;
-        if (_enemyState == ES_DODGE) {
-            dodgeOff = (_enemyStateTick < 8) ? -15 : 15;
-        }
+        if (_enemyState == ES_DODGE) { dodgeOff = (_enemyStateTick < 6) ? -14 : 14; }
         cx += dodgeOff;
 
-        var headR = _w * 8 / 100;
-        var bodyW = headR * 2;
-        var bodyH = (headR * 2.5).toNumber();
-        var headY = baseY - bodyH / 2 - headR;
-
-        var bobOff = 0;
-        if (_enemyState == ES_IDLE) {
-            bobOff = (_tick % 16 < 8) ? -1 : 1;
-        }
+        var headR = _w * 7 / 100;
+        if (headR < 8) { headR = 8; }
+        var bodyW = (headR * 2.0).toNumber();
+        var bodyH = (headR * 2.2).toNumber();
+        var headY = baseY - bodyH / 2 - headR + 2;
+        var bobOff = (_enemyState == ES_IDLE) ? ((_tick % 14 < 7) ? -1 : 1) : 0;
         headY += bobOff;
 
-        if (_enemyState == ES_STUNNED) {
-            var sway = (_enemyStateTick % 6 < 3) ? -3 : 3;
-            cx += sway;
-        }
+        if (_enemyState == ES_STUNNED) { cx += ((_enemyStateTick % 6 < 3) ? -3 : 3); }
 
-        var skinBase = 0xDDAA77;
-        var skinBruised = skinBase;
+        var skin = _enemySkin;
         if (_enemyBruise > 0) {
-            var br = (0xDD - _enemyBruise * 3);
-            var bg = (0xAA - _enemyBruise * 4);
-            if (br < 0x88) { br = 0x88; }
-            if (bg < 0x55) { bg = 0x55; }
-            skinBruised = (br << 16) | (bg << 8) | 0x77;
+            var sr = (skin >> 16) & 0xFF; var sg = (skin >> 8) & 0xFF;
+            sr = sr - _enemyBruise * 2; sg = sg - _enemyBruise * 3;
+            if (sr < 0x55) { sr = 0x55; } if (sg < 0x33) { sg = 0x33; }
+            skin = (sr << 16) | (sg << 8) | (skin & 0xFF);
         }
 
-        dc.setColor(skinBruised, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(skin, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(cx, headY, headR);
 
-        dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(cx - headR, headY - headR - 2, headR * 2, headR / 2);
-
-        var eyeY = headY - 2;
-        var lEyeX = cx - headR / 3;
-        var rEyeX = cx + headR / 3;
-
-        if (_enemyState == ES_STUNNED) {
-            dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT);
-            dc.drawLine(lEyeX - 2, eyeY - 2, lEyeX + 2, eyeY + 2);
-            dc.drawLine(lEyeX + 2, eyeY - 2, lEyeX - 2, eyeY + 2);
-            dc.drawLine(rEyeX - 2, eyeY - 2, rEyeX + 2, eyeY + 2);
-            dc.drawLine(rEyeX + 2, eyeY - 2, rEyeX - 2, eyeY + 2);
+        dc.setColor(_enemyHairCol, Graphics.COLOR_TRANSPARENT);
+        if (_enemyHairStyle == 0) {
+            dc.fillRectangle(cx - headR + 1, headY - headR - 1, headR * 2 - 2, headR / 2);
+        } else if (_enemyHairStyle == 1) {
+            dc.fillCircle(cx, headY - headR + 2, headR - 1);
+        } else if (_enemyHairStyle == 2) {
+            dc.fillRectangle(cx - headR + 1, headY - headR, headR * 2 - 2, headR / 3);
+            dc.fillRectangle(cx - 2, headY - headR - 3, 4, 4);
         } else {
-            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(lEyeX, eyeY, 3);
-            dc.fillCircle(rEyeX, eyeY, 3);
-            dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(lEyeX, eyeY, 1);
-            dc.fillCircle(rEyeX, eyeY, 1);
-
-            if (_enemySwellL > 3) {
-                dc.setColor(0x884466, Graphics.COLOR_TRANSPARENT);
-                dc.fillCircle(lEyeX - 1, eyeY + 2, _enemySwellL / 2);
-            }
-            if (_enemySwellR > 3) {
-                dc.setColor(0x884466, Graphics.COLOR_TRANSPARENT);
-                dc.fillCircle(rEyeX + 1, eyeY + 2, _enemySwellR / 2);
-            }
+            dc.fillRectangle(cx - headR + 2, headY - headR, headR * 2 - 4, headR / 2 + 2);
         }
 
-        if (_enemyState == ES_STUNNED || _enemyHp < _enemyMaxHp / 3) {
+        var eyeY = headY - 1; var leX = cx - headR / 3; var reX = cx + headR / 3;
+        if (_enemyState == ES_STUNNED) {
             dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT);
-            dc.drawLine(cx - headR / 4, headY + headR / 2, cx + headR / 4, headY + headR / 2 + 2);
+            dc.drawLine(leX - 2, eyeY - 2, leX + 2, eyeY + 2); dc.drawLine(leX + 2, eyeY - 2, leX - 2, eyeY + 2);
+            dc.drawLine(reX - 2, eyeY - 2, reX + 2, eyeY + 2); dc.drawLine(reX + 2, eyeY - 2, reX - 2, eyeY + 2);
+        } else {
+            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillCircle(leX, eyeY, 3); dc.fillCircle(reX, eyeY, 3);
+            dc.setColor(0x111111, Graphics.COLOR_TRANSPARENT); dc.fillCircle(leX, eyeY, 1); dc.fillCircle(reX, eyeY, 1);
+            if (_enemySwellL > 3) { dc.setColor(0x884466, Graphics.COLOR_TRANSPARENT); dc.fillCircle(leX - 1, eyeY + 2, _enemySwellL / 3); }
+            if (_enemySwellR > 3) { dc.setColor(0x884466, Graphics.COLOR_TRANSPARENT); dc.fillCircle(reX + 1, eyeY + 2, _enemySwellR / 3); }
+        }
+
+        if (_enemyState == ES_STUNNED || _enemyHp < _enemyMaxHp / 4) {
+            dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT);
+            dc.drawLine(cx - headR / 4, headY + headR / 2, cx + headR / 4, headY + headR / 2 + 1);
         } else if (_enemyState == ES_WINDUP) {
             dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(cx - 3, headY + headR / 3, 6, 2);
+            dc.fillRectangle(cx - 3, headY + headR / 3, 6, 3);
         } else {
             dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT);
             dc.fillRectangle(cx - 2, headY + headR / 3, 4, 2);
@@ -895,99 +734,87 @@ class BitochiBoxingView extends WatchUi.View {
 
         if (_enemyNoseBleed > 0) {
             dc.setColor(0xCC0000, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(cx - 1, headY + headR / 4, 2, _enemyNoseBleed / 2 + 2);
-            if (_enemyNoseBleed > 8) {
-                dc.fillCircle(cx, headY + headR / 3 + _enemyNoseBleed / 2, 2);
-            }
+            dc.fillRectangle(cx - 1, headY + headR / 4, 2, _enemyNoseBleed / 3 + 2);
+            if (_enemyNoseBleed > 10) { dc.fillCircle(cx, headY + headR / 3 + _enemyNoseBleed / 3, 2); }
         }
 
-        for (var c = 0; c < _enemyCuts && c < 5; c++) {
-            var cutX = cx - headR / 2 + (c * headR / 3);
-            var cutY = headY - headR / 3 + (c % 2 == 0 ? 2 : -2);
+        for (var c = 0; c < _enemyCuts && c < 6; c++) {
             dc.setColor(0xCC2222, Graphics.COLOR_TRANSPARENT);
-            dc.drawLine(cutX, cutY, cutX + 3, cutY + 2);
+            var cutX = cx - headR / 2 + (c * headR / 3);
+            dc.drawLine(cutX, headY - headR / 3 + (c % 2 == 0 ? 2 : -2), cutX + 3, headY - headR / 3 + (c % 2 == 0 ? 5 : 0));
         }
 
-        var tColor = getEnemyTrunkColor();
-        dc.setColor(tColor, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(cx - bodyW / 2, baseY - bodyH / 2, bodyW, bodyH);
-        dc.setColor(skinBruised, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(cx - bodyW / 2 + 1, baseY - bodyH / 2 + 1, bodyW - 2, bodyH / 4);
-
-        var gloveC = getEnemyGloveColor();
-        if (_enemyState == ES_WINDUP) {
-            dc.setColor(gloveC, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(cx - bodyW / 2 - 5, baseY - bodyH / 4 - 5, headR * 3 / 4);
-            dc.fillCircle(cx + bodyW / 2 + 5, baseY - bodyH / 4 - 5, headR * 3 / 4);
-        } else if (_enemyState == ES_PUNCH) {
-            var punchExt = _enemyStateTick < 5 ? _enemyStateTick * 4 : 20 - (_enemyStateTick - 5) * 4;
-            var pSide = (_enemyAttackTimer + _tick) % 2 == 0 ? -1 : 1;
-            dc.setColor(gloveC, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(cx + pSide * bodyW / 4, baseY + bodyH / 2 + punchExt, headR);
-            dc.fillCircle(cx - pSide * bodyW / 2 - 4, baseY - bodyH / 4, headR * 3 / 4);
-        } else {
-            dc.setColor(gloveC, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(cx - bodyW / 2 - 4, baseY - 2 + bobOff, headR * 3 / 4);
-            dc.fillCircle(cx + bodyW / 2 + 4, baseY - 2 + bobOff, headR * 3 / 4);
-        }
-
-        dc.setColor(skinBruised, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(skin, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(cx - 2, headY + headR, 4, 4);
-    }
 
-    hidden function getEnemyTrunkColor() {
-        var colors = [0x3344AA, 0x883322, 0x228833, 0x555555, 0xAA2244];
-        var idx = _enemyFace;
-        if (idx > 4) { idx = 4; }
-        return colors[idx];
-    }
+        var tColors = [0x3344AA, 0x883322, 0x228833, 0x555555, 0xAA2244, 0x886611, 0x338888, 0x663366];
+        var tc = tColors[_enemyFace % 8];
+        dc.setColor(tc, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(cx - bodyW / 2, baseY - bodyH / 2, bodyW, bodyH);
+        dc.setColor(skin, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(cx - bodyW / 2 + 2, baseY - bodyH / 2 + 1, bodyW - 4, bodyH / 5);
 
-    hidden function getEnemyGloveColor() {
-        var colors = [0xCC3333, 0x3333CC, 0xCC8833, 0x33CC33, 0xCC33CC];
-        var idx = _enemyFace;
-        if (idx > 4) { idx = 4; }
-        return colors[idx];
+        var gColors = [0xCC3333, 0x3333CC, 0xCC8833, 0x33CC33, 0xCC33CC, 0xCCCC33, 0x33CCCC, 0xCC6633];
+        var gc = gColors[_enemyFace % 8];
+        var glR = (headR * 0.7).toNumber();
+        if (glR < 5) { glR = 5; }
+
+        if (_enemyState == ES_WINDUP) {
+            dc.setColor(gc, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(cx - bodyW / 2 - 5, baseY - bodyH / 4 - 4, glR);
+            dc.fillCircle(cx + bodyW / 2 + 5, baseY - bodyH / 4 - 4, glR);
+        } else if (_enemyState == ES_JAB || _enemyState == ES_COMBO) {
+            var ext = _enemyStateTick < 3 ? _enemyStateTick * 6 : 18 - (_enemyStateTick - 3) * 4;
+            var side = (_tick % 2 == 0) ? -1 : 1;
+            dc.setColor(gc, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(cx + side * bodyW / 4, baseY + bodyH / 2 + ext, glR + 1);
+            dc.fillCircle(cx - side * bodyW / 2 - 4, baseY - bodyH / 4, glR - 1);
+        } else if (_enemyState == ES_HOOK) {
+            var ext = _enemyStateTick < 4 ? _enemyStateTick * 5 : 20 - (_enemyStateTick - 4) * 4;
+            dc.setColor(gc, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(cx + ext, baseY + bodyH / 3, glR + 1);
+            dc.fillCircle(cx - bodyW / 2 - 4, baseY - bodyH / 4, glR - 1);
+        } else if (_enemyState == ES_UPPER) {
+            var ext = _enemyStateTick < 4 ? _enemyStateTick * 7 : 28 - (_enemyStateTick - 4) * 4;
+            dc.setColor(gc, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(cx, baseY + bodyH / 2 + ext, glR + 2);
+            dc.fillCircle(cx + bodyW / 2 + 4, baseY, glR - 1);
+        } else {
+            dc.setColor(gc, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(cx - bodyW / 2 - 4, baseY - 1 + bobOff, glR);
+            dc.fillCircle(cx + bodyW / 2 + 4, baseY - 1 + bobOff, glR);
+        }
     }
 
     hidden function drawPlayer(dc, ox, oy) {
         var cx = _w / 2 + ox;
-        var baseY = _h * 68 / 100 + oy;
+        var baseY = pBaseY() + oy;
+        if (_playerState == PS_DODGE_L) { cx -= _w * 12 / 100; }
+        else if (_playerState == PS_DODGE_R) { cx += _w * 12 / 100; }
+        if (_playerState == PS_HIT_STUN) { cx += ((_playerStateTick % 4 < 2) ? -3 : 3); }
 
-        var dodgeOff = 0;
-        if (_playerState == PS_DODGE_L) { dodgeOff = -_w * 12 / 100; }
-        else if (_playerState == PS_DODGE_R) { dodgeOff = _w * 12 / 100; }
-        cx += dodgeOff;
+        var headR = _w * 6 / 100;
+        if (headR < 7) { headR = 7; }
+        var bodyW = (headR * 2.0).toNumber();
+        var bodyH = (headR * 1.8).toNumber();
 
-        var headR = _w * 7 / 100;
-        var bodyW = headR * 2;
-        var bodyH = (headR * 2.0).toNumber();
-
-        var hitOff = 0;
-        if (_playerState == PS_HIT_STUN) {
-            hitOff = (_playerStateTick % 4 < 2) ? -3 : 3;
-        }
-        cx += hitOff;
-
-        var skinBase = 0xDDAA77;
+        var skin = 0xDDAA77;
         if (_playerBruise > 0) {
-            var pr = 0xDD - _playerBruise * 2;
-            var pg = 0xAA - _playerBruise * 3;
-            if (pr < 0x99) { pr = 0x99; }
-            if (pg < 0x66) { pg = 0x66; }
-            skinBase = (pr << 16) | (pg << 8) | 0x77;
+            var pr = 0xDD - _playerBruise * 2; var pg = 0xAA - _playerBruise * 3;
+            if (pr < 0x88) { pr = 0x88; } if (pg < 0x55) { pg = 0x55; }
+            skin = (pr << 16) | (pg << 8) | 0x77;
         }
 
         dc.setColor(0x2244AA, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(cx - bodyW / 2, baseY, bodyW, bodyH);
-        dc.setColor(skinBase, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(skin, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(cx - bodyW / 2 + 2, baseY + 1, bodyW - 4, bodyH / 5);
 
-        dc.setColor(skinBase, Graphics.COLOR_TRANSPARENT);
-        var headY = baseY - headR - 2;
+        var headY = baseY - headR - 1;
+        dc.setColor(skin, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(cx, headY, headR);
-
         dc.setColor(0x553311, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(cx - headR + 1, headY - headR, headR * 2 - 2, headR / 2 + 2);
+        dc.fillRectangle(cx - headR + 2, headY - headR, headR * 2 - 4, headR / 2 + 2);
 
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(cx - headR / 4, headY - 1, 2);
@@ -996,207 +823,323 @@ class BitochiBoxingView extends WatchUi.View {
         dc.fillCircle(cx - headR / 4, headY - 1, 1);
         dc.fillCircle(cx + headR / 4, headY - 1, 1);
 
-        if (_playerSwellL > 2) {
-            dc.setColor(0x774455, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(cx - headR / 3 - 1, headY + 1, _playerSwellL / 2);
-        }
-        if (_playerSwellR > 2) {
-            dc.setColor(0x774455, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(cx + headR / 3 + 1, headY + 1, _playerSwellR / 2);
-        }
-
-        if (_playerState == PS_HIT_STUN) {
-            dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT);
-            dc.drawLine(cx - 3, headY + headR / 2, cx + 3, headY + headR / 2 + 1);
-        }
-
-        dc.setColor(skinBase, Graphics.COLOR_TRANSPARENT);
+        if (_playerSwellL > 2) { dc.setColor(0x774455, Graphics.COLOR_TRANSPARENT); dc.fillCircle(cx - headR / 3 - 1, headY + 1, _playerSwellL / 3); }
+        if (_playerSwellR > 2) { dc.setColor(0x774455, Graphics.COLOR_TRANSPARENT); dc.fillCircle(cx + headR / 3 + 1, headY + 1, _playerSwellR / 3); }
+        if (_playerState == PS_HIT_STUN) { dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT); dc.drawLine(cx - 3, headY + headR / 2, cx + 3, headY + headR / 2); }
+        dc.setColor(skin, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(cx - 2, headY + headR, 4, 3);
 
-        var gloveR = (headR * 0.9).toNumber();
-        if (_playerState == PS_PUNCH_JAB) {
-            var ext = _playerStateTick < 4 ? _playerStateTick * 6 : 24 - (_playerStateTick - 4) * 6;
+        var glR = (headR * 0.8).toNumber();
+        if (glR < 5) { glR = 5; }
+
+        if (_playerState == PS_SUPER) {
+            var ext = _playerStateTick < 4 ? _playerStateTick * 10 : 40 - (_playerStateTick - 4) * 7;
+            dc.setColor(0xFFDD00, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(cx, baseY - ext - headR, glR + 3);
+            dc.setColor(0xFFAA00, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(cx, baseY - ext - headR, glR + 1);
+            dc.fillCircle(cx + bodyW / 2 + 4, baseY + 2, glR - 1);
+        } else if (_playerState == PS_JAB) {
+            var ext = _playerStateTick < 3 ? _playerStateTick * 6 : 18 - (_playerStateTick - 3) * 5;
             dc.setColor(0xCC3333, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(cx, baseY - ext - headR, gloveR);
-            dc.fillCircle(cx + bodyW / 2 + 4, baseY + 2, gloveR - 2);
-        } else if (_playerState == PS_PUNCH_HOOK) {
-            var ext = _playerStateTick < 4 ? _playerStateTick * 5 : 20 - (_playerStateTick - 4) * 5;
-            var hookX = (_playerStateTick < 4) ? cx + ext : cx + 20 - ext;
+            dc.fillCircle(cx, baseY - ext - headR, glR);
+            dc.fillCircle(cx + bodyW / 2 + 4, baseY + 2, glR - 1);
+        } else if (_playerState == PS_CROSS) {
+            var ext = _playerStateTick < 3 ? _playerStateTick * 7 : 21 - (_playerStateTick - 3) * 5;
             dc.setColor(0xCC3333, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(hookX, baseY - headR * 2 - ext / 2, gloveR);
-            dc.fillCircle(cx - bodyW / 2 - 4, baseY + 2, gloveR - 2);
-        } else if (_playerState == PS_PUNCH_UPPER) {
-            var ext = _playerStateTick < 4 ? _playerStateTick * 8 : 32 - (_playerStateTick - 4) * 8;
+            dc.fillCircle(cx + 3, baseY - ext - headR, glR);
+            dc.fillCircle(cx - bodyW / 2 - 4, baseY + 2, glR - 1);
+        } else if (_playerState == PS_HOOK) {
+            var ext = _playerStateTick < 3 ? _playerStateTick * 5 : 15 - (_playerStateTick - 3) * 4;
             dc.setColor(0xCC3333, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(cx, baseY - ext - headR * 2, gloveR + 1);
-            dc.fillCircle(cx + bodyW / 2 + 3, baseY + 4, gloveR - 2);
+            dc.fillCircle(cx + ext, baseY - headR * 2 - ext / 3, glR + 1);
+            dc.fillCircle(cx - bodyW / 2 - 4, baseY + 2, glR - 1);
+        } else if (_playerState == PS_UPPER) {
+            var ext = _playerStateTick < 3 ? _playerStateTick * 8 : 24 - (_playerStateTick - 3) * 6;
+            dc.setColor(0xCC3333, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(cx, baseY - ext - headR * 2, glR + 1);
+            dc.fillCircle(cx + bodyW / 2 + 3, baseY + 3, glR - 1);
+        } else if (_playerState == PS_BODY) {
+            var ext = _playerStateTick < 3 ? _playerStateTick * 5 : 15 - (_playerStateTick - 3) * 4;
+            dc.setColor(0xCC3333, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(cx - 4, baseY - ext - headR / 2, glR);
+            dc.fillCircle(cx + bodyW / 2 + 3, baseY - 1, glR - 1);
         } else if (_playerState == PS_BLOCK) {
             dc.setColor(0xCC3333, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(cx - bodyW / 3, headY + headR / 2, gloveR);
-            dc.fillCircle(cx + bodyW / 3, headY + headR / 2, gloveR);
+            dc.fillCircle(cx - bodyW / 3, headY + headR / 2, glR);
+            dc.fillCircle(cx + bodyW / 3, headY + headR / 2, glR);
+        } else if (_playerState == PS_EXHAUSTED) {
+            dc.setColor(0x993333, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(cx - bodyW / 2 - 2, baseY + bodyH / 2, glR - 1);
+            dc.fillCircle(cx + bodyW / 2 + 2, baseY + bodyH / 2, glR - 1);
+            if (_playerStateTick % 8 < 4) {
+                dc.setColor(0xAADDFF, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(cx - headR / 2, headY + headR + 2, 2);
+                dc.fillCircle(cx + headR / 2 + 1, headY + headR + 3, 1);
+            }
         } else {
-            var bob = (_tick % 12 < 6) ? -2 : 2;
-            dc.setColor(0xCC3333, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(cx - bodyW / 2 - 4, baseY - 4 + bob, gloveR);
-            dc.fillCircle(cx + bodyW / 2 + 4, baseY - 4 - bob, gloveR);
+            var bob = (_tick % 10 < 5) ? -1 : 1;
+            dc.setColor((_stamina < 25) ? 0x993333 : 0xCC3333, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(cx - bodyW / 2 - 4, baseY - 3 + bob, glR);
+            dc.fillCircle(cx + bodyW / 2 + 4, baseY - 3 - bob, glR);
         }
     }
 
-    hidden function drawBloodParticles(dc, ox, oy) {
-        for (var i = 0; i < 30; i++) {
+    hidden function drawBloodParts(dc, ox, oy) {
+        for (var i = 0; i < BLOOD_MAX; i++) {
             if (_bloodLife[i] <= 0) { continue; }
-            var sz = 1;
-            if (_bloodLife[i] > 15) { sz = 3; }
-            else if (_bloodLife[i] > 8) { sz = 2; }
+            var sz = (_bloodLife[i] > 16) ? 3 : ((_bloodLife[i] > 8) ? 2 : 1);
             var red = 0xAA0000 + (_bloodLife[i] * 0x050000);
             if (red > 0xFF0000) { red = 0xFF0000; }
             dc.setColor(red, Graphics.COLOR_TRANSPARENT);
             dc.fillCircle(_bloodX[i] + ox, _bloodY[i] + oy, sz);
-            if (sz > 1 && _bloodLife[i] < 10) {
-                dc.setColor(0x660000, Graphics.COLOR_TRANSPARENT);
-                dc.fillCircle(_bloodX[i] + ox, _bloodY[i] + oy + sz, 1);
-            }
+            if (sz > 1 && _bloodLife[i] < 12) { dc.setColor(0x660000, Graphics.COLOR_TRANSPARENT); dc.fillCircle(_bloodX[i] + ox, _bloodY[i] + oy + sz, 1); }
         }
     }
 
-    hidden function drawSweatParticles(dc, ox, oy) {
-        for (var i = 0; i < 6; i++) {
+    hidden function drawSweatParts(dc, ox, oy) {
+        for (var i = 0; i < 8; i++) {
             if (_sweatLife[i] <= 0) { continue; }
             dc.setColor(0xAADDFF, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(_sweatX[i] + ox, _sweatY[i] + oy, 2);
-            if (_sweatLife[i] > 5) {
-                dc.setColor(0xDDEEFF, Graphics.COLOR_TRANSPARENT);
-                dc.fillCircle(_sweatX[i] + ox - 1, _sweatY[i] + oy - 1, 1);
-            }
+            dc.fillCircle(_sweatX[i] + ox, _sweatY[i] + oy, 1);
         }
     }
 
-    hidden function drawStarParticles(dc, ox, oy) {
-        for (var i = 0; i < 5; i++) {
+    hidden function drawStarParts(dc, ox, oy) {
+        for (var i = 0; i < 6; i++) {
             if (_starLife[i] <= 0) { continue; }
-            var bright = (_starLife[i] % 4 < 2) ? 0xFFFF44 : 0xFFDD00;
-            dc.setColor(bright, Graphics.COLOR_TRANSPARENT);
-            var sx = _starX[i] + ox;
-            var sy = _starY[i] + oy;
-            dc.fillRectangle(sx - 1, sy - 3, 2, 6);
-            dc.fillRectangle(sx - 3, sy - 1, 6, 2);
+            dc.setColor((_starLife[i] % 4 < 2) ? 0xFFFF44 : 0xFFDD00, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(_starX[i] + ox - 1, _starY[i] + oy - 3, 2, 6);
+            dc.fillRectangle(_starX[i] + ox - 3, _starY[i] + oy - 1, 6, 2);
+        }
+    }
+
+    hidden function drawPops(dc, ox, oy) {
+        for (var i = 0; i < 6; i++) {
+            if (_dmgPopLife[i] <= 0) { continue; }
+            var col = 0xFFFFFF;
+            if (_dmgPopType[i] == 1) { col = 0xFFAA22; }
+            else if (_dmgPopType[i] == 2) { col = 0xFF4444; }
+            else if (_dmgPopType[i] == 3) { col = 0xFF6666; }
+            else if (_dmgPopType[i] == 4) { col = 0xFFDD00; }
+            var txt = "" + _dmgPopVal[i];
+            if (_dmgPopType[i] == 2) { txt = txt + "!"; }
+            if (_dmgPopType[i] == 4) { txt = txt + "!!"; }
+            dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_dmgPopX[i] + ox + 1, _dmgPopY[i] + oy + 1, Graphics.FONT_XTINY, txt, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(col, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_dmgPopX[i] + ox, _dmgPopY[i] + oy, Graphics.FONT_XTINY, txt, Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 
     hidden function drawHUD(dc) {
         var barW = _w * 35 / 100;
-        var barH = 8;
-        var barY = _h * 3 / 100;
+        var barH = 7;
+        var barY = 3;
 
         var pFill = (_playerHp.toFloat() / _playerMaxHp * barW).toNumber();
         if (pFill < 0) { pFill = 0; }
         dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(_w * 5 / 100, barY, barW, barH);
+        dc.fillRectangle(_w * 3 / 100, barY, barW, barH);
         var pCol = 0x44CC44;
-        if (_playerHp < _playerMaxHp / 4) { pCol = 0xFF2222; }
+        if (_playerHp < _playerMaxHp / 4) { pCol = (_tick % 6 < 3) ? 0xFF2222 : 0xCC0000; }
         else if (_playerHp < _playerMaxHp / 2) { pCol = 0xFFAA22; }
         dc.setColor(pCol, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(_w * 5 / 100, barY, pFill, barH);
+        dc.fillRectangle(_w * 3 / 100, barY, pFill, barH);
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawRectangle(_w * 5 / 100, barY, barW, barH);
+        dc.drawRectangle(_w * 3 / 100, barY, barW, barH);
 
         var eFill = (_enemyHp.toFloat() / _enemyMaxHp * barW).toNumber();
         if (eFill < 0) { eFill = 0; }
-        var eBarX = _w * 95 / 100 - barW;
+        var eBarX = _w * 97 / 100 - barW;
         dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(eBarX, barY, barW, barH);
         var eCol = 0xCC4444;
-        if (_enemyHp < _enemyMaxHp / 4) { eCol = 0xFF2222; }
+        if (_enemyHp < _enemyMaxHp / 4) { eCol = (_tick % 6 < 3) ? 0xFF2222 : 0xAA0000; }
         dc.setColor(eCol, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(eBarX + barW - eFill, barY, eFill, barH);
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
         dc.drawRectangle(eBarX, barY, barW, barH);
 
-        dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w * 5 / 100, barY + barH + 1, Graphics.FONT_XTINY, "YOU", Graphics.TEXT_JUSTIFY_LEFT);
-        dc.drawText(_w * 95 / 100, barY + barH + 1, Graphics.FONT_XTINY, "CPU", Graphics.TEXT_JUSTIFY_RIGHT);
-
         dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w / 2, barY - 1, Graphics.FONT_XTINY, "R" + _round, Graphics.TEXT_JUSTIFY_CENTER);
 
-        if (_playerState == PS_BLOCK) {
-            dc.setColor(0x4488FF, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 92 / 100, Graphics.FONT_XTINY, "BLOCKING", Graphics.TEXT_JUSTIFY_CENTER);
-        } else if (_playerState == PS_DODGE_L || _playerState == PS_DODGE_R) {
-            dc.setColor(0x44FF88, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 92 / 100, Graphics.FONT_XTINY, "DODGE!", Graphics.TEXT_JUSTIFY_CENTER);
-        }
+        var sec = _roundTimer / 30;
+        var timerCol = (sec <= 10) ? ((_tick % 8 < 4) ? 0xFF4444 : 0xCC2222) : 0xAABBCC;
+        dc.setColor(timerCol, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, barY + barH + 1, Graphics.FONT_XTINY, "" + sec + "s", Graphics.TEXT_JUSTIFY_CENTER);
 
-        if (_enemyState == ES_WINDUP && _enemyStateTick > 3) {
-            var warnFlash = (_tick % 4 < 2);
-            if (warnFlash) {
-                dc.setColor(0xFF4444, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(_w / 2, _h * 16 / 100, Graphics.FONT_XTINY, "! INCOMING !", Graphics.TEXT_JUSTIFY_CENTER);
+        var stW = _w * 28 / 100;
+        var stX = _w * 3 / 100;
+        var stY = barY + barH + 2;
+        dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(stX, stY, stW, 3);
+        var stFill = (_stamina * stW / _staminaMax);
+        var stCol = (_stamina < 20) ? 0xFF6622 : 0x44AAFF;
+        dc.setColor(stCol, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(stX, stY, stFill, 3);
+
+        if (_comboMeter > 0) {
+            var mW = _w * 28 / 100;
+            var mX = _w * 97 / 100 - mW;
+            var mY = barY + barH + 2;
+            dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(mX, mY, mW, 3);
+            var mFill = (_comboMeter * mW / 100);
+            var mCol = (_comboMeter >= 100) ? ((_tick % 4 < 2) ? 0xFFDD00 : 0xFF4400) : ((_comboMeter >= 60) ? 0xFFAA22 : 0x4488FF);
+            dc.setColor(mCol, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(mX, mY, mFill, 3);
+            if (_comboMeter >= 100) {
+                dc.setColor((_tick % 6 < 3) ? 0xFFDD00 : 0xFF8800, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(_w - 5, mY + 3, Graphics.FONT_XTINY, "TAP!", Graphics.TEXT_JUSTIFY_RIGHT);
             }
         }
+
+        if (_playerState == PS_EXHAUSTED) {
+            dc.setColor((_tick % 6 < 3) ? 0xFF6622 : 0xCC4400, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2, _h * 86 / 100, Graphics.FONT_XTINY, "EXHAUSTED!", Graphics.TEXT_JUSTIFY_CENTER);
+        } else if (_playerState == PS_BLOCK) {
+            dc.setColor(0x4488FF, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2, _h * 86 / 100, Graphics.FONT_XTINY, "BLOCK", Graphics.TEXT_JUSTIFY_CENTER);
+        } else if (_playerState == PS_DODGE_L || _playerState == PS_DODGE_R) {
+            dc.setColor(0x44FF88, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2, _h * 86 / 100, Graphics.FONT_XTINY, "DODGE!", Graphics.TEXT_JUSTIFY_CENTER);
+        } else if (_stamina < 20 && gameState == GS_FIGHT) {
+            dc.setColor(0xFF8844, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2, _h * 86 / 100, Graphics.FONT_XTINY, "LOW STAMINA", Graphics.TEXT_JUSTIFY_CENTER);
+        }
+
+        if (_enemyState == ES_WINDUP && _enemyStateTick > 2) {
+            if (_tick % 4 < 2) {
+                dc.setColor(0xFF4444, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(_w / 2, _h * 16 / 100, Graphics.FONT_XTINY, "!! WARNING !!", Graphics.TEXT_JUSTIFY_CENTER);
+            }
+        }
+
+        dc.setColor(0x888888, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(5, _h - 12, Graphics.FONT_XTINY, "" + _score, Graphics.TEXT_JUSTIFY_LEFT);
+    }
+
+    hidden function drawMenu(dc) {
+        dc.setColor(0x0A0A14, 0x0A0A14); dc.clear();
+        dc.setColor(0x1A1A2A, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, _h * 72 / 100, _w, _h * 28 / 100);
+        dc.setColor(0x330808, Graphics.COLOR_TRANSPARENT);
+        for (var i = 0; i < _w; i += 4) { dc.fillRectangle(i, _h * 72 / 100 - (3 + (i * 7 + 13) % 5), 3, 3 + (i * 7 + 13) % 5); }
+
+        drawMenuBoxer(dc, _w * 22 / 100, _h * 48 / 100, 0xDD4444, true);
+        drawMenuBoxer(dc, _w * 78 / 100, _h * 48 / 100, 0x4444DD, false);
+
+        dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(_w * 36 / 100, _h * 40 / 100, _w * 28 / 100, 2);
+        dc.setColor(0xFFAA22, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 42 / 100, Graphics.FONT_XTINY, "VS", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(_w * 36 / 100, _h * 50 / 100, _w * 28 / 100, 2);
+
+        var pulse = (_tick % 16 < 8) ? 0xFF4444 : 0xDD2222;
+        dc.setColor(0x110000, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2 + 1, _h * 8 / 100 + 1, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(pulse, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 8 / 100, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 22 / 100, Graphics.FONT_MEDIUM, "BOXING", Graphics.TEXT_JUSTIFY_CENTER);
+
+        dc.setColor(0x888888, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 58 / 100, Graphics.FONT_XTINY, "Shake = punch", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 64 / 100, Graphics.FONT_XTINY, "Tilt = dodge", Graphics.TEXT_JUSTIFY_CENTER);
+
+        if (_bestScore > 0) { dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 74 / 100, Graphics.FONT_XTINY, "Best: " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER); }
+        if (_bestRound > 0) { dc.setColor(0x8899AA, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 80 / 100, Graphics.FONT_XTINY, "Round " + _bestRound, Graphics.TEXT_JUSTIFY_CENTER); }
+        dc.setColor((_tick % 24 < 12) ? 0x44FF44 : 0x22AA22, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 88 / 100, Graphics.FONT_XTINY, "Tap to fight", Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    hidden function drawMenuBoxer(dc, cx, cy, col, left) {
+        var hr = _w * 5 / 100;
+        if (hr < 5) { hr = 5; }
+        dc.setColor(0xDDAA77, Graphics.COLOR_TRANSPARENT); dc.fillCircle(cx, cy - hr * 2, hr);
+        dc.setColor(col, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(cx - hr, cy, hr * 2, hr * 3);
+        var d = left ? 1 : -1;
+        dc.setColor(col, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(cx + d * hr * 2, cy - hr, hr * 3 / 4);
+        dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(left ? cx + 1 : cx - 1, cy - hr * 2 - 1, 1);
+    }
+
+    hidden function drawIntro(dc) {
+        dc.setColor(0x0A0A14, 0x0A0A14); dc.clear();
+        dc.setColor(0x332211, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, _h * 55 / 100, _w, _h * 45 / 100);
+
+        dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 8 / 100, Graphics.FONT_MEDIUM, "ROUND " + _round, Graphics.TEXT_JUSTIFY_CENTER);
+
+        var names = ["ROOKIE JOE", "IRON MIKE", "MAD BULL", "SHADOW", "CHAMPION", "VIPER", "TITAN", "NIGHTMARE"];
+        dc.setColor(0xFF6644, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 26 / 100, Graphics.FONT_SMALL, names[_enemyFace % 8], Graphics.TEXT_JUSTIFY_CENTER);
+
+        dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 38 / 100, Graphics.FONT_XTINY, "HP " + _enemyMaxHp + "  DMG " + _enemyDmg, Graphics.TEXT_JUSTIFY_CENTER);
+
+        var spdLabel = "SLOW";
+        if (_enemySpeed > 2.2) { spdLabel = "INSANE"; }
+        else if (_enemySpeed > 1.6) { spdLabel = "FAST"; }
+        else if (_enemySpeed > 1.0) { spdLabel = "NORMAL"; }
+        dc.setColor(0x8899AA, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 46 / 100, Graphics.FONT_XTINY, "SPD: " + spdLabel, Graphics.TEXT_JUSTIFY_CENTER);
+
+        if (_introTick > 15) {
+            dc.setColor((_introTick % 6 < 3) ? 0xFF4444 : 0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2, _h * 58 / 100, Graphics.FONT_LARGE, "FIGHT!", Graphics.TEXT_JUSTIFY_CENTER);
+        }
+
+        var barY = _h * 78 / 100; var barW = _w * 60 / 100; var barX = (_w - barW) / 2;
+        var fill = (_introTick * barW / 50); if (fill > barW) { fill = barW; }
+        dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(barX, barY, barW, 5);
+        dc.setColor(0xFF4444, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(barX, barY, fill, 5);
     }
 
     hidden function drawKO(dc) {
-        var prog = _koTick;
-        if (prog > 30) { prog = 30; }
-        var alpha = prog * 4;
-        if (alpha > 120) { alpha = 120; }
-
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, _h * 35 / 100, _w, _h * 30 / 100);
-
-        var flash = (_koTick % 6 < 3);
-        dc.setColor(flash ? 0xFF2222 : 0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 38 / 100, Graphics.FONT_MEDIUM, "K.O.!", Graphics.TEXT_JUSTIFY_CENTER);
-
-        if (_koTick > 30) {
+        dc.setColor((_koTick % 6 < 3) ? 0xFF2222 : 0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 38 / 100, Graphics.FONT_LARGE, "K.O.!", Graphics.TEXT_JUSTIFY_CENTER);
+        if (_koTick > 25) {
+            var count = 10 - (_koTick - 25) / 4; if (count < 1) { count = 1; }
             dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT);
-            var count = 10 - (_koTick - 30) / 5;
-            if (count < 1) { count = 1; }
-            dc.drawText(_w / 2, _h * 52 / 100, Graphics.FONT_SMALL, "" + count, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_w / 2, _h * 52 / 100, Graphics.FONT_MEDIUM, "" + count, Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 
     hidden function drawWin(dc) {
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(0, _h * 25 / 100, _w, _h * 55 / 100);
-
+        dc.fillRectangle(0, _h * 22 / 100, _w, _h * 60 / 100);
         dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 28 / 100, Graphics.FONT_MEDIUM, "YOU WIN!", Graphics.TEXT_JUSTIFY_CENTER);
-
+        dc.drawText(_w / 2, _h * 24 / 100, Graphics.FONT_LARGE, "YOU WIN!", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 42 / 100, Graphics.FONT_SMALL, "Round " + _round + " cleared", Graphics.TEXT_JUSTIFY_CENTER);
-
+        dc.drawText(_w / 2, _h * 38 / 100, Graphics.FONT_SMALL, "Round " + _round, Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x88CCFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 54 / 100, Graphics.FONT_XTINY, "Hits: " + _totalHits, Graphics.TEXT_JUSTIFY_CENTER);
-        if (_perfectHits > 0) {
-            dc.setColor(0xFF8844, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 61 / 100, Graphics.FONT_XTINY, "Counters: " + _perfectHits, Graphics.TEXT_JUSTIFY_CENTER);
-        }
-
+        dc.drawText(_w / 2, _h * 48 / 100, Graphics.FONT_XTINY, "Hits " + _totalHits + " Counters " + _perfectHits, Graphics.TEXT_JUSTIFY_CENTER);
+        if (_maxCombo >= 3) { dc.setColor(0xFFAA22, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 55 / 100, Graphics.FONT_XTINY, "Combo x" + _maxCombo, Graphics.TEXT_JUSTIFY_CENTER); }
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 63 / 100, Graphics.FONT_SMALL, "" + _score, Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor((_tick % 20 < 10) ? 0x44FF44 : 0x22AA22, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 72 / 100, Graphics.FONT_XTINY, "Tap for next round", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 72 / 100, Graphics.FONT_XTINY, "Tap: next round", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawLose(dc) {
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(0, _h * 25 / 100, _w, _h * 55 / 100);
-
+        dc.fillRectangle(0, _h * 22 / 100, _w, _h * 60 / 100);
         dc.setColor(0xFF4444, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 28 / 100, Graphics.FONT_MEDIUM, "DEFEATED", Graphics.TEXT_JUSTIFY_CENTER);
-
+        dc.drawText(_w / 2, _h * 24 / 100, Graphics.FONT_LARGE, "DEFEATED", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 42 / 100, Graphics.FONT_SMALL, "Round " + _round, Graphics.TEXT_JUSTIFY_CENTER);
-
+        dc.drawText(_w / 2, _h * 38 / 100, Graphics.FONT_SMALL, "Round " + _round, Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x88CCFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 54 / 100, Graphics.FONT_XTINY, "Hits: " + _totalHits, Graphics.TEXT_JUSTIFY_CENTER);
-
-        if (_bestRound > 0) {
-            dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 62 / 100, Graphics.FONT_XTINY, "Best: Round " + _bestRound, Graphics.TEXT_JUSTIFY_CENTER);
-        }
-
+        dc.drawText(_w / 2, _h * 48 / 100, Graphics.FONT_XTINY, "Hits " + _totalHits + " Score " + _score, Graphics.TEXT_JUSTIFY_CENTER);
+        if (_bestScore > 0) { dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 56 / 100, Graphics.FONT_XTINY, "Best " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER); }
+        if (_bestRound > 0) { dc.setColor(0x8899AA, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 63 / 100, Graphics.FONT_XTINY, "Best Round " + _bestRound, Graphics.TEXT_JUSTIFY_CENTER); }
         dc.setColor((_tick % 20 < 10) ? 0xFF8844 : 0xBB6622, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 72 / 100, Graphics.FONT_XTINY, "Tap to retry", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 72 / 100, Graphics.FONT_XTINY, "Tap to play again", Graphics.TEXT_JUSTIFY_CENTER);
     }
 }
