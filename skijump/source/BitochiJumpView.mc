@@ -86,11 +86,11 @@ class BitochiJumpView extends WatchUi.View {
     hidden var _showStandings;
     hidden var _judgeScores;
 
-    hidden const SNOW_N = 15;
+    hidden const SNOW_N = 8;
     hidden var _snowX;
     hidden var _snowY;
 
-    hidden const TRAIL_N = 10;
+    hidden const TRAIL_N = 7;
     hidden var _trailX;
     hidden var _trailY;
     hidden var _trailLife;
@@ -99,7 +99,7 @@ class BitochiJumpView extends WatchUi.View {
     hidden var _shakeY;
     hidden var _shakeTick;
 
-    hidden const CROWD_N = 8;
+    hidden const CROWD_N = 5;
     hidden var _crowdX;
     hidden var _crowdC;
     hidden var _crowdJump;
@@ -123,7 +123,7 @@ class BitochiJumpView extends WatchUi.View {
         _venue = 0;
 
         _crowdX = new [CROWD_N]; _crowdC = new [CROWD_N]; _crowdJump = new [CROWD_N];
-        var cc = [0xDD4444, 0x4488DD, 0xFFCC22, 0x44BB44, 0xFF8844, 0xDD44DD, 0x44DDDD, 0xFFFFFF];
+        var cc = [0xDD4444, 0x4488DD, 0xFFCC22, 0x44BB44, 0xFF8844];
         for (var i = 0; i < CROWD_N; i++) { _crowdX[i] = 0.0; _crowdC[i] = cc[i % 8]; _crowdJump[i] = 0; }
         _crowdCheer = 0; _passedK = false;
 
@@ -214,8 +214,8 @@ class BitochiJumpView extends WatchUi.View {
     function onTick() as Void {
         _tick++;
         for (var i = 0; i < SNOW_N; i++) {
-            _snowY[i] += 0.7 + (i % 3).toFloat() * 0.3;
-            _snowX[i] += _windCurrent * 0.3 + Math.sin((_tick + i * 13).toFloat() * 0.04) * 0.3;
+            _snowY[i] += 0.8 + (i % 3).toFloat() * 0.25;
+            _snowX[i] += _windCurrent * 0.3;
             if (_snowY[i] > _h.toFloat()) { _snowY[i] = 0.0; _snowX[i] = (Math.rand().abs() % _w).toFloat(); }
             if (_snowX[i] < 0.0) { _snowX[i] += _w.toFloat(); } if (_snowX[i] > _w.toFloat()) { _snowX[i] -= _w.toFloat(); }
         }
@@ -238,7 +238,7 @@ class BitochiJumpView extends WatchUi.View {
                 _bodyAngle = hillAngleAtX(_posX);
                 updateCamera();
             }
-            if (_landTick > 90) { finishJump(); }
+            if (_landTick > 62) { finishJump(); }
         }
         WatchUi.requestUpdate();
     }
@@ -246,7 +246,7 @@ class BitochiJumpView extends WatchUi.View {
     hidden function updateInrun() {
         var hA = hillAngleAtX(_posX);
         var gravity = 9.8 * Math.sin(hA * 3.14159 / 180.0);
-        _speed += (gravity * 0.033 - 0.02 - 0.0004 * _speed * _speed);
+        _speed += (gravity * 0.036 - 0.012 - 0.0003 * _speed * _speed);
         if (_speed < 0.5) { _speed = 0.5; }
         if (_speed > _maxSpeed) { _speed = _maxSpeed; }
         var ang = hA * 3.14159 / 180.0;
@@ -294,23 +294,26 @@ class BitochiJumpView extends WatchUi.View {
 
     hidden function updateFlight() {
         var dt = 0.028;
-        var accelInput = accelX.toFloat() / 400.0;
+        // Increased sensitivity (divisor 400→290) and reduced multiplier so sweet-spot is reachable
+        var accelInput = accelX.toFloat() / 290.0;
         if (accelInput > 1.8) { accelInput = 1.8; } if (accelInput < -1.8) { accelInput = -1.8; }
 
-        var targetAngle = 22.0 + accelInput * 16.0;
-        if (targetAngle < -8.0) { targetAngle = -8.0; } if (targetAngle > 55.0) { targetAngle = 55.0; }
+        var targetAngle = 22.0 + accelInput * 13.0;
+        if (targetAngle < -10.0) { targetAngle = -10.0; } if (targetAngle > 58.0) { targetAngle = 58.0; }
 
-        _windPhase += 0.08;
-        var windAmp = 0.5 + _venue.toFloat() * 0.15;
-        var gust = Math.sin(_windPhase) * windAmp + Math.sin(_windPhase * 2.7) * 0.25;
+        _windPhase += 0.06;
+        var windAmp = 0.35 + _venue.toFloat() * 0.10;
+        var gust = Math.sin(_windPhase) * windAmp + Math.sin(_windPhase * 2.7) * 0.15;
         _windCurrent = _windBase + gust;
 
-        targetAngle += _windCurrent * 4.0;
-        if (targetAngle < -8.0) { targetAngle = -8.0; } if (targetAngle > 55.0) { targetAngle = 55.0; }
+        // Halved wind disturbance so player can fight it
+        targetAngle += _windCurrent * 2.2;
+        if (targetAngle < -10.0) { targetAngle = -10.0; } if (targetAngle > 58.0) { targetAngle = 58.0; }
 
-        _bodyAngle = _bodyAngle * 0.88 + targetAngle * 0.12;
+        // Faster body angle tracking (0.12→0.22) so tilt feels immediate
+        _bodyAngle = _bodyAngle * 0.78 + targetAngle * 0.22;
 
-        if (_bodyAngle > 52.0 || _bodyAngle < -5.0) {
+        if (_bodyAngle > 56.0 || _bodyAngle < -8.0) {
             _landCrash = true;
             _posY = hillYAtX(_posX);
             doLanding();
@@ -325,10 +328,11 @@ class BitochiJumpView extends WatchUi.View {
 
         var tqLift = 0.55 + _takeoffQuality * 0.7;
         var sweetSpot = 0.0;
-        if (_bodyAngle > 12.0 && _bodyAngle < 32.0) {
+        // Widened sweet spot: 10°–36° instead of 12°–32° for better accessibility
+        if (_bodyAngle > 10.0 && _bodyAngle < 36.0) {
             var optAngle = 22.0;
             var dev = _bodyAngle - optAngle; if (dev < 0.0) { dev = -dev; }
-            sweetSpot = 1.0 - dev / 12.0;
+            sweetSpot = 1.0 - dev / 14.0;
             if (sweetSpot < 0.0) { sweetSpot = 0.0; }
         }
         var liftMul = 1.0 + sweetSpot * 0.6;
@@ -557,30 +561,25 @@ class BitochiJumpView extends WatchUi.View {
     }
 
     hidden function drawMountains(dc, ox, oy) {
-        var par = (_camX * 0.15).toNumber();
+        // Single background mountain range with snow ridge line
+        var par = (_camX * 0.12).toNumber();
         var mc = [0x0E1525, 0x121825, 0x0A1520, 0x101828];
         dc.setColor(mc[_venue], Graphics.COLOR_TRANSPARENT);
-        dc.fillPolygon([[0, _h * 55 / 100 + oy], [_w * 18 / 100 - par + ox, _h * 25 / 100 + oy], [_w * 45 / 100 - par + ox, _h * 20 / 100 + oy],
-            [_w * 70 / 100 - par + ox, _h * 30 / 100 + oy], [_w + ox, _h * 45 / 100 + oy], [_w + ox, _h + oy], [0, _h + oy]]);
-        dc.setColor(0xDDEEFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawLine(_w * 18 / 100 - par + ox, _h * 25 / 100 + oy, _w * 45 / 100 - par + ox, _h * 20 / 100 + oy);
-        dc.drawLine(_w * 45 / 100 - par + ox, _h * 20 / 100 + oy, _w * 70 / 100 - par + ox, _h * 30 / 100 + oy);
-
-        var par2 = (_camX * 0.25).toNumber();
-        dc.setColor(0x18243A, Graphics.COLOR_TRANSPARENT);
-        dc.fillPolygon([[0, _h * 50 / 100 + oy], [_w * 25 / 100 - par2 + ox, _h * 32 / 100 + oy], [_w * 55 / 100 - par2 + ox, _h * 28 / 100 + oy],
-            [_w * 80 / 100 - par2 + ox, _h * 36 / 100 + oy], [_w + ox, _h * 42 / 100 + oy], [_w + ox, _h + oy], [0, _h + oy]]);
+        dc.fillPolygon([[0, _h * 52 / 100 + oy], [_w * 22 / 100 - par + ox, _h * 26 / 100 + oy], [_w * 48 / 100 - par + ox, _h * 20 / 100 + oy],
+            [_w * 72 / 100 - par + ox, _h * 30 / 100 + oy], [_w + ox, _h * 44 / 100 + oy], [_w + ox, _h + oy], [0, _h + oy]]);
+        dc.setColor(0xCCDDEE, Graphics.COLOR_TRANSPARENT);
+        dc.drawLine(_w * 22 / 100 - par + ox, _h * 26 / 100 + oy, _w * 48 / 100 - par + ox, _h * 20 / 100 + oy);
+        dc.drawLine(_w * 48 / 100 - par + ox, _h * 20 / 100 + oy, _w * 72 / 100 - par + ox, _h * 30 / 100 + oy);
     }
 
     hidden function drawHill(dc, ox, oy) {
+        // Draw every point but only 2 lines per segment (halved from 4) — no fill rectangles
         for (var i = 0; i < HILL_PTS - 1; i++) {
             var s1 = worldToScreen(_hillX[i], _hillY[i]); var s2 = worldToScreen(_hillX[i + 1], _hillY[i + 1]);
             var sx1 = s1[0] + ox; var sy1 = s1[1] + oy; var sx2 = s2[0] + ox; var sy2 = s2[1] + oy;
             if (sx2 < -10 || sx1 > _w + 10) { continue; }
-            dc.setColor(0xDDEEFF, Graphics.COLOR_TRANSPARENT); dc.drawLine(sx1, sy1, sx2, sy2); dc.drawLine(sx1, sy1 + 1, sx2, sy2 + 1);
-            dc.setColor(0xBBCCDD, Graphics.COLOR_TRANSPARENT); dc.drawLine(sx1, sy1 + 2, sx2, sy2 + 2);
-            dc.setColor(0x8899AA, Graphics.COLOR_TRANSPARENT); dc.drawLine(sx1, sy1 + 3, sx2, sy2 + 3);
-            if (sy1 + 4 < _h) { dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT); var fH = _h - sy1 - 3; if (fH > 0 && fH < _h) { dc.fillRectangle(sx1, sy1 + 4, 4, fH); } }
+            dc.setColor(0xDDEEFF, Graphics.COLOR_TRANSPARENT); dc.drawLine(sx1, sy1, sx2, sy2);
+            dc.setColor(0x8899AA, Graphics.COLOR_TRANSPARENT); dc.drawLine(sx1, sy1 + 2, sx2, sy2 + 2);
         }
         if (_kIdx < HILL_PTS) { var sk = worldToScreen(_hillX[_kIdx], _hillY[_kIdx]); var ksx = sk[0] + ox; var ksy = sk[1] + oy;
             if (ksx > 0 && ksx < _w) { dc.setColor(0xFF4444, Graphics.COLOR_TRANSPARENT); dc.drawLine(ksx, ksy - 8, ksx, ksy + 2); dc.drawLine(ksx + 1, ksy - 8, ksx + 1, ksy + 2);
@@ -591,14 +590,15 @@ class BitochiJumpView extends WatchUi.View {
     }
 
     hidden function drawTrees(dc, ox, oy) {
-        for (var i = 0; i < 14; i++) {
-            var tWx = 18.0 + i.toFloat() * 32.0; var tWy = hillYAtX(tWx) - 1.0;
+        for (var i = 0; i < 8; i++) {
+            var tWx = 18.0 + i.toFloat() * 52.0; var tWy = hillYAtX(tWx) - 1.0;
             var s = worldToScreen(tWx, tWy); var tx = s[0] + ox + 14; var ty = s[1] + oy;
             if (tx < -10 || tx > _w + 10) { continue; }
-            dc.setColor(0x2A1A0A, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(tx - 1, ty - 1, 2, 6);
-            dc.setColor(0x1B5528, Graphics.COLOR_TRANSPARENT); dc.fillPolygon([[tx, ty - 10 - (i % 3) * 2], [tx - 5, ty], [tx + 5, ty]]);
-            dc.setColor(0x22AA44, Graphics.COLOR_TRANSPARENT); dc.fillPolygon([[tx, ty - 8 - (i % 3) * 2], [tx - 3, ty - 2], [tx + 3, ty - 2]]);
-            dc.setColor(0xDDEEFF, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(tx - 3, ty - 9 - (i % 3) * 2, 2, 1); dc.fillRectangle(tx + 1, ty - 7, 1, 1);
+            var th = 9 + (i % 3) * 2;
+            dc.setColor(0x2A1A0A, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(tx - 1, ty, 2, 5);
+            dc.setColor(0x1B5528, Graphics.COLOR_TRANSPARENT); dc.fillPolygon([[tx, ty - th], [tx - 5, ty], [tx + 5, ty]]);
+            dc.setColor(0x22AA44, Graphics.COLOR_TRANSPARENT); dc.fillPolygon([[tx, ty - th + 2], [tx - 3, ty - 2], [tx + 3, ty - 2]]);
+            dc.setColor(0xDDEEFF, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(tx - 2, ty - th + 1, 1, 1);
         }
     }
 
@@ -612,11 +612,6 @@ class BitochiJumpView extends WatchUi.View {
             dc.fillRectangle(cx - 1, cy - 5 - jmp, 3, 4);
             dc.setColor(0xDDAA77, Graphics.COLOR_TRANSPARENT);
             dc.fillCircle(cx, cy - 6 - jmp, 2);
-            if (_crowdCheer > 0 && _crowdJump[i] > 0) {
-                dc.setColor(_crowdC[i], Graphics.COLOR_TRANSPARENT);
-                dc.drawLine(cx - 2, cy - 5 - jmp, cx - 4, cy - 8 - jmp);
-                dc.drawLine(cx + 2, cy - 5 - jmp, cx + 4, cy - 8 - jmp);
-            }
         }
     }
 
@@ -734,15 +729,15 @@ class BitochiJumpView extends WatchUi.View {
             dc.setColor(0x88AACC, Graphics.COLOR_TRANSPARENT); dc.drawText(5, 3, Graphics.FONT_XTINY, "W " + wStr, Graphics.TEXT_JUSTIFY_LEFT);
 
             var aI = _bodyAngle.toNumber();
-            var inSweet = (aI > 14 && aI < 30);
-            var angleOk = (aI > 12 && aI < 40);
+            var inSweet = (aI > 12 && aI < 34);
+            var angleOk = (aI > 8 && aI < 44);
             dc.setColor(inSweet ? 0x44FFAA : (angleOk ? 0x44FF44 : 0xFF4444), Graphics.COLOR_TRANSPARENT);
             dc.drawText(_w - 5, 3, Graphics.FONT_XTINY, aI + "d", Graphics.TEXT_JUSTIFY_RIGHT);
 
             if (inSweet && _takeoffQuality > 0.7 && !_landReady) {
                 dc.setColor((_tick % 6 < 3) ? 0x44FFAA : 0x22DD88, Graphics.COLOR_TRANSPARENT);
                 dc.drawText(_w / 2, _h * 20 / 100, Graphics.FONT_XTINY, "SOARING!", Graphics.TEXT_JUSTIFY_CENTER);
-            } else if (!angleOk && (_bodyAngle > 48.0 || _bodyAngle < -2.0)) {
+            } else if (!angleOk && (_bodyAngle > 46.0 || _bodyAngle < 0.0)) {
                 dc.setColor((_tick % 4 < 2) ? 0xFF2222 : 0xFF8800, Graphics.COLOR_TRANSPARENT);
                 dc.drawText(_w / 2, _h * 20 / 100, Graphics.FONT_XTINY, "BALANCE!", Graphics.TEXT_JUSTIFY_CENTER);
             }
@@ -762,13 +757,17 @@ class BitochiJumpView extends WatchUi.View {
                 var fillW = (closeRatio * bW.toFloat()).toNumber();
                 dc.setColor(tapCol, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX, bY, fillW, 4);
             } else if (!_landReady) {
-                var bW = _w * 30 / 100; var bX = (_w - bW) / 2; var bY = _h - 12;
-                dc.setColor(0x222244, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX, bY, bW, 6);
-                var optL = bX + (bW * 18 / 100); var optR = bX + (bW * 60 / 100);
-                dc.setColor(inSweet ? 0x33AA66 : 0x226622, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(optL, bY, optR - optL, 6);
+                var bW = _w * 36 / 100; var bX = (_w - bW) / 2; var bY = _h - 14;
+                dc.setColor(0x222244, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX, bY, bW, 8);
+                // Widened green zone: 10% to 70% (≈9° to 35°) to match widened sweet spot
+                var optL = bX + (bW * 10 / 100); var optR = bX + (bW * 70 / 100);
+                dc.setColor(inSweet ? 0x33CC77 : 0x226622, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(optL, bY, optR - optL, 8);
+                // Brighter center highlight for the optimal zone
+                var ctrL = bX + (bW * 28 / 100); var ctrR = bX + (bW * 52 / 100);
+                dc.setColor(inSweet ? 0x44FF99 : 0x2A8833, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(ctrL, bY + 2, ctrR - ctrL, 4);
                 var balPct = (_bodyAngle - 5.0) / 45.0; if (balPct < 0.0) { balPct = 0.0; } if (balPct > 1.0) { balPct = 1.0; }
                 var bPos = bX + (balPct * bW.toFloat()).toNumber();
-                dc.setColor(inSweet ? 0x66FFCC : 0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bPos - 1, bY - 2, 3, 10);
+                dc.setColor(inSweet ? 0x88FFDD : 0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bPos - 2, bY - 2, 4, 12);
             }
         }
         if (gameState == JS_LANDING) {
