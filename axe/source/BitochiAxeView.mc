@@ -222,7 +222,8 @@ class BitochiAxeView extends WatchUi.View {
     }
 
     hidden function checkHit() {
-        var normAng = ((_axeAngle % 360.0) + 360.0) % 360.0;
+        var normAng = _axeAngle - ((_axeAngle / 360.0).toNumber() * 360.0);
+        if (normAng < 0.0) { normAng += 360.0; }
         var diff = normAng - 90.0;
         if (diff > 180.0) { diff -= 360.0; }
         if (diff < -180.0) { diff += 360.0; }
@@ -483,7 +484,8 @@ class BitochiAxeView extends WatchUi.View {
 
         if (gameState == GS_AIM) {
             dc.setColor(0x6A5533, Graphics.COLOR_TRANSPARENT);
-            var angNorm = ((_axeAngle % 360.0) + 360.0) % 360.0;
+            var angNorm = _axeAngle - ((_axeAngle / 360.0).toNumber() * 360.0);
+            if (angNorm < 0.0) { angNorm += 360.0; }
             var angDiff = angNorm - 90.0;
             if (angDiff > 180.0) { angDiff -= 360.0; }
             if (angDiff < -180.0) { angDiff += 360.0; }
