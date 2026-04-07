@@ -83,7 +83,7 @@ class BitochiSniperView extends WatchUi.View {
     hidden var _shotMsg;
 
     hidden const CREAT_MAX = 8;
-    hidden const GRASS_COUNT = 30;
+    hidden const GRASS_COUNT = 20;
 
 
     function initialize() {
@@ -213,20 +213,20 @@ class BitochiSniperView extends WatchUi.View {
     }
 
     hidden function updateAim() {
-        var steerX = accelX.toFloat() / 150.0;
-        var steerY = accelY.toFloat() / 200.0;
-        if (steerX > 4.0) { steerX = 4.0; }
-        if (steerX < -4.0) { steerX = -4.0; }
-        if (steerY > 3.0) { steerY = 3.0; }
-        if (steerY < -3.0) { steerY = -3.0; }
+        var steerX = accelX.toFloat() / 100.0;
+        var steerY = accelY.toFloat() / 135.0;
+        if (steerX > 5.5) { steerX = 5.5; }
+        if (steerX < -5.5) { steerX = -5.5; }
+        if (steerY > 4.5) { steerY = 4.5; }
+        if (steerY < -4.5) { steerY = -4.5; }
 
         _aimX += steerX;
         _aimY += steerY;
 
         var sway = Math.sin(_swayPhase) * _swayAmp;
         var breath = Math.sin(_breathPhase) * (_swayAmp * 0.7);
-        _aimX += sway * 0.4 + _windX * 0.3;
-        _aimY += breath * 0.3;
+        _aimX += sway * 0.08 + _windX * 0.06;
+        _aimY += breath * 0.06;
 
         if (_aimX < 20.0) { _aimX = 20.0; }
         if (_aimX > (_worldW - 20).toFloat()) { _aimX = (_worldW - 20).toFloat(); }
@@ -237,8 +237,8 @@ class BitochiSniperView extends WatchUi.View {
     hidden function startLevel() {
         _aimX = (_worldW / 2).toFloat();
         _aimY = (_worldH / 2).toFloat();
-        _swayAmp = 2.4 + _level.toFloat() * 0.42;
-        if (_swayAmp > 6.5) { _swayAmp = 6.5; }
+        _swayAmp = 0.8 + _level.toFloat() * 0.14;
+        if (_swayAmp > 2.8) { _swayAmp = 2.8; }
         _ammo = 6 + (_level / 2) + (_level / 3);
         if (_ammo > 14) { _ammo = 14; }
         _maxAmmo = _ammo;
@@ -269,7 +269,7 @@ class BitochiSniperView extends WatchUi.View {
         _creatVy[idx] = ((Math.rand().abs() % 30) - 15).toFloat() / 10.0;
         _creatType[idx] = Math.rand().abs() % 8;
         _creatAlive[idx] = true;
-        _creatSize[idx] = 12 + Math.rand().abs() % 6;
+        _creatSize[idx] = 36 + Math.rand().abs() % 8;
         _creatFlee[idx] = 0;
     }
 
@@ -360,7 +360,7 @@ class BitochiSniperView extends WatchUi.View {
             if (_combo > _maxCombo) { _maxCombo = _combo; }
 
             var pts = 100 + (_combo - 1) * 50;
-            if (bestDist < 3.0) {
+            if (bestDist < _creatSize[bestIdx].toFloat() * 0.18) {
                 pts = pts + 200;
                 _shotMsg = "HEADSHOT!";
                 _ammo++;
@@ -666,7 +666,7 @@ class BitochiSniperView extends WatchUi.View {
         r = r - 2;
 
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-        for (var ring = r; ring < r + 35; ring++) {
+        for (var ring = r; ring < r + 18; ring++) {
             dc.drawCircle(_cx, _cy, ring);
         }
 

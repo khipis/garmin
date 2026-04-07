@@ -86,7 +86,7 @@ class BitochiSkywalkerView extends WatchUi.View {
     hidden var _shotMsg;
 
     hidden const SHIP_MAX = 8;
-    hidden const STAR_COUNT = 40;
+    hidden const STAR_COUNT = 25;
 
     hidden var _enemyNames;
 
@@ -243,20 +243,20 @@ class BitochiSkywalkerView extends WatchUi.View {
     }
 
     hidden function updateAim() {
-        var steerX = accelX.toFloat() / 140.0;
-        var steerY = accelY.toFloat() / 190.0;
-        if (steerX > 4.5) { steerX = 4.5; }
-        if (steerX < -4.5) { steerX = -4.5; }
-        if (steerY > 3.5) { steerY = 3.5; }
-        if (steerY < -3.5) { steerY = -3.5; }
+        var steerX = accelX.toFloat() / 95.0;
+        var steerY = accelY.toFloat() / 128.0;
+        if (steerX > 6.0) { steerX = 6.0; }
+        if (steerX < -6.0) { steerX = -6.0; }
+        if (steerY > 5.0) { steerY = 5.0; }
+        if (steerY < -5.0) { steerY = -5.0; }
 
         _aimX += steerX;
         _aimY += steerY;
 
         var sway = Math.sin(_swayPhase) * _swayAmp;
         var drift = Math.sin(_driftPhase) * (_swayAmp * 0.5);
-        _aimX += sway * 0.3;
-        _aimY += drift * 0.25;
+        _aimX += sway * 0.07;
+        _aimY += drift * 0.05;
 
         if (_aimX < 20.0) { _aimX = 20.0; }
         if (_aimX > (_worldW - 20).toFloat()) { _aimX = (_worldW - 20).toFloat(); }
@@ -267,8 +267,8 @@ class BitochiSkywalkerView extends WatchUi.View {
     hidden function startLevel() {
         _aimX = (_worldW / 2).toFloat();
         _aimY = (_worldH / 2).toFloat();
-        _swayAmp = 1.8 + _level.toFloat() * 0.35;
-        if (_swayAmp > 5.5) { _swayAmp = 5.5; }
+        _swayAmp = 0.6 + _level.toFloat() * 0.12;
+        if (_swayAmp > 2.2) { _swayAmp = 2.2; }
         _ammo = 7 + (_level / 2) + (_level / 4);
         if (_ammo > 16) { _ammo = 16; }
         _maxAmmo = _ammo;
@@ -317,9 +317,9 @@ class BitochiSkywalkerView extends WatchUi.View {
             _shipType[idx] = Math.rand().abs() % maxType;
         }
         _shipAlive[idx] = true;
-        _shipSize[idx] = 13 + Math.rand().abs() % 6;
-        if (_level >= 10 && Math.rand().abs() % 5 == 0) { _shipSize[idx] += 2; }
-        if (_shipSize[idx] > 20) { _shipSize[idx] = 20; }
+        _shipSize[idx] = 38 + Math.rand().abs() % 8;
+        if (_level >= 10 && Math.rand().abs() % 5 == 0) { _shipSize[idx] += 4; }
+        if (_shipSize[idx] > 52) { _shipSize[idx] = 52; }
         _shipFlee[idx] = 0;
     }
 
@@ -428,7 +428,7 @@ class BitochiSkywalkerView extends WatchUi.View {
             if (_combo > _maxCombo) { _maxCombo = _combo; }
 
             var pts = 100 + (_combo - 1) * 50;
-            if (bestDist < 3.0) { pts = pts + 250; _shotMsg = "CRITICAL!"; }
+            if (bestDist < _shipSize[bestIdx].toFloat() * 0.2) { pts = pts + 250; _shotMsg = "CRITICAL!"; }
             else if (bestDist < _shipSize[bestIdx].toFloat() * 0.5) { pts = pts + 120; _shotMsg = "DIRECT!"; }
             else { _shotMsg = "DESTROYED!"; }
             _score += pts;
@@ -850,7 +850,7 @@ class BitochiSkywalkerView extends WatchUi.View {
         r = r - 2;
 
         dc.setColor(0x0A0A14, Graphics.COLOR_TRANSPARENT);
-        for (var ring = r; ring < r + 35; ring++) {
+        for (var ring = r; ring < r + 18; ring++) {
             dc.drawCircle(_cx, _cy, ring);
         }
 
