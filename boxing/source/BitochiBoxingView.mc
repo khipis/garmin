@@ -236,7 +236,7 @@ class BitochiBoxingView extends WatchUi.View {
         _punchCooldown = 14;
         _comboMeter = 0;
         _superFlash = 8;
-        _staminaRegenDelay = 20;
+        _staminaRegenDelay = 12;
         doVibe(100, 300);
 
         if (_enemyState == ES_DODGE) { spawnSweat(_w / 2, eBaseY(), 3); return; }
@@ -291,7 +291,7 @@ class BitochiBoxingView extends WatchUi.View {
             if (_comboMeter > 0 && _tick % 5 == 0) { _comboMeter--; }
 
             if (_staminaRegenDelay > 0) { _staminaRegenDelay--; }
-            else if (_stamina < _staminaMax && _tick % 8 == 0) { _stamina++; }
+            else if (_stamina < _staminaMax && _tick % 3 == 0) { _stamina++; }
 
             if (_enemyStamina < _enemyStaminaMax && _tick % 6 == 0) { _enemyStamina++; }
 
@@ -354,11 +354,11 @@ class BitochiBoxingView extends WatchUi.View {
         if (_punchCooldown > 0 || _playerState == PS_HIT_STUN || _playerState == PS_EXHAUSTED) { return; }
         if (_playerState >= PS_JAB && _playerState <= PS_BODY) { return; }
 
-        var cost = 18;
-        if (pType == PS_CROSS) { cost = 24; }
-        else if (pType == PS_HOOK) { cost = 32; }
-        else if (pType == PS_UPPER) { cost = 40; }
-        else if (pType == PS_BODY) { cost = 20; }
+        var cost = 10;
+        if (pType == PS_CROSS) { cost = 14; }
+        else if (pType == PS_HOOK) { cost = 18; }
+        else if (pType == PS_UPPER) { cost = 24; }
+        else if (pType == PS_BODY) { cost = 12; }
         if (_stamina < cost) {
             _playerState = PS_EXHAUSTED; _playerStateTick = 0;
             _punchLabel = "TIRED!"; _punchLabelTick = 18;
@@ -368,7 +368,7 @@ class BitochiBoxingView extends WatchUi.View {
         _playerState = pType; _playerStateTick = 0;
         _punchCooldown = 10;
         _stamina -= cost;
-        _staminaRegenDelay = 12;
+        _staminaRegenDelay = 8;
         if (_stamina <= 0) { _stamina = 0; _playerState = PS_EXHAUSTED; _playerStateTick = 0; _punchLabel = "TIRED!"; _punchLabelTick = 18; return; }
         doVibe(25, 40);
 
@@ -444,7 +444,7 @@ class BitochiBoxingView extends WatchUi.View {
         if (_playerState == PS_SUPER) {
             if (_playerStateTick >= 10) { _playerState = PS_IDLE; _playerStateTick = 0; }
         } else if (_playerState == PS_EXHAUSTED) {
-            if (_playerStateTick >= 30) { _playerState = PS_IDLE; _playerStateTick = 0; _stamina = 15; }
+            if (_playerStateTick >= 20) { _playerState = PS_IDLE; _playerStateTick = 0; _stamina = 45; }
         } else if (_playerState >= PS_JAB && _playerState <= PS_BODY) {
             if (_playerStateTick >= 7) { _playerState = PS_IDLE; _playerStateTick = 0; }
         } else if (_playerState == PS_DODGE_L || _playerState == PS_DODGE_R) {
@@ -454,7 +454,7 @@ class BitochiBoxingView extends WatchUi.View {
         } else if (_playerState == PS_BLOCK) {
             var ax = (accelX != null) ? accelX : 0;
             if (ax > 150 || ax < -150) { _playerState = PS_IDLE; _playerStateTick = 0; }
-            if (_tick % 4 == 0) { _stamina--; if (_stamina < 0) { _stamina = 0; } }
+            if (_tick % 8 == 0) { _stamina--; if (_stamina < 0) { _stamina = 0; } }
         }
     }
 
@@ -522,11 +522,11 @@ class BitochiBoxingView extends WatchUi.View {
         var dmg = (_enemyDmg.toFloat() * mult).toNumber();
         if (_playerState == PS_BLOCK) {
             dmg = (dmg * 0.25).toNumber(); if (dmg < 1) { dmg = 1; }
-            _stamina -= 8; if (_stamina < 0) { _stamina = 0; }
+            _stamina -= 5; if (_stamina < 0) { _stamina = 0; }
             doVibe(20, 40); _shakeLeft = 2;
         } else {
-            _stamina -= 18; if (_stamina < 0) { _stamina = 0; }
-            _staminaRegenDelay = 15;
+            _stamina -= 12; if (_stamina < 0) { _stamina = 0; }
+            _staminaRegenDelay = 10;
             _playerState = PS_HIT_STUN; _playerStateTick = 0;
             doVibe(70, 180); _shakeLeft = 7; _hitFlash = 5;
             _playerBruise += 3; if (_playerBruise > 25) { _playerBruise = 25; }
@@ -628,9 +628,9 @@ class BitochiBoxingView extends WatchUi.View {
             else if (_punchLabel.equals("SUPER!")) { lc = 0xFFDD00; }
             else if (_punchLabel.equals("TIRED!")) { lc = 0xFF6622; }
             dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2 + 1, _h * 48 / 100 + 1, Graphics.FONT_SMALL, _punchLabel, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_w / 2 + 1, _h * 52 / 100 + 1, Graphics.FONT_SMALL, _punchLabel, Graphics.TEXT_JUSTIFY_CENTER);
             dc.setColor(lc, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 48 / 100, Graphics.FONT_SMALL, _punchLabel, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_w / 2, _h * 52 / 100, Graphics.FONT_SMALL, _punchLabel, Graphics.TEXT_JUSTIFY_CENTER);
         }
 
         if (_comboCount >= 3 && _comboTimer > 0 && gameState == GS_FIGHT) {
@@ -638,9 +638,9 @@ class BitochiBoxingView extends WatchUi.View {
             if (_comboCount >= 8) { comboC = 0xFF2222; }
             else if (_comboCount >= 5) { comboC = 0xFF6622; }
             dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2 + 1, _h * 43 / 100 + 1, Graphics.FONT_XTINY, "" + _comboCount + "x COMBO!", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_w / 2 + 1, _h * 57 / 100 + 1, Graphics.FONT_XTINY, "" + _comboCount + "x COMBO!", Graphics.TEXT_JUSTIFY_CENTER);
             dc.setColor(comboC, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 43 / 100, Graphics.FONT_XTINY, "" + _comboCount + "x COMBO!", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_w / 2, _h * 57 / 100, Graphics.FONT_XTINY, "" + _comboCount + "x COMBO!", Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 
@@ -962,115 +962,119 @@ class BitochiBoxingView extends WatchUi.View {
     }
 
     hidden function drawHUD(dc) {
-        var barW = _w * 34 / 100;
-        var barH = 10;
-        var barY = 2;
-        var gap = 2;
+        var cx = _w / 2;
+        // Bars sized to fit within round display safe area
+        var barW = _w * 27 / 100;
+        var barH = 8;
+        var stH = 5;
+        var gap = 4;
+        var pBarX = cx - barW - gap;
+        var eBarX = cx + gap;
 
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w * 3 / 100, barY - 1, Graphics.FONT_XTINY, "YOU", Graphics.TEXT_JUSTIFY_LEFT);
-        dc.drawText(_w * 97 / 100, barY - 1, Graphics.FONT_XTINY, "OPP", Graphics.TEXT_JUSTIFY_RIGHT);
+        // Round + Timer - compact top center
+        var sec = _roundTimer / 30;
+        var timerCol = (sec <= 10) ? ((_tick % 8 < 4) ? 0xFF4444 : 0xCC2222) : 0xCCCCCC;
+        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(cx - 24, _h * 5 / 100, 48, 11);
+        dc.setColor(timerCol, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, _h * 5 / 100, Graphics.FONT_XTINY, "R" + _round + "  " + sec + "s", Graphics.TEXT_JUSTIFY_CENTER);
 
-        var hpBarY = barY + 12;
+        // HP bars
+        var hpY = _h * 12 / 100;
+        // Labels
+        dc.setColor(0xCCCCCC, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(pBarX + barW / 2, hpY - 10, Graphics.FONT_XTINY, "YOU", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(eBarX + barW / 2, hpY - 10, Graphics.FONT_XTINY, "OPP", Graphics.TEXT_JUSTIFY_CENTER);
+
+        // Player HP
         var pFill = (_playerHp.toFloat() / _playerMaxHp * barW).toNumber();
         if (pFill < 0) { pFill = 0; }
-        dc.setColor(0x333333, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(_w * 3 / 100, hpBarY, barW, barH);
-        var pCol = 0x44CC44;
-        if (_playerHp < _playerMaxHp / 4) { pCol = (_tick % 6 < 3) ? 0xFF2222 : 0xCC0000; }
-        else if (_playerHp < _playerMaxHp / 2) { pCol = 0xFFAA22; }
+        dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(pBarX, hpY, barW, barH);
+        var pCol = (_playerHp < _playerMaxHp / 4) ? ((_tick % 6 < 3) ? 0xFF2222 : 0xCC0000) : (_playerHp < _playerMaxHp / 2 ? 0xFFAA22 : 0x44CC44);
         dc.setColor(pCol, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(_w * 3 / 100, hpBarY, pFill, barH);
+        dc.fillRectangle(pBarX, hpY, pFill, barH);
+        dc.setColor(0x777777, Graphics.COLOR_TRANSPARENT);
+        dc.drawRectangle(pBarX, hpY, barW, barH);
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawRectangle(_w * 3 / 100, hpBarY, barW, barH);
-        dc.drawText(_w * 3 / 100 + barW / 2, hpBarY - 1, Graphics.FONT_XTINY, "" + _playerHp, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(pBarX + barW / 2, hpY, Graphics.FONT_XTINY, "" + _playerHp, Graphics.TEXT_JUSTIFY_CENTER);
 
+        // Enemy HP
         var eFill = (_enemyHp.toFloat() / _enemyMaxHp * barW).toNumber();
         if (eFill < 0) { eFill = 0; }
-        var eBarX = _w * 97 / 100 - barW;
-        dc.setColor(0x333333, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(eBarX, hpBarY, barW, barH);
-        var eCol = 0xCC4444;
-        if (_enemyHp < _enemyMaxHp / 4) { eCol = (_tick % 6 < 3) ? 0xFF2222 : 0xAA0000; }
+        dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(eBarX, hpY, barW, barH);
+        var eCol = (_enemyHp < _enemyMaxHp / 4) ? ((_tick % 6 < 3) ? 0xFF2222 : 0xAA0000) : 0xCC4444;
         dc.setColor(eCol, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(eBarX + barW - eFill, hpBarY, eFill, barH);
+        dc.fillRectangle(eBarX + barW - eFill, hpY, eFill, barH);
+        dc.setColor(0x777777, Graphics.COLOR_TRANSPARENT);
+        dc.drawRectangle(eBarX, hpY, barW, barH);
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawRectangle(eBarX, hpBarY, barW, barH);
-        dc.drawText(eBarX + barW / 2, hpBarY - 1, Graphics.FONT_XTINY, "" + _enemyHp, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(eBarX + barW / 2, hpY, Graphics.FONT_XTINY, "" + _enemyHp, Graphics.TEXT_JUSTIFY_CENTER);
 
-        dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, hpBarY - 2, Graphics.FONT_XTINY, "R" + _round, Graphics.TEXT_JUSTIFY_CENTER);
-
-        var sec = _roundTimer / 30;
-        var timerCol = (sec <= 10) ? ((_tick % 8 < 4) ? 0xFF4444 : 0xCC2222) : 0xAABBCC;
-        dc.setColor(timerCol, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, hpBarY + barH, Graphics.FONT_XTINY, "" + sec + "s", Graphics.TEXT_JUSTIFY_CENTER);
-
-        var stBarY = hpBarY + barH + gap;
-        var stW = _w * 34 / 100;
-        var stX = _w * 3 / 100;
-        dc.setColor(0x222233, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(stX, stBarY, stW, 5);
-        var stFill = (_stamina * stW / _staminaMax);
-        var stCol = 0x44AAFF;
-        if (_stamina < 20) { stCol = (_tick % 6 < 3) ? 0xFF4422 : 0xCC3311; }
-        else if (_stamina < 40) { stCol = 0xFF8844; }
+        // Stamina bars
+        var stY = hpY + barH + 3;
+        // Player stamina
+        var stFill = (_stamina * barW / _staminaMax);
+        var stCol = (_stamina < 20) ? ((_tick % 6 < 3) ? 0xFF4422 : 0xCC3311) : (_stamina < 40 ? 0xFF8844 : 0x44AAFF);
+        dc.setColor(0x111122, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(pBarX, stY, barW, stH);
         dc.setColor(stCol, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(stX, stBarY, stFill, 5);
-        dc.setColor(0x88AACC, Graphics.COLOR_TRANSPARENT);
-        dc.drawRectangle(stX, stBarY, stW, 5);
+        dc.fillRectangle(pBarX, stY, stFill, stH);
+        dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT);
+        dc.drawRectangle(pBarX, stY, barW, stH);
 
-        var eStW = _w * 34 / 100;
-        var eStX = _w * 97 / 100 - eStW;
-        dc.setColor(0x222233, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(eStX, stBarY, eStW, 5);
-        var eStFill = (_enemyStamina * eStW / _enemyStaminaMax);
-        var eStCol = 0xCC6644;
-        if (_enemyStamina < _enemyStaminaMax / 4) { eStCol = 0xFF4422; }
+        // Enemy stamina
+        var eStFill = (_enemyStamina * barW / _enemyStaminaMax);
+        var eStCol = (_enemyStamina < _enemyStaminaMax / 4) ? 0xFF4422 : 0xCC6644;
+        dc.setColor(0x111122, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(eBarX, stY, barW, stH);
         dc.setColor(eStCol, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(eStX + eStW - eStFill, stBarY, eStFill, 5);
-        dc.setColor(0x88AACC, Graphics.COLOR_TRANSPARENT);
-        dc.drawRectangle(eStX, stBarY, eStW, 5);
+        dc.fillRectangle(eBarX + barW - eStFill, stY, eStFill, stH);
+        dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT);
+        dc.drawRectangle(eBarX, stY, barW, stH);
 
+        // Combo meter (bottom center)
         if (_comboMeter > 0) {
-            var mW = _w * 40 / 100;
-            var mX = (_w - mW) / 2;
+            var mW = _w * 38 / 100;
+            var mX = cx - mW / 2;
             var mY = _h * 82 / 100;
             dc.setColor(0x222244, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(mX, mY, mW, 4);
+            dc.fillRectangle(mX, mY, mW, 5);
             var mFill = (_comboMeter * mW / 100);
             var mCol = (_comboMeter >= 100) ? ((_tick % 4 < 2) ? 0xFFDD00 : 0xFF4400) : ((_comboMeter >= 60) ? 0xFFAA22 : 0x4488FF);
             dc.setColor(mCol, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(mX, mY, mFill, 4);
+            dc.fillRectangle(mX, mY, mFill, 5);
             if (_comboMeter >= 100) {
                 dc.setColor((_tick % 6 < 3) ? 0xFFDD00 : 0xFF8800, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(_w / 2, mY + 4, Graphics.FONT_XTINY, "TAP: SUPER!", Graphics.TEXT_JUSTIFY_CENTER);
+                dc.drawText(cx, mY + 5, Graphics.FONT_XTINY, "TAP: SUPER!", Graphics.TEXT_JUSTIFY_CENTER);
             }
         }
 
+        // Status text bottom
+        var statusY = _h * 87 / 100;
         if (_playerState == PS_EXHAUSTED) {
-            dc.setColor((_tick % 6 < 3) ? 0xFF6622 : 0xCC4400, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 88 / 100, Graphics.FONT_XTINY, "EXHAUSTED!", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor((_tick % 4 < 2) ? 0xFF6622 : 0xFFAA44, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, statusY, Graphics.FONT_XTINY, "EXHAUSTED!", Graphics.TEXT_JUSTIFY_CENTER);
         } else if (_playerState == PS_BLOCK) {
             dc.setColor(0x4488FF, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 88 / 100, Graphics.FONT_XTINY, "BLOCK", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(cx, statusY, Graphics.FONT_XTINY, "BLOCK", Graphics.TEXT_JUSTIFY_CENTER);
         } else if (_playerState == PS_DODGE_L || _playerState == PS_DODGE_R) {
             dc.setColor(0x44FF88, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 88 / 100, Graphics.FONT_XTINY, "DODGE!", Graphics.TEXT_JUSTIFY_CENTER);
-        } else if (_stamina < 25 && gameState == GS_FIGHT) {
-            dc.setColor(0xFF8844, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 88 / 100, Graphics.FONT_XTINY, "LOW STAMINA", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(cx, statusY, Graphics.FONT_XTINY, "DODGE!", Graphics.TEXT_JUSTIFY_CENTER);
+        } else if (_stamina < 30 && gameState == GS_FIGHT) {
+            dc.setColor((_tick % 6 < 3) ? 0xFF8844 : 0xFFCC22, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, statusY, Graphics.FONT_XTINY, "LOW STAMINA", Graphics.TEXT_JUSTIFY_CENTER);
         }
 
-        if (_enemyState == ES_WINDUP && _enemyStateTick > 1) {
-            if (_tick % 4 < 2) {
-                dc.setColor(0xFF4444, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(_w / 2, _h * 18 / 100, Graphics.FONT_XTINY, "!! WARNING !!", Graphics.TEXT_JUSTIFY_CENTER);
-            }
+        // Enemy warning
+        if (_enemyState == ES_WINDUP && _enemyStateTick > 1 && _tick % 4 < 2) {
+            dc.setColor(0xFF4444, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, _h * 47 / 100, Graphics.FONT_XTINY, "!! INCOMING !!", Graphics.TEXT_JUSTIFY_CENTER);
         }
 
-        dc.setColor(0x888888, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(5, _h - 12, Graphics.FONT_XTINY, "" + _score, Graphics.TEXT_JUSTIFY_LEFT);
+        dc.setColor(0x666666, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, _h - 12, Graphics.FONT_XTINY, "" + _score, Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawMenu(dc) {
