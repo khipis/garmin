@@ -1,58 +1,35 @@
 # BitochiJump
 
-Ski jumping simulator for Garmin watches. Physics-based with retro pixel-art style, part of the Bitochi game family.
+Ski jumping game with realistic physics for Garmin smartwatches.
 
-## Gameplay
+## How to Play
 
-Compete with 5 Pets characters across 2 rounds of ski jumping. Master the inrun speed, nail the takeoff timing, and control your lean during flight for maximum distance.
-
-### Jump Phases:
-1. **Character Select** - Choose your jumper (UP/DOWN to browse, SELECT to start)
-2. **Inrun** - Speed bar oscillates, press to lock speed at the right moment
-3. **Takeoff** - Timing window with sweet spot. Press/shake at the perfect moment for maximum quality
-4. **Flight** - Control lean with UP/DOWN buttons or wrist tilt. Forward lean = more lift but more drag
-5. **Landing** - Telemark bonus for correct lean position on touchdown
-
-### 5 Jumpers:
-| Character | Style | Special |
-|-----------|-------|---------|
-| Chikko | Neurotic chicken | Balanced, panics |
-| Foczka | Happy seal | Great flopper |
-| Doggo | Loyal dog | Fast zoomer |
-| Vexor | Angry demon | +15% speed, harder control |
-| Emilka | Graceful girl | +35% lift, weaker takeoff |
+1. Select your jumper
+2. Ride down the in-run hill
+3. Tap to take off at the right moment
+4. Control your balance in flight with wrist tilt
+5. Land smoothly for the best score
 
 ## Features
 
-- Realistic aerodynamic physics (lift, drag, gravity, wind)
-- Variable wind with gusts during flight
-- K-point and HS hill markers
-- 2-round competition format with cumulative scoring
-- Parallax mountain backgrounds
-- Trees along the hillside
-- Crowd at the bottom
-- Snow particles affected by wind
-- Trail effect behind jumper in flight
-- Perfect takeoff flash effect
-- Speed bar with sweet spot zone
-- Wind indicator with arrows
-- Score = distance + style (takeoff quality + landing + lean bonus)
-- Haptic feedback on takeoff and landing
+- Extended ski jump hill with realistic descent
+- In-flight aerodynamics: gravity, lift, drag, lean control
+- Accelerometer-based balance during flight
+- Dynamic camera with zoom and parallax scrolling
+- Detailed mountain scenery with trees, crowd, and sky
+- Multiple jumper selection
+- Score based on distance, style, and landing
+- Trail effects during flight
+- Snow particle system
 
 ## Controls
 
-| Button | Action |
-|--------|--------|
-| UP | Previous jumper / Lean forward |
-| DOWN | Next jumper / Lean back |
-| Select | Start / Jump / Continue |
-| Physical shake | Takeoff trigger |
-| Back | Exit |
+- **Tap** — take off / advance screens
+- **Tilt** — control in-flight lean and balance
 
-## Build
+## Scoring
 
-```bash
-cd jump
-monkeyc -o bin/jump.prg -f monkey.jungle -y ../developer_key.der -d fenix7x
-monkeydo bin/jump.prg fenix7x
-```
+- Distance points
+- Style points for stable flight
+- Landing bonus for smooth touchdown
+- Judge scoring system
