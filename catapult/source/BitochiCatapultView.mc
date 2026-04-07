@@ -24,7 +24,7 @@ enum {
     PW_FIRE,
     PW_TRIPLE,
     PW_PIERCE,
-    PW_FREEZE,
+    PW_POISON,
     PW_CLUSTER,
     PW_AMMO
 }
@@ -143,7 +143,7 @@ class BitochiCatapultView extends WatchUi.View {
     hidden var _roundGold;
     hidden var _enemyBaseX;
     hidden var _accBonusShots;
-    hidden var _freezeTicks;
+    hidden var _poisonTicks;
     hidden var _hitType;
 
     function initialize() {
@@ -207,11 +207,11 @@ class BitochiCatapultView extends WatchUi.View {
         _enemyBaseX = 0.0;
         _accBonusShots = 0;
 
-        _shopNames = ["MEGA BOMB", "FIRE SHOT", "PIERCER", "TRIPLE", "FREEZE", "CLUSTER", "AMMO +3"];
+        _shopNames = ["MEGA BOMB", "FIRE SHOT", "PIERCER", "TRIPLE", "POISON", "CLUSTER", "AMMO +3"];
         _shopCosts = [120, 180, 220, 250, 160, 200, 80];
-        _shopPows = [PW_MEGA, PW_FIRE, PW_PIERCE, PW_TRIPLE, PW_FREEZE, PW_CLUSTER, PW_AMMO];
-        _shopDesc = ["Giant blast radius", "Burns+chains blocks", "3x enemy damage", "3-point detonation", "Freezes enemy solid", "Scatter bomb x3", "+3 shots"];
-        _freezeTicks = 0; _hitType = 0;
+        _shopPows = [PW_MEGA, PW_FIRE, PW_PIERCE, PW_TRIPLE, PW_POISON, PW_CLUSTER, PW_AMMO];
+        _shopDesc = ["Giant blast radius", "Burns+chains blocks", "3x enemy damage", "3-point detonation", "DoT + 50% vuln to blasts", "Scatter bomb x3", "+3 shots"];
+        _poisonTicks = 0; _hitType = 0;
 
         initRound();
     }
@@ -254,7 +254,7 @@ class BitochiCatapultView extends WatchUi.View {
         _enemyVy = 0.0;
         _enemyOnGround = true;
         _enemyBaseX = _castleWX;
-        _freezeTicks = 0; _hitType = 0;
+        _poisonTicks = 0; _hitType = 0;
 
         applyTheme();
         buildCastle();
@@ -421,12 +421,18 @@ class BitochiCatapultView extends WatchUi.View {
     function onTick() as Void {
         _tick++;
 
-        if (_freezeTicks > 0) { _freezeTicks--; }
+        if (_poisonTicks > 0) {
+            _poisonTicks--;
+            if (_tick % 8 == 0 && _enemyHp > 0) {
+                var dotDmg = 6 + _round * 2;
+                _enemyHp -= dotDmg;
+                _score += dotDmg;
+            }
+        }
 
         if (_round >= 6 && _enemyHp > 0) {
             var amp = (_round >= 11) ? 22.0 : ((_round >= 8) ? 16.0 : 11.0);
             var spd = (_round >= 11) ? 0.095 : 0.078;
-            if (_freezeTicks > 0) { amp = amp * 0.18; }
             _enemyWX = _enemyBaseX + Math.sin(_tick.toFloat() * spd) * amp;
         }
 
@@ -649,9 +655,9 @@ class BitochiCatapultView extends WatchUi.View {
         if (_enemyHp > 0) {
             var edx = hx - _enemyWX; var edy = hy - _enemyWY;
             if (edx * edx + edy * edy < r * r * 4.0) {
-                var dmg = 14 + _round * 2;
-                if (_freezeTicks > 20) { dmg = dmg * 3 / 2; }
-                _enemyHp -= dmg; _score += dmg;
+            var dmg = 14 + _round * 2;
+            if (_poisonTicks > 20) { dmg = dmg * 3 / 2; }
+            _enemyHp -= dmg; _score += dmg;
             }
         }
     }
@@ -669,7 +675,7 @@ class BitochiCatapultView extends WatchUi.View {
         if (_activePow == PW_MEGA) { _hitType = 2; }
         else if (_activePow == PW_FIRE) { _hitType = 3; }
         else if (_activePow == PW_PIERCE) { _hitType = 4; }
-        else if (_activePow == PW_FREEZE) { _hitType = 5; }
+        else if (_activePow == PW_POISON) { _hitType = 5; }
         else if (_activePow == PW_CLUSTER) { _hitType = 6; }
         else if (_activePow == PW_TRIPLE) { _hitType = 7; }
 
@@ -732,20 +738,19 @@ class BitochiCatapultView extends WatchUi.View {
                 var dmg = 25 + _round * 4;
                 if (_activePow == PW_PIERCE) { dmg = dmg * 3; }
                 else if (_activePow == PW_MEGA) { dmg = dmg * 2; }
-                else if (_activePow == PW_FREEZE) { dmg = dmg * 3 / 4; }
-                if (_freezeTicks > 20 && _activePow != PW_FREEZE) { dmg = dmg * 3 / 2; }
+                if (_poisonTicks > 20) { dmg = dmg * 3 / 2; }
                 _enemyHp -= dmg; _score += dmg;
                 hitSomething = true;
             }
         }
 
-        if (_activePow == PW_FREEZE) {
+        if (_activePow == PW_POISON) {
             var edxF = hx - _enemyWX; var edyF = hy - _enemyWY;
-            var freezeR = splR * 4.0;
-            if (edxF * edxF + edyF * edyF < freezeR * freezeR) {
-                _freezeTicks = 60 + _round * 2;
-                if (_freezeTicks > 110) { _freezeTicks = 110; }
-                doVibe(30, 200);
+            var poisonR = splR * 3.5;
+            if (edxF * edxF + edyF * edyF < poisonR * poisonR) {
+                _poisonTicks += 50 + _round * 2;
+                if (_poisonTicks > 120) { _poisonTicks = 120; }
+                doVibe(40, 150);
             }
         }
 
@@ -846,7 +851,7 @@ class BitochiCatapultView extends WatchUi.View {
         } else if (ht == 4) {
             palette = [0x22AAFF, 0x44DDFF, 0xAAEEFF, 0x2266FF, 0x88CCFF, 0xFFFFFF];
         } else if (ht == 5) {
-            palette = [0x88DDFF, 0xCCEEFF, 0x44AAFF, 0xFFFFFF, 0xAADDFF, 0x66BBFF];
+            palette = [0x44FF44, 0x88FF44, 0x22CC22, 0xAAFF44, 0x66DD44, 0xCCFF66];
         } else if (ht == 6) {
             palette = [0xFFAA22, 0xFF6622, 0xFFFF44, 0xFF8844, 0xFFCC44, 0xFF4422];
         } else if (ht == 7) {
@@ -864,7 +869,7 @@ class BitochiCatapultView extends WatchUi.View {
             _prtX[i] = wx; _prtY[i] = wy;
             var a = (Math.rand().abs() % 360).toFloat() * 3.14159 / 180.0;
             var s = 1.5 + (Math.rand().abs() % 60).toFloat() / 6.0;
-            if (ht == 5) { s = s * 0.7; }
+            if (ht == 5) { s = s * 1.1; }
             _prtVx[i] = s * Math.cos(a);
             _prtVy[i] = -s * Math.sin(a);
             _prtL[i] = 14 + Math.rand().abs() % 20;
@@ -1001,8 +1006,8 @@ class BitochiCatapultView extends WatchUi.View {
             _projColor = 0x44DDFF;
         } else if (curPow == PW_TRIPLE) {
             _projColor = 0xFFFF44;
-        } else if (curPow == PW_FREEZE) {
-            _projColor = 0x88EEFF;
+        } else if (curPow == PW_POISON) {
+            _projColor = 0x88FF44;
         } else if (curPow == PW_CLUSTER) {
             _projColor = 0xFF9922;
         }
@@ -1728,25 +1733,25 @@ class BitochiCatapultView extends WatchUi.View {
         }
 
         dc.setColor(_enemyColor, Graphics.COLOR_TRANSPARENT);
-        var legOff = (_freezeTicks > 0) ? 0 : ((_tick % 8 < 4) ? 2 : -2);
+        var legOff = (_tick % 8 < 4) ? 2 : -2;
         dc.fillRectangle(esx - er / 2, esy + er - 2, er / 3, er / 2 + legOff);
         dc.fillRectangle(esx + er / 4, esy + er - 2, er / 3, er / 2 - legOff);
 
-        if (_freezeTicks > 0) {
-            var iceC = (_freezeTicks > 30) ? 0x88DDFF : 0x44AACC;
-            dc.setColor(iceC, Graphics.COLOR_TRANSPARENT);
+        if (_poisonTicks > 0) {
+            var psnC = (_poisonTicks % 6 < 3) ? 0x88FF44 : 0x44CC22;
+            dc.setColor(psnC, Graphics.COLOR_TRANSPARENT);
             dc.drawCircle(esx, esy, er + 2);
             dc.drawCircle(esx, esy, er + 3);
-            for (var fi = 0; fi < 6; fi++) {
-                var fa = fi * 60 + _tick;
+            for (var fi = 0; fi < 5; fi++) {
+                var fa = fi * 72 + _tick * 3;
                 var frad = fa.toFloat() * 3.14159 / 180.0;
-                var ifx = esx + ((er + 4) * Math.cos(frad)).toNumber();
-                var ify = esy + ((er + 4) * Math.sin(frad)).toNumber();
-                dc.fillRectangle(ifx - 1, ify - 1, 3, 3);
+                var ifx = esx + ((er + 5) * Math.cos(frad)).toNumber();
+                var ify = esy + ((er + 5) * Math.sin(frad)).toNumber();
+                dc.fillCircle(ifx, ify, 2);
             }
-            dc.setColor(0xCCEEFF, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(esx - er / 3, esy - er / 3, er / 5);
-            dc.fillCircle(esx + er / 4, esy - er * 2 / 3, er / 6);
+            dc.setColor(0xCCFF66, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(esx - er / 3, esy - er / 4, er / 6);
+            dc.fillCircle(esx + er / 4, esy - er * 3 / 5, er / 7);
         }
 
         var barW = er * 3;
@@ -1870,7 +1875,7 @@ class BitochiCatapultView extends WatchUi.View {
             if (fp == PW_FIRE) { pwC = 0xFF8800; pwN = "F"; }
             else if (fp == PW_PIERCE) { pwC = 0x44DDFF; pwN = "P"; }
             else if (fp == PW_TRIPLE) { pwC = 0xFFFF44; pwN = "3x"; }
-            else if (fp == PW_FREEZE) { pwC = 0x88EEFF; pwN = "Z"; }
+            else if (fp == PW_POISON) { pwC = 0x88FF44; pwN = "V"; }
             else if (fp == PW_CLUSTER) { pwC = 0xFF9922; pwN = "C"; }
             dc.setColor(pwC, Graphics.COLOR_TRANSPARENT);
             var qlbl = "[" + pwN + "]";
@@ -1893,10 +1898,10 @@ class BitochiCatapultView extends WatchUi.View {
         dc.setColor(windColor, Graphics.COLOR_TRANSPARENT);
         dc.drawText(4, 3, Graphics.FONT_XTINY, windStr, Graphics.TEXT_JUSTIFY_LEFT);
 
-        if (_freezeTicks > 0) {
-            var fc2 = (_freezeTicks % 6 < 3) ? 0x88EEFF : 0x44AADD;
+        if (_poisonTicks > 0) {
+            var fc2 = (_poisonTicks % 6 < 3) ? 0x88FF44 : 0x44CC22;
             dc.setColor(fc2, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(4, h - 30, Graphics.FONT_XTINY, "FROZE!", Graphics.TEXT_JUSTIFY_LEFT);
+            dc.drawText(4, h - 30, Graphics.FONT_XTINY, "POISON!", Graphics.TEXT_JUSTIFY_LEFT);
         }
 
         for (var i = 0; i < _shots; i++) {
@@ -2082,7 +2087,7 @@ class BitochiCatapultView extends WatchUi.View {
                 else if (_powQueue[qi] == PW_FIRE) { pn = "F"; }
                 else if (_powQueue[qi] == PW_PIERCE) { pn = "P"; }
                 else if (_powQueue[qi] == PW_TRIPLE) { pn = "3"; }
-                else if (_powQueue[qi] == PW_FREEZE) { pn = "Z"; }
+                else if (_powQueue[qi] == PW_POISON) { pn = "V"; }
                 else if (_powQueue[qi] == PW_CLUSTER) { pn = "C"; }
                 qstr += pn;
             }
