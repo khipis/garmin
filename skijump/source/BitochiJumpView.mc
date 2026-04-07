@@ -38,6 +38,7 @@ class BitochiJumpView extends WatchUi.View {
     hidden var _hsDist;
     hidden var _venue;
     hidden var _venueNames;
+    hidden var _maxSpeed;
 
     hidden var _posX;
     hidden var _posY;
@@ -48,6 +49,7 @@ class BitochiJumpView extends WatchUi.View {
     hidden var _bodyAngle;
     hidden var _skiAngle;
 
+    hidden var _inTakeoffZone;
     hidden var _takeoffWindow;
     hidden var _takeoffQuality;
     hidden var _takeoffFlash;
@@ -115,7 +117,7 @@ class BitochiJumpView extends WatchUi.View {
         _jumperColors = [0xFFCC22, 0xFF4444, 0x2266DD, 0xDD2222, 0x22BB55, 0x4488FF];
         _jumperAccents = [0xFF8822, 0xFF8866, 0x88BBFF, 0xFF6666, 0x66DD88, 0x88CCFF];
 
-        _venueNames = ["Zakopane", "Innsbruck", "Vikersund", "Oberstdorf"];
+        _venueNames = ["Zakopane", "Innsbruck", "Oberstdorf", "Vikersund"];
         _venue = 0;
 
         _crowdX = new [CROWD_N]; _crowdC = new [CROWD_N]; _crowdJump = new [CROWD_N];
@@ -140,6 +142,7 @@ class BitochiJumpView extends WatchUi.View {
 
         _posX = 0.0; _posY = 0.0; _vx = 0.0; _vy = 0.0;
         _onHill = true; _speed = 0.0; _bodyAngle = 0.0; _skiAngle = 0.0;
+        _inTakeoffZone = false; _maxSpeed = 3.2;
         _takeoffWindow = 0; _takeoffQuality = 0.0; _takeoffFlash = 0;
         _windBase = 0.0; _windCurrent = 0.0; _windPhase = 0.0;
         _camX = 0.0; _camY = 0.0;
@@ -158,17 +161,17 @@ class BitochiJumpView extends WatchUi.View {
         var sx = 0.0; var sy = 0.0;
         var inA; var inStep; var tA; var lA;
         if (_venue == 0) {
-            _inrunLen = 40; inA = 35.0; inStep = 3.2; tA = 10.0; lA = 33.0;
-            _kDist = 90.0; _hsDist = 105.0;
+            _inrunLen = 28; inA = 34.0; inStep = 3.0; tA = 10.0; lA = 32.0;
+            _kDist = 90.0; _hsDist = 100.0; _maxSpeed = 3.2;
         } else if (_venue == 1) {
-            _inrunLen = 48; inA = 37.5; inStep = 3.4; tA = 11.0; lA = 35.0;
-            _kDist = 105.0; _hsDist = 125.0;
+            _inrunLen = 36; inA = 36.0; inStep = 3.2; tA = 11.0; lA = 34.0;
+            _kDist = 105.0; _hsDist = 120.0; _maxSpeed = 3.8;
         } else if (_venue == 2) {
-            _inrunLen = 52; inA = 38.0; inStep = 3.5; tA = 11.5; lA = 36.0;
-            _kDist = 120.0; _hsDist = 145.0;
+            _inrunLen = 46; inA = 37.5; inStep = 3.4; tA = 11.5; lA = 35.5;
+            _kDist = 120.0; _hsDist = 140.0; _maxSpeed = 4.3;
         } else {
             _inrunLen = 62; inA = 40.0; inStep = 3.8; tA = 12.0; lA = 38.0;
-            _kDist = 185.0; _hsDist = 225.0;
+            _kDist = 185.0; _hsDist = 225.0; _maxSpeed = 5.5;
         }
         _tableIdx = _inrunLen;
         var inR = inA * 3.14159 / 180.0;
@@ -223,7 +226,6 @@ class BitochiJumpView extends WatchUi.View {
         } else { for (var i = 0; i < CROWD_N; i++) { _crowdJump[i] = 0; } }
 
         if (gameState == JS_INRUN) { updateInrun(); }
-        else if (gameState == JS_TAKEOFF) { updateTakeoff(); }
         else if (gameState == JS_FLIGHT) { updateFlight(); }
         else if (gameState == JS_LANDING) { _landTick++; if (_landTick > 55) { finishJump(); } }
         WatchUi.requestUpdate();
@@ -233,44 +235,48 @@ class BitochiJumpView extends WatchUi.View {
         var hA = hillAngleAtX(_posX);
         var gravity = 9.8 * Math.sin(hA * 3.14159 / 180.0);
         _speed += (gravity * 0.033 - 0.02 - 0.0004 * _speed * _speed);
-        if (_speed < 0.5) { _speed = 0.5; } if (_speed > 5.5) { _speed = 5.5; }
+        if (_speed < 0.5) { _speed = 0.5; }
+        if (_speed > _maxSpeed) { _speed = _maxSpeed; }
         var ang = hA * 3.14159 / 180.0;
         _posX += _speed * Math.cos(ang); _posY = hillYAtX(_posX);
         _bodyAngle = hA; _skiAngle = hA;
-        if (_posX >= _hillX[_tableIdx]) { gameState = JS_TAKEOFF; _takeoffWindow = 0; }
-        updateCamera();
-    }
-
-    hidden function updateTakeoff() {
-        var hA = hillAngleAtX(_posX);
-        _speed += (9.8 * Math.sin(hA * 3.14159 / 180.0) * 0.033 - 0.01 - 0.0004 * _speed * _speed);
-        if (_speed < 2.0) { _speed = 2.0; }
-        var ang = hA * 3.14159 / 180.0;
-        _posX += _speed * Math.cos(ang); _posY = hillYAtX(_posX);
-        _bodyAngle = hA; _skiAngle = hA; _takeoffWindow++;
-        if (_posX >= _hillX[_tableIdx + 4]) { executeTakeoff(false); }
+        if (_posX >= _hillX[_tableIdx]) {
+            _inTakeoffZone = true;
+        }
+        if (_posX >= _hillX[_tableIdx + 4]) {
+            executeTakeoff(false);
+        }
         updateCamera();
     }
 
     hidden function executeTakeoff(manual) {
-        if (gameState != JS_TAKEOFF) { return; }
-        if (manual) {
-            var dist = _hillX[_tableIdx + 4] - _posX; if (dist < 0.0) { dist = -dist; }
-            var maxD = _hillX[_tableIdx + 4] - _hillX[_tableIdx];
-            var ratio = dist / (maxD + 0.01);
-            if (ratio < 0.12) { _takeoffQuality = 1.0; _takeoffFlash = 8; }
-            else if (ratio < 0.30) { _takeoffQuality = 0.82; }
-            else if (ratio < 0.55) { _takeoffQuality = 0.55; }
-            else { _takeoffQuality = 0.25; }
-        } else { _takeoffQuality = 0.1; }
-        var la = 10.0 + _takeoffQuality * 16.0;
+        if (gameState != JS_INRUN) { return; }
+        if (manual && _inTakeoffZone) {
+            var edgeX = _hillX[_tableIdx + 4];
+            var zoneStartX = _hillX[_tableIdx];
+            var dist = edgeX - _posX;
+            if (dist < 0.0) { dist = 0.0; }
+            var zoneLen = edgeX - zoneStartX;
+            var ratio = dist / (zoneLen + 0.01);
+            if (ratio < 0.08) { _takeoffQuality = 1.0; _takeoffFlash = 8; }
+            else if (ratio < 0.20) { _takeoffQuality = 0.85; _takeoffFlash = 5; }
+            else if (ratio < 0.40) { _takeoffQuality = 0.6; }
+            else if (ratio < 0.65) { _takeoffQuality = 0.35; }
+            else { _takeoffQuality = 0.15; }
+        } else if (manual) {
+            _takeoffQuality = 0.05;
+        } else {
+            _takeoffQuality = 0.0;
+        }
+        var la = 3.0 + _takeoffQuality * 23.0;
         var lr = la * 3.14159 / 180.0;
-        var boost = 0.9 + _takeoffQuality * 0.8;
+        var boost = 0.3 + _takeoffQuality * 1.3;
         _vx = _speed * boost * Math.cos(lr); _vy = -_speed * boost * Math.sin(lr);
         _onHill = false; _bodyAngle = la; _skiAngle = la;
         _windBase = -0.8 + (Math.rand().abs() % 20).toFloat() / 10.0;
         _windPhase = (Math.rand().abs() % 628).toFloat() / 100.0;
-        doVibe(50, 100); gameState = JS_FLIGHT;
+        if (_takeoffQuality > 0.1) { doVibe(50, 100); }
+        gameState = JS_FLIGHT;
     }
 
     hidden function updateFlight() {
@@ -304,11 +310,11 @@ class BitochiJumpView extends WatchUi.View {
         var aoa = _bodyAngle - fDeg;
         if (aoa < -10.0) { aoa = -10.0; } if (aoa > 40.0) { aoa = 40.0; }
 
-        var tqLift = 0.85 + _takeoffQuality * 0.3;
+        var tqLift = 0.5 + _takeoffQuality * 0.65;
         var lC = 0.0;
         if (aoa > 0.0 && aoa < 30.0) { lC = (aoa * 0.014 - aoa * aoa * 0.00015) * tqLift; }
         else if (aoa >= 30.0) { lC = 0.20 * tqLift; }
-        var dC = 0.006 + aoa * aoa * 0.00008;
+        var dC = 0.008 + aoa * aoa * 0.00009;
 
         var lift = lC * speed * speed * 0.5;
         var drag = dC * speed * speed * 0.5;
@@ -317,7 +323,7 @@ class BitochiJumpView extends WatchUi.View {
         var ay = 9.8 - drag * Math.sin(fRad) - lift * Math.sin(lDir);
 
         _vx += ax * dt; _vy += ay * dt;
-        if (_vx < 1.0) { _vx = 1.0; }
+        if (_vx < 0.8) { _vx = 0.8; }
         _posX += _vx * dt * 28.0; _posY += _vy * dt * 28.0;
 
         _skiAngle = _skiAngle * 0.9 + _bodyAngle * 0.1;
@@ -327,13 +333,13 @@ class BitochiJumpView extends WatchUi.View {
         var hY = hillYAtX(_posX);
         var heightAbove = hY - _posY;
 
-        if (!_landReady && heightAbove < 22.0 && _distance > 15.0) {
+        if (!_landReady && heightAbove < 22.0 && _distance > 8.0) {
             _landReady = true;
             _landReadyTick = 0;
         }
         if (_landReady) {
             _landReadyTick++;
-            if (_landReadyTick > 50 && !_landTapDone) {
+            if (_landReadyTick > 32 && !_landTapDone) {
                 _landCrash = true;
                 _posY = hY;
                 doLanding();
@@ -341,7 +347,7 @@ class BitochiJumpView extends WatchUi.View {
             }
         }
 
-        if (_posY >= hY - 2.0 && _distance > 5.0) {
+        if (_posY >= hY - 2.0 && _posX > _hillX[_tableIdx + 4]) {
             _posY = hY;
             if (!_landTapDone) { _landCrash = true; }
             doLanding();
@@ -377,7 +383,7 @@ class BitochiJumpView extends WatchUi.View {
         _landTapDone = true;
         var hY = hillYAtX(_posX);
         var heightAbove = hY - _posY;
-        if (heightAbove < 5.0) {
+        if (heightAbove < 8.0) {
             _posY = hY;
             doLanding();
         }
@@ -429,7 +435,7 @@ class BitochiJumpView extends WatchUi.View {
 
     function doAction() {
         if (gameState == JS_MENU) { startCompetition(); }
-        else if (gameState == JS_TAKEOFF) { executeTakeoff(true); }
+        else if (gameState == JS_INRUN) { executeTakeoff(true); }
         else if (gameState == JS_FLIGHT && _landReady && !_landTapDone) { doLandingTap(); }
         else if (gameState == JS_SCORE) { advanceAfterScore(); }
         else if (gameState == JS_FINAL) { gameState = JS_MENU; }
@@ -448,6 +454,7 @@ class BitochiJumpView extends WatchUi.View {
         _jumpNum++; _posX = _hillX[0]; _posY = _hillY[0];
         _vx = 0.0; _vy = 0.0; _speed = 0.5; _onHill = true;
         _bodyAngle = hillAngleAtX(_posX); _skiAngle = _bodyAngle;
+        _inTakeoffZone = false;
         _takeoffWindow = 0; _takeoffQuality = 0.0; _takeoffFlash = 0;
         _distance = 0.0; _landTick = 0; _landGood = false;
         _landCrash = false; _landReady = false; _landReadyTick = 0; _landTapDone = false; _landQuality = 0.0;
@@ -648,14 +655,26 @@ class BitochiJumpView extends WatchUi.View {
     }
 
     hidden function drawHUD(dc) {
-        if (gameState == JS_INRUN || gameState == JS_TAKEOFF) {
+        if (gameState == JS_INRUN) {
             var kmh = (_speed * 35.0).toNumber();
             dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(6, 4, Graphics.FONT_XTINY, kmh + " km/h", Graphics.TEXT_JUSTIFY_LEFT);
             dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(5, 3, Graphics.FONT_XTINY, kmh + " km/h", Graphics.TEXT_JUSTIFY_LEFT);
-        }
-        if (gameState == JS_TAKEOFF) {
-            dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2 + 1, _h - 19, Graphics.FONT_SMALL, "TAP!", Graphics.TEXT_JUSTIFY_CENTER);
-            dc.setColor((_tick % 4 < 2) ? 0xFF4444 : 0xFFAA22, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h - 20, Graphics.FONT_SMALL, "TAP!", Graphics.TEXT_JUSTIFY_CENTER);
+            if (_inTakeoffZone) {
+                var edgeX = _hillX[_tableIdx + 4];
+                var zoneX = _hillX[_tableIdx];
+                var ratio = (edgeX - _posX) / (edgeX - zoneX + 0.01);
+                if (ratio < 0.0) { ratio = 0.0; } if (ratio > 1.0) { ratio = 1.0; }
+                var barW = _w * 30 / 100; var barX = (_w - barW) / 2; var barY = _h - 16;
+                dc.setColor(0x333355, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(barX, barY, barW, 6);
+                var goodZone = barX + barW * 75 / 100;
+                dc.setColor(0x226622, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(goodZone, barY, barX + barW - goodZone, 6);
+                var perfZone = barX + barW * 90 / 100;
+                dc.setColor(0x44AA44, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(perfZone, barY, barX + barW - perfZone, 6);
+                var markerPos = barX + ((1.0 - ratio) * barW.toFloat()).toNumber();
+                dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(markerPos - 1, barY - 2, 3, 10);
+                dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2 + 1, _h - 31, Graphics.FONT_SMALL, "TAP!", Graphics.TEXT_JUSTIFY_CENTER);
+                dc.setColor((_tick % 4 < 2) ? 0xFF4444 : 0xFFAA22, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h - 32, Graphics.FONT_SMALL, "TAP!", Graphics.TEXT_JUSTIFY_CENTER);
+            }
         }
         if (gameState == JS_FLIGHT) {
             dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2 + 1, 4, Graphics.FONT_SMALL, _distance.toNumber() + "m", Graphics.TEXT_JUSTIFY_CENTER);
@@ -675,9 +694,12 @@ class BitochiJumpView extends WatchUi.View {
             }
 
             if (_landReady && !_landTapDone) {
-                dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2 + 1, _h - 25, Graphics.FONT_SMALL, "TAP!", Graphics.TEXT_JUSTIFY_CENTER);
-                dc.setColor((_tick % 4 < 2) ? 0x44FF44 : 0xFFFF44, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(_w / 2, _h - 26, Graphics.FONT_SMALL, "TAP!", Graphics.TEXT_JUSTIFY_CENTER);
+                var urgency = _landReadyTick.toFloat() / 32.0;
+                if (urgency > 1.0) { urgency = 1.0; }
+                var tapCol = (urgency > 0.7) ? 0xFF2222 : ((_tick % 4 < 2) ? 0x44FF44 : 0xFFFF44);
+                dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2 + 1, _h - 25, Graphics.FONT_SMALL, "LAND!", Graphics.TEXT_JUSTIFY_CENTER);
+                dc.setColor(tapCol, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(_w / 2, _h - 26, Graphics.FONT_SMALL, "LAND!", Graphics.TEXT_JUSTIFY_CENTER);
             } else {
                 var bW = _w * 30 / 100; var bX = (_w - bW) / 2; var bY = _h - 12;
                 dc.setColor(0x222244, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX, bY, bW, 4);
@@ -775,7 +797,12 @@ class BitochiJumpView extends WatchUi.View {
         }
 
         dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 54 / 100, Graphics.FONT_SMALL, _lastScore.toNumber() + " pts", Graphics.TEXT_JUSTIFY_CENTER);
-        var tqMsg = ""; if (_takeoffQuality >= 0.95) { tqMsg = "PERFECT!"; } else if (_takeoffQuality >= 0.7) { tqMsg = "Good takeoff"; } else if (_takeoffQuality >= 0.4) { tqMsg = "OK takeoff"; } else { tqMsg = "Late!"; }
+        var tqMsg = "";
+        if (_takeoffQuality >= 0.95) { tqMsg = "PERFECT!"; }
+        else if (_takeoffQuality >= 0.7) { tqMsg = "Great jump!"; }
+        else if (_takeoffQuality >= 0.4) { tqMsg = "Good jump"; }
+        else if (_takeoffQuality >= 0.1) { tqMsg = "Early!"; }
+        else { tqMsg = "No jump!"; }
         dc.setColor(0x88AACC, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 68 / 100, Graphics.FONT_XTINY, tqMsg, Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x556677, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 78 / 100, Graphics.FONT_XTINY, _venueNames[_venue] + " R" + _currentRound + " J" + (_jumpSlot + 1) + "/" + NUM_JUMPERS, Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor((_tick % 10 < 5) ? 0x44CCFF : 0x33AADD, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 88 / 100, Graphics.FONT_XTINY, "Tap", Graphics.TEXT_JUSTIFY_CENTER);
@@ -792,8 +819,7 @@ class BitochiJumpView extends WatchUi.View {
             dc.setColor(_jumperColors[idx], Graphics.COLOR_TRANSPARENT); dc.drawText(25, ry, Graphics.FONT_XTINY, _jumperNames[idx], Graphics.TEXT_JUSTIFY_LEFT);
             dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_w - 8, ry, Graphics.FONT_XTINY, _cumScores[idx].toNumber() + "", Graphics.TEXT_JUSTIFY_RIGHT);
         }
-        var nxtMsg = (_venue < 3) ? "Tap for Round 2" : "Tap for Round 2";
-        dc.setColor((_tick % 10 < 5) ? 0x44CCFF : 0x33AADD, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 88 / 100, Graphics.FONT_XTINY, nxtMsg, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor((_tick % 10 < 5) ? 0x44CCFF : 0x33AADD, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 88 / 100, Graphics.FONT_XTINY, "Tap for Round 2", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawFinal(dc) {
