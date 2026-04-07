@@ -767,7 +767,7 @@ class BitochiCatapultView extends WatchUi.View {
                     _resultTick = 0;
                 } else {
                     gameState = GS_SHOP;
-                    _shopSel = 0;
+                    _shopSel = 5;
                     _resultTick = 0;
                 }
             } else {
@@ -817,6 +817,9 @@ class BitochiCatapultView extends WatchUi.View {
                 _activePow = pow;
             }
             doVibe(40, 80);
+            _shopSel = 5;
+        } else {
+            doVibe(20, 30);
         }
     }
 
@@ -1886,7 +1889,7 @@ class BitochiCatapultView extends WatchUi.View {
         }
 
         dc.setColor(0x556677, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 96 / 100, Graphics.FONT_XTINY, "UP/DN nav  TAP buy", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 96 / 100, Graphics.FONT_XTINY, "Scroll to buy, Tap OK", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawGameOver(dc, w, h) {

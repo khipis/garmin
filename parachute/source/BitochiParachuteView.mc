@@ -421,7 +421,7 @@ class BitochiParachuteView extends WatchUi.View {
 
     hidden function drawSkyGradient(dc) {
         var altPct = 1.0;
-        if (gameState != PS_JUMP && _maxAlt > 0.0) {
+        if (gameState != PS_JUMP && _maxAlt != null && _maxAlt > 0.0 && _altitude != null) {
             altPct = _altitude / _maxAlt;
         }
         if (altPct > 1.0) { altPct = 1.0; }
@@ -522,10 +522,12 @@ class BitochiParachuteView extends WatchUi.View {
     }
 
     hidden function drawClouds(dc) {
+        var maxA = (_maxAlt != null && _maxAlt > 0.0) ? _maxAlt : 1.0;
+        var curA = (_altitude != null) ? _altitude : maxA;
         for (var i = 0; i < 8; i++) {
             if (_cloudY[i] < -25 || _cloudY[i] > _h + 25) { continue; }
             var cw = _cloudW[i];
-            var altPct = _altitude / _maxAlt;
+            var altPct = curA / maxA;
             if (altPct > 1.0) { altPct = 1.0; }
             var shadow = (altPct > 0.5) ? 0xBBCCDD : 0x99AABB;
             dc.setColor(shadow, Graphics.COLOR_TRANSPARENT);
@@ -545,7 +547,8 @@ class BitochiParachuteView extends WatchUi.View {
     }
 
     hidden function drawRings(dc) {
-        var altPct = _altitude / _maxAlt;
+        var maxA = (_maxAlt != null && _maxAlt > 0.0) ? _maxAlt : 1.0;
+        var altPct = ((_altitude != null) ? _altitude : maxA) / maxA;
 
         for (var i = 0; i < _ringCount; i++) {
             var ringAltPct = 1.0 - ((_ringY[i] - _h * 20 / 100).toFloat() / (_h * 60 / 100).toFloat());
