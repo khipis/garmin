@@ -6,12 +6,16 @@ class BitochiRunDelegate extends WatchUi.BehaviorDelegate {
     hidden var _view;
     hidden var _sensorEnabled;
     hidden var _lastMag;
+    hidden var _lastAx;
+    hidden var _lastAy;
+    hidden var _lastAz;
 
     function initialize(view) {
         BehaviorDelegate.initialize();
         _view = view;
         _sensorEnabled = false;
         _lastMag = 0;
+        _lastAx = 0; _lastAy = 0; _lastAz = 0;
         enableAccel();
     }
 
@@ -41,13 +45,15 @@ class BitochiRunDelegate extends WatchUi.BehaviorDelegate {
         _view.accelY = ay;
         _view.accelZ = az;
 
-        var mag = ax * ax + ay * ay + az * az;
-        if (_lastMag > 0) {
-            var diff = mag - _lastMag;
-            if (diff < 0) { diff = -diff; }
-            _view.shakeMag = diff;
-        }
-        _lastMag = mag;
+        var dax = ax - _lastAx;
+        var day = ay - _lastAy;
+        var daz = az - _lastAz;
+        if (dax < 0) { dax = -dax; }
+        if (day < 0) { day = -day; }
+        if (daz < 0) { daz = -daz; }
+        var diff = dax + day + daz;
+        _view.shakeMag = diff;
+        _lastAx = ax; _lastAy = ay; _lastAz = az;
     }
 
     function onSelect() {

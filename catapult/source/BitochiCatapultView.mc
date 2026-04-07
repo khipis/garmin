@@ -132,6 +132,8 @@ class BitochiCatapultView extends WatchUi.View {
     hidden var _gold;
     hidden var _shopSel;
     hidden var _activePow;
+    hidden var _powQueue;
+    hidden var _powQueueLen;
     hidden var _shopNames;
     hidden var _shopCosts;
     hidden var _shopPows;
@@ -193,6 +195,9 @@ class BitochiCatapultView extends WatchUi.View {
         _gold = 0;
         _shopSel = 0;
         _activePow = PW_NONE;
+        _powQueue = new [6];
+        _powQueueLen = 0;
+        for (var qi = 0; qi < 6; qi++) { _powQueue[qi] = PW_NONE; }
         _roundGold = 0;
         _enemyBaseX = 0.0;
         _accBonusShots = 0;
@@ -682,8 +687,13 @@ class BitochiCatapultView extends WatchUi.View {
         _shakeLeft = shk;
         doVibe(_critHit ? 80 : 50, _critHit ? 250 : 150);
 
-        if (_activePow != PW_NONE && _activePow != PW_AMMO) {
-            _activePow = PW_NONE;
+        if (_activePow != PW_NONE) {
+            for (var qi = 0; qi < _powQueueLen - 1; qi++) {
+                _powQueue[qi] = _powQueue[qi + 1];
+            }
+            _powQueueLen--;
+            if (_powQueueLen < 0) { _powQueueLen = 0; }
+            _activePow = (_powQueueLen > 0) ? _powQueue[0] : PW_NONE;
         }
     }
 
@@ -845,18 +855,22 @@ class BitochiCatapultView extends WatchUi.View {
             return;
         }
         var cost = _shopCosts[_shopSel];
-        if (_gold >= cost) {
-            _gold -= cost;
-            var pow = _shopPows[_shopSel];
-            if (pow == PW_AMMO) {
+        var pow = _shopPows[_shopSel];
+        if (pow == PW_AMMO) {
+            if (_gold >= cost && _shots < 17) {
+                _gold -= cost;
                 _shots += 3;
-            } else {
-                _activePow = pow;
-            }
-            doVibe(40, 80);
-            _shopSel = 5;
+                if (_shots > 17) { _shots = 17; }
+                doVibe(40, 80);
+            } else { doVibe(20, 30); }
         } else {
-            doVibe(20, 30);
+            if (_gold >= cost && _powQueueLen < 6) {
+                _gold -= cost;
+                _powQueue[_powQueueLen] = pow;
+                _powQueueLen++;
+                _activePow = _powQueue[0];
+                doVibe(40, 80);
+            } else { doVibe(20, 30); }
         }
     }
 
@@ -875,13 +889,14 @@ class BitochiCatapultView extends WatchUi.View {
         _px = _catWX + 30.0 * Math.cos(rad);
         _py = _groundWY - 25.0 - 30.0 * Math.sin(rad);
 
-        if (_activePow == PW_MEGA) {
+        var curPow = (_powQueueLen > 0) ? _powQueue[0] : PW_NONE;
+        if (curPow == PW_MEGA) {
             _projColor = 0xFF4444;
-        } else if (_activePow == PW_FIRE) {
+        } else if (curPow == PW_FIRE) {
             _projColor = 0xFF8800;
-        } else if (_activePow == PW_PIERCE) {
+        } else if (curPow == PW_PIERCE) {
             _projColor = 0x44DDFF;
-        } else if (_activePow == PW_TRIPLE) {
+        } else if (curPow == PW_TRIPLE) {
             _projColor = 0xFFFF44;
         }
     }
@@ -1725,14 +1740,17 @@ class BitochiCatapultView extends WatchUi.View {
         dc.drawText(w - 4, 3, Graphics.FONT_XTINY, "" + _score, Graphics.TEXT_JUSTIFY_RIGHT);
         dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w - 4, 16, Graphics.FONT_XTINY, _gold + "g", Graphics.TEXT_JUSTIFY_RIGHT);
-        if (_activePow != PW_NONE && _activePow != PW_AMMO) {
+        if (_powQueueLen > 0) {
             var pwC = 0xFF4444;
             var pwN = "M";
-            if (_activePow == PW_FIRE) { pwC = 0xFF8800; pwN = "F"; }
-            else if (_activePow == PW_PIERCE) { pwC = 0x44DDFF; pwN = "P"; }
-            else if (_activePow == PW_TRIPLE) { pwC = 0xFFFF44; pwN = "T"; }
+            var fp = _powQueue[0];
+            if (fp == PW_FIRE) { pwC = 0xFF8800; pwN = "F"; }
+            else if (fp == PW_PIERCE) { pwC = 0x44DDFF; pwN = "P"; }
+            else if (fp == PW_TRIPLE) { pwC = 0xFFFF44; pwN = "T"; }
             dc.setColor(pwC, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w / 2, 14, Graphics.FONT_XTINY, "[" + pwN + "]", Graphics.TEXT_JUSTIFY_CENTER);
+            var qlbl = "[" + pwN + "]";
+            if (_powQueueLen > 1) { qlbl = "[" + pwN + "x" + _powQueueLen + "]"; }
+            dc.drawText(w / 2, 14, Graphics.FONT_XTINY, qlbl, Graphics.TEXT_JUSTIFY_CENTER);
         }
         if (_combo > 1) {
             dc.setColor(0xFF66FF, Graphics.COLOR_TRANSPARENT);
@@ -1915,18 +1933,22 @@ class BitochiCatapultView extends WatchUi.View {
         dc.setColor(exitSel ? 0x44FF88 : 0x88AACC, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w / 2, exitY + 1, Graphics.FONT_XTINY, "NEXT ROUND >>", Graphics.TEXT_JUSTIFY_CENTER);
 
-        if (_activePow != PW_NONE && _activePow != PW_AMMO) {
+        if (_powQueueLen > 0) {
             dc.setColor(0x88FF88, Graphics.COLOR_TRANSPARENT);
-            var pn = "?";
-            if (_activePow == PW_MEGA) { pn = "MEGA"; }
-            else if (_activePow == PW_FIRE) { pn = "FIRE"; }
-            else if (_activePow == PW_PIERCE) { pn = "PIERCER"; }
-            else if (_activePow == PW_TRIPLE) { pn = "TRIPLE"; }
-            dc.drawText(w / 2, h * 90 / 100, Graphics.FONT_XTINY, "Loaded: " + pn, Graphics.TEXT_JUSTIFY_CENTER);
+            var qstr = "Queue:";
+            for (var qi = 0; qi < _powQueueLen; qi++) {
+                var pn = "?";
+                if (_powQueue[qi] == PW_MEGA) { pn = "M"; }
+                else if (_powQueue[qi] == PW_FIRE) { pn = "F"; }
+                else if (_powQueue[qi] == PW_PIERCE) { pn = "P"; }
+                else if (_powQueue[qi] == PW_TRIPLE) { pn = "T"; }
+                qstr += pn;
+            }
+            dc.drawText(w / 2, h * 90 / 100, Graphics.FONT_XTINY, qstr, Graphics.TEXT_JUSTIFY_CENTER);
         }
 
         dc.setColor(0x556677, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 96 / 100, Graphics.FONT_XTINY, "Scroll to buy, Tap OK", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 96 / 100, Graphics.FONT_XTINY, "Tap to buy, scroll to next", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawGameOver(dc, w, h) {

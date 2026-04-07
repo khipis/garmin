@@ -61,6 +61,7 @@ class BitochiBoxingView extends WatchUi.View {
     hidden var _wins;
     hidden var _bestRound;
     hidden var _introTick;
+    hidden var _rematchUsed;
     hidden var _koTick;
 
     hidden var _shakeX;
@@ -120,7 +121,7 @@ class BitochiBoxingView extends WatchUi.View {
         _h = ds.screenHeight;
 
         accelX = 0; accelY = 0; accelZ = 0;
-        _tick = 0; _round = 1; _wins = 0; _bestRound = 0;
+        _tick = 0; _round = 1; _wins = 0; _bestRound = 0; _rematchUsed = false;
         _prevAccelMag = 0; _accelSmooth = 0; _crowdPhase = 0; _crowdHype = 0;
         _score = 0;
         var bs = Application.Storage.getValue("boxBest");
@@ -226,8 +227,15 @@ class BitochiBoxingView extends WatchUi.View {
             _round++; initFight();
             gameState = GS_INTRO; _introTick = 0;
         } else if (gameState == GS_LOSE) {
-            _round = 1; _wins = 0; _score = 0; _playerMaxHp = 100; initFight();
-            gameState = GS_INTRO; _introTick = 0;
+            if (!_rematchUsed) {
+                _rematchUsed = true;
+                _playerHp = _playerMaxHp;
+                initFight();
+                gameState = GS_INTRO; _introTick = 0;
+            } else {
+                _round = 1; _wins = 0; _score = 0; _playerMaxHp = 100; _rematchUsed = false; initFight();
+                gameState = GS_INTRO; _introTick = 0;
+            }
         }
     }
 
@@ -236,7 +244,7 @@ class BitochiBoxingView extends WatchUi.View {
         _punchCooldown = 14;
         _comboMeter = 0;
         _superFlash = 8;
-        _staminaRegenDelay = 12;
+            _staminaRegenDelay = 6;
         doVibe(100, 300);
 
         if (_enemyState == ES_DODGE) { spawnSweat(_w / 2, eBaseY(), 3); return; }
@@ -291,7 +299,7 @@ class BitochiBoxingView extends WatchUi.View {
             if (_comboMeter > 0 && _tick % 5 == 0) { _comboMeter--; }
 
             if (_staminaRegenDelay > 0) { _staminaRegenDelay--; }
-            else if (_stamina < _staminaMax && _tick % 3 == 0) { _stamina++; }
+            else if (_stamina < _staminaMax && _tick % 2 == 0) { _stamina += 2; if (_stamina > _staminaMax) { _stamina = _staminaMax; } }
 
             if (_enemyStamina < _enemyStaminaMax && _tick % 6 == 0) { _enemyStamina++; }
 
@@ -334,8 +342,8 @@ class BitochiBoxingView extends WatchUi.View {
         if (_punchCooldown > 0) { _punchCooldown--; }
 
         if ((_playerState == PS_IDLE || _playerState == PS_BLOCK) && _playerState != PS_EXHAUSTED) {
-            if (ax > 350) { _playerState = PS_DODGE_L; _playerStateTick = 0; _stamina -= 10; if (_stamina < 0) { _stamina = 0; } _staminaRegenDelay = 8; }
-            else if (ax < -350) { _playerState = PS_DODGE_R; _playerStateTick = 0; _stamina -= 10; if (_stamina < 0) { _stamina = 0; } _staminaRegenDelay = 8; }
+            if (ax > 220) { _playerState = PS_DODGE_L; _playerStateTick = 0; _stamina -= 7; if (_stamina < 0) { _stamina = 0; } _staminaRegenDelay = 4; }
+            else if (ax < -220) { _playerState = PS_DODGE_R; _playerStateTick = 0; _stamina -= 7; if (_stamina < 0) { _stamina = 0; } _staminaRegenDelay = 4; }
             else if (delta > 500 && _punchCooldown <= 0) {
                 var pType = PS_JAB;
                 if (delta > 1400) { pType = PS_UPPER; }
@@ -368,7 +376,7 @@ class BitochiBoxingView extends WatchUi.View {
         _playerState = pType; _playerStateTick = 0;
         _punchCooldown = 10;
         _stamina -= cost;
-        _staminaRegenDelay = 8;
+        _staminaRegenDelay = 4;
         if (_stamina <= 0) { _stamina = 0; _playerState = PS_EXHAUSTED; _playerStateTick = 0; _punchLabel = "TIRED!"; _punchLabelTick = 18; return; }
         doVibe(25, 40);
 
@@ -1197,6 +1205,10 @@ class BitochiBoxingView extends WatchUi.View {
         if (_bestScore > 0) { dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 56 / 100, Graphics.FONT_XTINY, "Best " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER); }
         if (_bestRound > 0) { dc.setColor(0x8899AA, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 63 / 100, Graphics.FONT_XTINY, "Best Round " + _bestRound, Graphics.TEXT_JUSTIFY_CENTER); }
         dc.setColor((_tick % 20 < 10) ? 0xFF8844 : 0xBB6622, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 72 / 100, Graphics.FONT_XTINY, "Tap to play again", Graphics.TEXT_JUSTIFY_CENTER);
+        if (!_rematchUsed) {
+            dc.drawText(_w / 2, _h * 72 / 100, Graphics.FONT_XTINY, "Tap: REMATCH!", Graphics.TEXT_JUSTIFY_CENTER);
+        } else {
+            dc.drawText(_w / 2, _h * 72 / 100, Graphics.FONT_XTINY, "Tap to play again", Graphics.TEXT_JUSTIFY_CENTER);
+        }
     }
 }

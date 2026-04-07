@@ -182,7 +182,7 @@ class BitochiSkywalkerView extends WatchUi.View {
 
     function onShow() {
         _timer = new Timer.Timer();
-        _timer.start(method(:onTick), 50, true);
+        _timer.start(method(:onTick), 40, true);
     }
 
     function onHide() {
@@ -243,8 +243,8 @@ class BitochiSkywalkerView extends WatchUi.View {
     }
 
     hidden function updateAim() {
-        var steerX = accelX.toFloat() / 200.0;
-        var steerY = accelY.toFloat() / 280.0;
+        var steerX = accelX.toFloat() / 140.0;
+        var steerY = accelY.toFloat() / 190.0;
         if (steerX > 4.5) { steerX = 4.5; }
         if (steerX < -4.5) { steerX = -4.5; }
         if (steerY > 3.5) { steerY = 3.5; }
@@ -317,9 +317,9 @@ class BitochiSkywalkerView extends WatchUi.View {
             _shipType[idx] = Math.rand().abs() % maxType;
         }
         _shipAlive[idx] = true;
-        _shipSize[idx] = 7 + Math.rand().abs() % 5;
-        if (_level >= 10 && Math.rand().abs() % 5 == 0) { _shipSize[idx] += 1; }
-        if (_shipSize[idx] > 12) { _shipSize[idx] = 12; }
+        _shipSize[idx] = 13 + Math.rand().abs() % 6;
+        if (_level >= 10 && Math.rand().abs() % 5 == 0) { _shipSize[idx] += 2; }
+        if (_shipSize[idx] > 20) { _shipSize[idx] = 20; }
         _shipFlee[idx] = 0;
     }
 

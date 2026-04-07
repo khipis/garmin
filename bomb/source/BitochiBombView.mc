@@ -30,7 +30,7 @@ class BitochiBombView extends WatchUi.View {
     hidden var _planeDir;
     hidden var _planeSpeed;
 
-    hidden const MAX_BOMBS = 8;
+    hidden const MAX_BOMBS = 5;
     hidden var _bombX;
     hidden var _bombY;
     hidden var _bombVx;
@@ -39,7 +39,7 @@ class BitochiBombView extends WatchUi.View {
     hidden var _bombTrailX;
     hidden var _bombTrailY;
 
-    hidden const MAX_ENEMIES = 16;
+    hidden const MAX_ENEMIES = 10;
     hidden var _enemX;
     hidden var _enemY;
     hidden var _enemVx;
@@ -47,7 +47,7 @@ class BitochiBombView extends WatchUi.View {
     hidden var _enemAlive;
     hidden var _enemSize;
 
-    hidden const MAX_BLDG = 22;
+    hidden const MAX_BLDG = 14;
     hidden var _bldgX;
     hidden var _bldgW;
     hidden var _bldgH;
@@ -55,7 +55,7 @@ class BitochiBombView extends WatchUi.View {
     hidden var _bldgMaxHp;
     hidden var _bldgColor;
 
-    hidden const MAX_PARTS = 180;
+    hidden const MAX_PARTS = 80;
     hidden var _partX;
     hidden var _partY;
     hidden var _partVx;
@@ -64,19 +64,19 @@ class BitochiBombView extends WatchUi.View {
     hidden var _partColor;
     hidden var _partSize;
 
-    hidden const MAX_EXPL = 30;
+    hidden const MAX_EXPL = 12;
     hidden var _explX;
     hidden var _explY;
     hidden var _explR;
     hidden var _explLife;
     hidden var _explMax;
 
-    hidden const MAX_CRATERS = 28;
+    hidden const MAX_CRATERS = 14;
     hidden var _craterX;
     hidden var _craterR;
     hidden var _craterLife;
 
-    hidden const MAX_DEBRIS = 55;
+    hidden const MAX_DEBRIS = 25;
     hidden var _debX;
     hidden var _debY;
     hidden var _debVx;

@@ -161,7 +161,7 @@ class BitochiSniperView extends WatchUi.View {
 
     function onShow() {
         _timer = new Timer.Timer();
-        _timer.start(method(:onTick), 50, true);
+        _timer.start(method(:onTick), 40, true);
     }
 
     function onHide() {
@@ -213,8 +213,8 @@ class BitochiSniperView extends WatchUi.View {
     }
 
     hidden function updateAim() {
-        var steerX = accelX.toFloat() / 220.0;
-        var steerY = accelY.toFloat() / 300.0;
+        var steerX = accelX.toFloat() / 150.0;
+        var steerY = accelY.toFloat() / 200.0;
         if (steerX > 4.0) { steerX = 4.0; }
         if (steerX < -4.0) { steerX = -4.0; }
         if (steerY > 3.0) { steerY = 3.0; }
@@ -269,7 +269,7 @@ class BitochiSniperView extends WatchUi.View {
         _creatVy[idx] = ((Math.rand().abs() % 30) - 15).toFloat() / 10.0;
         _creatType[idx] = Math.rand().abs() % 8;
         _creatAlive[idx] = true;
-        _creatSize[idx] = 7 + Math.rand().abs() % 5;
+        _creatSize[idx] = 12 + Math.rand().abs() % 6;
         _creatFlee[idx] = 0;
     }
 

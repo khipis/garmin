@@ -86,11 +86,11 @@ class BitochiJumpView extends WatchUi.View {
     hidden var _showStandings;
     hidden var _judgeScores;
 
-    hidden const SNOW_N = 30;
+    hidden const SNOW_N = 15;
     hidden var _snowX;
     hidden var _snowY;
 
-    hidden const TRAIL_N = 20;
+    hidden const TRAIL_N = 10;
     hidden var _trailX;
     hidden var _trailY;
     hidden var _trailLife;
@@ -99,7 +99,7 @@ class BitochiJumpView extends WatchUi.View {
     hidden var _shakeY;
     hidden var _shakeTick;
 
-    hidden const CROWD_N = 16;
+    hidden const CROWD_N = 8;
     hidden var _crowdX;
     hidden var _crowdC;
     hidden var _crowdJump;

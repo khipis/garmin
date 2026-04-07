@@ -70,7 +70,7 @@ class BitochiBlobsView extends WatchUi.View {
     hidden var _hitMsg;
     hidden var _hitMsgTick;
 
-    const MAX_PARTS = 60;
+    const MAX_PARTS = 35;
     hidden var _partX;
     hidden var _partY;
     hidden var _partVx;
@@ -1194,8 +1194,10 @@ class BitochiBlobsView extends WatchUi.View {
             dc.drawText(_w / 2, _h - 30, Graphics.FONT_XTINY, _aimAngle.toNumber() + "\u00B0", Graphics.TEXT_JUSTIFY_CENTER);
         }
 
-        dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h - 6, Graphics.FONT_XTINY, "R" + _round, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(_w / 2 - 18, _h - 16, 36, 14);
+        dc.setColor(0xAADDFF, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h - 16, Graphics.FONT_XTINY, "Round " + _round, Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawOffscreenArrows(dc) {

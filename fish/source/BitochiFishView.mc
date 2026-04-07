@@ -155,7 +155,7 @@ class BitochiFishView extends WatchUi.View {
         for (var i = 0; i < RIPPLE_N; i++) { if (_ripLife[i] <= 0) { continue; } _ripR[i] += 0.45; _ripLife[i]--; }
 
         if (gameState == GS_POWER) {
-            _power += _powerDir.toFloat() * 2.2;
+            _power += _powerDir.toFloat() * 3.8;
             if (_power >= 100.0) { _power = 100.0; _powerDir = -1; }
             if (_power <= 0.0) { _power = 0.0; _powerDir = 1; }
         } else if (gameState == GS_CAST) {
@@ -188,7 +188,7 @@ class BitochiFishView extends WatchUi.View {
             _biteTick++;
             _bobY = _waterY.toFloat() + Math.sin(_tick.toFloat() * 0.6) * 4.0;
             if (_biteTick % 8 == 0) { addRipple(_bobX.toNumber()); }
-            if (_biteTick > 60) {
+            if (_biteTick > 80) {
                 gameState = GS_LOST; _resultMsg = "TOO SLOW!"; _resultTick = 0; _combo = 0; _emotion = 3;
             }
         } else if (gameState == GS_FIGHT) {
@@ -243,7 +243,8 @@ class BitochiFishView extends WatchUi.View {
         if (_fishStr > 2.42) { _fishStr = 2.42; }
         _fishHP = 44.0 + _fishType.toFloat() * 13.0 + lvlF * 3.5;
         _fishMaxHP = _fishHP;
-        _fishX = _bobX; _fishY = _bobY + 15.0 + (Math.rand().abs() % 15).toFloat();
+        _fishX = _bobX + ((Math.rand().abs() % 2 == 0) ? -35.0 : 35.0);
+        _fishY = _bobY + 55.0 + (Math.rand().abs() % 30).toFloat();
         _fishVx = 0.0; _fishVy = 0.0;
         _fishPullDir = (Math.rand().abs() % 360).toFloat();
         _fishPullTimer = 20 + Math.rand().abs() % 20;
@@ -276,15 +277,15 @@ class BitochiFishView extends WatchUi.View {
         if (_fishY < (_waterY + 8).toFloat()) { _fishY = (_waterY + 8).toFloat(); }
         if (_fishY > (_h - 12).toFloat()) { _fishY = (_h - 12).toFloat(); }
 
-        var pFx = accelX.toFloat() / 300.0;
-        var pFy = accelY.toFloat() / 350.0;
-        if (pFx > 2.5) { pFx = 2.5; } if (pFx < -2.5) { pFx = -2.5; }
-        if (pFy > 2.0) { pFy = 2.0; } if (pFy < -2.0) { pFy = -2.0; }
+        var pFx = accelX.toFloat() / 160.0;
+        var pFy = accelY.toFloat() / 180.0;
+        if (pFx > 3.5) { pFx = 3.5; } if (pFx < -3.5) { pFx = -3.5; }
+        if (pFy > 3.0) { pFy = 3.0; } if (pFy < -3.0) { pFy = -3.0; }
 
         var fishPullMag = Math.sqrt(_fishVx * _fishVx + _fishVy * _fishVy);
         var counterDot = -(pFx * _fishVx + pFy * _fishVy);
         var counterEff = counterDot / (fishPullMag + 0.01);
-        if (counterEff > 1.0) { counterEff = 1.0; }
+        if (counterEff > 1.5) { counterEff = 1.5; }
         if (counterEff < -0.5) { counterEff = -0.5; }
 
         var pullScale = 1.12 - _lineTensionBonus * 0.004;
@@ -673,7 +674,7 @@ class BitochiFishView extends WatchUi.View {
     }
 
     hidden function drawPowerBar(dc) {
-        var bW = _w * 50 / 100; var bH = 10; var bX = (_w - bW) / 2; var bY = _h * 76 / 100;
+        var bW = _w * 35 / 100; var bH = 10; var bX = (_w - bW) / 2; var bY = _h * 76 / 100;
         dc.setColor(0x333333, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX - 1, bY - 1, bW + 2, bH + 2);
         dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX, bY, bW, bH);
         var fill = (_power / 100.0 * bW.toFloat()).toNumber();
@@ -695,10 +696,10 @@ class BitochiFishView extends WatchUi.View {
         dc.setColor(fc, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, 5, Graphics.FONT_SMALL, "BITE!", Graphics.TEXT_JUSTIFY_CENTER);
         var tlY = _h * 80 / 100;
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, tlY - 14, Graphics.FONT_XTINY, "TAP NOW!", Graphics.TEXT_JUSTIFY_CENTER);
-        var timeLeft = 60 - _biteTick;
+        var timeLeft = 80 - _biteTick;
         var tlW = _w * 40 / 100; var tlX = (_w - tlW) / 2;
         dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(tlX, tlY, tlW, 5);
-        dc.setColor(0xFF4444, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(tlX, tlY, timeLeft * tlW / 60, 5);
+        dc.setColor(0xFF4444, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(tlX, tlY, timeLeft * tlW / 80, 5);
     }
 
     hidden function drawFightHUD(dc) {
@@ -787,13 +788,13 @@ class BitochiFishView extends WatchUi.View {
 
     hidden function drawHUD(dc) {
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w - 5, _waterY - 14, Graphics.FONT_XTINY, "" + _score, Graphics.TEXT_JUSTIFY_RIGHT);
+        dc.drawText(_w - 5, 2, Graphics.FONT_XTINY, "" + _score, Graphics.TEXT_JUSTIFY_RIGHT);
         if (_fishCaught > 0) {
             dc.setColor(0x88CCFF, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(5, _waterY - 14, Graphics.FONT_XTINY, "" + _fishCaught + " fish", Graphics.TEXT_JUSTIFY_LEFT);
+            dc.drawText(5, 2, Graphics.FONT_XTINY, "" + _fishCaught + " fish", Graphics.TEXT_JUSTIFY_LEFT);
         }
         dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _waterY - 14, Graphics.FONT_XTINY, "Lv" + _level, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(5, _waterY - 16, Graphics.FONT_XTINY, "Lv" + _level, Graphics.TEXT_JUSTIFY_LEFT);
     }
 
     hidden function drawMenu(dc) {

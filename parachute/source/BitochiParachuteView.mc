@@ -71,6 +71,7 @@ class BitochiParachuteView extends WatchUi.View {
 
     hidden var _jumpTick;
     hidden var _resultTick;
+    hidden var _landAnimY;
     hidden var _shakeT;
     hidden var _flashT;
 
@@ -101,7 +102,7 @@ class BitochiParachuteView extends WatchUi.View {
         _cloudX = new [6]; _cloudY = new [6]; _cloudW = new [6];
         for (var i = 0; i < 6; i++) { _cloudX[i] = Math.rand().abs() % _w; _cloudY[i] = Math.rand().abs() % _h; _cloudW[i] = 14 + Math.rand().abs() % 18; }
 
-        _playerX = 0.0; _playerVx = 0.0;
+        _playerX = 0.0; _playerVx = 0.0; _landAnimY = 0.0;
         _altitude = 3000.0; _maxAlt = 3000.0; _fallSpeed = 0.0; _chuteOpen = false;
         _windX = 0.0; _windPhase = 0.0;
         _score = 0; _ringsHit = 0; _ringStreak = 0; _ringTotal = 0; _ringSpawnAcc = 0.0;
@@ -216,6 +217,7 @@ class BitochiParachuteView extends WatchUi.View {
             else if (_landDist < _landR.toFloat() * 3.5) { _landGrade = "GOOD"; }
             else { _landGrade = "OFF TARGET"; }
             gameState = PS_LAND; _resultTick = 0;
+            _landAnimY = (_h * 10 / 100).toFloat();
             doVibe(50, 200); _shakeT = 4;
             finalScore(true);
         }
@@ -494,19 +496,41 @@ class BitochiParachuteView extends WatchUi.View {
     hidden function drawPlayer(dc, px, py, chuteOpen, ox, oy) {
         px += ox; py += oy;
         if (chuteOpen) {
-            var cw = (_tick % 8 < 4) ? 1 : -1;
-            dc.setColor(0xAA1818, Graphics.COLOR_TRANSPARENT); dc.fillCircle(px + cw, py - 36, 26);
-            dc.setColor(0xDD3333, Graphics.COLOR_TRANSPARENT); dc.fillCircle(px + cw, py - 36, 23);
-            dc.setColor(0xFF5544, Graphics.COLOR_TRANSPARENT); dc.fillCircle(px + cw, py - 36, 17);
-            dc.setColor(0xFFAA44, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(px - 2 + cw, py - 54, 4, 22);
-            dc.setColor(0xFFDD88, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(px - 13 + cw, py - 48, 4, 14); dc.fillRectangle(px + 9 + cw, py - 48, 4, 14);
-            dc.setColor(0x991515, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(px - 24 + cw, py - 14, 48, 3);
-            dc.setColor(0x555555, Graphics.COLOR_TRANSPARENT);
-            dc.drawLine(px - 23 + cw, py - 14, px - 6, py - 2); dc.drawLine(px + 23 + cw, py - 14, px + 6, py - 2);
-            dc.drawLine(px - 15 + cw, py - 16, px - 3, py - 1); dc.drawLine(px + 15 + cw, py - 16, px + 3, py - 1);
-            dc.drawLine(px + cw, py - 19, px, py - 4);
+            var cw = (_tick % 10 < 5) ? 2 : -2;
+            var cy2 = py - 50;
+            dc.setColor(0x880022, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(px + cw, cy2, 32);
+            dc.setColor(0x0A1530, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(px + cw - 33, cy2, 66, 34);
+            dc.setColor(0xCC1133, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(px + cw, cy2, 29);
+            dc.setColor(0x0A1530, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(px + cw - 30, cy2, 60, 32);
+            dc.setColor(0xFF3355, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(px + cw, cy2, 22);
+            dc.setColor(0x0A1530, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(px + cw - 23, cy2, 46, 25);
+            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+            for (var seg = 0; seg < 5; seg++) {
+                var ang = (200 + seg * 28) * 3.14159 / 180.0;
+                var sx2 = px + cw + (28.0 * Math.cos(ang)).toNumber();
+                var sy2 = cy2 + (28.0 * Math.sin(ang)).toNumber();
+                if (sy2 < cy2) { dc.fillCircle(sx2, sy2, 3); }
+            }
+            dc.setColor(0xFFDD00, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(px + cw, cy2, 10);
+            dc.setColor(0x0A1530, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(px + cw - 11, cy2, 22, 12);
+            dc.setColor(0xFFFF88, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(px + cw, cy2, 6);
+            dc.setColor(0x0A1530, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(px + cw - 7, cy2, 14, 8);
+            dc.setColor(0x553333, Graphics.COLOR_TRANSPARENT);
+            dc.drawLine(px - 28 + cw, cy2 + 14, px - 6, py - 2);
+            dc.drawLine(px - 16 + cw, cy2 + 20, px - 3, py - 1);
+            dc.drawLine(px + cw, cy2 + 22, px, py - 4);
+            dc.drawLine(px + 16 + cw, cy2 + 20, px + 3, py - 1);
+            dc.drawLine(px + 28 + cw, cy2 + 14, px + 6, py - 2);
         }
 
         dc.setColor(0xFFCC88, Graphics.COLOR_TRANSPARENT); dc.fillCircle(px, py - 5, 5);
@@ -654,7 +678,12 @@ class BitochiParachuteView extends WatchUi.View {
     }
 
     hidden function drawLanded(dc, ox, oy) {
-        drawPlayer(dc, _playerX.toNumber(), _h * 60 / 100, true, ox, oy);
+        var targetY = _h * 60 / 100;
+        if (_landAnimY < targetY.toFloat()) {
+            _landAnimY += 6.0;
+            if (_landAnimY > targetY.toFloat()) { _landAnimY = targetY.toFloat(); }
+        }
+        drawPlayer(dc, _playerX.toNumber(), _landAnimY.toNumber(), _resultTick < 40, ox, oy);
 
         var gc = 0x44FF44;
         if (_landDist > _landR.toFloat() * 2.0) { gc = 0xFFCC22; }

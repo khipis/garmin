@@ -82,6 +82,9 @@ class BitochiSwingView extends WatchUi.View {
     hidden var _shakeOx;
     hidden var _shakeOy;
 
+    var accelX;
+    var accelY;
+
     function initialize() {
         View.initialize();
         Math.srand(Time.now().value());
@@ -132,6 +135,8 @@ class BitochiSwingView extends WatchUi.View {
         }
 
         _shakeTimer = 0; _shakeOx = 0; _shakeOy = 0;
+        accelX = 0;
+        accelY = 0;
         gameState = GS_MENU;
     }
 
@@ -192,7 +197,13 @@ class BitochiSwingView extends WatchUi.View {
     }
 
     hidden function updateSwing() {
-        _swingPhase += _swingSpeed;
+        var tiltFactor = accelX.toFloat() / 500.0;
+        if (tiltFactor > 2.5) { tiltFactor = 2.5; }
+        if (tiltFactor < -2.5) { tiltFactor = -2.5; }
+        var effectiveSpeed = _swingSpeed + tiltFactor;
+        if (effectiveSpeed < 0.5) { effectiveSpeed = 0.5; }
+        if (effectiveSpeed > 7.5) { effectiveSpeed = 7.5; }
+        _swingPhase += effectiveSpeed;
         var phRad = _swingPhase * 3.14159 / 180.0;
         var angDeg = _maxAngle * Math.sin(phRad);
         var angRad = angDeg * 3.14159 / 180.0;

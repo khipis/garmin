@@ -75,7 +75,7 @@ class BitochiAxeArcadeView extends WatchUi.View {
     hidden var _dirChangeTimer;
     hidden var _dirWarnTimer;
 
-    hidden const MAX_SPARKS = 24;
+    hidden const MAX_SPARKS = 14;
     hidden var _spkX;
     hidden var _spkY;
     hidden var _spkVx;
@@ -95,7 +95,7 @@ class BitochiAxeArcadeView extends WatchUi.View {
 
     hidden var _bgStars;
 
-    hidden const CROWD_N = 14;
+    hidden const CROWD_N = 8;
     hidden var _crowdX;
     hidden var _crowdJump;
     hidden var _crowdCol;

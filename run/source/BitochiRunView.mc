@@ -633,20 +633,20 @@ class BitochiRunView extends WatchUi.View {
             _boostTicks--;
         }
 
-        var shakeBoost = shakeMag.toFloat() / 3000.0;
-        if (shakeBoost > 2.8) { shakeBoost = 2.8; }
+        var shakeBoost = shakeMag.toFloat() / 900.0;
+        if (shakeBoost > 3.5) { shakeBoost = 3.5; }
 
-        var canSprint = _stamina > 4.0;
+        var canSprint = _stamina > 2.0;
         if (!canSprint) {
             shakeBoost = 0.0;
         }
 
         _playerSpeed = _playerSpeed * 0.86;
-        if (canSprint) {
+        if (canSprint && shakeBoost > 0.1) {
             _playerSpeed += shakeBoost;
-            _stamina = _stamina - (shakeBoost * 4.5 + 0.35);
+            _stamina = _stamina - (shakeBoost * 1.5 + 0.1);
         } else {
-            _stamina = _stamina + 1.8;
+            _stamina = _stamina + 3.5;
         }
 
         if (_stamina < 0.0) { _stamina = 0.0; }
