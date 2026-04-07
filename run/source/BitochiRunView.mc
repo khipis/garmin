@@ -85,6 +85,7 @@ class BitochiRunView extends WatchUi.View {
     hidden var _emilkaSpike;
 
     hidden var _dodgeLane;
+    hidden var _dodgeCooldown;
     hidden var _nextObstacleDist;
     hidden var _obstacleOpenLane;
     hidden var _obstacleWidth;
@@ -469,8 +470,9 @@ class BitochiRunView extends WatchUi.View {
         _playerDist = 0.0;
         _exitDist = 62.0 + (_level * 10).toFloat() + (_level / 3 * 6).toFloat();
         _monsterDist = -24.0 - (_level * 4).toFloat();
-        _monsterBaseSpeed = 0.48 + _level.toFloat() * 0.075 + (_level / 5).toFloat() * 0.04;
-        if (_monsterBaseSpeed > 1.8) { _monsterBaseSpeed = 1.8; }
+        // Reduced starting speed and level scaling so early levels are winnable
+        _monsterBaseSpeed = 0.36 + _level.toFloat() * 0.055 + (_level / 5).toFloat() * 0.025;
+        if (_monsterBaseSpeed > 1.55) { _monsterBaseSpeed = 1.55; }
         _monsterSpeed = _monsterBaseSpeed;
         _playerSpeed = 0.0;
         _runShake = 0;
@@ -489,7 +491,8 @@ class BitochiRunView extends WatchUi.View {
         _dzikkoBurst = 0;
         _emilkaSpike = 0;
         _dodgeLane = 1;
-        _nextObstacleDist = 12.0 + (Math.rand().abs() % 8).toFloat();
+        _dodgeCooldown = 0;
+        _nextObstacleDist = 24.0 + (Math.rand().abs() % 12).toFloat();
         _obstacleOpenLane = Math.rand().abs() % 3;
         _obstacleWidth = 10.0;
         _levelRunScore = 0;
@@ -578,15 +581,15 @@ class BitochiRunView extends WatchUi.View {
                 _emilkaSpike = 14;
             }
         } else if (mi == 6) {
-            _monsterBaseSpeed = _monsterBaseSpeed + 0.0035;
+            _monsterBaseSpeed = _monsterBaseSpeed + 0.0015;
         }
 
         if (mi == 3) {
-            _monsterBaseSpeed = _monsterBaseSpeed + 0.002;
+            _monsterBaseSpeed = _monsterBaseSpeed + 0.001;
         }
 
-        if (_monsterBaseSpeed > 2.0) {
-            _monsterBaseSpeed = 2.0;
+        if (_monsterBaseSpeed > 1.8) {
+            _monsterBaseSpeed = 1.8;
         }
     }
 
@@ -619,7 +622,7 @@ class BitochiRunView extends WatchUi.View {
         }
 
         if (_lungeBurst > 0) {
-            m = m * 2.1;
+            m = m * 1.60;
         }
 
         return m;
@@ -633,20 +636,23 @@ class BitochiRunView extends WatchUi.View {
             _boostTicks--;
         }
 
-        var shakeBoost = shakeMag.toFloat() / 900.0;
-        if (shakeBoost > 3.5) { shakeBoost = 3.5; }
+        // More sensitive: divisor 900→380 so moderate arm movement registers clearly
+        var shakeBoost = shakeMag.toFloat() / 380.0;
+        if (shakeBoost > 4.5) { shakeBoost = 4.5; }
 
         var canSprint = _stamina > 2.0;
         if (!canSprint) {
             shakeBoost = 0.0;
         }
 
-        _playerSpeed = _playerSpeed * 0.86;
+        // Slower decay (0.86→0.90) so speed persists longer between arm swings
+        _playerSpeed = _playerSpeed * 0.90;
         if (canSprint && shakeBoost > 0.1) {
             _playerSpeed += shakeBoost;
-            _stamina = _stamina - (shakeBoost * 1.5 + 0.1);
+            // Reduced stamina drain so moderate running is sustainable
+            _stamina = _stamina - (shakeBoost * 1.1 + 0.06);
         } else {
-            _stamina = _stamina + 3.5;
+            _stamina = _stamina + 4.2;
         }
 
         if (_stamina < 0.0) { _stamina = 0.0; }
@@ -658,7 +664,8 @@ class BitochiRunView extends WatchUi.View {
         }
         _playerSpeed = _playerSpeed * spdMult;
 
-        if (_playerSpeed < 0.08) { _playerSpeed = 0.08; }
+        // Higher min speed so player always moves forward at a useful pace
+        if (_playerSpeed < 0.22) { _playerSpeed = 0.22; }
 
         _playerDist += _playerSpeed;
 
@@ -667,21 +674,35 @@ class BitochiRunView extends WatchUi.View {
         _monsterDist = _monsterDist + monStep + _monsterWobble;
 
         if (_monsterIdx != 6 && _monsterIdx != 3) {
-            if (_monsterBaseSpeed < 1.65 + _level.toFloat() * 0.09) {
-                _monsterBaseSpeed += 0.0045;
+            // Halved acceleration rate; also lower the cap so monster stays beatable
+            if (_monsterBaseSpeed < 1.30 + _level.toFloat() * 0.06) {
+                _monsterBaseSpeed += 0.0020;
             }
         }
 
         if (_lungeWarn > 0) {
             _lungeWarn--;
             if (_lungeWarn == 0) {
-                _lungeBurst = 14;
+                _lungeBurst = 9;
             }
         } else if (_lungeBurst > 0) {
             _lungeBurst--;
         } else if (Math.rand().abs() % 130 == 0 && _playerDist > 8.0) {
             _lungeWarn = 8;
             doVibeDouble();
+        }
+
+        // Accelerometer lane-dodge: tilt wrist left/right to change lane
+        if (_dodgeCooldown > 0) {
+            _dodgeCooldown--;
+        } else {
+            if (accelX > 420 && _dodgeLane < 2) {
+                _dodgeLane++;
+                _dodgeCooldown = 15;
+            } else if (accelX < -420 && _dodgeLane > 0) {
+                _dodgeLane--;
+                _dodgeCooldown = 15;
+            }
         }
 
         if (_playerDist >= _nextObstacleDist) {
@@ -697,7 +718,7 @@ class BitochiRunView extends WatchUi.View {
                     return;
                 }
             }
-            _nextObstacleDist = _playerDist + 14.0 + (Math.rand().abs() % 10).toFloat();
+            _nextObstacleDist = _playerDist + 22.0 + (Math.rand().abs() % 14).toFloat();
             _obstacleOpenLane = Math.rand().abs() % 3;
             spawnPowerupNearObstacle();
         }
