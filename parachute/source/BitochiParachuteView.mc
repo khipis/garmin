@@ -280,11 +280,8 @@ class BitochiParachuteView extends WatchUi.View {
             else if (_landDist < lr * 3.5) { _landGrade = "GOOD"; }
             else { _landGrade = "MISSED!"; }
 
-            var lifeThresh = 9999.0;
-            if (_level >= 3) { lifeThresh = lr * 5.0; }
-            if (_level >= 6) { lifeThresh = lr * 3.8; }
-            if (_level >= 10) { lifeThresh = lr * 2.8; }
-            if (_landDist > lifeThresh) {
+            var ringsRequired = _level;
+            if (_ringsHit < ringsRequired) {
                 _lives--;
                 if (_lives < 0) { _lives = 0; }
                 _lifeLost = true;
@@ -413,9 +410,15 @@ class BitochiParachuteView extends WatchUi.View {
 
     function doAction() {
         if (gameState == PS_MENU) { _level = 1; _totalScore = 0; _lives = 3; startLevel(); }
-        else if (gameState == PS_FREE) { _chuteOpen = true; gameState = PS_CHUTE; doVibe(60, 150); }
+        else if (gameState == PS_FREE) {
+            if (_altitude > 300.0) { _flashT = 6; return; }
+            _chuteOpen = true; gameState = PS_CHUTE; doVibe(60, 150);
+        }
         else if (gameState == PS_LAND) {
-            if (_resultTick > 20) { _level++; startLevel(); }
+            if (_resultTick > 20) {
+                if (!_lifeLost) { _level++; }
+                startLevel();
+            }
         }
         else if (gameState == PS_CRASH) {
             if (_resultTick > 20) { startLevel(); }
@@ -665,7 +668,7 @@ class BitochiParachuteView extends WatchUi.View {
         dc.setColor(ac, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(abX, abY + abH - fH, abW, fH);
 
         dc.setColor(0xFFFF44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(4, 2, Graphics.FONT_XTINY, "" + _ringsHit, Graphics.TEXT_JUSTIFY_LEFT);
+        dc.drawText(4, 2, Graphics.FONT_XTINY, "" + _ringsHit + "/" + _level, Graphics.TEXT_JUSTIFY_LEFT);
         if (_ringStreak >= 3) {
             dc.setColor(0xFF8844, Graphics.COLOR_TRANSPARENT);
             dc.drawText(4, 14, Graphics.FONT_XTINY, "x" + (_ringStreak / 3 + 1), Graphics.TEXT_JUSTIFY_LEFT);
@@ -686,10 +689,15 @@ class BitochiParachuteView extends WatchUi.View {
             dc.drawText(_w / 2, _h * 60 / 100, Graphics.FONT_XTINY, _gustX > 0.0 ? "GUST>>>" : "<<<GUST", Graphics.TEXT_JUSTIFY_CENTER);
         }
 
-        if (_altitude < 600.0 && !_chuteOpen) {
-            var wc = (_tick % 6 < 3) ? 0xFF0000 : 0xFF8800;
-            dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2 + 1, _h * 82 / 100 + 1, Graphics.FONT_SMALL, "DEPLOY!", Graphics.TEXT_JUSTIFY_CENTER);
-            dc.setColor(wc, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 82 / 100, Graphics.FONT_SMALL, "DEPLOY!", Graphics.TEXT_JUSTIFY_CENTER);
+        if (!_chuteOpen) {
+            if (_altitude > 300.0 && _altitude < 900.0) {
+                dc.setColor(0x6688BB, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(_w / 2, _h * 82 / 100, Graphics.FONT_XTINY, "chute < 300m", Graphics.TEXT_JUSTIFY_CENTER);
+            } else if (_altitude <= 300.0) {
+                var wc = (_tick % 6 < 3) ? 0xFF0000 : 0xFF8800;
+                dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2 + 1, _h * 82 / 100 + 1, Graphics.FONT_SMALL, "DEPLOY!", Graphics.TEXT_JUSTIFY_CENTER);
+                dc.setColor(wc, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 82 / 100, Graphics.FONT_SMALL, "DEPLOY!", Graphics.TEXT_JUSTIFY_CENTER);
+            }
         }
 
         if (_chuteOpen) {
@@ -734,8 +742,8 @@ class BitochiParachuteView extends WatchUi.View {
         drawPlayer(dc, _w / 2, _h * 44 / 100, true, 0, 0);
 
         dc.setColor(0x7799BB, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 60 / 100, Graphics.FONT_XTINY, "Fly through rings!", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(_w / 2, _h * 67 / 100, Graphics.FONT_XTINY, "Tap to deploy chute", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 58 / 100, Graphics.FONT_XTINY, "Collect rings per level!", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 65 / 100, Graphics.FONT_XTINY, "Chute opens below 300m", Graphics.TEXT_JUSTIFY_CENTER);
         if (_bestScore > 0) {
             dc.setColor(0x888888, Graphics.COLOR_TRANSPARENT);
             var bTxt = "BEST " + _bestScore;
@@ -796,13 +804,14 @@ class BitochiParachuteView extends WatchUi.View {
 
         if (_lifeLost) {
             dc.setColor(0xFF4444, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 20 / 100, Graphics.FONT_XTINY, "LIFE LOST!", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_w / 2, _h * 18 / 100, Graphics.FONT_XTINY, "RINGS: " + _ringsHit + "/" + _level, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_w / 2, _h * 27 / 100, Graphics.FONT_XTINY, "LIFE LOST!", Graphics.TEXT_JUSTIFY_CENTER);
             var heartStr = "";
             for (var li = 0; li < _lives; li++) { heartStr = heartStr + "*"; }
             dc.setColor(0xFF4466, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 28 / 100, Graphics.FONT_XTINY, heartStr, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_w / 2, _h * 36 / 100, Graphics.FONT_XTINY, heartStr, Graphics.TEXT_JUSTIFY_CENTER);
         } else {
-            dc.setColor(0xFFFF44, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 22 / 100, Graphics.FONT_XTINY, "RINGS " + _ringsHit, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(0xFFFF44, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 22 / 100, Graphics.FONT_XTINY, "RINGS " + _ringsHit + "/" + _level, Graphics.TEXT_JUSTIFY_CENTER);
         }
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 35 / 100, Graphics.FONT_SMALL, "+" + _score, Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x88CCFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 46 / 100, Graphics.FONT_XTINY, "TOTAL " + _totalScore, Graphics.TEXT_JUSTIFY_CENTER);

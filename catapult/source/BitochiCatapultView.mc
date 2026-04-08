@@ -145,6 +145,12 @@ class BitochiCatapultView extends WatchUi.View {
     hidden var _accBonusShots;
     hidden var _poisonTicks;
     hidden var _hitType;
+    hidden var _boomWx;
+    hidden var _boomWy;
+    hidden var _boomSubWx;
+    hidden var _boomSubWy;
+    hidden var _boomSubN;
+    hidden var _chainLimit;
 
     function initialize() {
         View.initialize();
@@ -212,6 +218,9 @@ class BitochiCatapultView extends WatchUi.View {
         _shopPows = [PW_MEGA, PW_FIRE, PW_PIERCE, PW_TRIPLE, PW_POISON, PW_CLUSTER, PW_AMMO];
         _shopDesc = ["Giant blast radius", "Burns+chains blocks", "3x enemy damage", "3-point detonation", "DoT + 50% vuln to blasts", "Scatter bomb x3", "+3 shots"];
         _poisonTicks = 0; _hitType = 0;
+        _boomWx = 0.0; _boomWy = 0.0; _boomSubN = 0; _chainLimit = 15;
+        _boomSubWx = new [2]; _boomSubWy = new [2];
+        _boomSubWx[0] = 0.0; _boomSubWx[1] = 0.0; _boomSubWy[0] = 0.0; _boomSubWy[1] = 0.0;
 
         initRound();
     }
@@ -255,6 +264,7 @@ class BitochiCatapultView extends WatchUi.View {
         _enemyOnGround = true;
         _enemyBaseX = _castleWX;
         _poisonTicks = 0; _hitType = 0;
+        _boomWx = 0.0; _boomWy = 0.0; _boomSubN = 0; _chainLimit = 15;
 
         applyTheme();
         buildCastle();
@@ -498,6 +508,17 @@ class BitochiCatapultView extends WatchUi.View {
             }
         } else if (gameState == GS_RESULT || gameState == GS_GAMEOVER || gameState == GS_SHOP) {
             _resultTick++;
+            if (gameState == GS_RESULT && _enemyHp <= 0 && _resultTick > 58) {
+                if (_round >= 16) {
+                    _beatGame = true;
+                    gameState = GS_GAMEOVER;
+                    _resultTick = 0;
+                } else {
+                    gameState = GS_SHOP;
+                    _shopSel = 5;
+                    _resultTick = 0;
+                }
+            }
         }
 
         var diff = _camTargetX - _camX;
@@ -678,6 +699,7 @@ class BitochiCatapultView extends WatchUi.View {
         else if (_activePow == PW_POISON) { _hitType = 5; }
         else if (_activePow == PW_CLUSTER) { _hitType = 6; }
         else if (_activePow == PW_TRIPLE) { _hitType = 7; }
+        _boomWx = hx; _boomWy = hy; _boomSubN = 0;
 
         var splMul = 1.0;
         if (_activePow == PW_MEGA) { splMul = 2.4; }
@@ -687,6 +709,7 @@ class BitochiCatapultView extends WatchUi.View {
         var splR = _bw.toFloat() * 3.5 * splMul;
         var bwf = _bw.toFloat();
         var hitSomething = _hitEnemyDirect;
+        _chainLimit = 15;
 
         for (var i = 0; i < _numBlocks; i++) {
             if (_bhp[i] <= 0) { continue; }
@@ -713,6 +736,9 @@ class BitochiCatapultView extends WatchUi.View {
 
         if (_activePow == PW_TRIPLE) {
             var tOff = splR * 1.8;
+            _boomSubWx[0] = hx - tOff; _boomSubWy[0] = hy;
+            _boomSubWx[1] = hx + tOff; _boomSubWy[1] = hy;
+            _boomSubN = 2;
             subBlast(hx - tOff, hy, splR);
             subBlast(hx + tOff, hy, splR);
             spawnImpactParticles(hx - tOff, hy, 7);
@@ -784,6 +810,8 @@ class BitochiCatapultView extends WatchUi.View {
     }
 
     hidden function chainExplosion(cx, cy) {
+        if (_chainLimit <= 0) { return; }
+        _chainLimit--;
         var bwf = _bw.toFloat();
         var chainR = bwf * 4.0;
         for (var j = 0; j < _numBlocks; j++) {
@@ -1540,7 +1568,74 @@ class BitochiCatapultView extends WatchUi.View {
             dc.fillRectangle(dsx, dsy, 3, 3);
         }
 
+        drawExplosionRings(dc, ox, oy);
         drawHUD(dc, w, h, ox, oy);
+    }
+
+    hidden function drawExplosionRings(dc, ox, oy) {
+        if (gameState != GS_HIT || _hitTick >= 26) { return; }
+        var t = _hitTick;
+        var bsx = w2sx(_boomWx) + ox;
+        var bsy = w2sy(_boomWy) + oy;
+        var r = t * 3 + 4;
+
+        if (_hitType == 2) { // MEGA - huge orange rings
+            dc.setColor(0xFF8800, Graphics.COLOR_TRANSPARENT);
+            dc.drawCircle(bsx, bsy, r * 3);
+            dc.drawCircle(bsx, bsy, r * 3 - 2);
+            dc.setColor(0xFFCC00, Graphics.COLOR_TRANSPARENT);
+            dc.drawCircle(bsx, bsy, r * 2);
+            if (t < 10) {
+                dc.setColor(0xFFFF44, Graphics.COLOR_TRANSPARENT);
+                dc.drawCircle(bsx, bsy, r);
+            }
+        } else if (_hitType == 3) { // FIRE - red nested rings
+            dc.setColor(0xFF4400, Graphics.COLOR_TRANSPARENT);
+            dc.drawCircle(bsx, bsy, r * 2);
+            dc.setColor(0xFF8800, Graphics.COLOR_TRANSPARENT);
+            dc.drawCircle(bsx, bsy, r);
+            if (t % 4 < 2) {
+                dc.setColor(0xFFFF00, Graphics.COLOR_TRANSPARENT);
+                dc.drawCircle(bsx, bsy, r / 2);
+            }
+        } else if (_hitType == 4) { // PIERCE - blue beam
+            dc.setColor(0x00DDFF, Graphics.COLOR_TRANSPARENT);
+            dc.drawCircle(bsx, bsy, r + 6);
+            dc.setColor(0x4488FF, Graphics.COLOR_TRANSPARENT);
+            var bh = 3 + t * 2; if (bh > 40) { bh = 40; }
+            dc.fillRectangle(bsx - 2, bsy - bh, 4, bh * 2);
+        } else if (_hitType == 5) { // POISON - green rings
+            dc.setColor(0x44FF44, Graphics.COLOR_TRANSPARENT);
+            dc.drawCircle(bsx, bsy, r * 2 + 6);
+            dc.drawCircle(bsx, bsy, r + 2);
+        } else if (_hitType == 6) { // CLUSTER - double rings
+            dc.setColor(0xFF9922, Graphics.COLOR_TRANSPARENT);
+            dc.drawCircle(bsx, bsy, r + 6);
+            dc.setColor(0xFF6600, Graphics.COLOR_TRANSPARENT);
+            dc.drawCircle(bsx, bsy, r);
+        } else if (_hitType == 7) { // TRIPLE - 3 separate rings
+            dc.setColor(0xFF44FF, Graphics.COLOR_TRANSPARENT);
+            dc.drawCircle(bsx, bsy, r);
+            dc.drawCircle(bsx, bsy, r + 2);
+            if (_boomSubN >= 2) {
+                var s1x = w2sx(_boomSubWx[0]) + ox;
+                var s1y = w2sy(_boomSubWy[0]) + oy;
+                var s2x = w2sx(_boomSubWx[1]) + ox;
+                var s2y = w2sy(_boomSubWy[1]) + oy;
+                dc.drawCircle(s1x, s1y, r);
+                dc.drawCircle(s1x, s1y, r + 2);
+                dc.drawCircle(s2x, s2y, r);
+                dc.drawCircle(s2x, s2y, r + 2);
+            }
+        } else if (_hitType == 1) { // CRIT - gold ring
+            dc.setColor(0xFFFF00, Graphics.COLOR_TRANSPARENT);
+            dc.drawCircle(bsx, bsy, r * 2);
+            dc.setColor(0xFFEE44, Graphics.COLOR_TRANSPARENT);
+            dc.drawCircle(bsx, bsy, r);
+        } else { // normal
+            dc.setColor(0xFF8822, Graphics.COLOR_TRANSPARENT);
+            dc.drawCircle(bsx, bsy, r + 2);
+        }
     }
 
     hidden function drawEnemy(dc, ox, oy) {
