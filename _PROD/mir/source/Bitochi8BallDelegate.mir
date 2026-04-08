@@ -1,0 +1,462 @@
+[ @file = "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc"; @line = 1; @symbol_usingdef<0> = [Toybox,1,6,12]; @symbol_usingdef<1> = [WatchUi,1,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc"; @line = 2; @symbol_usingdef<0> = [Toybox,2,6,12]; @symbol_usingdef<1> = [Sensor,2,13,19]; ]
+using Toybox.Sensor;
+[ @file = "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc"; @line = 4; @symbol_classdef = [Bitochi8BallDelegate,4,6,26]; @symbol_extends<0> = [WatchUi,4,35,42]; @symbol_extends<1> = [BehaviorDelegate,4,43,59]; ]
+class Bitochi8BallDelegate extends WatchUi.BehaviorDelegate {
+    [ @file = "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc"; @line = 4; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc"; @line = 4; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc"; @line = 6; @position = 15; @symbol_vardef = [_view,6,15,20]; ]
+    protected
+    var _view;
+    [ @file = "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc"; @line = 7; @position = 15; @symbol_vardef = [_shakeThreshold,7,15,30]; ]
+    protected
+    var _shakeThreshold;
+    [ @file = "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc"; @line = 8; @position = 15; @symbol_vardef = [_lastMag,8,15,23]; ]
+    protected
+    var _lastMag;
+    [ @file = "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc"; @line = 9; @position = 15; @symbol_vardef = [_sensorEnabled,9,15,29]; ]
+    protected
+    var _sensorEnabled;
+    [ @file = "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc"; @line = 11; @symbol_functiondef = [initialize,11,13,23]; @symbol_param<0> = [view,11,24,28]; ]
+    function initialize(view) as Void {
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_11_30_18_4_start:
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 12 8 ]
+        symbol [ BehaviorDelegate %tmp.2 12 8 24 ];
+        %tmp.2 = getv ? :BehaviorDelegate;
+        symbol [ initialize %tmp.3 12 25 35 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 13 8 ]
+        %tmp.4 = lgetv %view;
+        symbol [ view %tmp.4 13 16 20 ];
+        symbol [ _view ? 13 8 13 ];
+        putv self :_view %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 14 8 ]
+        %tmp.5 = 2500;
+        symbol [ _shakeThreshold ? 14 8 23 ];
+        putv self :_shakeThreshold %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 15 8 ]
+        %tmp.6 = 0;
+        symbol [ _lastMag ? 15 8 16 ];
+        putv self :_lastMag %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 16 8 ]
+        %tmp.7 = false;
+        symbol [ _sensorEnabled ? 16 8 22 ];
+        putv self :_sensorEnabled %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 17 8 ]
+        %tmp.8 = self;
+        symbol [ enableAccel %tmp.9 17 8 19 ];
+        %tmp.9 = getv function %tmp.8 :enableAccel;
+        invoke %tmp.8 %tmp.9();
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_11_30_18_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc"; @line = 20; @symbol_functiondef = [enableAccel,20,20,31]; ]
+    protected
+    function enableAccel() {
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_20_34_31_4_start:
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 21 8 ]
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_21_8_30_8_if_stmt:
+        symbol [ Toybox %tmp.2 21 12 18 ];
+        %tmp.2 = getv ? :Toybox;
+        %tmp.4 = const :Sensor;
+        symbol [ Sensor %tmp.4 21 24 30 const ];
+        %tmp.5 = canhazplz %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_21_8_30_8_if_end;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_21_8_30_8_if_true:
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_21_32_30_8_start:
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 22 12 ]
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_22_12_29_12_if_stmt:
+        symbol [ Sensor %tmp.6 22 16 22 ];
+        %tmp.6 = getm $.Toybox.Sensor;
+        %tmp.8 = const :enableSensorEvents;
+        symbol [ enableSensorEvents %tmp.8 22 28 46 const ];
+        %tmp.9 = canhazplz %tmp.6 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_22_12_29_12_if_end;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_22_12_29_12_if_true:
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_22_48_29_12_start:
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 23 16 ]
+        try @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_23_16_28_16_beginTry @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_23_16_28_16_endTry @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_23_16_28_16_catch @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_23_16_28_16_finally;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_23_16_28_16_beginTry:
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_23_20_26_16_start:
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 24 20 ]
+        symbol [ Sensor %tmp.10 24 20 26 ];
+        %tmp.10 = getm $.Toybox.Sensor;
+        symbol [ enableSensorEvents %tmp.11 24 27 45 ];
+        %tmp.11 = getv function %tmp.10 :enableSensorEvents;
+        %tmp.12 = self;
+        symbol [ method %tmp.13 24 46 52 ];
+        %tmp.13 = getv function %tmp.12 :method;
+        %tmp.15 = const :onSensor;
+        symbol [ onSensor %tmp.15 24 54 62 const ];
+        %tmp.16 = invoke %tmp.12 %tmp.13(%tmp.15);
+        invoke %tmp.10 %tmp.11(%tmp.16);
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 25 20 ]
+        %tmp.17 = true;
+        symbol [ _sensorEnabled ? 25 20 34 ];
+        putv self :_sensorEnabled %tmp.17;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_23_20_26_16_stop:
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_23_16_28_16_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_23_16_28_16_finally;
+        goto @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_23_16_28_16_end;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_23_16_28_16_catch:
+        %tmp.18 = exception;
+        push %tmp.18;
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 26 18 ]
+        [ "_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_23_16_28_16_catch" "_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_26_18_28_16_end" ]
+        %e.1 = local;
+        symbol [ e %e.1 26 25 26 ];
+        %tmp.19 = dup %tmp.18;
+        lputv %e.1 %tmp.19;
+        symbol [ e %e.1 26 25 26 ];
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_26_28_28_16_start:
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 27 20 ]
+        %tmp.20 = false;
+        symbol [ _sensorEnabled ? 27 20 34 ];
+        putv self :_sensorEnabled %tmp.20;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_26_28_28_16_stop:
+        jsr @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_23_16_28_16_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_23_16_28_16_end;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_26_18_28_16_end:
+        try @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_23_16_28_16_catch @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_26_18_28_16_end @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_26_18_28_16_end @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_23_16_28_16_finally;
+        jsr @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_23_16_28_16_finally;
+        throw %tmp.18;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_23_16_28_16_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_23_16_28_16_end:
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_22_48_29_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_22_12_29_12_if_end;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_22_12_29_12_if_end:
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_21_32_30_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_21_8_30_8_if_end;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_21_8_30_8_if_end:
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_20_34_31_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc"; @line = 33; @symbol_functiondef = [onSensor,33,13,21]; @symbol_param<0> = [sensorInfo,33,22,32]; @symbol_param<0>_type<0> = [Sensor,33,36,42]; @symbol_param<0>_type<1> = [Info,33,43,47]; ]
+    function onSensor(sensorInfo as Sensor.Info) as Void {
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_33_57_53_4_start:
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 34 8 ]
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_34_8_34_42_if_stmt:
+        %tmp.1 = lgetv %sensorInfo;
+        symbol [ sensorInfo %tmp.1 34 12 22 ];
+        %tmp.2 = null;
+        %tmp.3 = eq %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_34_8_34_42_if_end;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_34_8_34_42_if_true:
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_34_32_34_42_start:
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 34 34 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_34_32_34_42_stop:
+        goto @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_34_8_34_42_if_end;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_34_8_34_42_if_end:
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 35 8 ]
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_35_8_35_76_if_stmt:
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_35_12_35_60_begin:
+        %tmp.4 = lgetv %sensorInfo;
+        symbol [ sensorInfo %tmp.4 35 14 24 ];
+        %tmp.6 = const :accel;
+        symbol [ accel %tmp.6 35 30 35 const ];
+        %tmp.7 = canhazplz %tmp.4 %tmp.6;
+        %tmp.8 = not %tmp.7;
+        bt %tmp.8 @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_35_8_35_76_if_true;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_35_40_35_60_false:
+        %tmp.9 = lgetv %sensorInfo;
+        symbol [ sensorInfo %tmp.9 35 40 50 ];
+        %tmp.10 = as %tmp.9 { (interface { var accel; }) };
+        symbol [ accel %tmp.11 35 51 56 ];
+        %tmp.11 = getv %tmp.10 :accel;
+        %tmp.12 = null;
+        %tmp.13 = eq %tmp.11 %tmp.12;
+        push %tmp.13;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_35_40_35_60_end:
+        %tmp.14 = phi [%tmp.8 @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_35_12_35_60_begin] [%tmp.13 @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_35_40_35_60_false] [%tmp.14 @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_35_40_35_60_end];
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_35_8_35_76_if_end;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_35_8_35_76_if_true:
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_35_66_35_76_start:
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 35 68 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_35_66_35_76_stop:
+        goto @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_35_8_35_76_if_end;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_35_8_35_76_if_end:
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 36 8 ]
+        [ "_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_33_57_53_4_start" "_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_33_57_53_4_stop" ]
+        %accel.1 = local;
+        symbol [ accel %accel.1 36 12 17 ];
+        %tmp.15 = lgetv %sensorInfo;
+        symbol [ sensorInfo %tmp.15 36 20 30 ];
+        symbol [ accel %tmp.16 36 31 36 ];
+        %tmp.16 = getv %tmp.15 :accel;
+        lputv %accel.1 %tmp.16;
+        symbol [ accel %accel.1 36 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 37 8 ]
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_37_8_37_40_if_stmt:
+        %tmp.17 = lgetv %accel.1;
+        symbol [ accel %tmp.17 37 12 17 ];
+        symbol [ size %tmp.18 37 18 22 ];
+        %tmp.18 = getv function %tmp.17 :size;
+        %tmp.19 = invoke %tmp.17 %tmp.18();
+        %tmp.20 = 3;
+        %tmp.21 = lt %tmp.19 %tmp.20;
+        bf %tmp.21 @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_37_8_37_40_if_end;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_37_8_37_40_if_true:
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_37_30_37_40_start:
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 37 32 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_37_30_37_40_stop:
+        goto @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_37_8_37_40_if_end;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_37_8_37_40_if_end:
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 39 8 ]
+        [ "_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_33_57_53_4_start" "_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_33_57_53_4_stop" ]
+        %x.2 = local;
+        symbol [ x %x.2 39 12 13 ];
+        %tmp.22 = lgetv %accel.1;
+        symbol [ accel %tmp.22 39 16 21 ];
+        %tmp.23 = 0;
+        %tmp.24 = agetv %tmp.22 %tmp.23;
+        lputv %x.2 %tmp.24;
+        symbol [ x %x.2 39 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 40 8 ]
+        [ "_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_33_57_53_4_start" "_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_33_57_53_4_stop" ]
+        %y.3 = local;
+        symbol [ y %y.3 40 12 13 ];
+        %tmp.25 = lgetv %accel.1;
+        symbol [ accel %tmp.25 40 16 21 ];
+        %tmp.26 = 1;
+        %tmp.27 = agetv %tmp.25 %tmp.26;
+        lputv %y.3 %tmp.27;
+        symbol [ y %y.3 40 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 41 8 ]
+        [ "_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_33_57_53_4_start" "_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_33_57_53_4_stop" ]
+        %z.4 = local;
+        symbol [ z %z.4 41 12 13 ];
+        %tmp.28 = lgetv %accel.1;
+        symbol [ accel %tmp.28 41 16 21 ];
+        %tmp.29 = 2;
+        %tmp.30 = agetv %tmp.28 %tmp.29;
+        lputv %z.4 %tmp.30;
+        symbol [ z %z.4 41 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 42 8 ]
+        [ "_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_33_57_53_4_start" "_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_33_57_53_4_stop" ]
+        %mag.5 = local;
+        symbol [ mag %mag.5 42 12 15 ];
+        %tmp.31 = lgetv %x.2;
+        symbol [ x %tmp.31 42 18 19 ];
+        %tmp.32 = lgetv %x.2;
+        symbol [ x %tmp.32 42 22 23 ];
+        %tmp.33 = mul %tmp.31 %tmp.32;
+        %tmp.34 = lgetv %y.3;
+        symbol [ y %tmp.34 42 26 27 ];
+        %tmp.35 = lgetv %y.3;
+        symbol [ y %tmp.35 42 30 31 ];
+        %tmp.36 = mul %tmp.34 %tmp.35;
+        %tmp.37 = add %tmp.33 %tmp.36;
+        %tmp.38 = lgetv %z.4;
+        symbol [ z %tmp.38 42 34 35 ];
+        %tmp.39 = lgetv %z.4;
+        symbol [ z %tmp.39 42 38 39 ];
+        %tmp.40 = mul %tmp.38 %tmp.39;
+        %tmp.41 = add %tmp.37 %tmp.40;
+        lputv %mag.5 %tmp.41;
+        symbol [ mag %mag.5 42 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 44 8 ]
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_44_8_51_8_if_stmt:
+        symbol [ _lastMag %tmp.43 44 12 20 ];
+        %tmp.43 = getv ? :_lastMag;
+        %tmp.44 = 0;
+        %tmp.45 = gt %tmp.43 %tmp.44;
+        bf %tmp.45 @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_44_8_51_8_if_end;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_44_8_51_8_if_true:
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_44_26_51_8_start:
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 45 12 ]
+        [ "_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_44_26_51_8_start" "_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_44_26_51_8_stop" ]
+        %diff.6 = local;
+        symbol [ diff %diff.6 45 16 20 ];
+        %tmp.46 = lgetv %mag.5;
+        symbol [ mag %tmp.46 45 23 26 ];
+        symbol [ _lastMag %tmp.48 45 29 37 ];
+        %tmp.48 = getv ? :_lastMag;
+        %tmp.49 = sub %tmp.46 %tmp.48;
+        lputv %diff.6 %tmp.49;
+        symbol [ diff %diff.6 45 16 20 ];
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 46 12 ]
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_46_12_46_42_if_stmt:
+        %tmp.50 = lgetv %diff.6;
+        symbol [ diff %tmp.50 46 16 20 ];
+        %tmp.51 = 0;
+        %tmp.52 = lt %tmp.50 %tmp.51;
+        bf %tmp.52 @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_46_12_46_42_if_end;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_46_12_46_42_if_true:
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_46_26_46_42_start:
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 46 28 ]
+        %tmp.53 = lgetv %diff.6;
+        symbol [ diff %tmp.53 46 36 40 ];
+        %tmp.54 = sub 0 %tmp.53;
+        lputv %diff.6 %tmp.54;
+        symbol [ diff %diff.6 46 28 32 ];
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_46_26_46_42_stop:
+        goto @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_46_12_46_42_if_end;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_46_12_46_42_if_end:
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 47 12 ]
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_47_12_50_12_if_stmt:
+        %tmp.55 = lgetv %diff.6;
+        symbol [ diff %tmp.55 47 16 20 ];
+        symbol [ _shakeThreshold %tmp.57 47 23 38 ];
+        %tmp.57 = getv ? :_shakeThreshold;
+        symbol [ _shakeThreshold %tmp.59 47 41 56 ];
+        %tmp.59 = getv ? :_shakeThreshold;
+        %tmp.60 = mul %tmp.57 %tmp.59;
+        %tmp.61 = gt %tmp.55 %tmp.60;
+        bf %tmp.61 @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_47_12_50_12_if_end;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_47_12_50_12_if_true:
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_47_58_50_12_start:
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 48 16 ]
+        symbol [ _view %tmp.63 48 16 21 ];
+        %tmp.63 = getv ? :_view;
+        symbol [ shake %tmp.64 48 22 27 ];
+        %tmp.64 = getv function %tmp.63 :shake;
+        invoke %tmp.63 %tmp.64();
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 49 16 ]
+        symbol [ WatchUi %tmp.65 49 16 23 ];
+        %tmp.65 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.66 49 24 37 ];
+        %tmp.66 = getv function %tmp.65 :requestUpdate;
+        invoke %tmp.65 %tmp.66();
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_47_58_50_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_47_12_50_12_if_end;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_47_12_50_12_if_end:
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_44_26_51_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_44_8_51_8_if_end;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_44_8_51_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 52 8 ]
+        %tmp.67 = lgetv %mag.5;
+        symbol [ mag %tmp.67 52 19 22 ];
+        symbol [ _lastMag ? 52 8 16 ];
+        putv self :_lastMag %tmp.67;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_33_57_53_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc"; @line = 55; @symbol_functiondef = [onSelect,55,13,21]; ]
+    function onSelect() {
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_55_24_59_4_start:
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 56 8 ]
+        symbol [ _view %tmp.2 56 8 13 ];
+        %tmp.2 = getv ? :_view;
+        symbol [ shake %tmp.3 56 14 19 ];
+        %tmp.3 = getv function %tmp.2 :shake;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 57 8 ]
+        symbol [ WatchUi %tmp.4 57 8 15 ];
+        %tmp.4 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.5 57 16 29 ];
+        %tmp.5 = getv function %tmp.4 :requestUpdate;
+        invoke %tmp.4 %tmp.5();
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 58 8 ]
+        %tmp.6 = true;
+        ret %tmp.6;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_55_24_59_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc"; @line = 61; @symbol_functiondef = [onMenu,61,13,19]; ]
+    function onMenu() {
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_61_22_65_4_start:
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 62 8 ]
+        symbol [ _view %tmp.2 62 8 13 ];
+        %tmp.2 = getv ? :_view;
+        symbol [ shake %tmp.3 62 14 19 ];
+        %tmp.3 = getv function %tmp.2 :shake;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 63 8 ]
+        symbol [ WatchUi %tmp.4 63 8 15 ];
+        %tmp.4 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.5 63 16 29 ];
+        %tmp.5 = getv function %tmp.4 :requestUpdate;
+        invoke %tmp.4 %tmp.5();
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 64 8 ]
+        %tmp.6 = true;
+        ret %tmp.6;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_61_22_65_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc"; @line = 67; @symbol_functiondef = [onPreviousPage,67,13,27]; ]
+    function onPreviousPage() {
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_67_30_71_4_start:
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 68 8 ]
+        symbol [ _view %tmp.2 68 8 13 ];
+        %tmp.2 = getv ? :_view;
+        symbol [ shake %tmp.3 68 14 19 ];
+        %tmp.3 = getv function %tmp.2 :shake;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 69 8 ]
+        symbol [ WatchUi %tmp.4 69 8 15 ];
+        %tmp.4 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.5 69 16 29 ];
+        %tmp.5 = getv function %tmp.4 :requestUpdate;
+        invoke %tmp.4 %tmp.5();
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 70 8 ]
+        %tmp.6 = true;
+        ret %tmp.6;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_67_30_71_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc"; @line = 73; @symbol_functiondef = [onNextPage,73,13,23]; ]
+    function onNextPage() {
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_73_26_77_4_start:
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 74 8 ]
+        symbol [ _view %tmp.2 74 8 13 ];
+        %tmp.2 = getv ? :_view;
+        symbol [ shake %tmp.3 74 14 19 ];
+        %tmp.3 = getv function %tmp.2 :shake;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 75 8 ]
+        symbol [ WatchUi %tmp.4 75 8 15 ];
+        %tmp.4 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.5 75 16 29 ];
+        %tmp.5 = getv function %tmp.4 :requestUpdate;
+        invoke %tmp.4 %tmp.5();
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 76 8 ]
+        %tmp.6 = true;
+        ret %tmp.6;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_73_26_77_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc"; @line = 79; @symbol_functiondef = [onBack,79,13,19]; ]
+    function onBack() {
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_79_22_84_4_start:
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 80 8 ]
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_80_8_82_8_if_stmt:
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_80_12_80_42_begin:
+        symbol [ _sensorEnabled %tmp.2 80 12 26 ];
+        %tmp.2 = getv ? :_sensorEnabled;
+        bf %tmp.2 @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_80_8_82_8_if_end;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_80_30_80_42_true:
+        symbol [ Toybox %tmp.4 80 30 36 ];
+        %tmp.4 = getv ? :Toybox;
+        %tmp.6 = const :Sensor;
+        symbol [ Sensor %tmp.6 80 42 48 const ];
+        %tmp.7 = canhazplz %tmp.4 %tmp.6;
+        push %tmp.7;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_80_30_80_42_end:
+        %tmp.8 = phi [%tmp.2 @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_80_12_80_42_begin] [%tmp.7 @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_80_30_80_42_true] [%tmp.8 @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_80_30_80_42_end];
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_80_8_82_8_if_end;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_80_8_82_8_if_true:
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_80_50_82_8_start:
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 81 12 ]
+        symbol [ Sensor %tmp.9 81 12 18 ];
+        %tmp.9 = getm $.Toybox.Sensor;
+        symbol [ enableSensorEvents %tmp.10 81 19 37 ];
+        %tmp.10 = getv function %tmp.9 :enableSensorEvents;
+        %tmp.11 = null;
+        invoke %tmp.9 %tmp.10(%tmp.11);
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_80_50_82_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_80_8_82_8_if_end;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_80_8_82_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc" 83 8 ]
+        %tmp.12 = false;
+        ret %tmp.12;
+_Users_kkorolczuk_work_garmin_8ball_source_Bitochi8BallDelegate_mc_79_22_84_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/8ball/source/Bitochi8BallDelegate.mc"; @line = 1; ]
+<init> {
+}

@@ -1,0 +1,1761 @@
+[ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 1; @symbol_usingdef<0> = [Toybox,1,6,12]; @symbol_usingdef<1> = [Graphics,1,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 2; @symbol_usingdef<0> = [Toybox,2,6,12]; @symbol_usingdef<1> = [WatchUi,2,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 3; @symbol_usingdef<0> = [Toybox,3,6,12]; @symbol_usingdef<1> = [Timer,3,13,18]; ]
+using Toybox.Timer;
+[ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 4; @symbol_usingdef<0> = [Toybox,4,6,12]; @symbol_usingdef<1> = [Math,4,13,17]; ]
+using Toybox.Math;
+[ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 6; @position = 6; @symbol_constdef = [DODGE_OBS_MAX,6,6,19]; ]
+const DODGE_OBS_MAX = 8;
+[ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 7; @position = 6; @symbol_constdef = [DODGE_LANES,7,6,17]; ]
+const DODGE_LANES = 5;
+[ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 8; @position = 6; @symbol_constdef = [DODGE_PET_ROW,8,6,19]; ]
+const DODGE_PET_ROW = 88;
+[ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 10; @symbol_classdef = [DodgeGameView,10,6,19]; @symbol_extends<0> = [WatchUi,10,28,35]; @symbol_extends<1> = [View,10,36,40]; ]
+class DodgeGameView extends WatchUi.View {
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 10; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 10; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 12; @position = 15; @symbol_vardef = [_pet,12,15,19]; ]
+    protected
+    var _pet;
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 13; @position = 15; @symbol_vardef = [_timer,13,15,21]; ]
+    protected
+    var _timer;
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 14; @position = 15; @symbol_vardef = [_state,14,15,21]; ]
+    protected
+    var _state;
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 15; @position = 15; @symbol_vardef = [_doneTicks,15,15,25]; ]
+    protected
+    var _doneTicks;
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 16; @position = 15; @symbol_vardef = [_survivalTicks,16,15,29]; ]
+    protected
+    var _survivalTicks;
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 17; @position = 15; @symbol_vardef = [_petLane,17,15,23]; ]
+    protected
+    var _petLane;
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 18; @position = 15; @symbol_vardef = [_obsLane,18,15,23]; ]
+    protected
+    var _obsLane;
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 19; @position = 15; @symbol_vardef = [_obsY,19,15,20]; ]
+    protected
+    var _obsY;
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 20; @position = 15; @symbol_vardef = [_obsOn,20,15,21]; ]
+    protected
+    var _obsOn;
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 21; @position = 15; @symbol_vardef = [_spawnAcc,21,15,24]; ]
+    protected
+    var _spawnAcc;
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 22; @position = 15; @symbol_vardef = [_fallSpeed,22,15,25]; ]
+    protected
+    var _fallSpeed;
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 23; @position = 15; @symbol_vardef = [_sparkles,23,15,24]; ]
+    protected
+    var _sparkles;
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 25; @symbol_functiondef = [initialize,25,13,23]; @symbol_param<0> = [pet,25,24,27]; ]
+    function initialize(pet) as Void {
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_25_29_41_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 26 8 ]
+        symbol [ View %tmp.2 26 8 12 ];
+        %tmp.2 = getv ? :View;
+        symbol [ initialize %tmp.3 26 13 23 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 27 8 ]
+        %tmp.4 = lgetv %pet;
+        symbol [ pet %tmp.4 27 15 18 ];
+        symbol [ _pet ? 27 8 12 ];
+        putv self :_pet %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 28 8 ]
+        %tmp.5 = 0;
+        symbol [ _state ? 28 8 14 ];
+        putv self :_state %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 29 8 ]
+        %tmp.6 = 0;
+        symbol [ _doneTicks ? 29 8 18 ];
+        putv self :_doneTicks %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 30 8 ]
+        %tmp.7 = 0;
+        symbol [ _survivalTicks ? 30 8 22 ];
+        putv self :_survivalTicks %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 31 8 ]
+        symbol [ DODGE_LANES %tmp.9 31 19 30 ];
+        %tmp.9 = getv ? :DODGE_LANES;
+        %tmp.10 = 2;
+        %tmp.11 = div %tmp.9 %tmp.10;
+        symbol [ _petLane ? 31 8 16 ];
+        putv self :_petLane %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 32 8 ]
+        %tmp.12 = 0;
+        symbol [ _spawnAcc ? 32 8 17 ];
+        putv self :_spawnAcc %tmp.12;
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 33 8 ]
+        %tmp.13 = 2;
+        symbol [ _fallSpeed ? 33 8 18 ];
+        putv self :_fallSpeed %tmp.13;
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 34 8 ]
+        %tmp.14 = 0;
+        symbol [ _sparkles ? 34 8 17 ];
+        putv self :_sparkles %tmp.14;
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 35 8 ]
+        symbol [ DODGE_OBS_MAX %tmp.17 35 24 37 ];
+        %tmp.17 = getv ? :DODGE_OBS_MAX;
+        %tmp.15 = newa %tmp.17;
+        symbol [ _obsLane ? 35 8 16 ];
+        putv self :_obsLane %tmp.15;
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 36 8 ]
+        symbol [ DODGE_OBS_MAX %tmp.20 36 21 34 ];
+        %tmp.20 = getv ? :DODGE_OBS_MAX;
+        %tmp.18 = newa %tmp.20;
+        symbol [ _obsY ? 36 8 13 ];
+        putv self :_obsY %tmp.18;
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 37 8 ]
+        symbol [ DODGE_OBS_MAX %tmp.23 37 22 35 ];
+        %tmp.23 = getv ? :DODGE_OBS_MAX;
+        %tmp.21 = newa %tmp.23;
+        symbol [ _obsOn ? 37 8 14 ];
+        putv self :_obsOn %tmp.21;
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 38 8 ]
+        for @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_38_8_40_8_for_test @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_38_8_40_8_for_incr @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_38_8_40_8_for_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_38_8_40_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_38_8_40_8_for_begin" "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_38_8_40_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 38 17 18 ];
+        %tmp.24 = 0;
+        lputv %i.1 %tmp.24;
+        symbol [ i %i.1 38 17 18 ];
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_38_8_40_8_for_test:
+        %tmp.25 = lgetv %i.1;
+        symbol [ i %tmp.25 38 24 25 ];
+        symbol [ DODGE_OBS_MAX %tmp.27 38 28 41 ];
+        %tmp.27 = getv ? :DODGE_OBS_MAX;
+        %tmp.28 = lt %tmp.25 %tmp.27;
+        bf %tmp.28 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_38_8_40_8_for_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_38_8_40_8_for_begin:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_38_48_40_8_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 39 12 ]
+        symbol [ _obsOn %tmp.29 39 12 18 ];
+        %tmp.29 = getv self :_obsOn;
+        %tmp.30 = 0;
+        %tmp.31 = lgetv %i.1;
+        symbol [ i %tmp.31 39 19 20 ];
+        aputv %tmp.29 %tmp.31 %tmp.30;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_38_48_40_8_stop:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_38_8_40_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 38 ]
+        %tmp.34 = lgetv %i.1;
+        symbol [ i %tmp.34 38 43 44 ];
+        %tmp.35 = add %tmp.34 1;
+        lputv %i.1 %tmp.35;
+        symbol [ i %i.1 38 43 44 ];
+        goto @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_38_8_40_8_for_test;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_38_8_40_8_for_end:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_25_29_41_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 43; @symbol_functiondef = [onShow,43,13,19]; ]
+    function onShow() {
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_43_22_46_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 44 8 ]
+        symbol [ Timer %tmp.3 44 21 26 ];
+        %tmp.3 = getm $.Toybox.Timer;
+        symbol [ Timer %tmp.4 44 27 32 ];
+        %tmp.4 = getv function ? %tmp.3 :Timer;
+        %tmp.1 = newc %tmp.4 ();
+        symbol [ _timer ? 44 8 14 ];
+        putv self :_timer %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 45 8 ]
+        symbol [ _timer %tmp.6 45 8 14 ];
+        %tmp.6 = getv ? :_timer;
+        symbol [ start %tmp.7 45 15 20 ];
+        %tmp.7 = getv function %tmp.6 :start;
+        %tmp.8 = self;
+        symbol [ method %tmp.9 45 21 27 ];
+        %tmp.9 = getv function %tmp.8 :method;
+        %tmp.11 = const :onGameTimer;
+        symbol [ onGameTimer %tmp.11 45 29 40 const ];
+        %tmp.12 = invoke %tmp.8 %tmp.9(%tmp.11);
+        %tmp.13 = 80;
+        %tmp.14 = true;
+        invoke %tmp.6 %tmp.7(%tmp.12, %tmp.13, %tmp.14);
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_43_22_46_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 48; @symbol_functiondef = [onHide,48,13,19]; ]
+    function onHide() {
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_48_22_53_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 49 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_49_8_52_8_if_stmt:
+        symbol [ _timer %tmp.2 49 12 18 ];
+        %tmp.2 = getv ? :_timer;
+        %tmp.3 = null;
+        %tmp.4 = ne %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_49_8_52_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_49_8_52_8_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_49_28_52_8_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 50 12 ]
+        symbol [ _timer %tmp.6 50 12 18 ];
+        %tmp.6 = getv ? :_timer;
+        %tmp.7 = as %tmp.6 { (!Null) };
+        symbol [ stop %tmp.8 50 19 23 ];
+        %tmp.8 = getv function %tmp.7 :stop;
+        invoke %tmp.7 %tmp.8();
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 51 12 ]
+        %tmp.9 = null;
+        symbol [ _timer ? 51 12 18 ];
+        putv self :_timer %tmp.9;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_49_28_52_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_49_8_52_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_49_8_52_8_if_end:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_48_22_53_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 55; @symbol_functiondef = [survivalDisplayScore,55,20,40]; ]
+    protected
+    function survivalDisplayScore() {
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_55_43_57_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 56 8 ]
+        symbol [ _survivalTicks %tmp.2 56 16 30 ];
+        %tmp.2 = getv ? :_survivalTicks;
+        %tmp.3 = 8;
+        %tmp.4 = mul %tmp.2 %tmp.3;
+        %tmp.5 = 10;
+        %tmp.6 = div %tmp.4 %tmp.5;
+        ret %tmp.6;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_55_43_57_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 59; @symbol_functiondef = [survivalToPlayResult,59,20,40]; ]
+    protected
+    function survivalToPlayResult() {
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_59_43_69_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 60 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_59_43_69_4_start" "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_59_43_69_4_stop" ]
+        %s.1 = local;
+        symbol [ s %s.1 60 12 13 ];
+        %tmp.1 = self;
+        symbol [ survivalDisplayScore %tmp.2 60 16 36 ];
+        %tmp.2 = getv function %tmp.1 :survivalDisplayScore;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        lputv %s.1 %tmp.3;
+        symbol [ s %s.1 60 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 61 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_61_8_67_8_if_stmt:
+        %tmp.4 = lgetv %s.1;
+        symbol [ s %tmp.4 61 12 13 ];
+        %tmp.5 = 30;
+        %tmp.6 = lt %tmp.4 %tmp.5;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_61_8_67_8_if_false;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_61_8_67_8_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_61_20_63_8_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 62 12 ]
+        %tmp.7 = 0;
+        ret %tmp.7;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_61_20_63_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_61_8_67_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_61_8_67_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 63 15 ]
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_63_15_67_8_if_stmt:
+        %tmp.8 = lgetv %s.1;
+        symbol [ s %tmp.8 63 19 20 ];
+        %tmp.9 = 60;
+        %tmp.10 = lt %tmp.8 %tmp.9;
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_63_15_67_8_if_false;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_63_15_67_8_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_63_27_65_8_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 64 12 ]
+        %tmp.11 = 1;
+        ret %tmp.11;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_63_27_65_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_63_15_67_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_63_15_67_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 65 15 ]
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_65_15_67_8_if_stmt:
+        %tmp.12 = lgetv %s.1;
+        symbol [ s %tmp.12 65 19 20 ];
+        %tmp.13 = 100;
+        %tmp.14 = lt %tmp.12 %tmp.13;
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_65_15_67_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_65_15_67_8_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_65_28_67_8_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 66 12 ]
+        %tmp.15 = 2;
+        ret %tmp.15;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_65_28_67_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_65_15_67_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_65_15_67_8_if_end:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_63_15_67_8_if_end:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_61_8_67_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 68 8 ]
+        %tmp.16 = 3;
+        ret %tmp.16;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_59_43_69_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 71; @symbol_functiondef = [spawnObstacle,71,20,33]; ]
+    protected
+    function spawnObstacle() {
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_71_36_81_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 72 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_71_36_81_4_start" "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_71_36_81_4_stop" ]
+        %lane.1 = local;
+        symbol [ lane %lane.1 72 12 16 ];
+        symbol [ Math %tmp.1 72 19 23 ];
+        %tmp.1 = getm $.Toybox.Math;
+        symbol [ rand %tmp.2 72 24 28 ];
+        %tmp.2 = getv function %tmp.1 :rand;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        symbol [ abs %tmp.4 72 31 34 ];
+        %tmp.4 = getv function %tmp.3 :abs;
+        %tmp.5 = invoke %tmp.3 %tmp.4();
+        symbol [ DODGE_LANES %tmp.7 72 39 50 ];
+        %tmp.7 = getv ? :DODGE_LANES;
+        %tmp.8 = mod %tmp.5 %tmp.7;
+        lputv %lane.1 %tmp.8;
+        symbol [ lane %lane.1 72 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 73 8 ]
+        for @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_73_8_80_8_for_test @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_73_8_80_8_for_incr @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_73_8_80_8_for_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_73_8_80_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_73_8_80_8_for_begin" "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_73_8_80_8_for_end" ]
+        %i.2 = local;
+        symbol [ i %i.2 73 17 18 ];
+        %tmp.9 = 0;
+        lputv %i.2 %tmp.9;
+        symbol [ i %i.2 73 17 18 ];
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_73_8_80_8_for_test:
+        %tmp.10 = lgetv %i.2;
+        symbol [ i %tmp.10 73 24 25 ];
+        symbol [ DODGE_OBS_MAX %tmp.12 73 28 41 ];
+        %tmp.12 = getv ? :DODGE_OBS_MAX;
+        %tmp.13 = lt %tmp.10 %tmp.12;
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_73_8_80_8_for_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_73_8_80_8_for_begin:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_73_48_80_8_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 74 12 ]
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_74_12_79_12_if_stmt:
+        symbol [ _obsOn %tmp.15 74 16 22 ];
+        %tmp.15 = getv ? :_obsOn;
+        %tmp.16 = lgetv %i.2;
+        symbol [ i %tmp.16 74 23 24 ];
+        %tmp.17 = agetv %tmp.15 %tmp.16;
+        %tmp.18 = 0;
+        %tmp.19 = eq %tmp.17 %tmp.18;
+        bf %tmp.19 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_74_12_79_12_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_74_12_79_12_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_74_32_79_12_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 75 16 ]
+        symbol [ _obsLane %tmp.20 75 16 24 ];
+        %tmp.20 = getv self :_obsLane;
+        %tmp.21 = lgetv %lane.1;
+        symbol [ lane %tmp.21 75 30 34 ];
+        %tmp.22 = lgetv %i.2;
+        symbol [ i %tmp.22 75 25 26 ];
+        aputv %tmp.20 %tmp.22 %tmp.21;
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 76 16 ]
+        symbol [ _obsY %tmp.23 76 16 21 ];
+        %tmp.23 = getv self :_obsY;
+        %tmp.24 = 0;
+        %tmp.25 = lgetv %i.2;
+        symbol [ i %tmp.25 76 22 23 ];
+        aputv %tmp.23 %tmp.25 %tmp.24;
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 77 16 ]
+        symbol [ _obsOn %tmp.26 77 16 22 ];
+        %tmp.26 = getv self :_obsOn;
+        %tmp.27 = 1;
+        %tmp.28 = lgetv %i.2;
+        symbol [ i %tmp.28 77 23 24 ];
+        aputv %tmp.26 %tmp.28 %tmp.27;
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 78 16 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_74_32_79_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_74_12_79_12_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_74_12_79_12_if_end:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_73_48_80_8_stop:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_73_8_80_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 73 ]
+        %tmp.31 = lgetv %i.2;
+        symbol [ i %tmp.31 73 43 44 ];
+        %tmp.32 = add %tmp.31 1;
+        lputv %i.2 %tmp.32;
+        symbol [ i %i.2 73 43 44 ];
+        goto @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_73_8_80_8_for_test;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_73_8_80_8_for_end:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_71_36_81_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 83; @symbol_functiondef = [movePet,83,20,27]; @symbol_param<0> = [delta,83,28,33]; ]
+    protected
+    function movePet(delta) {
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_83_35_94_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 84 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_84_8_86_8_if_stmt:
+        symbol [ _state %tmp.2 84 12 18 ];
+        %tmp.2 = getv ? :_state;
+        %tmp.3 = 0;
+        %tmp.4 = ne %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_84_8_86_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_84_8_86_8_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_84_25_86_8_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 85 12 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_84_25_86_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_84_8_86_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_84_8_86_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 87 8 ]
+        symbol [ _petLane %tmp.5 87 8 16 ];
+        %tmp.5 = getv self :_petLane;
+        %tmp.6 = lgetv %delta;
+        symbol [ delta %tmp.6 87 20 25 ];
+        %tmp.7 = add %tmp.5 %tmp.6;
+        symbol [ _petLane ? 87 8 16 ];
+        putv self :_petLane dup %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 88 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_88_8_90_8_if_stmt:
+        symbol [ _petLane %tmp.9 88 12 20 ];
+        %tmp.9 = getv ? :_petLane;
+        %tmp.10 = 0;
+        %tmp.11 = lt %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_88_8_90_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_88_8_90_8_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_88_26_90_8_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 89 12 ]
+        %tmp.12 = 0;
+        symbol [ _petLane ? 89 12 20 ];
+        putv self :_petLane %tmp.12;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_88_26_90_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_88_8_90_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_88_8_90_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 91 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_91_8_93_8_if_stmt:
+        symbol [ _petLane %tmp.14 91 12 20 ];
+        %tmp.14 = getv ? :_petLane;
+        symbol [ DODGE_LANES %tmp.16 91 24 35 ];
+        %tmp.16 = getv ? :DODGE_LANES;
+        %tmp.17 = gte %tmp.14 %tmp.16;
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_91_8_93_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_91_8_93_8_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_91_37_93_8_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 92 12 ]
+        symbol [ DODGE_LANES %tmp.19 92 23 34 ];
+        %tmp.19 = getv ? :DODGE_LANES;
+        %tmp.20 = 1;
+        %tmp.21 = sub %tmp.19 %tmp.20;
+        symbol [ _petLane ? 92 12 20 ];
+        putv self :_petLane %tmp.21;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_91_37_93_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_91_8_93_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_91_8_93_8_if_end:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_83_35_94_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 96; @symbol_functiondef = [checkCollisions,96,20,35]; ]
+    protected
+    function checkCollisions() {
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_96_38_110_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 97 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_96_38_110_4_start" "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_96_38_110_4_stop" ]
+        %petY.1 = local;
+        symbol [ petY %petY.1 97 12 16 ];
+        symbol [ DODGE_PET_ROW %tmp.2 97 19 32 ];
+        %tmp.2 = getv ? :DODGE_PET_ROW;
+        lputv %petY.1 %tmp.2;
+        symbol [ petY %petY.1 97 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 98 8 ]
+        for @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_98_8_108_8_for_test @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_98_8_108_8_for_incr @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_98_8_108_8_for_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_98_8_108_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_98_8_108_8_for_begin" "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_98_8_108_8_for_end" ]
+        %i.2 = local;
+        symbol [ i %i.2 98 17 18 ];
+        %tmp.3 = 0;
+        lputv %i.2 %tmp.3;
+        symbol [ i %i.2 98 17 18 ];
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_98_8_108_8_for_test:
+        %tmp.4 = lgetv %i.2;
+        symbol [ i %tmp.4 98 24 25 ];
+        symbol [ DODGE_OBS_MAX %tmp.6 98 28 41 ];
+        %tmp.6 = getv ? :DODGE_OBS_MAX;
+        %tmp.7 = lt %tmp.4 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_98_8_108_8_for_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_98_8_108_8_for_begin:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_98_48_108_8_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 99 12 ]
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_99_12_101_12_if_stmt:
+        symbol [ _obsOn %tmp.9 99 16 22 ];
+        %tmp.9 = getv ? :_obsOn;
+        %tmp.10 = lgetv %i.2;
+        symbol [ i %tmp.10 99 23 24 ];
+        %tmp.11 = agetv %tmp.9 %tmp.10;
+        %tmp.12 = 0;
+        %tmp.13 = eq %tmp.11 %tmp.12;
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_99_12_101_12_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_99_12_101_12_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_99_32_101_12_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 100 16 ]
+        goto break @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_98_8_108_8_for_incr;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_99_32_101_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_99_12_101_12_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_99_12_101_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 102 12 ]
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_102_12_104_12_if_stmt:
+        symbol [ _obsLane %tmp.15 102 16 24 ];
+        %tmp.15 = getv ? :_obsLane;
+        %tmp.16 = lgetv %i.2;
+        symbol [ i %tmp.16 102 25 26 ];
+        %tmp.17 = agetv %tmp.15 %tmp.16;
+        symbol [ _petLane %tmp.19 102 31 39 ];
+        %tmp.19 = getv ? :_petLane;
+        %tmp.20 = ne %tmp.17 %tmp.19;
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_102_12_104_12_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_102_12_104_12_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_102_41_104_12_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 103 16 ]
+        goto break @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_98_8_108_8_for_incr;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_102_41_104_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_102_12_104_12_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_102_12_104_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 105 12 ]
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_105_12_107_12_if_stmt:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_105_16_105_59_begin:
+        symbol [ _obsY %tmp.22 105 16 21 ];
+        %tmp.22 = getv ? :_obsY;
+        %tmp.23 = lgetv %i.2;
+        symbol [ i %tmp.23 105 22 23 ];
+        %tmp.24 = agetv %tmp.22 %tmp.23;
+        %tmp.25 = lgetv %petY.1;
+        symbol [ petY %tmp.25 105 28 32 ];
+        %tmp.26 = 8;
+        %tmp.27 = sub %tmp.25 %tmp.26;
+        %tmp.28 = gte %tmp.24 %tmp.27;
+        bf %tmp.28 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_105_12_107_12_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_105_40_105_59_true:
+        symbol [ _obsY %tmp.30 105 40 45 ];
+        %tmp.30 = getv ? :_obsY;
+        %tmp.31 = lgetv %i.2;
+        symbol [ i %tmp.31 105 46 47 ];
+        %tmp.32 = agetv %tmp.30 %tmp.31;
+        %tmp.33 = lgetv %petY.1;
+        symbol [ petY %tmp.33 105 52 56 ];
+        %tmp.34 = 10;
+        %tmp.35 = add %tmp.33 %tmp.34;
+        %tmp.36 = lte %tmp.32 %tmp.35;
+        push %tmp.36;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_105_40_105_59_end:
+        %tmp.37 = phi [%tmp.28 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_105_16_105_59_begin] [%tmp.36 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_105_40_105_59_true] [%tmp.37 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_105_40_105_59_end];
+        bf %tmp.37 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_105_12_107_12_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_105_12_107_12_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_105_63_107_12_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 106 16 ]
+        %tmp.38 = true;
+        ret %tmp.38;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_105_63_107_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_105_12_107_12_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_105_12_107_12_if_end:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_98_48_108_8_stop:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_98_8_108_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 98 ]
+        %tmp.41 = lgetv %i.2;
+        symbol [ i %tmp.41 98 43 44 ];
+        %tmp.42 = add %tmp.41 1;
+        lputv %i.2 %tmp.42;
+        symbol [ i %i.2 98 43 44 ];
+        goto @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_98_8_108_8_for_test;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_98_8_108_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 109 8 ]
+        %tmp.43 = false;
+        ret %tmp.43;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_96_38_110_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 112; @symbol_functiondef = [onGameTimer,112,13,24]; ]
+    function onGameTimer() as Void {
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_112_35_154_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 113 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_113_8_152_8_if_stmt:
+        symbol [ _state %tmp.2 113 12 18 ];
+        %tmp.2 = getv ? :_state;
+        %tmp.3 = 0;
+        %tmp.4 = eq %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_113_8_152_8_if_false;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_113_8_152_8_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_113_25_146_8_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 114 12 ]
+        symbol [ _sparkles %tmp.6 114 25 34 ];
+        %tmp.6 = getv ? :_sparkles;
+        %tmp.7 = 1;
+        %tmp.8 = add %tmp.6 %tmp.7;
+        %tmp.9 = 8;
+        %tmp.10 = mod %tmp.8 %tmp.9;
+        symbol [ _sparkles ? 114 12 21 ];
+        putv self :_sparkles %tmp.10;
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 115 12 ]
+        symbol [ _survivalTicks %tmp.13 115 12 26 ];
+        %tmp.13 = getv ? :_survivalTicks;
+        %tmp.14 = add %tmp.13 1;
+        symbol [ _survivalTicks ? 115 12 26 ];
+        putv self :_survivalTicks dup %tmp.14;
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 116 12 ]
+        %tmp.15 = 2;
+        symbol [ _survivalTicks %tmp.17 116 29 43 ];
+        %tmp.17 = getv ? :_survivalTicks;
+        %tmp.18 = 80;
+        %tmp.19 = div %tmp.17 %tmp.18;
+        %tmp.20 = add %tmp.15 %tmp.19;
+        symbol [ _fallSpeed ? 116 12 22 ];
+        putv self :_fallSpeed %tmp.20;
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 117 12 ]
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_117_12_119_12_if_stmt:
+        symbol [ _fallSpeed %tmp.22 117 16 26 ];
+        %tmp.22 = getv ? :_fallSpeed;
+        %tmp.23 = 10;
+        %tmp.24 = gt %tmp.22 %tmp.23;
+        bf %tmp.24 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_117_12_119_12_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_117_12_119_12_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_117_33_119_12_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 118 16 ]
+        %tmp.25 = 10;
+        symbol [ _fallSpeed ? 118 16 26 ];
+        putv self :_fallSpeed %tmp.25;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_117_33_119_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_117_12_119_12_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_117_12_119_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 120 12 ]
+        symbol [ _spawnAcc %tmp.28 120 12 21 ];
+        %tmp.28 = getv ? :_spawnAcc;
+        %tmp.29 = add %tmp.28 1;
+        symbol [ _spawnAcc ? 120 12 21 ];
+        putv self :_spawnAcc dup %tmp.29;
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 121 12 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_113_25_146_8_start" "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_113_25_146_8_stop" ]
+        %spawnEvery.1 = local;
+        symbol [ spawnEvery %spawnEvery.1 121 16 26 ];
+        %tmp.30 = 14;
+        symbol [ _fallSpeed %tmp.32 121 34 44 ];
+        %tmp.32 = getv ? :_fallSpeed;
+        %tmp.33 = 2;
+        %tmp.34 = div %tmp.32 %tmp.33;
+        %tmp.35 = sub %tmp.30 %tmp.34;
+        lputv %spawnEvery.1 %tmp.35;
+        symbol [ spawnEvery %spawnEvery.1 121 16 26 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 122 12 ]
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_122_12_124_12_if_stmt:
+        %tmp.36 = lgetv %spawnEvery.1;
+        symbol [ spawnEvery %tmp.36 122 16 26 ];
+        %tmp.37 = 5;
+        %tmp.38 = lt %tmp.36 %tmp.37;
+        bf %tmp.38 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_122_12_124_12_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_122_12_124_12_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_122_32_124_12_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 123 16 ]
+        %tmp.39 = 5;
+        lputv %spawnEvery.1 %tmp.39;
+        symbol [ spawnEvery %spawnEvery.1 123 16 26 ];
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_122_32_124_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_122_12_124_12_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_122_12_124_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 125 12 ]
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_125_12_128_12_if_stmt:
+        symbol [ _spawnAcc %tmp.41 125 16 25 ];
+        %tmp.41 = getv ? :_spawnAcc;
+        %tmp.42 = lgetv %spawnEvery.1;
+        symbol [ spawnEvery %tmp.42 125 29 39 ];
+        %tmp.43 = gte %tmp.41 %tmp.42;
+        bf %tmp.43 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_125_12_128_12_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_125_12_128_12_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_125_41_128_12_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 126 16 ]
+        %tmp.44 = 0;
+        symbol [ _spawnAcc ? 126 16 25 ];
+        putv self :_spawnAcc %tmp.44;
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 127 16 ]
+        %tmp.45 = self;
+        symbol [ spawnObstacle %tmp.46 127 16 29 ];
+        %tmp.46 = getv function %tmp.45 :spawnObstacle;
+        invoke %tmp.45 %tmp.46();
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_125_41_128_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_125_12_128_12_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_125_12_128_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 129 12 ]
+        for @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_129_12_136_12_for_test @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_129_12_136_12_for_incr @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_129_12_136_12_for_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_129_12_136_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_129_12_136_12_for_begin" "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_129_12_136_12_for_end" ]
+        %i.2 = local;
+        symbol [ i %i.2 129 21 22 ];
+        %tmp.47 = 0;
+        lputv %i.2 %tmp.47;
+        symbol [ i %i.2 129 21 22 ];
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_129_12_136_12_for_test:
+        %tmp.48 = lgetv %i.2;
+        symbol [ i %tmp.48 129 28 29 ];
+        symbol [ DODGE_OBS_MAX %tmp.50 129 32 45 ];
+        %tmp.50 = getv ? :DODGE_OBS_MAX;
+        %tmp.51 = lt %tmp.48 %tmp.50;
+        bf %tmp.51 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_129_12_136_12_for_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_129_12_136_12_for_begin:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_129_52_136_12_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 130 16 ]
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_130_16_135_16_if_stmt:
+        symbol [ _obsOn %tmp.53 130 20 26 ];
+        %tmp.53 = getv ? :_obsOn;
+        %tmp.54 = lgetv %i.2;
+        symbol [ i %tmp.54 130 27 28 ];
+        %tmp.55 = agetv %tmp.53 %tmp.54;
+        %tmp.56 = 0;
+        %tmp.57 = ne %tmp.55 %tmp.56;
+        bf %tmp.57 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_130_16_135_16_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_130_16_135_16_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_130_36_135_16_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 131 20 ]
+        symbol [ _obsY %tmp.58 131 20 25 ];
+        %tmp.58 = getv self :_obsY;
+        symbol [ _obsY %tmp.59 131 20 25 ];
+        %tmp.59 = getv self :_obsY;
+        %tmp.60 = lgetv %i.2;
+        symbol [ i %tmp.60 131 26 27 ];
+        %tmp.61 = agetv %tmp.59 %tmp.60;
+        symbol [ _fallSpeed %tmp.63 131 32 42 ];
+        %tmp.63 = getv ? :_fallSpeed;
+        %tmp.64 = add %tmp.61 %tmp.63;
+        %tmp.65 = lgetv %i.2;
+        symbol [ i %tmp.65 131 26 27 ];
+        aputv %tmp.58 %tmp.65 dup %tmp.64;
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 132 20 ]
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_132_20_134_20_if_stmt:
+        symbol [ _obsY %tmp.67 132 24 29 ];
+        %tmp.67 = getv ? :_obsY;
+        %tmp.68 = lgetv %i.2;
+        symbol [ i %tmp.68 132 30 31 ];
+        %tmp.69 = agetv %tmp.67 %tmp.68;
+        %tmp.70 = 110;
+        %tmp.71 = gt %tmp.69 %tmp.70;
+        bf %tmp.71 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_132_20_134_20_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_132_20_134_20_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_132_40_134_20_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 133 24 ]
+        symbol [ _obsOn %tmp.72 133 24 30 ];
+        %tmp.72 = getv self :_obsOn;
+        %tmp.73 = 0;
+        %tmp.74 = lgetv %i.2;
+        symbol [ i %tmp.74 133 31 32 ];
+        aputv %tmp.72 %tmp.74 %tmp.73;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_132_40_134_20_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_132_20_134_20_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_132_20_134_20_if_end:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_130_36_135_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_130_16_135_16_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_130_16_135_16_if_end:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_129_52_136_12_stop:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_129_12_136_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 129 ]
+        %tmp.77 = lgetv %i.2;
+        symbol [ i %tmp.77 129 47 48 ];
+        %tmp.78 = add %tmp.77 1;
+        lputv %i.2 %tmp.78;
+        symbol [ i %i.2 129 47 48 ];
+        goto @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_129_12_136_12_for_test;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_129_12_136_12_for_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 137 12 ]
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_137_12_145_12_if_stmt:
+        %tmp.79 = self;
+        symbol [ checkCollisions %tmp.80 137 16 31 ];
+        %tmp.80 = getv function %tmp.79 :checkCollisions;
+        %tmp.81 = invoke %tmp.79 %tmp.80();
+        bf %tmp.81 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_137_12_145_12_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_137_12_145_12_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_137_35_145_12_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 138 16 ]
+        %tmp.82 = 1;
+        symbol [ _state ? 138 16 22 ];
+        putv self :_state %tmp.82;
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 139 16 ]
+        %tmp.83 = 0;
+        symbol [ _doneTicks ? 139 16 26 ];
+        putv self :_doneTicks %tmp.83;
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 140 16 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_137_35_145_12_start" "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_137_35_145_12_stop" ]
+        %pr.3 = local;
+        symbol [ pr %pr.3 140 20 22 ];
+        %tmp.84 = self;
+        symbol [ survivalToPlayResult %tmp.85 140 25 45 ];
+        %tmp.85 = getv function %tmp.84 :survivalToPlayResult;
+        %tmp.86 = invoke %tmp.84 %tmp.85();
+        lputv %pr.3 %tmp.86;
+        symbol [ pr %pr.3 140 20 22 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 141 16 ]
+        symbol [ _pet %tmp.88 141 16 20 ];
+        %tmp.88 = getv ? :_pet;
+        symbol [ playResult %tmp.89 141 21 31 ];
+        %tmp.89 = getv function %tmp.88 :playResult;
+        %tmp.90 = lgetv %pr.3;
+        symbol [ pr %tmp.90 141 32 34 ];
+        invoke %tmp.88 %tmp.89(%tmp.90);
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 142 16 ]
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_142_16_144_16_if_stmt:
+        symbol [ Toybox %tmp.92 142 20 26 ];
+        %tmp.92 = getv ? :Toybox;
+        symbol [ Attention %tmp.93 142 27 36 ];
+        %tmp.93 = getv %tmp.92 :Attention;
+        %tmp.95 = const :vibrate;
+        symbol [ vibrate %tmp.95 142 42 49 const ];
+        %tmp.96 = canhazplz %tmp.93 %tmp.95;
+        bf %tmp.96 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_142_16_144_16_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_142_16_144_16_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_142_51_144_16_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 143 20 ]
+        symbol [ Toybox %tmp.98 143 20 26 ];
+        %tmp.98 = getv ? :Toybox;
+        symbol [ Attention %tmp.99 143 27 36 ];
+        %tmp.99 = getv %tmp.98 :Attention;
+        symbol [ vibrate %tmp.100 143 37 44 ];
+        %tmp.100 = getv function %tmp.99 :vibrate;
+        %tmp.101 = newa 1;
+        symbol [ Toybox %tmp.105 143 50 56 ];
+        %tmp.105 = getv ? :Toybox;
+        symbol [ Attention %tmp.106 143 57 66 ];
+        %tmp.106 = getv %tmp.105 :Attention;
+        symbol [ VibeProfile %tmp.107 143 67 78 ];
+        %tmp.107 = getv %tmp.106 :VibeProfile;
+        %tmp.108 = 20;
+        %tmp.109 = 200;
+        %tmp.102 = newc %tmp.107 (%tmp.108, %tmp.109);
+        %tmp.110 = dup %tmp.101;
+        %tmp.111 = aputv %tmp.110 0 %tmp.102;
+        invoke %tmp.99 %tmp.100(%tmp.111);
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_142_51_144_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_142_16_144_16_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_142_16_144_16_if_end:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_137_35_145_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_137_12_145_12_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_137_12_145_12_if_end:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_113_25_146_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_113_8_152_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_113_8_152_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 146 15 ]
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_146_15_152_8_if_stmt:
+        symbol [ _state %tmp.113 146 19 25 ];
+        %tmp.113 = getv ? :_state;
+        %tmp.114 = 1;
+        %tmp.115 = eq %tmp.113 %tmp.114;
+        bf %tmp.115 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_146_15_152_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_146_15_152_8_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_146_32_152_8_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 147 12 ]
+        symbol [ _doneTicks %tmp.118 147 12 22 ];
+        %tmp.118 = getv ? :_doneTicks;
+        %tmp.119 = add %tmp.118 1;
+        symbol [ _doneTicks ? 147 12 22 ];
+        putv self :_doneTicks dup %tmp.119;
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 148 12 ]
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_148_12_151_12_if_stmt:
+        symbol [ _doneTicks %tmp.121 148 16 26 ];
+        %tmp.121 = getv ? :_doneTicks;
+        %tmp.122 = 25;
+        %tmp.123 = gte %tmp.121 %tmp.122;
+        bf %tmp.123 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_148_12_151_12_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_148_12_151_12_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_148_34_151_12_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 149 16 ]
+        symbol [ WatchUi %tmp.124 149 16 23 ];
+        %tmp.124 = getm $.Toybox.WatchUi;
+        symbol [ popView %tmp.125 149 24 31 ];
+        %tmp.125 = getv function %tmp.124 :popView;
+        symbol [ WatchUi %tmp.126 149 32 39 ];
+        %tmp.126 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_DOWN %tmp.127 149 40 50 ];
+        %tmp.127 = getv %tmp.126 :SLIDE_DOWN;
+        invoke %tmp.124 %tmp.125(%tmp.127);
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 150 16 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_148_34_151_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_148_12_151_12_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_148_12_151_12_if_end:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_146_32_152_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_146_15_152_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_146_15_152_8_if_end:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_113_8_152_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 153 8 ]
+        symbol [ WatchUi %tmp.128 153 8 15 ];
+        %tmp.128 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.129 153 16 29 ];
+        %tmp.129 = getv function %tmp.128 :requestUpdate;
+        invoke %tmp.128 %tmp.129();
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_112_35_154_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 156; @symbol_functiondef = [moveLeft,156,13,21]; ]
+    function moveLeft() {
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_156_24_158_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 157 8 ]
+        %tmp.1 = self;
+        symbol [ movePet %tmp.2 157 8 15 ];
+        %tmp.2 = getv function %tmp.1 :movePet;
+        %tmp.3 = -1;
+        invoke %tmp.1 %tmp.2(%tmp.3);
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_156_24_158_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 160; @symbol_functiondef = [moveRight,160,13,22]; ]
+    function moveRight() {
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_160_25_162_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 161 8 ]
+        %tmp.1 = self;
+        symbol [ movePet %tmp.2 161 8 15 ];
+        %tmp.2 = getv function %tmp.1 :movePet;
+        %tmp.3 = 1;
+        invoke %tmp.1 %tmp.2(%tmp.3);
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_160_25_162_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 164; @symbol_functiondef = [onUpdate,164,13,21]; @symbol_param<0> = [dc,164,22,24]; ]
+    function onUpdate(dc) {
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_164_26_193_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 165 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_164_26_193_4_start" "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_164_26_193_4_stop" ]
+        %w.1 = local;
+        symbol [ w %w.1 165 12 13 ];
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 165 16 18 ];
+        symbol [ getWidth %tmp.2 165 19 27 ];
+        %tmp.2 = getv function %tmp.1 :getWidth;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        lputv %w.1 %tmp.3;
+        symbol [ w %w.1 165 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 166 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_164_26_193_4_start" "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_164_26_193_4_stop" ]
+        %h.2 = local;
+        symbol [ h %h.2 166 12 13 ];
+        %tmp.4 = lgetv %dc;
+        symbol [ dc %tmp.4 166 16 18 ];
+        symbol [ getHeight %tmp.5 166 19 28 ];
+        %tmp.5 = getv function %tmp.4 :getHeight;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        lputv %h.2 %tmp.6;
+        symbol [ h %h.2 166 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 167 8 ]
+        %tmp.7 = lgetv %dc;
+        symbol [ dc %tmp.7 167 8 10 ];
+        symbol [ setColor %tmp.8 167 11 19 ];
+        %tmp.8 = getv function %tmp.7 :setColor;
+        %tmp.9 = 0x0F0F23;
+        %tmp.10 = 0x0F0F23;
+        invoke %tmp.7 %tmp.8(%tmp.9, %tmp.10);
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 168 8 ]
+        %tmp.11 = lgetv %dc;
+        symbol [ dc %tmp.11 168 8 10 ];
+        symbol [ clear %tmp.12 168 11 16 ];
+        %tmp.12 = getv function %tmp.11 :clear;
+        invoke %tmp.11 %tmp.12();
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 170 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_164_26_193_4_start" "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_164_26_193_4_stop" ]
+        %petColors.3 = local;
+        symbol [ petColors %petColors.3 170 12 21 ];
+        symbol [ _pet %tmp.14 170 24 28 ];
+        %tmp.14 = getv ? :_pet;
+        symbol [ getColors %tmp.15 170 29 38 ];
+        %tmp.15 = getv function %tmp.14 :getColors;
+        symbol [ _pet %tmp.17 170 39 43 ];
+        %tmp.17 = getv ? :_pet;
+        symbol [ petType %tmp.18 170 44 51 ];
+        %tmp.18 = getv %tmp.17 :petType;
+        %tmp.19 = invoke %tmp.14 %tmp.15(%tmp.18);
+        lputv %petColors.3 %tmp.19;
+        symbol [ petColors %petColors.3 170 12 21 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 172 8 ]
+        %tmp.20 = lgetv %dc;
+        symbol [ dc %tmp.20 172 8 10 ];
+        symbol [ setColor %tmp.21 172 11 19 ];
+        %tmp.21 = getv function %tmp.20 :setColor;
+        %tmp.22 = lgetv %petColors.3;
+        symbol [ petColors %tmp.22 172 20 29 ];
+        %tmp.23 = 2;
+        %tmp.24 = agetv %tmp.22 %tmp.23;
+        symbol [ Graphics %tmp.25 172 34 42 ];
+        %tmp.25 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.26 172 43 60 ];
+        %tmp.26 = getv %tmp.25 :COLOR_TRANSPARENT;
+        invoke %tmp.20 %tmp.21(%tmp.24, %tmp.26);
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 173 8 ]
+        %tmp.27 = lgetv %dc;
+        symbol [ dc %tmp.27 173 8 10 ];
+        symbol [ drawText %tmp.28 173 11 19 ];
+        %tmp.28 = getv function %tmp.27 :drawText;
+        %tmp.29 = lgetv %w.1;
+        symbol [ w %tmp.29 173 20 21 ];
+        %tmp.30 = 2;
+        %tmp.31 = div %tmp.29 %tmp.30;
+        %tmp.32 = lgetv %h.2;
+        symbol [ h %tmp.32 173 27 28 ];
+        %tmp.33 = 5;
+        %tmp.34 = mul %tmp.32 %tmp.33;
+        %tmp.35 = 100;
+        %tmp.36 = div %tmp.34 %tmp.35;
+        symbol [ Graphics %tmp.37 173 40 48 ];
+        %tmp.37 = getm $.Toybox.Graphics;
+        symbol [ FONT_SMALL %tmp.38 173 49 59 ];
+        %tmp.38 = getv %tmp.37 :FONT_SMALL;
+        %tmp.39 = "Dodge!";
+        symbol [ Graphics %tmp.40 173 71 79 ];
+        %tmp.40 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.41 173 80 99 ];
+        %tmp.41 = getv %tmp.40 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.27 %tmp.28(%tmp.31, %tmp.36, %tmp.38, %tmp.39, %tmp.41);
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 175 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_164_26_193_4_start" "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_164_26_193_4_stop" ]
+        %scoreStr.4 = local;
+        symbol [ scoreStr %scoreStr.4 175 12 20 ];
+        %tmp.42 = "";
+        %tmp.43 = self;
+        symbol [ survivalDisplayScore %tmp.44 175 28 48 ];
+        %tmp.44 = getv function %tmp.43 :survivalDisplayScore;
+        %tmp.45 = invoke %tmp.43 %tmp.44();
+        %tmp.46 = add %tmp.42 %tmp.45;
+        lputv %scoreStr.4 %tmp.46;
+        symbol [ scoreStr %scoreStr.4 175 12 20 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 176 8 ]
+        %tmp.47 = lgetv %dc;
+        symbol [ dc %tmp.47 176 8 10 ];
+        symbol [ setColor %tmp.48 176 11 19 ];
+        %tmp.48 = getv function %tmp.47 :setColor;
+        %tmp.49 = 0x888899;
+        symbol [ Graphics %tmp.50 176 30 38 ];
+        %tmp.50 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.51 176 39 56 ];
+        %tmp.51 = getv %tmp.50 :COLOR_TRANSPARENT;
+        invoke %tmp.47 %tmp.48(%tmp.49, %tmp.51);
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 177 8 ]
+        %tmp.52 = lgetv %dc;
+        symbol [ dc %tmp.52 177 8 10 ];
+        symbol [ drawText %tmp.53 177 11 19 ];
+        %tmp.53 = getv function %tmp.52 :drawText;
+        %tmp.54 = lgetv %w.1;
+        symbol [ w %tmp.54 177 20 21 ];
+        %tmp.55 = 2;
+        %tmp.56 = div %tmp.54 %tmp.55;
+        %tmp.57 = lgetv %h.2;
+        symbol [ h %tmp.57 177 27 28 ];
+        %tmp.58 = 14;
+        %tmp.59 = mul %tmp.57 %tmp.58;
+        %tmp.60 = 100;
+        %tmp.61 = div %tmp.59 %tmp.60;
+        symbol [ Graphics %tmp.62 177 41 49 ];
+        %tmp.62 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.63 177 50 60 ];
+        %tmp.63 = getv %tmp.62 :FONT_XTINY;
+        %tmp.64 = lgetv %scoreStr.4;
+        symbol [ scoreStr %tmp.64 177 62 70 ];
+        symbol [ Graphics %tmp.65 177 72 80 ];
+        %tmp.65 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.66 177 81 100 ];
+        %tmp.66 = getv %tmp.65 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.52 %tmp.53(%tmp.56, %tmp.61, %tmp.63, %tmp.64, %tmp.66);
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 179 8 ]
+        %tmp.67 = self;
+        symbol [ drawObstacles %tmp.68 179 8 21 ];
+        %tmp.68 = getv function %tmp.67 :drawObstacles;
+        %tmp.69 = lgetv %dc;
+        symbol [ dc %tmp.69 179 22 24 ];
+        %tmp.70 = lgetv %w.1;
+        symbol [ w %tmp.70 179 26 27 ];
+        %tmp.71 = lgetv %h.2;
+        symbol [ h %tmp.71 179 29 30 ];
+        %tmp.72 = lgetv %petColors.3;
+        symbol [ petColors %tmp.72 179 32 41 ];
+        invoke %tmp.67 %tmp.68(%tmp.69, %tmp.70, %tmp.71, %tmp.72);
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 180 8 ]
+        %tmp.73 = self;
+        symbol [ drawPet %tmp.74 180 8 15 ];
+        %tmp.74 = getv function %tmp.73 :drawPet;
+        %tmp.75 = lgetv %dc;
+        symbol [ dc %tmp.75 180 16 18 ];
+        %tmp.76 = lgetv %w.1;
+        symbol [ w %tmp.76 180 20 21 ];
+        %tmp.77 = lgetv %h.2;
+        symbol [ h %tmp.77 180 23 24 ];
+        %tmp.78 = lgetv %petColors.3;
+        symbol [ petColors %tmp.78 180 26 35 ];
+        invoke %tmp.73 %tmp.74(%tmp.75, %tmp.76, %tmp.77, %tmp.78);
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 182 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_182_8_190_8_if_stmt:
+        symbol [ _state %tmp.80 182 12 18 ];
+        %tmp.80 = getv ? :_state;
+        %tmp.81 = 1;
+        %tmp.82 = eq %tmp.80 %tmp.81;
+        bf %tmp.82 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_182_8_190_8_if_else_false;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_182_8_190_8_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_182_25_187_8_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 183 12 ]
+        %tmp.83 = lgetv %dc;
+        symbol [ dc %tmp.83 183 12 14 ];
+        symbol [ setColor %tmp.84 183 15 23 ];
+        %tmp.84 = getv function %tmp.83 :setColor;
+        %tmp.85 = 0xFF4444;
+        symbol [ Graphics %tmp.86 183 34 42 ];
+        %tmp.86 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.87 183 43 60 ];
+        %tmp.87 = getv %tmp.86 :COLOR_TRANSPARENT;
+        invoke %tmp.83 %tmp.84(%tmp.85, %tmp.87);
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 184 12 ]
+        %tmp.88 = lgetv %dc;
+        symbol [ dc %tmp.88 184 12 14 ];
+        symbol [ drawText %tmp.89 184 15 23 ];
+        %tmp.89 = getv function %tmp.88 :drawText;
+        %tmp.90 = lgetv %w.1;
+        symbol [ w %tmp.90 184 24 25 ];
+        %tmp.91 = 2;
+        %tmp.92 = div %tmp.90 %tmp.91;
+        %tmp.93 = lgetv %h.2;
+        symbol [ h %tmp.93 184 31 32 ];
+        %tmp.94 = 42;
+        %tmp.95 = mul %tmp.93 %tmp.94;
+        %tmp.96 = 100;
+        %tmp.97 = div %tmp.95 %tmp.96;
+        symbol [ Graphics %tmp.98 184 45 53 ];
+        %tmp.98 = getm $.Toybox.Graphics;
+        symbol [ FONT_MEDIUM %tmp.99 184 54 65 ];
+        %tmp.99 = getv %tmp.98 :FONT_MEDIUM;
+        %tmp.100 = "HIT!";
+        symbol [ Graphics %tmp.101 184 75 83 ];
+        %tmp.101 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.102 184 84 103 ];
+        %tmp.102 = getv %tmp.101 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.88 %tmp.89(%tmp.92, %tmp.97, %tmp.99, %tmp.100, %tmp.102);
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 185 12 ]
+        %tmp.103 = lgetv %dc;
+        symbol [ dc %tmp.103 185 12 14 ];
+        symbol [ setColor %tmp.104 185 15 23 ];
+        %tmp.104 = getv function %tmp.103 :setColor;
+        %tmp.105 = 0xCCCCCC;
+        symbol [ Graphics %tmp.106 185 34 42 ];
+        %tmp.106 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.107 185 43 60 ];
+        %tmp.107 = getv %tmp.106 :COLOR_TRANSPARENT;
+        invoke %tmp.103 %tmp.104(%tmp.105, %tmp.107);
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 186 12 ]
+        %tmp.108 = lgetv %dc;
+        symbol [ dc %tmp.108 186 12 14 ];
+        symbol [ drawText %tmp.109 186 15 23 ];
+        %tmp.109 = getv function %tmp.108 :drawText;
+        %tmp.110 = lgetv %w.1;
+        symbol [ w %tmp.110 186 24 25 ];
+        %tmp.111 = 2;
+        %tmp.112 = div %tmp.110 %tmp.111;
+        %tmp.113 = lgetv %h.2;
+        symbol [ h %tmp.113 186 31 32 ];
+        %tmp.114 = 55;
+        %tmp.115 = mul %tmp.113 %tmp.114;
+        %tmp.116 = 100;
+        %tmp.117 = div %tmp.115 %tmp.116;
+        symbol [ Graphics %tmp.118 186 45 53 ];
+        %tmp.118 = getm $.Toybox.Graphics;
+        symbol [ FONT_TINY %tmp.119 186 54 63 ];
+        %tmp.119 = getv %tmp.118 :FONT_TINY;
+        %tmp.120 = "Score ";
+        %tmp.121 = lgetv %scoreStr.4;
+        symbol [ scoreStr %tmp.121 186 76 84 ];
+        %tmp.122 = add %tmp.120 %tmp.121;
+        symbol [ Graphics %tmp.123 186 86 94 ];
+        %tmp.123 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.124 186 95 114 ];
+        %tmp.124 = getv %tmp.123 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.108 %tmp.109(%tmp.112, %tmp.117, %tmp.119, %tmp.122, %tmp.124);
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_182_25_187_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_182_8_190_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_182_8_190_8_if_else_false:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_187_15_190_8_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 188 12 ]
+        %tmp.125 = lgetv %dc;
+        symbol [ dc %tmp.125 188 12 14 ];
+        symbol [ setColor %tmp.126 188 15 23 ];
+        %tmp.126 = getv function %tmp.125 :setColor;
+        %tmp.127 = 0x555577;
+        symbol [ Graphics %tmp.128 188 34 42 ];
+        %tmp.128 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.129 188 43 60 ];
+        %tmp.129 = getv %tmp.128 :COLOR_TRANSPARENT;
+        invoke %tmp.125 %tmp.126(%tmp.127, %tmp.129);
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 189 12 ]
+        %tmp.130 = lgetv %dc;
+        symbol [ dc %tmp.130 189 12 14 ];
+        symbol [ drawText %tmp.131 189 15 23 ];
+        %tmp.131 = getv function %tmp.130 :drawText;
+        %tmp.132 = lgetv %w.1;
+        symbol [ w %tmp.132 189 24 25 ];
+        %tmp.133 = 2;
+        %tmp.134 = div %tmp.132 %tmp.133;
+        %tmp.135 = lgetv %h.2;
+        symbol [ h %tmp.135 189 31 32 ];
+        %tmp.136 = 72;
+        %tmp.137 = mul %tmp.135 %tmp.136;
+        %tmp.138 = 100;
+        %tmp.139 = div %tmp.137 %tmp.138;
+        symbol [ Graphics %tmp.140 189 45 53 ];
+        %tmp.140 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.141 189 54 64 ];
+        %tmp.141 = getv %tmp.140 :FONT_XTINY;
+        %tmp.142 = "< prev  next >";
+        symbol [ Graphics %tmp.143 189 84 92 ];
+        %tmp.143 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.144 189 93 112 ];
+        %tmp.144 = getv %tmp.143 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.130 %tmp.131(%tmp.134, %tmp.139, %tmp.141, %tmp.142, %tmp.144);
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_187_15_190_8_stop:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_182_8_190_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 192 8 ]
+        %tmp.145 = self;
+        symbol [ drawDecorations %tmp.146 192 8 23 ];
+        %tmp.146 = getv function %tmp.145 :drawDecorations;
+        %tmp.147 = lgetv %dc;
+        symbol [ dc %tmp.147 192 24 26 ];
+        %tmp.148 = lgetv %w.1;
+        symbol [ w %tmp.148 192 28 29 ];
+        %tmp.149 = lgetv %h.2;
+        symbol [ h %tmp.149 192 31 32 ];
+        invoke %tmp.145 %tmp.146(%tmp.147, %tmp.148, %tmp.149);
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_164_26_193_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 195; @symbol_functiondef = [laneToX,195,20,27]; @symbol_param<0> = [dc,195,28,30]; @symbol_param<1> = [lane,195,32,36]; ]
+    protected
+    function laneToX(dc, lane) {
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_195_38_200_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 196 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_195_38_200_4_start" "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_195_38_200_4_stop" ]
+        %w.1 = local;
+        symbol [ w %w.1 196 12 13 ];
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 196 16 18 ];
+        symbol [ getWidth %tmp.2 196 19 27 ];
+        %tmp.2 = getv function %tmp.1 :getWidth;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        lputv %w.1 %tmp.3;
+        symbol [ w %w.1 196 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 197 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_195_38_200_4_start" "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_195_38_200_4_stop" ]
+        %margin.2 = local;
+        symbol [ margin %margin.2 197 12 18 ];
+        %tmp.4 = lgetv %w.1;
+        symbol [ w %tmp.4 197 21 22 ];
+        %tmp.5 = 12;
+        %tmp.6 = mul %tmp.4 %tmp.5;
+        %tmp.7 = 100;
+        %tmp.8 = div %tmp.6 %tmp.7;
+        lputv %margin.2 %tmp.8;
+        symbol [ margin %margin.2 197 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 198 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_195_38_200_4_start" "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_195_38_200_4_stop" ]
+        %track.3 = local;
+        symbol [ track %track.3 198 12 17 ];
+        %tmp.9 = lgetv %w.1;
+        symbol [ w %tmp.9 198 20 21 ];
+        %tmp.10 = 2;
+        %tmp.11 = lgetv %margin.2;
+        symbol [ margin %tmp.11 198 28 34 ];
+        %tmp.12 = mul %tmp.10 %tmp.11;
+        %tmp.13 = sub %tmp.9 %tmp.12;
+        lputv %track.3 %tmp.13;
+        symbol [ track %track.3 198 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 199 8 ]
+        %tmp.14 = lgetv %margin.2;
+        symbol [ margin %tmp.14 199 15 21 ];
+        %tmp.15 = lgetv %track.3;
+        symbol [ track %tmp.15 199 24 29 ];
+        %tmp.16 = lgetv %lane;
+        symbol [ lane %tmp.16 199 33 37 ];
+        %tmp.17 = 2;
+        %tmp.18 = mul %tmp.16 %tmp.17;
+        %tmp.19 = 1;
+        %tmp.20 = add %tmp.18 %tmp.19;
+        %tmp.21 = mul %tmp.15 %tmp.20;
+        symbol [ DODGE_LANES %tmp.23 199 50 61 ];
+        %tmp.23 = getv ? :DODGE_LANES;
+        %tmp.24 = 2;
+        %tmp.25 = mul %tmp.23 %tmp.24;
+        %tmp.26 = div %tmp.21 %tmp.25;
+        %tmp.27 = add %tmp.14 %tmp.26;
+        ret %tmp.27;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_195_38_200_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 202; @symbol_functiondef = [drawObstacles,202,20,33]; @symbol_param<0> = [dc,202,34,36]; @symbol_param<1> = [w,202,38,39]; @symbol_param<2> = [h,202,41,42]; @symbol_param<3> = [petColors,202,44,53]; ]
+    protected
+    function drawObstacles(dc, w, h, petColors) {
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_202_55_220_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 203 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 203 8 10 ];
+        symbol [ setColor %tmp.2 203 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        %tmp.3 = 0xAA3333;
+        %tmp.4 = 0xAA3333;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.4);
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 204 8 ]
+        for @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_204_8_219_8_for_test @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_204_8_219_8_for_incr @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_204_8_219_8_for_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_204_8_219_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_204_8_219_8_for_begin" "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_204_8_219_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 204 17 18 ];
+        %tmp.5 = 0;
+        lputv %i.1 %tmp.5;
+        symbol [ i %i.1 204 17 18 ];
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_204_8_219_8_for_test:
+        %tmp.6 = lgetv %i.1;
+        symbol [ i %tmp.6 204 24 25 ];
+        symbol [ DODGE_OBS_MAX %tmp.8 204 28 41 ];
+        %tmp.8 = getv ? :DODGE_OBS_MAX;
+        %tmp.9 = lt %tmp.6 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_204_8_219_8_for_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_204_8_219_8_for_begin:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_204_48_219_8_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 205 12 ]
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_205_12_207_12_if_stmt:
+        symbol [ _obsOn %tmp.11 205 16 22 ];
+        %tmp.11 = getv ? :_obsOn;
+        %tmp.12 = lgetv %i.1;
+        symbol [ i %tmp.12 205 23 24 ];
+        %tmp.13 = agetv %tmp.11 %tmp.12;
+        %tmp.14 = 0;
+        %tmp.15 = eq %tmp.13 %tmp.14;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_205_12_207_12_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_205_12_207_12_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_205_32_207_12_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 206 16 ]
+        goto break @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_204_8_219_8_for_incr;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_205_32_207_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_205_12_207_12_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_205_12_207_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 208 12 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_204_48_219_8_start" "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_204_48_219_8_stop" ]
+        %cx.2 = local;
+        symbol [ cx %cx.2 208 16 18 ];
+        %tmp.16 = self;
+        symbol [ laneToX %tmp.17 208 21 28 ];
+        %tmp.17 = getv function %tmp.16 :laneToX;
+        %tmp.18 = lgetv %dc;
+        symbol [ dc %tmp.18 208 29 31 ];
+        symbol [ _obsLane %tmp.20 208 33 41 ];
+        %tmp.20 = getv ? :_obsLane;
+        %tmp.21 = lgetv %i.1;
+        symbol [ i %tmp.21 208 42 43 ];
+        %tmp.22 = agetv %tmp.20 %tmp.21;
+        %tmp.23 = invoke %tmp.16 %tmp.17(%tmp.18, %tmp.22);
+        lputv %cx.2 %tmp.23;
+        symbol [ cx %cx.2 208 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 209 12 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_204_48_219_8_start" "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_204_48_219_8_stop" ]
+        %cy.3 = local;
+        symbol [ cy %cy.3 209 16 18 ];
+        %tmp.24 = lgetv %h;
+        symbol [ h %tmp.24 209 21 22 ];
+        symbol [ _obsY %tmp.26 209 25 30 ];
+        %tmp.26 = getv ? :_obsY;
+        %tmp.27 = lgetv %i.1;
+        symbol [ i %tmp.27 209 31 32 ];
+        %tmp.28 = agetv %tmp.26 %tmp.27;
+        %tmp.29 = mul %tmp.24 %tmp.28;
+        %tmp.30 = 100;
+        %tmp.31 = div %tmp.29 %tmp.30;
+        lputv %cy.3 %tmp.31;
+        symbol [ cy %cy.3 209 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 210 12 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_204_48_219_8_start" "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_204_48_219_8_stop" ]
+        %rw.4 = local;
+        symbol [ rw %rw.4 210 16 18 ];
+        %tmp.32 = lgetv %w;
+        symbol [ w %tmp.32 210 21 22 ];
+        %tmp.33 = 7;
+        %tmp.34 = mul %tmp.32 %tmp.33;
+        %tmp.35 = 100;
+        %tmp.36 = div %tmp.34 %tmp.35;
+        lputv %rw.4 %tmp.36;
+        symbol [ rw %rw.4 210 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 211 12 ]
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_211_12_213_12_if_stmt:
+        %tmp.37 = lgetv %rw.4;
+        symbol [ rw %tmp.37 211 16 18 ];
+        %tmp.38 = 6;
+        %tmp.39 = lt %tmp.37 %tmp.38;
+        bf %tmp.39 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_211_12_213_12_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_211_12_213_12_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_211_24_213_12_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 212 16 ]
+        %tmp.40 = 6;
+        lputv %rw.4 %tmp.40;
+        symbol [ rw %rw.4 212 16 18 ];
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_211_24_213_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_211_12_213_12_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_211_12_213_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 214 12 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_204_48_219_8_start" "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_204_48_219_8_stop" ]
+        %rh.5 = local;
+        symbol [ rh %rh.5 214 16 18 ];
+        %tmp.41 = lgetv %h;
+        symbol [ h %tmp.41 214 21 22 ];
+        %tmp.42 = 5;
+        %tmp.43 = mul %tmp.41 %tmp.42;
+        %tmp.44 = 100;
+        %tmp.45 = div %tmp.43 %tmp.44;
+        lputv %rh.5 %tmp.45;
+        symbol [ rh %rh.5 214 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 215 12 ]
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_215_12_217_12_if_stmt:
+        %tmp.46 = lgetv %rh.5;
+        symbol [ rh %tmp.46 215 16 18 ];
+        %tmp.47 = 6;
+        %tmp.48 = lt %tmp.46 %tmp.47;
+        bf %tmp.48 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_215_12_217_12_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_215_12_217_12_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_215_24_217_12_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 216 16 ]
+        %tmp.49 = 6;
+        lputv %rh.5 %tmp.49;
+        symbol [ rh %rh.5 216 16 18 ];
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_215_24_217_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_215_12_217_12_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_215_12_217_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 218 12 ]
+        %tmp.50 = lgetv %dc;
+        symbol [ dc %tmp.50 218 12 14 ];
+        symbol [ fillRectangle %tmp.51 218 15 28 ];
+        %tmp.51 = getv function %tmp.50 :fillRectangle;
+        %tmp.52 = lgetv %cx.2;
+        symbol [ cx %tmp.52 218 29 31 ];
+        %tmp.53 = lgetv %rw.4;
+        symbol [ rw %tmp.53 218 34 36 ];
+        %tmp.54 = 2;
+        %tmp.55 = div %tmp.53 %tmp.54;
+        %tmp.56 = sub %tmp.52 %tmp.55;
+        %tmp.57 = lgetv %cy.3;
+        symbol [ cy %tmp.57 218 42 44 ];
+        %tmp.58 = lgetv %rh.5;
+        symbol [ rh %tmp.58 218 47 49 ];
+        %tmp.59 = 2;
+        %tmp.60 = div %tmp.58 %tmp.59;
+        %tmp.61 = sub %tmp.57 %tmp.60;
+        %tmp.62 = lgetv %rw.4;
+        symbol [ rw %tmp.62 218 55 57 ];
+        %tmp.63 = lgetv %rh.5;
+        symbol [ rh %tmp.63 218 59 61 ];
+        invoke %tmp.50 %tmp.51(%tmp.56, %tmp.61, %tmp.62, %tmp.63);
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_204_48_219_8_stop:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_204_8_219_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 204 ]
+        %tmp.66 = lgetv %i.1;
+        symbol [ i %tmp.66 204 43 44 ];
+        %tmp.67 = add %tmp.66 1;
+        lputv %i.1 %tmp.67;
+        symbol [ i %i.1 204 43 44 ];
+        goto @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_204_8_219_8_for_test;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_204_8_219_8_for_end:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_202_55_220_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 222; @symbol_functiondef = [drawPet,222,20,27]; @symbol_param<0> = [dc,222,28,30]; @symbol_param<1> = [w,222,32,33]; @symbol_param<2> = [h,222,35,36]; @symbol_param<3> = [petColors,222,38,47]; ]
+    protected
+    function drawPet(dc, w, h, petColors) {
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_222_49_242_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 223 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_222_49_242_4_start" "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_222_49_242_4_stop" ]
+        %cx.1 = local;
+        symbol [ cx %cx.1 223 12 14 ];
+        %tmp.1 = self;
+        symbol [ laneToX %tmp.2 223 17 24 ];
+        %tmp.2 = getv function %tmp.1 :laneToX;
+        %tmp.3 = lgetv %dc;
+        symbol [ dc %tmp.3 223 25 27 ];
+        symbol [ _petLane %tmp.5 223 29 37 ];
+        %tmp.5 = getv ? :_petLane;
+        %tmp.6 = invoke %tmp.1 %tmp.2(%tmp.3, %tmp.5);
+        lputv %cx.1 %tmp.6;
+        symbol [ cx %cx.1 223 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 224 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_222_49_242_4_start" "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_222_49_242_4_stop" ]
+        %cy.2 = local;
+        symbol [ cy %cy.2 224 12 14 ];
+        %tmp.7 = lgetv %h;
+        symbol [ h %tmp.7 224 17 18 ];
+        symbol [ DODGE_PET_ROW %tmp.9 224 21 34 ];
+        %tmp.9 = getv ? :DODGE_PET_ROW;
+        %tmp.10 = mul %tmp.7 %tmp.9;
+        %tmp.11 = 100;
+        %tmp.12 = div %tmp.10 %tmp.11;
+        lputv %cy.2 %tmp.12;
+        symbol [ cy %cy.2 224 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 225 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_222_49_242_4_start" "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_222_49_242_4_stop" ]
+        %pw.3 = local;
+        symbol [ pw %pw.3 225 12 14 ];
+        %tmp.13 = lgetv %w;
+        symbol [ w %tmp.13 225 17 18 ];
+        %tmp.14 = 9;
+        %tmp.15 = mul %tmp.13 %tmp.14;
+        %tmp.16 = 100;
+        %tmp.17 = div %tmp.15 %tmp.16;
+        lputv %pw.3 %tmp.17;
+        symbol [ pw %pw.3 225 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 226 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_226_8_228_8_if_stmt:
+        %tmp.18 = lgetv %pw.3;
+        symbol [ pw %tmp.18 226 12 14 ];
+        %tmp.19 = 8;
+        %tmp.20 = lt %tmp.18 %tmp.19;
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_226_8_228_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_226_8_228_8_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_226_20_228_8_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 227 12 ]
+        %tmp.21 = 8;
+        lputv %pw.3 %tmp.21;
+        symbol [ pw %pw.3 227 12 14 ];
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_226_20_228_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_226_8_228_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_226_8_228_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 229 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_222_49_242_4_start" "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_222_49_242_4_stop" ]
+        %ph.4 = local;
+        symbol [ ph %ph.4 229 12 14 ];
+        %tmp.22 = lgetv %h;
+        symbol [ h %tmp.22 229 17 18 ];
+        %tmp.23 = 7;
+        %tmp.24 = mul %tmp.22 %tmp.23;
+        %tmp.25 = 100;
+        %tmp.26 = div %tmp.24 %tmp.25;
+        lputv %ph.4 %tmp.26;
+        symbol [ ph %ph.4 229 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 230 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_230_8_232_8_if_stmt:
+        %tmp.27 = lgetv %ph.4;
+        symbol [ ph %tmp.27 230 12 14 ];
+        %tmp.28 = 8;
+        %tmp.29 = lt %tmp.27 %tmp.28;
+        bf %tmp.29 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_230_8_232_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_230_8_232_8_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_230_20_232_8_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 231 12 ]
+        %tmp.30 = 8;
+        lputv %ph.4 %tmp.30;
+        symbol [ ph %ph.4 231 12 14 ];
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_230_20_232_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_230_8_232_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_230_8_232_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 233 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_233_8_237_8_if_stmt:
+        symbol [ _state %tmp.32 233 12 18 ];
+        %tmp.32 = getv ? :_state;
+        %tmp.33 = 1;
+        %tmp.34 = eq %tmp.32 %tmp.33;
+        bf %tmp.34 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_233_8_237_8_if_else_false;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_233_8_237_8_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_233_25_235_8_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 234 12 ]
+        %tmp.35 = lgetv %dc;
+        symbol [ dc %tmp.35 234 12 14 ];
+        symbol [ setColor %tmp.36 234 15 23 ];
+        %tmp.36 = getv function %tmp.35 :setColor;
+        %tmp.37 = 0x662222;
+        %tmp.38 = 0x662222;
+        invoke %tmp.35 %tmp.36(%tmp.37, %tmp.38);
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_233_25_235_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_233_8_237_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_233_8_237_8_if_else_false:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_235_15_237_8_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 236 12 ]
+        %tmp.39 = lgetv %dc;
+        symbol [ dc %tmp.39 236 12 14 ];
+        symbol [ setColor %tmp.40 236 15 23 ];
+        %tmp.40 = getv function %tmp.39 :setColor;
+        %tmp.41 = lgetv %petColors;
+        symbol [ petColors %tmp.41 236 24 33 ];
+        %tmp.42 = 0;
+        %tmp.43 = agetv %tmp.41 %tmp.42;
+        %tmp.44 = lgetv %petColors;
+        symbol [ petColors %tmp.44 236 38 47 ];
+        %tmp.45 = 0;
+        %tmp.46 = agetv %tmp.44 %tmp.45;
+        invoke %tmp.39 %tmp.40(%tmp.43, %tmp.46);
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_235_15_237_8_stop:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_233_8_237_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 238 8 ]
+        %tmp.47 = lgetv %dc;
+        symbol [ dc %tmp.47 238 8 10 ];
+        symbol [ fillRectangle %tmp.48 238 11 24 ];
+        %tmp.48 = getv function %tmp.47 :fillRectangle;
+        %tmp.49 = lgetv %cx.1;
+        symbol [ cx %tmp.49 238 25 27 ];
+        %tmp.50 = lgetv %pw.3;
+        symbol [ pw %tmp.50 238 30 32 ];
+        %tmp.51 = 2;
+        %tmp.52 = div %tmp.50 %tmp.51;
+        %tmp.53 = sub %tmp.49 %tmp.52;
+        %tmp.54 = lgetv %cy.2;
+        symbol [ cy %tmp.54 238 38 40 ];
+        %tmp.55 = lgetv %ph.4;
+        symbol [ ph %tmp.55 238 43 45 ];
+        %tmp.56 = 2;
+        %tmp.57 = div %tmp.55 %tmp.56;
+        %tmp.58 = sub %tmp.54 %tmp.57;
+        %tmp.59 = lgetv %pw.3;
+        symbol [ pw %tmp.59 238 51 53 ];
+        %tmp.60 = lgetv %ph.4;
+        symbol [ ph %tmp.60 238 55 57 ];
+        invoke %tmp.47 %tmp.48(%tmp.53, %tmp.58, %tmp.59, %tmp.60);
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 239 8 ]
+        %tmp.61 = lgetv %dc;
+        symbol [ dc %tmp.61 239 8 10 ];
+        symbol [ setColor %tmp.62 239 11 19 ];
+        %tmp.62 = getv function %tmp.61 :setColor;
+        %tmp.63 = lgetv %petColors;
+        symbol [ petColors %tmp.63 239 20 29 ];
+        %tmp.64 = 3;
+        %tmp.65 = agetv %tmp.63 %tmp.64;
+        %tmp.66 = lgetv %petColors;
+        symbol [ petColors %tmp.66 239 34 43 ];
+        %tmp.67 = 3;
+        %tmp.68 = agetv %tmp.66 %tmp.67;
+        invoke %tmp.61 %tmp.62(%tmp.65, %tmp.68);
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 240 8 ]
+        %tmp.69 = lgetv %dc;
+        symbol [ dc %tmp.69 240 8 10 ];
+        symbol [ fillRectangle %tmp.70 240 11 24 ];
+        %tmp.70 = getv function %tmp.69 :fillRectangle;
+        %tmp.71 = lgetv %cx.1;
+        symbol [ cx %tmp.71 240 25 27 ];
+        %tmp.72 = 2;
+        %tmp.73 = sub %tmp.71 %tmp.72;
+        %tmp.74 = lgetv %cy.2;
+        symbol [ cy %tmp.74 240 33 35 ];
+        %tmp.75 = lgetv %ph.4;
+        symbol [ ph %tmp.75 240 38 40 ];
+        %tmp.76 = 4;
+        %tmp.77 = div %tmp.75 %tmp.76;
+        %tmp.78 = sub %tmp.74 %tmp.77;
+        %tmp.79 = 2;
+        %tmp.80 = 2;
+        invoke %tmp.69 %tmp.70(%tmp.73, %tmp.78, %tmp.79, %tmp.80);
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 241 8 ]
+        %tmp.81 = lgetv %dc;
+        symbol [ dc %tmp.81 241 8 10 ];
+        symbol [ fillRectangle %tmp.82 241 11 24 ];
+        %tmp.82 = getv function %tmp.81 :fillRectangle;
+        %tmp.83 = lgetv %cx.1;
+        symbol [ cx %tmp.83 241 25 27 ];
+        %tmp.84 = 1;
+        %tmp.85 = add %tmp.83 %tmp.84;
+        %tmp.86 = lgetv %cy.2;
+        symbol [ cy %tmp.86 241 33 35 ];
+        %tmp.87 = lgetv %ph.4;
+        symbol [ ph %tmp.87 241 38 40 ];
+        %tmp.88 = 4;
+        %tmp.89 = div %tmp.87 %tmp.88;
+        %tmp.90 = sub %tmp.86 %tmp.89;
+        %tmp.91 = 2;
+        %tmp.92 = 2;
+        invoke %tmp.81 %tmp.82(%tmp.85, %tmp.90, %tmp.91, %tmp.92);
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_222_49_242_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 244; @symbol_functiondef = [drawDecorations,244,20,35]; @symbol_param<0> = [dc,244,36,38]; @symbol_param<1> = [w,244,40,41]; @symbol_param<2> = [h,244,43,44]; ]
+    protected
+    function drawDecorations(dc, w, h) {
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_244_46_254_4_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 245 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_244_46_254_4_start" "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_244_46_254_4_stop" ]
+        %f.1 = local;
+        symbol [ f %f.1 245 12 13 ];
+        symbol [ _sparkles %tmp.2 245 16 25 ];
+        %tmp.2 = getv ? :_sparkles;
+        lputv %f.1 %tmp.2;
+        symbol [ f %f.1 245 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 246 8 ]
+        %tmp.3 = lgetv %dc;
+        symbol [ dc %tmp.3 246 8 10 ];
+        symbol [ setColor %tmp.4 246 11 19 ];
+        %tmp.4 = getv function %tmp.3 :setColor;
+        %tmp.5 = 0x222244;
+        %tmp.6 = 0x222244;
+        invoke %tmp.3 %tmp.4(%tmp.5, %tmp.6);
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 247 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_244_46_254_4_start" "_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_244_46_254_4_stop" ]
+        %topY.2 = local;
+        symbol [ topY %topY.2 247 12 16 ];
+        %tmp.7 = lgetv %h;
+        symbol [ h %tmp.7 247 19 20 ];
+        %tmp.8 = 22;
+        %tmp.9 = mul %tmp.7 %tmp.8;
+        %tmp.10 = 100;
+        %tmp.11 = div %tmp.9 %tmp.10;
+        lputv %topY.2 %tmp.11;
+        symbol [ topY %topY.2 247 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 248 8 ]
+        %tmp.12 = lgetv %dc;
+        symbol [ dc %tmp.12 248 8 10 ];
+        symbol [ drawLine %tmp.13 248 11 19 ];
+        %tmp.13 = getv function %tmp.12 :drawLine;
+        %tmp.14 = lgetv %w;
+        symbol [ w %tmp.14 248 20 21 ];
+        %tmp.15 = 10;
+        %tmp.16 = mul %tmp.14 %tmp.15;
+        %tmp.17 = 100;
+        %tmp.18 = div %tmp.16 %tmp.17;
+        %tmp.19 = lgetv %topY.2;
+        symbol [ topY %tmp.19 248 34 38 ];
+        %tmp.20 = lgetv %w;
+        symbol [ w %tmp.20 248 40 41 ];
+        %tmp.21 = 90;
+        %tmp.22 = mul %tmp.20 %tmp.21;
+        %tmp.23 = 100;
+        %tmp.24 = div %tmp.22 %tmp.23;
+        %tmp.25 = lgetv %topY.2;
+        symbol [ topY %tmp.25 248 54 58 ];
+        invoke %tmp.12 %tmp.13(%tmp.18, %tmp.19, %tmp.24, %tmp.25);
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 249 8 ]
+        %tmp.26 = lgetv %dc;
+        symbol [ dc %tmp.26 249 8 10 ];
+        symbol [ setColor %tmp.27 249 11 19 ];
+        %tmp.27 = getv function %tmp.26 :setColor;
+        %tmp.28 = 0x333355;
+        %tmp.29 = 0x333355;
+        invoke %tmp.26 %tmp.27(%tmp.28, %tmp.29);
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 250 8 ]
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_250_8_253_8_if_stmt:
+        %tmp.30 = lgetv %f.1;
+        symbol [ f %tmp.30 250 12 13 ];
+        %tmp.31 = 4;
+        %tmp.32 = mod %tmp.30 %tmp.31;
+        %tmp.33 = 2;
+        %tmp.34 = lt %tmp.32 %tmp.33;
+        bf %tmp.34 @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_250_8_253_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_250_8_253_8_if_true:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_250_23_253_8_start:
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 251 12 ]
+        %tmp.35 = lgetv %dc;
+        symbol [ dc %tmp.35 251 12 14 ];
+        symbol [ fillRectangle %tmp.36 251 15 28 ];
+        %tmp.36 = getv function %tmp.35 :fillRectangle;
+        %tmp.37 = lgetv %w;
+        symbol [ w %tmp.37 251 29 30 ];
+        %tmp.38 = 15;
+        %tmp.39 = mul %tmp.37 %tmp.38;
+        %tmp.40 = 100;
+        %tmp.41 = div %tmp.39 %tmp.40;
+        %tmp.42 = lgetv %topY.2;
+        symbol [ topY %tmp.42 251 43 47 ];
+        %tmp.43 = 4;
+        %tmp.44 = sub %tmp.42 %tmp.43;
+        %tmp.45 = 2;
+        %tmp.46 = 2;
+        invoke %tmp.35 %tmp.36(%tmp.41, %tmp.44, %tmp.45, %tmp.46);
+[ "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc" 252 12 ]
+        %tmp.47 = lgetv %dc;
+        symbol [ dc %tmp.47 252 12 14 ];
+        symbol [ fillRectangle %tmp.48 252 15 28 ];
+        %tmp.48 = getv function %tmp.47 :fillRectangle;
+        %tmp.49 = lgetv %w;
+        symbol [ w %tmp.49 252 29 30 ];
+        %tmp.50 = 85;
+        %tmp.51 = mul %tmp.49 %tmp.50;
+        %tmp.52 = 100;
+        %tmp.53 = div %tmp.51 %tmp.52;
+        %tmp.54 = lgetv %topY.2;
+        symbol [ topY %tmp.54 252 43 47 ];
+        %tmp.55 = 4;
+        %tmp.56 = sub %tmp.54 %tmp.55;
+        %tmp.57 = 2;
+        %tmp.58 = 2;
+        invoke %tmp.47 %tmp.48(%tmp.53, %tmp.56, %tmp.57, %tmp.58);
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_250_23_253_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_250_8_253_8_if_end;
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_250_8_253_8_if_end:
+_Users_kkorolczuk_work_garmin_pets_source_DodgeGameView_mc_244_46_254_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/pets/source/DodgeGameView.mc"; @line = 1; ]
+<init> {
+}
