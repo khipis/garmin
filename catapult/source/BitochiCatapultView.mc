@@ -515,7 +515,7 @@ class BitochiCatapultView extends WatchUi.View {
                     _resultTick = 0;
                 } else {
                     gameState = GS_SHOP;
-                    _shopSel = 5;
+                    _shopSel = 7;
                     _resultTick = 0;
                 }
             }
@@ -944,7 +944,7 @@ class BitochiCatapultView extends WatchUi.View {
                     _resultTick = 0;
                 } else {
                     gameState = GS_SHOP;
-                    _shopSel = 5;
+                    _shopSel = 7;
                     _resultTick = 0;
                 }
             } else {
