@@ -809,36 +809,47 @@ class BitochiCatapultView extends WatchUi.View {
         }
     }
 
-    hidden function chainExplosion(cx, cy) {
-        if (_chainLimit <= 0) { return; }
-        _chainLimit--;
+    hidden function chainExplosion(startCx, startCy) {
+        // Iterative BFS — no recursion, no stack overflow
+        var MAX_QUEUE = 20;
+        var qx = new [MAX_QUEUE];
+        var qy = new [MAX_QUEUE];
+        qx[0] = startCx; qy[0] = startCy;
+        var head = 0; var tail = 1;
+
         var bwf = _bw.toFloat();
         var chainR = bwf * 4.0;
-        for (var j = 0; j < _numBlocks; j++) {
-            if (_bhp[j] <= 0) { continue; }
-            var bcx = _bx[j] + bwf / 2.0;
-            var bcy = _by[j] + bwf / 2.0;
-            var dx = cx - bcx;
-            var dy = cy - bcy;
-            if (dx * dx + dy * dy < chainR * chainR) {
-                _bhp[j]--;
-                if (_bhp[j] <= 0) {
-                    _score += 15;
-                    spawnDebris(bcx, bcy, _bkind[j]);
-                    if (_bkind[j] == 2) { chainExplosion(bcx, bcy); }
+        var chainR2 = chainR * chainR;
+
+        while (head < tail) {
+            var cx = qx[head]; var cy = qy[head]; head++;
+
+            for (var j = 0; j < _numBlocks; j++) {
+                if (_bhp[j] <= 0) { continue; }
+                var bcx = _bx[j] + bwf / 2.0;
+                var bcy = _by[j] + bwf / 2.0;
+                var dx = cx - bcx; var dy = cy - bcy;
+                if (dx * dx + dy * dy < chainR2) {
+                    _bhp[j]--;
+                    if (_bhp[j] <= 0) {
+                        _score += 15;
+                        spawnDebris(bcx, bcy, _bkind[j]);
+                        if (_bkind[j] == 2 && tail < MAX_QUEUE) {
+                            qx[tail] = bcx; qy[tail] = bcy; tail++;
+                        }
+                    }
                 }
             }
-        }
-        if (_enemyHp > 0) {
-            var edx = cx - _enemyWX;
-            var edy = cy - _enemyWY;
-            if (edx * edx + edy * edy < chainR * chainR * 1.5) {
-                _enemyHp -= 30;
-                _score += 30;
+
+            if (_enemyHp > 0) {
+                var edx = cx - _enemyWX; var edy = cy - _enemyWY;
+                if (edx * edx + edy * edy < chainR2 * 1.5) {
+                    _enemyHp -= 30; _score += 30;
+                }
             }
+            _shakeLeft += 4;
+            spawnImpactParticles(cx, cy, 3);
         }
-        _shakeLeft += 4;
-        spawnImpactParticles(cx, cy, 3);
     }
 
     hidden function spawnDebris(wx, wy, kind) {
