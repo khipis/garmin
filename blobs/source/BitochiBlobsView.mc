@@ -429,6 +429,16 @@ class BitochiBlobsView extends WatchUi.View {
         _hopCount = 0; _hopCooldown = 0;
         _aimPhase = 0; _aimAnglePhase = 0.0; _powerPhase = 0.0;
         _camTarget = _bX[_activeIdx] - _w.toFloat() / 2.0;
+        // If this player's current weapon is depleted, switch to next available
+        if (isHumanTurn()) {
+            var btPIdx = (_twoPlayer && _activeIdx == 1) ? 1 : 0;
+            if (_wpnAmmo[btPIdx][_weapon] == 0) {
+                for (var w = 0; w < WPN_COUNT; w++) {
+                    var next = (_weapon + 1 + w) % WPN_COUNT;
+                    if (_wpnAmmo[btPIdx][next] != 0) { _weapon = next; break; }
+                }
+            }
+        }
     }
 
     hidden function nextTurn() {
