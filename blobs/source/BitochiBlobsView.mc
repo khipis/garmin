@@ -89,6 +89,7 @@ class BitochiBlobsView extends WatchUi.View {
     hidden var _round;
     hidden var _bestStreak;
     hidden var _newBest;
+    hidden var _winnerPlayer; // -1=all won, 0=P1, 1=P2 (meaningful in 2P mode)
     hidden var _introTick;
     hidden var _resultTick;
     hidden var _turnTick;
@@ -179,7 +180,7 @@ class BitochiBlobsView extends WatchUi.View {
             _partLife[i] = 0; _partCol[i] = 0;
         }
 
-        _round = 0;
+        _round = 0; _winnerPlayer = -1;
         var bs = Application.Storage.getValue("blobBest");
         _bestStreak = (bs != null) ? bs : 0;
         _newBest = false;
@@ -410,7 +411,7 @@ class BitochiBlobsView extends WatchUi.View {
         }
         _aimAngle = 45.0; _aimPhase = 0; _aimAnglePhase = 0.0; _powerPhase = 0.0;
         _projAlive = false; _projBurrowing = false;
-        _newBest = false; _kills = 0;
+        _newBest = false; _kills = 0; _winnerPlayer = -1;
         _wind = -1.0 + (Math.rand().abs() % 20).toFloat() / 10.0;
         _hitMsg = ""; _hitMsgTick = 0; _dmgFloatT = 0;
         for (var i = 0; i < MAX_PARTS; i++) { _partLife[i] = 0; }
@@ -759,6 +760,12 @@ class BitochiBlobsView extends WatchUi.View {
         var allPlayersDead = _twoPlayer ? (p0Dead && p1Dead) : p0Dead;
 
         if (!anyEnemyAlive && !allPlayersDead) {
+            // Determine which player(s) won
+            if (_twoPlayer) {
+                if (!p0Dead && !p1Dead) { _winnerPlayer = -1; }   // both survived = team win
+                else if (!p0Dead)       { _winnerPlayer = 0; }    // P1 outlasted P2
+                else                    { _winnerPlayer = 1; }    // P2 outlasted P1
+            } else { _winnerPlayer = 0; }
             gameState = GS_WIN; _resultTick = 0;
             if (_round > _bestStreak) {
                 _bestStreak = _round; _newBest = true;
@@ -1256,7 +1263,7 @@ class BitochiBlobsView extends WatchUi.View {
         else { wStr = "--"; }
         dc.setColor(0x88AACC, Graphics.COLOR_TRANSPARENT); dc.drawText(_w - 4, 1, Graphics.FONT_XTINY, wStr, Graphics.TEXT_JUSTIFY_RIGHT);
 
-        if ((gameState == GS_AIM || gameState == GS_POWER) && _activeIdx == 0) {
+        if ((gameState == GS_AIM || gameState == GS_POWER) && isHumanTurn()) {
             var wpnC;
             if      (_weapon == WPN_ROCKET)  { wpnC = 0xFF8844; }
             else if (_weapon == WPN_GRENADE) { wpnC = 0x44CC44; }
@@ -1346,8 +1353,14 @@ class BitochiBlobsView extends WatchUi.View {
         var bw = _w * 82 / 100; var bh = _h * 50 / 100; var bx = (_w - bw) / 2; var by = _h * 18 / 100;
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bx, by, bw, bh);
         dc.setColor(0x225533, Graphics.COLOR_TRANSPARENT); dc.drawRectangle(bx, by, bw, bh);
+        var victoryLine;
+        if (_twoPlayer) {
+            if (_winnerPlayer == 0)      { victoryLine = "P1 WINS!"; }
+            else if (_winnerPlayer == 1) { victoryLine = "P2 WINS!"; }
+            else                         { victoryLine = "VICTORY!"; }
+        } else { victoryLine = "VICTORY!"; }
         dc.setColor((_resultTick % 6 < 3) ? 0x44FF44 : 0x22DD22, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, by + 4, Graphics.FONT_MEDIUM, "VICTORY!", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, by + 4, Graphics.FONT_MEDIUM, victoryLine, Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, by + bh * 35 / 100, Graphics.FONT_XTINY, "Streak: " + _round + "  Kills: " + _kills, Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, by + bh * 48 / 100, Graphics.FONT_XTINY, "Best: " + _bestStreak, Graphics.TEXT_JUSTIFY_CENTER);
         if (_newBest) { dc.setColor((_resultTick % 4 < 2) ? 0xFFDD44 : 0xFF8822, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, by + bh * 60 / 100, Graphics.FONT_XTINY, "NEW BEST!", Graphics.TEXT_JUSTIFY_CENTER); }
