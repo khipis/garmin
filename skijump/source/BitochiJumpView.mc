@@ -103,6 +103,12 @@ class BitochiJumpView extends WatchUi.View {
         _jumperAccents = [0xFF8822, 0xFF8866,  0x88BBFF,   0xFF6666,  0x66DD88,  0x88CCFF];
 
         _hillX = new [HILL_PTS]; _hillY = new [HILL_PTS];
+
+        // Must be initialised before buildHill() which writes to _crowdX
+        _crowdX = new [CROWD_N]; _crowdC = new [CROWD_N]; _crowdJump = new [CROWD_N];
+        var cc = [0xDD4444, 0x4488DD, 0xFFCC22, 0x44BB44, 0xFF8844];
+        for (var i = 0; i < CROWD_N; i++) { _crowdX[i] = 0.0; _crowdC[i] = cc[i]; _crowdJump[i] = 0; }
+
         buildHill();
 
         _scores    = new [NUM_JUMPERS]; _dists     = new [NUM_JUMPERS];
@@ -116,10 +122,6 @@ class BitochiJumpView extends WatchUi.View {
 
         _trailX = new [TRAIL_N]; _trailY = new [TRAIL_N]; _trailLife = new [TRAIL_N];
         for (var i = 0; i < TRAIL_N; i++) { _trailX[i] = 0.0; _trailY[i] = 0.0; _trailLife[i] = 0; }
-
-        _crowdX = new [CROWD_N]; _crowdC = new [CROWD_N]; _crowdJump = new [CROWD_N];
-        var cc = [0xDD4444, 0x4488DD, 0xFFCC22, 0x44BB44, 0xFF8844];
-        for (var i = 0; i < CROWD_N; i++) { _crowdX[i] = 0.0; _crowdC[i] = cc[i]; _crowdJump[i] = 0; }
 
         initJumpVars();
         _currentRound = 1; _jumpSlot = 0; _startJumper = 0; _jumpNum = 0;
