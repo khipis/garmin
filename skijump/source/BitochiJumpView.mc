@@ -59,6 +59,12 @@ class BitochiJumpView extends WatchUi.View {
     hidden var _landReady; hidden var _landReadyTick; hidden var _landTapDone;
     hidden var _landQuality;
     hidden var _slideSpeed;
+    // Advanced landing states
+    hidden var _preparingLanding; // tapped at right moment, gentle descent phase
+    hidden var _preparingTick;
+    hidden var _earlyTap;        // tapped too early → de-balance stumble
+    hidden var _earlyTapTick;
+    hidden var _spinningOut;     // lost control (angle/wind) → spinning tumble
 
     // Tournament
     hidden var _currentRound; hidden var _jumpSlot; hidden var _startJumper;
@@ -210,6 +216,8 @@ class BitochiJumpView extends WatchUi.View {
         _landGood = false; _landCrash = false;
         _landReady = false; _landReadyTick = 0; _landTapDone = false;
         _landQuality = 0.0; _slideSpeed = 0.0;
+        _preparingLanding = false; _preparingTick = 0;
+        _earlyTap = false; _earlyTapTick = 0; _spinningOut = false;
         _windBase = 0.0; _windCurrent = 0.0; _windPhase = 0.0;
         _passedK = false;
         _camX = _posX; _camY = _posY;
@@ -289,12 +297,60 @@ class BitochiJumpView extends WatchUi.View {
     }
 
     hidden function updateFlight() {
-        // Wind calculation
+        // Always update wind for HUD/snow even in special states
         _windPhase += 0.052;
         var wAmp = 0.26 + _venue.toFloat() * 0.07;
         _windCurrent = _windBase + Math.sin(_windPhase) * wAmp + Math.sin(_windPhase * 2.4) * 0.09;
 
-        // Smooth body angle from accelerometer — very gentle like Fish/Parachute
+        // --- PATH 1: Early tap — jumper stumbled and de-balancing ---
+        if (_earlyTap) {
+            _earlyTapTick++;
+            _bodyAngle += 3.5;           // rapidly tipping over
+            _skiAngle  += 2.0;
+            _velY += 0.20;               // gravity pulling down harder
+            _posX += _velX * 0.88; _posY += _velY;
+            _distance = distMeters(_posX);
+            if (_tick % 2 == 0) { pushTrail(_posX, _posY); }
+            var hillYE = hillYAtX(_posX);
+            if (_posY >= hillYE - 1.5 || _bodyAngle > 62.0) {
+                _landCrash = true; _posY = hillYE; doLanding();
+            }
+            return;
+        }
+
+        // --- PATH 2: Spinning out of control (wind/angle overdone) ---
+        if (_spinningOut) {
+            _bodyAngle += 5.2;
+            _velY += 0.28;
+            _posX += _velX * 0.82; _posY += _velY;
+            _distance = distMeters(_posX);
+            if (_tick % 2 == 0) { pushTrail(_posX, _posY); }
+            var hillYS = hillYAtX(_posX);
+            if (_posY >= hillYS - 1.5) {
+                _landCrash = true; _posY = hillYS; doLanding();
+            }
+            return;
+        }
+
+        // --- PATH 3: Tap landed correctly — gentle curved descent into landing pose ---
+        if (_preparingLanding) {
+            _preparingTick++;
+            _velY += 0.08;          // soft, gentle gravity arc
+            _velX *= 0.988;
+            // Smoothly rotate body toward landing angle (upright, legs ready)
+            var landTargetAngle = 10.0 + _landQuality * 7.0;
+            _bodyAngle = _bodyAngle * 0.91 + landTargetAngle * 0.09;
+            _skiAngle  = _skiAngle  * 0.93 + _bodyAngle * 0.07;
+            _posX += _velX; _posY += _velY;
+            _distance = distMeters(_posX);
+            if (_tick % 2 == 0) { pushTrail(_posX, _posY); }
+            var hillYP = hillYAtX(_posX);
+            if (_posY >= hillYP - 1.0) { _posY = hillYP; doLanding(); }
+            return;
+        }
+
+        // --- PATH 4: Normal flight ---
+        // Accelerometer input — smooth and delicate
         var ax = accelX.toFloat();
         var dead = 70.0;
         var input = 0.0;
@@ -303,21 +359,22 @@ class BitochiJumpView extends WatchUi.View {
         if (input >  1.3) { input =  1.3; }
         if (input < -1.3) { input = -1.3; }
 
-        // Wind slightly disturbs balance
-        var windNudge = _windCurrent * 1.8;
+        // Wind nudge — stronger when body is misaligned (fighting or drifting)
+        var misalign = _bodyAngle - 18.0; if (misalign < 0.0) { misalign = -misalign; }
+        var windMult = 1.8 + (misalign > 14.0 ? (misalign - 14.0) * 0.12 : 0.0);
+        var windNudge = _windCurrent * windMult;
         var targetAngle = 18.0 + input * 16.0 + windNudge;
-        if (targetAngle < -8.0) { targetAngle = -8.0; } if (targetAngle > 52.0) { targetAngle = 52.0; }
+        if (targetAngle < -10.0) { targetAngle = -10.0; }
+        if (targetAngle >  56.0) { targetAngle =  56.0; }
 
-        // Very smooth angle tracking (lerp 0.14) = gentle, chill, responsive
+        // Very smooth lerp — delicate, responsive
         _bodyAngle = _bodyAngle * 0.86 + targetAngle * 0.14;
         _skiAngle  = _skiAngle  * 0.93 + _bodyAngle  * 0.07;
 
-        // Out of control check
-        if (_bodyAngle > 50.0 || _bodyAngle < -7.0) {
-            _landCrash = true; _posY = hillYAtX(_posX); doLanding(); return;
-        }
+        // Lose control: smooth transition to spinning tumble (not instant crash)
+        if (_bodyAngle > 46.0 || _bodyAngle < -8.0) { _spinningOut = true; return; }
 
-        // Simplified aerodynamics: lift depends on closeness to optimal angle (18°)
+        // Aerodynamics: lift from optimal angle (18°), drag from deviation
         var optDev = _bodyAngle - 18.0; if (optDev < 0.0) { optDev = -optDev; }
         var liftFactor = 1.0 - optDev / 18.0;
         if (liftFactor < 0.0) { liftFactor = 0.0; }
@@ -326,7 +383,7 @@ class BitochiJumpView extends WatchUi.View {
         var drag = 0.007 + (1.0 - liftFactor) * 0.004;
         var speed = Math.sqrt(_velX * _velX + _velY * _velY);
 
-        var fRad  = Math.atan2(-_velY, _velX);
+        var fRad    = Math.atan2(-_velY, _velX);
         var liftDir = fRad + 3.14159 / 2.0;
         var ax2 = -drag * speed * _velX + lift * Math.cos(liftDir) + _windCurrent * 0.011;
         var ay2 = 0.23  - lift * Math.sin(liftDir);
@@ -336,21 +393,20 @@ class BitochiJumpView extends WatchUi.View {
         _posX += _velX; _posY += _velY;
         _distance = distMeters(_posX);
 
-        // K-point cheer
         if (!_passedK && _distance > _hillKDist) { _passedK = true; _crowdCheer = 55; doVibe(28, 60); }
-
-        // Trail (every 2 ticks)
         if (_tick % 2 == 0) { pushTrail(_posX, _posY); }
 
-        // Landing detection
+        // Landing zone detection
         var hillY = hillYAtX(_posX);
         var heightAbove = hillY - _posY;
-        if (!_landReady && heightAbove < 26.0 && _distance > 8.0) { _landReady = true; _landReadyTick = 0; }
+        if (!_landReady && heightAbove < 30.0 && _distance > 8.0) { _landReady = true; _landReadyTick = 0; }
         if (_landReady) { _landReadyTick++; }
+
+        // Auto-land: touches ground without tap → poor quality
         if (_posY >= hillY - 1.5 && _posX > _hillX[_hillLaunchIdx]) {
             _posY = hillY;
             if (!_landTapDone) {
-                _landQuality = (_distance > 6.0) ? 0.32 : 0.0;
+                _landQuality = 0.20;
                 if (_distance < 6.0) { _landCrash = true; }
             }
             doLanding();
@@ -374,15 +430,32 @@ class BitochiJumpView extends WatchUi.View {
     }
 
     hidden function doLandingTap() {
-        if (!_landReady || _landTapDone) { return; }
+        if (_landTapDone || _earlyTap || _spinningOut || _preparingLanding) { return; }
         _landTapDone = true;
+
+        if (!_landReady) {
+            // Tapped too early — de-balance, stumble, graceful fall
+            if (_distance > 10.0) {
+                _earlyTap = true;
+                doVibe(70, 160);
+            } else {
+                _landTapDone = false; // too close to takeoff, ignore
+            }
+            return;
+        }
+
+        // In landing zone — quality depends on height above hill
         var hillY = hillYAtX(_posX);
-        var ha = hillY - _posY; if (ha < 0.0) { ha = -ha; }
-        if      (ha <  8.0) { _landQuality = 1.00; }
-        else if (ha < 15.0) { _landQuality = 0.84; }
-        else if (ha < 22.0) { _landQuality = 0.60; }
-        else                { _landQuality = 0.36; }
-        _posY = hillY; doLanding();
+        var ha = hillY - _posY; if (ha < 0.0) { ha = 0.0; }
+        if      (ha <  6.0) { _landQuality = 1.00; }   // nearly touching: perfect
+        else if (ha < 13.0) { _landQuality = 0.84; }   // very close: telemark
+        else if (ha < 22.0) { _landQuality = 0.62; }   // ok: two-foot
+        else if (ha < 32.0) { _landQuality = 0.38; }   // high: weak two-foot
+        else                { _landQuality = 0.22; }   // very high: late/awkward
+
+        // Start graceful preparation descent — don't snap to ground
+        _preparingLanding = true;
+        doVibe(30, 80);
     }
 
     hidden function finishJump() {
@@ -428,7 +501,7 @@ class BitochiJumpView extends WatchUi.View {
     function doAction() {
         if (gameState == JS_MENU)    { startCompetition(); }
         else if (gameState == JS_INRUN) { executeTakeoff(true); }
-        else if (gameState == JS_FLIGHT && _landReady && !_landTapDone) { doLandingTap(); }
+        else if (gameState == JS_FLIGHT) { doLandingTap(); }
         else if (gameState == JS_RESULT) { advanceAfterResult(); }
         else if (gameState == JS_STANDINGS) { advanceFromStandings(); }
         else if (gameState == JS_FINAL) { gameState = JS_MENU; }
@@ -656,23 +729,55 @@ class BitochiJumpView extends WatchUi.View {
                 dc.setColor(0x555566, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(jx - 5, jy, 10, 1);
             }
         } else if (gameState == JS_FLIGHT) {
-            var aR2 = _bodyAngle * 3.14159 / 180.0;
-            var bdx2 = (Math.cos(aR2) * 11.0).toNumber(); var bdy2 = -(Math.sin(aR2) * 11.0).toNumber();
-            // Body / suit
-            dc.setColor(col, Graphics.COLOR_TRANSPARENT);
-            dc.drawLine(jx, jy, jx + bdx2, jy + bdy2);
-            dc.drawLine(jx + 1, jy, jx + bdx2 + 1, jy + bdy2);
-            dc.drawLine(jx, jy + 1, jx + bdx2, jy + bdy2 + 1);
-            dc.drawLine(jx, jy - 1, jx + bdx2, jy + bdy2 - 1);
-            // Head with helmet
-            dc.setColor(0xDDAA77, Graphics.COLOR_TRANSPARENT); dc.fillCircle(jx + bdx2, jy + bdy2, 3);
-            dc.setColor(acc, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(jx + bdx2 - 3, jy + bdy2 - 4, 6, 3);
-            // V-style skis
-            var sR = _skiAngle * 3.14159 / 180.0;
-            var sdx = (Math.cos(sR) * 10.0).toNumber(); var sdy = -(Math.sin(sR) * 10.0).toNumber();
-            dc.setColor(0x333344, Graphics.COLOR_TRANSPARENT);
-            dc.drawLine(jx - 4, jy + 2, jx - 4 + sdx, jy + 2 + sdy);
-            dc.drawLine(jx + 4, jy + 2, jx + 4 + sdx, jy + 2 + sdy);
+            if (_earlyTap || _spinningOut) {
+                // Tumbling: body rotating rapidly, arms/skis flailing
+                var tR = _bodyAngle * 3.14159 / 180.0;
+                var tdx = (Math.cos(tR) * 7.0).toNumber(); var tdy = -(Math.sin(tR) * 7.0).toNumber();
+                dc.setColor(col, Graphics.COLOR_TRANSPARENT);
+                dc.drawLine(jx, jy, jx + tdx, jy + tdy);
+                dc.drawLine(jx + 1, jy, jx + tdx + 1, jy + tdy);
+                dc.setColor(0xDDAA77, Graphics.COLOR_TRANSPARENT); dc.fillCircle(jx + tdx, jy + tdy, 3);
+                dc.setColor(acc, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(jx + tdx - 3, jy + tdy - 4, 6, 3);
+                // Skis flailing perpendicular
+                var sR = (tR + 1.57);
+                var sdx = (Math.cos(sR) * 9.0).toNumber(); var sdy = -(Math.sin(sR) * 9.0).toNumber();
+                dc.setColor(0x333344, Graphics.COLOR_TRANSPARENT);
+                dc.drawLine(jx - 2, jy, jx - 2 + sdx, jy + sdy);
+                dc.drawLine(jx + 2, jy, jx + 2 - sdx, jy - sdy);
+            } else if (_preparingLanding) {
+                // Transitioning to landing: body upright, legs bending
+                var aR2 = _bodyAngle * 3.14159 / 180.0;
+                var prep = _preparingTick.toFloat() / 14.0; if (prep > 1.0) { prep = 1.0; }
+                var bLen = (11.0 - prep * 3.5).toNumber();
+                var bdx2 = (Math.cos(aR2) * bLen).toNumber(); var bdy2 = -(Math.sin(aR2) * bLen).toNumber();
+                dc.setColor(col, Graphics.COLOR_TRANSPARENT);
+                dc.drawLine(jx, jy, jx + bdx2, jy + bdy2);
+                dc.drawLine(jx + 1, jy, jx + bdx2 + 1, jy + bdy2);
+                dc.drawLine(jx, jy + 1, jx + bdx2, jy + bdy2 + 1);
+                dc.setColor(0xDDAA77, Graphics.COLOR_TRANSPARENT); dc.fillCircle(jx + bdx2, jy + bdy2, 3);
+                dc.setColor(acc, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(jx + bdx2 - 3, jy + bdy2 - 4, 6, 3);
+                // Legs bending forward (skis spreading into telemark prep)
+                var legOut = (prep * 5.0).toNumber();
+                dc.setColor(0x333344, Graphics.COLOR_TRANSPARENT);
+                dc.drawLine(jx - 3, jy + 2, jx - 3 + legOut, jy + 8 + legOut);
+                dc.drawLine(jx + 3, jy + 2, jx + 3, jy + 9);
+            } else {
+                // Normal V-style flight pose
+                var aR2 = _bodyAngle * 3.14159 / 180.0;
+                var bdx2 = (Math.cos(aR2) * 11.0).toNumber(); var bdy2 = -(Math.sin(aR2) * 11.0).toNumber();
+                dc.setColor(col, Graphics.COLOR_TRANSPARENT);
+                dc.drawLine(jx, jy, jx + bdx2, jy + bdy2);
+                dc.drawLine(jx + 1, jy, jx + bdx2 + 1, jy + bdy2);
+                dc.drawLine(jx, jy + 1, jx + bdx2, jy + bdy2 + 1);
+                dc.drawLine(jx, jy - 1, jx + bdx2, jy + bdy2 - 1);
+                dc.setColor(0xDDAA77, Graphics.COLOR_TRANSPARENT); dc.fillCircle(jx + bdx2, jy + bdy2, 3);
+                dc.setColor(acc, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(jx + bdx2 - 3, jy + bdy2 - 4, 6, 3);
+                var sR = _skiAngle * 3.14159 / 180.0;
+                var sdx = (Math.cos(sR) * 10.0).toNumber(); var sdy = -(Math.sin(sR) * 10.0).toNumber();
+                dc.setColor(0x333344, Graphics.COLOR_TRANSPARENT);
+                dc.drawLine(jx - 4, jy + 2, jx - 4 + sdx, jy + 2 + sdy);
+                dc.drawLine(jx + 4, jy + 2, jx + 4 + sdx, jy + 2 + sdy);
+            }
         } else {
             // Inrun: crouched
             var ang = _bodyAngle * 3.14159 / 180.0;
@@ -747,31 +852,40 @@ class BitochiJumpView extends WatchUi.View {
             var inSweet = (aI > 10 && aI < 28);
             var angleOk = (aI > 4 && aI < 44);
 
-            if (_landReady && !_landTapDone) {
+            if (_earlyTap) {
+                // Too early! Show warning flash
+                dc.setColor((_tick % 3 < 2) ? 0xFF2222 : 0xFF8800, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(_w / 2, _h * 68 / 100, Graphics.FONT_SMALL, "TOO EARLY!", Graphics.TEXT_JUSTIFY_CENTER);
+            } else if (_spinningOut) {
+                dc.setColor((_tick % 3 < 2) ? 0xFF4422 : 0xFF8800, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(_w / 2, _h * 68 / 100, Graphics.FONT_SMALL, "OUT!", Graphics.TEXT_JUSTIFY_CENTER);
+            } else if (_preparingLanding) {
+                // Graceful descent — show landing message
+                dc.setColor((_tick % 4 < 2) ? 0x44FFAA : 0x22DD88, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(_w / 2, _h * 68 / 100, Graphics.FONT_SMALL, "LANDING...", Graphics.TEXT_JUSTIFY_CENTER);
+            } else if (_landReady && !_landTapDone) {
+                // Show LAND! indicator with height proximity bar
                 var hillY2 = hillYAtX(_posX); var hAb = hillY2 - _posY;
                 if (hAb < 0.0) { hAb = 0.0; }
-                var closeR = 1.0 - hAb / 26.0;
+                var closeR = 1.0 - hAb / 30.0;
                 if (closeR < 0.0) { closeR = 0.0; } if (closeR > 1.0) { closeR = 1.0; }
                 var landC;
-                if (closeR > 0.78) { landC = (_tick % 2 == 0) ? 0xFF2222 : 0xFF8800; }
-                else if (closeR > 0.5) { landC = (_tick % 4 < 2) ? 0xFFFF44 : 0xFFAA22; }
+                if (closeR > 0.80) { landC = (_tick % 2 == 0) ? 0xFF2222 : 0xFF8800; }
+                else if (closeR > 0.55) { landC = (_tick % 4 < 2) ? 0xFFFF44 : 0xFFAA22; }
                 else { landC = 0x44FF44; }
                 dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2 + 1, _h - 29, Graphics.FONT_MEDIUM, "LAND!", Graphics.TEXT_JUSTIFY_CENTER);
                 dc.setColor(landC, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h - 30, Graphics.FONT_MEDIUM, "LAND!", Graphics.TEXT_JUSTIFY_CENTER);
                 var bW2 = _w * 32 / 100; var bX2 = (_w - bW2) / 2; var bY2 = _h - 9;
                 dc.setColor(0x223344, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX2, bY2, bW2, 4);
                 dc.setColor(landC, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX2, bY2, (closeR * bW2.toFloat()).toNumber(), 4);
-            } else if (!_landReady) {
-                // Balance bar at bottom
+            } else if (!_landReady && !_preparingLanding) {
+                // Balance bar while in flight
                 var bW = _w * 40 / 100; var bX = (_w - bW) / 2; var bY = _h - 14;
                 dc.setColor(0x1A2233, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX, bY, bW, 9);
-                // Sweet zone: 12%–65% width (≈ 10°–28° body angle)
                 var gL = bX + bW * 12 / 100; var gR = bX + bW * 65 / 100;
                 dc.setColor(inSweet ? 0x22AA55 : 0x1A5522, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(gL, bY, gR - gL, 9);
-                // Center highlight
                 var cL = bX + bW * 28 / 100; var cR = bX + bW * 48 / 100;
                 dc.setColor(inSweet ? 0x44FF88 : 0x228844, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(cL, bY + 2, cR - cL, 5);
-                // Marker
                 var bPct = (_bodyAngle - 3.0) / 46.0; if (bPct < 0.0) { bPct = 0.0; } if (bPct > 1.0) { bPct = 1.0; }
                 var mP = bX + (bPct * bW.toFloat()).toNumber();
                 dc.setColor(inSweet ? 0x88FFCC : 0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(mP - 2, bY - 3, 4, 15);
