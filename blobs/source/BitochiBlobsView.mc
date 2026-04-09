@@ -48,6 +48,8 @@ class BitochiBlobsView extends WatchUi.View {
     hidden var _wpnDmg;
     hidden var _wpnWind;
     hidden var _wpnBounce;
+    // -1 = unlimited (basic), >= 0 = uses remaining this round (special)
+    hidden var _wpnAmmo;
 
     // Aim: phase 0 = angle oscillates (tap to lock), phase 1 = power oscillates (tap to fire)
     hidden var _aimPhase;
@@ -154,6 +156,8 @@ class BitochiBlobsView extends WatchUi.View {
         _wpnDmg    = [1,    1,    2,    1,    1,    1,    1,    3,    1,    2,    2];
         _wpnWind   = [1.0,  1.0,  1.0,  0.2,  1.0,  0.8,  0.9,  0.1,  1.2,  0.5,  0.3];
         _wpnBounce = [0,    2,    0,    0,    0,    0,    0,    0,    0,    0,    0];
+        // -1=unlimited (basic): ROCKET,GRENADE,SNIPER,CLUSTER; 1=one use/round (special): MEGA,MIRV,QUAKE,PLASMA,NAPALM,NUKE,DRILL
+        _wpnAmmo   = [-1,   -1,   1,    -1,   1,    1,    -1,   1,    1,    1,    1];
         _weapon = WPN_ROCKET;
 
         _aimPhase = 0; _aimAnglePhase = 0.0;
@@ -399,6 +403,10 @@ class BitochiBlobsView extends WatchUi.View {
         }
         _activeIdx = 0;
         _weapon = WPN_ROCKET;
+        // Reset special weapon ammo each round
+        for (var i = 0; i < WPN_COUNT; i++) {
+            if (_wpnAmmo[i] != -1) { _wpnAmmo[i] = 1; }
+        }
         _aimAngle = 45.0; _aimPhase = 0; _aimAnglePhase = 0.0; _powerPhase = 0.0;
         _projAlive = false; _projBurrowing = false;
         _newBest = false; _kills = 0;
@@ -451,6 +459,8 @@ class BitochiBlobsView extends WatchUi.View {
         _projBounces = 0; _projAlive = true;
         _projBurrowing = false;
         _projWeapon = _weapon;
+        // Consume one use if it's a limited special weapon
+        if (_wpnAmmo[_weapon] > 0) { _wpnAmmo[_weapon]--; }
         gameState = GS_FLY;
         doVibe(30, 50);
     }
@@ -861,7 +871,9 @@ class BitochiBlobsView extends WatchUi.View {
             gameState = GS_POWER;
             doVibe(18, 25);
         }
-        else if (gameState == GS_POWER && isHumanTurn()) { fireShot(); }
+        else if (gameState == GS_POWER && isHumanTurn()) {
+            if (_wpnAmmo[_weapon] != 0) { fireShot(); }
+        }
         else if (gameState == GS_WIN) { if (_resultTick > 30) { startRound(); } }
         else if (gameState == GS_OVER) { if (_resultTick > 30) { _round = 0; _newBest = false; startRound(); } }
     }
@@ -873,7 +885,14 @@ class BitochiBlobsView extends WatchUi.View {
             return;
         }
         if ((gameState == GS_AIM || gameState == GS_POWER) && isHumanTurn()) {
-            _weapon = (_weapon + dir + WPN_COUNT) % WPN_COUNT;
+            // Cycle, skipping specials that are depleted
+            var next = (_weapon + dir + WPN_COUNT) % WPN_COUNT;
+            var tried = 0;
+            while (_wpnAmmo[next] == 0 && tried < WPN_COUNT) {
+                next = (next + dir + WPN_COUNT) % WPN_COUNT;
+                tried++;
+            }
+            _weapon = next;
             doVibe(15, 30);
         }
     }
@@ -1270,9 +1289,15 @@ class BitochiBlobsView extends WatchUi.View {
             else if (_weapon == WPN_NAPALM)  { wpnC = 0xFF6600; }
             else if (_weapon == WPN_NUKE)    { wpnC = 0xFF4444; }
             else { wpnC = 0xCCCCCC; }  // DRILL
-            dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(_w / 2 - 40, 13, 80, 12);
+            var wpnLabel;
+            if (_wpnAmmo[_weapon] == -1) {
+                wpnLabel = "< " + _wpnNames[_weapon] + " >";
+            } else {
+                wpnLabel = "< " + _wpnNames[_weapon] + " [1x] >";
+            }
+            dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(_w / 2 - 50, 13, 100, 12);
             dc.setColor(wpnC, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, 13, Graphics.FONT_XTINY, "< " + _wpnNames[_weapon] + " >", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_w / 2, 13, Graphics.FONT_XTINY, wpnLabel, Graphics.TEXT_JUSTIFY_CENTER);
             if (gameState == GS_AIM) {
                 dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h - 30, Graphics.FONT_XTINY, "AIM", Graphics.TEXT_JUSTIFY_CENTER);
             }
