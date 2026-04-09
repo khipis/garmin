@@ -432,12 +432,13 @@ class BitochiJumpView extends WatchUi.View {
         if (!_landReady && heightAbove < 30.0 && _distance > 8.0) { _landReady = true; _landReadyTick = 0; }
         if (_landReady) { _landReadyTick++; }
 
-        // Auto-land: touches ground without tap → poor quality
+        // Auto-land: touches ground without tap → poor quality; strong wind = crash
         if (_posY >= hillY - 1.5 && _posX > _hillX[_hillLaunchIdx]) {
             _posY = hillY;
             if (!_landTapDone) {
-                _landQuality = 0.20;
-                if (_distance < 6.0) { _landCrash = true; }
+                _landQuality = 0.15;
+                var wAbsA = _windCurrent; if (wAbsA < 0.0) { wAbsA = -wAbsA; }
+                if (_distance < 6.0 || wAbsA > 0.45) { _landCrash = true; }
             }
             doLanding();
         }
@@ -445,11 +446,32 @@ class BitochiJumpView extends WatchUi.View {
 
     hidden function doLanding() {
         _distance = distMeters(_posX);
+        if (!_landCrash) {
+            // Wind penalty: crosswind destabilises the landing
+            var wAbs = _windCurrent; if (wAbs < 0.0) { wAbs = -wAbs; }
+            var windPenalty = 0.0;
+            if      (wAbs > 0.55) { windPenalty = 0.22; }
+            else if (wAbs > 0.30) { windPenalty = 0.10; }
+
+            // Distance penalty: longer jump = faster approach = harder to stick
+            var distPenalty = 0.0;
+            if      (_distance > _hillHSDist)  { distPenalty = 0.14; }
+            else if (_distance > _hillKDist)   { distPenalty = 0.06; }
+
+            var finalQ = _landQuality - windPenalty - distPenalty;
+            if (finalQ < 0.0) { finalQ = 0.0; }
+
+            // Crash when landing quality is too poor or body angle is wrong
+            if (finalQ < 0.14 || _bodyAngle > 44.0 || _bodyAngle < 3.0) {
+                _landCrash = true;
+            } else {
+                _landGood = (finalQ > 0.65 && _bodyAngle > 7.0 && _bodyAngle < 40.0);
+            }
+        }
         if (_landCrash) {
             _landGood = false; _shakeTick = 14; doVibe(100, 280);
             _crowdCheer = 8; _slideSpeed = 0.0;
         } else {
-            _landGood = (_landQuality > 0.65 && _bodyAngle > 7.0 && _bodyAngle < 40.0);
             _shakeTick = _landGood ? 4 : 7;
             doVibe(_landGood ? 40 : 70, _landGood ? 100 : 180);
             _crowdCheer = _landGood ? 55 : 22;
@@ -477,11 +499,18 @@ class BitochiJumpView extends WatchUi.View {
         // In landing zone — quality depends on height above hill
         var hillY = hillYAtX(_posX);
         var ha = hillY - _posY; if (ha < 0.0) { ha = 0.0; }
-        if      (ha <  6.0) { _landQuality = 1.00; }   // nearly touching: perfect
-        else if (ha < 13.0) { _landQuality = 0.84; }   // very close: telemark
-        else if (ha < 22.0) { _landQuality = 0.62; }   // ok: two-foot
-        else if (ha < 32.0) { _landQuality = 0.38; }   // high: weak two-foot
-        else                { _landQuality = 0.22; }   // very high: late/awkward
+
+        if (ha < 2.5) {
+            // Tapped way too late — nearly on the hill already → crash
+            _landQuality = 0.0; _landCrash = true;
+            _preparingLanding = true;
+            doVibe(90, 220); return;
+        }
+        if      (ha <  7.0) { _landQuality = 1.00; }   // nearly touching: perfect
+        else if (ha < 14.0) { _landQuality = 0.84; }   // very close: telemark
+        else if (ha < 23.0) { _landQuality = 0.62; }   // ok: two-foot
+        else if (ha < 33.0) { _landQuality = 0.38; }   // high: weak two-foot
+        else                { _landQuality = 0.22; }   // very high: early/awkward
 
         // Start graceful preparation descent — don't snap to ground
         _preparingLanding = true;
@@ -860,10 +889,12 @@ class BitochiJumpView extends WatchUi.View {
             dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(6, 4, Graphics.FONT_XTINY, kmh + " km/h", Graphics.TEXT_JUSTIFY_LEFT);
             dc.setColor(spC, Graphics.COLOR_TRANSPARENT); dc.drawText(5, 3, Graphics.FONT_XTINY, kmh + " km/h", Graphics.TEXT_JUSTIFY_LEFT);
             if (!_inTakeoffZone) {
-                // Before takeoff zone: show venue info + hill record as motivation
+                // Before takeoff zone: show venue info + hill record on dark pill for contrast
                 var hrStr = (_bestPerVenue[_venue] > 0.0) ? ("PR:" + _bestPerVenue[_venue].toNumber() + "m") : ("HS:" + _hillHSDist.toNumber() + "m");
-                dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(_w / 2, _h - 18, Graphics.FONT_XTINY, _venueNames[_venue] + "  " + hrStr, Graphics.TEXT_JUSTIFY_CENTER);
+                var infoTxt = _venueNames[_venue] + "  " + hrStr;
+                dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(_w / 2 - 52, _h - 20, 104, 14);
+                dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(_w / 2, _h - 20, Graphics.FONT_XTINY, infoTxt, Graphics.TEXT_JUSTIFY_CENTER);
             }
             if (_inTakeoffZone) {
                 var edgeX = _hillX[_hillLaunchIdx]; var zoneX = _hillX[_hillTableIdx];
@@ -1032,10 +1063,12 @@ class BitochiJumpView extends WatchUi.View {
         else                               { tqMsg = "Early takeoff!"; }
         dc.setColor(0x88AACC, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 63 / 100, Graphics.FONT_XTINY, tqMsg, Graphics.TEXT_JUSTIFY_CENTER);
         if (_newHillRecord) {
-            dc.setColor((_tick % 4 < 2) ? 0xFFDD22 : 0xFF8800, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 73 / 100, Graphics.FONT_XTINY, "HILL RECORD!", Graphics.TEXT_JUSTIFY_CENTER);
+            var hrC = (_tick % 4 < 2) ? 0xFFDD22 : 0xFF8800;
+            dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(_w / 2 - 46, _h * 73 / 100, 92, 13);
+            dc.setColor(hrC, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2, _h * 73 / 100, Graphics.FONT_XTINY, "★ HILL RECORD! ★", Graphics.TEXT_JUSTIFY_CENTER);
         } else if (_bestPerVenue[_venue] > 0.0) {
-            dc.setColor(0x446655, Graphics.COLOR_TRANSPARENT);
+            dc.setColor(0x6688AA, Graphics.COLOR_TRANSPARENT);
             dc.drawText(_w / 2, _h * 73 / 100, Graphics.FONT_XTINY, "Hill best: " + _bestPerVenue[_venue].toNumber() + "m", Graphics.TEXT_JUSTIFY_CENTER);
         }
         dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 83 / 100, Graphics.FONT_XTINY, _venueNames[_venue] + "  R" + _currentRound + " [" + (_jumpSlot + 1) + "/" + NUM_JUMPERS + "]", Graphics.TEXT_JUSTIFY_CENTER);
