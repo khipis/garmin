@@ -158,7 +158,9 @@ class BitochiBlobsView extends WatchUi.View {
         _wpnWind   = [1.0,  1.0,  1.0,  0.2,  1.0,  0.8,  0.9,  0.1,  1.2,  0.5,  0.3];
         _wpnBounce = [0,    2,    0,    0,    0,    0,    0,    0,    0,    0,    0];
         // -1=unlimited (basic): ROCKET,GRENADE,SNIPER,CLUSTER; 1=one use/round (special): MEGA,MIRV,QUAKE,PLASMA,NAPALM,NUKE,DRILL
-        _wpnAmmo   = [-1,   -1,   1,    -1,   1,    1,    -1,   1,    1,    1,    1];
+        // Per-player ammo: _wpnAmmo[playerIdx][weaponIdx]; -1 = unlimited
+        _wpnAmmo = [[-1, -1, 1, -1, 1, 1, -1, 1, 1, 1, 1],
+                    [-1, -1, 1, -1, 1, 1, -1, 1, 1, 1, 1]];
         _weapon = WPN_ROCKET;
 
         _aimPhase = 0; _aimAnglePhase = 0.0;
@@ -405,9 +407,11 @@ class BitochiBlobsView extends WatchUi.View {
         }
         _activeIdx = 0;
         _weapon = WPN_ROCKET;
-        // Reset special weapon ammo each round
-        for (var i = 0; i < WPN_COUNT; i++) {
-            if (_wpnAmmo[i] != -1) { _wpnAmmo[i] = 1; }
+        // Reset per-player special weapon ammo each round
+        for (var p = 0; p < 2; p++) {
+            for (var i = 0; i < WPN_COUNT; i++) {
+                if (_wpnAmmo[p][i] != -1) { _wpnAmmo[p][i] = 1; }
+            }
         }
         _aimAngle = 45.0; _aimPhase = 0; _aimAnglePhase = 0.0; _powerPhase = 0.0;
         _projAlive = false; _projBurrowing = false;
@@ -449,8 +453,9 @@ class BitochiBlobsView extends WatchUi.View {
         _projBounces = 0; _projAlive = true;
         _projBurrowing = false;
         _projWeapon = _weapon;
-        // Consume one use if it's a limited special weapon
-        if (_wpnAmmo[_weapon] > 0) { _wpnAmmo[_weapon]--; }
+        // Consume one use from active player's ammo if it's a limited special weapon
+        var fpIdx = (_twoPlayer && _activeIdx == 1) ? 1 : 0;
+        if (_wpnAmmo[fpIdx][_weapon] > 0) { _wpnAmmo[fpIdx][_weapon]--; }
         gameState = GS_FLY;
         doVibe(30, 50);
     }
@@ -742,47 +747,62 @@ class BitochiBlobsView extends WatchUi.View {
     }
 
     hidden function afterBoom() {
-        // In 2P: blobs 0 and 1 are players; blobs 2+ are AI enemies.
-        // In 1P: blob 0 is player; blobs 1+ are AI enemies.
         var enemyStart = _twoPlayer ? 2 : 1;
-
-        var p0Dead = (_bHp[0] <= 0);
-        var p1Dead = _twoPlayer ? (_bHp[1] <= 0) : true;
-        if (_bAlive[0] && p0Dead) { _bAlive[0] = false; }
-        if (_twoPlayer && _bAlive[1] && p1Dead) { _bAlive[1] = false; }
-
-        var anyEnemyAlive = false;
+        // Mark all dead blobs
+        if (_bAlive[0] && _bHp[0] <= 0) { _bAlive[0] = false; }
+        if (_twoPlayer && _bAlive[1] && _bHp[1] <= 0) { _bAlive[1] = false; }
         for (var i = enemyStart; i < _blobCount; i++) {
-            if (_bAlive[i] && _bHp[i] > 0) { anyEnemyAlive = true; }
-            else if (_bAlive[i] && _bHp[i] <= 0) { _bAlive[i] = false; _kills++; }
+            if (_bAlive[i] && _bHp[i] <= 0) { _bAlive[i] = false; _kills++; }
         }
 
-        var allPlayersDead = _twoPlayer ? (p0Dead && p1Dead) : p0Dead;
-
-        if (!anyEnemyAlive && !allPlayersDead) {
-            // Determine which player(s) won
-            if (_twoPlayer) {
-                if (!p0Dead && !p1Dead) { _winnerPlayer = -1; }   // both survived = team win
-                else if (!p0Dead)       { _winnerPlayer = 0; }    // P1 outlasted P2
-                else                    { _winnerPlayer = 1; }    // P2 outlasted P1
-            } else { _winnerPlayer = 0; }
-            gameState = GS_WIN; _resultTick = 0;
-            if (_round > _bestStreak) {
-                _bestStreak = _round; _newBest = true;
-                Application.Storage.setValue("blobBest", _bestStreak);
+        if (_twoPlayer) {
+            // 2P FFA: last blob standing wins — players fight each other AND AI.
+            var aliveCount = 0; var lastAlive = -1;
+            for (var i = 0; i < _blobCount; i++) {
+                if (_bAlive[i]) { aliveCount++; lastAlive = i; }
             }
-            doVibe(80, 200); spawnVictory(); return;
-        }
-        if (allPlayersDead) {
-            gameState = GS_OVER; _resultTick = 0;
-            var streak = _round - 1;
-            if (streak > _bestStreak) {
-                _bestStreak = streak; _newBest = true;
-                Application.Storage.setValue("blobBest", _bestStreak);
+            if (aliveCount <= 1) {
+                if (lastAlive == 0 || lastAlive == 1) {
+                    // A player is the last blob — they win the round
+                    _winnerPlayer = lastAlive;
+                    gameState = GS_WIN; _resultTick = 0;
+                    if (_round > _bestStreak) { _bestStreak = _round; _newBest = true; Application.Storage.setValue("blobBest", _bestStreak); }
+                    doVibe(80, 200); spawnVictory();
+                } else {
+                    // All player blobs eliminated (or everyone dead)
+                    gameState = GS_OVER; _resultTick = 0;
+                    var s = _round - 1; if (s < 0) { s = 0; }
+                    if (s > _bestStreak) { _bestStreak = s; _newBest = true; Application.Storage.setValue("blobBest", _bestStreak); }
+                    doVibe(100, 300);
+                }
+                return;
             }
-            doVibe(100, 300); return;
+            // Both players dead but AI still alive → immediate game over
+            if (!_bAlive[0] && !_bAlive[1]) {
+                gameState = GS_OVER; _resultTick = 0;
+                var s2 = _round - 1; if (s2 < 0) { s2 = 0; }
+                if (s2 > _bestStreak) { _bestStreak = s2; _newBest = true; Application.Storage.setValue("blobBest", _bestStreak); }
+                doVibe(100, 300); return;
+            }
+            nextTurn();
+        } else {
+            // 1P: kill every enemy to win; player death = game over
+            var anyEnemyAlive = false;
+            for (var i = 1; i < _blobCount; i++) { if (_bAlive[i]) { anyEnemyAlive = true; break; } }
+            if (!anyEnemyAlive && _bAlive[0]) {
+                _winnerPlayer = 0;
+                gameState = GS_WIN; _resultTick = 0;
+                if (_round > _bestStreak) { _bestStreak = _round; _newBest = true; Application.Storage.setValue("blobBest", _bestStreak); }
+                doVibe(80, 200); spawnVictory(); return;
+            }
+            if (!_bAlive[0]) {
+                gameState = GS_OVER; _resultTick = 0;
+                var streak = _round - 1; if (streak < 0) { streak = 0; }
+                if (streak > _bestStreak) { _bestStreak = streak; _newBest = true; Application.Storage.setValue("blobBest", _bestStreak); }
+                doVibe(100, 300); return;
+            }
+            nextTurn();
         }
-        nextTurn();
     }
 
     hidden function spawnBoom(ex, ey) {
@@ -869,7 +889,8 @@ class BitochiBlobsView extends WatchUi.View {
             doVibe(18, 25);
         }
         else if (gameState == GS_POWER && isHumanTurn()) {
-            if (_wpnAmmo[_weapon] != 0) { fireShot(); }
+            var apIdx = (_twoPlayer && _activeIdx == 1) ? 1 : 0;
+            if (_wpnAmmo[apIdx][_weapon] != 0) { fireShot(); }
         }
         else if (gameState == GS_WIN) { if (_resultTick > 30) { startRound(); } }
         else if (gameState == GS_OVER) { if (_resultTick > 30) { _round = 0; _newBest = false; startRound(); } }
@@ -882,10 +903,11 @@ class BitochiBlobsView extends WatchUi.View {
             return;
         }
         if ((gameState == GS_AIM || gameState == GS_POWER) && isHumanTurn()) {
-            // Cycle, skipping specials that are depleted
+            // Cycle, skipping specials that are depleted for this player
+            var wpIdx = (_twoPlayer && _activeIdx == 1) ? 1 : 0;
             var next = (_weapon + dir + WPN_COUNT) % WPN_COUNT;
             var tried = 0;
-            while (_wpnAmmo[next] == 0 && tried < WPN_COUNT) {
+            while (_wpnAmmo[wpIdx][next] == 0 && tried < WPN_COUNT) {
                 next = (next + dir + WPN_COUNT) % WPN_COUNT;
                 tried++;
             }
@@ -1276,8 +1298,9 @@ class BitochiBlobsView extends WatchUi.View {
             else if (_weapon == WPN_NAPALM)  { wpnC = 0xFF6600; }
             else if (_weapon == WPN_NUKE)    { wpnC = 0xFF4444; }
             else { wpnC = 0xCCCCCC; }  // DRILL
+            var hudPIdx = (_twoPlayer && _activeIdx == 1) ? 1 : 0;
             var wpnLabel;
-            if (_wpnAmmo[_weapon] == -1) {
+            if (_wpnAmmo[hudPIdx][_weapon] == -1) {
                 wpnLabel = "< " + _wpnNames[_weapon] + " >";
             } else {
                 wpnLabel = "< " + _wpnNames[_weapon] + " [1x] >";
