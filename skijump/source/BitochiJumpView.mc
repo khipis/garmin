@@ -974,21 +974,31 @@ class BitochiJumpView extends WatchUi.View {
         }
 
         if (gameState == JS_LANDING) {
+            // Distance — black shadow on white snow
             dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2 + 1, 4, Graphics.FONT_MEDIUM, _distance.toNumber() + "m", Graphics.TEXT_JUSTIFY_CENTER);
             dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, 3, Graphics.FONT_MEDIUM, _distance.toNumber() + "m", Graphics.TEXT_JUSTIFY_CENTER);
+            // Landing result — dark pill for contrast on any background
             var lMsg; var lC;
             if (_landCrash)     { lMsg = "CRASH!";    lC = 0xFF2222; }
             else if (_landGood) { lMsg = "TELEMARK!"; lC = 0x44FF88; }
             else                { lMsg = "TWO-FOOT";  lC = 0xFFAA44; }
-            dc.setColor(lC, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 68 / 100, Graphics.FONT_SMALL, lMsg, Graphics.TEXT_JUSTIFY_CENTER);
+            var lY = _h * 66 / 100;
+            dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(_w / 2 - 44, lY, 88, 16);
+            dc.setColor(lC, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, lY, Graphics.FONT_SMALL, lMsg, Graphics.TEXT_JUSTIFY_CENTER);
+            // Hill record / K-point — dark pill to stay readable on white slope
             if (_distance > _hillKDist && !_landCrash) {
-                dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(_w / 2, _h * 80 / 100, Graphics.FONT_XTINY, (_distance > _hillHSDist) ? "HILL RECORD!" : "Beyond K!", Graphics.TEXT_JUSTIFY_CENTER);
+                var hrMsg = (_distance > _hillHSDist) ? "★ HILL RECORD! ★" : "Beyond K!";
+                var hrC2  = (_distance > _hillHSDist) ? ((_tick % 4 < 2) ? 0xFFDD22 : 0xFF8800) : 0x44FF88;
+                var hrY   = _h * 80 / 100;
+                dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(_w / 2 - 52, hrY, 104, 14);
+                dc.setColor(hrC2, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(_w / 2, hrY, Graphics.FONT_XTINY, hrMsg, Graphics.TEXT_JUSTIFY_CENTER);
             }
         }
 
-        // Venue + jumper name + round (bottom)
-        dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT);
+        // Venue + jumper name + round (bottom) — dark strip for contrast on slope
+        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h - 15, _w, 15);
+        dc.setColor(0x6677AA, Graphics.COLOR_TRANSPARENT);
         dc.drawText(4, _h - 14, Graphics.FONT_XTINY, _venueNames[_venue], Graphics.TEXT_JUSTIFY_LEFT);
         dc.drawText(_w - 4, _h - 14, Graphics.FONT_XTINY, _jumperNames[_jumperIdx], Graphics.TEXT_JUSTIFY_RIGHT);
         dc.drawText(_w / 2, _h - 14, Graphics.FONT_XTINY, "R" + _currentRound, Graphics.TEXT_JUSTIFY_CENTER);
