@@ -977,20 +977,20 @@ class BitochiJumpView extends WatchUi.View {
             // Distance — black shadow on white snow
             dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2 + 1, 4, Graphics.FONT_MEDIUM, _distance.toNumber() + "m", Graphics.TEXT_JUSTIFY_CENTER);
             dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, 3, Graphics.FONT_MEDIUM, _distance.toNumber() + "m", Graphics.TEXT_JUSTIFY_CENTER);
-            // Landing result — dark pill for contrast on any background
+            // Landing result — shadow only, no background rectangle
             var lMsg; var lC;
             if (_landCrash)     { lMsg = "CRASH!";    lC = 0xFF2222; }
             else if (_landGood) { lMsg = "TELEMARK!"; lC = 0x44FF88; }
             else                { lMsg = "TWO-FOOT";  lC = 0xFFAA44; }
             var lY = _h * 66 / 100;
-            dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(_w / 2 - 44, lY, 88, 16);
+            dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2 + 1, lY + 1, Graphics.FONT_SMALL, lMsg, Graphics.TEXT_JUSTIFY_CENTER);
             dc.setColor(lC, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, lY, Graphics.FONT_SMALL, lMsg, Graphics.TEXT_JUSTIFY_CENTER);
-            // Hill record / K-point — dark pill to stay readable on white slope
+            // Hill record / K-point — full-width dark strip for guaranteed contrast
             if (_distance > _hillKDist && !_landCrash) {
-                var hrMsg = (_distance > _hillHSDist) ? "★ HILL RECORD! ★" : "Beyond K!";
+                var hrMsg = (_distance > _hillHSDist) ? "\u2605 HILL RECORD! \u2605" : "Beyond K!";
                 var hrC2  = (_distance > _hillHSDist) ? ((_tick % 4 < 2) ? 0xFFDD22 : 0xFF8800) : 0x44FF88;
                 var hrY   = _h * 80 / 100;
-                dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(_w / 2 - 52, hrY, 104, 14);
+                dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, hrY - 1, _w, 16);
                 dc.setColor(hrC2, Graphics.COLOR_TRANSPARENT);
                 dc.drawText(_w / 2, hrY, Graphics.FONT_XTINY, hrMsg, Graphics.TEXT_JUSTIFY_CENTER);
             }
