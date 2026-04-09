@@ -764,7 +764,7 @@ class BitochiBlobsView extends WatchUi.View {
         if (isNapalm) { colors = [0xFF6600, 0xFF8800, 0xFFCC00, 0xFF4400, 0xFFAA00]; }
         else if (isNuke) { colors = [0xFFFFAA, 0xFFFF44, 0xFF8822, 0xFF4411, 0xFFFFFF]; }
         else { colors = [0xFF4422, 0xFFAA22, 0xFFDD44, 0xFF6622, 0xFFFFAA, 0xFF2211]; }
-        var nColors = isNuke ? 5 : 6;
+        var nColors = (isNapalm || isNuke) ? 5 : 6;
         var nSpawn = isNuke ? 16 : 12;
         var spawned = 0;
         for (var i = 0; i < MAX_PARTS; i++) {
