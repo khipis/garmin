@@ -387,6 +387,7 @@ class BitochiJumpView extends WatchUi.View {
         var liftDir = fRad + 3.14159 / 2.0;
         var ax2 = -drag * speed * _velX + lift * Math.cos(liftDir) + _windCurrent * 0.011;
         var ay2 = 0.23  - lift * Math.sin(liftDir);
+        if (ay2 < 0.052) { ay2 = 0.052; } // gravity floor — always falls, even perfectly positioned
 
         _velX += ax2; _velY += ay2;
         if (_velX < 0.7) { _velX = 0.7; }
