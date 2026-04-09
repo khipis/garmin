@@ -28,6 +28,7 @@ class BitochiJumpView extends WatchUi.View {
     hidden var _hillKDist; hidden var _hillHSDist;
     hidden var _inrunLen;
     hidden var _maxSpeed;
+    hidden var _kmhMax;       // realistic top-speed display for each venue
     hidden var _venue;
     hidden var _venueNames;
 
@@ -72,6 +73,8 @@ class BitochiJumpView extends WatchUi.View {
     hidden var _scores; hidden var _dists;
     hidden var _cumScores; hidden var _cumDists;
     hidden var _lastDist; hidden var _lastScore; hidden var _bestDist;
+    hidden var _bestPerVenue;   // per-venue personal bests [4]
+    hidden var _newHillRecord;  // set in finishJump, shown in drawResult
     hidden var _judgeScores;
     hidden var _showStandings;
 
@@ -131,9 +134,14 @@ class BitochiJumpView extends WatchUi.View {
 
         initJumpVars();
         _currentRound = 1; _jumpSlot = 0; _startJumper = 0; _jumpNum = 0;
-        _lastDist = 0.0; _lastScore = 0.0;
+        _lastDist = 0.0; _lastScore = 0.0; _newHillRecord = false;
         var jbd = Application.Storage.getValue("jumpBest");
         _bestDist = (jbd != null) ? jbd : 0.0;
+        _bestPerVenue = new [4];
+        for (var i = 0; i < 4; i++) {
+            var v = Application.Storage.getValue("jumpBest" + i);
+            _bestPerVenue[i] = (v != null) ? v : 0.0;
+        }
         _showStandings = false; _jumperIdx = 0;
         _shakeX = 0; _shakeY = 0; _shakeTick = 0; _crowdCheer = 0;
         gameState = JS_MENU;
@@ -144,16 +152,16 @@ class BitochiJumpView extends WatchUi.View {
         var inA; var inStep; var tA; var lA;
         if (_venue == 0) {
             _inrunLen = 26; inA = 33.0; inStep = 2.8; tA = 10.0; lA = 33.0;
-            _hillKDist = 90.0; _hillHSDist = 99.0; _maxSpeed = 3.0;
+            _hillKDist = 90.0; _hillHSDist = 99.0; _maxSpeed = 3.0; _kmhMax = 87.0;
         } else if (_venue == 1) {
             _inrunLen = 34; inA = 35.0; inStep = 3.0; tA = 10.5; lA = 34.5;
-            _hillKDist = 120.0; _hillHSDist = 130.0; _maxSpeed = 3.6;
+            _hillKDist = 120.0; _hillHSDist = 130.0; _maxSpeed = 3.6; _kmhMax = 92.0;
         } else if (_venue == 2) {
             _inrunLen = 44; inA = 37.0; inStep = 3.2; tA = 11.0; lA = 35.5;
-            _hillKDist = 137.0; _hillHSDist = 147.0; _maxSpeed = 4.1;
+            _hillKDist = 137.0; _hillHSDist = 147.0; _maxSpeed = 4.1; _kmhMax = 97.0;
         } else {
             _inrunLen = 60; inA = 39.5; inStep = 3.6; tA = 11.5; lA = 38.0;
-            _hillKDist = 200.0; _hillHSDist = 243.0; _maxSpeed = 5.2;
+            _hillKDist = 200.0; _hillHSDist = 243.0; _maxSpeed = 5.2; _kmhMax = 104.0;
         }
         _hillTableIdx = _inrunLen;
         var inR = inA * 3.14159 / 180.0;
@@ -218,6 +226,7 @@ class BitochiJumpView extends WatchUi.View {
         _landQuality = 0.0; _slideSpeed = 0.0;
         _preparingLanding = false; _preparingTick = 0;
         _earlyTap = false; _earlyTapTick = 0; _spinningOut = false;
+        _newHillRecord = false;
         _windBase = 0.0; _windCurrent = 0.0; _windPhase = 0.0;
         _passedK = false;
         _camX = _posX; _camY = _posY;
@@ -285,10 +294,14 @@ class BitochiJumpView extends WatchUi.View {
             else if (ratio < 0.65) { _takeoffQuality = 0.55; }
             else                   { _takeoffQuality = 0.38; }
         } else { _takeoffQuality = 0.28; }
-        var launchA = 13.0 + _takeoffQuality * 18.0;
+        // Flatter launch angle (10-20°) so good takeoff sends jumper FORWARD, not upward.
+        // fwdBoost >> upBoost: horizontal carry dominates — realistic ski-jump trajectory.
+        var launchA = 10.0 + _takeoffQuality * 10.0;  // 10° (poor) → 20° (perfect)
         var lr = launchA * 3.14159 / 180.0;
-        var boost = 0.72 + _takeoffQuality * 0.96;
-        _velX = _speed * boost * Math.cos(lr); _velY = -_speed * boost * Math.sin(lr);
+        var fwdBoost = 0.88 + _takeoffQuality * 0.68;  // horizontal: 0.88 → 1.56
+        var upBoost  = 0.50 + _takeoffQuality * 0.38;  // vertical:   0.50 → 0.88 (smaller)
+        _velX = _speed * fwdBoost * Math.cos(lr);
+        _velY = -_speed * upBoost  * Math.sin(lr);
         _bodyAngle = launchA; _skiAngle = launchA; _onHill = false;
         _windBase = -0.9 + (Math.rand().abs() % 20).toFloat() / 11.0;
         _windPhase = (Math.rand().abs() % 628).toFloat() / 100.0;
@@ -478,6 +491,11 @@ class BitochiJumpView extends WatchUi.View {
         _dists[_jumperIdx] = dist; _scores[_jumperIdx] = total;
         _cumDists[_jumperIdx] += dist; _cumScores[_jumperIdx] += total;
         if (dist > _bestDist && !_landCrash) { _bestDist = dist; Application.Storage.setValue("jumpBest", _bestDist); }
+        if (dist > _bestPerVenue[_venue] && !_landCrash) {
+            _bestPerVenue[_venue] = dist;
+            Application.Storage.setValue("jumpBest" + _venue, dist);
+            _newHillRecord = true;
+        }
         gameState = JS_RESULT;
     }
 
@@ -820,9 +838,17 @@ class BitochiJumpView extends WatchUi.View {
         drawWindBox(dc);
 
         if (gameState == JS_INRUN) {
-            var kmh = (_speed * 38.0).toNumber();
+            // Speed shown as realistic km/h for this venue's inrun length/angle
+            var kmh = (55.0 + (_speed / _maxSpeed) * (_kmhMax - 55.0)).toNumber();
+            var spC = (_inTakeoffZone && kmh >= (_kmhMax * 0.97).toNumber()) ? 0x44FF88 : 0x88AACC;
             dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(6, 4, Graphics.FONT_XTINY, kmh + " km/h", Graphics.TEXT_JUSTIFY_LEFT);
-            dc.setColor(0x223344, Graphics.COLOR_TRANSPARENT); dc.drawText(5, 3, Graphics.FONT_XTINY, kmh + " km/h", Graphics.TEXT_JUSTIFY_LEFT);
+            dc.setColor(spC, Graphics.COLOR_TRANSPARENT); dc.drawText(5, 3, Graphics.FONT_XTINY, kmh + " km/h", Graphics.TEXT_JUSTIFY_LEFT);
+            if (!_inTakeoffZone) {
+                // Before takeoff zone: show venue info + hill record as motivation
+                var hrStr = (_bestPerVenue[_venue] > 0.0) ? ("PR:" + _bestPerVenue[_venue].toNumber() + "m") : ("HS:" + _hillHSDist.toNumber() + "m");
+                dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(_w / 2, _h - 18, Graphics.FONT_XTINY, _venueNames[_venue] + "  " + hrStr, Graphics.TEXT_JUSTIFY_CENTER);
+            }
             if (_inTakeoffZone) {
                 var edgeX = _hillX[_hillLaunchIdx]; var zoneX = _hillX[_hillTableIdx];
                 var ratio = (edgeX - _posX) / (edgeX - zoneX + 0.01);
@@ -988,8 +1014,15 @@ class BitochiJumpView extends WatchUi.View {
         else if (_takeoffQuality >= 0.70) { tqMsg = "Great takeoff"; }
         else if (_takeoffQuality >= 0.40) { tqMsg = "Good"; }
         else                               { tqMsg = "Early takeoff!"; }
-        dc.setColor(0x88AACC, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 66 / 100, Graphics.FONT_XTINY, tqMsg, Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 77 / 100, Graphics.FONT_XTINY, _venueNames[_venue] + "  R" + _currentRound + " [" + (_jumpSlot + 1) + "/" + NUM_JUMPERS + "]", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x88AACC, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 63 / 100, Graphics.FONT_XTINY, tqMsg, Graphics.TEXT_JUSTIFY_CENTER);
+        if (_newHillRecord) {
+            dc.setColor((_tick % 4 < 2) ? 0xFFDD22 : 0xFF8800, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2, _h * 73 / 100, Graphics.FONT_XTINY, "HILL RECORD!", Graphics.TEXT_JUSTIFY_CENTER);
+        } else if (_bestPerVenue[_venue] > 0.0) {
+            dc.setColor(0x446655, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2, _h * 73 / 100, Graphics.FONT_XTINY, "Hill best: " + _bestPerVenue[_venue].toNumber() + "m", Graphics.TEXT_JUSTIFY_CENTER);
+        }
+        dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 83 / 100, Graphics.FONT_XTINY, _venueNames[_venue] + "  R" + _currentRound + " [" + (_jumpSlot + 1) + "/" + NUM_JUMPERS + "]", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor((_tick % 10 < 5) ? 0x44AAFF : 0x3388DD, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 88 / 100, Graphics.FONT_XTINY, "Tap to continue", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
@@ -1019,8 +1052,19 @@ class BitochiJumpView extends WatchUi.View {
             dc.setColor(0xDDDDEE, Graphics.COLOR_TRANSPARENT); dc.drawText(_w - 6, ry, Graphics.FONT_XTINY, _cumScores[idx].toNumber() + "", Graphics.TEXT_JUSTIFY_RIGHT);
         }
         dc.setColor(_jumperColors[order[0]], Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 74 / 100, Graphics.FONT_XTINY, _jumperNames[order[0]] + " WINS!", Graphics.TEXT_JUSTIFY_CENTER);
-        if (_bestDist > 0.0) { dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 83 / 100, Graphics.FONT_XTINY, "BEST: " + _bestDist.toNumber() + "m", Graphics.TEXT_JUSTIFY_CENTER); }
+        dc.drawText(_w / 2, _h * 72 / 100, Graphics.FONT_XTINY, _jumperNames[order[0]] + " WINS!", Graphics.TEXT_JUSTIFY_CENTER);
+        // Show personal hill records for each venue
+        var vShort = ["ZAK", "INN", "OBE", "VIK"];
+        var recLine = "";
+        for (var vi = 0; vi < 4; vi++) {
+            if (_bestPerVenue[vi] > 0.0) {
+                recLine = recLine + vShort[vi] + ":" + _bestPerVenue[vi].toNumber() + " ";
+            }
+        }
+        if (recLine.length() > 0) {
+            dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2, _h * 81 / 100, Graphics.FONT_XTINY, recLine, Graphics.TEXT_JUSTIFY_CENTER);
+        }
         dc.setColor((_tick % 10 < 5) ? 0x44AAFF : 0x3388DD, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 91 / 100, Graphics.FONT_XTINY, "Tap for menu", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
