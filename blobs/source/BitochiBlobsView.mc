@@ -120,6 +120,9 @@ class BitochiBlobsView extends WatchUi.View {
     hidden var _cloudX;
     hidden var _cloudS;
 
+    hidden var _twoPlayer;
+    hidden var _menuSel;
+
     function initialize() {
         View.initialize();
         Math.srand(Time.now().value());
@@ -190,6 +193,13 @@ class BitochiBlobsView extends WatchUi.View {
             _cloudX[i] = (Math.rand().abs() % _w).toFloat();
             _cloudS[i] = 0.1 + (Math.rand().abs() % 8).toFloat() / 20.0;
         }
+
+        _twoPlayer = false;
+        _menuSel = 0;
+    }
+
+    hidden function isHumanTurn() {
+        return (_activeIdx == 0 || (_twoPlayer && _activeIdx == 1));
     }
 
     function onShow() {
@@ -239,19 +249,19 @@ class BitochiBlobsView extends WatchUi.View {
         } else if (gameState == GS_MOVE) {
             _moveTick++;
             _camTarget = _bX[_activeIdx] - _w.toFloat() / 2.0;
-            if (_activeIdx == 0) {
+            if (isHumanTurn()) {
                 if (_hopCooldown > 0) { _hopCooldown--; }
                 if (_hopCount < 2 && _hopCooldown == 0) {
                     var steer = accelX.toFloat() / 280.0;
                     if (steer > 1.8) {
-                        var nx = _bX[0] + 20.0;
+                        var nx = _bX[_activeIdx] + 20.0;
                         if (nx > _mapW.toFloat() - 10.0) { nx = _mapW.toFloat() - 10.0; }
-                        _bX[0] = nx; updateBlobY(0);
+                        _bX[_activeIdx] = nx; updateBlobY(_activeIdx);
                         _hopCount++; _hopCooldown = 11; doVibe(25, 40);
                     } else if (steer < -1.8) {
-                        var nx = _bX[0] - 20.0;
+                        var nx = _bX[_activeIdx] - 20.0;
                         if (nx < 10.0) { nx = 10.0; }
-                        _bX[0] = nx; updateBlobY(0);
+                        _bX[_activeIdx] = nx; updateBlobY(_activeIdx);
                         _hopCount++; _hopCooldown = 11; doVibe(25, 40);
                     }
                 }
@@ -279,7 +289,7 @@ class BitochiBlobsView extends WatchUi.View {
                 }
             }
         } else if (gameState == GS_AIM) {
-            if (_activeIdx == 0) {
+            if (isHumanTurn()) {
                 // Phase 0: angle oscillates 12°–78°
                 _aimAnglePhase += 0.048;
                 _aimAngle = 45.0 + 33.0 * Math.sin(_aimAnglePhase);
@@ -288,7 +298,7 @@ class BitochiBlobsView extends WatchUi.View {
                 if (_aiTick >= 18) { aiFireShot(); }
             }
         } else if (gameState == GS_POWER) {
-            if (_activeIdx == 0) {
+            if (isHumanTurn()) {
                 // Phase 1: power oscillates 15–95%
                 _powerPhase += 0.11;
                 _power = 55.0 + 40.0 * Math.sin(_powerPhase);
@@ -376,7 +386,8 @@ class BitochiBlobsView extends WatchUi.View {
                 var col = blobSpawnCol(i);
                 _bX[i] = (col * _mapW / TERR_N).toFloat();
                 _bY[i] = terrYAtCol(col).toFloat();
-                if (i == 0) {
+                var isPlayerBlob = (i == 0 || (_twoPlayer && i == 1));
+                if (isPlayerBlob) {
                     _bHp[i] = 3; _bMaxHp[i] = 3;
                 } else {
                     var ehp = 2;
@@ -422,18 +433,19 @@ class BitochiBlobsView extends WatchUi.View {
         var facingRight = true;
         var nearestDist = 99999.0;
         var nearestEnemy = -1;
-        for (var i = 1; i < _blobCount; i++) {
+        for (var i = 0; i < _blobCount; i++) {
+            if (i == _activeIdx) { continue; }
             if (!_bAlive[i] || _bHp[i] <= 0) { continue; }
-            var d = (_bX[i] - _bX[0]).abs();
+            var d = (_bX[i] - _bX[_activeIdx]).abs();
             if (d < nearestDist) { nearestDist = d; nearestEnemy = i; }
         }
-        if (nearestEnemy >= 0 && _bX[nearestEnemy] < _bX[0]) { facingRight = false; }
+        if (nearestEnemy >= 0 && _bX[nearestEnemy] < _bX[_activeIdx]) { facingRight = false; }
 
         var rad = _aimAngle * 3.14159 / 180.0;
         var spd = _wpnSpd[_weapon];
         var pwr = _power / 100.0 * spd;
         var dir = facingRight ? 1.0 : -1.0;
-        _projX = _bX[0]; _projY = _bY[0] - 8.0;
+        _projX = _bX[_activeIdx]; _projY = _bY[_activeIdx] - 8.0;
         _projVx = dir * pwr * Math.cos(rad);
         _projVy = -pwr * Math.sin(rad);
         _projBounces = 0; _projAlive = true;
@@ -729,15 +741,24 @@ class BitochiBlobsView extends WatchUi.View {
     }
 
     hidden function afterBoom() {
-        var playerDead = (_bHp[0] <= 0);
+        // In 2P: blobs 0 and 1 are players; blobs 2+ are AI enemies.
+        // In 1P: blob 0 is player; blobs 1+ are AI enemies.
+        var enemyStart = _twoPlayer ? 2 : 1;
+
+        var p0Dead = (_bHp[0] <= 0);
+        var p1Dead = _twoPlayer ? (_bHp[1] <= 0) : true;
+        if (_bAlive[0] && p0Dead) { _bAlive[0] = false; }
+        if (_twoPlayer && _bAlive[1] && p1Dead) { _bAlive[1] = false; }
+
         var anyEnemyAlive = false;
-        for (var i = 1; i < _blobCount; i++) {
+        for (var i = enemyStart; i < _blobCount; i++) {
             if (_bAlive[i] && _bHp[i] > 0) { anyEnemyAlive = true; }
             else if (_bAlive[i] && _bHp[i] <= 0) { _bAlive[i] = false; _kills++; }
         }
-        if (_bAlive[0] && _bHp[0] <= 0) { _bAlive[0] = false; }
 
-        if (!anyEnemyAlive && !playerDead) {
+        var allPlayersDead = _twoPlayer ? (p0Dead && p1Dead) : p0Dead;
+
+        if (!anyEnemyAlive && !allPlayersDead) {
             gameState = GS_WIN; _resultTick = 0;
             if (_round > _bestStreak) {
                 _bestStreak = _round; _newBest = true;
@@ -745,7 +766,7 @@ class BitochiBlobsView extends WatchUi.View {
             }
             doVibe(80, 200); spawnVictory(); return;
         }
-        if (playerDead) {
+        if (allPlayersDead) {
             gameState = GS_OVER; _resultTick = 0;
             var streak = _round - 1;
             if (streak > _bestStreak) {
@@ -830,23 +851,28 @@ class BitochiBlobsView extends WatchUi.View {
     }
 
     function doAction() {
-        if (gameState == GS_MENU) { startRound(); }
-        else if (gameState == GS_MOVE && _activeIdx == 0) {
+        if (gameState == GS_MENU) { _twoPlayer = (_menuSel == 1); startRound(); }
+        else if (gameState == GS_MOVE && isHumanTurn()) {
             gameState = GS_AIM; _aimPhase = 0; _aimAnglePhase = 0.0;
         }
-        else if (gameState == GS_AIM && _activeIdx == 0) {
+        else if (gameState == GS_AIM && isHumanTurn()) {
             // Lock angle, enter power phase
             _aimPhase = 1; _powerPhase = 0.0;
             gameState = GS_POWER;
             doVibe(18, 25);
         }
-        else if (gameState == GS_POWER && _activeIdx == 0) { fireShot(); }
+        else if (gameState == GS_POWER && isHumanTurn()) { fireShot(); }
         else if (gameState == GS_WIN) { if (_resultTick > 30) { startRound(); } }
         else if (gameState == GS_OVER) { if (_resultTick > 30) { _round = 0; _newBest = false; startRound(); } }
     }
 
     function doWeapon(dir) {
-        if ((gameState == GS_AIM || gameState == GS_POWER) && _activeIdx == 0) {
+        if (gameState == GS_MENU) {
+            _menuSel = (_menuSel + dir + 2) % 2;
+            doVibe(15, 30);
+            return;
+        }
+        if ((gameState == GS_AIM || gameState == GS_POWER) && isHumanTurn()) {
             _weapon = (_weapon + dir + WPN_COUNT) % WPN_COUNT;
             doVibe(15, 30);
         }
@@ -888,11 +914,11 @@ class BitochiBlobsView extends WatchUi.View {
             }
         }
 
-        if ((gameState == GS_AIM || gameState == GS_POWER) && _activeIdx == 0) {
+        if ((gameState == GS_AIM || gameState == GS_POWER) && isHumanTurn()) {
             if (gameState == GS_AIM) { drawAngleSelector(dc, ox, oy); }
             if (gameState == GS_POWER) { drawAimLine(dc, ox, oy); drawPowerBar(dc); }
         }
-        if ((gameState == GS_AIM || gameState == GS_POWER) && _activeIdx != 0) { drawAiThinking(dc); }
+        if ((gameState == GS_AIM || gameState == GS_POWER) && !isHumanTurn()) { drawAiThinking(dc); }
         if (gameState == GS_MOVE && _activeIdx == 0) { drawMoveBar(dc); }
         if (gameState == GS_TURN) { drawTurnLabel(dc); }
 
@@ -1177,8 +1203,16 @@ class BitochiBlobsView extends WatchUi.View {
 
     hidden function drawTurnLabel(dc) {
         var msg; var mc;
-        if (_activeIdx == 0) { msg = "YOUR TURN!"; mc = (_turnTick % 6 < 3) ? 0x44DDFF : 0x2299BB; }
-        else { msg = "ENEMY #" + _activeIdx; mc = (_turnTick % 6 < 3) ? 0xFF6644 : 0xCC4422; }
+        if (_activeIdx == 0) {
+            msg = _twoPlayer ? "PLAYER 1!" : "YOUR TURN!";
+            mc = (_turnTick % 6 < 3) ? 0x44DDFF : 0x2299BB;
+        } else if (_twoPlayer && _activeIdx == 1) {
+            msg = "PLAYER 2!";
+            mc = (_turnTick % 6 < 3) ? 0x44FF88 : 0x22DD66;
+        } else {
+            msg = "ENEMY #" + _activeIdx;
+            mc = (_turnTick % 6 < 3) ? 0xFF6644 : 0xCC4422;
+        }
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(_w * 18 / 100, _h * 38 / 100, _w * 64 / 100, _h * 12 / 100);
         dc.setColor(mc, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 38 / 100, Graphics.FONT_SMALL, msg, Graphics.TEXT_JUSTIFY_CENTER);
     }
@@ -1203,13 +1237,19 @@ class BitochiBlobsView extends WatchUi.View {
     hidden function drawHUD(dc) {
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, 0, _w, 14);
         dc.setColor(_bCol[0], Graphics.COLOR_TRANSPARENT); dc.fillCircle(6, 7, 4);
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(14, 1, Graphics.FONT_XTINY, "" + _bHp[0], Graphics.TEXT_JUSTIFY_LEFT);
-        var xOff = 30;
+        var p0Label = _twoPlayer ? "P1:" + _bHp[0] : "" + _bHp[0];
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(14, 1, Graphics.FONT_XTINY, p0Label, Graphics.TEXT_JUSTIFY_LEFT);
+        var xOff = _twoPlayer ? 42 : 30;
         for (var i = 1; i < _blobCount; i++) {
             if (!_bAlive[i]) { continue; }
             dc.setColor(_bCol[i], Graphics.COLOR_TRANSPARENT); dc.fillCircle(xOff, 7, 3);
-            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(xOff + 6, 1, Graphics.FONT_XTINY, "" + _bHp[i], Graphics.TEXT_JUSTIFY_LEFT);
-            xOff += 22;
+            if (_twoPlayer && i == 1) {
+                dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(xOff + 6, 1, Graphics.FONT_XTINY, "P2:" + _bHp[i], Graphics.TEXT_JUSTIFY_LEFT);
+                xOff += 36;
+            } else {
+                dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(xOff + 6, 1, Graphics.FONT_XTINY, "" + _bHp[i], Graphics.TEXT_JUSTIFY_LEFT);
+                xOff += 22;
+            }
         }
         var wStr;
         if (_wind > 0.4) { wStr = ">>"; } else if (_wind > 0.12) { wStr = ">"; }
@@ -1284,13 +1324,17 @@ class BitochiBlobsView extends WatchUi.View {
     }
 
     hidden function drawIntro(dc) {
-        var bw = _w * 74 / 100; var bh = _h * 32 / 100; var bx = (_w - bw) / 2; var by = _h * 26 / 100;
+        var bw = _w * 74 / 100; var bh = _h * 36 / 100; var bx = (_w - bw) / 2; var by = _h * 26 / 100;
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bx, by, bw, bh);
         dc.setColor(0x333355, Graphics.COLOR_TRANSPARENT); dc.drawRectangle(bx, by, bw, bh);
         dc.setColor((_introTick % 8 < 4) ? 0xFFCC44 : 0xFFAA22, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w / 2, by + 4, Graphics.FONT_MEDIUM, "ROUND " + _round, Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xFF6644, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, by + bh * 45 / 100, Graphics.FONT_XTINY, _blobCount + " BLOBS", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0x88AACC, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, by + bh - 14, Graphics.FONT_XTINY, "FIGHT!", Graphics.TEXT_JUSTIFY_CENTER);
+        if (_twoPlayer) {
+            dc.setColor(0x44FF88, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2, by + bh * 36 / 100, Graphics.FONT_XTINY, "2 PLAYER MODE", Graphics.TEXT_JUSTIFY_CENTER);
+        }
+        dc.setColor(0xFF6644, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, by + bh * 58 / 100, Graphics.FONT_XTINY, _blobCount + " BLOBS", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x88AACC, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, by + bh - 10, Graphics.FONT_XTINY, "FIGHT!", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawWin(dc) {
@@ -1320,17 +1364,37 @@ class BitochiBlobsView extends WatchUi.View {
 
     hidden function drawMenu(dc) {
         dc.setColor(0x1A2844, 0x1A2844); dc.clear();
-        dc.setColor(0x3A5588, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h * 40 / 100, _w, _h);
-        dc.setColor(0x44AA44, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h * 58 / 100, _w, 3);
-        dc.setColor(0x5A3A1A, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h * 61 / 100, _w, _h);
+        dc.setColor(0x3A5588, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h * 55 / 100, _w, _h);
+        dc.setColor(0x44AA44, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h * 71 / 100, _w, 3);
+        dc.setColor(0x5A3A1A, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h * 74 / 100, _w, _h);
 
         var tc = (_tick % 14 < 7) ? 0xFF6644 : 0xFF8866;
-        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2 + 1, _h * 5 / 100 + 1, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(tc, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 5 / 100, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 18 / 100, Graphics.FONT_LARGE, "BLOBS", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0x88AACC, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 30 / 100, Graphics.FONT_XTINY, "FFA Deathmatch", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2 + 1, _h * 3 / 100 + 1, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(tc, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 3 / 100, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 15 / 100, Graphics.FONT_LARGE, "BLOBS", Graphics.TEXT_JUSTIFY_CENTER);
 
-        var by = _h * 48 / 100;
+        // Mode selector: 1 PLAYER / 2 PLAYERS
+        var selY0 = _h * 32 / 100;
+        var selY1 = _h * 44 / 100;
+        var selW = _w * 68 / 100; var selX = (_w - selW) / 2;
+        // 1 PLAYER row
+        if (_menuSel == 0) {
+            dc.setColor(0x44DDFF, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(selX, selY0, selW, 14);
+            dc.setColor(0x001122, Graphics.COLOR_TRANSPARENT);
+        } else { dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT); }
+        dc.drawText(_w / 2, selY0, Graphics.FONT_XTINY, "1 PLAYER", Graphics.TEXT_JUSTIFY_CENTER);
+        // 2 PLAYERS row
+        if (_menuSel == 1) {
+            dc.setColor(0x44FF88, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(selX, selY1, selW, 14);
+            dc.setColor(0x001A00, Graphics.COLOR_TRANSPARENT);
+        } else { dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT); }
+        dc.drawText(_w / 2, selY1, Graphics.FONT_XTINY, "2 PLAYERS", Graphics.TEXT_JUSTIFY_CENTER);
+
+        dc.setColor(0x556677, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 56 / 100, Graphics.FONT_XTINY, "Up/Down = select mode", Graphics.TEXT_JUSTIFY_CENTER);
+
+        // Two blobs for 1P illustration, or two pairs for 2P
+        var by = _h * 63 / 100;
         var positions = [_w * 20 / 100, _w * 35 / 100, _w * 50 / 100, _w * 65 / 100, _w * 80 / 100];
         for (var i = 0; i < 5; i++) {
             var wob = (Math.sin(_wobble * 0.8 + i.toFloat() * 1.2) * 2.0).toNumber();
@@ -1339,11 +1403,8 @@ class BitochiBlobsView extends WatchUi.View {
             dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillCircle(positions[i] - 2, by + wob - 1, 1); dc.fillCircle(positions[i] + 2, by + wob - 1, 1);
         }
 
-        dc.setColor(0x7799AA, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 58 / 100, Graphics.FONT_XTINY, "Tap=angle  Tap=power  Tap=fire", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(_w / 2, _h * 65 / 100, Graphics.FONT_XTINY, "Up/Down=weapon (11 types)", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(_w / 2, _h * 72 / 100, Graphics.FONT_XTINY, "Tilt=move  Tap=skip move", Graphics.TEXT_JUSTIFY_CENTER);
-        if (_bestStreak > 0) { dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 80 / 100, Graphics.FONT_XTINY, "BEST: " + _bestStreak, Graphics.TEXT_JUSTIFY_CENTER); }
-        dc.setColor((_tick % 10 < 5) ? 0xFF6644 : 0xFF8866, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 89 / 100, Graphics.FONT_XTINY, "Tap to fight!", Graphics.TEXT_JUSTIFY_CENTER);
+        if (_bestStreak > 0) { dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 76 / 100, Graphics.FONT_XTINY, "BEST: " + _bestStreak, Graphics.TEXT_JUSTIFY_CENTER); }
+        dc.setColor(0x7799AA, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 84 / 100, Graphics.FONT_XTINY, "Tap=angle  Tap=power  Tap=fire", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor((_tick % 10 < 5) ? 0xFF6644 : 0xFF8866, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 92 / 100, Graphics.FONT_XTINY, "Tap to fight!", Graphics.TEXT_JUSTIFY_CENTER);
     }
 }
