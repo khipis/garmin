@@ -294,9 +294,10 @@ class BitochiBlobsView extends WatchUi.View {
             }
         } else if (gameState == GS_AIM) {
             if (isHumanTurn()) {
-                // Phase 0: angle oscillates 12°–78°
-                _aimAnglePhase += 0.048;
-                _aimAngle = 45.0 + 33.0 * Math.sin(_aimAnglePhase);
+                // Phase 0: full 360° clockwise rotation (~3.5s/rev)
+                _aimAnglePhase += 0.055;
+                if (_aimAnglePhase >= 6.28318) { _aimAnglePhase -= 6.28318; }
+                _aimAngle = _aimAnglePhase * 180.0 / 3.14159;
             } else {
                 _aiTick++;
                 if (_aiTick >= 18) { aiFireShot(); }
@@ -438,23 +439,11 @@ class BitochiBlobsView extends WatchUi.View {
     }
 
     hidden function fireShot() {
-        var facingRight = true;
-        var nearestDist = 99999.0;
-        var nearestEnemy = -1;
-        for (var i = 0; i < _blobCount; i++) {
-            if (i == _activeIdx) { continue; }
-            if (!_bAlive[i] || _bHp[i] <= 0) { continue; }
-            var d = (_bX[i] - _bX[_activeIdx]).abs();
-            if (d < nearestDist) { nearestDist = d; nearestEnemy = i; }
-        }
-        if (nearestEnemy >= 0 && _bX[nearestEnemy] < _bX[_activeIdx]) { facingRight = false; }
-
         var rad = _aimAngle * 3.14159 / 180.0;
         var spd = _wpnSpd[_weapon];
         var pwr = _power / 100.0 * spd;
-        var dir = facingRight ? 1.0 : -1.0;
         _projX = _bX[_activeIdx]; _projY = _bY[_activeIdx] - 8.0;
-        _projVx = dir * pwr * Math.cos(rad);
+        _projVx = pwr * Math.cos(rad);
         _projVy = -pwr * Math.sin(rad);
         _projBounces = 0; _projAlive = true;
         _projBurrowing = false;
@@ -509,19 +498,23 @@ class BitochiBlobsView extends WatchUi.View {
         var dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < 1.0) { dist = 1.0; }
 
-        var ang = Math.atan2(-dy, dx.abs()) * 180.0 / 3.14159;
-        if (ang < 0.0) { ang = -ang; }
-        if (ang < 15.0) { ang = 15.0; }
-        if (ang > 75.0) { ang = 75.0; }
+        // Full directional angle: atan2(-dy, dx) gives correct angle for
+        // the physics formula: vx = cos(rad), vy = -sin(rad)
+        var ang = Math.atan2(-dy, dx) * 180.0 / 3.14159;
+        if (ang < 0.0) { ang += 360.0; }
+        // Wind adjustment (helps right-facing, hinders left-facing)
         var windAdj = _wind * dist * 0.003;
         if (dx < 0.0) { windAdj = -windAdj; }
         ang += windAdj;
+        // Clamp to above-ground range (5°-175°)
+        if (ang < 5.0) { ang = 5.0; }
+        if (ang > 175.0) { ang = 175.0; }
         var errS = 22.0 - _round.toFloat() * 1.3;
         if (errS < 4.0) { errS = 4.0; }
         var eN = errS.toNumber(); if (eN < 1) { eN = 1; }
         _aiAngle = ang + ((Math.rand().abs() % (eN * 2 + 1)) - eN).toFloat();
-        if (_aiAngle < 12.0) { _aiAngle = 12.0; }
-        if (_aiAngle > 78.0) { _aiAngle = 78.0; }
+        if (_aiAngle < 5.0) { _aiAngle = 5.0; }
+        if (_aiAngle > 175.0) { _aiAngle = 175.0; }
         var idealP = 38.0 + dist * 0.22;
         if (idealP > 92.0) { idealP = 92.0; }
         var pE = eN / 2; if (pE < 1) { pE = 1; }
@@ -531,14 +524,11 @@ class BitochiBlobsView extends WatchUi.View {
     }
 
     hidden function aiFireShot() {
-        var dx = _bX[_aiTarget] - _bX[_activeIdx];
-        var facingRight = (dx > 0.0);
         var rad = _aiAngle * 3.14159 / 180.0;
         var spd = _wpnSpd[_aiWpn];
         var pwr = _aiPower / 100.0 * spd;
-        var dir = facingRight ? 1.0 : -1.0;
         _projX = _bX[_activeIdx]; _projY = _bY[_activeIdx] - 8.0;
-        _projVx = dir * pwr * Math.cos(rad);
+        _projVx = pwr * Math.cos(rad);
         _projVy = -pwr * Math.sin(rad);
         _projBounces = 0; _projAlive = true; _projBurrowing = false;
         _projWeapon = _aiWpn;
@@ -1132,21 +1122,16 @@ class BitochiBlobsView extends WatchUi.View {
     }
 
     hidden function drawAngleSelector(dc, ox, oy) {
-        var facingRight = true;
-        for (var i = 1; i < _blobCount; i++) {
-            if (_bAlive[i] && _bHp[i] > 0 && _bX[i] < _bX[0]) { facingRight = false; break; }
-        }
-        var bsx = sx(_bX[0]).toNumber() + ox;
-        var bsy = _bY[0].toNumber() + oy - 8;
+        var bsx = sx(_bX[_activeIdx]).toNumber() + ox;
+        var bsy = _bY[_activeIdx].toNumber() + oy - 8;
         var rad = _aimAngle * 3.14159 / 180.0;
-        var dir = facingRight ? 1.0 : -1.0;
         var len = 32;
-        var ex = bsx + (dir * len.toFloat() * Math.cos(rad)).toNumber();
+        var ex = bsx + (len.toFloat() * Math.cos(rad)).toNumber();
         var ey = bsy - (len.toFloat() * Math.sin(rad)).toNumber();
 
-        // Angle sweep arc (visual indicator)
-        dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT);
-        dc.drawArc(bsx, bsy, 28, Graphics.ARC_COUNTER_CLOCKWISE, facingRight ? 180 : 0, facingRight ? 90 : 90);
+        // Full circle guide (dim)
+        dc.setColor(0x223344, Graphics.COLOR_TRANSPARENT);
+        dc.drawCircle(bsx, bsy, 28);
 
         // Direction line
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
@@ -1155,11 +1140,11 @@ class BitochiBlobsView extends WatchUi.View {
         dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(ex, ey, 3);
 
-        // Angle display
+        // Angle display — show as compass: 0=R, 90=U, 180=L
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(bsx + 1, bsy - 26, Graphics.FONT_SMALL, _aimAngle.toNumber() + "\u00B0", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(bsx + 1, bsy - 28, Graphics.FONT_SMALL, _aimAngle.toNumber() + "\u00B0", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor((_tick % 8 < 4) ? 0xFFDD44 : 0xFFBB22, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(bsx, bsy - 27, Graphics.FONT_SMALL, _aimAngle.toNumber() + "\u00B0", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(bsx, bsy - 29, Graphics.FONT_SMALL, _aimAngle.toNumber() + "\u00B0", Graphics.TEXT_JUSTIFY_CENTER);
 
         // Instruction at bottom
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
@@ -1169,18 +1154,13 @@ class BitochiBlobsView extends WatchUi.View {
     }
 
     hidden function drawAimLine(dc, ox, oy) {
-        var facingRight = true;
-        for (var i = 1; i < _blobCount; i++) {
-            if (_bAlive[i] && _bHp[i] > 0 && _bX[i] < _bX[0]) { facingRight = false; break; }
-        }
         var rad = _aimAngle * 3.14159 / 180.0;
         var spd = _wpnSpd[_weapon];
         var pwr = _power / 100.0 * spd;
-        var dir = facingRight ? 1.0 : -1.0;
-        var vx = dir * pwr * Math.cos(rad);
+        var vx = pwr * Math.cos(rad);
         var vy = -pwr * Math.sin(rad);
         var grav = _wpnGrv[_weapon];
-        var px = _bX[0]; var py = _bY[0] - 8.0;
+        var px = _bX[_activeIdx]; var py = _bY[_activeIdx] - 8.0;
         for (var t = 0; t < 22; t++) {
             var tx = px + vx * t.toFloat() * 0.7;
             var ty = py + vy * t.toFloat() * 0.7 + 0.5 * grav * t.toFloat() * t.toFloat() * 0.49;
