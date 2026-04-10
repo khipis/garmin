@@ -234,10 +234,12 @@ class BitochiBlocksView extends WatchUi.View {
         // Board occupies TB_COLS cells; leave rest for NEXT panel
         var cellFromW = (safeHalf * 2) / TB_COLS;
 
-        // Use the binding (smaller) constraint — no artificial upper cap
+        // Use the binding (smaller) constraint, then scale down 20% so the
+        // full board height fits inside the round-screen safe zone at the bottom.
         _cellH = (cellFromH < cellFromW) ? cellFromH : cellFromW;
-        if (_cellH < 6)  { _cellH = 6; }
-        if (_cellH > 22) { _cellH = 22; }   // sanity only
+        _cellH = _cellH * 4 / 5;   // −20%
+        if (_cellH < 5)  { _cellH = 5; }
+        if (_cellH > 18) { _cellH = 18; }
         _cellW = _cellH;
 
         // Center board; clamp so left edge stays within the visible circle
