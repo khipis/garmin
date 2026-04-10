@@ -33,28 +33,32 @@ class BitochiBlocksDelegate extends WatchUi.BehaviorDelegate {
         _view.accelX = accel[0];
     }
 
-    // SELECT — rotate piece (main action)
+    // SELECT — start game (from menu/over) OR rotate piece (during play)
     function onSelect() {
-        _view.doRotate();
+        _view.doAction();
         WatchUi.requestUpdate();
         return true;
     }
 
-    // MENU — hard drop
+    // MENU — start game (from menu/over) OR hard drop (during play)
     function onMenu() {
-        _view.doHardDrop();
+        if (_view.isPlaying()) {
+            _view.doHardDrop();
+        } else {
+            _view.doAction();
+        }
         WatchUi.requestUpdate();
         return true;
     }
 
-    // UP — rotate
+    // UP — rotate piece during play
     function onPreviousPage() {
         _view.doRotate();
         WatchUi.requestUpdate();
         return true;
     }
 
-    // DOWN — soft drop (speed up fall)
+    // DOWN — soft drop during play
     function onNextPage() {
         _view.doSoftDrop();
         WatchUi.requestUpdate();
@@ -63,7 +67,8 @@ class BitochiBlocksDelegate extends WatchUi.BehaviorDelegate {
 
     function onBack() {
         if (_view.isPlaying()) {
-            _view.doAction();
+            // BACK during play → go back to menu
+            _view.doBack();
             WatchUi.requestUpdate();
             return true;
         }

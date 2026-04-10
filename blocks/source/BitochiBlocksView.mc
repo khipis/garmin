@@ -353,6 +353,11 @@ class BitochiBlocksView extends WatchUi.View {
         else if (_gs == TBS_OVER) { _gs = TBS_MENU; }
     }
 
+    function doBack() {
+        if (_gs == TBS_PLAY) { _gs = TBS_MENU; }
+        else if (_gs == TBS_OVER) { _gs = TBS_MENU; }
+    }
+
     function isPlaying() { return _gs == TBS_PLAY; }
 
     // ── Locking + line clear ──────────────────────────────────────────────────
