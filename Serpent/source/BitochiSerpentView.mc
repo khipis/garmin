@@ -133,14 +133,18 @@ class BitochiSerpentView extends WatchUi.View {
     }
 
     hidden function setupGrid() {
-        _cellSize = 9;
+        _cellSize = 8;
         var hudH = 18;
-        // Side margin so grid stays inside the round bezel
-        var margin = _w * 7 / 100;
-        _gridW = (_w - margin * 2) / _cellSize;
-        _gridH = (_h - hudH - margin) / _cellSize;
+        // 18% margin ensures the rectangular grid clears the round bezel on all Garmin watches.
+        // Square grid (equal W and H) prevents asymmetric clipping.
+        var margin = _w * 18 / 100;
+        var cells = (_w - margin * 2) / _cellSize;
+        _gridW = cells;
+        _gridH = cells;  // square grid — fits inside circle cleanly
         _offX = (_w - _gridW * _cellSize) / 2;
-        _offY = hudH + (_h - hudH - _gridH * _cellSize) / 2;
+        var gridPx = _gridH * _cellSize;
+        _offY = hudH + (_h - hudH - gridPx) / 2;
+        if (_offY < hudH) { _offY = hudH; }
     }
 
     hidden function startGame() {
@@ -228,8 +232,8 @@ class BitochiSerpentView extends WatchUi.View {
         _flashTick++;
         _puFlash = (_tick % 10 < 5) ? 1 : 0;
 
-        // Smooth accelerometer
-        _smoothAx = _smoothAx * 0.70 + accelX.toFloat() * 0.30;
+        // Smooth accelerometer (60/40 — responsive but not jittery)
+        _smoothAx = _smoothAx * 0.60 + accelX.toFloat() * 0.40;
 
         if (_gs == SS_PLAY) {
             updateParticles();
@@ -244,14 +248,14 @@ class BitochiSerpentView extends WatchUi.View {
                 gameStep();
             }
 
-            // Accelerometer tilt → turn
+            // Accelerometer tilt → turn (threshold 500 avoids spurious auto-turns from wrist motion)
             if (_accelCooldown == 0) {
-                if (_smoothAx > 300.0) {
+                if (_smoothAx > 500.0) {
                     turnRight();
-                    _accelCooldown = 5;
-                } else if (_smoothAx < -300.0) {
+                    _accelCooldown = 10;  // at least 2 steps between accel-turns
+                } else if (_smoothAx < -500.0) {
                     turnLeft();
-                    _accelCooldown = 5;
+                    _accelCooldown = 10;
                 }
             }
 
@@ -368,10 +372,9 @@ class BitochiSerpentView extends WatchUi.View {
             _sX[i] = _sX[i - 1]; _sY[i] = _sY[i - 1];
         }
 
-        // Apply direction (possibly reversed by event)
+        // Commit queued direction — reverseOn only flips CONTROLS (see turnLeft/Right), NOT movement
         _dir = _nextDir;
         var effectiveDir = _dir;
-        if (_reverseOn) { effectiveDir = (_dir + 2) % 4; }
 
         var hx = _sX[0]; var hy = _sY[0];
         if (effectiveDir == 0) { hx++; }
@@ -520,12 +523,22 @@ class BitochiSerpentView extends WatchUi.View {
 
     function turnLeft() {
         if (_gs != SS_PLAY) { return; }
-        var nd = (_nextDir + 3) % 4;
-        if (nd != (_dir + 2) % 4) { _nextDir = nd; }
+        // REVERSE event flips controls — left button actually turns right
+        if (_reverseOn) { _doTurnRight(); } else { _doTurnLeft(); }
     }
 
     function turnRight() {
         if (_gs != SS_PLAY) { return; }
+        // REVERSE event flips controls — right button actually turns left
+        if (_reverseOn) { _doTurnLeft(); } else { _doTurnRight(); }
+    }
+
+    hidden function _doTurnLeft() {
+        var nd = (_nextDir + 3) % 4;
+        if (nd != (_dir + 2) % 4) { _nextDir = nd; }
+    }
+
+    hidden function _doTurnRight() {
         var nd = (_nextDir + 1) % 4;
         if (nd != (_dir + 2) % 4) { _nextDir = nd; }
     }
