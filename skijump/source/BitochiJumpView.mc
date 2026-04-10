@@ -308,9 +308,10 @@ class BitochiJumpView extends WatchUi.View {
             else if (ratio < 0.65) { _takeoffQuality = 0.55; }
             else                   { _takeoffQuality = 0.38; }
         } else if (!manual) {
-            // Missed takeoff — no button press, skier naturally leaves the ramp edge.
-            // No quality bonus, but still a proper flight (player can still correct in air).
-            _takeoffQuality = 0.20;
+            // Missed takeoff — skier naturally rolls off ramp without pressing.
+            // Quality = 0.40: gives enough height/distance to avoid the <6m crash
+            // condition and provides a fair but unremarkable jump.
+            _takeoffQuality = 0.40;
         } else {
             _takeoffQuality = 0.22;  // tapped before zone — below-average but still a jump
         }
@@ -409,7 +410,7 @@ class BitochiJumpView extends WatchUi.View {
         _skiAngle  = _skiAngle  * 0.92 + _bodyAngle  * 0.08;
 
         // Lose control: smooth transition to spinning tumble (not instant crash)
-        if (_bodyAngle > 46.0 || _bodyAngle < -8.0) { _spinningOut = true; return; }
+        if (_bodyAngle > 50.0 || _bodyAngle < -8.0) { _spinningOut = true; return; }
 
         // Aerodynamics: lift from optimal angle (18°), drag from deviation
         var optDev = _bodyAngle - 18.0; if (optDev < 0.0) { optDev = -optDev; }
@@ -1106,15 +1107,15 @@ class BitochiJumpView extends WatchUi.View {
     hidden function drawStandings(dc) {
         dc.setColor(0x0A1422, 0x0A1422); dc.clear();
         var order = rankByCumScore();
-        var rowH  = 13;
-        var totalH = 14 + 5 + NUM_JUMPERS * rowH + 5 + 13;
+        var rowH  = 16;
+        var totalH = 14 + 6 + NUM_JUMPERS * rowH + 6 + 14;
         var sy = (_h - totalH) / 2;
         if (sy < 4) { sy = 4; }
         dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w / 2, sy, Graphics.FONT_XTINY, _venueNames[_venue] + "  PO R1", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x223344, Graphics.COLOR_TRANSPARENT);
-        dc.drawLine(18, sy + 13, _w - 18, sy + 13);
-        var rowsY = sy + 19;
+        dc.drawLine(18, sy + 14, _w - 18, sy + 14);
+        var rowsY = sy + 21;
         for (var r = 0; r < NUM_JUMPERS; r++) {
             var idx = order[r];
             var ry = rowsY + r * rowH;
@@ -1134,22 +1135,22 @@ class BitochiJumpView extends WatchUi.View {
         dc.setColor(0x223344, Graphics.COLOR_TRANSPARENT);
         dc.drawLine(18, rowsY + NUM_JUMPERS * rowH, _w - 18, rowsY + NUM_JUMPERS * rowH);
         dc.setColor((_tick % 10 < 5) ? 0x44AAFF : 0x3388DD, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, rowsY + NUM_JUMPERS * rowH + 4, Graphics.FONT_XTINY, "Tap \u2192 Round 2", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, rowsY + NUM_JUMPERS * rowH + 5, Graphics.FONT_XTINY, "Tap \u2192 Round 2", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawFinal(dc) {
         dc.setColor(0x0A1422, 0x0A1422); dc.clear();
         var order = rankByCumScore();
-        var rowH  = 13;
-        var totalH = 14 + 5 + NUM_JUMPERS * rowH + 5 + 13;
+        var rowH  = 16;
+        var totalH = 14 + 6 + NUM_JUMPERS * rowH + 6 + 14;
         var sy = (_h - totalH) / 2;
         if (sy < 4) { sy = 4; }
         var winC = _jumperColors[order[0]];
         dc.setColor(winC, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w / 2, sy, Graphics.FONT_XTINY, "\u2605 " + _jumperNames[order[0]] + " WINS! \u2605", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x223344, Graphics.COLOR_TRANSPARENT);
-        dc.drawLine(18, sy + 13, _w - 18, sy + 13);
-        var rowsY = sy + 19;
+        dc.drawLine(18, sy + 14, _w - 18, sy + 14);
+        var rowsY = sy + 21;
         for (var r = 0; r < NUM_JUMPERS; r++) {
             var idx = order[r];
             var ry = rowsY + r * rowH;
@@ -1169,7 +1170,7 @@ class BitochiJumpView extends WatchUi.View {
         dc.setColor(0x223344, Graphics.COLOR_TRANSPARENT);
         dc.drawLine(18, rowsY + NUM_JUMPERS * rowH, _w - 18, rowsY + NUM_JUMPERS * rowH);
         dc.setColor((_tick % 10 < 5) ? 0x44AAFF : 0x3388DD, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, rowsY + NUM_JUMPERS * rowH + 4, Graphics.FONT_XTINY, "Tap for menu", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, rowsY + NUM_JUMPERS * rowH + 5, Graphics.FONT_XTINY, "Tap for menu", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function rankByCumScore() {
