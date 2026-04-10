@@ -878,22 +878,19 @@ class BitochiJumpView extends WatchUi.View {
         }
     }
 
-    // Wind indicator box: top-right corner (like DSJ)
     hidden function drawWindBox(dc) {
         var bx = _w - 40; var by = _h * 38 / 100;
-        dc.setColor(0x111122, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bx, by, 34, 20);
-        dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT); dc.drawRectangle(bx, by, 34, 20);
-        // Arrow
         var wAbs = _windCurrent; if (wAbs < 0.0) { wAbs = -wAbs; }
-        var wC = (wAbs > 0.5) ? 0xFF8844 : ((wAbs > 0.15) ? 0xFFCC88 : 0x88AACC);
         var arrowTxt = (_windCurrent > 0.15) ? ">>" : ((_windCurrent < -0.15) ? "<<" : "--");
-        dc.setColor(wC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(bx + 17, by + 1, Graphics.FONT_XTINY, arrowTxt, Graphics.TEXT_JUSTIFY_CENTER);
-        // Number (e.g. "2.3")
         var wInt = (wAbs * 10.0).toNumber();
         var wDec = (wAbs * 100.0).toNumber() % 10;
-        dc.setColor(0xFFEE88, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(bx + 17, by + 11, Graphics.FONT_XTINY, wInt + "." + wDec, Graphics.TEXT_JUSTIFY_CENTER);
+        // Shadow for readability, then red text — no background rectangle
+        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(bx + 18, by + 2,  Graphics.FONT_XTINY, arrowTxt,              Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(bx + 18, by + 12, Graphics.FONT_XTINY, wInt + "." + wDec,     Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0xFF3333, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(bx + 17, by + 1,  Graphics.FONT_XTINY, arrowTxt,              Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(bx + 17, by + 11, Graphics.FONT_XTINY, wInt + "." + wDec,     Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawHUD(dc) {
