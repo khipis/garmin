@@ -80,6 +80,7 @@ class BitochiJumpView extends WatchUi.View {
 
     // Camera
     hidden var _camX; hidden var _camY;
+    hidden var _zoom;  // world-to-screen zoom, scales with screen size
 
     // Effects
     hidden var _shakeX; hidden var _shakeY; hidden var _shakeTick;
@@ -105,6 +106,7 @@ class BitochiJumpView extends WatchUi.View {
         Math.srand(Time.now().value());
         var ds = System.getDeviceSettings();
         _w = ds.screenWidth; _h = ds.screenHeight;
+        _zoom = 2.2 * (_h.toFloat() / 260.0);
         _tick = 0; accelX = 0; accelY = 0;
 
         _venueNames   = ["Zakopane", "Innsbruck", "Oberstdorf", "Vikersund"];
@@ -565,8 +567,8 @@ class BitochiJumpView extends WatchUi.View {
     }
 
     // World to screen: scale 2.2, anchor at screen center / 44% height
-    hidden function wsx(wx) { return (_w / 2 + ((wx - _camX) * 2.2).toNumber()); }
-    hidden function wsy(wy) { return (_h * 44 / 100 + ((wy - _camY) * 2.2).toNumber()); }
+    hidden function wsx(wx) { return (_w / 2 + ((wx - _camX) * _zoom).toNumber()); }
+    hidden function wsy(wy) { return (_h * 44 / 100 + ((wy - _camY) * _zoom).toNumber()); }
 
     hidden function doVibe(intensity, duration) {
         if (Toybox has :Attention) { if (Toybox.Attention has :vibrate) {
