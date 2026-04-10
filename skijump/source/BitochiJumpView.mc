@@ -379,12 +379,12 @@ class BitochiJumpView extends WatchUi.View {
         }
 
         // --- PATH 4: Normal flight ---
-        // Accelerometer input — smooth and delicate
+        // Accelerometer input — Parachute-style: small dead zone, smooth and direct
         var ax = accelX.toFloat();
-        var dead = 70.0;
+        var dead = 40.0;
         var input = 0.0;
-        if (ax >  dead) { input =  (ax - dead) / 295.0; }
-        else if (ax < -dead) { input = (ax + dead) / 295.0; }
+        if (ax >  dead) { input =  (ax - dead) / 280.0; }
+        else if (ax < -dead) { input = (ax + dead) / 280.0; }
         if (input >  1.3) { input =  1.3; }
         if (input < -1.3) { input = -1.3; }
 
@@ -396,9 +396,9 @@ class BitochiJumpView extends WatchUi.View {
         if (targetAngle < -10.0) { targetAngle = -10.0; }
         if (targetAngle >  56.0) { targetAngle =  56.0; }
 
-        // Very smooth lerp — delicate, responsive
-        _bodyAngle = _bodyAngle * 0.86 + targetAngle * 0.14;
-        _skiAngle  = _skiAngle  * 0.93 + _bodyAngle  * 0.07;
+        // Smooth lerp — responsive like Parachute, not sluggish
+        _bodyAngle = _bodyAngle * 0.84 + targetAngle * 0.16;
+        _skiAngle  = _skiAngle  * 0.92 + _bodyAngle  * 0.08;
 
         // Lose control: smooth transition to spinning tumble (not instant crash)
         if (_bodyAngle > 46.0 || _bodyAngle < -8.0) { _spinningOut = true; return; }
@@ -926,19 +926,18 @@ class BitochiJumpView extends WatchUi.View {
             var inSweet = (aI > 10 && aI < 28);
             var angleOk = (aI > 4 && aI < 44);
 
+            // State-specific messages in the upper-middle area
             if (_earlyTap) {
-                // Too early! Show warning flash
                 dc.setColor((_tick % 3 < 2) ? 0xFF2222 : 0xFF8800, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(_w / 2, _h * 68 / 100, Graphics.FONT_SMALL, "TOO EARLY!", Graphics.TEXT_JUSTIFY_CENTER);
+                dc.drawText(_w / 2, _h * 40 / 100, Graphics.FONT_SMALL, "TOO EARLY!", Graphics.TEXT_JUSTIFY_CENTER);
             } else if (_spinningOut) {
                 dc.setColor((_tick % 3 < 2) ? 0xFF4422 : 0xFF8800, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(_w / 2, _h * 68 / 100, Graphics.FONT_SMALL, "OUT!", Graphics.TEXT_JUSTIFY_CENTER);
+                dc.drawText(_w / 2, _h * 40 / 100, Graphics.FONT_SMALL, "OUT!", Graphics.TEXT_JUSTIFY_CENTER);
             } else if (_preparingLanding) {
-                // Graceful descent — show landing message
                 dc.setColor((_tick % 4 < 2) ? 0x44FFAA : 0x22DD88, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(_w / 2, _h * 68 / 100, Graphics.FONT_SMALL, "LANDING...", Graphics.TEXT_JUSTIFY_CENTER);
+                dc.drawText(_w / 2, _h * 40 / 100, Graphics.FONT_SMALL, "LANDING...", Graphics.TEXT_JUSTIFY_CENTER);
             } else if (_landReady && !_landTapDone) {
-                // Show LAND! indicator with height proximity bar
+                // LAND! with proximity bar — positioned above the balance bar
                 var hillY2 = hillYAtX(_posX); var hAb = hillY2 - _posY;
                 if (hAb < 0.0) { hAb = 0.0; }
                 var closeR = 1.0 - hAb / 30.0;
@@ -947,29 +946,43 @@ class BitochiJumpView extends WatchUi.View {
                 if (closeR > 0.80) { landC = (_tick % 2 == 0) ? 0xFF2222 : 0xFF8800; }
                 else if (closeR > 0.55) { landC = (_tick % 4 < 2) ? 0xFFFF44 : 0xFFAA22; }
                 else { landC = 0x44FF44; }
-                dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2 + 1, _h - 29, Graphics.FONT_MEDIUM, "LAND!", Graphics.TEXT_JUSTIFY_CENTER);
-                dc.setColor(landC, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h - 30, Graphics.FONT_MEDIUM, "LAND!", Graphics.TEXT_JUSTIFY_CENTER);
-                var bW2 = _w * 32 / 100; var bX2 = (_w - bW2) / 2; var bY2 = _h - 9;
-                dc.setColor(0x223344, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX2, bY2, bW2, 4);
-                dc.setColor(landC, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX2, bY2, (closeR * bW2.toFloat()).toNumber(), 4);
-            } else if (!_landReady && !_preparingLanding) {
-                // Balance bar while in flight
-                var bW = _w * 40 / 100; var bX = (_w - bW) / 2; var bY = _h - 14;
-                dc.setColor(0x1A2233, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX, bY, bW, 9);
-                var gL = bX + bW * 12 / 100; var gR = bX + bW * 65 / 100;
-                dc.setColor(inSweet ? 0x22AA55 : 0x1A5522, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(gL, bY, gR - gL, 9);
-                var cL = bX + bW * 28 / 100; var cR = bX + bW * 48 / 100;
-                dc.setColor(inSweet ? 0x44FF88 : 0x228844, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(cL, bY + 2, cR - cL, 5);
-                var bPct = (_bodyAngle - 3.0) / 46.0; if (bPct < 0.0) { bPct = 0.0; } if (bPct > 1.0) { bPct = 1.0; }
-                var mP = bX + (bPct * bW.toFloat()).toNumber();
-                dc.setColor(inSweet ? 0x88FFCC : 0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(mP - 2, bY - 3, 4, 15);
+                dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2 + 1, _h * 50 / 100 + 1, Graphics.FONT_MEDIUM, "LAND!", Graphics.TEXT_JUSTIFY_CENTER);
+                dc.setColor(landC, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 50 / 100, Graphics.FONT_MEDIUM, "LAND!", Graphics.TEXT_JUSTIFY_CENTER);
+                var bW2 = _w * 36 / 100; var bX2 = (_w - bW2) / 2; var bY2 = _h * 62 / 100;
+                dc.setColor(0x223344, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX2, bY2, bW2, 5);
+                dc.setColor(landC, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX2, bY2, (closeR * bW2.toFloat()).toNumber(), 5);
+            } else if (!_landReady && !_preparingLanding && !_earlyTap && !_spinningOut) {
+                // Sweet spot / balance cue
                 if (inSweet) {
                     dc.setColor((_tick % 6 < 3) ? 0x44FFAA : 0x22DD88, Graphics.COLOR_TRANSPARENT);
-                    dc.drawText(_w / 2, _h * 20 / 100, Graphics.FONT_XTINY, "SWEET SPOT!", Graphics.TEXT_JUSTIFY_CENTER);
+                    dc.drawText(_w / 2, _h * 19 / 100, Graphics.FONT_XTINY, "SWEET SPOT!", Graphics.TEXT_JUSTIFY_CENTER);
                 } else if (!angleOk) {
                     dc.setColor((_tick % 4 < 2) ? 0xFF3333 : 0xFF8800, Graphics.COLOR_TRANSPARENT);
-                    dc.drawText(_w / 2, _h * 20 / 100, Graphics.FONT_XTINY, "BALANCE!", Graphics.TEXT_JUSTIFY_CENTER);
+                    dc.drawText(_w / 2, _h * 19 / 100, Graphics.FONT_XTINY, "BALANCE!", Graphics.TEXT_JUSTIFY_CENTER);
                 }
+            }
+
+            // ── Balance bar — ALWAYS visible during flight (not buried by bottom strip) ──
+            // Shown in all states except crash/early-tap where player can do nothing
+            if (!_earlyTap && !_spinningOut) {
+                var bW = _w * 44 / 100; var bX = (_w - bW) / 2; var bY = _h * 71 / 100;
+                // Background
+                dc.setColor(0x111B28, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX - 1, bY - 1, bW + 2, 12);
+                // Green zone (good angle range)
+                var gL = bX + bW * 12 / 100; var gR = bX + bW * 65 / 100;
+                dc.setColor(inSweet ? 0x22AA55 : 0x1A5522, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(gL, bY, gR - gL, 10);
+                // Sweet spot (brighter center)
+                var cL = bX + bW * 28 / 100; var cR = bX + bW * 48 / 100;
+                dc.setColor(inSweet ? 0x44FF88 : 0x228844, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(cL, bY + 2, cR - cL, 6);
+                // Body angle cursor (white bar)
+                var bPct = (_bodyAngle - 3.0) / 46.0; if (bPct < 0.0) { bPct = 0.0; } if (bPct > 1.0) { bPct = 1.0; }
+                var mP = bX + (bPct * bW.toFloat()).toNumber();
+                dc.setColor(inSweet ? 0x88FFCC : 0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(mP - 2, bY - 3, 4, 16);
+                // Accelerometer input indicator (blue — shows current tilt direction)
+                var accelPct = 0.5 + accelX.toFloat() / 1600.0;
+                if (accelPct < 0.0) { accelPct = 0.0; } if (accelPct > 1.0) { accelPct = 1.0; }
+                var aP = bX + (accelPct * bW.toFloat()).toNumber();
+                dc.setColor(0x3388FF, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(aP - 1, bY + 1, 2, 8);
             }
         }
 
@@ -990,7 +1003,7 @@ class BitochiJumpView extends WatchUi.View {
                 var hrMsg = (_distance > _hillHSDist) ? "\u2605 HILL RECORD! \u2605" : "Beyond K!";
                 var hrC2  = (_distance > _hillHSDist) ? ((_tick % 4 < 2) ? 0xFFDD22 : 0xFF8800) : 0x44FF88;
                 var hrY   = _h * 80 / 100;
-                dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, hrY - 1, _w, 16);
+                dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, hrY - 2, _w, 20);
                 dc.setColor(hrC2, Graphics.COLOR_TRANSPARENT);
                 dc.drawText(_w / 2, hrY, Graphics.FONT_XTINY, hrMsg, Graphics.TEXT_JUSTIFY_CENTER);
             }
@@ -1074,7 +1087,7 @@ class BitochiJumpView extends WatchUi.View {
         dc.setColor(0x88AACC, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 63 / 100, Graphics.FONT_XTINY, tqMsg, Graphics.TEXT_JUSTIFY_CENTER);
         if (_newHillRecord) {
             var hrC = (_tick % 4 < 2) ? 0xFFDD22 : 0xFF8800;
-            dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(_w / 2 - 46, _h * 73 / 100, 92, 13);
+            dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h * 73 / 100 - 1, _w, 18);
             dc.setColor(hrC, Graphics.COLOR_TRANSPARENT);
             dc.drawText(_w / 2, _h * 73 / 100, Graphics.FONT_XTINY, "★ HILL RECORD! ★", Graphics.TEXT_JUSTIFY_CENTER);
         } else if (_bestPerVenue[_venue] > 0.0) {
