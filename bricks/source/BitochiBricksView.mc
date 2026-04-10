@@ -157,7 +157,7 @@ class BitochiBricksView extends WatchUi.View {
 
     function onShow() {
         _timer = new Timer.Timer();
-        _timer.start(method(:onTick), 33, true);
+        _timer.start(method(:onTick), 50, true);
     }
     function onHide() { if (_timer != null) { _timer.stop(); _timer = null; } }
 

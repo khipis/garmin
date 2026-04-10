@@ -112,7 +112,7 @@ class BitochiFishView extends WatchUi.View {
         gameState = GS_MENU;
     }
 
-    function onShow() { _timer = new Timer.Timer(); _timer.start(method(:onTick), 33, true); }
+    function onShow() { _timer = new Timer.Timer(); _timer.start(method(:onTick), 50, true); }
     function onHide() { if (_timer != null) { _timer.stop(); _timer = null; } }
 
     function onTick() as Void {
@@ -483,20 +483,15 @@ class BitochiFishView extends WatchUi.View {
 
         if (_envType == 5) {
             dc.setColor(0xCCDDEE, Graphics.COLOR_TRANSPARENT);
-            for (var s = 0; s < 16; s++) {
+            for (var s = 0; s < 16; s += 2) {  // every other star — same visual, half the calls
                 var sx = (s * 41 + 9) % _w; var sy = (s * 27 + 5) % (_waterY * 70 / 100);
-                if ((s + _tick / 25) % 5 < 4) { dc.fillCircle(sx, sy, 1); }
+                if ((s + _tick / 25) % 5 < 4) { dc.fillRectangle(sx, sy, 1, 1); }
             }
-            dc.setColor(0xDDEECC, Graphics.COLOR_TRANSPARENT); dc.fillCircle(28 + ox, 22 + oy, 10);
-            dc.setColor(skyTop, Graphics.COLOR_TRANSPARENT); dc.fillCircle(34 + ox, 18 + oy, 8);
+            dc.setColor(0xDDEECC, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(18 + ox, 14 + oy, 20, 14);
         } else if (_envType == 3) {
-            dc.setColor(0xFF5511, Graphics.COLOR_TRANSPARENT); dc.fillCircle(28 + ox, _waterY - 20 + oy, 15);
-            dc.setColor(0xFF7733, Graphics.COLOR_TRANSPARENT); dc.fillCircle(28 + ox, _waterY - 20 + oy, 10);
-            dc.setColor(0xFFBB55, Graphics.COLOR_TRANSPARENT); dc.fillCircle(28 + ox, _waterY - 20 + oy, 5);
+            dc.setColor(0xFF7733, Graphics.COLOR_TRANSPARENT); dc.fillCircle(28 + ox, _waterY - 20 + oy, 14);
         } else if (_envType == 0 || _envType == 4) {
             dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT); dc.fillCircle(26 + ox, 22 + oy, 12);
-            dc.setColor(0xFFEE77, Graphics.COLOR_TRANSPARENT); dc.fillCircle(26 + ox, 22 + oy, 8);
-            dc.setColor(0xFFFFAA, Graphics.COLOR_TRANSPARENT); dc.fillCircle(26 + ox, 22 + oy, 4);
             for (var r = 0; r < 5; r++) {
                 var ra = (r * 72 + _tick * 2).toFloat() * 3.14159 / 180.0;
                 dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
