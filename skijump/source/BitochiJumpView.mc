@@ -946,8 +946,7 @@ class BitochiJumpView extends WatchUi.View {
                 if (closeR > 0.80) { landC = (_tick % 2 == 0) ? 0xFF2222 : 0xFF8800; }
                 else if (closeR > 0.55) { landC = (_tick % 4 < 2) ? 0xFFFF44 : 0xFFAA22; }
                 else { landC = 0x44FF44; }
-                // Dark strip at top so text is readable over the sky
-                dc.setColor(0x00000088, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h * 14 / 100, _w, 18);
+                // LAND! — shadow only, no background rectangle
                 dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2 + 1, _h * 14 / 100 + 1, Graphics.FONT_SMALL, "LAND!", Graphics.TEXT_JUSTIFY_CENTER);
                 dc.setColor(landC, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 14 / 100, Graphics.FONT_SMALL, "LAND!", Graphics.TEXT_JUSTIFY_CENTER);
                 // Proximity bar just below the LAND! text
@@ -1103,94 +1102,70 @@ class BitochiJumpView extends WatchUi.View {
 
     hidden function drawStandings(dc) {
         dc.setColor(0x0A1422, 0x0A1422); dc.clear();
-        // Compact header — XTINY instead of FONT_SMALL
-        dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, 3, Graphics.FONT_XTINY, _venueNames[_venue] + "  AFTER R1", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT);
-        dc.drawLine(0, 16, _w, 16);
         var order = rankByCumScore();
-        // Row spacing: 13px fixed — fits 6 rows in ~78px, well within any watch
+        // Calculate total height and center the whole block vertically
+        var rowH  = 14;
+        var totalH = 14 + 4 + NUM_JUMPERS * rowH + 4 + 14; // title + gap + rows + gap + tap
+        var sy = (_h - totalH) / 2;
+        if (sy < 2) { sy = 2; }
+        // Title
+        dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, sy, Graphics.FONT_XTINY, _venueNames[_venue] + "  AFTER R1", Graphics.TEXT_JUSTIFY_CENTER);
+        var rowsY = sy + 18;
         for (var r = 0; r < NUM_JUMPERS; r++) {
             var idx = order[r];
-            var ry = 20 + r * 13;
+            var ry = rowsY + r * rowH;
             var isPlayer = (idx == _jumperIdx);
             var medal = (r == 0) ? 0xFFDD44 : ((r == 1) ? 0xCCCCCC : ((r == 2) ? 0xCC8844 : 0x445566));
-            // Highlight player row
             if (isPlayer) {
                 dc.setColor(0x1A3A1A, Graphics.COLOR_TRANSPARENT);
-                dc.fillRectangle(0, ry - 1, _w, 13);
+                dc.fillRectangle(0, ry - 1, _w, rowH);
             }
             dc.setColor(medal, Graphics.COLOR_TRANSPARENT);
             dc.drawText(5, ry, Graphics.FONT_XTINY, (r + 1) + ".", Graphics.TEXT_JUSTIFY_LEFT);
             dc.setColor(isPlayer ? 0x44FF88 : _jumperColors[idx], Graphics.COLOR_TRANSPARENT);
-            dc.drawText(22, ry, Graphics.FONT_XTINY, _jumperNames[idx], Graphics.TEXT_JUSTIFY_LEFT);
-            // Score + best distance
+            dc.drawText(24, ry, Graphics.FONT_XTINY, _jumperNames[idx], Graphics.TEXT_JUSTIFY_LEFT);
             dc.setColor(0xCCCCDD, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w - 5, ry, Graphics.FONT_XTINY,
-                _cumScores[idx].toNumber() + "p  " + _cumDists[idx].toNumber() + "m",
-                Graphics.TEXT_JUSTIFY_RIGHT);
+            dc.drawText(_w - 4, ry, Graphics.FONT_XTINY,
+                _cumScores[idx].toNumber() + "p", Graphics.TEXT_JUSTIFY_RIGHT);
         }
-        dc.setColor(0x223344, Graphics.COLOR_TRANSPARENT);
-        dc.drawLine(0, 20 + NUM_JUMPERS * 13 + 2, _w, 20 + NUM_JUMPERS * 13 + 2);
+        var tapY = rowsY + NUM_JUMPERS * rowH + 6;
         dc.setColor((_tick % 10 < 5) ? 0x44AAFF : 0x3388DD, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, 20 + NUM_JUMPERS * 13 + 8, Graphics.FONT_XTINY, "Tap → Round 2", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, tapY, Graphics.FONT_XTINY, "Tap \u2192 Round 2", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawFinal(dc) {
         dc.setColor(0x0A1422, 0x0A1422); dc.clear();
-        // Winner podium strip
         var order = rankByCumScore();
-        var winCol = _jumperColors[order[0]];
-        dc.setColor(winCol, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(0, 0, _w, 14);
-        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, 1, Graphics.FONT_XTINY, "\u2605 " + _jumperNames[order[0]] + " WINS! \u2605", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT);
-        dc.drawLine(0, 14, _w, 14);
-        // Compact scoreboard — 13px rows
+        // Calculate total height and center the whole block vertically
+        var rowH  = 14;
+        var totalH = 14 + 4 + NUM_JUMPERS * rowH + 4 + 14; // winner + gap + rows + gap + tap
+        var sy = (_h - totalH) / 2;
+        if (sy < 2) { sy = 2; }
+        // Winner banner
+        dc.setColor(_jumperColors[order[0]], Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, sy, Graphics.FONT_XTINY, "\u2605 " + _jumperNames[order[0]] + " WINS! \u2605", Graphics.TEXT_JUSTIFY_CENTER);
+        var rowsY = sy + 18;
         for (var r = 0; r < NUM_JUMPERS; r++) {
             var idx = order[r];
-            var ry = 17 + r * 13;
+            var ry = rowsY + r * rowH;
             var isPlayer = (idx == _jumperIdx);
             var medal = (r == 0) ? 0xFFDD44 : ((r == 1) ? 0xCCCCCC : ((r == 2) ? 0xCC8844 : 0x445566));
             if (isPlayer) {
                 dc.setColor(0x1A3A1A, Graphics.COLOR_TRANSPARENT);
-                dc.fillRectangle(0, ry - 1, _w, 13);
+                dc.fillRectangle(0, ry - 1, _w, rowH);
             }
             dc.setColor(medal, Graphics.COLOR_TRANSPARENT);
             dc.drawText(5, ry, Graphics.FONT_XTINY, (r + 1) + ".", Graphics.TEXT_JUSTIFY_LEFT);
             dc.setColor(isPlayer ? 0x44FF88 : _jumperColors[idx], Graphics.COLOR_TRANSPARENT);
-            dc.drawText(22, ry, Graphics.FONT_XTINY, _jumperNames[idx], Graphics.TEXT_JUSTIFY_LEFT);
+            dc.drawText(24, ry, Graphics.FONT_XTINY, _jumperNames[idx], Graphics.TEXT_JUSTIFY_LEFT);
             dc.setColor(0xCCCCDD, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w - 5, ry, Graphics.FONT_XTINY,
-                _cumScores[idx].toNumber() + "p",
-                Graphics.TEXT_JUSTIFY_RIGHT);
+            dc.drawText(_w - 4, ry, Graphics.FONT_XTINY,
+                _cumScores[idx].toNumber() + "p", Graphics.TEXT_JUSTIFY_RIGHT);
         }
-        var tableBottom = 17 + NUM_JUMPERS * 13 + 3;
-        dc.setColor(0x223344, Graphics.COLOR_TRANSPARENT);
-        dc.drawLine(0, tableBottom, _w, tableBottom);
-        // Personal hill records — two per line to save space
-        var vShort = ["ZAK", "INN", "OBE", "VIK"];
-        var line1 = ""; var line2 = "";
-        for (var vi = 0; vi < 4; vi++) {
-            if (_bestPerVenue[vi] > 0.0) {
-                var s = vShort[vi] + ":" + _bestPerVenue[vi].toNumber() + "m ";
-                if (vi < 2) { line1 = line1 + s; } else { line2 = line2 + s; }
-            }
-        }
-        var recY = tableBottom + 4;
-        if (line1.length() > 0) {
-            dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, recY, Graphics.FONT_XTINY, line1, Graphics.TEXT_JUSTIFY_CENTER);
-            recY = recY + 13;
-        }
-        if (line2.length() > 0) {
-            dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, recY, Graphics.FONT_XTINY, line2, Graphics.TEXT_JUSTIFY_CENTER);
-            recY = recY + 13;
-        }
+        var tapY = rowsY + NUM_JUMPERS * rowH + 6;
         dc.setColor((_tick % 10 < 5) ? 0x44AAFF : 0x3388DD, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, recY + 2, Graphics.FONT_XTINY, "Tap for menu", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, tapY, Graphics.FONT_XTINY, "Tap for menu", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function rankByCumScore() {
