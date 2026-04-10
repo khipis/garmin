@@ -33,6 +33,7 @@ class BitochiBlocksView extends WatchUi.View {
     // Board geometry
     hidden var _cellW; hidden var _cellH;
     hidden var _boardX; hidden var _boardY;  // top-left pixel of board
+    hidden var _panelX;                      // X start of right info panel
 
     // Board: 0 = empty, 1-7 = piece color index, 8+ = power-up marker
     hidden var _board;   // [TB_ROWS][TB_COLS]
@@ -90,6 +91,7 @@ class BitochiBlocksView extends WatchUi.View {
         accelX = 0;
         _w = 0; _h = 0;
         _tick = 0; _gs = TBS_MENU;
+        _panelX = 0;
         _wobble = 0.0;
         _smoothAx = 0.0; _accelMove = 0.0; _accelCd = 0;
 
@@ -212,40 +214,41 @@ class BitochiBlocksView extends WatchUi.View {
 
     hidden function setupBoard() {
         if (_w == 0) { return; }
-        // Top HUD strip — raised slightly so safe zone at y=topBar is wider
-        var topBar = 20;
+        // HUD strip at top
+        var topBar = 22;
         var botPad = 2;
         var availH = _h - topBar - botPad;
 
-        // Cell size from HEIGHT (primary constraint)
+        // Safe half-width at y=topBar on a round screen:
+        // hw = sqrt(r² − (r−topBar)²)  — this is the tightest horizontal point.
+        var r = _w / 2;
+        var dyTop = r - topBar;
+        var safeHalfTop;
+        if (dyTop > 0) {
+            var sqf = r.toFloat() * r.toFloat() - dyTop.toFloat() * dyTop.toFloat();
+            safeHalfTop = (sqf > 0.0) ? Math.sqrt(sqf).toNumber() : r;
+        } else {
+            safeHalfTop = r;
+        }
+
+        // Layout: board (TB_COLS cells) + 3px gap + panel (4 cells) must all fit
+        // within the safe width at topBar.  Use 88% of safe width for headroom.
+        var usableW = safeHalfTop * 2 * 88 / 100;
+        var cellFromSafeW = usableW / (TB_COLS + 4);   // 14 cell slots total
         var cellFromH = availH / TB_ROWS;
 
-        // Cell size from WIDTH — round screen clips corners; compute the
-        // horizontal safe half-width at y=topBar: hw = sqrt(r² − (r−topBar)²)
-        var r = _w / 2;
-        var dy = r - topBar;
-        var safeHalf;
-        if (dy > 0) {
-            var sqf = r.toFloat() * r.toFloat() - dy.toFloat() * dy.toFloat();
-            safeHalf = (sqf > 0.0) ? Math.sqrt(sqf).toNumber() : r;
-        } else {
-            safeHalf = r;
-        }
-        // Board occupies TB_COLS cells; leave rest for NEXT panel
-        var cellFromW = (safeHalf * 2) / TB_COLS;
-
-        // Use the binding (smaller) constraint, then scale down 20% so the
-        // full board height fits inside the round-screen safe zone at the bottom.
-        _cellH = (cellFromH < cellFromW) ? cellFromH : cellFromW;
-        _cellH = _cellH * 4 / 5;   // −20%
+        _cellH = (cellFromH < cellFromSafeW) ? cellFromH : cellFromSafeW;
         if (_cellH < 5)  { _cellH = 5; }
-        if (_cellH > 18) { _cellH = 18; }
+        if (_cellH > 13) { _cellH = 13; }
         _cellW = _cellH;
 
-        // Center board; clamp so left edge stays within the visible circle
-        _boardX = (_w - TB_COLS * _cellW) / 2;
-        var minBoardX = _w / 2 - safeHalf;
+        // Centre the board+panel group horizontally; clamp to safe zone left edge
+        var totalW = (TB_COLS + 4) * _cellW + 3;
+        _boardX = (_w - totalW) / 2;
+        var minBoardX = _w / 2 - safeHalfTop + 2;
         if (_boardX < minBoardX) { _boardX = minBoardX; }
+
+        _panelX = _boardX + TB_COLS * _cellW + 3;
         _boardY = topBar;
     }
 
@@ -821,81 +824,70 @@ class BitochiBlocksView extends WatchUi.View {
     }
 
     // ── HUD panel ─────────────────────────────────────────────────────────────
-    // Top strip (18px): Score | Level | Lines
-    // Right of board: NEXT preview + status badges
+    // Top strip (22px): Score | Lv | Lines
+    // Right panel (always visible, guaranteed to fit by setupBoard):
+    //   NXT label → next piece preview → level progress bar → combo/freeze
 
     hidden function drawHUD(dc, ox, oy) {
         // ── Top strip ──────────────────────────────────────────────────────────
         dc.setColor(0x0A1A2A, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, 0, _w, _boardY);
 
+        // Score (left-aligned to board left edge)
         dc.setColor(0xDDEEFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(4, 3, Graphics.FONT_XTINY, "" + _score, Graphics.TEXT_JUSTIFY_LEFT);
+        dc.drawText(_boardX, 4, Graphics.FONT_XTINY, "" + _score, Graphics.TEXT_JUSTIFY_LEFT);
 
+        // Level (centred over board)
+        var boardMidX = _boardX + TB_COLS * _cellW / 2;
         dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, 3, Graphics.FONT_XTINY, "Lv" + _level, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(boardMidX, 4, Graphics.FONT_XTINY, "Lv" + _level, Graphics.TEXT_JUSTIFY_CENTER);
 
+        // Lines cleared (right-aligned to panel right edge)
         dc.setColor(0x88AABB, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w - 4, 3, Graphics.FONT_XTINY, _linesCleared + "L", Graphics.TEXT_JUSTIFY_RIGHT);
+        dc.drawText(_panelX + 4 * _cellW, 4, Graphics.FONT_XTINY,
+            _linesCleared + "L", Graphics.TEXT_JUSTIFY_RIGHT);
 
-        // NEXT mini-preview always shown in top-right of HUD
-        drawNextMini(dc);
+        // ── Right panel (always drawn — layout guaranteed by setupBoard) ────────
+        var px  = _panelX;
+        var pw  = 4 * _cellW;       // panel pixel width
+        var py  = _boardY + oy;     // panel top (moves with shake offset)
 
-        // ── Right-side panel — only when safe zone is wide enough at that depth ──
-        // Check safe horizontal extent at y = boardY + cellH (one row below top)
-        var checkY = _boardY + _cellH;
-        var r = _w / 2;
-        var dyc = r - checkY; if (dyc < 0) { dyc = -dyc; }
-        var sqc = r.toFloat() * r.toFloat() - dyc.toFloat() * dyc.toFloat();
-        var safeRight = (sqc > 0.0) ? r + Math.sqrt(sqc).toNumber() : _w;
-        var hudX = _boardX + TB_COLS * _cellW + 3;
-        var hudAvail = safeRight - hudX - 2;
+        // "NXT" label
+        dc.setColor(0x3A5870, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(px + pw / 2, py + 1, Graphics.FONT_XTINY, "NXT", Graphics.TEXT_JUSTIFY_CENTER);
 
-        if (hudAvail >= _cellW * 2) {
-            drawNextPreview(dc, hudX, _boardY + oy + _cellH);
+        // Next piece preview (full-size cells)
+        drawNextPreview(dc, px, py + 14);
 
-            if (_freezeTicks > 0) {
-                dc.setColor(0x44CCFF, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(hudX, _boardY + oy + _cellH * 3 + 4, Graphics.FONT_XTINY, "ICE", Graphics.TEXT_JUSTIFY_LEFT);
-            }
-            if (_combo > 1) {
-                var cy2 = _boardY + oy + _cellH * 3 + (_freezeTicks > 0 ? 20 : 4);
-                dc.setColor((_tick % 6 < 3) ? 0xFFFF44 : 0xFFAA00, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(hudX, cy2, Graphics.FONT_XTINY, "x" + _combo, Graphics.TEXT_JUSTIFY_LEFT);
-            }
-        } else {
-            // No right panel — show combo/freeze below board if space permits
-            var belowY = _boardY + TB_ROWS * _cellH + 2;
-            if (belowY + 12 < _h) {
-                if (_combo > 1) {
-                    dc.setColor((_tick % 6 < 3) ? 0xFFFF44 : 0xFFAA00, Graphics.COLOR_TRANSPARENT);
-                    dc.drawText(_w / 2, belowY, Graphics.FONT_XTINY, "x" + _combo, Graphics.TEXT_JUSTIFY_CENTER);
-                }
-                if (_freezeTicks > 0) {
-                    dc.setColor(0x44CCFF, Graphics.COLOR_TRANSPARENT);
-                    dc.drawText(_w / 2, belowY + (_combo > 1 ? 12 : 0), Graphics.FONT_XTINY, "ICE", Graphics.TEXT_JUSTIFY_CENTER);
-                }
-            }
+        // Lines-to-next-level progress bar
+        var barY    = py + 14 + _cellH * 2 + 6;
+        var barW    = pw;
+        var linesMod = _linesCleared % 10;
+        dc.setColor(0x0E2030, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(px, barY, barW, 5);
+        dc.setColor(0x2288CC, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(px, barY, barW * linesMod / 10, 5);
+        dc.setColor(0x1A4060, Graphics.COLOR_TRANSPARENT);
+        dc.drawRectangle(px, barY, barW, 5);
+
+        // "→LvX" next level hint
+        dc.setColor(0x446677, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(px + pw / 2, barY + 7, Graphics.FONT_XTINY,
+            "\u2192Lv" + (_level + 1), Graphics.TEXT_JUSTIFY_CENTER);
+
+        // Combo
+        var extraY = barY + 20;
+        if (_combo > 1) {
+            dc.setColor((_tick % 6 < 3) ? 0xFFFF44 : 0xFFAA00, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(px + pw / 2, extraY, Graphics.FONT_XTINY,
+                "x" + _combo, Graphics.TEXT_JUSTIFY_CENTER);
+            extraY += 13;
         }
-    }
-
-    // Compact 4-cell mini-preview drawn in top-right corner of HUD bar
-    hidden function drawNextMini(dc) {
-        var ms = 4;  // mini cell size in pixels
-        var rx = _w - ms * 5 - 2;   // rightmost column start x
-        var ty = (_boardY - ms * 2) / 2;  // vertically centered in HUD
-        if (ty < 1) { ty = 1; }
-
-        var col = _nextIsPu ? puColor(_nextType) : _pieceColors[_nextType];
-        var pType = _nextIsPu ? 1 : _nextType;  // I-shape fallback for PU
-
-        dc.setColor(col, Graphics.COLOR_TRANSPARENT);
-        for (var i = 0; i < 4; i++) {
-            var dc2 = getCell(pType, 0, i, 0) + 2;  // shift: center in 0-4 range
-            var dr2 = getCell(pType, 0, i, 1) + 1;  // shift: center in 0-3 range
-            if (dc2 < 0) { dc2 = 0; } if (dc2 > 4) { dc2 = 4; }
-            if (dr2 < 0) { dr2 = 0; } if (dr2 > 3) { dr2 = 3; }
-            dc.fillRectangle(rx + dc2 * (ms + 1), ty + dr2 * (ms + 1), ms, ms);
+        // Freeze
+        if (_freezeTicks > 0) {
+            dc.setColor(0x44CCFF, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(px + pw / 2, extraY, Graphics.FONT_XTINY,
+                "ICE", Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 
