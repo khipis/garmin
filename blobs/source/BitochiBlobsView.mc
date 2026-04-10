@@ -1414,48 +1414,87 @@ class BitochiBlobsView extends WatchUi.View {
     }
 
     hidden function drawMenu(dc) {
-        dc.setColor(0x1A2844, 0x1A2844); dc.clear();
-        dc.setColor(0x3A5588, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h * 55 / 100, _w, _h);
-        dc.setColor(0x44AA44, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h * 71 / 100, _w, 3);
-        dc.setColor(0x5A3A1A, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h * 74 / 100, _w, _h);
+        // Full dark background — covers the entire screen so all UI is always legible
+        dc.setColor(0x0E1828, 0x0E1828); dc.clear();
 
+        // Landscape pushed to the bottom quarter so it never overlaps text
+        dc.setColor(0x2A4A7A, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h * 74 / 100, _w, _h);
+        dc.setColor(0x44AA44, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h * 86 / 100, _w, 3);
+        dc.setColor(0x5A3A1A, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h * 89 / 100, _w, _h);
+
+        // Title
         var tc = (_tick % 14 < 7) ? 0xFF6644 : 0xFF8866;
-        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2 + 1, _h * 3 / 100 + 1, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(tc, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 3 / 100, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 15 / 100, Graphics.FONT_LARGE, "BLOBS", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2 + 1, _h * 3 / 100 + 1, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(tc, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 3 / 100, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 15 / 100, Graphics.FONT_LARGE, "BLOBS", Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Mode selector: 1 PLAYER / 2 PLAYERS
-        var selY0 = _h * 32 / 100;
-        var selY1 = _h * 44 / 100;
-        var selW = _w * 68 / 100; var selX = (_w - selW) / 2;
+        // ── Dark panel covering the FULL selector + instruction area ─────
+        var cardTop = _h * 27 / 100;
+        var cardH   = _h * 32 / 100;   // tall enough for both rows + instruction
+        var cardW   = _w * 78 / 100;
+        var cardX   = (_w - cardW) / 2;
+        dc.setColor(0x080F1C, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(cardX, cardTop, cardW, cardH, 6);
+        dc.setColor(0x1A2E4A, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(cardX, cardTop, cardW, cardH, 6);
+
+        // ── Mode selector rows ───────────────────────────────────────────
+        var rowH  = _h * 10 / 100;   // ~24px on 240, scales with screen
+        var padV  = rowH / 4;        // vertical text padding inside row
+        var selW2 = cardW - 16;
+        var selX2 = cardX + 8;
+        var selY0 = cardTop + 8;
+        var selY1 = selY0 + rowH + 6;
+
         // 1 PLAYER row
         if (_menuSel == 0) {
-            dc.setColor(0x44DDFF, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(selX, selY0, selW, 14);
-            dc.setColor(0x001122, Graphics.COLOR_TRANSPARENT);
-        } else { dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT); }
-        dc.drawText(_w / 2, selY0, Graphics.FONT_XTINY, "1 PLAYER", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(0x22BBFF, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(selX2, selY0, selW2, rowH, 4);
+            dc.setColor(0x00080E, Graphics.COLOR_TRANSPARENT);
+        } else {
+            dc.setColor(0x5577AA, Graphics.COLOR_TRANSPARENT);
+        }
+        dc.drawText(_w / 2, selY0 + padV, Graphics.FONT_XTINY,
+            (_menuSel == 0) ? "> 1 PLAYER <" : "  1 PLAYER  ", Graphics.TEXT_JUSTIFY_CENTER);
+
         // 2 PLAYERS row
         if (_menuSel == 1) {
-            dc.setColor(0x44FF88, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(selX, selY1, selW, 14);
-            dc.setColor(0x001A00, Graphics.COLOR_TRANSPARENT);
-        } else { dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT); }
-        dc.drawText(_w / 2, selY1, Graphics.FONT_XTINY, "2 PLAYERS", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(0x44FF88, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(selX2, selY1, selW2, rowH, 4);
+            dc.setColor(0x001408, Graphics.COLOR_TRANSPARENT);
+        } else {
+            dc.setColor(0x5577AA, Graphics.COLOR_TRANSPARENT);
+        }
+        dc.drawText(_w / 2, selY1 + padV, Graphics.FONT_XTINY,
+            (_menuSel == 1) ? "> 2 PLAYERS <" : "  2 PLAYERS  ", Graphics.TEXT_JUSTIFY_CENTER);
 
-        dc.setColor(0x556677, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 56 / 100, Graphics.FONT_XTINY, "Up/Down = select mode", Graphics.TEXT_JUSTIFY_CENTER);
+        // Instruction row (still inside the dark panel)
+        dc.setColor(0x3A5577, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, selY1 + rowH + 8, Graphics.FONT_XTINY,
+            "Up/Down: choose", Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Two blobs for 1P illustration, or two pairs for 2P
-        var by = _h * 63 / 100;
+        // ── Blobs illustration ───────────────────────────────────────────
+        var by = _h * 65 / 100;
         var positions = [_w * 20 / 100, _w * 35 / 100, _w * 50 / 100, _w * 65 / 100, _w * 80 / 100];
         for (var i = 0; i < 5; i++) {
             var wob = (Math.sin(_wobble * 0.8 + i.toFloat() * 1.2) * 2.0).toNumber();
             dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillCircle(positions[i] + 1, by + wob + 1, 6);
             dc.setColor(_bCol[i], Graphics.COLOR_TRANSPARENT); dc.fillCircle(positions[i], by + wob, 6);
-            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillCircle(positions[i] - 2, by + wob - 1, 1); dc.fillCircle(positions[i] + 2, by + wob - 1, 1);
+            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(positions[i] - 2, by + wob - 1, 1); dc.fillCircle(positions[i] + 2, by + wob - 1, 1);
         }
 
-        if (_bestStreak > 0) { dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 76 / 100, Graphics.FONT_XTINY, "BEST: " + _bestStreak, Graphics.TEXT_JUSTIFY_CENTER); }
-        dc.setColor(0x7799AA, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 84 / 100, Graphics.FONT_XTINY, "Tap=angle  Tap=power  Tap=fire", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor((_tick % 10 < 5) ? 0xFF6644 : 0xFF8866, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 92 / 100, Graphics.FONT_XTINY, "Tap to fight!", Graphics.TEXT_JUSTIFY_CENTER);
+        // ── Bottom info texts — always on the dark background ────────────
+        if (_bestStreak > 0) {
+            dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2, _h * 74 / 100, Graphics.FONT_XTINY, "BEST: " + _bestStreak, Graphics.TEXT_JUSTIFY_CENTER);
+        }
+        dc.setColor(0x5577AA, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 81 / 100, Graphics.FONT_XTINY, "angle / power / fire", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor((_tick % 10 < 5) ? 0xFF6644 : 0xFF8866, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 89 / 100, Graphics.FONT_XTINY, "Tap to fight!", Graphics.TEXT_JUSTIFY_CENTER);
     }
 }
