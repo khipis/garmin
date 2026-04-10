@@ -827,16 +827,17 @@ class BitochiSerpentView extends WatchUi.View {
             dc.fillRectangle(0, hudH - 3, eW, 2);
         }
 
-        // Event labels — shown at bottom of grid area
+        // Event labels — just below the grid (safe zone on round screens)
+        var evY = _offY + _gridH * _cellSize + 3;
         if (_reverseOn) {
             dc.setColor((_tick % 6 < 3) ? 0xFF4444 : 0xFF8800, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h - 14, Graphics.FONT_XTINY, "REVERSE!", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_w / 2, evY, Graphics.FONT_XTINY, "REVERSE!", Graphics.TEXT_JUSTIFY_CENTER);
         } else if (_magnetOn) {
             dc.setColor((_tick % 6 < 3) ? 0xFFCC00 : 0xAA8800, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h - 14, Graphics.FONT_XTINY, "MAGNET!", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_w / 2, evY, Graphics.FONT_XTINY, "MAGNET!", Graphics.TEXT_JUSTIFY_CENTER);
         } else if (_evType == SEV_PORTAL) {
             dc.setColor((_tick % 8 < 4) ? 0xFF44CC : 0x882266, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h - 14, Graphics.FONT_XTINY, "PORTAL!", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_w / 2, evY, Graphics.FONT_XTINY, "PORTAL!", Graphics.TEXT_JUSTIFY_CENTER);
         }
 
         // Combo flash
