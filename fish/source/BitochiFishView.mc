@@ -27,6 +27,8 @@ class BitochiFishView extends WatchUi.View {
     hidden var _fishPullDir; hidden var _fishPullTimer;
     hidden var _fishHP; hidden var _fishMaxHP;
 
+    hidden var _fightCursor;    // -100..+100 tug-of-war position
+
     hidden var _tension; hidden var _maxTension;
     hidden var _reelProg; hidden var _reelTarget; hidden var _lineLen;
     hidden var _score; hidden var _bestScore;
@@ -73,6 +75,7 @@ class BitochiFishView extends WatchUi.View {
         _fishType = 0; _fishSize = 8; _fishStr = 1.0; _fishWeight = 0;
         _fishPullDir = 30.0; _fishPullTimer = 0;
         _fishHP = 100.0; _fishMaxHP = 100.0;
+        _fightCursor = 0.0;
         _tension = 0.0; _maxTension = 100.0;
         _reelProg = 0.0; _reelTarget = 100.0; _lineLen = 0.0;
         _score = 0;
@@ -134,7 +137,7 @@ class BitochiFishView extends WatchUi.View {
             if (_power >= 100.0) { _power = 100.0; _powerDir = -1; }
             if (_power <= 0.0) { _power = 0.0; _powerDir = 1; }
         } else if (gameState == GS_CAST) {
-            _bobVy += 0.33; _bobX -= _castDist * 0.033; _bobY += _bobVy;
+            _bobVy += 0.30; _bobX -= _castDist * 0.044; if (_bobX < 8.0) { _bobX = 8.0; } _bobY += _bobVy;
             if (_bobY >= _waterY.toFloat()) {
                 _bobY = _waterY.toFloat(); addRipple(_bobX.toNumber());
                 spawnSplash(_bobX.toNumber(), _waterY);
@@ -295,6 +298,7 @@ class BitochiFishView extends WatchUi.View {
         _tension = 24.0 + _lineTensionBonus * 0.18; _reelProg = 0.0;
         _reelTarget = 44.0 + _fishType.toFloat() * 10.0 - _lineTensionBonus * 0.18;
         if (_reelTarget < 34.0) { _reelTarget = 34.0; }
+        _fightCursor = 0.0;
     }
 
     hidden function updateFight() {
@@ -302,30 +306,51 @@ class BitochiFishView extends WatchUi.View {
         if (_fishPullTimer <= 0) {
             _fishPullDir = (_fishPullDir < 100.0) ? 208.0 : 28.0;
             _fishPullTimer = 22 + Math.rand().abs() % 28;
-            if (Math.rand().abs() % 5 == 0) { _fishStr *= 1.08; if (_fishStr > 2.0) { _fishStr = 2.0; } doVibe(50, 55); }
+            if (Math.rand().abs() % 5 == 0) { _fishStr *= 1.08; if (_fishStr > 2.0) { _fishStr = 2.0; } doVibe(45, 60); }
         }
-        var pullRad = _fishPullDir * 3.14159 / 180.0;
-        var pullForce = _fishStr * (0.48 + Math.sin(_tick.toFloat() * 0.17) * 0.22);
-        _fishVx = pullForce * Math.cos(pullRad); _fishVy = pullForce * Math.sin(pullRad) * 0.3;
+
+        var pullForce = _fishStr * (0.55 + Math.sin(_tick.toFloat() * 0.18) * 0.22);
+        var fishDir = (_fishPullDir < 100.0) ? 1.0 : -1.0;
+
+        // Fish pushes fight cursor toward its escape direction.
+        // Player counters with Parachute-style direct accelerometer control:
+        //   fish goes right (fishDir=+1) → cursor drifts right
+        //   tilt left (accelX<0)         → cursor pushed left back to center
+        _fightCursor += pullForce * fishDir * 1.8;
+        _fightCursor += accelX.toFloat() * 0.095;
+        if (_fightCursor >  100.0) { _fightCursor =  100.0; }
+        if (_fightCursor < -100.0) { _fightCursor = -100.0; }
+
+        // Move fish visually under water
+        var pullRad = _fishPullDir * 3.14159265 / 180.0;
+        _fishVx = pullForce * Math.cos(pullRad) * 0.55;
+        _fishVy = pullForce * Math.sin(pullRad) * 0.18;
         _fishX += _fishVx; _fishY += _fishVy;
-        if (_fishX < 10.0) { _fishX = 10.0; } if (_fishX > (_w - 10).toFloat()) { _fishX = (_w - 10).toFloat(); }
+        if (_fishX < 10.0) { _fishX = 10.0; }
+        if (_fishX > (_w - 10).toFloat()) { _fishX = (_w - 10).toFloat(); }
         if (_fishY < (_waterY + 8).toFloat()) { _fishY = (_waterY + 8).toFloat(); }
         if (_fishY > (_h - 12).toFloat()) { _fishY = (_h - 12).toFloat(); }
 
-        // Left/right tilt mechanics: fish pulls one way, player tilts opposite
-        var fishPullsRight = (_fishPullDir < 100.0);
-        var ax = accelX.toFloat();
-        var counterEff = 0.0;
-        if (fishPullsRight && ax < -100.0) { counterEff = (-ax - 100.0) / 320.0; }
-        else if (!fishPullsRight && ax > 100.0) { counterEff = (ax - 100.0) / 320.0; }
-        if (counterEff > 1.2) { counterEff = 1.2; }
-
-        _tension += pullForce * 1.04 - counterEff * 2.2;
-        _tension -= 0.42 + _lineTensionBonus * 0.002;
-        if (_tension < 0.0) { _tension = 0.0; } if (_tension > _maxTension) { _tension = _maxTension; }
-
-        if (counterEff > 0.12) { _fishHP -= 0.85 + counterEff * 0.65; _reelProg += 0.32 + counterEff * 0.42; }
-        else { _fishHP -= 0.22; _reelProg += 0.05; }
+        // Tension + HP outcome based on cursor position
+        var absCursor = _fightCursor; if (absCursor < 0.0) { absCursor = -absCursor; }
+        var tensionDelta;
+        if (absCursor < 28.0) {
+            // Safe zone: fish tires quickly, tension eases
+            tensionDelta = -1.4 - _lineTensionBonus * 0.004;
+            _fishHP -= 1.6 + pullForce * 0.35;
+            _reelProg += 0.65 + pullForce * 0.25;
+        } else if (absCursor < 62.0) {
+            // Yellow zone: slight tension rise, slow drain
+            tensionDelta = 0.4 + (absCursor - 28.0) / 34.0 * 0.8;
+            _fishHP -= 0.35;
+            _reelProg += 0.12;
+        } else {
+            // Danger zone: tension spikes fast
+            tensionDelta = 1.2 + (absCursor - 62.0) * 0.06;
+        }
+        _tension += tensionDelta;
+        if (_tension < 0.0) { _tension = 0.0; }
+        if (_tension > _maxTension) { _tension = _maxTension; }
 
         _emotion = (_tension > 70.0) ? 3 : ((_tension > 42.0) ? 1 : 0);
         if (_fishHP <= 0.0) { gameState = GS_REEL; doVibe(60, 80); _emotion = 2; }
@@ -336,7 +361,7 @@ class BitochiFishView extends WatchUi.View {
             doVibe(100, 150); _shakeTimer = 8; _emotion = 3;
         }
         if (_tick % 14 == 0 && pullForce > 0.5) { addRipple(_fishX.toNumber()); }
-        if (_tension > 72.0) { doVibe((((_tension - 72.0) / 28.0) * 28.0).toNumber() + 10, 20); }
+        if (_tension > 72.0) { doVibe((((_tension - 72.0) / 28.0 * 28.0)).toNumber() + 10, 20); }
         _bobX = _bobX * 0.88 + _fishX * 0.12;
         _bobY = _waterY.toFloat() + Math.sin(_tick.toFloat() * 0.27) * 2.0;
     }
@@ -358,7 +383,7 @@ class BitochiFishView extends WatchUi.View {
         if (gameState == GS_IDLE) { _power = 0.0; _powerDir = 1; gameState = GS_POWER; return; }
         if (gameState == GS_POWER) {
             _castDist = _power; _bobX = _rodTipX.toFloat(); _bobY = _rodTipY.toFloat();
-            _bobVy = -2.7 - _power * 0.032; gameState = GS_CAST; doVibe(30, 40); return;
+            _bobVy = -3.8 - _power * 0.026; gameState = GS_CAST; doVibe(30, 40); return;
         }
         if (gameState == GS_BITE) { gameState = GS_FIGHT; _resultMsg = "FIGHT!"; _resultTick = 0; doVibe(40, 50); _emotion = 1; return; }
         if (gameState == GS_FIGHT) {
@@ -709,15 +734,35 @@ class BitochiFishView extends WatchUi.View {
         var fc = (_power > 76.0) ? 0xFF4444 : ((_power > 46.0) ? 0xFFAA44 : 0x44CC44);
         dc.setColor(fc, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX, bY, fill, bH);
         dc.setColor(0xDDEEFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, bY - 14, Graphics.FONT_XTINY, "CAST POWER", Graphics.TEXT_JUSTIFY_CENTER);
-        var nearX = -1; var nd = 9999.0;
+
+        // Landing preview dot on water line using arc physics (gravity=0.30)
+        var vy0 = -3.8 - _power * 0.026;
+        var disc = vy0 * vy0 + 4.0 * 0.15 * 18.0;
+        var ft = (-vy0 + Math.sqrt(disc)) / (2.0 * 0.15);
+        var prevX = _rodTipX.toFloat() - _power * 0.044 * ft;
+        if (prevX < 8.0) { prevX = 8.0; }
+        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillCircle(prevX.toNumber(), _waterY - 3, 5);
+        dc.setColor(fc, Graphics.COLOR_TRANSPARENT); dc.fillCircle(prevX.toNumber(), _waterY - 3, 4);
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillCircle(prevX.toNumber() - 1, _waterY - 5, 1);
+
+        // Fish markers on power bar – show which power level reaches each fish
+        var maxTravel = _rodTipX - 8;
+        var nearName = ""; var nearDist2 = 9999.0;
         for (var ai = 0; ai < MAX_AMB; ai++) {
             if (!_ambActive[ai]) { continue; }
-            var adx = _rodTipX.toFloat() - _ambX[ai]; if (adx < 0.0) { adx = -adx; }
-            if (adx < nd) { nd = adx; nearX = _ambX[ai].toNumber(); }
+            var fx2 = _ambX[ai];
+            if (fx2 >= _rodTipX.toFloat()) { continue; }
+            var fp = (_rodTipX.toFloat() - fx2) / maxTravel.toFloat() * 100.0;
+            if (fp < 2.0 || fp > 100.0) { continue; }
+            var mrkX = bX + (fp / 100.0 * bW.toFloat()).toNumber();
+            dc.setColor(getFishColorType(_ambType[ai]), Graphics.COLOR_TRANSPARENT); dc.fillCircle(mrkX, bY + bH + 4, 3);
+            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillCircle(mrkX, bY + bH + 4, 1);
+            var fdx = prevX - fx2; if (fdx < 0.0) { fdx = -fdx; }
+            if (fdx < nearDist2) { nearDist2 = fdx; nearName = _fishNames[_ambType[ai]]; }
         }
-        if (nearX >= 0) {
+        if (nearDist2 < 28.0 && nearName.length() > 0) {
             dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_cx, bY - 26, Graphics.FONT_XTINY, (nearX < _rodTipX) ? "< AIM HERE" : "AIM HERE >", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_cx, bY - 28, Graphics.FONT_XTINY, nearName + "!", Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 
@@ -743,34 +788,88 @@ class BitochiFishView extends WatchUi.View {
     }
 
     hidden function drawFightHUD(dc) {
-        var tBarY = _h * 8 / 100; var bW = _w * 65 / 100; var bX = (_w - bW) / 2;
-        dc.setColor(0x181828, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX - 1, tBarY - 1, bW + 2, 12);
-        dc.setColor(0x282838, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX, tBarY, bW, 10);
-        var tf = (_tension / _maxTension * bW.toFloat()).toNumber();
+        // ── Tension bar (top) ─────────────────────────────────────────────
+        var tBarY = _h * 8 / 100; var tBW = _w * 65 / 100; var tBX = (_w - tBW) / 2;
+        dc.setColor(0x181828, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(tBX - 1, tBarY - 1, tBW + 2, 12);
+        dc.setColor(0x282838, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(tBX, tBarY, tBW, 10);
+        var tf = (_tension / _maxTension * tBW.toFloat()).toNumber();
         var tc = 0x33CC44;
-        if (_tension > 80.0) { tc = (_tick % 4 < 2) ? 0xFF2222 : 0xCC0000; }
+        if (_tension > 80.0)      { tc = (_tick % 4 < 2) ? 0xFF2222 : 0xCC0000; }
         else if (_tension > 62.0) { tc = 0xFF8822; }
         else if (_tension > 42.0) { tc = 0xFFCC44; }
-        dc.setColor(tc, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX, tBarY, tf, 10);
-        dc.setColor(0x55FF55, Graphics.COLOR_TRANSPARENT);
-        dc.drawLine(bX + bW * 38 / 100, tBarY - 2, bX + bW * 38 / 100, tBarY + 12);
-        dc.drawLine(bX + bW * 62 / 100, tBarY - 2, bX + bW * 62 / 100, tBarY + 12);
-        if (_tension > 80.0) { dc.setColor((_tick % 3 < 2) ? 0xFF2222 : 0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(bX + bW + 4, tBarY - 2, Graphics.FONT_XTINY, "!", Graphics.TEXT_JUSTIFY_LEFT); }
-
+        dc.setColor(tc, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(tBX, tBarY, tf, 10);
+        if (_tension > 80.0) {
+            dc.setColor((_tick % 3 < 2) ? 0xFF2222 : 0x000000, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(tBX + tBW + 4, tBarY - 2, Graphics.FONT_XTINY, "!", Graphics.TEXT_JUSTIFY_LEFT);
+        }
         dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT); dc.drawText(4, tBarY + 12, Graphics.FONT_XTINY, _fishNames[_fishType], Graphics.TEXT_JUSTIFY_LEFT);
         var hpW = _w * 26 / 100; var hpFill = (_fishHP / _fishMaxHP * hpW.toFloat()).toNumber(); if (hpFill < 0) { hpFill = 0; }
         dc.setColor(0x222233, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(_w - 4 - hpW, tBarY + 12, hpW, 4);
         dc.setColor(0x44AAFF, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(_w - 4 - hpW, tBarY + 12, hpFill, 4);
 
-        var fishPullsRight = (_fishPullDir < 100.0);
-        var arrowTxt = fishPullsRight ? "FISH >>>" : "<<< FISH";
-        var hintTxt  = fishPullsRight ? "<< TILT LEFT" : "TILT RIGHT >>";
-        var arrY = _h * 52 / 100;
-        dc.setColor((_tick % 8 < 5) ? 0xFF8844 : 0xFF6622, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, arrY, Graphics.FONT_XTINY, arrowTxt, Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor((_tick % 6 < 3) ? 0x88FF88 : 0x44CC44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, arrY + 14, Graphics.FONT_XTINY, hintTxt, Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0x5588AA, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 84 / 100, Graphics.FONT_XTINY, "Tap = reel", Graphics.TEXT_JUSTIFY_CENTER);
+        // ── Tug-of-war fight bar (center) ────────────────────────────────
+        // _fightCursor: -100 (far left) to +100 (far right)
+        // Fish pushes it toward its escape direction; player tilts opposite to fight back.
+        var fBH = 16; var fBW = _w * 82 / 100; var fBX = (_w - fBW) / 2;
+        var fBarY = _h * 43 / 100;
+
+        // Background shell
+        dc.setColor(0x050A14, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(fBX - 2, fBarY - 2, fBW + 4, fBH + 4);
+
+        // Red danger zones (outer 20% each side)
+        dc.setColor(0x2A0808, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(fBX, fBarY, fBW * 20 / 100, fBH);
+        dc.fillRectangle(fBX + fBW * 80 / 100, fBarY, fBW * 20 / 100, fBH);
+
+        // Yellow warning zones (next 15% each side)
+        dc.setColor(0x201800, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(fBX + fBW * 20 / 100, fBarY, fBW * 15 / 100, fBH);
+        dc.fillRectangle(fBX + fBW * 65 / 100, fBarY, fBW * 15 / 100, fBH);
+
+        // Green safe zone (center 30%)
+        dc.setColor(0x081808, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(fBX + fBW * 35 / 100, fBarY, fBW * 30 / 100, fBH);
+
+        // Zone separators
+        dc.setColor(0x224422, Graphics.COLOR_TRANSPARENT);
+        dc.drawLine(fBX + fBW * 35 / 100, fBarY, fBX + fBW * 35 / 100, fBarY + fBH);
+        dc.drawLine(fBX + fBW * 65 / 100, fBarY, fBX + fBW * 65 / 100, fBarY + fBH);
+
+        // Fight cursor  (_fightCursor in -100..+100 → 0..fBW)
+        var cursorX = fBX + ((_fightCursor + 100.0) / 200.0 * fBW.toFloat()).toNumber();
+        if (cursorX < fBX + 4) { cursorX = fBX + 4; }
+        if (cursorX > fBX + fBW - 4) { cursorX = fBX + fBW - 4; }
+        var absCursor = _fightCursor; if (absCursor < 0.0) { absCursor = -absCursor; }
+        var cc;
+        if (absCursor < 28.0)      { cc = 0x44FF66; }
+        else if (absCursor < 62.0) { cc = 0xFFCC44; }
+        else                       { cc = (_tick % 4 < 2) ? 0xFF3333 : 0xFF8844; }
+        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(cursorX - 4, fBarY - 2, 8, fBH + 4);
+        dc.setColor(cc, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(cursorX - 3, fBarY - 1, 6, fBH + 2);
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(cursorX - 1, fBarY + 2, 2, fBH - 4);
+
+        // ── Accelerometer indicator (below fight bar) ─────────────────────
+        // Shows current tilt direction so player knows their input
+        var aBarY = fBarY + fBH + 6; var aBarW = _w * 55 / 100; var aBarX = (_w - aBarW) / 2;
+        dc.setColor(0x0C1422, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(aBarX, aBarY, aBarW, 5);
+        // Centre tick
+        dc.setColor(0x1C2840, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(aBarX + aBarW / 2 - 1, aBarY - 1, 2, 7);
+        var aPos = aBarX + aBarW / 2 + (accelX.toFloat() * aBarW.toFloat() / 2200.0).toNumber();
+        if (aPos < aBarX + 2) { aPos = aBarX + 2; }
+        if (aPos > aBarX + aBarW - 2) { aPos = aBarX + aBarW - 2; }
+        dc.setColor(0x4488FF, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(aPos - 3, aBarY - 1, 6, 7);
+
+        // ── Fish direction + counter-tilt hint ────────────────────────────
+        var fishGoesRight = (_fishPullDir < 100.0);
+        var dirTxt    = fishGoesRight ? "FISH >>>" : "<<< FISH";
+        var counterTxt = fishGoesRight ? "<< TILT" : "TILT >>";
+        var hintY = _h * 66 / 100;
+        dc.setColor((_tick % 8 < 5) ? 0xFF8844 : 0xFF5500, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_cx, hintY, Graphics.FONT_XTINY, dirTxt, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor((_tick % 6 < 3) ? 0x66FF88 : 0x44CC66, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_cx, hintY + 14, Graphics.FONT_XTINY, counterTxt, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x4477AA, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_cx, _h * 84 / 100, Graphics.FONT_XTINY, "Tap = reel boost", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawReelAnim(dc) {
