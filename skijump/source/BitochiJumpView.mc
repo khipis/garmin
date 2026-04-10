@@ -880,7 +880,7 @@ class BitochiJumpView extends WatchUi.View {
 
     // Wind indicator box: top-right corner (like DSJ)
     hidden function drawWindBox(dc) {
-        var bx = _w - 36; var by = 2;
+        var bx = _w - 40; var by = _h * 38 / 100;
         dc.setColor(0x111122, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bx, by, 34, 20);
         dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT); dc.drawRectangle(bx, by, 34, 20);
         // Arrow
