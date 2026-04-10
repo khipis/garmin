@@ -212,15 +212,19 @@ class BitochiBlocksView extends WatchUi.View {
 
     hidden function setupBoard() {
         if (_w == 0) { return; }
-        var hudW = _w * 28 / 100;  // right-side HUD panel
-        var playW = _w - hudW;
-        _cellW = playW / TB_COLS;
-        if (_cellW < 10) { _cellW = 10; }
-        if (_cellW > 14) { _cellW = 14; }
-        _cellH = _cellW;  // square cells
-        _boardX = (_w - hudW - TB_COLS * _cellW) / 2;
-        _boardY = (_h - TB_ROWS * _cellH) / 2;
-        if (_boardY < 2) { _boardY = 2; }
+        // Drive cell size from HEIGHT so the board always fits vertically
+        var topBar = 18;  // strip for score / level / lines
+        var botPad = 2;
+        var availH = _h - topBar - botPad;
+        _cellH = availH / TB_ROWS;
+        if (_cellH < 7)  { _cellH = 7; }
+        if (_cellH > 13) { _cellH = 13; }
+        _cellW = _cellH;  // square cells
+        // Center board horizontally; leave right margin for NEXT preview
+        var boardW = TB_COLS * _cellW;
+        _boardX = (_w - boardW) / 2 - 8;  // shift left a bit to free right space
+        if (_boardX < 0) { _boardX = 0; }
+        _boardY = topBar;
     }
 
     hidden function startGame() {
@@ -795,45 +799,44 @@ class BitochiBlocksView extends WatchUi.View {
     }
 
     // ── HUD panel ─────────────────────────────────────────────────────────────
+    // Top strip (18px): Score | Level | Lines
+    // Right of board: NEXT preview + status badges
 
     hidden function drawHUD(dc, ox, oy) {
-        var hudX = _boardX + TB_COLS * _cellW + 4;
-        var cw   = _w - hudX - 2;
-        if (cw < 20) { cw = 20; }
+        // ── Top strip ──────────────────────────────────────────────────────────
+        dc.setColor(0x0A1A2A, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, 0, _w, 18);
 
-        // Score
-        dc.setColor(0x4499DD, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(hudX, _boardY + oy, Graphics.FONT_XTINY, "SCR", Graphics.TEXT_JUSTIFY_LEFT);
         dc.setColor(0xDDEEFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(hudX, _boardY + oy + 12, Graphics.FONT_XTINY, "" + _score, Graphics.TEXT_JUSTIFY_LEFT);
+        dc.drawText(4, 2, Graphics.FONT_XTINY, "" + _score, Graphics.TEXT_JUSTIFY_LEFT);
 
-        // Level
-        dc.setColor(0x4499DD, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(hudX, _boardY + oy + 30, Graphics.FONT_XTINY, "LVL", Graphics.TEXT_JUSTIFY_LEFT);
         dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(hudX, _boardY + oy + 42, Graphics.FONT_XTINY, "" + _level, Graphics.TEXT_JUSTIFY_LEFT);
+        dc.drawText(_w / 2, 2, Graphics.FONT_XTINY, "Lv" + _level, Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Lines
-        dc.setColor(0x4499DD, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(hudX, _boardY + oy + 60, Graphics.FONT_XTINY, "LNS", Graphics.TEXT_JUSTIFY_LEFT);
-        dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(hudX, _boardY + oy + 72, Graphics.FONT_XTINY, "" + _linesCleared, Graphics.TEXT_JUSTIFY_LEFT);
+        dc.setColor(0x88AABB, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w - 4, 2, Graphics.FONT_XTINY, _linesCleared + "L", Graphics.TEXT_JUSTIFY_RIGHT);
 
-        // Next piece preview
-        dc.setColor(0x4499DD, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(hudX, _boardY + oy + 96, Graphics.FONT_XTINY, "NXT", Graphics.TEXT_JUSTIFY_LEFT);
-        drawNextPreview(dc, hudX, _boardY + oy + 110);
+        // ── Right-side panel (next piece + badges) ────────────────────────────
+        var hudX = _boardX + TB_COLS * _cellW + 3;
+        var hudAvail = _w - hudX;
+        if (hudAvail < 12) { return; }  // no room, skip
 
-        // Freeze indicator
+        // NEXT label
+        dc.setColor(0x335566, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(hudX, _boardY + oy + 2, Graphics.FONT_XTINY, "NX", Graphics.TEXT_JUSTIFY_LEFT);
+        drawNextPreview(dc, hudX, _boardY + oy + 16);
+
+        // Freeze badge
         if (_freezeTicks > 0) {
             dc.setColor(0x44CCFF, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(hudX, _boardY + oy + 150, Graphics.FONT_XTINY, "ICE!", Graphics.TEXT_JUSTIFY_LEFT);
+            dc.drawText(hudX, _boardY + oy + 16 + _cellH * 2 + 6, Graphics.FONT_XTINY, "ICE", Graphics.TEXT_JUSTIFY_LEFT);
         }
 
-        // Combo
+        // Combo badge
         if (_combo > 1) {
+            var cy2 = _boardY + oy + 16 + _cellH * 2 + (_freezeTicks > 0 ? 20 : 6);
             dc.setColor((_tick % 6 < 3) ? 0xFFFF44 : 0xFFAA00, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(hudX, _boardY + oy + 165, Graphics.FONT_XTINY, "x" + _combo, Graphics.TEXT_JUSTIFY_LEFT);
+            dc.drawText(hudX, cy2, Graphics.FONT_XTINY, "x" + _combo, Graphics.TEXT_JUSTIFY_LEFT);
         }
     }
 
