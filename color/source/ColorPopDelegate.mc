@@ -3,21 +3,12 @@ using Toybox.WatchUi;
 // ─────────────────────────────────────────────────────────────────────────────
 //  ColorPopDelegate  –  all button routing
 //
-//  Controls (two modes: MOVE cursor, SELECT first gem for swap):
-//
-//  MOVE mode:
-//    UP    → move cursor up
-//    DOWN  → move cursor down
-//    SELECT→ enter SELECT mode (highlight this gem for swapping)
-//    MENU  → quick-rotate cursor right (shortcut)
-//    BACK  → exit game
-//
-//  SELECT mode (gem chosen, pick direction):
-//    UP    → swap up
-//    DOWN  → swap down
-//    SELECT→ swap right  (most frequent swap direction)
-//    MENU  → swap left
-//    BACK  → cancel selection
+//  Single mode — no sub-selection:
+//    UP     → swap cursor gem with gem ABOVE   (↑)
+//    DOWN   → swap cursor gem with gem BELOW   (↓)
+//    SELECT → swap cursor gem with gem to RIGHT (→)
+//    MENU   → advance cursor to next cell (navigate)
+//    BACK   → go to menu / exit
 // ─────────────────────────────────────────────────────────────────────────────
 
 class ColorPopDelegate extends WatchUi.BehaviorDelegate {

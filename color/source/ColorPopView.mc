@@ -8,18 +8,22 @@ using Toybox.Math;
 //
 //  UI states:
 //    VS_MENU     – title screen
-//    VS_PLAY     – active gameplay
-//    VS_SWAP_SEL – gem selected, choose swap direction
-//    VS_POP_ANIM – brief pop animation before cascade
+//    VS_PLAY     – active gameplay (single mode — no sub-selection)
 //    VS_LEVEL_UP – level clear banner
 //    VS_OVER     – game over
+//
+//  Controls (ONE mode only, no mode switching):
+//    UP     → swap cursor gem with gem ABOVE   (↑ swap)
+//    DOWN   → swap cursor gem with gem BELOW   (↓ swap)
+//    SELECT → swap cursor gem with gem to RIGHT (→ swap)
+//    MENU   → advance cursor to next cell (navigation, wraps grid)
+//    BACK   → return to menu
 // ─────────────────────────────────────────────────────────────────────────────
 
 const VS_MENU     = 0;
 const VS_PLAY     = 1;
-const VS_SWAP_SEL = 2;  // gem A selected
-const VS_LEVEL_UP = 3;
-const VS_OVER     = 4;
+const VS_LEVEL_UP = 2;
+const VS_OVER     = 3;
 
 class ColorPopView extends WatchUi.View {
 
@@ -31,11 +35,9 @@ class ColorPopView extends WatchUi.View {
     // Cursor position on grid
     hidden var _curR; hidden var _curC;
 
-    // Selected gem for swap
-    hidden var _selR; hidden var _selC;
-
     // Animation
     hidden var _flashTick;    // countdown for swap-fail flash
+    hidden var _flashDir;     // direction arrow to show when flash fires
     hidden var _msgTick;      // countdown for small floating message
     hidden var _msg;          // floating message text
     hidden var _bannerTick;   // countdown for level-up / combo banner
@@ -54,9 +56,8 @@ class ColorPopView extends WatchUi.View {
         View.initialize();
         _game  = new ColorPopGame();
         _tick  = 0; _vs = VS_MENU;
-        _curR  = 2; _curC  = 2;
-        _selR  = -1; _selC = -1;
-        _flashTick = 0; _msgTick = 0; _msg = "";
+        _curR  = 0; _curC  = 0;
+        _flashTick = 0; _flashDir = ""; _msgTick = 0; _msg = "";
         _bannerTick = 0; _wobble = 0.0;
         _w = 0; _h = 0;
 
@@ -102,88 +103,55 @@ class ColorPopView extends WatchUi.View {
     }
 
     // ── Input handlers ────────────────────────────────────────────────────────
-
-    // ── Controls ──────────────────────────────────────────────────────────────
     //
-    //  MOVE mode  (navigating the grid):
-    //    UP / DOWN   → move cursor row
-    //    TAP (SELECT)→ move cursor column RIGHT (wraps 0→4→0)
-    //    MENU        → pick gem → enter SWAP mode
-    //    BACK        → exit to menu
-    //
-    //  SWAP mode  (gem selected, choosing direction):
-    //    UP          → swap with gem above
-    //    DOWN        → swap with gem below
-    //    TAP (SELECT)→ swap with gem to the RIGHT
-    //    MENU        → swap with gem to the LEFT
-    //    BACK        → cancel, return to MOVE mode
+    //  ONE mode only — no sub-selection, no mode toggling:
+    //    UP     → swap cursor gem ↑ (with gem above)
+    //    DOWN   → swap cursor gem ↓ (with gem below)
+    //    SELECT → swap cursor gem → (with gem to the right)
+    //    MENU   → advance cursor one cell (navigate: right, then down)
+    //    BACK   → go to menu
 
     function onSelect() {
         if (_vs == VS_MENU)     { _game.initialize(); _vs = VS_PLAY; return; }
         if (_vs == VS_OVER)     { _game.initialize(); _vs = VS_MENU; return; }
         if (_vs == VS_LEVEL_UP) { return; }
-
-        if (_vs == VS_PLAY) {
-            // TAP cycles column right — the main way to reach any gem
-            _curC = (_curC + 1) % CP_COLS;
-        } else if (_vs == VS_SWAP_SEL) {
-            doSwap(_selR, _selC, _selR, _selC + 1);
-        }
+        if (_vs == VS_PLAY)     { doSwap(_curR, _curC, _curR, _curC + 1, "\u2192"); }
     }
 
     function onMenu() {
-        if (_vs == VS_PLAY) {
-            // MENU picks the current gem for swapping
-            _selR = _curR; _selC = _curC;
-            _vs = VS_SWAP_SEL;
-        } else if (_vs == VS_SWAP_SEL) {
-            doSwap(_selR, _selC, _selR, _selC - 1);
-        }
+        if (_vs != VS_PLAY) { return; }
+        // Advance cursor — right then wrap to next row
+        _curC++;
+        if (_curC >= CP_COLS) { _curC = 0; _curR = (_curR + 1) % CP_ROWS; }
     }
 
     function onUp() {
-        if (_vs == VS_PLAY || _vs == VS_MENU) {
-            _curR = (_curR + CP_ROWS - 1) % CP_ROWS;  // wrap top
-        } else if (_vs == VS_SWAP_SEL) {
-            doSwap(_selR, _selC, _selR - 1, _selC);
-        }
+        if (_vs == VS_PLAY) { doSwap(_curR, _curC, _curR - 1, _curC, "\u2191"); }
     }
 
     function onDown() {
-        if (_vs == VS_PLAY || _vs == VS_MENU) {
-            _curR = (_curR + 1) % CP_ROWS;  // wrap bottom
-        } else if (_vs == VS_SWAP_SEL) {
-            doSwap(_selR, _selC, _selR + 1, _selC);
-        }
+        if (_vs == VS_PLAY) { doSwap(_curR, _curC, _curR + 1, _curC, "\u2193"); }
     }
 
     function onBack() {
-        if (_vs == VS_SWAP_SEL) {
-            _vs = VS_PLAY; _selR = -1; _selC = -1; return true;
-        }
         if (_vs == VS_PLAY || _vs == VS_OVER || _vs == VS_LEVEL_UP) {
             _vs = VS_MENU; return true;
         }
         return false;
     }
 
-    hidden function doSwap(r1, c1, r2, c2) {
+    hidden function doSwap(r1, c1, r2, c2, dir) {
         var ok = _game.trySwap(r1, c1, r2, c2);
         if (ok) {
-            _vs = VS_PLAY;
-            _selR = -1; _selC = -1;
             if (_game.totalCombo > 1) {
                 showMsg("COMBO x" + _game.totalCombo + "!");
             }
         } else {
-            _flashTick = 4;
-            showMsg("No match");
-            _vs = VS_PLAY;
-            _selR = -1; _selC = -1;
+            _flashTick = 5; _flashDir = dir;
         }
     }
 
-    function isPlaying() { return _vs == VS_PLAY || _vs == VS_SWAP_SEL; }
+    function isPlaying() { return _vs == VS_PLAY; }
 
     hidden function showMsg(txt) {
         _msg = txt; _msgTick = 6;
@@ -250,11 +218,13 @@ class ColorPopView extends WatchUi.View {
             dc.drawText(w / 2, h * 67 / 100, Graphics.FONT_XTINY, "BEST: " + _game.fmt(_game.best), Graphics.TEXT_JUSTIFY_CENTER);
         }
 
-        // Mini how-to-play
-        dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 71 / 100, Graphics.FONT_XTINY, "Match 3+ gems of same color", Graphics.TEXT_JUSTIFY_CENTER);
+        // How to play
+        dc.setColor(0x446688, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w / 2, h * 68 / 100, Graphics.FONT_XTINY, "Match 3+ same-color gems", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x224433, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 79 / 100, Graphics.FONT_XTINY, "UP/DN row  TAP col  MENU pick", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 76 / 100, Graphics.FONT_XTINY, "MENU=next gem", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x22553A, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w / 2, h * 83 / 100, Graphics.FONT_XTINY, "\u2191\u2193 or TAP = swap", Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor((_tick % 12 < 6) ? 0xFFEE44 : 0xBBAA00, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w / 2, h * 91 / 100, Graphics.FONT_XTINY, "Tap to play!", Graphics.TEXT_JUSTIFY_CENTER);
@@ -403,35 +373,39 @@ class ColorPopView extends WatchUi.View {
     hidden function drawCursor(dc) {
         var bx = _bX; var by = _bY;
         var cw = _cellW; var ch = _cellH;
+        var cx = bx + _curC * cw; var cy = by + _curR * ch;
 
-        if (_vs == VS_SWAP_SEL && _selR >= 0) {
-            // Selected gem: bright thick pulsing border — very visible
-            var sc = (_tick % 4 < 2) ? 0xFFFFFF : 0xFFDD44;
-            dc.setColor(sc, Graphics.COLOR_TRANSPARENT);
-            var sx = bx + _selC * cw; var sy = by + _selR * ch;
-            dc.drawRectangle(sx,     sy,     cw,     ch);
-            dc.drawRectangle(sx + 1, sy + 1, cw - 2, ch - 2);
-            dc.drawRectangle(sx + 2, sy + 2, cw - 4, ch - 4);
-        } else {
-            // Normal cursor: solid white rectangle outline
-            var cx = bx + _curC * cw; var cy = by + _curR * ch;
-            var cc = (_flashTick > 0) ? 0xFF4444 : 0xFFFFFF;
-            dc.setColor(cc, Graphics.COLOR_TRANSPARENT);
-            dc.drawRectangle(cx, cy, cw, ch);
+        if (_flashTick > 0) {
+            // Red flash: swap failed — show which direction failed
+            var fc = (_tick % 2 == 0) ? 0xFF3333 : 0xFF8800;
+            dc.setColor(fc, Graphics.COLOR_TRANSPARENT);
+            dc.drawRectangle(cx,     cy,     cw,     ch);
             dc.drawRectangle(cx + 1, cy + 1, cw - 2, ch - 2);
+            // Direction label inside cell
+            dc.setColor(fc, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx + cw / 2, cy + ch / 2 - 6, Graphics.FONT_XTINY, _flashDir, Graphics.TEXT_JUSTIFY_CENTER);
+        } else {
+            // Pulsing white/cyan outline — bright and easy to see
+            var cc = (_tick % 6 < 3) ? 0xFFFFFF : 0x44CCFF;
+            dc.setColor(cc, Graphics.COLOR_TRANSPARENT);
+            dc.drawRectangle(cx,     cy,     cw,     ch);
+            dc.drawRectangle(cx + 1, cy + 1, cw - 2, ch - 2);
+        }
 
-            // Column indicator dots below the board (show current column)
-            var dotY = by + CP_ROWS * ch + 3;
-            for (var ci = 0; ci < CP_COLS; ci++) {
-                var dotX = bx + ci * cw + cw / 2;
-                if (ci == _curC) {
-                    dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-                    dc.fillCircle(dotX, dotY, 3);
-                } else {
-                    dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT);
-                    dc.fillCircle(dotX, dotY, 2);
-                }
-            }
+        // Draw swap direction arrows around the cursor
+        dc.setColor(0x44FF88, Graphics.COLOR_TRANSPARENT);
+        var midX = cx + cw / 2; var midY = cy + ch / 2;
+        // Arrow UP (if row > 0)
+        if (_curR > 0) {
+            dc.drawText(midX, cy - 10, Graphics.FONT_XTINY, "\u2191", Graphics.TEXT_JUSTIFY_CENTER);
+        }
+        // Arrow DOWN (if row < max)
+        if (_curR < CP_ROWS - 1) {
+            dc.drawText(midX, cy + ch + 1, Graphics.FONT_XTINY, "\u2193", Graphics.TEXT_JUSTIFY_CENTER);
+        }
+        // Arrow RIGHT (if col < max)
+        if (_curC < CP_COLS - 1) {
+            dc.drawText(cx + cw + 2, midY - 6, Graphics.FONT_XTINY, "\u2192", Graphics.TEXT_JUSTIFY_LEFT);
         }
     }
 
@@ -439,18 +413,9 @@ class ColorPopView extends WatchUi.View {
         var w = _w; var h = _h;
         dc.setColor(0x0A1A2A, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, h - 18, w, 18);
-
-        if (_vs == VS_SWAP_SEL) {
-            // Swap mode: show directional swap options
-            dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w / 2, h - 17, Graphics.FONT_XTINY,
-                "UP/DN swap  TAP right  MENU left", Graphics.TEXT_JUSTIFY_CENTER);
-        } else {
-            // Move mode: show navigation controls
-            dc.setColor(0x446688, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w / 2, h - 17, Graphics.FONT_XTINY,
-                "UP/DN row  TAP column  MENU pick", Graphics.TEXT_JUSTIFY_CENTER);
-        }
+        dc.setColor(0x335566, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w / 2, h - 17, Graphics.FONT_XTINY,
+            "\u2191\u2193TAP swap  MENU=next cell", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawFloatingMsg(dc) {
