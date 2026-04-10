@@ -1,14 +1,13 @@
 using Toybox.WatchUi;
 
 // ─────────────────────────────────────────────────────────────────────────────
-//  ColorPopDelegate  –  all button routing
+//  ColorPopDelegate  –  button routing for DIAMONDS match-3
 //
-//  Single mode — no sub-selection:
-//    UP     → swap cursor gem with gem ABOVE   (↑)
-//    DOWN   → swap cursor gem with gem BELOW   (↓)
-//    SELECT → swap cursor gem with gem to RIGHT (→)
-//    MENU   → advance cursor to next cell (navigate)
-//    BACK   → go to menu / exit
+//    TAP / SELECT  → select gem; if gem selected + adjacent cursor → swap
+//    MENU          → advance cursor right → down (navigation)
+//    UP  (prev)    → move cursor up   (clears selection)
+//    DOWN (next)   → move cursor down (clears selection)
+//    BACK          → return to menu
 // ─────────────────────────────────────────────────────────────────────────────
 
 class ColorPopDelegate extends WatchUi.BehaviorDelegate {
