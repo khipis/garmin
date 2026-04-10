@@ -492,12 +492,11 @@ class BitochiFishView extends WatchUi.View {
             dc.setColor(0xFF7733, Graphics.COLOR_TRANSPARENT); dc.fillCircle(28 + ox, _waterY - 20 + oy, 14);
         } else if (_envType == 0 || _envType == 4) {
             dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT); dc.fillCircle(26 + ox, 22 + oy, 12);
-            for (var r = 0; r < 5; r++) {
-                var ra = (r * 72 + _tick * 2).toFloat() * 3.14159 / 180.0;
-                dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
-                dc.drawLine(26 + ox + (13.0 * Math.cos(ra)).toNumber(), 22 + oy + (13.0 * Math.sin(ra)).toNumber(),
-                            26 + ox + (17.0 * Math.cos(ra)).toNumber(), 22 + oy + (17.0 * Math.sin(ra)).toNumber());
-            }
+            dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
+            dc.drawLine(26 + ox, 5 + oy,  26 + ox, 8 + oy);
+            dc.drawLine(26 + ox, 36 + oy, 26 + ox, 39 + oy);
+            dc.drawLine(9  + ox, 22 + oy, 12 + ox, 22 + oy);
+            dc.drawLine(40 + ox, 22 + oy, 43 + ox, 22 + oy);
         }
         if (_envType == 4) {
             var rainbowC = [0xFF4444, 0xFF8800, 0xFFEE00, 0x44CC44, 0x4477FF];
@@ -520,8 +519,9 @@ class BitochiFishView extends WatchUi.View {
             var ccx = _cloudX[i].toNumber() + ox; var ccy = _cloudY[i] + oy;
             var cs = 8 + i * 3 + (_envType >= 1 && _envType <= 2 ? 5 : 0);
             dc.setColor(ccW, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(ccx, ccy, cs); dc.fillCircle(ccx + cs * 13 / 10, ccy + 1, cs * 85 / 100); dc.fillCircle(ccx - cs, ccy + 2, cs * 75 / 100);
-            dc.setColor(ccW2, Graphics.COLOR_TRANSPARENT); dc.fillCircle(ccx + 4, ccy - 3, cs * 6 / 10);
+            dc.fillRectangle(ccx - cs, ccy - cs, cs * 3, cs * 2);
+            dc.fillRectangle(ccx - cs / 2, ccy - cs * 3 / 2, cs * 2, cs);
+            dc.setColor(ccW2, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(ccx, ccy - cs * 4 / 3, cs, cs * 2 / 3);
         }
         var bx2 = _birdX.toNumber() + ox;
         dc.setColor((_envType == 5) ? 0x446688 : 0x222222, Graphics.COLOR_TRANSPARENT);
@@ -544,9 +544,9 @@ class BitochiFishView extends WatchUi.View {
         var wavC  = (_envType == 2) ? 0x205570 : ((_envType == 3) ? 0x6A4A28 : ((_envType == 5) ? 0x0A2030 : 0x2475AA));
         var deepC = (_envType == 5) ? 0x040C16 : 0x0C3660;
         dc.setColor(wC, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, wy, _w, _h - wy);
-        for (var x = 0; x < _w; x += 6) {
-            var wh = (Math.sin((x.toFloat() + _waveOff * 16.0) * 0.09) * 2.2).toNumber();
-            dc.setColor(wavC, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(x + ox, wy + wh, 6, 3);
+        for (var x = 0; x < _w; x += 12) {
+            var wh = ((x / 12 + _tick / 3 + _waveOff.toNumber()) % 4 < 2) ? 1 : -1;
+            dc.setColor(wavC, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(x + ox, wy + wh, 12, 3);
         }
         dc.setColor(deepC, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, wy + 5, _w, _h - wy - 5);
         for (var d = 0; d < 3; d++) {
@@ -558,13 +558,13 @@ class BitochiFishView extends WatchUi.View {
         dc.setColor(0x1A6030, Graphics.COLOR_TRANSPARENT);
         for (var lp = 0; lp < 2; lp++) {
             var lpx = (_w * 11 / 100 + lp * _w * 26 / 100) + ox;
-            dc.fillCircle(lpx, wy + 2, 6); dc.fillCircle(lpx + 5, wy + 1, 4);
-            dc.setColor(0x28AA44, Graphics.COLOR_TRANSPARENT); dc.fillCircle(lpx + 1, wy, 3);
+            dc.fillRectangle(lpx - 6, wy - 2, 14, 6);
+            dc.setColor(0x28AA44, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(lpx - 2, wy - 4, 6, 4);
             dc.setColor(0x1A6030, Graphics.COLOR_TRANSPARENT);
         }
         dc.setColor(0x7A6644, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h - 9, _w, 9);
         dc.setColor(0x8A7755, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h - 6, _w, 4);
-        for (var r2 = 0; r2 < _w; r2 += 12) { dc.setColor(0x6A5533, Graphics.COLOR_TRANSPARENT); dc.fillCircle(r2 + 6, _h - 3, 2); }
+        dc.setColor(0x6A5533, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h - 5, _w, 3);
     }
 
     hidden function getFishColorType(t) {

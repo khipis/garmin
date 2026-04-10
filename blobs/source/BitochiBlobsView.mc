@@ -943,7 +943,7 @@ class BitochiBlobsView extends WatchUi.View {
         for (var i = 0; i < _blobCount; i++) {
             if (!_bAlive[i] && _bHp[i] <= 0 && gameState != GS_BOOM) { continue; }
             var bsx = sx(_bX[i]) + ox;
-            var wob = (Math.sin(_wobble + i.toFloat()) * 1.2).toNumber();
+            var wob = ((_tick / 4 + i * 3) % 5) - 2;
             drawBlob(dc, bsx, _bY[i].toNumber() + oy + wob, _bHp[i], _bMaxHp[i], _bCol[i], _bDark[i], i == _activeIdx);
         }
 
@@ -998,7 +998,7 @@ class BitochiBlobsView extends WatchUi.View {
             if (csx < -30 || csx > _w + 30) { continue; }
             dc.setColor(0x88AABB, Graphics.COLOR_TRANSPARENT);
             var cy = _h * 12 / 100 + (i * 7);
-            dc.fillCircle(csx, cy + oy, 7); dc.fillCircle(csx + 6, cy - 2 + oy, 5);
+            dc.fillRectangle(csx - 7, cy - 5 + oy, 20, 10); dc.fillRectangle(csx - 2, cy - 9 + oy, 10, 6);
         }
     }
 
@@ -1038,20 +1038,21 @@ class BitochiBlobsView extends WatchUi.View {
     hidden function drawBlob(dc, bx, by, hp, maxHp, col, darkCol, isActive) {
         if (bx < -_w || bx > _w * 2) { return; }
         var r = (hp > 0) ? 8 : 6;
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawCircle(bx, by - r, r + 1);
-        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillCircle(bx + 1, by - r + 1, r);
-        dc.setColor(col, Graphics.COLOR_TRANSPARENT); dc.fillCircle(bx, by - r, r);
-        dc.setColor(darkCol, Graphics.COLOR_TRANSPARENT); dc.fillCircle(bx, by - r + 2, r - 2);
-        dc.setColor(col, Graphics.COLOR_TRANSPARENT); dc.fillCircle(bx - 2, by - r - 2, r / 2);
+        var d = r * 2;
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawRectangle(bx - r, by - d, d, d);
+        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bx - r + 1, by - d + 1, d, d);
+        dc.setColor(col, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bx - r, by - d, d, d);
+        dc.setColor(darkCol, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bx - r + 2, by - d + 2, d - 4, d - 4);
+        dc.setColor(col, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bx - r - 1, by - d - 2, r / 2 + 1, r / 2 + 1);
 
         if (hp <= 0) {
             dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
             dc.drawLine(bx - 4, by - r - 2, bx - 2, by - r); dc.drawLine(bx - 2, by - r - 2, bx - 4, by - r);
             dc.drawLine(bx + 2, by - r - 2, bx + 4, by - r); dc.drawLine(bx + 4, by - r - 2, bx + 2, by - r);
         } else {
-            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillCircle(bx - 3, by - r - 1, 2); dc.fillCircle(bx + 3, by - r - 1, 2);
-            dc.setColor(0x111111, Graphics.COLOR_TRANSPARENT); dc.fillCircle(bx - 3, by - r - 1, 1); dc.fillCircle(bx + 3, by - r - 1, 1);
-            if (hp == 1) { dc.setColor(0x66BBFF, Graphics.COLOR_TRANSPARENT); dc.fillCircle(bx + 6, by - r - 3, 2); }
+            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bx - 5, by - r - 3, 4, 4); dc.fillRectangle(bx + 1, by - r - 3, 4, 4);
+            dc.setColor(0x111111, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bx - 4, by - r - 2, 2, 2); dc.fillRectangle(bx + 2, by - r - 2, 2, 2);
+            if (hp == 1) { dc.setColor(0x66BBFF, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bx + 4, by - r - 5, 4, 4); }
             if (hp >= 2) { dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bx - 2, by - r + 3, 4, 1); }
         }
         if (isActive && (gameState == GS_MOVE || gameState == GS_AIM || gameState == GS_POWER || gameState == GS_TURN)) {
@@ -1480,9 +1481,9 @@ class BitochiBlobsView extends WatchUi.View {
         var by = _h * 65 / 100;
         var positions = [_w * 20 / 100, _w * 35 / 100, _w * 50 / 100, _w * 65 / 100, _w * 80 / 100];
         for (var i = 0; i < 5; i++) {
-            var wob = (Math.sin(_wobble * 0.8 + i.toFloat() * 1.2) * 2.0).toNumber();
-            dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillCircle(positions[i] + 1, by + wob + 1, 6);
-            dc.setColor(_bCol[i], Graphics.COLOR_TRANSPARENT); dc.fillCircle(positions[i], by + wob, 6);
+            var wob = ((_tick / 5 + i * 3) % 5) - 2;
+            dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(positions[i] - 5, by + wob - 5, 12, 12);
+            dc.setColor(_bCol[i], Graphics.COLOR_TRANSPARENT); dc.fillRectangle(positions[i] - 6, by + wob - 6, 12, 12);
             dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
             dc.fillCircle(positions[i] - 2, by + wob - 1, 1); dc.fillCircle(positions[i] + 2, by + wob - 1, 1);
         }

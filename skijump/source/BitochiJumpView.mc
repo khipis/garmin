@@ -426,10 +426,11 @@ class BitochiJumpView extends WatchUi.View {
         var drag = 0.007 + (1.0 - liftFactor) * 0.004;
         var speed = Math.sqrt(_velX * _velX + _velY * _velY);
 
-        var fRad    = Math.atan2(-_velY, _velX);
-        var liftDir = fRad + 3.14159 / 2.0;
-        var ax2 = -drag * speed * _velX + lift * Math.cos(liftDir) + _windCurrent * 0.011;
-        var ay2 = 0.23  - lift * Math.sin(liftDir);
+        // cos(atan2(-vy,vx)+pi/2) = vy/speed, sin(atan2(-vy,vx)+pi/2) = vx/speed
+        // eliminates atan2 + cos + sin entirely
+        var invSpd = 1.0 / speed;
+        var ax2 = -drag * speed * _velX + lift * _velY * invSpd + _windCurrent * 0.011;
+        var ay2 = 0.23  - lift * _velX * invSpd;
         if (ay2 < 0.052) { ay2 = 0.052; } // gravity floor — always falls, even perfectly positioned
 
         _velX += ax2; _velY += ay2;
@@ -820,9 +821,8 @@ class BitochiJumpView extends WatchUi.View {
                 dc.drawLine(jx + 1, jy, jx + tdx + 1, jy + tdy);
                 dc.setColor(0xDDAA77, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(jx + tdx - 3, jy + tdy - 3, 6, 5);
                 dc.setColor(acc, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(jx + tdx - 3, jy + tdy - 4, 6, 3);
-                // Skis flailing perpendicular
-                var sR = (tR + 1.57);
-                var sdx = (Math.cos(sR) * 9.0).toNumber(); var sdy = -(Math.sin(sR) * 9.0).toNumber();
+                // Skis flailing perpendicular — cos(tR+pi/2)=sin(tR)=(-tdy/7), sin(tR+pi/2)=cos(tR)=(tdx/7)
+                var sdx = (tdy * 9 / 7).toNumber(); var sdy = (tdx * 9 / 7).toNumber();
                 dc.setColor(0x333344, Graphics.COLOR_TRANSPARENT);
                 dc.drawLine(jx - 2, jy, jx - 2 + sdx, jy + sdy);
                 dc.drawLine(jx + 2, jy, jx + 2 - sdx, jy - sdy);
