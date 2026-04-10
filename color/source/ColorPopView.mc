@@ -103,34 +103,47 @@ class ColorPopView extends WatchUi.View {
 
     // ── Input handlers ────────────────────────────────────────────────────────
 
+    // ── Controls ──────────────────────────────────────────────────────────────
+    //
+    //  MOVE mode  (navigating the grid):
+    //    UP / DOWN   → move cursor row
+    //    TAP (SELECT)→ move cursor column RIGHT (wraps 0→4→0)
+    //    MENU        → pick gem → enter SWAP mode
+    //    BACK        → exit to menu
+    //
+    //  SWAP mode  (gem selected, choosing direction):
+    //    UP          → swap with gem above
+    //    DOWN        → swap with gem below
+    //    TAP (SELECT)→ swap with gem to the RIGHT
+    //    MENU        → swap with gem to the LEFT
+    //    BACK        → cancel, return to MOVE mode
+
     function onSelect() {
-        if (_vs == VS_MENU) { _game.initialize(); _vs = VS_PLAY; return; }
-        if (_vs == VS_OVER) { _game.initialize(); _vs = VS_MENU; return; }
+        if (_vs == VS_MENU)     { _game.initialize(); _vs = VS_PLAY; return; }
+        if (_vs == VS_OVER)     { _game.initialize(); _vs = VS_MENU; return; }
         if (_vs == VS_LEVEL_UP) { return; }
 
         if (_vs == VS_PLAY) {
-            // Enter swap-selection mode
-            _selR = _curR; _selC = _curC;
-            _vs = VS_SWAP_SEL;
+            // TAP cycles column right — the main way to reach any gem
+            _curC = (_curC + 1) % CP_COLS;
         } else if (_vs == VS_SWAP_SEL) {
-            // Tap = swap RIGHT (most common swap)
             doSwap(_selR, _selC, _selR, _selC + 1);
         }
     }
 
     function onMenu() {
         if (_vs == VS_PLAY) {
+            // MENU picks the current gem for swapping
             _selR = _curR; _selC = _curC;
             _vs = VS_SWAP_SEL;
         } else if (_vs == VS_SWAP_SEL) {
-            // MENU = swap LEFT
             doSwap(_selR, _selC, _selR, _selC - 1);
         }
     }
 
     function onUp() {
         if (_vs == VS_PLAY || _vs == VS_MENU) {
-            if (_curR > 0) { _curR--; }
+            _curR = (_curR + CP_ROWS - 1) % CP_ROWS;  // wrap top
         } else if (_vs == VS_SWAP_SEL) {
             doSwap(_selR, _selC, _selR - 1, _selC);
         }
@@ -138,7 +151,7 @@ class ColorPopView extends WatchUi.View {
 
     function onDown() {
         if (_vs == VS_PLAY || _vs == VS_MENU) {
-            if (_curR < CP_ROWS - 1) { _curR++; }
+            _curR = (_curR + 1) % CP_ROWS;  // wrap bottom
         } else if (_vs == VS_SWAP_SEL) {
             doSwap(_selR, _selC, _selR + 1, _selC);
         }
@@ -237,9 +250,11 @@ class ColorPopView extends WatchUi.View {
             dc.drawText(w / 2, h * 67 / 100, Graphics.FONT_XTINY, "BEST: " + _game.fmt(_game.best), Graphics.TEXT_JUSTIFY_CENTER);
         }
 
-        dc.setColor(0x223344, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 75 / 100, Graphics.FONT_XTINY, "UP/DN move", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(w / 2, h * 82 / 100, Graphics.FONT_XTINY, "TAP pick  UP/DN/TAP/MENU swap", Graphics.TEXT_JUSTIFY_CENTER);
+        // Mini how-to-play
+        dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w / 2, h * 71 / 100, Graphics.FONT_XTINY, "Match 3+ gems of same color", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x224433, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w / 2, h * 79 / 100, Graphics.FONT_XTINY, "UP/DN row  TAP col  MENU pick", Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor((_tick % 12 < 6) ? 0xFFEE44 : 0xBBAA00, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w / 2, h * 91 / 100, Graphics.FONT_XTINY, "Tap to play!", Graphics.TEXT_JUSTIFY_CENTER);
@@ -259,27 +274,29 @@ class ColorPopView extends WatchUi.View {
         dc.setColor(0x0A1A2A, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, 0, w, 20);
 
-        // Score (left)
+        // Score / target  e.g.  "320 / 800"
+        var levelScore = _game.score - _game.levelBase;
         dc.setColor(0xFFEE44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(4, 2, Graphics.FONT_XTINY, _game.fmt(_game.score), Graphics.TEXT_JUSTIFY_LEFT);
+        dc.drawText(4, 2, Graphics.FONT_XTINY,
+            _game.fmt(levelScore) + "/" + _game.fmt(_game.levelTarget),
+            Graphics.TEXT_JUSTIFY_LEFT);
 
         // Level (center)
         dc.setColor(0x44AAFF, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w / 2, 2, Graphics.FONT_XTINY, "LV" + _game.level, Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Moves left (right)
+        // Moves left (right) — red when running low
         var mc = (_game.movesLeft <= 5) ? 0xFF4444 : 0xAABBCC;
         dc.setColor(mc, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w - 4, 2, Graphics.FONT_XTINY, _game.movesLeft + "↓", Graphics.TEXT_JUSTIFY_RIGHT);
+        dc.drawText(w - 4, 2, Graphics.FONT_XTINY, _game.movesLeft + "mv", Graphics.TEXT_JUSTIFY_RIGHT);
 
-        // Level progress bar
-        var levelScore = (_game.score - _game.levelBase).toFloat();
-        var pct = levelScore / _game.levelTarget.toFloat();
+        // Level progress bar (yellow fill = score toward target)
+        var pct = levelScore.toFloat() / _game.levelTarget.toFloat();
         if (pct > 1.0) { pct = 1.0; }
         var barW = (w.toFloat() * pct).toNumber();
-        dc.setColor(0x1A3A6A, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0x1A3A1A, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, 17, w, 3);
-        dc.setColor(0x44AAFF, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(pct >= 1.0 ? 0x44FF88 : 0xFFEE44, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, 17, barW, 3);
     }
 
@@ -388,31 +405,33 @@ class ColorPopView extends WatchUi.View {
         var cw = _cellW; var ch = _cellH;
 
         if (_vs == VS_SWAP_SEL && _selR >= 0) {
-            // Selected gem: bright pulsing border
+            // Selected gem: bright thick pulsing border — very visible
             var sc = (_tick % 4 < 2) ? 0xFFFFFF : 0xFFDD44;
             dc.setColor(sc, Graphics.COLOR_TRANSPARENT);
             var sx = bx + _selC * cw; var sy = by + _selR * ch;
-            dc.drawRectangle(sx, sy, cw, ch);
+            dc.drawRectangle(sx,     sy,     cw,     ch);
             dc.drawRectangle(sx + 1, sy + 1, cw - 2, ch - 2);
-            // Direction arrows hint
-            dc.setColor(0x88AACC, Graphics.COLOR_TRANSPARENT);
-            if (_selR > 0)          { dc.drawText(sx + cw/2, sy - 8, Graphics.FONT_XTINY, "^", Graphics.TEXT_JUSTIFY_CENTER); }
-            if (_selR < CP_ROWS-1)  { dc.drawText(sx + cw/2, sy + ch, Graphics.FONT_XTINY, "v", Graphics.TEXT_JUSTIFY_CENTER); }
-            if (_selC < CP_COLS-1)  { dc.drawText(sx + cw + 1, sy + ch/2 - 5, Graphics.FONT_XTINY, ">", Graphics.TEXT_JUSTIFY_LEFT); }
-            if (_selC > 0)          { dc.drawText(sx - 8, sy + ch/2 - 5, Graphics.FONT_XTINY, "<", Graphics.TEXT_JUSTIFY_LEFT); }
+            dc.drawRectangle(sx + 2, sy + 2, cw - 4, ch - 4);
         } else {
-            // Normal cursor: corner ticks
+            // Normal cursor: solid white rectangle outline
             var cx = bx + _curC * cw; var cy = by + _curR * ch;
-            var cc = (_flashTick > 0) ? 0xFF4444 : 0x44AAFF;
+            var cc = (_flashTick > 0) ? 0xFF4444 : 0xFFFFFF;
             dc.setColor(cc, Graphics.COLOR_TRANSPARENT);
-            dc.drawLine(cx, cy, cx + 4, cy);
-            dc.drawLine(cx, cy, cx, cy + 4);
-            dc.drawLine(cx + cw - 1, cy, cx + cw - 5, cy);
-            dc.drawLine(cx + cw - 1, cy, cx + cw - 1, cy + 4);
-            dc.drawLine(cx, cy + ch - 1, cx + 4, cy + ch - 1);
-            dc.drawLine(cx, cy + ch - 1, cx, cy + ch - 5);
-            dc.drawLine(cx + cw - 1, cy + ch - 1, cx + cw - 5, cy + ch - 1);
-            dc.drawLine(cx + cw - 1, cy + ch - 1, cx + cw - 1, cy + ch - 5);
+            dc.drawRectangle(cx, cy, cw, ch);
+            dc.drawRectangle(cx + 1, cy + 1, cw - 2, ch - 2);
+
+            // Column indicator dots below the board (show current column)
+            var dotY = by + CP_ROWS * ch + 3;
+            for (var ci = 0; ci < CP_COLS; ci++) {
+                var dotX = bx + ci * cw + cw / 2;
+                if (ci == _curC) {
+                    dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+                    dc.fillCircle(dotX, dotY, 3);
+                } else {
+                    dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT);
+                    dc.fillCircle(dotX, dotY, 2);
+                }
+            }
         }
     }
 
@@ -422,13 +441,15 @@ class ColorPopView extends WatchUi.View {
         dc.fillRectangle(0, h - 18, w, 18);
 
         if (_vs == VS_SWAP_SEL) {
+            // Swap mode: show directional swap options
             dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
             dc.drawText(w / 2, h - 17, Graphics.FONT_XTINY,
-                "↑↓ swap  TAP→  MENU←  BACK cancel", Graphics.TEXT_JUSTIFY_CENTER);
+                "UP/DN swap  TAP right  MENU left", Graphics.TEXT_JUSTIFY_CENTER);
         } else {
-            dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT);
+            // Move mode: show navigation controls
+            dc.setColor(0x446688, Graphics.COLOR_TRANSPARENT);
             dc.drawText(w / 2, h - 17, Graphics.FONT_XTINY,
-                "↑↓ move  TAP select  MENU select-L", Graphics.TEXT_JUSTIFY_CENTER);
+                "UP/DN row  TAP column  MENU pick", Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 
@@ -493,8 +514,13 @@ class ColorPopView extends WatchUi.View {
         }
 
         dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 67 / 100, Graphics.FONT_XTINY,
-            "Level " + _game.level + "  combo x" + _game.totalCombo, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 63 / 100, Graphics.FONT_XTINY,
+            "Level " + _game.level, Graphics.TEXT_JUSTIFY_CENTER);
+        if (_game.totalCombo > 1) {
+            dc.setColor(0xFFAA00, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w / 2, h * 73 / 100, Graphics.FONT_XTINY,
+                "Best combo x" + _game.totalCombo, Graphics.TEXT_JUSTIFY_CENTER);
+        }
 
         dc.setColor((_tick % 12 < 6) ? 0x44AAFF : 0x2277CC, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w / 2, h * 87 / 100, Graphics.FONT_XTINY, "Tap to continue", Graphics.TEXT_JUSTIFY_CENTER);
