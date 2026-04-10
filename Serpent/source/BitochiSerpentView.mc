@@ -133,12 +133,12 @@ class BitochiSerpentView extends WatchUi.View {
     }
 
     hidden function setupGrid() {
-        _cellSize = _w / 24;
-        if (_cellSize < 8)  { _cellSize = 8; }
-        if (_cellSize > 12) { _cellSize = 12; }
+        _cellSize = 9;
         var hudH = 18;
-        _gridW = (_w - 2) / _cellSize;
-        _gridH = (_h - hudH - 2) / _cellSize;
+        // Side margin so grid stays inside the round bezel
+        var margin = _w * 7 / 100;
+        _gridW = (_w - margin * 2) / _cellSize;
+        _gridH = (_h - hudH - margin) / _cellSize;
         _offX = (_w - _gridW * _cellSize) / 2;
         _offY = hudH + (_h - hudH - _gridH * _cellSize) / 2;
     }
@@ -163,7 +163,7 @@ class BitochiSerpentView extends WatchUi.View {
 
         for (var i = 0; i < SPART_N; i++) { _prtLife[i] = 0; }
 
-        _stepBase = 8;  // ticks per step (80ms each = 640ms/step at start)
+        _stepBase = 5;  // ticks per step (80ms each = 400ms/step at start — faster)
         _stepCount = 0;
         _accelCooldown = 0;
 
@@ -424,7 +424,13 @@ class BitochiSerpentView extends WatchUi.View {
                 _score += pts;
                 _foodEaten++;
 
-                if (_sLen < SMAX_SNAKE - 1) { _sLen++; }
+                // BUG FIX: copy last segment to new tail slot BEFORE incrementing
+                // so drawSnake never reads an uninitialized null element
+                if (_sLen < SMAX_SNAKE - 1) {
+                    _sX[_sLen] = _sX[_sLen - 1];
+                    _sY[_sLen] = _sY[_sLen - 1];
+                    _sLen++;
+                }
 
                 spawnParticles(
                     _offX + hx * _cellSize + _cellSize / 2,
