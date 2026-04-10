@@ -71,6 +71,8 @@ class ColorPopGame {
 
     function initialize() {
         grid = new [CP_CELLS];
+        // Monkey C new[] fills with null, not 0 — must initialize explicitly
+        for (var i = 0; i < CP_CELLS; i++) { grid[i] = GEM_EMPTY; }
         score = 0; level = 1; combo = 0; totalCombo = 0;
         levelBase = 0;
         needsFill = false; levelUp = false;
@@ -129,6 +131,7 @@ class ColorPopGame {
     // ── Gem color extraction ──────────────────────────────────────────────────
 
     function gemColor(v) {
+        if (v == null) { return -1; }
         if (v >= 1 && v <= 5) { return v; }
         if (v >= 10 && v <= 14) { return v - GEM_BOMB_OFF; }
         if (v >= 20 && v <= 24) { return v - GEM_STAR_OFF; }
@@ -148,6 +151,7 @@ class ColorPopGame {
     }
 
     function colorsMatch(a, b) {
+        if (a == null || b == null) { return false; }
         if (a == GEM_EMPTY || b == GEM_EMPTY) { return false; }
         var ca = gemColor(a); var cb = gemColor(b);
         if (ca == 0 || cb == 0) { return true; }  // rainbow matches anything
