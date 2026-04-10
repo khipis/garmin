@@ -64,6 +64,11 @@ class BitochiBricksView extends WatchUi.View {
     hidden var _bestScore;
     hidden var _resultTick;
 
+    // Board layout — computed from screen width for round-screen safety
+    hidden var _bOffX;   // left (and right) pixel margin
+    hidden var _bW;      // brick pixel width  (= (_w - 2*_bOffX) / COLS)
+    hidden var _startY;  // y of first brick row
+
     // ── Init ─────────────────────────────────────────────────────────────
 
     function initialize() {
@@ -90,6 +95,11 @@ class BitochiBricksView extends WatchUi.View {
         _laserReady=false; _laserOn=false; _laserX=0; _laserY=0.0;
         _slowTick=0; _shakeTick=0; _shakeX=0; _shakeY=0;
         _level=1; _score=0; _lives=3; _resultTick=0;
+        // 12% margin on each side keeps bricks inside the round-screen safe zone
+        // (at y=54 on a 260px circle the safe half-width is ~105px, margin=31px ✓)
+        _bOffX  = _w * 12 / 100;
+        _bW     = (_w - 2 * _bOffX) / COLS;
+        _startY = 54;
     }
 
     hidden function initLevel() {
@@ -184,8 +194,9 @@ class BitochiBricksView extends WatchUi.View {
         var half = padW.toFloat() / 2.0;
         var target = _w.toFloat() / 2.0 + accelX.toFloat() * _w.toFloat() / 1800.0;
         _padX = _padX * 0.74 + target * 0.26;
-        if (_padX - half < 3.0) { _padX = half + 3.0; }
-        if (_padX + half > _w.toFloat() - 3.0) { _padX = _w.toFloat() - 3.0 - half; }
+        var bOff = _bOffX.toFloat();
+        if (_padX - half < bOff) { _padX = half + bOff; }
+        if (_padX + half > _w.toFloat() - bOff) { _padX = _w.toFloat() - bOff - half; }
 
         // Laser in flight
         if (_laserOn) {
@@ -222,12 +233,13 @@ class BitochiBricksView extends WatchUi.View {
             var bx = _bX[bi]; var by = _bY[bi];
             var vx = _bVx[bi]; var vy = _bVy[bi];
 
-            // Wall bounces
-            if (bx < 5.0) {
-                _bX[bi] = 5.0;
+            // Wall bounces — clamped to brick-area bounds
+            var wallL = _bOffX.toFloat(); var wallR = (_w - _bOffX).toFloat();
+            if (bx < wallL) {
+                _bX[bi] = wallL;
                 if (vx < 0.0) { _bVx[bi] = -vx; }
-            } else if (bx > _w.toFloat() - 5.0) {
-                _bX[bi] = _w.toFloat() - 5.0;
+            } else if (bx > wallR) {
+                _bX[bi] = wallR;
                 if (vx > 0.0) { _bVx[bi] = -vx; }
             }
             if (by < 30.0) {
@@ -285,12 +297,12 @@ class BitochiBricksView extends WatchUi.View {
 
     hidden function brickBounce(bi) {
         var bx = _bX[bi]; var by = _bY[bi];
-        var bW = _w / COLS;
-        var startY = 38;
+        var bW = _bW;
+        var startY = _startY;
         for (var i = 0; i < N_BRK; i++) {
             if (_bkHp[i] <= 0) { continue; }
             var r = i / COLS; var c = i % COLS;
-            var x1 = c * bW + 1;
+            var x1 = _bOffX + c * bW + 1;
             var y1 = startY + r * 12;
             var x2 = x1 + bW - 2;
             var y2 = y1 + 10;
@@ -315,12 +327,12 @@ class BitochiBricksView extends WatchUi.View {
     }
 
     hidden function checkLaserHit() {
-        var bW = _w / COLS; var startY = 38;
+        var bW = _bW; var startY = _startY;
         var lx = _laserX; var ly = _laserY.toNumber();
         for (var i = 0; i < N_BRK; i++) {
             if (_bkHp[i] <= 0) { continue; }
             var r = i / COLS; var c = i % COLS;
-            var x1 = c * bW + 1; var y1 = startY + r * 12;
+            var x1 = _bOffX + c * bW + 1; var y1 = startY + r * 12;
             if (lx >= x1 && lx <= x1 + bW - 2 && ly >= y1 && ly <= y1 + 10) {
                 hitBrick(i); return true;
             }
@@ -341,12 +353,12 @@ class BitochiBricksView extends WatchUi.View {
     }
 
     hidden function dropPowerup(type, idx) {
-        var bW = _w / COLS;
+        var bW = _bW;
         var r = idx / COLS; var c = idx % COLS;
         for (var i = 0; i < MAX_PU; i++) {
             if (!_puOn[i]) {
-                _puX[i] = (c * bW + bW / 2).toFloat();
-                _puY[i] = (38 + r * 12 + 10).toFloat();
+                _puX[i] = (_bOffX + c * bW + bW / 2).toFloat();
+                _puY[i] = (_startY + r * 12 + 10).toFloat();
                 _puT[i] = type; _puOn[i] = true;
                 return;
             }
@@ -437,11 +449,11 @@ class BitochiBricksView extends WatchUi.View {
         }
 
         // Bricks
-        var bW = _w / COLS; var startY = 38;
+        var bW = _bW; var startY = _startY;
         for (var i = 0; i < N_BRK; i++) {
             var hp = _bkHp[i]; if (hp <= 0) { continue; }
             var r = i / COLS; var c = i % COLS;
-            var bx2 = c * bW + ox; var by2 = startY + r * 12 + oy;
+            var bx2 = _bOffX + c * bW + ox; var by2 = startY + r * 12 + oy;
             var col;
             if (hp == 1) {
                 var rc = r % 6;
@@ -554,15 +566,15 @@ class BitochiBricksView extends WatchUi.View {
         dc.drawText(_w / 2, _h * 18 / 100, Graphics.FONT_LARGE, "BRICKS", Graphics.TEXT_JUSTIFY_CENTER);
 
         // Animated brick preview
-        var bW2 = _w / COLS;
+        var bW2 = _bW;
         var cols6 = [0x22DDFF, 0x44FF88, 0xFFFF44, 0xFF9944, 0xFF44AA, 0xBB44FF];
         for (var row = 0; row < 3; row++) {
             for (var col3 = 0; col3 < COLS; col3++) {
                 var ci = (_tick / 5 + row * 3 + col3) % 6;
                 dc.setColor(cols6[ci], Graphics.COLOR_TRANSPARENT);
-                dc.fillRectangle(col3 * bW2 + 1, _h * 36 / 100 + row * 12, bW2 - 2, 10);
+                dc.fillRectangle(_bOffX + col3 * bW2 + 1, _h * 36 / 100 + row * 12, bW2 - 2, 10);
                 dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-                dc.fillRectangle(col3 * bW2 + 2, _h * 36 / 100 + row * 12 + 1, bW2 - 6, 2);
+                dc.fillRectangle(_bOffX + col3 * bW2 + 2, _h * 36 / 100 + row * 12 + 1, bW2 - 6, 2);
             }
         }
         if (_bestScore > 0) {
