@@ -308,19 +308,9 @@ class BitochiJumpView extends WatchUi.View {
             else if (ratio < 0.65) { _takeoffQuality = 0.55; }
             else                   { _takeoffQuality = 0.38; }
         } else if (!manual) {
-            // Missed takeoff entirely — stumbles off the ramp edge.
-            // Very little speed is converted; body angle is bad → no lift, short flight.
-            _takeoffQuality = 0.0;
-            _velX = _speed * 0.42;   // lose most inrun speed — weak forward push
-            _velY = -_speed * 0.05;  // almost no upward kick
-            _bodyAngle = 38.0;       // awful position — near-zero lift, high drag
-            _skiAngle  = 42.0;
-            _onHill = false;
-            _windBase = -0.9 + (Math.rand().abs() % 20).toFloat() / 11.0;
-            _windPhase = (Math.rand().abs() % 628).toFloat() / 100.0;
-            doVibe(25, 60);
-            gameState = JS_FLIGHT;
-            return;
+            // Missed takeoff — no button press, skier naturally leaves the ramp edge.
+            // No quality bonus, but still a proper flight (player can still correct in air).
+            _takeoffQuality = 0.20;
         } else {
             _takeoffQuality = 0.22;  // tapped before zone — below-average but still a jump
         }
