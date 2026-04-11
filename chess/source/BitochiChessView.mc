@@ -61,8 +61,9 @@ class BitochiChessView extends WatchUi.View {
     hidden var _statusMsg;
     hidden var _statusTick;
 
-    // Difficulty
+    // Difficulty + color choice
     hidden var _difficulty; // 0=Easy(d2) 1=Normal(d3) 2=Hard(d4)
+    hidden var _playerIsWhite; // true = player plays white (default)
 
     // ── Piece value table for evaluation ─────────────────────────────────────
     hidden var _pieceVal;
@@ -73,11 +74,13 @@ class BitochiChessView extends WatchUi.View {
         _w = 0; _h = 0; _tick = 0;
         _gs = CS_MENU;
         _difficulty = 1;
+        _playerIsWhite = true;
         _selSq = -1; _curSq = 36; // e4 area
         _legalMoves = new [0];
         _promSq = -1; _promPick = 0;
         _aiMove = null; _aiTimer = 0;
         _statusMsg = ""; _statusTick = 0;
+        _ox = 0; _oy = 0; _sq = 0;
 
         _pieceVal = [0, 100, 320, 330, 500, 900, 20000];
 
@@ -140,7 +143,8 @@ class BitochiChessView extends WatchUi.View {
         if (_gs == CS_PROMOTE) { _promPick = (_promPick + 3) % 4; return; }
         if (_gs != CS_PLAY) { return; }
         var r = _curSq / 8; var f = _curSq % 8;
-        if (r < 7) { _curSq = (r + 1) * 8 + f; }
+        if (_playerIsWhite) { if (r < 7) { _curSq = (r + 1) * 8 + f; } }
+        else                { if (r > 0) { _curSq = (r - 1) * 8 + f; } }
     }
 
     function doDown() {
@@ -148,7 +152,8 @@ class BitochiChessView extends WatchUi.View {
         if (_gs == CS_PROMOTE) { _promPick = (_promPick + 1) % 4; return; }
         if (_gs != CS_PLAY) { return; }
         var r = _curSq / 8; var f = _curSq % 8;
-        if (r > 0) { _curSq = (r - 1) * 8 + f; }
+        if (_playerIsWhite) { if (r > 0) { _curSq = (r - 1) * 8 + f; } }
+        else                { if (r < 7) { _curSq = (r + 1) * 8 + f; } }
     }
 
     function doSelect() {
@@ -168,12 +173,21 @@ class BitochiChessView extends WatchUi.View {
     function doMenu() { doBack(); }
 
     function doTap(tx, ty) {
-        if (_gs == CS_MENU) { startGame(); return; }
+        if (_gs == CS_MENU) {
+            // Check if tapping the color toggle buttons
+            var btnY = _h * 65 / 100; var btnH = 22; var btnW = 56;
+            var wBtnX = _w / 2 - btnW - 4;
+            var bBtnX = _w / 2 + 4;
+            if (ty >= btnY && ty < btnY + btnH) {
+                if (tx >= wBtnX && tx < wBtnX + btnW) { _playerIsWhite = true; return; }
+                if (tx >= bBtnX && tx < bBtnX + btnW) { _playerIsWhite = false; return; }
+            }
+            startGame(); return;
+        }
         if (_gs == CS_CHECKMATE || _gs == CS_STALEMATE) { _gs = CS_MENU; return; }
         if (_gs == CS_AI_THINK) { return; }
 
         if (_gs == CS_PROMOTE) {
-            // Tap on one of 4 promo pieces at top
             var bw = _sq * 2; var bh = _sq;
             var px = _w / 2 - bw;
             for (var i = 0; i < 4; i++) {
@@ -186,31 +200,37 @@ class BitochiChessView extends WatchUi.View {
         }
 
         if (_gs != CS_PLAY) { return; }
-        // Convert tap to square
+        if (_sq <= 0) { return; }
         var sq = tapToSq(tx, ty);
         if (sq >= 0) { _curSq = sq; handleSquare(sq); }
     }
 
     hidden function tapToSq(tx, ty) {
+        if (tx < _ox || tx >= _ox + _sq * 8) { return -1; }
+        if (ty < _oy || ty >= _oy + _sq * 8) { return -1; }
         var f = (tx - _ox) / _sq;
         var rInv = (ty - _oy) / _sq;
         if (f < 0 || f >= 8 || rInv < 0 || rInv >= 8) { return -1; }
-        // Draw board with rank 7 at top (screen y=0) — flip
-        var r = 7 - rInv;
-        return r * 8 + f;
+        // When playing white: rank 7 at top; when playing black: rank 0 at top (board flipped)
+        var r = _playerIsWhite ? (7 - rInv) : rInv;
+        // File also flips when playing black
+        var fl = _playerIsWhite ? f : (7 - f);
+        return r * 8 + fl;
     }
 
     // ── Core game logic ───────────────────────────────────────────────────────
     hidden function handleSquare(sq) {
-        if (!_whiteToMove) { return; } // Player is white
+        // Only allow input when it's the player's turn
+        if (_whiteToMove != _playerIsWhite) { return; }
 
         var piece = _board[sq];
+        var isOwnPiece = _playerIsWhite ? (piece > 0) : (piece < 0);
 
         if (_selSq < 0) {
-            // Select white piece
-            if (piece > 0) {
-                _selSq = sq;
-                _legalMoves = genLegalMovesFor(sq);
+            // Select own piece
+            if (isOwnPiece) {
+                var moves = genLegalMovesFor(sq);
+                if (moves.size() > 0) { _selSq = sq; _legalMoves = moves; }
             }
         } else {
             // Try to execute a move from _selSq to sq
@@ -224,9 +244,12 @@ class BitochiChessView extends WatchUi.View {
                 }
             }
             if (!moved) {
-                // Maybe select a different white piece
+                // Maybe select a different own piece
                 _selSq = -1; _legalMoves = new [0];
-                if (piece > 0) { _selSq = sq; _legalMoves = genLegalMovesFor(sq); }
+                if (isOwnPiece) {
+                    var moves2 = genLegalMovesFor(sq);
+                    if (moves2.size() > 0) { _selSq = sq; _legalMoves = moves2; }
+                }
             }
         }
     }
@@ -235,8 +258,14 @@ class BitochiChessView extends WatchUi.View {
         setupBoard();
         _gs = CS_PLAY;
         _aiDepth = 2 + _difficulty;
-        _selSq = -1; _curSq = 4; // e1
+        _selSq = -1;
+        _curSq = _playerIsWhite ? 4 : 60; // start cursor on king
         _statusMsg = "";
+        // If player plays black, AI (white) goes first
+        if (!_playerIsWhite) {
+            _gs = CS_AI_THINK;
+            _aiTimer = 2;
+        }
     }
 
     // ── Move execution ────────────────────────────────────────────────────────
@@ -318,12 +347,12 @@ class BitochiChessView extends WatchUi.View {
             else          { _gs = CS_STALEMATE; }
             return;
         }
-        if (_whiteToMove) {
-            // Player's turn — nothing special
+        // Is it the player's turn or AI's?
+        if (_whiteToMove == _playerIsWhite) {
+            _gs = CS_PLAY; // player's turn
         } else {
-            // AI's turn
             _gs = CS_AI_THINK;
-            _aiTimer = 2; // short delay so screen updates first
+            _aiTimer = 2;
         }
     }
 
@@ -340,40 +369,41 @@ class BitochiChessView extends WatchUi.View {
 
     // ── AI ────────────────────────────────────────────────────────────────────
     hidden function doAiMove() {
-        var moves = genAllLegalMoves(false); // AI is black
+        var aiIsWhite = !_playerIsWhite; // AI plays opposite color
+        var moves = genAllLegalMoves(aiIsWhite);
         if (moves.size() == 0) {
-            _inCheck = isInCheck(false);
+            _inCheck = isInCheck(aiIsWhite);
             if (_inCheck) { _gs = CS_CHECKMATE; } else { _gs = CS_STALEMATE; }
             return;
         }
 
-        var bestScore = 999999;
+        var bestScore = aiIsWhite ? -999999 : 999999;
         var bestMv = moves[0];
 
         for (var i = 0; i < moves.size(); i++) {
             var mv = moves[i];
             var saved = saveBoardState();
             applyMove(mv);
-            var score = minimax(_aiDepth - 1, -999999, 999999, true);
+            var score = minimax(_aiDepth - 1, -999999, 999999, !aiIsWhite);
             restoreBoardState(saved);
-            if (score < bestScore) { bestScore = score; bestMv = mv; }
+            if (aiIsWhite && score > bestScore) { bestScore = score; bestMv = mv; }
+            if (!aiIsWhite && score < bestScore) { bestScore = score; bestMv = mv; }
         }
 
         applyMove(bestMv);
-        _whiteToMove = true;
+        _whiteToMove = _playerIsWhite; // back to player
 
         // Handle pawn promotion for AI — auto-queen
         var to = bestMv[1];
         var piece = _board[to];
-        if ((piece == -PC_PAWN) && (to / 8 == 0)) {
-            _board[to] = -PC_QUEEN;
-        }
+        if (aiIsWhite && piece == PC_PAWN  && to / 8 == 7) { _board[to] =  PC_QUEEN; }
+        if (!aiIsWhite && piece == -PC_PAWN && to / 8 == 0) { _board[to] = -PC_QUEEN; }
 
-        _inCheck = isInCheck(true);
+        _inCheck = isInCheck(_playerIsWhite);
         _gs = CS_PLAY;
 
-        var allWhiteMoves = genAllLegalMoves(true);
-        if (allWhiteMoves.size() == 0) {
+        var allPlayerMoves = genAllLegalMoves(_playerIsWhite);
+        if (allPlayerMoves.size() == 0) {
             if (_inCheck) { _gs = CS_CHECKMATE; } else { _gs = CS_STALEMATE; }
         }
     }
@@ -800,7 +830,6 @@ class BitochiChessView extends WatchUi.View {
         dc.setColor(0x080808, 0x080808); dc.clear();
         var r = _w / 2;
 
-        // Dark board pattern background
         dc.setColor(0x111111, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(r, r, r - 2);
         for (var row = 0; row < 8; row++) {
@@ -808,34 +837,58 @@ class BitochiChessView extends WatchUi.View {
                 var light = ((row + col) % 2 == 0);
                 dc.setColor(light ? 0x1A1208 : 0x0E0A05, Graphics.COLOR_TRANSPARENT);
                 var bx = _ox + col * _sq; var by = _oy + (7 - row) * _sq;
-                dc.fillRectangle(bx, by, _sq, _sq);
+                if (_sq > 0) { dc.fillRectangle(bx, by, _sq, _sq); }
             }
         }
 
-        // Centre title box
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(_w/2 - 72, _h/2 - 58, 144, 120, 10);
+        dc.fillRoundedRectangle(_w/2 - 72, _h/2 - 68, 144, 140, 10);
         dc.setColor(0x885522, Graphics.COLOR_TRANSPARENT);
-        dc.drawRoundedRectangle(_w/2 - 72, _h/2 - 58, 144, 120, 10);
+        dc.drawRoundedRectangle(_w/2 - 72, _h/2 - 68, 144, 140, 10);
 
         dc.setColor(0xFFDD88, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h/2 - 52, Graphics.FONT_MEDIUM, "CHESS", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, _h/2 - 62, Graphics.FONT_MEDIUM, "CHESS", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x887766, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h/2 - 28, Graphics.FONT_XTINY, "BITOCHI GAMES", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, _h/2 - 38, Graphics.FONT_XTINY, "BITOCHI GAMES", Graphics.TEXT_JUSTIFY_CENTER);
 
         var diffLabels = ["Easy", "Normal", "Hard"];
         dc.setColor(0xCCBB88, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h/2 - 10, Graphics.FONT_XTINY, "Difficulty:", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xFFFF44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h/2 + 5, Graphics.FONT_XTINY, diffLabels[_difficulty], Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, _h/2 - 20, Graphics.FONT_XTINY, "Diff: " + diffLabels[_difficulty], Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x886655, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h/2 + 22, Graphics.FONT_XTINY, "\u25B2\u25BC change", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, _h/2 - 6, Graphics.FONT_XTINY, "^ v = change", Graphics.TEXT_JUSTIFY_CENTER);
+
+        // Color selection buttons
+        var btnY  = _h * 65 / 100; var btnH = 22; var btnW = 56;
+        var wBtnX = _w / 2 - btnW - 4;
+        var bBtnX = _w / 2 + 4;
+
+        dc.setColor(_playerIsWhite ? 0x55AAFF : 0x223344, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(wBtnX, btnY, btnW, btnH, 4);
+        dc.setColor(_playerIsWhite ? 0x88CCFF : 0x446688, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(wBtnX, btnY, btnW, btnH, 4);
+        dc.setColor(_playerIsWhite ? 0x000000 : 0x88AACC, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(wBtnX + btnW/2, btnY + 5, Graphics.FONT_XTINY, "WHITE", Graphics.TEXT_JUSTIFY_CENTER);
+
+        dc.setColor(!_playerIsWhite ? 0x55AAFF : 0x223344, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(bBtnX, btnY, btnW, btnH, 4);
+        dc.setColor(!_playerIsWhite ? 0x88CCFF : 0x446688, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(bBtnX, btnY, btnW, btnH, 4);
+        dc.setColor(!_playerIsWhite ? 0x000000 : 0x88AACC, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(bBtnX + btnW/2, btnY + 5, Graphics.FONT_XTINY, "BLACK", Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor((_tick % 10 < 5) ? 0xFFCC55 : 0xAA8833, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h/2 + 42, Graphics.FONT_XTINY, "Tap to play!", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, _h * 85 / 100, Graphics.FONT_XTINY, "Tap to play!", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     // ── Game board ────────────────────────────────────────────────────────────
+    hidden function sqToScreen(sq) {
+        // Returns [bx, by] top-left pixel of square
+        var r = sq / 8; var f = sq % 8;
+        var screenRow = _playerIsWhite ? (7 - r) : r;
+        var screenCol = _playerIsWhite ? f       : (7 - f);
+        return [_ox + screenCol * _sq, _oy + screenRow * _sq];
+    }
+
     hidden function drawGame(dc) {
         dc.setColor(0x080808, 0x080808); dc.clear();
 
@@ -844,8 +897,8 @@ class BitochiChessView extends WatchUi.View {
             for (var col = 0; col < 8; col++) {
                 var light = ((row + col) % 2 == 0);
                 var sq = row * 8 + col;
-                var bx = _ox + col * _sq;
-                var by = _oy + (7 - row) * _sq;
+                var xy = sqToScreen(sq);
+                var bx = xy[0]; var by = xy[1];
 
                 var sqColor = light ? 0xD4B077 : 0x8B5E2C;
 
@@ -855,7 +908,7 @@ class BitochiChessView extends WatchUi.View {
                     if (_legalMoves[mi][1] == sq) { isLegal = true; break; }
                 }
                 if (isLegal) { sqColor = light ? 0xAADD88 : 0x558833; }
-                if (sq == _selSq)  { sqColor = 0x55AAFF; }
+                if (sq == _selSq)  { sqColor = 0x3377EE; }
                 if (sq == _curSq && _gs == CS_PLAY) { sqColor = light ? 0xFFEE77 : 0xCCAA44; }
 
                 dc.setColor(sqColor, Graphics.COLOR_TRANSPARENT);
@@ -865,9 +918,15 @@ class BitochiChessView extends WatchUi.View {
                 if (_inCheck) {
                     var kPiece = _whiteToMove ? PC_KING : -PC_KING;
                     if (_board[sq] == kPiece) {
-                        dc.setColor(0xFF4444, Graphics.COLOR_TRANSPARENT);
+                        dc.setColor(0xFF3333, Graphics.COLOR_TRANSPARENT);
                         dc.fillRectangle(bx, by, _sq, _sq);
                     }
+                }
+
+                // Destination dot on legal empty squares
+                if (isLegal && _board[sq] == PC_EMPTY) {
+                    dc.setColor(0x226600, Graphics.COLOR_TRANSPARENT);
+                    dc.fillCircle(bx + _sq/2, by + _sq/2, _sq/5);
                 }
 
                 drawPiece(dc, bx, by, _board[sq]);
@@ -885,56 +944,179 @@ class BitochiChessView extends WatchUi.View {
     hidden function drawHUD(dc) {
         var hy = _oy + _sq * 8 + 3;
         if (hy + 14 > _h) { hy = _oy - 14; }
-        dc.setColor(0xAA9977, Graphics.COLOR_TRANSPARENT);
-        var turnStr = _whiteToMove ? "Your turn (White)" : "AI thinking...";
-        if (_gs == CS_PLAY && !_whiteToMove) { turnStr = "AI thinking..."; }
+        var isPlayerTurn = (_whiteToMove == _playerIsWhite) && (_gs == CS_PLAY);
+        var colorStr = _playerIsWhite ? "White" : "Black";
+        var turnStr = isPlayerTurn ? "Your turn (" + colorStr + ")" : "AI thinking...";
+        if (_inCheck && isPlayerTurn) { turnStr = "CHECK!"; }
+        dc.setColor(_inCheck && isPlayerTurn ? 0xFF4444 : 0xAA9977, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w/2, hy, Graphics.FONT_XTINY, turnStr, Graphics.TEXT_JUSTIFY_CENTER);
-        // Check indicator
-        if (_inCheck && _gs == CS_PLAY) {
-            dc.setColor(0xFF4444, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w/2, hy, Graphics.FONT_XTINY, "CHECK!", Graphics.TEXT_JUSTIFY_CENTER);
-        }
     }
 
-    // ── Piece rendering ───────────────────────────────────────────────────────
-    // Unicode chess pieces
+    // ── Piece rendering — all drawn, no Unicode ───────────────────────────────
     hidden function drawPiece(dc, bx, by, piece) {
         if (piece == PC_EMPTY) { return; }
         var white = (piece > 0);
         var abs   = white ? piece : -piece;
-        // Unicode chess pieces: ♔♕♖♗♘♙ (white) ♚♛♜♝♞♟ (black)
-        var glyphs = [" ", "\u265F", "\u265E", "\u265D", "\u265C", "\u265B", "\u265A"];
-        if (white) { glyphs = [" ", "\u2659", "\u2658", "\u2657", "\u2656", "\u2655", "\u2654"]; }
 
-        // Shadow / outline for visibility
-        dc.setColor(white ? 0x222222 : 0xCCAA66, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(bx + _sq/2 + 1, by + 1, Graphics.FONT_XTINY, glyphs[abs], Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(white ? 0xF8F0E0 : 0x1A0E06, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(bx + _sq/2, by, Graphics.FONT_XTINY, glyphs[abs], Graphics.TEXT_JUSTIFY_CENTER);
+        var cx  = bx + _sq / 2;
+        var bot = by + _sq - 1;
+        var s   = _sq;
+
+        // Colors: white pieces = cream/ivory; black pieces = dark brown
+        var bodyC = white ? 0xF0E8D0 : 0x1E0E06;
+        var rimC  = white ? 0x6B4A28 : 0xC09050;
+        var markC = white ? 0x4A2E10 : 0xE8C070;
+
+        if (abs == PC_PAWN) {
+            // Base
+            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - s*3/8, bot - s*22/100, s*3/4, s*22/100, 2);
+            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - s*3/8 + 1, bot - s*22/100 + 1, s*3/4 - 2, s*22/100 - 1, 1);
+            // Stem
+            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - s/10, bot - s*65/100, s/5, s*43/100, 1);
+            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - s/10 + 1, bot - s*65/100 + 1, s/5 - 2, s*43/100 - 1, 0);
+            // Head
+            var hr = s * 18 / 100;
+            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(cx, bot - s*65/100 - hr + 1, hr);
+            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(cx, bot - s*65/100 - hr + 1, hr - 2);
+
+        } else if (abs == PC_ROOK) {
+            var bw = s * 56 / 100;
+            // Body
+            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - bw/2, bot - s*72/100, bw, s*72/100, 2);
+            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - bw/2 + 1, bot - s*72/100 + 1, bw - 2, s*72/100 - 2, 1);
+            // Battlements (3 merlons)
+            var tw = bw / 4; var th = s / 6;
+            var tops = [cx - bw/2, cx - bw/2 + bw/2, cx - bw/2 + bw*3/4];
+            for (var ti = 0; ti < 3; ti += 2) {
+                dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(cx - bw/2 + ti * bw/4, bot - s*72/100 - th, tw, th + 2);
+                dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(cx - bw/2 + ti * bw/4 + 1, bot - s*72/100 - th, tw - 2, th);
+            }
+            // R label
+            dc.setColor(markC, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, bot - s*55/100, Graphics.FONT_XTINY, "R", Graphics.TEXT_JUSTIFY_CENTER);
+
+        } else if (abs == PC_KNIGHT) {
+            var bw = s * 50 / 100;
+            // Body
+            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - bw/2, bot - s*72/100, bw, s*72/100, 2);
+            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - bw/2 + 1, bot - s*72/100 + 1, bw - 2, s*72/100 - 2, 1);
+            // Horse head bump
+            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - 2, bot - s*88/100, bw * 6/10, s * 26/100, 3);
+            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - 1, bot - s*87/100, bw * 6/10 - 2, s * 25/100 - 2, 2);
+            // N label
+            dc.setColor(markC, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, bot - s*55/100, Graphics.FONT_XTINY, "N", Graphics.TEXT_JUSTIFY_CENTER);
+
+        } else if (abs == PC_BISHOP) {
+            var bw = s * 46 / 100;
+            // Body
+            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - bw/2, bot - s*72/100, bw, s*72/100, 3);
+            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - bw/2 + 1, bot - s*72/100 + 1, bw - 2, s*72/100 - 2, 2);
+            // Pointed top
+            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(cx, bot - s*78/100, s / 10);
+            // Collar
+            dc.setColor(markC, Graphics.COLOR_TRANSPARENT);
+            dc.drawLine(cx - bw/2 + 2, bot - s*40/100, cx + bw/2 - 2, bot - s*40/100);
+            dc.drawText(cx, bot - s*65/100, Graphics.FONT_XTINY, "B", Graphics.TEXT_JUSTIFY_CENTER);
+
+        } else if (abs == PC_QUEEN) {
+            var bw = s * 62 / 100;
+            // Body
+            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - bw/2, bot - s*72/100, bw, s*72/100, 3);
+            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - bw/2 + 1, bot - s*72/100 + 1, bw - 2, s*72/100 - 2, 2);
+            // Crown: 3 balls
+            var cy2 = bot - s*72/100;
+            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(cx,        cy2 - s*12/100, s*10/100);
+            dc.fillCircle(cx - bw/3, cy2 - s*8/100,  s*8/100);
+            dc.fillCircle(cx + bw/3, cy2 - s*8/100,  s*8/100);
+            dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(cx,        cy2 - s*12/100, s*7/100);
+            dc.fillCircle(cx - bw/3, cy2 - s*8/100,  s*5/100);
+            dc.fillCircle(cx + bw/3, cy2 - s*8/100,  s*5/100);
+            // Q label
+            dc.setColor(markC, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, bot - s*58/100, Graphics.FONT_XTINY, "Q", Graphics.TEXT_JUSTIFY_CENTER);
+
+        } else if (abs == PC_KING) {
+            var bw = s * 62 / 100;
+            // Body
+            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - bw/2, bot - s*72/100, bw, s*72/100, 3);
+            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - bw/2 + 1, bot - s*72/100 + 1, bw - 2, s*72/100 - 2, 2);
+            // Cross (gold)
+            var cy2 = bot - s*72/100;
+            dc.setColor(0xFFDD22, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(cx - 1, cy2 - s*22/100, 3, s*22/100 + 2);   // vertical
+            dc.fillRectangle(cx - s/7, cy2 - s*15/100, s*2/7, 3);        // horizontal
+        }
+    }
+
+    // Helper to draw a piece by type (for promotion overlay, not full piece)
+    hidden function drawPieceType(dc, cx, cy, abs, s, white) {
+        var bodyC = white ? 0xF0E8D0 : 0x1E0E06;
+        var rimC  = white ? 0x6B4A28 : 0xC09050;
+        var markC = white ? 0x4A2E10 : 0xE8C070;
+        var labels = ["", "P", "N", "B", "R", "Q", "K"];
+        if (abs >= 1 && abs <= 6) {
+            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - s*3/8, cy - s*3/8, s*3/4, s*3/4, 3);
+            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - s*3/8 + 1, cy - s*3/8 + 1, s*3/4 - 2, s*3/4 - 2, 2);
+            dc.setColor(markC, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, cy - s/5, Graphics.FONT_XTINY, labels[abs], Graphics.TEXT_JUSTIFY_CENTER);
+        }
     }
 
     // ── Overlays ─────────────────────────────────────────────────────────────
     hidden function drawPromoOverlay(dc) {
-        var bw = _sq * 4 + 8; var bh = _sq + 16;
+        var bw = _sq * 4 + 16; var bh = _sq + 28;
         var px = (_w - bw) / 2; var py = _h/2 - bh/2;
         dc.setColor(0x1A1008, Graphics.COLOR_TRANSPARENT);
         dc.fillRoundedRectangle(px, py, bw, bh, 6);
         dc.setColor(0xAA8844, Graphics.COLOR_TRANSPARENT);
         dc.drawRoundedRectangle(px, py, bw, bh, 6);
 
-        var pieces   = [PC_QUEEN, PC_ROOK, PC_BISHOP, PC_KNIGHT];
-        var glyphs   = ["\u2655", "\u2656", "\u2657", "\u2658"];
+        var pieces = [PC_QUEEN, PC_ROOK, PC_BISHOP, PC_KNIGHT];
+        var isWhitePromo = (_board[_promSq] > 0 || (_promSq >= 0 && _board[_promSq] > 0));
+        // Check if the promoting pawn was white or black
+        // (After executeMove, promotion square might have the pawn still or the new piece)
+        var promWhite = _playerIsWhite; // promotion always happens for the moving player
+
         for (var i = 0; i < 4; i++) {
-            var ix = px + 4 + i * (_sq + 2);
+            var ix = px + 4 + i * (_sq + 3);
+            var iy = py + 4;
             if (i == _promPick) {
-                dc.setColor(0x55AAFF, Graphics.COLOR_TRANSPARENT);
-                dc.fillRoundedRectangle(ix, py + 4, _sq, _sq, 3);
+                dc.setColor(0x3388FF, Graphics.COLOR_TRANSPARENT);
+                dc.fillRoundedRectangle(ix, iy, _sq, _sq, 3);
+            } else {
+                dc.setColor(0x2A1A08, Graphics.COLOR_TRANSPARENT);
+                dc.fillRoundedRectangle(ix, iy, _sq, _sq, 3);
             }
-            dc.setColor(0xF8F0E0, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(ix + _sq/2, py + 6, Graphics.FONT_XTINY, glyphs[i], Graphics.TEXT_JUSTIFY_CENTER);
+            drawPieceType(dc, ix + _sq/2, iy + _sq/2, pieces[i], _sq, promWhite);
         }
         dc.setColor(0xCCBB99, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, py + _sq + 8, Graphics.FONT_XTINY, "Promote! Tap or \u25B2\u25BC+sel", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, py + _sq + 10, Graphics.FONT_XTINY, "Promote! Tap piece", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawThinkingBadge(dc) {

@@ -1011,7 +1011,7 @@ class BitochiJumpView extends WatchUi.View {
             dc.setColor(lC, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, lY, Graphics.FONT_SMALL, lMsg, Graphics.TEXT_JUSTIFY_CENTER);
             // Hill record / K-point — full-width dark strip for guaranteed contrast
             if (_distance > _hillKDist && !_landCrash) {
-                var hrMsg = (_distance > _hillHSDist) ? "\u2605 HILL RECORD! \u2605" : "Beyond K!";
+                var hrMsg = (_distance > _hillHSDist) ? "* HILL RECORD! *" : "Beyond K!";
                 var hrC2  = (_distance > _hillHSDist) ? ((_tick % 4 < 2) ? 0xFFDD22 : 0xFF8800) : 0x44FF88;
                 var hrY   = _h * 80 / 100;
                 dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2 + 1, hrY + 1, Graphics.FONT_XTINY, hrMsg, Graphics.TEXT_JUSTIFY_CENTER);
@@ -1178,7 +1178,7 @@ class BitochiJumpView extends WatchUi.View {
         drawTable(dc,
             _venueNames[_venue] + "  PO R1",
             0xFFCC44,
-            "Tap \u2192 Round 2",
+            "Tap > Round 2",
             order);
     }
 
@@ -1187,7 +1187,7 @@ class BitochiJumpView extends WatchUi.View {
         var order = rankByCumScore();
         var winName = _jumperNames[order[0]];
         drawTable(dc,
-            "\u2605 " + winName + " WINS! \u2605",
+            "* " + winName + " WINS! *",
             _jumperColors[order[0]],
             "Tap for menu",
             order);

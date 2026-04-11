@@ -228,8 +228,8 @@ class BitochiMinigolfView extends WatchUi.View {
         _scoreCard[_holeIdx] = _strokes;
         _totalStrokes += _strokes;
         var diff = _strokes - _par[_holeIdx];
-        if (diff <= -2)     { _holeMsg = "Eagle! \u2605\u2605"; }
-        else if (diff == -1){ _holeMsg = "Birdie! \u2605"; }
+        if (diff <= -2)     { _holeMsg = "Eagle! **"; }
+        else if (diff == -1){ _holeMsg = "Birdie! *"; }
         else if (diff == 0) { _holeMsg = "Par!"; }
         else if (diff == 1) { _holeMsg = "Bogey"; }
         else                { _holeMsg = "+" + diff; }
@@ -506,7 +506,7 @@ class BitochiMinigolfView extends WatchUi.View {
         dc.setColor(0xFFFF44, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w/2, _h/2 + 2, Graphics.FONT_XTINY, diffLabels[_difficulty], Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x448833, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h/2 + 16, Graphics.FONT_XTINY, "\u25B2\u25BC change", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, _h/2 + 16, Graphics.FONT_XTINY, "^ v change", Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor((_tick % 10 < 5) ? 0x44FF88 : 0x228844, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w/2, _h/2 + 70, Graphics.FONT_XTINY, "Tap to tee off!", Graphics.TEXT_JUSTIFY_CENTER);
@@ -659,12 +659,12 @@ class BitochiMinigolfView extends WatchUi.View {
         dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w/2, 4, Graphics.FONT_XTINY, "Par " + _par[_holeIdx], Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xCCEEFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w - 4, 4, Graphics.FONT_XTINY, "\u26F3 " + _strokes, Graphics.TEXT_JUSTIFY_RIGHT);
+        dc.drawText(_w - 4, 4, Graphics.FONT_XTINY, "H " + _strokes, Graphics.TEXT_JUSTIFY_RIGHT);
 
         // Aim hint bottom
         if (_gs == MG_AIM) {
             dc.setColor(0x44AA66, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w/2, _h - 14, Graphics.FONT_XTINY, "Tap/\u25B2\u25BC aim  \u25CF shoot", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_w/2, _h - 14, Graphics.FONT_XTINY, "Tap/^v aim  O shoot", Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 
@@ -684,7 +684,7 @@ class BitochiMinigolfView extends WatchUi.View {
             "Strokes: " + _strokes + " / Par: " + _par[_holeIdx], Graphics.TEXT_JUSTIFY_CENTER);
         if (_holeWait <= 0) {
             dc.setColor((_tick % 8 < 4) ? 0x88CCFF : 0x4488AA, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w/2, _h/2 + 24, Graphics.FONT_XTINY, "Tap \u25BA next hole", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_w/2, _h/2 + 24, Graphics.FONT_XTINY, "Tap > next hole", Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 

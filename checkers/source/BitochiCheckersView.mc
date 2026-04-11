@@ -45,15 +45,15 @@ class BitochiCheckersView extends WatchUi.View {
     hidden var _aiDelay;
     hidden var _difficulty;   // 0=Easy 1=Normal 2=Hard
 
-    // Geometry
     hidden var _ox; hidden var _oy; hidden var _sq;
-    // _sq/ox/oy initialised to 0 so doTap guard works before onLayout fires
+    hidden var _playerIsWhite; // true = player is light pieces (moves up)
 
     // ── Initialize ────────────────────────────────────────────────────────────
     function initialize() {
         View.initialize();
         _w = 0; _h = 0; _tick = 0;
         _gs = GS_MENU; _difficulty = 1;
+        _playerIsWhite = true;
         _selRow = -1; _selCol = -1;
         _mustRow = -1; _mustCol = -1;
         _curRow = 4; _curCol = 1;
@@ -137,7 +137,17 @@ class BitochiCheckersView extends WatchUi.View {
     function doMenu() { doBack(); }
 
     function doTap(tx, ty) {
-        if (_gs == GS_MENU)                                       { startGame(); return; }
+        if (_gs == GS_MENU) {
+            // Check color toggle buttons
+            var btnY = _h * 65 / 100; var btnH = 22; var btnW = 52;
+            var wBtnX = _w / 2 - btnW - 4;
+            var bBtnX = _w / 2 + 4;
+            if (ty >= btnY && ty < btnY + btnH) {
+                if (tx >= wBtnX && tx < wBtnX + btnW) { _playerIsWhite = true; return; }
+                if (tx >= bBtnX && tx < bBtnX + btnW) { _playerIsWhite = false; return; }
+            }
+            startGame(); return;
+        }
         if (_gs == GS_WIN || _gs == GS_LOSE || _gs == GS_DRAW)   { _gs = GS_MENU; return; }
         if (_gs == GS_AI_THINK) { return; }
         if (_gs != GS_PLAY)     { return; }
@@ -147,47 +157,53 @@ class BitochiCheckersView extends WatchUi.View {
         var col    = (tx - _ox) / _sq;
         var rowInv = (ty - _oy) / _sq;
 
-        // Strict bounds — reject taps outside the board area
         if (tx < _ox || tx >= _ox + _sq * 8) { return; }
         if (ty < _oy || ty >= _oy + _sq * 8) { return; }
         if (col < 0 || col >= 8 || rowInv < 0 || rowInv >= 8) { return; }
 
-        var row = 7 - rowInv;   // screen-top = row 7 (AI back rank)
-        _curRow = row; _curCol = col;
-        handleCell(row, col);
+        var row; var realCol;
+        if (_playerIsWhite) {
+            row = 7 - rowInv;
+            realCol = col;
+        } else {
+            row = rowInv;
+            realCol = 7 - col;
+        }
+        _curRow = row; _curCol = realCol;
+        handleCell(row, realCol);
     }
 
-    // ── Core logic ────────────────────────────────────────────────────────────
     hidden function startGame() {
         resetBoard();
         _gs = GS_PLAY;
-        _curRow = 2; _curCol = 1;
+        if (_playerIsWhite) {
+            _whiteTurn = true;
+            _curRow = 2; _curCol = 1;
+        } else {
+            _whiteTurn = false;
+            _curRow = 5; _curCol = 0;
+            // AI (white) moves first
+            _gs = GS_AI_THINK;
+            _aiDelay = 2 + _difficulty;
+        }
     }
 
-    // First tap: select your piece and show valid destinations (green).
-    // Second tap: on a green square = execute move; on own piece = reselect;
-    //             anywhere else = deselect.
     hidden function handleCell(row, col) {
-        if (!_whiteTurn) { return; }
+        var isPlayerTurn = _playerIsWhite ? _whiteTurn : !_whiteTurn;
+        if (!isPlayerTurn) { return; }
 
         var piece = _board[row * 8 + col];
-        var isOwnPiece = (piece == CK_WHITE || piece == CK_WKING);
+        var playerPiece = _playerIsWhite ? (piece == CK_WHITE || piece == CK_WKING)
+                                         : (piece == CK_BLACK || piece == CK_BKING);
 
         if (_selRow < 0) {
-            // ── Phase 1: nothing selected — select a piece ────────────────
-            if (!isOwnPiece) { return; }
-            // During forced multi-jump only the forced piece may be chosen
+            if (!playerPiece) { return; }
             if (_mustRow >= 0 && (row != _mustRow || col != _mustCol)) { return; }
-
             var moves = getMovesFor(row, col, piece, _mustRow >= 0);
-            if (moves.size() == 0) { return; }  // no valid moves for this piece — ignore tap
-
+            if (moves.size() == 0) { return; }
             _selRow = row; _selCol = col;
             _validDsts = moves;
-
         } else {
-            // ── Phase 2: piece already selected ──────────────────────────
-            // Check if tap lands on a highlighted (valid) destination
             var moved = false;
             for (var i = 0; i < _validDsts.size(); i++) {
                 var mv = _validDsts[i];
@@ -197,18 +213,12 @@ class BitochiCheckersView extends WatchUi.View {
                     break;
                 }
             }
-
             if (!moved) {
-                // Deselect and optionally reselect another own piece
                 _selRow = -1; _selCol = -1; _validDsts = new [0];
-
-                if (isOwnPiece) {
+                if (playerPiece) {
                     if (_mustRow >= 0 && (row != _mustRow || col != _mustCol)) { return; }
                     var moves2 = getMovesFor(row, col, piece, _mustRow >= 0);
-                    if (moves2.size() > 0) {
-                        _selRow = row; _selCol = col;
-                        _validDsts = moves2;
-                    }
+                    if (moves2.size() > 0) { _selRow = row; _selCol = col; _validDsts = moves2; }
                 }
             }
         }
@@ -243,7 +253,8 @@ class BitochiCheckersView extends WatchUi.View {
 
         checkGameOver();
         if (_gs == GS_PLAY) {
-            _whiteTurn = false;
+            // Switch to AI's turn
+            if (_playerIsWhite) { _whiteTurn = false; } else { _whiteTurn = true; }
             _gs = GS_AI_THINK;
             _aiDelay = 2 + _difficulty;
         }
@@ -351,37 +362,40 @@ class BitochiCheckersView extends WatchUi.View {
     // ── AI ────────────────────────────────────────────────────────────────────
     hidden function doAiTurn() {
         _gs = GS_PLAY;
-        _whiteTurn = false;
+        var aiIsWhite = !_playerIsWhite;
+        _whiteTurn = aiIsWhite;
         doAiMoves();
         if (_gs == GS_PLAY) {
-            _whiteTurn = true;
+            _whiteTurn = _playerIsWhite;
             checkGameOver();
             if (_gs == GS_PLAY) {
-                // Check white has moves
-                var whiteHasMoves = false;
-                for (var r = 0; r < 8 && !whiteHasMoves; r++) {
-                    for (var c = 0; c < 8 && !whiteHasMoves; c++) {
+                // Check player has moves
+                var playerHasMoves = false;
+                for (var r = 0; r < 8 && !playerHasMoves; r++) {
+                    for (var c = 0; c < 8 && !playerHasMoves; c++) {
                         var p = _board[r*8+c];
-                        if (p == CK_WHITE || p == CK_WKING) {
-                            if (getMovesFor(r, c, p, false).size() > 0) { whiteHasMoves = true; }
+                        var isPlayerPiece = _playerIsWhite ? (p == CK_WHITE || p == CK_WKING)
+                                                           : (p == CK_BLACK || p == CK_BKING);
+                        if (isPlayerPiece && getMovesFor(r, c, p, false).size() > 0) {
+                            playerHasMoves = true;
                         }
                     }
                 }
-                if (!whiteHasMoves) { _gs = GS_LOSE; }
+                if (!playerHasMoves) { _gs = GS_LOSE; }
             }
         }
     }
 
     hidden function doAiMoves() {
-        // Multi-jump handled in loop
+        var aiIsWhite = !_playerIsWhite;
         var forced = false; var forcedRow = -1; var forcedCol = -1;
         while (true) {
             var depth = 2 + _difficulty;
-            var result = aiPickMove(forced, forcedRow, forcedCol, depth);
+            var result = aiPickMove(forced, forcedRow, forcedCol, depth, aiIsWhite);
             if (result == null) { break; }
 
             var fromR = result[0]; var fromC = result[1];
-            var mv    = result[2]; // [toR,toC,capR,capC]
+            var mv    = result[2];
             var toR   = mv[0];    var toC   = mv[1];
             var capR  = mv[2];    var capC  = mv[3];
 
@@ -390,10 +404,9 @@ class BitochiCheckersView extends WatchUi.View {
             _board[fromR*8+fromC] = CK_EMPTY;
             if (capR >= 0) { _board[capR*8+capC] = CK_EMPTY; }
 
-            // King promotion
-            if (piece == CK_BLACK && toR == 0) { _board[toR*8+toC] = CK_BKING; piece = CK_BKING; }
+            if (aiIsWhite && piece == CK_WHITE && toR == 7) { _board[toR*8+toC] = CK_WKING; piece = CK_WKING; }
+            if (!aiIsWhite && piece == CK_BLACK && toR == 0) { _board[toR*8+toC] = CK_BKING; piece = CK_BKING; }
 
-            // Multi-jump?
             if (capR >= 0) {
                 var moreCaps = getCapturesFor(toR, toC, _board[toR*8+toC]);
                 if (moreCaps.size() > 0) { forced = true; forcedRow = toR; forcedCol = toC; continue; }
@@ -403,16 +416,18 @@ class BitochiCheckersView extends WatchUi.View {
     }
 
     // Returns [fromRow, fromCol, bestMove] or null if no moves
-    hidden function aiPickMove(forced, forcedRow, forcedCol, depth) {
+    hidden function aiPickMove(forced, forcedRow, forcedCol, depth, aiIsWhite) {
         var bestScore = -999999;
         var bestFrom = null; var bestMv = null;
 
-        var anyCap = playerHasCapture(false);
+        var anyCap = playerHasCapture(aiIsWhite);
 
         for (var r = 0; r < 8; r++) {
             for (var c = 0; c < 8; c++) {
                 var p = _board[r*8+c];
-                if (p != CK_BLACK && p != CK_BKING) { continue; }
+                var isAiPiece = aiIsWhite ? (p == CK_WHITE || p == CK_WKING)
+                                          : (p == CK_BLACK || p == CK_BKING);
+                if (!isAiPiece) { continue; }
                 if (forced && (r != forcedRow || c != forcedCol)) { continue; }
 
                 var moves = anyCap ? getCapturesFor(r, c, p)
@@ -535,52 +550,72 @@ class BitochiCheckersView extends WatchUi.View {
         var r = _w / 2;
         dc.setColor(0x111111, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(r, r, r - 2);
-
-        // Mini checkerboard preview in background
-        var msq = _sq > 0 ? _sq : 14;
-        for (var row = 0; row < 8; row++) {
-            for (var col = 0; col < 8; col++) {
-                var light = ((row + col) % 2 == 0);
-                dc.setColor(light ? 0x1A1208 : 0x0E0A04, Graphics.COLOR_TRANSPARENT);
-                dc.fillRectangle(_ox + col * msq, _oy + (7-row) * msq, msq, msq);
+        if (_sq > 0) {
+            for (var row = 0; row < 8; row++) {
+                for (var col = 0; col < 8; col++) {
+                    var light = ((row + col) % 2 == 0);
+                    dc.setColor(light ? 0x1A1208 : 0x0E0A04, Graphics.COLOR_TRANSPARENT);
+                    dc.fillRectangle(_ox + col * _sq, _oy + (7-row) * _sq, _sq, _sq);
+                }
             }
         }
 
-        // Title panel
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(_w/2 - 72, _h/2 - 62, 144, 128, 10);
+        dc.fillRoundedRectangle(_w/2 - 72, _h/2 - 68, 144, 140, 10);
         dc.setColor(0x882211, Graphics.COLOR_TRANSPARENT);
-        dc.drawRoundedRectangle(_w/2 - 72, _h/2 - 62, 144, 128, 10);
+        dc.drawRoundedRectangle(_w/2 - 72, _h/2 - 68, 144, 140, 10);
 
         dc.setColor(0xFF6633, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h/2 - 56, Graphics.FONT_MEDIUM, "CHECKERS", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, _h/2 - 62, Graphics.FONT_MEDIUM, "CHECKERS", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x775544, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h/2 - 32, Graphics.FONT_XTINY, "BITOCHI GAMES", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, _h/2 - 40, Graphics.FONT_XTINY, "BITOCHI GAMES", Graphics.TEXT_JUSTIFY_CENTER);
 
         var diffLabels = ["Easy", "Normal", "Hard"];
         dc.setColor(0xCCBB88, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h/2 - 14, Graphics.FONT_XTINY, "Difficulty:", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xFFFF44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h/2 + 2, Graphics.FONT_XTINY, diffLabels[_difficulty], Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, _h/2 - 23, Graphics.FONT_XTINY, "Diff: " + diffLabels[_difficulty], Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x885544, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h/2 + 19, Graphics.FONT_XTINY, "\u25B2\u25BC change", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, _h/2 - 9, Graphics.FONT_XTINY, "^ v = change", Graphics.TEXT_JUSTIFY_CENTER);
+
+        // Color buttons
+        var btnY  = _h * 63 / 100; var btnH = 22; var btnW = 52;
+        var wBtnX = _w / 2 - btnW - 4;
+        var bBtnX = _w / 2 + 4;
+
+        dc.setColor(_playerIsWhite ? 0x55AAFF : 0x223344, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(wBtnX, btnY, btnW, btnH, 4);
+        dc.setColor(_playerIsWhite ? 0x88CCFF : 0x446688, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(wBtnX, btnY, btnW, btnH, 4);
+        dc.setColor(_playerIsWhite ? 0x000000 : 0x88AACC, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(wBtnX + btnW/2, btnY + 5, Graphics.FONT_XTINY, "LIGHT", Graphics.TEXT_JUSTIFY_CENTER);
+
+        dc.setColor(!_playerIsWhite ? 0x55AAFF : 0x223344, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(bBtnX, btnY, btnW, btnH, 4);
+        dc.setColor(!_playerIsWhite ? 0x88CCFF : 0x446688, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(bBtnX, btnY, btnW, btnH, 4);
+        dc.setColor(!_playerIsWhite ? 0x000000 : 0x88AACC, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(bBtnX + btnW/2, btnY + 5, Graphics.FONT_XTINY, "DARK", Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor((_tick % 10 < 5) ? 0xFF9944 : 0xAA5522, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h/2 + 43, Graphics.FONT_XTINY, "Tap to play!", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, _h * 85 / 100, Graphics.FONT_XTINY, "Tap to play!", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     // ── Board ─────────────────────────────────────────────────────────────────
+    hidden function sqToScreen(row, col) {
+        var screenRow = _playerIsWhite ? (7 - row) : row;
+        var screenCol = _playerIsWhite ? col       : (7 - col);
+        return [_ox + screenCol * _sq, _oy + screenRow * _sq];
+    }
+
     hidden function drawBoard(dc) {
         dc.setColor(0x0A0A0A, 0x0A0A0A); dc.clear();
         for (var row = 0; row < 8; row++) {
             for (var col = 0; col < 8; col++) {
                 var light = ((row + col) % 2 == 0);
-                var bx = _ox + col * _sq;
-                var by = _oy + (7 - row) * _sq;
+                var xy = sqToScreen(row, col);
+                var bx = xy[0]; var by = xy[1];
 
                 var sqClr = light ? 0xD4B077 : 0x7A4020;
 
-                // Valid destination highlight (green)
                 var isDst = false;
                 for (var i = 0; i < _validDsts.size(); i++) {
                     if (_validDsts[i][0] == row && _validDsts[i][1] == col) { isDst = true; break; }
@@ -590,7 +625,6 @@ class BitochiCheckersView extends WatchUi.View {
                 dc.setColor(sqClr, Graphics.COLOR_TRANSPARENT);
                 dc.fillRectangle(bx, by, _sq, _sq);
 
-                // Selected piece: bright blue outline (drawn over square, under piece)
                 if (row == _selRow && col == _selCol) {
                     dc.setColor(0x2266FF, Graphics.COLOR_TRANSPARENT);
                     dc.fillRectangle(bx, by, _sq, _sq);
@@ -598,7 +632,6 @@ class BitochiCheckersView extends WatchUi.View {
                     dc.drawRectangle(bx, by, _sq, _sq);
                 }
 
-                // Cursor ring (button navigation) — dim yellow, only when not selected
                 if (row == _curRow && col == _curCol && (row != _selRow || col != _selCol)) {
                     dc.setColor(0x887700, Graphics.COLOR_TRANSPARENT);
                     dc.drawRectangle(bx, by, _sq, _sq);
@@ -616,11 +649,11 @@ class BitochiCheckersView extends WatchUi.View {
         for (var row = 0; row < 8; row++) {
             for (var col = 0; col < 8; col++) {
                 var p = _board[row*8+col];
-                var bx = _ox + col * _sq + _sq / 2;
-                var by = _oy + (7 - row) * _sq + _sq / 2;
+                var xy = sqToScreen(row, col);
+                var bx = xy[0] + _sq / 2;
+                var by = xy[1] + _sq / 2;
 
                 if (p == CK_EMPTY) {
-                    // Draw dot on valid destination squares
                     var isDst = false;
                     for (var i = 0; i < _validDsts.size(); i++) {
                         if (_validDsts[i][0] == row && _validDsts[i][1] == col) { isDst = true; break; }
@@ -634,10 +667,10 @@ class BitochiCheckersView extends WatchUi.View {
                 drawChecker(dc, bx, by, p, r2, r2k);
             }
         }
-        // Cursor ring (only when using button navigation)
         if (_gs == GS_PLAY && _selRow < 0) {
-            var cx = _ox + _curCol * _sq + _sq / 2;
-            var cy = _oy + (7 - _curRow) * _sq + _sq / 2;
+            var xy2 = sqToScreen(_curRow, _curCol);
+            var cx = xy2[0] + _sq / 2;
+            var cy = xy2[1] + _sq / 2;
             dc.setColor(0x887700, Graphics.COLOR_TRANSPARENT);
             dc.drawCircle(cx, cy, r2 + 2);
         }
@@ -676,9 +709,10 @@ class BitochiCheckersView extends WatchUi.View {
     hidden function drawHUD(dc) {
         var hy = _oy + _sq * 8 + 3;
         if (hy + 12 > _h) { hy = _oy - 12; }
-        dc.setColor(0xAA8866, Graphics.COLOR_TRANSPARENT);
-        var lbl = _whiteTurn ? "Your turn" : "AI thinking...";
+        var isPlayerTurn = _playerIsWhite ? _whiteTurn : !_whiteTurn;
+        var lbl = isPlayerTurn ? "Your turn" : "AI thinking...";
         if (_mustRow >= 0) { lbl = "Continue jump!"; }
+        dc.setColor(0xAA8866, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w/2, hy, Graphics.FONT_XTINY, lbl, Graphics.TEXT_JUSTIFY_CENTER);
     }
 

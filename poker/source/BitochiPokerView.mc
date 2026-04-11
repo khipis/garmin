@@ -69,7 +69,7 @@ class BitochiPokerView extends WatchUi.View {
         _curCard = 0;
 
         _rankStr  = ["2","3","4","5","6","7","8","9","T","J","Q","K","A"];
-        _suitStr  = ["\u2660","\u2665","\u2666","\u2663"];
+        _suitStr  = ["S","H","D","C"];   // Spade Heart Diamond Club (ASCII safe)
         _handNames = ["High Card","Pair","Two Pair","Three of a Kind",
                       "Straight","Flush","Full House","Four of a Kind",
                       "Str.Flush","Royal Flush"];
@@ -491,13 +491,13 @@ class BitochiPokerView extends WatchUi.View {
 
         // Chips + pot
         dc.setColor(0x44CC88, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w * 15 / 100, midY, Graphics.FONT_XTINY, "\u2665 " + _pChips, Graphics.TEXT_JUSTIFY_LEFT);
+        dc.drawText(_w * 15 / 100, midY, Graphics.FONT_XTINY, "H " + _pChips, Graphics.TEXT_JUSTIFY_LEFT);
         dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
         if (_pot > 0) {
             dc.drawText(_w / 2, midY, Graphics.FONT_XTINY, "POT " + _pot, Graphics.TEXT_JUSTIFY_CENTER);
         }
         dc.setColor(0xFF8866, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w * 85 / 100, midY, Graphics.FONT_XTINY, _aChips + " \u2660", Graphics.TEXT_JUSTIFY_RIGHT);
+        dc.drawText(_w * 85 / 100, midY, Graphics.FONT_XTINY, _aChips + " S", Graphics.TEXT_JUSTIFY_RIGHT);
 
         var btnY  = _h * 53 / 100;
         var btnW  = _w * 50 / 100;
@@ -543,7 +543,7 @@ class BitochiPokerView extends WatchUi.View {
             dc.drawText(_w / 2, btnY + 2, Graphics.FONT_XTINY, _resultMsg, Graphics.TEXT_JUSTIFY_CENTER);
 
             dc.setColor((_tick%10<5)?0x88CCFF:0x4488AA, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, btnY + btnH + 10, Graphics.FONT_XTINY, "Tap \u25BA next hand", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_w / 2, btnY + btnH + 10, Graphics.FONT_XTINY, "Tap > next hand", Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 

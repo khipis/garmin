@@ -855,7 +855,7 @@ class BitochiBlocksView extends WatchUi.View {
         // Lines + next-level hint
         dc.setColor(0x446677, Graphics.COLOR_TRANSPARENT);
         dc.drawText(px + pw / 2, barY + 7, Graphics.FONT_XTINY,
-            _linesCleared + "L \u2192" + (_level + 1), Graphics.TEXT_JUSTIFY_CENTER);
+            _linesCleared + "L >" + (_level + 1), Graphics.TEXT_JUSTIFY_CENTER);
 
         // Combo
         var extraY = barY + 21;

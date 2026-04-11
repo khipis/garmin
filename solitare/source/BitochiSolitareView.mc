@@ -68,7 +68,7 @@ class BitochiSolitareView extends WatchUi.View {
         _winTick = 0;
 
         _rankStr = ["A","2","3","4","5","6","7","8","9","T","J","Q","K"];
-        _suitStr = ["\u2660","\u2665","\u2666","\u2663"];
+        _suitStr = ["S","H","D","C"];   // Spade Heart Diamond Club (ASCII safe)
 
         _pile = new [NUM_PILES];
         for (var i = 0; i < NUM_PILES; i++) { _pile[i] = new [0]; }
@@ -507,7 +507,7 @@ class BitochiSolitareView extends WatchUi.View {
             Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x336655, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w/2, _h * 66 / 100, Graphics.FONT_XTINY,
-            "\u25B2\u25BC toggle  1 / 3", Graphics.TEXT_JUSTIFY_CENTER);
+            "^ v toggle  1 / 3", Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor((_tick % 12 < 6) ? 0x44AAFF : 0x2277CC, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w/2, _h * 83 / 100, Graphics.FONT_XTINY, "Tap to deal!", Graphics.TEXT_JUSTIFY_CENTER);
@@ -547,7 +547,7 @@ class BitochiSolitareView extends WatchUi.View {
             dc.drawRoundedRectangle(_stockX, _topRowY, _cw, _ch, 3);
             dc.setColor(0x44AA66, Graphics.COLOR_TRANSPARENT);
             dc.drawText(_stockX + _cw/2, _topRowY + _ch/2 - 7,
-                Graphics.FONT_XTINY, "\u21BA", Graphics.TEXT_JUSTIFY_CENTER);
+                Graphics.FONT_XTINY, "<<", Graphics.TEXT_JUSTIFY_CENTER);
         }
         // Cursor
         if (_cursor == STOCK && _selPile < 0) {
@@ -651,7 +651,7 @@ class BitochiSolitareView extends WatchUi.View {
     hidden function drawHint(dc) {
         // Place hint safely above the bottom clip zone of the round screen
         var hintY = _h - 18;
-        var moveLabel = (_selPile >= 0) ? "tap dest / \u2190cancel" : "tap card \u25B2\u25BC sel";
+        var moveLabel = (_selPile >= 0) ? "tap dest / <cancel" : "tap card ^v sel";
         dc.setColor(0x2A6040, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w / 2, hintY, Graphics.FONT_XTINY, moveLabel, Graphics.TEXT_JUSTIFY_CENTER);
     }

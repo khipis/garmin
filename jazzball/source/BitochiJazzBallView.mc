@@ -442,16 +442,24 @@ class BitochiJazzBallView extends WatchUi.View {
         if (_gs == JB_LEVEL_WIN){ nextLevel(); return; }
         if (_gs == JB_GAMEOVER) { _gs = JB_MENU; return; }
         if (_gs != JB_PLAY)     { return; }
+        if (_cs <= 0) { return; }
 
-        // Convert tap to grid cell
         var col = (tx - _ox) / _cs;
         var row = (ty - _oy) / _cs;
-        if (col < 0 || col >= GCOLS || row < 0 || row >= GROWS) { return; }
+        if (col < 1 || col >= GCOLS - 1 || row < 1 || row >= GROWS - 1) { return; }
 
         if (_wall != null) {
-            // Second tap toggles orientation
+            // Tap while wall is growing → toggle orientation of NEXT wall
             _curHoriz = !_curHoriz;
             return;
+        }
+
+        // Place wall. Orientation: if tap is far from previous cursor position
+        // horizontally, use horizontal wall; otherwise vertical.
+        var dx = col - _curCol; if (dx < 0) { dx = -dx; }
+        var dy = row - _curRow; if (dy < 0) { dy = -dy; }
+        if (dx != 0 || dy != 0) {
+            _curHoriz = (dx >= dy); // more horizontal movement → horizontal wall
         }
 
         _curCol = col; _curRow = row;
@@ -485,31 +493,43 @@ class BitochiJazzBallView extends WatchUi.View {
     }
 
     hidden function loadLevel() {
-        // Clear grid
+        // Clear grid — border walls only
         for (var i = 0; i < _totalCells; i++) { _grid[i] = CELL_OPEN; }
-        _openCount = _totalCells;
+        // Top/bottom border rows
+        for (var c = 0; c < GCOLS; c++) {
+            _grid[0 * GCOLS + c] = CELL_WALL;
+            _grid[(GROWS - 1) * GCOLS + c] = CELL_WALL;
+        }
+        // Left/right border cols
+        for (var r = 0; r < GROWS; r++) {
+            _grid[r * GCOLS + 0] = CELL_WALL;
+            _grid[r * GCOLS + (GCOLS - 1)] = CELL_WALL;
+        }
+        _openCount = 0;
+        for (var i = 0; i < _totalCells; i++) { if (_grid[i] == CELL_OPEN) { _openCount++; } }
+
         _wall = null;
         _curCol = GCOLS / 2; _curRow = GROWS / 2;
 
-        // Spawn balls: 2 + level
-        var numBalls = 1 + _level;
+        // Level 1 starts with 1 ball, +1 per level
+        var numBalls = _level;
         if (numBalls > 8) { numBalls = 8; }
         _balls = new [numBalls];
 
-        var speedBase = 4 + _level;
-        if (speedBase > 9) { speedBase = 9; }
+        // Balls are faster at higher levels
+        var speedBase = 5 + _level * 2;
+        if (speedBase > 14) { speedBase = 14; }
 
         for (var i = 0; i < numBalls; i++) {
-            var bx = (5 + Math.rand().abs() % (GCOLS - 10)) * 10;
-            var by = (5 + Math.rand().abs() % (GROWS - 10)) * 10;
+            var bx = (4 + Math.rand().abs() % (GCOLS - 8)) * 10;
+            var by = (4 + Math.rand().abs() % (GROWS - 8)) * 10;
             var vx = (Math.rand().abs() % 2 == 0) ? speedBase : -speedBase;
             var vy = (Math.rand().abs() % 2 == 0) ? speedBase : -speedBase;
             _balls[i] = [bx, by, vx, vy, _ballColors[i % _ballColors.size()]];
         }
 
-        // Wall grow speed: faster on higher levels
-        _growSpeed = 4 - (_level / 3);
-        if (_growSpeed < 1) { _growSpeed = 1; }
+        // Wall grow very fast — 1 cell every tick (50ms)
+        _growSpeed = 1;
     }
 
     // ── Rendering ─────────────────────────────────────────────────────────────
@@ -638,7 +658,7 @@ class BitochiJazzBallView extends WatchUi.View {
         dc.drawText(_ox, hudY, Graphics.FONT_XTINY, "Lv" + _level, Graphics.TEXT_JUSTIFY_LEFT);
         // Lives as dots
         var livesStr = "";
-        for (var i = 0; i < _lives; i++) { livesStr = livesStr + "\u25CF"; }
+        for (var i = 0; i < _lives; i++) { livesStr = livesStr + "O"; }
         dc.setColor(0xFF6644, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_ox + _cs * GCOLS / 2, hudY, Graphics.FONT_XTINY, livesStr, Graphics.TEXT_JUSTIFY_CENTER);
         // Target %
@@ -671,7 +691,7 @@ class BitochiJazzBallView extends WatchUi.View {
         dc.setColor(0xFF4422, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w / 2, _h / 2 - 8, Graphics.FONT_XTINY, "WALL BROKEN!", Graphics.TEXT_JUSTIFY_CENTER);
         var livesStr = "";
-        for (var i = 0; i < _lives; i++) { livesStr = livesStr + "\u25CF"; }
+        for (var i = 0; i < _lives; i++) { livesStr = livesStr + "O"; }
         dc.setColor(0xFF9966, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w / 2, _h / 2 + 8, Graphics.FONT_XTINY, livesStr, Graphics.TEXT_JUSTIFY_CENTER);
     }
@@ -687,7 +707,7 @@ class BitochiJazzBallView extends WatchUi.View {
         dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w/2, _h/2 - 6, Graphics.FONT_XTINY, "Filled: " + filledPct + "%", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor((_tick % 8 < 4) ? 0x88CCFF : 0x4488CC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h/2 + 12, Graphics.FONT_XTINY, "Tap \u25BA next level", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, _h/2 + 12, Graphics.FONT_XTINY, "Tap > next level", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawGameOver(dc) {
