@@ -664,20 +664,18 @@ class BitochiBlocksView extends WatchUi.View {
         dc.setColor(0x224466, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w / 2, _h * 52 / 100, Graphics.FONT_XTINY, "BITOCHI GAMES", Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Controls hint
+        // Controls hint (centered — safe on all round screens)
         dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 62 / 100, Graphics.FONT_XTINY, "Tilt: move", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(_w / 2, _h * 70 / 100, Graphics.FONT_XTINY, "Tap: rotate", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(_w / 2, _h * 78 / 100, Graphics.FONT_XTINY, "Hold: drop", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 60 / 100, Graphics.FONT_XTINY, "Tilt: move  |  Tap: rotate", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 70 / 100, Graphics.FONT_XTINY, "Hold: drop", Graphics.TEXT_JUSTIFY_CENTER);
 
         if (_best > 0) {
             dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(4, _h * 62 / 100, Graphics.FONT_XTINY, "BEST", Graphics.TEXT_JUSTIFY_LEFT);
-            dc.drawText(4, _h * 70 / 100, Graphics.FONT_XTINY, "" + _best, Graphics.TEXT_JUSTIFY_LEFT);
+            dc.drawText(_w / 2, _h * 79 / 100, Graphics.FONT_XTINY, "Best: " + _best, Graphics.TEXT_JUSTIFY_CENTER);
         }
 
         dc.setColor((_tick % 12 < 6) ? 0x88CCFF : 0x4488BB, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 88 / 100, Graphics.FONT_XTINY, "Tap to play!", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 89 / 100, Graphics.FONT_XTINY, "Tap to play!", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     // ── Game screen ──────────────────────────────────────────────────────────
@@ -829,39 +827,32 @@ class BitochiBlocksView extends WatchUi.View {
     //   NXT label → next piece preview → level progress bar → combo/freeze
 
     hidden function drawHUD(dc, ox, oy) {
-        // ── Top strip ──────────────────────────────────────────────────────────
+        // ── Top strip: only level, centred on screen (always in safe zone) ───────
         dc.setColor(0x0A1A2A, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, 0, _w, _boardY);
 
-        // Score (left-aligned to board left edge)
-        dc.setColor(0xDDEEFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_boardX, 4, Graphics.FONT_XTINY, "" + _score, Graphics.TEXT_JUSTIFY_LEFT);
-
-        // Level (centred over board)
-        var boardMidX = _boardX + TB_COLS * _cellW / 2;
         dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(boardMidX, 4, Graphics.FONT_XTINY, "Lv" + _level, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, 4, Graphics.FONT_XTINY, "Lv" + _level, Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Lines cleared (right-aligned to panel right edge)
-        dc.setColor(0x88AABB, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_panelX + 4 * _cellW, 4, Graphics.FONT_XTINY,
-            _linesCleared + "L", Graphics.TEXT_JUSTIFY_RIGHT);
-
-        // ── Right panel (always drawn — layout guaranteed by setupBoard) ────────
+        // ── Right panel (always drawn — layout guaranteed by setupBoard) ─────────
         var px  = _panelX;
-        var pw  = 4 * _cellW;       // panel pixel width
-        var py  = _boardY + oy;     // panel top (moves with shake offset)
+        var pw  = 4 * _cellW;
+        var py  = _boardY + oy;
+
+        // Score — most prominent info, at the very top of the panel
+        dc.setColor(0xDDEEFF, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(px + pw / 2, py + 1, Graphics.FONT_XTINY, "" + _score, Graphics.TEXT_JUSTIFY_CENTER);
 
         // "NXT" label
         dc.setColor(0x3A5870, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(px + pw / 2, py + 1, Graphics.FONT_XTINY, "NXT", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(px + pw / 2, py + 14, Graphics.FONT_XTINY, "NXT", Graphics.TEXT_JUSTIFY_CENTER);
 
         // Next piece preview (full-size cells)
-        drawNextPreview(dc, px, py + 14);
+        drawNextPreview(dc, px, py + 27);
 
         // Lines-to-next-level progress bar
-        var barY    = py + 14 + _cellH * 2 + 6;
-        var barW    = pw;
+        var barY     = py + 27 + _cellH * 2 + 5;
+        var barW     = pw;
         var linesMod = _linesCleared % 10;
         dc.setColor(0x0E2030, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(px, barY, barW, 5);
@@ -870,10 +861,10 @@ class BitochiBlocksView extends WatchUi.View {
         dc.setColor(0x1A4060, Graphics.COLOR_TRANSPARENT);
         dc.drawRectangle(px, barY, barW, 5);
 
-        // "→LvX" next level hint
+        // Lines count + next level hint
         dc.setColor(0x446677, Graphics.COLOR_TRANSPARENT);
         dc.drawText(px + pw / 2, barY + 7, Graphics.FONT_XTINY,
-            "\u2192Lv" + (_level + 1), Graphics.TEXT_JUSTIFY_CENTER);
+            _linesCleared + "L \u2192" + (_level + 1), Graphics.TEXT_JUSTIFY_CENTER);
 
         // Combo
         var extraY = barY + 20;
