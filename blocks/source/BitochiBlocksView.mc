@@ -214,39 +214,29 @@ class BitochiBlocksView extends WatchUi.View {
 
     hidden function setupBoard() {
         if (_w == 0) { return; }
-        // HUD strip at top
-        var topBar = 22;
+        // HUD strip height.  Text at y≈10 sits in a wide enough safe zone even on
+        // the smallest round screens (dy≈120 from centre → safeHalf≈50 → zone ±50px).
+        var topBar = 28;
         var botPad = 2;
         var availH = _h - topBar - botPad;
 
-        // Safe half-width at y=topBar on a round screen:
-        // hw = sqrt(r² − (r−topBar)²)  — this is the tightest horizontal point.
-        var r = _w / 2;
-        var dyTop = r - topBar;
-        var safeHalfTop;
-        if (dyTop > 0) {
-            var sqf = r.toFloat() * r.toFloat() - dyTop.toFloat() * dyTop.toFloat();
-            safeHalfTop = (sqf > 0.0) ? Math.sqrt(sqf).toNumber() : r;
-        } else {
-            safeHalfTop = r;
-        }
-
-        // Layout: board (TB_COLS cells) + 3px gap + panel (4 cells) must all fit
-        // within the safe width at topBar.  Use 88% of safe width for headroom.
-        var usableW = safeHalfTop * 2 * 88 / 100;
-        var cellFromSafeW = usableW / (TB_COLS + 4);   // 14 cell slots total
+        // Cell size from height (primary driver — fill the screen vertically)
         var cellFromH = availH / TB_ROWS;
 
-        _cellH = (cellFromH < cellFromSafeW) ? cellFromH : cellFromSafeW;
+        // Cell size cap: board must not be wider than ~44% of screen so the right
+        // panel (4 cells) has room alongside it without overlapping screen content.
+        var cellFromW = _w * 44 / 100 / TB_COLS;
+
+        _cellH = (cellFromH < cellFromW) ? cellFromH : cellFromW;
         if (_cellH < 5)  { _cellH = 5; }
         if (_cellH > 13) { _cellH = 13; }
         _cellW = _cellH;
 
-        // Centre the board+panel group horizontally; clamp to safe zone left edge
-        var totalW = (TB_COLS + 4) * _cellW + 3;
-        _boardX = (_w - totalW) / 2;
-        var minBoardX = _w / 2 - safeHalfTop + 2;
-        if (_boardX < minBoardX) { _boardX = minBoardX; }
+        // Centre the BOARD on the screen (not the board+panel group).
+        // The panel sits to the right of the board — on a round screen this is
+        // in the wider mid-section where there is plenty of horizontal room.
+        _boardX = (_w - TB_COLS * _cellW) / 2;
+        if (_boardX < 0) { _boardX = 0; }
 
         _panelX = _boardX + TB_COLS * _cellW + 3;
         _boardY = topBar;
@@ -827,31 +817,32 @@ class BitochiBlocksView extends WatchUi.View {
     //   NXT label → next piece preview → level progress bar → combo/freeze
 
     hidden function drawHUD(dc, ox, oy) {
-        // ── Top strip: only level, centred on screen (always in safe zone) ───────
+        // ── Top bar: score + level, both centred at screen midpoint ──────────────
+        // At y≈10 the safe zone is ±50px from centre — wide enough for all values.
         dc.setColor(0x0A1A2A, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, 0, _w, _boardY);
 
         dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, 4, Graphics.FONT_XTINY, "Lv" + _level, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, 10, Graphics.FONT_XTINY, "Lv" + _level, Graphics.TEXT_JUSTIFY_RIGHT);
+        dc.setColor(0xDDEEFF, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2 + 3, 10, Graphics.FONT_XTINY, "" + _score, Graphics.TEXT_JUSTIFY_LEFT);
 
-        // ── Right panel (always drawn — layout guaranteed by setupBoard) ─────────
+        // ── Right panel ───────────────────────────────────────────────────────────
+        // Content starts at boardY+8 (y≈36) where the round screen is already wide
+        // enough that even 4-cell-wide content clears the circle edge.
         var px  = _panelX;
         var pw  = 4 * _cellW;
         var py  = _boardY + oy;
 
-        // Score — most prominent info, at the very top of the panel
-        dc.setColor(0xDDEEFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(px + pw / 2, py + 1, Graphics.FONT_XTINY, "" + _score, Graphics.TEXT_JUSTIFY_CENTER);
-
         // "NXT" label
         dc.setColor(0x3A5870, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(px + pw / 2, py + 14, Graphics.FONT_XTINY, "NXT", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(px + pw / 2, py + 8, Graphics.FONT_XTINY, "NXT", Graphics.TEXT_JUSTIFY_CENTER);
 
         // Next piece preview (full-size cells)
-        drawNextPreview(dc, px, py + 27);
+        drawNextPreview(dc, px, py + 22);
 
         // Lines-to-next-level progress bar
-        var barY     = py + 27 + _cellH * 2 + 5;
+        var barY     = py + 22 + _cellH * 2 + 6;
         var barW     = pw;
         var linesMod = _linesCleared % 10;
         dc.setColor(0x0E2030, Graphics.COLOR_TRANSPARENT);
@@ -861,13 +852,13 @@ class BitochiBlocksView extends WatchUi.View {
         dc.setColor(0x1A4060, Graphics.COLOR_TRANSPARENT);
         dc.drawRectangle(px, barY, barW, 5);
 
-        // Lines count + next level hint
+        // Lines + next-level hint
         dc.setColor(0x446677, Graphics.COLOR_TRANSPARENT);
         dc.drawText(px + pw / 2, barY + 7, Graphics.FONT_XTINY,
             _linesCleared + "L \u2192" + (_level + 1), Graphics.TEXT_JUSTIFY_CENTER);
 
         // Combo
-        var extraY = barY + 20;
+        var extraY = barY + 21;
         if (_combo > 1) {
             dc.setColor((_tick % 6 < 3) ? 0xFFFF44 : 0xFFAA00, Graphics.COLOR_TRANSPARENT);
             dc.drawText(px + pw / 2, extraY, Graphics.FONT_XTINY,
