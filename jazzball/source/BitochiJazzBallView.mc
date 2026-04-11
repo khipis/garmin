@@ -15,6 +15,7 @@ const CELL_OPEN   = 0;   // open space, balls can travel here
 const CELL_WALL   = 1;   // permanent wall / filled area
 const CELL_GROW_H = 2;   // growing wall segment — horizontal (active)
 const CELL_GROW_V = 3;   // growing wall segment — vertical (active)
+const CELL_TEMP   = 4;   // temporary flood-fill marker (never drawn, never persisted)
 
 // ── Grid size ─────────────────────────────────────────────────────────────────
 // We use a 40×40 logical grid.  Each cell is drawn as a small square.
@@ -66,6 +67,9 @@ class BitochiJazzBallView extends WatchUi.View {
     // Ball colours per level
     hidden var _ballColors;
 
+    // Pre-allocated BFS helpers — avoids per-tick allocations in floodFill
+    hidden var _floodQueue;   // int[GCOLS*GROWS]
+
     // ── Initialize ────────────────────────────────────────────────────────────
     function initialize() {
         View.initialize();
@@ -82,6 +86,7 @@ class BitochiJazzBallView extends WatchUi.View {
         _curCol = GCOLS / 2; _curRow = GROWS / 2; _curHoriz = true;
         _deadFlash = 0;
         _ballColors = [0xFF4422, 0xFF8800, 0xFFCC00, 0x44FF88, 0x44AAFF, 0xFF44AA];
+        _floodQueue = new [_totalCells];
 
         _timer = new Timer.Timer();
         _timer.start(method(:onTick), 50, true);
@@ -273,92 +278,83 @@ class BitochiJazzBallView extends WatchUi.View {
         recountOpen();
     }
 
-    // Simple flood fill: find connected open regions on each side of the wall.
-    // Fill the region that contains NO balls.
+    // Fill the region on each side of the completed wall that contains no balls.
+    // Uses in-place CELL_TEMP marking to avoid ANY dynamic array allocation.
     hidden function fillEmptySide() {
         var dirH = _wall[2];
         var fixedCoord = dirH ? _wall[1] : _wall[0];
 
-        // Get two seed points on either side of the wall
-        var seeds = new [2];
+        // Two seed points, one on each side of the wall
+        var seed0; var seed1;
         if (dirH) {
             var r1 = fixedCoord - 1; var r2 = fixedCoord + 1;
-            if (r1 < 0) { r1 = 0; } if (r2 >= GROWS) { r2 = GROWS - 1; }
-            seeds[0] = r1 * GCOLS + _wall[3]; // left-edge col of wall, row above
-            seeds[1] = r2 * GCOLS + _wall[3]; // left-edge col, row below
+            if (r1 < 0)      { r1 = 0; }
+            if (r2 >= GROWS) { r2 = GROWS - 1; }
+            seed0 = r1 * GCOLS + _wall[3];
+            seed1 = r2 * GCOLS + _wall[3];
         } else {
             var c1 = fixedCoord - 1; var c2 = fixedCoord + 1;
-            if (c1 < 0) { c1 = 0; } if (c2 >= GCOLS) { c2 = GCOLS - 1; }
-            seeds[0] = _wall[3] * GCOLS + c1; // row top of wall, col left
-            seeds[1] = _wall[3] * GCOLS + c2; // row top, col right
+            if (c1 < 0)      { c1 = 0; }
+            if (c2 >= GCOLS) { c2 = GCOLS - 1; }
+            seed0 = _wall[3] * GCOLS + c1;
+            seed1 = _wall[3] * GCOLS + c2;
         }
 
-        for (var si = 0; si < 2; si++) {
-            var seed = seeds[si];
-            if (_grid[seed] != CELL_OPEN) { continue; }
-
-            // Flood fill from seed — collect region
-            var region = floodCollect(seed);
-            if (region == null) { continue; }
-
-            // Check if any ball is in this region
-            var hasBall = false;
-            for (var bi = 0; bi < _balls.size() && !hasBall; bi++) {
-                var bc = _balls[bi][0] / 10;
-                var br = _balls[bi][1] / 10;
-                var idx = br * GCOLS + bc;
-                for (var ri = 0; ri < region.size() && !hasBall; ri++) {
-                    if (region[ri] == idx) { hasBall = true; }
-                }
-            }
-
-            if (!hasBall) {
-                // Fill this region
-                for (var ri = 0; ri < region.size(); ri++) {
-                    _grid[region[ri]] = CELL_WALL;
-                }
-            }
-        }
+        floodFillSide(seed0);
+        floodFillSide(seed1);
     }
 
-    // Flood fill collecting up to 1000 cells (limits CPU spike)
-    hidden function floodCollect(startIdx) {
-        var visited = new [_totalCells];
-        for (var i = 0; i < _totalCells; i++) { visited[i] = false; }
+    // BFS flood fill from startIdx.
+    // Marks the connected CELL_OPEN region as CELL_TEMP, then:
+    //   • if no ball found inside → converts CELL_TEMP → CELL_WALL (filled)
+    //   • otherwise             → restores CELL_TEMP → CELL_OPEN
+    // Uses pre-allocated _floodQueue — zero heap allocations.
+    hidden function floodFillSide(startIdx) {
+        if (_grid[startIdx] != CELL_OPEN) { return; }
 
-        var queue = new [800];
+        // BFS — mark visited cells with CELL_TEMP immediately on enqueue
         var qHead = 0; var qTail = 0;
-        queue[qTail] = startIdx; qTail++; visited[startIdx] = true;
+        _grid[startIdx] = CELL_TEMP;
+        _floodQueue[qTail] = startIdx; qTail++;
 
-        var result = new [0];
-        var rSize = 0;
+        while (qHead < qTail) {
+            var idx = _floodQueue[qHead]; qHead++;
+            var r = idx / GCOLS;
+            var c = idx % GCOLS;
 
-        while (qHead < qTail && rSize < 600) {
-            var idx = queue[qHead]; qHead++;
-            var r = idx / GCOLS; var c = idx % GCOLS;
-
-            // Append to result
-            var newResult = new [rSize + 1];
-            for (var i = 0; i < rSize; i++) { newResult[i] = result[i]; }
-            newResult[rSize] = idx;
-            result = newResult; rSize++;
-
-            // 4-neighbours
-            var neighbours = new [4];
-            neighbours[0] = (r > 0)          ? (r-1)*GCOLS+c : -1;
-            neighbours[1] = (r < GROWS-1)    ? (r+1)*GCOLS+c : -1;
-            neighbours[2] = (c > 0)          ? r*GCOLS+(c-1) : -1;
-            neighbours[3] = (c < GCOLS-1)    ? r*GCOLS+(c+1) : -1;
-
-            for (var ni = 0; ni < 4; ni++) {
-                var n = neighbours[ni];
-                if (n < 0 || visited[n]) { continue; }
-                if (_grid[n] != CELL_OPEN) { continue; }
-                visited[n] = true;
-                if (qTail < 800) { queue[qTail] = n; qTail++; }
+            // 4-neighbours (inline to avoid allocating a temp array)
+            if (r > 0) {
+                var n = (r - 1) * GCOLS + c;
+                if (_grid[n] == CELL_OPEN) { _grid[n] = CELL_TEMP; _floodQueue[qTail] = n; qTail++; }
+            }
+            if (r < GROWS - 1) {
+                var n = (r + 1) * GCOLS + c;
+                if (_grid[n] == CELL_OPEN) { _grid[n] = CELL_TEMP; _floodQueue[qTail] = n; qTail++; }
+            }
+            if (c > 0) {
+                var n = r * GCOLS + (c - 1);
+                if (_grid[n] == CELL_OPEN) { _grid[n] = CELL_TEMP; _floodQueue[qTail] = n; qTail++; }
+            }
+            if (c < GCOLS - 1) {
+                var n = r * GCOLS + (c + 1);
+                if (_grid[n] == CELL_OPEN) { _grid[n] = CELL_TEMP; _floodQueue[qTail] = n; qTail++; }
             }
         }
-        return result;
+
+        // Check whether any ball landed inside the marked region
+        var hasBall = false;
+        var bCount = _balls.size();
+        for (var bi = 0; bi < bCount && !hasBall; bi++) {
+            var bc = _balls[bi][0] / 10;
+            var br = _balls[bi][1] / 10;
+            if (_grid[br * GCOLS + bc] == CELL_TEMP) { hasBall = true; }
+        }
+
+        // Convert CELL_TEMP to final state (single pass over marked cells only)
+        var finalCell = hasBall ? CELL_OPEN : CELL_WALL;
+        for (var qi = 0; qi < qTail; qi++) {
+            _grid[_floodQueue[qi]] = finalCell;
+        }
     }
 
     hidden function recountOpen() {
