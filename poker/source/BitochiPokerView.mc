@@ -344,7 +344,7 @@ class BitochiPokerView extends WatchUi.View {
 
     hidden function advanceStreet() {
         _street++;
-        if (_street > STR_RIVER) { doShowdown(); return; }
+        if (_street > STR_RIVER) { _street = STR_RIVER; doShowdown(); return; }
 
         // Deal community cards
         if (_street == STR_FLOP) {
@@ -613,9 +613,12 @@ class BitochiPokerView extends WatchUi.View {
     }
 
     hidden function drawHUD(dc) {
-        // Street name (top center)
+        // Street name (top center) — clamp index in case street advanced past RIVER
+        var streetIdx = _street;
+        if (streetIdx < 0) { streetIdx = 0; }
+        if (streetIdx >= _streetStr.size()) { streetIdx = _streetStr.size() - 1; }
         dc.setColor(0x5599AA, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, 4, Graphics.FONT_XTINY, _streetStr[_street], Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, 4, Graphics.FONT_XTINY, _streetStr[streetIdx], Graphics.TEXT_JUSTIFY_CENTER);
         // Pot
         if (_pot > 0) {
             dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
