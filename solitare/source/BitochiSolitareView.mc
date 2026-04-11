@@ -83,25 +83,37 @@ class BitochiSolitareView extends WatchUi.View {
     }
 
     hidden function setupGeometry() {
-        // Card dimensions — fit 7 columns across screen with small gaps
-        var gap  = 2;
-        _cw = (_w - gap * 8) / 7;
-        _ch = _cw * 14 / 10;
+        var r    = _w / 2;
+        var gap  = 1;
 
-        // Top row: stock, waste, [gap], 4 foundations
-        _topRowY = 4;
-        _stockX  = gap;
-        _wasteX  = gap * 2 + _cw;
+        // Push the top row down until it's inside the round-screen safe zone.
+        // safeHalf(y) = sqrt(r² – (r–y)²)  — half the usable width at row y.
+        // We need:  safeHalf * 2  ≥  7*cw + 8*gap + 4px margin
+        // Try topRowY = 26; solve for max cw that fits.
+        _topRowY = 26;
+        var dy       = r - _topRowY;
+        var safeHalf = Math.sqrt((r * r - dy * dy).toFloat()).toNumber();
+        var usableW  = safeHalf * 2 - 4;          // leave 2px margin each side
+        _cw = (usableW - gap * 8) / 7;
+        if (_cw > 22) { _cw = 22; }
+        if (_cw < 14) { _cw = 14; }
+        _ch = _cw * 15 / 10;                      // card height = 1.5× width
 
-        // Foundation x positions (right-aligned, 4 suits)
+        // Centre the 7 columns on screen
+        var totalW = _cw * 7 + gap * 8;
+        var startX = (_w - totalW) / 2;
         _colX = new [7];
         for (var c = 0; c < 7; c++) {
-            _colX[c] = gap + c * (_cw + gap);
+            _colX[c] = startX + gap + c * (_cw + gap);
         }
 
+        _stockX = _colX[0];
+        _wasteX = _colX[1];
         _foundY = _topRowY;
-        _colY   = _topRowY + _ch + gap * 2;
-        _fanOff = _cw * 3 / 10;  // tableau fan: show ~30% of each card
+        _colY   = _topRowY + _ch + 3;
+
+        // Fan offset: fixed 11px — shows rank + suit line of each fanned card
+        _fanOff = 11;
     }
 
     // ── Timer ─────────────────────────────────────────────────────────────────
@@ -579,10 +591,9 @@ class BitochiSolitareView extends WatchUi.View {
                 dc.fillRoundedRectangle(fx, _foundY, _cw, _ch, 3);
                 dc.setColor(0x226644, Graphics.COLOR_TRANSPARENT);
                 dc.drawRoundedRectangle(fx, _foundY, _cw, _ch, 3);
-                var fSuit = (f < 2) ? f : (f == 2 ? 2 : 3);
-                var isRed = (fSuit == 1 || fSuit == 2);
-                dc.setColor(isRed ? 0x883333 : 0x888888, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(fx + _cw/2, _foundY + _ch/2 - 7,
+                var isRed = (f == 1 || f == 2);
+                dc.setColor(isRed ? 0x993333 : 0x777799, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(fx + _cw / 2, _foundY + _ch / 2 - 6,
                     Graphics.FONT_XTINY, _suitStr[f], Graphics.TEXT_JUSTIFY_CENTER);
             } else {
                 drawCardFace(dc, fx, _foundY, _cw, _ch, found[found.size()-1], true);
@@ -638,11 +649,11 @@ class BitochiSolitareView extends WatchUi.View {
     }
 
     hidden function drawHint(dc) {
-        // Bottom center: navigation hint + stats
-        var gap = 2;
-        var moveLabel = (_selPile >= 0) ? "tap dst / back=cancel" : "tap card or \u25B2\u25BC+tap";
-        dc.setColor(0x1A4A2A, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h - 12, Graphics.FONT_XTINY, moveLabel, Graphics.TEXT_JUSTIFY_CENTER);
+        // Place hint safely above the bottom clip zone of the round screen
+        var hintY = _h - 18;
+        var moveLabel = (_selPile >= 0) ? "tap dest / \u2190cancel" : "tap card \u25B2\u25BC sel";
+        dc.setColor(0x2A6040, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, hintY, Graphics.FONT_XTINY, moveLabel, Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawWinOverlay(dc) {
@@ -661,75 +672,96 @@ class BitochiSolitareView extends WatchUi.View {
     }
 
     // ── Card drawing primitives ───────────────────────────────────────────────
+
+    // Full face-down card (stock / unflipped tableau)
     hidden function drawCardBack(dc, x, y, w, h) {
-        dc.setColor(0x1A2888, Graphics.COLOR_TRANSPARENT);
+        // Navy body
+        dc.setColor(0x1C2F9A, Graphics.COLOR_TRANSPARENT);
         dc.fillRoundedRectangle(x, y, w, h, 2);
-        dc.setColor(0x283AAA, Graphics.COLOR_TRANSPARENT);
-        var s = (w > 10) ? 4 : 3;
-        for (var d = -h; d < w + h; d += s) {
+        // Diagonal line pattern
+        dc.setColor(0x2A44C0, Graphics.COLOR_TRANSPARENT);
+        var step = (w > 12) ? 4 : 3;
+        for (var d = -h; d < w + h; d += step) {
             dc.drawLine(x + d, y, x + d + h, y + h);
         }
-        dc.setColor(0x3A4ABB, Graphics.COLOR_TRANSPARENT);
+        // Border
+        dc.setColor(0x4A64D8, Graphics.COLOR_TRANSPARENT);
         dc.drawRoundedRectangle(x, y, w, h, 2);
     }
 
-    // For partial (fanned) card back
+    // Partial (fanned) face-down card — only top strip drawn
     hidden function drawCardBackH(dc, x, y, w, h) {
-        dc.setColor(0x1A2888, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0x1C2F9A, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(x, y, w, h);
-        dc.setColor(0x3A4ABB, Graphics.COLOR_TRANSPARENT);
-        dc.drawLine(x, y, x+w, y);
-        dc.drawLine(x, y, x, y+h);
-        dc.drawLine(x+w-1, y, x+w-1, y+h);
+        dc.setColor(0x2A44C0, Graphics.COLOR_TRANSPARENT);
+        var step = (w > 12) ? 4 : 3;
+        for (var d = -h; d < w + h; d += step) {
+            dc.drawLine(x + d, y, x + d + h, y + h);
+        }
+        dc.setColor(0x4A64D8, Graphics.COLOR_TRANSPARENT);
+        dc.drawLine(x, y, x + w, y);
+        dc.drawLine(x, y, x, y + h);
+        dc.drawLine(x + w - 1, y, x + w - 1, y + h);
     }
 
     // Full face-up card
     hidden function drawCardFace(dc, x, y, w, h, card, full) {
-        var rank = card / 4; var suit = card % 4;
+        var rank  = card / 4;
+        var suit  = card % 4;
         var isRed = (suit == 1 || suit == 2);
 
-        dc.setColor(0xEEEDDD, Graphics.COLOR_TRANSPARENT);
+        // Card body — bright white, visible on green felt
+        dc.setColor(0xF8F8F4, Graphics.COLOR_TRANSPARENT);
         dc.fillRoundedRectangle(x, y, w, h, 2);
-        dc.setColor(0x998877, Graphics.COLOR_TRANSPARENT);
+        // Subtle border
+        dc.setColor(isRed ? 0xBB4444 : 0x445588, Graphics.COLOR_TRANSPARENT);
         dc.drawRoundedRectangle(x, y, w, h, 2);
 
-        var tc = isRed ? 0xCC1111 : 0x111133;
+        var tc = isRed ? 0xCC0000 : 0x111122;
         dc.setColor(tc, Graphics.COLOR_TRANSPARENT);
+        // Rank — top-left, 1px from edges
         dc.drawText(x + 2, y + 1, Graphics.FONT_XTINY, _rankStr[rank], Graphics.TEXT_JUSTIFY_LEFT);
-        if (full && h >= 14) {
-            dc.drawText(x + 2, y + 9, Graphics.FONT_XTINY, _suitStr[suit], Graphics.TEXT_JUSTIFY_LEFT);
-        }
-        if (full && w >= 22 && h >= 28) {
-            // Centre suit
-            dc.drawText(x + w/2, y + h/2 - 7, Graphics.FONT_XTINY, _suitStr[suit], Graphics.TEXT_JUSTIFY_CENTER);
+        // Suit — just below rank
+        dc.drawText(x + 2, y + 9, Graphics.FONT_XTINY, _suitStr[suit], Graphics.TEXT_JUSTIFY_LEFT);
+        // Large centre suit on full (last) card when tall enough
+        if (full && h >= 26) {
+            dc.drawText(x + w / 2, y + h / 2 - 6, Graphics.FONT_XTINY, _suitStr[suit], Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 
-    // Partial (fanned) face-up card showing just top strip
+    // Partial (fanned) face-up card — shows rank + suit in top strip
     hidden function drawCardFaceH(dc, x, y, w, h, card, full) {
         if (full) { drawCardFace(dc, x, y, w, h, card, true); return; }
-        var rank = card / 4; var suit = card % 4;
+        var rank  = card / 4;
+        var suit  = card % 4;
         var isRed = (suit == 1 || suit == 2);
 
-        dc.setColor(0xEEEDDD, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0xF8F8F4, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(x, y, w, h);
-        dc.setColor(isRed ? 0xCC1111 : 0x111133, Graphics.COLOR_TRANSPARENT);
+
+        var tc = isRed ? 0xCC0000 : 0x111122;
+        dc.setColor(tc, Graphics.COLOR_TRANSPARENT);
         dc.drawText(x + 2, y + 1, Graphics.FONT_XTINY, _rankStr[rank], Graphics.TEXT_JUSTIFY_LEFT);
-        if (h >= 14) {
+        if (h >= 12) {
             dc.drawText(x + 2, y + 9, Graphics.FONT_XTINY, _suitStr[suit], Graphics.TEXT_JUSTIFY_LEFT);
         }
-        dc.setColor(0x998877, Graphics.COLOR_TRANSPARENT);
-        dc.drawLine(x, y, x+w, y); dc.drawLine(x, y, x, y+h); dc.drawLine(x+w-1, y, x+w-1, y+h);
+
+        // Top / left / right borders only (bottom is hidden by next card)
+        dc.setColor(isRed ? 0xBB4444 : 0x445588, Graphics.COLOR_TRANSPARENT);
+        dc.drawLine(x, y, x + w, y);
+        dc.drawLine(x, y, x, y + h);
+        dc.drawLine(x + w - 1, y, x + w - 1, y + h);
     }
 
     hidden function drawCursor(dc, x, y, w, h) {
-        dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0xFFEE33, Graphics.COLOR_TRANSPARENT);
         dc.drawRoundedRectangle(x - 1, y - 1, w + 2, h + 2, 3);
         dc.drawRoundedRectangle(x - 2, y - 2, w + 4, h + 4, 4);
     }
 
     hidden function drawSelected(dc, x, y, w, h) {
-        dc.setColor(0x44FFCC, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0x33FFCC, Graphics.COLOR_TRANSPARENT);
         dc.drawRoundedRectangle(x - 1, y - 1, w + 2, h + 2, 3);
+        dc.drawRoundedRectangle(x - 2, y - 2, w + 4, h + 4, 4);
     }
 }
