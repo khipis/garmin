@@ -47,6 +47,7 @@ class BitochiCheckersView extends WatchUi.View {
 
     // Geometry
     hidden var _ox; hidden var _oy; hidden var _sq;
+    // _sq/ox/oy initialised to 0 so doTap guard works before onLayout fires
 
     // ── Initialize ────────────────────────────────────────────────────────────
     function initialize() {
@@ -58,6 +59,7 @@ class BitochiCheckersView extends WatchUi.View {
         _curRow = 4; _curCol = 1;
         _validDsts = new [0];
         _board = new [64];
+        _sq = 0; _ox = 0; _oy = 0;
         resetBoard();
         _timer = new Timer.Timer();
         _timer.start(method(:onTick), 200, true);
@@ -135,14 +137,22 @@ class BitochiCheckersView extends WatchUi.View {
     function doMenu() { doBack(); }
 
     function doTap(tx, ty) {
-        if (_gs == GS_MENU)                           { startGame(); return; }
-        if (_gs == GS_WIN || _gs == GS_LOSE || _gs == GS_DRAW) { _gs = GS_MENU; return; }
+        if (_gs == GS_MENU)                                       { startGame(); return; }
+        if (_gs == GS_WIN || _gs == GS_LOSE || _gs == GS_DRAW)   { _gs = GS_MENU; return; }
         if (_gs == GS_AI_THINK) { return; }
         if (_gs != GS_PLAY)     { return; }
-        var col = (tx - _ox) / _sq;
+        if (_sq <= 0) { return; }
+
+        // Map screen pixel → board square
+        var col    = (tx - _ox) / _sq;
         var rowInv = (ty - _oy) / _sq;
+
+        // Strict bounds — reject taps outside the board area
+        if (tx < _ox || tx >= _ox + _sq * 8) { return; }
+        if (ty < _oy || ty >= _oy + _sq * 8) { return; }
         if (col < 0 || col >= 8 || rowInv < 0 || rowInv >= 8) { return; }
-        var row = 7 - rowInv;  // flip: top of screen = row 7
+
+        var row = 7 - rowInv;   // screen-top = row 7 (AI back rank)
         _curRow = row; _curCol = col;
         handleCell(row, col);
     }
@@ -154,28 +164,30 @@ class BitochiCheckersView extends WatchUi.View {
         _curRow = 2; _curCol = 1;
     }
 
+    // First tap: select your piece and show valid destinations (green).
+    // Second tap: on a green square = execute move; on own piece = reselect;
+    //             anywhere else = deselect.
     hidden function handleCell(row, col) {
         if (!_whiteTurn) { return; }
 
-        // If there is a forced piece (multi-jump), only that piece may be used
-        if (_mustRow >= 0 && !(_selRow == _mustRow && _selCol == _mustCol)) {
-            if (_board[row*8+col] == CK_WHITE || _board[row*8+col] == CK_WKING) {
-                // Trying to select a different piece during forced jump — ignore
-                if (row != _mustRow || col != _mustCol) { return; }
-            }
-        }
-
-        var piece = _board[row*8+col];
+        var piece = _board[row * 8 + col];
+        var isOwnPiece = (piece == CK_WHITE || piece == CK_WKING);
 
         if (_selRow < 0) {
-            // Select
-            if (piece == CK_WHITE || piece == CK_WKING) {
-                if (_mustRow >= 0 && (row != _mustRow || col != _mustCol)) { return; }
-                _selRow = row; _selCol = col;
-                _validDsts = getMovesFor(row, col, piece, _mustRow >= 0);
-            }
+            // ── Phase 1: nothing selected — select a piece ────────────────
+            if (!isOwnPiece) { return; }
+            // During forced multi-jump only the forced piece may be chosen
+            if (_mustRow >= 0 && (row != _mustRow || col != _mustCol)) { return; }
+
+            var moves = getMovesFor(row, col, piece, _mustRow >= 0);
+            if (moves.size() == 0) { return; }  // no valid moves for this piece — ignore tap
+
+            _selRow = row; _selCol = col;
+            _validDsts = moves;
+
         } else {
-            // Destination?
+            // ── Phase 2: piece already selected ──────────────────────────
+            // Check if tap lands on a highlighted (valid) destination
             var moved = false;
             for (var i = 0; i < _validDsts.size(); i++) {
                 var mv = _validDsts[i];
@@ -185,13 +197,18 @@ class BitochiCheckersView extends WatchUi.View {
                     break;
                 }
             }
+
             if (!moved) {
-                // Reselect
+                // Deselect and optionally reselect another own piece
                 _selRow = -1; _selCol = -1; _validDsts = new [0];
-                if (piece == CK_WHITE || piece == CK_WKING) {
+
+                if (isOwnPiece) {
                     if (_mustRow >= 0 && (row != _mustRow || col != _mustCol)) { return; }
-                    _selRow = row; _selCol = col;
-                    _validDsts = getMovesFor(row, col, piece, _mustRow >= 0);
+                    var moves2 = getMovesFor(row, col, piece, _mustRow >= 0);
+                    if (moves2.size() > 0) {
+                        _selRow = row; _selCol = col;
+                        _validDsts = moves2;
+                    }
                 }
             }
         }
@@ -563,24 +580,28 @@ class BitochiCheckersView extends WatchUi.View {
 
                 var sqClr = light ? 0xD4B077 : 0x7A4020;
 
-                // Cursor highlight
-                if (row == _curRow && col == _curCol) {
-                    sqClr = light ? 0xFFEE88 : 0xCC8833;
-                }
-                // Valid destination
+                // Valid destination highlight (green)
                 var isDst = false;
                 for (var i = 0; i < _validDsts.size(); i++) {
                     if (_validDsts[i][0] == row && _validDsts[i][1] == col) { isDst = true; break; }
                 }
-                if (isDst) { sqClr = 0x55CC66; }
+                if (isDst) { sqClr = 0x44CC55; }
 
                 dc.setColor(sqClr, Graphics.COLOR_TRANSPARENT);
                 dc.fillRectangle(bx, by, _sq, _sq);
 
-                // Selected piece square
+                // Selected piece: bright blue outline (drawn over square, under piece)
                 if (row == _selRow && col == _selCol) {
-                    dc.setColor(0x55AAFF, Graphics.COLOR_TRANSPARENT);
+                    dc.setColor(0x2266FF, Graphics.COLOR_TRANSPARENT);
                     dc.fillRectangle(bx, by, _sq, _sq);
+                    dc.setColor(0x55AAFF, Graphics.COLOR_TRANSPARENT);
+                    dc.drawRectangle(bx, by, _sq, _sq);
+                }
+
+                // Cursor ring (button navigation) — dim yellow, only when not selected
+                if (row == _curRow && col == _curCol && (row != _selRow || col != _selCol)) {
+                    dc.setColor(0x887700, Graphics.COLOR_TRANSPARENT);
+                    dc.drawRectangle(bx, by, _sq, _sq);
                 }
             }
         }
@@ -595,17 +616,29 @@ class BitochiCheckersView extends WatchUi.View {
         for (var row = 0; row < 8; row++) {
             for (var col = 0; col < 8; col++) {
                 var p = _board[row*8+col];
-                if (p == CK_EMPTY) { continue; }
                 var bx = _ox + col * _sq + _sq / 2;
                 var by = _oy + (7 - row) * _sq + _sq / 2;
+
+                if (p == CK_EMPTY) {
+                    // Draw dot on valid destination squares
+                    var isDst = false;
+                    for (var i = 0; i < _validDsts.size(); i++) {
+                        if (_validDsts[i][0] == row && _validDsts[i][1] == col) { isDst = true; break; }
+                    }
+                    if (isDst) {
+                        dc.setColor(0x00AA33, Graphics.COLOR_TRANSPARENT);
+                        dc.fillCircle(bx, by, _sq / 4);
+                    }
+                    continue;
+                }
                 drawChecker(dc, bx, by, p, r2, r2k);
             }
         }
-        // Cursor ring
-        if (_gs == GS_PLAY) {
+        // Cursor ring (only when using button navigation)
+        if (_gs == GS_PLAY && _selRow < 0) {
             var cx = _ox + _curCol * _sq + _sq / 2;
             var cy = _oy + (7 - _curRow) * _sq + _sq / 2;
-            dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
+            dc.setColor(0x887700, Graphics.COLOR_TRANSPARENT);
             dc.drawCircle(cx, cy, r2 + 2);
         }
     }
