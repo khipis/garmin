@@ -3,900 +3,602 @@ using Toybox.Graphics;
 using Toybox.Timer;
 using Toybox.Math;
 
-// ── Game state constants ──────────────────────────────────────────────────────
+// ── 5-Card Draw Poker ─────────────────────────────────────────────────────────
+// States
 const PS_MENU     = 0;
-const PS_PLAY     = 1;
-const PS_SHOWDOWN = 2;
-const PS_RESULT   = 3;
+const PS_EXCHANGE = 1;   // player selects cards to swap (0-2)
+const PS_AI_DRAW  = 2;   // brief pause while AI draws
+const PS_SHOWDOWN = 3;   // both hands face-up, result shown
 const PS_GAMEOVER = 4;
 
-// Streets
-const STR_PREFLOP = 0;
-const STR_FLOP    = 1;
-const STR_TURN    = 2;
-const STR_RIVER   = 3;
-
-// Actions
-const ACT_FOLD  = 0;
-const ACT_CALL  = 1;
-const ACT_RAISE = 2;
-
-// Poker config
-const BB          = 20;   // big blind
-const SB          = 10;   // small blind
-const RAISE_BB    = 2;    // raise = RAISE_BB × BB
+// Card: rank*4 + suit    rank 0=2 … 12=A    suit 0=♠ 1=♥ 2=♦ 3=♣
+const ANTE       = 20;
 const START_CHIPS = 500;
+const MAX_DISCARD = 2;   // player may swap up to 2 cards
 
 class BitochiPokerView extends WatchUi.View {
 
     hidden var _w; hidden var _h;
     hidden var _timer; hidden var _tick;
-    hidden var _gs; hidden var _street;
+    hidden var _gs;
 
-    // Setup menu
-    hidden var _numOpp;   // 1-3
-
-    // Deck: card = rank*4+suit, rank 0-12 (2→A), suit 0-3 (♠♥♦♣)
-    hidden var _deck;     // [52]
+    // Deck
+    hidden var _deck;    // [52]
     hidden var _deckTop;
 
-    // Cards: _hands flat array, player i → _hands[i*2], _hands[i*2+1]
-    hidden var _hands;    // [8]
-    hidden var _comm;     // [5] community cards, -1 = not dealt
+    // Hands: [5] each
+    hidden var _pHand;   // player
+    hidden var _aHand;   // AI
+
+    // Selection (exchange phase)
+    hidden var _discard; // [5] boolean — marked for discard
+    hidden var _curCard; // cursor index 0-4
 
     // Chips & pot
-    hidden var _chips;    // [4]
+    hidden var _pChips;
+    hidden var _aChips;
     hidden var _pot;
-    hidden var _sbets;    // [4] bets in current street
-    hidden var _maxBet;   // highest bet this street
-    hidden var _allin;    // [4] boolean
 
-    // Round control
-    hidden var _dealer;   // button position 0..numOpp
-    hidden var _actIdx;   // who acts next
-    hidden var _active;   // [4] still in hand
-    hidden var _bust;     // [4] eliminated
-    hidden var _needAct;  // [4] still needs to act this street
+    // Result
+    hidden var _resultMsg;
+    hidden var _aiDelay;
 
-    // UI
-    hidden var _selAct;   // player's chosen action
-    hidden var _aiDelay;  // ticks before AI acts
-    hidden var _showAll;  // true at showdown
-    hidden var _winMsg;   // winner message
-    hidden var _winIdx;   // winner index
-    hidden var _handDesc; // [4] hand description at showdown
-
-    // Geometry (set in setupGeometry)
-    hidden var _hudH;
-    hidden var _oppY; hidden var _oppCardW; hidden var _oppCardH;
-    hidden var _commX; hidden var _commY; hidden var _commCW; hidden var _commCH;
-    hidden var _handX; hidden var _handY; hidden var _handCW; hidden var _handCH;
-    hidden var _actY;
-
-    // String tables
+    // Hand evaluation strings
     hidden var _rankStr;
     hidden var _suitStr;
-    hidden var _streetStr;
     hidden var _handNames;
+
+    // Geometry (computed in setupGeo)
+    hidden var _cw; hidden var _ch; hidden var _gap;
+    hidden var _startX;
+    hidden var _pHandY;   // top of player hand
+    hidden var _aHandY;   // top of AI hand
 
     // ── Initialize ────────────────────────────────────────────────────────────
     function initialize() {
         View.initialize();
         _w = 0; _h = 0; _tick = 0;
-        _gs = PS_MENU; _street = STR_PREFLOP;
-        _numOpp = 2;
-        _selAct = ACT_CALL; _aiDelay = 0; _showAll = false;
-        _winMsg = ""; _winIdx = -1;
-        _dealer = 0; _actIdx = 0; _pot = 0; _maxBet = 0; _deckTop = 0;
+        _gs = PS_MENU;
+        _pChips = START_CHIPS; _aChips = START_CHIPS; _pot = 0;
+        _resultMsg = ""; _aiDelay = 0;
 
-        _deck    = new [52];
-        _hands   = new [8];
-        _comm    = new [5];
-        _chips   = new [4];
-        _sbets   = new [4];
-        _allin   = new [4];
-        _active  = new [4];
-        _bust    = new [4];
-        _needAct = new [4];
-        _handDesc = new [4];
+        _deck  = new [52]; _deckTop = 0;
+        _pHand = new [5];  _aHand  = new [5];
+        _discard = new [5];
+        for (var i = 0; i < 5; i++) { _discard[i] = false; _pHand[i] = i; _aHand[i] = i+5; }
+        _curCard = 0;
 
-        for (var i = 0; i < 5; i++) { _comm[i] = -1; }
-        for (var i = 0; i < 4; i++) {
-            _chips[i] = START_CHIPS; _bust[i] = false;
-            _active[i] = false; _allin[i] = false;
-            _needAct[i] = false; _handDesc[i] = "";
-            _hands[i*2] = 0; _hands[i*2+1] = 1;
-        }
-
-        _rankStr   = ["2","3","4","5","6","7","8","9","T","J","Q","K","A"];
-        _suitStr   = ["\u2660","\u2665","\u2666","\u2663"];
-        _streetStr = ["Pre-Flop","Flop","Turn","River"];
+        _rankStr  = ["2","3","4","5","6","7","8","9","T","J","Q","K","A"];
+        _suitStr  = ["\u2660","\u2665","\u2666","\u2663"];
         _handNames = ["High Card","Pair","Two Pair","Three of a Kind",
                       "Straight","Flush","Full House","Four of a Kind",
                       "Str.Flush","Royal Flush"];
 
         _timer = new Timer.Timer();
-        _timer.start(method(:onTick), 120, true);
+        _timer.start(method(:onTick), 150, true);
     }
 
     function onLayout(dc) {
         _w = dc.getWidth(); _h = dc.getHeight();
-        setupGeometry();
+        setupGeo();
     }
 
-    hidden function setupGeometry() {
-        _hudH     = 26;
-        _oppY     = _hudH + 4;
-        _oppCardW = _w / 18;                        // ~14px
-        _oppCardH = _oppCardW * 3 / 2;              // ~21px
+    hidden function setupGeo() {
+        // 5 cards across — safe zone on round screen.
+        // Cards at two rows: AI near top (y≈28), player near bottom (y≈190).
+        // At y=190+ch, safeHalf = sqrt(r²-(r-y-ch)²) must fit 5 cards.
+        var r = _w / 2;
+        _gap = 4;
+        // Use card height ≈ screen height * 13/100 but cap
+        _ch = _h * 14 / 100;
+        if (_ch > 42) { _ch = 42; }
+        if (_ch < 28) { _ch = 28; }
+        _cw = _ch * 24 / 36; // width = 2/3 of height
 
-        var oppAreaH = _oppCardH + 30;
+        var totalW = _cw * 5 + _gap * 4;
+        // Ensure fits at narrowest Y we'll use
+        var bottomY = _h * 77 / 100 + _ch; // bottom of player hand
+        var dy = bottomY > r ? bottomY - r : r - bottomY;
+        var safeHalf = Math.sqrt((r * r - dy * dy).toFloat()).toNumber() - 4;
+        if (totalW > safeHalf * 2) {
+            _cw = (safeHalf * 2 - _gap * 4) / 5;
+            _ch = _cw * 36 / 24;
+        }
 
-        var commGap  = 3;
-        var commTotalW = _w * 74 / 100;
-        _commCW   = (commTotalW - commGap * 4) / 5;
-        _commCH   = _commCW * 14 / 10;
-        _commX    = (_w - commTotalW) / 2;
-        _commY    = _oppY + oppAreaH + 4;
-
-        _handCW   = _w * 21 / 100;                 // ~54px
-        _handCH   = _handCW * 14 / 10;             // ~75px
-        _handX    = (_w - _handCW * 2 - 10) / 2;
-        _handY    = _commY + _commCH + 8;
-
-        _actY     = _handY + _handCH + 8;
-        if (_actY > _h * 88 / 100) { _actY = _h * 88 / 100; }
+        _startX = (_w - (_cw * 5 + _gap * 4)) / 2;
+        _aHandY = _h * 10 / 100;         // AI hand top
+        _pHandY = _h * 77 / 100;         // player hand top
     }
 
-    // ── Timer / tick ──────────────────────────────────────────────────────────
+    // ── Timer ─────────────────────────────────────────────────────────────────
     function onTick() as Void {
         _tick++;
-        if (_gs == PS_PLAY && _actIdx != 0 && _active[_actIdx] && !_allin[_actIdx]) {
+        if (_gs == PS_AI_DRAW) {
             _aiDelay--;
-            if (_aiDelay <= 0) { doAiAction(); }
+            if (_aiDelay <= 0) { doAiDraw(); }
         }
         WatchUi.requestUpdate();
     }
 
     // ── Input ─────────────────────────────────────────────────────────────────
     function doUp() {
-        if (_gs == PS_MENU) {
-            _numOpp = (_numOpp % 3) + 1;
-        } else if (_gs == PS_PLAY && _actIdx == 0 && _active[0]) {
-            _selAct = (_selAct + 2) % 3;
-        } else if (_gs == PS_SHOWDOWN || _gs == PS_RESULT) {
-            startNewHand();
+        if (_gs == PS_MENU)     { return; }
+        if (_gs == PS_GAMEOVER) { _gs = PS_MENU; return; }
+        if (_gs == PS_SHOWDOWN) { dealNewHand(); return; }
+        if (_gs == PS_EXCHANGE) {
+            if (_curCard > 0) { _curCard--; }
         }
     }
 
     function doDown() {
-        if (_gs == PS_MENU) {
-            _numOpp = (_numOpp % 3) + 1;
-        } else if (_gs == PS_PLAY && _actIdx == 0 && _active[0]) {
-            _selAct = (_selAct + 1) % 3;
-        } else if (_gs == PS_SHOWDOWN || _gs == PS_RESULT) {
-            startNewHand();
+        if (_gs == PS_MENU)     { return; }
+        if (_gs == PS_GAMEOVER) { _gs = PS_MENU; return; }
+        if (_gs == PS_SHOWDOWN) { dealNewHand(); return; }
+        if (_gs == PS_EXCHANGE) {
+            if (_curCard < 4) { _curCard++; }
         }
     }
 
     function doSelect() {
-        if (_gs == PS_MENU)     { startGame(); }
-        else if (_gs == PS_PLAY && _actIdx == 0 && _active[0]) { doPlayerAction(_selAct); }
-        else if (_gs == PS_SHOWDOWN || _gs == PS_RESULT) { startNewHand(); }
-        else if (_gs == PS_GAMEOVER) { resetGame(); }
+        if (_gs == PS_MENU)     { startGame(); return; }
+        if (_gs == PS_GAMEOVER) { _gs = PS_MENU; return; }
+        if (_gs == PS_SHOWDOWN) { dealNewHand(); return; }
+        if (_gs == PS_EXCHANGE) { toggleDiscard(_curCard); }
     }
 
     function doBack() {
         if (_gs != PS_MENU) { _gs = PS_MENU; }
     }
 
-    // ── Game control ──────────────────────────────────────────────────────────
+    function doMenu() { doBack(); }
+
+    function doTap(tx, ty) {
+        if (_gs == PS_MENU)     { startGame(); return; }
+        if (_gs == PS_GAMEOVER) { _gs = PS_MENU; return; }
+        if (_gs == PS_SHOWDOWN) { dealNewHand(); return; }
+        if (_gs == PS_AI_DRAW)  { return; }
+        if (_gs != PS_EXCHANGE) { return; }
+
+        // Tap on a player card → toggle discard
+        for (var i = 0; i < 5; i++) {
+            var cx = _startX + i * (_cw + _gap);
+            if (tx >= cx && tx < cx + _cw && ty >= _pHandY && ty < _pHandY + _ch) {
+                _curCard = i; toggleDiscard(i); return;
+            }
+        }
+
+        // Tap on the DEAL button (centre of screen ~y=55%)
+        var btnY = _h * 53 / 100; var btnH = 24;
+        if (ty >= btnY && ty < btnY + btnH) {
+            commitExchange(); return;
+        }
+    }
+
+    hidden function toggleDiscard(i) {
+        if (_discard[i]) {
+            _discard[i] = false; return;
+        }
+        // Count how many already marked
+        var cnt = 0;
+        for (var j = 0; j < 5; j++) { if (_discard[j]) { cnt++; } }
+        if (cnt < MAX_DISCARD) { _discard[i] = true; }
+    }
+
+    // ── Game flow ─────────────────────────────────────────────────────────────
     hidden function startGame() {
-        for (var i = 0; i < 4; i++) {
-            _chips[i] = START_CHIPS;
-            _bust[i]  = (i > _numOpp);
-        }
-        _dealer = 0;
-        _gs = PS_PLAY;
-        startNewHand();
+        _pChips = START_CHIPS; _aChips = START_CHIPS;
+        _resultMsg = "";
+        dealNewHand();
     }
 
-    hidden function resetGame() {
-        _gs = PS_MENU;
-        for (var i = 0; i < 4; i++) { _chips[i] = START_CHIPS; _bust[i] = false; }
-    }
+    hidden function dealNewHand() {
+        if (_pChips <= 0 || _aChips <= 0) { _gs = PS_GAMEOVER; return; }
 
-    hidden function startNewHand() {
-        // Game-over checks
-        if (_chips[0] <= 0) { _gs = PS_GAMEOVER; return; }
-        var opp_alive = false;
-        for (var i = 1; i <= _numOpp; i++) { if (_chips[i] > 0) { opp_alive = true; } }
-        if (!opp_alive) { _gs = PS_GAMEOVER; return; }
+        // Ante
+        var ante = ANTE;
+        if (ante > _pChips) { ante = _pChips; }
+        if (ante > _aChips) { ante = _aChips; }
+        _pChips -= ante; _aChips -= ante; _pot = ante * 2;
 
-        _gs = PS_PLAY;
-        _street = STR_PREFLOP;
-        _pot = 0; _maxBet = 0; _showAll = false;
-        _winMsg = ""; _winIdx = -1;
-
-        for (var i = 0; i < 5; i++) { _comm[i] = -1; }
-        for (var i = 0; i < 4; i++) {
-            _active[i]  = (i == 0 || (i <= _numOpp && _chips[i] > 0));
-            _allin[i]   = false;
-            _sbets[i]   = 0;
-            _needAct[i] = _active[i];
-            _handDesc[i] = "";
-        }
-
-        // Advance dealer past bust players
-        var np = _numOpp + 1;
-        _dealer = (_dealer + 1) % np;
-        while (_bust[_dealer] || _chips[_dealer] <= 0) {
-            _dealer = (_dealer + 1) % np;
-        }
-
-        shuffleDeck();
-        for (var i = 0; i < np; i++) {
-            if (_active[i]) {
-                _hands[i*2]   = _deck[_deckTop];
-                _hands[i*2+1] = _deck[_deckTop+1];
-                _deckTop += 2;
-            }
-        }
-
-        // Post blinds
-        var sb_pos = nextActive((_dealer + 1) % np, -1);
-        var bb_pos = nextActive((sb_pos + 1) % np, sb_pos);
-        postBlind(sb_pos, SB);
-        postBlind(bb_pos, BB);
-        _maxBet = BB;
-        _needAct[bb_pos] = true; // BB can re-raise
-
-        // First to act: left of BB
-        _actIdx  = nextActive((bb_pos + 1) % np, -1);
-        _selAct  = ACT_CALL;
-        _aiDelay = 5;
-    }
-
-    hidden function nextActive(start, skip) {
-        var np = _numOpp + 1;
-        var idx = start % np;
-        for (var tries = 0; tries < np; tries++) {
-            if (_active[idx] && idx != skip) { return idx; }
-            idx = (idx + 1) % np;
-        }
-        return start % np;
-    }
-
-    hidden function postBlind(idx, amount) {
-        var bet = (amount < _chips[idx]) ? amount : _chips[idx];
-        if (bet >= _chips[idx]) { _allin[idx] = true; }
-        _chips[idx] -= bet;
-        _sbets[idx] += bet;
-        _pot += bet;
-        _needAct[idx] = false;
-    }
-
-    hidden function doPlayerAction(act) {
-        if (_actIdx != 0) { return; }
-        executeAction(0, act);
-    }
-
-    hidden function doAiAction() {
-        executeAction(_actIdx, aiDecide(_actIdx));
-    }
-
-    hidden function executeAction(idx, act) {
-        var toCall = _maxBet - _sbets[idx];
-        if (toCall < 0) { toCall = 0; }
-
-        if (act == ACT_FOLD) {
-            _active[idx]  = false;
-            _needAct[idx] = false;
-
-        } else if (act == ACT_CALL) {
-            var bet = (toCall < _chips[idx]) ? toCall : _chips[idx];
-            if (bet >= _chips[idx]) { _allin[idx] = true; }
-            _chips[idx]  -= bet;
-            _sbets[idx]  += bet;
-            _pot         += bet;
-            _needAct[idx] = false;
-
-        } else if (act == ACT_RAISE) {
-            var raiseAmt  = BB * RAISE_BB;
-            var newTotal  = _maxBet + raiseAmt;
-            var bet       = newTotal - _sbets[idx];
-            if (bet >= _chips[idx]) { bet = _chips[idx]; _allin[idx] = true; }
-            _chips[idx]  -= bet;
-            _sbets[idx]  += bet;
-            _pot         += bet;
-            if (_sbets[idx] > _maxBet) { _maxBet = _sbets[idx]; }
-            for (var i = 0; i < 4; i++) {
-                if (i != idx && _active[i] && !_allin[i]) { _needAct[i] = true; }
-            }
-            _needAct[idx] = false;
-        }
-
-        advanceRound();
-    }
-
-    hidden function advanceRound() {
-        // Count active players
-        var cnt = 0; var last = -1;
-        for (var i = 0; i < 4; i++) { if (_active[i]) { cnt++; last = i; } }
-        if (cnt <= 1) { awardPot(last); return; }
-
-        // Find next player who needs to act
-        var np = _numOpp + 1;
-        var next = (_actIdx + 1) % np;
-        var found = false;
-        for (var tries = 0; tries < np; tries++) {
-            if (_active[next] && _needAct[next] && !_allin[next]) { found = true; break; }
-            next = (next + 1) % np;
-        }
-
-        if (!found) {
-            advanceStreet();
-        } else {
-            _actIdx  = next;
-            _aiDelay = 5;
-        }
-    }
-
-    hidden function advanceStreet() {
-        _street++;
-        if (_street > STR_RIVER) { _street = STR_RIVER; doShowdown(); return; }
-
-        // Deal community cards
-        if (_street == STR_FLOP) {
-            _comm[0] = _deck[_deckTop]; _comm[1] = _deck[_deckTop+1]; _comm[2] = _deck[_deckTop+2];
-            _deckTop += 3;
-        } else {
-            _comm[_street + 1] = _deck[_deckTop]; _deckTop++;
-        }
-
-        // Reset street bets
-        _maxBet = 0;
-        for (var i = 0; i < 4; i++) {
-            _sbets[i]   = 0;
-            _needAct[i] = _active[i] && !_allin[i];
-        }
-
-        var np = _numOpp + 1;
-        _actIdx = nextActiveNeedsAct((_dealer + 1) % np);
-        _selAct = ACT_CALL;
-        _aiDelay = 5;
-    }
-
-    hidden function nextActiveNeedsAct(start) {
-        var np = _numOpp + 1;
-        var idx = start % np;
-        for (var tries = 0; tries < np; tries++) {
-            if (_active[idx] && _needAct[idx] && !_allin[idx]) { return idx; }
-            idx = (idx + 1) % np;
-        }
-        return start % np;
-    }
-
-    hidden function doShowdown() {
-        _showAll = true;
-        _gs = PS_SHOWDOWN;
-
-        // Evaluate all active players' best 7-card hand
-        var np = _numOpp + 1;
-        var bestVal = -1; var winner = -1;
-        for (var i = 0; i < np; i++) {
-            if (!_active[i]) { continue; }
-            var cards7 = new [7];
-            cards7[0] = _hands[i*2]; cards7[1] = _hands[i*2+1];
-            for (var c = 0; c < 5; c++) {
-                cards7[c+2] = (_comm[c] >= 0) ? _comm[c] : 0;
-            }
-            var hv = bestHand7(cards7);
-            var ht = hv / 371293;
-            if (ht < 0) { ht = 0; } if (ht > 9) { ht = 9; }
-            _handDesc[i] = _handNames[ht];
-            if (hv > bestVal) { bestVal = hv; winner = i; }
-        }
-        awardPot(winner);
-    }
-
-    hidden function awardPot(winner) {
-        if (winner >= 0) {
-            _chips[winner] += _pot;
-            _winIdx = winner;
-            _winMsg = (winner == 0) ? "You win  +" + _pot + "!" : "CPU " + winner + " wins";
-        }
-        _pot = 0;
-        // Mark any chip-less opponents as bust
-        for (var i = 0; i < 4; i++) {
-            if (i <= _numOpp && _chips[i] <= 0) { _bust[i] = true; }
-        }
-        _gs = PS_RESULT;
-    }
-
-    // ── Deck helpers ──────────────────────────────────────────────────────────
-    hidden function shuffleDeck() {
+        // Shuffle
         for (var i = 0; i < 52; i++) { _deck[i] = i; }
         for (var i = 51; i > 0; i--) {
             var j = Math.rand().abs() % (i + 1);
             var t = _deck[i]; _deck[i] = _deck[j]; _deck[j] = t;
         }
         _deckTop = 0;
+
+        // Deal 5 to each
+        for (var i = 0; i < 5; i++) { _pHand[i] = _deck[_deckTop]; _deckTop++; }
+        for (var i = 0; i < 5; i++) { _aHand[i] = _deck[_deckTop]; _deckTop++; }
+
+        for (var i = 0; i < 5; i++) { _discard[i] = false; }
+        _curCard = 0;
+        _gs = PS_EXCHANGE;
+    }
+
+    hidden function commitExchange() {
+        // Replace player's discarded cards
+        for (var i = 0; i < 5; i++) {
+            if (_discard[i]) { _pHand[i] = _deck[_deckTop]; _deckTop++; _discard[i] = false; }
+        }
+        _gs = PS_AI_DRAW;
+        _aiDelay = 5;
+    }
+
+    hidden function doAiDraw() {
+        // AI draws: discard cards not contributing to best hand
+        aiExchange();
+        // Showdown
+        var pScore = evalHand(_pHand);
+        var aScore = evalHand(_aHand);
+        if (pScore > aScore)      { _resultMsg = "YOU WIN!";  _pChips += _pot; }
+        else if (aScore > pScore) { _resultMsg = "YOU LOSE";  _aChips += _pot; }
+        else                      { _resultMsg = "SPLIT POT"; _pChips += _pot/2; _aChips += _pot/2; }
+        _pot = 0;
+        _gs = PS_SHOWDOWN;
+    }
+
+    // ── AI exchange logic ─────────────────────────────────────────────────────
+    hidden function aiExchange() {
+        // Count ranks and suits
+        var ranks = new [13];
+        var suits = new [4];
+        for (var i = 0; i < 13; i++) { ranks[i] = 0; }
+        for (var i = 0; i < 4;  i++) { suits[i] = 0; }
+        for (var i = 0; i < 5;  i++) {
+            ranks[_aHand[i] / 4]++;
+            suits[_aHand[i] % 4]++;
+        }
+
+        // Classify current hand strength
+        var maxRank = 0; var pairs = 0; var trips = 0; var quads = 0;
+        for (var i = 0; i < 13; i++) {
+            if (ranks[i] > maxRank) { maxRank = ranks[i]; }
+            if (ranks[i] == 2) { pairs++; }
+            if (ranks[i] == 3) { trips++; }
+            if (ranks[i] == 4) { quads++; }
+        }
+        var flushDraw = false;
+        for (var i = 0; i < 4; i++) { if (suits[i] == 4) { flushDraw = true; } }
+
+        // Decide what to keep
+        // Four of a kind / full house / flush / straight → keep all
+        if (quads > 0 || (pairs > 0 && trips > 0)) { return; }
+
+        // Check flush (all same suit)
+        var flushSuit = -1;
+        for (var i = 0; i < 4; i++) { if (suits[i] == 5) { flushSuit = i; } }
+        if (flushSuit >= 0) { return; }
+
+        // Three of a kind → keep trips, discard 2
+        if (trips > 0) {
+            var cnt = 0;
+            for (var i = 0; i < 5; i++) {
+                if (ranks[_aHand[i] / 4] < 3 && cnt < 2) { _aHand[i] = _deck[_deckTop]; _deckTop++; cnt++; }
+            }
+            return;
+        }
+
+        // Two pair → keep both pairs
+        if (pairs >= 2) { return; }
+
+        // One pair → keep pair, discard worst 2 (up to MAX_DISCARD)
+        if (pairs == 1) {
+            var pairRank = -1;
+            for (var i = 0; i < 13; i++) { if (ranks[i] == 2) { pairRank = i; } }
+            var cnt = 0;
+            for (var i = 0; i < 5; i++) {
+                if (_aHand[i] / 4 != pairRank && cnt < MAX_DISCARD) {
+                    _aHand[i] = _deck[_deckTop]; _deckTop++; cnt++;
+                }
+            }
+            return;
+        }
+
+        // Flush draw (4 same suit) → draw 1
+        if (flushDraw) {
+            for (var i = 0; i < 5; i++) {
+                if (_aHand[i] % 4 != suits[0] && suits[0] == 4) {
+                    // find the suit with 4
+                }
+            }
+            var oddSuit = -1; var fsIdx = -1;
+            for (var s = 0; s < 4; s++) { if (suits[s] == 4) { fsIdx = s; } }
+            if (fsIdx >= 0) {
+                for (var i = 0; i < 5; i++) {
+                    if (_aHand[i] % 4 != fsIdx) { _aHand[i] = _deck[_deckTop]; _deckTop++; break; }
+                }
+            }
+            return;
+        }
+
+        // Nothing → discard 2 lowest-rank cards
+        var swapped = 0;
+        // Simple: sort indices by rank ascending, swap first 2
+        var loIdx0 = 0; var loIdx1 = 1;
+        var loR0 = _aHand[0] / 4; var loR1 = _aHand[1] / 4;
+        if (loR0 > loR1) {
+            var t = loR0; loR0 = loR1; loR1 = t;
+            var ti = loIdx0; loIdx0 = loIdx1; loIdx1 = ti;
+        }
+        for (var i = 2; i < 5; i++) {
+            var r = _aHand[i] / 4;
+            if (r < loR0) { loR1 = loR0; loIdx1 = loIdx0; loR0 = r; loIdx0 = i; }
+            else if (r < loR1) { loR1 = r; loIdx1 = i; }
+        }
+        _aHand[loIdx0] = _deck[_deckTop]; _deckTop++;
+        _aHand[loIdx1] = _deck[_deckTop]; _deckTop++;
     }
 
     // ── Hand evaluation ───────────────────────────────────────────────────────
-    // Best of all C(7,2)=21 five-card combinations
-    hidden function bestHand7(c7) {
-        var best = 0;
-        var c5 = new [5];
-        for (var s1 = 0; s1 < 6; s1++) {
-            for (var s2 = s1 + 1; s2 < 7; s2++) {
-                var ci = 0;
-                for (var k = 0; k < 7; k++) {
-                    if (k != s1 && k != s2) { c5[ci] = c7[k]; ci++; }
-                }
-                var v = evalHand5(c5);
-                if (v > best) { best = v; }
-            }
+    // Returns integer score: higher = better hand.
+    // Encodes hand type × 10^8 + kicker info.
+    hidden function evalHand(hand) {
+        var ranks = new [13];
+        var suits = new [4];
+        for (var i = 0; i < 13; i++) { ranks[i] = 0; }
+        for (var i = 0; i < 4;  i++) { suits[i] = 0; }
+        var rs = new [5]; // rank of each card
+        for (var i = 0; i < 5; i++) {
+            rs[i] = hand[i] / 4;
+            ranks[rs[i]]++;
+            suits[hand[i] % 4]++;
         }
-        return best;
-    }
 
-    // Returns integer: handType*13^5 + rank_encoding (higher = better)
-    hidden function evalHand5(c) {
-        var r = new [5]; var s = new [5];
-        for (var i = 0; i < 5; i++) { r[i] = c[i] / 4; s[i] = c[i] % 4; }
-
-        // Sort ranks descending
+        // Sort rs descending (bubble)
         for (var i = 0; i < 4; i++) {
             for (var j = i+1; j < 5; j++) {
-                if (r[j] > r[i]) { var t = r[i]; r[i] = r[j]; r[j] = t; }
+                if (rs[j] > rs[i]) { var t = rs[i]; rs[i] = rs[j]; rs[j] = t; }
             }
         }
 
-        var flush = (s[0]==s[1] && s[1]==s[2] && s[2]==s[3] && s[3]==s[4]);
-        var straight = false; var strHigh = r[0];
-        if (r[0]-r[4] == 4 && r[0]!=r[1] && r[1]!=r[2] && r[2]!=r[3] && r[3]!=r[4]) {
-            straight = true;
-        }
-        if (r[0]==12 && r[1]==3 && r[2]==2 && r[3]==1 && r[4]==0) {
-            straight = true; strHigh = 3;
-        }
+        var isFlush = false;
+        for (var i = 0; i < 4; i++) { if (suits[i] == 5) { isFlush = true; } }
 
-        var cnt = new [13];
-        for (var i = 0; i < 13; i++) { cnt[i] = 0; }
-        for (var i = 0; i < 5; i++)  { cnt[r[i]]++; }
-
-        var quad=-1; var trip=-1; var p0=-1; var p1=-1; var pc=0;
-        for (var k = 12; k >= 0; k--) {
-            if      (cnt[k] == 4) { quad = k; }
-            else if (cnt[k] == 3) { trip = k; }
-            else if (cnt[k] == 2) { if (pc==0){p0=k;}else if(pc==1){p1=k;} pc++; }
+        var isStraight = false;
+        if (rs[0] - rs[4] == 4 && ranks[rs[0]] == 1) { isStraight = true; }
+        // Wheel: A-2-3-4-5
+        if (rs[0] == 12 && rs[1] == 3 && rs[2] == 2 && rs[3] == 1 && rs[4] == 0) {
+            isStraight = true; rs[0] = -1; // ace low
+            for (var i = 0; i < 4; i++) { for (var j = i+1; j < 5; j++) { if (rs[j]>rs[i]){var t=rs[i];rs[i]=rs[j];rs[j]=t;} } }
         }
 
-        var B = 371293; // 13^5
-        var type; var val;
-
-        if (straight && flush) {
-            type = (strHigh == 12) ? 9 : 8; val = type*B + strHigh;
-        } else if (quad >= 0) {
-            var kick=-1; for(var k=12;k>=0;k--){if(cnt[k]==1){kick=k;break;}}
-            type = 7; val = type*B + quad*28561 + (kick>=0?kick:0);
-        } else if (trip >= 0 && pc >= 1) {
-            type = 6; val = type*B + trip*2197 + p0*169;
-        } else if (flush) {
-            type = 5; val = type*B + r[0]*28561+r[1]*2197+r[2]*169+r[3]*13+r[4];
-        } else if (straight) {
-            type = 4; val = type*B + strHigh;
-        } else if (trip >= 0) {
-            var k1=-1; var k2=-1;
-            for(var k=12;k>=0;k--){if(cnt[k]==1){if(k1<0){k1=k;}else{k2=k;break;}}}
-            type = 3; val = type*B + trip*28561 + (k1>=0?k1:0)*2197 + (k2>=0?k2:0)*169;
-        } else if (pc >= 2) {
-            var kick2=-1; for(var k=12;k>=0;k--){if(cnt[k]==1){kick2=k;break;}}
-            type = 2; val = type*B + p0*2197 + p1*169 + (kick2>=0?kick2:0)*13;
-        } else if (pc == 1) {
-            var k1b=-1; var k2b=-1; var k3b=-1;
-            for(var k=12;k>=0;k--){if(cnt[k]==1){if(k1b<0){k1b=k;}else if(k2b<0){k2b=k;}else{k3b=k;break;}}}
-            type = 1; val = type*B + p0*28561 + (k1b>=0?k1b:0)*2197 + (k2b>=0?k2b:0)*169 + (k3b>=0?k3b:0)*13;
-        } else {
-            type = 0; val = r[0]*28561+r[1]*2197+r[2]*169+r[3]*13+r[4];
+        var pairs = 0; var trips = 0; var quads = 0;
+        for (var i = 0; i < 13; i++) {
+            if (ranks[i] == 2) { pairs++; }
+            if (ranks[i] == 3) { trips++; }
+            if (ranks[i] == 4) { quads++; }
         }
-        return val;
+
+        var handType = 0;
+        if (isFlush && isStraight) {
+            handType = (rs[0] == 12) ? 9 : 8; // royal or straight flush
+        } else if (quads > 0)            { handType = 7; }
+        else if (trips > 0 && pairs > 0) { handType = 6; }
+        else if (isFlush)                { handType = 5; }
+        else if (isStraight)             { handType = 4; }
+        else if (trips > 0)              { handType = 3; }
+        else if (pairs >= 2)             { handType = 2; }
+        else if (pairs == 1)             { handType = 1; }
+        else                             { handType = 0; }
+
+        // Kicker: pack top 5 ranks into score
+        var score = handType * 100000;
+        score += rs[0] * 1000 + rs[1] * 100 + rs[2] * 10 + rs[3];
+        return score;
     }
 
-    // ── AI logic ──────────────────────────────────────────────────────────────
-    hidden function aiDecide(idx) {
-        var toCall = _maxBet - _sbets[idx];
-        if (toCall < 0) { toCall = 0; }
-        var str = aiStrength(idx);
-        var canRaise = (_chips[idx] > toCall + BB);
-
-        if (str > 0.78 && canRaise) { return ACT_RAISE; }
-        if (str > 0.52)             { return ACT_CALL;  }
-        if (toCall == 0)            { return ACT_CALL;  } // free check
-        if (str > 0.32 && toCall <= BB * 3) { return ACT_CALL; }
-        return ACT_FOLD;
-    }
-
-    hidden function aiStrength(idx) {
-        var c0r = _hands[idx*2]   / 4; // rank 0-12
-        var c1r = _hands[idx*2+1] / 4;
-        var hi  = (c0r > c1r) ? c0r : c1r;
-        var lo  = (c0r < c1r) ? c0r : c1r;
-        var paired  = (c0r == c1r);
-        var suited  = (_hands[idx*2] % 4 == _hands[idx*2+1] % 4);
-
-        if (_street == STR_PREFLOP) {
-            var sc = (hi.toFloat() + lo.toFloat()) / 24.0;
-            if (paired) { sc += 0.22; }
-            if (suited)  { sc += 0.06; }
-            if (sc > 1.0) { sc = 1.0; }
-            return sc;
-        }
-
-        // Post-flop: use actual hand value
-        var commCount = 0;
-        for (var c = 0; c < 5; c++) { if (_comm[c] >= 0) { commCount++; } }
-        if (commCount == 0) { return (hi.toFloat() + lo.toFloat()) / 24.0; }
-
-        var cards7 = new [7];
-        cards7[0] = _hands[idx*2]; cards7[1] = _hands[idx*2+1];
-        for (var c = 0; c < 5; c++) {
-            cards7[c+2] = (_comm[c] >= 0) ? _comm[c] : _deck[0];
-        }
-        var hv = bestHand7(cards7);
-        var ht = hv / 371293;
-        return (ht.toFloat() + 1.0) / 10.5;
+    hidden function handName(hand) {
+        var score = evalHand(hand);
+        var ht = score / 100000;
+        if (ht < 0) { ht = 0; }
+        if (ht >= _handNames.size()) { ht = _handNames.size() - 1; }
+        return _handNames[ht];
     }
 
     // ── Rendering ─────────────────────────────────────────────────────────────
     function onUpdate(dc) {
-        if (_w == 0) { _w = dc.getWidth(); _h = dc.getHeight(); setupGeometry(); }
-        if (_gs == PS_MENU)     { drawMenu(dc); return; }
-        if (_gs == PS_GAMEOVER) { drawGameOver(dc); return; }
-        drawTable(dc);
+        if (_w == 0) { _w = dc.getWidth(); _h = dc.getHeight(); setupGeo(); }
+        if (_gs == PS_MENU) { drawMenu(dc); return; }
+        drawBackground(dc);
+        drawAIHand(dc);
+        drawPlayerHand(dc);
+        drawMiddle(dc);
+        if (_gs == PS_GAMEOVER) { drawGameOver(dc); }
+    }
+
+    // ── Background ────────────────────────────────────────────────────────────
+    hidden function drawBackground(dc) {
+        dc.setColor(0x050C08, 0x050C08); dc.clear();
+        var r = _w / 2;
+        dc.setColor(0x0B3018, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(r, r, r - 2);
+        dc.setColor(0x0E3C20, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(r, r, r - 14);
     }
 
     // ── Menu ─────────────────────────────────────────────────────────────────
     hidden function drawMenu(dc) {
-        dc.setColor(0x0B1520, 0x0B1520); dc.clear();
-
-        // Suit decorations across the top
-        var sClr = [0xBBBBBB, 0xFF5555, 0xFF7733, 0xBBBBBB];
-        for (var i = 0; i < 4; i++) {
-            dc.setColor(sClr[i], Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w * (15 + i * 24) / 100, _h * 7 / 100,
-                Graphics.FONT_LARGE, _suitStr[i], Graphics.TEXT_JUSTIFY_CENTER);
-        }
-
-        dc.setColor(0x44AAFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h * 26 / 100, Graphics.FONT_MEDIUM, "POKER", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0x1E3D5A, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h * 38 / 100, Graphics.FONT_XTINY, "Texas Hold'em", Graphics.TEXT_JUSTIFY_CENTER);
-
-        // Opponent count selector
-        dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h * 52 / 100, Graphics.FONT_XTINY,
-            "Opponents: " + _numOpp, Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h * 62 / 100, Graphics.FONT_XTINY,
-            "\u25B2 \u25BC  to change", Graphics.TEXT_JUSTIFY_CENTER);
-
-        // Starting chips info
-        dc.setColor(0x446677, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h * 72 / 100, Graphics.FONT_XTINY,
-            "Start: " + START_CHIPS + " chips", Graphics.TEXT_JUSTIFY_CENTER);
-
-        dc.setColor((_tick % 12 < 6) ? 0x44AAFF : 0x2277CC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h * 86 / 100, Graphics.FONT_XTINY, "Tap to deal!", Graphics.TEXT_JUSTIFY_CENTER);
-    }
-
-    // ── Game table ────────────────────────────────────────────────────────────
-    hidden function drawTable(dc) {
-        // Dark background + circular green felt
-        dc.setColor(0x050C10, 0x050C10); dc.clear();
+        dc.setColor(0x050C08, 0x050C08); dc.clear();
         var r = _w / 2;
-        dc.setColor(0x0B3520, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0x0B3018, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(r, r, r - 2);
-        dc.setColor(0x0E4228, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(r, r, r - 18);
+        dc.setColor(0x0E3C20, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(r, r, r - 14);
 
-        drawHUD(dc);
-        drawOpponents(dc);
-        drawCommunity(dc);
-        drawPlayerCards(dc);
-
-        if (_gs == PS_PLAY)     { drawActionBar(dc); }
-        if (_gs == PS_SHOWDOWN) { drawShowdownBar(dc); }
-        if (_gs == PS_RESULT)   { drawResultOverlay(dc); }
-    }
-
-    hidden function drawHUD(dc) {
-        // Street name (top center) — clamp index in case street advanced past RIVER
-        var streetIdx = _street;
-        if (streetIdx < 0) { streetIdx = 0; }
-        if (streetIdx >= _streetStr.size()) { streetIdx = _streetStr.size() - 1; }
-        dc.setColor(0x5599AA, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, 4, Graphics.FONT_XTINY, _streetStr[streetIdx], Graphics.TEXT_JUSTIFY_CENTER);
-        // Pot
-        if (_pot > 0) {
-            dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w/2, 15, Graphics.FONT_XTINY, "POT " + _pot, Graphics.TEXT_JUSTIFY_CENTER);
-        }
-        // Player chips (safe bottom-left)
-        dc.setColor(0x44FF88, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w * 15 / 100, _h - 13, Graphics.FONT_XTINY, "" + _chips[0], Graphics.TEXT_JUSTIFY_LEFT);
-    }
-
-    hidden function drawOpponents(dc) {
-        var oppXs = getOppXs();
-        for (var i = 1; i <= _numOpp; i++) {
-            var ox = oppXs[i-1];
-            var oy = _oppY;
-            var bust  = (_bust[i] || _chips[i] <= 0);
-            var folded = (!_active[i] && !bust && _gs == PS_PLAY);
-            var isAct  = (_actIdx == i && _gs == PS_PLAY);
-
-            // Active player highlight
-            if (isAct) {
-                dc.setColor(0x1A4A2A, Graphics.COLOR_TRANSPARENT);
-                dc.fillRoundedRectangle(ox - _oppCardW - 4, oy - 2, _oppCardW * 2 + 11, _oppCardH + 26, 3);
-            }
-
-            // Cards
-            var cx0 = ox - _oppCardW - 2;
-            var cx1 = cx0 + _oppCardW + 3;
-            if (bust) {
-                dc.setColor(0x333333, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(ox, oy + 8, Graphics.FONT_XTINY, "OUT", Graphics.TEXT_JUSTIFY_CENTER);
-            } else if (folded) {
-                dc.setColor(0x553333, Graphics.COLOR_TRANSPARENT);
-                dc.fillRoundedRectangle(cx0, oy, _oppCardW, _oppCardH, 2);
-                dc.fillRoundedRectangle(cx1, oy, _oppCardW, _oppCardH, 2);
-                dc.setColor(0xFF4444, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(ox, oy + 4, Graphics.FONT_XTINY, "FOLD", Graphics.TEXT_JUSTIFY_CENTER);
-            } else {
-                var faceUp = _showAll && _active[i];
-                drawCard(dc, cx0, oy, _oppCardW, _oppCardH,
-                    _hands[i*2],   faceUp);
-                drawCard(dc, cx1, oy, _oppCardW, _oppCardH,
-                    _hands[i*2+1], faceUp);
-            }
-
-            // Name + chips
-            var nameColor = bust ? 0x444444 : (isAct ? 0xFFDD44 : 0x88AACC);
-            dc.setColor(nameColor, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(ox, oy + _oppCardH + 2, Graphics.FONT_XTINY, "CPU" + i, Graphics.TEXT_JUSTIFY_CENTER);
-            if (!bust) {
-                dc.setColor(0x557799, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(ox, oy + _oppCardH + 13, Graphics.FONT_XTINY, "" + _chips[i], Graphics.TEXT_JUSTIFY_CENTER);
-            }
-
-            // Current street bet
-            if (!bust && _sbets[i] > 0 && _gs == PS_PLAY) {
-                dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(ox, oy - 11, Graphics.FONT_XTINY, "+" + _sbets[i], Graphics.TEXT_JUSTIFY_CENTER);
-            }
-
-            // Hand name at showdown
-            if (_showAll && _active[i] && !_handDesc[i].equals("")) {
-                dc.setColor(0xAADD88, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(ox, oy + _oppCardH + 24, Graphics.FONT_XTINY, _handDesc[i], Graphics.TEXT_JUSTIFY_CENTER);
-            }
-
-            // Dealer button
-            if (_dealer == i) {
-                dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-                dc.fillCircle(cx0 - 5, oy + _oppCardH/2, 5);
-                dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(cx0 - 5, oy + _oppCardH/2 - 7, Graphics.FONT_XTINY, "D", Graphics.TEXT_JUSTIFY_CENTER);
-            }
-        }
-    }
-
-    hidden function getOppXs() {
-        var xs = new [3];
-        if (_numOpp == 1) {
-            xs[0] = _w / 2;
-        } else if (_numOpp == 2) {
-            xs[0] = _w * 28 / 100;
-            xs[1] = _w * 72 / 100;
-        } else {
-            xs[0] = _w * 18 / 100;
-            xs[1] = _w / 2;
-            xs[2] = _w * 82 / 100;
-        }
-        return xs;
-    }
-
-    hidden function drawCommunity(dc) {
-        var gap = 3;
-        var x = _commX;
+        // Sample cards
+        var sampleCards = [48, 35, 26, 13, 4]; // some face cards
         for (var i = 0; i < 5; i++) {
-            if (_comm[i] >= 0) {
-                drawCard(dc, x, _commY, _commCW, _commCH, _comm[i], true);
-            } else {
-                dc.setColor(0x0D3020, Graphics.COLOR_TRANSPARENT);
-                dc.fillRoundedRectangle(x, _commY, _commCW, _commCH, 2);
-                dc.setColor(0x1A4A30, Graphics.COLOR_TRANSPARENT);
-                dc.drawRoundedRectangle(x, _commY, _commCW, _commCH, 2);
+            var cx = _startX + i * (_cw + _gap);
+            var cy = _h * 28 / 100;
+            drawCard(dc, cx, cy, _cw, _ch, sampleCards[i % 4 + i * 3 % 5 < 52 ? i : 0], false, false);
+        }
+
+        dc.setColor(0xFFCC55, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w/2, _h * 50 / 100, Graphics.FONT_MEDIUM, "POKER", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x4A8040, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w/2, _h * 62 / 100, Graphics.FONT_XTINY, "5-Card Draw", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x336644, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w/2, _h * 72 / 100, Graphics.FONT_XTINY, "Exchange up to 2 cards", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor((_tick%10<5)?0xFFCC55:0xAA8833, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w/2, _h * 85 / 100, Graphics.FONT_XTINY, "Tap to deal!", Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    // ── AI hand (top) ─────────────────────────────────────────────────────────
+    hidden function drawAIHand(dc) {
+        var showCards = (_gs == PS_SHOWDOWN);
+        for (var i = 0; i < 5; i++) {
+            var cx = _startX + i * (_cw + _gap);
+            drawCard(dc, cx, _aHandY, _cw, _ch, _aHand[i], showCards, false);
+        }
+        // AI label / hand name
+        var lbl = (_gs == PS_SHOWDOWN) ? handName(_aHand) : "Dealer";
+        dc.setColor(showCards ? 0xFFDD88 : 0x558866, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _aHandY + _ch + 3, Graphics.FONT_XTINY, lbl, Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    // ── Player hand (bottom) ──────────────────────────────────────────────────
+    hidden function drawPlayerHand(dc) {
+        var showCards = true; // player always sees own cards
+        for (var i = 0; i < 5; i++) {
+            var cx = _startX + i * (_cw + _gap);
+            var isDiscard  = _discard[i];
+            var isCursor   = (_gs == PS_EXCHANGE && i == _curCard);
+            drawCard(dc, cx, _pHandY, _cw, _ch, _pHand[i], showCards, isDiscard);
+
+            if (isCursor) {
+                dc.setColor(0xFFEE44, Graphics.COLOR_TRANSPARENT);
+                dc.drawRoundedRectangle(cx - 2, _pHandY - 2, _cw + 4, _ch + 4, 3);
             }
-            x += _commCW + gap;
+            if (isDiscard) {
+                // X mark
+                dc.setColor(0xFF4422, Graphics.COLOR_TRANSPARENT);
+                dc.drawLine(cx + 2, _pHandY + 2, cx + _cw - 2, _pHandY + _ch - 2);
+                dc.drawLine(cx + _cw - 2, _pHandY + 2, cx + 2, _pHandY + _ch - 2);
+            }
+        }
+        // Player hand name at showdown
+        if (_gs == PS_SHOWDOWN) {
+            dc.setColor(0xAADDFF, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2, _pHandY - 14, Graphics.FONT_XTINY, handName(_pHand), Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 
-    hidden function drawPlayerCards(dc) {
-        // Active indicator behind cards
-        if (_actIdx == 0 && _gs == PS_PLAY && _active[0]) {
-            dc.setColor(0x1A4A2A, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(_handX - 6, _handY - 4, _handCW * 2 + 22, _handCH + 8, 5);
+    // ── Middle area ───────────────────────────────────────────────────────────
+    hidden function drawMiddle(dc) {
+        var midY = _aHandY + _ch + 18;
+
+        // Chips + pot
+        dc.setColor(0x44CC88, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w * 15 / 100, midY, Graphics.FONT_XTINY, "\u2665 " + _pChips, Graphics.TEXT_JUSTIFY_LEFT);
+        dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
+        if (_pot > 0) {
+            dc.drawText(_w / 2, midY, Graphics.FONT_XTINY, "POT " + _pot, Graphics.TEXT_JUSTIFY_CENTER);
         }
+        dc.setColor(0xFF8866, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w * 85 / 100, midY, Graphics.FONT_XTINY, _aChips + " \u2660", Graphics.TEXT_JUSTIFY_RIGHT);
 
-        drawCard(dc, _handX,              _handY, _handCW, _handCH, _hands[0], true);
-        drawCard(dc, _handX+_handCW+10,   _handY, _handCW, _handCH, _hands[1], true);
+        var btnY  = _h * 53 / 100;
+        var btnW  = _w * 50 / 100;
+        var btnH  = 24;
+        var btnX  = (_w - btnW) / 2;
 
-        // Hand name at showdown
-        if (_showAll && !_handDesc[0].equals("")) {
-            dc.setColor(0x44FF88, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w/2, _handY + _handCH + 5, Graphics.FONT_XTINY, _handDesc[0], Graphics.TEXT_JUSTIFY_CENTER);
-        }
+        if (_gs == PS_EXCHANGE) {
+            var cnt = 0;
+            for (var i = 0; i < 5; i++) { if (_discard[i]) { cnt++; } }
 
-        // Current bet
-        if (_sbets[0] > 0 && _gs == PS_PLAY) {
-            dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w/2, _handY - 13, Graphics.FONT_XTINY, "BET " + _sbets[0], Graphics.TEXT_JUSTIFY_CENTER);
-        }
+            // Instructions
+            dc.setColor(0x88BBAA, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2, btnY - 22, Graphics.FONT_XTINY,
+                "Tap card to discard (" + cnt + "/" + MAX_DISCARD + ")",
+                Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Dealer button for player
-        if (_dealer == 0) {
-            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(_handX - 8, _handY + _handCH/2, 6);
-            dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_handX - 8, _handY + _handCH/2 - 7, Graphics.FONT_XTINY, "D", Graphics.TEXT_JUSTIFY_CENTER);
+            // DEAL button
+            dc.setColor(0x112A1A, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(btnX, btnY, btnW, btnH, 5);
+            dc.setColor(0x33AA55, Graphics.COLOR_TRANSPARENT);
+            dc.drawRoundedRectangle(btnX, btnY, btnW, btnH, 5);
+            dc.setColor(0x66FF99, Graphics.COLOR_TRANSPARENT);
+            var lbl = (cnt == 0) ? "Stand Pat" : "Draw " + cnt;
+            dc.drawText(_w / 2, btnY + 4, Graphics.FONT_XTINY, lbl, Graphics.TEXT_JUSTIFY_CENTER);
+
+        } else if (_gs == PS_AI_DRAW) {
+            var dots = "";
+            for (var i = 0; i < (_tick % 4); i++) { dots = dots + "."; }
+            dc.setColor(0x88BBAA, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2, btnY, Graphics.FONT_XTINY, "Dealer draws" + dots, Graphics.TEXT_JUSTIFY_CENTER);
+
+        } else if (_gs == PS_SHOWDOWN) {
+            // Result message
+            var clr = 0xFFFFFF;
+            if (_resultMsg.equals("YOU WIN!"))  { clr = 0x44FF88; }
+            if (_resultMsg.equals("YOU LOSE"))  { clr = 0xFF5544; }
+            if (_resultMsg.equals("SPLIT POT")) { clr = 0xFFDD44; }
+
+            dc.setColor(0x081A10, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(btnX, btnY - 4, btnW, btnH + 8, 6);
+            dc.setColor(clr, Graphics.COLOR_TRANSPARENT);
+            dc.drawRoundedRectangle(btnX, btnY - 4, btnW, btnH + 8, 6);
+            dc.drawText(_w / 2, btnY + 2, Graphics.FONT_XTINY, _resultMsg, Graphics.TEXT_JUSTIFY_CENTER);
+
+            dc.setColor((_tick%10<5)?0x88CCFF:0x4488AA, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2, btnY + btnH + 10, Graphics.FONT_XTINY, "Tap \u25BA next hand", Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 
-    hidden function drawActionBar(dc) {
-        // Show AI thinking indicator when it's not player's turn
-        if (_actIdx != 0) {
-            dc.setColor(0x336655, Graphics.COLOR_TRANSPARENT);
-            var d = "";
-            var n = _tick % 4;
-            for (var i = 0; i < n; i++) { d = d + "."; }
-            dc.drawText(_w/2, _actY, Graphics.FONT_XTINY,
-                "CPU" + _actIdx + " thinking" + d, Graphics.TEXT_JUSTIFY_CENTER);
-            return;
-        }
-        if (!_active[0]) { return; }
-
-        var toCall = _maxBet - _sbets[0];
-        if (toCall < 0) { toCall = 0; }
-
-        var actLabels = new [3];
-        actLabels[ACT_FOLD]  = "FOLD";
-        actLabels[ACT_CALL]  = (toCall == 0) ? "CHECK" : ("CALL " + toCall);
-        actLabels[ACT_RAISE] = (_chips[0] > toCall + BB) ? ("RAISE") : "ALL-IN";
-
-        // Three buttons across the safe zone at _actY
-        var slotW = _w / 3;
-        for (var a = 0; a < 3; a++) {
-            var ax = a * slotW + slotW / 2;
-            var sel = (_selAct == a);
-            var bgClr = (a == ACT_FOLD)  ? (sel ? 0x661111 : 0x2A0808)
-                      : (a == ACT_CALL)  ? (sel ? 0x116611 : 0x082A08)
-                      :                    (sel ? 0x665511 : 0x2A2008);
-            dc.setColor(bgClr, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(ax - slotW/2 + 3, _actY - 2, slotW - 6, 20, 4);
-
-            var txtClr = sel ? 0xFFFFFF
-                       : (a == ACT_FOLD)  ? 0xAA4444
-                       : (a == ACT_CALL)  ? 0x44AA66
-                       :                    0xAA9933;
-            dc.setColor(txtClr, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(ax, _actY, Graphics.FONT_XTINY, actLabels[a], Graphics.TEXT_JUSTIFY_CENTER);
-        }
-
-        dc.setColor(0x2A3A44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _actY + 18, Graphics.FONT_XTINY,
-            "\u25B2\u25BC=switch  tap=ok", Graphics.TEXT_JUSTIFY_CENTER);
-    }
-
-    hidden function drawShowdownBar(dc) {
-        dc.setColor(0x335544, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _actY, Graphics.FONT_XTINY, "Tap to continue", Graphics.TEXT_JUSTIFY_CENTER);
-    }
-
-    hidden function drawResultOverlay(dc) {
-        var w2 = _w * 72 / 100;
-        var h2 = 44;
-        dc.setColor(0x050C0A, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle((_w - w2)/2, _h/2 - h2/2, w2, h2, 8);
-        dc.setColor(0x336655, Graphics.COLOR_TRANSPARENT);
-        dc.drawRoundedRectangle((_w - w2)/2, _h/2 - h2/2, w2, h2, 8);
-
-        var clr = (_winIdx == 0) ? 0x44FF88 : 0xFF8844;
-        dc.setColor(clr, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h/2 - 16, Graphics.FONT_XTINY, _winMsg, Graphics.TEXT_JUSTIFY_CENTER);
-
-        // Show player chip total
-        dc.setColor(0x88AACC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h/2, Graphics.FONT_XTINY, "Chips: " + _chips[0], Graphics.TEXT_JUSTIFY_CENTER);
-
-        dc.setColor((_tick % 10 < 5) ? 0x44AAFF : 0x2277CC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h/2 + 14, Graphics.FONT_XTINY, "Tap for next hand", Graphics.TEXT_JUSTIFY_CENTER);
-    }
-
+    // ── Game over ─────────────────────────────────────────────────────────────
     hidden function drawGameOver(dc) {
-        dc.setColor(0x0B1520, 0x0B1520); dc.clear();
-        var sClr = [0xBBBBBB, 0xFF5555, 0xFF7733, 0xBBBBBB];
-        for (var i = 0; i < 4; i++) {
-            dc.setColor(sClr[i], Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w * (15 + i * 24) / 100, _h * 8 / 100,
-                Graphics.FONT_LARGE, _suitStr[i], Graphics.TEXT_JUSTIFY_CENTER);
-        }
-
-        var won = (_chips[0] >= START_CHIPS * _numOpp);
-        dc.setColor(won ? 0xFFDD44 : 0xFF4455, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h * 30 / 100, Graphics.FONT_MEDIUM,
-            won ? "YOU WIN!" : "BUSTED!", Graphics.TEXT_JUSTIFY_CENTER);
-
-        dc.setColor(0x88AACC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h * 47 / 100, Graphics.FONT_XTINY,
-            "Chips: " + _chips[0], Graphics.TEXT_JUSTIFY_CENTER);
-
-        dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h * 58 / 100, Graphics.FONT_XTINY,
-            "Start: " + START_CHIPS + "   Opp: " + _numOpp, Graphics.TEXT_JUSTIFY_CENTER);
-
-        dc.setColor((_tick % 12 < 6) ? 0x44AAFF : 0x2277CC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h * 80 / 100, Graphics.FONT_XTINY, "Tap to restart", Graphics.TEXT_JUSTIFY_CENTER);
+        var bankrupt = (_pChips <= 0) ? "YOU'RE BROKE!" : "DEALER BROKE!";
+        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(_w/2 - 70, _h/2 - 32, 140, 64, 8);
+        dc.setColor(0x334422, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(_w/2 - 70, _h/2 - 32, 140, 64, 8);
+        dc.setColor(_pChips <= 0 ? 0xFF5544 : 0x44FF88, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w/2, _h/2 - 28, Graphics.FONT_MEDIUM, bankrupt, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor((_tick%10<5)?0x88CCFF:0x4466AA, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w/2, _h/2 + 8, Graphics.FONT_XTINY, "Tap for menu", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
-    // ── Card drawing ──────────────────────────────────────────────────────────
-    hidden function drawCard(dc, x, y, w, h, cardIdx, faceUp) {
-        if (!faceUp || cardIdx < 0) {
-            // Face-down: dark blue with diagonal lines
-            dc.setColor(0x1A2888, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(x, y, w, h, 3);
-            dc.setColor(0x283AAA, Graphics.COLOR_TRANSPARENT);
+    // ── Card drawing ─────────────────────────────────────────────────────────
+    hidden function drawCard(dc, x, y, w, h, card, faceUp, dimmed) {
+        if (!faceUp) {
+            // Face-down: navy with diagonal pattern
+            dc.setColor(dimmed ? 0x101830 : 0x1C2F9A, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(x, y, w, h, 2);
+            dc.setColor(0x2A44C0, Graphics.COLOR_TRANSPARENT);
             var step = (w > 14) ? 5 : 4;
-            for (var d = -h; d < w; d += step) {
+            for (var d = -h; d < w + h; d += step) {
                 dc.drawLine(x + d, y, x + d + h, y + h);
             }
-            dc.setColor(0x3A4ABB, Graphics.COLOR_TRANSPARENT);
-            dc.drawRoundedRectangle(x, y, w, h, 3);
+            dc.setColor(0x4A64D8, Graphics.COLOR_TRANSPARENT);
+            dc.drawRoundedRectangle(x, y, w, h, 2);
             return;
         }
 
-        var rank = cardIdx / 4;
-        var suit = cardIdx % 4;
+        var rank  = card / 4;
+        var suit  = card % 4;
         var isRed = (suit == 1 || suit == 2);
 
-        // Card face — cream background
-        dc.setColor(0xEEEDDD, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(x, y, w, h, 3);
-        dc.setColor(0x999888, Graphics.COLOR_TRANSPARENT);
-        dc.drawRoundedRectangle(x, y, w, h, 3);
+        // Card body
+        var bgClr = dimmed ? 0xCCCCBB : 0xF5F5EE;
+        dc.setColor(bgClr, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(x, y, w, h, 2);
+        // Border — colour matches suit
+        dc.setColor(isRed ? 0xBB3333 : 0x334466, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(x, y, w, h, 2);
 
-        var rankColor = isRed ? 0xCC1111 : 0x111122;
-        dc.setColor(rankColor, Graphics.COLOR_TRANSPARENT);
+        var tc = isRed ? 0xCC0000 : 0x111122;
+        if (dimmed) { tc = isRed ? 0x993333 : 0x444466; }
+        dc.setColor(tc, Graphics.COLOR_TRANSPARENT);
 
-        var font = (w >= 30) ? Graphics.FONT_TINY : Graphics.FONT_XTINY;
         // Rank top-left
         dc.drawText(x + 2, y + 1, Graphics.FONT_XTINY, _rankStr[rank], Graphics.TEXT_JUSTIFY_LEFT);
-
-        // Suit centre
-        var sFont = (w >= 30) ? Graphics.FONT_SMALL : Graphics.FONT_XTINY;
-        dc.setColor(isRed ? 0xCC1111 : 0x111133, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(x + w/2, y + h/2 - (w >= 30 ? 10 : 7), sFont,
-            _suitStr[suit], Graphics.TEXT_JUSTIFY_CENTER);
-
-        // Rank bottom-right (upside-down style: just repeat rank)
-        if (w >= 25) {
-            dc.setColor(rankColor, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(x + w - 2, y + h - 13, Graphics.FONT_XTINY,
-                _rankStr[rank], Graphics.TEXT_JUSTIFY_RIGHT);
+        // Suit below rank
+        dc.drawText(x + 2, y + 9, Graphics.FONT_XTINY, _suitStr[suit], Graphics.TEXT_JUSTIFY_LEFT);
+        // Large suit in centre (when card is tall enough)
+        if (h >= 30) {
+            dc.drawText(x + w / 2, y + h / 2 - 6, Graphics.FONT_XTINY, _suitStr[suit], Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 }
