@@ -216,7 +216,7 @@ class BitochiBlocksView extends WatchUi.View {
         if (_w == 0) { return; }
         // HUD strip height.  Text at y≈10 sits in a wide enough safe zone even on
         // the smallest round screens (dy≈120 from centre → safeHalf≈50 → zone ±50px).
-        var topBar = 28;
+        var topBar = 36;
         var botPad = 2;
         var availH = _h - topBar - botPad;
 
