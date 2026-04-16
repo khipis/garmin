@@ -1,0 +1,2546 @@
+[ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 15; @symbol_usingdef<0> = [Toybox,15,6,12]; @symbol_usingdef<1> = [Graphics,15,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 16; @symbol_usingdef<0> = [Toybox,16,6,12]; @symbol_usingdef<1> = [WatchUi,16,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 17; @symbol_usingdef<0> = [Toybox,17,6,12]; @symbol_usingdef<1> = [Timer,17,13,18]; ]
+using Toybox.Timer;
+[ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 18; @symbol_usingdef<0> = [Toybox,18,6,12]; @symbol_usingdef<1> = [System,18,13,19]; ]
+using Toybox.System;
+[ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 21; ]
+enum {
+    [ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 21; @position = 7; @symbol_enumdec = [QC_CHECK,21,7,15]; ]
+    QC_CHECK,
+    [ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 21; @position = 17; @symbol_enumdec = [QC_BESTMIX,21,17,27]; ]
+    QC_BESTMIX
+}
+[ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 24; @position = 6; @symbol_constdef = [QDC_FO2_VALS,24,6,18]; ]
+const QDC_FO2_VALS;
+[ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 25; @position = 6; @symbol_constdef = [QDC_FO2_LBLS,25,6,18]; ]
+const QDC_FO2_LBLS;
+[ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 28; @position = 6; @symbol_constdef = [QDC_DEPTHS,28,6,16]; ]
+const QDC_DEPTHS;
+[ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 31; @position = 6; @symbol_constdef = [QDC_NDL_D,31,6,15]; ]
+const QDC_NDL_D;
+[ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 32; @position = 6; @symbol_constdef = [QDC_NDL_T,32,6,15]; ]
+const QDC_NDL_T;
+[ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 35; @position = 6; @symbol_constdef = [QDC_PO2_WORK,35,6,18]; ]
+const QDC_PO2_WORK = 1.4;
+[ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 36; @position = 6; @symbol_constdef = [QDC_PO2_ABS,36,6,17]; ]
+const QDC_PO2_ABS = 1.6;
+[ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 38; @position = 6; @symbol_constdef = [QC_BG_SAFE,38,6,16]; ]
+const QC_BG_SAFE = 0x000000;
+[ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 39; @position = 6; @symbol_constdef = [QC_BG_WARN,39,6,16]; ]
+const QC_BG_WARN = 0x000000;
+[ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 40; @position = 6; @symbol_constdef = [QC_BG_DANG,40,6,16]; ]
+const QC_BG_DANG = 0x0A0000;
+[ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 41; @position = 6; @symbol_constdef = [QC_BG_PULSE,41,6,17]; ]
+const QC_BG_PULSE = 0x120000;
+[ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 42; @position = 6; @symbol_constdef = [QC_BG_NEUTRAL,42,6,19]; ]
+const QC_BG_NEUTRAL = 0x000000;
+[ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 44; @position = 6; @symbol_constdef = [QC_V_SAFE,44,6,15]; ]
+const QC_V_SAFE = 0x00CC44;
+[ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 45; @position = 6; @symbol_constdef = [QC_V_WARN,45,6,15]; ]
+const QC_V_WARN = 0xFFAA00;
+[ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 46; @position = 6; @symbol_constdef = [QC_V_DANG,46,6,15]; ]
+const QC_V_DANG = 0xFF2222;
+[ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 48; @position = 6; @symbol_constdef = [QC_WHITE,48,6,14]; ]
+const QC_WHITE = 0xFFFFFF;
+[ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 49; @position = 6; @symbol_constdef = [QC_DIM,49,6,12]; ]
+const QC_DIM = 0x333333;
+[ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 50; @position = 6; @symbol_constdef = [QC_HINT,50,6,13]; ]
+const QC_HINT = 0x222222;
+[ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 51; @position = 6; @symbol_constdef = [QC_CYAN,51,6,13]; ]
+const QC_CYAN = 0x0088CC;
+[ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 52; @position = 6; @symbol_constdef = [QC_DIVL,52,6,13]; ]
+const QC_DIVL = 0x111111;
+[ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 56; @symbol_classdef = [QuickDiveView,56,6,19]; @symbol_extends<0> = [WatchUi,56,28,35]; @symbol_extends<1> = [View,56,36,40]; ]
+class QuickDiveView extends WatchUi.View {
+    [ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 56; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 56; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 58; @position = 8; @symbol_vardef = [_page,58,8,13]; ]
+    var _page;
+    [ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 60; @position = 15; @symbol_vardef = [_w,60,15,17]; ]
+    protected
+    var _w;
+    [ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 61; @position = 15; @symbol_vardef = [_h,61,15,17]; ]
+    protected
+    var _h;
+    [ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 62; @position = 15; @symbol_vardef = [_tick,62,15,20]; ]
+    protected
+    var _tick;
+    [ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 63; @position = 15; @symbol_vardef = [_timer,63,15,21]; ]
+    protected
+    var _timer;
+    [ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 66; @position = 15; @symbol_vardef = [_fo2Idx,66,15,22]; ]
+    protected
+    var _fo2Idx;
+    [ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 67; @position = 15; @symbol_vardef = [_depIdx,67,15,22]; ]
+    protected
+    var _depIdx;
+    [ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 68; @position = 15; @symbol_vardef = [_field,68,15,21]; ]
+    protected
+    var _field;
+    [ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 72; @symbol_functiondef = [initialize,72,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_72_26_83_4_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 73 8 ]
+        symbol [ View %tmp.2 73 8 12 ];
+        %tmp.2 = getv ? :View;
+        symbol [ initialize %tmp.3 73 13 23 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 74 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_72_26_83_4_start" "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_72_26_83_4_stop" ]
+        %ds.1 = local;
+        symbol [ ds %ds.1 74 12 14 ];
+        symbol [ System %tmp.4 74 18 24 ];
+        %tmp.4 = getm $.Toybox.System;
+        symbol [ getDeviceSettings %tmp.5 74 25 42 ];
+        %tmp.5 = getv function %tmp.4 :getDeviceSettings;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        lputv %ds.1 %tmp.6;
+        symbol [ ds %ds.1 74 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 75 8 ]
+        %tmp.7 = lgetv %ds.1;
+        symbol [ ds %tmp.7 75 18 20 ];
+        symbol [ screenWidth %tmp.8 75 21 32 ];
+        %tmp.8 = getv %tmp.7 :screenWidth;
+        symbol [ _w ? 75 8 10 ];
+        putv self :_w %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 76 8 ]
+        %tmp.9 = lgetv %ds.1;
+        symbol [ ds %tmp.9 76 18 20 ];
+        symbol [ screenHeight %tmp.10 76 21 33 ];
+        %tmp.10 = getv %tmp.9 :screenHeight;
+        symbol [ _h ? 76 8 10 ];
+        putv self :_h %tmp.10;
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 77 8 ]
+        %tmp.11 = 0;
+        symbol [ _tick ? 77 8 13 ];
+        putv self :_tick %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 78 8 ]
+        symbol [ QC_CHECK %tmp.13 78 18 26 ];
+        %tmp.13 = getv ? :QC_CHECK;
+        symbol [ _page ? 78 8 13 ];
+        putv self :_page %tmp.13;
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 80 8 ]
+        %tmp.14 = 1;
+        symbol [ _fo2Idx ? 80 8 15 ];
+        putv self :_fo2Idx %tmp.14;
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 81 8 ]
+        %tmp.15 = 7;
+        symbol [ _depIdx ? 81 8 15 ];
+        putv self :_depIdx %tmp.15;
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 82 8 ]
+        %tmp.16 = 1;
+        symbol [ _field ? 82 8 14 ];
+        putv self :_field %tmp.16;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_72_26_83_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 87; @symbol_functiondef = [onShow,87,13,19]; ]
+    function onShow() {
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_87_22_90_4_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 88 8 ]
+        symbol [ Timer %tmp.3 88 21 26 ];
+        %tmp.3 = getm $.Toybox.Timer;
+        symbol [ Timer %tmp.4 88 27 32 ];
+        %tmp.4 = getv function ? %tmp.3 :Timer;
+        %tmp.1 = newc %tmp.4 ();
+        symbol [ _timer ? 88 8 14 ];
+        putv self :_timer %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 89 8 ]
+        symbol [ _timer %tmp.6 89 8 14 ];
+        %tmp.6 = getv ? :_timer;
+        symbol [ start %tmp.7 89 15 20 ];
+        %tmp.7 = getv function %tmp.6 :start;
+        %tmp.8 = self;
+        symbol [ method %tmp.9 89 21 27 ];
+        %tmp.9 = getv function %tmp.8 :method;
+        %tmp.11 = const :onTick;
+        symbol [ onTick %tmp.11 89 29 35 const ];
+        %tmp.12 = invoke %tmp.8 %tmp.9(%tmp.11);
+        %tmp.13 = 500;
+        %tmp.14 = true;
+        invoke %tmp.6 %tmp.7(%tmp.12, %tmp.13, %tmp.14);
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_87_22_90_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 92; @symbol_functiondef = [onHide,92,13,19]; ]
+    function onHide() {
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_92_22_94_4_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 93 8 ]
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_93_8_93_60_if_stmt:
+        symbol [ _timer %tmp.2 93 12 18 ];
+        %tmp.2 = getv ? :_timer;
+        %tmp.3 = null;
+        %tmp.4 = ne %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_93_8_93_60_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_93_8_93_60_if_true:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_93_28_93_60_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 93 30 ]
+        symbol [ _timer %tmp.6 93 30 36 ];
+        %tmp.6 = getv ? :_timer;
+        %tmp.7 = as %tmp.6 { (!Null) };
+        symbol [ stop %tmp.8 93 37 41 ];
+        %tmp.8 = getv function %tmp.7 :stop;
+        invoke %tmp.7 %tmp.8();
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 93 45 ]
+        %tmp.9 = null;
+        symbol [ _timer ? 93 45 51 ];
+        putv self :_timer %tmp.9;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_93_28_93_60_stop:
+        goto @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_93_8_93_60_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_93_8_93_60_if_end:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_92_22_94_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 96; @symbol_functiondef = [onTick,96,13,19]; ]
+    function onTick() as Void {
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_96_30_99_4_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 97 8 ]
+        symbol [ _tick %tmp.3 97 8 13 ];
+        %tmp.3 = getv ? :_tick;
+        %tmp.4 = add %tmp.3 1;
+        symbol [ _tick ? 97 8 13 ];
+        putv self :_tick dup %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 98 8 ]
+        symbol [ WatchUi %tmp.5 98 8 15 ];
+        %tmp.5 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.6 98 16 29 ];
+        %tmp.6 = getv function %tmp.5 :requestUpdate;
+        invoke %tmp.5 %tmp.6();
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_96_30_99_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 104; @symbol_functiondef = [doSelect,104,13,21]; ]
+    function doSelect() {
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_104_24_109_4_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 105 8 ]
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_105_8_107_8_if_stmt:
+        symbol [ _page %tmp.2 105 12 17 ];
+        %tmp.2 = getv ? :_page;
+        symbol [ QC_CHECK %tmp.4 105 21 29 ];
+        %tmp.4 = getv ? :QC_CHECK;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_105_8_107_8_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_105_8_107_8_if_true:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_105_31_107_8_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 106 12 ]
+        %tmp.6 = 1;
+        symbol [ _field %tmp.8 106 25 31 ];
+        %tmp.8 = getv ? :_field;
+        %tmp.9 = sub %tmp.6 %tmp.8;
+        symbol [ _field ? 106 12 18 ];
+        putv self :_field %tmp.9;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_105_31_107_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_105_8_107_8_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_105_8_107_8_if_end:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_104_24_109_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 112; @symbol_functiondef = [doUp,112,13,17]; ]
+    function doUp() {
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_112_20_119_4_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 113 8 ]
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_113_8_118_8_if_stmt:
+        symbol [ _page %tmp.2 113 12 17 ];
+        %tmp.2 = getv ? :_page;
+        symbol [ QC_CHECK %tmp.4 113 21 29 ];
+        %tmp.4 = getv ? :QC_CHECK;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_113_8_118_8_if_else_false;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_113_8_118_8_if_true:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_113_31_116_8_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 114 12 ]
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_114_12_115_99_if_stmt:
+        symbol [ _field %tmp.7 114 16 22 ];
+        %tmp.7 = getv ? :_field;
+        %tmp.8 = 0;
+        %tmp.9 = eq %tmp.7 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_114_12_115_99_if_else_false;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_114_12_115_99_if_true:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_114_29_114_100_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 114 31 ]
+        symbol [ _fo2Idx %tmp.11 114 42 49 ];
+        %tmp.11 = getv ? :_fo2Idx;
+        %tmp.12 = 1;
+        %tmp.13 = sub %tmp.11 %tmp.12;
+        symbol [ QDC_FO2_VALS %tmp.15 114 56 68 ];
+        %tmp.15 = getv ? :QDC_FO2_VALS;
+        symbol [ size %tmp.16 114 69 73 ];
+        %tmp.16 = getv function %tmp.15 :size;
+        %tmp.17 = invoke %tmp.15 %tmp.16();
+        %tmp.18 = add %tmp.13 %tmp.17;
+        symbol [ QDC_FO2_VALS %tmp.20 114 79 91 ];
+        %tmp.20 = getv ? :QDC_FO2_VALS;
+        symbol [ size %tmp.21 114 92 96 ];
+        %tmp.21 = getv function %tmp.20 :size;
+        %tmp.22 = invoke %tmp.20 %tmp.21();
+        %tmp.23 = mod %tmp.18 %tmp.22;
+        symbol [ _fo2Idx ? 114 31 38 ];
+        putv self :_fo2Idx %tmp.23;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_114_29_114_100_stop:
+        goto @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_114_12_115_99_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_114_12_115_99_if_else_false:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_115_29_115_99_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 115 31 ]
+        symbol [ _depIdx %tmp.25 115 42 49 ];
+        %tmp.25 = getv ? :_depIdx;
+        %tmp.26 = 1;
+        %tmp.27 = sub %tmp.25 %tmp.26;
+        symbol [ QDC_DEPTHS %tmp.29 115 56 66 ];
+        %tmp.29 = getv ? :QDC_DEPTHS;
+        symbol [ size %tmp.30 115 67 71 ];
+        %tmp.30 = getv function %tmp.29 :size;
+        %tmp.31 = invoke %tmp.29 %tmp.30();
+        %tmp.32 = add %tmp.27 %tmp.31;
+        symbol [ QDC_DEPTHS %tmp.34 115 80 90 ];
+        %tmp.34 = getv ? :QDC_DEPTHS;
+        symbol [ size %tmp.35 115 91 95 ];
+        %tmp.35 = getv function %tmp.34 :size;
+        %tmp.36 = invoke %tmp.34 %tmp.35();
+        %tmp.37 = mod %tmp.32 %tmp.36;
+        symbol [ _depIdx ? 115 31 38 ];
+        putv self :_depIdx %tmp.37;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_115_29_115_99_stop:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_114_12_115_99_if_end:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_113_31_116_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_113_8_118_8_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_113_8_118_8_if_else_false:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_116_15_118_8_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 117 12 ]
+        symbol [ _depIdx %tmp.39 117 23 30 ];
+        %tmp.39 = getv ? :_depIdx;
+        %tmp.40 = 1;
+        %tmp.41 = sub %tmp.39 %tmp.40;
+        symbol [ QDC_DEPTHS %tmp.43 117 37 47 ];
+        %tmp.43 = getv ? :QDC_DEPTHS;
+        symbol [ size %tmp.44 117 48 52 ];
+        %tmp.44 = getv function %tmp.43 :size;
+        %tmp.45 = invoke %tmp.43 %tmp.44();
+        %tmp.46 = add %tmp.41 %tmp.45;
+        symbol [ QDC_DEPTHS %tmp.48 117 58 68 ];
+        %tmp.48 = getv ? :QDC_DEPTHS;
+        symbol [ size %tmp.49 117 69 73 ];
+        %tmp.49 = getv function %tmp.48 :size;
+        %tmp.50 = invoke %tmp.48 %tmp.49();
+        %tmp.51 = mod %tmp.46 %tmp.50;
+        symbol [ _depIdx ? 117 12 19 ];
+        putv self :_depIdx %tmp.51;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_116_15_118_8_stop:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_113_8_118_8_if_end:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_112_20_119_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 122; @symbol_functiondef = [doDown,122,13,19]; ]
+    function doDown() {
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_122_22_129_4_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 123 8 ]
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_123_8_128_8_if_stmt:
+        symbol [ _page %tmp.2 123 12 17 ];
+        %tmp.2 = getv ? :_page;
+        symbol [ QC_CHECK %tmp.4 123 21 29 ];
+        %tmp.4 = getv ? :QC_CHECK;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_123_8_128_8_if_else_false;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_123_8_128_8_if_true:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_123_31_126_8_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 124 12 ]
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_124_12_125_76_if_stmt:
+        symbol [ _field %tmp.7 124 16 22 ];
+        %tmp.7 = getv ? :_field;
+        %tmp.8 = 0;
+        %tmp.9 = eq %tmp.7 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_124_12_125_76_if_else_false;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_124_12_125_76_if_true:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_124_29_124_78_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 124 31 ]
+        symbol [ _fo2Idx %tmp.11 124 42 49 ];
+        %tmp.11 = getv ? :_fo2Idx;
+        %tmp.12 = 1;
+        %tmp.13 = add %tmp.11 %tmp.12;
+        symbol [ QDC_FO2_VALS %tmp.15 124 57 69 ];
+        %tmp.15 = getv ? :QDC_FO2_VALS;
+        symbol [ size %tmp.16 124 70 74 ];
+        %tmp.16 = getv function %tmp.15 :size;
+        %tmp.17 = invoke %tmp.15 %tmp.16();
+        %tmp.18 = mod %tmp.13 %tmp.17;
+        symbol [ _fo2Idx ? 124 31 38 ];
+        putv self :_fo2Idx %tmp.18;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_124_29_124_78_stop:
+        goto @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_124_12_125_76_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_124_12_125_76_if_else_false:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_125_29_125_76_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 125 31 ]
+        symbol [ _depIdx %tmp.20 125 42 49 ];
+        %tmp.20 = getv ? :_depIdx;
+        %tmp.21 = 1;
+        %tmp.22 = add %tmp.20 %tmp.21;
+        symbol [ QDC_DEPTHS %tmp.24 125 57 67 ];
+        %tmp.24 = getv ? :QDC_DEPTHS;
+        symbol [ size %tmp.25 125 68 72 ];
+        %tmp.25 = getv function %tmp.24 :size;
+        %tmp.26 = invoke %tmp.24 %tmp.25();
+        %tmp.27 = mod %tmp.22 %tmp.26;
+        symbol [ _depIdx ? 125 31 38 ];
+        putv self :_depIdx %tmp.27;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_125_29_125_76_stop:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_124_12_125_76_if_end:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_123_31_126_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_123_8_128_8_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_123_8_128_8_if_else_false:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_126_15_128_8_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 127 12 ]
+        symbol [ _depIdx %tmp.29 127 23 30 ];
+        %tmp.29 = getv ? :_depIdx;
+        %tmp.30 = 1;
+        %tmp.31 = add %tmp.29 %tmp.30;
+        symbol [ QDC_DEPTHS %tmp.33 127 38 48 ];
+        %tmp.33 = getv ? :QDC_DEPTHS;
+        symbol [ size %tmp.34 127 49 53 ];
+        %tmp.34 = getv function %tmp.33 :size;
+        %tmp.35 = invoke %tmp.33 %tmp.34();
+        %tmp.36 = mod %tmp.31 %tmp.35;
+        symbol [ _depIdx ? 127 12 19 ];
+        putv self :_depIdx %tmp.36;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_126_15_128_8_stop:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_123_8_128_8_if_end:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_122_22_129_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 132; @symbol_functiondef = [doNextPage,132,13,23]; ]
+    function doNextPage() {
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_132_26_135_4_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 133 8 ]
+        symbol [ QC_BESTMIX %tmp.2 133 17 27 ];
+        %tmp.2 = getv ? :QC_BESTMIX;
+        symbol [ _page ? 133 8 13 ];
+        putv self :_page %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 134 8 ]
+        %tmp.3 = 0;
+        symbol [ _field ? 134 8 14 ];
+        putv self :_field %tmp.3;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_132_26_135_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 138; @symbol_functiondef = [doPrevPage,138,13,23]; ]
+    function doPrevPage() {
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_138_26_141_4_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 139 8 ]
+        symbol [ QC_CHECK %tmp.2 139 17 25 ];
+        %tmp.2 = getv ? :QC_CHECK;
+        symbol [ _page ? 139 8 13 ];
+        putv self :_page %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 140 8 ]
+        %tmp.3 = 1;
+        symbol [ _field ? 140 8 14 ];
+        putv self :_field %tmp.3;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_138_26_141_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 143; @symbol_functiondef = [doBack,143,13,19]; ]
+    function doBack() {
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_143_22_146_4_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 144 8 ]
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_144_8_144_78_if_stmt:
+        symbol [ _page %tmp.2 144 12 17 ];
+        %tmp.2 = getv ? :_page;
+        symbol [ QC_BESTMIX %tmp.4 144 21 31 ];
+        %tmp.4 = getv ? :QC_BESTMIX;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_144_8_144_78_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_144_8_144_78_if_true:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_144_33_144_78_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 144 35 ]
+        symbol [ QC_CHECK %tmp.7 144 43 51 ];
+        %tmp.7 = getv ? :QC_CHECK;
+        symbol [ _page ? 144 35 40 ];
+        putv self :_page %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 144 53 ]
+        %tmp.8 = 1;
+        symbol [ _field ? 144 53 59 ];
+        putv self :_field %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 144 65 ]
+        %tmp.9 = true;
+        ret %tmp.9;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_144_33_144_78_stop:
+        goto @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_144_8_144_78_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_144_8_144_78_if_end:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 145 8 ]
+        %tmp.10 = false;
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_143_22_146_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 149; @symbol_functiondef = [doTap,149,13,18]; @symbol_param<0> = [x,149,19,20]; @symbol_param<1> = [y,149,22,23]; ]
+    function doTap(x, y) {
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_149_25_152_4_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 150 8 ]
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_150_8_151_37_if_stmt:
+        %tmp.1 = lgetv %y;
+        symbol [ y %tmp.1 150 12 13 ];
+        symbol [ _h %tmp.3 150 16 18 ];
+        %tmp.3 = getv ? :_h;
+        %tmp.4 = 2;
+        %tmp.5 = div %tmp.3 %tmp.4;
+        %tmp.6 = lt %tmp.1 %tmp.5;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_150_8_151_37_if_else_false;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_150_8_151_37_if_true:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_150_24_150_34_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 150 26 ]
+        %tmp.7 = self;
+        symbol [ doUp %tmp.8 150 26 30 ];
+        %tmp.8 = getv function %tmp.7 :doUp;
+        invoke %tmp.7 %tmp.8();
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_150_24_150_34_stop:
+        goto @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_150_8_151_37_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_150_8_151_37_if_else_false:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_151_25_151_37_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 151 27 ]
+        %tmp.9 = self;
+        symbol [ doDown %tmp.10 151 27 33 ];
+        %tmp.10 = getv function %tmp.9 :doDown;
+        invoke %tmp.9 %tmp.10();
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_151_25_151_37_stop:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_150_8_151_37_if_end:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_149_25_152_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 156; @symbol_functiondef = [onUpdate,156,13,21]; @symbol_param<0> = [dc,156,22,24]; ]
+    function onUpdate(dc) {
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_156_26_162_4_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 157 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 157 13 15 ];
+        symbol [ getWidth %tmp.2 157 16 24 ];
+        %tmp.2 = getv function %tmp.1 :getWidth;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        %tmp.4 = 9;
+        %tmp.5 = mul %tmp.3 %tmp.4;
+        %tmp.6 = 10;
+        %tmp.7 = div %tmp.5 %tmp.6;
+        symbol [ _w ? 157 8 10 ];
+        putv self :_w %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 158 8 ]
+        %tmp.8 = lgetv %dc;
+        symbol [ dc %tmp.8 158 13 15 ];
+        symbol [ getHeight %tmp.9 158 16 25 ];
+        %tmp.9 = getv function %tmp.8 :getHeight;
+        %tmp.10 = invoke %tmp.8 %tmp.9();
+        %tmp.11 = 9;
+        %tmp.12 = mul %tmp.10 %tmp.11;
+        %tmp.13 = 10;
+        %tmp.14 = div %tmp.12 %tmp.13;
+        symbol [ _h ? 158 8 10 ];
+        putv self :_h %tmp.14;
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 160 8 ]
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_160_8_161_51_if_stmt:
+        symbol [ _page %tmp.16 160 12 17 ];
+        %tmp.16 = getv ? :_page;
+        symbol [ QC_CHECK %tmp.18 160 21 29 ];
+        %tmp.18 = getv ? :QC_CHECK;
+        %tmp.19 = eq %tmp.16 %tmp.18;
+        bf %tmp.19 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_160_8_161_51_if_else_false;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_160_8_161_51_if_true:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_160_31_160_49_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 160 33 ]
+        %tmp.20 = self;
+        symbol [ _drawCheck %tmp.21 160 33 43 ];
+        %tmp.21 = getv function %tmp.20 :_drawCheck;
+        %tmp.22 = lgetv %dc;
+        symbol [ dc %tmp.22 160 44 46 ];
+        invoke %tmp.20 %tmp.21(%tmp.22);
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_160_31_160_49_stop:
+        goto @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_160_8_161_51_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_160_8_161_51_if_else_false:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_161_31_161_51_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 161 33 ]
+        %tmp.23 = self;
+        symbol [ _drawBestMix %tmp.24 161 33 45 ];
+        %tmp.24 = getv function %tmp.23 :_drawBestMix;
+        %tmp.25 = lgetv %dc;
+        symbol [ dc %tmp.25 161 46 48 ];
+        invoke %tmp.23 %tmp.24(%tmp.25);
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_161_31_161_51_stop:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_160_8_161_51_if_end:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_156_26_162_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 166; @symbol_functiondef = [_drawCheck,166,20,30]; @symbol_param<0> = [dc,166,31,33]; ]
+    protected
+    function _drawCheck(dc) {
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_166_35_230_4_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 167 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_166_35_230_4_start" "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_166_35_230_4_stop" ]
+        %fo2.1 = local;
+        symbol [ fo2 %fo2.1 167 12 15 ];
+        symbol [ QDC_FO2_VALS %tmp.2 167 19 31 ];
+        %tmp.2 = getv ? :QDC_FO2_VALS;
+        symbol [ _fo2Idx %tmp.4 167 32 39 ];
+        %tmp.4 = getv ? :_fo2Idx;
+        %tmp.5 = agetv %tmp.2 %tmp.4;
+        lputv %fo2.1 %tmp.5;
+        symbol [ fo2 %fo2.1 167 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 168 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_166_35_230_4_start" "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_166_35_230_4_stop" ]
+        %dep.2 = local;
+        symbol [ dep %dep.2 168 12 15 ];
+        symbol [ QDC_DEPTHS %tmp.7 168 19 29 ];
+        %tmp.7 = getv ? :QDC_DEPTHS;
+        symbol [ _depIdx %tmp.9 168 30 37 ];
+        %tmp.9 = getv ? :_depIdx;
+        %tmp.10 = agetv %tmp.7 %tmp.9;
+        lputv %dep.2 %tmp.10;
+        symbol [ dep %dep.2 168 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 169 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_166_35_230_4_start" "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_166_35_230_4_stop" ]
+        %po2.3 = local;
+        symbol [ po2 %po2.3 169 12 15 ];
+        %tmp.11 = lgetv %fo2.1;
+        symbol [ fo2 %tmp.11 169 19 22 ];
+        %tmp.12 = lgetv %dep.2;
+        symbol [ dep %tmp.12 169 26 29 ];
+        symbol [ toFloat %tmp.13 169 30 37 ];
+        %tmp.13 = getv function %tmp.12 :toFloat;
+        %tmp.14 = invoke %tmp.12 %tmp.13();
+        %tmp.15 = 10.0;
+        %tmp.16 = div %tmp.14 %tmp.15;
+        %tmp.17 = 1.0;
+        %tmp.18 = add %tmp.16 %tmp.17;
+        %tmp.19 = mul %tmp.11 %tmp.18;
+        lputv %po2.3 %tmp.19;
+        symbol [ po2 %po2.3 169 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 170 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_166_35_230_4_start" "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_166_35_230_4_stop" ]
+        %modV.4 = local;
+        symbol [ modV %modV.4 170 12 16 ];
+        symbol [ QDC_PO2_WORK %tmp.21 170 21 33 ];
+        %tmp.21 = getv ? :QDC_PO2_WORK;
+        %tmp.22 = lgetv %fo2.1;
+        symbol [ fo2 %tmp.22 170 36 39 ];
+        %tmp.23 = div %tmp.21 %tmp.22;
+        %tmp.24 = 1.0;
+        %tmp.25 = sub %tmp.23 %tmp.24;
+        %tmp.26 = 10.0;
+        %tmp.27 = mul %tmp.25 %tmp.26;
+        symbol [ toNumber %tmp.28 170 55 63 ];
+        %tmp.28 = getv function %tmp.27 :toNumber;
+        %tmp.29 = invoke %tmp.27 %tmp.28();
+        lputv %modV.4 %tmp.29;
+        symbol [ modV %modV.4 170 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 171 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_166_35_230_4_start" "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_166_35_230_4_stop" ]
+        %ndlV.5 = local;
+        symbol [ ndlV %ndlV.5 171 12 16 ];
+        %tmp.30 = self;
+        symbol [ _ndl %tmp.31 171 19 23 ];
+        %tmp.31 = getv function %tmp.30 :_ndl;
+        %tmp.32 = lgetv %dep.2;
+        symbol [ dep %tmp.32 171 24 27 ];
+        %tmp.33 = lgetv %fo2.1;
+        symbol [ fo2 %tmp.33 171 29 32 ];
+        %tmp.34 = invoke %tmp.30 %tmp.31(%tmp.32, %tmp.33);
+        symbol [ toNumber %tmp.35 171 34 42 ];
+        %tmp.35 = getv function %tmp.34 :toNumber;
+        %tmp.36 = invoke %tmp.34 %tmp.35();
+        lputv %ndlV.5 %tmp.36;
+        symbol [ ndlV %ndlV.5 171 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 174 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_166_35_230_4_start" "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_166_35_230_4_stop" ]
+        %bgCol.6 = local;
+        symbol [ bgCol %bgCol.6 174 12 17 ];
+        %tmp.37 = self;
+        symbol [ _bgColor %tmp.38 174 20 28 ];
+        %tmp.38 = getv function %tmp.37 :_bgColor;
+        %tmp.39 = lgetv %po2.3;
+        symbol [ po2 %tmp.39 174 29 32 ];
+        %tmp.40 = invoke %tmp.37 %tmp.38(%tmp.39);
+        lputv %bgCol.6 %tmp.40;
+        symbol [ bgCol %bgCol.6 174 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 175 8 ]
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_175_8_175_72_if_stmt:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_175_12_175_46_begin:
+        %tmp.41 = lgetv %po2.3;
+        symbol [ po2 %tmp.41 175 12 15 ];
+        symbol [ QDC_PO2_ABS %tmp.43 175 18 29 ];
+        %tmp.43 = getv ? :QDC_PO2_ABS;
+        %tmp.44 = gt %tmp.41 %tmp.43;
+        bf %tmp.44 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_175_8_175_72_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_175_33_175_46_true:
+        symbol [ _tick %tmp.46 175 33 38 ];
+        %tmp.46 = getv ? :_tick;
+        %tmp.47 = 2;
+        %tmp.48 = mod %tmp.46 %tmp.47;
+        %tmp.49 = 0;
+        %tmp.50 = eq %tmp.48 %tmp.49;
+        push %tmp.50;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_175_33_175_46_end:
+        %tmp.51 = phi [%tmp.44 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_175_12_175_46_begin] [%tmp.50 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_175_33_175_46_true] [%tmp.51 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_175_33_175_46_end];
+        bf %tmp.51 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_175_8_175_72_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_175_8_175_72_if_true:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_175_49_175_72_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 175 51 ]
+        symbol [ QC_BG_PULSE %tmp.53 175 59 70 ];
+        %tmp.53 = getv ? :QC_BG_PULSE;
+        lputv %bgCol.6 %tmp.53;
+        symbol [ bgCol %bgCol.6 175 51 56 ];
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_175_49_175_72_stop:
+        goto @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_175_8_175_72_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_175_8_175_72_if_end:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 176 8 ]
+        %tmp.54 = lgetv %dc;
+        symbol [ dc %tmp.54 176 8 10 ];
+        symbol [ setColor %tmp.55 176 11 19 ];
+        %tmp.55 = getv function %tmp.54 :setColor;
+        %tmp.56 = lgetv %bgCol.6;
+        symbol [ bgCol %tmp.56 176 20 25 ];
+        %tmp.57 = lgetv %bgCol.6;
+        symbol [ bgCol %tmp.57 176 27 32 ];
+        invoke %tmp.54 %tmp.55(%tmp.56, %tmp.57);
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 177 8 ]
+        %tmp.58 = lgetv %dc;
+        symbol [ dc %tmp.58 177 8 10 ];
+        symbol [ clear %tmp.59 177 11 16 ];
+        %tmp.59 = getv function %tmp.58 :clear;
+        invoke %tmp.58 %tmp.59();
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 180 8 ]
+        %tmp.60 = lgetv %dc;
+        symbol [ dc %tmp.60 180 8 10 ];
+        symbol [ setColor %tmp.61 180 11 19 ];
+        %tmp.61 = getv function %tmp.60 :setColor;
+        symbol [ QC_DIM %tmp.63 180 20 26 ];
+        %tmp.63 = getv ? :QC_DIM;
+        symbol [ Graphics %tmp.64 180 28 36 ];
+        %tmp.64 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.65 180 37 54 ];
+        %tmp.65 = getv %tmp.64 :COLOR_TRANSPARENT;
+        invoke %tmp.60 %tmp.61(%tmp.63, %tmp.65);
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 181 8 ]
+        %tmp.66 = lgetv %dc;
+        symbol [ dc %tmp.66 181 8 10 ];
+        symbol [ drawText %tmp.67 181 11 19 ];
+        %tmp.67 = getv function %tmp.66 :drawText;
+        symbol [ _w %tmp.69 181 20 22 ];
+        %tmp.69 = getv ? :_w;
+        %tmp.70 = 2;
+        %tmp.71 = div %tmp.69 %tmp.70;
+        symbol [ _h %tmp.73 181 28 30 ];
+        %tmp.73 = getv ? :_h;
+        %tmp.74 = 2;
+        %tmp.75 = mul %tmp.73 %tmp.74;
+        %tmp.76 = 100;
+        %tmp.77 = div %tmp.75 %tmp.76;
+        symbol [ Graphics %tmp.78 181 42 50 ];
+        %tmp.78 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.79 181 51 61 ];
+        %tmp.79 = getv %tmp.78 :FONT_XTINY;
+        %tmp.80 = "GAS CHECK  1/2";
+        symbol [ Graphics %tmp.81 181 81 89 ];
+        %tmp.81 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.82 181 90 109 ];
+        %tmp.82 = getv %tmp.81 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.66 %tmp.67(%tmp.71, %tmp.77, %tmp.79, %tmp.80, %tmp.82);
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 184 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_166_35_230_4_start" "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_166_35_230_4_stop" ]
+        %mg.7 = local;
+        symbol [ mg %mg.7 184 12 14 ];
+        symbol [ _w %tmp.84 184 18 20 ];
+        %tmp.84 = getv ? :_w;
+        %tmp.85 = 9;
+        %tmp.86 = mul %tmp.84 %tmp.85;
+        %tmp.87 = 100;
+        %tmp.88 = div %tmp.86 %tmp.87;
+        lputv %mg.7 %tmp.88;
+        symbol [ mg %mg.7 184 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 185 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_166_35_230_4_start" "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_166_35_230_4_stop" ]
+        %rH.8 = local;
+        symbol [ rH %rH.8 185 12 14 ];
+        symbol [ _h %tmp.90 185 18 20 ];
+        %tmp.90 = getv ? :_h;
+        %tmp.91 = 11;
+        %tmp.92 = mul %tmp.90 %tmp.91;
+        %tmp.93 = 100;
+        %tmp.94 = div %tmp.92 %tmp.93;
+        lputv %rH.8 %tmp.94;
+        symbol [ rH %rH.8 185 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 186 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_166_35_230_4_start" "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_166_35_230_4_stop" ]
+        %y0.9 = local;
+        symbol [ y0 %y0.9 186 12 14 ];
+        symbol [ _h %tmp.96 186 18 20 ];
+        %tmp.96 = getv ? :_h;
+        %tmp.97 = 10;
+        %tmp.98 = mul %tmp.96 %tmp.97;
+        %tmp.99 = 100;
+        %tmp.100 = div %tmp.98 %tmp.99;
+        lputv %y0.9 %tmp.100;
+        symbol [ y0 %y0.9 186 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 187 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_166_35_230_4_start" "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_166_35_230_4_stop" ]
+        %y1.10 = local;
+        symbol [ y1 %y1.10 187 12 14 ];
+        symbol [ _h %tmp.102 187 18 20 ];
+        %tmp.102 = getv ? :_h;
+        %tmp.103 = 22;
+        %tmp.104 = mul %tmp.102 %tmp.103;
+        %tmp.105 = 100;
+        %tmp.106 = div %tmp.104 %tmp.105;
+        lputv %y1.10 %tmp.106;
+        symbol [ y1 %y1.10 187 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 189 8 ]
+        %tmp.107 = self;
+        symbol [ _drawRow %tmp.108 189 8 16 ];
+        %tmp.108 = getv function %tmp.107 :_drawRow;
+        %tmp.109 = lgetv %dc;
+        symbol [ dc %tmp.109 189 17 19 ];
+        %tmp.110 = lgetv %y0.9;
+        symbol [ y0 %tmp.110 189 21 23 ];
+        %tmp.111 = "GAS";
+        symbol [ QDC_FO2_LBLS %tmp.113 189 34 46 ];
+        %tmp.113 = getv ? :QDC_FO2_LBLS;
+        symbol [ _fo2Idx %tmp.115 189 47 54 ];
+        %tmp.115 = getv ? :_fo2Idx;
+        %tmp.116 = agetv %tmp.113 %tmp.115;
+        symbol [ _field %tmp.118 189 57 63 ];
+        %tmp.118 = getv ? :_field;
+        %tmp.119 = 0;
+        %tmp.120 = eq %tmp.118 %tmp.119;
+        %tmp.121 = lgetv %mg.7;
+        symbol [ mg %tmp.121 189 70 72 ];
+        %tmp.122 = lgetv %rH.8;
+        symbol [ rH %tmp.122 189 74 76 ];
+        invoke %tmp.107 %tmp.108(%tmp.109, %tmp.110, %tmp.111, %tmp.116, %tmp.120, %tmp.121, %tmp.122);
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 190 8 ]
+        %tmp.123 = self;
+        symbol [ _drawRow %tmp.124 190 8 16 ];
+        %tmp.124 = getv function %tmp.123 :_drawRow;
+        %tmp.125 = lgetv %dc;
+        symbol [ dc %tmp.125 190 17 19 ];
+        %tmp.126 = lgetv %y1.10;
+        symbol [ y1 %tmp.126 190 21 23 ];
+        %tmp.127 = "DEPTH";
+        %tmp.128 = lgetv %dep.2;
+        symbol [ dep %tmp.128 190 34 37 ];
+        %tmp.129 = "m";
+        %tmp.130 = add %tmp.128 %tmp.129;
+        symbol [ _field %tmp.132 190 59 65 ];
+        %tmp.132 = getv ? :_field;
+        %tmp.133 = 1;
+        %tmp.134 = eq %tmp.132 %tmp.133;
+        %tmp.135 = lgetv %mg.7;
+        symbol [ mg %tmp.135 190 72 74 ];
+        %tmp.136 = lgetv %rH.8;
+        symbol [ rH %tmp.136 190 76 78 ];
+        invoke %tmp.123 %tmp.124(%tmp.125, %tmp.126, %tmp.127, %tmp.130, %tmp.134, %tmp.135, %tmp.136);
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 193 8 ]
+        %tmp.137 = lgetv %dc;
+        symbol [ dc %tmp.137 193 8 10 ];
+        symbol [ setColor %tmp.138 193 11 19 ];
+        %tmp.138 = getv function %tmp.137 :setColor;
+        symbol [ QC_DIVL %tmp.140 193 20 27 ];
+        %tmp.140 = getv ? :QC_DIVL;
+        symbol [ Graphics %tmp.141 193 29 37 ];
+        %tmp.141 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.142 193 38 55 ];
+        %tmp.142 = getv %tmp.141 :COLOR_TRANSPARENT;
+        invoke %tmp.137 %tmp.138(%tmp.140, %tmp.142);
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 194 8 ]
+        %tmp.143 = lgetv %dc;
+        symbol [ dc %tmp.143 194 8 10 ];
+        symbol [ drawLine %tmp.144 194 11 19 ];
+        %tmp.144 = getv function %tmp.143 :drawLine;
+        symbol [ _w %tmp.146 194 20 22 ];
+        %tmp.146 = getv ? :_w;
+        %tmp.147 = 10;
+        %tmp.148 = mul %tmp.146 %tmp.147;
+        %tmp.149 = 100;
+        %tmp.150 = div %tmp.148 %tmp.149;
+        symbol [ _h %tmp.152 194 35 37 ];
+        %tmp.152 = getv ? :_h;
+        %tmp.153 = 35;
+        %tmp.154 = mul %tmp.152 %tmp.153;
+        %tmp.155 = 100;
+        %tmp.156 = div %tmp.154 %tmp.155;
+        symbol [ _w %tmp.158 194 50 52 ];
+        %tmp.158 = getv ? :_w;
+        %tmp.159 = 90;
+        %tmp.160 = mul %tmp.158 %tmp.159;
+        %tmp.161 = 100;
+        %tmp.162 = div %tmp.160 %tmp.161;
+        symbol [ _h %tmp.164 194 65 67 ];
+        %tmp.164 = getv ? :_h;
+        %tmp.165 = 35;
+        %tmp.166 = mul %tmp.164 %tmp.165;
+        %tmp.167 = 100;
+        %tmp.168 = div %tmp.166 %tmp.167;
+        invoke %tmp.143 %tmp.144(%tmp.150, %tmp.156, %tmp.162, %tmp.168);
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 197 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_166_35_230_4_start" "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_166_35_230_4_stop" ]
+        %vCol.11 = local;
+        symbol [ vCol %vCol.11 197 12 16 ];
+        %tmp.169 = self;
+        symbol [ _verdictColor %tmp.170 197 19 32 ];
+        %tmp.170 = getv function %tmp.169 :_verdictColor;
+        %tmp.171 = lgetv %po2.3;
+        symbol [ po2 %tmp.171 197 33 36 ];
+        %tmp.172 = invoke %tmp.169 %tmp.170(%tmp.171);
+        lputv %vCol.11 %tmp.172;
+        symbol [ vCol %vCol.11 197 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 198 8 ]
+        %tmp.173 = lgetv %dc;
+        symbol [ dc %tmp.173 198 8 10 ];
+        symbol [ setColor %tmp.174 198 11 19 ];
+        %tmp.174 = getv function %tmp.173 :setColor;
+        %tmp.175 = lgetv %vCol.11;
+        symbol [ vCol %tmp.175 198 20 24 ];
+        symbol [ Graphics %tmp.176 198 26 34 ];
+        %tmp.176 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.177 198 35 52 ];
+        %tmp.177 = getv %tmp.176 :COLOR_TRANSPARENT;
+        invoke %tmp.173 %tmp.174(%tmp.175, %tmp.177);
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 199 8 ]
+        %tmp.178 = lgetv %dc;
+        symbol [ dc %tmp.178 199 8 10 ];
+        symbol [ drawText %tmp.179 199 11 19 ];
+        %tmp.179 = getv function %tmp.178 :drawText;
+        symbol [ _w %tmp.181 199 20 22 ];
+        %tmp.181 = getv ? :_w;
+        %tmp.182 = 2;
+        %tmp.183 = div %tmp.181 %tmp.182;
+        symbol [ _h %tmp.185 199 28 30 ];
+        %tmp.185 = getv ? :_h;
+        %tmp.186 = 37;
+        %tmp.187 = mul %tmp.185 %tmp.186;
+        %tmp.188 = 100;
+        %tmp.189 = div %tmp.187 %tmp.188;
+        symbol [ Graphics %tmp.190 199 43 51 ];
+        %tmp.190 = getm $.Toybox.Graphics;
+        symbol [ FONT_MEDIUM %tmp.191 199 52 63 ];
+        %tmp.191 = getv %tmp.190 :FONT_MEDIUM;
+        %tmp.192 = "PO2 ";
+        %tmp.193 = self;
+        symbol [ _f2 %tmp.194 200 29 32 ];
+        %tmp.194 = getv function %tmp.193 :_f2;
+        %tmp.195 = lgetv %po2.3;
+        symbol [ po2 %tmp.195 200 33 36 ];
+        %tmp.196 = invoke %tmp.193 %tmp.194(%tmp.195);
+        %tmp.197 = add %tmp.192 %tmp.196;
+        %tmp.198 = " ATA";
+        %tmp.199 = add %tmp.197 %tmp.198;
+        symbol [ Graphics %tmp.200 200 48 56 ];
+        %tmp.200 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.201 200 57 76 ];
+        %tmp.201 = getv %tmp.200 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.178 %tmp.179(%tmp.183, %tmp.189, %tmp.191, %tmp.199, %tmp.201);
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 203 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_166_35_230_4_start" "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_166_35_230_4_stop" ]
+        %bY.12 = local;
+        symbol [ bY %bY.12 203 12 14 ];
+        symbol [ _h %tmp.203 203 18 20 ];
+        %tmp.203 = getv ? :_h;
+        %tmp.204 = 48;
+        %tmp.205 = mul %tmp.203 %tmp.204;
+        %tmp.206 = 100;
+        %tmp.207 = div %tmp.205 %tmp.206;
+        lputv %bY.12 %tmp.207;
+        symbol [ bY %bY.12 203 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 204 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_166_35_230_4_start" "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_166_35_230_4_stop" ]
+        %bH.13 = local;
+        symbol [ bH %bH.13 204 12 14 ];
+        symbol [ _h %tmp.209 204 18 20 ];
+        %tmp.209 = getv ? :_h;
+        %tmp.210 = 16;
+        %tmp.211 = mul %tmp.209 %tmp.210;
+        %tmp.212 = 100;
+        %tmp.213 = div %tmp.211 %tmp.212;
+        lputv %bH.13 %tmp.213;
+        symbol [ bH %bH.13 204 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 205 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_166_35_230_4_start" "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_166_35_230_4_stop" ]
+        %bMg.14 = local;
+        symbol [ bMg %bMg.14 205 12 15 ];
+        symbol [ _w %tmp.215 205 18 20 ];
+        %tmp.215 = getv ? :_w;
+        %tmp.216 = 12;
+        %tmp.217 = mul %tmp.215 %tmp.216;
+        %tmp.218 = 100;
+        %tmp.219 = div %tmp.217 %tmp.218;
+        lputv %bMg.14 %tmp.219;
+        symbol [ bMg %bMg.14 205 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 206 8 ]
+        %tmp.220 = lgetv %dc;
+        symbol [ dc %tmp.220 206 8 10 ];
+        symbol [ setColor %tmp.221 206 11 19 ];
+        %tmp.221 = getv function %tmp.220 :setColor;
+        %tmp.222 = lgetv %vCol.11;
+        symbol [ vCol %tmp.222 206 20 24 ];
+        symbol [ Graphics %tmp.223 206 26 34 ];
+        %tmp.223 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.224 206 35 52 ];
+        %tmp.224 = getv %tmp.223 :COLOR_TRANSPARENT;
+        invoke %tmp.220 %tmp.221(%tmp.222, %tmp.224);
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 207 8 ]
+        %tmp.225 = lgetv %dc;
+        symbol [ dc %tmp.225 207 8 10 ];
+        symbol [ fillRoundedRectangle %tmp.226 207 11 31 ];
+        %tmp.226 = getv function %tmp.225 :fillRoundedRectangle;
+        %tmp.227 = lgetv %bMg.14;
+        symbol [ bMg %tmp.227 207 32 35 ];
+        %tmp.228 = lgetv %bY.12;
+        symbol [ bY %tmp.228 207 37 39 ];
+        symbol [ _w %tmp.230 207 41 43 ];
+        %tmp.230 = getv ? :_w;
+        %tmp.231 = lgetv %bMg.14;
+        symbol [ bMg %tmp.231 207 46 49 ];
+        %tmp.232 = 2;
+        %tmp.233 = mul %tmp.231 %tmp.232;
+        %tmp.234 = sub %tmp.230 %tmp.233;
+        %tmp.235 = lgetv %bH.13;
+        symbol [ bH %tmp.235 207 55 57 ];
+        %tmp.236 = 6;
+        invoke %tmp.225 %tmp.226(%tmp.227, %tmp.228, %tmp.234, %tmp.235, %tmp.236);
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 208 8 ]
+        %tmp.237 = lgetv %dc;
+        symbol [ dc %tmp.237 208 8 10 ];
+        symbol [ setColor %tmp.238 208 11 19 ];
+        %tmp.238 = getv function %tmp.237 :setColor;
+        %tmp.239 = 0x000000;
+        symbol [ Graphics %tmp.240 208 30 38 ];
+        %tmp.240 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.241 208 39 56 ];
+        %tmp.241 = getv %tmp.240 :COLOR_TRANSPARENT;
+        invoke %tmp.237 %tmp.238(%tmp.239, %tmp.241);
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 209 8 ]
+        %tmp.242 = lgetv %dc;
+        symbol [ dc %tmp.242 209 8 10 ];
+        symbol [ drawText %tmp.243 209 11 19 ];
+        %tmp.243 = getv function %tmp.242 :drawText;
+        symbol [ _w %tmp.245 209 20 22 ];
+        %tmp.245 = getv ? :_w;
+        %tmp.246 = 2;
+        %tmp.247 = div %tmp.245 %tmp.246;
+        %tmp.248 = lgetv %bY.12;
+        symbol [ bY %tmp.248 209 28 30 ];
+        %tmp.249 = lgetv %bH.13;
+        symbol [ bH %tmp.249 209 33 35 ];
+        %tmp.250 = 5;
+        %tmp.251 = mul %tmp.249 %tmp.250;
+        %tmp.252 = 100;
+        %tmp.253 = div %tmp.251 %tmp.252;
+        %tmp.254 = add %tmp.248 %tmp.253;
+        symbol [ Graphics %tmp.255 209 47 55 ];
+        %tmp.255 = getm $.Toybox.Graphics;
+        symbol [ FONT_LARGE %tmp.256 209 56 66 ];
+        %tmp.256 = getv %tmp.255 :FONT_LARGE;
+        %tmp.257 = self;
+        symbol [ _verdictText %tmp.258 210 20 32 ];
+        %tmp.258 = getv function %tmp.257 :_verdictText;
+        %tmp.259 = lgetv %po2.3;
+        symbol [ po2 %tmp.259 210 33 36 ];
+        %tmp.260 = invoke %tmp.257 %tmp.258(%tmp.259);
+        symbol [ Graphics %tmp.261 210 39 47 ];
+        %tmp.261 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.262 210 48 67 ];
+        %tmp.262 = getv %tmp.261 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.242 %tmp.243(%tmp.247, %tmp.254, %tmp.256, %tmp.260, %tmp.262);
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 213 8 ]
+        %tmp.263 = lgetv %dc;
+        symbol [ dc %tmp.263 213 8 10 ];
+        symbol [ setColor %tmp.264 213 11 19 ];
+        %tmp.264 = getv function %tmp.263 :setColor;
+        symbol [ QC_WHITE %tmp.266 213 20 28 ];
+        %tmp.266 = getv ? :QC_WHITE;
+        symbol [ Graphics %tmp.267 213 30 38 ];
+        %tmp.267 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.268 213 39 56 ];
+        %tmp.268 = getv %tmp.267 :COLOR_TRANSPARENT;
+        invoke %tmp.263 %tmp.264(%tmp.266, %tmp.268);
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 214 8 ]
+        %tmp.269 = lgetv %dc;
+        symbol [ dc %tmp.269 214 8 10 ];
+        symbol [ drawText %tmp.270 214 11 19 ];
+        %tmp.270 = getv function %tmp.269 :drawText;
+        symbol [ _w %tmp.272 214 20 22 ];
+        %tmp.272 = getv ? :_w;
+        %tmp.273 = 2;
+        %tmp.274 = div %tmp.272 %tmp.273;
+        symbol [ _h %tmp.276 214 28 30 ];
+        %tmp.276 = getv ? :_h;
+        %tmp.277 = 67;
+        %tmp.278 = mul %tmp.276 %tmp.277;
+        %tmp.279 = 100;
+        %tmp.280 = div %tmp.278 %tmp.279;
+        symbol [ Graphics %tmp.281 214 43 51 ];
+        %tmp.281 = getm $.Toybox.Graphics;
+        symbol [ FONT_SMALL %tmp.282 214 52 62 ];
+        %tmp.282 = getv %tmp.281 :FONT_SMALL;
+        %tmp.283 = "MOD ";
+        %tmp.284 = lgetv %modV.4;
+        symbol [ modV %tmp.284 215 29 33 ];
+        %tmp.285 = add %tmp.283 %tmp.284;
+        %tmp.286 = "m   NDL ";
+        %tmp.287 = add %tmp.285 %tmp.286;
+        %tmp.288 = lgetv %ndlV.5;
+        symbol [ ndlV %tmp.288 215 49 53 ];
+        %tmp.289 = add %tmp.287 %tmp.288;
+        %tmp.290 = "min";
+        %tmp.291 = add %tmp.289 %tmp.290;
+        symbol [ Graphics %tmp.292 215 63 71 ];
+        %tmp.292 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.293 215 72 91 ];
+        %tmp.293 = getv %tmp.292 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.269 %tmp.270(%tmp.274, %tmp.280, %tmp.282, %tmp.291, %tmp.293);
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 218 8 ]
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_218_8_222_8_if_stmt:
+        %tmp.294 = lgetv %po2.3;
+        symbol [ po2 %tmp.294 218 12 15 ];
+        symbol [ QDC_PO2_ABS %tmp.296 218 18 29 ];
+        %tmp.296 = getv ? :QDC_PO2_ABS;
+        %tmp.297 = gt %tmp.294 %tmp.296;
+        bf %tmp.297 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_218_8_222_8_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_218_8_222_8_if_true:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_218_31_222_8_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 219 12 ]
+        %tmp.298 = lgetv %dc;
+        symbol [ dc %tmp.298 219 12 14 ];
+        symbol [ setColor %tmp.299 219 15 23 ];
+        %tmp.299 = getv function %tmp.298 :setColor;
+        symbol [ QC_V_DANG %tmp.301 219 24 33 ];
+        %tmp.301 = getv ? :QC_V_DANG;
+        symbol [ Graphics %tmp.302 219 35 43 ];
+        %tmp.302 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.303 219 44 61 ];
+        %tmp.303 = getv %tmp.302 :COLOR_TRANSPARENT;
+        invoke %tmp.298 %tmp.299(%tmp.301, %tmp.303);
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 220 12 ]
+        %tmp.304 = lgetv %dc;
+        symbol [ dc %tmp.304 220 12 14 ];
+        symbol [ drawText %tmp.305 220 15 23 ];
+        %tmp.305 = getv function %tmp.304 :drawText;
+        symbol [ _w %tmp.307 220 24 26 ];
+        %tmp.307 = getv ? :_w;
+        %tmp.308 = 2;
+        %tmp.309 = div %tmp.307 %tmp.308;
+        symbol [ _h %tmp.311 220 32 34 ];
+        %tmp.311 = getv ? :_h;
+        %tmp.312 = 76;
+        %tmp.313 = mul %tmp.311 %tmp.312;
+        %tmp.314 = 100;
+        %tmp.315 = div %tmp.313 %tmp.314;
+        symbol [ Graphics %tmp.316 220 47 55 ];
+        %tmp.316 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.317 220 56 66 ];
+        %tmp.317 = getv %tmp.316 :FONT_XTINY;
+        %tmp.318 = "EXCEEDS ABSOLUTE LIMIT";
+        symbol [ Graphics %tmp.319 221 50 58 ];
+        %tmp.319 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.320 221 59 78 ];
+        %tmp.320 = getv %tmp.319 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.304 %tmp.305(%tmp.309, %tmp.315, %tmp.317, %tmp.318, %tmp.320);
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_218_31_222_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_218_8_222_8_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_218_8_222_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 225 8 ]
+        %tmp.321 = lgetv %dc;
+        symbol [ dc %tmp.321 225 8 10 ];
+        symbol [ setColor %tmp.322 225 11 19 ];
+        %tmp.322 = getv function %tmp.321 :setColor;
+        symbol [ QC_HINT %tmp.324 225 20 27 ];
+        %tmp.324 = getv ? :QC_HINT;
+        symbol [ Graphics %tmp.325 225 29 37 ];
+        %tmp.325 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.326 225 38 55 ];
+        %tmp.326 = getv %tmp.325 :COLOR_TRANSPARENT;
+        invoke %tmp.321 %tmp.322(%tmp.324, %tmp.326);
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 226 8 ]
+        %tmp.327 = lgetv %dc;
+        symbol [ dc %tmp.327 226 8 10 ];
+        symbol [ drawText %tmp.328 226 11 19 ];
+        %tmp.328 = getv function %tmp.327 :drawText;
+        symbol [ _w %tmp.330 226 20 22 ];
+        %tmp.330 = getv ? :_w;
+        %tmp.331 = 2;
+        %tmp.332 = div %tmp.330 %tmp.331;
+        symbol [ _h %tmp.334 226 28 30 ];
+        %tmp.334 = getv ? :_h;
+        %tmp.335 = 84;
+        %tmp.336 = mul %tmp.334 %tmp.335;
+        %tmp.337 = 100;
+        %tmp.338 = div %tmp.336 %tmp.337;
+        symbol [ Graphics %tmp.339 226 43 51 ];
+        %tmp.339 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.340 226 52 62 ];
+        %tmp.340 = getv %tmp.339 :FONT_XTINY;
+        %tmp.341 = "SEL: gas/depth  UP/DN: value";
+        symbol [ Graphics %tmp.342 227 52 60 ];
+        %tmp.342 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.343 227 61 80 ];
+        %tmp.343 = getv %tmp.342 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.327 %tmp.328(%tmp.332, %tmp.338, %tmp.340, %tmp.341, %tmp.343);
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 228 8 ]
+        %tmp.344 = lgetv %dc;
+        symbol [ dc %tmp.344 228 8 10 ];
+        symbol [ drawText %tmp.345 228 11 19 ];
+        %tmp.345 = getv function %tmp.344 :drawText;
+        symbol [ _w %tmp.347 228 20 22 ];
+        %tmp.347 = getv ? :_w;
+        %tmp.348 = 2;
+        %tmp.349 = div %tmp.347 %tmp.348;
+        symbol [ _h %tmp.351 228 28 30 ];
+        %tmp.351 = getv ? :_h;
+        %tmp.352 = 91;
+        %tmp.353 = mul %tmp.351 %tmp.352;
+        %tmp.354 = 100;
+        %tmp.355 = div %tmp.353 %tmp.354;
+        symbol [ Graphics %tmp.356 228 43 51 ];
+        %tmp.356 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.357 228 52 62 ];
+        %tmp.357 = getv %tmp.356 :FONT_XTINY;
+        %tmp.358 = "►  Best Mix";
+        symbol [ Graphics %tmp.359 229 35 43 ];
+        %tmp.359 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.360 229 44 63 ];
+        %tmp.360 = getv %tmp.359 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.344 %tmp.345(%tmp.349, %tmp.355, %tmp.357, %tmp.358, %tmp.360);
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_166_35_230_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 234; @symbol_functiondef = [_drawBestMix,234,20,32]; @symbol_param<0> = [dc,234,33,35]; ]
+    protected
+    function _drawBestMix(dc) {
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_234_37_282_4_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 235 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 235 8 10 ];
+        symbol [ setColor %tmp.2 235 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        symbol [ QC_BG_NEUTRAL %tmp.4 235 20 33 ];
+        %tmp.4 = getv ? :QC_BG_NEUTRAL;
+        symbol [ QC_BG_NEUTRAL %tmp.6 235 35 48 ];
+        %tmp.6 = getv ? :QC_BG_NEUTRAL;
+        invoke %tmp.1 %tmp.2(%tmp.4, %tmp.6);
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 236 8 ]
+        %tmp.7 = lgetv %dc;
+        symbol [ dc %tmp.7 236 8 10 ];
+        symbol [ clear %tmp.8 236 11 16 ];
+        %tmp.8 = getv function %tmp.7 :clear;
+        invoke %tmp.7 %tmp.8();
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 238 8 ]
+        %tmp.9 = lgetv %dc;
+        symbol [ dc %tmp.9 238 8 10 ];
+        symbol [ setColor %tmp.10 238 11 19 ];
+        %tmp.10 = getv function %tmp.9 :setColor;
+        symbol [ QC_DIM %tmp.12 238 20 26 ];
+        %tmp.12 = getv ? :QC_DIM;
+        symbol [ Graphics %tmp.13 238 28 36 ];
+        %tmp.13 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.14 238 37 54 ];
+        %tmp.14 = getv %tmp.13 :COLOR_TRANSPARENT;
+        invoke %tmp.9 %tmp.10(%tmp.12, %tmp.14);
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 239 8 ]
+        %tmp.15 = lgetv %dc;
+        symbol [ dc %tmp.15 239 8 10 ];
+        symbol [ drawText %tmp.16 239 11 19 ];
+        %tmp.16 = getv function %tmp.15 :drawText;
+        symbol [ _w %tmp.18 239 20 22 ];
+        %tmp.18 = getv ? :_w;
+        %tmp.19 = 2;
+        %tmp.20 = div %tmp.18 %tmp.19;
+        symbol [ _h %tmp.22 239 28 30 ];
+        %tmp.22 = getv ? :_h;
+        %tmp.23 = 2;
+        %tmp.24 = mul %tmp.22 %tmp.23;
+        %tmp.25 = 100;
+        %tmp.26 = div %tmp.24 %tmp.25;
+        symbol [ Graphics %tmp.27 239 42 50 ];
+        %tmp.27 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.28 239 51 61 ];
+        %tmp.28 = getv %tmp.27 :FONT_XTINY;
+        %tmp.29 = "BEST MIX  2/2";
+        symbol [ Graphics %tmp.30 239 80 88 ];
+        %tmp.30 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.31 239 89 108 ];
+        %tmp.31 = getv %tmp.30 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.15 %tmp.16(%tmp.20, %tmp.26, %tmp.28, %tmp.29, %tmp.31);
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 241 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_234_37_282_4_start" "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_234_37_282_4_stop" ]
+        %dep.1 = local;
+        symbol [ dep %dep.1 241 12 15 ];
+        symbol [ QDC_DEPTHS %tmp.33 241 19 29 ];
+        %tmp.33 = getv ? :QDC_DEPTHS;
+        symbol [ _depIdx %tmp.35 241 30 37 ];
+        %tmp.35 = getv ? :_depIdx;
+        %tmp.36 = agetv %tmp.33 %tmp.35;
+        lputv %dep.1 %tmp.36;
+        symbol [ dep %dep.1 241 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 242 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_234_37_282_4_start" "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_234_37_282_4_stop" ]
+        %fo2.2 = local;
+        symbol [ fo2 %fo2.2 242 12 15 ];
+        %tmp.37 = 1.4;
+        %tmp.38 = lgetv %dep.1;
+        symbol [ dep %tmp.38 242 26 29 ];
+        symbol [ toFloat %tmp.39 242 30 37 ];
+        %tmp.39 = getv function %tmp.38 :toFloat;
+        %tmp.40 = invoke %tmp.38 %tmp.39();
+        %tmp.41 = 10.0;
+        %tmp.42 = div %tmp.40 %tmp.41;
+        %tmp.43 = 1.0;
+        %tmp.44 = add %tmp.42 %tmp.43;
+        %tmp.45 = div %tmp.37 %tmp.44;
+        lputv %fo2.2 %tmp.45;
+        symbol [ fo2 %fo2.2 242 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 243 8 ]
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_243_8_243_37_if_stmt:
+        %tmp.46 = lgetv %fo2.2;
+        symbol [ fo2 %tmp.46 243 12 15 ];
+        %tmp.47 = 1.0;
+        %tmp.48 = gt %tmp.46 %tmp.47;
+        bf %tmp.48 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_243_8_243_37_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_243_8_243_37_if_true:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_243_24_243_37_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 243 26 ]
+        %tmp.49 = 1.0;
+        lputv %fo2.2 %tmp.49;
+        symbol [ fo2 %fo2.2 243 26 29 ];
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_243_24_243_37_stop:
+        goto @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_243_8_243_37_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_243_8_243_37_if_end:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 244 8 ]
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_244_8_244_38_if_stmt:
+        %tmp.50 = lgetv %fo2.2;
+        symbol [ fo2 %tmp.50 244 12 15 ];
+        %tmp.51 = 0.21;
+        %tmp.52 = lt %tmp.50 %tmp.51;
+        bf %tmp.52 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_244_8_244_38_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_244_8_244_38_if_true:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_244_24_244_38_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 244 26 ]
+        %tmp.53 = 0.21;
+        lputv %fo2.2 %tmp.53;
+        symbol [ fo2 %fo2.2 244 26 29 ];
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_244_24_244_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_244_8_244_38_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_244_8_244_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 245 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_234_37_282_4_start" "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_234_37_282_4_stop" ]
+        %pct.3 = local;
+        symbol [ pct %pct.3 245 12 15 ];
+        %tmp.54 = lgetv %fo2.2;
+        symbol [ fo2 %tmp.54 245 20 23 ];
+        %tmp.55 = 100.0;
+        %tmp.56 = mul %tmp.54 %tmp.55;
+        %tmp.57 = 0.5;
+        %tmp.58 = add %tmp.56 %tmp.57;
+        symbol [ toNumber %tmp.59 245 39 47 ];
+        %tmp.59 = getv function %tmp.58 :toNumber;
+        %tmp.60 = invoke %tmp.58 %tmp.59();
+        lputv %pct.3 %tmp.60;
+        symbol [ pct %pct.3 245 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 246 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_234_37_282_4_start" "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_234_37_282_4_stop" ]
+        %modV.4 = local;
+        symbol [ modV %modV.4 246 12 16 ];
+        symbol [ QDC_PO2_WORK %tmp.62 246 21 33 ];
+        %tmp.62 = getv ? :QDC_PO2_WORK;
+        %tmp.63 = lgetv %fo2.2;
+        symbol [ fo2 %tmp.63 246 36 39 ];
+        %tmp.64 = div %tmp.62 %tmp.63;
+        %tmp.65 = 1.0;
+        %tmp.66 = sub %tmp.64 %tmp.65;
+        %tmp.67 = 10.0;
+        %tmp.68 = mul %tmp.66 %tmp.67;
+        symbol [ toNumber %tmp.69 246 55 63 ];
+        %tmp.69 = getv function %tmp.68 :toNumber;
+        %tmp.70 = invoke %tmp.68 %tmp.69();
+        lputv %modV.4 %tmp.70;
+        symbol [ modV %modV.4 246 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 247 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_234_37_282_4_start" "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_234_37_282_4_stop" ]
+        %ndlV.5 = local;
+        symbol [ ndlV %ndlV.5 247 12 16 ];
+        %tmp.71 = self;
+        symbol [ _ndl %tmp.72 247 19 23 ];
+        %tmp.72 = getv function %tmp.71 :_ndl;
+        %tmp.73 = lgetv %dep.1;
+        symbol [ dep %tmp.73 247 24 27 ];
+        %tmp.74 = lgetv %fo2.2;
+        symbol [ fo2 %tmp.74 247 29 32 ];
+        %tmp.75 = invoke %tmp.71 %tmp.72(%tmp.73, %tmp.74);
+        symbol [ toNumber %tmp.76 247 34 42 ];
+        %tmp.76 = getv function %tmp.75 :toNumber;
+        %tmp.77 = invoke %tmp.75 %tmp.76();
+        lputv %ndlV.5 %tmp.77;
+        symbol [ ndlV %ndlV.5 247 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 250 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_234_37_282_4_start" "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_234_37_282_4_stop" ]
+        %mg.6 = local;
+        symbol [ mg %mg.6 250 12 14 ];
+        symbol [ _w %tmp.79 250 17 19 ];
+        %tmp.79 = getv ? :_w;
+        %tmp.80 = 9;
+        %tmp.81 = mul %tmp.79 %tmp.80;
+        %tmp.82 = 100;
+        %tmp.83 = div %tmp.81 %tmp.82;
+        lputv %mg.6 %tmp.83;
+        symbol [ mg %mg.6 250 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 251 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_234_37_282_4_start" "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_234_37_282_4_stop" ]
+        %rH.7 = local;
+        symbol [ rH %rH.7 251 12 14 ];
+        symbol [ _h %tmp.85 251 17 19 ];
+        %tmp.85 = getv ? :_h;
+        %tmp.86 = 11;
+        %tmp.87 = mul %tmp.85 %tmp.86;
+        %tmp.88 = 100;
+        %tmp.89 = div %tmp.87 %tmp.88;
+        lputv %rH.7 %tmp.89;
+        symbol [ rH %rH.7 251 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 252 8 ]
+        %tmp.90 = self;
+        symbol [ _drawRow %tmp.91 252 8 16 ];
+        %tmp.91 = getv function %tmp.90 :_drawRow;
+        %tmp.92 = lgetv %dc;
+        symbol [ dc %tmp.92 252 17 19 ];
+        symbol [ _h %tmp.94 252 21 23 ];
+        %tmp.94 = getv ? :_h;
+        %tmp.95 = 10;
+        %tmp.96 = mul %tmp.94 %tmp.95;
+        %tmp.97 = 100;
+        %tmp.98 = div %tmp.96 %tmp.97;
+        %tmp.99 = "DEPTH";
+        %tmp.100 = lgetv %dep.1;
+        symbol [ dep %tmp.100 252 45 48 ];
+        %tmp.101 = "m";
+        %tmp.102 = add %tmp.100 %tmp.101;
+        %tmp.103 = true;
+        %tmp.104 = lgetv %mg.6;
+        symbol [ mg %tmp.104 252 62 64 ];
+        %tmp.105 = lgetv %rH.7;
+        symbol [ rH %tmp.105 252 66 68 ];
+        invoke %tmp.90 %tmp.91(%tmp.92, %tmp.98, %tmp.99, %tmp.102, %tmp.103, %tmp.104, %tmp.105);
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 255 8 ]
+        %tmp.106 = lgetv %dc;
+        symbol [ dc %tmp.106 255 8 10 ];
+        symbol [ setColor %tmp.107 255 11 19 ];
+        %tmp.107 = getv function %tmp.106 :setColor;
+        symbol [ QC_DIVL %tmp.109 255 20 27 ];
+        %tmp.109 = getv ? :QC_DIVL;
+        symbol [ Graphics %tmp.110 255 29 37 ];
+        %tmp.110 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.111 255 38 55 ];
+        %tmp.111 = getv %tmp.110 :COLOR_TRANSPARENT;
+        invoke %tmp.106 %tmp.107(%tmp.109, %tmp.111);
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 256 8 ]
+        %tmp.112 = lgetv %dc;
+        symbol [ dc %tmp.112 256 8 10 ];
+        symbol [ drawLine %tmp.113 256 11 19 ];
+        %tmp.113 = getv function %tmp.112 :drawLine;
+        symbol [ _w %tmp.115 256 20 22 ];
+        %tmp.115 = getv ? :_w;
+        %tmp.116 = 10;
+        %tmp.117 = mul %tmp.115 %tmp.116;
+        %tmp.118 = 100;
+        %tmp.119 = div %tmp.117 %tmp.118;
+        symbol [ _h %tmp.121 256 35 37 ];
+        %tmp.121 = getv ? :_h;
+        %tmp.122 = 24;
+        %tmp.123 = mul %tmp.121 %tmp.122;
+        %tmp.124 = 100;
+        %tmp.125 = div %tmp.123 %tmp.124;
+        symbol [ _w %tmp.127 256 50 52 ];
+        %tmp.127 = getv ? :_w;
+        %tmp.128 = 90;
+        %tmp.129 = mul %tmp.127 %tmp.128;
+        %tmp.130 = 100;
+        %tmp.131 = div %tmp.129 %tmp.130;
+        symbol [ _h %tmp.133 256 65 67 ];
+        %tmp.133 = getv ? :_h;
+        %tmp.134 = 24;
+        %tmp.135 = mul %tmp.133 %tmp.134;
+        %tmp.136 = 100;
+        %tmp.137 = div %tmp.135 %tmp.136;
+        invoke %tmp.112 %tmp.113(%tmp.119, %tmp.125, %tmp.131, %tmp.137);
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 259 8 ]
+        %tmp.138 = lgetv %dc;
+        symbol [ dc %tmp.138 259 8 10 ];
+        symbol [ setColor %tmp.139 259 11 19 ];
+        %tmp.139 = getv function %tmp.138 :setColor;
+        symbol [ QC_CYAN %tmp.141 259 20 27 ];
+        %tmp.141 = getv ? :QC_CYAN;
+        symbol [ Graphics %tmp.142 259 29 37 ];
+        %tmp.142 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.143 259 38 55 ];
+        %tmp.143 = getv %tmp.142 :COLOR_TRANSPARENT;
+        invoke %tmp.138 %tmp.139(%tmp.141, %tmp.143);
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 260 8 ]
+        %tmp.144 = lgetv %dc;
+        symbol [ dc %tmp.144 260 8 10 ];
+        symbol [ drawText %tmp.145 260 11 19 ];
+        %tmp.145 = getv function %tmp.144 :drawText;
+        symbol [ _w %tmp.147 260 20 22 ];
+        %tmp.147 = getv ? :_w;
+        %tmp.148 = 2;
+        %tmp.149 = div %tmp.147 %tmp.148;
+        symbol [ _h %tmp.151 260 28 30 ];
+        %tmp.151 = getv ? :_h;
+        %tmp.152 = 26;
+        %tmp.153 = mul %tmp.151 %tmp.152;
+        %tmp.154 = 100;
+        %tmp.155 = div %tmp.153 %tmp.154;
+        symbol [ Graphics %tmp.156 260 43 51 ];
+        %tmp.156 = getm $.Toybox.Graphics;
+        symbol [ FONT_NUMBER_HOT %tmp.157 260 52 67 ];
+        %tmp.157 = getv %tmp.156 :FONT_NUMBER_HOT;
+        %tmp.158 = lgetv %pct.3;
+        symbol [ pct %tmp.158 261 20 23 ];
+        %tmp.159 = "%";
+        %tmp.160 = add %tmp.158 %tmp.159;
+        symbol [ Graphics %tmp.161 261 31 39 ];
+        %tmp.161 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.162 261 40 59 ];
+        %tmp.162 = getv %tmp.161 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.144 %tmp.145(%tmp.149, %tmp.155, %tmp.157, %tmp.160, %tmp.162);
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 263 8 ]
+        %tmp.163 = lgetv %dc;
+        symbol [ dc %tmp.163 263 8 10 ];
+        symbol [ setColor %tmp.164 263 11 19 ];
+        %tmp.164 = getv function %tmp.163 :setColor;
+        symbol [ QC_DIM %tmp.166 263 20 26 ];
+        %tmp.166 = getv ? :QC_DIM;
+        symbol [ Graphics %tmp.167 263 28 36 ];
+        %tmp.167 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.168 263 37 54 ];
+        %tmp.168 = getv %tmp.167 :COLOR_TRANSPARENT;
+        invoke %tmp.163 %tmp.164(%tmp.166, %tmp.168);
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 264 8 ]
+        %tmp.169 = lgetv %dc;
+        symbol [ dc %tmp.169 264 8 10 ];
+        symbol [ drawText %tmp.170 264 11 19 ];
+        %tmp.170 = getv function %tmp.169 :drawText;
+        symbol [ _w %tmp.172 264 20 22 ];
+        %tmp.172 = getv ? :_w;
+        %tmp.173 = 2;
+        %tmp.174 = div %tmp.172 %tmp.173;
+        symbol [ _h %tmp.176 264 28 30 ];
+        %tmp.176 = getv ? :_h;
+        %tmp.177 = 55;
+        %tmp.178 = mul %tmp.176 %tmp.177;
+        %tmp.179 = 100;
+        %tmp.180 = div %tmp.178 %tmp.179;
+        symbol [ Graphics %tmp.181 264 43 51 ];
+        %tmp.181 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.182 264 52 62 ];
+        %tmp.182 = getv %tmp.181 :FONT_XTINY;
+        %tmp.183 = "optimal FO2";
+        symbol [ Graphics %tmp.184 264 79 87 ];
+        %tmp.184 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.185 264 88 107 ];
+        %tmp.185 = getv %tmp.184 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.169 %tmp.170(%tmp.174, %tmp.180, %tmp.182, %tmp.183, %tmp.185);
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 267 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_234_37_282_4_start" "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_234_37_282_4_stop" ]
+        %gasName.8 = local;
+        symbol [ gasName %gasName.8 267 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 268 8 ]
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_268_8_270_63_if_stmt:
+        %tmp.186 = lgetv %pct.3;
+        symbol [ pct %tmp.186 268 17 20 ];
+        %tmp.187 = 21;
+        %tmp.188 = lte %tmp.186 %tmp.187;
+        bf %tmp.188 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_268_8_270_63_if_false;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_268_8_270_63_if_true:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_268_28_268_47_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 268 30 ]
+        %tmp.189 = "Air";
+        lputv %gasName.8 %tmp.189;
+        symbol [ gasName %gasName.8 268 30 37 ];
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_268_28_268_47_stop:
+        goto @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_268_8_270_63_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_268_8_270_63_if_false:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 269 13 ]
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_269_13_270_63_if_stmt:
+        %tmp.190 = lgetv %pct.3;
+        symbol [ pct %tmp.190 269 17 20 ];
+        %tmp.191 = 36;
+        %tmp.192 = lte %tmp.190 %tmp.191;
+        bf %tmp.192 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_269_13_270_63_if_else_false;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_269_13_270_63_if_true:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_269_28_269_57_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 269 30 ]
+        %tmp.193 = "Nitrox ";
+        %tmp.194 = lgetv %pct.3;
+        symbol [ pct %tmp.194 269 52 55 ];
+        %tmp.195 = add %tmp.193 %tmp.194;
+        lputv %gasName.8 %tmp.195;
+        symbol [ gasName %gasName.8 269 30 37 ];
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_269_28_269_57_stop:
+        goto @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_269_13_270_63_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_269_13_270_63_if_else_false:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_270_28_270_63_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 270 30 ]
+        %tmp.196 = "Nitrox ";
+        %tmp.197 = lgetv %pct.3;
+        symbol [ pct %tmp.197 270 52 55 ];
+        %tmp.198 = add %tmp.196 %tmp.197;
+        %tmp.199 = "*";
+        %tmp.200 = add %tmp.198 %tmp.199;
+        lputv %gasName.8 %tmp.200;
+        symbol [ gasName %gasName.8 270 30 37 ];
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_270_28_270_63_stop:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_269_13_270_63_if_end:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_268_8_270_63_if_end:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 271 8 ]
+        %tmp.201 = lgetv %dc;
+        symbol [ dc %tmp.201 271 8 10 ];
+        symbol [ setColor %tmp.202 271 11 19 ];
+        %tmp.202 = getv function %tmp.201 :setColor;
+        symbol [ QC_WHITE %tmp.204 271 20 28 ];
+        %tmp.204 = getv ? :QC_WHITE;
+        symbol [ Graphics %tmp.205 271 30 38 ];
+        %tmp.205 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.206 271 39 56 ];
+        %tmp.206 = getv %tmp.205 :COLOR_TRANSPARENT;
+        invoke %tmp.201 %tmp.202(%tmp.204, %tmp.206);
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 272 8 ]
+        %tmp.207 = lgetv %dc;
+        symbol [ dc %tmp.207 272 8 10 ];
+        symbol [ drawText %tmp.208 272 11 19 ];
+        %tmp.208 = getv function %tmp.207 :drawText;
+        symbol [ _w %tmp.210 272 20 22 ];
+        %tmp.210 = getv ? :_w;
+        %tmp.211 = 2;
+        %tmp.212 = div %tmp.210 %tmp.211;
+        symbol [ _h %tmp.214 272 28 30 ];
+        %tmp.214 = getv ? :_h;
+        %tmp.215 = 63;
+        %tmp.216 = mul %tmp.214 %tmp.215;
+        %tmp.217 = 100;
+        %tmp.218 = div %tmp.216 %tmp.217;
+        symbol [ Graphics %tmp.219 272 43 51 ];
+        %tmp.219 = getm $.Toybox.Graphics;
+        symbol [ FONT_SMALL %tmp.220 272 52 62 ];
+        %tmp.220 = getv %tmp.219 :FONT_SMALL;
+        %tmp.221 = lgetv %gasName.8;
+        symbol [ gasName %tmp.221 272 64 71 ];
+        symbol [ Graphics %tmp.222 272 73 81 ];
+        %tmp.222 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.223 272 82 101 ];
+        %tmp.223 = getv %tmp.222 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.207 %tmp.208(%tmp.212, %tmp.218, %tmp.220, %tmp.221, %tmp.223);
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 275 8 ]
+        %tmp.224 = lgetv %dc;
+        symbol [ dc %tmp.224 275 8 10 ];
+        symbol [ setColor %tmp.225 275 11 19 ];
+        %tmp.225 = getv function %tmp.224 :setColor;
+        symbol [ QC_DIM %tmp.227 275 20 26 ];
+        %tmp.227 = getv ? :QC_DIM;
+        symbol [ Graphics %tmp.228 275 28 36 ];
+        %tmp.228 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.229 275 37 54 ];
+        %tmp.229 = getv %tmp.228 :COLOR_TRANSPARENT;
+        invoke %tmp.224 %tmp.225(%tmp.227, %tmp.229);
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 276 8 ]
+        %tmp.230 = lgetv %dc;
+        symbol [ dc %tmp.230 276 8 10 ];
+        symbol [ drawText %tmp.231 276 11 19 ];
+        %tmp.231 = getv function %tmp.230 :drawText;
+        symbol [ _w %tmp.233 276 20 22 ];
+        %tmp.233 = getv ? :_w;
+        %tmp.234 = 2;
+        %tmp.235 = div %tmp.233 %tmp.234;
+        symbol [ _h %tmp.237 276 28 30 ];
+        %tmp.237 = getv ? :_h;
+        %tmp.238 = 73;
+        %tmp.239 = mul %tmp.237 %tmp.238;
+        %tmp.240 = 100;
+        %tmp.241 = div %tmp.239 %tmp.240;
+        symbol [ Graphics %tmp.242 276 43 51 ];
+        %tmp.242 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.243 276 52 62 ];
+        %tmp.243 = getv %tmp.242 :FONT_XTINY;
+        %tmp.244 = "MOD ";
+        %tmp.245 = lgetv %modV.4;
+        symbol [ modV %tmp.245 277 29 33 ];
+        %tmp.246 = add %tmp.244 %tmp.245;
+        %tmp.247 = "m   NDL ";
+        %tmp.248 = add %tmp.246 %tmp.247;
+        %tmp.249 = lgetv %ndlV.5;
+        symbol [ ndlV %tmp.249 277 49 53 ];
+        %tmp.250 = add %tmp.248 %tmp.249;
+        %tmp.251 = "min";
+        %tmp.252 = add %tmp.250 %tmp.251;
+        symbol [ Graphics %tmp.253 277 63 71 ];
+        %tmp.253 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.254 277 72 91 ];
+        %tmp.254 = getv %tmp.253 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.230 %tmp.231(%tmp.235, %tmp.241, %tmp.243, %tmp.252, %tmp.254);
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 279 8 ]
+        %tmp.255 = lgetv %dc;
+        symbol [ dc %tmp.255 279 8 10 ];
+        symbol [ setColor %tmp.256 279 11 19 ];
+        %tmp.256 = getv function %tmp.255 :setColor;
+        symbol [ QC_HINT %tmp.258 279 20 27 ];
+        %tmp.258 = getv ? :QC_HINT;
+        symbol [ Graphics %tmp.259 279 29 37 ];
+        %tmp.259 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.260 279 38 55 ];
+        %tmp.260 = getv %tmp.259 :COLOR_TRANSPARENT;
+        invoke %tmp.255 %tmp.256(%tmp.258, %tmp.260);
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 280 8 ]
+        %tmp.261 = lgetv %dc;
+        symbol [ dc %tmp.261 280 8 10 ];
+        symbol [ drawText %tmp.262 280 11 19 ];
+        %tmp.262 = getv function %tmp.261 :drawText;
+        symbol [ _w %tmp.264 280 20 22 ];
+        %tmp.264 = getv ? :_w;
+        %tmp.265 = 2;
+        %tmp.266 = div %tmp.264 %tmp.265;
+        symbol [ _h %tmp.268 280 28 30 ];
+        %tmp.268 = getv ? :_h;
+        %tmp.269 = 84;
+        %tmp.270 = mul %tmp.268 %tmp.269;
+        %tmp.271 = 100;
+        %tmp.272 = div %tmp.270 %tmp.271;
+        symbol [ Graphics %tmp.273 280 43 51 ];
+        %tmp.273 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.274 280 52 62 ];
+        %tmp.274 = getv %tmp.273 :FONT_XTINY;
+        %tmp.275 = "UP/DN: depth";
+        symbol [ Graphics %tmp.276 280 80 88 ];
+        %tmp.276 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.277 280 89 108 ];
+        %tmp.277 = getv %tmp.276 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.261 %tmp.262(%tmp.266, %tmp.272, %tmp.274, %tmp.275, %tmp.277);
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 281 8 ]
+        %tmp.278 = lgetv %dc;
+        symbol [ dc %tmp.278 281 8 10 ];
+        symbol [ drawText %tmp.279 281 11 19 ];
+        %tmp.279 = getv function %tmp.278 :drawText;
+        symbol [ _w %tmp.281 281 20 22 ];
+        %tmp.281 = getv ? :_w;
+        %tmp.282 = 2;
+        %tmp.283 = div %tmp.281 %tmp.282;
+        symbol [ _h %tmp.285 281 28 30 ];
+        %tmp.285 = getv ? :_h;
+        %tmp.286 = 91;
+        %tmp.287 = mul %tmp.285 %tmp.286;
+        %tmp.288 = 100;
+        %tmp.289 = div %tmp.287 %tmp.288;
+        symbol [ Graphics %tmp.290 281 43 51 ];
+        %tmp.290 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.291 281 52 62 ];
+        %tmp.291 = getv %tmp.290 :FONT_XTINY;
+        %tmp.292 = "◄  Gas Check";
+        symbol [ Graphics %tmp.293 281 80 88 ];
+        %tmp.293 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.294 281 89 108 ];
+        %tmp.294 = getv %tmp.293 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.278 %tmp.279(%tmp.283, %tmp.289, %tmp.291, %tmp.292, %tmp.294);
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_234_37_282_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 287; @symbol_functiondef = [_drawRow,287,20,28]; @symbol_param<0> = [dc,287,29,31]; @symbol_param<1> = [y,287,33,34]; @symbol_param<2> = [lbl,287,36,39]; @symbol_param<3> = [val,287,41,44]; @symbol_param<4> = [active,287,46,52]; @symbol_param<5> = [mg,287,54,56]; @symbol_param<6> = [rH,287,58,60]; ]
+    protected
+    function _drawRow(dc, y, lbl, val, active, mg, rH) {
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_287_62_295_4_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 288 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_287_62_295_4_start" "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_287_62_295_4_stop" ]
+        %fXH.1 = local;
+        symbol [ fXH %fXH.1 288 12 15 ];
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 288 18 20 ];
+        symbol [ getFontHeight %tmp.2 288 21 34 ];
+        %tmp.2 = getv function %tmp.1 :getFontHeight;
+        symbol [ Graphics %tmp.3 288 35 43 ];
+        %tmp.3 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.4 288 44 54 ];
+        %tmp.4 = getv %tmp.3 :FONT_XTINY;
+        %tmp.5 = invoke %tmp.1 %tmp.2(%tmp.4);
+        lputv %fXH.1 %tmp.5;
+        symbol [ fXH %fXH.1 288 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 289 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_287_62_295_4_start" "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_287_62_295_4_stop" ]
+        %tY.2 = local;
+        symbol [ tY %tY.2 289 12 14 ];
+        %tmp.6 = lgetv %y;
+        symbol [ y %tmp.6 289 18 19 ];
+        %tmp.7 = lgetv %rH;
+        symbol [ rH %tmp.7 289 23 25 ];
+        %tmp.8 = lgetv %fXH.1;
+        symbol [ fXH %tmp.8 289 28 31 ];
+        %tmp.9 = sub %tmp.7 %tmp.8;
+        %tmp.10 = 2;
+        %tmp.11 = div %tmp.9 %tmp.10;
+        %tmp.12 = add %tmp.6 %tmp.11;
+        lputv %tY.2 %tmp.12;
+        symbol [ tY %tY.2 289 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 290 8 ]
+        %tmp.13 = lgetv %dc;
+        symbol [ dc %tmp.13 290 8 10 ];
+        symbol [ setColor %tmp.14 290 11 19 ];
+        %tmp.14 = getv function %tmp.13 :setColor;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_290_20_290_39_begin:
+        %tmp.15 = lgetv %active;
+        symbol [ active %tmp.15 290 20 26 ];
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_290_20_290_39_else_false;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_290_20_290_39_true:
+        symbol [ QC_CYAN %tmp.17 290 29 36 ];
+        %tmp.17 = getv ? :QC_CYAN;
+        push %tmp.17;
+        goto @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_290_20_290_39_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_290_20_290_39_else_false:
+        symbol [ QC_DIM %tmp.19 290 39 45 ];
+        %tmp.19 = getv ? :QC_DIM;
+        push %tmp.19;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_290_20_290_39_end:
+        %tmp.20 = phi [%tmp.15 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_290_20_290_39_begin] [%tmp.17 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_290_20_290_39_true] [%tmp.19 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_290_20_290_39_else_false] [%tmp.20 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_290_20_290_39_end];
+        symbol [ Graphics %tmp.21 290 47 55 ];
+        %tmp.21 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.22 290 56 73 ];
+        %tmp.22 = getv %tmp.21 :COLOR_TRANSPARENT;
+        invoke %tmp.13 %tmp.14(%tmp.20, %tmp.22);
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 291 8 ]
+        %tmp.23 = lgetv %dc;
+        symbol [ dc %tmp.23 291 8 10 ];
+        symbol [ drawText %tmp.24 291 11 19 ];
+        %tmp.24 = getv function %tmp.23 :drawText;
+        %tmp.25 = lgetv %mg;
+        symbol [ mg %tmp.25 291 20 22 ];
+        %tmp.26 = 5;
+        %tmp.27 = add %tmp.25 %tmp.26;
+        %tmp.28 = lgetv %tY.2;
+        symbol [ tY %tmp.28 291 28 30 ];
+        symbol [ Graphics %tmp.29 291 32 40 ];
+        %tmp.29 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.30 291 41 51 ];
+        %tmp.30 = getv %tmp.29 :FONT_XTINY;
+        %tmp.31 = lgetv %lbl;
+        symbol [ lbl %tmp.31 291 53 56 ];
+        symbol [ Graphics %tmp.32 291 58 66 ];
+        %tmp.32 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_LEFT %tmp.33 291 67 84 ];
+        %tmp.33 = getv %tmp.32 :TEXT_JUSTIFY_LEFT;
+        invoke %tmp.23 %tmp.24(%tmp.27, %tmp.28, %tmp.30, %tmp.31, %tmp.33);
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 292 8 ]
+        %tmp.34 = lgetv %dc;
+        symbol [ dc %tmp.34 292 8 10 ];
+        symbol [ setColor %tmp.35 292 11 19 ];
+        %tmp.35 = getv function %tmp.34 :setColor;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_292_20_292_40_begin:
+        %tmp.36 = lgetv %active;
+        symbol [ active %tmp.36 292 20 26 ];
+        bf %tmp.36 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_292_20_292_40_else_false;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_292_20_292_40_true:
+        symbol [ QC_WHITE %tmp.38 292 29 37 ];
+        %tmp.38 = getv ? :QC_WHITE;
+        push %tmp.38;
+        goto @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_292_20_292_40_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_292_20_292_40_else_false:
+        %tmp.39 = 0x778899;
+        push %tmp.39;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_292_20_292_40_end:
+        %tmp.40 = phi [%tmp.36 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_292_20_292_40_begin] [%tmp.38 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_292_20_292_40_true] [%tmp.39 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_292_20_292_40_else_false] [%tmp.40 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_292_20_292_40_end];
+        symbol [ Graphics %tmp.41 292 50 58 ];
+        %tmp.41 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.42 292 59 76 ];
+        %tmp.42 = getv %tmp.41 :COLOR_TRANSPARENT;
+        invoke %tmp.34 %tmp.35(%tmp.40, %tmp.42);
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 293 8 ]
+        %tmp.43 = lgetv %dc;
+        symbol [ dc %tmp.43 293 8 10 ];
+        symbol [ drawText %tmp.44 293 11 19 ];
+        %tmp.44 = getv function %tmp.43 :drawText;
+        symbol [ _w %tmp.46 293 20 22 ];
+        %tmp.46 = getv ? :_w;
+        %tmp.47 = lgetv %mg;
+        symbol [ mg %tmp.47 293 25 27 ];
+        %tmp.48 = sub %tmp.46 %tmp.47;
+        %tmp.49 = 5;
+        %tmp.50 = sub %tmp.48 %tmp.49;
+        %tmp.51 = lgetv %tY.2;
+        symbol [ tY %tmp.51 293 33 35 ];
+        symbol [ Graphics %tmp.52 293 37 45 ];
+        %tmp.52 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.53 293 46 56 ];
+        %tmp.53 = getv %tmp.52 :FONT_XTINY;
+        %tmp.54 = lgetv %val;
+        symbol [ val %tmp.54 294 20 23 ];
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_294_27_294_44_begin:
+        %tmp.55 = lgetv %active;
+        symbol [ active %tmp.55 294 27 33 ];
+        bf %tmp.55 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_294_27_294_44_else_false;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_294_27_294_44_true:
+        %tmp.56 = " <>";
+        push %tmp.56;
+        goto @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_294_27_294_44_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_294_27_294_44_else_false:
+        %tmp.57 = "";
+        push %tmp.57;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_294_27_294_44_end:
+        %tmp.58 = phi [%tmp.55 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_294_27_294_44_begin] [%tmp.56 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_294_27_294_44_true] [%tmp.57 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_294_27_294_44_else_false] [%tmp.58 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_294_27_294_44_end];
+        %tmp.59 = add %tmp.54 %tmp.58;
+        symbol [ Graphics %tmp.60 294 49 57 ];
+        %tmp.60 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_RIGHT %tmp.61 294 58 76 ];
+        %tmp.61 = getv %tmp.60 :TEXT_JUSTIFY_RIGHT;
+        invoke %tmp.43 %tmp.44(%tmp.50, %tmp.51, %tmp.53, %tmp.59, %tmp.61);
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_287_62_295_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 299; @symbol_functiondef = [_bgColor,299,20,28]; @symbol_param<0> = [po2,299,29,32]; ]
+    protected
+    function _bgColor(po2) {
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_299_34_303_4_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 300 8 ]
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_300_8_300_54_if_stmt:
+        %tmp.1 = lgetv %po2;
+        symbol [ po2 %tmp.1 300 12 15 ];
+        symbol [ QDC_PO2_WORK %tmp.3 300 19 31 ];
+        %tmp.3 = getv ? :QDC_PO2_WORK;
+        %tmp.4 = lte %tmp.1 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_300_8_300_54_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_300_8_300_54_if_true:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_300_33_300_54_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 300 35 ]
+        symbol [ QC_BG_SAFE %tmp.6 300 42 52 ];
+        %tmp.6 = getv ? :QC_BG_SAFE;
+        ret %tmp.6;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_300_33_300_54_stop:
+        goto @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_300_8_300_54_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_300_8_300_54_if_end:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 301 8 ]
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_301_8_301_54_if_stmt:
+        %tmp.7 = lgetv %po2;
+        symbol [ po2 %tmp.7 301 12 15 ];
+        symbol [ QDC_PO2_ABS %tmp.9 301 19 30 ];
+        %tmp.9 = getv ? :QDC_PO2_ABS;
+        %tmp.10 = lte %tmp.7 %tmp.9;
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_301_8_301_54_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_301_8_301_54_if_true:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_301_33_301_54_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 301 35 ]
+        symbol [ QC_BG_WARN %tmp.12 301 42 52 ];
+        %tmp.12 = getv ? :QC_BG_WARN;
+        ret %tmp.12;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_301_33_301_54_stop:
+        goto @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_301_8_301_54_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_301_8_301_54_if_end:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 302 8 ]
+        symbol [ QC_BG_DANG %tmp.14 302 15 25 ];
+        %tmp.14 = getv ? :QC_BG_DANG;
+        ret %tmp.14;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_299_34_303_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 305; @symbol_functiondef = [_verdictColor,305,20,33]; @symbol_param<0> = [po2,305,34,37]; ]
+    protected
+    function _verdictColor(po2) {
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_305_39_309_4_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 306 8 ]
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_306_8_306_53_if_stmt:
+        %tmp.1 = lgetv %po2;
+        symbol [ po2 %tmp.1 306 12 15 ];
+        symbol [ QDC_PO2_WORK %tmp.3 306 19 31 ];
+        %tmp.3 = getv ? :QDC_PO2_WORK;
+        %tmp.4 = lte %tmp.1 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_306_8_306_53_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_306_8_306_53_if_true:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_306_33_306_53_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 306 35 ]
+        symbol [ QC_V_SAFE %tmp.6 306 42 51 ];
+        %tmp.6 = getv ? :QC_V_SAFE;
+        ret %tmp.6;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_306_33_306_53_stop:
+        goto @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_306_8_306_53_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_306_8_306_53_if_end:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 307 8 ]
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_307_8_307_53_if_stmt:
+        %tmp.7 = lgetv %po2;
+        symbol [ po2 %tmp.7 307 12 15 ];
+        symbol [ QDC_PO2_ABS %tmp.9 307 19 30 ];
+        %tmp.9 = getv ? :QDC_PO2_ABS;
+        %tmp.10 = lte %tmp.7 %tmp.9;
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_307_8_307_53_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_307_8_307_53_if_true:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_307_33_307_53_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 307 35 ]
+        symbol [ QC_V_WARN %tmp.12 307 42 51 ];
+        %tmp.12 = getv ? :QC_V_WARN;
+        ret %tmp.12;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_307_33_307_53_stop:
+        goto @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_307_8_307_53_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_307_8_307_53_if_end:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 308 8 ]
+        symbol [ QC_V_DANG %tmp.14 308 15 24 ];
+        %tmp.14 = getv ? :QC_V_DANG;
+        ret %tmp.14;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_305_39_309_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 311; @symbol_functiondef = [_verdictText,311,20,32]; @symbol_param<0> = [po2,311,33,36]; ]
+    protected
+    function _verdictText(po2) {
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_311_38_315_4_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 312 8 ]
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_312_8_312_50_if_stmt:
+        %tmp.1 = lgetv %po2;
+        symbol [ po2 %tmp.1 312 12 15 ];
+        symbol [ QDC_PO2_WORK %tmp.3 312 19 31 ];
+        %tmp.3 = getv ? :QDC_PO2_WORK;
+        %tmp.4 = lte %tmp.1 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_312_8_312_50_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_312_8_312_50_if_true:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_312_33_312_50_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 312 35 ]
+        %tmp.5 = "SAFE";
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_312_33_312_50_stop:
+        goto @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_312_8_312_50_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_312_8_312_50_if_end:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 313 8 ]
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_313_8_313_53_if_stmt:
+        %tmp.6 = lgetv %po2;
+        symbol [ po2 %tmp.6 313 12 15 ];
+        symbol [ QDC_PO2_ABS %tmp.8 313 19 30 ];
+        %tmp.8 = getv ? :QDC_PO2_ABS;
+        %tmp.9 = lte %tmp.6 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_313_8_313_53_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_313_8_313_53_if_true:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_313_33_313_53_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 313 35 ]
+        %tmp.10 = "WARNING";
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_313_33_313_53_stop:
+        goto @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_313_8_313_53_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_313_8_313_53_if_end:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 314 8 ]
+        %tmp.11 = "DANGER";
+        ret %tmp.11;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_311_38_315_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 318; @symbol_functiondef = [_ndl,318,20,24]; @symbol_param<0> = [depth,318,25,30]; @symbol_param<1> = [fo2,318,32,35]; ]
+    protected
+    function _ndl(depth, fo2) {
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_318_37_337_4_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 319 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_318_37_337_4_start" "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_318_37_337_4_stop" ]
+        %effD.1 = local;
+        symbol [ effD %effD.1 319 12 16 ];
+        %tmp.1 = lgetv %depth;
+        symbol [ depth %tmp.1 319 19 24 ];
+        symbol [ toFloat %tmp.2 319 25 32 ];
+        %tmp.2 = getv function %tmp.1 :toFloat;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        lputv %effD.1 %tmp.3;
+        symbol [ effD %effD.1 319 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 320 8 ]
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_320_8_323_8_if_stmt:
+        %tmp.4 = lgetv %fo2;
+        symbol [ fo2 %tmp.4 320 12 15 ];
+        %tmp.5 = 0.21;
+        %tmp.6 = gt %tmp.4 %tmp.5;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_320_8_323_8_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_320_8_323_8_if_true:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_320_24_323_8_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 321 12 ]
+        [ "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_320_24_323_8_start" "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_320_24_323_8_stop" ]
+        %eadV.2 = local;
+        symbol [ eadV %eadV.2 321 16 20 ];
+        %tmp.7 = lgetv %depth;
+        symbol [ depth %tmp.7 321 25 30 ];
+        symbol [ toFloat %tmp.8 321 31 38 ];
+        %tmp.8 = getv function %tmp.7 :toFloat;
+        %tmp.9 = invoke %tmp.7 %tmp.8();
+        %tmp.10 = 10.0;
+        %tmp.11 = add %tmp.9 %tmp.10;
+        %tmp.12 = 1.0;
+        %tmp.13 = lgetv %fo2;
+        symbol [ fo2 %tmp.13 321 58 61 ];
+        %tmp.14 = sub %tmp.12 %tmp.13;
+        %tmp.15 = mul %tmp.11 %tmp.14;
+        %tmp.16 = 0.79;
+        %tmp.17 = div %tmp.15 %tmp.16;
+        %tmp.18 = 10.0;
+        %tmp.19 = sub %tmp.17 %tmp.18;
+        lputv %eadV.2 %tmp.19;
+        symbol [ eadV %eadV.2 321 16 20 ];
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 322 12 ]
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_322_12_322_44_if_stmt:
+        %tmp.20 = lgetv %eadV.2;
+        symbol [ eadV %tmp.20 322 16 20 ];
+        %tmp.21 = 0.0;
+        %tmp.22 = gte %tmp.20 %tmp.21;
+        bf %tmp.22 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_322_12_322_44_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_322_12_322_44_if_true:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_322_29_322_44_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 322 31 ]
+        %tmp.23 = lgetv %eadV.2;
+        symbol [ eadV %tmp.23 322 38 42 ];
+        lputv %effD.1 %tmp.23;
+        symbol [ effD %effD.1 322 31 35 ];
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_322_29_322_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_322_12_322_44_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_322_12_322_44_if_end:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_320_24_323_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_320_8_323_8_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_320_8_323_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 324 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_318_37_337_4_start" "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_318_37_337_4_stop" ]
+        %n.3 = local;
+        symbol [ n %n.3 324 12 13 ];
+        symbol [ QDC_NDL_D %tmp.25 324 16 25 ];
+        %tmp.25 = getv ? :QDC_NDL_D;
+        symbol [ size %tmp.26 324 26 30 ];
+        %tmp.26 = getv function %tmp.25 :size;
+        %tmp.27 = invoke %tmp.25 %tmp.26();
+        lputv %n.3 %tmp.27;
+        symbol [ n %n.3 324 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 325 8 ]
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_325_8_325_83_if_stmt:
+        %tmp.28 = lgetv %effD.1;
+        symbol [ effD %tmp.28 325 12 16 ];
+        symbol [ QDC_NDL_D %tmp.30 325 20 29 ];
+        %tmp.30 = getv ? :QDC_NDL_D;
+        %tmp.31 = 0;
+        %tmp.32 = agetv %tmp.30 %tmp.31;
+        symbol [ toFloat %tmp.33 325 33 40 ];
+        %tmp.33 = getv function %tmp.32 :toFloat;
+        %tmp.34 = invoke %tmp.32 %tmp.33();
+        %tmp.35 = lte %tmp.28 %tmp.34;
+        bf %tmp.35 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_325_8_325_83_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_325_8_325_83_if_true:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_325_50_325_83_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 325 52 ]
+        symbol [ QDC_NDL_T %tmp.37 325 59 68 ];
+        %tmp.37 = getv ? :QDC_NDL_T;
+        %tmp.38 = 0;
+        %tmp.39 = agetv %tmp.37 %tmp.38;
+        symbol [ toFloat %tmp.40 325 72 79 ];
+        %tmp.40 = getv function %tmp.39 :toFloat;
+        %tmp.41 = invoke %tmp.39 %tmp.40();
+        ret %tmp.41;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_325_50_325_83_stop:
+        goto @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_325_8_325_83_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_325_8_325_83_if_end:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 326 8 ]
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_326_8_326_87_if_stmt:
+        %tmp.42 = lgetv %effD.1;
+        symbol [ effD %tmp.42 326 12 16 ];
+        symbol [ QDC_NDL_D %tmp.44 326 20 29 ];
+        %tmp.44 = getv ? :QDC_NDL_D;
+        %tmp.45 = lgetv %n.3;
+        symbol [ n %tmp.45 326 30 31 ];
+        %tmp.46 = 1;
+        %tmp.47 = sub %tmp.45 %tmp.46;
+        %tmp.48 = agetv %tmp.44 %tmp.47;
+        symbol [ toFloat %tmp.49 326 37 44 ];
+        %tmp.49 = getv function %tmp.48 :toFloat;
+        %tmp.50 = invoke %tmp.48 %tmp.49();
+        %tmp.51 = gte %tmp.42 %tmp.50;
+        bf %tmp.51 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_326_8_326_87_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_326_8_326_87_if_true:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_326_50_326_87_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 326 52 ]
+        symbol [ QDC_NDL_T %tmp.53 326 59 68 ];
+        %tmp.53 = getv ? :QDC_NDL_T;
+        %tmp.54 = lgetv %n.3;
+        symbol [ n %tmp.54 326 69 70 ];
+        %tmp.55 = 1;
+        %tmp.56 = sub %tmp.54 %tmp.55;
+        %tmp.57 = agetv %tmp.53 %tmp.56;
+        symbol [ toFloat %tmp.58 326 76 83 ];
+        %tmp.58 = getv function %tmp.57 :toFloat;
+        %tmp.59 = invoke %tmp.57 %tmp.58();
+        ret %tmp.59;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_326_50_326_87_stop:
+        goto @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_326_8_326_87_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_326_8_326_87_if_end:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 327 8 ]
+        for @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_327_8_335_8_for_test @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_327_8_335_8_for_incr @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_327_8_335_8_for_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_327_8_335_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_327_8_335_8_for_begin" "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_327_8_335_8_for_end" ]
+        %i.4 = local;
+        symbol [ i %i.4 327 17 18 ];
+        %tmp.60 = 0;
+        lputv %i.4 %tmp.60;
+        symbol [ i %i.4 327 17 18 ];
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_327_8_335_8_for_test:
+        %tmp.61 = lgetv %i.4;
+        symbol [ i %tmp.61 327 24 25 ];
+        %tmp.62 = lgetv %n.3;
+        symbol [ n %tmp.62 327 28 29 ];
+        %tmp.63 = 1;
+        %tmp.64 = sub %tmp.62 %tmp.63;
+        %tmp.65 = lt %tmp.61 %tmp.64;
+        bf %tmp.65 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_327_8_335_8_for_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_327_8_335_8_for_begin:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_327_40_335_8_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 328 12 ]
+        [ "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_327_40_335_8_start" "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_327_40_335_8_stop" ]
+        %d0.5 = local;
+        symbol [ d0 %d0.5 328 16 18 ];
+        symbol [ QDC_NDL_D %tmp.67 328 21 30 ];
+        %tmp.67 = getv ? :QDC_NDL_D;
+        %tmp.68 = lgetv %i.4;
+        symbol [ i %tmp.68 328 31 32 ];
+        %tmp.69 = agetv %tmp.67 %tmp.68;
+        symbol [ toFloat %tmp.70 328 34 41 ];
+        %tmp.70 = getv function %tmp.69 :toFloat;
+        %tmp.71 = invoke %tmp.69 %tmp.70();
+        lputv %d0.5 %tmp.71;
+        symbol [ d0 %d0.5 328 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 329 12 ]
+        [ "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_327_40_335_8_start" "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_327_40_335_8_stop" ]
+        %d1.6 = local;
+        symbol [ d1 %d1.6 329 16 18 ];
+        symbol [ QDC_NDL_D %tmp.73 329 21 30 ];
+        %tmp.73 = getv ? :QDC_NDL_D;
+        %tmp.74 = lgetv %i.4;
+        symbol [ i %tmp.74 329 31 32 ];
+        %tmp.75 = 1;
+        %tmp.76 = add %tmp.74 %tmp.75;
+        %tmp.77 = agetv %tmp.73 %tmp.76;
+        symbol [ toFloat %tmp.78 329 38 45 ];
+        %tmp.78 = getv function %tmp.77 :toFloat;
+        %tmp.79 = invoke %tmp.77 %tmp.78();
+        lputv %d1.6 %tmp.79;
+        symbol [ d1 %d1.6 329 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 330 12 ]
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_330_12_334_12_if_stmt:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_330_16_330_38_begin:
+        %tmp.80 = lgetv %effD.1;
+        symbol [ effD %tmp.80 330 16 20 ];
+        %tmp.81 = lgetv %d0.5;
+        symbol [ d0 %tmp.81 330 24 26 ];
+        %tmp.82 = gte %tmp.80 %tmp.81;
+        bf %tmp.82 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_330_12_334_12_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_330_30_330_38_true:
+        %tmp.83 = lgetv %effD.1;
+        symbol [ effD %tmp.83 330 30 34 ];
+        %tmp.84 = lgetv %d1.6;
+        symbol [ d1 %tmp.84 330 38 40 ];
+        %tmp.85 = lte %tmp.83 %tmp.84;
+        push %tmp.85;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_330_30_330_38_end:
+        %tmp.86 = phi [%tmp.82 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_330_16_330_38_begin] [%tmp.85 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_330_30_330_38_true] [%tmp.86 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_330_30_330_38_end];
+        bf %tmp.86 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_330_12_334_12_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_330_12_334_12_if_true:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_330_42_334_12_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 331 16 ]
+        [ "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_330_42_334_12_start" "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_330_42_334_12_stop" ]
+        %t0.7 = local;
+        symbol [ t0 %t0.7 331 20 22 ];
+        symbol [ QDC_NDL_T %tmp.88 331 25 34 ];
+        %tmp.88 = getv ? :QDC_NDL_T;
+        %tmp.89 = lgetv %i.4;
+        symbol [ i %tmp.89 331 35 36 ];
+        %tmp.90 = agetv %tmp.88 %tmp.89;
+        symbol [ toFloat %tmp.91 331 38 45 ];
+        %tmp.91 = getv function %tmp.90 :toFloat;
+        %tmp.92 = invoke %tmp.90 %tmp.91();
+        lputv %t0.7 %tmp.92;
+        symbol [ t0 %t0.7 331 20 22 ];
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 332 16 ]
+        [ "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_330_42_334_12_start" "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_330_42_334_12_stop" ]
+        %t1.8 = local;
+        symbol [ t1 %t1.8 332 20 22 ];
+        symbol [ QDC_NDL_T %tmp.94 332 25 34 ];
+        %tmp.94 = getv ? :QDC_NDL_T;
+        %tmp.95 = lgetv %i.4;
+        symbol [ i %tmp.95 332 35 36 ];
+        %tmp.96 = 1;
+        %tmp.97 = add %tmp.95 %tmp.96;
+        %tmp.98 = agetv %tmp.94 %tmp.97;
+        symbol [ toFloat %tmp.99 332 42 49 ];
+        %tmp.99 = getv function %tmp.98 :toFloat;
+        %tmp.100 = invoke %tmp.98 %tmp.99();
+        lputv %t1.8 %tmp.100;
+        symbol [ t1 %t1.8 332 20 22 ];
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 333 16 ]
+        %tmp.101 = lgetv %t0.7;
+        symbol [ t0 %tmp.101 333 23 25 ];
+        %tmp.102 = lgetv %t1.8;
+        symbol [ t1 %tmp.102 333 29 31 ];
+        %tmp.103 = lgetv %t0.7;
+        symbol [ t0 %tmp.103 333 34 36 ];
+        %tmp.104 = sub %tmp.102 %tmp.103;
+        %tmp.105 = lgetv %effD.1;
+        symbol [ effD %tmp.105 333 41 45 ];
+        %tmp.106 = lgetv %d0.5;
+        symbol [ d0 %tmp.106 333 48 50 ];
+        %tmp.107 = sub %tmp.105 %tmp.106;
+        %tmp.108 = mul %tmp.104 %tmp.107;
+        %tmp.109 = lgetv %d1.6;
+        symbol [ d1 %tmp.109 333 55 57 ];
+        %tmp.110 = lgetv %d0.5;
+        symbol [ d0 %tmp.110 333 60 62 ];
+        %tmp.111 = sub %tmp.109 %tmp.110;
+        %tmp.112 = div %tmp.108 %tmp.111;
+        %tmp.113 = add %tmp.101 %tmp.112;
+        ret %tmp.113;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_330_42_334_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_330_12_334_12_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_330_12_334_12_if_end:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_327_40_335_8_stop:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_327_8_335_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 327 ]
+        %tmp.116 = lgetv %i.4;
+        symbol [ i %tmp.116 327 35 36 ];
+        %tmp.117 = add %tmp.116 1;
+        lputv %i.4 %tmp.117;
+        symbol [ i %i.4 327 35 36 ];
+        goto @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_327_8_335_8_for_test;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_327_8_335_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 336 8 ]
+        symbol [ QDC_NDL_T %tmp.119 336 15 24 ];
+        %tmp.119 = getv ? :QDC_NDL_T;
+        %tmp.120 = lgetv %n.3;
+        symbol [ n %tmp.120 336 25 26 ];
+        %tmp.121 = 1;
+        %tmp.122 = sub %tmp.120 %tmp.121;
+        %tmp.123 = agetv %tmp.119 %tmp.122;
+        symbol [ toFloat %tmp.124 336 32 39 ];
+        %tmp.124 = getv function %tmp.123 :toFloat;
+        %tmp.125 = invoke %tmp.123 %tmp.124();
+        ret %tmp.125;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_318_37_337_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 340; @symbol_functiondef = [_f2,340,20,23]; @symbol_param<0> = [v,340,24,25]; ]
+    protected
+    function _f2(v) {
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_340_27_346_4_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 341 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_340_27_346_4_start" "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_340_27_346_4_stop" ]
+        %i.1 = local;
+        symbol [ i %i.1 341 12 13 ];
+        %tmp.1 = lgetv %v;
+        symbol [ v %tmp.1 341 17 18 ];
+        symbol [ toNumber %tmp.2 341 19 27 ];
+        %tmp.2 = getv function %tmp.1 :toNumber;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        lputv %i.1 %tmp.3;
+        symbol [ i %i.1 341 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 342 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_340_27_346_4_start" "_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_340_27_346_4_stop" ]
+        %dv.2 = local;
+        symbol [ dv %dv.2 342 12 14 ];
+        %tmp.4 = lgetv %v;
+        symbol [ v %tmp.4 342 19 20 ];
+        %tmp.5 = lgetv %i.1;
+        symbol [ i %tmp.5 342 23 24 ];
+        symbol [ toFloat %tmp.6 342 25 32 ];
+        %tmp.6 = getv function %tmp.5 :toFloat;
+        %tmp.7 = invoke %tmp.5 %tmp.6();
+        %tmp.8 = sub %tmp.4 %tmp.7;
+        symbol [ abs %tmp.9 342 36 39 ];
+        %tmp.9 = getv function %tmp.8 :abs;
+        %tmp.10 = invoke %tmp.8 %tmp.9();
+        %tmp.11 = 100.0;
+        %tmp.12 = mul %tmp.10 %tmp.11;
+        %tmp.13 = 0.5;
+        %tmp.14 = add %tmp.12 %tmp.13;
+        symbol [ toNumber %tmp.15 342 57 65 ];
+        %tmp.15 = getv function %tmp.14 :toNumber;
+        %tmp.16 = invoke %tmp.14 %tmp.15();
+        lputv %dv.2 %tmp.16;
+        symbol [ dv %dv.2 342 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 343 8 ]
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_343_8_343_38_if_stmt:
+        %tmp.17 = lgetv %dv.2;
+        symbol [ dv %tmp.17 343 12 14 ];
+        %tmp.18 = 100;
+        %tmp.19 = gte %tmp.17 %tmp.18;
+        bf %tmp.19 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_343_8_343_38_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_343_8_343_38_if_true:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_343_23_343_38_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 343 25 ]
+        %tmp.22 = lgetv %i.1;
+        symbol [ i %tmp.22 343 25 26 ];
+        %tmp.23 = add %tmp.22 1;
+        lputv %i.1 %tmp.23;
+        symbol [ i %i.1 343 25 26 ];
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 343 30 ]
+        %tmp.24 = 0;
+        lputv %dv.2 %tmp.24;
+        symbol [ dv %dv.2 343 30 32 ];
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_343_23_343_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_343_8_343_38_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_343_8_343_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 344 8 ]
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_344_8_344_47_if_stmt:
+        %tmp.25 = lgetv %dv.2;
+        symbol [ dv %tmp.25 344 12 14 ];
+        %tmp.26 = 10;
+        %tmp.27 = lt %tmp.25 %tmp.26;
+        bf %tmp.27 @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_344_8_344_47_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_344_8_344_47_if_true:
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_344_23_344_47_start:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 344 25 ]
+        %tmp.28 = lgetv %i.1;
+        symbol [ i %tmp.28 344 32 33 ];
+        %tmp.29 = ".0";
+        %tmp.30 = add %tmp.28 %tmp.29;
+        %tmp.31 = lgetv %dv.2;
+        symbol [ dv %tmp.31 344 43 45 ];
+        %tmp.32 = add %tmp.30 %tmp.31;
+        ret %tmp.32;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_344_23_344_47_stop:
+        goto @_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_344_8_344_47_if_end;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_344_8_344_47_if_end:
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 345 8 ]
+        %tmp.33 = lgetv %i.1;
+        symbol [ i %tmp.33 345 15 16 ];
+        %tmp.34 = ".";
+        %tmp.35 = add %tmp.33 %tmp.34;
+        %tmp.36 = lgetv %dv.2;
+        symbol [ dv %tmp.36 345 25 27 ];
+        %tmp.37 = add %tmp.35 %tmp.36;
+        ret %tmp.37;
+_Users_kkorolczuk_work_garmin_divequickcalculator_source_QuickDiveView_mc_340_27_346_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc"; @line = 15; ]
+<init> {
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 24 6 ]
+    %tmp.38 = newa 8;
+    %tmp.39 = 0.21;
+    %tmp.40 = dup %tmp.38;
+    %tmp.41 = aputv %tmp.40 0 %tmp.39;
+    %tmp.42 = 0.27;
+    %tmp.43 = dup %tmp.41;
+    %tmp.44 = aputv %tmp.43 1 %tmp.42;
+    %tmp.45 = 0.28;
+    %tmp.46 = dup %tmp.44;
+    %tmp.47 = aputv %tmp.46 2 %tmp.45;
+    %tmp.48 = 0.29;
+    %tmp.49 = dup %tmp.47;
+    %tmp.50 = aputv %tmp.49 3 %tmp.48;
+    %tmp.51 = 0.30;
+    %tmp.52 = dup %tmp.50;
+    %tmp.53 = aputv %tmp.52 4 %tmp.51;
+    %tmp.54 = 0.31;
+    %tmp.55 = dup %tmp.53;
+    %tmp.56 = aputv %tmp.55 5 %tmp.54;
+    %tmp.57 = 0.32;
+    %tmp.58 = dup %tmp.56;
+    %tmp.59 = aputv %tmp.58 6 %tmp.57;
+    %tmp.60 = 0.36;
+    %tmp.61 = dup %tmp.59;
+    %tmp.62 = aputv %tmp.61 7 %tmp.60;
+    putv self :QDC_FO2_VALS %tmp.62;
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 25 6 ]
+    %tmp.63 = newa 8;
+    %tmp.64 = "Air 21%";
+    %tmp.65 = dup %tmp.63;
+    %tmp.66 = aputv %tmp.65 0 %tmp.64;
+    %tmp.67 = "EAN 27";
+    %tmp.68 = dup %tmp.66;
+    %tmp.69 = aputv %tmp.68 1 %tmp.67;
+    %tmp.70 = "EAN 28";
+    %tmp.71 = dup %tmp.69;
+    %tmp.72 = aputv %tmp.71 2 %tmp.70;
+    %tmp.73 = "EAN 29";
+    %tmp.74 = dup %tmp.72;
+    %tmp.75 = aputv %tmp.74 3 %tmp.73;
+    %tmp.76 = "EAN 30";
+    %tmp.77 = dup %tmp.75;
+    %tmp.78 = aputv %tmp.77 4 %tmp.76;
+    %tmp.79 = "EAN 31";
+    %tmp.80 = dup %tmp.78;
+    %tmp.81 = aputv %tmp.80 5 %tmp.79;
+    %tmp.82 = "Nitrox 32";
+    %tmp.83 = dup %tmp.81;
+    %tmp.84 = aputv %tmp.83 6 %tmp.82;
+    %tmp.85 = "Nitrox 36";
+    %tmp.86 = dup %tmp.84;
+    %tmp.87 = aputv %tmp.86 7 %tmp.85;
+    putv self :QDC_FO2_LBLS %tmp.87;
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 28 6 ]
+    %tmp.88 = newa 13;
+    %tmp.89 = 5;
+    %tmp.90 = dup %tmp.88;
+    %tmp.91 = aputv %tmp.90 0 %tmp.89;
+    %tmp.92 = 10;
+    %tmp.93 = dup %tmp.91;
+    %tmp.94 = aputv %tmp.93 1 %tmp.92;
+    %tmp.95 = 12;
+    %tmp.96 = dup %tmp.94;
+    %tmp.97 = aputv %tmp.96 2 %tmp.95;
+    %tmp.98 = 15;
+    %tmp.99 = dup %tmp.97;
+    %tmp.100 = aputv %tmp.99 3 %tmp.98;
+    %tmp.101 = 18;
+    %tmp.102 = dup %tmp.100;
+    %tmp.103 = aputv %tmp.102 4 %tmp.101;
+    %tmp.104 = 20;
+    %tmp.105 = dup %tmp.103;
+    %tmp.106 = aputv %tmp.105 5 %tmp.104;
+    %tmp.107 = 22;
+    %tmp.108 = dup %tmp.106;
+    %tmp.109 = aputv %tmp.108 6 %tmp.107;
+    %tmp.110 = 25;
+    %tmp.111 = dup %tmp.109;
+    %tmp.112 = aputv %tmp.111 7 %tmp.110;
+    %tmp.113 = 28;
+    %tmp.114 = dup %tmp.112;
+    %tmp.115 = aputv %tmp.114 8 %tmp.113;
+    %tmp.116 = 30;
+    %tmp.117 = dup %tmp.115;
+    %tmp.118 = aputv %tmp.117 9 %tmp.116;
+    %tmp.119 = 33;
+    %tmp.120 = dup %tmp.118;
+    %tmp.121 = aputv %tmp.120 10 %tmp.119;
+    %tmp.122 = 35;
+    %tmp.123 = dup %tmp.121;
+    %tmp.124 = aputv %tmp.123 11 %tmp.122;
+    %tmp.125 = 40;
+    %tmp.126 = dup %tmp.124;
+    %tmp.127 = aputv %tmp.126 12 %tmp.125;
+    putv self :QDC_DEPTHS %tmp.127;
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 31 6 ]
+    %tmp.128 = newa 8;
+    %tmp.129 = 10;
+    %tmp.130 = dup %tmp.128;
+    %tmp.131 = aputv %tmp.130 0 %tmp.129;
+    %tmp.132 = 15;
+    %tmp.133 = dup %tmp.131;
+    %tmp.134 = aputv %tmp.133 1 %tmp.132;
+    %tmp.135 = 18;
+    %tmp.136 = dup %tmp.134;
+    %tmp.137 = aputv %tmp.136 2 %tmp.135;
+    %tmp.138 = 20;
+    %tmp.139 = dup %tmp.137;
+    %tmp.140 = aputv %tmp.139 3 %tmp.138;
+    %tmp.141 = 25;
+    %tmp.142 = dup %tmp.140;
+    %tmp.143 = aputv %tmp.142 4 %tmp.141;
+    %tmp.144 = 30;
+    %tmp.145 = dup %tmp.143;
+    %tmp.146 = aputv %tmp.145 5 %tmp.144;
+    %tmp.147 = 35;
+    %tmp.148 = dup %tmp.146;
+    %tmp.149 = aputv %tmp.148 6 %tmp.147;
+    %tmp.150 = 40;
+    %tmp.151 = dup %tmp.149;
+    %tmp.152 = aputv %tmp.151 7 %tmp.150;
+    putv self :QDC_NDL_D %tmp.152;
+[ "/Users/kkorolczuk/work/garmin/divequickcalculator/source/QuickDiveView.mc" 32 6 ]
+    %tmp.153 = newa 8;
+    %tmp.154 = 219;
+    %tmp.155 = dup %tmp.153;
+    %tmp.156 = aputv %tmp.155 0 %tmp.154;
+    %tmp.157 = 80;
+    %tmp.158 = dup %tmp.156;
+    %tmp.159 = aputv %tmp.158 1 %tmp.157;
+    %tmp.160 = 56;
+    %tmp.161 = dup %tmp.159;
+    %tmp.162 = aputv %tmp.161 2 %tmp.160;
+    %tmp.163 = 45;
+    %tmp.164 = dup %tmp.162;
+    %tmp.165 = aputv %tmp.164 3 %tmp.163;
+    %tmp.166 = 29;
+    %tmp.167 = dup %tmp.165;
+    %tmp.168 = aputv %tmp.167 4 %tmp.166;
+    %tmp.169 = 20;
+    %tmp.170 = dup %tmp.168;
+    %tmp.171 = aputv %tmp.170 5 %tmp.169;
+    %tmp.172 = 14;
+    %tmp.173 = dup %tmp.171;
+    %tmp.174 = aputv %tmp.173 6 %tmp.172;
+    %tmp.175 = 9;
+    %tmp.176 = dup %tmp.174;
+    %tmp.177 = aputv %tmp.176 7 %tmp.175;
+    putv self :QDC_NDL_T %tmp.177;
+}

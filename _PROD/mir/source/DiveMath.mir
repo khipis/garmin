@@ -1,0 +1,910 @@
+[ @file = "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc"; @line = 13; @symbol_usingdef<0> = [Toybox,13,6,12]; @symbol_usingdef<1> = [Math,13,13,17]; ]
+using Toybox.Math;
+[ @file = "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc"; @line = 17; @position = 6; @symbol_constdef = [DIVE_FO2_VALS,17,6,19]; ]
+const DIVE_FO2_VALS;
+[ @file = "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc"; @line = 18; @position = 6; @symbol_constdef = [DIVE_FO2_LBLS,18,6,19]; ]
+const DIVE_FO2_LBLS;
+[ @file = "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc"; @line = 20; @position = 6; @symbol_constdef = [DIVE_DEPTHS,20,6,17]; ]
+const DIVE_DEPTHS;
+[ @file = "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc"; @line = 22; @position = 6; @symbol_constdef = [DIVE_TANKS,22,6,16]; ]
+const DIVE_TANKS;
+[ @file = "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc"; @line = 23; @position = 6; @symbol_constdef = [DIVE_STARTP,23,6,17]; ]
+const DIVE_STARTP;
+[ @file = "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc"; @line = 24; @position = 6; @symbol_constdef = [DIVE_ENDP,24,6,15]; ]
+const DIVE_ENDP;
+[ @file = "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc"; @line = 25; @position = 6; @symbol_constdef = [DIVE_TIMES,25,6,16]; ]
+const DIVE_TIMES;
+[ @file = "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc"; @line = 27; @position = 6; @symbol_constdef = [DIVE_PO2_WORK,27,6,19]; ]
+const DIVE_PO2_WORK = 1.4;
+[ @file = "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc"; @line = 28; @position = 6; @symbol_constdef = [DIVE_PO2_ABS,28,6,18]; ]
+const DIVE_PO2_ABS = 1.6;
+[ @file = "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc"; @line = 31; @position = 6; @symbol_constdef = [DIVE_NDL_D,31,6,16]; ]
+const DIVE_NDL_D;
+[ @file = "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc"; @line = 32; @position = 6; @symbol_constdef = [DIVE_NDL_T,32,6,16]; ]
+const DIVE_NDL_T;
+[ @file = "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc"; @line = 35; @symbol_classdef = [DiveMath,35,6,14]; ]
+class DiveMath {
+    [ @file = "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc"; @line = 35; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc"; @line = 35; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc"; @line = 37; @symbol_functiondef = [initialize,37,13,23]; ]
+    function initialize() as Void {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc"; @line = 56; @symbol_functiondef = [po2,56,13,16]; @symbol_param<0> = [fo2,56,17,20]; @symbol_param<1> = [depth,56,22,27]; ]
+    function po2(fo2, depth) {
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_56_29_59_4_start:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 57 8 ]
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_57_8_57_51_if_stmt:
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_57_12_57_34_begin:
+        %tmp.1 = lgetv %fo2;
+        symbol [ fo2 %tmp.1 57 12 15 ];
+        %tmp.2 = 0.0;
+        %tmp.3 = lte %tmp.1 %tmp.2;
+        bt %tmp.3 @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_57_8_57_51_if_true;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_57_26_57_34_false:
+        %tmp.4 = lgetv %depth;
+        symbol [ depth %tmp.4 57 26 31 ];
+        %tmp.5 = 0;
+        %tmp.6 = lt %tmp.4 %tmp.5;
+        push %tmp.6;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_57_26_57_34_end:
+        %tmp.7 = phi [%tmp.3 @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_57_12_57_34_begin] [%tmp.6 @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_57_26_57_34_false] [%tmp.7 @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_57_26_57_34_end];
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_57_8_57_51_if_end;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_57_8_57_51_if_true:
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_57_37_57_51_start:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 57 39 ]
+        %tmp.8 = 0.0;
+        ret %tmp.8;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_57_37_57_51_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_57_8_57_51_if_end;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_57_8_57_51_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 58 8 ]
+        %tmp.9 = lgetv %fo2;
+        symbol [ fo2 %tmp.9 58 15 18 ];
+        %tmp.10 = lgetv %depth;
+        symbol [ depth %tmp.10 58 22 27 ];
+        symbol [ toFloat %tmp.11 58 28 35 ];
+        %tmp.11 = getv function %tmp.10 :toFloat;
+        %tmp.12 = invoke %tmp.10 %tmp.11();
+        %tmp.13 = 10.0;
+        %tmp.14 = div %tmp.12 %tmp.13;
+        %tmp.15 = 1.0;
+        %tmp.16 = add %tmp.14 %tmp.15;
+        %tmp.17 = mul %tmp.9 %tmp.16;
+        ret %tmp.17;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_56_29_59_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc"; @line = 77; @symbol_functiondef = [mod,77,13,16]; @symbol_param<0> = [fo2,77,17,20]; @symbol_param<1> = [po2Limit,77,22,30]; ]
+    function mod(fo2, po2Limit) {
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_77_32_80_4_start:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 78 8 ]
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_78_8_78_38_if_stmt:
+        %tmp.1 = lgetv %fo2;
+        symbol [ fo2 %tmp.1 78 12 15 ];
+        %tmp.2 = 0.0;
+        %tmp.3 = lte %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_78_8_78_38_if_end;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_78_8_78_38_if_true:
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_78_24_78_38_start:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 78 26 ]
+        %tmp.4 = 0.0;
+        ret %tmp.4;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_78_24_78_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_78_8_78_38_if_end;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_78_8_78_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 79 8 ]
+        %tmp.5 = lgetv %po2Limit;
+        symbol [ po2Limit %tmp.5 79 16 24 ];
+        %tmp.6 = lgetv %fo2;
+        symbol [ fo2 %tmp.6 79 27 30 ];
+        %tmp.7 = div %tmp.5 %tmp.6;
+        %tmp.8 = 1.0;
+        %tmp.9 = sub %tmp.7 %tmp.8;
+        %tmp.10 = 10.0;
+        %tmp.11 = mul %tmp.9 %tmp.10;
+        ret %tmp.11;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_77_32_80_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc"; @line = 94; @symbol_functiondef = [bestMix,94,13,20]; @symbol_param<0> = [depth,94,21,26]; ]
+    function bestMix(depth) {
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_94_28_100_4_start:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 95 8 ]
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_95_8_95_39_if_stmt:
+        %tmp.1 = lgetv %depth;
+        symbol [ depth %tmp.1 95 12 17 ];
+        %tmp.2 = 0;
+        %tmp.3 = lte %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_95_8_95_39_if_end;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_95_8_95_39_if_true:
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_95_24_95_39_start:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 95 26 ]
+        %tmp.4 = 0.21;
+        ret %tmp.4;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_95_24_95_39_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_95_8_95_39_if_end;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_95_8_95_39_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 96 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_94_28_100_4_start" "_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_94_28_100_4_stop" ]
+        %f.1 = local;
+        symbol [ f %f.1 96 12 13 ];
+        %tmp.5 = 1.4;
+        %tmp.6 = lgetv %depth;
+        symbol [ depth %tmp.6 96 23 28 ];
+        symbol [ toFloat %tmp.7 96 29 36 ];
+        %tmp.7 = getv function %tmp.6 :toFloat;
+        %tmp.8 = invoke %tmp.6 %tmp.7();
+        %tmp.9 = 10.0;
+        %tmp.10 = div %tmp.8 %tmp.9;
+        %tmp.11 = 1.0;
+        %tmp.12 = add %tmp.10 %tmp.11;
+        %tmp.13 = div %tmp.5 %tmp.12;
+        lputv %f.1 %tmp.13;
+        symbol [ f %f.1 96 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 97 8 ]
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_97_8_97_32_if_stmt:
+        %tmp.14 = lgetv %f.1;
+        symbol [ f %tmp.14 97 12 13 ];
+        %tmp.15 = 1.0;
+        %tmp.16 = gt %tmp.14 %tmp.15;
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_97_8_97_32_if_end;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_97_8_97_32_if_true:
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_97_21_97_32_start:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 97 23 ]
+        %tmp.17 = 1.0;
+        lputv %f.1 %tmp.17;
+        symbol [ f %f.1 97 23 24 ];
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_97_21_97_32_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_97_8_97_32_if_end;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_97_8_97_32_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 98 8 ]
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_98_8_98_34_if_stmt:
+        %tmp.18 = lgetv %f.1;
+        symbol [ f %tmp.18 98 12 13 ];
+        %tmp.19 = 0.21;
+        %tmp.20 = lt %tmp.18 %tmp.19;
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_98_8_98_34_if_end;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_98_8_98_34_if_true:
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_98_22_98_34_start:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 98 24 ]
+        %tmp.21 = 0.21;
+        lputv %f.1 %tmp.21;
+        symbol [ f %f.1 98 24 25 ];
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_98_22_98_34_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_98_8_98_34_if_end;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_98_8_98_34_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 99 8 ]
+        %tmp.22 = lgetv %f.1;
+        symbol [ f %tmp.22 99 15 16 ];
+        ret %tmp.22;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_94_28_100_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc"; @line = 122; @symbol_functiondef = [ead,122,13,16]; @symbol_param<0> = [depth,122,17,22]; @symbol_param<1> = [fo2,122,24,27]; ]
+    function ead(depth, fo2) {
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_122_29_128_4_start:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 123 8 ]
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_123_8_123_36_if_stmt:
+        %tmp.1 = lgetv %depth;
+        symbol [ depth %tmp.1 123 12 17 ];
+        %tmp.2 = 0;
+        %tmp.3 = lt %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_123_8_123_36_if_end;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_123_8_123_36_if_true:
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_123_23_123_36_start:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 123 25 ]
+        %tmp.4 = 0;
+        lputv %depth %tmp.4;
+        symbol [ depth %depth 123 25 30 ];
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_123_23_123_36_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_123_8_123_36_if_end;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_123_8_123_36_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 124 8 ]
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_124_8_124_38_if_stmt:
+        %tmp.5 = lgetv %fo2;
+        symbol [ fo2 %tmp.5 124 12 15 ];
+        %tmp.6 = 1.0;
+        %tmp.7 = gte %tmp.5 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_124_8_124_38_if_end;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_124_8_124_38_if_true:
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_124_24_124_38_start:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 124 26 ]
+        %tmp.8 = 0.0;
+        ret %tmp.8;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_124_24_124_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_124_8_124_38_if_end;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_124_8_124_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 125 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_122_29_128_4_start" "_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_122_29_128_4_stop" ]
+        %result.1 = local;
+        symbol [ result %result.1 125 12 18 ];
+        %tmp.9 = lgetv %depth;
+        symbol [ depth %tmp.9 125 23 28 ];
+        symbol [ toFloat %tmp.10 125 29 36 ];
+        %tmp.10 = getv function %tmp.9 :toFloat;
+        %tmp.11 = invoke %tmp.9 %tmp.10();
+        %tmp.12 = 10.0;
+        %tmp.13 = add %tmp.11 %tmp.12;
+        %tmp.14 = 1.0;
+        %tmp.15 = lgetv %fo2;
+        symbol [ fo2 %tmp.15 125 56 59 ];
+        %tmp.16 = sub %tmp.14 %tmp.15;
+        %tmp.17 = mul %tmp.13 %tmp.16;
+        %tmp.18 = 0.79;
+        %tmp.19 = div %tmp.17 %tmp.18;
+        %tmp.20 = 10.0;
+        %tmp.21 = sub %tmp.19 %tmp.20;
+        lputv %result.1 %tmp.21;
+        symbol [ result %result.1 125 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 126 8 ]
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_126_8_126_42_if_stmt:
+        %tmp.22 = lgetv %result.1;
+        symbol [ result %tmp.22 126 12 18 ];
+        %tmp.23 = 0.0;
+        %tmp.24 = lt %tmp.22 %tmp.23;
+        bf %tmp.24 @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_126_8_126_42_if_end;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_126_8_126_42_if_true:
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_126_26_126_42_start:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 126 28 ]
+        %tmp.25 = 0.0;
+        lputv %result.1 %tmp.25;
+        symbol [ result %result.1 126 28 34 ];
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_126_26_126_42_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_126_8_126_42_if_end;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_126_8_126_42_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 127 8 ]
+        %tmp.26 = lgetv %result.1;
+        symbol [ result %tmp.26 127 15 21 ];
+        ret %tmp.26;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_122_29_128_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc"; @line = 152; @symbol_functiondef = [sac,152,13,16]; @symbol_param<0> = [tank,152,17,21]; @symbol_param<1> = [startP,152,23,29]; @symbol_param<2> = [endP,152,31,35]; @symbol_param<3> = [time,152,37,41]; @symbol_param<4> = [depth,152,43,48]; ]
+    function sac(tank, startP, endP, time, depth) {
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_152_50_160_4_start:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 153 8 ]
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_153_8_153_63_if_stmt:
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_153_12_153_46_begin:
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_153_12_153_33_begin:
+        %tmp.1 = lgetv %tank;
+        symbol [ tank %tmp.1 153 12 16 ];
+        %tmp.2 = 0;
+        %tmp.3 = lte %tmp.1 %tmp.2;
+        bt %tmp.3 @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_153_8_153_63_if_true;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_153_25_153_33_false:
+        %tmp.4 = lgetv %time;
+        symbol [ time %tmp.4 153 25 29 ];
+        %tmp.5 = 0;
+        %tmp.6 = lte %tmp.4 %tmp.5;
+        push %tmp.6;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_153_25_153_33_end:
+        %tmp.7 = phi [%tmp.3 @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_153_12_153_33_begin] [%tmp.6 @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_153_25_153_33_false] [%tmp.7 @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_153_25_153_33_end];
+        bt %tmp.7 @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_153_8_153_63_if_true;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_153_38_153_46_false:
+        %tmp.8 = lgetv %depth;
+        symbol [ depth %tmp.8 153 38 43 ];
+        %tmp.9 = 0;
+        %tmp.10 = lt %tmp.8 %tmp.9;
+        push %tmp.10;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_153_38_153_46_end:
+        %tmp.11 = phi [%tmp.7 @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_153_12_153_46_begin] [%tmp.10 @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_153_38_153_46_false] [%tmp.11 @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_153_38_153_46_end];
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_153_8_153_63_if_end;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_153_8_153_63_if_true:
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_153_49_153_63_start:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 153 51 ]
+        %tmp.12 = 0.0;
+        ret %tmp.12;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_153_49_153_63_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_153_8_153_63_if_end;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_153_8_153_63_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 154 8 ]
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_154_8_154_42_if_stmt:
+        %tmp.13 = lgetv %startP;
+        symbol [ startP %tmp.13 154 12 18 ];
+        %tmp.14 = lgetv %endP;
+        symbol [ endP %tmp.14 154 22 26 ];
+        %tmp.15 = lte %tmp.13 %tmp.14;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_154_8_154_42_if_end;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_154_8_154_42_if_true:
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_154_28_154_42_start:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 154 30 ]
+        %tmp.16 = 0.0;
+        ret %tmp.16;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_154_28_154_42_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_154_8_154_42_if_end;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_154_8_154_42_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 155 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_152_50_160_4_start" "_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_152_50_160_4_stop" ]
+        %gasUsed.1 = local;
+        symbol [ gasUsed %gasUsed.1 155 12 19 ];
+        %tmp.17 = lgetv %startP;
+        symbol [ startP %tmp.17 155 23 29 ];
+        %tmp.18 = lgetv %endP;
+        symbol [ endP %tmp.18 155 32 36 ];
+        %tmp.19 = sub %tmp.17 %tmp.18;
+        symbol [ toFloat %tmp.20 155 38 45 ];
+        %tmp.20 = getv function %tmp.19 :toFloat;
+        %tmp.21 = invoke %tmp.19 %tmp.20();
+        %tmp.22 = lgetv %tank;
+        symbol [ tank %tmp.22 155 50 54 ];
+        symbol [ toFloat %tmp.23 155 55 62 ];
+        %tmp.23 = getv function %tmp.22 :toFloat;
+        %tmp.24 = invoke %tmp.22 %tmp.23();
+        %tmp.25 = mul %tmp.21 %tmp.24;
+        lputv %gasUsed.1 %tmp.25;
+        symbol [ gasUsed %gasUsed.1 155 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 156 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_152_50_160_4_start" "_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_152_50_160_4_stop" ]
+        %ambient.2 = local;
+        symbol [ ambient %ambient.2 156 12 19 ];
+        %tmp.26 = lgetv %depth;
+        symbol [ depth %tmp.26 156 22 27 ];
+        symbol [ toFloat %tmp.27 156 28 35 ];
+        %tmp.27 = getv function %tmp.26 :toFloat;
+        %tmp.28 = invoke %tmp.26 %tmp.27();
+        %tmp.29 = 10.0;
+        %tmp.30 = div %tmp.28 %tmp.29;
+        %tmp.31 = 1.0;
+        %tmp.32 = add %tmp.30 %tmp.31;
+        lputv %ambient.2 %tmp.32;
+        symbol [ ambient %ambient.2 156 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 157 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_152_50_160_4_start" "_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_152_50_160_4_stop" ]
+        %denom.3 = local;
+        symbol [ denom %denom.3 157 12 17 ];
+        %tmp.33 = lgetv %time;
+        symbol [ time %tmp.33 157 22 26 ];
+        symbol [ toFloat %tmp.34 157 27 34 ];
+        %tmp.34 = getv function %tmp.33 :toFloat;
+        %tmp.35 = invoke %tmp.33 %tmp.34();
+        %tmp.36 = lgetv %ambient.2;
+        symbol [ ambient %tmp.36 157 39 46 ];
+        %tmp.37 = mul %tmp.35 %tmp.36;
+        lputv %denom.3 %tmp.37;
+        symbol [ denom %denom.3 157 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 158 8 ]
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_158_8_158_40_if_stmt:
+        %tmp.38 = lgetv %denom.3;
+        symbol [ denom %tmp.38 158 12 17 ];
+        %tmp.39 = 0.0;
+        %tmp.40 = lte %tmp.38 %tmp.39;
+        bf %tmp.40 @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_158_8_158_40_if_end;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_158_8_158_40_if_true:
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_158_26_158_40_start:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 158 28 ]
+        %tmp.41 = 0.0;
+        ret %tmp.41;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_158_26_158_40_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_158_8_158_40_if_end;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_158_8_158_40_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 159 8 ]
+        %tmp.42 = lgetv %gasUsed.1;
+        symbol [ gasUsed %tmp.42 159 15 22 ];
+        %tmp.43 = lgetv %denom.3;
+        symbol [ denom %tmp.43 159 25 30 ];
+        %tmp.44 = div %tmp.42 %tmp.43;
+        ret %tmp.44;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_152_50_160_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc"; @line = 183; @symbol_functiondef = [ndl,183,13,16]; @symbol_param<0> = [depth,183,17,22]; @symbol_param<1> = [fo2,183,24,27]; ]
+    function ndl(depth, fo2) {
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_183_29_210_4_start:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 185 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_183_29_210_4_start" "_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_183_29_210_4_stop" ]
+        %effD.1 = local;
+        symbol [ effD %effD.1 185 12 16 ];
+        %tmp.1 = lgetv %depth;
+        symbol [ depth %tmp.1 185 19 24 ];
+        symbol [ toFloat %tmp.2 185 25 32 ];
+        %tmp.2 = getv function %tmp.1 :toFloat;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        lputv %effD.1 %tmp.3;
+        symbol [ effD %effD.1 185 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 186 8 ]
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_186_8_189_8_if_stmt:
+        %tmp.4 = lgetv %fo2;
+        symbol [ fo2 %tmp.4 186 12 15 ];
+        %tmp.5 = 0.209;
+        %tmp.6 = gt %tmp.4 %tmp.5;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_186_8_189_8_if_end;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_186_8_189_8_if_true:
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_186_25_189_8_start:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 187 12 ]
+        [ "_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_186_25_189_8_start" "_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_186_25_189_8_stop" ]
+        %eadV.2 = local;
+        symbol [ eadV %eadV.2 187 16 20 ];
+        %tmp.7 = self;
+        symbol [ ead %tmp.8 187 23 26 ];
+        %tmp.8 = getv function %tmp.7 :ead;
+        %tmp.9 = lgetv %depth;
+        symbol [ depth %tmp.9 187 27 32 ];
+        %tmp.10 = lgetv %fo2;
+        symbol [ fo2 %tmp.10 187 34 37 ];
+        %tmp.11 = invoke %tmp.7 %tmp.8(%tmp.9, %tmp.10);
+        lputv %eadV.2 %tmp.11;
+        symbol [ eadV %eadV.2 187 16 20 ];
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 188 12 ]
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_188_12_188_44_if_stmt:
+        %tmp.12 = lgetv %eadV.2;
+        symbol [ eadV %tmp.12 188 16 20 ];
+        %tmp.13 = 0.0;
+        %tmp.14 = gte %tmp.12 %tmp.13;
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_188_12_188_44_if_end;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_188_12_188_44_if_true:
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_188_29_188_44_start:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 188 31 ]
+        %tmp.15 = lgetv %eadV.2;
+        symbol [ eadV %tmp.15 188 38 42 ];
+        lputv %effD.1 %tmp.15;
+        symbol [ effD %effD.1 188 31 35 ];
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_188_29_188_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_188_12_188_44_if_end;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_188_12_188_44_if_end:
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_186_25_189_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_186_8_189_8_if_end;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_186_8_189_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 191 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_183_29_210_4_start" "_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_183_29_210_4_stop" ]
+        %n.3 = local;
+        symbol [ n %n.3 191 12 13 ];
+        symbol [ DIVE_NDL_D %tmp.17 191 16 26 ];
+        %tmp.17 = getv ? :DIVE_NDL_D;
+        symbol [ size %tmp.18 191 27 31 ];
+        %tmp.18 = getv function %tmp.17 :size;
+        %tmp.19 = invoke %tmp.17 %tmp.18();
+        lputv %n.3 %tmp.19;
+        symbol [ n %n.3 191 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 194 8 ]
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_194_8_194_79_if_stmt:
+        %tmp.20 = lgetv %effD.1;
+        symbol [ effD %tmp.20 194 12 16 ];
+        symbol [ DIVE_NDL_D %tmp.22 194 20 30 ];
+        %tmp.22 = getv ? :DIVE_NDL_D;
+        %tmp.23 = 0;
+        %tmp.24 = agetv %tmp.22 %tmp.23;
+        symbol [ toFloat %tmp.25 194 34 41 ];
+        %tmp.25 = getv function %tmp.24 :toFloat;
+        %tmp.26 = invoke %tmp.24 %tmp.25();
+        %tmp.27 = lte %tmp.20 %tmp.26;
+        bf %tmp.27 @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_194_8_194_79_if_end;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_194_8_194_79_if_true:
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_194_45_194_79_start:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 194 47 ]
+        symbol [ DIVE_NDL_T %tmp.29 194 54 64 ];
+        %tmp.29 = getv ? :DIVE_NDL_T;
+        %tmp.30 = 0;
+        %tmp.31 = agetv %tmp.29 %tmp.30;
+        symbol [ toFloat %tmp.32 194 68 75 ];
+        %tmp.32 = getv function %tmp.31 :toFloat;
+        %tmp.33 = invoke %tmp.31 %tmp.32();
+        ret %tmp.33;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_194_45_194_79_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_194_8_194_79_if_end;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_194_8_194_79_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 196 8 ]
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_196_8_196_87_if_stmt:
+        %tmp.34 = lgetv %effD.1;
+        symbol [ effD %tmp.34 196 12 16 ];
+        symbol [ DIVE_NDL_D %tmp.36 196 20 30 ];
+        %tmp.36 = getv ? :DIVE_NDL_D;
+        %tmp.37 = lgetv %n.3;
+        symbol [ n %tmp.37 196 31 32 ];
+        %tmp.38 = 1;
+        %tmp.39 = sub %tmp.37 %tmp.38;
+        %tmp.40 = agetv %tmp.36 %tmp.39;
+        symbol [ toFloat %tmp.41 196 38 45 ];
+        %tmp.41 = getv function %tmp.40 :toFloat;
+        %tmp.42 = invoke %tmp.40 %tmp.41();
+        %tmp.43 = gte %tmp.34 %tmp.42;
+        bf %tmp.43 @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_196_8_196_87_if_end;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_196_8_196_87_if_true:
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_196_49_196_87_start:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 196 51 ]
+        symbol [ DIVE_NDL_T %tmp.45 196 58 68 ];
+        %tmp.45 = getv ? :DIVE_NDL_T;
+        %tmp.46 = lgetv %n.3;
+        symbol [ n %tmp.46 196 69 70 ];
+        %tmp.47 = 1;
+        %tmp.48 = sub %tmp.46 %tmp.47;
+        %tmp.49 = agetv %tmp.45 %tmp.48;
+        symbol [ toFloat %tmp.50 196 76 83 ];
+        %tmp.50 = getv function %tmp.49 :toFloat;
+        %tmp.51 = invoke %tmp.49 %tmp.50();
+        ret %tmp.51;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_196_49_196_87_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_196_8_196_87_if_end;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_196_8_196_87_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 199 8 ]
+        for @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_199_8_208_8_for_test @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_199_8_208_8_for_incr @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_199_8_208_8_for_end;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_199_8_208_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_199_8_208_8_for_begin" "_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_199_8_208_8_for_end" ]
+        %i.4 = local;
+        symbol [ i %i.4 199 17 18 ];
+        %tmp.52 = 0;
+        lputv %i.4 %tmp.52;
+        symbol [ i %i.4 199 17 18 ];
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_199_8_208_8_for_test:
+        %tmp.53 = lgetv %i.4;
+        symbol [ i %tmp.53 199 24 25 ];
+        %tmp.54 = lgetv %n.3;
+        symbol [ n %tmp.54 199 28 29 ];
+        %tmp.55 = 1;
+        %tmp.56 = sub %tmp.54 %tmp.55;
+        %tmp.57 = lt %tmp.53 %tmp.56;
+        bf %tmp.57 @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_199_8_208_8_for_end;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_199_8_208_8_for_begin:
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_199_40_208_8_start:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 200 12 ]
+        [ "_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_199_40_208_8_start" "_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_199_40_208_8_stop" ]
+        %d0.5 = local;
+        symbol [ d0 %d0.5 200 16 18 ];
+        symbol [ DIVE_NDL_D %tmp.59 200 21 31 ];
+        %tmp.59 = getv ? :DIVE_NDL_D;
+        %tmp.60 = lgetv %i.4;
+        symbol [ i %tmp.60 200 32 33 ];
+        %tmp.61 = agetv %tmp.59 %tmp.60;
+        symbol [ toFloat %tmp.62 200 35 42 ];
+        %tmp.62 = getv function %tmp.61 :toFloat;
+        %tmp.63 = invoke %tmp.61 %tmp.62();
+        lputv %d0.5 %tmp.63;
+        symbol [ d0 %d0.5 200 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 201 12 ]
+        [ "_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_199_40_208_8_start" "_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_199_40_208_8_stop" ]
+        %d1.6 = local;
+        symbol [ d1 %d1.6 201 16 18 ];
+        symbol [ DIVE_NDL_D %tmp.65 201 21 31 ];
+        %tmp.65 = getv ? :DIVE_NDL_D;
+        %tmp.66 = lgetv %i.4;
+        symbol [ i %tmp.66 201 32 33 ];
+        %tmp.67 = 1;
+        %tmp.68 = add %tmp.66 %tmp.67;
+        %tmp.69 = agetv %tmp.65 %tmp.68;
+        symbol [ toFloat %tmp.70 201 39 46 ];
+        %tmp.70 = getv function %tmp.69 :toFloat;
+        %tmp.71 = invoke %tmp.69 %tmp.70();
+        lputv %d1.6 %tmp.71;
+        symbol [ d1 %d1.6 201 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 202 12 ]
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_202_12_207_12_if_stmt:
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_202_16_202_38_begin:
+        %tmp.72 = lgetv %effD.1;
+        symbol [ effD %tmp.72 202 16 20 ];
+        %tmp.73 = lgetv %d0.5;
+        symbol [ d0 %tmp.73 202 24 26 ];
+        %tmp.74 = gte %tmp.72 %tmp.73;
+        bf %tmp.74 @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_202_12_207_12_if_end;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_202_30_202_38_true:
+        %tmp.75 = lgetv %effD.1;
+        symbol [ effD %tmp.75 202 30 34 ];
+        %tmp.76 = lgetv %d1.6;
+        symbol [ d1 %tmp.76 202 38 40 ];
+        %tmp.77 = lte %tmp.75 %tmp.76;
+        push %tmp.77;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_202_30_202_38_end:
+        %tmp.78 = phi [%tmp.74 @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_202_16_202_38_begin] [%tmp.77 @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_202_30_202_38_true] [%tmp.78 @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_202_30_202_38_end];
+        bf %tmp.78 @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_202_12_207_12_if_end;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_202_12_207_12_if_true:
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_202_42_207_12_start:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 203 16 ]
+        [ "_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_202_42_207_12_start" "_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_202_42_207_12_stop" ]
+        %t0.7 = local;
+        symbol [ t0 %t0.7 203 20 22 ];
+        symbol [ DIVE_NDL_T %tmp.80 203 27 37 ];
+        %tmp.80 = getv ? :DIVE_NDL_T;
+        %tmp.81 = lgetv %i.4;
+        symbol [ i %tmp.81 203 38 39 ];
+        %tmp.82 = agetv %tmp.80 %tmp.81;
+        symbol [ toFloat %tmp.83 203 41 48 ];
+        %tmp.83 = getv function %tmp.82 :toFloat;
+        %tmp.84 = invoke %tmp.82 %tmp.83();
+        lputv %t0.7 %tmp.84;
+        symbol [ t0 %t0.7 203 20 22 ];
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 204 16 ]
+        [ "_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_202_42_207_12_start" "_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_202_42_207_12_stop" ]
+        %t1.8 = local;
+        symbol [ t1 %t1.8 204 20 22 ];
+        symbol [ DIVE_NDL_T %tmp.86 204 27 37 ];
+        %tmp.86 = getv ? :DIVE_NDL_T;
+        %tmp.87 = lgetv %i.4;
+        symbol [ i %tmp.87 204 38 39 ];
+        %tmp.88 = 1;
+        %tmp.89 = add %tmp.87 %tmp.88;
+        %tmp.90 = agetv %tmp.86 %tmp.89;
+        symbol [ toFloat %tmp.91 204 45 52 ];
+        %tmp.91 = getv function %tmp.90 :toFloat;
+        %tmp.92 = invoke %tmp.90 %tmp.91();
+        lputv %t1.8 %tmp.92;
+        symbol [ t1 %t1.8 204 20 22 ];
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 205 16 ]
+        [ "_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_202_42_207_12_start" "_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_202_42_207_12_stop" ]
+        %frac.9 = local;
+        symbol [ frac %frac.9 205 20 24 ];
+        %tmp.93 = lgetv %effD.1;
+        symbol [ effD %tmp.93 205 28 32 ];
+        %tmp.94 = lgetv %d0.5;
+        symbol [ d0 %tmp.94 205 35 37 ];
+        %tmp.95 = sub %tmp.93 %tmp.94;
+        %tmp.96 = lgetv %d1.6;
+        symbol [ d1 %tmp.96 205 42 44 ];
+        %tmp.97 = lgetv %d0.5;
+        symbol [ d0 %tmp.97 205 47 49 ];
+        %tmp.98 = sub %tmp.96 %tmp.97;
+        %tmp.99 = div %tmp.95 %tmp.98;
+        lputv %frac.9 %tmp.99;
+        symbol [ frac %frac.9 205 20 24 ];
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 206 16 ]
+        %tmp.100 = lgetv %t0.7;
+        symbol [ t0 %tmp.100 206 23 25 ];
+        %tmp.101 = lgetv %t1.8;
+        symbol [ t1 %tmp.101 206 29 31 ];
+        %tmp.102 = lgetv %t0.7;
+        symbol [ t0 %tmp.102 206 34 36 ];
+        %tmp.103 = sub %tmp.101 %tmp.102;
+        %tmp.104 = lgetv %frac.9;
+        symbol [ frac %tmp.104 206 40 44 ];
+        %tmp.105 = mul %tmp.103 %tmp.104;
+        %tmp.106 = add %tmp.100 %tmp.105;
+        ret %tmp.106;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_202_42_207_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_202_12_207_12_if_end;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_202_12_207_12_if_end:
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_199_40_208_8_stop:
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_199_8_208_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 199 ]
+        %tmp.109 = lgetv %i.4;
+        symbol [ i %tmp.109 199 35 36 ];
+        %tmp.110 = add %tmp.109 1;
+        lputv %i.4 %tmp.110;
+        symbol [ i %i.4 199 35 36 ];
+        goto @_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_199_8_208_8_for_test;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_199_8_208_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 209 8 ]
+        symbol [ DIVE_NDL_T %tmp.112 209 15 25 ];
+        %tmp.112 = getv ? :DIVE_NDL_T;
+        %tmp.113 = lgetv %n.3;
+        symbol [ n %tmp.113 209 26 27 ];
+        %tmp.114 = 1;
+        %tmp.115 = sub %tmp.113 %tmp.114;
+        %tmp.116 = agetv %tmp.112 %tmp.115;
+        symbol [ toFloat %tmp.117 209 33 40 ];
+        %tmp.117 = getv function %tmp.116 :toFloat;
+        %tmp.118 = invoke %tmp.116 %tmp.117();
+        ret %tmp.118;
+_Users_kkorolczuk_work_garmin_diveplantoolkit_source_DiveMath_mc_183_29_210_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc"; @line = 13; ]
+<init> {
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 17 6 ]
+    %tmp.119 = newa 8;
+    %tmp.120 = 0.21;
+    %tmp.121 = dup %tmp.119;
+    %tmp.122 = aputv %tmp.121 0 %tmp.120;
+    %tmp.123 = 0.27;
+    %tmp.124 = dup %tmp.122;
+    %tmp.125 = aputv %tmp.124 1 %tmp.123;
+    %tmp.126 = 0.28;
+    %tmp.127 = dup %tmp.125;
+    %tmp.128 = aputv %tmp.127 2 %tmp.126;
+    %tmp.129 = 0.29;
+    %tmp.130 = dup %tmp.128;
+    %tmp.131 = aputv %tmp.130 3 %tmp.129;
+    %tmp.132 = 0.30;
+    %tmp.133 = dup %tmp.131;
+    %tmp.134 = aputv %tmp.133 4 %tmp.132;
+    %tmp.135 = 0.31;
+    %tmp.136 = dup %tmp.134;
+    %tmp.137 = aputv %tmp.136 5 %tmp.135;
+    %tmp.138 = 0.32;
+    %tmp.139 = dup %tmp.137;
+    %tmp.140 = aputv %tmp.139 6 %tmp.138;
+    %tmp.141 = 0.36;
+    %tmp.142 = dup %tmp.140;
+    %tmp.143 = aputv %tmp.142 7 %tmp.141;
+    putv self :DIVE_FO2_VALS %tmp.143;
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 18 6 ]
+    %tmp.144 = newa 8;
+    %tmp.145 = "Air 21%";
+    %tmp.146 = dup %tmp.144;
+    %tmp.147 = aputv %tmp.146 0 %tmp.145;
+    %tmp.148 = "EAN 27";
+    %tmp.149 = dup %tmp.147;
+    %tmp.150 = aputv %tmp.149 1 %tmp.148;
+    %tmp.151 = "EAN 28";
+    %tmp.152 = dup %tmp.150;
+    %tmp.153 = aputv %tmp.152 2 %tmp.151;
+    %tmp.154 = "EAN 29";
+    %tmp.155 = dup %tmp.153;
+    %tmp.156 = aputv %tmp.155 3 %tmp.154;
+    %tmp.157 = "EAN 30";
+    %tmp.158 = dup %tmp.156;
+    %tmp.159 = aputv %tmp.158 4 %tmp.157;
+    %tmp.160 = "EAN 31";
+    %tmp.161 = dup %tmp.159;
+    %tmp.162 = aputv %tmp.161 5 %tmp.160;
+    %tmp.163 = "Nitrox 32";
+    %tmp.164 = dup %tmp.162;
+    %tmp.165 = aputv %tmp.164 6 %tmp.163;
+    %tmp.166 = "Nitrox 36";
+    %tmp.167 = dup %tmp.165;
+    %tmp.168 = aputv %tmp.167 7 %tmp.166;
+    putv self :DIVE_FO2_LBLS %tmp.168;
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 20 6 ]
+    %tmp.169 = newa 8;
+    %tmp.170 = 10;
+    %tmp.171 = dup %tmp.169;
+    %tmp.172 = aputv %tmp.171 0 %tmp.170;
+    %tmp.173 = 15;
+    %tmp.174 = dup %tmp.172;
+    %tmp.175 = aputv %tmp.174 1 %tmp.173;
+    %tmp.176 = 18;
+    %tmp.177 = dup %tmp.175;
+    %tmp.178 = aputv %tmp.177 2 %tmp.176;
+    %tmp.179 = 20;
+    %tmp.180 = dup %tmp.178;
+    %tmp.181 = aputv %tmp.180 3 %tmp.179;
+    %tmp.182 = 25;
+    %tmp.183 = dup %tmp.181;
+    %tmp.184 = aputv %tmp.183 4 %tmp.182;
+    %tmp.185 = 30;
+    %tmp.186 = dup %tmp.184;
+    %tmp.187 = aputv %tmp.186 5 %tmp.185;
+    %tmp.188 = 35;
+    %tmp.189 = dup %tmp.187;
+    %tmp.190 = aputv %tmp.189 6 %tmp.188;
+    %tmp.191 = 40;
+    %tmp.192 = dup %tmp.190;
+    %tmp.193 = aputv %tmp.192 7 %tmp.191;
+    putv self :DIVE_DEPTHS %tmp.193;
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 22 6 ]
+    %tmp.194 = newa 3;
+    %tmp.195 = 10;
+    %tmp.196 = dup %tmp.194;
+    %tmp.197 = aputv %tmp.196 0 %tmp.195;
+    %tmp.198 = 12;
+    %tmp.199 = dup %tmp.197;
+    %tmp.200 = aputv %tmp.199 1 %tmp.198;
+    %tmp.201 = 15;
+    %tmp.202 = dup %tmp.200;
+    %tmp.203 = aputv %tmp.202 2 %tmp.201;
+    putv self :DIVE_TANKS %tmp.203;
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 23 6 ]
+    %tmp.204 = newa 8;
+    %tmp.205 = 100;
+    %tmp.206 = dup %tmp.204;
+    %tmp.207 = aputv %tmp.206 0 %tmp.205;
+    %tmp.208 = 120;
+    %tmp.209 = dup %tmp.207;
+    %tmp.210 = aputv %tmp.209 1 %tmp.208;
+    %tmp.211 = 140;
+    %tmp.212 = dup %tmp.210;
+    %tmp.213 = aputv %tmp.212 2 %tmp.211;
+    %tmp.214 = 160;
+    %tmp.215 = dup %tmp.213;
+    %tmp.216 = aputv %tmp.215 3 %tmp.214;
+    %tmp.217 = 180;
+    %tmp.218 = dup %tmp.216;
+    %tmp.219 = aputv %tmp.218 4 %tmp.217;
+    %tmp.220 = 200;
+    %tmp.221 = dup %tmp.219;
+    %tmp.222 = aputv %tmp.221 5 %tmp.220;
+    %tmp.223 = 220;
+    %tmp.224 = dup %tmp.222;
+    %tmp.225 = aputv %tmp.224 6 %tmp.223;
+    %tmp.226 = 240;
+    %tmp.227 = dup %tmp.225;
+    %tmp.228 = aputv %tmp.227 7 %tmp.226;
+    putv self :DIVE_STARTP %tmp.228;
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 24 6 ]
+    %tmp.229 = newa 8;
+    %tmp.230 = 30;
+    %tmp.231 = dup %tmp.229;
+    %tmp.232 = aputv %tmp.231 0 %tmp.230;
+    %tmp.233 = 40;
+    %tmp.234 = dup %tmp.232;
+    %tmp.235 = aputv %tmp.234 1 %tmp.233;
+    %tmp.236 = 50;
+    %tmp.237 = dup %tmp.235;
+    %tmp.238 = aputv %tmp.237 2 %tmp.236;
+    %tmp.239 = 60;
+    %tmp.240 = dup %tmp.238;
+    %tmp.241 = aputv %tmp.240 3 %tmp.239;
+    %tmp.242 = 70;
+    %tmp.243 = dup %tmp.241;
+    %tmp.244 = aputv %tmp.243 4 %tmp.242;
+    %tmp.245 = 80;
+    %tmp.246 = dup %tmp.244;
+    %tmp.247 = aputv %tmp.246 5 %tmp.245;
+    %tmp.248 = 100;
+    %tmp.249 = dup %tmp.247;
+    %tmp.250 = aputv %tmp.249 6 %tmp.248;
+    %tmp.251 = 120;
+    %tmp.252 = dup %tmp.250;
+    %tmp.253 = aputv %tmp.252 7 %tmp.251;
+    putv self :DIVE_ENDP %tmp.253;
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 25 6 ]
+    %tmp.254 = newa 9;
+    %tmp.255 = 10;
+    %tmp.256 = dup %tmp.254;
+    %tmp.257 = aputv %tmp.256 0 %tmp.255;
+    %tmp.258 = 15;
+    %tmp.259 = dup %tmp.257;
+    %tmp.260 = aputv %tmp.259 1 %tmp.258;
+    %tmp.261 = 20;
+    %tmp.262 = dup %tmp.260;
+    %tmp.263 = aputv %tmp.262 2 %tmp.261;
+    %tmp.264 = 25;
+    %tmp.265 = dup %tmp.263;
+    %tmp.266 = aputv %tmp.265 3 %tmp.264;
+    %tmp.267 = 30;
+    %tmp.268 = dup %tmp.266;
+    %tmp.269 = aputv %tmp.268 4 %tmp.267;
+    %tmp.270 = 40;
+    %tmp.271 = dup %tmp.269;
+    %tmp.272 = aputv %tmp.271 5 %tmp.270;
+    %tmp.273 = 50;
+    %tmp.274 = dup %tmp.272;
+    %tmp.275 = aputv %tmp.274 6 %tmp.273;
+    %tmp.276 = 60;
+    %tmp.277 = dup %tmp.275;
+    %tmp.278 = aputv %tmp.277 7 %tmp.276;
+    %tmp.279 = 80;
+    %tmp.280 = dup %tmp.278;
+    %tmp.281 = aputv %tmp.280 8 %tmp.279;
+    putv self :DIVE_TIMES %tmp.281;
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 31 6 ]
+    %tmp.282 = newa 8;
+    %tmp.283 = 10;
+    %tmp.284 = dup %tmp.282;
+    %tmp.285 = aputv %tmp.284 0 %tmp.283;
+    %tmp.286 = 15;
+    %tmp.287 = dup %tmp.285;
+    %tmp.288 = aputv %tmp.287 1 %tmp.286;
+    %tmp.289 = 18;
+    %tmp.290 = dup %tmp.288;
+    %tmp.291 = aputv %tmp.290 2 %tmp.289;
+    %tmp.292 = 20;
+    %tmp.293 = dup %tmp.291;
+    %tmp.294 = aputv %tmp.293 3 %tmp.292;
+    %tmp.295 = 25;
+    %tmp.296 = dup %tmp.294;
+    %tmp.297 = aputv %tmp.296 4 %tmp.295;
+    %tmp.298 = 30;
+    %tmp.299 = dup %tmp.297;
+    %tmp.300 = aputv %tmp.299 5 %tmp.298;
+    %tmp.301 = 35;
+    %tmp.302 = dup %tmp.300;
+    %tmp.303 = aputv %tmp.302 6 %tmp.301;
+    %tmp.304 = 40;
+    %tmp.305 = dup %tmp.303;
+    %tmp.306 = aputv %tmp.305 7 %tmp.304;
+    putv self :DIVE_NDL_D %tmp.306;
+[ "/Users/kkorolczuk/work/garmin/diveplantoolkit/source/DiveMath.mc" 32 6 ]
+    %tmp.307 = newa 8;
+    %tmp.308 = 219;
+    %tmp.309 = dup %tmp.307;
+    %tmp.310 = aputv %tmp.309 0 %tmp.308;
+    %tmp.311 = 80;
+    %tmp.312 = dup %tmp.310;
+    %tmp.313 = aputv %tmp.312 1 %tmp.311;
+    %tmp.314 = 56;
+    %tmp.315 = dup %tmp.313;
+    %tmp.316 = aputv %tmp.315 2 %tmp.314;
+    %tmp.317 = 45;
+    %tmp.318 = dup %tmp.316;
+    %tmp.319 = aputv %tmp.318 3 %tmp.317;
+    %tmp.320 = 29;
+    %tmp.321 = dup %tmp.319;
+    %tmp.322 = aputv %tmp.321 4 %tmp.320;
+    %tmp.323 = 20;
+    %tmp.324 = dup %tmp.322;
+    %tmp.325 = aputv %tmp.324 5 %tmp.323;
+    %tmp.326 = 14;
+    %tmp.327 = dup %tmp.325;
+    %tmp.328 = aputv %tmp.327 6 %tmp.326;
+    %tmp.329 = 9;
+    %tmp.330 = dup %tmp.328;
+    %tmp.331 = aputv %tmp.330 7 %tmp.329;
+    putv self :DIVE_NDL_T %tmp.331;
+}

@@ -8,16 +8,35 @@ class BitochiChessDelegate extends WatchUi.BehaviorDelegate {
         _view = view;
     }
 
-    function onKey(evt) {
-        var key = evt.getKey();
-        if (key == WatchUi.KEY_UP)   { _view.doUp();   WatchUi.requestUpdate(); return true; }
-        if (key == WatchUi.KEY_DOWN) { _view.doDown(); WatchUi.requestUpdate(); return true; }
-        if (key == WatchUi.KEY_MENU) { _view.doMenu(); WatchUi.requestUpdate(); return true; }
-        return false;
+    function onSelect() {
+        _view.doSelect();
+        WatchUi.requestUpdate();
+        return true;
     }
 
-    function onSelect() { _view.doSelect(); WatchUi.requestUpdate(); return true; }
-    function onBack()   { _view.doBack();   WatchUi.requestUpdate(); return true; }
+    function onBack() {
+        var h = _view.doBack();
+        WatchUi.requestUpdate();
+        return h;
+    }
+
+    function onMenu() {
+        var h = _view.doBack();
+        WatchUi.requestUpdate();
+        return h;
+    }
+
+    function onPreviousPage() {
+        _view.doPrev();
+        WatchUi.requestUpdate();
+        return true;
+    }
+
+    function onNextPage() {
+        _view.doNext();
+        WatchUi.requestUpdate();
+        return true;
+    }
 
     function onTap(evt) {
         var xy = evt.getCoordinates();

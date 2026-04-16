@@ -51,12 +51,13 @@ class BitochiJazzBallView extends WatchUi.View {
     // alive=false means the wall was killed this tick (flashing)
     hidden var _wall;         // null if none
 
-    // Wall grow speed in cells per tick
-    hidden var _growSpeed;    // 1 cell every N ticks; counter
+    hidden var _wallAcc;      // fractional wall-growth accumulator (x10)
 
     // Cursor (for button navigation)
     hidden var _curCol; hidden var _curRow;
     hidden var _curHoriz;   // preferred orientation (true=H, false=V)
+    hidden var _nextHoriz;  // alternates between H and V
+    hidden var _swipeTick;  // tick when last swipe occurred (for key suppression)
 
     // Viewport geometry
     hidden var _ox; hidden var _oy; hidden var _cs;  // cell size in pixels
@@ -82,14 +83,14 @@ class BitochiJazzBallView extends WatchUi.View {
         _grid = new [_totalCells];
         _balls = new [0];
         _wall = null;
-        _growSpeed = 3;
-        _curCol = GCOLS / 2; _curRow = GROWS / 2; _curHoriz = true;
+        _wallAcc = 0;
+        _curCol = GCOLS / 2; _curRow = GROWS / 2; _curHoriz = true; _nextHoriz = true; _swipeTick = -10;
         _deadFlash = 0;
         _ballColors = [0xFF4422, 0xFF8800, 0xFFCC00, 0x44FF88, 0x44AAFF, 0xFF44AA];
         _floodQueue = new [_totalCells];
 
         _timer = new Timer.Timer();
-        _timer.start(method(:onTick), 50, true);
+        _timer.start(method(:onTick), 40, true);
     }
 
     function onLayout(dc) {
@@ -121,10 +122,15 @@ class BitochiJazzBallView extends WatchUi.View {
         WatchUi.requestUpdate();
     }
 
-    // ── Core game step ────────────────────────────────────────────────────────
     hidden function stepGame() {
         moveBalls();
-        if (_wall != null) { stepWall(); }
+        if (_wall != null) {
+            _wallAcc += 23;
+            while (_wallAcc >= 10 && _wall != null) {
+                stepWall();
+                _wallAcc -= 10;
+            }
+        }
     }
 
     // ── Ball movement ─────────────────────────────────────────────────────────
@@ -209,7 +215,6 @@ class BitochiJazzBallView extends WatchUi.View {
     // ── Wall growth ───────────────────────────────────────────────────────────
     hidden function stepWall() {
         if (_wall == null || !_wall[5]) { return; }
-        if (_tick % _growSpeed != 0)    { return; }
 
         var dirH = _wall[2];
         var headA = _wall[3]; var headB = _wall[4];
@@ -276,6 +281,30 @@ class BitochiJazzBallView extends WatchUi.View {
         // Flood-fill to find which side has no balls — fill that side
         fillEmptySide();
         recountOpen();
+
+        centerCursor();
+    }
+
+    // Place cursor at the center of the grid, or the nearest open cell to center.
+    hidden function centerCursor() {
+        _curCol = GCOLS / 2; _curRow = GROWS / 2;
+        if (_grid[_curRow * GCOLS + _curCol] == CELL_OPEN) { return; }
+        var maxD = GCOLS > GROWS ? GCOLS : GROWS;
+        for (var d = 1; d < maxD; d++) {
+            for (var dr = -d; dr <= d; dr++) {
+                var absdr = dr < 0 ? -dr : dr;
+                var dc2 = d - absdr;
+                var r = _curRow + dr;
+                if (r < 1 || r >= GROWS - 1) { continue; }
+                var c1 = _curCol + dc2; var c2 = _curCol - dc2;
+                if (c1 >= 1 && c1 < GCOLS - 1 && _grid[r * GCOLS + c1] == CELL_OPEN) {
+                    _curRow = r; _curCol = c1; return;
+                }
+                if (dc2 != 0 && c2 >= 1 && c2 < GCOLS - 1 && _grid[r * GCOLS + c2] == CELL_OPEN) {
+                    _curRow = r; _curCol = c2; return;
+                }
+            }
+        }
     }
 
     // Fill the region on each side of the completed wall that contains no balls.
@@ -387,6 +416,7 @@ class BitochiJazzBallView extends WatchUi.View {
         _lives--;
         _deadFlash = 8;
         _gs = JB_DEAD;
+        centerCursor();
     }
 
     hidden function resetWall() { _wall = null; }
@@ -399,84 +429,80 @@ class BitochiJazzBallView extends WatchUi.View {
     }
 
     // ── Input ─────────────────────────────────────────────────────────────────
+
     function doUp() {
-        if (_gs == JB_MENU)     { return; }
+        if (_gs == JB_MENU)     { startGame(); return; }
         if (_gs == JB_LEVEL_WIN){ nextLevel(); return; }
         if (_gs == JB_GAMEOVER) { _gs = JB_MENU; return; }
-        if (_gs != JB_PLAY)     { return; }
-        if (_wall != null)      { return; }
-        if (_curRow > 0) { _curRow--; }
+        if (_gs != JB_PLAY || _wall != null) { return; }
+        if (_tick - _swipeTick < 3) { return; }
+        if (_nextHoriz) { _tryMove(0, -1); }
+        else            { _tryMove(-1, 0); }
     }
 
     function doDown() {
-        if (_gs == JB_MENU)     { return; }
+        if (_gs == JB_MENU)     { startGame(); return; }
         if (_gs == JB_LEVEL_WIN){ nextLevel(); return; }
         if (_gs == JB_GAMEOVER) { _gs = JB_MENU; return; }
-        if (_gs != JB_PLAY)     { return; }
-        if (_wall != null)      { return; }
-        if (_curRow < GROWS - 1) { _curRow++; }
+        if (_gs != JB_PLAY || _wall != null) { return; }
+        if (_tick - _swipeTick < 3) { return; }
+        if (_nextHoriz) { _tryMove(0, 1); }
+        else            { _tryMove(1, 0); }
     }
 
     function doSelect() {
         if (_gs == JB_MENU)     { startGame(); return; }
         if (_gs == JB_LEVEL_WIN){ nextLevel(); return; }
         if (_gs == JB_GAMEOVER) { _gs = JB_MENU; return; }
-        if (_gs != JB_PLAY)     { return; }
-        if (_wall != null)      { _curHoriz = !_curHoriz; return; } // toggle orientation
-        placeWall(_curCol, _curRow, _curHoriz);
+        if (_gs != JB_PLAY || _wall != null) { return; }
+        _fireLine();
     }
 
     function doBack() {
-        if (_gs == JB_PLAY)     { _gs = JB_MENU; _wall = null; }
-        else if (_gs != JB_MENU){ _gs = JB_MENU; }
+        if (_gs != JB_MENU) { _gs = JB_MENU; _wall = null; return true; }
+        return false;
     }
 
-    function doMenu() { doBack(); }
+    function doToggleDir() {
+        if (_gs != JB_PLAY) { return; }
+        if (_wall != null)  { return; }
+        _nextHoriz = !_nextHoriz;
+        _swipeTick = _tick;
+    }
 
     function doTap(tx, ty) {
         if (_gs == JB_MENU)     { startGame(); return; }
         if (_gs == JB_LEVEL_WIN){ nextLevel(); return; }
         if (_gs == JB_GAMEOVER) { _gs = JB_MENU; return; }
-        if (_gs != JB_PLAY)     { return; }
-        if (_cs <= 0) { return; }
-
-        var col = (tx - _ox) / _cs;
-        var row = (ty - _oy) / _cs;
-        if (col < 1 || col >= GCOLS - 1 || row < 1 || row >= GROWS - 1) { return; }
-
-        if (_wall != null) {
-            // Tap while wall is growing → toggle orientation of NEXT wall
-            _curHoriz = !_curHoriz;
-            return;
-        }
-
-        // Place wall. Orientation: if tap is far from previous cursor position
-        // horizontally, use horizontal wall; otherwise vertical.
-        var dx = col - _curCol; if (dx < 0) { dx = -dx; }
-        var dy = row - _curRow; if (dy < 0) { dy = -dy; }
-        if (dx != 0 || dy != 0) {
-            _curHoriz = (dx >= dy); // more horizontal movement → horizontal wall
-        }
-
-        _curCol = col; _curRow = row;
-        placeWall(col, row, _curHoriz);
+        if (_gs != JB_PLAY || _wall != null) { return; }
+        _fireLine();
     }
 
-    hidden function placeWall(col, row, horiz) {
-        // Can't place on a wall cell
-        if (_grid[row * GCOLS + col] != CELL_OPEN) { return; }
+    // Move cursor exactly 1 cell. Stays in place if target is not CELL_OPEN.
+    hidden function _tryMove(dRow, dCol) {
+        var nr = _curRow + dRow;
+        var nc = _curCol + dCol;
+        if (nr < 1 || nr >= GROWS - 1 || nc < 1 || nc >= GCOLS - 1) { return; }
+        if (_grid[nr * GCOLS + nc] == CELL_OPEN) {
+            _curRow = nr; _curCol = nc;
+        }
+    }
 
-        // Initialise growing wall
-        var fixedCoord = horiz ? row : col;
-        var startPos   = horiz ? col : row;
-        _wall = [col, row, horiz, startPos, startPos, true];
-        // Mark origin cell
-        _grid[row * GCOLS + col] = horiz ? CELL_GROW_H : CELL_GROW_V;
+    // Fire line from EXACTLY (_curCol, _curRow). No other source of coordinates.
+    hidden function _fireLine() {
+        var c = _curCol; var r = _curRow;
+        if (_grid[r * GCOLS + c] != CELL_OPEN) { return; }
+        _curHoriz = _nextHoriz;
+        var fixedCoord = _curHoriz ? r : c;
+        var startPos   = _curHoriz ? c : r;
+        _wall = [c, r, _curHoriz, startPos, startPos, true];
+        _wallAcc = 0;
+        _grid[r * GCOLS + c] = _curHoriz ? CELL_GROW_H : CELL_GROW_V;
     }
 
     // ── Game setup ────────────────────────────────────────────────────────────
     hidden function startGame() {
-        _level = 1; _lives = 3; _targetPct = 75;
+        _level = 1; _lives = 5; _targetPct = 75;
         loadLevel();
         _gs = JB_PLAY;
     }
@@ -506,6 +532,7 @@ class BitochiJazzBallView extends WatchUi.View {
 
         _wall = null;
         _curCol = GCOLS / 2; _curRow = GROWS / 2;
+        _nextHoriz = true;
 
         // Level 1 starts with 1 ball, +1 per level
         var numBalls = _level;
@@ -524,8 +551,6 @@ class BitochiJazzBallView extends WatchUi.View {
             _balls[i] = [bx, by, vx, vy, _ballColors[i % _ballColors.size()]];
         }
 
-        // Wall grow very fast — 1 cell every tick (50ms)
-        _growSpeed = 1;
     }
 
     // ── Rendering ─────────────────────────────────────────────────────────────
@@ -565,43 +590,50 @@ class BitochiJazzBallView extends WatchUi.View {
         dc.drawText(_w/2, _h * 44 / 100, Graphics.FONT_XTINY, "BITOCHI GAMES", Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0xCCDDEE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h * 56 / 100, Graphics.FONT_XTINY, "Draw walls to", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(_w/2, _h * 64 / 100, Graphics.FONT_XTINY, "trap the balls!", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, _h * 52 / 100, Graphics.FONT_XTINY, "Draw walls to", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, _h * 60 / 100, Graphics.FONT_XTINY, "trap the balls!", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x557788, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h * 73 / 100, Graphics.FONT_XTINY, "Tap=place  2x=rotate", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, _h * 69 / 100, Graphics.FONT_XTINY, "UP: left  DOWN: down", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, _h * 77 / 100, Graphics.FONT_XTINY, "Tap/Sel: fire line", Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor((_tick % 10 < 5) ? 0x44AAFF : 0x2266AA, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w/2, _h * 84 / 100, Graphics.FONT_XTINY, "Tap to play!", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
-    // ── Board ─────────────────────────────────────────────────────────────────
     hidden function drawBoard(dc) {
         dc.setColor(0x080C18, 0x080C18); dc.clear();
 
-        // Draw grid cells
-        for (var row = 0; row < GROWS; row++) {
-            for (var col = 0; col < GCOLS; col++) {
-                var cell = _grid[row * GCOLS + col];
-                var px = _ox + col * _cs;
-                var py = _oy + row * _cs;
+        var blink = (_tick % 4 < 2);
+        var growHC = blink ? 0x88DDFF : 0x4499CC;
+        var growVC = blink ? 0xFFDD88 : 0xCC9944;
 
-                if (cell == CELL_WALL) {
-                    dc.setColor(0x2A3D66, Graphics.COLOR_TRANSPARENT);
-                    dc.fillRectangle(px, py, _cs, _cs);
-                } else if (cell == CELL_GROW_H) {
-                    var blink = (_tick % 4 < 2);
-                    dc.setColor(blink ? 0x88DDFF : 0x4499CC, Graphics.COLOR_TRANSPARENT);
-                    dc.fillRectangle(px, py, _cs, _cs);
-                } else if (cell == CELL_GROW_V) {
-                    var blink2 = (_tick % 4 < 2);
-                    dc.setColor(blink2 ? 0xFFDD88 : 0xCC9944, Graphics.COLOR_TRANSPARENT);
-                    dc.fillRectangle(px, py, _cs, _cs);
+        dc.setColor(0x2A3D66, Graphics.COLOR_TRANSPARENT);
+        for (var row = 0; row < GROWS; row++) {
+            var base = row * GCOLS;
+            var py = _oy + row * _cs;
+            var spanS = -1;
+            for (var col = 0; col <= GCOLS; col++) {
+                var c = (col < GCOLS) ? _grid[base + col] : CELL_OPEN;
+                if (c == CELL_WALL) {
+                    if (spanS < 0) { spanS = col; }
+                } else {
+                    if (spanS >= 0) {
+                        dc.fillRectangle(_ox + spanS * _cs, py, (col - spanS) * _cs, _cs);
+                        spanS = -1;
+                    }
+                    if (c == CELL_GROW_H) {
+                        dc.setColor(growHC, Graphics.COLOR_TRANSPARENT);
+                        dc.fillRectangle(_ox + col * _cs, py, _cs, _cs);
+                        dc.setColor(0x2A3D66, Graphics.COLOR_TRANSPARENT);
+                    } else if (c == CELL_GROW_V) {
+                        dc.setColor(growVC, Graphics.COLOR_TRANSPARENT);
+                        dc.fillRectangle(_ox + col * _cs, py, _cs, _cs);
+                        dc.setColor(0x2A3D66, Graphics.COLOR_TRANSPARENT);
+                    }
                 }
-                // CELL_OPEN: leave dark background
             }
         }
 
-        // Grid border
         dc.setColor(0x1A2A44, Graphics.COLOR_TRANSPARENT);
         dc.drawRectangle(_ox - 1, _oy - 1, _cs * GCOLS + 2, _cs * GROWS + 2);
     }
@@ -631,15 +663,18 @@ class BitochiJazzBallView extends WatchUi.View {
         if (_gs != JB_PLAY || _wall != null) { return; }
         var px = _ox + _curCol * _cs;
         var py = _oy + _curRow * _cs;
-        dc.setColor(0xFFFF44, Graphics.COLOR_TRANSPARENT);
-        dc.drawRectangle(px - 1, py - 1, _cs + 2, _cs + 2);
+        var mid = _cs / 2;
 
-        // Direction indicator (small crosshair line)
+        // Crosshair at exact fire position
         dc.setColor(0xFFFF44, Graphics.COLOR_TRANSPARENT);
-        if (_curHoriz) {
-            dc.drawLine(px - 4, py + _cs/2, px + _cs + 4, py + _cs/2);
+        dc.fillRectangle(px, py, _cs, _cs);
+
+        // Direction preview line
+        dc.setColor((_tick % 6 < 3) ? 0xFFFF44 : 0xAA9900, Graphics.COLOR_TRANSPARENT);
+        if (_nextHoriz) {
+            dc.drawLine(_ox, py + mid, _ox + _cs * GCOLS, py + mid);
         } else {
-            dc.drawLine(px + _cs/2, py - 4, px + _cs/2, py + _cs + 4);
+            dc.drawLine(px + mid, _oy, px + mid, _oy + _cs * GROWS);
         }
     }
 

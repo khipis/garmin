@@ -38,7 +38,9 @@ class BitochiBricksDelegate extends WatchUi.BehaviorDelegate {
     function onPreviousPage() { return true; }
     function onNextPage()     { return true; }
     function onBack() {
-        if (_sensorEnabled) { Sensor.enableSensorEvents(null); }
-        return false;
+        var h = _view.doBack();
+        if (!h && _sensorEnabled) { Sensor.enableSensorEvents(null); }
+        WatchUi.requestUpdate();
+        return h;
     }
 }

@@ -127,7 +127,7 @@ class BitochiAxeArcadeView extends WatchUi.View {
         _hazAngles = new [MAX_HAZ];
         for (var i = 0; i < MAX_HAZ; i++) { _hazAngles[i] = 0.0; }
         _hazCount = 0;
-        _hazSize = 22.0;
+        _hazSize = 16.0;
 
         _appleAngle = 0.0;
         _appleActive = false;
@@ -143,7 +143,7 @@ class BitochiAxeArcadeView extends WatchUi.View {
         _level = 1;
         _axesThisLevel = 0;
         _axesPerLevel = 5;
-        _hitMinDeg = 14.0;
+        _hitMinDeg = 5.0;
         _isBoss = false;
 
         _lives = 3;
@@ -419,7 +419,7 @@ class BitochiAxeArcadeView extends WatchUi.View {
             _logRadiusPct = 22;
             _axesPerLevel = 8 + _level / 5;
             if (_axesPerLevel > 14) { _axesPerLevel = 14; }
-            _hitMinDeg = 12.0;
+            _hitMinDeg = 4.0;
 
             var preStuck = 2 + _level / 10;
             if (preStuck > 5) { preStuck = 5; }
@@ -435,8 +435,8 @@ class BitochiAxeArcadeView extends WatchUi.View {
             if (_level % 4 == 2) { _logRadiusPct = 16; }
             else if (_level % 4 == 0) { _logRadiusPct = 17; }
             _axesPerLevel = 5 + ((_level - 1) % 3);
-            _hitMinDeg = 14.0 - (_level - 1).toFloat() * 0.12;
-            if (_hitMinDeg < 10.0) { _hitMinDeg = 10.0; }
+            _hitMinDeg = 5.0 - (_level - 1).toFloat() * 0.05;
+            if (_hitMinDeg < 3.0) { _hitMinDeg = 3.0; }
 
             _hazCount = (_level - 1) / 4;
             if (_hazCount > 3) { _hazCount = 3; }

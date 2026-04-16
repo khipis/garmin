@@ -41,6 +41,9 @@ class BitochiMinigolfView extends WatchUi.View {
     // Tee (start) position
     hidden var _tx; hidden var _ty;
 
+    // Last valid ball position (before shot — used when ball goes out of bounds)
+    hidden var _lastBx; hidden var _lastBy;
+
     // Aim
     hidden var _aimAngle;   // degrees 0-359
     hidden var _power;      // 0-100 (during power state, oscillates)
@@ -51,6 +54,7 @@ class BitochiMinigolfView extends WatchUi.View {
 
     // Course viewport mapping: course → screen
     hidden var _vpX; hidden var _vpY; hidden var _vpW; hidden var _vpH; hidden var _scale;
+    hidden var _offX; hidden var _offY;  // centering offsets within viewport
 
     // Obstacles (rect: [cx,cy,w,h] in 0-1000 space)
     hidden var _obstacles;
@@ -94,11 +98,16 @@ class BitochiMinigolfView extends WatchUi.View {
     }
 
     hidden function setupVP() {
-        // Leave HUD space: top ~22px, bottom ~20px
-        var hudTop = 22; var hudBot = 20;
+        // HUD proportional to screen size
+        var hudTop = _h * 22 / 100; if (hudTop < 20) { hudTop = 20; }
+        var hudBot = _h * 16 / 100; if (hudBot < 16) { hudBot = 16; }
         _vpX = 4; _vpY = hudTop;
         _vpW = _w - 8; _vpH = _h - hudTop - hudBot;
-        _scale = _vpW < _vpH ? _vpW : _vpH; // 1000 course units → _scale pixels
+        // Uniform scale so course is never distorted on non-square screens
+        _scale = _vpW < _vpH ? _vpW : _vpH;
+        // Center the course square within the viewport
+        _offX = (_vpW - _scale) / 2;
+        _offY = (_vpH - _scale) / 2;
     }
 
     // ── Timer ─────────────────────────────────────────────────────────────────
@@ -116,48 +125,58 @@ class BitochiMinigolfView extends WatchUi.View {
 
     // ── Physics ───────────────────────────────────────────────────────────────
     hidden function stepPhysics() {
-        // Friction
-        _vx = _vx * 97 / 100;
-        _vy = _vy * 97 / 100;
+        // Apply friction once per game tick (91% retention — slightly more drag so ball
+        // decelerates on course instead of flying off the edge)
+        _vx = _vx * 91 / 100;
+        _vy = _vy * 91 / 100;
 
-        // Move
-        _bx += _vx;
-        _by += _vy;
+        // Sub-step the movement 3× so fast balls don't tunnel through walls
+        var SUB = 3;
+        var svx = _vx / SUB; var svy = _vy / SUB;
+        for (var s = 0; s < SUB; s++) {
+            _bx += svx;
+            _by += svy;
 
-        // Wall collisions
-        for (var i = 0; i < _walls.size(); i++) {
-            var w = _walls[i];
-            resolveWall(w[0], w[1], w[2], w[3]);
-        }
+            for (var i = 0; i < _walls.size(); i++) {
+                var w = _walls[i];
+                resolveWall(w[0], w[1], w[2], w[3]);
+            }
+            for (var i = 0; i < _obstacles.size(); i++) {
+                var ob = _obstacles[i];
+                resolveObstacle(ob[0]*10, ob[1]*10, ob[2]*10, ob[3]*10);
+            }
 
-        // Obstacle collisions
-        for (var i = 0; i < _obstacles.size(); i++) {
-            var ob = _obstacles[i];
-            resolveObstacle(ob[0]*10, ob[1]*10, ob[2]*10, ob[3]*10);
-        }
+            // Water hazard — reset to tee
+            for (var i = 0; i < _water.size(); i++) {
+                var wt = _water[i];
+                var dx = _bx/10 - wt[0]; var dy = _by/10 - wt[1];
+                if (dx*dx + dy*dy < (wt[2]+_ballR)*(wt[2]+_ballR)) {
+                    _bx = _tx * 10; _by = _ty * 10;
+                    _vx = 0; _vy = 0;
+                    _strokes++; // penalty
+                    _gs = MG_AIM; return;
+                }
+            }
 
-        // Water hazard — reset to tee
-        for (var i = 0; i < _water.size(); i++) {
-            var wt = _water[i];
-            var dx = _bx/10 - wt[0]; var dy = _by/10 - wt[1];
-            if (dx*dx + dy*dy < (wt[2]+_ballR)*(wt[2]+_ballR)) {
-                _bx = _tx * 10; _by = _ty * 10;
+            // Check if in hole
+            var hdx = _bx/10 - _hx; var hdy = _by/10 - _hy;
+            if (hdx*hdx + hdy*hdy < _holeR*_holeR) {
                 _vx = 0; _vy = 0;
-                _strokes++; // penalty
-                _gs = MG_AIM; return;
+                sinkBall(); return;
             }
         }
 
-        // Check if in hole
-        var hdx = _bx/10 - _hx; var hdy = _by/10 - _hy;
-        if (hdx*hdx + hdy*hdy < _holeR*_holeR) {
+        // Out-of-bounds check (course space 0-1000)
+        var cx = _bx / 10; var cy = _by / 10;
+        if (cx < -50 || cx > 1050 || cy < -50 || cy > 1050) {
+            _bx = _lastBx; _by = _lastBy;
             _vx = 0; _vy = 0;
-            sinkBall(); return;
+            _gs = MG_AIM;
+            return;
         }
 
-        // Stop if very slow
         var spd = _vx * _vx + _vy * _vy;
-        if (spd < 4) {
+        if (spd < 25) {
             _vx = 0; _vy = 0;
             _gs = MG_AIM;
         }
@@ -261,10 +280,11 @@ class BitochiMinigolfView extends WatchUi.View {
     }
 
     function doBack() {
-        if (_gs != MG_MENU) { _gs = MG_MENU; }
+        if (_gs != MG_MENU) { _gs = MG_MENU; return true; }
+        return false;
     }
 
-    function doMenu() { doBack(); }
+    function doMenu() { return doBack(); }
 
     function doTap(tx, ty) {
         if (_gs == MG_MENU)     { startGame(); return; }
@@ -287,9 +307,11 @@ class BitochiMinigolfView extends WatchUi.View {
     }
 
     hidden function commitShot() {
+        _lastBx = _bx; _lastBy = _by;
         _strokes++;
         var rad = _aimAngle * Math.PI / 180;
-        var spd = _power * 18 / 10 + 20; // min 20, max 200
+        // -30% from previous value (was 324/360, now 227/252)
+        var spd = _power * 227 / 10 + 252;
         _vx = (Math.cos(rad) * spd).toNumber();
         _vy = (Math.sin(rad) * spd).toNumber();
         _gs = MG_ROLLING;
@@ -443,6 +465,7 @@ class BitochiMinigolfView extends WatchUi.View {
         }
 
         _bx = _tx * 10; _by = _ty * 10;
+        _lastBx = _bx; _lastBy = _by;
         _aimAngle = computeAimTowardHole();
     }
 
@@ -454,10 +477,10 @@ class BitochiMinigolfView extends WatchUi.View {
     }
 
     // ── Coordinate helpers ────────────────────────────────────────────────────
-    // Course (0-1000) → screen pixel
-    hidden function cToS_X(cx) { return _vpX + cx * _vpW / 1000; }
-    hidden function cToS_Y(cy) { return _vpY + cy * _vpH / 1000; }
-    hidden function cToS_R(cr) { return cr * _vpW / 1000; }
+    // Course (0-1000) → screen pixel — uniform scale, centered
+    hidden function cToS_X(cx) { return _vpX + _offX + cx * _scale / 1000; }
+    hidden function cToS_Y(cy) { return _vpY + _offY + cy * _scale / 1000; }
+    hidden function cToS_R(cr) { return cr * _scale / 1000; }
 
     // ── Rendering ─────────────────────────────────────────────────────────────
     function onUpdate(dc) {
@@ -481,35 +504,35 @@ class BitochiMinigolfView extends WatchUi.View {
         dc.setColor(0x144820, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(r, r, r - 14);
 
-        // Decorative mini-course hint
-        dc.setColor(0x1A5028, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(_w/2 - 50, _h/2 + 28, 100, 30, 6);
-        dc.setColor(0x2A7040, Graphics.COLOR_TRANSPARENT);
-        dc.drawRoundedRectangle(_w/2 - 50, _h/2 + 28, 100, 30, 6);
-        // Tiny ball
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(_w/2 - 32, _h/2 + 43, 5);
-        // Tiny flag
-        dc.setColor(0x885522, Graphics.COLOR_TRANSPARENT);
-        dc.drawLine(_w/2 + 30, _h/2 + 30, _w/2 + 30, _h/2 + 55);
-        dc.setColor(0xFF3311, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(_w/2 + 30, _h/2 + 30, 10, 7);
-
         dc.setColor(0x44FF88, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h/2 - 56, Graphics.FONT_MEDIUM, "MINIGOLF", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, _h * 14 / 100, Graphics.FONT_MEDIUM, "MINIGOLF", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x226633, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h/2 - 32, Graphics.FONT_XTINY, "BITOCHI GAMES", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, _h * 28 / 100, Graphics.FONT_XTINY, "BITOCHI GAMES", Graphics.TEXT_JUSTIFY_CENTER);
 
         var diffLabels = ["Easy (9 holes)", "Normal", "Hard"];
         dc.setColor(0xCCEEBB, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h/2 - 14, Graphics.FONT_XTINY, "Difficulty:", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xFFFF44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h/2 + 2, Graphics.FONT_XTINY, diffLabels[_difficulty], Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0x448833, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h/2 + 16, Graphics.FONT_XTINY, "^ v change", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, _h * 40 / 100, Graphics.FONT_XTINY, "Difficulty:", Graphics.TEXT_JUSTIFY_CENTER);
 
-        dc.setColor((_tick % 10 < 5) ? 0x44FF88 : 0x228844, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h/2 + 70, Graphics.FONT_XTINY, "Tap to tee off!", Graphics.TEXT_JUSTIFY_CENTER);
+        var btnW = _w * 60 / 100; var btnH = 28; var btnX = (_w - btnW) / 2;
+        var btnY = _h * 48 / 100;
+        dc.setColor(0x1A5028, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(btnX, btnY, btnW, btnH, 6);
+        dc.setColor(0x2A7040, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(btnX, btnY, btnW, btnH, 6);
+        dc.setColor(0xFFFF44, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w/2, btnY + 6, Graphics.FONT_XTINY, diffLabels[_difficulty], Graphics.TEXT_JUSTIFY_CENTER);
+
+        dc.setColor(0x448833, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w/2, _h * 62 / 100, Graphics.FONT_XTINY, "UP/DOWN change", Graphics.TEXT_JUSTIFY_CENTER);
+
+        var sBtnW = _w * 55 / 100; var sBtnH = 30;
+        var sBtnX = (_w - sBtnW) / 2; var sBtnY = _h * 72 / 100;
+        dc.setColor(0x225500, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(sBtnX, sBtnY, sBtnW, sBtnH, 8);
+        dc.setColor(0x44AA22, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(sBtnX, sBtnY, sBtnW, sBtnH, 8);
+        dc.setColor((_tick % 10 < 5) ? 0x88FF44 : 0x55CC22, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w/2, sBtnY + 7, Graphics.FONT_XTINY, "TAP TO PLAY", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     // ── Course ────────────────────────────────────────────────────────────────
@@ -636,8 +659,8 @@ class BitochiMinigolfView extends WatchUi.View {
 
     // ── Power bar ────────────────────────────────────────────────────────────
     hidden function drawPowerBar(dc) {
-        var bw = _vpW * 7 / 10; var bh = 8;
-        var bx = _vpX + (_vpW - bw) / 2; var by = _h - 16;
+        var bw = _w * 7 / 10; var bh = _h * 5 / 100; if (bh < 7) { bh = 7; }
+        var bx = (_w - bw) / 2; var by = _h - bh - _h * 6 / 100;
         dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT);
         dc.fillRoundedRectangle(bx - 1, by - 1, bw + 2, bh + 2, 3);
         var filled = bw * _power / 100;
@@ -646,7 +669,7 @@ class BitochiMinigolfView extends WatchUi.View {
         dc.fillRoundedRectangle(bx, by, filled, bh, 2);
         dc.setColor(0xAAAAAA, Graphics.COLOR_TRANSPARENT);
         dc.drawRoundedRectangle(bx, by, bw, bh, 2);
-        dc.drawText(_vpX + _vpW / 2, by - 12, Graphics.FONT_XTINY, "Power! Tap to shoot", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, by - _h * 4 / 100, Graphics.FONT_XTINY, "Power! Tap to shoot", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     // ── HUD ───────────────────────────────────────────────────────────────────
@@ -664,27 +687,29 @@ class BitochiMinigolfView extends WatchUi.View {
         // Aim hint bottom
         if (_gs == MG_AIM) {
             dc.setColor(0x44AA66, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w/2, _h - 14, Graphics.FONT_XTINY, "Tap/^v aim  O shoot", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_w/2, _h - _h * 10 / 100, Graphics.FONT_XTINY, "Tap/^v aim  O shoot", Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 
     // ── Holed overlay ────────────────────────────────────────────────────────
     hidden function drawHoledOverlay(dc) {
+        var ow = _w * 68 / 100; var oh = _h * 36 / 100;
+        var ox = (_w - ow) / 2; var oy = _h / 2 - oh / 2;
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(_w/2 - 60, _h/2 - 32, 120, 64, 8);
+        dc.fillRoundedRectangle(ox, oy, ow, oh, 8);
         dc.setColor(0x226633, Graphics.COLOR_TRANSPARENT);
-        dc.drawRoundedRectangle(_w/2 - 60, _h/2 - 32, 120, 64, 8);
+        dc.drawRoundedRectangle(ox, oy, ow, oh, 8);
 
         dc.setColor(0x44FF88, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h/2 - 28, Graphics.FONT_MEDIUM, "HOLED!", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, oy + oh * 4 / 100, Graphics.FONT_MEDIUM, "HOLED!", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h/2 - 6, Graphics.FONT_XTINY, _holeMsg, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, oy + oh * 36 / 100, Graphics.FONT_XTINY, _holeMsg, Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xCCCCCC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h/2 + 10, Graphics.FONT_XTINY,
+        dc.drawText(_w/2, oy + oh * 56 / 100, Graphics.FONT_XTINY,
             "Strokes: " + _strokes + " / Par: " + _par[_holeIdx], Graphics.TEXT_JUSTIFY_CENTER);
         if (_holeWait <= 0) {
             dc.setColor((_tick % 8 < 4) ? 0x88CCFF : 0x4488AA, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w/2, _h/2 + 24, Graphics.FONT_XTINY, "Tap > next hole", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_w/2, oy + oh * 76 / 100, Graphics.FONT_XTINY, "Tap > next hole", Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 

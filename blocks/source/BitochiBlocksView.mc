@@ -7,98 +7,78 @@ using Toybox.Attention;
 
 enum { TBS_MENU, TBS_PLAY, TBS_OVER }
 
-// Power-up types (appear as special falling pieces)
-const TB_PU_BOMB    = 1;  // clears all cells in 3×3 area on landing
-const TB_PU_LASER   = 2;  // clears the entire column on landing
-const TB_PU_FREEZE  = 3;  // next 8 drops are slowed to minimum speed
-const TB_PU_SMASH   = 4;  // destroys bottom 2 rows instantly
-const TB_PU_COLOR   = 5;  // clears all cells of the same color
+const TB_PU_BOMB    = 1;
+const TB_PU_LASER   = 2;
+const TB_PU_FREEZE  = 3;
+const TB_PU_SMASH   = 4;
+const TB_PU_COLOR   = 5;
 
 const TB_COLS  = 10;
 const TB_ROWS  = 18;
-const TB_PART  = 14;   // particle count
-
-// Piece shapes: each is 4 rotations × 4 cells [col, row] offsets
-// Pieces: I, O, T, S, Z, J, L
+const TB_PART  = 14;
 const TB_NUM_PIECES = 7;
 
 class BitochiBlocksView extends WatchUi.View {
-
-    var accelX;
 
     hidden var _w; hidden var _h;
     hidden var _timer; hidden var _tick;
     hidden var _gs;
 
-    // Board geometry
     hidden var _cellW; hidden var _cellH;
-    hidden var _boardX; hidden var _boardY;  // top-left pixel of board
-    hidden var _panelX;                      // X start of right info panel
+    hidden var _boardX; hidden var _boardY;
+    hidden var _panelX;
 
-    // Board: 0 = empty, 1-7 = piece color index, 8+ = power-up marker
-    hidden var _board;   // [TB_ROWS][TB_COLS]
+    hidden var _board;
 
-    // Current piece
-    hidden var _pieceType;   // 0-6 = normal, 7+ = power-up type
+    hidden var _pieceType;
     hidden var _pieceRot;
-    hidden var _pieceX;      // col of pivot
-    hidden var _pieceY;      // row of pivot
-    hidden var _isPowerup;   // current piece is a power-up
+    hidden var _pieceX;
+    hidden var _pieceY;
+    hidden var _isPowerup;
 
-    // Next piece
     hidden var _nextType;
     hidden var _nextIsPu;
 
-    // Fall timing
-    hidden var _fallInterval;  // ticks per row drop
+    hidden var _fallInterval;
     hidden var _fallCount;
     hidden var _softDrop;
-    hidden var _freezeTicks;   // freeze power-up countdown
+    hidden var _freezeTicks;
 
-    // Scoring
     hidden var _score; hidden var _best;
     hidden var _level; hidden var _linesCleared;
     hidden var _combo;
 
-    // Effects
     hidden var _shakeTick; hidden var _shakeX; hidden var _shakeY;
     hidden var _flashTick; hidden var _flashColor;
-    hidden var _clearRows;  // array of rows being cleared (animation)
-    hidden var _clearAnim;  // countdown
+    hidden var _clearRows;
+    hidden var _clearAnim;
 
-    // Particles
     hidden var _prtX; hidden var _prtY;
     hidden var _prtVx; hidden var _prtVy;
     hidden var _prtLife; hidden var _prtCol;
 
-    // Accel
-    hidden var _smoothAx;
-    hidden var _accelMove;   // fractional accumulator for accel-driven movement
     hidden var _accelCd;
-
-    // Menu animation
     hidden var _wobble;
 
-    // Piece color palette
     hidden var _pieceColors;
-
-    // Piece shape data: [type][rotation][cell] = [dc, dr]
-    // Using flat encoding: shapes[type*16 + rot*4 + cell] = [dc, dr]
     hidden var _shapes;
+
+    // Scaled layout helpers
+    hidden var _prtSz;
+    hidden var _prtGrav;
+    hidden var _decoSz;
 
     function initialize() {
         View.initialize();
-        accelX = 0;
         _w = 0; _h = 0;
         _tick = 0; _gs = TBS_MENU;
         _panelX = 0;
         _wobble = 0.0;
-        _smoothAx = 0.0; _accelMove = 0.0; _accelCd = 0;
+        _accelCd = 0;
 
         _best = Application.Storage.getValue("blocks_best");
         if (_best == null) { _best = 0; }
 
-        // Board: flat array [row * TB_COLS + col]
         _board = new [TB_ROWS * TB_COLS];
         for (var i = 0; i < TB_ROWS * TB_COLS; i++) { _board[i] = 0; }
 
@@ -118,68 +98,42 @@ class BitochiBlocksView extends WatchUi.View {
         _shakeTick = 0; _shakeX = 0; _shakeY = 0;
         _flashTick = 0; _flashColor = 0;
 
-        // Neon colors per piece type (I O T S Z J L)
+        _prtSz = 2; _prtGrav = 0.22; _decoSz = 11;
+
         _pieceColors = [
-            0x00EEFF,  // I — cyan
-            0xFFDD00,  // O — yellow
-            0xCC44FF,  // T — purple
-            0x44FF44,  // S — green
-            0xFF3333,  // Z — red
-            0x4477FF,  // J — blue
-            0xFF8800   // L — orange
+            0x00EEFF, 0xFFDD00, 0xCC44FF, 0x44FF44,
+            0xFF3333, 0x4477FF, 0xFF8800
         ];
 
-        // Build shape tables
         buildShapes();
     }
 
-    // ── Shape data ────────────────────────────────────────────────────────────
-    // Each piece: 4 rotations, each rotation: array of 4 [dc, dr] offsets
-    // Stored as flat array: _shapes[pieceIdx][rot][cell*2 + 0/1]
-
     hidden function buildShapes() {
-        // shapes[piece][rot] = [[dc,dr],[dc,dr],[dc,dr],[dc,dr]]
-        // We store as _shapes[piece * 4 * 4 * 2 + rot * 4 * 2 + cell * 2 + axis]
-        // Total: 7 * 4 * 4 * 2 = 224 entries
         _shapes = new [7 * 4 * 8];
-
-        // I-piece
-        setShape(0, 0, [[-1,0],[0,0],[1,0],[2,0]]);
-        setShape(0, 1, [[0,-1],[0,0],[0,1],[0,2]]);
-        setShape(0, 2, [[-1,0],[0,0],[1,0],[2,0]]);
-        setShape(0, 3, [[0,-1],[0,0],[0,1],[0,2]]);
-
-        // O-piece
+        setShape(0, 0, [[-1,0],[0,0],[1,0],[2,0]]);    // I horizontal right-heavy
+        setShape(0, 1, [[0,-1],[0,0],[0,1],[0,2]]);    // I vertical bottom-heavy
+        setShape(0, 2, [[-2,0],[-1,0],[0,0],[1,0]]);   // I horizontal left-heavy
+        setShape(0, 3, [[0,-2],[0,-1],[0,0],[0,1]]);
         setShape(1, 0, [[0,0],[1,0],[0,1],[1,1]]);
         setShape(1, 1, [[0,0],[1,0],[0,1],[1,1]]);
         setShape(1, 2, [[0,0],[1,0],[0,1],[1,1]]);
         setShape(1, 3, [[0,0],[1,0],[0,1],[1,1]]);
-
-        // T-piece
         setShape(2, 0, [[-1,0],[0,0],[1,0],[0,1]]);
         setShape(2, 1, [[0,-1],[0,0],[1,0],[0,1]]);
         setShape(2, 2, [[-1,0],[0,0],[1,0],[0,-1]]);
         setShape(2, 3, [[0,-1],[0,0],[-1,0],[0,1]]);
-
-        // S-piece
-        setShape(3, 0, [[0,0],[1,0],[-1,1],[0,1]]);
-        setShape(3, 1, [[0,-1],[0,0],[1,0],[1,1]]);
-        setShape(3, 2, [[0,0],[1,0],[-1,1],[0,1]]);
-        setShape(3, 3, [[0,-1],[0,0],[1,0],[1,1]]);
-
-        // Z-piece
-        setShape(4, 0, [[-1,0],[0,0],[0,1],[1,1]]);
-        setShape(4, 1, [[1,-1],[0,0],[1,0],[0,1]]);
-        setShape(4, 2, [[-1,0],[0,0],[0,1],[1,1]]);
-        setShape(4, 3, [[1,-1],[0,0],[1,0],[0,1]]);
-
-        // J-piece
+        setShape(3, 0, [[0,0],[1,0],[-1,1],[0,1]]);      // S standard
+        setShape(3, 1, [[0,-1],[0,0],[1,0],[1,1]]);      // S vertical
+        setShape(3, 2, [[0,-1],[1,-1],[-1,0],[0,0]]);    // S shifted up
+        setShape(3, 3, [[-1,-1],[-1,0],[0,0],[0,1]]);
+        setShape(4, 0, [[-1,0],[0,0],[0,1],[1,1]]);      // Z standard
+        setShape(4, 1, [[1,-1],[0,0],[1,0],[0,1]]);      // Z vertical
+        setShape(4, 2, [[-1,-1],[0,-1],[0,0],[1,0]]);    // Z shifted up
+        setShape(4, 3, [[0,-1],[1,-1],[0,0],[-1,0]]);
         setShape(5, 0, [[-1,0],[0,0],[1,0],[-1,1]]);
         setShape(5, 1, [[0,-1],[0,0],[0,1],[1,1]]);
         setShape(5, 2, [[-1,0],[0,0],[1,0],[1,-1]]);
         setShape(5, 3, [[0,-1],[0,0],[0,1],[-1,-1]]);
-
-        // L-piece
         setShape(6, 0, [[-1,0],[0,0],[1,0],[1,1]]);
         setShape(6, 1, [[0,-1],[0,0],[0,1],[1,-1]]);
         setShape(6, 2, [[-1,0],[0,0],[1,0],[-1,-1]]);
@@ -195,11 +149,8 @@ class BitochiBlocksView extends WatchUi.View {
     }
 
     hidden function getCell(piece, rot, cellIdx, axis) {
-        var base = (piece * 4 + rot) * 8;
-        return _shapes[base + cellIdx * 2 + axis];
+        return _shapes[(piece * 4 + rot) * 8 + cellIdx * 2 + axis];
     }
-
-    // ── Lifecycle ─────────────────────────────────────────────────────────────
 
     function onLayout(dc) {}
 
@@ -214,32 +165,38 @@ class BitochiBlocksView extends WatchUi.View {
 
     hidden function setupBoard() {
         if (_w == 0) { return; }
-        // HUD strip height.  Text at y≈10 sits in a wide enough safe zone even on
-        // the smallest round screens (dy≈120 from centre → safeHalf≈50 → zone ±50px).
-        var topBar = 36;
-        var botPad = 2;
+        var topBar = _h * 14 / 100;
+        if (topBar < 24) { topBar = 24; }
+        var botPad = _h * 1 / 100;
+        if (botPad < 2) { botPad = 2; }
         var availH = _h - topBar - botPad;
 
-        // Cell size from height (primary driver — fill the screen vertically)
         var cellFromH = availH / TB_ROWS;
-
-        // Cell size cap: board must not be wider than ~44% of screen so the right
-        // panel (4 cells) has room alongside it without overlapping screen content.
-        var cellFromW = _w * 44 / 100 / TB_COLS;
+        var cellFromW = _w * 62 / 100 / (TB_COLS + 5);
 
         _cellH = (cellFromH < cellFromW) ? cellFromH : cellFromW;
-        if (_cellH < 5)  { _cellH = 5; }
-        if (_cellH > 13) { _cellH = 13; }
+        if (_cellH < 4) { _cellH = 4; }
+
         _cellW = _cellH;
 
-        // Centre the BOARD on the screen (not the board+panel group).
-        // The panel sits to the right of the board — on a round screen this is
-        // in the wider mid-section where there is plenty of horizontal room.
-        _boardX = (_w - TB_COLS * _cellW) / 2;
-        if (_boardX < 0) { _boardX = 0; }
+        var boardW = TB_COLS * _cellW;
+        var panelW = 4 * _cellW + 3;
+        var totalW = boardW + 3 + panelW;
+        _boardX = (_w - totalW) / 2;
+        if (_boardX < 2) { _boardX = 2; }
 
-        _panelX = _boardX + TB_COLS * _cellW + 3;
+        _panelX = _boardX + boardW + 3;
         _boardY = topBar;
+
+        // Scale particle size and gravity to cell size
+        _prtSz = _cellW / 4;
+        if (_prtSz < 2) { _prtSz = 2; }
+        _prtGrav = _cellH.toFloat() * 0.018;
+        if (_prtGrav < 0.15) { _prtGrav = 0.15; }
+
+        // Menu decorative block size
+        _decoSz = _cellW - 2;
+        if (_decoSz < 8) { _decoSz = 8; }
     }
 
     hidden function startGame() {
@@ -252,7 +209,7 @@ class BitochiBlocksView extends WatchUi.View {
         _shakeTick = 0; _flashTick = 0; _clearAnim = 0;
         for (var i = 0; i < TB_PART; i++) { _prtLife[i] = 0; }
         for (var i = 0; i < 4; i++) { _clearRows[i] = -1; }
-        _accelMove = 0.0; _accelCd = 0;
+        _accelCd = 0;
 
         _nextType = randPiece(); _nextIsPu = false;
         spawnPiece();
@@ -262,8 +219,6 @@ class BitochiBlocksView extends WatchUi.View {
     hidden function randPiece() {
         return (Math.rand() % TB_NUM_PIECES).toNumber();
     }
-
-    // ── Main tick ─────────────────────────────────────────────────────────────
 
     function onTick() as Void {
         _tick++;
@@ -277,12 +232,9 @@ class BitochiBlocksView extends WatchUi.View {
 
         if (_flashTick > 0) { _flashTick--; }
 
-        _smoothAx = _smoothAx * 0.68 + accelX.toFloat() * 0.32;
-
         if (_gs == TBS_PLAY) {
             updateParticles();
 
-            // Clear-line animation gate
             if (_clearAnim > 0) {
                 _clearAnim--;
                 if (_clearAnim == 0) { finishClear(); }
@@ -290,19 +242,6 @@ class BitochiBlocksView extends WatchUi.View {
                 return;
             }
 
-            // Accel-driven horizontal movement
-            if (_accelCd > 0) { _accelCd--; }
-            if (_accelCd == 0) {
-                var ax = _smoothAx;
-                var deadzone = 260.0;
-                if (ax > deadzone) {
-                    if (tryMove(1, 0)) { _accelCd = 4; }
-                } else if (ax < -deadzone) {
-                    if (tryMove(-1, 0)) { _accelCd = 4; }
-                }
-            }
-
-            // Gravity
             if (_freezeTicks > 0) { _freezeTicks--; }
             var interval = _fallInterval;
             if (_softDrop) { interval = 2; }
@@ -312,16 +251,14 @@ class BitochiBlocksView extends WatchUi.View {
             if (_fallCount >= interval) {
                 _fallCount = 0;
                 _softDrop = false;
-                if (!tryMove(0, 1)) {
-                    lockPiece();
-                }
+                if (!tryMove(0, 1)) { lockPiece(); }
             }
         }
 
         WatchUi.requestUpdate();
     }
 
-    // ── Movement + rotation ───────────────────────────────────────────────────
+    // ── Movement + rotation ─────────────────────────────────────────────────
 
     hidden function tryMove(dc, dr) {
         var nx = _pieceX + dc; var ny = _pieceY + dr;
@@ -332,7 +269,7 @@ class BitochiBlocksView extends WatchUi.View {
 
     hidden function collides(pType, pRot, px, py) {
         var realType = pType;
-        if (_isPowerup) { realType = 0; }  // power-up uses I-shape single cell
+        if (_isPowerup) { realType = 0; }
         for (var i = 0; i < 4; i++) {
             var cc = px + getCell(realType, pRot, i, 0);
             var cr = py + getCell(realType, pRot, i, 1);
@@ -360,10 +297,20 @@ class BitochiBlocksView extends WatchUi.View {
 
     function doHardDrop() {
         if (_gs != TBS_PLAY) { return; }
-        var dropped = 0;
-        while (tryMove(0, 1)) { dropped++; }
-        _score += dropped * 2;
+        var realType = _isPowerup ? 0 : _pieceType;
+        while (!collides(realType, _pieceRot, _pieceX, _pieceY + 1)) {
+            _pieceY++;
+            _score += 2;
+        }
         lockPiece();
+    }
+
+    function doMoveLeft() {
+        if (_gs == TBS_PLAY) { tryMove(-1, 0); }
+    }
+
+    function doMoveRight() {
+        if (_gs == TBS_PLAY) { tryMove(1, 0); }
     }
 
     function doAction() {
@@ -377,9 +324,15 @@ class BitochiBlocksView extends WatchUi.View {
         else if (_gs == TBS_OVER) { _gs = TBS_MENU; }
     }
 
+    function doTap(tx, ty) {
+        if (_gs == TBS_MENU) { startGame(); return; }
+        if (_gs == TBS_OVER) { _gs = TBS_MENU; return; }
+        if (_gs == TBS_PLAY) { doRotate(); }
+    }
+
     function isPlaying() { return _gs == TBS_PLAY; }
 
-    // ── Locking + line clear ──────────────────────────────────────────────────
+    // ── Locking + line clear ────────────────────────────────────────────────
 
     hidden function lockPiece() {
         if (_isPowerup) {
@@ -397,7 +350,6 @@ class BitochiBlocksView extends WatchUi.View {
             }
         }
 
-        // Check for full rows
         var numCleared = 0;
         for (var i = 0; i < 4; i++) { _clearRows[i] = -1; }
         for (var r = 0; r < TB_ROWS; r++) {
@@ -418,7 +370,6 @@ class BitochiBlocksView extends WatchUi.View {
             _score += pts;
             _linesCleared += numCleared;
 
-            // Level up every 10 lines
             var newLevel = 1 + _linesCleared / 10;
             if (newLevel > _level) {
                 _level = newLevel;
@@ -437,29 +388,23 @@ class BitochiBlocksView extends WatchUi.View {
             _combo = 0;
         }
 
-        // Check game over
         for (var c = 0; c < TB_COLS; c++) {
-            if (_board[c] != 0) {
-                endGame(); return;
-            }
+            if (_board[c] != 0) { endGame(); return; }
         }
 
         spawnPiece();
     }
 
     hidden function finishClear() {
-        // Remove cleared rows from top to bottom order
         for (var k = 0; k < 4; k++) {
             var r = _clearRows[k];
             if (r < 0) { continue; }
-            // Shift everything above down
             for (var row = r; row > 0; row--) {
                 for (var col = 0; col < TB_COLS; col++) {
                     _board[row * TB_COLS + col] = _board[(row - 1) * TB_COLS + col];
                 }
             }
             for (var col = 0; col < TB_COLS; col++) { _board[col] = 0; }
-            // Adjust remaining clear row indices
             for (var j = k + 1; j < 4; j++) {
                 if (_clearRows[j] > r) { _clearRows[j]--; }
             }
@@ -468,12 +413,11 @@ class BitochiBlocksView extends WatchUi.View {
         spawnPiece();
     }
 
-    // ── Power-up activation ───────────────────────────────────────────────────
+    // ── Power-up activation ─────────────────────────────────────────────────
 
     hidden function activatePowerup(puType) {
         doVibe(1);
         if (puType == TB_PU_BOMB) {
-            // Clear 3×3 around landing position
             for (var dr = -1; dr <= 1; dr++) {
                 for (var dc = -1; dc <= 1; dc++) {
                     var br = _pieceY + dr; var bc = _pieceX + dc;
@@ -487,21 +431,17 @@ class BitochiBlocksView extends WatchUi.View {
             }
             startShake(5);
         } else if (puType == TB_PU_LASER) {
-            // Clear entire column
             for (var r = 0; r < TB_ROWS; r++) {
                 if (_board[r * TB_COLS + _pieceX] != 0) {
                     spawnCellParticle(_pieceX, r, 0xFF2299);
                     _board[r * TB_COLS + _pieceX] = 0;
                 }
             }
-            _flashColor = 0xFF44AA;
-            _flashTick = 6;
+            _flashColor = 0xFF44AA; _flashTick = 6;
         } else if (puType == TB_PU_FREEZE) {
             _freezeTicks = 80;
-            _flashColor = 0x44CCFF;
-            _flashTick = 5;
+            _flashColor = 0x44CCFF; _flashTick = 5;
         } else if (puType == TB_PU_SMASH) {
-            // Destroy bottom 2 rows
             for (var r = TB_ROWS - 2; r < TB_ROWS; r++) {
                 for (var c = 0; c < TB_COLS; c++) {
                     if (_board[r * TB_COLS + c] != 0) {
@@ -510,10 +450,8 @@ class BitochiBlocksView extends WatchUi.View {
                     }
                 }
             }
-            startShake(6);
-            _score += 50 * _level;
+            startShake(6); _score += 50 * _level;
         } else if (puType == TB_PU_COLOR) {
-            // Find color at landing pos and clear all of same color
             var target = (_board[_pieceY * TB_COLS + _pieceX] > 0)
                 ? _board[_pieceY * TB_COLS + _pieceX]
                 : 1 + (Math.rand() % TB_NUM_PIECES).toNumber();
@@ -532,17 +470,16 @@ class BitochiBlocksView extends WatchUi.View {
         }
     }
 
-    // ── Spawn logic ───────────────────────────────────────────────────────────
+    // ── Spawn logic ─────────────────────────────────────────────────────────
 
     hidden function spawnPiece() {
         _pieceType = _nextType;
-        _isPowerup  = _nextIsPu;
+        _isPowerup = _nextIsPu;
         _pieceRot  = 0;
         _pieceX    = TB_COLS / 2;
         _pieceY    = 0;
         _fallCount = 0;
 
-        // Pick next — 15% chance of power-up after level 2
         var puChance = (_level >= 2) ? 15 : 0;
         if ((Math.rand() % 100).toNumber() < puChance) {
             _nextIsPu  = true;
@@ -552,7 +489,6 @@ class BitochiBlocksView extends WatchUi.View {
             _nextType  = randPiece();
         }
 
-        // Immediate game-over check
         if (collides(_isPowerup ? 0 : _pieceType, _pieceRot, _pieceX, _pieceY)) {
             endGame();
         }
@@ -567,19 +503,20 @@ class BitochiBlocksView extends WatchUi.View {
         doVibe(2);
     }
 
-    // ── Particles ─────────────────────────────────────────────────────────────
+    // ── Particles ───────────────────────────────────────────────────────────
 
     hidden function spawnCellParticle(col, row, color) {
         var px = _boardX + col * _cellW + _cellW / 2 + _shakeX;
         var py = _boardY + row * _cellH + _cellH / 2 + _shakeY;
+        var spdScale = _cellH.toFloat() / 12.0;
         for (var i = 0; i < TB_PART; i++) {
             if (_prtLife[i] == 0) {
                 _prtX[i] = px.toFloat();
                 _prtY[i] = py.toFloat();
                 var ang = (Math.rand() % 628).toFloat() / 100.0;
-                var spd = 0.6 + (Math.rand() % 16).toFloat() * 0.1;
+                var spd = (0.6 + (Math.rand() % 16).toFloat() * 0.1) * spdScale;
                 _prtVx[i] = Math.cos(ang) * spd;
-                _prtVy[i] = Math.sin(ang) * spd - 1.0;
+                _prtVy[i] = Math.sin(ang) * spd - spdScale;
                 _prtLife[i] = 7 + (Math.rand() % 6).toNumber();
                 _prtCol[i] = color;
                 return;
@@ -604,14 +541,12 @@ class BitochiBlocksView extends WatchUi.View {
                 _prtLife[i]--;
                 _prtX[i] = _prtX[i] + _prtVx[i];
                 _prtY[i] = _prtY[i] + _prtVy[i];
-                _prtVy[i] = _prtVy[i] + 0.22;
+                _prtVy[i] = _prtVy[i] + _prtGrav;
             }
         }
     }
 
-    hidden function startShake(dur) {
-        _shakeTick = dur;
-    }
+    hidden function startShake(dur) { _shakeTick = dur; }
 
     hidden function doVibe(pat) {
         if (Toybox has :Attention) {
@@ -622,31 +557,32 @@ class BitochiBlocksView extends WatchUi.View {
         }
     }
 
-    // ── Rendering ─────────────────────────────────────────────────────────────
+    // ── Rendering ───────────────────────────────────────────────────────────
 
     function onUpdate(dc) {
         if (_w == 0) { _w = dc.getWidth(); _h = dc.getHeight(); setupBoard(); }
 
-        if (_gs == TBS_MENU)     { drawMenu(dc); }
-        else if (_gs == TBS_PLAY){ drawGame(dc); }
-        else                     { drawOver(dc); }
+        if (_gs == TBS_MENU)      { drawMenu(dc); }
+        else if (_gs == TBS_PLAY) { drawGame(dc); }
+        else                      { drawOver(dc); }
     }
-
-    // ── Menu ─────────────────────────────────────────────────────────────────
 
     hidden function drawMenu(dc) {
         dc.setColor(0x07101C, 0x07101C); dc.clear();
 
-        // Animated falling-blocks deco
         var t = _wobble;
         var colors = [0x00EEFF, 0xFFDD00, 0xCC44FF, 0x44FF44, 0xFF3333, 0x4477FF, 0xFF8800];
+        var ds = _decoSz;
+        var dh = ds / 2;
         for (var i = 0; i < 7; i++) {
             var bx = _w * (10 + i * 12) / 100;
-            var by = (_h * 18 / 100 + (Math.sin(t + i.toFloat() * 0.9) * 14.0).toNumber()).toNumber();
+            var by = (_h * 18 / 100 + (Math.sin(t + i.toFloat() * 0.9) * (_h * 35 / 1000).toFloat()).toNumber()).toNumber();
             dc.setColor(colors[i], Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(bx - 5, by - 5, 11, 11, 2);
+            dc.fillRoundedRectangle(bx - dh, by - dh, ds, ds, 2);
+            var hl = ds / 4;
+            if (hl < 2) { hl = 2; }
             dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(bx - 2, by - 2, 3, 3);
+            dc.fillRectangle(bx - dh + 2, by - dh + 2, hl, hl);
         }
 
         dc.setColor(0x44AAFF, Graphics.COLOR_TRANSPARENT);
@@ -654,10 +590,9 @@ class BitochiBlocksView extends WatchUi.View {
         dc.setColor(0x224466, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w / 2, _h * 52 / 100, Graphics.FONT_XTINY, "BITOCHI GAMES", Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Controls hint (centered — safe on all round screens)
         dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 60 / 100, Graphics.FONT_XTINY, "Tilt: move  |  Tap: rotate", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(_w / 2, _h * 70 / 100, Graphics.FONT_XTINY, "Hold: drop", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 60 / 100, Graphics.FONT_XTINY, "L/R: move  Mid: rotate", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 70 / 100, Graphics.FONT_XTINY, "Bottom: drop", Graphics.TEXT_JUSTIFY_CENTER);
 
         if (_best > 0) {
             dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
@@ -668,14 +603,11 @@ class BitochiBlocksView extends WatchUi.View {
         dc.drawText(_w / 2, _h * 89 / 100, Graphics.FONT_XTINY, "Tap to play!", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
-    // ── Game screen ──────────────────────────────────────────────────────────
-
     hidden function drawGame(dc) {
         dc.setColor(0x060F1A, 0x060F1A); dc.clear();
 
         var ox = _shakeX; var oy = _shakeY;
 
-        // Flash overlay
         if (_flashTick > 0) {
             dc.setColor(_flashColor, Graphics.COLOR_TRANSPARENT);
             dc.fillRectangle(0, 0, _w, _h);
@@ -683,19 +615,16 @@ class BitochiBlocksView extends WatchUi.View {
             dc.fillRectangle(1, 1, _w - 2, _h - 2);
         }
 
-        // Board background + border
         var bx = _boardX + ox; var by = _boardY + oy;
         var bw = TB_COLS * _cellW; var bh = TB_ROWS * _cellH;
         dc.setColor(0x0A1A28, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(bx, by, bw, bh);
 
-        // Freeze overlay
         if (_freezeTicks > 0) {
             dc.setColor(0x1A4466, Graphics.COLOR_TRANSPARENT);
             dc.fillRectangle(bx, by, bw, bh);
         }
 
-        // Grid lines (very faint)
         dc.setColor(0x0D1E2E, Graphics.COLOR_TRANSPARENT);
         for (var c = 0; c <= TB_COLS; c++) {
             dc.drawLine(bx + c * _cellW, by, bx + c * _cellW, by + bh);
@@ -704,9 +633,7 @@ class BitochiBlocksView extends WatchUi.View {
             dc.drawLine(bx, by + r * _cellH, bx + bw, by + r * _cellH);
         }
 
-        // Draw locked cells
         for (var r = 0; r < TB_ROWS; r++) {
-            // Flashing clear-row animation
             var isClearRow = false;
             if (_clearAnim > 0) {
                 for (var k = 0; k < 4; k++) {
@@ -722,42 +649,31 @@ class BitochiBlocksView extends WatchUi.View {
             }
         }
 
-        // Ghost piece (landing preview)
-        if (!_isPowerup) {
-            drawGhost(dc, ox, oy);
-        }
-
-        // Active piece
+        if (!_isPowerup) { drawGhost(dc, ox, oy); }
         drawActivePiece(dc, ox, oy);
 
-        // Particles
         for (var i = 0; i < TB_PART; i++) {
             if (_prtLife[i] > 0) {
                 dc.setColor(_prtCol[i], Graphics.COLOR_TRANSPARENT);
-                dc.fillRectangle(_prtX[i].toNumber(), _prtY[i].toNumber(), 2, 2);
+                dc.fillRectangle(_prtX[i].toNumber(), _prtY[i].toNumber(), _prtSz, _prtSz);
             }
         }
 
-        // Board border
         var borderC = _freezeTicks > 0 ? 0x44CCFF :
                       (_flashTick > 0  ? _flashColor : 0x1A3A5A);
         dc.setColor(borderC, Graphics.COLOR_TRANSPARENT);
         dc.drawRectangle(bx - 1, by - 1, bw + 2, bh + 2);
 
-        // HUD panel
         drawHUD(dc, ox, oy);
     }
 
     hidden function drawCell(dc, px, py, color) {
         var cw = _cellW; var ch = _cellH;
-        // Fill
         dc.setColor(color, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(px + 1, py + 1, cw - 2, ch - 2);
-        // Bright top-left highlight (neon glow effect)
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
         dc.drawLine(px + 1, py + 1, px + cw - 2, py + 1);
         dc.drawLine(px + 1, py + 1, px + 1, py + ch - 2);
-        // Dark bottom-right shadow
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
         dc.drawLine(px + 1, py + ch - 2, px + cw - 2, py + ch - 2);
         dc.drawLine(px + cw - 2, py + 1, px + cw - 2, py + ch - 2);
@@ -767,15 +683,13 @@ class BitochiBlocksView extends WatchUi.View {
         var gy = _pieceY;
         while (!collides(_pieceType, _pieceRot, _pieceX, gy + 1)) { gy++; }
         if (gy == _pieceY) { return; }
-        var gc = _pieceColors[_pieceType];
-        dc.setColor(gc & 0x444444, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(_pieceColors[_pieceType] & 0x444444, Graphics.COLOR_TRANSPARENT);
         for (var i = 0; i < 4; i++) {
             var cc = _pieceX + getCell(_pieceType, _pieceRot, i, 0);
             var cr = gy + getCell(_pieceType, _pieceRot, i, 1);
             if (cr >= 0 && cr < TB_ROWS) {
-                var px2 = _boardX + ox + cc * _cellW;
-                var py2 = _boardY + oy + cr * _cellH;
-                dc.drawRectangle(px2 + 1, py2 + 1, _cellW - 2, _cellH - 2);
+                dc.drawRectangle(_boardX + ox + cc * _cellW + 1, _boardY + oy + cr * _cellH + 1,
+                    _cellW - 2, _cellH - 2);
             }
         }
     }
@@ -783,23 +697,20 @@ class BitochiBlocksView extends WatchUi.View {
     hidden function drawActivePiece(dc, ox, oy) {
         var col; var pType;
         if (_isPowerup) {
-            col = puColor(_pieceType);
-            pType = 0;  // single-cell: use I-shape first cell
+            col = puColor(_pieceType); pType = 0;
         } else {
-            col = _pieceColors[_pieceType];
-            pType = _pieceType;
+            col = _pieceColors[_pieceType]; pType = _pieceType;
         }
 
         if (_isPowerup) {
-            // Power-up: animated single pulsing cell with symbol
             var blink = (_tick % 8 < 4) ? 1 : 0;
             var px2 = _boardX + ox + _pieceX * _cellW;
             var py2 = _boardY + oy + _pieceY * _cellH;
             dc.setColor(col, Graphics.COLOR_TRANSPARENT);
             dc.fillRoundedRectangle(px2, py2, _cellW + blink, _cellH + blink, 2);
             dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(px2 + _cellW / 2, py2 + _cellH / 2 - 6, Graphics.FONT_XTINY,
-                puSymbol(_pieceType), Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(px2 + _cellW / 2, py2 + _cellH / 2 - _cellH * 40 / 100,
+                Graphics.FONT_XTINY, puSymbol(_pieceType), Graphics.TEXT_JUSTIFY_CENTER);
         } else {
             for (var i = 0; i < 4; i++) {
                 var cc = _pieceX + getCell(pType, _pieceRot, i, 0);
@@ -811,61 +722,53 @@ class BitochiBlocksView extends WatchUi.View {
         }
     }
 
-    // ── HUD panel ─────────────────────────────────────────────────────────────
-    // Top strip (22px): Score | Lv | Lines
-    // Right panel (always visible, guaranteed to fit by setupBoard):
-    //   NXT label → next piece preview → level progress bar → combo/freeze
+    // ── HUD panel ───────────────────────────────────────────────────────────
 
     hidden function drawHUD(dc, ox, oy) {
-        // ── Top bar: score + level, both centred at screen midpoint ──────────────
-        // At y≈10 the safe zone is ±50px from centre — wide enough for all values.
         dc.setColor(0x0A1A2A, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, 0, _w, _boardY);
 
+        var topTextY = _boardY * 30 / 100;
         dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, 10, Graphics.FONT_XTINY, "Lv" + _level, Graphics.TEXT_JUSTIFY_RIGHT);
+        dc.drawText(_w / 2, topTextY, Graphics.FONT_XTINY, "Lv" + _level, Graphics.TEXT_JUSTIFY_RIGHT);
         dc.setColor(0xDDEEFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2 + 3, 10, Graphics.FONT_XTINY, "" + _score, Graphics.TEXT_JUSTIFY_LEFT);
+        dc.drawText(_w / 2 + 3, topTextY, Graphics.FONT_XTINY, "" + _score, Graphics.TEXT_JUSTIFY_LEFT);
 
-        // ── Right panel ───────────────────────────────────────────────────────────
-        // Content starts at boardY+8 (y≈36) where the round screen is already wide
-        // enough that even 4-cell-wide content clears the circle edge.
         var px  = _panelX;
         var pw  = 4 * _cellW;
         var py  = _boardY + oy;
 
-        // "NXT" label
+        var gap = _cellH * 60 / 100;
+        if (gap < 4) { gap = 4; }
+
         dc.setColor(0x3A5870, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(px + pw / 2, py + 8, Graphics.FONT_XTINY, "NXT", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(px + pw / 2, py + gap, Graphics.FONT_XTINY, "NXT", Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Next piece preview (full-size cells)
-        drawNextPreview(dc, px, py + 22);
+        var previewY = py + gap + _cellH + gap / 2;
+        drawNextPreview(dc, px, previewY);
 
-        // Lines-to-next-level progress bar
-        var barY     = py + 22 + _cellH * 2 + 6;
-        var barW     = pw;
+        var barY = previewY + _cellH * 2 + gap;
+        var barH = _cellH * 35 / 100;
+        if (barH < 3) { barH = 3; }
         var linesMod = _linesCleared % 10;
         dc.setColor(0x0E2030, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(px, barY, barW, 5);
+        dc.fillRectangle(px, barY, pw, barH);
         dc.setColor(0x2288CC, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(px, barY, barW * linesMod / 10, 5);
+        dc.fillRectangle(px, barY, pw * linesMod / 10, barH);
         dc.setColor(0x1A4060, Graphics.COLOR_TRANSPARENT);
-        dc.drawRectangle(px, barY, barW, 5);
+        dc.drawRectangle(px, barY, pw, barH);
 
-        // Lines + next-level hint
         dc.setColor(0x446677, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(px + pw / 2, barY + 7, Graphics.FONT_XTINY,
+        dc.drawText(px + pw / 2, barY + barH + 2, Graphics.FONT_XTINY,
             _linesCleared + "L >" + (_level + 1), Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Combo
-        var extraY = barY + 21;
+        var extraY = barY + barH + 2 + _cellH;
         if (_combo > 1) {
             dc.setColor((_tick % 6 < 3) ? 0xFFFF44 : 0xFFAA00, Graphics.COLOR_TRANSPARENT);
             dc.drawText(px + pw / 2, extraY, Graphics.FONT_XTINY,
                 "x" + _combo, Graphics.TEXT_JUSTIFY_CENTER);
-            extraY += 13;
+            extraY += _cellH;
         }
-        // Freeze
         if (_freezeTicks > 0) {
             dc.setColor(0x44CCFF, Graphics.COLOR_TRANSPARENT);
             dc.drawText(px + pw / 2, extraY, Graphics.FONT_XTINY,
@@ -879,8 +782,8 @@ class BitochiBlocksView extends WatchUi.View {
             dc.setColor(pc, Graphics.COLOR_TRANSPARENT);
             dc.fillRoundedRectangle(nx, ny, _cellW, _cellH, 2);
             dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(nx + _cellW / 2, ny + _cellH / 2 - 6, Graphics.FONT_XTINY,
-                puSymbol(_nextType), Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(nx + _cellW / 2, ny + _cellH / 2 - _cellH * 40 / 100,
+                Graphics.FONT_XTINY, puSymbol(_nextType), Graphics.TEXT_JUSTIFY_CENTER);
             return;
         }
         var previewCol = _pieceColors[_nextType];
@@ -894,8 +797,6 @@ class BitochiBlocksView extends WatchUi.View {
         }
     }
 
-    // ── Game over ────────────────────────────────────────────────────────────
-
     hidden function drawOver(dc) {
         dc.setColor(0x060F1A, 0x060F1A); dc.clear();
 
@@ -907,11 +808,13 @@ class BitochiBlocksView extends WatchUi.View {
         dc.setColor(0x446677, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w / 2, _h * 46 / 100, Graphics.FONT_XTINY, "SCORE", Graphics.TEXT_JUSTIFY_CENTER);
 
+        var bannerH = _h * 5 / 100;
+        if (bannerH < 14) { bannerH = 14; }
         if (_score >= _best && _score > 0) {
             dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(0, _h * 55 / 100 - 1, _w, 18);
+            dc.fillRectangle(0, _h * 55 / 100 - 1, _w, bannerH);
             dc.setColor((_tick % 8 < 4) ? 0xFFDD22 : 0xFF8800, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 55 / 100, Graphics.FONT_XTINY, "★ NEW BEST! ★", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_w / 2, _h * 55 / 100, Graphics.FONT_XTINY, "NEW BEST!", Graphics.TEXT_JUSTIFY_CENTER);
         } else if (_best > 0) {
             dc.setColor(0x446677, Graphics.COLOR_TRANSPARENT);
             dc.drawText(_w / 2, _h * 55 / 100, Graphics.FONT_XTINY, "Best: " + _best, Graphics.TEXT_JUSTIFY_CENTER);
@@ -924,8 +827,6 @@ class BitochiBlocksView extends WatchUi.View {
         dc.setColor((_tick % 12 < 6) ? 0x44AAFF : 0x2277CC, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w / 2, _h * 87 / 100, Graphics.FONT_XTINY, "Tap to continue", Graphics.TEXT_JUSTIFY_CENTER);
     }
-
-    // ── Power-up helpers ─────────────────────────────────────────────────────
 
     hidden function puColor(t) {
         if (t == TB_PU_BOMB)   { return 0xFF5500; }

@@ -1,0 +1,3558 @@
+[ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 1; @symbol_usingdef<0> = [Toybox,1,6,12]; @symbol_usingdef<1> = [Graphics,1,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 2; @symbol_usingdef<0> = [Toybox,2,6,12]; @symbol_usingdef<1> = [WatchUi,2,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 3; @symbol_usingdef<0> = [Toybox,3,6,12]; @symbol_usingdef<1> = [Timer,3,13,18]; ]
+using Toybox.Timer;
+[ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 4; @symbol_usingdef<0> = [Toybox,4,6,12]; @symbol_usingdef<1> = [System,4,13,19]; ]
+using Toybox.System;
+[ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 5; @symbol_usingdef<0> = [Toybox,5,6,12]; @symbol_usingdef<1> = [Application,5,13,24]; ]
+using Toybox.Application;
+[ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 7; ]
+enum {
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 7; @position = 7; @symbol_enumdec = [TS_MENU,7,7,14]; ]
+    TS_MENU,
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 7; @position = 16; @symbol_enumdec = [TS_ROUND,7,16,24]; ]
+    TS_ROUND,
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 7; @position = 26; @symbol_enumdec = [TS_LAST10,7,26,35]; ]
+    TS_LAST10,
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 7; @position = 37; @symbol_enumdec = [TS_REST,7,37,44]; ]
+    TS_REST,
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 7; @position = 46; @symbol_enumdec = [TS_PAUSED,7,46,55]; ]
+    TS_PAUSED,
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 7; @position = 57; @symbol_enumdec = [TS_DONE,7,57,64]; ]
+    TS_DONE
+}
+[ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 10; @position = 6; @symbol_constdef = [ROUND_PRESETS,10,6,19]; ]
+const ROUND_PRESETS;
+[ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 11; @position = 6; @symbol_constdef = [REST_PRESETS,11,6,18]; ]
+const REST_PRESETS;
+[ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 12; @position = 6; @symbol_constdef = [ROUNDS_PRESETS,12,6,20]; ]
+const ROUNDS_PRESETS;
+[ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 14; @symbol_classdef = [BitochiTimerView,14,6,22]; @symbol_extends<0> = [WatchUi,14,31,38]; @symbol_extends<1> = [View,14,39,43]; ]
+class BitochiTimerView extends WatchUi.View {
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 14; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 14; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 16; @position = 8; @symbol_vardef = [gameState,16,8,17]; ]
+    var gameState;
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 18; @position = 15; @symbol_vardef = [_w,18,15,17]; ]
+    protected
+    var _w;
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 18; @position = 30; @symbol_vardef = [_h,18,30,32]; ]
+    protected
+    var _h;
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 19; @position = 15; @symbol_vardef = [_timer,19,15,21]; ]
+    protected
+    var _timer;
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 20; @position = 15; @symbol_vardef = [_tick,20,15,20]; ]
+    protected
+    var _tick;
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 23; @position = 15; @symbol_vardef = [_roundSec,23,15,24]; ]
+    protected
+    var _roundSec;
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 24; @position = 15; @symbol_vardef = [_restSec,24,15,23]; ]
+    protected
+    var _restSec;
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 25; @position = 15; @symbol_vardef = [_totalRounds,25,15,27]; ]
+    protected
+    var _totalRounds;
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 28; @position = 15; @symbol_vardef = [_currentRound,28,15,28]; ]
+    protected
+    var _currentRound;
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 29; @position = 15; @symbol_vardef = [_remaining,29,15,25]; ]
+    protected
+    var _remaining;
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 30; @position = 15; @symbol_vardef = [_menuSel,30,15,23]; ]
+    protected
+    var _menuSel;
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 31; @position = 15; @symbol_vardef = [_pausedState,31,15,27]; ]
+    protected
+    var _pausedState;
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 32; @position = 15; @symbol_vardef = [_totalElapsed,32,15,28]; ]
+    protected
+    var _totalElapsed;
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 33; @position = 15; @symbol_vardef = [_menuLabels,33,15,26]; ]
+    protected
+    var _menuLabels;
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 35; @symbol_functiondef = [initialize,35,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_35_26_55_4_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 36 8 ]
+        symbol [ View %tmp.2 36 8 12 ];
+        %tmp.2 = getv ? :View;
+        symbol [ initialize %tmp.3 36 13 23 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 37 8 ]
+        [ "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_35_26_55_4_start" "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_35_26_55_4_stop" ]
+        %ds.1 = local;
+        symbol [ ds %ds.1 37 12 14 ];
+        symbol [ System %tmp.4 37 17 23 ];
+        %tmp.4 = getm $.Toybox.System;
+        symbol [ getDeviceSettings %tmp.5 37 24 41 ];
+        %tmp.5 = getv function %tmp.4 :getDeviceSettings;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        lputv %ds.1 %tmp.6;
+        symbol [ ds %ds.1 37 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 38 8 ]
+        %tmp.7 = lgetv %ds.1;
+        symbol [ ds %tmp.7 38 13 15 ];
+        symbol [ screenWidth %tmp.8 38 16 27 ];
+        %tmp.8 = getv %tmp.7 :screenWidth;
+        symbol [ _w ? 38 8 10 ];
+        putv self :_w %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 38 29 ]
+        %tmp.9 = lgetv %ds.1;
+        symbol [ ds %tmp.9 38 34 36 ];
+        symbol [ screenHeight %tmp.10 38 37 49 ];
+        %tmp.10 = getv %tmp.9 :screenHeight;
+        symbol [ _h ? 38 29 31 ];
+        putv self :_h %tmp.10;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 39 8 ]
+        %tmp.11 = 0;
+        symbol [ _tick ? 39 8 13 ];
+        putv self :_tick %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 40 8 ]
+        %tmp.12 = newa 3;
+        %tmp.13 = "ROUND";
+        %tmp.14 = dup %tmp.12;
+        %tmp.15 = aputv %tmp.14 0 %tmp.13;
+        %tmp.16 = "REST";
+        %tmp.17 = dup %tmp.15;
+        %tmp.18 = aputv %tmp.17 1 %tmp.16;
+        %tmp.19 = "ROUNDS";
+        %tmp.20 = dup %tmp.18;
+        %tmp.21 = aputv %tmp.20 2 %tmp.19;
+        symbol [ _menuLabels ? 40 8 19 ];
+        putv self :_menuLabels %tmp.21;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 42 8 ]
+        [ "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_35_26_55_4_start" "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_35_26_55_4_stop" ]
+        %rs.2 = local;
+        symbol [ rs %rs.2 42 12 14 ];
+        symbol [ Application %tmp.22 42 17 28 ];
+        %tmp.22 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.23 42 29 36 ];
+        %tmp.23 = getv %tmp.22 :Storage;
+        symbol [ getValue %tmp.24 42 37 45 ];
+        %tmp.24 = getv function %tmp.23 :getValue;
+        %tmp.25 = "tRound";
+        %tmp.26 = invoke %tmp.23 %tmp.24(%tmp.25);
+        lputv %rs.2 %tmp.26;
+        symbol [ rs %rs.2 42 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 43 8 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_43_20_43_40_begin:
+        %tmp.27 = lgetv %rs.2;
+        symbol [ rs %tmp.27 43 21 23 ];
+        %tmp.28 = null;
+        %tmp.29 = ne %tmp.27 %tmp.28;
+        bf %tmp.29 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_43_20_43_40_else_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_43_20_43_40_true:
+        %tmp.30 = lgetv %rs.2;
+        symbol [ rs %tmp.30 43 35 37 ];
+        %tmp.31 = as %tmp.30 { (!Null) };
+        push %tmp.31;
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_43_20_43_40_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_43_20_43_40_else_false:
+        %tmp.32 = 300;
+        push %tmp.32;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_43_20_43_40_end:
+        %tmp.33 = phi [%tmp.29 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_43_20_43_40_begin] [%tmp.31 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_43_20_43_40_true] [%tmp.32 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_43_20_43_40_else_false] [%tmp.33 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_43_20_43_40_end];
+        symbol [ _roundSec ? 43 8 17 ];
+        putv self :_roundSec %tmp.33;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 44 8 ]
+        [ "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_35_26_55_4_start" "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_35_26_55_4_stop" ]
+        %re.3 = local;
+        symbol [ re %re.3 44 12 14 ];
+        symbol [ Application %tmp.34 44 17 28 ];
+        %tmp.34 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.35 44 29 36 ];
+        %tmp.35 = getv %tmp.34 :Storage;
+        symbol [ getValue %tmp.36 44 37 45 ];
+        %tmp.36 = getv function %tmp.35 :getValue;
+        %tmp.37 = "tRest";
+        %tmp.38 = invoke %tmp.35 %tmp.36(%tmp.37);
+        lputv %re.3 %tmp.38;
+        symbol [ re %re.3 44 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 45 8 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_45_19_45_39_begin:
+        %tmp.39 = lgetv %re.3;
+        symbol [ re %tmp.39 45 20 22 ];
+        %tmp.40 = null;
+        %tmp.41 = ne %tmp.39 %tmp.40;
+        bf %tmp.41 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_45_19_45_39_else_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_45_19_45_39_true:
+        %tmp.42 = lgetv %re.3;
+        symbol [ re %tmp.42 45 34 36 ];
+        %tmp.43 = as %tmp.42 { (!Null) };
+        push %tmp.43;
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_45_19_45_39_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_45_19_45_39_else_false:
+        %tmp.44 = 60;
+        push %tmp.44;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_45_19_45_39_end:
+        %tmp.45 = phi [%tmp.41 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_45_19_45_39_begin] [%tmp.43 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_45_19_45_39_true] [%tmp.44 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_45_19_45_39_else_false] [%tmp.45 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_45_19_45_39_end];
+        symbol [ _restSec ? 45 8 16 ];
+        putv self :_restSec %tmp.45;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 46 8 ]
+        [ "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_35_26_55_4_start" "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_35_26_55_4_stop" ]
+        %tr.4 = local;
+        symbol [ tr %tr.4 46 12 14 ];
+        symbol [ Application %tmp.46 46 17 28 ];
+        %tmp.46 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.47 46 29 36 ];
+        %tmp.47 = getv %tmp.46 :Storage;
+        symbol [ getValue %tmp.48 46 37 45 ];
+        %tmp.48 = getv function %tmp.47 :getValue;
+        %tmp.49 = "tRounds";
+        %tmp.50 = invoke %tmp.47 %tmp.48(%tmp.49);
+        lputv %tr.4 %tmp.50;
+        symbol [ tr %tr.4 46 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 47 8 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_47_23_47_43_begin:
+        %tmp.51 = lgetv %tr.4;
+        symbol [ tr %tmp.51 47 24 26 ];
+        %tmp.52 = null;
+        %tmp.53 = ne %tmp.51 %tmp.52;
+        bf %tmp.53 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_47_23_47_43_else_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_47_23_47_43_true:
+        %tmp.54 = lgetv %tr.4;
+        symbol [ tr %tmp.54 47 38 40 ];
+        %tmp.55 = as %tmp.54 { (!Null) };
+        push %tmp.55;
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_47_23_47_43_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_47_23_47_43_else_false:
+        %tmp.56 = 5;
+        push %tmp.56;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_47_23_47_43_end:
+        %tmp.57 = phi [%tmp.53 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_47_23_47_43_begin] [%tmp.55 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_47_23_47_43_true] [%tmp.56 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_47_23_47_43_else_false] [%tmp.57 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_47_23_47_43_end];
+        symbol [ _totalRounds ? 47 8 20 ];
+        putv self :_totalRounds %tmp.57;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 49 8 ]
+        %tmp.58 = 1;
+        symbol [ _currentRound ? 49 8 21 ];
+        putv self :_currentRound %tmp.58;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 50 8 ]
+        symbol [ _roundSec %tmp.60 50 21 30 ];
+        %tmp.60 = getv ? :_roundSec;
+        symbol [ _remaining ? 50 8 18 ];
+        putv self :_remaining %tmp.60;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 51 8 ]
+        %tmp.61 = 3;
+        symbol [ _menuSel ? 51 8 16 ];
+        putv self :_menuSel %tmp.61;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 52 8 ]
+        symbol [ TS_ROUND %tmp.63 52 23 31 ];
+        %tmp.63 = getv ? :TS_ROUND;
+        symbol [ _pausedState ? 52 8 20 ];
+        putv self :_pausedState %tmp.63;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 53 8 ]
+        %tmp.64 = 0;
+        symbol [ _totalElapsed ? 53 8 21 ];
+        putv self :_totalElapsed %tmp.64;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 54 8 ]
+        symbol [ TS_MENU %tmp.66 54 20 27 ];
+        %tmp.66 = getv ? :TS_MENU;
+        symbol [ gameState ? 54 8 17 ];
+        putv self :gameState %tmp.66;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_35_26_55_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 57; @symbol_functiondef = [onShow,57,13,19]; ]
+    function onShow() {
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_57_22_60_4_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 58 8 ]
+        symbol [ Timer %tmp.3 58 21 26 ];
+        %tmp.3 = getm $.Toybox.Timer;
+        symbol [ Timer %tmp.4 58 27 32 ];
+        %tmp.4 = getv function ? %tmp.3 :Timer;
+        %tmp.1 = newc %tmp.4 ();
+        symbol [ _timer ? 58 8 14 ];
+        putv self :_timer %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 59 8 ]
+        symbol [ _timer %tmp.6 59 8 14 ];
+        %tmp.6 = getv ? :_timer;
+        symbol [ start %tmp.7 59 15 20 ];
+        %tmp.7 = getv function %tmp.6 :start;
+        %tmp.8 = self;
+        symbol [ method %tmp.9 59 21 27 ];
+        %tmp.9 = getv function %tmp.8 :method;
+        %tmp.11 = const :onTick;
+        symbol [ onTick %tmp.11 59 29 35 const ];
+        %tmp.12 = invoke %tmp.8 %tmp.9(%tmp.11);
+        %tmp.13 = 1000;
+        %tmp.14 = true;
+        invoke %tmp.6 %tmp.7(%tmp.12, %tmp.13, %tmp.14);
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_57_22_60_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 62; @symbol_functiondef = [onHide,62,13,19]; ]
+    function onHide() {
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_62_22_64_4_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 63 8 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_63_8_63_60_if_stmt:
+        symbol [ _timer %tmp.2 63 12 18 ];
+        %tmp.2 = getv ? :_timer;
+        %tmp.3 = null;
+        %tmp.4 = ne %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_63_8_63_60_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_63_8_63_60_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_63_28_63_60_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 63 30 ]
+        symbol [ _timer %tmp.6 63 30 36 ];
+        %tmp.6 = getv ? :_timer;
+        %tmp.7 = as %tmp.6 { (!Null) };
+        symbol [ stop %tmp.8 63 37 41 ];
+        %tmp.8 = getv function %tmp.7 :stop;
+        invoke %tmp.7 %tmp.8();
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 63 45 ]
+        %tmp.9 = null;
+        symbol [ _timer ? 63 45 51 ];
+        putv self :_timer %tmp.9;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_63_28_63_60_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_63_8_63_60_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_63_8_63_60_if_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_62_22_64_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 66; @symbol_functiondef = [onTick,66,13,19]; ]
+    function onTick() as Void {
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_66_30_104_4_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 67 8 ]
+        symbol [ _tick %tmp.3 67 8 13 ];
+        %tmp.3 = getv ? :_tick;
+        %tmp.4 = add %tmp.3 1;
+        symbol [ _tick ? 67 8 13 ];
+        putv self :_tick dup %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 69 8 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_69_8_101_8_if_stmt:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_69_12_69_50_begin:
+        symbol [ gameState %tmp.6 69 12 21 ];
+        %tmp.6 = getv ? :gameState;
+        symbol [ TS_ROUND %tmp.8 69 25 33 ];
+        %tmp.8 = getv ? :TS_ROUND;
+        %tmp.9 = eq %tmp.6 %tmp.8;
+        bt %tmp.9 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_69_8_101_8_if_true;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_69_37_69_50_false:
+        symbol [ gameState %tmp.11 69 37 46 ];
+        %tmp.11 = getv ? :gameState;
+        symbol [ TS_LAST10 %tmp.13 69 50 59 ];
+        %tmp.13 = getv ? :TS_LAST10;
+        %tmp.14 = eq %tmp.11 %tmp.13;
+        push %tmp.14;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_69_37_69_50_end:
+        %tmp.15 = phi [%tmp.9 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_69_12_69_50_begin] [%tmp.14 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_69_37_69_50_false] [%tmp.15 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_69_37_69_50_end];
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_69_8_101_8_if_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_69_8_101_8_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_69_61_91_8_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 70 12 ]
+        symbol [ _remaining %tmp.18 70 12 22 ];
+        %tmp.18 = getv ? :_remaining;
+        %tmp.19 = sub %tmp.18 1;
+        symbol [ _remaining ? 70 12 22 ];
+        putv self :_remaining dup %tmp.19;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 71 12 ]
+        symbol [ _totalElapsed %tmp.22 71 12 25 ];
+        %tmp.22 = getv ? :_totalElapsed;
+        %tmp.23 = add %tmp.22 1;
+        symbol [ _totalElapsed ? 71 12 25 ];
+        putv self :_totalElapsed dup %tmp.23;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 73 12 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_73_12_78_12_if_stmt:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_73_16_73_67_begin:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_73_16_73_49_begin:
+        symbol [ _remaining %tmp.25 73 16 26 ];
+        %tmp.25 = getv ? :_remaining;
+        %tmp.26 = 10;
+        %tmp.27 = lte %tmp.25 %tmp.26;
+        bf %tmp.27 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_73_12_78_12_if_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_73_36_73_49_true:
+        symbol [ _remaining %tmp.29 73 36 46 ];
+        %tmp.29 = getv ? :_remaining;
+        %tmp.30 = 0;
+        %tmp.31 = gt %tmp.29 %tmp.30;
+        push %tmp.31;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_73_36_73_49_end:
+        %tmp.32 = phi [%tmp.27 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_73_16_73_49_begin] [%tmp.31 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_73_36_73_49_true] [%tmp.32 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_73_36_73_49_end];
+        bf %tmp.32 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_73_12_78_12_if_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_73_54_73_67_true:
+        symbol [ gameState %tmp.34 73 54 63 ];
+        %tmp.34 = getv ? :gameState;
+        symbol [ TS_ROUND %tmp.36 73 67 75 ];
+        %tmp.36 = getv ? :TS_ROUND;
+        %tmp.37 = eq %tmp.34 %tmp.36;
+        push %tmp.37;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_73_54_73_67_end:
+        %tmp.38 = phi [%tmp.32 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_73_16_73_67_begin] [%tmp.37 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_73_54_73_67_true] [%tmp.38 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_73_54_73_67_end];
+        bf %tmp.38 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_73_12_78_12_if_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_73_12_78_12_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_73_77_76_12_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 74 16 ]
+        symbol [ TS_LAST10 %tmp.40 74 28 37 ];
+        %tmp.40 = getv ? :TS_LAST10;
+        symbol [ gameState ? 74 16 25 ];
+        putv self :gameState %tmp.40;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 75 16 ]
+        %tmp.41 = self;
+        symbol [ vibeWarning %tmp.42 75 16 27 ];
+        %tmp.42 = getv function %tmp.41 :vibeWarning;
+        invoke %tmp.41 %tmp.42();
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_73_77_76_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_73_12_78_12_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_73_12_78_12_if_false:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 76 19 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_76_19_78_12_if_stmt:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_76_23_76_80_begin:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_76_23_76_62_begin:
+        symbol [ gameState %tmp.44 76 23 32 ];
+        %tmp.44 = getv ? :gameState;
+        symbol [ TS_LAST10 %tmp.46 76 36 45 ];
+        %tmp.46 = getv ? :TS_LAST10;
+        %tmp.47 = eq %tmp.44 %tmp.46;
+        bf %tmp.47 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_76_19_78_12_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_76_49_76_62_true:
+        symbol [ _remaining %tmp.49 76 49 59 ];
+        %tmp.49 = getv ? :_remaining;
+        %tmp.50 = 0;
+        %tmp.51 = gt %tmp.49 %tmp.50;
+        push %tmp.51;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_76_49_76_62_end:
+        %tmp.52 = phi [%tmp.47 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_76_23_76_62_begin] [%tmp.51 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_76_49_76_62_true] [%tmp.52 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_76_49_76_62_end];
+        bf %tmp.52 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_76_19_78_12_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_76_67_76_80_true:
+        symbol [ _remaining %tmp.54 76 67 77 ];
+        %tmp.54 = getv ? :_remaining;
+        %tmp.55 = 10;
+        %tmp.56 = lt %tmp.54 %tmp.55;
+        push %tmp.56;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_76_67_76_80_end:
+        %tmp.57 = phi [%tmp.52 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_76_23_76_80_begin] [%tmp.56 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_76_67_76_80_true] [%tmp.57 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_76_67_76_80_end];
+        bf %tmp.57 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_76_19_78_12_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_76_19_78_12_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_76_84_78_12_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 77 16 ]
+        %tmp.58 = self;
+        symbol [ vibeTick %tmp.59 77 16 24 ];
+        %tmp.59 = getv function %tmp.58 :vibeTick;
+        invoke %tmp.58 %tmp.59();
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_76_84_78_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_76_19_78_12_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_76_19_78_12_if_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_73_12_78_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 80 12 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_80_12_90_12_if_stmt:
+        symbol [ _remaining %tmp.61 80 16 26 ];
+        %tmp.61 = getv ? :_remaining;
+        %tmp.62 = 0;
+        %tmp.63 = lte %tmp.61 %tmp.62;
+        bf %tmp.63 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_80_12_90_12_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_80_12_90_12_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_80_33_90_12_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 81 16 ]
+        %tmp.64 = self;
+        symbol [ vibeRoundEnd %tmp.65 81 16 28 ];
+        %tmp.65 = getv function %tmp.64 :vibeRoundEnd;
+        invoke %tmp.64 %tmp.65();
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 82 16 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_82_16_89_16_if_stmt:
+        symbol [ _currentRound %tmp.67 82 20 33 ];
+        %tmp.67 = getv ? :_currentRound;
+        symbol [ _totalRounds %tmp.69 82 37 49 ];
+        %tmp.69 = getv ? :_totalRounds;
+        %tmp.70 = gte %tmp.67 %tmp.69;
+        bf %tmp.70 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_82_16_89_16_if_else_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_82_16_89_16_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_82_51_85_16_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 83 20 ]
+        symbol [ TS_DONE %tmp.72 83 32 39 ];
+        %tmp.72 = getv ? :TS_DONE;
+        symbol [ gameState ? 83 20 29 ];
+        putv self :gameState %tmp.72;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 84 20 ]
+        %tmp.73 = self;
+        symbol [ vibeDone %tmp.74 84 20 28 ];
+        %tmp.74 = getv function %tmp.73 :vibeDone;
+        invoke %tmp.73 %tmp.74();
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_82_51_85_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_82_16_89_16_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_82_16_89_16_if_else_false:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_85_23_89_16_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 86 20 ]
+        symbol [ _restSec %tmp.76 86 33 41 ];
+        %tmp.76 = getv ? :_restSec;
+        symbol [ _remaining ? 86 20 30 ];
+        putv self :_remaining %tmp.76;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 87 20 ]
+        symbol [ TS_REST %tmp.78 87 32 39 ];
+        %tmp.78 = getv ? :TS_REST;
+        symbol [ gameState ? 87 20 29 ];
+        putv self :gameState %tmp.78;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 88 20 ]
+        %tmp.79 = self;
+        symbol [ vibeRestStart %tmp.80 88 20 33 ];
+        %tmp.80 = getv function %tmp.79 :vibeRestStart;
+        invoke %tmp.79 %tmp.80();
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_85_23_89_16_stop:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_82_16_89_16_if_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_80_33_90_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_80_12_90_12_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_80_12_90_12_if_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_69_61_91_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_69_8_101_8_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_69_8_101_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 91 15 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_91_15_101_8_if_stmt:
+        symbol [ gameState %tmp.82 91 19 28 ];
+        %tmp.82 = getv ? :gameState;
+        symbol [ TS_REST %tmp.84 91 32 39 ];
+        %tmp.84 = getv ? :TS_REST;
+        %tmp.85 = eq %tmp.82 %tmp.84;
+        bf %tmp.85 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_91_15_101_8_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_91_15_101_8_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_91_41_101_8_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 92 12 ]
+        symbol [ _remaining %tmp.88 92 12 22 ];
+        %tmp.88 = getv ? :_remaining;
+        %tmp.89 = sub %tmp.88 1;
+        symbol [ _remaining ? 92 12 22 ];
+        putv self :_remaining dup %tmp.89;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 93 12 ]
+        symbol [ _totalElapsed %tmp.92 93 12 25 ];
+        %tmp.92 = getv ? :_totalElapsed;
+        %tmp.93 = add %tmp.92 1;
+        symbol [ _totalElapsed ? 93 12 25 ];
+        putv self :_totalElapsed dup %tmp.93;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 95 12 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_95_12_100_12_if_stmt:
+        symbol [ _remaining %tmp.95 95 16 26 ];
+        %tmp.95 = getv ? :_remaining;
+        %tmp.96 = 0;
+        %tmp.97 = lte %tmp.95 %tmp.96;
+        bf %tmp.97 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_95_12_100_12_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_95_12_100_12_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_95_33_100_12_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 96 16 ]
+        symbol [ _currentRound %tmp.100 96 16 29 ];
+        %tmp.100 = getv ? :_currentRound;
+        %tmp.101 = add %tmp.100 1;
+        symbol [ _currentRound ? 96 16 29 ];
+        putv self :_currentRound dup %tmp.101;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 97 16 ]
+        symbol [ _roundSec %tmp.103 97 29 38 ];
+        %tmp.103 = getv ? :_roundSec;
+        symbol [ _remaining ? 97 16 26 ];
+        putv self :_remaining %tmp.103;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 98 16 ]
+        symbol [ TS_ROUND %tmp.105 98 28 36 ];
+        %tmp.105 = getv ? :TS_ROUND;
+        symbol [ gameState ? 98 16 25 ];
+        putv self :gameState %tmp.105;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 99 16 ]
+        %tmp.106 = self;
+        symbol [ vibeRoundStart %tmp.107 99 16 30 ];
+        %tmp.107 = getv function %tmp.106 :vibeRoundStart;
+        invoke %tmp.106 %tmp.107();
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_95_33_100_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_95_12_100_12_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_95_12_100_12_if_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_91_41_101_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_91_15_101_8_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_91_15_101_8_if_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_69_8_101_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 103 8 ]
+        symbol [ WatchUi %tmp.108 103 8 15 ];
+        %tmp.108 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.109 103 16 29 ];
+        %tmp.109 = getv function %tmp.108 :requestUpdate;
+        invoke %tmp.108 %tmp.109();
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_66_30_104_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 108; @symbol_functiondef = [vibeRoundStart,108,20,34]; ]
+    protected
+    function vibeRoundStart() {
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_108_37_110_4_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 109 8 ]
+        %tmp.1 = self;
+        symbol [ doVibe %tmp.2 109 8 14 ];
+        %tmp.2 = getv function %tmp.1 :doVibe;
+        %tmp.3 = newa 1;
+        symbol [ Toybox %tmp.7 109 20 26 ];
+        %tmp.7 = getv ? :Toybox;
+        symbol [ Attention %tmp.8 109 27 36 ];
+        %tmp.8 = getv %tmp.7 :Attention;
+        symbol [ VibeProfile %tmp.9 109 37 48 ];
+        %tmp.9 = getv %tmp.8 :VibeProfile;
+        %tmp.10 = 100;
+        %tmp.11 = 600;
+        %tmp.4 = newc %tmp.9 (%tmp.10, %tmp.11);
+        %tmp.12 = dup %tmp.3;
+        %tmp.13 = aputv %tmp.12 0 %tmp.4;
+        invoke %tmp.1 %tmp.2(%tmp.13);
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_108_37_110_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 113; @symbol_functiondef = [vibeRoundEnd,113,20,32]; ]
+    protected
+    function vibeRoundEnd() {
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_113_35_115_4_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 114 8 ]
+        %tmp.1 = self;
+        symbol [ doVibe %tmp.2 114 8 14 ];
+        %tmp.2 = getv function %tmp.1 :doVibe;
+        %tmp.3 = newa 1;
+        symbol [ Toybox %tmp.7 114 20 26 ];
+        %tmp.7 = getv ? :Toybox;
+        symbol [ Attention %tmp.8 114 27 36 ];
+        %tmp.8 = getv %tmp.7 :Attention;
+        symbol [ VibeProfile %tmp.9 114 37 48 ];
+        %tmp.9 = getv %tmp.8 :VibeProfile;
+        %tmp.10 = 100;
+        %tmp.11 = 1000;
+        %tmp.4 = newc %tmp.9 (%tmp.10, %tmp.11);
+        %tmp.12 = dup %tmp.3;
+        %tmp.13 = aputv %tmp.12 0 %tmp.4;
+        invoke %tmp.1 %tmp.2(%tmp.13);
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_113_35_115_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 118; @symbol_functiondef = [vibeRestStart,118,20,33]; ]
+    protected
+    function vibeRestStart() {
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_118_36_124_4_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 119 8 ]
+        %tmp.1 = self;
+        symbol [ doVibe %tmp.2 119 8 14 ];
+        %tmp.2 = getv function %tmp.1 :doVibe;
+        %tmp.3 = newa 3;
+        symbol [ Toybox %tmp.7 120 16 22 ];
+        %tmp.7 = getv ? :Toybox;
+        symbol [ Attention %tmp.8 120 23 32 ];
+        %tmp.8 = getv %tmp.7 :Attention;
+        symbol [ VibeProfile %tmp.9 120 33 44 ];
+        %tmp.9 = getv %tmp.8 :VibeProfile;
+        %tmp.10 = 100;
+        %tmp.11 = 250;
+        %tmp.4 = newc %tmp.9 (%tmp.10, %tmp.11);
+        %tmp.12 = dup %tmp.3;
+        %tmp.13 = aputv %tmp.12 0 %tmp.4;
+        symbol [ Toybox %tmp.17 121 16 22 ];
+        %tmp.17 = getv ? :Toybox;
+        symbol [ Attention %tmp.18 121 23 32 ];
+        %tmp.18 = getv %tmp.17 :Attention;
+        symbol [ VibeProfile %tmp.19 121 33 44 ];
+        %tmp.19 = getv %tmp.18 :VibeProfile;
+        %tmp.20 = 0;
+        %tmp.21 = 150;
+        %tmp.14 = newc %tmp.19 (%tmp.20, %tmp.21);
+        %tmp.22 = dup %tmp.13;
+        %tmp.23 = aputv %tmp.22 1 %tmp.14;
+        symbol [ Toybox %tmp.27 122 16 22 ];
+        %tmp.27 = getv ? :Toybox;
+        symbol [ Attention %tmp.28 122 23 32 ];
+        %tmp.28 = getv %tmp.27 :Attention;
+        symbol [ VibeProfile %tmp.29 122 33 44 ];
+        %tmp.29 = getv %tmp.28 :VibeProfile;
+        %tmp.30 = 100;
+        %tmp.31 = 250;
+        %tmp.24 = newc %tmp.29 (%tmp.30, %tmp.31);
+        %tmp.32 = dup %tmp.23;
+        %tmp.33 = aputv %tmp.32 2 %tmp.24;
+        invoke %tmp.1 %tmp.2(%tmp.33);
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_118_36_124_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 127; @symbol_functiondef = [vibeWarning,127,20,31]; ]
+    protected
+    function vibeWarning() {
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_127_34_133_4_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 128 8 ]
+        %tmp.1 = self;
+        symbol [ doVibe %tmp.2 128 8 14 ];
+        %tmp.2 = getv function %tmp.1 :doVibe;
+        %tmp.3 = newa 3;
+        symbol [ Toybox %tmp.7 129 16 22 ];
+        %tmp.7 = getv ? :Toybox;
+        symbol [ Attention %tmp.8 129 23 32 ];
+        %tmp.8 = getv %tmp.7 :Attention;
+        symbol [ VibeProfile %tmp.9 129 33 44 ];
+        %tmp.9 = getv %tmp.8 :VibeProfile;
+        %tmp.10 = 100;
+        %tmp.11 = 200;
+        %tmp.4 = newc %tmp.9 (%tmp.10, %tmp.11);
+        %tmp.12 = dup %tmp.3;
+        %tmp.13 = aputv %tmp.12 0 %tmp.4;
+        symbol [ Toybox %tmp.17 130 16 22 ];
+        %tmp.17 = getv ? :Toybox;
+        symbol [ Attention %tmp.18 130 23 32 ];
+        %tmp.18 = getv %tmp.17 :Attention;
+        symbol [ VibeProfile %tmp.19 130 33 44 ];
+        %tmp.19 = getv %tmp.18 :VibeProfile;
+        %tmp.20 = 0;
+        %tmp.21 = 100;
+        %tmp.14 = newc %tmp.19 (%tmp.20, %tmp.21);
+        %tmp.22 = dup %tmp.13;
+        %tmp.23 = aputv %tmp.22 1 %tmp.14;
+        symbol [ Toybox %tmp.27 131 16 22 ];
+        %tmp.27 = getv ? :Toybox;
+        symbol [ Attention %tmp.28 131 23 32 ];
+        %tmp.28 = getv %tmp.27 :Attention;
+        symbol [ VibeProfile %tmp.29 131 33 44 ];
+        %tmp.29 = getv %tmp.28 :VibeProfile;
+        %tmp.30 = 100;
+        %tmp.31 = 200;
+        %tmp.24 = newc %tmp.29 (%tmp.30, %tmp.31);
+        %tmp.32 = dup %tmp.23;
+        %tmp.33 = aputv %tmp.32 2 %tmp.24;
+        invoke %tmp.1 %tmp.2(%tmp.33);
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_127_34_133_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 136; @symbol_functiondef = [vibeTick,136,20,28]; ]
+    protected
+    function vibeTick() {
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_136_31_138_4_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 137 8 ]
+        %tmp.1 = self;
+        symbol [ doVibe %tmp.2 137 8 14 ];
+        %tmp.2 = getv function %tmp.1 :doVibe;
+        %tmp.3 = newa 1;
+        symbol [ Toybox %tmp.7 137 20 26 ];
+        %tmp.7 = getv ? :Toybox;
+        symbol [ Attention %tmp.8 137 27 36 ];
+        %tmp.8 = getv %tmp.7 :Attention;
+        symbol [ VibeProfile %tmp.9 137 37 48 ];
+        %tmp.9 = getv %tmp.8 :VibeProfile;
+        %tmp.10 = 80;
+        %tmp.11 = 120;
+        %tmp.4 = newc %tmp.9 (%tmp.10, %tmp.11);
+        %tmp.12 = dup %tmp.3;
+        %tmp.13 = aputv %tmp.12 0 %tmp.4;
+        invoke %tmp.1 %tmp.2(%tmp.13);
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_136_31_138_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 141; @symbol_functiondef = [vibeDone,141,20,28]; ]
+    protected
+    function vibeDone() {
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_141_31_149_4_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 142 8 ]
+        %tmp.1 = self;
+        symbol [ doVibe %tmp.2 142 8 14 ];
+        %tmp.2 = getv function %tmp.1 :doVibe;
+        %tmp.3 = newa 5;
+        symbol [ Toybox %tmp.7 143 16 22 ];
+        %tmp.7 = getv ? :Toybox;
+        symbol [ Attention %tmp.8 143 23 32 ];
+        %tmp.8 = getv %tmp.7 :Attention;
+        symbol [ VibeProfile %tmp.9 143 33 44 ];
+        %tmp.9 = getv %tmp.8 :VibeProfile;
+        %tmp.10 = 100;
+        %tmp.11 = 500;
+        %tmp.4 = newc %tmp.9 (%tmp.10, %tmp.11);
+        %tmp.12 = dup %tmp.3;
+        %tmp.13 = aputv %tmp.12 0 %tmp.4;
+        symbol [ Toybox %tmp.17 144 16 22 ];
+        %tmp.17 = getv ? :Toybox;
+        symbol [ Attention %tmp.18 144 23 32 ];
+        %tmp.18 = getv %tmp.17 :Attention;
+        symbol [ VibeProfile %tmp.19 144 33 44 ];
+        %tmp.19 = getv %tmp.18 :VibeProfile;
+        %tmp.20 = 0;
+        %tmp.21 = 200;
+        %tmp.14 = newc %tmp.19 (%tmp.20, %tmp.21);
+        %tmp.22 = dup %tmp.13;
+        %tmp.23 = aputv %tmp.22 1 %tmp.14;
+        symbol [ Toybox %tmp.27 145 16 22 ];
+        %tmp.27 = getv ? :Toybox;
+        symbol [ Attention %tmp.28 145 23 32 ];
+        %tmp.28 = getv %tmp.27 :Attention;
+        symbol [ VibeProfile %tmp.29 145 33 44 ];
+        %tmp.29 = getv %tmp.28 :VibeProfile;
+        %tmp.30 = 100;
+        %tmp.31 = 500;
+        %tmp.24 = newc %tmp.29 (%tmp.30, %tmp.31);
+        %tmp.32 = dup %tmp.23;
+        %tmp.33 = aputv %tmp.32 2 %tmp.24;
+        symbol [ Toybox %tmp.37 146 16 22 ];
+        %tmp.37 = getv ? :Toybox;
+        symbol [ Attention %tmp.38 146 23 32 ];
+        %tmp.38 = getv %tmp.37 :Attention;
+        symbol [ VibeProfile %tmp.39 146 33 44 ];
+        %tmp.39 = getv %tmp.38 :VibeProfile;
+        %tmp.40 = 0;
+        %tmp.41 = 200;
+        %tmp.34 = newc %tmp.39 (%tmp.40, %tmp.41);
+        %tmp.42 = dup %tmp.33;
+        %tmp.43 = aputv %tmp.42 3 %tmp.34;
+        symbol [ Toybox %tmp.47 147 16 22 ];
+        %tmp.47 = getv ? :Toybox;
+        symbol [ Attention %tmp.48 147 23 32 ];
+        %tmp.48 = getv %tmp.47 :Attention;
+        symbol [ VibeProfile %tmp.49 147 33 44 ];
+        %tmp.49 = getv %tmp.48 :VibeProfile;
+        %tmp.50 = 100;
+        %tmp.51 = 500;
+        %tmp.44 = newc %tmp.49 (%tmp.50, %tmp.51);
+        %tmp.52 = dup %tmp.43;
+        %tmp.53 = aputv %tmp.52 4 %tmp.44;
+        invoke %tmp.1 %tmp.2(%tmp.53);
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_141_31_149_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 151; @symbol_functiondef = [doVibe,151,20,26]; @symbol_param<0> = [pattern,151,27,34]; ]
+    protected
+    function doVibe(pattern) {
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_151_36_157_4_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 152 8 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_152_8_156_8_if_stmt:
+        symbol [ Toybox %tmp.2 152 12 18 ];
+        %tmp.2 = getv ? :Toybox;
+        %tmp.4 = const :Attention;
+        symbol [ Attention %tmp.4 152 24 33 const ];
+        %tmp.5 = canhazplz %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_152_8_156_8_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_152_8_156_8_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_152_35_156_8_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 153 12 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_153_12_155_12_if_stmt:
+        symbol [ Toybox %tmp.7 153 16 22 ];
+        %tmp.7 = getv ? :Toybox;
+        %tmp.8 = as %tmp.7 { (interface { var Attention; }) };
+        symbol [ Attention %tmp.9 153 23 32 ];
+        %tmp.9 = getv %tmp.8 :Attention;
+        %tmp.11 = const :vibrate;
+        symbol [ vibrate %tmp.11 153 38 45 const ];
+        %tmp.12 = canhazplz %tmp.9 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_153_12_155_12_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_153_12_155_12_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_153_47_155_12_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 154 16 ]
+        symbol [ Toybox %tmp.14 154 16 22 ];
+        %tmp.14 = getv ? :Toybox;
+        %tmp.15 = as %tmp.14 { (interface { var Attention; }) };
+        symbol [ Attention %tmp.16 154 23 32 ];
+        %tmp.16 = getv %tmp.15 :Attention;
+        symbol [ vibrate %tmp.17 154 33 40 ];
+        %tmp.17 = getv function %tmp.16 :vibrate;
+        %tmp.18 = lgetv %pattern;
+        symbol [ pattern %tmp.18 154 41 48 ];
+        invoke %tmp.16 %tmp.17(%tmp.18);
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_153_47_155_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_153_12_155_12_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_153_12_155_12_if_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_152_35_156_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_152_8_156_8_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_152_8_156_8_if_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_151_36_157_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 160; @symbol_functiondef = [doSelect,160,13,21]; ]
+    function doSelect() {
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_160_24_183_4_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 161 8 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_161_8_182_8_if_stmt:
+        symbol [ gameState %tmp.2 161 12 21 ];
+        %tmp.2 = getv ? :gameState;
+        symbol [ TS_MENU %tmp.4 161 25 32 ];
+        %tmp.4 = getv ? :TS_MENU;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_161_8_182_8_if_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_161_8_182_8_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_161_34_172_8_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 162 12 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_162_12_171_12_if_stmt:
+        symbol [ _menuSel %tmp.7 162 16 24 ];
+        %tmp.7 = getv ? :_menuSel;
+        %tmp.8 = 3;
+        %tmp.9 = eq %tmp.7 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_162_12_171_12_if_else_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_162_12_171_12_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_162_31_169_12_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 163 16 ]
+        %tmp.10 = self;
+        symbol [ saveSettings %tmp.11 163 16 28 ];
+        %tmp.11 = getv function %tmp.10 :saveSettings;
+        invoke %tmp.10 %tmp.11();
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 164 16 ]
+        %tmp.12 = 1;
+        symbol [ _currentRound ? 164 16 29 ];
+        putv self :_currentRound %tmp.12;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 165 16 ]
+        symbol [ _roundSec %tmp.14 165 29 38 ];
+        %tmp.14 = getv ? :_roundSec;
+        symbol [ _remaining ? 165 16 26 ];
+        putv self :_remaining %tmp.14;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 166 16 ]
+        %tmp.15 = 0;
+        symbol [ _totalElapsed ? 166 16 29 ];
+        putv self :_totalElapsed %tmp.15;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 167 16 ]
+        symbol [ TS_ROUND %tmp.17 167 28 36 ];
+        %tmp.17 = getv ? :TS_ROUND;
+        symbol [ gameState ? 167 16 25 ];
+        putv self :gameState %tmp.17;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 168 16 ]
+        %tmp.18 = self;
+        symbol [ vibeRoundStart %tmp.19 168 16 30 ];
+        %tmp.19 = getv function %tmp.18 :vibeRoundStart;
+        invoke %tmp.18 %tmp.19();
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_162_31_169_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_162_12_171_12_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_162_12_171_12_if_else_false:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_169_19_171_12_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 170 16 ]
+        %tmp.20 = self;
+        symbol [ cyclePreset %tmp.21 170 16 27 ];
+        %tmp.21 = getv function %tmp.20 :cyclePreset;
+        invoke %tmp.20 %tmp.21();
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_169_19_171_12_stop:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_162_12_171_12_if_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_161_34_172_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_161_8_182_8_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_161_8_182_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 172 15 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_172_15_182_8_if_stmt:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_172_19_172_57_begin:
+        symbol [ gameState %tmp.23 172 19 28 ];
+        %tmp.23 = getv ? :gameState;
+        symbol [ TS_ROUND %tmp.25 172 32 40 ];
+        %tmp.25 = getv ? :TS_ROUND;
+        %tmp.26 = eq %tmp.23 %tmp.25;
+        bt %tmp.26 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_172_15_182_8_if_true;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_172_44_172_57_false:
+        symbol [ gameState %tmp.28 172 44 53 ];
+        %tmp.28 = getv ? :gameState;
+        symbol [ TS_LAST10 %tmp.30 172 57 66 ];
+        %tmp.30 = getv ? :TS_LAST10;
+        %tmp.31 = eq %tmp.28 %tmp.30;
+        push %tmp.31;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_172_44_172_57_end:
+        %tmp.32 = phi [%tmp.26 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_172_19_172_57_begin] [%tmp.31 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_172_44_172_57_false] [%tmp.32 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_172_44_172_57_end];
+        bf %tmp.32 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_172_15_182_8_if_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_172_15_182_8_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_172_68_175_8_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 173 12 ]
+        symbol [ gameState %tmp.34 173 27 36 ];
+        %tmp.34 = getv ? :gameState;
+        symbol [ _pausedState ? 173 12 24 ];
+        putv self :_pausedState %tmp.34;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 174 12 ]
+        symbol [ TS_PAUSED %tmp.36 174 24 33 ];
+        %tmp.36 = getv ? :TS_PAUSED;
+        symbol [ gameState ? 174 12 21 ];
+        putv self :gameState %tmp.36;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_172_68_175_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_172_15_182_8_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_172_15_182_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 175 15 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_175_15_182_8_if_stmt:
+        symbol [ gameState %tmp.38 175 19 28 ];
+        %tmp.38 = getv ? :gameState;
+        symbol [ TS_REST %tmp.40 175 32 39 ];
+        %tmp.40 = getv ? :TS_REST;
+        %tmp.41 = eq %tmp.38 %tmp.40;
+        bf %tmp.41 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_175_15_182_8_if_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_175_15_182_8_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_175_41_178_8_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 176 12 ]
+        symbol [ TS_REST %tmp.43 176 27 34 ];
+        %tmp.43 = getv ? :TS_REST;
+        symbol [ _pausedState ? 176 12 24 ];
+        putv self :_pausedState %tmp.43;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 177 12 ]
+        symbol [ TS_PAUSED %tmp.45 177 24 33 ];
+        %tmp.45 = getv ? :TS_PAUSED;
+        symbol [ gameState ? 177 12 21 ];
+        putv self :gameState %tmp.45;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_175_41_178_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_175_15_182_8_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_175_15_182_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 178 15 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_178_15_182_8_if_stmt:
+        symbol [ gameState %tmp.47 178 19 28 ];
+        %tmp.47 = getv ? :gameState;
+        symbol [ TS_PAUSED %tmp.49 178 32 41 ];
+        %tmp.49 = getv ? :TS_PAUSED;
+        %tmp.50 = eq %tmp.47 %tmp.49;
+        bf %tmp.50 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_178_15_182_8_if_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_178_15_182_8_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_178_43_180_8_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 179 12 ]
+        symbol [ _pausedState %tmp.52 179 24 36 ];
+        %tmp.52 = getv ? :_pausedState;
+        symbol [ gameState ? 179 12 21 ];
+        putv self :gameState %tmp.52;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_178_43_180_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_178_15_182_8_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_178_15_182_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 180 15 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_180_15_182_8_if_stmt:
+        symbol [ gameState %tmp.54 180 19 28 ];
+        %tmp.54 = getv ? :gameState;
+        symbol [ TS_DONE %tmp.56 180 32 39 ];
+        %tmp.56 = getv ? :TS_DONE;
+        %tmp.57 = eq %tmp.54 %tmp.56;
+        bf %tmp.57 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_180_15_182_8_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_180_15_182_8_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_180_41_182_8_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 181 12 ]
+        symbol [ TS_MENU %tmp.59 181 24 31 ];
+        %tmp.59 = getv ? :TS_MENU;
+        symbol [ gameState ? 181 12 21 ];
+        putv self :gameState %tmp.59;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_180_41_182_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_180_15_182_8_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_180_15_182_8_if_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_178_15_182_8_if_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_175_15_182_8_if_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_172_15_182_8_if_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_161_8_182_8_if_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_160_24_183_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 185; @symbol_functiondef = [doBack,185,13,19]; ]
+    function doBack() {
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_185_22_194_4_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 186 8 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_186_8_188_8_if_stmt:
+        symbol [ gameState %tmp.2 186 12 21 ];
+        %tmp.2 = getv ? :gameState;
+        symbol [ TS_MENU %tmp.4 186 25 32 ];
+        %tmp.4 = getv ? :TS_MENU;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_186_8_188_8_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_186_8_188_8_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_186_34_188_8_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 187 12 ]
+        %tmp.6 = false;
+        ret %tmp.6;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_186_34_188_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_186_8_188_8_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_186_8_188_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 189 8 ]
+        symbol [ TS_MENU %tmp.8 189 20 27 ];
+        %tmp.8 = getv ? :TS_MENU;
+        symbol [ gameState ? 189 8 17 ];
+        putv self :gameState %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 190 8 ]
+        %tmp.9 = 1;
+        symbol [ _currentRound ? 190 8 21 ];
+        putv self :_currentRound %tmp.9;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 191 8 ]
+        symbol [ _roundSec %tmp.11 191 21 30 ];
+        %tmp.11 = getv ? :_roundSec;
+        symbol [ _remaining ? 191 8 18 ];
+        putv self :_remaining %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 192 8 ]
+        %tmp.12 = 0;
+        symbol [ _totalElapsed ? 192 8 21 ];
+        putv self :_totalElapsed %tmp.12;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 193 8 ]
+        %tmp.13 = true;
+        ret %tmp.13;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_185_22_194_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 196; @symbol_functiondef = [doUp,196,13,17]; ]
+    function doUp() {
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_196_20_200_4_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 197 8 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_197_8_199_8_if_stmt:
+        symbol [ gameState %tmp.2 197 12 21 ];
+        %tmp.2 = getv ? :gameState;
+        symbol [ TS_MENU %tmp.4 197 25 32 ];
+        %tmp.4 = getv ? :TS_MENU;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_197_8_199_8_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_197_8_199_8_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_197_34_199_8_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 198 12 ]
+        symbol [ _menuSel %tmp.7 198 24 32 ];
+        %tmp.7 = getv ? :_menuSel;
+        %tmp.8 = 1;
+        %tmp.9 = sub %tmp.7 %tmp.8;
+        %tmp.10 = 4;
+        %tmp.11 = add %tmp.9 %tmp.10;
+        %tmp.12 = 4;
+        %tmp.13 = mod %tmp.11 %tmp.12;
+        symbol [ _menuSel ? 198 12 20 ];
+        putv self :_menuSel %tmp.13;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_197_34_199_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_197_8_199_8_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_197_8_199_8_if_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_196_20_200_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 202; @symbol_functiondef = [doDown,202,13,19]; ]
+    function doDown() {
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_202_22_206_4_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 203 8 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_203_8_205_8_if_stmt:
+        symbol [ gameState %tmp.2 203 12 21 ];
+        %tmp.2 = getv ? :gameState;
+        symbol [ TS_MENU %tmp.4 203 25 32 ];
+        %tmp.4 = getv ? :TS_MENU;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_203_8_205_8_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_203_8_205_8_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_203_34_205_8_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 204 12 ]
+        symbol [ _menuSel %tmp.7 204 24 32 ];
+        %tmp.7 = getv ? :_menuSel;
+        %tmp.8 = 1;
+        %tmp.9 = add %tmp.7 %tmp.8;
+        %tmp.10 = 4;
+        %tmp.11 = mod %tmp.9 %tmp.10;
+        symbol [ _menuSel ? 204 12 20 ];
+        putv self :_menuSel %tmp.11;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_203_34_205_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_203_8_205_8_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_203_8_205_8_if_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_202_22_206_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 208; @symbol_functiondef = [doTap,208,13,18]; @symbol_param<0> = [x,208,19,20]; @symbol_param<1> = [y,208,22,23]; ]
+    function doTap(x, y) {
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_208_25_230_4_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 209 8 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_209_8_229_8_if_stmt:
+        symbol [ gameState %tmp.2 209 12 21 ];
+        %tmp.2 = getv ? :gameState;
+        symbol [ TS_MENU %tmp.4 209 25 32 ];
+        %tmp.4 = getv ? :TS_MENU;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_209_8_229_8_if_else_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_209_8_229_8_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_209_34_227_8_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 211 12 ]
+        [ "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_209_34_227_8_start" "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_209_34_227_8_stop" ]
+        %startY.1 = local;
+        symbol [ startY %startY.1 211 16 22 ];
+        symbol [ _h %tmp.7 211 25 27 ];
+        %tmp.7 = getv ? :_h;
+        %tmp.8 = 32;
+        %tmp.9 = mul %tmp.7 %tmp.8;
+        %tmp.10 = 100;
+        %tmp.11 = div %tmp.9 %tmp.10;
+        lputv %startY.1 %tmp.11;
+        symbol [ startY %startY.1 211 16 22 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 212 12 ]
+        [ "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_209_34_227_8_start" "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_209_34_227_8_stop" ]
+        %rowH.2 = local;
+        symbol [ rowH %rowH.2 212 16 20 ];
+        symbol [ _h %tmp.13 212 23 25 ];
+        %tmp.13 = getv ? :_h;
+        %tmp.14 = 14;
+        %tmp.15 = mul %tmp.13 %tmp.14;
+        %tmp.16 = 100;
+        %tmp.17 = div %tmp.15 %tmp.16;
+        lputv %rowH.2 %tmp.17;
+        symbol [ rowH %rowH.2 212 16 20 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 213 12 ]
+        for @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_213_12_226_12_for_test @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_213_12_226_12_for_incr @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_213_12_226_12_for_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_213_12_226_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_213_12_226_12_for_begin" "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_213_12_226_12_for_end" ]
+        %i.3 = local;
+        symbol [ i %i.3 213 21 22 ];
+        %tmp.18 = 0;
+        lputv %i.3 %tmp.18;
+        symbol [ i %i.3 213 21 22 ];
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_213_12_226_12_for_test:
+        %tmp.19 = lgetv %i.3;
+        symbol [ i %tmp.19 213 28 29 ];
+        %tmp.20 = 4;
+        %tmp.21 = lt %tmp.19 %tmp.20;
+        bf %tmp.21 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_213_12_226_12_for_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_213_12_226_12_for_begin:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_213_40_226_12_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 214 16 ]
+        [ "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_213_40_226_12_start" "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_213_40_226_12_stop" ]
+        %ry.4 = local;
+        symbol [ ry %ry.4 214 20 22 ];
+        %tmp.22 = lgetv %startY.1;
+        symbol [ startY %tmp.22 214 25 31 ];
+        %tmp.23 = lgetv %i.3;
+        symbol [ i %tmp.23 214 34 35 ];
+        %tmp.24 = lgetv %rowH.2;
+        symbol [ rowH %tmp.24 214 38 42 ];
+        %tmp.25 = mul %tmp.23 %tmp.24;
+        %tmp.26 = add %tmp.22 %tmp.25;
+        lputv %ry.4 %tmp.26;
+        symbol [ ry %ry.4 214 20 22 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 215 16 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_215_16_225_16_if_stmt:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_215_20_215_40_begin:
+        %tmp.27 = lgetv %y;
+        symbol [ y %tmp.27 215 20 21 ];
+        %tmp.28 = lgetv %ry.4;
+        symbol [ ry %tmp.28 215 25 27 ];
+        %tmp.29 = gte %tmp.27 %tmp.28;
+        bf %tmp.29 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_215_16_225_16_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_215_31_215_40_true:
+        %tmp.30 = lgetv %y;
+        symbol [ y %tmp.30 215 31 32 ];
+        %tmp.31 = lgetv %ry.4;
+        symbol [ ry %tmp.31 215 35 37 ];
+        %tmp.32 = lgetv %rowH.2;
+        symbol [ rowH %tmp.32 215 40 44 ];
+        %tmp.33 = add %tmp.31 %tmp.32;
+        %tmp.34 = lt %tmp.30 %tmp.33;
+        push %tmp.34;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_215_31_215_40_end:
+        %tmp.35 = phi [%tmp.29 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_215_20_215_40_begin] [%tmp.34 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_215_31_215_40_true] [%tmp.35 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_215_31_215_40_end];
+        bf %tmp.35 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_215_16_225_16_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_215_16_225_16_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_215_46_225_16_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 216 20 ]
+        %tmp.36 = lgetv %i.3;
+        symbol [ i %tmp.36 216 31 32 ];
+        symbol [ _menuSel ? 216 20 28 ];
+        putv self :_menuSel %tmp.36;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 217 20 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_217_20_223_20_if_stmt:
+        %tmp.37 = lgetv %i.3;
+        symbol [ i %tmp.37 217 24 25 ];
+        %tmp.38 = 3;
+        %tmp.39 = eq %tmp.37 %tmp.38;
+        bf %tmp.39 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_217_20_223_20_if_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_217_20_223_20_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_217_32_219_20_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 218 24 ]
+        %tmp.40 = self;
+        symbol [ doSelect %tmp.41 218 24 32 ];
+        %tmp.41 = getv function %tmp.40 :doSelect;
+        invoke %tmp.40 %tmp.41();
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_217_32_219_20_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_217_20_223_20_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_217_20_223_20_if_false:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 219 27 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_219_27_223_20_if_stmt:
+        %tmp.42 = lgetv %x;
+        symbol [ x %tmp.42 219 31 32 ];
+        symbol [ _w %tmp.44 219 35 37 ];
+        %tmp.44 = getv ? :_w;
+        %tmp.45 = 2;
+        %tmp.46 = div %tmp.44 %tmp.45;
+        %tmp.47 = lt %tmp.42 %tmp.46;
+        bf %tmp.47 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_219_27_223_20_if_else_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_219_27_223_20_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_219_43_221_20_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 220 24 ]
+        %tmp.48 = self;
+        symbol [ cyclePresetRev %tmp.49 220 24 38 ];
+        %tmp.49 = getv function %tmp.48 :cyclePresetRev;
+        invoke %tmp.48 %tmp.49();
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_219_43_221_20_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_219_27_223_20_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_219_27_223_20_if_else_false:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_221_27_223_20_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 222 24 ]
+        %tmp.50 = self;
+        symbol [ cyclePreset %tmp.51 222 24 35 ];
+        %tmp.51 = getv function %tmp.50 :cyclePreset;
+        invoke %tmp.50 %tmp.51();
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_221_27_223_20_stop:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_219_27_223_20_if_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_217_20_223_20_if_end:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 224 20 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_215_46_225_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_215_16_225_16_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_215_16_225_16_if_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_213_40_226_12_stop:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_213_12_226_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 213 ]
+        %tmp.54 = lgetv %i.3;
+        symbol [ i %tmp.54 213 35 36 ];
+        %tmp.55 = add %tmp.54 1;
+        lputv %i.3 %tmp.55;
+        symbol [ i %i.3 213 35 36 ];
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_213_12_226_12_for_test;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_213_12_226_12_for_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_209_34_227_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_209_8_229_8_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_209_8_229_8_if_else_false:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_227_15_229_8_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 228 12 ]
+        %tmp.56 = self;
+        symbol [ doSelect %tmp.57 228 12 20 ];
+        %tmp.57 = getv function %tmp.56 :doSelect;
+        invoke %tmp.56 %tmp.57();
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_227_15_229_8_stop:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_209_8_229_8_if_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_208_25_230_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 232; @symbol_functiondef = [cyclePreset,232,20,31]; ]
+    protected
+    function cyclePreset() {
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_232_34_240_4_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 233 8 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_233_8_239_8_if_stmt:
+        symbol [ _menuSel %tmp.2 233 12 20 ];
+        %tmp.2 = getv ? :_menuSel;
+        %tmp.3 = 0;
+        %tmp.4 = eq %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_233_8_239_8_if_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_233_8_239_8_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_233_27_235_8_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 234 12 ]
+        %tmp.5 = self;
+        symbol [ nextInArray %tmp.6 234 24 35 ];
+        %tmp.6 = getv function %tmp.5 :nextInArray;
+        symbol [ ROUND_PRESETS %tmp.8 234 36 49 ];
+        %tmp.8 = getv ? :ROUND_PRESETS;
+        symbol [ _roundSec %tmp.10 234 51 60 ];
+        %tmp.10 = getv ? :_roundSec;
+        %tmp.11 = invoke %tmp.5 %tmp.6(%tmp.8, %tmp.10);
+        symbol [ _roundSec ? 234 12 21 ];
+        putv self :_roundSec %tmp.11;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_233_27_235_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_233_8_239_8_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_233_8_239_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 235 15 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_235_15_239_8_if_stmt:
+        symbol [ _menuSel %tmp.13 235 19 27 ];
+        %tmp.13 = getv ? :_menuSel;
+        %tmp.14 = 1;
+        %tmp.15 = eq %tmp.13 %tmp.14;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_235_15_239_8_if_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_235_15_239_8_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_235_34_237_8_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 236 12 ]
+        %tmp.16 = self;
+        symbol [ nextInArray %tmp.17 236 23 34 ];
+        %tmp.17 = getv function %tmp.16 :nextInArray;
+        symbol [ REST_PRESETS %tmp.19 236 35 47 ];
+        %tmp.19 = getv ? :REST_PRESETS;
+        symbol [ _restSec %tmp.21 236 49 57 ];
+        %tmp.21 = getv ? :_restSec;
+        %tmp.22 = invoke %tmp.16 %tmp.17(%tmp.19, %tmp.21);
+        symbol [ _restSec ? 236 12 20 ];
+        putv self :_restSec %tmp.22;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_235_34_237_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_235_15_239_8_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_235_15_239_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 237 15 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_237_15_239_8_if_stmt:
+        symbol [ _menuSel %tmp.24 237 19 27 ];
+        %tmp.24 = getv ? :_menuSel;
+        %tmp.25 = 2;
+        %tmp.26 = eq %tmp.24 %tmp.25;
+        bf %tmp.26 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_237_15_239_8_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_237_15_239_8_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_237_34_239_8_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 238 12 ]
+        %tmp.27 = self;
+        symbol [ nextInArray %tmp.28 238 27 38 ];
+        %tmp.28 = getv function %tmp.27 :nextInArray;
+        symbol [ ROUNDS_PRESETS %tmp.30 238 39 53 ];
+        %tmp.30 = getv ? :ROUNDS_PRESETS;
+        symbol [ _totalRounds %tmp.32 238 55 67 ];
+        %tmp.32 = getv ? :_totalRounds;
+        %tmp.33 = invoke %tmp.27 %tmp.28(%tmp.30, %tmp.32);
+        symbol [ _totalRounds ? 238 12 24 ];
+        putv self :_totalRounds %tmp.33;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_237_34_239_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_237_15_239_8_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_237_15_239_8_if_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_235_15_239_8_if_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_233_8_239_8_if_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_232_34_240_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 242; @symbol_functiondef = [cyclePresetRev,242,20,34]; ]
+    protected
+    function cyclePresetRev() {
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_242_37_250_4_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 243 8 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_243_8_249_8_if_stmt:
+        symbol [ _menuSel %tmp.2 243 12 20 ];
+        %tmp.2 = getv ? :_menuSel;
+        %tmp.3 = 0;
+        %tmp.4 = eq %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_243_8_249_8_if_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_243_8_249_8_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_243_27_245_8_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 244 12 ]
+        %tmp.5 = self;
+        symbol [ prevInArray %tmp.6 244 24 35 ];
+        %tmp.6 = getv function %tmp.5 :prevInArray;
+        symbol [ ROUND_PRESETS %tmp.8 244 36 49 ];
+        %tmp.8 = getv ? :ROUND_PRESETS;
+        symbol [ _roundSec %tmp.10 244 51 60 ];
+        %tmp.10 = getv ? :_roundSec;
+        %tmp.11 = invoke %tmp.5 %tmp.6(%tmp.8, %tmp.10);
+        symbol [ _roundSec ? 244 12 21 ];
+        putv self :_roundSec %tmp.11;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_243_27_245_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_243_8_249_8_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_243_8_249_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 245 15 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_245_15_249_8_if_stmt:
+        symbol [ _menuSel %tmp.13 245 19 27 ];
+        %tmp.13 = getv ? :_menuSel;
+        %tmp.14 = 1;
+        %tmp.15 = eq %tmp.13 %tmp.14;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_245_15_249_8_if_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_245_15_249_8_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_245_34_247_8_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 246 12 ]
+        %tmp.16 = self;
+        symbol [ prevInArray %tmp.17 246 23 34 ];
+        %tmp.17 = getv function %tmp.16 :prevInArray;
+        symbol [ REST_PRESETS %tmp.19 246 35 47 ];
+        %tmp.19 = getv ? :REST_PRESETS;
+        symbol [ _restSec %tmp.21 246 49 57 ];
+        %tmp.21 = getv ? :_restSec;
+        %tmp.22 = invoke %tmp.16 %tmp.17(%tmp.19, %tmp.21);
+        symbol [ _restSec ? 246 12 20 ];
+        putv self :_restSec %tmp.22;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_245_34_247_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_245_15_249_8_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_245_15_249_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 247 15 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_247_15_249_8_if_stmt:
+        symbol [ _menuSel %tmp.24 247 19 27 ];
+        %tmp.24 = getv ? :_menuSel;
+        %tmp.25 = 2;
+        %tmp.26 = eq %tmp.24 %tmp.25;
+        bf %tmp.26 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_247_15_249_8_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_247_15_249_8_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_247_34_249_8_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 248 12 ]
+        %tmp.27 = self;
+        symbol [ prevInArray %tmp.28 248 27 38 ];
+        %tmp.28 = getv function %tmp.27 :prevInArray;
+        symbol [ ROUNDS_PRESETS %tmp.30 248 39 53 ];
+        %tmp.30 = getv ? :ROUNDS_PRESETS;
+        symbol [ _totalRounds %tmp.32 248 55 67 ];
+        %tmp.32 = getv ? :_totalRounds;
+        %tmp.33 = invoke %tmp.27 %tmp.28(%tmp.30, %tmp.32);
+        symbol [ _totalRounds ? 248 12 24 ];
+        putv self :_totalRounds %tmp.33;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_247_34_249_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_247_15_249_8_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_247_15_249_8_if_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_245_15_249_8_if_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_243_8_249_8_if_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_242_37_250_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 252; @symbol_functiondef = [nextInArray,252,20,31]; @symbol_param<0> = [arr,252,32,35]; @symbol_param<1> = [val,252,37,40]; ]
+    protected
+    function nextInArray(arr, val) {
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_252_42_263_4_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 253 8 ]
+        for @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_253_8_257_8_for_test @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_253_8_257_8_for_incr @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_253_8_257_8_for_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_253_8_257_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_253_8_257_8_for_begin" "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_253_8_257_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 253 17 18 ];
+        %tmp.1 = 0;
+        lputv %i.1 %tmp.1;
+        symbol [ i %i.1 253 17 18 ];
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_253_8_257_8_for_test:
+        %tmp.2 = lgetv %i.1;
+        symbol [ i %tmp.2 253 24 25 ];
+        %tmp.3 = lgetv %arr;
+        symbol [ arr %tmp.3 253 28 31 ];
+        symbol [ size %tmp.4 253 32 36 ];
+        %tmp.4 = getv function %tmp.3 :size;
+        %tmp.5 = invoke %tmp.3 %tmp.4();
+        %tmp.6 = lt %tmp.2 %tmp.5;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_253_8_257_8_for_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_253_8_257_8_for_begin:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_253_45_257_8_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 254 12 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_254_12_256_12_if_stmt:
+        %tmp.7 = lgetv %arr;
+        symbol [ arr %tmp.7 254 16 19 ];
+        %tmp.8 = lgetv %i.1;
+        symbol [ i %tmp.8 254 20 21 ];
+        %tmp.9 = agetv %tmp.7 %tmp.8;
+        %tmp.10 = lgetv %val;
+        symbol [ val %tmp.10 254 26 29 ];
+        %tmp.11 = eq %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_254_12_256_12_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_254_12_256_12_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_254_31_256_12_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 255 16 ]
+        %tmp.12 = lgetv %arr;
+        symbol [ arr %tmp.12 255 23 26 ];
+        %tmp.13 = lgetv %i.1;
+        symbol [ i %tmp.13 255 28 29 ];
+        %tmp.14 = 1;
+        %tmp.15 = add %tmp.13 %tmp.14;
+        %tmp.16 = lgetv %arr;
+        symbol [ arr %tmp.16 255 37 40 ];
+        symbol [ size %tmp.17 255 41 45 ];
+        %tmp.17 = getv function %tmp.16 :size;
+        %tmp.18 = invoke %tmp.16 %tmp.17();
+        %tmp.19 = mod %tmp.15 %tmp.18;
+        %tmp.20 = agetv %tmp.12 %tmp.19;
+        ret %tmp.20;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_254_31_256_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_254_12_256_12_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_254_12_256_12_if_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_253_45_257_8_stop:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_253_8_257_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 253 ]
+        %tmp.23 = lgetv %i.1;
+        symbol [ i %tmp.23 253 40 41 ];
+        %tmp.24 = add %tmp.23 1;
+        lputv %i.1 %tmp.24;
+        symbol [ i %i.1 253 40 41 ];
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_253_8_257_8_for_test;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_253_8_257_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 259 8 ]
+        for @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_259_8_261_8_for_test @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_259_8_261_8_for_incr @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_259_8_261_8_for_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_259_8_261_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_259_8_261_8_for_begin" "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_259_8_261_8_for_end" ]
+        %i.2 = local;
+        symbol [ i %i.2 259 17 18 ];
+        %tmp.25 = 0;
+        lputv %i.2 %tmp.25;
+        symbol [ i %i.2 259 17 18 ];
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_259_8_261_8_for_test:
+        %tmp.26 = lgetv %i.2;
+        symbol [ i %tmp.26 259 24 25 ];
+        %tmp.27 = lgetv %arr;
+        symbol [ arr %tmp.27 259 28 31 ];
+        symbol [ size %tmp.28 259 32 36 ];
+        %tmp.28 = getv function %tmp.27 :size;
+        %tmp.29 = invoke %tmp.27 %tmp.28();
+        %tmp.30 = lt %tmp.26 %tmp.29;
+        bf %tmp.30 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_259_8_261_8_for_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_259_8_261_8_for_begin:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_259_45_261_8_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 260 12 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_260_12_260_47_if_stmt:
+        %tmp.31 = lgetv %arr;
+        symbol [ arr %tmp.31 260 16 19 ];
+        %tmp.32 = lgetv %i.2;
+        symbol [ i %tmp.32 260 20 21 ];
+        %tmp.33 = agetv %tmp.31 %tmp.32;
+        %tmp.34 = lgetv %val;
+        symbol [ val %tmp.34 260 25 28 ];
+        %tmp.35 = gt %tmp.33 %tmp.34;
+        bf %tmp.35 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_260_12_260_47_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_260_12_260_47_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_260_30_260_47_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 260 32 ]
+        %tmp.36 = lgetv %arr;
+        symbol [ arr %tmp.36 260 39 42 ];
+        %tmp.37 = lgetv %i.2;
+        symbol [ i %tmp.37 260 43 44 ];
+        %tmp.38 = agetv %tmp.36 %tmp.37;
+        ret %tmp.38;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_260_30_260_47_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_260_12_260_47_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_260_12_260_47_if_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_259_45_261_8_stop:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_259_8_261_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 259 ]
+        %tmp.41 = lgetv %i.2;
+        symbol [ i %tmp.41 259 40 41 ];
+        %tmp.42 = add %tmp.41 1;
+        lputv %i.2 %tmp.42;
+        symbol [ i %i.2 259 40 41 ];
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_259_8_261_8_for_test;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_259_8_261_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 262 8 ]
+        %tmp.43 = lgetv %arr;
+        symbol [ arr %tmp.43 262 15 18 ];
+        %tmp.44 = 0;
+        %tmp.45 = agetv %tmp.43 %tmp.44;
+        ret %tmp.45;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_252_42_263_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 265; @symbol_functiondef = [prevInArray,265,20,31]; @symbol_param<0> = [arr,265,32,35]; @symbol_param<1> = [val,265,37,40]; ]
+    protected
+    function prevInArray(arr, val) {
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_265_42_275_4_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 266 8 ]
+        for @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_266_8_270_8_for_test @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_266_8_270_8_for_incr @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_266_8_270_8_for_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_266_8_270_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_266_8_270_8_for_begin" "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_266_8_270_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 266 17 18 ];
+        %tmp.1 = 0;
+        lputv %i.1 %tmp.1;
+        symbol [ i %i.1 266 17 18 ];
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_266_8_270_8_for_test:
+        %tmp.2 = lgetv %i.1;
+        symbol [ i %tmp.2 266 24 25 ];
+        %tmp.3 = lgetv %arr;
+        symbol [ arr %tmp.3 266 28 31 ];
+        symbol [ size %tmp.4 266 32 36 ];
+        %tmp.4 = getv function %tmp.3 :size;
+        %tmp.5 = invoke %tmp.3 %tmp.4();
+        %tmp.6 = lt %tmp.2 %tmp.5;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_266_8_270_8_for_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_266_8_270_8_for_begin:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_266_45_270_8_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 267 12 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_267_12_269_12_if_stmt:
+        %tmp.7 = lgetv %arr;
+        symbol [ arr %tmp.7 267 16 19 ];
+        %tmp.8 = lgetv %i.1;
+        symbol [ i %tmp.8 267 20 21 ];
+        %tmp.9 = agetv %tmp.7 %tmp.8;
+        %tmp.10 = lgetv %val;
+        symbol [ val %tmp.10 267 26 29 ];
+        %tmp.11 = eq %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_267_12_269_12_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_267_12_269_12_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_267_31_269_12_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 268 16 ]
+        %tmp.12 = lgetv %arr;
+        symbol [ arr %tmp.12 268 23 26 ];
+        %tmp.13 = lgetv %i.1;
+        symbol [ i %tmp.13 268 28 29 ];
+        %tmp.14 = 1;
+        %tmp.15 = sub %tmp.13 %tmp.14;
+        %tmp.16 = lgetv %arr;
+        symbol [ arr %tmp.16 268 36 39 ];
+        symbol [ size %tmp.17 268 40 44 ];
+        %tmp.17 = getv function %tmp.16 :size;
+        %tmp.18 = invoke %tmp.16 %tmp.17();
+        %tmp.19 = add %tmp.15 %tmp.18;
+        %tmp.20 = lgetv %arr;
+        symbol [ arr %tmp.20 268 50 53 ];
+        symbol [ size %tmp.21 268 54 58 ];
+        %tmp.21 = getv function %tmp.20 :size;
+        %tmp.22 = invoke %tmp.20 %tmp.21();
+        %tmp.23 = mod %tmp.19 %tmp.22;
+        %tmp.24 = agetv %tmp.12 %tmp.23;
+        ret %tmp.24;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_267_31_269_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_267_12_269_12_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_267_12_269_12_if_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_266_45_270_8_stop:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_266_8_270_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 266 ]
+        %tmp.27 = lgetv %i.1;
+        symbol [ i %tmp.27 266 40 41 ];
+        %tmp.28 = add %tmp.27 1;
+        lputv %i.1 %tmp.28;
+        symbol [ i %i.1 266 40 41 ];
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_266_8_270_8_for_test;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_266_8_270_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 271 8 ]
+        for @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_271_8_273_8_for_test @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_271_8_273_8_for_incr @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_271_8_273_8_for_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_271_8_273_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_271_8_273_8_for_begin" "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_271_8_273_8_for_end" ]
+        %i.2 = local;
+        symbol [ i %i.2 271 17 18 ];
+        %tmp.29 = lgetv %arr;
+        symbol [ arr %tmp.29 271 21 24 ];
+        symbol [ size %tmp.30 271 25 29 ];
+        %tmp.30 = getv function %tmp.29 :size;
+        %tmp.31 = invoke %tmp.29 %tmp.30();
+        %tmp.32 = 1;
+        %tmp.33 = sub %tmp.31 %tmp.32;
+        lputv %i.2 %tmp.33;
+        symbol [ i %i.2 271 17 18 ];
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_271_8_273_8_for_test:
+        %tmp.34 = lgetv %i.2;
+        symbol [ i %tmp.34 271 37 38 ];
+        %tmp.35 = 0;
+        %tmp.36 = gte %tmp.34 %tmp.35;
+        bf %tmp.36 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_271_8_273_8_for_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_271_8_273_8_for_begin:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_271_50_273_8_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 272 12 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_272_12_272_47_if_stmt:
+        %tmp.37 = lgetv %arr;
+        symbol [ arr %tmp.37 272 16 19 ];
+        %tmp.38 = lgetv %i.2;
+        symbol [ i %tmp.38 272 20 21 ];
+        %tmp.39 = agetv %tmp.37 %tmp.38;
+        %tmp.40 = lgetv %val;
+        symbol [ val %tmp.40 272 25 28 ];
+        %tmp.41 = lt %tmp.39 %tmp.40;
+        bf %tmp.41 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_272_12_272_47_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_272_12_272_47_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_272_30_272_47_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 272 32 ]
+        %tmp.42 = lgetv %arr;
+        symbol [ arr %tmp.42 272 39 42 ];
+        %tmp.43 = lgetv %i.2;
+        symbol [ i %tmp.43 272 43 44 ];
+        %tmp.44 = agetv %tmp.42 %tmp.43;
+        ret %tmp.44;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_272_30_272_47_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_272_12_272_47_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_272_12_272_47_if_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_271_50_273_8_stop:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_271_8_273_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 271 ]
+        %tmp.47 = lgetv %i.2;
+        symbol [ i %tmp.47 271 45 46 ];
+        %tmp.48 = sub %tmp.47 1;
+        lputv %i.2 %tmp.48;
+        symbol [ i %i.2 271 45 46 ];
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_271_8_273_8_for_test;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_271_8_273_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 274 8 ]
+        %tmp.49 = lgetv %arr;
+        symbol [ arr %tmp.49 274 15 18 ];
+        %tmp.50 = lgetv %arr;
+        symbol [ arr %tmp.50 274 19 22 ];
+        symbol [ size %tmp.51 274 23 27 ];
+        %tmp.51 = getv function %tmp.50 :size;
+        %tmp.52 = invoke %tmp.50 %tmp.51();
+        %tmp.53 = 1;
+        %tmp.54 = sub %tmp.52 %tmp.53;
+        %tmp.55 = agetv %tmp.49 %tmp.54;
+        ret %tmp.55;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_265_42_275_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 277; @symbol_functiondef = [saveSettings,277,20,32]; ]
+    protected
+    function saveSettings() {
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_277_35_281_4_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 278 8 ]
+        symbol [ Application %tmp.1 278 8 19 ];
+        %tmp.1 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.2 278 20 27 ];
+        %tmp.2 = getv %tmp.1 :Storage;
+        symbol [ setValue %tmp.3 278 28 36 ];
+        %tmp.3 = getv function %tmp.2 :setValue;
+        %tmp.4 = "tRound";
+        symbol [ _roundSec %tmp.6 278 47 56 ];
+        %tmp.6 = getv ? :_roundSec;
+        invoke %tmp.2 %tmp.3(%tmp.4, %tmp.6);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 279 8 ]
+        symbol [ Application %tmp.7 279 8 19 ];
+        %tmp.7 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.8 279 20 27 ];
+        %tmp.8 = getv %tmp.7 :Storage;
+        symbol [ setValue %tmp.9 279 28 36 ];
+        %tmp.9 = getv function %tmp.8 :setValue;
+        %tmp.10 = "tRest";
+        symbol [ _restSec %tmp.12 279 46 54 ];
+        %tmp.12 = getv ? :_restSec;
+        invoke %tmp.8 %tmp.9(%tmp.10, %tmp.12);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 280 8 ]
+        symbol [ Application %tmp.13 280 8 19 ];
+        %tmp.13 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.14 280 20 27 ];
+        %tmp.14 = getv %tmp.13 :Storage;
+        symbol [ setValue %tmp.15 280 28 36 ];
+        %tmp.15 = getv function %tmp.14 :setValue;
+        %tmp.16 = "tRounds";
+        symbol [ _totalRounds %tmp.18 280 48 60 ];
+        %tmp.18 = getv ? :_totalRounds;
+        invoke %tmp.14 %tmp.15(%tmp.16, %tmp.18);
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_277_35_281_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 283; @symbol_functiondef = [fmtTime,283,20,27]; @symbol_param<0> = [sec,283,28,31]; ]
+    protected
+    function fmtTime(sec) {
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_283_33_288_4_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 284 8 ]
+        [ "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_283_33_288_4_start" "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_283_33_288_4_stop" ]
+        %m.1 = local;
+        symbol [ m %m.1 284 12 13 ];
+        %tmp.1 = lgetv %sec;
+        symbol [ sec %tmp.1 284 16 19 ];
+        %tmp.2 = 60;
+        %tmp.3 = div %tmp.1 %tmp.2;
+        lputv %m.1 %tmp.3;
+        symbol [ m %m.1 284 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 285 8 ]
+        [ "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_283_33_288_4_start" "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_283_33_288_4_stop" ]
+        %s.2 = local;
+        symbol [ s %s.2 285 12 13 ];
+        %tmp.4 = lgetv %sec;
+        symbol [ sec %tmp.4 285 16 19 ];
+        %tmp.5 = 60;
+        %tmp.6 = mod %tmp.4 %tmp.5;
+        lputv %s.2 %tmp.6;
+        symbol [ s %s.2 285 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 286 8 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_286_8_286_43_if_stmt:
+        %tmp.7 = lgetv %s.2;
+        symbol [ s %tmp.7 286 12 13 ];
+        %tmp.8 = 10;
+        %tmp.9 = lt %tmp.7 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_286_8_286_43_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_286_8_286_43_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_286_20_286_43_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 286 22 ]
+        %tmp.10 = lgetv %m.1;
+        symbol [ m %tmp.10 286 29 30 ];
+        %tmp.11 = ":0";
+        %tmp.12 = add %tmp.10 %tmp.11;
+        %tmp.13 = lgetv %s.2;
+        symbol [ s %tmp.13 286 40 41 ];
+        %tmp.14 = add %tmp.12 %tmp.13;
+        ret %tmp.14;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_286_20_286_43_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_286_8_286_43_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_286_8_286_43_if_end:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 287 8 ]
+        %tmp.15 = lgetv %m.1;
+        symbol [ m %tmp.15 287 15 16 ];
+        %tmp.16 = ":";
+        %tmp.17 = add %tmp.15 %tmp.16;
+        %tmp.18 = lgetv %s.2;
+        symbol [ s %tmp.18 287 25 26 ];
+        %tmp.19 = add %tmp.17 %tmp.18;
+        ret %tmp.19;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_283_33_288_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 291; @symbol_functiondef = [onUpdate,291,13,21]; @symbol_param<0> = [dc,291,22,24]; ]
+    function onUpdate(dc) {
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_291_26_297_4_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 292 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 292 13 15 ];
+        symbol [ getWidth %tmp.2 292 16 24 ];
+        %tmp.2 = getv function %tmp.1 :getWidth;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        symbol [ _w ? 292 8 10 ];
+        putv self :_w %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 292 28 ]
+        %tmp.4 = lgetv %dc;
+        symbol [ dc %tmp.4 292 33 35 ];
+        symbol [ getHeight %tmp.5 292 36 45 ];
+        %tmp.5 = getv function %tmp.4 :getHeight;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        symbol [ _h ? 292 28 30 ];
+        putv self :_h %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 294 8 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_294_8_296_30_if_stmt:
+        symbol [ gameState %tmp.8 294 12 21 ];
+        %tmp.8 = getv ? :gameState;
+        symbol [ TS_MENU %tmp.10 294 25 32 ];
+        %tmp.10 = getv ? :TS_MENU;
+        %tmp.11 = eq %tmp.8 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_294_8_296_30_if_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_294_8_296_30_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_294_34_294_50_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 294 36 ]
+        %tmp.12 = self;
+        symbol [ drawMenu %tmp.13 294 36 44 ];
+        %tmp.13 = getv function %tmp.12 :drawMenu;
+        %tmp.14 = lgetv %dc;
+        symbol [ dc %tmp.14 294 45 47 ];
+        invoke %tmp.12 %tmp.13(%tmp.14);
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_294_34_294_50_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_294_8_296_30_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_294_8_296_30_if_false:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 295 13 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_295_13_296_30_if_stmt:
+        symbol [ gameState %tmp.16 295 17 26 ];
+        %tmp.16 = getv ? :gameState;
+        symbol [ TS_DONE %tmp.18 295 30 37 ];
+        %tmp.18 = getv ? :TS_DONE;
+        %tmp.19 = eq %tmp.16 %tmp.18;
+        bf %tmp.19 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_295_13_296_30_if_else_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_295_13_296_30_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_295_39_295_55_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 295 41 ]
+        %tmp.20 = self;
+        symbol [ drawDone %tmp.21 295 41 49 ];
+        %tmp.21 = getv function %tmp.20 :drawDone;
+        %tmp.22 = lgetv %dc;
+        symbol [ dc %tmp.22 295 50 52 ];
+        invoke %tmp.20 %tmp.21(%tmp.22);
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_295_39_295_55_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_295_13_296_30_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_295_13_296_30_if_else_false:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_296_13_296_30_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 296 15 ]
+        %tmp.23 = self;
+        symbol [ drawTimer %tmp.24 296 15 24 ];
+        %tmp.24 = getv function %tmp.23 :drawTimer;
+        %tmp.25 = lgetv %dc;
+        symbol [ dc %tmp.25 296 25 27 ];
+        invoke %tmp.23 %tmp.24(%tmp.25);
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_296_13_296_30_stop:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_295_13_296_30_if_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_294_8_296_30_if_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_291_26_297_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 299; @symbol_functiondef = [drawMenu,299,20,28]; @symbol_param<0> = [dc,299,29,31]; ]
+    protected
+    function drawMenu(dc) {
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_299_33_354_4_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 300 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 300 8 10 ];
+        symbol [ setColor %tmp.2 300 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        %tmp.3 = 0x0A0A0A;
+        %tmp.4 = 0x0A0A0A;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.4);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 300 41 ]
+        %tmp.5 = lgetv %dc;
+        symbol [ dc %tmp.5 300 41 43 ];
+        symbol [ clear %tmp.6 300 44 49 ];
+        %tmp.6 = getv function %tmp.5 :clear;
+        invoke %tmp.5 %tmp.6();
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 303 8 ]
+        %tmp.7 = lgetv %dc;
+        symbol [ dc %tmp.7 303 8 10 ];
+        symbol [ setColor %tmp.8 303 11 19 ];
+        %tmp.8 = getv function %tmp.7 :setColor;
+        %tmp.9 = 0xFF2222;
+        symbol [ Graphics %tmp.10 303 30 38 ];
+        %tmp.10 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.11 303 39 56 ];
+        %tmp.11 = getv %tmp.10 :COLOR_TRANSPARENT;
+        invoke %tmp.7 %tmp.8(%tmp.9, %tmp.11);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 304 8 ]
+        %tmp.12 = lgetv %dc;
+        symbol [ dc %tmp.12 304 8 10 ];
+        symbol [ drawText %tmp.13 304 11 19 ];
+        %tmp.13 = getv function %tmp.12 :drawText;
+        symbol [ _w %tmp.15 304 20 22 ];
+        %tmp.15 = getv ? :_w;
+        %tmp.16 = 2;
+        %tmp.17 = div %tmp.15 %tmp.16;
+        symbol [ _h %tmp.19 304 28 30 ];
+        %tmp.19 = getv ? :_h;
+        %tmp.20 = 4;
+        %tmp.21 = mul %tmp.19 %tmp.20;
+        %tmp.22 = 100;
+        %tmp.23 = div %tmp.21 %tmp.22;
+        symbol [ Graphics %tmp.24 304 42 50 ];
+        %tmp.24 = getm $.Toybox.Graphics;
+        symbol [ FONT_MEDIUM %tmp.25 304 51 62 ];
+        %tmp.25 = getv %tmp.24 :FONT_MEDIUM;
+        %tmp.26 = "SPARING";
+        symbol [ Graphics %tmp.27 304 75 83 ];
+        %tmp.27 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.28 304 84 103 ];
+        %tmp.28 = getv %tmp.27 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.12 %tmp.13(%tmp.17, %tmp.23, %tmp.25, %tmp.26, %tmp.28);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 305 8 ]
+        %tmp.29 = lgetv %dc;
+        symbol [ dc %tmp.29 305 8 10 ];
+        symbol [ setColor %tmp.30 305 11 19 ];
+        %tmp.30 = getv function %tmp.29 :setColor;
+        %tmp.31 = 0xFFCC22;
+        symbol [ Graphics %tmp.32 305 30 38 ];
+        %tmp.32 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.33 305 39 56 ];
+        %tmp.33 = getv %tmp.32 :COLOR_TRANSPARENT;
+        invoke %tmp.29 %tmp.30(%tmp.31, %tmp.33);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 306 8 ]
+        %tmp.34 = lgetv %dc;
+        symbol [ dc %tmp.34 306 8 10 ];
+        symbol [ drawText %tmp.35 306 11 19 ];
+        %tmp.35 = getv function %tmp.34 :drawText;
+        symbol [ _w %tmp.37 306 20 22 ];
+        %tmp.37 = getv ? :_w;
+        %tmp.38 = 2;
+        %tmp.39 = div %tmp.37 %tmp.38;
+        symbol [ _h %tmp.41 306 28 30 ];
+        %tmp.41 = getv ? :_h;
+        %tmp.42 = 17;
+        %tmp.43 = mul %tmp.41 %tmp.42;
+        %tmp.44 = 100;
+        %tmp.45 = div %tmp.43 %tmp.44;
+        symbol [ Graphics %tmp.46 306 43 51 ];
+        %tmp.46 = getm $.Toybox.Graphics;
+        symbol [ FONT_SMALL %tmp.47 306 52 62 ];
+        %tmp.47 = getv %tmp.46 :FONT_SMALL;
+        %tmp.48 = "TIMER";
+        symbol [ Graphics %tmp.49 306 73 81 ];
+        %tmp.49 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.50 306 82 101 ];
+        %tmp.50 = getv %tmp.49 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.34 %tmp.35(%tmp.39, %tmp.45, %tmp.47, %tmp.48, %tmp.50);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 309 8 ]
+        [ "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_299_33_354_4_start" "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_299_33_354_4_stop" ]
+        %labels.1 = local;
+        symbol [ labels %labels.1 309 12 18 ];
+        symbol [ _menuLabels %tmp.52 309 21 32 ];
+        %tmp.52 = getv ? :_menuLabels;
+        lputv %labels.1 %tmp.52;
+        symbol [ labels %labels.1 309 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 310 8 ]
+        [ "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_299_33_354_4_start" "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_299_33_354_4_stop" ]
+        %values.2 = local;
+        symbol [ values %values.2 310 12 18 ];
+        %tmp.53 = newa 3;
+        %tmp.54 = self;
+        symbol [ fmtTime %tmp.55 310 22 29 ];
+        %tmp.55 = getv function %tmp.54 :fmtTime;
+        symbol [ _roundSec %tmp.57 310 30 39 ];
+        %tmp.57 = getv ? :_roundSec;
+        %tmp.58 = invoke %tmp.54 %tmp.55(%tmp.57);
+        %tmp.59 = dup %tmp.53;
+        %tmp.60 = aputv %tmp.59 0 %tmp.58;
+        %tmp.61 = self;
+        symbol [ fmtTime %tmp.62 310 42 49 ];
+        %tmp.62 = getv function %tmp.61 :fmtTime;
+        symbol [ _restSec %tmp.64 310 50 58 ];
+        %tmp.64 = getv ? :_restSec;
+        %tmp.65 = invoke %tmp.61 %tmp.62(%tmp.64);
+        %tmp.66 = dup %tmp.60;
+        %tmp.67 = aputv %tmp.66 1 %tmp.65;
+        symbol [ _totalRounds %tmp.69 310 61 73 ];
+        %tmp.69 = getv ? :_totalRounds;
+        symbol [ toString %tmp.70 310 74 82 ];
+        %tmp.70 = getv function %tmp.69 :toString;
+        %tmp.71 = invoke %tmp.69 %tmp.70();
+        %tmp.72 = dup %tmp.67;
+        %tmp.73 = aputv %tmp.72 2 %tmp.71;
+        lputv %values.2 %tmp.73;
+        symbol [ values %values.2 310 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 312 8 ]
+        [ "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_299_33_354_4_start" "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_299_33_354_4_stop" ]
+        %startY.3 = local;
+        symbol [ startY %startY.3 312 12 18 ];
+        symbol [ _h %tmp.75 312 21 23 ];
+        %tmp.75 = getv ? :_h;
+        %tmp.76 = 32;
+        %tmp.77 = mul %tmp.75 %tmp.76;
+        %tmp.78 = 100;
+        %tmp.79 = div %tmp.77 %tmp.78;
+        lputv %startY.3 %tmp.79;
+        symbol [ startY %startY.3 312 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 313 8 ]
+        [ "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_299_33_354_4_start" "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_299_33_354_4_stop" ]
+        %rowH.4 = local;
+        symbol [ rowH %rowH.4 313 12 16 ];
+        symbol [ _h %tmp.81 313 19 21 ];
+        %tmp.81 = getv ? :_h;
+        %tmp.82 = 14;
+        %tmp.83 = mul %tmp.81 %tmp.82;
+        %tmp.84 = 100;
+        %tmp.85 = div %tmp.83 %tmp.84;
+        lputv %rowH.4 %tmp.85;
+        symbol [ rowH %rowH.4 313 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 314 8 ]
+        [ "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_299_33_354_4_start" "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_299_33_354_4_stop" ]
+        %mg.5 = local;
+        symbol [ mg %mg.5 314 12 14 ];
+        symbol [ _w %tmp.87 314 17 19 ];
+        %tmp.87 = getv ? :_w;
+        %tmp.88 = 12;
+        %tmp.89 = mul %tmp.87 %tmp.88;
+        %tmp.90 = 100;
+        %tmp.91 = div %tmp.89 %tmp.90;
+        lputv %mg.5 %tmp.91;
+        symbol [ mg %mg.5 314 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 316 8 ]
+        for @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_316_8_336_8_for_test @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_316_8_336_8_for_incr @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_316_8_336_8_for_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_316_8_336_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_316_8_336_8_for_begin" "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_316_8_336_8_for_end" ]
+        %i.6 = local;
+        symbol [ i %i.6 316 17 18 ];
+        %tmp.92 = 0;
+        lputv %i.6 %tmp.92;
+        symbol [ i %i.6 316 17 18 ];
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_316_8_336_8_for_test:
+        %tmp.93 = lgetv %i.6;
+        symbol [ i %tmp.93 316 24 25 ];
+        %tmp.94 = 3;
+        %tmp.95 = lt %tmp.93 %tmp.94;
+        bf %tmp.95 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_316_8_336_8_for_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_316_8_336_8_for_begin:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_316_36_336_8_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 317 12 ]
+        [ "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_316_36_336_8_start" "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_316_36_336_8_stop" ]
+        %y.7 = local;
+        symbol [ y %y.7 317 16 17 ];
+        %tmp.96 = lgetv %startY.3;
+        symbol [ startY %tmp.96 317 20 26 ];
+        %tmp.97 = lgetv %i.6;
+        symbol [ i %tmp.97 317 29 30 ];
+        %tmp.98 = lgetv %rowH.4;
+        symbol [ rowH %tmp.98 317 33 37 ];
+        %tmp.99 = mul %tmp.97 %tmp.98;
+        %tmp.100 = add %tmp.96 %tmp.99;
+        lputv %y.7 %tmp.100;
+        symbol [ y %y.7 317 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 318 12 ]
+        [ "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_316_36_336_8_start" "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_316_36_336_8_stop" ]
+        %sel.8 = local;
+        symbol [ sel %sel.8 318 16 19 ];
+        %tmp.101 = lgetv %i.6;
+        symbol [ i %tmp.101 318 23 24 ];
+        symbol [ _menuSel %tmp.103 318 28 36 ];
+        %tmp.103 = getv ? :_menuSel;
+        %tmp.104 = eq %tmp.101 %tmp.103;
+        lputv %sel.8 %tmp.104;
+        symbol [ sel %sel.8 318 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 320 12 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_320_12_323_12_if_stmt:
+        %tmp.105 = lgetv %sel.8;
+        symbol [ sel %tmp.105 320 16 19 ];
+        bf %tmp.105 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_320_12_323_12_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_320_12_323_12_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_320_21_323_12_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 321 16 ]
+        %tmp.106 = lgetv %dc;
+        symbol [ dc %tmp.106 321 16 18 ];
+        symbol [ setColor %tmp.107 321 19 27 ];
+        %tmp.107 = getv function %tmp.106 :setColor;
+        %tmp.108 = 0x1A2A3A;
+        symbol [ Graphics %tmp.109 321 38 46 ];
+        %tmp.109 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.110 321 47 64 ];
+        %tmp.110 = getv %tmp.109 :COLOR_TRANSPARENT;
+        invoke %tmp.106 %tmp.107(%tmp.108, %tmp.110);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 322 16 ]
+        %tmp.111 = lgetv %dc;
+        symbol [ dc %tmp.111 322 16 18 ];
+        symbol [ fillRoundedRectangle %tmp.112 322 19 39 ];
+        %tmp.112 = getv function %tmp.111 :fillRoundedRectangle;
+        %tmp.113 = lgetv %mg.5;
+        symbol [ mg %tmp.113 322 40 42 ];
+        %tmp.114 = lgetv %y.7;
+        symbol [ y %tmp.114 322 44 45 ];
+        %tmp.115 = 2;
+        %tmp.116 = sub %tmp.114 %tmp.115;
+        symbol [ _w %tmp.118 322 51 53 ];
+        %tmp.118 = getv ? :_w;
+        %tmp.119 = lgetv %mg.5;
+        symbol [ mg %tmp.119 322 56 58 ];
+        %tmp.120 = 2;
+        %tmp.121 = mul %tmp.119 %tmp.120;
+        %tmp.122 = sub %tmp.118 %tmp.121;
+        %tmp.123 = lgetv %rowH.4;
+        symbol [ rowH %tmp.123 322 64 68 ];
+        %tmp.124 = 2;
+        %tmp.125 = sub %tmp.123 %tmp.124;
+        %tmp.126 = 6;
+        invoke %tmp.111 %tmp.112(%tmp.113, %tmp.116, %tmp.122, %tmp.125, %tmp.126);
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_320_21_323_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_320_12_323_12_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_320_12_323_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 325 12 ]
+        %tmp.127 = lgetv %dc;
+        symbol [ dc %tmp.127 325 12 14 ];
+        symbol [ setColor %tmp.128 325 15 23 ];
+        %tmp.128 = getv function %tmp.127 :setColor;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_325_24_325_41_begin:
+        %tmp.129 = lgetv %sel.8;
+        symbol [ sel %tmp.129 325 24 27 ];
+        bf %tmp.129 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_325_24_325_41_else_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_325_24_325_41_true:
+        %tmp.130 = 0xFFFFFF;
+        push %tmp.130;
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_325_24_325_41_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_325_24_325_41_else_false:
+        %tmp.131 = 0x667788;
+        push %tmp.131;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_325_24_325_41_end:
+        %tmp.132 = phi [%tmp.129 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_325_24_325_41_begin] [%tmp.130 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_325_24_325_41_true] [%tmp.131 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_325_24_325_41_else_false] [%tmp.132 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_325_24_325_41_end];
+        symbol [ Graphics %tmp.133 325 51 59 ];
+        %tmp.133 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.134 325 60 77 ];
+        %tmp.134 = getv %tmp.133 :COLOR_TRANSPARENT;
+        invoke %tmp.127 %tmp.128(%tmp.132, %tmp.134);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 326 12 ]
+        %tmp.135 = lgetv %dc;
+        symbol [ dc %tmp.135 326 12 14 ];
+        symbol [ drawText %tmp.136 326 15 23 ];
+        %tmp.136 = getv function %tmp.135 :drawText;
+        %tmp.137 = lgetv %mg.5;
+        symbol [ mg %tmp.137 326 24 26 ];
+        %tmp.138 = 8;
+        %tmp.139 = add %tmp.137 %tmp.138;
+        %tmp.140 = lgetv %y.7;
+        symbol [ y %tmp.140 326 32 33 ];
+        %tmp.141 = 2;
+        %tmp.142 = add %tmp.140 %tmp.141;
+        symbol [ Graphics %tmp.143 326 39 47 ];
+        %tmp.143 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.144 326 48 58 ];
+        %tmp.144 = getv %tmp.143 :FONT_XTINY;
+        %tmp.145 = lgetv %labels.1;
+        symbol [ labels %tmp.145 326 60 66 ];
+        %tmp.146 = lgetv %i.6;
+        symbol [ i %tmp.146 326 67 68 ];
+        %tmp.147 = agetv %tmp.145 %tmp.146;
+        symbol [ Graphics %tmp.148 326 71 79 ];
+        %tmp.148 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_LEFT %tmp.149 326 80 97 ];
+        %tmp.149 = getv %tmp.148 :TEXT_JUSTIFY_LEFT;
+        invoke %tmp.135 %tmp.136(%tmp.139, %tmp.142, %tmp.144, %tmp.147, %tmp.149);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 328 12 ]
+        %tmp.150 = lgetv %dc;
+        symbol [ dc %tmp.150 328 12 14 ];
+        symbol [ setColor %tmp.151 328 15 23 ];
+        %tmp.151 = getv function %tmp.150 :setColor;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_328_24_328_41_begin:
+        %tmp.152 = lgetv %sel.8;
+        symbol [ sel %tmp.152 328 24 27 ];
+        bf %tmp.152 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_328_24_328_41_else_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_328_24_328_41_true:
+        %tmp.153 = 0x44FF88;
+        push %tmp.153;
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_328_24_328_41_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_328_24_328_41_else_false:
+        %tmp.154 = 0x99AABB;
+        push %tmp.154;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_328_24_328_41_end:
+        %tmp.155 = phi [%tmp.152 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_328_24_328_41_begin] [%tmp.153 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_328_24_328_41_true] [%tmp.154 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_328_24_328_41_else_false] [%tmp.155 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_328_24_328_41_end];
+        symbol [ Graphics %tmp.156 328 51 59 ];
+        %tmp.156 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.157 328 60 77 ];
+        %tmp.157 = getv %tmp.156 :COLOR_TRANSPARENT;
+        invoke %tmp.150 %tmp.151(%tmp.155, %tmp.157);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 329 12 ]
+        %tmp.158 = lgetv %dc;
+        symbol [ dc %tmp.158 329 12 14 ];
+        symbol [ drawText %tmp.159 329 15 23 ];
+        %tmp.159 = getv function %tmp.158 :drawText;
+        symbol [ _w %tmp.161 329 24 26 ];
+        %tmp.161 = getv ? :_w;
+        %tmp.162 = lgetv %mg.5;
+        symbol [ mg %tmp.162 329 29 31 ];
+        %tmp.163 = sub %tmp.161 %tmp.162;
+        %tmp.164 = 8;
+        %tmp.165 = sub %tmp.163 %tmp.164;
+        %tmp.166 = lgetv %y.7;
+        symbol [ y %tmp.166 329 37 38 ];
+        %tmp.167 = 2;
+        %tmp.168 = add %tmp.166 %tmp.167;
+        symbol [ Graphics %tmp.169 329 44 52 ];
+        %tmp.169 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.170 329 53 63 ];
+        %tmp.170 = getv %tmp.169 :FONT_XTINY;
+        %tmp.171 = lgetv %values.2;
+        symbol [ values %tmp.171 329 65 71 ];
+        %tmp.172 = lgetv %i.6;
+        symbol [ i %tmp.172 329 72 73 ];
+        %tmp.173 = agetv %tmp.171 %tmp.172;
+        symbol [ Graphics %tmp.174 329 76 84 ];
+        %tmp.174 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_RIGHT %tmp.175 329 85 103 ];
+        %tmp.175 = getv %tmp.174 :TEXT_JUSTIFY_RIGHT;
+        invoke %tmp.158 %tmp.159(%tmp.165, %tmp.168, %tmp.170, %tmp.173, %tmp.175);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 331 12 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_331_12_335_12_if_stmt:
+        %tmp.176 = lgetv %sel.8;
+        symbol [ sel %tmp.176 331 16 19 ];
+        bf %tmp.176 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_331_12_335_12_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_331_12_335_12_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_331_21_335_12_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 332 16 ]
+        %tmp.177 = lgetv %dc;
+        symbol [ dc %tmp.177 332 16 18 ];
+        symbol [ setColor %tmp.178 332 19 27 ];
+        %tmp.178 = getv function %tmp.177 :setColor;
+        %tmp.179 = 0xFFCC22;
+        symbol [ Graphics %tmp.180 332 38 46 ];
+        %tmp.180 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.181 332 47 64 ];
+        %tmp.181 = getv %tmp.180 :COLOR_TRANSPARENT;
+        invoke %tmp.177 %tmp.178(%tmp.179, %tmp.181);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 333 16 ]
+        %tmp.182 = lgetv %dc;
+        symbol [ dc %tmp.182 333 16 18 ];
+        symbol [ drawText %tmp.183 333 19 27 ];
+        %tmp.183 = getv function %tmp.182 :drawText;
+        %tmp.184 = lgetv %mg.5;
+        symbol [ mg %tmp.184 333 28 30 ];
+        %tmp.185 = 2;
+        %tmp.186 = add %tmp.184 %tmp.185;
+        %tmp.187 = lgetv %y.7;
+        symbol [ y %tmp.187 333 36 37 ];
+        %tmp.188 = 2;
+        %tmp.189 = add %tmp.187 %tmp.188;
+        symbol [ Graphics %tmp.190 333 43 51 ];
+        %tmp.190 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.191 333 52 62 ];
+        %tmp.191 = getv %tmp.190 :FONT_XTINY;
+        %tmp.192 = "<";
+        symbol [ Graphics %tmp.193 333 69 77 ];
+        %tmp.193 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_LEFT %tmp.194 333 78 95 ];
+        %tmp.194 = getv %tmp.193 :TEXT_JUSTIFY_LEFT;
+        invoke %tmp.182 %tmp.183(%tmp.186, %tmp.189, %tmp.191, %tmp.192, %tmp.194);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 334 16 ]
+        %tmp.195 = lgetv %dc;
+        symbol [ dc %tmp.195 334 16 18 ];
+        symbol [ drawText %tmp.196 334 19 27 ];
+        %tmp.196 = getv function %tmp.195 :drawText;
+        symbol [ _w %tmp.198 334 28 30 ];
+        %tmp.198 = getv ? :_w;
+        %tmp.199 = lgetv %mg.5;
+        symbol [ mg %tmp.199 334 33 35 ];
+        %tmp.200 = sub %tmp.198 %tmp.199;
+        %tmp.201 = 2;
+        %tmp.202 = sub %tmp.200 %tmp.201;
+        %tmp.203 = lgetv %y.7;
+        symbol [ y %tmp.203 334 41 42 ];
+        %tmp.204 = 2;
+        %tmp.205 = add %tmp.203 %tmp.204;
+        symbol [ Graphics %tmp.206 334 48 56 ];
+        %tmp.206 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.207 334 57 67 ];
+        %tmp.207 = getv %tmp.206 :FONT_XTINY;
+        %tmp.208 = ">";
+        symbol [ Graphics %tmp.209 334 74 82 ];
+        %tmp.209 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_RIGHT %tmp.210 334 83 101 ];
+        %tmp.210 = getv %tmp.209 :TEXT_JUSTIFY_RIGHT;
+        invoke %tmp.195 %tmp.196(%tmp.202, %tmp.205, %tmp.207, %tmp.208, %tmp.210);
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_331_21_335_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_331_12_335_12_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_331_12_335_12_if_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_316_36_336_8_stop:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_316_8_336_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 316 ]
+        %tmp.213 = lgetv %i.6;
+        symbol [ i %tmp.213 316 31 32 ];
+        %tmp.214 = add %tmp.213 1;
+        lputv %i.6 %tmp.214;
+        symbol [ i %i.6 316 31 32 ];
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_316_8_336_8_for_test;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_316_8_336_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 339 8 ]
+        [ "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_299_33_354_4_start" "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_299_33_354_4_stop" ]
+        %sy.9 = local;
+        symbol [ sy %sy.9 339 12 14 ];
+        %tmp.215 = lgetv %startY.3;
+        symbol [ startY %tmp.215 339 17 23 ];
+        %tmp.216 = 3;
+        %tmp.217 = lgetv %rowH.4;
+        symbol [ rowH %tmp.217 339 30 34 ];
+        %tmp.218 = mul %tmp.216 %tmp.217;
+        %tmp.219 = add %tmp.215 %tmp.218;
+        lputv %sy.9 %tmp.219;
+        symbol [ sy %sy.9 339 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 340 8 ]
+        [ "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_299_33_354_4_start" "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_299_33_354_4_stop" ]
+        %btnSel.10 = local;
+        symbol [ btnSel %btnSel.10 340 12 18 ];
+        symbol [ _menuSel %tmp.221 340 22 30 ];
+        %tmp.221 = getv ? :_menuSel;
+        %tmp.222 = 3;
+        %tmp.223 = eq %tmp.221 %tmp.222;
+        lputv %btnSel.10 %tmp.223;
+        symbol [ btnSel %btnSel.10 340 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 341 8 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_341_8_348_8_if_stmt:
+        %tmp.224 = lgetv %btnSel.10;
+        symbol [ btnSel %tmp.224 341 12 18 ];
+        bf %tmp.224 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_341_8_348_8_if_else_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_341_8_348_8_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_341_20_346_8_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 342 12 ]
+        [ "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_341_20_346_8_start" "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_341_20_346_8_stop" ]
+        %bc.11 = local;
+        symbol [ bc %bc.11 342 16 18 ];
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_342_21_342_50_begin:
+        symbol [ _tick %tmp.226 342 22 27 ];
+        %tmp.226 = getv ? :_tick;
+        %tmp.227 = 4;
+        %tmp.228 = mod %tmp.226 %tmp.227;
+        %tmp.229 = 2;
+        %tmp.230 = lt %tmp.228 %tmp.229;
+        bf %tmp.230 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_342_21_342_50_else_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_342_21_342_50_true:
+        %tmp.231 = 0x00CC00;
+        push %tmp.231;
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_342_21_342_50_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_342_21_342_50_else_false:
+        %tmp.232 = 0x00AA00;
+        push %tmp.232;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_342_21_342_50_end:
+        %tmp.233 = phi [%tmp.230 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_342_21_342_50_begin] [%tmp.231 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_342_21_342_50_true] [%tmp.232 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_342_21_342_50_else_false] [%tmp.233 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_342_21_342_50_end];
+        lputv %bc.11 %tmp.233;
+        symbol [ bc %bc.11 342 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 343 12 ]
+        %tmp.234 = lgetv %dc;
+        symbol [ dc %tmp.234 343 12 14 ];
+        symbol [ setColor %tmp.235 343 15 23 ];
+        %tmp.235 = getv function %tmp.234 :setColor;
+        %tmp.236 = lgetv %bc.11;
+        symbol [ bc %tmp.236 343 24 26 ];
+        symbol [ Graphics %tmp.237 343 28 36 ];
+        %tmp.237 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.238 343 37 54 ];
+        %tmp.238 = getv %tmp.237 :COLOR_TRANSPARENT;
+        invoke %tmp.234 %tmp.235(%tmp.236, %tmp.238);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 344 12 ]
+        %tmp.239 = lgetv %dc;
+        symbol [ dc %tmp.239 344 12 14 ];
+        symbol [ fillRoundedRectangle %tmp.240 344 15 35 ];
+        %tmp.240 = getv function %tmp.239 :fillRoundedRectangle;
+        symbol [ _w %tmp.242 344 36 38 ];
+        %tmp.242 = getv ? :_w;
+        %tmp.243 = 20;
+        %tmp.244 = mul %tmp.242 %tmp.243;
+        %tmp.245 = 100;
+        %tmp.246 = div %tmp.244 %tmp.245;
+        %tmp.247 = lgetv %sy.9;
+        symbol [ sy %tmp.247 344 51 53 ];
+        %tmp.248 = 2;
+        %tmp.249 = sub %tmp.247 %tmp.248;
+        symbol [ _w %tmp.251 344 59 61 ];
+        %tmp.251 = getv ? :_w;
+        %tmp.252 = 60;
+        %tmp.253 = mul %tmp.251 %tmp.252;
+        %tmp.254 = 100;
+        %tmp.255 = div %tmp.253 %tmp.254;
+        %tmp.256 = lgetv %rowH.4;
+        symbol [ rowH %tmp.256 344 74 78 ];
+        %tmp.257 = 10;
+        invoke %tmp.239 %tmp.240(%tmp.246, %tmp.249, %tmp.255, %tmp.256, %tmp.257);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 345 12 ]
+        %tmp.258 = lgetv %dc;
+        symbol [ dc %tmp.258 345 12 14 ];
+        symbol [ setColor %tmp.259 345 15 23 ];
+        %tmp.259 = getv function %tmp.258 :setColor;
+        %tmp.260 = 0x000000;
+        symbol [ Graphics %tmp.261 345 34 42 ];
+        %tmp.261 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.262 345 43 60 ];
+        %tmp.262 = getv %tmp.261 :COLOR_TRANSPARENT;
+        invoke %tmp.258 %tmp.259(%tmp.260, %tmp.262);
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_341_20_346_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_341_8_348_8_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_341_8_348_8_if_else_false:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_346_15_348_8_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 347 12 ]
+        %tmp.263 = lgetv %dc;
+        symbol [ dc %tmp.263 347 12 14 ];
+        symbol [ setColor %tmp.264 347 15 23 ];
+        %tmp.264 = getv function %tmp.263 :setColor;
+        %tmp.265 = 0x228833;
+        symbol [ Graphics %tmp.266 347 34 42 ];
+        %tmp.266 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.267 347 43 60 ];
+        %tmp.267 = getv %tmp.266 :COLOR_TRANSPARENT;
+        invoke %tmp.263 %tmp.264(%tmp.265, %tmp.267);
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_346_15_348_8_stop:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_341_8_348_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 349 8 ]
+        %tmp.268 = lgetv %dc;
+        symbol [ dc %tmp.268 349 8 10 ];
+        symbol [ drawText %tmp.269 349 11 19 ];
+        %tmp.269 = getv function %tmp.268 :drawText;
+        symbol [ _w %tmp.271 349 20 22 ];
+        %tmp.271 = getv ? :_w;
+        %tmp.272 = 2;
+        %tmp.273 = div %tmp.271 %tmp.272;
+        %tmp.274 = lgetv %sy.9;
+        symbol [ sy %tmp.274 349 28 30 ];
+        %tmp.275 = 2;
+        %tmp.276 = add %tmp.274 %tmp.275;
+        symbol [ Graphics %tmp.277 349 36 44 ];
+        %tmp.277 = getm $.Toybox.Graphics;
+        symbol [ FONT_SMALL %tmp.278 349 45 55 ];
+        %tmp.278 = getv %tmp.277 :FONT_SMALL;
+        %tmp.279 = "START";
+        symbol [ Graphics %tmp.280 349 66 74 ];
+        %tmp.280 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.281 349 75 94 ];
+        %tmp.281 = getv %tmp.280 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.268 %tmp.269(%tmp.273, %tmp.276, %tmp.278, %tmp.279, %tmp.281);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 352 8 ]
+        %tmp.282 = lgetv %dc;
+        symbol [ dc %tmp.282 352 8 10 ];
+        symbol [ setColor %tmp.283 352 11 19 ];
+        %tmp.283 = getv function %tmp.282 :setColor;
+        %tmp.284 = 0x334455;
+        symbol [ Graphics %tmp.285 352 30 38 ];
+        %tmp.285 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.286 352 39 56 ];
+        %tmp.286 = getv %tmp.285 :COLOR_TRANSPARENT;
+        invoke %tmp.282 %tmp.283(%tmp.284, %tmp.286);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 353 8 ]
+        %tmp.287 = lgetv %dc;
+        symbol [ dc %tmp.287 353 8 10 ];
+        symbol [ drawText %tmp.288 353 11 19 ];
+        %tmp.288 = getv function %tmp.287 :drawText;
+        symbol [ _w %tmp.290 353 20 22 ];
+        %tmp.290 = getv ? :_w;
+        %tmp.291 = 2;
+        %tmp.292 = div %tmp.290 %tmp.291;
+        symbol [ _h %tmp.294 353 28 30 ];
+        %tmp.294 = getv ? :_h;
+        %tmp.295 = 92;
+        %tmp.296 = mul %tmp.294 %tmp.295;
+        %tmp.297 = 100;
+        %tmp.298 = div %tmp.296 %tmp.297;
+        symbol [ Graphics %tmp.299 353 43 51 ];
+        %tmp.299 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.300 353 52 62 ];
+        %tmp.300 = getv %tmp.299 :FONT_XTINY;
+        %tmp.301 = "SEL:cycle  UP/DN:nav";
+        symbol [ Graphics %tmp.302 353 88 96 ];
+        %tmp.302 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.303 353 97 116 ];
+        %tmp.303 = getv %tmp.302 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.287 %tmp.288(%tmp.292, %tmp.298, %tmp.300, %tmp.301, %tmp.303);
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_299_33_354_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 356; @symbol_functiondef = [drawTimer,356,20,29]; @symbol_param<0> = [dc,356,30,32]; ]
+    protected
+    function drawTimer(dc) {
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_356_34_428_4_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 358 8 ]
+        [ "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_356_34_428_4_start" "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_356_34_428_4_stop" ]
+        %bg.1 = local;
+        symbol [ bg %bg.1 358 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 358 16 ]
+        [ "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_356_34_428_4_start" "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_356_34_428_4_stop" ]
+        %fg.2 = local;
+        symbol [ fg %fg.2 358 20 22 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 358 24 ]
+        [ "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_356_34_428_4_start" "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_356_34_428_4_stop" ]
+        %label.3 = local;
+        symbol [ label %label.3 358 28 33 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 360 8 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_360_8_377_8_if_stmt:
+        symbol [ gameState %tmp.2 360 12 21 ];
+        %tmp.2 = getv ? :gameState;
+        symbol [ TS_PAUSED %tmp.4 360 25 34 ];
+        %tmp.4 = getv ? :TS_PAUSED;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_360_8_377_8_if_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_360_8_377_8_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_360_36_364_8_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 361 12 ]
+        %tmp.6 = 0x181818;
+        lputv %bg.1 %tmp.6;
+        symbol [ bg %bg.1 361 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 362 12 ]
+        %tmp.7 = 0xAAAAAA;
+        lputv %fg.2 %tmp.7;
+        symbol [ fg %fg.2 362 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 363 12 ]
+        %tmp.8 = "PAUSED";
+        lputv %label.3 %tmp.8;
+        symbol [ label %label.3 363 12 17 ];
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_360_36_364_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_360_8_377_8_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_360_8_377_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 364 15 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_364_15_377_8_if_stmt:
+        symbol [ gameState %tmp.10 364 19 28 ];
+        %tmp.10 = getv ? :gameState;
+        symbol [ TS_LAST10 %tmp.12 364 32 41 ];
+        %tmp.12 = getv ? :TS_LAST10;
+        %tmp.13 = eq %tmp.10 %tmp.12;
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_364_15_377_8_if_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_364_15_377_8_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_364_43_369_8_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 366 12 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_366_17_366_47_begin:
+        symbol [ _tick %tmp.15 366 18 23 ];
+        %tmp.15 = getv ? :_tick;
+        %tmp.16 = 2;
+        %tmp.17 = mod %tmp.15 %tmp.16;
+        %tmp.18 = 0;
+        %tmp.19 = eq %tmp.17 %tmp.18;
+        bf %tmp.19 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_366_17_366_47_else_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_366_17_366_47_true:
+        %tmp.20 = 0xFFDD00;
+        push %tmp.20;
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_366_17_366_47_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_366_17_366_47_else_false:
+        %tmp.21 = 0x00DD00;
+        push %tmp.21;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_366_17_366_47_end:
+        %tmp.22 = phi [%tmp.19 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_366_17_366_47_begin] [%tmp.20 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_366_17_366_47_true] [%tmp.21 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_366_17_366_47_else_false] [%tmp.22 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_366_17_366_47_end];
+        lputv %bg.1 %tmp.22;
+        symbol [ bg %bg.1 366 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 367 12 ]
+        %tmp.23 = 0x000000;
+        lputv %fg.2 %tmp.23;
+        symbol [ fg %fg.2 367 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 368 12 ]
+        %tmp.24 = "LAST 10!";
+        lputv %label.3 %tmp.24;
+        symbol [ label %label.3 368 12 17 ];
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_364_43_369_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_364_15_377_8_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_364_15_377_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 369 15 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_369_15_377_8_if_stmt:
+        symbol [ gameState %tmp.26 369 19 28 ];
+        %tmp.26 = getv ? :gameState;
+        symbol [ TS_REST %tmp.28 369 32 39 ];
+        %tmp.28 = getv ? :TS_REST;
+        %tmp.29 = eq %tmp.26 %tmp.28;
+        bf %tmp.29 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_369_15_377_8_if_else_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_369_15_377_8_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_369_41_373_8_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 370 12 ]
+        %tmp.30 = 0xDD0000;
+        lputv %bg.1 %tmp.30;
+        symbol [ bg %bg.1 370 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 371 12 ]
+        %tmp.31 = 0xFFFFFF;
+        lputv %fg.2 %tmp.31;
+        symbol [ fg %fg.2 371 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 372 12 ]
+        %tmp.32 = "REST";
+        lputv %label.3 %tmp.32;
+        symbol [ label %label.3 372 12 17 ];
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_369_41_373_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_369_15_377_8_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_369_15_377_8_if_else_false:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_373_15_377_8_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 374 12 ]
+        %tmp.33 = 0x00BB00;
+        lputv %bg.1 %tmp.33;
+        symbol [ bg %bg.1 374 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 375 12 ]
+        %tmp.34 = 0x000000;
+        lputv %fg.2 %tmp.34;
+        symbol [ fg %fg.2 375 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 376 12 ]
+        %tmp.35 = "FIGHT!";
+        lputv %label.3 %tmp.35;
+        symbol [ label %label.3 376 12 17 ];
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_373_15_377_8_stop:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_369_15_377_8_if_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_364_15_377_8_if_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_360_8_377_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 379 8 ]
+        %tmp.36 = lgetv %dc;
+        symbol [ dc %tmp.36 379 8 10 ];
+        symbol [ setColor %tmp.37 379 11 19 ];
+        %tmp.37 = getv function %tmp.36 :setColor;
+        %tmp.38 = lgetv %bg.1;
+        symbol [ bg %tmp.38 379 20 22 ];
+        %tmp.39 = lgetv %bg.1;
+        symbol [ bg %tmp.39 379 24 26 ];
+        invoke %tmp.36 %tmp.37(%tmp.38, %tmp.39);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 379 29 ]
+        %tmp.40 = lgetv %dc;
+        symbol [ dc %tmp.40 379 29 31 ];
+        symbol [ clear %tmp.41 379 32 37 ];
+        %tmp.41 = getv function %tmp.40 :clear;
+        invoke %tmp.40 %tmp.41();
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 382 8 ]
+        [ "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_356_34_428_4_start" "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_356_34_428_4_stop" ]
+        %roundStr.4 = local;
+        symbol [ roundStr %roundStr.4 382 12 20 ];
+        %tmp.42 = "R";
+        symbol [ _currentRound %tmp.44 382 29 42 ];
+        %tmp.44 = getv ? :_currentRound;
+        %tmp.45 = add %tmp.42 %tmp.44;
+        %tmp.46 = "/";
+        %tmp.47 = add %tmp.45 %tmp.46;
+        symbol [ _totalRounds %tmp.49 382 51 63 ];
+        %tmp.49 = getv ? :_totalRounds;
+        %tmp.50 = add %tmp.47 %tmp.49;
+        lputv %roundStr.4 %tmp.50;
+        symbol [ roundStr %roundStr.4 382 12 20 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 383 8 ]
+        %tmp.51 = lgetv %dc;
+        symbol [ dc %tmp.51 383 8 10 ];
+        symbol [ setColor %tmp.52 383 11 19 ];
+        %tmp.52 = getv function %tmp.51 :setColor;
+        %tmp.53 = lgetv %fg.2;
+        symbol [ fg %tmp.53 383 20 22 ];
+        symbol [ Graphics %tmp.54 383 24 32 ];
+        %tmp.54 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.55 383 33 50 ];
+        %tmp.55 = getv %tmp.54 :COLOR_TRANSPARENT;
+        invoke %tmp.51 %tmp.52(%tmp.53, %tmp.55);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 384 8 ]
+        %tmp.56 = lgetv %dc;
+        symbol [ dc %tmp.56 384 8 10 ];
+        symbol [ drawText %tmp.57 384 11 19 ];
+        %tmp.57 = getv function %tmp.56 :drawText;
+        symbol [ _w %tmp.59 384 20 22 ];
+        %tmp.59 = getv ? :_w;
+        %tmp.60 = 2;
+        %tmp.61 = div %tmp.59 %tmp.60;
+        symbol [ _h %tmp.63 384 28 30 ];
+        %tmp.63 = getv ? :_h;
+        %tmp.64 = 6;
+        %tmp.65 = mul %tmp.63 %tmp.64;
+        %tmp.66 = 100;
+        %tmp.67 = div %tmp.65 %tmp.66;
+        symbol [ Graphics %tmp.68 384 42 50 ];
+        %tmp.68 = getm $.Toybox.Graphics;
+        symbol [ FONT_SMALL %tmp.69 384 51 61 ];
+        %tmp.69 = getv %tmp.68 :FONT_SMALL;
+        %tmp.70 = lgetv %roundStr.4;
+        symbol [ roundStr %tmp.70 384 63 71 ];
+        symbol [ Graphics %tmp.71 384 73 81 ];
+        %tmp.71 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.72 384 82 101 ];
+        %tmp.72 = getv %tmp.71 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.56 %tmp.57(%tmp.61, %tmp.67, %tmp.69, %tmp.70, %tmp.72);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 387 8 ]
+        %tmp.73 = lgetv %dc;
+        symbol [ dc %tmp.73 387 8 10 ];
+        symbol [ drawText %tmp.74 387 11 19 ];
+        %tmp.74 = getv function %tmp.73 :drawText;
+        symbol [ _w %tmp.76 387 20 22 ];
+        %tmp.76 = getv ? :_w;
+        %tmp.77 = 2;
+        %tmp.78 = div %tmp.76 %tmp.77;
+        symbol [ _h %tmp.80 387 28 30 ];
+        %tmp.80 = getv ? :_h;
+        %tmp.81 = 18;
+        %tmp.82 = mul %tmp.80 %tmp.81;
+        %tmp.83 = 100;
+        %tmp.84 = div %tmp.82 %tmp.83;
+        symbol [ Graphics %tmp.85 387 43 51 ];
+        %tmp.85 = getm $.Toybox.Graphics;
+        symbol [ FONT_MEDIUM %tmp.86 387 52 63 ];
+        %tmp.86 = getv %tmp.85 :FONT_MEDIUM;
+        %tmp.87 = lgetv %label.3;
+        symbol [ label %tmp.87 387 65 70 ];
+        symbol [ Graphics %tmp.88 387 72 80 ];
+        %tmp.88 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.89 387 81 100 ];
+        %tmp.89 = getv %tmp.88 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.73 %tmp.74(%tmp.78, %tmp.84, %tmp.86, %tmp.87, %tmp.89);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 390 8 ]
+        [ "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_356_34_428_4_start" "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_356_34_428_4_stop" ]
+        %timeStr.5 = local;
+        symbol [ timeStr %timeStr.5 390 12 19 ];
+        %tmp.90 = self;
+        symbol [ fmtTime %tmp.91 390 22 29 ];
+        %tmp.91 = getv function %tmp.90 :fmtTime;
+        symbol [ _remaining %tmp.93 390 30 40 ];
+        %tmp.93 = getv ? :_remaining;
+        %tmp.94 = invoke %tmp.90 %tmp.91(%tmp.93);
+        lputv %timeStr.5 %tmp.94;
+        symbol [ timeStr %timeStr.5 390 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 391 8 ]
+        %tmp.95 = lgetv %dc;
+        symbol [ dc %tmp.95 391 8 10 ];
+        symbol [ drawText %tmp.96 391 11 19 ];
+        %tmp.96 = getv function %tmp.95 :drawText;
+        symbol [ _w %tmp.98 391 20 22 ];
+        %tmp.98 = getv ? :_w;
+        %tmp.99 = 2;
+        %tmp.100 = div %tmp.98 %tmp.99;
+        symbol [ _h %tmp.102 391 28 30 ];
+        %tmp.102 = getv ? :_h;
+        %tmp.103 = 32;
+        %tmp.104 = mul %tmp.102 %tmp.103;
+        %tmp.105 = 100;
+        %tmp.106 = div %tmp.104 %tmp.105;
+        symbol [ Graphics %tmp.107 391 43 51 ];
+        %tmp.107 = getm $.Toybox.Graphics;
+        symbol [ FONT_NUMBER_THAI_HOT %tmp.108 391 52 72 ];
+        %tmp.108 = getv %tmp.107 :FONT_NUMBER_THAI_HOT;
+        %tmp.109 = lgetv %timeStr.5;
+        symbol [ timeStr %tmp.109 391 74 81 ];
+        symbol [ Graphics %tmp.110 391 83 91 ];
+        %tmp.110 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.111 391 92 111 ];
+        %tmp.111 = getv %tmp.110 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.95 %tmp.96(%tmp.100, %tmp.106, %tmp.108, %tmp.109, %tmp.111);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 394 8 ]
+        [ "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_356_34_428_4_start" "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_356_34_428_4_stop" ]
+        %barH.6 = local;
+        symbol [ barH %barH.6 394 12 16 ];
+        symbol [ _h %tmp.113 394 19 21 ];
+        %tmp.113 = getv ? :_h;
+        %tmp.114 = 6;
+        %tmp.115 = mul %tmp.113 %tmp.114;
+        %tmp.116 = 100;
+        %tmp.117 = div %tmp.115 %tmp.116;
+        lputv %barH.6 %tmp.117;
+        symbol [ barH %barH.6 394 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 394 33 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_394_33_394_59_if_stmt:
+        %tmp.118 = lgetv %barH.6;
+        symbol [ barH %tmp.118 394 37 41 ];
+        %tmp.119 = 8;
+        %tmp.120 = lt %tmp.118 %tmp.119;
+        bf %tmp.120 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_394_33_394_59_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_394_33_394_59_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_394_47_394_59_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 394 49 ]
+        %tmp.121 = 8;
+        lputv %barH.6 %tmp.121;
+        symbol [ barH %barH.6 394 49 53 ];
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_394_47_394_59_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_394_33_394_59_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_394_33_394_59_if_end:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 395 8 ]
+        [ "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_356_34_428_4_start" "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_356_34_428_4_stop" ]
+        %barY.7 = local;
+        symbol [ barY %barY.7 395 12 16 ];
+        symbol [ _h %tmp.123 395 19 21 ];
+        %tmp.123 = getv ? :_h;
+        %tmp.124 = lgetv %barH.6;
+        symbol [ barH %tmp.124 395 24 28 ];
+        %tmp.125 = sub %tmp.123 %tmp.124;
+        lputv %barY.7 %tmp.125;
+        symbol [ barY %barY.7 395 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 396 8 ]
+        [ "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_356_34_428_4_start" "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_356_34_428_4_stop" ]
+        %totalSec.8 = local;
+        symbol [ totalSec %totalSec.8 396 12 20 ];
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_396_23_396_114_begin:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_396_24_396_98_begin:
+        symbol [ gameState %tmp.127 396 24 33 ];
+        %tmp.127 = getv ? :gameState;
+        symbol [ TS_REST %tmp.129 396 37 44 ];
+        %tmp.129 = getv ? :TS_REST;
+        %tmp.130 = eq %tmp.127 %tmp.129;
+        bt %tmp.130 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_396_23_396_114_true;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_396_48_396_98_false:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_396_49_396_91_begin:
+        symbol [ gameState %tmp.132 396 49 58 ];
+        %tmp.132 = getv ? :gameState;
+        symbol [ TS_PAUSED %tmp.134 396 62 71 ];
+        %tmp.134 = getv ? :TS_PAUSED;
+        %tmp.135 = eq %tmp.132 %tmp.134;
+        bf %tmp.135 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_396_23_396_114_else_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_396_75_396_91_true:
+        symbol [ _pausedState %tmp.137 396 75 87 ];
+        %tmp.137 = getv ? :_pausedState;
+        symbol [ TS_REST %tmp.139 396 91 98 ];
+        %tmp.139 = getv ? :TS_REST;
+        %tmp.140 = eq %tmp.137 %tmp.139;
+        push %tmp.140;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_396_75_396_91_end:
+        %tmp.141 = phi [%tmp.135 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_396_49_396_91_begin] [%tmp.140 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_396_75_396_91_true] [%tmp.141 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_396_75_396_91_end];
+        push %tmp.141;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_396_48_396_98_end:
+        %tmp.142 = phi [%tmp.130 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_396_24_396_98_begin] [%tmp.141 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_396_48_396_98_false] [%tmp.142 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_396_48_396_98_end];
+        bf %tmp.142 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_396_23_396_114_else_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_396_23_396_114_true:
+        symbol [ _restSec %tmp.144 396 103 111 ];
+        %tmp.144 = getv ? :_restSec;
+        push %tmp.144;
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_396_23_396_114_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_396_23_396_114_else_false:
+        symbol [ _roundSec %tmp.146 396 114 123 ];
+        %tmp.146 = getv ? :_roundSec;
+        push %tmp.146;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_396_23_396_114_end:
+        %tmp.147 = phi [%tmp.142 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_396_23_396_114_begin] [%tmp.144 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_396_23_396_114_true] [%tmp.146 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_396_23_396_114_else_false] [%tmp.147 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_396_23_396_114_end];
+        lputv %totalSec.8 %tmp.147;
+        symbol [ totalSec %totalSec.8 396 12 20 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 397 8 ]
+        [ "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_356_34_428_4_start" "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_356_34_428_4_stop" ]
+        %progress.9 = local;
+        symbol [ progress %progress.9 397 12 20 ];
+        %tmp.148 = 0;
+        lputv %progress.9 %tmp.148;
+        symbol [ progress %progress.9 397 12 20 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 398 8 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_398_8_398_67_if_stmt:
+        %tmp.149 = lgetv %totalSec.8;
+        symbol [ totalSec %tmp.149 398 12 20 ];
+        %tmp.150 = 0;
+        %tmp.151 = gt %tmp.149 %tmp.150;
+        bf %tmp.151 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_398_8_398_67_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_398_8_398_67_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_398_26_398_67_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 398 28 ]
+        symbol [ _w %tmp.153 398 39 41 ];
+        %tmp.153 = getv ? :_w;
+        symbol [ _remaining %tmp.155 398 44 54 ];
+        %tmp.155 = getv ? :_remaining;
+        %tmp.156 = mul %tmp.153 %tmp.155;
+        %tmp.157 = lgetv %totalSec.8;
+        symbol [ totalSec %tmp.157 398 57 65 ];
+        %tmp.158 = div %tmp.156 %tmp.157;
+        lputv %progress.9 %tmp.158;
+        symbol [ progress %progress.9 398 28 36 ];
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_398_26_398_67_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_398_8_398_67_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_398_8_398_67_if_end:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 399 8 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_399_8_399_44_if_stmt:
+        %tmp.159 = lgetv %progress.9;
+        symbol [ progress %tmp.159 399 12 20 ];
+        symbol [ _w %tmp.161 399 23 25 ];
+        %tmp.161 = getv ? :_w;
+        %tmp.162 = gt %tmp.159 %tmp.161;
+        bf %tmp.162 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_399_8_399_44_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_399_8_399_44_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_399_27_399_44_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 399 29 ]
+        symbol [ _w %tmp.164 399 40 42 ];
+        %tmp.164 = getv ? :_w;
+        lputv %progress.9 %tmp.164;
+        symbol [ progress %progress.9 399 29 37 ];
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_399_27_399_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_399_8_399_44_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_399_8_399_44_if_end:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 401 8 ]
+        %tmp.165 = lgetv %dc;
+        symbol [ dc %tmp.165 401 8 10 ];
+        symbol [ setColor %tmp.166 401 11 19 ];
+        %tmp.166 = getv function %tmp.165 :setColor;
+        %tmp.167 = 0x000000;
+        symbol [ Graphics %tmp.168 401 30 38 ];
+        %tmp.168 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.169 401 39 56 ];
+        %tmp.169 = getv %tmp.168 :COLOR_TRANSPARENT;
+        invoke %tmp.165 %tmp.166(%tmp.167, %tmp.169);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 402 8 ]
+        %tmp.170 = lgetv %dc;
+        symbol [ dc %tmp.170 402 8 10 ];
+        symbol [ fillRectangle %tmp.171 402 11 24 ];
+        %tmp.171 = getv function %tmp.170 :fillRectangle;
+        %tmp.172 = 0;
+        %tmp.173 = lgetv %barY.7;
+        symbol [ barY %tmp.173 402 28 32 ];
+        symbol [ _w %tmp.175 402 34 36 ];
+        %tmp.175 = getv ? :_w;
+        %tmp.176 = lgetv %barH.6;
+        symbol [ barH %tmp.176 402 38 42 ];
+        invoke %tmp.170 %tmp.171(%tmp.172, %tmp.173, %tmp.175, %tmp.176);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 404 8 ]
+        [ "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_356_34_428_4_start" "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_356_34_428_4_stop" ]
+        %barC.10 = local;
+        symbol [ barC %barC.10 404 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 405 8 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_405_8_413_8_if_stmt:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_405_12_405_86_begin:
+        symbol [ gameState %tmp.178 405 12 21 ];
+        %tmp.178 = getv ? :gameState;
+        symbol [ TS_REST %tmp.180 405 25 32 ];
+        %tmp.180 = getv ? :TS_REST;
+        %tmp.181 = eq %tmp.178 %tmp.180;
+        bt %tmp.181 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_405_8_413_8_if_true;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_405_36_405_86_false:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_405_37_405_79_begin:
+        symbol [ gameState %tmp.183 405 37 46 ];
+        %tmp.183 = getv ? :gameState;
+        symbol [ TS_PAUSED %tmp.185 405 50 59 ];
+        %tmp.185 = getv ? :TS_PAUSED;
+        %tmp.186 = eq %tmp.183 %tmp.185;
+        bf %tmp.186 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_405_8_413_8_if_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_405_63_405_79_true:
+        symbol [ _pausedState %tmp.188 405 63 75 ];
+        %tmp.188 = getv ? :_pausedState;
+        symbol [ TS_REST %tmp.190 405 79 86 ];
+        %tmp.190 = getv ? :TS_REST;
+        %tmp.191 = eq %tmp.188 %tmp.190;
+        push %tmp.191;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_405_63_405_79_end:
+        %tmp.192 = phi [%tmp.186 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_405_37_405_79_begin] [%tmp.191 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_405_63_405_79_true] [%tmp.192 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_405_63_405_79_end];
+        push %tmp.192;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_405_36_405_86_end:
+        %tmp.193 = phi [%tmp.181 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_405_12_405_86_begin] [%tmp.192 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_405_36_405_86_false] [%tmp.193 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_405_36_405_86_end];
+        bf %tmp.193 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_405_8_413_8_if_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_405_8_413_8_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_405_89_407_8_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 406 12 ]
+        %tmp.194 = 0xFF4444;
+        lputv %barC.10 %tmp.194;
+        symbol [ barC %barC.10 406 12 16 ];
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_405_89_407_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_405_8_413_8_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_405_8_413_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 407 15 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_407_15_413_8_if_stmt:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_407_19_407_97_begin:
+        symbol [ gameState %tmp.196 407 19 28 ];
+        %tmp.196 = getv ? :gameState;
+        symbol [ TS_LAST10 %tmp.198 407 32 41 ];
+        %tmp.198 = getv ? :TS_LAST10;
+        %tmp.199 = eq %tmp.196 %tmp.198;
+        bt %tmp.199 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_407_15_413_8_if_true;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_407_45_407_97_false:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_407_46_407_88_begin:
+        symbol [ gameState %tmp.201 407 46 55 ];
+        %tmp.201 = getv ? :gameState;
+        symbol [ TS_PAUSED %tmp.203 407 59 68 ];
+        %tmp.203 = getv ? :TS_PAUSED;
+        %tmp.204 = eq %tmp.201 %tmp.203;
+        bf %tmp.204 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_407_15_413_8_if_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_407_72_407_88_true:
+        symbol [ _pausedState %tmp.206 407 72 84 ];
+        %tmp.206 = getv ? :_pausedState;
+        symbol [ TS_LAST10 %tmp.208 407 88 97 ];
+        %tmp.208 = getv ? :TS_LAST10;
+        %tmp.209 = eq %tmp.206 %tmp.208;
+        push %tmp.209;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_407_72_407_88_end:
+        %tmp.210 = phi [%tmp.204 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_407_46_407_88_begin] [%tmp.209 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_407_72_407_88_true] [%tmp.210 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_407_72_407_88_end];
+        push %tmp.210;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_407_45_407_97_end:
+        %tmp.211 = phi [%tmp.199 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_407_19_407_97_begin] [%tmp.210 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_407_45_407_97_false] [%tmp.211 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_407_45_407_97_end];
+        bf %tmp.211 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_407_15_413_8_if_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_407_15_413_8_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_407_100_409_8_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 408 12 ]
+        %tmp.212 = 0xFFDD00;
+        lputv %barC.10 %tmp.212;
+        symbol [ barC %barC.10 408 12 16 ];
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_407_100_409_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_407_15_413_8_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_407_15_413_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 409 15 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_409_15_413_8_if_stmt:
+        symbol [ gameState %tmp.214 409 19 28 ];
+        %tmp.214 = getv ? :gameState;
+        symbol [ TS_PAUSED %tmp.216 409 32 41 ];
+        %tmp.216 = getv ? :TS_PAUSED;
+        %tmp.217 = eq %tmp.214 %tmp.216;
+        bf %tmp.217 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_409_15_413_8_if_else_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_409_15_413_8_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_409_43_411_8_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 410 12 ]
+        %tmp.218 = 0x555555;
+        lputv %barC.10 %tmp.218;
+        symbol [ barC %barC.10 410 12 16 ];
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_409_43_411_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_409_15_413_8_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_409_15_413_8_if_else_false:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_411_15_413_8_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 412 12 ]
+        %tmp.219 = 0x44FF44;
+        lputv %barC.10 %tmp.219;
+        symbol [ barC %barC.10 412 12 16 ];
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_411_15_413_8_stop:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_409_15_413_8_if_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_407_15_413_8_if_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_405_8_413_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 414 8 ]
+        %tmp.220 = lgetv %dc;
+        symbol [ dc %tmp.220 414 8 10 ];
+        symbol [ setColor %tmp.221 414 11 19 ];
+        %tmp.221 = getv function %tmp.220 :setColor;
+        %tmp.222 = lgetv %barC.10;
+        symbol [ barC %tmp.222 414 20 24 ];
+        symbol [ Graphics %tmp.223 414 26 34 ];
+        %tmp.223 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.224 414 35 52 ];
+        %tmp.224 = getv %tmp.223 :COLOR_TRANSPARENT;
+        invoke %tmp.220 %tmp.221(%tmp.222, %tmp.224);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 415 8 ]
+        %tmp.225 = lgetv %dc;
+        symbol [ dc %tmp.225 415 8 10 ];
+        symbol [ fillRectangle %tmp.226 415 11 24 ];
+        %tmp.226 = getv function %tmp.225 :fillRectangle;
+        %tmp.227 = 0;
+        %tmp.228 = lgetv %barY.7;
+        symbol [ barY %tmp.228 415 28 32 ];
+        %tmp.229 = lgetv %progress.9;
+        symbol [ progress %tmp.229 415 34 42 ];
+        %tmp.230 = lgetv %barH.6;
+        symbol [ barH %tmp.230 415 44 48 ];
+        invoke %tmp.225 %tmp.226(%tmp.227, %tmp.228, %tmp.229, %tmp.230);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 418 8 ]
+        %tmp.231 = lgetv %dc;
+        symbol [ dc %tmp.231 418 8 10 ];
+        symbol [ setColor %tmp.232 418 11 19 ];
+        %tmp.232 = getv function %tmp.231 :setColor;
+        %tmp.233 = lgetv %fg.2;
+        symbol [ fg %tmp.233 418 20 22 ];
+        symbol [ Graphics %tmp.234 418 24 32 ];
+        %tmp.234 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.235 418 33 50 ];
+        %tmp.235 = getv %tmp.234 :COLOR_TRANSPARENT;
+        invoke %tmp.231 %tmp.232(%tmp.233, %tmp.235);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 419 8 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_419_8_427_8_if_stmt:
+        symbol [ gameState %tmp.237 419 12 21 ];
+        %tmp.237 = getv ? :gameState;
+        symbol [ TS_PAUSED %tmp.239 419 25 34 ];
+        %tmp.239 = getv ? :TS_PAUSED;
+        %tmp.240 = eq %tmp.237 %tmp.239;
+        bf %tmp.240 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_419_8_427_8_if_else_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_419_8_427_8_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_419_36_425_8_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 421 12 ]
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_421_12_423_12_if_stmt:
+        symbol [ _tick %tmp.242 421 16 21 ];
+        %tmp.242 = getv ? :_tick;
+        %tmp.243 = 3;
+        %tmp.244 = mod %tmp.242 %tmp.243;
+        %tmp.245 = 2;
+        %tmp.246 = lt %tmp.244 %tmp.245;
+        bf %tmp.246 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_421_12_423_12_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_421_12_423_12_if_true:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_421_31_423_12_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 422 16 ]
+        %tmp.247 = lgetv %dc;
+        symbol [ dc %tmp.247 422 16 18 ];
+        symbol [ drawText %tmp.248 422 19 27 ];
+        %tmp.248 = getv function %tmp.247 :drawText;
+        symbol [ _w %tmp.250 422 28 30 ];
+        %tmp.250 = getv ? :_w;
+        %tmp.251 = 2;
+        %tmp.252 = div %tmp.250 %tmp.251;
+        symbol [ _h %tmp.254 422 36 38 ];
+        %tmp.254 = getv ? :_h;
+        %tmp.255 = 72;
+        %tmp.256 = mul %tmp.254 %tmp.255;
+        %tmp.257 = 100;
+        %tmp.258 = div %tmp.256 %tmp.257;
+        symbol [ Graphics %tmp.259 422 51 59 ];
+        %tmp.259 = getm $.Toybox.Graphics;
+        symbol [ FONT_SMALL %tmp.260 422 60 70 ];
+        %tmp.260 = getv %tmp.259 :FONT_SMALL;
+        %tmp.261 = "|| PAUSED ||";
+        symbol [ Graphics %tmp.262 422 88 96 ];
+        %tmp.262 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.263 422 97 116 ];
+        %tmp.263 = getv %tmp.262 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.247 %tmp.248(%tmp.252, %tmp.258, %tmp.260, %tmp.261, %tmp.263);
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_421_31_423_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_421_12_423_12_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_421_12_423_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 424 12 ]
+        %tmp.264 = lgetv %dc;
+        symbol [ dc %tmp.264 424 12 14 ];
+        symbol [ drawText %tmp.265 424 15 23 ];
+        %tmp.265 = getv function %tmp.264 :drawText;
+        symbol [ _w %tmp.267 424 24 26 ];
+        %tmp.267 = getv ? :_w;
+        %tmp.268 = 2;
+        %tmp.269 = div %tmp.267 %tmp.268;
+        symbol [ _h %tmp.271 424 32 34 ];
+        %tmp.271 = getv ? :_h;
+        %tmp.272 = 84;
+        %tmp.273 = mul %tmp.271 %tmp.272;
+        %tmp.274 = 100;
+        %tmp.275 = div %tmp.273 %tmp.274;
+        symbol [ Graphics %tmp.276 424 47 55 ];
+        %tmp.276 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.277 424 56 66 ];
+        %tmp.277 = getv %tmp.276 :FONT_XTINY;
+        %tmp.278 = "Sel:resume  Back:reset";
+        symbol [ Graphics %tmp.279 424 94 102 ];
+        %tmp.279 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.280 424 103 122 ];
+        %tmp.280 = getv %tmp.279 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.264 %tmp.265(%tmp.269, %tmp.275, %tmp.277, %tmp.278, %tmp.280);
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_419_36_425_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_419_8_427_8_if_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_419_8_427_8_if_else_false:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_425_15_427_8_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 426 12 ]
+        %tmp.281 = lgetv %dc;
+        symbol [ dc %tmp.281 426 12 14 ];
+        symbol [ drawText %tmp.282 426 15 23 ];
+        %tmp.282 = getv function %tmp.281 :drawText;
+        symbol [ _w %tmp.284 426 24 26 ];
+        %tmp.284 = getv ? :_w;
+        %tmp.285 = 2;
+        %tmp.286 = div %tmp.284 %tmp.285;
+        symbol [ _h %tmp.288 426 32 34 ];
+        %tmp.288 = getv ? :_h;
+        %tmp.289 = 78;
+        %tmp.290 = mul %tmp.288 %tmp.289;
+        %tmp.291 = 100;
+        %tmp.292 = div %tmp.290 %tmp.291;
+        symbol [ Graphics %tmp.293 426 47 55 ];
+        %tmp.293 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.294 426 56 66 ];
+        %tmp.294 = getv %tmp.293 :FONT_XTINY;
+        %tmp.295 = "Total: ";
+        %tmp.296 = self;
+        symbol [ fmtTime %tmp.297 426 80 87 ];
+        %tmp.297 = getv function %tmp.296 :fmtTime;
+        symbol [ _totalElapsed %tmp.299 426 88 101 ];
+        %tmp.299 = getv ? :_totalElapsed;
+        %tmp.300 = invoke %tmp.296 %tmp.297(%tmp.299);
+        %tmp.301 = add %tmp.295 %tmp.300;
+        symbol [ Graphics %tmp.302 426 104 112 ];
+        %tmp.302 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.303 426 113 132 ];
+        %tmp.303 = getv %tmp.302 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.281 %tmp.282(%tmp.286, %tmp.292, %tmp.294, %tmp.301, %tmp.303);
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_425_15_427_8_stop:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_419_8_427_8_if_end:
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_356_34_428_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 430; @symbol_functiondef = [drawDone,430,20,28]; @symbol_param<0> = [dc,430,29,31]; ]
+    protected
+    function drawDone(dc) {
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_430_33_453_4_start:
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 431 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 431 8 10 ];
+        symbol [ setColor %tmp.2 431 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        %tmp.3 = 0x080808;
+        %tmp.4 = 0x080808;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.4);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 431 41 ]
+        %tmp.5 = lgetv %dc;
+        symbol [ dc %tmp.5 431 41 43 ];
+        symbol [ clear %tmp.6 431 44 49 ];
+        %tmp.6 = getv function %tmp.5 :clear;
+        invoke %tmp.5 %tmp.6();
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 434 8 ]
+        %tmp.7 = lgetv %dc;
+        symbol [ dc %tmp.7 434 8 10 ];
+        symbol [ setColor %tmp.8 434 11 19 ];
+        %tmp.8 = getv function %tmp.7 :setColor;
+        %tmp.9 = 0x00DD00;
+        symbol [ Graphics %tmp.10 434 30 38 ];
+        %tmp.10 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.11 434 39 56 ];
+        %tmp.11 = getv %tmp.10 :COLOR_TRANSPARENT;
+        invoke %tmp.7 %tmp.8(%tmp.9, %tmp.11);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 435 8 ]
+        [ "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_430_33_453_4_start" "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_430_33_453_4_stop" ]
+        %okW.1 = local;
+        symbol [ okW %okW.1 435 12 15 ];
+        symbol [ _w %tmp.13 435 18 20 ];
+        %tmp.13 = getv ? :_w;
+        %tmp.14 = 25;
+        %tmp.15 = mul %tmp.13 %tmp.14;
+        %tmp.16 = 100;
+        %tmp.17 = div %tmp.15 %tmp.16;
+        lputv %okW.1 %tmp.17;
+        symbol [ okW %okW.1 435 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 436 8 ]
+        [ "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_430_33_453_4_start" "_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_430_33_453_4_stop" ]
+        %okH.2 = local;
+        symbol [ okH %okH.2 436 12 15 ];
+        symbol [ _h %tmp.19 436 18 20 ];
+        %tmp.19 = getv ? :_h;
+        %tmp.20 = 21;
+        %tmp.21 = mul %tmp.19 %tmp.20;
+        %tmp.22 = 100;
+        %tmp.23 = div %tmp.21 %tmp.22;
+        lputv %okH.2 %tmp.23;
+        symbol [ okH %okH.2 436 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 437 8 ]
+        %tmp.24 = lgetv %dc;
+        symbol [ dc %tmp.24 437 8 10 ];
+        symbol [ fillRoundedRectangle %tmp.25 437 11 31 ];
+        %tmp.25 = getv function %tmp.24 :fillRoundedRectangle;
+        symbol [ _w %tmp.27 437 32 34 ];
+        %tmp.27 = getv ? :_w;
+        %tmp.28 = 2;
+        %tmp.29 = div %tmp.27 %tmp.28;
+        %tmp.30 = lgetv %okW.1;
+        symbol [ okW %tmp.30 437 41 44 ];
+        %tmp.31 = 2;
+        %tmp.32 = div %tmp.30 %tmp.31;
+        %tmp.33 = sub %tmp.29 %tmp.32;
+        symbol [ _h %tmp.35 437 50 52 ];
+        %tmp.35 = getv ? :_h;
+        %tmp.36 = 8;
+        %tmp.37 = mul %tmp.35 %tmp.36;
+        %tmp.38 = 100;
+        %tmp.39 = div %tmp.37 %tmp.38;
+        %tmp.40 = lgetv %okW.1;
+        symbol [ okW %tmp.40 437 64 67 ];
+        %tmp.41 = lgetv %okH.2;
+        symbol [ okH %tmp.41 437 69 72 ];
+        %tmp.42 = 12;
+        invoke %tmp.24 %tmp.25(%tmp.33, %tmp.39, %tmp.40, %tmp.41, %tmp.42);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 438 8 ]
+        %tmp.43 = lgetv %dc;
+        symbol [ dc %tmp.43 438 8 10 ];
+        symbol [ setColor %tmp.44 438 11 19 ];
+        %tmp.44 = getv function %tmp.43 :setColor;
+        %tmp.45 = 0x000000;
+        symbol [ Graphics %tmp.46 438 30 38 ];
+        %tmp.46 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.47 438 39 56 ];
+        %tmp.47 = getv %tmp.46 :COLOR_TRANSPARENT;
+        invoke %tmp.43 %tmp.44(%tmp.45, %tmp.47);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 439 8 ]
+        %tmp.48 = lgetv %dc;
+        symbol [ dc %tmp.48 439 8 10 ];
+        symbol [ drawText %tmp.49 439 11 19 ];
+        %tmp.49 = getv function %tmp.48 :drawText;
+        symbol [ _w %tmp.51 439 20 22 ];
+        %tmp.51 = getv ? :_w;
+        %tmp.52 = 2;
+        %tmp.53 = div %tmp.51 %tmp.52;
+        symbol [ _h %tmp.55 439 28 30 ];
+        %tmp.55 = getv ? :_h;
+        %tmp.56 = 10;
+        %tmp.57 = mul %tmp.55 %tmp.56;
+        %tmp.58 = 100;
+        %tmp.59 = div %tmp.57 %tmp.58;
+        symbol [ Graphics %tmp.60 439 43 51 ];
+        %tmp.60 = getm $.Toybox.Graphics;
+        symbol [ FONT_LARGE %tmp.61 439 52 62 ];
+        %tmp.61 = getv %tmp.60 :FONT_LARGE;
+        %tmp.62 = "OK";
+        symbol [ Graphics %tmp.63 439 70 78 ];
+        %tmp.63 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.64 439 79 98 ];
+        %tmp.64 = getv %tmp.63 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.48 %tmp.49(%tmp.53, %tmp.59, %tmp.61, %tmp.62, %tmp.64);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 441 8 ]
+        %tmp.65 = lgetv %dc;
+        symbol [ dc %tmp.65 441 8 10 ];
+        symbol [ setColor %tmp.66 441 11 19 ];
+        %tmp.66 = getv function %tmp.65 :setColor;
+        %tmp.67 = 0xFFDD22;
+        symbol [ Graphics %tmp.68 441 30 38 ];
+        %tmp.68 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.69 441 39 56 ];
+        %tmp.69 = getv %tmp.68 :COLOR_TRANSPARENT;
+        invoke %tmp.65 %tmp.66(%tmp.67, %tmp.69);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 442 8 ]
+        %tmp.70 = lgetv %dc;
+        symbol [ dc %tmp.70 442 8 10 ];
+        symbol [ drawText %tmp.71 442 11 19 ];
+        %tmp.71 = getv function %tmp.70 :drawText;
+        symbol [ _w %tmp.73 442 20 22 ];
+        %tmp.73 = getv ? :_w;
+        %tmp.74 = 2;
+        %tmp.75 = div %tmp.73 %tmp.74;
+        symbol [ _h %tmp.77 442 28 30 ];
+        %tmp.77 = getv ? :_h;
+        %tmp.78 = 30;
+        %tmp.79 = mul %tmp.77 %tmp.78;
+        %tmp.80 = 100;
+        %tmp.81 = div %tmp.79 %tmp.80;
+        symbol [ Graphics %tmp.82 442 43 51 ];
+        %tmp.82 = getm $.Toybox.Graphics;
+        symbol [ FONT_LARGE %tmp.83 442 52 62 ];
+        %tmp.83 = getv %tmp.82 :FONT_LARGE;
+        %tmp.84 = "DONE!";
+        symbol [ Graphics %tmp.85 442 73 81 ];
+        %tmp.85 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.86 442 82 101 ];
+        %tmp.86 = getv %tmp.85 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.70 %tmp.71(%tmp.75, %tmp.81, %tmp.83, %tmp.84, %tmp.86);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 444 8 ]
+        %tmp.87 = lgetv %dc;
+        symbol [ dc %tmp.87 444 8 10 ];
+        symbol [ setColor %tmp.88 444 11 19 ];
+        %tmp.88 = getv function %tmp.87 :setColor;
+        %tmp.89 = 0xFFFFFF;
+        symbol [ Graphics %tmp.90 444 30 38 ];
+        %tmp.90 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.91 444 39 56 ];
+        %tmp.91 = getv %tmp.90 :COLOR_TRANSPARENT;
+        invoke %tmp.87 %tmp.88(%tmp.89, %tmp.91);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 445 8 ]
+        %tmp.92 = lgetv %dc;
+        symbol [ dc %tmp.92 445 8 10 ];
+        symbol [ drawText %tmp.93 445 11 19 ];
+        %tmp.93 = getv function %tmp.92 :drawText;
+        symbol [ _w %tmp.95 445 20 22 ];
+        %tmp.95 = getv ? :_w;
+        %tmp.96 = 2;
+        %tmp.97 = div %tmp.95 %tmp.96;
+        symbol [ _h %tmp.99 445 28 30 ];
+        %tmp.99 = getv ? :_h;
+        %tmp.100 = 48;
+        %tmp.101 = mul %tmp.99 %tmp.100;
+        %tmp.102 = 100;
+        %tmp.103 = div %tmp.101 %tmp.102;
+        symbol [ Graphics %tmp.104 445 43 51 ];
+        %tmp.104 = getm $.Toybox.Graphics;
+        symbol [ FONT_SMALL %tmp.105 445 52 62 ];
+        %tmp.105 = getv %tmp.104 :FONT_SMALL;
+        symbol [ _totalRounds %tmp.107 445 64 76 ];
+        %tmp.107 = getv ? :_totalRounds;
+        %tmp.108 = " rounds";
+        %tmp.109 = add %tmp.107 %tmp.108;
+        symbol [ Graphics %tmp.110 445 90 98 ];
+        %tmp.110 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.111 445 99 118 ];
+        %tmp.111 = getv %tmp.110 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.92 %tmp.93(%tmp.97, %tmp.103, %tmp.105, %tmp.109, %tmp.111);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 447 8 ]
+        %tmp.112 = lgetv %dc;
+        symbol [ dc %tmp.112 447 8 10 ];
+        symbol [ setColor %tmp.113 447 11 19 ];
+        %tmp.113 = getv function %tmp.112 :setColor;
+        %tmp.114 = 0xAABBCC;
+        symbol [ Graphics %tmp.115 447 30 38 ];
+        %tmp.115 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.116 447 39 56 ];
+        %tmp.116 = getv %tmp.115 :COLOR_TRANSPARENT;
+        invoke %tmp.112 %tmp.113(%tmp.114, %tmp.116);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 448 8 ]
+        %tmp.117 = lgetv %dc;
+        symbol [ dc %tmp.117 448 8 10 ];
+        symbol [ drawText %tmp.118 448 11 19 ];
+        %tmp.118 = getv function %tmp.117 :drawText;
+        symbol [ _w %tmp.120 448 20 22 ];
+        %tmp.120 = getv ? :_w;
+        %tmp.121 = 2;
+        %tmp.122 = div %tmp.120 %tmp.121;
+        symbol [ _h %tmp.124 448 28 30 ];
+        %tmp.124 = getv ? :_h;
+        %tmp.125 = 60;
+        %tmp.126 = mul %tmp.124 %tmp.125;
+        %tmp.127 = 100;
+        %tmp.128 = div %tmp.126 %tmp.127;
+        symbol [ Graphics %tmp.129 448 43 51 ];
+        %tmp.129 = getm $.Toybox.Graphics;
+        symbol [ FONT_SMALL %tmp.130 448 52 62 ];
+        %tmp.130 = getv %tmp.129 :FONT_SMALL;
+        %tmp.131 = self;
+        symbol [ fmtTime %tmp.132 448 64 71 ];
+        %tmp.132 = getv function %tmp.131 :fmtTime;
+        symbol [ _totalElapsed %tmp.134 448 72 85 ];
+        %tmp.134 = getv ? :_totalElapsed;
+        %tmp.135 = invoke %tmp.131 %tmp.132(%tmp.134);
+        symbol [ Graphics %tmp.136 448 88 96 ];
+        %tmp.136 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.137 448 97 116 ];
+        %tmp.137 = getv %tmp.136 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.117 %tmp.118(%tmp.122, %tmp.128, %tmp.130, %tmp.135, %tmp.137);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 449 8 ]
+        %tmp.138 = lgetv %dc;
+        symbol [ dc %tmp.138 449 8 10 ];
+        symbol [ drawText %tmp.139 449 11 19 ];
+        %tmp.139 = getv function %tmp.138 :drawText;
+        symbol [ _w %tmp.141 449 20 22 ];
+        %tmp.141 = getv ? :_w;
+        %tmp.142 = 2;
+        %tmp.143 = div %tmp.141 %tmp.142;
+        symbol [ _h %tmp.145 449 28 30 ];
+        %tmp.145 = getv ? :_h;
+        %tmp.146 = 72;
+        %tmp.147 = mul %tmp.145 %tmp.146;
+        %tmp.148 = 100;
+        %tmp.149 = div %tmp.147 %tmp.148;
+        symbol [ Graphics %tmp.150 449 43 51 ];
+        %tmp.150 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.151 449 52 62 ];
+        %tmp.151 = getv %tmp.150 :FONT_XTINY;
+        %tmp.152 = "total time";
+        symbol [ Graphics %tmp.153 449 78 86 ];
+        %tmp.153 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.154 449 87 106 ];
+        %tmp.154 = getv %tmp.153 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.138 %tmp.139(%tmp.143, %tmp.149, %tmp.151, %tmp.152, %tmp.154);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 451 8 ]
+        %tmp.155 = lgetv %dc;
+        symbol [ dc %tmp.155 451 8 10 ];
+        symbol [ setColor %tmp.156 451 11 19 ];
+        %tmp.156 = getv function %tmp.155 :setColor;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_451_20_451_49_begin:
+        symbol [ _tick %tmp.158 451 21 26 ];
+        %tmp.158 = getv ? :_tick;
+        %tmp.159 = 4;
+        %tmp.160 = mod %tmp.158 %tmp.159;
+        %tmp.161 = 2;
+        %tmp.162 = lt %tmp.160 %tmp.161;
+        bf %tmp.162 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_451_20_451_49_else_false;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_451_20_451_49_true:
+        %tmp.163 = 0x44FF88;
+        push %tmp.163;
+        goto @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_451_20_451_49_end;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_451_20_451_49_else_false:
+        %tmp.164 = 0x22CC66;
+        push %tmp.164;
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_451_20_451_49_end:
+        %tmp.165 = phi [%tmp.162 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_451_20_451_49_begin] [%tmp.163 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_451_20_451_49_true] [%tmp.164 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_451_20_451_49_else_false] [%tmp.165 @_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_451_20_451_49_end];
+        symbol [ Graphics %tmp.166 451 59 67 ];
+        %tmp.166 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.167 451 68 85 ];
+        %tmp.167 = getv %tmp.166 :COLOR_TRANSPARENT;
+        invoke %tmp.155 %tmp.156(%tmp.165, %tmp.167);
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 452 8 ]
+        %tmp.168 = lgetv %dc;
+        symbol [ dc %tmp.168 452 8 10 ];
+        symbol [ drawText %tmp.169 452 11 19 ];
+        %tmp.169 = getv function %tmp.168 :drawText;
+        symbol [ _w %tmp.171 452 20 22 ];
+        %tmp.171 = getv ? :_w;
+        %tmp.172 = 2;
+        %tmp.173 = div %tmp.171 %tmp.172;
+        symbol [ _h %tmp.175 452 28 30 ];
+        %tmp.175 = getv ? :_h;
+        %tmp.176 = 86;
+        %tmp.177 = mul %tmp.175 %tmp.176;
+        %tmp.178 = 100;
+        %tmp.179 = div %tmp.177 %tmp.178;
+        symbol [ Graphics %tmp.180 452 43 51 ];
+        %tmp.180 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.181 452 52 62 ];
+        %tmp.181 = getv %tmp.180 :FONT_XTINY;
+        %tmp.182 = "Tap for menu";
+        symbol [ Graphics %tmp.183 452 80 88 ];
+        %tmp.183 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.184 452 89 108 ];
+        %tmp.184 = getv %tmp.183 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.168 %tmp.169(%tmp.173, %tmp.179, %tmp.181, %tmp.182, %tmp.184);
+_Users_kkorolczuk_work_garmin_timer_source_BitochiTimerView_mc_430_33_453_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc"; @line = 1; ]
+<init> {
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 10 6 ]
+    %tmp.185 = newa 9;
+    %tmp.186 = 60;
+    %tmp.187 = dup %tmp.185;
+    %tmp.188 = aputv %tmp.187 0 %tmp.186;
+    %tmp.189 = 120;
+    %tmp.190 = dup %tmp.188;
+    %tmp.191 = aputv %tmp.190 1 %tmp.189;
+    %tmp.192 = 180;
+    %tmp.193 = dup %tmp.191;
+    %tmp.194 = aputv %tmp.193 2 %tmp.192;
+    %tmp.195 = 240;
+    %tmp.196 = dup %tmp.194;
+    %tmp.197 = aputv %tmp.196 3 %tmp.195;
+    %tmp.198 = 300;
+    %tmp.199 = dup %tmp.197;
+    %tmp.200 = aputv %tmp.199 4 %tmp.198;
+    %tmp.201 = 360;
+    %tmp.202 = dup %tmp.200;
+    %tmp.203 = aputv %tmp.202 5 %tmp.201;
+    %tmp.204 = 480;
+    %tmp.205 = dup %tmp.203;
+    %tmp.206 = aputv %tmp.205 6 %tmp.204;
+    %tmp.207 = 600;
+    %tmp.208 = dup %tmp.206;
+    %tmp.209 = aputv %tmp.208 7 %tmp.207;
+    %tmp.210 = 900;
+    %tmp.211 = dup %tmp.209;
+    %tmp.212 = aputv %tmp.211 8 %tmp.210;
+    putv self :ROUND_PRESETS %tmp.212;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 11 6 ]
+    %tmp.213 = newa 8;
+    %tmp.214 = 15;
+    %tmp.215 = dup %tmp.213;
+    %tmp.216 = aputv %tmp.215 0 %tmp.214;
+    %tmp.217 = 30;
+    %tmp.218 = dup %tmp.216;
+    %tmp.219 = aputv %tmp.218 1 %tmp.217;
+    %tmp.220 = 45;
+    %tmp.221 = dup %tmp.219;
+    %tmp.222 = aputv %tmp.221 2 %tmp.220;
+    %tmp.223 = 60;
+    %tmp.224 = dup %tmp.222;
+    %tmp.225 = aputv %tmp.224 3 %tmp.223;
+    %tmp.226 = 90;
+    %tmp.227 = dup %tmp.225;
+    %tmp.228 = aputv %tmp.227 4 %tmp.226;
+    %tmp.229 = 120;
+    %tmp.230 = dup %tmp.228;
+    %tmp.231 = aputv %tmp.230 5 %tmp.229;
+    %tmp.232 = 180;
+    %tmp.233 = dup %tmp.231;
+    %tmp.234 = aputv %tmp.233 6 %tmp.232;
+    %tmp.235 = 300;
+    %tmp.236 = dup %tmp.234;
+    %tmp.237 = aputv %tmp.236 7 %tmp.235;
+    putv self :REST_PRESETS %tmp.237;
+[ "/Users/kkorolczuk/work/garmin/timer/source/BitochiTimerView.mc" 12 6 ]
+    %tmp.238 = newa 11;
+    %tmp.239 = 1;
+    %tmp.240 = dup %tmp.238;
+    %tmp.241 = aputv %tmp.240 0 %tmp.239;
+    %tmp.242 = 2;
+    %tmp.243 = dup %tmp.241;
+    %tmp.244 = aputv %tmp.243 1 %tmp.242;
+    %tmp.245 = 3;
+    %tmp.246 = dup %tmp.244;
+    %tmp.247 = aputv %tmp.246 2 %tmp.245;
+    %tmp.248 = 4;
+    %tmp.249 = dup %tmp.247;
+    %tmp.250 = aputv %tmp.249 3 %tmp.248;
+    %tmp.251 = 5;
+    %tmp.252 = dup %tmp.250;
+    %tmp.253 = aputv %tmp.252 4 %tmp.251;
+    %tmp.254 = 6;
+    %tmp.255 = dup %tmp.253;
+    %tmp.256 = aputv %tmp.255 5 %tmp.254;
+    %tmp.257 = 8;
+    %tmp.258 = dup %tmp.256;
+    %tmp.259 = aputv %tmp.258 6 %tmp.257;
+    %tmp.260 = 10;
+    %tmp.261 = dup %tmp.259;
+    %tmp.262 = aputv %tmp.261 7 %tmp.260;
+    %tmp.263 = 12;
+    %tmp.264 = dup %tmp.262;
+    %tmp.265 = aputv %tmp.264 8 %tmp.263;
+    %tmp.266 = 15;
+    %tmp.267 = dup %tmp.265;
+    %tmp.268 = aputv %tmp.267 9 %tmp.266;
+    %tmp.269 = 20;
+    %tmp.270 = dup %tmp.268;
+    %tmp.271 = aputv %tmp.270 10 %tmp.269;
+    putv self :ROUNDS_PRESETS %tmp.271;
+}

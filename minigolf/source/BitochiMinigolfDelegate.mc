@@ -17,7 +17,7 @@ class BitochiMinigolfDelegate extends WatchUi.BehaviorDelegate {
     }
 
     function onSelect() { _view.doSelect(); WatchUi.requestUpdate(); return true; }
-    function onBack()   { _view.doBack();   WatchUi.requestUpdate(); return true; }
+    function onBack()   { var h = _view.doBack(); WatchUi.requestUpdate(); return h; }
 
     function onTap(evt) {
         var xy = evt.getCoordinates();

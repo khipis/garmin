@@ -101,12 +101,25 @@ class BitochiJumpView extends WatchUi.View {
     hidden var _treeWorldY;   // [7] tree Y positions in world coords
     hidden var _crowdWorldY;  // [CROWD_N] crowd Y positions in world coords
 
+    // Pre-zoomed hill coordinates (integer) — computed once in buildHill, eliminates
+    // all float math from rendering loops (~350 wsx/wsy calls per frame → integer adds)
+    hidden var _hillXz; hidden var _hillYz;
+    // Per-frame camera screen offset (computed once at start of drawScene)
+    hidden var _csOx; hidden var _csOy;
+    // Pre-computed fence/tree zoom offsets
+    hidden var _fenceOff; hidden var _fenceOff2;
+    // Pre-built K/HS label strings (avoids string concat per frame)
+    hidden var _kLabel; hidden var _hsLabel;
+    // Pre-zoomed tree/crowd screen coords (integer)
+    hidden var _treeXz; hidden var _treeYz;
+    hidden var _crowdXz; hidden var _crowdYz;
+
     function initialize() {
         View.initialize();
         Math.srand(Time.now().value());
         var ds = System.getDeviceSettings();
         _w = ds.screenWidth; _h = ds.screenHeight;
-        _zoom = 2.2 * (_h.toFloat() / 260.0);
+        _zoom = 3.6 * (_h.toFloat() / 260.0);
         _tick = 0; accelX = 0; accelY = 0;
 
         _venueNames   = ["Zakopane", "Innsbruck", "Oberstdorf", "Vikersund"];
@@ -117,6 +130,11 @@ class BitochiJumpView extends WatchUi.View {
         _jumperAccents = [0xFF8822, 0xFF8866,  0x88BBFF,   0xFF6666,  0x66DD88,  0x88CCFF];
 
         _hillX = new [HILL_PTS]; _hillY = new [HILL_PTS];
+        _hillXz = new [HILL_PTS]; _hillYz = new [HILL_PTS];
+        _csOx = 0; _csOy = 0; _fenceOff = 0; _fenceOff2 = 0;
+        _kLabel = ""; _hsLabel = "";
+        _treeXz = new [7]; _treeYz = new [7];
+        _crowdXz = new [CROWD_N]; _crowdYz = new [CROWD_N];
 
         // Must be initialised before buildHill() which writes to _crowdX
         _crowdX = new [CROWD_N]; _crowdC = new [CROWD_N]; _crowdJump = new [CROWD_N];
@@ -206,6 +224,23 @@ class BitochiJumpView extends WatchUi.View {
         for (var i = 0; i < CROWD_N; i++) {
             _crowdWorldY[i] = hillYAtX(_crowdX[i]) - 2.5;
         }
+        // Pre-zoom hill coordinates — eliminates float multiply per point in every render frame
+        for (var i = 0; i < HILL_PTS; i++) {
+            _hillXz[i] = (_hillX[i] * _zoom).toNumber();
+            _hillYz[i] = (_hillY[i] * _zoom).toNumber();
+        }
+        _fenceOff = (2.5 * _zoom).toNumber();
+        _fenceOff2 = (4.5 * _zoom).toNumber();
+        _kLabel = "K" + _hillKDist.toNumber();
+        _hsLabel = "HS" + _hillHSDist.toNumber();
+        for (var i = 0; i < 7; i++) {
+            _treeXz[i] = ((14.0 + i.toFloat() * 46.0) * _zoom).toNumber();
+            _treeYz[i] = ((_treeWorldY[i] - 1.5) * _zoom).toNumber();
+        }
+        for (var i = 0; i < CROWD_N; i++) {
+            _crowdXz[i] = (_crowdX[i] * _zoom).toNumber();
+            _crowdYz[i] = (_crowdWorldY[i] * _zoom).toNumber();
+        }
     }
 
     hidden function hillYAtX(wx) {
@@ -241,7 +276,9 @@ class BitochiJumpView extends WatchUi.View {
         _preparingLanding = false; _preparingTick = 0;
         _earlyTap = false; _earlyTapTick = 0; _spinningOut = false;
         _newHillRecord = false;
-        _windBase = 0.0; _windCurrent = 0.0; _windPhase = 0.0;
+        _windBase = -0.9 + (Math.rand().abs() % 20).toFloat() / 11.0;
+        _windPhase = (Math.rand().abs() % 628).toFloat() / 100.0;
+        _windCurrent = _windBase;
         _passedK = false;
         _camX = _posX; _camY = _posY;
         _shakeTick = 0; _crowdCheer = 0;
@@ -267,7 +304,7 @@ class BitochiJumpView extends WatchUi.View {
         else { for (var i = 0; i < CROWD_N; i++) { _crowdJump[i] = 0; } }
 
         // Smooth camera follow
-        var cs = 0.13;
+        var cs = 0.18;
         _camX = _camX * (1.0 - cs) + (_posX + _velX * 3.0) * cs;
         _camY = _camY * (1.0 - cs) + (_posY + _velY * 1.5) * cs;
 
@@ -285,6 +322,10 @@ class BitochiJumpView extends WatchUi.View {
     }
 
     hidden function updateInrun() {
+        _windPhase += 0.052;
+        var wAmp = 0.26 + _venue.toFloat() * 0.07;
+        _windCurrent = _windBase + Math.sin(_windPhase) * wAmp + Math.sin(_windPhase * 2.4) * 0.09;
+
         var hA = hillAngleAtX(_posX);
         var grav = 9.8 * Math.sin(hA * 3.14159 / 180.0);
         _speed += grav * 0.033 - 0.009 - 0.00022 * _speed * _speed;
@@ -328,8 +369,6 @@ class BitochiJumpView extends WatchUi.View {
         _bodyAngle = 34.0 + (1.0 - _takeoffQuality) * 6.0;
         _skiAngle  = _bodyAngle + 2.0;
         _onHill = false;
-        _windBase = -0.9 + (Math.rand().abs() % 20).toFloat() / 11.0;
-        _windPhase = (Math.rand().abs() % 628).toFloat() / 100.0;
         if (_takeoffQuality >= 0.95) { doVibe(80, 150); } else if (_takeoffQuality > 0.2) { doVibe(50, 100); }
         gameState = JS_FLIGHT;
     }
@@ -390,12 +429,12 @@ class BitochiJumpView extends WatchUi.View {
         // --- PATH 4: Normal flight ---
         // Accelerometer input — Parachute-style: small dead zone, smooth and direct
         var ax = accelX.toFloat();
-        var dead = 40.0;
+        var dead = 20.0;
         var input = 0.0;
-        if (ax >  dead) { input =  (ax - dead) / 280.0; }
-        else if (ax < -dead) { input = (ax + dead) / 280.0; }
-        if (input >  1.3) { input =  1.3; }
-        if (input < -1.3) { input = -1.3; }
+        if (ax >  dead) { input =  (ax - dead) / 180.0; }
+        else if (ax < -dead) { input = (ax + dead) / 180.0; }
+        if (input >  1.5) { input =  1.5; }
+        if (input < -1.5) { input = -1.5; }
 
         // Wind nudge — stronger when body is misaligned (fighting or drifting)
         var misalign = _bodyAngle - 18.0; if (misalign < 0.0) { misalign = -misalign; }
@@ -615,6 +654,9 @@ class BitochiJumpView extends WatchUi.View {
 
     hidden function drawScene(dc) {
         var ox = _shakeX; var oy = _shakeY;
+        // Per-frame camera offset: wsx(wx) = _csOx + _hillXz[i], wsy(wy) = _csOy + _hillYz[i]
+        _csOx = _w / 2 - (_camX * _zoom).toNumber();
+        _csOy = _h * 44 / 100 - (_camY * _zoom).toNumber();
         drawSky(dc);
         drawMountains(dc, ox, oy);
         drawHillSnow(dc, ox, oy);
@@ -643,108 +685,112 @@ class BitochiJumpView extends WatchUi.View {
 
     hidden function drawMountains(dc, ox, oy) {
         var par = (_camX * 0.1).toNumber();
-        // Background mountains
+        var peakX = [_w*16/100, _w*36/100, _w*52/100, _w*70/100, _w*88/100, _w];
+        var peakY = [_h*25/100, _h*31/100, _h*18/100, _h*28/100, _h*22/100, _h*38/100];
         dc.setColor(0xE0ECF4, Graphics.COLOR_TRANSPARENT);
-        dc.fillPolygon([
-            [0, _h * 54 / 100 + oy],
-            [_w * 16 / 100 - par + ox, _h * 25 / 100 + oy],
-            [_w * 36 / 100 - par + ox, _h * 31 / 100 + oy],
-            [_w * 52 / 100 - par + ox, _h * 18 / 100 + oy],
-            [_w * 70 / 100 - par + ox, _h * 28 / 100 + oy],
-            [_w * 88 / 100 - par + ox, _h * 22 / 100 + oy],
-            [_w + ox, _h * 38 / 100 + oy],
-            [_w + ox, _h + oy], [0, _h + oy]
-        ]);
-        // Snow ridge lines
+        var prevX = 0; var prevY = _h * 54 / 100 + oy;
+        for (var i = 0; i < 6; i++) {
+            var px = peakX[i] - par + ox;
+            var py = peakY[i] + oy;
+            var steps = (px - prevX); if (steps < 1) { steps = 1; }
+            var stripW = steps / 3; if (stripW < 4) { stripW = 4; }
+            for (var sx = prevX; sx < px; sx += stripW) {
+                var t = (sx - prevX) * 100 / steps;
+                var sy = prevY + (py - prevY) * t / 100;
+                dc.fillRectangle(sx, sy, stripW + 1, _h - sy + 4);
+            }
+            prevX = px; prevY = py;
+        }
+        if (prevX < _w) { dc.fillRectangle(prevX, prevY, _w - prevX, _h - prevY + 4); }
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawLine(_w * 16 / 100 - par + ox, _h * 25 / 100 + oy, _w * 36 / 100 - par + ox, _h * 31 / 100 + oy);
-        dc.drawLine(_w * 36 / 100 - par + ox, _h * 31 / 100 + oy, _w * 52 / 100 - par + ox, _h * 18 / 100 + oy);
-        dc.drawLine(_w * 52 / 100 - par + ox, _h * 18 / 100 + oy, _w * 70 / 100 - par + ox, _h * 28 / 100 + oy);
-        dc.drawLine(_w * 70 / 100 - par + ox, _h * 28 / 100 + oy, _w * 88 / 100 - par + ox, _h * 22 / 100 + oy);
+        for (var i = 1; i < 5; i++) {
+            dc.drawLine(peakX[i-1] - par + ox, peakY[i-1] + oy, peakX[i] - par + ox, peakY[i] + oy);
+        }
     }
 
     hidden function drawHillSnow(dc, ox, oy) {
-        // Draw snow slope as vertical strips (fast, no polygon allocation)
-        // Each strip: from hill Y down to bottom of screen
-        var prevSx = -999; var prevSy = _h;
-        for (var i = 0; i < HILL_PTS; i += 2) {
-            var sx = wsx(_hillX[i]) + ox;
-            var sy = wsy(_hillY[i]) + oy;
-            if (sx < -8 || sx > _w + 8) { prevSx = sx; prevSy = sy; continue; }
-            var stripW = (prevSx >= 0 && prevSx < _w + 8) ? sx - prevSx + 2 : 5;
+        // Pre-zoomed coords: integer adds only, no float math in loops
+        var cx = _csOx + ox; var cy = _csOy + oy;
+        var prevSx = -999;
+        var step = 2;
+        dc.setColor(0xDDE8F0, Graphics.COLOR_TRANSPARENT);
+        for (var i = 0; i < HILL_PTS; i += step) {
+            var sx = cx + _hillXz[i];
+            var sy = cy + _hillYz[i];
+            if (sx < -12 || sx > _w + 12) { prevSx = sx; step = 4; continue; }
+            step = 2;
+            var stripW = (prevSx > -900) ? sx - prevSx + 2 : 5;
             if (stripW < 2) { stripW = 2; }
-            dc.setColor(0xDDE8F0, Graphics.COLOR_TRANSPARENT);
             dc.fillRectangle(sx, sy, stripW, _h - sy + 4);
-            prevSx = sx; prevSy = sy;
+            prevSx = sx;
         }
-        // Snow surface line (white on top)
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        for (var i = 1; i < HILL_PTS; i += 2) {
-            var sx1 = wsx(_hillX[i-1]) + ox; var sy1 = wsy(_hillY[i-1]) + oy;
-            var sx2 = wsx(_hillX[i])   + ox; var sy2 = wsy(_hillY[i])   + oy;
+        for (var i = 3; i < HILL_PTS; i += 3) {
+            var sx1 = cx + _hillXz[i-3]; var sy1 = cy + _hillYz[i-3];
+            var sx2 = cx + _hillXz[i];   var sy2 = cy + _hillYz[i];
             if (sx2 < -5 || sx1 > _w + 5) { continue; }
             dc.drawLine(sx1, sy1, sx2, sy2);
         }
-        // Light blue-gray shadow just below surface
         dc.setColor(0xBBCCDD, Graphics.COLOR_TRANSPARENT);
-        for (var i = 1; i < HILL_PTS; i += 3) {
-            var sx1 = wsx(_hillX[i-1]) + ox; var sy1 = wsy(_hillY[i-1]) + oy + 2;
-            var sx2 = wsx(_hillX[i])   + ox; var sy2 = wsy(_hillY[i])   + oy + 2;
+        for (var i = 5; i < HILL_PTS; i += 5) {
+            var sx1 = cx + _hillXz[i-5]; var sy1 = cy + _hillYz[i-5] + 2;
+            var sx2 = cx + _hillXz[i];   var sy2 = cy + _hillYz[i] + 2;
             if (sx2 < -5 || sx1 > _w + 5) { continue; }
             dc.drawLine(sx1, sy1, sx2, sy2);
         }
     }
 
     hidden function drawFence(dc, ox, oy) {
-        // Yellow fence along the slope (like DSJ screenshot)
+        var cx = _csOx + ox; var cy = _csOy + oy;
+        var fo = _fenceOff;
         var lS = _hillTableIdx + 5;
         dc.setColor(0xDDAA00, Graphics.COLOR_TRANSPARENT);
-        for (var i = lS + 2; i < HILL_PTS; i += 2) {
-            var sx1 = wsx(_hillX[i-2]) + ox; var sy1 = wsy(_hillY[i-2] - 2.5) + oy;
-            var sx2 = wsx(_hillX[i])   + ox; var sy2 = wsy(_hillY[i]   - 2.5) + oy;
-            if (sx2 < -5 || sx1 > _w + 5) { continue; }
+        for (var i = lS + 3; i < HILL_PTS; i += 3) {
+            var sx1 = cx + _hillXz[i-3];
+            if (sx1 > _w + 8) { break; }
+            var sx2 = cx + _hillXz[i];
+            if (sx2 < -8) { continue; }
+            var sy1 = cy + _hillYz[i-3] - fo;
+            var sy2 = cy + _hillYz[i] - fo;
             dc.drawLine(sx1, sy1, sx2, sy2);
             dc.drawLine(sx1, sy1 + 2, sx2, sy2 + 2);
         }
-        // Fence posts (dark yellow)
+        var fo2 = _fenceOff2;
         dc.setColor(0x886600, Graphics.COLOR_TRANSPARENT);
-        for (var i = lS; i < HILL_PTS; i += 8) {
-            var px = wsx(_hillX[i]) + ox;
-            var py = wsy(_hillY[i] - 4.5) + oy;
-            if (px < 0 || px > _w) { continue; }
-            dc.fillRectangle(px - 1, py, 2, 7);
+        for (var i = lS; i < HILL_PTS; i += 10) {
+            var px = cx + _hillXz[i];
+            if (px < -2 || px > _w + 2) { continue; }
+            dc.fillRectangle(px - 1, cy + _hillYz[i] - fo2, 2, 7);
         }
     }
 
     hidden function drawKHS(dc, ox, oy) {
+        var cx = _csOx + ox; var cy = _csOy + oy;
         if (_hillKIdx < HILL_PTS) {
-            var kx = wsx(_hillX[_hillKIdx]) + ox;
-            var ky = wsy(_hillY[_hillKIdx]) + oy;
+            var kx = cx + _hillXz[_hillKIdx];
+            var ky = cy + _hillYz[_hillKIdx];
             if (kx > 2 && kx < _w - 2) {
                 dc.setColor(0xFF3333, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(kx - 1, ky - 10, 3, 10);
-                dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(kx, ky - 20, Graphics.FONT_XTINY, "K" + _hillKDist.toNumber(), Graphics.TEXT_JUSTIFY_CENTER);
+                dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(kx, ky - 20, Graphics.FONT_XTINY, _kLabel, Graphics.TEXT_JUSTIFY_CENTER);
             }
         }
         if (_hillHSIdx < HILL_PTS) {
-            var hx = wsx(_hillX[_hillHSIdx]) + ox;
-            var hy = wsy(_hillY[_hillHSIdx]) + oy;
+            var hx = cx + _hillXz[_hillHSIdx];
+            var hy = cy + _hillYz[_hillHSIdx];
             if (hx > 2 && hx < _w - 2) {
                 dc.setColor(0x33DD33, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(hx - 1, hy - 10, 3, 10);
-                dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(hx, hy - 20, Graphics.FONT_XTINY, "HS" + _hillHSDist.toNumber(), Graphics.TEXT_JUSTIFY_CENTER);
+                dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(hx, hy - 20, Graphics.FONT_XTINY, _hsLabel, Graphics.TEXT_JUSTIFY_CENTER);
             }
         }
     }
 
     hidden function drawTrees(dc, ox, oy) {
+        var cx = _csOx + ox; var cy = _csOy + oy;
         for (var i = 0; i < 7; i++) {
-            var tWx = 14.0 + i.toFloat() * 46.0;
-            var tWy = _treeWorldY[i] - 1.5;   // use pre-cached Y
-            var tx = wsx(tWx) + ox + 12; var ty = wsy(tWy) + oy;
+            var tx = cx + _treeXz[i] + 12; var ty = cy + _treeYz[i];
             if (tx < -12 || tx > _w + 12) { continue; }
             var th = 10 + (i % 3) * 2;
-            // Trunk
             dc.setColor(0x3A2010, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(tx - 1, ty, 2, 4);
-            // Pine tiers using fillRectangle (replaces 2 fillPolygon — much faster)
             dc.setColor(0x194A22, Graphics.COLOR_TRANSPARENT);
             dc.fillRectangle(tx - 1, ty - th,           2,      th / 3);
             dc.fillRectangle(tx - 3, ty - th * 2 / 3,   6,  th / 3);
@@ -754,12 +800,13 @@ class BitochiJumpView extends WatchUi.View {
     }
 
     hidden function drawCrowd(dc, ox, oy) {
+        var cxo = _csOx + ox; var cyo = _csOy + oy;
         for (var i = 0; i < CROWD_N; i++) {
-            var cx = wsx(_crowdX[i]) + ox; var cy = wsy(_crowdWorldY[i]) + oy;  // cached Y
-            if (cx < -5 || cx > _w + 5) { continue; }
+            var px = cxo + _crowdXz[i]; var py = cyo + _crowdYz[i];
+            if (px < -5 || px > _w + 5) { continue; }
             var jmp = _crowdJump[i] * 3;
-            dc.setColor(_crowdC[i], Graphics.COLOR_TRANSPARENT); dc.fillRectangle(cx - 1, cy - 5 - jmp, 3, 4);
-            dc.setColor(0xCCAA77, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(cx - 2, cy - 9 - jmp, 4, 4);
+            dc.setColor(_crowdC[i], Graphics.COLOR_TRANSPARENT); dc.fillRectangle(px - 1, py - 5 - jmp, 3, 4);
+            dc.setColor(0xCCAA77, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(px - 2, py - 9 - jmp, 4, 4);
         }
     }
 
@@ -876,15 +923,13 @@ class BitochiJumpView extends WatchUi.View {
         var bx = _w - 40; var by = _h * 38 / 100;
         var wAbs = _windCurrent; if (wAbs < 0.0) { wAbs = -wAbs; }
         var arrowTxt = (_windCurrent > 0.15) ? ">>" : ((_windCurrent < -0.15) ? "<<" : "--");
-        var wInt = (wAbs * 10.0).toNumber();
-        var wDec = (wAbs * 100.0).toNumber() % 10;
-        // Shadow for readability, then red text — no background rectangle
+        var wStr = (wAbs * 10.0).toNumber() + "." + ((wAbs * 100.0).toNumber() % 10);
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(bx + 18, by + 2,  Graphics.FONT_XTINY, arrowTxt,              Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(bx + 18, by + 12, Graphics.FONT_XTINY, wInt + "." + wDec,     Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(bx + 18, by + 2,  Graphics.FONT_XTINY, arrowTxt, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(bx + 18, by + 12, Graphics.FONT_XTINY, wStr,     Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFF3333, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(bx + 17, by + 1,  Graphics.FONT_XTINY, arrowTxt,              Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(bx + 17, by + 11, Graphics.FONT_XTINY, wInt + "." + wDec,     Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(bx + 17, by + 1,  Graphics.FONT_XTINY, arrowTxt, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(bx + 17, by + 11, Graphics.FONT_XTINY, wStr,     Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawHUD(dc) {
@@ -895,8 +940,9 @@ class BitochiJumpView extends WatchUi.View {
             // Speed shown as realistic km/h for this venue's inrun length/angle
             var kmh = (55.0 + (_speed / _maxSpeed) * (_kmhMax - 55.0)).toNumber();
             var spC = (_inTakeoffZone && kmh >= (_kmhMax * 0.97).toNumber()) ? 0x44FF88 : 0x88AACC;
-            dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(6, 4, Graphics.FONT_XTINY, kmh + " km/h", Graphics.TEXT_JUSTIFY_LEFT);
-            dc.setColor(spC, Graphics.COLOR_TRANSPARENT); dc.drawText(5, 3, Graphics.FONT_XTINY, kmh + " km/h", Graphics.TEXT_JUSTIFY_LEFT);
+            var spdStr = kmh + " km/h";
+            dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(6, 4, Graphics.FONT_XTINY, spdStr, Graphics.TEXT_JUSTIFY_LEFT);
+            dc.setColor(spC, Graphics.COLOR_TRANSPARENT); dc.drawText(5, 3, Graphics.FONT_XTINY, spdStr, Graphics.TEXT_JUSTIFY_LEFT);
             if (!_inTakeoffZone) {
                 // Before takeoff zone: show venue info + hill record on dark pill for contrast
                 var hrStr = (_bestPerVenue[_venue] > 0.0) ? ("PR:" + _bestPerVenue[_venue].toNumber() + "m") : ("HS:" + _hillHSDist.toNumber() + "m");
@@ -924,12 +970,14 @@ class BitochiJumpView extends WatchUi.View {
 
         if (gameState == JS_FLIGHT) {
             var distN = _distance.toNumber();
+            var kN = _hillKDist.toNumber(); var hsN = _hillHSDist.toNumber();
             var distC = 0xFFFFFF;
-            if (distN > _hillHSDist.toNumber()) { distC = 0xFFDD22; }
-            else if (distN > _hillKDist.toNumber()) { distC = 0x44FF88; }
-            var df = (distN > _hillKDist.toNumber()) ? Graphics.FONT_MEDIUM : Graphics.FONT_SMALL;
-            dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2 + 1, 4, df, distN + "m", Graphics.TEXT_JUSTIFY_CENTER);
-            dc.setColor(distC, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, 3, df, distN + "m", Graphics.TEXT_JUSTIFY_CENTER);
+            if (distN > hsN) { distC = 0xFFDD22; }
+            else if (distN > kN) { distC = 0x44FF88; }
+            var df = (distN > kN) ? Graphics.FONT_MEDIUM : Graphics.FONT_SMALL;
+            var dStr = distN + "m";
+            dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2 + 1, 4, df, dStr, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(distC, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, 3, df, dStr, Graphics.TEXT_JUSTIFY_CENTER);
 
             var aI = _bodyAngle.toNumber();
             var inSweet = (aI > 10 && aI < 28);
@@ -998,9 +1046,9 @@ class BitochiJumpView extends WatchUi.View {
         }
 
         if (gameState == JS_LANDING) {
-            // Distance — black shadow on white snow
-            dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2 + 1, 4, Graphics.FONT_MEDIUM, _distance.toNumber() + "m", Graphics.TEXT_JUSTIFY_CENTER);
-            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, 3, Graphics.FONT_MEDIUM, _distance.toNumber() + "m", Graphics.TEXT_JUSTIFY_CENTER);
+            var ldStr = _distance.toNumber() + "m";
+            dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2 + 1, 4, Graphics.FONT_MEDIUM, ldStr, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, 3, Graphics.FONT_MEDIUM, ldStr, Graphics.TEXT_JUSTIFY_CENTER);
             // Landing result — shadow only, no background rectangle
             var lMsg; var lC;
             if (_landCrash)     { lMsg = "CRASH!";    lC = 0xFF2222; }
@@ -1030,11 +1078,15 @@ class BitochiJumpView extends WatchUi.View {
     hidden function drawMenu(dc) {
         dc.setColor(0xBBCCDD, 0xBBCCDD); dc.clear();
         dc.setColor(0xD8E8F2, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, 0, _w, _h / 2);
-        // Snowy hill background
+        // Snowy hill background — fillRectangle strips (no allocation)
         dc.setColor(0xEEF4F8, Graphics.COLOR_TRANSPARENT);
-        dc.fillPolygon([[0, _h * 48 / 100], [_w * 28 / 100, _h * 26 / 100], [_w * 52 / 100, _h * 34 / 100], [_w, _h * 48 / 100], [_w, _h], [0, _h]]);
+        dc.fillRectangle(0, _h * 48 / 100, _w, _h - _h * 48 / 100);
+        dc.fillRectangle(0, _h * 34 / 100, _w * 52 / 100, _h * 14 / 100);
+        dc.fillRectangle(_w * 14 / 100, _h * 26 / 100, _w * 38 / 100, _h * 8 / 100);
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.fillPolygon([[0, _h * 54 / 100], [_w * 22 / 100, _h * 38 / 100], [_w * 56 / 100, _h * 46 / 100], [_w, _h * 54 / 100], [_w, _h], [0, _h]]);
+        dc.fillRectangle(0, _h * 54 / 100, _w, _h - _h * 54 / 100);
+        dc.fillRectangle(0, _h * 46 / 100, _w * 56 / 100, _h * 8 / 100);
+        dc.fillRectangle(_w * 10 / 100, _h * 38 / 100, _w * 46 / 100, _h * 8 / 100);
         // Yellow fence in menu
         dc.setColor(0xCC9900, Graphics.COLOR_TRANSPARENT);
         dc.drawLine(0, _h * 55 / 100, _w, _h * 57 / 100);
@@ -1185,12 +1237,126 @@ class BitochiJumpView extends WatchUi.View {
     hidden function drawFinal(dc) {
         dc.setColor(0x0A1422, 0x0A1422); dc.clear();
         var order = rankByCumScore();
-        var winName = _jumperNames[order[0]];
-        drawTable(dc,
-            "* " + winName + " WINS! *",
-            _jumperColors[order[0]],
-            "Tap for menu",
-            order);
+        drawPodium(dc, order);
+    }
+
+    hidden function drawPodium(dc, order) {
+        var cx = _w / 2;
+
+        // Confetti particles
+        for (var c = 0; c < 12; c++) {
+            var cX = (c * 37 + _tick * 3) % _w;
+            var cY = (c * 53 + _tick * 2) % _h;
+            var cColors = [0xFFDD22, 0xFF4444, 0x44AAFF, 0x44FF88, 0xFF88DD, 0xFFAA44];
+            dc.setColor(cColors[c % 6], Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(cX, cY, 2, 2);
+        }
+
+        // Title
+        var flash = (_tick % 8 < 4) ? 0xFFDD22 : 0xFFAA44;
+        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx + 1, _h * 3 / 100 + 1, Graphics.FONT_SMALL, "TOURNAMENT", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(flash, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, _h * 3 / 100, Graphics.FONT_SMALL, "TOURNAMENT", Graphics.TEXT_JUSTIFY_CENTER);
+
+        // Podium blocks
+        var podY = _h * 62 / 100;
+        var podW = _w * 22 / 100;
+        var p1H = _h * 22 / 100;
+        var p2H = _h * 16 / 100;
+        var p3H = _h * 12 / 100;
+
+        // 2nd place (left)
+        dc.setColor(0x888888, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(cx - podW - podW / 2, podY - p2H, podW, p2H);
+        dc.setColor(0xAAAAAA, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(cx - podW - podW / 2, podY - p2H, podW, 3);
+        dc.setColor(0xCCCCCC, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx - podW, podY - p2H / 2, Graphics.FONT_XTINY, "2", Graphics.TEXT_JUSTIFY_CENTER);
+
+        // 1st place (center)
+        dc.setColor(0xBB9922, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(cx - podW / 2, podY - p1H, podW, p1H);
+        dc.setColor(0xDDBB44, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(cx - podW / 2, podY - p1H, podW, 3);
+        dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, podY - p1H / 2, Graphics.FONT_XTINY, "1", Graphics.TEXT_JUSTIFY_CENTER);
+
+        // 3rd place (right)
+        dc.setColor(0x885533, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(cx + podW / 2, podY - p3H, podW, p3H);
+        dc.setColor(0xAA7744, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(cx + podW / 2, podY - p3H, podW, 3);
+        dc.setColor(0xCC8844, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx + podW, podY - p3H / 2, Graphics.FONT_XTINY, "3", Graphics.TEXT_JUSTIFY_CENTER);
+
+        // Base
+        dc.setColor(0x333344, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(cx - podW - podW / 2, podY, podW * 3, 4);
+
+        // Draw jumpers standing on podium
+        var positions = [cx, cx - podW, cx + podW];
+        var heights = [p1H, p2H, p3H];
+        for (var p = 0; p < 3 && p < NUM_JUMPERS; p++) {
+            var idx = order[p];
+            var jx = positions[p];
+            var jy = podY - heights[p];
+            var col = _jumperColors[idx];
+            var acc = _jumperAccents[idx];
+
+            // Body
+            dc.setColor(col, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(jx - 4, jy - 14, 8, 11);
+            // Head
+            dc.setColor(0xDDAA77, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(jx - 3, jy - 20, 6, 6);
+            // Helmet
+            dc.setColor(acc, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(jx - 4, jy - 21, 8, 3);
+            // Legs
+            dc.setColor(0x333344, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(jx - 3, jy - 3, 3, 3);
+            dc.fillRectangle(jx + 1, jy - 3, 3, 3);
+
+            // Winner celebration: arms up + trophy
+            if (p == 0) {
+                dc.setColor(col, Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(jx - 7, jy - 20, 3, 7);
+                dc.fillRectangle(jx + 5, jy - 20, 3, 7);
+                // Trophy
+                dc.setColor(0xFFDD22, Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(jx - 3, jy - 28, 7, 5);
+                dc.setColor(0xFFEE44, Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(jx - 2, jy - 27, 5, 3);
+                dc.setColor(0xFFDD22, Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(jx - 1, jy - 23, 3, 2);
+                dc.fillRectangle(jx - 2, jy - 21, 5, 1);
+            } else {
+                // Clapping animation
+                var clap = (_tick % 10 < 5);
+                if (clap) {
+                    dc.setColor(col, Graphics.COLOR_TRANSPARENT);
+                    dc.fillRectangle(jx - 7, jy - 14, 3, 4);
+                    dc.fillRectangle(jx + 5, jy - 14, 3, 4);
+                }
+            }
+
+            // Name below podium
+            dc.setColor(col, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(jx, podY + 5, Graphics.FONT_XTINY, _jumperNames[idx], Graphics.TEXT_JUSTIFY_CENTER);
+        }
+
+        // Scores below
+        dc.setColor(0x88AACC, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, _h * 16 / 100, Graphics.FONT_XTINY,
+            _jumperNames[order[0]] + " [" + _jumperNat[order[0]] + "]", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, _h * 22 / 100, Graphics.FONT_XTINY,
+            _cumScores[order[0]].toNumber() + " pts", Graphics.TEXT_JUSTIFY_CENTER);
+
+        // Tap prompt
+        dc.setColor((_tick % 10 < 5) ? 0x44AAFF : 0x3388DD, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, _h * 82 / 100, Graphics.FONT_XTINY, "Tap for menu", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function rankByCumScore() {

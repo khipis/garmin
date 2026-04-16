@@ -100,6 +100,7 @@ class BitochiBlobsView extends WatchUi.View {
 
     hidden var _camX;
     hidden var _camTarget;
+    hidden var _maxCam;   // precomputed _mapW - _w clamp for camera
 
     hidden var _moveDist;
     hidden const MOVE_MAX = 40.0;
@@ -189,6 +190,7 @@ class BitochiBlobsView extends WatchUi.View {
         _introTick = 0; _resultTick = 0; _turnTick = 0;
         _shakeT = 0; _shakeOx = 0; _shakeOy = 0;
         _camX = 0.0; _camTarget = 0.0;
+        _maxCam = (_mapW - _w).toFloat(); if (_maxCam < 0.0) { _maxCam = 0.0; }
         _moveDist = 0.0; _moveTick = 0;
         _hopCount = 0; _hopCooldown = 0; _aiMoveTarget = 0.0;
         _aiTick = 0; _aiAngle = 45.0; _aiPower = 60.0; _aiTarget = 1; _aiWpn = 0;
@@ -240,9 +242,7 @@ class BitochiBlobsView extends WatchUi.View {
 
         _camX += (_camTarget - _camX) * 0.16;
         if (_camX < 0.0) { _camX = 0.0; }
-        var maxCam = (_mapW - _w).toFloat();
-        if (maxCam < 0.0) { maxCam = 0.0; }
-        if (_camX > maxCam) { _camX = maxCam; }
+        if (_camX > _maxCam) { _camX = _maxCam; }
 
         if (gameState == GS_INTRO) {
             _introTick++;
@@ -481,14 +481,27 @@ class BitochiBlobsView extends WatchUi.View {
     }
 
     hidden function aiCalcShot() {
-        var targets = [];
+        // Collect up to 4 target indices without dynamic array allocation
+        var t0 = -1; var t1 = -1; var t2 = -1; var t3 = -1; var tCount = 0;
         for (var i = 0; i < _blobCount; i++) {
-            if (i != _activeIdx && _bAlive[i] && _bHp[i] > 0) { targets = targets.add(i); }
+            if (i != _activeIdx && _bAlive[i] && _bHp[i] > 0) {
+                if (tCount == 0) { t0 = i; }
+                else if (tCount == 1) { t1 = i; }
+                else if (tCount == 2) { t2 = i; }
+                else { t3 = i; }
+                tCount++;
+            }
         }
-        if (targets.size() == 0) { return; }
-        _aiTarget = targets[0];
-        if (_bAlive[0] && _bHp[0] > 0 && Math.rand().abs() % 100 < 65) { _aiTarget = 0; }
-        else { _aiTarget = targets[Math.rand().abs() % targets.size()]; }
+        if (tCount == 0) { return; }
+        if (_bAlive[0] && _bHp[0] > 0 && Math.rand().abs() % 100 < 65) {
+            _aiTarget = 0;
+        } else {
+            var tIdx = Math.rand().abs() % tCount;
+            if (tIdx == 0) { _aiTarget = t0; }
+            else if (tIdx == 1) { _aiTarget = (t1 >= 0) ? t1 : t0; }
+            else if (tIdx == 2) { _aiTarget = (t2 >= 0) ? t2 : t0; }
+            else { _aiTarget = (t3 >= 0) ? t3 : t0; }
+        }
 
         var r = Math.rand().abs() % 100;
         if (_bHp[_aiTarget] <= 1 && _round >= 4) {
@@ -593,9 +606,8 @@ class BitochiBlobsView extends WatchUi.View {
         for (var i = 0; i < _blobCount; i++) {
             if (!_bAlive[i] || _bHp[i] <= 0) { continue; }
             if (i == _activeIdx) { continue; }
-            var d = Math.sqrt((_projX - _bX[i]) * (_projX - _bX[i]) +
-                              (_projY - (_bY[i] - 6.0)) * (_projY - (_bY[i] - 6.0)));
-            if (d < 10.0) { doHit(_projX, _projY); return; }
+            var ddx = _projX - _bX[i]; var ddy = _projY - (_bY[i] - 6.0);
+            if (ddx * ddx + ddy * ddy < 100.0) { doHit(_projX, _projY); return; }
         }
     }
 
@@ -691,17 +703,19 @@ class BitochiBlobsView extends WatchUi.View {
 
     hidden function applyDmgAt(ex, ey, radius, dmg) {
         var anyHit = false;
+        var r2 = radius * radius;
+        var r07sq = radius * 0.7; r07sq = r07sq * r07sq;
         for (var i = 0; i < _blobCount; i++) {
             if (!_bAlive[i] || _bHp[i] <= 0) { continue; }
-            var d = Math.sqrt((ex - _bX[i]) * (ex - _bX[i]) +
-                              (ey - (_bY[i] - 6.0)) * (ey - (_bY[i] - 6.0)));
-            if (d < radius) {
+            var ddx = ex - _bX[i]; var ddy = ey - (_bY[i] - 6.0);
+            var d2 = ddx * ddx + ddy * ddy;
+            if (d2 < r2) {
                 var actualDmg = dmg;
-                if (d > radius * 0.7 && dmg > 1) { actualDmg = 1; }
+                if (d2 > r07sq && dmg > 1) { actualDmg = 1; }
                 _bHp[i] -= actualDmg; if (_bHp[i] < 0) { _bHp[i] = 0; }
                 if (i != _activeIdx) {
                     anyHit = true;
-                    _hitMsg = (d < 8.0) ? "DIRECT HIT!" : "HIT!";
+                    _hitMsg = (d2 < 64.0) ? "DIRECT HIT!" : "HIT!";
                     _hitMsgTick = 35;
                     _dmgFloatX = _bX[i]; _dmgFloatY = _bY[i] - 22.0;
                     _dmgFloatV = actualDmg; _dmgFloatT = 30;

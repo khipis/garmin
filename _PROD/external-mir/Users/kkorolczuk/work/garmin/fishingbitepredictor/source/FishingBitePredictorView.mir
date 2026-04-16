@@ -1,0 +1,2404 @@
+[ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 1; @symbol_usingdef<0> = [Toybox,1,6,12]; @symbol_usingdef<1> = [WatchUi,1,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 2; @symbol_usingdef<0> = [Toybox,2,6,12]; @symbol_usingdef<1> = [Graphics,2,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 3; @symbol_usingdef<0> = [Toybox,3,6,12]; @symbol_usingdef<1> = [Timer,3,13,18]; ]
+using Toybox.Timer;
+[ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 6; @position = 6; @symbol_constdef = [SC_SCORE,6,6,14]; ]
+const SC_SCORE = 0;
+[ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 7; @position = 6; @symbol_constdef = [SC_INPUT,7,6,14]; ]
+const SC_INPUT = 1;
+[ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 10; @position = 6; @symbol_constdef = [IN_TIME,10,6,13]; ]
+const IN_TIME = 0;
+[ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 11; @position = 6; @symbol_constdef = [IN_WEATHER,11,6,16]; ]
+const IN_WEATHER = 1;
+[ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 12; @position = 6; @symbol_constdef = [IN_TEMP,12,6,13]; ]
+const IN_TEMP = 2;
+[ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 13; @position = 6; @symbol_constdef = [IN_PRESSURE,13,6,17]; ]
+const IN_PRESSURE = 3;
+[ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 14; @position = 6; @symbol_constdef = [IN_MOON,14,6,13]; ]
+const IN_MOON = 4;
+[ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 16; @symbol_classdef = [FishingBitePredictorView,16,6,30]; @symbol_extends<0> = [WatchUi,16,39,46]; @symbol_extends<1> = [View,16,47,51]; ]
+class FishingBitePredictorView extends WatchUi.View {
+    [ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 16; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 16; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 18; @position = 15; @symbol_vardef = [_w,18,15,17]; ]
+    protected
+    var _w;
+    [ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 19; @position = 15; @symbol_vardef = [_h,19,15,17]; ]
+    protected
+    var _h;
+    [ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 20; @position = 15; @symbol_vardef = [_timer,20,15,21]; ]
+    protected
+    var _timer;
+    [ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 21; @position = 15; @symbol_vardef = [_tick,21,15,20]; ]
+    protected
+    var _tick;
+    [ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 23; @position = 15; @symbol_vardef = [_screen,23,15,22]; ]
+    protected
+    var _screen;
+    [ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 24; @position = 15; @symbol_vardef = [_inputs,24,15,22]; ]
+    protected
+    var _inputs;
+    [ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 25; @position = 15; @symbol_vardef = [_cursor,25,15,22]; ]
+    protected
+    var _cursor;
+    [ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 27; @position = 15; @symbol_vardef = [_score,27,15,21]; ]
+    protected
+    var _score;
+    [ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 28; @position = 15; @symbol_vardef = [_factors,28,15,23]; ]
+    protected
+    var _factors;
+    [ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 29; @position = 15; @symbol_vardef = [_factCount,29,15,25]; ]
+    protected
+    var _factCount;
+    [ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 31; @symbol_functiondef = [initialize,31,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_31_26_44_4_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 32 8 ]
+        symbol [ View %tmp.2 32 8 12 ];
+        %tmp.2 = getv ? :View;
+        symbol [ initialize %tmp.3 32 13 23 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 33 8 ]
+        symbol [ SC_SCORE %tmp.5 33 20 28 ];
+        %tmp.5 = getv ? :SC_SCORE;
+        symbol [ _screen ? 33 8 15 ];
+        putv self :_screen %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 34 8 ]
+        %tmp.6 = newa 5;
+        %tmp.7 = 0;
+        %tmp.8 = dup %tmp.6;
+        %tmp.9 = aputv %tmp.8 0 %tmp.7;
+        %tmp.10 = 0;
+        %tmp.11 = dup %tmp.9;
+        %tmp.12 = aputv %tmp.11 1 %tmp.10;
+        %tmp.13 = 1;
+        %tmp.14 = dup %tmp.12;
+        %tmp.15 = aputv %tmp.14 2 %tmp.13;
+        %tmp.16 = 1;
+        %tmp.17 = dup %tmp.15;
+        %tmp.18 = aputv %tmp.17 3 %tmp.16;
+        %tmp.19 = 0;
+        %tmp.20 = dup %tmp.18;
+        %tmp.21 = aputv %tmp.20 4 %tmp.19;
+        symbol [ _inputs ? 34 8 15 ];
+        putv self :_inputs %tmp.21;
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 35 8 ]
+        %tmp.22 = 0;
+        symbol [ _cursor ? 35 8 15 ];
+        putv self :_cursor %tmp.22;
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 36 8 ]
+        %tmp.23 = 0;
+        symbol [ _tick ? 36 8 13 ];
+        putv self :_tick %tmp.23;
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 37 8 ]
+        %tmp.24 = 0;
+        symbol [ _score ? 37 8 14 ];
+        putv self :_score %tmp.24;
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 38 8 ]
+        %tmp.26 = 5;
+        %tmp.25 = newa %tmp.26;
+        symbol [ _factors ? 38 8 16 ];
+        putv self :_factors %tmp.25;
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 39 8 ]
+        %tmp.27 = 0;
+        symbol [ _factCount ? 39 8 18 ];
+        putv self :_factCount %tmp.27;
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 40 8 ]
+        %tmp.28 = self;
+        symbol [ _computeScore %tmp.29 40 8 21 ];
+        %tmp.29 = getv function %tmp.28 :_computeScore;
+        invoke %tmp.28 %tmp.29();
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 41 8 ]
+        %tmp.30 = 240;
+        symbol [ _w ? 41 8 10 ];
+        putv self :_w %tmp.30;
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 41 18 ]
+        %tmp.31 = 240;
+        symbol [ _h ? 41 18 20 ];
+        putv self :_h %tmp.31;
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 42 8 ]
+        symbol [ Timer %tmp.34 42 21 26 ];
+        %tmp.34 = getm $.Toybox.Timer;
+        symbol [ Timer %tmp.35 42 27 32 ];
+        %tmp.35 = getv function ? %tmp.34 :Timer;
+        %tmp.32 = newc %tmp.35 ();
+        symbol [ _timer ? 42 8 14 ];
+        putv self :_timer %tmp.32;
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 43 8 ]
+        symbol [ _timer %tmp.37 43 8 14 ];
+        %tmp.37 = getv ? :_timer;
+        symbol [ start %tmp.38 43 15 20 ];
+        %tmp.38 = getv function %tmp.37 :start;
+        %tmp.39 = self;
+        symbol [ method %tmp.40 43 21 27 ];
+        %tmp.40 = getv function %tmp.39 :method;
+        %tmp.42 = const :onTick;
+        symbol [ onTick %tmp.42 43 29 35 const ];
+        %tmp.43 = invoke %tmp.39 %tmp.40(%tmp.42);
+        %tmp.44 = 500;
+        %tmp.45 = true;
+        invoke %tmp.37 %tmp.38(%tmp.43, %tmp.44, %tmp.45);
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_31_26_44_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 46; @symbol_functiondef = [onLayout,46,13,21]; @symbol_param<0> = [dc,46,22,24]; ]
+    function onLayout(dc) {
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_46_26_49_4_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 47 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 47 13 15 ];
+        symbol [ getWidth %tmp.2 47 16 24 ];
+        %tmp.2 = getv function %tmp.1 :getWidth;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        symbol [ _w ? 47 8 10 ];
+        putv self :_w %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 48 8 ]
+        %tmp.4 = lgetv %dc;
+        symbol [ dc %tmp.4 48 13 15 ];
+        symbol [ getHeight %tmp.5 48 16 25 ];
+        %tmp.5 = getv function %tmp.4 :getHeight;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        symbol [ _h ? 48 8 10 ];
+        putv self :_h %tmp.6;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_46_26_49_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 51; @symbol_functiondef = [onTick,51,13,19]; ]
+    function onTick() as Void {
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_51_30_54_4_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 52 8 ]
+        symbol [ _tick %tmp.3 52 8 13 ];
+        %tmp.3 = getv ? :_tick;
+        %tmp.4 = add %tmp.3 1;
+        symbol [ _tick ? 52 8 13 ];
+        putv self :_tick dup %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 53 8 ]
+        symbol [ WatchUi %tmp.5 53 8 15 ];
+        %tmp.5 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.6 53 16 29 ];
+        %tmp.6 = getv function %tmp.5 :requestUpdate;
+        invoke %tmp.5 %tmp.6();
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_51_30_54_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 58; @symbol_functiondef = [_computeScore,58,20,33]; ]
+    protected
+    function _computeScore() {
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_58_36_96_4_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 59 8 ]
+        [ "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_58_36_96_4_start" "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_58_36_96_4_stop" ]
+        %s.1 = local;
+        symbol [ s %s.1 59 12 13 ];
+        %tmp.1 = 50;
+        lputv %s.1 %tmp.1;
+        symbol [ s %s.1 59 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 60 8 ]
+        %tmp.2 = 0;
+        symbol [ _factCount ? 60 8 18 ];
+        putv self :_factCount %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 63 8 ]
+        [ "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_58_36_96_4_start" "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_58_36_96_4_stop" ]
+        %t.2 = local;
+        symbol [ t %t.2 63 12 13 ];
+        symbol [ _inputs %tmp.4 63 16 23 ];
+        %tmp.4 = getv ? :_inputs;
+        symbol [ IN_TIME %tmp.6 63 24 31 ];
+        %tmp.6 = getv ? :IN_TIME;
+        %tmp.7 = agetv %tmp.4 %tmp.6;
+        lputv %t.2 %tmp.7;
+        symbol [ t %t.2 63 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 64 8 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_64_8_66_91_if_stmt:
+        %tmp.8 = lgetv %t.2;
+        symbol [ t %tmp.8 64 12 13 ];
+        %tmp.9 = 0;
+        %tmp.10 = eq %tmp.8 %tmp.9;
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_64_8_66_91_if_false;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_64_8_66_91_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_64_25_64_91_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 64 27 ]
+        %tmp.11 = lgetv %s.1;
+        symbol [ s %tmp.11 64 27 28 ];
+        %tmp.12 = 15;
+        %tmp.13 = add %tmp.11 %tmp.12;
+        lputv %s.1 %tmp.13;
+        symbol [ s %s.1 64 27 28 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 64 36 ]
+        symbol [ _factors %tmp.14 64 36 44 ];
+        %tmp.14 = getv self :_factors;
+        %tmp.15 = "Morning    +15";
+        symbol [ _factCount %tmp.17 64 45 55 ];
+        %tmp.17 = getv ? :_factCount;
+        aputv %tmp.14 %tmp.17 %tmp.15;
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 64 77 ]
+        symbol [ _factCount %tmp.20 64 77 87 ];
+        %tmp.20 = getv ? :_factCount;
+        %tmp.21 = add %tmp.20 1;
+        symbol [ _factCount ? 64 77 87 ];
+        putv self :_factCount dup %tmp.21;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_64_25_64_91_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_64_8_66_91_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_64_8_66_91_if_false:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 65 13 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_65_13_66_91_if_stmt:
+        %tmp.22 = lgetv %t.2;
+        symbol [ t %tmp.22 65 17 18 ];
+        %tmp.23 = 2;
+        %tmp.24 = eq %tmp.22 %tmp.23;
+        bf %tmp.24 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_65_13_66_91_if_false;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_65_13_66_91_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_65_25_65_91_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 65 27 ]
+        %tmp.25 = lgetv %s.1;
+        symbol [ s %tmp.25 65 27 28 ];
+        %tmp.26 = 15;
+        %tmp.27 = add %tmp.25 %tmp.26;
+        lputv %s.1 %tmp.27;
+        symbol [ s %s.1 65 27 28 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 65 36 ]
+        symbol [ _factors %tmp.28 65 36 44 ];
+        %tmp.28 = getv self :_factors;
+        %tmp.29 = "Evening    +15";
+        symbol [ _factCount %tmp.31 65 45 55 ];
+        %tmp.31 = getv ? :_factCount;
+        aputv %tmp.28 %tmp.31 %tmp.29;
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 65 77 ]
+        symbol [ _factCount %tmp.34 65 77 87 ];
+        %tmp.34 = getv ? :_factCount;
+        %tmp.35 = add %tmp.34 1;
+        symbol [ _factCount ? 65 77 87 ];
+        putv self :_factCount dup %tmp.35;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_65_25_65_91_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_65_13_66_91_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_65_13_66_91_if_false:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 66 13 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_66_13_66_91_if_stmt:
+        %tmp.36 = lgetv %t.2;
+        symbol [ t %tmp.36 66 17 18 ];
+        %tmp.37 = 3;
+        %tmp.38 = eq %tmp.36 %tmp.37;
+        bf %tmp.38 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_66_13_66_91_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_66_13_66_91_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_66_25_66_91_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 66 27 ]
+        %tmp.39 = lgetv %s.1;
+        symbol [ s %tmp.39 66 27 28 ];
+        %tmp.40 = 5;
+        %tmp.41 = add %tmp.39 %tmp.40;
+        lputv %s.1 %tmp.41;
+        symbol [ s %s.1 66 27 28 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 66 36 ]
+        symbol [ _factors %tmp.42 66 36 44 ];
+        %tmp.42 = getv self :_factors;
+        %tmp.43 = "Night       +5";
+        symbol [ _factCount %tmp.45 66 45 55 ];
+        %tmp.45 = getv ? :_factCount;
+        aputv %tmp.42 %tmp.45 %tmp.43;
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 66 77 ]
+        symbol [ _factCount %tmp.48 66 77 87 ];
+        %tmp.48 = getv ? :_factCount;
+        %tmp.49 = add %tmp.48 1;
+        symbol [ _factCount ? 66 77 87 ];
+        putv self :_factCount dup %tmp.49;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_66_25_66_91_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_66_13_66_91_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_66_13_66_91_if_end:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_65_13_66_91_if_end:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_64_8_66_91_if_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 70 8 ]
+        [ "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_58_36_96_4_start" "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_58_36_96_4_stop" ]
+        %w.3 = local;
+        symbol [ w %w.3 70 12 13 ];
+        symbol [ _inputs %tmp.51 70 16 23 ];
+        %tmp.51 = getv ? :_inputs;
+        symbol [ IN_WEATHER %tmp.53 70 24 34 ];
+        %tmp.53 = getv ? :IN_WEATHER;
+        %tmp.54 = agetv %tmp.51 %tmp.53;
+        lputv %w.3 %tmp.54;
+        symbol [ w %w.3 70 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 71 8 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_71_8_72_91_if_stmt:
+        %tmp.55 = lgetv %w.3;
+        symbol [ w %tmp.55 71 12 13 ];
+        %tmp.56 = 1;
+        %tmp.57 = eq %tmp.55 %tmp.56;
+        bf %tmp.57 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_71_8_72_91_if_false;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_71_8_72_91_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_71_25_71_91_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 71 27 ]
+        %tmp.58 = lgetv %s.1;
+        symbol [ s %tmp.58 71 27 28 ];
+        %tmp.59 = 5;
+        %tmp.60 = add %tmp.58 %tmp.59;
+        lputv %s.1 %tmp.60;
+        symbol [ s %s.1 71 27 28 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 71 36 ]
+        symbol [ _factors %tmp.61 71 36 44 ];
+        %tmp.61 = getv self :_factors;
+        %tmp.62 = "Cloudy      +5";
+        symbol [ _factCount %tmp.64 71 45 55 ];
+        %tmp.64 = getv ? :_factCount;
+        aputv %tmp.61 %tmp.64 %tmp.62;
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 71 77 ]
+        symbol [ _factCount %tmp.67 71 77 87 ];
+        %tmp.67 = getv ? :_factCount;
+        %tmp.68 = add %tmp.67 1;
+        symbol [ _factCount ? 71 77 87 ];
+        putv self :_factCount dup %tmp.68;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_71_25_71_91_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_71_8_72_91_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_71_8_72_91_if_false:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 72 13 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_72_13_72_91_if_stmt:
+        %tmp.69 = lgetv %w.3;
+        symbol [ w %tmp.69 72 17 18 ];
+        %tmp.70 = 2;
+        %tmp.71 = eq %tmp.69 %tmp.70;
+        bf %tmp.71 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_72_13_72_91_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_72_13_72_91_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_72_25_72_91_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 72 27 ]
+        %tmp.72 = lgetv %s.1;
+        symbol [ s %tmp.72 72 27 28 ];
+        %tmp.73 = 10;
+        %tmp.74 = add %tmp.72 %tmp.73;
+        lputv %s.1 %tmp.74;
+        symbol [ s %s.1 72 27 28 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 72 36 ]
+        symbol [ _factors %tmp.75 72 36 44 ];
+        %tmp.75 = getv self :_factors;
+        %tmp.76 = "Rain       +10";
+        symbol [ _factCount %tmp.78 72 45 55 ];
+        %tmp.78 = getv ? :_factCount;
+        aputv %tmp.75 %tmp.78 %tmp.76;
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 72 77 ]
+        symbol [ _factCount %tmp.81 72 77 87 ];
+        %tmp.81 = getv ? :_factCount;
+        %tmp.82 = add %tmp.81 1;
+        symbol [ _factCount ? 72 77 87 ];
+        putv self :_factCount dup %tmp.82;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_72_25_72_91_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_72_13_72_91_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_72_13_72_91_if_end:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_71_8_72_91_if_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 76 8 ]
+        [ "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_58_36_96_4_start" "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_58_36_96_4_stop" ]
+        %tp.4 = local;
+        symbol [ tp %tp.4 76 12 14 ];
+        symbol [ _inputs %tmp.84 76 17 24 ];
+        %tmp.84 = getv ? :_inputs;
+        symbol [ IN_TEMP %tmp.86 76 25 32 ];
+        %tmp.86 = getv ? :IN_TEMP;
+        %tmp.87 = agetv %tmp.84 %tmp.86;
+        lputv %tp.4 %tmp.87;
+        symbol [ tp %tp.4 76 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 77 8 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_77_8_79_92_if_stmt:
+        %tmp.88 = lgetv %tp.4;
+        symbol [ tp %tmp.88 77 12 14 ];
+        %tmp.89 = 0;
+        %tmp.90 = eq %tmp.88 %tmp.89;
+        bf %tmp.90 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_77_8_79_92_if_false;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_77_8_79_92_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_77_26_77_92_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 77 28 ]
+        %tmp.91 = lgetv %s.1;
+        symbol [ s %tmp.91 77 28 29 ];
+        %tmp.92 = 5;
+        %tmp.93 = sub %tmp.91 %tmp.92;
+        lputv %s.1 %tmp.93;
+        symbol [ s %s.1 77 28 29 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 77 37 ]
+        symbol [ _factors %tmp.94 77 37 45 ];
+        %tmp.94 = getv self :_factors;
+        %tmp.95 = "Cold        -5";
+        symbol [ _factCount %tmp.97 77 46 56 ];
+        %tmp.97 = getv ? :_factCount;
+        aputv %tmp.94 %tmp.97 %tmp.95;
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 77 78 ]
+        symbol [ _factCount %tmp.100 77 78 88 ];
+        %tmp.100 = getv ? :_factCount;
+        %tmp.101 = add %tmp.100 1;
+        symbol [ _factCount ? 77 78 88 ];
+        putv self :_factCount dup %tmp.101;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_77_26_77_92_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_77_8_79_92_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_77_8_79_92_if_false:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 78 13 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_78_13_79_92_if_stmt:
+        %tmp.102 = lgetv %tp.4;
+        symbol [ tp %tmp.102 78 17 19 ];
+        %tmp.103 = 1;
+        %tmp.104 = eq %tmp.102 %tmp.103;
+        bf %tmp.104 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_78_13_79_92_if_else_false;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_78_13_79_92_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_78_26_78_92_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 78 28 ]
+        %tmp.105 = lgetv %s.1;
+        symbol [ s %tmp.105 78 28 29 ];
+        %tmp.106 = 10;
+        %tmp.107 = add %tmp.105 %tmp.106;
+        lputv %s.1 %tmp.107;
+        symbol [ s %s.1 78 28 29 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 78 37 ]
+        symbol [ _factors %tmp.108 78 37 45 ];
+        %tmp.108 = getv self :_factors;
+        %tmp.109 = "Moderate   +10";
+        symbol [ _factCount %tmp.111 78 46 56 ];
+        %tmp.111 = getv ? :_factCount;
+        aputv %tmp.108 %tmp.111 %tmp.109;
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 78 78 ]
+        symbol [ _factCount %tmp.114 78 78 88 ];
+        %tmp.114 = getv ? :_factCount;
+        %tmp.115 = add %tmp.114 1;
+        symbol [ _factCount ? 78 78 88 ];
+        putv self :_factCount dup %tmp.115;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_78_26_78_92_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_78_13_79_92_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_78_13_79_92_if_else_false:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_79_26_79_92_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 79 28 ]
+        %tmp.116 = lgetv %s.1;
+        symbol [ s %tmp.116 79 28 29 ];
+        %tmp.117 = 5;
+        %tmp.118 = sub %tmp.116 %tmp.117;
+        lputv %s.1 %tmp.118;
+        symbol [ s %s.1 79 28 29 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 79 37 ]
+        symbol [ _factors %tmp.119 79 37 45 ];
+        %tmp.119 = getv self :_factors;
+        %tmp.120 = "Warm        -5";
+        symbol [ _factCount %tmp.122 79 46 56 ];
+        %tmp.122 = getv ? :_factCount;
+        aputv %tmp.119 %tmp.122 %tmp.120;
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 79 78 ]
+        symbol [ _factCount %tmp.125 79 78 88 ];
+        %tmp.125 = getv ? :_factCount;
+        %tmp.126 = add %tmp.125 1;
+        symbol [ _factCount ? 79 78 88 ];
+        putv self :_factCount dup %tmp.126;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_79_26_79_92_stop:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_78_13_79_92_if_end:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_77_8_79_92_if_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 82 8 ]
+        [ "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_58_36_96_4_start" "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_58_36_96_4_stop" ]
+        %p.5 = local;
+        symbol [ p %p.5 82 12 13 ];
+        symbol [ _inputs %tmp.128 82 16 23 ];
+        %tmp.128 = getv ? :_inputs;
+        symbol [ IN_PRESSURE %tmp.130 82 24 35 ];
+        %tmp.130 = getv ? :IN_PRESSURE;
+        %tmp.131 = agetv %tmp.128 %tmp.130;
+        lputv %p.5 %tmp.131;
+        symbol [ p %p.5 82 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 83 8 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_83_8_85_91_if_stmt:
+        %tmp.132 = lgetv %p.5;
+        symbol [ p %tmp.132 83 12 13 ];
+        %tmp.133 = 0;
+        %tmp.134 = eq %tmp.132 %tmp.133;
+        bf %tmp.134 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_83_8_85_91_if_false;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_83_8_85_91_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_83_25_83_91_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 83 27 ]
+        %tmp.135 = lgetv %s.1;
+        symbol [ s %tmp.135 83 27 28 ];
+        %tmp.136 = 10;
+        %tmp.137 = sub %tmp.135 %tmp.136;
+        lputv %s.1 %tmp.137;
+        symbol [ s %s.1 83 27 28 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 83 36 ]
+        symbol [ _factors %tmp.138 83 36 44 ];
+        %tmp.138 = getv self :_factors;
+        %tmp.139 = "Rising     -10";
+        symbol [ _factCount %tmp.141 83 45 55 ];
+        %tmp.141 = getv ? :_factCount;
+        aputv %tmp.138 %tmp.141 %tmp.139;
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 83 77 ]
+        symbol [ _factCount %tmp.144 83 77 87 ];
+        %tmp.144 = getv ? :_factCount;
+        %tmp.145 = add %tmp.144 1;
+        symbol [ _factCount ? 83 77 87 ];
+        putv self :_factCount dup %tmp.145;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_83_25_83_91_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_83_8_85_91_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_83_8_85_91_if_false:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 84 13 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_84_13_85_91_if_stmt:
+        %tmp.146 = lgetv %p.5;
+        symbol [ p %tmp.146 84 17 18 ];
+        %tmp.147 = 1;
+        %tmp.148 = eq %tmp.146 %tmp.147;
+        bf %tmp.148 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_84_13_85_91_if_else_false;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_84_13_85_91_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_84_25_84_91_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 84 27 ]
+        %tmp.149 = lgetv %s.1;
+        symbol [ s %tmp.149 84 27 28 ];
+        %tmp.150 = 5;
+        %tmp.151 = add %tmp.149 %tmp.150;
+        lputv %s.1 %tmp.151;
+        symbol [ s %s.1 84 27 28 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 84 36 ]
+        symbol [ _factors %tmp.152 84 36 44 ];
+        %tmp.152 = getv self :_factors;
+        %tmp.153 = "Stable      +5";
+        symbol [ _factCount %tmp.155 84 45 55 ];
+        %tmp.155 = getv ? :_factCount;
+        aputv %tmp.152 %tmp.155 %tmp.153;
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 84 77 ]
+        symbol [ _factCount %tmp.158 84 77 87 ];
+        %tmp.158 = getv ? :_factCount;
+        %tmp.159 = add %tmp.158 1;
+        symbol [ _factCount ? 84 77 87 ];
+        putv self :_factCount dup %tmp.159;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_84_25_84_91_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_84_13_85_91_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_84_13_85_91_if_else_false:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_85_25_85_91_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 85 27 ]
+        %tmp.160 = lgetv %s.1;
+        symbol [ s %tmp.160 85 27 28 ];
+        %tmp.161 = 15;
+        %tmp.162 = add %tmp.160 %tmp.161;
+        lputv %s.1 %tmp.162;
+        symbol [ s %s.1 85 27 28 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 85 36 ]
+        symbol [ _factors %tmp.163 85 36 44 ];
+        %tmp.163 = getv self :_factors;
+        %tmp.164 = "Falling    +15";
+        symbol [ _factCount %tmp.166 85 45 55 ];
+        %tmp.166 = getv ? :_factCount;
+        aputv %tmp.163 %tmp.166 %tmp.164;
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 85 77 ]
+        symbol [ _factCount %tmp.169 85 77 87 ];
+        %tmp.169 = getv ? :_factCount;
+        %tmp.170 = add %tmp.169 1;
+        symbol [ _factCount ? 85 77 87 ];
+        putv self :_factCount dup %tmp.170;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_85_25_85_91_stop:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_84_13_85_91_if_end:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_83_8_85_91_if_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 88 8 ]
+        [ "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_58_36_96_4_start" "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_58_36_96_4_stop" ]
+        %m.6 = local;
+        symbol [ m %m.6 88 12 13 ];
+        symbol [ _inputs %tmp.172 88 16 23 ];
+        %tmp.172 = getv ? :_inputs;
+        symbol [ IN_MOON %tmp.174 88 24 31 ];
+        %tmp.174 = getv ? :IN_MOON;
+        %tmp.175 = agetv %tmp.172 %tmp.174;
+        lputv %m.6 %tmp.175;
+        symbol [ m %m.6 88 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 89 8 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_89_8_91_91_if_stmt:
+        %tmp.176 = lgetv %m.6;
+        symbol [ m %tmp.176 89 12 13 ];
+        %tmp.177 = 0;
+        %tmp.178 = eq %tmp.176 %tmp.177;
+        bf %tmp.178 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_89_8_91_91_if_false;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_89_8_91_91_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_89_25_89_91_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 89 27 ]
+        %tmp.179 = lgetv %s.1;
+        symbol [ s %tmp.179 89 27 28 ];
+        %tmp.180 = 10;
+        %tmp.181 = add %tmp.179 %tmp.180;
+        lputv %s.1 %tmp.181;
+        symbol [ s %s.1 89 27 28 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 89 36 ]
+        symbol [ _factors %tmp.182 89 36 44 ];
+        %tmp.182 = getv self :_factors;
+        %tmp.183 = "New moon   +10";
+        symbol [ _factCount %tmp.185 89 45 55 ];
+        %tmp.185 = getv ? :_factCount;
+        aputv %tmp.182 %tmp.185 %tmp.183;
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 89 77 ]
+        symbol [ _factCount %tmp.188 89 77 87 ];
+        %tmp.188 = getv ? :_factCount;
+        %tmp.189 = add %tmp.188 1;
+        symbol [ _factCount ? 89 77 87 ];
+        putv self :_factCount dup %tmp.189;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_89_25_89_91_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_89_8_91_91_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_89_8_91_91_if_false:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 90 13 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_90_13_91_91_if_stmt:
+        %tmp.190 = lgetv %m.6;
+        symbol [ m %tmp.190 90 17 18 ];
+        %tmp.191 = 1;
+        %tmp.192 = eq %tmp.190 %tmp.191;
+        bf %tmp.192 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_90_13_91_91_if_else_false;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_90_13_91_91_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_90_25_90_91_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 90 27 ]
+        %tmp.193 = lgetv %s.1;
+        symbol [ s %tmp.193 90 27 28 ];
+        %tmp.194 = 2;
+        %tmp.195 = add %tmp.193 %tmp.194;
+        lputv %s.1 %tmp.195;
+        symbol [ s %s.1 90 27 28 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 90 36 ]
+        symbol [ _factors %tmp.196 90 36 44 ];
+        %tmp.196 = getv self :_factors;
+        %tmp.197 = "Half moon   +2";
+        symbol [ _factCount %tmp.199 90 45 55 ];
+        %tmp.199 = getv ? :_factCount;
+        aputv %tmp.196 %tmp.199 %tmp.197;
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 90 77 ]
+        symbol [ _factCount %tmp.202 90 77 87 ];
+        %tmp.202 = getv ? :_factCount;
+        %tmp.203 = add %tmp.202 1;
+        symbol [ _factCount ? 90 77 87 ];
+        putv self :_factCount dup %tmp.203;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_90_25_90_91_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_90_13_91_91_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_90_13_91_91_if_else_false:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_91_25_91_91_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 91 27 ]
+        %tmp.204 = lgetv %s.1;
+        symbol [ s %tmp.204 91 27 28 ];
+        %tmp.205 = 5;
+        %tmp.206 = add %tmp.204 %tmp.205;
+        lputv %s.1 %tmp.206;
+        symbol [ s %s.1 91 27 28 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 91 36 ]
+        symbol [ _factors %tmp.207 91 36 44 ];
+        %tmp.207 = getv self :_factors;
+        %tmp.208 = "Full moon   +5";
+        symbol [ _factCount %tmp.210 91 45 55 ];
+        %tmp.210 = getv ? :_factCount;
+        aputv %tmp.207 %tmp.210 %tmp.208;
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 91 77 ]
+        symbol [ _factCount %tmp.213 91 77 87 ];
+        %tmp.213 = getv ? :_factCount;
+        %tmp.214 = add %tmp.213 1;
+        symbol [ _factCount ? 91 77 87 ];
+        putv self :_factCount dup %tmp.214;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_91_25_91_91_stop:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_90_13_91_91_if_end:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_89_8_91_91_if_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 93 8 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_93_8_93_30_if_stmt:
+        %tmp.215 = lgetv %s.1;
+        symbol [ s %tmp.215 93 12 13 ];
+        %tmp.216 = 0;
+        %tmp.217 = lt %tmp.215 %tmp.216;
+        bf %tmp.217 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_93_8_93_30_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_93_8_93_30_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_93_21_93_30_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 93 23 ]
+        %tmp.218 = 0;
+        lputv %s.1 %tmp.218;
+        symbol [ s %s.1 93 23 24 ];
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_93_21_93_30_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_93_8_93_30_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_93_8_93_30_if_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 94 8 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_94_8_94_32_if_stmt:
+        %tmp.219 = lgetv %s.1;
+        symbol [ s %tmp.219 94 12 13 ];
+        %tmp.220 = 100;
+        %tmp.221 = gt %tmp.219 %tmp.220;
+        bf %tmp.221 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_94_8_94_32_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_94_8_94_32_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_94_21_94_32_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 94 23 ]
+        %tmp.222 = 100;
+        lputv %s.1 %tmp.222;
+        symbol [ s %s.1 94 23 24 ];
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_94_21_94_32_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_94_8_94_32_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_94_8_94_32_if_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 95 8 ]
+        %tmp.223 = lgetv %s.1;
+        symbol [ s %tmp.223 95 17 18 ];
+        symbol [ _score ? 95 8 14 ];
+        putv self :_score %tmp.223;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_58_36_96_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 100; @symbol_functiondef = [_getOptCount,100,20,32]; @symbol_param<0> = [inp,100,33,36]; ]
+    protected
+    function _getOptCount(inp) {
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_100_38_103_4_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 101 8 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_101_8_101_40_if_stmt:
+        %tmp.1 = lgetv %inp;
+        symbol [ inp %tmp.1 101 12 15 ];
+        symbol [ IN_TIME %tmp.3 101 19 26 ];
+        %tmp.3 = getv ? :IN_TIME;
+        %tmp.4 = eq %tmp.1 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_101_8_101_40_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_101_8_101_40_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_101_28_101_40_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 101 30 ]
+        %tmp.5 = 4;
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_101_28_101_40_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_101_8_101_40_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_101_8_101_40_if_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 102 8 ]
+        %tmp.6 = 3;
+        ret %tmp.6;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_100_38_103_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 105; @symbol_functiondef = [_getInputName,105,20,33]; @symbol_param<0> = [inp,105,34,37]; ]
+    protected
+    function _getInputName(inp) {
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_105_39_111_4_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 106 8 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_106_8_106_49_if_stmt:
+        %tmp.1 = lgetv %inp;
+        symbol [ inp %tmp.1 106 12 15 ];
+        symbol [ IN_TIME %tmp.3 106 19 26 ];
+        %tmp.3 = getv ? :IN_TIME;
+        %tmp.4 = eq %tmp.1 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_106_8_106_49_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_106_8_106_49_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_106_32_106_49_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 106 34 ]
+        %tmp.5 = "Time";
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_106_32_106_49_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_106_8_106_49_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_106_8_106_49_if_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 107 8 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_107_8_107_52_if_stmt:
+        %tmp.6 = lgetv %inp;
+        symbol [ inp %tmp.6 107 12 15 ];
+        symbol [ IN_WEATHER %tmp.8 107 19 29 ];
+        %tmp.8 = getv ? :IN_WEATHER;
+        %tmp.9 = eq %tmp.6 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_107_8_107_52_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_107_8_107_52_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_107_32_107_52_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 107 34 ]
+        %tmp.10 = "Weather";
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_107_32_107_52_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_107_8_107_52_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_107_8_107_52_if_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 108 8 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_108_8_108_49_if_stmt:
+        %tmp.11 = lgetv %inp;
+        symbol [ inp %tmp.11 108 12 15 ];
+        symbol [ IN_TEMP %tmp.13 108 19 26 ];
+        %tmp.13 = getv ? :IN_TEMP;
+        %tmp.14 = eq %tmp.11 %tmp.13;
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_108_8_108_49_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_108_8_108_49_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_108_32_108_49_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 108 34 ]
+        %tmp.15 = "Temp";
+        ret %tmp.15;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_108_32_108_49_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_108_8_108_49_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_108_8_108_49_if_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 109 8 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_109_8_109_53_if_stmt:
+        %tmp.16 = lgetv %inp;
+        symbol [ inp %tmp.16 109 12 15 ];
+        symbol [ IN_PRESSURE %tmp.18 109 19 30 ];
+        %tmp.18 = getv ? :IN_PRESSURE;
+        %tmp.19 = eq %tmp.16 %tmp.18;
+        bf %tmp.19 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_109_8_109_53_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_109_8_109_53_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_109_32_109_53_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 109 34 ]
+        %tmp.20 = "Pressure";
+        ret %tmp.20;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_109_32_109_53_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_109_8_109_53_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_109_8_109_53_if_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 110 8 ]
+        %tmp.21 = "Moon";
+        ret %tmp.21;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_105_39_111_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 113; @symbol_functiondef = [_getCurLabel,113,20,32]; @symbol_param<0> = [inp,113,33,36]; ]
+    protected
+    function _getCurLabel(inp) {
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_113_38_140_4_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 114 8 ]
+        [ "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_113_38_140_4_start" "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_113_38_140_4_stop" ]
+        %opt.1 = local;
+        symbol [ opt %opt.1 114 12 15 ];
+        symbol [ _inputs %tmp.2 114 18 25 ];
+        %tmp.2 = getv ? :_inputs;
+        %tmp.3 = lgetv %inp;
+        symbol [ inp %tmp.3 114 26 29 ];
+        %tmp.4 = agetv %tmp.2 %tmp.3;
+        lputv %opt.1 %tmp.4;
+        symbol [ opt %opt.1 114 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 115 8 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_115_8_120_8_if_stmt:
+        %tmp.5 = lgetv %inp;
+        symbol [ inp %tmp.5 115 12 15 ];
+        symbol [ IN_TIME %tmp.7 115 19 26 ];
+        %tmp.7 = getv ? :IN_TIME;
+        %tmp.8 = eq %tmp.5 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_115_8_120_8_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_115_8_120_8_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_115_28_120_8_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 116 12 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_116_12_116_46_if_stmt:
+        %tmp.9 = lgetv %opt.1;
+        symbol [ opt %tmp.9 116 16 19 ];
+        %tmp.10 = 0;
+        %tmp.11 = eq %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_116_12_116_46_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_116_12_116_46_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_116_26_116_46_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 116 28 ]
+        %tmp.12 = "Morning";
+        ret %tmp.12;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_116_26_116_46_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_116_12_116_46_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_116_12_116_46_if_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 117 12 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_117_12_117_45_if_stmt:
+        %tmp.13 = lgetv %opt.1;
+        symbol [ opt %tmp.13 117 16 19 ];
+        %tmp.14 = 1;
+        %tmp.15 = eq %tmp.13 %tmp.14;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_117_12_117_45_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_117_12_117_45_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_117_26_117_45_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 117 28 ]
+        %tmp.16 = "Midday";
+        ret %tmp.16;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_117_26_117_45_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_117_12_117_45_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_117_12_117_45_if_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 118 12 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_118_12_118_46_if_stmt:
+        %tmp.17 = lgetv %opt.1;
+        symbol [ opt %tmp.17 118 16 19 ];
+        %tmp.18 = 2;
+        %tmp.19 = eq %tmp.17 %tmp.18;
+        bf %tmp.19 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_118_12_118_46_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_118_12_118_46_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_118_26_118_46_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 118 28 ]
+        %tmp.20 = "Evening";
+        ret %tmp.20;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_118_26_118_46_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_118_12_118_46_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_118_12_118_46_if_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 119 12 ]
+        %tmp.21 = "Night";
+        ret %tmp.21;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_115_28_120_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_115_8_120_8_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_115_8_120_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 121 8 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_121_8_125_8_if_stmt:
+        %tmp.22 = lgetv %inp;
+        symbol [ inp %tmp.22 121 12 15 ];
+        symbol [ IN_WEATHER %tmp.24 121 19 29 ];
+        %tmp.24 = getv ? :IN_WEATHER;
+        %tmp.25 = eq %tmp.22 %tmp.24;
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_121_8_125_8_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_121_8_125_8_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_121_31_125_8_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 122 12 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_122_12_122_44_if_stmt:
+        %tmp.26 = lgetv %opt.1;
+        symbol [ opt %tmp.26 122 16 19 ];
+        %tmp.27 = 0;
+        %tmp.28 = eq %tmp.26 %tmp.27;
+        bf %tmp.28 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_122_12_122_44_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_122_12_122_44_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_122_26_122_44_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 122 28 ]
+        %tmp.29 = "Sunny";
+        ret %tmp.29;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_122_26_122_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_122_12_122_44_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_122_12_122_44_if_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 123 12 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_123_12_123_45_if_stmt:
+        %tmp.30 = lgetv %opt.1;
+        symbol [ opt %tmp.30 123 16 19 ];
+        %tmp.31 = 1;
+        %tmp.32 = eq %tmp.30 %tmp.31;
+        bf %tmp.32 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_123_12_123_45_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_123_12_123_45_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_123_26_123_45_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 123 28 ]
+        %tmp.33 = "Cloudy";
+        ret %tmp.33;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_123_26_123_45_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_123_12_123_45_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_123_12_123_45_if_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 124 12 ]
+        %tmp.34 = "Rainy";
+        ret %tmp.34;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_121_31_125_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_121_8_125_8_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_121_8_125_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 126 8 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_126_8_130_8_if_stmt:
+        %tmp.35 = lgetv %inp;
+        symbol [ inp %tmp.35 126 12 15 ];
+        symbol [ IN_TEMP %tmp.37 126 19 26 ];
+        %tmp.37 = getv ? :IN_TEMP;
+        %tmp.38 = eq %tmp.35 %tmp.37;
+        bf %tmp.38 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_126_8_130_8_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_126_8_130_8_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_126_28_130_8_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 127 12 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_127_12_127_43_if_stmt:
+        %tmp.39 = lgetv %opt.1;
+        symbol [ opt %tmp.39 127 16 19 ];
+        %tmp.40 = 0;
+        %tmp.41 = eq %tmp.39 %tmp.40;
+        bf %tmp.41 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_127_12_127_43_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_127_12_127_43_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_127_26_127_43_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 127 28 ]
+        %tmp.42 = "Cold";
+        ret %tmp.42;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_127_26_127_43_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_127_12_127_43_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_127_12_127_43_if_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 128 12 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_128_12_128_47_if_stmt:
+        %tmp.43 = lgetv %opt.1;
+        symbol [ opt %tmp.43 128 16 19 ];
+        %tmp.44 = 1;
+        %tmp.45 = eq %tmp.43 %tmp.44;
+        bf %tmp.45 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_128_12_128_47_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_128_12_128_47_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_128_26_128_47_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 128 28 ]
+        %tmp.46 = "Moderate";
+        ret %tmp.46;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_128_26_128_47_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_128_12_128_47_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_128_12_128_47_if_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 129 12 ]
+        %tmp.47 = "Warm";
+        ret %tmp.47;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_126_28_130_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_126_8_130_8_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_126_8_130_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 131 8 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_131_8_135_8_if_stmt:
+        %tmp.48 = lgetv %inp;
+        symbol [ inp %tmp.48 131 12 15 ];
+        symbol [ IN_PRESSURE %tmp.50 131 19 30 ];
+        %tmp.50 = getv ? :IN_PRESSURE;
+        %tmp.51 = eq %tmp.48 %tmp.50;
+        bf %tmp.51 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_131_8_135_8_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_131_8_135_8_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_131_32_135_8_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 132 12 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_132_12_132_45_if_stmt:
+        %tmp.52 = lgetv %opt.1;
+        symbol [ opt %tmp.52 132 16 19 ];
+        %tmp.53 = 0;
+        %tmp.54 = eq %tmp.52 %tmp.53;
+        bf %tmp.54 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_132_12_132_45_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_132_12_132_45_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_132_26_132_45_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 132 28 ]
+        %tmp.55 = "Rising";
+        ret %tmp.55;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_132_26_132_45_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_132_12_132_45_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_132_12_132_45_if_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 133 12 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_133_12_133_45_if_stmt:
+        %tmp.56 = lgetv %opt.1;
+        symbol [ opt %tmp.56 133 16 19 ];
+        %tmp.57 = 1;
+        %tmp.58 = eq %tmp.56 %tmp.57;
+        bf %tmp.58 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_133_12_133_45_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_133_12_133_45_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_133_26_133_45_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 133 28 ]
+        %tmp.59 = "Stable";
+        ret %tmp.59;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_133_26_133_45_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_133_12_133_45_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_133_12_133_45_if_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 134 12 ]
+        %tmp.60 = "Falling";
+        ret %tmp.60;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_131_32_135_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_131_8_135_8_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_131_8_135_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 137 8 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_137_8_137_38_if_stmt:
+        %tmp.61 = lgetv %opt.1;
+        symbol [ opt %tmp.61 137 12 15 ];
+        %tmp.62 = 0;
+        %tmp.63 = eq %tmp.61 %tmp.62;
+        bf %tmp.63 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_137_8_137_38_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_137_8_137_38_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_137_22_137_38_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 137 24 ]
+        %tmp.64 = "New";
+        ret %tmp.64;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_137_22_137_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_137_8_137_38_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_137_8_137_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 138 8 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_138_8_138_39_if_stmt:
+        %tmp.65 = lgetv %opt.1;
+        symbol [ opt %tmp.65 138 12 15 ];
+        %tmp.66 = 1;
+        %tmp.67 = eq %tmp.65 %tmp.66;
+        bf %tmp.67 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_138_8_138_39_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_138_8_138_39_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_138_22_138_39_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 138 24 ]
+        %tmp.68 = "Half";
+        ret %tmp.68;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_138_22_138_39_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_138_8_138_39_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_138_8_138_39_if_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 139 8 ]
+        %tmp.69 = "Full";
+        ret %tmp.69;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_113_38_140_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 144; @symbol_functiondef = [goToInput,144,13,22]; ]
+    function goToInput() {
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_144_25_148_4_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 145 8 ]
+        symbol [ SC_INPUT %tmp.2 145 18 26 ];
+        %tmp.2 = getv ? :SC_INPUT;
+        symbol [ _screen ? 145 8 15 ];
+        putv self :_screen %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 146 8 ]
+        %tmp.3 = 0;
+        symbol [ _cursor ? 146 8 15 ];
+        putv self :_cursor %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 147 8 ]
+        symbol [ WatchUi %tmp.4 147 8 15 ];
+        %tmp.4 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.5 147 16 29 ];
+        %tmp.5 = getv function %tmp.4 :requestUpdate;
+        invoke %tmp.4 %tmp.5();
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_144_25_148_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 150; @symbol_functiondef = [goToScore,150,13,22]; ]
+    function goToScore() {
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_150_25_153_4_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 151 8 ]
+        symbol [ SC_SCORE %tmp.2 151 18 26 ];
+        %tmp.2 = getv ? :SC_SCORE;
+        symbol [ _screen ? 151 8 15 ];
+        putv self :_screen %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 152 8 ]
+        symbol [ WatchUi %tmp.3 152 8 15 ];
+        %tmp.3 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.4 152 16 29 ];
+        %tmp.4 = getv function %tmp.3 :requestUpdate;
+        invoke %tmp.3 %tmp.4();
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_150_25_153_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 155; @symbol_functiondef = [doUp,155,13,17]; ]
+    function doUp() {
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_155_20_160_4_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 156 8 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_156_8_159_8_if_stmt:
+        symbol [ _screen %tmp.2 156 12 19 ];
+        %tmp.2 = getv ? :_screen;
+        symbol [ SC_INPUT %tmp.4 156 23 31 ];
+        %tmp.4 = getv ? :SC_INPUT;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_156_8_159_8_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_156_8_159_8_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_156_33_159_8_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 157 12 ]
+        symbol [ _cursor %tmp.7 157 23 30 ];
+        %tmp.7 = getv ? :_cursor;
+        %tmp.8 = 4;
+        %tmp.9 = add %tmp.7 %tmp.8;
+        %tmp.10 = 5;
+        %tmp.11 = mod %tmp.9 %tmp.10;
+        symbol [ _cursor ? 157 12 19 ];
+        putv self :_cursor %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 158 12 ]
+        symbol [ WatchUi %tmp.12 158 12 19 ];
+        %tmp.12 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.13 158 20 33 ];
+        %tmp.13 = getv function %tmp.12 :requestUpdate;
+        invoke %tmp.12 %tmp.13();
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_156_33_159_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_156_8_159_8_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_156_8_159_8_if_end:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_155_20_160_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 162; @symbol_functiondef = [doDown,162,13,19]; ]
+    function doDown() {
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_162_22_167_4_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 163 8 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_163_8_166_8_if_stmt:
+        symbol [ _screen %tmp.2 163 12 19 ];
+        %tmp.2 = getv ? :_screen;
+        symbol [ SC_INPUT %tmp.4 163 23 31 ];
+        %tmp.4 = getv ? :SC_INPUT;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_163_8_166_8_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_163_8_166_8_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_163_33_166_8_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 164 12 ]
+        symbol [ _cursor %tmp.7 164 23 30 ];
+        %tmp.7 = getv ? :_cursor;
+        %tmp.8 = 1;
+        %tmp.9 = add %tmp.7 %tmp.8;
+        %tmp.10 = 5;
+        %tmp.11 = mod %tmp.9 %tmp.10;
+        symbol [ _cursor ? 164 12 19 ];
+        putv self :_cursor %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 165 12 ]
+        symbol [ WatchUi %tmp.12 165 12 19 ];
+        %tmp.12 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.13 165 20 33 ];
+        %tmp.13 = getv function %tmp.12 :requestUpdate;
+        invoke %tmp.12 %tmp.13();
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_163_33_166_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_163_8_166_8_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_163_8_166_8_if_end:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_162_22_167_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 169; @symbol_functiondef = [doSelect,169,13,21]; ]
+    function doSelect() {
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_169_24_178_4_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 170 8 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_170_8_177_8_if_stmt:
+        symbol [ _screen %tmp.2 170 12 19 ];
+        %tmp.2 = getv ? :_screen;
+        symbol [ SC_SCORE %tmp.4 170 23 31 ];
+        %tmp.4 = getv ? :SC_SCORE;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_170_8_177_8_if_false;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_170_8_177_8_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_170_33_172_8_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 171 12 ]
+        %tmp.6 = self;
+        symbol [ goToInput %tmp.7 171 12 21 ];
+        %tmp.7 = getv function %tmp.6 :goToInput;
+        invoke %tmp.6 %tmp.7();
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_170_33_172_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_170_8_177_8_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_170_8_177_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 172 15 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_172_15_177_8_if_stmt:
+        symbol [ _screen %tmp.9 172 19 26 ];
+        %tmp.9 = getv ? :_screen;
+        symbol [ SC_INPUT %tmp.11 172 30 38 ];
+        %tmp.11 = getv ? :SC_INPUT;
+        %tmp.12 = eq %tmp.9 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_172_15_177_8_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_172_15_177_8_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_172_40_177_8_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 173 12 ]
+        [ "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_172_40_177_8_start" "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_172_40_177_8_stop" ]
+        %count.1 = local;
+        symbol [ count %count.1 173 16 21 ];
+        %tmp.13 = self;
+        symbol [ _getOptCount %tmp.14 173 24 36 ];
+        %tmp.14 = getv function %tmp.13 :_getOptCount;
+        symbol [ _cursor %tmp.16 173 37 44 ];
+        %tmp.16 = getv ? :_cursor;
+        %tmp.17 = invoke %tmp.13 %tmp.14(%tmp.16);
+        lputv %count.1 %tmp.17;
+        symbol [ count %count.1 173 16 21 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 174 12 ]
+        symbol [ _inputs %tmp.18 174 12 19 ];
+        %tmp.18 = getv self :_inputs;
+        symbol [ _inputs %tmp.20 174 32 39 ];
+        %tmp.20 = getv ? :_inputs;
+        symbol [ _cursor %tmp.22 174 40 47 ];
+        %tmp.22 = getv ? :_cursor;
+        %tmp.23 = agetv %tmp.20 %tmp.22;
+        %tmp.24 = 1;
+        %tmp.25 = add %tmp.23 %tmp.24;
+        %tmp.26 = lgetv %count.1;
+        symbol [ count %tmp.26 174 56 61 ];
+        %tmp.27 = mod %tmp.25 %tmp.26;
+        symbol [ _cursor %tmp.29 174 20 27 ];
+        %tmp.29 = getv ? :_cursor;
+        aputv %tmp.18 %tmp.29 %tmp.27;
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 175 12 ]
+        %tmp.30 = self;
+        symbol [ _computeScore %tmp.31 175 12 25 ];
+        %tmp.31 = getv function %tmp.30 :_computeScore;
+        invoke %tmp.30 %tmp.31();
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 176 12 ]
+        symbol [ WatchUi %tmp.32 176 12 19 ];
+        %tmp.32 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.33 176 20 33 ];
+        %tmp.33 = getv function %tmp.32 :requestUpdate;
+        invoke %tmp.32 %tmp.33();
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_172_40_177_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_172_15_177_8_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_172_15_177_8_if_end:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_170_8_177_8_if_end:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_169_24_178_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 180; @symbol_functiondef = [doBack,180,13,19]; ]
+    function doBack() {
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_180_22_186_4_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 181 8 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_181_8_184_8_if_stmt:
+        symbol [ _screen %tmp.2 181 12 19 ];
+        %tmp.2 = getv ? :_screen;
+        symbol [ SC_INPUT %tmp.4 181 23 31 ];
+        %tmp.4 = getv ? :SC_INPUT;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_181_8_184_8_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_181_8_184_8_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_181_33_184_8_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 182 12 ]
+        %tmp.6 = self;
+        symbol [ goToScore %tmp.7 182 12 21 ];
+        %tmp.7 = getv function %tmp.6 :goToScore;
+        invoke %tmp.6 %tmp.7();
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 183 12 ]
+        %tmp.8 = true;
+        ret %tmp.8;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_181_33_184_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_181_8_184_8_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_181_8_184_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 185 8 ]
+        %tmp.9 = false;
+        ret %tmp.9;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_180_22_186_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 190; @symbol_functiondef = [onUpdate,190,13,21]; @symbol_param<0> = [dc,190,22,24]; ]
+    function onUpdate(dc) {
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_190_26_198_4_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 191 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 191 13 15 ];
+        symbol [ getWidth %tmp.2 191 16 24 ];
+        %tmp.2 = getv function %tmp.1 :getWidth;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        symbol [ _w ? 191 8 10 ];
+        putv self :_w %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 192 8 ]
+        %tmp.4 = lgetv %dc;
+        symbol [ dc %tmp.4 192 13 15 ];
+        symbol [ getHeight %tmp.5 192 16 25 ];
+        %tmp.5 = getv function %tmp.4 :getHeight;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        symbol [ _h ? 192 8 10 ];
+        putv self :_h %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 193 8 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_193_8_197_8_if_stmt:
+        symbol [ _screen %tmp.8 193 12 19 ];
+        %tmp.8 = getv ? :_screen;
+        symbol [ SC_SCORE %tmp.10 193 23 31 ];
+        %tmp.10 = getv ? :SC_SCORE;
+        %tmp.11 = eq %tmp.8 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_193_8_197_8_if_else_false;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_193_8_197_8_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_193_33_195_8_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 194 12 ]
+        %tmp.12 = self;
+        symbol [ _drawScore %tmp.13 194 12 22 ];
+        %tmp.13 = getv function %tmp.12 :_drawScore;
+        %tmp.14 = lgetv %dc;
+        symbol [ dc %tmp.14 194 23 25 ];
+        invoke %tmp.12 %tmp.13(%tmp.14);
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_193_33_195_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_193_8_197_8_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_193_8_197_8_if_else_false:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_195_15_197_8_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 196 12 ]
+        %tmp.15 = self;
+        symbol [ _drawInput %tmp.16 196 12 22 ];
+        %tmp.16 = getv function %tmp.15 :_drawInput;
+        %tmp.17 = lgetv %dc;
+        symbol [ dc %tmp.17 196 23 25 ];
+        invoke %tmp.15 %tmp.16(%tmp.17);
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_195_15_197_8_stop:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_193_8_197_8_if_end:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_190_26_198_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 201; @symbol_functiondef = [_drawScore,201,20,30]; @symbol_param<0> = [dc,201,31,33]; ]
+    protected
+    function _drawScore(dc) {
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_201_35_252_4_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 202 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 202 8 10 ];
+        symbol [ setColor %tmp.2 202 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        %tmp.3 = 0x06101A;
+        %tmp.4 = 0x06101A;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.4);
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 203 8 ]
+        %tmp.5 = lgetv %dc;
+        symbol [ dc %tmp.5 203 8 10 ];
+        symbol [ clear %tmp.6 203 11 16 ];
+        %tmp.6 = getv function %tmp.5 :clear;
+        invoke %tmp.5 %tmp.6();
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 206 8 ]
+        %tmp.7 = lgetv %dc;
+        symbol [ dc %tmp.7 206 8 10 ];
+        symbol [ setColor %tmp.8 206 11 19 ];
+        %tmp.8 = getv function %tmp.7 :setColor;
+        %tmp.9 = 0x2A5060;
+        symbol [ Graphics %tmp.10 206 30 38 ];
+        %tmp.10 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.11 206 39 56 ];
+        %tmp.11 = getv %tmp.10 :COLOR_TRANSPARENT;
+        invoke %tmp.7 %tmp.8(%tmp.9, %tmp.11);
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 207 8 ]
+        %tmp.12 = lgetv %dc;
+        symbol [ dc %tmp.12 207 8 10 ];
+        symbol [ drawText %tmp.13 207 11 19 ];
+        %tmp.13 = getv function %tmp.12 :drawText;
+        symbol [ _w %tmp.15 207 20 22 ];
+        %tmp.15 = getv ? :_w;
+        %tmp.16 = 2;
+        %tmp.17 = div %tmp.15 %tmp.16;
+        symbol [ _h %tmp.19 207 28 30 ];
+        %tmp.19 = getv ? :_h;
+        %tmp.20 = 11;
+        %tmp.21 = mul %tmp.19 %tmp.20;
+        %tmp.22 = 100;
+        %tmp.23 = div %tmp.21 %tmp.22;
+        symbol [ Graphics %tmp.24 207 43 51 ];
+        %tmp.24 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.25 207 52 62 ];
+        %tmp.25 = getv %tmp.24 :FONT_XTINY;
+        %tmp.26 = "FISHING SCORE";
+        symbol [ Graphics %tmp.27 208 29 37 ];
+        %tmp.27 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.28 208 38 57 ];
+        %tmp.28 = getv %tmp.27 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.12 %tmp.13(%tmp.17, %tmp.23, %tmp.25, %tmp.26, %tmp.28);
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 211 8 ]
+        [ "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_201_35_252_4_start" "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_201_35_252_4_stop" ]
+        %scoreC.1 = local;
+        symbol [ scoreC %scoreC.1 211 12 18 ];
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_211_21_211_77_begin:
+        symbol [ _score %tmp.30 211 22 28 ];
+        %tmp.30 = getv ? :_score;
+        %tmp.31 = 70;
+        %tmp.32 = gte %tmp.30 %tmp.31;
+        bf %tmp.32 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_211_21_211_77_else_false;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_211_21_211_77_true:
+        %tmp.33 = 0x22DD55;
+        push %tmp.33;
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_211_21_211_77_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_211_21_211_77_else_false:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_211_49_211_77_begin:
+        symbol [ _score %tmp.35 211 50 56 ];
+        %tmp.35 = getv ? :_score;
+        %tmp.36 = 40;
+        %tmp.37 = gte %tmp.35 %tmp.36;
+        bf %tmp.37 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_211_49_211_77_else_false;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_211_49_211_77_true:
+        %tmp.38 = 0xFFCC00;
+        push %tmp.38;
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_211_49_211_77_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_211_49_211_77_else_false:
+        %tmp.39 = 0xFF4422;
+        push %tmp.39;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_211_49_211_77_end:
+        %tmp.40 = phi [%tmp.37 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_211_49_211_77_begin] [%tmp.38 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_211_49_211_77_true] [%tmp.39 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_211_49_211_77_else_false] [%tmp.40 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_211_49_211_77_end];
+        push %tmp.40;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_211_21_211_77_end:
+        %tmp.41 = phi [%tmp.32 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_211_21_211_77_begin] [%tmp.33 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_211_21_211_77_true] [%tmp.40 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_211_21_211_77_else_false] [%tmp.41 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_211_21_211_77_end];
+        lputv %scoreC.1 %tmp.41;
+        symbol [ scoreC %scoreC.1 211 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 214 8 ]
+        [ "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_201_35_252_4_start" "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_201_35_252_4_stop" ]
+        %numFont.2 = local;
+        symbol [ numFont %numFont.2 214 12 19 ];
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_214_22_214_72_begin:
+        symbol [ _h %tmp.43 214 23 25 ];
+        %tmp.43 = getv ? :_h;
+        %tmp.44 = 200;
+        %tmp.45 = gte %tmp.43 %tmp.44;
+        bf %tmp.45 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_214_22_214_72_else_false;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_214_22_214_72_true:
+        symbol [ Graphics %tmp.46 214 36 44 ];
+        %tmp.46 = getm $.Toybox.Graphics;
+        symbol [ FONT_NUMBER_HOT %tmp.47 214 45 60 ];
+        %tmp.47 = getv %tmp.46 :FONT_NUMBER_HOT;
+        push %tmp.47;
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_214_22_214_72_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_214_22_214_72_else_false:
+        symbol [ Graphics %tmp.48 214 63 71 ];
+        %tmp.48 = getm $.Toybox.Graphics;
+        symbol [ FONT_NUMBER_MILD %tmp.49 214 72 88 ];
+        %tmp.49 = getv %tmp.48 :FONT_NUMBER_MILD;
+        push %tmp.49;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_214_22_214_72_end:
+        %tmp.50 = phi [%tmp.45 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_214_22_214_72_begin] [%tmp.47 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_214_22_214_72_true] [%tmp.49 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_214_22_214_72_else_false] [%tmp.50 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_214_22_214_72_end];
+        lputv %numFont.2 %tmp.50;
+        symbol [ numFont %numFont.2 214 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 215 8 ]
+        [ "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_201_35_252_4_start" "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_201_35_252_4_stop" ]
+        %numH.3 = local;
+        symbol [ numH %numH.3 215 12 16 ];
+        %tmp.51 = lgetv %dc;
+        symbol [ dc %tmp.51 215 22 24 ];
+        symbol [ getFontHeight %tmp.52 215 25 38 ];
+        %tmp.52 = getv function %tmp.51 :getFontHeight;
+        %tmp.53 = lgetv %numFont.2;
+        symbol [ numFont %tmp.53 215 39 46 ];
+        %tmp.54 = invoke %tmp.51 %tmp.52(%tmp.53);
+        lputv %numH.3 %tmp.54;
+        symbol [ numH %numH.3 215 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 216 8 ]
+        [ "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_201_35_252_4_start" "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_201_35_252_4_stop" ]
+        %numY.4 = local;
+        symbol [ numY %numY.4 216 12 16 ];
+        symbol [ _h %tmp.56 216 22 24 ];
+        %tmp.56 = getv ? :_h;
+        %tmp.57 = 20;
+        %tmp.58 = mul %tmp.56 %tmp.57;
+        %tmp.59 = 100;
+        %tmp.60 = div %tmp.58 %tmp.59;
+        lputv %numY.4 %tmp.60;
+        symbol [ numY %numY.4 216 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 217 8 ]
+        %tmp.61 = lgetv %dc;
+        symbol [ dc %tmp.61 217 8 10 ];
+        symbol [ setColor %tmp.62 217 11 19 ];
+        %tmp.62 = getv function %tmp.61 :setColor;
+        %tmp.63 = lgetv %scoreC.1;
+        symbol [ scoreC %tmp.63 217 20 26 ];
+        symbol [ Graphics %tmp.64 217 28 36 ];
+        %tmp.64 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.65 217 37 54 ];
+        %tmp.65 = getv %tmp.64 :COLOR_TRANSPARENT;
+        invoke %tmp.61 %tmp.62(%tmp.63, %tmp.65);
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 218 8 ]
+        %tmp.66 = lgetv %dc;
+        symbol [ dc %tmp.66 218 8 10 ];
+        symbol [ drawText %tmp.67 218 11 19 ];
+        %tmp.67 = getv function %tmp.66 :drawText;
+        symbol [ _w %tmp.69 218 20 22 ];
+        %tmp.69 = getv ? :_w;
+        %tmp.70 = 2;
+        %tmp.71 = div %tmp.69 %tmp.70;
+        %tmp.72 = lgetv %numY.4;
+        symbol [ numY %tmp.72 218 28 32 ];
+        %tmp.73 = lgetv %numFont.2;
+        symbol [ numFont %tmp.73 218 34 41 ];
+        symbol [ _score %tmp.75 218 43 49 ];
+        %tmp.75 = getv ? :_score;
+        symbol [ toString %tmp.76 218 50 58 ];
+        %tmp.76 = getv function %tmp.75 :toString;
+        %tmp.77 = invoke %tmp.75 %tmp.76();
+        symbol [ Graphics %tmp.78 218 62 70 ];
+        %tmp.78 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.79 218 71 90 ];
+        %tmp.79 = getv %tmp.78 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.66 %tmp.67(%tmp.71, %tmp.72, %tmp.73, %tmp.77, %tmp.79);
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 221 8 ]
+        [ "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_201_35_252_4_start" "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_201_35_252_4_stop" ]
+        %statusY.5 = local;
+        symbol [ statusY %statusY.5 221 12 19 ];
+        %tmp.80 = lgetv %numY.4;
+        symbol [ numY %tmp.80 221 22 26 ];
+        %tmp.81 = lgetv %numH.3;
+        symbol [ numH %tmp.81 221 29 33 ];
+        %tmp.82 = add %tmp.80 %tmp.81;
+        %tmp.83 = 2;
+        %tmp.84 = add %tmp.82 %tmp.83;
+        lputv %statusY.5 %tmp.84;
+        symbol [ statusY %statusY.5 221 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 222 8 ]
+        [ "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_201_35_252_4_start" "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_201_35_252_4_stop" ]
+        %label.6 = local;
+        symbol [ label %label.6 222 12 17 ];
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_222_22_222_76_begin:
+        symbol [ _score %tmp.86 222 23 29 ];
+        %tmp.86 = getv ? :_score;
+        %tmp.87 = 70;
+        %tmp.88 = gte %tmp.86 %tmp.87;
+        bf %tmp.88 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_222_22_222_76_else_false;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_222_22_222_76_true:
+        %tmp.89 = "HIGH";
+        push %tmp.89;
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_222_22_222_76_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_222_22_222_76_else_false:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_222_48_222_76_begin:
+        symbol [ _score %tmp.91 222 49 55 ];
+        %tmp.91 = getv ? :_score;
+        %tmp.92 = 40;
+        %tmp.93 = gte %tmp.91 %tmp.92;
+        bf %tmp.93 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_222_48_222_76_else_false;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_222_48_222_76_true:
+        %tmp.94 = "MEDIUM";
+        push %tmp.94;
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_222_48_222_76_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_222_48_222_76_else_false:
+        %tmp.95 = "LOW";
+        push %tmp.95;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_222_48_222_76_end:
+        %tmp.96 = phi [%tmp.93 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_222_48_222_76_begin] [%tmp.94 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_222_48_222_76_true] [%tmp.95 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_222_48_222_76_else_false] [%tmp.96 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_222_48_222_76_end];
+        push %tmp.96;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_222_22_222_76_end:
+        %tmp.97 = phi [%tmp.88 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_222_22_222_76_begin] [%tmp.89 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_222_22_222_76_true] [%tmp.96 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_222_22_222_76_else_false] [%tmp.97 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_222_22_222_76_end];
+        lputv %label.6 %tmp.97;
+        symbol [ label %label.6 222 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 223 8 ]
+        %tmp.98 = lgetv %dc;
+        symbol [ dc %tmp.98 223 8 10 ];
+        symbol [ setColor %tmp.99 223 11 19 ];
+        %tmp.99 = getv function %tmp.98 :setColor;
+        %tmp.100 = lgetv %scoreC.1;
+        symbol [ scoreC %tmp.100 223 20 26 ];
+        symbol [ Graphics %tmp.101 223 28 36 ];
+        %tmp.101 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.102 223 37 54 ];
+        %tmp.102 = getv %tmp.101 :COLOR_TRANSPARENT;
+        invoke %tmp.98 %tmp.99(%tmp.100, %tmp.102);
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 224 8 ]
+        %tmp.103 = lgetv %dc;
+        symbol [ dc %tmp.103 224 8 10 ];
+        symbol [ drawText %tmp.104 224 11 19 ];
+        %tmp.104 = getv function %tmp.103 :drawText;
+        symbol [ _w %tmp.106 224 20 22 ];
+        %tmp.106 = getv ? :_w;
+        %tmp.107 = 2;
+        %tmp.108 = div %tmp.106 %tmp.107;
+        %tmp.109 = lgetv %statusY.5;
+        symbol [ statusY %tmp.109 224 28 35 ];
+        symbol [ Graphics %tmp.110 224 37 45 ];
+        %tmp.110 = getm $.Toybox.Graphics;
+        symbol [ FONT_MEDIUM %tmp.111 224 46 57 ];
+        %tmp.111 = getv %tmp.110 :FONT_MEDIUM;
+        %tmp.112 = lgetv %label.6;
+        symbol [ label %tmp.112 224 59 64 ];
+        symbol [ Graphics %tmp.113 224 66 74 ];
+        %tmp.113 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.114 224 75 94 ];
+        %tmp.114 = getv %tmp.113 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.103 %tmp.104(%tmp.108, %tmp.109, %tmp.111, %tmp.112, %tmp.114);
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 227 8 ]
+        [ "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_201_35_252_4_start" "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_201_35_252_4_stop" ]
+        %statusH.7 = local;
+        symbol [ statusH %statusH.7 227 12 19 ];
+        %tmp.115 = lgetv %dc;
+        symbol [ dc %tmp.115 227 23 25 ];
+        symbol [ getFontHeight %tmp.116 227 26 39 ];
+        %tmp.116 = getv function %tmp.115 :getFontHeight;
+        symbol [ Graphics %tmp.117 227 40 48 ];
+        %tmp.117 = getm $.Toybox.Graphics;
+        symbol [ FONT_MEDIUM %tmp.118 227 49 60 ];
+        %tmp.118 = getv %tmp.117 :FONT_MEDIUM;
+        %tmp.119 = invoke %tmp.115 %tmp.116(%tmp.118);
+        lputv %statusH.7 %tmp.119;
+        symbol [ statusH %statusH.7 227 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 228 8 ]
+        [ "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_201_35_252_4_start" "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_201_35_252_4_stop" ]
+        %divY.8 = local;
+        symbol [ divY %divY.8 228 12 16 ];
+        %tmp.120 = lgetv %statusY.5;
+        symbol [ statusY %tmp.120 228 23 30 ];
+        %tmp.121 = lgetv %statusH.7;
+        symbol [ statusH %tmp.121 228 33 40 ];
+        %tmp.122 = add %tmp.120 %tmp.121;
+        %tmp.123 = 6;
+        %tmp.124 = add %tmp.122 %tmp.123;
+        lputv %divY.8 %tmp.124;
+        symbol [ divY %divY.8 228 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 229 8 ]
+        %tmp.125 = lgetv %dc;
+        symbol [ dc %tmp.125 229 8 10 ];
+        symbol [ setColor %tmp.126 229 11 19 ];
+        %tmp.126 = getv function %tmp.125 :setColor;
+        %tmp.127 = 0x162430;
+        symbol [ Graphics %tmp.128 229 30 38 ];
+        %tmp.128 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.129 229 39 56 ];
+        %tmp.129 = getv %tmp.128 :COLOR_TRANSPARENT;
+        invoke %tmp.125 %tmp.126(%tmp.127, %tmp.129);
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 230 8 ]
+        %tmp.130 = lgetv %dc;
+        symbol [ dc %tmp.130 230 8 10 ];
+        symbol [ drawLine %tmp.131 230 11 19 ];
+        %tmp.131 = getv function %tmp.130 :drawLine;
+        symbol [ _w %tmp.133 230 20 22 ];
+        %tmp.133 = getv ? :_w;
+        %tmp.134 = 14;
+        %tmp.135 = mul %tmp.133 %tmp.134;
+        %tmp.136 = 100;
+        %tmp.137 = div %tmp.135 %tmp.136;
+        %tmp.138 = lgetv %divY.8;
+        symbol [ divY %tmp.138 230 35 39 ];
+        symbol [ _w %tmp.140 230 41 43 ];
+        %tmp.140 = getv ? :_w;
+        %tmp.141 = 86;
+        %tmp.142 = mul %tmp.140 %tmp.141;
+        %tmp.143 = 100;
+        %tmp.144 = div %tmp.142 %tmp.143;
+        %tmp.145 = lgetv %divY.8;
+        symbol [ divY %tmp.145 230 56 60 ];
+        invoke %tmp.130 %tmp.131(%tmp.137, %tmp.138, %tmp.144, %tmp.145);
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 233 8 ]
+        [ "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_201_35_252_4_start" "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_201_35_252_4_stop" ]
+        %factH.9 = local;
+        symbol [ factH %factH.9 233 12 17 ];
+        %tmp.146 = lgetv %dc;
+        symbol [ dc %tmp.146 233 26 28 ];
+        symbol [ getFontHeight %tmp.147 233 29 42 ];
+        %tmp.147 = getv function %tmp.146 :getFontHeight;
+        symbol [ Graphics %tmp.148 233 43 51 ];
+        %tmp.148 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.149 233 52 62 ];
+        %tmp.149 = getv %tmp.148 :FONT_XTINY;
+        %tmp.150 = invoke %tmp.146 %tmp.147(%tmp.149);
+        lputv %factH.9 %tmp.150;
+        symbol [ factH %factH.9 233 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 234 8 ]
+        [ "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_201_35_252_4_start" "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_201_35_252_4_stop" ]
+        %factStartY.10 = local;
+        symbol [ factStartY %factStartY.10 234 12 22 ];
+        %tmp.151 = lgetv %divY.8;
+        symbol [ divY %tmp.151 234 26 30 ];
+        %tmp.152 = 5;
+        %tmp.153 = add %tmp.151 %tmp.152;
+        lputv %factStartY.10 %tmp.153;
+        symbol [ factStartY %factStartY.10 234 12 22 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 235 8 ]
+        [ "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_201_35_252_4_start" "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_201_35_252_4_stop" ]
+        %availH.11 = local;
+        symbol [ availH %availH.11 235 12 18 ];
+        symbol [ _h %tmp.155 235 26 28 ];
+        %tmp.155 = getv ? :_h;
+        %tmp.156 = 84;
+        %tmp.157 = mul %tmp.155 %tmp.156;
+        %tmp.158 = 100;
+        %tmp.159 = div %tmp.157 %tmp.158;
+        %tmp.160 = lgetv %factStartY.10;
+        symbol [ factStartY %tmp.160 235 42 52 ];
+        %tmp.161 = sub %tmp.159 %tmp.160;
+        lputv %availH.11 %tmp.161;
+        symbol [ availH %availH.11 235 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 236 8 ]
+        [ "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_201_35_252_4_start" "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_201_35_252_4_stop" ]
+        %maxFacts.12 = local;
+        symbol [ maxFacts %maxFacts.12 236 12 20 ];
+        %tmp.162 = lgetv %availH.11;
+        symbol [ availH %tmp.162 236 26 32 ];
+        %tmp.163 = lgetv %factH.9;
+        symbol [ factH %tmp.163 236 35 40 ];
+        %tmp.164 = div %tmp.162 %tmp.163;
+        lputv %maxFacts.12 %tmp.164;
+        symbol [ maxFacts %maxFacts.12 236 12 20 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 237 8 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_237_8_237_60_if_stmt:
+        %tmp.165 = lgetv %maxFacts.12;
+        symbol [ maxFacts %tmp.165 237 12 20 ];
+        symbol [ _factCount %tmp.167 237 23 33 ];
+        %tmp.167 = getv ? :_factCount;
+        %tmp.168 = gt %tmp.165 %tmp.167;
+        bf %tmp.168 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_237_8_237_60_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_237_8_237_60_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_237_35_237_60_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 237 37 ]
+        symbol [ _factCount %tmp.170 237 48 58 ];
+        %tmp.170 = getv ? :_factCount;
+        lputv %maxFacts.12 %tmp.170;
+        symbol [ maxFacts %maxFacts.12 237 37 45 ];
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_237_35_237_60_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_237_8_237_60_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_237_8_237_60_if_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 238 8 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_238_8_238_51_if_stmt:
+        %tmp.171 = lgetv %maxFacts.12;
+        symbol [ maxFacts %tmp.171 238 12 20 ];
+        %tmp.172 = 0;
+        %tmp.173 = lt %tmp.171 %tmp.172;
+        bf %tmp.173 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_238_8_238_51_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_238_8_238_51_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_238_35_238_51_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 238 37 ]
+        %tmp.174 = 0;
+        lputv %maxFacts.12 %tmp.174;
+        symbol [ maxFacts %maxFacts.12 238 37 45 ];
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_238_35_238_51_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_238_8_238_51_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_238_8_238_51_if_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 240 8 ]
+        for @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_240_8_245_8_for_test @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_240_8_245_8_for_incr @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_240_8_245_8_for_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_240_8_245_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_240_8_245_8_for_begin" "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_240_8_245_8_for_end" ]
+        %i.13 = local;
+        symbol [ i %i.13 240 17 18 ];
+        %tmp.175 = 0;
+        lputv %i.13 %tmp.175;
+        symbol [ i %i.13 240 17 18 ];
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_240_8_245_8_for_test:
+        %tmp.176 = lgetv %i.13;
+        symbol [ i %tmp.176 240 24 25 ];
+        %tmp.177 = lgetv %maxFacts.12;
+        symbol [ maxFacts %tmp.177 240 28 36 ];
+        %tmp.178 = lt %tmp.176 %tmp.177;
+        bf %tmp.178 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_240_8_245_8_for_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_240_8_245_8_for_begin:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_240_43_245_8_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 241 12 ]
+        [ "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_240_43_245_8_start" "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_240_43_245_8_stop" ]
+        %isNeg.14 = local;
+        symbol [ isNeg %isNeg.14 241 16 21 ];
+        symbol [ _factors %tmp.180 241 25 33 ];
+        %tmp.180 = getv ? :_factors;
+        %tmp.181 = lgetv %i.13;
+        symbol [ i %tmp.181 241 34 35 ];
+        %tmp.182 = agetv %tmp.180 %tmp.181;
+        symbol [ find %tmp.183 241 37 41 ];
+        %tmp.183 = getv function %tmp.182 :find;
+        %tmp.184 = "-";
+        %tmp.185 = invoke %tmp.182 %tmp.183(%tmp.184);
+        %tmp.186 = null;
+        %tmp.187 = ne %tmp.185 %tmp.186;
+        lputv %isNeg.14 %tmp.187;
+        symbol [ isNeg %isNeg.14 241 16 21 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 242 12 ]
+        %tmp.188 = lgetv %dc;
+        symbol [ dc %tmp.188 242 12 14 ];
+        symbol [ setColor %tmp.189 242 15 23 ];
+        %tmp.189 = getv function %tmp.188 :setColor;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_242_24_242_43_begin:
+        %tmp.190 = lgetv %isNeg.14;
+        symbol [ isNeg %tmp.190 242 24 29 ];
+        bf %tmp.190 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_242_24_242_43_else_false;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_242_24_242_43_true:
+        %tmp.191 = 0xCC5533;
+        push %tmp.191;
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_242_24_242_43_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_242_24_242_43_else_false:
+        %tmp.192 = 0x33AACC;
+        push %tmp.192;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_242_24_242_43_end:
+        %tmp.193 = phi [%tmp.190 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_242_24_242_43_begin] [%tmp.191 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_242_24_242_43_true] [%tmp.192 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_242_24_242_43_else_false] [%tmp.193 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_242_24_242_43_end];
+        symbol [ Graphics %tmp.194 242 53 61 ];
+        %tmp.194 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.195 242 62 79 ];
+        %tmp.195 = getv %tmp.194 :COLOR_TRANSPARENT;
+        invoke %tmp.188 %tmp.189(%tmp.193, %tmp.195);
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 243 12 ]
+        %tmp.196 = lgetv %dc;
+        symbol [ dc %tmp.196 243 12 14 ];
+        symbol [ drawText %tmp.197 243 15 23 ];
+        %tmp.197 = getv function %tmp.196 :drawText;
+        symbol [ _w %tmp.199 243 24 26 ];
+        %tmp.199 = getv ? :_w;
+        %tmp.200 = 14;
+        %tmp.201 = mul %tmp.199 %tmp.200;
+        %tmp.202 = 100;
+        %tmp.203 = div %tmp.201 %tmp.202;
+        %tmp.204 = lgetv %factStartY.10;
+        symbol [ factStartY %tmp.204 243 39 49 ];
+        %tmp.205 = lgetv %i.13;
+        symbol [ i %tmp.205 243 52 53 ];
+        %tmp.206 = lgetv %factH.9;
+        symbol [ factH %tmp.206 243 56 61 ];
+        %tmp.207 = mul %tmp.205 %tmp.206;
+        %tmp.208 = add %tmp.204 %tmp.207;
+        symbol [ Graphics %tmp.209 243 63 71 ];
+        %tmp.209 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.210 243 72 82 ];
+        %tmp.210 = getv %tmp.209 :FONT_XTINY;
+        symbol [ _factors %tmp.212 244 16 24 ];
+        %tmp.212 = getv ? :_factors;
+        %tmp.213 = lgetv %i.13;
+        symbol [ i %tmp.213 244 25 26 ];
+        %tmp.214 = agetv %tmp.212 %tmp.213;
+        symbol [ Graphics %tmp.215 244 29 37 ];
+        %tmp.215 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_LEFT %tmp.216 244 38 55 ];
+        %tmp.216 = getv %tmp.215 :TEXT_JUSTIFY_LEFT;
+        invoke %tmp.196 %tmp.197(%tmp.203, %tmp.208, %tmp.210, %tmp.214, %tmp.216);
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_240_43_245_8_stop:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_240_8_245_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 240 ]
+        %tmp.219 = lgetv %i.13;
+        symbol [ i %tmp.219 240 38 39 ];
+        %tmp.220 = add %tmp.219 1;
+        lputv %i.13 %tmp.220;
+        symbol [ i %i.13 240 38 39 ];
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_240_8_245_8_for_test;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_240_8_245_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 248 8 ]
+        [ "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_201_35_252_4_start" "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_201_35_252_4_stop" ]
+        %hintC.15 = local;
+        symbol [ hintC %hintC.15 248 12 17 ];
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_248_20_248_49_begin:
+        symbol [ _tick %tmp.222 248 21 26 ];
+        %tmp.222 = getv ? :_tick;
+        %tmp.223 = 8;
+        %tmp.224 = mod %tmp.222 %tmp.223;
+        %tmp.225 = 4;
+        %tmp.226 = lt %tmp.224 %tmp.225;
+        bf %tmp.226 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_248_20_248_49_else_false;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_248_20_248_49_true:
+        %tmp.227 = 0x1E3848;
+        push %tmp.227;
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_248_20_248_49_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_248_20_248_49_else_false:
+        %tmp.228 = 0x0E1E28;
+        push %tmp.228;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_248_20_248_49_end:
+        %tmp.229 = phi [%tmp.226 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_248_20_248_49_begin] [%tmp.227 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_248_20_248_49_true] [%tmp.228 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_248_20_248_49_else_false] [%tmp.229 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_248_20_248_49_end];
+        lputv %hintC.15 %tmp.229;
+        symbol [ hintC %hintC.15 248 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 249 8 ]
+        %tmp.230 = lgetv %dc;
+        symbol [ dc %tmp.230 249 8 10 ];
+        symbol [ setColor %tmp.231 249 11 19 ];
+        %tmp.231 = getv function %tmp.230 :setColor;
+        %tmp.232 = lgetv %hintC.15;
+        symbol [ hintC %tmp.232 249 20 25 ];
+        symbol [ Graphics %tmp.233 249 27 35 ];
+        %tmp.233 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.234 249 36 53 ];
+        %tmp.234 = getv %tmp.233 :COLOR_TRANSPARENT;
+        invoke %tmp.230 %tmp.231(%tmp.232, %tmp.234);
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 250 8 ]
+        %tmp.235 = lgetv %dc;
+        symbol [ dc %tmp.235 250 8 10 ];
+        symbol [ drawText %tmp.236 250 11 19 ];
+        %tmp.236 = getv function %tmp.235 :drawText;
+        symbol [ _w %tmp.238 250 20 22 ];
+        %tmp.238 = getv ? :_w;
+        %tmp.239 = 2;
+        %tmp.240 = div %tmp.238 %tmp.239;
+        symbol [ _h %tmp.242 250 28 30 ];
+        %tmp.242 = getv ? :_h;
+        %tmp.243 = 87;
+        %tmp.244 = mul %tmp.242 %tmp.243;
+        %tmp.245 = 100;
+        %tmp.246 = div %tmp.244 %tmp.245;
+        symbol [ Graphics %tmp.247 250 43 51 ];
+        %tmp.247 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.248 250 52 62 ];
+        %tmp.248 = getv %tmp.247 :FONT_XTINY;
+        %tmp.249 = "tap to adjust";
+        symbol [ Graphics %tmp.250 251 29 37 ];
+        %tmp.250 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.251 251 38 57 ];
+        %tmp.251 = getv %tmp.250 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.235 %tmp.236(%tmp.240, %tmp.246, %tmp.248, %tmp.249, %tmp.251);
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_201_35_252_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 255; @symbol_functiondef = [_drawInput,255,20,30]; @symbol_param<0> = [dc,255,31,33]; ]
+    protected
+    function _drawInput(dc) {
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_255_35_304_4_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 256 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 256 8 10 ];
+        symbol [ setColor %tmp.2 256 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        %tmp.3 = 0x060C14;
+        %tmp.4 = 0x060C14;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.4);
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 257 8 ]
+        %tmp.5 = lgetv %dc;
+        symbol [ dc %tmp.5 257 8 10 ];
+        symbol [ clear %tmp.6 257 11 16 ];
+        %tmp.6 = getv function %tmp.5 :clear;
+        invoke %tmp.5 %tmp.6();
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 260 8 ]
+        %tmp.7 = lgetv %dc;
+        symbol [ dc %tmp.7 260 8 10 ];
+        symbol [ setColor %tmp.8 260 11 19 ];
+        %tmp.8 = getv function %tmp.7 :setColor;
+        %tmp.9 = 0x44AACC;
+        symbol [ Graphics %tmp.10 260 30 38 ];
+        %tmp.10 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.11 260 39 56 ];
+        %tmp.11 = getv %tmp.10 :COLOR_TRANSPARENT;
+        invoke %tmp.7 %tmp.8(%tmp.9, %tmp.11);
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 261 8 ]
+        %tmp.12 = lgetv %dc;
+        symbol [ dc %tmp.12 261 8 10 ];
+        symbol [ drawText %tmp.13 261 11 19 ];
+        %tmp.13 = getv function %tmp.12 :drawText;
+        symbol [ _w %tmp.15 261 20 22 ];
+        %tmp.15 = getv ? :_w;
+        %tmp.16 = 2;
+        %tmp.17 = div %tmp.15 %tmp.16;
+        symbol [ _h %tmp.19 261 28 30 ];
+        %tmp.19 = getv ? :_h;
+        %tmp.20 = 11;
+        %tmp.21 = mul %tmp.19 %tmp.20;
+        %tmp.22 = 100;
+        %tmp.23 = div %tmp.21 %tmp.22;
+        symbol [ Graphics %tmp.24 261 43 51 ];
+        %tmp.24 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.25 261 52 62 ];
+        %tmp.25 = getv %tmp.24 :FONT_XTINY;
+        %tmp.26 = "ADJUST INPUTS";
+        symbol [ Graphics %tmp.27 262 29 37 ];
+        %tmp.27 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.28 262 38 57 ];
+        %tmp.28 = getv %tmp.27 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.12 %tmp.13(%tmp.17, %tmp.23, %tmp.25, %tmp.26, %tmp.28);
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 265 8 ]
+        [ "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_255_35_304_4_start" "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_255_35_304_4_stop" ]
+        %mx.1 = local;
+        symbol [ mx %mx.1 265 12 14 ];
+        symbol [ _w %tmp.30 265 21 23 ];
+        %tmp.30 = getv ? :_w;
+        %tmp.31 = 8;
+        %tmp.32 = mul %tmp.30 %tmp.31;
+        %tmp.33 = 100;
+        %tmp.34 = div %tmp.32 %tmp.33;
+        lputv %mx.1 %tmp.34;
+        symbol [ mx %mx.1 265 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 265 35 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_265_35_265_57_if_stmt:
+        %tmp.35 = lgetv %mx.1;
+        symbol [ mx %tmp.35 265 39 41 ];
+        %tmp.36 = 8;
+        %tmp.37 = lt %tmp.35 %tmp.36;
+        bf %tmp.37 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_265_35_265_57_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_265_35_265_57_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_265_47_265_57_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 265 49 ]
+        %tmp.38 = 8;
+        lputv %mx.1 %tmp.38;
+        symbol [ mx %mx.1 265 49 51 ];
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_265_47_265_57_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_265_35_265_57_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_265_35_265_57_if_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 266 8 ]
+        [ "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_255_35_304_4_start" "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_255_35_304_4_stop" ]
+        %startY.2 = local;
+        symbol [ startY %startY.2 266 12 18 ];
+        symbol [ _h %tmp.40 266 21 23 ];
+        %tmp.40 = getv ? :_h;
+        %tmp.41 = 24;
+        %tmp.42 = mul %tmp.40 %tmp.41;
+        %tmp.43 = 100;
+        %tmp.44 = div %tmp.42 %tmp.43;
+        lputv %startY.2 %tmp.44;
+        symbol [ startY %startY.2 266 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 266 36 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_266_36_266_68_if_stmt:
+        %tmp.45 = lgetv %startY.2;
+        symbol [ startY %tmp.45 266 40 46 ];
+        %tmp.46 = 32;
+        %tmp.47 = lt %tmp.45 %tmp.46;
+        bf %tmp.47 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_266_36_266_68_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_266_36_266_68_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_266_53_266_68_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 266 55 ]
+        %tmp.48 = 32;
+        lputv %startY.2 %tmp.48;
+        symbol [ startY %startY.2 266 55 61 ];
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_266_53_266_68_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_266_36_266_68_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_266_36_266_68_if_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 267 8 ]
+        [ "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_255_35_304_4_start" "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_255_35_304_4_stop" ]
+        %endY.3 = local;
+        symbol [ endY %endY.3 267 12 16 ];
+        symbol [ _h %tmp.50 267 21 23 ];
+        %tmp.50 = getv ? :_h;
+        %tmp.51 = 88;
+        %tmp.52 = mul %tmp.50 %tmp.51;
+        %tmp.53 = 100;
+        %tmp.54 = div %tmp.52 %tmp.53;
+        lputv %endY.3 %tmp.54;
+        symbol [ endY %endY.3 267 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 268 8 ]
+        [ "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_255_35_304_4_start" "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_255_35_304_4_stop" ]
+        %rowH.4 = local;
+        symbol [ rowH %rowH.4 268 12 16 ];
+        %tmp.55 = lgetv %endY.3;
+        symbol [ endY %tmp.55 268 22 26 ];
+        %tmp.56 = lgetv %startY.2;
+        symbol [ startY %tmp.56 268 29 35 ];
+        %tmp.57 = sub %tmp.55 %tmp.56;
+        %tmp.58 = 5;
+        %tmp.59 = div %tmp.57 %tmp.58;
+        lputv %rowH.4 %tmp.59;
+        symbol [ rowH %rowH.4 268 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 269 8 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_269_8_269_36_if_stmt:
+        %tmp.60 = lgetv %rowH.4;
+        symbol [ rowH %tmp.60 269 12 16 ];
+        %tmp.61 = 38;
+        %tmp.62 = gt %tmp.60 %tmp.61;
+        bf %tmp.62 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_269_8_269_36_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_269_8_269_36_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_269_23_269_36_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 269 25 ]
+        %tmp.63 = 38;
+        lputv %rowH.4 %tmp.63;
+        symbol [ rowH %rowH.4 269 25 29 ];
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_269_23_269_36_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_269_8_269_36_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_269_8_269_36_if_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 270 8 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_270_8_270_36_if_stmt:
+        %tmp.64 = lgetv %rowH.4;
+        symbol [ rowH %tmp.64 270 12 16 ];
+        %tmp.65 = 20;
+        %tmp.66 = lt %tmp.64 %tmp.65;
+        bf %tmp.66 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_270_8_270_36_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_270_8_270_36_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_270_23_270_36_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 270 25 ]
+        %tmp.67 = 20;
+        lputv %rowH.4 %tmp.67;
+        symbol [ rowH %rowH.4 270 25 29 ];
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_270_23_270_36_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_270_8_270_36_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_270_8_270_36_if_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 272 8 ]
+        [ "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_255_35_304_4_start" "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_255_35_304_4_stop" ]
+        %rowFont.5 = local;
+        symbol [ rowFont %rowFont.5 272 12 19 ];
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_272_23_272_69_begin:
+        %tmp.68 = lgetv %rowH.4;
+        symbol [ rowH %tmp.68 272 24 28 ];
+        %tmp.69 = 28;
+        %tmp.70 = gte %tmp.68 %tmp.69;
+        bf %tmp.70 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_272_23_272_69_else_false;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_272_23_272_69_true:
+        symbol [ Graphics %tmp.71 272 38 46 ];
+        %tmp.71 = getm $.Toybox.Graphics;
+        symbol [ FONT_SMALL %tmp.72 272 47 57 ];
+        %tmp.72 = getv %tmp.71 :FONT_SMALL;
+        push %tmp.72;
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_272_23_272_69_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_272_23_272_69_else_false:
+        symbol [ Graphics %tmp.73 272 60 68 ];
+        %tmp.73 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.74 272 69 79 ];
+        %tmp.74 = getv %tmp.73 :FONT_XTINY;
+        push %tmp.74;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_272_23_272_69_end:
+        %tmp.75 = phi [%tmp.70 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_272_23_272_69_begin] [%tmp.72 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_272_23_272_69_true] [%tmp.74 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_272_23_272_69_else_false] [%tmp.75 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_272_23_272_69_end];
+        lputv %rowFont.5 %tmp.75;
+        symbol [ rowFont %rowFont.5 272 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 273 8 ]
+        [ "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_255_35_304_4_start" "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_255_35_304_4_stop" ]
+        %fontH.6 = local;
+        symbol [ fontH %fontH.6 273 12 17 ];
+        %tmp.76 = lgetv %dc;
+        symbol [ dc %tmp.76 273 23 25 ];
+        symbol [ getFontHeight %tmp.77 273 26 39 ];
+        %tmp.77 = getv function %tmp.76 :getFontHeight;
+        %tmp.78 = lgetv %rowFont.5;
+        symbol [ rowFont %tmp.78 273 40 47 ];
+        %tmp.79 = invoke %tmp.76 %tmp.77(%tmp.78);
+        lputv %fontH.6 %tmp.79;
+        symbol [ fontH %fontH.6 273 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 275 8 ]
+        for @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_275_8_298_8_for_test @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_275_8_298_8_for_incr @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_275_8_298_8_for_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_275_8_298_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_275_8_298_8_for_begin" "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_275_8_298_8_for_end" ]
+        %i.7 = local;
+        symbol [ i %i.7 275 17 18 ];
+        %tmp.80 = 0;
+        lputv %i.7 %tmp.80;
+        symbol [ i %i.7 275 17 18 ];
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_275_8_298_8_for_test:
+        %tmp.81 = lgetv %i.7;
+        symbol [ i %tmp.81 275 24 25 ];
+        %tmp.82 = 5;
+        %tmp.83 = lt %tmp.81 %tmp.82;
+        bf %tmp.83 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_275_8_298_8_for_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_275_8_298_8_for_begin:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_275_36_298_8_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 276 12 ]
+        [ "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_275_36_298_8_start" "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_275_36_298_8_stop" ]
+        %ry.8 = local;
+        symbol [ ry %ry.8 276 16 18 ];
+        %tmp.84 = lgetv %startY.2;
+        symbol [ startY %tmp.84 276 22 28 ];
+        %tmp.85 = lgetv %i.7;
+        symbol [ i %tmp.85 276 31 32 ];
+        %tmp.86 = lgetv %rowH.4;
+        symbol [ rowH %tmp.86 276 35 39 ];
+        %tmp.87 = mul %tmp.85 %tmp.86;
+        %tmp.88 = add %tmp.84 %tmp.87;
+        lputv %ry.8 %tmp.88;
+        symbol [ ry %ry.8 276 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 277 12 ]
+        [ "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_275_36_298_8_start" "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_275_36_298_8_stop" ]
+        %sel.9 = local;
+        symbol [ sel %sel.9 277 16 19 ];
+        %tmp.89 = lgetv %i.7;
+        symbol [ i %tmp.89 277 23 24 ];
+        symbol [ _cursor %tmp.91 277 28 35 ];
+        %tmp.91 = getv ? :_cursor;
+        %tmp.92 = eq %tmp.89 %tmp.91;
+        lputv %sel.9 %tmp.92;
+        symbol [ sel %sel.9 277 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 279 12 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_279_12_284_12_if_stmt:
+        %tmp.93 = lgetv %sel.9;
+        symbol [ sel %tmp.93 279 16 19 ];
+        bf %tmp.93 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_279_12_284_12_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_279_12_284_12_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_279_21_284_12_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 280 16 ]
+        %tmp.94 = lgetv %dc;
+        symbol [ dc %tmp.94 280 16 18 ];
+        symbol [ setColor %tmp.95 280 19 27 ];
+        %tmp.95 = getv function %tmp.94 :setColor;
+        %tmp.96 = 0x0A2232;
+        symbol [ Graphics %tmp.97 280 38 46 ];
+        %tmp.97 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.98 280 47 64 ];
+        %tmp.98 = getv %tmp.97 :COLOR_TRANSPARENT;
+        invoke %tmp.94 %tmp.95(%tmp.96, %tmp.98);
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 281 16 ]
+        %tmp.99 = lgetv %dc;
+        symbol [ dc %tmp.99 281 16 18 ];
+        symbol [ fillRoundedRectangle %tmp.100 281 19 39 ];
+        %tmp.100 = getv function %tmp.99 :fillRoundedRectangle;
+        %tmp.101 = lgetv %mx.1;
+        symbol [ mx %tmp.101 281 40 42 ];
+        %tmp.102 = lgetv %ry.8;
+        symbol [ ry %tmp.102 281 44 46 ];
+        symbol [ _w %tmp.104 281 48 50 ];
+        %tmp.104 = getv ? :_w;
+        %tmp.105 = lgetv %mx.1;
+        symbol [ mx %tmp.105 281 53 55 ];
+        %tmp.106 = 2;
+        %tmp.107 = mul %tmp.105 %tmp.106;
+        %tmp.108 = sub %tmp.104 %tmp.107;
+        %tmp.109 = lgetv %rowH.4;
+        symbol [ rowH %tmp.109 281 61 65 ];
+        %tmp.110 = 2;
+        %tmp.111 = sub %tmp.109 %tmp.110;
+        %tmp.112 = 5;
+        invoke %tmp.99 %tmp.100(%tmp.101, %tmp.102, %tmp.108, %tmp.111, %tmp.112);
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 282 16 ]
+        %tmp.113 = lgetv %dc;
+        symbol [ dc %tmp.113 282 16 18 ];
+        symbol [ setColor %tmp.114 282 19 27 ];
+        %tmp.114 = getv function %tmp.113 :setColor;
+        %tmp.115 = 0x1A6080;
+        symbol [ Graphics %tmp.116 282 38 46 ];
+        %tmp.116 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.117 282 47 64 ];
+        %tmp.117 = getv %tmp.116 :COLOR_TRANSPARENT;
+        invoke %tmp.113 %tmp.114(%tmp.115, %tmp.117);
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 283 16 ]
+        %tmp.118 = lgetv %dc;
+        symbol [ dc %tmp.118 283 16 18 ];
+        symbol [ drawRoundedRectangle %tmp.119 283 19 39 ];
+        %tmp.119 = getv function %tmp.118 :drawRoundedRectangle;
+        %tmp.120 = lgetv %mx.1;
+        symbol [ mx %tmp.120 283 40 42 ];
+        %tmp.121 = lgetv %ry.8;
+        symbol [ ry %tmp.121 283 44 46 ];
+        symbol [ _w %tmp.123 283 48 50 ];
+        %tmp.123 = getv ? :_w;
+        %tmp.124 = lgetv %mx.1;
+        symbol [ mx %tmp.124 283 53 55 ];
+        %tmp.125 = 2;
+        %tmp.126 = mul %tmp.124 %tmp.125;
+        %tmp.127 = sub %tmp.123 %tmp.126;
+        %tmp.128 = lgetv %rowH.4;
+        symbol [ rowH %tmp.128 283 61 65 ];
+        %tmp.129 = 2;
+        %tmp.130 = sub %tmp.128 %tmp.129;
+        %tmp.131 = 5;
+        invoke %tmp.118 %tmp.119(%tmp.120, %tmp.121, %tmp.127, %tmp.130, %tmp.131);
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_279_21_284_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_279_12_284_12_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_279_12_284_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 286 12 ]
+        [ "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_275_36_298_8_start" "_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_275_36_298_8_stop" ]
+        %textY.10 = local;
+        symbol [ textY %textY.10 286 16 21 ];
+        %tmp.132 = lgetv %ry.8;
+        symbol [ ry %tmp.132 286 24 26 ];
+        %tmp.133 = lgetv %rowH.4;
+        symbol [ rowH %tmp.133 286 30 34 ];
+        %tmp.134 = lgetv %fontH.6;
+        symbol [ fontH %tmp.134 286 37 42 ];
+        %tmp.135 = sub %tmp.133 %tmp.134;
+        %tmp.136 = 2;
+        %tmp.137 = div %tmp.135 %tmp.136;
+        %tmp.138 = add %tmp.132 %tmp.137;
+        lputv %textY.10 %tmp.138;
+        symbol [ textY %textY.10 286 16 21 ];
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 287 12 ]
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_287_12_287_42_if_stmt:
+        %tmp.139 = lgetv %textY.10;
+        symbol [ textY %tmp.139 287 16 21 ];
+        %tmp.140 = lgetv %ry.8;
+        symbol [ ry %tmp.140 287 24 26 ];
+        %tmp.141 = lt %tmp.139 %tmp.140;
+        bf %tmp.141 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_287_12_287_42_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_287_12_287_42_if_true:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_287_28_287_42_start:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 287 30 ]
+        %tmp.142 = lgetv %ry.8;
+        symbol [ ry %tmp.142 287 38 40 ];
+        lputv %textY.10 %tmp.142;
+        symbol [ textY %textY.10 287 30 35 ];
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_287_28_287_42_stop:
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_287_12_287_42_if_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_287_12_287_42_if_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 290 12 ]
+        %tmp.143 = lgetv %dc;
+        symbol [ dc %tmp.143 290 12 14 ];
+        symbol [ setColor %tmp.144 290 15 23 ];
+        %tmp.144 = getv function %tmp.143 :setColor;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_290_24_290_41_begin:
+        %tmp.145 = lgetv %sel.9;
+        symbol [ sel %tmp.145 290 24 27 ];
+        bf %tmp.145 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_290_24_290_41_else_false;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_290_24_290_41_true:
+        %tmp.146 = 0xCCEEFF;
+        push %tmp.146;
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_290_24_290_41_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_290_24_290_41_else_false:
+        %tmp.147 = 0x556677;
+        push %tmp.147;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_290_24_290_41_end:
+        %tmp.148 = phi [%tmp.145 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_290_24_290_41_begin] [%tmp.146 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_290_24_290_41_true] [%tmp.147 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_290_24_290_41_else_false] [%tmp.148 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_290_24_290_41_end];
+        symbol [ Graphics %tmp.149 290 51 59 ];
+        %tmp.149 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.150 290 60 77 ];
+        %tmp.150 = getv %tmp.149 :COLOR_TRANSPARENT;
+        invoke %tmp.143 %tmp.144(%tmp.148, %tmp.150);
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 291 12 ]
+        %tmp.151 = lgetv %dc;
+        symbol [ dc %tmp.151 291 12 14 ];
+        symbol [ drawText %tmp.152 291 15 23 ];
+        %tmp.152 = getv function %tmp.151 :drawText;
+        %tmp.153 = lgetv %mx.1;
+        symbol [ mx %tmp.153 291 24 26 ];
+        %tmp.154 = 8;
+        %tmp.155 = add %tmp.153 %tmp.154;
+        %tmp.156 = lgetv %textY.10;
+        symbol [ textY %tmp.156 291 32 37 ];
+        %tmp.157 = lgetv %rowFont.5;
+        symbol [ rowFont %tmp.157 291 39 46 ];
+        %tmp.158 = self;
+        symbol [ _getInputName %tmp.159 292 16 29 ];
+        %tmp.159 = getv function %tmp.158 :_getInputName;
+        %tmp.160 = lgetv %i.7;
+        symbol [ i %tmp.160 292 30 31 ];
+        %tmp.161 = invoke %tmp.158 %tmp.159(%tmp.160);
+        symbol [ Graphics %tmp.162 292 34 42 ];
+        %tmp.162 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_LEFT %tmp.163 292 43 60 ];
+        %tmp.163 = getv %tmp.162 :TEXT_JUSTIFY_LEFT;
+        invoke %tmp.151 %tmp.152(%tmp.155, %tmp.156, %tmp.157, %tmp.161, %tmp.163);
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 295 12 ]
+        %tmp.164 = lgetv %dc;
+        symbol [ dc %tmp.164 295 12 14 ];
+        symbol [ setColor %tmp.165 295 15 23 ];
+        %tmp.165 = getv function %tmp.164 :setColor;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_295_24_295_41_begin:
+        %tmp.166 = lgetv %sel.9;
+        symbol [ sel %tmp.166 295 24 27 ];
+        bf %tmp.166 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_295_24_295_41_else_false;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_295_24_295_41_true:
+        %tmp.167 = 0x44DDFF;
+        push %tmp.167;
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_295_24_295_41_end;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_295_24_295_41_else_false:
+        %tmp.168 = 0x226688;
+        push %tmp.168;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_295_24_295_41_end:
+        %tmp.169 = phi [%tmp.166 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_295_24_295_41_begin] [%tmp.167 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_295_24_295_41_true] [%tmp.168 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_295_24_295_41_else_false] [%tmp.169 @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_295_24_295_41_end];
+        symbol [ Graphics %tmp.170 295 51 59 ];
+        %tmp.170 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.171 295 60 77 ];
+        %tmp.171 = getv %tmp.170 :COLOR_TRANSPARENT;
+        invoke %tmp.164 %tmp.165(%tmp.169, %tmp.171);
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 296 12 ]
+        %tmp.172 = lgetv %dc;
+        symbol [ dc %tmp.172 296 12 14 ];
+        symbol [ drawText %tmp.173 296 15 23 ];
+        %tmp.173 = getv function %tmp.172 :drawText;
+        symbol [ _w %tmp.175 296 24 26 ];
+        %tmp.175 = getv ? :_w;
+        %tmp.176 = lgetv %mx.1;
+        symbol [ mx %tmp.176 296 29 31 ];
+        %tmp.177 = sub %tmp.175 %tmp.176;
+        %tmp.178 = 8;
+        %tmp.179 = sub %tmp.177 %tmp.178;
+        %tmp.180 = lgetv %textY.10;
+        symbol [ textY %tmp.180 296 37 42 ];
+        %tmp.181 = lgetv %rowFont.5;
+        symbol [ rowFont %tmp.181 296 44 51 ];
+        %tmp.182 = self;
+        symbol [ _getCurLabel %tmp.183 297 16 28 ];
+        %tmp.183 = getv function %tmp.182 :_getCurLabel;
+        %tmp.184 = lgetv %i.7;
+        symbol [ i %tmp.184 297 29 30 ];
+        %tmp.185 = invoke %tmp.182 %tmp.183(%tmp.184);
+        symbol [ Graphics %tmp.186 297 33 41 ];
+        %tmp.186 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_RIGHT %tmp.187 297 42 60 ];
+        %tmp.187 = getv %tmp.186 :TEXT_JUSTIFY_RIGHT;
+        invoke %tmp.172 %tmp.173(%tmp.179, %tmp.180, %tmp.181, %tmp.185, %tmp.187);
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_275_36_298_8_stop:
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_275_8_298_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 275 ]
+        %tmp.190 = lgetv %i.7;
+        symbol [ i %tmp.190 275 31 32 ];
+        %tmp.191 = add %tmp.190 1;
+        lputv %i.7 %tmp.191;
+        symbol [ i %i.7 275 31 32 ];
+        goto @_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_275_8_298_8_for_test;
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_275_8_298_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 301 8 ]
+        %tmp.192 = lgetv %dc;
+        symbol [ dc %tmp.192 301 8 10 ];
+        symbol [ setColor %tmp.193 301 11 19 ];
+        %tmp.193 = getv function %tmp.192 :setColor;
+        %tmp.194 = 0x1A2E3A;
+        symbol [ Graphics %tmp.195 301 30 38 ];
+        %tmp.195 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.196 301 39 56 ];
+        %tmp.196 = getv %tmp.195 :COLOR_TRANSPARENT;
+        invoke %tmp.192 %tmp.193(%tmp.194, %tmp.196);
+[ "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc" 302 8 ]
+        %tmp.197 = lgetv %dc;
+        symbol [ dc %tmp.197 302 8 10 ];
+        symbol [ drawText %tmp.198 302 11 19 ];
+        %tmp.198 = getv function %tmp.197 :drawText;
+        symbol [ _w %tmp.200 302 20 22 ];
+        %tmp.200 = getv ? :_w;
+        %tmp.201 = 2;
+        %tmp.202 = div %tmp.200 %tmp.201;
+        symbol [ _h %tmp.204 302 28 30 ];
+        %tmp.204 = getv ? :_h;
+        %tmp.205 = 90;
+        %tmp.206 = mul %tmp.204 %tmp.205;
+        %tmp.207 = 100;
+        %tmp.208 = div %tmp.206 %tmp.207;
+        symbol [ Graphics %tmp.209 302 43 51 ];
+        %tmp.209 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.210 302 52 62 ];
+        %tmp.210 = getv %tmp.209 :FONT_XTINY;
+        %tmp.211 = "SELECT = cycle";
+        symbol [ Graphics %tmp.212 303 30 38 ];
+        %tmp.212 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.213 303 39 58 ];
+        %tmp.213 = getv %tmp.212 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.197 %tmp.198(%tmp.202, %tmp.208, %tmp.210, %tmp.211, %tmp.213);
+_Users_kkorolczuk_work_garmin_fishingbitepredictor_source_FishingBitePredictorView_mc_255_35_304_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/fishingbitepredictor/source/FishingBitePredictorView.mc"; @line = 1; ]
+<init> {
+}

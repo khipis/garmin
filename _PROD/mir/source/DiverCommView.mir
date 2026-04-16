@@ -1,0 +1,3336 @@
+[ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 1; @symbol_usingdef<0> = [Toybox,1,6,12]; @symbol_usingdef<1> = [WatchUi,1,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 2; @symbol_usingdef<0> = [Toybox,2,6,12]; @symbol_usingdef<1> = [Graphics,2,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 3; @symbol_usingdef<0> = [Toybox,3,6,12]; @symbol_usingdef<1> = [Timer,3,13,18]; ]
+using Toybox.Timer;
+[ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 4; @symbol_usingdef<0> = [Toybox,4,6,12]; @symbol_usingdef<1> = [System,4,13,19]; ]
+using Toybox.System;
+[ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 7; @position = 6; @symbol_constdef = [DC_HOME,7,6,13]; ]
+const DC_HOME = 0;
+[ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 8; @position = 6; @symbol_constdef = [DC_LIST,8,6,13]; ]
+const DC_LIST = 1;
+[ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 9; @position = 6; @symbol_constdef = [DC_SHOW,9,6,13]; ]
+const DC_SHOW = 2;
+[ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 12; @position = 6; @symbol_constdef = [CAT_OK,12,6,12]; ]
+const CAT_OK = 0;
+[ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 13; @position = 6; @symbol_constdef = [CAT_AIR,13,6,13]; ]
+const CAT_AIR = 1;
+[ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 14; @position = 6; @symbol_constdef = [CAT_MOVE,14,6,14]; ]
+const CAT_MOVE = 2;
+[ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 15; @position = 6; @symbol_constdef = [CAT_ISSUE,15,6,15]; ]
+const CAT_ISSUE = 3;
+[ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 16; @position = 6; @symbol_constdef = [CAT_SOS,16,6,13]; ]
+const CAT_SOS = 4;
+[ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 18; @symbol_classdef = [DiverCommView,18,6,19]; @symbol_extends<0> = [WatchUi,18,28,35]; @symbol_extends<1> = [View,18,36,40]; ]
+class DiverCommView extends WatchUi.View {
+    [ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 18; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 18; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 20; @position = 15; @symbol_vardef = [_w,20,15,17]; ]
+    protected
+    var _w;
+    [ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 21; @position = 15; @symbol_vardef = [_h,21,15,17]; ]
+    protected
+    var _h;
+    [ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 22; @position = 15; @symbol_vardef = [_timer,22,15,21]; ]
+    protected
+    var _timer;
+    [ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 23; @position = 15; @symbol_vardef = [_tick,23,15,20]; ]
+    protected
+    var _tick;
+    [ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 25; @position = 15; @symbol_vardef = [_gs,25,15,18]; ]
+    protected
+    var _gs;
+    [ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 26; @position = 15; @symbol_vardef = [_catIdx,26,15,22]; ]
+    protected
+    var _catIdx;
+    [ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 27; @position = 15; @symbol_vardef = [_msgIdx,27,15,22]; ]
+    protected
+    var _msgIdx;
+    [ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 29; @position = 15; @symbol_vardef = [_cats,29,15,20]; ]
+    protected
+    var _cats;
+    [ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 30; @position = 15; @symbol_vardef = [_catColors,30,15,25]; ]
+    protected
+    var _catColors;
+    [ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 31; @position = 15; @symbol_vardef = [_msgCounts,31,15,25]; ]
+    protected
+    var _msgCounts;
+    [ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 32; @position = 15; @symbol_vardef = [_msgs,32,15,20]; ]
+    protected
+    var _msgs;
+    [ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 34; @symbol_functiondef = [initialize,34,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_34_26_67_4_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 35 8 ]
+        symbol [ View %tmp.2 35 8 12 ];
+        %tmp.2 = getv ? :View;
+        symbol [ initialize %tmp.3 35 13 23 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 36 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_34_26_67_4_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_34_26_67_4_stop" ]
+        %ds.1 = local;
+        symbol [ ds %ds.1 36 12 14 ];
+        symbol [ System %tmp.4 36 17 23 ];
+        %tmp.4 = getm $.Toybox.System;
+        symbol [ getDeviceSettings %tmp.5 36 24 41 ];
+        %tmp.5 = getv function %tmp.4 :getDeviceSettings;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        lputv %ds.1 %tmp.6;
+        symbol [ ds %ds.1 36 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 37 8 ]
+        %tmp.7 = lgetv %ds.1;
+        symbol [ ds %tmp.7 37 13 15 ];
+        symbol [ screenWidth %tmp.8 37 16 27 ];
+        %tmp.8 = getv %tmp.7 :screenWidth;
+        symbol [ _w ? 37 8 10 ];
+        putv self :_w %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 38 8 ]
+        %tmp.9 = lgetv %ds.1;
+        symbol [ ds %tmp.9 38 13 15 ];
+        symbol [ screenHeight %tmp.10 38 16 28 ];
+        %tmp.10 = getv %tmp.9 :screenHeight;
+        symbol [ _h ? 38 8 10 ];
+        putv self :_h %tmp.10;
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 39 8 ]
+        %tmp.11 = 0;
+        symbol [ _tick ? 39 8 13 ];
+        putv self :_tick %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 40 8 ]
+        symbol [ DC_HOME %tmp.13 40 18 25 ];
+        %tmp.13 = getv ? :DC_HOME;
+        symbol [ _gs ? 40 8 11 ];
+        putv self :_gs %tmp.13;
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 41 8 ]
+        %tmp.14 = 0;
+        symbol [ _catIdx ? 41 8 15 ];
+        putv self :_catIdx %tmp.14;
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 42 8 ]
+        %tmp.15 = 0;
+        symbol [ _msgIdx ? 42 8 15 ];
+        putv self :_msgIdx %tmp.15;
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 46 8 ]
+        %tmp.16 = newa 5;
+        %tmp.17 = "OK";
+        %tmp.18 = dup %tmp.16;
+        %tmp.19 = aputv %tmp.18 0 %tmp.17;
+        %tmp.20 = "AIR";
+        %tmp.21 = dup %tmp.19;
+        %tmp.22 = aputv %tmp.21 1 %tmp.20;
+        %tmp.23 = "MOVE";
+        %tmp.24 = dup %tmp.22;
+        %tmp.25 = aputv %tmp.24 2 %tmp.23;
+        %tmp.26 = "ISSUE";
+        %tmp.27 = dup %tmp.25;
+        %tmp.28 = aputv %tmp.27 3 %tmp.26;
+        %tmp.29 = "SOS";
+        %tmp.30 = dup %tmp.28;
+        %tmp.31 = aputv %tmp.30 4 %tmp.29;
+        symbol [ _cats ? 46 8 13 ];
+        putv self :_cats %tmp.31;
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 48 8 ]
+        %tmp.32 = newa 5;
+        %tmp.33 = 0x00CC44;
+        %tmp.34 = dup %tmp.32;
+        %tmp.35 = aputv %tmp.34 0 %tmp.33;
+        %tmp.36 = 0x0088CC;
+        %tmp.37 = dup %tmp.35;
+        %tmp.38 = aputv %tmp.37 1 %tmp.36;
+        %tmp.39 = 0xFFAA00;
+        %tmp.40 = dup %tmp.38;
+        %tmp.41 = aputv %tmp.40 2 %tmp.39;
+        %tmp.42 = 0xFF6600;
+        %tmp.43 = dup %tmp.41;
+        %tmp.44 = aputv %tmp.43 3 %tmp.42;
+        %tmp.45 = 0xFF2222;
+        %tmp.46 = dup %tmp.44;
+        %tmp.47 = aputv %tmp.46 4 %tmp.45;
+        symbol [ _catColors ? 48 8 18 ];
+        putv self :_catColors %tmp.47;
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 53 8 ]
+        %tmp.48 = newa 5;
+        %tmp.49 = newa 4;
+        %tmp.50 = "OK";
+        %tmp.51 = dup %tmp.49;
+        %tmp.52 = aputv %tmp.51 0 %tmp.50;
+        %tmp.53 = "YES";
+        %tmp.54 = dup %tmp.52;
+        %tmp.55 = aputv %tmp.54 1 %tmp.53;
+        %tmp.56 = "NO";
+        %tmp.57 = dup %tmp.55;
+        %tmp.58 = aputv %tmp.57 2 %tmp.56;
+        %tmp.59 = "WAIT";
+        %tmp.60 = dup %tmp.58;
+        %tmp.61 = aputv %tmp.60 3 %tmp.59;
+        %tmp.62 = dup %tmp.48;
+        %tmp.63 = aputv %tmp.62 0 %tmp.61;
+        %tmp.64 = newa 3;
+        %tmp.65 = "AIR OK?";
+        %tmp.66 = dup %tmp.64;
+        %tmp.67 = aputv %tmp.66 0 %tmp.65;
+        %tmp.68 = "LOW AIR!";
+        %tmp.69 = dup %tmp.67;
+        %tmp.70 = aputv %tmp.69 1 %tmp.68;
+        %tmp.71 = "SHARE AIR?";
+        %tmp.72 = dup %tmp.70;
+        %tmp.73 = aputv %tmp.72 2 %tmp.71;
+        %tmp.74 = dup %tmp.63;
+        %tmp.75 = aputv %tmp.74 1 %tmp.73;
+        %tmp.76 = newa 4;
+        %tmp.77 = "UP NOW";
+        %tmp.78 = dup %tmp.76;
+        %tmp.79 = aputv %tmp.78 0 %tmp.77;
+        %tmp.80 = "FOLLOW ME";
+        %tmp.81 = dup %tmp.79;
+        %tmp.82 = aputv %tmp.81 1 %tmp.80;
+        %tmp.83 = "STOP!";
+        %tmp.84 = dup %tmp.82;
+        %tmp.85 = aputv %tmp.84 2 %tmp.83;
+        %tmp.86 = "TURN BACK";
+        %tmp.87 = dup %tmp.85;
+        %tmp.88 = aputv %tmp.87 3 %tmp.86;
+        %tmp.89 = dup %tmp.75;
+        %tmp.90 = aputv %tmp.89 2 %tmp.88;
+        %tmp.91 = newa 4;
+        %tmp.92 = "CHECK ME";
+        %tmp.93 = dup %tmp.91;
+        %tmp.94 = aputv %tmp.93 0 %tmp.92;
+        %tmp.95 = "NOT OK";
+        %tmp.96 = dup %tmp.94;
+        %tmp.97 = aputv %tmp.96 1 %tmp.95;
+        %tmp.98 = "EQUIP FAIL";
+        %tmp.99 = dup %tmp.97;
+        %tmp.100 = aputv %tmp.99 2 %tmp.98;
+        %tmp.101 = "SAY AGAIN";
+        %tmp.102 = dup %tmp.100;
+        %tmp.103 = aputv %tmp.102 3 %tmp.101;
+        %tmp.104 = dup %tmp.90;
+        %tmp.105 = aputv %tmp.104 3 %tmp.103;
+        %tmp.106 = newa 4;
+        %tmp.107 = "HELP!";
+        %tmp.108 = dup %tmp.106;
+        %tmp.109 = aputv %tmp.108 0 %tmp.107;
+        %tmp.110 = "OUT OF AIR!";
+        %tmp.111 = dup %tmp.109;
+        %tmp.112 = aputv %tmp.111 1 %tmp.110;
+        %tmp.113 = "ABORT DIVE";
+        %tmp.114 = dup %tmp.112;
+        %tmp.115 = aputv %tmp.114 2 %tmp.113;
+        %tmp.116 = "COME NOW!";
+        %tmp.117 = dup %tmp.115;
+        %tmp.118 = aputv %tmp.117 3 %tmp.116;
+        %tmp.119 = dup %tmp.105;
+        %tmp.120 = aputv %tmp.119 4 %tmp.118;
+        symbol [ _msgs ? 53 8 13 ];
+        putv self :_msgs %tmp.120;
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 66 8 ]
+        %tmp.121 = newa 5;
+        %tmp.122 = 4;
+        %tmp.123 = dup %tmp.121;
+        %tmp.124 = aputv %tmp.123 0 %tmp.122;
+        %tmp.125 = 3;
+        %tmp.126 = dup %tmp.124;
+        %tmp.127 = aputv %tmp.126 1 %tmp.125;
+        %tmp.128 = 4;
+        %tmp.129 = dup %tmp.127;
+        %tmp.130 = aputv %tmp.129 2 %tmp.128;
+        %tmp.131 = 4;
+        %tmp.132 = dup %tmp.130;
+        %tmp.133 = aputv %tmp.132 3 %tmp.131;
+        %tmp.134 = 4;
+        %tmp.135 = dup %tmp.133;
+        %tmp.136 = aputv %tmp.135 4 %tmp.134;
+        symbol [ _msgCounts ? 66 8 18 ];
+        putv self :_msgCounts %tmp.136;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_34_26_67_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 69; @symbol_functiondef = [onShow,69,13,19]; ]
+    function onShow() {
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_69_22_74_4_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 70 8 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_70_8_73_8_if_stmt:
+        symbol [ _timer %tmp.2 70 12 18 ];
+        %tmp.2 = getv ? :_timer;
+        %tmp.3 = null;
+        %tmp.4 = eq %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_70_8_73_8_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_70_8_73_8_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_70_28_73_8_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 71 12 ]
+        symbol [ Timer %tmp.7 71 25 30 ];
+        %tmp.7 = getm $.Toybox.Timer;
+        symbol [ Timer %tmp.8 71 31 36 ];
+        %tmp.8 = getv function ? %tmp.7 :Timer;
+        %tmp.5 = newc %tmp.8 ();
+        symbol [ _timer ? 71 12 18 ];
+        putv self :_timer %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 72 12 ]
+        symbol [ _timer %tmp.10 72 12 18 ];
+        %tmp.10 = getv ? :_timer;
+        symbol [ start %tmp.11 72 19 24 ];
+        %tmp.11 = getv function %tmp.10 :start;
+        %tmp.12 = self;
+        symbol [ method %tmp.13 72 25 31 ];
+        %tmp.13 = getv function %tmp.12 :method;
+        %tmp.15 = const :onTick;
+        symbol [ onTick %tmp.15 72 33 39 const ];
+        %tmp.16 = invoke %tmp.12 %tmp.13(%tmp.15);
+        %tmp.17 = 100;
+        %tmp.18 = true;
+        invoke %tmp.10 %tmp.11(%tmp.16, %tmp.17, %tmp.18);
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_70_28_73_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_70_8_73_8_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_70_8_73_8_if_end:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_69_22_74_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 76; @symbol_functiondef = [onHide,76,13,19]; ]
+    function onHide() {
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_76_22_78_4_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 77 8 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_77_8_77_60_if_stmt:
+        symbol [ _timer %tmp.2 77 12 18 ];
+        %tmp.2 = getv ? :_timer;
+        %tmp.3 = null;
+        %tmp.4 = ne %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_77_8_77_60_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_77_8_77_60_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_77_28_77_60_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 77 30 ]
+        symbol [ _timer %tmp.6 77 30 36 ];
+        %tmp.6 = getv ? :_timer;
+        %tmp.7 = as %tmp.6 { (!Null) };
+        symbol [ stop %tmp.8 77 37 41 ];
+        %tmp.8 = getv function %tmp.7 :stop;
+        invoke %tmp.7 %tmp.8();
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 77 45 ]
+        %tmp.9 = null;
+        symbol [ _timer ? 77 45 51 ];
+        putv self :_timer %tmp.9;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_77_28_77_60_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_77_8_77_60_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_77_8_77_60_if_end:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_76_22_78_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 80; @symbol_functiondef = [onLayout,80,13,21]; @symbol_param<0> = [dc,80,22,24]; ]
+    function onLayout(dc) {
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_80_26_83_4_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 81 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 81 13 15 ];
+        symbol [ getWidth %tmp.2 81 16 24 ];
+        %tmp.2 = getv function %tmp.1 :getWidth;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        %tmp.4 = 9;
+        %tmp.5 = mul %tmp.3 %tmp.4;
+        %tmp.6 = 10;
+        %tmp.7 = div %tmp.5 %tmp.6;
+        symbol [ _w ? 81 8 10 ];
+        putv self :_w %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 82 8 ]
+        %tmp.8 = lgetv %dc;
+        symbol [ dc %tmp.8 82 13 15 ];
+        symbol [ getHeight %tmp.9 82 16 25 ];
+        %tmp.9 = getv function %tmp.8 :getHeight;
+        %tmp.10 = invoke %tmp.8 %tmp.9();
+        %tmp.11 = 9;
+        %tmp.12 = mul %tmp.10 %tmp.11;
+        %tmp.13 = 10;
+        %tmp.14 = div %tmp.12 %tmp.13;
+        symbol [ _h ? 82 8 10 ];
+        putv self :_h %tmp.14;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_80_26_83_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 85; @symbol_functiondef = [onTick,85,13,19]; ]
+    function onTick() as Void {
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_85_30_88_4_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 86 8 ]
+        symbol [ _tick %tmp.3 86 8 13 ];
+        %tmp.3 = getv ? :_tick;
+        %tmp.4 = add %tmp.3 1;
+        symbol [ _tick ? 86 8 13 ];
+        putv self :_tick dup %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 87 8 ]
+        symbol [ WatchUi %tmp.5 87 8 15 ];
+        %tmp.5 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.6 87 16 29 ];
+        %tmp.6 = getv function %tmp.5 :requestUpdate;
+        invoke %tmp.5 %tmp.6();
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_85_30_88_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 92; @symbol_functiondef = [doUp,92,13,17]; ]
+    function doUp() {
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_92_20_100_4_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 93 8 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_93_8_99_8_if_stmt:
+        symbol [ _gs %tmp.2 93 12 15 ];
+        %tmp.2 = getv ? :_gs;
+        symbol [ DC_HOME %tmp.4 93 19 26 ];
+        %tmp.4 = getv ? :DC_HOME;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_93_8_99_8_if_false;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_93_8_99_8_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_93_28_96_8_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 94 12 ]
+        symbol [ _catIdx %tmp.7 94 23 30 ];
+        %tmp.7 = getv ? :_catIdx;
+        %tmp.8 = 4;
+        %tmp.9 = add %tmp.7 %tmp.8;
+        %tmp.10 = 5;
+        %tmp.11 = mod %tmp.9 %tmp.10;
+        symbol [ _catIdx ? 94 12 19 ];
+        putv self :_catIdx %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 95 12 ]
+        %tmp.12 = 0;
+        symbol [ _msgIdx ? 95 12 19 ];
+        putv self :_msgIdx %tmp.12;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_93_28_96_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_93_8_99_8_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_93_8_99_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 96 15 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_96_15_99_8_if_stmt:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_96_19_96_44_begin:
+        symbol [ _gs %tmp.14 96 19 22 ];
+        %tmp.14 = getv ? :_gs;
+        symbol [ DC_LIST %tmp.16 96 26 33 ];
+        %tmp.16 = getv ? :DC_LIST;
+        %tmp.17 = eq %tmp.14 %tmp.16;
+        bt %tmp.17 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_96_15_99_8_if_true;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_96_37_96_44_false:
+        symbol [ _gs %tmp.19 96 37 40 ];
+        %tmp.19 = getv ? :_gs;
+        symbol [ DC_SHOW %tmp.21 96 44 51 ];
+        %tmp.21 = getv ? :DC_SHOW;
+        %tmp.22 = eq %tmp.19 %tmp.21;
+        push %tmp.22;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_96_37_96_44_end:
+        %tmp.23 = phi [%tmp.17 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_96_19_96_44_begin] [%tmp.22 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_96_37_96_44_false] [%tmp.23 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_96_37_96_44_end];
+        bf %tmp.23 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_96_15_99_8_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_96_15_99_8_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_96_53_99_8_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 97 12 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_96_53_99_8_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_96_53_99_8_stop" ]
+        %n.1 = local;
+        symbol [ n %n.1 97 16 17 ];
+        symbol [ _msgCounts %tmp.25 97 20 30 ];
+        %tmp.25 = getv ? :_msgCounts;
+        symbol [ _catIdx %tmp.27 97 31 38 ];
+        %tmp.27 = getv ? :_catIdx;
+        %tmp.28 = agetv %tmp.25 %tmp.27;
+        lputv %n.1 %tmp.28;
+        symbol [ n %n.1 97 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 98 12 ]
+        symbol [ _msgIdx %tmp.30 98 23 30 ];
+        %tmp.30 = getv ? :_msgIdx;
+        %tmp.31 = lgetv %n.1;
+        symbol [ n %tmp.31 98 33 34 ];
+        %tmp.32 = add %tmp.30 %tmp.31;
+        %tmp.33 = 1;
+        %tmp.34 = sub %tmp.32 %tmp.33;
+        %tmp.35 = lgetv %n.1;
+        symbol [ n %tmp.35 98 42 43 ];
+        %tmp.36 = mod %tmp.34 %tmp.35;
+        symbol [ _msgIdx ? 98 12 19 ];
+        putv self :_msgIdx %tmp.36;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_96_53_99_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_96_15_99_8_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_96_15_99_8_if_end:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_93_8_99_8_if_end:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_92_20_100_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 102; @symbol_functiondef = [doDown,102,13,19]; ]
+    function doDown() {
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_102_22_110_4_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 103 8 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_103_8_109_8_if_stmt:
+        symbol [ _gs %tmp.2 103 12 15 ];
+        %tmp.2 = getv ? :_gs;
+        symbol [ DC_HOME %tmp.4 103 19 26 ];
+        %tmp.4 = getv ? :DC_HOME;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_103_8_109_8_if_false;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_103_8_109_8_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_103_28_106_8_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 104 12 ]
+        symbol [ _catIdx %tmp.7 104 23 30 ];
+        %tmp.7 = getv ? :_catIdx;
+        %tmp.8 = 1;
+        %tmp.9 = add %tmp.7 %tmp.8;
+        %tmp.10 = 5;
+        %tmp.11 = mod %tmp.9 %tmp.10;
+        symbol [ _catIdx ? 104 12 19 ];
+        putv self :_catIdx %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 105 12 ]
+        %tmp.12 = 0;
+        symbol [ _msgIdx ? 105 12 19 ];
+        putv self :_msgIdx %tmp.12;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_103_28_106_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_103_8_109_8_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_103_8_109_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 106 15 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_106_15_109_8_if_stmt:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_106_19_106_44_begin:
+        symbol [ _gs %tmp.14 106 19 22 ];
+        %tmp.14 = getv ? :_gs;
+        symbol [ DC_LIST %tmp.16 106 26 33 ];
+        %tmp.16 = getv ? :DC_LIST;
+        %tmp.17 = eq %tmp.14 %tmp.16;
+        bt %tmp.17 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_106_15_109_8_if_true;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_106_37_106_44_false:
+        symbol [ _gs %tmp.19 106 37 40 ];
+        %tmp.19 = getv ? :_gs;
+        symbol [ DC_SHOW %tmp.21 106 44 51 ];
+        %tmp.21 = getv ? :DC_SHOW;
+        %tmp.22 = eq %tmp.19 %tmp.21;
+        push %tmp.22;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_106_37_106_44_end:
+        %tmp.23 = phi [%tmp.17 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_106_19_106_44_begin] [%tmp.22 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_106_37_106_44_false] [%tmp.23 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_106_37_106_44_end];
+        bf %tmp.23 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_106_15_109_8_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_106_15_109_8_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_106_53_109_8_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 107 12 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_106_53_109_8_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_106_53_109_8_stop" ]
+        %n.1 = local;
+        symbol [ n %n.1 107 16 17 ];
+        symbol [ _msgCounts %tmp.25 107 20 30 ];
+        %tmp.25 = getv ? :_msgCounts;
+        symbol [ _catIdx %tmp.27 107 31 38 ];
+        %tmp.27 = getv ? :_catIdx;
+        %tmp.28 = agetv %tmp.25 %tmp.27;
+        lputv %n.1 %tmp.28;
+        symbol [ n %n.1 107 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 108 12 ]
+        symbol [ _msgIdx %tmp.30 108 23 30 ];
+        %tmp.30 = getv ? :_msgIdx;
+        %tmp.31 = 1;
+        %tmp.32 = add %tmp.30 %tmp.31;
+        %tmp.33 = lgetv %n.1;
+        symbol [ n %tmp.33 108 38 39 ];
+        %tmp.34 = mod %tmp.32 %tmp.33;
+        symbol [ _msgIdx ? 108 12 19 ];
+        putv self :_msgIdx %tmp.34;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_106_53_109_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_106_15_109_8_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_106_15_109_8_if_end:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_103_8_109_8_if_end:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_102_22_110_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 112; @symbol_functiondef = [doSelect,112,13,21]; ]
+    function doSelect() {
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_112_24_122_4_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 113 8 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_113_8_121_8_if_stmt:
+        symbol [ _gs %tmp.2 113 12 15 ];
+        %tmp.2 = getv ? :_gs;
+        symbol [ DC_HOME %tmp.4 113 19 26 ];
+        %tmp.4 = getv ? :DC_HOME;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_113_8_121_8_if_false;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_113_8_121_8_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_113_28_116_8_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 114 12 ]
+        %tmp.6 = 0;
+        symbol [ _msgIdx ? 114 12 19 ];
+        putv self :_msgIdx %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 115 12 ]
+        symbol [ DC_LIST %tmp.8 115 18 25 ];
+        %tmp.8 = getv ? :DC_LIST;
+        symbol [ _gs ? 115 12 15 ];
+        putv self :_gs %tmp.8;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_113_28_116_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_113_8_121_8_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_113_8_121_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 116 15 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_116_15_121_8_if_stmt:
+        symbol [ _gs %tmp.10 116 19 22 ];
+        %tmp.10 = getv ? :_gs;
+        symbol [ DC_LIST %tmp.12 116 26 33 ];
+        %tmp.12 = getv ? :DC_LIST;
+        %tmp.13 = eq %tmp.10 %tmp.12;
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_116_15_121_8_if_false;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_116_15_121_8_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_116_35_119_8_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 117 12 ]
+        symbol [ DC_SHOW %tmp.15 117 18 25 ];
+        %tmp.15 = getv ? :DC_SHOW;
+        symbol [ _gs ? 117 12 15 ];
+        putv self :_gs %tmp.15;
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 118 12 ]
+        %tmp.16 = self;
+        symbol [ _vibeForCat %tmp.17 118 12 23 ];
+        %tmp.17 = getv function %tmp.16 :_vibeForCat;
+        symbol [ _catIdx %tmp.19 118 24 31 ];
+        %tmp.19 = getv ? :_catIdx;
+        invoke %tmp.16 %tmp.17(%tmp.19);
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_116_35_119_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_116_15_121_8_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_116_15_121_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 119 15 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_119_15_121_8_if_stmt:
+        symbol [ _gs %tmp.21 119 19 22 ];
+        %tmp.21 = getv ? :_gs;
+        symbol [ DC_SHOW %tmp.23 119 26 33 ];
+        %tmp.23 = getv ? :DC_SHOW;
+        %tmp.24 = eq %tmp.21 %tmp.23;
+        bf %tmp.24 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_119_15_121_8_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_119_15_121_8_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_119_35_121_8_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 120 12 ]
+        symbol [ DC_LIST %tmp.26 120 18 25 ];
+        %tmp.26 = getv ? :DC_LIST;
+        symbol [ _gs ? 120 12 15 ];
+        putv self :_gs %tmp.26;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_119_35_121_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_119_15_121_8_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_119_15_121_8_if_end:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_116_15_121_8_if_end:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_113_8_121_8_if_end:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_112_24_122_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 124; @symbol_functiondef = [doBack,124,13,19]; ]
+    function doBack() {
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_124_22_128_4_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 125 8 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_125_8_125_58_if_stmt:
+        symbol [ _gs %tmp.2 125 12 15 ];
+        %tmp.2 = getv ? :_gs;
+        symbol [ DC_SHOW %tmp.4 125 19 26 ];
+        %tmp.4 = getv ? :DC_SHOW;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_125_8_125_58_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_125_8_125_58_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_125_28_125_58_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 125 30 ]
+        symbol [ DC_LIST %tmp.7 125 36 43 ];
+        %tmp.7 = getv ? :DC_LIST;
+        symbol [ _gs ? 125 30 33 ];
+        putv self :_gs %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 125 45 ]
+        %tmp.8 = true;
+        ret %tmp.8;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_125_28_125_58_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_125_8_125_58_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_125_8_125_58_if_end:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 126 8 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_126_8_126_58_if_stmt:
+        symbol [ _gs %tmp.10 126 12 15 ];
+        %tmp.10 = getv ? :_gs;
+        symbol [ DC_LIST %tmp.12 126 19 26 ];
+        %tmp.12 = getv ? :DC_LIST;
+        %tmp.13 = eq %tmp.10 %tmp.12;
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_126_8_126_58_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_126_8_126_58_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_126_28_126_58_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 126 30 ]
+        symbol [ DC_HOME %tmp.15 126 36 43 ];
+        %tmp.15 = getv ? :DC_HOME;
+        symbol [ _gs ? 126 30 33 ];
+        putv self :_gs %tmp.15;
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 126 45 ]
+        %tmp.16 = true;
+        ret %tmp.16;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_126_28_126_58_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_126_8_126_58_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_126_8_126_58_if_end:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 127 8 ]
+        %tmp.17 = false;
+        ret %tmp.17;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_124_22_128_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 131; @symbol_functiondef = [doEmergency,131,13,24]; ]
+    function doEmergency() {
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_131_27_136_4_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 132 8 ]
+        symbol [ CAT_SOS %tmp.2 132 18 25 ];
+        %tmp.2 = getv ? :CAT_SOS;
+        symbol [ _catIdx ? 132 8 15 ];
+        putv self :_catIdx %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 133 8 ]
+        %tmp.3 = 0;
+        symbol [ _msgIdx ? 133 8 15 ];
+        putv self :_msgIdx %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 134 8 ]
+        symbol [ DC_SHOW %tmp.5 134 14 21 ];
+        %tmp.5 = getv ? :DC_SHOW;
+        symbol [ _gs ? 134 8 11 ];
+        putv self :_gs %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 135 8 ]
+        %tmp.6 = self;
+        symbol [ _vibeEmergency %tmp.7 135 8 22 ];
+        %tmp.7 = getv function %tmp.6 :_vibeEmergency;
+        invoke %tmp.6 %tmp.7();
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_131_27_136_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 138; @symbol_functiondef = [doTap,138,13,18]; @symbol_param<0> = [tx,138,19,21]; @symbol_param<1> = [ty,138,23,25]; ]
+    function doTap(tx, ty) {
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_138_27_163_4_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 139 8 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_139_8_162_8_if_stmt:
+        symbol [ _gs %tmp.2 139 12 15 ];
+        %tmp.2 = getv ? :_gs;
+        symbol [ DC_HOME %tmp.4 139 19 26 ];
+        %tmp.4 = getv ? :DC_HOME;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_139_8_162_8_if_false;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_139_8_162_8_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_139_28_148_8_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 140 12 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_139_28_148_8_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_139_28_148_8_stop" ]
+        %tileH.1 = local;
+        symbol [ tileH %tileH.1 140 16 21 ];
+        symbol [ _h %tmp.7 140 25 27 ];
+        %tmp.7 = getv ? :_h;
+        %tmp.8 = 13;
+        %tmp.9 = sub %tmp.7 %tmp.8;
+        %tmp.10 = 5;
+        %tmp.11 = div %tmp.9 %tmp.10;
+        lputv %tileH.1 %tmp.11;
+        symbol [ tileH %tileH.1 140 16 21 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 141 12 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_141_12_141_40_if_stmt:
+        %tmp.12 = lgetv %tileH.1;
+        symbol [ tileH %tmp.12 141 16 21 ];
+        %tmp.13 = 1;
+        %tmp.14 = lt %tmp.12 %tmp.13;
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_141_12_141_40_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_141_12_141_40_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_141_27_141_40_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 141 29 ]
+        %tmp.15 = 1;
+        lputv %tileH.1 %tmp.15;
+        symbol [ tileH %tileH.1 141 29 34 ];
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_141_27_141_40_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_141_12_141_40_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_141_12_141_40_if_end:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 142 12 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_139_28_148_8_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_139_28_148_8_stop" ]
+        %tapped.2 = local;
+        symbol [ tapped %tapped.2 142 16 22 ];
+        %tmp.16 = lgetv %ty;
+        symbol [ ty %tmp.16 142 25 27 ];
+        %tmp.17 = lgetv %tileH.1;
+        symbol [ tileH %tmp.17 142 30 35 ];
+        %tmp.18 = div %tmp.16 %tmp.17;
+        lputv %tapped.2 %tmp.18;
+        symbol [ tapped %tapped.2 142 16 22 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 143 12 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_143_12_147_12_if_stmt:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_143_16_143_40_begin:
+        %tmp.19 = lgetv %tapped.2;
+        symbol [ tapped %tmp.19 143 16 22 ];
+        %tmp.20 = 0;
+        %tmp.21 = gte %tmp.19 %tmp.20;
+        bf %tmp.21 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_143_12_147_12_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_143_31_143_40_true:
+        %tmp.22 = lgetv %tapped.2;
+        symbol [ tapped %tmp.22 143 31 37 ];
+        %tmp.23 = 5;
+        %tmp.24 = lt %tmp.22 %tmp.23;
+        push %tmp.24;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_143_31_143_40_end:
+        %tmp.25 = phi [%tmp.21 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_143_16_143_40_begin] [%tmp.24 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_143_31_143_40_true] [%tmp.25 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_143_31_143_40_end];
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_143_12_147_12_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_143_12_147_12_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_143_43_147_12_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 144 16 ]
+        %tmp.26 = lgetv %tapped.2;
+        symbol [ tapped %tmp.26 144 26 32 ];
+        symbol [ _catIdx ? 144 16 23 ];
+        putv self :_catIdx %tmp.26;
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 145 16 ]
+        %tmp.27 = 0;
+        symbol [ _msgIdx ? 145 16 23 ];
+        putv self :_msgIdx %tmp.27;
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 146 16 ]
+        symbol [ DC_LIST %tmp.29 146 22 29 ];
+        %tmp.29 = getv ? :DC_LIST;
+        symbol [ _gs ? 146 16 19 ];
+        putv self :_gs %tmp.29;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_143_43_147_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_143_12_147_12_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_143_12_147_12_if_end:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_139_28_148_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_139_8_162_8_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_139_8_162_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 148 15 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_148_15_162_8_if_stmt:
+        symbol [ _gs %tmp.31 148 19 22 ];
+        %tmp.31 = getv ? :_gs;
+        symbol [ DC_LIST %tmp.33 148 26 33 ];
+        %tmp.33 = getv ? :DC_LIST;
+        %tmp.34 = eq %tmp.31 %tmp.33;
+        bf %tmp.34 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_148_15_162_8_if_false;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_148_15_162_8_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_148_35_160_8_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 149 12 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_148_35_160_8_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_148_35_160_8_stop" ]
+        %hdrH.3 = local;
+        symbol [ hdrH %hdrH.3 149 16 20 ];
+        %tmp.35 = self;
+        symbol [ _listHdrH %tmp.36 149 23 32 ];
+        %tmp.36 = getv function %tmp.35 :_listHdrH;
+        %tmp.37 = invoke %tmp.35 %tmp.36();
+        lputv %hdrH.3 %tmp.37;
+        symbol [ hdrH %hdrH.3 149 16 20 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 150 12 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_148_35_160_8_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_148_35_160_8_stop" ]
+        %n.4 = local;
+        symbol [ n %n.4 150 16 17 ];
+        symbol [ _msgCounts %tmp.39 150 23 33 ];
+        %tmp.39 = getv ? :_msgCounts;
+        symbol [ _catIdx %tmp.41 150 34 41 ];
+        %tmp.41 = getv ? :_catIdx;
+        %tmp.42 = agetv %tmp.39 %tmp.41;
+        lputv %n.4 %tmp.42;
+        symbol [ n %n.4 150 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 151 12 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_148_35_160_8_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_148_35_160_8_stop" ]
+        %rowH.5 = local;
+        symbol [ rowH %rowH.5 151 16 20 ];
+        symbol [ _h %tmp.44 151 24 26 ];
+        %tmp.44 = getv ? :_h;
+        %tmp.45 = lgetv %hdrH.3;
+        symbol [ hdrH %tmp.45 151 29 33 ];
+        %tmp.46 = sub %tmp.44 %tmp.45;
+        %tmp.47 = 14;
+        %tmp.48 = sub %tmp.46 %tmp.47;
+        %tmp.49 = lgetv %n.4;
+        symbol [ n %tmp.49 151 42 43 ];
+        %tmp.50 = div %tmp.48 %tmp.49;
+        lputv %rowH.5 %tmp.50;
+        symbol [ rowH %rowH.5 151 16 20 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 152 12 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_152_12_152_38_if_stmt:
+        %tmp.51 = lgetv %rowH.5;
+        symbol [ rowH %tmp.51 152 16 20 ];
+        %tmp.52 = 1;
+        %tmp.53 = lt %tmp.51 %tmp.52;
+        bf %tmp.53 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_152_12_152_38_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_152_12_152_38_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_152_26_152_38_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 152 28 ]
+        %tmp.54 = 1;
+        lputv %rowH.5 %tmp.54;
+        symbol [ rowH %rowH.5 152 28 32 ];
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_152_26_152_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_152_12_152_38_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_152_12_152_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 153 12 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_153_12_153_52_if_stmt:
+        %tmp.55 = lgetv %ty;
+        symbol [ ty %tmp.55 153 16 18 ];
+        %tmp.56 = lgetv %hdrH.3;
+        symbol [ hdrH %tmp.56 153 21 25 ];
+        %tmp.57 = lt %tmp.55 %tmp.56;
+        bf %tmp.57 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_153_12_153_52_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_153_12_153_52_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_153_27_153_52_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 153 29 ]
+        symbol [ DC_HOME %tmp.59 153 35 42 ];
+        %tmp.59 = getv ? :DC_HOME;
+        symbol [ _gs ? 153 29 32 ];
+        putv self :_gs %tmp.59;
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 153 44 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_153_27_153_52_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_153_12_153_52_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_153_12_153_52_if_end:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 154 12 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_148_35_160_8_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_148_35_160_8_stop" ]
+        %row.6 = local;
+        symbol [ row %row.6 154 16 19 ];
+        %tmp.60 = lgetv %ty;
+        symbol [ ty %tmp.60 154 23 25 ];
+        %tmp.61 = lgetv %hdrH.3;
+        symbol [ hdrH %tmp.61 154 28 32 ];
+        %tmp.62 = sub %tmp.60 %tmp.61;
+        %tmp.63 = lgetv %rowH.5;
+        symbol [ rowH %tmp.63 154 36 40 ];
+        %tmp.64 = div %tmp.62 %tmp.63;
+        lputv %row.6 %tmp.64;
+        symbol [ row %row.6 154 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 155 12 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_155_12_159_12_if_stmt:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_155_16_155_34_begin:
+        %tmp.65 = lgetv %row.6;
+        symbol [ row %tmp.65 155 16 19 ];
+        %tmp.66 = 0;
+        %tmp.67 = gte %tmp.65 %tmp.66;
+        bf %tmp.67 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_155_12_159_12_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_155_28_155_34_true:
+        %tmp.68 = lgetv %row.6;
+        symbol [ row %tmp.68 155 28 31 ];
+        %tmp.69 = lgetv %n.4;
+        symbol [ n %tmp.69 155 34 35 ];
+        %tmp.70 = lt %tmp.68 %tmp.69;
+        push %tmp.70;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_155_28_155_34_end:
+        %tmp.71 = phi [%tmp.67 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_155_16_155_34_begin] [%tmp.70 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_155_28_155_34_true] [%tmp.71 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_155_28_155_34_end];
+        bf %tmp.71 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_155_12_159_12_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_155_12_159_12_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_155_37_159_12_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 156 16 ]
+        %tmp.72 = lgetv %row.6;
+        symbol [ row %tmp.72 156 26 29 ];
+        symbol [ _msgIdx ? 156 16 23 ];
+        putv self :_msgIdx %tmp.72;
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 157 16 ]
+        symbol [ DC_SHOW %tmp.74 157 22 29 ];
+        %tmp.74 = getv ? :DC_SHOW;
+        symbol [ _gs ? 157 16 19 ];
+        putv self :_gs %tmp.74;
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 158 16 ]
+        %tmp.75 = self;
+        symbol [ _vibeForCat %tmp.76 158 16 27 ];
+        %tmp.76 = getv function %tmp.75 :_vibeForCat;
+        symbol [ _catIdx %tmp.78 158 28 35 ];
+        %tmp.78 = getv ? :_catIdx;
+        invoke %tmp.75 %tmp.76(%tmp.78);
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_155_37_159_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_155_12_159_12_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_155_12_159_12_if_end:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_148_35_160_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_148_15_162_8_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_148_15_162_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 160 15 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_160_15_162_8_if_stmt:
+        symbol [ _gs %tmp.80 160 19 22 ];
+        %tmp.80 = getv ? :_gs;
+        symbol [ DC_SHOW %tmp.82 160 26 33 ];
+        %tmp.82 = getv ? :DC_SHOW;
+        %tmp.83 = eq %tmp.80 %tmp.82;
+        bf %tmp.83 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_160_15_162_8_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_160_15_162_8_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_160_35_162_8_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 161 12 ]
+        symbol [ DC_LIST %tmp.85 161 18 25 ];
+        %tmp.85 = getv ? :DC_LIST;
+        symbol [ _gs ? 161 12 15 ];
+        putv self :_gs %tmp.85;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_160_35_162_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_160_15_162_8_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_160_15_162_8_if_end:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_148_15_162_8_if_end:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_139_8_162_8_if_end:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_138_27_163_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 167; @symbol_functiondef = [onUpdate,167,13,21]; @symbol_param<0> = [dc,167,22,24]; ]
+    function onUpdate(dc) {
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_167_26_172_4_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 168 8 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_168_8_168_82_if_stmt:
+        symbol [ _w %tmp.2 168 12 14 ];
+        %tmp.2 = getv ? :_w;
+        %tmp.3 = 0;
+        %tmp.4 = eq %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_168_8_168_82_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_168_8_168_82_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_168_21_168_82_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 168 23 ]
+        %tmp.5 = lgetv %dc;
+        symbol [ dc %tmp.5 168 28 30 ];
+        symbol [ getWidth %tmp.6 168 31 39 ];
+        %tmp.6 = getv function %tmp.5 :getWidth;
+        %tmp.7 = invoke %tmp.5 %tmp.6();
+        %tmp.8 = 9;
+        %tmp.9 = mul %tmp.7 %tmp.8;
+        %tmp.10 = 10;
+        %tmp.11 = div %tmp.9 %tmp.10;
+        symbol [ _w ? 168 23 25 ];
+        putv self :_w %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 168 52 ]
+        %tmp.12 = lgetv %dc;
+        symbol [ dc %tmp.12 168 57 59 ];
+        symbol [ getHeight %tmp.13 168 60 69 ];
+        %tmp.13 = getv function %tmp.12 :getHeight;
+        %tmp.14 = invoke %tmp.12 %tmp.13();
+        %tmp.15 = 9;
+        %tmp.16 = mul %tmp.14 %tmp.15;
+        %tmp.17 = 10;
+        %tmp.18 = div %tmp.16 %tmp.17;
+        symbol [ _h ? 168 52 54 ];
+        putv self :_h %tmp.18;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_168_21_168_82_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_168_8_168_82_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_168_8_168_82_if_end:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 169 8 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_169_8_171_50_if_stmt:
+        symbol [ _gs %tmp.20 169 17 20 ];
+        %tmp.20 = getv ? :_gs;
+        symbol [ DC_HOME %tmp.22 169 24 31 ];
+        %tmp.22 = getv ? :DC_HOME;
+        %tmp.23 = eq %tmp.20 %tmp.22;
+        bf %tmp.23 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_169_8_171_50_if_false;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_169_8_171_50_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_169_33_169_50_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 169 35 ]
+        %tmp.24 = self;
+        symbol [ _drawHome %tmp.25 169 35 44 ];
+        %tmp.25 = getv function %tmp.24 :_drawHome;
+        %tmp.26 = lgetv %dc;
+        symbol [ dc %tmp.26 169 45 47 ];
+        invoke %tmp.24 %tmp.25(%tmp.26);
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_169_33_169_50_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_169_8_171_50_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_169_8_171_50_if_false:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 170 13 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_170_13_171_50_if_stmt:
+        symbol [ _gs %tmp.28 170 17 20 ];
+        %tmp.28 = getv ? :_gs;
+        symbol [ DC_LIST %tmp.30 170 24 31 ];
+        %tmp.30 = getv ? :DC_LIST;
+        %tmp.31 = eq %tmp.28 %tmp.30;
+        bf %tmp.31 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_170_13_171_50_if_false;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_170_13_171_50_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_170_33_170_50_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 170 35 ]
+        %tmp.32 = self;
+        symbol [ _drawList %tmp.33 170 35 44 ];
+        %tmp.33 = getv function %tmp.32 :_drawList;
+        %tmp.34 = lgetv %dc;
+        symbol [ dc %tmp.34 170 45 47 ];
+        invoke %tmp.32 %tmp.33(%tmp.34);
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_170_33_170_50_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_170_13_171_50_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_170_13_171_50_if_false:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 171 13 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_171_13_171_50_if_stmt:
+        symbol [ _gs %tmp.36 171 17 20 ];
+        %tmp.36 = getv ? :_gs;
+        symbol [ DC_SHOW %tmp.38 171 24 31 ];
+        %tmp.38 = getv ? :DC_SHOW;
+        %tmp.39 = eq %tmp.36 %tmp.38;
+        bf %tmp.39 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_171_13_171_50_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_171_13_171_50_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_171_33_171_50_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 171 35 ]
+        %tmp.40 = self;
+        symbol [ _drawShow %tmp.41 171 35 44 ];
+        %tmp.41 = getv function %tmp.40 :_drawShow;
+        %tmp.42 = lgetv %dc;
+        symbol [ dc %tmp.42 171 45 47 ];
+        invoke %tmp.40 %tmp.41(%tmp.42);
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_171_33_171_50_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_171_13_171_50_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_171_13_171_50_if_end:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_170_13_171_50_if_end:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_169_8_171_50_if_end:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_167_26_172_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 176; @symbol_functiondef = [_drawHome,176,20,29]; @symbol_param<0> = [dc,176,30,32]; ]
+    protected
+    function _drawHome(dc) {
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_176_34_218_4_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 177 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 177 8 10 ];
+        symbol [ setColor %tmp.2 177 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        %tmp.3 = 0x000000;
+        %tmp.4 = 0x000000;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.4);
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 178 8 ]
+        %tmp.5 = lgetv %dc;
+        symbol [ dc %tmp.5 178 8 10 ];
+        symbol [ clear %tmp.6 178 11 16 ];
+        %tmp.6 = getv function %tmp.5 :clear;
+        invoke %tmp.5 %tmp.6();
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 181 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_176_34_218_4_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_176_34_218_4_stop" ]
+        %tileH.1 = local;
+        symbol [ tileH %tileH.1 181 12 17 ];
+        symbol [ _h %tmp.8 181 24 26 ];
+        %tmp.8 = getv ? :_h;
+        %tmp.9 = 13;
+        %tmp.10 = sub %tmp.8 %tmp.9;
+        %tmp.11 = 5;
+        %tmp.12 = div %tmp.10 %tmp.11;
+        lputv %tileH.1 %tmp.12;
+        symbol [ tileH %tileH.1 181 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 182 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_176_34_218_4_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_176_34_218_4_stop" ]
+        %fntSel.2 = local;
+        symbol [ fntSel %fntSel.2 182 12 18 ];
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_182_23_182_110_begin:
+        %tmp.13 = lgetv %tileH.1;
+        symbol [ tileH %tmp.13 182 24 29 ];
+        %tmp.14 = 70;
+        %tmp.15 = gte %tmp.13 %tmp.14;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_182_23_182_110_else_false;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_182_23_182_110_true:
+        symbol [ Graphics %tmp.16 182 39 47 ];
+        %tmp.16 = getm $.Toybox.Graphics;
+        symbol [ FONT_LARGE %tmp.17 182 48 58 ];
+        %tmp.17 = getv %tmp.16 :FONT_LARGE;
+        push %tmp.17;
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_182_23_182_110_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_182_23_182_110_else_false:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_182_62_182_110_begin:
+        %tmp.18 = lgetv %tileH.1;
+        symbol [ tileH %tmp.18 182 63 68 ];
+        %tmp.19 = 38;
+        %tmp.20 = gte %tmp.18 %tmp.19;
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_182_62_182_110_else_false;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_182_62_182_110_true:
+        symbol [ Graphics %tmp.21 182 78 86 ];
+        %tmp.21 = getm $.Toybox.Graphics;
+        symbol [ FONT_MEDIUM %tmp.22 182 87 98 ];
+        %tmp.22 = getv %tmp.21 :FONT_MEDIUM;
+        push %tmp.22;
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_182_62_182_110_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_182_62_182_110_else_false:
+        symbol [ Graphics %tmp.23 182 101 109 ];
+        %tmp.23 = getm $.Toybox.Graphics;
+        symbol [ FONT_SMALL %tmp.24 182 110 120 ];
+        %tmp.24 = getv %tmp.23 :FONT_SMALL;
+        push %tmp.24;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_182_62_182_110_end:
+        %tmp.25 = phi [%tmp.20 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_182_62_182_110_begin] [%tmp.22 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_182_62_182_110_true] [%tmp.24 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_182_62_182_110_else_false] [%tmp.25 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_182_62_182_110_end];
+        push %tmp.25;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_182_23_182_110_end:
+        %tmp.26 = phi [%tmp.15 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_182_23_182_110_begin] [%tmp.17 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_182_23_182_110_true] [%tmp.25 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_182_23_182_110_else_false] [%tmp.26 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_182_23_182_110_end];
+        lputv %fntSel.2 %tmp.26;
+        symbol [ fntSel %fntSel.2 182 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 183 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_176_34_218_4_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_176_34_218_4_stop" ]
+        %fntUnsel.3 = local;
+        symbol [ fntUnsel %fntUnsel.3 183 12 20 ];
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_183_23_183_110_begin:
+        %tmp.27 = lgetv %tileH.1;
+        symbol [ tileH %tmp.27 183 24 29 ];
+        %tmp.28 = 70;
+        %tmp.29 = gte %tmp.27 %tmp.28;
+        bf %tmp.29 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_183_23_183_110_else_false;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_183_23_183_110_true:
+        symbol [ Graphics %tmp.30 183 39 47 ];
+        %tmp.30 = getm $.Toybox.Graphics;
+        symbol [ FONT_MEDIUM %tmp.31 183 48 59 ];
+        %tmp.31 = getv %tmp.30 :FONT_MEDIUM;
+        push %tmp.31;
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_183_23_183_110_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_183_23_183_110_else_false:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_183_62_183_110_begin:
+        %tmp.32 = lgetv %tileH.1;
+        symbol [ tileH %tmp.32 183 63 68 ];
+        %tmp.33 = 38;
+        %tmp.34 = gte %tmp.32 %tmp.33;
+        bf %tmp.34 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_183_62_183_110_else_false;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_183_62_183_110_true:
+        symbol [ Graphics %tmp.35 183 78 86 ];
+        %tmp.35 = getm $.Toybox.Graphics;
+        symbol [ FONT_SMALL %tmp.36 183 87 97 ];
+        %tmp.36 = getv %tmp.35 :FONT_SMALL;
+        push %tmp.36;
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_183_62_183_110_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_183_62_183_110_else_false:
+        symbol [ Graphics %tmp.37 183 101 109 ];
+        %tmp.37 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.38 183 110 120 ];
+        %tmp.38 = getv %tmp.37 :FONT_XTINY;
+        push %tmp.38;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_183_62_183_110_end:
+        %tmp.39 = phi [%tmp.34 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_183_62_183_110_begin] [%tmp.36 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_183_62_183_110_true] [%tmp.38 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_183_62_183_110_else_false] [%tmp.39 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_183_62_183_110_end];
+        push %tmp.39;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_183_23_183_110_end:
+        %tmp.40 = phi [%tmp.29 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_183_23_183_110_begin] [%tmp.31 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_183_23_183_110_true] [%tmp.39 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_183_23_183_110_else_false] [%tmp.40 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_183_23_183_110_end];
+        lputv %fntUnsel.3 %tmp.40;
+        symbol [ fntUnsel %fntUnsel.3 183 12 20 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 184 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_176_34_218_4_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_176_34_218_4_stop" ]
+        %hSel.4 = local;
+        symbol [ hSel %hSel.4 184 12 16 ];
+        %tmp.41 = lgetv %dc;
+        symbol [ dc %tmp.41 184 23 25 ];
+        symbol [ getFontHeight %tmp.42 184 26 39 ];
+        %tmp.42 = getv function %tmp.41 :getFontHeight;
+        %tmp.43 = lgetv %fntSel.2;
+        symbol [ fntSel %tmp.43 184 40 46 ];
+        %tmp.44 = invoke %tmp.41 %tmp.42(%tmp.43);
+        lputv %hSel.4 %tmp.44;
+        symbol [ hSel %hSel.4 184 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 185 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_176_34_218_4_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_176_34_218_4_stop" ]
+        %hUnsel.5 = local;
+        symbol [ hUnsel %hUnsel.5 185 12 18 ];
+        %tmp.45 = lgetv %dc;
+        symbol [ dc %tmp.45 185 23 25 ];
+        symbol [ getFontHeight %tmp.46 185 26 39 ];
+        %tmp.46 = getv function %tmp.45 :getFontHeight;
+        %tmp.47 = lgetv %fntUnsel.3;
+        symbol [ fntUnsel %tmp.47 185 40 48 ];
+        %tmp.48 = invoke %tmp.45 %tmp.46(%tmp.47);
+        lputv %hUnsel.5 %tmp.48;
+        symbol [ hUnsel %hUnsel.5 185 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 187 8 ]
+        for @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_187_8_214_8_for_test @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_187_8_214_8_for_incr @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_187_8_214_8_for_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_187_8_214_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_187_8_214_8_for_begin" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_187_8_214_8_for_end" ]
+        %i.6 = local;
+        symbol [ i %i.6 187 17 18 ];
+        %tmp.49 = 0;
+        lputv %i.6 %tmp.49;
+        symbol [ i %i.6 187 17 18 ];
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_187_8_214_8_for_test:
+        %tmp.50 = lgetv %i.6;
+        symbol [ i %tmp.50 187 24 25 ];
+        %tmp.51 = 5;
+        %tmp.52 = lt %tmp.50 %tmp.51;
+        bf %tmp.52 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_187_8_214_8_for_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_187_8_214_8_for_begin:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_187_36_214_8_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 188 12 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_187_36_214_8_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_187_36_214_8_stop" ]
+        %ty.7 = local;
+        symbol [ ty %ty.7 188 16 18 ];
+        %tmp.53 = lgetv %i.6;
+        symbol [ i %tmp.53 188 22 23 ];
+        %tmp.54 = lgetv %tileH.1;
+        symbol [ tileH %tmp.54 188 26 31 ];
+        %tmp.55 = mul %tmp.53 %tmp.54;
+        lputv %ty.7 %tmp.55;
+        symbol [ ty %ty.7 188 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 189 12 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_187_36_214_8_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_187_36_214_8_stop" ]
+        %col.8 = local;
+        symbol [ col %col.8 189 16 19 ];
+        symbol [ _catColors %tmp.57 189 22 32 ];
+        %tmp.57 = getv ? :_catColors;
+        %tmp.58 = lgetv %i.6;
+        symbol [ i %tmp.58 189 33 34 ];
+        %tmp.59 = agetv %tmp.57 %tmp.58;
+        lputv %col.8 %tmp.59;
+        symbol [ col %col.8 189 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 190 12 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_187_36_214_8_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_187_36_214_8_stop" ]
+        %sel.9 = local;
+        symbol [ sel %sel.9 190 16 19 ];
+        %tmp.60 = lgetv %i.6;
+        symbol [ i %tmp.60 190 23 24 ];
+        symbol [ _catIdx %tmp.62 190 28 35 ];
+        %tmp.62 = getv ? :_catIdx;
+        %tmp.63 = eq %tmp.60 %tmp.62;
+        lputv %sel.9 %tmp.63;
+        symbol [ sel %sel.9 190 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 191 12 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_187_36_214_8_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_187_36_214_8_stop" ]
+        %tY.10 = local;
+        symbol [ tY %tY.10 191 16 18 ];
+        %tmp.64 = lgetv %ty.7;
+        symbol [ ty %tmp.64 191 22 24 ];
+        %tmp.65 = lgetv %tileH.1;
+        symbol [ tileH %tmp.65 191 28 33 ];
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_191_37_191_50_begin:
+        %tmp.66 = lgetv %sel.9;
+        symbol [ sel %tmp.66 191 37 40 ];
+        bf %tmp.66 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_191_37_191_50_else_false;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_191_37_191_50_true:
+        %tmp.67 = lgetv %hSel.4;
+        symbol [ hSel %tmp.67 191 43 47 ];
+        push %tmp.67;
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_191_37_191_50_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_191_37_191_50_else_false:
+        %tmp.68 = lgetv %hUnsel.5;
+        symbol [ hUnsel %tmp.68 191 50 56 ];
+        push %tmp.68;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_191_37_191_50_end:
+        %tmp.69 = phi [%tmp.66 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_191_37_191_50_begin] [%tmp.67 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_191_37_191_50_true] [%tmp.68 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_191_37_191_50_else_false] [%tmp.69 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_191_37_191_50_end];
+        %tmp.70 = sub %tmp.65 %tmp.69;
+        %tmp.71 = 2;
+        %tmp.72 = div %tmp.70 %tmp.71;
+        %tmp.73 = add %tmp.64 %tmp.72;
+        lputv %tY.10 %tmp.73;
+        symbol [ tY %tY.10 191 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 193 12 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_193_12_208_12_if_stmt:
+        %tmp.74 = lgetv %sel.9;
+        symbol [ sel %tmp.74 193 16 19 ];
+        bf %tmp.74 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_193_12_208_12_if_else_false;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_193_12_208_12_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_193_21_199_12_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 195 16 ]
+        %tmp.75 = lgetv %dc;
+        symbol [ dc %tmp.75 195 16 18 ];
+        symbol [ setColor %tmp.76 195 19 27 ];
+        %tmp.76 = getv function %tmp.75 :setColor;
+        %tmp.77 = lgetv %col.8;
+        symbol [ col %tmp.77 195 28 31 ];
+        symbol [ Graphics %tmp.78 195 33 41 ];
+        %tmp.78 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.79 195 42 59 ];
+        %tmp.79 = getv %tmp.78 :COLOR_TRANSPARENT;
+        invoke %tmp.75 %tmp.76(%tmp.77, %tmp.79);
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 196 16 ]
+        %tmp.80 = lgetv %dc;
+        symbol [ dc %tmp.80 196 16 18 ];
+        symbol [ fillRectangle %tmp.81 196 19 32 ];
+        %tmp.81 = getv function %tmp.80 :fillRectangle;
+        %tmp.82 = 0;
+        %tmp.83 = lgetv %ty.7;
+        symbol [ ty %tmp.83 196 36 38 ];
+        symbol [ _w %tmp.85 196 40 42 ];
+        %tmp.85 = getv ? :_w;
+        %tmp.86 = lgetv %tileH.1;
+        symbol [ tileH %tmp.86 196 44 49 ];
+        %tmp.87 = 1;
+        %tmp.88 = sub %tmp.86 %tmp.87;
+        invoke %tmp.80 %tmp.81(%tmp.82, %tmp.83, %tmp.85, %tmp.88);
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 197 16 ]
+        %tmp.89 = lgetv %dc;
+        symbol [ dc %tmp.89 197 16 18 ];
+        symbol [ setColor %tmp.90 197 19 27 ];
+        %tmp.90 = getv function %tmp.89 :setColor;
+        %tmp.91 = 0x000000;
+        symbol [ Graphics %tmp.92 197 38 46 ];
+        %tmp.92 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.93 197 47 64 ];
+        %tmp.93 = getv %tmp.92 :COLOR_TRANSPARENT;
+        invoke %tmp.89 %tmp.90(%tmp.91, %tmp.93);
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 198 16 ]
+        %tmp.94 = lgetv %dc;
+        symbol [ dc %tmp.94 198 16 18 ];
+        symbol [ drawText %tmp.95 198 19 27 ];
+        %tmp.95 = getv function %tmp.94 :drawText;
+        symbol [ _w %tmp.97 198 28 30 ];
+        %tmp.97 = getv ? :_w;
+        %tmp.98 = 2;
+        %tmp.99 = div %tmp.97 %tmp.98;
+        %tmp.100 = lgetv %tY.10;
+        symbol [ tY %tmp.100 198 36 38 ];
+        %tmp.101 = lgetv %fntSel.2;
+        symbol [ fntSel %tmp.101 198 40 46 ];
+        symbol [ _cats %tmp.103 198 48 53 ];
+        %tmp.103 = getv ? :_cats;
+        %tmp.104 = lgetv %i.6;
+        symbol [ i %tmp.104 198 54 55 ];
+        %tmp.105 = agetv %tmp.103 %tmp.104;
+        symbol [ Graphics %tmp.106 198 58 66 ];
+        %tmp.106 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.107 198 67 86 ];
+        %tmp.107 = getv %tmp.106 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.94 %tmp.95(%tmp.99, %tmp.100, %tmp.101, %tmp.105, %tmp.107);
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_193_21_199_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_193_12_208_12_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_193_12_208_12_if_else_false:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_199_19_208_12_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 201 16 ]
+        %tmp.108 = lgetv %dc;
+        symbol [ dc %tmp.108 201 16 18 ];
+        symbol [ setColor %tmp.109 201 19 27 ];
+        %tmp.109 = getv function %tmp.108 :setColor;
+        %tmp.110 = self;
+        symbol [ _darken %tmp.111 201 28 35 ];
+        %tmp.111 = getv function %tmp.110 :_darken;
+        %tmp.112 = lgetv %col.8;
+        symbol [ col %tmp.112 201 36 39 ];
+        %tmp.113 = invoke %tmp.110 %tmp.111(%tmp.112);
+        symbol [ Graphics %tmp.114 201 42 50 ];
+        %tmp.114 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.115 201 51 68 ];
+        %tmp.115 = getv %tmp.114 :COLOR_TRANSPARENT;
+        invoke %tmp.108 %tmp.109(%tmp.113, %tmp.115);
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 202 16 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_199_19_208_12_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_199_19_208_12_stop" ]
+        %stripW.11 = local;
+        symbol [ stripW %stripW.11 202 20 26 ];
+        symbol [ _w %tmp.117 202 29 31 ];
+        %tmp.117 = getv ? :_w;
+        %tmp.118 = 15;
+        %tmp.119 = mul %tmp.117 %tmp.118;
+        %tmp.120 = 1000;
+        %tmp.121 = div %tmp.119 %tmp.120;
+        lputv %stripW.11 %tmp.121;
+        symbol [ stripW %stripW.11 202 20 26 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 202 45 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_202_45_202_75_if_stmt:
+        %tmp.122 = lgetv %stripW.11;
+        symbol [ stripW %tmp.122 202 49 55 ];
+        %tmp.123 = 3;
+        %tmp.124 = lt %tmp.122 %tmp.123;
+        bf %tmp.124 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_202_45_202_75_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_202_45_202_75_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_202_61_202_75_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 202 63 ]
+        %tmp.125 = 3;
+        lputv %stripW.11 %tmp.125;
+        symbol [ stripW %stripW.11 202 63 69 ];
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_202_61_202_75_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_202_45_202_75_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_202_45_202_75_if_end:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 203 16 ]
+        %tmp.126 = lgetv %dc;
+        symbol [ dc %tmp.126 203 16 18 ];
+        symbol [ fillRectangle %tmp.127 203 19 32 ];
+        %tmp.127 = getv function %tmp.126 :fillRectangle;
+        %tmp.128 = 0;
+        %tmp.129 = lgetv %ty.7;
+        symbol [ ty %tmp.129 203 36 38 ];
+        %tmp.130 = lgetv %stripW.11;
+        symbol [ stripW %tmp.130 203 40 46 ];
+        %tmp.131 = lgetv %tileH.1;
+        symbol [ tileH %tmp.131 203 48 53 ];
+        %tmp.132 = 1;
+        %tmp.133 = sub %tmp.131 %tmp.132;
+        invoke %tmp.126 %tmp.127(%tmp.128, %tmp.129, %tmp.130, %tmp.133);
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 204 16 ]
+        %tmp.134 = lgetv %dc;
+        symbol [ dc %tmp.134 204 16 18 ];
+        symbol [ setColor %tmp.135 204 19 27 ];
+        %tmp.135 = getv function %tmp.134 :setColor;
+        %tmp.136 = self;
+        symbol [ _darken %tmp.137 204 28 35 ];
+        %tmp.137 = getv function %tmp.136 :_darken;
+        %tmp.138 = lgetv %col.8;
+        symbol [ col %tmp.138 204 36 39 ];
+        %tmp.139 = invoke %tmp.136 %tmp.137(%tmp.138);
+        symbol [ Graphics %tmp.140 204 42 50 ];
+        %tmp.140 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.141 204 51 68 ];
+        %tmp.141 = getv %tmp.140 :COLOR_TRANSPARENT;
+        invoke %tmp.134 %tmp.135(%tmp.139, %tmp.141);
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 205 16 ]
+        %tmp.142 = lgetv %dc;
+        symbol [ dc %tmp.142 205 16 18 ];
+        symbol [ drawText %tmp.143 205 19 27 ];
+        %tmp.143 = getv function %tmp.142 :drawText;
+        symbol [ _w %tmp.145 205 28 30 ];
+        %tmp.145 = getv ? :_w;
+        %tmp.146 = 10;
+        %tmp.147 = mul %tmp.145 %tmp.146;
+        %tmp.148 = 100;
+        %tmp.149 = div %tmp.147 %tmp.148;
+        %tmp.150 = lgetv %tY.10;
+        symbol [ tY %tmp.150 205 43 45 ];
+        %tmp.151 = lgetv %fntUnsel.3;
+        symbol [ fntUnsel %tmp.151 205 47 55 ];
+        symbol [ _cats %tmp.153 205 57 62 ];
+        %tmp.153 = getv ? :_cats;
+        %tmp.154 = lgetv %i.6;
+        symbol [ i %tmp.154 205 63 64 ];
+        %tmp.155 = agetv %tmp.153 %tmp.154;
+        symbol [ Graphics %tmp.156 205 67 75 ];
+        %tmp.156 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_LEFT %tmp.157 205 76 93 ];
+        %tmp.157 = getv %tmp.156 :TEXT_JUSTIFY_LEFT;
+        invoke %tmp.142 %tmp.143(%tmp.149, %tmp.150, %tmp.151, %tmp.155, %tmp.157);
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 206 16 ]
+        %tmp.158 = lgetv %dc;
+        symbol [ dc %tmp.158 206 16 18 ];
+        symbol [ setColor %tmp.159 206 19 27 ];
+        %tmp.159 = getv function %tmp.158 :setColor;
+        %tmp.160 = 0x2A2A2A;
+        symbol [ Graphics %tmp.161 206 38 46 ];
+        %tmp.161 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.162 206 47 64 ];
+        %tmp.162 = getv %tmp.161 :COLOR_TRANSPARENT;
+        invoke %tmp.158 %tmp.159(%tmp.160, %tmp.162);
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 207 16 ]
+        %tmp.163 = lgetv %dc;
+        symbol [ dc %tmp.163 207 16 18 ];
+        symbol [ drawText %tmp.164 207 19 27 ];
+        %tmp.164 = getv function %tmp.163 :drawText;
+        symbol [ _w %tmp.166 207 28 30 ];
+        %tmp.166 = getv ? :_w;
+        %tmp.167 = 6;
+        %tmp.168 = sub %tmp.166 %tmp.167;
+        %tmp.169 = lgetv %tY.10;
+        symbol [ tY %tmp.169 207 36 38 ];
+        %tmp.170 = lgetv %fntUnsel.3;
+        symbol [ fntUnsel %tmp.170 207 40 48 ];
+        %tmp.171 = "";
+        symbol [ _msgCounts %tmp.173 207 55 65 ];
+        %tmp.173 = getv ? :_msgCounts;
+        %tmp.174 = lgetv %i.6;
+        symbol [ i %tmp.174 207 66 67 ];
+        %tmp.175 = agetv %tmp.173 %tmp.174;
+        %tmp.176 = add %tmp.171 %tmp.175;
+        symbol [ Graphics %tmp.177 207 70 78 ];
+        %tmp.177 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_RIGHT %tmp.178 207 79 97 ];
+        %tmp.178 = getv %tmp.177 :TEXT_JUSTIFY_RIGHT;
+        invoke %tmp.163 %tmp.164(%tmp.168, %tmp.169, %tmp.170, %tmp.176, %tmp.178);
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_199_19_208_12_stop:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_193_12_208_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 210 12 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_210_12_213_12_if_stmt:
+        %tmp.179 = lgetv %i.6;
+        symbol [ i %tmp.179 210 16 17 ];
+        %tmp.180 = 4;
+        %tmp.181 = lt %tmp.179 %tmp.180;
+        bf %tmp.181 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_210_12_213_12_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_210_12_213_12_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_210_23_213_12_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 211 16 ]
+        %tmp.182 = lgetv %dc;
+        symbol [ dc %tmp.182 211 16 18 ];
+        symbol [ setColor %tmp.183 211 19 27 ];
+        %tmp.183 = getv function %tmp.182 :setColor;
+        %tmp.184 = 0x111111;
+        symbol [ Graphics %tmp.185 211 38 46 ];
+        %tmp.185 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.186 211 47 64 ];
+        %tmp.186 = getv %tmp.185 :COLOR_TRANSPARENT;
+        invoke %tmp.182 %tmp.183(%tmp.184, %tmp.186);
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 212 16 ]
+        %tmp.187 = lgetv %dc;
+        symbol [ dc %tmp.187 212 16 18 ];
+        symbol [ drawLine %tmp.188 212 19 27 ];
+        %tmp.188 = getv function %tmp.187 :drawLine;
+        %tmp.189 = 0;
+        %tmp.190 = lgetv %ty.7;
+        symbol [ ty %tmp.190 212 31 33 ];
+        %tmp.191 = lgetv %tileH.1;
+        symbol [ tileH %tmp.191 212 36 41 ];
+        %tmp.192 = add %tmp.190 %tmp.191;
+        %tmp.193 = 1;
+        %tmp.194 = sub %tmp.192 %tmp.193;
+        symbol [ _w %tmp.196 212 47 49 ];
+        %tmp.196 = getv ? :_w;
+        %tmp.197 = lgetv %ty.7;
+        symbol [ ty %tmp.197 212 51 53 ];
+        %tmp.198 = lgetv %tileH.1;
+        symbol [ tileH %tmp.198 212 56 61 ];
+        %tmp.199 = add %tmp.197 %tmp.198;
+        %tmp.200 = 1;
+        %tmp.201 = sub %tmp.199 %tmp.200;
+        invoke %tmp.187 %tmp.188(%tmp.189, %tmp.194, %tmp.196, %tmp.201);
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_210_23_213_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_210_12_213_12_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_210_12_213_12_if_end:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_187_36_214_8_stop:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_187_8_214_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 187 ]
+        %tmp.204 = lgetv %i.6;
+        symbol [ i %tmp.204 187 31 32 ];
+        %tmp.205 = add %tmp.204 1;
+        lputv %i.6 %tmp.205;
+        symbol [ i %i.6 187 31 32 ];
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_187_8_214_8_for_test;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_187_8_214_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 216 8 ]
+        %tmp.206 = lgetv %dc;
+        symbol [ dc %tmp.206 216 8 10 ];
+        symbol [ setColor %tmp.207 216 11 19 ];
+        %tmp.207 = getv function %tmp.206 :setColor;
+        %tmp.208 = 0x1E1E1E;
+        symbol [ Graphics %tmp.209 216 30 38 ];
+        %tmp.209 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.210 216 39 56 ];
+        %tmp.210 = getv %tmp.209 :COLOR_TRANSPARENT;
+        invoke %tmp.206 %tmp.207(%tmp.208, %tmp.210);
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 217 8 ]
+        %tmp.211 = lgetv %dc;
+        symbol [ dc %tmp.211 217 8 10 ];
+        symbol [ drawText %tmp.212 217 11 19 ];
+        %tmp.212 = getv function %tmp.211 :drawText;
+        symbol [ _w %tmp.214 217 20 22 ];
+        %tmp.214 = getv ? :_w;
+        %tmp.215 = 2;
+        %tmp.216 = div %tmp.214 %tmp.215;
+        symbol [ _h %tmp.218 217 28 30 ];
+        %tmp.218 = getv ? :_h;
+        symbol [ _h %tmp.220 217 33 35 ];
+        %tmp.220 = getv ? :_h;
+        %tmp.221 = 5;
+        %tmp.222 = mul %tmp.220 %tmp.221;
+        %tmp.223 = 100;
+        %tmp.224 = div %tmp.222 %tmp.223;
+        %tmp.225 = sub %tmp.218 %tmp.224;
+        symbol [ Graphics %tmp.226 217 47 55 ];
+        %tmp.226 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.227 217 56 66 ];
+        %tmp.227 = getv %tmp.226 :FONT_XTINY;
+        %tmp.228 = "HOLD=SOS";
+        symbol [ Graphics %tmp.229 217 80 88 ];
+        %tmp.229 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.230 217 89 108 ];
+        %tmp.230 = getv %tmp.229 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.211 %tmp.212(%tmp.216, %tmp.225, %tmp.227, %tmp.228, %tmp.230);
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_176_34_218_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 223; @symbol_functiondef = [_drawList,223,20,29]; @symbol_param<0> = [dc,223,30,32]; ]
+    protected
+    function _drawList(dc) {
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_223_34_275_4_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 224 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 224 8 10 ];
+        symbol [ setColor %tmp.2 224 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        %tmp.3 = 0x000000;
+        %tmp.4 = 0x000000;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.4);
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 225 8 ]
+        %tmp.5 = lgetv %dc;
+        symbol [ dc %tmp.5 225 8 10 ];
+        symbol [ clear %tmp.6 225 11 16 ];
+        %tmp.6 = getv function %tmp.5 :clear;
+        invoke %tmp.5 %tmp.6();
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 227 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_223_34_275_4_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_223_34_275_4_stop" ]
+        %col.1 = local;
+        symbol [ col %col.1 227 12 15 ];
+        symbol [ _catColors %tmp.8 227 19 29 ];
+        %tmp.8 = getv ? :_catColors;
+        symbol [ _catIdx %tmp.10 227 30 37 ];
+        %tmp.10 = getv ? :_catIdx;
+        %tmp.11 = agetv %tmp.8 %tmp.10;
+        lputv %col.1 %tmp.11;
+        symbol [ col %col.1 227 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 228 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_223_34_275_4_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_223_34_275_4_stop" ]
+        %n.2 = local;
+        symbol [ n %n.2 228 12 13 ];
+        symbol [ _msgCounts %tmp.13 228 19 29 ];
+        %tmp.13 = getv ? :_msgCounts;
+        symbol [ _catIdx %tmp.15 228 30 37 ];
+        %tmp.15 = getv ? :_catIdx;
+        %tmp.16 = agetv %tmp.13 %tmp.15;
+        lputv %n.2 %tmp.16;
+        symbol [ n %n.2 228 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 229 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_223_34_275_4_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_223_34_275_4_stop" ]
+        %hdrH.3 = local;
+        symbol [ hdrH %hdrH.3 229 12 16 ];
+        %tmp.17 = self;
+        symbol [ _listHdrH %tmp.18 229 19 28 ];
+        %tmp.18 = getv function %tmp.17 :_listHdrH;
+        %tmp.19 = invoke %tmp.17 %tmp.18();
+        lputv %hdrH.3 %tmp.19;
+        symbol [ hdrH %hdrH.3 229 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 230 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_223_34_275_4_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_223_34_275_4_stop" ]
+        %rowH.4 = local;
+        symbol [ rowH %rowH.4 230 12 16 ];
+        symbol [ _h %tmp.21 230 20 22 ];
+        %tmp.21 = getv ? :_h;
+        %tmp.22 = lgetv %hdrH.3;
+        symbol [ hdrH %tmp.22 230 25 29 ];
+        %tmp.23 = sub %tmp.21 %tmp.22;
+        %tmp.24 = 14;
+        %tmp.25 = sub %tmp.23 %tmp.24;
+        %tmp.26 = lgetv %n.2;
+        symbol [ n %tmp.26 230 38 39 ];
+        %tmp.27 = div %tmp.25 %tmp.26;
+        lputv %rowH.4 %tmp.27;
+        symbol [ rowH %rowH.4 230 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 233 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_223_34_275_4_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_223_34_275_4_stop" ]
+        %fnt.5 = local;
+        symbol [ fnt %fnt.5 233 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 234 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_223_34_275_4_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_223_34_275_4_stop" ]
+        %fntH.6 = local;
+        symbol [ fntH %fntH.6 234 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 235 8 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_235_8_238_59_if_stmt:
+        %tmp.28 = lgetv %rowH.4;
+        symbol [ rowH %tmp.28 235 17 21 ];
+        %tmp.29 = 70;
+        %tmp.30 = gte %tmp.28 %tmp.29;
+        bf %tmp.30 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_235_8_238_59_if_false;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_235_8_238_59_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_235_29_235_59_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 235 31 ]
+        symbol [ Graphics %tmp.31 235 37 45 ];
+        %tmp.31 = getm $.Toybox.Graphics;
+        symbol [ FONT_LARGE %tmp.32 235 46 56 ];
+        %tmp.32 = getv %tmp.31 :FONT_LARGE;
+        lputv %fnt.5 %tmp.32;
+        symbol [ fnt %fnt.5 235 31 34 ];
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_235_29_235_59_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_235_8_238_59_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_235_8_238_59_if_false:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 236 13 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_236_13_238_59_if_stmt:
+        %tmp.33 = lgetv %rowH.4;
+        symbol [ rowH %tmp.33 236 17 21 ];
+        %tmp.34 = 38;
+        %tmp.35 = gte %tmp.33 %tmp.34;
+        bf %tmp.35 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_236_13_238_59_if_false;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_236_13_238_59_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_236_29_236_59_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 236 31 ]
+        symbol [ Graphics %tmp.36 236 37 45 ];
+        %tmp.36 = getm $.Toybox.Graphics;
+        symbol [ FONT_MEDIUM %tmp.37 236 46 57 ];
+        %tmp.37 = getv %tmp.36 :FONT_MEDIUM;
+        lputv %fnt.5 %tmp.37;
+        symbol [ fnt %fnt.5 236 31 34 ];
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_236_29_236_59_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_236_13_238_59_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_236_13_238_59_if_false:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 237 13 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_237_13_238_59_if_stmt:
+        %tmp.38 = lgetv %rowH.4;
+        symbol [ rowH %tmp.38 237 17 21 ];
+        %tmp.39 = 26;
+        %tmp.40 = gte %tmp.38 %tmp.39;
+        bf %tmp.40 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_237_13_238_59_if_else_false;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_237_13_238_59_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_237_29_237_59_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 237 31 ]
+        symbol [ Graphics %tmp.41 237 37 45 ];
+        %tmp.41 = getm $.Toybox.Graphics;
+        symbol [ FONT_SMALL %tmp.42 237 46 56 ];
+        %tmp.42 = getv %tmp.41 :FONT_SMALL;
+        lputv %fnt.5 %tmp.42;
+        symbol [ fnt %fnt.5 237 31 34 ];
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_237_29_237_59_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_237_13_238_59_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_237_13_238_59_if_else_false:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_238_29_238_59_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 238 31 ]
+        symbol [ Graphics %tmp.43 238 37 45 ];
+        %tmp.43 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.44 238 46 56 ];
+        %tmp.44 = getv %tmp.43 :FONT_XTINY;
+        lputv %fnt.5 %tmp.44;
+        symbol [ fnt %fnt.5 238 31 34 ];
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_238_29_238_59_stop:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_237_13_238_59_if_end:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_236_13_238_59_if_end:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_235_8_238_59_if_end:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 239 8 ]
+        %tmp.45 = lgetv %dc;
+        symbol [ dc %tmp.45 239 15 17 ];
+        symbol [ getFontHeight %tmp.46 239 18 31 ];
+        %tmp.46 = getv function %tmp.45 :getFontHeight;
+        %tmp.47 = lgetv %fnt.5;
+        symbol [ fnt %tmp.47 239 32 35 ];
+        %tmp.48 = invoke %tmp.45 %tmp.46(%tmp.47);
+        lputv %fntH.6 %tmp.48;
+        symbol [ fntH %fntH.6 239 8 12 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 242 8 ]
+        %tmp.49 = lgetv %dc;
+        symbol [ dc %tmp.49 242 8 10 ];
+        symbol [ setColor %tmp.50 242 11 19 ];
+        %tmp.50 = getv function %tmp.49 :setColor;
+        %tmp.51 = lgetv %col.1;
+        symbol [ col %tmp.51 242 20 23 ];
+        symbol [ Graphics %tmp.52 242 25 33 ];
+        %tmp.52 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.53 242 34 51 ];
+        %tmp.53 = getv %tmp.52 :COLOR_TRANSPARENT;
+        invoke %tmp.49 %tmp.50(%tmp.51, %tmp.53);
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 243 8 ]
+        %tmp.54 = lgetv %dc;
+        symbol [ dc %tmp.54 243 8 10 ];
+        symbol [ fillRectangle %tmp.55 243 11 24 ];
+        %tmp.55 = getv function %tmp.54 :fillRectangle;
+        %tmp.56 = 0;
+        %tmp.57 = 0;
+        symbol [ _w %tmp.59 243 31 33 ];
+        %tmp.59 = getv ? :_w;
+        %tmp.60 = lgetv %hdrH.3;
+        symbol [ hdrH %tmp.60 243 35 39 ];
+        invoke %tmp.54 %tmp.55(%tmp.56, %tmp.57, %tmp.59, %tmp.60);
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 244 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_223_34_275_4_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_223_34_275_4_stop" ]
+        %hdrFont.7 = local;
+        symbol [ hdrFont %hdrFont.7 244 12 19 ];
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_244_22_244_68_begin:
+        %tmp.61 = lgetv %hdrH.3;
+        symbol [ hdrH %tmp.61 244 23 27 ];
+        %tmp.62 = 40;
+        %tmp.63 = gte %tmp.61 %tmp.62;
+        bf %tmp.63 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_244_22_244_68_else_false;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_244_22_244_68_true:
+        symbol [ Graphics %tmp.64 244 37 45 ];
+        %tmp.64 = getm $.Toybox.Graphics;
+        symbol [ FONT_SMALL %tmp.65 244 46 56 ];
+        %tmp.65 = getv %tmp.64 :FONT_SMALL;
+        push %tmp.65;
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_244_22_244_68_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_244_22_244_68_else_false:
+        symbol [ Graphics %tmp.66 244 59 67 ];
+        %tmp.66 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.67 244 68 78 ];
+        %tmp.67 = getv %tmp.66 :FONT_XTINY;
+        push %tmp.67;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_244_22_244_68_end:
+        %tmp.68 = phi [%tmp.63 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_244_22_244_68_begin] [%tmp.65 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_244_22_244_68_true] [%tmp.67 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_244_22_244_68_else_false] [%tmp.68 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_244_22_244_68_end];
+        lputv %hdrFont.7 %tmp.68;
+        symbol [ hdrFont %hdrFont.7 244 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 245 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_223_34_275_4_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_223_34_275_4_stop" ]
+        %hdrFH.8 = local;
+        symbol [ hdrFH %hdrFH.8 245 12 17 ];
+        %tmp.69 = lgetv %dc;
+        symbol [ dc %tmp.69 245 20 22 ];
+        symbol [ getFontHeight %tmp.70 245 23 36 ];
+        %tmp.70 = getv function %tmp.69 :getFontHeight;
+        %tmp.71 = lgetv %hdrFont.7;
+        symbol [ hdrFont %tmp.71 245 37 44 ];
+        %tmp.72 = invoke %tmp.69 %tmp.70(%tmp.71);
+        lputv %hdrFH.8 %tmp.72;
+        symbol [ hdrFH %hdrFH.8 245 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 246 8 ]
+        %tmp.73 = lgetv %dc;
+        symbol [ dc %tmp.73 246 8 10 ];
+        symbol [ setColor %tmp.74 246 11 19 ];
+        %tmp.74 = getv function %tmp.73 :setColor;
+        %tmp.75 = 0x000000;
+        symbol [ Graphics %tmp.76 246 30 38 ];
+        %tmp.76 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.77 246 39 56 ];
+        %tmp.77 = getv %tmp.76 :COLOR_TRANSPARENT;
+        invoke %tmp.73 %tmp.74(%tmp.75, %tmp.77);
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 247 8 ]
+        %tmp.78 = lgetv %dc;
+        symbol [ dc %tmp.78 247 8 10 ];
+        symbol [ drawText %tmp.79 247 11 19 ];
+        %tmp.79 = getv function %tmp.78 :drawText;
+        symbol [ _w %tmp.81 247 20 22 ];
+        %tmp.81 = getv ? :_w;
+        %tmp.82 = 2;
+        %tmp.83 = div %tmp.81 %tmp.82;
+        %tmp.84 = lgetv %hdrH.3;
+        symbol [ hdrH %tmp.84 247 29 33 ];
+        %tmp.85 = lgetv %hdrFH.8;
+        symbol [ hdrFH %tmp.85 247 36 41 ];
+        %tmp.86 = sub %tmp.84 %tmp.85;
+        %tmp.87 = 2;
+        %tmp.88 = div %tmp.86 %tmp.87;
+        %tmp.89 = lgetv %hdrFont.7;
+        symbol [ hdrFont %tmp.89 247 48 55 ];
+        symbol [ _cats %tmp.91 248 20 25 ];
+        %tmp.91 = getv ? :_cats;
+        symbol [ _catIdx %tmp.93 248 26 33 ];
+        %tmp.93 = getv ? :_catIdx;
+        %tmp.94 = agetv %tmp.91 %tmp.93;
+        symbol [ Graphics %tmp.95 248 36 44 ];
+        %tmp.95 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.96 248 45 64 ];
+        %tmp.96 = getv %tmp.95 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.78 %tmp.79(%tmp.83, %tmp.88, %tmp.89, %tmp.94, %tmp.96);
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 251 8 ]
+        for @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_251_8_270_8_for_test @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_251_8_270_8_for_incr @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_251_8_270_8_for_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_251_8_270_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_251_8_270_8_for_begin" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_251_8_270_8_for_end" ]
+        %i.9 = local;
+        symbol [ i %i.9 251 17 18 ];
+        %tmp.97 = 0;
+        lputv %i.9 %tmp.97;
+        symbol [ i %i.9 251 17 18 ];
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_251_8_270_8_for_test:
+        %tmp.98 = lgetv %i.9;
+        symbol [ i %tmp.98 251 24 25 ];
+        %tmp.99 = lgetv %n.2;
+        symbol [ n %tmp.99 251 28 29 ];
+        %tmp.100 = lt %tmp.98 %tmp.99;
+        bf %tmp.100 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_251_8_270_8_for_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_251_8_270_8_for_begin:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_251_36_270_8_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 252 12 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_251_36_270_8_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_251_36_270_8_stop" ]
+        %ry.10 = local;
+        symbol [ ry %ry.10 252 16 18 ];
+        %tmp.101 = lgetv %hdrH.3;
+        symbol [ hdrH %tmp.101 252 22 26 ];
+        %tmp.102 = lgetv %i.9;
+        symbol [ i %tmp.102 252 29 30 ];
+        %tmp.103 = lgetv %rowH.4;
+        symbol [ rowH %tmp.103 252 33 37 ];
+        %tmp.104 = mul %tmp.102 %tmp.103;
+        %tmp.105 = add %tmp.101 %tmp.104;
+        lputv %ry.10 %tmp.105;
+        symbol [ ry %ry.10 252 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 253 12 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_251_36_270_8_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_251_36_270_8_stop" ]
+        %sel.11 = local;
+        symbol [ sel %sel.11 253 16 19 ];
+        %tmp.106 = lgetv %i.9;
+        symbol [ i %tmp.106 253 23 24 ];
+        symbol [ _msgIdx %tmp.108 253 28 35 ];
+        %tmp.108 = getv ? :_msgIdx;
+        %tmp.109 = eq %tmp.106 %tmp.108;
+        lputv %sel.11 %tmp.109;
+        symbol [ sel %sel.11 253 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 254 12 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_251_36_270_8_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_251_36_270_8_stop" ]
+        %msg.12 = local;
+        symbol [ msg %msg.12 254 16 19 ];
+        symbol [ _msgs %tmp.111 254 22 27 ];
+        %tmp.111 = getv ? :_msgs;
+        symbol [ _catIdx %tmp.113 254 28 35 ];
+        %tmp.113 = getv ? :_catIdx;
+        %tmp.114 = agetv %tmp.111 %tmp.113;
+        %tmp.115 = lgetv %i.9;
+        symbol [ i %tmp.115 254 37 38 ];
+        %tmp.116 = agetv %tmp.114 %tmp.115;
+        lputv %msg.12 %tmp.116;
+        symbol [ msg %msg.12 254 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 255 12 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_251_36_270_8_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_251_36_270_8_stop" ]
+        %tY.13 = local;
+        symbol [ tY %tY.13 255 16 18 ];
+        %tmp.117 = lgetv %ry.10;
+        symbol [ ry %tmp.117 255 22 24 ];
+        %tmp.118 = lgetv %rowH.4;
+        symbol [ rowH %tmp.118 255 28 32 ];
+        %tmp.119 = lgetv %fntH.6;
+        symbol [ fntH %tmp.119 255 35 39 ];
+        %tmp.120 = sub %tmp.118 %tmp.119;
+        %tmp.121 = 2;
+        %tmp.122 = div %tmp.120 %tmp.121;
+        %tmp.123 = add %tmp.117 %tmp.122;
+        lputv %tY.13 %tmp.123;
+        symbol [ tY %tY.13 255 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 257 12 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_257_12_263_12_if_stmt:
+        %tmp.124 = lgetv %sel.11;
+        symbol [ sel %tmp.124 257 16 19 ];
+        bf %tmp.124 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_257_12_263_12_if_else_false;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_257_12_263_12_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_257_21_261_12_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 258 16 ]
+        %tmp.125 = lgetv %dc;
+        symbol [ dc %tmp.125 258 16 18 ];
+        symbol [ setColor %tmp.126 258 19 27 ];
+        %tmp.126 = getv function %tmp.125 :setColor;
+        %tmp.127 = lgetv %col.1;
+        symbol [ col %tmp.127 258 28 31 ];
+        symbol [ Graphics %tmp.128 258 33 41 ];
+        %tmp.128 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.129 258 42 59 ];
+        %tmp.129 = getv %tmp.128 :COLOR_TRANSPARENT;
+        invoke %tmp.125 %tmp.126(%tmp.127, %tmp.129);
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 259 16 ]
+        %tmp.130 = lgetv %dc;
+        symbol [ dc %tmp.130 259 16 18 ];
+        symbol [ fillRoundedRectangle %tmp.131 259 19 39 ];
+        %tmp.131 = getv function %tmp.130 :fillRoundedRectangle;
+        symbol [ _w %tmp.133 259 40 42 ];
+        %tmp.133 = getv ? :_w;
+        %tmp.134 = 3;
+        %tmp.135 = mul %tmp.133 %tmp.134;
+        %tmp.136 = 100;
+        %tmp.137 = div %tmp.135 %tmp.136;
+        %tmp.138 = lgetv %ry.10;
+        symbol [ ry %tmp.138 259 54 56 ];
+        %tmp.139 = 2;
+        %tmp.140 = add %tmp.138 %tmp.139;
+        symbol [ _w %tmp.142 259 62 64 ];
+        %tmp.142 = getv ? :_w;
+        %tmp.143 = 94;
+        %tmp.144 = mul %tmp.142 %tmp.143;
+        %tmp.145 = 100;
+        %tmp.146 = div %tmp.144 %tmp.145;
+        %tmp.147 = lgetv %rowH.4;
+        symbol [ rowH %tmp.147 259 77 81 ];
+        %tmp.148 = 4;
+        %tmp.149 = sub %tmp.147 %tmp.148;
+        %tmp.150 = 4;
+        invoke %tmp.130 %tmp.131(%tmp.137, %tmp.140, %tmp.146, %tmp.149, %tmp.150);
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 260 16 ]
+        %tmp.151 = lgetv %dc;
+        symbol [ dc %tmp.151 260 16 18 ];
+        symbol [ setColor %tmp.152 260 19 27 ];
+        %tmp.152 = getv function %tmp.151 :setColor;
+        %tmp.153 = 0x000000;
+        symbol [ Graphics %tmp.154 260 38 46 ];
+        %tmp.154 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.155 260 47 64 ];
+        %tmp.155 = getv %tmp.154 :COLOR_TRANSPARENT;
+        invoke %tmp.151 %tmp.152(%tmp.153, %tmp.155);
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_257_21_261_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_257_12_263_12_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_257_12_263_12_if_else_false:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_261_19_263_12_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 262 16 ]
+        %tmp.156 = lgetv %dc;
+        symbol [ dc %tmp.156 262 16 18 ];
+        symbol [ setColor %tmp.157 262 19 27 ];
+        %tmp.157 = getv function %tmp.156 :setColor;
+        %tmp.158 = self;
+        symbol [ _darken %tmp.159 262 28 35 ];
+        %tmp.159 = getv function %tmp.158 :_darken;
+        %tmp.160 = lgetv %col.1;
+        symbol [ col %tmp.160 262 36 39 ];
+        %tmp.161 = invoke %tmp.158 %tmp.159(%tmp.160);
+        symbol [ Graphics %tmp.162 262 42 50 ];
+        %tmp.162 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.163 262 51 68 ];
+        %tmp.163 = getv %tmp.162 :COLOR_TRANSPARENT;
+        invoke %tmp.156 %tmp.157(%tmp.161, %tmp.163);
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_261_19_263_12_stop:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_257_12_263_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 264 12 ]
+        %tmp.164 = lgetv %dc;
+        symbol [ dc %tmp.164 264 12 14 ];
+        symbol [ drawText %tmp.165 264 15 23 ];
+        %tmp.165 = getv function %tmp.164 :drawText;
+        symbol [ _w %tmp.167 264 24 26 ];
+        %tmp.167 = getv ? :_w;
+        %tmp.168 = 2;
+        %tmp.169 = div %tmp.167 %tmp.168;
+        %tmp.170 = lgetv %tY.13;
+        symbol [ tY %tmp.170 264 32 34 ];
+        %tmp.171 = lgetv %fnt.5;
+        symbol [ fnt %tmp.171 264 36 39 ];
+        %tmp.172 = lgetv %msg.12;
+        symbol [ msg %tmp.172 264 41 44 ];
+        symbol [ Graphics %tmp.173 264 46 54 ];
+        %tmp.173 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.174 264 55 74 ];
+        %tmp.174 = getv %tmp.173 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.164 %tmp.165(%tmp.169, %tmp.170, %tmp.171, %tmp.172, %tmp.174);
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 266 12 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_266_12_269_12_if_stmt:
+        %tmp.175 = lgetv %i.9;
+        symbol [ i %tmp.175 266 16 17 ];
+        %tmp.176 = lgetv %n.2;
+        symbol [ n %tmp.176 266 20 21 ];
+        %tmp.177 = 1;
+        %tmp.178 = sub %tmp.176 %tmp.177;
+        %tmp.179 = lt %tmp.175 %tmp.178;
+        bf %tmp.179 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_266_12_269_12_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_266_12_269_12_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_266_27_269_12_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 267 16 ]
+        %tmp.180 = lgetv %dc;
+        symbol [ dc %tmp.180 267 16 18 ];
+        symbol [ setColor %tmp.181 267 19 27 ];
+        %tmp.181 = getv function %tmp.180 :setColor;
+        %tmp.182 = 0x111111;
+        symbol [ Graphics %tmp.183 267 38 46 ];
+        %tmp.183 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.184 267 47 64 ];
+        %tmp.184 = getv %tmp.183 :COLOR_TRANSPARENT;
+        invoke %tmp.180 %tmp.181(%tmp.182, %tmp.184);
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 268 16 ]
+        %tmp.185 = lgetv %dc;
+        symbol [ dc %tmp.185 268 16 18 ];
+        symbol [ drawLine %tmp.186 268 19 27 ];
+        %tmp.186 = getv function %tmp.185 :drawLine;
+        %tmp.187 = 0;
+        %tmp.188 = lgetv %ry.10;
+        symbol [ ry %tmp.188 268 31 33 ];
+        %tmp.189 = lgetv %rowH.4;
+        symbol [ rowH %tmp.189 268 36 40 ];
+        %tmp.190 = add %tmp.188 %tmp.189;
+        %tmp.191 = 1;
+        %tmp.192 = sub %tmp.190 %tmp.191;
+        symbol [ _w %tmp.194 268 46 48 ];
+        %tmp.194 = getv ? :_w;
+        %tmp.195 = lgetv %ry.10;
+        symbol [ ry %tmp.195 268 50 52 ];
+        %tmp.196 = lgetv %rowH.4;
+        symbol [ rowH %tmp.196 268 55 59 ];
+        %tmp.197 = add %tmp.195 %tmp.196;
+        %tmp.198 = 1;
+        %tmp.199 = sub %tmp.197 %tmp.198;
+        invoke %tmp.185 %tmp.186(%tmp.187, %tmp.192, %tmp.194, %tmp.199);
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_266_27_269_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_266_12_269_12_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_266_12_269_12_if_end:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_251_36_270_8_stop:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_251_8_270_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 251 ]
+        %tmp.202 = lgetv %i.9;
+        symbol [ i %tmp.202 251 31 32 ];
+        %tmp.203 = add %tmp.202 1;
+        lputv %i.9 %tmp.203;
+        symbol [ i %i.9 251 31 32 ];
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_251_8_270_8_for_test;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_251_8_270_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 272 8 ]
+        %tmp.204 = lgetv %dc;
+        symbol [ dc %tmp.204 272 8 10 ];
+        symbol [ setColor %tmp.205 272 11 19 ];
+        %tmp.205 = getv function %tmp.204 :setColor;
+        %tmp.206 = 0x1E1E1E;
+        symbol [ Graphics %tmp.207 272 30 38 ];
+        %tmp.207 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.208 272 39 56 ];
+        %tmp.208 = getv %tmp.207 :COLOR_TRANSPARENT;
+        invoke %tmp.204 %tmp.205(%tmp.206, %tmp.208);
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 273 8 ]
+        %tmp.209 = lgetv %dc;
+        symbol [ dc %tmp.209 273 8 10 ];
+        symbol [ drawText %tmp.210 273 11 19 ];
+        %tmp.210 = getv function %tmp.209 :drawText;
+        symbol [ _w %tmp.212 273 20 22 ];
+        %tmp.212 = getv ? :_w;
+        %tmp.213 = 2;
+        %tmp.214 = div %tmp.212 %tmp.213;
+        symbol [ _h %tmp.216 273 28 30 ];
+        %tmp.216 = getv ? :_h;
+        symbol [ _h %tmp.218 273 33 35 ];
+        %tmp.218 = getv ? :_h;
+        %tmp.219 = 5;
+        %tmp.220 = mul %tmp.218 %tmp.219;
+        %tmp.221 = 100;
+        %tmp.222 = div %tmp.220 %tmp.221;
+        %tmp.223 = sub %tmp.216 %tmp.222;
+        symbol [ Graphics %tmp.224 273 47 55 ];
+        %tmp.224 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.225 273 56 66 ];
+        %tmp.225 = getv %tmp.224 :FONT_XTINY;
+        %tmp.226 = "SEL=show  BACK=menu";
+        symbol [ Graphics %tmp.227 274 43 51 ];
+        %tmp.227 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.228 274 52 71 ];
+        %tmp.228 = getv %tmp.227 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.209 %tmp.210(%tmp.214, %tmp.223, %tmp.225, %tmp.226, %tmp.228);
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_223_34_275_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 279; @symbol_functiondef = [_drawShow,279,20,29]; @symbol_param<0> = [dc,279,30,32]; ]
+    protected
+    function _drawShow(dc) {
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_279_34_318_4_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 280 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_279_34_318_4_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_279_34_318_4_stop" ]
+        %col.1 = local;
+        symbol [ col %col.1 280 12 15 ];
+        symbol [ _catColors %tmp.2 280 20 30 ];
+        %tmp.2 = getv ? :_catColors;
+        symbol [ _catIdx %tmp.4 280 31 38 ];
+        %tmp.4 = getv ? :_catIdx;
+        %tmp.5 = agetv %tmp.2 %tmp.4;
+        lputv %col.1 %tmp.5;
+        symbol [ col %col.1 280 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 281 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_279_34_318_4_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_279_34_318_4_stop" ]
+        %isSOS.2 = local;
+        symbol [ isSOS %isSOS.2 281 12 17 ];
+        symbol [ _catIdx %tmp.7 281 21 28 ];
+        %tmp.7 = getv ? :_catIdx;
+        symbol [ CAT_SOS %tmp.9 281 32 39 ];
+        %tmp.9 = getv ? :CAT_SOS;
+        %tmp.10 = eq %tmp.7 %tmp.9;
+        lputv %isSOS.2 %tmp.10;
+        symbol [ isSOS %isSOS.2 281 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 282 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_279_34_318_4_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_279_34_318_4_stop" ]
+        %flash.3 = local;
+        symbol [ flash %flash.3 282 12 17 ];
+        symbol [ _tick %tmp.12 282 21 26 ];
+        %tmp.12 = getv ? :_tick;
+        %tmp.13 = 5;
+        %tmp.14 = mod %tmp.12 %tmp.13;
+        %tmp.15 = 2;
+        %tmp.16 = lt %tmp.14 %tmp.15;
+        lputv %flash.3 %tmp.16;
+        symbol [ flash %flash.3 282 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 284 8 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_284_8_288_8_if_stmt:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_284_12_284_21_begin:
+        %tmp.17 = lgetv %isSOS.2;
+        symbol [ isSOS %tmp.17 284 12 17 ];
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_284_8_288_8_if_else_false;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_284_21_284_21_true:
+        %tmp.18 = lgetv %flash.3;
+        symbol [ flash %tmp.18 284 21 26 ];
+        push %tmp.18;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_284_21_284_21_end:
+        %tmp.19 = phi [%tmp.17 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_284_12_284_21_begin] [%tmp.18 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_284_21_284_21_true] [%tmp.19 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_284_21_284_21_end];
+        bf %tmp.19 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_284_8_288_8_if_else_false;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_284_8_288_8_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_284_28_286_8_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 285 12 ]
+        %tmp.20 = lgetv %dc;
+        symbol [ dc %tmp.20 285 12 14 ];
+        symbol [ setColor %tmp.21 285 15 23 ];
+        %tmp.21 = getv function %tmp.20 :setColor;
+        %tmp.22 = 0xFF0000;
+        %tmp.23 = 0xFF0000;
+        invoke %tmp.20 %tmp.21(%tmp.22, %tmp.23);
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_284_28_286_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_284_8_288_8_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_284_8_288_8_if_else_false:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_286_15_288_8_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 287 12 ]
+        %tmp.24 = lgetv %dc;
+        symbol [ dc %tmp.24 287 12 14 ];
+        symbol [ setColor %tmp.25 287 15 23 ];
+        %tmp.25 = getv function %tmp.24 :setColor;
+        %tmp.26 = 0x000000;
+        %tmp.27 = 0x000000;
+        invoke %tmp.24 %tmp.25(%tmp.26, %tmp.27);
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_286_15_288_8_stop:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_284_8_288_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 289 8 ]
+        %tmp.28 = lgetv %dc;
+        symbol [ dc %tmp.28 289 8 10 ];
+        symbol [ clear %tmp.29 289 11 16 ];
+        %tmp.29 = getv function %tmp.28 :clear;
+        invoke %tmp.28 %tmp.29();
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 292 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_279_34_318_4_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_279_34_318_4_stop" ]
+        %bC.4 = local;
+        symbol [ bC %bC.4 292 12 14 ];
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_292_17_292_57_begin:
+        %tmp.30 = lgetv %isSOS.2;
+        symbol [ isSOS %tmp.30 292 17 22 ];
+        bf %tmp.30 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_292_17_292_57_else_false;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_292_17_292_57_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_292_26_292_45_begin:
+        %tmp.31 = lgetv %flash.3;
+        symbol [ flash %tmp.31 292 26 31 ];
+        bf %tmp.31 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_292_26_292_45_else_false;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_292_26_292_45_true:
+        %tmp.32 = 0xFFFFFF;
+        push %tmp.32;
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_292_26_292_45_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_292_26_292_45_else_false:
+        %tmp.33 = 0xFF2222;
+        push %tmp.33;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_292_26_292_45_end:
+        %tmp.34 = phi [%tmp.31 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_292_26_292_45_begin] [%tmp.32 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_292_26_292_45_true] [%tmp.33 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_292_26_292_45_else_false] [%tmp.34 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_292_26_292_45_end];
+        push %tmp.34;
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_292_17_292_57_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_292_17_292_57_else_false:
+        %tmp.35 = lgetv %col.1;
+        symbol [ col %tmp.35 292 57 60 ];
+        push %tmp.35;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_292_17_292_57_end:
+        %tmp.36 = phi [%tmp.30 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_292_17_292_57_begin] [%tmp.34 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_292_17_292_57_true] [%tmp.35 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_292_17_292_57_else_false] [%tmp.36 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_292_17_292_57_end];
+        lputv %bC.4 %tmp.36;
+        symbol [ bC %bC.4 292 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 293 8 ]
+        %tmp.37 = lgetv %dc;
+        symbol [ dc %tmp.37 293 8 10 ];
+        symbol [ setColor %tmp.38 293 11 19 ];
+        %tmp.38 = getv function %tmp.37 :setColor;
+        %tmp.39 = lgetv %bC.4;
+        symbol [ bC %tmp.39 293 20 22 ];
+        symbol [ Graphics %tmp.40 293 24 32 ];
+        %tmp.40 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.41 293 33 50 ];
+        %tmp.41 = getv %tmp.40 :COLOR_TRANSPARENT;
+        invoke %tmp.37 %tmp.38(%tmp.39, %tmp.41);
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 294 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_279_34_318_4_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_279_34_318_4_stop" ]
+        %bW.5 = local;
+        symbol [ bW %bW.5 294 12 14 ];
+        symbol [ _w %tmp.43 294 17 19 ];
+        %tmp.43 = getv ? :_w;
+        %tmp.44 = 15;
+        %tmp.45 = mul %tmp.43 %tmp.44;
+        %tmp.46 = 1000;
+        %tmp.47 = div %tmp.45 %tmp.46;
+        lputv %bW.5 %tmp.47;
+        symbol [ bW %bW.5 294 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 294 33 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_294_33_294_55_if_stmt:
+        %tmp.48 = lgetv %bW.5;
+        symbol [ bW %tmp.48 294 37 39 ];
+        %tmp.49 = 3;
+        %tmp.50 = lt %tmp.48 %tmp.49;
+        bf %tmp.50 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_294_33_294_55_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_294_33_294_55_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_294_45_294_55_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 294 47 ]
+        %tmp.51 = 3;
+        lputv %bW.5 %tmp.51;
+        symbol [ bW %bW.5 294 47 49 ];
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_294_45_294_55_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_294_33_294_55_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_294_33_294_55_if_end:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 295 8 ]
+        for @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_295_8_297_8_for_test @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_295_8_297_8_for_incr @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_295_8_297_8_for_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_295_8_297_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_295_8_297_8_for_begin" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_295_8_297_8_for_end" ]
+        %b.6 = local;
+        symbol [ b %b.6 295 17 18 ];
+        %tmp.52 = 0;
+        lputv %b.6 %tmp.52;
+        symbol [ b %b.6 295 17 18 ];
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_295_8_297_8_for_test:
+        %tmp.53 = lgetv %b.6;
+        symbol [ b %tmp.53 295 24 25 ];
+        %tmp.54 = lgetv %bW.5;
+        symbol [ bW %tmp.54 295 28 30 ];
+        %tmp.55 = lt %tmp.53 %tmp.54;
+        bf %tmp.55 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_295_8_297_8_for_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_295_8_297_8_for_begin:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_295_37_297_8_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 296 12 ]
+        %tmp.56 = lgetv %dc;
+        symbol [ dc %tmp.56 296 12 14 ];
+        symbol [ drawRectangle %tmp.57 296 15 28 ];
+        %tmp.57 = getv function %tmp.56 :drawRectangle;
+        %tmp.58 = lgetv %b.6;
+        symbol [ b %tmp.58 296 29 30 ];
+        %tmp.59 = lgetv %b.6;
+        symbol [ b %tmp.59 296 32 33 ];
+        symbol [ _w %tmp.61 296 35 37 ];
+        %tmp.61 = getv ? :_w;
+        %tmp.62 = lgetv %b.6;
+        symbol [ b %tmp.62 296 40 41 ];
+        %tmp.63 = 2;
+        %tmp.64 = mul %tmp.62 %tmp.63;
+        %tmp.65 = sub %tmp.61 %tmp.64;
+        symbol [ _h %tmp.67 296 47 49 ];
+        %tmp.67 = getv ? :_h;
+        %tmp.68 = lgetv %b.6;
+        symbol [ b %tmp.68 296 52 53 ];
+        %tmp.69 = 2;
+        %tmp.70 = mul %tmp.68 %tmp.69;
+        %tmp.71 = sub %tmp.67 %tmp.70;
+        invoke %tmp.56 %tmp.57(%tmp.58, %tmp.59, %tmp.65, %tmp.71);
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_295_37_297_8_stop:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_295_8_297_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 295 ]
+        %tmp.74 = lgetv %b.6;
+        symbol [ b %tmp.74 295 32 33 ];
+        %tmp.75 = add %tmp.74 1;
+        lputv %b.6 %tmp.75;
+        symbol [ b %b.6 295 32 33 ];
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_295_8_297_8_for_test;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_295_8_297_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 299 8 ]
+        %tmp.76 = lgetv %dc;
+        symbol [ dc %tmp.76 299 8 10 ];
+        symbol [ setColor %tmp.77 299 11 19 ];
+        %tmp.77 = getv function %tmp.76 :setColor;
+        %tmp.78 = self;
+        symbol [ _darken %tmp.79 299 20 27 ];
+        %tmp.79 = getv function %tmp.78 :_darken;
+        %tmp.80 = lgetv %bC.4;
+        symbol [ bC %tmp.80 299 28 30 ];
+        %tmp.81 = invoke %tmp.78 %tmp.79(%tmp.80);
+        symbol [ Graphics %tmp.82 299 33 41 ];
+        %tmp.82 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.83 299 42 59 ];
+        %tmp.83 = getv %tmp.82 :COLOR_TRANSPARENT;
+        invoke %tmp.76 %tmp.77(%tmp.81, %tmp.83);
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 300 8 ]
+        %tmp.84 = lgetv %dc;
+        symbol [ dc %tmp.84 300 8 10 ];
+        symbol [ drawText %tmp.85 300 11 19 ];
+        %tmp.85 = getv function %tmp.84 :drawText;
+        symbol [ _w %tmp.87 300 20 22 ];
+        %tmp.87 = getv ? :_w;
+        %tmp.88 = 2;
+        %tmp.89 = div %tmp.87 %tmp.88;
+        symbol [ _h %tmp.91 300 28 30 ];
+        %tmp.91 = getv ? :_h;
+        %tmp.92 = 3;
+        %tmp.93 = mul %tmp.91 %tmp.92;
+        %tmp.94 = 100;
+        %tmp.95 = div %tmp.93 %tmp.94;
+        symbol [ Graphics %tmp.96 300 42 50 ];
+        %tmp.96 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.97 300 51 61 ];
+        %tmp.97 = getv %tmp.96 :FONT_XTINY;
+        symbol [ _cats %tmp.99 300 63 68 ];
+        %tmp.99 = getv ? :_cats;
+        symbol [ _catIdx %tmp.101 300 69 76 ];
+        %tmp.101 = getv ? :_catIdx;
+        %tmp.102 = agetv %tmp.99 %tmp.101;
+        symbol [ Graphics %tmp.103 300 79 87 ];
+        %tmp.103 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.104 300 88 107 ];
+        %tmp.104 = getv %tmp.103 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.84 %tmp.85(%tmp.89, %tmp.95, %tmp.97, %tmp.102, %tmp.104);
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 303 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_279_34_318_4_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_279_34_318_4_stop" ]
+        %textC.7 = local;
+        symbol [ textC %textC.7 303 12 17 ];
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_303_20_303_60_begin:
+        %tmp.105 = lgetv %isSOS.2;
+        symbol [ isSOS %tmp.105 303 20 25 ];
+        bf %tmp.105 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_303_20_303_60_else_false;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_303_20_303_60_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_303_29_303_48_begin:
+        %tmp.106 = lgetv %flash.3;
+        symbol [ flash %tmp.106 303 29 34 ];
+        bf %tmp.106 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_303_29_303_48_else_false;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_303_29_303_48_true:
+        %tmp.107 = 0xFFFFFF;
+        push %tmp.107;
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_303_29_303_48_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_303_29_303_48_else_false:
+        %tmp.108 = 0xFF2222;
+        push %tmp.108;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_303_29_303_48_end:
+        %tmp.109 = phi [%tmp.106 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_303_29_303_48_begin] [%tmp.107 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_303_29_303_48_true] [%tmp.108 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_303_29_303_48_else_false] [%tmp.109 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_303_29_303_48_end];
+        push %tmp.109;
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_303_20_303_60_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_303_20_303_60_else_false:
+        %tmp.110 = lgetv %col.1;
+        symbol [ col %tmp.110 303 60 63 ];
+        push %tmp.110;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_303_20_303_60_end:
+        %tmp.111 = phi [%tmp.105 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_303_20_303_60_begin] [%tmp.109 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_303_20_303_60_true] [%tmp.110 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_303_20_303_60_else_false] [%tmp.111 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_303_20_303_60_end];
+        lputv %textC.7 %tmp.111;
+        symbol [ textC %textC.7 303 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 304 8 ]
+        %tmp.112 = lgetv %dc;
+        symbol [ dc %tmp.112 304 8 10 ];
+        symbol [ setColor %tmp.113 304 11 19 ];
+        %tmp.113 = getv function %tmp.112 :setColor;
+        %tmp.114 = lgetv %textC.7;
+        symbol [ textC %tmp.114 304 20 25 ];
+        symbol [ Graphics %tmp.115 304 27 35 ];
+        %tmp.115 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.116 304 36 53 ];
+        %tmp.116 = getv %tmp.115 :COLOR_TRANSPARENT;
+        invoke %tmp.112 %tmp.113(%tmp.114, %tmp.116);
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 305 8 ]
+        %tmp.117 = self;
+        symbol [ _drawMsgLarge %tmp.118 305 8 21 ];
+        %tmp.118 = getv function %tmp.117 :_drawMsgLarge;
+        %tmp.119 = lgetv %dc;
+        symbol [ dc %tmp.119 305 22 24 ];
+        symbol [ _msgs %tmp.121 305 26 31 ];
+        %tmp.121 = getv ? :_msgs;
+        symbol [ _catIdx %tmp.123 305 32 39 ];
+        %tmp.123 = getv ? :_catIdx;
+        %tmp.124 = agetv %tmp.121 %tmp.123;
+        symbol [ _msgIdx %tmp.126 305 41 48 ];
+        %tmp.126 = getv ? :_msgIdx;
+        %tmp.127 = agetv %tmp.124 %tmp.126;
+        invoke %tmp.117 %tmp.118(%tmp.119, %tmp.127);
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 308 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_279_34_318_4_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_279_34_318_4_stop" ]
+        %n.8 = local;
+        symbol [ n %n.8 308 12 13 ];
+        symbol [ _msgCounts %tmp.129 308 16 26 ];
+        %tmp.129 = getv ? :_msgCounts;
+        symbol [ _catIdx %tmp.131 308 27 34 ];
+        %tmp.131 = getv ? :_catIdx;
+        %tmp.132 = agetv %tmp.129 %tmp.131;
+        lputv %n.8 %tmp.132;
+        symbol [ n %n.8 308 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 309 8 ]
+        %tmp.133 = lgetv %dc;
+        symbol [ dc %tmp.133 309 8 10 ];
+        symbol [ setColor %tmp.134 309 11 19 ];
+        %tmp.134 = getv function %tmp.133 :setColor;
+        %tmp.135 = 0x2A2A2A;
+        symbol [ Graphics %tmp.136 309 30 38 ];
+        %tmp.136 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.137 309 39 56 ];
+        %tmp.137 = getv %tmp.136 :COLOR_TRANSPARENT;
+        invoke %tmp.133 %tmp.134(%tmp.135, %tmp.137);
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 310 8 ]
+        %tmp.138 = lgetv %dc;
+        symbol [ dc %tmp.138 310 8 10 ];
+        symbol [ drawText %tmp.139 310 11 19 ];
+        %tmp.139 = getv function %tmp.138 :drawText;
+        symbol [ _w %tmp.141 310 20 22 ];
+        %tmp.141 = getv ? :_w;
+        %tmp.142 = 2;
+        %tmp.143 = div %tmp.141 %tmp.142;
+        symbol [ _h %tmp.145 310 28 30 ];
+        %tmp.145 = getv ? :_h;
+        symbol [ _h %tmp.147 310 33 35 ];
+        %tmp.147 = getv ? :_h;
+        %tmp.148 = 8;
+        %tmp.149 = mul %tmp.147 %tmp.148;
+        %tmp.150 = 100;
+        %tmp.151 = div %tmp.149 %tmp.150;
+        %tmp.152 = sub %tmp.145 %tmp.151;
+        symbol [ Graphics %tmp.153 310 47 55 ];
+        %tmp.153 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.154 310 56 66 ];
+        %tmp.154 = getv %tmp.153 :FONT_XTINY;
+        %tmp.155 = "";
+        symbol [ _msgIdx %tmp.157 311 26 33 ];
+        %tmp.157 = getv ? :_msgIdx;
+        %tmp.158 = 1;
+        %tmp.159 = add %tmp.157 %tmp.158;
+        %tmp.160 = add %tmp.155 %tmp.159;
+        %tmp.161 = " / ";
+        %tmp.162 = add %tmp.160 %tmp.161;
+        %tmp.163 = lgetv %n.8;
+        symbol [ n %tmp.163 311 49 50 ];
+        %tmp.164 = add %tmp.162 %tmp.163;
+        symbol [ Graphics %tmp.165 311 52 60 ];
+        %tmp.165 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.166 311 61 80 ];
+        %tmp.166 = getv %tmp.165 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.138 %tmp.139(%tmp.143, %tmp.152, %tmp.154, %tmp.164, %tmp.166);
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 313 8 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_313_8_317_8_if_stmt:
+        symbol [ _tick %tmp.168 313 12 17 ];
+        %tmp.168 = getv ? :_tick;
+        %tmp.169 = 18;
+        %tmp.170 = mod %tmp.168 %tmp.169;
+        %tmp.171 = 9;
+        %tmp.172 = gt %tmp.170 %tmp.171;
+        bf %tmp.172 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_313_8_317_8_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_313_8_317_8_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_313_28_317_8_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 314 12 ]
+        %tmp.173 = lgetv %dc;
+        symbol [ dc %tmp.173 314 12 14 ];
+        symbol [ setColor %tmp.174 314 15 23 ];
+        %tmp.174 = getv function %tmp.173 :setColor;
+        %tmp.175 = 0x222222;
+        symbol [ Graphics %tmp.176 314 34 42 ];
+        %tmp.176 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.177 314 43 60 ];
+        %tmp.177 = getv %tmp.176 :COLOR_TRANSPARENT;
+        invoke %tmp.173 %tmp.174(%tmp.175, %tmp.177);
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 315 12 ]
+        %tmp.178 = lgetv %dc;
+        symbol [ dc %tmp.178 315 12 14 ];
+        symbol [ drawText %tmp.179 315 15 23 ];
+        %tmp.179 = getv function %tmp.178 :drawText;
+        symbol [ _w %tmp.181 315 24 26 ];
+        %tmp.181 = getv ? :_w;
+        %tmp.182 = 2;
+        %tmp.183 = div %tmp.181 %tmp.182;
+        symbol [ _h %tmp.185 315 32 34 ];
+        %tmp.185 = getv ? :_h;
+        symbol [ _h %tmp.187 315 37 39 ];
+        %tmp.187 = getv ? :_h;
+        %tmp.188 = 4;
+        %tmp.189 = mul %tmp.187 %tmp.188;
+        %tmp.190 = 100;
+        %tmp.191 = div %tmp.189 %tmp.190;
+        %tmp.192 = sub %tmp.185 %tmp.191;
+        symbol [ Graphics %tmp.193 315 51 59 ];
+        %tmp.193 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.194 315 60 70 ];
+        %tmp.194 = getv %tmp.193 :FONT_XTINY;
+        %tmp.195 = "^/v msg  tap=back";
+        symbol [ Graphics %tmp.196 316 45 53 ];
+        %tmp.196 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.197 316 54 73 ];
+        %tmp.197 = getv %tmp.196 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.178 %tmp.179(%tmp.183, %tmp.192, %tmp.194, %tmp.195, %tmp.197);
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_313_28_317_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_313_8_317_8_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_313_8_317_8_if_end:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_279_34_318_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 322; @symbol_functiondef = [_drawMsgLarge,322,20,33]; @symbol_param<0> = [dc,322,34,36]; @symbol_param<1> = [msg,322,38,41]; ]
+    protected
+    function _drawMsgLarge(dc, msg) {
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_322_43_369_4_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 323 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_322_43_369_4_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_322_43_369_4_stop" ]
+        %len.1 = local;
+        symbol [ len %len.1 323 12 15 ];
+        %tmp.1 = lgetv %msg;
+        symbol [ msg %tmp.1 323 20 23 ];
+        symbol [ length %tmp.2 323 24 30 ];
+        %tmp.2 = getv function %tmp.1 :length;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        lputv %len.1 %tmp.3;
+        symbol [ len %len.1 323 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 324 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_322_43_369_4_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_322_43_369_4_stop" ]
+        %line1.2 = local;
+        symbol [ line1 %line1.2 324 12 17 ];
+        %tmp.4 = lgetv %msg;
+        symbol [ msg %tmp.4 324 20 23 ];
+        lputv %line1.2 %tmp.4;
+        symbol [ line1 %line1.2 324 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 325 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_322_43_369_4_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_322_43_369_4_stop" ]
+        %line2.3 = local;
+        symbol [ line2 %line2.3 325 12 17 ];
+        %tmp.5 = "";
+        lputv %line2.3 %tmp.5;
+        symbol [ line2 %line2.3 325 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 328 8 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_328_8_342_8_if_stmt:
+        %tmp.6 = lgetv %len.1;
+        symbol [ len %tmp.6 328 12 15 ];
+        %tmp.7 = 6;
+        %tmp.8 = gt %tmp.6 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_328_8_342_8_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_328_8_342_8_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_328_21_342_8_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 329 12 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_328_21_342_8_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_328_21_342_8_stop" ]
+        %mid.4 = local;
+        symbol [ mid %mid.4 329 16 19 ];
+        %tmp.9 = lgetv %len.1;
+        symbol [ len %tmp.9 329 27 30 ];
+        %tmp.10 = 2;
+        %tmp.11 = div %tmp.9 %tmp.10;
+        lputv %mid.4 %tmp.11;
+        symbol [ mid %mid.4 329 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 330 12 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_328_21_342_8_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_328_21_342_8_stop" ]
+        %bestI.5 = local;
+        symbol [ bestI %bestI.5 330 16 21 ];
+        %tmp.12 = -1;
+        lputv %bestI.5 %tmp.12;
+        symbol [ bestI %bestI.5 330 16 21 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 331 12 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_328_21_342_8_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_328_21_342_8_stop" ]
+        %bestDist.6 = local;
+        symbol [ bestDist %bestDist.6 331 16 24 ];
+        %tmp.13 = lgetv %len.1;
+        symbol [ len %tmp.13 331 27 30 ];
+        %tmp.14 = 1;
+        %tmp.15 = add %tmp.13 %tmp.14;
+        lputv %bestDist.6 %tmp.15;
+        symbol [ bestDist %bestDist.6 331 16 24 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 332 12 ]
+        for @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_332_12_337_12_for_test @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_332_12_337_12_for_incr @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_332_12_337_12_for_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_332_12_337_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_332_12_337_12_for_begin" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_332_12_337_12_for_end" ]
+        %i.7 = local;
+        symbol [ i %i.7 332 21 22 ];
+        %tmp.16 = 0;
+        lputv %i.7 %tmp.16;
+        symbol [ i %i.7 332 21 22 ];
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_332_12_337_12_for_test:
+        %tmp.17 = lgetv %i.7;
+        symbol [ i %tmp.17 332 28 29 ];
+        %tmp.18 = lgetv %len.1;
+        symbol [ len %tmp.18 332 32 35 ];
+        %tmp.19 = lt %tmp.17 %tmp.18;
+        bf %tmp.19 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_332_12_337_12_for_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_332_12_337_12_for_begin:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_332_42_337_12_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 333 16 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_333_16_336_16_if_stmt:
+        %tmp.20 = lgetv %msg;
+        symbol [ msg %tmp.20 333 20 23 ];
+        symbol [ substring %tmp.21 333 24 33 ];
+        %tmp.21 = getv function %tmp.20 :substring;
+        %tmp.22 = lgetv %i.7;
+        symbol [ i %tmp.22 333 34 35 ];
+        %tmp.23 = lgetv %i.7;
+        symbol [ i %tmp.23 333 37 38 ];
+        %tmp.24 = 1;
+        %tmp.25 = add %tmp.23 %tmp.24;
+        %tmp.26 = invoke %tmp.20 %tmp.21(%tmp.22, %tmp.25);
+        symbol [ equals %tmp.27 333 44 50 ];
+        %tmp.27 = getv function %tmp.26 :equals;
+        %tmp.28 = " ";
+        %tmp.29 = invoke %tmp.26 %tmp.27(%tmp.28);
+        bf %tmp.29 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_333_16_336_16_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_333_16_336_16_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_333_57_336_16_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 334 20 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_333_57_336_16_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_333_57_336_16_stop" ]
+        %d.8 = local;
+        symbol [ d %d.8 334 24 25 ];
+        %tmp.30 = lgetv %i.7;
+        symbol [ i %tmp.30 334 29 30 ];
+        %tmp.31 = lgetv %mid.4;
+        symbol [ mid %tmp.31 334 33 36 ];
+        %tmp.32 = sub %tmp.30 %tmp.31;
+        symbol [ abs %tmp.33 334 38 41 ];
+        %tmp.33 = getv function %tmp.32 :abs;
+        %tmp.34 = invoke %tmp.32 %tmp.33();
+        lputv %d.8 %tmp.34;
+        symbol [ d %d.8 334 24 25 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 335 20 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_335_20_335_65_if_stmt:
+        %tmp.35 = lgetv %d.8;
+        symbol [ d %tmp.35 335 24 25 ];
+        %tmp.36 = lgetv %bestDist.6;
+        symbol [ bestDist %tmp.36 335 28 36 ];
+        %tmp.37 = lt %tmp.35 %tmp.36;
+        bf %tmp.37 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_335_20_335_65_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_335_20_335_65_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_335_38_335_65_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 335 40 ]
+        %tmp.38 = lgetv %d.8;
+        symbol [ d %tmp.38 335 51 52 ];
+        lputv %bestDist.6 %tmp.38;
+        symbol [ bestDist %bestDist.6 335 40 48 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 335 54 ]
+        %tmp.39 = lgetv %i.7;
+        symbol [ i %tmp.39 335 62 63 ];
+        lputv %bestI.5 %tmp.39;
+        symbol [ bestI %bestI.5 335 54 59 ];
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_335_38_335_65_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_335_20_335_65_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_335_20_335_65_if_end:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_333_57_336_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_333_16_336_16_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_333_16_336_16_if_end:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_332_42_337_12_stop:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_332_12_337_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 332 ]
+        %tmp.42 = lgetv %i.7;
+        symbol [ i %tmp.42 332 37 38 ];
+        %tmp.43 = add %tmp.42 1;
+        lputv %i.7 %tmp.43;
+        symbol [ i %i.7 332 37 38 ];
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_332_12_337_12_for_test;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_332_12_337_12_for_end:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 338 12 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_338_12_341_12_if_stmt:
+        %tmp.44 = lgetv %bestI.5;
+        symbol [ bestI %tmp.44 338 16 21 ];
+        %tmp.45 = 0;
+        %tmp.46 = gt %tmp.44 %tmp.45;
+        bf %tmp.46 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_338_12_341_12_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_338_12_341_12_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_338_27_341_12_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 339 16 ]
+        %tmp.47 = lgetv %msg;
+        symbol [ msg %tmp.47 339 24 27 ];
+        symbol [ substring %tmp.48 339 28 37 ];
+        %tmp.48 = getv function %tmp.47 :substring;
+        %tmp.49 = 0;
+        %tmp.50 = lgetv %bestI.5;
+        symbol [ bestI %tmp.50 339 41 46 ];
+        %tmp.51 = invoke %tmp.47 %tmp.48(%tmp.49, %tmp.50);
+        lputv %line1.2 %tmp.51;
+        symbol [ line1 %line1.2 339 16 21 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 340 16 ]
+        %tmp.52 = lgetv %msg;
+        symbol [ msg %tmp.52 340 24 27 ];
+        symbol [ substring %tmp.53 340 28 37 ];
+        %tmp.53 = getv function %tmp.52 :substring;
+        %tmp.54 = lgetv %bestI.5;
+        symbol [ bestI %tmp.54 340 38 43 ];
+        %tmp.55 = 1;
+        %tmp.56 = add %tmp.54 %tmp.55;
+        %tmp.57 = lgetv %len.1;
+        symbol [ len %tmp.57 340 49 52 ];
+        %tmp.58 = invoke %tmp.52 %tmp.53(%tmp.56, %tmp.57);
+        lputv %line2.3 %tmp.58;
+        symbol [ line2 %line2.3 340 16 21 ];
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_338_27_341_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_338_12_341_12_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_338_12_341_12_if_end:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_328_21_342_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_328_8_342_8_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_328_8_342_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 345 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_322_43_369_4_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_322_43_369_4_stop" ]
+        %zoneTop.9 = local;
+        symbol [ zoneTop %zoneTop.9 345 12 19 ];
+        symbol [ _h %tmp.60 345 22 24 ];
+        %tmp.60 = getv ? :_h;
+        %tmp.61 = 7;
+        %tmp.62 = mul %tmp.60 %tmp.61;
+        %tmp.63 = 100;
+        %tmp.64 = div %tmp.62 %tmp.63;
+        lputv %zoneTop.9 %tmp.64;
+        symbol [ zoneTop %zoneTop.9 345 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 346 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_322_43_369_4_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_322_43_369_4_stop" ]
+        %zoneBot.10 = local;
+        symbol [ zoneBot %zoneBot.10 346 12 19 ];
+        symbol [ _h %tmp.66 346 22 24 ];
+        %tmp.66 = getv ? :_h;
+        symbol [ _h %tmp.68 346 27 29 ];
+        %tmp.68 = getv ? :_h;
+        %tmp.69 = 9;
+        %tmp.70 = mul %tmp.68 %tmp.69;
+        %tmp.71 = 100;
+        %tmp.72 = div %tmp.70 %tmp.71;
+        %tmp.73 = sub %tmp.66 %tmp.72;
+        lputv %zoneBot.10 %tmp.73;
+        symbol [ zoneBot %zoneBot.10 346 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 347 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_322_43_369_4_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_322_43_369_4_stop" ]
+        %zoneMid.11 = local;
+        symbol [ zoneMid %zoneMid.11 347 12 19 ];
+        %tmp.74 = lgetv %zoneTop.9;
+        symbol [ zoneTop %tmp.74 347 23 30 ];
+        %tmp.75 = lgetv %zoneBot.10;
+        symbol [ zoneBot %tmp.75 347 33 40 ];
+        %tmp.76 = add %tmp.74 %tmp.75;
+        %tmp.77 = 2;
+        %tmp.78 = div %tmp.76 %tmp.77;
+        lputv %zoneMid.11 %tmp.78;
+        symbol [ zoneMid %zoneMid.11 347 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 349 8 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_349_8_368_8_if_stmt:
+        %tmp.79 = lgetv %line2.3;
+        symbol [ line2 %tmp.79 349 12 17 ];
+        symbol [ equals %tmp.80 349 18 24 ];
+        %tmp.80 = getv function %tmp.79 :equals;
+        %tmp.81 = "";
+        %tmp.82 = invoke %tmp.79 %tmp.80(%tmp.81);
+        bf %tmp.82 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_349_8_368_8_if_else_false;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_349_8_368_8_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_349_30_357_8_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 350 12 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_349_30_357_8_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_349_30_357_8_stop" ]
+        %fnt.12 = local;
+        symbol [ fnt %fnt.12 350 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 351 12 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_349_30_357_8_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_349_30_357_8_stop" ]
+        %fntH.13 = local;
+        symbol [ fntH %fntH.13 351 16 20 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 352 12 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_352_12_354_62_if_stmt:
+        %tmp.83 = lgetv %len.1;
+        symbol [ len %tmp.83 352 21 24 ];
+        %tmp.84 = 5;
+        %tmp.85 = lte %tmp.83 %tmp.84;
+        bf %tmp.85 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_352_12_354_62_if_false;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_352_12_354_62_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_352_32_352_62_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 352 34 ]
+        symbol [ Graphics %tmp.86 352 40 48 ];
+        %tmp.86 = getm $.Toybox.Graphics;
+        symbol [ FONT_LARGE %tmp.87 352 49 59 ];
+        %tmp.87 = getv %tmp.86 :FONT_LARGE;
+        lputv %fnt.12 %tmp.87;
+        symbol [ fnt %fnt.12 352 34 37 ];
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_352_32_352_62_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_352_12_354_62_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_352_12_354_62_if_false:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 353 17 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_353_17_354_62_if_stmt:
+        %tmp.88 = lgetv %len.1;
+        symbol [ len %tmp.88 353 21 24 ];
+        %tmp.89 = 10;
+        %tmp.90 = lte %tmp.88 %tmp.89;
+        bf %tmp.90 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_353_17_354_62_if_else_false;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_353_17_354_62_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_353_32_353_62_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 353 34 ]
+        symbol [ Graphics %tmp.91 353 40 48 ];
+        %tmp.91 = getm $.Toybox.Graphics;
+        symbol [ FONT_MEDIUM %tmp.92 353 49 60 ];
+        %tmp.92 = getv %tmp.91 :FONT_MEDIUM;
+        lputv %fnt.12 %tmp.92;
+        symbol [ fnt %fnt.12 353 34 37 ];
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_353_32_353_62_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_353_17_354_62_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_353_17_354_62_if_else_false:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_354_32_354_62_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 354 34 ]
+        symbol [ Graphics %tmp.93 354 40 48 ];
+        %tmp.93 = getm $.Toybox.Graphics;
+        symbol [ FONT_SMALL %tmp.94 354 49 59 ];
+        %tmp.94 = getv %tmp.93 :FONT_SMALL;
+        lputv %fnt.12 %tmp.94;
+        symbol [ fnt %fnt.12 354 34 37 ];
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_354_32_354_62_stop:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_353_17_354_62_if_end:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_352_12_354_62_if_end:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 355 12 ]
+        %tmp.95 = lgetv %dc;
+        symbol [ dc %tmp.95 355 19 21 ];
+        symbol [ getFontHeight %tmp.96 355 22 35 ];
+        %tmp.96 = getv function %tmp.95 :getFontHeight;
+        %tmp.97 = lgetv %fnt.12;
+        symbol [ fnt %tmp.97 355 36 39 ];
+        %tmp.98 = invoke %tmp.95 %tmp.96(%tmp.97);
+        lputv %fntH.13 %tmp.98;
+        symbol [ fntH %fntH.13 355 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 356 12 ]
+        %tmp.99 = lgetv %dc;
+        symbol [ dc %tmp.99 356 12 14 ];
+        symbol [ drawText %tmp.100 356 15 23 ];
+        %tmp.100 = getv function %tmp.99 :drawText;
+        symbol [ _w %tmp.102 356 24 26 ];
+        %tmp.102 = getv ? :_w;
+        %tmp.103 = 2;
+        %tmp.104 = div %tmp.102 %tmp.103;
+        %tmp.105 = lgetv %zoneMid.11;
+        symbol [ zoneMid %tmp.105 356 32 39 ];
+        %tmp.106 = lgetv %fntH.13;
+        symbol [ fntH %tmp.106 356 42 46 ];
+        %tmp.107 = 2;
+        %tmp.108 = div %tmp.106 %tmp.107;
+        %tmp.109 = sub %tmp.105 %tmp.108;
+        %tmp.110 = lgetv %fnt.12;
+        symbol [ fnt %tmp.110 356 52 55 ];
+        %tmp.111 = lgetv %line1.2;
+        symbol [ line1 %tmp.111 356 57 62 ];
+        symbol [ Graphics %tmp.112 356 64 72 ];
+        %tmp.112 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.113 356 73 92 ];
+        %tmp.113 = getv %tmp.112 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.99 %tmp.100(%tmp.104, %tmp.109, %tmp.110, %tmp.111, %tmp.113);
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_349_30_357_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_349_8_368_8_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_349_8_368_8_if_else_false:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_357_15_368_8_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 358 12 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_357_15_368_8_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_357_15_368_8_stop" ]
+        %maxL.14 = local;
+        symbol [ maxL %maxL.14 358 16 20 ];
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_358_23_358_87_begin:
+        %tmp.114 = lgetv %line1.2;
+        symbol [ line1 %tmp.114 358 23 28 ];
+        symbol [ length %tmp.115 358 29 35 ];
+        %tmp.115 = getv function %tmp.114 :length;
+        %tmp.116 = invoke %tmp.114 %tmp.115();
+        %tmp.117 = lgetv %line2.3;
+        symbol [ line2 %tmp.117 358 40 45 ];
+        symbol [ length %tmp.118 358 46 52 ];
+        %tmp.118 = getv function %tmp.117 :length;
+        %tmp.119 = invoke %tmp.117 %tmp.118();
+        %tmp.120 = gt %tmp.116 %tmp.119;
+        bf %tmp.120 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_358_23_358_87_else_false;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_358_23_358_87_true:
+        %tmp.121 = lgetv %line1.2;
+        symbol [ line1 %tmp.121 358 57 62 ];
+        symbol [ length %tmp.122 358 63 69 ];
+        %tmp.122 = getv function %tmp.121 :length;
+        %tmp.123 = invoke %tmp.121 %tmp.122();
+        push %tmp.123;
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_358_23_358_87_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_358_23_358_87_else_false:
+        %tmp.124 = lgetv %line2.3;
+        symbol [ line2 %tmp.124 358 74 79 ];
+        symbol [ length %tmp.125 358 80 86 ];
+        %tmp.125 = getv function %tmp.124 :length;
+        %tmp.126 = invoke %tmp.124 %tmp.125();
+        push %tmp.126;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_358_23_358_87_end:
+        %tmp.127 = phi [%tmp.120 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_358_23_358_87_begin] [%tmp.123 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_358_23_358_87_true] [%tmp.126 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_358_23_358_87_else_false] [%tmp.127 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_358_23_358_87_end];
+        lputv %maxL.14 %tmp.127;
+        symbol [ maxL %maxL.14 358 16 20 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 359 12 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_357_15_368_8_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_357_15_368_8_stop" ]
+        %fnt.15 = local;
+        symbol [ fnt %fnt.15 359 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 360 12 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_357_15_368_8_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_357_15_368_8_stop" ]
+        %fntH.16 = local;
+        symbol [ fntH %fntH.16 360 16 20 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 361 12 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_361_12_363_62_if_stmt:
+        %tmp.128 = lgetv %maxL.14;
+        symbol [ maxL %tmp.128 361 21 25 ];
+        %tmp.129 = 5;
+        %tmp.130 = lte %tmp.128 %tmp.129;
+        bf %tmp.130 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_361_12_363_62_if_false;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_361_12_363_62_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_361_32_361_62_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 361 34 ]
+        symbol [ Graphics %tmp.131 361 40 48 ];
+        %tmp.131 = getm $.Toybox.Graphics;
+        symbol [ FONT_LARGE %tmp.132 361 49 59 ];
+        %tmp.132 = getv %tmp.131 :FONT_LARGE;
+        lputv %fnt.15 %tmp.132;
+        symbol [ fnt %fnt.15 361 34 37 ];
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_361_32_361_62_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_361_12_363_62_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_361_12_363_62_if_false:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 362 17 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_362_17_363_62_if_stmt:
+        %tmp.133 = lgetv %maxL.14;
+        symbol [ maxL %tmp.133 362 21 25 ];
+        %tmp.134 = 8;
+        %tmp.135 = lte %tmp.133 %tmp.134;
+        bf %tmp.135 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_362_17_363_62_if_else_false;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_362_17_363_62_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_362_32_362_62_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 362 34 ]
+        symbol [ Graphics %tmp.136 362 40 48 ];
+        %tmp.136 = getm $.Toybox.Graphics;
+        symbol [ FONT_MEDIUM %tmp.137 362 49 60 ];
+        %tmp.137 = getv %tmp.136 :FONT_MEDIUM;
+        lputv %fnt.15 %tmp.137;
+        symbol [ fnt %fnt.15 362 34 37 ];
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_362_32_362_62_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_362_17_363_62_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_362_17_363_62_if_else_false:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_363_32_363_62_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 363 34 ]
+        symbol [ Graphics %tmp.138 363 40 48 ];
+        %tmp.138 = getm $.Toybox.Graphics;
+        symbol [ FONT_SMALL %tmp.139 363 49 59 ];
+        %tmp.139 = getv %tmp.138 :FONT_SMALL;
+        lputv %fnt.15 %tmp.139;
+        symbol [ fnt %fnt.15 363 34 37 ];
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_363_32_363_62_stop:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_362_17_363_62_if_end:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_361_12_363_62_if_end:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 364 12 ]
+        %tmp.140 = lgetv %dc;
+        symbol [ dc %tmp.140 364 19 21 ];
+        symbol [ getFontHeight %tmp.141 364 22 35 ];
+        %tmp.141 = getv function %tmp.140 :getFontHeight;
+        %tmp.142 = lgetv %fnt.15;
+        symbol [ fnt %tmp.142 364 36 39 ];
+        %tmp.143 = invoke %tmp.140 %tmp.141(%tmp.142);
+        lputv %fntH.16 %tmp.143;
+        symbol [ fntH %fntH.16 364 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 365 12 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_357_15_368_8_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_357_15_368_8_stop" ]
+        %gap.17 = local;
+        symbol [ gap %gap.17 365 16 19 ];
+        %tmp.144 = lgetv %fntH.16;
+        symbol [ fntH %tmp.144 365 22 26 ];
+        %tmp.145 = 4;
+        %tmp.146 = add %tmp.144 %tmp.145;
+        lputv %gap.17 %tmp.146;
+        symbol [ gap %gap.17 365 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 366 12 ]
+        %tmp.147 = lgetv %dc;
+        symbol [ dc %tmp.147 366 12 14 ];
+        symbol [ drawText %tmp.148 366 15 23 ];
+        %tmp.148 = getv function %tmp.147 :drawText;
+        symbol [ _w %tmp.150 366 24 26 ];
+        %tmp.150 = getv ? :_w;
+        %tmp.151 = 2;
+        %tmp.152 = div %tmp.150 %tmp.151;
+        %tmp.153 = lgetv %zoneMid.11;
+        symbol [ zoneMid %tmp.153 366 32 39 ];
+        %tmp.154 = lgetv %gap.17;
+        symbol [ gap %tmp.154 366 42 45 ];
+        %tmp.155 = sub %tmp.153 %tmp.154;
+        %tmp.156 = lgetv %fnt.15;
+        symbol [ fnt %tmp.156 366 47 50 ];
+        %tmp.157 = lgetv %line1.2;
+        symbol [ line1 %tmp.157 366 52 57 ];
+        symbol [ Graphics %tmp.158 366 59 67 ];
+        %tmp.158 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.159 366 68 87 ];
+        %tmp.159 = getv %tmp.158 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.147 %tmp.148(%tmp.152, %tmp.155, %tmp.156, %tmp.157, %tmp.159);
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 367 12 ]
+        %tmp.160 = lgetv %dc;
+        symbol [ dc %tmp.160 367 12 14 ];
+        symbol [ drawText %tmp.161 367 15 23 ];
+        %tmp.161 = getv function %tmp.160 :drawText;
+        symbol [ _w %tmp.163 367 24 26 ];
+        %tmp.163 = getv ? :_w;
+        %tmp.164 = 2;
+        %tmp.165 = div %tmp.163 %tmp.164;
+        %tmp.166 = lgetv %zoneMid.11;
+        symbol [ zoneMid %tmp.166 367 32 39 ];
+        %tmp.167 = 4;
+        %tmp.168 = add %tmp.166 %tmp.167;
+        %tmp.169 = lgetv %fnt.15;
+        symbol [ fnt %tmp.169 367 47 50 ];
+        %tmp.170 = lgetv %line2.3;
+        symbol [ line2 %tmp.170 367 52 57 ];
+        symbol [ Graphics %tmp.171 367 59 67 ];
+        %tmp.171 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.172 367 68 87 ];
+        %tmp.172 = getv %tmp.171 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.160 %tmp.161(%tmp.165, %tmp.168, %tmp.169, %tmp.170, %tmp.172);
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_357_15_368_8_stop:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_349_8_368_8_if_end:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_322_43_369_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 373; @symbol_functiondef = [_listHdrH,373,20,29]; ]
+    protected
+    function _listHdrH() {
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_373_32_377_4_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 374 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_373_32_377_4_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_373_32_377_4_stop" ]
+        %h.1 = local;
+        symbol [ h %h.1 374 12 13 ];
+        symbol [ _h %tmp.2 374 16 18 ];
+        %tmp.2 = getv ? :_h;
+        %tmp.3 = 13;
+        %tmp.4 = mul %tmp.2 %tmp.3;
+        %tmp.5 = 100;
+        %tmp.6 = div %tmp.4 %tmp.5;
+        lputv %h.1 %tmp.6;
+        symbol [ h %h.1 374 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 375 8 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_375_8_375_30_if_stmt:
+        %tmp.7 = lgetv %h.1;
+        symbol [ h %tmp.7 375 12 13 ];
+        %tmp.8 = 18;
+        %tmp.9 = lt %tmp.7 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_375_8_375_30_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_375_8_375_30_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_375_20_375_30_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 375 22 ]
+        %tmp.10 = 18;
+        lputv %h.1 %tmp.10;
+        symbol [ h %h.1 375 22 23 ];
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_375_20_375_30_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_375_8_375_30_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_375_8_375_30_if_end:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 376 8 ]
+        %tmp.11 = lgetv %h.1;
+        symbol [ h %tmp.11 376 15 16 ];
+        ret %tmp.11;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_373_32_377_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 379; @symbol_functiondef = [_darken,379,20,27]; @symbol_param<0> = [col,379,28,31]; ]
+    protected
+    function _darken(col) {
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_379_33_381_4_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 380 8 ]
+        %tmp.1 = lgetv %col;
+        symbol [ col %tmp.1 380 16 19 ];
+        %tmp.2 = 1;
+        %tmp.3 = shr %tmp.1 %tmp.2;
+        %tmp.4 = 0x7F7F7F;
+        %tmp.5 = bitand %tmp.3 %tmp.4;
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_379_33_381_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 383; @symbol_functiondef = [_vibeForCat,383,20,31]; @symbol_param<0> = [cat,383,32,35]; ]
+    protected
+    function _vibeForCat(cat) {
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_383_37_398_4_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 384 8 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_384_8_384_84_if_stmt:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_384_12_384_71_begin:
+        symbol [ Toybox %tmp.2 384 14 20 ];
+        %tmp.2 = getv ? :Toybox;
+        %tmp.4 = const :Attention;
+        symbol [ Attention %tmp.4 384 26 35 const ];
+        %tmp.5 = canhazplz %tmp.2 %tmp.4;
+        %tmp.6 = not %tmp.5;
+        bt %tmp.6 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_384_8_384_84_if_true;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_384_40_384_71_false:
+        symbol [ Toybox %tmp.8 384 42 48 ];
+        %tmp.8 = getv ? :Toybox;
+        %tmp.9 = as %tmp.8 { (interface { var Attention; }) };
+        symbol [ Attention %tmp.10 384 49 58 ];
+        %tmp.10 = getv %tmp.9 :Attention;
+        %tmp.12 = const :vibrate;
+        symbol [ vibrate %tmp.12 384 64 71 const ];
+        %tmp.13 = canhazplz %tmp.10 %tmp.12;
+        %tmp.14 = not %tmp.13;
+        push %tmp.14;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_384_40_384_71_end:
+        %tmp.15 = phi [%tmp.6 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_384_12_384_71_begin] [%tmp.14 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_384_40_384_71_false] [%tmp.15 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_384_40_384_71_end];
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_384_8_384_84_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_384_8_384_84_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_384_74_384_84_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 384 76 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_384_74_384_84_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_384_8_384_84_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_384_8_384_84_if_end:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 385 8 ]
+        [ "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_383_37_398_4_start" "_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_383_37_398_4_stop" ]
+        %p.1 = local;
+        symbol [ p %p.1 385 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 386 8 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_386_8_396_8_if_stmt:
+        %tmp.16 = lgetv %cat;
+        symbol [ cat %tmp.16 386 12 15 ];
+        symbol [ CAT_SOS %tmp.18 386 19 26 ];
+        %tmp.18 = getv ? :CAT_SOS;
+        %tmp.19 = eq %tmp.16 %tmp.18;
+        bf %tmp.19 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_386_8_396_8_if_false;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_386_8_396_8_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_386_28_390_8_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 387 12 ]
+        %tmp.20 = newa 3;
+        symbol [ Toybox %tmp.24 387 21 27 ];
+        %tmp.24 = getv ? :Toybox;
+        symbol [ Attention %tmp.25 387 28 37 ];
+        %tmp.25 = getv %tmp.24 :Attention;
+        symbol [ VibeProfile %tmp.26 387 38 49 ];
+        %tmp.26 = getv %tmp.25 :VibeProfile;
+        %tmp.27 = 100;
+        %tmp.28 = 300;
+        %tmp.21 = newc %tmp.26 (%tmp.27, %tmp.28);
+        %tmp.29 = dup %tmp.20;
+        %tmp.30 = aputv %tmp.29 0 %tmp.21;
+        symbol [ Toybox %tmp.34 388 21 27 ];
+        %tmp.34 = getv ? :Toybox;
+        symbol [ Attention %tmp.35 388 28 37 ];
+        %tmp.35 = getv %tmp.34 :Attention;
+        symbol [ VibeProfile %tmp.36 388 38 49 ];
+        %tmp.36 = getv %tmp.35 :VibeProfile;
+        %tmp.37 = 0;
+        %tmp.38 = 100;
+        %tmp.31 = newc %tmp.36 (%tmp.37, %tmp.38);
+        %tmp.39 = dup %tmp.30;
+        %tmp.40 = aputv %tmp.39 1 %tmp.31;
+        symbol [ Toybox %tmp.44 389 21 27 ];
+        %tmp.44 = getv ? :Toybox;
+        symbol [ Attention %tmp.45 389 28 37 ];
+        %tmp.45 = getv %tmp.44 :Attention;
+        symbol [ VibeProfile %tmp.46 389 38 49 ];
+        %tmp.46 = getv %tmp.45 :VibeProfile;
+        %tmp.47 = 100;
+        %tmp.48 = 300;
+        %tmp.41 = newc %tmp.46 (%tmp.47, %tmp.48);
+        %tmp.49 = dup %tmp.40;
+        %tmp.50 = aputv %tmp.49 2 %tmp.41;
+        lputv %p.1 %tmp.50;
+        symbol [ p %p.1 387 12 13 ];
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_386_28_390_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_386_8_396_8_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_386_8_396_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 390 15 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_390_15_396_8_if_stmt:
+        %tmp.51 = lgetv %cat;
+        symbol [ cat %tmp.51 390 19 22 ];
+        symbol [ CAT_AIR %tmp.53 390 26 33 ];
+        %tmp.53 = getv ? :CAT_AIR;
+        %tmp.54 = eq %tmp.51 %tmp.53;
+        bf %tmp.54 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_390_15_396_8_if_else_false;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_390_15_396_8_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_390_35_394_8_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 391 12 ]
+        %tmp.55 = newa 3;
+        symbol [ Toybox %tmp.59 391 21 27 ];
+        %tmp.59 = getv ? :Toybox;
+        symbol [ Attention %tmp.60 391 28 37 ];
+        %tmp.60 = getv %tmp.59 :Attention;
+        symbol [ VibeProfile %tmp.61 391 38 49 ];
+        %tmp.61 = getv %tmp.60 :VibeProfile;
+        %tmp.62 = 80;
+        %tmp.63 = 200;
+        %tmp.56 = newc %tmp.61 (%tmp.62, %tmp.63);
+        %tmp.64 = dup %tmp.55;
+        %tmp.65 = aputv %tmp.64 0 %tmp.56;
+        symbol [ Toybox %tmp.69 392 21 27 ];
+        %tmp.69 = getv ? :Toybox;
+        symbol [ Attention %tmp.70 392 28 37 ];
+        %tmp.70 = getv %tmp.69 :Attention;
+        symbol [ VibeProfile %tmp.71 392 38 49 ];
+        %tmp.71 = getv %tmp.70 :VibeProfile;
+        %tmp.72 = 0;
+        %tmp.73 = 100;
+        %tmp.66 = newc %tmp.71 (%tmp.72, %tmp.73);
+        %tmp.74 = dup %tmp.65;
+        %tmp.75 = aputv %tmp.74 1 %tmp.66;
+        symbol [ Toybox %tmp.79 393 21 27 ];
+        %tmp.79 = getv ? :Toybox;
+        symbol [ Attention %tmp.80 393 28 37 ];
+        %tmp.80 = getv %tmp.79 :Attention;
+        symbol [ VibeProfile %tmp.81 393 38 49 ];
+        %tmp.81 = getv %tmp.80 :VibeProfile;
+        %tmp.82 = 80;
+        %tmp.83 = 200;
+        %tmp.76 = newc %tmp.81 (%tmp.82, %tmp.83);
+        %tmp.84 = dup %tmp.75;
+        %tmp.85 = aputv %tmp.84 2 %tmp.76;
+        lputv %p.1 %tmp.85;
+        symbol [ p %p.1 391 12 13 ];
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_390_35_394_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_390_15_396_8_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_390_15_396_8_if_else_false:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_394_15_396_8_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 395 12 ]
+        %tmp.86 = newa 1;
+        symbol [ Toybox %tmp.90 395 21 27 ];
+        %tmp.90 = getv ? :Toybox;
+        symbol [ Attention %tmp.91 395 28 37 ];
+        %tmp.91 = getv %tmp.90 :Attention;
+        symbol [ VibeProfile %tmp.92 395 38 49 ];
+        %tmp.92 = getv %tmp.91 :VibeProfile;
+        %tmp.93 = 60;
+        %tmp.94 = 150;
+        %tmp.87 = newc %tmp.92 (%tmp.93, %tmp.94);
+        %tmp.95 = dup %tmp.86;
+        %tmp.96 = aputv %tmp.95 0 %tmp.87;
+        lputv %p.1 %tmp.96;
+        symbol [ p %p.1 395 12 13 ];
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_394_15_396_8_stop:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_390_15_396_8_if_end:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_386_8_396_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 397 8 ]
+        symbol [ Toybox %tmp.98 397 8 14 ];
+        %tmp.98 = getv ? :Toybox;
+        symbol [ Attention %tmp.99 397 15 24 ];
+        %tmp.99 = getv %tmp.98 :Attention;
+        symbol [ vibrate %tmp.100 397 25 32 ];
+        %tmp.100 = getv function %tmp.99 :vibrate;
+        %tmp.101 = lgetv %p.1;
+        symbol [ p %tmp.101 397 33 34 ];
+        invoke %tmp.99 %tmp.100(%tmp.101);
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_383_37_398_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 400; @symbol_functiondef = [_vibeEmergency,400,20,34]; ]
+    protected
+    function _vibeEmergency() {
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_400_37_409_4_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 401 8 ]
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_401_8_401_84_if_stmt:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_401_12_401_71_begin:
+        symbol [ Toybox %tmp.2 401 14 20 ];
+        %tmp.2 = getv ? :Toybox;
+        %tmp.4 = const :Attention;
+        symbol [ Attention %tmp.4 401 26 35 const ];
+        %tmp.5 = canhazplz %tmp.2 %tmp.4;
+        %tmp.6 = not %tmp.5;
+        bt %tmp.6 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_401_8_401_84_if_true;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_401_40_401_71_false:
+        symbol [ Toybox %tmp.8 401 42 48 ];
+        %tmp.8 = getv ? :Toybox;
+        %tmp.9 = as %tmp.8 { (interface { var Attention; }) };
+        symbol [ Attention %tmp.10 401 49 58 ];
+        %tmp.10 = getv %tmp.9 :Attention;
+        %tmp.12 = const :vibrate;
+        symbol [ vibrate %tmp.12 401 64 71 const ];
+        %tmp.13 = canhazplz %tmp.10 %tmp.12;
+        %tmp.14 = not %tmp.13;
+        push %tmp.14;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_401_40_401_71_end:
+        %tmp.15 = phi [%tmp.6 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_401_12_401_71_begin] [%tmp.14 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_401_40_401_71_false] [%tmp.15 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_401_40_401_71_end];
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_401_8_401_84_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_401_8_401_84_if_true:
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_401_74_401_84_start:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 401 76 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_401_74_401_84_stop:
+        goto @_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_401_8_401_84_if_end;
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_401_8_401_84_if_end:
+[ "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc" 402 8 ]
+        symbol [ Toybox %tmp.17 402 8 14 ];
+        %tmp.17 = getv ? :Toybox;
+        symbol [ Attention %tmp.18 402 15 24 ];
+        %tmp.18 = getv %tmp.17 :Attention;
+        symbol [ vibrate %tmp.19 402 25 32 ];
+        %tmp.19 = getv function %tmp.18 :vibrate;
+        %tmp.20 = newa 5;
+        symbol [ Toybox %tmp.24 403 16 22 ];
+        %tmp.24 = getv ? :Toybox;
+        symbol [ Attention %tmp.25 403 23 32 ];
+        %tmp.25 = getv %tmp.24 :Attention;
+        symbol [ VibeProfile %tmp.26 403 33 44 ];
+        %tmp.26 = getv %tmp.25 :VibeProfile;
+        %tmp.27 = 100;
+        %tmp.28 = 400;
+        %tmp.21 = newc %tmp.26 (%tmp.27, %tmp.28);
+        %tmp.29 = dup %tmp.20;
+        %tmp.30 = aputv %tmp.29 0 %tmp.21;
+        symbol [ Toybox %tmp.34 404 16 22 ];
+        %tmp.34 = getv ? :Toybox;
+        symbol [ Attention %tmp.35 404 23 32 ];
+        %tmp.35 = getv %tmp.34 :Attention;
+        symbol [ VibeProfile %tmp.36 404 33 44 ];
+        %tmp.36 = getv %tmp.35 :VibeProfile;
+        %tmp.37 = 0;
+        %tmp.38 = 100;
+        %tmp.31 = newc %tmp.36 (%tmp.37, %tmp.38);
+        %tmp.39 = dup %tmp.30;
+        %tmp.40 = aputv %tmp.39 1 %tmp.31;
+        symbol [ Toybox %tmp.44 405 16 22 ];
+        %tmp.44 = getv ? :Toybox;
+        symbol [ Attention %tmp.45 405 23 32 ];
+        %tmp.45 = getv %tmp.44 :Attention;
+        symbol [ VibeProfile %tmp.46 405 33 44 ];
+        %tmp.46 = getv %tmp.45 :VibeProfile;
+        %tmp.47 = 100;
+        %tmp.48 = 400;
+        %tmp.41 = newc %tmp.46 (%tmp.47, %tmp.48);
+        %tmp.49 = dup %tmp.40;
+        %tmp.50 = aputv %tmp.49 2 %tmp.41;
+        symbol [ Toybox %tmp.54 406 16 22 ];
+        %tmp.54 = getv ? :Toybox;
+        symbol [ Attention %tmp.55 406 23 32 ];
+        %tmp.55 = getv %tmp.54 :Attention;
+        symbol [ VibeProfile %tmp.56 406 33 44 ];
+        %tmp.56 = getv %tmp.55 :VibeProfile;
+        %tmp.57 = 0;
+        %tmp.58 = 100;
+        %tmp.51 = newc %tmp.56 (%tmp.57, %tmp.58);
+        %tmp.59 = dup %tmp.50;
+        %tmp.60 = aputv %tmp.59 3 %tmp.51;
+        symbol [ Toybox %tmp.64 407 16 22 ];
+        %tmp.64 = getv ? :Toybox;
+        symbol [ Attention %tmp.65 407 23 32 ];
+        %tmp.65 = getv %tmp.64 :Attention;
+        symbol [ VibeProfile %tmp.66 407 33 44 ];
+        %tmp.66 = getv %tmp.65 :VibeProfile;
+        %tmp.67 = 100;
+        %tmp.68 = 400;
+        %tmp.61 = newc %tmp.66 (%tmp.67, %tmp.68);
+        %tmp.69 = dup %tmp.60;
+        %tmp.70 = aputv %tmp.69 4 %tmp.61;
+        invoke %tmp.18 %tmp.19(%tmp.70);
+_Users_kkorolczuk_work_garmin_divercommunicator_source_DiverCommView_mc_400_37_409_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/divercommunicator/source/DiverCommView.mc"; @line = 1; ]
+<init> {
+}

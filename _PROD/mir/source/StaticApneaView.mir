@@ -1,0 +1,2897 @@
+[ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 9; @symbol_usingdef<0> = [Toybox,9,6,12]; @symbol_usingdef<1> = [WatchUi,9,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 10; @symbol_usingdef<0> = [Toybox,10,6,12]; @symbol_usingdef<1> = [Graphics,10,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 11; @symbol_usingdef<0> = [Toybox,11,6,12]; @symbol_usingdef<1> = [Timer,11,13,18]; ]
+using Toybox.Timer;
+[ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 12; @symbol_usingdef<0> = [Toybox,12,6,12]; @symbol_usingdef<1> = [System,12,13,19]; ]
+using Toybox.System;
+[ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 13; @symbol_usingdef<0> = [Toybox,13,6,12]; @symbol_usingdef<1> = [Application,13,13,24]; ]
+using Toybox.Application;
+[ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 16; ]
+enum {
+    [ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 16; @position = 7; @symbol_enumdec = [SA_IDLE,16,7,14]; ]
+    SA_IDLE = 0,
+    [ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 16; @position = 20; @symbol_enumdec = [SA_RUNNING,16,20,30]; ]
+    SA_RUNNING = 1,
+    [ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 16; @position = 36; @symbol_enumdec = [SA_DONE,16,36,43]; ]
+    SA_DONE = 2
+}
+[ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 19; @position = 6; @symbol_constdef = [SA_BG,19,6,11]; ]
+const SA_BG = 0x040810;
+[ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 20; @position = 6; @symbol_constdef = [SA_TEAL,20,6,13]; ]
+const SA_TEAL = 0x00AACC;
+[ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 21; @position = 6; @symbol_constdef = [SA_GREEN,21,6,14]; ]
+const SA_GREEN = 0x22CC55;
+[ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 22; @position = 6; @symbol_constdef = [SA_YELLOW,22,6,15]; ]
+const SA_YELLOW = 0xFFCC00;
+[ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 23; @position = 6; @symbol_constdef = [SA_RED,23,6,12]; ]
+const SA_RED = 0xFF3322;
+[ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 24; @position = 6; @symbol_constdef = [SA_WHITE,24,6,14]; ]
+const SA_WHITE = 0xCCEEFF;
+[ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 25; @position = 6; @symbol_constdef = [SA_DIM,25,6,12]; ]
+const SA_DIM = 0x1A3040;
+[ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 26; @position = 6; @symbol_constdef = [SA_HINT,26,6,13]; ]
+const SA_HINT = 0x0C1826;
+[ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 30; @symbol_classdef = [StaticApneaView,30,6,21]; @symbol_extends<0> = [WatchUi,30,30,37]; @symbol_extends<1> = [View,30,38,42]; ]
+class StaticApneaView extends WatchUi.View {
+    [ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 30; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 30; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 32; @position = 15; @symbol_vardef = [_w,32,15,17]; ]
+    protected
+    var _w;
+    [ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 33; @position = 15; @symbol_vardef = [_h,33,15,17]; ]
+    protected
+    var _h;
+    [ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 34; @position = 15; @symbol_vardef = [_timer,34,15,21]; ]
+    protected
+    var _timer;
+    [ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 35; @position = 15; @symbol_vardef = [_tick,35,15,20]; ]
+    protected
+    var _tick;
+    [ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 37; @position = 15; @symbol_vardef = [_state,37,15,21]; ]
+    protected
+    var _state;
+    [ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 40; @position = 15; @symbol_vardef = [_elapsed,40,15,23]; ]
+    protected
+    var _elapsed;
+    [ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 41; @position = 15; @symbol_vardef = [_prevSecs,41,15,24]; ]
+    protected
+    var _prevSecs;
+    [ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 44; @position = 15; @symbol_vardef = [_warnSecs,44,15,24]; ]
+    protected
+    var _warnSecs;
+    [ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 45; @position = 15; @symbol_vardef = [_critSecs,45,15,24]; ]
+    protected
+    var _critSecs;
+    [ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 46; @position = 15; @symbol_vardef = [_warnFired,46,15,25]; ]
+    protected
+    var _warnFired;
+    [ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 49; @position = 15; @symbol_vardef = [_pb,49,15,18]; ]
+    protected
+    var _pb;
+    [ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 50; @position = 15; @symbol_vardef = [_lastSecs,50,15,24]; ]
+    protected
+    var _lastSecs;
+    [ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 51; @position = 15; @symbol_vardef = [_newPb,51,15,21]; ]
+    protected
+    var _newPb;
+    [ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 52; @position = 15; @symbol_vardef = [_log,52,15,19]; ]
+    protected
+    var _log;
+    [ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 56; @symbol_functiondef = [initialize,56,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_56_26_82_4_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 57 8 ]
+        symbol [ View %tmp.2 57 8 12 ];
+        %tmp.2 = getv ? :View;
+        symbol [ initialize %tmp.3 57 13 23 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 59 8 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_56_26_82_4_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_56_26_82_4_stop" ]
+        %ds.1 = local;
+        symbol [ ds %ds.1 59 12 14 ];
+        symbol [ System %tmp.4 59 17 23 ];
+        %tmp.4 = getm $.Toybox.System;
+        symbol [ getDeviceSettings %tmp.5 59 24 41 ];
+        %tmp.5 = getv function %tmp.4 :getDeviceSettings;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        lputv %ds.1 %tmp.6;
+        symbol [ ds %ds.1 59 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 60 8 ]
+        %tmp.7 = lgetv %ds.1;
+        symbol [ ds %tmp.7 60 13 15 ];
+        symbol [ screenWidth %tmp.8 60 16 27 ];
+        %tmp.8 = getv %tmp.7 :screenWidth;
+        symbol [ _w ? 60 8 10 ];
+        putv self :_w %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 61 8 ]
+        %tmp.9 = lgetv %ds.1;
+        symbol [ ds %tmp.9 61 13 15 ];
+        symbol [ screenHeight %tmp.10 61 16 28 ];
+        %tmp.10 = getv %tmp.9 :screenHeight;
+        symbol [ _h ? 61 8 10 ];
+        putv self :_h %tmp.10;
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 63 8 ]
+        symbol [ SA_IDLE %tmp.12 63 20 27 ];
+        %tmp.12 = getv ? :SA_IDLE;
+        symbol [ _state ? 63 8 14 ];
+        putv self :_state %tmp.12;
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 64 8 ]
+        %tmp.13 = 0;
+        symbol [ _elapsed ? 64 8 16 ];
+        putv self :_elapsed %tmp.13;
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 65 8 ]
+        %tmp.14 = -1;
+        symbol [ _prevSecs ? 65 8 17 ];
+        putv self :_prevSecs %tmp.14;
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 66 8 ]
+        %tmp.15 = 0;
+        symbol [ _tick ? 66 8 13 ];
+        putv self :_tick %tmp.15;
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 67 8 ]
+        %tmp.16 = false;
+        symbol [ _newPb ? 67 8 14 ];
+        putv self :_newPb %tmp.16;
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 68 8 ]
+        %tmp.17 = 0;
+        symbol [ _lastSecs ? 68 8 17 ];
+        putv self :_lastSecs %tmp.17;
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 69 8 ]
+        %tmp.18 = false;
+        symbol [ _warnFired ? 69 8 18 ];
+        putv self :_warnFired %tmp.18;
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 72 8 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_56_26_82_4_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_56_26_82_4_stop" ]
+        %storedPb.2 = local;
+        symbol [ storedPb %storedPb.2 72 12 20 ];
+        symbol [ Application %tmp.19 72 23 34 ];
+        %tmp.19 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.20 72 35 42 ];
+        %tmp.20 = getv %tmp.19 :Storage;
+        symbol [ getValue %tmp.21 72 43 51 ];
+        %tmp.21 = getv function %tmp.20 :getValue;
+        %tmp.22 = "ap_pb";
+        %tmp.23 = invoke %tmp.20 %tmp.21(%tmp.22);
+        lputv %storedPb.2 %tmp.23;
+        symbol [ storedPb %storedPb.2 72 12 20 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 73 8 ]
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_73_14_73_56_begin:
+        %tmp.24 = lgetv %storedPb.2;
+        symbol [ storedPb %tmp.24 73 15 23 ];
+        symbol [ Number %tmp.26 73 35 41 ];
+        %tmp.26 = getv ? :Number;
+        %tmp.27 = isa %tmp.24 %tmp.26;
+        bf %tmp.27 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_73_14_73_56_else_false;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_73_14_73_56_true:
+        %tmp.28 = lgetv %storedPb.2;
+        symbol [ storedPb %tmp.28 73 45 53 ];
+        %tmp.29 = as %tmp.28 { (Number) };
+        push %tmp.29;
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_73_14_73_56_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_73_14_73_56_else_false:
+        %tmp.30 = 0;
+        push %tmp.30;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_73_14_73_56_end:
+        %tmp.31 = phi [%tmp.27 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_73_14_73_56_begin] [%tmp.29 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_73_14_73_56_true] [%tmp.30 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_73_14_73_56_else_false] [%tmp.31 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_73_14_73_56_end];
+        symbol [ _pb ? 73 8 11 ];
+        putv self :_pb %tmp.31;
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 75 8 ]
+        %tmp.33 = 3;
+        %tmp.32 = newa %tmp.33;
+        symbol [ _log ? 75 8 12 ];
+        putv self :_log %tmp.32;
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 76 8 ]
+        for @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_76_8_79_8_for_test @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_76_8_79_8_for_incr @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_76_8_79_8_for_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_76_8_79_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_76_8_79_8_for_begin" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_76_8_79_8_for_end" ]
+        %i.3 = local;
+        symbol [ i %i.3 76 17 18 ];
+        %tmp.34 = 0;
+        lputv %i.3 %tmp.34;
+        symbol [ i %i.3 76 17 18 ];
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_76_8_79_8_for_test:
+        %tmp.35 = lgetv %i.3;
+        symbol [ i %tmp.35 76 24 25 ];
+        %tmp.36 = 3;
+        %tmp.37 = lt %tmp.35 %tmp.36;
+        bf %tmp.37 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_76_8_79_8_for_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_76_8_79_8_for_begin:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_76_36_79_8_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 77 12 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_76_36_79_8_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_76_36_79_8_stop" ]
+        %v.4 = local;
+        symbol [ v %v.4 77 16 17 ];
+        symbol [ Application %tmp.38 77 20 31 ];
+        %tmp.38 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.39 77 32 39 ];
+        %tmp.39 = getv %tmp.38 :Storage;
+        symbol [ getValue %tmp.40 77 40 48 ];
+        %tmp.40 = getv function %tmp.39 :getValue;
+        %tmp.41 = "ap_lg";
+        %tmp.42 = lgetv %i.3;
+        symbol [ i %tmp.42 77 59 60 ];
+        symbol [ toString %tmp.43 77 61 69 ];
+        %tmp.43 = getv function %tmp.42 :toString;
+        %tmp.44 = invoke %tmp.42 %tmp.43();
+        %tmp.45 = add %tmp.41 %tmp.44;
+        %tmp.46 = invoke %tmp.39 %tmp.40(%tmp.45);
+        lputv %v.4 %tmp.46;
+        symbol [ v %v.4 77 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 78 12 ]
+        symbol [ _log %tmp.47 78 12 16 ];
+        %tmp.47 = getv self :_log;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_78_22_78_50_begin:
+        %tmp.48 = lgetv %v.4;
+        symbol [ v %tmp.48 78 23 24 ];
+        symbol [ Number %tmp.50 78 36 42 ];
+        %tmp.50 = getv ? :Number;
+        %tmp.51 = isa %tmp.48 %tmp.50;
+        bf %tmp.51 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_78_22_78_50_else_false;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_78_22_78_50_true:
+        %tmp.52 = lgetv %v.4;
+        symbol [ v %tmp.52 78 46 47 ];
+        %tmp.53 = as %tmp.52 { (Number) };
+        push %tmp.53;
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_78_22_78_50_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_78_22_78_50_else_false:
+        %tmp.54 = 0;
+        push %tmp.54;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_78_22_78_50_end:
+        %tmp.55 = phi [%tmp.51 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_78_22_78_50_begin] [%tmp.53 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_78_22_78_50_true] [%tmp.54 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_78_22_78_50_else_false] [%tmp.55 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_78_22_78_50_end];
+        %tmp.56 = lgetv %i.3;
+        symbol [ i %tmp.56 78 17 18 ];
+        aputv %tmp.47 %tmp.56 %tmp.55;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_76_36_79_8_stop:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_76_8_79_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 76 ]
+        %tmp.59 = lgetv %i.3;
+        symbol [ i %tmp.59 76 31 32 ];
+        %tmp.60 = add %tmp.59 1;
+        lputv %i.3 %tmp.60;
+        symbol [ i %i.3 76 31 32 ];
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_76_8_79_8_for_test;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_76_8_79_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 81 8 ]
+        %tmp.61 = self;
+        symbol [ _calcThresholds %tmp.62 81 8 23 ];
+        %tmp.62 = getv function %tmp.61 :_calcThresholds;
+        invoke %tmp.61 %tmp.62();
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_56_26_82_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 84; @symbol_functiondef = [onShow,84,13,19]; ]
+    function onShow() {
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_84_22_89_4_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 85 8 ]
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_85_8_88_8_if_stmt:
+        symbol [ _timer %tmp.2 85 12 18 ];
+        %tmp.2 = getv ? :_timer;
+        %tmp.3 = null;
+        %tmp.4 = eq %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_85_8_88_8_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_85_8_88_8_if_true:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_85_28_88_8_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 86 12 ]
+        symbol [ Timer %tmp.7 86 25 30 ];
+        %tmp.7 = getm $.Toybox.Timer;
+        symbol [ Timer %tmp.8 86 31 36 ];
+        %tmp.8 = getv function ? %tmp.7 :Timer;
+        %tmp.5 = newc %tmp.8 ();
+        symbol [ _timer ? 86 12 18 ];
+        putv self :_timer %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 87 12 ]
+        symbol [ _timer %tmp.10 87 12 18 ];
+        %tmp.10 = getv ? :_timer;
+        symbol [ start %tmp.11 87 19 24 ];
+        %tmp.11 = getv function %tmp.10 :start;
+        %tmp.12 = self;
+        symbol [ method %tmp.13 87 25 31 ];
+        %tmp.13 = getv function %tmp.12 :method;
+        %tmp.15 = const :onTick;
+        symbol [ onTick %tmp.15 87 33 39 const ];
+        %tmp.16 = invoke %tmp.12 %tmp.13(%tmp.15);
+        %tmp.17 = 200;
+        %tmp.18 = true;
+        invoke %tmp.10 %tmp.11(%tmp.16, %tmp.17, %tmp.18);
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_85_28_88_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_85_8_88_8_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_85_8_88_8_if_end:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_84_22_89_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 91; @symbol_functiondef = [onHide,91,13,19]; ]
+    function onHide() {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 98; @symbol_functiondef = [onTick,98,13,19]; ]
+    function onTick() as Void {
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_98_30_109_4_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 99 8 ]
+        symbol [ _tick %tmp.3 99 8 13 ];
+        %tmp.3 = getv ? :_tick;
+        %tmp.4 = add %tmp.3 1;
+        symbol [ _tick ? 99 8 13 ];
+        putv self :_tick dup %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 100 8 ]
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_100_8_107_8_if_stmt:
+        symbol [ _state %tmp.6 100 12 18 ];
+        %tmp.6 = getv ? :_state;
+        symbol [ SA_RUNNING %tmp.8 100 22 32 ];
+        %tmp.8 = getv ? :SA_RUNNING;
+        %tmp.9 = eq %tmp.6 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_100_8_107_8_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_100_8_107_8_if_true:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_100_34_107_8_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 101 12 ]
+        symbol [ _elapsed %tmp.12 101 12 20 ];
+        %tmp.12 = getv ? :_elapsed;
+        %tmp.13 = add %tmp.12 1;
+        symbol [ _elapsed ? 101 12 20 ];
+        putv self :_elapsed dup %tmp.13;
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 102 12 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_100_34_107_8_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_100_34_107_8_stop" ]
+        %secs.1 = local;
+        symbol [ secs %secs.1 102 16 20 ];
+        symbol [ _elapsed %tmp.15 102 23 31 ];
+        %tmp.15 = getv ? :_elapsed;
+        %tmp.16 = 5;
+        %tmp.17 = div %tmp.15 %tmp.16;
+        lputv %secs.1 %tmp.17;
+        symbol [ secs %secs.1 102 16 20 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 103 12 ]
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_103_12_106_12_if_stmt:
+        %tmp.18 = lgetv %secs.1;
+        symbol [ secs %tmp.18 103 16 20 ];
+        symbol [ _prevSecs %tmp.20 103 24 33 ];
+        %tmp.20 = getv ? :_prevSecs;
+        %tmp.21 = ne %tmp.18 %tmp.20;
+        bf %tmp.21 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_103_12_106_12_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_103_12_106_12_if_true:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_103_35_106_12_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 104 16 ]
+        %tmp.22 = lgetv %secs.1;
+        symbol [ secs %tmp.22 104 28 32 ];
+        symbol [ _prevSecs ? 104 16 25 ];
+        putv self :_prevSecs %tmp.22;
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 105 16 ]
+        %tmp.23 = self;
+        symbol [ _checkVibes %tmp.24 105 16 27 ];
+        %tmp.24 = getv function %tmp.23 :_checkVibes;
+        %tmp.25 = lgetv %secs.1;
+        symbol [ secs %tmp.25 105 28 32 ];
+        invoke %tmp.23 %tmp.24(%tmp.25);
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_103_35_106_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_103_12_106_12_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_103_12_106_12_if_end:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_100_34_107_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_100_8_107_8_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_100_8_107_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 108 8 ]
+        symbol [ WatchUi %tmp.26 108 8 15 ];
+        %tmp.26 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.27 108 16 29 ];
+        %tmp.27 = getv function %tmp.26 :requestUpdate;
+        invoke %tmp.26 %tmp.27();
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_98_30_109_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 117; @symbol_functiondef = [_checkVibes,117,20,31]; @symbol_param<0> = [secs,117,32,36]; ]
+    protected
+    function _checkVibes(secs) {
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_117_38_127_4_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 118 8 ]
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_118_8_122_8_if_stmt:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_118_12_118_37_begin:
+        %tmp.1 = lgetv %secs;
+        symbol [ secs %tmp.1 118 12 16 ];
+        %tmp.2 = 0;
+        %tmp.3 = gt %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_118_8_122_8_if_false;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_118_24_118_37_true:
+        %tmp.4 = lgetv %secs;
+        symbol [ secs %tmp.4 118 24 28 ];
+        %tmp.5 = 60;
+        %tmp.6 = mod %tmp.4 %tmp.5;
+        %tmp.7 = 0;
+        %tmp.8 = eq %tmp.6 %tmp.7;
+        push %tmp.8;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_118_24_118_37_end:
+        %tmp.9 = phi [%tmp.3 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_118_12_118_37_begin] [%tmp.8 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_118_24_118_37_true] [%tmp.9 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_118_24_118_37_end];
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_118_8_122_8_if_false;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_118_8_122_8_if_true:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_118_40_120_8_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 119 12 ]
+        %tmp.10 = self;
+        symbol [ _vibe %tmp.11 119 12 17 ];
+        %tmp.11 = getv function %tmp.10 :_vibe;
+        %tmp.12 = 80;
+        %tmp.13 = 280;
+        invoke %tmp.10 %tmp.11(%tmp.12, %tmp.13);
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_118_40_120_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_118_8_122_8_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_118_8_122_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 120 15 ]
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_120_15_122_8_if_stmt:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_120_19_120_44_begin:
+        %tmp.14 = lgetv %secs;
+        symbol [ secs %tmp.14 120 19 23 ];
+        %tmp.15 = 0;
+        %tmp.16 = gt %tmp.14 %tmp.15;
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_120_15_122_8_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_120_31_120_44_true:
+        %tmp.17 = lgetv %secs;
+        symbol [ secs %tmp.17 120 31 35 ];
+        %tmp.18 = 30;
+        %tmp.19 = mod %tmp.17 %tmp.18;
+        %tmp.20 = 0;
+        %tmp.21 = eq %tmp.19 %tmp.20;
+        push %tmp.21;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_120_31_120_44_end:
+        %tmp.22 = phi [%tmp.16 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_120_19_120_44_begin] [%tmp.21 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_120_31_120_44_true] [%tmp.22 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_120_31_120_44_end];
+        bf %tmp.22 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_120_15_122_8_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_120_15_122_8_if_true:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_120_47_122_8_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 121 12 ]
+        %tmp.23 = self;
+        symbol [ _vibe %tmp.24 121 12 17 ];
+        %tmp.24 = getv function %tmp.23 :_vibe;
+        %tmp.25 = 50;
+        %tmp.26 = 110;
+        invoke %tmp.23 %tmp.24(%tmp.25, %tmp.26);
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_120_47_122_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_120_15_122_8_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_120_15_122_8_if_end:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_118_8_122_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 123 8 ]
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_123_8_126_8_if_stmt:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_123_12_123_35_begin:
+        symbol [ _warnFired %tmp.28 123 13 23 ];
+        %tmp.28 = getv ? :_warnFired;
+        %tmp.29 = not %tmp.28;
+        bf %tmp.29 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_123_8_126_8_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_123_27_123_35_true:
+        %tmp.30 = lgetv %secs;
+        symbol [ secs %tmp.30 123 27 31 ];
+        symbol [ _warnSecs %tmp.32 123 35 44 ];
+        %tmp.32 = getv ? :_warnSecs;
+        %tmp.33 = gte %tmp.30 %tmp.32;
+        push %tmp.33;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_123_27_123_35_end:
+        %tmp.34 = phi [%tmp.29 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_123_12_123_35_begin] [%tmp.33 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_123_27_123_35_true] [%tmp.34 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_123_27_123_35_end];
+        bf %tmp.34 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_123_8_126_8_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_123_8_126_8_if_true:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_123_46_126_8_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 124 12 ]
+        %tmp.35 = true;
+        symbol [ _warnFired ? 124 12 22 ];
+        putv self :_warnFired %tmp.35;
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 125 12 ]
+        %tmp.36 = self;
+        symbol [ _vibeDouble %tmp.37 125 12 23 ];
+        %tmp.37 = getv function %tmp.36 :_vibeDouble;
+        %tmp.38 = 90;
+        %tmp.39 = 150;
+        %tmp.40 = 100;
+        invoke %tmp.36 %tmp.37(%tmp.38, %tmp.39, %tmp.40);
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_123_46_126_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_123_8_126_8_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_123_8_126_8_if_end:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_117_38_127_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 129; @symbol_functiondef = [_vibe,129,20,25]; @symbol_param<0> = [intensity,129,26,35]; @symbol_param<1> = [duration,129,37,45]; ]
+    protected
+    function _vibe(intensity, duration) {
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_129_47_136_4_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 130 8 ]
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_130_8_135_8_if_stmt:
+        symbol [ Toybox %tmp.2 130 12 18 ];
+        %tmp.2 = getv ? :Toybox;
+        %tmp.4 = const :Attention;
+        symbol [ Attention %tmp.4 130 24 33 const ];
+        %tmp.5 = canhazplz %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_130_8_135_8_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_130_8_135_8_if_true:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_130_35_135_8_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 131 12 ]
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_131_12_134_12_if_stmt:
+        symbol [ Toybox %tmp.7 131 16 22 ];
+        %tmp.7 = getv ? :Toybox;
+        %tmp.8 = as %tmp.7 { (interface { var Attention; }) };
+        symbol [ Attention %tmp.9 131 23 32 ];
+        %tmp.9 = getv %tmp.8 :Attention;
+        %tmp.11 = const :vibrate;
+        symbol [ vibrate %tmp.11 131 38 45 const ];
+        %tmp.12 = canhazplz %tmp.9 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_131_12_134_12_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_131_12_134_12_if_true:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_131_47_134_12_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 132 16 ]
+        symbol [ Toybox %tmp.14 132 16 22 ];
+        %tmp.14 = getv ? :Toybox;
+        %tmp.15 = as %tmp.14 { (interface { var Attention; }) };
+        symbol [ Attention %tmp.16 132 23 32 ];
+        %tmp.16 = getv %tmp.15 :Attention;
+        symbol [ vibrate %tmp.17 132 33 40 ];
+        %tmp.17 = getv function %tmp.16 :vibrate;
+        %tmp.18 = newa 1;
+        symbol [ Toybox %tmp.22 133 25 31 ];
+        %tmp.22 = getv ? :Toybox;
+        symbol [ Attention %tmp.23 133 32 41 ];
+        %tmp.23 = getv %tmp.22 :Attention;
+        symbol [ VibeProfile %tmp.24 133 42 53 ];
+        %tmp.24 = getv %tmp.23 :VibeProfile;
+        %tmp.25 = lgetv %intensity;
+        symbol [ intensity %tmp.25 133 54 63 ];
+        %tmp.26 = lgetv %duration;
+        symbol [ duration %tmp.26 133 65 73 ];
+        %tmp.19 = newc %tmp.24 (%tmp.25, %tmp.26);
+        %tmp.27 = dup %tmp.18;
+        %tmp.28 = aputv %tmp.27 0 %tmp.19;
+        invoke %tmp.16 %tmp.17(%tmp.28);
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_131_47_134_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_131_12_134_12_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_131_12_134_12_if_end:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_130_35_135_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_130_8_135_8_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_130_8_135_8_if_end:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_129_47_136_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 138; @symbol_functiondef = [_vibeDouble,138,20,31]; @symbol_param<0> = [intensity,138,32,41]; @symbol_param<1> = [dur,138,43,46]; @symbol_param<2> = [gap,138,48,51]; ]
+    protected
+    function _vibeDouble(intensity, dur, gap) {
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_138_53_148_4_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 139 8 ]
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_139_8_147_8_if_stmt:
+        symbol [ Toybox %tmp.2 139 12 18 ];
+        %tmp.2 = getv ? :Toybox;
+        %tmp.4 = const :Attention;
+        symbol [ Attention %tmp.4 139 24 33 const ];
+        %tmp.5 = canhazplz %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_139_8_147_8_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_139_8_147_8_if_true:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_139_35_147_8_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 140 12 ]
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_140_12_146_12_if_stmt:
+        symbol [ Toybox %tmp.7 140 16 22 ];
+        %tmp.7 = getv ? :Toybox;
+        %tmp.8 = as %tmp.7 { (interface { var Attention; }) };
+        symbol [ Attention %tmp.9 140 23 32 ];
+        %tmp.9 = getv %tmp.8 :Attention;
+        %tmp.11 = const :vibrate;
+        symbol [ vibrate %tmp.11 140 38 45 const ];
+        %tmp.12 = canhazplz %tmp.9 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_140_12_146_12_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_140_12_146_12_if_true:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_140_47_146_12_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 141 16 ]
+        symbol [ Toybox %tmp.14 141 16 22 ];
+        %tmp.14 = getv ? :Toybox;
+        %tmp.15 = as %tmp.14 { (interface { var Attention; }) };
+        symbol [ Attention %tmp.16 141 23 32 ];
+        %tmp.16 = getv %tmp.15 :Attention;
+        symbol [ vibrate %tmp.17 141 33 40 ];
+        %tmp.17 = getv function %tmp.16 :vibrate;
+        %tmp.18 = newa 3;
+        symbol [ Toybox %tmp.22 142 24 30 ];
+        %tmp.22 = getv ? :Toybox;
+        symbol [ Attention %tmp.23 142 31 40 ];
+        %tmp.23 = getv %tmp.22 :Attention;
+        symbol [ VibeProfile %tmp.24 142 41 52 ];
+        %tmp.24 = getv %tmp.23 :VibeProfile;
+        %tmp.25 = lgetv %intensity;
+        symbol [ intensity %tmp.25 142 53 62 ];
+        %tmp.26 = lgetv %dur;
+        symbol [ dur %tmp.26 142 64 67 ];
+        %tmp.19 = newc %tmp.24 (%tmp.25, %tmp.26);
+        %tmp.27 = dup %tmp.18;
+        %tmp.28 = aputv %tmp.27 0 %tmp.19;
+        symbol [ Toybox %tmp.32 143 24 30 ];
+        %tmp.32 = getv ? :Toybox;
+        symbol [ Attention %tmp.33 143 31 40 ];
+        %tmp.33 = getv %tmp.32 :Attention;
+        symbol [ VibeProfile %tmp.34 143 41 52 ];
+        %tmp.34 = getv %tmp.33 :VibeProfile;
+        %tmp.35 = 0;
+        %tmp.36 = lgetv %gap;
+        symbol [ gap %tmp.36 143 56 59 ];
+        %tmp.29 = newc %tmp.34 (%tmp.35, %tmp.36);
+        %tmp.37 = dup %tmp.28;
+        %tmp.38 = aputv %tmp.37 1 %tmp.29;
+        symbol [ Toybox %tmp.42 144 24 30 ];
+        %tmp.42 = getv ? :Toybox;
+        symbol [ Attention %tmp.43 144 31 40 ];
+        %tmp.43 = getv %tmp.42 :Attention;
+        symbol [ VibeProfile %tmp.44 144 41 52 ];
+        %tmp.44 = getv %tmp.43 :VibeProfile;
+        %tmp.45 = lgetv %intensity;
+        symbol [ intensity %tmp.45 144 53 62 ];
+        %tmp.46 = lgetv %dur;
+        symbol [ dur %tmp.46 144 64 67 ];
+        %tmp.39 = newc %tmp.44 (%tmp.45, %tmp.46);
+        %tmp.47 = dup %tmp.38;
+        %tmp.48 = aputv %tmp.47 2 %tmp.39;
+        invoke %tmp.16 %tmp.17(%tmp.48);
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_140_47_146_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_140_12_146_12_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_140_12_146_12_if_end:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_139_35_147_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_139_8_147_8_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_139_8_147_8_if_end:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_138_53_148_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 152; @symbol_functiondef = [_calcThresholds,152,20,35]; ]
+    protected
+    function _calcThresholds() {
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_152_38_162_4_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 153 8 ]
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_153_8_159_8_if_stmt:
+        symbol [ _pb %tmp.2 153 12 15 ];
+        %tmp.2 = getv ? :_pb;
+        %tmp.3 = 0;
+        %tmp.4 = gt %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_153_8_159_8_if_else_false;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_153_8_159_8_if_true:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_153_21_156_8_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 154 12 ]
+        symbol [ _pb %tmp.6 154 24 27 ];
+        %tmp.6 = getv ? :_pb;
+        %tmp.7 = 75;
+        %tmp.8 = mul %tmp.6 %tmp.7;
+        %tmp.9 = 100;
+        %tmp.10 = div %tmp.8 %tmp.9;
+        symbol [ _warnSecs ? 154 12 21 ];
+        putv self :_warnSecs %tmp.10;
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 155 12 ]
+        symbol [ _pb %tmp.12 155 24 27 ];
+        %tmp.12 = getv ? :_pb;
+        %tmp.13 = 90;
+        %tmp.14 = mul %tmp.12 %tmp.13;
+        %tmp.15 = 100;
+        %tmp.16 = div %tmp.14 %tmp.15;
+        symbol [ _critSecs ? 155 12 21 ];
+        putv self :_critSecs %tmp.16;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_153_21_156_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_153_8_159_8_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_153_8_159_8_if_else_false:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_156_15_159_8_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 157 12 ]
+        %tmp.17 = 90;
+        symbol [ _warnSecs ? 157 12 21 ];
+        putv self :_warnSecs %tmp.17;
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 158 12 ]
+        %tmp.18 = 150;
+        symbol [ _critSecs ? 158 12 21 ];
+        putv self :_critSecs %tmp.18;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_156_15_159_8_stop:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_153_8_159_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 160 8 ]
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_160_8_160_46_if_stmt:
+        symbol [ _warnSecs %tmp.20 160 12 21 ];
+        %tmp.20 = getv ? :_warnSecs;
+        %tmp.21 = 20;
+        %tmp.22 = lt %tmp.20 %tmp.21;
+        bf %tmp.22 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_160_8_160_46_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_160_8_160_46_if_true:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_160_28_160_46_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 160 30 ]
+        %tmp.23 = 20;
+        symbol [ _warnSecs ? 160 30 39 ];
+        putv self :_warnSecs %tmp.23;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_160_28_160_46_stop:
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_160_8_160_46_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_160_8_160_46_if_end:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 161 8 ]
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_161_8_161_66_if_stmt:
+        symbol [ _critSecs %tmp.25 161 12 21 ];
+        %tmp.25 = getv ? :_critSecs;
+        symbol [ _warnSecs %tmp.27 161 25 34 ];
+        %tmp.27 = getv ? :_warnSecs;
+        %tmp.28 = lte %tmp.25 %tmp.27;
+        bf %tmp.28 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_161_8_161_66_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_161_8_161_66_if_true:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_161_36_161_66_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 161 38 ]
+        symbol [ _warnSecs %tmp.30 161 50 59 ];
+        %tmp.30 = getv ? :_warnSecs;
+        %tmp.31 = 30;
+        %tmp.32 = add %tmp.30 %tmp.31;
+        symbol [ _critSecs ? 161 38 47 ];
+        putv self :_critSecs %tmp.32;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_161_36_161_66_stop:
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_161_8_161_66_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_161_8_161_66_if_end:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_152_38_162_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 166; @symbol_functiondef = [doSelect,166,13,21]; ]
+    function doSelect() {
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_166_24_170_4_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 167 8 ]
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_167_8_169_59_if_stmt:
+        symbol [ _state %tmp.2 167 12 18 ];
+        %tmp.2 = getv ? :_state;
+        symbol [ SA_IDLE %tmp.4 167 22 29 ];
+        %tmp.4 = getv ? :SA_IDLE;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_167_8_169_59_if_false;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_167_8_169_59_if_true:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_167_34_167_50_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 167 36 ]
+        %tmp.6 = self;
+        symbol [ _startHold %tmp.7 167 36 46 ];
+        %tmp.7 = getv function %tmp.6 :_startHold;
+        invoke %tmp.6 %tmp.7();
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_167_34_167_50_stop:
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_167_8_169_59_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_167_8_169_59_if_false:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 168 13 ]
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_168_13_169_59_if_stmt:
+        symbol [ _state %tmp.9 168 17 23 ];
+        %tmp.9 = getv ? :_state;
+        symbol [ SA_RUNNING %tmp.11 168 27 37 ];
+        %tmp.11 = getv ? :SA_RUNNING;
+        %tmp.12 = eq %tmp.9 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_168_13_169_59_if_false;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_168_13_169_59_if_true:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_168_39_168_54_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 168 41 ]
+        %tmp.13 = self;
+        symbol [ _stopHold %tmp.14 168 41 50 ];
+        %tmp.14 = getv function %tmp.13 :_stopHold;
+        invoke %tmp.13 %tmp.14();
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_168_39_168_54_stop:
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_168_13_169_59_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_168_13_169_59_if_false:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 169 13 ]
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_169_13_169_59_if_stmt:
+        symbol [ _state %tmp.16 169 17 23 ];
+        %tmp.16 = getv ? :_state;
+        symbol [ SA_DONE %tmp.18 169 27 34 ];
+        %tmp.18 = getv ? :SA_DONE;
+        %tmp.19 = eq %tmp.16 %tmp.18;
+        bf %tmp.19 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_169_13_169_59_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_169_13_169_59_if_true:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_169_39_169_59_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 169 41 ]
+        symbol [ SA_IDLE %tmp.21 169 50 57 ];
+        %tmp.21 = getv ? :SA_IDLE;
+        symbol [ _state ? 169 41 47 ];
+        putv self :_state %tmp.21;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_169_39_169_59_stop:
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_169_13_169_59_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_169_13_169_59_if_end:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_168_13_169_59_if_end:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_167_8_169_59_if_end:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_166_24_170_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 172; @symbol_functiondef = [doBack,172,13,19]; ]
+    function doBack() {
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_172_22_182_4_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 173 8 ]
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_173_8_176_8_if_stmt:
+        symbol [ _state %tmp.2 173 12 18 ];
+        %tmp.2 = getv ? :_state;
+        symbol [ SA_RUNNING %tmp.4 173 22 32 ];
+        %tmp.4 = getv ? :SA_RUNNING;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_173_8_176_8_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_173_8_176_8_if_true:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_173_34_176_8_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 174 12 ]
+        %tmp.6 = self;
+        symbol [ _stopHold %tmp.7 174 12 21 ];
+        %tmp.7 = getv function %tmp.6 :_stopHold;
+        invoke %tmp.6 %tmp.7();
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 175 12 ]
+        %tmp.8 = true;
+        ret %tmp.8;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_173_34_176_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_173_8_176_8_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_173_8_176_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 177 8 ]
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_177_8_180_8_if_stmt:
+        symbol [ _state %tmp.10 177 12 18 ];
+        %tmp.10 = getv ? :_state;
+        symbol [ SA_DONE %tmp.12 177 22 29 ];
+        %tmp.12 = getv ? :SA_DONE;
+        %tmp.13 = eq %tmp.10 %tmp.12;
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_177_8_180_8_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_177_8_180_8_if_true:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_177_31_180_8_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 178 12 ]
+        symbol [ SA_IDLE %tmp.15 178 21 28 ];
+        %tmp.15 = getv ? :SA_IDLE;
+        symbol [ _state ? 178 12 18 ];
+        putv self :_state %tmp.15;
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 179 12 ]
+        %tmp.16 = true;
+        ret %tmp.16;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_177_31_180_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_177_8_180_8_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_177_8_180_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 181 8 ]
+        %tmp.17 = false;
+        ret %tmp.17;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_172_22_182_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 184; @symbol_functiondef = [_startHold,184,20,30]; ]
+    protected
+    function _startHold() {
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_184_33_191_4_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 185 8 ]
+        %tmp.1 = 0;
+        symbol [ _elapsed ? 185 8 16 ];
+        putv self :_elapsed %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 186 8 ]
+        %tmp.2 = -1;
+        symbol [ _prevSecs ? 186 8 17 ];
+        putv self :_prevSecs %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 187 8 ]
+        %tmp.3 = false;
+        symbol [ _newPb ? 187 8 14 ];
+        putv self :_newPb %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 188 8 ]
+        %tmp.4 = false;
+        symbol [ _warnFired ? 188 8 18 ];
+        putv self :_warnFired %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 189 8 ]
+        symbol [ SA_RUNNING %tmp.6 189 21 31 ];
+        %tmp.6 = getv ? :SA_RUNNING;
+        symbol [ _state ? 189 8 14 ];
+        putv self :_state %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 190 8 ]
+        %tmp.7 = self;
+        symbol [ _vibe %tmp.8 190 8 13 ];
+        %tmp.8 = getv function %tmp.7 :_vibe;
+        %tmp.9 = 40;
+        %tmp.10 = 70;
+        invoke %tmp.7 %tmp.8(%tmp.9, %tmp.10);
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_184_33_191_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 193; @symbol_functiondef = [_stopHold,193,20,29]; ]
+    protected
+    function _stopHold() {
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_193_32_217_4_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 194 8 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_193_32_217_4_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_193_32_217_4_stop" ]
+        %secs.1 = local;
+        symbol [ secs %secs.1 194 12 16 ];
+        symbol [ _elapsed %tmp.2 194 20 28 ];
+        %tmp.2 = getv ? :_elapsed;
+        %tmp.3 = 5;
+        %tmp.4 = div %tmp.2 %tmp.3;
+        lputv %secs.1 %tmp.4;
+        symbol [ secs %secs.1 194 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 195 8 ]
+        %tmp.5 = lgetv %secs.1;
+        symbol [ secs %tmp.5 195 20 24 ];
+        symbol [ _lastSecs ? 195 8 17 ];
+        putv self :_lastSecs %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 196 8 ]
+        %tmp.6 = self;
+        symbol [ _vibe %tmp.7 196 8 13 ];
+        %tmp.7 = getv function %tmp.6 :_vibe;
+        %tmp.8 = 100;
+        %tmp.9 = 600;
+        invoke %tmp.6 %tmp.7(%tmp.8, %tmp.9);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 198 8 ]
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_198_8_214_8_if_stmt:
+        %tmp.10 = lgetv %secs.1;
+        symbol [ secs %tmp.10 198 12 16 ];
+        %tmp.11 = 5;
+        %tmp.12 = gte %tmp.10 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_198_8_214_8_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_198_8_214_8_if_true:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_198_23_214_8_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 200 12 ]
+        symbol [ _log %tmp.13 200 12 16 ];
+        %tmp.13 = getv self :_log;
+        symbol [ _log %tmp.15 200 22 26 ];
+        %tmp.15 = getv ? :_log;
+        %tmp.16 = 1;
+        %tmp.17 = agetv %tmp.15 %tmp.16;
+        %tmp.18 = 2;
+        aputv %tmp.13 %tmp.18 %tmp.17;
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 201 12 ]
+        symbol [ _log %tmp.19 201 12 16 ];
+        %tmp.19 = getv self :_log;
+        symbol [ _log %tmp.21 201 22 26 ];
+        %tmp.21 = getv ? :_log;
+        %tmp.22 = 0;
+        %tmp.23 = agetv %tmp.21 %tmp.22;
+        %tmp.24 = 1;
+        aputv %tmp.19 %tmp.24 %tmp.23;
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 202 12 ]
+        symbol [ _log %tmp.25 202 12 16 ];
+        %tmp.25 = getv self :_log;
+        %tmp.26 = lgetv %secs.1;
+        symbol [ secs %tmp.26 202 22 26 ];
+        %tmp.27 = 0;
+        aputv %tmp.25 %tmp.27 %tmp.26;
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 203 12 ]
+        symbol [ Application %tmp.28 203 12 23 ];
+        %tmp.28 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.29 203 24 31 ];
+        %tmp.29 = getv %tmp.28 :Storage;
+        symbol [ setValue %tmp.30 203 32 40 ];
+        %tmp.30 = getv function %tmp.29 :setValue;
+        %tmp.31 = "ap_lg0";
+        symbol [ _log %tmp.33 203 51 55 ];
+        %tmp.33 = getv ? :_log;
+        %tmp.34 = 0;
+        %tmp.35 = agetv %tmp.33 %tmp.34;
+        invoke %tmp.29 %tmp.30(%tmp.31, %tmp.35);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 204 12 ]
+        symbol [ Application %tmp.36 204 12 23 ];
+        %tmp.36 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.37 204 24 31 ];
+        %tmp.37 = getv %tmp.36 :Storage;
+        symbol [ setValue %tmp.38 204 32 40 ];
+        %tmp.38 = getv function %tmp.37 :setValue;
+        %tmp.39 = "ap_lg1";
+        symbol [ _log %tmp.41 204 51 55 ];
+        %tmp.41 = getv ? :_log;
+        %tmp.42 = 1;
+        %tmp.43 = agetv %tmp.41 %tmp.42;
+        invoke %tmp.37 %tmp.38(%tmp.39, %tmp.43);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 205 12 ]
+        symbol [ Application %tmp.44 205 12 23 ];
+        %tmp.44 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.45 205 24 31 ];
+        %tmp.45 = getv %tmp.44 :Storage;
+        symbol [ setValue %tmp.46 205 32 40 ];
+        %tmp.46 = getv function %tmp.45 :setValue;
+        %tmp.47 = "ap_lg2";
+        symbol [ _log %tmp.49 205 51 55 ];
+        %tmp.49 = getv ? :_log;
+        %tmp.50 = 2;
+        %tmp.51 = agetv %tmp.49 %tmp.50;
+        invoke %tmp.45 %tmp.46(%tmp.47, %tmp.51);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 208 12 ]
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_208_12_213_12_if_stmt:
+        %tmp.52 = lgetv %secs.1;
+        symbol [ secs %tmp.52 208 16 20 ];
+        symbol [ _pb %tmp.54 208 23 26 ];
+        %tmp.54 = getv ? :_pb;
+        %tmp.55 = gt %tmp.52 %tmp.54;
+        bf %tmp.55 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_208_12_213_12_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_208_12_213_12_if_true:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_208_28_213_12_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 209 16 ]
+        %tmp.56 = lgetv %secs.1;
+        symbol [ secs %tmp.56 209 22 26 ];
+        symbol [ _pb ? 209 16 19 ];
+        putv self :_pb %tmp.56;
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 210 16 ]
+        %tmp.57 = true;
+        symbol [ _newPb ? 210 16 22 ];
+        putv self :_newPb %tmp.57;
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 211 16 ]
+        symbol [ Application %tmp.58 211 16 27 ];
+        %tmp.58 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.59 211 28 35 ];
+        %tmp.59 = getv %tmp.58 :Storage;
+        symbol [ setValue %tmp.60 211 36 44 ];
+        %tmp.60 = getv function %tmp.59 :setValue;
+        %tmp.61 = "ap_pb";
+        symbol [ _pb %tmp.63 211 54 57 ];
+        %tmp.63 = getv ? :_pb;
+        invoke %tmp.59 %tmp.60(%tmp.61, %tmp.63);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 212 16 ]
+        %tmp.64 = self;
+        symbol [ _calcThresholds %tmp.65 212 16 31 ];
+        %tmp.65 = getv function %tmp.64 :_calcThresholds;
+        invoke %tmp.64 %tmp.65();
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_208_28_213_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_208_12_213_12_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_208_12_213_12_if_end:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_198_23_214_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_198_8_214_8_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_198_8_214_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 216 8 ]
+        symbol [ SA_DONE %tmp.67 216 17 24 ];
+        %tmp.67 = getv ? :SA_DONE;
+        symbol [ _state ? 216 8 14 ];
+        putv self :_state %tmp.67;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_193_32_217_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 221; @symbol_functiondef = [onUpdate,221,13,21]; @symbol_param<0> = [dc,221,22,24]; ]
+    function onUpdate(dc) {
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_221_26_227_4_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 222 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 222 13 15 ];
+        symbol [ getWidth %tmp.2 222 16 24 ];
+        %tmp.2 = getv function %tmp.1 :getWidth;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        %tmp.4 = 9;
+        %tmp.5 = mul %tmp.3 %tmp.4;
+        %tmp.6 = 10;
+        %tmp.7 = div %tmp.5 %tmp.6;
+        symbol [ _w ? 222 8 10 ];
+        putv self :_w %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 223 8 ]
+        %tmp.8 = lgetv %dc;
+        symbol [ dc %tmp.8 223 13 15 ];
+        symbol [ getHeight %tmp.9 223 16 25 ];
+        %tmp.9 = getv function %tmp.8 :getHeight;
+        %tmp.10 = invoke %tmp.8 %tmp.9();
+        %tmp.11 = 9;
+        %tmp.12 = mul %tmp.10 %tmp.11;
+        %tmp.13 = 10;
+        %tmp.14 = div %tmp.12 %tmp.13;
+        symbol [ _h ? 223 8 10 ];
+        putv self :_h %tmp.14;
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 224 8 ]
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_224_8_226_56_if_stmt:
+        symbol [ _state %tmp.16 224 17 23 ];
+        %tmp.16 = getv ? :_state;
+        symbol [ SA_IDLE %tmp.18 224 27 34 ];
+        %tmp.18 = getv ? :SA_IDLE;
+        %tmp.19 = eq %tmp.16 %tmp.18;
+        bf %tmp.19 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_224_8_226_56_if_false;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_224_8_226_56_if_true:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_224_39_224_56_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 224 41 ]
+        %tmp.20 = self;
+        symbol [ _drawIdle %tmp.21 224 41 50 ];
+        %tmp.21 = getv function %tmp.20 :_drawIdle;
+        %tmp.22 = lgetv %dc;
+        symbol [ dc %tmp.22 224 51 53 ];
+        invoke %tmp.20 %tmp.21(%tmp.22);
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_224_39_224_56_stop:
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_224_8_226_56_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_224_8_226_56_if_false:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 225 13 ]
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_225_13_226_56_if_stmt:
+        symbol [ _state %tmp.24 225 17 23 ];
+        %tmp.24 = getv ? :_state;
+        symbol [ SA_RUNNING %tmp.26 225 27 37 ];
+        %tmp.26 = getv ? :SA_RUNNING;
+        %tmp.27 = eq %tmp.24 %tmp.26;
+        bf %tmp.27 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_225_13_226_56_if_else_false;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_225_13_226_56_if_true:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_225_39_225_59_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 225 41 ]
+        %tmp.28 = self;
+        symbol [ _drawRunning %tmp.29 225 41 53 ];
+        %tmp.29 = getv function %tmp.28 :_drawRunning;
+        %tmp.30 = lgetv %dc;
+        symbol [ dc %tmp.30 225 54 56 ];
+        invoke %tmp.28 %tmp.29(%tmp.30);
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_225_39_225_59_stop:
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_225_13_226_56_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_225_13_226_56_if_else_false:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_226_39_226_56_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 226 41 ]
+        %tmp.31 = self;
+        symbol [ _drawDone %tmp.32 226 41 50 ];
+        %tmp.32 = getv function %tmp.31 :_drawDone;
+        %tmp.33 = lgetv %dc;
+        symbol [ dc %tmp.33 226 51 53 ];
+        invoke %tmp.31 %tmp.32(%tmp.33);
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_226_39_226_56_stop:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_225_13_226_56_if_end:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_224_8_226_56_if_end:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_221_26_227_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 231; @symbol_functiondef = [_fmtTime,231,20,28]; @symbol_param<0> = [secs,231,29,33]; ]
+    protected
+    function _fmtTime(secs) {
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_231_35_236_4_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 232 8 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_231_35_236_4_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_231_35_236_4_stop" ]
+        %m.1 = local;
+        symbol [ m %m.1 232 12 13 ];
+        %tmp.1 = lgetv %secs;
+        symbol [ secs %tmp.1 232 17 21 ];
+        %tmp.2 = 60;
+        %tmp.3 = div %tmp.1 %tmp.2;
+        lputv %m.1 %tmp.3;
+        symbol [ m %m.1 232 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 233 8 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_231_35_236_4_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_231_35_236_4_stop" ]
+        %s.2 = local;
+        symbol [ s %s.2 233 12 13 ];
+        %tmp.4 = lgetv %secs;
+        symbol [ secs %tmp.4 233 17 21 ];
+        %tmp.5 = 60;
+        %tmp.6 = mod %tmp.4 %tmp.5;
+        lputv %s.2 %tmp.6;
+        symbol [ s %s.2 233 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 234 8 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_231_35_236_4_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_231_35_236_4_stop" ]
+        %ss.3 = local;
+        symbol [ ss %ss.3 234 12 14 ];
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_234_17_234_62_begin:
+        %tmp.7 = lgetv %s.2;
+        symbol [ s %tmp.7 234 18 19 ];
+        %tmp.8 = 10;
+        %tmp.9 = lt %tmp.7 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_234_17_234_62_else_false;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_234_17_234_62_true:
+        %tmp.10 = "0";
+        %tmp.11 = lgetv %s.2;
+        symbol [ s %tmp.11 234 35 36 ];
+        symbol [ toString %tmp.12 234 37 45 ];
+        %tmp.12 = getv function %tmp.11 :toString;
+        %tmp.13 = invoke %tmp.11 %tmp.12();
+        %tmp.14 = add %tmp.10 %tmp.13;
+        push %tmp.14;
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_234_17_234_62_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_234_17_234_62_else_false:
+        %tmp.15 = lgetv %s.2;
+        symbol [ s %tmp.15 234 51 52 ];
+        symbol [ toString %tmp.16 234 53 61 ];
+        %tmp.16 = getv function %tmp.15 :toString;
+        %tmp.17 = invoke %tmp.15 %tmp.16();
+        push %tmp.17;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_234_17_234_62_end:
+        %tmp.18 = phi [%tmp.9 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_234_17_234_62_begin] [%tmp.14 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_234_17_234_62_true] [%tmp.17 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_234_17_234_62_else_false] [%tmp.18 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_234_17_234_62_end];
+        lputv %ss.3 %tmp.18;
+        symbol [ ss %ss.3 234 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 235 8 ]
+        %tmp.19 = lgetv %m.1;
+        symbol [ m %tmp.19 235 15 16 ];
+        symbol [ toString %tmp.20 235 17 25 ];
+        %tmp.20 = getv function %tmp.19 :toString;
+        %tmp.21 = invoke %tmp.19 %tmp.20();
+        %tmp.22 = ":";
+        %tmp.23 = add %tmp.21 %tmp.22;
+        %tmp.24 = lgetv %ss.3;
+        symbol [ ss %tmp.24 235 36 38 ];
+        %tmp.25 = add %tmp.23 %tmp.24;
+        ret %tmp.25;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_231_35_236_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 238; @symbol_functiondef = [_phaseColor,238,20,31]; @symbol_param<0> = [secs,238,32,36]; ]
+    protected
+    function _phaseColor(secs) {
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_238_38_242_4_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 239 8 ]
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_239_8_239_48_if_stmt:
+        %tmp.1 = lgetv %secs;
+        symbol [ secs %tmp.1 239 12 16 ];
+        symbol [ _critSecs %tmp.3 239 20 29 ];
+        %tmp.3 = getv ? :_critSecs;
+        %tmp.4 = gte %tmp.1 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_239_8_239_48_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_239_8_239_48_if_true:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_239_31_239_48_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 239 33 ]
+        symbol [ SA_RED %tmp.6 239 40 46 ];
+        %tmp.6 = getv ? :SA_RED;
+        ret %tmp.6;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_239_31_239_48_stop:
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_239_8_239_48_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_239_8_239_48_if_end:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 240 8 ]
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_240_8_240_51_if_stmt:
+        %tmp.7 = lgetv %secs;
+        symbol [ secs %tmp.7 240 12 16 ];
+        symbol [ _warnSecs %tmp.9 240 20 29 ];
+        %tmp.9 = getv ? :_warnSecs;
+        %tmp.10 = gte %tmp.7 %tmp.9;
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_240_8_240_51_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_240_8_240_51_if_true:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_240_31_240_51_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 240 33 ]
+        symbol [ SA_YELLOW %tmp.12 240 40 49 ];
+        %tmp.12 = getv ? :SA_YELLOW;
+        ret %tmp.12;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_240_31_240_51_stop:
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_240_8_240_51_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_240_8_240_51_if_end:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 241 8 ]
+        symbol [ SA_GREEN %tmp.14 241 15 23 ];
+        %tmp.14 = getv ? :SA_GREEN;
+        ret %tmp.14;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_238_38_242_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 247; @symbol_functiondef = [_drawIdle,247,20,29]; @symbol_param<0> = [dc,247,30,32]; ]
+    protected
+    function _drawIdle(dc) {
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_247_34_295_4_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 248 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 248 8 10 ];
+        symbol [ setColor %tmp.2 248 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        symbol [ SA_BG %tmp.4 248 20 25 ];
+        %tmp.4 = getv ? :SA_BG;
+        symbol [ SA_BG %tmp.6 248 27 32 ];
+        %tmp.6 = getv ? :SA_BG;
+        invoke %tmp.1 %tmp.2(%tmp.4, %tmp.6);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 249 8 ]
+        %tmp.7 = lgetv %dc;
+        symbol [ dc %tmp.7 249 8 10 ];
+        symbol [ clear %tmp.8 249 11 16 ];
+        %tmp.8 = getv function %tmp.7 :clear;
+        invoke %tmp.7 %tmp.8();
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 251 8 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_247_34_295_4_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_247_34_295_4_stop" ]
+        %cx.1 = local;
+        symbol [ cx %cx.1 251 12 14 ];
+        symbol [ _w %tmp.10 251 17 19 ];
+        %tmp.10 = getv ? :_w;
+        %tmp.11 = 2;
+        %tmp.12 = div %tmp.10 %tmp.11;
+        lputv %cx.1 %tmp.12;
+        symbol [ cx %cx.1 251 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 252 8 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_247_34_295_4_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_247_34_295_4_stop" ]
+        %tinyH.2 = local;
+        symbol [ tinyH %tinyH.2 252 12 17 ];
+        %tmp.13 = lgetv %dc;
+        symbol [ dc %tmp.13 252 20 22 ];
+        symbol [ getFontHeight %tmp.14 252 23 36 ];
+        %tmp.14 = getv function %tmp.13 :getFontHeight;
+        symbol [ Graphics %tmp.15 252 37 45 ];
+        %tmp.15 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.16 252 46 56 ];
+        %tmp.16 = getv %tmp.15 :FONT_XTINY;
+        %tmp.17 = invoke %tmp.13 %tmp.14(%tmp.16);
+        lputv %tinyH.2 %tmp.17;
+        symbol [ tinyH %tinyH.2 252 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 253 8 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_247_34_295_4_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_247_34_295_4_stop" ]
+        %largeH.3 = local;
+        symbol [ largeH %largeH.3 253 12 18 ];
+        %tmp.18 = lgetv %dc;
+        symbol [ dc %tmp.18 253 21 23 ];
+        symbol [ getFontHeight %tmp.19 253 24 37 ];
+        %tmp.19 = getv function %tmp.18 :getFontHeight;
+        symbol [ Graphics %tmp.20 253 38 46 ];
+        %tmp.20 = getm $.Toybox.Graphics;
+        symbol [ FONT_LARGE %tmp.21 253 47 57 ];
+        %tmp.21 = getv %tmp.20 :FONT_LARGE;
+        %tmp.22 = invoke %tmp.18 %tmp.19(%tmp.21);
+        lputv %largeH.3 %tmp.22;
+        symbol [ largeH %largeH.3 253 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 255 8 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_247_34_295_4_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_247_34_295_4_stop" ]
+        %y.4 = local;
+        symbol [ y %y.4 255 12 13 ];
+        symbol [ _h %tmp.24 255 16 18 ];
+        %tmp.24 = getv ? :_h;
+        %tmp.25 = 9;
+        %tmp.26 = mul %tmp.24 %tmp.25;
+        %tmp.27 = 100;
+        %tmp.28 = div %tmp.26 %tmp.27;
+        lputv %y.4 %tmp.28;
+        symbol [ y %y.4 255 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 257 8 ]
+        %tmp.29 = lgetv %dc;
+        symbol [ dc %tmp.29 257 8 10 ];
+        symbol [ setColor %tmp.30 257 11 19 ];
+        %tmp.30 = getv function %tmp.29 :setColor;
+        symbol [ SA_DIM %tmp.32 257 20 26 ];
+        %tmp.32 = getv ? :SA_DIM;
+        symbol [ Graphics %tmp.33 257 28 36 ];
+        %tmp.33 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.34 257 37 54 ];
+        %tmp.34 = getv %tmp.33 :COLOR_TRANSPARENT;
+        invoke %tmp.29 %tmp.30(%tmp.32, %tmp.34);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 258 8 ]
+        %tmp.35 = lgetv %dc;
+        symbol [ dc %tmp.35 258 8 10 ];
+        symbol [ drawText %tmp.36 258 11 19 ];
+        %tmp.36 = getv function %tmp.35 :drawText;
+        %tmp.37 = lgetv %cx.1;
+        symbol [ cx %tmp.37 258 20 22 ];
+        %tmp.38 = lgetv %y.4;
+        symbol [ y %tmp.38 258 24 25 ];
+        symbol [ Graphics %tmp.39 258 27 35 ];
+        %tmp.39 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.40 258 36 46 ];
+        %tmp.40 = getv %tmp.39 :FONT_XTINY;
+        %tmp.41 = "STATIC APNEA";
+        symbol [ Graphics %tmp.42 258 64 72 ];
+        %tmp.42 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.43 258 73 92 ];
+        %tmp.43 = getv %tmp.42 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.35 %tmp.36(%tmp.37, %tmp.38, %tmp.40, %tmp.41, %tmp.43);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 259 8 ]
+        %tmp.44 = lgetv %y.4;
+        symbol [ y %tmp.44 259 8 9 ];
+        %tmp.45 = lgetv %tinyH.2;
+        symbol [ tinyH %tmp.45 259 13 18 ];
+        %tmp.46 = 6;
+        %tmp.47 = add %tmp.45 %tmp.46;
+        %tmp.48 = add %tmp.44 %tmp.47;
+        lputv %y.4 %tmp.48;
+        symbol [ y %y.4 259 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 261 8 ]
+        %tmp.49 = lgetv %dc;
+        symbol [ dc %tmp.49 261 8 10 ];
+        symbol [ setColor %tmp.50 261 11 19 ];
+        %tmp.50 = getv function %tmp.49 :setColor;
+        symbol [ SA_TEAL %tmp.52 261 20 27 ];
+        %tmp.52 = getv ? :SA_TEAL;
+        symbol [ Graphics %tmp.53 261 29 37 ];
+        %tmp.53 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.54 261 38 55 ];
+        %tmp.54 = getv %tmp.53 :COLOR_TRANSPARENT;
+        invoke %tmp.49 %tmp.50(%tmp.52, %tmp.54);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 262 8 ]
+        %tmp.55 = lgetv %dc;
+        symbol [ dc %tmp.55 262 8 10 ];
+        symbol [ drawText %tmp.56 262 11 19 ];
+        %tmp.56 = getv function %tmp.55 :drawText;
+        %tmp.57 = lgetv %cx.1;
+        symbol [ cx %tmp.57 262 20 22 ];
+        %tmp.58 = lgetv %y.4;
+        symbol [ y %tmp.58 262 24 25 ];
+        symbol [ Graphics %tmp.59 262 27 35 ];
+        %tmp.59 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.60 262 36 46 ];
+        %tmp.60 = getv %tmp.59 :FONT_XTINY;
+        %tmp.61 = "BEST";
+        symbol [ Graphics %tmp.62 262 56 64 ];
+        %tmp.62 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.63 262 65 84 ];
+        %tmp.63 = getv %tmp.62 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.55 %tmp.56(%tmp.57, %tmp.58, %tmp.60, %tmp.61, %tmp.63);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 263 8 ]
+        %tmp.64 = lgetv %y.4;
+        symbol [ y %tmp.64 263 8 9 ];
+        %tmp.65 = lgetv %tinyH.2;
+        symbol [ tinyH %tmp.65 263 13 18 ];
+        %tmp.66 = 4;
+        %tmp.67 = add %tmp.65 %tmp.66;
+        %tmp.68 = add %tmp.64 %tmp.67;
+        lputv %y.4 %tmp.68;
+        symbol [ y %y.4 263 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 265 8 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_247_34_295_4_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_247_34_295_4_stop" ]
+        %pbStr.5 = local;
+        symbol [ pbStr %pbStr.5 265 12 17 ];
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_265_20_265_48_begin:
+        symbol [ _pb %tmp.70 265 21 24 ];
+        %tmp.70 = getv ? :_pb;
+        %tmp.71 = 0;
+        %tmp.72 = gt %tmp.70 %tmp.71;
+        bf %tmp.72 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_265_20_265_48_else_false;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_265_20_265_48_true:
+        %tmp.73 = self;
+        symbol [ _fmtTime %tmp.74 265 32 40 ];
+        %tmp.74 = getv function %tmp.73 :_fmtTime;
+        symbol [ _pb %tmp.76 265 41 44 ];
+        %tmp.76 = getv ? :_pb;
+        %tmp.77 = invoke %tmp.73 %tmp.74(%tmp.76);
+        push %tmp.77;
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_265_20_265_48_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_265_20_265_48_else_false:
+        %tmp.78 = "--:--";
+        push %tmp.78;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_265_20_265_48_end:
+        %tmp.79 = phi [%tmp.72 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_265_20_265_48_begin] [%tmp.77 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_265_20_265_48_true] [%tmp.78 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_265_20_265_48_else_false] [%tmp.79 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_265_20_265_48_end];
+        lputv %pbStr.5 %tmp.79;
+        symbol [ pbStr %pbStr.5 265 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 266 8 ]
+        %tmp.80 = lgetv %dc;
+        symbol [ dc %tmp.80 266 8 10 ];
+        symbol [ setColor %tmp.81 266 11 19 ];
+        %tmp.81 = getv function %tmp.80 :setColor;
+        symbol [ SA_WHITE %tmp.83 266 20 28 ];
+        %tmp.83 = getv ? :SA_WHITE;
+        symbol [ Graphics %tmp.84 266 30 38 ];
+        %tmp.84 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.85 266 39 56 ];
+        %tmp.85 = getv %tmp.84 :COLOR_TRANSPARENT;
+        invoke %tmp.80 %tmp.81(%tmp.83, %tmp.85);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 267 8 ]
+        %tmp.86 = lgetv %dc;
+        symbol [ dc %tmp.86 267 8 10 ];
+        symbol [ drawText %tmp.87 267 11 19 ];
+        %tmp.87 = getv function %tmp.86 :drawText;
+        %tmp.88 = lgetv %cx.1;
+        symbol [ cx %tmp.88 267 20 22 ];
+        %tmp.89 = lgetv %y.4;
+        symbol [ y %tmp.89 267 24 25 ];
+        symbol [ Graphics %tmp.90 267 27 35 ];
+        %tmp.90 = getm $.Toybox.Graphics;
+        symbol [ FONT_LARGE %tmp.91 267 36 46 ];
+        %tmp.91 = getv %tmp.90 :FONT_LARGE;
+        %tmp.92 = lgetv %pbStr.5;
+        symbol [ pbStr %tmp.92 267 48 53 ];
+        symbol [ Graphics %tmp.93 267 55 63 ];
+        %tmp.93 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.94 267 64 83 ];
+        %tmp.94 = getv %tmp.93 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.86 %tmp.87(%tmp.88, %tmp.89, %tmp.91, %tmp.92, %tmp.94);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 268 8 ]
+        %tmp.95 = lgetv %y.4;
+        symbol [ y %tmp.95 268 8 9 ];
+        %tmp.96 = lgetv %largeH.3;
+        symbol [ largeH %tmp.96 268 13 19 ];
+        %tmp.97 = 10;
+        %tmp.98 = add %tmp.96 %tmp.97;
+        %tmp.99 = add %tmp.95 %tmp.98;
+        lputv %y.4 %tmp.99;
+        symbol [ y %y.4 268 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 270 8 ]
+        %tmp.100 = lgetv %dc;
+        symbol [ dc %tmp.100 270 8 10 ];
+        symbol [ setColor %tmp.101 270 11 19 ];
+        %tmp.101 = getv function %tmp.100 :setColor;
+        symbol [ SA_DIM %tmp.103 270 20 26 ];
+        %tmp.103 = getv ? :SA_DIM;
+        symbol [ Graphics %tmp.104 270 28 36 ];
+        %tmp.104 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.105 270 37 54 ];
+        %tmp.105 = getv %tmp.104 :COLOR_TRANSPARENT;
+        invoke %tmp.100 %tmp.101(%tmp.103, %tmp.105);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 271 8 ]
+        %tmp.106 = lgetv %dc;
+        symbol [ dc %tmp.106 271 8 10 ];
+        symbol [ drawLine %tmp.107 271 11 19 ];
+        %tmp.107 = getv function %tmp.106 :drawLine;
+        symbol [ _w %tmp.109 271 20 22 ];
+        %tmp.109 = getv ? :_w;
+        %tmp.110 = 10;
+        %tmp.111 = mul %tmp.109 %tmp.110;
+        %tmp.112 = 100;
+        %tmp.113 = div %tmp.111 %tmp.112;
+        %tmp.114 = lgetv %y.4;
+        symbol [ y %tmp.114 271 35 36 ];
+        symbol [ _w %tmp.116 271 38 40 ];
+        %tmp.116 = getv ? :_w;
+        %tmp.117 = 90;
+        %tmp.118 = mul %tmp.116 %tmp.117;
+        %tmp.119 = 100;
+        %tmp.120 = div %tmp.118 %tmp.119;
+        %tmp.121 = lgetv %y.4;
+        symbol [ y %tmp.121 271 53 54 ];
+        invoke %tmp.106 %tmp.107(%tmp.113, %tmp.114, %tmp.120, %tmp.121);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 272 8 ]
+        %tmp.122 = lgetv %y.4;
+        symbol [ y %tmp.122 272 8 9 ];
+        %tmp.123 = 12;
+        %tmp.124 = add %tmp.122 %tmp.123;
+        lputv %y.4 %tmp.124;
+        symbol [ y %y.4 272 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 274 8 ]
+        %tmp.125 = lgetv %dc;
+        symbol [ dc %tmp.125 274 8 10 ];
+        symbol [ setColor %tmp.126 274 11 19 ];
+        %tmp.126 = getv function %tmp.125 :setColor;
+        symbol [ SA_DIM %tmp.128 274 20 26 ];
+        %tmp.128 = getv ? :SA_DIM;
+        symbol [ Graphics %tmp.129 274 28 36 ];
+        %tmp.129 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.130 274 37 54 ];
+        %tmp.130 = getv %tmp.129 :COLOR_TRANSPARENT;
+        invoke %tmp.125 %tmp.126(%tmp.128, %tmp.130);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 275 8 ]
+        %tmp.131 = lgetv %dc;
+        symbol [ dc %tmp.131 275 8 10 ];
+        symbol [ drawText %tmp.132 275 11 19 ];
+        %tmp.132 = getv function %tmp.131 :drawText;
+        %tmp.133 = lgetv %cx.1;
+        symbol [ cx %tmp.133 275 20 22 ];
+        %tmp.134 = lgetv %y.4;
+        symbol [ y %tmp.134 275 24 25 ];
+        symbol [ Graphics %tmp.135 275 27 35 ];
+        %tmp.135 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.136 275 36 46 ];
+        %tmp.136 = getv %tmp.135 :FONT_XTINY;
+        %tmp.137 = "Last:";
+        symbol [ Graphics %tmp.138 275 57 65 ];
+        %tmp.138 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.139 275 66 85 ];
+        %tmp.139 = getv %tmp.138 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.131 %tmp.132(%tmp.133, %tmp.134, %tmp.136, %tmp.137, %tmp.139);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 276 8 ]
+        %tmp.140 = lgetv %y.4;
+        symbol [ y %tmp.140 276 8 9 ];
+        %tmp.141 = lgetv %tinyH.2;
+        symbol [ tinyH %tmp.141 276 13 18 ];
+        %tmp.142 = 6;
+        %tmp.143 = add %tmp.141 %tmp.142;
+        %tmp.144 = add %tmp.140 %tmp.143;
+        lputv %y.4 %tmp.144;
+        symbol [ y %y.4 276 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 278 8 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_247_34_295_4_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_247_34_295_4_stop" ]
+        %sessFont.6 = local;
+        symbol [ sessFont %sessFont.6 278 12 20 ];
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_278_23_278_68_begin:
+        symbol [ _h %tmp.146 278 24 26 ];
+        %tmp.146 = getv ? :_h;
+        %tmp.147 = 180;
+        %tmp.148 = gte %tmp.146 %tmp.147;
+        bf %tmp.148 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_278_23_278_68_else_false;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_278_23_278_68_true:
+        symbol [ Graphics %tmp.149 278 37 45 ];
+        %tmp.149 = getm $.Toybox.Graphics;
+        symbol [ FONT_SMALL %tmp.150 278 46 56 ];
+        %tmp.150 = getv %tmp.149 :FONT_SMALL;
+        push %tmp.150;
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_278_23_278_68_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_278_23_278_68_else_false:
+        symbol [ Graphics %tmp.151 278 59 67 ];
+        %tmp.151 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.152 278 68 78 ];
+        %tmp.152 = getv %tmp.151 :FONT_XTINY;
+        push %tmp.152;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_278_23_278_68_end:
+        %tmp.153 = phi [%tmp.148 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_278_23_278_68_begin] [%tmp.150 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_278_23_278_68_true] [%tmp.152 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_278_23_278_68_else_false] [%tmp.153 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_278_23_278_68_end];
+        lputv %sessFont.6 %tmp.153;
+        symbol [ sessFont %sessFont.6 278 12 20 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 279 8 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_247_34_295_4_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_247_34_295_4_stop" ]
+        %sessH.7 = local;
+        symbol [ sessH %sessH.7 279 12 17 ];
+        %tmp.154 = lgetv %dc;
+        symbol [ dc %tmp.154 279 20 22 ];
+        symbol [ getFontHeight %tmp.155 279 23 36 ];
+        %tmp.155 = getv function %tmp.154 :getFontHeight;
+        %tmp.156 = lgetv %sessFont.6;
+        symbol [ sessFont %tmp.156 279 37 45 ];
+        %tmp.157 = invoke %tmp.154 %tmp.155(%tmp.156);
+        lputv %sessH.7 %tmp.157;
+        symbol [ sessH %sessH.7 279 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 280 8 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_247_34_295_4_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_247_34_295_4_stop" ]
+        %rowGap.8 = local;
+        symbol [ rowGap %rowGap.8 280 12 18 ];
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_280_21_280_39_begin:
+        symbol [ _h %tmp.159 280 22 24 ];
+        %tmp.159 = getv ? :_h;
+        %tmp.160 = 200;
+        %tmp.161 = gte %tmp.159 %tmp.160;
+        bf %tmp.161 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_280_21_280_39_else_false;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_280_21_280_39_true:
+        %tmp.162 = 5;
+        push %tmp.162;
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_280_21_280_39_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_280_21_280_39_else_false:
+        %tmp.163 = 3;
+        push %tmp.163;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_280_21_280_39_end:
+        %tmp.164 = phi [%tmp.161 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_280_21_280_39_begin] [%tmp.162 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_280_21_280_39_true] [%tmp.163 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_280_21_280_39_else_false] [%tmp.164 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_280_21_280_39_end];
+        lputv %rowGap.8 %tmp.164;
+        symbol [ rowGap %rowGap.8 280 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 282 8 ]
+        for @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_282_8_289_8_for_test @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_282_8_289_8_for_incr @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_282_8_289_8_for_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_282_8_289_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_282_8_289_8_for_begin" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_282_8_289_8_for_end" ]
+        %i.9 = local;
+        symbol [ i %i.9 282 17 18 ];
+        %tmp.165 = 0;
+        lputv %i.9 %tmp.165;
+        symbol [ i %i.9 282 17 18 ];
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_282_8_289_8_for_test:
+        %tmp.166 = lgetv %i.9;
+        symbol [ i %tmp.166 282 24 25 ];
+        %tmp.167 = 3;
+        %tmp.168 = lt %tmp.166 %tmp.167;
+        bf %tmp.168 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_282_8_289_8_for_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_282_8_289_8_for_begin:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_282_36_289_8_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 283 12 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_282_36_289_8_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_282_36_289_8_stop" ]
+        %sv.10 = local;
+        symbol [ sv %sv.10 283 16 18 ];
+        symbol [ _log %tmp.170 283 21 25 ];
+        %tmp.170 = getv ? :_log;
+        %tmp.171 = lgetv %i.9;
+        symbol [ i %tmp.171 283 26 27 ];
+        %tmp.172 = agetv %tmp.170 %tmp.171;
+        lputv %sv.10 %tmp.172;
+        symbol [ sv %sv.10 283 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 284 12 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_282_36_289_8_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_282_36_289_8_stop" ]
+        %str.11 = local;
+        symbol [ str %str.11 284 16 19 ];
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_284_22_284_48_begin:
+        %tmp.173 = lgetv %sv.10;
+        symbol [ sv %tmp.173 284 23 25 ];
+        %tmp.174 = 0;
+        %tmp.175 = gt %tmp.173 %tmp.174;
+        bf %tmp.175 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_284_22_284_48_else_false;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_284_22_284_48_true:
+        %tmp.176 = self;
+        symbol [ _fmtTime %tmp.177 284 33 41 ];
+        %tmp.177 = getv function %tmp.176 :_fmtTime;
+        %tmp.178 = lgetv %sv.10;
+        symbol [ sv %tmp.178 284 42 44 ];
+        %tmp.179 = invoke %tmp.176 %tmp.177(%tmp.178);
+        push %tmp.179;
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_284_22_284_48_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_284_22_284_48_else_false:
+        %tmp.180 = "--:--";
+        push %tmp.180;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_284_22_284_48_end:
+        %tmp.181 = phi [%tmp.175 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_284_22_284_48_begin] [%tmp.179 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_284_22_284_48_true] [%tmp.180 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_284_22_284_48_else_false] [%tmp.181 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_284_22_284_48_end];
+        lputv %str.11 %tmp.181;
+        symbol [ str %str.11 284 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 285 12 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_282_36_289_8_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_282_36_289_8_stop" ]
+        %tc.12 = local;
+        symbol [ tc %tc.12 285 16 18 ];
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_285_21_285_55_begin:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_285_22_285_38_begin:
+        %tmp.182 = lgetv %sv.10;
+        symbol [ sv %tmp.182 285 22 24 ];
+        %tmp.183 = 0;
+        %tmp.184 = gt %tmp.182 %tmp.183;
+        bf %tmp.184 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_285_21_285_55_else_false;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_285_32_285_38_true:
+        %tmp.185 = lgetv %sv.10;
+        symbol [ sv %tmp.185 285 32 34 ];
+        symbol [ _pb %tmp.187 285 38 41 ];
+        %tmp.187 = getv ? :_pb;
+        %tmp.188 = eq %tmp.185 %tmp.187;
+        push %tmp.188;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_285_32_285_38_end:
+        %tmp.189 = phi [%tmp.184 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_285_22_285_38_begin] [%tmp.188 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_285_32_285_38_true] [%tmp.189 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_285_32_285_38_end];
+        bf %tmp.189 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_285_21_285_55_else_false;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_285_21_285_55_true:
+        symbol [ SA_TEAL %tmp.191 285 45 52 ];
+        %tmp.191 = getv ? :SA_TEAL;
+        push %tmp.191;
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_285_21_285_55_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_285_21_285_55_else_false:
+        %tmp.192 = 0x2A4A5A;
+        push %tmp.192;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_285_21_285_55_end:
+        %tmp.193 = phi [%tmp.189 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_285_21_285_55_begin] [%tmp.191 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_285_21_285_55_true] [%tmp.192 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_285_21_285_55_else_false] [%tmp.193 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_285_21_285_55_end];
+        lputv %tc.12 %tmp.193;
+        symbol [ tc %tc.12 285 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 286 12 ]
+        %tmp.194 = lgetv %dc;
+        symbol [ dc %tmp.194 286 12 14 ];
+        symbol [ setColor %tmp.195 286 15 23 ];
+        %tmp.195 = getv function %tmp.194 :setColor;
+        %tmp.196 = lgetv %tc.12;
+        symbol [ tc %tmp.196 286 24 26 ];
+        symbol [ Graphics %tmp.197 286 28 36 ];
+        %tmp.197 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.198 286 37 54 ];
+        %tmp.198 = getv %tmp.197 :COLOR_TRANSPARENT;
+        invoke %tmp.194 %tmp.195(%tmp.196, %tmp.198);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 287 12 ]
+        %tmp.199 = lgetv %dc;
+        symbol [ dc %tmp.199 287 12 14 ];
+        symbol [ drawText %tmp.200 287 15 23 ];
+        %tmp.200 = getv function %tmp.199 :drawText;
+        %tmp.201 = lgetv %cx.1;
+        symbol [ cx %tmp.201 287 24 26 ];
+        %tmp.202 = lgetv %y.4;
+        symbol [ y %tmp.202 287 28 29 ];
+        %tmp.203 = lgetv %sessFont.6;
+        symbol [ sessFont %tmp.203 287 31 39 ];
+        %tmp.204 = lgetv %str.11;
+        symbol [ str %tmp.204 287 41 44 ];
+        symbol [ Graphics %tmp.205 287 46 54 ];
+        %tmp.205 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.206 287 55 74 ];
+        %tmp.206 = getv %tmp.205 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.199 %tmp.200(%tmp.201, %tmp.202, %tmp.203, %tmp.204, %tmp.206);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 288 12 ]
+        %tmp.207 = lgetv %y.4;
+        symbol [ y %tmp.207 288 12 13 ];
+        %tmp.208 = lgetv %sessH.7;
+        symbol [ sessH %tmp.208 288 17 22 ];
+        %tmp.209 = lgetv %rowGap.8;
+        symbol [ rowGap %tmp.209 288 25 31 ];
+        %tmp.210 = add %tmp.208 %tmp.209;
+        %tmp.211 = add %tmp.207 %tmp.210;
+        lputv %y.4 %tmp.211;
+        symbol [ y %y.4 288 12 13 ];
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_282_36_289_8_stop:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_282_8_289_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 282 ]
+        %tmp.214 = lgetv %i.9;
+        symbol [ i %tmp.214 282 31 32 ];
+        %tmp.215 = add %tmp.214 1;
+        lputv %i.9 %tmp.215;
+        symbol [ i %i.9 282 31 32 ];
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_282_8_289_8_for_test;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_282_8_289_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 291 8 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_247_34_295_4_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_247_34_295_4_stop" ]
+        %pc.13 = local;
+        symbol [ pc %pc.13 291 12 14 ];
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_291_17_291_46_begin:
+        symbol [ _tick %tmp.217 291 18 23 ];
+        %tmp.217 = getv ? :_tick;
+        %tmp.218 = 14;
+        %tmp.219 = mod %tmp.217 %tmp.218;
+        %tmp.220 = 7;
+        %tmp.221 = lt %tmp.219 %tmp.220;
+        bf %tmp.221 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_291_17_291_46_else_false;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_291_17_291_46_true:
+        symbol [ SA_TEAL %tmp.223 291 36 43 ];
+        %tmp.223 = getv ? :SA_TEAL;
+        push %tmp.223;
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_291_17_291_46_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_291_17_291_46_else_false:
+        symbol [ SA_DIM %tmp.225 291 46 52 ];
+        %tmp.225 = getv ? :SA_DIM;
+        push %tmp.225;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_291_17_291_46_end:
+        %tmp.226 = phi [%tmp.221 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_291_17_291_46_begin] [%tmp.223 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_291_17_291_46_true] [%tmp.225 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_291_17_291_46_else_false] [%tmp.226 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_291_17_291_46_end];
+        lputv %pc.13 %tmp.226;
+        symbol [ pc %pc.13 291 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 292 8 ]
+        %tmp.227 = lgetv %dc;
+        symbol [ dc %tmp.227 292 8 10 ];
+        symbol [ setColor %tmp.228 292 11 19 ];
+        %tmp.228 = getv function %tmp.227 :setColor;
+        %tmp.229 = lgetv %pc.13;
+        symbol [ pc %tmp.229 292 20 22 ];
+        symbol [ Graphics %tmp.230 292 24 32 ];
+        %tmp.230 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.231 292 33 50 ];
+        %tmp.231 = getv %tmp.230 :COLOR_TRANSPARENT;
+        invoke %tmp.227 %tmp.228(%tmp.229, %tmp.231);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 293 8 ]
+        %tmp.232 = lgetv %dc;
+        symbol [ dc %tmp.232 293 8 10 ];
+        symbol [ drawText %tmp.233 293 11 19 ];
+        %tmp.233 = getv function %tmp.232 :drawText;
+        %tmp.234 = lgetv %cx.1;
+        symbol [ cx %tmp.234 293 20 22 ];
+        symbol [ _h %tmp.236 293 24 26 ];
+        %tmp.236 = getv ? :_h;
+        %tmp.237 = 88;
+        %tmp.238 = mul %tmp.236 %tmp.237;
+        %tmp.239 = 100;
+        %tmp.240 = div %tmp.238 %tmp.239;
+        symbol [ Graphics %tmp.241 293 39 47 ];
+        %tmp.241 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.242 293 48 58 ];
+        %tmp.242 = getv %tmp.241 :FONT_XTINY;
+        %tmp.243 = "SELECT to start";
+        symbol [ Graphics %tmp.244 294 31 39 ];
+        %tmp.244 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.245 294 40 59 ];
+        %tmp.245 = getv %tmp.244 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.232 %tmp.233(%tmp.234, %tmp.240, %tmp.242, %tmp.243, %tmp.245);
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_247_34_295_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 300; @symbol_functiondef = [_drawRunning,300,20,32]; @symbol_param<0> = [dc,300,33,35]; ]
+    protected
+    function _drawRunning(dc) {
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_300_37_371_4_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 301 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 301 8 10 ];
+        symbol [ setColor %tmp.2 301 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        symbol [ SA_BG %tmp.4 301 20 25 ];
+        %tmp.4 = getv ? :SA_BG;
+        symbol [ SA_BG %tmp.6 301 27 32 ];
+        %tmp.6 = getv ? :SA_BG;
+        invoke %tmp.1 %tmp.2(%tmp.4, %tmp.6);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 302 8 ]
+        %tmp.7 = lgetv %dc;
+        symbol [ dc %tmp.7 302 8 10 ];
+        symbol [ clear %tmp.8 302 11 16 ];
+        %tmp.8 = getv function %tmp.7 :clear;
+        invoke %tmp.7 %tmp.8();
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 304 8 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_300_37_371_4_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_300_37_371_4_stop" ]
+        %secs.1 = local;
+        symbol [ secs %secs.1 304 12 16 ];
+        symbol [ _elapsed %tmp.10 304 19 27 ];
+        %tmp.10 = getv ? :_elapsed;
+        %tmp.11 = 5;
+        %tmp.12 = div %tmp.10 %tmp.11;
+        lputv %secs.1 %tmp.12;
+        symbol [ secs %secs.1 304 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 305 8 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_300_37_371_4_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_300_37_371_4_stop" ]
+        %pC.2 = local;
+        symbol [ pC %pC.2 305 12 14 ];
+        %tmp.13 = self;
+        symbol [ _phaseColor %tmp.14 305 19 30 ];
+        %tmp.14 = getv function %tmp.13 :_phaseColor;
+        %tmp.15 = lgetv %secs.1;
+        symbol [ secs %tmp.15 305 31 35 ];
+        %tmp.16 = invoke %tmp.13 %tmp.14(%tmp.15);
+        lputv %pC.2 %tmp.16;
+        symbol [ pC %pC.2 305 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 306 8 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_300_37_371_4_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_300_37_371_4_stop" ]
+        %cx.3 = local;
+        symbol [ cx %cx.3 306 12 14 ];
+        symbol [ _w %tmp.18 306 19 21 ];
+        %tmp.18 = getv ? :_w;
+        %tmp.19 = 2;
+        %tmp.20 = div %tmp.18 %tmp.19;
+        lputv %cx.3 %tmp.20;
+        symbol [ cx %cx.3 306 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 307 8 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_300_37_371_4_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_300_37_371_4_stop" ]
+        %cy.4 = local;
+        symbol [ cy %cy.4 307 12 14 ];
+        symbol [ _h %tmp.22 307 19 21 ];
+        %tmp.22 = getv ? :_h;
+        %tmp.23 = 2;
+        %tmp.24 = div %tmp.22 %tmp.23;
+        lputv %cy.4 %tmp.24;
+        symbol [ cy %cy.4 307 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 310 8 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_300_37_371_4_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_300_37_371_4_stop" ]
+        %rMax.5 = local;
+        symbol [ rMax %rMax.5 310 12 16 ];
+        symbol [ _w %tmp.26 310 19 21 ];
+        %tmp.26 = getv ? :_w;
+        %tmp.27 = 2;
+        %tmp.28 = div %tmp.26 %tmp.27;
+        %tmp.29 = 3;
+        %tmp.30 = sub %tmp.28 %tmp.29;
+        lputv %rMax.5 %tmp.30;
+        symbol [ rMax %rMax.5 310 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 311 8 ]
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_311_8_311_52_if_stmt:
+        %tmp.31 = lgetv %rMax.5;
+        symbol [ rMax %tmp.31 311 12 16 ];
+        symbol [ _h %tmp.33 311 19 21 ];
+        %tmp.33 = getv ? :_h;
+        %tmp.34 = 2;
+        %tmp.35 = div %tmp.33 %tmp.34;
+        %tmp.36 = 3;
+        %tmp.37 = sub %tmp.35 %tmp.36;
+        %tmp.38 = gt %tmp.31 %tmp.37;
+        bf %tmp.38 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_311_8_311_52_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_311_8_311_52_if_true:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_311_31_311_52_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 311 33 ]
+        symbol [ _h %tmp.40 311 40 42 ];
+        %tmp.40 = getv ? :_h;
+        %tmp.41 = 2;
+        %tmp.42 = div %tmp.40 %tmp.41;
+        %tmp.43 = 3;
+        %tmp.44 = sub %tmp.42 %tmp.43;
+        lputv %rMax.5 %tmp.44;
+        symbol [ rMax %rMax.5 311 33 37 ];
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_311_31_311_52_stop:
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_311_8_311_52_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_311_8_311_52_if_end:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 312 8 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_300_37_371_4_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_300_37_371_4_stop" ]
+        %ringR.6 = local;
+        symbol [ ringR %ringR.6 312 12 17 ];
+        symbol [ _w %tmp.46 312 20 22 ];
+        %tmp.46 = getv ? :_w;
+        %tmp.47 = 42;
+        %tmp.48 = mul %tmp.46 %tmp.47;
+        %tmp.49 = 100;
+        %tmp.50 = div %tmp.48 %tmp.49;
+        lputv %ringR.6 %tmp.50;
+        symbol [ ringR %ringR.6 312 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 313 8 ]
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_313_8_313_42_if_stmt:
+        %tmp.51 = lgetv %ringR.6;
+        symbol [ ringR %tmp.51 313 12 17 ];
+        %tmp.52 = lgetv %rMax.5;
+        symbol [ rMax %tmp.52 313 20 24 ];
+        %tmp.53 = gt %tmp.51 %tmp.52;
+        bf %tmp.53 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_313_8_313_42_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_313_8_313_42_if_true:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_313_26_313_42_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 313 28 ]
+        %tmp.54 = lgetv %rMax.5;
+        symbol [ rMax %tmp.54 313 36 40 ];
+        lputv %ringR.6 %tmp.54;
+        symbol [ ringR %ringR.6 313 28 33 ];
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_313_26_313_42_stop:
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_313_8_313_42_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_313_8_313_42_if_end:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 315 8 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_300_37_371_4_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_300_37_371_4_stop" ]
+        %pulseOff.7 = local;
+        symbol [ pulseOff %pulseOff.7 315 12 20 ];
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_315_23_315_45_begin:
+        symbol [ _tick %tmp.56 315 24 29 ];
+        %tmp.56 = getv ? :_tick;
+        %tmp.57 = 4;
+        %tmp.58 = mod %tmp.56 %tmp.57;
+        %tmp.59 = 2;
+        %tmp.60 = lt %tmp.58 %tmp.59;
+        bf %tmp.60 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_315_23_315_45_else_false;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_315_23_315_45_true:
+        %tmp.61 = 0;
+        push %tmp.61;
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_315_23_315_45_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_315_23_315_45_else_false:
+        %tmp.62 = 1;
+        push %tmp.62;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_315_23_315_45_end:
+        %tmp.63 = phi [%tmp.60 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_315_23_315_45_begin] [%tmp.61 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_315_23_315_45_true] [%tmp.62 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_315_23_315_45_else_false] [%tmp.63 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_315_23_315_45_end];
+        lputv %pulseOff.7 %tmp.63;
+        symbol [ pulseOff %pulseOff.7 315 12 20 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 316 8 ]
+        %tmp.64 = lgetv %dc;
+        symbol [ dc %tmp.64 316 8 10 ];
+        symbol [ setColor %tmp.65 316 11 19 ];
+        %tmp.65 = getv function %tmp.64 :setColor;
+        %tmp.66 = 0x081828;
+        symbol [ Graphics %tmp.67 316 30 38 ];
+        %tmp.67 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.68 316 39 56 ];
+        %tmp.68 = getv %tmp.67 :COLOR_TRANSPARENT;
+        invoke %tmp.64 %tmp.65(%tmp.66, %tmp.68);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 317 8 ]
+        %tmp.69 = lgetv %dc;
+        symbol [ dc %tmp.69 317 8 10 ];
+        symbol [ drawCircle %tmp.70 317 11 21 ];
+        %tmp.70 = getv function %tmp.69 :drawCircle;
+        %tmp.71 = lgetv %cx.3;
+        symbol [ cx %tmp.71 317 22 24 ];
+        %tmp.72 = lgetv %cy.4;
+        symbol [ cy %tmp.72 317 26 28 ];
+        %tmp.73 = lgetv %ringR.6;
+        symbol [ ringR %tmp.73 317 30 35 ];
+        %tmp.74 = lgetv %pulseOff.7;
+        symbol [ pulseOff %tmp.74 317 38 46 ];
+        %tmp.75 = add %tmp.73 %tmp.74;
+        invoke %tmp.69 %tmp.70(%tmp.71, %tmp.72, %tmp.75);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 318 8 ]
+        %tmp.76 = lgetv %dc;
+        symbol [ dc %tmp.76 318 8 10 ];
+        symbol [ drawCircle %tmp.77 318 11 21 ];
+        %tmp.77 = getv function %tmp.76 :drawCircle;
+        %tmp.78 = lgetv %cx.3;
+        symbol [ cx %tmp.78 318 22 24 ];
+        %tmp.79 = lgetv %cy.4;
+        symbol [ cy %tmp.79 318 26 28 ];
+        %tmp.80 = lgetv %ringR.6;
+        symbol [ ringR %tmp.80 318 30 35 ];
+        %tmp.81 = lgetv %pulseOff.7;
+        symbol [ pulseOff %tmp.81 318 38 46 ];
+        %tmp.82 = add %tmp.80 %tmp.81;
+        %tmp.83 = 1;
+        %tmp.84 = add %tmp.82 %tmp.83;
+        invoke %tmp.76 %tmp.77(%tmp.78, %tmp.79, %tmp.84);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 321 8 ]
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_321_8_339_8_if_stmt:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_321_12_321_30_begin:
+        symbol [ _pb %tmp.86 321 12 15 ];
+        %tmp.86 = getv ? :_pb;
+        %tmp.87 = 0;
+        %tmp.88 = gt %tmp.86 %tmp.87;
+        bf %tmp.88 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_321_8_339_8_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_321_23_321_30_true:
+        %tmp.89 = lgetv %secs.1;
+        symbol [ secs %tmp.89 321 23 27 ];
+        %tmp.90 = 0;
+        %tmp.91 = gt %tmp.89 %tmp.90;
+        push %tmp.91;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_321_23_321_30_end:
+        %tmp.92 = phi [%tmp.88 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_321_12_321_30_begin] [%tmp.91 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_321_23_321_30_true] [%tmp.92 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_321_23_321_30_end];
+        bf %tmp.92 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_321_8_339_8_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_321_8_339_8_if_true:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_321_33_339_8_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 322 12 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_321_33_339_8_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_321_33_339_8_stop" ]
+        %arcR.8 = local;
+        symbol [ arcR %arcR.8 322 16 20 ];
+        %tmp.93 = lgetv %ringR.6;
+        symbol [ ringR %tmp.93 322 23 28 ];
+        %tmp.94 = 5;
+        %tmp.95 = sub %tmp.93 %tmp.94;
+        lputv %arcR.8 %tmp.95;
+        symbol [ arcR %arcR.8 322 16 20 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 323 12 ]
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_323_12_323_38_if_stmt:
+        %tmp.96 = lgetv %arcR.8;
+        symbol [ arcR %tmp.96 323 16 20 ];
+        %tmp.97 = 8;
+        %tmp.98 = lt %tmp.96 %tmp.97;
+        bf %tmp.98 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_323_12_323_38_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_323_12_323_38_if_true:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_323_26_323_38_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 323 28 ]
+        %tmp.99 = 8;
+        lputv %arcR.8 %tmp.99;
+        symbol [ arcR %arcR.8 323 28 32 ];
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_323_26_323_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_323_12_323_38_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_323_12_323_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 325 12 ]
+        %tmp.100 = lgetv %dc;
+        symbol [ dc %tmp.100 325 12 14 ];
+        symbol [ setColor %tmp.101 325 15 23 ];
+        %tmp.101 = getv function %tmp.100 :setColor;
+        symbol [ SA_DIM %tmp.103 325 24 30 ];
+        %tmp.103 = getv ? :SA_DIM;
+        symbol [ Graphics %tmp.104 325 32 40 ];
+        %tmp.104 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.105 325 41 58 ];
+        %tmp.105 = getv %tmp.104 :COLOR_TRANSPARENT;
+        invoke %tmp.100 %tmp.101(%tmp.103, %tmp.105);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 326 12 ]
+        %tmp.106 = lgetv %dc;
+        symbol [ dc %tmp.106 326 12 14 ];
+        symbol [ drawCircle %tmp.107 326 15 25 ];
+        %tmp.107 = getv function %tmp.106 :drawCircle;
+        %tmp.108 = lgetv %cx.3;
+        symbol [ cx %tmp.108 326 26 28 ];
+        %tmp.109 = lgetv %cy.4;
+        symbol [ cy %tmp.109 326 30 32 ];
+        %tmp.110 = lgetv %arcR.8;
+        symbol [ arcR %tmp.110 326 34 38 ];
+        invoke %tmp.106 %tmp.107(%tmp.108, %tmp.109, %tmp.110);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 328 12 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_321_33_339_8_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_321_33_339_8_stop" ]
+        %pct.9 = local;
+        symbol [ pct %pct.9 328 16 19 ];
+        %tmp.111 = lgetv %secs.1;
+        symbol [ secs %tmp.111 328 22 26 ];
+        %tmp.112 = 360;
+        %tmp.113 = mul %tmp.111 %tmp.112;
+        symbol [ _pb %tmp.115 328 35 38 ];
+        %tmp.115 = getv ? :_pb;
+        %tmp.116 = div %tmp.113 %tmp.115;
+        lputv %pct.9 %tmp.116;
+        symbol [ pct %pct.9 328 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 329 12 ]
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_329_12_338_12_if_stmt:
+        %tmp.117 = lgetv %pct.9;
+        symbol [ pct %tmp.117 329 16 19 ];
+        %tmp.118 = 360;
+        %tmp.119 = gte %tmp.117 %tmp.118;
+        bf %tmp.119 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_329_12_338_12_if_else_false;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_329_12_338_12_if_true:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_329_28_334_12_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 331 16 ]
+        %tmp.120 = lgetv %dc;
+        symbol [ dc %tmp.120 331 16 18 ];
+        symbol [ setColor %tmp.121 331 19 27 ];
+        %tmp.121 = getv function %tmp.120 :setColor;
+        %tmp.122 = lgetv %pC.2;
+        symbol [ pC %tmp.122 331 28 30 ];
+        symbol [ Graphics %tmp.123 331 32 40 ];
+        %tmp.123 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.124 331 41 58 ];
+        %tmp.124 = getv %tmp.123 :COLOR_TRANSPARENT;
+        invoke %tmp.120 %tmp.121(%tmp.122, %tmp.124);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 332 16 ]
+        %tmp.125 = lgetv %dc;
+        symbol [ dc %tmp.125 332 16 18 ];
+        symbol [ drawCircle %tmp.126 332 19 29 ];
+        %tmp.126 = getv function %tmp.125 :drawCircle;
+        %tmp.127 = lgetv %cx.3;
+        symbol [ cx %tmp.127 332 30 32 ];
+        %tmp.128 = lgetv %cy.4;
+        symbol [ cy %tmp.128 332 34 36 ];
+        %tmp.129 = lgetv %arcR.8;
+        symbol [ arcR %tmp.129 332 38 42 ];
+        invoke %tmp.125 %tmp.126(%tmp.127, %tmp.128, %tmp.129);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 333 16 ]
+        %tmp.130 = lgetv %dc;
+        symbol [ dc %tmp.130 333 16 18 ];
+        symbol [ drawCircle %tmp.131 333 19 29 ];
+        %tmp.131 = getv function %tmp.130 :drawCircle;
+        %tmp.132 = lgetv %cx.3;
+        symbol [ cx %tmp.132 333 30 32 ];
+        %tmp.133 = lgetv %cy.4;
+        symbol [ cy %tmp.133 333 34 36 ];
+        %tmp.134 = lgetv %arcR.8;
+        symbol [ arcR %tmp.134 333 38 42 ];
+        %tmp.135 = 1;
+        %tmp.136 = add %tmp.134 %tmp.135;
+        invoke %tmp.130 %tmp.131(%tmp.132, %tmp.133, %tmp.136);
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_329_28_334_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_329_12_338_12_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_329_12_338_12_if_else_false:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_334_19_338_12_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 335 16 ]
+        %tmp.137 = lgetv %dc;
+        symbol [ dc %tmp.137 335 16 18 ];
+        symbol [ setColor %tmp.138 335 19 27 ];
+        %tmp.138 = getv function %tmp.137 :setColor;
+        %tmp.139 = lgetv %pC.2;
+        symbol [ pC %tmp.139 335 28 30 ];
+        symbol [ Graphics %tmp.140 335 32 40 ];
+        %tmp.140 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.141 335 41 58 ];
+        %tmp.141 = getv %tmp.140 :COLOR_TRANSPARENT;
+        invoke %tmp.137 %tmp.138(%tmp.139, %tmp.141);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 336 16 ]
+        %tmp.142 = lgetv %dc;
+        symbol [ dc %tmp.142 336 16 18 ];
+        symbol [ drawArc %tmp.143 336 19 26 ];
+        %tmp.143 = getv function %tmp.142 :drawArc;
+        %tmp.144 = lgetv %cx.3;
+        symbol [ cx %tmp.144 336 27 29 ];
+        %tmp.145 = lgetv %cy.4;
+        symbol [ cy %tmp.145 336 31 33 ];
+        %tmp.146 = lgetv %arcR.8;
+        symbol [ arcR %tmp.146 336 35 39 ];
+        symbol [ Graphics %tmp.147 336 41 49 ];
+        %tmp.147 = getm $.Toybox.Graphics;
+        symbol [ ARC_CLOCKWISE %tmp.148 336 50 63 ];
+        %tmp.148 = getv %tmp.147 :ARC_CLOCKWISE;
+        %tmp.149 = 90;
+        %tmp.150 = 90;
+        %tmp.151 = lgetv %pct.9;
+        symbol [ pct %tmp.151 336 74 77 ];
+        %tmp.152 = sub %tmp.150 %tmp.151;
+        invoke %tmp.142 %tmp.143(%tmp.144, %tmp.145, %tmp.146, %tmp.148, %tmp.149, %tmp.152);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 337 16 ]
+        %tmp.153 = lgetv %dc;
+        symbol [ dc %tmp.153 337 16 18 ];
+        symbol [ drawArc %tmp.154 337 19 26 ];
+        %tmp.154 = getv function %tmp.153 :drawArc;
+        %tmp.155 = lgetv %cx.3;
+        symbol [ cx %tmp.155 337 27 29 ];
+        %tmp.156 = lgetv %cy.4;
+        symbol [ cy %tmp.156 337 31 33 ];
+        %tmp.157 = lgetv %arcR.8;
+        symbol [ arcR %tmp.157 337 35 39 ];
+        %tmp.158 = 1;
+        %tmp.159 = add %tmp.157 %tmp.158;
+        symbol [ Graphics %tmp.160 337 45 53 ];
+        %tmp.160 = getm $.Toybox.Graphics;
+        symbol [ ARC_CLOCKWISE %tmp.161 337 54 67 ];
+        %tmp.161 = getv %tmp.160 :ARC_CLOCKWISE;
+        %tmp.162 = 90;
+        %tmp.163 = 90;
+        %tmp.164 = lgetv %pct.9;
+        symbol [ pct %tmp.164 337 78 81 ];
+        %tmp.165 = sub %tmp.163 %tmp.164;
+        invoke %tmp.153 %tmp.154(%tmp.155, %tmp.156, %tmp.159, %tmp.161, %tmp.162, %tmp.165);
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_334_19_338_12_stop:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_329_12_338_12_if_end:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_321_33_339_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_321_8_339_8_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_321_8_339_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 342 8 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_300_37_371_4_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_300_37_371_4_stop" ]
+        %numFont.10 = local;
+        symbol [ numFont %numFont.10 342 12 19 ];
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_342_22_342_72_begin:
+        symbol [ _h %tmp.167 342 23 25 ];
+        %tmp.167 = getv ? :_h;
+        %tmp.168 = 200;
+        %tmp.169 = gte %tmp.167 %tmp.168;
+        bf %tmp.169 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_342_22_342_72_else_false;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_342_22_342_72_true:
+        symbol [ Graphics %tmp.170 342 36 44 ];
+        %tmp.170 = getm $.Toybox.Graphics;
+        symbol [ FONT_NUMBER_HOT %tmp.171 342 45 60 ];
+        %tmp.171 = getv %tmp.170 :FONT_NUMBER_HOT;
+        push %tmp.171;
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_342_22_342_72_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_342_22_342_72_else_false:
+        symbol [ Graphics %tmp.172 342 63 71 ];
+        %tmp.172 = getm $.Toybox.Graphics;
+        symbol [ FONT_NUMBER_MILD %tmp.173 342 72 88 ];
+        %tmp.173 = getv %tmp.172 :FONT_NUMBER_MILD;
+        push %tmp.173;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_342_22_342_72_end:
+        %tmp.174 = phi [%tmp.169 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_342_22_342_72_begin] [%tmp.171 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_342_22_342_72_true] [%tmp.173 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_342_22_342_72_else_false] [%tmp.174 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_342_22_342_72_end];
+        lputv %numFont.10 %tmp.174;
+        symbol [ numFont %numFont.10 342 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 343 8 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_300_37_371_4_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_300_37_371_4_stop" ]
+        %numH.11 = local;
+        symbol [ numH %numH.11 343 12 16 ];
+        %tmp.175 = lgetv %dc;
+        symbol [ dc %tmp.175 343 22 24 ];
+        symbol [ getFontHeight %tmp.176 343 25 38 ];
+        %tmp.176 = getv function %tmp.175 :getFontHeight;
+        %tmp.177 = lgetv %numFont.10;
+        symbol [ numFont %tmp.177 343 39 46 ];
+        %tmp.178 = invoke %tmp.175 %tmp.176(%tmp.177);
+        lputv %numH.11 %tmp.178;
+        symbol [ numH %numH.11 343 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 345 8 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_300_37_371_4_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_300_37_371_4_stop" ]
+        %numY.12 = local;
+        symbol [ numY %numY.12 345 12 16 ];
+        %tmp.179 = lgetv %cy.4;
+        symbol [ cy %tmp.179 345 19 21 ];
+        %tmp.180 = lgetv %numH.11;
+        symbol [ numH %tmp.180 345 24 28 ];
+        %tmp.181 = 2;
+        %tmp.182 = div %tmp.180 %tmp.181;
+        %tmp.183 = sub %tmp.179 %tmp.182;
+        symbol [ _h %tmp.185 345 35 37 ];
+        %tmp.185 = getv ? :_h;
+        %tmp.186 = 4;
+        %tmp.187 = mul %tmp.185 %tmp.186;
+        %tmp.188 = 100;
+        %tmp.189 = div %tmp.187 %tmp.188;
+        %tmp.190 = sub %tmp.183 %tmp.189;
+        lputv %numY.12 %tmp.190;
+        symbol [ numY %numY.12 345 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 346 8 ]
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_346_8_346_58_if_stmt:
+        %tmp.191 = lgetv %numY.12;
+        symbol [ numY %tmp.191 346 12 16 ];
+        symbol [ _h %tmp.193 346 19 21 ];
+        %tmp.193 = getv ? :_h;
+        %tmp.194 = 20;
+        %tmp.195 = mul %tmp.193 %tmp.194;
+        %tmp.196 = 100;
+        %tmp.197 = div %tmp.195 %tmp.196;
+        %tmp.198 = lt %tmp.191 %tmp.197;
+        bf %tmp.198 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_346_8_346_58_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_346_8_346_58_if_true:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_346_34_346_58_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 346 36 ]
+        symbol [ _h %tmp.200 346 43 45 ];
+        %tmp.200 = getv ? :_h;
+        %tmp.201 = 20;
+        %tmp.202 = mul %tmp.200 %tmp.201;
+        %tmp.203 = 100;
+        %tmp.204 = div %tmp.202 %tmp.203;
+        lputv %numY.12 %tmp.204;
+        symbol [ numY %numY.12 346 36 40 ];
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_346_34_346_58_stop:
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_346_8_346_58_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_346_8_346_58_if_end:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 348 8 ]
+        %tmp.205 = lgetv %dc;
+        symbol [ dc %tmp.205 348 8 10 ];
+        symbol [ setColor %tmp.206 348 11 19 ];
+        %tmp.206 = getv function %tmp.205 :setColor;
+        %tmp.207 = lgetv %pC.2;
+        symbol [ pC %tmp.207 348 20 22 ];
+        symbol [ Graphics %tmp.208 348 24 32 ];
+        %tmp.208 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.209 348 33 50 ];
+        %tmp.209 = getv %tmp.208 :COLOR_TRANSPARENT;
+        invoke %tmp.205 %tmp.206(%tmp.207, %tmp.209);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 349 8 ]
+        %tmp.210 = lgetv %dc;
+        symbol [ dc %tmp.210 349 8 10 ];
+        symbol [ drawText %tmp.211 349 11 19 ];
+        %tmp.211 = getv function %tmp.210 :drawText;
+        %tmp.212 = lgetv %cx.3;
+        symbol [ cx %tmp.212 349 20 22 ];
+        %tmp.213 = lgetv %numY.12;
+        symbol [ numY %tmp.213 349 24 28 ];
+        %tmp.214 = lgetv %numFont.10;
+        symbol [ numFont %tmp.214 349 30 37 ];
+        %tmp.215 = self;
+        symbol [ _fmtTime %tmp.216 349 39 47 ];
+        %tmp.216 = getv function %tmp.215 :_fmtTime;
+        %tmp.217 = lgetv %secs.1;
+        symbol [ secs %tmp.217 349 48 52 ];
+        %tmp.218 = invoke %tmp.215 %tmp.216(%tmp.217);
+        symbol [ Graphics %tmp.219 349 55 63 ];
+        %tmp.219 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.220 349 64 83 ];
+        %tmp.220 = getv %tmp.219 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.210 %tmp.211(%tmp.212, %tmp.213, %tmp.214, %tmp.218, %tmp.220);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 354 8 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_300_37_371_4_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_300_37_371_4_stop" ]
+        %labelY.13 = local;
+        symbol [ labelY %labelY.13 354 12 18 ];
+        %tmp.221 = lgetv %numY.12;
+        symbol [ numY %tmp.221 354 21 25 ];
+        symbol [ _h %tmp.223 354 28 30 ];
+        %tmp.223 = getv ? :_h;
+        %tmp.224 = 9;
+        %tmp.225 = mul %tmp.223 %tmp.224;
+        %tmp.226 = 100;
+        %tmp.227 = div %tmp.225 %tmp.226;
+        %tmp.228 = sub %tmp.221 %tmp.227;
+        lputv %labelY.13 %tmp.228;
+        symbol [ labelY %labelY.13 354 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 355 8 ]
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_355_8_355_62_if_stmt:
+        %tmp.229 = lgetv %labelY.13;
+        symbol [ labelY %tmp.229 355 12 18 ];
+        symbol [ _h %tmp.231 355 21 23 ];
+        %tmp.231 = getv ? :_h;
+        %tmp.232 = 10;
+        %tmp.233 = mul %tmp.231 %tmp.232;
+        %tmp.234 = 100;
+        %tmp.235 = div %tmp.233 %tmp.234;
+        %tmp.236 = lt %tmp.229 %tmp.235;
+        bf %tmp.236 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_355_8_355_62_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_355_8_355_62_if_true:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_355_36_355_62_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 355 38 ]
+        symbol [ _h %tmp.238 355 47 49 ];
+        %tmp.238 = getv ? :_h;
+        %tmp.239 = 10;
+        %tmp.240 = mul %tmp.238 %tmp.239;
+        %tmp.241 = 100;
+        %tmp.242 = div %tmp.240 %tmp.241;
+        lputv %labelY.13 %tmp.242;
+        symbol [ labelY %labelY.13 355 38 44 ];
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_355_36_355_62_stop:
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_355_8_355_62_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_355_8_355_62_if_end:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 356 8 ]
+        %tmp.243 = lgetv %dc;
+        symbol [ dc %tmp.243 356 8 10 ];
+        symbol [ setColor %tmp.244 356 11 19 ];
+        %tmp.244 = getv function %tmp.243 :setColor;
+        %tmp.245 = lgetv %pC.2;
+        symbol [ pC %tmp.245 356 20 22 ];
+        symbol [ Graphics %tmp.246 356 24 32 ];
+        %tmp.246 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.247 356 33 50 ];
+        %tmp.247 = getv %tmp.246 :COLOR_TRANSPARENT;
+        invoke %tmp.243 %tmp.244(%tmp.245, %tmp.247);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 357 8 ]
+        %tmp.248 = lgetv %dc;
+        symbol [ dc %tmp.248 357 8 10 ];
+        symbol [ drawText %tmp.249 357 11 19 ];
+        %tmp.249 = getv function %tmp.248 :drawText;
+        %tmp.250 = lgetv %cx.3;
+        symbol [ cx %tmp.250 357 20 22 ];
+        %tmp.251 = lgetv %labelY.13;
+        symbol [ labelY %tmp.251 357 24 30 ];
+        symbol [ Graphics %tmp.252 357 32 40 ];
+        %tmp.252 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.253 357 41 51 ];
+        %tmp.253 = getv %tmp.252 :FONT_XTINY;
+        %tmp.254 = "HOLD";
+        symbol [ Graphics %tmp.255 357 61 69 ];
+        %tmp.255 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.256 357 70 89 ];
+        %tmp.256 = getv %tmp.255 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.248 %tmp.249(%tmp.250, %tmp.251, %tmp.253, %tmp.254, %tmp.256);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 360 8 ]
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_360_8_365_8_if_stmt:
+        symbol [ _pb %tmp.258 360 12 15 ];
+        %tmp.258 = getv ? :_pb;
+        %tmp.259 = 0;
+        %tmp.260 = gt %tmp.258 %tmp.259;
+        bf %tmp.260 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_360_8_365_8_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_360_8_365_8_if_true:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_360_21_365_8_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 361 12 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_360_21_365_8_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_360_21_365_8_stop" ]
+        %pbY.14 = local;
+        symbol [ pbY %pbY.14 361 16 19 ];
+        %tmp.261 = lgetv %numY.12;
+        symbol [ numY %tmp.261 361 22 26 ];
+        %tmp.262 = lgetv %numH.11;
+        symbol [ numH %tmp.262 361 29 33 ];
+        %tmp.263 = add %tmp.261 %tmp.262;
+        symbol [ _h %tmp.265 361 36 38 ];
+        %tmp.265 = getv ? :_h;
+        %tmp.266 = 3;
+        %tmp.267 = mul %tmp.265 %tmp.266;
+        %tmp.268 = 100;
+        %tmp.269 = div %tmp.267 %tmp.268;
+        %tmp.270 = add %tmp.263 %tmp.269;
+        lputv %pbY.14 %tmp.270;
+        symbol [ pbY %pbY.14 361 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 362 12 ]
+        %tmp.271 = lgetv %dc;
+        symbol [ dc %tmp.271 362 12 14 ];
+        symbol [ setColor %tmp.272 362 15 23 ];
+        %tmp.272 = getv function %tmp.271 :setColor;
+        symbol [ SA_DIM %tmp.274 362 24 30 ];
+        %tmp.274 = getv ? :SA_DIM;
+        symbol [ Graphics %tmp.275 362 32 40 ];
+        %tmp.275 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.276 362 41 58 ];
+        %tmp.276 = getv %tmp.275 :COLOR_TRANSPARENT;
+        invoke %tmp.271 %tmp.272(%tmp.274, %tmp.276);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 363 12 ]
+        %tmp.277 = lgetv %dc;
+        symbol [ dc %tmp.277 363 12 14 ];
+        symbol [ drawText %tmp.278 363 15 23 ];
+        %tmp.278 = getv function %tmp.277 :drawText;
+        %tmp.279 = lgetv %cx.3;
+        symbol [ cx %tmp.279 363 24 26 ];
+        %tmp.280 = lgetv %pbY.14;
+        symbol [ pbY %tmp.280 363 28 31 ];
+        symbol [ Graphics %tmp.281 363 33 41 ];
+        %tmp.281 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.282 363 42 52 ];
+        %tmp.282 = getv %tmp.281 :FONT_XTINY;
+        %tmp.283 = "PB ";
+        %tmp.284 = self;
+        symbol [ _fmtTime %tmp.285 364 24 32 ];
+        %tmp.285 = getv function %tmp.284 :_fmtTime;
+        symbol [ _pb %tmp.287 364 33 36 ];
+        %tmp.287 = getv ? :_pb;
+        %tmp.288 = invoke %tmp.284 %tmp.285(%tmp.287);
+        %tmp.289 = add %tmp.283 %tmp.288;
+        symbol [ Graphics %tmp.290 364 39 47 ];
+        %tmp.290 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.291 364 48 67 ];
+        %tmp.291 = getv %tmp.290 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.277 %tmp.278(%tmp.279, %tmp.280, %tmp.282, %tmp.289, %tmp.291);
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_360_21_365_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_360_8_365_8_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_360_8_365_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 368 8 ]
+        %tmp.292 = lgetv %dc;
+        symbol [ dc %tmp.292 368 8 10 ];
+        symbol [ setColor %tmp.293 368 11 19 ];
+        %tmp.293 = getv function %tmp.292 :setColor;
+        symbol [ SA_HINT %tmp.295 368 20 27 ];
+        %tmp.295 = getv ? :SA_HINT;
+        symbol [ Graphics %tmp.296 368 29 37 ];
+        %tmp.296 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.297 368 38 55 ];
+        %tmp.297 = getv %tmp.296 :COLOR_TRANSPARENT;
+        invoke %tmp.292 %tmp.293(%tmp.295, %tmp.297);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 369 8 ]
+        %tmp.298 = lgetv %dc;
+        symbol [ dc %tmp.298 369 8 10 ];
+        symbol [ drawText %tmp.299 369 11 19 ];
+        %tmp.299 = getv function %tmp.298 :drawText;
+        %tmp.300 = lgetv %cx.3;
+        symbol [ cx %tmp.300 369 20 22 ];
+        symbol [ _h %tmp.302 369 24 26 ];
+        %tmp.302 = getv ? :_h;
+        %tmp.303 = 88;
+        %tmp.304 = mul %tmp.302 %tmp.303;
+        %tmp.305 = 100;
+        %tmp.306 = div %tmp.304 %tmp.305;
+        symbol [ Graphics %tmp.307 369 39 47 ];
+        %tmp.307 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.308 369 48 58 ];
+        %tmp.308 = getv %tmp.307 :FONT_XTINY;
+        %tmp.309 = "SELECT = stop";
+        symbol [ Graphics %tmp.310 370 29 37 ];
+        %tmp.310 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.311 370 38 57 ];
+        %tmp.311 = getv %tmp.310 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.298 %tmp.299(%tmp.300, %tmp.306, %tmp.308, %tmp.309, %tmp.311);
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_300_37_371_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 376; @symbol_functiondef = [_drawDone,376,20,29]; @symbol_param<0> = [dc,376,30,32]; ]
+    protected
+    function _drawDone(dc) {
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_376_34_422_4_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 377 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 377 8 10 ];
+        symbol [ setColor %tmp.2 377 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        symbol [ SA_BG %tmp.4 377 20 25 ];
+        %tmp.4 = getv ? :SA_BG;
+        symbol [ SA_BG %tmp.6 377 27 32 ];
+        %tmp.6 = getv ? :SA_BG;
+        invoke %tmp.1 %tmp.2(%tmp.4, %tmp.6);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 378 8 ]
+        %tmp.7 = lgetv %dc;
+        symbol [ dc %tmp.7 378 8 10 ];
+        symbol [ clear %tmp.8 378 11 16 ];
+        %tmp.8 = getv function %tmp.7 :clear;
+        invoke %tmp.7 %tmp.8();
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 380 8 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_376_34_422_4_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_376_34_422_4_stop" ]
+        %secs.1 = local;
+        symbol [ secs %secs.1 380 12 16 ];
+        symbol [ _lastSecs %tmp.10 380 19 28 ];
+        %tmp.10 = getv ? :_lastSecs;
+        lputv %secs.1 %tmp.10;
+        symbol [ secs %secs.1 380 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 381 8 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_376_34_422_4_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_376_34_422_4_stop" ]
+        %pC.2 = local;
+        symbol [ pC %pC.2 381 12 14 ];
+        %tmp.11 = self;
+        symbol [ _phaseColor %tmp.12 381 19 30 ];
+        %tmp.12 = getv function %tmp.11 :_phaseColor;
+        %tmp.13 = lgetv %secs.1;
+        symbol [ secs %tmp.13 381 31 35 ];
+        %tmp.14 = invoke %tmp.11 %tmp.12(%tmp.13);
+        lputv %pC.2 %tmp.14;
+        symbol [ pC %pC.2 381 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 382 8 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_376_34_422_4_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_376_34_422_4_stop" ]
+        %cx.3 = local;
+        symbol [ cx %cx.3 382 12 14 ];
+        symbol [ _w %tmp.16 382 19 21 ];
+        %tmp.16 = getv ? :_w;
+        %tmp.17 = 2;
+        %tmp.18 = div %tmp.16 %tmp.17;
+        lputv %cx.3 %tmp.18;
+        symbol [ cx %cx.3 382 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 385 8 ]
+        %tmp.19 = lgetv %dc;
+        symbol [ dc %tmp.19 385 8 10 ];
+        symbol [ setColor %tmp.20 385 11 19 ];
+        %tmp.20 = getv function %tmp.19 :setColor;
+        symbol [ SA_TEAL %tmp.22 385 20 27 ];
+        %tmp.22 = getv ? :SA_TEAL;
+        symbol [ Graphics %tmp.23 385 29 37 ];
+        %tmp.23 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.24 385 38 55 ];
+        %tmp.24 = getv %tmp.23 :COLOR_TRANSPARENT;
+        invoke %tmp.19 %tmp.20(%tmp.22, %tmp.24);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 386 8 ]
+        %tmp.25 = lgetv %dc;
+        symbol [ dc %tmp.25 386 8 10 ];
+        symbol [ drawText %tmp.26 386 11 19 ];
+        %tmp.26 = getv function %tmp.25 :drawText;
+        %tmp.27 = lgetv %cx.3;
+        symbol [ cx %tmp.27 386 20 22 ];
+        symbol [ _h %tmp.29 386 24 26 ];
+        %tmp.29 = getv ? :_h;
+        %tmp.30 = 10;
+        %tmp.31 = mul %tmp.29 %tmp.30;
+        %tmp.32 = 100;
+        %tmp.33 = div %tmp.31 %tmp.32;
+        symbol [ Graphics %tmp.34 386 39 47 ];
+        %tmp.34 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.35 386 48 58 ];
+        %tmp.35 = getv %tmp.34 :FONT_XTINY;
+        %tmp.36 = "SESSION";
+        symbol [ Graphics %tmp.37 387 23 31 ];
+        %tmp.37 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.38 387 32 51 ];
+        %tmp.38 = getv %tmp.37 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.25 %tmp.26(%tmp.27, %tmp.33, %tmp.35, %tmp.36, %tmp.38);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 390 8 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_376_34_422_4_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_376_34_422_4_stop" ]
+        %numFont.4 = local;
+        symbol [ numFont %numFont.4 390 12 19 ];
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_390_22_390_72_begin:
+        symbol [ _h %tmp.40 390 23 25 ];
+        %tmp.40 = getv ? :_h;
+        %tmp.41 = 200;
+        %tmp.42 = gte %tmp.40 %tmp.41;
+        bf %tmp.42 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_390_22_390_72_else_false;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_390_22_390_72_true:
+        symbol [ Graphics %tmp.43 390 36 44 ];
+        %tmp.43 = getm $.Toybox.Graphics;
+        symbol [ FONT_NUMBER_HOT %tmp.44 390 45 60 ];
+        %tmp.44 = getv %tmp.43 :FONT_NUMBER_HOT;
+        push %tmp.44;
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_390_22_390_72_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_390_22_390_72_else_false:
+        symbol [ Graphics %tmp.45 390 63 71 ];
+        %tmp.45 = getm $.Toybox.Graphics;
+        symbol [ FONT_NUMBER_MILD %tmp.46 390 72 88 ];
+        %tmp.46 = getv %tmp.45 :FONT_NUMBER_MILD;
+        push %tmp.46;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_390_22_390_72_end:
+        %tmp.47 = phi [%tmp.42 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_390_22_390_72_begin] [%tmp.44 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_390_22_390_72_true] [%tmp.46 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_390_22_390_72_else_false] [%tmp.47 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_390_22_390_72_end];
+        lputv %numFont.4 %tmp.47;
+        symbol [ numFont %numFont.4 390 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 391 8 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_376_34_422_4_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_376_34_422_4_stop" ]
+        %numH.5 = local;
+        symbol [ numH %numH.5 391 12 16 ];
+        %tmp.48 = lgetv %dc;
+        symbol [ dc %tmp.48 391 22 24 ];
+        symbol [ getFontHeight %tmp.49 391 25 38 ];
+        %tmp.49 = getv function %tmp.48 :getFontHeight;
+        %tmp.50 = lgetv %numFont.4;
+        symbol [ numFont %tmp.50 391 39 46 ];
+        %tmp.51 = invoke %tmp.48 %tmp.49(%tmp.50);
+        lputv %numH.5 %tmp.51;
+        symbol [ numH %numH.5 391 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 392 8 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_376_34_422_4_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_376_34_422_4_stop" ]
+        %numY.6 = local;
+        symbol [ numY %numY.6 392 12 16 ];
+        symbol [ _h %tmp.53 392 22 24 ];
+        %tmp.53 = getv ? :_h;
+        %tmp.54 = 22;
+        %tmp.55 = mul %tmp.53 %tmp.54;
+        %tmp.56 = 100;
+        %tmp.57 = div %tmp.55 %tmp.56;
+        lputv %numY.6 %tmp.57;
+        symbol [ numY %numY.6 392 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 393 8 ]
+        %tmp.58 = lgetv %dc;
+        symbol [ dc %tmp.58 393 8 10 ];
+        symbol [ setColor %tmp.59 393 11 19 ];
+        %tmp.59 = getv function %tmp.58 :setColor;
+        %tmp.60 = lgetv %pC.2;
+        symbol [ pC %tmp.60 393 20 22 ];
+        symbol [ Graphics %tmp.61 393 24 32 ];
+        %tmp.61 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.62 393 33 50 ];
+        %tmp.62 = getv %tmp.61 :COLOR_TRANSPARENT;
+        invoke %tmp.58 %tmp.59(%tmp.60, %tmp.62);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 394 8 ]
+        %tmp.63 = lgetv %dc;
+        symbol [ dc %tmp.63 394 8 10 ];
+        symbol [ drawText %tmp.64 394 11 19 ];
+        %tmp.64 = getv function %tmp.63 :drawText;
+        %tmp.65 = lgetv %cx.3;
+        symbol [ cx %tmp.65 394 20 22 ];
+        %tmp.66 = lgetv %numY.6;
+        symbol [ numY %tmp.66 394 24 28 ];
+        %tmp.67 = lgetv %numFont.4;
+        symbol [ numFont %tmp.67 394 30 37 ];
+        %tmp.68 = self;
+        symbol [ _fmtTime %tmp.69 394 39 47 ];
+        %tmp.69 = getv function %tmp.68 :_fmtTime;
+        %tmp.70 = lgetv %secs.1;
+        symbol [ secs %tmp.70 394 48 52 ];
+        %tmp.71 = invoke %tmp.68 %tmp.69(%tmp.70);
+        symbol [ Graphics %tmp.72 394 55 63 ];
+        %tmp.72 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.73 394 64 83 ];
+        %tmp.73 = getv %tmp.72 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.63 %tmp.64(%tmp.65, %tmp.66, %tmp.67, %tmp.71, %tmp.73);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 397 8 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_376_34_422_4_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_376_34_422_4_stop" ]
+        %midY.7 = local;
+        symbol [ midY %midY.7 397 12 16 ];
+        %tmp.74 = lgetv %numY.6;
+        symbol [ numY %tmp.74 397 19 23 ];
+        %tmp.75 = lgetv %numH.5;
+        symbol [ numH %tmp.75 397 26 30 ];
+        %tmp.76 = add %tmp.74 %tmp.75;
+        symbol [ _h %tmp.78 397 33 35 ];
+        %tmp.78 = getv ? :_h;
+        %tmp.79 = 3;
+        %tmp.80 = mul %tmp.78 %tmp.79;
+        %tmp.81 = 100;
+        %tmp.82 = div %tmp.80 %tmp.81;
+        %tmp.83 = add %tmp.76 %tmp.82;
+        lputv %midY.7 %tmp.83;
+        symbol [ midY %midY.7 397 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 398 8 ]
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_398_8_415_8_if_stmt:
+        symbol [ _newPb %tmp.85 398 12 18 ];
+        %tmp.85 = getv ? :_newPb;
+        bf %tmp.85 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_398_8_415_8_if_false;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_398_8_415_8_if_true:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_398_20_404_8_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 400 12 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_398_20_404_8_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_398_20_404_8_stop" ]
+        %flash.8 = local;
+        symbol [ flash %flash.8 400 16 21 ];
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_400_24_400_53_begin:
+        symbol [ _tick %tmp.87 400 25 30 ];
+        %tmp.87 = getv ? :_tick;
+        %tmp.88 = 8;
+        %tmp.89 = mod %tmp.87 %tmp.88;
+        %tmp.90 = 4;
+        %tmp.91 = lt %tmp.89 %tmp.90;
+        bf %tmp.91 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_400_24_400_53_else_false;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_400_24_400_53_true:
+        %tmp.92 = 0xFFDD00;
+        push %tmp.92;
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_400_24_400_53_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_400_24_400_53_else_false:
+        %tmp.93 = 0xFFAA00;
+        push %tmp.93;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_400_24_400_53_end:
+        %tmp.94 = phi [%tmp.91 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_400_24_400_53_begin] [%tmp.92 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_400_24_400_53_true] [%tmp.93 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_400_24_400_53_else_false] [%tmp.94 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_400_24_400_53_end];
+        lputv %flash.8 %tmp.94;
+        symbol [ flash %flash.8 400 16 21 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 401 12 ]
+        %tmp.95 = lgetv %dc;
+        symbol [ dc %tmp.95 401 12 14 ];
+        symbol [ setColor %tmp.96 401 15 23 ];
+        %tmp.96 = getv function %tmp.95 :setColor;
+        %tmp.97 = lgetv %flash.8;
+        symbol [ flash %tmp.97 401 24 29 ];
+        symbol [ Graphics %tmp.98 401 31 39 ];
+        %tmp.98 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.99 401 40 57 ];
+        %tmp.99 = getv %tmp.98 :COLOR_TRANSPARENT;
+        invoke %tmp.95 %tmp.96(%tmp.97, %tmp.99);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 402 12 ]
+        %tmp.100 = lgetv %dc;
+        symbol [ dc %tmp.100 402 12 14 ];
+        symbol [ drawText %tmp.101 402 15 23 ];
+        %tmp.101 = getv function %tmp.100 :drawText;
+        %tmp.102 = lgetv %cx.3;
+        symbol [ cx %tmp.102 402 24 26 ];
+        %tmp.103 = lgetv %midY.7;
+        symbol [ midY %tmp.103 402 28 32 ];
+        symbol [ Graphics %tmp.104 402 34 42 ];
+        %tmp.104 = getm $.Toybox.Graphics;
+        symbol [ FONT_SMALL %tmp.105 402 43 53 ];
+        %tmp.105 = getv %tmp.104 :FONT_SMALL;
+        %tmp.106 = "\u2605 NEW PB!";
+        symbol [ Graphics %tmp.107 403 34 42 ];
+        %tmp.107 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.108 403 43 62 ];
+        %tmp.108 = getv %tmp.107 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.100 %tmp.101(%tmp.102, %tmp.103, %tmp.105, %tmp.106, %tmp.108);
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_398_20_404_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_398_8_415_8_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_398_8_415_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 404 15 ]
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_404_15_415_8_if_stmt:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_404_19_404_37_begin:
+        symbol [ _pb %tmp.110 404 19 22 ];
+        %tmp.110 = getv ? :_pb;
+        %tmp.111 = 0;
+        %tmp.112 = gt %tmp.110 %tmp.111;
+        bf %tmp.112 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_404_15_415_8_if_false;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_404_30_404_37_true:
+        %tmp.113 = lgetv %secs.1;
+        symbol [ secs %tmp.113 404 30 34 ];
+        symbol [ _pb %tmp.115 404 37 40 ];
+        %tmp.115 = getv ? :_pb;
+        %tmp.116 = lt %tmp.113 %tmp.115;
+        push %tmp.116;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_404_30_404_37_end:
+        %tmp.117 = phi [%tmp.112 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_404_19_404_37_begin] [%tmp.116 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_404_30_404_37_true] [%tmp.117 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_404_30_404_37_end];
+        bf %tmp.117 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_404_15_415_8_if_false;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_404_15_415_8_if_true:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_404_42_411_8_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 406 12 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_404_42_411_8_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_404_42_411_8_stop" ]
+        %behind.9 = local;
+        symbol [ behind %behind.9 406 16 22 ];
+        symbol [ _pb %tmp.119 406 25 28 ];
+        %tmp.119 = getv ? :_pb;
+        %tmp.120 = lgetv %secs.1;
+        symbol [ secs %tmp.120 406 31 35 ];
+        %tmp.121 = sub %tmp.119 %tmp.120;
+        lputv %behind.9 %tmp.121;
+        symbol [ behind %behind.9 406 16 22 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 407 12 ]
+        %tmp.122 = lgetv %dc;
+        symbol [ dc %tmp.122 407 12 14 ];
+        symbol [ setColor %tmp.123 407 15 23 ];
+        %tmp.123 = getv function %tmp.122 :setColor;
+        symbol [ SA_DIM %tmp.125 407 24 30 ];
+        %tmp.125 = getv ? :SA_DIM;
+        symbol [ Graphics %tmp.126 407 32 40 ];
+        %tmp.126 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.127 407 41 58 ];
+        %tmp.127 = getv %tmp.126 :COLOR_TRANSPARENT;
+        invoke %tmp.122 %tmp.123(%tmp.125, %tmp.127);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 408 12 ]
+        %tmp.128 = lgetv %dc;
+        symbol [ dc %tmp.128 408 12 14 ];
+        symbol [ drawText %tmp.129 408 15 23 ];
+        %tmp.129 = getv function %tmp.128 :drawText;
+        %tmp.130 = lgetv %cx.3;
+        symbol [ cx %tmp.130 408 24 26 ];
+        %tmp.131 = lgetv %midY.7;
+        symbol [ midY %tmp.131 408 28 32 ];
+        symbol [ Graphics %tmp.132 408 34 42 ];
+        %tmp.132 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.133 408 43 53 ];
+        %tmp.133 = getv %tmp.132 :FONT_XTINY;
+        %tmp.134 = "PB: ";
+        %tmp.135 = self;
+        symbol [ _fmtTime %tmp.136 409 25 33 ];
+        %tmp.136 = getv function %tmp.135 :_fmtTime;
+        symbol [ _pb %tmp.138 409 34 37 ];
+        %tmp.138 = getv ? :_pb;
+        %tmp.139 = invoke %tmp.135 %tmp.136(%tmp.138);
+        %tmp.140 = add %tmp.134 %tmp.139;
+        %tmp.141 = "  (-";
+        %tmp.142 = add %tmp.140 %tmp.141;
+        %tmp.143 = lgetv %behind.9;
+        symbol [ behind %tmp.143 409 50 56 ];
+        symbol [ toString %tmp.144 409 57 65 ];
+        %tmp.144 = getv function %tmp.143 :toString;
+        %tmp.145 = invoke %tmp.143 %tmp.144();
+        %tmp.146 = add %tmp.142 %tmp.145;
+        %tmp.147 = "s)";
+        %tmp.148 = add %tmp.146 %tmp.147;
+        symbol [ Graphics %tmp.149 410 16 24 ];
+        %tmp.149 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.150 410 25 44 ];
+        %tmp.150 = getv %tmp.149 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.128 %tmp.129(%tmp.130, %tmp.131, %tmp.133, %tmp.148, %tmp.150);
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_404_42_411_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_404_15_415_8_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_404_15_415_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 411 15 ]
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_411_15_415_8_if_stmt:
+        symbol [ _pb %tmp.152 411 19 22 ];
+        %tmp.152 = getv ? :_pb;
+        %tmp.153 = 0;
+        %tmp.154 = gt %tmp.152 %tmp.153;
+        bf %tmp.154 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_411_15_415_8_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_411_15_415_8_if_true:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_411_28_415_8_start:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 412 12 ]
+        %tmp.155 = lgetv %dc;
+        symbol [ dc %tmp.155 412 12 14 ];
+        symbol [ setColor %tmp.156 412 15 23 ];
+        %tmp.156 = getv function %tmp.155 :setColor;
+        symbol [ SA_DIM %tmp.158 412 24 30 ];
+        %tmp.158 = getv ? :SA_DIM;
+        symbol [ Graphics %tmp.159 412 32 40 ];
+        %tmp.159 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.160 412 41 58 ];
+        %tmp.160 = getv %tmp.159 :COLOR_TRANSPARENT;
+        invoke %tmp.155 %tmp.156(%tmp.158, %tmp.160);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 413 12 ]
+        %tmp.161 = lgetv %dc;
+        symbol [ dc %tmp.161 413 12 14 ];
+        symbol [ drawText %tmp.162 413 15 23 ];
+        %tmp.162 = getv function %tmp.161 :drawText;
+        %tmp.163 = lgetv %cx.3;
+        symbol [ cx %tmp.163 413 24 26 ];
+        %tmp.164 = lgetv %midY.7;
+        symbol [ midY %tmp.164 413 28 32 ];
+        symbol [ Graphics %tmp.165 413 34 42 ];
+        %tmp.165 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.166 413 43 53 ];
+        %tmp.166 = getv %tmp.165 :FONT_XTINY;
+        %tmp.167 = "PB: ";
+        %tmp.168 = self;
+        symbol [ _fmtTime %tmp.169 414 25 33 ];
+        %tmp.169 = getv function %tmp.168 :_fmtTime;
+        symbol [ _pb %tmp.171 414 34 37 ];
+        %tmp.171 = getv ? :_pb;
+        %tmp.172 = invoke %tmp.168 %tmp.169(%tmp.171);
+        %tmp.173 = add %tmp.167 %tmp.172;
+        symbol [ Graphics %tmp.174 414 40 48 ];
+        %tmp.174 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.175 414 49 68 ];
+        %tmp.175 = getv %tmp.174 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.161 %tmp.162(%tmp.163, %tmp.164, %tmp.166, %tmp.173, %tmp.175);
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_411_28_415_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_411_15_415_8_if_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_411_15_415_8_if_end:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_404_15_415_8_if_end:
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_398_8_415_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 418 8 ]
+        [ "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_376_34_422_4_start" "_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_376_34_422_4_stop" ]
+        %hintC.10 = local;
+        symbol [ hintC %hintC.10 418 12 17 ];
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_418_20_418_49_begin:
+        symbol [ _tick %tmp.177 418 21 26 ];
+        %tmp.177 = getv ? :_tick;
+        %tmp.178 = 10;
+        %tmp.179 = mod %tmp.177 %tmp.178;
+        %tmp.180 = 5;
+        %tmp.181 = lt %tmp.179 %tmp.180;
+        bf %tmp.181 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_418_20_418_49_else_false;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_418_20_418_49_true:
+        symbol [ SA_TEAL %tmp.183 418 39 46 ];
+        %tmp.183 = getv ? :SA_TEAL;
+        push %tmp.183;
+        goto @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_418_20_418_49_end;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_418_20_418_49_else_false:
+        symbol [ SA_DIM %tmp.185 418 49 55 ];
+        %tmp.185 = getv ? :SA_DIM;
+        push %tmp.185;
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_418_20_418_49_end:
+        %tmp.186 = phi [%tmp.181 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_418_20_418_49_begin] [%tmp.183 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_418_20_418_49_true] [%tmp.185 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_418_20_418_49_else_false] [%tmp.186 @_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_418_20_418_49_end];
+        lputv %hintC.10 %tmp.186;
+        symbol [ hintC %hintC.10 418 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 419 8 ]
+        %tmp.187 = lgetv %dc;
+        symbol [ dc %tmp.187 419 8 10 ];
+        symbol [ setColor %tmp.188 419 11 19 ];
+        %tmp.188 = getv function %tmp.187 :setColor;
+        %tmp.189 = lgetv %hintC.10;
+        symbol [ hintC %tmp.189 419 20 25 ];
+        symbol [ Graphics %tmp.190 419 27 35 ];
+        %tmp.190 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.191 419 36 53 ];
+        %tmp.191 = getv %tmp.190 :COLOR_TRANSPARENT;
+        invoke %tmp.187 %tmp.188(%tmp.189, %tmp.191);
+[ "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc" 420 8 ]
+        %tmp.192 = lgetv %dc;
+        symbol [ dc %tmp.192 420 8 10 ];
+        symbol [ drawText %tmp.193 420 11 19 ];
+        %tmp.193 = getv function %tmp.192 :drawText;
+        %tmp.194 = lgetv %cx.3;
+        symbol [ cx %tmp.194 420 20 22 ];
+        symbol [ _h %tmp.196 420 24 26 ];
+        %tmp.196 = getv ? :_h;
+        %tmp.197 = 87;
+        %tmp.198 = mul %tmp.196 %tmp.197;
+        %tmp.199 = 100;
+        %tmp.200 = div %tmp.198 %tmp.199;
+        symbol [ Graphics %tmp.201 420 39 47 ];
+        %tmp.201 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.202 420 48 58 ];
+        %tmp.202 = getv %tmp.201 :FONT_XTINY;
+        %tmp.203 = "SELECT = next dive";
+        symbol [ Graphics %tmp.204 421 34 42 ];
+        %tmp.204 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.205 421 43 62 ];
+        %tmp.205 = getv %tmp.204 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.192 %tmp.193(%tmp.194, %tmp.200, %tmp.202, %tmp.203, %tmp.205);
+_Users_kkorolczuk_work_garmin_freediverstaticapneatimer_source_StaticApneaView_mc_376_34_422_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/freediverstaticapneatimer/source/StaticApneaView.mc"; @line = 9; ]
+<init> {
+}

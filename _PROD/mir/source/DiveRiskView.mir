@@ -1,0 +1,2308 @@
+[ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 25; @symbol_usingdef<0> = [Toybox,25,6,12]; @symbol_usingdef<1> = [Graphics,25,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 26; @symbol_usingdef<0> = [Toybox,26,6,12]; @symbol_usingdef<1> = [WatchUi,26,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 27; @symbol_usingdef<0> = [Toybox,27,6,12]; @symbol_usingdef<1> = [Timer,27,13,18]; ]
+using Toybox.Timer;
+[ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 28; @symbol_usingdef<0> = [Toybox,28,6,12]; @symbol_usingdef<1> = [System,28,13,19]; ]
+using Toybox.System;
+[ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 31; @position = 6; @symbol_constdef = [DRI_DEPTHS,31,6,16]; ]
+const DRI_DEPTHS;
+[ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 32; @position = 6; @symbol_constdef = [DRI_TIMES,32,6,15]; ]
+const DRI_TIMES;
+[ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 33; @position = 6; @symbol_constdef = [DRI_GAS_FO2,33,6,17]; ]
+const DRI_GAS_FO2;
+[ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 34; @position = 6; @symbol_constdef = [DRI_GAS_LBL,34,6,17]; ]
+const DRI_GAS_LBL;
+[ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 35; @position = 6; @symbol_constdef = [DRI_GAS_PTS,35,6,17]; ]
+const DRI_GAS_PTS;
+[ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 37; @position = 6; @symbol_constdef = [DRI_NDL_D,37,6,15]; ]
+const DRI_NDL_D;
+[ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 38; @position = 6; @symbol_constdef = [DRI_NDL_T,38,6,15]; ]
+const DRI_NDL_T;
+[ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 40; @position = 6; @symbol_constdef = [DR_BG_LOW,40,6,15]; ]
+const DR_BG_LOW = 0x000000;
+[ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 41; @position = 6; @symbol_constdef = [DR_BG_MED,41,6,15]; ]
+const DR_BG_MED = 0x000000;
+[ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 42; @position = 6; @symbol_constdef = [DR_BG_HIGH,42,6,16]; ]
+const DR_BG_HIGH = 0x0A0000;
+[ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 43; @position = 6; @symbol_constdef = [DR_BG_PULSE,43,6,17]; ]
+const DR_BG_PULSE = 0x120000;
+[ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 45; @position = 6; @symbol_constdef = [DR_C_LOW,45,6,14]; ]
+const DR_C_LOW = 0x00CC44;
+[ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 46; @position = 6; @symbol_constdef = [DR_C_MED,46,6,14]; ]
+const DR_C_MED = 0xFFAA00;
+[ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 47; @position = 6; @symbol_constdef = [DR_C_HIGH,47,6,15]; ]
+const DR_C_HIGH = 0xFF2222;
+[ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 49; @position = 6; @symbol_constdef = [DR_WHITE,49,6,14]; ]
+const DR_WHITE = 0xFFFFFF;
+[ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 50; @position = 6; @symbol_constdef = [DR_DIM,50,6,12]; ]
+const DR_DIM = 0x333333;
+[ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 51; @position = 6; @symbol_constdef = [DR_HINT,51,6,13]; ]
+const DR_HINT = 0x222222;
+[ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 52; @position = 6; @symbol_constdef = [DR_ACCENT,52,6,15]; ]
+const DR_ACCENT = 0x0088CC;
+[ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 53; @position = 6; @symbol_constdef = [DR_DIVL,53,6,13]; ]
+const DR_DIVL = 0x111111;
+[ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 57; @symbol_classdef = [DiveRiskView,57,6,18]; @symbol_extends<0> = [WatchUi,57,27,34]; @symbol_extends<1> = [View,57,35,39]; ]
+class DiveRiskView extends WatchUi.View {
+    [ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 57; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 57; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 59; @position = 15; @symbol_vardef = [_w,59,15,17]; ]
+    protected
+    var _w;
+    [ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 60; @position = 15; @symbol_vardef = [_h,60,15,17]; ]
+    protected
+    var _h;
+    [ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 61; @position = 15; @symbol_vardef = [_tick,61,15,20]; ]
+    protected
+    var _tick;
+    [ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 62; @position = 15; @symbol_vardef = [_timer,62,15,21]; ]
+    protected
+    var _timer;
+    [ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 65; @position = 15; @symbol_vardef = [_depIdx,65,15,22]; ]
+    protected
+    var _depIdx;
+    [ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 66; @position = 15; @symbol_vardef = [_timeIdx,66,15,23]; ]
+    protected
+    var _timeIdx;
+    [ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 67; @position = 15; @symbol_vardef = [_gasIdx,67,15,22]; ]
+    protected
+    var _gasIdx;
+    [ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 68; @position = 15; @symbol_vardef = [_repIdx,68,15,22]; ]
+    protected
+    var _repIdx;
+    [ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 69; @position = 15; @symbol_vardef = [_field,69,15,21]; ]
+    protected
+    var _field;
+    [ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 72; @position = 15; @symbol_vardef = [_rScore,72,15,22]; ]
+    protected
+    var _rScore;
+    [ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 72; @position = 35; @symbol_vardef = [_rNdlRat,72,35,43]; ]
+    protected
+    var _rNdlRat;
+    [ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 72; @position = 56; @symbol_vardef = [_rNdlMins,72,56,65]; ]
+    protected
+    var _rNdlMins;
+    [ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 76; @symbol_functiondef = [initialize,76,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_76_26_89_4_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 77 8 ]
+        symbol [ View %tmp.2 77 8 12 ];
+        %tmp.2 = getv ? :View;
+        symbol [ initialize %tmp.3 77 13 23 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 78 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_76_26_89_4_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_76_26_89_4_stop" ]
+        %ds.1 = local;
+        symbol [ ds %ds.1 78 12 14 ];
+        symbol [ System %tmp.4 78 18 24 ];
+        %tmp.4 = getm $.Toybox.System;
+        symbol [ getDeviceSettings %tmp.5 78 25 42 ];
+        %tmp.5 = getv function %tmp.4 :getDeviceSettings;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        lputv %ds.1 %tmp.6;
+        symbol [ ds %ds.1 78 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 79 8 ]
+        %tmp.7 = lgetv %ds.1;
+        symbol [ ds %tmp.7 79 18 20 ];
+        symbol [ screenWidth %tmp.8 79 21 32 ];
+        %tmp.8 = getv %tmp.7 :screenWidth;
+        symbol [ _w ? 79 8 10 ];
+        putv self :_w %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 80 8 ]
+        %tmp.9 = lgetv %ds.1;
+        symbol [ ds %tmp.9 80 18 20 ];
+        symbol [ screenHeight %tmp.10 80 21 33 ];
+        %tmp.10 = getv %tmp.9 :screenHeight;
+        symbol [ _h ? 80 8 10 ];
+        putv self :_h %tmp.10;
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 81 8 ]
+        %tmp.11 = 0;
+        symbol [ _tick ? 81 8 13 ];
+        putv self :_tick %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 83 8 ]
+        %tmp.12 = 9;
+        symbol [ _depIdx ? 83 8 15 ];
+        putv self :_depIdx %tmp.12;
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 84 8 ]
+        %tmp.13 = 5;
+        symbol [ _timeIdx ? 84 8 16 ];
+        putv self :_timeIdx %tmp.13;
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 85 8 ]
+        %tmp.14 = 0;
+        symbol [ _gasIdx ? 85 8 15 ];
+        putv self :_gasIdx %tmp.14;
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 86 8 ]
+        %tmp.15 = 0;
+        symbol [ _repIdx ? 86 8 15 ];
+        putv self :_repIdx %tmp.15;
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 87 8 ]
+        %tmp.16 = 0;
+        symbol [ _field ? 87 8 14 ];
+        putv self :_field %tmp.16;
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 88 8 ]
+        %tmp.17 = 0;
+        symbol [ _rScore ? 88 8 15 ];
+        putv self :_rScore %tmp.17;
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 88 21 ]
+        %tmp.18 = 0;
+        symbol [ _rNdlRat ? 88 21 29 ];
+        putv self :_rNdlRat %tmp.18;
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 88 35 ]
+        %tmp.19 = 0;
+        symbol [ _rNdlMins ? 88 35 44 ];
+        putv self :_rNdlMins %tmp.19;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_76_26_89_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 91; @symbol_functiondef = [onShow,91,13,19]; ]
+    function onShow() {
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_91_22_94_4_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 92 8 ]
+        symbol [ Timer %tmp.3 92 21 26 ];
+        %tmp.3 = getm $.Toybox.Timer;
+        symbol [ Timer %tmp.4 92 27 32 ];
+        %tmp.4 = getv function ? %tmp.3 :Timer;
+        %tmp.1 = newc %tmp.4 ();
+        symbol [ _timer ? 92 8 14 ];
+        putv self :_timer %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 93 8 ]
+        symbol [ _timer %tmp.6 93 8 14 ];
+        %tmp.6 = getv ? :_timer;
+        symbol [ start %tmp.7 93 15 20 ];
+        %tmp.7 = getv function %tmp.6 :start;
+        %tmp.8 = self;
+        symbol [ method %tmp.9 93 21 27 ];
+        %tmp.9 = getv function %tmp.8 :method;
+        %tmp.11 = const :onTick;
+        symbol [ onTick %tmp.11 93 29 35 const ];
+        %tmp.12 = invoke %tmp.8 %tmp.9(%tmp.11);
+        %tmp.13 = 500;
+        %tmp.14 = true;
+        invoke %tmp.6 %tmp.7(%tmp.12, %tmp.13, %tmp.14);
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_91_22_94_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 96; @symbol_functiondef = [onHide,96,13,19]; ]
+    function onHide() {
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_96_22_98_4_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 97 8 ]
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_97_8_97_60_if_stmt:
+        symbol [ _timer %tmp.2 97 12 18 ];
+        %tmp.2 = getv ? :_timer;
+        %tmp.3 = null;
+        %tmp.4 = ne %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_97_8_97_60_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_97_8_97_60_if_true:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_97_28_97_60_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 97 30 ]
+        symbol [ _timer %tmp.6 97 30 36 ];
+        %tmp.6 = getv ? :_timer;
+        %tmp.7 = as %tmp.6 { (!Null) };
+        symbol [ stop %tmp.8 97 37 41 ];
+        %tmp.8 = getv function %tmp.7 :stop;
+        invoke %tmp.7 %tmp.8();
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 97 45 ]
+        %tmp.9 = null;
+        symbol [ _timer ? 97 45 51 ];
+        putv self :_timer %tmp.9;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_97_28_97_60_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_97_8_97_60_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_97_8_97_60_if_end:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_96_22_98_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 100; @symbol_functiondef = [onTick,100,13,19]; ]
+    function onTick() as Void {
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_100_30_103_4_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 101 8 ]
+        symbol [ _tick %tmp.3 101 8 13 ];
+        %tmp.3 = getv ? :_tick;
+        %tmp.4 = add %tmp.3 1;
+        symbol [ _tick ? 101 8 13 ];
+        putv self :_tick dup %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 102 8 ]
+        symbol [ WatchUi %tmp.5 102 8 15 ];
+        %tmp.5 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.6 102 16 29 ];
+        %tmp.6 = getv function %tmp.5 :requestUpdate;
+        invoke %tmp.5 %tmp.6();
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_100_30_103_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 107; @symbol_functiondef = [doSelect,107,13,21]; ]
+    function doSelect() {
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_107_24_109_4_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 108 8 ]
+        symbol [ _field %tmp.2 108 18 24 ];
+        %tmp.2 = getv ? :_field;
+        %tmp.3 = 1;
+        %tmp.4 = add %tmp.2 %tmp.3;
+        %tmp.5 = 4;
+        %tmp.6 = mod %tmp.4 %tmp.5;
+        symbol [ _field ? 108 8 14 ];
+        putv self :_field %tmp.6;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_107_24_109_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 111; @symbol_functiondef = [doBack,111,13,19]; ]
+    function doBack() {
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_111_22_114_4_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 112 8 ]
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_112_8_112_49_if_stmt:
+        symbol [ _field %tmp.2 112 12 18 ];
+        %tmp.2 = getv ? :_field;
+        %tmp.3 = 0;
+        %tmp.4 = gt %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_112_8_112_49_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_112_8_112_49_if_true:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_112_24_112_49_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 112 26 ]
+        symbol [ _field %tmp.7 112 26 32 ];
+        %tmp.7 = getv ? :_field;
+        %tmp.8 = sub %tmp.7 1;
+        symbol [ _field ? 112 26 32 ];
+        putv self :_field dup %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 112 36 ]
+        %tmp.9 = true;
+        ret %tmp.9;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_112_24_112_49_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_112_8_112_49_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_112_8_112_49_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 113 8 ]
+        %tmp.10 = false;
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_111_22_114_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 116; @symbol_functiondef = [doUp,116,13,17]; ]
+    function doUp() {
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_116_20_118_4_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 117 8 ]
+        %tmp.1 = self;
+        symbol [ _cycleField %tmp.2 117 8 19 ];
+        %tmp.2 = getv function %tmp.1 :_cycleField;
+        %tmp.3 = -1;
+        invoke %tmp.1 %tmp.2(%tmp.3);
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_116_20_118_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 120; @symbol_functiondef = [doDown,120,13,19]; ]
+    function doDown() {
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_120_22_122_4_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 121 8 ]
+        %tmp.1 = self;
+        symbol [ _cycleField %tmp.2 121 8 19 ];
+        %tmp.2 = getv function %tmp.1 :_cycleField;
+        %tmp.3 = 1;
+        invoke %tmp.1 %tmp.2(%tmp.3);
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_120_22_122_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 124; @symbol_functiondef = [doTap,124,13,18]; @symbol_param<0> = [x,124,19,20]; @symbol_param<1> = [y,124,22,23]; ]
+    function doTap(x, y) {
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_124_25_127_4_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 125 8 ]
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_125_8_126_43_if_stmt:
+        %tmp.1 = lgetv %y;
+        symbol [ y %tmp.1 125 12 13 ];
+        symbol [ _h %tmp.3 125 16 18 ];
+        %tmp.3 = getv ? :_h;
+        %tmp.4 = 2;
+        %tmp.5 = div %tmp.3 %tmp.4;
+        %tmp.6 = lt %tmp.1 %tmp.5;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_125_8_126_43_if_else_false;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_125_8_126_43_if_true:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_125_24_125_43_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 125 26 ]
+        %tmp.7 = self;
+        symbol [ _cycleField %tmp.8 125 26 37 ];
+        %tmp.8 = getv function %tmp.7 :_cycleField;
+        %tmp.9 = -1;
+        invoke %tmp.7 %tmp.8(%tmp.9);
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_125_24_125_43_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_125_8_126_43_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_125_8_126_43_if_else_false:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_126_25_126_43_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 126 27 ]
+        %tmp.10 = self;
+        symbol [ _cycleField %tmp.11 126 27 38 ];
+        %tmp.11 = getv function %tmp.10 :_cycleField;
+        %tmp.12 = 1;
+        invoke %tmp.10 %tmp.11(%tmp.12);
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_126_25_126_43_stop:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_125_8_126_43_if_end:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_124_25_127_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 129; @symbol_functiondef = [_cycleField,129,20,31]; @symbol_param<0> = [dir,129,32,35]; ]
+    protected
+    function _cycleField(dir) {
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_129_37_134_4_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 130 8 ]
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_130_8_133_69_if_stmt:
+        symbol [ _field %tmp.2 130 17 23 ];
+        %tmp.2 = getv ? :_field;
+        %tmp.3 = 0;
+        %tmp.4 = eq %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_130_8_133_69_if_false;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_130_8_133_69_if_true:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_130_30_130_101_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 130 32 ]
+        symbol [ _depIdx %tmp.6 130 44 51 ];
+        %tmp.6 = getv ? :_depIdx;
+        %tmp.7 = lgetv %dir;
+        symbol [ dir %tmp.7 130 55 58 ];
+        %tmp.8 = add %tmp.6 %tmp.7;
+        symbol [ DRI_DEPTHS %tmp.10 130 61 71 ];
+        %tmp.10 = getv ? :DRI_DEPTHS;
+        symbol [ size %tmp.11 130 72 76 ];
+        %tmp.11 = getv function %tmp.10 :size;
+        %tmp.12 = invoke %tmp.10 %tmp.11();
+        %tmp.13 = add %tmp.8 %tmp.12;
+        symbol [ DRI_DEPTHS %tmp.15 130 82 92 ];
+        %tmp.15 = getv ? :DRI_DEPTHS;
+        symbol [ size %tmp.16 130 93 97 ];
+        %tmp.16 = getv function %tmp.15 :size;
+        %tmp.17 = invoke %tmp.15 %tmp.16();
+        %tmp.18 = mod %tmp.13 %tmp.17;
+        symbol [ _depIdx ? 130 32 39 ];
+        putv self :_depIdx %tmp.18;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_130_30_130_101_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_130_8_133_69_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_130_8_133_69_if_false:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 131 13 ]
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_131_13_133_69_if_stmt:
+        symbol [ _field %tmp.20 131 17 23 ];
+        %tmp.20 = getv ? :_field;
+        %tmp.21 = 1;
+        %tmp.22 = eq %tmp.20 %tmp.21;
+        bf %tmp.22 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_131_13_133_69_if_false;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_131_13_133_69_if_true:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_131_30_131_100_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 131 32 ]
+        symbol [ _timeIdx %tmp.24 131 44 52 ];
+        %tmp.24 = getv ? :_timeIdx;
+        %tmp.25 = lgetv %dir;
+        symbol [ dir %tmp.25 131 55 58 ];
+        %tmp.26 = add %tmp.24 %tmp.25;
+        symbol [ DRI_TIMES %tmp.28 131 61 70 ];
+        %tmp.28 = getv ? :DRI_TIMES;
+        symbol [ size %tmp.29 131 71 75 ];
+        %tmp.29 = getv function %tmp.28 :size;
+        %tmp.30 = invoke %tmp.28 %tmp.29();
+        %tmp.31 = add %tmp.26 %tmp.30;
+        symbol [ DRI_TIMES %tmp.33 131 82 91 ];
+        %tmp.33 = getv ? :DRI_TIMES;
+        symbol [ size %tmp.34 131 92 96 ];
+        %tmp.34 = getv function %tmp.33 :size;
+        %tmp.35 = invoke %tmp.33 %tmp.34();
+        %tmp.36 = mod %tmp.31 %tmp.35;
+        symbol [ _timeIdx ? 131 32 40 ];
+        putv self :_timeIdx %tmp.36;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_131_30_131_100_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_131_13_133_69_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_131_13_133_69_if_false:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 132 13 ]
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_132_13_133_69_if_stmt:
+        symbol [ _field %tmp.38 132 17 23 ];
+        %tmp.38 = getv ? :_field;
+        %tmp.39 = 2;
+        %tmp.40 = eq %tmp.38 %tmp.39;
+        bf %tmp.40 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_132_13_133_69_if_else_false;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_132_13_133_69_if_true:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_132_30_132_69_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 132 32 ]
+        symbol [ _gasIdx %tmp.42 132 44 51 ];
+        %tmp.42 = getv ? :_gasIdx;
+        %tmp.43 = lgetv %dir;
+        symbol [ dir %tmp.43 132 55 58 ];
+        %tmp.44 = add %tmp.42 %tmp.43;
+        %tmp.45 = 3;
+        %tmp.46 = add %tmp.44 %tmp.45;
+        %tmp.47 = 3;
+        %tmp.48 = mod %tmp.46 %tmp.47;
+        symbol [ _gasIdx ? 132 32 39 ];
+        putv self :_gasIdx %tmp.48;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_132_30_132_69_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_132_13_133_69_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_132_13_133_69_if_else_false:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_133_30_133_69_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 133 32 ]
+        symbol [ _repIdx %tmp.50 133 44 51 ];
+        %tmp.50 = getv ? :_repIdx;
+        %tmp.51 = lgetv %dir;
+        symbol [ dir %tmp.51 133 55 58 ];
+        %tmp.52 = add %tmp.50 %tmp.51;
+        %tmp.53 = 2;
+        %tmp.54 = add %tmp.52 %tmp.53;
+        %tmp.55 = 2;
+        %tmp.56 = mod %tmp.54 %tmp.55;
+        symbol [ _repIdx ? 133 32 39 ];
+        putv self :_repIdx %tmp.56;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_133_30_133_69_stop:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_132_13_133_69_if_end:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_131_13_133_69_if_end:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_130_8_133_69_if_end:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_129_37_134_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 138; @symbol_functiondef = [onUpdate,138,13,21]; @symbol_param<0> = [dc,138,22,24]; ]
+    function onUpdate(dc) {
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 139 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 139 13 15 ];
+        symbol [ getWidth %tmp.2 139 16 24 ];
+        %tmp.2 = getv function %tmp.1 :getWidth;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        %tmp.4 = 9;
+        %tmp.5 = mul %tmp.3 %tmp.4;
+        %tmp.6 = 10;
+        %tmp.7 = div %tmp.5 %tmp.6;
+        symbol [ _w ? 139 8 10 ];
+        putv self :_w %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 140 8 ]
+        %tmp.8 = lgetv %dc;
+        symbol [ dc %tmp.8 140 13 15 ];
+        symbol [ getHeight %tmp.9 140 16 25 ];
+        %tmp.9 = getv function %tmp.8 :getHeight;
+        %tmp.10 = invoke %tmp.8 %tmp.9();
+        %tmp.11 = 9;
+        %tmp.12 = mul %tmp.10 %tmp.11;
+        %tmp.13 = 10;
+        %tmp.14 = div %tmp.12 %tmp.13;
+        symbol [ _h ? 140 8 10 ];
+        putv self :_h %tmp.14;
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 142 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_stop" ]
+        %depth.1 = local;
+        symbol [ depth %depth.1 142 12 17 ];
+        symbol [ DRI_DEPTHS %tmp.16 142 20 30 ];
+        %tmp.16 = getv ? :DRI_DEPTHS;
+        symbol [ _depIdx %tmp.18 142 31 38 ];
+        %tmp.18 = getv ? :_depIdx;
+        %tmp.19 = agetv %tmp.16 %tmp.18;
+        lputv %depth.1 %tmp.19;
+        symbol [ depth %depth.1 142 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 143 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_stop" ]
+        %time.2 = local;
+        symbol [ time %time.2 143 12 16 ];
+        symbol [ DRI_TIMES %tmp.21 143 20 29 ];
+        %tmp.21 = getv ? :DRI_TIMES;
+        symbol [ _timeIdx %tmp.23 143 30 38 ];
+        %tmp.23 = getv ? :_timeIdx;
+        %tmp.24 = agetv %tmp.21 %tmp.23;
+        lputv %time.2 %tmp.24;
+        symbol [ time %time.2 143 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 144 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_stop" ]
+        %fo2.3 = local;
+        symbol [ fo2 %fo2.3 144 12 15 ];
+        symbol [ DRI_GAS_FO2 %tmp.26 144 20 31 ];
+        %tmp.26 = getv ? :DRI_GAS_FO2;
+        symbol [ _gasIdx %tmp.28 144 32 39 ];
+        %tmp.28 = getv ? :_gasIdx;
+        %tmp.29 = agetv %tmp.26 %tmp.28;
+        lputv %fo2.3 %tmp.29;
+        symbol [ fo2 %fo2.3 144 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 145 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_stop" ]
+        %rep.4 = local;
+        symbol [ rep %rep.4 145 12 15 ];
+        symbol [ _repIdx %tmp.31 145 21 28 ];
+        %tmp.31 = getv ? :_repIdx;
+        %tmp.32 = 1;
+        %tmp.33 = eq %tmp.31 %tmp.32;
+        lputv %rep.4 %tmp.33;
+        symbol [ rep %rep.4 145 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 147 8 ]
+        %tmp.34 = self;
+        symbol [ _calcScore %tmp.35 147 8 18 ];
+        %tmp.35 = getv function %tmp.34 :_calcScore;
+        %tmp.36 = lgetv %depth.1;
+        symbol [ depth %tmp.36 147 19 24 ];
+        %tmp.37 = lgetv %time.2;
+        symbol [ time %tmp.37 147 26 30 ];
+        %tmp.38 = lgetv %fo2.3;
+        symbol [ fo2 %tmp.38 147 32 35 ];
+        %tmp.39 = lgetv %rep.4;
+        symbol [ rep %tmp.39 147 37 40 ];
+        invoke %tmp.34 %tmp.35(%tmp.36, %tmp.37, %tmp.38, %tmp.39);
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 148 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_stop" ]
+        %score.5 = local;
+        symbol [ score %score.5 148 12 17 ];
+        symbol [ _rScore %tmp.41 148 22 29 ];
+        %tmp.41 = getv ? :_rScore;
+        lputv %score.5 %tmp.41;
+        symbol [ score %score.5 148 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 149 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_stop" ]
+        %ndlRat.6 = local;
+        symbol [ ndlRat %ndlRat.6 149 12 18 ];
+        symbol [ _rNdlRat %tmp.43 149 22 30 ];
+        %tmp.43 = getv ? :_rNdlRat;
+        lputv %ndlRat.6 %tmp.43;
+        symbol [ ndlRat %ndlRat.6 149 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 150 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_stop" ]
+        %ndlMins.7 = local;
+        symbol [ ndlMins %ndlMins.7 150 12 19 ];
+        symbol [ _rNdlMins %tmp.45 150 22 31 ];
+        %tmp.45 = getv ? :_rNdlMins;
+        lputv %ndlMins.7 %tmp.45;
+        symbol [ ndlMins %ndlMins.7 150 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 153 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_stop" ]
+        %bgCol.8 = local;
+        symbol [ bgCol %bgCol.8 153 12 17 ];
+        %tmp.46 = self;
+        symbol [ _bgColor %tmp.47 153 20 28 ];
+        %tmp.47 = getv function %tmp.46 :_bgColor;
+        %tmp.48 = lgetv %score.5;
+        symbol [ score %tmp.48 153 29 34 ];
+        %tmp.49 = invoke %tmp.46 %tmp.47(%tmp.48);
+        lputv %bgCol.8 %tmp.49;
+        symbol [ bgCol %bgCol.8 153 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 154 8 ]
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_154_8_154_66_if_stmt:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_154_12_154_40_begin:
+        %tmp.50 = lgetv %score.5;
+        symbol [ score %tmp.50 154 12 17 ];
+        %tmp.51 = 66;
+        %tmp.52 = gte %tmp.50 %tmp.51;
+        bf %tmp.52 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_154_8_154_66_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_154_27_154_40_true:
+        symbol [ _tick %tmp.54 154 27 32 ];
+        %tmp.54 = getv ? :_tick;
+        %tmp.55 = 2;
+        %tmp.56 = mod %tmp.54 %tmp.55;
+        %tmp.57 = 0;
+        %tmp.58 = eq %tmp.56 %tmp.57;
+        push %tmp.58;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_154_27_154_40_end:
+        %tmp.59 = phi [%tmp.52 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_154_12_154_40_begin] [%tmp.58 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_154_27_154_40_true] [%tmp.59 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_154_27_154_40_end];
+        bf %tmp.59 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_154_8_154_66_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_154_8_154_66_if_true:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_154_43_154_66_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 154 45 ]
+        symbol [ DR_BG_PULSE %tmp.61 154 53 64 ];
+        %tmp.61 = getv ? :DR_BG_PULSE;
+        lputv %bgCol.8 %tmp.61;
+        symbol [ bgCol %bgCol.8 154 45 50 ];
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_154_43_154_66_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_154_8_154_66_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_154_8_154_66_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 155 8 ]
+        %tmp.62 = lgetv %dc;
+        symbol [ dc %tmp.62 155 8 10 ];
+        symbol [ setColor %tmp.63 155 11 19 ];
+        %tmp.63 = getv function %tmp.62 :setColor;
+        %tmp.64 = lgetv %bgCol.8;
+        symbol [ bgCol %tmp.64 155 20 25 ];
+        %tmp.65 = lgetv %bgCol.8;
+        symbol [ bgCol %tmp.65 155 27 32 ];
+        invoke %tmp.62 %tmp.63(%tmp.64, %tmp.65);
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 156 8 ]
+        %tmp.66 = lgetv %dc;
+        symbol [ dc %tmp.66 156 8 10 ];
+        symbol [ clear %tmp.67 156 11 16 ];
+        %tmp.67 = getv function %tmp.66 :clear;
+        invoke %tmp.66 %tmp.67();
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 159 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_stop" ]
+        %divY.9 = local;
+        symbol [ divY %divY.9 159 12 16 ];
+        symbol [ _h %tmp.69 159 19 21 ];
+        %tmp.69 = getv ? :_h;
+        %tmp.70 = 2;
+        %tmp.71 = div %tmp.69 %tmp.70;
+        lputv %divY.9 %tmp.71;
+        symbol [ divY %divY.9 159 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 160 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_stop" ]
+        %mg.10 = local;
+        symbol [ mg %mg.10 160 12 14 ];
+        symbol [ _w %tmp.73 160 19 21 ];
+        %tmp.73 = getv ? :_w;
+        %tmp.74 = 8;
+        %tmp.75 = mul %tmp.73 %tmp.74;
+        %tmp.76 = 100;
+        %tmp.77 = div %tmp.75 %tmp.76;
+        lputv %mg.10 %tmp.77;
+        symbol [ mg %mg.10 160 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 162 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_stop" ]
+        %rH.11 = local;
+        symbol [ rH %rH.11 162 12 14 ];
+        %tmp.78 = lgetv %divY.9;
+        symbol [ divY %tmp.78 162 18 22 ];
+        %tmp.79 = 18;
+        %tmp.80 = sub %tmp.78 %tmp.79;
+        %tmp.81 = 4;
+        %tmp.82 = div %tmp.80 %tmp.81;
+        lputv %rH.11 %tmp.82;
+        symbol [ rH %rH.11 162 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 163 8 ]
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_163_8_163_32_if_stmt:
+        %tmp.83 = lgetv %rH.11;
+        symbol [ rH %tmp.83 163 12 14 ];
+        %tmp.84 = 14;
+        %tmp.85 = lt %tmp.83 %tmp.84;
+        bf %tmp.85 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_163_8_163_32_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_163_8_163_32_if_true:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_163_21_163_32_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 163 23 ]
+        %tmp.86 = 14;
+        lputv %rH.11 %tmp.86;
+        symbol [ rH %rH.11 163 23 25 ];
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_163_21_163_32_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_163_8_163_32_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_163_8_163_32_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 165 8 ]
+        %tmp.87 = lgetv %dc;
+        symbol [ dc %tmp.87 165 8 10 ];
+        symbol [ setColor %tmp.88 165 11 19 ];
+        %tmp.88 = getv function %tmp.87 :setColor;
+        symbol [ DR_DIM %tmp.90 165 20 26 ];
+        %tmp.90 = getv ? :DR_DIM;
+        symbol [ Graphics %tmp.91 165 28 36 ];
+        %tmp.91 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.92 165 37 54 ];
+        %tmp.92 = getv %tmp.91 :COLOR_TRANSPARENT;
+        invoke %tmp.87 %tmp.88(%tmp.90, %tmp.92);
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 166 8 ]
+        %tmp.93 = lgetv %dc;
+        symbol [ dc %tmp.93 166 8 10 ];
+        symbol [ drawText %tmp.94 166 11 19 ];
+        %tmp.94 = getv function %tmp.93 :drawText;
+        symbol [ _w %tmp.96 166 20 22 ];
+        %tmp.96 = getv ? :_w;
+        %tmp.97 = 2;
+        %tmp.98 = div %tmp.96 %tmp.97;
+        symbol [ _h %tmp.100 166 28 30 ];
+        %tmp.100 = getv ? :_h;
+        %tmp.101 = 1;
+        %tmp.102 = mul %tmp.100 %tmp.101;
+        %tmp.103 = 100;
+        %tmp.104 = div %tmp.102 %tmp.103;
+        symbol [ Graphics %tmp.105 166 42 50 ];
+        %tmp.105 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.106 166 51 61 ];
+        %tmp.106 = getv %tmp.105 :FONT_XTINY;
+        %tmp.107 = "DIVE RISK";
+        symbol [ Graphics %tmp.108 166 76 84 ];
+        %tmp.108 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.109 166 85 104 ];
+        %tmp.109 = getv %tmp.108 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.93 %tmp.94(%tmp.98, %tmp.104, %tmp.106, %tmp.107, %tmp.109);
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 168 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_stop" ]
+        %sY.12 = local;
+        symbol [ sY %sY.12 168 12 14 ];
+        symbol [ _h %tmp.111 168 17 19 ];
+        %tmp.111 = getv ? :_h;
+        %tmp.112 = 4;
+        %tmp.113 = mul %tmp.111 %tmp.112;
+        %tmp.114 = 100;
+        %tmp.115 = div %tmp.113 %tmp.114;
+        lputv %sY.12 %tmp.115;
+        symbol [ sY %sY.12 168 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 169 8 ]
+        %tmp.116 = self;
+        symbol [ _drawRow %tmp.117 169 8 16 ];
+        %tmp.117 = getv function %tmp.116 :_drawRow;
+        %tmp.118 = lgetv %dc;
+        symbol [ dc %tmp.118 169 17 19 ];
+        %tmp.119 = lgetv %sY.12;
+        symbol [ sY %tmp.119 169 21 23 ];
+        %tmp.120 = 0;
+        %tmp.121 = lgetv %rH.11;
+        symbol [ rH %tmp.121 169 30 32 ];
+        %tmp.122 = mul %tmp.120 %tmp.121;
+        %tmp.123 = add %tmp.119 %tmp.122;
+        %tmp.124 = "DEPTH";
+        %tmp.125 = lgetv %depth.1;
+        symbol [ depth %tmp.125 169 43 48 ];
+        %tmp.126 = "m";
+        %tmp.127 = add %tmp.125 %tmp.126;
+        symbol [ _field %tmp.129 169 77 83 ];
+        %tmp.129 = getv ? :_field;
+        %tmp.130 = 0;
+        %tmp.131 = eq %tmp.129 %tmp.130;
+        %tmp.132 = lgetv %mg.10;
+        symbol [ mg %tmp.132 169 90 92 ];
+        %tmp.133 = lgetv %rH.11;
+        symbol [ rH %tmp.133 169 94 96 ];
+        invoke %tmp.116 %tmp.117(%tmp.118, %tmp.123, %tmp.124, %tmp.127, %tmp.131, %tmp.132, %tmp.133);
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 170 8 ]
+        %tmp.134 = self;
+        symbol [ _drawRow %tmp.135 170 8 16 ];
+        %tmp.135 = getv function %tmp.134 :_drawRow;
+        %tmp.136 = lgetv %dc;
+        symbol [ dc %tmp.136 170 17 19 ];
+        %tmp.137 = lgetv %sY.12;
+        symbol [ sY %tmp.137 170 21 23 ];
+        %tmp.138 = 1;
+        %tmp.139 = lgetv %rH.11;
+        symbol [ rH %tmp.139 170 30 32 ];
+        %tmp.140 = mul %tmp.138 %tmp.139;
+        %tmp.141 = add %tmp.137 %tmp.140;
+        %tmp.142 = "TIME";
+        %tmp.143 = lgetv %time.2;
+        symbol [ time %tmp.143 170 43 47 ];
+        %tmp.144 = " min";
+        %tmp.145 = add %tmp.143 %tmp.144;
+        symbol [ _field %tmp.147 170 78 84 ];
+        %tmp.147 = getv ? :_field;
+        %tmp.148 = 1;
+        %tmp.149 = eq %tmp.147 %tmp.148;
+        %tmp.150 = lgetv %mg.10;
+        symbol [ mg %tmp.150 170 91 93 ];
+        %tmp.151 = lgetv %rH.11;
+        symbol [ rH %tmp.151 170 95 97 ];
+        invoke %tmp.134 %tmp.135(%tmp.136, %tmp.141, %tmp.142, %tmp.145, %tmp.149, %tmp.150, %tmp.151);
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 171 8 ]
+        %tmp.152 = self;
+        symbol [ _drawRow %tmp.153 171 8 16 ];
+        %tmp.153 = getv function %tmp.152 :_drawRow;
+        %tmp.154 = lgetv %dc;
+        symbol [ dc %tmp.154 171 17 19 ];
+        %tmp.155 = lgetv %sY.12;
+        symbol [ sY %tmp.155 171 21 23 ];
+        %tmp.156 = 2;
+        %tmp.157 = lgetv %rH.11;
+        symbol [ rH %tmp.157 171 30 32 ];
+        %tmp.158 = mul %tmp.156 %tmp.157;
+        %tmp.159 = add %tmp.155 %tmp.158;
+        %tmp.160 = "GAS";
+        symbol [ DRI_GAS_LBL %tmp.162 171 43 54 ];
+        %tmp.162 = getv ? :DRI_GAS_LBL;
+        symbol [ _gasIdx %tmp.164 171 55 62 ];
+        %tmp.164 = getv ? :_gasIdx;
+        %tmp.165 = agetv %tmp.162 %tmp.164;
+        symbol [ _field %tmp.167 171 78 84 ];
+        %tmp.167 = getv ? :_field;
+        %tmp.168 = 2;
+        %tmp.169 = eq %tmp.167 %tmp.168;
+        %tmp.170 = lgetv %mg.10;
+        symbol [ mg %tmp.170 171 91 93 ];
+        %tmp.171 = lgetv %rH.11;
+        symbol [ rH %tmp.171 171 95 97 ];
+        invoke %tmp.152 %tmp.153(%tmp.154, %tmp.159, %tmp.160, %tmp.165, %tmp.169, %tmp.170, %tmp.171);
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 172 8 ]
+        %tmp.172 = self;
+        symbol [ _drawRow %tmp.173 172 8 16 ];
+        %tmp.173 = getv function %tmp.172 :_drawRow;
+        %tmp.174 = lgetv %dc;
+        symbol [ dc %tmp.174 172 17 19 ];
+        %tmp.175 = lgetv %sY.12;
+        symbol [ sY %tmp.175 172 21 23 ];
+        %tmp.176 = 3;
+        %tmp.177 = lgetv %rH.11;
+        symbol [ rH %tmp.177 172 30 32 ];
+        %tmp.178 = mul %tmp.176 %tmp.177;
+        %tmp.179 = add %tmp.175 %tmp.178;
+        %tmp.180 = "PREV";
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_172_43_172_64_begin:
+        %tmp.181 = lgetv %rep.4;
+        symbol [ rep %tmp.181 172 43 46 ];
+        bf %tmp.181 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_172_43_172_64_else_false;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_172_43_172_64_true:
+        %tmp.182 = "Repetitive";
+        push %tmp.182;
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_172_43_172_64_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_172_43_172_64_else_false:
+        %tmp.183 = "1st dive";
+        push %tmp.183;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_172_43_172_64_end:
+        %tmp.184 = phi [%tmp.181 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_172_43_172_64_begin] [%tmp.182 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_172_43_172_64_true] [%tmp.183 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_172_43_172_64_else_false] [%tmp.184 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_172_43_172_64_end];
+        symbol [ _field %tmp.186 172 78 84 ];
+        %tmp.186 = getv ? :_field;
+        %tmp.187 = 3;
+        %tmp.188 = eq %tmp.186 %tmp.187;
+        %tmp.189 = lgetv %mg.10;
+        symbol [ mg %tmp.189 172 91 93 ];
+        %tmp.190 = lgetv %rH.11;
+        symbol [ rH %tmp.190 172 95 97 ];
+        invoke %tmp.172 %tmp.173(%tmp.174, %tmp.179, %tmp.180, %tmp.184, %tmp.188, %tmp.189, %tmp.190);
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 175 8 ]
+        %tmp.191 = lgetv %dc;
+        symbol [ dc %tmp.191 175 8 10 ];
+        symbol [ setColor %tmp.192 175 11 19 ];
+        %tmp.192 = getv function %tmp.191 :setColor;
+        symbol [ DR_DIVL %tmp.194 175 20 27 ];
+        %tmp.194 = getv ? :DR_DIVL;
+        symbol [ Graphics %tmp.195 175 29 37 ];
+        %tmp.195 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.196 175 38 55 ];
+        %tmp.196 = getv %tmp.195 :COLOR_TRANSPARENT;
+        invoke %tmp.191 %tmp.192(%tmp.194, %tmp.196);
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 176 8 ]
+        %tmp.197 = lgetv %dc;
+        symbol [ dc %tmp.197 176 8 10 ];
+        symbol [ drawLine %tmp.198 176 11 19 ];
+        %tmp.198 = getv function %tmp.197 :drawLine;
+        symbol [ _w %tmp.200 176 20 22 ];
+        %tmp.200 = getv ? :_w;
+        %tmp.201 = 10;
+        %tmp.202 = mul %tmp.200 %tmp.201;
+        %tmp.203 = 100;
+        %tmp.204 = div %tmp.202 %tmp.203;
+        %tmp.205 = lgetv %divY.9;
+        symbol [ divY %tmp.205 176 35 39 ];
+        symbol [ _w %tmp.207 176 41 43 ];
+        %tmp.207 = getv ? :_w;
+        %tmp.208 = 90;
+        %tmp.209 = mul %tmp.207 %tmp.208;
+        %tmp.210 = 100;
+        %tmp.211 = div %tmp.209 %tmp.210;
+        %tmp.212 = lgetv %divY.9;
+        symbol [ divY %tmp.212 176 56 60 ];
+        invoke %tmp.197 %tmp.198(%tmp.204, %tmp.205, %tmp.211, %tmp.212);
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 180 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_stop" ]
+        %isLarge.13 = local;
+        symbol [ isLarge %isLarge.13 180 12 19 ];
+        symbol [ _h %tmp.214 180 25 27 ];
+        %tmp.214 = getv ? :_h;
+        %tmp.215 = 210;
+        %tmp.216 = gte %tmp.214 %tmp.215;
+        lputv %isLarge.13 %tmp.216;
+        symbol [ isLarge %isLarge.13 180 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 181 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_stop" ]
+        %scoreFont.14 = local;
+        symbol [ scoreFont %scoreFont.14 181 12 21 ];
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_181_24_181_71_begin:
+        %tmp.217 = lgetv %isLarge.13;
+        symbol [ isLarge %tmp.217 181 24 31 ];
+        bf %tmp.217 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_181_24_181_71_else_false;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_181_24_181_71_true:
+        symbol [ Graphics %tmp.218 181 34 42 ];
+        %tmp.218 = getm $.Toybox.Graphics;
+        symbol [ FONT_NUMBER_HOT %tmp.219 181 43 58 ];
+        %tmp.219 = getv %tmp.218 :FONT_NUMBER_HOT;
+        push %tmp.219;
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_181_24_181_71_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_181_24_181_71_else_false:
+        symbol [ Graphics %tmp.220 181 62 70 ];
+        %tmp.220 = getm $.Toybox.Graphics;
+        symbol [ FONT_NUMBER_MILD %tmp.221 181 71 87 ];
+        %tmp.221 = getv %tmp.220 :FONT_NUMBER_MILD;
+        push %tmp.221;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_181_24_181_71_end:
+        %tmp.222 = phi [%tmp.217 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_181_24_181_71_begin] [%tmp.219 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_181_24_181_71_true] [%tmp.221 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_181_24_181_71_else_false] [%tmp.222 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_181_24_181_71_end];
+        lputv %scoreFont.14 %tmp.222;
+        symbol [ scoreFont %scoreFont.14 181 12 21 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 182 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_stop" ]
+        %scoreFH.15 = local;
+        symbol [ scoreFH %scoreFH.15 182 12 19 ];
+        %tmp.223 = lgetv %dc;
+        symbol [ dc %tmp.223 182 24 26 ];
+        symbol [ getFontHeight %tmp.224 182 27 40 ];
+        %tmp.224 = getv function %tmp.223 :getFontHeight;
+        %tmp.225 = lgetv %scoreFont.14;
+        symbol [ scoreFont %tmp.225 182 41 50 ];
+        %tmp.226 = invoke %tmp.223 %tmp.224(%tmp.225);
+        lputv %scoreFH.15 %tmp.226;
+        symbol [ scoreFH %scoreFH.15 182 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 183 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_stop" ]
+        %levelFont.16 = local;
+        symbol [ levelFont %levelFont.16 183 12 21 ];
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_183_24_183_71_begin:
+        %tmp.227 = lgetv %isLarge.13;
+        symbol [ isLarge %tmp.227 183 24 31 ];
+        bf %tmp.227 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_183_24_183_71_else_false;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_183_24_183_71_true:
+        symbol [ Graphics %tmp.228 183 34 42 ];
+        %tmp.228 = getm $.Toybox.Graphics;
+        symbol [ FONT_MEDIUM %tmp.229 183 43 54 ];
+        %tmp.229 = getv %tmp.228 :FONT_MEDIUM;
+        push %tmp.229;
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_183_24_183_71_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_183_24_183_71_else_false:
+        symbol [ Graphics %tmp.230 183 62 70 ];
+        %tmp.230 = getm $.Toybox.Graphics;
+        symbol [ FONT_SMALL %tmp.231 183 71 81 ];
+        %tmp.231 = getv %tmp.230 :FONT_SMALL;
+        push %tmp.231;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_183_24_183_71_end:
+        %tmp.232 = phi [%tmp.227 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_183_24_183_71_begin] [%tmp.229 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_183_24_183_71_true] [%tmp.231 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_183_24_183_71_else_false] [%tmp.232 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_183_24_183_71_end];
+        lputv %levelFont.16 %tmp.232;
+        symbol [ levelFont %levelFont.16 183 12 21 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 184 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_stop" ]
+        %levelFH.17 = local;
+        symbol [ levelFH %levelFH.17 184 12 19 ];
+        %tmp.233 = lgetv %dc;
+        symbol [ dc %tmp.233 184 24 26 ];
+        symbol [ getFontHeight %tmp.234 184 27 40 ];
+        %tmp.234 = getv function %tmp.233 :getFontHeight;
+        %tmp.235 = lgetv %levelFont.16;
+        symbol [ levelFont %tmp.235 184 41 50 ];
+        %tmp.236 = invoke %tmp.233 %tmp.234(%tmp.235);
+        lputv %levelFH.17 %tmp.236;
+        symbol [ levelFH %levelFH.17 184 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 187 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_stop" ]
+        %totalH.18 = local;
+        symbol [ totalH %totalH.18 187 12 18 ];
+        %tmp.237 = lgetv %scoreFH.15;
+        symbol [ scoreFH %tmp.237 187 21 28 ];
+        %tmp.238 = 3;
+        %tmp.239 = add %tmp.237 %tmp.238;
+        %tmp.240 = lgetv %levelFH.17;
+        symbol [ levelFH %tmp.240 187 35 42 ];
+        %tmp.241 = add %tmp.239 %tmp.240;
+        %tmp.242 = 3;
+        %tmp.243 = add %tmp.241 %tmp.242;
+        %tmp.244 = 13;
+        %tmp.245 = add %tmp.243 %tmp.244;
+        lputv %totalH.18 %tmp.245;
+        symbol [ totalH %totalH.18 187 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 188 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_stop" ]
+        %topGap.19 = local;
+        symbol [ topGap %topGap.19 188 12 18 ];
+        symbol [ _h %tmp.247 188 23 25 ];
+        %tmp.247 = getv ? :_h;
+        %tmp.248 = lgetv %divY.9;
+        symbol [ divY %tmp.248 188 28 32 ];
+        %tmp.249 = sub %tmp.247 %tmp.248;
+        %tmp.250 = lgetv %totalH.18;
+        symbol [ totalH %tmp.250 188 36 42 ];
+        %tmp.251 = sub %tmp.249 %tmp.250;
+        %tmp.252 = 2;
+        %tmp.253 = div %tmp.251 %tmp.252;
+        lputv %topGap.19 %tmp.253;
+        symbol [ topGap %topGap.19 188 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 189 8 ]
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_189_8_189_38_if_stmt:
+        %tmp.254 = lgetv %topGap.19;
+        symbol [ topGap %tmp.254 189 12 18 ];
+        %tmp.255 = 2;
+        %tmp.256 = lt %tmp.254 %tmp.255;
+        bf %tmp.256 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_189_8_189_38_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_189_8_189_38_if_true:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_189_24_189_38_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 189 26 ]
+        %tmp.257 = 2;
+        lputv %topGap.19 %tmp.257;
+        symbol [ topGap %topGap.19 189 26 32 ];
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_189_24_189_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_189_8_189_38_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_189_8_189_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 191 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_stop" ]
+        %scoreY.20 = local;
+        symbol [ scoreY %scoreY.20 191 12 18 ];
+        %tmp.258 = lgetv %divY.9;
+        symbol [ divY %tmp.258 191 21 25 ];
+        %tmp.259 = lgetv %topGap.19;
+        symbol [ topGap %tmp.259 191 28 34 ];
+        %tmp.260 = add %tmp.258 %tmp.259;
+        lputv %scoreY.20 %tmp.260;
+        symbol [ scoreY %scoreY.20 191 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 192 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_stop" ]
+        %levelY.21 = local;
+        symbol [ levelY %levelY.21 192 12 18 ];
+        %tmp.261 = lgetv %scoreY.20;
+        symbol [ scoreY %tmp.261 192 21 27 ];
+        %tmp.262 = lgetv %scoreFH.15;
+        symbol [ scoreFH %tmp.262 192 30 37 ];
+        %tmp.263 = add %tmp.261 %tmp.262;
+        %tmp.264 = 3;
+        %tmp.265 = add %tmp.263 %tmp.264;
+        lputv %levelY.21 %tmp.265;
+        symbol [ levelY %levelY.21 192 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 193 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_stop" ]
+        %infoY.22 = local;
+        symbol [ infoY %infoY.22 193 12 17 ];
+        %tmp.266 = lgetv %levelY.21;
+        symbol [ levelY %tmp.266 193 21 27 ];
+        %tmp.267 = lgetv %levelFH.17;
+        symbol [ levelFH %tmp.267 193 30 37 ];
+        %tmp.268 = add %tmp.266 %tmp.267;
+        %tmp.269 = 3;
+        %tmp.270 = add %tmp.268 %tmp.269;
+        lputv %infoY.22 %tmp.270;
+        symbol [ infoY %infoY.22 193 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 195 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_stop" ]
+        %scoreCol.23 = local;
+        symbol [ scoreCol %scoreCol.23 195 12 20 ];
+        %tmp.271 = self;
+        symbol [ _riskColor %tmp.272 195 23 33 ];
+        %tmp.272 = getv function %tmp.271 :_riskColor;
+        %tmp.273 = lgetv %score.5;
+        symbol [ score %tmp.273 195 34 39 ];
+        %tmp.274 = invoke %tmp.271 %tmp.272(%tmp.273);
+        lputv %scoreCol.23 %tmp.274;
+        symbol [ scoreCol %scoreCol.23 195 12 20 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 196 8 ]
+        %tmp.275 = lgetv %dc;
+        symbol [ dc %tmp.275 196 8 10 ];
+        symbol [ setColor %tmp.276 196 11 19 ];
+        %tmp.276 = getv function %tmp.275 :setColor;
+        %tmp.277 = lgetv %scoreCol.23;
+        symbol [ scoreCol %tmp.277 196 20 28 ];
+        symbol [ Graphics %tmp.278 196 30 38 ];
+        %tmp.278 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.279 196 39 56 ];
+        %tmp.279 = getv %tmp.278 :COLOR_TRANSPARENT;
+        invoke %tmp.275 %tmp.276(%tmp.277, %tmp.279);
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 197 8 ]
+        %tmp.280 = lgetv %dc;
+        symbol [ dc %tmp.280 197 8 10 ];
+        symbol [ drawText %tmp.281 197 11 19 ];
+        %tmp.281 = getv function %tmp.280 :drawText;
+        symbol [ _w %tmp.283 197 20 22 ];
+        %tmp.283 = getv ? :_w;
+        %tmp.284 = 2;
+        %tmp.285 = div %tmp.283 %tmp.284;
+        %tmp.286 = lgetv %scoreY.20;
+        symbol [ scoreY %tmp.286 197 28 34 ];
+        %tmp.287 = lgetv %scoreFont.14;
+        symbol [ scoreFont %tmp.287 197 36 45 ];
+        %tmp.288 = lgetv %score.5;
+        symbol [ score %tmp.288 197 47 52 ];
+        symbol [ toString %tmp.289 197 53 61 ];
+        %tmp.289 = getv function %tmp.288 :toString;
+        %tmp.290 = invoke %tmp.288 %tmp.289();
+        symbol [ Graphics %tmp.291 197 65 73 ];
+        %tmp.291 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.292 197 74 93 ];
+        %tmp.292 = getv %tmp.291 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.280 %tmp.281(%tmp.285, %tmp.286, %tmp.287, %tmp.290, %tmp.292);
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 199 8 ]
+        %tmp.293 = lgetv %dc;
+        symbol [ dc %tmp.293 199 8 10 ];
+        symbol [ setColor %tmp.294 199 11 19 ];
+        %tmp.294 = getv function %tmp.293 :setColor;
+        %tmp.295 = lgetv %scoreCol.23;
+        symbol [ scoreCol %tmp.295 199 20 28 ];
+        symbol [ Graphics %tmp.296 199 30 38 ];
+        %tmp.296 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.297 199 39 56 ];
+        %tmp.297 = getv %tmp.296 :COLOR_TRANSPARENT;
+        invoke %tmp.293 %tmp.294(%tmp.295, %tmp.297);
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 200 8 ]
+        %tmp.298 = lgetv %dc;
+        symbol [ dc %tmp.298 200 8 10 ];
+        symbol [ drawText %tmp.299 200 11 19 ];
+        %tmp.299 = getv function %tmp.298 :drawText;
+        symbol [ _w %tmp.301 200 20 22 ];
+        %tmp.301 = getv ? :_w;
+        %tmp.302 = 2;
+        %tmp.303 = div %tmp.301 %tmp.302;
+        %tmp.304 = lgetv %levelY.21;
+        symbol [ levelY %tmp.304 200 28 34 ];
+        %tmp.305 = lgetv %levelFont.16;
+        symbol [ levelFont %tmp.305 200 36 45 ];
+        %tmp.306 = self;
+        symbol [ _riskLevel %tmp.307 200 47 57 ];
+        %tmp.307 = getv function %tmp.306 :_riskLevel;
+        %tmp.308 = lgetv %score.5;
+        symbol [ score %tmp.308 200 58 63 ];
+        %tmp.309 = invoke %tmp.306 %tmp.307(%tmp.308);
+        symbol [ Graphics %tmp.310 200 66 74 ];
+        %tmp.310 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.311 200 75 94 ];
+        %tmp.311 = getv %tmp.310 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.298 %tmp.299(%tmp.303, %tmp.304, %tmp.305, %tmp.309, %tmp.311);
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 203 8 ]
+        %tmp.312 = lgetv %dc;
+        symbol [ dc %tmp.312 203 8 10 ];
+        symbol [ setColor %tmp.313 203 11 19 ];
+        %tmp.313 = getv function %tmp.312 :setColor;
+        symbol [ DR_DIM %tmp.315 203 20 26 ];
+        %tmp.315 = getv ? :DR_DIM;
+        symbol [ Graphics %tmp.316 203 28 36 ];
+        %tmp.316 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.317 203 37 54 ];
+        %tmp.317 = getv %tmp.316 :COLOR_TRANSPARENT;
+        invoke %tmp.312 %tmp.313(%tmp.315, %tmp.317);
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 204 8 ]
+        %tmp.318 = lgetv %dc;
+        symbol [ dc %tmp.318 204 8 10 ];
+        symbol [ drawText %tmp.319 204 11 19 ];
+        %tmp.319 = getv function %tmp.318 :drawText;
+        symbol [ _w %tmp.321 204 20 22 ];
+        %tmp.321 = getv ? :_w;
+        %tmp.322 = 2;
+        %tmp.323 = div %tmp.321 %tmp.322;
+        %tmp.324 = lgetv %infoY.22;
+        symbol [ infoY %tmp.324 204 28 33 ];
+        symbol [ Graphics %tmp.325 204 35 43 ];
+        %tmp.325 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.326 204 44 54 ];
+        %tmp.326 = getv %tmp.325 :FONT_XTINY;
+        %tmp.327 = "NDL ";
+        %tmp.328 = lgetv %ndlMins.7;
+        symbol [ ndlMins %tmp.328 205 29 36 ];
+        %tmp.329 = add %tmp.327 %tmp.328;
+        %tmp.330 = "min  ";
+        %tmp.331 = add %tmp.329 %tmp.330;
+        %tmp.332 = self;
+        symbol [ _riskExplain %tmp.333 205 49 61 ];
+        %tmp.333 = getv function %tmp.332 :_riskExplain;
+        %tmp.334 = lgetv %score.5;
+        symbol [ score %tmp.334 205 62 67 ];
+        %tmp.335 = lgetv %ndlRat.6;
+        symbol [ ndlRat %tmp.335 205 69 75 ];
+        %tmp.336 = lgetv %rep.4;
+        symbol [ rep %tmp.336 205 77 80 ];
+        %tmp.337 = lgetv %depth.1;
+        symbol [ depth %tmp.337 205 82 87 ];
+        %tmp.338 = invoke %tmp.332 %tmp.333(%tmp.334, %tmp.335, %tmp.336, %tmp.337);
+        %tmp.339 = add %tmp.331 %tmp.338;
+        symbol [ Graphics %tmp.340 206 20 28 ];
+        %tmp.340 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.341 206 29 48 ];
+        %tmp.341 = getv %tmp.340 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.318 %tmp.319(%tmp.323, %tmp.324, %tmp.326, %tmp.339, %tmp.341);
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_138_26_207_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 212; @symbol_functiondef = [_calcScore,212,20,30]; @symbol_param<0> = [depth,212,31,36]; @symbol_param<1> = [time,212,38,42]; @symbol_param<2> = [fo2,212,44,47]; @symbol_param<3> = [rep,212,49,52]; ]
+    protected
+    function _calcScore(depth, time, fo2, rep) {
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_212_54_246_4_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 213 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_212_54_246_4_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_212_54_246_4_stop" ]
+        %ndlV.1 = local;
+        symbol [ ndlV %ndlV.1 213 12 16 ];
+        %tmp.1 = self;
+        symbol [ _ndl %tmp.2 213 22 26 ];
+        %tmp.2 = getv function %tmp.1 :_ndl;
+        %tmp.3 = lgetv %depth;
+        symbol [ depth %tmp.3 213 27 32 ];
+        %tmp.4 = lgetv %fo2;
+        symbol [ fo2 %tmp.4 213 34 37 ];
+        %tmp.5 = invoke %tmp.1 %tmp.2(%tmp.3, %tmp.4);
+        lputv %ndlV.1 %tmp.5;
+        symbol [ ndlV %ndlV.1 213 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 214 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_212_54_246_4_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_212_54_246_4_stop" ]
+        %ndlMins.2 = local;
+        symbol [ ndlMins %ndlMins.2 214 12 19 ];
+        %tmp.6 = lgetv %ndlV.1;
+        symbol [ ndlV %tmp.6 214 22 26 ];
+        symbol [ toNumber %tmp.7 214 27 35 ];
+        %tmp.7 = getv function %tmp.6 :toNumber;
+        %tmp.8 = invoke %tmp.6 %tmp.7();
+        lputv %ndlMins.2 %tmp.8;
+        symbol [ ndlMins %ndlMins.2 214 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 215 8 ]
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_215_8_215_40_if_stmt:
+        %tmp.9 = lgetv %ndlMins.2;
+        symbol [ ndlMins %tmp.9 215 12 19 ];
+        %tmp.10 = 1;
+        %tmp.11 = lt %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_215_8_215_40_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_215_8_215_40_if_true:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_215_25_215_40_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 215 27 ]
+        %tmp.12 = 1;
+        lputv %ndlMins.2 %tmp.12;
+        symbol [ ndlMins %ndlMins.2 215 27 34 ];
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_215_25_215_40_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_215_8_215_40_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_215_8_215_40_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 218 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_212_54_246_4_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_212_54_246_4_stop" ]
+        %depScore.3 = local;
+        symbol [ depScore %depScore.3 218 12 20 ];
+        %tmp.13 = lgetv %depth;
+        symbol [ depth %tmp.13 218 24 29 ];
+        symbol [ toFloat %tmp.14 218 30 37 ];
+        %tmp.14 = getv function %tmp.13 :toFloat;
+        %tmp.15 = invoke %tmp.13 %tmp.14();
+        %tmp.16 = 40.0;
+        %tmp.17 = div %tmp.15 %tmp.16;
+        %tmp.18 = 25.0;
+        %tmp.19 = mul %tmp.17 %tmp.18;
+        lputv %depScore.3 %tmp.19;
+        symbol [ depScore %depScore.3 218 12 20 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 219 8 ]
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_219_8_219_48_if_stmt:
+        %tmp.20 = lgetv %depScore.3;
+        symbol [ depScore %tmp.20 219 12 20 ];
+        %tmp.21 = 25.0;
+        %tmp.22 = gt %tmp.20 %tmp.21;
+        bf %tmp.22 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_219_8_219_48_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_219_8_219_48_if_true:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_219_29_219_48_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 219 31 ]
+        %tmp.23 = 25.0;
+        lputv %depScore.3 %tmp.23;
+        symbol [ depScore %depScore.3 219 31 39 ];
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_219_29_219_48_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_219_8_219_48_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_219_8_219_48_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 223 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_212_54_246_4_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_212_54_246_4_stop" ]
+        %ndlRatio.4 = local;
+        symbol [ ndlRatio %ndlRatio.4 223 12 20 ];
+        %tmp.24 = lgetv %time;
+        symbol [ time %tmp.24 223 23 27 ];
+        symbol [ toFloat %tmp.25 223 28 35 ];
+        %tmp.25 = getv function %tmp.24 :toFloat;
+        %tmp.26 = invoke %tmp.24 %tmp.25();
+        %tmp.27 = lgetv %ndlV.1;
+        symbol [ ndlV %tmp.27 223 40 44 ];
+        %tmp.28 = div %tmp.26 %tmp.27;
+        lputv %ndlRatio.4 %tmp.28;
+        symbol [ ndlRatio %ndlRatio.4 223 12 20 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 224 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_212_54_246_4_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_212_54_246_4_stop" ]
+        %ndlScore.5 = local;
+        symbol [ ndlScore %ndlScore.5 224 12 20 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 225 8 ]
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_225_8_231_8_if_stmt:
+        %tmp.29 = lgetv %ndlRatio.4;
+        symbol [ ndlRatio %tmp.29 225 12 20 ];
+        %tmp.30 = 1.0;
+        %tmp.31 = gte %tmp.29 %tmp.30;
+        bf %tmp.31 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_225_8_231_8_if_else_false;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_225_8_231_8_if_true:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_225_29_229_8_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 227 12 ]
+        %tmp.32 = 40.0;
+        %tmp.33 = lgetv %ndlRatio.4;
+        symbol [ ndlRatio %tmp.33 227 31 39 ];
+        %tmp.34 = 1.0;
+        %tmp.35 = sub %tmp.33 %tmp.34;
+        %tmp.36 = 30.0;
+        %tmp.37 = mul %tmp.35 %tmp.36;
+        %tmp.38 = add %tmp.32 %tmp.37;
+        lputv %ndlScore.5 %tmp.38;
+        symbol [ ndlScore %ndlScore.5 227 12 20 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 228 12 ]
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_228_12_228_52_if_stmt:
+        %tmp.39 = lgetv %ndlScore.5;
+        symbol [ ndlScore %tmp.39 228 16 24 ];
+        %tmp.40 = 70.0;
+        %tmp.41 = gt %tmp.39 %tmp.40;
+        bf %tmp.41 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_228_12_228_52_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_228_12_228_52_if_true:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_228_33_228_52_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 228 35 ]
+        %tmp.42 = 70.0;
+        lputv %ndlScore.5 %tmp.42;
+        symbol [ ndlScore %ndlScore.5 228 35 43 ];
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_228_33_228_52_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_228_12_228_52_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_228_12_228_52_if_end:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_225_29_229_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_225_8_231_8_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_225_8_231_8_if_else_false:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_229_15_231_8_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 230 12 ]
+        %tmp.43 = lgetv %ndlRatio.4;
+        symbol [ ndlRatio %tmp.43 230 23 31 ];
+        %tmp.44 = 40.0;
+        %tmp.45 = mul %tmp.43 %tmp.44;
+        lputv %ndlScore.5 %tmp.45;
+        symbol [ ndlScore %ndlScore.5 230 12 20 ];
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_229_15_231_8_stop:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_225_8_231_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 234 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_212_54_246_4_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_212_54_246_4_stop" ]
+        %gasScore.6 = local;
+        symbol [ gasScore %gasScore.6 234 12 20 ];
+        symbol [ DRI_GAS_PTS %tmp.47 234 23 34 ];
+        %tmp.47 = getv ? :DRI_GAS_PTS;
+        symbol [ _gasIdx %tmp.49 234 35 42 ];
+        %tmp.49 = getv ? :_gasIdx;
+        %tmp.50 = agetv %tmp.47 %tmp.49;
+        symbol [ toFloat %tmp.51 234 44 51 ];
+        %tmp.51 = getv function %tmp.50 :toFloat;
+        %tmp.52 = invoke %tmp.50 %tmp.51();
+        lputv %gasScore.6 %tmp.52;
+        symbol [ gasScore %gasScore.6 234 12 20 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 237 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_212_54_246_4_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_212_54_246_4_stop" ]
+        %repScore.7 = local;
+        symbol [ repScore %repScore.7 237 12 20 ];
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_237_23_237_36_begin:
+        %tmp.53 = lgetv %rep;
+        symbol [ rep %tmp.53 237 23 26 ];
+        bf %tmp.53 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_237_23_237_36_else_false;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_237_23_237_36_true:
+        %tmp.54 = 15.0;
+        push %tmp.54;
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_237_23_237_36_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_237_23_237_36_else_false:
+        %tmp.55 = 0.0;
+        push %tmp.55;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_237_23_237_36_end:
+        %tmp.56 = phi [%tmp.53 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_237_23_237_36_begin] [%tmp.54 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_237_23_237_36_true] [%tmp.55 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_237_23_237_36_else_false] [%tmp.56 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_237_23_237_36_end];
+        lputv %repScore.7 %tmp.56;
+        symbol [ repScore %repScore.7 237 12 20 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 239 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_212_54_246_4_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_212_54_246_4_stop" ]
+        %total.8 = local;
+        symbol [ total %total.8 239 12 17 ];
+        %tmp.57 = lgetv %depScore.3;
+        symbol [ depScore %tmp.57 239 20 28 ];
+        %tmp.58 = lgetv %ndlScore.5;
+        symbol [ ndlScore %tmp.58 239 31 39 ];
+        %tmp.59 = add %tmp.57 %tmp.58;
+        %tmp.60 = lgetv %gasScore.6;
+        symbol [ gasScore %tmp.60 239 42 50 ];
+        %tmp.61 = add %tmp.59 %tmp.60;
+        %tmp.62 = lgetv %repScore.7;
+        symbol [ repScore %tmp.62 239 53 61 ];
+        %tmp.63 = add %tmp.61 %tmp.62;
+        lputv %total.8 %tmp.63;
+        symbol [ total %total.8 239 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 240 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_212_54_246_4_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_212_54_246_4_stop" ]
+        %score.9 = local;
+        symbol [ score %score.9 240 12 17 ];
+        %tmp.64 = lgetv %total.8;
+        symbol [ total %tmp.64 240 20 25 ];
+        symbol [ toNumber %tmp.65 240 26 34 ];
+        %tmp.65 = getv function %tmp.64 :toNumber;
+        %tmp.66 = invoke %tmp.64 %tmp.65();
+        lputv %score.9 %tmp.66;
+        symbol [ score %score.9 240 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 241 8 ]
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_241_8_241_40_if_stmt:
+        %tmp.67 = lgetv %score.9;
+        symbol [ score %tmp.67 241 12 17 ];
+        %tmp.68 = 100;
+        %tmp.69 = gt %tmp.67 %tmp.68;
+        bf %tmp.69 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_241_8_241_40_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_241_8_241_40_if_true:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_241_25_241_40_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 241 27 ]
+        %tmp.70 = 100;
+        lputv %score.9 %tmp.70;
+        symbol [ score %score.9 241 27 32 ];
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_241_25_241_40_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_241_8_241_40_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_241_8_241_40_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 242 8 ]
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_242_8_242_38_if_stmt:
+        %tmp.71 = lgetv %score.9;
+        symbol [ score %tmp.71 242 12 17 ];
+        %tmp.72 = 0;
+        %tmp.73 = lt %tmp.71 %tmp.72;
+        bf %tmp.73 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_242_8_242_38_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_242_8_242_38_if_true:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_242_25_242_38_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 242 27 ]
+        %tmp.74 = 0;
+        lputv %score.9 %tmp.74;
+        symbol [ score %score.9 242 27 32 ];
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_242_25_242_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_242_8_242_38_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_242_8_242_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 244 8 ]
+        %tmp.75 = lgetv %score.9;
+        symbol [ score %tmp.75 244 18 23 ];
+        symbol [ _rScore ? 244 8 15 ];
+        putv self :_rScore %tmp.75;
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 244 25 ]
+        %tmp.76 = lgetv %ndlRatio.4;
+        symbol [ ndlRatio %tmp.76 244 36 44 ];
+        symbol [ _rNdlRat ? 244 25 33 ];
+        putv self :_rNdlRat %tmp.76;
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 244 46 ]
+        %tmp.77 = lgetv %ndlMins.2;
+        symbol [ ndlMins %tmp.77 244 58 65 ];
+        symbol [ _rNdlMins ? 244 46 55 ];
+        putv self :_rNdlMins %tmp.77;
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 245 8 ]
+        %tmp.78 = null;
+        ret %tmp.78;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_212_54_246_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 250; @symbol_functiondef = [_bgColor,250,20,28]; @symbol_param<0> = [score,250,29,34]; ]
+    protected
+    function _bgColor(score) {
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_250_36_254_4_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 251 8 ]
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_251_8_251_45_if_stmt:
+        %tmp.1 = lgetv %score;
+        symbol [ score %tmp.1 251 12 17 ];
+        %tmp.2 = 35;
+        %tmp.3 = lte %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_251_8_251_45_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_251_8_251_45_if_true:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_251_25_251_45_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 251 27 ]
+        symbol [ DR_BG_LOW %tmp.5 251 34 43 ];
+        %tmp.5 = getv ? :DR_BG_LOW;
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_251_25_251_45_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_251_8_251_45_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_251_8_251_45_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 252 8 ]
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_252_8_252_45_if_stmt:
+        %tmp.6 = lgetv %score;
+        symbol [ score %tmp.6 252 12 17 ];
+        %tmp.7 = 65;
+        %tmp.8 = lte %tmp.6 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_252_8_252_45_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_252_8_252_45_if_true:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_252_25_252_45_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 252 27 ]
+        symbol [ DR_BG_MED %tmp.10 252 34 43 ];
+        %tmp.10 = getv ? :DR_BG_MED;
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_252_25_252_45_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_252_8_252_45_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_252_8_252_45_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 253 8 ]
+        symbol [ DR_BG_HIGH %tmp.12 253 15 25 ];
+        %tmp.12 = getv ? :DR_BG_HIGH;
+        ret %tmp.12;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_250_36_254_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 256; @symbol_functiondef = [_riskColor,256,20,30]; @symbol_param<0> = [score,256,31,36]; ]
+    protected
+    function _riskColor(score) {
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_256_38_260_4_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 257 8 ]
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_257_8_257_44_if_stmt:
+        %tmp.1 = lgetv %score;
+        symbol [ score %tmp.1 257 12 17 ];
+        %tmp.2 = 35;
+        %tmp.3 = lte %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_257_8_257_44_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_257_8_257_44_if_true:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_257_25_257_44_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 257 27 ]
+        symbol [ DR_C_LOW %tmp.5 257 34 42 ];
+        %tmp.5 = getv ? :DR_C_LOW;
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_257_25_257_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_257_8_257_44_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_257_8_257_44_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 258 8 ]
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_258_8_258_44_if_stmt:
+        %tmp.6 = lgetv %score;
+        symbol [ score %tmp.6 258 12 17 ];
+        %tmp.7 = 65;
+        %tmp.8 = lte %tmp.6 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_258_8_258_44_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_258_8_258_44_if_true:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_258_25_258_44_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 258 27 ]
+        symbol [ DR_C_MED %tmp.10 258 34 42 ];
+        %tmp.10 = getv ? :DR_C_MED;
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_258_25_258_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_258_8_258_44_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_258_8_258_44_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 259 8 ]
+        symbol [ DR_C_HIGH %tmp.12 259 15 24 ];
+        %tmp.12 = getv ? :DR_C_HIGH;
+        ret %tmp.12;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_256_38_260_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 262; @symbol_functiondef = [_riskLevel,262,20,30]; @symbol_param<0> = [score,262,31,36]; ]
+    protected
+    function _riskLevel(score) {
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_262_38_266_4_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 263 8 ]
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_263_8_263_46_if_stmt:
+        %tmp.1 = lgetv %score;
+        symbol [ score %tmp.1 263 12 17 ];
+        %tmp.2 = 35;
+        %tmp.3 = lte %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_263_8_263_46_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_263_8_263_46_if_true:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_263_25_263_46_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 263 27 ]
+        %tmp.4 = "LOW RISK";
+        ret %tmp.4;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_263_25_263_46_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_263_8_263_46_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_263_8_263_46_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 264 8 ]
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_264_8_264_49_if_stmt:
+        %tmp.5 = lgetv %score;
+        symbol [ score %tmp.5 264 12 17 ];
+        %tmp.6 = 65;
+        %tmp.7 = lte %tmp.5 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_264_8_264_49_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_264_8_264_49_if_true:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_264_25_264_49_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 264 27 ]
+        %tmp.8 = "MEDIUM RISK";
+        ret %tmp.8;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_264_25_264_49_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_264_8_264_49_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_264_8_264_49_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 265 8 ]
+        %tmp.9 = "HIGH RISK";
+        ret %tmp.9;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_262_38_266_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 268; @symbol_functiondef = [_riskExplain,268,20,32]; @symbol_param<0> = [score,268,33,38]; @symbol_param<1> = [ndlRatio,268,40,48]; @symbol_param<2> = [rep,268,50,53]; @symbol_param<3> = [depth,268,55,60]; ]
+    protected
+    function _riskExplain(score, ndlRatio, rep, depth) {
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_268_62_280_4_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 270 8 ]
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_270_8_270_55_if_stmt:
+        %tmp.1 = lgetv %ndlRatio;
+        symbol [ ndlRatio %tmp.1 270 12 20 ];
+        %tmp.2 = 1.0;
+        %tmp.3 = gte %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_270_8_270_55_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_270_8_270_55_if_true:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_270_33_270_55_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 270 35 ]
+        %tmp.4 = "DECO req!";
+        ret %tmp.4;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_270_33_270_55_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_270_8_270_55_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_270_8_270_55_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 271 8 ]
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_271_8_271_50_if_stmt:
+        %tmp.5 = lgetv %score;
+        symbol [ score %tmp.5 271 12 17 ];
+        %tmp.6 = 35;
+        %tmp.7 = lte %tmp.5 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_271_8_271_50_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_271_8_271_50_if_true:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_271_33_271_50_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 271 35 ]
+        %tmp.8 = "Safe";
+        ret %tmp.8;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_271_33_271_50_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_271_8_271_50_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_271_8_271_50_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 272 8 ]
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_272_8_276_8_if_stmt:
+        %tmp.9 = lgetv %score;
+        symbol [ score %tmp.9 272 12 17 ];
+        %tmp.10 = 65;
+        %tmp.11 = lte %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_272_8_276_8_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_272_8_276_8_if_true:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_272_25_276_8_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 273 12 ]
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_273_12_273_56_if_stmt:
+        %tmp.12 = lgetv %ndlRatio;
+        symbol [ ndlRatio %tmp.12 273 16 24 ];
+        %tmp.13 = 0.75;
+        %tmp.14 = gt %tmp.12 %tmp.13;
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_273_12_273_56_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_273_12_273_56_if_true:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_273_33_273_56_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 273 35 ]
+        %tmp.15 = "Near limit";
+        ret %tmp.15;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_273_33_273_56_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_273_12_273_56_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_273_12_273_56_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 274 12 ]
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_274_12_274_58_if_stmt:
+        %tmp.16 = lgetv %rep;
+        symbol [ rep %tmp.16 274 16 19 ];
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_274_12_274_58_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_274_12_274_58_if_true:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_274_33_274_58_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 274 35 ]
+        %tmp.17 = "Rep. N2 high";
+        ret %tmp.17;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_274_33_274_58_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_274_12_274_58_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_274_12_274_58_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 275 12 ]
+        %tmp.18 = "Moderate";
+        ret %tmp.18;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_272_25_276_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_272_8_276_8_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_272_8_276_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 277 8 ]
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_277_8_277_56_if_stmt:
+        %tmp.19 = lgetv %depth;
+        symbol [ depth %tmp.19 277 12 17 ];
+        %tmp.20 = 35;
+        %tmp.21 = gt %tmp.19 %tmp.20;
+        bf %tmp.21 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_277_8_277_56_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_277_8_277_56_if_true:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_277_33_277_56_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 277 35 ]
+        %tmp.22 = "Deep limit";
+        ret %tmp.22;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_277_33_277_56_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_277_8_277_56_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_277_8_277_56_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 278 8 ]
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_278_8_278_55_if_stmt:
+        %tmp.23 = lgetv %ndlRatio;
+        symbol [ ndlRatio %tmp.23 278 12 20 ];
+        %tmp.24 = 0.85;
+        %tmp.25 = gt %tmp.23 %tmp.24;
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_278_8_278_55_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_278_8_278_55_if_true:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_278_33_278_55_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 278 35 ]
+        %tmp.26 = "Near NDL!";
+        ret %tmp.26;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_278_33_278_55_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_278_8_278_55_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_278_8_278_55_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 279 8 ]
+        %tmp.27 = "High risk";
+        ret %tmp.27;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_268_62_280_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 284; @symbol_functiondef = [_drawRow,284,20,28]; @symbol_param<0> = [dc,284,29,31]; @symbol_param<1> = [y,284,33,34]; @symbol_param<2> = [lbl,284,36,39]; @symbol_param<3> = [val,284,41,44]; @symbol_param<4> = [active,284,46,52]; @symbol_param<5> = [mg,284,54,56]; @symbol_param<6> = [rH,284,58,60]; ]
+    protected
+    function _drawRow(dc, y, lbl, val, active, mg, rH) {
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_284_62_292_4_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 285 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_284_62_292_4_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_284_62_292_4_stop" ]
+        %fXH.1 = local;
+        symbol [ fXH %fXH.1 285 12 15 ];
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 285 18 20 ];
+        symbol [ getFontHeight %tmp.2 285 21 34 ];
+        %tmp.2 = getv function %tmp.1 :getFontHeight;
+        symbol [ Graphics %tmp.3 285 35 43 ];
+        %tmp.3 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.4 285 44 54 ];
+        %tmp.4 = getv %tmp.3 :FONT_XTINY;
+        %tmp.5 = invoke %tmp.1 %tmp.2(%tmp.4);
+        lputv %fXH.1 %tmp.5;
+        symbol [ fXH %fXH.1 285 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 286 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_284_62_292_4_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_284_62_292_4_stop" ]
+        %ty.2 = local;
+        symbol [ ty %ty.2 286 12 14 ];
+        %tmp.6 = lgetv %y;
+        symbol [ y %tmp.6 286 17 18 ];
+        %tmp.7 = lgetv %rH;
+        symbol [ rH %tmp.7 286 22 24 ];
+        %tmp.8 = lgetv %fXH.1;
+        symbol [ fXH %tmp.8 286 27 30 ];
+        %tmp.9 = sub %tmp.7 %tmp.8;
+        %tmp.10 = 2;
+        %tmp.11 = div %tmp.9 %tmp.10;
+        %tmp.12 = add %tmp.6 %tmp.11;
+        lputv %ty.2 %tmp.12;
+        symbol [ ty %ty.2 286 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 287 8 ]
+        %tmp.13 = lgetv %dc;
+        symbol [ dc %tmp.13 287 8 10 ];
+        symbol [ setColor %tmp.14 287 11 19 ];
+        %tmp.14 = getv function %tmp.13 :setColor;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_287_20_287_41_begin:
+        %tmp.15 = lgetv %active;
+        symbol [ active %tmp.15 287 20 26 ];
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_287_20_287_41_else_false;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_287_20_287_41_true:
+        symbol [ DR_ACCENT %tmp.17 287 29 38 ];
+        %tmp.17 = getv ? :DR_ACCENT;
+        push %tmp.17;
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_287_20_287_41_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_287_20_287_41_else_false:
+        symbol [ DR_DIM %tmp.19 287 41 47 ];
+        %tmp.19 = getv ? :DR_DIM;
+        push %tmp.19;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_287_20_287_41_end:
+        %tmp.20 = phi [%tmp.15 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_287_20_287_41_begin] [%tmp.17 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_287_20_287_41_true] [%tmp.19 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_287_20_287_41_else_false] [%tmp.20 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_287_20_287_41_end];
+        symbol [ Graphics %tmp.21 287 49 57 ];
+        %tmp.21 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.22 287 58 75 ];
+        %tmp.22 = getv %tmp.21 :COLOR_TRANSPARENT;
+        invoke %tmp.13 %tmp.14(%tmp.20, %tmp.22);
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 288 8 ]
+        %tmp.23 = lgetv %dc;
+        symbol [ dc %tmp.23 288 8 10 ];
+        symbol [ drawText %tmp.24 288 11 19 ];
+        %tmp.24 = getv function %tmp.23 :drawText;
+        %tmp.25 = lgetv %mg;
+        symbol [ mg %tmp.25 288 20 22 ];
+        %tmp.26 = 7;
+        %tmp.27 = add %tmp.25 %tmp.26;
+        %tmp.28 = lgetv %ty.2;
+        symbol [ ty %tmp.28 288 28 30 ];
+        symbol [ Graphics %tmp.29 288 32 40 ];
+        %tmp.29 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.30 288 41 51 ];
+        %tmp.30 = getv %tmp.29 :FONT_XTINY;
+        %tmp.31 = lgetv %lbl;
+        symbol [ lbl %tmp.31 288 53 56 ];
+        symbol [ Graphics %tmp.32 288 58 66 ];
+        %tmp.32 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_LEFT %tmp.33 288 67 84 ];
+        %tmp.33 = getv %tmp.32 :TEXT_JUSTIFY_LEFT;
+        invoke %tmp.23 %tmp.24(%tmp.27, %tmp.28, %tmp.30, %tmp.31, %tmp.33);
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 289 8 ]
+        %tmp.34 = lgetv %dc;
+        symbol [ dc %tmp.34 289 8 10 ];
+        symbol [ setColor %tmp.35 289 11 19 ];
+        %tmp.35 = getv function %tmp.34 :setColor;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_289_20_289_40_begin:
+        %tmp.36 = lgetv %active;
+        symbol [ active %tmp.36 289 20 26 ];
+        bf %tmp.36 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_289_20_289_40_else_false;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_289_20_289_40_true:
+        symbol [ DR_WHITE %tmp.38 289 29 37 ];
+        %tmp.38 = getv ? :DR_WHITE;
+        push %tmp.38;
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_289_20_289_40_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_289_20_289_40_else_false:
+        %tmp.39 = 0x778899;
+        push %tmp.39;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_289_20_289_40_end:
+        %tmp.40 = phi [%tmp.36 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_289_20_289_40_begin] [%tmp.38 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_289_20_289_40_true] [%tmp.39 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_289_20_289_40_else_false] [%tmp.40 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_289_20_289_40_end];
+        symbol [ Graphics %tmp.41 289 50 58 ];
+        %tmp.41 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.42 289 59 76 ];
+        %tmp.42 = getv %tmp.41 :COLOR_TRANSPARENT;
+        invoke %tmp.34 %tmp.35(%tmp.40, %tmp.42);
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 290 8 ]
+        %tmp.43 = lgetv %dc;
+        symbol [ dc %tmp.43 290 8 10 ];
+        symbol [ drawText %tmp.44 290 11 19 ];
+        %tmp.44 = getv function %tmp.43 :drawText;
+        symbol [ _w %tmp.46 290 20 22 ];
+        %tmp.46 = getv ? :_w;
+        %tmp.47 = lgetv %mg;
+        symbol [ mg %tmp.47 290 25 27 ];
+        %tmp.48 = sub %tmp.46 %tmp.47;
+        %tmp.49 = 5;
+        %tmp.50 = sub %tmp.48 %tmp.49;
+        %tmp.51 = lgetv %ty.2;
+        symbol [ ty %tmp.51 290 33 35 ];
+        symbol [ Graphics %tmp.52 290 37 45 ];
+        %tmp.52 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.53 290 46 56 ];
+        %tmp.53 = getv %tmp.52 :FONT_XTINY;
+        %tmp.54 = lgetv %val;
+        symbol [ val %tmp.54 291 20 23 ];
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_291_27_291_44_begin:
+        %tmp.55 = lgetv %active;
+        symbol [ active %tmp.55 291 27 33 ];
+        bf %tmp.55 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_291_27_291_44_else_false;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_291_27_291_44_true:
+        %tmp.56 = " <>";
+        push %tmp.56;
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_291_27_291_44_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_291_27_291_44_else_false:
+        %tmp.57 = "";
+        push %tmp.57;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_291_27_291_44_end:
+        %tmp.58 = phi [%tmp.55 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_291_27_291_44_begin] [%tmp.56 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_291_27_291_44_true] [%tmp.57 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_291_27_291_44_else_false] [%tmp.58 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_291_27_291_44_end];
+        %tmp.59 = add %tmp.54 %tmp.58;
+        symbol [ Graphics %tmp.60 291 49 57 ];
+        %tmp.60 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_RIGHT %tmp.61 291 58 76 ];
+        %tmp.61 = getv %tmp.60 :TEXT_JUSTIFY_RIGHT;
+        invoke %tmp.43 %tmp.44(%tmp.50, %tmp.51, %tmp.53, %tmp.59, %tmp.61);
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_284_62_292_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 295; @symbol_functiondef = [_ndl,295,20,24]; @symbol_param<0> = [depth,295,25,30]; @symbol_param<1> = [fo2,295,32,35]; ]
+    protected
+    function _ndl(depth, fo2) {
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_295_37_314_4_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 296 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_295_37_314_4_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_295_37_314_4_stop" ]
+        %effD.1 = local;
+        symbol [ effD %effD.1 296 12 16 ];
+        %tmp.1 = lgetv %depth;
+        symbol [ depth %tmp.1 296 19 24 ];
+        symbol [ toFloat %tmp.2 296 25 32 ];
+        %tmp.2 = getv function %tmp.1 :toFloat;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        lputv %effD.1 %tmp.3;
+        symbol [ effD %effD.1 296 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 297 8 ]
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_297_8_300_8_if_stmt:
+        %tmp.4 = lgetv %fo2;
+        symbol [ fo2 %tmp.4 297 12 15 ];
+        %tmp.5 = 0.21;
+        %tmp.6 = gt %tmp.4 %tmp.5;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_297_8_300_8_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_297_8_300_8_if_true:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_297_24_300_8_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 298 12 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_297_24_300_8_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_297_24_300_8_stop" ]
+        %eadV.2 = local;
+        symbol [ eadV %eadV.2 298 16 20 ];
+        %tmp.7 = lgetv %depth;
+        symbol [ depth %tmp.7 298 25 30 ];
+        symbol [ toFloat %tmp.8 298 31 38 ];
+        %tmp.8 = getv function %tmp.7 :toFloat;
+        %tmp.9 = invoke %tmp.7 %tmp.8();
+        %tmp.10 = 10.0;
+        %tmp.11 = add %tmp.9 %tmp.10;
+        %tmp.12 = 1.0;
+        %tmp.13 = lgetv %fo2;
+        symbol [ fo2 %tmp.13 298 58 61 ];
+        %tmp.14 = sub %tmp.12 %tmp.13;
+        %tmp.15 = mul %tmp.11 %tmp.14;
+        %tmp.16 = 0.79;
+        %tmp.17 = div %tmp.15 %tmp.16;
+        %tmp.18 = 10.0;
+        %tmp.19 = sub %tmp.17 %tmp.18;
+        lputv %eadV.2 %tmp.19;
+        symbol [ eadV %eadV.2 298 16 20 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 299 12 ]
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_299_12_299_44_if_stmt:
+        %tmp.20 = lgetv %eadV.2;
+        symbol [ eadV %tmp.20 299 16 20 ];
+        %tmp.21 = 0.0;
+        %tmp.22 = gte %tmp.20 %tmp.21;
+        bf %tmp.22 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_299_12_299_44_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_299_12_299_44_if_true:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_299_29_299_44_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 299 31 ]
+        %tmp.23 = lgetv %eadV.2;
+        symbol [ eadV %tmp.23 299 38 42 ];
+        lputv %effD.1 %tmp.23;
+        symbol [ effD %effD.1 299 31 35 ];
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_299_29_299_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_299_12_299_44_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_299_12_299_44_if_end:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_297_24_300_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_297_8_300_8_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_297_8_300_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 301 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_295_37_314_4_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_295_37_314_4_stop" ]
+        %n.3 = local;
+        symbol [ n %n.3 301 12 13 ];
+        symbol [ DRI_NDL_D %tmp.25 301 16 25 ];
+        %tmp.25 = getv ? :DRI_NDL_D;
+        symbol [ size %tmp.26 301 26 30 ];
+        %tmp.26 = getv function %tmp.25 :size;
+        %tmp.27 = invoke %tmp.25 %tmp.26();
+        lputv %n.3 %tmp.27;
+        symbol [ n %n.3 301 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 302 8 ]
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_302_8_302_81_if_stmt:
+        %tmp.28 = lgetv %effD.1;
+        symbol [ effD %tmp.28 302 12 16 ];
+        symbol [ DRI_NDL_D %tmp.30 302 20 29 ];
+        %tmp.30 = getv ? :DRI_NDL_D;
+        %tmp.31 = 0;
+        %tmp.32 = agetv %tmp.30 %tmp.31;
+        symbol [ toFloat %tmp.33 302 33 40 ];
+        %tmp.33 = getv function %tmp.32 :toFloat;
+        %tmp.34 = invoke %tmp.32 %tmp.33();
+        %tmp.35 = lte %tmp.28 %tmp.34;
+        bf %tmp.35 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_302_8_302_81_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_302_8_302_81_if_true:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_302_48_302_81_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 302 50 ]
+        symbol [ DRI_NDL_T %tmp.37 302 57 66 ];
+        %tmp.37 = getv ? :DRI_NDL_T;
+        %tmp.38 = 0;
+        %tmp.39 = agetv %tmp.37 %tmp.38;
+        symbol [ toFloat %tmp.40 302 70 77 ];
+        %tmp.40 = getv function %tmp.39 :toFloat;
+        %tmp.41 = invoke %tmp.39 %tmp.40();
+        ret %tmp.41;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_302_48_302_81_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_302_8_302_81_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_302_8_302_81_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 303 8 ]
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_303_8_303_83_if_stmt:
+        %tmp.42 = lgetv %effD.1;
+        symbol [ effD %tmp.42 303 12 16 ];
+        symbol [ DRI_NDL_D %tmp.44 303 20 29 ];
+        %tmp.44 = getv ? :DRI_NDL_D;
+        %tmp.45 = lgetv %n.3;
+        symbol [ n %tmp.45 303 30 31 ];
+        %tmp.46 = 1;
+        %tmp.47 = sub %tmp.45 %tmp.46;
+        %tmp.48 = agetv %tmp.44 %tmp.47;
+        symbol [ toFloat %tmp.49 303 35 42 ];
+        %tmp.49 = getv function %tmp.48 :toFloat;
+        %tmp.50 = invoke %tmp.48 %tmp.49();
+        %tmp.51 = gte %tmp.42 %tmp.50;
+        bf %tmp.51 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_303_8_303_83_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_303_8_303_83_if_true:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_303_48_303_83_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 303 50 ]
+        symbol [ DRI_NDL_T %tmp.53 303 57 66 ];
+        %tmp.53 = getv ? :DRI_NDL_T;
+        %tmp.54 = lgetv %n.3;
+        symbol [ n %tmp.54 303 67 68 ];
+        %tmp.55 = 1;
+        %tmp.56 = sub %tmp.54 %tmp.55;
+        %tmp.57 = agetv %tmp.53 %tmp.56;
+        symbol [ toFloat %tmp.58 303 72 79 ];
+        %tmp.58 = getv function %tmp.57 :toFloat;
+        %tmp.59 = invoke %tmp.57 %tmp.58();
+        ret %tmp.59;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_303_48_303_83_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_303_8_303_83_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_303_8_303_83_if_end:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 304 8 ]
+        for @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_304_8_312_8_for_test @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_304_8_312_8_for_incr @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_304_8_312_8_for_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_304_8_312_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_304_8_312_8_for_begin" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_304_8_312_8_for_end" ]
+        %i.4 = local;
+        symbol [ i %i.4 304 17 18 ];
+        %tmp.60 = 0;
+        lputv %i.4 %tmp.60;
+        symbol [ i %i.4 304 17 18 ];
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_304_8_312_8_for_test:
+        %tmp.61 = lgetv %i.4;
+        symbol [ i %tmp.61 304 24 25 ];
+        %tmp.62 = lgetv %n.3;
+        symbol [ n %tmp.62 304 28 29 ];
+        %tmp.63 = 1;
+        %tmp.64 = sub %tmp.62 %tmp.63;
+        %tmp.65 = lt %tmp.61 %tmp.64;
+        bf %tmp.65 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_304_8_312_8_for_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_304_8_312_8_for_begin:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_304_40_312_8_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 305 12 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_304_40_312_8_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_304_40_312_8_stop" ]
+        %d0.5 = local;
+        symbol [ d0 %d0.5 305 16 18 ];
+        symbol [ DRI_NDL_D %tmp.67 305 21 30 ];
+        %tmp.67 = getv ? :DRI_NDL_D;
+        %tmp.68 = lgetv %i.4;
+        symbol [ i %tmp.68 305 31 32 ];
+        %tmp.69 = agetv %tmp.67 %tmp.68;
+        symbol [ toFloat %tmp.70 305 34 41 ];
+        %tmp.70 = getv function %tmp.69 :toFloat;
+        %tmp.71 = invoke %tmp.69 %tmp.70();
+        lputv %d0.5 %tmp.71;
+        symbol [ d0 %d0.5 305 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 306 12 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_304_40_312_8_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_304_40_312_8_stop" ]
+        %d1.6 = local;
+        symbol [ d1 %d1.6 306 16 18 ];
+        symbol [ DRI_NDL_D %tmp.73 306 21 30 ];
+        %tmp.73 = getv ? :DRI_NDL_D;
+        %tmp.74 = lgetv %i.4;
+        symbol [ i %tmp.74 306 31 32 ];
+        %tmp.75 = 1;
+        %tmp.76 = add %tmp.74 %tmp.75;
+        %tmp.77 = agetv %tmp.73 %tmp.76;
+        symbol [ toFloat %tmp.78 306 38 45 ];
+        %tmp.78 = getv function %tmp.77 :toFloat;
+        %tmp.79 = invoke %tmp.77 %tmp.78();
+        lputv %d1.6 %tmp.79;
+        symbol [ d1 %d1.6 306 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 307 12 ]
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_307_12_311_12_if_stmt:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_307_16_307_38_begin:
+        %tmp.80 = lgetv %effD.1;
+        symbol [ effD %tmp.80 307 16 20 ];
+        %tmp.81 = lgetv %d0.5;
+        symbol [ d0 %tmp.81 307 24 26 ];
+        %tmp.82 = gte %tmp.80 %tmp.81;
+        bf %tmp.82 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_307_12_311_12_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_307_30_307_38_true:
+        %tmp.83 = lgetv %effD.1;
+        symbol [ effD %tmp.83 307 30 34 ];
+        %tmp.84 = lgetv %d1.6;
+        symbol [ d1 %tmp.84 307 38 40 ];
+        %tmp.85 = lte %tmp.83 %tmp.84;
+        push %tmp.85;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_307_30_307_38_end:
+        %tmp.86 = phi [%tmp.82 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_307_16_307_38_begin] [%tmp.85 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_307_30_307_38_true] [%tmp.86 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_307_30_307_38_end];
+        bf %tmp.86 @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_307_12_311_12_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_307_12_311_12_if_true:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_307_42_311_12_start:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 308 16 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_307_42_311_12_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_307_42_311_12_stop" ]
+        %t0.7 = local;
+        symbol [ t0 %t0.7 308 20 22 ];
+        symbol [ DRI_NDL_T %tmp.88 308 25 34 ];
+        %tmp.88 = getv ? :DRI_NDL_T;
+        %tmp.89 = lgetv %i.4;
+        symbol [ i %tmp.89 308 35 36 ];
+        %tmp.90 = agetv %tmp.88 %tmp.89;
+        symbol [ toFloat %tmp.91 308 38 45 ];
+        %tmp.91 = getv function %tmp.90 :toFloat;
+        %tmp.92 = invoke %tmp.90 %tmp.91();
+        lputv %t0.7 %tmp.92;
+        symbol [ t0 %t0.7 308 20 22 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 309 16 ]
+        [ "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_307_42_311_12_start" "_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_307_42_311_12_stop" ]
+        %t1.8 = local;
+        symbol [ t1 %t1.8 309 20 22 ];
+        symbol [ DRI_NDL_T %tmp.94 309 25 34 ];
+        %tmp.94 = getv ? :DRI_NDL_T;
+        %tmp.95 = lgetv %i.4;
+        symbol [ i %tmp.95 309 35 36 ];
+        %tmp.96 = 1;
+        %tmp.97 = add %tmp.95 %tmp.96;
+        %tmp.98 = agetv %tmp.94 %tmp.97;
+        symbol [ toFloat %tmp.99 309 42 49 ];
+        %tmp.99 = getv function %tmp.98 :toFloat;
+        %tmp.100 = invoke %tmp.98 %tmp.99();
+        lputv %t1.8 %tmp.100;
+        symbol [ t1 %t1.8 309 20 22 ];
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 310 16 ]
+        %tmp.101 = lgetv %t0.7;
+        symbol [ t0 %tmp.101 310 23 25 ];
+        %tmp.102 = lgetv %t1.8;
+        symbol [ t1 %tmp.102 310 29 31 ];
+        %tmp.103 = lgetv %t0.7;
+        symbol [ t0 %tmp.103 310 34 36 ];
+        %tmp.104 = sub %tmp.102 %tmp.103;
+        %tmp.105 = lgetv %effD.1;
+        symbol [ effD %tmp.105 310 41 45 ];
+        %tmp.106 = lgetv %d0.5;
+        symbol [ d0 %tmp.106 310 48 50 ];
+        %tmp.107 = sub %tmp.105 %tmp.106;
+        %tmp.108 = mul %tmp.104 %tmp.107;
+        %tmp.109 = lgetv %d1.6;
+        symbol [ d1 %tmp.109 310 55 57 ];
+        %tmp.110 = lgetv %d0.5;
+        symbol [ d0 %tmp.110 310 60 62 ];
+        %tmp.111 = sub %tmp.109 %tmp.110;
+        %tmp.112 = div %tmp.108 %tmp.111;
+        %tmp.113 = add %tmp.101 %tmp.112;
+        ret %tmp.113;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_307_42_311_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_307_12_311_12_if_end;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_307_12_311_12_if_end:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_304_40_312_8_stop:
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_304_8_312_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 304 ]
+        %tmp.116 = lgetv %i.4;
+        symbol [ i %tmp.116 304 35 36 ];
+        %tmp.117 = add %tmp.116 1;
+        lputv %i.4 %tmp.117;
+        symbol [ i %i.4 304 35 36 ];
+        goto @_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_304_8_312_8_for_test;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_304_8_312_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 313 8 ]
+        symbol [ DRI_NDL_T %tmp.119 313 15 24 ];
+        %tmp.119 = getv ? :DRI_NDL_T;
+        %tmp.120 = lgetv %n.3;
+        symbol [ n %tmp.120 313 25 26 ];
+        %tmp.121 = 1;
+        %tmp.122 = sub %tmp.120 %tmp.121;
+        %tmp.123 = agetv %tmp.119 %tmp.122;
+        symbol [ toFloat %tmp.124 313 30 37 ];
+        %tmp.124 = getv function %tmp.123 :toFloat;
+        %tmp.125 = invoke %tmp.123 %tmp.124();
+        ret %tmp.125;
+_Users_kkorolczuk_work_garmin_diveriskindicator_source_DiveRiskView_mc_295_37_314_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc"; @line = 25; ]
+<init> {
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 31 6 ]
+    %tmp.126 = newa 13;
+    %tmp.127 = 5;
+    %tmp.128 = dup %tmp.126;
+    %tmp.129 = aputv %tmp.128 0 %tmp.127;
+    %tmp.130 = 10;
+    %tmp.131 = dup %tmp.129;
+    %tmp.132 = aputv %tmp.131 1 %tmp.130;
+    %tmp.133 = 12;
+    %tmp.134 = dup %tmp.132;
+    %tmp.135 = aputv %tmp.134 2 %tmp.133;
+    %tmp.136 = 15;
+    %tmp.137 = dup %tmp.135;
+    %tmp.138 = aputv %tmp.137 3 %tmp.136;
+    %tmp.139 = 18;
+    %tmp.140 = dup %tmp.138;
+    %tmp.141 = aputv %tmp.140 4 %tmp.139;
+    %tmp.142 = 20;
+    %tmp.143 = dup %tmp.141;
+    %tmp.144 = aputv %tmp.143 5 %tmp.142;
+    %tmp.145 = 22;
+    %tmp.146 = dup %tmp.144;
+    %tmp.147 = aputv %tmp.146 6 %tmp.145;
+    %tmp.148 = 25;
+    %tmp.149 = dup %tmp.147;
+    %tmp.150 = aputv %tmp.149 7 %tmp.148;
+    %tmp.151 = 28;
+    %tmp.152 = dup %tmp.150;
+    %tmp.153 = aputv %tmp.152 8 %tmp.151;
+    %tmp.154 = 30;
+    %tmp.155 = dup %tmp.153;
+    %tmp.156 = aputv %tmp.155 9 %tmp.154;
+    %tmp.157 = 33;
+    %tmp.158 = dup %tmp.156;
+    %tmp.159 = aputv %tmp.158 10 %tmp.157;
+    %tmp.160 = 35;
+    %tmp.161 = dup %tmp.159;
+    %tmp.162 = aputv %tmp.161 11 %tmp.160;
+    %tmp.163 = 40;
+    %tmp.164 = dup %tmp.162;
+    %tmp.165 = aputv %tmp.164 12 %tmp.163;
+    putv self :DRI_DEPTHS %tmp.165;
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 32 6 ]
+    %tmp.166 = newa 10;
+    %tmp.167 = 5;
+    %tmp.168 = dup %tmp.166;
+    %tmp.169 = aputv %tmp.168 0 %tmp.167;
+    %tmp.170 = 10;
+    %tmp.171 = dup %tmp.169;
+    %tmp.172 = aputv %tmp.171 1 %tmp.170;
+    %tmp.173 = 15;
+    %tmp.174 = dup %tmp.172;
+    %tmp.175 = aputv %tmp.174 2 %tmp.173;
+    %tmp.176 = 20;
+    %tmp.177 = dup %tmp.175;
+    %tmp.178 = aputv %tmp.177 3 %tmp.176;
+    %tmp.179 = 25;
+    %tmp.180 = dup %tmp.178;
+    %tmp.181 = aputv %tmp.180 4 %tmp.179;
+    %tmp.182 = 30;
+    %tmp.183 = dup %tmp.181;
+    %tmp.184 = aputv %tmp.183 5 %tmp.182;
+    %tmp.185 = 40;
+    %tmp.186 = dup %tmp.184;
+    %tmp.187 = aputv %tmp.186 6 %tmp.185;
+    %tmp.188 = 50;
+    %tmp.189 = dup %tmp.187;
+    %tmp.190 = aputv %tmp.189 7 %tmp.188;
+    %tmp.191 = 60;
+    %tmp.192 = dup %tmp.190;
+    %tmp.193 = aputv %tmp.192 8 %tmp.191;
+    %tmp.194 = 80;
+    %tmp.195 = dup %tmp.193;
+    %tmp.196 = aputv %tmp.195 9 %tmp.194;
+    putv self :DRI_TIMES %tmp.196;
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 33 6 ]
+    %tmp.197 = newa 8;
+    %tmp.198 = 0.21;
+    %tmp.199 = dup %tmp.197;
+    %tmp.200 = aputv %tmp.199 0 %tmp.198;
+    %tmp.201 = 0.27;
+    %tmp.202 = dup %tmp.200;
+    %tmp.203 = aputv %tmp.202 1 %tmp.201;
+    %tmp.204 = 0.28;
+    %tmp.205 = dup %tmp.203;
+    %tmp.206 = aputv %tmp.205 2 %tmp.204;
+    %tmp.207 = 0.29;
+    %tmp.208 = dup %tmp.206;
+    %tmp.209 = aputv %tmp.208 3 %tmp.207;
+    %tmp.210 = 0.30;
+    %tmp.211 = dup %tmp.209;
+    %tmp.212 = aputv %tmp.211 4 %tmp.210;
+    %tmp.213 = 0.31;
+    %tmp.214 = dup %tmp.212;
+    %tmp.215 = aputv %tmp.214 5 %tmp.213;
+    %tmp.216 = 0.32;
+    %tmp.217 = dup %tmp.215;
+    %tmp.218 = aputv %tmp.217 6 %tmp.216;
+    %tmp.219 = 0.36;
+    %tmp.220 = dup %tmp.218;
+    %tmp.221 = aputv %tmp.220 7 %tmp.219;
+    putv self :DRI_GAS_FO2 %tmp.221;
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 34 6 ]
+    %tmp.222 = newa 8;
+    %tmp.223 = "Air 21%";
+    %tmp.224 = dup %tmp.222;
+    %tmp.225 = aputv %tmp.224 0 %tmp.223;
+    %tmp.226 = "EAN 27";
+    %tmp.227 = dup %tmp.225;
+    %tmp.228 = aputv %tmp.227 1 %tmp.226;
+    %tmp.229 = "EAN 28";
+    %tmp.230 = dup %tmp.228;
+    %tmp.231 = aputv %tmp.230 2 %tmp.229;
+    %tmp.232 = "EAN 29";
+    %tmp.233 = dup %tmp.231;
+    %tmp.234 = aputv %tmp.233 3 %tmp.232;
+    %tmp.235 = "EAN 30";
+    %tmp.236 = dup %tmp.234;
+    %tmp.237 = aputv %tmp.236 4 %tmp.235;
+    %tmp.238 = "EAN 31";
+    %tmp.239 = dup %tmp.237;
+    %tmp.240 = aputv %tmp.239 5 %tmp.238;
+    %tmp.241 = "Nitrox 32";
+    %tmp.242 = dup %tmp.240;
+    %tmp.243 = aputv %tmp.242 6 %tmp.241;
+    %tmp.244 = "Nitrox 36";
+    %tmp.245 = dup %tmp.243;
+    %tmp.246 = aputv %tmp.245 7 %tmp.244;
+    putv self :DRI_GAS_LBL %tmp.246;
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 35 6 ]
+    %tmp.247 = newa 8;
+    %tmp.248 = 8;
+    %tmp.249 = dup %tmp.247;
+    %tmp.250 = aputv %tmp.249 0 %tmp.248;
+    %tmp.251 = 6;
+    %tmp.252 = dup %tmp.250;
+    %tmp.253 = aputv %tmp.252 1 %tmp.251;
+    %tmp.254 = 6;
+    %tmp.255 = dup %tmp.253;
+    %tmp.256 = aputv %tmp.255 2 %tmp.254;
+    %tmp.257 = 5;
+    %tmp.258 = dup %tmp.256;
+    %tmp.259 = aputv %tmp.258 3 %tmp.257;
+    %tmp.260 = 5;
+    %tmp.261 = dup %tmp.259;
+    %tmp.262 = aputv %tmp.261 4 %tmp.260;
+    %tmp.263 = 4;
+    %tmp.264 = dup %tmp.262;
+    %tmp.265 = aputv %tmp.264 5 %tmp.263;
+    %tmp.266 = 4;
+    %tmp.267 = dup %tmp.265;
+    %tmp.268 = aputv %tmp.267 6 %tmp.266;
+    %tmp.269 = 1;
+    %tmp.270 = dup %tmp.268;
+    %tmp.271 = aputv %tmp.270 7 %tmp.269;
+    putv self :DRI_GAS_PTS %tmp.271;
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 37 6 ]
+    %tmp.272 = newa 8;
+    %tmp.273 = 10;
+    %tmp.274 = dup %tmp.272;
+    %tmp.275 = aputv %tmp.274 0 %tmp.273;
+    %tmp.276 = 15;
+    %tmp.277 = dup %tmp.275;
+    %tmp.278 = aputv %tmp.277 1 %tmp.276;
+    %tmp.279 = 18;
+    %tmp.280 = dup %tmp.278;
+    %tmp.281 = aputv %tmp.280 2 %tmp.279;
+    %tmp.282 = 20;
+    %tmp.283 = dup %tmp.281;
+    %tmp.284 = aputv %tmp.283 3 %tmp.282;
+    %tmp.285 = 25;
+    %tmp.286 = dup %tmp.284;
+    %tmp.287 = aputv %tmp.286 4 %tmp.285;
+    %tmp.288 = 30;
+    %tmp.289 = dup %tmp.287;
+    %tmp.290 = aputv %tmp.289 5 %tmp.288;
+    %tmp.291 = 35;
+    %tmp.292 = dup %tmp.290;
+    %tmp.293 = aputv %tmp.292 6 %tmp.291;
+    %tmp.294 = 40;
+    %tmp.295 = dup %tmp.293;
+    %tmp.296 = aputv %tmp.295 7 %tmp.294;
+    putv self :DRI_NDL_D %tmp.296;
+[ "/Users/kkorolczuk/work/garmin/diveriskindicator/source/DiveRiskView.mc" 38 6 ]
+    %tmp.297 = newa 8;
+    %tmp.298 = 219;
+    %tmp.299 = dup %tmp.297;
+    %tmp.300 = aputv %tmp.299 0 %tmp.298;
+    %tmp.301 = 80;
+    %tmp.302 = dup %tmp.300;
+    %tmp.303 = aputv %tmp.302 1 %tmp.301;
+    %tmp.304 = 56;
+    %tmp.305 = dup %tmp.303;
+    %tmp.306 = aputv %tmp.305 2 %tmp.304;
+    %tmp.307 = 45;
+    %tmp.308 = dup %tmp.306;
+    %tmp.309 = aputv %tmp.308 3 %tmp.307;
+    %tmp.310 = 29;
+    %tmp.311 = dup %tmp.309;
+    %tmp.312 = aputv %tmp.311 4 %tmp.310;
+    %tmp.313 = 20;
+    %tmp.314 = dup %tmp.312;
+    %tmp.315 = aputv %tmp.314 5 %tmp.313;
+    %tmp.316 = 14;
+    %tmp.317 = dup %tmp.315;
+    %tmp.318 = aputv %tmp.317 6 %tmp.316;
+    %tmp.319 = 9;
+    %tmp.320 = dup %tmp.318;
+    %tmp.321 = aputv %tmp.320 7 %tmp.319;
+    putv self :DRI_NDL_T %tmp.321;
+}

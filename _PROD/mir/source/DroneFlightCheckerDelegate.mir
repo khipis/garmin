@@ -1,0 +1,346 @@
+[ @file = "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc"; @line = 1; @symbol_usingdef<0> = [Toybox,1,6,12]; @symbol_usingdef<1> = [WatchUi,1,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc"; @line = 3; @symbol_classdef = [DroneFlightCheckerDelegate,3,6,32]; @symbol_extends<0> = [WatchUi,3,41,48]; @symbol_extends<1> = [BehaviorDelegate,3,49,65]; ]
+class DroneFlightCheckerDelegate extends WatchUi.BehaviorDelegate {
+    [ @file = "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc"; @line = 3; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc"; @line = 3; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc"; @line = 5; @position = 15; @symbol_vardef = [_view,5,15,20]; ]
+    protected
+    var _view;
+    [ @file = "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc"; @line = 7; @symbol_functiondef = [initialize,7,13,23]; @symbol_param<0> = [view,7,24,28]; ]
+    function initialize(view) as Void {
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_7_30_10_4_start:
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 8 8 ]
+        symbol [ BehaviorDelegate %tmp.2 8 8 24 ];
+        %tmp.2 = getv ? :BehaviorDelegate;
+        symbol [ initialize %tmp.3 8 25 35 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 9 8 ]
+        %tmp.4 = lgetv %view;
+        symbol [ view %tmp.4 9 16 20 ];
+        symbol [ _view ? 9 8 13 ];
+        putv self :_view %tmp.4;
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_7_30_10_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc"; @line = 12; @symbol_functiondef = [onSelect,12,13,21]; ]
+    function onSelect() {
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_12_24_15_4_start:
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 13 8 ]
+        symbol [ _view %tmp.2 13 8 13 ];
+        %tmp.2 = getv ? :_view;
+        symbol [ doSelect %tmp.3 13 14 22 ];
+        %tmp.3 = getv function %tmp.2 :doSelect;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 14 8 ]
+        %tmp.4 = true;
+        ret %tmp.4;
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_12_24_15_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc"; @line = 17; @symbol_functiondef = [onBack,17,13,19]; ]
+    function onBack() {
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_17_22_22_4_start:
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 18 8 ]
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_18_8_20_8_if_stmt:
+        symbol [ _view %tmp.2 18 13 18 ];
+        %tmp.2 = getv ? :_view;
+        symbol [ doBack %tmp.3 18 19 25 ];
+        %tmp.3 = getv function %tmp.2 :doBack;
+        %tmp.4 = invoke %tmp.2 %tmp.3();
+        %tmp.5 = not %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_18_8_20_8_if_end;
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_18_8_20_8_if_true:
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_18_29_20_8_start:
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 19 12 ]
+        symbol [ WatchUi %tmp.6 19 12 19 ];
+        %tmp.6 = getm $.Toybox.WatchUi;
+        symbol [ popView %tmp.7 19 20 27 ];
+        %tmp.7 = getv function %tmp.6 :popView;
+        symbol [ WatchUi %tmp.8 19 28 35 ];
+        %tmp.8 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_BLINK %tmp.9 19 36 47 ];
+        %tmp.9 = getv %tmp.8 :SLIDE_BLINK;
+        invoke %tmp.6 %tmp.7(%tmp.9);
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_18_29_20_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_18_8_20_8_if_end;
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_18_8_20_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 21 8 ]
+        %tmp.10 = true;
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_17_22_22_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc"; @line = 24; @symbol_functiondef = [onNextPage,24,13,23]; ]
+    function onNextPage() {
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_24_26_27_4_start:
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 25 8 ]
+        symbol [ _view %tmp.2 25 8 13 ];
+        %tmp.2 = getv ? :_view;
+        symbol [ doDown %tmp.3 25 14 20 ];
+        %tmp.3 = getv function %tmp.2 :doDown;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 26 8 ]
+        %tmp.4 = true;
+        ret %tmp.4;
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_24_26_27_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc"; @line = 29; @symbol_functiondef = [onPreviousPage,29,13,27]; ]
+    function onPreviousPage() {
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_29_30_32_4_start:
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 30 8 ]
+        symbol [ _view %tmp.2 30 8 13 ];
+        %tmp.2 = getv ? :_view;
+        symbol [ doUp %tmp.3 30 14 18 ];
+        %tmp.3 = getv function %tmp.2 :doUp;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 31 8 ]
+        %tmp.4 = true;
+        ret %tmp.4;
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_29_30_32_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc"; @line = 34; @symbol_functiondef = [onKey,34,13,18]; @symbol_param<0> = [keyEvent,34,19,27]; ]
+    function onKey(keyEvent) {
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_34_29_49_4_start:
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 35 8 ]
+        [ "_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_34_29_49_4_start" "_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_34_29_49_4_stop" ]
+        %key.1 = local;
+        symbol [ key %key.1 35 12 15 ];
+        %tmp.1 = lgetv %keyEvent;
+        symbol [ keyEvent %tmp.1 35 18 26 ];
+        symbol [ getKey %tmp.2 35 27 33 ];
+        %tmp.2 = getv function %tmp.1 :getKey;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        lputv %key.1 %tmp.3;
+        symbol [ key %key.1 35 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 36 8 ]
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_36_8_39_8_if_stmt:
+        %tmp.4 = lgetv %key.1;
+        symbol [ key %tmp.4 36 12 15 ];
+        symbol [ WatchUi %tmp.5 36 19 26 ];
+        %tmp.5 = getm $.Toybox.WatchUi;
+        symbol [ KEY_UP %tmp.6 36 27 33 ];
+        %tmp.6 = getv %tmp.5 :KEY_UP;
+        %tmp.7 = eq %tmp.4 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_36_8_39_8_if_end;
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_36_8_39_8_if_true:
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_36_35_39_8_start:
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 37 12 ]
+        symbol [ _view %tmp.9 37 12 17 ];
+        %tmp.9 = getv ? :_view;
+        symbol [ doUp %tmp.10 37 18 22 ];
+        %tmp.10 = getv function %tmp.9 :doUp;
+        invoke %tmp.9 %tmp.10();
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 38 12 ]
+        %tmp.11 = true;
+        ret %tmp.11;
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_36_35_39_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_36_8_39_8_if_end;
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_36_8_39_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 40 8 ]
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_40_8_43_8_if_stmt:
+        %tmp.12 = lgetv %key.1;
+        symbol [ key %tmp.12 40 12 15 ];
+        symbol [ WatchUi %tmp.13 40 19 26 ];
+        %tmp.13 = getm $.Toybox.WatchUi;
+        symbol [ KEY_DOWN %tmp.14 40 27 35 ];
+        %tmp.14 = getv %tmp.13 :KEY_DOWN;
+        %tmp.15 = eq %tmp.12 %tmp.14;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_40_8_43_8_if_end;
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_40_8_43_8_if_true:
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_40_37_43_8_start:
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 41 12 ]
+        symbol [ _view %tmp.17 41 12 17 ];
+        %tmp.17 = getv ? :_view;
+        symbol [ doDown %tmp.18 41 18 24 ];
+        %tmp.18 = getv function %tmp.17 :doDown;
+        invoke %tmp.17 %tmp.18();
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 42 12 ]
+        %tmp.19 = true;
+        ret %tmp.19;
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_40_37_43_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_40_8_43_8_if_end;
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_40_8_43_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 44 8 ]
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_44_8_47_8_if_stmt:
+        %tmp.20 = lgetv %key.1;
+        symbol [ key %tmp.20 44 12 15 ];
+        symbol [ WatchUi %tmp.21 44 19 26 ];
+        %tmp.21 = getm $.Toybox.WatchUi;
+        symbol [ KEY_ENTER %tmp.22 44 27 36 ];
+        %tmp.22 = getv %tmp.21 :KEY_ENTER;
+        %tmp.23 = eq %tmp.20 %tmp.22;
+        bf %tmp.23 @_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_44_8_47_8_if_end;
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_44_8_47_8_if_true:
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_44_38_47_8_start:
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 45 12 ]
+        symbol [ _view %tmp.25 45 12 17 ];
+        %tmp.25 = getv ? :_view;
+        symbol [ doSelect %tmp.26 45 18 26 ];
+        %tmp.26 = getv function %tmp.25 :doSelect;
+        invoke %tmp.25 %tmp.26();
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 46 12 ]
+        %tmp.27 = true;
+        ret %tmp.27;
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_44_38_47_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_44_8_47_8_if_end;
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_44_8_47_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 48 8 ]
+        %tmp.28 = false;
+        ret %tmp.28;
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_34_29_49_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc"; @line = 51; @symbol_functiondef = [onTap,51,13,18]; @symbol_param<0> = [tapEvent,51,19,27]; ]
+    function onTap(tapEvent) {
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_51_29_54_4_start:
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 52 8 ]
+        symbol [ _view %tmp.2 52 8 13 ];
+        %tmp.2 = getv ? :_view;
+        symbol [ doSelect %tmp.3 52 14 22 ];
+        %tmp.3 = getv function %tmp.2 :doSelect;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 53 8 ]
+        %tmp.4 = true;
+        ret %tmp.4;
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_51_29_54_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc"; @line = 56; @symbol_functiondef = [onSwipe,56,13,20]; @symbol_param<0> = [swipeEvent,56,21,31]; ]
+    function onSwipe(swipeEvent) {
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_56_33_77_4_start:
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 57 8 ]
+        [ "_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_56_33_77_4_start" "_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_56_33_77_4_stop" ]
+        %dir.1 = local;
+        symbol [ dir %dir.1 57 12 15 ];
+        %tmp.1 = lgetv %swipeEvent;
+        symbol [ swipeEvent %tmp.1 57 18 28 ];
+        symbol [ getDirection %tmp.2 57 29 41 ];
+        %tmp.2 = getv function %tmp.1 :getDirection;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        lputv %dir.1 %tmp.3;
+        symbol [ dir %dir.1 57 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 58 8 ]
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_58_8_61_8_if_stmt:
+        %tmp.4 = lgetv %dir.1;
+        symbol [ dir %tmp.4 58 12 15 ];
+        symbol [ WatchUi %tmp.5 58 19 26 ];
+        %tmp.5 = getm $.Toybox.WatchUi;
+        symbol [ SWIPE_UP %tmp.6 58 27 35 ];
+        %tmp.6 = getv %tmp.5 :SWIPE_UP;
+        %tmp.7 = eq %tmp.4 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_58_8_61_8_if_end;
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_58_8_61_8_if_true:
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_58_37_61_8_start:
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 59 12 ]
+        symbol [ _view %tmp.9 59 12 17 ];
+        %tmp.9 = getv ? :_view;
+        symbol [ doDown %tmp.10 59 18 24 ];
+        %tmp.10 = getv function %tmp.9 :doDown;
+        invoke %tmp.9 %tmp.10();
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 60 12 ]
+        %tmp.11 = true;
+        ret %tmp.11;
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_58_37_61_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_58_8_61_8_if_end;
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_58_8_61_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 62 8 ]
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_62_8_65_8_if_stmt:
+        %tmp.12 = lgetv %dir.1;
+        symbol [ dir %tmp.12 62 12 15 ];
+        symbol [ WatchUi %tmp.13 62 19 26 ];
+        %tmp.13 = getm $.Toybox.WatchUi;
+        symbol [ SWIPE_DOWN %tmp.14 62 27 37 ];
+        %tmp.14 = getv %tmp.13 :SWIPE_DOWN;
+        %tmp.15 = eq %tmp.12 %tmp.14;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_62_8_65_8_if_end;
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_62_8_65_8_if_true:
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_62_39_65_8_start:
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 63 12 ]
+        symbol [ _view %tmp.17 63 12 17 ];
+        %tmp.17 = getv ? :_view;
+        symbol [ doUp %tmp.18 63 18 22 ];
+        %tmp.18 = getv function %tmp.17 :doUp;
+        invoke %tmp.17 %tmp.18();
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 64 12 ]
+        %tmp.19 = true;
+        ret %tmp.19;
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_62_39_65_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_62_8_65_8_if_end;
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_62_8_65_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 66 8 ]
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_66_8_69_8_if_stmt:
+        %tmp.20 = lgetv %dir.1;
+        symbol [ dir %tmp.20 66 12 15 ];
+        symbol [ WatchUi %tmp.21 66 19 26 ];
+        %tmp.21 = getm $.Toybox.WatchUi;
+        symbol [ SWIPE_LEFT %tmp.22 66 27 37 ];
+        %tmp.22 = getv %tmp.21 :SWIPE_LEFT;
+        %tmp.23 = eq %tmp.20 %tmp.22;
+        bf %tmp.23 @_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_66_8_69_8_if_end;
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_66_8_69_8_if_true:
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_66_39_69_8_start:
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 67 12 ]
+        symbol [ _view %tmp.25 67 12 17 ];
+        %tmp.25 = getv ? :_view;
+        symbol [ doSelect %tmp.26 67 18 26 ];
+        %tmp.26 = getv function %tmp.25 :doSelect;
+        invoke %tmp.25 %tmp.26();
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 68 12 ]
+        %tmp.27 = true;
+        ret %tmp.27;
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_66_39_69_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_66_8_69_8_if_end;
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_66_8_69_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 70 8 ]
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_70_8_75_8_if_stmt:
+        %tmp.28 = lgetv %dir.1;
+        symbol [ dir %tmp.28 70 12 15 ];
+        symbol [ WatchUi %tmp.29 70 19 26 ];
+        %tmp.29 = getm $.Toybox.WatchUi;
+        symbol [ SWIPE_RIGHT %tmp.30 70 27 38 ];
+        %tmp.30 = getv %tmp.29 :SWIPE_RIGHT;
+        %tmp.31 = eq %tmp.28 %tmp.30;
+        bf %tmp.31 @_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_70_8_75_8_if_end;
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_70_8_75_8_if_true:
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_70_40_75_8_start:
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 71 12 ]
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_71_12_73_12_if_stmt:
+        symbol [ _view %tmp.33 71 17 22 ];
+        %tmp.33 = getv ? :_view;
+        symbol [ doBack %tmp.34 71 23 29 ];
+        %tmp.34 = getv function %tmp.33 :doBack;
+        %tmp.35 = invoke %tmp.33 %tmp.34();
+        %tmp.36 = not %tmp.35;
+        bf %tmp.36 @_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_71_12_73_12_if_end;
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_71_12_73_12_if_true:
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_71_33_73_12_start:
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 72 16 ]
+        symbol [ WatchUi %tmp.37 72 16 23 ];
+        %tmp.37 = getm $.Toybox.WatchUi;
+        symbol [ popView %tmp.38 72 24 31 ];
+        %tmp.38 = getv function %tmp.37 :popView;
+        symbol [ WatchUi %tmp.39 72 32 39 ];
+        %tmp.39 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_BLINK %tmp.40 72 40 51 ];
+        %tmp.40 = getv %tmp.39 :SLIDE_BLINK;
+        invoke %tmp.37 %tmp.38(%tmp.40);
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_71_33_73_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_71_12_73_12_if_end;
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_71_12_73_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 74 12 ]
+        %tmp.41 = true;
+        ret %tmp.41;
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_70_40_75_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_70_8_75_8_if_end;
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_70_8_75_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc" 76 8 ]
+        %tmp.42 = false;
+        ret %tmp.42;
+_Users_kkorolczuk_work_garmin_droneflightchecker_source_DroneFlightCheckerDelegate_mc_56_33_77_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/droneflightchecker/source/DroneFlightCheckerDelegate.mc"; @line = 1; ]
+<init> {
+}

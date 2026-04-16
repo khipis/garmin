@@ -110,6 +110,7 @@ class BitochiCatapultView extends WatchUi.View {
     hidden var _shakeLeft;
     hidden var _shakeOx;
     hidden var _shakeOy;
+    hidden var _enemySinCache;   // cached Math.sin result for enemy oscillation
     hidden var _hitEnemyDirect;
     hidden var _critHit;
     hidden var _beatGame;
@@ -409,6 +410,7 @@ class BitochiCatapultView extends WatchUi.View {
         _vx = 0.0; _vy = 0.0;
         _maxAlt = 0.0;
         _shakeLeft = 0; _shakeOx = 0; _shakeOy = 0;
+        _enemySinCache = 0.0;
         _trailIdx = 0;
         _flashTick = 0;
         for (var i = 0; i < TRAIL_LEN; i++) { _trailX[i] = 0.0; _trailY[i] = 0.0; }
@@ -421,7 +423,7 @@ class BitochiCatapultView extends WatchUi.View {
 
     function onShow() {
         _timer = new Timer.Timer();
-        _timer.start(method(:onTick), 33, true);
+        _timer.start(method(:onTick), 45, true);
     }
 
     function onHide() {
@@ -441,9 +443,13 @@ class BitochiCatapultView extends WatchUi.View {
         }
 
         if (_round >= 6 && _enemyHp > 0) {
-            var amp = (_round >= 11) ? 22.0 : ((_round >= 8) ? 16.0 : 11.0);
-            var spd = (_round >= 11) ? 0.095 : 0.078;
-            _enemyWX = _enemyBaseX + Math.sin(_tick.toFloat() * spd) * amp;
+            // Only recompute sin every 2 ticks — imperceptible at 45ms interval
+            if (_tick % 2 == 0) {
+                var amp = (_round >= 11) ? 22.0 : ((_round >= 8) ? 16.0 : 11.0);
+                var spd = (_round >= 11) ? 0.095 : 0.078;
+                _enemySinCache = Math.sin(_tick.toFloat() * spd) * amp;
+            }
+            _enemyWX = _enemyBaseX + _enemySinCache;
         }
 
         if (_shakeLeft > 0) {
@@ -1407,20 +1413,18 @@ class BitochiCatapultView extends WatchUi.View {
             }
         }
 
+        // Ground fill — single block + 2 thin accent strips (replaces a per-5px line loop)
         dc.setColor(_groundC1, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, gsy, w, _h - gsy);
         dc.setColor(_groundC2, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, gsy, w, 3);
         dc.setColor(_groundC1, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, gsy + 3, w, 2);
-
-        for (g = 0; g < w; g += 5) {
-            gc = (g % 3 == 0) ? _groundC2 : _groundC1;
-            dc.setColor(gc, Graphics.COLOR_TRANSPARENT);
-            gh = 3 + (g % 6);
-            dc.drawLine(g, gsy + 5, g, gsy + 5 + gh);
-            if (g % 10 == 0) { dc.drawLine(g + 1, gsy + 5, g - 1, gsy + 5 + gh); }
-        }
+        // Subtle texture: two alternating strips in the top 12px of ground
+        dc.setColor(_groundC2, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, gsy + 5, w, 4);
+        dc.setColor(_groundC1, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, gsy + 9, w, 4);
 
         if (t == 0) {
             fc = [0xFF4488, 0xFFFF44, 0xFF88FF, 0x44BBFF, 0xFF8844];
@@ -1715,6 +1719,7 @@ class BitochiCatapultView extends WatchUi.View {
             dc.fillPolygon([[esx - er / 2, headY - er * 60 / 100], [esx - er / 3, headY - er], [esx - er / 5, headY - er * 60 / 100]]);
             dc.fillPolygon([[esx + er / 5, headY - er * 60 / 100], [esx + er / 3, headY - er], [esx + er / 2, headY - er * 60 / 100]]);
         } else if (_enemyIdx == 5) {
+            if (_tick % 2 == 0) {
             dc.setColor(0xEE88FF, Graphics.COLOR_TRANSPARENT);
             for (var sp = 0; sp < 6; sp++) {
                 var sa = sp * 60 + _tick * 3;
@@ -1722,6 +1727,7 @@ class BitochiCatapultView extends WatchUi.View {
                 var spx = esx + (er * 110 / 100 * Math.cos(srad)).toNumber();
                 var spy = esy + (er * 110 / 100 * Math.sin(srad)).toNumber();
                 dc.fillCircle(spx, spy, 2);
+            }
             }
         } else if (_enemyIdx == 6) {
             dc.setColor(0x443388, Graphics.COLOR_TRANSPARENT);
@@ -1733,6 +1739,7 @@ class BitochiCatapultView extends WatchUi.View {
             dc.setColor(0xFF0000, Graphics.COLOR_TRANSPARENT);
             dc.fillCircle(esx - eo, headY - eo / 3, eo / 2);
             dc.fillCircle(esx + eo, headY - eo / 3, eo / 2);
+            if (_tick % 2 == 0) {
             dc.setColor(0xFF4400, Graphics.COLOR_TRANSPARENT);
             for (var sp = 0; sp < 8; sp++) {
                 var sa = sp * 45 + _tick * 5;
@@ -1741,7 +1748,9 @@ class BitochiCatapultView extends WatchUi.View {
                 var spy = esy + ((er + 4) * Math.sin(srad)).toNumber();
                 dc.fillRectangle(spx, spy, 3, 3);
             }
+            }
         } else if (_enemyIdx == 8) {
+            if (_tick % 2 == 0) {
             dc.setColor(0xAAEEFF, Graphics.COLOR_TRANSPARENT);
             for (var sp = 0; sp < 6; sp++) {
                 var sa = sp * 60 + _tick * 2;
@@ -1749,6 +1758,7 @@ class BitochiCatapultView extends WatchUi.View {
                 var spx = esx + ((er + 3) * Math.cos(srad)).toNumber();
                 var spy = esy + ((er + 3) * Math.sin(srad)).toNumber();
                 dc.fillPolygon([[spx - 2, spy + 3], [spx, spy - 3], [spx + 2, spy + 3]]);
+            }
             }
             dc.setColor(0x88DDFF, Graphics.COLOR_TRANSPARENT);
             dc.fillRectangle(esx - eo, headY + eo / 3, eo * 2, 2);
@@ -1777,6 +1787,7 @@ class BitochiCatapultView extends WatchUi.View {
             dc.fillRectangle(esx - eo, headY - er * 70 / 100 - 6, eo * 2, 4);
             dc.setColor(0xFFFF88, Graphics.COLOR_TRANSPARENT);
             dc.fillRectangle(esx - eo + 1, headY - er * 70 / 100 - 5, eo * 2 - 2, 2);
+            if (_tick % 2 == 0) {
             dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
             for (var sp = 0; sp < 4; sp++) {
                 var sa = sp * 90 + _tick * 2;
@@ -1784,6 +1795,7 @@ class BitochiCatapultView extends WatchUi.View {
                 var spx = esx + ((er + 6) * Math.cos(srad)).toNumber();
                 var spy = esy + ((er + 6) * Math.sin(srad)).toNumber();
                 dc.fillCircle(spx, spy, 2);
+            }
             }
         } else if (_enemyIdx == 12) {
             dc.setColor(0x88FF44, Graphics.COLOR_TRANSPARENT);
@@ -1828,6 +1840,7 @@ class BitochiCatapultView extends WatchUi.View {
             dc.setColor(0xFF00FF, Graphics.COLOR_TRANSPARENT);
             dc.fillCircle(esx - eo, headY - eo / 3, eo / 3 + 1);
             dc.fillCircle(esx + eo, headY - eo / 3, eo / 3 + 1);
+            if (_tick % 2 == 0) {
             dc.setColor(0xAA44FF, Graphics.COLOR_TRANSPARENT);
             for (var sp = 0; sp < 6; sp++) {
                 var sa = sp * 60 + _tick * 4;
@@ -1835,6 +1848,7 @@ class BitochiCatapultView extends WatchUi.View {
                 var spx = esx + ((er + 6) * Math.cos(srad)).toNumber();
                 var spy = esy + ((er + 6) * Math.sin(srad)).toNumber();
                 dc.fillRectangle(spx - 1, spy - 1, 2, 2);
+            }
             }
         }
 
