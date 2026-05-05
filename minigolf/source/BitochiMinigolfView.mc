@@ -9,9 +9,12 @@ const MG_AIM       = 1;   // player rotating aim arrow + charging power
 const MG_POWER     = 2;   // power bar filling
 const MG_ROLLING   = 3;   // ball in motion
 const MG_HOLED     = 4;   // ball sunk — show score, wait for tap
-const MG_GAMEOVER  = 5;   // all 9 holes done
+const MG_GAMEOVER  = 5;   // all holes done
 
-// ── Wall segment: [x1*10, y1*10, x2*10, y2*10] (coords in 0..1000 space) ────
+// 20 holes total — see loadHole() for individual designs
+const MG_HOLES = 20;
+
+// ── Wall segment: [x1, y1, x2, y2] (coords in 0..1000 space) ────────────────
 // Course space is 0-1000 × 0-1000, rendered into game viewport at runtime.
 
 class BitochiMinigolfView extends WatchUi.View {
@@ -22,12 +25,21 @@ class BitochiMinigolfView extends WatchUi.View {
 
     // Difficulty / level selection
     hidden var _difficulty;  // 0=Easy 1=Normal 2=Hard
-    // 3 courses × 3 holes each = 9 holes total
-    // Course 0 = holes 0-2, Course 1 = holes 3-5, Course 2 = holes 6-8
-    hidden var _holeIdx;     // 0-8
+    // 20 holes total. Difficulty multiplies the target par allowance only,
+    // not the level layout (every player faces the same 20 designs).
+    hidden var _holeIdx;     // 0..MG_HOLES-1
     hidden var _strokes;     // strokes this hole
     hidden var _totalStrokes;
-    hidden var _par;         // [9] par per hole
+    hidden var _par;         // [MG_HOLES] par per hole
+
+    // Animated obstacle helper (windmill, moving bumpers).
+    // Stored as separate state so the obstacle list can be regenerated each frame.
+    hidden var _animPhase;
+
+    // Per-level rendering / physics theme.
+    //   false = thin "rail" white walls (90% bounce, default)
+    //   true  = chunky brown bumper walls (95% bounce, more pinball-feel)
+    hidden var _brownWalls;
 
     // Ball state (in 0-1000 space ×10 = fixed-point 0-10000)
     hidden var _bx; hidden var _by;   // *10 fixed
@@ -82,12 +94,19 @@ class BitochiMinigolfView extends WatchUi.View {
         _gs = MG_MENU; _difficulty = 1;
         _holeIdx = 0; _strokes = 0; _totalStrokes = 0;
         _aimAngle = 0; _power = 0; _powerDir = 1;
-        _ballR = 14; _holeR = 18;
-        _par = [2, 2, 3, 2, 3, 3, 3, 3, 4];
-        _scoreCard = new [9];
-        for (var i = 0; i < 9; i++) { _scoreCard[i] = -1; }
+        _ballR = 14; _holeR = 20;
+        // Par tuned per layout difficulty (warm-up → finale).
+        _par = [
+            2, 3, 3, 3, 3,    // 1-5  intro / shapes / hazards
+            3, 3, 3, 4, 3,    // 6-10 windmill / pinball / lake / funnel
+            3, 4, 3, 4, 3,    // 11-15 slalom / eye / tunnel / pinball / cross
+            4, 3, 4, 4, 5     // 16-20 volcano / snake / triangle / spiral / boss
+        ];
+        _scoreCard = new [MG_HOLES];
+        for (var i = 0; i < MG_HOLES; i++) { _scoreCard[i] = -1; }
         _walls = new [0]; _obstacles = new [0]; _water = new [0];
-        _holeMsg = ""; _holeWait = 0;
+        _holeMsg = ""; _holeWait = 0; _animPhase = 0;
+        _brownWalls = false;
         _timer = new Timer.Timer();
         _timer.start(method(:onTick), 50, true);
     }
@@ -113,26 +132,37 @@ class BitochiMinigolfView extends WatchUi.View {
     // ── Timer ─────────────────────────────────────────────────────────────────
     function onTick() as Void {
         _tick++;
+        _animPhase = (_animPhase + 1) % 360;
         if (_gs == MG_POWER) {
             _power += _powerDir * 4;
             if (_power >= 100) { _power = 100; _powerDir = -1; }
             if (_power <= 0)   { _power = 0;   _powerDir =  1; }
         }
+        // Refresh animated obstacles for the current hole (windmill, sliders…)
+        updateAnimated();
         if (_gs == MG_ROLLING) { stepPhysics(); }
         if (_gs == MG_HOLED && _holeWait > 0) { _holeWait--; }
         WatchUi.requestUpdate();
     }
 
     // ── Physics ───────────────────────────────────────────────────────────────
+    // Realistic-feel rolling: low rolling friction (94% retention), elastic
+    // walls (~90%), high substep count to avoid tunneling on fast shots, and
+    // velocity-based sub-step subdivision so slow balls aren't over-processed.
     hidden function stepPhysics() {
-        // Apply friction once per game tick (91% retention — slightly more drag so ball
-        // decelerates on course instead of flying off the edge)
-        _vx = _vx * 91 / 100;
-        _vy = _vy * 91 / 100;
+        // Rolling friction — exponential decay, applied once per tick.
+        // 94% retention ≈ ball loses ~6% per 50ms tick → natural roll length.
+        _vx = _vx * 94 / 100;
+        _vy = _vy * 94 / 100;
 
-        // Sub-step the movement 3× so fast balls don't tunnel through walls
+        // Adaptive substep: faster ball → more steps so we never miss a wall
+        var spd2 = _vx * _vx + _vy * _vy;
         var SUB = 3;
+        if (spd2 > 90000)   { SUB = 4; }
+        if (spd2 > 250000)  { SUB = 5; }
+        if (spd2 > 500000)  { SUB = 6; }
         var svx = _vx / SUB; var svy = _vy / SUB;
+
         for (var s = 0; s < SUB; s++) {
             _bx += svx;
             _by += svy;
@@ -146,27 +176,34 @@ class BitochiMinigolfView extends WatchUi.View {
                 resolveObstacle(ob[0]*10, ob[1]*10, ob[2]*10, ob[3]*10);
             }
 
-            // Water hazard — reset to tee
+            // Water hazard — drop in, reset to last valid position +1 stroke
             for (var i = 0; i < _water.size(); i++) {
                 var wt = _water[i];
                 var dx = _bx/10 - wt[0]; var dy = _by/10 - wt[1];
-                if (dx*dx + dy*dy < (wt[2]+_ballR)*(wt[2]+_ballR)) {
-                    _bx = _tx * 10; _by = _ty * 10;
+                if (dx*dx + dy*dy < (wt[2]+_ballR/2)*(wt[2]+_ballR/2)) {
+                    _bx = _lastBx; _by = _lastBy;
                     _vx = 0; _vy = 0;
-                    _strokes++; // penalty
+                    _strokes++; // splash penalty
                     _gs = MG_AIM; return;
                 }
             }
 
-            // Check if in hole
+            // In hole? ball must also be slow enough — fast balls bounce out.
             var hdx = _bx/10 - _hx; var hdy = _by/10 - _hy;
-            if (hdx*hdx + hdy*hdy < _holeR*_holeR) {
-                _vx = 0; _vy = 0;
-                sinkBall(); return;
+            var dist2 = hdx*hdx + hdy*hdy;
+            if (dist2 < _holeR*_holeR) {
+                if (spd2 < 360000 || dist2 < (_holeR/2)*(_holeR/2)) {
+                    _vx = 0; _vy = 0;
+                    sinkBall(); return;
+                }
+                // Lip-out: pull ball slightly toward centre (gravity into cup)
+                _vx = _vx * 80 / 100; _vy = _vy * 80 / 100;
+                if (hdx != 0) { _vx -= hdx; }
+                if (hdy != 0) { _vy -= hdy; }
             }
         }
 
-        // Out-of-bounds check (course space 0-1000)
+        // Out-of-bounds check (course space 0-1000) — restore last shot origin
         var cx = _bx / 10; var cy = _by / 10;
         if (cx < -50 || cx > 1050 || cy < -50 || cy > 1050) {
             _bx = _lastBx; _by = _lastBy;
@@ -175,48 +212,69 @@ class BitochiMinigolfView extends WatchUi.View {
             return;
         }
 
-        var spd = _vx * _vx + _vy * _vy;
-        if (spd < 25) {
+        // Stop threshold — slightly higher so ball settles cleanly near hole
+        var spdEnd = _vx * _vx + _vy * _vy;
+        if (spdEnd < 36) {
             _vx = 0; _vy = 0;
             _gs = MG_AIM;
         }
     }
 
-    // Wall segment collision (line segment reflection)
+    // Wall segment collision (line segment reflection).
+    // Handles ball arriving from EITHER side of the wall — normal is flipped
+    // based on which side the ball is on, so inner walls bounce correctly.
     hidden function resolveWall(x1, y1, x2, y2) {
-        // Wall normal (outward)
         var wx = (x2 - x1); var wy = (y2 - y1);
-        var len = Math.sqrt(wx*wx + wy*wy).toNumber();
-        if (len == 0) { return; }
-        // Unit normal (perpendicular, pointing left of direction)
+        var lenSq = wx * wx + wy * wy;
+        if (lenSq == 0) { return; }
+        var len = Math.sqrt(lenSq).toNumber();
+        // Unit normal × 10 (CCW perpendicular)
         var nx = -wy * 10 / len; var ny = wx * 10 / len;
 
-        // Distance from ball centre to wall line
-        var dx = _bx/10 - x1; var dy = _by/10 - y1;
-        var dist = (dx * nx + dy * ny) / 10;
+        // Project ball onto the segment — clamp t to [0, lenSq] so endcaps
+        // are handled like a rounded capsule (push from nearest endpoint).
+        var dx = _bx / 10 - x1; var dy = _by / 10 - y1;
+        var t = dx * wx + dy * wy;
+        var px; var py;
+        if (t <= 0) {
+            px = x1; py = y1;
+        } else if (t >= lenSq) {
+            px = x2; py = y2;
+        } else {
+            // Project to interior of segment
+            px = x1 + (wx * t / lenSq);
+            py = y1 + (wy * t / lenSq);
+        }
+        var rx = _bx / 10 - px; var ry = _by / 10 - py;
+        var dist2 = rx * rx + ry * ry;
+        if (dist2 >= _ballR * _ballR) { return; }
 
-        // Check if ball is near the segment (project onto segment)
-        var t = (dx * wx + dy * wy); // dot
-        if (t < 0 || t > len*len) { return; }
+        var dist = Math.sqrt(dist2).toNumber();
+        if (dist == 0) {
+            // Degenerate — push along the wall normal arbitrarily
+            rx = nx; ry = ny; dist = 10;
+        }
+        // Outward unit vector toward ball centre × 10 (scaled like nx/ny)
+        var ux = rx * 10 / dist; var uy = ry * 10 / dist;
+        // Push out so ball just touches the wall
+        var overlap = _ballR - dist;
+        _bx += ux * overlap;
+        _by += uy * overlap;
 
-        if (dist < _ballR && dist > -4) {
-            // Push out
-            var overlap = _ballR - dist;
-            _bx += nx * overlap;
-            _by += ny * overlap;
-            // Reflect velocity
-            var vDotN = (_vx * nx + _vy * ny) / 100;
-            _vx -= nx * vDotN * 2 / 10;
-            _vy -= ny * vDotN * 2 / 10;
-            // Dampen
-            _vx = _vx * 85 / 100;
-            _vy = _vy * 85 / 100;
+        // Reflect velocity only if moving toward the wall
+        var vDotU = (_vx * ux + _vy * uy) / 100;
+        if (vDotU < 0) {
+            _vx -= ux * vDotU * 2 / 10;
+            _vy -= uy * vDotU * 2 / 10;
+            // White rails lose ~10%; brown bumper walls only ~5% (springier).
+            var keep = _brownWalls ? 95 : 90;
+            _vx = _vx * keep / 100;
+            _vy = _vy * keep / 100;
         }
     }
 
-    // Rect obstacle (axis-aligned box)
+    // Rect obstacle (axis-aligned box) — small dampening, normal reflection
     hidden function resolveObstacle(cx10, cy10, hw10, hh10) {
-        // AABB: find closest point, push out
         var bxc = _bx; var byc = _by;
         var left = cx10 - hw10; var right = cx10 + hw10;
         var top  = cy10 - hh10; var bot   = cy10 + hh10;
@@ -231,16 +289,59 @@ class BitochiMinigolfView extends WatchUi.View {
         var overT = byc + r10 - top;
         var overB = bot - (byc - r10);
 
-        // Find minimum overlap axis
+        // Resolve along the axis with the smallest overlap (prefer the side
+        // the ball is *moving toward* when overlaps are equal)
         var minO = overL;
         if (overR < minO) { minO = overR; }
         if (overT < minO) { minO = overT; }
         if (overB < minO) { minO = overB; }
 
-        if (minO == overL) { _bx -= overL; _vx = -(_vx * 80 / 100); }
-        else if (minO == overR) { _bx += overR; _vx = -(_vx * 80 / 100); }
-        else if (minO == overT) { _by -= overT; _vy = -(_vy * 80 / 100); }
-        else { _by += overB; _vy = -(_vy * 80 / 100); }
+        // Brown obstacles act like real pinball bumpers — ~92% retention.
+        if (minO == overL && _vx > -1)       { _bx -= overL; _vx = -(_vx * 92 / 100); }
+        else if (minO == overR && _vx < 1)   { _bx += overR; _vx = -(_vx * 92 / 100); }
+        else if (minO == overT && _vy > -1)  { _by -= overT; _vy = -(_vy * 92 / 100); }
+        else if (minO == overB && _vy < 1)   { _by += overB; _vy = -(_vy * 92 / 100); }
+        else if (minO == overL)              { _bx -= overL; _vx = -(_vx * 92 / 100); }
+        else if (minO == overR)              { _bx += overR; _vx = -(_vx * 92 / 100); }
+        else if (minO == overT)              { _by -= overT; _vy = -(_vy * 92 / 100); }
+        else                                 { _by += overB; _vy = -(_vy * 92 / 100); }
+    }
+
+    // Update obstacles that animate per-tick (windmill, slider, pendulum…).
+    // For the most part it rebuilds _obstacles for the relevant hole index.
+    hidden function updateAnimated() {
+        if (_holeIdx == 5) {
+            // Windmill: cross-shaped blade rotating about (500,500)
+            var ang = _animPhase * 4;   // ~14°/tick → full revolution per ~25 ticks
+            var rad = ang * Math.PI / 180;
+            var c = Math.cos(rad); var s = Math.sin(rad);
+            // Two perpendicular blades, length 180 / thickness 18
+            var L = 170; var T = 14;
+            var ax = (c * L).toNumber(); var ay = (s * L).toNumber();
+            // Blade A: full rectangle from (-ax,-ay) to (ax,ay) — too thin to hit,
+            // so we approximate with 5 small hubs along the blade
+            _obstacles = [
+                [500,         500,         T, T],
+                [500 + ax/2,  500 + ay/2,  T, T],
+                [500 - ax/2,  500 - ay/2,  T, T],
+                [500 + ax,    500 + ay,    T, T],
+                [500 - ax,    500 - ay,    T, T],
+                // Perpendicular blade
+                [500 + (-ay)/2, 500 + ax/2,  T, T],
+                [500 - (-ay)/2, 500 - ax/2,  T, T],
+                [500 - ay,      500 + ax,    T, T],
+                [500 + ay,      500 - ax,    T, T]
+            ];
+        } else if (_holeIdx == 16) {
+            // Snake: two pendulum bumpers swinging horizontally
+            var ph = _animPhase * 2;
+            var off1 = (Math.sin(ph * Math.PI / 180) * 140).toNumber();
+            var off2 = (Math.sin((ph + 180) * Math.PI / 180) * 140).toNumber();
+            _obstacles = [
+                [500 + off1, 380, 28, 18],
+                [500 + off2, 620, 28, 18]
+            ];
+        }
     }
 
     hidden function sinkBall() {
@@ -320,14 +421,14 @@ class BitochiMinigolfView extends WatchUi.View {
 
     hidden function startGame() {
         _holeIdx = 0; _totalStrokes = 0; _strokes = 0;
-        for (var i = 0; i < 9; i++) { _scoreCard[i] = -1; }
+        for (var i = 0; i < MG_HOLES; i++) { _scoreCard[i] = -1; }
         loadHole(_holeIdx);
         _gs = MG_AIM;
     }
 
     hidden function nextHole() {
         _holeIdx++;
-        if (_holeIdx >= 9) { _gs = MG_GAMEOVER; return; }
+        if (_holeIdx >= MG_HOLES) { _gs = MG_GAMEOVER; return; }
         _strokes = 0;
         loadHole(_holeIdx);
         _gs = MG_AIM;
@@ -341,132 +442,328 @@ class BitochiMinigolfView extends WatchUi.View {
 
     hidden function loadHole(idx) {
         _vx = 0; _vy = 0;
+        _walls = new [0]; _obstacles = new [0]; _water = new [0];
+        _brownWalls = false;
 
         if (idx == 0) {
-            // Hole 1 — straight corridor
+            // 1. Straight corridor — easy intro
             _tx=120; _ty=500; _hx=880; _hy=500;
             _walls = [
-                [100,350, 900,350],
-                [900,350, 900,650],
-                [900,650, 100,650],
-                [100,650, 100,350]
+                [100,400, 900,400],
+                [900,400, 900,600],
+                [900,600, 100,600],
+                [100,600, 100,400]
             ];
-            _obstacles = new [0]; _water = new [0];
         } else if (idx == 1) {
-            // Hole 2 — L-shape
-            _tx=120; _ty=200; _hx=820; _hy=800;
+            // 2. L-shape — first bend with a free-standing nub
+            _tx=160; _ty=180; _hx=830; _hy=830;
             _walls = [
-                [100,100, 500,100],
-                [500,100, 500,500],
-                [500,500, 900,500],
-                [900,500, 900,900],
+                [100,100, 600,100],
+                [600,100, 600,520],
+                [600,520, 900,520],
+                [900,520, 900,900],
                 [900,900, 100,900],
                 [100,900, 100,100]
             ];
-            _obstacles = [[490,300, 20,200]]; _water = new [0];
+            _obstacles = [[470,300, 18,160]];
         } else if (idx == 2) {
-            // Hole 3 — dogleg with obstacle
-            _tx=130; _ty=150; _hx=870; _hy=850;
+            // 3. Dogleg (inverted U) — go up, around, then down
+            _tx=140; _ty=820; _hx=860; _hy=820;
             _walls = [
-                [100,100, 400,100],
-                [400,100, 400,500],
-                [400,500, 900,500],
-                [900,500, 900,900],
-                [900,900, 600,900],
-                [600,900, 600,500],  // inner corner
-                [600,500, 100,500],
-                [100,500, 100,100]
+                [100,200, 900,200],     // top wall
+                [900,200, 900,900],     // right outer
+                [900,900, 600,900],     // bottom right
+                [600,900, 600,400],     // inner divider right
+                [600,400, 400,400],     // inner divider top
+                [400,400, 400,900],     // inner divider left
+                [400,900, 100,900],     // bottom left
+                [100,900, 100,200]      // left outer
             ];
-            _obstacles = [[250,300, 60,40]]; _water = new [0];
+            _obstacles = [[250,300, 50,30], [750,300, 50,30]];
         } else if (idx == 3) {
-            // Hole 4 — narrow Z corridor
-            _tx=130; _ty=800; _hx=870; _hy=200;
+            // 4. Z-corridor — three connected lanes with proper openings
+            // Bottom lane (x100..700, y700..900) opens up at x300..700 → bridge.
+            // Bridge (x300..700, y400..700) opens up at x300..700 to top lane.
+            // Top lane (x300..900, y100..400).
+            _tx=160; _ty=820; _hx=840; _hy=180;
             _walls = [
-                [100,700, 600,700],
-                [600,700, 600,900],
-                [600,900, 100,900],
-                [100,900, 100,700],
-                // middle bridge
-                [300,400, 700,400],
-                [700,400, 700,700],
-                [300,700, 300,400],
-                // top section
-                [400,100, 900,100],
-                [900,100, 900,400],
-                [400,400, 400,100]
+                [100,700, 300,700],   // bottom lane top (left half — opening x300..700)
+                [700,700, 700,900],   // bottom lane right
+                [700,900, 100,900],   // bottom lane bottom
+                [100,900, 100,700],   // bottom lane left
+                [300,400, 300,700],   // bridge left
+                [700,400, 700,700],   // bridge right
+                [300,100, 300,400],   // top lane left
+                [300,100, 900,100],   // top lane top
+                [900,100, 900,400],   // top lane right
+                [700,400, 900,400]    // top lane bottom (right half — opening x300..700)
             ];
-            _obstacles = new [0]; _water = new [0];
         } else if (idx == 4) {
-            // Hole 5 — island green with water
-            _tx=130; _ty=500; _hx=870; _hy=500;
+            // 5. Island Green — water lake spanning corridor centre
+            _tx=140; _ty=500; _hx=860; _hy=500;
             _walls = [
                 [100,300, 900,300],
                 [900,300, 900,700],
                 [900,700, 100,700],
                 [100,700, 100,300]
             ];
-            _obstacles = new [0];
-            _water = [[500,500, 130]]; // pond in middle
+            _water = [[500,500, 140]];
         } else if (idx == 5) {
-            // Hole 6 — windmill obstacle
-            _tx=130; _ty=500; _hx=870; _hy=500;
+            // 6. Windmill — animated rotating cross blocks centre (see updateAnimated)
+            _tx=140; _ty=500; _hx=860; _hy=500;
+            _brownWalls = true;
             _walls = [
-                [100,350, 900,350],
-                [900,350, 900,650],
-                [900,650, 100,650],
-                [100,650, 100,350]
+                [100,330, 900,330],
+                [900,330, 900,670],
+                [900,670, 100,670],
+                [100,670, 100,330]
             ];
-            // Windmill blades as obstacles that rotate... simplified: 4 rects in X
-            _obstacles = [[500,500, 20,100], [500,500, 100,20]];
-            _water = new [0];
+            // _obstacles populated each tick by updateAnimated()
+            _obstacles = [[500,500, 14,14]];
         } else if (idx == 6) {
-            // Hole 7 — multiple corridors
-            _tx=130; _ty=150; _hx=870; _hy=850;
+            // 7. Diamond Court — diamond-shaped fairway of bouncy bumper rails.
+            // Tee on the west point, hole on the east point, central bumper
+            // forces the ball to deflect off a diagonal wall to score.
+            _tx=200; _ty=500; _hx=820; _hy=500;
+            _brownWalls = true;
             _walls = [
-                [100,100, 900,100],
-                [900,100, 900,400],
-                [900,400, 600,400],
-                [600,400, 600,600],
-                [600,600, 900,600],
-                [900,600, 900,900],
-                [900,900, 100,900],
-                [100,900, 100,600],
-                [100,600, 400,600],
-                [400,600, 400,400],
-                [400,400, 100,400],
-                [100,400, 100,100]
+                [500,120, 880,500],   // top-right slope
+                [880,500, 500,880],   // bottom-right slope
+                [500,880, 120,500],   // bottom-left slope
+                [120,500, 500,120]    // top-left slope
             ];
-            _obstacles = [[500,500, 30,30]];
-            _water = new [0];
+            _obstacles = [
+                [500,500, 26,26],   // centre bumper
+                [380,380, 18,18],   // NW kicker
+                [620,620, 18,18]    // SE kicker
+            ];
         } else if (idx == 7) {
-            // Hole 8 — curved-ish with bumpers
-            _tx=130; _ty=130; _hx=870; _hy=870;
+            // 8. Bumper field — open arena with quincunx of bumpers
+            _tx=160; _ty=160; _hx=840; _hy=840;
+            _brownWalls = true;
             _walls = [
                 [100,100, 900,100],
                 [900,100, 900,900],
                 [900,900, 100,900],
                 [100,900, 100,100]
             ];
-            _obstacles = [[350,350, 40,40], [650,350, 40,40],
-                          [350,650, 40,40], [650,650, 40,40],
-                          [500,500, 30,30]];
+            _obstacles = [
+                [320,320, 38,38], [680,320, 38,38],
+                [320,680, 38,38], [680,680, 38,38],
+                [500,500, 32,32]
+            ];
+        } else if (idx == 8) {
+            // 9. Bowtie / Hourglass — two trapezoid bowls joined by a narrow waist.
+            // Must thread the 60-wide waist (~3 ball diameters) without scraping.
+            _tx=200; _ty=200; _hx=800; _hy=800;
+            _brownWalls = true;
+            _walls = [
+                // top bowl
+                [150,140, 850,140],   // top
+                [850,140, 530,470],   // right wall slopes inward
+                [150,140, 470,470],   // left wall slopes inward
+                // waist (vertical channel)
+                [470,470, 470,530],
+                [530,470, 530,530],
+                // bottom bowl
+                [470,530, 150,860],
+                [530,530, 850,860],
+                [150,860, 850,860]    // bottom
+            ];
+            _obstacles = new [0];
             _water = new [0];
-        } else {
-            // Hole 9 — grand finale with water and bumpers
-            _tx=130; _ty=500; _hx=870; _hy=500;
+        } else if (idx == 9) {
+            // 10. Funnel — wide tee narrowing to hole, with two angled rails
+            _tx=160; _ty=500; _hx=860; _hy=500;
+            _brownWalls = true;
+            _walls = [
+                // outer corridor
+                [100,180, 900,400],     // top angled wall
+                [900,400, 900,600],     // hole pocket right
+                [900,600, 100,820],     // bottom angled wall
+                [100,820, 100,180]      // left tee wall
+            ];
+            _obstacles = [[600,400, 8,40], [600,600, 8,40]];
+        } else if (idx == 10) {
+            // 11. Slalom — alternating pegs hang halfway across the corridor,
+            // forcing the ball to weave above/below to pass.
+            _tx=140; _ty=500; _hx=860; _hy=500;
+            _walls = [
+                [100,300, 900,300],
+                [900,300, 900,700],
+                [900,700, 100,700],
+                [100,700, 100,300]
+            ];
+            _obstacles = [
+                [320,400, 22,100],  // top peg (hangs y 300..500)
+                [460,600, 22,100],  // bottom peg (hangs y 500..700)
+                [600,400, 22,100],
+                [740,600, 22,100]
+            ];
+        } else if (idx == 11) {
+            // 12. The Eye — circular wall around hole, single entrance gap
+            _tx=140; _ty=500; _hx=620; _hy=500;
+            _brownWalls = true;
+            _walls = [
+                [100,200, 900,200],
+                [900,200, 900,800],
+                [900,800, 100,800],
+                [100,800, 100,200],
+                // ring approximated by 12 segments around (620,500) r=180,
+                // with a gap on the WEST side (facing the tee)
+                [620 + 180,        500,                   620 + 156,  500 + 90],
+                [620 + 156,  500 + 90,    620 + 90,   500 + 156],
+                [620 + 90,   500 + 156,   620 + 0,    500 + 180],
+                [620 + 0,    500 + 180,   620 - 90,   500 + 156],
+                [620 - 90,   500 + 156,   620 - 156,  500 + 90],
+                // gap from y=590 to y=410 on west side — entrance
+                [620 - 156,  500 - 90,    620 - 90,   500 - 156],
+                [620 - 90,   500 - 156,   620 + 0,    500 - 180],
+                [620 + 0,    500 - 180,   620 + 90,   500 - 156],
+                [620 + 90,   500 - 156,   620 + 156,  500 - 90],
+                [620 + 156,  500 - 90,    620 + 180,  500 + 0]
+            ];
+        } else if (idx == 12) {
+            // 13. Tunnel — narrow channel between water hazards
+            _tx=140; _ty=500; _hx=860; _hy=500;
             _walls = [
                 [100,200, 900,200],
                 [900,200, 900,800],
                 [900,800, 100,800],
                 [100,800, 100,200]
             ];
-            _obstacles = [[350,400, 30,100], [650,400, 30,100]];
-            _water = [[500,300, 80], [500,700, 80]];
+            _water = [
+                [500,260, 50],
+                [500,740, 50],
+                [350,500, 35],
+                [650,500, 35]
+            ];
+        } else if (idx == 13) {
+            // 14. Pinball — dense bumper cluster, must thread the needle
+            _tx=160; _ty=160; _hx=840; _hy=840;
+            _brownWalls = true;
+            _walls = [
+                [100,100, 900,100],
+                [900,100, 900,900],
+                [900,900, 100,900],
+                [100,900, 100,100]
+            ];
+            _obstacles = [
+                [280,280, 24,24], [500,280, 24,24], [720,280, 24,24],
+                [380,440, 24,24], [620,440, 24,24],
+                [280,560, 24,24], [500,560, 24,24], [720,560, 24,24],
+                [380,720, 24,24], [620,720, 24,24]
+            ];
+        } else if (idx == 14) {
+            // 15. Cross — 4 arms meeting at centre, hole at far end
+            _tx=160; _ty=500; _hx=840; _hy=500;
+            _walls = [
+                // Horizontal arm
+                [100,400, 400,400],
+                [400,400, 400,150],
+                [400,150, 600,150],
+                [600,150, 600,400],
+                [600,400, 900,400],
+                [900,400, 900,600],
+                [900,600, 600,600],
+                [600,600, 600,850],
+                [600,850, 400,850],
+                [400,850, 400,600],
+                [400,600, 100,600],
+                [100,600, 100,400]
+            ];
+            _obstacles = [[500,500, 30,30]];
+        } else if (idx == 15) {
+            // 16. Volcano — hole sits inside ring of water, must drop in via top gap
+            _tx=140; _ty=500; _hx=620; _hy=500;
+            _brownWalls = true;
+            _walls = [
+                [100,200, 900,200],
+                [900,200, 900,800],
+                [900,800, 100,800],
+                [100,800, 100,200]
+            ];
+            // Water moat surrounding the hole — leave one approach lane (north)
+            _water = [
+                [620, 620, 70],   // south
+                [520, 540, 60],   // south-west
+                [720, 540, 60],   // south-east
+                [520, 460, 40],   // sliver west
+                [720, 460, 40]    // sliver east
+            ];
+            _obstacles = [[820,500, 18,90]];
+        } else if (idx == 16) {
+            // 17. Snake — sinuous path with two animated pendulum bumpers
+            _tx=140; _ty=500; _hx=860; _hy=500;
+            _brownWalls = true;
+            _walls = [
+                [100,260, 900,260],
+                [900,260, 900,740],
+                [900,740, 100,740],
+                [100,740, 100,260]
+            ];
+            // _obstacles populated by updateAnimated()
+            _obstacles = [[500,380, 28,18], [500,620, 28,18]];
+        } else if (idx == 17) {
+            // 18. Triangle — triangular fairway, hole tucked in far corner
+            _tx=180; _ty=820; _hx=820; _hy=820;
+            _brownWalls = true;
+            _walls = [
+                [120,860, 880,860],     // base
+                [880,860, 500,140],     // right slope
+                [500,140, 120,860]      // left slope
+            ];
+            _obstacles = [[500,580, 32,80]];
+        } else if (idx == 18) {
+            // 19. Spiral — concentric rings with offset gaps lead inward to centre.
+            // Tee starts in the outermost corridor, must thread three openings
+            // to reach the cup at (500,500).
+            _tx=140; _ty=160; _hx=500; _hy=500;
+            _brownWalls = true;
+            _walls = [
+                // outer box (fully closed)
+                [100,100, 900,100],
+                [900,100, 900,900],
+                [900,900, 100,900],
+                [100,100, 100,900],
+                // first inner ring — gap on LEFT (y 220..360)
+                [220,220, 800,220],
+                [800,220, 800,800],
+                [800,800, 220,800],
+                [220,800, 220,360],
+                // second inner ring — gap on RIGHT (y 540..660), forces a half-lap
+                [340,340, 660,340],
+                [660,340, 660,540],
+                [660,660, 340,660],
+                [340,340, 340,660]
+            ];
+        } else if (idx == 19) {
+            // 20. Boss Finale — combo: water + obstacles + bumpers + tight pocket
+            _tx=140; _ty=140; _hx=860; _hy=860;
+            _brownWalls = true;
+            _walls = [
+                [100,100, 900,100],
+                [900,100, 900,900],
+                [900,900, 100,900],
+                [100,900, 100,100],
+                // mid divider with two passages
+                [200,500, 380,500],
+                [620,500, 800,500]
+            ];
+            _obstacles = [
+                [500,300, 30,90],
+                [500,700, 30,90],
+                [300,720, 28,28],
+                [700,300, 28,28]
+            ];
+            _water = [[500,500, 60], [200,800, 50], [800,200, 50]];
         }
 
         _bx = _tx * 10; _by = _ty * 10;
         _lastBx = _bx; _lastBy = _by;
         _aimAngle = computeAimTowardHole();
+        // Rebuild animated obstacles immediately so first frame looks correct
+        updateAnimated();
     }
 
     hidden function computeAimTowardHole() {
@@ -485,14 +782,15 @@ class BitochiMinigolfView extends WatchUi.View {
     // ── Rendering ─────────────────────────────────────────────────────────────
     function onUpdate(dc) {
         if (_w == 0) { _w = dc.getWidth(); _h = dc.getHeight(); setupVP(); }
-        if (_gs == MG_MENU) { drawMenu(dc); return; }
+        if (_gs == MG_MENU)     { drawMenu(dc); return; }
+        // Handle GAMEOVER before drawHUD — _holeIdx is 9 at this point (out of _par bounds)
+        if (_gs == MG_GAMEOVER) { drawGameOver(dc); return; }
         drawCourse(dc);
         drawBall(dc);
         drawAimArrow(dc);
         drawHUD(dc);
-        if (_gs == MG_POWER)   { drawPowerBar(dc); }
-        if (_gs == MG_HOLED)   { drawHoledOverlay(dc); }
-        if (_gs == MG_GAMEOVER){ drawGameOver(dc); }
+        if (_gs == MG_POWER) { drawPowerBar(dc); }
+        if (_gs == MG_HOLED) { drawHoledOverlay(dc); }
     }
 
     // ── Menu ─────────────────────────────────────────────────────────────────
@@ -509,7 +807,7 @@ class BitochiMinigolfView extends WatchUi.View {
         dc.setColor(0x226633, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w/2, _h * 28 / 100, Graphics.FONT_XTINY, "BITOCHI GAMES", Graphics.TEXT_JUSTIFY_CENTER);
 
-        var diffLabels = ["Easy (9 holes)", "Normal", "Hard"];
+        var diffLabels = ["Easy (20 holes)", "Normal", "Hard"];
         dc.setColor(0xCCEEBB, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w/2, _h * 40 / 100, Graphics.FONT_XTINY, "Difficulty:", Graphics.TEXT_JUSTIFY_CENTER);
 
@@ -560,27 +858,82 @@ class BitochiMinigolfView extends WatchUi.View {
             dc.setColor(0x1144AA, Graphics.COLOR_TRANSPARENT);
         }
 
-        // Obstacles (dark blocks — concrete/wood)
-        dc.setColor(0x664422, Graphics.COLOR_TRANSPARENT);
+        // Obstacles. Roughly-square obstacles render as round bumper pegs (with
+        // inner highlight) for that pinball look; rectangular ones stay as
+        // wooden planks.
         for (var i = 0; i < _obstacles.size(); i++) {
             var ob = _obstacles[i];
-            var sx = cToS_X(ob[0] - ob[2]); var sy = cToS_Y(ob[1] - ob[3]);
-            var sw = cToS_R(ob[2] * 2 + 1); var sh = cToS_R(ob[3] * 2 + 1);
-            if (sw < 4) { sw = 4; } if (sh < 4) { sh = 4; }
-            dc.fillRoundedRectangle(sx, sy, sw, sh, 2);
-            dc.setColor(0x885533, Graphics.COLOR_TRANSPARENT);
-            dc.drawRoundedRectangle(sx, sy, sw, sh, 2);
-            dc.setColor(0x664422, Graphics.COLOR_TRANSPARENT);
+            var minSide = ob[2] < ob[3] ? ob[2] : ob[3];
+            if (minSide < 1) { minSide = 1; }
+            var maxSide = ob[2] > ob[3] ? ob[2] : ob[3];
+            var ratio = maxSide * 100 / minSide;
+            if (ratio <= 130) {
+                var cxp = cToS_X(ob[0]); var cyp = cToS_Y(ob[1]);
+                var rp  = cToS_R((ob[2] + ob[3]) / 2 + 1);
+                if (rp < 4) { rp = 4; }
+                // Outer ring
+                dc.setColor(0x442211, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(cxp, cyp, rp + 1);
+                // Brown body
+                dc.setColor(0x884422, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(cxp, cyp, rp);
+                // Highlight (top-left)
+                dc.setColor(0xCC8855, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(cxp - rp/3, cyp - rp/3, rp/3 + 1);
+                // Centre spark
+                dc.setColor(0xFFCC88, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(cxp - rp/3, cyp - rp/3, rp/6);
+            } else {
+                var sx = cToS_X(ob[0] - ob[2]); var sy = cToS_Y(ob[1] - ob[3]);
+                var sw = cToS_R(ob[2] * 2 + 1); var sh = cToS_R(ob[3] * 2 + 1);
+                if (sw < 4) { sw = 4; } if (sh < 4) { sh = 4; }
+                dc.setColor(0x442211, Graphics.COLOR_TRANSPARENT);
+                dc.fillRoundedRectangle(sx - 1, sy - 1, sw + 2, sh + 2, 2);
+                dc.setColor(0x664422, Graphics.COLOR_TRANSPARENT);
+                dc.fillRoundedRectangle(sx, sy, sw, sh, 2);
+                dc.setColor(0xAA7744, Graphics.COLOR_TRANSPARENT);
+                dc.drawRoundedRectangle(sx, sy, sw, sh, 2);
+            }
         }
 
-        // Walls (white-ish boundary lines)
-        dc.setColor(0xCCDDBB, Graphics.COLOR_TRANSPARENT);
-        for (var i = 0; i < _walls.size(); i++) {
-            var wl = _walls[i];
-            var sx1 = cToS_X(wl[0]); var sy1 = cToS_Y(wl[1]);
-            var sx2 = cToS_X(wl[2]); var sy2 = cToS_Y(wl[3]);
-            dc.drawLine(sx1, sy1, sx2, sy2);
-            dc.drawLine(sx1+1, sy1, sx2+1, sy2);
+        // Walls — two visual themes:
+        //   white (default): thin painted "rail" lines (CCDDBB)
+        //   brown: chunky pinball-bumper rails drawn with setPenWidth so
+        //   diagonal walls also look correct.
+        if (_brownWalls) {
+            // Dark outer outline
+            dc.setPenWidth(7);
+            dc.setColor(0x442211, Graphics.COLOR_TRANSPARENT);
+            for (var i = 0; i < _walls.size(); i++) {
+                var wl = _walls[i];
+                dc.drawLine(cToS_X(wl[0]), cToS_Y(wl[1]),
+                            cToS_X(wl[2]), cToS_Y(wl[3]));
+            }
+            // Brown body
+            dc.setPenWidth(5);
+            dc.setColor(0x885533, Graphics.COLOR_TRANSPARENT);
+            for (var i = 0; i < _walls.size(); i++) {
+                var wl = _walls[i];
+                dc.drawLine(cToS_X(wl[0]), cToS_Y(wl[1]),
+                            cToS_X(wl[2]), cToS_Y(wl[3]));
+            }
+            // Bright centre highlight
+            dc.setPenWidth(1);
+            dc.setColor(0xBB8855, Graphics.COLOR_TRANSPARENT);
+            for (var i = 0; i < _walls.size(); i++) {
+                var wl = _walls[i];
+                dc.drawLine(cToS_X(wl[0]), cToS_Y(wl[1]),
+                            cToS_X(wl[2]), cToS_Y(wl[3]));
+            }
+        } else {
+            dc.setPenWidth(2);
+            dc.setColor(0xCCDDBB, Graphics.COLOR_TRANSPARENT);
+            for (var i = 0; i < _walls.size(); i++) {
+                var wl = _walls[i];
+                dc.drawLine(cToS_X(wl[0]), cToS_Y(wl[1]),
+                            cToS_X(wl[2]), cToS_Y(wl[3]));
+            }
+            dc.setPenWidth(1);
         }
 
         // Tee marker
@@ -678,7 +1031,7 @@ class BitochiMinigolfView extends WatchUi.View {
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, 0, _w, _vpY);
         dc.setColor(0x88CCAA, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(4, 4, Graphics.FONT_XTINY, "Hole " + hole + "/9", Graphics.TEXT_JUSTIFY_LEFT);
+        dc.drawText(4, 4, Graphics.FONT_XTINY, "Hole " + hole + "/" + MG_HOLES, Graphics.TEXT_JUSTIFY_LEFT);
         dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w/2, 4, Graphics.FONT_XTINY, "Par " + _par[_holeIdx], Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xCCEEFF, Graphics.COLOR_TRANSPARENT);
@@ -714,6 +1067,7 @@ class BitochiMinigolfView extends WatchUi.View {
     }
 
     // ── Game over ─────────────────────────────────────────────────────────────
+    // Two-column scorecard so all 20 holes fit even on small displays.
     hidden function drawGameOver(dc) {
         dc.setColor(0x050D04, 0x050D04); dc.clear();
         var r = _w / 2;
@@ -721,35 +1075,48 @@ class BitochiMinigolfView extends WatchUi.View {
         dc.fillCircle(r, r, r - 2);
 
         dc.setColor(0x44FF88, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h * 8 / 100, Graphics.FONT_MEDIUM, "GAME OVER", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, _h * 6 / 100, Graphics.FONT_MEDIUM, "GAME OVER", Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Score card
-        var par18 = 0; for (var i = 0; i < 9; i++) { par18 += _par[i]; }
-        var diff = _totalStrokes - par18;
+        var totalPar = 0; for (var i = 0; i < MG_HOLES; i++) { totalPar += _par[i]; }
+        var diff = _totalStrokes - totalPar;
         var diffStr = diff == 0 ? "E" : (diff > 0 ? "+" + diff : "" + diff);
         dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h * 22 / 100, Graphics.FONT_XTINY,
-            "Total: " + _totalStrokes + " (" + diffStr + ")", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, _h * 18 / 100, Graphics.FONT_XTINY,
+            "Total " + _totalStrokes + " / par " + totalPar + " (" + diffStr + ")",
+            Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Mini scorecard rows
-        var rowH = _h * 44 / 100 / 9;
-        if (rowH < 12) { rowH = 12; }
-        for (var i = 0; i < 9; i++) {
-            var ry = _h * 32 / 100 + i * rowH;
-            if (ry + rowH > _h * 80 / 100) { break; }
+        // Two columns × 10 rows
+        var topY  = _h * 26 / 100;
+        var botY  = _h * 80 / 100;
+        var rowsH = botY - topY;
+        var rowH  = rowsH / 10;
+        if (rowH < 10) { rowH = 10; }
+        var colLX = _w * 28 / 100;
+        var colRX = _w * 72 / 100;
+
+        for (var i = 0; i < MG_HOLES; i++) {
+            var col = (i < 10) ? 0 : 1;
+            var row = i % 10;
+            var rx = (col == 0) ? colLX : colRX;
+            var ry = topY + row * rowH;
+            if (ry + rowH > _h - 4) { break; }
+
             var sc = _scoreCard[i];
             var pd = (sc >= 0) ? sc - _par[i] : 0;
-            var clr = 0xCCCCCC;
-            if (pd < 0) { clr = 0x44FF88; }
-            else if (pd == 0) { clr = 0xFFFFFF; }
-            else if (pd == 1) { clr = 0xFFAA44; }
-            else { clr = 0xFF5544; }
+            var clr = 0x888888;
+            if (sc >= 0) {
+                if (pd < 0)        { clr = 0x44FF88; }
+                else if (pd == 0)  { clr = 0xFFFFFF; }
+                else if (pd == 1)  { clr = 0xFFAA44; }
+                else               { clr = 0xFF5544; }
+            }
             dc.setColor(clr, Graphics.COLOR_TRANSPARENT);
-            var txt = "H" + (i+1) + ": " + (sc >= 0 ? "" + sc : "-") + " (par " + _par[i] + ")";
-            dc.drawText(_w/2, ry, Graphics.FONT_XTINY, txt, Graphics.TEXT_JUSTIFY_CENTER);
+            var label = (sc >= 0) ? sc.toString() : "-";
+            dc.drawText(rx, ry, Graphics.FONT_XTINY,
+                "H" + (i + 1) + " " + label, Graphics.TEXT_JUSTIFY_CENTER);
         }
 
         dc.setColor((_tick % 10 < 5) ? 0x44FF88 : 0x226633, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h * 86 / 100, Graphics.FONT_XTINY, "Tap for menu", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, _h * 92 / 100, Graphics.FONT_XTINY, "Tap for menu", Graphics.TEXT_JUSTIFY_CENTER);
     }
 }

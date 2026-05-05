@@ -1,0 +1,2164 @@
+[ @file = "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc"; @line = 1; @symbol_usingdef<0> = [Toybox,1,6,12]; @symbol_usingdef<1> = [WatchUi,1,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc"; @line = 2; @symbol_usingdef<0> = [Toybox,2,6,12]; @symbol_usingdef<1> = [Graphics,2,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc"; @line = 3; @symbol_usingdef<0> = [Toybox,3,6,12]; @symbol_usingdef<1> = [System,3,13,19]; ]
+using Toybox.System;
+[ @file = "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc"; @line = 4; @symbol_usingdef<0> = [Toybox,4,6,12]; @symbol_usingdef<1> = [Lang,4,13,17]; ]
+using Toybox.Lang;
+[ @file = "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc"; @line = 5; @symbol_usingdef<0> = [Toybox,5,6,12]; @symbol_usingdef<1> = [Time,5,13,17]; ]
+using Toybox.Time;
+[ @file = "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc"; @line = 6; @symbol_usingdef<0> = [Toybox,6,6,12]; @symbol_usingdef<1> = [Time,6,13,17]; @symbol_usingdef<2> = [Gregorian,6,18,27]; ]
+using Toybox.Time.Gregorian;
+[ @file = "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc"; @line = 15; @symbol_classdef = [JSAlertView,15,6,17]; @symbol_extends<0> = [WatchUi,15,26,33]; @symbol_extends<1> = [WatchFace,15,34,43]; ]
+class JSAlertView extends WatchUi.WatchFace {
+    [ @file = "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc"; @line = 15; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc"; @line = 15; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc"; @line = 16; @position = 15; @symbol_vardef = [_w,16,15,17]; ]
+    protected
+    var _w;
+    [ @file = "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc"; @line = 16; @position = 30; @symbol_vardef = [_h,16,30,32]; ]
+    protected
+    var _h;
+    [ @file = "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc"; @line = 18; @symbol_functiondef = [initialize,18,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_18_26_18_72_start:
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 18 28 ]
+        symbol [ WatchFace %tmp.2 18 28 37 ];
+        %tmp.2 = getv ? :WatchFace;
+        symbol [ initialize %tmp.3 18 38 48 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 18 52 ]
+        %tmp.4 = 454;
+        symbol [ _w ? 18 52 54 ];
+        putv self :_w %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 18 62 ]
+        %tmp.5 = 454;
+        symbol [ _h ? 18 62 64 ];
+        putv self :_h %tmp.5;
+_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_18_26_18_72_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc"; @line = 19; @symbol_functiondef = [onLayout,19,13,21]; @symbol_param<0> = [dc,19,22,24]; ]
+    function onLayout(dc) {
+_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_19_26_19_69_start:
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 19 28 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 19 33 35 ];
+        symbol [ getWidth %tmp.2 19 36 44 ];
+        %tmp.2 = getv function %tmp.1 :getWidth;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        symbol [ _w ? 19 28 30 ];
+        putv self :_w %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 19 48 ]
+        %tmp.4 = lgetv %dc;
+        symbol [ dc %tmp.4 19 53 55 ];
+        symbol [ getHeight %tmp.5 19 56 65 ];
+        %tmp.5 = getv function %tmp.4 :getHeight;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        symbol [ _h ? 19 48 50 ];
+        putv self :_h %tmp.6;
+_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_19_26_19_69_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc"; @line = 20; @symbol_functiondef = [onShow,20,13,19]; ]
+    function onShow() {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc"; @line = 21; @symbol_functiondef = [onHide,21,13,19]; ]
+    function onHide() {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc"; @line = 22; @symbol_functiondef = [onEnterSleep,22,13,25]; ]
+    function onEnterSleep() {
+_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_22_28_22_55_start:
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 22 30 ]
+        symbol [ WatchUi %tmp.1 22 30 37 ];
+        %tmp.1 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.2 22 38 51 ];
+        %tmp.2 = getv function %tmp.1 :requestUpdate;
+        invoke %tmp.1 %tmp.2();
+_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_22_28_22_55_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc"; @line = 23; @symbol_functiondef = [onExitSleep,23,13,24]; ]
+    function onExitSleep() {
+_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_23_28_23_55_start:
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 23 30 ]
+        symbol [ WatchUi %tmp.1 23 30 37 ];
+        %tmp.1 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.2 23 38 51 ];
+        %tmp.2 = getv function %tmp.1 :requestUpdate;
+        invoke %tmp.1 %tmp.2();
+_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_23_28_23_55_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc"; @line = 25; @symbol_functiondef = [onUpdate,25,13,21]; @symbol_param<0> = [dc,25,22,24]; ]
+    function onUpdate(dc) {
+_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_25_26_29_4_start:
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 26 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 26 13 15 ];
+        symbol [ getWidth %tmp.2 26 16 24 ];
+        %tmp.2 = getv function %tmp.1 :getWidth;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        symbol [ _w ? 26 8 10 ];
+        putv self :_w %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 26 28 ]
+        %tmp.4 = lgetv %dc;
+        symbol [ dc %tmp.4 26 33 35 ];
+        symbol [ getHeight %tmp.5 26 36 45 ];
+        %tmp.5 = getv function %tmp.4 :getHeight;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        symbol [ _h ? 26 28 30 ];
+        putv self :_h %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 27 8 ]
+        %tmp.7 = self;
+        symbol [ _drawPage %tmp.8 27 8 17 ];
+        %tmp.8 = getv function %tmp.7 :_drawPage;
+        %tmp.9 = lgetv %dc;
+        symbol [ dc %tmp.9 27 18 20 ];
+        invoke %tmp.7 %tmp.8(%tmp.9);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 28 8 ]
+        %tmp.10 = self;
+        symbol [ _drawDialog %tmp.11 28 8 19 ];
+        %tmp.11 = getv function %tmp.10 :_drawDialog;
+        %tmp.12 = lgetv %dc;
+        symbol [ dc %tmp.12 28 20 22 ];
+        invoke %tmp.10 %tmp.11(%tmp.12);
+_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_25_26_29_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc"; @line = 32; @symbol_functiondef = [_drawPage,32,20,29]; @symbol_param<0> = [dc,32,30,32]; ]
+    protected
+    function _drawPage(dc) {
+_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_32_34_70_4_start:
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 34 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 34 8 10 ];
+        symbol [ setColor %tmp.2 34 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        %tmp.3 = 0xD4D0C8;
+        %tmp.4 = 0xD4D0C8;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.4);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 35 8 ]
+        %tmp.5 = lgetv %dc;
+        symbol [ dc %tmp.5 35 8 10 ];
+        symbol [ clear %tmp.6 35 11 16 ];
+        %tmp.6 = getv function %tmp.5 :clear;
+        invoke %tmp.5 %tmp.6();
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 37 8 ]
+        [ "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_32_34_70_4_start" "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_32_34_70_4_stop" ]
+        %cx.1 = local;
+        symbol [ cx %cx.1 37 12 14 ];
+        symbol [ _w %tmp.8 37 17 19 ];
+        %tmp.8 = getv ? :_w;
+        %tmp.9 = 2;
+        %tmp.10 = div %tmp.8 %tmp.9;
+        lputv %cx.1 %tmp.10;
+        symbol [ cx %cx.1 37 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 40 8 ]
+        %tmp.11 = lgetv %dc;
+        symbol [ dc %tmp.11 40 8 10 ];
+        symbol [ setColor %tmp.12 40 11 19 ];
+        %tmp.12 = getv function %tmp.11 :setColor;
+        %tmp.13 = 0xECE9D8;
+        symbol [ Graphics %tmp.14 40 30 38 ];
+        %tmp.14 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.15 40 39 56 ];
+        %tmp.15 = getv %tmp.14 :COLOR_TRANSPARENT;
+        invoke %tmp.11 %tmp.12(%tmp.13, %tmp.15);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 41 8 ]
+        %tmp.16 = lgetv %dc;
+        symbol [ dc %tmp.16 41 8 10 ];
+        symbol [ fillRectangle %tmp.17 41 11 24 ];
+        %tmp.17 = getv function %tmp.16 :fillRectangle;
+        %tmp.18 = lgetv %cx.1;
+        symbol [ cx %tmp.18 41 25 27 ];
+        %tmp.19 = 160;
+        %tmp.20 = sub %tmp.18 %tmp.19;
+        symbol [ _h %tmp.22 41 35 37 ];
+        %tmp.22 = getv ? :_h;
+        %tmp.23 = 9;
+        %tmp.24 = mul %tmp.22 %tmp.23;
+        %tmp.25 = 100;
+        %tmp.26 = div %tmp.24 %tmp.25;
+        %tmp.27 = 320;
+        %tmp.28 = 52;
+        invoke %tmp.16 %tmp.17(%tmp.20, %tmp.26, %tmp.27, %tmp.28);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 42 8 ]
+        %tmp.29 = lgetv %dc;
+        symbol [ dc %tmp.29 42 8 10 ];
+        symbol [ setColor %tmp.30 42 11 19 ];
+        %tmp.30 = getv function %tmp.29 :setColor;
+        %tmp.31 = 0x808080;
+        symbol [ Graphics %tmp.32 42 30 38 ];
+        %tmp.32 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.33 42 39 56 ];
+        %tmp.33 = getv %tmp.32 :COLOR_TRANSPARENT;
+        invoke %tmp.29 %tmp.30(%tmp.31, %tmp.33);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 43 8 ]
+        %tmp.34 = lgetv %dc;
+        symbol [ dc %tmp.34 43 8 10 ];
+        symbol [ drawLine %tmp.35 43 11 19 ];
+        %tmp.35 = getv function %tmp.34 :drawLine;
+        %tmp.36 = lgetv %cx.1;
+        symbol [ cx %tmp.36 43 20 22 ];
+        %tmp.37 = 160;
+        %tmp.38 = sub %tmp.36 %tmp.37;
+        symbol [ _h %tmp.40 43 30 32 ];
+        %tmp.40 = getv ? :_h;
+        %tmp.41 = 9;
+        %tmp.42 = mul %tmp.40 %tmp.41;
+        %tmp.43 = 100;
+        %tmp.44 = div %tmp.42 %tmp.43;
+        %tmp.45 = 52;
+        %tmp.46 = add %tmp.44 %tmp.45;
+        %tmp.47 = lgetv %cx.1;
+        symbol [ cx %tmp.47 43 49 51 ];
+        %tmp.48 = 160;
+        %tmp.49 = add %tmp.47 %tmp.48;
+        symbol [ _h %tmp.51 43 59 61 ];
+        %tmp.51 = getv ? :_h;
+        %tmp.52 = 9;
+        %tmp.53 = mul %tmp.51 %tmp.52;
+        %tmp.54 = 100;
+        %tmp.55 = div %tmp.53 %tmp.54;
+        %tmp.56 = 52;
+        %tmp.57 = add %tmp.55 %tmp.56;
+        invoke %tmp.34 %tmp.35(%tmp.38, %tmp.46, %tmp.49, %tmp.57);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 46 8 ]
+        %tmp.58 = lgetv %dc;
+        symbol [ dc %tmp.58 46 8 10 ];
+        symbol [ setColor %tmp.59 46 11 19 ];
+        %tmp.59 = getv function %tmp.58 :setColor;
+        %tmp.60 = 0xFFFFFF;
+        symbol [ Graphics %tmp.61 46 30 38 ];
+        %tmp.61 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.62 46 39 56 ];
+        %tmp.62 = getv %tmp.61 :COLOR_TRANSPARENT;
+        invoke %tmp.58 %tmp.59(%tmp.60, %tmp.62);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 47 8 ]
+        %tmp.63 = lgetv %dc;
+        symbol [ dc %tmp.63 47 8 10 ];
+        symbol [ fillRectangle %tmp.64 47 11 24 ];
+        %tmp.64 = getv function %tmp.63 :fillRectangle;
+        %tmp.65 = lgetv %cx.1;
+        symbol [ cx %tmp.65 47 25 27 ];
+        %tmp.66 = 120;
+        %tmp.67 = sub %tmp.65 %tmp.66;
+        symbol [ _h %tmp.69 47 35 37 ];
+        %tmp.69 = getv ? :_h;
+        %tmp.70 = 9;
+        %tmp.71 = mul %tmp.69 %tmp.70;
+        %tmp.72 = 100;
+        %tmp.73 = div %tmp.71 %tmp.72;
+        %tmp.74 = 30;
+        %tmp.75 = add %tmp.73 %tmp.74;
+        %tmp.76 = 240;
+        %tmp.77 = 16;
+        invoke %tmp.63 %tmp.64(%tmp.67, %tmp.75, %tmp.76, %tmp.77);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 48 8 ]
+        %tmp.78 = lgetv %dc;
+        symbol [ dc %tmp.78 48 8 10 ];
+        symbol [ setColor %tmp.79 48 11 19 ];
+        %tmp.79 = getv function %tmp.78 :setColor;
+        %tmp.80 = 0x808080;
+        symbol [ Graphics %tmp.81 48 30 38 ];
+        %tmp.81 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.82 48 39 56 ];
+        %tmp.82 = getv %tmp.81 :COLOR_TRANSPARENT;
+        invoke %tmp.78 %tmp.79(%tmp.80, %tmp.82);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 49 8 ]
+        %tmp.83 = lgetv %dc;
+        symbol [ dc %tmp.83 49 8 10 ];
+        symbol [ drawRectangle %tmp.84 49 11 24 ];
+        %tmp.84 = getv function %tmp.83 :drawRectangle;
+        %tmp.85 = lgetv %cx.1;
+        symbol [ cx %tmp.85 49 25 27 ];
+        %tmp.86 = 120;
+        %tmp.87 = sub %tmp.85 %tmp.86;
+        symbol [ _h %tmp.89 49 35 37 ];
+        %tmp.89 = getv ? :_h;
+        %tmp.90 = 9;
+        %tmp.91 = mul %tmp.89 %tmp.90;
+        %tmp.92 = 100;
+        %tmp.93 = div %tmp.91 %tmp.92;
+        %tmp.94 = 30;
+        %tmp.95 = add %tmp.93 %tmp.94;
+        %tmp.96 = 240;
+        %tmp.97 = 16;
+        invoke %tmp.83 %tmp.84(%tmp.87, %tmp.95, %tmp.96, %tmp.97);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 50 8 ]
+        %tmp.98 = lgetv %dc;
+        symbol [ dc %tmp.98 50 8 10 ];
+        symbol [ setColor %tmp.99 50 11 19 ];
+        %tmp.99 = getv function %tmp.98 :setColor;
+        %tmp.100 = 0x2266CC;
+        symbol [ Graphics %tmp.101 50 30 38 ];
+        %tmp.101 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.102 50 39 56 ];
+        %tmp.102 = getv %tmp.101 :COLOR_TRANSPARENT;
+        invoke %tmp.98 %tmp.99(%tmp.100, %tmp.102);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 51 8 ]
+        %tmp.103 = lgetv %dc;
+        symbol [ dc %tmp.103 51 8 10 ];
+        symbol [ drawText %tmp.104 51 11 19 ];
+        %tmp.104 = getv function %tmp.103 :drawText;
+        %tmp.105 = lgetv %cx.1;
+        symbol [ cx %tmp.105 51 20 22 ];
+        symbol [ _h %tmp.107 51 24 26 ];
+        %tmp.107 = getv ? :_h;
+        %tmp.108 = 9;
+        %tmp.109 = mul %tmp.107 %tmp.108;
+        %tmp.110 = 100;
+        %tmp.111 = div %tmp.109 %tmp.110;
+        %tmp.112 = 30;
+        %tmp.113 = add %tmp.111 %tmp.112;
+        symbol [ Graphics %tmp.114 51 43 51 ];
+        %tmp.114 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.115 51 52 62 ];
+        %tmp.115 = getv %tmp.114 :FONT_XTINY;
+        %tmp.116 = "http://example.com/";
+        symbol [ Graphics %tmp.117 51 87 95 ];
+        %tmp.117 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.118 51 96 115 ];
+        %tmp.118 = getv %tmp.117 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.103 %tmp.104(%tmp.105, %tmp.113, %tmp.115, %tmp.116, %tmp.118);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 54 8 ]
+        %tmp.119 = lgetv %dc;
+        symbol [ dc %tmp.119 54 8 10 ];
+        symbol [ setColor %tmp.120 54 11 19 ];
+        %tmp.120 = getv function %tmp.119 :setColor;
+        %tmp.121 = 0xFFFFFF;
+        symbol [ Graphics %tmp.122 54 30 38 ];
+        %tmp.122 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.123 54 39 56 ];
+        %tmp.123 = getv %tmp.122 :COLOR_TRANSPARENT;
+        invoke %tmp.119 %tmp.120(%tmp.121, %tmp.123);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 55 8 ]
+        %tmp.124 = lgetv %dc;
+        symbol [ dc %tmp.124 55 8 10 ];
+        symbol [ fillCircle %tmp.125 55 11 21 ];
+        %tmp.125 = getv function %tmp.124 :fillCircle;
+        %tmp.126 = lgetv %cx.1;
+        symbol [ cx %tmp.126 55 22 24 ];
+        %tmp.127 = 140;
+        %tmp.128 = sub %tmp.126 %tmp.127;
+        symbol [ _h %tmp.130 55 32 34 ];
+        %tmp.130 = getv ? :_h;
+        %tmp.131 = 9;
+        %tmp.132 = mul %tmp.130 %tmp.131;
+        %tmp.133 = 100;
+        %tmp.134 = div %tmp.132 %tmp.133;
+        %tmp.135 = 12;
+        %tmp.136 = add %tmp.134 %tmp.135;
+        %tmp.137 = 10;
+        invoke %tmp.124 %tmp.125(%tmp.128, %tmp.136, %tmp.137);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 56 8 ]
+        %tmp.138 = lgetv %dc;
+        symbol [ dc %tmp.138 56 8 10 ];
+        symbol [ setColor %tmp.139 56 11 19 ];
+        %tmp.139 = getv function %tmp.138 :setColor;
+        %tmp.140 = 0x1E5FB0;
+        symbol [ Graphics %tmp.141 56 30 38 ];
+        %tmp.141 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.142 56 39 56 ];
+        %tmp.142 = getv %tmp.141 :COLOR_TRANSPARENT;
+        invoke %tmp.138 %tmp.139(%tmp.140, %tmp.142);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 57 8 ]
+        %tmp.143 = lgetv %dc;
+        symbol [ dc %tmp.143 57 8 10 ];
+        symbol [ fillCircle %tmp.144 57 11 21 ];
+        %tmp.144 = getv function %tmp.143 :fillCircle;
+        %tmp.145 = lgetv %cx.1;
+        symbol [ cx %tmp.145 57 22 24 ];
+        %tmp.146 = 140;
+        %tmp.147 = sub %tmp.145 %tmp.146;
+        symbol [ _h %tmp.149 57 32 34 ];
+        %tmp.149 = getv ? :_h;
+        %tmp.150 = 9;
+        %tmp.151 = mul %tmp.149 %tmp.150;
+        %tmp.152 = 100;
+        %tmp.153 = div %tmp.151 %tmp.152;
+        %tmp.154 = 12;
+        %tmp.155 = add %tmp.153 %tmp.154;
+        %tmp.156 = 8;
+        invoke %tmp.143 %tmp.144(%tmp.147, %tmp.155, %tmp.156);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 58 8 ]
+        %tmp.157 = lgetv %dc;
+        symbol [ dc %tmp.157 58 8 10 ];
+        symbol [ setColor %tmp.158 58 11 19 ];
+        %tmp.158 = getv function %tmp.157 :setColor;
+        %tmp.159 = 0xFFFFFF;
+        symbol [ Graphics %tmp.160 58 30 38 ];
+        %tmp.160 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.161 58 39 56 ];
+        %tmp.161 = getv %tmp.160 :COLOR_TRANSPARENT;
+        invoke %tmp.157 %tmp.158(%tmp.159, %tmp.161);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 59 8 ]
+        %tmp.162 = lgetv %dc;
+        symbol [ dc %tmp.162 59 8 10 ];
+        symbol [ drawText %tmp.163 59 11 19 ];
+        %tmp.163 = getv function %tmp.162 :drawText;
+        %tmp.164 = lgetv %cx.1;
+        symbol [ cx %tmp.164 59 20 22 ];
+        %tmp.165 = 145;
+        %tmp.166 = sub %tmp.164 %tmp.165;
+        symbol [ _h %tmp.168 59 30 32 ];
+        %tmp.168 = getv ? :_h;
+        %tmp.169 = 9;
+        %tmp.170 = mul %tmp.168 %tmp.169;
+        %tmp.171 = 100;
+        %tmp.172 = div %tmp.170 %tmp.171;
+        %tmp.173 = 3;
+        %tmp.174 = add %tmp.172 %tmp.173;
+        symbol [ Graphics %tmp.175 59 48 56 ];
+        %tmp.175 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.176 59 57 67 ];
+        %tmp.176 = getv %tmp.175 :FONT_XTINY;
+        %tmp.177 = "e";
+        symbol [ Graphics %tmp.178 59 74 82 ];
+        %tmp.178 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_LEFT %tmp.179 59 83 100 ];
+        %tmp.179 = getv %tmp.178 :TEXT_JUSTIFY_LEFT;
+        invoke %tmp.162 %tmp.163(%tmp.166, %tmp.174, %tmp.176, %tmp.177, %tmp.179);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 62 8 ]
+        %tmp.180 = lgetv %dc;
+        symbol [ dc %tmp.180 62 8 10 ];
+        symbol [ setColor %tmp.181 62 11 19 ];
+        %tmp.181 = getv function %tmp.180 :setColor;
+        %tmp.182 = 0xAAAAAA;
+        symbol [ Graphics %tmp.183 62 30 38 ];
+        %tmp.183 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.184 62 39 56 ];
+        %tmp.184 = getv %tmp.183 :COLOR_TRANSPARENT;
+        invoke %tmp.180 %tmp.181(%tmp.182, %tmp.184);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 63 8 ]
+        %tmp.185 = lgetv %dc;
+        symbol [ dc %tmp.185 63 8 10 ];
+        symbol [ fillRectangle %tmp.186 63 11 24 ];
+        %tmp.186 = getv function %tmp.185 :fillRectangle;
+        %tmp.187 = lgetv %cx.1;
+        symbol [ cx %tmp.187 63 25 27 ];
+        %tmp.188 = 120;
+        %tmp.189 = sub %tmp.187 %tmp.188;
+        symbol [ _h %tmp.191 63 35 37 ];
+        %tmp.191 = getv ? :_h;
+        %tmp.192 = 82;
+        %tmp.193 = mul %tmp.191 %tmp.192;
+        %tmp.194 = 100;
+        %tmp.195 = div %tmp.193 %tmp.194;
+        %tmp.196 = 240;
+        %tmp.197 = 3;
+        invoke %tmp.185 %tmp.186(%tmp.189, %tmp.195, %tmp.196, %tmp.197);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 64 8 ]
+        %tmp.198 = lgetv %dc;
+        symbol [ dc %tmp.198 64 8 10 ];
+        symbol [ fillRectangle %tmp.199 64 11 24 ];
+        %tmp.199 = getv function %tmp.198 :fillRectangle;
+        %tmp.200 = lgetv %cx.1;
+        symbol [ cx %tmp.200 64 25 27 ];
+        %tmp.201 = 100;
+        %tmp.202 = sub %tmp.200 %tmp.201;
+        symbol [ _h %tmp.204 64 35 37 ];
+        %tmp.204 = getv ? :_h;
+        %tmp.205 = 87;
+        %tmp.206 = mul %tmp.204 %tmp.205;
+        %tmp.207 = 100;
+        %tmp.208 = div %tmp.206 %tmp.207;
+        %tmp.209 = 200;
+        %tmp.210 = 3;
+        invoke %tmp.198 %tmp.199(%tmp.202, %tmp.208, %tmp.209, %tmp.210);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 65 8 ]
+        %tmp.211 = lgetv %dc;
+        symbol [ dc %tmp.211 65 8 10 ];
+        symbol [ fillRectangle %tmp.212 65 11 24 ];
+        %tmp.212 = getv function %tmp.211 :fillRectangle;
+        %tmp.213 = lgetv %cx.1;
+        symbol [ cx %tmp.213 65 25 27 ];
+        %tmp.214 = 110;
+        %tmp.215 = sub %tmp.213 %tmp.214;
+        symbol [ _h %tmp.217 65 35 37 ];
+        %tmp.217 = getv ? :_h;
+        %tmp.218 = 92;
+        %tmp.219 = mul %tmp.217 %tmp.218;
+        %tmp.220 = 100;
+        %tmp.221 = div %tmp.219 %tmp.220;
+        %tmp.222 = 220;
+        %tmp.223 = 3;
+        invoke %tmp.211 %tmp.212(%tmp.215, %tmp.221, %tmp.222, %tmp.223);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 68 8 ]
+        %tmp.224 = lgetv %dc;
+        symbol [ dc %tmp.224 68 8 10 ];
+        symbol [ setColor %tmp.225 68 11 19 ];
+        %tmp.225 = getv function %tmp.224 :setColor;
+        %tmp.226 = 0x884400;
+        symbol [ Graphics %tmp.227 68 30 38 ];
+        %tmp.227 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.228 68 39 56 ];
+        %tmp.228 = getv %tmp.227 :COLOR_TRANSPARENT;
+        invoke %tmp.224 %tmp.225(%tmp.226, %tmp.228);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 69 8 ]
+        %tmp.229 = lgetv %dc;
+        symbol [ dc %tmp.229 69 8 10 ];
+        symbol [ drawText %tmp.230 69 11 19 ];
+        %tmp.230 = getv function %tmp.229 :drawText;
+        %tmp.231 = lgetv %cx.1;
+        symbol [ cx %tmp.231 69 20 22 ];
+        symbol [ _h %tmp.233 69 24 26 ];
+        %tmp.233 = getv ? :_h;
+        %tmp.234 = 95;
+        %tmp.235 = mul %tmp.233 %tmp.234;
+        %tmp.236 = 100;
+        %tmp.237 = div %tmp.235 %tmp.236;
+        symbol [ Graphics %tmp.238 69 39 47 ];
+        %tmp.238 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.239 69 48 58 ];
+        %tmp.239 = getv %tmp.238 :FONT_XTINY;
+        %tmp.240 = "alert(new Date().toTimeString())";
+        symbol [ Graphics %tmp.241 69 96 104 ];
+        %tmp.241 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.242 69 105 124 ];
+        %tmp.242 = getv %tmp.241 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.229 %tmp.230(%tmp.231, %tmp.237, %tmp.239, %tmp.240, %tmp.242);
+_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_32_34_70_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc"; @line = 73; @symbol_functiondef = [_drawDialog,73,20,31]; @symbol_param<0> = [dc,73,32,34]; ]
+    protected
+    function _drawDialog(dc) {
+_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_start:
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 74 8 ]
+        [ "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_start" "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_stop" ]
+        %cx.1 = local;
+        symbol [ cx %cx.1 74 12 14 ];
+        symbol [ _w %tmp.2 74 17 19 ];
+        %tmp.2 = getv ? :_w;
+        %tmp.3 = 2;
+        %tmp.4 = div %tmp.2 %tmp.3;
+        lputv %cx.1 %tmp.4;
+        symbol [ cx %cx.1 74 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 75 8 ]
+        [ "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_start" "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_stop" ]
+        %cy.2 = local;
+        symbol [ cy %cy.2 75 12 14 ];
+        symbol [ _h %tmp.6 75 17 19 ];
+        %tmp.6 = getv ? :_h;
+        %tmp.7 = 2;
+        %tmp.8 = div %tmp.6 %tmp.7;
+        %tmp.9 = 10;
+        %tmp.10 = sub %tmp.8 %tmp.9;
+        lputv %cy.2 %tmp.10;
+        symbol [ cy %cy.2 75 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 77 8 ]
+        [ "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_start" "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_stop" ]
+        %dW.3 = local;
+        symbol [ dW %dW.3 77 12 14 ];
+        %tmp.11 = 280;
+        lputv %dW.3 %tmp.11;
+        symbol [ dW %dW.3 77 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 77 22 ]
+        [ "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_start" "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_stop" ]
+        %dH.4 = local;
+        symbol [ dH %dH.4 77 26 28 ];
+        %tmp.12 = 148;
+        lputv %dH.4 %tmp.12;
+        symbol [ dH %dH.4 77 26 28 ];
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 78 8 ]
+        [ "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_start" "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_stop" ]
+        %dX.5 = local;
+        symbol [ dX %dX.5 78 12 14 ];
+        %tmp.13 = lgetv %cx.1;
+        symbol [ cx %tmp.13 78 17 19 ];
+        %tmp.14 = lgetv %dW.3;
+        symbol [ dW %tmp.14 78 22 24 ];
+        %tmp.15 = 2;
+        %tmp.16 = div %tmp.14 %tmp.15;
+        %tmp.17 = sub %tmp.13 %tmp.16;
+        lputv %dX.5 %tmp.17;
+        symbol [ dX %dX.5 78 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 79 8 ]
+        [ "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_start" "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_stop" ]
+        %dY.6 = local;
+        symbol [ dY %dY.6 79 12 14 ];
+        %tmp.18 = lgetv %cy.2;
+        symbol [ cy %tmp.18 79 17 19 ];
+        %tmp.19 = lgetv %dH.4;
+        symbol [ dH %tmp.19 79 22 24 ];
+        %tmp.20 = 2;
+        %tmp.21 = div %tmp.19 %tmp.20;
+        %tmp.22 = sub %tmp.18 %tmp.21;
+        lputv %dY.6 %tmp.22;
+        symbol [ dY %dY.6 79 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 82 8 ]
+        %tmp.23 = lgetv %dc;
+        symbol [ dc %tmp.23 82 8 10 ];
+        symbol [ setColor %tmp.24 82 11 19 ];
+        %tmp.24 = getv function %tmp.23 :setColor;
+        %tmp.25 = 0x404040;
+        symbol [ Graphics %tmp.26 82 30 38 ];
+        %tmp.26 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.27 82 39 56 ];
+        %tmp.27 = getv %tmp.26 :COLOR_TRANSPARENT;
+        invoke %tmp.23 %tmp.24(%tmp.25, %tmp.27);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 83 8 ]
+        %tmp.28 = lgetv %dc;
+        symbol [ dc %tmp.28 83 8 10 ];
+        symbol [ fillRectangle %tmp.29 83 11 24 ];
+        %tmp.29 = getv function %tmp.28 :fillRectangle;
+        %tmp.30 = lgetv %dX.5;
+        symbol [ dX %tmp.30 83 25 27 ];
+        %tmp.31 = 5;
+        %tmp.32 = add %tmp.30 %tmp.31;
+        %tmp.33 = lgetv %dY.6;
+        symbol [ dY %tmp.33 83 33 35 ];
+        %tmp.34 = 5;
+        %tmp.35 = add %tmp.33 %tmp.34;
+        %tmp.36 = lgetv %dW.3;
+        symbol [ dW %tmp.36 83 41 43 ];
+        %tmp.37 = lgetv %dH.4;
+        symbol [ dH %tmp.37 83 45 47 ];
+        invoke %tmp.28 %tmp.29(%tmp.32, %tmp.35, %tmp.36, %tmp.37);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 86 8 ]
+        %tmp.38 = lgetv %dc;
+        symbol [ dc %tmp.38 86 8 10 ];
+        symbol [ setColor %tmp.39 86 11 19 ];
+        %tmp.39 = getv function %tmp.38 :setColor;
+        %tmp.40 = 0xECE9D8;
+        symbol [ Graphics %tmp.41 86 30 38 ];
+        %tmp.41 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.42 86 39 56 ];
+        %tmp.42 = getv %tmp.41 :COLOR_TRANSPARENT;
+        invoke %tmp.38 %tmp.39(%tmp.40, %tmp.42);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 87 8 ]
+        %tmp.43 = lgetv %dc;
+        symbol [ dc %tmp.43 87 8 10 ];
+        symbol [ fillRectangle %tmp.44 87 11 24 ];
+        %tmp.44 = getv function %tmp.43 :fillRectangle;
+        %tmp.45 = lgetv %dX.5;
+        symbol [ dX %tmp.45 87 25 27 ];
+        %tmp.46 = lgetv %dY.6;
+        symbol [ dY %tmp.46 87 29 31 ];
+        %tmp.47 = lgetv %dW.3;
+        symbol [ dW %tmp.47 87 33 35 ];
+        %tmp.48 = lgetv %dH.4;
+        symbol [ dH %tmp.48 87 37 39 ];
+        invoke %tmp.43 %tmp.44(%tmp.45, %tmp.46, %tmp.47, %tmp.48);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 90 8 ]
+        %tmp.49 = lgetv %dc;
+        symbol [ dc %tmp.49 90 8 10 ];
+        symbol [ setColor %tmp.50 90 11 19 ];
+        %tmp.50 = getv function %tmp.49 :setColor;
+        %tmp.51 = 0xFFFFFF;
+        symbol [ Graphics %tmp.52 90 30 38 ];
+        %tmp.52 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.53 90 39 56 ];
+        %tmp.53 = getv %tmp.52 :COLOR_TRANSPARENT;
+        invoke %tmp.49 %tmp.50(%tmp.51, %tmp.53);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 91 8 ]
+        %tmp.54 = lgetv %dc;
+        symbol [ dc %tmp.54 91 8 10 ];
+        symbol [ drawLine %tmp.55 91 11 19 ];
+        %tmp.55 = getv function %tmp.54 :drawLine;
+        %tmp.56 = lgetv %dX.5;
+        symbol [ dX %tmp.56 91 20 22 ];
+        %tmp.57 = lgetv %dY.6;
+        symbol [ dY %tmp.57 91 24 26 ];
+        %tmp.58 = lgetv %dX.5;
+        symbol [ dX %tmp.58 91 28 30 ];
+        %tmp.59 = lgetv %dW.3;
+        symbol [ dW %tmp.59 91 33 35 ];
+        %tmp.60 = add %tmp.58 %tmp.59;
+        %tmp.61 = 1;
+        %tmp.62 = sub %tmp.60 %tmp.61;
+        %tmp.63 = lgetv %dY.6;
+        symbol [ dY %tmp.63 91 41 43 ];
+        invoke %tmp.54 %tmp.55(%tmp.56, %tmp.57, %tmp.62, %tmp.63);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 92 8 ]
+        %tmp.64 = lgetv %dc;
+        symbol [ dc %tmp.64 92 8 10 ];
+        symbol [ drawLine %tmp.65 92 11 19 ];
+        %tmp.65 = getv function %tmp.64 :drawLine;
+        %tmp.66 = lgetv %dX.5;
+        symbol [ dX %tmp.66 92 20 22 ];
+        %tmp.67 = lgetv %dY.6;
+        symbol [ dY %tmp.67 92 24 26 ];
+        %tmp.68 = lgetv %dX.5;
+        symbol [ dX %tmp.68 92 28 30 ];
+        %tmp.69 = lgetv %dY.6;
+        symbol [ dY %tmp.69 92 32 34 ];
+        %tmp.70 = lgetv %dH.4;
+        symbol [ dH %tmp.70 92 37 39 ];
+        %tmp.71 = add %tmp.69 %tmp.70;
+        %tmp.72 = 1;
+        %tmp.73 = sub %tmp.71 %tmp.72;
+        invoke %tmp.64 %tmp.65(%tmp.66, %tmp.67, %tmp.68, %tmp.73);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 93 8 ]
+        %tmp.74 = lgetv %dc;
+        symbol [ dc %tmp.74 93 8 10 ];
+        symbol [ setColor %tmp.75 93 11 19 ];
+        %tmp.75 = getv function %tmp.74 :setColor;
+        %tmp.76 = 0x000000;
+        symbol [ Graphics %tmp.77 93 30 38 ];
+        %tmp.77 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.78 93 39 56 ];
+        %tmp.78 = getv %tmp.77 :COLOR_TRANSPARENT;
+        invoke %tmp.74 %tmp.75(%tmp.76, %tmp.78);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 94 8 ]
+        %tmp.79 = lgetv %dc;
+        symbol [ dc %tmp.79 94 8 10 ];
+        symbol [ drawRectangle %tmp.80 94 11 24 ];
+        %tmp.80 = getv function %tmp.79 :drawRectangle;
+        %tmp.81 = lgetv %dX.5;
+        symbol [ dX %tmp.81 94 25 27 ];
+        %tmp.82 = lgetv %dY.6;
+        symbol [ dY %tmp.82 94 29 31 ];
+        %tmp.83 = lgetv %dW.3;
+        symbol [ dW %tmp.83 94 33 35 ];
+        %tmp.84 = lgetv %dH.4;
+        symbol [ dH %tmp.84 94 37 39 ];
+        invoke %tmp.79 %tmp.80(%tmp.81, %tmp.82, %tmp.83, %tmp.84);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 95 8 ]
+        %tmp.85 = lgetv %dc;
+        symbol [ dc %tmp.85 95 8 10 ];
+        symbol [ setColor %tmp.86 95 11 19 ];
+        %tmp.86 = getv function %tmp.85 :setColor;
+        %tmp.87 = 0x808080;
+        symbol [ Graphics %tmp.88 95 30 38 ];
+        %tmp.88 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.89 95 39 56 ];
+        %tmp.89 = getv %tmp.88 :COLOR_TRANSPARENT;
+        invoke %tmp.85 %tmp.86(%tmp.87, %tmp.89);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 96 8 ]
+        %tmp.90 = lgetv %dc;
+        symbol [ dc %tmp.90 96 8 10 ];
+        symbol [ drawLine %tmp.91 96 11 19 ];
+        %tmp.91 = getv function %tmp.90 :drawLine;
+        %tmp.92 = lgetv %dX.5;
+        symbol [ dX %tmp.92 96 20 22 ];
+        %tmp.93 = 1;
+        %tmp.94 = add %tmp.92 %tmp.93;
+        %tmp.95 = lgetv %dY.6;
+        symbol [ dY %tmp.95 96 28 30 ];
+        %tmp.96 = lgetv %dH.4;
+        symbol [ dH %tmp.96 96 33 35 ];
+        %tmp.97 = add %tmp.95 %tmp.96;
+        %tmp.98 = 2;
+        %tmp.99 = sub %tmp.97 %tmp.98;
+        %tmp.100 = lgetv %dX.5;
+        symbol [ dX %tmp.100 96 41 43 ];
+        %tmp.101 = lgetv %dW.3;
+        symbol [ dW %tmp.101 96 46 48 ];
+        %tmp.102 = add %tmp.100 %tmp.101;
+        %tmp.103 = 2;
+        %tmp.104 = sub %tmp.102 %tmp.103;
+        %tmp.105 = lgetv %dY.6;
+        symbol [ dY %tmp.105 96 54 56 ];
+        %tmp.106 = lgetv %dH.4;
+        symbol [ dH %tmp.106 96 59 61 ];
+        %tmp.107 = add %tmp.105 %tmp.106;
+        %tmp.108 = 2;
+        %tmp.109 = sub %tmp.107 %tmp.108;
+        invoke %tmp.90 %tmp.91(%tmp.94, %tmp.99, %tmp.104, %tmp.109);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 97 8 ]
+        %tmp.110 = lgetv %dc;
+        symbol [ dc %tmp.110 97 8 10 ];
+        symbol [ drawLine %tmp.111 97 11 19 ];
+        %tmp.111 = getv function %tmp.110 :drawLine;
+        %tmp.112 = lgetv %dX.5;
+        symbol [ dX %tmp.112 97 20 22 ];
+        %tmp.113 = lgetv %dW.3;
+        symbol [ dW %tmp.113 97 25 27 ];
+        %tmp.114 = add %tmp.112 %tmp.113;
+        %tmp.115 = 2;
+        %tmp.116 = sub %tmp.114 %tmp.115;
+        %tmp.117 = lgetv %dY.6;
+        symbol [ dY %tmp.117 97 33 35 ];
+        %tmp.118 = 1;
+        %tmp.119 = add %tmp.117 %tmp.118;
+        %tmp.120 = lgetv %dX.5;
+        symbol [ dX %tmp.120 97 41 43 ];
+        %tmp.121 = lgetv %dW.3;
+        symbol [ dW %tmp.121 97 46 48 ];
+        %tmp.122 = add %tmp.120 %tmp.121;
+        %tmp.123 = 2;
+        %tmp.124 = sub %tmp.122 %tmp.123;
+        %tmp.125 = lgetv %dY.6;
+        symbol [ dY %tmp.125 97 54 56 ];
+        %tmp.126 = lgetv %dH.4;
+        symbol [ dH %tmp.126 97 59 61 ];
+        %tmp.127 = add %tmp.125 %tmp.126;
+        %tmp.128 = 2;
+        %tmp.129 = sub %tmp.127 %tmp.128;
+        invoke %tmp.110 %tmp.111(%tmp.116, %tmp.119, %tmp.124, %tmp.129);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 100 8 ]
+        [ "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_start" "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_stop" ]
+        %tbH.7 = local;
+        symbol [ tbH %tbH.7 100 12 15 ];
+        %tmp.130 = 22;
+        lputv %tbH.7 %tmp.130;
+        symbol [ tbH %tbH.7 100 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 101 8 ]
+        [ "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_start" "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_stop" ]
+        %tbBands.8 = local;
+        symbol [ tbBands %tbBands.8 101 12 19 ];
+        %tmp.131 = 6;
+        lputv %tbBands.8 %tmp.131;
+        symbol [ tbBands %tbBands.8 101 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 102 8 ]
+        [ "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_start" "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_stop" ]
+        %tbbh.9 = local;
+        symbol [ tbbh %tbbh.9 102 12 16 ];
+        %tmp.132 = lgetv %tbH.7;
+        symbol [ tbH %tmp.132 102 19 22 ];
+        %tmp.133 = lgetv %tbBands.8;
+        symbol [ tbBands %tmp.133 102 25 32 ];
+        %tmp.134 = div %tmp.132 %tmp.133;
+        lputv %tbbh.9 %tmp.134;
+        symbol [ tbbh %tbbh.9 102 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 103 8 ]
+        [ "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_start" "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_stop" ]
+        %tbR.10 = local;
+        symbol [ tbR %tbR.10 103 12 15 ];
+        %tmp.135 = newa 6;
+        %tmp.136 = 0x24;
+        %tmp.137 = dup %tmp.135;
+        %tmp.138 = aputv %tmp.137 0 %tmp.136;
+        %tmp.139 = 0x2C;
+        %tmp.140 = dup %tmp.138;
+        %tmp.141 = aputv %tmp.140 1 %tmp.139;
+        %tmp.142 = 0x34;
+        %tmp.143 = dup %tmp.141;
+        %tmp.144 = aputv %tmp.143 2 %tmp.142;
+        %tmp.145 = 0x3A;
+        %tmp.146 = dup %tmp.144;
+        %tmp.147 = aputv %tmp.146 3 %tmp.145;
+        %tmp.148 = 0x30;
+        %tmp.149 = dup %tmp.147;
+        %tmp.150 = aputv %tmp.149 4 %tmp.148;
+        %tmp.151 = 0x24;
+        %tmp.152 = dup %tmp.150;
+        %tmp.153 = aputv %tmp.152 5 %tmp.151;
+        lputv %tbR.10 %tmp.153;
+        symbol [ tbR %tbR.10 103 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 104 8 ]
+        [ "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_start" "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_stop" ]
+        %tbG.11 = local;
+        symbol [ tbG %tbG.11 104 12 15 ];
+        %tmp.154 = newa 6;
+        %tmp.155 = 0x60;
+        %tmp.156 = dup %tmp.154;
+        %tmp.157 = aputv %tmp.156 0 %tmp.155;
+        %tmp.158 = 0x74;
+        %tmp.159 = dup %tmp.157;
+        %tmp.160 = aputv %tmp.159 1 %tmp.158;
+        %tmp.161 = 0x88;
+        %tmp.162 = dup %tmp.160;
+        %tmp.163 = aputv %tmp.162 2 %tmp.161;
+        %tmp.164 = 0x94;
+        %tmp.165 = dup %tmp.163;
+        %tmp.166 = aputv %tmp.165 3 %tmp.164;
+        %tmp.167 = 0x7C;
+        %tmp.168 = dup %tmp.166;
+        %tmp.169 = aputv %tmp.168 4 %tmp.167;
+        %tmp.170 = 0x60;
+        %tmp.171 = dup %tmp.169;
+        %tmp.172 = aputv %tmp.171 5 %tmp.170;
+        lputv %tbG.11 %tmp.172;
+        symbol [ tbG %tbG.11 104 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 105 8 ]
+        [ "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_start" "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_stop" ]
+        %tbB.12 = local;
+        symbol [ tbB %tbB.12 105 12 15 ];
+        %tmp.173 = newa 6;
+        %tmp.174 = 0xC0;
+        %tmp.175 = dup %tmp.173;
+        %tmp.176 = aputv %tmp.175 0 %tmp.174;
+        %tmp.177 = 0xD0;
+        %tmp.178 = dup %tmp.176;
+        %tmp.179 = aputv %tmp.178 1 %tmp.177;
+        %tmp.180 = 0xE0;
+        %tmp.181 = dup %tmp.179;
+        %tmp.182 = aputv %tmp.181 2 %tmp.180;
+        %tmp.183 = 0xE8;
+        %tmp.184 = dup %tmp.182;
+        %tmp.185 = aputv %tmp.184 3 %tmp.183;
+        %tmp.186 = 0xD4;
+        %tmp.187 = dup %tmp.185;
+        %tmp.188 = aputv %tmp.187 4 %tmp.186;
+        %tmp.189 = 0xC0;
+        %tmp.190 = dup %tmp.188;
+        %tmp.191 = aputv %tmp.190 5 %tmp.189;
+        lputv %tbB.12 %tmp.191;
+        symbol [ tbB %tbB.12 105 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 106 8 ]
+        for @_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_106_8_110_8_for_test @_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_106_8_110_8_for_incr @_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_106_8_110_8_for_end;
+_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_106_8_110_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_106_8_110_8_for_begin" "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_106_8_110_8_for_end" ]
+        %i.13 = local;
+        symbol [ i %i.13 106 17 18 ];
+        %tmp.192 = 0;
+        lputv %i.13 %tmp.192;
+        symbol [ i %i.13 106 17 18 ];
+_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_106_8_110_8_for_test:
+        %tmp.193 = lgetv %i.13;
+        symbol [ i %tmp.193 106 24 25 ];
+        %tmp.194 = lgetv %tbBands.8;
+        symbol [ tbBands %tmp.194 106 28 35 ];
+        %tmp.195 = lt %tmp.193 %tmp.194;
+        bf %tmp.195 @_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_106_8_110_8_for_end;
+_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_106_8_110_8_for_begin:
+_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_106_42_110_8_start:
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 107 12 ]
+        %tmp.196 = lgetv %dc;
+        symbol [ dc %tmp.196 107 12 14 ];
+        symbol [ setColor %tmp.197 107 15 23 ];
+        %tmp.197 = getv function %tmp.196 :setColor;
+        %tmp.198 = lgetv %tbR.10;
+        symbol [ tbR %tmp.198 107 25 28 ];
+        %tmp.199 = lgetv %i.13;
+        symbol [ i %tmp.199 107 29 30 ];
+        %tmp.200 = agetv %tmp.198 %tmp.199;
+        %tmp.201 = 16;
+        %tmp.202 = shl %tmp.200 %tmp.201;
+        %tmp.203 = lgetv %tbG.11;
+        symbol [ tbG %tmp.203 107 42 45 ];
+        %tmp.204 = lgetv %i.13;
+        symbol [ i %tmp.204 107 46 47 ];
+        %tmp.205 = agetv %tmp.203 %tmp.204;
+        %tmp.206 = 8;
+        %tmp.207 = shl %tmp.205 %tmp.206;
+        %tmp.208 = bitor %tmp.202 %tmp.207;
+        %tmp.209 = lgetv %tbB.12;
+        symbol [ tbB %tmp.209 107 57 60 ];
+        %tmp.210 = lgetv %i.13;
+        symbol [ i %tmp.210 107 61 62 ];
+        %tmp.211 = agetv %tmp.209 %tmp.210;
+        %tmp.212 = bitor %tmp.208 %tmp.211;
+        %tmp.213 = lgetv %tbR.10;
+        symbol [ tbR %tmp.213 108 25 28 ];
+        %tmp.214 = lgetv %i.13;
+        symbol [ i %tmp.214 108 29 30 ];
+        %tmp.215 = agetv %tmp.213 %tmp.214;
+        %tmp.216 = 16;
+        %tmp.217 = shl %tmp.215 %tmp.216;
+        %tmp.218 = lgetv %tbG.11;
+        symbol [ tbG %tmp.218 108 42 45 ];
+        %tmp.219 = lgetv %i.13;
+        symbol [ i %tmp.219 108 46 47 ];
+        %tmp.220 = agetv %tmp.218 %tmp.219;
+        %tmp.221 = 8;
+        %tmp.222 = shl %tmp.220 %tmp.221;
+        %tmp.223 = bitor %tmp.217 %tmp.222;
+        %tmp.224 = lgetv %tbB.12;
+        symbol [ tbB %tmp.224 108 57 60 ];
+        %tmp.225 = lgetv %i.13;
+        symbol [ i %tmp.225 108 61 62 ];
+        %tmp.226 = agetv %tmp.224 %tmp.225;
+        %tmp.227 = bitor %tmp.223 %tmp.226;
+        invoke %tmp.196 %tmp.197(%tmp.212, %tmp.227);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 109 12 ]
+        %tmp.228 = lgetv %dc;
+        symbol [ dc %tmp.228 109 12 14 ];
+        symbol [ fillRectangle %tmp.229 109 15 28 ];
+        %tmp.229 = getv function %tmp.228 :fillRectangle;
+        %tmp.230 = lgetv %dX.5;
+        symbol [ dX %tmp.230 109 29 31 ];
+        %tmp.231 = 3;
+        %tmp.232 = add %tmp.230 %tmp.231;
+        %tmp.233 = lgetv %dY.6;
+        symbol [ dY %tmp.233 109 37 39 ];
+        %tmp.234 = 3;
+        %tmp.235 = add %tmp.233 %tmp.234;
+        %tmp.236 = lgetv %i.13;
+        symbol [ i %tmp.236 109 46 47 ];
+        %tmp.237 = lgetv %tbbh.9;
+        symbol [ tbbh %tmp.237 109 50 54 ];
+        %tmp.238 = mul %tmp.236 %tmp.237;
+        %tmp.239 = add %tmp.235 %tmp.238;
+        %tmp.240 = lgetv %dW.3;
+        symbol [ dW %tmp.240 109 56 58 ];
+        %tmp.241 = 6;
+        %tmp.242 = sub %tmp.240 %tmp.241;
+        %tmp.243 = lgetv %tbbh.9;
+        symbol [ tbbh %tmp.243 109 64 68 ];
+        %tmp.244 = 1;
+        %tmp.245 = add %tmp.243 %tmp.244;
+        invoke %tmp.228 %tmp.229(%tmp.232, %tmp.239, %tmp.242, %tmp.245);
+_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_106_42_110_8_stop:
+_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_106_8_110_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 106 ]
+        %tmp.248 = lgetv %i.13;
+        symbol [ i %tmp.248 106 37 38 ];
+        %tmp.249 = add %tmp.248 1;
+        lputv %i.13 %tmp.249;
+        symbol [ i %i.13 106 37 38 ];
+        goto @_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_106_8_110_8_for_test;
+_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_106_8_110_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 113 8 ]
+        %tmp.250 = lgetv %dc;
+        symbol [ dc %tmp.250 113 8 10 ];
+        symbol [ setColor %tmp.251 113 11 19 ];
+        %tmp.251 = getv function %tmp.250 :setColor;
+        %tmp.252 = 0xFFFFFF;
+        symbol [ Graphics %tmp.253 113 30 38 ];
+        %tmp.253 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.254 113 39 56 ];
+        %tmp.254 = getv %tmp.253 :COLOR_TRANSPARENT;
+        invoke %tmp.250 %tmp.251(%tmp.252, %tmp.254);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 114 8 ]
+        %tmp.255 = lgetv %dc;
+        symbol [ dc %tmp.255 114 8 10 ];
+        symbol [ fillCircle %tmp.256 114 11 21 ];
+        %tmp.256 = getv function %tmp.255 :fillCircle;
+        %tmp.257 = lgetv %dX.5;
+        symbol [ dX %tmp.257 114 22 24 ];
+        %tmp.258 = 15;
+        %tmp.259 = add %tmp.257 %tmp.258;
+        %tmp.260 = lgetv %dY.6;
+        symbol [ dY %tmp.260 114 31 33 ];
+        %tmp.261 = 13;
+        %tmp.262 = add %tmp.260 %tmp.261;
+        %tmp.263 = 8;
+        invoke %tmp.255 %tmp.256(%tmp.259, %tmp.262, %tmp.263);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 115 8 ]
+        %tmp.264 = lgetv %dc;
+        symbol [ dc %tmp.264 115 8 10 ];
+        symbol [ setColor %tmp.265 115 11 19 ];
+        %tmp.265 = getv function %tmp.264 :setColor;
+        %tmp.266 = 0x1E5FB0;
+        symbol [ Graphics %tmp.267 115 30 38 ];
+        %tmp.267 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.268 115 39 56 ];
+        %tmp.268 = getv %tmp.267 :COLOR_TRANSPARENT;
+        invoke %tmp.264 %tmp.265(%tmp.266, %tmp.268);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 116 8 ]
+        %tmp.269 = lgetv %dc;
+        symbol [ dc %tmp.269 116 8 10 ];
+        symbol [ fillCircle %tmp.270 116 11 21 ];
+        %tmp.270 = getv function %tmp.269 :fillCircle;
+        %tmp.271 = lgetv %dX.5;
+        symbol [ dX %tmp.271 116 22 24 ];
+        %tmp.272 = 15;
+        %tmp.273 = add %tmp.271 %tmp.272;
+        %tmp.274 = lgetv %dY.6;
+        symbol [ dY %tmp.274 116 31 33 ];
+        %tmp.275 = 13;
+        %tmp.276 = add %tmp.274 %tmp.275;
+        %tmp.277 = 6;
+        invoke %tmp.269 %tmp.270(%tmp.273, %tmp.276, %tmp.277);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 117 8 ]
+        %tmp.278 = lgetv %dc;
+        symbol [ dc %tmp.278 117 8 10 ];
+        symbol [ setColor %tmp.279 117 11 19 ];
+        %tmp.279 = getv function %tmp.278 :setColor;
+        %tmp.280 = 0xFFFFFF;
+        symbol [ Graphics %tmp.281 117 30 38 ];
+        %tmp.281 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.282 117 39 56 ];
+        %tmp.282 = getv %tmp.281 :COLOR_TRANSPARENT;
+        invoke %tmp.278 %tmp.279(%tmp.280, %tmp.282);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 118 8 ]
+        %tmp.283 = lgetv %dc;
+        symbol [ dc %tmp.283 118 8 10 ];
+        symbol [ drawText %tmp.284 118 11 19 ];
+        %tmp.284 = getv function %tmp.283 :drawText;
+        %tmp.285 = lgetv %dX.5;
+        symbol [ dX %tmp.285 118 20 22 ];
+        %tmp.286 = 11;
+        %tmp.287 = add %tmp.285 %tmp.286;
+        %tmp.288 = lgetv %dY.6;
+        symbol [ dY %tmp.288 118 29 31 ];
+        %tmp.289 = 5;
+        %tmp.290 = add %tmp.288 %tmp.289;
+        symbol [ Graphics %tmp.291 118 37 45 ];
+        %tmp.291 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.292 118 46 56 ];
+        %tmp.292 = getv %tmp.291 :FONT_XTINY;
+        %tmp.293 = "e";
+        symbol [ Graphics %tmp.294 118 63 71 ];
+        %tmp.294 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_LEFT %tmp.295 118 72 89 ];
+        %tmp.295 = getv %tmp.294 :TEXT_JUSTIFY_LEFT;
+        invoke %tmp.283 %tmp.284(%tmp.287, %tmp.290, %tmp.292, %tmp.293, %tmp.295);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 121 8 ]
+        %tmp.296 = lgetv %dc;
+        symbol [ dc %tmp.296 121 8 10 ];
+        symbol [ setColor %tmp.297 121 11 19 ];
+        %tmp.297 = getv function %tmp.296 :setColor;
+        %tmp.298 = 0xFFFFFF;
+        symbol [ Graphics %tmp.299 121 30 38 ];
+        %tmp.299 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.300 121 39 56 ];
+        %tmp.300 = getv %tmp.299 :COLOR_TRANSPARENT;
+        invoke %tmp.296 %tmp.297(%tmp.298, %tmp.300);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 122 8 ]
+        %tmp.301 = lgetv %dc;
+        symbol [ dc %tmp.301 122 8 10 ];
+        symbol [ drawText %tmp.302 122 11 19 ];
+        %tmp.302 = getv function %tmp.301 :drawText;
+        %tmp.303 = lgetv %dX.5;
+        symbol [ dX %tmp.303 122 20 22 ];
+        %tmp.304 = 27;
+        %tmp.305 = add %tmp.303 %tmp.304;
+        %tmp.306 = lgetv %dY.6;
+        symbol [ dY %tmp.306 122 29 31 ];
+        %tmp.307 = 2;
+        %tmp.308 = add %tmp.306 %tmp.307;
+        symbol [ Graphics %tmp.309 122 37 45 ];
+        %tmp.309 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.310 122 46 56 ];
+        %tmp.310 = getv %tmp.309 :FONT_XTINY;
+        %tmp.311 = "Windows Internet Explorer";
+        symbol [ Graphics %tmp.312 122 87 95 ];
+        %tmp.312 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_LEFT %tmp.313 122 96 113 ];
+        %tmp.313 = getv %tmp.312 :TEXT_JUSTIFY_LEFT;
+        invoke %tmp.301 %tmp.302(%tmp.305, %tmp.308, %tmp.310, %tmp.311, %tmp.313);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 125 8 ]
+        [ "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_start" "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_stop" ]
+        %xbS.14 = local;
+        symbol [ xbS %xbS.14 125 12 15 ];
+        %tmp.314 = 18;
+        lputv %xbS.14 %tmp.314;
+        symbol [ xbS %xbS.14 125 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 126 8 ]
+        [ "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_start" "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_stop" ]
+        %xbX.15 = local;
+        symbol [ xbX %xbX.15 126 12 15 ];
+        %tmp.315 = lgetv %dX.5;
+        symbol [ dX %tmp.315 126 18 20 ];
+        %tmp.316 = lgetv %dW.3;
+        symbol [ dW %tmp.316 126 23 25 ];
+        %tmp.317 = add %tmp.315 %tmp.316;
+        %tmp.318 = lgetv %xbS.14;
+        symbol [ xbS %tmp.318 126 28 31 ];
+        %tmp.319 = sub %tmp.317 %tmp.318;
+        %tmp.320 = 4;
+        %tmp.321 = sub %tmp.319 %tmp.320;
+        lputv %xbX.15 %tmp.321;
+        symbol [ xbX %xbX.15 126 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 126 37 ]
+        [ "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_start" "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_stop" ]
+        %xbY.16 = local;
+        symbol [ xbY %xbY.16 126 41 44 ];
+        %tmp.322 = lgetv %dY.6;
+        symbol [ dY %tmp.322 126 47 49 ];
+        %tmp.323 = 4;
+        %tmp.324 = add %tmp.322 %tmp.323;
+        lputv %xbY.16 %tmp.324;
+        symbol [ xbY %xbY.16 126 41 44 ];
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 127 8 ]
+        %tmp.325 = lgetv %dc;
+        symbol [ dc %tmp.325 127 8 10 ];
+        symbol [ setColor %tmp.326 127 11 19 ];
+        %tmp.326 = getv function %tmp.325 :setColor;
+        %tmp.327 = 0xCC3333;
+        symbol [ Graphics %tmp.328 127 30 38 ];
+        %tmp.328 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.329 127 39 56 ];
+        %tmp.329 = getv %tmp.328 :COLOR_TRANSPARENT;
+        invoke %tmp.325 %tmp.326(%tmp.327, %tmp.329);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 128 8 ]
+        %tmp.330 = lgetv %dc;
+        symbol [ dc %tmp.330 128 8 10 ];
+        symbol [ fillRoundedRectangle %tmp.331 128 11 31 ];
+        %tmp.331 = getv function %tmp.330 :fillRoundedRectangle;
+        %tmp.332 = lgetv %xbX.15;
+        symbol [ xbX %tmp.332 128 32 35 ];
+        %tmp.333 = lgetv %xbY.16;
+        symbol [ xbY %tmp.333 128 37 40 ];
+        %tmp.334 = lgetv %xbS.14;
+        symbol [ xbS %tmp.334 128 42 45 ];
+        %tmp.335 = lgetv %xbS.14;
+        symbol [ xbS %tmp.335 128 47 50 ];
+        %tmp.336 = 2;
+        %tmp.337 = sub %tmp.335 %tmp.336;
+        %tmp.338 = 3;
+        invoke %tmp.330 %tmp.331(%tmp.332, %tmp.333, %tmp.334, %tmp.337, %tmp.338);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 129 8 ]
+        %tmp.339 = lgetv %dc;
+        symbol [ dc %tmp.339 129 8 10 ];
+        symbol [ setColor %tmp.340 129 11 19 ];
+        %tmp.340 = getv function %tmp.339 :setColor;
+        %tmp.341 = 0xFFFFFF;
+        symbol [ Graphics %tmp.342 129 30 38 ];
+        %tmp.342 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.343 129 39 56 ];
+        %tmp.343 = getv %tmp.342 :COLOR_TRANSPARENT;
+        invoke %tmp.339 %tmp.340(%tmp.341, %tmp.343);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 130 8 ]
+        %tmp.344 = lgetv %dc;
+        symbol [ dc %tmp.344 130 8 10 ];
+        symbol [ drawText %tmp.345 130 11 19 ];
+        %tmp.345 = getv function %tmp.344 :drawText;
+        %tmp.346 = lgetv %xbX.15;
+        symbol [ xbX %tmp.346 130 20 23 ];
+        %tmp.347 = lgetv %xbS.14;
+        symbol [ xbS %tmp.347 130 26 29 ];
+        %tmp.348 = 2;
+        %tmp.349 = div %tmp.347 %tmp.348;
+        %tmp.350 = add %tmp.346 %tmp.349;
+        %tmp.351 = lgetv %xbY.16;
+        symbol [ xbY %tmp.351 130 35 38 ];
+        %tmp.352 = 3;
+        %tmp.353 = sub %tmp.351 %tmp.352;
+        symbol [ Graphics %tmp.354 130 44 52 ];
+        %tmp.354 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.355 130 53 63 ];
+        %tmp.355 = getv %tmp.354 :FONT_XTINY;
+        %tmp.356 = "x";
+        symbol [ Graphics %tmp.357 130 70 78 ];
+        %tmp.357 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.358 130 79 98 ];
+        %tmp.358 = getv %tmp.357 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.344 %tmp.345(%tmp.350, %tmp.353, %tmp.355, %tmp.356, %tmp.358);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 133 8 ]
+        [ "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_start" "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_stop" ]
+        %bodyY.17 = local;
+        symbol [ bodyY %bodyY.17 133 12 17 ];
+        %tmp.359 = lgetv %dY.6;
+        symbol [ dY %tmp.359 133 20 22 ];
+        %tmp.360 = lgetv %tbH.7;
+        symbol [ tbH %tmp.360 133 25 28 ];
+        %tmp.361 = add %tmp.359 %tmp.360;
+        %tmp.362 = 8;
+        %tmp.363 = add %tmp.361 %tmp.362;
+        lputv %bodyY.17 %tmp.363;
+        symbol [ bodyY %bodyY.17 133 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 134 8 ]
+        [ "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_start" "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_stop" ]
+        %triCx.18 = local;
+        symbol [ triCx %triCx.18 134 12 17 ];
+        %tmp.364 = lgetv %dX.5;
+        symbol [ dX %tmp.364 134 20 22 ];
+        %tmp.365 = 30;
+        %tmp.366 = add %tmp.364 %tmp.365;
+        lputv %triCx.18 %tmp.366;
+        symbol [ triCx %triCx.18 134 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 134 29 ]
+        [ "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_start" "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_stop" ]
+        %triCy.19 = local;
+        symbol [ triCy %triCy.19 134 33 38 ];
+        %tmp.367 = lgetv %bodyY.17;
+        symbol [ bodyY %tmp.367 134 41 46 ];
+        %tmp.368 = 24;
+        %tmp.369 = add %tmp.367 %tmp.368;
+        lputv %triCy.19 %tmp.369;
+        symbol [ triCy %triCy.19 134 33 38 ];
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 135 8 ]
+        %tmp.370 = self;
+        symbol [ _triangle %tmp.371 135 8 17 ];
+        %tmp.371 = getv function %tmp.370 :_triangle;
+        %tmp.372 = lgetv %dc;
+        symbol [ dc %tmp.372 135 18 20 ];
+        %tmp.373 = lgetv %triCx.18;
+        symbol [ triCx %tmp.373 135 22 27 ];
+        %tmp.374 = lgetv %triCy.19;
+        symbol [ triCy %tmp.374 135 29 34 ];
+        %tmp.375 = 18;
+        invoke %tmp.370 %tmp.371(%tmp.372, %tmp.373, %tmp.374, %tmp.375);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 138 8 ]
+        [ "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_start" "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_stop" ]
+        %clk.20 = local;
+        symbol [ clk %clk.20 138 12 15 ];
+        symbol [ System %tmp.376 138 18 24 ];
+        %tmp.376 = getm $.Toybox.System;
+        symbol [ getClockTime %tmp.377 138 25 37 ];
+        %tmp.377 = getv function %tmp.376 :getClockTime;
+        %tmp.378 = invoke %tmp.376 %tmp.377();
+        lputv %clk.20 %tmp.378;
+        symbol [ clk %clk.20 138 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 139 8 ]
+        [ "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_start" "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_stop" ]
+        %tStr.21 = local;
+        symbol [ tStr %tStr.21 139 12 16 ];
+        symbol [ Lang %tmp.379 139 19 23 ];
+        %tmp.379 = getm $.Toybox.Lang;
+        symbol [ format %tmp.380 139 24 30 ];
+        %tmp.380 = getv function %tmp.379 :format;
+        %tmp.381 = "$1$:$2$";
+        %tmp.382 = newa 2;
+        %tmp.383 = lgetv %clk.20;
+        symbol [ clk %tmp.383 139 43 46 ];
+        symbol [ hour %tmp.384 139 47 51 ];
+        %tmp.384 = getv %tmp.383 :hour;
+        symbol [ format %tmp.385 139 52 58 ];
+        %tmp.385 = getv function %tmp.384 :format;
+        %tmp.386 = "%02d";
+        %tmp.387 = invoke %tmp.384 %tmp.385(%tmp.386);
+        %tmp.388 = dup %tmp.382;
+        %tmp.389 = aputv %tmp.388 0 %tmp.387;
+        %tmp.390 = lgetv %clk.20;
+        symbol [ clk %tmp.390 139 68 71 ];
+        symbol [ min %tmp.391 139 72 75 ];
+        %tmp.391 = getv %tmp.390 :min;
+        symbol [ format %tmp.392 139 76 82 ];
+        %tmp.392 = getv function %tmp.391 :format;
+        %tmp.393 = "%02d";
+        %tmp.394 = invoke %tmp.391 %tmp.392(%tmp.393);
+        %tmp.395 = dup %tmp.389;
+        %tmp.396 = aputv %tmp.395 1 %tmp.394;
+        %tmp.397 = invoke %tmp.379 %tmp.380(%tmp.381, %tmp.396);
+        lputv %tStr.21 %tmp.397;
+        symbol [ tStr %tStr.21 139 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 140 8 ]
+        [ "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_start" "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_stop" ]
+        %now.22 = local;
+        symbol [ now %now.22 140 12 15 ];
+        symbol [ Gregorian %tmp.398 140 18 27 ];
+        %tmp.398 = getm $.Toybox.Time.Gregorian;
+        symbol [ info %tmp.399 140 28 32 ];
+        %tmp.399 = getv function %tmp.398 :info;
+        symbol [ Time %tmp.400 140 33 37 ];
+        %tmp.400 = getm $.Toybox.Time;
+        symbol [ now %tmp.401 140 38 41 ];
+        %tmp.401 = getv function %tmp.400 :now;
+        %tmp.402 = invoke %tmp.400 %tmp.401();
+        symbol [ Time %tmp.403 140 45 49 ];
+        %tmp.403 = getm $.Toybox.Time;
+        symbol [ FORMAT_MEDIUM %tmp.404 140 50 63 ];
+        %tmp.404 = getv %tmp.403 :FORMAT_MEDIUM;
+        %tmp.405 = invoke %tmp.398 %tmp.399(%tmp.402, %tmp.404);
+        lputv %now.22 %tmp.405;
+        symbol [ now %now.22 140 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 141 8 ]
+        [ "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_start" "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_stop" ]
+        %dStr.23 = local;
+        symbol [ dStr %dStr.23 141 12 16 ];
+        symbol [ Lang %tmp.406 141 19 23 ];
+        %tmp.406 = getm $.Toybox.Lang;
+        symbol [ format %tmp.407 141 24 30 ];
+        %tmp.407 = getv function %tmp.406 :format;
+        %tmp.408 = "$1$, $2$ $3$";
+        %tmp.409 = newa 3;
+        %tmp.410 = lgetv %now.22;
+        symbol [ now %tmp.410 141 48 51 ];
+        symbol [ day_of_week %tmp.411 141 52 63 ];
+        %tmp.411 = getv %tmp.410 :day_of_week;
+        %tmp.412 = dup %tmp.409;
+        %tmp.413 = aputv %tmp.412 0 %tmp.411;
+        %tmp.414 = lgetv %now.22;
+        symbol [ now %tmp.414 141 65 68 ];
+        symbol [ month %tmp.415 141 69 74 ];
+        %tmp.415 = getv %tmp.414 :month;
+        %tmp.416 = dup %tmp.413;
+        %tmp.417 = aputv %tmp.416 1 %tmp.415;
+        %tmp.418 = lgetv %now.22;
+        symbol [ now %tmp.418 141 76 79 ];
+        symbol [ day %tmp.419 141 80 83 ];
+        %tmp.419 = getv %tmp.418 :day;
+        symbol [ format %tmp.420 141 84 90 ];
+        %tmp.420 = getv function %tmp.419 :format;
+        %tmp.421 = "%d";
+        %tmp.422 = invoke %tmp.419 %tmp.420(%tmp.421);
+        %tmp.423 = dup %tmp.417;
+        %tmp.424 = aputv %tmp.423 2 %tmp.422;
+        %tmp.425 = invoke %tmp.406 %tmp.407(%tmp.408, %tmp.424);
+        lputv %dStr.23 %tmp.425;
+        symbol [ dStr %dStr.23 141 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 143 8 ]
+        %tmp.426 = lgetv %dc;
+        symbol [ dc %tmp.426 143 8 10 ];
+        symbol [ setColor %tmp.427 143 11 19 ];
+        %tmp.427 = getv function %tmp.426 :setColor;
+        %tmp.428 = 0x000000;
+        symbol [ Graphics %tmp.429 143 30 38 ];
+        %tmp.429 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.430 143 39 56 ];
+        %tmp.430 = getv %tmp.429 :COLOR_TRANSPARENT;
+        invoke %tmp.426 %tmp.427(%tmp.428, %tmp.430);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 144 8 ]
+        %tmp.431 = lgetv %dc;
+        symbol [ dc %tmp.431 144 8 10 ];
+        symbol [ drawText %tmp.432 144 11 19 ];
+        %tmp.432 = getv function %tmp.431 :drawText;
+        %tmp.433 = lgetv %triCx.18;
+        symbol [ triCx %tmp.433 144 20 25 ];
+        %tmp.434 = 22;
+        %tmp.435 = add %tmp.433 %tmp.434;
+        %tmp.436 = lgetv %bodyY.17;
+        symbol [ bodyY %tmp.436 144 32 37 ];
+        %tmp.437 = 4;
+        %tmp.438 = add %tmp.436 %tmp.437;
+        symbol [ Graphics %tmp.439 144 43 51 ];
+        %tmp.439 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.440 144 52 62 ];
+        %tmp.440 = getv %tmp.439 :FONT_XTINY;
+        %tmp.441 = "The page says:";
+        symbol [ Graphics %tmp.442 144 82 90 ];
+        %tmp.442 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_LEFT %tmp.443 144 91 108 ];
+        %tmp.443 = getv %tmp.442 :TEXT_JUSTIFY_LEFT;
+        invoke %tmp.431 %tmp.432(%tmp.435, %tmp.438, %tmp.440, %tmp.441, %tmp.443);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 146 8 ]
+        %tmp.444 = lgetv %dc;
+        symbol [ dc %tmp.444 146 8 10 ];
+        symbol [ drawText %tmp.445 146 11 19 ];
+        %tmp.445 = getv function %tmp.444 :drawText;
+        %tmp.446 = lgetv %dX.5;
+        symbol [ dX %tmp.446 146 20 22 ];
+        %tmp.447 = lgetv %dW.3;
+        symbol [ dW %tmp.447 146 25 27 ];
+        %tmp.448 = 2;
+        %tmp.449 = div %tmp.447 %tmp.448;
+        %tmp.450 = add %tmp.446 %tmp.449;
+        %tmp.451 = 14;
+        %tmp.452 = add %tmp.450 %tmp.451;
+        %tmp.453 = lgetv %bodyY.17;
+        symbol [ bodyY %tmp.453 146 38 43 ];
+        %tmp.454 = 16;
+        %tmp.455 = add %tmp.453 %tmp.454;
+        symbol [ Graphics %tmp.456 146 50 58 ];
+        %tmp.456 = getm $.Toybox.Graphics;
+        symbol [ FONT_NUMBER_MEDIUM %tmp.457 146 59 77 ];
+        %tmp.457 = getv %tmp.456 :FONT_NUMBER_MEDIUM;
+        %tmp.458 = lgetv %tStr.21;
+        symbol [ tStr %tmp.458 146 79 83 ];
+        symbol [ Graphics %tmp.459 146 85 93 ];
+        %tmp.459 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.460 146 94 113 ];
+        %tmp.460 = getv %tmp.459 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.444 %tmp.445(%tmp.452, %tmp.455, %tmp.457, %tmp.458, %tmp.460);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 147 8 ]
+        %tmp.461 = lgetv %dc;
+        symbol [ dc %tmp.461 147 8 10 ];
+        symbol [ setColor %tmp.462 147 11 19 ];
+        %tmp.462 = getv function %tmp.461 :setColor;
+        %tmp.463 = 0x444444;
+        symbol [ Graphics %tmp.464 147 30 38 ];
+        %tmp.464 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.465 147 39 56 ];
+        %tmp.465 = getv %tmp.464 :COLOR_TRANSPARENT;
+        invoke %tmp.461 %tmp.462(%tmp.463, %tmp.465);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 148 8 ]
+        %tmp.466 = lgetv %dc;
+        symbol [ dc %tmp.466 148 8 10 ];
+        symbol [ drawText %tmp.467 148 11 19 ];
+        %tmp.467 = getv function %tmp.466 :drawText;
+        %tmp.468 = lgetv %dX.5;
+        symbol [ dX %tmp.468 148 20 22 ];
+        %tmp.469 = lgetv %dW.3;
+        symbol [ dW %tmp.469 148 25 27 ];
+        %tmp.470 = 2;
+        %tmp.471 = div %tmp.469 %tmp.470;
+        %tmp.472 = add %tmp.468 %tmp.471;
+        %tmp.473 = lgetv %bodyY.17;
+        symbol [ bodyY %tmp.473 148 33 38 ];
+        %tmp.474 = 58;
+        %tmp.475 = add %tmp.473 %tmp.474;
+        symbol [ Graphics %tmp.476 148 45 53 ];
+        %tmp.476 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.477 148 54 64 ];
+        %tmp.477 = getv %tmp.476 :FONT_XTINY;
+        %tmp.478 = lgetv %dStr.23;
+        symbol [ dStr %tmp.478 148 66 70 ];
+        symbol [ Graphics %tmp.479 148 72 80 ];
+        %tmp.479 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.480 148 81 100 ];
+        %tmp.480 = getv %tmp.479 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.466 %tmp.467(%tmp.472, %tmp.475, %tmp.477, %tmp.478, %tmp.480);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 151 8 ]
+        %tmp.481 = lgetv %dc;
+        symbol [ dc %tmp.481 151 8 10 ];
+        symbol [ setColor %tmp.482 151 11 19 ];
+        %tmp.482 = getv function %tmp.481 :setColor;
+        %tmp.483 = 0x808080;
+        symbol [ Graphics %tmp.484 151 30 38 ];
+        %tmp.484 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.485 151 39 56 ];
+        %tmp.485 = getv %tmp.484 :COLOR_TRANSPARENT;
+        invoke %tmp.481 %tmp.482(%tmp.483, %tmp.485);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 152 8 ]
+        %tmp.486 = lgetv %dc;
+        symbol [ dc %tmp.486 152 8 10 ];
+        symbol [ drawLine %tmp.487 152 11 19 ];
+        %tmp.487 = getv function %tmp.486 :drawLine;
+        %tmp.488 = lgetv %dX.5;
+        symbol [ dX %tmp.488 152 20 22 ];
+        %tmp.489 = 8;
+        %tmp.490 = add %tmp.488 %tmp.489;
+        %tmp.491 = lgetv %dY.6;
+        symbol [ dY %tmp.491 152 28 30 ];
+        %tmp.492 = lgetv %dH.4;
+        symbol [ dH %tmp.492 152 33 35 ];
+        %tmp.493 = add %tmp.491 %tmp.492;
+        %tmp.494 = 42;
+        %tmp.495 = sub %tmp.493 %tmp.494;
+        %tmp.496 = lgetv %dX.5;
+        symbol [ dX %tmp.496 152 42 44 ];
+        %tmp.497 = lgetv %dW.3;
+        symbol [ dW %tmp.497 152 47 49 ];
+        %tmp.498 = add %tmp.496 %tmp.497;
+        %tmp.499 = 8;
+        %tmp.500 = sub %tmp.498 %tmp.499;
+        %tmp.501 = lgetv %dY.6;
+        symbol [ dY %tmp.501 152 55 57 ];
+        %tmp.502 = lgetv %dH.4;
+        symbol [ dH %tmp.502 152 60 62 ];
+        %tmp.503 = add %tmp.501 %tmp.502;
+        %tmp.504 = 42;
+        %tmp.505 = sub %tmp.503 %tmp.504;
+        invoke %tmp.486 %tmp.487(%tmp.490, %tmp.495, %tmp.500, %tmp.505);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 153 8 ]
+        %tmp.506 = lgetv %dc;
+        symbol [ dc %tmp.506 153 8 10 ];
+        symbol [ setColor %tmp.507 153 11 19 ];
+        %tmp.507 = getv function %tmp.506 :setColor;
+        %tmp.508 = 0xFFFFFF;
+        symbol [ Graphics %tmp.509 153 30 38 ];
+        %tmp.509 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.510 153 39 56 ];
+        %tmp.510 = getv %tmp.509 :COLOR_TRANSPARENT;
+        invoke %tmp.506 %tmp.507(%tmp.508, %tmp.510);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 154 8 ]
+        %tmp.511 = lgetv %dc;
+        symbol [ dc %tmp.511 154 8 10 ];
+        symbol [ drawLine %tmp.512 154 11 19 ];
+        %tmp.512 = getv function %tmp.511 :drawLine;
+        %tmp.513 = lgetv %dX.5;
+        symbol [ dX %tmp.513 154 20 22 ];
+        %tmp.514 = 8;
+        %tmp.515 = add %tmp.513 %tmp.514;
+        %tmp.516 = lgetv %dY.6;
+        symbol [ dY %tmp.516 154 28 30 ];
+        %tmp.517 = lgetv %dH.4;
+        symbol [ dH %tmp.517 154 33 35 ];
+        %tmp.518 = add %tmp.516 %tmp.517;
+        %tmp.519 = 41;
+        %tmp.520 = sub %tmp.518 %tmp.519;
+        %tmp.521 = lgetv %dX.5;
+        symbol [ dX %tmp.521 154 42 44 ];
+        %tmp.522 = lgetv %dW.3;
+        symbol [ dW %tmp.522 154 47 49 ];
+        %tmp.523 = add %tmp.521 %tmp.522;
+        %tmp.524 = 8;
+        %tmp.525 = sub %tmp.523 %tmp.524;
+        %tmp.526 = lgetv %dY.6;
+        symbol [ dY %tmp.526 154 55 57 ];
+        %tmp.527 = lgetv %dH.4;
+        symbol [ dH %tmp.527 154 60 62 ];
+        %tmp.528 = add %tmp.526 %tmp.527;
+        %tmp.529 = 41;
+        %tmp.530 = sub %tmp.528 %tmp.529;
+        invoke %tmp.511 %tmp.512(%tmp.515, %tmp.520, %tmp.525, %tmp.530);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 157 8 ]
+        [ "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_start" "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_stop" ]
+        %chX.24 = local;
+        symbol [ chX %chX.24 157 12 15 ];
+        %tmp.531 = lgetv %dX.5;
+        symbol [ dX %tmp.531 157 18 20 ];
+        %tmp.532 = 14;
+        %tmp.533 = add %tmp.531 %tmp.532;
+        lputv %chX.24 %tmp.533;
+        symbol [ chX %chX.24 157 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 157 27 ]
+        [ "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_start" "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_stop" ]
+        %chY.25 = local;
+        symbol [ chY %chY.25 157 31 34 ];
+        %tmp.534 = lgetv %dY.6;
+        symbol [ dY %tmp.534 157 37 39 ];
+        %tmp.535 = lgetv %dH.4;
+        symbol [ dH %tmp.535 157 42 44 ];
+        %tmp.536 = add %tmp.534 %tmp.535;
+        %tmp.537 = 34;
+        %tmp.538 = sub %tmp.536 %tmp.537;
+        lputv %chY.25 %tmp.538;
+        symbol [ chY %chY.25 157 31 34 ];
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 158 8 ]
+        %tmp.539 = lgetv %dc;
+        symbol [ dc %tmp.539 158 8 10 ];
+        symbol [ setColor %tmp.540 158 11 19 ];
+        %tmp.540 = getv function %tmp.539 :setColor;
+        %tmp.541 = 0xFFFFFF;
+        symbol [ Graphics %tmp.542 158 30 38 ];
+        %tmp.542 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.543 158 39 56 ];
+        %tmp.543 = getv %tmp.542 :COLOR_TRANSPARENT;
+        invoke %tmp.539 %tmp.540(%tmp.541, %tmp.543);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 158 59 ]
+        %tmp.544 = lgetv %dc;
+        symbol [ dc %tmp.544 158 59 61 ];
+        symbol [ fillRectangle %tmp.545 158 62 75 ];
+        %tmp.545 = getv function %tmp.544 :fillRectangle;
+        %tmp.546 = lgetv %chX.24;
+        symbol [ chX %tmp.546 158 76 79 ];
+        %tmp.547 = lgetv %chY.25;
+        symbol [ chY %tmp.547 158 81 84 ];
+        %tmp.548 = 10;
+        %tmp.549 = 10;
+        invoke %tmp.544 %tmp.545(%tmp.546, %tmp.547, %tmp.548, %tmp.549);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 159 8 ]
+        %tmp.550 = lgetv %dc;
+        symbol [ dc %tmp.550 159 8 10 ];
+        symbol [ setColor %tmp.551 159 11 19 ];
+        %tmp.551 = getv function %tmp.550 :setColor;
+        %tmp.552 = 0x444444;
+        symbol [ Graphics %tmp.553 159 30 38 ];
+        %tmp.553 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.554 159 39 56 ];
+        %tmp.554 = getv %tmp.553 :COLOR_TRANSPARENT;
+        invoke %tmp.550 %tmp.551(%tmp.552, %tmp.554);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 159 59 ]
+        %tmp.555 = lgetv %dc;
+        symbol [ dc %tmp.555 159 59 61 ];
+        symbol [ drawRectangle %tmp.556 159 62 75 ];
+        %tmp.556 = getv function %tmp.555 :drawRectangle;
+        %tmp.557 = lgetv %chX.24;
+        symbol [ chX %tmp.557 159 76 79 ];
+        %tmp.558 = lgetv %chY.25;
+        symbol [ chY %tmp.558 159 81 84 ];
+        %tmp.559 = 10;
+        %tmp.560 = 10;
+        invoke %tmp.555 %tmp.556(%tmp.557, %tmp.558, %tmp.559, %tmp.560);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 160 8 ]
+        %tmp.561 = lgetv %dc;
+        symbol [ dc %tmp.561 160 8 10 ];
+        symbol [ drawText %tmp.562 160 11 19 ];
+        %tmp.562 = getv function %tmp.561 :drawText;
+        %tmp.563 = lgetv %chX.24;
+        symbol [ chX %tmp.563 160 20 23 ];
+        %tmp.564 = 14;
+        %tmp.565 = add %tmp.563 %tmp.564;
+        %tmp.566 = lgetv %chY.25;
+        symbol [ chY %tmp.566 160 30 33 ];
+        %tmp.567 = 2;
+        %tmp.568 = sub %tmp.566 %tmp.567;
+        symbol [ Graphics %tmp.569 160 39 47 ];
+        %tmp.569 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.570 160 48 58 ];
+        %tmp.570 = getv %tmp.569 :FONT_XTINY;
+        %tmp.571 = "Prevent this page from creating dialogs";
+        symbol [ Graphics %tmp.572 160 103 111 ];
+        %tmp.572 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_LEFT %tmp.573 160 112 129 ];
+        %tmp.573 = getv %tmp.572 :TEXT_JUSTIFY_LEFT;
+        invoke %tmp.561 %tmp.562(%tmp.565, %tmp.568, %tmp.570, %tmp.571, %tmp.573);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 163 8 ]
+        [ "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_start" "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_stop" ]
+        %okW.26 = local;
+        symbol [ okW %okW.26 163 12 15 ];
+        %tmp.574 = 72;
+        lputv %okW.26 %tmp.574;
+        symbol [ okW %okW.26 163 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 163 22 ]
+        [ "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_start" "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_stop" ]
+        %okH.27 = local;
+        symbol [ okH %okH.27 163 26 29 ];
+        %tmp.575 = 24;
+        lputv %okH.27 %tmp.575;
+        symbol [ okH %okH.27 163 26 29 ];
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 164 8 ]
+        [ "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_start" "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_stop" ]
+        %okX.28 = local;
+        symbol [ okX %okX.28 164 12 15 ];
+        %tmp.576 = lgetv %dX.5;
+        symbol [ dX %tmp.576 164 18 20 ];
+        %tmp.577 = lgetv %dW.3;
+        symbol [ dW %tmp.577 164 23 25 ];
+        %tmp.578 = 2;
+        %tmp.579 = div %tmp.577 %tmp.578;
+        %tmp.580 = add %tmp.576 %tmp.579;
+        %tmp.581 = lgetv %okW.26;
+        symbol [ okW %tmp.581 164 32 35 ];
+        %tmp.582 = 2;
+        %tmp.583 = div %tmp.581 %tmp.582;
+        %tmp.584 = sub %tmp.580 %tmp.583;
+        lputv %okX.28 %tmp.584;
+        symbol [ okX %okX.28 164 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 165 8 ]
+        [ "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_start" "_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_stop" ]
+        %okY.29 = local;
+        symbol [ okY %okY.29 165 12 15 ];
+        %tmp.585 = lgetv %dY.6;
+        symbol [ dY %tmp.585 165 18 20 ];
+        %tmp.586 = lgetv %dH.4;
+        symbol [ dH %tmp.586 165 23 25 ];
+        %tmp.587 = add %tmp.585 %tmp.586;
+        %tmp.588 = lgetv %okH.27;
+        symbol [ okH %tmp.588 165 28 31 ];
+        %tmp.589 = sub %tmp.587 %tmp.588;
+        %tmp.590 = 6;
+        %tmp.591 = sub %tmp.589 %tmp.590;
+        lputv %okY.29 %tmp.591;
+        symbol [ okY %okY.29 165 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 168 8 ]
+        %tmp.592 = lgetv %dc;
+        symbol [ dc %tmp.592 168 8 10 ];
+        symbol [ setColor %tmp.593 168 11 19 ];
+        %tmp.593 = getv function %tmp.592 :setColor;
+        %tmp.594 = 0x000000;
+        symbol [ Graphics %tmp.595 168 30 38 ];
+        %tmp.595 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.596 168 39 56 ];
+        %tmp.596 = getv %tmp.595 :COLOR_TRANSPARENT;
+        invoke %tmp.592 %tmp.593(%tmp.594, %tmp.596);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 169 8 ]
+        %tmp.597 = lgetv %dc;
+        symbol [ dc %tmp.597 169 8 10 ];
+        symbol [ drawRectangle %tmp.598 169 11 24 ];
+        %tmp.598 = getv function %tmp.597 :drawRectangle;
+        %tmp.599 = lgetv %okX.28;
+        symbol [ okX %tmp.599 169 25 28 ];
+        %tmp.600 = 1;
+        %tmp.601 = sub %tmp.599 %tmp.600;
+        %tmp.602 = lgetv %okY.29;
+        symbol [ okY %tmp.602 169 34 37 ];
+        %tmp.603 = 1;
+        %tmp.604 = sub %tmp.602 %tmp.603;
+        %tmp.605 = lgetv %okW.26;
+        symbol [ okW %tmp.605 169 43 46 ];
+        %tmp.606 = 2;
+        %tmp.607 = add %tmp.605 %tmp.606;
+        %tmp.608 = lgetv %okH.27;
+        symbol [ okH %tmp.608 169 52 55 ];
+        %tmp.609 = 2;
+        %tmp.610 = add %tmp.608 %tmp.609;
+        invoke %tmp.597 %tmp.598(%tmp.601, %tmp.604, %tmp.607, %tmp.610);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 171 8 ]
+        %tmp.611 = lgetv %dc;
+        symbol [ dc %tmp.611 171 8 10 ];
+        symbol [ setColor %tmp.612 171 11 19 ];
+        %tmp.612 = getv function %tmp.611 :setColor;
+        %tmp.613 = 0xECE9D8;
+        symbol [ Graphics %tmp.614 171 30 38 ];
+        %tmp.614 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.615 171 39 56 ];
+        %tmp.615 = getv %tmp.614 :COLOR_TRANSPARENT;
+        invoke %tmp.611 %tmp.612(%tmp.613, %tmp.615);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 172 8 ]
+        %tmp.616 = lgetv %dc;
+        symbol [ dc %tmp.616 172 8 10 ];
+        symbol [ fillRectangle %tmp.617 172 11 24 ];
+        %tmp.617 = getv function %tmp.616 :fillRectangle;
+        %tmp.618 = lgetv %okX.28;
+        symbol [ okX %tmp.618 172 25 28 ];
+        %tmp.619 = lgetv %okY.29;
+        symbol [ okY %tmp.619 172 30 33 ];
+        %tmp.620 = lgetv %okW.26;
+        symbol [ okW %tmp.620 172 35 38 ];
+        %tmp.621 = lgetv %okH.27;
+        symbol [ okH %tmp.621 172 40 43 ];
+        invoke %tmp.616 %tmp.617(%tmp.618, %tmp.619, %tmp.620, %tmp.621);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 173 8 ]
+        %tmp.622 = lgetv %dc;
+        symbol [ dc %tmp.622 173 8 10 ];
+        symbol [ setColor %tmp.623 173 11 19 ];
+        %tmp.623 = getv function %tmp.622 :setColor;
+        %tmp.624 = 0xFFFFFF;
+        symbol [ Graphics %tmp.625 173 30 38 ];
+        %tmp.625 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.626 173 39 56 ];
+        %tmp.626 = getv %tmp.625 :COLOR_TRANSPARENT;
+        invoke %tmp.622 %tmp.623(%tmp.624, %tmp.626);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 174 8 ]
+        %tmp.627 = lgetv %dc;
+        symbol [ dc %tmp.627 174 8 10 ];
+        symbol [ drawLine %tmp.628 174 11 19 ];
+        %tmp.628 = getv function %tmp.627 :drawLine;
+        %tmp.629 = lgetv %okX.28;
+        symbol [ okX %tmp.629 174 20 23 ];
+        %tmp.630 = lgetv %okY.29;
+        symbol [ okY %tmp.630 174 25 28 ];
+        %tmp.631 = lgetv %okX.28;
+        symbol [ okX %tmp.631 174 30 33 ];
+        %tmp.632 = lgetv %okW.26;
+        symbol [ okW %tmp.632 174 36 39 ];
+        %tmp.633 = add %tmp.631 %tmp.632;
+        %tmp.634 = 1;
+        %tmp.635 = sub %tmp.633 %tmp.634;
+        %tmp.636 = lgetv %okY.29;
+        symbol [ okY %tmp.636 174 45 48 ];
+        invoke %tmp.627 %tmp.628(%tmp.629, %tmp.630, %tmp.635, %tmp.636);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 175 8 ]
+        %tmp.637 = lgetv %dc;
+        symbol [ dc %tmp.637 175 8 10 ];
+        symbol [ drawLine %tmp.638 175 11 19 ];
+        %tmp.638 = getv function %tmp.637 :drawLine;
+        %tmp.639 = lgetv %okX.28;
+        symbol [ okX %tmp.639 175 20 23 ];
+        %tmp.640 = lgetv %okY.29;
+        symbol [ okY %tmp.640 175 25 28 ];
+        %tmp.641 = lgetv %okX.28;
+        symbol [ okX %tmp.641 175 30 33 ];
+        %tmp.642 = lgetv %okY.29;
+        symbol [ okY %tmp.642 175 35 38 ];
+        %tmp.643 = lgetv %okH.27;
+        symbol [ okH %tmp.643 175 41 44 ];
+        %tmp.644 = add %tmp.642 %tmp.643;
+        %tmp.645 = 1;
+        %tmp.646 = sub %tmp.644 %tmp.645;
+        invoke %tmp.637 %tmp.638(%tmp.639, %tmp.640, %tmp.641, %tmp.646);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 176 8 ]
+        %tmp.647 = lgetv %dc;
+        symbol [ dc %tmp.647 176 8 10 ];
+        symbol [ setColor %tmp.648 176 11 19 ];
+        %tmp.648 = getv function %tmp.647 :setColor;
+        %tmp.649 = 0x808080;
+        symbol [ Graphics %tmp.650 176 30 38 ];
+        %tmp.650 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.651 176 39 56 ];
+        %tmp.651 = getv %tmp.650 :COLOR_TRANSPARENT;
+        invoke %tmp.647 %tmp.648(%tmp.649, %tmp.651);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 177 8 ]
+        %tmp.652 = lgetv %dc;
+        symbol [ dc %tmp.652 177 8 10 ];
+        symbol [ drawLine %tmp.653 177 11 19 ];
+        %tmp.653 = getv function %tmp.652 :drawLine;
+        %tmp.654 = lgetv %okX.28;
+        symbol [ okX %tmp.654 177 20 23 ];
+        %tmp.655 = 1;
+        %tmp.656 = add %tmp.654 %tmp.655;
+        %tmp.657 = lgetv %okY.29;
+        symbol [ okY %tmp.657 177 29 32 ];
+        %tmp.658 = lgetv %okH.27;
+        symbol [ okH %tmp.658 177 35 38 ];
+        %tmp.659 = add %tmp.657 %tmp.658;
+        %tmp.660 = 2;
+        %tmp.661 = sub %tmp.659 %tmp.660;
+        %tmp.662 = lgetv %okX.28;
+        symbol [ okX %tmp.662 177 44 47 ];
+        %tmp.663 = lgetv %okW.26;
+        symbol [ okW %tmp.663 177 50 53 ];
+        %tmp.664 = add %tmp.662 %tmp.663;
+        %tmp.665 = 2;
+        %tmp.666 = sub %tmp.664 %tmp.665;
+        %tmp.667 = lgetv %okY.29;
+        symbol [ okY %tmp.667 177 59 62 ];
+        %tmp.668 = lgetv %okH.27;
+        symbol [ okH %tmp.668 177 65 68 ];
+        %tmp.669 = add %tmp.667 %tmp.668;
+        %tmp.670 = 2;
+        %tmp.671 = sub %tmp.669 %tmp.670;
+        invoke %tmp.652 %tmp.653(%tmp.656, %tmp.661, %tmp.666, %tmp.671);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 178 8 ]
+        %tmp.672 = lgetv %dc;
+        symbol [ dc %tmp.672 178 8 10 ];
+        symbol [ drawLine %tmp.673 178 11 19 ];
+        %tmp.673 = getv function %tmp.672 :drawLine;
+        %tmp.674 = lgetv %okX.28;
+        symbol [ okX %tmp.674 178 20 23 ];
+        %tmp.675 = lgetv %okW.26;
+        symbol [ okW %tmp.675 178 26 29 ];
+        %tmp.676 = add %tmp.674 %tmp.675;
+        %tmp.677 = 2;
+        %tmp.678 = sub %tmp.676 %tmp.677;
+        %tmp.679 = lgetv %okY.29;
+        symbol [ okY %tmp.679 178 35 38 ];
+        %tmp.680 = 1;
+        %tmp.681 = add %tmp.679 %tmp.680;
+        %tmp.682 = lgetv %okX.28;
+        symbol [ okX %tmp.682 178 44 47 ];
+        %tmp.683 = lgetv %okW.26;
+        symbol [ okW %tmp.683 178 50 53 ];
+        %tmp.684 = add %tmp.682 %tmp.683;
+        %tmp.685 = 2;
+        %tmp.686 = sub %tmp.684 %tmp.685;
+        %tmp.687 = lgetv %okY.29;
+        symbol [ okY %tmp.687 178 59 62 ];
+        %tmp.688 = lgetv %okH.27;
+        symbol [ okH %tmp.688 178 65 68 ];
+        %tmp.689 = add %tmp.687 %tmp.688;
+        %tmp.690 = 2;
+        %tmp.691 = sub %tmp.689 %tmp.690;
+        invoke %tmp.672 %tmp.673(%tmp.678, %tmp.681, %tmp.686, %tmp.691);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 179 8 ]
+        %tmp.692 = lgetv %dc;
+        symbol [ dc %tmp.692 179 8 10 ];
+        symbol [ setColor %tmp.693 179 11 19 ];
+        %tmp.693 = getv function %tmp.692 :setColor;
+        %tmp.694 = 0x000000;
+        symbol [ Graphics %tmp.695 179 30 38 ];
+        %tmp.695 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.696 179 39 56 ];
+        %tmp.696 = getv %tmp.695 :COLOR_TRANSPARENT;
+        invoke %tmp.692 %tmp.693(%tmp.694, %tmp.696);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 180 8 ]
+        %tmp.697 = lgetv %dc;
+        symbol [ dc %tmp.697 180 8 10 ];
+        symbol [ drawLine %tmp.698 180 11 19 ];
+        %tmp.698 = getv function %tmp.697 :drawLine;
+        %tmp.699 = lgetv %okX.28;
+        symbol [ okX %tmp.699 180 20 23 ];
+        %tmp.700 = lgetv %okY.29;
+        symbol [ okY %tmp.700 180 25 28 ];
+        %tmp.701 = lgetv %okH.27;
+        symbol [ okH %tmp.701 180 31 34 ];
+        %tmp.702 = add %tmp.700 %tmp.701;
+        %tmp.703 = 1;
+        %tmp.704 = sub %tmp.702 %tmp.703;
+        %tmp.705 = lgetv %okX.28;
+        symbol [ okX %tmp.705 180 40 43 ];
+        %tmp.706 = lgetv %okW.26;
+        symbol [ okW %tmp.706 180 46 49 ];
+        %tmp.707 = add %tmp.705 %tmp.706;
+        %tmp.708 = lgetv %okY.29;
+        symbol [ okY %tmp.708 180 51 54 ];
+        %tmp.709 = lgetv %okH.27;
+        symbol [ okH %tmp.709 180 57 60 ];
+        %tmp.710 = add %tmp.708 %tmp.709;
+        %tmp.711 = 1;
+        %tmp.712 = sub %tmp.710 %tmp.711;
+        invoke %tmp.697 %tmp.698(%tmp.699, %tmp.704, %tmp.707, %tmp.712);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 181 8 ]
+        %tmp.713 = lgetv %dc;
+        symbol [ dc %tmp.713 181 8 10 ];
+        symbol [ drawLine %tmp.714 181 11 19 ];
+        %tmp.714 = getv function %tmp.713 :drawLine;
+        %tmp.715 = lgetv %okX.28;
+        symbol [ okX %tmp.715 181 20 23 ];
+        %tmp.716 = lgetv %okW.26;
+        symbol [ okW %tmp.716 181 26 29 ];
+        %tmp.717 = add %tmp.715 %tmp.716;
+        %tmp.718 = 1;
+        %tmp.719 = sub %tmp.717 %tmp.718;
+        %tmp.720 = lgetv %okY.29;
+        symbol [ okY %tmp.720 181 35 38 ];
+        %tmp.721 = lgetv %okX.28;
+        symbol [ okX %tmp.721 181 40 43 ];
+        %tmp.722 = lgetv %okW.26;
+        symbol [ okW %tmp.722 181 46 49 ];
+        %tmp.723 = add %tmp.721 %tmp.722;
+        %tmp.724 = 1;
+        %tmp.725 = sub %tmp.723 %tmp.724;
+        %tmp.726 = lgetv %okY.29;
+        symbol [ okY %tmp.726 181 55 58 ];
+        %tmp.727 = lgetv %okH.27;
+        symbol [ okH %tmp.727 181 61 64 ];
+        %tmp.728 = add %tmp.726 %tmp.727;
+        %tmp.729 = 1;
+        %tmp.730 = sub %tmp.728 %tmp.729;
+        invoke %tmp.713 %tmp.714(%tmp.719, %tmp.720, %tmp.725, %tmp.730);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 183 8 ]
+        %tmp.731 = lgetv %dc;
+        symbol [ dc %tmp.731 183 8 10 ];
+        symbol [ setColor %tmp.732 183 11 19 ];
+        %tmp.732 = getv function %tmp.731 :setColor;
+        %tmp.733 = 0x000000;
+        symbol [ Graphics %tmp.734 183 30 38 ];
+        %tmp.734 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.735 183 39 56 ];
+        %tmp.735 = getv %tmp.734 :COLOR_TRANSPARENT;
+        invoke %tmp.731 %tmp.732(%tmp.733, %tmp.735);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 184 8 ]
+        %tmp.736 = lgetv %dc;
+        symbol [ dc %tmp.736 184 8 10 ];
+        symbol [ drawText %tmp.737 184 11 19 ];
+        %tmp.737 = getv function %tmp.736 :drawText;
+        %tmp.738 = lgetv %okX.28;
+        symbol [ okX %tmp.738 184 20 23 ];
+        %tmp.739 = lgetv %okW.26;
+        symbol [ okW %tmp.739 184 26 29 ];
+        %tmp.740 = 2;
+        %tmp.741 = div %tmp.739 %tmp.740;
+        %tmp.742 = add %tmp.738 %tmp.741;
+        %tmp.743 = lgetv %okY.29;
+        symbol [ okY %tmp.743 184 35 38 ];
+        %tmp.744 = 2;
+        %tmp.745 = add %tmp.743 %tmp.744;
+        symbol [ Graphics %tmp.746 184 44 52 ];
+        %tmp.746 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.747 184 53 63 ];
+        %tmp.747 = getv %tmp.746 :FONT_XTINY;
+        %tmp.748 = "OK";
+        symbol [ Graphics %tmp.749 184 71 79 ];
+        %tmp.749 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.750 184 80 99 ];
+        %tmp.750 = getv %tmp.749 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.736 %tmp.737(%tmp.742, %tmp.745, %tmp.747, %tmp.748, %tmp.750);
+_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_73_36_185_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc"; @line = 187; @symbol_functiondef = [_triangle,187,20,29]; @symbol_param<0> = [dc,187,30,32]; @symbol_param<1> = [cx,187,34,36]; @symbol_param<2> = [cy,187,38,40]; @symbol_param<3> = [r,187,42,43]; ]
+    protected
+    function _triangle(dc, cx, cy, r) {
+_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_187_45_206_4_start:
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 189 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 189 8 10 ];
+        symbol [ setColor %tmp.2 189 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        %tmp.3 = 0x000000;
+        symbol [ Graphics %tmp.4 189 30 38 ];
+        %tmp.4 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.5 189 39 56 ];
+        %tmp.5 = getv %tmp.4 :COLOR_TRANSPARENT;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.5);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 190 8 ]
+        %tmp.6 = lgetv %dc;
+        symbol [ dc %tmp.6 190 8 10 ];
+        symbol [ fillPolygon %tmp.7 190 11 22 ];
+        %tmp.7 = getv function %tmp.6 :fillPolygon;
+        %tmp.8 = newa 3;
+        %tmp.9 = newa 2;
+        %tmp.10 = lgetv %cx;
+        symbol [ cx %tmp.10 191 13 15 ];
+        %tmp.11 = dup %tmp.9;
+        %tmp.12 = aputv %tmp.11 0 %tmp.10;
+        %tmp.13 = lgetv %cy;
+        symbol [ cy %tmp.13 191 25 27 ];
+        %tmp.14 = lgetv %r;
+        symbol [ r %tmp.14 191 30 31 ];
+        %tmp.15 = sub %tmp.13 %tmp.14;
+        %tmp.16 = 2;
+        %tmp.17 = sub %tmp.15 %tmp.16;
+        %tmp.18 = dup %tmp.12;
+        %tmp.19 = aputv %tmp.18 1 %tmp.17;
+        %tmp.20 = dup %tmp.8;
+        %tmp.21 = aputv %tmp.20 0 %tmp.19;
+        %tmp.22 = newa 2;
+        %tmp.23 = lgetv %cx;
+        symbol [ cx %tmp.23 192 13 15 ];
+        %tmp.24 = lgetv %r;
+        symbol [ r %tmp.24 192 18 19 ];
+        %tmp.25 = add %tmp.23 %tmp.24;
+        %tmp.26 = 2;
+        %tmp.27 = add %tmp.25 %tmp.26;
+        %tmp.28 = dup %tmp.22;
+        %tmp.29 = aputv %tmp.28 0 %tmp.27;
+        %tmp.30 = lgetv %cy;
+        symbol [ cy %tmp.30 192 25 27 ];
+        %tmp.31 = lgetv %r;
+        symbol [ r %tmp.31 192 30 31 ];
+        %tmp.32 = add %tmp.30 %tmp.31;
+        %tmp.33 = dup %tmp.29;
+        %tmp.34 = aputv %tmp.33 1 %tmp.32;
+        %tmp.35 = dup %tmp.21;
+        %tmp.36 = aputv %tmp.35 1 %tmp.34;
+        %tmp.37 = newa 2;
+        %tmp.38 = lgetv %cx;
+        symbol [ cx %tmp.38 193 13 15 ];
+        %tmp.39 = lgetv %r;
+        symbol [ r %tmp.39 193 18 19 ];
+        %tmp.40 = sub %tmp.38 %tmp.39;
+        %tmp.41 = 2;
+        %tmp.42 = sub %tmp.40 %tmp.41;
+        %tmp.43 = dup %tmp.37;
+        %tmp.44 = aputv %tmp.43 0 %tmp.42;
+        %tmp.45 = lgetv %cy;
+        symbol [ cy %tmp.45 193 25 27 ];
+        %tmp.46 = lgetv %r;
+        symbol [ r %tmp.46 193 30 31 ];
+        %tmp.47 = add %tmp.45 %tmp.46;
+        %tmp.48 = dup %tmp.44;
+        %tmp.49 = aputv %tmp.48 1 %tmp.47;
+        %tmp.50 = dup %tmp.36;
+        %tmp.51 = aputv %tmp.50 2 %tmp.49;
+        invoke %tmp.6 %tmp.7(%tmp.51);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 196 8 ]
+        %tmp.52 = lgetv %dc;
+        symbol [ dc %tmp.52 196 8 10 ];
+        symbol [ setColor %tmp.53 196 11 19 ];
+        %tmp.53 = getv function %tmp.52 :setColor;
+        %tmp.54 = 0xFFCC00;
+        symbol [ Graphics %tmp.55 196 30 38 ];
+        %tmp.55 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.56 196 39 56 ];
+        %tmp.56 = getv %tmp.55 :COLOR_TRANSPARENT;
+        invoke %tmp.52 %tmp.53(%tmp.54, %tmp.56);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 197 8 ]
+        %tmp.57 = lgetv %dc;
+        symbol [ dc %tmp.57 197 8 10 ];
+        symbol [ fillPolygon %tmp.58 197 11 22 ];
+        %tmp.58 = getv function %tmp.57 :fillPolygon;
+        %tmp.59 = newa 3;
+        %tmp.60 = newa 2;
+        %tmp.61 = lgetv %cx;
+        symbol [ cx %tmp.61 198 13 15 ];
+        %tmp.62 = dup %tmp.60;
+        %tmp.63 = aputv %tmp.62 0 %tmp.61;
+        %tmp.64 = lgetv %cy;
+        symbol [ cy %tmp.64 198 21 23 ];
+        %tmp.65 = lgetv %r;
+        symbol [ r %tmp.65 198 26 27 ];
+        %tmp.66 = sub %tmp.64 %tmp.65;
+        %tmp.67 = dup %tmp.63;
+        %tmp.68 = aputv %tmp.67 1 %tmp.66;
+        %tmp.69 = dup %tmp.59;
+        %tmp.70 = aputv %tmp.69 0 %tmp.68;
+        %tmp.71 = newa 2;
+        %tmp.72 = lgetv %cx;
+        symbol [ cx %tmp.72 199 13 15 ];
+        %tmp.73 = lgetv %r;
+        symbol [ r %tmp.73 199 18 19 ];
+        %tmp.74 = add %tmp.72 %tmp.73;
+        %tmp.75 = dup %tmp.71;
+        %tmp.76 = aputv %tmp.75 0 %tmp.74;
+        %tmp.77 = lgetv %cy;
+        symbol [ cy %tmp.77 199 21 23 ];
+        %tmp.78 = lgetv %r;
+        symbol [ r %tmp.78 199 26 27 ];
+        %tmp.79 = add %tmp.77 %tmp.78;
+        %tmp.80 = 2;
+        %tmp.81 = sub %tmp.79 %tmp.80;
+        %tmp.82 = dup %tmp.76;
+        %tmp.83 = aputv %tmp.82 1 %tmp.81;
+        %tmp.84 = dup %tmp.70;
+        %tmp.85 = aputv %tmp.84 1 %tmp.83;
+        %tmp.86 = newa 2;
+        %tmp.87 = lgetv %cx;
+        symbol [ cx %tmp.87 200 13 15 ];
+        %tmp.88 = lgetv %r;
+        symbol [ r %tmp.88 200 18 19 ];
+        %tmp.89 = sub %tmp.87 %tmp.88;
+        %tmp.90 = dup %tmp.86;
+        %tmp.91 = aputv %tmp.90 0 %tmp.89;
+        %tmp.92 = lgetv %cy;
+        symbol [ cy %tmp.92 200 21 23 ];
+        %tmp.93 = lgetv %r;
+        symbol [ r %tmp.93 200 26 27 ];
+        %tmp.94 = add %tmp.92 %tmp.93;
+        %tmp.95 = 2;
+        %tmp.96 = sub %tmp.94 %tmp.95;
+        %tmp.97 = dup %tmp.91;
+        %tmp.98 = aputv %tmp.97 1 %tmp.96;
+        %tmp.99 = dup %tmp.85;
+        %tmp.100 = aputv %tmp.99 2 %tmp.98;
+        invoke %tmp.57 %tmp.58(%tmp.100);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 203 8 ]
+        %tmp.101 = lgetv %dc;
+        symbol [ dc %tmp.101 203 8 10 ];
+        symbol [ setColor %tmp.102 203 11 19 ];
+        %tmp.102 = getv function %tmp.101 :setColor;
+        %tmp.103 = 0x000000;
+        symbol [ Graphics %tmp.104 203 30 38 ];
+        %tmp.104 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.105 203 39 56 ];
+        %tmp.105 = getv %tmp.104 :COLOR_TRANSPARENT;
+        invoke %tmp.101 %tmp.102(%tmp.103, %tmp.105);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 204 8 ]
+        %tmp.106 = lgetv %dc;
+        symbol [ dc %tmp.106 204 8 10 ];
+        symbol [ fillRectangle %tmp.107 204 11 24 ];
+        %tmp.107 = getv function %tmp.106 :fillRectangle;
+        %tmp.108 = lgetv %cx;
+        symbol [ cx %tmp.108 204 25 27 ];
+        %tmp.109 = 1;
+        %tmp.110 = sub %tmp.108 %tmp.109;
+        %tmp.111 = lgetv %cy;
+        symbol [ cy %tmp.111 204 33 35 ];
+        %tmp.112 = 6;
+        %tmp.113 = sub %tmp.111 %tmp.112;
+        %tmp.114 = 3;
+        %tmp.115 = 9;
+        invoke %tmp.106 %tmp.107(%tmp.110, %tmp.113, %tmp.114, %tmp.115);
+[ "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc" 205 8 ]
+        %tmp.116 = lgetv %dc;
+        symbol [ dc %tmp.116 205 8 10 ];
+        symbol [ fillRectangle %tmp.117 205 11 24 ];
+        %tmp.117 = getv function %tmp.116 :fillRectangle;
+        %tmp.118 = lgetv %cx;
+        symbol [ cx %tmp.118 205 25 27 ];
+        %tmp.119 = 1;
+        %tmp.120 = sub %tmp.118 %tmp.119;
+        %tmp.121 = lgetv %cy;
+        symbol [ cy %tmp.121 205 33 35 ];
+        %tmp.122 = 6;
+        %tmp.123 = add %tmp.121 %tmp.122;
+        %tmp.124 = 3;
+        %tmp.125 = 3;
+        invoke %tmp.116 %tmp.117(%tmp.120, %tmp.123, %tmp.124, %tmp.125);
+_Users_kkorolczuk_work_garmin_watchfaces_jsalert_source_JSAlertView_mc_187_45_206_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/watchfaces/jsalert/source/JSAlertView.mc"; @line = 1; ]
+<init> {
+}

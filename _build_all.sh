@@ -35,7 +35,9 @@ APPS=(
   fakenotificationescape
   fish
   fishingbitepredictor
-  freedivingtrainingtool
+  breathtrainingtool
+  breathtrainingsystem
+  cellwars
   intervalbeeper
   jazzball
   minigolf

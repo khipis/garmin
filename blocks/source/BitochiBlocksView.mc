@@ -60,6 +60,11 @@ class BitochiBlocksView extends WatchUi.View {
     hidden var _accelCd;
     hidden var _wobble;
 
+    public var accelX;
+    hidden var _useAccel;
+    hidden var _tiltArm;
+    hidden var _menuToggleY0; hidden var _menuToggleY1;
+
     hidden var _pieceColors;
     hidden var _shapes;
 
@@ -78,6 +83,12 @@ class BitochiBlocksView extends WatchUi.View {
 
         _best = Application.Storage.getValue("blocks_best");
         if (_best == null) { _best = 0; }
+
+        var ua = Application.Storage.getValue("blocks_accel");
+        _useAccel = (ua instanceof Toybox.Lang.Boolean) ? ua : false;
+        accelX = 0;
+        _tiltArm = true;
+        _menuToggleY0 = 0; _menuToggleY1 = 0;
 
         _board = new [TB_ROWS * TB_COLS];
         for (var i = 0; i < TB_ROWS * TB_COLS; i++) { _board[i] = 0; }
@@ -212,8 +223,34 @@ class BitochiBlocksView extends WatchUi.View {
         _accelCd = 0;
 
         _nextType = randPiece(); _nextIsPu = false;
+        _tiltArm = true;
         spawnPiece();
         _gs = TBS_PLAY;
+    }
+
+    hidden function handleTilt() {
+        if (!_useAccel) { return; }
+        if (_isPowerup) { /* still allow tilt */ }
+        if (_accelCd > 0) { _accelCd--; }
+
+        var ax = accelX;
+        if (ax == null) { return; }
+        var a = ax;
+        if (a < 0) { a = -a; }
+
+        if (a < 150) {
+            _tiltArm = true;
+            return;
+        }
+        if (!_tiltArm) { return; }
+        if (_accelCd > 0) { return; }
+        if (a < 350) { return; }
+
+        if (ax > 0) { tryMove(1, 0); }
+        else        { tryMove(-1, 0); }
+
+        _tiltArm = false;
+        _accelCd = 3;
     }
 
     hidden function randPiece() {
@@ -234,6 +271,7 @@ class BitochiBlocksView extends WatchUi.View {
 
         if (_gs == TBS_PLAY) {
             updateParticles();
+            handleTilt();
 
             if (_clearAnim > 0) {
                 _clearAnim--;
@@ -325,7 +363,16 @@ class BitochiBlocksView extends WatchUi.View {
     }
 
     function doTap(tx, ty) {
-        if (_gs == TBS_MENU) { startGame(); return; }
+        if (_gs == TBS_MENU) {
+            if (_menuToggleY1 > _menuToggleY0 && ty >= _menuToggleY0 && ty <= _menuToggleY1) {
+                _useAccel = !_useAccel;
+                Application.Storage.setValue("blocks_accel", _useAccel);
+                _tiltArm = true;
+                return;
+            }
+            startGame();
+            return;
+        }
         if (_gs == TBS_OVER) { _gs = TBS_MENU; return; }
         if (_gs == TBS_PLAY) { doRotate(); }
     }
@@ -596,11 +643,20 @@ class BitochiBlocksView extends WatchUi.View {
 
         if (_best > 0) {
             dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 79 / 100, Graphics.FONT_XTINY, "Best: " + _best, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_w / 2, _h * 76 / 100, Graphics.FONT_XTINY, "Best: " + _best, Graphics.TEXT_JUSTIFY_CENTER);
         }
 
+        var tY = _h * 84 / 100;
+        var fH = dc.getFontHeight(Graphics.FONT_XTINY);
+        _menuToggleY0 = tY - fH / 2 - 2;
+        _menuToggleY1 = tY + fH / 2 + 2;
+        var tClr = _useAccel ? 0x44FF88 : 0x557788;
+        dc.setColor(tClr, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, tY, Graphics.FONT_XTINY,
+            "TILT: " + (_useAccel ? "ON" : "OFF"), Graphics.TEXT_JUSTIFY_CENTER);
+
         dc.setColor((_tick % 12 < 6) ? 0x88CCFF : 0x4488BB, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 89 / 100, Graphics.FONT_XTINY, "Tap to play!", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 93 / 100, Graphics.FONT_XTINY, "Tap to play!", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawGame(dc) {
