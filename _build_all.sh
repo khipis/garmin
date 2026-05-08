@@ -38,6 +38,7 @@ APPS=(
   breathtrainingtool
   breathtrainingsystem
   cellwars
+  dinosaur
   intervalbeeper
   jazzball
   minigolf

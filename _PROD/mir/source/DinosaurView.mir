@@ -1,0 +1,2850 @@
+[ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 1; @symbol_usingdef<0> = [Toybox,1,6,12]; @symbol_usingdef<1> = [WatchUi,1,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 2; @symbol_usingdef<0> = [Toybox,2,6,12]; @symbol_usingdef<1> = [Graphics,2,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 3; @symbol_usingdef<0> = [Toybox,3,6,12]; @symbol_usingdef<1> = [Timer,3,13,18]; ]
+using Toybox.Timer;
+[ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 4; @symbol_usingdef<0> = [Toybox,4,6,12]; @symbol_usingdef<1> = [Math,4,13,17]; ]
+using Toybox.Math;
+[ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 7; @position = 6; @symbol_constdef = [GS_TITLE,7,6,14]; ]
+const GS_TITLE = 0;
+[ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 8; @position = 6; @symbol_constdef = [GS_RUN,8,6,12]; ]
+const GS_RUN = 1;
+[ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 9; @position = 6; @symbol_constdef = [GS_OVER,9,6,13]; ]
+const GS_OVER = 2;
+[ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 12; @position = 6; @symbol_constdef = [OBS_MAX,12,6,13]; ]
+const OBS_MAX = 3;
+[ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 14; @position = 6; @symbol_constdef = [CLD_MAX,14,6,13]; ]
+const CLD_MAX = 3;
+[ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 16; @symbol_classdef = [DinosaurView,16,6,18]; @symbol_extends<0> = [WatchUi,16,27,34]; @symbol_extends<1> = [View,16,35,39]; ]
+class DinosaurView extends WatchUi.View {
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 16; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 16; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 19; @position = 15; @symbol_vardef = [_timer,19,15,21]; ]
+    protected
+    var _timer;
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 20; @position = 15; @symbol_vardef = [_state,20,15,21]; ]
+    protected
+    var _state;
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 23; @position = 15; @symbol_vardef = [_sw,23,15,18]; ]
+    protected
+    var _sw;
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 24; @position = 15; @symbol_vardef = [_sh,24,15,18]; ]
+    protected
+    var _sh;
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 25; @position = 15; @symbol_vardef = [_grdY,25,15,20]; ]
+    protected
+    var _grdY;
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 26; @position = 15; @symbol_vardef = [_dinoX,26,15,21]; ]
+    protected
+    var _dinoX;
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 27; @position = 15; @symbol_vardef = [_dw,27,15,18]; ]
+    protected
+    var _dw;
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 28; @position = 15; @symbol_vardef = [_dh,28,15,18]; ]
+    protected
+    var _dh;
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 31; @position = 15; @symbol_vardef = [_dy,31,15,18]; ]
+    protected
+    var _dy;
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 32; @position = 15; @symbol_vardef = [_vy,32,15,18]; ]
+    protected
+    var _vy;
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 33; @position = 15; @symbol_vardef = [_onGrd,33,15,21]; ]
+    protected
+    var _onGrd;
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 34; @position = 15; @symbol_vardef = [_frame,34,15,21]; ]
+    protected
+    var _frame;
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 37; @position = 15; @symbol_vardef = [_ox,37,15,18]; ]
+    protected
+    var _ox;
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 38; @position = 15; @symbol_vardef = [_ow,38,15,18]; ]
+    protected
+    var _ow;
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 39; @position = 15; @symbol_vardef = [_oh,39,15,18]; ]
+    protected
+    var _oh;
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 40; @position = 15; @symbol_vardef = [_oa,40,15,18]; ]
+    protected
+    var _oa;
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 43; @position = 15; @symbol_vardef = [_cx,43,15,18]; ]
+    protected
+    var _cx;
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 44; @position = 15; @symbol_vardef = [_cy,44,15,18]; ]
+    protected
+    var _cy;
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 45; @position = 15; @symbol_vardef = [_cw,45,15,18]; ]
+    protected
+    var _cw;
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 48; @position = 15; @symbol_vardef = [_score,48,15,21]; ]
+    protected
+    var _score;
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 49; @position = 15; @symbol_vardef = [_hiScore,49,15,23]; ]
+    protected
+    var _hiScore;
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 50; @position = 15; @symbol_vardef = [_spd,50,15,19]; ]
+    protected
+    var _spd;
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 51; @position = 15; @symbol_vardef = [_nextObs,51,15,23]; ]
+    protected
+    var _nextObs;
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 54; @position = 15; @symbol_vardef = [_flash,54,15,21]; ]
+    protected
+    var _flash;
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 56; @symbol_functiondef = [initialize,56,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_56_26_68_4_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 57 8 ]
+        symbol [ View %tmp.2 57 8 12 ];
+        %tmp.2 = getv ? :View;
+        symbol [ initialize %tmp.3 57 13 23 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 58 8 ]
+        symbol [ GS_TITLE %tmp.5 58 19 27 ];
+        %tmp.5 = getv ? :GS_TITLE;
+        symbol [ _state ? 58 8 14 ];
+        putv self :_state %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 59 8 ]
+        %tmp.6 = 0;
+        symbol [ _hiScore ? 59 8 16 ];
+        putv self :_hiScore %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 60 8 ]
+        %tmp.7 = null;
+        symbol [ _timer ? 60 8 14 ];
+        putv self :_timer %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 61 8 ]
+        %tmp.8 = 0;
+        symbol [ _flash ? 61 8 14 ];
+        putv self :_flash %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 63 8 ]
+        symbol [ OBS_MAX %tmp.11 63 19 26 ];
+        %tmp.11 = getv ? :OBS_MAX;
+        %tmp.9 = newa %tmp.11;
+        symbol [ _ox ? 63 8 11 ];
+        putv self :_ox %tmp.9;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 63 29 ]
+        symbol [ OBS_MAX %tmp.14 63 40 47 ];
+        %tmp.14 = getv ? :OBS_MAX;
+        %tmp.12 = newa %tmp.14;
+        symbol [ _ow ? 63 29 32 ];
+        putv self :_ow %tmp.12;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 64 8 ]
+        symbol [ OBS_MAX %tmp.17 64 19 26 ];
+        %tmp.17 = getv ? :OBS_MAX;
+        %tmp.15 = newa %tmp.17;
+        symbol [ _oh ? 64 8 11 ];
+        putv self :_oh %tmp.15;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 64 29 ]
+        symbol [ OBS_MAX %tmp.20 64 40 47 ];
+        %tmp.20 = getv ? :OBS_MAX;
+        %tmp.18 = newa %tmp.20;
+        symbol [ _oa ? 64 29 32 ];
+        putv self :_oa %tmp.18;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 65 8 ]
+        for @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_65_8_65_56_for_test @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_65_8_65_56_for_incr @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_65_8_65_56_for_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_65_8_65_56_for_init:
+        [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_65_8_65_56_for_begin" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_65_8_65_56_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 65 17 18 ];
+        %tmp.21 = 0;
+        lputv %i.1 %tmp.21;
+        symbol [ i %i.1 65 17 18 ];
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_65_8_65_56_for_test:
+        %tmp.22 = lgetv %i.1;
+        symbol [ i %tmp.22 65 24 25 ];
+        symbol [ OBS_MAX %tmp.24 65 28 35 ];
+        %tmp.24 = getv ? :OBS_MAX;
+        %tmp.25 = lt %tmp.22 %tmp.24;
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_65_8_65_56_for_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_65_8_65_56_for_begin:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_65_42_65_56_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 65 44 ]
+        symbol [ _oa %tmp.26 65 44 47 ];
+        %tmp.26 = getv self :_oa;
+        %tmp.27 = 0;
+        %tmp.28 = lgetv %i.1;
+        symbol [ i %tmp.28 65 48 49 ];
+        aputv %tmp.26 %tmp.28 %tmp.27;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_65_42_65_56_stop:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_65_8_65_56_for_incr:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 65 ]
+        %tmp.31 = lgetv %i.1;
+        symbol [ i %tmp.31 65 37 38 ];
+        %tmp.32 = add %tmp.31 1;
+        lputv %i.1 %tmp.32;
+        symbol [ i %i.1 65 37 38 ];
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_65_8_65_56_for_test;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_65_8_65_56_for_end:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 67 8 ]
+        symbol [ CLD_MAX %tmp.35 67 19 26 ];
+        %tmp.35 = getv ? :CLD_MAX;
+        %tmp.33 = newa %tmp.35;
+        symbol [ _cx ? 67 8 11 ];
+        putv self :_cx %tmp.33;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 67 29 ]
+        symbol [ CLD_MAX %tmp.38 67 40 47 ];
+        %tmp.38 = getv ? :CLD_MAX;
+        %tmp.36 = newa %tmp.38;
+        symbol [ _cy ? 67 29 32 ];
+        putv self :_cy %tmp.36;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 67 50 ]
+        symbol [ CLD_MAX %tmp.41 67 61 68 ];
+        %tmp.41 = getv ? :CLD_MAX;
+        %tmp.39 = newa %tmp.41;
+        symbol [ _cw ? 67 50 53 ];
+        putv self :_cw %tmp.39;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_56_26_68_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 70; @symbol_functiondef = [onLayout,70,13,21]; @symbol_param<0> = [dc,70,22,24]; ]
+    function onLayout(dc) {
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_70_26_90_4_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 71 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 71 16 18 ];
+        symbol [ getWidth %tmp.2 71 19 27 ];
+        %tmp.2 = getv function %tmp.1 :getWidth;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        symbol [ _sw ? 71 8 11 ];
+        putv self :_sw %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 72 8 ]
+        %tmp.4 = lgetv %dc;
+        symbol [ dc %tmp.4 72 16 18 ];
+        symbol [ getHeight %tmp.5 72 19 28 ];
+        %tmp.5 = getv function %tmp.4 :getHeight;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        symbol [ _sh ? 72 8 11 ];
+        putv self :_sh %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 73 8 ]
+        symbol [ _sh %tmp.8 73 16 19 ];
+        %tmp.8 = getv ? :_sh;
+        %tmp.9 = 70;
+        %tmp.10 = mul %tmp.8 %tmp.9;
+        %tmp.11 = 100;
+        %tmp.12 = div %tmp.10 %tmp.11;
+        symbol [ _grdY ? 73 8 13 ];
+        putv self :_grdY %tmp.12;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 75 8 ]
+        symbol [ _sw %tmp.14 75 17 20 ];
+        %tmp.14 = getv ? :_sw;
+        %tmp.15 = 17;
+        %tmp.16 = mul %tmp.14 %tmp.15;
+        %tmp.17 = 100;
+        %tmp.18 = div %tmp.16 %tmp.17;
+        symbol [ _dinoX ? 75 8 14 ];
+        putv self :_dinoX %tmp.18;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 76 8 ]
+        symbol [ _sw %tmp.20 76 17 20 ];
+        %tmp.20 = getv ? :_sw;
+        %tmp.21 = 7;
+        %tmp.22 = mul %tmp.20 %tmp.21;
+        %tmp.23 = 100;
+        %tmp.24 = div %tmp.22 %tmp.23;
+        symbol [ _dw ? 76 8 11 ];
+        putv self :_dw %tmp.24;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 77 8 ]
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_77_8_77_34_if_stmt:
+        symbol [ _dw %tmp.26 77 12 15 ];
+        %tmp.26 = getv ? :_dw;
+        %tmp.27 = 22;
+        %tmp.28 = lt %tmp.26 %tmp.27;
+        bf %tmp.28 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_77_8_77_34_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_77_8_77_34_if_true:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_77_22_77_34_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 77 24 ]
+        %tmp.29 = 22;
+        symbol [ _dw ? 77 24 27 ];
+        putv self :_dw %tmp.29;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_77_22_77_34_stop:
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_77_8_77_34_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_77_8_77_34_if_end:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 78 8 ]
+        symbol [ _dw %tmp.31 78 14 17 ];
+        %tmp.31 = getv ? :_dw;
+        symbol [ _dw %tmp.33 78 20 23 ];
+        %tmp.33 = getv ? :_dw;
+        %tmp.34 = 2;
+        %tmp.35 = div %tmp.33 %tmp.34;
+        %tmp.36 = add %tmp.31 %tmp.35;
+        symbol [ _dh ? 78 8 11 ];
+        putv self :_dh %tmp.36;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 81 8 ]
+        symbol [ _cy %tmp.37 81 8 11 ];
+        %tmp.37 = getv self :_cy;
+        symbol [ _sh %tmp.39 81 17 20 ];
+        %tmp.39 = getv ? :_sh;
+        %tmp.40 = 18;
+        %tmp.41 = mul %tmp.39 %tmp.40;
+        %tmp.42 = 100;
+        %tmp.43 = div %tmp.41 %tmp.42;
+        %tmp.44 = 0;
+        aputv %tmp.37 %tmp.44 %tmp.43;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 82 8 ]
+        symbol [ _cy %tmp.45 82 8 11 ];
+        %tmp.45 = getv self :_cy;
+        symbol [ _sh %tmp.47 82 17 20 ];
+        %tmp.47 = getv ? :_sh;
+        %tmp.48 = 26;
+        %tmp.49 = mul %tmp.47 %tmp.48;
+        %tmp.50 = 100;
+        %tmp.51 = div %tmp.49 %tmp.50;
+        %tmp.52 = 1;
+        aputv %tmp.45 %tmp.52 %tmp.51;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 83 8 ]
+        symbol [ _cy %tmp.53 83 8 11 ];
+        %tmp.53 = getv self :_cy;
+        symbol [ _sh %tmp.55 83 17 20 ];
+        %tmp.55 = getv ? :_sh;
+        %tmp.56 = 12;
+        %tmp.57 = mul %tmp.55 %tmp.56;
+        %tmp.58 = 100;
+        %tmp.59 = div %tmp.57 %tmp.58;
+        %tmp.60 = 2;
+        aputv %tmp.53 %tmp.60 %tmp.59;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 84 8 ]
+        symbol [ _cw %tmp.61 84 8 11 ];
+        %tmp.61 = getv self :_cw;
+        %tmp.62 = 44;
+        %tmp.63 = 0;
+        aputv %tmp.61 %tmp.63 %tmp.62;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 84 21 ]
+        symbol [ _cw %tmp.64 84 21 24 ];
+        %tmp.64 = getv self :_cw;
+        %tmp.65 = 36;
+        %tmp.66 = 1;
+        aputv %tmp.64 %tmp.66 %tmp.65;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 84 34 ]
+        symbol [ _cw %tmp.67 84 34 37 ];
+        %tmp.67 = getv self :_cw;
+        %tmp.68 = 50;
+        %tmp.69 = 2;
+        aputv %tmp.67 %tmp.69 %tmp.68;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 85 8 ]
+        symbol [ _cx %tmp.70 85 8 11 ];
+        %tmp.70 = getv self :_cx;
+        symbol [ _sw %tmp.72 85 17 20 ];
+        %tmp.72 = getv ? :_sw;
+        %tmp.73 = 40;
+        %tmp.74 = mul %tmp.72 %tmp.73;
+        %tmp.75 = 100;
+        %tmp.76 = div %tmp.74 %tmp.75;
+        %tmp.77 = 0;
+        aputv %tmp.70 %tmp.77 %tmp.76;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 86 8 ]
+        symbol [ _cx %tmp.78 86 8 11 ];
+        %tmp.78 = getv self :_cx;
+        symbol [ _sw %tmp.80 86 17 20 ];
+        %tmp.80 = getv ? :_sw;
+        %tmp.81 = 62;
+        %tmp.82 = mul %tmp.80 %tmp.81;
+        %tmp.83 = 100;
+        %tmp.84 = div %tmp.82 %tmp.83;
+        %tmp.85 = 1;
+        aputv %tmp.78 %tmp.85 %tmp.84;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 87 8 ]
+        symbol [ _cx %tmp.86 87 8 11 ];
+        %tmp.86 = getv self :_cx;
+        symbol [ _sw %tmp.88 87 17 20 ];
+        %tmp.88 = getv ? :_sw;
+        %tmp.89 = 80;
+        %tmp.90 = mul %tmp.88 %tmp.89;
+        %tmp.91 = 100;
+        %tmp.92 = div %tmp.90 %tmp.91;
+        %tmp.93 = 2;
+        aputv %tmp.86 %tmp.93 %tmp.92;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 89 8 ]
+        %tmp.94 = self;
+        symbol [ _resetGame %tmp.95 89 8 18 ];
+        %tmp.95 = getv function %tmp.94 :_resetGame;
+        invoke %tmp.94 %tmp.95();
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_70_26_90_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 92; @symbol_functiondef = [onShow,92,13,19]; ]
+    function onShow() {
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_92_22_95_4_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 93 8 ]
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_93_8_93_58_if_stmt:
+        symbol [ _timer %tmp.2 93 12 18 ];
+        %tmp.2 = getv ? :_timer;
+        %tmp.3 = null;
+        %tmp.4 = eq %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_93_8_93_58_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_93_8_93_58_if_true:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_93_28_93_58_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 93 30 ]
+        symbol [ Timer %tmp.7 93 43 48 ];
+        %tmp.7 = getm $.Toybox.Timer;
+        symbol [ Timer %tmp.8 93 49 54 ];
+        %tmp.8 = getv function ? %tmp.7 :Timer;
+        %tmp.5 = newc %tmp.8 ();
+        symbol [ _timer ? 93 30 36 ];
+        putv self :_timer %tmp.5;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_93_28_93_58_stop:
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_93_8_93_58_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_93_8_93_58_if_end:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 94 8 ]
+        symbol [ _timer %tmp.10 94 8 14 ];
+        %tmp.10 = getv ? :_timer;
+        symbol [ start %tmp.11 94 15 20 ];
+        %tmp.11 = getv function %tmp.10 :start;
+        %tmp.12 = self;
+        symbol [ method %tmp.13 94 21 27 ];
+        %tmp.13 = getv function %tmp.12 :method;
+        %tmp.15 = const :gameTick;
+        symbol [ gameTick %tmp.15 94 29 37 const ];
+        %tmp.16 = invoke %tmp.12 %tmp.13(%tmp.15);
+        %tmp.17 = 33;
+        %tmp.18 = true;
+        invoke %tmp.10 %tmp.11(%tmp.16, %tmp.17, %tmp.18);
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_92_22_95_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 97; @symbol_functiondef = [onHide,97,13,19]; ]
+    function onHide() {
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_97_22_99_4_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 98 8 ]
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_98_8_98_45_if_stmt:
+        symbol [ _timer %tmp.2 98 12 18 ];
+        %tmp.2 = getv ? :_timer;
+        %tmp.3 = null;
+        %tmp.4 = ne %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_98_8_98_45_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_98_8_98_45_if_true:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_98_28_98_45_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 98 30 ]
+        symbol [ _timer %tmp.6 98 30 36 ];
+        %tmp.6 = getv ? :_timer;
+        %tmp.7 = as %tmp.6 { (!Null) };
+        symbol [ stop %tmp.8 98 37 41 ];
+        %tmp.8 = getv function %tmp.7 :stop;
+        invoke %tmp.7 %tmp.8();
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_98_28_98_45_stop:
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_98_8_98_45_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_98_8_98_45_if_end:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_97_22_99_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 103; @symbol_functiondef = [gameTick,103,13,21]; ]
+    function gameTick() {
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_103_24_107_4_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 104 8 ]
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_104_8_104_41_if_stmt:
+        symbol [ _state %tmp.2 104 12 18 ];
+        %tmp.2 = getv ? :_state;
+        symbol [ GS_RUN %tmp.4 104 22 28 ];
+        %tmp.4 = getv ? :GS_RUN;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_104_8_104_41_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_104_8_104_41_if_true:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_104_30_104_41_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 104 32 ]
+        %tmp.6 = self;
+        symbol [ _step %tmp.7 104 32 37 ];
+        %tmp.7 = getv function %tmp.6 :_step;
+        invoke %tmp.6 %tmp.7();
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_104_30_104_41_stop:
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_104_8_104_41_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_104_8_104_41_if_end:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 105 8 ]
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_105_8_105_47_if_stmt:
+        symbol [ _flash %tmp.9 105 12 18 ];
+        %tmp.9 = getv ? :_flash;
+        %tmp.10 = 0;
+        %tmp.11 = gt %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_105_8_105_47_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_105_8_105_47_if_true:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_105_24_105_47_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 105 26 ]
+        symbol [ _flash %tmp.13 105 35 41 ];
+        %tmp.13 = getv ? :_flash;
+        %tmp.14 = 1;
+        %tmp.15 = sub %tmp.13 %tmp.14;
+        symbol [ _flash ? 105 26 32 ];
+        putv self :_flash %tmp.15;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_105_24_105_47_stop:
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_105_8_105_47_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_105_8_105_47_if_end:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 106 8 ]
+        symbol [ WatchUi %tmp.16 106 8 15 ];
+        %tmp.16 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.17 106 16 29 ];
+        %tmp.17 = getv function %tmp.16 :requestUpdate;
+        invoke %tmp.16 %tmp.17();
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_103_24_107_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 111; @symbol_functiondef = [doAction,111,13,21]; ]
+    function doAction() {
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_111_24_122_4_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 112 8 ]
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_112_8_116_8_if_stmt:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_112_12_112_44_begin:
+        symbol [ _state %tmp.2 112 12 18 ];
+        %tmp.2 = getv ? :_state;
+        symbol [ GS_TITLE %tmp.4 112 22 30 ];
+        %tmp.4 = getv ? :GS_TITLE;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bt %tmp.5 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_112_8_116_8_if_true;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_112_34_112_44_false:
+        symbol [ _state %tmp.7 112 34 40 ];
+        %tmp.7 = getv ? :_state;
+        symbol [ GS_OVER %tmp.9 112 44 51 ];
+        %tmp.9 = getv ? :GS_OVER;
+        %tmp.10 = eq %tmp.7 %tmp.9;
+        push %tmp.10;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_112_34_112_44_end:
+        %tmp.11 = phi [%tmp.5 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_112_12_112_44_begin] [%tmp.10 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_112_34_112_44_false] [%tmp.11 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_112_34_112_44_end];
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_112_8_116_8_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_112_8_116_8_if_true:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_112_53_116_8_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 113 12 ]
+        %tmp.12 = self;
+        symbol [ _resetGame %tmp.13 113 12 22 ];
+        %tmp.13 = getv function %tmp.12 :_resetGame;
+        invoke %tmp.12 %tmp.13();
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 114 12 ]
+        symbol [ GS_RUN %tmp.15 114 21 27 ];
+        %tmp.15 = getv ? :GS_RUN;
+        symbol [ _state ? 114 12 18 ];
+        putv self :_state %tmp.15;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 115 12 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_112_53_116_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_112_8_116_8_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_112_8_116_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 118 8 ]
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_118_8_121_8_if_stmt:
+        symbol [ _onGrd %tmp.17 118 12 18 ];
+        %tmp.17 = getv ? :_onGrd;
+        %tmp.18 = 1;
+        %tmp.19 = eq %tmp.17 %tmp.18;
+        bf %tmp.19 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_118_8_121_8_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_118_8_121_8_if_true:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_118_25_121_8_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 119 12 ]
+        %tmp.20 = -17;
+        symbol [ _vy ? 119 12 15 ];
+        putv self :_vy %tmp.20;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 120 12 ]
+        %tmp.21 = 0;
+        symbol [ _onGrd ? 120 12 18 ];
+        putv self :_onGrd %tmp.21;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_118_25_121_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_118_8_121_8_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_118_8_121_8_if_end:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_111_24_122_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 124; @symbol_functiondef = [doBack,124,13,19]; ]
+    function doBack() {
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_124_22_127_4_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 125 8 ]
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_125_8_125_63_if_stmt:
+        symbol [ _state %tmp.2 125 12 18 ];
+        %tmp.2 = getv ? :_state;
+        symbol [ GS_RUN %tmp.4 125 22 28 ];
+        %tmp.4 = getv ? :GS_RUN;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_125_8_125_63_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_125_8_125_63_if_true:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_125_30_125_63_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 125 32 ]
+        symbol [ GS_OVER %tmp.7 125 41 48 ];
+        %tmp.7 = getv ? :GS_OVER;
+        symbol [ _state ? 125 32 38 ];
+        putv self :_state %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 125 50 ]
+        %tmp.8 = true;
+        ret %tmp.8;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_125_30_125_63_stop:
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_125_8_125_63_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_125_8_125_63_if_end:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 126 8 ]
+        %tmp.9 = false;
+        ret %tmp.9;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_124_22_127_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 131; @symbol_functiondef = [_resetGame,131,20,30]; ]
+    protected
+    function _resetGame() {
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_131_33_140_4_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 132 8 ]
+        symbol [ _grdY %tmp.2 132 19 24 ];
+        %tmp.2 = getv ? :_grdY;
+        symbol [ _dh %tmp.4 132 27 30 ];
+        %tmp.4 = getv ? :_dh;
+        %tmp.5 = sub %tmp.2 %tmp.4;
+        symbol [ _dy ? 132 8 11 ];
+        putv self :_dy %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 133 8 ]
+        %tmp.6 = 0;
+        symbol [ _vy ? 133 8 11 ];
+        putv self :_vy %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 134 8 ]
+        %tmp.7 = 1;
+        symbol [ _onGrd ? 134 8 14 ];
+        putv self :_onGrd %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 135 8 ]
+        %tmp.8 = 0;
+        symbol [ _frame ? 135 8 14 ];
+        putv self :_frame %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 136 8 ]
+        %tmp.9 = 0;
+        symbol [ _score ? 136 8 14 ];
+        putv self :_score %tmp.9;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 137 8 ]
+        %tmp.10 = 5;
+        symbol [ _spd ? 137 8 12 ];
+        putv self :_spd %tmp.10;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 138 8 ]
+        %tmp.11 = 55;
+        symbol [ _nextObs ? 138 8 16 ];
+        putv self :_nextObs %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 139 8 ]
+        for @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_139_8_139_56_for_test @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_139_8_139_56_for_incr @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_139_8_139_56_for_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_139_8_139_56_for_init:
+        [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_139_8_139_56_for_begin" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_139_8_139_56_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 139 17 18 ];
+        %tmp.12 = 0;
+        lputv %i.1 %tmp.12;
+        symbol [ i %i.1 139 17 18 ];
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_139_8_139_56_for_test:
+        %tmp.13 = lgetv %i.1;
+        symbol [ i %tmp.13 139 24 25 ];
+        symbol [ OBS_MAX %tmp.15 139 28 35 ];
+        %tmp.15 = getv ? :OBS_MAX;
+        %tmp.16 = lt %tmp.13 %tmp.15;
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_139_8_139_56_for_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_139_8_139_56_for_begin:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_139_42_139_56_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 139 44 ]
+        symbol [ _oa %tmp.17 139 44 47 ];
+        %tmp.17 = getv self :_oa;
+        %tmp.18 = 0;
+        %tmp.19 = lgetv %i.1;
+        symbol [ i %tmp.19 139 48 49 ];
+        aputv %tmp.17 %tmp.19 %tmp.18;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_139_42_139_56_stop:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_139_8_139_56_for_incr:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 139 ]
+        %tmp.22 = lgetv %i.1;
+        symbol [ i %tmp.22 139 37 38 ];
+        %tmp.23 = add %tmp.22 1;
+        lputv %i.1 %tmp.23;
+        symbol [ i %i.1 139 37 38 ];
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_139_8_139_56_for_test;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_139_8_139_56_for_end:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_131_33_140_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 142; @symbol_functiondef = [_step,142,20,25]; ]
+    protected
+    function _step() {
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_142_28_186_4_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 143 8 ]
+        symbol [ _frame %tmp.2 143 17 23 ];
+        %tmp.2 = getv ? :_frame;
+        %tmp.3 = 1;
+        %tmp.4 = add %tmp.2 %tmp.3;
+        symbol [ _frame ? 143 8 14 ];
+        putv self :_frame %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 146 8 ]
+        symbol [ _vy %tmp.6 146 14 17 ];
+        %tmp.6 = getv ? :_vy;
+        %tmp.7 = 2;
+        %tmp.8 = add %tmp.6 %tmp.7;
+        symbol [ _vy ? 146 8 11 ];
+        putv self :_vy %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 147 8 ]
+        symbol [ _dy %tmp.10 147 14 17 ];
+        %tmp.10 = getv ? :_dy;
+        symbol [ _vy %tmp.12 147 20 23 ];
+        %tmp.12 = getv ? :_vy;
+        %tmp.13 = add %tmp.10 %tmp.12;
+        symbol [ _dy ? 147 8 11 ];
+        putv self :_dy %tmp.13;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 148 8 ]
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_148_8_152_8_if_stmt:
+        symbol [ _dy %tmp.15 148 12 15 ];
+        %tmp.15 = getv ? :_dy;
+        symbol [ _grdY %tmp.17 148 19 24 ];
+        %tmp.17 = getv ? :_grdY;
+        symbol [ _dh %tmp.19 148 27 30 ];
+        %tmp.19 = getv ? :_dh;
+        %tmp.20 = sub %tmp.17 %tmp.19;
+        %tmp.21 = gte %tmp.15 %tmp.20;
+        bf %tmp.21 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_148_8_152_8_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_148_8_152_8_if_true:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_148_32_152_8_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 149 12 ]
+        symbol [ _grdY %tmp.23 149 21 26 ];
+        %tmp.23 = getv ? :_grdY;
+        symbol [ _dh %tmp.25 149 29 32 ];
+        %tmp.25 = getv ? :_dh;
+        %tmp.26 = sub %tmp.23 %tmp.25;
+        symbol [ _dy ? 149 12 15 ];
+        putv self :_dy %tmp.26;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 150 12 ]
+        %tmp.27 = 0;
+        symbol [ _vy ? 150 12 15 ];
+        putv self :_vy %tmp.27;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 151 12 ]
+        %tmp.28 = 1;
+        symbol [ _onGrd ? 151 12 18 ];
+        putv self :_onGrd %tmp.28;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_148_32_152_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_148_8_152_8_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_148_8_152_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 155 8 ]
+        %tmp.29 = 5;
+        symbol [ _score %tmp.31 155 19 25 ];
+        %tmp.31 = getv ? :_score;
+        %tmp.32 = 250;
+        %tmp.33 = div %tmp.31 %tmp.32;
+        %tmp.34 = add %tmp.29 %tmp.33;
+        symbol [ _spd ? 155 8 12 ];
+        putv self :_spd %tmp.34;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 156 8 ]
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_156_8_156_36_if_stmt:
+        symbol [ _spd %tmp.36 156 12 16 ];
+        %tmp.36 = getv ? :_spd;
+        %tmp.37 = 13;
+        %tmp.38 = gt %tmp.36 %tmp.37;
+        bf %tmp.38 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_156_8_156_36_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_156_8_156_36_if_true:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_156_23_156_36_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 156 25 ]
+        %tmp.39 = 13;
+        symbol [ _spd ? 156 25 29 ];
+        putv self :_spd %tmp.39;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_156_23_156_36_stop:
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_156_8_156_36_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_156_8_156_36_if_end:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 159 8 ]
+        for @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_159_8_163_8_for_test @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_159_8_163_8_for_incr @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_159_8_163_8_for_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_159_8_163_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_159_8_163_8_for_begin" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_159_8_163_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 159 17 18 ];
+        %tmp.40 = 0;
+        lputv %i.1 %tmp.40;
+        symbol [ i %i.1 159 17 18 ];
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_159_8_163_8_for_test:
+        %tmp.41 = lgetv %i.1;
+        symbol [ i %tmp.41 159 24 25 ];
+        symbol [ OBS_MAX %tmp.43 159 28 35 ];
+        %tmp.43 = getv ? :OBS_MAX;
+        %tmp.44 = lt %tmp.41 %tmp.43;
+        bf %tmp.44 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_159_8_163_8_for_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_159_8_163_8_for_begin:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_159_42_163_8_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 160 12 ]
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_160_12_160_41_if_stmt:
+        symbol [ _oa %tmp.46 160 16 19 ];
+        %tmp.46 = getv ? :_oa;
+        %tmp.47 = lgetv %i.1;
+        symbol [ i %tmp.47 160 20 21 ];
+        %tmp.48 = agetv %tmp.46 %tmp.47;
+        %tmp.49 = 0;
+        %tmp.50 = eq %tmp.48 %tmp.49;
+        bf %tmp.50 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_160_12_160_41_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_160_12_160_41_if_true:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_160_29_160_41_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 160 31 ]
+        goto break @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_159_8_163_8_for_incr;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_160_29_160_41_stop:
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_160_12_160_41_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_160_12_160_41_if_end:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 161 12 ]
+        symbol [ _ox %tmp.51 161 12 15 ];
+        %tmp.51 = getv self :_ox;
+        symbol [ _ox %tmp.53 161 21 24 ];
+        %tmp.53 = getv ? :_ox;
+        %tmp.54 = lgetv %i.1;
+        symbol [ i %tmp.54 161 25 26 ];
+        %tmp.55 = agetv %tmp.53 %tmp.54;
+        symbol [ _spd %tmp.57 161 30 34 ];
+        %tmp.57 = getv ? :_spd;
+        %tmp.58 = sub %tmp.55 %tmp.57;
+        %tmp.59 = lgetv %i.1;
+        symbol [ i %tmp.59 161 16 17 ];
+        aputv %tmp.51 %tmp.59 %tmp.58;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 162 12 ]
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_162_12_162_51_if_stmt:
+        symbol [ _ox %tmp.61 162 16 19 ];
+        %tmp.61 = getv ? :_ox;
+        %tmp.62 = lgetv %i.1;
+        symbol [ i %tmp.62 162 20 21 ];
+        %tmp.63 = agetv %tmp.61 %tmp.62;
+        symbol [ _ow %tmp.65 162 25 28 ];
+        %tmp.65 = getv ? :_ow;
+        %tmp.66 = lgetv %i.1;
+        symbol [ i %tmp.66 162 29 30 ];
+        %tmp.67 = agetv %tmp.65 %tmp.66;
+        %tmp.68 = add %tmp.63 %tmp.67;
+        %tmp.69 = 0;
+        %tmp.70 = lt %tmp.68 %tmp.69;
+        bf %tmp.70 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_162_12_162_51_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_162_12_162_51_if_true:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_162_37_162_51_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 162 39 ]
+        symbol [ _oa %tmp.71 162 39 42 ];
+        %tmp.71 = getv self :_oa;
+        %tmp.72 = 0;
+        %tmp.73 = lgetv %i.1;
+        symbol [ i %tmp.73 162 43 44 ];
+        aputv %tmp.71 %tmp.73 %tmp.72;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_162_37_162_51_stop:
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_162_12_162_51_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_162_12_162_51_if_end:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_159_42_163_8_stop:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_159_8_163_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 159 ]
+        %tmp.76 = lgetv %i.1;
+        symbol [ i %tmp.76 159 37 38 ];
+        %tmp.77 = add %tmp.76 1;
+        lputv %i.1 %tmp.77;
+        symbol [ i %i.1 159 37 38 ];
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_159_8_163_8_for_test;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_159_8_163_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 166 8 ]
+        for @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_166_8_169_8_for_test @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_166_8_169_8_for_incr @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_166_8_169_8_for_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_166_8_169_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_166_8_169_8_for_begin" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_166_8_169_8_for_end" ]
+        %i.2 = local;
+        symbol [ i %i.2 166 17 18 ];
+        %tmp.78 = 0;
+        lputv %i.2 %tmp.78;
+        symbol [ i %i.2 166 17 18 ];
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_166_8_169_8_for_test:
+        %tmp.79 = lgetv %i.2;
+        symbol [ i %tmp.79 166 24 25 ];
+        symbol [ CLD_MAX %tmp.81 166 28 35 ];
+        %tmp.81 = getv ? :CLD_MAX;
+        %tmp.82 = lt %tmp.79 %tmp.81;
+        bf %tmp.82 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_166_8_169_8_for_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_166_8_169_8_for_begin:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_166_42_169_8_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 167 12 ]
+        symbol [ _cx %tmp.83 167 12 15 ];
+        %tmp.83 = getv self :_cx;
+        symbol [ _cx %tmp.85 167 21 24 ];
+        %tmp.85 = getv ? :_cx;
+        %tmp.86 = lgetv %i.2;
+        symbol [ i %tmp.86 167 25 26 ];
+        %tmp.87 = agetv %tmp.85 %tmp.86;
+        symbol [ _spd %tmp.89 167 31 35 ];
+        %tmp.89 = getv ? :_spd;
+        %tmp.90 = 2;
+        %tmp.91 = div %tmp.89 %tmp.90;
+        %tmp.92 = 1;
+        %tmp.93 = add %tmp.91 %tmp.92;
+        %tmp.94 = sub %tmp.87 %tmp.93;
+        %tmp.95 = lgetv %i.2;
+        symbol [ i %tmp.95 167 16 17 ];
+        aputv %tmp.83 %tmp.95 %tmp.94;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 168 12 ]
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_168_12_168_58_if_stmt:
+        symbol [ _cx %tmp.97 168 16 19 ];
+        %tmp.97 = getv ? :_cx;
+        %tmp.98 = lgetv %i.2;
+        symbol [ i %tmp.98 168 20 21 ];
+        %tmp.99 = agetv %tmp.97 %tmp.98;
+        symbol [ _cw %tmp.101 168 25 28 ];
+        %tmp.101 = getv ? :_cw;
+        %tmp.102 = lgetv %i.2;
+        symbol [ i %tmp.102 168 29 30 ];
+        %tmp.103 = agetv %tmp.101 %tmp.102;
+        %tmp.104 = add %tmp.99 %tmp.103;
+        %tmp.105 = 0;
+        %tmp.106 = lt %tmp.104 %tmp.105;
+        bf %tmp.106 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_168_12_168_58_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_168_12_168_58_if_true:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_168_37_168_58_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 168 39 ]
+        symbol [ _cx %tmp.107 168 39 42 ];
+        %tmp.107 = getv self :_cx;
+        symbol [ _sw %tmp.109 168 48 51 ];
+        %tmp.109 = getv ? :_sw;
+        %tmp.110 = 10;
+        %tmp.111 = add %tmp.109 %tmp.110;
+        %tmp.112 = lgetv %i.2;
+        symbol [ i %tmp.112 168 43 44 ];
+        aputv %tmp.107 %tmp.112 %tmp.111;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_168_37_168_58_stop:
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_168_12_168_58_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_168_12_168_58_if_end:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_166_42_169_8_stop:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_166_8_169_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 166 ]
+        %tmp.115 = lgetv %i.2;
+        symbol [ i %tmp.115 166 37 38 ];
+        %tmp.116 = add %tmp.115 1;
+        lputv %i.2 %tmp.116;
+        symbol [ i %i.2 166 37 38 ];
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_166_8_169_8_for_test;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_166_8_169_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 172 8 ]
+        symbol [ _nextObs %tmp.118 172 19 27 ];
+        %tmp.118 = getv ? :_nextObs;
+        %tmp.119 = 1;
+        %tmp.120 = sub %tmp.118 %tmp.119;
+        symbol [ _nextObs ? 172 8 16 ];
+        putv self :_nextObs %tmp.120;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 173 8 ]
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_173_8_173_42_if_stmt:
+        symbol [ _nextObs %tmp.122 173 12 20 ];
+        %tmp.122 = getv ? :_nextObs;
+        %tmp.123 = 0;
+        %tmp.124 = lte %tmp.122 %tmp.123;
+        bf %tmp.124 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_173_8_173_42_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_173_8_173_42_if_true:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_173_27_173_42_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 173 29 ]
+        %tmp.125 = self;
+        symbol [ _spawnObs %tmp.126 173 29 38 ];
+        %tmp.126 = getv function %tmp.125 :_spawnObs;
+        invoke %tmp.125 %tmp.126();
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_173_27_173_42_stop:
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_173_8_173_42_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_173_8_173_42_if_end:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 176 8 ]
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_176_8_183_8_if_stmt:
+        %tmp.127 = self;
+        symbol [ _collide %tmp.128 176 12 20 ];
+        %tmp.128 = getv function %tmp.127 :_collide;
+        %tmp.129 = invoke %tmp.127 %tmp.128();
+        bf %tmp.129 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_176_8_183_8_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_176_8_183_8_if_true:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_176_24_183_8_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 177 12 ]
+        symbol [ GS_OVER %tmp.131 177 21 28 ];
+        %tmp.131 = getv ? :GS_OVER;
+        symbol [ _state ? 177 12 18 ];
+        putv self :_state %tmp.131;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 178 12 ]
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_178_12_181_12_if_stmt:
+        symbol [ _score %tmp.133 178 16 22 ];
+        %tmp.133 = getv ? :_score;
+        symbol [ _hiScore %tmp.135 178 25 33 ];
+        %tmp.135 = getv ? :_hiScore;
+        %tmp.136 = gt %tmp.133 %tmp.135;
+        bf %tmp.136 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_178_12_181_12_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_178_12_181_12_if_true:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_178_35_181_12_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 179 16 ]
+        symbol [ _score %tmp.138 179 27 33 ];
+        %tmp.138 = getv ? :_score;
+        symbol [ _hiScore ? 179 16 24 ];
+        putv self :_hiScore %tmp.138;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 180 16 ]
+        %tmp.139 = 60;
+        symbol [ _flash ? 180 16 22 ];
+        putv self :_flash %tmp.139;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_178_35_181_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_178_12_181_12_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_178_12_181_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 182 12 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_176_24_183_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_176_8_183_8_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_176_8_183_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 185 8 ]
+        symbol [ _score %tmp.141 185 17 23 ];
+        %tmp.141 = getv ? :_score;
+        %tmp.142 = 1;
+        %tmp.143 = add %tmp.141 %tmp.142;
+        symbol [ _score ? 185 8 14 ];
+        putv self :_score %tmp.143;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_142_28_186_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 188; @symbol_functiondef = [_spawnObs,188,20,29]; ]
+    protected
+    function _spawnObs() {
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_188_32_202_4_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 189 8 ]
+        for @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_189_8_197_8_for_test @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_189_8_197_8_for_incr @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_189_8_197_8_for_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_189_8_197_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_189_8_197_8_for_begin" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_189_8_197_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 189 17 18 ];
+        %tmp.1 = 0;
+        lputv %i.1 %tmp.1;
+        symbol [ i %i.1 189 17 18 ];
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_189_8_197_8_for_test:
+        %tmp.2 = lgetv %i.1;
+        symbol [ i %tmp.2 189 24 25 ];
+        symbol [ OBS_MAX %tmp.4 189 28 35 ];
+        %tmp.4 = getv ? :OBS_MAX;
+        %tmp.5 = lt %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_189_8_197_8_for_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_189_8_197_8_for_begin:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_189_42_197_8_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 190 12 ]
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_190_12_190_41_if_stmt:
+        symbol [ _oa %tmp.7 190 16 19 ];
+        %tmp.7 = getv ? :_oa;
+        %tmp.8 = lgetv %i.1;
+        symbol [ i %tmp.8 190 20 21 ];
+        %tmp.9 = agetv %tmp.7 %tmp.8;
+        %tmp.10 = 0;
+        %tmp.11 = ne %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_190_12_190_41_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_190_12_190_41_if_true:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_190_29_190_41_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 190 31 ]
+        goto break @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_189_8_197_8_for_incr;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_190_29_190_41_stop:
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_190_12_190_41_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_190_12_190_41_if_end:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 191 12 ]
+        [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_189_42_197_8_start" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_189_42_197_8_stop" ]
+        %t.2 = local;
+        symbol [ t %t.2 191 16 17 ];
+        symbol [ Math %tmp.12 191 21 25 ];
+        %tmp.12 = getm $.Toybox.Math;
+        symbol [ rand %tmp.13 191 26 30 ];
+        %tmp.13 = getv function %tmp.12 :rand;
+        %tmp.14 = invoke %tmp.12 %tmp.13();
+        %tmp.15 = 3;
+        %tmp.16 = mod %tmp.14 %tmp.15;
+        lputv %t.2 %tmp.16;
+        symbol [ t %t.2 191 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 192 12 ]
+        symbol [ _ow %tmp.17 192 12 15 ];
+        %tmp.17 = getv self :_ow;
+        symbol [ _dw %tmp.19 192 21 24 ];
+        %tmp.19 = getv ? :_dw;
+        %tmp.20 = 8;
+        %tmp.21 = lgetv %t.2;
+        symbol [ t %tmp.21 192 32 33 ];
+        %tmp.22 = 2;
+        %tmp.23 = mul %tmp.21 %tmp.22;
+        %tmp.24 = add %tmp.20 %tmp.23;
+        %tmp.25 = mul %tmp.19 %tmp.24;
+        %tmp.26 = 10;
+        %tmp.27 = div %tmp.25 %tmp.26;
+        %tmp.28 = lgetv %i.1;
+        symbol [ i %tmp.28 192 16 17 ];
+        aputv %tmp.17 %tmp.28 %tmp.27;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 193 12 ]
+        symbol [ _oh %tmp.29 193 12 15 ];
+        %tmp.29 = getv self :_oh;
+        symbol [ _dh %tmp.31 193 21 24 ];
+        %tmp.31 = getv ? :_dh;
+        %tmp.32 = 55;
+        %tmp.33 = lgetv %t.2;
+        symbol [ t %tmp.33 193 33 34 ];
+        %tmp.34 = 20;
+        %tmp.35 = mul %tmp.33 %tmp.34;
+        %tmp.36 = add %tmp.32 %tmp.35;
+        %tmp.37 = mul %tmp.31 %tmp.36;
+        %tmp.38 = 100;
+        %tmp.39 = div %tmp.37 %tmp.38;
+        %tmp.40 = lgetv %i.1;
+        symbol [ i %tmp.40 193 16 17 ];
+        aputv %tmp.29 %tmp.40 %tmp.39;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 194 12 ]
+        symbol [ _ox %tmp.41 194 12 15 ];
+        %tmp.41 = getv self :_ox;
+        symbol [ _sw %tmp.43 194 21 24 ];
+        %tmp.43 = getv ? :_sw;
+        %tmp.44 = 8;
+        %tmp.45 = add %tmp.43 %tmp.44;
+        %tmp.46 = lgetv %i.1;
+        symbol [ i %tmp.46 194 16 17 ];
+        aputv %tmp.41 %tmp.46 %tmp.45;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 195 12 ]
+        symbol [ _oa %tmp.47 195 12 15 ];
+        %tmp.47 = getv self :_oa;
+        %tmp.48 = 1;
+        %tmp.49 = lgetv %i.1;
+        symbol [ i %tmp.49 195 16 17 ];
+        aputv %tmp.47 %tmp.49 %tmp.48;
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 196 12 ]
+        goto break @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_189_8_197_8_for_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_189_42_197_8_stop:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_189_8_197_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 189 ]
+        %tmp.52 = lgetv %i.1;
+        symbol [ i %tmp.52 189 37 38 ];
+        %tmp.53 = add %tmp.52 1;
+        lputv %i.1 %tmp.53;
+        symbol [ i %i.1 189 37 38 ];
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_189_8_197_8_for_test;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_189_8_197_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 199 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_188_32_202_4_start" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_188_32_202_4_stop" ]
+        %gap.3 = local;
+        symbol [ gap %gap.3 199 12 15 ];
+        %tmp.54 = 68;
+        symbol [ Math %tmp.55 199 23 27 ];
+        %tmp.55 = getm $.Toybox.Math;
+        symbol [ rand %tmp.56 199 28 32 ];
+        %tmp.56 = getv function %tmp.55 :rand;
+        %tmp.57 = invoke %tmp.55 %tmp.56();
+        %tmp.58 = 48;
+        %tmp.59 = mod %tmp.57 %tmp.58;
+        %tmp.60 = add %tmp.54 %tmp.59;
+        symbol [ _spd %tmp.62 199 43 47 ];
+        %tmp.62 = getv ? :_spd;
+        %tmp.63 = 5;
+        %tmp.64 = sub %tmp.62 %tmp.63;
+        %tmp.65 = 4;
+        %tmp.66 = mul %tmp.64 %tmp.65;
+        %tmp.67 = sub %tmp.60 %tmp.66;
+        lputv %gap.3 %tmp.67;
+        symbol [ gap %gap.3 199 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 200 8 ]
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_200_8_200_34_if_stmt:
+        %tmp.68 = lgetv %gap.3;
+        symbol [ gap %tmp.68 200 12 15 ];
+        %tmp.69 = 32;
+        %tmp.70 = lt %tmp.68 %tmp.69;
+        bf %tmp.70 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_200_8_200_34_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_200_8_200_34_if_true:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_200_22_200_34_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 200 24 ]
+        %tmp.71 = 32;
+        lputv %gap.3 %tmp.71;
+        symbol [ gap %gap.3 200 24 27 ];
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_200_22_200_34_stop:
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_200_8_200_34_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_200_8_200_34_if_end:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 201 8 ]
+        %tmp.72 = lgetv %gap.3;
+        symbol [ gap %tmp.72 201 19 22 ];
+        symbol [ _nextObs ? 201 8 16 ];
+        putv self :_nextObs %tmp.72;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_188_32_202_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 204; @symbol_functiondef = [_collide,204,20,28]; ]
+    protected
+    function _collide() {
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_204_31_220_4_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 206 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_204_31_220_4_start" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_204_31_220_4_stop" ]
+        %dx1.1 = local;
+        symbol [ dx1 %dx1.1 206 12 15 ];
+        symbol [ _dinoX %tmp.2 206 18 24 ];
+        %tmp.2 = getv ? :_dinoX;
+        %tmp.3 = 3;
+        %tmp.4 = add %tmp.2 %tmp.3;
+        lputv %dx1.1 %tmp.4;
+        symbol [ dx1 %dx1.1 206 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 207 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_204_31_220_4_start" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_204_31_220_4_stop" ]
+        %dx2.2 = local;
+        symbol [ dx2 %dx2.2 207 12 15 ];
+        symbol [ _dinoX %tmp.6 207 18 24 ];
+        %tmp.6 = getv ? :_dinoX;
+        symbol [ _dw %tmp.8 207 27 30 ];
+        %tmp.8 = getv ? :_dw;
+        %tmp.9 = add %tmp.6 %tmp.8;
+        %tmp.10 = 3;
+        %tmp.11 = sub %tmp.9 %tmp.10;
+        lputv %dx2.2 %tmp.11;
+        symbol [ dx2 %dx2.2 207 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 208 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_204_31_220_4_start" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_204_31_220_4_stop" ]
+        %dy1.3 = local;
+        symbol [ dy1 %dy1.3 208 12 15 ];
+        symbol [ _dy %tmp.13 208 18 21 ];
+        %tmp.13 = getv ? :_dy;
+        symbol [ _dh %tmp.15 208 24 27 ];
+        %tmp.15 = getv ? :_dh;
+        %tmp.16 = 4;
+        %tmp.17 = div %tmp.15 %tmp.16;
+        %tmp.18 = add %tmp.13 %tmp.17;
+        lputv %dy1.3 %tmp.18;
+        symbol [ dy1 %dy1.3 208 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 209 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_204_31_220_4_start" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_204_31_220_4_stop" ]
+        %dy2.4 = local;
+        symbol [ dy2 %dy2.4 209 12 15 ];
+        symbol [ _dy %tmp.20 209 18 21 ];
+        %tmp.20 = getv ? :_dy;
+        symbol [ _dh %tmp.22 209 24 27 ];
+        %tmp.22 = getv ? :_dh;
+        %tmp.23 = add %tmp.20 %tmp.22;
+        %tmp.24 = 2;
+        %tmp.25 = sub %tmp.23 %tmp.24;
+        lputv %dy2.4 %tmp.25;
+        symbol [ dy2 %dy2.4 209 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 211 8 ]
+        for @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_211_8_218_8_for_test @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_211_8_218_8_for_incr @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_211_8_218_8_for_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_211_8_218_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_211_8_218_8_for_begin" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_211_8_218_8_for_end" ]
+        %i.5 = local;
+        symbol [ i %i.5 211 17 18 ];
+        %tmp.26 = 0;
+        lputv %i.5 %tmp.26;
+        symbol [ i %i.5 211 17 18 ];
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_211_8_218_8_for_test:
+        %tmp.27 = lgetv %i.5;
+        symbol [ i %tmp.27 211 24 25 ];
+        symbol [ OBS_MAX %tmp.29 211 28 35 ];
+        %tmp.29 = getv ? :OBS_MAX;
+        %tmp.30 = lt %tmp.27 %tmp.29;
+        bf %tmp.30 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_211_8_218_8_for_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_211_8_218_8_for_begin:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_211_42_218_8_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 212 12 ]
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_212_12_212_41_if_stmt:
+        symbol [ _oa %tmp.32 212 16 19 ];
+        %tmp.32 = getv ? :_oa;
+        %tmp.33 = lgetv %i.5;
+        symbol [ i %tmp.33 212 20 21 ];
+        %tmp.34 = agetv %tmp.32 %tmp.33;
+        %tmp.35 = 0;
+        %tmp.36 = eq %tmp.34 %tmp.35;
+        bf %tmp.36 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_212_12_212_41_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_212_12_212_41_if_true:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_212_29_212_41_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 212 31 ]
+        goto break @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_211_8_218_8_for_incr;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_212_29_212_41_stop:
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_212_12_212_41_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_212_12_212_41_if_end:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 213 12 ]
+        [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_211_42_218_8_start" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_211_42_218_8_stop" ]
+        %ox1.6 = local;
+        symbol [ ox1 %ox1.6 213 16 19 ];
+        symbol [ _ox %tmp.38 213 22 25 ];
+        %tmp.38 = getv ? :_ox;
+        %tmp.39 = lgetv %i.5;
+        symbol [ i %tmp.39 213 26 27 ];
+        %tmp.40 = agetv %tmp.38 %tmp.39;
+        %tmp.41 = 2;
+        %tmp.42 = add %tmp.40 %tmp.41;
+        lputv %ox1.6 %tmp.42;
+        symbol [ ox1 %ox1.6 213 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 214 12 ]
+        [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_211_42_218_8_start" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_211_42_218_8_stop" ]
+        %ox2.7 = local;
+        symbol [ ox2 %ox2.7 214 16 19 ];
+        symbol [ _ox %tmp.44 214 22 25 ];
+        %tmp.44 = getv ? :_ox;
+        %tmp.45 = lgetv %i.5;
+        symbol [ i %tmp.45 214 26 27 ];
+        %tmp.46 = agetv %tmp.44 %tmp.45;
+        symbol [ _ow %tmp.48 214 31 34 ];
+        %tmp.48 = getv ? :_ow;
+        %tmp.49 = lgetv %i.5;
+        symbol [ i %tmp.49 214 35 36 ];
+        %tmp.50 = agetv %tmp.48 %tmp.49;
+        %tmp.51 = add %tmp.46 %tmp.50;
+        %tmp.52 = 2;
+        %tmp.53 = sub %tmp.51 %tmp.52;
+        lputv %ox2.7 %tmp.53;
+        symbol [ ox2 %ox2.7 214 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 215 12 ]
+        [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_211_42_218_8_start" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_211_42_218_8_stop" ]
+        %oy1.8 = local;
+        symbol [ oy1 %oy1.8 215 16 19 ];
+        symbol [ _grdY %tmp.55 215 22 27 ];
+        %tmp.55 = getv ? :_grdY;
+        symbol [ _oh %tmp.57 215 30 33 ];
+        %tmp.57 = getv ? :_oh;
+        %tmp.58 = lgetv %i.5;
+        symbol [ i %tmp.58 215 34 35 ];
+        %tmp.59 = agetv %tmp.57 %tmp.58;
+        %tmp.60 = sub %tmp.55 %tmp.59;
+        lputv %oy1.8 %tmp.60;
+        symbol [ oy1 %oy1.8 215 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 217 12 ]
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_217_12_217_68_if_stmt:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_217_16_217_48_begin:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_217_16_217_35_begin:
+        %tmp.61 = lgetv %dx2.2;
+        symbol [ dx2 %tmp.61 217 16 19 ];
+        %tmp.62 = lgetv %ox1.6;
+        symbol [ ox1 %tmp.62 217 22 25 ];
+        %tmp.63 = gt %tmp.61 %tmp.62;
+        bf %tmp.63 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_217_12_217_68_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_217_29_217_35_true:
+        %tmp.64 = lgetv %dx1.1;
+        symbol [ dx1 %tmp.64 217 29 32 ];
+        %tmp.65 = lgetv %ox2.7;
+        symbol [ ox2 %tmp.65 217 35 38 ];
+        %tmp.66 = lt %tmp.64 %tmp.65;
+        push %tmp.66;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_217_29_217_35_end:
+        %tmp.67 = phi [%tmp.63 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_217_16_217_35_begin] [%tmp.66 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_217_29_217_35_true] [%tmp.67 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_217_29_217_35_end];
+        bf %tmp.67 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_217_12_217_68_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_217_42_217_48_true:
+        %tmp.68 = lgetv %dy2.4;
+        symbol [ dy2 %tmp.68 217 42 45 ];
+        %tmp.69 = lgetv %oy1.8;
+        symbol [ oy1 %tmp.69 217 48 51 ];
+        %tmp.70 = gt %tmp.68 %tmp.69;
+        push %tmp.70;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_217_42_217_48_end:
+        %tmp.71 = phi [%tmp.67 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_217_16_217_48_begin] [%tmp.70 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_217_42_217_48_true] [%tmp.71 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_217_42_217_48_end];
+        bf %tmp.71 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_217_12_217_68_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_217_12_217_68_if_true:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_217_53_217_68_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 217 55 ]
+        %tmp.72 = true;
+        ret %tmp.72;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_217_53_217_68_stop:
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_217_12_217_68_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_217_12_217_68_if_end:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_211_42_218_8_stop:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_211_8_218_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 211 ]
+        %tmp.75 = lgetv %i.5;
+        symbol [ i %tmp.75 211 37 38 ];
+        %tmp.76 = add %tmp.75 1;
+        lputv %i.5 %tmp.76;
+        symbol [ i %i.5 211 37 38 ];
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_211_8_218_8_for_test;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_211_8_218_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 219 8 ]
+        %tmp.77 = false;
+        ret %tmp.77;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_204_31_220_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 224; @symbol_functiondef = [onUpdate,224,13,21]; @symbol_param<0> = [dc,224,22,24]; ]
+    function onUpdate(dc) {
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_224_26_241_4_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 225 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 225 8 10 ];
+        symbol [ setColor %tmp.2 225 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        %tmp.3 = 0x0e0e0e;
+        %tmp.4 = 0x0e0e0e;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.4);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 226 8 ]
+        %tmp.5 = lgetv %dc;
+        symbol [ dc %tmp.5 226 8 10 ];
+        symbol [ clear %tmp.6 226 11 16 ];
+        %tmp.6 = getv function %tmp.5 :clear;
+        invoke %tmp.5 %tmp.6();
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 228 8 ]
+        %tmp.7 = self;
+        symbol [ _drawClouds %tmp.8 228 8 19 ];
+        %tmp.8 = getv function %tmp.7 :_drawClouds;
+        %tmp.9 = lgetv %dc;
+        symbol [ dc %tmp.9 228 20 22 ];
+        invoke %tmp.7 %tmp.8(%tmp.9);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 229 8 ]
+        %tmp.10 = self;
+        symbol [ _drawGround %tmp.11 229 8 19 ];
+        %tmp.11 = getv function %tmp.10 :_drawGround;
+        %tmp.12 = lgetv %dc;
+        symbol [ dc %tmp.12 229 20 22 ];
+        invoke %tmp.10 %tmp.11(%tmp.12);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 230 8 ]
+        %tmp.13 = self;
+        symbol [ _drawObstacles %tmp.14 230 8 22 ];
+        %tmp.14 = getv function %tmp.13 :_drawObstacles;
+        %tmp.15 = lgetv %dc;
+        symbol [ dc %tmp.15 230 23 25 ];
+        invoke %tmp.13 %tmp.14(%tmp.15);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 231 8 ]
+        %tmp.16 = self;
+        symbol [ _drawDino %tmp.17 231 8 17 ];
+        %tmp.17 = getv function %tmp.16 :_drawDino;
+        %tmp.18 = lgetv %dc;
+        symbol [ dc %tmp.18 231 18 20 ];
+        invoke %tmp.16 %tmp.17(%tmp.18);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 233 8 ]
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_233_8_240_8_if_stmt:
+        symbol [ _state %tmp.20 233 12 18 ];
+        %tmp.20 = getv ? :_state;
+        symbol [ GS_TITLE %tmp.22 233 22 30 ];
+        %tmp.22 = getv ? :GS_TITLE;
+        %tmp.23 = eq %tmp.20 %tmp.22;
+        bf %tmp.23 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_233_8_240_8_if_false;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_233_8_240_8_if_true:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_233_32_235_8_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 234 12 ]
+        %tmp.24 = self;
+        symbol [ _drawTitle %tmp.25 234 12 22 ];
+        %tmp.25 = getv function %tmp.24 :_drawTitle;
+        %tmp.26 = lgetv %dc;
+        symbol [ dc %tmp.26 234 23 25 ];
+        invoke %tmp.24 %tmp.25(%tmp.26);
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_233_32_235_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_233_8_240_8_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_233_8_240_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 235 15 ]
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_235_15_240_8_if_stmt:
+        symbol [ _state %tmp.28 235 19 25 ];
+        %tmp.28 = getv ? :_state;
+        symbol [ GS_OVER %tmp.30 235 29 36 ];
+        %tmp.30 = getv ? :GS_OVER;
+        %tmp.31 = eq %tmp.28 %tmp.30;
+        bf %tmp.31 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_235_15_240_8_if_else_false;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_235_15_240_8_if_true:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_235_38_238_8_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 236 12 ]
+        %tmp.32 = self;
+        symbol [ _drawScore %tmp.33 236 12 22 ];
+        %tmp.33 = getv function %tmp.32 :_drawScore;
+        %tmp.34 = lgetv %dc;
+        symbol [ dc %tmp.34 236 23 25 ];
+        invoke %tmp.32 %tmp.33(%tmp.34);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 237 12 ]
+        %tmp.35 = self;
+        symbol [ _drawOver %tmp.36 237 12 21 ];
+        %tmp.36 = getv function %tmp.35 :_drawOver;
+        %tmp.37 = lgetv %dc;
+        symbol [ dc %tmp.37 237 22 24 ];
+        invoke %tmp.35 %tmp.36(%tmp.37);
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_235_38_238_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_235_15_240_8_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_235_15_240_8_if_else_false:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_238_15_240_8_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 239 12 ]
+        %tmp.38 = self;
+        symbol [ _drawScore %tmp.39 239 12 22 ];
+        %tmp.39 = getv function %tmp.38 :_drawScore;
+        %tmp.40 = lgetv %dc;
+        symbol [ dc %tmp.40 239 23 25 ];
+        invoke %tmp.38 %tmp.39(%tmp.40);
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_238_15_240_8_stop:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_235_15_240_8_if_end:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_233_8_240_8_if_end:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_224_26_241_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 243; @symbol_functiondef = [_drawGround,243,20,31]; @symbol_param<0> = [dc,243,32,34]; ]
+    protected
+    function _drawGround(dc) {
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_243_36_248_4_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 244 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 244 8 10 ];
+        symbol [ setColor %tmp.2 244 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        %tmp.3 = 0x383838;
+        symbol [ Graphics %tmp.4 244 30 38 ];
+        %tmp.4 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.5 244 39 56 ];
+        %tmp.5 = getv %tmp.4 :COLOR_TRANSPARENT;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.5);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 245 8 ]
+        %tmp.6 = lgetv %dc;
+        symbol [ dc %tmp.6 245 8 10 ];
+        symbol [ fillRectangle %tmp.7 245 11 24 ];
+        %tmp.7 = getv function %tmp.6 :fillRectangle;
+        %tmp.8 = 0;
+        symbol [ _grdY %tmp.10 245 28 33 ];
+        %tmp.10 = getv ? :_grdY;
+        symbol [ _sw %tmp.12 245 35 38 ];
+        %tmp.12 = getv ? :_sw;
+        %tmp.13 = 2;
+        invoke %tmp.6 %tmp.7(%tmp.8, %tmp.10, %tmp.12, %tmp.13);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 246 8 ]
+        %tmp.14 = lgetv %dc;
+        symbol [ dc %tmp.14 246 8 10 ];
+        symbol [ setColor %tmp.15 246 11 19 ];
+        %tmp.15 = getv function %tmp.14 :setColor;
+        %tmp.16 = 0x262626;
+        symbol [ Graphics %tmp.17 246 30 38 ];
+        %tmp.17 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.18 246 39 56 ];
+        %tmp.18 = getv %tmp.17 :COLOR_TRANSPARENT;
+        invoke %tmp.14 %tmp.15(%tmp.16, %tmp.18);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 247 8 ]
+        %tmp.19 = lgetv %dc;
+        symbol [ dc %tmp.19 247 8 10 ];
+        symbol [ fillRectangle %tmp.20 247 11 24 ];
+        %tmp.20 = getv function %tmp.19 :fillRectangle;
+        %tmp.21 = 0;
+        symbol [ _grdY %tmp.23 247 28 33 ];
+        %tmp.23 = getv ? :_grdY;
+        %tmp.24 = 4;
+        %tmp.25 = add %tmp.23 %tmp.24;
+        symbol [ _sw %tmp.27 247 39 42 ];
+        %tmp.27 = getv ? :_sw;
+        %tmp.28 = 1;
+        invoke %tmp.19 %tmp.20(%tmp.21, %tmp.25, %tmp.27, %tmp.28);
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_243_36_248_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 250; @symbol_functiondef = [_drawClouds,250,20,31]; @symbol_param<0> = [dc,250,32,34]; ]
+    protected
+    function _drawClouds(dc) {
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_250_36_259_4_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 251 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 251 8 10 ];
+        symbol [ setColor %tmp.2 251 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        %tmp.3 = 0x1c1c1c;
+        symbol [ Graphics %tmp.4 251 30 38 ];
+        %tmp.4 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.5 251 39 56 ];
+        %tmp.5 = getv %tmp.4 :COLOR_TRANSPARENT;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.5);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 252 8 ]
+        for @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_252_8_258_8_for_test @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_252_8_258_8_for_incr @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_252_8_258_8_for_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_252_8_258_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_252_8_258_8_for_begin" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_252_8_258_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 252 17 18 ];
+        %tmp.6 = 0;
+        lputv %i.1 %tmp.6;
+        symbol [ i %i.1 252 17 18 ];
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_252_8_258_8_for_test:
+        %tmp.7 = lgetv %i.1;
+        symbol [ i %tmp.7 252 24 25 ];
+        symbol [ CLD_MAX %tmp.9 252 28 35 ];
+        %tmp.9 = getv ? :CLD_MAX;
+        %tmp.10 = lt %tmp.7 %tmp.9;
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_252_8_258_8_for_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_252_8_258_8_for_begin:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_252_42_258_8_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 253 12 ]
+        [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_252_42_258_8_start" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_252_42_258_8_stop" ]
+        %cx.2 = local;
+        symbol [ cx %cx.2 253 16 18 ];
+        symbol [ _cx %tmp.12 253 21 24 ];
+        %tmp.12 = getv ? :_cx;
+        %tmp.13 = lgetv %i.1;
+        symbol [ i %tmp.13 253 25 26 ];
+        %tmp.14 = agetv %tmp.12 %tmp.13;
+        lputv %cx.2 %tmp.14;
+        symbol [ cx %cx.2 253 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 254 12 ]
+        [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_252_42_258_8_start" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_252_42_258_8_stop" ]
+        %cy.3 = local;
+        symbol [ cy %cy.3 254 16 18 ];
+        symbol [ _cy %tmp.16 254 21 24 ];
+        %tmp.16 = getv ? :_cy;
+        %tmp.17 = lgetv %i.1;
+        symbol [ i %tmp.17 254 25 26 ];
+        %tmp.18 = agetv %tmp.16 %tmp.17;
+        lputv %cy.3 %tmp.18;
+        symbol [ cy %cy.3 254 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 255 12 ]
+        [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_252_42_258_8_start" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_252_42_258_8_stop" ]
+        %cw.4 = local;
+        symbol [ cw %cw.4 255 16 18 ];
+        symbol [ _cw %tmp.20 255 21 24 ];
+        %tmp.20 = getv ? :_cw;
+        %tmp.21 = lgetv %i.1;
+        symbol [ i %tmp.21 255 25 26 ];
+        %tmp.22 = agetv %tmp.20 %tmp.21;
+        lputv %cw.4 %tmp.22;
+        symbol [ cw %cw.4 255 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 256 12 ]
+        %tmp.23 = lgetv %dc;
+        symbol [ dc %tmp.23 256 12 14 ];
+        symbol [ fillRoundedRectangle %tmp.24 256 15 35 ];
+        %tmp.24 = getv function %tmp.23 :fillRoundedRectangle;
+        %tmp.25 = lgetv %cx.2;
+        symbol [ cx %tmp.25 256 36 38 ];
+        %tmp.26 = lgetv %cy.3;
+        symbol [ cy %tmp.26 256 40 42 ];
+        %tmp.27 = 6;
+        %tmp.28 = add %tmp.26 %tmp.27;
+        %tmp.29 = lgetv %cw.4;
+        symbol [ cw %tmp.29 256 48 50 ];
+        %tmp.30 = 8;
+        %tmp.31 = 4;
+        invoke %tmp.23 %tmp.24(%tmp.25, %tmp.28, %tmp.29, %tmp.30, %tmp.31);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 257 12 ]
+        %tmp.32 = lgetv %dc;
+        symbol [ dc %tmp.32 257 12 14 ];
+        symbol [ fillRoundedRectangle %tmp.33 257 15 35 ];
+        %tmp.33 = getv function %tmp.32 :fillRoundedRectangle;
+        %tmp.34 = lgetv %cx.2;
+        symbol [ cx %tmp.34 257 36 38 ];
+        %tmp.35 = lgetv %cw.4;
+        symbol [ cw %tmp.35 257 41 43 ];
+        %tmp.36 = 5;
+        %tmp.37 = div %tmp.35 %tmp.36;
+        %tmp.38 = add %tmp.34 %tmp.37;
+        %tmp.39 = lgetv %cy.3;
+        symbol [ cy %tmp.39 257 49 51 ];
+        %tmp.40 = lgetv %cw.4;
+        symbol [ cw %tmp.40 257 53 55 ];
+        %tmp.41 = 6;
+        %tmp.42 = mul %tmp.40 %tmp.41;
+        %tmp.43 = 10;
+        %tmp.44 = div %tmp.42 %tmp.43;
+        %tmp.45 = 12;
+        %tmp.46 = 6;
+        invoke %tmp.32 %tmp.33(%tmp.38, %tmp.39, %tmp.44, %tmp.45, %tmp.46);
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_252_42_258_8_stop:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_252_8_258_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 252 ]
+        %tmp.49 = lgetv %i.1;
+        symbol [ i %tmp.49 252 37 38 ];
+        %tmp.50 = add %tmp.49 1;
+        lputv %i.1 %tmp.50;
+        symbol [ i %i.1 252 37 38 ];
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_252_8_258_8_for_test;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_252_8_258_8_for_end:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_250_36_259_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 261; @symbol_functiondef = [_drawDino,261,20,29]; @symbol_param<0> = [dc,261,30,32]; ]
+    protected
+    function _drawDino(dc) {
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_261_34_299_4_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 262 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_261_34_299_4_start" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_261_34_299_4_stop" ]
+        %x.1 = local;
+        symbol [ x %x.1 262 12 13 ];
+        symbol [ _dinoX %tmp.2 262 17 23 ];
+        %tmp.2 = getv ? :_dinoX;
+        lputv %x.1 %tmp.2;
+        symbol [ x %x.1 262 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 263 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_261_34_299_4_start" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_261_34_299_4_stop" ]
+        %y.2 = local;
+        symbol [ y %y.2 263 12 13 ];
+        symbol [ _dy %tmp.4 263 17 20 ];
+        %tmp.4 = getv ? :_dy;
+        lputv %y.2 %tmp.4;
+        symbol [ y %y.2 263 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 264 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_261_34_299_4_start" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_261_34_299_4_stop" ]
+        %dw.3 = local;
+        symbol [ dw %dw.3 264 12 14 ];
+        symbol [ _dw %tmp.6 264 17 20 ];
+        %tmp.6 = getv ? :_dw;
+        lputv %dw.3 %tmp.6;
+        symbol [ dw %dw.3 264 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 265 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_261_34_299_4_start" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_261_34_299_4_stop" ]
+        %dh.4 = local;
+        symbol [ dh %dh.4 265 12 14 ];
+        symbol [ _dh %tmp.8 265 17 20 ];
+        %tmp.8 = getv ? :_dh;
+        lputv %dh.4 %tmp.8;
+        symbol [ dh %dh.4 265 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 266 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_261_34_299_4_start" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_261_34_299_4_stop" ]
+        %dead.5 = local;
+        symbol [ dead %dead.5 266 12 16 ];
+        symbol [ _state %tmp.10 266 20 26 ];
+        %tmp.10 = getv ? :_state;
+        symbol [ GS_OVER %tmp.12 266 30 37 ];
+        %tmp.12 = getv ? :GS_OVER;
+        %tmp.13 = eq %tmp.10 %tmp.12;
+        lputv %dead.5 %tmp.13;
+        symbol [ dead %dead.5 266 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 267 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_261_34_299_4_start" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_261_34_299_4_stop" ]
+        %col.6 = local;
+        symbol [ col %col.6 267 12 15 ];
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_267_19_267_37_begin:
+        %tmp.14 = lgetv %dead.5;
+        symbol [ dead %tmp.14 267 19 23 ];
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_267_19_267_37_else_false;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_267_19_267_37_true:
+        %tmp.15 = 0xBB3333;
+        push %tmp.15;
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_267_19_267_37_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_267_19_267_37_else_false:
+        %tmp.16 = 0xDDDDDD;
+        push %tmp.16;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_267_19_267_37_end:
+        %tmp.17 = phi [%tmp.14 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_267_19_267_37_begin] [%tmp.15 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_267_19_267_37_true] [%tmp.16 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_267_19_267_37_else_false] [%tmp.17 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_267_19_267_37_end];
+        lputv %col.6 %tmp.17;
+        symbol [ col %col.6 267 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 268 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_261_34_299_4_start" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_261_34_299_4_stop" ]
+        %col2.7 = local;
+        symbol [ col2 %col2.7 268 12 16 ];
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_268_19_268_37_begin:
+        %tmp.18 = lgetv %dead.5;
+        symbol [ dead %tmp.18 268 19 23 ];
+        bf %tmp.18 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_268_19_268_37_else_false;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_268_19_268_37_true:
+        %tmp.19 = 0x992222;
+        push %tmp.19;
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_268_19_268_37_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_268_19_268_37_else_false:
+        %tmp.20 = 0xAAAAAA;
+        push %tmp.20;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_268_19_268_37_end:
+        %tmp.21 = phi [%tmp.18 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_268_19_268_37_begin] [%tmp.19 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_268_19_268_37_true] [%tmp.20 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_268_19_268_37_else_false] [%tmp.21 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_268_19_268_37_end];
+        lputv %col2.7 %tmp.21;
+        symbol [ col2 %col2.7 268 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 270 8 ]
+        %tmp.22 = lgetv %dc;
+        symbol [ dc %tmp.22 270 8 10 ];
+        symbol [ setColor %tmp.23 270 11 19 ];
+        %tmp.23 = getv function %tmp.22 :setColor;
+        %tmp.24 = lgetv %col.6;
+        symbol [ col %tmp.24 270 20 23 ];
+        symbol [ Graphics %tmp.25 270 25 33 ];
+        %tmp.25 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.26 270 34 51 ];
+        %tmp.26 = getv %tmp.25 :COLOR_TRANSPARENT;
+        invoke %tmp.22 %tmp.23(%tmp.24, %tmp.26);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 273 8 ]
+        %tmp.27 = lgetv %dc;
+        symbol [ dc %tmp.27 273 8 10 ];
+        symbol [ fillRoundedRectangle %tmp.28 273 11 31 ];
+        %tmp.28 = getv function %tmp.27 :fillRoundedRectangle;
+        %tmp.29 = lgetv %x.1;
+        symbol [ x %tmp.29 273 32 33 ];
+        %tmp.30 = lgetv %y.2;
+        symbol [ y %tmp.30 273 35 36 ];
+        %tmp.31 = lgetv %dh.4;
+        symbol [ dh %tmp.31 273 39 41 ];
+        %tmp.32 = 36;
+        %tmp.33 = mul %tmp.31 %tmp.32;
+        %tmp.34 = 100;
+        %tmp.35 = div %tmp.33 %tmp.34;
+        %tmp.36 = add %tmp.30 %tmp.35;
+        %tmp.37 = lgetv %dw.3;
+        symbol [ dw %tmp.37 273 54 56 ];
+        %tmp.38 = 76;
+        %tmp.39 = mul %tmp.37 %tmp.38;
+        %tmp.40 = 100;
+        %tmp.41 = div %tmp.39 %tmp.40;
+        %tmp.42 = lgetv %dh.4;
+        symbol [ dh %tmp.42 273 69 71 ];
+        %tmp.43 = 54;
+        %tmp.44 = mul %tmp.42 %tmp.43;
+        %tmp.45 = 100;
+        %tmp.46 = div %tmp.44 %tmp.45;
+        %tmp.47 = 3;
+        invoke %tmp.27 %tmp.28(%tmp.29, %tmp.36, %tmp.41, %tmp.46, %tmp.47);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 276 8 ]
+        %tmp.48 = lgetv %dc;
+        symbol [ dc %tmp.48 276 8 10 ];
+        symbol [ fillRoundedRectangle %tmp.49 276 11 31 ];
+        %tmp.49 = getv function %tmp.48 :fillRoundedRectangle;
+        %tmp.50 = lgetv %x.1;
+        symbol [ x %tmp.50 276 32 33 ];
+        %tmp.51 = lgetv %dw.3;
+        symbol [ dw %tmp.51 276 36 38 ];
+        %tmp.52 = 36;
+        %tmp.53 = mul %tmp.51 %tmp.52;
+        %tmp.54 = 100;
+        %tmp.55 = div %tmp.53 %tmp.54;
+        %tmp.56 = add %tmp.50 %tmp.55;
+        %tmp.57 = lgetv %y.2;
+        symbol [ y %tmp.57 276 51 52 ];
+        %tmp.58 = lgetv %dh.4;
+        symbol [ dh %tmp.58 276 55 57 ];
+        %tmp.59 = 4;
+        %tmp.60 = mul %tmp.58 %tmp.59;
+        %tmp.61 = 100;
+        %tmp.62 = div %tmp.60 %tmp.61;
+        %tmp.63 = add %tmp.57 %tmp.62;
+        %tmp.64 = lgetv %dw.3;
+        symbol [ dw %tmp.64 276 69 71 ];
+        %tmp.65 = 64;
+        %tmp.66 = mul %tmp.64 %tmp.65;
+        %tmp.67 = 100;
+        %tmp.68 = div %tmp.66 %tmp.67;
+        %tmp.69 = lgetv %dh.4;
+        symbol [ dh %tmp.69 276 84 86 ];
+        %tmp.70 = 40;
+        %tmp.71 = mul %tmp.69 %tmp.70;
+        %tmp.72 = 100;
+        %tmp.73 = div %tmp.71 %tmp.72;
+        %tmp.74 = 3;
+        invoke %tmp.48 %tmp.49(%tmp.56, %tmp.63, %tmp.68, %tmp.73, %tmp.74);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 279 8 ]
+        %tmp.75 = lgetv %dc;
+        symbol [ dc %tmp.75 279 8 10 ];
+        symbol [ fillRoundedRectangle %tmp.76 279 11 31 ];
+        %tmp.76 = getv function %tmp.75 :fillRoundedRectangle;
+        %tmp.77 = lgetv %x.1;
+        symbol [ x %tmp.77 279 32 33 ];
+        %tmp.78 = lgetv %dw.3;
+        symbol [ dw %tmp.78 279 36 38 ];
+        %tmp.79 = 10;
+        %tmp.80 = mul %tmp.78 %tmp.79;
+        %tmp.81 = 100;
+        %tmp.82 = div %tmp.80 %tmp.81;
+        %tmp.83 = sub %tmp.77 %tmp.82;
+        %tmp.84 = lgetv %y.2;
+        symbol [ y %tmp.84 279 51 52 ];
+        %tmp.85 = lgetv %dh.4;
+        symbol [ dh %tmp.85 279 55 57 ];
+        %tmp.86 = 40;
+        %tmp.87 = mul %tmp.85 %tmp.86;
+        %tmp.88 = 100;
+        %tmp.89 = div %tmp.87 %tmp.88;
+        %tmp.90 = add %tmp.84 %tmp.89;
+        %tmp.91 = lgetv %dw.3;
+        symbol [ dw %tmp.91 279 70 72 ];
+        %tmp.92 = 16;
+        %tmp.93 = mul %tmp.91 %tmp.92;
+        %tmp.94 = 100;
+        %tmp.95 = div %tmp.93 %tmp.94;
+        %tmp.96 = lgetv %dh.4;
+        symbol [ dh %tmp.96 279 85 87 ];
+        %tmp.97 = 18;
+        %tmp.98 = mul %tmp.96 %tmp.97;
+        %tmp.99 = 100;
+        %tmp.100 = div %tmp.98 %tmp.99;
+        %tmp.101 = 2;
+        invoke %tmp.75 %tmp.76(%tmp.83, %tmp.90, %tmp.95, %tmp.100, %tmp.101);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 282 8 ]
+        %tmp.102 = lgetv %dc;
+        symbol [ dc %tmp.102 282 8 10 ];
+        symbol [ setColor %tmp.103 282 11 19 ];
+        %tmp.103 = getv function %tmp.102 :setColor;
+        %tmp.104 = 0x0e0e0e;
+        symbol [ Graphics %tmp.105 282 30 38 ];
+        %tmp.105 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.106 282 39 56 ];
+        %tmp.106 = getv %tmp.105 :COLOR_TRANSPARENT;
+        invoke %tmp.102 %tmp.103(%tmp.104, %tmp.106);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 283 8 ]
+        %tmp.107 = lgetv %dc;
+        symbol [ dc %tmp.107 283 8 10 ];
+        symbol [ fillRectangle %tmp.108 283 11 24 ];
+        %tmp.108 = getv function %tmp.107 :fillRectangle;
+        %tmp.109 = lgetv %x.1;
+        symbol [ x %tmp.109 283 25 26 ];
+        %tmp.110 = lgetv %dw.3;
+        symbol [ dw %tmp.110 283 29 31 ];
+        %tmp.111 = 85;
+        %tmp.112 = mul %tmp.110 %tmp.111;
+        %tmp.113 = 100;
+        %tmp.114 = div %tmp.112 %tmp.113;
+        %tmp.115 = add %tmp.109 %tmp.114;
+        %tmp.116 = lgetv %y.2;
+        symbol [ y %tmp.116 283 44 45 ];
+        %tmp.117 = lgetv %dh.4;
+        symbol [ dh %tmp.117 283 48 50 ];
+        %tmp.118 = 11;
+        %tmp.119 = mul %tmp.117 %tmp.118;
+        %tmp.120 = 100;
+        %tmp.121 = div %tmp.119 %tmp.120;
+        %tmp.122 = add %tmp.116 %tmp.121;
+        %tmp.123 = 3;
+        %tmp.124 = 3;
+        invoke %tmp.107 %tmp.108(%tmp.115, %tmp.122, %tmp.123, %tmp.124);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 286 8 ]
+        %tmp.125 = lgetv %dc;
+        symbol [ dc %tmp.125 286 8 10 ];
+        symbol [ setColor %tmp.126 286 11 19 ];
+        %tmp.126 = getv function %tmp.125 :setColor;
+        %tmp.127 = lgetv %col2.7;
+        symbol [ col2 %tmp.127 286 20 24 ];
+        symbol [ Graphics %tmp.128 286 26 34 ];
+        %tmp.128 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.129 286 35 52 ];
+        %tmp.129 = getv %tmp.128 :COLOR_TRANSPARENT;
+        invoke %tmp.125 %tmp.126(%tmp.127, %tmp.129);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 287 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_261_34_299_4_start" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_261_34_299_4_stop" ]
+        %lg.8 = local;
+        symbol [ lg %lg.8 287 12 14 ];
+        symbol [ _frame %tmp.131 287 18 24 ];
+        %tmp.131 = getv ? :_frame;
+        %tmp.132 = 4;
+        %tmp.133 = div %tmp.131 %tmp.132;
+        %tmp.134 = 2;
+        %tmp.135 = mod %tmp.133 %tmp.134;
+        lputv %lg.8 %tmp.135;
+        symbol [ lg %lg.8 287 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 288 8 ]
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_288_8_298_8_if_stmt:
+        symbol [ _onGrd %tmp.137 288 12 18 ];
+        %tmp.137 = getv ? :_onGrd;
+        %tmp.138 = 0;
+        %tmp.139 = eq %tmp.137 %tmp.138;
+        bf %tmp.139 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_288_8_298_8_if_false;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_288_8_298_8_if_true:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_288_25_292_8_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 290 12 ]
+        %tmp.140 = lgetv %dc;
+        symbol [ dc %tmp.140 290 12 14 ];
+        symbol [ fillRectangle %tmp.141 290 15 28 ];
+        %tmp.141 = getv function %tmp.140 :fillRectangle;
+        %tmp.142 = lgetv %x.1;
+        symbol [ x %tmp.142 290 29 30 ];
+        %tmp.143 = lgetv %dw.3;
+        symbol [ dw %tmp.143 290 33 35 ];
+        %tmp.144 = 22;
+        %tmp.145 = mul %tmp.143 %tmp.144;
+        %tmp.146 = 100;
+        %tmp.147 = div %tmp.145 %tmp.146;
+        %tmp.148 = add %tmp.142 %tmp.147;
+        %tmp.149 = lgetv %y.2;
+        symbol [ y %tmp.149 290 48 49 ];
+        %tmp.150 = lgetv %dh.4;
+        symbol [ dh %tmp.150 290 52 54 ];
+        %tmp.151 = 76;
+        %tmp.152 = mul %tmp.150 %tmp.151;
+        %tmp.153 = 100;
+        %tmp.154 = div %tmp.152 %tmp.153;
+        %tmp.155 = add %tmp.149 %tmp.154;
+        %tmp.156 = lgetv %dw.3;
+        symbol [ dw %tmp.156 290 67 69 ];
+        %tmp.157 = 20;
+        %tmp.158 = mul %tmp.156 %tmp.157;
+        %tmp.159 = 100;
+        %tmp.160 = div %tmp.158 %tmp.159;
+        %tmp.161 = lgetv %dh.4;
+        symbol [ dh %tmp.161 290 82 84 ];
+        %tmp.162 = 14;
+        %tmp.163 = mul %tmp.161 %tmp.162;
+        %tmp.164 = 100;
+        %tmp.165 = div %tmp.163 %tmp.164;
+        invoke %tmp.140 %tmp.141(%tmp.148, %tmp.155, %tmp.160, %tmp.165);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 291 12 ]
+        %tmp.166 = lgetv %dc;
+        symbol [ dc %tmp.166 291 12 14 ];
+        symbol [ fillRectangle %tmp.167 291 15 28 ];
+        %tmp.167 = getv function %tmp.166 :fillRectangle;
+        %tmp.168 = lgetv %x.1;
+        symbol [ x %tmp.168 291 29 30 ];
+        %tmp.169 = lgetv %dw.3;
+        symbol [ dw %tmp.169 291 33 35 ];
+        %tmp.170 = 50;
+        %tmp.171 = mul %tmp.169 %tmp.170;
+        %tmp.172 = 100;
+        %tmp.173 = div %tmp.171 %tmp.172;
+        %tmp.174 = add %tmp.168 %tmp.173;
+        %tmp.175 = lgetv %y.2;
+        symbol [ y %tmp.175 291 48 49 ];
+        %tmp.176 = lgetv %dh.4;
+        symbol [ dh %tmp.176 291 52 54 ];
+        %tmp.177 = 76;
+        %tmp.178 = mul %tmp.176 %tmp.177;
+        %tmp.179 = 100;
+        %tmp.180 = div %tmp.178 %tmp.179;
+        %tmp.181 = add %tmp.175 %tmp.180;
+        %tmp.182 = lgetv %dw.3;
+        symbol [ dw %tmp.182 291 67 69 ];
+        %tmp.183 = 20;
+        %tmp.184 = mul %tmp.182 %tmp.183;
+        %tmp.185 = 100;
+        %tmp.186 = div %tmp.184 %tmp.185;
+        %tmp.187 = lgetv %dh.4;
+        symbol [ dh %tmp.187 291 82 84 ];
+        %tmp.188 = 14;
+        %tmp.189 = mul %tmp.187 %tmp.188;
+        %tmp.190 = 100;
+        %tmp.191 = div %tmp.189 %tmp.190;
+        invoke %tmp.166 %tmp.167(%tmp.174, %tmp.181, %tmp.186, %tmp.191);
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_288_25_292_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_288_8_298_8_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_288_8_298_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 292 15 ]
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_292_15_298_8_if_stmt:
+        %tmp.192 = lgetv %lg.8;
+        symbol [ lg %tmp.192 292 19 21 ];
+        %tmp.193 = 0;
+        %tmp.194 = eq %tmp.192 %tmp.193;
+        bf %tmp.194 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_292_15_298_8_if_else_false;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_292_15_298_8_if_true:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_292_28_295_8_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 293 12 ]
+        %tmp.195 = lgetv %dc;
+        symbol [ dc %tmp.195 293 12 14 ];
+        symbol [ fillRectangle %tmp.196 293 15 28 ];
+        %tmp.196 = getv function %tmp.195 :fillRectangle;
+        %tmp.197 = lgetv %x.1;
+        symbol [ x %tmp.197 293 29 30 ];
+        %tmp.198 = lgetv %dw.3;
+        symbol [ dw %tmp.198 293 33 35 ];
+        %tmp.199 = 22;
+        %tmp.200 = mul %tmp.198 %tmp.199;
+        %tmp.201 = 100;
+        %tmp.202 = div %tmp.200 %tmp.201;
+        %tmp.203 = add %tmp.197 %tmp.202;
+        %tmp.204 = lgetv %y.2;
+        symbol [ y %tmp.204 293 48 49 ];
+        %tmp.205 = lgetv %dh.4;
+        symbol [ dh %tmp.205 293 52 54 ];
+        %tmp.206 = 74;
+        %tmp.207 = mul %tmp.205 %tmp.206;
+        %tmp.208 = 100;
+        %tmp.209 = div %tmp.207 %tmp.208;
+        %tmp.210 = add %tmp.204 %tmp.209;
+        %tmp.211 = lgetv %dw.3;
+        symbol [ dw %tmp.211 293 67 69 ];
+        %tmp.212 = 18;
+        %tmp.213 = mul %tmp.211 %tmp.212;
+        %tmp.214 = 100;
+        %tmp.215 = div %tmp.213 %tmp.214;
+        %tmp.216 = lgetv %dh.4;
+        symbol [ dh %tmp.216 293 82 84 ];
+        %tmp.217 = 26;
+        %tmp.218 = mul %tmp.216 %tmp.217;
+        %tmp.219 = 100;
+        %tmp.220 = div %tmp.218 %tmp.219;
+        invoke %tmp.195 %tmp.196(%tmp.203, %tmp.210, %tmp.215, %tmp.220);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 294 12 ]
+        %tmp.221 = lgetv %dc;
+        symbol [ dc %tmp.221 294 12 14 ];
+        symbol [ fillRectangle %tmp.222 294 15 28 ];
+        %tmp.222 = getv function %tmp.221 :fillRectangle;
+        %tmp.223 = lgetv %x.1;
+        symbol [ x %tmp.223 294 29 30 ];
+        %tmp.224 = lgetv %dw.3;
+        symbol [ dw %tmp.224 294 33 35 ];
+        %tmp.225 = 50;
+        %tmp.226 = mul %tmp.224 %tmp.225;
+        %tmp.227 = 100;
+        %tmp.228 = div %tmp.226 %tmp.227;
+        %tmp.229 = add %tmp.223 %tmp.228;
+        %tmp.230 = lgetv %y.2;
+        symbol [ y %tmp.230 294 48 49 ];
+        %tmp.231 = lgetv %dh.4;
+        symbol [ dh %tmp.231 294 52 54 ];
+        %tmp.232 = 80;
+        %tmp.233 = mul %tmp.231 %tmp.232;
+        %tmp.234 = 100;
+        %tmp.235 = div %tmp.233 %tmp.234;
+        %tmp.236 = add %tmp.230 %tmp.235;
+        %tmp.237 = lgetv %dw.3;
+        symbol [ dw %tmp.237 294 67 69 ];
+        %tmp.238 = 18;
+        %tmp.239 = mul %tmp.237 %tmp.238;
+        %tmp.240 = 100;
+        %tmp.241 = div %tmp.239 %tmp.240;
+        %tmp.242 = lgetv %dh.4;
+        symbol [ dh %tmp.242 294 82 84 ];
+        %tmp.243 = 18;
+        %tmp.244 = mul %tmp.242 %tmp.243;
+        %tmp.245 = 100;
+        %tmp.246 = div %tmp.244 %tmp.245;
+        invoke %tmp.221 %tmp.222(%tmp.229, %tmp.236, %tmp.241, %tmp.246);
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_292_28_295_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_292_15_298_8_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_292_15_298_8_if_else_false:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_295_15_298_8_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 296 12 ]
+        %tmp.247 = lgetv %dc;
+        symbol [ dc %tmp.247 296 12 14 ];
+        symbol [ fillRectangle %tmp.248 296 15 28 ];
+        %tmp.248 = getv function %tmp.247 :fillRectangle;
+        %tmp.249 = lgetv %x.1;
+        symbol [ x %tmp.249 296 29 30 ];
+        %tmp.250 = lgetv %dw.3;
+        symbol [ dw %tmp.250 296 33 35 ];
+        %tmp.251 = 22;
+        %tmp.252 = mul %tmp.250 %tmp.251;
+        %tmp.253 = 100;
+        %tmp.254 = div %tmp.252 %tmp.253;
+        %tmp.255 = add %tmp.249 %tmp.254;
+        %tmp.256 = lgetv %y.2;
+        symbol [ y %tmp.256 296 48 49 ];
+        %tmp.257 = lgetv %dh.4;
+        symbol [ dh %tmp.257 296 52 54 ];
+        %tmp.258 = 80;
+        %tmp.259 = mul %tmp.257 %tmp.258;
+        %tmp.260 = 100;
+        %tmp.261 = div %tmp.259 %tmp.260;
+        %tmp.262 = add %tmp.256 %tmp.261;
+        %tmp.263 = lgetv %dw.3;
+        symbol [ dw %tmp.263 296 67 69 ];
+        %tmp.264 = 18;
+        %tmp.265 = mul %tmp.263 %tmp.264;
+        %tmp.266 = 100;
+        %tmp.267 = div %tmp.265 %tmp.266;
+        %tmp.268 = lgetv %dh.4;
+        symbol [ dh %tmp.268 296 82 84 ];
+        %tmp.269 = 18;
+        %tmp.270 = mul %tmp.268 %tmp.269;
+        %tmp.271 = 100;
+        %tmp.272 = div %tmp.270 %tmp.271;
+        invoke %tmp.247 %tmp.248(%tmp.255, %tmp.262, %tmp.267, %tmp.272);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 297 12 ]
+        %tmp.273 = lgetv %dc;
+        symbol [ dc %tmp.273 297 12 14 ];
+        symbol [ fillRectangle %tmp.274 297 15 28 ];
+        %tmp.274 = getv function %tmp.273 :fillRectangle;
+        %tmp.275 = lgetv %x.1;
+        symbol [ x %tmp.275 297 29 30 ];
+        %tmp.276 = lgetv %dw.3;
+        symbol [ dw %tmp.276 297 33 35 ];
+        %tmp.277 = 50;
+        %tmp.278 = mul %tmp.276 %tmp.277;
+        %tmp.279 = 100;
+        %tmp.280 = div %tmp.278 %tmp.279;
+        %tmp.281 = add %tmp.275 %tmp.280;
+        %tmp.282 = lgetv %y.2;
+        symbol [ y %tmp.282 297 48 49 ];
+        %tmp.283 = lgetv %dh.4;
+        symbol [ dh %tmp.283 297 52 54 ];
+        %tmp.284 = 74;
+        %tmp.285 = mul %tmp.283 %tmp.284;
+        %tmp.286 = 100;
+        %tmp.287 = div %tmp.285 %tmp.286;
+        %tmp.288 = add %tmp.282 %tmp.287;
+        %tmp.289 = lgetv %dw.3;
+        symbol [ dw %tmp.289 297 67 69 ];
+        %tmp.290 = 18;
+        %tmp.291 = mul %tmp.289 %tmp.290;
+        %tmp.292 = 100;
+        %tmp.293 = div %tmp.291 %tmp.292;
+        %tmp.294 = lgetv %dh.4;
+        symbol [ dh %tmp.294 297 82 84 ];
+        %tmp.295 = 26;
+        %tmp.296 = mul %tmp.294 %tmp.295;
+        %tmp.297 = 100;
+        %tmp.298 = div %tmp.296 %tmp.297;
+        invoke %tmp.273 %tmp.274(%tmp.281, %tmp.288, %tmp.293, %tmp.298);
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_295_15_298_8_stop:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_292_15_298_8_if_end:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_288_8_298_8_if_end:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_261_34_299_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 301; @symbol_functiondef = [_drawObstacles,301,20,34]; @symbol_param<0> = [dc,301,35,37]; ]
+    protected
+    function _drawObstacles(dc) {
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_301_39_317_4_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 302 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 302 8 10 ];
+        symbol [ setColor %tmp.2 302 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        %tmp.3 = 0x2EAA44;
+        symbol [ Graphics %tmp.4 302 30 38 ];
+        %tmp.4 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.5 302 39 56 ];
+        %tmp.5 = getv %tmp.4 :COLOR_TRANSPARENT;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.5);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 303 8 ]
+        for @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_303_8_316_8_for_test @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_303_8_316_8_for_incr @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_303_8_316_8_for_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_303_8_316_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_303_8_316_8_for_begin" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_303_8_316_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 303 17 18 ];
+        %tmp.6 = 0;
+        lputv %i.1 %tmp.6;
+        symbol [ i %i.1 303 17 18 ];
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_303_8_316_8_for_test:
+        %tmp.7 = lgetv %i.1;
+        symbol [ i %tmp.7 303 24 25 ];
+        symbol [ OBS_MAX %tmp.9 303 28 35 ];
+        %tmp.9 = getv ? :OBS_MAX;
+        %tmp.10 = lt %tmp.7 %tmp.9;
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_303_8_316_8_for_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_303_8_316_8_for_begin:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_303_42_316_8_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 304 12 ]
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_304_12_304_41_if_stmt:
+        symbol [ _oa %tmp.12 304 16 19 ];
+        %tmp.12 = getv ? :_oa;
+        %tmp.13 = lgetv %i.1;
+        symbol [ i %tmp.13 304 20 21 ];
+        %tmp.14 = agetv %tmp.12 %tmp.13;
+        %tmp.15 = 0;
+        %tmp.16 = eq %tmp.14 %tmp.15;
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_304_12_304_41_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_304_12_304_41_if_true:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_304_29_304_41_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 304 31 ]
+        goto break @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_303_8_316_8_for_incr;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_304_29_304_41_stop:
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_304_12_304_41_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_304_12_304_41_if_end:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 305 12 ]
+        [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_303_42_316_8_start" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_303_42_316_8_stop" ]
+        %ox.2 = local;
+        symbol [ ox %ox.2 305 16 18 ];
+        symbol [ _ox %tmp.18 305 21 24 ];
+        %tmp.18 = getv ? :_ox;
+        %tmp.19 = lgetv %i.1;
+        symbol [ i %tmp.19 305 25 26 ];
+        %tmp.20 = agetv %tmp.18 %tmp.19;
+        lputv %ox.2 %tmp.20;
+        symbol [ ox %ox.2 305 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 306 12 ]
+        [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_303_42_316_8_start" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_303_42_316_8_stop" ]
+        %ow.3 = local;
+        symbol [ ow %ow.3 306 16 18 ];
+        symbol [ _ow %tmp.22 306 21 24 ];
+        %tmp.22 = getv ? :_ow;
+        %tmp.23 = lgetv %i.1;
+        symbol [ i %tmp.23 306 25 26 ];
+        %tmp.24 = agetv %tmp.22 %tmp.23;
+        lputv %ow.3 %tmp.24;
+        symbol [ ow %ow.3 306 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 307 12 ]
+        [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_303_42_316_8_start" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_303_42_316_8_stop" ]
+        %oh.4 = local;
+        symbol [ oh %oh.4 307 16 18 ];
+        symbol [ _oh %tmp.26 307 21 24 ];
+        %tmp.26 = getv ? :_oh;
+        %tmp.27 = lgetv %i.1;
+        symbol [ i %tmp.27 307 25 26 ];
+        %tmp.28 = agetv %tmp.26 %tmp.27;
+        lputv %oh.4 %tmp.28;
+        symbol [ oh %oh.4 307 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 308 12 ]
+        [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_303_42_316_8_start" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_303_42_316_8_stop" ]
+        %oy.5 = local;
+        symbol [ oy %oy.5 308 16 18 ];
+        symbol [ _grdY %tmp.30 308 21 26 ];
+        %tmp.30 = getv ? :_grdY;
+        %tmp.31 = lgetv %oh.4;
+        symbol [ oh %tmp.31 308 29 31 ];
+        %tmp.32 = sub %tmp.30 %tmp.31;
+        lputv %oy.5 %tmp.32;
+        symbol [ oy %oy.5 308 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 310 12 ]
+        %tmp.33 = lgetv %dc;
+        symbol [ dc %tmp.33 310 12 14 ];
+        symbol [ fillRoundedRectangle %tmp.34 310 15 35 ];
+        %tmp.34 = getv function %tmp.33 :fillRoundedRectangle;
+        %tmp.35 = lgetv %ox.2;
+        symbol [ ox %tmp.35 310 36 38 ];
+        %tmp.36 = lgetv %ow.3;
+        symbol [ ow %tmp.36 310 41 43 ];
+        %tmp.37 = 4;
+        %tmp.38 = div %tmp.36 %tmp.37;
+        %tmp.39 = add %tmp.35 %tmp.38;
+        %tmp.40 = lgetv %oy.5;
+        symbol [ oy %tmp.40 310 49 51 ];
+        %tmp.41 = lgetv %ow.3;
+        symbol [ ow %tmp.41 310 53 55 ];
+        %tmp.42 = 2;
+        %tmp.43 = div %tmp.41 %tmp.42;
+        %tmp.44 = lgetv %oh.4;
+        symbol [ oh %tmp.44 310 61 63 ];
+        %tmp.45 = 2;
+        invoke %tmp.33 %tmp.34(%tmp.39, %tmp.40, %tmp.43, %tmp.44, %tmp.45);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 312 12 ]
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_312_12_315_12_if_stmt:
+        %tmp.46 = lgetv %oh.4;
+        symbol [ oh %tmp.46 312 16 18 ];
+        symbol [ _dh %tmp.48 312 21 24 ];
+        %tmp.48 = getv ? :_dh;
+        %tmp.49 = 6;
+        %tmp.50 = mul %tmp.48 %tmp.49;
+        %tmp.51 = 10;
+        %tmp.52 = div %tmp.50 %tmp.51;
+        %tmp.53 = gt %tmp.46 %tmp.52;
+        bf %tmp.53 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_312_12_315_12_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_312_12_315_12_if_true:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_312_35_315_12_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 313 16 ]
+        %tmp.54 = lgetv %dc;
+        symbol [ dc %tmp.54 313 16 18 ];
+        symbol [ fillRoundedRectangle %tmp.55 313 19 39 ];
+        %tmp.55 = getv function %tmp.54 :fillRoundedRectangle;
+        %tmp.56 = lgetv %ox.2;
+        symbol [ ox %tmp.56 313 40 42 ];
+        %tmp.57 = lgetv %oy.5;
+        symbol [ oy %tmp.57 313 44 46 ];
+        %tmp.58 = lgetv %oh.4;
+        symbol [ oh %tmp.58 313 49 51 ];
+        %tmp.59 = 4;
+        %tmp.60 = div %tmp.58 %tmp.59;
+        %tmp.61 = add %tmp.57 %tmp.60;
+        %tmp.62 = lgetv %ow.3;
+        symbol [ ow %tmp.62 313 57 59 ];
+        %tmp.63 = 28;
+        %tmp.64 = mul %tmp.62 %tmp.63;
+        %tmp.65 = 100;
+        %tmp.66 = div %tmp.64 %tmp.65;
+        %tmp.67 = lgetv %oh.4;
+        symbol [ oh %tmp.67 313 72 74 ];
+        %tmp.68 = 18;
+        %tmp.69 = mul %tmp.67 %tmp.68;
+        %tmp.70 = 100;
+        %tmp.71 = div %tmp.69 %tmp.70;
+        %tmp.72 = 2;
+        invoke %tmp.54 %tmp.55(%tmp.56, %tmp.61, %tmp.66, %tmp.71, %tmp.72);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 314 16 ]
+        %tmp.73 = lgetv %dc;
+        symbol [ dc %tmp.73 314 16 18 ];
+        symbol [ fillRoundedRectangle %tmp.74 314 19 39 ];
+        %tmp.74 = getv function %tmp.73 :fillRoundedRectangle;
+        %tmp.75 = lgetv %ox.2;
+        symbol [ ox %tmp.75 314 40 42 ];
+        %tmp.76 = lgetv %ow.3;
+        symbol [ ow %tmp.76 314 45 47 ];
+        %tmp.77 = 7;
+        %tmp.78 = mul %tmp.76 %tmp.77;
+        %tmp.79 = 10;
+        %tmp.80 = div %tmp.78 %tmp.79;
+        %tmp.81 = add %tmp.75 %tmp.80;
+        %tmp.82 = lgetv %oy.5;
+        symbol [ oy %tmp.82 314 58 60 ];
+        %tmp.83 = lgetv %oh.4;
+        symbol [ oh %tmp.83 314 63 65 ];
+        %tmp.84 = 36;
+        %tmp.85 = mul %tmp.83 %tmp.84;
+        %tmp.86 = 100;
+        %tmp.87 = div %tmp.85 %tmp.86;
+        %tmp.88 = add %tmp.82 %tmp.87;
+        %tmp.89 = lgetv %ow.3;
+        symbol [ ow %tmp.89 314 78 80 ];
+        %tmp.90 = 28;
+        %tmp.91 = mul %tmp.89 %tmp.90;
+        %tmp.92 = 100;
+        %tmp.93 = div %tmp.91 %tmp.92;
+        %tmp.94 = lgetv %oh.4;
+        symbol [ oh %tmp.94 314 93 95 ];
+        %tmp.95 = 18;
+        %tmp.96 = mul %tmp.94 %tmp.95;
+        %tmp.97 = 100;
+        %tmp.98 = div %tmp.96 %tmp.97;
+        %tmp.99 = 2;
+        invoke %tmp.73 %tmp.74(%tmp.81, %tmp.88, %tmp.93, %tmp.98, %tmp.99);
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_312_35_315_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_312_12_315_12_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_312_12_315_12_if_end:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_303_42_316_8_stop:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_303_8_316_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 303 ]
+        %tmp.102 = lgetv %i.1;
+        symbol [ i %tmp.102 303 37 38 ];
+        %tmp.103 = add %tmp.102 1;
+        lputv %i.1 %tmp.103;
+        symbol [ i %i.1 303 37 38 ];
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_303_8_316_8_for_test;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_303_8_316_8_for_end:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_301_39_317_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 319; @symbol_functiondef = [_drawScore,319,20,30]; @symbol_param<0> = [dc,319,31,33]; ]
+    protected
+    function _drawScore(dc) {
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_319_35_328_4_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 320 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 320 8 10 ];
+        symbol [ setColor %tmp.2 320 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        %tmp.3 = 0x606060;
+        symbol [ Graphics %tmp.4 320 30 38 ];
+        %tmp.4 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.5 320 39 56 ];
+        %tmp.5 = getv %tmp.4 :COLOR_TRANSPARENT;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.5);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 321 8 ]
+        %tmp.6 = lgetv %dc;
+        symbol [ dc %tmp.6 321 8 10 ];
+        symbol [ drawText %tmp.7 321 11 19 ];
+        %tmp.7 = getv function %tmp.6 :drawText;
+        symbol [ _sw %tmp.9 321 20 23 ];
+        %tmp.9 = getv ? :_sw;
+        %tmp.10 = 78;
+        %tmp.11 = mul %tmp.9 %tmp.10;
+        %tmp.12 = 100;
+        %tmp.13 = div %tmp.11 %tmp.12;
+        symbol [ _sh %tmp.15 321 36 39 ];
+        %tmp.15 = getv ? :_sh;
+        %tmp.16 = 8;
+        %tmp.17 = mul %tmp.15 %tmp.16;
+        %tmp.18 = 100;
+        %tmp.19 = div %tmp.17 %tmp.18;
+        symbol [ Graphics %tmp.20 321 51 59 ];
+        %tmp.20 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.21 321 60 70 ];
+        %tmp.21 = getv %tmp.20 :FONT_XTINY;
+        symbol [ _score %tmp.23 322 12 18 ];
+        %tmp.23 = getv ? :_score;
+        symbol [ format %tmp.24 322 19 25 ];
+        %tmp.24 = getv function %tmp.23 :format;
+        %tmp.25 = "%05d";
+        %tmp.26 = invoke %tmp.23 %tmp.24(%tmp.25);
+        symbol [ Graphics %tmp.27 322 35 43 ];
+        %tmp.27 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.28 322 44 63 ];
+        %tmp.28 = getv %tmp.27 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.6 %tmp.7(%tmp.13, %tmp.19, %tmp.21, %tmp.26, %tmp.28);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 323 8 ]
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_323_8_327_8_if_stmt:
+        symbol [ _hiScore %tmp.30 323 12 20 ];
+        %tmp.30 = getv ? :_hiScore;
+        %tmp.31 = 0;
+        %tmp.32 = gt %tmp.30 %tmp.31;
+        bf %tmp.32 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_323_8_327_8_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_323_8_327_8_if_true:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_323_26_327_8_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 324 12 ]
+        %tmp.33 = lgetv %dc;
+        symbol [ dc %tmp.33 324 12 14 ];
+        symbol [ setColor %tmp.34 324 15 23 ];
+        %tmp.34 = getv function %tmp.33 :setColor;
+        %tmp.35 = 0x404040;
+        symbol [ Graphics %tmp.36 324 34 42 ];
+        %tmp.36 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.37 324 43 60 ];
+        %tmp.37 = getv %tmp.36 :COLOR_TRANSPARENT;
+        invoke %tmp.33 %tmp.34(%tmp.35, %tmp.37);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 325 12 ]
+        %tmp.38 = lgetv %dc;
+        symbol [ dc %tmp.38 325 12 14 ];
+        symbol [ drawText %tmp.39 325 15 23 ];
+        %tmp.39 = getv function %tmp.38 :drawText;
+        symbol [ _sw %tmp.41 325 24 27 ];
+        %tmp.41 = getv ? :_sw;
+        %tmp.42 = 78;
+        %tmp.43 = mul %tmp.41 %tmp.42;
+        %tmp.44 = 100;
+        %tmp.45 = div %tmp.43 %tmp.44;
+        symbol [ _sh %tmp.47 325 40 43 ];
+        %tmp.47 = getv ? :_sh;
+        %tmp.48 = 16;
+        %tmp.49 = mul %tmp.47 %tmp.48;
+        %tmp.50 = 100;
+        %tmp.51 = div %tmp.49 %tmp.50;
+        symbol [ Graphics %tmp.52 325 56 64 ];
+        %tmp.52 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.53 325 65 75 ];
+        %tmp.53 = getv %tmp.52 :FONT_XTINY;
+        %tmp.54 = "HI ";
+        symbol [ _hiScore %tmp.56 326 24 32 ];
+        %tmp.56 = getv ? :_hiScore;
+        symbol [ format %tmp.57 326 33 39 ];
+        %tmp.57 = getv function %tmp.56 :format;
+        %tmp.58 = "%05d";
+        %tmp.59 = invoke %tmp.56 %tmp.57(%tmp.58);
+        %tmp.60 = add %tmp.54 %tmp.59;
+        symbol [ Graphics %tmp.61 326 49 57 ];
+        %tmp.61 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.62 326 58 77 ];
+        %tmp.62 = getv %tmp.61 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.38 %tmp.39(%tmp.45, %tmp.51, %tmp.53, %tmp.60, %tmp.62);
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_323_26_327_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_323_8_327_8_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_323_8_327_8_if_end:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_319_35_328_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 330; @symbol_functiondef = [_drawTitle,330,20,30]; @symbol_param<0> = [dc,330,31,33]; ]
+    protected
+    function _drawTitle(dc) {
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_330_35_347_4_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 332 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 332 8 10 ];
+        symbol [ setColor %tmp.2 332 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        %tmp.3 = 0x2EAA44;
+        symbol [ Graphics %tmp.4 332 30 38 ];
+        %tmp.4 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.5 332 39 56 ];
+        %tmp.5 = getv %tmp.4 :COLOR_TRANSPARENT;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.5);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 333 8 ]
+        %tmp.6 = lgetv %dc;
+        symbol [ dc %tmp.6 333 8 10 ];
+        symbol [ drawText %tmp.7 333 11 19 ];
+        %tmp.7 = getv function %tmp.6 :drawText;
+        symbol [ _sw %tmp.9 333 20 23 ];
+        %tmp.9 = getv ? :_sw;
+        %tmp.10 = 2;
+        %tmp.11 = div %tmp.9 %tmp.10;
+        symbol [ _sh %tmp.13 333 29 32 ];
+        %tmp.13 = getv ? :_sh;
+        %tmp.14 = 25;
+        %tmp.15 = mul %tmp.13 %tmp.14;
+        %tmp.16 = 100;
+        %tmp.17 = div %tmp.15 %tmp.16;
+        symbol [ Graphics %tmp.18 333 45 53 ];
+        %tmp.18 = getm $.Toybox.Graphics;
+        symbol [ FONT_MEDIUM %tmp.19 333 54 65 ];
+        %tmp.19 = getv %tmp.18 :FONT_MEDIUM;
+        %tmp.20 = "DINO RUN";
+        symbol [ Graphics %tmp.21 334 24 32 ];
+        %tmp.21 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.22 334 33 52 ];
+        %tmp.22 = getv %tmp.21 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.6 %tmp.7(%tmp.11, %tmp.17, %tmp.19, %tmp.20, %tmp.22);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 337 8 ]
+        %tmp.23 = lgetv %dc;
+        symbol [ dc %tmp.23 337 8 10 ];
+        symbol [ setColor %tmp.24 337 11 19 ];
+        %tmp.24 = getv function %tmp.23 :setColor;
+        %tmp.25 = 0x4a4a4a;
+        symbol [ Graphics %tmp.26 337 30 38 ];
+        %tmp.26 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.27 337 39 56 ];
+        %tmp.27 = getv %tmp.26 :COLOR_TRANSPARENT;
+        invoke %tmp.23 %tmp.24(%tmp.25, %tmp.27);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 338 8 ]
+        %tmp.28 = lgetv %dc;
+        symbol [ dc %tmp.28 338 8 10 ];
+        symbol [ drawText %tmp.29 338 11 19 ];
+        %tmp.29 = getv function %tmp.28 :drawText;
+        symbol [ _sw %tmp.31 338 20 23 ];
+        %tmp.31 = getv ? :_sw;
+        %tmp.32 = 2;
+        %tmp.33 = div %tmp.31 %tmp.32;
+        symbol [ _sh %tmp.35 338 29 32 ];
+        %tmp.35 = getv ? :_sh;
+        %tmp.36 = 44;
+        %tmp.37 = mul %tmp.35 %tmp.36;
+        %tmp.38 = 100;
+        %tmp.39 = div %tmp.37 %tmp.38;
+        symbol [ Graphics %tmp.40 338 45 53 ];
+        %tmp.40 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.41 338 54 64 ];
+        %tmp.41 = getv %tmp.40 :FONT_XTINY;
+        %tmp.42 = "any key to start";
+        symbol [ Graphics %tmp.43 339 32 40 ];
+        %tmp.43 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.44 339 41 60 ];
+        %tmp.44 = getv %tmp.43 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.28 %tmp.29(%tmp.33, %tmp.39, %tmp.41, %tmp.42, %tmp.44);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 342 8 ]
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_342_8_346_8_if_stmt:
+        symbol [ _hiScore %tmp.46 342 12 20 ];
+        %tmp.46 = getv ? :_hiScore;
+        %tmp.47 = 0;
+        %tmp.48 = gt %tmp.46 %tmp.47;
+        bf %tmp.48 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_342_8_346_8_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_342_8_346_8_if_true:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_342_26_346_8_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 343 12 ]
+        %tmp.49 = lgetv %dc;
+        symbol [ dc %tmp.49 343 12 14 ];
+        symbol [ setColor %tmp.50 343 15 23 ];
+        %tmp.50 = getv function %tmp.49 :setColor;
+        %tmp.51 = 0x383838;
+        symbol [ Graphics %tmp.52 343 34 42 ];
+        %tmp.52 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.53 343 43 60 ];
+        %tmp.53 = getv %tmp.52 :COLOR_TRANSPARENT;
+        invoke %tmp.49 %tmp.50(%tmp.51, %tmp.53);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 344 12 ]
+        %tmp.54 = lgetv %dc;
+        symbol [ dc %tmp.54 344 12 14 ];
+        symbol [ drawText %tmp.55 344 15 23 ];
+        %tmp.55 = getv function %tmp.54 :drawText;
+        symbol [ _sw %tmp.57 344 24 27 ];
+        %tmp.57 = getv ? :_sw;
+        %tmp.58 = 2;
+        %tmp.59 = div %tmp.57 %tmp.58;
+        symbol [ _sh %tmp.61 344 33 36 ];
+        %tmp.61 = getv ? :_sh;
+        %tmp.62 = 52;
+        %tmp.63 = mul %tmp.61 %tmp.62;
+        %tmp.64 = 100;
+        %tmp.65 = div %tmp.63 %tmp.64;
+        symbol [ Graphics %tmp.66 344 49 57 ];
+        %tmp.66 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.67 344 58 68 ];
+        %tmp.67 = getv %tmp.66 :FONT_XTINY;
+        %tmp.68 = "best ";
+        symbol [ _hiScore %tmp.70 345 26 34 ];
+        %tmp.70 = getv ? :_hiScore;
+        symbol [ format %tmp.71 345 35 41 ];
+        %tmp.71 = getv function %tmp.70 :format;
+        %tmp.72 = "%05d";
+        %tmp.73 = invoke %tmp.70 %tmp.71(%tmp.72);
+        %tmp.74 = add %tmp.68 %tmp.73;
+        symbol [ Graphics %tmp.75 345 51 59 ];
+        %tmp.75 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.76 345 60 79 ];
+        %tmp.76 = getv %tmp.75 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.54 %tmp.55(%tmp.59, %tmp.65, %tmp.67, %tmp.74, %tmp.76);
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_342_26_346_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_342_8_346_8_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_342_8_346_8_if_end:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_330_35_347_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 349; @symbol_functiondef = [_drawOver,349,20,29]; @symbol_param<0> = [dc,349,30,32]; ]
+    protected
+    function _drawOver(dc) {
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_349_34_380_4_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 350 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_349_34_380_4_start" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_349_34_380_4_stop" ]
+        %cx.1 = local;
+        symbol [ cx %cx.1 350 12 14 ];
+        symbol [ _sw %tmp.2 350 17 20 ];
+        %tmp.2 = getv ? :_sw;
+        %tmp.3 = 2;
+        %tmp.4 = div %tmp.2 %tmp.3;
+        lputv %cx.1 %tmp.4;
+        symbol [ cx %cx.1 350 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 351 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_349_34_380_4_start" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_349_34_380_4_stop" ]
+        %bw.2 = local;
+        symbol [ bw %bw.2 351 12 14 ];
+        symbol [ _sw %tmp.6 351 17 20 ];
+        %tmp.6 = getv ? :_sw;
+        %tmp.7 = 38;
+        %tmp.8 = mul %tmp.6 %tmp.7;
+        %tmp.9 = 100;
+        %tmp.10 = div %tmp.8 %tmp.9;
+        lputv %bw.2 %tmp.10;
+        symbol [ bw %bw.2 351 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 352 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_349_34_380_4_start" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_349_34_380_4_stop" ]
+        %bh.3 = local;
+        symbol [ bh %bh.3 352 12 14 ];
+        symbol [ _sh %tmp.12 352 17 20 ];
+        %tmp.12 = getv ? :_sh;
+        %tmp.13 = 18;
+        %tmp.14 = mul %tmp.12 %tmp.13;
+        %tmp.15 = 100;
+        %tmp.16 = div %tmp.14 %tmp.15;
+        lputv %bh.3 %tmp.16;
+        symbol [ bh %bh.3 352 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 353 8 ]
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_353_8_353_34_if_stmt:
+        %tmp.17 = lgetv %bw.2;
+        symbol [ bw %tmp.17 353 12 14 ];
+        %tmp.18 = 110;
+        %tmp.19 = lt %tmp.17 %tmp.18;
+        bf %tmp.19 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_353_8_353_34_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_353_8_353_34_if_true:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_353_22_353_34_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 353 24 ]
+        %tmp.20 = 110;
+        lputv %bw.2 %tmp.20;
+        symbol [ bw %bw.2 353 24 26 ];
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_353_22_353_34_stop:
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_353_8_353_34_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_353_8_353_34_if_end:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 354 8 ]
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_354_8_354_34_if_stmt:
+        %tmp.21 = lgetv %bh.3;
+        symbol [ bh %tmp.21 354 12 14 ];
+        %tmp.22 = 56;
+        %tmp.23 = lt %tmp.21 %tmp.22;
+        bf %tmp.23 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_354_8_354_34_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_354_8_354_34_if_true:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_354_22_354_34_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 354 24 ]
+        %tmp.24 = 56;
+        lputv %bh.3 %tmp.24;
+        symbol [ bh %bh.3 354 24 26 ];
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_354_22_354_34_stop:
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_354_8_354_34_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_354_8_354_34_if_end:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 355 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_349_34_380_4_start" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_349_34_380_4_stop" ]
+        %bx.4 = local;
+        symbol [ bx %bx.4 355 12 14 ];
+        %tmp.25 = lgetv %cx.1;
+        symbol [ cx %tmp.25 355 17 19 ];
+        %tmp.26 = lgetv %bw.2;
+        symbol [ bw %tmp.26 355 22 24 ];
+        %tmp.27 = 2;
+        %tmp.28 = div %tmp.26 %tmp.27;
+        %tmp.29 = sub %tmp.25 %tmp.28;
+        lputv %bx.4 %tmp.29;
+        symbol [ bx %bx.4 355 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 356 8 ]
+        [ "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_349_34_380_4_start" "_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_349_34_380_4_stop" ]
+        %by.5 = local;
+        symbol [ by %by.5 356 12 14 ];
+        symbol [ _sh %tmp.31 356 17 20 ];
+        %tmp.31 = getv ? :_sh;
+        %tmp.32 = 36;
+        %tmp.33 = mul %tmp.31 %tmp.32;
+        %tmp.34 = 100;
+        %tmp.35 = div %tmp.33 %tmp.34;
+        lputv %by.5 %tmp.35;
+        symbol [ by %by.5 356 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 358 8 ]
+        %tmp.36 = lgetv %dc;
+        symbol [ dc %tmp.36 358 8 10 ];
+        symbol [ setColor %tmp.37 358 11 19 ];
+        %tmp.37 = getv function %tmp.36 :setColor;
+        %tmp.38 = 0x111111;
+        symbol [ Graphics %tmp.39 358 30 38 ];
+        %tmp.39 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.40 358 39 56 ];
+        %tmp.40 = getv %tmp.39 :COLOR_TRANSPARENT;
+        invoke %tmp.36 %tmp.37(%tmp.38, %tmp.40);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 359 8 ]
+        %tmp.41 = lgetv %dc;
+        symbol [ dc %tmp.41 359 8 10 ];
+        symbol [ fillRoundedRectangle %tmp.42 359 11 31 ];
+        %tmp.42 = getv function %tmp.41 :fillRoundedRectangle;
+        %tmp.43 = lgetv %bx.4;
+        symbol [ bx %tmp.43 359 32 34 ];
+        %tmp.44 = lgetv %by.5;
+        symbol [ by %tmp.44 359 36 38 ];
+        %tmp.45 = lgetv %bw.2;
+        symbol [ bw %tmp.45 359 40 42 ];
+        %tmp.46 = lgetv %bh.3;
+        symbol [ bh %tmp.46 359 44 46 ];
+        %tmp.47 = 8;
+        invoke %tmp.41 %tmp.42(%tmp.43, %tmp.44, %tmp.45, %tmp.46, %tmp.47);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 360 8 ]
+        %tmp.48 = lgetv %dc;
+        symbol [ dc %tmp.48 360 8 10 ];
+        symbol [ setColor %tmp.49 360 11 19 ];
+        %tmp.49 = getv function %tmp.48 :setColor;
+        %tmp.50 = 0x303030;
+        symbol [ Graphics %tmp.51 360 30 38 ];
+        %tmp.51 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.52 360 39 56 ];
+        %tmp.52 = getv %tmp.51 :COLOR_TRANSPARENT;
+        invoke %tmp.48 %tmp.49(%tmp.50, %tmp.52);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 361 8 ]
+        %tmp.53 = lgetv %dc;
+        symbol [ dc %tmp.53 361 8 10 ];
+        symbol [ drawRoundedRectangle %tmp.54 361 11 31 ];
+        %tmp.54 = getv function %tmp.53 :drawRoundedRectangle;
+        %tmp.55 = lgetv %bx.4;
+        symbol [ bx %tmp.55 361 32 34 ];
+        %tmp.56 = lgetv %by.5;
+        symbol [ by %tmp.56 361 36 38 ];
+        %tmp.57 = lgetv %bw.2;
+        symbol [ bw %tmp.57 361 40 42 ];
+        %tmp.58 = lgetv %bh.3;
+        symbol [ bh %tmp.58 361 44 46 ];
+        %tmp.59 = 8;
+        invoke %tmp.53 %tmp.54(%tmp.55, %tmp.56, %tmp.57, %tmp.58, %tmp.59);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 363 8 ]
+        %tmp.60 = lgetv %dc;
+        symbol [ dc %tmp.60 363 8 10 ];
+        symbol [ setColor %tmp.61 363 11 19 ];
+        %tmp.61 = getv function %tmp.60 :setColor;
+        %tmp.62 = 0xCC3333;
+        symbol [ Graphics %tmp.63 363 30 38 ];
+        %tmp.63 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.64 363 39 56 ];
+        %tmp.64 = getv %tmp.63 :COLOR_TRANSPARENT;
+        invoke %tmp.60 %tmp.61(%tmp.62, %tmp.64);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 364 8 ]
+        %tmp.65 = lgetv %dc;
+        symbol [ dc %tmp.65 364 8 10 ];
+        symbol [ drawText %tmp.66 364 11 19 ];
+        %tmp.66 = getv function %tmp.65 :drawText;
+        %tmp.67 = lgetv %cx.1;
+        symbol [ cx %tmp.67 364 20 22 ];
+        %tmp.68 = lgetv %by.5;
+        symbol [ by %tmp.68 364 24 26 ];
+        %tmp.69 = 5;
+        %tmp.70 = add %tmp.68 %tmp.69;
+        symbol [ Graphics %tmp.71 364 32 40 ];
+        %tmp.71 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.72 364 41 51 ];
+        %tmp.72 = getv %tmp.71 :FONT_XTINY;
+        %tmp.73 = "GAME OVER";
+        symbol [ Graphics %tmp.74 365 25 33 ];
+        %tmp.74 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.75 365 34 53 ];
+        %tmp.75 = getv %tmp.74 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.65 %tmp.66(%tmp.67, %tmp.70, %tmp.72, %tmp.73, %tmp.75);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 367 8 ]
+        %tmp.76 = lgetv %dc;
+        symbol [ dc %tmp.76 367 8 10 ];
+        symbol [ setColor %tmp.77 367 11 19 ];
+        %tmp.77 = getv function %tmp.76 :setColor;
+        %tmp.78 = 0x888888;
+        symbol [ Graphics %tmp.79 367 30 38 ];
+        %tmp.79 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.80 367 39 56 ];
+        %tmp.80 = getv %tmp.79 :COLOR_TRANSPARENT;
+        invoke %tmp.76 %tmp.77(%tmp.78, %tmp.80);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 368 8 ]
+        %tmp.81 = lgetv %dc;
+        symbol [ dc %tmp.81 368 8 10 ];
+        symbol [ drawText %tmp.82 368 11 19 ];
+        %tmp.82 = getv function %tmp.81 :drawText;
+        %tmp.83 = lgetv %cx.1;
+        symbol [ cx %tmp.83 368 20 22 ];
+        %tmp.84 = lgetv %by.5;
+        symbol [ by %tmp.84 368 24 26 ];
+        %tmp.85 = 21;
+        %tmp.86 = add %tmp.84 %tmp.85;
+        symbol [ Graphics %tmp.87 368 33 41 ];
+        %tmp.87 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.88 368 42 52 ];
+        %tmp.88 = getv %tmp.87 :FONT_XTINY;
+        symbol [ _score %tmp.90 369 12 18 ];
+        %tmp.90 = getv ? :_score;
+        symbol [ format %tmp.91 369 19 25 ];
+        %tmp.91 = getv function %tmp.90 :format;
+        %tmp.92 = "%05d";
+        %tmp.93 = invoke %tmp.90 %tmp.91(%tmp.92);
+        symbol [ Graphics %tmp.94 369 35 43 ];
+        %tmp.94 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.95 369 44 63 ];
+        %tmp.95 = getv %tmp.94 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.81 %tmp.82(%tmp.83, %tmp.86, %tmp.88, %tmp.93, %tmp.95);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 371 8 ]
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_371_8_379_8_if_stmt:
+        symbol [ _flash %tmp.97 371 12 18 ];
+        %tmp.97 = getv ? :_flash;
+        %tmp.98 = 0;
+        %tmp.99 = gt %tmp.97 %tmp.98;
+        bf %tmp.99 @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_371_8_379_8_if_else_false;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_371_8_379_8_if_true:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_371_24_375_8_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 372 12 ]
+        %tmp.100 = lgetv %dc;
+        symbol [ dc %tmp.100 372 12 14 ];
+        symbol [ setColor %tmp.101 372 15 23 ];
+        %tmp.101 = getv function %tmp.100 :setColor;
+        %tmp.102 = 0xFFCC00;
+        symbol [ Graphics %tmp.103 372 34 42 ];
+        %tmp.103 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.104 372 43 60 ];
+        %tmp.104 = getv %tmp.103 :COLOR_TRANSPARENT;
+        invoke %tmp.100 %tmp.101(%tmp.102, %tmp.104);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 373 12 ]
+        %tmp.105 = lgetv %dc;
+        symbol [ dc %tmp.105 373 12 14 ];
+        symbol [ drawText %tmp.106 373 15 23 ];
+        %tmp.106 = getv function %tmp.105 :drawText;
+        %tmp.107 = lgetv %cx.1;
+        symbol [ cx %tmp.107 373 24 26 ];
+        %tmp.108 = lgetv %by.5;
+        symbol [ by %tmp.108 373 28 30 ];
+        %tmp.109 = 37;
+        %tmp.110 = add %tmp.108 %tmp.109;
+        symbol [ Graphics %tmp.111 373 37 45 ];
+        %tmp.111 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.112 373 46 56 ];
+        %tmp.112 = getv %tmp.111 :FONT_XTINY;
+        %tmp.113 = "NEW BEST!";
+        symbol [ Graphics %tmp.114 374 29 37 ];
+        %tmp.114 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.115 374 38 57 ];
+        %tmp.115 = getv %tmp.114 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.105 %tmp.106(%tmp.107, %tmp.110, %tmp.112, %tmp.113, %tmp.115);
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_371_24_375_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_371_8_379_8_if_end;
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_371_8_379_8_if_else_false:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_375_15_379_8_start:
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 376 12 ]
+        %tmp.116 = lgetv %dc;
+        symbol [ dc %tmp.116 376 12 14 ];
+        symbol [ setColor %tmp.117 376 15 23 ];
+        %tmp.117 = getv function %tmp.116 :setColor;
+        %tmp.118 = 0x444444;
+        symbol [ Graphics %tmp.119 376 34 42 ];
+        %tmp.119 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.120 376 43 60 ];
+        %tmp.120 = getv %tmp.119 :COLOR_TRANSPARENT;
+        invoke %tmp.116 %tmp.117(%tmp.118, %tmp.120);
+[ "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc" 377 12 ]
+        %tmp.121 = lgetv %dc;
+        symbol [ dc %tmp.121 377 12 14 ];
+        symbol [ drawText %tmp.122 377 15 23 ];
+        %tmp.122 = getv function %tmp.121 :drawText;
+        %tmp.123 = lgetv %cx.1;
+        symbol [ cx %tmp.123 377 24 26 ];
+        %tmp.124 = lgetv %by.5;
+        symbol [ by %tmp.124 377 28 30 ];
+        %tmp.125 = 37;
+        %tmp.126 = add %tmp.124 %tmp.125;
+        symbol [ Graphics %tmp.127 377 37 45 ];
+        %tmp.127 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.128 377 46 56 ];
+        %tmp.128 = getv %tmp.127 :FONT_XTINY;
+        %tmp.129 = "best ";
+        symbol [ _hiScore %tmp.131 378 26 34 ];
+        %tmp.131 = getv ? :_hiScore;
+        symbol [ format %tmp.132 378 35 41 ];
+        %tmp.132 = getv function %tmp.131 :format;
+        %tmp.133 = "%05d";
+        %tmp.134 = invoke %tmp.131 %tmp.132(%tmp.133);
+        %tmp.135 = add %tmp.129 %tmp.134;
+        symbol [ Graphics %tmp.136 378 51 59 ];
+        %tmp.136 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.137 378 60 79 ];
+        %tmp.137 = getv %tmp.136 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.121 %tmp.122(%tmp.123, %tmp.126, %tmp.128, %tmp.135, %tmp.137);
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_375_15_379_8_stop:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_371_8_379_8_if_end:
+_Users_kkorolczuk_work_garmin_dinosaur_source_DinosaurView_mc_349_34_380_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/dinosaur/source/DinosaurView.mc"; @line = 1; ]
+<init> {
+}
