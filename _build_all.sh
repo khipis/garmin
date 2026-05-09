@@ -41,6 +41,7 @@ APPS=(
   dinosaur
   shadowclonerunner
   edgesurvivor
+  mini_go_9x9
   intervalbeeper
   jazzball
   minigolf
