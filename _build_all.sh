@@ -45,6 +45,7 @@ APPS=(
   othello_blitz
   tic_tac_pro
   connect_four_lite
+  hex_mini
   intervalbeeper
   jazzball
   minigolf
