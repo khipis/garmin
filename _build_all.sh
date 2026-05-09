@@ -42,6 +42,7 @@ APPS=(
   shadowclonerunner
   edgesurvivor
   mini_go_9x9
+  othello_blitz
   intervalbeeper
   jazzball
   minigolf
