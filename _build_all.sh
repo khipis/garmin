@@ -39,6 +39,7 @@ APPS=(
   breathtrainingsystem
   cellwars
   dinosaur
+  shadowclonerunner
   intervalbeeper
   jazzball
   minigolf
