@@ -43,6 +43,7 @@ APPS=(
   edgesurvivor
   mini_go_9x9
   othello_blitz
+  tic_tac_pro
   intervalbeeper
   jazzball
   minigolf
