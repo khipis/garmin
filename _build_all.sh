@@ -44,6 +44,7 @@ APPS=(
   mini_go_9x9
   othello_blitz
   tic_tac_pro
+  connect_four_lite
   intervalbeeper
   jazzball
   minigolf
