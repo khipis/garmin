@@ -40,6 +40,7 @@ APPS=(
   cellwars
   dinosaur
   shadowclonerunner
+  edgesurvivor
   intervalbeeper
   jazzball
   minigolf
