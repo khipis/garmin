@@ -567,6 +567,9 @@ class DinosaurView extends WatchUi.View {
     // ── HUD ───────────────────────────────────────────────────────────────────
 
     hidden function _drawScore(dc) {
+        // On a round watch the usable width at y≈12 % is ~234 px wide (radius 180).
+        // Centering at x=73 % keeps the text well inside the bezel.
+        var sx = _sw * 73 / 100;
         // score colour shifts grey → red as speed increases
         var spd10 = _spd - 5;
         if (spd10 < 0) { spd10 = 0; }
@@ -575,11 +578,11 @@ class DinosaurView extends WatchUi.View {
         if (r > 220) { r = 220; }
         if (g < 28)  { g = 28; }
         dc.setColor(r * 65536 + g * 256 + 28, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_sw * 78 / 100, _sh * 8 / 100, Graphics.FONT_XTINY,
+        dc.drawText(sx, _sh * 13 / 100, Graphics.FONT_XTINY,
             _score.format("%05d"), Graphics.TEXT_JUSTIFY_CENTER);
         if (_hiScore > 0) {
             dc.setColor(0x3a3a3a, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_sw * 78 / 100, _sh * 16 / 100, Graphics.FONT_XTINY,
+            dc.drawText(sx, _sh * 21 / 100, Graphics.FONT_XTINY,
                 "HI " + _hiScore.format("%05d"), Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
