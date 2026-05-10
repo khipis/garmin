@@ -112,27 +112,27 @@ class GameView extends WatchUi.View {
     function onLayout(dc) {
         _sw = dc.getWidth();
         _sh = dc.getHeight();
-        // Leave ~44px total for top HUD + hand strips; divide remaining height by GM
+        // 85% scale: leave ~44px for HUD/hand strips, then shrink by 15%
         var avail = _sh - 44;
-        _csz = avail / GM;
-        var wlim = _sw / (GM + 1);     // also constrain by width
+        _csz = avail * 85 / 100 / GM;
+        var wlim = _sw * 85 / 100 / (GM + 1);
         if (_csz > wlim) { _csz = wlim; }
         var bsz = _csz * GM;
         _gx = (_sw - bsz) / 2;
-        _gy = 22;    // top HUD reserve
+        _gy = 20;
         // Board piece radii: nest visually (22 / 40 / 58 / 76 % of half-cell)
         var hc = _csz / 2;
-        _psz[0] = hc * 22 / 100; if (_psz[0] < 3)  { _psz[0] = 3; }
-        _psz[1] = hc * 40 / 100; if (_psz[1] < 5)  { _psz[1] = 5; }
-        _psz[2] = hc * 58 / 100; if (_psz[2] < 7)  { _psz[2] = 7; }
-        _psz[3] = hc * 76 / 100; if (_psz[3] < 9)  { _psz[3] = 9; }
+        _psz[0] = hc * 22 / 100; if (_psz[0] < 2)  { _psz[0] = 2; }
+        _psz[1] = hc * 40 / 100; if (_psz[1] < 4)  { _psz[1] = 4; }
+        _psz[2] = hc * 58 / 100; if (_psz[2] < 6)  { _psz[2] = 6; }
+        _psz[3] = hc * 76 / 100; if (_psz[3] < 8)  { _psz[3] = 8; }
         // Hand icon radii (smaller, for the strip above/below the grid)
         var hr = _sh * 3 / 100;
-        if (hr > 12) { hr = 12; }
-        if (hr < 4)  { hr = 4; }
+        if (hr > 10) { hr = 10; }
+        if (hr < 3)  { hr = 3; }
         _hpsz[0] = hr * 25 / 100; if (_hpsz[0] < 2) { _hpsz[0] = 2; }
-        _hpsz[1] = hr * 50 / 100; if (_hpsz[1] < 3) { _hpsz[1] = 3; }
-        _hpsz[2] = hr * 75 / 100; if (_hpsz[2] < 4) { _hpsz[2] = 4; }
+        _hpsz[1] = hr * 50 / 100; if (_hpsz[1] < 2) { _hpsz[1] = 2; }
+        _hpsz[2] = hr * 75 / 100; if (_hpsz[2] < 3) { _hpsz[2] = 3; }
         _hpsz[3] = hr;
         _timer = new Timer.Timer();
         _timer.start(method(:gameTick), 500, true);
@@ -902,15 +902,15 @@ class GameView extends WatchUi.View {
         dc.setColor(0x0C0C0C, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(hw, hw, hw - 1);
         dc.setColor(0xFFAA00, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(hw, _sh * 11 / 100, Graphics.FONT_SMALL, "GOBBLET", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(hw, _sh * 9 / 100, Graphics.FONT_XTINY, "GOBBLET MINI", Graphics.TEXT_JUSTIFY_CENTER);
         var modeStr = (_mode == MODE_PVAI) ? "P vs AI" : ((_mode == MODE_PVP) ? "P vs P" : "AI vs AI");
         var diffStr = (_diff == DIFF_EASY) ? "Easy" : ((_diff == DIFF_MED) ? "Med" : "Hard");
         var sideStr = _playerFirst ? "Side: Lt" : "Side: Dk";
         var rows = ["Mode: " + modeStr, "Diff: " + diffStr, sideStr, "START"];
         var nR = 4;
-        var rowH = _sh * 14 / 100; if (rowH < 26) { rowH = 26; } if (rowH > 40) { rowH = 40; }
-        var rowW = _sw * 78 / 100; var rowX = (_sw - rowW) / 2;
-        var gap = 6; var tot = nR * rowH + (nR - 1) * gap; var rowY0 = (_sh - tot) / 2 + rowH;
+        var rowH = _sh * 11 / 100; if (rowH < 22) { rowH = 22; } if (rowH > 32) { rowH = 32; }
+        var rowW = _sw * 66 / 100; var rowX = (_sw - rowW) / 2;
+        var gap = 5; var tot = nR * rowH + (nR - 1) * gap; var rowY0 = (_sh - tot) / 2 + rowH;
         var i = 0;
         while (i < nR) {
             var ry = rowY0 + i * (rowH + gap); var sel = (i == _menuSel); var isStart = (i == nR - 1);
