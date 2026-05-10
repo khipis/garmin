@@ -43,6 +43,12 @@ class GameController {
         if (!_checkGameOver()) { _aiTurn(); }
     }
 
+    // AI makes the opening move (used when AI goes first).
+    function aiFirstMove() {
+        if (gameOver != 0) { return; }
+        _aiTurn();
+    }
+
     // AI plays its turn.
     hidden function _aiTurn() {
         var move = ai.chooseMove(STONE_WHITE);

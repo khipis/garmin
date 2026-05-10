@@ -1,0 +1,1215 @@
+[ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc"; @line = 1; @symbol_usingdef<0> = [Toybox,1,6,12]; @symbol_usingdef<1> = [Math,1,13,17]; ]
+using Toybox.Math;
+[ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc"; @line = 16; @symbol_classdef = [AI,16,6,8]; ]
+class AI {
+    [ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc"; @line = 16; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc"; @line = 16; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc"; @line = 17; @position = 15; @symbol_vardef = [_board,17,15,21]; ]
+    protected
+    var _board;
+    [ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc"; @line = 18; @position = 15; @symbol_vardef = [_wt,18,15,18]; ]
+    protected
+    var _wt;
+    [ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc"; @line = 20; @symbol_functiondef = [initialize,20,13,23]; @symbol_param<0> = [board,20,24,29]; ]
+    function initialize(board) as Void {
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_20_31_48_4_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 21 8 ]
+        %tmp.1 = lgetv %board;
+        symbol [ board %tmp.1 21 17 22 ];
+        symbol [ _board ? 21 8 14 ];
+        putv self :_board %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 22 8 ]
+        %tmp.3 = 64;
+        %tmp.2 = newa %tmp.3;
+        symbol [ _wt ? 22 8 11 ];
+        putv self :_wt %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 25 8 ]
+        symbol [ _wt %tmp.4 25 8 11 ];
+        %tmp.4 = getv self :_wt;
+        %tmp.5 = 40;
+        %tmp.6 = 0;
+        aputv %tmp.4 %tmp.6 %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 25 20 ]
+        symbol [ _wt %tmp.7 25 20 23 ];
+        %tmp.7 = getv self :_wt;
+        %tmp.8 = -12;
+        %tmp.9 = 1;
+        aputv %tmp.7 %tmp.9 %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 25 32 ]
+        symbol [ _wt %tmp.10 25 32 35 ];
+        %tmp.10 = getv self :_wt;
+        %tmp.11 = 20;
+        %tmp.12 = 2;
+        aputv %tmp.10 %tmp.12 %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 25 44 ]
+        symbol [ _wt %tmp.13 25 44 47 ];
+        %tmp.13 = getv self :_wt;
+        %tmp.14 = 20;
+        %tmp.15 = 3;
+        aputv %tmp.13 %tmp.15 %tmp.14;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 26 8 ]
+        symbol [ _wt %tmp.16 26 8 11 ];
+        %tmp.16 = getv self :_wt;
+        %tmp.17 = 20;
+        %tmp.18 = 4;
+        aputv %tmp.16 %tmp.18 %tmp.17;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 26 20 ]
+        symbol [ _wt %tmp.19 26 20 23 ];
+        %tmp.19 = getv self :_wt;
+        %tmp.20 = 20;
+        %tmp.21 = 5;
+        aputv %tmp.19 %tmp.21 %tmp.20;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 26 32 ]
+        symbol [ _wt %tmp.22 26 32 35 ];
+        %tmp.22 = getv self :_wt;
+        %tmp.23 = -12;
+        %tmp.24 = 6;
+        aputv %tmp.22 %tmp.24 %tmp.23;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 26 44 ]
+        symbol [ _wt %tmp.25 26 44 47 ];
+        %tmp.25 = getv self :_wt;
+        %tmp.26 = 40;
+        %tmp.27 = 7;
+        aputv %tmp.25 %tmp.27 %tmp.26;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 28 8 ]
+        symbol [ _wt %tmp.28 28 8 11 ];
+        %tmp.28 = getv self :_wt;
+        %tmp.29 = -12;
+        %tmp.30 = 8;
+        aputv %tmp.28 %tmp.30 %tmp.29;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 28 21 ]
+        symbol [ _wt %tmp.31 28 21 24 ];
+        %tmp.31 = getv self :_wt;
+        %tmp.32 = -20;
+        %tmp.33 = 9;
+        aputv %tmp.31 %tmp.33 %tmp.32;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 28 33 ]
+        symbol [ _wt %tmp.34 28 33 36 ];
+        %tmp.34 = getv self :_wt;
+        %tmp.35 = -5;
+        %tmp.36 = 10;
+        aputv %tmp.34 %tmp.36 %tmp.35;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 28 45 ]
+        symbol [ _wt %tmp.37 28 45 48 ];
+        %tmp.37 = getv self :_wt;
+        %tmp.38 = -5;
+        %tmp.39 = 11;
+        aputv %tmp.37 %tmp.39 %tmp.38;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 29 8 ]
+        symbol [ _wt %tmp.40 29 8 11 ];
+        %tmp.40 = getv self :_wt;
+        %tmp.41 = -5;
+        %tmp.42 = 12;
+        aputv %tmp.40 %tmp.42 %tmp.41;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 29 21 ]
+        symbol [ _wt %tmp.43 29 21 24 ];
+        %tmp.43 = getv self :_wt;
+        %tmp.44 = -5;
+        %tmp.45 = 13;
+        aputv %tmp.43 %tmp.45 %tmp.44;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 29 33 ]
+        symbol [ _wt %tmp.46 29 33 36 ];
+        %tmp.46 = getv self :_wt;
+        %tmp.47 = -20;
+        %tmp.48 = 14;
+        aputv %tmp.46 %tmp.48 %tmp.47;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 29 46 ]
+        symbol [ _wt %tmp.49 29 46 49 ];
+        %tmp.49 = getv self :_wt;
+        %tmp.50 = -12;
+        %tmp.51 = 15;
+        aputv %tmp.49 %tmp.51 %tmp.50;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 31 8 ]
+        symbol [ _wt %tmp.52 31 8 11 ];
+        %tmp.52 = getv self :_wt;
+        %tmp.53 = 20;
+        %tmp.54 = 16;
+        aputv %tmp.52 %tmp.54 %tmp.53;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 31 21 ]
+        symbol [ _wt %tmp.55 31 21 24 ];
+        %tmp.55 = getv self :_wt;
+        %tmp.56 = -5;
+        %tmp.57 = 17;
+        aputv %tmp.55 %tmp.57 %tmp.56;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 31 34 ]
+        symbol [ _wt %tmp.58 31 34 37 ];
+        %tmp.58 = getv self :_wt;
+        %tmp.59 = 10;
+        %tmp.60 = 18;
+        aputv %tmp.58 %tmp.60 %tmp.59;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 31 46 ]
+        symbol [ _wt %tmp.61 31 46 49 ];
+        %tmp.61 = getv self :_wt;
+        %tmp.62 = 0;
+        %tmp.63 = 19;
+        aputv %tmp.61 %tmp.63 %tmp.62;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 32 8 ]
+        symbol [ _wt %tmp.64 32 8 11 ];
+        %tmp.64 = getv self :_wt;
+        %tmp.65 = 0;
+        %tmp.66 = 20;
+        aputv %tmp.64 %tmp.66 %tmp.65;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 32 21 ]
+        symbol [ _wt %tmp.67 32 21 24 ];
+        %tmp.67 = getv self :_wt;
+        %tmp.68 = 10;
+        %tmp.69 = 21;
+        aputv %tmp.67 %tmp.69 %tmp.68;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 32 34 ]
+        symbol [ _wt %tmp.70 32 34 37 ];
+        %tmp.70 = getv self :_wt;
+        %tmp.71 = -5;
+        %tmp.72 = 22;
+        aputv %tmp.70 %tmp.72 %tmp.71;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 32 46 ]
+        symbol [ _wt %tmp.73 32 46 49 ];
+        %tmp.73 = getv self :_wt;
+        %tmp.74 = 20;
+        %tmp.75 = 23;
+        aputv %tmp.73 %tmp.75 %tmp.74;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 34 8 ]
+        symbol [ _wt %tmp.76 34 8 11 ];
+        %tmp.76 = getv self :_wt;
+        %tmp.77 = 20;
+        %tmp.78 = 24;
+        aputv %tmp.76 %tmp.78 %tmp.77;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 34 21 ]
+        symbol [ _wt %tmp.79 34 21 24 ];
+        %tmp.79 = getv self :_wt;
+        %tmp.80 = -5;
+        %tmp.81 = 25;
+        aputv %tmp.79 %tmp.81 %tmp.80;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 34 34 ]
+        symbol [ _wt %tmp.82 34 34 37 ];
+        %tmp.82 = getv self :_wt;
+        %tmp.83 = 0;
+        %tmp.84 = 26;
+        aputv %tmp.82 %tmp.84 %tmp.83;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 34 46 ]
+        symbol [ _wt %tmp.85 34 46 49 ];
+        %tmp.85 = getv self :_wt;
+        %tmp.86 = 10;
+        %tmp.87 = 27;
+        aputv %tmp.85 %tmp.87 %tmp.86;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 35 8 ]
+        symbol [ _wt %tmp.88 35 8 11 ];
+        %tmp.88 = getv self :_wt;
+        %tmp.89 = 10;
+        %tmp.90 = 28;
+        aputv %tmp.88 %tmp.90 %tmp.89;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 35 21 ]
+        symbol [ _wt %tmp.91 35 21 24 ];
+        %tmp.91 = getv self :_wt;
+        %tmp.92 = 0;
+        %tmp.93 = 29;
+        aputv %tmp.91 %tmp.93 %tmp.92;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 35 34 ]
+        symbol [ _wt %tmp.94 35 34 37 ];
+        %tmp.94 = getv self :_wt;
+        %tmp.95 = -5;
+        %tmp.96 = 30;
+        aputv %tmp.94 %tmp.96 %tmp.95;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 35 46 ]
+        symbol [ _wt %tmp.97 35 46 49 ];
+        %tmp.97 = getv self :_wt;
+        %tmp.98 = 20;
+        %tmp.99 = 31;
+        aputv %tmp.97 %tmp.99 %tmp.98;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 37 8 ]
+        symbol [ _wt %tmp.100 37 8 11 ];
+        %tmp.100 = getv self :_wt;
+        %tmp.101 = 20;
+        %tmp.102 = 32;
+        aputv %tmp.100 %tmp.102 %tmp.101;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 37 21 ]
+        symbol [ _wt %tmp.103 37 21 24 ];
+        %tmp.103 = getv self :_wt;
+        %tmp.104 = -5;
+        %tmp.105 = 33;
+        aputv %tmp.103 %tmp.105 %tmp.104;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 37 34 ]
+        symbol [ _wt %tmp.106 37 34 37 ];
+        %tmp.106 = getv self :_wt;
+        %tmp.107 = 0;
+        %tmp.108 = 34;
+        aputv %tmp.106 %tmp.108 %tmp.107;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 37 46 ]
+        symbol [ _wt %tmp.109 37 46 49 ];
+        %tmp.109 = getv self :_wt;
+        %tmp.110 = 10;
+        %tmp.111 = 35;
+        aputv %tmp.109 %tmp.111 %tmp.110;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 38 8 ]
+        symbol [ _wt %tmp.112 38 8 11 ];
+        %tmp.112 = getv self :_wt;
+        %tmp.113 = 10;
+        %tmp.114 = 36;
+        aputv %tmp.112 %tmp.114 %tmp.113;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 38 21 ]
+        symbol [ _wt %tmp.115 38 21 24 ];
+        %tmp.115 = getv self :_wt;
+        %tmp.116 = 0;
+        %tmp.117 = 37;
+        aputv %tmp.115 %tmp.117 %tmp.116;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 38 34 ]
+        symbol [ _wt %tmp.118 38 34 37 ];
+        %tmp.118 = getv self :_wt;
+        %tmp.119 = -5;
+        %tmp.120 = 38;
+        aputv %tmp.118 %tmp.120 %tmp.119;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 38 46 ]
+        symbol [ _wt %tmp.121 38 46 49 ];
+        %tmp.121 = getv self :_wt;
+        %tmp.122 = 20;
+        %tmp.123 = 39;
+        aputv %tmp.121 %tmp.123 %tmp.122;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 40 8 ]
+        symbol [ _wt %tmp.124 40 8 11 ];
+        %tmp.124 = getv self :_wt;
+        %tmp.125 = 20;
+        %tmp.126 = 40;
+        aputv %tmp.124 %tmp.126 %tmp.125;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 40 21 ]
+        symbol [ _wt %tmp.127 40 21 24 ];
+        %tmp.127 = getv self :_wt;
+        %tmp.128 = -5;
+        %tmp.129 = 41;
+        aputv %tmp.127 %tmp.129 %tmp.128;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 40 34 ]
+        symbol [ _wt %tmp.130 40 34 37 ];
+        %tmp.130 = getv self :_wt;
+        %tmp.131 = 10;
+        %tmp.132 = 42;
+        aputv %tmp.130 %tmp.132 %tmp.131;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 40 46 ]
+        symbol [ _wt %tmp.133 40 46 49 ];
+        %tmp.133 = getv self :_wt;
+        %tmp.134 = 0;
+        %tmp.135 = 43;
+        aputv %tmp.133 %tmp.135 %tmp.134;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 41 8 ]
+        symbol [ _wt %tmp.136 41 8 11 ];
+        %tmp.136 = getv self :_wt;
+        %tmp.137 = 0;
+        %tmp.138 = 44;
+        aputv %tmp.136 %tmp.138 %tmp.137;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 41 21 ]
+        symbol [ _wt %tmp.139 41 21 24 ];
+        %tmp.139 = getv self :_wt;
+        %tmp.140 = 10;
+        %tmp.141 = 45;
+        aputv %tmp.139 %tmp.141 %tmp.140;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 41 34 ]
+        symbol [ _wt %tmp.142 41 34 37 ];
+        %tmp.142 = getv self :_wt;
+        %tmp.143 = -5;
+        %tmp.144 = 46;
+        aputv %tmp.142 %tmp.144 %tmp.143;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 41 46 ]
+        symbol [ _wt %tmp.145 41 46 49 ];
+        %tmp.145 = getv self :_wt;
+        %tmp.146 = 20;
+        %tmp.147 = 47;
+        aputv %tmp.145 %tmp.147 %tmp.146;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 43 8 ]
+        symbol [ _wt %tmp.148 43 8 11 ];
+        %tmp.148 = getv self :_wt;
+        %tmp.149 = -12;
+        %tmp.150 = 48;
+        aputv %tmp.148 %tmp.150 %tmp.149;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 43 21 ]
+        symbol [ _wt %tmp.151 43 21 24 ];
+        %tmp.151 = getv self :_wt;
+        %tmp.152 = -20;
+        %tmp.153 = 49;
+        aputv %tmp.151 %tmp.153 %tmp.152;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 43 34 ]
+        symbol [ _wt %tmp.154 43 34 37 ];
+        %tmp.154 = getv self :_wt;
+        %tmp.155 = -5;
+        %tmp.156 = 50;
+        aputv %tmp.154 %tmp.156 %tmp.155;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 43 46 ]
+        symbol [ _wt %tmp.157 43 46 49 ];
+        %tmp.157 = getv self :_wt;
+        %tmp.158 = -5;
+        %tmp.159 = 51;
+        aputv %tmp.157 %tmp.159 %tmp.158;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 44 8 ]
+        symbol [ _wt %tmp.160 44 8 11 ];
+        %tmp.160 = getv self :_wt;
+        %tmp.161 = -5;
+        %tmp.162 = 52;
+        aputv %tmp.160 %tmp.162 %tmp.161;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 44 21 ]
+        symbol [ _wt %tmp.163 44 21 24 ];
+        %tmp.163 = getv self :_wt;
+        %tmp.164 = -5;
+        %tmp.165 = 53;
+        aputv %tmp.163 %tmp.165 %tmp.164;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 44 34 ]
+        symbol [ _wt %tmp.166 44 34 37 ];
+        %tmp.166 = getv self :_wt;
+        %tmp.167 = -20;
+        %tmp.168 = 54;
+        aputv %tmp.166 %tmp.168 %tmp.167;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 44 47 ]
+        symbol [ _wt %tmp.169 44 47 50 ];
+        %tmp.169 = getv self :_wt;
+        %tmp.170 = -12;
+        %tmp.171 = 55;
+        aputv %tmp.169 %tmp.171 %tmp.170;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 46 8 ]
+        symbol [ _wt %tmp.172 46 8 11 ];
+        %tmp.172 = getv self :_wt;
+        %tmp.173 = 40;
+        %tmp.174 = 56;
+        aputv %tmp.172 %tmp.174 %tmp.173;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 46 21 ]
+        symbol [ _wt %tmp.175 46 21 24 ];
+        %tmp.175 = getv self :_wt;
+        %tmp.176 = -12;
+        %tmp.177 = 57;
+        aputv %tmp.175 %tmp.177 %tmp.176;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 46 34 ]
+        symbol [ _wt %tmp.178 46 34 37 ];
+        %tmp.178 = getv self :_wt;
+        %tmp.179 = 20;
+        %tmp.180 = 58;
+        aputv %tmp.178 %tmp.180 %tmp.179;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 46 46 ]
+        symbol [ _wt %tmp.181 46 46 49 ];
+        %tmp.181 = getv self :_wt;
+        %tmp.182 = 20;
+        %tmp.183 = 59;
+        aputv %tmp.181 %tmp.183 %tmp.182;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 47 8 ]
+        symbol [ _wt %tmp.184 47 8 11 ];
+        %tmp.184 = getv self :_wt;
+        %tmp.185 = 20;
+        %tmp.186 = 60;
+        aputv %tmp.184 %tmp.186 %tmp.185;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 47 21 ]
+        symbol [ _wt %tmp.187 47 21 24 ];
+        %tmp.187 = getv self :_wt;
+        %tmp.188 = 20;
+        %tmp.189 = 61;
+        aputv %tmp.187 %tmp.189 %tmp.188;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 47 34 ]
+        symbol [ _wt %tmp.190 47 34 37 ];
+        %tmp.190 = getv self :_wt;
+        %tmp.191 = -12;
+        %tmp.192 = 62;
+        aputv %tmp.190 %tmp.192 %tmp.191;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 47 47 ]
+        symbol [ _wt %tmp.193 47 47 50 ];
+        %tmp.193 = getv self :_wt;
+        %tmp.194 = 40;
+        %tmp.195 = 63;
+        aputv %tmp.193 %tmp.195 %tmp.194;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_20_31_48_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc"; @line = 51; @symbol_functiondef = [chooseMove,51,13,23]; @symbol_param<0> = [aiColor,51,24,31]; ]
+    function chooseMove(aiColor) {
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_51_33_71_4_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 53 8 ]
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_53_8_53_83_if_stmt:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_53_12_53_67_begin:
+        symbol [ _board %tmp.2 53 12 18 ];
+        %tmp.2 = getv ? :_board;
+        symbol [ cells %tmp.3 53 19 24 ];
+        %tmp.3 = getv %tmp.2 :cells;
+        %tmp.4 = 0;
+        %tmp.5 = agetv %tmp.3 %tmp.4;
+        %tmp.6 = 0;
+        %tmp.7 = eq %tmp.5 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_53_8_53_83_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_53_37_53_67_true:
+        symbol [ _board %tmp.9 53 37 43 ];
+        %tmp.9 = getv ? :_board;
+        symbol [ isValidAt %tmp.10 53 44 53 ];
+        %tmp.10 = getv function %tmp.9 :isValidAt;
+        %tmp.11 = 0;
+        %tmp.12 = 0;
+        %tmp.13 = lgetv %aiColor;
+        symbol [ aiColor %tmp.13 53 60 67 ];
+        %tmp.14 = invoke %tmp.9 %tmp.10(%tmp.11, %tmp.12, %tmp.13);
+        push %tmp.14;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_53_37_53_67_end:
+        %tmp.15 = phi [%tmp.7 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_53_12_53_67_begin] [%tmp.14 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_53_37_53_67_true] [%tmp.15 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_53_37_53_67_end];
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_53_8_53_83_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_53_8_53_83_if_true:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_53_70_53_83_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 53 72 ]
+        %tmp.16 = 0;
+        ret %tmp.16;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_53_70_53_83_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_53_8_53_83_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_53_8_53_83_if_end:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 54 8 ]
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_54_8_54_83_if_stmt:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_54_12_54_67_begin:
+        symbol [ _board %tmp.18 54 12 18 ];
+        %tmp.18 = getv ? :_board;
+        symbol [ cells %tmp.19 54 19 24 ];
+        %tmp.19 = getv %tmp.18 :cells;
+        %tmp.20 = 7;
+        %tmp.21 = agetv %tmp.19 %tmp.20;
+        %tmp.22 = 0;
+        %tmp.23 = eq %tmp.21 %tmp.22;
+        bf %tmp.23 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_54_8_54_83_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_54_37_54_67_true:
+        symbol [ _board %tmp.25 54 37 43 ];
+        %tmp.25 = getv ? :_board;
+        symbol [ isValidAt %tmp.26 54 44 53 ];
+        %tmp.26 = getv function %tmp.25 :isValidAt;
+        %tmp.27 = 7;
+        %tmp.28 = 0;
+        %tmp.29 = lgetv %aiColor;
+        symbol [ aiColor %tmp.29 54 60 67 ];
+        %tmp.30 = invoke %tmp.25 %tmp.26(%tmp.27, %tmp.28, %tmp.29);
+        push %tmp.30;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_54_37_54_67_end:
+        %tmp.31 = phi [%tmp.23 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_54_12_54_67_begin] [%tmp.30 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_54_37_54_67_true] [%tmp.31 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_54_37_54_67_end];
+        bf %tmp.31 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_54_8_54_83_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_54_8_54_83_if_true:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_54_70_54_83_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 54 72 ]
+        %tmp.32 = 7;
+        ret %tmp.32;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_54_70_54_83_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_54_8_54_83_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_54_8_54_83_if_end:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 55 8 ]
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_55_8_55_83_if_stmt:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_55_12_55_67_begin:
+        symbol [ _board %tmp.34 55 12 18 ];
+        %tmp.34 = getv ? :_board;
+        symbol [ cells %tmp.35 55 19 24 ];
+        %tmp.35 = getv %tmp.34 :cells;
+        %tmp.36 = 56;
+        %tmp.37 = agetv %tmp.35 %tmp.36;
+        %tmp.38 = 0;
+        %tmp.39 = eq %tmp.37 %tmp.38;
+        bf %tmp.39 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_55_8_55_83_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_55_37_55_67_true:
+        symbol [ _board %tmp.41 55 37 43 ];
+        %tmp.41 = getv ? :_board;
+        symbol [ isValidAt %tmp.42 55 44 53 ];
+        %tmp.42 = getv function %tmp.41 :isValidAt;
+        %tmp.43 = 0;
+        %tmp.44 = 7;
+        %tmp.45 = lgetv %aiColor;
+        symbol [ aiColor %tmp.45 55 60 67 ];
+        %tmp.46 = invoke %tmp.41 %tmp.42(%tmp.43, %tmp.44, %tmp.45);
+        push %tmp.46;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_55_37_55_67_end:
+        %tmp.47 = phi [%tmp.39 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_55_12_55_67_begin] [%tmp.46 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_55_37_55_67_true] [%tmp.47 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_55_37_55_67_end];
+        bf %tmp.47 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_55_8_55_83_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_55_8_55_83_if_true:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_55_70_55_83_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 55 72 ]
+        %tmp.48 = 56;
+        ret %tmp.48;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_55_70_55_83_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_55_8_55_83_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_55_8_55_83_if_end:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 56 8 ]
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_56_8_56_83_if_stmt:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_56_12_56_67_begin:
+        symbol [ _board %tmp.50 56 12 18 ];
+        %tmp.50 = getv ? :_board;
+        symbol [ cells %tmp.51 56 19 24 ];
+        %tmp.51 = getv %tmp.50 :cells;
+        %tmp.52 = 63;
+        %tmp.53 = agetv %tmp.51 %tmp.52;
+        %tmp.54 = 0;
+        %tmp.55 = eq %tmp.53 %tmp.54;
+        bf %tmp.55 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_56_8_56_83_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_56_37_56_67_true:
+        symbol [ _board %tmp.57 56 37 43 ];
+        %tmp.57 = getv ? :_board;
+        symbol [ isValidAt %tmp.58 56 44 53 ];
+        %tmp.58 = getv function %tmp.57 :isValidAt;
+        %tmp.59 = 7;
+        %tmp.60 = 7;
+        %tmp.61 = lgetv %aiColor;
+        symbol [ aiColor %tmp.61 56 60 67 ];
+        %tmp.62 = invoke %tmp.57 %tmp.58(%tmp.59, %tmp.60, %tmp.61);
+        push %tmp.62;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_56_37_56_67_end:
+        %tmp.63 = phi [%tmp.55 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_56_12_56_67_begin] [%tmp.62 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_56_37_56_67_true] [%tmp.63 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_56_37_56_67_end];
+        bf %tmp.63 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_56_8_56_83_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_56_8_56_83_if_true:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_56_70_56_83_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 56 72 ]
+        %tmp.64 = 63;
+        ret %tmp.64;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_56_70_56_83_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_56_8_56_83_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_56_8_56_83_if_end:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 58 8 ]
+        [ "_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_51_33_71_4_start" "_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_51_33_71_4_stop" ]
+        %opp.1 = local;
+        symbol [ opp %opp.1 58 12 15 ];
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_58_24_58_45_begin:
+        %tmp.65 = lgetv %aiColor;
+        symbol [ aiColor %tmp.65 58 25 32 ];
+        %tmp.66 = 1;
+        %tmp.67 = eq %tmp.65 %tmp.66;
+        bf %tmp.67 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_58_24_58_45_else_false;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_58_24_58_45_true:
+        %tmp.68 = 2;
+        push %tmp.68;
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_58_24_58_45_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_58_24_58_45_else_false:
+        %tmp.69 = 1;
+        push %tmp.69;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_58_24_58_45_end:
+        %tmp.70 = phi [%tmp.67 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_58_24_58_45_begin] [%tmp.68 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_58_24_58_45_true] [%tmp.69 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_58_24_58_45_else_false] [%tmp.70 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_58_24_58_45_end];
+        lputv %opp.1 %tmp.70;
+        symbol [ opp %opp.1 58 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 59 8 ]
+        [ "_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_51_33_71_4_start" "_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_51_33_71_4_stop" ]
+        %bestScore.2 = local;
+        symbol [ bestScore %bestScore.2 59 12 21 ];
+        %tmp.71 = -999999;
+        lputv %bestScore.2 %tmp.71;
+        symbol [ bestScore %bestScore.2 59 12 21 ];
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 60 8 ]
+        [ "_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_51_33_71_4_start" "_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_51_33_71_4_stop" ]
+        %bestMove.3 = local;
+        symbol [ bestMove %bestMove.3 60 12 20 ];
+        %tmp.72 = -1;
+        lputv %bestMove.3 %tmp.72;
+        symbol [ bestMove %bestMove.3 60 12 20 ];
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 61 8 ]
+        [ "_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_51_33_71_4_start" "_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_51_33_71_4_stop" ]
+        %i.4 = local;
+        symbol [ i %i.4 61 12 13 ];
+        %tmp.73 = 0;
+        lputv %i.4 %tmp.73;
+        symbol [ i %i.4 61 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 62 8 ]
+        while @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_62_8_69_8_while_test @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_62_8_69_8_while_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_62_8_69_8_while_test:
+        %tmp.74 = lgetv %i.4;
+        symbol [ i %tmp.74 62 15 16 ];
+        %tmp.75 = 64;
+        %tmp.76 = lt %tmp.74 %tmp.75;
+        bf %tmp.76 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_62_8_69_8_while_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_62_8_69_8_while_begin:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_62_23_69_8_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 63 12 ]
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_63_12_63_61_if_stmt:
+        symbol [ _board %tmp.78 63 16 22 ];
+        %tmp.78 = getv ? :_board;
+        symbol [ cells %tmp.79 63 23 28 ];
+        %tmp.79 = getv %tmp.78 :cells;
+        %tmp.80 = lgetv %i.4;
+        symbol [ i %tmp.80 63 29 30 ];
+        %tmp.81 = agetv %tmp.79 %tmp.80;
+        %tmp.82 = 0;
+        %tmp.83 = ne %tmp.81 %tmp.82;
+        bf %tmp.83 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_63_12_63_61_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_63_12_63_61_if_true:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_63_38_63_61_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 63 40 ]
+        %tmp.84 = lgetv %i.4;
+        symbol [ i %tmp.84 63 44 45 ];
+        %tmp.85 = 1;
+        %tmp.86 = add %tmp.84 %tmp.85;
+        lputv %i.4 %tmp.86;
+        symbol [ i %i.4 63 40 41 ];
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 63 51 ]
+        goto break @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_62_8_69_8_while_test;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_63_38_63_61_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_63_12_63_61_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_63_12_63_61_if_end:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 64 12 ]
+        [ "_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_62_23_69_8_start" "_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_62_23_69_8_stop" ]
+        %mx.5 = local;
+        symbol [ mx %mx.5 64 16 18 ];
+        %tmp.87 = lgetv %i.4;
+        symbol [ i %tmp.87 64 21 22 ];
+        %tmp.88 = 8;
+        %tmp.89 = mod %tmp.87 %tmp.88;
+        lputv %mx.5 %tmp.89;
+        symbol [ mx %mx.5 64 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 64 28 ]
+        [ "_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_62_23_69_8_start" "_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_62_23_69_8_stop" ]
+        %my.6 = local;
+        symbol [ my %my.6 64 32 34 ];
+        %tmp.90 = lgetv %i.4;
+        symbol [ i %tmp.90 64 37 38 ];
+        %tmp.91 = 8;
+        %tmp.92 = div %tmp.90 %tmp.91;
+        lputv %my.6 %tmp.92;
+        symbol [ my %my.6 64 32 34 ];
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 65 12 ]
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_65_12_65_75_if_stmt:
+        symbol [ _board %tmp.94 65 17 23 ];
+        %tmp.94 = getv ? :_board;
+        symbol [ isValidAt %tmp.95 65 24 33 ];
+        %tmp.95 = getv function %tmp.94 :isValidAt;
+        %tmp.96 = lgetv %mx.5;
+        symbol [ mx %tmp.96 65 34 36 ];
+        %tmp.97 = lgetv %my.6;
+        symbol [ my %tmp.97 65 38 40 ];
+        %tmp.98 = lgetv %aiColor;
+        symbol [ aiColor %tmp.98 65 42 49 ];
+        %tmp.99 = invoke %tmp.94 %tmp.95(%tmp.96, %tmp.97, %tmp.98);
+        %tmp.100 = not %tmp.99;
+        bf %tmp.100 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_65_12_65_75_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_65_12_65_75_if_true:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_65_52_65_75_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 65 54 ]
+        %tmp.101 = lgetv %i.4;
+        symbol [ i %tmp.101 65 58 59 ];
+        %tmp.102 = 1;
+        %tmp.103 = add %tmp.101 %tmp.102;
+        lputv %i.4 %tmp.103;
+        symbol [ i %i.4 65 54 55 ];
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 65 65 ]
+        goto break @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_62_8_69_8_while_test;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_65_52_65_75_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_65_12_65_75_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_65_12_65_75_if_end:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 66 12 ]
+        [ "_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_62_23_69_8_start" "_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_62_23_69_8_stop" ]
+        %score.7 = local;
+        symbol [ score %score.7 66 16 21 ];
+        %tmp.104 = self;
+        symbol [ _evalMove %tmp.105 66 24 33 ];
+        %tmp.105 = getv function %tmp.104 :_evalMove;
+        %tmp.106 = lgetv %i.4;
+        symbol [ i %tmp.106 66 34 35 ];
+        %tmp.107 = lgetv %mx.5;
+        symbol [ mx %tmp.107 66 37 39 ];
+        %tmp.108 = lgetv %my.6;
+        symbol [ my %tmp.108 66 41 43 ];
+        %tmp.109 = lgetv %aiColor;
+        symbol [ aiColor %tmp.109 66 45 52 ];
+        %tmp.110 = lgetv %opp.1;
+        symbol [ opp %tmp.110 66 54 57 ];
+        %tmp.111 = invoke %tmp.104 %tmp.105(%tmp.106, %tmp.107, %tmp.108, %tmp.109, %tmp.110);
+        lputv %score.7 %tmp.111;
+        symbol [ score %score.7 66 16 21 ];
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 67 12 ]
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_67_12_67_70_if_stmt:
+        %tmp.112 = lgetv %score.7;
+        symbol [ score %tmp.112 67 16 21 ];
+        %tmp.113 = lgetv %bestScore.2;
+        symbol [ bestScore %tmp.113 67 24 33 ];
+        %tmp.114 = gt %tmp.112 %tmp.113;
+        bf %tmp.114 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_67_12_67_70_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_67_12_67_70_if_true:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_67_35_67_70_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 67 37 ]
+        %tmp.115 = lgetv %score.7;
+        symbol [ score %tmp.115 67 49 54 ];
+        lputv %bestScore.2 %tmp.115;
+        symbol [ bestScore %bestScore.2 67 37 46 ];
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 67 56 ]
+        %tmp.116 = lgetv %i.4;
+        symbol [ i %tmp.116 67 67 68 ];
+        lputv %bestMove.3 %tmp.116;
+        symbol [ bestMove %bestMove.3 67 56 64 ];
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_67_35_67_70_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_67_12_67_70_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_67_12_67_70_if_end:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 68 12 ]
+        %tmp.117 = lgetv %i.4;
+        symbol [ i %tmp.117 68 16 17 ];
+        %tmp.118 = 1;
+        %tmp.119 = add %tmp.117 %tmp.118;
+        lputv %i.4 %tmp.119;
+        symbol [ i %i.4 68 12 13 ];
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_62_23_69_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_62_8_69_8_while_test;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_62_8_69_8_while_end:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 70 8 ]
+        %tmp.120 = lgetv %bestMove.3;
+        symbol [ bestMove %tmp.120 70 15 23 ];
+        ret %tmp.120;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_51_33_71_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc"; @line = 77; @symbol_functiondef = [_evalMove,77,20,29]; @symbol_param<0> = [idx,77,30,33]; @symbol_param<1> = [x,77,35,36]; @symbol_param<2> = [y,77,38,39]; @symbol_param<3> = [col,77,41,44]; @symbol_param<4> = [opp,77,46,49]; ]
+    protected
+    function _evalMove(idx, x, y, col, opp) {
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_77_51_110_4_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 78 8 ]
+        [ "_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_77_51_110_4_start" "_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_77_51_110_4_stop" ]
+        %score.1 = local;
+        symbol [ score %score.1 78 12 17 ];
+        symbol [ _wt %tmp.2 78 20 23 ];
+        %tmp.2 = getv ? :_wt;
+        %tmp.3 = lgetv %idx;
+        symbol [ idx %tmp.3 78 24 27 ];
+        %tmp.4 = agetv %tmp.2 %tmp.3;
+        %tmp.5 = 3;
+        %tmp.6 = mul %tmp.4 %tmp.5;
+        lputv %score.1 %tmp.6;
+        symbol [ score %score.1 78 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 82 8 ]
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_82_8_82_76_if_stmt:
+        %tmp.7 = lgetv %idx;
+        symbol [ idx %tmp.7 82 12 15 ];
+        %tmp.8 = 9;
+        %tmp.9 = eq %tmp.7 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_82_8_82_76_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_82_8_82_76_if_true:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_82_23_82_76_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 82 25 ]
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_82_25_82_74_if_stmt:
+        symbol [ _board %tmp.11 82 29 35 ];
+        %tmp.11 = getv ? :_board;
+        symbol [ cells %tmp.12 82 36 41 ];
+        %tmp.12 = getv %tmp.11 :cells;
+        %tmp.13 = 0;
+        %tmp.14 = agetv %tmp.12 %tmp.13;
+        %tmp.15 = 0;
+        %tmp.16 = eq %tmp.14 %tmp.15;
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_82_25_82_74_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_82_25_82_74_if_true:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_82_52_82_74_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 82 54 ]
+        %tmp.17 = lgetv %score.1;
+        symbol [ score %tmp.17 82 62 67 ];
+        %tmp.18 = 25;
+        %tmp.19 = sub %tmp.17 %tmp.18;
+        lputv %score.1 %tmp.19;
+        symbol [ score %score.1 82 54 59 ];
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_82_52_82_74_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_82_25_82_74_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_82_25_82_74_if_end:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_82_23_82_76_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_82_8_82_76_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_82_8_82_76_if_end:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 83 8 ]
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_83_8_83_76_if_stmt:
+        %tmp.20 = lgetv %idx;
+        symbol [ idx %tmp.20 83 12 15 ];
+        %tmp.21 = 14;
+        %tmp.22 = eq %tmp.20 %tmp.21;
+        bf %tmp.22 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_83_8_83_76_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_83_8_83_76_if_true:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_83_23_83_76_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 83 25 ]
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_83_25_83_74_if_stmt:
+        symbol [ _board %tmp.24 83 29 35 ];
+        %tmp.24 = getv ? :_board;
+        symbol [ cells %tmp.25 83 36 41 ];
+        %tmp.25 = getv %tmp.24 :cells;
+        %tmp.26 = 7;
+        %tmp.27 = agetv %tmp.25 %tmp.26;
+        %tmp.28 = 0;
+        %tmp.29 = eq %tmp.27 %tmp.28;
+        bf %tmp.29 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_83_25_83_74_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_83_25_83_74_if_true:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_83_52_83_74_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 83 54 ]
+        %tmp.30 = lgetv %score.1;
+        symbol [ score %tmp.30 83 62 67 ];
+        %tmp.31 = 25;
+        %tmp.32 = sub %tmp.30 %tmp.31;
+        lputv %score.1 %tmp.32;
+        symbol [ score %score.1 83 54 59 ];
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_83_52_83_74_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_83_25_83_74_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_83_25_83_74_if_end:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_83_23_83_76_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_83_8_83_76_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_83_8_83_76_if_end:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 84 8 ]
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_84_8_84_76_if_stmt:
+        %tmp.33 = lgetv %idx;
+        symbol [ idx %tmp.33 84 12 15 ];
+        %tmp.34 = 49;
+        %tmp.35 = eq %tmp.33 %tmp.34;
+        bf %tmp.35 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_84_8_84_76_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_84_8_84_76_if_true:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_84_23_84_76_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 84 25 ]
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_84_25_84_74_if_stmt:
+        symbol [ _board %tmp.37 84 29 35 ];
+        %tmp.37 = getv ? :_board;
+        symbol [ cells %tmp.38 84 36 41 ];
+        %tmp.38 = getv %tmp.37 :cells;
+        %tmp.39 = 56;
+        %tmp.40 = agetv %tmp.38 %tmp.39;
+        %tmp.41 = 0;
+        %tmp.42 = eq %tmp.40 %tmp.41;
+        bf %tmp.42 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_84_25_84_74_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_84_25_84_74_if_true:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_84_52_84_74_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 84 54 ]
+        %tmp.43 = lgetv %score.1;
+        symbol [ score %tmp.43 84 62 67 ];
+        %tmp.44 = 25;
+        %tmp.45 = sub %tmp.43 %tmp.44;
+        lputv %score.1 %tmp.45;
+        symbol [ score %score.1 84 54 59 ];
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_84_52_84_74_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_84_25_84_74_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_84_25_84_74_if_end:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_84_23_84_76_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_84_8_84_76_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_84_8_84_76_if_end:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 85 8 ]
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_85_8_85_76_if_stmt:
+        %tmp.46 = lgetv %idx;
+        symbol [ idx %tmp.46 85 12 15 ];
+        %tmp.47 = 54;
+        %tmp.48 = eq %tmp.46 %tmp.47;
+        bf %tmp.48 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_85_8_85_76_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_85_8_85_76_if_true:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_85_23_85_76_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 85 25 ]
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_85_25_85_74_if_stmt:
+        symbol [ _board %tmp.50 85 29 35 ];
+        %tmp.50 = getv ? :_board;
+        symbol [ cells %tmp.51 85 36 41 ];
+        %tmp.51 = getv %tmp.50 :cells;
+        %tmp.52 = 63;
+        %tmp.53 = agetv %tmp.51 %tmp.52;
+        %tmp.54 = 0;
+        %tmp.55 = eq %tmp.53 %tmp.54;
+        bf %tmp.55 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_85_25_85_74_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_85_25_85_74_if_true:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_85_52_85_74_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 85 54 ]
+        %tmp.56 = lgetv %score.1;
+        symbol [ score %tmp.56 85 62 67 ];
+        %tmp.57 = 25;
+        %tmp.58 = sub %tmp.56 %tmp.57;
+        lputv %score.1 %tmp.58;
+        symbol [ score %score.1 85 54 59 ];
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_85_52_85_74_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_85_25_85_74_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_85_25_85_74_if_end:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_85_23_85_76_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_85_8_85_76_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_85_8_85_76_if_end:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 88 8 ]
+        symbol [ _board %tmp.60 88 8 14 ];
+        %tmp.60 = getv ? :_board;
+        symbol [ collectFlips %tmp.61 88 15 27 ];
+        %tmp.61 = getv function %tmp.60 :collectFlips;
+        %tmp.62 = lgetv %x;
+        symbol [ x %tmp.62 88 28 29 ];
+        %tmp.63 = lgetv %y;
+        symbol [ y %tmp.63 88 31 32 ];
+        %tmp.64 = lgetv %col;
+        symbol [ col %tmp.64 88 34 37 ];
+        invoke %tmp.60 %tmp.61(%tmp.62, %tmp.63, %tmp.64);
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 89 8 ]
+        [ "_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_77_51_110_4_start" "_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_77_51_110_4_stop" ]
+        %flipSaved.2 = local;
+        symbol [ flipSaved %flipSaved.2 89 12 21 ];
+        symbol [ _board %tmp.66 89 24 30 ];
+        %tmp.66 = getv ? :_board;
+        symbol [ flipCount %tmp.67 89 31 40 ];
+        %tmp.67 = getv %tmp.66 :flipCount;
+        lputv %flipSaved.2 %tmp.67;
+        symbol [ flipSaved %flipSaved.2 89 12 21 ];
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 90 8 ]
+        %tmp.68 = lgetv %score.1;
+        symbol [ score %tmp.68 90 16 21 ];
+        %tmp.69 = lgetv %flipSaved.2;
+        symbol [ flipSaved %tmp.69 90 24 33 ];
+        %tmp.70 = add %tmp.68 %tmp.69;
+        lputv %score.1 %tmp.70;
+        symbol [ score %score.1 90 8 13 ];
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 93 8 ]
+        symbol [ _board %tmp.71 93 8 14 ];
+        %tmp.71 = getv self :_board;
+        symbol [ cells %tmp.72 93 15 20 ];
+        %tmp.72 = getv %tmp.71 :cells;
+        %tmp.73 = lgetv %col;
+        symbol [ col %tmp.73 93 34 37 ];
+        %tmp.74 = lgetv %y;
+        symbol [ y %tmp.74 93 21 22 ];
+        %tmp.75 = 8;
+        %tmp.76 = mul %tmp.74 %tmp.75;
+        %tmp.77 = lgetv %x;
+        symbol [ x %tmp.77 93 29 30 ];
+        %tmp.78 = add %tmp.76 %tmp.77;
+        aputv %tmp.72 %tmp.78 %tmp.73;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 94 8 ]
+        [ "_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_77_51_110_4_start" "_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_77_51_110_4_stop" ]
+        %fi.3 = local;
+        symbol [ fi %fi.3 94 12 14 ];
+        %tmp.79 = 0;
+        lputv %fi.3 %tmp.79;
+        symbol [ fi %fi.3 94 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 95 8 ]
+        while @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_95_8_95_86_while_test @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_95_8_95_86_while_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_95_8_95_86_while_test:
+        %tmp.80 = lgetv %fi.3;
+        symbol [ fi %tmp.80 95 15 17 ];
+        %tmp.81 = lgetv %flipSaved.2;
+        symbol [ flipSaved %tmp.81 95 20 29 ];
+        %tmp.82 = lt %tmp.80 %tmp.81;
+        bf %tmp.82 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_95_8_95_86_while_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_95_8_95_86_while_begin:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_95_31_95_86_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 95 33 ]
+        symbol [ _board %tmp.83 95 33 39 ];
+        %tmp.83 = getv self :_board;
+        symbol [ cells %tmp.84 95 40 45 ];
+        %tmp.84 = getv %tmp.83 :cells;
+        %tmp.85 = lgetv %col;
+        symbol [ col %tmp.85 95 68 71 ];
+        symbol [ _board %tmp.87 95 46 52 ];
+        %tmp.87 = getv ? :_board;
+        symbol [ flipBuf %tmp.88 95 53 60 ];
+        %tmp.88 = getv %tmp.87 :flipBuf;
+        %tmp.89 = lgetv %fi.3;
+        symbol [ fi %tmp.89 95 61 63 ];
+        %tmp.90 = agetv %tmp.88 %tmp.89;
+        aputv %tmp.84 %tmp.90 %tmp.85;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 95 73 ]
+        %tmp.91 = lgetv %fi.3;
+        symbol [ fi %tmp.91 95 78 80 ];
+        %tmp.92 = 1;
+        %tmp.93 = add %tmp.91 %tmp.92;
+        lputv %fi.3 %tmp.93;
+        symbol [ fi %fi.3 95 73 75 ];
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_95_31_95_86_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_95_8_95_86_while_test;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_95_8_95_86_while_end:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 98 8 ]
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_98_8_98_88_if_stmt:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_98_12_98_63_begin:
+        symbol [ _board %tmp.95 98 12 18 ];
+        %tmp.95 = getv ? :_board;
+        symbol [ cells %tmp.96 98 19 24 ];
+        %tmp.96 = getv %tmp.95 :cells;
+        %tmp.97 = 0;
+        %tmp.98 = agetv %tmp.96 %tmp.97;
+        %tmp.99 = 0;
+        %tmp.100 = eq %tmp.98 %tmp.99;
+        bf %tmp.100 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_98_8_98_88_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_98_37_98_63_true:
+        symbol [ _board %tmp.102 98 37 43 ];
+        %tmp.102 = getv ? :_board;
+        symbol [ isValidAt %tmp.103 98 44 53 ];
+        %tmp.103 = getv function %tmp.102 :isValidAt;
+        %tmp.104 = 0;
+        %tmp.105 = 0;
+        %tmp.106 = lgetv %opp;
+        symbol [ opp %tmp.106 98 60 63 ];
+        %tmp.107 = invoke %tmp.102 %tmp.103(%tmp.104, %tmp.105, %tmp.106);
+        push %tmp.107;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_98_37_98_63_end:
+        %tmp.108 = phi [%tmp.100 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_98_12_98_63_begin] [%tmp.107 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_98_37_98_63_true] [%tmp.108 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_98_37_98_63_end];
+        bf %tmp.108 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_98_8_98_88_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_98_8_98_88_if_true:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_98_66_98_88_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 98 68 ]
+        %tmp.109 = lgetv %score.1;
+        symbol [ score %tmp.109 98 76 81 ];
+        %tmp.110 = 50;
+        %tmp.111 = sub %tmp.109 %tmp.110;
+        lputv %score.1 %tmp.111;
+        symbol [ score %score.1 98 68 73 ];
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_98_66_98_88_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_98_8_98_88_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_98_8_98_88_if_end:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 99 8 ]
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_99_8_99_88_if_stmt:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_99_12_99_63_begin:
+        symbol [ _board %tmp.113 99 12 18 ];
+        %tmp.113 = getv ? :_board;
+        symbol [ cells %tmp.114 99 19 24 ];
+        %tmp.114 = getv %tmp.113 :cells;
+        %tmp.115 = 7;
+        %tmp.116 = agetv %tmp.114 %tmp.115;
+        %tmp.117 = 0;
+        %tmp.118 = eq %tmp.116 %tmp.117;
+        bf %tmp.118 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_99_8_99_88_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_99_37_99_63_true:
+        symbol [ _board %tmp.120 99 37 43 ];
+        %tmp.120 = getv ? :_board;
+        symbol [ isValidAt %tmp.121 99 44 53 ];
+        %tmp.121 = getv function %tmp.120 :isValidAt;
+        %tmp.122 = 7;
+        %tmp.123 = 0;
+        %tmp.124 = lgetv %opp;
+        symbol [ opp %tmp.124 99 60 63 ];
+        %tmp.125 = invoke %tmp.120 %tmp.121(%tmp.122, %tmp.123, %tmp.124);
+        push %tmp.125;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_99_37_99_63_end:
+        %tmp.126 = phi [%tmp.118 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_99_12_99_63_begin] [%tmp.125 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_99_37_99_63_true] [%tmp.126 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_99_37_99_63_end];
+        bf %tmp.126 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_99_8_99_88_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_99_8_99_88_if_true:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_99_66_99_88_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 99 68 ]
+        %tmp.127 = lgetv %score.1;
+        symbol [ score %tmp.127 99 76 81 ];
+        %tmp.128 = 50;
+        %tmp.129 = sub %tmp.127 %tmp.128;
+        lputv %score.1 %tmp.129;
+        symbol [ score %score.1 99 68 73 ];
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_99_66_99_88_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_99_8_99_88_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_99_8_99_88_if_end:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 100 8 ]
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_100_8_100_88_if_stmt:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_100_12_100_63_begin:
+        symbol [ _board %tmp.131 100 12 18 ];
+        %tmp.131 = getv ? :_board;
+        symbol [ cells %tmp.132 100 19 24 ];
+        %tmp.132 = getv %tmp.131 :cells;
+        %tmp.133 = 56;
+        %tmp.134 = agetv %tmp.132 %tmp.133;
+        %tmp.135 = 0;
+        %tmp.136 = eq %tmp.134 %tmp.135;
+        bf %tmp.136 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_100_8_100_88_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_100_37_100_63_true:
+        symbol [ _board %tmp.138 100 37 43 ];
+        %tmp.138 = getv ? :_board;
+        symbol [ isValidAt %tmp.139 100 44 53 ];
+        %tmp.139 = getv function %tmp.138 :isValidAt;
+        %tmp.140 = 0;
+        %tmp.141 = 7;
+        %tmp.142 = lgetv %opp;
+        symbol [ opp %tmp.142 100 60 63 ];
+        %tmp.143 = invoke %tmp.138 %tmp.139(%tmp.140, %tmp.141, %tmp.142);
+        push %tmp.143;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_100_37_100_63_end:
+        %tmp.144 = phi [%tmp.136 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_100_12_100_63_begin] [%tmp.143 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_100_37_100_63_true] [%tmp.144 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_100_37_100_63_end];
+        bf %tmp.144 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_100_8_100_88_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_100_8_100_88_if_true:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_100_66_100_88_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 100 68 ]
+        %tmp.145 = lgetv %score.1;
+        symbol [ score %tmp.145 100 76 81 ];
+        %tmp.146 = 50;
+        %tmp.147 = sub %tmp.145 %tmp.146;
+        lputv %score.1 %tmp.147;
+        symbol [ score %score.1 100 68 73 ];
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_100_66_100_88_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_100_8_100_88_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_100_8_100_88_if_end:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 101 8 ]
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_101_8_101_88_if_stmt:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_101_12_101_63_begin:
+        symbol [ _board %tmp.149 101 12 18 ];
+        %tmp.149 = getv ? :_board;
+        symbol [ cells %tmp.150 101 19 24 ];
+        %tmp.150 = getv %tmp.149 :cells;
+        %tmp.151 = 63;
+        %tmp.152 = agetv %tmp.150 %tmp.151;
+        %tmp.153 = 0;
+        %tmp.154 = eq %tmp.152 %tmp.153;
+        bf %tmp.154 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_101_8_101_88_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_101_37_101_63_true:
+        symbol [ _board %tmp.156 101 37 43 ];
+        %tmp.156 = getv ? :_board;
+        symbol [ isValidAt %tmp.157 101 44 53 ];
+        %tmp.157 = getv function %tmp.156 :isValidAt;
+        %tmp.158 = 7;
+        %tmp.159 = 7;
+        %tmp.160 = lgetv %opp;
+        symbol [ opp %tmp.160 101 60 63 ];
+        %tmp.161 = invoke %tmp.156 %tmp.157(%tmp.158, %tmp.159, %tmp.160);
+        push %tmp.161;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_101_37_101_63_end:
+        %tmp.162 = phi [%tmp.154 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_101_12_101_63_begin] [%tmp.161 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_101_37_101_63_true] [%tmp.162 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_101_37_101_63_end];
+        bf %tmp.162 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_101_8_101_88_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_101_8_101_88_if_true:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_101_66_101_88_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 101 68 ]
+        %tmp.163 = lgetv %score.1;
+        symbol [ score %tmp.163 101 76 81 ];
+        %tmp.164 = 50;
+        %tmp.165 = sub %tmp.163 %tmp.164;
+        lputv %score.1 %tmp.165;
+        symbol [ score %score.1 101 68 73 ];
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_101_66_101_88_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_101_8_101_88_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_101_8_101_88_if_end:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 104 8 ]
+        symbol [ _board %tmp.166 104 8 14 ];
+        %tmp.166 = getv self :_board;
+        symbol [ cells %tmp.167 104 15 20 ];
+        %tmp.167 = getv %tmp.166 :cells;
+        %tmp.168 = 0;
+        %tmp.169 = lgetv %y;
+        symbol [ y %tmp.169 104 21 22 ];
+        %tmp.170 = 8;
+        %tmp.171 = mul %tmp.169 %tmp.170;
+        %tmp.172 = lgetv %x;
+        symbol [ x %tmp.172 104 29 30 ];
+        %tmp.173 = add %tmp.171 %tmp.172;
+        aputv %tmp.167 %tmp.173 %tmp.168;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 105 8 ]
+        %tmp.174 = 0;
+        lputv %fi.3 %tmp.174;
+        symbol [ fi %fi.3 105 8 10 ];
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 106 8 ]
+        while @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_106_8_106_86_while_test @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_106_8_106_86_while_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_106_8_106_86_while_test:
+        %tmp.175 = lgetv %fi.3;
+        symbol [ fi %tmp.175 106 15 17 ];
+        %tmp.176 = lgetv %flipSaved.2;
+        symbol [ flipSaved %tmp.176 106 20 29 ];
+        %tmp.177 = lt %tmp.175 %tmp.176;
+        bf %tmp.177 @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_106_8_106_86_while_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_106_8_106_86_while_begin:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_106_31_106_86_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 106 33 ]
+        symbol [ _board %tmp.178 106 33 39 ];
+        %tmp.178 = getv self :_board;
+        symbol [ cells %tmp.179 106 40 45 ];
+        %tmp.179 = getv %tmp.178 :cells;
+        %tmp.180 = lgetv %opp;
+        symbol [ opp %tmp.180 106 68 71 ];
+        symbol [ _board %tmp.182 106 46 52 ];
+        %tmp.182 = getv ? :_board;
+        symbol [ flipBuf %tmp.183 106 53 60 ];
+        %tmp.183 = getv %tmp.182 :flipBuf;
+        %tmp.184 = lgetv %fi.3;
+        symbol [ fi %tmp.184 106 61 63 ];
+        %tmp.185 = agetv %tmp.183 %tmp.184;
+        aputv %tmp.179 %tmp.185 %tmp.180;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 106 73 ]
+        %tmp.186 = lgetv %fi.3;
+        symbol [ fi %tmp.186 106 78 80 ];
+        %tmp.187 = 1;
+        %tmp.188 = add %tmp.186 %tmp.187;
+        lputv %fi.3 %tmp.188;
+        symbol [ fi %fi.3 106 73 75 ];
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_106_31_106_86_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_106_8_106_86_while_test;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_106_8_106_86_while_end:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 108 8 ]
+        %tmp.189 = lgetv %score.1;
+        symbol [ score %tmp.189 108 16 21 ];
+        symbol [ Math %tmp.190 108 24 28 ];
+        %tmp.190 = getm $.Toybox.Math;
+        symbol [ rand %tmp.191 108 29 33 ];
+        %tmp.191 = getv function %tmp.190 :rand;
+        %tmp.192 = invoke %tmp.190 %tmp.191();
+        %tmp.193 = 3;
+        %tmp.194 = mod %tmp.192 %tmp.193;
+        %tmp.195 = add %tmp.189 %tmp.194;
+        lputv %score.1 %tmp.195;
+        symbol [ score %score.1 108 8 13 ];
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc" 109 8 ]
+        %tmp.196 = lgetv %score.1;
+        symbol [ score %tmp.196 109 15 20 ];
+        ret %tmp.196;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_AI_mc_77_51_110_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/AI.mc"; @line = 1; ]
+<init> {
+}

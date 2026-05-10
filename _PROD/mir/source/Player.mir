@@ -1,0 +1,415 @@
+[ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc"; @line = 6; @symbol_classdef = [Player,6,6,12]; ]
+class Player {
+    [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc"; @line = 6; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc"; @line = 6; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc"; @line = 7; @position = 8; @symbol_vardef = [angle,7,8,13]; ]
+    var angle;
+    [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc"; @line = 8; @position = 8; @symbol_vardef = [vel,8,8,11]; ]
+    var vel;
+    [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc"; @line = 9; @position = 8; @symbol_vardef = [dashCd,9,8,14]; ]
+    var dashCd;
+    [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc"; @line = 10; @position = 8; @symbol_vardef = [isDashing,10,8,17]; ]
+    var isDashing;
+    [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc"; @line = 12; @position = 8; @symbol_vardef = [trailAngle,12,8,18]; ]
+    var trailAngle;
+    [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc"; @line = 14; @symbol_functiondef = [initialize,14,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_14_26_17_4_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 15 8 ]
+        symbol [ TRAIL_LEN %tmp.3 15 26 35 ];
+        %tmp.3 = getv ? :TRAIL_LEN;
+        %tmp.1 = newa %tmp.3;
+        symbol [ trailAngle ? 15 8 18 ];
+        putv self :trailAngle %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 16 8 ]
+        %tmp.4 = self;
+        symbol [ reset %tmp.5 16 8 13 ];
+        %tmp.5 = getv function %tmp.4 :reset;
+        invoke %tmp.4 %tmp.5();
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_14_26_17_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc"; @line = 19; @symbol_functiondef = [reset,19,13,18]; ]
+    function reset() {
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_19_21_25_4_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 20 8 ]
+        %tmp.1 = 270;
+        symbol [ angle ? 20 8 13 ];
+        putv self :angle %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 21 8 ]
+        %tmp.2 = 0;
+        symbol [ vel ? 21 8 11 ];
+        putv self :vel %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 22 8 ]
+        %tmp.3 = 0;
+        symbol [ dashCd ? 22 8 14 ];
+        putv self :dashCd %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 23 8 ]
+        %tmp.4 = 0;
+        symbol [ isDashing ? 23 8 17 ];
+        putv self :isDashing %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 24 8 ]
+        for @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_24_8_24_67_for_test @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_24_8_24_67_for_incr @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_24_8_24_67_for_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_24_8_24_67_for_init:
+        [ "_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_24_8_24_67_for_begin" "_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_24_8_24_67_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 24 17 18 ];
+        %tmp.5 = 0;
+        lputv %i.1 %tmp.5;
+        symbol [ i %i.1 24 17 18 ];
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_24_8_24_67_for_test:
+        %tmp.6 = lgetv %i.1;
+        symbol [ i %tmp.6 24 24 25 ];
+        symbol [ TRAIL_LEN %tmp.8 24 28 37 ];
+        %tmp.8 = getv ? :TRAIL_LEN;
+        %tmp.9 = lt %tmp.6 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_24_8_24_67_for_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_24_8_24_67_for_begin:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_24_44_24_67_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 24 46 ]
+        symbol [ trailAngle %tmp.10 24 46 56 ];
+        %tmp.10 = getv self :trailAngle;
+        %tmp.11 = 270;
+        %tmp.12 = lgetv %i.1;
+        symbol [ i %tmp.12 24 57 58 ];
+        aputv %tmp.10 %tmp.12 %tmp.11;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_24_44_24_67_stop:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_24_8_24_67_for_incr:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 24 ]
+        %tmp.15 = lgetv %i.1;
+        symbol [ i %tmp.15 24 39 40 ];
+        %tmp.16 = add %tmp.15 1;
+        lputv %i.1 %tmp.16;
+        symbol [ i %i.1 24 39 40 ];
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_24_8_24_67_for_test;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_24_8_24_67_for_end:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_19_21_25_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc"; @line = 27; @symbol_functiondef = [update,27,13,19]; @symbol_param<0> = [keyRight,27,20,28]; @symbol_param<1> = [keyLeft,27,30,37]; ]
+    function update(keyRight, keyLeft) {
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_27_39_55_4_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 29 8 ]
+        [ "_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_27_39_55_4_start" "_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_27_39_55_4_stop" ]
+        %t.1 = local;
+        symbol [ t %t.1 29 12 13 ];
+        symbol [ TRAIL_LEN %tmp.2 29 16 25 ];
+        %tmp.2 = getv ? :TRAIL_LEN;
+        %tmp.3 = 1;
+        %tmp.4 = sub %tmp.2 %tmp.3;
+        lputv %t.1 %tmp.4;
+        symbol [ t %t.1 29 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 30 8 ]
+        while @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_30_8_33_8_while_test @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_30_8_33_8_while_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_30_8_33_8_while_test:
+        %tmp.5 = lgetv %t.1;
+        symbol [ t %tmp.5 30 15 16 ];
+        %tmp.6 = 0;
+        %tmp.7 = gt %tmp.5 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_30_8_33_8_while_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_30_8_33_8_while_begin:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_30_22_33_8_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 31 12 ]
+        symbol [ trailAngle %tmp.8 31 12 22 ];
+        %tmp.8 = getv self :trailAngle;
+        symbol [ trailAngle %tmp.10 31 28 38 ];
+        %tmp.10 = getv ? :trailAngle;
+        %tmp.11 = lgetv %t.1;
+        symbol [ t %tmp.11 31 39 40 ];
+        %tmp.12 = 1;
+        %tmp.13 = sub %tmp.11 %tmp.12;
+        %tmp.14 = agetv %tmp.10 %tmp.13;
+        %tmp.15 = lgetv %t.1;
+        symbol [ t %tmp.15 31 23 24 ];
+        aputv %tmp.8 %tmp.15 %tmp.14;
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 32 12 ]
+        %tmp.16 = lgetv %t.1;
+        symbol [ t %tmp.16 32 16 17 ];
+        %tmp.17 = 1;
+        %tmp.18 = sub %tmp.16 %tmp.17;
+        lputv %t.1 %tmp.18;
+        symbol [ t %t.1 32 12 13 ];
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_30_22_33_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_30_8_33_8_while_test;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_30_8_33_8_while_end:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 34 8 ]
+        symbol [ trailAngle %tmp.19 34 8 18 ];
+        %tmp.19 = getv self :trailAngle;
+        symbol [ angle %tmp.21 34 24 29 ];
+        %tmp.21 = getv ? :angle;
+        %tmp.22 = 0;
+        aputv %tmp.19 %tmp.22 %tmp.21;
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 37 8 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_37_8_40_8_if_stmt:
+        %tmp.23 = lgetv %keyRight;
+        symbol [ keyRight %tmp.23 37 12 20 ];
+        %tmp.24 = 1;
+        %tmp.25 = eq %tmp.23 %tmp.24;
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_37_8_40_8_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_37_8_40_8_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_37_27_40_8_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 38 12 ]
+        symbol [ vel %tmp.27 38 18 21 ];
+        %tmp.27 = getv ? :vel;
+        %tmp.28 = 1;
+        %tmp.29 = add %tmp.27 %tmp.28;
+        symbol [ vel ? 38 12 15 ];
+        putv self :vel %tmp.29;
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 39 12 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_39_12_39_62_if_stmt:
+        symbol [ vel %tmp.31 39 16 19 ];
+        %tmp.31 = getv ? :vel;
+        symbol [ PLAYER_MAX_VEL %tmp.33 39 22 36 ];
+        %tmp.33 = getv ? :PLAYER_MAX_VEL;
+        %tmp.34 = gt %tmp.31 %tmp.33;
+        bf %tmp.34 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_39_12_39_62_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_39_12_39_62_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_39_38_39_62_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 39 40 ]
+        symbol [ PLAYER_MAX_VEL %tmp.36 39 46 60 ];
+        %tmp.36 = getv ? :PLAYER_MAX_VEL;
+        symbol [ vel ? 39 40 43 ];
+        putv self :vel %tmp.36;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_39_38_39_62_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_39_12_39_62_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_39_12_39_62_if_end:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_37_27_40_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_37_8_40_8_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_37_8_40_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 41 8 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_41_8_44_8_if_stmt:
+        %tmp.37 = lgetv %keyLeft;
+        symbol [ keyLeft %tmp.37 41 12 19 ];
+        %tmp.38 = 1;
+        %tmp.39 = eq %tmp.37 %tmp.38;
+        bf %tmp.39 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_41_8_44_8_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_41_8_44_8_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_41_26_44_8_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 42 12 ]
+        symbol [ vel %tmp.41 42 18 21 ];
+        %tmp.41 = getv ? :vel;
+        %tmp.42 = 1;
+        %tmp.43 = sub %tmp.41 %tmp.42;
+        symbol [ vel ? 42 12 15 ];
+        putv self :vel %tmp.43;
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 43 12 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_43_12_43_64_if_stmt:
+        symbol [ vel %tmp.45 43 16 19 ];
+        %tmp.45 = getv ? :vel;
+        symbol [ PLAYER_MAX_VEL %tmp.47 43 23 37 ];
+        %tmp.47 = getv ? :PLAYER_MAX_VEL;
+        %tmp.48 = sub 0 %tmp.47;
+        %tmp.49 = lt %tmp.45 %tmp.48;
+        bf %tmp.49 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_43_12_43_64_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_43_12_43_64_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_43_39_43_64_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 43 41 ]
+        symbol [ PLAYER_MAX_VEL %tmp.51 43 48 62 ];
+        %tmp.51 = getv ? :PLAYER_MAX_VEL;
+        %tmp.52 = sub 0 %tmp.51;
+        symbol [ vel ? 43 41 44 ];
+        putv self :vel %tmp.52;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_43_39_43_64_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_43_12_43_64_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_43_12_43_64_if_end:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_41_26_44_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_41_8_44_8_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_41_8_44_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 45 8 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_45_8_49_8_if_stmt:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_45_12_45_40_begin:
+        %tmp.53 = lgetv %keyRight;
+        symbol [ keyRight %tmp.53 45 12 20 ];
+        %tmp.54 = 0;
+        %tmp.55 = eq %tmp.53 %tmp.54;
+        bf %tmp.55 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_45_8_49_8_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_45_29_45_40_true:
+        %tmp.56 = lgetv %keyLeft;
+        symbol [ keyLeft %tmp.56 45 29 36 ];
+        %tmp.57 = 0;
+        %tmp.58 = eq %tmp.56 %tmp.57;
+        push %tmp.58;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_45_29_45_40_end:
+        %tmp.59 = phi [%tmp.55 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_45_12_45_40_begin] [%tmp.58 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_45_29_45_40_true] [%tmp.59 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_45_29_45_40_end];
+        bf %tmp.59 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_45_8_49_8_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_45_8_49_8_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_45_43_49_8_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 47 12 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_47_12_48_47_if_stmt:
+        symbol [ vel %tmp.61 47 16 19 ];
+        %tmp.61 = getv ? :vel;
+        %tmp.62 = 0;
+        %tmp.63 = gt %tmp.61 %tmp.62;
+        bf %tmp.63 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_47_12_48_47_if_false;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_47_12_48_47_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_47_25_47_42_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 47 27 ]
+        symbol [ vel %tmp.65 47 33 36 ];
+        %tmp.65 = getv ? :vel;
+        %tmp.66 = 1;
+        %tmp.67 = sub %tmp.65 %tmp.66;
+        symbol [ vel ? 47 27 30 ];
+        putv self :vel %tmp.67;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_47_25_47_42_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_47_12_48_47_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_47_12_48_47_if_false:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 48 17 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_48_17_48_47_if_stmt:
+        symbol [ vel %tmp.69 48 21 24 ];
+        %tmp.69 = getv ? :vel;
+        %tmp.70 = 0;
+        %tmp.71 = lt %tmp.69 %tmp.70;
+        bf %tmp.71 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_48_17_48_47_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_48_17_48_47_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_48_30_48_47_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 48 32 ]
+        symbol [ vel %tmp.73 48 38 41 ];
+        %tmp.73 = getv ? :vel;
+        %tmp.74 = 1;
+        %tmp.75 = add %tmp.73 %tmp.74;
+        symbol [ vel ? 48 32 35 ];
+        putv self :vel %tmp.75;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_48_30_48_47_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_48_17_48_47_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_48_17_48_47_if_end:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_47_12_48_47_if_end:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_45_43_49_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_45_8_49_8_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_45_8_49_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 51 8 ]
+        symbol [ angle %tmp.77 51 17 22 ];
+        %tmp.77 = getv ? :angle;
+        symbol [ vel %tmp.79 51 25 28 ];
+        %tmp.79 = getv ? :vel;
+        %tmp.80 = add %tmp.77 %tmp.79;
+        %tmp.81 = 360;
+        %tmp.82 = add %tmp.80 %tmp.81;
+        %tmp.83 = 360;
+        %tmp.84 = mod %tmp.82 %tmp.83;
+        symbol [ angle ? 51 8 13 ];
+        putv self :angle %tmp.84;
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 53 8 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_53_8_53_53_if_stmt:
+        symbol [ dashCd %tmp.86 53 12 18 ];
+        %tmp.86 = getv ? :dashCd;
+        %tmp.87 = 0;
+        %tmp.88 = gt %tmp.86 %tmp.87;
+        bf %tmp.88 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_53_8_53_53_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_53_8_53_53_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_53_26_53_53_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 53 28 ]
+        symbol [ dashCd %tmp.90 53 39 45 ];
+        %tmp.90 = getv ? :dashCd;
+        %tmp.91 = 1;
+        %tmp.92 = sub %tmp.90 %tmp.91;
+        symbol [ dashCd ? 53 28 34 ];
+        putv self :dashCd %tmp.92;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_53_26_53_53_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_53_8_53_53_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_53_8_53_53_if_end:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 54 8 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_54_8_54_56_if_stmt:
+        symbol [ isDashing %tmp.94 54 12 21 ];
+        %tmp.94 = getv ? :isDashing;
+        %tmp.95 = 0;
+        %tmp.96 = gt %tmp.94 %tmp.95;
+        bf %tmp.96 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_54_8_54_56_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_54_8_54_56_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_54_27_54_56_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 54 29 ]
+        symbol [ isDashing %tmp.98 54 41 50 ];
+        %tmp.98 = getv ? :isDashing;
+        %tmp.99 = 1;
+        %tmp.100 = sub %tmp.98 %tmp.99;
+        symbol [ isDashing ? 54 29 38 ];
+        putv self :isDashing %tmp.100;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_54_27_54_56_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_54_8_54_56_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_54_8_54_56_if_end:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_27_39_55_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc"; @line = 57; @symbol_functiondef = [doDash,57,13,19]; ]
+    function doDash() {
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_57_22_64_4_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 58 8 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_58_8_58_34_if_stmt:
+        symbol [ dashCd %tmp.2 58 12 18 ];
+        %tmp.2 = getv ? :dashCd;
+        %tmp.3 = 0;
+        %tmp.4 = gt %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_58_8_58_34_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_58_8_58_34_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_58_24_58_34_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 58 26 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_58_24_58_34_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_58_8_58_34_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_58_8_58_34_if_end:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 60 8 ]
+        [ "_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_57_22_64_4_start" "_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_57_22_64_4_stop" ]
+        %dir.1 = local;
+        symbol [ dir %dir.1 60 12 15 ];
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_18_60_53_begin:
+        symbol [ vel %tmp.6 60 19 22 ];
+        %tmp.6 = getv ? :vel;
+        %tmp.7 = 0;
+        %tmp.8 = gt %tmp.6 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_18_60_53_else_false;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_18_60_53_true:
+        %tmp.9 = 1;
+        push %tmp.9;
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_18_60_53_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_18_60_53_else_false:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_35_60_52_begin:
+        symbol [ vel %tmp.11 60 36 39 ];
+        %tmp.11 = getv ? :vel;
+        %tmp.12 = 0;
+        %tmp.13 = lt %tmp.11 %tmp.12;
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_35_60_52_else_false;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_35_60_52_true:
+        %tmp.14 = -1;
+        push %tmp.14;
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_35_60_52_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_35_60_52_else_false:
+        %tmp.15 = 1;
+        push %tmp.15;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_35_60_52_end:
+        %tmp.16 = phi [%tmp.13 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_35_60_52_begin] [%tmp.14 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_35_60_52_true] [%tmp.15 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_35_60_52_else_false] [%tmp.16 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_35_60_52_end];
+        push %tmp.16;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_18_60_53_end:
+        %tmp.17 = phi [%tmp.8 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_18_60_53_begin] [%tmp.9 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_18_60_53_true] [%tmp.16 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_18_60_53_else_false] [%tmp.17 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_18_60_53_end];
+        lputv %dir.1 %tmp.17;
+        symbol [ dir %dir.1 60 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 61 8 ]
+        symbol [ angle %tmp.19 61 20 25 ];
+        %tmp.19 = getv ? :angle;
+        %tmp.20 = lgetv %dir.1;
+        symbol [ dir %tmp.20 61 28 31 ];
+        symbol [ DASH_DEGREES %tmp.22 61 34 46 ];
+        %tmp.22 = getv ? :DASH_DEGREES;
+        %tmp.23 = mul %tmp.20 %tmp.22;
+        %tmp.24 = add %tmp.19 %tmp.23;
+        %tmp.25 = 360;
+        %tmp.26 = add %tmp.24 %tmp.25;
+        %tmp.27 = 360;
+        %tmp.28 = mod %tmp.26 %tmp.27;
+        symbol [ angle ? 61 8 13 ];
+        putv self :angle %tmp.28;
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 62 8 ]
+        symbol [ DASH_COOLDOWN %tmp.30 62 19 32 ];
+        %tmp.30 = getv ? :DASH_COOLDOWN;
+        symbol [ dashCd ? 62 8 14 ];
+        putv self :dashCd %tmp.30;
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 63 8 ]
+        %tmp.31 = 10;
+        symbol [ isDashing ? 63 8 17 ];
+        putv self :isDashing %tmp.31;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_57_22_64_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc"; @line = 6; ]
+<init> {
+}

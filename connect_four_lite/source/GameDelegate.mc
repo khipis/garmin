@@ -30,7 +30,11 @@ class GameDelegate extends WatchUi.BehaviorDelegate {
     function onTap(evt)       { _v.doAction();      WatchUi.requestUpdate(); return true; }
 
     function onBack() {
-        WatchUi.popView(WatchUi.SLIDE_RIGHT);
+        if (!_v.doBack()) {
+            WatchUi.popView(WatchUi.SLIDE_RIGHT);
+        } else {
+            WatchUi.requestUpdate();
+        }
         return true;
     }
 }

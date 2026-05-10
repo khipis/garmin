@@ -10,7 +10,14 @@ const GS_ANIM_P   = 1;   // player flip animation in progress
 const GS_AI       = 2;   // AI will move on next gameTick
 const GS_ANIM_AI  = 3;   // AI flip animation in progress
 const GS_OVER     = 4;   // game over
+const GS_MENU     = 10;  // pre-game menu
 const ANIM_TICKS  = 3;   // animation frames per flip (×100 ms = 300 ms total)
+const MODE_PVAI   = 0;
+const MODE_PVP    = 1;
+const MODE_AIAI   = 2;
+const DIFF_EASY   = 0;
+const DIFF_MED    = 1;
+const DIFF_HARD   = 2;
 
 // ── GameView ───────────────────────────────────────────────────────────────
 class GameView extends WatchUi.View {
@@ -45,6 +52,14 @@ class GameView extends WatchUi.View {
     // ── Timer ─────────────────────────────────────────────────────────────
     hidden var _timer;
 
+    // ── Pre-game menu ─────────────────────────────────────────────────────
+    hidden var _mode;
+    hidden var _diff;
+    hidden var _menuSel;
+    hidden var _playerFirst;
+    hidden var _playerColor;  // DISC_BLACK or DISC_WHITE
+    hidden var _aiColor;
+
     function initialize() {
         View.initialize();
         _board       = new Board();
@@ -55,7 +70,13 @@ class GameView extends WatchUi.View {
         _animTick    = 0;
         _passNotif   = 0;
         _curX = 3; _curY = 3;
-        _gameState = GS_PLAYER;
+        _mode        = MODE_PVAI;
+        _diff        = DIFF_MED;
+        _menuSel     = 0;
+        _playerFirst = true;
+        _playerColor = DISC_BLACK;
+        _aiColor     = DISC_WHITE;
+        _gameState   = GS_MENU;
     }
 
     function onLayout(dc) {
@@ -70,8 +91,6 @@ class GameView extends WatchUi.View {
         _sr = _cell * 44 / 100;
         if (_sr < 8) { _sr = 8; }
 
-        _startGame();
-
         _timer = new Timer.Timer();
         _timer.start(method(:gameTick), 100, true);
     }
@@ -83,24 +102,57 @@ class GameView extends WatchUi.View {
     // ── Public input API (GameDelegate) ───────────────────────────────────
 
     function moveCursor(dx, dy) {
-        if (_gameState != GS_PLAYER) { return; }
-        _curX = _curX + dx; _curY = _curY + dy;
-        if (_curX < 0) { _curX = 0; } if (_curX > 7) { _curX = 7; }
-        if (_curY < 0) { _curY = 0; } if (_curY > 7) { _curY = 7; }
+        if (_gameState == GS_MENU) {
+            if (dy < 0 || dx < 0) { _menuSel = (_menuSel + 3) % 4; }
+            else if (dy > 0 || dx > 0) { _menuSel = (_menuSel + 1) % 4; }
+            WatchUi.requestUpdate();
+            return;
+        }
+        if (_gameState != GS_PLAYER && !(_gameState == GS_AI && _mode == MODE_PVP)) { return; }
+        // dx != 0 → horizontal wrap along current row
+        // dy != 0 → vertical wrap along current column
+        if (dx != 0) {
+            _curX = (_curX + dx + 8) % 8;
+        } else if (dy != 0) {
+            _curY = (_curY + dy + 8) % 8;
+        }
+    }
+
+    function doBack() {
+        if (_gameState == GS_MENU) { return false; }
+        _gameState = GS_MENU; _menuSel = 0;
+        WatchUi.requestUpdate();
+        return true;
     }
 
     // SELECT: place disc or start new game
     function doAction() {
-        if (_gameState == GS_OVER) { _startGame(); return; }
-        if (_gameState != GS_PLAYER) { return; }
-        if (_validMoves[_curY * 8 + _curX] == 0) { return; }  // not a valid cell
-        if (_board.placeDisc(_curX, _curY, DISC_BLACK)) {
-            _startAnim(DISC_BLACK);
+        if (_gameState == GS_MENU) {
+            if (_menuSel == 0) { _mode = (_mode + 1) % 3; }
+            else if (_menuSel == 1) { _diff = (_diff + 1) % 3; }
+            else if (_menuSel == 2) { if (_mode == MODE_PVAI) { _playerFirst = !_playerFirst; } }
+            else {
+                _playerColor = _playerFirst ? DISC_BLACK : DISC_WHITE;
+                _aiColor     = _playerFirst ? DISC_WHITE : DISC_BLACK;
+                _startGame();
+            }
+            WatchUi.requestUpdate();
+            return;
+        }
+        if (_gameState == GS_OVER) { _gameState = GS_MENU; _menuSel = 0; WatchUi.requestUpdate(); return; }
+        // PvP: P2 also places via cursor when it's GS_AI state
+        var isP2Turn = (_gameState == GS_AI && _mode == MODE_PVP);
+        if (_gameState != GS_PLAYER && !isP2Turn) { return; }
+        if (_validMoves[_curY * 8 + _curX] == 0) { return; }
+        var col = isP2Turn ? _aiColor : _playerColor;
+        if (_board.placeDisc(_curX, _curY, col)) {
+            _startAnim(col);
         }
     }
 
     // ── 100 ms timer tick ─────────────────────────────────────────────────
     function gameTick() {
+        if (_gameState == GS_MENU) { return; }
         // Always decrement pass notification (independent of animation state)
         if (_passNotif > 0) { _passNotif = _passNotif - 1; }
 
@@ -115,7 +167,10 @@ class GameView extends WatchUi.View {
                 }
             }
         } else if (_gameState == GS_AI) {
-            _doAiMove();
+            if (_mode != MODE_PVP) { _doAiMoveAs(_aiColor); }
+            // PvP: P2 uses cursor — do nothing here
+        } else if (_gameState == GS_PLAYER && _mode == MODE_AIAI) {
+            _doAiMoveAs(_playerColor);
         }
         WatchUi.requestUpdate();
     }
@@ -124,11 +179,17 @@ class GameView extends WatchUi.View {
 
     hidden function _startGame() {
         _board.newGame();
-        _gameState = GS_PLAYER;
         _animTick  = 0;
         _passNotif = 0;
         _curX = 3; _curY = 3;
-        _computeValidMoves();
+        // Black always goes first in Othello
+        if (_playerColor == DISC_BLACK || _mode == MODE_AIAI) {
+            _gameState = GS_PLAYER;
+            if (_mode != MODE_AIAI) { _computeValidMoves(); }
+        } else {
+            _gameState = GS_AI;
+        }
+        if (_mode == MODE_PVP) { _computeValidMoves(); }
     }
 
     // Begin flip animation for 'targetCol' using the current board.flipBuf.
@@ -142,53 +203,55 @@ class GameView extends WatchUi.View {
             _flippingSet[_board.flipBuf[i]] = 1;
             i = i + 1;
         }
-        _gameState = (targetCol == DISC_BLACK) ? GS_ANIM_P : GS_ANIM_AI;
+        _gameState = (_animTargetCol == _playerColor) ? GS_ANIM_P : GS_ANIM_AI;
     }
 
-    // AI makes its move (or passes if no valid move exists).
-    hidden function _doAiMove() {
-        var move = _ai.chooseMove(DISC_WHITE);
+    // AI makes its move for a given colour (or passes if no valid move).
+    hidden function _doAiMoveAs(color) {
+        var move = _ai.chooseMove(color);
         if (move >= 0) {
             var mx = move % 8; var my = move / 8;
-            if (_board.placeDisc(mx, my, DISC_WHITE)) {
-                _startAnim(DISC_WHITE);
+            if (_board.placeDisc(mx, my, color)) {
+                _startAnim(color);
                 return;
             }
         }
-        // AI passes — advance turn directly
         _advanceTurn();
     }
 
     // Decide whose turn is next; detect game-over.
     hidden function _advanceTurn() {
-        var pCan = _board.hasValidMoves(DISC_BLACK);
-        var aCan = _board.hasValidMoves(DISC_WHITE);
+        var pCan = _board.hasValidMoves(_playerColor);
+        var aCan = _board.hasValidMoves(_aiColor);
 
         if (!pCan && !aCan) {
             _gameState = GS_OVER;
             return;
         }
         if (!pCan) {
-            // Player has no moves — auto-pass; AI goes immediately
-            _passNotif = 18;  // 1.8 s notification
+            _passNotif = 18;
             _gameState = GS_AI;
+            if (_mode == MODE_PVP) { _computeValidMoves(); }  // P2 needs valid moves
             return;
         }
         _gameState = GS_PLAYER;
-        _computeValidMoves();
+        if (_mode != MODE_AIAI) { _computeValidMoves(); }
     }
 
-    // Refresh valid-move cache for the human player (Black).
+    // Refresh valid-move cache: for the current human's turn.
+    // In PvP GS_AI = P2's turn so compute for _aiColor.
     hidden function _computeValidMoves() {
+        var col = (_gameState == GS_AI && _mode == MODE_PVP) ? _aiColor : _playerColor;
         var i = 0;
         while (i < 64) {
-            _validMoves[i] = (_board.isValidAt(i % 8, i / 8, DISC_BLACK)) ? 1 : 0;
+            _validMoves[i] = (_board.isValidAt(i % 8, i / 8, col)) ? 1 : 0;
             i = i + 1;
         }
     }
 
     // ── Rendering ─────────────────────────────────────────────────────────
     function onUpdate(dc) {
+        if (_gameState == GS_MENU) { _drawMenu(dc); return; }
         // Dark background
         dc.setColor(0x0A120A, 0x0A120A);
         dc.clear();
@@ -198,6 +261,49 @@ class GameView extends WatchUi.View {
 
         if (_passNotif > 0)          { _drawPassNotif(dc); }
         if (_gameState == GS_OVER)   { _drawGameOver(dc); }
+    }
+
+    // ── Pre-game menu ─────────────────────────────────────────────────────
+    hidden function _drawMenu(dc) {
+        dc.setColor(0x080808, 0x080808); dc.clear();
+        var hw = _sw / 2;
+        dc.setColor(0x0A0A0A, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(hw, hw, hw - 1);
+        dc.setColor(0x1A7A1A, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(hw, _sh * 11 / 100, Graphics.FONT_SMALL, "OTHELLO", Graphics.TEXT_JUSTIFY_CENTER);
+        var modeStr = (_mode == MODE_PVAI) ? "P vs AI" : ((_mode == MODE_PVP) ? "P vs P" : "AI vs AI");
+        var diffStr = (_diff == DIFF_EASY) ? "Easy" : ((_diff == DIFF_MED) ? "Med" : "Hard");
+        var sideStr = _playerFirst ? "Side: Blk" : "Side: Wht";
+        var rows = ["Mode: " + modeStr, "Diff: " + diffStr, sideStr, "START"];
+        var nR = 4;
+        var rowH = _sh * 10 / 100; if (rowH < 20) { rowH = 20; } if (rowH > 28) { rowH = 28; }
+        var rowW = _sw * 74 / 100;
+        var rowX = (_sw - rowW) / 2;
+        var gap  = 5;
+        var tot  = nR * rowH + (nR - 1) * gap;
+        var rowY0 = (_sh - tot) / 2 + rowH;
+        var i = 0;
+        while (i < nR) {
+            var ry  = rowY0 + i * (rowH + gap);
+            var sel = (i == _menuSel);
+            var isStart = (i == nR - 1);
+            dc.setColor(sel ? (isStart ? 0x1A3A1A : 0x0A2040) : 0x0A0A0A, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);
+            dc.setColor(sel ? (isStart ? 0x44CC44 : 0x4499FF) : 0x1A3A1A, Graphics.COLOR_TRANSPARENT);
+            dc.drawRoundedRectangle(rowX, ry, rowW, rowH, 5);
+            if (sel) {
+                dc.setColor(isStart ? 0x44CC44 : 0x4499FF, Graphics.COLOR_TRANSPARENT);
+                var ay = ry + rowH / 2;
+                dc.fillPolygon([[rowX + 5, ay - 4], [rowX + 5, ay + 4], [rowX + 11, ay]]);
+            }
+            var dimmed = (i == 1 && _mode == MODE_PVP) || (i == 2 && _mode != MODE_PVAI);
+            dc.setColor(dimmed ? 0x445566 : (sel ? (isStart ? 0xAAFFAA : 0xAADDFF) : 0x556677),
+                        Graphics.COLOR_TRANSPARENT);
+            dc.drawText(hw, ry + (rowH - 14) / 2, Graphics.FONT_XTINY, rows[i], Graphics.TEXT_JUSTIFY_CENTER);
+            i++;
+        }
+        dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(hw, _sh - 14, Graphics.FONT_XTINY, "UP/DN sel  SELECT set/start", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     // ── Board ─────────────────────────────────────────────────────────────
@@ -321,14 +427,14 @@ class GameView extends WatchUi.View {
                     _board.whiteCount.format("%d"), Graphics.TEXT_JUSTIFY_LEFT);
 
         // Turn label (centred between the two disc icons)
-        if (_gameState == GS_PLAYER) {
+        if (_gameState == GS_PLAYER || _gameState == GS_ANIM_P) {
             dc.setColor(0x44FF44, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_sw / 2 - 4, txtY, Graphics.FONT_XTINY,
-                        "YOU", Graphics.TEXT_JUSTIFY_CENTER);
+            var lbl = (_mode == MODE_PVP) ? "P1" : ((_mode == MODE_AIAI) ? "B" : "YOU");
+            dc.drawText(_sw / 2 - 4, txtY, Graphics.FONT_XTINY, lbl, Graphics.TEXT_JUSTIFY_CENTER);
         } else if (_gameState == GS_AI || _gameState == GS_ANIM_AI) {
             dc.setColor(0x888888, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_sw / 2 - 4, txtY, Graphics.FONT_XTINY,
-                        "AI", Graphics.TEXT_JUSTIFY_CENTER);
+            var lbl2 = (_mode == MODE_PVP) ? "P2" : ((_mode == MODE_AIAI) ? "W" : "AI");
+            dc.drawText(_sw / 2 - 4, txtY, Graphics.FONT_XTINY, lbl2, Graphics.TEXT_JUSTIFY_CENTER);
         }
 
         // BACK = exit hint (below board)
@@ -368,9 +474,11 @@ class GameView extends WatchUi.View {
         // Winner message
         var msgCol;
         var msg;
-        if      (bc > wc) { msg = "BLACK WINS!"; msgCol = 0xAAAAAA; }
-        else if (wc > bc) { msg = "WHITE WINS!"; msgCol = 0xEEEEEE; }
-        else              { msg = "DRAW!";        msgCol = 0xBBBB44; }
+        var playerWins = (_playerColor == DISC_BLACK) ? (bc > wc) : (wc > bc);
+        var aiWins     = (_playerColor == DISC_BLACK) ? (wc > bc) : (bc > wc);
+        if      (playerWins) { msg = "YOU WIN!";   msgCol = 0x44FF44; }
+        else if (aiWins)     { msg = "AI WINS!";   msgCol = 0xAAAAAA; }
+        else                 { msg = "DRAW!";       msgCol = 0xBBBB44; }
         dc.setColor(msgCol, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, by + 8, Graphics.FONT_SMALL, msg, Graphics.TEXT_JUSTIFY_CENTER);
 

@@ -3,6 +3,8 @@ using Toybox.Graphics;
 using Toybox.Timer;
 using Toybox.System;
 using Toybox.Application;
+using Toybox.ActivityRecording;
+using Toybox.Sensor;
 
 const FT_HOME = 0;
 const FT_BCFG = 1;
@@ -77,6 +79,7 @@ class BreathTrainingView extends WatchUi.View {
     hidden var _stBrC; hidden var _stBrT; hidden var _stApC;
     hidden var _stCoC; hidden var _stO2C; hidden var _stTotT;
     hidden var _exEarly;
+    hidden var _actSes;   // ActivityRecording session (null when inactive)
 
     function initialize() {
         View.initialize();
@@ -85,6 +88,7 @@ class BreathTrainingView extends WatchUi.View {
         _tick = 0; _sub = 0;
         _gs = FT_HOME; _hSel = 0; _mSel = 0;
         _exEarly = false;
+        _actSes = null;
 
         var sfa = Application.Storage.getValue("usr_safe_ack");
         if (!(sfa instanceof Toybox.Lang.Boolean) || !sfa) { _gs = FT_SAFE; }
@@ -371,6 +375,42 @@ class BreathTrainingView extends WatchUi.View {
         else { _saveCustom(); _gs = FT_HOME; }
     }
 
+    // ── Activity Recording helpers ─────────────────────────────────────────
+    hidden function _actStart(name) {
+        if (_actSes != null) {
+            try { _actSes.stop(); _actSes.discard(); } catch (e) {}
+            _actSes = null;
+        }
+        try {
+            _actSes = ActivityRecording.createSession({
+                :name     => name,
+                :sport    => ActivityRecording.SPORT_GENERIC,
+                :subSport => ActivityRecording.SUB_SPORT_GENERIC
+            });
+            try { Sensor.setEnabledSensors([Sensor.SENSOR_HEARTRATE]); } catch (e) {}
+            _actSes.start();
+        } catch (e) { _actSes = null; }
+    }
+
+    // Save if session lasted ≥60 s; discard otherwise.
+    hidden function _actStop(durationSec) {
+        if (_actSes == null) { return; }
+        try {
+            _actSes.stop();
+            if (durationSec >= 60) { _actSes.save(); }
+            else                   { _actSes.discard(); }
+        } catch (e) {}
+        try { Sensor.setEnabledSensors([]); } catch (e) {}
+        _actSes = null;
+    }
+
+    hidden function _actDiscard() {
+        if (_actSes == null) { return; }
+        try { _actSes.stop(); _actSes.discard(); } catch (e) {}
+        try { Sensor.setEnabledSensors([]); } catch (e) {}
+        _actSes = null;
+    }
+
     function doBack() {
         if (_gs == FT_SAFE) {
             Application.Storage.setValue("usr_safe_ack", true);
@@ -382,6 +422,7 @@ class BreathTrainingView extends WatchUi.View {
         if (_gs == FT_TCFG) { if (_tF > 0) { _tF--; return true; } _gs = FT_HOME; return true; }
         if (_gs == FT_ACT || _gs == FT_PAU) {
             if (_mode == FM_CO || _mode == FM_O2) { _exEarly = true; }
+            _actDiscard();
             _hSel = 0; _gs = FT_HOME; return true;
         }
         if (_gs == FT_DONE || _gs == FT_STAT) { _hSel = 0; _gs = FT_HOME; return true; }
@@ -473,12 +514,14 @@ class BreathTrainingView extends WatchUi.View {
         }
         _brSS = BR_SES[_brSI] * 60; _brRem = _brSS; _brBC = 0;
         _brPh = BP_INH; _brPD = _brPat[BP_INH]; _brPE = 0; _brPS = 0; _brTrans = 0;
+        _actStart("Breathwork");
         _gs = FT_ACT; _vibe(80, 300);
     }
 
     hidden function _startAp() {
         _savePreset();
         _apE = 0; _apPS = -1; _apNP = false; _apWF = false;
+        _actStart("Apnea Hold");
         _gs = FT_ACT; _vibe(40, 70);
     }
 
@@ -508,6 +551,7 @@ class BreathTrainingView extends WatchUi.View {
         if (_mode == FM_CO) { _genCO2(maxH, _tTR); }
         else { _genO2(maxH, _tTR); }
         _tRnd = 0; _tPh = BP_PRP; _tPS = 3; _tPE = 0; _tPSub = 0;
+        _actStart(_mode == FM_CO ? "CO2 Table" : "O2 Table");
         _gs = FT_ACT; _vibe(80, 300);
     }
 
@@ -627,6 +671,7 @@ class BreathTrainingView extends WatchUi.View {
     }
 
     hidden function _saveSt(mode, dur) {
+        _actStop(dur);
         _stTotT += dur; Application.Storage.setValue("st_tot", _stTotT);
         if (mode == FM_BR) {
             _stBrC++; _stBrT += dur;

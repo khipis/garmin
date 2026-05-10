@@ -3,68 +3,98 @@ using Toybox.Graphics;
 using Toybox.Timer;
 using Toybox.Math;
 
-// ── Module-level constants ─────────────────────────────────────────────────
+// ── Constants ─────────────────────────────────────────────────────────────────
 const MARK_NONE = 0;
-const MARK_X    = 1;   // human player
-const MARK_O    = 2;   // AI
+const MARK_X    = 1;
+const MARK_O    = 2;
 
-const GS_PLAY   = 0;   // human's turn
-const GS_AI     = 1;   // 300 ms AI thinking pause, then AI moves
-const GS_OVER   = 2;
+const GS_PLAY    = 0;
+const GS_AI      = 1;
+const GS_OVER    = 2;
+const GS_AI_FORK  = 5;   // fork search spread across multiple timer ticks
+const GS_AI_SCORE = 6;   // heuristic scored move (separate tick after fork)
+const GS_MENU     = 10;
 
-const OVER_NONE  = 0;
-const OVER_XWIN  = 1;
-const OVER_OWIN  = 2;
-const OVER_DRAW  = 3;
+const FORK_BATCH  = 16;  // outer iterations per tick — fast enough for grids ≤5x5
 
-// ── Grid size — change GRID_N to 7 for a 7×7 board ────────────────────────
-const GRID_N  = 5;   // 5×5 board
-const WIN_LEN = 4;   // need 4 in a row to win
+const OVER_NONE = 0;
+const OVER_XWIN = 1;
+const OVER_OWIN = 2;
+const OVER_DRAW = 3;
 
-// ── GameView ───────────────────────────────────────────────────────────────
+const MODE_PVAI = 0;
+const MODE_PVP  = 1;
+const MODE_AIAI = 2;
+
+const DIFF_EASY = 0;
+const DIFF_MED  = 1;
+const DIFF_HARD = 2;
+
+// ── GameView ───────────────────────────────────────────────────────────────────
 class GameView extends WatchUi.View {
 
     // ── Layout ────────────────────────────────────────────────────────────
     hidden var _sw, _sh;
-    hidden var _boardX, _boardY;  // top-left pixel of the grid
-    hidden var _cell;             // pixels per cell
+    hidden var _boardX, _boardY;
+    hidden var _cell;
 
     // ── Board state ───────────────────────────────────────────────────────
-    hidden var _cells;       // int[GRID_N * GRID_N]
-    hidden var _moveCount;   // marks placed so far
-    hidden var _winLine;     // int[WIN_LEN] — filled when a win is detected
+    hidden var _cells;       // new [7*7] = 49 max
+    hidden var _moveCount;
+    hidden var _winLine;     // new [4]
+    hidden var _gridN;       // 3..7
+    hidden var _winLen;      // 3 or 4
 
     // ── Cursor ────────────────────────────────────────────────────────────
     hidden var _curX, _curY;
 
     // ── Game flow ─────────────────────────────────────────────────────────
     hidden var _state;
-    hidden var _overType;    // OVER_* constant
+    hidden var _overType;
 
     // ── Session score ─────────────────────────────────────────────────────
     hidden var _scoreX, _scoreO;
 
+    // ── Mode / difficulty / menu ──────────────────────────────────────────
+    hidden var _mode;
+    hidden var _diff;
+    hidden var _menuSel;
+    hidden var _playerFirst;
+
     // ── Timer ─────────────────────────────────────────────────────────────
     hidden var _timer;
 
+    // ── Multi-tick fork search state ──────────────────────────────────────
+    hidden var _aiForkMark;    // mark being checked this phase
+    hidden var _aiForkAiMk;    // mark the AI is actually playing
+    hidden var _aiForkPhase;   // 0 = fork(AI), 1 = fork(opp)
+    hidden var _aiForkI;       // outer-loop cursor
+    hidden var _aiForkResult;  // fork move index found (-1 = none yet)
+
+    // ─────────────────────────────────────────────────────────────────────
     function initialize() {
         View.initialize();
-        _cells   = new [GRID_N * GRID_N];
-        _winLine = new [WIN_LEN];
-        _scoreX  = 0; _scoreO = 0;
+        _cells   = new [7 * 7];
+        _winLine = new [4];
+        _scoreX  = 0;
+        _scoreO  = 0;
+        _gridN   = 5;
+        _winLen  = 4;
+        _mode        = MODE_PVAI;
+        _diff        = DIFF_MED;
+        _menuSel     = 0;
+        _playerFirst = true;
+        _sw          = 0;
+        _sh      = 0;
         _timer   = null;
         _startGame();
+        _state   = GS_MENU;
     }
 
     function onLayout(dc) {
-        _sw = dc.getWidth(); _sh = dc.getHeight();
-
-        // Board occupies 69% of screen width, centred with slight downward shift for HUD.
-        var bsz = _sw * 69 / 100;
-        _cell   = bsz / GRID_N;
-        _boardX = (_sw - GRID_N * _cell) / 2;
-        _boardY = (_sh - GRID_N * _cell) / 2 + _sh * 4 / 100;
-
+        _sw = dc.getWidth();
+        _sh = dc.getHeight();
+        _calcLayout();
         _timer = new Timer.Timer();
         _timer.start(method(:gameTick), 300, true);
     }
@@ -73,71 +103,276 @@ class GameView extends WatchUi.View {
         if (_timer != null) { _timer.stop(); }
     }
 
+    // ── Layout helper ─────────────────────────────────────────────────────
+    hidden function _calcLayout() {
+        if (_sw == 0) { return; }
+        var minDim = (_sw < _sh) ? _sw : _sh;
+        _cell   = minDim * 68 / (100 * _gridN);
+        _boardX = (_sw - _gridN * _cell) / 2;
+        _boardY = (_sh - _gridN * _cell) / 2 - _sh * 3 / 100;
+        if (_boardY < 18) { _boardY = 18; }
+    }
+
     // ── Public input API ──────────────────────────────────────────────────
 
-    function moveCursor(dx, dy) {
-        if (_state != GS_PLAY) { return; }
-        _curX = _curX + dx; _curY = _curY + dy;
-        if (_curX < 0)      { _curX = 0; }
-        if (_curX >= GRID_N){ _curX = GRID_N - 1; }
-        if (_curY < 0)      { _curY = 0; }
-        if (_curY >= GRID_N){ _curY = GRID_N - 1; }
+    // advance cursor in reading order: right → next row → wrap
+    // onNextPage (DOWN button): move RIGHT in current row, wrap to col=0
+    function advanceCursor() {
+        if (_state == GS_MENU) {
+            _menuSel = (_menuSel + 1) % 5;
+            WatchUi.requestUpdate();
+            return;
+        }
+        if (_mode == MODE_AIAI) { return; }
+        if (_state != GS_PLAY && !(_state == GS_AI && _mode == MODE_PVP)) { return; }
+        _curX = (_curX + 1) % _gridN;
+        WatchUi.requestUpdate();
+    }
+
+    // onPreviousPage (UP button): move DOWN in current column, wrap to row=0
+    function retreatCursor() {
+        if (_state == GS_MENU) {
+            _menuSel = (_menuSel + 4) % 5;
+            WatchUi.requestUpdate();
+            return;
+        }
+        if (_mode == MODE_AIAI) { return; }
+        if (_state != GS_PLAY && !(_state == GS_AI && _mode == MODE_PVP)) { return; }
+        _curY = (_curY + 1) % _gridN;
+        WatchUi.requestUpdate();
+    }
+
+    // move cursor up/down one row, same column, wrapping
+    function moveCursorRow(delta) {
+        if (_state == GS_MENU) {
+            _menuSel = (_menuSel + 5 + delta) % 5;
+            WatchUi.requestUpdate();
+            return;
+        }
+        if (_mode == MODE_AIAI) { return; }
+        if (_state != GS_PLAY && !(_state == GS_AI && _mode == MODE_PVP)) { return; }
+        _curY = _curY + delta;
+        if (_curY < 0)        { _curY = _gridN - 1; }
+        if (_curY >= _gridN)  { _curY = 0; }
+        WatchUi.requestUpdate();
+    }
+
+    // BACK: menu → pop app, in-game → return to menu
+    function doBack() {
+        if (_state == GS_MENU) { return false; }
+        _state = GS_MENU; _menuSel = 0;
+        return true;
     }
 
     function doAction() {
-        if (_state == GS_OVER)  { _startGame(); return; }
-        if (_state != GS_PLAY)  { return; }
-        if (_cells[_curY * GRID_N + _curX] != MARK_NONE) { return; }  // cell occupied
+        if (_state == GS_MENU)  { _menuAction(); WatchUi.requestUpdate(); return; }
+        if (_state == GS_OVER)  { _state = GS_MENU; _menuSel = 0; WatchUi.requestUpdate(); return; }
+        if (_mode == MODE_AIAI) { return; }
+
+        // PvP: GS_AI = O's turn (P2 places O)
+        if (_state == GS_AI && _mode == MODE_PVP) {
+            if (_cells[_curY * _gridN + _curX] != MARK_NONE) { return; }
+            _place(_curX, _curY, MARK_O);
+            if (_checkWin(MARK_O)) {
+                _overType = OVER_OWIN; _scoreO = _scoreO + 1; _state = GS_OVER;
+                WatchUi.requestUpdate(); return;
+            }
+            if (_moveCount == _gridN * _gridN) {
+                _overType = OVER_DRAW; _state = GS_OVER;
+                WatchUi.requestUpdate(); return;
+            }
+            _state = GS_PLAY;
+            WatchUi.requestUpdate();
+            return;
+        }
+
+        // PvAI player goes second: GS_AI = player's turn (player places O)
+        if (_state == GS_AI && _mode == MODE_PVAI && !_playerFirst) {
+            if (_cells[_curY * _gridN + _curX] != MARK_NONE) { return; }
+            _place(_curX, _curY, MARK_O);
+            if (_checkWin(MARK_O)) {
+                _overType = OVER_OWIN; _scoreO = _scoreO + 1; _state = GS_OVER;
+                WatchUi.requestUpdate(); return;
+            }
+            if (_moveCount == _gridN * _gridN) {
+                _overType = OVER_DRAW; _state = GS_OVER;
+                WatchUi.requestUpdate(); return;
+            }
+            _state = GS_PLAY;
+            WatchUi.requestUpdate();
+            return;
+        }
+
+        if (_state != GS_PLAY) { return; }
+        if (_cells[_curY * _gridN + _curX] != MARK_NONE) { return; }
 
         _place(_curX, _curY, MARK_X);
-
         if (_checkWin(MARK_X)) {
-            _overType = OVER_XWIN; _scoreX = _scoreX + 1; _state = GS_OVER; return;
+            _overType = OVER_XWIN; _scoreX = _scoreX + 1; _state = GS_OVER;
+            WatchUi.requestUpdate(); return;
         }
-        if (_moveCount == GRID_N * GRID_N) {
-            _overType = OVER_DRAW; _state = GS_OVER; return;
+        if (_moveCount == _gridN * _gridN) {
+            _overType = OVER_DRAW; _state = GS_OVER;
+            WatchUi.requestUpdate(); return;
         }
-        _state = GS_AI;  // hand off to AI (fires on next timer tick)
+        _state = GS_AI;
+        WatchUi.requestUpdate();
+    }
+
+    // ── Menu action ───────────────────────────────────────────────────────
+    hidden function _menuAction() {
+        if (_menuSel == 0) {
+            _mode = (_mode + 1) % 3;
+        } else if (_menuSel == 1) {
+            if (_mode != MODE_PVP) { _diff = (_diff + 1) % 3; }
+        } else if (_menuSel == 2) {
+            _gridN = _gridN + 1;
+            if (_gridN > 7) { _gridN = 3; }
+            _winLen = (_gridN == 3) ? 3 : 4;
+        } else if (_menuSel == 3) {
+            if (_mode == MODE_PVAI) { _playerFirst = !_playerFirst; }
+        } else {
+            _startGame();
+        }
     }
 
     // ── 300 ms timer tick ─────────────────────────────────────────────────
     function gameTick() {
-        if (_state == GS_AI) {
-            _aiMove();
-            if (_checkWin(MARK_O)) {
-                _overType = OVER_OWIN; _scoreO = _scoreO + 1; _state = GS_OVER;
-            } else if (_moveCount == GRID_N * GRID_N) {
-                _overType = OVER_DRAW; _state = GS_OVER;
-            } else {
-                _state = GS_PLAY;
+        if (_state == GS_AI && (_mode == MODE_PVAI || _mode == MODE_AIAI)) {
+            if (!(_mode == MODE_PVAI && !_playerFirst)) {
+                _aiStart(MARK_O);
             }
-            WatchUi.requestUpdate();
+        } else if (_state == GS_AI_FORK) {
+            _aiForkStep();
+        } else if (_state == GS_AI_SCORE) {
+            _aiScoreTick();
+        } else if (_state == GS_PLAY && _mode == MODE_AIAI) {
+            _aiStart(MARK_X);
+        } else if (_state == GS_PLAY && _mode == MODE_PVAI && !_playerFirst) {
+            _aiStart(MARK_X);
+        }
+        WatchUi.requestUpdate();
+    }
+
+    // Fast path: immediate win/block + Easy move. Med/Hard fork → GS_AI_FORK.
+    hidden function _aiStart(mark) {
+        var opp = (mark == MARK_X) ? MARK_O : MARK_X;
+        var move = _findThreat(mark);
+        if (move >= 0) { _aiFinish(move, mark); return; }
+        move = _findThreat(opp);
+        if (move >= 0) { _aiFinish(move, mark); return; }
+        if (_diff == DIFF_EASY) {
+            if (Math.rand() % 10 < 4) { move = _randomMove(); }
+            else { move = _bestScoredMove(mark); }
+            if (move >= 0) { _aiFinish(move, mark); }
+            return;
+        }
+        // Med/Hard: fork search only for small grids (≤5x5 = 25 cells).
+        // On larger grids it takes too many ticks — scored move is fast enough.
+        if (_gridN <= 5) {
+            _aiForkAiMk  = mark;
+            _aiForkMark  = mark;
+            _aiForkPhase = 0;
+            _aiForkI     = 0;
+            _aiForkResult = -1;
+            _state = GS_AI_FORK;
+        } else {
+            _aiForkAiMk = mark;
+            _state = GS_AI_SCORE;
+        }
+    }
+
+    // Processes FORK_BATCH outer iterations per timer tick.
+    hidden function _aiForkStep() {
+        var col   = _aiForkMark;
+        var total = _gridN * _gridN;
+        var done  = 0;
+        while (_aiForkI < total && done < FORK_BATCH) {
+            if (_cells[_aiForkI] == MARK_NONE) {
+                _cells[_aiForkI] = col;
+                var threats = 0; var j = 0;
+                while (j < total) {
+                    if (_cells[j] == MARK_NONE) {
+                        _cells[j] = col;
+                        if (_checkWinAt(col, j % _gridN, j / _gridN)) { threats = threats + 1; }
+                        _cells[j] = MARK_NONE;
+                        if (threats >= 2) { break; }
+                    }
+                    j = j + 1;
+                }
+                _cells[_aiForkI] = MARK_NONE;
+                if (threats >= 2) { _aiForkResult = _aiForkI; break; }
+            }
+            _aiForkI = _aiForkI + 1;
+            done = done + 1;
+        }
+        if (_aiForkResult >= 0) { _aiFinish(_aiForkResult, _aiForkAiMk); return; }
+        if (_aiForkI < total)   { return; }  // need more ticks
+        // This phase exhausted — advance to next phase or fall back
+        if (_aiForkPhase == 0) {
+            _aiForkPhase = 1;
+            var opp = (_aiForkAiMk == MARK_X) ? MARK_O : MARK_X;
+            _aiForkMark = opp; _aiForkI = 0; _aiForkResult = -1;
+            return;
+        }
+        // Both fork phases done with no result — yield to scored-move tick
+        _state = GS_AI_SCORE;
+    }
+
+    // Separate tick: heuristic scored move after fork phases complete.
+    hidden function _aiScoreTick() {
+        var move = _bestScoredMove(_aiForkAiMk);
+        if (move < 0) { move = _randomMove(); }
+        if (move >= 0) { _aiFinish(move, _aiForkAiMk); }
+        else { _state = (_aiForkAiMk == MARK_O) ? GS_PLAY : GS_AI; }
+    }
+
+    // Apply a move and update game state.
+    // Uses fast _checkWinAt first (O(W*4)) to detect win, then full _checkWin
+    // only when confirmed — to populate _winLine for display.
+    hidden function _aiFinish(move, mark) {
+        var mx = move % _gridN;
+        var my = move / _gridN;
+        _place(mx, my, mark);
+        if (_checkWinAt(mark, mx, my)) {
+            _checkWin(mark);  // populate _winLine for highlighting
+            if (mark == MARK_X) { _overType = OVER_XWIN; _scoreX = _scoreX + 1; }
+            else                { _overType = OVER_OWIN; _scoreO = _scoreO + 1; }
+            _state = GS_OVER;
+        } else if (_moveCount == _gridN * _gridN) {
+            _overType = OVER_DRAW; _state = GS_OVER;
+        } else {
+            _state = (mark == MARK_O) ? GS_PLAY : GS_AI;
         }
     }
 
     // ── Game management ───────────────────────────────────────────────────
-
     hidden function _startGame() {
+        _calcLayout();
+        var total = _gridN * _gridN;
         var i = 0;
-        while (i < GRID_N * GRID_N) { _cells[i] = MARK_NONE; i = i + 1; }
+        while (i < total) { _cells[i] = MARK_NONE; i = i + 1; }
         i = 0;
-        while (i < WIN_LEN) { _winLine[i] = -1; i = i + 1; }
+        while (i < 4) { _winLine[i] = -1; i = i + 1; }
         _moveCount = 0;
-        _curX = GRID_N / 2; _curY = GRID_N / 2;  // start cursor at centre
-        _state    = GS_PLAY;
-        _overType = OVER_NONE;
+        _curX      = _gridN / 2;
+        _curY      = _gridN / 2;
+        _overType  = OVER_NONE;
+        if (_mode == MODE_PVAI && !_playerFirst) {
+            _state = GS_AI;
+        } else {
+            _state = GS_PLAY;
+        }
     }
 
     hidden function _place(x, y, mark) {
-        _cells[y * GRID_N + x] = mark;
+        _cells[y * _gridN + x] = mark;
         _moveCount = _moveCount + 1;
     }
 
     // ── Win detection ─────────────────────────────────────────────────────
-    // Returns true if 'col' has WIN_LEN in a row; also populates _winLine.
     hidden function _checkWin(col) {
-        var N = GRID_N; var W = WIN_LEN;
-
+        var N = _gridN; var W = _winLen;
         // Horizontal
         var r = 0;
         while (r < N) {
@@ -168,7 +403,7 @@ class GameView extends WatchUi.View {
             }
             rd = rd + 1;
         }
-        // Diagonal ↙  (x starts at W-1, goes right; direction dx=-1)
+        // Diagonal ↙
         var ra = 0;
         while (ra <= N - W) {
             var ca = W - 1;
@@ -181,44 +416,29 @@ class GameView extends WatchUi.View {
         return false;
     }
 
-    // Check WIN_LEN cells starting at (x,y) going (dx,dy). Store result in _winLine.
     hidden function _testLine(col, x, y, dx, dy) {
         var k = 0;
-        while (k < WIN_LEN) {
-            if (_cells[(y + k * dy) * GRID_N + (x + k * dx)] != col) { return false; }
+        while (k < _winLen) {
+            if (_cells[(y + k * dy) * _gridN + (x + k * dx)] != col) { return false; }
             k = k + 1;
         }
         k = 0;
-        while (k < WIN_LEN) {
-            _winLine[k] = (y + k * dy) * GRID_N + (x + k * dx);
+        while (k < _winLen) {
+            _winLine[k] = (y + k * dy) * _gridN + (x + k * dx);
             k = k + 1;
         }
         return true;
     }
 
     // ── AI ────────────────────────────────────────────────────────────────
-
-    hidden function _aiMove() {
-        // 1. Win
-        var move = _findThreat(MARK_O);
-        if (move >= 0) { _place(move % GRID_N, move / GRID_N, MARK_O); return; }
-
-        // 2. Block player's winning move
-        move = _findThreat(MARK_X);
-        if (move >= 0) { _place(move % GRID_N, move / GRID_N, MARK_O); return; }
-
-        // 3. Best scored empty cell (positional + line-extension heuristic)
-        move = _bestScoredMove();
-        if (move >= 0) { _place(move % GRID_N, move / GRID_N, MARK_O); }
-    }
-
-    // Find any empty cell where placing 'col' would immediately win.
+    // O(N²·W): try each empty cell; fast-check axes through that cell only.
     hidden function _findThreat(col) {
+        var total = _gridN * _gridN;
         var i = 0;
-        while (i < GRID_N * GRID_N) {
+        while (i < total) {
             if (_cells[i] == MARK_NONE) {
                 _cells[i] = col;
-                var wins = _checkWin(col);
+                var wins = _checkWinAt(col, i % _gridN, i / _gridN);
                 _cells[i] = MARK_NONE;
                 if (wins) { return i; }
             }
@@ -227,81 +447,139 @@ class GameView extends WatchUi.View {
         return -1;
     }
 
-    // Score-based fallback: centre preference + line-extension bonus.
-    hidden function _bestScoredMove() {
-        var best = -9999; var move = -1;
-        var cx = GRID_N / 2; var cy = GRID_N / 2;
-        var i = 0;
-        while (i < GRID_N * GRID_N) {
+    // Fast win check — only 4 axes through (lx, ly). Does NOT set _winLine.
+    hidden function _checkWinAt(col, lx, ly) {
+        if (_fastAxis(col, lx, ly,  1,  0)) { return true; }
+        if (_fastAxis(col, lx, ly,  0,  1)) { return true; }
+        if (_fastAxis(col, lx, ly,  1,  1)) { return true; }
+        if (_fastAxis(col, lx, ly,  1, -1)) { return true; }
+        return false;
+    }
+
+    hidden function _fastAxis(col, x, y, dx, dy) {
+        var cnt = 1; var k = 1;
+        while (k < _winLen) {
+            var nx = x + k * dx; var ny = y + k * dy;
+            if (nx < 0 || nx >= _gridN || ny < 0 || ny >= _gridN) { break; }
+            if (_cells[ny * _gridN + nx] != col) { break; }
+            cnt = cnt + 1; k = k + 1;
+        }
+        k = 1;
+        while (k < _winLen) {
+            var nx = x - k * dx; var ny = y - k * dy;
+            if (nx < 0 || nx >= _gridN || ny < 0 || ny >= _gridN) { break; }
+            if (_cells[ny * _gridN + nx] != col) { break; }
+            cnt = cnt + 1; k = k + 1;
+        }
+        return cnt >= _winLen;
+    }
+
+    hidden function _randomMove() {
+        var total = _gridN * _gridN;
+        var count = 0; var i = 0;
+        while (i < total) { if (_cells[i] == MARK_NONE) { count = count + 1; } i = i + 1; }
+        if (count == 0) { return -1; }
+        var pick = Math.rand() % count;
+        i = 0; var found = 0;
+        while (i < total) {
+            if (_cells[i] == MARK_NONE) {
+                if (found == pick) { return i; }
+                found = found + 1;
+            }
+            i = i + 1;
+        }
+        return -1;
+    }
+
+    hidden function _bestScoredMove(mark) {
+        var best = -99999; var move = -1;
+        var total = _gridN * _gridN; var i = 0;
+        while (i < total) {
             if (_cells[i] != MARK_NONE) { i = i + 1; continue; }
-            var score = _scoreCell(i, cx, cy);
-            if (score > best) { best = score; move = i; }
+            var s = _scoreCell(i, mark);
+            if (s > best) { best = s; move = i; }
             i = i + 1;
         }
         return move;
     }
 
-    hidden function _scoreCell(idx, cx, cy) {
-        var x = idx % GRID_N; var y = idx / GRID_N;
+    // Score a candidate cell for 'mark'.
+    // Combines own potential, opponent threat (defensive), and centre bias.
+    hidden function _scoreCell(idx, mark) {
+        var x = idx % _gridN; var y = idx / _gridN;
+        var opp = (mark == MARK_X) ? MARK_O : MARK_X;
+        var mid = _gridN / 2;
+        var ddx = x - mid; if (ddx < 0) { ddx = -ddx; }
+        var ddy = y - mid; if (ddy < 0) { ddy = -ddy; }
+        var score = (_gridN - ddx - ddy) * 4;
 
-        // Distance from centre (lower = better)
-        var dx = x - cx; if (dx < 0) { dx = -dx; }
-        var dy = y - cy; if (dy < 0) { dy = -dy; }
-        var score = (GRID_N - dx - dy) * 2;
+        // Offensive potential (cubic: 1, 8, 27 for 1, 2, 3-in-window)
+        score = score + _axisPotential(x, y, mark, opp,  1,  0);
+        score = score + _axisPotential(x, y, mark, opp,  0,  1);
+        score = score + _axisPotential(x, y, mark, opp,  1,  1);
+        score = score + _axisPotential(x, y, mark, opp,  1, -1);
 
-        // Extension bonus: count own pieces in each axis through this cell
-        score = score + _axisScore(x, y, MARK_O, 1,  0);
-        score = score + _axisScore(x, y, MARK_O, 0,  1);
-        score = score + _axisScore(x, y, MARK_O, 1,  1);
-        score = score + _axisScore(x, y, MARK_O, 1, -1);
+        // Defensive: how dangerous is this cell for the opponent?
+        var defW = (_diff == DIFF_HARD) ? 6 : 4;
+        score = score + _axisPotential(x, y, opp, mark,  1,  0) * defW / 4;
+        score = score + _axisPotential(x, y, opp, mark,  0,  1) * defW / 4;
+        score = score + _axisPotential(x, y, opp, mark,  1,  1) * defW / 4;
+        score = score + _axisPotential(x, y, opp, mark,  1, -1) * defW / 4;
 
-        // Small random noise to break exact ties
-        score = score + Math.rand() % 3;
+        if (_diff == DIFF_EASY) { score = score + Math.rand() % 20 - 10; }
+        else if (_diff == DIFF_MED)  { score = score + Math.rand() % 5; }
+        else                          { score = score + Math.rand() % 3; }
         return score;
     }
 
-    // Count consecutive 'col' marks in both directions along (dx,dy) from (x,y).
-    // Returns a bonus based on how long the resulting line would be.
-    hidden function _axisScore(x, y, col, dx, dy) {
-        var cnt = 0;
-        // Forward
-        var cx2 = x + dx; var cy2 = y + dy;
-        while (cx2 >= 0 && cx2 < GRID_N && cy2 >= 0 && cy2 < GRID_N &&
-               _cells[cy2 * GRID_N + cx2] == col) {
-            cnt = cnt + 1; cx2 = cx2 + dx; cy2 = cy2 + dy;
+    // Scan all windows of size _winLen on axis (dx,dy) that contain (x,y).
+    // For each window with no 'opp' mark, add cnt³ where cnt = own marks in window.
+    // O(_winLen²) per call — extremely fast.
+    hidden function _axisPotential(x, y, col, opp, dx, dy) {
+        var W = _winLen; var N = _gridN; var score = 0;
+        // Window offsets: the cell (x,y) is at position k within the window,
+        // so window starts at (x - k*dx, y - k*dy) for k = 0..W-1.
+        var k = 0;
+        while (k < W) {
+            var sx = x - k * dx; var sy = y - k * dy;
+            // Verify window fits on board
+            var ex = sx + (W - 1) * dx; var ey = sy + (W - 1) * dy;
+            if (sx < 0 || sx >= N || sy < 0 || sy >= N) { k = k + 1; continue; }
+            if (ex < 0 || ex >= N || ey < 0 || ey >= N) { k = k + 1; continue; }
+            // Count col marks; abort if opp present
+            var cnt = 0; var blocked = false; var j = 0;
+            while (j < W) {
+                var v = _cells[(sy + j * dy) * N + (sx + j * dx)];
+                if (v == opp) { blocked = true; break; }
+                if (v == col) { cnt = cnt + 1; }
+                j = j + 1;
+            }
+            if (!blocked && cnt > 0) {
+                score = score + cnt * cnt * cnt;  // 1, 8, 27 for 1, 2, 3 marks
+            }
+            k = k + 1;
         }
-        // Backward
-        cx2 = x - dx; cy2 = y - dy;
-        while (cx2 >= 0 && cx2 < GRID_N && cy2 >= 0 && cy2 < GRID_N &&
-               _cells[cy2 * GRID_N + cx2] == col) {
-            cnt = cnt + 1; cx2 = cx2 - dx; cy2 = cy2 - dy;
-        }
-        // Bonus: 3-in-a-row ≫ 2-in-a-row ≫ 1-in-a-row
-        if (cnt >= 3) { return 18; }
-        if (cnt >= 2) { return  8; }
-        if (cnt >= 1) { return  3; }
-        return 0;
+        return score;
     }
 
     // ── Rendering ─────────────────────────────────────────────────────────
     function onUpdate(dc) {
+        if (_state == GS_MENU) { _drawMenu(dc); return; }
         dc.setColor(0x080810, 0x080810);
         dc.clear();
-
         _drawBoard(dc);
         _drawHUD(dc);
-
         if (_state == GS_OVER) { _drawGameOver(dc); }
     }
 
     // ── Board ─────────────────────────────────────────────────────────────
     hidden function _drawBoard(dc) {
-        var bsz = GRID_N * _cell;
+        var bsz = _gridN * _cell;
 
-        // Grid lines (all GRID_N+1 lines each axis → shows outer border)
+        // Grid lines
         dc.setColor(0x3A3A5A, Graphics.COLOR_TRANSPARENT);
         var li = 0;
-        while (li <= GRID_N) {
+        while (li <= _gridN) {
             var lx = _boardX + li * _cell;
             var ly = _boardY + li * _cell;
             dc.drawLine(lx, _boardY,       lx, _boardY + bsz);
@@ -309,14 +587,13 @@ class GameView extends WatchUi.View {
             li = li + 1;
         }
 
-        // Marks and cursor
+        // Marks and win-line highlight
+        var total = _gridN * _gridN;
         var i = 0;
-        while (i < GRID_N * GRID_N) {
-            var gx = i % GRID_N; var gy = i / GRID_N;
+        while (i < total) {
+            var gx = i % _gridN; var gy = i / _gridN;
             var px = _boardX + gx * _cell + _cell / 2;
             var py = _boardY + gy * _cell + _cell / 2;
-
-            // Win-line highlight (drawn behind the mark)
             if (_overType == OVER_XWIN || _overType == OVER_OWIN) {
                 if (_inWinLine(i)) {
                     dc.setColor(0x002200, Graphics.COLOR_TRANSPARENT);
@@ -324,20 +601,19 @@ class GameView extends WatchUi.View {
                                      _cell - 2, _cell - 2);
                 }
             }
-
             if (_cells[i] == MARK_X) { _drawX(dc, px, py); }
             if (_cells[i] == MARK_O) { _drawO(dc, px, py); }
             i = i + 1;
         }
 
-        // Win line stroke (through the four winning cells)
+        // Win line stroke
         if (_overType == OVER_XWIN || _overType == OVER_OWIN) {
-            var w0 = _winLine[0]; var w3 = _winLine[WIN_LEN - 1];
+            var w0 = _winLine[0]; var w3 = _winLine[_winLen - 1];
             if (w0 >= 0 && w3 >= 0) {
-                var lx1 = _boardX + (w0 % GRID_N) * _cell + _cell / 2;
-                var ly1 = _boardY + (w0 / GRID_N) * _cell + _cell / 2;
-                var lx2 = _boardX + (w3 % GRID_N) * _cell + _cell / 2;
-                var ly2 = _boardY + (w3 / GRID_N) * _cell + _cell / 2;
+                var lx1 = _boardX + (w0 % _gridN) * _cell + _cell / 2;
+                var ly1 = _boardY + (w0 / _gridN) * _cell + _cell / 2;
+                var lx2 = _boardX + (w3 % _gridN) * _cell + _cell / 2;
+                var ly2 = _boardY + (w3 / _gridN) * _cell + _cell / 2;
                 dc.setColor(0x00FF44, Graphics.COLOR_TRANSPARENT);
                 dc.drawLine(lx1,     ly1,     lx2,     ly2);
                 dc.drawLine(lx1 + 1, ly1,     lx2 + 1, ly2);
@@ -347,77 +623,84 @@ class GameView extends WatchUi.View {
             }
         }
 
-        // Cursor (player turn only)
-        if (_state == GS_PLAY) {
+        // Cursor — show for human turns
+        var showCursor = (_state == GS_PLAY && _mode != MODE_AIAI) ||
+                         (_state == GS_AI   && _mode == MODE_PVP);
+        if (showCursor) {
             var cpx = _boardX + _curX * _cell;
             var cpy = _boardY + _curY * _cell;
-            var occupied = (_cells[_curY * GRID_N + _curX] != MARK_NONE);
-            var cc = occupied ? 0xFF6600 : 0xFFFF00;
-            dc.setColor(cc, Graphics.COLOR_TRANSPARENT);
-            dc.drawRoundedRectangle(cpx + 2, cpy + 2, _cell - 4, _cell - 4, 4);
-            dc.drawRoundedRectangle(cpx + 3, cpy + 3, _cell - 6, _cell - 6, 3);
+            var occupied = (_cells[_curY * _gridN + _curX] != MARK_NONE);
+            dc.setColor(occupied ? 0xFF6600 : 0xFFFF00, Graphics.COLOR_TRANSPARENT);
+            var inset1 = (_cell > 8) ? 2 : 1;
+            var inset2 = (_cell > 8) ? 3 : 1;
+            dc.drawRoundedRectangle(cpx + inset1, cpy + inset1, _cell - inset1 * 2, _cell - inset1 * 2, 4);
+            dc.drawRoundedRectangle(cpx + inset2, cpy + inset2, _cell - inset2 * 2, _cell - inset2 * 2, 3);
         }
     }
 
     hidden function _inWinLine(idx) {
         var k = 0;
-        while (k < WIN_LEN) {
+        while (k < _winLen) {
             if (_winLine[k] == idx) { return true; }
             k = k + 1;
         }
         return false;
     }
 
-    // Draw X at pixel centre (px, py) in blue.
     hidden function _drawX(dc, px, py) {
         var hc = _cell * 33 / 100;
+        if (hc < 3) { hc = 3; }
         dc.setColor(0x00AAFF, Graphics.COLOR_TRANSPARENT);
-        // Two diagonals, each drawn twice for 2px thickness
         dc.drawLine(px - hc,     py - hc,     px + hc,     py + hc);
         dc.drawLine(px - hc + 1, py - hc,     px + hc,     py + hc - 1);
         dc.drawLine(px + hc,     py - hc,     px - hc,     py + hc);
         dc.drawLine(px + hc - 1, py - hc,     px - hc,     py + hc - 1);
     }
 
-    // Draw O at pixel centre (px, py) in red-orange.
     hidden function _drawO(dc, px, py) {
         var r = _cell * 33 / 100;
+        if (r < 3) { r = 3; }
         dc.setColor(0xFF4422, Graphics.COLOR_TRANSPARENT);
         dc.drawCircle(px, py, r);
         dc.drawCircle(px, py, r - 1);
-        dc.drawCircle(px, py, r - 2);
+        if (r >= 3) { dc.drawCircle(px, py, r - 2); }
     }
 
     // ── HUD ───────────────────────────────────────────────────────────────
     hidden function _drawHUD(dc) {
-        var hudCY = _boardY / 2;
-        var txtY  = hudCY - 7;
+        var ty = _sh * 3 / 100;
+        if (ty < 4) { ty = 4; }
 
-        // Session score — left and right
+        // Score — left (X) and right (O)
         dc.setColor(0x00AAFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_sw / 2 - _sw * 22 / 100, txtY, Graphics.FONT_XTINY,
+        dc.drawText(10, ty, Graphics.FONT_XTINY,
                     "X " + _scoreX.format("%d"), Graphics.TEXT_JUSTIFY_LEFT);
         dc.setColor(0xFF4422, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_sw / 2 + _sw * 22 / 100, txtY, Graphics.FONT_XTINY,
+        dc.drawText(_sw - 10, ty, Graphics.FONT_XTINY,
                     _scoreO.format("%d") + " O", Graphics.TEXT_JUSTIFY_RIGHT);
 
         // Turn indicator — centre
         if (_state == GS_PLAY) {
+            var turnTxt = "YOUR TURN";
+            if (_mode == MODE_PVP)  { turnTxt = "X TURN"; }
+            if (_mode == MODE_AIAI) { turnTxt = "X THINKING"; }
             dc.setColor(0x44FF44, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_sw / 2, txtY, Graphics.FONT_XTINY,
-                        "YOUR TURN", Graphics.TEXT_JUSTIFY_CENTER);
-        } else if (_state == GS_AI) {
-            dc.setColor(0x666666, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_sw / 2, txtY, Graphics.FONT_XTINY,
-                        "AI...", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_sw / 2, ty, Graphics.FONT_XTINY, turnTxt, Graphics.TEXT_JUSTIFY_CENTER);
+        } else if (_state == GS_AI || _state == GS_AI_FORK || _state == GS_AI_SCORE) {
+            var aiTxt = "AI THINKING";
+            if (_mode == MODE_PVP)  { aiTxt = "O TURN"; }
+            if (_mode == MODE_AIAI) { aiTxt = "O THINKING"; }
+            var aiCol = (_mode == MODE_PVP) ? 0x44FF44 : 0x555566;
+            dc.setColor(aiCol, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_sw / 2, ty, Graphics.FONT_XTINY, aiTxt, Graphics.TEXT_JUSTIFY_CENTER);
         }
 
         // Hint below board
-        var hintY = _boardY + GRID_N * _cell + 8;
+        var hintY = _boardY + _gridN * _cell + 8;
         if (hintY < _sh - 14) {
             dc.setColor(0x222233, Graphics.COLOR_TRANSPARENT);
             dc.drawText(_sw / 2, hintY, Graphics.FONT_XTINY,
-                        "BACK = exit", Graphics.TEXT_JUSTIFY_CENTER);
+                        "DN=next  UP=down  SEL=place", Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 
@@ -432,22 +715,88 @@ class GameView extends WatchUi.View {
         dc.setColor(0x3A3A5A, Graphics.COLOR_TRANSPARENT);
         dc.drawRoundedRectangle(bx, by, bw, bh, 8);
 
-        var cx = _sw / 2;
+        var cx  = _sw / 2;
         var msg = ""; var msgCol = 0xCCCCCC;
-        if      (_overType == OVER_XWIN) { msg = "YOU WIN!";  msgCol = 0x00AAFF; }
-        else if (_overType == OVER_OWIN) { msg = "AI WINS!";  msgCol = 0xFF4422; }
-        else                              { msg = "DRAW!";     msgCol = 0xCCCC00; }
+        if (_overType == OVER_XWIN) {
+            msg    = (_mode == MODE_PVAI) ? (_playerFirst ? "YOU WIN!" : "AI WINS!") : "X WINS!";
+            msgCol = 0x00AAFF;
+        } else if (_overType == OVER_OWIN) {
+            msg    = (_mode == MODE_PVAI) ? (_playerFirst ? "AI WINS!" : "YOU WIN!") : "O WINS!";
+            msgCol = 0xFF4422;
+        } else {
+            msg = "DRAW!"; msgCol = 0xCCCC00;
+        }
 
         dc.setColor(msgCol, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, by + 8, Graphics.FONT_SMALL, msg, Graphics.TEXT_JUSTIFY_CENTER);
 
+        var sc1, sc2;
+        if (_mode == MODE_PVAI) {
+            if (_playerFirst) { sc1 = "YOU "; sc2 = " AI"; }
+            else              { sc1 = "AI ";  sc2 = " YOU"; }
+        } else {
+            sc1 = "X "; sc2 = " O";
+        }
         dc.setColor(0x555566, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, by + 36, Graphics.FONT_XTINY,
-                    "YOU " + _scoreX.format("%d") + " : " + _scoreO.format("%d") + " AI",
+                    sc1 + _scoreX.format("%d") + " : " + _scoreO.format("%d") + sc2,
                     Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0x2A2A44, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, by + bh - 14, Graphics.FONT_XTINY,
                     "SELECT = new game", Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    // ── Pre-game menu ─────────────────────────────────────────────────────
+    hidden function _drawMenu(dc) {
+        dc.setColor(0x080810, 0x080810); dc.clear();
+        var hw = _sw / 2;
+        if (_sw == _sh) {
+            dc.setColor(0x0A0A18, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(hw, hw, hw - 1);
+        }
+
+        dc.setColor(0x00AAFF, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(hw, _sh * 11 / 100, Graphics.FONT_SMALL,
+                    "TIC TAC PRO", Graphics.TEXT_JUSTIFY_CENTER);
+
+        var modeStr = (_mode == MODE_PVAI) ? "P vs AI" : ((_mode == MODE_PVP) ? "P vs P" : "AI vs AI");
+        var diffStr = (_diff == DIFF_EASY) ? "Easy" : ((_diff == DIFF_MED) ? "Med" : "Hard");
+        var gridStr = "" + _gridN + "x" + _gridN;
+        var sideStr = _playerFirst ? "Side: X" : "Side: O";
+        var rows = ["Mode: " + modeStr, "Diff: " + diffStr, "Grid: " + gridStr, sideStr, "START"];
+        var nR   = 5;
+        var rowH = _sh * 10 / 100; if (rowH < 22) { rowH = 22; } if (rowH > 32) { rowH = 32; }
+        var rowW = _sw * 76 / 100;
+        var rowX = (_sw - rowW) / 2;
+        var gap  = _sh * 2 / 100; if (gap < 3) { gap = 3; }
+        var tot  = nR * rowH + (nR - 1) * gap;
+        var rowY0 = (_sh - tot) / 2 + rowH;
+        var i = 0;
+        while (i < nR) {
+            var ry     = rowY0 + i * (rowH + gap);
+            var sel    = (i == _menuSel);
+            var isStart = (i == nR - 1);
+            dc.setColor(sel ? (isStart ? 0x3A1800 : 0x0A2040) : 0x0A0A18, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);
+            dc.setColor(sel ? (isStart ? 0xFF8833 : 0x4499FF) : 0x1A2A3A, Graphics.COLOR_TRANSPARENT);
+            dc.drawRoundedRectangle(rowX, ry, rowW, rowH, 5);
+            if (sel) {
+                dc.setColor(isStart ? 0xFF8833 : 0x4499FF, Graphics.COLOR_TRANSPARENT);
+                var ay = ry + rowH / 2;
+                dc.fillPolygon([[rowX + 5, ay - 4], [rowX + 5, ay + 4], [rowX + 11, ay]]);
+            }
+            var dimmed = (i == 1 && _mode == MODE_PVP) || (i == 3 && _mode != MODE_PVAI);
+            dc.setColor(dimmed ? 0x445566 :
+                        (sel ? (isStart ? 0xFFCC88 : 0xAADDFF) : 0x556677),
+                        Graphics.COLOR_TRANSPARENT);
+            dc.drawText(hw, ry + (rowH - 14) / 2, Graphics.FONT_XTINY,
+                        rows[i], Graphics.TEXT_JUSTIFY_CENTER);
+            i++;
+        }
+
+        dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(hw, _sh - 14, Graphics.FONT_XTINY,
+                    "UP/DN move  SEL act", Graphics.TEXT_JUSTIFY_CENTER);
     }
 }

@@ -57,6 +57,7 @@ class BitochiChessView extends WatchUi.View {
     hidden var _difficulty;
     hidden var _playerIsWhite;
     hidden var _aiVsAi;
+    hidden var _pvp;
     hidden var _pieceVal;
     hidden var _menuRow;
 
@@ -88,6 +89,7 @@ class BitochiChessView extends WatchUi.View {
         _difficulty = 1;
         _playerIsWhite = true;
         _aiVsAi = false;
+        _pvp = false;
         _menuRow = 0;
         _selSq = -1; _curSq = 36;
         _legalMoves = new [0];
@@ -184,7 +186,7 @@ class BitochiChessView extends WatchUi.View {
         if (_gs == CS_PROMOTE) { _promPick = (_promPick + 1) % 4; return; }
         if (_gs == CS_CHECKMATE || _gs == CS_STALEMATE) { return; }
         if (_gs != CS_PLAY) { return; }
-        if (_whiteToMove != _playerIsWhite) { return; }
+        if (!_pvp && _whiteToMove != _playerIsWhite) { return; }
         if (_selSq >= 0) { cycleTarget(1); }
         else { cyclePiece(1); }
     }
@@ -194,17 +196,18 @@ class BitochiChessView extends WatchUi.View {
         if (_gs == CS_PROMOTE) { _promPick = (_promPick + 3) % 4; return; }
         if (_gs == CS_CHECKMATE || _gs == CS_STALEMATE) { return; }
         if (_gs != CS_PLAY) { return; }
-        if (_whiteToMove != _playerIsWhite) { return; }
+        if (!_pvp && _whiteToMove != _playerIsWhite) { return; }
         if (_selSq >= 0) { cycleTarget(-1); }
         else { cyclePiece(-1); }
     }
 
     hidden function cyclePiece(dir) {
-        var d = _playerIsWhite ? -dir : dir;
+        var white = _pvp ? _whiteToMove : _playerIsWhite;
+        var d = white ? -dir : dir;
         for (var i = 1; i <= 64; i++) {
             var sq = (_curSq + i * d + 64) % 64;
             var p = _board[sq];
-            var own = _playerIsWhite ? (p > 0) : (p < 0);
+            var own = white ? (p > 0) : (p < 0);
             if (own && _hasLegalMoveForSq(sq)) { _curSq = sq; return; }
         }
     }
@@ -224,7 +227,11 @@ class BitochiChessView extends WatchUi.View {
         if (_gs == CS_MENU) {
             if (_menuRow == 0) { _playerIsWhite = !_playerIsWhite; }
             else if (_menuRow == 1) { _difficulty = (_difficulty + 1) % 3; }
-            else if (_menuRow == 2) { _aiVsAi = !_aiVsAi; }
+            else if (_menuRow == 2) {
+                if (!_aiVsAi && !_pvp) { _pvp = true; }
+                else if (_pvp) { _pvp = false; _aiVsAi = true; }
+                else { _aiVsAi = false; }
+            }
             else { startGame(); }
             return;
         }
@@ -232,11 +239,12 @@ class BitochiChessView extends WatchUi.View {
         if (_aiVsAi) { return; }
         if (_gs == CS_PROMOTE) { confirmPromotion(); return; }
         if (_gs != CS_PLAY) { return; }
-        if (_whiteToMove != _playerIsWhite) { return; }
+        if (!_pvp && _whiteToMove != _playerIsWhite) { return; }
 
         if (_selSq < 0) {
             var p = _board[_curSq];
-            var own = _playerIsWhite ? (p > 0) : (p < 0);
+            var mover = _pvp ? _whiteToMove : _playerIsWhite;
+            var own = mover ? (p > 0) : (p < 0);
             if (own) {
                 var moves = genLegalMovesFor(_curSq);
                 if (moves.size() > 0) {
@@ -293,7 +301,11 @@ class BitochiChessView extends WatchUi.View {
                     _menuRow = i;
                     if (i == 0) { _playerIsWhite = !_playerIsWhite; }
                     else if (i == 1) { _difficulty = (_difficulty + 1) % 3; }
-                    else if (i == 2) { _aiVsAi = !_aiVsAi; }
+                    else if (i == 2) {
+                        if (!_aiVsAi && !_pvp) { _pvp = true; }
+                        else if (_pvp) { _pvp = false; _aiVsAi = true; }
+                        else { _aiVsAi = false; }
+                    }
                     else { startGame(); }
                     return;
                 }
@@ -331,9 +343,10 @@ class BitochiChessView extends WatchUi.View {
     }
 
     hidden function handleSquare(sq) {
-        if (_whiteToMove != _playerIsWhite) { return; }
+        if (!_pvp && _whiteToMove != _playerIsWhite) { return; }
         var piece = _board[sq];
-        var isOwnPiece = _playerIsWhite ? (piece > 0) : (piece < 0);
+        var mover = _pvp ? _whiteToMove : _playerIsWhite;
+        var isOwnPiece = mover ? (piece > 0) : (piece < 0);
 
         if (_selSq < 0) {
             if (isOwnPiece) {
@@ -373,9 +386,11 @@ class BitochiChessView extends WatchUi.View {
             _gs = CS_AI_THINK; _aiTimer = 1;
         } else if (_playerIsWhite) {
             _curSq = 4;
-        } else {
+        } else if (!_pvp) {
             _curSq = 60;
             _gs = CS_AI_THINK; _aiTimer = 1;
+        } else {
+            _curSq = 4;
         }
     }
 
@@ -434,7 +449,7 @@ class BitochiChessView extends WatchUi.View {
     }
 
     hidden function _snapCursorToAnyValid() {
-        var white = _playerIsWhite;
+        var white = _pvp ? _whiteToMove : _playerIsWhite;
         var kingPiece = white ? PC_KING : -PC_KING;
         var kingSq = -1;
         for (var k = 0; k < 64; k++) { if (_board[k] == kingPiece) { kingSq = k; break; } }
@@ -509,8 +524,9 @@ class BitochiChessView extends WatchUi.View {
         if (_anyLegalMoveExists(_whiteToMove)) {
             if (_aiVsAi) {
                 _gs = CS_AI_THINK; _aiTimer = 1;
-            } else if (_whiteToMove == _playerIsWhite) {
+            } else if (_pvp || _whiteToMove == _playerIsWhite) {
                 _gs = CS_PLAY;
+                if (_pvp) { _snapCursorToAnyValid(); }
             } else {
                 _gs = CS_AI_THINK; _aiTimer = 1;
             }
@@ -1194,12 +1210,12 @@ class BitochiChessView extends WatchUi.View {
 
         // Title
         dc.setColor(0xFFDD88, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(hw, _h * 6 / 100, Graphics.FONT_MEDIUM, "CHESS", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(hw, _h * 11 / 100, Graphics.FONT_SMALL, "CHESS", Graphics.TEXT_JUSTIFY_CENTER);
 
         var rowLabels = [
             _playerIsWhite ? "Color: WHITE" : "Color: BLACK",
             "Diff: " + (["Easy","Normal","Hard"][_difficulty]),
-            _aiVsAi ? "Mode: AI vs AI" : "Mode: Player",
+            _aiVsAi ? "Mode: AI vs AI" : (_pvp ? "Mode: P vs P" : "Mode: P vs AI"),
             "START"
         ];
         var nRows = 4;
@@ -1353,7 +1369,7 @@ class BitochiChessView extends WatchUi.View {
     hidden function drawHUD(dc) {
         var hy = _oy + _sq * 8 + 3;
         if (hy + 14 > _h) { hy = _oy - 14; }
-        var isPlayerTurn = (_whiteToMove == _playerIsWhite) && (_gs == CS_PLAY);
+        var isPlayerTurn = (_pvp || _whiteToMove == _playerIsWhite) && (_gs == CS_PLAY);
         var turnStr = "";
         var hClr = 0xAA9977;
         if (_gs == CS_AI_THINK || _gs == CS_AI_EVAL || _gs == CS_AI_FINISH) {
@@ -1366,7 +1382,7 @@ class BitochiChessView extends WatchUi.View {
             if (_selSq >= 0) {
                 turnStr = _legalMoves.size() > 1 ? "UP/DN switch  SEL move" : "SEL to move";
             } else {
-                turnStr = _playerIsWhite ? "White to move" : "Black to move";
+                turnStr = (_pvp ? _whiteToMove : _playerIsWhite) ? "White to move" : "Black to move";
             }
         }
         dc.setColor(hClr, Graphics.COLOR_TRANSPARENT);

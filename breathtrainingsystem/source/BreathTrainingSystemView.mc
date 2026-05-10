@@ -7,6 +7,8 @@ using Toybox.Time;
 using Toybox.Sensor;
 using Toybox.Activity;
 using Toybox.SensorHistory;
+using Toybox.ActivityRecording;
+using Toybox.FitContributor;
 
 // ── Debug flag ────────────────────────────────────────────────────────────────
 // Set to false to completely hide the "Gen Test User" option from Customize menu
@@ -263,6 +265,7 @@ class BreathTrainingSystemView extends WatchUi.View {
     hidden var _cstRowY0; hidden var _cstRowY1; hidden var _cstRowY2; hidden var _cstRowY3;
     hidden var _cINH; hidden var _cHI; hidden var _cEXH; hidden var _cHE;
     hidden var _cPRP; hidden var _cRST; hidden var _cHLD;
+    hidden var _actSes;  // ActivityRecording session (null = inactive)
     hidden var _stBrC; hidden var _stBrT; hidden var _stApC;
     hidden var _stCoC; hidden var _stO2C; hidden var _stTotT;
     hidden var _stPg;
@@ -373,6 +376,7 @@ class BreathTrainingSystemView extends WatchUi.View {
         var ds = System.getDeviceSettings();
         _w = ds.screenWidth; _h = ds.screenHeight;
         _tick = 0; _sub = 0;
+        _actSes = null;
         _gs = FT_HOME; _hSel = 0; _mSel = 0; _hlSel = 0;
 
         var lm = Application.Storage.getValue("lst_md");
@@ -1879,6 +1883,7 @@ class BreathTrainingSystemView extends WatchUi.View {
         if (_gs == FT_ACT || _gs == FT_PAU) {
             if (_mode == FM_CO || _mode == FM_O2) { _trackFail(_mode); }
             if (_plFromPlan) { _planAdvanceWith(PO_REPEAT); _plFromPlan = false; }
+            _actDiscard();
             _hSel = 0; _gs = FT_HOME; return true;
         }
         if (_gs == FT_DONE || _gs == FT_STAT) { _hSel = 0; _gs = FT_HOME; return true; }
@@ -1957,6 +1962,7 @@ class BreathTrainingSystemView extends WatchUi.View {
         }
         _brSS = BR_SES[_brSI] * 60; _brRem = _brSS; _brBC = 0;
         _brPh = BP_INH; _brPD = _brPat[BP_INH]; _brPE = 0; _brPS = 0; _brTrans = 0;
+        _actStart("Breathwork");
         _gs = FT_ACT; _vibe(80, 300);
         _snSessionStart();
     }
@@ -1967,6 +1973,7 @@ class BreathTrainingSystemView extends WatchUi.View {
         _apE = 0; _apPS = -1; _apNP = false; _apWF = false;
         _apPrevPB = _apPB;
         _mfFlags = 0;
+        _actStart("Apnea Hold");
         _gs = FT_ACT; _vibe(40, 70);
         _snSessionStart();
     }
@@ -2010,6 +2017,7 @@ class BreathTrainingSystemView extends WatchUi.View {
         if (_mode == FM_CO) { _genCO2(maxH, _tTR); }
         else { _genO2(maxH, _tTR); }
         _tRnd = 0; _tPh = BP_PRP; _tPS = 3; _tPE = 0; _tPSub = 0;
+        _actStart(_mode == FM_CO ? "CO2 Table" : "O2 Table");
         _gs = FT_ACT; _vibe(80, 300);
         _snSessionStart();
     }
@@ -2514,7 +2522,66 @@ class BreathTrainingSystemView extends WatchUi.View {
     // dur = total session time (sec) — what gets added to lifetime totals
     // holdSec = actual breath-hold seconds — what gets credited to weekly hold buckets
     //   (caller passes the right number; table sessions split rest from hold themselves)
+    // ── Activity Recording ────────────────────────────────────────────────
+    hidden function _actStart(name) {
+        if (_actSes != null) {
+            try { _actSes.stop(); _actSes.discard(); } catch (e) {}
+            _actSes = null;
+        }
+        try {
+            _actSes = ActivityRecording.createSession({
+                :name     => name,
+                :sport    => ActivityRecording.SPORT_GENERIC,
+                :subSport => ActivityRecording.SUB_SPORT_GENERIC
+            });
+            _actSes.start();
+        } catch (e) { _actSes = null; }
+    }
+
+    // Stop & save/discard; write FIT custom fields before stopping.
+    // mode, dur: same as _saveSt; breathCount for BR, holdSec for AP/CO2/O2.
+    hidden function _actStop(mode, dur, breathCount, holdSec, calmScore) {
+        if (_actSes == null) { return; }
+        try {
+            // Field IDs: 0=Duration(s) 1=Breaths 2=MaxHold(s) 3=CalmScore
+            var f;
+            f = _actSes.createField("Duration", 0, FitContributor.DATA_TYPE_UINT32,
+                { :mesgType => FitContributor.MESG_TYPE_SESSION, :units => "s" });
+            f.setData(dur > 0 ? dur : 0);
+
+            if (mode == FM_BR && breathCount > 0) {
+                f = _actSes.createField("Breaths", 1, FitContributor.DATA_TYPE_UINT16,
+                    { :mesgType => FitContributor.MESG_TYPE_SESSION, :units => "br" });
+                f.setData(breathCount);
+            }
+            if ((mode == FM_AP || mode == FM_CO || mode == FM_O2) && holdSec > 0) {
+                f = _actSes.createField("MaxHold", 2, FitContributor.DATA_TYPE_UINT16,
+                    { :mesgType => FitContributor.MESG_TYPE_SESSION, :units => "s" });
+                f.setData(holdSec);
+            }
+            if (mode == FM_BR && calmScore > 0) {
+                f = _actSes.createField("CalmScore", 3, FitContributor.DATA_TYPE_UINT8,
+                    { :mesgType => FitContributor.MESG_TYPE_SESSION });
+                f.setData(calmScore > 100 ? 100 : calmScore);
+            }
+            _actSes.stop();
+            if (dur >= 60) { _actSes.save(); }
+            else           { _actSes.discard(); }
+        } catch (e) {}
+        _actSes = null;
+    }
+
+    hidden function _actDiscard() {
+        if (_actSes == null) { return; }
+        try { _actSes.stop(); _actSes.discard(); } catch (e) {}
+        _actSes = null;
+    }
+
     hidden function _saveSt(mode, dur, holdSec) {
+        _actStop(mode, dur,
+            (mode == FM_BR) ? _brBC : 0,
+            holdSec,
+            (mode == FM_BR) ? _snCalmLast : 0);
         _stTotT += dur; Application.Storage.setValue("st_tot", _stTotT);
         if (mode == FM_BR) {
             _stBrC++; _stBrT += dur;

@@ -1,0 +1,819 @@
+[ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc"; @line = 1; @symbol_usingdef<0> = [Toybox,1,6,12]; @symbol_usingdef<1> = [Math,1,13,17]; ]
+using Toybox.Math;
+[ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc"; @line = 2; @symbol_usingdef<0> = [Toybox,2,6,12]; @symbol_usingdef<1> = [Graphics,2,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc"; @line = 7; @symbol_classdef = [ObstacleManager,7,6,21]; ]
+class ObstacleManager {
+    [ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc"; @line = 7; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc"; @line = 7; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc"; @line = 8; @position = 15; @symbol_vardef = [_ox,8,15,18]; ]
+    protected
+    var _ox;
+    [ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc"; @line = 9; @position = 15; @symbol_vardef = [_ow,9,15,18]; ]
+    protected
+    var _ow;
+    [ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc"; @line = 10; @position = 15; @symbol_vardef = [_oh,10,15,18]; ]
+    protected
+    var _oh;
+    [ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc"; @line = 11; @position = 15; @symbol_vardef = [_oa,11,15,18]; ]
+    protected
+    var _oa;
+    [ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc"; @line = 12; @position = 15; @symbol_vardef = [_nextSpawn,12,15,25]; ]
+    protected
+    var _nextSpawn;
+    [ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc"; @line = 14; @symbol_functiondef = [initialize,14,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_14_26_19_4_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 15 8 ]
+        symbol [ OBS_MAX %tmp.3 15 19 26 ];
+        %tmp.3 = getv ? :OBS_MAX;
+        %tmp.1 = newa %tmp.3;
+        symbol [ _ox ? 15 8 11 ];
+        putv self :_ox %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 15 29 ]
+        symbol [ OBS_MAX %tmp.6 15 40 47 ];
+        %tmp.6 = getv ? :OBS_MAX;
+        %tmp.4 = newa %tmp.6;
+        symbol [ _ow ? 15 29 32 ];
+        putv self :_ow %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 16 8 ]
+        symbol [ OBS_MAX %tmp.9 16 19 26 ];
+        %tmp.9 = getv ? :OBS_MAX;
+        %tmp.7 = newa %tmp.9;
+        symbol [ _oh ? 16 8 11 ];
+        putv self :_oh %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 16 29 ]
+        symbol [ OBS_MAX %tmp.12 16 40 47 ];
+        %tmp.12 = getv ? :OBS_MAX;
+        %tmp.10 = newa %tmp.12;
+        symbol [ _oa ? 16 29 32 ];
+        putv self :_oa %tmp.10;
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 17 8 ]
+        for @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_17_8_17_56_for_test @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_17_8_17_56_for_incr @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_17_8_17_56_for_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_17_8_17_56_for_init:
+        [ "_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_17_8_17_56_for_begin" "_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_17_8_17_56_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 17 17 18 ];
+        %tmp.13 = 0;
+        lputv %i.1 %tmp.13;
+        symbol [ i %i.1 17 17 18 ];
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_17_8_17_56_for_test:
+        %tmp.14 = lgetv %i.1;
+        symbol [ i %tmp.14 17 24 25 ];
+        symbol [ OBS_MAX %tmp.16 17 28 35 ];
+        %tmp.16 = getv ? :OBS_MAX;
+        %tmp.17 = lt %tmp.14 %tmp.16;
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_17_8_17_56_for_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_17_8_17_56_for_begin:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_17_42_17_56_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 17 44 ]
+        symbol [ _oa %tmp.18 17 44 47 ];
+        %tmp.18 = getv self :_oa;
+        %tmp.19 = 0;
+        %tmp.20 = lgetv %i.1;
+        symbol [ i %tmp.20 17 48 49 ];
+        aputv %tmp.18 %tmp.20 %tmp.19;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_17_42_17_56_stop:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_17_8_17_56_for_incr:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 17 ]
+        %tmp.23 = lgetv %i.1;
+        symbol [ i %tmp.23 17 37 38 ];
+        %tmp.24 = add %tmp.23 1;
+        lputv %i.1 %tmp.24;
+        symbol [ i %i.1 17 37 38 ];
+        goto @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_17_8_17_56_for_test;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_17_8_17_56_for_end:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 18 8 ]
+        %tmp.25 = 55;
+        symbol [ _nextSpawn ? 18 8 18 ];
+        putv self :_nextSpawn %tmp.25;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_14_26_19_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc"; @line = 21; @symbol_functiondef = [reset,21,13,18]; ]
+    function reset() {
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_21_21_24_4_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 22 8 ]
+        for @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_22_8_22_56_for_test @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_22_8_22_56_for_incr @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_22_8_22_56_for_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_22_8_22_56_for_init:
+        [ "_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_22_8_22_56_for_begin" "_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_22_8_22_56_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 22 17 18 ];
+        %tmp.1 = 0;
+        lputv %i.1 %tmp.1;
+        symbol [ i %i.1 22 17 18 ];
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_22_8_22_56_for_test:
+        %tmp.2 = lgetv %i.1;
+        symbol [ i %tmp.2 22 24 25 ];
+        symbol [ OBS_MAX %tmp.4 22 28 35 ];
+        %tmp.4 = getv ? :OBS_MAX;
+        %tmp.5 = lt %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_22_8_22_56_for_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_22_8_22_56_for_begin:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_22_42_22_56_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 22 44 ]
+        symbol [ _oa %tmp.6 22 44 47 ];
+        %tmp.6 = getv self :_oa;
+        %tmp.7 = 0;
+        %tmp.8 = lgetv %i.1;
+        symbol [ i %tmp.8 22 48 49 ];
+        aputv %tmp.6 %tmp.8 %tmp.7;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_22_42_22_56_stop:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_22_8_22_56_for_incr:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 22 ]
+        %tmp.11 = lgetv %i.1;
+        symbol [ i %tmp.11 22 37 38 ];
+        %tmp.12 = add %tmp.11 1;
+        lputv %i.1 %tmp.12;
+        symbol [ i %i.1 22 37 38 ];
+        goto @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_22_8_22_56_for_test;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_22_8_22_56_for_end:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 23 8 ]
+        %tmp.13 = 55;
+        symbol [ _nextSpawn ? 23 8 18 ];
+        putv self :_nextSpawn %tmp.13;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_21_21_24_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc"; @line = 26; @symbol_functiondef = [update,26,13,19]; @symbol_param<0> = [spd,26,20,23]; @symbol_param<1> = [screenW,26,25,32]; @symbol_param<2> = [pDw,26,34,37]; @symbol_param<3> = [pDh,26,39,42]; ]
+    function update(spd, screenW, pDw, pDh) {
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_26_44_34_4_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 27 8 ]
+        for @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_27_8_31_8_for_test @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_27_8_31_8_for_incr @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_27_8_31_8_for_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_27_8_31_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_27_8_31_8_for_begin" "_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_27_8_31_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 27 17 18 ];
+        %tmp.1 = 0;
+        lputv %i.1 %tmp.1;
+        symbol [ i %i.1 27 17 18 ];
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_27_8_31_8_for_test:
+        %tmp.2 = lgetv %i.1;
+        symbol [ i %tmp.2 27 24 25 ];
+        symbol [ OBS_MAX %tmp.4 27 28 35 ];
+        %tmp.4 = getv ? :OBS_MAX;
+        %tmp.5 = lt %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_27_8_31_8_for_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_27_8_31_8_for_begin:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_27_42_31_8_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 28 12 ]
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_28_12_28_41_if_stmt:
+        symbol [ _oa %tmp.7 28 16 19 ];
+        %tmp.7 = getv ? :_oa;
+        %tmp.8 = lgetv %i.1;
+        symbol [ i %tmp.8 28 20 21 ];
+        %tmp.9 = agetv %tmp.7 %tmp.8;
+        %tmp.10 = 0;
+        %tmp.11 = eq %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_28_12_28_41_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_28_12_28_41_if_true:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_28_29_28_41_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 28 31 ]
+        goto break @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_27_8_31_8_for_incr;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_28_29_28_41_stop:
+        goto @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_28_12_28_41_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_28_12_28_41_if_end:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 29 12 ]
+        symbol [ _ox %tmp.12 29 12 15 ];
+        %tmp.12 = getv self :_ox;
+        symbol [ _ox %tmp.14 29 21 24 ];
+        %tmp.14 = getv ? :_ox;
+        %tmp.15 = lgetv %i.1;
+        symbol [ i %tmp.15 29 25 26 ];
+        %tmp.16 = agetv %tmp.14 %tmp.15;
+        %tmp.17 = lgetv %spd;
+        symbol [ spd %tmp.17 29 30 33 ];
+        %tmp.18 = sub %tmp.16 %tmp.17;
+        %tmp.19 = lgetv %i.1;
+        symbol [ i %tmp.19 29 16 17 ];
+        aputv %tmp.12 %tmp.19 %tmp.18;
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 30 12 ]
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_30_12_30_51_if_stmt:
+        symbol [ _ox %tmp.21 30 16 19 ];
+        %tmp.21 = getv ? :_ox;
+        %tmp.22 = lgetv %i.1;
+        symbol [ i %tmp.22 30 20 21 ];
+        %tmp.23 = agetv %tmp.21 %tmp.22;
+        symbol [ _ow %tmp.25 30 25 28 ];
+        %tmp.25 = getv ? :_ow;
+        %tmp.26 = lgetv %i.1;
+        symbol [ i %tmp.26 30 29 30 ];
+        %tmp.27 = agetv %tmp.25 %tmp.26;
+        %tmp.28 = add %tmp.23 %tmp.27;
+        %tmp.29 = 0;
+        %tmp.30 = lt %tmp.28 %tmp.29;
+        bf %tmp.30 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_30_12_30_51_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_30_12_30_51_if_true:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_30_37_30_51_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 30 39 ]
+        symbol [ _oa %tmp.31 30 39 42 ];
+        %tmp.31 = getv self :_oa;
+        %tmp.32 = 0;
+        %tmp.33 = lgetv %i.1;
+        symbol [ i %tmp.33 30 43 44 ];
+        aputv %tmp.31 %tmp.33 %tmp.32;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_30_37_30_51_stop:
+        goto @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_30_12_30_51_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_30_12_30_51_if_end:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_27_42_31_8_stop:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_27_8_31_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 27 ]
+        %tmp.36 = lgetv %i.1;
+        symbol [ i %tmp.36 27 37 38 ];
+        %tmp.37 = add %tmp.36 1;
+        lputv %i.1 %tmp.37;
+        symbol [ i %i.1 27 37 38 ];
+        goto @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_27_8_31_8_for_test;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_27_8_31_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 32 8 ]
+        symbol [ _nextSpawn %tmp.39 32 21 31 ];
+        %tmp.39 = getv ? :_nextSpawn;
+        %tmp.40 = 1;
+        %tmp.41 = sub %tmp.39 %tmp.40;
+        symbol [ _nextSpawn ? 32 8 18 ];
+        putv self :_nextSpawn %tmp.41;
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 33 8 ]
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_33_8_33_63_if_stmt:
+        symbol [ _nextSpawn %tmp.43 33 12 22 ];
+        %tmp.43 = getv ? :_nextSpawn;
+        %tmp.44 = 0;
+        %tmp.45 = lte %tmp.43 %tmp.44;
+        bf %tmp.45 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_33_8_33_63_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_33_8_33_63_if_true:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_33_29_33_63_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 33 31 ]
+        %tmp.46 = self;
+        symbol [ _spawn %tmp.47 33 31 37 ];
+        %tmp.47 = getv function %tmp.46 :_spawn;
+        %tmp.48 = lgetv %screenW;
+        symbol [ screenW %tmp.48 33 38 45 ];
+        %tmp.49 = lgetv %pDw;
+        symbol [ pDw %tmp.49 33 47 50 ];
+        %tmp.50 = lgetv %pDh;
+        symbol [ pDh %tmp.50 33 52 55 ];
+        %tmp.51 = lgetv %spd;
+        symbol [ spd %tmp.51 33 57 60 ];
+        invoke %tmp.46 %tmp.47(%tmp.48, %tmp.49, %tmp.50, %tmp.51);
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_33_29_33_63_stop:
+        goto @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_33_8_33_63_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_33_8_33_63_if_end:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_26_44_34_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc"; @line = 36; @symbol_functiondef = [_spawn,36,20,26]; @symbol_param<0> = [sw,36,27,29]; @symbol_param<1> = [pDw,36,31,34]; @symbol_param<2> = [pDh,36,36,39]; @symbol_param<3> = [spd,36,41,44]; ]
+    protected
+    function _spawn(sw, pDw, pDh, spd) {
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_36_46_49_4_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 37 8 ]
+        for @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_37_8_45_8_for_test @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_37_8_45_8_for_incr @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_37_8_45_8_for_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_37_8_45_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_37_8_45_8_for_begin" "_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_37_8_45_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 37 17 18 ];
+        %tmp.1 = 0;
+        lputv %i.1 %tmp.1;
+        symbol [ i %i.1 37 17 18 ];
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_37_8_45_8_for_test:
+        %tmp.2 = lgetv %i.1;
+        symbol [ i %tmp.2 37 24 25 ];
+        symbol [ OBS_MAX %tmp.4 37 28 35 ];
+        %tmp.4 = getv ? :OBS_MAX;
+        %tmp.5 = lt %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_37_8_45_8_for_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_37_8_45_8_for_begin:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_37_42_45_8_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 38 12 ]
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_38_12_38_41_if_stmt:
+        symbol [ _oa %tmp.7 38 16 19 ];
+        %tmp.7 = getv ? :_oa;
+        %tmp.8 = lgetv %i.1;
+        symbol [ i %tmp.8 38 20 21 ];
+        %tmp.9 = agetv %tmp.7 %tmp.8;
+        %tmp.10 = 0;
+        %tmp.11 = ne %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_38_12_38_41_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_38_12_38_41_if_true:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_38_29_38_41_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 38 31 ]
+        goto break @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_37_8_45_8_for_incr;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_38_29_38_41_stop:
+        goto @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_38_12_38_41_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_38_12_38_41_if_end:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 39 12 ]
+        [ "_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_37_42_45_8_start" "_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_37_42_45_8_stop" ]
+        %t.2 = local;
+        symbol [ t %t.2 39 16 17 ];
+        symbol [ Math %tmp.12 39 21 25 ];
+        %tmp.12 = getm $.Toybox.Math;
+        symbol [ rand %tmp.13 39 26 30 ];
+        %tmp.13 = getv function %tmp.12 :rand;
+        %tmp.14 = invoke %tmp.12 %tmp.13();
+        %tmp.15 = 3;
+        %tmp.16 = mod %tmp.14 %tmp.15;
+        lputv %t.2 %tmp.16;
+        symbol [ t %t.2 39 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 40 12 ]
+        symbol [ _ow %tmp.17 40 12 15 ];
+        %tmp.17 = getv self :_ow;
+        %tmp.18 = lgetv %pDw;
+        symbol [ pDw %tmp.18 40 21 24 ];
+        %tmp.19 = 8;
+        %tmp.20 = lgetv %t.2;
+        symbol [ t %tmp.20 40 32 33 ];
+        %tmp.21 = 2;
+        %tmp.22 = mul %tmp.20 %tmp.21;
+        %tmp.23 = add %tmp.19 %tmp.22;
+        %tmp.24 = mul %tmp.18 %tmp.23;
+        %tmp.25 = 10;
+        %tmp.26 = div %tmp.24 %tmp.25;
+        %tmp.27 = lgetv %i.1;
+        symbol [ i %tmp.27 40 16 17 ];
+        aputv %tmp.17 %tmp.27 %tmp.26;
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 41 12 ]
+        symbol [ _oh %tmp.28 41 12 15 ];
+        %tmp.28 = getv self :_oh;
+        %tmp.29 = lgetv %pDh;
+        symbol [ pDh %tmp.29 41 21 24 ];
+        %tmp.30 = 55;
+        %tmp.31 = lgetv %t.2;
+        symbol [ t %tmp.31 41 33 34 ];
+        %tmp.32 = 20;
+        %tmp.33 = mul %tmp.31 %tmp.32;
+        %tmp.34 = add %tmp.30 %tmp.33;
+        %tmp.35 = mul %tmp.29 %tmp.34;
+        %tmp.36 = 100;
+        %tmp.37 = div %tmp.35 %tmp.36;
+        %tmp.38 = lgetv %i.1;
+        symbol [ i %tmp.38 41 16 17 ];
+        aputv %tmp.28 %tmp.38 %tmp.37;
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 42 12 ]
+        symbol [ _ox %tmp.39 42 12 15 ];
+        %tmp.39 = getv self :_ox;
+        %tmp.40 = lgetv %sw;
+        symbol [ sw %tmp.40 42 21 23 ];
+        %tmp.41 = 8;
+        %tmp.42 = add %tmp.40 %tmp.41;
+        %tmp.43 = lgetv %i.1;
+        symbol [ i %tmp.43 42 16 17 ];
+        aputv %tmp.39 %tmp.43 %tmp.42;
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 43 12 ]
+        symbol [ _oa %tmp.44 43 12 15 ];
+        %tmp.44 = getv self :_oa;
+        %tmp.45 = 1;
+        %tmp.46 = lgetv %i.1;
+        symbol [ i %tmp.46 43 16 17 ];
+        aputv %tmp.44 %tmp.46 %tmp.45;
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 44 12 ]
+        goto break @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_37_8_45_8_for_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_37_42_45_8_stop:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_37_8_45_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 37 ]
+        %tmp.49 = lgetv %i.1;
+        symbol [ i %tmp.49 37 37 38 ];
+        %tmp.50 = add %tmp.49 1;
+        lputv %i.1 %tmp.50;
+        symbol [ i %i.1 37 37 38 ];
+        goto @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_37_8_45_8_for_test;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_37_8_45_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 46 8 ]
+        [ "_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_36_46_49_4_start" "_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_36_46_49_4_stop" ]
+        %gap.3 = local;
+        symbol [ gap %gap.3 46 12 15 ];
+        %tmp.51 = 72;
+        symbol [ Math %tmp.52 46 23 27 ];
+        %tmp.52 = getm $.Toybox.Math;
+        symbol [ rand %tmp.53 46 28 32 ];
+        %tmp.53 = getv function %tmp.52 :rand;
+        %tmp.54 = invoke %tmp.52 %tmp.53();
+        %tmp.55 = 46;
+        %tmp.56 = mod %tmp.54 %tmp.55;
+        %tmp.57 = add %tmp.51 %tmp.56;
+        %tmp.58 = lgetv %spd;
+        symbol [ spd %tmp.58 46 43 46 ];
+        %tmp.59 = 5;
+        %tmp.60 = sub %tmp.58 %tmp.59;
+        %tmp.61 = 4;
+        %tmp.62 = mul %tmp.60 %tmp.61;
+        %tmp.63 = sub %tmp.57 %tmp.62;
+        lputv %gap.3 %tmp.63;
+        symbol [ gap %gap.3 46 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 47 8 ]
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_47_8_47_34_if_stmt:
+        %tmp.64 = lgetv %gap.3;
+        symbol [ gap %tmp.64 47 12 15 ];
+        %tmp.65 = 28;
+        %tmp.66 = lt %tmp.64 %tmp.65;
+        bf %tmp.66 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_47_8_47_34_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_47_8_47_34_if_true:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_47_22_47_34_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 47 24 ]
+        %tmp.67 = 28;
+        lputv %gap.3 %tmp.67;
+        symbol [ gap %gap.3 47 24 27 ];
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_47_22_47_34_stop:
+        goto @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_47_8_47_34_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_47_8_47_34_if_end:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 48 8 ]
+        %tmp.68 = lgetv %gap.3;
+        symbol [ gap %tmp.68 48 21 24 ];
+        symbol [ _nextSpawn ? 48 8 18 ];
+        putv self :_nextSpawn %tmp.68;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_36_46_49_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc"; @line = 52; @symbol_functiondef = [collides,52,13,21]; @symbol_param<0> = [hx1,52,22,25]; @symbol_param<1> = [hy1,52,27,30]; @symbol_param<2> = [hx2,52,32,35]; @symbol_param<3> = [hy2,52,37,40]; @symbol_param<4> = [groundY,52,42,49]; ]
+    function collides(hx1, hy1, hx2, hy2, groundY) {
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_52_51_61_4_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 53 8 ]
+        for @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_53_8_59_8_for_test @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_53_8_59_8_for_incr @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_53_8_59_8_for_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_53_8_59_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_53_8_59_8_for_begin" "_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_53_8_59_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 53 17 18 ];
+        %tmp.1 = 0;
+        lputv %i.1 %tmp.1;
+        symbol [ i %i.1 53 17 18 ];
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_53_8_59_8_for_test:
+        %tmp.2 = lgetv %i.1;
+        symbol [ i %tmp.2 53 24 25 ];
+        symbol [ OBS_MAX %tmp.4 53 28 35 ];
+        %tmp.4 = getv ? :OBS_MAX;
+        %tmp.5 = lt %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_53_8_59_8_for_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_53_8_59_8_for_begin:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_53_42_59_8_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 54 12 ]
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_54_12_54_41_if_stmt:
+        symbol [ _oa %tmp.7 54 16 19 ];
+        %tmp.7 = getv ? :_oa;
+        %tmp.8 = lgetv %i.1;
+        symbol [ i %tmp.8 54 20 21 ];
+        %tmp.9 = agetv %tmp.7 %tmp.8;
+        %tmp.10 = 0;
+        %tmp.11 = eq %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_54_12_54_41_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_54_12_54_41_if_true:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_54_29_54_41_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 54 31 ]
+        goto break @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_53_8_59_8_for_incr;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_54_29_54_41_stop:
+        goto @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_54_12_54_41_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_54_12_54_41_if_end:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 55 12 ]
+        [ "_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_53_42_59_8_start" "_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_53_42_59_8_stop" ]
+        %ox1.2 = local;
+        symbol [ ox1 %ox1.2 55 16 19 ];
+        symbol [ _ox %tmp.13 55 22 25 ];
+        %tmp.13 = getv ? :_ox;
+        %tmp.14 = lgetv %i.1;
+        symbol [ i %tmp.14 55 26 27 ];
+        %tmp.15 = agetv %tmp.13 %tmp.14;
+        %tmp.16 = 2;
+        %tmp.17 = add %tmp.15 %tmp.16;
+        lputv %ox1.2 %tmp.17;
+        symbol [ ox1 %ox1.2 55 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 56 12 ]
+        [ "_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_53_42_59_8_start" "_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_53_42_59_8_stop" ]
+        %ox2.3 = local;
+        symbol [ ox2 %ox2.3 56 16 19 ];
+        symbol [ _ox %tmp.19 56 22 25 ];
+        %tmp.19 = getv ? :_ox;
+        %tmp.20 = lgetv %i.1;
+        symbol [ i %tmp.20 56 26 27 ];
+        %tmp.21 = agetv %tmp.19 %tmp.20;
+        symbol [ _ow %tmp.23 56 31 34 ];
+        %tmp.23 = getv ? :_ow;
+        %tmp.24 = lgetv %i.1;
+        symbol [ i %tmp.24 56 35 36 ];
+        %tmp.25 = agetv %tmp.23 %tmp.24;
+        %tmp.26 = add %tmp.21 %tmp.25;
+        %tmp.27 = 2;
+        %tmp.28 = sub %tmp.26 %tmp.27;
+        lputv %ox2.3 %tmp.28;
+        symbol [ ox2 %ox2.3 56 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 57 12 ]
+        [ "_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_53_42_59_8_start" "_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_53_42_59_8_stop" ]
+        %oy1.4 = local;
+        symbol [ oy1 %oy1.4 57 16 19 ];
+        %tmp.29 = lgetv %groundY;
+        symbol [ groundY %tmp.29 57 22 29 ];
+        symbol [ _oh %tmp.31 57 32 35 ];
+        %tmp.31 = getv ? :_oh;
+        %tmp.32 = lgetv %i.1;
+        symbol [ i %tmp.32 57 36 37 ];
+        %tmp.33 = agetv %tmp.31 %tmp.32;
+        %tmp.34 = sub %tmp.29 %tmp.33;
+        lputv %oy1.4 %tmp.34;
+        symbol [ oy1 %oy1.4 57 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 58 12 ]
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_58_12_58_68_if_stmt:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_58_16_58_48_begin:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_58_16_58_35_begin:
+        %tmp.35 = lgetv %hx2;
+        symbol [ hx2 %tmp.35 58 16 19 ];
+        %tmp.36 = lgetv %ox1.2;
+        symbol [ ox1 %tmp.36 58 22 25 ];
+        %tmp.37 = gt %tmp.35 %tmp.36;
+        bf %tmp.37 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_58_12_58_68_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_58_29_58_35_true:
+        %tmp.38 = lgetv %hx1;
+        symbol [ hx1 %tmp.38 58 29 32 ];
+        %tmp.39 = lgetv %ox2.3;
+        symbol [ ox2 %tmp.39 58 35 38 ];
+        %tmp.40 = lt %tmp.38 %tmp.39;
+        push %tmp.40;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_58_29_58_35_end:
+        %tmp.41 = phi [%tmp.37 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_58_16_58_35_begin] [%tmp.40 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_58_29_58_35_true] [%tmp.41 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_58_29_58_35_end];
+        bf %tmp.41 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_58_12_58_68_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_58_42_58_48_true:
+        %tmp.42 = lgetv %hy2;
+        symbol [ hy2 %tmp.42 58 42 45 ];
+        %tmp.43 = lgetv %oy1.4;
+        symbol [ oy1 %tmp.43 58 48 51 ];
+        %tmp.44 = gt %tmp.42 %tmp.43;
+        push %tmp.44;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_58_42_58_48_end:
+        %tmp.45 = phi [%tmp.41 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_58_16_58_48_begin] [%tmp.44 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_58_42_58_48_true] [%tmp.45 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_58_42_58_48_end];
+        bf %tmp.45 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_58_12_58_68_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_58_12_58_68_if_true:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_58_53_58_68_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 58 55 ]
+        %tmp.46 = true;
+        ret %tmp.46;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_58_53_58_68_stop:
+        goto @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_58_12_58_68_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_58_12_58_68_if_end:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_53_42_59_8_stop:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_53_8_59_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 53 ]
+        %tmp.49 = lgetv %i.1;
+        symbol [ i %tmp.49 53 37 38 ];
+        %tmp.50 = add %tmp.49 1;
+        lputv %i.1 %tmp.50;
+        symbol [ i %i.1 53 37 38 ];
+        goto @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_53_8_59_8_for_test;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_53_8_59_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 60 8 ]
+        %tmp.51 = false;
+        ret %tmp.51;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_52_51_61_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc"; @line = 63; @symbol_functiondef = [draw,63,13,17]; @symbol_param<0> = [dc,63,18,20]; @symbol_param<1> = [groundY,63,22,29]; @symbol_param<2> = [pDh,63,31,34]; ]
+    function draw(dc, groundY, pDh) {
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_63_36_83_4_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 64 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 64 8 10 ];
+        symbol [ setColor %tmp.2 64 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        %tmp.3 = 0xCC4422;
+        symbol [ Graphics %tmp.4 64 30 38 ];
+        %tmp.4 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.5 64 39 56 ];
+        %tmp.5 = getv %tmp.4 :COLOR_TRANSPARENT;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.5);
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 65 8 ]
+        for @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_65_8_82_8_for_test @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_65_8_82_8_for_incr @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_65_8_82_8_for_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_65_8_82_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_65_8_82_8_for_begin" "_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_65_8_82_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 65 17 18 ];
+        %tmp.6 = 0;
+        lputv %i.1 %tmp.6;
+        symbol [ i %i.1 65 17 18 ];
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_65_8_82_8_for_test:
+        %tmp.7 = lgetv %i.1;
+        symbol [ i %tmp.7 65 24 25 ];
+        symbol [ OBS_MAX %tmp.9 65 28 35 ];
+        %tmp.9 = getv ? :OBS_MAX;
+        %tmp.10 = lt %tmp.7 %tmp.9;
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_65_8_82_8_for_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_65_8_82_8_for_begin:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_65_42_82_8_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 66 12 ]
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_66_12_66_41_if_stmt:
+        symbol [ _oa %tmp.12 66 16 19 ];
+        %tmp.12 = getv ? :_oa;
+        %tmp.13 = lgetv %i.1;
+        symbol [ i %tmp.13 66 20 21 ];
+        %tmp.14 = agetv %tmp.12 %tmp.13;
+        %tmp.15 = 0;
+        %tmp.16 = eq %tmp.14 %tmp.15;
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_66_12_66_41_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_66_12_66_41_if_true:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_66_29_66_41_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 66 31 ]
+        goto break @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_65_8_82_8_for_incr;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_66_29_66_41_stop:
+        goto @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_66_12_66_41_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_66_12_66_41_if_end:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 67 12 ]
+        [ "_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_65_42_82_8_start" "_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_65_42_82_8_stop" ]
+        %ox.2 = local;
+        symbol [ ox %ox.2 67 16 18 ];
+        symbol [ _ox %tmp.18 67 21 24 ];
+        %tmp.18 = getv ? :_ox;
+        %tmp.19 = lgetv %i.1;
+        symbol [ i %tmp.19 67 25 26 ];
+        %tmp.20 = agetv %tmp.18 %tmp.19;
+        lputv %ox.2 %tmp.20;
+        symbol [ ox %ox.2 67 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 68 12 ]
+        [ "_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_65_42_82_8_start" "_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_65_42_82_8_stop" ]
+        %ow.3 = local;
+        symbol [ ow %ow.3 68 16 18 ];
+        symbol [ _ow %tmp.22 68 21 24 ];
+        %tmp.22 = getv ? :_ow;
+        %tmp.23 = lgetv %i.1;
+        symbol [ i %tmp.23 68 25 26 ];
+        %tmp.24 = agetv %tmp.22 %tmp.23;
+        lputv %ow.3 %tmp.24;
+        symbol [ ow %ow.3 68 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 69 12 ]
+        [ "_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_65_42_82_8_start" "_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_65_42_82_8_stop" ]
+        %oh.4 = local;
+        symbol [ oh %oh.4 69 16 18 ];
+        symbol [ _oh %tmp.26 69 21 24 ];
+        %tmp.26 = getv ? :_oh;
+        %tmp.27 = lgetv %i.1;
+        symbol [ i %tmp.27 69 25 26 ];
+        %tmp.28 = agetv %tmp.26 %tmp.27;
+        lputv %oh.4 %tmp.28;
+        symbol [ oh %oh.4 69 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 70 12 ]
+        [ "_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_65_42_82_8_start" "_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_65_42_82_8_stop" ]
+        %oy.5 = local;
+        symbol [ oy %oy.5 70 16 18 ];
+        %tmp.29 = lgetv %groundY;
+        symbol [ groundY %tmp.29 70 21 28 ];
+        %tmp.30 = lgetv %oh.4;
+        symbol [ oh %tmp.30 70 31 33 ];
+        %tmp.31 = sub %tmp.29 %tmp.30;
+        lputv %oy.5 %tmp.31;
+        symbol [ oy %oy.5 70 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 72 12 ]
+        %tmp.32 = lgetv %dc;
+        symbol [ dc %tmp.32 72 12 14 ];
+        symbol [ fillRoundedRectangle %tmp.33 72 15 35 ];
+        %tmp.33 = getv function %tmp.32 :fillRoundedRectangle;
+        %tmp.34 = lgetv %ox.2;
+        symbol [ ox %tmp.34 72 36 38 ];
+        %tmp.35 = lgetv %ow.3;
+        symbol [ ow %tmp.35 72 41 43 ];
+        %tmp.36 = 4;
+        %tmp.37 = div %tmp.35 %tmp.36;
+        %tmp.38 = add %tmp.34 %tmp.37;
+        %tmp.39 = lgetv %oy.5;
+        symbol [ oy %tmp.39 72 49 51 ];
+        %tmp.40 = lgetv %ow.3;
+        symbol [ ow %tmp.40 72 53 55 ];
+        %tmp.41 = 2;
+        %tmp.42 = div %tmp.40 %tmp.41;
+        %tmp.43 = lgetv %oh.4;
+        symbol [ oh %tmp.43 72 61 63 ];
+        %tmp.44 = 2;
+        invoke %tmp.32 %tmp.33(%tmp.38, %tmp.39, %tmp.42, %tmp.43, %tmp.44);
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 74 12 ]
+        %tmp.45 = lgetv %dc;
+        symbol [ dc %tmp.45 74 12 14 ];
+        symbol [ fillRoundedRectangle %tmp.46 74 15 35 ];
+        %tmp.46 = getv function %tmp.45 :fillRoundedRectangle;
+        %tmp.47 = lgetv %ox.2;
+        symbol [ ox %tmp.47 74 36 38 ];
+        %tmp.48 = lgetv %ow.3;
+        symbol [ ow %tmp.48 74 41 43 ];
+        %tmp.49 = 4;
+        %tmp.50 = div %tmp.48 %tmp.49;
+        %tmp.51 = add %tmp.47 %tmp.50;
+        %tmp.52 = 1;
+        %tmp.53 = sub %tmp.51 %tmp.52;
+        %tmp.54 = lgetv %oy.5;
+        symbol [ oy %tmp.54 74 53 55 ];
+        %tmp.55 = 3;
+        %tmp.56 = sub %tmp.54 %tmp.55;
+        %tmp.57 = lgetv %ow.3;
+        symbol [ ow %tmp.57 74 61 63 ];
+        %tmp.58 = 2;
+        %tmp.59 = div %tmp.57 %tmp.58;
+        %tmp.60 = 2;
+        %tmp.61 = add %tmp.59 %tmp.60;
+        %tmp.62 = 5;
+        %tmp.63 = 1;
+        invoke %tmp.45 %tmp.46(%tmp.53, %tmp.56, %tmp.61, %tmp.62, %tmp.63);
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 76 12 ]
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_76_12_81_12_if_stmt:
+        %tmp.64 = lgetv %oh.4;
+        symbol [ oh %tmp.64 76 16 18 ];
+        %tmp.65 = lgetv %pDh;
+        symbol [ pDh %tmp.65 76 21 24 ];
+        %tmp.66 = 6;
+        %tmp.67 = mul %tmp.65 %tmp.66;
+        %tmp.68 = 10;
+        %tmp.69 = div %tmp.67 %tmp.68;
+        %tmp.70 = gt %tmp.64 %tmp.69;
+        bf %tmp.70 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_76_12_81_12_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_76_12_81_12_if_true:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_76_35_81_12_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 77 16 ]
+        %tmp.71 = lgetv %dc;
+        symbol [ dc %tmp.71 77 16 18 ];
+        symbol [ setColor %tmp.72 77 19 27 ];
+        %tmp.72 = getv function %tmp.71 :setColor;
+        %tmp.73 = 0xAA3311;
+        symbol [ Graphics %tmp.74 77 38 46 ];
+        %tmp.74 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.75 77 47 64 ];
+        %tmp.75 = getv %tmp.74 :COLOR_TRANSPARENT;
+        invoke %tmp.71 %tmp.72(%tmp.73, %tmp.75);
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 78 16 ]
+        %tmp.76 = lgetv %dc;
+        symbol [ dc %tmp.76 78 16 18 ];
+        symbol [ fillRoundedRectangle %tmp.77 78 19 39 ];
+        %tmp.77 = getv function %tmp.76 :fillRoundedRectangle;
+        %tmp.78 = lgetv %ox.2;
+        symbol [ ox %tmp.78 78 40 42 ];
+        %tmp.79 = lgetv %oy.5;
+        symbol [ oy %tmp.79 78 44 46 ];
+        %tmp.80 = lgetv %oh.4;
+        symbol [ oh %tmp.80 78 49 51 ];
+        %tmp.81 = 3;
+        %tmp.82 = div %tmp.80 %tmp.81;
+        %tmp.83 = add %tmp.79 %tmp.82;
+        %tmp.84 = lgetv %ow.3;
+        symbol [ ow %tmp.84 78 57 59 ];
+        %tmp.85 = 3;
+        %tmp.86 = mul %tmp.84 %tmp.85;
+        %tmp.87 = 10;
+        %tmp.88 = div %tmp.86 %tmp.87;
+        %tmp.89 = lgetv %oh.4;
+        symbol [ oh %tmp.89 78 70 72 ];
+        %tmp.90 = 5;
+        %tmp.91 = div %tmp.89 %tmp.90;
+        %tmp.92 = 2;
+        invoke %tmp.76 %tmp.77(%tmp.78, %tmp.83, %tmp.88, %tmp.91, %tmp.92);
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 79 16 ]
+        %tmp.93 = lgetv %dc;
+        symbol [ dc %tmp.93 79 16 18 ];
+        symbol [ fillRoundedRectangle %tmp.94 79 19 39 ];
+        %tmp.94 = getv function %tmp.93 :fillRoundedRectangle;
+        %tmp.95 = lgetv %ox.2;
+        symbol [ ox %tmp.95 79 40 42 ];
+        %tmp.96 = lgetv %ow.3;
+        symbol [ ow %tmp.96 79 45 47 ];
+        %tmp.97 = 7;
+        %tmp.98 = mul %tmp.96 %tmp.97;
+        %tmp.99 = 10;
+        %tmp.100 = div %tmp.98 %tmp.99;
+        %tmp.101 = add %tmp.95 %tmp.100;
+        %tmp.102 = lgetv %oy.5;
+        symbol [ oy %tmp.102 79 58 60 ];
+        %tmp.103 = lgetv %oh.4;
+        symbol [ oh %tmp.103 79 63 65 ];
+        %tmp.104 = 4;
+        %tmp.105 = mul %tmp.103 %tmp.104;
+        %tmp.106 = 10;
+        %tmp.107 = div %tmp.105 %tmp.106;
+        %tmp.108 = add %tmp.102 %tmp.107;
+        %tmp.109 = lgetv %ow.3;
+        symbol [ ow %tmp.109 79 76 78 ];
+        %tmp.110 = 3;
+        %tmp.111 = mul %tmp.109 %tmp.110;
+        %tmp.112 = 10;
+        %tmp.113 = div %tmp.111 %tmp.112;
+        %tmp.114 = lgetv %oh.4;
+        symbol [ oh %tmp.114 79 89 91 ];
+        %tmp.115 = 5;
+        %tmp.116 = div %tmp.114 %tmp.115;
+        %tmp.117 = 2;
+        invoke %tmp.93 %tmp.94(%tmp.101, %tmp.108, %tmp.113, %tmp.116, %tmp.117);
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 80 16 ]
+        %tmp.118 = lgetv %dc;
+        symbol [ dc %tmp.118 80 16 18 ];
+        symbol [ setColor %tmp.119 80 19 27 ];
+        %tmp.119 = getv function %tmp.118 :setColor;
+        %tmp.120 = 0xCC4422;
+        symbol [ Graphics %tmp.121 80 38 46 ];
+        %tmp.121 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.122 80 47 64 ];
+        %tmp.122 = getv %tmp.121 :COLOR_TRANSPARENT;
+        invoke %tmp.118 %tmp.119(%tmp.120, %tmp.122);
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_76_35_81_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_76_12_81_12_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_76_12_81_12_if_end:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_65_42_82_8_stop:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_65_8_82_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc" 65 ]
+        %tmp.125 = lgetv %i.1;
+        symbol [ i %tmp.125 65 37 38 ];
+        %tmp.126 = add %tmp.125 1;
+        lputv %i.1 %tmp.126;
+        symbol [ i %i.1 65 37 38 ];
+        goto @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_65_8_82_8_for_test;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_65_8_82_8_for_end:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_ObstacleManager_mc_63_36_83_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/ObstacleManager.mc"; @line = 1; ]
+<init> {
+}

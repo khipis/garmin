@@ -39,6 +39,7 @@ class BitochiCheckersView extends WatchUi.View {
     hidden var _ox; hidden var _oy; hidden var _sq;
     hidden var _playerIsWhite;
     hidden var _aiVsAi;
+    hidden var _pvp;
 
     hidden var _menuRow;
 
@@ -64,7 +65,7 @@ class BitochiCheckersView extends WatchUi.View {
         _w = ds.screenWidth; _h = ds.screenHeight;
         _tick = 0;
         _gs = GS_MENU; _difficulty = 1;
-        _playerIsWhite = true; _aiVsAi = false;
+        _playerIsWhite = true; _aiVsAi = false; _pvp = false;
         _selRow = -1; _selCol = -1;
         _mustRow = -1; _mustCol = -1;
         _curRow = 2; _curCol = 1;
@@ -161,12 +162,13 @@ class BitochiCheckersView extends WatchUi.View {
     }
 
     hidden function isPlayerTurn() {
-        return _playerIsWhite ? _whiteTurn : !_whiteTurn;
+        return _pvp || (_playerIsWhite ? _whiteTurn : !_whiteTurn);
     }
 
     hidden function isPlayerPiece(p) {
-        return _playerIsWhite ? (p == CK_WHITE || p == CK_WKING)
-                              : (p == CK_BLACK || p == CK_BKING);
+        var white = _pvp ? _whiteTurn : _playerIsWhite;
+        return white ? (p == CK_WHITE || p == CK_WKING)
+                     : (p == CK_BLACK || p == CK_BKING);
     }
 
     hidden function cyclePiece(dir) {
@@ -202,7 +204,11 @@ class BitochiCheckersView extends WatchUi.View {
         if (_gs == GS_MENU) {
             if (_menuRow == 0) { _playerIsWhite = !_playerIsWhite; }
             else if (_menuRow == 1) { _difficulty = (_difficulty + 1) % 3; }
-            else if (_menuRow == 2) { _aiVsAi = !_aiVsAi; }
+            else if (_menuRow == 2) {
+                if (!_aiVsAi && !_pvp) { _pvp = true; }
+                else if (_pvp) { _pvp = false; _aiVsAi = true; }
+                else { _aiVsAi = false; }
+            }
             else { startGame(); }
             return;
         }
@@ -273,7 +279,11 @@ class BitochiCheckersView extends WatchUi.View {
                     _menuRow = i;
                     if (i == 0) { _playerIsWhite = !_playerIsWhite; }
                     else if (i == 1) { _difficulty = (_difficulty + 1) % 3; }
-                    else if (i == 2) { _aiVsAi = !_aiVsAi; }
+                    else if (i == 2) {
+                        if (!_aiVsAi && !_pvp) { _pvp = true; }
+                        else if (_pvp) { _pvp = false; _aiVsAi = true; }
+                        else { _aiVsAi = false; }
+                    }
                     else { startGame(); }
                     return;
                 }
@@ -313,11 +323,14 @@ class BitochiCheckersView extends WatchUi.View {
         } else if (_playerIsWhite) {
             _whiteTurn = true;
             _curRow = 2; _curCol = 1;
-        } else {
+        } else if (!_pvp) {
             _whiteTurn = true;
             _curRow = 5; _curCol = 2;
             _gs = GS_AI_THINK;
             _aiDelay = 1;
+        } else {
+            _whiteTurn = true;
+            _curRow = 2; _curCol = 1;
         }
     }
 
@@ -402,9 +415,11 @@ class BitochiCheckersView extends WatchUi.View {
 
         checkGameOver();
         if (_gs == GS_PLAY) {
-            if (_playerIsWhite) { _whiteTurn = false; } else { _whiteTurn = true; }
-            _gs = GS_AI_THINK;
-            _aiDelay = 1;
+            _whiteTurn = !_whiteTurn;
+            if (!_pvp) {
+                _gs = GS_AI_THINK;
+                _aiDelay = 1;
+            }
         }
     }
 
@@ -1163,12 +1178,12 @@ class BitochiCheckersView extends WatchUi.View {
 
         // Title
         dc.setColor(0xFF6633, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(hw, _h * 6 / 100, Graphics.FONT_MEDIUM, "CHECKERS", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(hw, _h * 11 / 100, Graphics.FONT_SMALL, "CHECKERS", Graphics.TEXT_JUSTIFY_CENTER);
 
         var rowLabels = [
             _playerIsWhite ? "Color: LIGHT" : "Color: DARK",
             "Diff: " + (["Easy","Normal","Hard"][_difficulty]),
-            _aiVsAi ? "Mode: AI vs AI" : "Mode: Player",
+            _aiVsAi ? "Mode: AI vs AI" : (_pvp ? "Mode: P vs P" : "Mode: P vs AI"),
             "START"
         ];
         var nRows = 4;

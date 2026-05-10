@@ -46,6 +46,11 @@ APPS=(
   tic_tac_pro
   connect_four_lite
   hex_mini
+  morris_classic
+  dots_boxes
+  gobblet_mini
+  makao_lite
+  territory_clash
   intervalbeeper
   jazzball
   minigolf

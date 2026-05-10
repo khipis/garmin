@@ -1,0 +1,3126 @@
+[ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 1; @symbol_usingdef<0> = [Toybox,1,6,12]; @symbol_usingdef<1> = [WatchUi,1,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 2; @symbol_usingdef<0> = [Toybox,2,6,12]; @symbol_usingdef<1> = [Graphics,2,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 5; @position = 6; @symbol_constdef = [STONE_BLACK,5,6,17]; ]
+const STONE_BLACK = 1;
+[ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 6; @position = 6; @symbol_constdef = [STONE_WHITE,6,6,17]; ]
+const STONE_WHITE = 2;
+[ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 7; @position = 6; @symbol_constdef = [GS_PLAY,7,6,13]; ]
+const GS_PLAY = 0;
+[ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 8; @position = 6; @symbol_constdef = [GS_OVER,8,6,13]; ]
+const GS_OVER = 1;
+[ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 9; @position = 6; @symbol_constdef = [GS_MENU,9,6,13]; ]
+const GS_MENU = 10;
+[ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 10; @position = 6; @symbol_constdef = [MODE_PVAI,10,6,15]; ]
+const MODE_PVAI = 0;
+[ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 11; @position = 6; @symbol_constdef = [MODE_PVP,11,6,14]; ]
+const MODE_PVP = 1;
+[ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 12; @position = 6; @symbol_constdef = [DIFF_EASY,12,6,15]; ]
+const DIFF_EASY = 0;
+[ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 13; @position = 6; @symbol_constdef = [DIFF_MED,13,6,14]; ]
+const DIFF_MED = 1;
+[ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 14; @position = 6; @symbol_constdef = [DIFF_HARD,14,6,15]; ]
+const DIFF_HARD = 2;
+[ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 17; @symbol_classdef = [GameView,17,6,14]; @symbol_extends<0> = [WatchUi,17,23,30]; @symbol_extends<1> = [View,17,31,35]; ]
+class GameView extends WatchUi.View {
+    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 17; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 17; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 20; @position = 15; @symbol_vardef = [_sw,20,15,18]; ]
+    protected
+    var _sw;
+    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 20; @position = 20; @symbol_vardef = [_sh,20,20,23]; ]
+    protected
+    var _sh;
+    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 21; @position = 15; @symbol_vardef = [_boardX,21,15,22]; ]
+    protected
+    var _boardX;
+    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 21; @position = 24; @symbol_vardef = [_boardY,21,24,31]; ]
+    protected
+    var _boardY;
+    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 22; @position = 15; @symbol_vardef = [_cell,22,15,20]; ]
+    protected
+    var _cell;
+    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 23; @position = 15; @symbol_vardef = [_sr,23,15,18]; ]
+    protected
+    var _sr;
+    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 24; @position = 15; @symbol_vardef = [_bgX,24,15,19]; ]
+    protected
+    var _bgX;
+    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 24; @position = 21; @symbol_vardef = [_bgY,24,21,25]; ]
+    protected
+    var _bgY;
+    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 25; @position = 15; @symbol_vardef = [_bgSz,25,15,20]; ]
+    protected
+    var _bgSz;
+    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 28; @position = 15; @symbol_vardef = [_ctrl,28,15,20]; ]
+    protected
+    var _ctrl;
+    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 31; @position = 15; @symbol_vardef = [_curX,31,15,20]; ]
+    protected
+    var _curX;
+    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 31; @position = 22; @symbol_vardef = [_curY,31,22,27]; ]
+    protected
+    var _curY;
+    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 34; @position = 15; @symbol_vardef = [_illegalFlash,34,15,28]; ]
+    protected
+    var _illegalFlash;
+    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 37; @position = 15; @symbol_vardef = [_state,37,15,21]; ]
+    protected
+    var _state;
+    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 38; @position = 15; @symbol_vardef = [_mode,38,15,20]; ]
+    protected
+    var _mode;
+    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 38; @position = 22; @symbol_vardef = [_diff,38,22,27]; ]
+    protected
+    var _diff;
+    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 38; @position = 29; @symbol_vardef = [_menuSel,38,29,37]; ]
+    protected
+    var _menuSel;
+    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 39; @position = 15; @symbol_vardef = [_playerFirst,39,15,27]; ]
+    protected
+    var _playerFirst;
+    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 41; @symbol_functiondef = [initialize,41,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_41_26_52_4_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 42 8 ]
+        symbol [ View %tmp.2 42 8 12 ];
+        %tmp.2 = getv ? :View;
+        symbol [ initialize %tmp.3 42 13 23 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 43 8 ]
+        symbol [ GameController %tmp.7 43 28 42 ];
+        %tmp.7 = getv ? :GameController;
+        %tmp.4 = newc %tmp.7 ();
+        symbol [ _ctrl ? 43 8 13 ];
+        putv self :_ctrl %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 44 8 ]
+        %tmp.8 = 4;
+        symbol [ _curX ? 44 8 13 ];
+        putv self :_curX %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 45 8 ]
+        %tmp.9 = 4;
+        symbol [ _curY ? 45 8 13 ];
+        putv self :_curY %tmp.9;
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 46 8 ]
+        %tmp.10 = 0;
+        symbol [ _illegalFlash ? 46 8 21 ];
+        putv self :_illegalFlash %tmp.10;
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 47 8 ]
+        symbol [ MODE_PVAI %tmp.12 47 24 33 ];
+        %tmp.12 = getv ? :MODE_PVAI;
+        symbol [ _mode ? 47 8 13 ];
+        putv self :_mode %tmp.12;
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 48 8 ]
+        symbol [ DIFF_MED %tmp.14 48 24 32 ];
+        %tmp.14 = getv ? :DIFF_MED;
+        symbol [ _diff ? 48 8 13 ];
+        putv self :_diff %tmp.14;
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 49 8 ]
+        %tmp.15 = 0;
+        symbol [ _menuSel ? 49 8 16 ];
+        putv self :_menuSel %tmp.15;
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 50 8 ]
+        %tmp.16 = true;
+        symbol [ _playerFirst ? 50 8 20 ];
+        putv self :_playerFirst %tmp.16;
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 51 8 ]
+        symbol [ GS_MENU %tmp.18 51 24 31 ];
+        %tmp.18 = getv ? :GS_MENU;
+        symbol [ _state ? 51 8 14 ];
+        putv self :_state %tmp.18;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_41_26_52_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 54; @symbol_functiondef = [onLayout,54,13,21]; @symbol_param<0> = [dc,54,22,24]; ]
+    function onLayout(dc) {
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_54_26_72_4_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 55 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 55 14 16 ];
+        symbol [ getWidth %tmp.2 55 17 25 ];
+        %tmp.2 = getv function %tmp.1 :getWidth;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        symbol [ _sw ? 55 8 11 ];
+        putv self :_sw %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 56 8 ]
+        %tmp.4 = lgetv %dc;
+        symbol [ dc %tmp.4 56 14 16 ];
+        symbol [ getHeight %tmp.5 56 17 26 ];
+        %tmp.5 = getv function %tmp.4 :getHeight;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        symbol [ _sh ? 56 8 11 ];
+        putv self :_sh %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 59 8 ]
+        symbol [ _sw %tmp.8 59 19 22 ];
+        %tmp.8 = getv ? :_sw;
+        %tmp.9 = 6;
+        %tmp.10 = mul %tmp.8 %tmp.9;
+        %tmp.11 = 100;
+        %tmp.12 = div %tmp.10 %tmp.11;
+        symbol [ _cell ? 59 8 13 ];
+        putv self :_cell %tmp.12;
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 60 8 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_60_8_60_38_if_stmt:
+        symbol [ _cell %tmp.14 60 12 17 ];
+        %tmp.14 = getv ? :_cell;
+        %tmp.15 = 24;
+        %tmp.16 = lt %tmp.14 %tmp.15;
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_60_8_60_38_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_60_8_60_38_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_60_24_60_38_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 60 26 ]
+        %tmp.17 = 24;
+        symbol [ _cell ? 60 26 31 ];
+        putv self :_cell %tmp.17;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_60_24_60_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_60_8_60_38_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_60_8_60_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 62 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_54_26_72_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_54_26_72_4_stop" ]
+        %span.1 = local;
+        symbol [ span %span.1 62 12 16 ];
+        %tmp.18 = 8;
+        symbol [ _cell %tmp.20 62 23 28 ];
+        %tmp.20 = getv ? :_cell;
+        %tmp.21 = mul %tmp.18 %tmp.20;
+        lputv %span.1 %tmp.21;
+        symbol [ span %span.1 62 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 63 8 ]
+        symbol [ _sw %tmp.23 63 20 23 ];
+        %tmp.23 = getv ? :_sw;
+        %tmp.24 = lgetv %span.1;
+        symbol [ span %tmp.24 63 26 30 ];
+        %tmp.25 = sub %tmp.23 %tmp.24;
+        %tmp.26 = 2;
+        %tmp.27 = div %tmp.25 %tmp.26;
+        symbol [ _boardX ? 63 8 15 ];
+        putv self :_boardX %tmp.27;
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 64 8 ]
+        symbol [ _sh %tmp.29 64 20 23 ];
+        %tmp.29 = getv ? :_sh;
+        %tmp.30 = lgetv %span.1;
+        symbol [ span %tmp.30 64 26 30 ];
+        %tmp.31 = sub %tmp.29 %tmp.30;
+        %tmp.32 = 2;
+        %tmp.33 = div %tmp.31 %tmp.32;
+        symbol [ _sh %tmp.35 64 38 41 ];
+        %tmp.35 = getv ? :_sh;
+        %tmp.36 = 4;
+        %tmp.37 = mul %tmp.35 %tmp.36;
+        %tmp.38 = 100;
+        %tmp.39 = div %tmp.37 %tmp.38;
+        %tmp.40 = add %tmp.33 %tmp.39;
+        symbol [ _boardY ? 64 8 15 ];
+        putv self :_boardY %tmp.40;
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 66 8 ]
+        %tmp.41 = 9;
+        symbol [ _cell %tmp.43 66 23 28 ];
+        %tmp.43 = getv ? :_cell;
+        %tmp.44 = mul %tmp.41 %tmp.43;
+        symbol [ _bgSz ? 66 8 13 ];
+        putv self :_bgSz %tmp.44;
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 67 8 ]
+        symbol [ _boardX %tmp.46 67 19 26 ];
+        %tmp.46 = getv ? :_boardX;
+        symbol [ _cell %tmp.48 67 29 34 ];
+        %tmp.48 = getv ? :_cell;
+        %tmp.49 = 2;
+        %tmp.50 = div %tmp.48 %tmp.49;
+        %tmp.51 = sub %tmp.46 %tmp.50;
+        symbol [ _bgX ? 67 8 12 ];
+        putv self :_bgX %tmp.51;
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 68 8 ]
+        symbol [ _boardY %tmp.53 68 19 26 ];
+        %tmp.53 = getv ? :_boardY;
+        symbol [ _cell %tmp.55 68 29 34 ];
+        %tmp.55 = getv ? :_cell;
+        %tmp.56 = 2;
+        %tmp.57 = div %tmp.55 %tmp.56;
+        %tmp.58 = sub %tmp.53 %tmp.57;
+        symbol [ _bgY ? 68 8 12 ];
+        putv self :_bgY %tmp.58;
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 70 8 ]
+        symbol [ _cell %tmp.60 70 14 19 ];
+        %tmp.60 = getv ? :_cell;
+        %tmp.61 = 43;
+        %tmp.62 = mul %tmp.60 %tmp.61;
+        %tmp.63 = 100;
+        %tmp.64 = div %tmp.62 %tmp.63;
+        symbol [ _sr ? 70 8 11 ];
+        putv self :_sr %tmp.64;
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 71 8 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_71_8_71_32_if_stmt:
+        symbol [ _sr %tmp.66 71 12 15 ];
+        %tmp.66 = getv ? :_sr;
+        %tmp.67 = 9;
+        %tmp.68 = lt %tmp.66 %tmp.67;
+        bf %tmp.68 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_71_8_71_32_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_71_8_71_32_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_71_21_71_32_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 71 23 ]
+        %tmp.69 = 9;
+        symbol [ _sr ? 71 23 26 ];
+        putv self :_sr %tmp.69;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_71_21_71_32_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_71_8_71_32_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_71_8_71_32_if_end:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_54_26_72_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 78; @symbol_functiondef = [moveCursor,78,13,23]; @symbol_param<0> = [dx,78,24,26]; @symbol_param<1> = [dy,78,28,30]; ]
+    function moveCursor(dx, dy) {
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_78_32_91_4_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 79 8 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_79_8_83_8_if_stmt:
+        symbol [ _state %tmp.2 79 12 18 ];
+        %tmp.2 = getv ? :_state;
+        symbol [ GS_MENU %tmp.4 79 22 29 ];
+        %tmp.4 = getv ? :GS_MENU;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_79_8_83_8_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_79_8_83_8_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_79_31_83_8_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 80 12 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_80_12_81_62_if_stmt:
+        %tmp.6 = lgetv %dy;
+        symbol [ dy %tmp.6 80 16 18 ];
+        %tmp.7 = 0;
+        %tmp.8 = lt %tmp.6 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_80_12_81_62_if_false;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_80_12_81_62_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_80_24_80_57_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 80 26 ]
+        symbol [ _menuSel %tmp.10 80 38 46 ];
+        %tmp.10 = getv ? :_menuSel;
+        %tmp.11 = 3;
+        %tmp.12 = add %tmp.10 %tmp.11;
+        %tmp.13 = 4;
+        %tmp.14 = mod %tmp.12 %tmp.13;
+        symbol [ _menuSel ? 80 26 34 ];
+        putv self :_menuSel %tmp.14;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_80_24_80_57_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_80_12_81_62_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_80_12_81_62_if_false:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 81 17 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_81_17_81_62_if_stmt:
+        %tmp.15 = lgetv %dy;
+        symbol [ dy %tmp.15 81 21 23 ];
+        %tmp.16 = 0;
+        %tmp.17 = gt %tmp.15 %tmp.16;
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_81_17_81_62_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_81_17_81_62_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_81_29_81_62_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 81 31 ]
+        symbol [ _menuSel %tmp.19 81 43 51 ];
+        %tmp.19 = getv ? :_menuSel;
+        %tmp.20 = 1;
+        %tmp.21 = add %tmp.19 %tmp.20;
+        %tmp.22 = 4;
+        %tmp.23 = mod %tmp.21 %tmp.22;
+        symbol [ _menuSel ? 81 31 39 ];
+        putv self :_menuSel %tmp.23;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_81_29_81_62_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_81_17_81_62_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_81_17_81_62_if_end:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_80_12_81_62_if_end:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 82 12 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_79_31_83_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_79_8_83_8_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_79_8_83_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 84 8 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_84_8_84_43_if_stmt:
+        symbol [ _ctrl %tmp.25 84 12 17 ];
+        %tmp.25 = getv ? :_ctrl;
+        symbol [ gameOver %tmp.26 84 18 26 ];
+        %tmp.26 = getv %tmp.25 :gameOver;
+        %tmp.27 = 0;
+        %tmp.28 = ne %tmp.26 %tmp.27;
+        bf %tmp.28 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_84_8_84_43_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_84_8_84_43_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_84_33_84_43_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 84 35 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_84_33_84_43_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_84_8_84_43_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_84_8_84_43_if_end:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 85 8 ]
+        symbol [ _curX %tmp.30 85 16 21 ];
+        %tmp.30 = getv ? :_curX;
+        %tmp.31 = lgetv %dx;
+        symbol [ dx %tmp.31 85 24 26 ];
+        %tmp.32 = add %tmp.30 %tmp.31;
+        symbol [ _curX ? 85 8 13 ];
+        putv self :_curX %tmp.32;
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 86 8 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_86_8_86_36_if_stmt:
+        symbol [ _curX %tmp.34 86 12 17 ];
+        %tmp.34 = getv ? :_curX;
+        %tmp.35 = 0;
+        %tmp.36 = lt %tmp.34 %tmp.35;
+        bf %tmp.36 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_86_8_86_36_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_86_8_86_36_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_86_23_86_36_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 86 25 ]
+        %tmp.37 = 0;
+        symbol [ _curX ? 86 25 30 ];
+        putv self :_curX %tmp.37;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_86_23_86_36_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_86_8_86_36_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_86_8_86_36_if_end:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 87 8 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_87_8_87_36_if_stmt:
+        symbol [ _curX %tmp.39 87 12 17 ];
+        %tmp.39 = getv ? :_curX;
+        %tmp.40 = 8;
+        %tmp.41 = gt %tmp.39 %tmp.40;
+        bf %tmp.41 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_87_8_87_36_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_87_8_87_36_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_87_23_87_36_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 87 25 ]
+        %tmp.42 = 8;
+        symbol [ _curX ? 87 25 30 ];
+        putv self :_curX %tmp.42;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_87_23_87_36_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_87_8_87_36_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_87_8_87_36_if_end:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 88 8 ]
+        symbol [ _curY %tmp.44 88 16 21 ];
+        %tmp.44 = getv ? :_curY;
+        %tmp.45 = lgetv %dy;
+        symbol [ dy %tmp.45 88 24 26 ];
+        %tmp.46 = add %tmp.44 %tmp.45;
+        symbol [ _curY ? 88 8 13 ];
+        putv self :_curY %tmp.46;
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 89 8 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_89_8_89_36_if_stmt:
+        symbol [ _curY %tmp.48 89 12 17 ];
+        %tmp.48 = getv ? :_curY;
+        %tmp.49 = 0;
+        %tmp.50 = lt %tmp.48 %tmp.49;
+        bf %tmp.50 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_89_8_89_36_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_89_8_89_36_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_89_23_89_36_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 89 25 ]
+        %tmp.51 = 8;
+        symbol [ _curY ? 89 25 30 ];
+        putv self :_curY %tmp.51;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_89_23_89_36_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_89_8_89_36_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_89_8_89_36_if_end:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 90 8 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_90_8_90_36_if_stmt:
+        symbol [ _curY %tmp.53 90 12 17 ];
+        %tmp.53 = getv ? :_curY;
+        %tmp.54 = 8;
+        %tmp.55 = gt %tmp.53 %tmp.54;
+        bf %tmp.55 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_90_8_90_36_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_90_8_90_36_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_90_23_90_36_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 90 25 ]
+        %tmp.56 = 0;
+        symbol [ _curY ? 90 25 30 ];
+        putv self :_curY %tmp.56;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_90_23_90_36_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_90_8_90_36_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_90_8_90_36_if_end:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_78_32_91_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 96; @symbol_functiondef = [advanceCursor,96,13,26]; ]
+    function advanceCursor() {
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_96_29_103_4_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 97 8 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_97_8_100_8_if_stmt:
+        symbol [ _state %tmp.2 97 12 18 ];
+        %tmp.2 = getv ? :_state;
+        symbol [ GS_MENU %tmp.4 97 22 29 ];
+        %tmp.4 = getv ? :GS_MENU;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_97_8_100_8_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_97_8_100_8_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_97_31_100_8_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 98 12 ]
+        symbol [ _menuSel %tmp.7 98 24 32 ];
+        %tmp.7 = getv ? :_menuSel;
+        %tmp.8 = 1;
+        %tmp.9 = add %tmp.7 %tmp.8;
+        %tmp.10 = 4;
+        %tmp.11 = mod %tmp.9 %tmp.10;
+        symbol [ _menuSel ? 98 12 20 ];
+        putv self :_menuSel %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 99 12 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_97_31_100_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_97_8_100_8_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_97_8_100_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 101 8 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_101_8_101_43_if_stmt:
+        symbol [ _ctrl %tmp.13 101 12 17 ];
+        %tmp.13 = getv ? :_ctrl;
+        symbol [ gameOver %tmp.14 101 18 26 ];
+        %tmp.14 = getv %tmp.13 :gameOver;
+        %tmp.15 = 0;
+        %tmp.16 = ne %tmp.14 %tmp.15;
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_101_8_101_43_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_101_8_101_43_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_101_33_101_43_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 101 35 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_101_33_101_43_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_101_8_101_43_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_101_8_101_43_if_end:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 102 8 ]
+        symbol [ _curX %tmp.18 102 17 22 ];
+        %tmp.18 = getv ? :_curX;
+        %tmp.19 = 1;
+        %tmp.20 = add %tmp.18 %tmp.19;
+        %tmp.21 = 9;
+        %tmp.22 = mod %tmp.20 %tmp.21;
+        symbol [ _curX ? 102 8 13 ];
+        putv self :_curX %tmp.22;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_96_29_103_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 106; @symbol_functiondef = [retreatCursor,106,13,26]; ]
+    function retreatCursor() {
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_106_29_113_4_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 107 8 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_107_8_110_8_if_stmt:
+        symbol [ _state %tmp.2 107 12 18 ];
+        %tmp.2 = getv ? :_state;
+        symbol [ GS_MENU %tmp.4 107 22 29 ];
+        %tmp.4 = getv ? :GS_MENU;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_107_8_110_8_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_107_8_110_8_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_107_31_110_8_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 108 12 ]
+        symbol [ _menuSel %tmp.7 108 24 32 ];
+        %tmp.7 = getv ? :_menuSel;
+        %tmp.8 = 3;
+        %tmp.9 = add %tmp.7 %tmp.8;
+        %tmp.10 = 4;
+        %tmp.11 = mod %tmp.9 %tmp.10;
+        symbol [ _menuSel ? 108 12 20 ];
+        putv self :_menuSel %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 109 12 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_107_31_110_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_107_8_110_8_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_107_8_110_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 111 8 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_111_8_111_43_if_stmt:
+        symbol [ _ctrl %tmp.13 111 12 17 ];
+        %tmp.13 = getv ? :_ctrl;
+        symbol [ gameOver %tmp.14 111 18 26 ];
+        %tmp.14 = getv %tmp.13 :gameOver;
+        %tmp.15 = 0;
+        %tmp.16 = ne %tmp.14 %tmp.15;
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_111_8_111_43_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_111_8_111_43_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_111_33_111_43_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 111 35 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_111_33_111_43_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_111_8_111_43_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_111_8_111_43_if_end:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 112 8 ]
+        symbol [ _curY %tmp.18 112 17 22 ];
+        %tmp.18 = getv ? :_curY;
+        %tmp.19 = 1;
+        %tmp.20 = add %tmp.18 %tmp.19;
+        %tmp.21 = 9;
+        %tmp.22 = mod %tmp.20 %tmp.21;
+        symbol [ _curY ? 112 8 13 ];
+        putv self :_curY %tmp.22;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_106_29_113_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 117; @symbol_functiondef = [doBack,117,13,19]; ]
+    function doBack() {
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_117_22_121_4_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 118 8 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_118_8_118_47_if_stmt:
+        symbol [ _state %tmp.2 118 12 18 ];
+        %tmp.2 = getv ? :_state;
+        symbol [ GS_MENU %tmp.4 118 22 29 ];
+        %tmp.4 = getv ? :GS_MENU;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_118_8_118_47_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_118_8_118_47_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_118_31_118_47_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 118 33 ]
+        %tmp.6 = false;
+        ret %tmp.6;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_118_31_118_47_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_118_8_118_47_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_118_8_118_47_if_end:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 119 8 ]
+        symbol [ GS_MENU %tmp.8 119 17 24 ];
+        %tmp.8 = getv ? :GS_MENU;
+        symbol [ _state ? 119 8 14 ];
+        putv self :_state %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 119 26 ]
+        %tmp.9 = 0;
+        symbol [ _menuSel ? 119 26 34 ];
+        putv self :_menuSel %tmp.9;
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 120 8 ]
+        %tmp.10 = true;
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_117_22_121_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 123; @symbol_functiondef = [doAction,123,13,21]; ]
+    function doAction() {
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_123_24_150_4_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 124 8 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_124_8_140_8_if_stmt:
+        symbol [ _state %tmp.2 124 12 18 ];
+        %tmp.2 = getv ? :_state;
+        symbol [ GS_MENU %tmp.4 124 22 29 ];
+        %tmp.4 = getv ? :GS_MENU;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_124_8_140_8_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_124_8_140_8_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_124_31_140_8_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 125 12 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_125_12_138_12_if_stmt:
+        symbol [ _menuSel %tmp.7 125 16 24 ];
+        %tmp.7 = getv ? :_menuSel;
+        %tmp.8 = 0;
+        %tmp.9 = eq %tmp.7 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_125_12_138_12_if_false;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_125_12_138_12_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_125_31_127_12_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 126 16 ]
+        symbol [ _mode %tmp.11 126 25 30 ];
+        %tmp.11 = getv ? :_mode;
+        %tmp.12 = 1;
+        %tmp.13 = add %tmp.11 %tmp.12;
+        %tmp.14 = 2;
+        %tmp.15 = mod %tmp.13 %tmp.14;
+        symbol [ _mode ? 126 16 21 ];
+        putv self :_mode %tmp.15;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_125_31_127_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_125_12_138_12_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_125_12_138_12_if_false:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 127 19 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_127_19_138_12_if_stmt:
+        symbol [ _menuSel %tmp.17 127 23 31 ];
+        %tmp.17 = getv ? :_menuSel;
+        %tmp.18 = 1;
+        %tmp.19 = eq %tmp.17 %tmp.18;
+        bf %tmp.19 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_127_19_138_12_if_false;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_127_19_138_12_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_127_38_129_12_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 128 16 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_128_16_128_66_if_stmt:
+        symbol [ _mode %tmp.21 128 20 25 ];
+        %tmp.21 = getv ? :_mode;
+        symbol [ MODE_PVP %tmp.23 128 29 37 ];
+        %tmp.23 = getv ? :MODE_PVP;
+        %tmp.24 = ne %tmp.21 %tmp.23;
+        bf %tmp.24 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_128_16_128_66_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_128_16_128_66_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_128_39_128_66_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 128 41 ]
+        symbol [ _diff %tmp.26 128 50 55 ];
+        %tmp.26 = getv ? :_diff;
+        %tmp.27 = 1;
+        %tmp.28 = add %tmp.26 %tmp.27;
+        %tmp.29 = 3;
+        %tmp.30 = mod %tmp.28 %tmp.29;
+        symbol [ _diff ? 128 41 46 ];
+        putv self :_diff %tmp.30;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_128_39_128_66_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_128_16_128_66_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_128_16_128_66_if_end:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_127_38_129_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_127_19_138_12_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_127_19_138_12_if_false:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 129 19 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_129_19_138_12_if_stmt:
+        symbol [ _menuSel %tmp.32 129 23 31 ];
+        %tmp.32 = getv ? :_menuSel;
+        %tmp.33 = 2;
+        %tmp.34 = eq %tmp.32 %tmp.33;
+        bf %tmp.34 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_129_19_138_12_if_else_false;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_129_19_138_12_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_129_38_131_12_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 130 16 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_130_16_130_72_if_stmt:
+        symbol [ _mode %tmp.36 130 20 25 ];
+        %tmp.36 = getv ? :_mode;
+        symbol [ MODE_PVAI %tmp.38 130 29 38 ];
+        %tmp.38 = getv ? :MODE_PVAI;
+        %tmp.39 = eq %tmp.36 %tmp.38;
+        bf %tmp.39 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_130_16_130_72_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_130_16_130_72_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_130_40_130_72_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 130 42 ]
+        symbol [ _playerFirst %tmp.41 130 58 70 ];
+        %tmp.41 = getv ? :_playerFirst;
+        %tmp.42 = not %tmp.41;
+        symbol [ _playerFirst ? 130 42 54 ];
+        putv self :_playerFirst %tmp.42;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_130_40_130_72_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_130_16_130_72_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_130_16_130_72_if_end:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_129_38_131_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_129_19_138_12_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_129_19_138_12_if_else_false:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_131_19_138_12_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 132 16 ]
+        symbol [ _ctrl %tmp.44 132 16 21 ];
+        %tmp.44 = getv ? :_ctrl;
+        symbol [ newGame %tmp.45 132 22 29 ];
+        %tmp.45 = getv function %tmp.44 :newGame;
+        invoke %tmp.44 %tmp.45();
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 133 16 ]
+        symbol [ _ctrl %tmp.47 133 16 21 ];
+        %tmp.47 = getv ? :_ctrl;
+        symbol [ ai %tmp.48 133 22 24 ];
+        %tmp.48 = getv %tmp.47 :ai;
+        symbol [ setDiff %tmp.49 133 25 32 ];
+        %tmp.49 = getv function %tmp.48 :setDiff;
+        symbol [ _diff %tmp.51 133 33 38 ];
+        %tmp.51 = getv ? :_diff;
+        invoke %tmp.48 %tmp.49(%tmp.51);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 134 16 ]
+        %tmp.52 = 4;
+        symbol [ _curX ? 134 16 21 ];
+        putv self :_curX %tmp.52;
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 134 27 ]
+        %tmp.53 = 4;
+        symbol [ _curY ? 134 27 32 ];
+        putv self :_curY %tmp.53;
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 135 16 ]
+        %tmp.54 = 0;
+        symbol [ _illegalFlash ? 135 16 29 ];
+        putv self :_illegalFlash %tmp.54;
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 136 16 ]
+        symbol [ GS_PLAY %tmp.56 136 25 32 ];
+        %tmp.56 = getv ? :GS_PLAY;
+        symbol [ _state ? 136 16 22 ];
+        putv self :_state %tmp.56;
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 137 16 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_137_16_137_80_if_stmt:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_137_20_137_43_begin:
+        symbol [ _mode %tmp.58 137 20 25 ];
+        %tmp.58 = getv ? :_mode;
+        symbol [ MODE_PVAI %tmp.60 137 29 38 ];
+        %tmp.60 = getv ? :MODE_PVAI;
+        %tmp.61 = eq %tmp.58 %tmp.60;
+        bf %tmp.61 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_137_16_137_80_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_137_42_137_43_true:
+        symbol [ _playerFirst %tmp.63 137 43 55 ];
+        %tmp.63 = getv ? :_playerFirst;
+        %tmp.64 = not %tmp.63;
+        push %tmp.64;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_137_42_137_43_end:
+        %tmp.65 = phi [%tmp.61 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_137_20_137_43_begin] [%tmp.64 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_137_42_137_43_true] [%tmp.65 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_137_42_137_43_end];
+        bf %tmp.65 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_137_16_137_80_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_137_16_137_80_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_137_57_137_80_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 137 59 ]
+        symbol [ _ctrl %tmp.67 137 59 64 ];
+        %tmp.67 = getv ? :_ctrl;
+        symbol [ aiFirstMove %tmp.68 137 65 76 ];
+        %tmp.68 = getv function %tmp.67 :aiFirstMove;
+        invoke %tmp.67 %tmp.68();
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_137_57_137_80_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_137_16_137_80_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_137_16_137_80_if_end:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_131_19_138_12_stop:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_129_19_138_12_if_end:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_127_19_138_12_if_end:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_125_12_138_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 139 12 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_124_31_140_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_124_8_140_8_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_124_8_140_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 141 8 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_141_8_146_8_if_stmt:
+        symbol [ _ctrl %tmp.70 141 12 17 ];
+        %tmp.70 = getv ? :_ctrl;
+        symbol [ gameOver %tmp.71 141 18 26 ];
+        %tmp.71 = getv %tmp.70 :gameOver;
+        %tmp.72 = 0;
+        %tmp.73 = ne %tmp.71 %tmp.72;
+        bf %tmp.73 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_141_8_146_8_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_141_8_146_8_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_141_33_146_8_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 142 12 ]
+        symbol [ GS_MENU %tmp.75 142 21 28 ];
+        %tmp.75 = getv ? :GS_MENU;
+        symbol [ _state ? 142 12 18 ];
+        putv self :_state %tmp.75;
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 143 12 ]
+        %tmp.76 = 0;
+        symbol [ _menuSel ? 143 12 20 ];
+        putv self :_menuSel %tmp.76;
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 144 12 ]
+        %tmp.77 = 0;
+        symbol [ _illegalFlash ? 144 12 25 ];
+        putv self :_illegalFlash %tmp.77;
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 145 12 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_141_33_146_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_141_8_146_8_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_141_8_146_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 147 8 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_147_8_149_8_if_stmt:
+        symbol [ _ctrl %tmp.79 147 13 18 ];
+        %tmp.79 = getv ? :_ctrl;
+        symbol [ playerMove %tmp.80 147 19 29 ];
+        %tmp.80 = getv function %tmp.79 :playerMove;
+        symbol [ _curX %tmp.82 147 30 35 ];
+        %tmp.82 = getv ? :_curX;
+        symbol [ _curY %tmp.84 147 37 42 ];
+        %tmp.84 = getv ? :_curY;
+        %tmp.85 = invoke %tmp.79 %tmp.80(%tmp.82, %tmp.84);
+        %tmp.86 = not %tmp.85;
+        bf %tmp.86 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_147_8_149_8_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_147_8_149_8_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_147_45_149_8_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 148 12 ]
+        %tmp.87 = 6;
+        symbol [ _illegalFlash ? 148 12 25 ];
+        putv self :_illegalFlash %tmp.87;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_147_45_149_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_147_8_149_8_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_147_8_149_8_if_end:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_123_24_150_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 153; @symbol_functiondef = [doPass,153,13,19]; ]
+    function doPass() {
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_153_22_163_4_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 154 8 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_154_8_154_47_if_stmt:
+        symbol [ _state %tmp.2 154 12 18 ];
+        %tmp.2 = getv ? :_state;
+        symbol [ GS_MENU %tmp.4 154 22 29 ];
+        %tmp.4 = getv ? :GS_MENU;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_154_8_154_47_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_154_8_154_47_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_154_31_154_47_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 154 33 ]
+        %tmp.6 = false;
+        ret %tmp.6;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_154_31_154_47_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_154_8_154_47_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_154_8_154_47_if_end:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 155 8 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_155_8_160_8_if_stmt:
+        symbol [ _ctrl %tmp.8 155 12 17 ];
+        %tmp.8 = getv ? :_ctrl;
+        symbol [ gameOver %tmp.9 155 18 26 ];
+        %tmp.9 = getv %tmp.8 :gameOver;
+        %tmp.10 = 0;
+        %tmp.11 = ne %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_155_8_160_8_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_155_8_160_8_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_155_33_160_8_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 156 12 ]
+        symbol [ GS_MENU %tmp.13 156 21 28 ];
+        %tmp.13 = getv ? :GS_MENU;
+        symbol [ _state ? 156 12 18 ];
+        putv self :_state %tmp.13;
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 157 12 ]
+        %tmp.14 = 0;
+        symbol [ _menuSel ? 157 12 20 ];
+        putv self :_menuSel %tmp.14;
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 158 12 ]
+        %tmp.15 = 0;
+        symbol [ _illegalFlash ? 158 12 25 ];
+        putv self :_illegalFlash %tmp.15;
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 159 12 ]
+        %tmp.16 = true;
+        ret %tmp.16;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_155_33_160_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_155_8_160_8_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_155_8_160_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 161 8 ]
+        symbol [ _ctrl %tmp.18 161 8 13 ];
+        %tmp.18 = getv ? :_ctrl;
+        symbol [ playerPass %tmp.19 161 14 24 ];
+        %tmp.19 = getv function %tmp.18 :playerPass;
+        invoke %tmp.18 %tmp.19();
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 162 8 ]
+        %tmp.20 = true;
+        ret %tmp.20;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_153_22_163_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 166; @symbol_functiondef = [onUpdate,166,13,21]; @symbol_param<0> = [dc,166,22,24]; ]
+    function onUpdate(dc) {
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_166_26_178_4_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 167 8 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_167_8_167_56_if_stmt:
+        symbol [ _state %tmp.2 167 12 18 ];
+        %tmp.2 = getv ? :_state;
+        symbol [ GS_MENU %tmp.4 167 22 29 ];
+        %tmp.4 = getv ? :GS_MENU;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_167_8_167_56_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_167_8_167_56_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_167_31_167_56_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 167 33 ]
+        %tmp.6 = self;
+        symbol [ _drawMenu %tmp.7 167 33 42 ];
+        %tmp.7 = getv function %tmp.6 :_drawMenu;
+        %tmp.8 = lgetv %dc;
+        symbol [ dc %tmp.8 167 43 45 ];
+        invoke %tmp.6 %tmp.7(%tmp.8);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 167 48 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_167_31_167_56_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_167_8_167_56_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_167_8_167_56_if_end:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 169 8 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_169_8_169_68_if_stmt:
+        symbol [ _illegalFlash %tmp.10 169 12 25 ];
+        %tmp.10 = getv ? :_illegalFlash;
+        %tmp.11 = 0;
+        %tmp.12 = gt %tmp.10 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_169_8_169_68_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_169_8_169_68_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_169_31_169_68_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 169 33 ]
+        symbol [ _illegalFlash %tmp.14 169 49 62 ];
+        %tmp.14 = getv ? :_illegalFlash;
+        %tmp.15 = 1;
+        %tmp.16 = sub %tmp.14 %tmp.15;
+        symbol [ _illegalFlash ? 169 33 46 ];
+        putv self :_illegalFlash %tmp.16;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_169_31_169_68_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_169_8_169_68_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_169_8_169_68_if_end:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 171 8 ]
+        %tmp.17 = lgetv %dc;
+        symbol [ dc %tmp.17 171 8 10 ];
+        symbol [ setColor %tmp.18 171 11 19 ];
+        %tmp.18 = getv function %tmp.17 :setColor;
+        %tmp.19 = 0x1A1208;
+        %tmp.20 = 0x1A1208;
+        invoke %tmp.17 %tmp.18(%tmp.19, %tmp.20);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 172 8 ]
+        %tmp.21 = lgetv %dc;
+        symbol [ dc %tmp.21 172 8 10 ];
+        symbol [ clear %tmp.22 172 11 16 ];
+        %tmp.22 = getv function %tmp.21 :clear;
+        invoke %tmp.21 %tmp.22();
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 174 8 ]
+        %tmp.23 = self;
+        symbol [ _drawBoard %tmp.24 174 8 18 ];
+        %tmp.24 = getv function %tmp.23 :_drawBoard;
+        %tmp.25 = lgetv %dc;
+        symbol [ dc %tmp.25 174 19 21 ];
+        invoke %tmp.23 %tmp.24(%tmp.25);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 175 8 ]
+        %tmp.26 = self;
+        symbol [ _drawHUD %tmp.27 175 8 16 ];
+        %tmp.27 = getv function %tmp.26 :_drawHUD;
+        %tmp.28 = lgetv %dc;
+        symbol [ dc %tmp.28 175 17 19 ];
+        invoke %tmp.26 %tmp.27(%tmp.28);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 177 8 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_177_8_177_54_if_stmt:
+        symbol [ _ctrl %tmp.30 177 12 17 ];
+        %tmp.30 = getv ? :_ctrl;
+        symbol [ gameOver %tmp.31 177 18 26 ];
+        %tmp.31 = getv %tmp.30 :gameOver;
+        %tmp.32 = 0;
+        %tmp.33 = ne %tmp.31 %tmp.32;
+        bf %tmp.33 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_177_8_177_54_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_177_8_177_54_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_177_33_177_54_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 177 35 ]
+        %tmp.34 = self;
+        symbol [ _drawGameOver %tmp.35 177 35 48 ];
+        %tmp.35 = getv function %tmp.34 :_drawGameOver;
+        %tmp.36 = lgetv %dc;
+        symbol [ dc %tmp.36 177 49 51 ];
+        invoke %tmp.34 %tmp.35(%tmp.36);
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_177_33_177_54_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_177_8_177_54_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_177_8_177_54_if_end:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_166_26_178_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 181; @symbol_functiondef = [_drawMenu,181,20,29]; @symbol_param<0> = [dc,181,30,32]; ]
+    protected
+    function _drawMenu(dc) {
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_181_34_231_4_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 182 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 182 8 10 ];
+        symbol [ setColor %tmp.2 182 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        %tmp.3 = 0x080810;
+        %tmp.4 = 0x080810;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.4);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 183 8 ]
+        %tmp.5 = lgetv %dc;
+        symbol [ dc %tmp.5 183 8 10 ];
+        symbol [ clear %tmp.6 183 11 16 ];
+        %tmp.6 = getv function %tmp.5 :clear;
+        invoke %tmp.5 %tmp.6();
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 184 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_181_34_231_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_181_34_231_4_stop" ]
+        %hw.1 = local;
+        symbol [ hw %hw.1 184 12 14 ];
+        symbol [ _sw %tmp.8 184 17 20 ];
+        %tmp.8 = getv ? :_sw;
+        %tmp.9 = 2;
+        %tmp.10 = div %tmp.8 %tmp.9;
+        lputv %hw.1 %tmp.10;
+        symbol [ hw %hw.1 184 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 185 8 ]
+        %tmp.11 = lgetv %dc;
+        symbol [ dc %tmp.11 185 8 10 ];
+        symbol [ setColor %tmp.12 185 11 19 ];
+        %tmp.12 = getv function %tmp.11 :setColor;
+        %tmp.13 = 0x0A0A18;
+        symbol [ Graphics %tmp.14 185 30 38 ];
+        %tmp.14 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.15 185 39 56 ];
+        %tmp.15 = getv %tmp.14 :COLOR_TRANSPARENT;
+        invoke %tmp.11 %tmp.12(%tmp.13, %tmp.15);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 186 8 ]
+        %tmp.16 = lgetv %dc;
+        symbol [ dc %tmp.16 186 8 10 ];
+        symbol [ fillCircle %tmp.17 186 11 21 ];
+        %tmp.17 = getv function %tmp.16 :fillCircle;
+        %tmp.18 = lgetv %hw.1;
+        symbol [ hw %tmp.18 186 22 24 ];
+        symbol [ _sh %tmp.20 186 26 29 ];
+        %tmp.20 = getv ? :_sh;
+        %tmp.21 = 2;
+        %tmp.22 = div %tmp.20 %tmp.21;
+        symbol [ _sw %tmp.24 186 35 38 ];
+        %tmp.24 = getv ? :_sw;
+        %tmp.25 = 2;
+        %tmp.26 = div %tmp.24 %tmp.25;
+        %tmp.27 = 1;
+        %tmp.28 = sub %tmp.26 %tmp.27;
+        invoke %tmp.16 %tmp.17(%tmp.18, %tmp.22, %tmp.28);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 188 8 ]
+        %tmp.29 = lgetv %dc;
+        symbol [ dc %tmp.29 188 8 10 ];
+        symbol [ setColor %tmp.30 188 11 19 ];
+        %tmp.30 = getv function %tmp.29 :setColor;
+        %tmp.31 = 0xC8A040;
+        symbol [ Graphics %tmp.32 188 30 38 ];
+        %tmp.32 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.33 188 39 56 ];
+        %tmp.33 = getv %tmp.32 :COLOR_TRANSPARENT;
+        invoke %tmp.29 %tmp.30(%tmp.31, %tmp.33);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 189 8 ]
+        %tmp.34 = lgetv %dc;
+        symbol [ dc %tmp.34 189 8 10 ];
+        symbol [ drawText %tmp.35 189 11 19 ];
+        %tmp.35 = getv function %tmp.34 :drawText;
+        %tmp.36 = lgetv %hw.1;
+        symbol [ hw %tmp.36 189 20 22 ];
+        symbol [ _sh %tmp.38 189 24 27 ];
+        %tmp.38 = getv ? :_sh;
+        %tmp.39 = 11;
+        %tmp.40 = mul %tmp.38 %tmp.39;
+        %tmp.41 = 100;
+        %tmp.42 = div %tmp.40 %tmp.41;
+        symbol [ Graphics %tmp.43 189 40 48 ];
+        %tmp.43 = getm $.Toybox.Graphics;
+        symbol [ FONT_SMALL %tmp.44 189 49 59 ];
+        %tmp.44 = getv %tmp.43 :FONT_SMALL;
+        %tmp.45 = "MINI GO 9x9";
+        symbol [ Graphics %tmp.46 189 76 84 ];
+        %tmp.46 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.47 189 85 104 ];
+        %tmp.47 = getv %tmp.46 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.34 %tmp.35(%tmp.36, %tmp.42, %tmp.44, %tmp.45, %tmp.47);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 191 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_181_34_231_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_181_34_231_4_stop" ]
+        %modeStr.2 = local;
+        symbol [ modeStr %modeStr.2 191 12 19 ];
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_191_22_191_57_begin:
+        symbol [ _mode %tmp.49 191 23 28 ];
+        %tmp.49 = getv ? :_mode;
+        symbol [ MODE_PVAI %tmp.51 191 32 41 ];
+        %tmp.51 = getv ? :MODE_PVAI;
+        %tmp.52 = eq %tmp.49 %tmp.51;
+        bf %tmp.52 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_191_22_191_57_else_false;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_191_22_191_57_true:
+        %tmp.53 = "P vs AI";
+        push %tmp.53;
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_191_22_191_57_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_191_22_191_57_else_false:
+        %tmp.54 = "P vs P";
+        push %tmp.54;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_191_22_191_57_end:
+        %tmp.55 = phi [%tmp.52 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_191_22_191_57_begin] [%tmp.53 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_191_22_191_57_true] [%tmp.54 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_191_22_191_57_else_false] [%tmp.55 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_191_22_191_57_end];
+        lputv %modeStr.2 %tmp.55;
+        symbol [ modeStr %modeStr.2 191 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 192 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_181_34_231_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_181_34_231_4_stop" ]
+        %diffStr.3 = local;
+        symbol [ diffStr %diffStr.3 192 12 19 ];
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_192_22_192_91_begin:
+        symbol [ _diff %tmp.57 192 23 28 ];
+        %tmp.57 = getv ? :_diff;
+        symbol [ DIFF_EASY %tmp.59 192 32 41 ];
+        %tmp.59 = getv ? :DIFF_EASY;
+        %tmp.60 = eq %tmp.57 %tmp.59;
+        bf %tmp.60 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_192_22_192_91_else_false;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_192_22_192_91_true:
+        %tmp.61 = "Easy";
+        push %tmp.61;
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_192_22_192_91_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_192_22_192_91_else_false:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_192_55_192_85_begin:
+        symbol [ _diff %tmp.63 192 56 61 ];
+        %tmp.63 = getv ? :_diff;
+        symbol [ DIFF_MED %tmp.65 192 65 73 ];
+        %tmp.65 = getv ? :DIFF_MED;
+        %tmp.66 = eq %tmp.63 %tmp.65;
+        bf %tmp.66 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_192_55_192_85_else_false;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_192_55_192_85_true:
+        %tmp.67 = "Med";
+        push %tmp.67;
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_192_55_192_85_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_192_55_192_85_else_false:
+        %tmp.68 = "Hard";
+        push %tmp.68;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_192_55_192_85_end:
+        %tmp.69 = phi [%tmp.66 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_192_55_192_85_begin] [%tmp.67 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_192_55_192_85_true] [%tmp.68 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_192_55_192_85_else_false] [%tmp.69 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_192_55_192_85_end];
+        push %tmp.69;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_192_22_192_91_end:
+        %tmp.70 = phi [%tmp.60 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_192_22_192_91_begin] [%tmp.61 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_192_22_192_91_true] [%tmp.69 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_192_22_192_91_else_false] [%tmp.70 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_192_22_192_91_end];
+        lputv %diffStr.3 %tmp.70;
+        symbol [ diffStr %diffStr.3 192 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 193 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_181_34_231_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_181_34_231_4_stop" ]
+        %sideStr.4 = local;
+        symbol [ sideStr %sideStr.4 193 12 19 ];
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_193_22_193_51_begin:
+        symbol [ _playerFirst %tmp.72 193 22 34 ];
+        %tmp.72 = getv ? :_playerFirst;
+        bf %tmp.72 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_193_22_193_51_else_false;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_193_22_193_51_true:
+        %tmp.73 = "Side: Blk";
+        push %tmp.73;
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_193_22_193_51_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_193_22_193_51_else_false:
+        %tmp.74 = "Side: Wht";
+        push %tmp.74;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_193_22_193_51_end:
+        %tmp.75 = phi [%tmp.72 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_193_22_193_51_begin] [%tmp.73 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_193_22_193_51_true] [%tmp.74 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_193_22_193_51_else_false] [%tmp.75 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_193_22_193_51_end];
+        lputv %sideStr.4 %tmp.75;
+        symbol [ sideStr %sideStr.4 193 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 194 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_181_34_231_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_181_34_231_4_stop" ]
+        %rows.5 = local;
+        symbol [ rows %rows.5 194 12 16 ];
+        %tmp.76 = newa 4;
+        %tmp.77 = "Mode: ";
+        %tmp.78 = lgetv %modeStr.2;
+        symbol [ modeStr %tmp.78 194 31 38 ];
+        %tmp.79 = add %tmp.77 %tmp.78;
+        %tmp.80 = dup %tmp.76;
+        %tmp.81 = aputv %tmp.80 0 %tmp.79;
+        %tmp.82 = "Diff: ";
+        %tmp.83 = lgetv %diffStr.3;
+        symbol [ diffStr %tmp.83 194 51 58 ];
+        %tmp.84 = add %tmp.82 %tmp.83;
+        %tmp.85 = dup %tmp.81;
+        %tmp.86 = aputv %tmp.85 1 %tmp.84;
+        %tmp.87 = lgetv %sideStr.4;
+        symbol [ sideStr %tmp.87 194 60 67 ];
+        %tmp.88 = dup %tmp.86;
+        %tmp.89 = aputv %tmp.88 2 %tmp.87;
+        %tmp.90 = "START";
+        %tmp.91 = dup %tmp.89;
+        %tmp.92 = aputv %tmp.91 3 %tmp.90;
+        lputv %rows.5 %tmp.92;
+        symbol [ rows %rows.5 194 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 195 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_181_34_231_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_181_34_231_4_stop" ]
+        %nR.6 = local;
+        symbol [ nR %nR.6 195 12 14 ];
+        %tmp.93 = 4;
+        lputv %nR.6 %tmp.93;
+        symbol [ nR %nR.6 195 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 196 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_181_34_231_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_181_34_231_4_stop" ]
+        %rowH.7 = local;
+        symbol [ rowH %rowH.7 196 12 16 ];
+        symbol [ _sh %tmp.95 196 19 22 ];
+        %tmp.95 = getv ? :_sh;
+        %tmp.96 = 10;
+        %tmp.97 = mul %tmp.95 %tmp.96;
+        %tmp.98 = 100;
+        %tmp.99 = div %tmp.97 %tmp.98;
+        lputv %rowH.7 %tmp.99;
+        symbol [ rowH %rowH.7 196 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 197 8 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_197_8_197_36_if_stmt:
+        %tmp.100 = lgetv %rowH.7;
+        symbol [ rowH %tmp.100 197 12 16 ];
+        %tmp.101 = 22;
+        %tmp.102 = lt %tmp.100 %tmp.101;
+        bf %tmp.102 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_197_8_197_36_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_197_8_197_36_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_197_23_197_36_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 197 25 ]
+        %tmp.103 = 22;
+        lputv %rowH.7 %tmp.103;
+        symbol [ rowH %rowH.7 197 25 29 ];
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_197_23_197_36_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_197_8_197_36_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_197_8_197_36_if_end:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 198 8 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_198_8_198_36_if_stmt:
+        %tmp.104 = lgetv %rowH.7;
+        symbol [ rowH %tmp.104 198 12 16 ];
+        %tmp.105 = 30;
+        %tmp.106 = gt %tmp.104 %tmp.105;
+        bf %tmp.106 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_198_8_198_36_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_198_8_198_36_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_198_23_198_36_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 198 25 ]
+        %tmp.107 = 30;
+        lputv %rowH.7 %tmp.107;
+        symbol [ rowH %rowH.7 198 25 29 ];
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_198_23_198_36_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_198_8_198_36_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_198_8_198_36_if_end:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 199 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_181_34_231_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_181_34_231_4_stop" ]
+        %rowW.8 = local;
+        symbol [ rowW %rowW.8 199 12 16 ];
+        symbol [ _sw %tmp.109 199 19 22 ];
+        %tmp.109 = getv ? :_sw;
+        %tmp.110 = 74;
+        %tmp.111 = mul %tmp.109 %tmp.110;
+        %tmp.112 = 100;
+        %tmp.113 = div %tmp.111 %tmp.112;
+        lputv %rowW.8 %tmp.113;
+        symbol [ rowW %rowW.8 199 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 200 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_181_34_231_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_181_34_231_4_stop" ]
+        %rowX.9 = local;
+        symbol [ rowX %rowX.9 200 12 16 ];
+        symbol [ _sw %tmp.115 200 20 23 ];
+        %tmp.115 = getv ? :_sw;
+        %tmp.116 = lgetv %rowW.8;
+        symbol [ rowW %tmp.116 200 26 30 ];
+        %tmp.117 = sub %tmp.115 %tmp.116;
+        %tmp.118 = 2;
+        %tmp.119 = div %tmp.117 %tmp.118;
+        lputv %rowX.9 %tmp.119;
+        symbol [ rowX %rowX.9 200 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 201 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_181_34_231_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_181_34_231_4_stop" ]
+        %gap.10 = local;
+        symbol [ gap %gap.10 201 12 15 ];
+        %tmp.120 = 6;
+        lputv %gap.10 %tmp.120;
+        symbol [ gap %gap.10 201 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 202 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_181_34_231_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_181_34_231_4_stop" ]
+        %tot.11 = local;
+        symbol [ tot %tot.11 202 12 15 ];
+        %tmp.121 = lgetv %nR.6;
+        symbol [ nR %tmp.121 202 19 21 ];
+        %tmp.122 = lgetv %rowH.7;
+        symbol [ rowH %tmp.122 202 24 28 ];
+        %tmp.123 = mul %tmp.121 %tmp.122;
+        %tmp.124 = lgetv %nR.6;
+        symbol [ nR %tmp.124 202 32 34 ];
+        %tmp.125 = 1;
+        %tmp.126 = sub %tmp.124 %tmp.125;
+        %tmp.127 = lgetv %gap.10;
+        symbol [ gap %tmp.127 202 42 45 ];
+        %tmp.128 = mul %tmp.126 %tmp.127;
+        %tmp.129 = add %tmp.123 %tmp.128;
+        lputv %tot.11 %tmp.129;
+        symbol [ tot %tot.11 202 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 203 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_181_34_231_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_181_34_231_4_stop" ]
+        %rowY0.12 = local;
+        symbol [ rowY0 %rowY0.12 203 12 17 ];
+        symbol [ _sh %tmp.131 203 21 24 ];
+        %tmp.131 = getv ? :_sh;
+        %tmp.132 = lgetv %tot.11;
+        symbol [ tot %tmp.132 203 27 30 ];
+        %tmp.133 = sub %tmp.131 %tmp.132;
+        %tmp.134 = 2;
+        %tmp.135 = div %tmp.133 %tmp.134;
+        %tmp.136 = lgetv %rowH.7;
+        symbol [ rowH %tmp.136 203 38 42 ];
+        %tmp.137 = add %tmp.135 %tmp.136;
+        lputv %rowY0.12 %tmp.137;
+        symbol [ rowY0 %rowY0.12 203 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 204 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_181_34_231_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_181_34_231_4_stop" ]
+        %i.13 = local;
+        symbol [ i %i.13 204 12 13 ];
+        %tmp.138 = 0;
+        lputv %i.13 %tmp.138;
+        symbol [ i %i.13 204 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 205 8 ]
+        while @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_205_8_227_8_while_test @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_205_8_227_8_while_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_205_8_227_8_while_test:
+        %tmp.139 = lgetv %i.13;
+        symbol [ i %tmp.139 205 15 16 ];
+        %tmp.140 = lgetv %nR.6;
+        symbol [ nR %tmp.140 205 19 21 ];
+        %tmp.141 = lt %tmp.139 %tmp.140;
+        bf %tmp.141 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_205_8_227_8_while_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_205_8_227_8_while_begin:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_205_23_227_8_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 206 12 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_205_23_227_8_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_205_23_227_8_stop" ]
+        %ry.14 = local;
+        symbol [ ry %ry.14 206 16 18 ];
+        %tmp.142 = lgetv %rowY0.12;
+        symbol [ rowY0 %tmp.142 206 26 31 ];
+        %tmp.143 = lgetv %i.13;
+        symbol [ i %tmp.143 206 34 35 ];
+        %tmp.144 = lgetv %rowH.7;
+        symbol [ rowH %tmp.144 206 39 43 ];
+        %tmp.145 = lgetv %gap.10;
+        symbol [ gap %tmp.145 206 46 49 ];
+        %tmp.146 = add %tmp.144 %tmp.145;
+        %tmp.147 = mul %tmp.143 %tmp.146;
+        %tmp.148 = add %tmp.142 %tmp.147;
+        lputv %ry.14 %tmp.148;
+        symbol [ ry %ry.14 206 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 207 12 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_205_23_227_8_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_205_23_227_8_stop" ]
+        %sel.15 = local;
+        symbol [ sel %sel.15 207 16 19 ];
+        %tmp.149 = lgetv %i.13;
+        symbol [ i %tmp.149 207 27 28 ];
+        symbol [ _menuSel %tmp.151 207 32 40 ];
+        %tmp.151 = getv ? :_menuSel;
+        %tmp.152 = eq %tmp.149 %tmp.151;
+        lputv %sel.15 %tmp.152;
+        symbol [ sel %sel.15 207 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 208 12 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_205_23_227_8_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_205_23_227_8_stop" ]
+        %isStart.16 = local;
+        symbol [ isStart %isStart.16 208 16 23 ];
+        %tmp.153 = lgetv %i.13;
+        symbol [ i %tmp.153 208 27 28 ];
+        %tmp.154 = lgetv %nR.6;
+        symbol [ nR %tmp.154 208 32 34 ];
+        %tmp.155 = 1;
+        %tmp.156 = sub %tmp.154 %tmp.155;
+        %tmp.157 = eq %tmp.153 %tmp.156;
+        lputv %isStart.16 %tmp.157;
+        symbol [ isStart %isStart.16 208 16 23 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 209 12 ]
+        %tmp.158 = lgetv %dc;
+        symbol [ dc %tmp.158 209 12 14 ];
+        symbol [ setColor %tmp.159 209 15 23 ];
+        %tmp.159 = getv function %tmp.158 :setColor;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_209_24_209_64_begin:
+        %tmp.160 = lgetv %sel.15;
+        symbol [ sel %tmp.160 209 24 27 ];
+        bf %tmp.160 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_209_24_209_64_else_false;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_209_24_209_64_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_209_31_209_52_begin:
+        %tmp.161 = lgetv %isStart.16;
+        symbol [ isStart %tmp.161 209 31 38 ];
+        bf %tmp.161 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_209_31_209_52_else_false;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_209_31_209_52_true:
+        %tmp.162 = 0x3A1800;
+        push %tmp.162;
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_209_31_209_52_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_209_31_209_52_else_false:
+        %tmp.163 = 0x0A2030;
+        push %tmp.163;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_209_31_209_52_end:
+        %tmp.164 = phi [%tmp.161 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_209_31_209_52_begin] [%tmp.162 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_209_31_209_52_true] [%tmp.163 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_209_31_209_52_else_false] [%tmp.164 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_209_31_209_52_end];
+        push %tmp.164;
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_209_24_209_64_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_209_24_209_64_else_false:
+        %tmp.165 = 0x0A0A18;
+        push %tmp.165;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_209_24_209_64_end:
+        %tmp.166 = phi [%tmp.160 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_209_24_209_64_begin] [%tmp.164 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_209_24_209_64_true] [%tmp.165 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_209_24_209_64_else_false] [%tmp.166 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_209_24_209_64_end];
+        symbol [ Graphics %tmp.167 210 24 32 ];
+        %tmp.167 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.168 210 33 50 ];
+        %tmp.168 = getv %tmp.167 :COLOR_TRANSPARENT;
+        invoke %tmp.158 %tmp.159(%tmp.166, %tmp.168);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 211 12 ]
+        %tmp.169 = lgetv %dc;
+        symbol [ dc %tmp.169 211 12 14 ];
+        symbol [ fillRoundedRectangle %tmp.170 211 15 35 ];
+        %tmp.170 = getv function %tmp.169 :fillRoundedRectangle;
+        %tmp.171 = lgetv %rowX.9;
+        symbol [ rowX %tmp.171 211 36 40 ];
+        %tmp.172 = lgetv %ry.14;
+        symbol [ ry %tmp.172 211 42 44 ];
+        %tmp.173 = lgetv %rowW.8;
+        symbol [ rowW %tmp.173 211 46 50 ];
+        %tmp.174 = lgetv %rowH.7;
+        symbol [ rowH %tmp.174 211 52 56 ];
+        %tmp.175 = 5;
+        invoke %tmp.169 %tmp.170(%tmp.171, %tmp.172, %tmp.173, %tmp.174, %tmp.175);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 212 12 ]
+        %tmp.176 = lgetv %dc;
+        symbol [ dc %tmp.176 212 12 14 ];
+        symbol [ setColor %tmp.177 212 15 23 ];
+        %tmp.177 = getv function %tmp.176 :setColor;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_212_24_212_64_begin:
+        %tmp.178 = lgetv %sel.15;
+        symbol [ sel %tmp.178 212 24 27 ];
+        bf %tmp.178 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_212_24_212_64_else_false;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_212_24_212_64_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_212_31_212_52_begin:
+        %tmp.179 = lgetv %isStart.16;
+        symbol [ isStart %tmp.179 212 31 38 ];
+        bf %tmp.179 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_212_31_212_52_else_false;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_212_31_212_52_true:
+        %tmp.180 = 0xC8A040;
+        push %tmp.180;
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_212_31_212_52_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_212_31_212_52_else_false:
+        %tmp.181 = 0x4488CC;
+        push %tmp.181;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_212_31_212_52_end:
+        %tmp.182 = phi [%tmp.179 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_212_31_212_52_begin] [%tmp.180 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_212_31_212_52_true] [%tmp.181 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_212_31_212_52_else_false] [%tmp.182 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_212_31_212_52_end];
+        push %tmp.182;
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_212_24_212_64_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_212_24_212_64_else_false:
+        %tmp.183 = 0x1A2030;
+        push %tmp.183;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_212_24_212_64_end:
+        %tmp.184 = phi [%tmp.178 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_212_24_212_64_begin] [%tmp.182 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_212_24_212_64_true] [%tmp.183 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_212_24_212_64_else_false] [%tmp.184 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_212_24_212_64_end];
+        symbol [ Graphics %tmp.185 213 24 32 ];
+        %tmp.185 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.186 213 33 50 ];
+        %tmp.186 = getv %tmp.185 :COLOR_TRANSPARENT;
+        invoke %tmp.176 %tmp.177(%tmp.184, %tmp.186);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 214 12 ]
+        %tmp.187 = lgetv %dc;
+        symbol [ dc %tmp.187 214 12 14 ];
+        symbol [ drawRoundedRectangle %tmp.188 214 15 35 ];
+        %tmp.188 = getv function %tmp.187 :drawRoundedRectangle;
+        %tmp.189 = lgetv %rowX.9;
+        symbol [ rowX %tmp.189 214 36 40 ];
+        %tmp.190 = lgetv %ry.14;
+        symbol [ ry %tmp.190 214 42 44 ];
+        %tmp.191 = lgetv %rowW.8;
+        symbol [ rowW %tmp.191 214 46 50 ];
+        %tmp.192 = lgetv %rowH.7;
+        symbol [ rowH %tmp.192 214 52 56 ];
+        %tmp.193 = 5;
+        invoke %tmp.187 %tmp.188(%tmp.189, %tmp.190, %tmp.191, %tmp.192, %tmp.193);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 215 12 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_215_12_219_12_if_stmt:
+        %tmp.194 = lgetv %sel.15;
+        symbol [ sel %tmp.194 215 16 19 ];
+        bf %tmp.194 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_215_12_219_12_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_215_12_219_12_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_215_21_219_12_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 216 16 ]
+        %tmp.195 = lgetv %dc;
+        symbol [ dc %tmp.195 216 16 18 ];
+        symbol [ setColor %tmp.196 216 19 27 ];
+        %tmp.196 = getv function %tmp.195 :setColor;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_216_28_216_49_begin:
+        %tmp.197 = lgetv %isStart.16;
+        symbol [ isStart %tmp.197 216 28 35 ];
+        bf %tmp.197 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_216_28_216_49_else_false;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_216_28_216_49_true:
+        %tmp.198 = 0xC8A040;
+        push %tmp.198;
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_216_28_216_49_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_216_28_216_49_else_false:
+        %tmp.199 = 0x4488CC;
+        push %tmp.199;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_216_28_216_49_end:
+        %tmp.200 = phi [%tmp.197 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_216_28_216_49_begin] [%tmp.198 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_216_28_216_49_true] [%tmp.199 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_216_28_216_49_else_false] [%tmp.200 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_216_28_216_49_end];
+        symbol [ Graphics %tmp.201 216 59 67 ];
+        %tmp.201 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.202 216 68 85 ];
+        %tmp.202 = getv %tmp.201 :COLOR_TRANSPARENT;
+        invoke %tmp.195 %tmp.196(%tmp.200, %tmp.202);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 217 16 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_215_21_219_12_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_215_21_219_12_stop" ]
+        %ay.17 = local;
+        symbol [ ay %ay.17 217 20 22 ];
+        %tmp.203 = lgetv %ry.14;
+        symbol [ ry %tmp.203 217 25 27 ];
+        %tmp.204 = lgetv %rowH.7;
+        symbol [ rowH %tmp.204 217 30 34 ];
+        %tmp.205 = 2;
+        %tmp.206 = div %tmp.204 %tmp.205;
+        %tmp.207 = add %tmp.203 %tmp.206;
+        lputv %ay.17 %tmp.207;
+        symbol [ ay %ay.17 217 20 22 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 218 16 ]
+        %tmp.208 = lgetv %dc;
+        symbol [ dc %tmp.208 218 16 18 ];
+        symbol [ fillPolygon %tmp.209 218 19 30 ];
+        %tmp.209 = getv function %tmp.208 :fillPolygon;
+        %tmp.210 = newa 3;
+        %tmp.211 = newa 2;
+        %tmp.212 = lgetv %rowX.9;
+        symbol [ rowX %tmp.212 218 33 37 ];
+        %tmp.213 = 5;
+        %tmp.214 = add %tmp.212 %tmp.213;
+        %tmp.215 = dup %tmp.211;
+        %tmp.216 = aputv %tmp.215 0 %tmp.214;
+        %tmp.217 = lgetv %ay.17;
+        symbol [ ay %tmp.217 218 43 45 ];
+        %tmp.218 = 4;
+        %tmp.219 = sub %tmp.217 %tmp.218;
+        %tmp.220 = dup %tmp.216;
+        %tmp.221 = aputv %tmp.220 1 %tmp.219;
+        %tmp.222 = dup %tmp.210;
+        %tmp.223 = aputv %tmp.222 0 %tmp.221;
+        %tmp.224 = newa 2;
+        %tmp.225 = lgetv %rowX.9;
+        symbol [ rowX %tmp.225 218 53 57 ];
+        %tmp.226 = 5;
+        %tmp.227 = add %tmp.225 %tmp.226;
+        %tmp.228 = dup %tmp.224;
+        %tmp.229 = aputv %tmp.228 0 %tmp.227;
+        %tmp.230 = lgetv %ay.17;
+        symbol [ ay %tmp.230 218 63 65 ];
+        %tmp.231 = 4;
+        %tmp.232 = add %tmp.230 %tmp.231;
+        %tmp.233 = dup %tmp.229;
+        %tmp.234 = aputv %tmp.233 1 %tmp.232;
+        %tmp.235 = dup %tmp.223;
+        %tmp.236 = aputv %tmp.235 1 %tmp.234;
+        %tmp.237 = newa 2;
+        %tmp.238 = lgetv %rowX.9;
+        symbol [ rowX %tmp.238 218 73 77 ];
+        %tmp.239 = 11;
+        %tmp.240 = add %tmp.238 %tmp.239;
+        %tmp.241 = dup %tmp.237;
+        %tmp.242 = aputv %tmp.241 0 %tmp.240;
+        %tmp.243 = lgetv %ay.17;
+        symbol [ ay %tmp.243 218 84 86 ];
+        %tmp.244 = dup %tmp.242;
+        %tmp.245 = aputv %tmp.244 1 %tmp.243;
+        %tmp.246 = dup %tmp.236;
+        %tmp.247 = aputv %tmp.246 2 %tmp.245;
+        invoke %tmp.208 %tmp.209(%tmp.247);
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_215_21_219_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_215_12_219_12_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_215_12_219_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 220 12 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_205_23_227_8_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_205_23_227_8_stop" ]
+        %dimmed.18 = local;
+        symbol [ dimmed %dimmed.18 220 16 22 ];
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_220_25_220_87_begin:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_220_26_220_45_begin:
+        %tmp.248 = lgetv %i.13;
+        symbol [ i %tmp.248 220 26 27 ];
+        %tmp.249 = 1;
+        %tmp.250 = eq %tmp.248 %tmp.249;
+        %tmp.251 = dup %tmp.250;
+        bf %tmp.251 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_220_36_220_45_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_220_36_220_45_true:
+        symbol [ _mode %tmp.253 220 36 41 ];
+        %tmp.253 = getv ? :_mode;
+        symbol [ MODE_PVP %tmp.255 220 45 53 ];
+        %tmp.255 = getv ? :MODE_PVP;
+        %tmp.256 = eq %tmp.253 %tmp.255;
+        %tmp.257 = and %tmp.250 %tmp.256;
+        push %tmp.257;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_220_36_220_45_end:
+        %tmp.258 = phi [%tmp.251 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_220_26_220_45_begin] [%tmp.257 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_220_36_220_45_true] [%tmp.258 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_220_36_220_45_end];
+        %tmp.259 = dup %tmp.258;
+        bt %tmp.259 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_220_58_220_87_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_220_58_220_87_false:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_220_59_220_78_begin:
+        %tmp.260 = lgetv %i.13;
+        symbol [ i %tmp.260 220 59 60 ];
+        %tmp.261 = 2;
+        %tmp.262 = eq %tmp.260 %tmp.261;
+        %tmp.263 = dup %tmp.262;
+        bf %tmp.263 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_220_69_220_78_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_220_69_220_78_true:
+        symbol [ _mode %tmp.265 220 69 74 ];
+        %tmp.265 = getv ? :_mode;
+        symbol [ MODE_PVAI %tmp.267 220 78 87 ];
+        %tmp.267 = getv ? :MODE_PVAI;
+        %tmp.268 = ne %tmp.265 %tmp.267;
+        %tmp.269 = and %tmp.262 %tmp.268;
+        push %tmp.269;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_220_69_220_78_end:
+        %tmp.270 = phi [%tmp.263 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_220_59_220_78_begin] [%tmp.269 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_220_69_220_78_true] [%tmp.270 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_220_69_220_78_end];
+        %tmp.271 = or %tmp.258 %tmp.270;
+        push %tmp.271;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_220_58_220_87_end:
+        %tmp.272 = phi [%tmp.259 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_220_25_220_87_begin] [%tmp.271 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_220_58_220_87_false] [%tmp.272 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_220_58_220_87_end];
+        lputv %dimmed.18 %tmp.272;
+        symbol [ dimmed %dimmed.18 220 16 22 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 221 12 ]
+        %tmp.273 = lgetv %dc;
+        symbol [ dc %tmp.273 221 12 14 ];
+        symbol [ setColor %tmp.274 221 15 23 ];
+        %tmp.274 = getv function %tmp.273 :setColor;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_221_24_222_75_begin:
+        %tmp.275 = lgetv %dimmed.18;
+        symbol [ dimmed %tmp.275 221 24 30 ];
+        bf %tmp.275 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_221_24_222_75_else_false;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_221_24_222_75_true:
+        %tmp.276 = 0x445566;
+        push %tmp.276;
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_221_24_222_75_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_221_24_222_75_else_false:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_222_27_222_67_begin:
+        %tmp.277 = lgetv %sel.15;
+        symbol [ sel %tmp.277 222 27 30 ];
+        bf %tmp.277 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_222_27_222_67_else_false;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_222_27_222_67_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_222_34_222_55_begin:
+        %tmp.278 = lgetv %isStart.16;
+        symbol [ isStart %tmp.278 222 34 41 ];
+        bf %tmp.278 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_222_34_222_55_else_false;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_222_34_222_55_true:
+        %tmp.279 = 0xFFCC88;
+        push %tmp.279;
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_222_34_222_55_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_222_34_222_55_else_false:
+        %tmp.280 = 0xAADDFF;
+        push %tmp.280;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_222_34_222_55_end:
+        %tmp.281 = phi [%tmp.278 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_222_34_222_55_begin] [%tmp.279 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_222_34_222_55_true] [%tmp.280 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_222_34_222_55_else_false] [%tmp.281 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_222_34_222_55_end];
+        push %tmp.281;
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_222_27_222_67_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_222_27_222_67_else_false:
+        %tmp.282 = 0x556677;
+        push %tmp.282;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_222_27_222_67_end:
+        %tmp.283 = phi [%tmp.277 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_222_27_222_67_begin] [%tmp.281 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_222_27_222_67_true] [%tmp.282 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_222_27_222_67_else_false] [%tmp.283 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_222_27_222_67_end];
+        push %tmp.283;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_221_24_222_75_end:
+        %tmp.284 = phi [%tmp.275 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_221_24_222_75_begin] [%tmp.276 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_221_24_222_75_true] [%tmp.283 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_221_24_222_75_else_false] [%tmp.284 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_221_24_222_75_end];
+        symbol [ Graphics %tmp.285 223 24 32 ];
+        %tmp.285 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.286 223 33 50 ];
+        %tmp.286 = getv %tmp.285 :COLOR_TRANSPARENT;
+        invoke %tmp.273 %tmp.274(%tmp.284, %tmp.286);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 224 12 ]
+        %tmp.287 = lgetv %dc;
+        symbol [ dc %tmp.287 224 12 14 ];
+        symbol [ drawText %tmp.288 224 15 23 ];
+        %tmp.288 = getv function %tmp.287 :drawText;
+        %tmp.289 = lgetv %hw.1;
+        symbol [ hw %tmp.289 224 24 26 ];
+        %tmp.290 = lgetv %ry.14;
+        symbol [ ry %tmp.290 224 28 30 ];
+        %tmp.291 = lgetv %rowH.7;
+        symbol [ rowH %tmp.291 224 34 38 ];
+        %tmp.292 = 14;
+        %tmp.293 = sub %tmp.291 %tmp.292;
+        %tmp.294 = 2;
+        %tmp.295 = div %tmp.293 %tmp.294;
+        %tmp.296 = add %tmp.290 %tmp.295;
+        symbol [ Graphics %tmp.297 225 24 32 ];
+        %tmp.297 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.298 225 33 43 ];
+        %tmp.298 = getv %tmp.297 :FONT_XTINY;
+        %tmp.299 = lgetv %rows.5;
+        symbol [ rows %tmp.299 225 45 49 ];
+        %tmp.300 = lgetv %i.13;
+        symbol [ i %tmp.300 225 50 51 ];
+        %tmp.301 = agetv %tmp.299 %tmp.300;
+        symbol [ Graphics %tmp.302 225 54 62 ];
+        %tmp.302 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.303 225 63 82 ];
+        %tmp.303 = getv %tmp.302 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.287 %tmp.288(%tmp.289, %tmp.296, %tmp.298, %tmp.301, %tmp.303);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 226 12 ]
+        %tmp.304 = lgetv %i.13;
+        symbol [ i %tmp.304 226 16 17 ];
+        %tmp.305 = 1;
+        %tmp.306 = add %tmp.304 %tmp.305;
+        lputv %i.13 %tmp.306;
+        symbol [ i %i.13 226 12 13 ];
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_205_23_227_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_205_8_227_8_while_test;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_205_8_227_8_while_end:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 228 8 ]
+        %tmp.307 = lgetv %dc;
+        symbol [ dc %tmp.307 228 8 10 ];
+        symbol [ setColor %tmp.308 228 11 19 ];
+        %tmp.308 = getv function %tmp.307 :setColor;
+        %tmp.309 = 0x334455;
+        symbol [ Graphics %tmp.310 228 30 38 ];
+        %tmp.310 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.311 228 39 56 ];
+        %tmp.311 = getv %tmp.310 :COLOR_TRANSPARENT;
+        invoke %tmp.307 %tmp.308(%tmp.309, %tmp.311);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 229 8 ]
+        %tmp.312 = lgetv %dc;
+        symbol [ dc %tmp.312 229 8 10 ];
+        symbol [ drawText %tmp.313 229 11 19 ];
+        %tmp.313 = getv function %tmp.312 :drawText;
+        %tmp.314 = lgetv %hw.1;
+        symbol [ hw %tmp.314 229 20 22 ];
+        symbol [ _sh %tmp.316 229 24 27 ];
+        %tmp.316 = getv ? :_sh;
+        %tmp.317 = 14;
+        %tmp.318 = sub %tmp.316 %tmp.317;
+        symbol [ Graphics %tmp.319 229 34 42 ];
+        %tmp.319 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.320 229 43 53 ];
+        %tmp.320 = getv %tmp.319 :FONT_XTINY;
+        %tmp.321 = "UP/DN sel  SELECT set/start";
+        symbol [ Graphics %tmp.322 230 51 59 ];
+        %tmp.322 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.323 230 60 79 ];
+        %tmp.323 = getv %tmp.322 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.312 %tmp.313(%tmp.314, %tmp.318, %tmp.320, %tmp.321, %tmp.323);
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_181_34_231_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 234; @symbol_functiondef = [_drawBoard,234,20,30]; @symbol_param<0> = [dc,234,31,33]; ]
+    protected
+    function _drawBoard(dc) {
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_234_35_281_4_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 236 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 236 8 10 ];
+        symbol [ setColor %tmp.2 236 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        %tmp.3 = 0xC8A040;
+        symbol [ Graphics %tmp.4 236 30 38 ];
+        %tmp.4 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.5 236 39 56 ];
+        %tmp.5 = getv %tmp.4 :COLOR_TRANSPARENT;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.5);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 237 8 ]
+        %tmp.6 = lgetv %dc;
+        symbol [ dc %tmp.6 237 8 10 ];
+        symbol [ fillRoundedRectangle %tmp.7 237 11 31 ];
+        %tmp.7 = getv function %tmp.6 :fillRoundedRectangle;
+        symbol [ _bgX %tmp.9 237 32 36 ];
+        %tmp.9 = getv ? :_bgX;
+        symbol [ _bgY %tmp.11 237 38 42 ];
+        %tmp.11 = getv ? :_bgY;
+        symbol [ _bgSz %tmp.13 237 44 49 ];
+        %tmp.13 = getv ? :_bgSz;
+        symbol [ _bgSz %tmp.15 237 51 56 ];
+        %tmp.15 = getv ? :_bgSz;
+        %tmp.16 = 4;
+        invoke %tmp.6 %tmp.7(%tmp.9, %tmp.11, %tmp.13, %tmp.15, %tmp.16);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 240 8 ]
+        %tmp.17 = lgetv %dc;
+        symbol [ dc %tmp.17 240 8 10 ];
+        symbol [ setColor %tmp.18 240 11 19 ];
+        %tmp.18 = getv function %tmp.17 :setColor;
+        %tmp.19 = 0x7B4F1C;
+        symbol [ Graphics %tmp.20 240 30 38 ];
+        %tmp.20 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.21 240 39 56 ];
+        %tmp.21 = getv %tmp.20 :COLOR_TRANSPARENT;
+        invoke %tmp.17 %tmp.18(%tmp.19, %tmp.21);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 241 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_234_35_281_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_234_35_281_4_stop" ]
+        %li.1 = local;
+        symbol [ li %li.1 241 12 14 ];
+        %tmp.22 = 0;
+        lputv %li.1 %tmp.22;
+        symbol [ li %li.1 241 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 242 8 ]
+        while @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_242_8_248_8_while_test @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_242_8_248_8_while_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_242_8_248_8_while_test:
+        %tmp.23 = lgetv %li.1;
+        symbol [ li %tmp.23 242 15 17 ];
+        %tmp.24 = 9;
+        %tmp.25 = lt %tmp.23 %tmp.24;
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_242_8_248_8_while_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_242_8_248_8_while_begin:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_242_23_248_8_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 243 12 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_242_23_248_8_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_242_23_248_8_stop" ]
+        %lx.2 = local;
+        symbol [ lx %lx.2 243 16 18 ];
+        symbol [ _boardX %tmp.27 243 21 28 ];
+        %tmp.27 = getv ? :_boardX;
+        %tmp.28 = lgetv %li.1;
+        symbol [ li %tmp.28 243 31 33 ];
+        symbol [ _cell %tmp.30 243 36 41 ];
+        %tmp.30 = getv ? :_cell;
+        %tmp.31 = mul %tmp.28 %tmp.30;
+        %tmp.32 = add %tmp.27 %tmp.31;
+        lputv %lx.2 %tmp.32;
+        symbol [ lx %lx.2 243 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 244 12 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_242_23_248_8_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_242_23_248_8_stop" ]
+        %ly.3 = local;
+        symbol [ ly %ly.3 244 16 18 ];
+        symbol [ _boardY %tmp.34 244 21 28 ];
+        %tmp.34 = getv ? :_boardY;
+        %tmp.35 = lgetv %li.1;
+        symbol [ li %tmp.35 244 31 33 ];
+        symbol [ _cell %tmp.37 244 36 41 ];
+        %tmp.37 = getv ? :_cell;
+        %tmp.38 = mul %tmp.35 %tmp.37;
+        %tmp.39 = add %tmp.34 %tmp.38;
+        lputv %ly.3 %tmp.39;
+        symbol [ ly %ly.3 244 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 245 12 ]
+        %tmp.40 = lgetv %dc;
+        symbol [ dc %tmp.40 245 12 14 ];
+        symbol [ drawLine %tmp.41 245 15 23 ];
+        %tmp.41 = getv function %tmp.40 :drawLine;
+        %tmp.42 = lgetv %lx.2;
+        symbol [ lx %tmp.42 245 24 26 ];
+        symbol [ _boardY %tmp.44 245 28 35 ];
+        %tmp.44 = getv ? :_boardY;
+        %tmp.45 = lgetv %lx.2;
+        symbol [ lx %tmp.45 245 37 39 ];
+        symbol [ _boardY %tmp.47 245 41 48 ];
+        %tmp.47 = getv ? :_boardY;
+        %tmp.48 = 8;
+        symbol [ _cell %tmp.50 245 55 60 ];
+        %tmp.50 = getv ? :_cell;
+        %tmp.51 = mul %tmp.48 %tmp.50;
+        %tmp.52 = add %tmp.47 %tmp.51;
+        invoke %tmp.40 %tmp.41(%tmp.42, %tmp.44, %tmp.45, %tmp.52);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 246 12 ]
+        %tmp.53 = lgetv %dc;
+        symbol [ dc %tmp.53 246 12 14 ];
+        symbol [ drawLine %tmp.54 246 15 23 ];
+        %tmp.54 = getv function %tmp.53 :drawLine;
+        symbol [ _boardX %tmp.56 246 24 31 ];
+        %tmp.56 = getv ? :_boardX;
+        %tmp.57 = lgetv %ly.3;
+        symbol [ ly %tmp.57 246 33 35 ];
+        symbol [ _boardX %tmp.59 246 37 44 ];
+        %tmp.59 = getv ? :_boardX;
+        %tmp.60 = 8;
+        symbol [ _cell %tmp.62 246 51 56 ];
+        %tmp.62 = getv ? :_cell;
+        %tmp.63 = mul %tmp.60 %tmp.62;
+        %tmp.64 = add %tmp.59 %tmp.63;
+        %tmp.65 = lgetv %ly.3;
+        symbol [ ly %tmp.65 246 58 60 ];
+        invoke %tmp.53 %tmp.54(%tmp.56, %tmp.57, %tmp.64, %tmp.65);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 247 12 ]
+        %tmp.66 = lgetv %li.1;
+        symbol [ li %tmp.66 247 17 19 ];
+        %tmp.67 = 1;
+        %tmp.68 = add %tmp.66 %tmp.67;
+        lputv %li.1 %tmp.68;
+        symbol [ li %li.1 247 12 14 ];
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_242_23_248_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_242_8_248_8_while_test;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_242_8_248_8_while_end:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 251 8 ]
+        %tmp.69 = lgetv %dc;
+        symbol [ dc %tmp.69 251 8 10 ];
+        symbol [ setColor %tmp.70 251 11 19 ];
+        %tmp.70 = getv function %tmp.69 :setColor;
+        %tmp.71 = 0x5C3317;
+        symbol [ Graphics %tmp.72 251 30 38 ];
+        %tmp.72 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.73 251 39 56 ];
+        %tmp.73 = getv %tmp.72 :COLOR_TRANSPARENT;
+        invoke %tmp.69 %tmp.70(%tmp.71, %tmp.73);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 252 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_234_35_281_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_234_35_281_4_stop" ]
+        %hoshi.4 = local;
+        symbol [ hoshi %hoshi.4 252 12 17 ];
+        %tmp.74 = newa 3;
+        %tmp.75 = 2;
+        %tmp.76 = dup %tmp.74;
+        %tmp.77 = aputv %tmp.76 0 %tmp.75;
+        %tmp.78 = 4;
+        %tmp.79 = dup %tmp.77;
+        %tmp.80 = aputv %tmp.79 1 %tmp.78;
+        %tmp.81 = 6;
+        %tmp.82 = dup %tmp.80;
+        %tmp.83 = aputv %tmp.82 2 %tmp.81;
+        lputv %hoshi.4 %tmp.83;
+        symbol [ hoshi %hoshi.4 252 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 253 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_234_35_281_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_234_35_281_4_stop" ]
+        %hi.5 = local;
+        symbol [ hi %hi.5 253 12 14 ];
+        %tmp.84 = 0;
+        lputv %hi.5 %tmp.84;
+        symbol [ hi %hi.5 253 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 254 8 ]
+        while @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_254_8_263_8_while_test @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_254_8_263_8_while_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_254_8_263_8_while_test:
+        %tmp.85 = lgetv %hi.5;
+        symbol [ hi %tmp.85 254 15 17 ];
+        %tmp.86 = 3;
+        %tmp.87 = lt %tmp.85 %tmp.86;
+        bf %tmp.87 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_254_8_263_8_while_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_254_8_263_8_while_begin:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_254_23_263_8_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 255 12 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_254_23_263_8_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_254_23_263_8_stop" ]
+        %hj.6 = local;
+        symbol [ hj %hj.6 255 16 18 ];
+        %tmp.88 = 0;
+        lputv %hj.6 %tmp.88;
+        symbol [ hj %hj.6 255 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 256 12 ]
+        while @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_256_12_261_12_while_test @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_256_12_261_12_while_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_256_12_261_12_while_test:
+        %tmp.89 = lgetv %hj.6;
+        symbol [ hj %tmp.89 256 19 21 ];
+        %tmp.90 = 3;
+        %tmp.91 = lt %tmp.89 %tmp.90;
+        bf %tmp.91 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_256_12_261_12_while_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_256_12_261_12_while_begin:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_256_27_261_12_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 257 16 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_256_27_261_12_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_256_27_261_12_stop" ]
+        %hx.7 = local;
+        symbol [ hx %hx.7 257 20 22 ];
+        symbol [ _boardX %tmp.93 257 25 32 ];
+        %tmp.93 = getv ? :_boardX;
+        %tmp.94 = lgetv %hoshi.4;
+        symbol [ hoshi %tmp.94 257 35 40 ];
+        %tmp.95 = lgetv %hi.5;
+        symbol [ hi %tmp.95 257 41 43 ];
+        %tmp.96 = agetv %tmp.94 %tmp.95;
+        symbol [ _cell %tmp.98 257 47 52 ];
+        %tmp.98 = getv ? :_cell;
+        %tmp.99 = mul %tmp.96 %tmp.98;
+        %tmp.100 = add %tmp.93 %tmp.99;
+        lputv %hx.7 %tmp.100;
+        symbol [ hx %hx.7 257 20 22 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 258 16 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_256_27_261_12_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_256_27_261_12_stop" ]
+        %hy.8 = local;
+        symbol [ hy %hy.8 258 20 22 ];
+        symbol [ _boardY %tmp.102 258 25 32 ];
+        %tmp.102 = getv ? :_boardY;
+        %tmp.103 = lgetv %hoshi.4;
+        symbol [ hoshi %tmp.103 258 35 40 ];
+        %tmp.104 = lgetv %hj.6;
+        symbol [ hj %tmp.104 258 41 43 ];
+        %tmp.105 = agetv %tmp.103 %tmp.104;
+        symbol [ _cell %tmp.107 258 47 52 ];
+        %tmp.107 = getv ? :_cell;
+        %tmp.108 = mul %tmp.105 %tmp.107;
+        %tmp.109 = add %tmp.102 %tmp.108;
+        lputv %hy.8 %tmp.109;
+        symbol [ hy %hy.8 258 20 22 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 259 16 ]
+        %tmp.110 = lgetv %dc;
+        symbol [ dc %tmp.110 259 16 18 ];
+        symbol [ fillCircle %tmp.111 259 19 29 ];
+        %tmp.111 = getv function %tmp.110 :fillCircle;
+        %tmp.112 = lgetv %hx.7;
+        symbol [ hx %tmp.112 259 30 32 ];
+        %tmp.113 = lgetv %hy.8;
+        symbol [ hy %tmp.113 259 34 36 ];
+        symbol [ _cell %tmp.115 259 38 43 ];
+        %tmp.115 = getv ? :_cell;
+        %tmp.116 = 10;
+        %tmp.117 = mul %tmp.115 %tmp.116;
+        %tmp.118 = 100;
+        %tmp.119 = div %tmp.117 %tmp.118;
+        %tmp.120 = 1;
+        %tmp.121 = add %tmp.119 %tmp.120;
+        invoke %tmp.110 %tmp.111(%tmp.112, %tmp.113, %tmp.121);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 260 16 ]
+        %tmp.122 = lgetv %hj.6;
+        symbol [ hj %tmp.122 260 21 23 ];
+        %tmp.123 = 1;
+        %tmp.124 = add %tmp.122 %tmp.123;
+        lputv %hj.6 %tmp.124;
+        symbol [ hj %hj.6 260 16 18 ];
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_256_27_261_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_256_12_261_12_while_test;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_256_12_261_12_while_end:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 262 12 ]
+        %tmp.125 = lgetv %hi.5;
+        symbol [ hi %tmp.125 262 17 19 ];
+        %tmp.126 = 1;
+        %tmp.127 = add %tmp.125 %tmp.126;
+        lputv %hi.5 %tmp.127;
+        symbol [ hi %hi.5 262 12 14 ];
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_254_23_263_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_254_8_263_8_while_test;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_254_8_263_8_while_end:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 266 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_234_35_281_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_234_35_281_4_stop" ]
+        %si.9 = local;
+        symbol [ si %si.9 266 12 14 ];
+        %tmp.128 = 0;
+        lputv %si.9 %tmp.128;
+        symbol [ si %si.9 266 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 267 8 ]
+        while @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_267_8_275_8_while_test @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_267_8_275_8_while_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_267_8_275_8_while_test:
+        %tmp.129 = lgetv %si.9;
+        symbol [ si %tmp.129 267 15 17 ];
+        %tmp.130 = 81;
+        %tmp.131 = lt %tmp.129 %tmp.130;
+        bf %tmp.131 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_267_8_275_8_while_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_267_8_275_8_while_begin:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_267_24_275_8_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 268 12 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_267_24_275_8_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_267_24_275_8_stop" ]
+        %sv.10 = local;
+        symbol [ sv %sv.10 268 16 18 ];
+        symbol [ _ctrl %tmp.133 268 21 26 ];
+        %tmp.133 = getv ? :_ctrl;
+        symbol [ board %tmp.134 268 27 32 ];
+        %tmp.134 = getv %tmp.133 :board;
+        symbol [ grid %tmp.135 268 33 37 ];
+        %tmp.135 = getv %tmp.134 :grid;
+        %tmp.136 = lgetv %si.9;
+        symbol [ si %tmp.136 268 38 40 ];
+        %tmp.137 = agetv %tmp.135 %tmp.136;
+        lputv %sv.10 %tmp.137;
+        symbol [ sv %sv.10 268 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 269 12 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_269_12_273_12_if_stmt:
+        %tmp.138 = lgetv %sv.10;
+        symbol [ sv %tmp.138 269 16 18 ];
+        %tmp.139 = 0;
+        %tmp.140 = ne %tmp.138 %tmp.139;
+        bf %tmp.140 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_269_12_273_12_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_269_12_273_12_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_269_25_273_12_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 270 16 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_269_25_273_12_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_269_25_273_12_stop" ]
+        %sx.11 = local;
+        symbol [ sx %sx.11 270 20 22 ];
+        symbol [ _boardX %tmp.142 270 25 32 ];
+        %tmp.142 = getv ? :_boardX;
+        %tmp.143 = lgetv %si.9;
+        symbol [ si %tmp.143 270 36 38 ];
+        %tmp.144 = 9;
+        %tmp.145 = mod %tmp.143 %tmp.144;
+        symbol [ _cell %tmp.147 270 46 51 ];
+        %tmp.147 = getv ? :_cell;
+        %tmp.148 = mul %tmp.145 %tmp.147;
+        %tmp.149 = add %tmp.142 %tmp.148;
+        lputv %sx.11 %tmp.149;
+        symbol [ sx %sx.11 270 20 22 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 271 16 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_269_25_273_12_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_269_25_273_12_stop" ]
+        %sy.12 = local;
+        symbol [ sy %sy.12 271 20 22 ];
+        symbol [ _boardY %tmp.151 271 25 32 ];
+        %tmp.151 = getv ? :_boardY;
+        %tmp.152 = lgetv %si.9;
+        symbol [ si %tmp.152 271 36 38 ];
+        %tmp.153 = 9;
+        %tmp.154 = div %tmp.152 %tmp.153;
+        symbol [ _cell %tmp.156 271 46 51 ];
+        %tmp.156 = getv ? :_cell;
+        %tmp.157 = mul %tmp.154 %tmp.156;
+        %tmp.158 = add %tmp.151 %tmp.157;
+        lputv %sy.12 %tmp.158;
+        symbol [ sy %sy.12 271 20 22 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 272 16 ]
+        %tmp.159 = self;
+        symbol [ _drawStone %tmp.160 272 16 26 ];
+        %tmp.160 = getv function %tmp.159 :_drawStone;
+        %tmp.161 = lgetv %dc;
+        symbol [ dc %tmp.161 272 27 29 ];
+        %tmp.162 = lgetv %sx.11;
+        symbol [ sx %tmp.162 272 31 33 ];
+        %tmp.163 = lgetv %sy.12;
+        symbol [ sy %tmp.163 272 35 37 ];
+        %tmp.164 = lgetv %sv.10;
+        symbol [ sv %tmp.164 272 39 41 ];
+        %tmp.165 = lgetv %si.9;
+        symbol [ si %tmp.165 272 43 45 ];
+        symbol [ _ctrl %tmp.167 272 49 54 ];
+        %tmp.167 = getv ? :_ctrl;
+        symbol [ lastMoveIdx %tmp.168 272 55 66 ];
+        %tmp.168 = getv %tmp.167 :lastMoveIdx;
+        %tmp.169 = eq %tmp.165 %tmp.168;
+        invoke %tmp.159 %tmp.160(%tmp.161, %tmp.162, %tmp.163, %tmp.164, %tmp.169);
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_269_25_273_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_269_12_273_12_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_269_12_273_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 274 12 ]
+        %tmp.170 = lgetv %si.9;
+        symbol [ si %tmp.170 274 17 19 ];
+        %tmp.171 = 1;
+        %tmp.172 = add %tmp.170 %tmp.171;
+        lputv %si.9 %tmp.172;
+        symbol [ si %si.9 274 12 14 ];
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_267_24_275_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_267_8_275_8_while_test;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_267_8_275_8_while_end:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 278 8 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_278_8_280_8_if_stmt:
+        symbol [ _ctrl %tmp.174 278 12 17 ];
+        %tmp.174 = getv ? :_ctrl;
+        symbol [ gameOver %tmp.175 278 18 26 ];
+        %tmp.175 = getv %tmp.174 :gameOver;
+        %tmp.176 = 0;
+        %tmp.177 = eq %tmp.175 %tmp.176;
+        bf %tmp.177 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_278_8_280_8_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_278_8_280_8_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_278_33_280_8_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 279 12 ]
+        %tmp.178 = self;
+        symbol [ _drawCursor %tmp.179 279 12 23 ];
+        %tmp.179 = getv function %tmp.178 :_drawCursor;
+        %tmp.180 = lgetv %dc;
+        symbol [ dc %tmp.180 279 24 26 ];
+        invoke %tmp.178 %tmp.179(%tmp.180);
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_278_33_280_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_278_8_280_8_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_278_8_280_8_if_end:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_234_35_281_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 283; @symbol_functiondef = [_drawStone,283,20,30]; @symbol_param<0> = [dc,283,31,33]; @symbol_param<1> = [px,283,35,37]; @symbol_param<2> = [py,283,39,41]; @symbol_param<3> = [color,283,43,48]; @symbol_param<4> = [isLast,283,50,56]; ]
+    protected
+    function _drawStone(dc, px, py, color, isLast) {
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_283_58_302_4_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 284 8 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_284_8_296_8_if_stmt:
+        %tmp.1 = lgetv %color;
+        symbol [ color %tmp.1 284 12 17 ];
+        symbol [ STONE_BLACK %tmp.3 284 21 32 ];
+        %tmp.3 = getv ? :STONE_BLACK;
+        %tmp.4 = eq %tmp.1 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_284_8_296_8_if_else_false;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_284_8_296_8_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_284_34_289_8_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 285 12 ]
+        %tmp.5 = lgetv %dc;
+        symbol [ dc %tmp.5 285 12 14 ];
+        symbol [ setColor %tmp.6 285 15 23 ];
+        %tmp.6 = getv function %tmp.5 :setColor;
+        %tmp.7 = 0x1A1A1A;
+        symbol [ Graphics %tmp.8 285 34 42 ];
+        %tmp.8 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.9 285 43 60 ];
+        %tmp.9 = getv %tmp.8 :COLOR_TRANSPARENT;
+        invoke %tmp.5 %tmp.6(%tmp.7, %tmp.9);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 286 12 ]
+        %tmp.10 = lgetv %dc;
+        symbol [ dc %tmp.10 286 12 14 ];
+        symbol [ fillCircle %tmp.11 286 15 25 ];
+        %tmp.11 = getv function %tmp.10 :fillCircle;
+        %tmp.12 = lgetv %px;
+        symbol [ px %tmp.12 286 26 28 ];
+        %tmp.13 = lgetv %py;
+        symbol [ py %tmp.13 286 30 32 ];
+        symbol [ _sr %tmp.15 286 34 37 ];
+        %tmp.15 = getv ? :_sr;
+        invoke %tmp.10 %tmp.11(%tmp.12, %tmp.13, %tmp.15);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 287 12 ]
+        %tmp.16 = lgetv %dc;
+        symbol [ dc %tmp.16 287 12 14 ];
+        symbol [ setColor %tmp.17 287 15 23 ];
+        %tmp.17 = getv function %tmp.16 :setColor;
+        %tmp.18 = 0x404040;
+        symbol [ Graphics %tmp.19 287 34 42 ];
+        %tmp.19 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.20 287 43 60 ];
+        %tmp.20 = getv %tmp.19 :COLOR_TRANSPARENT;
+        invoke %tmp.16 %tmp.17(%tmp.18, %tmp.20);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 288 12 ]
+        %tmp.21 = lgetv %dc;
+        symbol [ dc %tmp.21 288 12 14 ];
+        symbol [ fillCircle %tmp.22 288 15 25 ];
+        %tmp.22 = getv function %tmp.21 :fillCircle;
+        %tmp.23 = lgetv %px;
+        symbol [ px %tmp.23 288 26 28 ];
+        symbol [ _sr %tmp.25 288 31 34 ];
+        %tmp.25 = getv ? :_sr;
+        %tmp.26 = 3;
+        %tmp.27 = div %tmp.25 %tmp.26;
+        %tmp.28 = sub %tmp.23 %tmp.27;
+        %tmp.29 = lgetv %py;
+        symbol [ py %tmp.29 288 40 42 ];
+        symbol [ _sr %tmp.31 288 45 48 ];
+        %tmp.31 = getv ? :_sr;
+        %tmp.32 = 3;
+        %tmp.33 = div %tmp.31 %tmp.32;
+        %tmp.34 = sub %tmp.29 %tmp.33;
+        symbol [ _sr %tmp.36 288 54 57 ];
+        %tmp.36 = getv ? :_sr;
+        %tmp.37 = 4;
+        %tmp.38 = div %tmp.36 %tmp.37;
+        invoke %tmp.21 %tmp.22(%tmp.28, %tmp.34, %tmp.38);
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_284_34_289_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_284_8_296_8_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_284_8_296_8_if_else_false:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_289_15_296_8_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 290 12 ]
+        %tmp.39 = lgetv %dc;
+        symbol [ dc %tmp.39 290 12 14 ];
+        symbol [ setColor %tmp.40 290 15 23 ];
+        %tmp.40 = getv function %tmp.39 :setColor;
+        %tmp.41 = 0xEEEEEE;
+        symbol [ Graphics %tmp.42 290 34 42 ];
+        %tmp.42 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.43 290 43 60 ];
+        %tmp.43 = getv %tmp.42 :COLOR_TRANSPARENT;
+        invoke %tmp.39 %tmp.40(%tmp.41, %tmp.43);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 291 12 ]
+        %tmp.44 = lgetv %dc;
+        symbol [ dc %tmp.44 291 12 14 ];
+        symbol [ fillCircle %tmp.45 291 15 25 ];
+        %tmp.45 = getv function %tmp.44 :fillCircle;
+        %tmp.46 = lgetv %px;
+        symbol [ px %tmp.46 291 26 28 ];
+        %tmp.47 = lgetv %py;
+        symbol [ py %tmp.47 291 30 32 ];
+        symbol [ _sr %tmp.49 291 34 37 ];
+        %tmp.49 = getv ? :_sr;
+        invoke %tmp.44 %tmp.45(%tmp.46, %tmp.47, %tmp.49);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 292 12 ]
+        %tmp.50 = lgetv %dc;
+        symbol [ dc %tmp.50 292 12 14 ];
+        symbol [ setColor %tmp.51 292 15 23 ];
+        %tmp.51 = getv function %tmp.50 :setColor;
+        %tmp.52 = 0x888888;
+        symbol [ Graphics %tmp.53 292 34 42 ];
+        %tmp.53 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.54 292 43 60 ];
+        %tmp.54 = getv %tmp.53 :COLOR_TRANSPARENT;
+        invoke %tmp.50 %tmp.51(%tmp.52, %tmp.54);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 293 12 ]
+        %tmp.55 = lgetv %dc;
+        symbol [ dc %tmp.55 293 12 14 ];
+        symbol [ drawCircle %tmp.56 293 15 25 ];
+        %tmp.56 = getv function %tmp.55 :drawCircle;
+        %tmp.57 = lgetv %px;
+        symbol [ px %tmp.57 293 26 28 ];
+        %tmp.58 = lgetv %py;
+        symbol [ py %tmp.58 293 30 32 ];
+        symbol [ _sr %tmp.60 293 34 37 ];
+        %tmp.60 = getv ? :_sr;
+        invoke %tmp.55 %tmp.56(%tmp.57, %tmp.58, %tmp.60);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 294 12 ]
+        %tmp.61 = lgetv %dc;
+        symbol [ dc %tmp.61 294 12 14 ];
+        symbol [ setColor %tmp.62 294 15 23 ];
+        %tmp.62 = getv function %tmp.61 :setColor;
+        %tmp.63 = 0xFFFFFF;
+        symbol [ Graphics %tmp.64 294 34 42 ];
+        %tmp.64 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.65 294 43 60 ];
+        %tmp.65 = getv %tmp.64 :COLOR_TRANSPARENT;
+        invoke %tmp.61 %tmp.62(%tmp.63, %tmp.65);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 295 12 ]
+        %tmp.66 = lgetv %dc;
+        symbol [ dc %tmp.66 295 12 14 ];
+        symbol [ fillCircle %tmp.67 295 15 25 ];
+        %tmp.67 = getv function %tmp.66 :fillCircle;
+        %tmp.68 = lgetv %px;
+        symbol [ px %tmp.68 295 26 28 ];
+        symbol [ _sr %tmp.70 295 31 34 ];
+        %tmp.70 = getv ? :_sr;
+        %tmp.71 = 3;
+        %tmp.72 = div %tmp.70 %tmp.71;
+        %tmp.73 = sub %tmp.68 %tmp.72;
+        %tmp.74 = lgetv %py;
+        symbol [ py %tmp.74 295 40 42 ];
+        symbol [ _sr %tmp.76 295 45 48 ];
+        %tmp.76 = getv ? :_sr;
+        %tmp.77 = 3;
+        %tmp.78 = div %tmp.76 %tmp.77;
+        %tmp.79 = sub %tmp.74 %tmp.78;
+        symbol [ _sr %tmp.81 295 54 57 ];
+        %tmp.81 = getv ? :_sr;
+        %tmp.82 = 5;
+        %tmp.83 = div %tmp.81 %tmp.82;
+        invoke %tmp.66 %tmp.67(%tmp.73, %tmp.79, %tmp.83);
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_289_15_296_8_stop:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_284_8_296_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 297 8 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_297_8_301_8_if_stmt:
+        %tmp.84 = lgetv %isLast;
+        symbol [ isLast %tmp.84 297 12 18 ];
+        bf %tmp.84 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_297_8_301_8_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_297_8_301_8_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_297_20_301_8_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 298 12 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_297_20_301_8_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_297_20_301_8_stop" ]
+        %mc.1 = local;
+        symbol [ mc %mc.1 298 16 18 ];
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_298_21_298_57_begin:
+        %tmp.85 = lgetv %color;
+        symbol [ color %tmp.85 298 22 27 ];
+        symbol [ STONE_BLACK %tmp.87 298 31 42 ];
+        %tmp.87 = getv ? :STONE_BLACK;
+        %tmp.88 = eq %tmp.85 %tmp.87;
+        bf %tmp.88 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_298_21_298_57_else_false;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_298_21_298_57_true:
+        %tmp.89 = 0xCCCCCC;
+        push %tmp.89;
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_298_21_298_57_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_298_21_298_57_else_false:
+        %tmp.90 = 0x333333;
+        push %tmp.90;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_298_21_298_57_end:
+        %tmp.91 = phi [%tmp.88 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_298_21_298_57_begin] [%tmp.89 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_298_21_298_57_true] [%tmp.90 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_298_21_298_57_else_false] [%tmp.91 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_298_21_298_57_end];
+        lputv %mc.1 %tmp.91;
+        symbol [ mc %mc.1 298 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 299 12 ]
+        %tmp.92 = lgetv %dc;
+        symbol [ dc %tmp.92 299 12 14 ];
+        symbol [ setColor %tmp.93 299 15 23 ];
+        %tmp.93 = getv function %tmp.92 :setColor;
+        %tmp.94 = lgetv %mc.1;
+        symbol [ mc %tmp.94 299 24 26 ];
+        symbol [ Graphics %tmp.95 299 28 36 ];
+        %tmp.95 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.96 299 37 54 ];
+        %tmp.96 = getv %tmp.95 :COLOR_TRANSPARENT;
+        invoke %tmp.92 %tmp.93(%tmp.94, %tmp.96);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 300 12 ]
+        %tmp.97 = lgetv %dc;
+        symbol [ dc %tmp.97 300 12 14 ];
+        symbol [ fillCircle %tmp.98 300 15 25 ];
+        %tmp.98 = getv function %tmp.97 :fillCircle;
+        %tmp.99 = lgetv %px;
+        symbol [ px %tmp.99 300 26 28 ];
+        %tmp.100 = lgetv %py;
+        symbol [ py %tmp.100 300 30 32 ];
+        symbol [ _sr %tmp.102 300 34 37 ];
+        %tmp.102 = getv ? :_sr;
+        %tmp.103 = 25;
+        %tmp.104 = mul %tmp.102 %tmp.103;
+        %tmp.105 = 100;
+        %tmp.106 = div %tmp.104 %tmp.105;
+        invoke %tmp.97 %tmp.98(%tmp.99, %tmp.100, %tmp.106);
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_297_20_301_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_297_8_301_8_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_297_8_301_8_if_end:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_283_58_302_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 304; @symbol_functiondef = [_drawCursor,304,20,31]; @symbol_param<0> = [dc,304,32,34]; ]
+    protected
+    function _drawCursor(dc) {
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_304_36_312_4_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 305 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_304_36_312_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_304_36_312_4_stop" ]
+        %px.1 = local;
+        symbol [ px %px.1 305 12 14 ];
+        symbol [ _boardX %tmp.2 305 17 24 ];
+        %tmp.2 = getv ? :_boardX;
+        symbol [ _curX %tmp.4 305 27 32 ];
+        %tmp.4 = getv ? :_curX;
+        symbol [ _cell %tmp.6 305 35 40 ];
+        %tmp.6 = getv ? :_cell;
+        %tmp.7 = mul %tmp.4 %tmp.6;
+        %tmp.8 = add %tmp.2 %tmp.7;
+        lputv %px.1 %tmp.8;
+        symbol [ px %px.1 305 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 306 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_304_36_312_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_304_36_312_4_stop" ]
+        %py.2 = local;
+        symbol [ py %py.2 306 12 14 ];
+        symbol [ _boardY %tmp.10 306 17 24 ];
+        %tmp.10 = getv ? :_boardY;
+        symbol [ _curY %tmp.12 306 27 32 ];
+        %tmp.12 = getv ? :_curY;
+        symbol [ _cell %tmp.14 306 35 40 ];
+        %tmp.14 = getv ? :_cell;
+        %tmp.15 = mul %tmp.12 %tmp.14;
+        %tmp.16 = add %tmp.10 %tmp.15;
+        lputv %py.2 %tmp.16;
+        symbol [ py %py.2 306 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 307 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_304_36_312_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_304_36_312_4_stop" ]
+        %hs.3 = local;
+        symbol [ hs %hs.3 307 12 14 ];
+        symbol [ _sr %tmp.18 307 17 20 ];
+        %tmp.18 = getv ? :_sr;
+        %tmp.19 = 3;
+        %tmp.20 = add %tmp.18 %tmp.19;
+        lputv %hs.3 %tmp.20;
+        symbol [ hs %hs.3 307 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 308 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_304_36_312_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_304_36_312_4_stop" ]
+        %col.4 = local;
+        symbol [ col %col.4 308 12 15 ];
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_308_18_308_51_begin:
+        symbol [ _illegalFlash %tmp.22 308 19 32 ];
+        %tmp.22 = getv ? :_illegalFlash;
+        %tmp.23 = 0;
+        %tmp.24 = gt %tmp.22 %tmp.23;
+        bf %tmp.24 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_308_18_308_51_else_false;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_308_18_308_51_true:
+        %tmp.25 = 0xFF3300;
+        push %tmp.25;
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_308_18_308_51_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_308_18_308_51_else_false:
+        %tmp.26 = 0x00FF44;
+        push %tmp.26;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_308_18_308_51_end:
+        %tmp.27 = phi [%tmp.24 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_308_18_308_51_begin] [%tmp.25 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_308_18_308_51_true] [%tmp.26 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_308_18_308_51_else_false] [%tmp.27 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_308_18_308_51_end];
+        lputv %col.4 %tmp.27;
+        symbol [ col %col.4 308 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 309 8 ]
+        %tmp.28 = lgetv %dc;
+        symbol [ dc %tmp.28 309 8 10 ];
+        symbol [ setColor %tmp.29 309 11 19 ];
+        %tmp.29 = getv function %tmp.28 :setColor;
+        %tmp.30 = lgetv %col.4;
+        symbol [ col %tmp.30 309 20 23 ];
+        symbol [ Graphics %tmp.31 309 25 33 ];
+        %tmp.31 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.32 309 34 51 ];
+        %tmp.32 = getv %tmp.31 :COLOR_TRANSPARENT;
+        invoke %tmp.28 %tmp.29(%tmp.30, %tmp.32);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 310 8 ]
+        %tmp.33 = lgetv %dc;
+        symbol [ dc %tmp.33 310 8 10 ];
+        symbol [ drawRectangle %tmp.34 310 11 24 ];
+        %tmp.34 = getv function %tmp.33 :drawRectangle;
+        %tmp.35 = lgetv %px.1;
+        symbol [ px %tmp.35 310 25 27 ];
+        %tmp.36 = lgetv %hs.3;
+        symbol [ hs %tmp.36 310 30 32 ];
+        %tmp.37 = sub %tmp.35 %tmp.36;
+        %tmp.38 = lgetv %py.2;
+        symbol [ py %tmp.38 310 34 36 ];
+        %tmp.39 = lgetv %hs.3;
+        symbol [ hs %tmp.39 310 39 41 ];
+        %tmp.40 = sub %tmp.38 %tmp.39;
+        %tmp.41 = lgetv %hs.3;
+        symbol [ hs %tmp.41 310 43 45 ];
+        %tmp.42 = 2;
+        %tmp.43 = mul %tmp.41 %tmp.42;
+        %tmp.44 = lgetv %hs.3;
+        symbol [ hs %tmp.44 310 51 53 ];
+        %tmp.45 = 2;
+        %tmp.46 = mul %tmp.44 %tmp.45;
+        invoke %tmp.33 %tmp.34(%tmp.37, %tmp.40, %tmp.43, %tmp.46);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 311 8 ]
+        %tmp.47 = lgetv %dc;
+        symbol [ dc %tmp.47 311 8 10 ];
+        symbol [ drawRectangle %tmp.48 311 11 24 ];
+        %tmp.48 = getv function %tmp.47 :drawRectangle;
+        %tmp.49 = lgetv %px.1;
+        symbol [ px %tmp.49 311 25 27 ];
+        %tmp.50 = lgetv %hs.3;
+        symbol [ hs %tmp.50 311 30 32 ];
+        %tmp.51 = sub %tmp.49 %tmp.50;
+        %tmp.52 = 1;
+        %tmp.53 = add %tmp.51 %tmp.52;
+        %tmp.54 = lgetv %py.2;
+        symbol [ py %tmp.54 311 38 40 ];
+        %tmp.55 = lgetv %hs.3;
+        symbol [ hs %tmp.55 311 43 45 ];
+        %tmp.56 = sub %tmp.54 %tmp.55;
+        %tmp.57 = 1;
+        %tmp.58 = add %tmp.56 %tmp.57;
+        %tmp.59 = lgetv %hs.3;
+        symbol [ hs %tmp.59 311 51 53 ];
+        %tmp.60 = 2;
+        %tmp.61 = mul %tmp.59 %tmp.60;
+        %tmp.62 = 2;
+        %tmp.63 = sub %tmp.61 %tmp.62;
+        %tmp.64 = lgetv %hs.3;
+        symbol [ hs %tmp.64 311 63 65 ];
+        %tmp.65 = 2;
+        %tmp.66 = mul %tmp.64 %tmp.65;
+        %tmp.67 = 2;
+        %tmp.68 = sub %tmp.66 %tmp.67;
+        invoke %tmp.47 %tmp.48(%tmp.53, %tmp.58, %tmp.63, %tmp.68);
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_304_36_312_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 315; @symbol_functiondef = [_drawHUD,315,20,28]; @symbol_param<0> = [dc,315,29,31]; ]
+    protected
+    function _drawHUD(dc) {
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_315_33_341_4_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 316 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_315_33_341_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_315_33_341_4_stop" ]
+        %hudY.1 = local;
+        symbol [ hudY %hudY.1 316 12 16 ];
+        symbol [ _bgY %tmp.2 316 19 23 ];
+        %tmp.2 = getv ? :_bgY;
+        symbol [ _cell %tmp.4 316 26 31 ];
+        %tmp.4 = getv ? :_cell;
+        %tmp.5 = 2;
+        %tmp.6 = mul %tmp.4 %tmp.5;
+        %tmp.7 = 3;
+        %tmp.8 = div %tmp.6 %tmp.7;
+        %tmp.9 = sub %tmp.2 %tmp.8;
+        lputv %hudY.1 %tmp.9;
+        symbol [ hudY %hudY.1 316 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 317 8 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_317_8_317_34_if_stmt:
+        %tmp.10 = lgetv %hudY.1;
+        symbol [ hudY %tmp.10 317 12 16 ];
+        %tmp.11 = 5;
+        %tmp.12 = lt %tmp.10 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_317_8_317_34_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_317_8_317_34_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_317_22_317_34_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 317 24 ]
+        %tmp.13 = 5;
+        lputv %hudY.1 %tmp.13;
+        symbol [ hudY %hudY.1 317 24 28 ];
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_317_22_317_34_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_317_8_317_34_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_317_8_317_34_if_end:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 319 8 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_319_8_323_8_if_stmt:
+        symbol [ _ctrl %tmp.15 319 12 17 ];
+        %tmp.15 = getv ? :_ctrl;
+        symbol [ gameOver %tmp.16 319 18 26 ];
+        %tmp.16 = getv %tmp.15 :gameOver;
+        %tmp.17 = 0;
+        %tmp.18 = eq %tmp.16 %tmp.17;
+        bf %tmp.18 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_319_8_323_8_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_319_8_323_8_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_319_33_323_8_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 320 12 ]
+        %tmp.19 = lgetv %dc;
+        symbol [ dc %tmp.19 320 12 14 ];
+        symbol [ setColor %tmp.20 320 15 23 ];
+        %tmp.20 = getv function %tmp.19 :setColor;
+        %tmp.21 = 0xAAAAAA;
+        symbol [ Graphics %tmp.22 320 34 42 ];
+        %tmp.22 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.23 320 43 60 ];
+        %tmp.23 = getv %tmp.22 :COLOR_TRANSPARENT;
+        invoke %tmp.19 %tmp.20(%tmp.21, %tmp.23);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 321 12 ]
+        %tmp.24 = lgetv %dc;
+        symbol [ dc %tmp.24 321 12 14 ];
+        symbol [ drawText %tmp.25 321 15 23 ];
+        %tmp.25 = getv function %tmp.24 :drawText;
+        symbol [ _sw %tmp.27 321 24 27 ];
+        %tmp.27 = getv ? :_sw;
+        %tmp.28 = 2;
+        %tmp.29 = div %tmp.27 %tmp.28;
+        %tmp.30 = lgetv %hudY.1;
+        symbol [ hudY %tmp.30 321 33 37 ];
+        symbol [ Graphics %tmp.31 321 39 47 ];
+        %tmp.31 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.32 321 48 58 ];
+        %tmp.32 = getv %tmp.31 :FONT_XTINY;
+        %tmp.33 = "YOUR TURN (BLACK)";
+        symbol [ Graphics %tmp.34 322 37 45 ];
+        %tmp.34 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.35 322 46 65 ];
+        %tmp.35 = getv %tmp.34 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.24 %tmp.25(%tmp.29, %tmp.30, %tmp.32, %tmp.33, %tmp.35);
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_319_33_323_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_319_8_323_8_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_319_8_323_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 325 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_315_33_341_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_315_33_341_4_stop" ]
+        %capY.2 = local;
+        symbol [ capY %capY.2 325 12 16 ];
+        %tmp.36 = lgetv %hudY.1;
+        symbol [ hudY %tmp.36 325 19 23 ];
+        %tmp.37 = 14;
+        %tmp.38 = add %tmp.36 %tmp.37;
+        lputv %capY.2 %tmp.38;
+        symbol [ capY %capY.2 325 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 326 8 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_326_8_326_48_if_stmt:
+        %tmp.39 = lgetv %capY.2;
+        symbol [ capY %tmp.39 326 12 16 ];
+        symbol [ _bgY %tmp.41 326 19 23 ];
+        %tmp.41 = getv ? :_bgY;
+        %tmp.42 = 4;
+        %tmp.43 = sub %tmp.41 %tmp.42;
+        %tmp.44 = gt %tmp.39 %tmp.43;
+        bf %tmp.44 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_326_8_326_48_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_326_8_326_48_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_326_29_326_48_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 326 31 ]
+        symbol [ _bgY %tmp.46 326 38 42 ];
+        %tmp.46 = getv ? :_bgY;
+        %tmp.47 = 4;
+        %tmp.48 = sub %tmp.46 %tmp.47;
+        lputv %capY.2 %tmp.48;
+        symbol [ capY %capY.2 326 31 35 ];
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_326_29_326_48_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_326_8_326_48_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_326_8_326_48_if_end:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 327 8 ]
+        %tmp.49 = lgetv %dc;
+        symbol [ dc %tmp.49 327 8 10 ];
+        symbol [ setColor %tmp.50 327 11 19 ];
+        %tmp.50 = getv function %tmp.49 :setColor;
+        %tmp.51 = 0x666666;
+        symbol [ Graphics %tmp.52 327 30 38 ];
+        %tmp.52 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.53 327 39 56 ];
+        %tmp.53 = getv %tmp.52 :COLOR_TRANSPARENT;
+        invoke %tmp.49 %tmp.50(%tmp.51, %tmp.53);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 328 8 ]
+        %tmp.54 = lgetv %dc;
+        symbol [ dc %tmp.54 328 8 10 ];
+        symbol [ drawText %tmp.55 328 11 19 ];
+        %tmp.55 = getv function %tmp.54 :drawText;
+        symbol [ _sw %tmp.57 328 20 23 ];
+        %tmp.57 = getv ? :_sw;
+        %tmp.58 = 22;
+        %tmp.59 = mul %tmp.57 %tmp.58;
+        %tmp.60 = 100;
+        %tmp.61 = div %tmp.59 %tmp.60;
+        %tmp.62 = lgetv %capY.2;
+        symbol [ capY %tmp.62 328 36 40 ];
+        symbol [ Graphics %tmp.63 328 42 50 ];
+        %tmp.63 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.64 328 51 61 ];
+        %tmp.64 = getv %tmp.63 :FONT_XTINY;
+        %tmp.65 = "B cap ";
+        symbol [ _ctrl %tmp.67 329 23 28 ];
+        %tmp.67 = getv ? :_ctrl;
+        symbol [ board %tmp.68 329 29 34 ];
+        %tmp.68 = getv %tmp.67 :board;
+        symbol [ capWhite %tmp.69 329 35 43 ];
+        %tmp.69 = getv %tmp.68 :capWhite;
+        symbol [ format %tmp.70 329 44 50 ];
+        %tmp.70 = getv function %tmp.69 :format;
+        %tmp.71 = "%d";
+        %tmp.72 = invoke %tmp.69 %tmp.70(%tmp.71);
+        %tmp.73 = add %tmp.65 %tmp.72;
+        symbol [ Graphics %tmp.74 330 12 20 ];
+        %tmp.74 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.75 330 21 40 ];
+        %tmp.75 = getv %tmp.74 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.54 %tmp.55(%tmp.61, %tmp.62, %tmp.64, %tmp.73, %tmp.75);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 331 8 ]
+        %tmp.76 = lgetv %dc;
+        symbol [ dc %tmp.76 331 8 10 ];
+        symbol [ drawText %tmp.77 331 11 19 ];
+        %tmp.77 = getv function %tmp.76 :drawText;
+        symbol [ _sw %tmp.79 331 20 23 ];
+        %tmp.79 = getv ? :_sw;
+        %tmp.80 = 78;
+        %tmp.81 = mul %tmp.79 %tmp.80;
+        %tmp.82 = 100;
+        %tmp.83 = div %tmp.81 %tmp.82;
+        %tmp.84 = lgetv %capY.2;
+        symbol [ capY %tmp.84 331 36 40 ];
+        symbol [ Graphics %tmp.85 331 42 50 ];
+        %tmp.85 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.86 331 51 61 ];
+        %tmp.86 = getv %tmp.85 :FONT_XTINY;
+        %tmp.87 = "W cap ";
+        symbol [ _ctrl %tmp.89 332 23 28 ];
+        %tmp.89 = getv ? :_ctrl;
+        symbol [ board %tmp.90 332 29 34 ];
+        %tmp.90 = getv %tmp.89 :board;
+        symbol [ capBlack %tmp.91 332 35 43 ];
+        %tmp.91 = getv %tmp.90 :capBlack;
+        symbol [ format %tmp.92 332 44 50 ];
+        %tmp.92 = getv function %tmp.91 :format;
+        %tmp.93 = "%d";
+        %tmp.94 = invoke %tmp.91 %tmp.92(%tmp.93);
+        %tmp.95 = add %tmp.87 %tmp.94;
+        symbol [ Graphics %tmp.96 333 12 20 ];
+        %tmp.96 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.97 333 21 40 ];
+        %tmp.97 = getv %tmp.96 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.76 %tmp.77(%tmp.83, %tmp.84, %tmp.86, %tmp.95, %tmp.97);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 335 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_315_33_341_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_315_33_341_4_stop" ]
+        %hintY.3 = local;
+        symbol [ hintY %hintY.3 335 12 17 ];
+        symbol [ _bgY %tmp.99 335 20 24 ];
+        %tmp.99 = getv ? :_bgY;
+        symbol [ _bgSz %tmp.101 335 27 32 ];
+        %tmp.101 = getv ? :_bgSz;
+        %tmp.102 = add %tmp.99 %tmp.101;
+        %tmp.103 = 6;
+        %tmp.104 = add %tmp.102 %tmp.103;
+        lputv %hintY.3 %tmp.104;
+        symbol [ hintY %hintY.3 335 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 336 8 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_336_8_340_8_if_stmt:
+        %tmp.105 = lgetv %hintY.3;
+        symbol [ hintY %tmp.105 336 12 17 ];
+        symbol [ _sh %tmp.107 336 20 23 ];
+        %tmp.107 = getv ? :_sh;
+        %tmp.108 = 20;
+        %tmp.109 = sub %tmp.107 %tmp.108;
+        %tmp.110 = lt %tmp.105 %tmp.109;
+        bf %tmp.110 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_336_8_340_8_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_336_8_340_8_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_336_30_340_8_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 337 12 ]
+        %tmp.111 = lgetv %dc;
+        symbol [ dc %tmp.111 337 12 14 ];
+        symbol [ setColor %tmp.112 337 15 23 ];
+        %tmp.112 = getv function %tmp.111 :setColor;
+        %tmp.113 = 0x3a3a3a;
+        symbol [ Graphics %tmp.114 337 34 42 ];
+        %tmp.114 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.115 337 43 60 ];
+        %tmp.115 = getv %tmp.114 :COLOR_TRANSPARENT;
+        invoke %tmp.111 %tmp.112(%tmp.113, %tmp.115);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 338 12 ]
+        %tmp.116 = lgetv %dc;
+        symbol [ dc %tmp.116 338 12 14 ];
+        symbol [ drawText %tmp.117 338 15 23 ];
+        %tmp.117 = getv function %tmp.116 :drawText;
+        symbol [ _sw %tmp.119 338 24 27 ];
+        %tmp.119 = getv ? :_sw;
+        %tmp.120 = 2;
+        %tmp.121 = div %tmp.119 %tmp.120;
+        %tmp.122 = lgetv %hintY.3;
+        symbol [ hintY %tmp.122 338 33 38 ];
+        symbol [ Graphics %tmp.123 338 40 48 ];
+        %tmp.123 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.124 338 49 59 ];
+        %tmp.124 = getv %tmp.123 :FONT_XTINY;
+        %tmp.125 = "BACK = pass";
+        symbol [ Graphics %tmp.126 339 31 39 ];
+        %tmp.126 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.127 339 40 59 ];
+        %tmp.127 = getv %tmp.126 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.116 %tmp.117(%tmp.121, %tmp.122, %tmp.124, %tmp.125, %tmp.127);
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_336_30_340_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_336_8_340_8_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_336_8_340_8_if_end:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_315_33_341_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 344; @symbol_functiondef = [_drawGameOver,344,20,33]; @symbol_param<0> = [dc,344,34,36]; ]
+    protected
+    function _drawGameOver(dc) {
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_344_38_382_4_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 345 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_344_38_382_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_344_38_382_4_stop" ]
+        %bs.1 = local;
+        symbol [ bs %bs.1 345 12 14 ];
+        symbol [ _ctrl %tmp.2 345 17 22 ];
+        %tmp.2 = getv ? :_ctrl;
+        symbol [ board %tmp.3 345 23 28 ];
+        %tmp.3 = getv %tmp.2 :board;
+        symbol [ scoreBlack %tmp.4 345 29 39 ];
+        %tmp.4 = getv %tmp.3 :scoreBlack;
+        lputv %bs.1 %tmp.4;
+        symbol [ bs %bs.1 345 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 346 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_344_38_382_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_344_38_382_4_stop" ]
+        %ws.2 = local;
+        symbol [ ws %ws.2 346 12 14 ];
+        symbol [ _ctrl %tmp.6 346 17 22 ];
+        %tmp.6 = getv ? :_ctrl;
+        symbol [ board %tmp.7 346 23 28 ];
+        %tmp.7 = getv %tmp.6 :board;
+        symbol [ scoreWhite %tmp.8 346 29 39 ];
+        %tmp.8 = getv %tmp.7 :scoreWhite;
+        lputv %ws.2 %tmp.8;
+        symbol [ ws %ws.2 346 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 348 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_344_38_382_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_344_38_382_4_stop" ]
+        %bw.3 = local;
+        symbol [ bw %bw.3 348 12 14 ];
+        symbol [ _sw %tmp.10 348 17 20 ];
+        %tmp.10 = getv ? :_sw;
+        %tmp.11 = 44;
+        %tmp.12 = mul %tmp.10 %tmp.11;
+        %tmp.13 = 100;
+        %tmp.14 = div %tmp.12 %tmp.13;
+        lputv %bw.3 %tmp.14;
+        symbol [ bw %bw.3 348 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 349 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_344_38_382_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_344_38_382_4_stop" ]
+        %bh.4 = local;
+        symbol [ bh %bh.4 349 12 14 ];
+        symbol [ _sh %tmp.16 349 17 20 ];
+        %tmp.16 = getv ? :_sh;
+        %tmp.17 = 30;
+        %tmp.18 = mul %tmp.16 %tmp.17;
+        %tmp.19 = 100;
+        %tmp.20 = div %tmp.18 %tmp.19;
+        lputv %bh.4 %tmp.20;
+        symbol [ bh %bh.4 349 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 350 8 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_350_8_350_34_if_stmt:
+        %tmp.21 = lgetv %bw.3;
+        symbol [ bw %tmp.21 350 12 14 ];
+        %tmp.22 = 120;
+        %tmp.23 = lt %tmp.21 %tmp.22;
+        bf %tmp.23 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_350_8_350_34_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_350_8_350_34_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_350_22_350_34_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 350 24 ]
+        %tmp.24 = 120;
+        lputv %bw.3 %tmp.24;
+        symbol [ bw %bw.3 350 24 26 ];
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_350_22_350_34_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_350_8_350_34_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_350_8_350_34_if_end:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 351 8 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_351_8_351_33_if_stmt:
+        %tmp.25 = lgetv %bh.4;
+        symbol [ bh %tmp.25 351 12 14 ];
+        %tmp.26 = 96;
+        %tmp.27 = lt %tmp.25 %tmp.26;
+        bf %tmp.27 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_351_8_351_33_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_351_8_351_33_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_351_22_351_33_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 351 24 ]
+        %tmp.28 = 96;
+        lputv %bh.4 %tmp.28;
+        symbol [ bh %bh.4 351 24 26 ];
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_351_22_351_33_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_351_8_351_33_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_351_8_351_33_if_end:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 352 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_344_38_382_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_344_38_382_4_stop" ]
+        %bx.5 = local;
+        symbol [ bx %bx.5 352 12 14 ];
+        symbol [ _sw %tmp.30 352 17 20 ];
+        %tmp.30 = getv ? :_sw;
+        %tmp.31 = 2;
+        %tmp.32 = div %tmp.30 %tmp.31;
+        %tmp.33 = lgetv %bw.3;
+        symbol [ bw %tmp.33 352 27 29 ];
+        %tmp.34 = 2;
+        %tmp.35 = div %tmp.33 %tmp.34;
+        %tmp.36 = sub %tmp.32 %tmp.35;
+        lputv %bx.5 %tmp.36;
+        symbol [ bx %bx.5 352 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 353 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_344_38_382_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_344_38_382_4_stop" ]
+        %by.6 = local;
+        symbol [ by %by.6 353 12 14 ];
+        symbol [ _sh %tmp.38 353 17 20 ];
+        %tmp.38 = getv ? :_sh;
+        %tmp.39 = 2;
+        %tmp.40 = div %tmp.38 %tmp.39;
+        %tmp.41 = lgetv %bh.4;
+        symbol [ bh %tmp.41 353 27 29 ];
+        %tmp.42 = 2;
+        %tmp.43 = div %tmp.41 %tmp.42;
+        %tmp.44 = sub %tmp.40 %tmp.43;
+        lputv %by.6 %tmp.44;
+        symbol [ by %by.6 353 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 355 8 ]
+        %tmp.45 = lgetv %dc;
+        symbol [ dc %tmp.45 355 8 10 ];
+        symbol [ setColor %tmp.46 355 11 19 ];
+        %tmp.46 = getv function %tmp.45 :setColor;
+        %tmp.47 = 0x0A0A0A;
+        symbol [ Graphics %tmp.48 355 30 38 ];
+        %tmp.48 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.49 355 39 56 ];
+        %tmp.49 = getv %tmp.48 :COLOR_TRANSPARENT;
+        invoke %tmp.45 %tmp.46(%tmp.47, %tmp.49);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 356 8 ]
+        %tmp.50 = lgetv %dc;
+        symbol [ dc %tmp.50 356 8 10 ];
+        symbol [ fillRoundedRectangle %tmp.51 356 11 31 ];
+        %tmp.51 = getv function %tmp.50 :fillRoundedRectangle;
+        %tmp.52 = lgetv %bx.5;
+        symbol [ bx %tmp.52 356 32 34 ];
+        %tmp.53 = lgetv %by.6;
+        symbol [ by %tmp.53 356 36 38 ];
+        %tmp.54 = lgetv %bw.3;
+        symbol [ bw %tmp.54 356 40 42 ];
+        %tmp.55 = lgetv %bh.4;
+        symbol [ bh %tmp.55 356 44 46 ];
+        %tmp.56 = 8;
+        invoke %tmp.50 %tmp.51(%tmp.52, %tmp.53, %tmp.54, %tmp.55, %tmp.56);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 357 8 ]
+        %tmp.57 = lgetv %dc;
+        symbol [ dc %tmp.57 357 8 10 ];
+        symbol [ setColor %tmp.58 357 11 19 ];
+        %tmp.58 = getv function %tmp.57 :setColor;
+        %tmp.59 = 0x3A2A08;
+        symbol [ Graphics %tmp.60 357 30 38 ];
+        %tmp.60 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.61 357 39 56 ];
+        %tmp.61 = getv %tmp.60 :COLOR_TRANSPARENT;
+        invoke %tmp.57 %tmp.58(%tmp.59, %tmp.61);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 358 8 ]
+        %tmp.62 = lgetv %dc;
+        symbol [ dc %tmp.62 358 8 10 ];
+        symbol [ drawRoundedRectangle %tmp.63 358 11 31 ];
+        %tmp.63 = getv function %tmp.62 :drawRoundedRectangle;
+        %tmp.64 = lgetv %bx.5;
+        symbol [ bx %tmp.64 358 32 34 ];
+        %tmp.65 = lgetv %by.6;
+        symbol [ by %tmp.65 358 36 38 ];
+        %tmp.66 = lgetv %bw.3;
+        symbol [ bw %tmp.66 358 40 42 ];
+        %tmp.67 = lgetv %bh.4;
+        symbol [ bh %tmp.67 358 44 46 ];
+        %tmp.68 = 8;
+        invoke %tmp.62 %tmp.63(%tmp.64, %tmp.65, %tmp.66, %tmp.67, %tmp.68);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 360 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_344_38_382_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_344_38_382_4_stop" ]
+        %cx.7 = local;
+        symbol [ cx %cx.7 360 12 14 ];
+        symbol [ _sw %tmp.70 360 17 20 ];
+        %tmp.70 = getv ? :_sw;
+        %tmp.71 = 2;
+        %tmp.72 = div %tmp.70 %tmp.71;
+        lputv %cx.7 %tmp.72;
+        symbol [ cx %cx.7 360 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 361 8 ]
+        %tmp.73 = lgetv %dc;
+        symbol [ dc %tmp.73 361 8 10 ];
+        symbol [ setColor %tmp.74 361 11 19 ];
+        %tmp.74 = getv function %tmp.73 :setColor;
+        %tmp.75 = 0xC8A040;
+        symbol [ Graphics %tmp.76 361 30 38 ];
+        %tmp.76 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.77 361 39 56 ];
+        %tmp.77 = getv %tmp.76 :COLOR_TRANSPARENT;
+        invoke %tmp.73 %tmp.74(%tmp.75, %tmp.77);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 362 8 ]
+        %tmp.78 = lgetv %dc;
+        symbol [ dc %tmp.78 362 8 10 ];
+        symbol [ drawText %tmp.79 362 11 19 ];
+        %tmp.79 = getv function %tmp.78 :drawText;
+        %tmp.80 = lgetv %cx.7;
+        symbol [ cx %tmp.80 362 20 22 ];
+        %tmp.81 = lgetv %by.6;
+        symbol [ by %tmp.81 362 24 26 ];
+        %tmp.82 = 5;
+        %tmp.83 = add %tmp.81 %tmp.82;
+        symbol [ Graphics %tmp.84 362 32 40 ];
+        %tmp.84 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.85 362 41 51 ];
+        %tmp.85 = getv %tmp.84 :FONT_XTINY;
+        %tmp.86 = "GAME OVER";
+        symbol [ Graphics %tmp.87 362 66 74 ];
+        %tmp.87 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.88 362 75 94 ];
+        %tmp.88 = getv %tmp.87 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.78 %tmp.79(%tmp.80, %tmp.83, %tmp.85, %tmp.86, %tmp.88);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 364 8 ]
+        %tmp.89 = lgetv %dc;
+        symbol [ dc %tmp.89 364 8 10 ];
+        symbol [ setColor %tmp.90 364 11 19 ];
+        %tmp.90 = getv function %tmp.89 :setColor;
+        %tmp.91 = 0x888888;
+        symbol [ Graphics %tmp.92 364 30 38 ];
+        %tmp.92 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.93 364 39 56 ];
+        %tmp.93 = getv %tmp.92 :COLOR_TRANSPARENT;
+        invoke %tmp.89 %tmp.90(%tmp.91, %tmp.93);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 365 8 ]
+        %tmp.94 = lgetv %dc;
+        symbol [ dc %tmp.94 365 8 10 ];
+        symbol [ drawText %tmp.95 365 11 19 ];
+        %tmp.95 = getv function %tmp.94 :drawText;
+        %tmp.96 = lgetv %cx.7;
+        symbol [ cx %tmp.96 365 20 22 ];
+        %tmp.97 = lgetv %by.6;
+        symbol [ by %tmp.97 365 24 26 ];
+        %tmp.98 = 22;
+        %tmp.99 = add %tmp.97 %tmp.98;
+        symbol [ Graphics %tmp.100 365 33 41 ];
+        %tmp.100 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.101 365 42 52 ];
+        %tmp.101 = getv %tmp.100 :FONT_XTINY;
+        %tmp.102 = "Black: ";
+        %tmp.103 = lgetv %bs.1;
+        symbol [ bs %tmp.103 366 24 26 ];
+        symbol [ format %tmp.104 366 27 33 ];
+        %tmp.104 = getv function %tmp.103 :format;
+        %tmp.105 = "%d";
+        %tmp.106 = invoke %tmp.103 %tmp.104(%tmp.105);
+        %tmp.107 = add %tmp.102 %tmp.106;
+        %tmp.108 = "  White: ";
+        %tmp.109 = add %tmp.107 %tmp.108;
+        %tmp.110 = lgetv %ws.2;
+        symbol [ ws %tmp.110 366 56 58 ];
+        symbol [ format %tmp.111 366 59 65 ];
+        %tmp.111 = getv function %tmp.110 :format;
+        %tmp.112 = "%d";
+        %tmp.113 = invoke %tmp.110 %tmp.111(%tmp.112);
+        %tmp.114 = add %tmp.109 %tmp.113;
+        symbol [ Graphics %tmp.115 367 12 20 ];
+        %tmp.115 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.116 367 21 40 ];
+        %tmp.116 = getv %tmp.115 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.94 %tmp.95(%tmp.96, %tmp.99, %tmp.101, %tmp.114, %tmp.116);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 369 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_344_38_382_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_344_38_382_4_stop" ]
+        %wMsg.8 = local;
+        symbol [ wMsg %wMsg.8 369 12 16 ];
+        %tmp.117 = "";
+        lputv %wMsg.8 %tmp.117;
+        symbol [ wMsg %wMsg.8 369 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 370 8 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_370_8_372_82_if_stmt:
+        %tmp.118 = lgetv %bs.1;
+        symbol [ bs %tmp.118 370 12 14 ];
+        %tmp.119 = lgetv %ws.2;
+        symbol [ ws %tmp.119 370 17 19 ];
+        %tmp.120 = gt %tmp.118 %tmp.119;
+        bf %tmp.120 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_370_8_372_82_if_false;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_370_8_372_82_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_370_21_370_96_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 370 23 ]
+        %tmp.121 = "BLACK WINS!";
+        lputv %wMsg.8 %tmp.121;
+        symbol [ wMsg %wMsg.8 370 23 27 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 370 45 ]
+        %tmp.122 = lgetv %dc;
+        symbol [ dc %tmp.122 370 45 47 ];
+        symbol [ setColor %tmp.123 370 48 56 ];
+        %tmp.123 = getv function %tmp.122 :setColor;
+        %tmp.124 = 0xEEEEEE;
+        symbol [ Graphics %tmp.125 370 67 75 ];
+        %tmp.125 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.126 370 76 93 ];
+        %tmp.126 = getv %tmp.125 :COLOR_TRANSPARENT;
+        invoke %tmp.122 %tmp.123(%tmp.124, %tmp.126);
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_370_21_370_96_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_370_8_372_82_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_370_8_372_82_if_false:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 371 13 ]
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_371_13_372_82_if_stmt:
+        %tmp.127 = lgetv %ws.2;
+        symbol [ ws %tmp.127 371 17 19 ];
+        %tmp.128 = lgetv %bs.1;
+        symbol [ bs %tmp.128 371 22 24 ];
+        %tmp.129 = gt %tmp.127 %tmp.128;
+        bf %tmp.129 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_371_13_372_82_if_else_false;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_371_13_372_82_if_true:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_371_26_371_101_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 371 28 ]
+        %tmp.130 = "WHITE WINS!";
+        lputv %wMsg.8 %tmp.130;
+        symbol [ wMsg %wMsg.8 371 28 32 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 371 50 ]
+        %tmp.131 = lgetv %dc;
+        symbol [ dc %tmp.131 371 50 52 ];
+        symbol [ setColor %tmp.132 371 53 61 ];
+        %tmp.132 = getv function %tmp.131 :setColor;
+        %tmp.133 = 0xCCCCCC;
+        symbol [ Graphics %tmp.134 371 72 80 ];
+        %tmp.134 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.135 371 81 98 ];
+        %tmp.135 = getv %tmp.134 :COLOR_TRANSPARENT;
+        invoke %tmp.131 %tmp.132(%tmp.133, %tmp.135);
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_371_26_371_101_stop:
+        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_371_13_372_82_if_end;
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_371_13_372_82_if_else_false:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_372_13_372_82_start:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 372 15 ]
+        %tmp.136 = "DRAW!";
+        lputv %wMsg.8 %tmp.136;
+        symbol [ wMsg %wMsg.8 372 15 19 ];
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 372 31 ]
+        %tmp.137 = lgetv %dc;
+        symbol [ dc %tmp.137 372 31 33 ];
+        symbol [ setColor %tmp.138 372 34 42 ];
+        %tmp.138 = getv function %tmp.137 :setColor;
+        %tmp.139 = 0xAAAA44;
+        symbol [ Graphics %tmp.140 372 53 61 ];
+        %tmp.140 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.141 372 62 79 ];
+        %tmp.141 = getv %tmp.140 :COLOR_TRANSPARENT;
+        invoke %tmp.137 %tmp.138(%tmp.139, %tmp.141);
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_372_13_372_82_stop:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_371_13_372_82_if_end:
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_370_8_372_82_if_end:
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 373 8 ]
+        %tmp.142 = lgetv %dc;
+        symbol [ dc %tmp.142 373 8 10 ];
+        symbol [ drawText %tmp.143 373 11 19 ];
+        %tmp.143 = getv function %tmp.142 :drawText;
+        %tmp.144 = lgetv %cx.7;
+        symbol [ cx %tmp.144 373 20 22 ];
+        %tmp.145 = lgetv %by.6;
+        symbol [ by %tmp.145 373 24 26 ];
+        %tmp.146 = 42;
+        %tmp.147 = add %tmp.145 %tmp.146;
+        symbol [ Graphics %tmp.148 373 33 41 ];
+        %tmp.148 = getm $.Toybox.Graphics;
+        symbol [ FONT_SMALL %tmp.149 373 42 52 ];
+        %tmp.149 = getv %tmp.148 :FONT_SMALL;
+        %tmp.150 = lgetv %wMsg.8;
+        symbol [ wMsg %tmp.150 373 54 58 ];
+        symbol [ Graphics %tmp.151 373 60 68 ];
+        %tmp.151 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.152 373 69 88 ];
+        %tmp.152 = getv %tmp.151 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.142 %tmp.143(%tmp.144, %tmp.147, %tmp.149, %tmp.150, %tmp.152);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 375 8 ]
+        %tmp.153 = lgetv %dc;
+        symbol [ dc %tmp.153 375 8 10 ];
+        symbol [ setColor %tmp.154 375 11 19 ];
+        %tmp.154 = getv function %tmp.153 :setColor;
+        %tmp.155 = 0x444433;
+        symbol [ Graphics %tmp.156 375 30 38 ];
+        %tmp.156 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.157 375 39 56 ];
+        %tmp.157 = getv %tmp.156 :COLOR_TRANSPARENT;
+        invoke %tmp.153 %tmp.154(%tmp.155, %tmp.157);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 376 8 ]
+        %tmp.158 = lgetv %dc;
+        symbol [ dc %tmp.158 376 8 10 ];
+        symbol [ drawText %tmp.159 376 11 19 ];
+        %tmp.159 = getv function %tmp.158 :drawText;
+        %tmp.160 = lgetv %cx.7;
+        symbol [ cx %tmp.160 376 20 22 ];
+        %tmp.161 = lgetv %by.6;
+        symbol [ by %tmp.161 376 24 26 ];
+        %tmp.162 = 64;
+        %tmp.163 = add %tmp.161 %tmp.162;
+        symbol [ Graphics %tmp.164 376 33 41 ];
+        %tmp.164 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.165 376 42 52 ];
+        %tmp.165 = getv %tmp.164 :FONT_XTINY;
+        %tmp.166 = "(White +7 komi)";
+        symbol [ Graphics %tmp.167 377 31 39 ];
+        %tmp.167 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.168 377 40 59 ];
+        %tmp.168 = getv %tmp.167 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.158 %tmp.159(%tmp.160, %tmp.163, %tmp.165, %tmp.166, %tmp.168);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 379 8 ]
+        %tmp.169 = lgetv %dc;
+        symbol [ dc %tmp.169 379 8 10 ];
+        symbol [ setColor %tmp.170 379 11 19 ];
+        %tmp.170 = getv function %tmp.169 :setColor;
+        %tmp.171 = 0x333322;
+        symbol [ Graphics %tmp.172 379 30 38 ];
+        %tmp.172 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.173 379 39 56 ];
+        %tmp.173 = getv %tmp.172 :COLOR_TRANSPARENT;
+        invoke %tmp.169 %tmp.170(%tmp.171, %tmp.173);
+[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc" 380 8 ]
+        %tmp.174 = lgetv %dc;
+        symbol [ dc %tmp.174 380 8 10 ];
+        symbol [ drawText %tmp.175 380 11 19 ];
+        %tmp.175 = getv function %tmp.174 :drawText;
+        %tmp.176 = lgetv %cx.7;
+        symbol [ cx %tmp.176 380 20 22 ];
+        %tmp.177 = lgetv %by.6;
+        symbol [ by %tmp.177 380 24 26 ];
+        %tmp.178 = lgetv %bh.4;
+        symbol [ bh %tmp.178 380 29 31 ];
+        %tmp.179 = add %tmp.177 %tmp.178;
+        %tmp.180 = 13;
+        %tmp.181 = sub %tmp.179 %tmp.180;
+        symbol [ Graphics %tmp.182 380 38 46 ];
+        %tmp.182 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.183 380 47 57 ];
+        %tmp.183 = getv %tmp.182 :FONT_XTINY;
+        %tmp.184 = "SELECT = menu";
+        symbol [ Graphics %tmp.185 381 29 37 ];
+        %tmp.185 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.186 381 38 57 ];
+        %tmp.186 = getv %tmp.185 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.174 %tmp.175(%tmp.176, %tmp.181, %tmp.183, %tmp.184, %tmp.186);
+_Users_kkorolczuk_work_garmin_mini_go_9x9_source_GameView_mc_344_38_382_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/GameView.mc"; @line = 1; ]
+<init> {
+}

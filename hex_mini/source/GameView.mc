@@ -20,6 +20,14 @@ const HOV_NONE   = 0;
 const HOV_PWIN   = 1;
 const HOV_AIWIN  = 2;
 
+const GS_MENU   = 10;
+const MODE_PVAI = 0;
+const MODE_PVP  = 1;
+const MODE_AIAI = 2;
+const DIFF_EASY = 0;
+const DIFF_MED  = 1;
+const DIFF_HARD = 2;
+
 // ── GameView ───────────────────────────────────────────────────────────────
 class GameView extends WatchUi.View {
 
@@ -44,6 +52,12 @@ class GameView extends WatchUi.View {
 
     // ── Session score ─────────────────────────────────────────────────────
     hidden var _scoreP, _scoreAI;
+
+    // ── Pre-game menu ─────────────────────────────────────────────────────
+    hidden var _mode;
+    hidden var _diff;
+    hidden var _menuSel;
+    hidden var _playerFirst;
 
     // ── BFS state — pre-allocated, reused every win-check ─────────────────
     // Hex adjacency (row-offset parallelogram layout):
@@ -71,15 +85,20 @@ class GameView extends WatchUi.View {
         _scoreP  = 0;
         _scoreAI = 0;
         _timer   = null;
+        _mode    = MODE_PVAI;
+        _diff    = DIFF_MED;
+        _menuSel = 0;
+        _playerFirst = true;
         _startGame();
+        _state   = GS_MENU;
     }
 
     function onLayout(dc) {
         _sw = dc.getWidth();
         _sh = dc.getHeight();
 
-        // Scale hex cell spacing to screen width (reference: 30 px on 390 px watch).
-        _dx = _sw * 30 / 390;
+        // Scale hex cell spacing to screen width (reference: 26 px on 390 px watch).
+        _dx = _sw * 22 / 390;
         if (_dx < 18) { _dx = 18; }
         // dy ≈ dx * sqrt(3)/2; use integer approximation 87/100.
         _dy  = _dx * 87 / 100;
@@ -93,7 +112,7 @@ class GameView extends WatchUi.View {
 
         // Centre vertically; shift board slightly down for the HUD line above it.
         _boardY = (_sh - (HEX_N - 1) * _dy) / 2 + _sh * 3 / 100;
-        if (_boardY < 30) { _boardY = 30; }
+        if (_boardY < 28) { _boardY = 28; }
 
         _timer = new Timer.Timer();
         _timer.start(method(:gameTick), 350, true);
@@ -106,17 +125,74 @@ class GameView extends WatchUi.View {
     // ── Public input API ──────────────────────────────────────────────────
 
     function moveCursor(dr, dc2) {
-        if (_state != HGS_PLAY) { return; }
+        if (_state == GS_MENU) {
+            if (dr < 0 || dc2 < 0) { _menuSel = (_menuSel + 3) % 4; }
+            else if (dr > 0 || dc2 > 0) { _menuSel = (_menuSel + 1) % 4; }
+            WatchUi.requestUpdate(); return;
+        }
+        if (_mode == MODE_AIAI) { return; }
+        if (_state != HGS_PLAY && !(_state == HGS_AI && _mode == MODE_PVP)) { return; }
         _curR = _curR + dr;
         _curC = _curC + dc2;
         if (_curR < 0)        { _curR = 0; }
         if (_curR >= HEX_N)   { _curR = HEX_N - 1; }
         if (_curC < 0)        { _curC = 0; }
         if (_curC >= HEX_N)   { _curC = HEX_N - 1; }
+        WatchUi.requestUpdate();
+    }
+
+    // onNextPage: move RIGHT in current row, wrap to col=0
+    function advanceCursor() {
+        if (_state == GS_MENU) {
+            _menuSel = (_menuSel + 1) % 4;
+            WatchUi.requestUpdate(); return;
+        }
+        if (_mode == MODE_AIAI) { return; }
+        if (_state != HGS_PLAY && !(_state == HGS_AI && _mode == MODE_PVP)) { return; }
+        _curC = (_curC + 1) % HEX_N;
+        WatchUi.requestUpdate();
+    }
+
+    // onPreviousPage: move DOWN in current column, wrap to row=0
+    function retreatCursor() {
+        if (_state == GS_MENU) {
+            _menuSel = (_menuSel + 3) % 4;
+            WatchUi.requestUpdate(); return;
+        }
+        if (_mode == MODE_AIAI) { return; }
+        if (_state != HGS_PLAY && !(_state == HGS_AI && _mode == MODE_PVP)) { return; }
+        _curR = (_curR + 1) % HEX_N;
+        WatchUi.requestUpdate();
+    }
+
+    // BACK: menu → pop app, in-game → return to menu
+    function doBack() {
+        if (_state == GS_MENU) { return false; }
+        _state = GS_MENU; _menuSel = 0;
+        return true;
     }
 
     function doAction() {
-        if (_state == HGS_OVER) { _startGame(); return; }
+        if (_state == GS_MENU) {
+            if (_menuSel == 0) { _mode = (_mode + 1) % 3; }
+            else if (_menuSel == 1 && _mode != MODE_PVP) { _diff = (_diff + 1) % 3; }
+            else if (_menuSel == 2) { if (_mode == MODE_PVAI) { _playerFirst = !_playerFirst; } }
+            else if (_menuSel == 3) { _startGame(); }
+            WatchUi.requestUpdate();
+            return;
+        }
+        if (_state == HGS_OVER) { _state = GS_MENU; _menuSel = 0; WatchUi.requestUpdate(); return; }
+        if (_mode == MODE_AIAI) { return; }
+        // PvP: HGS_AI state is player 2's turn
+        if (_state == HGS_AI && _mode == MODE_PVP) {
+            if (_cells[_curR * HEX_N + _curC] != HM_NONE) { return; }
+            _placeMark(_curR, _curC, HM_AI);
+            if (_checkWin(HM_AI)) {
+                _overType = HOV_AIWIN; _scoreAI = _scoreAI + 1; _state = HGS_OVER; return;
+            }
+            _state = HGS_PLAY;
+            return;
+        }
         if (_state != HGS_PLAY) { return; }
         if (_cells[_curR * HEX_N + _curC] != HM_NONE) { return; }
         _placeMark(_curR, _curC, HM_P);
@@ -128,14 +204,24 @@ class GameView extends WatchUi.View {
 
     // ── 350 ms timer tick ─────────────────────────────────────────────────
     function gameTick() {
-        if (_state != HGS_AI) { return; }
-        _aiMove();
-        if (_checkWin(HM_AI)) {
-            _overType = HOV_AIWIN; _scoreAI = _scoreAI + 1; _state = HGS_OVER;
-        } else {
-            _state = HGS_PLAY;
+        if (_mode == MODE_PVP) { return; }
+        if (_state == HGS_AI) {
+            _aiMove(HM_AI);
+            if (_checkWin(HM_AI)) {
+                _overType = HOV_AIWIN; _scoreAI = _scoreAI + 1; _state = HGS_OVER;
+            } else {
+                _state = HGS_PLAY;
+            }
+            WatchUi.requestUpdate();
+        } else if (_mode == MODE_AIAI && _state == HGS_PLAY) {
+            _aiMove(HM_P);
+            if (_checkWin(HM_P)) {
+                _overType = HOV_PWIN; _scoreP = _scoreP + 1; _state = HGS_OVER;
+            } else {
+                _state = HGS_AI;
+            }
+            WatchUi.requestUpdate();
         }
-        WatchUi.requestUpdate();
     }
 
     // ── Game management ───────────────────────────────────────────────────
@@ -148,8 +234,14 @@ class GameView extends WatchUi.View {
         _curC      = HEX_N / 2;
         _lastR     = -1;
         _lastC     = -1;
-        _state     = HGS_PLAY;
         _overType  = HOV_NONE;
+        if (_mode == MODE_AIAI) {
+            _state = HGS_AI;
+        } else if (_mode == MODE_PVAI && !_playerFirst) {
+            _state = HGS_AI;
+        } else {
+            _state = HGS_PLAY;
+        }
     }
 
     hidden function _placeMark(r, c, mark) {
@@ -214,30 +306,80 @@ class GameView extends WatchUi.View {
         _bfsQo              = _bfsQo + 1;
     }
 
-    // ── AI — random with centre bias ──────────────────────────────────────
-    // Prefers cells close to the board centre; adds small random noise.
-    // The centre of a Hex board is strategically dominant, so this gives
-    // surprisingly reasonable play without lookahead.
-    hidden function _aiMove() {
-        var best = -9999; var move = -1;
-        var mid  = HEX_N / 2;
-        var i    = 0;
+    // ── AI — centre bias + path/connectivity/defence heuristic ───────────
+    // For Med/Hard: prefers cells that bridge the connection goal (path bonus),
+    // cluster with friendly stones (connectivity bonus), and sit next to enemy
+    // stones (defence bonus).  Hard doubles all bonuses and uses minimal noise.
+    // Hex adjacency directions: (dr,dc) = (-1,0),(-1,+1),(0,-1),(0,+1),(+1,-1),(+1,0)
+    //
+    // Watchdog safety: 49 cells × (centre+path+6 neighbour checks) ≈ 49 × 10 = 490 ops.
+    // Extremely safe — no fix required.
+    hidden function _aiMove(mark) {
+        var best   = -9999;
+        var move   = -1;
+        var mid    = HEX_N / 2;
+        var isHard = (_diff == DIFF_HARD);
+        var noise  = (_diff == DIFF_EASY) ? 20 : (isHard ? 1 : 5);
+        var opp    = (mark == HM_AI) ? HM_P : HM_AI;
+        var nv     = 0;
+        var i      = 0;
         while (i < HEX_N * HEX_N) {
             if (_cells[i] == HM_NONE) {
-                var r  = i / HEX_N;
-                var c  = i % HEX_N;
-                var dr = r - mid; if (dr < 0) { dr = -dr; }
+                var r   = i / HEX_N;
+                var c   = i % HEX_N;
+
+                // Centre bias (original)
+                var dr  = r - mid; if (dr  < 0) { dr  = -dr;  }
                 var dc2 = c - mid; if (dc2 < 0) { dc2 = -dc2; }
-                var score = (HEX_N - dr - dc2) * 3 + Math.rand() % 5;
+                var score = (HEX_N - dr - dc2) * 3;
+
+                // Path bonus: AI bridges top↔bottom (favour middle rows),
+                //             P  bridges left↔right (favour middle cols).
+                var distMid = (mark == HM_AI) ? (r - mid) : (c - mid);
+                if (distMid < 0) { distMid = -distMid; }
+                score = score + (HEX_N - distMid * 2);
+
+                // Count hex neighbours — same-mark (connectivity) and opp (defence)
+                var nSelf = 0;
+                var nOpp  = 0;
+                if (r - 1 >= 0) {
+                    nv = _cells[(r - 1) * HEX_N + c];
+                    if (nv == mark) { nSelf = nSelf + 1; } else if (nv == opp) { nOpp = nOpp + 1; }
+                }
+                if (r - 1 >= 0 && c + 1 < HEX_N) {
+                    nv = _cells[(r - 1) * HEX_N + (c + 1)];
+                    if (nv == mark) { nSelf = nSelf + 1; } else if (nv == opp) { nOpp = nOpp + 1; }
+                }
+                if (c - 1 >= 0) {
+                    nv = _cells[r * HEX_N + (c - 1)];
+                    if (nv == mark) { nSelf = nSelf + 1; } else if (nv == opp) { nOpp = nOpp + 1; }
+                }
+                if (c + 1 < HEX_N) {
+                    nv = _cells[r * HEX_N + (c + 1)];
+                    if (nv == mark) { nSelf = nSelf + 1; } else if (nv == opp) { nOpp = nOpp + 1; }
+                }
+                if (r + 1 < HEX_N && c - 1 >= 0) {
+                    nv = _cells[(r + 1) * HEX_N + (c - 1)];
+                    if (nv == mark) { nSelf = nSelf + 1; } else if (nv == opp) { nOpp = nOpp + 1; }
+                }
+                if (r + 1 < HEX_N) {
+                    nv = _cells[(r + 1) * HEX_N + c];
+                    if (nv == mark) { nSelf = nSelf + 1; } else if (nv == opp) { nOpp = nOpp + 1; }
+                }
+
+                var mult = isHard ? 2 : 1;
+                score = score + nSelf * 8 * mult + nOpp * 6 * mult;
+                score = score + Math.rand() % noise;
                 if (score > best) { best = score; move = i; }
             }
             i = i + 1;
         }
-        if (move >= 0) { _placeMark(move / HEX_N, move % HEX_N, HM_AI); }
+        if (move >= 0) { _placeMark(move / HEX_N, move % HEX_N, mark); }
     }
 
     // ── Rendering ─────────────────────────────────────────────────────────
     function onUpdate(dc) {
+        if (_state == GS_MENU) { _drawMenu(dc); return; }
         dc.setColor(0x06060E, 0x06060E);
         dc.clear();
 
@@ -352,23 +494,25 @@ class GameView extends WatchUi.View {
     hidden function _drawHUD(dc) {
         var ty = _sh * 3 / 100;
 
-        // Session score
+        // Session score labels (P1/P2 in PvP, YOU/AI otherwise)
+        var lbl1 = (_mode == MODE_PVP) ? "P1 " : "YOU ";
+        var lbl2 = (_mode == MODE_PVP) ? " P2" : " AI";
         dc.setColor(0xFF2200, Graphics.COLOR_TRANSPARENT);
         dc.drawText(10, ty, Graphics.FONT_XTINY,
-                    "YOU " + _scoreP.format("%d"), Graphics.TEXT_JUSTIFY_LEFT);
+                    lbl1 + _scoreP.format("%d"), Graphics.TEXT_JUSTIFY_LEFT);
         dc.setColor(0x0099FF, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_sw - 10, ty, Graphics.FONT_XTINY,
-                    _scoreAI.format("%d") + " AI", Graphics.TEXT_JUSTIFY_RIGHT);
+                    _scoreAI.format("%d") + lbl2, Graphics.TEXT_JUSTIFY_RIGHT);
 
         // Turn indicator
         if (_state == HGS_PLAY) {
+            var turnTxt = (_mode == MODE_PVP) ? "P1 TURN" : ((_mode == MODE_AIAI) ? "P1..." : "YOUR TURN");
             dc.setColor(0x44FF44, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_sw / 2, ty, Graphics.FONT_XTINY,
-                        "YOUR TURN", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_sw / 2, ty, Graphics.FONT_XTINY, turnTxt, Graphics.TEXT_JUSTIFY_CENTER);
         } else if (_state == HGS_AI) {
-            dc.setColor(0x555566, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_sw / 2, ty, Graphics.FONT_XTINY,
-                        "AI...", Graphics.TEXT_JUSTIFY_CENTER);
+            var aiTxt = (_mode == MODE_PVP) ? "P2 TURN" : ((_mode == MODE_AIAI) ? "P2..." : "AI...");
+            dc.setColor((_mode == MODE_PVP) ? 0x44FF44 : 0x555566, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_sw / 2, ty, Graphics.FONT_XTINY, aiTxt, Graphics.TEXT_JUSTIFY_CENTER);
         }
 
         // Direction hints below the board (concise ASCII arrows)
@@ -388,6 +532,48 @@ class GameView extends WatchUi.View {
             dc.drawText(_sw / 2, exitY, Graphics.FONT_XTINY,
                         "BACK = exit", Graphics.TEXT_JUSTIFY_CENTER);
         }
+    }
+
+    // ── Pre-game menu ─────────────────────────────────────────────────────
+    hidden function _drawMenu(dc) {
+        dc.setColor(0x080810, 0x080810); dc.clear();
+        var hw = _sw / 2;
+        dc.setColor(0x0A0A18, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(hw, hw, hw - 1);
+        dc.setColor(0xFF4422, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(hw, _sh * 11 / 100, Graphics.FONT_SMALL, "HEX MINI", Graphics.TEXT_JUSTIFY_CENTER);
+        var modeStr = (_mode == MODE_PVAI) ? "P vs AI" : ((_mode == MODE_PVP) ? "P vs P" : "AI vs AI");
+        var diffStr = (_diff == DIFF_EASY) ? "Easy" : ((_diff == DIFF_MED) ? "Med" : "Hard");
+        var sideStr = _playerFirst ? "Side: Red" : "Side: Blu";
+        var rows = ["Mode: " + modeStr, "Diff: " + diffStr, sideStr, "START"];
+        var nR = 4;
+        var rowH = _sh * 10 / 100; if (rowH < 22) { rowH = 22; } if (rowH > 30) { rowH = 30; }
+        var rowW = _sw * 74 / 100;
+        var rowX = (_sw - rowW) / 2;
+        var gap  = _sh * 2 / 100; if (gap < 3) { gap = 3; }
+        var tot  = nR * rowH + (nR - 1) * gap;
+        var rowY0 = (_sh - tot) / 2 + rowH;
+        var i = 0;
+        while (i < nR) {
+            var ry  = rowY0 + i * (rowH + gap);
+            var sel = (i == _menuSel);
+            var isStart = (i == nR - 1);
+            dc.setColor(sel ? (isStart ? 0x3A1800 : 0x0A2040) : 0x0A0A18, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);
+            dc.setColor(sel ? (isStart ? 0xFF8833 : 0x4499FF) : 0x1A2A3A, Graphics.COLOR_TRANSPARENT);
+            dc.drawRoundedRectangle(rowX, ry, rowW, rowH, 5);
+            if (sel) {
+                dc.setColor(isStart ? 0xFF8833 : 0x4499FF, Graphics.COLOR_TRANSPARENT);
+                var ay = ry + rowH / 2;
+                dc.fillPolygon([[rowX + 5, ay - 4], [rowX + 5, ay + 4], [rowX + 11, ay]]);
+            }
+            var dimmed = (i == 1 && _mode == MODE_PVP) || (i == 2 && _mode != MODE_PVAI);
+            dc.setColor(dimmed ? 0x445566 : (sel ? (isStart ? 0xFFCC88 : 0xAADDFF) : 0x556677), Graphics.COLOR_TRANSPARENT);
+            dc.drawText(hw, ry + (rowH - 14) / 2, Graphics.FONT_XTINY, rows[i], Graphics.TEXT_JUSTIFY_CENTER);
+            i++;
+        }
+        dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(hw, _sh - 14, Graphics.FONT_XTINY, "UP/DN sel  SELECT set/start", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     // ── Game-over overlay ─────────────────────────────────────────────────
