@@ -1419,13 +1419,6 @@ class BitochiChessView extends WatchUi.View {
 
     // drawPiece — 4-layer rendering: drop-shadow → rim → body → detail/highlight.
     // Uses explicit 's' so it can be called at any cell size (board squares or promo overlay).
-    // Premium 6-layer piece rendering:
-    //   silhouette (very dark for white / bright gold for black — pops on every square)
-    //   ↓ inner-rim band (warm tone)
-    //   ↓ body fill
-    //   ↓ mid-tone shadow band on bottom 1/3 (gives volume / curvature)
-    //   ↓ top-left highlight strip (light direction = upper left)
-    //   ↓ sparkle dot(s) at piece highest point
     hidden function drawPiece(dc, bx, by, piece, s) {
         if (piece == PC_EMPTY) { return; }
         var white = (piece > 0);
@@ -1433,545 +1426,257 @@ class BitochiChessView extends WatchUi.View {
         var cx    = bx + s / 2;
         var bot   = by + s - 2;
 
-        var silC, rimC, bodyC, midC, hlC, shdC, markC;
-        if (white) {
-            silC  = 0x2A1808;
-            rimC  = 0xA8702C;
-            bodyC = 0xFFF4DC;
-            midC  = 0xD2A672;
-            hlC   = 0xFFFFFF;
-            shdC  = 0x140A04;
-            markC = 0x583810;
-        } else {
-            silC  = 0xE8B850;
-            rimC  = 0x6A4214;
-            bodyC = 0x080400;
-            midC  = 0x2A1808;
-            hlC   = 0xA47028;
-            shdC  = 0x000000;
-            markC = 0xE0B860;
-        }
-        var goldC = 0xFFD028;
-        var goldHi = 0xFFEA88;
-        var rubyC = 0xE8284A;
-        var rubyHi = 0xFF7090;
-
-        // Soft ground shadow under every piece (rounded oval ribbon)
-        dc.setColor(shdC, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(cx - s*36/100, bot - 1, s*72/100, 3, 1);
+        var rimC    = white ? 0xB87830 : 0xC89040;
+        var bodyC   = white ? 0xFFF0D0 : 0x180C04;
+        var hlC     = white ? 0xFFFFFF : 0x5A3C1C;
+        var shdC    = white ? 0x302010 : 0x040100;
+        var markC   = white ? 0x583810 : 0xE0B860;
+        var accentC = 0xFFD020;
 
         if (abs == PC_PAWN) {
-            var hr = s*22/100; if (hr < 4) { hr = 4; }
-
-            // ── BASE (3-layer disc) ──
-            dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*36/100, bot - s*22/100, s*72/100, s*22/100, 4);
+            // shadow
+            dc.setColor(shdC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - s*33/100 + 1, bot - s*19/100 + 1, s*66/100, s*19/100, 3);
+            // base
             dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*34/100, bot - s*21/100, s*68/100, s*19/100, 3);
+            dc.fillRoundedRectangle(cx - s*33/100, bot - s*19/100, s*66/100, s*19/100, 3);
             dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*32/100, bot - s*20/100, s*64/100, s*16/100, 2);
-            dc.setColor(midC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*32/100, bot - s*8/100, s*64/100, s*4/100, 1);
-            dc.setColor(hlC, Graphics.COLOR_TRANSPARENT);
-            dc.drawLine(cx - s*30/100, bot - s*19/100, cx + s*30/100, bot - s*19/100);
-
-            // ── COLLAR DISC (between base and neck) ──
-            dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*22/100, bot - s*30/100, s*44/100, s*10/100, 3);
+            dc.fillRoundedRectangle(cx - s*30/100, bot - s*18/100, s*60/100, s*16/100, 2);
+            // neck
             dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*20/100, bot - s*29/100, s*40/100, s*8/100, 2);
-
-            // ── NECK (tapered) ──
-            dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*13/100, bot - s*60/100, s*26/100, s*32/100, 3);
-            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*12/100, bot - s*59/100, s*24/100, s*30/100, 2);
+            dc.fillRoundedRectangle(cx - s*11/100, bot - s*60/100, s*22/100, s*43/100, 2);
             dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*10/100, bot - s*58/100, s*20/100, s*27/100, 1);
-            dc.setColor(midC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(cx + s*4/100, bot - s*38/100, s*6/100, s*6/100);
-            dc.setColor(hlC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(cx - s*8/100, bot - s*55/100, 2, s*22/100);
-
-            // ── HEAD (sphere) ──
+            dc.fillRoundedRectangle(cx - s*9/100, bot - s*59/100, s*18/100, s*41/100, 1);
+            // head
+            var hr = s*20/100; if (hr < 3) { hr = 3; }
             dc.setColor(shdC, Graphics.COLOR_TRANSPARENT);
             dc.fillCircle(cx + 1, bot - s*66/100 + 1, hr);
-            dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(cx, bot - s*66/100, hr);
             dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(cx, bot - s*66/100, hr - 1);
+            dc.fillCircle(cx, bot - s*66/100, hr);
             dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
             dc.fillCircle(cx, bot - s*66/100, hr - 2);
-            dc.setColor(midC, Graphics.COLOR_TRANSPARENT);
-            if (hr > 4) { dc.fillCircle(cx + hr/3, bot - s*66/100 + hr/3, hr * 3 / 5); }
-            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            if (hr > 5) { dc.fillCircle(cx, bot - s*66/100, hr - 4); }
+            // highlight dot
             dc.setColor(hlC, Graphics.COLOR_TRANSPARENT);
-            if (hr > 4) { dc.fillCircle(cx - hr*3/8, bot - s*66/100 - hr*3/8, hr / 3); }
-            if (hr > 6) { dc.fillCircle(cx - hr*5/8, bot - s*66/100 - hr*5/8 + 1, 1); }
+            if (s > 18) { dc.fillCircle(cx - hr/3, bot - s*68/100, 2); }
 
         } else if (abs == PC_ROOK) {
-            var bw = s*54/100; if (bw < 9) { bw = 9; }
+            var bw = s*52/100; if (bw < 8) { bw = 8; }
             var mW = bw / 3; if (mW < 2) { mW = 2; }
-            var mH = s*16/100; if (mH < 3) { mH = 3; }
-
-            // ── BASE (wide stand) ──
-            dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*34/100, bot - s*22/100, s*68/100, s*22/100, 3);
+            var mH = s*18/100; if (mH < 3) { mH = 3; }
+            // shadow
+            dc.setColor(shdC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - bw/2 + 1, bot - s*79/100 + 1, bw, s*79/100, 2);
+            // base
             dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*32/100, bot - s*21/100, s*64/100, s*19/100, 2);
+            dc.fillRoundedRectangle(cx - s*32/100, bot - s*20/100, s*64/100, s*20/100, 3);
             dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*30/100, bot - s*20/100, s*60/100, s*16/100, 2);
-            dc.setColor(midC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(cx - s*30/100, bot - s*8/100, s*60/100, s*3/100);
-
-            // ── BELT (between base and tower) ──
-            dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*30/100, bot - s*30/100, s*60/100, s*9/100, 2);
+            dc.fillRoundedRectangle(cx - s*29/100, bot - s*19/100, s*58/100, s*17/100, 2);
+            // tower
             dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*28/100, bot - s*29/100, s*56/100, s*7/100, 1);
-
-            // ── TOWER ──
-            dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bw/2, bot - s*82/100, bw, s*52/100, 2);
-            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bw/2 + 1, bot - s*81/100, bw - 2, s*50/100, 1);
+            dc.fillRoundedRectangle(cx - bw/2, bot - s*79/100, bw, s*61/100, 2);
             dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bw/2 + 2, bot - s*80/100, bw - 4, s*48/100, 1);
-            dc.setColor(midC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(cx + bw/2 - 5, bot - s*78/100, 3, s*44/100);
-
-            // window slit (deep shadow)
+            dc.fillRoundedRectangle(cx - bw/2 + 1, bot - s*78/100, bw - 2, s*59/100, 1);
+            // window slit
             var sW2 = s*10/100; if (sW2 < 2) { sW2 = 2; }
             var sH2 = s*22/100; if (sH2 < 3) { sH2 = 3; }
-            dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - sW2/2 - 1, bot - s*65/100 - 1, sW2 + 2, sH2 + 2, 1);
             dc.setColor(shdC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - sW2/2, bot - s*65/100, sW2, sH2, 1);
-            dc.setColor(white ? 0xC8A47C : 0x301808, Graphics.COLOR_TRANSPARENT);
-            dc.drawLine(cx - sW2/2 + 1, bot - s*65/100 + 1, cx - sW2/2 + 1, bot - s*65/100 + sH2 - 2);
-
-            // tower top highlight
+            dc.fillRectangle(cx - sW2/2, bot - s*65/100, sW2, sH2);
+            // battlements: 3 merlons
+            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(cx - bw/2,        bot - s*79/100 - mH, mW, mH + 2);
+            dc.fillRectangle(cx - mW/2,        bot - s*79/100 - mH, mW, mH + 2);
+            dc.fillRectangle(cx + bw/2 - mW,   bot - s*79/100 - mH, mW, mH + 2);
+            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(cx - bw/2 + 1,       bot - s*79/100 - mH, mW - 2, mH);
+            dc.fillRectangle(cx - mW/2 + 1,       bot - s*79/100 - mH, mW - 2, mH);
+            dc.fillRectangle(cx + bw/2 - mW + 1,  bot - s*79/100 - mH, mW - 2, mH);
+            // top highlight
             dc.setColor(hlC, Graphics.COLOR_TRANSPARENT);
-            dc.drawLine(cx - bw/2 + 2, bot - s*78/100, cx + bw/2 - 4, bot - s*78/100);
-
-            // ── BATTLEMENTS (3 merlons) ──
-            for (var ti = 0; ti < 3; ti++) {
-                var mx = (ti == 0) ? (cx - bw/2) : ((ti == 1) ? (cx - mW/2) : (cx + bw/2 - mW));
-                dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
-                dc.fillRectangle(mx - 1, bot - s*82/100 - mH - 1, mW + 2, mH + 3);
-                dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-                dc.fillRectangle(mx,     bot - s*82/100 - mH,     mW,     mH + 2);
-                dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-                dc.fillRectangle(mx + 1, bot - s*82/100 - mH,     mW - 2, mH);
-                dc.setColor(hlC, Graphics.COLOR_TRANSPARENT);
-                dc.drawLine(mx + 1, bot - s*82/100 - mH, mx + mW - 2, bot - s*82/100 - mH);
-            }
+            dc.drawLine(cx - bw/2 + 2, bot - s*77/100, cx + bw/2 - 3, bot - s*77/100);
 
         } else if (abs == PC_KNIGHT) {
-            // ── BASE ──
-            dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*30/100, bot - s*22/100, s*60/100, s*22/100, 3);
+            // shadow
+            dc.setColor(shdC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - s*26/100 + 1, bot - s*20/100 + 1, s*52/100, s*20/100, 3);
+            // base
             dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*28/100, bot - s*21/100, s*56/100, s*19/100, 2);
+            dc.fillRoundedRectangle(cx - s*26/100, bot - s*20/100, s*52/100, s*20/100, 3);
             dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*26/100, bot - s*20/100, s*52/100, s*16/100, 2);
-            dc.setColor(midC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(cx - s*26/100, bot - s*8/100, s*52/100, s*3/100);
-
-            // ── BODY (chest) ──
-            dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*22/100, bot - s*60/100, s*44/100, s*40/100, 4);
+            dc.fillRoundedRectangle(cx - s*23/100, bot - s*19/100, s*46/100, s*17/100, 2);
+            // neck/body
             dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*21/100, bot - s*59/100, s*42/100, s*38/100, 3);
+            dc.fillRoundedRectangle(cx - s*20/100, bot - s*65/100, s*40/100, s*47/100, 3);
             dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*19/100, bot - s*58/100, s*38/100, s*35/100, 2);
-
-            // ── HORSE HEAD as polygon (pointing right) ──
-            // Coordinates: nose at right, mane at left, ear at top, jaw at bottom-right
-            if (s >= 18) {
-                var pts = [
-                    [cx - s*16/100, bot - s*60/100],  // back of neck (low)
-                    [cx - s*18/100, bot - s*72/100],  // mane back
-                    [cx - s*12/100, bot - s*82/100],  // top of head (back)
-                    [cx + s*4/100,  bot - s*92/100],  // ear base
-                    [cx + s*10/100, bot - s*98/100],  // ear tip
-                    [cx + s*16/100, bot - s*92/100],  // forehead high
-                    [cx + s*22/100, bot - s*86/100],  // forehead front
-                    [cx + s*28/100, bot - s*78/100],  // muzzle top
-                    [cx + s*30/100, bot - s*70/100],  // muzzle tip
-                    [cx + s*28/100, bot - s*64/100],  // mouth
-                    [cx + s*20/100, bot - s*60/100],  // chin/jaw
-                    [cx + s*8/100,  bot - s*58/100]   // jaw back
-                ];
-                // Silhouette
-                var ptsSil = [
-                    [pts[0][0]-1,  pts[0][1]+1],
-                    [pts[1][0]-1,  pts[1][1]],
-                    [pts[2][0],    pts[2][1]-1],
-                    [pts[3][0],    pts[3][1]-1],
-                    [pts[4][0]+1,  pts[4][1]-1],
-                    [pts[5][0]+1,  pts[5][1]-1],
-                    [pts[6][0]+1,  pts[6][1]-1],
-                    [pts[7][0]+1,  pts[7][1]],
-                    [pts[8][0]+1,  pts[8][1]+1],
-                    [pts[9][0]+1,  pts[9][1]+1],
-                    [pts[10][0]+1, pts[10][1]+1],
-                    [pts[11][0],   pts[11][1]+1]
-                ];
-                dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
-                dc.fillPolygon(ptsSil);
-                dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-                dc.fillPolygon(pts);
-                // body fill (slightly inset polygon)
-                var ptsIn = [
-                    [pts[0][0]+1,  pts[0][1]-1],
-                    [pts[1][0]+1,  pts[1][1]],
-                    [pts[2][0]+1,  pts[2][1]+1],
-                    [pts[3][0]+1,  pts[3][1]+1],
-                    [pts[4][0],    pts[4][1]+2],
-                    [pts[5][0]-1,  pts[5][1]+1],
-                    [pts[6][0]-1,  pts[6][1]+1],
-                    [pts[7][0]-1,  pts[7][1]],
-                    [pts[8][0]-1,  pts[8][1]-1],
-                    [pts[9][0]-1,  pts[9][1]-1],
-                    [pts[10][0]-1, pts[10][1]-1],
-                    [pts[11][0],   pts[11][1]-1]
-                ];
-                dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-                dc.fillPolygon(ptsIn);
-            } else {
-                dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
-                dc.fillRoundedRectangle(cx - s*5/100, bot - s*92/100, s*36/100, s*32/100, 5);
-                dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-                dc.fillRoundedRectangle(cx - s*3/100, bot - s*90/100, s*32/100, s*28/100, 4);
-                dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-                dc.fillRoundedRectangle(cx - s*1/100, bot - s*88/100, s*28/100, s*24/100, 3);
-            }
-
-            // ── EYE (alert, detailed) ──
-            var eyeX = cx + s*15/100; var eyeY = bot - s*80/100;
+            dc.fillRoundedRectangle(cx - s*18/100, bot - s*64/100, s*36/100, s*45/100, 2);
+            // horse head extends right
+            dc.setColor(shdC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - s*5/100 + 1, bot - s*86/100 + 1, s*34/100, s*26/100, 5);
+            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - s*5/100, bot - s*86/100, s*34/100, s*26/100, 5);
+            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - s*3/100, bot - s*85/100, s*30/100, s*23/100, 4);
+            // ear bump
+            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx + s*18/100, bot - s*96/100, s*10/100, s*13/100, 3);
+            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx + s*19/100, bot - s*95/100, s*8/100, s*11/100, 2);
+            // eye
+            var eyeX = cx + s*16/100; var eyeY = bot - s*76/100;
             var eyeR = s*7/100; if (eyeR < 2) { eyeR = 2; }
-            dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(eyeX, eyeY, eyeR + 1);
             dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
             dc.fillCircle(eyeX, eyeY, eyeR);
-            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(eyeX, eyeY, eyeR > 2 ? eyeR - 1 : 1);
-            dc.setColor(white ? 0xFFFFFF : 0xFFD088, Graphics.COLOR_TRANSPARENT);
-            if (eyeR > 2) { dc.fillCircle(eyeX - 1, eyeY - 1, 1); }
-
-            // ── NOSTRIL ──
+            dc.setColor(shdC, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(eyeX, eyeY, eyeR / 2 + 1);
+            // nostril
             dc.setColor(markC, Graphics.COLOR_TRANSPARENT);
             dc.fillCircle(cx + s*26/100, bot - s*68/100, s > 24 ? 2 : 1);
-            // ── MOUTH LINE ──
-            dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
-            if (s > 22) { dc.drawLine(cx + s*22/100, bot - s*64/100, cx + s*28/100, bot - s*65/100); }
-
-            // ── MANE highlights (top-left of head) ──
+            // mane highlight line
             dc.setColor(hlC, Graphics.COLOR_TRANSPARENT);
-            if (s > 18) {
-                dc.drawLine(cx - s*14/100, bot - s*64/100, cx - s*4/100, bot - s*82/100);
-                dc.drawLine(cx - s*8/100,  bot - s*64/100, cx - s*0/100, bot - s*84/100);
-            }
-            // ── BODY highlight strip ──
-            dc.setColor(hlC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(cx - s*17/100, bot - s*55/100, 2, s*30/100);
+            if (s > 20) { dc.drawLine(cx - s*14/100, bot - s*61/100, cx - s*4/100, bot - s*84/100); }
 
         } else if (abs == PC_BISHOP) {
-            var bwB = s*46/100; if (bwB < 8) { bwB = 8; }
+            var bwB = s*44/100; if (bwB < 7) { bwB = 7; }
             var bwU = bwB * 7 / 10;
-
-            // ── BASE ──
-            dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*30/100, bot - s*22/100, s*60/100, s*22/100, 3);
-            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*28/100, bot - s*21/100, s*56/100, s*19/100, 2);
-            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*26/100, bot - s*20/100, s*52/100, s*16/100, 2);
-            dc.setColor(midC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(cx - s*26/100, bot - s*8/100, s*52/100, s*3/100);
-
-            // ── LOWER BODY ──
-            dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwB/2 - 1, bot - s*55/100, bwB + 2, s*36/100, 4);
-            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwB/2, bot - s*54/100, bwB, s*34/100, 3);
-            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwB/2 + 1, bot - s*53/100, bwB - 2, s*31/100, 2);
-            dc.setColor(midC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(cx + bwB/2 - 4, bot - s*50/100, 2, s*28/100);
-            dc.setColor(hlC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(cx - bwB/2 + 2, bot - s*50/100, 2, s*26/100);
-
-            // ── COLLAR BAND ──
-            dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwB/2 - 1, bot - s*60/100, bwB + 2, s*9/100, 2);
-            dc.setColor(goldC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwB/2, bot - s*59/100, bwB, s*7/100, 1);
-            dc.setColor(goldHi, Graphics.COLOR_TRANSPARENT);
-            dc.drawLine(cx - bwB/2 + 1, bot - s*58/100, cx + bwB/2 - 2, bot - s*58/100);
-
-            // ── UPPER BODY (narrower) ──
-            dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwU/2 - 1, bot - s*72/100, bwU + 2, s*16/100, 3);
-            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwU/2, bot - s*71/100, bwU, s*14/100, 2);
-            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwU/2 + 1, bot - s*70/100, bwU - 2, s*12/100, 1);
-
-            // ── BISHOP CUT (diagonal line, one of bishop's defining marks) ──
-            dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
-            dc.drawLine(cx - bwU/2 + 2, bot - s*68/100, cx + bwU/2 - 2, bot - s*64/100);
-            dc.setColor(midC, Graphics.COLOR_TRANSPARENT);
-            dc.drawLine(cx - bwU/2 + 2, bot - s*67/100, cx + bwU/2 - 2, bot - s*63/100);
-
-            // ── ORB (sphere with shine) ──
-            var orR = s*12/100; if (orR < 3) { orR = 3; }
+            // shadow
             dc.setColor(shdC, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(cx + 1, bot - s*78/100 + 1, orR);
-            dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(cx, bot - s*78/100, orR);
+            dc.fillRoundedRectangle(cx - bwB/2 + 1, bot - s*20/100 + 1, bwB, s*20/100, 3);
+            // base
             dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(cx, bot - s*78/100, orR - 1);
+            dc.fillRoundedRectangle(cx - bwB/2, bot - s*20/100, bwB, s*20/100, 3);
             dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(cx, bot - s*78/100, orR - 2);
-            dc.setColor(midC, Graphics.COLOR_TRANSPARENT);
-            if (orR > 3) { dc.fillCircle(cx + orR/3, bot - s*78/100 + orR/3, orR * 3 / 5); }
+            dc.fillRoundedRectangle(cx - bwB/2 + 1, bot - s*19/100, bwB - 2, s*17/100, 2);
+            // lower body
+            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - bwB/2, bot - s*52/100, bwB, s*34/100, 3);
             dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            if (orR > 4) { dc.fillCircle(cx, bot - s*78/100, orR - 4); }
+            dc.fillRoundedRectangle(cx - bwB/2 + 1, bot - s*51/100, bwB - 2, s*32/100, 2);
+            // collar band
+            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - bwB/2, bot - s*55/100, bwB, s*7/100, 2);
             dc.setColor(hlC, Graphics.COLOR_TRANSPARENT);
-            if (orR > 3) { dc.fillCircle(cx - orR*3/8, bot - s*78/100 - orR*3/8, orR / 3); }
-            if (orR > 5) { dc.fillCircle(cx - orR*5/8, bot - s*78/100 - orR*5/8, 1); }
-
-            // ── MITRE HAT (pointed) — polygon ──
-            var mBase = bot - s*84/100;
-            var mW2 = s*11/100; if (mW2 < 3) { mW2 = 3; }
-            var mH2 = s*22/100; if (mH2 < 5) { mH2 = 5; }
-            if (s >= 16) {
-                // pointed mitre as polygon: tapers to a point at top
-                var mPts = [
-                    [cx - mW2/2 - 1, mBase + 2],
-                    [cx - mW2/2,     mBase - mH2*2/3],
-                    [cx - 1,         mBase - mH2],
-                    [cx + 1,         mBase - mH2],
-                    [cx + mW2/2,     mBase - mH2*2/3],
-                    [cx + mW2/2 + 1, mBase + 2]
-                ];
-                var mPtsIn = [
-                    [cx - mW2/2 + 1, mBase + 1],
-                    [cx - mW2/2 + 1, mBase - mH2*2/3],
-                    [cx - 1,         mBase - mH2 + 1],
-                    [cx + 1,         mBase - mH2 + 1],
-                    [cx + mW2/2 - 1, mBase - mH2*2/3],
-                    [cx + mW2/2 - 1, mBase + 1]
-                ];
-                dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
-                dc.fillPolygon(mPts);
-                dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-                dc.fillPolygon(mPtsIn);
-                dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-                dc.fillRoundedRectangle(cx - mW2/2 + 2, mBase - mH2*2/3, mW2 - 4, mH2*2/3 + 1, 1);
-                dc.setColor(hlC, Graphics.COLOR_TRANSPARENT);
-                dc.drawLine(cx - mW2/2 + 2, mBase - mH2*2/3 + 1, cx - mW2/2 + 2, mBase);
-            } else {
-                dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
-                dc.fillRoundedRectangle(cx - mW2/2, mBase - mH2, mW2, mH2 + 2, mW2/2);
-                dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-                dc.fillRoundedRectangle(cx - mW2/2 + 1, mBase - mH2 + 1, mW2 - 2, mH2, mW2/2 - 1);
-            }
-
-            // ── GOLD CROSS on tip ──
-            var crossT = mBase - mH2 - (s > 22 ? 7 : 5);
-            dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(cx - 2, crossT, 5, (mH2/2) + 2);
-            dc.fillRectangle(cx - 4, crossT + 2, 9, 4);
-            dc.setColor(goldC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(cx - 1, crossT + 1, 3, mH2/2);
-            dc.fillRectangle(cx - 3, crossT + 3, 7, 2);
-            dc.setColor(goldHi, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(cx - 1, crossT + 1, 1, mH2/2);
+            dc.drawLine(cx - bwB/2 + 2, bot - s*54/100, cx + bwB/2 - 3, bot - s*54/100);
+            // upper body (narrower)
+            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - bwU/2, bot - s*69/100, bwU, s*16/100, 2);
+            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - bwU/2 + 1, bot - s*68/100, bwU - 2, s*14/100, 1);
+            // orb
+            var orR = s*11/100; if (orR < 2) { orR = 2; }
+            dc.setColor(shdC, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(cx + 1, bot - s*74/100 + 1, orR);
+            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(cx, bot - s*74/100, orR);
+            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(cx, bot - s*74/100, orR > 2 ? orR - 2 : 1);
+            dc.setColor(hlC, Graphics.COLOR_TRANSPARENT);
+            if (orR > 3) { dc.fillCircle(cx - orR/3, bot - s*76/100, 2); }
+            // mitre hat: tall narrow rounded rect + tip cap
+            var mBase = bot - s*77/100;
+            var mW2 = s*9/100; if (mW2 < 3) { mW2 = 3; }
+            var mH2 = s*20/100; if (mH2 < 4) { mH2 = 4; }
+            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - mW2/2, mBase - mH2, mW2, mH2, mW2/2);
+            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - mW2/2 + 1, mBase - mH2, mW2 - 2, mH2 - 1, mW2/2 > 1 ? mW2/2 - 1 : 0);
+            // cross on tip
+            dc.setColor(accentC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(cx - 1, mBase - mH2 - 5, 3, 6);
+            dc.fillRectangle(cx - 3, mBase - mH2 - 3, 7, 2);
 
         } else if (abs == PC_QUEEN) {
-            var bwQ = s*60/100; if (bwQ < 11) { bwQ = 11; }
-            var pr2 = s*12/100; if (pr2 < 3) { pr2 = 3; }
-
-            // ── BASE (large) ──
-            dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*36/100, bot - s*22/100, s*72/100, s*22/100, 3);
+            var bwQ = s*56/100; if (bwQ < 10) { bwQ = 10; }
+            var pr2 = s*11/100; if (pr2 < 2) { pr2 = 2; }
+            // shadow
+            dc.setColor(shdC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - bwQ/2 + 1, bot - s*78/100 + 1, bwQ, s*78/100, 4);
+            // base
             dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*34/100, bot - s*21/100, s*68/100, s*19/100, 2);
+            dc.fillRoundedRectangle(cx - s*34/100, bot - s*20/100, s*68/100, s*20/100, 3);
             dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*32/100, bot - s*20/100, s*64/100, s*16/100, 2);
-            dc.setColor(midC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(cx - s*32/100, bot - s*8/100, s*64/100, s*3/100);
-            dc.setColor(hlC, Graphics.COLOR_TRANSPARENT);
-            dc.drawLine(cx - s*30/100, bot - s*19/100, cx + s*30/100, bot - s*19/100);
-
-            // ── BODY (curvy hourglass) ──
-            // lower bell
-            dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwQ/2 - 1, bot - s*52/100, bwQ + 2, s*32/100, 5);
+            dc.fillRoundedRectangle(cx - s*31/100, bot - s*19/100, s*62/100, s*17/100, 2);
+            // body
             dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwQ/2, bot - s*51/100, bwQ, s*30/100, 4);
+            dc.fillRoundedRectangle(cx - bwQ/2, bot - s*78/100, bwQ, s*60/100, 4);
             dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwQ/2 + 1, bot - s*50/100, bwQ - 2, s*27/100, 3);
-            dc.setColor(midC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(cx + bwQ/2 - 4, bot - s*48/100, 2, s*24/100);
-            // waist (narrower)
-            var bwW = bwQ * 65 / 100;
-            dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwW/2 - 1, bot - s*60/100, bwW + 2, s*12/100, 3);
+            dc.fillRoundedRectangle(cx - bwQ/2 + 1, bot - s*77/100, bwQ - 2, s*58/100, 3);
+            // waist indent
+            var bwW = bwQ * 7 / 10;
             dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
             dc.fillRoundedRectangle(cx - bwW/2, bot - s*59/100, bwW, s*10/100, 2);
             dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
             dc.fillRoundedRectangle(cx - bwW/2 + 1, bot - s*58/100, bwW - 2, s*8/100, 1);
-            // upper torso (slightly wider than waist)
-            var bwT = bwQ * 80 / 100;
-            dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwT/2 - 1, bot - s*78/100, bwT + 2, s*22/100, 4);
-            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwT/2, bot - s*77/100, bwT, s*20/100, 3);
-            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwT/2 + 1, bot - s*76/100, bwT - 2, s*17/100, 2);
-            dc.setColor(hlC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(cx - bwT/2 + 2, bot - s*74/100, 2, s*14/100);
-
-            // ── CROWN RING (golden) ──
+            // crown ring (gold)
             var crownBase = bot - s*78/100;
-            dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwQ/2 - 1, crownBase - s*8/100, bwQ + 2, s*9/100, 2);
-            dc.setColor(goldC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwQ/2, crownBase - s*7/100, bwQ, s*7/100, 1);
-            dc.setColor(goldHi, Graphics.COLOR_TRANSPARENT);
-            dc.drawLine(cx - bwQ/2 + 1, crownBase - s*6/100, cx + bwQ/2 - 2, crownBase - s*6/100);
-
-            // ── 5 PEARLS on crown spikes ──
+            dc.setColor(accentC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - bwQ/2, crownBase - s*7/100, bwQ, s*7/100, 2);
+            // 5 crown pearls
             var crownY2 = crownBase - s*8/100 - pr2;
             var pearlStep = bwQ * 22 / 100;
             for (var pi = 0; pi < 5; pi++) {
                 var px2 = cx + (pi - 2) * pearlStep;
-                // gold spike connecting crown ring to pearl
-                dc.setColor(goldC, Graphics.COLOR_TRANSPARENT);
-                dc.fillRectangle(px2 - 1, crownY2 + 1, 2, s*7/100);
-                // pearl
                 dc.setColor(shdC, Graphics.COLOR_TRANSPARENT);
                 dc.fillCircle(px2 + 1, crownY2 + 1, pr2);
-                dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
+                dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
                 dc.fillCircle(px2, crownY2, pr2);
-                dc.setColor(pi == 2 ? goldC : rimC, Graphics.COLOR_TRANSPARENT);
-                dc.fillCircle(px2, crownY2, pr2 - 1);
-                dc.setColor(pi == 2 ? rubyC : bodyC, Graphics.COLOR_TRANSPARENT);
-                dc.fillCircle(px2, crownY2, pr2 > 2 ? pr2 - 2 : 1);
+                dc.setColor(pi == 2 ? accentC : bodyC, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(px2, crownY2, pr2 > 1 ? pr2 - 1 : 1);
                 if (pr2 > 3) {
-                    dc.setColor(pi == 2 ? rubyHi : hlC, Graphics.COLOR_TRANSPARENT);
-                    dc.fillCircle(px2 - 1, crownY2 - pr2 / 2, pr2 > 4 ? 2 : 1);
-                }
-                if (pr2 > 5 && pi == 2) {
-                    dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-                    dc.fillCircle(px2 - pr2/3, crownY2 - pr2/2, 1);
+                    dc.setColor(hlC, Graphics.COLOR_TRANSPARENT);
+                    dc.fillCircle(px2 - 1, crownY2 - pr2 / 2, 1);
                 }
             }
-
-            // ── COLLAR detail ──
-            dc.setColor(goldC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwT/2 + 1, bot - s*60/100, bwT - 2, s*3/100, 1);
+            // center ruby
+            dc.setColor(0xFF2255, Graphics.COLOR_TRANSPARENT);
+            if (pr2 > 2) { dc.fillCircle(cx, crownY2, pr2 - 2); }
+            // body highlight line
+            dc.setColor(hlC, Graphics.COLOR_TRANSPARENT);
+            dc.drawLine(cx - bwQ/2 + 2, bot - s*76/100, cx - bwQ/2 + 2, bot - s*23/100);
 
         } else if (abs == PC_KING) {
-            var bwK = s*60/100; if (bwK < 11) { bwK = 11; }
+            var bwK = s*58/100; if (bwK < 10) { bwK = 10; }
             var mWK = bwK * 28 / 100; if (mWK < 3) { mWK = 3; }
-            var mHK = s*13/100; if (mHK < 3) { mHK = 3; }
-
-            // ── BASE (largest) ──
-            dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*36/100, bot - s*22/100, s*72/100, s*22/100, 3);
+            var mHK = s*14/100; if (mHK < 3) { mHK = 3; }
+            // shadow
+            dc.setColor(shdC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - bwK/2 + 1, bot - s*82/100 + 1, bwK, s*82/100, 4);
+            // base
             dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*34/100, bot - s*21/100, s*68/100, s*19/100, 2);
+            dc.fillRoundedRectangle(cx - s*34/100, bot - s*20/100, s*68/100, s*20/100, 3);
             dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*32/100, bot - s*20/100, s*64/100, s*16/100, 2);
-            dc.setColor(midC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(cx - s*32/100, bot - s*8/100, s*64/100, s*3/100);
-            dc.setColor(hlC, Graphics.COLOR_TRANSPARENT);
-            dc.drawLine(cx - s*30/100, bot - s*19/100, cx + s*30/100, bot - s*19/100);
-
-            // ── LOWER BODY (bell shape, hourglass) ──
-            dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwK/2 - 1, bot - s*52/100, bwK + 2, s*32/100, 5);
+            dc.fillRoundedRectangle(cx - s*31/100, bot - s*19/100, s*62/100, s*17/100, 2);
+            // body
             dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwK/2, bot - s*51/100, bwK, s*30/100, 4);
+            dc.fillRoundedRectangle(cx - bwK/2, bot - s*82/100, bwK, s*64/100, 4);
             dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwK/2 + 1, bot - s*50/100, bwK - 2, s*27/100, 3);
-            dc.setColor(midC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(cx + bwK/2 - 4, bot - s*48/100, 2, s*24/100);
-
-            // ── WAIST ──
-            var bwKW = bwK * 65 / 100;
-            dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwKW/2 - 1, bot - s*60/100, bwKW + 2, s*12/100, 3);
-            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwKW/2, bot - s*59/100, bwKW, s*10/100, 2);
-            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwKW/2 + 1, bot - s*58/100, bwKW - 2, s*8/100, 1);
-
-            // ── UPPER TORSO ──
-            var bwKT = bwK * 80 / 100;
-            dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwKT/2 - 1, bot - s*82/100, bwKT + 2, s*26/100, 4);
-            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwKT/2, bot - s*81/100, bwKT, s*24/100, 3);
-            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwKT/2 + 1, bot - s*80/100, bwKT - 2, s*21/100, 2);
-            dc.setColor(hlC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(cx - bwKT/2 + 2, bot - s*78/100, 2, s*16/100);
-
-            // ── CROWN RING (golden) ──
+            dc.fillRoundedRectangle(cx - bwK/2 + 1, bot - s*81/100, bwK - 2, s*62/100, 3);
+            // crown ring (gold)
             var cBase2 = bot - s*82/100;
-            dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwK/2 - 1, cBase2 - s*7/100, bwK + 2, s*8/100, 2);
-            dc.setColor(goldC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwK/2, cBase2 - s*6/100, bwK, s*6/100, 1);
-            dc.setColor(goldHi, Graphics.COLOR_TRANSPARENT);
-            dc.drawLine(cx - bwK/2 + 1, cBase2 - s*5/100, cx + bwK/2 - 2, cBase2 - s*5/100);
-
-            // ── 3 BATTLEMENTS (with gem inset on center) ──
-            for (var ki = 0; ki < 3; ki++) {
-                var kmx = (ki == 0) ? (cx - bwK/2) : ((ki == 1) ? (cx - mWK/2) : (cx + bwK/2 - mWK));
-                dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
-                dc.fillRectangle(kmx - 1, cBase2 - s*7/100 - mHK - 1, mWK + 2, mHK + 3);
-                dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-                dc.fillRectangle(kmx,     cBase2 - s*7/100 - mHK,     mWK,     mHK + 2);
-                dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-                dc.fillRectangle(kmx + 1, cBase2 - s*7/100 - mHK,     mWK - 2, mHK);
-                dc.setColor(hlC, Graphics.COLOR_TRANSPARENT);
-                dc.drawLine(kmx + 1, cBase2 - s*7/100 - mHK, kmx + mWK - 2, cBase2 - s*7/100 - mHK);
-                if (ki == 1 && mWK > 3) {
-                    // ruby inset on middle merlon
-                    dc.setColor(rubyC, Graphics.COLOR_TRANSPARENT);
-                    dc.fillCircle(cx, cBase2 - s*7/100 - mHK/2, mWK/3 + 1);
-                    dc.setColor(rubyHi, Graphics.COLOR_TRANSPARENT);
-                    if (mWK > 5) { dc.fillCircle(cx - 1, cBase2 - s*7/100 - mHK/2 - 1, 1); }
-                }
-            }
-
-            // ── CROSS (jewelled) ──
-            var crossH3 = s*30/100; if (crossH3 < 5) { crossH3 = 5; }
-            var armW3   = s*16/100; if (armW3 < 4) { armW3 = 4; }
-            var crossY3 = cBase2 - s*7/100 - mHK - crossH3;
-            // dark silhouette
-            dc.setColor(silC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(cx - 3, crossY3 - 1, 6, crossH3 + 2);
-            dc.fillRectangle(cx - armW3/2 - 1, crossY3 + crossH3*4/10 - 1, armW3 + 2, 5);
-            // gold body
-            dc.setColor(goldC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(cx - 2, crossY3, 4, crossH3);
+            dc.setColor(accentC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - bwK/2, cBase2 - s*6/100, bwK, s*6/100, 2);
+            // 3 battlements
+            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(cx - bwK/2,         cBase2 - s*6/100 - mHK, mWK, mHK + 2);
+            dc.fillRectangle(cx - mWK/2,          cBase2 - s*6/100 - mHK, mWK, mHK + 2);
+            dc.fillRectangle(cx + bwK/2 - mWK,    cBase2 - s*6/100 - mHK, mWK, mHK + 2);
+            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(cx - bwK/2 + 1,       cBase2 - s*6/100 - mHK, mWK - 2, mHK);
+            dc.fillRectangle(cx - mWK/2 + 1,       cBase2 - s*6/100 - mHK, mWK - 2, mHK);
+            dc.fillRectangle(cx + bwK/2 - mWK + 1, cBase2 - s*6/100 - mHK, mWK - 2, mHK);
+            // gold cross
+            var crossH3 = s*28/100; if (crossH3 < 4) { crossH3 = 4; }
+            var armW3   = s*14/100; if (armW3 < 3) { armW3 = 3; }
+            var crossY3 = cBase2 - s*6/100 - mHK - crossH3;
+            dc.setColor(shdC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(cx - 1, crossY3 + 1, 3, crossH3 + 1);
+            dc.fillRectangle(cx - armW3/2 + 1, crossY3 + crossH3*4/10 + 1, armW3, 3);
+            dc.setColor(accentC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(cx - 1, crossY3, 3, crossH3);
             dc.fillRectangle(cx - armW3/2, crossY3 + crossH3*4/10, armW3, 3);
-            // bright highlight strip
-            dc.setColor(goldHi, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(cx - 2, crossY3, 1, crossH3);
-            dc.fillRectangle(cx - armW3/2, crossY3 + crossH3*4/10, armW3 - 1, 1);
-            // top sparkle
-            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(cx - 2, crossY3, 2, 2);
+            dc.setColor(0xFFFF88, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(cx - 1, crossY3, 1, crossH3);
+            // body highlight line
+            dc.setColor(hlC, Graphics.COLOR_TRANSPARENT);
+            dc.drawLine(cx - bwK/2 + 2, bot - s*80/100, cx - bwK/2 + 2, bot - s*23/100);
         }
     }
 
