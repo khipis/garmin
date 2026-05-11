@@ -1270,457 +1270,242 @@ class BitochiChessView extends WatchUi.View {
 
     hidden function drawGame(dc) {
         dc.setColor(0x080808, 0x080808); dc.clear();
-        var bsz = _sq * 8;
 
-        // Board frame: outer shadow → warm brown frame → inner highlights
-        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(_ox - 4, _oy - 4, bsz + 8, bsz + 8);
-        dc.setColor(0x4A2808, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(_ox - 3, _oy - 3, bsz + 6, bsz + 6);
-        dc.setColor(0xA06C30, Graphics.COLOR_TRANSPARENT);
-        dc.drawRectangle(_ox - 2, _oy - 2, bsz + 4, bsz + 4);
-        dc.setColor(0x6A4010, Graphics.COLOR_TRANSPARENT);
-        dc.drawRectangle(_ox - 1, _oy - 1, bsz + 2, bsz + 2);
-
-        // ── Pass 1: squares ──────────────────────────────────────────────────
+        // Pass 1: squares + pieces
         for (var row = 0; row < 8; row++) {
             for (var col = 0; col < 8; col++) {
                 var sq = row * 8 + col;
-                var xy = sqToScreen(sq); var bx = xy[0]; var by = xy[1];
+                var xy = sqToScreen(sq);
+                var bx = xy[0]; var by = xy[1];
                 var light = ((row + col) % 2 == 0);
+
+                // Base square color
+                var sqColor = light ? 0xF0D9A0 : 0x7A6048;
 
                 var isLegal = false;
                 for (var mi = 0; mi < _legalMoves.size(); mi++) {
                     if (_legalMoves[mi][1] == sq) { isLegal = true; break; }
                 }
 
-                var sqColor = light ? 0xF0D5A0 : 0x7C5230;
-                if (isLegal) { sqColor = light ? 0xBEDC6E : 0x336618; }
+                // Destination highlight (keep subtle — ring will reinforce)
+                if (isLegal) { sqColor = light ? 0xCCEE88 : 0x2A7730; }
+
+                // King in check: red square
                 if (_inCheck) {
-                    var kP = _whiteToMove ? PC_KING : -PC_KING;
-                    if (_board[sq] == kP) { sqColor = 0xBB1E1E; }
+                    var kPiece = _whiteToMove ? PC_KING : -PC_KING;
+                    if (_board[sq] == kPiece) { sqColor = 0xAA2222; }
                 }
-                if (sq == _selSq) { sqColor = light ? 0xDDBB28 : 0x9A7A06; }
 
                 dc.setColor(sqColor, Graphics.COLOR_TRANSPARENT);
                 dc.fillRectangle(bx, by, _sq, _sq);
 
-                // Subtle 3D edge shading on each square
-                dc.setColor(light ? 0xC8B070 : 0x4E2A0E, Graphics.COLOR_TRANSPARENT);
-                dc.drawLine(bx + _sq - 1, by, bx + _sq - 1, by + _sq - 1);
-                dc.drawLine(bx, by + _sq - 1, bx + _sq - 1, by + _sq - 1);
-            }
-        }
-
-        // ── Pass 2: pieces ───────────────────────────────────────────────────
-        for (var row = 0; row < 8; row++) {
-            for (var col = 0; col < 8; col++) {
-                var sq = row * 8 + col;
-                if (_board[sq] != PC_EMPTY) {
-                    var xy = sqToScreen(sq);
-                    drawPiece(dc, xy[0], xy[1], _board[sq], _sq);
-                }
-            }
-        }
-
-        // ── Pass 3: overlays on top of pieces ────────────────────────────────
-        for (var row = 0; row < 8; row++) {
-            for (var col = 0; col < 8; col++) {
-                var sq = row * 8 + col;
-                var xy = sqToScreen(sq); var bx = xy[0]; var by = xy[1];
-                var cx2 = bx + _sq / 2; var cy2 = by + _sq / 2;
-
-                var isLegal2 = false;
-                for (var mi2 = 0; mi2 < _legalMoves.size(); mi2++) {
-                    if (_legalMoves[mi2][1] == sq) { isLegal2 = true; break; }
-                }
-
-                // Legal move: glowing dot on empty squares
-                if (isLegal2 && _board[sq] == PC_EMPTY) {
-                    var dr = _sq * 28 / 100; if (dr < 3) { dr = 3; }
-                    dc.setColor(0x0A4C0A, Graphics.COLOR_TRANSPARENT);
-                    dc.fillCircle(cx2, cy2, dr + 2);
-                    dc.setColor(0x00CC44, Graphics.COLOR_TRANSPARENT);
-                    dc.fillCircle(cx2, cy2, dr);
-                    dc.setColor(0x88FF99, Graphics.COLOR_TRANSPARENT);
-                    dc.fillCircle(cx2, cy2, dr / 2);
-                }
-
-                // Legal capture: bright green corner brackets
-                if (isLegal2 && _board[sq] != PC_EMPTY) {
-                    var bl = _sq / 4; if (bl < 3) { bl = 3; } if (bl > 9) { bl = 9; }
-                    dc.setColor(0x00CC33, Graphics.COLOR_TRANSPARENT);
-                    dc.fillRectangle(bx,          by,          bl, 2); dc.fillRectangle(bx,          by,          2,  bl);
-                    dc.fillRectangle(bx + _sq-bl, by,          bl, 2); dc.fillRectangle(bx + _sq-2,  by,          2,  bl);
-                    dc.fillRectangle(bx,          by + _sq-2,  bl, 2); dc.fillRectangle(bx,          by + _sq-bl, 2,  bl);
-                    dc.fillRectangle(bx + _sq-bl, by + _sq-2,  bl, 2); dc.fillRectangle(bx + _sq-2,  by + _sq-bl, 2,  bl);
-                }
-
-                // Cursor: pulsing L-corner brackets (cyan = browsing, gold = piece selected)
+                // Cursor: black outer + white separator + pulsing inner
+                // Visible on every square color; pulses orange (piece selected) or cyan (browsing)
                 if (sq == _curSq && (_gs == CS_PLAY || _gs == CS_PROMOTE)) {
                     var selMode = (_selSq >= 0);
                     var pulse   = (_tick % 2 == 0);
-                    var cBrC    = selMode ? (pulse ? 0xFFDD00 : 0xFF9900)
-                                         : (pulse ? 0x00CCFF : 0x0088BB);
-                    var bLen = _sq / 4; if (bLen < 4) { bLen = 4; } if (bLen > 9) { bLen = 9; }
-                    var bW   = selMode ? 3 : 2;
-                    dc.setColor(cBrC, Graphics.COLOR_TRANSPARENT);
-                    dc.fillRectangle(bx,           by,           bLen, bW);  dc.fillRectangle(bx,           by,           bW,   bLen);
-                    dc.fillRectangle(bx + _sq-bLen, by,           bLen, bW);  dc.fillRectangle(bx + _sq-bW,  by,           bW,   bLen);
-                    dc.fillRectangle(bx,           by + _sq-bW,  bLen, bW);  dc.fillRectangle(bx,           by + _sq-bLen, bW,   bLen);
-                    dc.fillRectangle(bx + _sq-bLen, by + _sq-bW,  bLen, bW);  dc.fillRectangle(bx + _sq-bW,  by + _sq-bLen, bW,   bLen);
+                    var innerC  = selMode ? (pulse ? 0xFF6600 : 0xFFAA00)
+                                         : (pulse ? 0x00CCFF : 0x0099CC);
+                    dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
+                    dc.drawRectangle(bx,     by,     _sq,     _sq);
+                    dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+                    dc.drawRectangle(bx + 1, by + 1, _sq - 2, _sq - 2);
+                    dc.setColor(innerC, Graphics.COLOR_TRANSPARENT);
+                    dc.drawRectangle(bx + 2, by + 2, _sq - 4, _sq - 4);
                 }
 
-                // Selection: thick pulsing gold corner brackets
-                if (sq == _selSq) {
-                    var sBLen = _sq / 3; if (sBLen < 5) { sBLen = 5; } if (sBLen > 11) { sBLen = 11; }
-                    var sW = 3;
-                    dc.setColor((_tick % 2 == 0) ? 0xFF8800 : 0xFFCC00, Graphics.COLOR_TRANSPARENT);
-                    dc.fillRectangle(bx,            by,            sBLen, sW);  dc.fillRectangle(bx,            by,            sW,    sBLen);
-                    dc.fillRectangle(bx + _sq-sBLen, by,            sBLen, sW);  dc.fillRectangle(bx + _sq-sW,   by,            sW,    sBLen);
-                    dc.fillRectangle(bx,            by + _sq-sW,   sBLen, sW);  dc.fillRectangle(bx,            by + _sq-sBLen, sW,    sBLen);
-                    dc.fillRectangle(bx + _sq-sBLen, by + _sq-sW,   sBLen, sW);  dc.fillRectangle(bx + _sq-sW,   by + _sq-sBLen, sW,    sBLen);
+                // Destination dot on empty squares
+                if (isLegal && _board[sq] == PC_EMPTY) {
+                    var dotR = _sq * 28 / 100; if (dotR < 3) { dotR = 3; }
+                    dc.setColor(0x00DD44, Graphics.COLOR_TRANSPARENT);
+                    dc.fillCircle(bx + _sq / 2, by + _sq / 2, dotR);
+                    dc.setColor(0x99FF88, Graphics.COLOR_TRANSPARENT);
+                    dc.fillCircle(bx + _sq / 2, by + _sq / 2, dotR * 5 / 10);
+                }
+
+                drawPiece(dc, bx, by, _board[sq]);
+            }
+        }
+
+        // Pass 2: overlays drawn ON TOP of pieces — always visible regardless of piece color
+        for (var row2 = 0; row2 < 8; row2++) {
+            for (var col2 = 0; col2 < 8; col2++) {
+                var sq2 = row2 * 8 + col2;
+                var xy2 = sqToScreen(sq2);
+                var bx2 = xy2[0]; var by2 = xy2[1];
+                var cx2 = bx2 + _sq / 2; var cy2 = by2 + _sq / 2;
+
+                // Selection ring — red for maximum visibility on any square colour
+                if (sq2 == _selSq) {
+                    var ringR = _sq * 38 / 100; if (ringR < 5) { ringR = 5; }
+                    dc.setColor(0xFF2200, Graphics.COLOR_TRANSPARENT);
+                    dc.drawCircle(cx2, cy2, ringR);
+                    dc.drawCircle(cx2, cy2, ringR + 1);
+                    dc.setColor(0xAA0000, Graphics.COLOR_TRANSPARENT);
+                    dc.drawCircle(cx2, cy2, ringR + 2);
+                }
+
+                // Destination ring on occupied squares
+                var isLegal2 = false;
+                for (var mi2 = 0; mi2 < _legalMoves.size(); mi2++) {
+                    if (_legalMoves[mi2][1] == sq2) { isLegal2 = true; break; }
+                }
+                if (isLegal2 && _board[sq2] != PC_EMPTY) {
+                    var capR = _sq * 40 / 100; if (capR < 5) { capR = 5; }
+                    dc.setColor(0x00DD44, Graphics.COLOR_TRANSPARENT);
+                    dc.drawCircle(cx2, cy2, capR);
+                    dc.drawCircle(cx2, cy2, capR - 1);
                 }
             }
         }
+
+        dc.setColor(0x3A2810, Graphics.COLOR_TRANSPARENT);
+        dc.drawRectangle(_ox - 1, _oy - 1, _sq * 8 + 2, _sq * 8 + 2);
+        dc.drawRectangle(_ox - 2, _oy - 2, _sq * 8 + 4, _sq * 8 + 4);
 
         drawHUD(dc);
     }
 
     hidden function drawHUD(dc) {
-        var hy = _oy + _sq * 8 + 5;
-        if (hy + 14 > _h) { hy = _oy - 17; }
+        var hy = _oy + _sq * 8 + 3;
+        if (hy + 14 > _h) { hy = _oy - 14; }
         var isPlayerTurn = (_pvp || _whiteToMove == _playerIsWhite) && (_gs == CS_PLAY);
         var turnStr = "";
         var hClr = 0xAA9977;
         if (_gs == CS_AI_THINK || _gs == CS_AI_EVAL || _gs == CS_AI_FINISH) {
             var dots = "";
-            for (var i = 0; i <= (_tick % 4); i++) { dots = dots + "."; }
-            turnStr = "AI" + dots; hClr = 0x66BBFF;
+            for (var i = 0; i < (_tick % 4); i++) { dots = dots + "."; }
+            turnStr = "AI" + dots;
         } else if (_inCheck && isPlayerTurn) {
-            turnStr = "CHECK!"; hClr = 0xFF4444;
+            turnStr = "CHECK! Move king"; hClr = 0xFF4444;
         } else if (isPlayerTurn) {
             if (_selSq >= 0) {
-                turnStr = "SEL: move"; hClr = 0xFFCC44;
+                turnStr = _legalMoves.size() > 1 ? "UP/DN switch  SEL move" : "SEL to move";
             } else {
-                var wm = _pvp ? _whiteToMove : _playerIsWhite;
-                turnStr = wm ? "White" : "Black";
-                hClr = wm ? 0xE8E8E8 : 0x909080;
+                turnStr = (_pvp ? _whiteToMove : _playerIsWhite) ? "White to move" : "Black to move";
             }
         }
-        if (!turnStr.equals("")) {
-            var tw = 80;
-            dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(_w / 2 - tw / 2, hy - 2, tw, 16, 3);
-            dc.setColor(hClr, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, hy, Graphics.FONT_XTINY, turnStr, Graphics.TEXT_JUSTIFY_CENTER);
-        }
+        dc.setColor(hClr, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, hy, Graphics.FONT_XTINY, turnStr, Graphics.TEXT_JUSTIFY_CENTER);
     }
 
-    // drawPiece — 4-layer rendering: drop-shadow → rim → body → detail/highlight.
-    // Uses explicit 's' so it can be called at any cell size (board squares or promo overlay).
-    hidden function drawPiece(dc, bx, by, piece, s) {
+    hidden function drawPiece(dc, bx, by, piece) {
         if (piece == PC_EMPTY) { return; }
         var white = (piece > 0);
-        var abs   = white ? piece : -piece;
-        var cx    = bx + s / 2;
-        var bot   = by + s - 2;
+        var abs = white ? piece : -piece;
+        var cx  = bx + _sq / 2;
+        var bot = by + _sq - 1;
+        var s   = _sq;
 
-        var rimC    = white ? 0xB87830 : 0xC89040;
-        var bodyC   = white ? 0xFFF0D0 : 0x180C04;
-        var hlC     = white ? 0xFFFFFF : 0x5A3C1C;
-        var shdC    = white ? 0x302010 : 0x040100;
-        var markC   = white ? 0x583810 : 0xE0B860;
-        var accentC = 0xFFD020;
+        var bodyC = white ? 0xFAF4E8 : 0x282010;
+        var rimC  = white ? 0x8B6030 : 0xD0A060;
+        var markC = white ? 0x3A2010 : 0xF0D080;
 
         if (abs == PC_PAWN) {
-            // shadow
-            dc.setColor(shdC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*33/100 + 1, bot - s*19/100 + 1, s*66/100, s*19/100, 3);
-            // base
             dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*33/100, bot - s*19/100, s*66/100, s*19/100, 3);
+            dc.fillRoundedRectangle(cx - s * 3 / 8, bot - s * 22 / 100, s * 3 / 4, s * 22 / 100, 2);
             dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*30/100, bot - s*18/100, s*60/100, s*16/100, 2);
-            // neck
+            dc.fillRoundedRectangle(cx - s * 3 / 8 + 1, bot - s * 22 / 100 + 1, s * 3 / 4 - 2, s * 22 / 100 - 1, 1);
             dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*11/100, bot - s*60/100, s*22/100, s*43/100, 2);
+            dc.fillRoundedRectangle(cx - s / 10, bot - s * 65 / 100, s / 5, s * 43 / 100, 1);
             dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*9/100, bot - s*59/100, s*18/100, s*41/100, 1);
-            // head
-            var hr = s*20/100; if (hr < 3) { hr = 3; }
-            dc.setColor(shdC, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(cx + 1, bot - s*66/100 + 1, hr);
+            dc.fillRoundedRectangle(cx - s / 10 + 1, bot - s * 65 / 100 + 1, s / 5 - 2, s * 43 / 100 - 1, 0);
+            var hr = s * 18 / 100;
             dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(cx, bot - s*66/100, hr);
+            dc.fillCircle(cx, bot - s * 65 / 100 - hr + 1, hr);
             dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(cx, bot - s*66/100, hr - 2);
-            // highlight dot
-            dc.setColor(hlC, Graphics.COLOR_TRANSPARENT);
-            if (s > 18) { dc.fillCircle(cx - hr/3, bot - s*68/100, 2); }
-
+            dc.fillCircle(cx, bot - s * 65 / 100 - hr + 1, hr - 2);
         } else if (abs == PC_ROOK) {
-            var bw = s*52/100; if (bw < 8) { bw = 8; }
-            var mW = bw / 3; if (mW < 2) { mW = 2; }
-            var mH = s*18/100; if (mH < 3) { mH = 3; }
-            // shadow
-            dc.setColor(shdC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bw/2 + 1, bot - s*79/100 + 1, bw, s*79/100, 2);
-            // base
+            var bw = s * 56 / 100;
             dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*32/100, bot - s*20/100, s*64/100, s*20/100, 3);
+            dc.fillRoundedRectangle(cx - bw / 2, bot - s * 72 / 100, bw, s * 72 / 100, 2);
             dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*29/100, bot - s*19/100, s*58/100, s*17/100, 2);
-            // tower
-            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bw/2, bot - s*79/100, bw, s*61/100, 2);
-            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bw/2 + 1, bot - s*78/100, bw - 2, s*59/100, 1);
-            // window slit
-            var sW2 = s*10/100; if (sW2 < 2) { sW2 = 2; }
-            var sH2 = s*22/100; if (sH2 < 3) { sH2 = 3; }
-            dc.setColor(shdC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(cx - sW2/2, bot - s*65/100, sW2, sH2);
-            // battlements: 3 merlons
-            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(cx - bw/2,        bot - s*79/100 - mH, mW, mH + 2);
-            dc.fillRectangle(cx - mW/2,        bot - s*79/100 - mH, mW, mH + 2);
-            dc.fillRectangle(cx + bw/2 - mW,   bot - s*79/100 - mH, mW, mH + 2);
-            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(cx - bw/2 + 1,       bot - s*79/100 - mH, mW - 2, mH);
-            dc.fillRectangle(cx - mW/2 + 1,       bot - s*79/100 - mH, mW - 2, mH);
-            dc.fillRectangle(cx + bw/2 - mW + 1,  bot - s*79/100 - mH, mW - 2, mH);
-            // top highlight
-            dc.setColor(hlC, Graphics.COLOR_TRANSPARENT);
-            dc.drawLine(cx - bw/2 + 2, bot - s*77/100, cx + bw/2 - 3, bot - s*77/100);
-
-        } else if (abs == PC_KNIGHT) {
-            // shadow
-            dc.setColor(shdC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*26/100 + 1, bot - s*20/100 + 1, s*52/100, s*20/100, 3);
-            // base
-            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*26/100, bot - s*20/100, s*52/100, s*20/100, 3);
-            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*23/100, bot - s*19/100, s*46/100, s*17/100, 2);
-            // neck/body
-            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*20/100, bot - s*65/100, s*40/100, s*47/100, 3);
-            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*18/100, bot - s*64/100, s*36/100, s*45/100, 2);
-            // horse head extends right
-            dc.setColor(shdC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*5/100 + 1, bot - s*86/100 + 1, s*34/100, s*26/100, 5);
-            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*5/100, bot - s*86/100, s*34/100, s*26/100, 5);
-            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*3/100, bot - s*85/100, s*30/100, s*23/100, 4);
-            // ear bump
-            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx + s*18/100, bot - s*96/100, s*10/100, s*13/100, 3);
-            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx + s*19/100, bot - s*95/100, s*8/100, s*11/100, 2);
-            // eye
-            var eyeX = cx + s*16/100; var eyeY = bot - s*76/100;
-            var eyeR = s*7/100; if (eyeR < 2) { eyeR = 2; }
-            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(eyeX, eyeY, eyeR);
-            dc.setColor(shdC, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(eyeX, eyeY, eyeR / 2 + 1);
-            // nostril
-            dc.setColor(markC, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(cx + s*26/100, bot - s*68/100, s > 24 ? 2 : 1);
-            // mane highlight line
-            dc.setColor(hlC, Graphics.COLOR_TRANSPARENT);
-            if (s > 20) { dc.drawLine(cx - s*14/100, bot - s*61/100, cx - s*4/100, bot - s*84/100); }
-
-        } else if (abs == PC_BISHOP) {
-            var bwB = s*44/100; if (bwB < 7) { bwB = 7; }
-            var bwU = bwB * 7 / 10;
-            // shadow
-            dc.setColor(shdC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwB/2 + 1, bot - s*20/100 + 1, bwB, s*20/100, 3);
-            // base
-            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwB/2, bot - s*20/100, bwB, s*20/100, 3);
-            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwB/2 + 1, bot - s*19/100, bwB - 2, s*17/100, 2);
-            // lower body
-            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwB/2, bot - s*52/100, bwB, s*34/100, 3);
-            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwB/2 + 1, bot - s*51/100, bwB - 2, s*32/100, 2);
-            // collar band
-            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwB/2, bot - s*55/100, bwB, s*7/100, 2);
-            dc.setColor(hlC, Graphics.COLOR_TRANSPARENT);
-            dc.drawLine(cx - bwB/2 + 2, bot - s*54/100, cx + bwB/2 - 3, bot - s*54/100);
-            // upper body (narrower)
-            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwU/2, bot - s*69/100, bwU, s*16/100, 2);
-            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwU/2 + 1, bot - s*68/100, bwU - 2, s*14/100, 1);
-            // orb
-            var orR = s*11/100; if (orR < 2) { orR = 2; }
-            dc.setColor(shdC, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(cx + 1, bot - s*74/100 + 1, orR);
-            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(cx, bot - s*74/100, orR);
-            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(cx, bot - s*74/100, orR > 2 ? orR - 2 : 1);
-            dc.setColor(hlC, Graphics.COLOR_TRANSPARENT);
-            if (orR > 3) { dc.fillCircle(cx - orR/3, bot - s*76/100, 2); }
-            // mitre hat: tall narrow rounded rect + tip cap
-            var mBase = bot - s*77/100;
-            var mW2 = s*9/100; if (mW2 < 3) { mW2 = 3; }
-            var mH2 = s*20/100; if (mH2 < 4) { mH2 = 4; }
-            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - mW2/2, mBase - mH2, mW2, mH2, mW2/2);
-            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - mW2/2 + 1, mBase - mH2, mW2 - 2, mH2 - 1, mW2/2 > 1 ? mW2/2 - 1 : 0);
-            // cross on tip
-            dc.setColor(accentC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(cx - 1, mBase - mH2 - 5, 3, 6);
-            dc.fillRectangle(cx - 3, mBase - mH2 - 3, 7, 2);
-
-        } else if (abs == PC_QUEEN) {
-            var bwQ = s*56/100; if (bwQ < 10) { bwQ = 10; }
-            var pr2 = s*11/100; if (pr2 < 2) { pr2 = 2; }
-            // shadow
-            dc.setColor(shdC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwQ/2 + 1, bot - s*78/100 + 1, bwQ, s*78/100, 4);
-            // base
-            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*34/100, bot - s*20/100, s*68/100, s*20/100, 3);
-            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*31/100, bot - s*19/100, s*62/100, s*17/100, 2);
-            // body
-            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwQ/2, bot - s*78/100, bwQ, s*60/100, 4);
-            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwQ/2 + 1, bot - s*77/100, bwQ - 2, s*58/100, 3);
-            // waist indent
-            var bwW = bwQ * 7 / 10;
-            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwW/2, bot - s*59/100, bwW, s*10/100, 2);
-            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwW/2 + 1, bot - s*58/100, bwW - 2, s*8/100, 1);
-            // crown ring (gold)
-            var crownBase = bot - s*78/100;
-            dc.setColor(accentC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwQ/2, crownBase - s*7/100, bwQ, s*7/100, 2);
-            // 5 crown pearls
-            var crownY2 = crownBase - s*8/100 - pr2;
-            var pearlStep = bwQ * 22 / 100;
-            for (var pi = 0; pi < 5; pi++) {
-                var px2 = cx + (pi - 2) * pearlStep;
-                dc.setColor(shdC, Graphics.COLOR_TRANSPARENT);
-                dc.fillCircle(px2 + 1, crownY2 + 1, pr2);
+            dc.fillRoundedRectangle(cx - bw / 2 + 1, bot - s * 72 / 100 + 1, bw - 2, s * 72 / 100 - 2, 1);
+            var tw = bw / 4; var th = s / 6;
+            for (var ti = 0; ti < 3; ti += 2) {
                 dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-                dc.fillCircle(px2, crownY2, pr2);
-                dc.setColor(pi == 2 ? accentC : bodyC, Graphics.COLOR_TRANSPARENT);
-                dc.fillCircle(px2, crownY2, pr2 > 1 ? pr2 - 1 : 1);
-                if (pr2 > 3) {
-                    dc.setColor(hlC, Graphics.COLOR_TRANSPARENT);
-                    dc.fillCircle(px2 - 1, crownY2 - pr2 / 2, 1);
-                }
+                dc.fillRectangle(cx - bw / 2 + ti * bw / 4, bot - s * 72 / 100 - th, tw, th + 2);
+                dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(cx - bw / 2 + ti * bw / 4 + 1, bot - s * 72 / 100 - th, tw - 2, th);
             }
-            // center ruby
-            dc.setColor(0xFF2255, Graphics.COLOR_TRANSPARENT);
-            if (pr2 > 2) { dc.fillCircle(cx, crownY2, pr2 - 2); }
-            // body highlight line
-            dc.setColor(hlC, Graphics.COLOR_TRANSPARENT);
-            dc.drawLine(cx - bwQ/2 + 2, bot - s*76/100, cx - bwQ/2 + 2, bot - s*23/100);
-
+        } else if (abs == PC_KNIGHT) {
+            var bw = s * 50 / 100;
+            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - bw / 2, bot - s * 72 / 100, bw, s * 72 / 100, 2);
+            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - bw / 2 + 1, bot - s * 72 / 100 + 1, bw - 2, s * 72 / 100 - 2, 1);
+            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - 2, bot - s * 88 / 100, bw * 6 / 10, s * 26 / 100, 3);
+            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - 1, bot - s * 87 / 100, bw * 6 / 10 - 2, s * 25 / 100 - 2, 2);
+        } else if (abs == PC_BISHOP) {
+            var bw = s * 46 / 100;
+            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - bw / 2, bot - s * 72 / 100, bw, s * 72 / 100, 3);
+            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - bw / 2 + 1, bot - s * 72 / 100 + 1, bw - 2, s * 72 / 100 - 2, 2);
+            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(cx, bot - s * 78 / 100, s / 10);
+            dc.setColor(markC, Graphics.COLOR_TRANSPARENT);
+            dc.drawLine(cx - bw / 2 + 2, bot - s * 40 / 100, cx + bw / 2 - 2, bot - s * 40 / 100);
+        } else if (abs == PC_QUEEN) {
+            var bw = s * 62 / 100;
+            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - bw / 2, bot - s * 72 / 100, bw, s * 72 / 100, 3);
+            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - bw / 2 + 1, bot - s * 72 / 100 + 1, bw - 2, s * 72 / 100 - 2, 2);
+            var cy2 = bot - s * 72 / 100;
+            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(cx, cy2 - s * 12 / 100, s * 10 / 100);
+            dc.fillCircle(cx - bw / 3, cy2 - s * 8 / 100, s * 8 / 100);
+            dc.fillCircle(cx + bw / 3, cy2 - s * 8 / 100, s * 8 / 100);
+            dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(cx, cy2 - s * 12 / 100, s * 7 / 100);
+            dc.fillCircle(cx - bw / 3, cy2 - s * 8 / 100, s * 5 / 100);
+            dc.fillCircle(cx + bw / 3, cy2 - s * 8 / 100, s * 5 / 100);
         } else if (abs == PC_KING) {
-            var bwK = s*58/100; if (bwK < 10) { bwK = 10; }
-            var mWK = bwK * 28 / 100; if (mWK < 3) { mWK = 3; }
-            var mHK = s*14/100; if (mHK < 3) { mHK = 3; }
-            // shadow
-            dc.setColor(shdC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwK/2 + 1, bot - s*82/100 + 1, bwK, s*82/100, 4);
-            // base
+            var bw = s * 62 / 100;
             dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*34/100, bot - s*20/100, s*68/100, s*20/100, 3);
+            dc.fillRoundedRectangle(cx - bw / 2, bot - s * 72 / 100, bw, s * 72 / 100, 3);
             dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - s*31/100, bot - s*19/100, s*62/100, s*17/100, 2);
-            // body
-            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwK/2, bot - s*82/100, bwK, s*64/100, 4);
-            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwK/2 + 1, bot - s*81/100, bwK - 2, s*62/100, 3);
-            // crown ring (gold)
-            var cBase2 = bot - s*82/100;
-            dc.setColor(accentC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(cx - bwK/2, cBase2 - s*6/100, bwK, s*6/100, 2);
-            // 3 battlements
-            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(cx - bwK/2,         cBase2 - s*6/100 - mHK, mWK, mHK + 2);
-            dc.fillRectangle(cx - mWK/2,          cBase2 - s*6/100 - mHK, mWK, mHK + 2);
-            dc.fillRectangle(cx + bwK/2 - mWK,    cBase2 - s*6/100 - mHK, mWK, mHK + 2);
-            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(cx - bwK/2 + 1,       cBase2 - s*6/100 - mHK, mWK - 2, mHK);
-            dc.fillRectangle(cx - mWK/2 + 1,       cBase2 - s*6/100 - mHK, mWK - 2, mHK);
-            dc.fillRectangle(cx + bwK/2 - mWK + 1, cBase2 - s*6/100 - mHK, mWK - 2, mHK);
-            // gold cross
-            var crossH3 = s*28/100; if (crossH3 < 4) { crossH3 = 4; }
-            var armW3   = s*14/100; if (armW3 < 3) { armW3 = 3; }
-            var crossY3 = cBase2 - s*6/100 - mHK - crossH3;
-            dc.setColor(shdC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(cx - 1, crossY3 + 1, 3, crossH3 + 1);
-            dc.fillRectangle(cx - armW3/2 + 1, crossY3 + crossH3*4/10 + 1, armW3, 3);
-            dc.setColor(accentC, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(cx - 1, crossY3, 3, crossH3);
-            dc.fillRectangle(cx - armW3/2, crossY3 + crossH3*4/10, armW3, 3);
-            dc.setColor(0xFFFF88, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(cx - 1, crossY3, 1, crossH3);
-            // body highlight line
-            dc.setColor(hlC, Graphics.COLOR_TRANSPARENT);
-            dc.drawLine(cx - bwK/2 + 2, bot - s*80/100, cx - bwK/2 + 2, bot - s*23/100);
+            dc.fillRoundedRectangle(cx - bw / 2 + 1, bot - s * 72 / 100 + 1, bw - 2, s * 72 / 100 - 2, 2);
+            var cy2 = bot - s * 72 / 100;
+            dc.setColor(0xFFDD22, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(cx - 1, cy2 - s * 22 / 100, 3, s * 22 / 100 + 2);
+            dc.fillRectangle(cx - s / 7, cy2 - s * 15 / 100, s * 2 / 7, 3);
         }
     }
 
-    // Draws a piece centered at (cx, cy) with explicit size s — used by promo overlay.
     hidden function drawPieceType(dc, cx, cy, abs, s, white) {
-        drawPiece(dc, cx - s / 2, cy - s / 2, white ? abs : -abs, s);
+        var bodyC = white ? 0xF0E8D0 : 0x1E0E06;
+        var rimC  = white ? 0x6B4A28 : 0xC09050;
+        if (abs >= 1 && abs <= 6) {
+            dc.setColor(rimC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - s * 3 / 8, cy - s * 3 / 8, s * 3 / 4, s * 3 / 4, 3);
+            dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - s * 3 / 8 + 1, cy - s * 3 / 8 + 1, s * 3 / 4 - 2, s * 3 / 4 - 2, 2);
+        }
     }
 
     hidden function drawPromoOverlay(dc) {
-        var bw = _sq * 4 + 24; var bh = _sq + 36;
+        var bw = _sq * 4 + 16; var bh = _sq + 28;
         var px = (_w - bw) / 2; var py = _h / 2 - bh / 2;
-        // shadow
-        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(px + 3, py + 3, bw, bh, 8);
-        // background
-        dc.setColor(0x140A04, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(px, py, bw, bh, 8);
+        dc.setColor(0x1A1008, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(px, py, bw, bh, 6);
         dc.setColor(0xAA8844, Graphics.COLOR_TRANSPARENT);
-        dc.drawRoundedRectangle(px, py, bw, bh, 8);
-        dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
-        dc.drawLine(px + 12, py + 3, px + bw - 12, py + 3);
+        dc.drawRoundedRectangle(px, py, bw, bh, 6);
 
         var pieces = [PC_QUEEN, PC_ROOK, PC_BISHOP, PC_KNIGHT];
         var promWhite = _playerIsWhite;
         for (var i = 0; i < 4; i++) {
-            var ix = px + 4 + i * (_sq + 4);
-            var iy = py + 8;
-            var isSel = (i == _promPick);
-            dc.setColor(isSel ? 0x3A2800 : 0x1A1008, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(ix, iy, _sq, _sq, 4);
-            dc.setColor(isSel ? 0xFFCC00 : 0x4A3020, Graphics.COLOR_TRANSPARENT);
-            dc.drawRoundedRectangle(ix, iy, _sq, _sq, 4);
+            var ix = px + 4 + i * (_sq + 3);
+            var iy = py + 4;
+            dc.setColor(i == _promPick ? 0x3388FF : 0x2A1A08, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(ix, iy, _sq, _sq, 3);
             drawPieceType(dc, ix + _sq / 2, iy + _sq / 2, pieces[i], _sq, promWhite);
-            if (isSel) {
-                var bl2 = 5;
-                dc.setColor(0xFFDD00, Graphics.COLOR_TRANSPARENT);
-                dc.fillRectangle(ix, iy, bl2, 2); dc.fillRectangle(ix, iy, 2, bl2);
-                dc.fillRectangle(ix + _sq-bl2, iy, bl2, 2); dc.fillRectangle(ix + _sq-2, iy, 2, bl2);
-                dc.fillRectangle(ix, iy + _sq-2, bl2, 2); dc.fillRectangle(ix, iy + _sq-bl2, 2, bl2);
-                dc.fillRectangle(ix + _sq-bl2, iy + _sq-2, bl2, 2); dc.fillRectangle(ix + _sq-2, iy + _sq-bl2, 2, bl2);
-            }
         }
         dc.setColor(0xCCBB99, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, py + _sq + 18, Graphics.FONT_XTINY, "Promote! Tap/Select", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, py + _sq + 10, Graphics.FONT_XTINY, "Promote! Tap/Select", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawThinkingBadge(dc) {
