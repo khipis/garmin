@@ -381,6 +381,7 @@ class BreathTrainingView extends WatchUi.View {
             try { _actSes.stop(); _actSes.discard(); } catch (e) {}
             _actSes = null;
         }
+        if (!(ActivityRecording has :createSession)) { return; }
         try {
             _actSes = ActivityRecording.createSession({
                 :name     => name,

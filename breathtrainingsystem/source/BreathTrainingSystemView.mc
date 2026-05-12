@@ -2528,6 +2528,7 @@ class BreathTrainingSystemView extends WatchUi.View {
             try { _actSes.stop(); _actSes.discard(); } catch (e) {}
             _actSes = null;
         }
+        if (!(ActivityRecording has :createSession)) { return; }
         try {
             _actSes = ActivityRecording.createSession({
                 :name     => name,
@@ -2543,26 +2544,28 @@ class BreathTrainingSystemView extends WatchUi.View {
     hidden function _actStop(mode, dur, breathCount, holdSec, calmScore) {
         if (_actSes == null) { return; }
         try {
-            // Field IDs: 0=Duration(s) 1=Breaths 2=MaxHold(s) 3=CalmScore
-            var f;
-            f = _actSes.createField("Duration", 0, FitContributor.DATA_TYPE_UINT32,
-                { :mesgType => FitContributor.MESG_TYPE_SESSION, :units => "s" });
-            f.setData(dur > 0 ? dur : 0);
-
-            if (mode == FM_BR && breathCount > 0) {
-                f = _actSes.createField("Breaths", 1, FitContributor.DATA_TYPE_UINT16,
-                    { :mesgType => FitContributor.MESG_TYPE_SESSION, :units => "br" });
-                f.setData(breathCount);
-            }
-            if ((mode == FM_AP || mode == FM_CO || mode == FM_O2) && holdSec > 0) {
-                f = _actSes.createField("MaxHold", 2, FitContributor.DATA_TYPE_UINT16,
+            // Write custom FIT fields only when FitContributor is available
+            if (FitContributor has :DATA_TYPE_UINT32) {
+                var f;
+                f = _actSes.createField("Duration", 0, FitContributor.DATA_TYPE_UINT32,
                     { :mesgType => FitContributor.MESG_TYPE_SESSION, :units => "s" });
-                f.setData(holdSec);
-            }
-            if (mode == FM_BR && calmScore > 0) {
-                f = _actSes.createField("CalmScore", 3, FitContributor.DATA_TYPE_UINT8,
-                    { :mesgType => FitContributor.MESG_TYPE_SESSION });
-                f.setData(calmScore > 100 ? 100 : calmScore);
+                f.setData(dur > 0 ? dur : 0);
+
+                if (mode == FM_BR && breathCount > 0) {
+                    f = _actSes.createField("Breaths", 1, FitContributor.DATA_TYPE_UINT16,
+                        { :mesgType => FitContributor.MESG_TYPE_SESSION, :units => "br" });
+                    f.setData(breathCount);
+                }
+                if ((mode == FM_AP || mode == FM_CO || mode == FM_O2) && holdSec > 0) {
+                    f = _actSes.createField("MaxHold", 2, FitContributor.DATA_TYPE_UINT16,
+                        { :mesgType => FitContributor.MESG_TYPE_SESSION, :units => "s" });
+                    f.setData(holdSec);
+                }
+                if (mode == FM_BR && calmScore > 0) {
+                    f = _actSes.createField("CalmScore", 3, FitContributor.DATA_TYPE_UINT8,
+                        { :mesgType => FitContributor.MESG_TYPE_SESSION });
+                    f.setData(calmScore > 100 ? 100 : calmScore);
+                }
             }
             _actSes.stop();
             if (dur >= 60) { _actSes.save(); }
