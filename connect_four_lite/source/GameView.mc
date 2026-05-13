@@ -288,7 +288,11 @@ class GameView extends WatchUi.View {
             if (col >= 0) { _dropDisc(col, _dropRow(col), mark); return; }
             col = _bestScoredColFor(mark, opp);
         } else {
-            var depth = (_cfDiff == CF_DIFF_HARD) ? 6 : 3;
+            // Med: depth 3, Hard: depth 5.
+            // Leaf eval returns 0 — only wins/losses propagate through the tree.
+            // When no tactical win/loss is found, fall back to positional heuristic.
+            // Watchdog safety: depth=5, no leaf eval, alpha-beta → ~100 nodes × ~80 ops = ~8K ops.
+            var depth = (_cfDiff == CF_DIFF_HARD) ? 5 : 3;
             col = _alphaBetaRoot(depth, mark, opp);
             if (col < 0) { col = _bestScoredColFor(mark, opp); }
         }
@@ -300,74 +304,13 @@ class GameView extends WatchUi.View {
         }
     }
 
-    // Score a window of WIN_LEN cells for static eval (called at depth=0 leaves).
-    hidden function _windowScore(c, r, dc, dr, mark, opp) {
-        var mCnt = 0; var oCnt = 0; var k = 0;
-        while (k < WIN_LEN) {
-            var v = _cells[(r + k * dr) * COLS + (c + k * dc)];
-            if      (v == mark) { mCnt = mCnt + 1; }
-            else if (v == opp)  { oCnt = oCnt + 1; }
-            k = k + 1;
-        }
-        if (oCnt > 0 && mCnt > 0) { return 0; }
-        if (oCnt > 0) {
-            if (oCnt == WIN_LEN - 1) { return -50; }
-            if (oCnt >= 2)           { return -10; }
-            return -1;
-        }
-        if (mCnt == WIN_LEN - 1) { return 20; }
-        if (mCnt >= 2)           { return 5; }
-        if (mCnt >= 1)           { return 1; }
-        return 0;
-    }
-
-    // Board evaluation from 'mark' perspective: window sum + centre bonus.
-    // O(69 windows × WIN_LEN cells) ≈ 280 ops — fast at leaves.
-    hidden function _c4StaticEval(mark, opp) {
-        var score = 0;
-        var r = 0;
-        while (r < ROWS) {
-            var c = 0;
-            while (c <= COLS - WIN_LEN) {
-                score = score + _windowScore(c, r, 1, 0, mark, opp);
-                c = c + 1;
-            }
-            r = r + 1;
-        }
-        var c2 = 0;
-        while (c2 < COLS) {
-            var r2 = 0;
-            while (r2 <= ROWS - WIN_LEN) {
-                score = score + _windowScore(c2, r2, 0, 1, mark, opp);
-                r2 = r2 + 1;
-            }
-            c2 = c2 + 1;
-        }
-        var r3 = 0;
-        while (r3 <= ROWS - WIN_LEN) {
-            var c3 = 0;
-            while (c3 <= COLS - WIN_LEN) {
-                score = score + _windowScore(c3, r3, 1, 1, mark, opp);
-                score = score + _windowScore(c3 + WIN_LEN - 1, r3, -1, 1, mark, opp);
-                c3 = c3 + 1;
-            }
-            r3 = r3 + 1;
-        }
-        var mid = COLS / 2;
-        var cr = 0;
-        while (cr < ROWS) {
-            if (_cells[cr * COLS + mid] == mark) { score = score + 3; }
-            cr = cr + 1;
-        }
-        return score;
-    }
-
-    // Alpha-beta negamax. Positive score = good for 'mark'.
-    // Win detected by checking axes through last placed piece — O(16 ops).
-    // With centre-out ordering and alpha-beta pruning, depth=6 visits ~500 nodes.
+    // Alpha-beta negamax with zero leaf eval.
+    // Only win/loss signals (±8000) propagate — no expensive board scan.
+    // Positional scoring happens once at the root via _bestScoredColFor fallback.
+    // Watchdog: depth=5 → ~100-300 nodes × 80 ops = 8-24K ops. Completely safe.
     hidden function _abSearch(depth, alpha, beta, mark, opp) {
         if (_moveCount == COLS * ROWS) { return 0; }
-        if (depth == 0)               { return _c4StaticEval(mark, opp); }
+        if (depth == 0)               { return 0; }  // no heuristic at leaves
         var best = -9999;
         var ci = 0;
         while (ci < COLS) {
@@ -393,9 +336,11 @@ class GameView extends WatchUi.View {
         return (best == -9999) ? 0 : best;
     }
 
-    // Root call: returns best column for 'mark' at given search depth.
+    // Root call: returns best column.
+    // When all moves score 0 (no tactical win/loss in window), returns -1
+    // so the caller falls back to _bestScoredColFor for positional play.
     hidden function _alphaBetaRoot(depth, mark, opp) {
-        var bestCol = -1; var bestScore = -999999;
+        var bestCol = -1; var bestScore = -999999; var allZero = true;
         var ci = 0;
         while (ci < COLS) {
             var c = _abCols[ci];
@@ -411,10 +356,13 @@ class GameView extends WatchUi.View {
                 }
                 _cells[r * COLS + c] = MARK_NONE;
                 _moveCount = _moveCount - 1;
+                if (sc != 0) { allZero = false; }
                 if (sc > bestScore) { bestScore = sc; bestCol = c; }
             }
             ci = ci + 1;
         }
+        // No tactical advantage → let _bestScoredColFor handle positional choice
+        if (allZero) { return -1; }
         return bestCol;
     }
 
