@@ -248,7 +248,7 @@ class GameView extends WatchUi.View {
     }
 
     // ── 450 ms timer tick ─────────────────────────────────────────────────
-    function gameTick() {
+    function gameTick() as Void {
         if (_mode == MODE_PVP) { return; }
         if (_state == MGS_AI) {
             _doAiTurn();
@@ -1033,5 +1033,38 @@ class GameView extends WatchUi.View {
         dc.setColor(0x2A2A44, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, oy + bh - 14, Graphics.FONT_XTINY,
                     "SELECT = new game", Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    function doTap(tx, ty) {
+        if (_state == GS_MENU) {
+            var nR = 4;
+            var rowH = _sh * 10 / 100; if (rowH < 22) { rowH = 22; } if (rowH > 30) { rowH = 30; }
+            var rowW = _sw * 74 / 100;
+            var rowX = (_sw - rowW) / 2;
+            var gap  = 6;
+            var tot  = nR * rowH + (nR - 1) * gap;
+            var rowY0 = (_sh - tot) / 2 + rowH;
+            for (var i = 0; i < nR; i++) {
+                var ry = rowY0 + i * (rowH + gap);
+                if (tx >= rowX && tx < rowX + rowW && ty >= ry && ty < ry + rowH) {
+                    _menuSel = i; doAction(); return;
+                }
+            }
+            return;
+        }
+        if (_state == MGS_OVER) { _state = GS_MENU; _menuSel = 0; return; }
+        if ((_state == MGS_AI || _state == MGS_AI_RM) && _mode != MODE_PVP) { return; }
+        if (_step <= 0) { return; }
+        // Find nearest of 24 nodes
+        var best = 0; var bestDist = 0x7FFFFFFF;
+        for (var n = 0; n < MN; n++) {
+            var px = _bx + _gx[n] * _step;
+            var py = _by + _gy[n] * _step;
+            var dx2 = tx - px; var dy2 = ty - py;
+            var dist = dx2 * dx2 + dy2 * dy2;
+            if (dist < bestDist) { bestDist = dist; best = n; }
+        }
+        _cur = best;
+        doAction();
     }
 }

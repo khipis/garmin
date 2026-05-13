@@ -203,7 +203,7 @@ class GameView extends WatchUi.View {
     }
 
     // ── 350 ms timer tick ─────────────────────────────────────────────────
-    function gameTick() {
+    function gameTick() as Void {
         if (_mode == MODE_PVP) { return; }
         if (_state == HGS_AI) {
             _aiMove(HM_AI);
@@ -604,5 +604,42 @@ class GameView extends WatchUi.View {
         dc.setColor(0x2A2A44, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, by + bh - 14, Graphics.FONT_XTINY,
                     "SELECT = new game", Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    function doTap(tx, ty) {
+        if (_state == GS_MENU) {
+            var nR = 4;
+            var rowH = _sh * 10 / 100; if (rowH < 22) { rowH = 22; } if (rowH > 30) { rowH = 30; }
+            var rowW = _sw * 74 / 100;
+            var rowX = (_sw - rowW) / 2;
+            var gap  = _sh * 2 / 100; if (gap < 3) { gap = 3; }
+            var tot  = nR * rowH + (nR - 1) * gap;
+            var rowY0 = (_sh - tot) / 2 + rowH;
+            for (var i = 0; i < nR; i++) {
+                var ry = rowY0 + i * (rowH + gap);
+                if (tx >= rowX && tx < rowX + rowW && ty >= ry && ty < ry + rowH) {
+                    _menuSel = i; doAction(); return;
+                }
+            }
+            return;
+        }
+        if (_state == HGS_OVER) { _state = GS_MENU; _menuSel = 0; return; }
+        if (_state != HGS_PLAY && !(_state == HGS_AI && _mode == MODE_PVP)) { return; }
+        if (_dx <= 0 || _dy <= 0) { return; }
+        // Find nearest hex cell using pixel-to-hex inverse of _cx/_cy:
+        //   _cx(r,c) = _boardX + c*_dx + r*(_dx/2)
+        //   _cy(r,c) = _boardY + r*_dy
+        var bestR = 0; var bestC = 0; var bestDist = 0x7FFFFFFF;
+        for (var r = 0; r < HEX_N; r++) {
+            for (var c = 0; c < HEX_N; c++) {
+                var px = _boardX + c * _dx + r * (_dx / 2);
+                var py = _boardY + r * _dy;
+                var dx2 = tx - px; var dy2 = ty - py;
+                var dist = dx2 * dx2 + dy2 * dy2;
+                if (dist < bestDist) { bestDist = dist; bestR = r; bestC = c; }
+            }
+        }
+        _curR = bestR; _curC = bestC;
+        doAction();
     }
 }

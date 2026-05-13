@@ -675,4 +675,30 @@ class GameView extends WatchUi.View {
         dc.drawText(cx, by + bh - 14, Graphics.FONT_XTINY,
                     "SELECT = menu", Graphics.TEXT_JUSTIFY_CENTER);
     }
+
+    function doTap(tx, ty) {
+        if (_state == GS_MENU) {
+            var nR   = 4;
+            var rowH = _sh * 10 / 100; if (rowH < 22) { rowH = 22; } if (rowH > 30) { rowH = 30; }
+            var rowW = _sw * 74 / 100;
+            var rowX = (_sw - rowW) / 2;
+            var gap  = 6;
+            var tot  = nR * rowH + (nR - 1) * gap;
+            var rowY0 = (_sh - tot) / 2 + rowH;
+            for (var i = 0; i < nR; i++) {
+                var ry = rowY0 + i * (rowH + gap);
+                if (tx >= rowX && tx < rowX + rowW && ty >= ry && ty < ry + rowH) {
+                    _menuSel = i; doAction(); return;
+                }
+            }
+            return;
+        }
+        if (_state == GS_OVER) { _state = GS_MENU; _menuSel = 0; return; }
+        if (_state != GS_PLAY) { return; }
+        if (_cell <= 0) { return; }
+        var col = (tx - _boardX) / _cell;
+        if (col < 0 || col >= COLS) { return; }
+        _curCol = col;
+        doAction();
+    }
 }

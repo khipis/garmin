@@ -30,7 +30,11 @@ class GameDelegate extends WatchUi.BehaviorDelegate {
     function onSelect()       { _v.doAction();       WatchUi.requestUpdate(); return true; }
     function onPreviousPage() { _v.retreatCursor();  WatchUi.requestUpdate(); return true; }
     function onNextPage()     { _v.advanceCursor();  WatchUi.requestUpdate(); return true; }
-    function onTap(evt)       { _v.doAction();       WatchUi.requestUpdate(); return true; }
+    function onTap(evt) {
+        var xy = evt.getCoordinates();
+        _v.doTap(xy[0], xy[1]);
+        WatchUi.requestUpdate(); return true;
+    }
 
     function onBack() {
         if (!_v.doBack()) {

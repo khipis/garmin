@@ -931,4 +931,30 @@ class GameView extends WatchUi.View {
         dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT);
         dc.drawText(hw, _sh - 14, Graphics.FONT_XTINY, "UP/DN sel  SELECT set/start", Graphics.TEXT_JUSTIFY_CENTER);
     }
+
+    function doTap(tx, ty) {
+        if (_state == GS_MENU) {
+            var nR = 4;
+            var rowH = _sh * 11 / 100; if (rowH < 22) { rowH = 22; } if (rowH > 32) { rowH = 32; }
+            var rowW = _sw * 66 / 100; var rowX = (_sw - rowW) / 2;
+            var gap = 5; var tot = nR * rowH + (nR - 1) * gap; var rowY0 = (_sh - tot) / 2 + rowH;
+            for (var i = 0; i < nR; i++) {
+                var ry = rowY0 + i * (rowH + gap);
+                if (tx >= rowX && tx < rowX + rowW && ty >= ry && ty < ry + rowH) {
+                    _menuSel = i; doAction(); return;
+                }
+            }
+            return;
+        }
+        if (_state == GMS_OVER) { _state = GS_MENU; _menuSel = 0; return; }
+        if (_state == GMS_AI)   { return; }
+        if (_csz <= 0) { return; }
+        // Map tap to board cell
+        var col = (tx - _gx) / _csz;
+        var row = (ty - _gy) / _csz;
+        if (col >= 0 && col < GM && row >= 0 && row < GM) {
+            _gridCur = row * GM + col;
+        }
+        doAction();
+    }
 }

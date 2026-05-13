@@ -193,7 +193,7 @@ class GameView extends WatchUi.View {
     }
 
     // ── Timer ─────────────────────────────────────────────────────────────
-    function gameTick() {
+    function gameTick() as Void {
         if (_state == MKS_AI) {
             if (_mode == MODE_PVP) {
                 // PvP: P2 auto-plays (practical on a watch — same AI logic, P2 label)
@@ -916,6 +916,56 @@ class GameView extends WatchUi.View {
             }
         } else {
             _playerDraw();
+        }
+    }
+
+    function doTap(tx, ty) {
+        if (_state == GS_MENU) {
+            var nR = 3;
+            var rowH = _sh * 10 / 100; if (rowH < 22) { rowH = 22; } if (rowH > 30) { rowH = 30; }
+            var rowW = _sw * 74 / 100; var rowX = (_sw - rowW) / 2;
+            var gap = 6; var tot = nR * rowH + (nR - 1) * gap; var rowY0 = (_sh - tot) / 2 + rowH;
+            for (var i = 0; i < nR; i++) {
+                var ry = rowY0 + i * (rowH + gap);
+                if (tx >= rowX && tx < rowX + rowW && ty >= ry && ty < ry + rowH) {
+                    _menuSel = i; doAction(); return;
+                }
+            }
+            return;
+        }
+        if (_state == MKS_OVER) { _state = GS_MENU; _menuSel = 0; return; }
+        if (_state == MKS_AI)   { return; }
+        // Suit picker overlay — tap on a suit slot
+        if (_state == MKS_SUIT) {
+            var bw = _sw * 72 / 100;
+            var ox = (_sw - bw) / 2; var oy = _sh / 2 - 29;
+            var slotW = bw / 4;
+            if (ty >= oy + 16 && ty <= oy + 44) {
+                var slot = (tx - ox) / slotW;
+                if (slot >= 0 && slot < 4) { _suitPick = slot; doAction(); return; }
+            }
+            return;
+        }
+        // Hand strip — tap on card or DRAW button
+        if (_state == MKS_PLAY) {
+            var slots = _pCount + 1;
+            var gap2  = 3;
+            var safeW = _sw * 86 / 100;
+            var cw    = (safeW - (slots - 1) * gap2) / slots;
+            if (cw > _cardW) { cw = _cardW; }
+            if (cw < 10)     { cw = 10; }
+            var ch    = cw * 150 / 100;
+            var totalW = slots * cw + (slots - 1) * gap2;
+            var startX = (_sw - totalW) / 2;
+            if (startX < 2) { startX = 2; }
+            if (ty >= _handY - 10 && ty <= _handY + ch + 10) {
+                var idx = (tx - startX + gap2 / 2) / (cw + gap2);
+                if (idx < 0) { idx = 0; }
+                if (idx > _pCount) { idx = _pCount; }
+                _cursorPos = idx;
+                doAction();
+                return;
+            }
         }
     }
 }

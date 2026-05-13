@@ -195,7 +195,7 @@ class GameView extends WatchUi.View {
     function isOver() { return _state == TC_OVER; }
 
     // ── Timer ─────────────────────────────────────────────────────────────
-    function gameTick() {
+    function gameTick() as Void {
         if (_state == TC_AIST) {
             if (_mode == MODE_PVP) {
                 // PvP: P2 (White) acts via input — do nothing here
@@ -787,5 +787,30 @@ class GameView extends WatchUi.View {
         dc.setColor(0x2A442A, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, oy + bh - 14, Graphics.FONT_XTINY,
                     "SELECT = new game", Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    function doTap(tx, ty) {
+        if (_state == GS_MENU) {
+            var nR = 4;
+            var rowH = _sh * 13 / 100; if (rowH < 23) { rowH = 23; } if (rowH > 36) { rowH = 36; }
+            var rowW = _sw * 70 / 100; var rowX = (_sw - rowW) / 2;
+            var gap = 5; var tot = nR * rowH + (nR - 1) * gap; var rowY0 = (_sh - tot) / 2 + rowH;
+            for (var i = 0; i < nR; i++) {
+                var ry = rowY0 + i * (rowH + gap);
+                if (tx >= rowX && tx < rowX + rowW && ty >= ry && ty < ry + rowH) {
+                    _menuSel = i; doAction(); return;
+                }
+            }
+            return;
+        }
+        if (_state == TC_OVER) { _state = GS_MENU; _menuSel = 0; return; }
+        if (_state != TC_PLAY && !(_state == TC_AIST && _mode == MODE_PVP)) { return; }
+        if (_step <= 0) { return; }
+        var col = (tx - _boardX + _step / 2) / _step;
+        var row = (ty - _boardY + _step / 2) / _step;
+        if (col < 0) { col = 0; } if (col >= TC_N) { col = TC_N - 1; }
+        if (row < 0) { row = 0; } if (row >= TC_N) { row = TC_N - 1; }
+        _curX = col; _curY = row;
+        doAction();
     }
 }

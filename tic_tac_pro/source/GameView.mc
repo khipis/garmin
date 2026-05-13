@@ -237,7 +237,7 @@ class GameView extends WatchUi.View {
     }
 
     // ── 300 ms timer tick ─────────────────────────────────────────────────
-    function gameTick() {
+    function gameTick() as Void {
         if (_state == GS_AI && (_mode == MODE_PVAI || _mode == MODE_AIAI)) {
             if (!(_mode == MODE_PVAI && !_playerFirst)) {
                 _aiStart(MARK_O);
@@ -798,5 +798,32 @@ class GameView extends WatchUi.View {
         dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT);
         dc.drawText(hw, _sh - 14, Graphics.FONT_XTINY,
                     "UP/DN move  SEL act", Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    function doTap(tx, ty) {
+        if (_state == GS_MENU) {
+            var gap  = _sh * 2 / 100; if (gap < 3) { gap = 3; }
+            var rowH = _sh * 10 / 100; if (rowH < 22) { rowH = 22; } if (rowH > 32) { rowH = 32; }
+            var rowW = _sw * 76 / 100;
+            var rowX = (_sw - rowW) / 2;
+            var nR = 5;
+            var tot  = nR * rowH + (nR - 1) * gap;
+            var rowY0 = (_sh - tot) / 2 + rowH;
+            for (var i = 0; i < nR; i++) {
+                var ry = rowY0 + i * (rowH + gap);
+                if (tx >= rowX && tx < rowX + rowW && ty >= ry && ty < ry + rowH) {
+                    _menuSel = i; _menuAction(); return;
+                }
+            }
+            return;
+        }
+        if (_state == GS_OVER) { _state = GS_MENU; _menuSel = 0; return; }
+        if (_state != GS_PLAY && !(_state == GS_AI && _mode == MODE_PVP)) { return; }
+        if (_cell <= 0) { return; }
+        var col = (tx - _boardX) / _cell;
+        var row = (ty - _boardY) / _cell;
+        if (col < 0 || col >= _gridN || row < 0 || row >= _gridN) { return; }
+        _curX = col; _curY = row;
+        doAction();
     }
 }

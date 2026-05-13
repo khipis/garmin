@@ -187,7 +187,7 @@ class GameView extends WatchUi.View {
     }
 
     // ── 420 ms timer tick ─────────────────────────────────────────────────
-    function gameTick() {
+    function gameTick() as Void {
         if (_mode == MODE_PVP) { WatchUi.requestUpdate(); return; }
         if (_state == DBS_AI) {
             var e = _aiChooseEdge();
@@ -731,5 +731,50 @@ class GameView extends WatchUi.View {
         }
         dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT);
         dc.drawText(hw, _sh - 14, Graphics.FONT_XTINY, "UP/DN sel  SELECT set/start", Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    function doTap(tx, ty) {
+        if (_state == GS_MENU) {
+            var nR = 4;
+            var rowH = _sh * 10 / 100; if (rowH < 22) { rowH = 22; } if (rowH > 30) { rowH = 30; }
+            var rowW = _sw * 74 / 100; var rowX = (_sw - rowW) / 2;
+            var gap = 6; var tot = nR * rowH + (nR - 1) * gap; var rowY0 = (_sh - tot) / 2 + rowH;
+            for (var i = 0; i < nR; i++) {
+                var ry = rowY0 + i * (rowH + gap);
+                if (tx >= rowX && tx < rowX + rowW && ty >= ry && ty < ry + rowH) {
+                    _menuSel = i; doAction(); return;
+                }
+            }
+            return;
+        }
+        if (_state == DBS_OVER) { _state = GS_MENU; _menuSel = 0; return; }
+        if (_state == DBS_AI && _mode != MODE_PVP) { return; }
+        if (_step <= 0) { return; }
+        // Find nearest edge midpoint.
+        // Horizontal edges: idx = r*DB_BOXES+c, midpoint = (_bx+c*_step+_step/2, _by+r*_step)
+        // Vertical edges:   idx = DB_H+r*DB_DOTS+c, midpoint = (_bx+c*_step, _by+r*_step+_step/2)
+        var best = 0; var bestDist = 0x7FFFFFFF;
+        var half = _step / 2;
+        var r; var c;
+        for (r = 0; r < DB_DOTS; r++) {
+            for (c = 0; c < DB_BOXES; c++) {
+                var mx = _bx + c * _step + half;
+                var my = _by + r * _step;
+                var dx2 = tx - mx; var dy2 = ty - my;
+                var dist = dx2 * dx2 + dy2 * dy2;
+                if (dist < bestDist) { bestDist = dist; best = r * DB_BOXES + c; }
+            }
+        }
+        for (r = 0; r < DB_BOXES; r++) {
+            for (c = 0; c < DB_DOTS; c++) {
+                var mx = _bx + c * _step;
+                var my = _by + r * _step + half;
+                var dx2 = tx - mx; var dy2 = ty - my;
+                var dist = dx2 * dx2 + dy2 * dy2;
+                if (dist < bestDist) { bestDist = dist; best = DB_H + r * DB_DOTS + c; }
+            }
+        }
+        _cursor = best;
+        doAction();
     }
 }
