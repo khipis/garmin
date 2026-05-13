@@ -306,12 +306,16 @@ class GameView extends WatchUi.View {
         _bfsQo              = _bfsQo + 1;
     }
 
-    // ── AI — BFS path + connectivity + defence heuristic ─────────────────
-    // Med/Hard: BFS counts reachable cells for each mark to estimate path progress.
-    // Placing at a cell that blocks opp's shortest path AND extends own path is ideal.
-    // Hard also simulates opponent response to penalise moves that let opp advance fast.
+    // ── AI — path + connectivity + defence heuristic ─────────────────────
     //
-    // Watchdog safety: 49 cells × (BFS-reach ~49 ops + 6 neighbour checks) ≈ 49 × 60 = 2940 ops.
+    // Watchdog budget:
+    //   2 × _bfsReachCount (once before loop): 2 × ~4 500 = ~9 000 ops
+    //   49 candidates × (6 neighbour checks + O(1) heuristic) ≈ 49 × 60 = ~2 940 ops
+    //   Total: ~11 940 ops — safely within watchdog limits.
+    //
+    // Previous design ran _bfsReachCount TWICE per candidate (49×2×4500 = ~441 000 ops)
+    // which tripped the watchdog.  The fix: run BFS once for each player as a global
+    // "board pressure" metric, then use O(1) per-cell positional bonuses to differentiate.
     hidden function _aiMove(mark) {
         var best   = -9999;
         var move   = -1;
@@ -321,7 +325,16 @@ class GameView extends WatchUi.View {
         var noise  = (_diff == DIFF_EASY) ? 20 : (isHard ? 1 : 4);
         var opp    = (mark == HM_AI) ? HM_P : HM_AI;
         var nv     = 0;
-        var i      = 0;
+
+        // Pre-compute board-level reach for each player (ONCE per turn, not per candidate).
+        // ownReach > oppReach → we lead; oppReach > ownReach → we must defend.
+        var ownReach = 0; var oppReach = 0;
+        if (isMed || isHard) {
+            ownReach = _bfsReachCount(mark);
+            oppReach = _bfsReachCount(opp);
+        }
+
+        var i = 0;
         while (i < HEX_N * HEX_N) {
             if (_cells[i] == HM_NONE) {
                 var r   = i / HEX_N;
@@ -365,18 +378,26 @@ class GameView extends WatchUi.View {
                 }
 
                 var mult = isHard ? 3 : (isMed ? 2 : 1);
-                score = score + nSelf * 10 * mult + nOpp * 8 * mult;
+                // Boosted neighbour weights compensate for removed per-candidate BFS.
+                score = score + nSelf * 18 * mult + nOpp * 14 * mult;
 
-                // Med/Hard: BFS reach bonus — count how many cells of mark's colour
-                // are reachable from start edge through this candidate cell.
-                // Temporarily place mark, run BFS-count, remove.
                 if (isMed || isHard) {
-                    _cells[i] = mark;
-                    var reach = _bfsReachCount(mark);
-                    _cells[i] = HM_NONE;
-                    // Also count opp reach without this cell (blocking effect)
-                    var oppReach = _bfsReachCount(opp);
-                    score = score + reach * 5 - oppReach * 6;
+                    // Cross-axis centrality: flexible column (AI) / row (Player) position.
+                    var axis = (mark == HM_AI) ? c : r;
+                    var axisDist = (axis > mid) ? (axis - mid) : (mid - axis);
+                    score = score + (mid - axisDist + 1) * 5 * mult;
+
+                    // "Bridge" bonus: placing here connects two or more existing groups.
+                    if (nSelf >= 2) { score = score + 20 * mult; }
+
+                    // Threat-block bonus: cell next to two or more opp pieces is key.
+                    if (nOpp >= 2) { score = score + 15 * mult; }
+
+                    // Board-pressure defensive bonus: if opp leads in reach,
+                    // extra reward for cells that touch many opp stones.
+                    if (oppReach > ownReach && nOpp > 0) {
+                        score = score + nOpp * 8 * mult;
+                    }
                 }
 
                 score = score + Math.rand() % noise;

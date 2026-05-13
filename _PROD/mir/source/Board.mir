@@ -1,2065 +1,1147 @@
-[ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc"; @line = 8; @symbol_classdef = [Board,8,6,11]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc"; @line = 12; @symbol_classdef = [Board,12,6,11]; ]
 class Board {
-    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc"; @line = 8; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc"; @line = 12; ]
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc"; @line = 8; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc"; @line = 12; ]
     static
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc"; @line = 9; @position = 8; @symbol_vardef = [grid,9,8,12]; ]
-    var grid;
-    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc"; @line = 10; @position = 8; @symbol_vardef = [prevGrid,10,8,16]; ]
-    var prevGrid;
-    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc"; @line = 11; @position = 8; @symbol_vardef = [capBlack,11,8,16]; ]
-    var capBlack;
-    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc"; @line = 12; @position = 8; @symbol_vardef = [capWhite,12,8,16]; ]
-    var capWhite;
-    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc"; @line = 15; @position = 8; @symbol_vardef = [scoreBlack,15,8,18]; ]
-    var scoreBlack;
-    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc"; @line = 16; @position = 8; @symbol_vardef = [scoreWhite,16,8,18]; ]
-    var scoreWhite;
-    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc"; @line = 19; @position = 15; @symbol_vardef = [_vis,19,15,19]; ]
-    protected
-    var _vis;
-    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc"; @line = 20; @position = 15; @symbol_vardef = [_gen,20,15,19]; ]
-    protected
-    var _gen;
-    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc"; @line = 21; @position = 15; @symbol_vardef = [_grp,21,15,19]; ]
-    protected
-    var _grp;
-    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc"; @line = 22; @position = 15; @symbol_vardef = [_grpSz,22,15,21]; ]
-    protected
-    var _grpSz;
-    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc"; @line = 23; @position = 15; @symbol_vardef = [_stk,23,15,19]; ]
-    protected
-    var _stk;
-    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc"; @line = 25; @symbol_functiondef = [initialize,25,13,23]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc"; @line = 13; @position = 8; @symbol_vardef = [cells,13,8,13]; ]
+    var cells;
+    [ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc"; @line = 14; @position = 8; @symbol_vardef = [flipBuf,14,8,15]; ]
+    var flipBuf;
+    [ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc"; @line = 15; @position = 8; @symbol_vardef = [flipCount,15,8,17]; ]
+    var flipCount;
+    [ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc"; @line = 16; @position = 8; @symbol_vardef = [blackCount,16,8,18]; ]
+    var blackCount;
+    [ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc"; @line = 17; @position = 8; @symbol_vardef = [whiteCount,17,8,18]; ]
+    var whiteCount;
+    [ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc"; @line = 19; @symbol_functiondef = [initialize,19,13,23]; ]
     function initialize() as Void {
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_25_26_31_4_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 26 8 ]
-        %tmp.2 = 81;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_19_26_25_4_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 20 8 ]
+        %tmp.2 = 64;
         %tmp.1 = newa %tmp.2;
-        symbol [ grid ? 26 8 12 ];
-        putv self :grid %tmp.1;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 26 29 ]
-        %tmp.4 = 81;
+        symbol [ cells ? 20 8 13 ];
+        putv self :cells %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 21 8 ]
+        %tmp.4 = 64;
         %tmp.3 = newa %tmp.4;
-        symbol [ prevGrid ? 26 29 37 ];
-        putv self :prevGrid %tmp.3;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 27 8 ]
-        %tmp.6 = 81;
-        %tmp.5 = newa %tmp.6;
-        symbol [ _vis ? 27 8 12 ];
-        putv self :_vis %tmp.5;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 27 29 ]
-        %tmp.8 = 81;
-        %tmp.7 = newa %tmp.8;
-        symbol [ _grp ? 27 29 33 ];
-        putv self :_grp %tmp.7;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 27 49 ]
-        %tmp.10 = 81;
-        %tmp.9 = newa %tmp.10;
-        symbol [ _stk ? 27 49 53 ];
-        putv self :_stk %tmp.9;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 28 8 ]
-        %tmp.11 = 0;
-        symbol [ _gen ? 28 8 12 ];
-        putv self :_gen %tmp.11;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 28 22 ]
-        %tmp.12 = 0;
-        symbol [ _grpSz ? 28 22 28 ];
-        putv self :_grpSz %tmp.12;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 29 8 ]
-        %tmp.13 = 0;
-        symbol [ scoreBlack ? 29 8 18 ];
-        putv self :scoreBlack %tmp.13;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 29 24 ]
-        %tmp.14 = 0;
-        symbol [ scoreWhite ? 29 24 34 ];
-        putv self :scoreWhite %tmp.14;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 30 8 ]
-        %tmp.15 = self;
-        symbol [ newGame %tmp.16 30 8 15 ];
-        %tmp.16 = getv function %tmp.15 :newGame;
-        invoke %tmp.15 %tmp.16();
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_25_26_31_4_stop:
+        symbol [ flipBuf ? 21 8 15 ];
+        putv self :flipBuf %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 22 8 ]
+        %tmp.5 = 0;
+        symbol [ flipCount ? 22 8 17 ];
+        putv self :flipCount %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 23 8 ]
+        %tmp.6 = 0;
+        symbol [ blackCount ? 23 8 18 ];
+        putv self :blackCount %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 23 24 ]
+        %tmp.7 = 0;
+        symbol [ whiteCount ? 23 24 34 ];
+        putv self :whiteCount %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 24 8 ]
+        %tmp.8 = self;
+        symbol [ newGame %tmp.9 24 8 15 ];
+        %tmp.9 = getv function %tmp.8 :newGame;
+        invoke %tmp.8 %tmp.9();
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_19_26_25_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc"; @line = 33; @symbol_functiondef = [newGame,33,13,20]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc"; @line = 27; @symbol_functiondef = [newGame,27,13,20]; ]
     function newGame() {
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_33_23_42_4_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 34 8 ]
-        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_33_23_42_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_33_23_42_4_stop" ]
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_27_23_37_4_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 28 8 ]
+        [ "_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_27_23_37_4_start" "_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_27_23_37_4_stop" ]
         %i.1 = local;
-        symbol [ i %i.1 34 12 13 ];
+        symbol [ i %i.1 28 12 13 ];
         %tmp.1 = 0;
         lputv %i.1 %tmp.1;
-        symbol [ i %i.1 34 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 35 8 ]
-        while @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_35_8_38_8_while_test @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_35_8_38_8_while_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_35_8_38_8_while_test:
+        symbol [ i %i.1 28 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 29 8 ]
+        while @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_29_8_29_50_while_test @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_29_8_29_50_while_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_29_8_29_50_while_test:
         %tmp.2 = lgetv %i.1;
-        symbol [ i %tmp.2 35 15 16 ];
-        %tmp.3 = 81;
+        symbol [ i %tmp.2 29 15 16 ];
+        %tmp.3 = 64;
         %tmp.4 = lt %tmp.2 %tmp.3;
-        bf %tmp.4 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_35_8_38_8_while_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_35_8_38_8_while_begin:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_35_23_38_8_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 36 12 ]
-        symbol [ grid %tmp.5 36 12 16 ];
-        %tmp.5 = getv self :grid;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_29_8_29_50_while_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_29_8_29_50_while_begin:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_29_23_29_50_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 29 25 ]
+        symbol [ cells %tmp.5 29 25 30 ];
+        %tmp.5 = getv self :cells;
         %tmp.6 = 0;
         %tmp.7 = lgetv %i.1;
-        symbol [ i %tmp.7 36 17 18 ];
+        symbol [ i %tmp.7 29 31 32 ];
         aputv %tmp.5 %tmp.7 %tmp.6;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 36 25 ]
-        symbol [ prevGrid %tmp.8 36 25 33 ];
-        %tmp.8 = getv self :prevGrid;
-        %tmp.9 = 0;
-        %tmp.10 = lgetv %i.1;
-        symbol [ i %tmp.10 36 34 35 ];
-        aputv %tmp.8 %tmp.10 %tmp.9;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 36 42 ]
-        symbol [ _vis %tmp.11 36 42 46 ];
-        %tmp.11 = getv self :_vis;
-        %tmp.12 = -1;
-        %tmp.13 = lgetv %i.1;
-        symbol [ i %tmp.13 36 47 48 ];
-        aputv %tmp.11 %tmp.13 %tmp.12;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 37 12 ]
-        %tmp.14 = lgetv %i.1;
-        symbol [ i %tmp.14 37 16 17 ];
-        %tmp.15 = 1;
-        %tmp.16 = add %tmp.14 %tmp.15;
-        lputv %i.1 %tmp.16;
-        symbol [ i %i.1 37 12 13 ];
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_35_23_38_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_35_8_38_8_while_test;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_35_8_38_8_while_end:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 39 8 ]
-        %tmp.17 = 0;
-        symbol [ capBlack ? 39 8 16 ];
-        putv self :capBlack %tmp.17;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 39 22 ]
-        %tmp.18 = 0;
-        symbol [ capWhite ? 39 22 30 ];
-        putv self :capWhite %tmp.18;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 40 8 ]
-        %tmp.19 = 0;
-        symbol [ scoreBlack ? 40 8 18 ];
-        putv self :scoreBlack %tmp.19;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 40 24 ]
-        %tmp.20 = 0;
-        symbol [ scoreWhite ? 40 24 34 ];
-        putv self :scoreWhite %tmp.20;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 41 8 ]
-        %tmp.21 = 0;
-        symbol [ _gen ? 41 8 12 ];
-        putv self :_gen %tmp.21;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_33_23_42_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc"; @line = 48; @symbol_functiondef = [_bfs,48,20,24]; @symbol_param<0> = [start,48,25,30]; @symbol_param<1> = [col,48,32,35]; ]
-    protected
-    function _bfs(start, col) {
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_48_37_85_4_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 49 8 ]
-        symbol [ _gen %tmp.2 49 17 21 ];
-        %tmp.2 = getv ? :_gen;
-        %tmp.3 = 1;
-        %tmp.4 = add %tmp.2 %tmp.3;
-        symbol [ _gen ? 49 8 12 ];
-        putv self :_gen %tmp.4;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 50 8 ]
-        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_48_37_85_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_48_37_85_4_stop" ]
-        %sTop.1 = local;
-        symbol [ sTop %sTop.1 50 12 16 ];
-        %tmp.5 = 0;
-        lputv %sTop.1 %tmp.5;
-        symbol [ sTop %sTop.1 50 12 16 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 50 22 ]
-        %tmp.6 = 0;
-        symbol [ _grpSz ? 50 22 28 ];
-        putv self :_grpSz %tmp.6;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 50 34 ]
-        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_48_37_85_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_48_37_85_4_stop" ]
-        %libs.2 = local;
-        symbol [ libs %libs.2 50 38 42 ];
-        %tmp.7 = 0;
-        lputv %libs.2 %tmp.7;
-        symbol [ libs %libs.2 50 38 42 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 51 8 ]
-        symbol [ _vis %tmp.8 51 8 12 ];
-        %tmp.8 = getv self :_vis;
-        symbol [ _gen %tmp.10 51 22 26 ];
-        %tmp.10 = getv ? :_gen;
-        %tmp.11 = lgetv %start;
-        symbol [ start %tmp.11 51 13 18 ];
-        aputv %tmp.8 %tmp.11 %tmp.10;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 52 8 ]
-        symbol [ _stk %tmp.12 52 8 12 ];
-        %tmp.12 = getv self :_stk;
-        %tmp.13 = lgetv %start;
-        symbol [ start %tmp.13 52 22 27 ];
-        %tmp.14 = lgetv %sTop.1;
-        symbol [ sTop %tmp.14 52 13 17 ];
-        aputv %tmp.12 %tmp.14 %tmp.13;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 52 29 ]
-        %tmp.15 = lgetv %sTop.1;
-        symbol [ sTop %tmp.15 52 36 40 ];
-        %tmp.16 = 1;
-        %tmp.17 = add %tmp.15 %tmp.16;
-        lputv %sTop.1 %tmp.17;
-        symbol [ sTop %sTop.1 52 29 33 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 54 8 ]
-        while @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_54_8_83_8_while_test @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_54_8_83_8_while_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_54_8_83_8_while_test:
-        %tmp.18 = lgetv %sTop.1;
-        symbol [ sTop %tmp.18 54 15 19 ];
-        %tmp.19 = 0;
-        %tmp.20 = gt %tmp.18 %tmp.19;
-        bf %tmp.20 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_54_8_83_8_while_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_54_8_83_8_while_begin:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_54_25_83_8_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 55 12 ]
-        %tmp.21 = lgetv %sTop.1;
-        symbol [ sTop %tmp.21 55 19 23 ];
-        %tmp.22 = 1;
-        %tmp.23 = sub %tmp.21 %tmp.22;
-        lputv %sTop.1 %tmp.23;
-        symbol [ sTop %sTop.1 55 12 16 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 56 12 ]
-        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_54_25_83_8_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_54_25_83_8_stop" ]
-        %idx.3 = local;
-        symbol [ idx %idx.3 56 16 19 ];
-        symbol [ _stk %tmp.25 56 22 26 ];
-        %tmp.25 = getv ? :_stk;
-        %tmp.26 = lgetv %sTop.1;
-        symbol [ sTop %tmp.26 56 27 31 ];
-        %tmp.27 = agetv %tmp.25 %tmp.26;
-        lputv %idx.3 %tmp.27;
-        symbol [ idx %idx.3 56 16 19 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 57 12 ]
-        symbol [ _grp %tmp.28 57 12 16 ];
-        %tmp.28 = getv self :_grp;
-        %tmp.29 = lgetv %idx.3;
-        symbol [ idx %tmp.29 57 27 30 ];
-        symbol [ _grpSz %tmp.31 57 17 23 ];
-        %tmp.31 = getv ? :_grpSz;
-        aputv %tmp.28 %tmp.31 %tmp.29;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 57 32 ]
-        symbol [ _grpSz %tmp.33 57 41 47 ];
-        %tmp.33 = getv ? :_grpSz;
-        %tmp.34 = 1;
-        %tmp.35 = add %tmp.33 %tmp.34;
-        symbol [ _grpSz ? 57 32 38 ];
-        putv self :_grpSz %tmp.35;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 58 12 ]
-        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_54_25_83_8_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_54_25_83_8_stop" ]
-        %bx.4 = local;
-        symbol [ bx %bx.4 58 16 18 ];
-        %tmp.36 = lgetv %idx.3;
-        symbol [ idx %tmp.36 58 21 24 ];
-        %tmp.37 = 9;
-        %tmp.38 = mod %tmp.36 %tmp.37;
-        lputv %bx.4 %tmp.38;
-        symbol [ bx %bx.4 58 16 18 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 58 30 ]
-        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_54_25_83_8_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_54_25_83_8_stop" ]
-        %by.5 = local;
-        symbol [ by %by.5 58 34 36 ];
-        %tmp.39 = lgetv %idx.3;
-        symbol [ idx %tmp.39 58 39 42 ];
-        %tmp.40 = 9;
-        %tmp.41 = div %tmp.39 %tmp.40;
-        lputv %by.5 %tmp.41;
-        symbol [ by %by.5 58 34 36 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 60 12 ]
-        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_54_25_83_8_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_54_25_83_8_stop" ]
-        %nbN.6 = local;
-        symbol [ nbN %nbN.6 60 16 19 ];
-        %tmp.42 = lgetv %idx.3;
-        symbol [ idx %tmp.42 60 22 25 ];
-        %tmp.43 = 9;
-        %tmp.44 = sub %tmp.42 %tmp.43;
-        lputv %nbN.6 %tmp.44;
-        symbol [ nbN %nbN.6 60 16 19 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 60 31 ]
-        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_54_25_83_8_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_54_25_83_8_stop" ]
-        %nbS.7 = local;
-        symbol [ nbS %nbS.7 60 35 38 ];
-        %tmp.45 = lgetv %idx.3;
-        symbol [ idx %tmp.45 60 41 44 ];
-        %tmp.46 = 9;
-        %tmp.47 = add %tmp.45 %tmp.46;
-        lputv %nbS.7 %tmp.47;
-        symbol [ nbS %nbS.7 60 35 38 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 61 12 ]
-        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_54_25_83_8_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_54_25_83_8_stop" ]
-        %nbW.8 = local;
-        symbol [ nbW %nbW.8 61 16 19 ];
-        %tmp.48 = lgetv %idx.3;
-        symbol [ idx %tmp.48 61 22 25 ];
-        %tmp.49 = 1;
-        %tmp.50 = sub %tmp.48 %tmp.49;
-        lputv %nbW.8 %tmp.50;
-        symbol [ nbW %nbW.8 61 16 19 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 61 31 ]
-        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_54_25_83_8_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_54_25_83_8_stop" ]
-        %nbE.9 = local;
-        symbol [ nbE %nbE.9 61 35 38 ];
-        %tmp.51 = lgetv %idx.3;
-        symbol [ idx %tmp.51 61 41 44 ];
-        %tmp.52 = 1;
-        %tmp.53 = add %tmp.51 %tmp.52;
-        lputv %nbE.9 %tmp.53;
-        symbol [ nbE %nbE.9 61 35 38 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 63 12 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_63_12_67_12_if_stmt:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_63_16_63_39_begin:
-        %tmp.54 = lgetv %by.5;
-        symbol [ by %tmp.54 63 16 18 ];
-        %tmp.55 = 0;
-        %tmp.56 = gt %tmp.54 %tmp.55;
-        bf %tmp.56 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_63_12_67_12_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_63_26_63_39_true:
-        symbol [ _vis %tmp.58 63 26 30 ];
-        %tmp.58 = getv ? :_vis;
-        %tmp.59 = lgetv %nbN.6;
-        symbol [ nbN %tmp.59 63 31 34 ];
-        %tmp.60 = agetv %tmp.58 %tmp.59;
-        symbol [ _gen %tmp.62 63 39 43 ];
-        %tmp.62 = getv ? :_gen;
-        %tmp.63 = ne %tmp.60 %tmp.62;
-        push %tmp.63;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_63_26_63_39_end:
-        %tmp.64 = phi [%tmp.56 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_63_16_63_39_begin] [%tmp.63 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_63_26_63_39_true] [%tmp.64 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_63_26_63_39_end];
-        bf %tmp.64 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_63_12_67_12_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_63_12_67_12_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_63_45_67_12_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 64 16 ]
-        symbol [ _vis %tmp.65 64 16 20 ];
-        %tmp.65 = getv self :_vis;
-        symbol [ _gen %tmp.67 64 28 32 ];
-        %tmp.67 = getv ? :_gen;
-        %tmp.68 = lgetv %nbN.6;
-        symbol [ nbN %tmp.68 64 21 24 ];
-        aputv %tmp.65 %tmp.68 %tmp.67;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 65 16 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_65_16_66_80_if_stmt:
-        symbol [ grid %tmp.70 65 25 29 ];
-        %tmp.70 = getv ? :grid;
-        %tmp.71 = lgetv %nbN.6;
-        symbol [ nbN %tmp.71 65 30 33 ];
-        %tmp.72 = agetv %tmp.70 %tmp.71;
-        %tmp.73 = 0;
-        %tmp.74 = eq %tmp.72 %tmp.73;
-        bf %tmp.74 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_65_16_66_80_if_false;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_65_16_66_80_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_65_43_65_62_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 65 45 ]
-        %tmp.75 = lgetv %libs.2;
-        symbol [ libs %tmp.75 65 52 56 ];
-        %tmp.76 = 1;
-        %tmp.77 = add %tmp.75 %tmp.76;
-        lputv %libs.2 %tmp.77;
-        symbol [ libs %libs.2 65 45 49 ];
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_65_43_65_62_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_65_16_66_80_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_65_16_66_80_if_false:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 66 21 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_66_21_66_80_if_stmt:
-        symbol [ grid %tmp.79 66 25 29 ];
-        %tmp.79 = getv ? :grid;
-        %tmp.80 = lgetv %nbN.6;
-        symbol [ nbN %tmp.80 66 30 33 ];
-        %tmp.81 = agetv %tmp.79 %tmp.80;
-        %tmp.82 = lgetv %col;
-        symbol [ col %tmp.82 66 38 41 ];
-        %tmp.83 = eq %tmp.81 %tmp.82;
-        bf %tmp.83 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_66_21_66_80_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_66_21_66_80_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_66_43_66_80_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 66 45 ]
-        symbol [ _stk %tmp.84 66 45 49 ];
-        %tmp.84 = getv self :_stk;
-        %tmp.85 = lgetv %nbN.6;
-        symbol [ nbN %tmp.85 66 58 61 ];
-        %tmp.86 = lgetv %sTop.1;
-        symbol [ sTop %tmp.86 66 50 54 ];
-        aputv %tmp.84 %tmp.86 %tmp.85;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 66 63 ]
-        %tmp.87 = lgetv %sTop.1;
-        symbol [ sTop %tmp.87 66 70 74 ];
-        %tmp.88 = 1;
-        %tmp.89 = add %tmp.87 %tmp.88;
-        lputv %sTop.1 %tmp.89;
-        symbol [ sTop %sTop.1 66 63 67 ];
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_66_43_66_80_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_66_21_66_80_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_66_21_66_80_if_end:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_65_16_66_80_if_end:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_63_45_67_12_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_63_12_67_12_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_63_12_67_12_if_end:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 68 12 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_68_12_72_12_if_stmt:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_68_16_68_39_begin:
-        %tmp.90 = lgetv %by.5;
-        symbol [ by %tmp.90 68 16 18 ];
-        %tmp.91 = 8;
-        %tmp.92 = lt %tmp.90 %tmp.91;
-        bf %tmp.92 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_68_12_72_12_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_68_26_68_39_true:
-        symbol [ _vis %tmp.94 68 26 30 ];
-        %tmp.94 = getv ? :_vis;
-        %tmp.95 = lgetv %nbS.7;
-        symbol [ nbS %tmp.95 68 31 34 ];
-        %tmp.96 = agetv %tmp.94 %tmp.95;
-        symbol [ _gen %tmp.98 68 39 43 ];
-        %tmp.98 = getv ? :_gen;
-        %tmp.99 = ne %tmp.96 %tmp.98;
-        push %tmp.99;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_68_26_68_39_end:
-        %tmp.100 = phi [%tmp.92 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_68_16_68_39_begin] [%tmp.99 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_68_26_68_39_true] [%tmp.100 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_68_26_68_39_end];
-        bf %tmp.100 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_68_12_72_12_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_68_12_72_12_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_68_45_72_12_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 69 16 ]
-        symbol [ _vis %tmp.101 69 16 20 ];
-        %tmp.101 = getv self :_vis;
-        symbol [ _gen %tmp.103 69 28 32 ];
-        %tmp.103 = getv ? :_gen;
-        %tmp.104 = lgetv %nbS.7;
-        symbol [ nbS %tmp.104 69 21 24 ];
-        aputv %tmp.101 %tmp.104 %tmp.103;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 70 16 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_70_16_71_80_if_stmt:
-        symbol [ grid %tmp.106 70 25 29 ];
-        %tmp.106 = getv ? :grid;
-        %tmp.107 = lgetv %nbS.7;
-        symbol [ nbS %tmp.107 70 30 33 ];
-        %tmp.108 = agetv %tmp.106 %tmp.107;
-        %tmp.109 = 0;
-        %tmp.110 = eq %tmp.108 %tmp.109;
-        bf %tmp.110 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_70_16_71_80_if_false;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_70_16_71_80_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_70_43_70_62_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 70 45 ]
-        %tmp.111 = lgetv %libs.2;
-        symbol [ libs %tmp.111 70 52 56 ];
-        %tmp.112 = 1;
-        %tmp.113 = add %tmp.111 %tmp.112;
-        lputv %libs.2 %tmp.113;
-        symbol [ libs %libs.2 70 45 49 ];
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_70_43_70_62_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_70_16_71_80_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_70_16_71_80_if_false:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 71 21 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_71_21_71_80_if_stmt:
-        symbol [ grid %tmp.115 71 25 29 ];
-        %tmp.115 = getv ? :grid;
-        %tmp.116 = lgetv %nbS.7;
-        symbol [ nbS %tmp.116 71 30 33 ];
-        %tmp.117 = agetv %tmp.115 %tmp.116;
-        %tmp.118 = lgetv %col;
-        symbol [ col %tmp.118 71 38 41 ];
-        %tmp.119 = eq %tmp.117 %tmp.118;
-        bf %tmp.119 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_71_21_71_80_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_71_21_71_80_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_71_43_71_80_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 71 45 ]
-        symbol [ _stk %tmp.120 71 45 49 ];
-        %tmp.120 = getv self :_stk;
-        %tmp.121 = lgetv %nbS.7;
-        symbol [ nbS %tmp.121 71 58 61 ];
-        %tmp.122 = lgetv %sTop.1;
-        symbol [ sTop %tmp.122 71 50 54 ];
-        aputv %tmp.120 %tmp.122 %tmp.121;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 71 63 ]
-        %tmp.123 = lgetv %sTop.1;
-        symbol [ sTop %tmp.123 71 70 74 ];
-        %tmp.124 = 1;
-        %tmp.125 = add %tmp.123 %tmp.124;
-        lputv %sTop.1 %tmp.125;
-        symbol [ sTop %sTop.1 71 63 67 ];
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_71_43_71_80_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_71_21_71_80_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_71_21_71_80_if_end:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_70_16_71_80_if_end:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_68_45_72_12_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_68_12_72_12_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_68_12_72_12_if_end:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 73 12 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_73_12_77_12_if_stmt:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_73_16_73_39_begin:
-        %tmp.126 = lgetv %bx.4;
-        symbol [ bx %tmp.126 73 16 18 ];
-        %tmp.127 = 0;
-        %tmp.128 = gt %tmp.126 %tmp.127;
-        bf %tmp.128 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_73_12_77_12_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_73_26_73_39_true:
-        symbol [ _vis %tmp.130 73 26 30 ];
-        %tmp.130 = getv ? :_vis;
-        %tmp.131 = lgetv %nbW.8;
-        symbol [ nbW %tmp.131 73 31 34 ];
-        %tmp.132 = agetv %tmp.130 %tmp.131;
-        symbol [ _gen %tmp.134 73 39 43 ];
-        %tmp.134 = getv ? :_gen;
-        %tmp.135 = ne %tmp.132 %tmp.134;
-        push %tmp.135;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_73_26_73_39_end:
-        %tmp.136 = phi [%tmp.128 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_73_16_73_39_begin] [%tmp.135 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_73_26_73_39_true] [%tmp.136 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_73_26_73_39_end];
-        bf %tmp.136 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_73_12_77_12_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_73_12_77_12_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_73_45_77_12_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 74 16 ]
-        symbol [ _vis %tmp.137 74 16 20 ];
-        %tmp.137 = getv self :_vis;
-        symbol [ _gen %tmp.139 74 28 32 ];
-        %tmp.139 = getv ? :_gen;
-        %tmp.140 = lgetv %nbW.8;
-        symbol [ nbW %tmp.140 74 21 24 ];
-        aputv %tmp.137 %tmp.140 %tmp.139;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 75 16 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_75_16_76_80_if_stmt:
-        symbol [ grid %tmp.142 75 25 29 ];
-        %tmp.142 = getv ? :grid;
-        %tmp.143 = lgetv %nbW.8;
-        symbol [ nbW %tmp.143 75 30 33 ];
-        %tmp.144 = agetv %tmp.142 %tmp.143;
-        %tmp.145 = 0;
-        %tmp.146 = eq %tmp.144 %tmp.145;
-        bf %tmp.146 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_75_16_76_80_if_false;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_75_16_76_80_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_75_43_75_62_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 75 45 ]
-        %tmp.147 = lgetv %libs.2;
-        symbol [ libs %tmp.147 75 52 56 ];
-        %tmp.148 = 1;
-        %tmp.149 = add %tmp.147 %tmp.148;
-        lputv %libs.2 %tmp.149;
-        symbol [ libs %libs.2 75 45 49 ];
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_75_43_75_62_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_75_16_76_80_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_75_16_76_80_if_false:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 76 21 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_76_21_76_80_if_stmt:
-        symbol [ grid %tmp.151 76 25 29 ];
-        %tmp.151 = getv ? :grid;
-        %tmp.152 = lgetv %nbW.8;
-        symbol [ nbW %tmp.152 76 30 33 ];
-        %tmp.153 = agetv %tmp.151 %tmp.152;
-        %tmp.154 = lgetv %col;
-        symbol [ col %tmp.154 76 38 41 ];
-        %tmp.155 = eq %tmp.153 %tmp.154;
-        bf %tmp.155 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_76_21_76_80_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_76_21_76_80_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_76_43_76_80_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 76 45 ]
-        symbol [ _stk %tmp.156 76 45 49 ];
-        %tmp.156 = getv self :_stk;
-        %tmp.157 = lgetv %nbW.8;
-        symbol [ nbW %tmp.157 76 58 61 ];
-        %tmp.158 = lgetv %sTop.1;
-        symbol [ sTop %tmp.158 76 50 54 ];
-        aputv %tmp.156 %tmp.158 %tmp.157;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 76 63 ]
-        %tmp.159 = lgetv %sTop.1;
-        symbol [ sTop %tmp.159 76 70 74 ];
-        %tmp.160 = 1;
-        %tmp.161 = add %tmp.159 %tmp.160;
-        lputv %sTop.1 %tmp.161;
-        symbol [ sTop %sTop.1 76 63 67 ];
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_76_43_76_80_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_76_21_76_80_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_76_21_76_80_if_end:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_75_16_76_80_if_end:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_73_45_77_12_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_73_12_77_12_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_73_12_77_12_if_end:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 78 12 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_78_12_82_12_if_stmt:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_78_16_78_39_begin:
-        %tmp.162 = lgetv %bx.4;
-        symbol [ bx %tmp.162 78 16 18 ];
-        %tmp.163 = 8;
-        %tmp.164 = lt %tmp.162 %tmp.163;
-        bf %tmp.164 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_78_12_82_12_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_78_26_78_39_true:
-        symbol [ _vis %tmp.166 78 26 30 ];
-        %tmp.166 = getv ? :_vis;
-        %tmp.167 = lgetv %nbE.9;
-        symbol [ nbE %tmp.167 78 31 34 ];
-        %tmp.168 = agetv %tmp.166 %tmp.167;
-        symbol [ _gen %tmp.170 78 39 43 ];
-        %tmp.170 = getv ? :_gen;
-        %tmp.171 = ne %tmp.168 %tmp.170;
-        push %tmp.171;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_78_26_78_39_end:
-        %tmp.172 = phi [%tmp.164 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_78_16_78_39_begin] [%tmp.171 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_78_26_78_39_true] [%tmp.172 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_78_26_78_39_end];
-        bf %tmp.172 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_78_12_82_12_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_78_12_82_12_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_78_45_82_12_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 79 16 ]
-        symbol [ _vis %tmp.173 79 16 20 ];
-        %tmp.173 = getv self :_vis;
-        symbol [ _gen %tmp.175 79 28 32 ];
-        %tmp.175 = getv ? :_gen;
-        %tmp.176 = lgetv %nbE.9;
-        symbol [ nbE %tmp.176 79 21 24 ];
-        aputv %tmp.173 %tmp.176 %tmp.175;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 80 16 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_80_16_81_80_if_stmt:
-        symbol [ grid %tmp.178 80 25 29 ];
-        %tmp.178 = getv ? :grid;
-        %tmp.179 = lgetv %nbE.9;
-        symbol [ nbE %tmp.179 80 30 33 ];
-        %tmp.180 = agetv %tmp.178 %tmp.179;
-        %tmp.181 = 0;
-        %tmp.182 = eq %tmp.180 %tmp.181;
-        bf %tmp.182 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_80_16_81_80_if_false;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_80_16_81_80_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_80_43_80_62_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 80 45 ]
-        %tmp.183 = lgetv %libs.2;
-        symbol [ libs %tmp.183 80 52 56 ];
-        %tmp.184 = 1;
-        %tmp.185 = add %tmp.183 %tmp.184;
-        lputv %libs.2 %tmp.185;
-        symbol [ libs %libs.2 80 45 49 ];
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_80_43_80_62_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_80_16_81_80_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_80_16_81_80_if_false:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 81 21 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_81_21_81_80_if_stmt:
-        symbol [ grid %tmp.187 81 25 29 ];
-        %tmp.187 = getv ? :grid;
-        %tmp.188 = lgetv %nbE.9;
-        symbol [ nbE %tmp.188 81 30 33 ];
-        %tmp.189 = agetv %tmp.187 %tmp.188;
-        %tmp.190 = lgetv %col;
-        symbol [ col %tmp.190 81 38 41 ];
-        %tmp.191 = eq %tmp.189 %tmp.190;
-        bf %tmp.191 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_81_21_81_80_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_81_21_81_80_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_81_43_81_80_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 81 45 ]
-        symbol [ _stk %tmp.192 81 45 49 ];
-        %tmp.192 = getv self :_stk;
-        %tmp.193 = lgetv %nbE.9;
-        symbol [ nbE %tmp.193 81 58 61 ];
-        %tmp.194 = lgetv %sTop.1;
-        symbol [ sTop %tmp.194 81 50 54 ];
-        aputv %tmp.192 %tmp.194 %tmp.193;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 81 63 ]
-        %tmp.195 = lgetv %sTop.1;
-        symbol [ sTop %tmp.195 81 70 74 ];
-        %tmp.196 = 1;
-        %tmp.197 = add %tmp.195 %tmp.196;
-        lputv %sTop.1 %tmp.197;
-        symbol [ sTop %sTop.1 81 63 67 ];
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_81_43_81_80_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_81_21_81_80_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_81_21_81_80_if_end:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_80_16_81_80_if_end:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_78_45_82_12_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_78_12_82_12_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_78_12_82_12_if_end:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_54_25_83_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_54_8_83_8_while_test;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_54_8_83_8_while_end:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 84 8 ]
-        %tmp.198 = lgetv %libs.2;
-        symbol [ libs %tmp.198 84 15 19 ];
-        ret %tmp.198;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_48_37_85_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc"; @line = 88; @symbol_functiondef = [getGroupLiberties,88,13,30]; @symbol_param<0> = [idx,88,31,34]; ]
-    function getGroupLiberties(idx) {
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_88_36_92_4_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 89 8 ]
-        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_88_36_92_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_88_36_92_4_stop" ]
-        %col.1 = local;
-        symbol [ col %col.1 89 12 15 ];
-        symbol [ grid %tmp.2 89 18 22 ];
-        %tmp.2 = getv ? :grid;
-        %tmp.3 = lgetv %idx;
-        symbol [ idx %tmp.3 89 23 26 ];
-        %tmp.4 = agetv %tmp.2 %tmp.3;
-        lputv %col.1 %tmp.4;
-        symbol [ col %col.1 89 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 90 8 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_90_8_90_34_if_stmt:
-        %tmp.5 = lgetv %col.1;
-        symbol [ col %tmp.5 90 12 15 ];
-        %tmp.6 = 0;
-        %tmp.7 = eq %tmp.5 %tmp.6;
-        bf %tmp.7 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_90_8_90_34_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_90_8_90_34_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_90_22_90_34_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 90 24 ]
-        %tmp.8 = 0;
-        ret %tmp.8;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_90_22_90_34_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_90_8_90_34_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_90_8_90_34_if_end:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 91 8 ]
-        %tmp.9 = self;
-        symbol [ _bfs %tmp.10 91 15 19 ];
-        %tmp.10 = getv function %tmp.9 :_bfs;
-        %tmp.11 = lgetv %idx;
-        symbol [ idx %tmp.11 91 20 23 ];
-        %tmp.12 = lgetv %col.1;
-        symbol [ col %tmp.12 91 25 28 ];
-        %tmp.13 = invoke %tmp.9 %tmp.10(%tmp.11, %tmp.12);
-        ret %tmp.13;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_88_36_92_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc"; @line = 95; @symbol_functiondef = [_captureIfDead,95,20,34]; @symbol_param<0> = [nb,95,35,37]; @symbol_param<1> = [opp,95,39,42]; ]
-    protected
-    function _captureIfDead(nb, opp) {
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_95_44_103_4_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 96 8 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_96_8_96_39_if_stmt:
-        symbol [ grid %tmp.2 96 12 16 ];
-        %tmp.2 = getv ? :grid;
-        %tmp.3 = lgetv %nb;
-        symbol [ nb %tmp.3 96 17 19 ];
-        %tmp.4 = agetv %tmp.2 %tmp.3;
-        %tmp.5 = lgetv %opp;
-        symbol [ opp %tmp.5 96 24 27 ];
-        %tmp.6 = ne %tmp.4 %tmp.5;
-        bf %tmp.6 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_96_8_96_39_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_96_8_96_39_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_96_29_96_39_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 96 31 ]
-        ret ?;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_96_29_96_39_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_96_8_96_39_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_96_8_96_39_if_end:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 97 8 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_97_8_102_8_if_stmt:
-        %tmp.7 = self;
-        symbol [ _bfs %tmp.8 97 12 16 ];
-        %tmp.8 = getv function %tmp.7 :_bfs;
-        %tmp.9 = lgetv %nb;
-        symbol [ nb %tmp.9 97 17 19 ];
-        %tmp.10 = lgetv %opp;
-        symbol [ opp %tmp.10 97 21 24 ];
-        %tmp.11 = invoke %tmp.7 %tmp.8(%tmp.9, %tmp.10);
-        %tmp.12 = 0;
-        %tmp.13 = eq %tmp.11 %tmp.12;
-        bf %tmp.13 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_97_8_102_8_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_97_8_102_8_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_97_32_102_8_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 98 12 ]
-        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_97_32_102_8_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_97_32_102_8_stop" ]
-        %i.1 = local;
-        symbol [ i %i.1 98 16 17 ];
-        %tmp.14 = 0;
-        lputv %i.1 %tmp.14;
-        symbol [ i %i.1 98 16 17 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 99 12 ]
-        while @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_99_12_99_63_while_test @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_99_12_99_63_while_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_99_12_99_63_while_test:
-        %tmp.15 = lgetv %i.1;
-        symbol [ i %tmp.15 99 19 20 ];
-        symbol [ _grpSz %tmp.17 99 23 29 ];
-        %tmp.17 = getv ? :_grpSz;
-        %tmp.18 = lt %tmp.15 %tmp.17;
-        bf %tmp.18 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_99_12_99_63_while_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_99_12_99_63_while_begin:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_99_31_99_63_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 99 33 ]
-        symbol [ grid %tmp.19 99 33 37 ];
-        %tmp.19 = getv self :grid;
-        %tmp.20 = 0;
-        symbol [ _grp %tmp.22 99 38 42 ];
-        %tmp.22 = getv ? :_grp;
-        %tmp.23 = lgetv %i.1;
-        symbol [ i %tmp.23 99 43 44 ];
-        %tmp.24 = agetv %tmp.22 %tmp.23;
-        aputv %tmp.19 %tmp.24 %tmp.20;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 99 52 ]
-        %tmp.25 = lgetv %i.1;
-        symbol [ i %tmp.25 99 56 57 ];
-        %tmp.26 = 1;
-        %tmp.27 = add %tmp.25 %tmp.26;
-        lputv %i.1 %tmp.27;
-        symbol [ i %i.1 99 52 53 ];
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_99_31_99_63_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_99_12_99_63_while_test;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_99_12_99_63_while_end:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 100 12 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_100_12_101_58_if_stmt:
-        %tmp.28 = lgetv %opp;
-        symbol [ opp %tmp.28 100 16 19 ];
-        %tmp.29 = 1;
-        %tmp.30 = eq %tmp.28 %tmp.29;
-        bf %tmp.30 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_100_12_101_58_if_else_false;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_100_12_101_58_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_100_26_100_58_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 100 28 ]
-        symbol [ capBlack %tmp.32 100 39 47 ];
-        %tmp.32 = getv ? :capBlack;
-        symbol [ _grpSz %tmp.34 100 50 56 ];
-        %tmp.34 = getv ? :_grpSz;
-        %tmp.35 = add %tmp.32 %tmp.34;
-        symbol [ capBlack ? 100 28 36 ];
-        putv self :capBlack %tmp.35;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_100_26_100_58_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_100_12_101_58_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_100_12_101_58_if_else_false:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_101_26_101_58_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 101 28 ]
-        symbol [ capWhite %tmp.37 101 39 47 ];
-        %tmp.37 = getv ? :capWhite;
-        symbol [ _grpSz %tmp.39 101 50 56 ];
-        %tmp.39 = getv ? :_grpSz;
-        %tmp.40 = add %tmp.37 %tmp.39;
-        symbol [ capWhite ? 101 28 36 ];
-        putv self :capWhite %tmp.40;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_101_26_101_58_stop:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_100_12_101_58_if_end:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_97_32_102_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_97_8_102_8_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_97_8_102_8_if_end:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_95_44_103_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc"; @line = 108; @symbol_functiondef = [placeStone,108,13,23]; @symbol_param<0> = [x,108,24,25]; @symbol_param<1> = [y,108,27,28]; @symbol_param<2> = [col,108,30,33]; ]
-    function placeStone(x, y, col) {
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_108_35_146_4_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 109 8 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_109_8_109_62_if_stmt:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_109_12_109_43_begin:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_109_12_109_34_begin:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_109_12_109_25_begin:
-        %tmp.1 = lgetv %x;
-        symbol [ x %tmp.1 109 12 13 ];
-        %tmp.2 = 0;
-        %tmp.3 = lt %tmp.1 %tmp.2;
-        bt %tmp.3 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_109_8_109_62_if_true;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_109_21_109_25_false:
-        %tmp.4 = lgetv %x;
-        symbol [ x %tmp.4 109 21 22 ];
-        %tmp.5 = 8;
-        %tmp.6 = gt %tmp.4 %tmp.5;
-        push %tmp.6;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_109_21_109_25_end:
-        %tmp.7 = phi [%tmp.3 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_109_12_109_25_begin] [%tmp.6 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_109_21_109_25_false] [%tmp.7 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_109_21_109_25_end];
-        bt %tmp.7 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_109_8_109_62_if_true;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_109_30_109_34_false:
-        %tmp.8 = lgetv %y;
-        symbol [ y %tmp.8 109 30 31 ];
-        %tmp.9 = 0;
-        %tmp.10 = lt %tmp.8 %tmp.9;
-        push %tmp.10;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_109_30_109_34_end:
-        %tmp.11 = phi [%tmp.7 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_109_12_109_34_begin] [%tmp.10 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_109_30_109_34_false] [%tmp.11 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_109_30_109_34_end];
-        bt %tmp.11 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_109_8_109_62_if_true;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_109_39_109_43_false:
-        %tmp.12 = lgetv %y;
-        symbol [ y %tmp.12 109 39 40 ];
-        %tmp.13 = 8;
-        %tmp.14 = gt %tmp.12 %tmp.13;
-        push %tmp.14;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_109_39_109_43_end:
-        %tmp.15 = phi [%tmp.11 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_109_12_109_43_begin] [%tmp.14 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_109_39_109_43_false] [%tmp.15 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_109_39_109_43_end];
-        bf %tmp.15 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_109_8_109_62_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_109_8_109_62_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_109_46_109_62_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 109 48 ]
-        %tmp.16 = false;
-        ret %tmp.16;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_109_46_109_62_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_109_8_109_62_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_109_8_109_62_if_end:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 110 8 ]
-        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_108_35_146_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_108_35_146_4_stop" ]
-        %idx.1 = local;
-        symbol [ idx %idx.1 110 12 15 ];
-        %tmp.17 = lgetv %y;
-        symbol [ y %tmp.17 110 18 19 ];
-        %tmp.18 = 9;
-        %tmp.19 = mul %tmp.17 %tmp.18;
-        %tmp.20 = lgetv %x;
-        symbol [ x %tmp.20 110 26 27 ];
-        %tmp.21 = add %tmp.19 %tmp.20;
-        lputv %idx.1 %tmp.21;
-        symbol [ idx %idx.1 110 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 111 8 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_111_8_111_44_if_stmt:
-        symbol [ grid %tmp.23 111 12 16 ];
-        %tmp.23 = getv ? :grid;
-        %tmp.24 = lgetv %idx.1;
-        symbol [ idx %tmp.24 111 17 20 ];
-        %tmp.25 = agetv %tmp.23 %tmp.24;
-        %tmp.26 = 0;
-        %tmp.27 = ne %tmp.25 %tmp.26;
-        bf %tmp.27 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_111_8_111_44_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_111_8_111_44_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_111_28_111_44_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 111 30 ]
-        %tmp.28 = false;
-        ret %tmp.28;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_111_28_111_44_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_111_8_111_44_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_111_8_111_44_if_end:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 114 8 ]
-        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_108_35_146_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_108_35_146_4_stop" ]
-        %i.2 = local;
-        symbol [ i %i.2 114 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 29 39 ]
+        %tmp.8 = lgetv %i.1;
+        symbol [ i %tmp.8 29 43 44 ];
+        %tmp.9 = 1;
+        %tmp.10 = add %tmp.8 %tmp.9;
+        lputv %i.1 %tmp.10;
+        symbol [ i %i.1 29 39 40 ];
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_29_23_29_50_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_29_8_29_50_while_test;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_29_8_29_50_while_end:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 31 8 ]
+        symbol [ cells %tmp.11 31 8 13 ];
+        %tmp.11 = getv self :cells;
+        symbol [ DISC_WHITE %tmp.13 31 20 30 ];
+        %tmp.13 = getv ? :DISC_WHITE;
+        %tmp.14 = 27;
+        aputv %tmp.11 %tmp.14 %tmp.13;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 32 8 ]
+        symbol [ cells %tmp.15 32 8 13 ];
+        %tmp.15 = getv self :cells;
+        symbol [ DISC_BLACK %tmp.17 32 20 30 ];
+        %tmp.17 = getv ? :DISC_BLACK;
+        %tmp.18 = 28;
+        aputv %tmp.15 %tmp.18 %tmp.17;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 33 8 ]
+        symbol [ cells %tmp.19 33 8 13 ];
+        %tmp.19 = getv self :cells;
+        symbol [ DISC_BLACK %tmp.21 33 20 30 ];
+        %tmp.21 = getv ? :DISC_BLACK;
+        %tmp.22 = 35;
+        aputv %tmp.19 %tmp.22 %tmp.21;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 34 8 ]
+        symbol [ cells %tmp.23 34 8 13 ];
+        %tmp.23 = getv self :cells;
+        symbol [ DISC_WHITE %tmp.25 34 20 30 ];
+        %tmp.25 = getv ? :DISC_WHITE;
+        %tmp.26 = 36;
+        aputv %tmp.23 %tmp.26 %tmp.25;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 35 8 ]
+        %tmp.27 = 2;
+        symbol [ blackCount ? 35 8 18 ];
+        putv self :blackCount %tmp.27;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 35 24 ]
+        %tmp.28 = 2;
+        symbol [ whiteCount ? 35 24 34 ];
+        putv self :whiteCount %tmp.28;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 36 8 ]
         %tmp.29 = 0;
-        lputv %i.2 %tmp.29;
-        symbol [ i %i.2 114 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 115 8 ]
-        while @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_115_8_115_59_while_test @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_115_8_115_59_while_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_115_8_115_59_while_test:
-        %tmp.30 = lgetv %i.2;
-        symbol [ i %tmp.30 115 15 16 ];
-        %tmp.31 = 81;
-        %tmp.32 = lt %tmp.30 %tmp.31;
-        bf %tmp.32 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_115_8_115_59_while_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_115_8_115_59_while_begin:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_115_23_115_59_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 115 25 ]
-        symbol [ prevGrid %tmp.33 115 25 33 ];
-        %tmp.33 = getv self :prevGrid;
-        symbol [ grid %tmp.35 115 39 43 ];
-        %tmp.35 = getv ? :grid;
-        %tmp.36 = lgetv %i.2;
-        symbol [ i %tmp.36 115 44 45 ];
-        %tmp.37 = agetv %tmp.35 %tmp.36;
-        %tmp.38 = lgetv %i.2;
-        symbol [ i %tmp.38 115 34 35 ];
-        aputv %tmp.33 %tmp.38 %tmp.37;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 115 48 ]
-        %tmp.39 = lgetv %i.2;
-        symbol [ i %tmp.39 115 52 53 ];
-        %tmp.40 = 1;
-        %tmp.41 = add %tmp.39 %tmp.40;
-        lputv %i.2 %tmp.41;
-        symbol [ i %i.2 115 48 49 ];
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_115_23_115_59_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_115_8_115_59_while_test;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_115_8_115_59_while_end:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 117 8 ]
-        symbol [ grid %tmp.42 117 8 12 ];
-        %tmp.42 = getv self :grid;
-        %tmp.43 = lgetv %col;
-        symbol [ col %tmp.43 117 20 23 ];
-        %tmp.44 = lgetv %idx.1;
-        symbol [ idx %tmp.44 117 13 16 ];
-        aputv %tmp.42 %tmp.44 %tmp.43;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 118 8 ]
-        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_108_35_146_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_108_35_146_4_stop" ]
-        %opp.3 = local;
-        symbol [ opp %opp.3 118 12 15 ];
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_118_18_118_35_begin:
-        %tmp.45 = lgetv %col;
-        symbol [ col %tmp.45 118 19 22 ];
-        %tmp.46 = 1;
-        %tmp.47 = eq %tmp.45 %tmp.46;
-        bf %tmp.47 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_118_18_118_35_else_false;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_118_18_118_35_true:
-        %tmp.48 = 2;
-        push %tmp.48;
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_118_18_118_35_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_118_18_118_35_else_false:
-        %tmp.49 = 1;
-        push %tmp.49;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_118_18_118_35_end:
-        %tmp.50 = phi [%tmp.47 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_118_18_118_35_begin] [%tmp.48 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_118_18_118_35_true] [%tmp.49 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_118_18_118_35_else_false] [%tmp.50 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_118_18_118_35_end];
-        lputv %opp.3 %tmp.50;
-        symbol [ opp %opp.3 118 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 121 8 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_121_8_121_51_if_stmt:
-        %tmp.51 = lgetv %y;
-        symbol [ y %tmp.51 121 12 13 ];
-        %tmp.52 = 0;
-        %tmp.53 = gt %tmp.51 %tmp.52;
-        bf %tmp.53 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_121_8_121_51_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_121_8_121_51_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_121_19_121_51_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 121 21 ]
-        %tmp.54 = self;
-        symbol [ _captureIfDead %tmp.55 121 21 35 ];
-        %tmp.55 = getv function %tmp.54 :_captureIfDead;
-        %tmp.56 = lgetv %idx.1;
-        symbol [ idx %tmp.56 121 36 39 ];
-        %tmp.57 = 9;
-        %tmp.58 = sub %tmp.56 %tmp.57;
-        %tmp.59 = lgetv %opp.3;
-        symbol [ opp %tmp.59 121 45 48 ];
-        invoke %tmp.54 %tmp.55(%tmp.58, %tmp.59);
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_121_19_121_51_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_121_8_121_51_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_121_8_121_51_if_end:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 122 8 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_122_8_122_51_if_stmt:
-        %tmp.60 = lgetv %y;
-        symbol [ y %tmp.60 122 12 13 ];
-        %tmp.61 = 8;
-        %tmp.62 = lt %tmp.60 %tmp.61;
-        bf %tmp.62 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_122_8_122_51_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_122_8_122_51_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_122_19_122_51_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 122 21 ]
-        %tmp.63 = self;
-        symbol [ _captureIfDead %tmp.64 122 21 35 ];
-        %tmp.64 = getv function %tmp.63 :_captureIfDead;
-        %tmp.65 = lgetv %idx.1;
-        symbol [ idx %tmp.65 122 36 39 ];
-        %tmp.66 = 9;
-        %tmp.67 = add %tmp.65 %tmp.66;
-        %tmp.68 = lgetv %opp.3;
-        symbol [ opp %tmp.68 122 45 48 ];
-        invoke %tmp.63 %tmp.64(%tmp.67, %tmp.68);
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_122_19_122_51_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_122_8_122_51_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_122_8_122_51_if_end:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 123 8 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_123_8_123_51_if_stmt:
-        %tmp.69 = lgetv %x;
-        symbol [ x %tmp.69 123 12 13 ];
-        %tmp.70 = 0;
-        %tmp.71 = gt %tmp.69 %tmp.70;
-        bf %tmp.71 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_123_8_123_51_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_123_8_123_51_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_123_19_123_51_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 123 21 ]
-        %tmp.72 = self;
-        symbol [ _captureIfDead %tmp.73 123 21 35 ];
-        %tmp.73 = getv function %tmp.72 :_captureIfDead;
-        %tmp.74 = lgetv %idx.1;
-        symbol [ idx %tmp.74 123 36 39 ];
-        %tmp.75 = 1;
-        %tmp.76 = sub %tmp.74 %tmp.75;
-        %tmp.77 = lgetv %opp.3;
-        symbol [ opp %tmp.77 123 45 48 ];
-        invoke %tmp.72 %tmp.73(%tmp.76, %tmp.77);
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_123_19_123_51_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_123_8_123_51_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_123_8_123_51_if_end:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 124 8 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_124_8_124_51_if_stmt:
-        %tmp.78 = lgetv %x;
-        symbol [ x %tmp.78 124 12 13 ];
-        %tmp.79 = 8;
-        %tmp.80 = lt %tmp.78 %tmp.79;
-        bf %tmp.80 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_124_8_124_51_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_124_8_124_51_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_124_19_124_51_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 124 21 ]
-        %tmp.81 = self;
-        symbol [ _captureIfDead %tmp.82 124 21 35 ];
-        %tmp.82 = getv function %tmp.81 :_captureIfDead;
-        %tmp.83 = lgetv %idx.1;
-        symbol [ idx %tmp.83 124 36 39 ];
-        %tmp.84 = 1;
-        %tmp.85 = add %tmp.83 %tmp.84;
-        %tmp.86 = lgetv %opp.3;
-        symbol [ opp %tmp.86 124 45 48 ];
-        invoke %tmp.81 %tmp.82(%tmp.85, %tmp.86);
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_124_19_124_51_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_124_8_124_51_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_124_8_124_51_if_end:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 127 8 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_127_8_131_8_if_stmt:
-        %tmp.87 = self;
-        symbol [ _bfs %tmp.88 127 12 16 ];
-        %tmp.88 = getv function %tmp.87 :_bfs;
-        %tmp.89 = lgetv %idx.1;
-        symbol [ idx %tmp.89 127 17 20 ];
-        %tmp.90 = lgetv %col;
-        symbol [ col %tmp.90 127 22 25 ];
-        %tmp.91 = invoke %tmp.87 %tmp.88(%tmp.89, %tmp.90);
-        %tmp.92 = 0;
-        %tmp.93 = eq %tmp.91 %tmp.92;
-        bf %tmp.93 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_127_8_131_8_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_127_8_131_8_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_127_33_131_8_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 128 12 ]
-        %tmp.94 = 0;
-        lputv %i.2 %tmp.94;
-        symbol [ i %i.2 128 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 129 12 ]
-        while @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_129_12_129_63_while_test @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_129_12_129_63_while_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_129_12_129_63_while_test:
-        %tmp.95 = lgetv %i.2;
-        symbol [ i %tmp.95 129 19 20 ];
-        %tmp.96 = 81;
-        %tmp.97 = lt %tmp.95 %tmp.96;
-        bf %tmp.97 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_129_12_129_63_while_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_129_12_129_63_while_begin:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_129_27_129_63_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 129 29 ]
-        symbol [ grid %tmp.98 129 29 33 ];
-        %tmp.98 = getv self :grid;
-        symbol [ prevGrid %tmp.100 129 39 47 ];
-        %tmp.100 = getv ? :prevGrid;
-        %tmp.101 = lgetv %i.2;
-        symbol [ i %tmp.101 129 48 49 ];
-        %tmp.102 = agetv %tmp.100 %tmp.101;
-        %tmp.103 = lgetv %i.2;
-        symbol [ i %tmp.103 129 34 35 ];
-        aputv %tmp.98 %tmp.103 %tmp.102;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 129 52 ]
-        %tmp.104 = lgetv %i.2;
-        symbol [ i %tmp.104 129 56 57 ];
-        %tmp.105 = 1;
-        %tmp.106 = add %tmp.104 %tmp.105;
-        lputv %i.2 %tmp.106;
-        symbol [ i %i.2 129 52 53 ];
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_129_27_129_63_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_129_12_129_63_while_test;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_129_12_129_63_while_end:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 130 12 ]
-        %tmp.107 = false;
-        ret %tmp.107;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_127_33_131_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_127_8_131_8_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_127_8_131_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 134 8 ]
-        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_108_35_146_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_108_35_146_4_stop" ]
-        %ko.4 = local;
-        symbol [ ko %ko.4 134 12 14 ];
-        %tmp.108 = true;
-        lputv %ko.4 %tmp.108;
-        symbol [ ko %ko.4 134 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 134 23 ]
-        %tmp.109 = 0;
-        lputv %i.2 %tmp.109;
-        symbol [ i %i.2 134 23 24 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 135 8 ]
-        while @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_135_8_138_8_while_test @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_135_8_138_8_while_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_135_8_138_8_while_test:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_135_15_135_25_begin:
-        %tmp.110 = lgetv %i.2;
-        symbol [ i %tmp.110 135 15 16 ];
-        %tmp.111 = 81;
-        %tmp.112 = lt %tmp.110 %tmp.111;
-        %tmp.113 = dup %tmp.112;
-        bf %tmp.113 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_135_25_135_25_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_135_25_135_25_true:
-        %tmp.114 = lgetv %ko.4;
-        symbol [ ko %tmp.114 135 25 27 ];
-        %tmp.115 = and %tmp.112 %tmp.114;
-        push %tmp.115;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_135_25_135_25_end:
-        %tmp.116 = phi [%tmp.113 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_135_15_135_25_begin] [%tmp.115 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_135_25_135_25_true] [%tmp.116 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_135_25_135_25_end];
-        bf %tmp.116 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_135_8_138_8_while_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_135_8_138_8_while_begin:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_135_29_138_8_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 136 12 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_136_12_136_54_if_stmt:
-        symbol [ grid %tmp.118 136 16 20 ];
-        %tmp.118 = getv ? :grid;
-        %tmp.119 = lgetv %i.2;
-        symbol [ i %tmp.119 136 21 22 ];
-        %tmp.120 = agetv %tmp.118 %tmp.119;
-        symbol [ prevGrid %tmp.122 136 27 35 ];
-        %tmp.122 = getv ? :prevGrid;
-        %tmp.123 = lgetv %i.2;
-        symbol [ i %tmp.123 136 36 37 ];
-        %tmp.124 = agetv %tmp.122 %tmp.123;
-        %tmp.125 = ne %tmp.120 %tmp.124;
-        bf %tmp.125 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_136_12_136_54_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_136_12_136_54_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_136_40_136_54_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 136 42 ]
-        %tmp.126 = false;
-        lputv %ko.4 %tmp.126;
-        symbol [ ko %ko.4 136 42 44 ];
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_136_40_136_54_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_136_12_136_54_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_136_12_136_54_if_end:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 137 12 ]
-        %tmp.127 = lgetv %i.2;
-        symbol [ i %tmp.127 137 16 17 ];
-        %tmp.128 = 1;
-        %tmp.129 = add %tmp.127 %tmp.128;
-        lputv %i.2 %tmp.129;
-        symbol [ i %i.2 137 12 13 ];
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_135_29_138_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_135_8_138_8_while_test;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_135_8_138_8_while_end:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 139 8 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_139_8_143_8_if_stmt:
-        %tmp.130 = lgetv %ko.4;
-        symbol [ ko %tmp.130 139 12 14 ];
-        bf %tmp.130 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_139_8_143_8_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_139_8_143_8_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_139_16_143_8_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 140 12 ]
-        %tmp.131 = 0;
-        lputv %i.2 %tmp.131;
-        symbol [ i %i.2 140 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 141 12 ]
-        while @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_141_12_141_63_while_test @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_141_12_141_63_while_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_141_12_141_63_while_test:
-        %tmp.132 = lgetv %i.2;
-        symbol [ i %tmp.132 141 19 20 ];
-        %tmp.133 = 81;
-        %tmp.134 = lt %tmp.132 %tmp.133;
-        bf %tmp.134 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_141_12_141_63_while_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_141_12_141_63_while_begin:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_141_27_141_63_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 141 29 ]
-        symbol [ grid %tmp.135 141 29 33 ];
-        %tmp.135 = getv self :grid;
-        symbol [ prevGrid %tmp.137 141 39 47 ];
-        %tmp.137 = getv ? :prevGrid;
-        %tmp.138 = lgetv %i.2;
-        symbol [ i %tmp.138 141 48 49 ];
-        %tmp.139 = agetv %tmp.137 %tmp.138;
-        %tmp.140 = lgetv %i.2;
-        symbol [ i %tmp.140 141 34 35 ];
-        aputv %tmp.135 %tmp.140 %tmp.139;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 141 52 ]
-        %tmp.141 = lgetv %i.2;
-        symbol [ i %tmp.141 141 56 57 ];
-        %tmp.142 = 1;
-        %tmp.143 = add %tmp.141 %tmp.142;
-        lputv %i.2 %tmp.143;
-        symbol [ i %i.2 141 52 53 ];
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_141_27_141_63_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_141_12_141_63_while_test;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_141_12_141_63_while_end:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 142 12 ]
-        %tmp.144 = false;
-        ret %tmp.144;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_139_16_143_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_139_8_143_8_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_139_8_143_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 145 8 ]
-        %tmp.145 = true;
-        ret %tmp.145;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_108_35_146_4_stop:
+        symbol [ flipCount ? 36 8 17 ];
+        putv self :flipCount %tmp.29;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_27_23_37_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc"; @line = 150; @symbol_functiondef = [calcScore,150,13,22]; ]
-    function calcScore() {
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_150_25_214_4_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 151 8 ]
-        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_150_25_214_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_150_25_214_4_stop" ]
-        %bTerr.1 = local;
-        symbol [ bTerr %bTerr.1 151 12 17 ];
-        %tmp.1 = 0;
-        lputv %bTerr.1 %tmp.1;
-        symbol [ bTerr %bTerr.1 151 12 17 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 151 23 ]
-        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_150_25_214_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_150_25_214_4_stop" ]
-        %wTerr.2 = local;
-        symbol [ wTerr %wTerr.2 151 27 32 ];
-        %tmp.2 = 0;
-        lputv %wTerr.2 %tmp.2;
-        symbol [ wTerr %wTerr.2 151 27 32 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 156 8 ]
-        symbol [ _gen %tmp.4 156 15 19 ];
-        %tmp.4 = getv ? :_gen;
-        %tmp.5 = 1;
-        %tmp.6 = add %tmp.4 %tmp.5;
-        symbol [ _gen ? 156 8 12 ];
-        putv self :_gen %tmp.6;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 157 8 ]
-        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_150_25_214_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_150_25_214_4_stop" ]
-        %vGen.3 = local;
-        symbol [ vGen %vGen.3 157 12 16 ];
-        symbol [ _gen %tmp.8 157 19 23 ];
-        %tmp.8 = getv ? :_gen;
-        lputv %vGen.3 %tmp.8;
-        symbol [ vGen %vGen.3 157 12 16 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 159 8 ]
-        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_150_25_214_4_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_150_25_214_4_stop" ]
-        %i.4 = local;
-        symbol [ i %i.4 159 12 13 ];
+    [ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc"; @line = 40; @symbol_functiondef = [isValidAt,40,13,22]; @symbol_param<0> = [x,40,23,24]; @symbol_param<1> = [y,40,26,27]; @symbol_param<2> = [col,40,29,32]; ]
+    function isValidAt(x, y, col) {
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_40_34_47_4_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 41 8 ]
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_41_8_41_51_if_stmt:
+        symbol [ cells %tmp.2 41 12 17 ];
+        %tmp.2 = getv ? :cells;
+        %tmp.3 = lgetv %y;
+        symbol [ y %tmp.3 41 18 19 ];
+        %tmp.4 = 8;
+        %tmp.5 = mul %tmp.3 %tmp.4;
+        %tmp.6 = lgetv %x;
+        symbol [ x %tmp.6 41 26 27 ];
+        %tmp.7 = add %tmp.5 %tmp.6;
+        %tmp.8 = agetv %tmp.2 %tmp.7;
         %tmp.9 = 0;
-        lputv %i.4 %tmp.9;
-        symbol [ i %i.4 159 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 160 8 ]
-        while @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_160_8_209_8_while_test @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_160_8_209_8_while_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_160_8_209_8_while_test:
-        %tmp.10 = lgetv %i.4;
-        symbol [ i %tmp.10 160 15 16 ];
-        %tmp.11 = 81;
-        %tmp.12 = lt %tmp.10 %tmp.11;
-        bf %tmp.12 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_160_8_209_8_while_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_160_8_209_8_while_begin:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_160_23_209_8_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 161 12 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_161_12_161_72_if_stmt:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_161_16_161_43_begin:
-        symbol [ grid %tmp.14 161 16 20 ];
-        %tmp.14 = getv ? :grid;
-        %tmp.15 = lgetv %i.4;
-        symbol [ i %tmp.15 161 21 22 ];
-        %tmp.16 = agetv %tmp.14 %tmp.15;
-        %tmp.17 = 0;
-        %tmp.18 = ne %tmp.16 %tmp.17;
-        bt %tmp.18 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_161_12_161_72_if_true;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_161_32_161_43_false:
-        symbol [ _vis %tmp.20 161 32 36 ];
-        %tmp.20 = getv ? :_vis;
-        %tmp.21 = lgetv %i.4;
-        symbol [ i %tmp.21 161 37 38 ];
-        %tmp.22 = agetv %tmp.20 %tmp.21;
-        %tmp.23 = lgetv %vGen.3;
-        symbol [ vGen %tmp.23 161 43 47 ];
-        %tmp.24 = eq %tmp.22 %tmp.23;
-        push %tmp.24;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_161_32_161_43_end:
-        %tmp.25 = phi [%tmp.18 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_161_16_161_43_begin] [%tmp.24 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_161_32_161_43_false] [%tmp.25 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_161_32_161_43_end];
-        bf %tmp.25 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_161_12_161_72_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_161_12_161_72_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_161_49_161_72_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 161 51 ]
-        %tmp.26 = lgetv %i.4;
-        symbol [ i %tmp.26 161 55 56 ];
+        %tmp.10 = ne %tmp.8 %tmp.9;
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_41_8_41_51_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_41_8_41_51_if_true:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_41_35_41_51_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 41 37 ]
+        %tmp.11 = false;
+        ret %tmp.11;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_41_35_41_51_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_41_8_41_51_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_41_8_41_51_if_end:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 42 8 ]
+        [ "_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_40_34_47_4_start" "_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_40_34_47_4_stop" ]
+        %opp.1 = local;
+        symbol [ opp %opp.1 42 12 15 ];
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_42_18_42_35_begin:
+        %tmp.12 = lgetv %col;
+        symbol [ col %tmp.12 42 19 22 ];
+        %tmp.13 = 1;
+        %tmp.14 = eq %tmp.12 %tmp.13;
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_42_18_42_35_else_false;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_42_18_42_35_true:
+        %tmp.15 = 2;
+        push %tmp.15;
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_42_18_42_35_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_42_18_42_35_else_false:
+        %tmp.16 = 1;
+        push %tmp.16;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_42_18_42_35_end:
+        %tmp.17 = phi [%tmp.14 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_42_18_42_35_begin] [%tmp.15 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_42_18_42_35_true] [%tmp.16 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_42_18_42_35_else_false] [%tmp.17 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_42_18_42_35_end];
+        lputv %opp.1 %tmp.17;
+        symbol [ opp %opp.1 42 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 43 8 ]
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_43_16_46_73_begin:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_43_16_46_42_begin:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_43_16_45_73_begin:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_43_16_45_42_begin:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_43_16_44_73_begin:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_43_16_44_42_begin:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_43_16_43_73_begin:
+        %tmp.18 = self;
+        symbol [ _qd %tmp.19 43 16 19 ];
+        %tmp.19 = getv function %tmp.18 :_qd;
+        %tmp.20 = lgetv %x;
+        symbol [ x %tmp.20 43 20 21 ];
+        %tmp.21 = lgetv %y;
+        symbol [ y %tmp.21 43 23 24 ];
+        %tmp.22 = lgetv %col;
+        symbol [ col %tmp.22 43 26 29 ];
+        %tmp.23 = lgetv %opp.1;
+        symbol [ opp %tmp.23 43 31 34 ];
+        %tmp.24 = -1;
+        %tmp.25 = -1;
+        %tmp.26 = invoke %tmp.18 %tmp.19(%tmp.20, %tmp.21, %tmp.22, %tmp.23, %tmp.24, %tmp.25);
+        %tmp.27 = dup %tmp.26;
+        bt %tmp.27 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_43_47_43_73_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_43_47_43_73_false:
+        %tmp.28 = self;
+        symbol [ _qd %tmp.29 43 47 50 ];
+        %tmp.29 = getv function %tmp.28 :_qd;
+        %tmp.30 = lgetv %x;
+        symbol [ x %tmp.30 43 51 52 ];
+        %tmp.31 = lgetv %y;
+        symbol [ y %tmp.31 43 54 55 ];
+        %tmp.32 = lgetv %col;
+        symbol [ col %tmp.32 43 57 60 ];
+        %tmp.33 = lgetv %opp.1;
+        symbol [ opp %tmp.33 43 62 65 ];
+        %tmp.34 = 0;
+        %tmp.35 = -1;
+        %tmp.36 = invoke %tmp.28 %tmp.29(%tmp.30, %tmp.31, %tmp.32, %tmp.33, %tmp.34, %tmp.35);
+        %tmp.37 = or %tmp.26 %tmp.36;
+        push %tmp.37;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_43_47_43_73_end:
+        %tmp.38 = phi [%tmp.27 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_43_16_43_73_begin] [%tmp.37 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_43_47_43_73_false] [%tmp.38 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_43_47_43_73_end];
+        %tmp.39 = dup %tmp.38;
+        bt %tmp.39 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_44_16_44_42_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_44_16_44_42_false:
+        %tmp.40 = self;
+        symbol [ _qd %tmp.41 44 16 19 ];
+        %tmp.41 = getv function %tmp.40 :_qd;
+        %tmp.42 = lgetv %x;
+        symbol [ x %tmp.42 44 20 21 ];
+        %tmp.43 = lgetv %y;
+        symbol [ y %tmp.43 44 23 24 ];
+        %tmp.44 = lgetv %col;
+        symbol [ col %tmp.44 44 26 29 ];
+        %tmp.45 = lgetv %opp.1;
+        symbol [ opp %tmp.45 44 31 34 ];
+        %tmp.46 = 1;
+        %tmp.47 = -1;
+        %tmp.48 = invoke %tmp.40 %tmp.41(%tmp.42, %tmp.43, %tmp.44, %tmp.45, %tmp.46, %tmp.47);
+        %tmp.49 = or %tmp.38 %tmp.48;
+        push %tmp.49;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_44_16_44_42_end:
+        %tmp.50 = phi [%tmp.39 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_43_16_44_42_begin] [%tmp.49 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_44_16_44_42_false] [%tmp.50 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_44_16_44_42_end];
+        %tmp.51 = dup %tmp.50;
+        bt %tmp.51 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_44_47_44_73_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_44_47_44_73_false:
+        %tmp.52 = self;
+        symbol [ _qd %tmp.53 44 47 50 ];
+        %tmp.53 = getv function %tmp.52 :_qd;
+        %tmp.54 = lgetv %x;
+        symbol [ x %tmp.54 44 51 52 ];
+        %tmp.55 = lgetv %y;
+        symbol [ y %tmp.55 44 54 55 ];
+        %tmp.56 = lgetv %col;
+        symbol [ col %tmp.56 44 57 60 ];
+        %tmp.57 = lgetv %opp.1;
+        symbol [ opp %tmp.57 44 62 65 ];
+        %tmp.58 = -1;
+        %tmp.59 = 0;
+        %tmp.60 = invoke %tmp.52 %tmp.53(%tmp.54, %tmp.55, %tmp.56, %tmp.57, %tmp.58, %tmp.59);
+        %tmp.61 = or %tmp.50 %tmp.60;
+        push %tmp.61;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_44_47_44_73_end:
+        %tmp.62 = phi [%tmp.51 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_43_16_44_73_begin] [%tmp.61 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_44_47_44_73_false] [%tmp.62 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_44_47_44_73_end];
+        %tmp.63 = dup %tmp.62;
+        bt %tmp.63 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_45_16_45_42_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_45_16_45_42_false:
+        %tmp.64 = self;
+        symbol [ _qd %tmp.65 45 16 19 ];
+        %tmp.65 = getv function %tmp.64 :_qd;
+        %tmp.66 = lgetv %x;
+        symbol [ x %tmp.66 45 20 21 ];
+        %tmp.67 = lgetv %y;
+        symbol [ y %tmp.67 45 23 24 ];
+        %tmp.68 = lgetv %col;
+        symbol [ col %tmp.68 45 26 29 ];
+        %tmp.69 = lgetv %opp.1;
+        symbol [ opp %tmp.69 45 31 34 ];
+        %tmp.70 = 1;
+        %tmp.71 = 0;
+        %tmp.72 = invoke %tmp.64 %tmp.65(%tmp.66, %tmp.67, %tmp.68, %tmp.69, %tmp.70, %tmp.71);
+        %tmp.73 = or %tmp.62 %tmp.72;
+        push %tmp.73;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_45_16_45_42_end:
+        %tmp.74 = phi [%tmp.63 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_43_16_45_42_begin] [%tmp.73 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_45_16_45_42_false] [%tmp.74 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_45_16_45_42_end];
+        %tmp.75 = dup %tmp.74;
+        bt %tmp.75 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_45_47_45_73_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_45_47_45_73_false:
+        %tmp.76 = self;
+        symbol [ _qd %tmp.77 45 47 50 ];
+        %tmp.77 = getv function %tmp.76 :_qd;
+        %tmp.78 = lgetv %x;
+        symbol [ x %tmp.78 45 51 52 ];
+        %tmp.79 = lgetv %y;
+        symbol [ y %tmp.79 45 54 55 ];
+        %tmp.80 = lgetv %col;
+        symbol [ col %tmp.80 45 57 60 ];
+        %tmp.81 = lgetv %opp.1;
+        symbol [ opp %tmp.81 45 62 65 ];
+        %tmp.82 = -1;
+        %tmp.83 = 1;
+        %tmp.84 = invoke %tmp.76 %tmp.77(%tmp.78, %tmp.79, %tmp.80, %tmp.81, %tmp.82, %tmp.83);
+        %tmp.85 = or %tmp.74 %tmp.84;
+        push %tmp.85;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_45_47_45_73_end:
+        %tmp.86 = phi [%tmp.75 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_43_16_45_73_begin] [%tmp.85 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_45_47_45_73_false] [%tmp.86 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_45_47_45_73_end];
+        %tmp.87 = dup %tmp.86;
+        bt %tmp.87 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_46_16_46_42_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_46_16_46_42_false:
+        %tmp.88 = self;
+        symbol [ _qd %tmp.89 46 16 19 ];
+        %tmp.89 = getv function %tmp.88 :_qd;
+        %tmp.90 = lgetv %x;
+        symbol [ x %tmp.90 46 20 21 ];
+        %tmp.91 = lgetv %y;
+        symbol [ y %tmp.91 46 23 24 ];
+        %tmp.92 = lgetv %col;
+        symbol [ col %tmp.92 46 26 29 ];
+        %tmp.93 = lgetv %opp.1;
+        symbol [ opp %tmp.93 46 31 34 ];
+        %tmp.94 = 0;
+        %tmp.95 = 1;
+        %tmp.96 = invoke %tmp.88 %tmp.89(%tmp.90, %tmp.91, %tmp.92, %tmp.93, %tmp.94, %tmp.95);
+        %tmp.97 = or %tmp.86 %tmp.96;
+        push %tmp.97;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_46_16_46_42_end:
+        %tmp.98 = phi [%tmp.87 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_43_16_46_42_begin] [%tmp.97 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_46_16_46_42_false] [%tmp.98 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_46_16_46_42_end];
+        %tmp.99 = dup %tmp.98;
+        bt %tmp.99 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_46_47_46_73_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_46_47_46_73_false:
+        %tmp.100 = self;
+        symbol [ _qd %tmp.101 46 47 50 ];
+        %tmp.101 = getv function %tmp.100 :_qd;
+        %tmp.102 = lgetv %x;
+        symbol [ x %tmp.102 46 51 52 ];
+        %tmp.103 = lgetv %y;
+        symbol [ y %tmp.103 46 54 55 ];
+        %tmp.104 = lgetv %col;
+        symbol [ col %tmp.104 46 57 60 ];
+        %tmp.105 = lgetv %opp.1;
+        symbol [ opp %tmp.105 46 62 65 ];
+        %tmp.106 = 1;
+        %tmp.107 = 1;
+        %tmp.108 = invoke %tmp.100 %tmp.101(%tmp.102, %tmp.103, %tmp.104, %tmp.105, %tmp.106, %tmp.107);
+        %tmp.109 = or %tmp.98 %tmp.108;
+        push %tmp.109;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_46_47_46_73_end:
+        %tmp.110 = phi [%tmp.99 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_43_16_46_73_begin] [%tmp.109 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_46_47_46_73_false] [%tmp.110 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_46_47_46_73_end];
+        ret %tmp.110;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_40_34_47_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc"; @line = 49; @symbol_functiondef = [hasValidMoves,49,13,26]; @symbol_param<0> = [col,49,27,30]; ]
+    function hasValidMoves(col) {
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_49_32_56_4_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 50 8 ]
+        [ "_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_49_32_56_4_start" "_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_49_32_56_4_stop" ]
+        %i.1 = local;
+        symbol [ i %i.1 50 12 13 ];
+        %tmp.1 = 0;
+        lputv %i.1 %tmp.1;
+        symbol [ i %i.1 50 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 51 8 ]
+        while @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_51_8_54_8_while_test @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_51_8_54_8_while_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_51_8_54_8_while_test:
+        %tmp.2 = lgetv %i.1;
+        symbol [ i %tmp.2 51 15 16 ];
+        %tmp.3 = 64;
+        %tmp.4 = lt %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_51_8_54_8_while_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_51_8_54_8_while_begin:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_51_23_54_8_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 52 12 ]
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_52_12_52_78_if_stmt:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_52_16_52_60_begin:
+        symbol [ cells %tmp.6 52 16 21 ];
+        %tmp.6 = getv ? :cells;
+        %tmp.7 = lgetv %i.1;
+        symbol [ i %tmp.7 52 22 23 ];
+        %tmp.8 = agetv %tmp.6 %tmp.7;
+        %tmp.9 = 0;
+        %tmp.10 = eq %tmp.8 %tmp.9;
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_52_12_52_78_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_52_33_52_60_true:
+        %tmp.11 = self;
+        symbol [ isValidAt %tmp.12 52 33 42 ];
+        %tmp.12 = getv function %tmp.11 :isValidAt;
+        %tmp.13 = lgetv %i.1;
+        symbol [ i %tmp.13 52 43 44 ];
+        %tmp.14 = 8;
+        %tmp.15 = mod %tmp.13 %tmp.14;
+        %tmp.16 = lgetv %i.1;
+        symbol [ i %tmp.16 52 50 51 ];
+        %tmp.17 = 8;
+        %tmp.18 = div %tmp.16 %tmp.17;
+        %tmp.19 = lgetv %col;
+        symbol [ col %tmp.19 52 57 60 ];
+        %tmp.20 = invoke %tmp.11 %tmp.12(%tmp.15, %tmp.18, %tmp.19);
+        push %tmp.20;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_52_33_52_60_end:
+        %tmp.21 = phi [%tmp.10 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_52_16_52_60_begin] [%tmp.20 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_52_33_52_60_true] [%tmp.21 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_52_33_52_60_end];
+        bf %tmp.21 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_52_12_52_78_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_52_12_52_78_if_true:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_52_63_52_78_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 52 65 ]
+        %tmp.22 = true;
+        ret %tmp.22;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_52_63_52_78_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_52_12_52_78_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_52_12_52_78_if_end:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 53 12 ]
+        %tmp.23 = lgetv %i.1;
+        symbol [ i %tmp.23 53 16 17 ];
+        %tmp.24 = 1;
+        %tmp.25 = add %tmp.23 %tmp.24;
+        lputv %i.1 %tmp.25;
+        symbol [ i %i.1 53 12 13 ];
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_51_23_54_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_51_8_54_8_while_test;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_51_8_54_8_while_end:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 55 8 ]
+        %tmp.26 = false;
+        ret %tmp.26;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_49_32_56_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc"; @line = 59; @symbol_functiondef = [_qd,59,20,23]; @symbol_param<0> = [x,59,24,25]; @symbol_param<1> = [y,59,27,28]; @symbol_param<2> = [col,59,30,33]; @symbol_param<3> = [opp,59,35,38]; @symbol_param<4> = [dx,59,40,42]; @symbol_param<5> = [dy,59,44,46]; ]
+    protected
+    function _qd(x, y, col, opp, dx, dy) {
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_59_48_70_4_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 60 8 ]
+        [ "_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_59_48_70_4_start" "_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_59_48_70_4_stop" ]
+        %cx.1 = local;
+        symbol [ cx %cx.1 60 12 14 ];
+        %tmp.1 = lgetv %x;
+        symbol [ x %tmp.1 60 17 18 ];
+        %tmp.2 = lgetv %dx;
+        symbol [ dx %tmp.2 60 21 23 ];
+        %tmp.3 = add %tmp.1 %tmp.2;
+        lputv %cx.1 %tmp.3;
+        symbol [ cx %cx.1 60 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 60 25 ]
+        [ "_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_59_48_70_4_start" "_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_59_48_70_4_stop" ]
+        %cy.2 = local;
+        symbol [ cy %cy.2 60 29 31 ];
+        %tmp.4 = lgetv %y;
+        symbol [ y %tmp.4 60 34 35 ];
+        %tmp.5 = lgetv %dy;
+        symbol [ dy %tmp.5 60 38 40 ];
+        %tmp.6 = add %tmp.4 %tmp.5;
+        lputv %cy.2 %tmp.6;
+        symbol [ cy %cy.2 60 29 31 ];
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 61 8 ]
+        [ "_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_59_48_70_4_start" "_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_59_48_70_4_stop" ]
+        %cnt.3 = local;
+        symbol [ cnt %cnt.3 61 12 15 ];
+        %tmp.7 = 0;
+        lputv %cnt.3 %tmp.7;
+        symbol [ cnt %cnt.3 61 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 62 8 ]
+        while @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_62_8_68_8_while_test @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_62_8_68_8_while_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_62_8_68_8_while_test:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_62_15_62_54_begin:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_62_15_62_43_begin:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_62_15_62_32_begin:
+        %tmp.8 = lgetv %cx.1;
+        symbol [ cx %tmp.8 62 15 17 ];
+        %tmp.9 = 0;
+        %tmp.10 = gte %tmp.8 %tmp.9;
+        %tmp.11 = dup %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_62_26_62_32_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_62_26_62_32_true:
+        %tmp.12 = lgetv %cx.1;
+        symbol [ cx %tmp.12 62 26 28 ];
+        %tmp.13 = 7;
+        %tmp.14 = lte %tmp.12 %tmp.13;
+        %tmp.15 = and %tmp.10 %tmp.14;
+        push %tmp.15;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_62_26_62_32_end:
+        %tmp.16 = phi [%tmp.11 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_62_15_62_32_begin] [%tmp.15 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_62_26_62_32_true] [%tmp.16 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_62_26_62_32_end];
+        %tmp.17 = dup %tmp.16;
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_62_37_62_43_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_62_37_62_43_true:
+        %tmp.18 = lgetv %cy.2;
+        symbol [ cy %tmp.18 62 37 39 ];
+        %tmp.19 = 0;
+        %tmp.20 = gte %tmp.18 %tmp.19;
+        %tmp.21 = and %tmp.16 %tmp.20;
+        push %tmp.21;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_62_37_62_43_end:
+        %tmp.22 = phi [%tmp.17 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_62_15_62_43_begin] [%tmp.21 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_62_37_62_43_true] [%tmp.22 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_62_37_62_43_end];
+        %tmp.23 = dup %tmp.22;
+        bf %tmp.23 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_62_48_62_54_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_62_48_62_54_true:
+        %tmp.24 = lgetv %cy.2;
+        symbol [ cy %tmp.24 62 48 50 ];
+        %tmp.25 = 7;
+        %tmp.26 = lte %tmp.24 %tmp.25;
+        %tmp.27 = and %tmp.22 %tmp.26;
+        push %tmp.27;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_62_48_62_54_end:
+        %tmp.28 = phi [%tmp.23 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_62_15_62_54_begin] [%tmp.27 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_62_48_62_54_true] [%tmp.28 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_62_48_62_54_end];
+        bf %tmp.28 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_62_8_68_8_while_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_62_8_68_8_while_begin:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_62_57_68_8_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 63 12 ]
+        [ "_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_62_57_68_8_start" "_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_62_57_68_8_stop" ]
+        %v.4 = local;
+        symbol [ v %v.4 63 16 17 ];
+        symbol [ cells %tmp.30 63 20 25 ];
+        %tmp.30 = getv ? :cells;
+        %tmp.31 = lgetv %cy.2;
+        symbol [ cy %tmp.31 63 26 28 ];
+        %tmp.32 = 8;
+        %tmp.33 = mul %tmp.31 %tmp.32;
+        %tmp.34 = lgetv %cx.1;
+        symbol [ cx %tmp.34 63 35 37 ];
+        %tmp.35 = add %tmp.33 %tmp.34;
+        %tmp.36 = agetv %tmp.30 %tmp.35;
+        lputv %v.4 %tmp.36;
+        symbol [ v %v.4 63 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 64 12 ]
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_64_12_66_47_if_stmt:
+        %tmp.37 = lgetv %v.4;
+        symbol [ v %tmp.37 64 21 22 ];
+        %tmp.38 = lgetv %opp;
+        symbol [ opp %tmp.38 64 26 29 ];
+        %tmp.39 = eq %tmp.37 %tmp.38;
+        bf %tmp.39 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_64_12_66_47_if_false;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_64_12_66_47_if_true:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_64_31_64_48_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 64 33 ]
+        %tmp.40 = lgetv %cnt.3;
+        symbol [ cnt %tmp.40 64 39 42 ];
+        %tmp.41 = 1;
+        %tmp.42 = add %tmp.40 %tmp.41;
+        lputv %cnt.3 %tmp.42;
+        symbol [ cnt %cnt.3 64 33 36 ];
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_64_31_64_48_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_64_12_66_47_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_64_12_66_47_if_false:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 65 17 ]
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_65_17_66_47_if_stmt:
+        %tmp.43 = lgetv %v.4;
+        symbol [ v %tmp.43 65 21 22 ];
+        %tmp.44 = lgetv %col;
+        symbol [ col %tmp.44 65 26 29 ];
+        %tmp.45 = eq %tmp.43 %tmp.44;
+        bf %tmp.45 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_65_17_66_47_if_else_false;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_65_17_66_47_if_true:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_65_31_65_77_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 65 33 ]
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_65_33_65_61_if_stmt:
+        %tmp.46 = lgetv %cnt.3;
+        symbol [ cnt %tmp.46 65 37 40 ];
+        %tmp.47 = 0;
+        %tmp.48 = gt %tmp.46 %tmp.47;
+        bf %tmp.48 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_65_33_65_61_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_65_33_65_61_if_true:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_65_46_65_61_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 65 48 ]
+        %tmp.49 = true;
+        ret %tmp.49;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_65_46_65_61_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_65_33_65_61_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_65_33_65_61_if_end:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 65 63 ]
+        %tmp.50 = false;
+        ret %tmp.50;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_65_31_65_77_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_65_17_66_47_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_65_17_66_47_if_else_false:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_66_31_66_47_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 66 33 ]
+        %tmp.51 = false;
+        ret %tmp.51;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_66_31_66_47_stop:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_65_17_66_47_if_end:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_64_12_66_47_if_end:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 67 12 ]
+        %tmp.52 = lgetv %cx.1;
+        symbol [ cx %tmp.52 67 17 19 ];
+        %tmp.53 = lgetv %dx;
+        symbol [ dx %tmp.53 67 22 24 ];
+        %tmp.54 = add %tmp.52 %tmp.53;
+        lputv %cx.1 %tmp.54;
+        symbol [ cx %cx.1 67 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 67 26 ]
+        %tmp.55 = lgetv %cy.2;
+        symbol [ cy %tmp.55 67 31 33 ];
+        %tmp.56 = lgetv %dy;
+        symbol [ dy %tmp.56 67 36 38 ];
+        %tmp.57 = add %tmp.55 %tmp.56;
+        lputv %cy.2 %tmp.57;
+        symbol [ cy %cy.2 67 26 28 ];
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_62_57_68_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_62_8_68_8_while_test;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_62_8_68_8_while_end:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 69 8 ]
+        %tmp.58 = false;
+        ret %tmp.58;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_59_48_70_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc"; @line = 75; @symbol_functiondef = [collectFlips,75,13,25]; @symbol_param<0> = [x,75,26,27]; @symbol_param<1> = [y,75,29,30]; @symbol_param<2> = [col,75,32,35]; ]
+    function collectFlips(x, y, col) {
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_75_37_83_4_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 76 8 ]
+        %tmp.1 = 0;
+        symbol [ flipCount ? 76 8 17 ];
+        putv self :flipCount %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 77 8 ]
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_77_8_77_47_if_stmt:
+        symbol [ cells %tmp.3 77 12 17 ];
+        %tmp.3 = getv ? :cells;
+        %tmp.4 = lgetv %y;
+        symbol [ y %tmp.4 77 18 19 ];
+        %tmp.5 = 8;
+        %tmp.6 = mul %tmp.4 %tmp.5;
+        %tmp.7 = lgetv %x;
+        symbol [ x %tmp.7 77 26 27 ];
+        %tmp.8 = add %tmp.6 %tmp.7;
+        %tmp.9 = agetv %tmp.3 %tmp.8;
+        %tmp.10 = 0;
+        %tmp.11 = ne %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_77_8_77_47_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_77_8_77_47_if_true:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_77_35_77_47_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 77 37 ]
+        %tmp.12 = 0;
+        ret %tmp.12;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_77_35_77_47_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_77_8_77_47_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_77_8_77_47_if_end:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 78 8 ]
+        [ "_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_75_37_83_4_start" "_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_75_37_83_4_stop" ]
+        %opp.1 = local;
+        symbol [ opp %opp.1 78 12 15 ];
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_78_18_78_35_begin:
+        %tmp.13 = lgetv %col;
+        symbol [ col %tmp.13 78 19 22 ];
+        %tmp.14 = 1;
+        %tmp.15 = eq %tmp.13 %tmp.14;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_78_18_78_35_else_false;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_78_18_78_35_true:
+        %tmp.16 = 2;
+        push %tmp.16;
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_78_18_78_35_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_78_18_78_35_else_false:
+        %tmp.17 = 1;
+        push %tmp.17;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_78_18_78_35_end:
+        %tmp.18 = phi [%tmp.15 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_78_18_78_35_begin] [%tmp.16 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_78_18_78_35_true] [%tmp.17 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_78_18_78_35_else_false] [%tmp.18 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_78_18_78_35_end];
+        lputv %opp.1 %tmp.18;
+        symbol [ opp %opp.1 78 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 79 8 ]
+        %tmp.19 = self;
+        symbol [ _cd %tmp.20 79 8 11 ];
+        %tmp.20 = getv function %tmp.19 :_cd;
+        %tmp.21 = lgetv %x;
+        symbol [ x %tmp.21 79 12 13 ];
+        %tmp.22 = lgetv %y;
+        symbol [ y %tmp.22 79 15 16 ];
+        %tmp.23 = lgetv %col;
+        symbol [ col %tmp.23 79 18 21 ];
+        %tmp.24 = lgetv %opp.1;
+        symbol [ opp %tmp.24 79 23 26 ];
+        %tmp.25 = -1;
+        %tmp.26 = -1;
+        invoke %tmp.19 %tmp.20(%tmp.21, %tmp.22, %tmp.23, %tmp.24, %tmp.25, %tmp.26);
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 79 37 ]
+        %tmp.27 = self;
+        symbol [ _cd %tmp.28 79 37 40 ];
+        %tmp.28 = getv function %tmp.27 :_cd;
+        %tmp.29 = lgetv %x;
+        symbol [ x %tmp.29 79 41 42 ];
+        %tmp.30 = lgetv %y;
+        symbol [ y %tmp.30 79 44 45 ];
+        %tmp.31 = lgetv %col;
+        symbol [ col %tmp.31 79 47 50 ];
+        %tmp.32 = lgetv %opp.1;
+        symbol [ opp %tmp.32 79 52 55 ];
+        %tmp.33 = 0;
+        %tmp.34 = -1;
+        invoke %tmp.27 %tmp.28(%tmp.29, %tmp.30, %tmp.31, %tmp.32, %tmp.33, %tmp.34);
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 79 66 ]
+        %tmp.35 = self;
+        symbol [ _cd %tmp.36 79 66 69 ];
+        %tmp.36 = getv function %tmp.35 :_cd;
+        %tmp.37 = lgetv %x;
+        symbol [ x %tmp.37 79 70 71 ];
+        %tmp.38 = lgetv %y;
+        symbol [ y %tmp.38 79 73 74 ];
+        %tmp.39 = lgetv %col;
+        symbol [ col %tmp.39 79 76 79 ];
+        %tmp.40 = lgetv %opp.1;
+        symbol [ opp %tmp.40 79 81 84 ];
+        %tmp.41 = 1;
+        %tmp.42 = -1;
+        invoke %tmp.35 %tmp.36(%tmp.37, %tmp.38, %tmp.39, %tmp.40, %tmp.41, %tmp.42);
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 80 8 ]
+        %tmp.43 = self;
+        symbol [ _cd %tmp.44 80 8 11 ];
+        %tmp.44 = getv function %tmp.43 :_cd;
+        %tmp.45 = lgetv %x;
+        symbol [ x %tmp.45 80 12 13 ];
+        %tmp.46 = lgetv %y;
+        symbol [ y %tmp.46 80 15 16 ];
+        %tmp.47 = lgetv %col;
+        symbol [ col %tmp.47 80 18 21 ];
+        %tmp.48 = lgetv %opp.1;
+        symbol [ opp %tmp.48 80 23 26 ];
+        %tmp.49 = -1;
+        %tmp.50 = 0;
+        invoke %tmp.43 %tmp.44(%tmp.45, %tmp.46, %tmp.47, %tmp.48, %tmp.49, %tmp.50);
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 80 68 ]
+        %tmp.51 = self;
+        symbol [ _cd %tmp.52 80 68 71 ];
+        %tmp.52 = getv function %tmp.51 :_cd;
+        %tmp.53 = lgetv %x;
+        symbol [ x %tmp.53 80 72 73 ];
+        %tmp.54 = lgetv %y;
+        symbol [ y %tmp.54 80 75 76 ];
+        %tmp.55 = lgetv %col;
+        symbol [ col %tmp.55 80 78 81 ];
+        %tmp.56 = lgetv %opp.1;
+        symbol [ opp %tmp.56 80 83 86 ];
+        %tmp.57 = 1;
+        %tmp.58 = 0;
+        invoke %tmp.51 %tmp.52(%tmp.53, %tmp.54, %tmp.55, %tmp.56, %tmp.57, %tmp.58);
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 81 8 ]
+        %tmp.59 = self;
+        symbol [ _cd %tmp.60 81 8 11 ];
+        %tmp.60 = getv function %tmp.59 :_cd;
+        %tmp.61 = lgetv %x;
+        symbol [ x %tmp.61 81 12 13 ];
+        %tmp.62 = lgetv %y;
+        symbol [ y %tmp.62 81 15 16 ];
+        %tmp.63 = lgetv %col;
+        symbol [ col %tmp.63 81 18 21 ];
+        %tmp.64 = lgetv %opp.1;
+        symbol [ opp %tmp.64 81 23 26 ];
+        %tmp.65 = -1;
+        %tmp.66 = 1;
+        invoke %tmp.59 %tmp.60(%tmp.61, %tmp.62, %tmp.63, %tmp.64, %tmp.65, %tmp.66);
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 81 37 ]
+        %tmp.67 = self;
+        symbol [ _cd %tmp.68 81 37 40 ];
+        %tmp.68 = getv function %tmp.67 :_cd;
+        %tmp.69 = lgetv %x;
+        symbol [ x %tmp.69 81 41 42 ];
+        %tmp.70 = lgetv %y;
+        symbol [ y %tmp.70 81 44 45 ];
+        %tmp.71 = lgetv %col;
+        symbol [ col %tmp.71 81 47 50 ];
+        %tmp.72 = lgetv %opp.1;
+        symbol [ opp %tmp.72 81 52 55 ];
+        %tmp.73 = 0;
+        %tmp.74 = 1;
+        invoke %tmp.67 %tmp.68(%tmp.69, %tmp.70, %tmp.71, %tmp.72, %tmp.73, %tmp.74);
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 81 66 ]
+        %tmp.75 = self;
+        symbol [ _cd %tmp.76 81 66 69 ];
+        %tmp.76 = getv function %tmp.75 :_cd;
+        %tmp.77 = lgetv %x;
+        symbol [ x %tmp.77 81 70 71 ];
+        %tmp.78 = lgetv %y;
+        symbol [ y %tmp.78 81 73 74 ];
+        %tmp.79 = lgetv %col;
+        symbol [ col %tmp.79 81 76 79 ];
+        %tmp.80 = lgetv %opp.1;
+        symbol [ opp %tmp.80 81 81 84 ];
+        %tmp.81 = 1;
+        %tmp.82 = 1;
+        invoke %tmp.75 %tmp.76(%tmp.77, %tmp.78, %tmp.79, %tmp.80, %tmp.81, %tmp.82);
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 82 8 ]
+        symbol [ flipCount %tmp.84 82 15 24 ];
+        %tmp.84 = getv ? :flipCount;
+        ret %tmp.84;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_75_37_83_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc"; @line = 86; @symbol_functiondef = [_cd,86,20,23]; @symbol_param<0> = [x,86,24,25]; @symbol_param<1> = [y,86,27,28]; @symbol_param<2> = [col,86,30,33]; @symbol_param<3> = [opp,86,35,38]; @symbol_param<4> = [dx,86,40,42]; @symbol_param<5> = [dy,86,44,46]; ]
+    protected
+    function _cd(x, y, col, opp, dx, dy) {
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_86_48_103_4_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 87 8 ]
+        [ "_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_86_48_103_4_start" "_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_86_48_103_4_stop" ]
+        %cx.1 = local;
+        symbol [ cx %cx.1 87 12 14 ];
+        %tmp.1 = lgetv %x;
+        symbol [ x %tmp.1 87 17 18 ];
+        %tmp.2 = lgetv %dx;
+        symbol [ dx %tmp.2 87 21 23 ];
+        %tmp.3 = add %tmp.1 %tmp.2;
+        lputv %cx.1 %tmp.3;
+        symbol [ cx %cx.1 87 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 87 25 ]
+        [ "_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_86_48_103_4_start" "_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_86_48_103_4_stop" ]
+        %cy.2 = local;
+        symbol [ cy %cy.2 87 29 31 ];
+        %tmp.4 = lgetv %y;
+        symbol [ y %tmp.4 87 34 35 ];
+        %tmp.5 = lgetv %dy;
+        symbol [ dy %tmp.5 87 38 40 ];
+        %tmp.6 = add %tmp.4 %tmp.5;
+        lputv %cy.2 %tmp.6;
+        symbol [ cy %cy.2 87 29 31 ];
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 88 8 ]
+        [ "_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_86_48_103_4_start" "_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_86_48_103_4_stop" ]
+        %ts.3 = local;
+        symbol [ ts %ts.3 88 12 14 ];
+        symbol [ flipCount %tmp.8 88 17 26 ];
+        %tmp.8 = getv ? :flipCount;
+        lputv %ts.3 %tmp.8;
+        symbol [ ts %ts.3 88 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 89 8 ]
+        while @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_89_8_101_8_while_test @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_89_8_101_8_while_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_89_8_101_8_while_test:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_89_15_89_54_begin:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_89_15_89_43_begin:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_89_15_89_32_begin:
+        %tmp.9 = lgetv %cx.1;
+        symbol [ cx %tmp.9 89 15 17 ];
+        %tmp.10 = 0;
+        %tmp.11 = gte %tmp.9 %tmp.10;
+        %tmp.12 = dup %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_89_26_89_32_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_89_26_89_32_true:
+        %tmp.13 = lgetv %cx.1;
+        symbol [ cx %tmp.13 89 26 28 ];
+        %tmp.14 = 7;
+        %tmp.15 = lte %tmp.13 %tmp.14;
+        %tmp.16 = and %tmp.11 %tmp.15;
+        push %tmp.16;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_89_26_89_32_end:
+        %tmp.17 = phi [%tmp.12 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_89_15_89_32_begin] [%tmp.16 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_89_26_89_32_true] [%tmp.17 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_89_26_89_32_end];
+        %tmp.18 = dup %tmp.17;
+        bf %tmp.18 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_89_37_89_43_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_89_37_89_43_true:
+        %tmp.19 = lgetv %cy.2;
+        symbol [ cy %tmp.19 89 37 39 ];
+        %tmp.20 = 0;
+        %tmp.21 = gte %tmp.19 %tmp.20;
+        %tmp.22 = and %tmp.17 %tmp.21;
+        push %tmp.22;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_89_37_89_43_end:
+        %tmp.23 = phi [%tmp.18 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_89_15_89_43_begin] [%tmp.22 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_89_37_89_43_true] [%tmp.23 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_89_37_89_43_end];
+        %tmp.24 = dup %tmp.23;
+        bf %tmp.24 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_89_48_89_54_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_89_48_89_54_true:
+        %tmp.25 = lgetv %cy.2;
+        symbol [ cy %tmp.25 89 48 50 ];
+        %tmp.26 = 7;
+        %tmp.27 = lte %tmp.25 %tmp.26;
+        %tmp.28 = and %tmp.23 %tmp.27;
+        push %tmp.28;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_89_48_89_54_end:
+        %tmp.29 = phi [%tmp.24 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_89_15_89_54_begin] [%tmp.28 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_89_48_89_54_true] [%tmp.29 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_89_48_89_54_end];
+        bf %tmp.29 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_89_8_101_8_while_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_89_8_101_8_while_begin:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_89_57_101_8_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 90 12 ]
+        [ "_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_89_57_101_8_start" "_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_89_57_101_8_stop" ]
+        %v.4 = local;
+        symbol [ v %v.4 90 16 17 ];
+        symbol [ cells %tmp.31 90 20 25 ];
+        %tmp.31 = getv ? :cells;
+        %tmp.32 = lgetv %cy.2;
+        symbol [ cy %tmp.32 90 26 28 ];
+        %tmp.33 = 8;
+        %tmp.34 = mul %tmp.32 %tmp.33;
+        %tmp.35 = lgetv %cx.1;
+        symbol [ cx %tmp.35 90 35 37 ];
+        %tmp.36 = add %tmp.34 %tmp.35;
+        %tmp.37 = agetv %tmp.31 %tmp.36;
+        lputv %v.4 %tmp.37;
+        symbol [ v %v.4 90 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 91 12 ]
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_91_12_99_12_if_stmt:
+        %tmp.38 = lgetv %v.4;
+        symbol [ v %tmp.38 91 16 17 ];
+        %tmp.39 = lgetv %opp;
+        symbol [ opp %tmp.39 91 21 24 ];
+        %tmp.40 = eq %tmp.38 %tmp.39;
+        bf %tmp.40 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_91_12_99_12_if_false;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_91_12_99_12_if_true:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_91_26_94_12_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 92 16 ]
+        symbol [ flipBuf %tmp.41 92 16 23 ];
+        %tmp.41 = getv self :flipBuf;
+        %tmp.42 = lgetv %cy.2;
+        symbol [ cy %tmp.42 92 37 39 ];
+        %tmp.43 = 8;
+        %tmp.44 = mul %tmp.42 %tmp.43;
+        %tmp.45 = lgetv %cx.1;
+        symbol [ cx %tmp.45 92 46 48 ];
+        %tmp.46 = add %tmp.44 %tmp.45;
+        symbol [ flipCount %tmp.48 92 24 33 ];
+        %tmp.48 = getv ? :flipCount;
+        aputv %tmp.41 %tmp.48 %tmp.46;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 93 16 ]
+        symbol [ flipCount %tmp.50 93 28 37 ];
+        %tmp.50 = getv ? :flipCount;
+        %tmp.51 = 1;
+        %tmp.52 = add %tmp.50 %tmp.51;
+        symbol [ flipCount ? 93 16 25 ];
+        putv self :flipCount %tmp.52;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_91_26_94_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_91_12_99_12_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_91_12_99_12_if_false:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 94 19 ]
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_94_19_99_12_if_stmt:
+        %tmp.53 = lgetv %v.4;
+        symbol [ v %tmp.53 94 23 24 ];
+        %tmp.54 = lgetv %col;
+        symbol [ col %tmp.54 94 28 31 ];
+        %tmp.55 = eq %tmp.53 %tmp.54;
+        bf %tmp.55 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_94_19_99_12_if_else_false;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_94_19_99_12_if_true:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_94_33_97_12_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 95 16 ]
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_95_16_95_46_if_stmt:
+        symbol [ flipCount %tmp.57 95 20 29 ];
+        %tmp.57 = getv ? :flipCount;
+        %tmp.58 = lgetv %ts.3;
+        symbol [ ts %tmp.58 95 32 34 ];
+        %tmp.59 = gt %tmp.57 %tmp.58;
+        bf %tmp.59 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_95_16_95_46_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_95_16_95_46_if_true:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_95_36_95_46_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 95 38 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_95_36_95_46_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_95_16_95_46_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_95_16_95_46_if_end:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 96 16 ]
+        %tmp.60 = lgetv %ts.3;
+        symbol [ ts %tmp.60 96 28 30 ];
+        symbol [ flipCount ? 96 16 25 ];
+        putv self :flipCount %tmp.60;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 96 32 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_94_33_97_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_94_19_99_12_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_94_19_99_12_if_else_false:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_97_19_99_12_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 98 16 ]
+        %tmp.61 = lgetv %ts.3;
+        symbol [ ts %tmp.61 98 28 30 ];
+        symbol [ flipCount ? 98 16 25 ];
+        putv self :flipCount %tmp.61;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 98 32 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_97_19_99_12_stop:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_94_19_99_12_if_end:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_91_12_99_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 100 12 ]
+        %tmp.62 = lgetv %cx.1;
+        symbol [ cx %tmp.62 100 17 19 ];
+        %tmp.63 = lgetv %dx;
+        symbol [ dx %tmp.63 100 22 24 ];
+        %tmp.64 = add %tmp.62 %tmp.63;
+        lputv %cx.1 %tmp.64;
+        symbol [ cx %cx.1 100 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 100 26 ]
+        %tmp.65 = lgetv %cy.2;
+        symbol [ cy %tmp.65 100 31 33 ];
+        %tmp.66 = lgetv %dy;
+        symbol [ dy %tmp.66 100 36 38 ];
+        %tmp.67 = add %tmp.65 %tmp.66;
+        lputv %cy.2 %tmp.67;
+        symbol [ cy %cy.2 100 26 28 ];
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_89_57_101_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_89_8_101_8_while_test;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_89_8_101_8_while_end:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 102 8 ]
+        %tmp.68 = lgetv %ts.3;
+        symbol [ ts %tmp.68 102 20 22 ];
+        symbol [ flipCount ? 102 8 17 ];
+        putv self :flipCount %tmp.68;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_86_48_103_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc"; @line = 107; @symbol_functiondef = [placeDisc,107,13,22]; @symbol_param<0> = [x,107,23,24]; @symbol_param<1> = [y,107,26,27]; @symbol_param<2> = [col,107,29,32]; ]
+    function placeDisc(x, y, col) {
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_107_34_113_4_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 108 8 ]
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_108_8_108_58_if_stmt:
+        %tmp.1 = self;
+        symbol [ collectFlips %tmp.2 108 12 24 ];
+        %tmp.2 = getv function %tmp.1 :collectFlips;
+        %tmp.3 = lgetv %x;
+        symbol [ x %tmp.3 108 25 26 ];
+        %tmp.4 = lgetv %y;
+        symbol [ y %tmp.4 108 28 29 ];
+        %tmp.5 = lgetv %col;
+        symbol [ col %tmp.5 108 31 34 ];
+        %tmp.6 = invoke %tmp.1 %tmp.2(%tmp.3, %tmp.4, %tmp.5);
+        %tmp.7 = 0;
+        %tmp.8 = eq %tmp.6 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_108_8_108_58_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_108_8_108_58_if_true:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_108_42_108_58_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 108 44 ]
+        %tmp.9 = false;
+        ret %tmp.9;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_108_42_108_58_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_108_8_108_58_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_108_8_108_58_if_end:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 109 8 ]
+        symbol [ cells %tmp.10 109 8 13 ];
+        %tmp.10 = getv self :cells;
+        %tmp.11 = lgetv %col;
+        symbol [ col %tmp.11 109 27 30 ];
+        %tmp.12 = lgetv %y;
+        symbol [ y %tmp.12 109 14 15 ];
+        %tmp.13 = 8;
+        %tmp.14 = mul %tmp.12 %tmp.13;
+        %tmp.15 = lgetv %x;
+        symbol [ x %tmp.15 109 22 23 ];
+        %tmp.16 = add %tmp.14 %tmp.15;
+        aputv %tmp.10 %tmp.16 %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 110 8 ]
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_110_8_111_62_if_stmt:
+        %tmp.17 = lgetv %col;
+        symbol [ col %tmp.17 110 12 15 ];
+        symbol [ DISC_BLACK %tmp.19 110 19 29 ];
+        %tmp.19 = getv ? :DISC_BLACK;
+        %tmp.20 = eq %tmp.17 %tmp.19;
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_110_8_111_62_if_else_false;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_110_8_111_62_if_true:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_110_31_110_62_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 110 33 ]
+        symbol [ blackCount %tmp.22 110 46 56 ];
+        %tmp.22 = getv ? :blackCount;
+        %tmp.23 = 1;
+        %tmp.24 = add %tmp.22 %tmp.23;
+        symbol [ blackCount ? 110 33 43 ];
+        putv self :blackCount %tmp.24;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_110_31_110_62_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_110_8_111_62_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_110_8_111_62_if_else_false:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_111_31_111_62_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 111 33 ]
+        symbol [ whiteCount %tmp.26 111 46 56 ];
+        %tmp.26 = getv ? :whiteCount;
         %tmp.27 = 1;
         %tmp.28 = add %tmp.26 %tmp.27;
-        lputv %i.4 %tmp.28;
-        symbol [ i %i.4 161 51 52 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 161 62 ]
-        goto break @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_160_8_209_8_while_test;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_161_49_161_72_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_161_12_161_72_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_161_12_161_72_if_end:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 163 12 ]
-        symbol [ _gen %tmp.30 163 19 23 ];
-        %tmp.30 = getv ? :_gen;
-        %tmp.31 = 1;
-        %tmp.32 = add %tmp.30 %tmp.31;
-        symbol [ _gen ? 163 12 16 ];
-        putv self :_gen %tmp.32;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 164 12 ]
-        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_160_23_209_8_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_160_23_209_8_stop" ]
-        %rGen.5 = local;
-        symbol [ rGen %rGen.5 164 16 20 ];
-        symbol [ _gen %tmp.34 164 23 27 ];
-        %tmp.34 = getv ? :_gen;
-        lputv %rGen.5 %tmp.34;
-        symbol [ rGen %rGen.5 164 16 20 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 165 12 ]
-        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_160_23_209_8_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_160_23_209_8_stop" ]
-        %sTop.6 = local;
-        symbol [ sTop %sTop.6 165 16 20 ];
-        %tmp.35 = 0;
-        lputv %sTop.6 %tmp.35;
-        symbol [ sTop %sTop.6 165 16 20 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 165 26 ]
-        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_160_23_209_8_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_160_23_209_8_stop" ]
-        %regSz.7 = local;
-        symbol [ regSz %regSz.7 165 30 35 ];
-        %tmp.36 = 0;
-        lputv %regSz.7 %tmp.36;
-        symbol [ regSz %regSz.7 165 30 35 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 166 12 ]
-        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_160_23_209_8_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_160_23_209_8_stop" ]
-        %hasB.8 = local;
-        symbol [ hasB %hasB.8 166 16 20 ];
-        %tmp.37 = 0;
-        lputv %hasB.8 %tmp.37;
-        symbol [ hasB %hasB.8 166 16 20 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 166 26 ]
-        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_160_23_209_8_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_160_23_209_8_stop" ]
-        %hasW.9 = local;
-        symbol [ hasW %hasW.9 166 30 34 ];
-        %tmp.38 = 0;
-        lputv %hasW.9 %tmp.38;
-        symbol [ hasW %hasW.9 166 30 34 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 168 12 ]
-        symbol [ _vis %tmp.39 168 12 16 ];
-        %tmp.39 = getv self :_vis;
-        %tmp.40 = lgetv %rGen.5;
-        symbol [ rGen %tmp.40 168 22 26 ];
-        %tmp.41 = lgetv %i.4;
-        symbol [ i %tmp.41 168 17 18 ];
-        aputv %tmp.39 %tmp.41 %tmp.40;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 168 28 ]
-        symbol [ _stk %tmp.42 168 28 32 ];
-        %tmp.42 = getv self :_stk;
-        %tmp.43 = lgetv %i.4;
-        symbol [ i %tmp.43 168 41 42 ];
-        %tmp.44 = lgetv %sTop.6;
-        symbol [ sTop %tmp.44 168 33 37 ];
-        aputv %tmp.42 %tmp.44 %tmp.43;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 168 44 ]
-        %tmp.45 = lgetv %sTop.6;
-        symbol [ sTop %tmp.45 168 51 55 ];
-        %tmp.46 = 1;
-        %tmp.47 = add %tmp.45 %tmp.46;
-        lputv %sTop.6 %tmp.47;
-        symbol [ sTop %sTop.6 168 44 48 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 170 12 ]
-        while @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_170_12_204_12_while_test @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_170_12_204_12_while_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_170_12_204_12_while_test:
-        %tmp.48 = lgetv %sTop.6;
-        symbol [ sTop %tmp.48 170 19 23 ];
-        %tmp.49 = 0;
-        %tmp.50 = gt %tmp.48 %tmp.49;
-        bf %tmp.50 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_170_12_204_12_while_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_170_12_204_12_while_begin:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_170_29_204_12_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 171 16 ]
-        %tmp.51 = lgetv %sTop.6;
-        symbol [ sTop %tmp.51 171 23 27 ];
-        %tmp.52 = 1;
-        %tmp.53 = sub %tmp.51 %tmp.52;
-        lputv %sTop.6 %tmp.53;
-        symbol [ sTop %sTop.6 171 16 20 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 172 16 ]
-        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_170_29_204_12_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_170_29_204_12_stop" ]
-        %idx.10 = local;
-        symbol [ idx %idx.10 172 20 23 ];
-        symbol [ _stk %tmp.55 172 26 30 ];
-        %tmp.55 = getv ? :_stk;
-        %tmp.56 = lgetv %sTop.6;
-        symbol [ sTop %tmp.56 172 31 35 ];
-        %tmp.57 = agetv %tmp.55 %tmp.56;
-        lputv %idx.10 %tmp.57;
-        symbol [ idx %idx.10 172 20 23 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 173 16 ]
-        symbol [ _vis %tmp.58 173 16 20 ];
-        %tmp.58 = getv self :_vis;
-        %tmp.59 = lgetv %vGen.3;
-        symbol [ vGen %tmp.59 173 28 32 ];
-        %tmp.60 = lgetv %idx.10;
-        symbol [ idx %tmp.60 173 21 24 ];
-        aputv %tmp.58 %tmp.60 %tmp.59;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 174 16 ]
-        %tmp.61 = lgetv %regSz.7;
-        symbol [ regSz %tmp.61 174 24 29 ];
-        %tmp.62 = 1;
-        %tmp.63 = add %tmp.61 %tmp.62;
-        lputv %regSz.7 %tmp.63;
-        symbol [ regSz %regSz.7 174 16 21 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 175 16 ]
-        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_170_29_204_12_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_170_29_204_12_stop" ]
-        %tx.11 = local;
-        symbol [ tx %tx.11 175 20 22 ];
-        %tmp.64 = lgetv %idx.10;
-        symbol [ idx %tmp.64 175 25 28 ];
-        %tmp.65 = 9;
-        %tmp.66 = mod %tmp.64 %tmp.65;
-        lputv %tx.11 %tmp.66;
-        symbol [ tx %tx.11 175 20 22 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 175 34 ]
-        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_170_29_204_12_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_170_29_204_12_stop" ]
-        %ty.12 = local;
-        symbol [ ty %ty.12 175 38 40 ];
-        %tmp.67 = lgetv %idx.10;
-        symbol [ idx %tmp.67 175 43 46 ];
-        %tmp.68 = 9;
-        %tmp.69 = div %tmp.67 %tmp.68;
-        lputv %ty.12 %tmp.69;
-        symbol [ ty %ty.12 175 38 40 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 177 16 ]
-        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_170_29_204_12_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_170_29_204_12_stop" ]
-        %tN.13 = local;
-        symbol [ tN %tN.13 177 20 22 ];
-        %tmp.70 = lgetv %idx.10;
-        symbol [ idx %tmp.70 177 25 28 ];
-        %tmp.71 = 9;
-        %tmp.72 = sub %tmp.70 %tmp.71;
-        lputv %tN.13 %tmp.72;
-        symbol [ tN %tN.13 177 20 22 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 177 34 ]
-        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_170_29_204_12_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_170_29_204_12_stop" ]
-        %tS.14 = local;
-        symbol [ tS %tS.14 177 38 40 ];
-        %tmp.73 = lgetv %idx.10;
-        symbol [ idx %tmp.73 177 43 46 ];
-        %tmp.74 = 9;
-        %tmp.75 = add %tmp.73 %tmp.74;
-        lputv %tS.14 %tmp.75;
-        symbol [ tS %tS.14 177 38 40 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 178 16 ]
-        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_170_29_204_12_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_170_29_204_12_stop" ]
-        %tW.15 = local;
-        symbol [ tW %tW.15 178 20 22 ];
-        %tmp.76 = lgetv %idx.10;
-        symbol [ idx %tmp.76 178 25 28 ];
-        %tmp.77 = 1;
-        %tmp.78 = sub %tmp.76 %tmp.77;
-        lputv %tW.15 %tmp.78;
-        symbol [ tW %tW.15 178 20 22 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 178 34 ]
-        [ "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_170_29_204_12_start" "_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_170_29_204_12_stop" ]
-        %tE.16 = local;
-        symbol [ tE %tE.16 178 38 40 ];
-        %tmp.79 = lgetv %idx.10;
-        symbol [ idx %tmp.79 178 43 46 ];
-        %tmp.80 = 1;
-        %tmp.81 = add %tmp.79 %tmp.80;
-        lputv %tE.16 %tmp.81;
-        symbol [ tE %tE.16 178 38 40 ];
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 180 16 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_180_16_185_16_if_stmt:
-        %tmp.82 = lgetv %ty.12;
-        symbol [ ty %tmp.82 180 20 22 ];
-        %tmp.83 = 0;
-        %tmp.84 = gt %tmp.82 %tmp.83;
-        bf %tmp.84 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_180_16_185_16_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_180_16_185_16_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_180_28_185_16_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 181 20 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_181_20_184_57_if_stmt:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_181_29_181_78_begin:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_181_29_181_58_begin:
-        symbol [ grid %tmp.86 181 29 33 ];
-        %tmp.86 = getv ? :grid;
-        %tmp.87 = lgetv %tN.13;
-        symbol [ tN %tmp.87 181 34 36 ];
-        %tmp.88 = agetv %tmp.86 %tmp.87;
-        %tmp.89 = 0;
-        %tmp.90 = eq %tmp.88 %tmp.89;
-        bf %tmp.90 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_181_20_184_57_if_false;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_181_46_181_58_true:
-        symbol [ _vis %tmp.92 181 46 50 ];
-        %tmp.92 = getv ? :_vis;
-        %tmp.93 = lgetv %tN.13;
-        symbol [ tN %tmp.93 181 51 53 ];
-        %tmp.94 = agetv %tmp.92 %tmp.93;
-        %tmp.95 = lgetv %rGen.5;
-        symbol [ rGen %tmp.95 181 58 62 ];
-        %tmp.96 = ne %tmp.94 %tmp.95;
-        push %tmp.96;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_181_46_181_58_end:
-        %tmp.97 = phi [%tmp.90 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_181_29_181_58_begin] [%tmp.96 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_181_46_181_58_true] [%tmp.97 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_181_46_181_58_end];
-        bf %tmp.97 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_181_20_184_57_if_false;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_181_66_181_78_true:
-        symbol [ _vis %tmp.99 181 66 70 ];
-        %tmp.99 = getv ? :_vis;
-        %tmp.100 = lgetv %tN.13;
-        symbol [ tN %tmp.100 181 71 73 ];
-        %tmp.101 = agetv %tmp.99 %tmp.100;
-        %tmp.102 = lgetv %vGen.3;
-        symbol [ vGen %tmp.102 181 78 82 ];
-        %tmp.103 = ne %tmp.101 %tmp.102;
-        push %tmp.103;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_181_66_181_78_end:
-        %tmp.104 = phi [%tmp.97 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_181_29_181_78_begin] [%tmp.103 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_181_66_181_78_true] [%tmp.104 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_181_66_181_78_end];
-        bf %tmp.104 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_181_20_184_57_if_false;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_181_20_184_57_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_181_84_183_20_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 182 24 ]
-        symbol [ _vis %tmp.105 182 24 28 ];
-        %tmp.105 = getv self :_vis;
-        %tmp.106 = lgetv %rGen.5;
-        symbol [ rGen %tmp.106 182 35 39 ];
-        %tmp.107 = lgetv %tN.13;
-        symbol [ tN %tmp.107 182 29 31 ];
-        aputv %tmp.105 %tmp.107 %tmp.106;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 182 41 ]
-        symbol [ _stk %tmp.108 182 41 45 ];
-        %tmp.108 = getv self :_stk;
-        %tmp.109 = lgetv %tN.13;
-        symbol [ tN %tmp.109 182 54 56 ];
-        %tmp.110 = lgetv %sTop.6;
-        symbol [ sTop %tmp.110 182 46 50 ];
-        aputv %tmp.108 %tmp.110 %tmp.109;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 182 58 ]
-        %tmp.111 = lgetv %sTop.6;
-        symbol [ sTop %tmp.111 182 65 69 ];
-        %tmp.112 = 1;
-        %tmp.113 = add %tmp.111 %tmp.112;
-        lputv %sTop.6 %tmp.113;
-        symbol [ sTop %sTop.6 182 58 62 ];
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_181_84_183_20_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_181_20_184_57_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_181_20_184_57_if_false:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 183 27 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_183_27_184_57_if_stmt:
-        symbol [ grid %tmp.115 183 31 35 ];
-        %tmp.115 = getv ? :grid;
-        %tmp.116 = lgetv %tN.13;
-        symbol [ tN %tmp.116 183 36 38 ];
-        %tmp.117 = agetv %tmp.115 %tmp.116;
-        %tmp.118 = 1;
-        %tmp.119 = eq %tmp.117 %tmp.118;
-        bf %tmp.119 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_183_27_184_57_if_false;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_183_27_184_57_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_183_46_183_58_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 183 48 ]
-        %tmp.120 = 1;
-        lputv %hasB.8 %tmp.120;
-        symbol [ hasB %hasB.8 183 48 52 ];
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_183_46_183_58_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_183_27_184_57_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_183_27_184_57_if_false:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 184 25 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_184_25_184_57_if_stmt:
-        symbol [ grid %tmp.122 184 30 34 ];
-        %tmp.122 = getv ? :grid;
-        %tmp.123 = lgetv %tN.13;
-        symbol [ tN %tmp.123 184 35 37 ];
-        %tmp.124 = agetv %tmp.122 %tmp.123;
-        %tmp.125 = 2;
-        %tmp.126 = eq %tmp.124 %tmp.125;
-        bf %tmp.126 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_184_25_184_57_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_184_25_184_57_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_184_45_184_57_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 184 47 ]
-        %tmp.127 = 1;
-        lputv %hasW.9 %tmp.127;
-        symbol [ hasW %hasW.9 184 47 51 ];
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_184_45_184_57_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_184_25_184_57_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_184_25_184_57_if_end:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_183_27_184_57_if_end:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_181_20_184_57_if_end:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_180_28_185_16_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_180_16_185_16_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_180_16_185_16_if_end:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 186 16 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_186_16_191_16_if_stmt:
-        %tmp.128 = lgetv %ty.12;
-        symbol [ ty %tmp.128 186 20 22 ];
-        %tmp.129 = 8;
-        %tmp.130 = lt %tmp.128 %tmp.129;
-        bf %tmp.130 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_186_16_191_16_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_186_16_191_16_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_186_28_191_16_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 187 20 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_187_20_190_57_if_stmt:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_187_29_187_78_begin:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_187_29_187_58_begin:
-        symbol [ grid %tmp.132 187 29 33 ];
-        %tmp.132 = getv ? :grid;
-        %tmp.133 = lgetv %tS.14;
-        symbol [ tS %tmp.133 187 34 36 ];
-        %tmp.134 = agetv %tmp.132 %tmp.133;
-        %tmp.135 = 0;
-        %tmp.136 = eq %tmp.134 %tmp.135;
-        bf %tmp.136 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_187_20_190_57_if_false;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_187_46_187_58_true:
-        symbol [ _vis %tmp.138 187 46 50 ];
-        %tmp.138 = getv ? :_vis;
-        %tmp.139 = lgetv %tS.14;
-        symbol [ tS %tmp.139 187 51 53 ];
-        %tmp.140 = agetv %tmp.138 %tmp.139;
-        %tmp.141 = lgetv %rGen.5;
-        symbol [ rGen %tmp.141 187 58 62 ];
-        %tmp.142 = ne %tmp.140 %tmp.141;
-        push %tmp.142;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_187_46_187_58_end:
-        %tmp.143 = phi [%tmp.136 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_187_29_187_58_begin] [%tmp.142 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_187_46_187_58_true] [%tmp.143 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_187_46_187_58_end];
-        bf %tmp.143 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_187_20_190_57_if_false;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_187_66_187_78_true:
-        symbol [ _vis %tmp.145 187 66 70 ];
-        %tmp.145 = getv ? :_vis;
-        %tmp.146 = lgetv %tS.14;
-        symbol [ tS %tmp.146 187 71 73 ];
-        %tmp.147 = agetv %tmp.145 %tmp.146;
-        %tmp.148 = lgetv %vGen.3;
-        symbol [ vGen %tmp.148 187 78 82 ];
-        %tmp.149 = ne %tmp.147 %tmp.148;
-        push %tmp.149;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_187_66_187_78_end:
-        %tmp.150 = phi [%tmp.143 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_187_29_187_78_begin] [%tmp.149 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_187_66_187_78_true] [%tmp.150 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_187_66_187_78_end];
-        bf %tmp.150 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_187_20_190_57_if_false;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_187_20_190_57_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_187_84_189_20_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 188 24 ]
-        symbol [ _vis %tmp.151 188 24 28 ];
-        %tmp.151 = getv self :_vis;
-        %tmp.152 = lgetv %rGen.5;
-        symbol [ rGen %tmp.152 188 35 39 ];
-        %tmp.153 = lgetv %tS.14;
-        symbol [ tS %tmp.153 188 29 31 ];
-        aputv %tmp.151 %tmp.153 %tmp.152;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 188 41 ]
-        symbol [ _stk %tmp.154 188 41 45 ];
-        %tmp.154 = getv self :_stk;
-        %tmp.155 = lgetv %tS.14;
-        symbol [ tS %tmp.155 188 54 56 ];
-        %tmp.156 = lgetv %sTop.6;
-        symbol [ sTop %tmp.156 188 46 50 ];
-        aputv %tmp.154 %tmp.156 %tmp.155;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 188 58 ]
-        %tmp.157 = lgetv %sTop.6;
-        symbol [ sTop %tmp.157 188 65 69 ];
-        %tmp.158 = 1;
-        %tmp.159 = add %tmp.157 %tmp.158;
-        lputv %sTop.6 %tmp.159;
-        symbol [ sTop %sTop.6 188 58 62 ];
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_187_84_189_20_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_187_20_190_57_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_187_20_190_57_if_false:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 189 27 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_189_27_190_57_if_stmt:
-        symbol [ grid %tmp.161 189 31 35 ];
-        %tmp.161 = getv ? :grid;
-        %tmp.162 = lgetv %tS.14;
-        symbol [ tS %tmp.162 189 36 38 ];
-        %tmp.163 = agetv %tmp.161 %tmp.162;
-        %tmp.164 = 1;
-        %tmp.165 = eq %tmp.163 %tmp.164;
-        bf %tmp.165 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_189_27_190_57_if_false;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_189_27_190_57_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_189_46_189_58_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 189 48 ]
-        %tmp.166 = 1;
-        lputv %hasB.8 %tmp.166;
-        symbol [ hasB %hasB.8 189 48 52 ];
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_189_46_189_58_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_189_27_190_57_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_189_27_190_57_if_false:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 190 25 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_190_25_190_57_if_stmt:
-        symbol [ grid %tmp.168 190 30 34 ];
-        %tmp.168 = getv ? :grid;
-        %tmp.169 = lgetv %tS.14;
-        symbol [ tS %tmp.169 190 35 37 ];
-        %tmp.170 = agetv %tmp.168 %tmp.169;
-        %tmp.171 = 2;
-        %tmp.172 = eq %tmp.170 %tmp.171;
-        bf %tmp.172 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_190_25_190_57_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_190_25_190_57_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_190_45_190_57_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 190 47 ]
-        %tmp.173 = 1;
-        lputv %hasW.9 %tmp.173;
-        symbol [ hasW %hasW.9 190 47 51 ];
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_190_45_190_57_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_190_25_190_57_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_190_25_190_57_if_end:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_189_27_190_57_if_end:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_187_20_190_57_if_end:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_186_28_191_16_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_186_16_191_16_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_186_16_191_16_if_end:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 192 16 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_192_16_197_16_if_stmt:
-        %tmp.174 = lgetv %tx.11;
-        symbol [ tx %tmp.174 192 20 22 ];
-        %tmp.175 = 0;
-        %tmp.176 = gt %tmp.174 %tmp.175;
-        bf %tmp.176 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_192_16_197_16_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_192_16_197_16_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_192_28_197_16_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 193 20 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_193_20_196_57_if_stmt:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_193_29_193_78_begin:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_193_29_193_58_begin:
-        symbol [ grid %tmp.178 193 29 33 ];
-        %tmp.178 = getv ? :grid;
-        %tmp.179 = lgetv %tW.15;
-        symbol [ tW %tmp.179 193 34 36 ];
-        %tmp.180 = agetv %tmp.178 %tmp.179;
-        %tmp.181 = 0;
-        %tmp.182 = eq %tmp.180 %tmp.181;
-        bf %tmp.182 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_193_20_196_57_if_false;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_193_46_193_58_true:
-        symbol [ _vis %tmp.184 193 46 50 ];
-        %tmp.184 = getv ? :_vis;
-        %tmp.185 = lgetv %tW.15;
-        symbol [ tW %tmp.185 193 51 53 ];
-        %tmp.186 = agetv %tmp.184 %tmp.185;
-        %tmp.187 = lgetv %rGen.5;
-        symbol [ rGen %tmp.187 193 58 62 ];
-        %tmp.188 = ne %tmp.186 %tmp.187;
-        push %tmp.188;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_193_46_193_58_end:
-        %tmp.189 = phi [%tmp.182 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_193_29_193_58_begin] [%tmp.188 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_193_46_193_58_true] [%tmp.189 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_193_46_193_58_end];
-        bf %tmp.189 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_193_20_196_57_if_false;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_193_66_193_78_true:
-        symbol [ _vis %tmp.191 193 66 70 ];
-        %tmp.191 = getv ? :_vis;
-        %tmp.192 = lgetv %tW.15;
-        symbol [ tW %tmp.192 193 71 73 ];
-        %tmp.193 = agetv %tmp.191 %tmp.192;
-        %tmp.194 = lgetv %vGen.3;
-        symbol [ vGen %tmp.194 193 78 82 ];
-        %tmp.195 = ne %tmp.193 %tmp.194;
-        push %tmp.195;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_193_66_193_78_end:
-        %tmp.196 = phi [%tmp.189 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_193_29_193_78_begin] [%tmp.195 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_193_66_193_78_true] [%tmp.196 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_193_66_193_78_end];
-        bf %tmp.196 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_193_20_196_57_if_false;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_193_20_196_57_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_193_84_195_20_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 194 24 ]
-        symbol [ _vis %tmp.197 194 24 28 ];
-        %tmp.197 = getv self :_vis;
-        %tmp.198 = lgetv %rGen.5;
-        symbol [ rGen %tmp.198 194 35 39 ];
-        %tmp.199 = lgetv %tW.15;
-        symbol [ tW %tmp.199 194 29 31 ];
-        aputv %tmp.197 %tmp.199 %tmp.198;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 194 41 ]
-        symbol [ _stk %tmp.200 194 41 45 ];
-        %tmp.200 = getv self :_stk;
-        %tmp.201 = lgetv %tW.15;
-        symbol [ tW %tmp.201 194 54 56 ];
-        %tmp.202 = lgetv %sTop.6;
-        symbol [ sTop %tmp.202 194 46 50 ];
-        aputv %tmp.200 %tmp.202 %tmp.201;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 194 58 ]
-        %tmp.203 = lgetv %sTop.6;
-        symbol [ sTop %tmp.203 194 65 69 ];
-        %tmp.204 = 1;
-        %tmp.205 = add %tmp.203 %tmp.204;
-        lputv %sTop.6 %tmp.205;
-        symbol [ sTop %sTop.6 194 58 62 ];
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_193_84_195_20_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_193_20_196_57_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_193_20_196_57_if_false:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 195 27 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_195_27_196_57_if_stmt:
-        symbol [ grid %tmp.207 195 31 35 ];
-        %tmp.207 = getv ? :grid;
-        %tmp.208 = lgetv %tW.15;
-        symbol [ tW %tmp.208 195 36 38 ];
-        %tmp.209 = agetv %tmp.207 %tmp.208;
-        %tmp.210 = 1;
-        %tmp.211 = eq %tmp.209 %tmp.210;
-        bf %tmp.211 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_195_27_196_57_if_false;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_195_27_196_57_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_195_46_195_58_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 195 48 ]
-        %tmp.212 = 1;
-        lputv %hasB.8 %tmp.212;
-        symbol [ hasB %hasB.8 195 48 52 ];
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_195_46_195_58_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_195_27_196_57_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_195_27_196_57_if_false:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 196 25 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_196_25_196_57_if_stmt:
-        symbol [ grid %tmp.214 196 30 34 ];
-        %tmp.214 = getv ? :grid;
-        %tmp.215 = lgetv %tW.15;
-        symbol [ tW %tmp.215 196 35 37 ];
-        %tmp.216 = agetv %tmp.214 %tmp.215;
-        %tmp.217 = 2;
-        %tmp.218 = eq %tmp.216 %tmp.217;
-        bf %tmp.218 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_196_25_196_57_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_196_25_196_57_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_196_45_196_57_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 196 47 ]
-        %tmp.219 = 1;
-        lputv %hasW.9 %tmp.219;
-        symbol [ hasW %hasW.9 196 47 51 ];
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_196_45_196_57_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_196_25_196_57_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_196_25_196_57_if_end:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_195_27_196_57_if_end:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_193_20_196_57_if_end:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_192_28_197_16_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_192_16_197_16_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_192_16_197_16_if_end:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 198 16 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_198_16_203_16_if_stmt:
-        %tmp.220 = lgetv %tx.11;
-        symbol [ tx %tmp.220 198 20 22 ];
-        %tmp.221 = 8;
-        %tmp.222 = lt %tmp.220 %tmp.221;
-        bf %tmp.222 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_198_16_203_16_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_198_16_203_16_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_198_28_203_16_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 199 20 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_199_20_202_57_if_stmt:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_199_29_199_78_begin:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_199_29_199_58_begin:
-        symbol [ grid %tmp.224 199 29 33 ];
-        %tmp.224 = getv ? :grid;
-        %tmp.225 = lgetv %tE.16;
-        symbol [ tE %tmp.225 199 34 36 ];
-        %tmp.226 = agetv %tmp.224 %tmp.225;
-        %tmp.227 = 0;
-        %tmp.228 = eq %tmp.226 %tmp.227;
-        bf %tmp.228 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_199_20_202_57_if_false;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_199_46_199_58_true:
-        symbol [ _vis %tmp.230 199 46 50 ];
-        %tmp.230 = getv ? :_vis;
-        %tmp.231 = lgetv %tE.16;
-        symbol [ tE %tmp.231 199 51 53 ];
-        %tmp.232 = agetv %tmp.230 %tmp.231;
-        %tmp.233 = lgetv %rGen.5;
-        symbol [ rGen %tmp.233 199 58 62 ];
-        %tmp.234 = ne %tmp.232 %tmp.233;
-        push %tmp.234;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_199_46_199_58_end:
-        %tmp.235 = phi [%tmp.228 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_199_29_199_58_begin] [%tmp.234 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_199_46_199_58_true] [%tmp.235 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_199_46_199_58_end];
-        bf %tmp.235 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_199_20_202_57_if_false;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_199_66_199_78_true:
-        symbol [ _vis %tmp.237 199 66 70 ];
-        %tmp.237 = getv ? :_vis;
-        %tmp.238 = lgetv %tE.16;
-        symbol [ tE %tmp.238 199 71 73 ];
-        %tmp.239 = agetv %tmp.237 %tmp.238;
-        %tmp.240 = lgetv %vGen.3;
-        symbol [ vGen %tmp.240 199 78 82 ];
-        %tmp.241 = ne %tmp.239 %tmp.240;
-        push %tmp.241;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_199_66_199_78_end:
-        %tmp.242 = phi [%tmp.235 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_199_29_199_78_begin] [%tmp.241 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_199_66_199_78_true] [%tmp.242 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_199_66_199_78_end];
-        bf %tmp.242 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_199_20_202_57_if_false;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_199_20_202_57_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_199_84_201_20_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 200 24 ]
-        symbol [ _vis %tmp.243 200 24 28 ];
-        %tmp.243 = getv self :_vis;
-        %tmp.244 = lgetv %rGen.5;
-        symbol [ rGen %tmp.244 200 35 39 ];
-        %tmp.245 = lgetv %tE.16;
-        symbol [ tE %tmp.245 200 29 31 ];
-        aputv %tmp.243 %tmp.245 %tmp.244;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 200 41 ]
-        symbol [ _stk %tmp.246 200 41 45 ];
-        %tmp.246 = getv self :_stk;
-        %tmp.247 = lgetv %tE.16;
-        symbol [ tE %tmp.247 200 54 56 ];
-        %tmp.248 = lgetv %sTop.6;
-        symbol [ sTop %tmp.248 200 46 50 ];
-        aputv %tmp.246 %tmp.248 %tmp.247;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 200 58 ]
-        %tmp.249 = lgetv %sTop.6;
-        symbol [ sTop %tmp.249 200 65 69 ];
-        %tmp.250 = 1;
-        %tmp.251 = add %tmp.249 %tmp.250;
-        lputv %sTop.6 %tmp.251;
-        symbol [ sTop %sTop.6 200 58 62 ];
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_199_84_201_20_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_199_20_202_57_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_199_20_202_57_if_false:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 201 27 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_201_27_202_57_if_stmt:
-        symbol [ grid %tmp.253 201 31 35 ];
-        %tmp.253 = getv ? :grid;
-        %tmp.254 = lgetv %tE.16;
-        symbol [ tE %tmp.254 201 36 38 ];
-        %tmp.255 = agetv %tmp.253 %tmp.254;
-        %tmp.256 = 1;
-        %tmp.257 = eq %tmp.255 %tmp.256;
-        bf %tmp.257 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_201_27_202_57_if_false;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_201_27_202_57_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_201_46_201_58_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 201 48 ]
-        %tmp.258 = 1;
-        lputv %hasB.8 %tmp.258;
-        symbol [ hasB %hasB.8 201 48 52 ];
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_201_46_201_58_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_201_27_202_57_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_201_27_202_57_if_false:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 202 25 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_202_25_202_57_if_stmt:
-        symbol [ grid %tmp.260 202 30 34 ];
-        %tmp.260 = getv ? :grid;
-        %tmp.261 = lgetv %tE.16;
-        symbol [ tE %tmp.261 202 35 37 ];
-        %tmp.262 = agetv %tmp.260 %tmp.261;
-        %tmp.263 = 2;
-        %tmp.264 = eq %tmp.262 %tmp.263;
-        bf %tmp.264 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_202_25_202_57_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_202_25_202_57_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_202_45_202_57_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 202 47 ]
-        %tmp.265 = 1;
-        lputv %hasW.9 %tmp.265;
-        symbol [ hasW %hasW.9 202 47 51 ];
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_202_45_202_57_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_202_25_202_57_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_202_25_202_57_if_end:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_201_27_202_57_if_end:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_199_20_202_57_if_end:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_198_28_203_16_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_198_16_203_16_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_198_16_203_16_if_end:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_170_29_204_12_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_170_12_204_12_while_test;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_170_12_204_12_while_end:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 206 12 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_206_12_207_70_if_stmt:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_206_21_206_42_begin:
-        %tmp.266 = lgetv %hasB.8;
-        symbol [ hasB %tmp.266 206 21 25 ];
-        %tmp.267 = 1;
-        %tmp.268 = eq %tmp.266 %tmp.267;
-        bf %tmp.268 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_206_12_207_70_if_false;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_206_34_206_42_true:
-        %tmp.269 = lgetv %hasW.9;
-        symbol [ hasW %tmp.269 206 34 38 ];
-        %tmp.270 = 0;
-        %tmp.271 = eq %tmp.269 %tmp.270;
-        push %tmp.271;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_206_34_206_42_end:
-        %tmp.272 = phi [%tmp.268 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_206_21_206_42_begin] [%tmp.271 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_206_34_206_42_true] [%tmp.272 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_206_34_206_42_end];
-        bf %tmp.272 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_206_12_207_70_if_false;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_206_12_207_70_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_206_45_206_70_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 206 47 ]
-        %tmp.273 = lgetv %bTerr.1;
-        symbol [ bTerr %tmp.273 206 55 60 ];
-        %tmp.274 = lgetv %regSz.7;
-        symbol [ regSz %tmp.274 206 63 68 ];
-        %tmp.275 = add %tmp.273 %tmp.274;
-        lputv %bTerr.1 %tmp.275;
-        symbol [ bTerr %bTerr.1 206 47 52 ];
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_206_45_206_70_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_206_12_207_70_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_206_12_207_70_if_false:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 207 17 ]
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_207_17_207_70_if_stmt:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_207_21_207_42_begin:
-        %tmp.276 = lgetv %hasW.9;
-        symbol [ hasW %tmp.276 207 21 25 ];
-        %tmp.277 = 1;
-        %tmp.278 = eq %tmp.276 %tmp.277;
-        bf %tmp.278 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_207_17_207_70_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_207_34_207_42_true:
-        %tmp.279 = lgetv %hasB.8;
-        symbol [ hasB %tmp.279 207 34 38 ];
-        %tmp.280 = 0;
-        %tmp.281 = eq %tmp.279 %tmp.280;
-        push %tmp.281;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_207_34_207_42_end:
-        %tmp.282 = phi [%tmp.278 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_207_21_207_42_begin] [%tmp.281 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_207_34_207_42_true] [%tmp.282 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_207_34_207_42_end];
-        bf %tmp.282 @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_207_17_207_70_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_207_17_207_70_if_true:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_207_45_207_70_start:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 207 47 ]
-        %tmp.283 = lgetv %wTerr.2;
-        symbol [ wTerr %tmp.283 207 55 60 ];
-        %tmp.284 = lgetv %regSz.7;
-        symbol [ regSz %tmp.284 207 63 68 ];
-        %tmp.285 = add %tmp.283 %tmp.284;
-        lputv %wTerr.2 %tmp.285;
-        symbol [ wTerr %wTerr.2 207 47 52 ];
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_207_45_207_70_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_207_17_207_70_if_end;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_207_17_207_70_if_end:
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_206_12_207_70_if_end:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 208 12 ]
-        %tmp.286 = lgetv %i.4;
-        symbol [ i %tmp.286 208 16 17 ];
-        %tmp.287 = 1;
-        %tmp.288 = add %tmp.286 %tmp.287;
-        lputv %i.4 %tmp.288;
-        symbol [ i %i.4 208 12 13 ];
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_160_23_209_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_160_8_209_8_while_test;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_160_8_209_8_while_end:
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 212 8 ]
-        %tmp.289 = lgetv %bTerr.1;
-        symbol [ bTerr %tmp.289 212 21 26 ];
-        symbol [ capWhite %tmp.291 212 29 37 ];
-        %tmp.291 = getv ? :capWhite;
-        %tmp.292 = add %tmp.289 %tmp.291;
-        symbol [ scoreBlack ? 212 8 18 ];
-        putv self :scoreBlack %tmp.292;
-[ "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc" 213 8 ]
-        %tmp.293 = lgetv %wTerr.2;
-        symbol [ wTerr %tmp.293 213 21 26 ];
-        symbol [ capBlack %tmp.295 213 29 37 ];
-        %tmp.295 = getv ? :capBlack;
-        %tmp.296 = add %tmp.293 %tmp.295;
-        %tmp.297 = 7;
-        %tmp.298 = add %tmp.296 %tmp.297;
-        symbol [ scoreWhite ? 213 8 18 ];
-        putv self :scoreWhite %tmp.298;
-_Users_kkorolczuk_work_garmin_mini_go_9x9_source_Board_mc_150_25_214_4_stop:
+        symbol [ whiteCount ? 111 33 43 ];
+        putv self :whiteCount %tmp.28;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_111_31_111_62_stop:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_110_8_111_62_if_end:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 112 8 ]
+        %tmp.29 = true;
+        ret %tmp.29;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_107_34_113_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc"; @line = 116; @symbol_functiondef = [applyFlips,116,13,23]; @symbol_param<0> = [col,116,24,27]; ]
+    function applyFlips(col) {
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_116_29_126_4_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 117 8 ]
+        [ "_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_116_29_126_4_start" "_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_116_29_126_4_stop" ]
+        %i.1 = local;
+        symbol [ i %i.1 117 12 13 ];
+        %tmp.1 = 0;
+        lputv %i.1 %tmp.1;
+        symbol [ i %i.1 117 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 118 8 ]
+        while @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_118_8_118_68_while_test @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_118_8_118_68_while_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_118_8_118_68_while_test:
+        %tmp.2 = lgetv %i.1;
+        symbol [ i %tmp.2 118 15 16 ];
+        symbol [ flipCount %tmp.4 118 19 28 ];
+        %tmp.4 = getv ? :flipCount;
+        %tmp.5 = lt %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_118_8_118_68_while_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_118_8_118_68_while_begin:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_118_30_118_68_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 118 32 ]
+        symbol [ cells %tmp.6 118 32 37 ];
+        %tmp.6 = getv self :cells;
+        %tmp.7 = lgetv %col;
+        symbol [ col %tmp.7 118 52 55 ];
+        symbol [ flipBuf %tmp.9 118 38 45 ];
+        %tmp.9 = getv ? :flipBuf;
+        %tmp.10 = lgetv %i.1;
+        symbol [ i %tmp.10 118 46 47 ];
+        %tmp.11 = agetv %tmp.9 %tmp.10;
+        aputv %tmp.6 %tmp.11 %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 118 57 ]
+        %tmp.12 = lgetv %i.1;
+        symbol [ i %tmp.12 118 61 62 ];
+        %tmp.13 = 1;
+        %tmp.14 = add %tmp.12 %tmp.13;
+        lputv %i.1 %tmp.14;
+        symbol [ i %i.1 118 57 58 ];
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_118_30_118_68_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_118_8_118_68_while_test;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_118_8_118_68_while_end:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 119 8 ]
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_119_8_125_8_if_stmt:
+        %tmp.15 = lgetv %col;
+        symbol [ col %tmp.15 119 12 15 ];
+        symbol [ DISC_BLACK %tmp.17 119 19 29 ];
+        %tmp.17 = getv ? :DISC_BLACK;
+        %tmp.18 = eq %tmp.15 %tmp.17;
+        bf %tmp.18 @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_119_8_125_8_if_else_false;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_119_8_125_8_if_true:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_119_31_122_8_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 120 12 ]
+        symbol [ blackCount %tmp.20 120 25 35 ];
+        %tmp.20 = getv ? :blackCount;
+        symbol [ flipCount %tmp.22 120 38 47 ];
+        %tmp.22 = getv ? :flipCount;
+        %tmp.23 = add %tmp.20 %tmp.22;
+        symbol [ blackCount ? 120 12 22 ];
+        putv self :blackCount %tmp.23;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 121 12 ]
+        symbol [ whiteCount %tmp.25 121 25 35 ];
+        %tmp.25 = getv ? :whiteCount;
+        symbol [ flipCount %tmp.27 121 38 47 ];
+        %tmp.27 = getv ? :flipCount;
+        %tmp.28 = sub %tmp.25 %tmp.27;
+        symbol [ whiteCount ? 121 12 22 ];
+        putv self :whiteCount %tmp.28;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_119_31_122_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_119_8_125_8_if_end;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_119_8_125_8_if_else_false:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_122_15_125_8_start:
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 123 12 ]
+        symbol [ whiteCount %tmp.30 123 25 35 ];
+        %tmp.30 = getv ? :whiteCount;
+        symbol [ flipCount %tmp.32 123 38 47 ];
+        %tmp.32 = getv ? :flipCount;
+        %tmp.33 = add %tmp.30 %tmp.32;
+        symbol [ whiteCount ? 123 12 22 ];
+        putv self :whiteCount %tmp.33;
+[ "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc" 124 12 ]
+        symbol [ blackCount %tmp.35 124 25 35 ];
+        %tmp.35 = getv ? :blackCount;
+        symbol [ flipCount %tmp.37 124 38 47 ];
+        %tmp.37 = getv ? :flipCount;
+        %tmp.38 = sub %tmp.35 %tmp.37;
+        symbol [ blackCount ? 124 12 22 ];
+        putv self :blackCount %tmp.38;
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_122_15_125_8_stop:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_119_8_125_8_if_end:
+_Users_kkorolczuk_work_garmin_othello_blitz_source_Board_mc_116_29_126_4_stop:
     }
 }
-[ @file = "/Users/kkorolczuk/work/garmin/mini_go_9x9/source/Board.mc"; @line = 8; ]
+[ @file = "/Users/kkorolczuk/work/garmin/othello_blitz/source/Board.mc"; @line = 12; ]
 <init> {
 }

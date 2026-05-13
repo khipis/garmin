@@ -277,16 +277,22 @@ class GameView extends WatchUi.View {
         _state = GS_AI_FORK;
     }
 
-    // Processes FORK_BATCH outer iterations per tick.
-    // For 3×3: runs full negamax per candidate (fast, terminates in 1-2 ticks).
-    // For 4×7: 2-ply — simulate my move, count opp winning replies + opp best score.
-    // Batch size adapts: 3×3=9 in one go; larger grids batched at FORK_BATCH/2.
+    // Processes outer iterations per tick (2-ply threat-aware search for N>3).
+    //
+    // Watchdog budget analysis (N=7, winLen=4):
+    //   _scoreCell (outer) : 8 × _axisPotential(~100)     ≈   800 ops
+    //   inner loop         : N²×(_checkWinAt(~72)+center(~8)) ≈ 49×80 = 3920 ops
+    //   per tick (batch=3) : 3 × (800 + 3920)             ≈ 14 160 ops — safe
+    //
+    //   Old design (batch=9, inner _scoreCell): 9×(800+49×800) = ~353K ops — watchdog!
     hidden function _aiForkStep() {
         var mark  = _aiForkAiMk;
         var opp   = (mark == MARK_X) ? MARK_O : MARK_X;
         var total = _gridN * _gridN;
         var is3   = (_gridN == 3);
-        var batch = is3 ? total : (FORK_BATCH / 2 + 1);
+        // batch=total for 3×3 (full negamax in ≤2 ticks); 3 for larger grids.
+        var batch = is3 ? total : 3;
+        var mid   = _gridN / 2;
         var done  = 0;
         while (_aiForkI < total && done < batch) {
             if (_cells[_aiForkI] == MARK_NONE) {
@@ -303,32 +309,36 @@ class GameView extends WatchUi.View {
                 } else if (_moveCount == total) {
                     sc = 0;  // draw
                 } else if (is3) {
-                    // Full minimax for 3×3 — never watchdogs (≤60 leaf nodes from here)
+                    // Full minimax for 3×3 — never watchdogs (≤60 leaf nodes)
                     sc = -_negamax3(opp, mark, -1000, 1000);
                 } else {
-                    // 2-ply: penalise moves that leave opp with winning replies
+                    // 2-ply: score own move with full heuristic; check opp wins and
+                    // use cheap center score for opp reply (avoids watchdog on 7×7).
                     var myHeur = _scoreCell(_aiForkI, mark);
                     var oppWins = 0; var oppBest = -99999; var j = 0;
                     while (j < total) {
                         if (_cells[j] == MARK_NONE) {
-                            // Fast: check opp winning
                             _cells[j] = opp;
                             var oppWin = _checkWinAt(opp, j % _gridN, j / _gridN);
                             if (oppWin) {
                                 oppWins = oppWins + 1;
                             } else {
-                                var os = _scoreCell(j, opp);
+                                // Cheap center-distance proxy (~8 ops vs ~800 for full _scoreCell)
+                                var jx = j % _gridN; var jy = j / _gridN;
+                                var jdx = jx - mid; if (jdx < 0) { jdx = -jdx; }
+                                var jdy = jy - mid; if (jdy < 0) { jdy = -jdy; }
+                                var os = (_gridN - jdx - jdy) * 4;
                                 if (os > oppBest) { oppBest = os; }
                             }
                             _cells[j] = MARK_NONE;
                         }
                         j = j + 1;
                     }
-                    // Heavy penalty if opp can win, otherwise use 2-ply difference
+                    // Heavy penalty if opp can win; otherwise 2-ply score difference
                     if (oppWins >= 2) {
-                        sc = myHeur - 5000;         // creates fork for opp — very bad
+                        sc = myHeur - 5000;
                     } else if (oppWins == 1) {
-                        sc = myHeur - 2000;         // leaves forced loss
+                        sc = myHeur - 2000;
                     } else {
                         var oppPenalty = (oppBest == -99999) ? 0 : oppBest;
                         sc = myHeur * 4 - oppPenalty * 3;
@@ -555,10 +565,21 @@ class GameView extends WatchUi.View {
 
     hidden function _bestScoredMove(mark) {
         var best = -99999; var move = -1;
-        var total = _gridN * _gridN; var i = 0;
+        var total = _gridN * _gridN; var mid = _gridN / 2; var i = 0;
+        // For N≥6: N²×_scoreCell ≈ 49×800 = ~39K ops — trips watchdog.
+        // Use cheap center score for large grids; full _scoreCell for N≤5.
+        var cheapOnly = (_gridN >= 6);
         while (i < total) {
             if (_cells[i] != MARK_NONE) { i = i + 1; continue; }
-            var s = _scoreCell(i, mark);
+            var s;
+            if (cheapOnly) {
+                var ix = i % _gridN; var iy = i / _gridN;
+                var ddx = ix - mid; if (ddx < 0) { ddx = -ddx; }
+                var ddy = iy - mid; if (ddy < 0) { ddy = -ddy; }
+                s = (_gridN - ddx - ddy) * 4 + Math.rand() % 5;
+            } else {
+                s = _scoreCell(i, mark);
+            }
             if (s > best) { best = s; move = i; }
             i = i + 1;
         }

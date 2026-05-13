@@ -1,9 +1,9 @@
 using Toybox.WatchUi;
 
 // Controls
-//   UP / DOWN               → move grid cursor row
-//   Previous Page / LEFT    → move grid cursor left  OR cycle size picker left
-//   Next Page / RIGHT       → move grid cursor right OR cycle size picker right
+//   UP / DOWN               → move grid cursor up / down  (wrapping)
+//   Previous Page           → move grid cursor RIGHT      (wrapping)  OR cycle size left
+//   Next Page               → move grid cursor DOWN       (wrapping)  OR cycle size right
 //   SELECT / tap            → pick source / confirm size / place piece / new game
 //   BACK                    → cancel current selection
 

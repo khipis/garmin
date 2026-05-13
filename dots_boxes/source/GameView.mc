@@ -12,12 +12,12 @@ using Toybox.Math;
 //   Vertical    v(r,c): row r∈[0..3], col c∈[0..4]  → index = 20+r*5+c (20..39)
 //
 // Cursor navigation:
-//   KEY_UP   from h(r,c) → h((r−1) mod DOTS, c)   wraps row upward
-//   KEY_DOWN from h(r,c) → h((r+1) mod DOTS, c)   wraps row downward
-//   KEY_UP   from v(r,c) → v((r−1) mod BOXES, c)  wraps row upward
-//   KEY_DOWN from v(r,c) → v((r+1) mod BOXES, c)  wraps row downward
-//   onNextPage     → (_cursor+1)            % EDGES  (linear reading order)
-//   onPreviousPage → (_cursor+EDGES−1)      % EDGES  (linear reading order)
+//   KEY_UP         from h(r,c) → h((r−1) mod DOTS,  c)  wraps row upward
+//   KEY_DOWN       from h(r,c) → h((r+1) mod DOTS,  c)  wraps row downward
+//   KEY_UP         from v(r,c) → v((r−1) mod BOXES, c)  wraps row upward
+//   KEY_DOWN       from v(r,c) → v((r+1) mod BOXES, c)  wraps row downward
+//   onNextPage     → column right within same orientation, wrapping
+//   onPreviousPage → toggle orientation  H ↔ V  at same approximate position
 //
 // Box (br,bc) sides:
 //   top=h(br,bc)  bottom=h(br+1,bc)  left=v(br,bc)  right=v(br,bc+1)
@@ -119,8 +119,11 @@ class GameView extends WatchUi.View {
     }
 
     // ── Public input API ──────────────────────────────────────────────────
-    // dir: 0=KEY_UP (row up)  1=KEY_DOWN (row down)
-    //      2=onPreviousPage (linear prev)  3=onNextPage (linear next)
+    // dir: 0=KEY_UP (row up)    1=KEY_DOWN (row down)
+    //      2=onPreviousPage     → toggle orientation  H ↔ V
+    //      3=onNextPage         → context-aware advance:
+    //                              H edge → column right (wrapping)
+    //                              V edge → row down    (wrapping)
     // Menu: 0|2 → prev item, 1|3 → next item
     function navigate(dir) {
         if (_state == GS_MENU) {
@@ -133,11 +136,31 @@ class GameView extends WatchUi.View {
         if (_state != DBS_PLAYER && _state != DBS_AI) { return; }
         var e = _cursor;
         if (dir == 2) {
-            // linear previous edge (wrapping)
-            _cursor = (e + DB_EDGES - 1) % DB_EDGES;
+            // Toggle orientation H ↔ V at the same approximate board position.
+            // h(r,c) → v(min(r, BOXES-1), c)   (clamp row since V has one fewer row)
+            // v(r,c) → h(r, min(c, BOXES-1))   (clamp col since H has one fewer col)
+            if (e < DB_H) {
+                var r = e / DB_BOXES; var c = e % DB_BOXES;
+                if (r >= DB_BOXES) { r = DB_BOXES - 1; }
+                _cursor = DB_H + r * DB_DOTS + c;
+            } else {
+                var idx = e - DB_H;
+                var r = idx / DB_DOTS; var c = idx % DB_DOTS;
+                if (c >= DB_BOXES) { c = DB_BOXES - 1; }
+                _cursor = r * DB_BOXES + c;
+            }
         } else if (dir == 3) {
-            // linear next edge (wrapping)
-            _cursor = (e + 1) % DB_EDGES;
+            // Context-aware advance:
+            //   H edge h(r,c) → next column right, wrapping within row.
+            //   V edge v(r,c) → next row down,    wrapping within column.
+            if (e < DB_H) {
+                var r = e / DB_BOXES; var c = e % DB_BOXES;
+                _cursor = r * DB_BOXES + (c + 1) % DB_BOXES;
+            } else {
+                var idx = e - DB_H;
+                var r = idx / DB_DOTS; var c = idx % DB_DOTS;
+                _cursor = DB_H + ((r + 1) % DB_BOXES) * DB_DOTS + c;
+            }
         } else if (e < DB_H) {
             // horizontal h(r, c) — KEY_UP/DOWN shifts row, wrapping
             var r = e / DB_BOXES; var c = e % DB_BOXES;
@@ -690,13 +713,14 @@ class GameView extends WatchUi.View {
             }
         }
 
-        // Boxes-remaining count (below board, if room)
+        // Cursor orientation indicator + boxes remaining (below board)
         var botY = _by + DB_BOXES * _step + _dr + 6;
         if (botY < _sh - 14) {
             var rem = DB_B - _pScore - _aiScore;
+            var orientHint = (_cursor < DB_H) ? "H: nxt=col" : "V: nxt=row";
             dc.setColor(0x333348, Graphics.COLOR_TRANSPARENT);
             dc.drawText(_sw / 2, botY, Graphics.FONT_XTINY,
-                        rem.format("%d") + " left", Graphics.TEXT_JUSTIFY_CENTER);
+                        orientHint + "  " + rem.format("%d") + " left", Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 
@@ -763,7 +787,7 @@ class GameView extends WatchUi.View {
             i++;
         }
         dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(hw, _sh - 14, Graphics.FONT_XTINY, "UP/DN sel  SELECT set/start", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(hw, _sh - 14, Graphics.FONT_XTINY, "UP/DN=row  nxt=col/row  prev=H/V", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     function doTap(tx, ty) {

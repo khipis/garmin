@@ -6,12 +6,16 @@ using Toybox.Math;
 //
 // Evaluation layers (highest priority first):
 //   1. Always grab an available corner immediately.
-//   2. Position weight * 3  (corners +40*3, X-squares −20*3, edges +20*3, …)
-//   3. X-square penalty: −25 when the adjacent corner is still empty.
-//   4. Flip count (secondary positional gain).
-//   5. Corner-exposure penalty: −50 for each corner a simulated move hands to the opponent.
-//   6. Small random noise for tie-breaking.
-// Mobility counting removed — too expensive for AI vs AI on real hardware.
+//   2. Position weight * 3  (corners +120, X-squares −36, edges +60, …)
+//   3. X-square penalty: −30 when the adjacent corner is still empty.
+//   4. Corner-exposure penalty: −60 per corner handed to opponent.
+//   5. Flip count × 2 (secondary territorial gain).
+//   6. Edge-stability proxy: own edge/corner pieces − opp edge/corner pieces (×5).
+//      Replaces full mobility count — O(28) vs O(64×8×8=4096) per candidate.
+//   7. Small random noise for tie-breaking.
+//
+// Full _countMobility was removed (O(64×isValidAt) per candidate × 64 candidates
+// = ~1M ops / turn — trips the watchdog on real hardware).
 
 class AI {
     hidden var _board;
@@ -70,30 +74,36 @@ class AI {
         return bestMove;
     }
 
-    // Count the number of valid moves for 'col' — used as mobility metric.
-    // O(64 × isValidAt) ≈ 64 × 32 = 2 048 ops.
-    hidden function _countMobility(col) {
-        var cnt = 0; var i = 0;
-        while (i < 64) {
-            if (_board.cells[i] == 0 && _board.isValidAt(i % 8, i / 8, col)) { cnt = cnt + 1; }
-            i = i + 1;
+    // Edge-stability proxy: own vs opp pieces on the 28 edge/border cells.
+    // Edge pieces are harder to flip → approximates stable mobility advantage.
+    // Cost: 28 array reads — O(28) vs O(64×8×8) for full mobility scan.
+    hidden function _edgeStability(col, opp) {
+        var own = 0; var opp2 = 0;
+        var ei = 0;
+        // Top row (0..7) and bottom row (56..63)
+        while (ei < 8) {
+            var tv = _board.cells[ei]; var bv = _board.cells[56 + ei];
+            if (tv == col) { own = own + 1; } else if (tv == opp) { opp2 = opp2 + 1; }
+            if (bv == col) { own = own + 1; } else if (bv == opp) { opp2 = opp2 + 1; }
+            ei = ei + 1;
         }
-        return cnt;
+        // Left col (8,16,24,32,40,48) and right col (15,23,31,39,47,55) — skip corners
+        ei = 1;
+        while (ei <= 6) {
+            var lv = _board.cells[ei * 8]; var rv = _board.cells[ei * 8 + 7];
+            if (lv == col) { own = own + 1; } else if (lv == opp) { opp2 = opp2 + 1; }
+            if (rv == col) { own = own + 1; } else if (rv == opp) { opp2 = opp2 + 1; }
+            ei = ei + 1;
+        }
+        return own - opp2;
     }
 
-    // Full evaluation for placing 'col' at (x, y).
-    // Layers (highest to lowest weight):
-    //   1. Position table × 3 (corners +120, X-sq −36, edges +60 …)
-    //   2. X-square penalty when adjacent corner is empty (−30)
-    //   3. Corner-exposure penalty −60 per corner handed to opp
-    //   4. Flip count (secondary territorial gain)
-    //   5. Opponent mobility after our move: −4 per opp legal move
-    //      (limit opponent options — crucial in mid-game)
-    //   6. Small tie-break noise
+    // Evaluate placing 'col' at (x, y).
+    // Watchdog budget: ~200 ops per candidate × 64 candidates = ~12 800 ops/turn.
     hidden function _evalMove(idx, x, y, col, opp) {
         var score = _wt[idx] * 3;
 
-        // X-square penalty
+        // X-square penalty: adjacent corner still empty → dangerous
         if (idx == 9)  { if (_board.cells[0]  == 0) { score = score - 30; } }
         if (idx == 14) { if (_board.cells[7]  == 0) { score = score - 30; } }
         if (idx == 49) { if (_board.cells[56] == 0) { score = score - 30; } }
@@ -109,16 +119,14 @@ class AI {
         var fi = 0;
         while (fi < flipSaved) { _board.cells[_board.flipBuf[fi]] = col; fi = fi + 1; }
 
-        // Corner-exposure penalty
+        // Corner-exposure penalty: −60 per corner we hand to the opponent
         if (_board.cells[0]  == 0 && _board.isValidAt(0, 0, opp)) { score = score - 60; }
         if (_board.cells[7]  == 0 && _board.isValidAt(7, 0, opp)) { score = score - 60; }
         if (_board.cells[56] == 0 && _board.isValidAt(0, 7, opp)) { score = score - 60; }
         if (_board.cells[63] == 0 && _board.isValidAt(7, 7, opp)) { score = score - 60; }
 
-        // Mobility: penalise moves that give opp many options (limit them)
-        var oppMob = _countMobility(opp);
-        var ownMob = _countMobility(col);
-        score = score + (ownMob - oppMob) * 4;
+        // Edge-stability proxy (O(28) — replaces full mobility scan)
+        score = score + _edgeStability(col, opp) * 5;
 
         // Undo move
         _board.cells[y * 8 + x] = 0;

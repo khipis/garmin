@@ -112,21 +112,8 @@ class GameView extends WatchUi.View {
     function onLayout(dc) {
         _sw = dc.getWidth();
         _sh = dc.getHeight();
-        // 85% scale: leave ~44px for HUD/hand strips, then shrink by 15%
-        var avail = _sh - 44;
-        _csz = avail * 85 / 100 / GM;
-        var wlim = _sw * 85 / 100 / (GM + 1);
-        if (_csz > wlim) { _csz = wlim; }
-        var bsz = _csz * GM;
-        _gx = (_sw - bsz) / 2;
-        _gy = 20;
-        // Board piece radii: nest visually (22 / 40 / 58 / 76 % of half-cell)
-        var hc = _csz / 2;
-        _psz[0] = hc * 22 / 100; if (_psz[0] < 2)  { _psz[0] = 2; }
-        _psz[1] = hc * 40 / 100; if (_psz[1] < 4)  { _psz[1] = 4; }
-        _psz[2] = hc * 58 / 100; if (_psz[2] < 6)  { _psz[2] = 6; }
-        _psz[3] = hc * 76 / 100; if (_psz[3] < 8)  { _psz[3] = 8; }
-        // Hand icon radii (smaller, for the strip above/below the grid)
+
+        // Hand icon radii — must be computed first (used in _gy calculation below)
         var hr = _sh * 3 / 100;
         if (hr > 10) { hr = 10; }
         if (hr < 3)  { hr = 3; }
@@ -134,6 +121,36 @@ class GameView extends WatchUi.View {
         _hpsz[1] = hr * 50 / 100; if (_hpsz[1] < 2) { _hpsz[1] = 2; }
         _hpsz[2] = hr * 75 / 100; if (_hpsz[2] < 3) { _hpsz[2] = 3; }
         _hpsz[3] = hr;
+
+        // Space reserved above and below the board:
+        //   above: 16px HUD text + hand-strip radius + 3px gap
+        //   below: hand-strip radius + 4px gap + 14px count-text
+        var topR = 16 + hr + 3;
+        var botR = hr + 4 + 14;
+
+        // Cell size: fit board vertically in remaining space; shrunk 15% for watch fit
+        var maxH = (_sh - topR - botR) * 85 / 100 / GM;
+        var maxW = _sw * 72 / 100 / GM;   // 85% × 85% ≈ 72%
+        _csz = (maxH < maxW) ? maxH : maxW;
+        if (_csz < 10) { _csz = 10; }
+
+        var bsz = _csz * GM;
+
+        // Centre horizontally
+        _gx = (_sw - bsz) / 2;
+
+        // Centre vertically — board centred in the strip-to-strip space
+        _gy = (_sh - bsz) / 2;
+        if (_gy < topR)              { _gy = topR; }              // clamp top
+        if (_gy + bsz + botR > _sh) { _gy = _sh - bsz - botR; } // clamp bottom
+
+        // Board piece radii: 22 / 40 / 58 / 76 % of half-cell
+        var hc = _csz / 2;
+        _psz[0] = hc * 22 / 100; if (_psz[0] < 2) { _psz[0] = 2; }
+        _psz[1] = hc * 40 / 100; if (_psz[1] < 4) { _psz[1] = 4; }
+        _psz[2] = hc * 58 / 100; if (_psz[2] < 6) { _psz[2] = 6; }
+        _psz[3] = hc * 76 / 100; if (_psz[3] < 8) { _psz[3] = 8; }
+
         _timer = new Timer.Timer();
         _timer.start(method(:gameTick), 500, true);
     }
@@ -143,7 +160,10 @@ class GameView extends WatchUi.View {
     }
 
     // ── Public input API ──────────────────────────────────────────────────
-    // dir: 0=UP  1=DOWN  2=LEFT  3=RIGHT
+    // dir: 0=KEY_UP   → row up   (wrapping)
+    //      1=KEY_DOWN → row down (wrapping)
+    //      2=onPreviousPage → col RIGHT (wrapping)
+    //      3=onNextPage     → row DOWN  (wrapping)
     function navigate(dir) {
         if (_state == GS_MENU) {
             if (dir == 0 || dir == 2) { _menuSel = (_menuSel + 3) % 4; }
@@ -153,16 +173,16 @@ class GameView extends WatchUi.View {
         }
         if (_state == GMS_AI || _state == GMS_OVER) { return; }
         if (_state == GMS_P_SIZE) {
-            // LEFT / RIGHT cycles the size picker
+            // size picker: left/right cycles available sizes
             if      (dir == 2) { _sizePickStep(-1); }
             else if (dir == 3) { _sizePickStep(1); }
             return;
         }
         var r = _gridCur / GM; var c = _gridCur % GM;
-        if      (dir == 0 && r > 0)      { _gridCur = _gridCur - GM; }
-        else if (dir == 1 && r < GM - 1) { _gridCur = _gridCur + GM; }
-        else if (dir == 2 && c > 0)      { _gridCur = _gridCur - 1; }
-        else if (dir == 3 && c < GM - 1) { _gridCur = _gridCur + 1; }
+        if      (dir == 0) { _gridCur = ((r + GM - 1) % GM) * GM + c; }  // up wrap
+        else if (dir == 1) { _gridCur = ((r + 1)      % GM) * GM + c; }  // down wrap
+        else if (dir == 2) { _gridCur = r * GM + (c + 1) % GM; }          // right wrap
+        else if (dir == 3) { _gridCur = ((r + 1)      % GM) * GM + c; }  // down wrap
     }
 
     function doAction() {
@@ -433,15 +453,20 @@ class GameView extends WatchUi.View {
 
     // ── AI ────────────────────────────────────────────────────────────────
     //
-    // Strategy (three priorities, evaluated with a one-ply lookahead):
+    // Strategy (one-ply lookahead):
     //   1. Win immediately if any move creates 4-in-a-row for AI.
-    //   2. Avoid moves that reveal a player 4-in-a-row (score −9000).
+    //   2. Block enemy threat (via pre-computed mask).
     //   3. Score positions by AI line progress minus player threat weight.
     //
+    // NOTE: _checkWinAt(enemy, dst) is OMITTED from Phase A — after placing our
+    //   piece at dst, _topOwner(dst)==who so the enemy can never win through dst.
+    //   Removing it saves ~72 ops × 64 candidates = ~4 600 ops.
+    //
     // Watchdog budget:
-    //   Phase A (≤64 cands): _checkWinAt(~16) + _aiScoreAt(~80) ≈  6 144 ops
-    //   Phase B (budget=48): _checkWinAt2(~32) + _aiScoreAt×2(~160) ≈ 9 216 ops
-    //   Total ≈ 15 360 ops — well within the 2 s watchdog.
+    //   _enemyThreatMask  : ~5 600 ops  (once per turn)
+    //   Phase A (≤64):     ~120 ops/cand × 64  = ~7 680 ops
+    //   Phase B (budget=32): ~350 ops/cand × 32 = ~11 200 ops
+    //   Total ≈ 24 480 ops — safe on all devices.
 
     // Score a single win-line for 'who' vs 'enemy'.
     hidden function _aiScoreLine(who, enemy, l) {
@@ -484,53 +509,37 @@ class GameView extends WatchUi.View {
         return score;
     }
 
-    // Returns true if 'enemy' can win immediately from the current board state.
-    // Budget=10 total move-checks + fast _checkWinAt keep each call to ~200 ops.
-    // Only called from Phase A of _aiDoMoveFor (≤64 times), so total ≤ 12 800 ops.
-    hidden function _aiEnemyCanWin(enemy, eh) {
-        var budget = 10;
+    // Pre-compute a bitmask of cells where 'enemy' can win by placing a hand piece.
+    // Called ONCE per turn (not per candidate) — cost: GSIZES×GM2×~40 = ~2560 ops.
+    // Returns 32-bit int with bit i set if placing any enemy hand piece at cell i wins.
+    hidden function _enemyThreatMask(enemy, eh) {
+        var mask = 0;
         var es = GSIZES;
-        while (es >= 1 && budget > 0) {
+        while (es >= 1) {
             if (eh[es - 1] > 0) {
                 var ev = _makeVal(enemy, es);
                 var ed = 0;
-                while (ed < GM2 && budget > 0) {
-                    budget = budget - 1;
+                while (ed < GM2) {
                     if (_canPlace(es, ed)) {
                         _place(ev, ed);
-                        var w = _checkWinAt(enemy, ed);
+                        if (_checkWinAt(enemy, ed)) { mask = mask | (1 << ed); }
                         _pop(ed);
-                        if (w) { return true; }
                     }
                     ed = ed + 1;
                 }
             }
             es = es - 1;
         }
-        var esrc = 0;
-        while (esrc < GM2 && budget > 0) {
-            if (_topOwner(esrc) == enemy) {
-                var esz = _topSize(esrc);
-                var edst = 0;
-                while (edst < GM2 && budget > 0) {
-                    budget = budget - 1;
-                    if (edst != esrc && _canPlace(esz, edst)) {
-                        var ev2 = _pop(esrc);
-                        _place(ev2, edst);
-                        var w2 = _checkWinAt2(enemy, esrc, edst);
-                        _pop(edst);
-                        _place(ev2, esrc);
-                        if (w2) { return true; }
-                    }
-                    edst = edst + 1;
-                }
-            }
-            esrc = esrc + 1;
-        }
-        return false;
+        return mask;
     }
 
     // Choose and execute the best move for player 'who' (1=P1/player, 2=AI).
+    //
+    // Watchdog budget (see block comment above for full breakdown):
+    //   _enemyThreatMask : ~5 600 ops  (once per turn)
+    //   Phase A          : ~7 680 ops  (64 candidates × ~120 ops)
+    //   Phase B          : ~11 200 ops (32 budget × ~350 ops, dst-only score)
+    //   Total            : ~24 480 ops — safely within watchdog limits.
     hidden function _aiDoMoveFor(who) {
         var enemy = (who == 2) ? 1 : 2;
         var ah  = (who == 2) ? _aih : _ph;
@@ -542,8 +551,15 @@ class GameView extends WatchUi.View {
         var bestSize    = 0;
         var bestDst     = -1;
 
+        // Pre-compute enemy threat mask once — O(1) lookup replaces per-candidate calls.
+        var eThreat = 0;
+        var ePen = 0;
+        if (_diff != DIFF_EASY) {
+            eThreat = _enemyThreatMask(enemy, eh);
+            ePen = (_diff == DIFF_HARD) ? 20000 : 8000;
+        }
+
         // ── Phase A: place from hand (prefer larger pieces first) ─────────
-        // Hard: also penalise moves that leave enemy with an immediate win.
         var s = GSIZES;
         while (s >= 1) {
             if (ah[s - 1] > 0) {
@@ -557,13 +573,18 @@ class GameView extends WatchUi.View {
                         var sc = 0;
                         if (_checkWinAt(who, dst)) {
                             sc = winScore;
-                        } else if (_checkWinAt(enemy, dst)) {
-                            sc = blockScore;
                         } else {
+                            // _checkWinAt(enemy, dst) is always false here: we just
+                            // placed our piece at dst so _topOwner(dst)==who.
                             sc = _aiScoreAt(who, enemy, dst) + capBonus;
-                            // Hard/Med: penalise moves that allow enemy immediate win on next turn
-                            if (_diff != DIFF_EASY && _aiEnemyCanWin(enemy, eh)) {
-                                sc = sc - ((_diff == DIFF_HARD) ? 20000 : 8000);
+                            // O(1) threat check: reward blocking, penalise ignoring threats
+                            if (eThreat != 0) {
+                                var bit = 1 << dst;
+                                if ((eThreat & bit) != 0) {
+                                    sc = sc + ePen;
+                                } else {
+                                    sc = sc - ePen;
+                                }
                             }
                             if (_diff == DIFF_EASY) { sc = sc + Math.rand() % 25 - 12; }
                         }
@@ -579,9 +600,10 @@ class GameView extends WatchUi.View {
         }
 
         // ── Phase B: move a board piece ───────────────────────────────────
-        // Budget raised to 64 for Hard; 48 for Med/Easy.
-        // Scores both src and dst cells' lines since both change after a board move.
-        var src = 0; var phBudget = (_diff == DIFF_HARD) ? 64 : 48;
+        // Budget capped at 32/20 to stay within watchdog.
+        // Score only dst (not src) to halve Phase B eval cost; src contribution
+        // is approximated as zero (neutral) — fast and watchdog-safe.
+        var src = 0; var phBudget = (_diff == DIFF_HARD) ? 32 : 20;
         while (src < GM2 && phBudget > 0) {
             if (_topOwner(src) == who) {
                 var sz = _topSize(src);
@@ -597,10 +619,16 @@ class GameView extends WatchUi.View {
                         if      (_checkWinAt2(who, src, dst))   { sc = winScore; }
                         else if (_checkWinAt2(enemy, src, dst)) { sc = blockScore; }
                         else {
-                            sc = _aiScoreAt(who, enemy, dst) + _aiScoreAt(who, enemy, src) + capBonus2;
-                            // Hard/Med: penalise moves that allow enemy immediate win on next turn
-                            if (_diff != DIFF_EASY && _aiEnemyCanWin(enemy, eh)) {
-                                sc = sc - ((_diff == DIFF_HARD) ? 20000 : 8000);
+                            // Only score dst (not src) — halves Phase B eval cost.
+                            sc = _aiScoreAt(who, enemy, dst) + capBonus2;
+                            // O(1) threat check via pre-computed mask
+                            if (eThreat != 0) {
+                                var bit = 1 << dst;
+                                if ((eThreat & bit) != 0) {
+                                    sc = sc + ePen;
+                                } else {
+                                    sc = sc - ePen;
+                                }
                             }
                             if (_diff == DIFF_EASY) { sc = sc + Math.rand() % 25 - 12; }
                         }
@@ -869,7 +897,7 @@ class GameView extends WatchUi.View {
         // Hint
         dc.setColor(0x444455, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_sw / 2, oy + bh - 11, Graphics.FONT_XTINY,
-                    "◀ ▶ size  SELECT ok", Graphics.TEXT_JUSTIFY_CENTER);
+                    "nxt=size  SELECT ok", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     // ── Game-over overlay ─────────────────────────────────────────────────

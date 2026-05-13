@@ -266,33 +266,42 @@ class GameView extends WatchUi.View {
 
     // ── AI ────────────────────────────────────────────────────────────────
     //
-    // Easy:  win/block + fork + heuristic (fast, ~2K ops)
-    // Med:   alpha-beta depth 3  (~200 nodes, ~30K ops)
-    // Hard:  alpha-beta depth 6  (~500 nodes, ~100K ops) — safe on all devices.
+    // Easy:  win/block + fork + heuristic                    (~5K ops)
+    // Med:   win/block + fork + alpha-beta depth 2           (~10K ops)
+    // Hard:  win/block + fork + alpha-beta depth 3           (~78K ops worst)
     //
-    // Alpha-beta uses centre-out column ordering to maximise pruning efficiency.
+    // DEPTH LIMITS (empirically determined):
+    //   depth=4 CRASHES: even with cheap eval, 7^4=2401 nodes × overhead.
+    //   depth=3 SAFE: 7^3=343 worst × 228 ops/leaf = ~78K ops — fits watchdog.
+    //   depth=3 + window-scan (1659 ops/leaf) CRASHES: 343×1659=569K ops.
+    //
+    // Leaf eval: row-weighted column counts (228 ops).
+    //   Bottom rows get higher weights (more winning sequences pass through them).
+    //   This creates diverse scores → effective α-β pruning even in early game.
+    //   Combined with _findForkCol for all non-easy levels, AI plays well tactically.
 
     hidden function _aiDropFor(mark, opp) {
-        // Immediate win (all difficulties)
+        // 1. Win immediately
         var col = _findWinningCol(mark);
         if (col >= 0) { _dropDisc(col, _dropRow(col), mark); return; }
 
-        // Block immediate loss (all difficulties)
+        // 2. Block immediate loss
         col = _findWinningCol(opp);
         if (col >= 0) { _dropDisc(col, _dropRow(col), mark); return; }
 
+        // 3. Fork attacks — fast pre-check (~7K ops), prevents missed forks
+        col = _findForkCol(mark);
+        if (col >= 0) { _dropDisc(col, _dropRow(col), mark); return; }
+        col = _findForkCol(opp);
+        if (col >= 0) { _dropDisc(col, _dropRow(col), mark); return; }
+
         if (_cfDiff == CF_DIFF_EASY) {
-            col = _findForkCol(mark);
-            if (col >= 0) { _dropDisc(col, _dropRow(col), mark); return; }
-            col = _findForkCol(opp);
-            if (col >= 0) { _dropDisc(col, _dropRow(col), mark); return; }
             col = _bestScoredColFor(mark, opp);
         } else {
-            // Med: depth 3, Hard: depth 5.
-            // Leaf eval returns 0 — only wins/losses propagate through the tree.
-            // When no tactical win/loss is found, fall back to positional heuristic.
-            // Watchdog safety: depth=5, no leaf eval, alpha-beta → ~100 nodes × ~80 ops = ~8K ops.
-            var depth = (_cfDiff == CF_DIFF_HARD) ? 5 : 3;
+            // Med depth=2: 1 move per player lookahead (+fork pre-check = solid).
+            // Hard depth=3: 1.5 moves per player with row-weighted positional eval.
+            // depth=4 crashes (7^4=2401 nodes too many); depth=3 max 343×228=78K ops.
+            var depth = (_cfDiff == CF_DIFF_HARD) ? 3 : 2;
             col = _alphaBetaRoot(depth, mark, opp);
             if (col < 0) { col = _bestScoredColFor(mark, opp); }
         }
@@ -304,13 +313,41 @@ class GameView extends WatchUi.View {
         }
     }
 
-    // Alpha-beta negamax with zero leaf eval.
-    // Only win/loss signals (±8000) propagate — no expensive board scan.
-    // Positional scoring happens once at the root via _bestScoredColFor fallback.
-    // Watchdog: depth=5 → ~100-300 nodes × 80 ops = 8-24K ops. Completely safe.
+    // Alpha-beta negamax.
+    // Leaf eval: row-weighted column counts (228 ops/leaf).
+    //   Bottom rows (cr≥4) weighted 50% higher — they host more winning sequences.
+    //   Col weights: outer→2/3, inner→4/5, centre→8/9.
+    //   Score range ±234 → diverse enough for effective α-β pruning.
+    //   Worst-case: 7^3=343 leaves × 228 ops = ~78K ops — safe on all devices.
+    //   (Window scan was 1659 ops/leaf → 343×1659=569K ops → WATCHDOG.)
     hidden function _abSearch(depth, alpha, beta, mark, opp) {
         if (_moveCount == COLS * ROWS) { return 0; }
-        if (depth == 0)               { return 0; }  // no heuristic at leaves
+        if (depth == 0) {
+            var sc = 0; var cr = 0;
+            while (cr < ROWS) {
+                var idx = cr * COLS; var v;
+                if (cr >= 4) {
+                    // Bottom 2 rows: higher weights (more win-lines pass through)
+                    v = _cells[idx];     if (v == mark) { sc = sc + 3; } else if (v == opp) { sc = sc - 3; }
+                    v = _cells[idx + 1]; if (v == mark) { sc = sc + 5; } else if (v == opp) { sc = sc - 5; }
+                    v = _cells[idx + 2]; if (v == mark) { sc = sc + 7; } else if (v == opp) { sc = sc - 7; }
+                    v = _cells[idx + 3]; if (v == mark) { sc = sc + 9; } else if (v == opp) { sc = sc - 9; }
+                    v = _cells[idx + 4]; if (v == mark) { sc = sc + 7; } else if (v == opp) { sc = sc - 7; }
+                    v = _cells[idx + 5]; if (v == mark) { sc = sc + 5; } else if (v == opp) { sc = sc - 5; }
+                    v = _cells[idx + 6]; if (v == mark) { sc = sc + 3; } else if (v == opp) { sc = sc - 3; }
+                } else {
+                    v = _cells[idx];     if (v == mark) { sc = sc + 2; } else if (v == opp) { sc = sc - 2; }
+                    v = _cells[idx + 1]; if (v == mark) { sc = sc + 4; } else if (v == opp) { sc = sc - 4; }
+                    v = _cells[idx + 2]; if (v == mark) { sc = sc + 6; } else if (v == opp) { sc = sc - 6; }
+                    v = _cells[idx + 3]; if (v == mark) { sc = sc + 8; } else if (v == opp) { sc = sc - 8; }
+                    v = _cells[idx + 4]; if (v == mark) { sc = sc + 6; } else if (v == opp) { sc = sc - 6; }
+                    v = _cells[idx + 5]; if (v == mark) { sc = sc + 4; } else if (v == opp) { sc = sc - 4; }
+                    v = _cells[idx + 6]; if (v == mark) { sc = sc + 2; } else if (v == opp) { sc = sc - 2; }
+                }
+                cr = cr + 1;
+            }
+            return sc;
+        }
         var best = -9999;
         var ci = 0;
         while (ci < COLS) {
@@ -336,11 +373,11 @@ class GameView extends WatchUi.View {
         return (best == -9999) ? 0 : best;
     }
 
-    // Root call: returns best column.
-    // When all moves score 0 (no tactical win/loss in window), returns -1
-    // so the caller falls back to _bestScoredColFor for positional play.
+    // Root call: returns best column index (always ≥ 0 when any move exists).
+    // With non-zero leaf eval, scores are never all zero, so -1 is only returned
+    // on a completely full board (handled by caller's fallback).
     hidden function _alphaBetaRoot(depth, mark, opp) {
-        var bestCol = -1; var bestScore = -999999; var allZero = true;
+        var bestCol = -1; var bestScore = -999999;
         var ci = 0;
         while (ci < COLS) {
             var c = _abCols[ci];
@@ -356,13 +393,10 @@ class GameView extends WatchUi.View {
                 }
                 _cells[r * COLS + c] = MARK_NONE;
                 _moveCount = _moveCount - 1;
-                if (sc != 0) { allZero = false; }
                 if (sc > bestScore) { bestScore = sc; bestCol = c; }
             }
             ci = ci + 1;
         }
-        // No tactical advantage → let _bestScoredColFor handle positional choice
-        if (allZero) { return -1; }
         return bestCol;
     }
 
