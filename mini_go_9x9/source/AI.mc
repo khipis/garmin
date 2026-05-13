@@ -25,10 +25,49 @@ class AI {
     function setDiff(d) { _diff = d; }
 
     // Returns grid index of best move for 'aiColor', or -1 to pass.
+    // Hard: first check for immediate captures (atari captures) — highest priority.
     function chooseMove(aiColor) {
         var opp        = (aiColor == 1) ? 2 : 1;
         var bestScore  = -9999;
         var bestMove   = -1;
+
+        // Phase 0 (Hard only): urgent capture — take any opp group in atari.
+        // Only attempt if self-atari estimate > 0 (not suicide after the capture).
+        if (_diff == 2) {
+            var i = 0;
+            while (i < 81) {
+                if (_board.grid[i] == 0) {
+                    var x = i % 9; var y = i / 9;
+                    var captures = false;
+                    if (y > 0    && _board.grid[i - 9] == opp && _board.getGroupLiberties(i - 9) == 1) { captures = true; }
+                    if (y < 8    && _board.grid[i + 9] == opp && _board.getGroupLiberties(i + 9) == 1) { captures = true; }
+                    if (x > 0    && _board.grid[i - 1] == opp && _board.getGroupLiberties(i - 1) == 1) { captures = true; }
+                    if (x < 8    && _board.grid[i + 1] == opp && _board.getGroupLiberties(i + 1) == 1) { captures = true; }
+                    if (captures) {
+                        var libs = _estLibsAfterPlace(i, aiColor);
+                        if (libs > 0) { return i; }
+                    }
+                }
+                i = i + 1;
+            }
+            // Phase 0b: save own group in atari.
+            i = 0;
+            while (i < 81) {
+                if (_board.grid[i] == 0) {
+                    var x = i % 9; var y = i / 9;
+                    var savesAtari = false;
+                    if (y > 0    && _board.grid[i - 9] == aiColor && _board.getGroupLiberties(i - 9) == 1) { savesAtari = true; }
+                    if (y < 8    && _board.grid[i + 9] == aiColor && _board.getGroupLiberties(i + 9) == 1) { savesAtari = true; }
+                    if (x > 0    && _board.grid[i - 1] == aiColor && _board.getGroupLiberties(i - 1) == 1) { savesAtari = true; }
+                    if (x < 8    && _board.grid[i + 1] == aiColor && _board.getGroupLiberties(i + 1) == 1) { savesAtari = true; }
+                    if (savesAtari) {
+                        var libs = _estLibsAfterPlace(i, aiColor);
+                        if (libs >= 2) { return i; }
+                    }
+                }
+                i = i + 1;
+            }
+        }
 
         var i = 0;
         while (i < 81) {
@@ -47,7 +86,9 @@ class AI {
         // ── Centre preference (Manhattan distance from centre 4,4) ───────
         var dx = x - 4; if (dx < 0) { dx = -dx; }
         var dy = y - 4; if (dy < 0) { dy = -dy; }
-        var score = 8 - dx - dy;
+        // Stronger centre weight for Hard, and bonus for 3-3 points (joseki positions)
+        var centreW = (_diff == 2) ? 12 : 8;
+        var score = centreW - (dx + dy);
 
         // ── Neighbour analysis (all 4 directions) ────────────────────────
         var adjOwn = 0;
@@ -100,18 +141,28 @@ class AI {
             }
             iy = iy + 1;
         }
-        var infBonus = (_diff == 2) ? 4 : 2;
+        var infBonus = (_diff == 2) ? 6 : 3;
         score = score + (ownNear - oppNear) * infBonus;
 
         // ── Self-atari penalty ───────────────────────────────────────────
         var estLibs = _estLibsAfterPlace(idx, aiColor);
-        if (estLibs <= 1) {
-            var penalty = (_diff == 2) ? -20 : -10;
+        if (estLibs <= 0) {
+            score = score - 999;  // absolute suicide — never do this
+        } else if (estLibs == 1) {
+            var penalty = (_diff == 2) ? -30 : -15;
             score = score + penalty;
         }
 
+        // ── Opponent atari threat bonus ──────────────────────────────────
+        // Placing here puts opp groups in atari (1 liberty) — large bonus.
+        if (y > 0    && _board.grid[idx - 9] == opp && _board.getGroupLiberties(idx - 9) == 2) { score = score + 8; }
+        if (y < 8    && _board.grid[idx + 9] == opp && _board.getGroupLiberties(idx + 9) == 2) { score = score + 8; }
+        if (x > 0    && _board.grid[idx - 1] == opp && _board.getGroupLiberties(idx - 1) == 2) { score = score + 8; }
+        if (x < 8    && _board.grid[idx + 1] == opp && _board.getGroupLiberties(idx + 1) == 2) { score = score + 8; }
+
         // Small random noise: breaks ties, adds variety
-        score = score + Math.rand() % 4;
+        var noiseRange = (_diff == 2) ? 2 : 4;
+        score = score + Math.rand() % noiseRange;
         return score;
     }
 

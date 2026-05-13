@@ -543,7 +543,7 @@ class GameView extends WatchUi.View {
         var bestDst     = -1;
 
         // ── Phase A: place from hand (prefer larger pieces first) ─────────
-        // Uses _aiScoreAt (2-4 lines × 4 cells ≈ 80 ops) vs _aiLineScoreFor (10 × 4 ≈ 400 ops).
+        // Hard: also penalise moves that leave enemy with an immediate win.
         var s = GSIZES;
         while (s >= 1) {
             if (ah[s - 1] > 0) {
@@ -551,21 +551,20 @@ class GameView extends WatchUi.View {
                 var dst = 0;
                 while (dst < GM2) {
                     if (_canPlace(s, dst)) {
-                        // Gobble bonus: capturing an opponent's visible piece is valuable
                         var capBonus = 0;
-                        if (_topOwner(dst) == enemy) {
-                            capBonus = _topSize(dst) * 150;
-                        }
+                        if (_topOwner(dst) == enemy) { capBonus = _topSize(dst) * 150; }
                         _place(aiVal, dst);
                         var sc = 0;
                         if (_checkWinAt(who, dst)) {
                             sc = winScore;
                         } else if (_checkWinAt(enemy, dst)) {
-                            // Placing here reveals a hidden opponent piece that completes
-                            // their line — same penalty as blocking a board-move threat
                             sc = blockScore;
                         } else {
                             sc = _aiScoreAt(who, enemy, dst) + capBonus;
+                            // Hard/Med: penalise moves that allow enemy immediate win on next turn
+                            if (_diff != DIFF_EASY && _aiEnemyCanWin(enemy, eh)) {
+                                sc = sc - ((_diff == DIFF_HARD) ? 20000 : 8000);
+                            }
                             if (_diff == DIFF_EASY) { sc = sc + Math.rand() % 25 - 12; }
                         }
                         _pop(dst);
@@ -580,9 +579,9 @@ class GameView extends WatchUi.View {
         }
 
         // ── Phase B: move a board piece ───────────────────────────────────
-        // Budget=48 caps worst-case to ≈ 48 × (32 + 160) = 9 216 ops.
+        // Budget raised to 64 for Hard; 48 for Med/Easy.
         // Scores both src and dst cells' lines since both change after a board move.
-        var src = 0; var phBudget = 48;
+        var src = 0; var phBudget = (_diff == DIFF_HARD) ? 64 : 48;
         while (src < GM2 && phBudget > 0) {
             if (_topOwner(src) == who) {
                 var sz = _topSize(src);
@@ -591,9 +590,7 @@ class GameView extends WatchUi.View {
                     phBudget = phBudget - 1;
                     if (dst != src && _canPlace(sz, dst)) {
                         var capBonus2 = 0;
-                        if (_topOwner(dst) == enemy) {
-                            capBonus2 = _topSize(dst) * 150;
-                        }
+                        if (_topOwner(dst) == enemy) { capBonus2 = _topSize(dst) * 150; }
                         var val = _pop(src);
                         _place(val, dst);
                         var sc = 0;
@@ -601,6 +598,10 @@ class GameView extends WatchUi.View {
                         else if (_checkWinAt2(enemy, src, dst)) { sc = blockScore; }
                         else {
                             sc = _aiScoreAt(who, enemy, dst) + _aiScoreAt(who, enemy, src) + capBonus2;
+                            // Hard/Med: penalise moves that allow enemy immediate win on next turn
+                            if (_diff != DIFF_EASY && _aiEnemyCanWin(enemy, eh)) {
+                                sc = sc - ((_diff == DIFF_HARD) ? 20000 : 8000);
+                            }
                             if (_diff == DIFF_EASY) { sc = sc + Math.rand() % 25 - 12; }
                         }
                         _pop(dst);

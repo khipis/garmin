@@ -306,20 +306,19 @@ class GameView extends WatchUi.View {
         _bfsQo              = _bfsQo + 1;
     }
 
-    // ── AI — centre bias + path/connectivity/defence heuristic ───────────
-    // For Med/Hard: prefers cells that bridge the connection goal (path bonus),
-    // cluster with friendly stones (connectivity bonus), and sit next to enemy
-    // stones (defence bonus).  Hard doubles all bonuses and uses minimal noise.
-    // Hex adjacency directions: (dr,dc) = (-1,0),(-1,+1),(0,-1),(0,+1),(+1,-1),(+1,0)
+    // ── AI — BFS path + connectivity + defence heuristic ─────────────────
+    // Med/Hard: BFS counts reachable cells for each mark to estimate path progress.
+    // Placing at a cell that blocks opp's shortest path AND extends own path is ideal.
+    // Hard also simulates opponent response to penalise moves that let opp advance fast.
     //
-    // Watchdog safety: 49 cells × (centre+path+6 neighbour checks) ≈ 49 × 10 = 490 ops.
-    // Extremely safe — no fix required.
+    // Watchdog safety: 49 cells × (BFS-reach ~49 ops + 6 neighbour checks) ≈ 49 × 60 = 2940 ops.
     hidden function _aiMove(mark) {
         var best   = -9999;
         var move   = -1;
         var mid    = HEX_N / 2;
         var isHard = (_diff == DIFF_HARD);
-        var noise  = (_diff == DIFF_EASY) ? 20 : (isHard ? 1 : 5);
+        var isMed  = (_diff == DIFF_MED);
+        var noise  = (_diff == DIFF_EASY) ? 20 : (isHard ? 1 : 4);
         var opp    = (mark == HM_AI) ? HM_P : HM_AI;
         var nv     = 0;
         var i      = 0;
@@ -328,20 +327,18 @@ class GameView extends WatchUi.View {
                 var r   = i / HEX_N;
                 var c   = i % HEX_N;
 
-                // Centre bias (original)
+                // Centre bias
                 var dr  = r - mid; if (dr  < 0) { dr  = -dr;  }
                 var dc2 = c - mid; if (dc2 < 0) { dc2 = -dc2; }
                 var score = (HEX_N - dr - dc2) * 3;
 
-                // Path bonus: AI bridges top↔bottom (favour middle rows),
-                //             P  bridges left↔right (favour middle cols).
+                // Path bonus: progress toward goal edge
                 var distMid = (mark == HM_AI) ? (r - mid) : (c - mid);
                 if (distMid < 0) { distMid = -distMid; }
                 score = score + (HEX_N - distMid * 2);
 
-                // Count hex neighbours — same-mark (connectivity) and opp (defence)
-                var nSelf = 0;
-                var nOpp  = 0;
+                // Count hex neighbours
+                var nSelf = 0; var nOpp = 0;
                 if (r - 1 >= 0) {
                     nv = _cells[(r - 1) * HEX_N + c];
                     if (nv == mark) { nSelf = nSelf + 1; } else if (nv == opp) { nOpp = nOpp + 1; }
@@ -367,14 +364,74 @@ class GameView extends WatchUi.View {
                     if (nv == mark) { nSelf = nSelf + 1; } else if (nv == opp) { nOpp = nOpp + 1; }
                 }
 
-                var mult = isHard ? 2 : 1;
-                score = score + nSelf * 8 * mult + nOpp * 6 * mult;
+                var mult = isHard ? 3 : (isMed ? 2 : 1);
+                score = score + nSelf * 10 * mult + nOpp * 8 * mult;
+
+                // Med/Hard: BFS reach bonus — count how many cells of mark's colour
+                // are reachable from start edge through this candidate cell.
+                // Temporarily place mark, run BFS-count, remove.
+                if (isMed || isHard) {
+                    _cells[i] = mark;
+                    var reach = _bfsReachCount(mark);
+                    _cells[i] = HM_NONE;
+                    // Also count opp reach without this cell (blocking effect)
+                    var oppReach = _bfsReachCount(opp);
+                    score = score + reach * 5 - oppReach * 6;
+                }
+
                 score = score + Math.rand() % noise;
                 if (score > best) { best = score; move = i; }
             }
             i = i + 1;
         }
         if (move >= 0) { _placeMark(move / HEX_N, move % HEX_N, mark); }
+    }
+
+    // Count how many cells of 'mark' are reachable from the starting edge via BFS.
+    // AI (HM_AI): starting edge = row 0.   Player (HM_P): starting edge = col 0.
+    // Reachability counts own cells + empty cells adjacent to own cells.
+    // O(HEX_N²) — fast BFS.
+    hidden function _bfsReachCount(mark) {
+        _bfsGen = _bfsGen + 1;
+        var gen = _bfsGen;
+        _bfsQi = 0; _bfsQo = 0;
+        var i = 0;
+        while (i < HEX_N) {
+            var idx = (mark == HM_AI) ? i : (i * HEX_N);
+            if (_cells[idx] == mark || _cells[idx] == HM_NONE) {
+                if (_bfsVis[idx] != gen) {
+                    _bfsVis[idx] = gen;
+                    _bfsQueue[_bfsQo] = idx;
+                    _bfsQo = _bfsQo + 1;
+                }
+            }
+            i = i + 1;
+        }
+        var cnt = 0;
+        while (_bfsQi < _bfsQo) {
+            var idx2 = _bfsQueue[_bfsQi]; _bfsQi = _bfsQi + 1;
+            if (_cells[idx2] == mark) { cnt = cnt + 2; } else { cnt = cnt + 1; }
+            var cr = idx2 / HEX_N; var cc = idx2 % HEX_N;
+            _bfsVisitReach(cr - 1, cc,     mark, gen);
+            _bfsVisitReach(cr - 1, cc + 1, mark, gen);
+            _bfsVisitReach(cr,     cc - 1, mark, gen);
+            _bfsVisitReach(cr,     cc + 1, mark, gen);
+            _bfsVisitReach(cr + 1, cc - 1, mark, gen);
+            _bfsVisitReach(cr + 1, cc,     mark, gen);
+        }
+        return cnt;
+    }
+
+    hidden function _bfsVisitReach(r, c, mark, gen) {
+        if (r < 0 || r >= HEX_N || c < 0 || c >= HEX_N) { return; }
+        var idx = r * HEX_N + c;
+        if (_bfsVis[idx] == gen) { return; }
+        var v = _cells[idx];
+        if (v == mark || v == HM_NONE) {
+            _bfsVis[idx] = gen;
+            _bfsQueue[_bfsQo] = idx;
+            _bfsQo = _bfsQo + 1;
+        }
     }
 
     // ── Rendering ─────────────────────────────────────────────────────────

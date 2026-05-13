@@ -512,6 +512,36 @@ class GameView extends WatchUi.View {
             }
         }
 
+        // Self-atari penalty: placing here should not leave own new group with 1 liberty.
+        // Estimate liberties of the group that would form at ci.
+        if (_diff != DIFF_EASY) {
+            var estLibs = 0;
+            if (cx > 0        && _board[ci - 1]    != TC_P) { estLibs = estLibs + 1; }
+            if (cx < TC_N - 1 && _board[ci + 1]    != TC_P) { estLibs = estLibs + 1; }
+            if (cy > 0        && _board[ci - TC_N]  != TC_P) { estLibs = estLibs + 1; }
+            if (cy < TC_N - 1 && _board[ci + TC_N]  != TC_P) { estLibs = estLibs + 1; }
+            if (estLibs <= 1) { score = score - (hard ? 40 : 20); }
+            else if (estLibs == 2) { score = score - (hard ? 10 : 5); }
+        }
+
+        // Bonus for moves that capture opponent groups in atari (already in capBonus above,
+        // but add extra incentive for Hard: also look one step away).
+        if (hard) {
+            // Look for opp groups with 2 libs adjacent to this cell — threatening them
+            var checkDirs = [ci - 1, ci + 1, ci - TC_N, ci + TC_N];
+            var di = 0;
+            while (di < 4) {
+                var nc = checkDirs[di];
+                if (nc >= 0 && nc < TC_CELLS) {
+                    if (_board[nc] == TC_P) {
+                        var nl = _checkGroup(nc, TC_P);
+                        if (nl == 2) { score = score + 15; }  // placing here threatens this group
+                    }
+                }
+                di = di + 1;
+            }
+        }
+
         score = score + Math.rand() % 7;
         if (_diff == DIFF_EASY) { return score / 2 + Math.rand() % 25; }
         return score;

@@ -70,37 +70,57 @@ class AI {
         return bestMove;
     }
 
+    // Count the number of valid moves for 'col' — used as mobility metric.
+    // O(64 × isValidAt) ≈ 64 × 32 = 2 048 ops.
+    hidden function _countMobility(col) {
+        var cnt = 0; var i = 0;
+        while (i < 64) {
+            if (_board.cells[i] == 0 && _board.isValidAt(i % 8, i / 8, col)) { cnt = cnt + 1; }
+            i = i + 1;
+        }
+        return cnt;
+    }
+
     // Full evaluation for placing 'col' at (x, y).
-    // Temporarily applies the move to measure opponent mobility and corner exposure,
-    // then restores the board.  Uses _board.flipBuf directly — isValidAt is read-only
-    // and never corrupts flipBuf, so no extra buffer is needed.
+    // Layers (highest to lowest weight):
+    //   1. Position table × 3 (corners +120, X-sq −36, edges +60 …)
+    //   2. X-square penalty when adjacent corner is empty (−30)
+    //   3. Corner-exposure penalty −60 per corner handed to opp
+    //   4. Flip count (secondary territorial gain)
+    //   5. Opponent mobility after our move: −4 per opp legal move
+    //      (limit opponent options — crucial in mid-game)
+    //   6. Small tie-break noise
     hidden function _evalMove(idx, x, y, col, opp) {
         var score = _wt[idx] * 3;
 
-        // X-square penalty: (1,1),(6,1),(1,6),(6,6) → indices 9,14,49,54.
-        // Penalise only when the diagonally-adjacent corner is still empty.
-        if (idx == 9)  { if (_board.cells[0]  == 0) { score = score - 25; } }
-        if (idx == 14) { if (_board.cells[7]  == 0) { score = score - 25; } }
-        if (idx == 49) { if (_board.cells[56] == 0) { score = score - 25; } }
-        if (idx == 54) { if (_board.cells[63] == 0) { score = score - 25; } }
+        // X-square penalty
+        if (idx == 9)  { if (_board.cells[0]  == 0) { score = score - 30; } }
+        if (idx == 14) { if (_board.cells[7]  == 0) { score = score - 30; } }
+        if (idx == 49) { if (_board.cells[56] == 0) { score = score - 30; } }
+        if (idx == 54) { if (_board.cells[63] == 0) { score = score - 30; } }
 
-        // Flip count — secondary mobility gain.
+        // Collect flips for the simulated move
         _board.collectFlips(x, y, col);
         var flipSaved = _board.flipCount;
-        score = score + flipSaved;
+        score = score + flipSaved * 2;
 
-        // Apply move temporarily (direct cell writes — no counter updates needed).
+        // Apply move temporarily
         _board.cells[y * 8 + x] = col;
         var fi = 0;
         while (fi < flipSaved) { _board.cells[_board.flipBuf[fi]] = col; fi = fi + 1; }
 
-        // Corner-exposure penalty: each corner that becomes available to the opponent.
-        if (_board.cells[0]  == 0 && _board.isValidAt(0, 0, opp)) { score = score - 50; }
-        if (_board.cells[7]  == 0 && _board.isValidAt(7, 0, opp)) { score = score - 50; }
-        if (_board.cells[56] == 0 && _board.isValidAt(0, 7, opp)) { score = score - 50; }
-        if (_board.cells[63] == 0 && _board.isValidAt(7, 7, opp)) { score = score - 50; }
+        // Corner-exposure penalty
+        if (_board.cells[0]  == 0 && _board.isValidAt(0, 0, opp)) { score = score - 60; }
+        if (_board.cells[7]  == 0 && _board.isValidAt(7, 0, opp)) { score = score - 60; }
+        if (_board.cells[56] == 0 && _board.isValidAt(0, 7, opp)) { score = score - 60; }
+        if (_board.cells[63] == 0 && _board.isValidAt(7, 7, opp)) { score = score - 60; }
 
-        // Undo move (flipBuf is unchanged since isValidAt is read-only).
+        // Mobility: penalise moves that give opp many options (limit them)
+        var oppMob = _countMobility(opp);
+        var ownMob = _countMobility(col);
+        score = score + (ownMob - oppMob) * 4;
+
+        // Undo move
         _board.cells[y * 8 + x] = 0;
         fi = 0;
         while (fi < flipSaved) { _board.cells[_board.flipBuf[fi]] = opp; fi = fi + 1; }

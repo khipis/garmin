@@ -64,12 +64,13 @@ class GameView extends WatchUi.View {
     // ── Timer ─────────────────────────────────────────────────────────────
     hidden var _timer;
 
-    // ── Multi-tick fork search state ──────────────────────────────────────
+    // ── Multi-tick 2-ply search state ────────────────────────────────────
     hidden var _aiForkMark;    // mark being checked this phase
     hidden var _aiForkAiMk;    // mark the AI is actually playing
-    hidden var _aiForkPhase;   // 0 = fork(AI), 1 = fork(opp)
+    hidden var _aiForkPhase;   // 0 = 2-ply search, 1 = unused (legacy)
     hidden var _aiForkI;       // outer-loop cursor
-    hidden var _aiForkResult;  // fork move index found (-1 = none yet)
+    hidden var _aiForkResult;  // best move index found (-1 = none yet)
+    hidden var _aiForkBest;    // best score found so far
 
     // ─────────────────────────────────────────────────────────────────────
     function initialize() {
@@ -254,7 +255,7 @@ class GameView extends WatchUi.View {
         WatchUi.requestUpdate();
     }
 
-    // Fast path: immediate win/block + Easy move. Med/Hard fork → GS_AI_FORK.
+    // Fast path: immediate win/block + Easy move. Med/Hard → 2-ply GS_AI_FORK.
     hidden function _aiStart(mark) {
         var opp = (mark == MARK_X) ? MARK_O : MARK_X;
         var move = _findThreat(mark);
@@ -267,56 +268,117 @@ class GameView extends WatchUi.View {
             if (move >= 0) { _aiFinish(move, mark); }
             return;
         }
-        // Med/Hard: fork search only for small grids (≤5x5 = 25 cells).
-        // On larger grids it takes too many ticks — scored move is fast enough.
-        if (_gridN <= 5) {
-            _aiForkAiMk  = mark;
-            _aiForkMark  = mark;
-            _aiForkPhase = 0;
-            _aiForkI     = 0;
-            _aiForkResult = -1;
-            _state = GS_AI_FORK;
-        } else {
-            _aiForkAiMk = mark;
-            _state = GS_AI_SCORE;
-        }
+        // Med/Hard: for 3×3 perfect minimax runs in one tick (at most 60 leaf nodes).
+        // For larger grids: 2-ply threat-aware search spread across ticks.
+        _aiForkAiMk  = mark;
+        _aiForkI     = 0;
+        _aiForkResult = -1;
+        _aiForkBest  = -999999;
+        _state = GS_AI_FORK;
     }
 
-    // Processes FORK_BATCH outer iterations per timer tick.
+    // Processes FORK_BATCH outer iterations per tick.
+    // For 3×3: runs full negamax per candidate (fast, terminates in 1-2 ticks).
+    // For 4×7: 2-ply — simulate my move, count opp winning replies + opp best score.
+    // Batch size adapts: 3×3=9 in one go; larger grids batched at FORK_BATCH/2.
     hidden function _aiForkStep() {
-        var col   = _aiForkMark;
+        var mark  = _aiForkAiMk;
+        var opp   = (mark == MARK_X) ? MARK_O : MARK_X;
         var total = _gridN * _gridN;
+        var is3   = (_gridN == 3);
+        var batch = is3 ? total : (FORK_BATCH / 2 + 1);
         var done  = 0;
-        while (_aiForkI < total && done < FORK_BATCH) {
+        while (_aiForkI < total && done < batch) {
             if (_cells[_aiForkI] == MARK_NONE) {
-                _cells[_aiForkI] = col;
-                var threats = 0; var j = 0;
-                while (j < total) {
-                    if (_cells[j] == MARK_NONE) {
-                        _cells[j] = col;
-                        if (_checkWinAt(col, j % _gridN, j / _gridN)) { threats = threats + 1; }
-                        _cells[j] = MARK_NONE;
-                        if (threats >= 2) { break; }
+                var ix = _aiForkI % _gridN; var iy = _aiForkI / _gridN;
+                _cells[_aiForkI] = mark;
+                _moveCount = _moveCount + 1;
+                var sc;
+                if (_checkWinAt(mark, ix, iy)) {
+                    // Immediate win — take it right now
+                    _cells[_aiForkI] = MARK_NONE;
+                    _moveCount = _moveCount - 1;
+                    _aiFinish(_aiForkI, mark);
+                    return;
+                } else if (_moveCount == total) {
+                    sc = 0;  // draw
+                } else if (is3) {
+                    // Full minimax for 3×3 — never watchdogs (≤60 leaf nodes from here)
+                    sc = -_negamax3(opp, mark, -1000, 1000);
+                } else {
+                    // 2-ply: penalise moves that leave opp with winning replies
+                    var myHeur = _scoreCell(_aiForkI, mark);
+                    var oppWins = 0; var oppBest = -99999; var j = 0;
+                    while (j < total) {
+                        if (_cells[j] == MARK_NONE) {
+                            // Fast: check opp winning
+                            _cells[j] = opp;
+                            var oppWin = _checkWinAt(opp, j % _gridN, j / _gridN);
+                            if (oppWin) {
+                                oppWins = oppWins + 1;
+                            } else {
+                                var os = _scoreCell(j, opp);
+                                if (os > oppBest) { oppBest = os; }
+                            }
+                            _cells[j] = MARK_NONE;
+                        }
+                        j = j + 1;
                     }
-                    j = j + 1;
+                    // Heavy penalty if opp can win, otherwise use 2-ply difference
+                    if (oppWins >= 2) {
+                        sc = myHeur - 5000;         // creates fork for opp — very bad
+                    } else if (oppWins == 1) {
+                        sc = myHeur - 2000;         // leaves forced loss
+                    } else {
+                        var oppPenalty = (oppBest == -99999) ? 0 : oppBest;
+                        sc = myHeur * 4 - oppPenalty * 3;
+                    }
                 }
                 _cells[_aiForkI] = MARK_NONE;
-                if (threats >= 2) { _aiForkResult = _aiForkI; break; }
+                _moveCount = _moveCount - 1;
+                if (sc > _aiForkBest) { _aiForkBest = sc; _aiForkResult = _aiForkI; }
             }
             _aiForkI = _aiForkI + 1;
             done = done + 1;
         }
-        if (_aiForkResult >= 0) { _aiFinish(_aiForkResult, _aiForkAiMk); return; }
-        if (_aiForkI < total)   { return; }  // need more ticks
-        // This phase exhausted — advance to next phase or fall back
-        if (_aiForkPhase == 0) {
-            _aiForkPhase = 1;
-            var opp = (_aiForkAiMk == MARK_X) ? MARK_O : MARK_X;
-            _aiForkMark = opp; _aiForkI = 0; _aiForkResult = -1;
-            return;
+        if (_aiForkI >= total) {
+            if (_aiForkResult >= 0) { _aiFinish(_aiForkResult, mark); }
+            else { _state = GS_AI_SCORE; }
         }
-        // Both fork phases done with no result — yield to scored-move tick
-        _state = GS_AI_SCORE;
+    }
+
+    // Full negamax with alpha-beta for 3×3 boards only.
+    // Positive score = good for 'mark'. Called after placing mark on board.
+    // Safe: max tree depth 7 (8 cells remain), alpha-beta prunes heavily.
+    hidden function _negamax3(mark, opp, alpha, beta) {
+        var move = _findThreat(mark);
+        if (move >= 0) {
+            _cells[move] = mark; _moveCount = _moveCount + 1;
+            _cells[move] = MARK_NONE; _moveCount = _moveCount - 1;
+            return 900;  // opponent already won last move? shouldn't reach here
+        }
+        if (_moveCount == _gridN * _gridN) { return 0; }
+        var best = -9999; var i = 0;
+        while (i < 9) {
+            if (_cells[i] == MARK_NONE) {
+                var ix = i % _gridN; var iy = i / _gridN;
+                _cells[i] = mark; _moveCount = _moveCount + 1;
+                var sc;
+                if (_checkWinAt(mark, ix, iy)) {
+                    sc = 900 - _moveCount;
+                } else if (_moveCount == 9) {
+                    sc = 0;
+                } else {
+                    sc = -_negamax3(opp, mark, -beta, -alpha);
+                }
+                _cells[i] = MARK_NONE; _moveCount = _moveCount - 1;
+                if (sc > best)  { best  = sc; }
+                if (sc > alpha) { alpha = sc; }
+                if (alpha >= beta) { break; }
+            }
+            i = i + 1;
+        }
+        return best;
     }
 
     // Separate tick: heuristic scored move after fork phases complete.

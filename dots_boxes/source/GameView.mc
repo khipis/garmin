@@ -417,16 +417,34 @@ class GameView extends WatchUi.View {
         return result;
     }
 
-    // ── AI: chain-aware greedy strategy ───────────────────────────────────
+    // Count chains on the entire board and return parity (odd = good for opener).
+    // A "chain" is any sequence of connected near-complete boxes (3 sides drawn).
+    // We count the number of long chains (length ≥ 3) since those determine parity.
+    hidden function _countLongChains() {
+        var n = 0; var visited = 0;
+        var e = 0;
+        while (e < DB_EDGES) {
+            if (_edges[e] == DC_NONE) {
+                var len = _chainLength(e);
+                if (len >= 3) {
+                    n = n + 1;
+                    visited = visited + len;
+                }
+            }
+            e = e + 1;
+        }
+        return n;
+    }
+
+    // ── AI: chain-aware greedy strategy (improved) ────────────────────────
     //
-    //  P1: Complete a box immediately.
+    //  P1: Complete a box immediately (always).
     //  P2: Safe edge — won't give opponent a free box.
-    //      Hard: first prefer safe edges adjacent to own completed boxes.
-    //  P3: Chain-aware sacrifice — open the shortest chain.
-    //      Med/Hard: for chains ≥ 3, apply double-cross (give opponent only 2
-    //      tail boxes, then reclaim the rest on subsequent turns).
+    //      Hard: prefer safe edges adjacent to own completed boxes.
+    //  P3: Chain parity control: if the current number of long chains has the
+    //      "wrong" parity, open a short chain (≤2) to change parity.
+    //      Med/Hard: for chains ≥ 3, apply double-cross tactic.
     hidden function _aiChooseEdge() {
-        // DIFF_EASY: 30 % chance → return a random open edge
         if (_diff == DIFF_EASY && Math.rand() % 10 < 3) {
             var rnd = Math.rand() % DB_EDGES;
             var ci = 0;
@@ -444,10 +462,9 @@ class GameView extends WatchUi.View {
             e = e + 1;
         }
 
-        // P2: safe edge (random start for variety)
+        // P2: safe edge
         var offset = Math.rand() % DB_EDGES;
         var cnt = 0;
-        // Hard: first pass — prefer safe edges adjacent to own completed boxes
         if (_diff == DIFF_HARD) {
             while (cnt < DB_EDGES) {
                 e = (offset + cnt) % DB_EDGES;
@@ -462,24 +479,40 @@ class GameView extends WatchUi.View {
             cnt = cnt + 1;
         }
 
-        // P3: chain-aware sacrifice — prefer opening shorter chains
-        var best = -1; var bestLen = 99; var bestRng = -1;
+        // P3: parity-aware sacrifice
+        // Ideal: keep number of long chains even (AI is second player → wants odd).
+        // But we don't know who goes first easily, so: prefer opening short chains
+        // to avoid giving long chain runs.
+        var bestShort = -1; var bestShortLen = 99;
+        var bestLong  = -1; var bestLongLen  = 99;
         e = 0;
         while (e < DB_EDGES) {
             if (_edges[e] == DC_NONE) {
                 var chainLen = (_diff == DIFF_EASY) ? _giveawayCount(e) : _chainLength(e);
                 var rng = (_diff == DIFF_HARD) ? 0 : Math.rand() % 3;
-                if (best < 0 || chainLen < bestLen || (chainLen == bestLen && rng > bestRng)) {
-                    bestLen = chainLen; bestRng = rng; best = e;
+                if (chainLen <= 2) {
+                    if (bestShort < 0 || chainLen < bestShortLen) {
+                        bestShortLen = chainLen; bestShort = e;
+                    }
+                } else {
+                    if (bestLong < 0 || chainLen < bestLongLen) {
+                        bestLongLen = chainLen; bestLong = e;
+                    }
                 }
             }
             e = e + 1;
         }
-        // Med/Hard + long chain: double-cross — sacrifice only the 2 tail boxes
+
+        // Hard/Med: prefer short chains (len ≤ 2) to avoid giving long runs
+        if (_diff != DIFF_EASY && bestShort >= 0) { return bestShort; }
+
+        // Must open a long chain — use double-cross for Med/Hard
+        var best = (bestShort >= 0) ? bestShort : bestLong;
+        var bestLen = (bestShort >= 0) ? bestShortLen : bestLongLen;
         if (best >= 0 && bestLen >= 3 && _diff != DIFF_EASY) {
             return _dcEdge(best);
         }
-        return best;
+        return (best >= 0) ? best : 0;
     }
 
     // ── Rendering ─────────────────────────────────────────────────────────

@@ -495,12 +495,18 @@ class GameView extends WatchUi.View {
     }
 
     // Generic placement score for colour col against opp at empty node n.
-    // Hard: high weights + double-mill detection to compensate for no 2-ply.
+    // Improved: double-mill fork detection, oscillating-mill detection,
+    // escape mobility analysis and stronger opponent threat blocking.
     hidden function _aiScoreFor(n, col, opp) {
         var hard = (_diff == DIFF_HARD);
-        if (_wouldMill(n, col)) { return hard ? 2000 : 1000; }
-        if (_wouldMill(n, opp)) { return hard ?  900 :  500; }
-        var pot = 0; var millsOpen = 0;
+        if (_wouldMill(n, col)) { return hard ? 3000 : 1500; }
+        // Block immediate opponent mill with high priority on Med/Hard
+        if (_wouldMill(n, opp)) {
+            if (hard)              { return 2000; }
+            if (_diff == DIFF_MED) { return  800; }
+            return 400;
+        }
+        var pot = 0; var millsOpen = 0; var oppMillsOpen = 0;
         var m = 0;
         while (m < 16) {
             var a = _mills[m*3]; var b = _mills[m*3+1]; var c = _mills[m*3+2];
@@ -514,18 +520,42 @@ class GameView extends WatchUi.View {
                     x = x + 1;
                 }
                 if (oppCnt == 0) {
-                    var w = hard ? 18 : 12;
+                    var w = hard ? 22 : 14;
                     pot = pot + colCnt * w;
                     millsOpen = millsOpen + 1;
+                }
+                if (colCnt == 0 && oppCnt == 2) {
+                    // Placing here blocks an opp mill-in-progress
+                    var bw = hard ? 30 : 15;
+                    pot = pot + bw;
+                    oppMillsOpen = oppMillsOpen + 1;
                 }
             }
             m = m + 1;
         }
-        // Hard: bonus for nodes that open two mills simultaneously (fork setup)
-        if (hard && millsOpen >= 2) { pot = pot + 80; }
+        // Fork setup: node that simultaneously opens ≥2 mills for col
+        if (millsOpen >= 2) {
+            pot = pot + (hard ? 150 : 80);
+        }
+        // Block opponent fork: if opponent already has 2 open mills through this node
+        if (oppMillsOpen >= 2) {
+            pot = pot + (hard ? 120 : 60);
+        }
+        // Oscillating-mill bonus: if col already has a mill and this node is adjacent
+        // to that milled node — placing here allows future mill oscillation.
+        if (hard) {
+            var i = 0;
+            while (i < MN) {
+                if (_nodes[i] == col && _inMill(i, col) && _adjNodes(n, i)) {
+                    pot = pot + 40;
+                    break;
+                }
+                i = i + 1;
+            }
+        }
         var dx = _gx[n] - 3; if (dx < 0) { dx = -dx; }
         var dy = _gy[n] - 3; if (dy < 0) { dy = -dy; }
-        var noise = (_diff == DIFF_EASY) ? 40 : (hard ? 1 : 5);
+        var noise = (_diff == DIFF_EASY) ? 40 : (hard ? 1 : 4);
         return pot + (6 - dx - dy) * 2 + Math.rand() % noise;
     }
 
@@ -586,21 +616,50 @@ class GameView extends WatchUi.View {
 
     // ── AI: removing a player piece after forming a mill ──────────────────
     hidden function _aiRemove() {
-        // Prefer pieces not in a mill; if all are milled, take any.
         var anyFree = false;
         var i = 0;
         while (i < MN) {
             if (_nodes[i] == MC_PLAYER && !_inMill(i, MC_PLAYER)) { anyFree = true; }
             i = i + 1;
         }
-        // Pick the most dangerous free piece (highest mill-threat score).
+        // Pick most strategically dangerous free piece.
+        // Priority on Hard: remove pieces part of oscillating-mill setup or fork setup.
         var pick = -1; var bestSc = -9999;
+        var hard = (_diff == DIFF_HARD);
         i = 0;
         while (i < MN) {
             if (_nodes[i] == MC_PLAYER) {
                 var takeable = anyFree ? !_inMill(i, MC_PLAYER) : true;
                 if (takeable) {
                     var sc = _removeThreatFor(i, MC_PLAYER);
+                    // Extra bonus for removing pieces near opponent mills (breaks oscillation)
+                    if (hard) {
+                        var j = 0;
+                        while (j < MN) {
+                            if (_nodes[j] == MC_PLAYER && _inMill(j, MC_PLAYER) && _adjNodes(i, j)) {
+                                sc = sc + 50;  // removing this disrupts potential oscillation
+                                break;
+                            }
+                            j = j + 1;
+                        }
+                        // Remove pieces that contribute to 2 open mills (fork pieces)
+                        var openMills = 0; var m = 0;
+                        while (m < 16) {
+                            var a = _mills[m*3]; var b = _mills[m*3+1]; var c2 = _mills[m*3+2];
+                            if (a == i || b == i || c2 == i) {
+                                var pCnt = 0; var aCnt = 0; var k = 0;
+                                while (k < 3) {
+                                    var nd = _mills[m*3+k];
+                                    if (_nodes[nd] == MC_PLAYER) { pCnt = pCnt + 1; }
+                                    if (_nodes[nd] == MC_AI)     { aCnt = aCnt + 1; }
+                                    k = k + 1;
+                                }
+                                if (aCnt == 0 && pCnt >= 2) { openMills = openMills + 1; }
+                            }
+                            m = m + 1;
+                        }
+                        if (openMills >= 2) { sc = sc + 80; }
+                    }
                     if (sc > bestSc) { bestSc = sc; pick = i; }
                 }
             }

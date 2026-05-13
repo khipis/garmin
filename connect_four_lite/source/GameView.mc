@@ -61,6 +61,9 @@ class GameView extends WatchUi.View {
     // ── Timer ─────────────────────────────────────────────────────────────
     hidden var _timer;
 
+    // ── Alpha-beta column ordering ────────────────────────────────────────
+    hidden var _abCols;   // center-out order [3,2,4,1,5,0,6]
+
     // ─────────────────────────────────────────────────────────────────────
     function initialize() {
         View.initialize();
@@ -73,6 +76,9 @@ class GameView extends WatchUi.View {
         _cfDiff  = CF_DIFF_MED;
         _menuSel = 0;
         _playerFirst = true;
+        _abCols = new [COLS];
+        _abCols[0] = 3; _abCols[1] = 2; _abCols[2] = 4;
+        _abCols[3] = 1; _abCols[4] = 5; _abCols[5] = 0; _abCols[6] = 6;
         _startGame();
         _state   = GS_MENU;   // override to show menu first
     }
@@ -260,39 +266,156 @@ class GameView extends WatchUi.View {
 
     // ── AI ────────────────────────────────────────────────────────────────
     //
-    // Watchdog safety: worst-case ops per tick ≈ 1 600.
-    //   _findWinningCol × 2: 2 × 7 × _checkWinAt(~16 ops) ≈ 224
-    //   _findForkCol × 2:    2 × 7 × _countThreats(7 × 16) ≈ 1 568
-    //   _bestScoredColFor:   7 × (_axisLen+_openEndsFor, ≤56 ops) ≈ 392
-    // Total ≈ 1 792 ops — safe on all devices.
+    // Easy:  win/block + fork + heuristic (fast, ~2K ops)
+    // Med:   alpha-beta depth 3  (~200 nodes, ~30K ops)
+    // Hard:  alpha-beta depth 6  (~500 nodes, ~100K ops) — safe on all devices.
+    //
+    // Alpha-beta uses centre-out column ordering to maximise pruning efficiency.
 
-    // Generic AI drop for given mark (allows AiAI: Red=MARK_P, Yellow=MARK_AI).
     hidden function _aiDropFor(mark, opp) {
-        // Step 1: take the win
+        // Immediate win (all difficulties)
         var col = _findWinningCol(mark);
         if (col >= 0) { _dropDisc(col, _dropRow(col), mark); return; }
 
-        // Step 2: block opponent win
+        // Block immediate loss (all difficulties)
         col = _findWinningCol(opp);
         if (col >= 0) { _dropDisc(col, _dropRow(col), mark); return; }
 
-        // Steps 2.5 / 3: fork creation and fork blocking (Med / Hard only)
-        if (_cfDiff != CF_DIFF_EASY) {
+        if (_cfDiff == CF_DIFF_EASY) {
             col = _findForkCol(mark);
             if (col >= 0) { _dropDisc(col, _dropRow(col), mark); return; }
             col = _findForkCol(opp);
             if (col >= 0) { _dropDisc(col, _dropRow(col), mark); return; }
+            col = _bestScoredColFor(mark, opp);
+        } else {
+            var depth = (_cfDiff == CF_DIFF_HARD) ? 6 : 3;
+            col = _alphaBetaRoot(depth, mark, opp);
+            if (col < 0) { col = _bestScoredColFor(mark, opp); }
         }
-
-        // Step 4: positional scoring with open-3 awareness
-        col = _bestScoredColFor(mark, opp);
         if (col >= 0) { _dropDisc(col, _dropRow(col), mark); return; }
-
         var c = 0;
         while (c < COLS) {
             if (_dropRow(c) >= 0) { _dropDisc(c, _dropRow(c), mark); return; }
             c = c + 1;
         }
+    }
+
+    // Score a window of WIN_LEN cells for static eval (called at depth=0 leaves).
+    hidden function _windowScore(c, r, dc, dr, mark, opp) {
+        var mCnt = 0; var oCnt = 0; var k = 0;
+        while (k < WIN_LEN) {
+            var v = _cells[(r + k * dr) * COLS + (c + k * dc)];
+            if      (v == mark) { mCnt = mCnt + 1; }
+            else if (v == opp)  { oCnt = oCnt + 1; }
+            k = k + 1;
+        }
+        if (oCnt > 0 && mCnt > 0) { return 0; }
+        if (oCnt > 0) {
+            if (oCnt == WIN_LEN - 1) { return -50; }
+            if (oCnt >= 2)           { return -10; }
+            return -1;
+        }
+        if (mCnt == WIN_LEN - 1) { return 20; }
+        if (mCnt >= 2)           { return 5; }
+        if (mCnt >= 1)           { return 1; }
+        return 0;
+    }
+
+    // Board evaluation from 'mark' perspective: window sum + centre bonus.
+    // O(69 windows × WIN_LEN cells) ≈ 280 ops — fast at leaves.
+    hidden function _c4StaticEval(mark, opp) {
+        var score = 0;
+        var r = 0;
+        while (r < ROWS) {
+            var c = 0;
+            while (c <= COLS - WIN_LEN) {
+                score = score + _windowScore(c, r, 1, 0, mark, opp);
+                c = c + 1;
+            }
+            r = r + 1;
+        }
+        var c2 = 0;
+        while (c2 < COLS) {
+            var r2 = 0;
+            while (r2 <= ROWS - WIN_LEN) {
+                score = score + _windowScore(c2, r2, 0, 1, mark, opp);
+                r2 = r2 + 1;
+            }
+            c2 = c2 + 1;
+        }
+        var r3 = 0;
+        while (r3 <= ROWS - WIN_LEN) {
+            var c3 = 0;
+            while (c3 <= COLS - WIN_LEN) {
+                score = score + _windowScore(c3, r3, 1, 1, mark, opp);
+                score = score + _windowScore(c3 + WIN_LEN - 1, r3, -1, 1, mark, opp);
+                c3 = c3 + 1;
+            }
+            r3 = r3 + 1;
+        }
+        var mid = COLS / 2;
+        var cr = 0;
+        while (cr < ROWS) {
+            if (_cells[cr * COLS + mid] == mark) { score = score + 3; }
+            cr = cr + 1;
+        }
+        return score;
+    }
+
+    // Alpha-beta negamax. Positive score = good for 'mark'.
+    // Win detected by checking axes through last placed piece — O(16 ops).
+    // With centre-out ordering and alpha-beta pruning, depth=6 visits ~500 nodes.
+    hidden function _abSearch(depth, alpha, beta, mark, opp) {
+        if (_moveCount == COLS * ROWS) { return 0; }
+        if (depth == 0)               { return _c4StaticEval(mark, opp); }
+        var best = -9999;
+        var ci = 0;
+        while (ci < COLS) {
+            var c = _abCols[ci];
+            var r = _dropRow(c);
+            if (r >= 0) {
+                _cells[r * COLS + c] = mark;
+                _moveCount = _moveCount + 1;
+                var sc;
+                if (_checkWinAt(mark, c, r)) {
+                    sc = 8000 + depth;
+                } else {
+                    sc = -_abSearch(depth - 1, -beta, -alpha, opp, mark);
+                }
+                _cells[r * COLS + c] = MARK_NONE;
+                _moveCount = _moveCount - 1;
+                if (sc > best)  { best  = sc; }
+                if (sc > alpha) { alpha = sc; }
+                if (alpha >= beta) { break; }
+            }
+            ci = ci + 1;
+        }
+        return (best == -9999) ? 0 : best;
+    }
+
+    // Root call: returns best column for 'mark' at given search depth.
+    hidden function _alphaBetaRoot(depth, mark, opp) {
+        var bestCol = -1; var bestScore = -999999;
+        var ci = 0;
+        while (ci < COLS) {
+            var c = _abCols[ci];
+            var r = _dropRow(c);
+            if (r >= 0) {
+                _cells[r * COLS + c] = mark;
+                _moveCount = _moveCount + 1;
+                var sc;
+                if (_checkWinAt(mark, c, r)) {
+                    sc = 9000;
+                } else {
+                    sc = -_abSearch(depth - 1, -9000, 9000, opp, mark);
+                }
+                _cells[r * COLS + c] = MARK_NONE;
+                _moveCount = _moveCount - 1;
+                if (sc > bestScore) { bestScore = sc; bestCol = c; }
+            }
+            ci = ci + 1;
+        }
+        return bestCol;
     }
 
     hidden function _aiDrop() { _aiDropFor(MARK_AI, MARK_P); }
