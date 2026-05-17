@@ -382,23 +382,32 @@ class BreathTrainingView extends WatchUi.View {
             _actSes = null;
         }
         if (!(ActivityRecording has :createSession)) { return; }
+        // Use SPORT_YOGA so the activity appears visibly in Garmin Connect
+        // (SPORT_GENERIC lands under "Other" and is very hard to find)
+        var sport    = ActivityRecording.SPORT_GENERIC;
+        var subSport = ActivityRecording.SUB_SPORT_GENERIC;
+        if (ActivityRecording has :SPORT_YOGA) {
+            sport    = ActivityRecording.SPORT_YOGA;
+            subSport = ActivityRecording.SUB_SPORT_GENERIC;
+        }
         try {
             _actSes = ActivityRecording.createSession({
                 :name     => name,
-                :sport    => ActivityRecording.SPORT_GENERIC,
-                :subSport => ActivityRecording.SUB_SPORT_GENERIC
+                :sport    => sport,
+                :subSport => subSport
             });
             try { Sensor.setEnabledSensors([Sensor.SENSOR_HEARTRATE]); } catch (e) {}
             _actSes.start();
         } catch (e) { _actSes = null; }
     }
 
-    // Save if session lasted ≥60 s; discard otherwise.
+    // Save if session lasted ≥20 s; discard otherwise.
+    // (60 s was too high — beginners' apnea holds or quick breathwork would be lost)
     hidden function _actStop(durationSec) {
         if (_actSes == null) { return; }
         try {
             _actSes.stop();
-            if (durationSec >= 60) { _actSes.save(); }
+            if (durationSec >= 20) { _actSes.save(); }
             else                   { _actSes.discard(); }
         } catch (e) {}
         try { Sensor.setEnabledSensors([]); } catch (e) {}

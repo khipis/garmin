@@ -2529,11 +2529,19 @@ class BreathTrainingSystemView extends WatchUi.View {
             _actSes = null;
         }
         if (!(ActivityRecording has :createSession)) { return; }
+        // Use SPORT_YOGA so the activity appears visibly in Garmin Connect
+        // (SPORT_GENERIC lands under "Other" and is very hard to find)
+        var sport    = ActivityRecording.SPORT_GENERIC;
+        var subSport = ActivityRecording.SUB_SPORT_GENERIC;
+        if (ActivityRecording has :SPORT_YOGA) {
+            sport    = ActivityRecording.SPORT_YOGA;
+            subSport = ActivityRecording.SUB_SPORT_GENERIC;
+        }
         try {
             _actSes = ActivityRecording.createSession({
                 :name     => name,
-                :sport    => ActivityRecording.SPORT_GENERIC,
-                :subSport => ActivityRecording.SUB_SPORT_GENERIC
+                :sport    => sport,
+                :subSport => subSport
             });
             _actSes.start();
         } catch (e) { _actSes = null; }
@@ -2568,7 +2576,8 @@ class BreathTrainingSystemView extends WatchUi.View {
                 }
             }
             _actSes.stop();
-            if (dur >= 60) { _actSes.save(); }
+            // Save if ≥20 s — 60 s was too strict (discarded short apnea holds)
+            if (dur >= 20) { _actSes.save(); }
             else           { _actSes.discard(); }
         } catch (e) {}
         _actSes = null;
