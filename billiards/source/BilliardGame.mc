@@ -274,11 +274,11 @@ class BilliardGame {
             }
             _resolveBallCollisions();
         }
-        // Rolling friction (once per full tick)
+        // Rolling friction (once per full tick) — 0.980 lets balls roll noticeably further
         for (var i = 0; i < MAX_BALLS; i++) {
             if (!bAlive[i]) { continue; }
-            bvx[i] *= 0.972;
-            bvy[i] *= 0.972;
+            bvx[i] *= 0.980;
+            bvy[i] *= 0.980;
         }
         _checkPockets();
 
@@ -377,7 +377,9 @@ class BilliardGame {
     // ── Shot mechanics ────────────────────────────────────────
     hidden function _commitShot() {
         var rad = aimAngle * Math.PI / 180.0;
-        var spd = power.toFloat() * 0.23 + 2.5;
+        // spd range: ~5 (power=0) … ~75 (power=100)
+        // substep move = spd/2 ≤ 37.5 < BALL_D(52) → no tunneling
+        var spd = power.toFloat() * 0.70 + 5.0;
         bvx[0] = Math.cos(rad) * spd;
         bvy[0] = Math.sin(rad) * spd;
         pocketedThisTurn = false;
