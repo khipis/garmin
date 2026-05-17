@@ -137,8 +137,13 @@ class DinosaurView extends WatchUi.View {
 
     function doJump() {
         if (_state != GS_RUN) { _resetGame(); _state = GS_RUN; return; }
-        // cancel crouch → stand up
-        if (_crouching == 1 && _onGrd == 1) { _crouching = 0; _crouchT = 0; return; }
+        // cancel crouch → stand up, snap position so floor check doesn't kill next jump
+        if (_crouching == 1 && _onGrd == 1) {
+            _crouching = 0;
+            _crouchT   = 0;
+            _dy        = _grdY - _dh;   // snap to standing floor to avoid pop
+            return;
+        }
         if (_jumpsLeft > 0) {
             var dbl = (_onGrd == 0);
             _vy        = dbl ? -11 : -17;
@@ -185,13 +190,18 @@ class DinosaurView extends WatchUi.View {
         _scrollX   = 0;
         _notifyStr = "";
         _notifyT   = 0;
+        _sparkT    = 0;   // clear any stale sparkle from previous run
+        _sparkX    = 0;
+        _sparkY    = 0;
         for (var i = 0; i < OBS_MAX; i++) { _oa[i] = 0; }
     }
 
     hidden function _step() {
         _frame   = _frame + 1;
         _scrollX = _scrollX + _spd;
-        if (_scrollX >= 3600) { _scrollX = _scrollX - 3600; }
+        // Wrap at 3800 = LCM(10, 38)*10 so pebble offset (_scrollX/10)%38 is seamless.
+        // Old value 3600: 3600/10=360, 360%38=18 ≠ 0 → visible texture jump on wrap.
+        if (_scrollX >= 3800) { _scrollX = _scrollX - 3800; }
 
         // crouch timer
         if (_crouching == 1) {
@@ -199,8 +209,8 @@ class DinosaurView extends WatchUi.View {
             if (_crouchT <= 0) { _crouching = 0; }
         }
 
-        // gravity
-        _vy = _vy + 2;
+        // gravity — skip when on ground to prevent 2-px oscillation each tick
+        if (_onGrd == 0) { _vy = _vy + 2; }
         _dy = _dy + _vy;
 
         // ground contact — crouching compresses dino to 55 % height
@@ -257,6 +267,7 @@ class DinosaurView extends WatchUi.View {
     }
 
     hidden function _spawnObs() {
+        var spawned = false;
         for (var i = 0; i < OBS_MAX; i++) {
             if (_oa[i] != 0) { continue; }
             // phase 2: 35 % pterodactyl
@@ -272,8 +283,12 @@ class DinosaurView extends WatchUi.View {
             }
             _ox[i] = _sw + 8;
             _oa[i] = 1;
+            spawned = true;
             break;
         }
+        // If all slots were full, retry quickly instead of silently resetting the gap.
+        // Old code always reset _nextObs even when nothing spawned → inconsistent gaps.
+        if (!spawned) { _nextObs = 8; return; }
         // gap shrinks with speed and phase
         var gap = 72 + Math.rand() % 46 - (_spd - 5) * 4;
         if (_phase >= 2) { gap = gap - 8; }
@@ -367,7 +382,10 @@ class DinosaurView extends WatchUi.View {
 
         // when crouching the dino squishes — bottom stays at ground
         var dh   = (_crouching == 1 && _onGrd == 1) ? (_dh * 55 / 100) : _dh;
-        var y    = _dy + (_dh - dh);   // shift top down when squished
+        // y = _dy: physics already places _dy at the correct top of the bounding box.
+        // Old formula `_dy + (_dh - dh)` shifted drawing DOWN when crouching,
+        // causing the body/legs to be drawn 10–15 px below the ground line.
+        var y    = _dy;
 
         var cBody  = dead ? 0xBB3333 : 0xDDDDDD;
         var cDark  = dead ? 0x882222 : 0x999999;
