@@ -27,19 +27,11 @@ class BitochiJumpDelegate extends WatchUi.BehaviorDelegate {
     }
 
     function onSelect() { _view.doAction(); WatchUi.requestUpdate(); return true; }
-    function onMenu() {
-        if (_view.gameState == JS_MENU) {
-            _view.cycleDiff();
-        } else {
-            _view.doAction();
-        }
-        WatchUi.requestUpdate();
-        return true;
-    }
+    function onMenu()   { _view.doAction(); WatchUi.requestUpdate(); return true; }
 
     function onPreviousPage() {
         if (_view.gameState == JS_MENU) {
-            _view.cycleJumper(-1);
+            _view.cycleMenuSel(-1);
         } else {
             _view.doAction();
         }
@@ -49,7 +41,7 @@ class BitochiJumpDelegate extends WatchUi.BehaviorDelegate {
 
     function onNextPage() {
         if (_view.gameState == JS_MENU) {
-            _view.cycleJumper(1);
+            _view.cycleMenuSel(1);
         } else {
             _view.doAction();
         }
