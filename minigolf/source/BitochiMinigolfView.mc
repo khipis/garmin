@@ -150,10 +150,9 @@ class BitochiMinigolfView extends WatchUi.View {
     // walls (~90%), high substep count to avoid tunneling on fast shots, and
     // velocity-based sub-step subdivision so slow balls aren't over-processed.
     hidden function stepPhysics() {
-        // Rolling friction — exponential decay, applied once per tick.
-        // 94% retention ≈ ball loses ~6% per 50ms tick → natural roll length.
-        _vx = _vx * 94 / 100;
-        _vy = _vy * 94 / 100;
+        // Rolling friction — 96% retention for a lively, satisfying roll.
+        _vx = _vx * 96 / 100;
+        _vy = _vy * 96 / 100;
 
         // Adaptive substep: faster ball → more steps so we never miss a wall
         var spd2 = _vx * _vx + _vy * _vy;
@@ -266,8 +265,8 @@ class BitochiMinigolfView extends WatchUi.View {
         if (vDotU < 0) {
             _vx -= ux * vDotU * 2 / 10;
             _vy -= uy * vDotU * 2 / 10;
-            // White rails lose ~10%; brown bumper walls only ~5% (springier).
-            var keep = _brownWalls ? 95 : 90;
+            // White rails lose ~5%; brown bumper walls only ~3% (very springy).
+            var keep = _brownWalls ? 97 : 95;
             _vx = _vx * keep / 100;
             _vy = _vy * keep / 100;
         }
@@ -296,15 +295,15 @@ class BitochiMinigolfView extends WatchUi.View {
         if (overT < minO) { minO = overT; }
         if (overB < minO) { minO = overB; }
 
-        // Brown obstacles act like real pinball bumpers — ~92% retention.
-        if (minO == overL && _vx > -1)       { _bx -= overL; _vx = -(_vx * 92 / 100); }
-        else if (minO == overR && _vx < 1)   { _bx += overR; _vx = -(_vx * 92 / 100); }
-        else if (minO == overT && _vy > -1)  { _by -= overT; _vy = -(_vy * 92 / 100); }
-        else if (minO == overB && _vy < 1)   { _by += overB; _vy = -(_vy * 92 / 100); }
-        else if (minO == overL)              { _bx -= overL; _vx = -(_vx * 92 / 100); }
-        else if (minO == overR)              { _bx += overR; _vx = -(_vx * 92 / 100); }
-        else if (minO == overT)              { _by -= overT; _vy = -(_vy * 92 / 100); }
-        else                                 { _by += overB; _vy = -(_vy * 92 / 100); }
+        // Obstacles act like real pinball bumpers — ~95% retention.
+        if (minO == overL && _vx > -1)       { _bx -= overL; _vx = -(_vx * 95 / 100); }
+        else if (minO == overR && _vx < 1)   { _bx += overR; _vx = -(_vx * 95 / 100); }
+        else if (minO == overT && _vy > -1)  { _by -= overT; _vy = -(_vy * 95 / 100); }
+        else if (minO == overB && _vy < 1)   { _by += overB; _vy = -(_vy * 95 / 100); }
+        else if (minO == overL)              { _bx -= overL; _vx = -(_vx * 95 / 100); }
+        else if (minO == overR)              { _bx += overR; _vx = -(_vx * 95 / 100); }
+        else if (minO == overT)              { _by -= overT; _vy = -(_vy * 95 / 100); }
+        else                                 { _by += overB; _vy = -(_vy * 95 / 100); }
     }
 
     // Update obstacles that animate per-tick (windmill, slider, pendulum…).
@@ -361,14 +360,14 @@ class BitochiMinigolfView extends WatchUi.View {
     function doUp() {
         if (_gs == MG_MENU)     { _difficulty = (_difficulty + 2) % 3; return; }
         if (_gs == MG_GAMEOVER) { _gs = MG_MENU; return; }
-        if (_gs == MG_AIM)      { _aimAngle = (_aimAngle + 355) % 360; }
+        if (_gs == MG_AIM)      { _aimAngle = (_aimAngle + 350) % 360; }  // -10° per step
         if (_gs == MG_POWER)    { commitShot(); }
     }
 
     function doDown() {
         if (_gs == MG_MENU)     { _difficulty = (_difficulty + 1) % 3; return; }
         if (_gs == MG_GAMEOVER) { _gs = MG_MENU; return; }
-        if (_gs == MG_AIM)      { _aimAngle = (_aimAngle + 5) % 360; }
+        if (_gs == MG_AIM)      { _aimAngle = (_aimAngle + 10) % 360; }   // +10° per step
         if (_gs == MG_POWER)    { commitShot(); }
     }
 
@@ -394,12 +393,16 @@ class BitochiMinigolfView extends WatchUi.View {
         if (_gs == MG_ROLLING)  { return; }
 
         if (_gs == MG_AIM) {
-            // Tap away from ball → set aim direction toward tap
+            // Tap away from ball → set aim direction only (does NOT start power bar).
+            // Press SELECT / O button to start charging. Two-step flow: aim → charge → fire.
             var bsx = cToS_X(_bx / 10); var bsy = cToS_Y(_by / 10);
             var dx = tx - bsx; var dy = ty - bsy;
             if (dx*dx + dy*dy > 100) {
                 _aimAngle = (Math.atan2(dy, dx) * 180 / Math.PI).toNumber();
                 if (_aimAngle < 0) { _aimAngle += 360; }
+                // Stay in MG_AIM so player can fine-tune angle before shooting
+            } else {
+                // Tap directly on ball → start power bar (shortcut for experienced players)
                 _gs = MG_POWER; _power = 0; _powerDir = 1;
             }
             return;
@@ -446,7 +449,7 @@ class BitochiMinigolfView extends WatchUi.View {
         _brownWalls = false;
 
         if (idx == 0) {
-            // 1. Straight corridor — easy intro
+            // 1. Straight corridor — easy intro with two angled deflectors
             _tx=120; _ty=500; _hx=880; _hy=500;
             _walls = [
                 [100,400, 900,400],
@@ -454,6 +457,7 @@ class BitochiMinigolfView extends WatchUi.View {
                 [900,600, 100,600],
                 [100,600, 100,400]
             ];
+            _obstacles = [[380,440, 14,40], [620,520, 14,40]];
         } else if (idx == 1) {
             // 2. L-shape — first bend with a free-standing nub
             _tx=160; _ty=180; _hx=830; _hy=830;
@@ -499,15 +503,15 @@ class BitochiMinigolfView extends WatchUi.View {
                 [700,400, 900,400]    // top lane bottom (right half — opening x300..700)
             ];
         } else if (idx == 4) {
-            // 5. Island Green — water lake spanning corridor centre
+            // 5. Island Green — water lake, two channels around it (top & bottom)
             _tx=140; _ty=500; _hx=860; _hy=500;
             _walls = [
-                [100,300, 900,300],
-                [900,300, 900,700],
-                [900,700, 100,700],
-                [100,700, 100,300]
+                [100,250, 900,250],
+                [900,250, 900,750],
+                [900,750, 100,750],
+                [100,750, 100,250]
             ];
-            _water = [[500,500, 140]];
+            _water = [[500,500, 110]];  // slightly smaller so top/bottom lanes are playable
         } else if (idx == 5) {
             // 6. Windmill — animated rotating cross blocks centre (see updateAnimated)
             _tx=140; _ty=500; _hx=860; _hy=500;
@@ -585,20 +589,19 @@ class BitochiMinigolfView extends WatchUi.View {
             ];
             _obstacles = [[600,400, 8,40], [600,600, 8,40]];
         } else if (idx == 10) {
-            // 11. Slalom — alternating pegs hang halfway across the corridor,
-            // forcing the ball to weave above/below to pass.
+            // 11. Slalom — alternating pegs, shorter so there is room to thread through.
             _tx=140; _ty=500; _hx=860; _hy=500;
             _walls = [
-                [100,300, 900,300],
-                [900,300, 900,700],
-                [900,700, 100,700],
-                [100,700, 100,300]
+                [100,280, 900,280],
+                [900,280, 900,720],
+                [900,720, 100,720],
+                [100,720, 100,280]
             ];
             _obstacles = [
-                [320,400, 22,100],  // top peg (hangs y 300..500)
-                [460,600, 22,100],  // bottom peg (hangs y 500..700)
-                [600,400, 22,100],
-                [740,600, 22,100]
+                [310,360, 20,80],   // top peg — gap below (y 440..720)
+                [460,580, 20,80],   // bottom peg — gap above (y 280..500)
+                [610,360, 20,80],
+                [760,580, 20,80]
             ];
         } else if (idx == 11) {
             // 12. The Eye — circular wall around hole, single entrance gap
@@ -674,8 +677,8 @@ class BitochiMinigolfView extends WatchUi.View {
             ];
             _obstacles = [[500,500, 30,30]];
         } else if (idx == 15) {
-            // 16. Volcano — hole sits inside ring of water, must drop in via top gap
-            _tx=140; _ty=500; _hx=620; _hy=500;
+            // 16. Volcano — hole sits inside a water ring, narrow north approach lane
+            _tx=140; _ty=500; _hx=580; _hy=500;
             _brownWalls = true;
             _walls = [
                 [100,200, 900,200],
@@ -683,15 +686,15 @@ class BitochiMinigolfView extends WatchUi.View {
                 [900,800, 100,800],
                 [100,800, 100,200]
             ];
-            // Water moat surrounding the hole — leave one approach lane (north)
+            // Water moat — gap on WEST side (x<500) for clear approach from tee
             _water = [
-                [620, 620, 70],   // south
-                [520, 540, 60],   // south-west
-                [720, 540, 60],   // south-east
-                [520, 460, 40],   // sliver west
-                [720, 460, 40]    // sliver east
+                [580, 640, 65],   // south
+                [580, 360, 65],   // north (behind hole)
+                [700, 500, 55],   // east
+                [680, 580, 40],   // SE
+                [680, 420, 40]    // NE
             ];
-            _obstacles = [[820,500, 18,90]];
+            _obstacles = [[800,500, 20,80]];
         } else if (idx == 16) {
             // 17. Snake — sinuous path with two animated pendulum bumpers
             _tx=140; _ty=500; _hx=860; _hy=500;
@@ -1040,7 +1043,7 @@ class BitochiMinigolfView extends WatchUi.View {
         // Aim hint bottom
         if (_gs == MG_AIM) {
             dc.setColor(0x44AA66, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w/2, _h - _h * 10 / 100, Graphics.FONT_XTINY, "Tap/^v aim  O shoot", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_w/2, _h - _h * 10 / 100, Graphics.FONT_XTINY, "Tap=aim  O/ball=shoot", Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 
