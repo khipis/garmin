@@ -143,7 +143,7 @@ class BitochiAxeArcadeView extends WatchUi.View {
         _level = 1;
         _axesThisLevel = 0;
         _axesPerLevel = 5;
-        _hitMinDeg = 5.0;
+        _hitMinDeg = 3.0;
         _isBoss = false;
 
         _lives = 3;
@@ -419,7 +419,7 @@ class BitochiAxeArcadeView extends WatchUi.View {
             _logRadiusPct = 22;
             _axesPerLevel = 8 + _level / 5;
             if (_axesPerLevel > 14) { _axesPerLevel = 14; }
-            _hitMinDeg = 4.0;
+            _hitMinDeg = 2.5;
 
             var preStuck = 2 + _level / 10;
             if (preStuck > 5) { preStuck = 5; }
@@ -435,8 +435,8 @@ class BitochiAxeArcadeView extends WatchUi.View {
             if (_level % 4 == 2) { _logRadiusPct = 16; }
             else if (_level % 4 == 0) { _logRadiusPct = 17; }
             _axesPerLevel = 5 + ((_level - 1) % 3);
-            _hitMinDeg = 5.0 - (_level - 1).toFloat() * 0.05;
-            if (_hitMinDeg < 3.0) { _hitMinDeg = 3.0; }
+            _hitMinDeg = 3.0 - (_level - 1).toFloat() * 0.04;
+            if (_hitMinDeg < 1.5) { _hitMinDeg = 1.5; }
 
             _hazCount = (_level - 1) / 4;
             if (_hazCount > 3) { _hazCount = 3; }
@@ -461,7 +461,7 @@ class BitochiAxeArcadeView extends WatchUi.View {
                 if (angleDiff(_appleAngle, _hazAngles[i]) < _hazSize + 5.0) { ok = false; break; }
             }
             for (var i = 0; i < _stuckCount; i++) {
-                if (angleDiff(_appleAngle, _stuckAngles[i]) < _hitMinDeg + 5.0) { ok = false; break; }
+                if (angleDiff(_appleAngle, _stuckAngles[i]) < _hitMinDeg + 3.0) { ok = false; break; }
             }
             if (ok) { return; }
             _appleAngle = (Math.rand().abs() % 360).toFloat();
