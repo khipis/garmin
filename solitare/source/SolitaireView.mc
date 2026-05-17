@@ -42,6 +42,10 @@ class SolitaireView extends WatchUi.View {
     hidden var _lastTapP; hidden var _lastTapT;
     hidden var _lastSelT;
 
+    // Sub-card index within a tableau column set by touch hit-test;
+    // -1 means "use default" (pick up all face-up cards, used for button nav)
+    hidden var _tapSubIdx;
+
     // Auto-foundation queue (one card per tick for visible delay)
     hidden var _autoFndQ;
 
@@ -67,6 +71,7 @@ class SolitaireView extends WatchUi.View {
         _sCards = new [20]; _sN = 0;
         _sel = -1; _cur = 0; _sIdx = 0;
         _lastTapP = -1; _lastTapT = 0; _lastSelT = 0;
+        _tapSubIdx = -1;
         _autoFndQ = false;
         _winTick = 0;
         _winParts = null;
@@ -141,6 +146,7 @@ class SolitaireView extends WatchUi.View {
             return;
         }
         _lastSelT = now;
+        _tapSubIdx = -1;  // button nav always picks up full face-up sequence
         _interact(_cur);
     }
 
@@ -190,7 +196,23 @@ class SolitaireView extends WatchUi.View {
 
     // ─── Hit Test ─────────────────────────────────────────────────────────────────
 
+    // Returns absolute card index (within _tab for column c) of the face-up card
+    // at or closest to Y coordinate ty. Allows picking up a partial sequence.
+    hidden function _subIdxFromY(c, ty) {
+        var n = _tN[c]; var u = _tU[c];
+        if (n <= 0 || u >= n) { return (u < n) ? u : 0; }
+        _calcOvl(c);
+        var cy = _tabY + u * _oFd;
+        var numFu = n - u;
+        for (var i = 0; i < numFu - 1; i++) {
+            if (ty < cy + _oFu) { return u + i; }
+            cy += _oFu;
+        }
+        return n - 1;
+    }
+
     hidden function _hitTest(tx, ty) {
+        _tapSubIdx = -1;
         if (ty >= _topY && ty < _tabY) {
             if (tx >= _colX[0] && tx < _colX[0] + _cw) { return 0; }
             var wstW = _cw;
@@ -206,7 +228,10 @@ class SolitaireView extends WatchUi.View {
         }
         if (ty >= _tabY) {
             for (var i = 0; i < 7; i++) {
-                if (tx >= _colX[i] && tx < _colX[i] + _cw) { return i + 6; }
+                if (tx >= _colX[i] && tx < _colX[i] + _cw) {
+                    _tapSubIdx = _subIdxFromY(i, ty);
+                    return i + 6;
+                }
             }
         }
         return -1;
@@ -274,10 +299,15 @@ class SolitaireView extends WatchUi.View {
             var n = _tN[c];
             if (n <= 0) { return; }
             var u = _tU[c];
-            _sel = p; _sIdx = u;
-            _sN = n - u;
+            // Use the tapped sub-card index (set by touch hit-test) when available.
+            // Clamp to the face-up range [u, n-1] so you can never pick up a face-down card.
+            var startIdx = u;
+            if (_tapSubIdx >= u && _tapSubIdx < n) { startIdx = _tapSubIdx; }
+            _tapSubIdx = -1;
+            _sel = p; _sIdx = startIdx;
+            _sN = n - startIdx;
             for (var i = 0; i < _sN; i++) {
-                _sCards[i] = _tab[c * 20 + u + i];
+                _sCards[i] = _tab[c * 20 + startIdx + i];
             }
         }
     }
@@ -460,6 +490,7 @@ class SolitaireView extends WatchUi.View {
         _wstN = 0;
         for (var i = 0; i < 4; i++) { _fnd[i] = 0; }
         _sel = -1; _sN = 0; _cur = 0; _moves = 0;
+        _tapSubIdx = -1;
         _autoFndQ = false; _winTick = 0; _winParts = null;
         _gs = SOL_PLAY;
         _autoFndQ = true;
