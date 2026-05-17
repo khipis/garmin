@@ -126,10 +126,11 @@ class BilliardGame {
         var botH = h * 9  / 100; if (botH < 9)  { botH = 9; }
         vpX = 4; vpY = hudH;
         vpW = w - 8; vpH = h - hudH - botH;
-        // Fit 1000×700 course uniformly into vpW×vpH
+        // Fit 1000×700 course uniformly into vpW×vpH, then shrink 15%
+        // so the full table (rails + pockets) is always visible
         var sW = vpW;
         var sH = vpH * 1000 / 700;
-        vpScale = sW < sH ? sW : sH;
+        vpScale = (sW < sH ? sW : sH) * 85 / 100;
         vpOffX = (vpW - vpScale) / 2;
         vpOffY = (vpH - vpScale * 700 / 1000) / 2;
     }
