@@ -42,6 +42,7 @@ class BitochiBlocksView extends WatchUi.View {
     hidden var _fallInterval;
     hidden var _fallCount;
     hidden var _softDrop;
+    hidden var _softDropHeld;  // true while MENU button is physically held down
     hidden var _freezeTicks;
 
     hidden var _score; hidden var _best;
@@ -104,7 +105,7 @@ class BitochiBlocksView extends WatchUi.View {
 
         _pieceType = 0; _pieceRot = 0; _pieceX = 0; _pieceY = 0;
         _isPowerup = false; _nextType = 0; _nextIsPu = false;
-        _fallInterval = 14; _fallCount = 0; _softDrop = false; _freezeTicks = 0;
+        _fallInterval = 14; _fallCount = 0; _softDrop = false; _softDropHeld = false; _freezeTicks = 0;
         _score = 0; _level = 1; _linesCleared = 0; _combo = 0;
         _shakeTick = 0; _shakeX = 0; _shakeY = 0;
         _flashTick = 0; _flashColor = 0;
@@ -216,7 +217,7 @@ class BitochiBlocksView extends WatchUi.View {
 
         for (var i = 0; i < TB_ROWS * TB_COLS; i++) { _board[i] = 0; }
         _score = 0; _level = 1; _linesCleared = 0; _combo = 0;
-        _fallInterval = 14; _fallCount = 0; _softDrop = false; _freezeTicks = 0;
+        _fallInterval = 14; _fallCount = 0; _softDrop = false; _softDropHeld = false; _freezeTicks = 0;
         _shakeTick = 0; _flashTick = 0; _clearAnim = 0;
         for (var i = 0; i < TB_PART; i++) { _prtLife[i] = 0; }
         for (var i = 0; i < 4; i++) { _clearRows[i] = -1; }
@@ -282,13 +283,13 @@ class BitochiBlocksView extends WatchUi.View {
 
             if (_freezeTicks > 0) { _freezeTicks--; }
             var interval = _fallInterval;
-            if (_softDrop) { interval = 2; }
+            if (_softDrop || _softDropHeld) { interval = 2; }
             if (_freezeTicks > 0) { interval = 99; }
 
             _fallCount++;
             if (_fallCount >= interval) {
                 _fallCount = 0;
-                _softDrop = false;
+                _softDrop = false;  // clear one-shot flag; _softDropHeld persists while button held
                 if (!tryMove(0, 1)) { lockPiece(); }
             }
         }
@@ -331,6 +332,11 @@ class BitochiBlocksView extends WatchUi.View {
 
     function doSoftDrop() {
         if (_gs == TBS_PLAY) { _softDrop = true; }
+    }
+
+    // Called by delegate on key-press / key-release to hold the soft-drop state
+    function setSoftDropHeld(v) {
+        _softDropHeld = (_gs == TBS_PLAY && v);
     }
 
     function doHardDrop() {
@@ -639,14 +645,15 @@ class BitochiBlocksView extends WatchUi.View {
 
         dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w / 2, _h * 60 / 100, Graphics.FONT_XTINY, "L/R: move  Mid: rotate", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(_w / 2, _h * 70 / 100, Graphics.FONT_XTINY, "Bottom: drop", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 68 / 100, Graphics.FONT_XTINY, "MENU hold: fast drop", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 76 / 100, Graphics.FONT_XTINY, "Swipe down: hard drop", Graphics.TEXT_JUSTIFY_CENTER);
 
         if (_best > 0) {
             dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 76 / 100, Graphics.FONT_XTINY, "Best: " + _best, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_w / 2, _h * 84 / 100, Graphics.FONT_XTINY, "Best: " + _best, Graphics.TEXT_JUSTIFY_CENTER);
         }
 
-        var tY = _h * 84 / 100;
+        var tY = _h * 91 / 100;
         var fH = dc.getFontHeight(Graphics.FONT_XTINY);
         _menuToggleY0 = tY - fH / 2 - 2;
         _menuToggleY1 = tY + fH / 2 + 2;
