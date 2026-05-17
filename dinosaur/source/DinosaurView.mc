@@ -162,8 +162,12 @@ class DinosaurView extends WatchUi.View {
         if (_onGrd == 1 && _phase >= 2) {
             _crouching = 1;
             _crouchT   = 42;
+            // Snap dino down to the crouching floor so it sits on the ground
+            // (without this, the dino floats ~45% of its height above the ground line)
+            _dy = _grdY - _dh * 55 / 100;
         } else if (_onGrd == 0) {
-            // ground pound — slam down
+            // ground pound — slam down (no crouch animation while airborne)
+            _crouching = 0;
             if (_vy < 12) { _vy = 12; }
         }
     }
@@ -436,8 +440,8 @@ class DinosaurView extends WatchUi.View {
             dc.drawLine(eyeX + 5, eyeY - 4, eyeX - 4, eyeY + 5);
             dc.drawLine(eyeX - 3, eyeY - 4, eyeX + 5, eyeY + 4);
             dc.drawLine(eyeX + 4, eyeY - 4, eyeX - 4, eyeY + 4);
-        } else if (_crouching == 1) {
-            // squinting determined eyes
+        } else if (_crouching == 1 && _onGrd == 1) {
+            // squinting determined eyes (only when crouching ON GROUND)
             dc.setColor(cLight, Graphics.COLOR_TRANSPARENT);
             dc.fillRoundedRectangle(eyeX - 4, eyeY - 2, 10, 6, 2);
             dc.setColor(0x0d0d0d, Graphics.COLOR_TRANSPARENT);
@@ -470,8 +474,8 @@ class DinosaurView extends WatchUi.View {
             // jumping: surprised O mouth
             dc.setColor(0x111111, Graphics.COLOR_TRANSPARENT);
             dc.fillCircle(mX + 1, mY + 2, 2);
-        } else if (_crouching == 1) {
-            // determined flat mouth
+        } else if (_crouching == 1 && _onGrd == 1) {
+            // determined flat mouth (only when crouching ON GROUND)
             dc.setColor(cDark, Graphics.COLOR_TRANSPARENT);
             dc.fillRectangle(mX - 2, mY + 2, 6, 2);
         }
