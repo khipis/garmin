@@ -20,7 +20,7 @@ const DIFF_MED  = 1;
 const DIFF_HARD = 2;
 
 // ── Physics constants ────────────────────────────────────────
-const MAX_BALLS = 6;     // 1 cue + 5 target
+const MAX_BALLS = 10;    // 1 cue + 9 target (diamond 9-ball rack + black)
 const BALL_R    = 26;    // ball radius in course units
 const BALL_D    = 52;    // 2*BALL_R — collision diameter
 const POCKET_R  = 42;    // pocket capture radius
@@ -91,8 +91,10 @@ class BilliardGame {
         msg = ""; msgT = 0; pocketedThisTurn = false;
         sw = 260; sh = 260; aimHitT = -1.0; aimHitBall = -1;
 
-        // Ball colours: white, yellow, blue, red, purple, orange
-        bCol = [0xFFFFFF, 0xFFDD00, 0x2255DD, 0xDD2222, 0x882299, 0xFF7700];
+        // Ball colours: white (cue), 8 colours, black (ball 9 = the key ball)
+        bCol = [0xFFFFFF, 0xFFDD00, 0x2255DD, 0xDD2222,
+                0x882299, 0xFF7700, 0x228833, 0xAA2200,
+                0x44AACC, 0x111111];
 
         bx = new [MAX_BALLS]; by = new [MAX_BALLS];
         bvx = new [MAX_BALLS]; bvy = new [MAX_BALLS];
@@ -142,15 +144,25 @@ class BilliardGame {
         // Cue ball — left side (baulk area)
         bx[0] = 230.0; by[0] = 350.0;
         bvx[0] = 0.0;  bvy[0] = 0.0;  bAlive[0] = true;
-        // Rack — tight triangle (spacing = BALL_D = 52)
-        // Row 1
+
+        // Diamond rack — 9 target balls (standard 9-ball layout)
+        // Horizontal pitch ≈ 45 course units, vertical pitch = 52 (BALL_D)
+        // Black ball (index 9, bCol[9]=0x111111) is placed at the diamond centre
+        // Col 1 (apex):
         bx[1] = 680.0; by[1] = 350.0;
-        // Row 2
+        // Col 2:
         bx[2] = 725.0; by[2] = 324.0;
         bx[3] = 725.0; by[3] = 376.0;
-        // Row 3
+        // Col 3 (centre row): ball 9 (BLACK) is in the exact middle
         bx[4] = 770.0; by[4] = 298.0;
-        bx[5] = 770.0; by[5] = 350.0;
+        bx[9] = 770.0; by[9] = 350.0;  // BLACK ball at diamond centre
+        bx[6] = 770.0; by[6] = 402.0;
+        // Col 4:
+        bx[7] = 815.0; by[7] = 324.0;
+        bx[8] = 815.0; by[8] = 376.0;
+        // Col 5 (back):
+        bx[5] = 860.0; by[5] = 350.0;
+
         for (var i = 1; i < MAX_BALLS; i++) { bvx[i] = 0.0; bvy[i] = 0.0; bAlive[i] = true; }
 
         playerScore = 0; aiScore = 0;
@@ -166,7 +178,9 @@ class BilliardGame {
         if (gs == BS_MENU)  { diff = (diff + 2) % 3; Application.Storage.setValue("billDiff", diff); return; }
         if (gs == BS_GAMEOVER) { gs = BS_MENU; return; }
         if (gs == BS_AIM && turn == TURN_PLAYER) {
-            aimAngle = (aimAngle - 10.0 + 360.0) % 360.0;
+            // float % not supported in Monkey C — use explicit wrap
+            aimAngle -= 10.0;
+            if (aimAngle < 0.0) { aimAngle += 360.0; }
             _computeAimIntersect();
         }
         if (gs == BS_POWER) { _commitShot(); }
@@ -176,7 +190,8 @@ class BilliardGame {
         if (gs == BS_MENU)  { diff = (diff + 1) % 3; Application.Storage.setValue("billDiff", diff); return; }
         if (gs == BS_GAMEOVER) { gs = BS_MENU; return; }
         if (gs == BS_AIM && turn == TURN_PLAYER) {
-            aimAngle = (aimAngle + 10.0) % 360.0;
+            aimAngle += 10.0;
+            if (aimAngle >= 360.0) { aimAngle -= 360.0; }
             _computeAimIntersect();
         }
         if (gs == BS_POWER) { _commitShot(); }

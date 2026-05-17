@@ -74,11 +74,14 @@ class BilliardView extends WatchUi.View {
         dc.fillCircle(tx1, ty1, 4); dc.fillCircle(tx2, ty1, 4);
         dc.fillCircle(tx1, ty2, 4); dc.fillCircle(tx2, ty2, 4);
         dc.fillCircle((tx1+tx2)/2, ty1, 4); dc.fillCircle((tx1+tx2)/2, ty2, 4);
-        // Decorative balls
-        var bColors = [0xFFFFFF, 0xFFDD00, 0x2255DD, 0xDD2222, 0xFF7700];
-        var bpx = [w*30/100, w*40/100, w*53/100, w*63/100, w*73/100];
-        var bpy = [h*42/100, h*37/100, h*45/100, h*38/100, h*43/100];
-        for (var i = 0; i < 5; i++) {
+        // Decorative balls — show all 9 colours including black
+        var bColors = [0xFFFFFF, 0xFFDD00, 0x2255DD, 0xDD2222,
+                       0x882299, 0xFF7700, 0x228833, 0xAA2200, 0x44AACC, 0x111111];
+        var bpx = [w*18/100, w*28/100, w*38/100, w*48/100, w*58/100,
+                   w*68/100, w*78/100, w*23/100, w*45/100, w*70/100];
+        var bpy = [h*42/100, h*37/100, h*44/100, h*38/100, h*43/100,
+                   h*38/100, h*43/100, h*48/100, h*49/100, h*48/100];
+        for (var i = 0; i < 10; i++) {
             dc.setColor(bColors[i], Graphics.COLOR_TRANSPARENT);
             dc.fillCircle(bpx[i], bpy[i], 7);
             dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
@@ -153,14 +156,6 @@ class BilliardView extends WatchUi.View {
             // Ball body
             dc.setColor(g.bCol[i], Graphics.COLOR_TRANSPARENT);
             dc.fillCircle(bsx, bsy, br);
-            // Numbered ball: white stripe + number
-            if (i > 0 && br >= 6) {
-                dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-                var sh2 = br * 3 / 5;
-                dc.fillRectangle(bsx - br*3/4, bsy - sh2/2, br*3/2, sh2);
-                dc.setColor(0x111111, Graphics.COLOR_TRANSPARENT);
-                dc.drawText(bsx, bsy - sh2/2 - 1, Graphics.FONT_XTINY, "" + i, Graphics.TEXT_JUSTIFY_CENTER);
-            }
             // Gloss highlight
             dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
             dc.fillCircle(bsx - br*2/5, bsy - br*2/5, br/4 + 1);
@@ -271,7 +266,7 @@ class BilliardView extends WatchUi.View {
         if (g.gs == BS_AIM && g.turn == TURN_PLAYER) {
             dc.setColor(0x3D7755, Graphics.COLOR_TRANSPARENT);
             dc.drawText(w/2, h - h*9/100, Graphics.FONT_XTINY,
-                        "^v=aim  O=charge  tap=aim+shoot",
+                        "MENU/DN=aim  O=charge  tap=aim",
                         Graphics.TEXT_JUSTIFY_CENTER);
         }
     }

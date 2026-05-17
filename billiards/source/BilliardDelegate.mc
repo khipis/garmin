@@ -9,11 +9,18 @@ class BilliardDelegate extends WatchUi.BehaviorDelegate {
     hidden var _v;
     function initialize(view) { BehaviorDelegate.initialize(); _v = view; }
 
+    // Key layout (Fenix 8 physical buttons):
+    //   KEY_UP   = top-left     → aim CCW
+    //   KEY_MENU = middle-left  → aim CCW  ("środkowy lewy" button)
+    //   KEY_DOWN = bottom-left  → aim CW   ("lewy dolny" button)
+    //   KEY_ESC  = back/right   → go back
+    //   any other (START)       → confirm shot
     function onKey(evt) {
         var k = evt.getKey();
         if      (k == WatchUi.KEY_UP)   { _v.doUp();   }
+        else if (k == WatchUi.KEY_MENU) { _v.doUp();   }
         else if (k == WatchUi.KEY_DOWN) { _v.doDown(); }
-        else if (k == WatchUi.KEY_MENU) { _v.doBack(); }
+        else if (k == WatchUi.KEY_ESC)  { var h = _v.doBack(); WatchUi.requestUpdate(); return h; }
         else                            { _v.doSelect(); }
         WatchUi.requestUpdate();
         return true;
