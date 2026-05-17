@@ -182,7 +182,7 @@ class DinosaurView extends WatchUi.View {
         _frame     = 0;
         _score     = 0;
         _spd       = 5;
-        _nextObs   = 55;
+        _nextObs   = 90;   // generous gap before very first obstacle
         _phase     = 0;
         _jumpsLeft = 1;
         _crouching = 0;
@@ -277,7 +277,10 @@ class DinosaurView extends WatchUi.View {
                 _oh[i] = _dh * 50 / 100;
             } else {
                 _ot[i] = OT_CACTUS;
-                var t  = Math.rand() % 3;
+                // Phase 0: cap to t=0/1 (max 75% dino height) so the player can
+                // realistically reach score 300 and unlock the double jump.
+                var tMax = (_phase == 0) ? 2 : 3;
+                var t    = Math.rand() % tMax;
                 _ow[i] = _dw * (8 + t * 2) / 10;
                 _oh[i] = _dh * (55 + t * 20) / 100;
             }
@@ -292,7 +295,9 @@ class DinosaurView extends WatchUi.View {
         // gap shrinks with speed and phase
         var gap = 72 + Math.rand() % 46 - (_spd - 5) * 4;
         if (_phase >= 2) { gap = gap - 8; }
-        if (gap < 28) { gap = 28; }
+        // Phase 0: wider minimum gap — gives beginner players more reaction time
+        var minGap = (_phase == 0) ? 42 : 28;
+        if (gap < minGap) { gap = minGap; }
         _nextObs = gap;
     }
 
