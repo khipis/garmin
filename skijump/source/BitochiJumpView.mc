@@ -31,6 +31,8 @@ class BitochiJumpView extends WatchUi.View {
     hidden var _kmhMax;       // realistic top-speed display for each venue
     hidden var _venue;
     hidden var _venueNames;
+    hidden var _diff;        // 0=Easy  1=Mid  2=Hard (default)
+    hidden var _diffNames;
 
     // Jumpers
     hidden var _jumperIdx;
@@ -124,6 +126,9 @@ class BitochiJumpView extends WatchUi.View {
 
         _venueNames   = ["Zakopane", "Innsbruck", "Oberstdorf", "Vikersund"];
         _venue = 0;
+        _diffNames = ["Easy", "Mid", "Hard"];
+        var sd = Application.Storage.getValue("sjDiff");
+        _diff = (sd != null) ? sd : 2;   // default Hard
         _jumperNames  = ["Stoch",   "Kraft",   "Lindvik",  "Kobayas", "Prevc",   "Granerud"];
         _jumperNat    = ["POL",     "AUT",     "NOR",      "JPN",     "SLO",     "NOR"];
         _jumperColors  = [0xFFCC22, 0xFF4444,  0x2266DD,   0xDD2222,  0x22BB55,  0x4488FF];
@@ -276,7 +281,14 @@ class BitochiJumpView extends WatchUi.View {
         _preparingLanding = false; _preparingTick = 0;
         _earlyTap = false; _earlyTapTick = 0; _spinningOut = false;
         _newHillRecord = false;
-        _windBase = -0.9 + (Math.rand().abs() % 20).toFloat() / 11.0;
+        // Wind base range scales with difficulty: Easy = gentle, Hard = full gale
+        if (_diff == 0) {
+            _windBase = -0.20 + (Math.rand().abs() % 12).toFloat() / 18.0;  // -0.20 .. +0.47
+        } else if (_diff == 1) {
+            _windBase = -0.55 + (Math.rand().abs() % 16).toFloat() / 13.0;  // -0.55 .. +0.68
+        } else {
+            _windBase = -0.9  + (Math.rand().abs() % 20).toFloat() / 11.0;  // -0.90 .. +0.92
+        }
         _windPhase = (Math.rand().abs() % 628).toFloat() / 100.0;
         _windCurrent = _windBase;
         _passedK = false;
@@ -323,7 +335,8 @@ class BitochiJumpView extends WatchUi.View {
 
     hidden function updateInrun() {
         _windPhase += 0.052;
-        var wAmp = 0.26 + _venue.toFloat() * 0.07;
+        var wBase2 = (_diff == 0) ? 0.07 : ((_diff == 1) ? 0.16 : 0.26);
+        var wAmp = wBase2 + _venue.toFloat() * ((_diff == 0) ? 0.02 : ((_diff == 1) ? 0.04 : 0.07));
         _windCurrent = _windBase + Math.sin(_windPhase) * wAmp + Math.sin(_windPhase * 2.4) * 0.09;
 
         var hA = hillAngleAtX(_posX);
@@ -343,11 +356,27 @@ class BitochiJumpView extends WatchUi.View {
             var edgeX = _hillX[_hillLaunchIdx]; var zoneX = _hillX[_hillTableIdx];
             var dist = edgeX - _posX; var zoneL = edgeX - zoneX + 0.01;
             var ratio = dist / zoneL;
-            if      (ratio < 0.10) { _takeoffQuality = 1.00; _takeoffFlash = 8; }
-            else if (ratio < 0.25) { _takeoffQuality = 0.88; _takeoffFlash = 5; }
-            else if (ratio < 0.45) { _takeoffQuality = 0.72; }
-            else if (ratio < 0.65) { _takeoffQuality = 0.55; }
-            else                   { _takeoffQuality = 0.38; }
+            // Easy: wide windows so timing is forgiving.
+            // Mid: slightly tighter. Hard: current (tight, last ~10% is perfect).
+            if (_diff == 0) {
+                if      (ratio < 0.30) { _takeoffQuality = 1.00; _takeoffFlash = 8; }
+                else if (ratio < 0.55) { _takeoffQuality = 0.88; _takeoffFlash = 5; }
+                else if (ratio < 0.75) { _takeoffQuality = 0.72; }
+                else if (ratio < 0.90) { _takeoffQuality = 0.55; }
+                else                   { _takeoffQuality = 0.38; }
+            } else if (_diff == 1) {
+                if      (ratio < 0.16) { _takeoffQuality = 1.00; _takeoffFlash = 8; }
+                else if (ratio < 0.35) { _takeoffQuality = 0.88; _takeoffFlash = 5; }
+                else if (ratio < 0.55) { _takeoffQuality = 0.72; }
+                else if (ratio < 0.72) { _takeoffQuality = 0.55; }
+                else                   { _takeoffQuality = 0.38; }
+            } else {
+                if      (ratio < 0.10) { _takeoffQuality = 1.00; _takeoffFlash = 8; }
+                else if (ratio < 0.25) { _takeoffQuality = 0.88; _takeoffFlash = 5; }
+                else if (ratio < 0.45) { _takeoffQuality = 0.72; }
+                else if (ratio < 0.65) { _takeoffQuality = 0.55; }
+                else                   { _takeoffQuality = 0.38; }
+            }
         } else if (!manual) {
             // Missed takeoff — skier naturally rolls off ramp without pressing.
             // Quality = 0.40: gives enough height/distance to avoid the <6m crash
@@ -364,9 +393,10 @@ class BitochiJumpView extends WatchUi.View {
         var upBoost  = 0.50 + _takeoffQuality * 0.38;  // vertical:   0.50 → 0.88 (smaller)
         _velX = _speed * fwdBoost * Math.cos(lr);
         _velY = -_speed * upBoost  * Math.sin(lr);
-        // Start well outside sweet spot — player must lean to correct toward 18°
-        // Perfect takeoff = 34°, poor = 40°. Sweet spot is ~16-25°.
-        _bodyAngle = 34.0 + (1.0 - _takeoffQuality) * 6.0;
+        // Starting angle: Easy starts near optimal (~22-26°), Hard starts far off (~34-40°).
+        var startBase = (_diff == 0) ? 22.0 : ((_diff == 1) ? 28.0 : 34.0);
+        var startRange = (_diff == 0) ? 4.0  : ((_diff == 1) ? 5.0  : 6.0);
+        _bodyAngle = startBase + (1.0 - _takeoffQuality) * startRange;
         _skiAngle  = _bodyAngle + 2.0;
         _onHill = false;
         if (_takeoffQuality >= 0.95) { doVibe(80, 150); } else if (_takeoffQuality > 0.2) { doVibe(50, 100); }
@@ -376,7 +406,8 @@ class BitochiJumpView extends WatchUi.View {
     hidden function updateFlight() {
         // Always update wind for HUD/snow even in special states
         _windPhase += 0.052;
-        var wAmp = 0.26 + _venue.toFloat() * 0.07;
+        var wBase3 = (_diff == 0) ? 0.07 : ((_diff == 1) ? 0.16 : 0.26);
+        var wAmp = wBase3 + _venue.toFloat() * ((_diff == 0) ? 0.02 : ((_diff == 1) ? 0.04 : 0.07));
         _windCurrent = _windBase + Math.sin(_windPhase) * wAmp + Math.sin(_windPhase * 2.4) * 0.09;
 
         // --- PATH 1: Early tap — jumper stumbled and de-balancing ---
@@ -444,12 +475,15 @@ class BitochiJumpView extends WatchUi.View {
         if (targetAngle < -10.0) { targetAngle = -10.0; }
         if (targetAngle >  56.0) { targetAngle =  56.0; }
 
-        // Smooth lerp — responsive like Parachute, not sluggish
-        _bodyAngle = _bodyAngle * 0.84 + targetAngle * 0.16;
+        // Lerp rate: Easy = faster correction (more responsive), Hard = current sluggish
+        var lr = (_diff == 0) ? 0.22 : ((_diff == 1) ? 0.18 : 0.16);
+        _bodyAngle = _bodyAngle * (1.0 - lr) + targetAngle * lr;
         _skiAngle  = _skiAngle  * 0.92 + _bodyAngle  * 0.08;
 
-        // Lose control: smooth transition to spinning tumble (not instant crash)
-        if (_bodyAngle > 50.0 || _bodyAngle < -8.0) { _spinningOut = true; return; }
+        // Spin-out tolerance: Easy has wider safe angle band, Hard is tightest
+        var spinHi = (_diff == 0) ? 60.0 : ((_diff == 1) ? 55.0 : 50.0);
+        var spinLo = (_diff == 0) ? -14.0 : ((_diff == 1) ? -11.0 : -8.0);
+        if (_bodyAngle > spinHi || _bodyAngle < spinLo) { _spinningOut = true; return; }
 
         // Aerodynamics: lift from optimal angle (18°), drag from deviation
         var optDev = _bodyAngle - 18.0; if (optDev < 0.0) { optDev = -optDev; }
@@ -487,7 +521,8 @@ class BitochiJumpView extends WatchUi.View {
             if (!_landTapDone) {
                 _landQuality = 0.15;
                 var wAbsA = _windCurrent; if (wAbsA < 0.0) { wAbsA = -wAbsA; }
-                if (_distance < 6.0 || wAbsA > 0.45) { _landCrash = true; }
+                var windCrashThr = (_diff == 0) ? 0.85 : ((_diff == 1) ? 0.62 : 0.45);
+                if (_distance < 6.0 || wAbsA > windCrashThr) { _landCrash = true; }
             }
             doLanding();
         }
@@ -555,11 +590,27 @@ class BitochiJumpView extends WatchUi.View {
             _preparingLanding = true;
             doVibe(90, 220); return;
         }
-        if      (ha <  7.0) { _landQuality = 1.00; }   // nearly touching: perfect
-        else if (ha < 14.0) { _landQuality = 0.84; }   // very close: telemark
-        else if (ha < 23.0) { _landQuality = 0.62; }   // ok: two-foot
-        else if (ha < 33.0) { _landQuality = 0.38; }   // high: weak two-foot
-        else                { _landQuality = 0.22; }   // very high: early/awkward
+        // Easy: large windows — tap anywhere near ground for a good landing.
+        // Mid: moderately wide. Hard: current tight windows.
+        if (_diff == 0) {
+            if      (ha < 14.0) { _landQuality = 1.00; }
+            else if (ha < 28.0) { _landQuality = 0.84; }
+            else if (ha < 44.0) { _landQuality = 0.62; }
+            else if (ha < 62.0) { _landQuality = 0.38; }
+            else                { _landQuality = 0.22; }
+        } else if (_diff == 1) {
+            if      (ha < 10.0) { _landQuality = 1.00; }
+            else if (ha < 19.0) { _landQuality = 0.84; }
+            else if (ha < 30.0) { _landQuality = 0.62; }
+            else if (ha < 43.0) { _landQuality = 0.38; }
+            else                { _landQuality = 0.22; }
+        } else {
+            if      (ha <  7.0) { _landQuality = 1.00; }
+            else if (ha < 14.0) { _landQuality = 0.84; }
+            else if (ha < 23.0) { _landQuality = 0.62; }
+            else if (ha < 33.0) { _landQuality = 0.38; }
+            else                { _landQuality = 0.22; }
+        }
 
         // Start graceful preparation descent — don't snap to ground
         _preparingLanding = true;
@@ -620,6 +671,11 @@ class BitochiJumpView extends WatchUi.View {
         else if (gameState == JS_FINAL) { gameState = JS_MENU; }
     }
     function cycleJumper(dir) { if (gameState == JS_MENU) { _jumperIdx = (_jumperIdx + dir + NUM_JUMPERS) % NUM_JUMPERS; } }
+    function cycleDiff() {
+        if (gameState != JS_MENU) { return; }
+        _diff = (_diff + 1) % 3;
+        Application.Storage.setValue("sjDiff", _diff);
+    }
 
     hidden function startCompetition() {
         _venue = 0; buildHill();
@@ -1109,8 +1165,29 @@ class BitochiJumpView extends WatchUi.View {
         dc.drawText(jx - 28, jy - 4, Graphics.FONT_XTINY, "<", Graphics.TEXT_JUSTIFY_CENTER);
         dc.drawText(jx + 28, jy - 4, Graphics.FONT_XTINY, ">", Graphics.TEXT_JUSTIFY_CENTER);
 
-        if (_bestDist > 0.0) { dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 74 / 100, Graphics.FONT_XTINY, "BEST " + _bestDist.toNumber() + "m", Graphics.TEXT_JUSTIFY_CENTER); }
-        dc.setColor((_tick % 10 < 5) ? 0x2244BB : 0x1133AA, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 84 / 100, Graphics.FONT_XTINY, "Tap to start", Graphics.TEXT_JUSTIFY_CENTER);
+        // Difficulty row — three boxes, current one highlighted
+        var diffY = _h * 68 / 100;
+        var boxW = _w * 22 / 100; var boxH = _h * 9 / 100;
+        var totalBoxW = boxW * 3 + _w * 4 / 100;
+        var boxStartX = (_w - totalBoxW) / 2;
+        var diffColors = [0x33AA44, 0xFFAA00, 0xDD2222];
+        for (var d = 0; d < 3; d++) {
+            var bx = boxStartX + d * (boxW + _w * 2 / 100);
+            if (d == _diff) {
+                dc.setColor(diffColors[d], Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(bx, diffY, boxW, boxH);
+                dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+            } else {
+                dc.setColor(0xBBCCDD, Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(bx, diffY, boxW, boxH);
+                dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT);
+            }
+            dc.drawText(bx + boxW / 2, diffY + boxH / 2 - dc.getFontHeight(Graphics.FONT_XTINY) / 2, Graphics.FONT_XTINY, _diffNames[d], Graphics.TEXT_JUSTIFY_CENTER);
+        }
+        dc.setColor(0x778899, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, diffY + boxH + 2, Graphics.FONT_XTINY, "Menu=cycle", Graphics.TEXT_JUSTIFY_CENTER);
+
+        if (_bestDist > 0.0) { dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 83 / 100, Graphics.FONT_XTINY, "BEST " + _bestDist.toNumber() + "m", Graphics.TEXT_JUSTIFY_CENTER); }
+        dc.setColor((_tick % 10 < 5) ? 0x2244BB : 0x1133AA, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 91 / 100, Graphics.FONT_XTINY, "Tap to start", Graphics.TEXT_JUSTIFY_CENTER);
 
         for (var i = 0; i < SNOW_N; i++) { dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(_snowX[i].toNumber(), _snowY[i].toNumber(), 1, 1); }
     }

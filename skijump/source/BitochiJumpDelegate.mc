@@ -27,7 +27,15 @@ class BitochiJumpDelegate extends WatchUi.BehaviorDelegate {
     }
 
     function onSelect() { _view.doAction(); WatchUi.requestUpdate(); return true; }
-    function onMenu() { _view.doAction(); WatchUi.requestUpdate(); return true; }
+    function onMenu() {
+        if (_view.gameState == JS_MENU) {
+            _view.cycleDiff();
+        } else {
+            _view.doAction();
+        }
+        WatchUi.requestUpdate();
+        return true;
+    }
 
     function onPreviousPage() {
         if (_view.gameState == JS_MENU) {
