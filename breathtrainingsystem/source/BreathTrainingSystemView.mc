@@ -3890,7 +3890,11 @@ class BreathTrainingSystemView extends WatchUi.View {
     //   valTxt:   string to render on right; valC: color for that string.
     //   When the newest hist slot is 0 but `val` > 0, renders `val` as the
     //   newest bar so users see something instead of "------".
-    hidden function _drTrendRow(dc, y, lbl, val, valTxt, valC, trend, hist, scaleMax, mode) {
+    // scaleMaxEncoded: positive = mode 0 (physio colour), negative = mode 1 (PB-percent colour).
+    // Merges the old 'scaleMax' and 'mode' params into one to stay within the 9-arg SDK 3.4 limit.
+    hidden function _drTrendRow(dc, y, lbl, val, valTxt, valC, trend, hist, scaleMaxEncoded) {
+        var mode  = (scaleMaxEncoded < 0) ? 1 : 0;
+        var scaleMax = (scaleMaxEncoded < 0) ? -scaleMaxEncoded : scaleMaxEncoded;
         var lblX = _w * 8 / 100;
         var valX = _w * 92 / 100;
 
@@ -3954,7 +3958,7 @@ class BreathTrainingSystemView extends WatchUi.View {
 
     // Compact physio row (0..100 scale)
     hidden function _drPhysioRow(dc, y, lbl, val, trend, hist) {
-        _drTrendRow(dc, y, lbl, val, val.toString(), _physioColor(val), trend, hist, 100, 0);
+        _drTrendRow(dc, y, lbl, val, val.toString(), _physioColor(val), trend, hist, 100);
     }
 
     // Apnea row — PB-scaled, value rendered as M:SS
@@ -3965,7 +3969,7 @@ class BreathTrainingSystemView extends WatchUi.View {
         if (pct >= 80)      { c = _cHLD; }
         else if (pct >= 60) { c = 0xFFA060; }
         else                { c = (val > 0) ? 0xFF5533 : 0x888888; }
-        _drTrendRow(dc, y, lbl, val, _fmt(val), c, trend, hist, pb, 1);
+        _drTrendRow(dc, y, lbl, val, _fmt(val), c, trend, hist, -pb);
     }
 
     // Trend over a 5-entry history (newest at idx 0). Returns -1/0/+1.
