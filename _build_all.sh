@@ -53,6 +53,7 @@ APPS=(
   territory_clash
   intervalbeeper
   jazzball
+  billiards
   minigolf
   moon
   parachute
