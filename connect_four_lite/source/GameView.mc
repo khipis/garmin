@@ -64,6 +64,32 @@ class GameView extends WatchUi.View {
     // ── Alpha-beta column ordering ────────────────────────────────────────
     hidden var _abCols;   // center-out order [3,2,4,1,5,0,6]
 
+    // ── Iterative alpha-beta stack (depth ≤ 8) — no recursion ────────────
+    // Each "frame" represents the search state at a particular depth.
+    hidden var _stCi;        // current column index iterator
+    hidden var _stCol;       // column actually played at this depth (for undo)
+    hidden var _stRow;       // row played
+    hidden var _stAlpha;
+    hidden var _stBeta;
+    hidden var _stBest;      // best score found so far at this depth
+    hidden var _stMark;      // mark to play
+    hidden var _stOpp;       // opponent of mark
+
+    // ── Tick-spread alpha-beta search state ─────────────────────────────
+    // The search runs incrementally across multiple timer ticks to stay
+    // well under the per-callback watchdog limit on slow devices
+    // (e.g. fenix8 solar 51mm). Each tick processes at most _abBudget
+    // iterations of the main loop.
+    hidden var _abActive;        // true while a search is in progress
+    hidden var _abSp;            // current stack pointer (depth)
+    hidden var _abLastResult;    // last child score returned to integrate
+    hidden var _abHasResult;     // pending child result?
+    hidden var _abRootBestScore;
+    hidden var _abRootBestCol;
+    hidden var _abMaxDepth;
+    hidden var _abRootMark;
+    hidden var _abRootOpp;
+
     // ─────────────────────────────────────────────────────────────────────
     function initialize() {
         View.initialize();
@@ -79,6 +105,20 @@ class GameView extends WatchUi.View {
         _abCols = new [COLS];
         _abCols[0] = 3; _abCols[1] = 2; _abCols[2] = 4;
         _abCols[3] = 1; _abCols[4] = 5; _abCols[5] = 0; _abCols[6] = 6;
+        // Allocate stack frames for max search depth = 8 (more than enough).
+        var MAXD = 8;
+        _stCi    = new [MAXD]; _stCol   = new [MAXD]; _stRow = new [MAXD];
+        _stAlpha = new [MAXD]; _stBeta  = new [MAXD]; _stBest = new [MAXD];
+        _stMark  = new [MAXD]; _stOpp   = new [MAXD];
+        _abActive        = false;
+        _abSp            = -1;
+        _abLastResult    = 0;
+        _abHasResult     = false;
+        _abRootBestScore = -999999;
+        _abRootBestCol   = -1;
+        _abMaxDepth      = 0;
+        _abRootMark      = MARK_AI;
+        _abRootOpp       = MARK_P;
         _startGame();
         _state   = GS_MENU;   // override to show menu first
     }
@@ -154,25 +194,32 @@ class GameView extends WatchUi.View {
     }
 
     // ── Timer tick ────────────────────────────────────────────────────────
+    // _aiTickFor() may return false ("still thinking") for tick-spread
+    // alpha-beta on Med/Hard. In that case we leave the state untouched
+    // and resume the search on the next tick.
     function gameTick() as Void {
         if (_state != GS_AI && (_state != GS_PLAY || _cfMode != CF_MODE_AIAI)) { return; }
         if (_state == GS_AI) {
-            _aiDropFor(MARK_AI, MARK_P);
-            if (_checkWin(MARK_AI)) {
-                _overType = OVER_AIWIN; _scoreAI = _scoreAI + 1; _state = GS_OVER;
-            } else if (_moveCount == COLS * ROWS) {
-                _overType = OVER_DRAW; _state = GS_OVER;
-            } else {
-                _state = GS_PLAY;
+            var committed = _aiTickFor(MARK_AI, MARK_P);
+            if (committed) {
+                if (_checkWin(MARK_AI)) {
+                    _overType = OVER_AIWIN; _scoreAI = _scoreAI + 1; _state = GS_OVER;
+                } else if (_moveCount == COLS * ROWS) {
+                    _overType = OVER_DRAW; _state = GS_OVER;
+                } else {
+                    _state = GS_PLAY;
+                }
             }
         } else {
-            _aiDropFor(MARK_P, MARK_AI);
-            if (_checkWin(MARK_P)) {
-                _overType = OVER_PWIN; _scoreP = _scoreP + 1; _state = GS_OVER;
-            } else if (_moveCount == COLS * ROWS) {
-                _overType = OVER_DRAW; _state = GS_OVER;
-            } else {
-                _state = GS_AI;
+            var committed2 = _aiTickFor(MARK_P, MARK_AI);
+            if (committed2) {
+                if (_checkWin(MARK_P)) {
+                    _overType = OVER_PWIN; _scoreP = _scoreP + 1; _state = GS_OVER;
+                } else if (_moveCount == COLS * ROWS) {
+                    _overType = OVER_DRAW; _state = GS_OVER;
+                } else {
+                    _state = GS_AI;
+                }
             }
         }
         WatchUi.requestUpdate();
@@ -188,6 +235,10 @@ class GameView extends WatchUi.View {
         _moveCount = 0;
         _curCol    = COLS / 2;
         _overType  = OVER_NONE;
+        // Abort any in-progress AI search from a previous game so the board
+        // doesn't get marks dropped into it after a restart.
+        _abActive  = false;
+        _abSp      = -1;
         if (_cfMode == CF_MODE_PVAI && !_playerFirst) {
             _state = GS_AI;
         } else {
@@ -280,127 +331,255 @@ class GameView extends WatchUi.View {
     //   This creates diverse scores → effective α-β pruning even in early game.
     //   Combined with _findForkCol for all non-easy levels, AI plays well tactically.
 
-    hidden function _aiDropFor(mark, opp) {
+    // Tick-spread AI driver. Returns true when a disc has been dropped
+    // (move committed); false while the AI is still "thinking" — the
+    // caller should keep the state at GS_AI and call again next tick.
+    //
+    // Watchdog strategy: pre-checks (win/block/fork) finish in one tick.
+    // Med/Hard alpha-beta runs incrementally via _alphaBetaStep so each
+    // timer callback stays well below the device's per-tick CPU budget.
+    hidden function _aiTickFor(mark, opp) {
+        // Resume an in-progress search.
+        if (_abActive) {
+            var done = _alphaBetaStep(120);  // ~120 frames × ~200 ops ≈ 24K ops/tick — safe
+            if (!done) { return false; }
+            var rc = _abRootBestCol;
+            _abActive = false;
+            if (rc < 0) { rc = _bestScoredColFor(_abRootMark, _abRootOpp); }
+            if (rc >= 0) { _dropDisc(rc, _dropRow(rc), _abRootMark); return true; }
+            // Fallback: drop in first legal column
+            var fc = 0;
+            while (fc < COLS) {
+                if (_dropRow(fc) >= 0) { _dropDisc(fc, _dropRow(fc), _abRootMark); return true; }
+                fc = fc + 1;
+            }
+            return true;
+        }
+
         // 1. Win immediately
         var col = _findWinningCol(mark);
-        if (col >= 0) { _dropDisc(col, _dropRow(col), mark); return; }
+        if (col >= 0) { _dropDisc(col, _dropRow(col), mark); return true; }
 
         // 2. Block immediate loss
         col = _findWinningCol(opp);
-        if (col >= 0) { _dropDisc(col, _dropRow(col), mark); return; }
+        if (col >= 0) { _dropDisc(col, _dropRow(col), mark); return true; }
 
         // 3. Fork attacks — fast pre-check (~7K ops), prevents missed forks
         col = _findForkCol(mark);
-        if (col >= 0) { _dropDisc(col, _dropRow(col), mark); return; }
+        if (col >= 0) { _dropDisc(col, _dropRow(col), mark); return true; }
         col = _findForkCol(opp);
-        if (col >= 0) { _dropDisc(col, _dropRow(col), mark); return; }
+        if (col >= 0) { _dropDisc(col, _dropRow(col), mark); return true; }
 
         if (_cfDiff == CF_DIFF_EASY) {
             col = _bestScoredColFor(mark, opp);
-        } else {
-            // Med depth=2: 1 move per player lookahead (+fork pre-check = solid).
-            // Hard depth=3: 1.5 moves per player with row-weighted positional eval.
-            // depth=4 crashes (7^4=2401 nodes too many); depth=3 max 343×228=78K ops.
-            var depth = (_cfDiff == CF_DIFF_HARD) ? 3 : 2;
-            col = _alphaBetaRoot(depth, mark, opp);
-            if (col < 0) { col = _bestScoredColFor(mark, opp); }
+            if (col < 0) {
+                var k = 0;
+                while (k < COLS) {
+                    if (_dropRow(k) >= 0) { col = k; break; }
+                    k = k + 1;
+                }
+            }
+            if (col >= 0) { _dropDisc(col, _dropRow(col), mark); }
+            return true;
         }
-        if (col >= 0) { _dropDisc(col, _dropRow(col), mark); return; }
-        var c = 0;
-        while (c < COLS) {
-            if (_dropRow(c) >= 0) { _dropDisc(c, _dropRow(c), mark); return; }
-            c = c + 1;
+
+        // Med/Hard: tick-spread alpha-beta search.
+        //   Easy : heuristic only            (above)
+        //   Med  : depth 2 → ~50 leaves, finishes in one tick (cheap)
+        //   Hard : depth 3 → ~80-150 leaves, ~5-9 ticks × 300 ms ≈ 1.5-2.7 s.
+        //          Depth 4 was too slow even with tick-spread (≥9 s).
+        //          Combined with win/block + 2-ply fork pre-tactics, the
+        //          effective tactical depth is ~5 plies — still a strong
+        //          Connect-4 opponent.
+        var depth = (_cfDiff == CF_DIFF_HARD) ? 3 : 2;
+        _alphaBetaSetup(depth, mark, opp);
+        var doneNow = _alphaBetaStep(120);
+        if (doneNow) {
+            var rc2 = _abRootBestCol;
+            _abActive = false;
+            if (rc2 < 0) { rc2 = _bestScoredColFor(mark, opp); }
+            if (rc2 >= 0) { _dropDisc(rc2, _dropRow(rc2), mark); return true; }
+            var fc2 = 0;
+            while (fc2 < COLS) {
+                if (_dropRow(fc2) >= 0) { _dropDisc(fc2, _dropRow(fc2), mark); return true; }
+                fc2 = fc2 + 1;
+            }
+            return true;
         }
+        return false; // still thinking
     }
 
-    // Alpha-beta negamax.
-    // Leaf eval: row-weighted column counts (228 ops/leaf).
-    //   Bottom rows (cr≥4) weighted 50% higher — they host more winning sequences.
-    //   Col weights: outer→2/3, inner→4/5, centre→8/9.
-    //   Score range ±234 → diverse enough for effective α-β pruning.
-    //   Worst-case: 7^3=343 leaves × 228 ops = ~78K ops — safe on all devices.
-    //   (Window scan was 1659 ops/leaf → 343×1659=569K ops → WATCHDOG.)
-    hidden function _abSearch(depth, alpha, beta, mark, opp) {
-        if (_moveCount == COLS * ROWS) { return 0; }
-        if (depth == 0) {
-            var sc = 0; var cr = 0;
-            while (cr < ROWS) {
-                var idx = cr * COLS; var v;
-                if (cr >= 4) {
-                    // Bottom 2 rows: higher weights (more win-lines pass through)
-                    v = _cells[idx];     if (v == mark) { sc = sc + 3; } else if (v == opp) { sc = sc - 3; }
-                    v = _cells[idx + 1]; if (v == mark) { sc = sc + 5; } else if (v == opp) { sc = sc - 5; }
-                    v = _cells[idx + 2]; if (v == mark) { sc = sc + 7; } else if (v == opp) { sc = sc - 7; }
-                    v = _cells[idx + 3]; if (v == mark) { sc = sc + 9; } else if (v == opp) { sc = sc - 9; }
-                    v = _cells[idx + 4]; if (v == mark) { sc = sc + 7; } else if (v == opp) { sc = sc - 7; }
-                    v = _cells[idx + 5]; if (v == mark) { sc = sc + 5; } else if (v == opp) { sc = sc - 5; }
-                    v = _cells[idx + 6]; if (v == mark) { sc = sc + 3; } else if (v == opp) { sc = sc - 3; }
-                } else {
-                    v = _cells[idx];     if (v == mark) { sc = sc + 2; } else if (v == opp) { sc = sc - 2; }
-                    v = _cells[idx + 1]; if (v == mark) { sc = sc + 4; } else if (v == opp) { sc = sc - 4; }
-                    v = _cells[idx + 2]; if (v == mark) { sc = sc + 6; } else if (v == opp) { sc = sc - 6; }
-                    v = _cells[idx + 3]; if (v == mark) { sc = sc + 8; } else if (v == opp) { sc = sc - 8; }
-                    v = _cells[idx + 4]; if (v == mark) { sc = sc + 6; } else if (v == opp) { sc = sc - 6; }
-                    v = _cells[idx + 5]; if (v == mark) { sc = sc + 4; } else if (v == opp) { sc = sc - 4; }
-                    v = _cells[idx + 6]; if (v == mark) { sc = sc + 2; } else if (v == opp) { sc = sc - 2; }
-                }
-                cr = cr + 1;
+    // Row-weighted leaf eval — extracted from inline body for reuse.
+    // Bottom rows weighted higher (more win-lines pass through them).
+    hidden function _leafEvalFor(mark, opp) {
+        var sc = 0; var cr = 0;
+        while (cr < ROWS) {
+            var idx = cr * COLS; var v;
+            if (cr >= 4) {
+                v = _cells[idx];     if (v == mark) { sc = sc + 3; } else if (v == opp) { sc = sc - 3; }
+                v = _cells[idx + 1]; if (v == mark) { sc = sc + 5; } else if (v == opp) { sc = sc - 5; }
+                v = _cells[idx + 2]; if (v == mark) { sc = sc + 7; } else if (v == opp) { sc = sc - 7; }
+                v = _cells[idx + 3]; if (v == mark) { sc = sc + 9; } else if (v == opp) { sc = sc - 9; }
+                v = _cells[idx + 4]; if (v == mark) { sc = sc + 7; } else if (v == opp) { sc = sc - 7; }
+                v = _cells[idx + 5]; if (v == mark) { sc = sc + 5; } else if (v == opp) { sc = sc - 5; }
+                v = _cells[idx + 6]; if (v == mark) { sc = sc + 3; } else if (v == opp) { sc = sc - 3; }
+            } else {
+                v = _cells[idx];     if (v == mark) { sc = sc + 2; } else if (v == opp) { sc = sc - 2; }
+                v = _cells[idx + 1]; if (v == mark) { sc = sc + 4; } else if (v == opp) { sc = sc - 4; }
+                v = _cells[idx + 2]; if (v == mark) { sc = sc + 6; } else if (v == opp) { sc = sc - 6; }
+                v = _cells[idx + 3]; if (v == mark) { sc = sc + 8; } else if (v == opp) { sc = sc - 8; }
+                v = _cells[idx + 4]; if (v == mark) { sc = sc + 6; } else if (v == opp) { sc = sc - 6; }
+                v = _cells[idx + 5]; if (v == mark) { sc = sc + 4; } else if (v == opp) { sc = sc - 4; }
+                v = _cells[idx + 6]; if (v == mark) { sc = sc + 2; } else if (v == opp) { sc = sc - 2; }
             }
-            return sc;
+            cr = cr + 1;
         }
-        var best = -9999;
-        var ci = 0;
-        while (ci < COLS) {
-            var c = _abCols[ci];
-            var r = _dropRow(c);
-            if (r >= 0) {
-                _cells[r * COLS + c] = mark;
-                _moveCount = _moveCount + 1;
-                var sc;
-                if (_checkWinAt(mark, c, r)) {
-                    sc = 8000 + depth;
-                } else {
-                    sc = -_abSearch(depth - 1, -beta, -alpha, opp, mark);
+        return sc;
+    }
+
+    // Iterative alpha-beta negamax with explicit stack — phase 1 (setup).
+    // Cheap: initializes the root frame and shared search state.
+    // Phase 2 (_alphaBetaStep) processes the search incrementally, a few
+    // hundred iterations per timer tick, to stay well under the watchdog
+    // limit on slow devices (fenix 8 solar 51mm).
+    hidden function _alphaBetaSetup(maxDepth, rootMark, rootOpp) {
+        _abActive        = true;
+        _abMaxDepth      = maxDepth;
+        _abRootMark      = rootMark;
+        _abRootOpp       = rootOpp;
+        _abRootBestScore = -999999;
+        _abRootBestCol   = -1;
+        _abSp            = 0;
+        _abLastResult    = 0;
+        _abHasResult     = false;
+        _stCi[0]    = 0;
+        _stCol[0]   = -1;
+        _stRow[0]   = -1;
+        _stAlpha[0] = -9999;
+        _stBeta[0]  =  9999;
+        _stBest[0]  = -9999;
+        _stMark[0]  = rootMark;
+        _stOpp[0]   = rootOpp;
+    }
+
+    // Process up to `budget` iterations of the main alpha-beta loop.
+    // Returns true if the search is complete (caller should commit
+    // _abRootBestCol), false if there's more work to do on the next tick.
+    //
+    // Each "iteration" either:
+    //   • integrates a child's returned score, or
+    //   • pops an exhausted frame, or
+    //   • plays one column at the current depth (descend / leaf eval).
+    //
+    // Per-iteration cost: ~50 ops (interior) … ~300 ops (leaf with eval).
+    // With budget=120 that's ~6K–36K ops per tick, comfortable on every
+    // supported Garmin watch.
+    hidden function _alphaBetaStep(budget) {
+        var maxDepth = _abMaxDepth;
+        var sp         = _abSp;
+        var hasResult  = _abHasResult;
+        var lastResult = _abLastResult;
+        var processed  = 0;
+
+        while (sp >= 0 && processed < budget) {
+            processed = processed + 1;
+            if (hasResult) {
+                var childScore = -lastResult;
+                hasResult = false;
+                _cells[_stRow[sp] * COLS + _stCol[sp]] = MARK_NONE;
+                _moveCount = _moveCount - 1;
+                if (childScore > _stBest[sp])  { _stBest[sp]  = childScore; }
+                if (childScore > _stAlpha[sp]) { _stAlpha[sp] = childScore; }
+                if (sp == 0 && childScore > _abRootBestScore) {
+                    _abRootBestScore = childScore;
+                    _abRootBestCol   = _stCol[sp];
                 }
+                if (_stAlpha[sp] >= _stBeta[sp]) { _stCi[sp] = COLS; }
+                else                              { _stCi[sp] = _stCi[sp] + 1; }
+                continue;
+            }
+            if (_stCi[sp] >= COLS) {
+                if (sp == 0) { sp = -1; break; }
+                lastResult = (_stBest[sp] == -9999) ? 0 : _stBest[sp];
+                hasResult  = true;
+                sp = sp - 1;
+                continue;
+            }
+            var c = _abCols[_stCi[sp]];
+            var r = _dropRow(c);
+            if (r < 0) { _stCi[sp] = _stCi[sp] + 1; continue; }
+
+            _cells[r * COLS + c] = _stMark[sp];
+            _moveCount = _moveCount + 1;
+
+            if (_checkWinAt(_stMark[sp], c, r)) {
+                var sc = 8000 + (maxDepth - sp);
                 _cells[r * COLS + c] = MARK_NONE;
                 _moveCount = _moveCount - 1;
-                if (sc > best)  { best  = sc; }
-                if (sc > alpha) { alpha = sc; }
-                if (alpha >= beta) { break; }
-            }
-            ci = ci + 1;
-        }
-        return (best == -9999) ? 0 : best;
-    }
-
-    // Root call: returns best column index (always ≥ 0 when any move exists).
-    // With non-zero leaf eval, scores are never all zero, so -1 is only returned
-    // on a completely full board (handled by caller's fallback).
-    hidden function _alphaBetaRoot(depth, mark, opp) {
-        var bestCol = -1; var bestScore = -999999;
-        var ci = 0;
-        while (ci < COLS) {
-            var c = _abCols[ci];
-            var r = _dropRow(c);
-            if (r >= 0) {
-                _cells[r * COLS + c] = mark;
-                _moveCount = _moveCount + 1;
-                var sc;
-                if (_checkWinAt(mark, c, r)) {
-                    sc = 9000;
-                } else {
-                    sc = -_abSearch(depth - 1, -9000, 9000, opp, mark);
+                if (sc > _stBest[sp])  { _stBest[sp]  = sc; }
+                if (sc > _stAlpha[sp]) { _stAlpha[sp] = sc; }
+                if (sp == 0 && sc > _abRootBestScore) {
+                    _abRootBestScore = sc; _abRootBestCol = c;
                 }
+                if (_stAlpha[sp] >= _stBeta[sp]) { _stCi[sp] = COLS; }
+                else                              { _stCi[sp] = _stCi[sp] + 1; }
+                continue;
+            }
+            if (_moveCount == COLS * ROWS) {
                 _cells[r * COLS + c] = MARK_NONE;
                 _moveCount = _moveCount - 1;
-                if (sc > bestScore) { bestScore = sc; bestCol = c; }
+                if (0 > _stBest[sp])  { _stBest[sp]  = 0; }
+                if (0 > _stAlpha[sp]) { _stAlpha[sp] = 0; }
+                if (sp == 0 && 0 > _abRootBestScore) {
+                    _abRootBestScore = 0; _abRootBestCol = c;
+                }
+                if (_stAlpha[sp] >= _stBeta[sp]) { _stCi[sp] = COLS; }
+                else                              { _stCi[sp] = _stCi[sp] + 1; }
+                continue;
             }
-            ci = ci + 1;
+            if (sp == maxDepth - 1) {
+                var sc2 = _leafEvalFor(_stMark[sp], _stOpp[sp]);
+                _cells[r * COLS + c] = MARK_NONE;
+                _moveCount = _moveCount - 1;
+                if (sc2 > _stBest[sp])  { _stBest[sp]  = sc2; }
+                if (sc2 > _stAlpha[sp]) { _stAlpha[sp] = sc2; }
+                if (sp == 0 && sc2 > _abRootBestScore) {
+                    _abRootBestScore = sc2; _abRootBestCol = c;
+                }
+                if (_stAlpha[sp] >= _stBeta[sp]) { _stCi[sp] = COLS; }
+                else                              { _stCi[sp] = _stCi[sp] + 1; }
+                continue;
+            }
+            _stCol[sp] = c;
+            _stRow[sp] = r;
+            sp = sp + 1;
+            _stCi[sp]    = 0;
+            _stCol[sp]   = -1;
+            _stRow[sp]   = -1;
+            _stAlpha[sp] = -_stBeta[sp - 1];
+            _stBeta[sp]  = -_stAlpha[sp - 1];
+            _stBest[sp]  = -9999;
+            _stMark[sp]  = _stOpp[sp - 1];
+            _stOpp[sp]   = _stMark[sp - 1];
         }
-        return bestCol;
+
+        _abSp         = sp;
+        _abHasResult  = hasResult;
+        _abLastResult = lastResult;
+        return (sp < 0);  // true → search complete, false → resume next tick
     }
 
-    hidden function _aiDrop() { _aiDropFor(MARK_AI, MARK_P); }
+    // Legacy single-shot wrapper kept for back-compat / fallback paths.
+    // NOT used by the regular AI flow (which now calls _alphaBetaSetup +
+    // _alphaBetaStep across multiple timer ticks for watchdog safety).
+    hidden function _alphaBetaIterativeRoot(maxDepth, rootMark, rootOpp) {
+        _alphaBetaSetup(maxDepth, rootMark, rootOpp);
+        while (!_alphaBetaStep(200)) { }
+        _abActive = false;
+        return _abRootBestCol;
+    }
+
+    hidden function _aiDrop() { _aiTickFor(MARK_AI, MARK_P); }
 
     // Returns a column where 'mark' would create ≥2 simultaneous winning threats (fork).
     hidden function _findForkCol(mark) {

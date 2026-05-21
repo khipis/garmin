@@ -68,6 +68,10 @@ class GameView extends WatchUi.View {
     hidden var _bfsQi;      // queue read pointer
     hidden var _bfsQo;      // queue write pointer (one past last occupied slot)
 
+    // ── 2-ply refinement scratch buffers (pre-allocated, reused per AI turn) ─
+    hidden var _refIdx;     // int[HEX_N * HEX_N] — candidate flat indices
+    hidden var _refScore;   // int[HEX_N * HEX_N] — 1-ply scores (no noise)
+
     // ── Timer ─────────────────────────────────────────────────────────────
     hidden var _timer;
 
@@ -77,6 +81,8 @@ class GameView extends WatchUi.View {
         _cells    = new [HEX_N * HEX_N];
         _bfsQueue = new [HEX_N * HEX_N];
         _bfsVis   = new [HEX_N * HEX_N];
+        _refIdx   = new [HEX_N * HEX_N];
+        _refScore = new [HEX_N * HEX_N];
         var i = 0;
         while (i < HEX_N * HEX_N) { _bfsVis[i] = 0; i = i + 1; }
         _bfsGen  = 0;
@@ -317,95 +323,192 @@ class GameView extends WatchUi.View {
     // which tripped the watchdog.  The fix: run BFS once for each player as a global
     // "board pressure" metric, then use O(1) per-cell positional bonuses to differentiate.
     hidden function _aiMove(mark) {
-        var best   = -9999;
-        var move   = -1;
-        var mid    = HEX_N / 2;
         var isHard = (_diff == DIFF_HARD);
         var isMed  = (_diff == DIFF_MED);
-        var noise  = (_diff == DIFF_EASY) ? 20 : (isHard ? 1 : 4);
         var opp    = (mark == HM_AI) ? HM_P : HM_AI;
-        var nv     = 0;
 
-        // Pre-compute board-level reach for each player (ONCE per turn, not per candidate).
-        // ownReach > oppReach → we lead; oppReach > ownReach → we must defend.
+        // Immediate-win shortcut: if any empty cell wins for AI, take it.
+        var winMv = _findImmediateWin(mark);
+        if (winMv >= 0) { _placeMark(winMv / HEX_N, winMv % HEX_N, mark); return; }
+
+        // Block opponent's immediate win (Med/Hard only — Easy plays naive).
+        if (isMed || isHard) {
+            var blockMv = _findImmediateWin(opp);
+            if (blockMv >= 0) { _placeMark(blockMv / HEX_N, blockMv % HEX_N, mark); return; }
+        }
+
+        // Pre-compute board-level reach for each player (Med/Hard only).
         var ownReach = 0; var oppReach = 0;
         if (isMed || isHard) {
             ownReach = _bfsReachCount(mark);
             oppReach = _bfsReachCount(opp);
         }
 
+        var noise = (_diff == DIFF_EASY) ? 20 : (isHard ? 1 : 4);
+
+        // 1-PLY scored cell picking (Easy/Med); Hard also uses this as candidate filter.
+        // For HARD we also collect candidates into _refIdx/_refScore so the
+        // 2-ply refinement can reuse them (no redundant rescoring).
+        var best   = -9999;
+        var move   = -1;
+        var nC     = 0;
         var i = 0;
         while (i < HEX_N * HEX_N) {
             if (_cells[i] == HM_NONE) {
-                var r   = i / HEX_N;
-                var c   = i % HEX_N;
-
-                // Centre bias
-                var dr  = r - mid; if (dr  < 0) { dr  = -dr;  }
-                var dc2 = c - mid; if (dc2 < 0) { dc2 = -dc2; }
-                var score = (HEX_N - dr - dc2) * 3;
-
-                // Path bonus: progress toward goal edge
-                var distMid = (mark == HM_AI) ? (r - mid) : (c - mid);
-                if (distMid < 0) { distMid = -distMid; }
-                score = score + (HEX_N - distMid * 2);
-
-                // Count hex neighbours
-                var nSelf = 0; var nOpp = 0;
-                if (r - 1 >= 0) {
-                    nv = _cells[(r - 1) * HEX_N + c];
-                    if (nv == mark) { nSelf = nSelf + 1; } else if (nv == opp) { nOpp = nOpp + 1; }
-                }
-                if (r - 1 >= 0 && c + 1 < HEX_N) {
-                    nv = _cells[(r - 1) * HEX_N + (c + 1)];
-                    if (nv == mark) { nSelf = nSelf + 1; } else if (nv == opp) { nOpp = nOpp + 1; }
-                }
-                if (c - 1 >= 0) {
-                    nv = _cells[r * HEX_N + (c - 1)];
-                    if (nv == mark) { nSelf = nSelf + 1; } else if (nv == opp) { nOpp = nOpp + 1; }
-                }
-                if (c + 1 < HEX_N) {
-                    nv = _cells[r * HEX_N + (c + 1)];
-                    if (nv == mark) { nSelf = nSelf + 1; } else if (nv == opp) { nOpp = nOpp + 1; }
-                }
-                if (r + 1 < HEX_N && c - 1 >= 0) {
-                    nv = _cells[(r + 1) * HEX_N + (c - 1)];
-                    if (nv == mark) { nSelf = nSelf + 1; } else if (nv == opp) { nOpp = nOpp + 1; }
-                }
-                if (r + 1 < HEX_N) {
-                    nv = _cells[(r + 1) * HEX_N + c];
-                    if (nv == mark) { nSelf = nSelf + 1; } else if (nv == opp) { nOpp = nOpp + 1; }
-                }
-
-                var mult = isHard ? 3 : (isMed ? 2 : 1);
-                // Boosted neighbour weights compensate for removed per-candidate BFS.
-                score = score + nSelf * 18 * mult + nOpp * 14 * mult;
-
-                if (isMed || isHard) {
-                    // Cross-axis centrality: flexible column (AI) / row (Player) position.
-                    var axis = (mark == HM_AI) ? c : r;
-                    var axisDist = (axis > mid) ? (axis - mid) : (mid - axis);
-                    score = score + (mid - axisDist + 1) * 5 * mult;
-
-                    // "Bridge" bonus: placing here connects two or more existing groups.
-                    if (nSelf >= 2) { score = score + 20 * mult; }
-
-                    // Threat-block bonus: cell next to two or more opp pieces is key.
-                    if (nOpp >= 2) { score = score + 15 * mult; }
-
-                    // Board-pressure defensive bonus: if opp leads in reach,
-                    // extra reward for cells that touch many opp stones.
-                    if (oppReach > ownReach && nOpp > 0) {
-                        score = score + nOpp * 8 * mult;
-                    }
-                }
-
-                score = score + Math.rand() % noise;
+                var rawScore = _scoreCell(i, mark, opp, isMed, isHard, ownReach, oppReach);
+                var score = rawScore + Math.rand() % noise;
                 if (score > best) { best = score; move = i; }
+                if (isHard) {
+                    _refIdx[nC]   = i;
+                    _refScore[nC] = rawScore;
+                    nC = nC + 1;
+                }
             }
             i = i + 1;
         }
+
+        // HARD: 2-ply refinement on top-K candidates.
+        // Reuses pre-computed reaches and 1-ply scores from above — no redundant
+        // BFS or cell scoring. Cost bound: ~7K ops on top of the ~2K already spent.
+        if (isHard && nC > 0) {
+            move = _twoPlyRefine(mark, opp, ownReach, oppReach, nC);
+        }
+
         if (move >= 0) { _placeMark(move / HEX_N, move % HEX_N, mark); }
+    }
+
+    // Returns flat index of a cell where placing 'mark' wins; -1 if none.
+    hidden function _findImmediateWin(mark) {
+        var i = 0;
+        while (i < HEX_N * HEX_N) {
+            if (_cells[i] == HM_NONE) {
+                _cells[i] = mark;
+                if (_checkWin(mark)) { _cells[i] = HM_NONE; return i; }
+                _cells[i] = HM_NONE;
+            }
+            i = i + 1;
+        }
+        return -1;
+    }
+
+    // Cell heuristic — extracted so 2-ply can reuse it.
+    hidden function _scoreCell(i, mark, opp, isMed, isHard, ownReach, oppReach) {
+        var mid = HEX_N / 2;
+        var r   = i / HEX_N;
+        var c   = i % HEX_N;
+        var nv  = 0;
+
+        var dr  = r - mid; if (dr  < 0) { dr  = -dr;  }
+        var dc2 = c - mid; if (dc2 < 0) { dc2 = -dc2; }
+        var score = (HEX_N - dr - dc2) * 3;
+
+        var distMid = (mark == HM_AI) ? (r - mid) : (c - mid);
+        if (distMid < 0) { distMid = -distMid; }
+        score = score + (HEX_N - distMid * 2);
+
+        var nSelf = 0; var nOpp = 0;
+        if (r - 1 >= 0) {
+            nv = _cells[(r - 1) * HEX_N + c];
+            if (nv == mark) { nSelf = nSelf + 1; } else if (nv == opp) { nOpp = nOpp + 1; }
+        }
+        if (r - 1 >= 0 && c + 1 < HEX_N) {
+            nv = _cells[(r - 1) * HEX_N + (c + 1)];
+            if (nv == mark) { nSelf = nSelf + 1; } else if (nv == opp) { nOpp = nOpp + 1; }
+        }
+        if (c - 1 >= 0) {
+            nv = _cells[r * HEX_N + (c - 1)];
+            if (nv == mark) { nSelf = nSelf + 1; } else if (nv == opp) { nOpp = nOpp + 1; }
+        }
+        if (c + 1 < HEX_N) {
+            nv = _cells[r * HEX_N + (c + 1)];
+            if (nv == mark) { nSelf = nSelf + 1; } else if (nv == opp) { nOpp = nOpp + 1; }
+        }
+        if (r + 1 < HEX_N && c - 1 >= 0) {
+            nv = _cells[(r + 1) * HEX_N + (c - 1)];
+            if (nv == mark) { nSelf = nSelf + 1; } else if (nv == opp) { nOpp = nOpp + 1; }
+        }
+        if (r + 1 < HEX_N) {
+            nv = _cells[(r + 1) * HEX_N + c];
+            if (nv == mark) { nSelf = nSelf + 1; } else if (nv == opp) { nOpp = nOpp + 1; }
+        }
+
+        var mult = isHard ? 3 : (isMed ? 2 : 1);
+        score = score + nSelf * 18 * mult + nOpp * 14 * mult;
+
+        if (isMed || isHard) {
+            var axis = (mark == HM_AI) ? c : r;
+            var axisDist = (axis > mid) ? (axis - mid) : (mid - axis);
+            score = score + (mid - axisDist + 1) * 5 * mult;
+            if (nSelf >= 2) { score = score + 20 * mult; }
+            if (nOpp  >= 2) { score = score + 15 * mult; }
+            if (oppReach > ownReach && nOpp > 0) {
+                score = score + nOpp * 8 * mult;
+            }
+        }
+        return score;
+    }
+
+    // HARD-only 2-ply refinement on top-K AI candidates.
+    //
+    // Watchdog-safe lean rewrite (previous version tripped on Fenix 8 Solar):
+    //   • Candidate buffer (_refIdx / _refScore) and board reaches (oR, pR)
+    //     are passed in from `_aiMove` — no redundant work.
+    //   • K = 4 (was 5) — extra safety margin on slow devices.
+    //   • The 49 × _checkWin(opp) "oppWinAt" pre-computation was DEAD CODE:
+    //     `_findImmediateWin(opp)` already ran in `_aiMove` and returned -1
+    //     (otherwise we'd never reach this function). Mathematically, an AI
+    //     placement can only REMOVE opp winning cells, never CREATE them, so
+    //     once oppWinTotal=0 before, it stays 0 after. Removed — saved ~7K ops.
+    //
+    // Cost: partial-sort (~80 ops) + K × (1 _checkWin + 49 _scoreCell)
+    //     = 80 + 4 × (~150 + ~1500) ≈ 6 700 ops.
+    hidden function _twoPlyRefine(mark, opp, oR, pR, nC) {
+        // Step 1: partial selection-sort top-K to front.
+        var K = (nC < 4) ? nC : 4;
+        var s = 0;
+        while (s < K) {
+            var bestJ = s; var bestV = _refScore[s];
+            var j = s + 1;
+            while (j < nC) {
+                if (_refScore[j] > bestV) { bestV = _refScore[j]; bestJ = j; }
+                j = j + 1;
+            }
+            if (bestJ != s) {
+                var t = _refIdx[s];   _refIdx[s]   = _refIdx[bestJ];   _refIdx[bestJ]   = t;
+                var u = _refScore[s]; _refScore[s] = _refScore[bestJ]; _refScore[bestJ] = u;
+            }
+            s = s + 1;
+        }
+
+        // Step 2: for each top-K AI move, simulate; find opp's best heuristic reply.
+        var bestDelta = -999999;
+        var bestMove  = _refIdx[0];
+        var k = 0;
+        while (k < K) {
+            var mv = _refIdx[k];
+            _cells[mv] = mark;
+            // After we placed, did we win? Take it immediately.
+            if (_checkWin(mark)) {
+                _cells[mv] = HM_NONE;
+                return mv;
+            }
+            // Find opp's best reply by 1-ply scoring on current board.
+            var oppBest = -9999;
+            var p = 0;
+            while (p < HEX_N * HEX_N) {
+                if (_cells[p] == HM_NONE) {
+                    var os = _scoreCell(p, opp, mark, true, true, pR, oR);
+                    if (os > oppBest) { oppBest = os; }
+                }
+                p = p + 1;
+            }
+            _cells[mv] = HM_NONE;
+            // Maximise (ownScore − 0.7 × oppBest).
+            var delta = _refScore[k] * 10 - oppBest * 7;
+            if (delta > bestDelta) { bestDelta = delta; bestMove = mv; }
+            k = k + 1;
+        }
+        return bestMove;
     }
 
     // Count how many cells of 'mark' are reachable from the starting edge via BFS.

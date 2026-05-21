@@ -526,20 +526,35 @@ class GameView extends WatchUi.View {
 
         // Bonus for moves that capture opponent groups in atari (already in capBonus above,
         // but add extra incentive for Hard: also look one step away).
+        // Hard fork detection: a single move threatening 2+ distinct opp groups
+        // is extremely strong — bonus per additional threatened group.
         if (hard) {
-            // Look for opp groups with 2 libs adjacent to this cell — threatening them
-            var checkDirs = [ci - 1, ci + 1, ci - TC_N, ci + TC_N];
-            var di = 0;
-            while (di < 4) {
-                var nc = checkDirs[di];
-                if (nc >= 0 && nc < TC_CELLS) {
-                    if (_board[nc] == TC_P) {
-                        var nl = _checkGroup(nc, TC_P);
-                        if (nl == 2) { score = score + 15; }  // placing here threatens this group
+            var threatGroups = 0;
+            var fLastBase = -1;     // crude duplicate filter — opp groups touching
+            var fdi = 0;
+            // Check 4 orthogonal neighbours
+            while (fdi < 4) {
+                var ndir = 0;
+                if      (fdi == 0) { ndir = (cx > 0)            ? (ci - 1)    : -1; }
+                else if (fdi == 1) { ndir = (cx < TC_N - 1)     ? (ci + 1)    : -1; }
+                else if (fdi == 2) { ndir = (cy > 0)            ? (ci - TC_N) : -1; }
+                else               { ndir = (cy < TC_N - 1)     ? (ci + TC_N) : -1; }
+                if (ndir >= 0 && _board[ndir] == TC_P) {
+                    var nl = _checkGroup(ndir, TC_P);
+                    if (nl == 2) {
+                        // Threatening this group; avoid double-counting same group.
+                        // Use first cell encountered as group representative.
+                        if (fLastBase != ndir) {
+                            score = score + 15;
+                            threatGroups = threatGroups + 1;
+                            fLastBase = ndir;
+                        }
                     }
                 }
-                di = di + 1;
+                fdi = fdi + 1;
             }
+            // Fork bonus: 2+ distinct threatened groups around this cell.
+            if (threatGroups >= 2) { score = score + 90; }
         }
 
         score = score + Math.rand() % 7;

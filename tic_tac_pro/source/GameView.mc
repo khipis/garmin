@@ -30,6 +30,20 @@ const DIFF_EASY = 0;
 const DIFF_MED  = 1;
 const DIFF_HARD = 2;
 
+// ── 3D mode (NxNxN tic-tac-toe, N ∈ {2,3,4}) ─────────────────────────────
+// Cell index: z * N*N + y * N + x   (z, y, x ∈ 0..N-1)
+// Lines per cube of size N:
+//   axis lines : 3 × N²        (rows + cols + verticals)
+//   plane diag : 6 × N          (xy, xz, yz planes × 2 diagonals each)
+//   space diag : 4
+//   Total      : 3N² + 6N + 4   → N=2: 28, N=3: 49, N=4: 76
+// Max lines-per-cell occurs for N=3 centre (3 axis + 6 plane + 4 space = 13).
+// MAX values are used for static array sizing; live values live in class.
+const N3D_MAX      = 4;
+const TOTAL3D_MAX  = 64;
+const LINES3D_MAX  = 76;
+const MAX_LPC      = 13;
+
 // ── GameView ───────────────────────────────────────────────────────────────────
 class GameView extends WatchUi.View {
 
@@ -39,11 +53,22 @@ class GameView extends WatchUi.View {
     hidden var _cell;
 
     // ── Board state ───────────────────────────────────────────────────────
-    hidden var _cells;       // new [7*7] = 49 max
+    hidden var _cells;       // new [64] — works for 2D (up to 7x7=49) and 3D (4x4x4=64)
     hidden var _moveCount;
     hidden var _winLine;     // new [4]
-    hidden var _gridN;       // 3..7
+    hidden var _gridN;       // 3..7  (in 3D mode set to 4)
     hidden var _winLen;      // 3 or 4
+
+    // ── 3D mode ───────────────────────────────────────────────────────────
+    hidden var _is3D;        // bool — when true: N×N×N cube, win along any line
+    hidden var _n3D;         // active cube size 2..4 (also = win length in 3D)
+    hidden var _total3D;     // _n3D ^ 3 — number of live cells
+    hidden var _lines3DCnt;  // 3·N² + 6·N + 4 — number of winning lines for current N
+    hidden var _lines3D;     // int[LINES3D_MAX*4] flat — line l, cell k at idx l*4+k
+    hidden var _cellLinesN;  // int[TOTAL3D_MAX] — how many lines pass through cell i
+    hidden var _cellLines;   // int[TOTAL3D_MAX*MAX_LPC]
+    hidden var _winLine3D;   // int[4]     — cells of the winning line (3D)
+    hidden var _curZ;        // 0..N-1 active layer (3D cursor depth)
 
     // ── Cursor ────────────────────────────────────────────────────────────
     hidden var _curX, _curY;
@@ -72,15 +97,33 @@ class GameView extends WatchUi.View {
     hidden var _aiForkResult;  // best move index found (-1 = none yet)
     hidden var _aiForkBest;    // best score found so far
 
+    // ── 3D Hard pick — tick-spread state ─────────────────────────────────
+    // _ai3DBufI/_ai3DBufS hold top-K candidates pre-sorted by 1-ply score.
+    // Each tick processes ONE candidate (fork count + opp-win check) to stay
+    // well under the watchdog limit (~3K ops/tick vs ~70K in single shot).
+    hidden var _ai3DBufI;      // candidate cell indices (top-K)
+    hidden var _ai3DBufS;      // 1-ply score for each candidate
+    hidden var _ai3DK;          // number of top candidates to evaluate
+
     // ─────────────────────────────────────────────────────────────────────
     function initialize() {
         View.initialize();
-        _cells   = new [7 * 7];
-        _winLine = new [4];
+        _cells     = new [TOTAL3D_MAX];  // 64 — covers 2D (≤49) and 3D up to 4×4×4
+        _winLine   = new [4];
+        _winLine3D = new [4];
+        // 3D Hard scratch buffers (pre-allocated to avoid per-move GC churn).
+        _ai3DBufI  = new [TOTAL3D_MAX];
+        _ai3DBufS  = new [TOTAL3D_MAX];
+        _ai3DK     = 0;
+        _n3D        = 4;
+        _total3D    = 64;
+        _lines3DCnt = 76;
         _scoreX  = 0;
         _scoreO  = 0;
         _gridN   = 5;
         _winLen  = 4;
+        _is3D    = false;
+        _curZ    = 0;
         _mode        = MODE_PVAI;
         _diff        = DIFF_MED;
         _menuSel     = 0;
@@ -88,8 +131,145 @@ class GameView extends WatchUi.View {
         _sw          = 0;
         _sh      = 0;
         _timer   = null;
+        _init3DTables();
         _startGame();
         _state   = GS_MENU;
+    }
+
+    // Build the winning-line tables for an N×N×N cube (N ∈ {2,3,4}).
+    // Lines per cube: 3·N² (axes) + 6·N (plane diags) + 4 (space diags).
+    // _lines3D[line*4 + k] = cell index for the k-th cell of that line
+    //                        (lines shorter than 4 are padded with the last cell).
+    // _cellLinesN[c] = number of lines through cell c; _cellLines[c*MAX_LPC+i] = line idx.
+    hidden function _init3DTables() {
+        var N  = _n3D;
+        var N2 = N * N;
+        if (_lines3D == null) {
+            _lines3D    = new [LINES3D_MAX * 4];
+            _cellLinesN = new [TOTAL3D_MAX];
+            _cellLines  = new [TOTAL3D_MAX * MAX_LPC];
+        }
+        _total3D     = N * N * N;
+        _lines3DCnt  = 3 * N2 + 6 * N + 4;
+
+        var c = 0;
+        while (c < _total3D) { _cellLinesN[c] = 0; c = c + 1; }
+
+        var li = 0;
+        var z; var y; var x; var k;
+
+        // Rows  (constant z, y; x = 0..N-1)         → N² lines
+        z = 0;
+        while (z < N) {
+            y = 0;
+            while (y < N) {
+                k = 0;
+                while (k < N) { _lines3D[li*4+k] = z*N2 + y*N + k; k = k + 1; }
+                while (k < 4) { _lines3D[li*4+k] = _lines3D[li*4 + N - 1]; k = k + 1; }
+                li = li + 1;
+                y = y + 1;
+            }
+            z = z + 1;
+        }
+        // Columns (constant z, x; y = 0..N-1)        → N² lines
+        z = 0;
+        while (z < N) {
+            x = 0;
+            while (x < N) {
+                k = 0;
+                while (k < N) { _lines3D[li*4+k] = z*N2 + k*N + x; k = k + 1; }
+                while (k < 4) { _lines3D[li*4+k] = _lines3D[li*4 + N - 1]; k = k + 1; }
+                li = li + 1;
+                x = x + 1;
+            }
+            z = z + 1;
+        }
+        // Verticals (constant y, x; z = 0..N-1)      → N² lines
+        y = 0;
+        while (y < N) {
+            x = 0;
+            while (x < N) {
+                k = 0;
+                while (k < N) { _lines3D[li*4+k] = k*N2 + y*N + x; k = k + 1; }
+                while (k < 4) { _lines3D[li*4+k] = _lines3D[li*4 + N - 1]; k = k + 1; }
+                li = li + 1;
+                x = x + 1;
+            }
+            y = y + 1;
+        }
+        // xy-plane diagonals (constant z, 2 per layer) → 2N lines
+        z = 0;
+        while (z < N) {
+            k = 0;
+            while (k < N) { _lines3D[li*4+k] = z*N2 + k*N + k; k = k + 1; }
+            while (k < 4) { _lines3D[li*4+k] = _lines3D[li*4 + N - 1]; k = k + 1; }
+            li = li + 1;
+            k = 0;
+            while (k < N) { _lines3D[li*4+k] = z*N2 + k*N + (N-1-k); k = k + 1; }
+            while (k < 4) { _lines3D[li*4+k] = _lines3D[li*4 + N - 1]; k = k + 1; }
+            li = li + 1;
+            z = z + 1;
+        }
+        // xz-plane diagonals (constant y, 2 per plane) → 2N lines
+        y = 0;
+        while (y < N) {
+            k = 0;
+            while (k < N) { _lines3D[li*4+k] = k*N2 + y*N + k; k = k + 1; }
+            while (k < 4) { _lines3D[li*4+k] = _lines3D[li*4 + N - 1]; k = k + 1; }
+            li = li + 1;
+            k = 0;
+            while (k < N) { _lines3D[li*4+k] = k*N2 + y*N + (N-1-k); k = k + 1; }
+            while (k < 4) { _lines3D[li*4+k] = _lines3D[li*4 + N - 1]; k = k + 1; }
+            li = li + 1;
+            y = y + 1;
+        }
+        // yz-plane diagonals (constant x, 2 per plane) → 2N lines
+        x = 0;
+        while (x < N) {
+            k = 0;
+            while (k < N) { _lines3D[li*4+k] = k*N2 + k*N + x; k = k + 1; }
+            while (k < 4) { _lines3D[li*4+k] = _lines3D[li*4 + N - 1]; k = k + 1; }
+            li = li + 1;
+            k = 0;
+            while (k < N) { _lines3D[li*4+k] = k*N2 + (N-1-k)*N + x; k = k + 1; }
+            while (k < 4) { _lines3D[li*4+k] = _lines3D[li*4 + N - 1]; k = k + 1; }
+            li = li + 1;
+            x = x + 1;
+        }
+        // 4 space diagonals
+        k = 0; while (k < N) { _lines3D[li*4+k] = k*N2 + k*N + k;             k = k + 1; }
+        while (k < 4) { _lines3D[li*4+k] = _lines3D[li*4 + N - 1]; k = k + 1; }
+        li = li + 1;
+        k = 0; while (k < N) { _lines3D[li*4+k] = k*N2 + k*N + (N-1-k);       k = k + 1; }
+        while (k < 4) { _lines3D[li*4+k] = _lines3D[li*4 + N - 1]; k = k + 1; }
+        li = li + 1;
+        k = 0; while (k < N) { _lines3D[li*4+k] = k*N2 + (N-1-k)*N + k;       k = k + 1; }
+        while (k < 4) { _lines3D[li*4+k] = _lines3D[li*4 + N - 1]; k = k + 1; }
+        li = li + 1;
+        k = 0; while (k < N) { _lines3D[li*4+k] = k*N2 + (N-1-k)*N + (N-1-k); k = k + 1; }
+        while (k < 4) { _lines3D[li*4+k] = _lines3D[li*4 + N - 1]; k = k + 1; }
+        li = li + 1;
+
+        // Build per-cell line index table.
+        // We iterate cells of each line ONCE (only first N entries since
+        // we padded the rest with the last cell, which would double-count).
+        var l = 0;
+        while (l < _lines3DCnt) {
+            // Use a small "seen" trick: track unique cells per line by checking
+            // the first N entries (which are the actual line cells; entries
+            // N..3 are duplicates of the last for shorter lines).
+            var kk = 0;
+            while (kk < N) {
+                var ci = _lines3D[l*4 + kk];
+                var n  = _cellLinesN[ci];
+                if (n < MAX_LPC) {
+                    _cellLines[ci * MAX_LPC + n] = l;
+                    _cellLinesN[ci] = n + 1;
+                }
+                kk = kk + 1;
+            }
+            l = l + 1;
+        }
     }
 
     function onLayout(dc) {
@@ -108,6 +288,53 @@ class GameView extends WatchUi.View {
     hidden function _calcLayout() {
         if (_sw == 0) { return; }
         var minDim = (_sw < _sh) ? _sw : _sh;
+        if (_is3D) {
+            // Isometric stacked-boards view (like classic 3D tic-tac-toe drawings).
+            // Each layer is rendered as a parallelogram (tilted square) and the
+            // _n3D layers are stacked vertically with a gap between them so all
+            // boards stay fully visible.
+            //
+            // Per cell unit c:
+            //   sx = c (horizontal half-width of one cell in iso projection)
+            //   sy = c * 3 / 7  (vertical half-height — shallow tilt for legibility)
+            // Each board diamond width  = 2·N·sx = 2Nc
+            //              height = 2·N·sy ≈ 0.86·N·c
+            // Layer vertical stride (incl. gap): boardH + gap, where
+            //   gap = max( c, boardH / 3 )  → clear separation
+            //
+            // Total bounding box:
+            //   width  = 2·N·sx
+            //   height = boardH + (Nz-1)·stride  where stride = boardH + gap
+            //
+            // Solve for c so total fits in (minDim*92)% × available height.
+            var N  = _n3D;
+            var Nz = _n3D;
+            // Try a generous cell size first; shrink until the stack fits.
+            var c = minDim / (2 * N);             // upper bound: full width
+            // Compute heights assuming sy = c·3/7, gap = boardH/3
+            //   boardH = 2·N·(c·3/7) = 6Nc/7
+            //   stride = boardH + gap = boardH·4/3 = 8Nc/7
+            //   totalH = boardH + (Nz-1)·stride = (6 + 8·(Nz-1)) · N·c / 7
+            // Limit: totalH ≤ minDim·78/100  (leave room for HUD top + hint bottom)
+            //   c ≤ minDim · 78 · 7 / ( 100 · N · (6 + 8·(Nz-1)) )
+            var maxH = minDim * 78 / 100;
+            var denomH = N * (6 + 8 * (Nz - 1));
+            var cH = (maxH * 7) / denomH;
+            if (cH < c) { c = cH; }
+            // Width limit: 2Nc ≤ minDim·92/100  → c ≤ minDim·46/(100·N)
+            var cW = minDim * 46 / (100 * N);
+            if (cW < c) { c = cW; }
+            if (c < 5) { c = 5; }
+            _cell = c;
+            var boardH = 2 * N * c * 3 / 7;
+            var stride = boardH * 4 / 3;
+            var totalW = 2 * N * c;
+            var totalH = boardH + (Nz - 1) * stride;
+            _boardX = (_sw - totalW) / 2 + N * c;   // anchor at top centre of first diamond
+            _boardY = (_sh - totalH) / 2;
+            if (_boardY < 18) { _boardY = 18; }
+            return;
+        }
         _cell   = minDim * 68 / (100 * _gridN);
         _boardX = (_sw - _gridN * _cell) / 2;
         _boardY = (_sh - _gridN * _cell) / 2 - _sh * 3 / 100;
@@ -117,7 +344,8 @@ class GameView extends WatchUi.View {
     // ── Public input API ──────────────────────────────────────────────────
 
     // advance cursor in reading order: right → next row → wrap
-    // onNextPage (DOWN button): move RIGHT in current row, wrap to col=0
+    // onNextPage (DOWN-RIGHT swipe button): in 2D move RIGHT;
+    // in 3D move RIGHT and cycle Z layer when wrapping.
     function advanceCursor() {
         if (_state == GS_MENU) {
             _menuSel = (_menuSel + 1) % 5;
@@ -126,11 +354,19 @@ class GameView extends WatchUi.View {
         }
         if (_mode == MODE_AIAI) { return; }
         if (_state != GS_PLAY && !(_state == GS_AI && _mode == MODE_PVP)) { return; }
-        _curX = (_curX + 1) % _gridN;
+        if (_is3D) {
+            var N = _n3D; var N2 = N * N;
+            var idx = _curZ * N2 + _curY * N + _curX;
+            idx = (idx + 1) % _total3D;
+            _curZ = idx / N2; var rem = idx % N2; _curY = rem / N; _curX = rem % N;
+        } else {
+            _curX = (_curX + 1) % _gridN;
+        }
         WatchUi.requestUpdate();
     }
 
-    // onPreviousPage (UP button): move DOWN in current column, wrap to row=0
+    // onPreviousPage (DOWN-LEFT swipe button): in 2D move DOWN;
+    // in 3D — cycle through Z layers (rotates active layer).
     function retreatCursor() {
         if (_state == GS_MENU) {
             _menuSel = (_menuSel + 4) % 5;
@@ -139,7 +375,11 @@ class GameView extends WatchUi.View {
         }
         if (_mode == MODE_AIAI) { return; }
         if (_state != GS_PLAY && !(_state == GS_AI && _mode == MODE_PVP)) { return; }
-        _curY = (_curY + 1) % _gridN;
+        if (_is3D) {
+            _curZ = (_curZ + 1) % _n3D;
+        } else {
+            _curY = (_curY + 1) % _gridN;
+        }
         WatchUi.requestUpdate();
     }
 
@@ -152,9 +392,18 @@ class GameView extends WatchUi.View {
         }
         if (_mode == MODE_AIAI) { return; }
         if (_state != GS_PLAY && !(_state == GS_AI && _mode == MODE_PVP)) { return; }
-        _curY = _curY + delta;
-        if (_curY < 0)        { _curY = _gridN - 1; }
-        if (_curY >= _gridN)  { _curY = 0; }
+        if (_is3D) {
+            // delta -1 → up: cycle Z; delta +1 → down: cycle within layer
+            if (delta < 0) { _curZ = (_curZ + _n3D - 1) % _n3D; }
+            else {
+                _curY = _curY + 1;
+                if (_curY >= _n3D) { _curY = 0; }
+            }
+        } else {
+            _curY = _curY + delta;
+            if (_curY < 0)        { _curY = _gridN - 1; }
+            if (_curY >= _gridN)  { _curY = 0; }
+        }
         WatchUi.requestUpdate();
     }
 
@@ -170,15 +419,19 @@ class GameView extends WatchUi.View {
         if (_state == GS_OVER)  { _state = GS_MENU; _menuSel = 0; WatchUi.requestUpdate(); return; }
         if (_mode == MODE_AIAI) { return; }
 
+        var curIdx = _is3D ? (_curZ * _n3D * _n3D + _curY * _n3D + _curX)
+                           : (_curY * _gridN + _curX);
+        var totalCells = _is3D ? _total3D : (_gridN * _gridN);
+
         // PvP: GS_AI = O's turn (P2 places O)
         if (_state == GS_AI && _mode == MODE_PVP) {
-            if (_cells[_curY * _gridN + _curX] != MARK_NONE) { return; }
+            if (_cells[curIdx] != MARK_NONE) { return; }
             _place(_curX, _curY, MARK_O);
             if (_checkWin(MARK_O)) {
                 _overType = OVER_OWIN; _scoreO = _scoreO + 1; _state = GS_OVER;
                 WatchUi.requestUpdate(); return;
             }
-            if (_moveCount == _gridN * _gridN) {
+            if (_moveCount == totalCells) {
                 _overType = OVER_DRAW; _state = GS_OVER;
                 WatchUi.requestUpdate(); return;
             }
@@ -189,13 +442,13 @@ class GameView extends WatchUi.View {
 
         // PvAI player goes second: GS_AI = player's turn (player places O)
         if (_state == GS_AI && _mode == MODE_PVAI && !_playerFirst) {
-            if (_cells[_curY * _gridN + _curX] != MARK_NONE) { return; }
+            if (_cells[curIdx] != MARK_NONE) { return; }
             _place(_curX, _curY, MARK_O);
             if (_checkWin(MARK_O)) {
                 _overType = OVER_OWIN; _scoreO = _scoreO + 1; _state = GS_OVER;
                 WatchUi.requestUpdate(); return;
             }
-            if (_moveCount == _gridN * _gridN) {
+            if (_moveCount == totalCells) {
                 _overType = OVER_DRAW; _state = GS_OVER;
                 WatchUi.requestUpdate(); return;
             }
@@ -205,14 +458,14 @@ class GameView extends WatchUi.View {
         }
 
         if (_state != GS_PLAY) { return; }
-        if (_cells[_curY * _gridN + _curX] != MARK_NONE) { return; }
+        if (_cells[curIdx] != MARK_NONE) { return; }
 
         _place(_curX, _curY, MARK_X);
         if (_checkWin(MARK_X)) {
             _overType = OVER_XWIN; _scoreX = _scoreX + 1; _state = GS_OVER;
             WatchUi.requestUpdate(); return;
         }
-        if (_moveCount == _gridN * _gridN) {
+        if (_moveCount == totalCells) {
             _overType = OVER_DRAW; _state = GS_OVER;
             WatchUi.requestUpdate(); return;
         }
@@ -221,15 +474,36 @@ class GameView extends WatchUi.View {
     }
 
     // ── Menu action ───────────────────────────────────────────────────────
+    // Grid cycle: 3 → 4 → 5 → 6 → 7 → 3D(2×2×2) → 3D(3×3×3) → 3D(4×4×4) → 3
     hidden function _menuAction() {
         if (_menuSel == 0) {
             _mode = (_mode + 1) % 3;
         } else if (_menuSel == 1) {
             if (_mode != MODE_PVP) { _diff = (_diff + 1) % 3; }
         } else if (_menuSel == 2) {
-            _gridN = _gridN + 1;
-            if (_gridN > 7) { _gridN = 3; }
-            _winLen = (_gridN == 3) ? 3 : 4;
+            if (_is3D) {
+                if (_n3D < 4) {
+                    _n3D = _n3D + 1;
+                    _total3D = _n3D * _n3D * _n3D;
+                    _winLen  = _n3D;
+                    _init3DTables();
+                } else {
+                    // exit 3D, back to flat 3×3
+                    _is3D = false;
+                    _gridN = 3;
+                    _winLen = 3;
+                }
+            } else if (_gridN >= 7) {
+                _is3D   = true;
+                _n3D    = 2;
+                _total3D = 8;
+                _gridN  = _n3D;     // for centre/cursor defaults
+                _winLen = _n3D;
+                _init3DTables();
+            } else {
+                _gridN = _gridN + 1;
+                _winLen = (_gridN == 3) ? 3 : 4;
+            }
         } else if (_menuSel == 3) {
             if (_mode == MODE_PVAI) { _playerFirst = !_playerFirst; }
         } else {
@@ -258,6 +532,33 @@ class GameView extends WatchUi.View {
     // Fast path: immediate win/block + Easy move. Med/Hard → 2-ply GS_AI_FORK.
     hidden function _aiStart(mark) {
         var opp = (mark == MARK_X) ? MARK_O : MARK_X;
+
+        if (_is3D) {
+            var w3 = _findThreat3D(mark);
+            if (w3 >= 0) { _aiFinish3D(w3, mark); return; }
+            w3 = _findThreat3D(opp);
+            if (w3 >= 0) { _aiFinish3D(w3, mark); return; }
+            // 3D: 1-ply line-score for Easy/Med (cheap, one tick).
+            // Hard: spread over multiple ticks via GS_AI_FORK (3D branch).
+            if (_diff == DIFF_HARD) {
+                _ai3D_HardSetup(mark, opp);
+                if (_ai3DK == 0) {
+                    var fallback = _ai3D_1Ply(mark, opp);
+                    if (fallback >= 0) { _aiFinish3D(fallback, mark); }
+                    return;
+                }
+                _aiForkAiMk   = mark;
+                _aiForkI      = 0;
+                _aiForkResult = _ai3DBufI[0];
+                _aiForkBest   = -999999;
+                _state        = GS_AI_FORK;
+                return;
+            }
+            var pick = _ai3D_1Ply(mark, opp);
+            if (pick >= 0) { _aiFinish3D(pick, mark); }
+            return;
+        }
+
         var move = _findThreat(mark);
         if (move >= 0) { _aiFinish(move, mark); return; }
         move = _findThreat(opp);
@@ -277,6 +578,193 @@ class GameView extends WatchUi.View {
         _state = GS_AI_FORK;
     }
 
+    // 3D — find an empty cell where placing 'col' wins immediately.
+    hidden function _findThreat3D(col) {
+        var i = 0;
+        while (i < _total3D) {
+            if (_cells[i] == MARK_NONE) {
+                _cells[i] = col;
+                if (_checkWinAt3D(col, i)) { _cells[i] = MARK_NONE; return i; }
+                _cells[i] = MARK_NONE;
+            }
+            i = i + 1;
+        }
+        return -1;
+    }
+
+    // 3D 1-ply scoring — for each empty cell, sum line scores through it.
+    // Line score: own count^3 (offense), opp count^3 weighted (defense).
+    // Also strong centre bias (closer to (1.5,1.5,1.5) is better).
+    hidden function _ai3D_1Ply(mark, opp) {
+        var best = -999999;
+        var bestI = -1;
+        var i = 0;
+        while (i < _total3D) {
+            if (_cells[i] == MARK_NONE) {
+                var sc = _scoreCell3D(i, mark, opp);
+                sc = sc + Math.rand() % 5;
+                if (sc > best) { best = sc; bestI = i; }
+            }
+            i = i + 1;
+        }
+        return bestI;
+    }
+
+    // 3D cell heuristic — sum of line evaluations through this cell.
+    hidden function _scoreCell3D(idx, mark, opp) {
+        var N  = _n3D;
+        var N2 = N * N;
+        var n  = _cellLinesN[idx];
+        var sc = 0;
+        var i  = 0;
+        while (i < n) {
+            var l = _cellLines[idx * MAX_LPC + i];
+            var base = l * 4;
+            var own = 0; var en = 0;
+            // Iterate only the N real cells of the line; cells N..3 are
+            // padded duplicates of cell N-1 (skip them so they aren't double-counted).
+            var k = 0;
+            while (k < N) {
+                var v = _cells[_lines3D[base+k]];
+                if      (v == mark) { own = own + 1; }
+                else if (v == opp)  { en  = en  + 1; }
+                k = k + 1;
+            }
+            if (en == 0 && own > 0) { sc = sc + (own + 1) * (own + 1) * (own + 1); }
+            else if (own == 0 && en > 0) { sc = sc + en * en * en * 2; }
+            // contested → no value
+            i = i + 1;
+        }
+        // Centre bias: reward cells inside the symmetric centre band.
+        // For N=2 band = {0,1} (no bias); N=3 band = {1}; N=4 band = {1,2}.
+        var z = idx / N2; var rem = idx % N2; var y = rem / N; var x = rem % N;
+        var lo = (N - 1) / 2; var hi = N / 2;
+        var dx = (x < lo) ? lo - x : ((x > hi) ? x - hi : 0);
+        var dy = (y < lo) ? lo - y : ((y > hi) ? y - hi : 0);
+        var dz = (z < lo) ? lo - z : ((z > hi) ? z - hi : 0);
+        var nearness = (N - dx) + (N - dy) + (N - dz);
+        sc = sc + nearness * 3;
+        return sc;
+    }
+
+    // 3D Hard — phase 1 (CHEAP, runs in one tick):
+    // gather all legal cells, score them with the fast 1-ply heuristic, and
+    // partial-sort the top-K candidates into _ai3DBufI/_ai3DBufS.
+    //
+    // Cost: _total3D × (~35 ops _scoreCell3D) + K^2/2 sort ≈ 2.2K + 30 ≈ 2.3K ops.
+    // K kept small (6) because each tick of _ai3D_HardStep is the expensive part.
+    hidden function _ai3D_HardSetup(mark, opp) {
+        var nC = 0;
+        var i = 0;
+        while (i < _total3D) {
+            if (_cells[i] == MARK_NONE) {
+                _ai3DBufI[nC] = i;
+                _ai3DBufS[nC] = _scoreCell3D(i, mark, opp);
+                nC = nC + 1;
+            }
+            i = i + 1;
+        }
+        // Top-6 (small K so per-move ticks stay within ~2s of "thinking")
+        var K = (nC < 6) ? nC : 6;
+        _ai3DK = K;
+        var s = 0;
+        while (s < K) {
+            var bj = s; var bv = _ai3DBufS[s];
+            var j = s + 1;
+            while (j < nC) {
+                if (_ai3DBufS[j] > bv) { bv = _ai3DBufS[j]; bj = j; }
+                j = j + 1;
+            }
+            if (bj != s) {
+                var t = _ai3DBufI[s]; _ai3DBufI[s] = _ai3DBufI[bj]; _ai3DBufI[bj] = t;
+                var u = _ai3DBufS[s]; _ai3DBufS[s] = _ai3DBufS[bj]; _ai3DBufS[bj] = u;
+            }
+            s = s + 1;
+        }
+    }
+
+    // 3D Hard — phase 2: evaluate ONE candidate per timer tick.
+    // Per-tick cost (worst case, empty-ish board):
+    //   fork count : ~63 × ~28 ops (_checkWinAt3D, with early-exit at 2)  ≈ 1.8K
+    //   opp-win    : ~63 × ~28 ops (early-exit on first opp threat)        ≈ 1.8K
+    //   total      : ~3.6K ops — safely under any device's watchdog limit.
+    // Called from _aiForkStep when _is3D && _diff == DIFF_HARD.
+    hidden function _ai3D_HardStep() {
+        var mark = _aiForkAiMk;
+        var opp  = (mark == MARK_X) ? MARK_O : MARK_X;
+        var k    = _aiForkI;
+
+        if (k >= _ai3DK) {
+            // All candidates evaluated — commit the best move we found.
+            if (_aiForkResult >= 0) { _aiFinish3D(_aiForkResult, mark); }
+            else { _state = (mark == MARK_O) ? GS_PLAY : GS_AI; }
+            return;
+        }
+
+        var mv = _ai3DBufI[k];
+        _cells[mv] = mark;
+
+        // Take the win if available.
+        if (_checkWinAt3D(mark, mv)) {
+            _cells[mv] = MARK_NONE;
+            _aiFinish3D(mv, mark);
+            return;
+        }
+
+        // Count own threats (fork detect, early-exit at 2 — that's all we need).
+        var threats = 0;
+        var p = 0;
+        while (p < _total3D && threats < 2) {
+            if (_cells[p] == MARK_NONE) {
+                _cells[p] = mark;
+                if (_checkWinAt3D(mark, p)) { threats = threats + 1; }
+                _cells[p] = MARK_NONE;
+            }
+            p = p + 1;
+        }
+
+        // Check whether opponent has an immediate winning reply (early-exit).
+        var oppCanWin = false;
+        p = 0;
+        while (p < _total3D) {
+            if (_cells[p] == MARK_NONE) {
+                _cells[p] = opp;
+                if (_checkWinAt3D(opp, p)) { oppCanWin = true; _cells[p] = MARK_NONE; break; }
+                _cells[p] = MARK_NONE;
+            }
+            p = p + 1;
+        }
+        _cells[mv] = MARK_NONE;
+
+        if (!oppCanWin) {
+            var forkBonus = (threats >= 2) ? 8000 : ((threats == 1) ? 300 : 0);
+            var delta = _ai3DBufS[k] * 10 + forkBonus;
+            if (delta > _aiForkBest) {
+                _aiForkBest   = delta;
+                _aiForkResult = mv;
+            }
+        }
+        // If oppCanWin: candidate is bad (opp wins next turn), skip — keep
+        // previous best. _aiForkResult was pre-seeded with top-1 candidate
+        // so we always have a fallback.
+
+        _aiForkI = k + 1;
+    }
+
+    // Apply 3D move and update state.
+    hidden function _aiFinish3D(cellIdx, mark) {
+        _place3D(cellIdx, mark);
+        if (_checkWin3D(mark)) {
+            if (mark == MARK_X) { _overType = OVER_XWIN; _scoreX = _scoreX + 1; }
+            else                { _overType = OVER_OWIN; _scoreO = _scoreO + 1; }
+            _state = GS_OVER;
+        } else if (_moveCount == _total3D) {
+            _overType = OVER_DRAW; _state = GS_OVER;
+        } else {
+            _state = (mark == MARK_O) ? GS_PLAY : GS_AI;
+        }
+    }
+
     // Processes outer iterations per tick (2-ply threat-aware search for N>3).
     //
     // Watchdog budget analysis (N=7, winLen=4):
@@ -286,6 +774,8 @@ class GameView extends WatchUi.View {
     //
     //   Old design (batch=9, inner _scoreCell): 9×(800+49×800) = ~353K ops — watchdog!
     hidden function _aiForkStep() {
+        // 3D Hard runs via _ai3D_HardStep (one candidate per tick).
+        if (_is3D) { _ai3D_HardStep(); return; }
         var mark  = _aiForkAiMk;
         var opp   = (mark == MARK_X) ? MARK_O : MARK_X;
         var total = _gridN * _gridN;
@@ -421,14 +911,18 @@ class GameView extends WatchUi.View {
     // ── Game management ───────────────────────────────────────────────────
     hidden function _startGame() {
         _calcLayout();
-        var total = _gridN * _gridN;
+        var total = _is3D ? _total3D : (_gridN * _gridN);
         var i = 0;
         while (i < total) { _cells[i] = MARK_NONE; i = i + 1; }
         i = 0;
-        while (i < 4) { _winLine[i] = -1; i = i + 1; }
+        while (i < 4) { _winLine[i] = -1; _winLine3D[i] = -1; i = i + 1; }
         _moveCount = 0;
-        _curX      = _gridN / 2;
-        _curY      = _gridN / 2;
+        if (_is3D) {
+            _curX = _n3D / 2; _curY = _n3D / 2;
+        } else {
+            _curX = _gridN / 2; _curY = _gridN / 2;
+        }
+        _curZ      = 0;
         _overType  = OVER_NONE;
         if (_mode == MODE_PVAI && !_playerFirst) {
             _state = GS_AI;
@@ -438,12 +932,62 @@ class GameView extends WatchUi.View {
     }
 
     hidden function _place(x, y, mark) {
-        _cells[y * _gridN + x] = mark;
+        if (_is3D) {
+            var N = _n3D;
+            _cells[_curZ * N * N + y * N + x] = mark;
+        } else {
+            _cells[y * _gridN + x] = mark;
+        }
+        _moveCount = _moveCount + 1;
+    }
+
+    // Place by absolute 3D cell index.
+    hidden function _place3D(cellIdx, mark) {
+        _cells[cellIdx] = mark;
         _moveCount = _moveCount + 1;
     }
 
     // ── Win detection ─────────────────────────────────────────────────────
+    // 3D win check: scan all lines (length-padded to 4); populate _winLine3D.
+    hidden function _checkWin3D(col) {
+        var l = 0;
+        while (l < _lines3DCnt) {
+            var base = l * 4;
+            if (_cells[_lines3D[base]]   == col &&
+                _cells[_lines3D[base+1]] == col &&
+                _cells[_lines3D[base+2]] == col &&
+                _cells[_lines3D[base+3]] == col) {
+                _winLine3D[0] = _lines3D[base];
+                _winLine3D[1] = _lines3D[base+1];
+                _winLine3D[2] = _lines3D[base+2];
+                _winLine3D[3] = _lines3D[base+3];
+                return true;
+            }
+            l = l + 1;
+        }
+        return false;
+    }
+
+    // 3D fast win check at a specific cell: only scan lines through that cell.
+    hidden function _checkWinAt3D(col, cellIdx) {
+        var n = _cellLinesN[cellIdx];
+        var i = 0;
+        while (i < n) {
+            var l = _cellLines[cellIdx * MAX_LPC + i];
+            var base = l * 4;
+            if (_cells[_lines3D[base]]   == col &&
+                _cells[_lines3D[base+1]] == col &&
+                _cells[_lines3D[base+2]] == col &&
+                _cells[_lines3D[base+3]] == col) {
+                return true;
+            }
+            i = i + 1;
+        }
+        return false;
+    }
+
     hidden function _checkWin(col) {
+        if (_is3D) { return _checkWin3D(col); }
         var N = _gridN; var W = _winLen;
         // Horizontal
         var r = 0;
@@ -650,9 +1194,155 @@ class GameView extends WatchUi.View {
         if (_state == GS_MENU) { _drawMenu(dc); return; }
         dc.setColor(0x080810, 0x080810);
         dc.clear();
-        _drawBoard(dc);
+        if (_is3D) { _drawBoard3D(dc); }
+        else       { _drawBoard(dc); }
         _drawHUD(dc);
         if (_state == GS_OVER) { _drawGameOver(dc); }
+    }
+
+    // ── 3D board: N×N×N cube drawn as a vertical stack of isometric ─────
+    //              parallelogram boards (classic 3D tic-tac-toe layout).
+    //
+    // Each layer is a tilted square (diamond) projected via:
+    //     scrX = anchorX + (gx - gy) * sx
+    //     scrY = anchorY + (gx + gy) * sy + z * stride
+    // where sx = _cell, sy = _cell·3/7 and stride = boardH·4/3.
+    //
+    // _boardX / _boardY mark the TOP vertex of the topmost diamond (z = 0).
+    // Successive layers (z = 1, 2, …) are drawn straight below with a gap so
+    // every board stays fully visible — exactly as in the reference image.
+    hidden function _drawBoard3D(dc) {
+        var N      = _n3D;
+        var sx     = _cell;
+        var sy     = _cell * 3 / 7;        if (sy < 2) { sy = 2; }
+        var boardH = 2 * N * sy;
+        var stride = boardH * 4 / 3;
+
+        // Draw layers top-down so cursor / marks on lower boards naturally
+        // sit on top (they don't overlap with the way layers are spaced).
+        var z = 0;
+        while (z < N) {
+            var yOff = z * stride;
+            _drawIsoLayer(dc, z, sx, sy, yOff);
+            z = z + 1;
+        }
+    }
+
+    // Draw a single isometric N×N board at vertical offset yOff.
+    hidden function _drawIsoLayer(dc, z, sx, sy, yOff) {
+        var N    = _n3D;
+        var ax   = _boardX;
+        var ay   = _boardY + yOff;
+        var isCur = (z == _curZ);
+
+        // Highlight tint for the active layer (slightly brighter grid lines)
+        var gridCol = isCur ? 0xD8D8E0 : 0x8888A0;
+        var bgCol   = isCur ? 0x141828 : 0x0C0E1C;
+
+        // Compute the 4 corner points of the diamond
+        // (gx,gy) =  (0,0) top, (N,0) right, (N,N) bottom, (0,N) left.
+        var tx = ax;                   var ty = ay;
+        var rx = ax + N * sx;          var ry = ay + N * sy;
+        var bx = ax;                   var by = ay + 2 * N * sy;
+        var lx = ax - N * sx;          var ly = ay + N * sy;
+
+        // Filled background diamond for contrast (helps marks pop)
+        var poly = [ [tx,ty], [rx,ry], [bx,by], [lx,ly] ];
+        dc.setColor(bgCol, Graphics.COLOR_TRANSPARENT);
+        dc.fillPolygon(poly);
+
+        // Win-line highlight: tint cells that belong to the winning line.
+        if (_state == GS_OVER && (_overType == OVER_XWIN || _overType == OVER_OWIN)) {
+            var N2 = N * N;
+            dc.setColor(0x114433, Graphics.COLOR_TRANSPARENT);
+            var iy = 0;
+            while (iy < N) {
+                var ix = 0;
+                while (ix < N) {
+                    var idx = z * N2 + iy * N + ix;
+                    if (_inWinLine3D(idx)) {
+                        _fillIsoCell(dc, ix, iy, sx, sy, ax, ay);
+                    }
+                    ix = ix + 1;
+                }
+                iy = iy + 1;
+            }
+        }
+
+        // Grid lines (N+1 in each of the two diagonal directions).
+        dc.setColor(gridCol, Graphics.COLOR_TRANSPARENT);
+        var k = 0;
+        while (k <= N) {
+            // "row" line constant gy = k, gx 0..N
+            //   from (0, k) → ( -k*sx, ay + k*sy )
+            //   to   (N, k) → ( (N-k)*sx, ay + (N+k)*sy )
+            dc.drawLine(ax - k * sx,        ay + k * sy,
+                        ax + (N - k) * sx,  ay + (N + k) * sy);
+            // "col" line constant gx = k, gy 0..N
+            //   from (k, 0) → ( k*sx, ay + k*sy )
+            //   to   (k, N) → ( (k-N)*sx, ay + (k+N)*sy )
+            dc.drawLine(ax + k * sx,        ay + k * sy,
+                        ax + (k - N) * sx,  ay + (k + N) * sy);
+            k = k + 1;
+        }
+
+        // Layer label (top-left of each board)
+        dc.setColor(isCur ? 0xFFCC44 : 0x556677, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(lx - 4, ay + N * sy - 8, Graphics.FONT_XTINY,
+                    "Z" + z.format("%d"), Graphics.TEXT_JUSTIFY_RIGHT);
+
+        // Marks + cursor
+        var N2b = N * N;
+        var iy2 = 0;
+        while (iy2 < N) {
+            var ix2 = 0;
+            while (ix2 < N) {
+                // Cell centre: (ix+0.5, iy+0.5)
+                var cx = ax + (ix2 - iy2) * sx;        // (gx - gy)*sx + ax
+                var cy = ay + (ix2 + iy2 + 1) * sy;    // (gx + gy)*sy + ay  (with +1 for +0.5+0.5)
+                var idx = z * N2b + iy2 * N + ix2;
+                var v   = _cells[idx];
+                if      (v == MARK_X) { _drawX(dc, cx, cy); }
+                else if (v == MARK_O) { _drawO(dc, cx, cy); }
+                ix2 = ix2 + 1;
+            }
+            iy2 = iy2 + 1;
+        }
+
+        // Active-layer cursor (drawn on top of the marks)
+        if (isCur) {
+            var occ = (_cells[z * N2b + _curY * N + _curX] != MARK_NONE);
+            dc.setColor(occ ? 0xFF6600 : 0xFFFF00, Graphics.COLOR_TRANSPARENT);
+            // Cursor cell parallelogram corners
+            var cx0 = ax + (_curX     - _curY    ) * sx;
+            var cy0 = ay + (_curX     + _curY    ) * sy;
+            var cx1 = ax + (_curX + 1 - _curY    ) * sx;
+            var cy1 = ay + (_curX + 1 + _curY    ) * sy;
+            var cx2 = ax + (_curX + 1 - _curY - 1) * sx;
+            var cy2 = ay + (_curX + 1 + _curY + 1) * sy;
+            var cx3 = ax + (_curX     - _curY - 1) * sx;
+            var cy3 = ay + (_curX     + _curY + 1) * sy;
+            dc.drawLine(cx0, cy0, cx1, cy1);
+            dc.drawLine(cx1, cy1, cx2, cy2);
+            dc.drawLine(cx2, cy2, cx3, cy3);
+            dc.drawLine(cx3, cy3, cx0, cy0);
+        }
+    }
+
+    // Fill a single iso parallelogram cell at grid coords (ix, iy).
+    // Corners: (ix,iy) top-left, (ix+1,iy) top-right,
+    //          (ix+1,iy+1) bottom-right, (ix,iy+1) bottom-left.
+    hidden function _fillIsoCell(dc, ix, iy, sx, sy, ax, ay) {
+        var tlx = ax + (ix     - iy    ) * sx; var tly = ay + (ix     + iy    ) * sy;
+        var trx = ax + (ix + 1 - iy    ) * sx; var tryy= ay + (ix + 1 + iy    ) * sy;
+        var brx = ax + (ix     - iy    ) * sx; var bry = ay + (ix     + iy + 2) * sy;
+        var blx = ax + (ix - 1 - iy    ) * sx; var bly = ay + (ix - 1 + iy + 2) * sy;
+        dc.fillPolygon([ [tlx,tly], [trx,tryy], [brx,bry], [blx,bly] ]);
+    }
+
+    hidden function _inWinLine3D(idx) {
+        return (_winLine3D[0] == idx || _winLine3D[1] == idx ||
+                _winLine3D[2] == idx || _winLine3D[3] == idx);
     }
 
     // ── Board ─────────────────────────────────────────────────────────────
@@ -778,12 +1468,20 @@ class GameView extends WatchUi.View {
             dc.drawText(_sw / 2, ty, Graphics.FONT_XTINY, aiTxt, Graphics.TEXT_JUSTIFY_CENTER);
         }
 
-        // Hint below board
-        var hintY = _boardY + _gridN * _cell + 8;
+        // Hint below board — for 3D, place it under the bottom diamond.
+        var hintY;
+        if (_is3D) {
+            var sy = _cell * 3 / 7; if (sy < 2) { sy = 2; }
+            var boardH = 2 * _n3D * sy;
+            var stride = boardH * 4 / 3;
+            hintY = _boardY + boardH + (_n3D - 1) * stride + 4;
+        } else {
+            hintY = _boardY + _gridN * _cell + 8;
+        }
         if (hintY < _sh - 14) {
             dc.setColor(0x222233, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_sw / 2, hintY, Graphics.FONT_XTINY,
-                        "DN=next  UP=down  SEL=place", Graphics.TEXT_JUSTIFY_CENTER);
+            var hint = _is3D ? "UP=Z  DN=next  SEL=place" : "DN=next  UP=down  SEL=place";
+            dc.drawText(_sw / 2, hintY, Graphics.FONT_XTINY, hint, Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 
@@ -845,7 +1543,8 @@ class GameView extends WatchUi.View {
 
         var modeStr = (_mode == MODE_PVAI) ? "P vs AI" : ((_mode == MODE_PVP) ? "P vs P" : "AI vs AI");
         var diffStr = (_diff == DIFF_EASY) ? "Easy" : ((_diff == DIFF_MED) ? "Med" : "Hard");
-        var gridStr = "" + _gridN + "x" + _gridN;
+        var gridStr = _is3D ? ("3D " + _n3D + "x" + _n3D + "x" + _n3D)
+                            : ("" + _gridN + "x" + _gridN);
         var sideStr = _playerFirst ? "Side: X" : "Side: O";
         var rows = ["Mode: " + modeStr, "Diff: " + diffStr, "Grid: " + gridStr, sideStr, "START"];
         var nR   = 5;
@@ -903,6 +1602,44 @@ class GameView extends WatchUi.View {
         if (_state == GS_OVER) { _state = GS_MENU; _menuSel = 0; return; }
         if (_state != GS_PLAY && !(_state == GS_AI && _mode == MODE_PVP)) { return; }
         if (_cell <= 0) { return; }
+
+        if (_is3D) {
+            // Iso-stacked layout: inverse-project tap into (gx, gy, z).
+            //  Forward: scrX = anchorX + (gx - gy)·sx
+            //           scrY = anchorY + (gx + gy)·sy   (anchorY = boardY + z·stride)
+            //  Solve for gx, gy:
+            //    gx = (u/sx + v/sy) / 2
+            //    gy = (v/sy - u/sx) / 2
+            //  with u = scrX - anchorX, v = scrY - anchorY.
+            var N = _n3D;
+            var sx = _cell;
+            var sy = _cell * 3 / 7; if (sy < 2) { sy = 2; }
+            var boardH = 2 * N * sy;
+            var stride = boardH * 4 / 3;
+            var z = 0;
+            while (z < N) {
+                var ay = _boardY + z * stride;
+                if (ty >= ay && ty <= ay + boardH) {
+                    var u = tx - _boardX;
+                    var v = ty - ay;
+                    // Compute in floats so we can floor correctly for both signs
+                    var fx = (u.toFloat() / sx + v.toFloat() / sy) / 2.0;
+                    var fy = (v.toFloat() / sy - u.toFloat() / sx) / 2.0;
+                    var gx = fx.toNumber();
+                    var gy = fy.toNumber();
+                    if (fx < 0) { gx = gx - 1; }
+                    if (fy < 0) { gy = gy - 1; }
+                    if (gx >= 0 && gx < N && gy >= 0 && gy < N) {
+                        _curZ = z; _curX = gx; _curY = gy;
+                        doAction();
+                    }
+                    return;
+                }
+                z = z + 1;
+            }
+            return;
+        }
+
         var col = (tx - _boardX) / _cell;
         var row = (ty - _boardY) / _cell;
         if (col < 0 || col >= _gridN || row < 0 || row >= _gridN) { return; }

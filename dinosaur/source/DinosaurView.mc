@@ -2,18 +2,28 @@ using Toybox.WatchUi;
 using Toybox.Graphics;
 using Toybox.Timer;
 using Toybox.Math;
+using Toybox.Application;
 
 // ── game states ───────────────────────────────────────────────────────────────
 const GS_TITLE = 0;
 const GS_RUN   = 1;
 const GS_OVER  = 2;
+const GS_DEMO  = 3;   // AI auto-plays on title screen ("arcy-intelligence")
 
 // obstacle types
 const OT_CACTUS = 0;
 const OT_PTERO  = 1;
 
-const OBS_MAX = 4;
-const CLD_MAX = 3;
+const OBS_MAX  = 4;
+const CLD_MAX  = 3;
+const STAR_MAX = 12;  // background stars during night phase
+
+// near-miss tolerance — obstacle clears within this many px of dino → +5 bonus
+const NEAR_MISS_PX = 12;
+const NEAR_MISS_BONUS = 5;
+
+// Storage keys
+const SK_BEST = "dinoBest";
 
 // ─────────────────────────────────────────────────────────────────────────────
 //  Phases
@@ -73,12 +83,32 @@ class DinosaurView extends WatchUi.View {
     hidden var _sparkX;
     hidden var _sparkY;
 
+    // ── smart-spawner memory & ambient theme ──────────────────────────────────
+    hidden var _lastObsType;    // last spawned obstacle (for pattern fairness)
+    hidden var _lastObsHeight;  // last spawned height (heuristic for next gap)
+    hidden var _theme;          // 0=day (clouds), 1=night (stars)
+    hidden var _starsX;
+    hidden var _starsY;
+    hidden var _starsR;
+
+    // ── near-miss bonus tracking ──────────────────────────────────────────────
+    // Per-obstacle flag: 0 = not yet processed, 1 = already credited / collided
+    hidden var _obsScored;
+    hidden var _missTxtT;       // floating "+5" display countdown
+    hidden var _missTxtX;
+    hidden var _missTxtY;
+
+    // ── game-over feedback ────────────────────────────────────────────────────
+    hidden var _shakeT;         // brief screen shake on death
+
+    // ── AUTO-AI demo (title screen) ──────────────────────────────────────────
+    hidden var _demoIdle;       // ticks player has been idle on title
+
     // ── init ──────────────────────────────────────────────────────────────────
 
     function initialize() {
         View.initialize();
         _state     = GS_TITLE;
-        _hiScore   = 0;
         _timer     = null;
         _flash     = 0;
         _notifyStr = "";
@@ -86,12 +116,34 @@ class DinosaurView extends WatchUi.View {
         _sparkT    = 0;
         _sparkX    = 0;
         _sparkY    = 0;
+        _theme     = 0;
+        _lastObsType   = -1;
+        _lastObsHeight = 0;
+        _missTxtT  = 0;
+        _missTxtX  = 0;
+        _missTxtY  = 0;
+        _shakeT    = 0;
+        _demoIdle  = 0;
+
+        // Restore best score from storage so it survives app restarts.
+        var stored = Application.Storage.getValue(SK_BEST);
+        _hiScore = (stored != null) ? stored : 0;
 
         _ox = new [OBS_MAX]; _ow = new [OBS_MAX];
         _oh = new [OBS_MAX]; _oa = new [OBS_MAX]; _ot = new [OBS_MAX];
-        for (var i = 0; i < OBS_MAX; i++) { _oa[i] = 0; _ot[i] = 0; }
+        _obsScored = new [OBS_MAX];
+        for (var i = 0; i < OBS_MAX; i++) {
+            _oa[i] = 0; _ot[i] = 0; _obsScored[i] = 0;
+        }
 
         _cx = new [CLD_MAX]; _cy = new [CLD_MAX]; _cw = new [CLD_MAX];
+
+        _starsX = new [STAR_MAX];
+        _starsY = new [STAR_MAX];
+        _starsR = new [STAR_MAX];
+        for (var i = 0; i < STAR_MAX; i++) {
+            _starsX[i] = 0; _starsY[i] = 0; _starsR[i] = 1;
+        }
     }
 
     function onLayout(dc) {
@@ -111,6 +163,15 @@ class DinosaurView extends WatchUi.View {
         _cx[1] = _sw * 63 / 100;
         _cx[2] = _sw * 81 / 100;
 
+        // Scatter background stars in the sky portion of the screen.
+        // (only drawn during night theme to give the long-run progression
+        //  some visual variety on AMOLED-friendly dark backgrounds).
+        for (var i = 0; i < STAR_MAX; i++) {
+            _starsX[i] = (Math.rand() & 0x7FFFFFFF) % _sw;
+            _starsY[i] = (Math.rand() & 0x7FFFFFFF) % (_grdY - 8);
+            _starsR[i] = ((Math.rand() & 0x7FFFFFFF) % 3 == 0) ? 2 : 1;
+        }
+
         _resetGame();
     }
 
@@ -126,23 +187,69 @@ class DinosaurView extends WatchUi.View {
     // ── timer callback ────────────────────────────────────────────────────────
 
     function gameTick() {
-        if (_state == GS_RUN) { _step(); }
-        if (_flash   > 0) { _flash   = _flash   - 1; }
-        if (_notifyT > 0) { _notifyT = _notifyT - 1; }
-        if (_sparkT  > 0) { _sparkT  = _sparkT  - 1; }
+        // Title screen: idle a moment, then let the AI demo take over so the
+        // user immediately sees gameplay in motion.
+        if (_state == GS_TITLE) {
+            _demoIdle = _demoIdle + 1;
+            if (_demoIdle > 36) {
+                _resetGame();
+                _state = GS_DEMO;
+            }
+        }
+
+        if (_state == GS_DEMO) {
+            _aiAutoPlay();   // pick action BEFORE physics so it takes effect this tick
+            _step();
+            // If the AI demo died, return to title with a brief pause so the
+            // attract loop never looks stuck on a corpse sprite.
+            if (_state == GS_OVER) {
+                _resetGame();
+                _state    = GS_TITLE;
+                _demoIdle = -36;   // ~1.2s pause before the next demo run
+            }
+        } else if (_state == GS_RUN) {
+            _step();
+        }
+
+        if (_flash    > 0) { _flash    = _flash    - 1; }
+        if (_notifyT  > 0) { _notifyT  = _notifyT  - 1; }
+        if (_sparkT   > 0) { _sparkT   = _sparkT   - 1; }
+        if (_missTxtT > 0) { _missTxtT = _missTxtT - 1; }
+        if (_shakeT   > 0) { _shakeT   = _shakeT   - 1; }
         WatchUi.requestUpdate();
     }
 
     // ── public controls ───────────────────────────────────────────────────────
 
+    // Public input handlers. Any input on TITLE/DEMO/OVER starts a fresh
+    // player-controlled run; in-game inputs perform jump/crouch actions.
     function doJump() {
-        if (_state != GS_RUN) { _resetGame(); _state = GS_RUN; return; }
-        // cancel crouch → stand up, snap position so floor check doesn't kill next jump
+        if (_state == GS_TITLE || _state == GS_DEMO || _state == GS_OVER) {
+            _resetGame();
+            _state = GS_RUN;
+            return;
+        }
+        _performJump();
+    }
+
+    function doCrouch() {
+        if (_state == GS_TITLE || _state == GS_DEMO || _state == GS_OVER) {
+            _resetGame();
+            _state = GS_RUN;
+            return;
+        }
+        _performCrouch();
+    }
+
+    // Core actions used by both player input and the auto-AI demo.
+    // Bug fix: crouch→jump combo now fires the jump in a SINGLE press
+    //          (old code only cancelled the crouch and returned).
+    hidden function _performJump() {
         if (_crouching == 1 && _onGrd == 1) {
             _crouching = 0;
             _crouchT   = 0;
-            _dy        = _grdY - _dh;   // snap to standing floor to avoid pop
-            return;
+            _dy        = _grdY - _dh;   // snap to standing floor
+            // fall through and execute jump on same input
         }
         if (_jumpsLeft > 0) {
             var dbl = (_onGrd == 0);
@@ -157,24 +264,40 @@ class DinosaurView extends WatchUi.View {
         }
     }
 
-    function doCrouch() {
-        if (_state != GS_RUN) { _resetGame(); _state = GS_RUN; return; }
+    hidden function _performCrouch() {
         if (_onGrd == 1 && _phase >= 2) {
             _crouching = 1;
             _crouchT   = 42;
-            // Snap dino down to the crouching floor so it sits on the ground
-            // (without this, the dino floats ~45% of its height above the ground line)
             _dy = _grdY - _dh * 55 / 100;
         } else if (_onGrd == 0) {
-            // ground pound — slam down (no crouch animation while airborne)
+            // ground pound — slam down
             _crouching = 0;
             if (_vy < 12) { _vy = 12; }
         }
     }
 
     function doBack() {
-        if (_state == GS_RUN) { _state = GS_OVER; return true; }
+        if (_state == GS_RUN) {
+            // Persist the best score if the player bails out of a real run.
+            if (_score > _hiScore) {
+                _hiScore = _score; _flash = 70; _saveHiScore();
+            }
+            _state = GS_OVER;
+            return true;
+        }
+        if (_state == GS_DEMO) {
+            // Exiting the attract loop just returns to the title — never
+            // counts as game over, never touches hi-score.
+            _state = GS_TITLE;
+            _demoIdle = 0;
+            return true;
+        }
         return false;
+    }
+
+    // Persist hi-score to storage so it survives app restart.
+    hidden function _saveHiScore() {
+        Application.Storage.setValue(SK_BEST, _hiScore);
     }
 
     // ── game logic ────────────────────────────────────────────────────────────
@@ -197,14 +320,19 @@ class DinosaurView extends WatchUi.View {
         _sparkT    = 0;   // clear any stale sparkle from previous run
         _sparkX    = 0;
         _sparkY    = 0;
-        for (var i = 0; i < OBS_MAX; i++) { _oa[i] = 0; }
+        _flash     = 0;   // bug fix: stale NEW BEST! from previous round must clear
+        _missTxtT  = 0;
+        _shakeT    = 0;
+        _theme     = 0;
+        _lastObsType   = -1;
+        _lastObsHeight = 0;
+        for (var i = 0; i < OBS_MAX; i++) { _oa[i] = 0; _obsScored[i] = 0; }
     }
 
     hidden function _step() {
         _frame   = _frame + 1;
         _scrollX = _scrollX + _spd;
         // Wrap at 3800 = LCM(10, 38)*10 so pebble offset (_scrollX/10)%38 is seamless.
-        // Old value 3600: 3600/10=360, 360%38=18 ≠ 0 → visible texture jump on wrap.
         if (_scrollX >= 3800) { _scrollX = _scrollX - 3800; }
 
         // crouch timer
@@ -235,25 +363,54 @@ class DinosaurView extends WatchUi.View {
         else if (_score >= 300)  { nPhase = 1; }
         if (nPhase > _phase) {
             _phase = nPhase;
-            if (_phase == 1) { _notifyStr = "x2 JUMP!";  _notifyT = 110; }
-            if (_phase == 2) { _notifyStr = "DUCK!  [v]"; _notifyT = 110; }
+            // Suppress unlock toast during the AI demo (those messages are
+            // for the player, not the spectated AI).
+            if (_state == GS_RUN) {
+                if (_phase == 1) { _notifyStr = "x2 JUMP!";  _notifyT = 110; }
+                if (_phase == 2) { _notifyStr = "DUCK!  [v]"; _notifyT = 110; }
+            }
         }
 
-        // speed: 5 at start → 15 at score 2000, no hard cap above that
+        // Day / night cycle — flips every 600 score points (~20s). The night
+        // theme swaps clouds for stars; both are equally AMOLED-friendly.
+        _theme = (_score / 600) % 2;
+
+        // speed: 5 at start → 15 at score 2000, hard cap to keep physics stable
         _spd = 5 + _score / 200;
         if (_spd > 16) { _spd = 16; }
 
-        // move obstacles
+        // move obstacles + bookkeep near-miss bonuses
+        var dinoRight = _dinoX + _dw;
         for (var i = 0; i < OBS_MAX; i++) {
             if (_oa[i] == 0) { continue; }
             _ox[i] = _ox[i] - _spd;
-            if (_ox[i] + _ow[i] < 0) { _oa[i] = 0; }
+
+            // Near-miss bonus: obstacle just cleared the dino (its right edge
+            // passed the dino's left edge) without colliding earlier in the
+            // collision check — award a small bonus once per obstacle.
+            if (_obsScored[i] == 0) {
+                var obsRight = _ox[i] + _ow[i];
+                if (obsRight < _dinoX) {
+                    _obsScored[i] = 1;
+                    // Only credit during real play (not demo) to keep score honest.
+                    if (_state == GS_RUN) {
+                        _score = _score + NEAR_MISS_BONUS;
+                        _missTxtT = 22;
+                        _missTxtX = dinoRight;
+                        _missTxtY = _dy - 4;
+                    }
+                }
+            }
+
+            if (_ox[i] + _ow[i] < 0) { _oa[i] = 0; _obsScored[i] = 0; }
         }
 
-        // parallax clouds (slower)
-        for (var i = 0; i < CLD_MAX; i++) {
-            _cx[i] = _cx[i] - (_spd / 2 + 1);
-            if (_cx[i] + _cw[i] < 0) { _cx[i] = _sw + 12; }
+        // parallax clouds (slower) — only when daytime theme is active
+        if (_theme == 0) {
+            for (var i = 0; i < CLD_MAX; i++) {
+                _cx[i] = _cx[i] - (_spd / 2 + 1);
+                if (_cx[i] + _cw[i] < 0) { _cx[i] = _sw + 12; }
+            }
         }
 
         // spawn
@@ -262,89 +419,186 @@ class DinosaurView extends WatchUi.View {
 
         // collision
         if (_collide()) {
-            _state = GS_OVER;
-            if (_score > _hiScore) { _hiScore = _score; _flash = 70; }
+            // Only credit hi-score when the PLAYER (not the AI demo) crashes,
+            // so spectating the demo can never inflate the saved best.
+            var wasDemo = (_state == GS_DEMO);
+            _state  = GS_OVER;
+            _shakeT = 8;
+            if (!wasDemo && _score > _hiScore) {
+                _hiScore = _score;
+                _flash   = 70;
+                _saveHiScore();
+            }
             return;
         }
 
         _score = _score + 1;
     }
 
+    // Smart spawner.
+    //
+    // Pattern-fairness rules (avoid "impossible" sequences at high speed):
+    //   • If last obstacle was a pterodactyl, next is biased toward CACTUS so
+    //     the player isn't forced to duck twice in quick succession.
+    //   • If last cactus was tall, next gap is widened so the player has time
+    //     to land before the next decision.
+    //   • Minimum gap scales with current speed: reaction_frames * spd must
+    //     fit inside the gap, otherwise even a perfect player can't react.
     hidden function _spawnObs() {
-        var spawned = false;
+        var slot = -1;
         for (var i = 0; i < OBS_MAX; i++) {
-            if (_oa[i] != 0) { continue; }
-            // phase 2: 35 % pterodactyl
-            if (_phase >= 2 && Math.rand() % 100 < 35) {
-                _ot[i] = OT_PTERO;
-                _ow[i] = _dw * 14 / 10;
-                _oh[i] = _dh * 50 / 100;
-            } else {
-                _ot[i] = OT_CACTUS;
-                // Phase 0: cap to t=0/1 (max 75% dino height) so the player can
-                // realistically reach score 300 and unlock the double jump.
-                var tMax = (_phase == 0) ? 2 : 3;
-                var t    = Math.rand() % tMax;
-                _ow[i] = _dw * (8 + t * 2) / 10;
-                _oh[i] = _dh * (55 + t * 20) / 100;
-            }
-            _ox[i] = _sw + 8;
-            _oa[i] = 1;
-            spawned = true;
-            break;
+            if (_oa[i] == 0) { slot = i; break; }
         }
-        // If all slots were full, retry quickly instead of silently resetting the gap.
-        // Old code always reset _nextObs even when nothing spawned → inconsistent gaps.
-        if (!spawned) { _nextObs = 8; return; }
-        // gap shrinks with speed and phase
-        var gap = 72 + Math.rand() % 46 - (_spd - 5) * 4;
-        if (_phase >= 2) { gap = gap - 8; }
-        // Phase 0: wider minimum gap — gives beginner players more reaction time
-        var minGap = (_phase == 0) ? 42 : 28;
+        // If all slots were full, retry quickly instead of silently resetting.
+        if (slot < 0) { _nextObs = 8; return; }
+
+        // Pick obstacle type — biased away from repeated pteros.
+        var isPtero = false;
+        if (_phase >= 2) {
+            var pteroChance = 35;
+            if (_lastObsType == OT_PTERO) { pteroChance = 12; } // suppress repeat
+            if ((Math.rand() & 0x7FFFFFFF) % 100 < pteroChance) { isPtero = true; }
+        }
+
+        if (isPtero) {
+            _ot[slot] = OT_PTERO;
+            _ow[slot] = _dw * 14 / 10;
+            _oh[slot] = _dh * 50 / 100;
+        } else {
+            _ot[slot] = OT_CACTUS;
+            // Phase 0: cap to t=0/1 (max 75% dino height) so the player can
+            // realistically reach score 300 and unlock the double jump.
+            var tMax = (_phase == 0) ? 2 : 3;
+            var t    = (Math.rand() & 0x7FFFFFFF) % tMax;
+            _ow[slot] = _dw * (8 + t * 2) / 10;
+            _oh[slot] = _dh * (55 + t * 20) / 100;
+        }
+        _ox[slot] = _sw + 8;
+        _oa[slot] = 1;
+        _obsScored[slot] = 0;
+
+        _lastObsType   = _ot[slot];
+        _lastObsHeight = _oh[slot];
+
+        // Base random gap (ticks).
+        var gap = 72 + (Math.rand() & 0x7FFFFFFF) % 46 - (_spd - 5) * 4;
+        if (_phase >= 2) { gap = gap - 6; }
+
+        // Pattern-aware adjustments.
+        if (_lastObsType == OT_PTERO) { gap = gap + 8; }
+        if (_lastObsType == OT_CACTUS && _lastObsHeight > _dh * 70 / 100) {
+            gap = gap + 6;
+        }
+
+        // Speed-aware minimum (player needs ~12 frames to react + jump arc).
+        var minGap = 12 + _spd;
+        if (_phase == 0 && minGap < 42) { minGap = 42; }
         if (gap < minGap) { gap = minGap; }
+
         _nextObs = gap;
     }
 
+    // Hitboxes are intentionally tighter than the rendered sprite so the
+    // game feels fair: only the dino's torso (not the head/tail outlines)
+    // and the obstacle's solid mass register hits.
     hidden function _collide() {
         var effH  = (_crouching == 1 && _onGrd == 1) ? (_dh * 55 / 100) : _dh;
-        var dx1   = _dinoX + 3;
-        var dx2   = _dinoX + _dw - 3;
-        var dy1   = _dy + effH / 4;
-        var dy2   = _dy + effH - 2;
+        var dx1   = _dinoX + 4;
+        var dx2   = _dinoX + _dw - 4;
+        var dy1   = _dy + effH * 30 / 100;   // skip head silhouette
+        var dy2   = _dy + effH - 3;
         // how high pterodactyls fly above ground
         var flyOff = _dh * 60 / 100;
 
         for (var i = 0; i < OBS_MAX; i++) {
             if (_oa[i] == 0) { continue; }
-            var ox1 = _ox[i] + 2;
-            var ox2 = _ox[i] + _ow[i] - 2;
+            var ox1 = _ox[i] + 3;
+            var ox2 = _ox[i] + _ow[i] - 3;
             var oy1;
             var oy2;
             if (_ot[i] == OT_PTERO) {
-                oy1 = _grdY - _oh[i] - flyOff;
-                oy2 = _grdY - flyOff;
+                // Inset pterodactyl hitbox slightly — wings shouldn't kill you.
+                oy1 = _grdY - _oh[i] - flyOff + 2;
+                oy2 = _grdY - flyOff - 2;
             } else {
                 oy1 = _grdY - _oh[i];
                 oy2 = _grdY;
             }
-            if (dx2 > ox1 && dx1 < ox2 && dy2 > oy1 && dy1 < oy2) { return true; }
+            if (dx2 > ox1 && dx1 < ox2 && dy2 > oy1 && dy1 < oy2) {
+                // Mark this obstacle as resolved so the near-miss pass skips it.
+                _obsScored[i] = 1;
+                return true;
+            }
         }
         return false;
+    }
+
+    // ── AUTO-AI demo controller ──────────────────────────────────────────────
+    // A simple but solid reactive policy that plays the same physics the player
+    // does. No lookahead / no recursion → constant per-tick cost.
+    //
+    // Decision algorithm:
+    //   1. Find the nearest obstacle ahead of the dino.
+    //   2. If it's a pterodactyl and we're on the ground, crouch when in range.
+    //   3. If it's a cactus, jump just in time based on speed and obstacle
+    //      height (tall cactus → jump a bit earlier).
+    //   4. If we cleared the first jump too early, double-jump in mid-air as
+    //      a safety net before reaching a tall cactus.
+    hidden function _aiAutoPlay() {
+        var nearestI    = -1;
+        var nearestDist = 9999;
+        for (var i = 0; i < OBS_MAX; i++) {
+            if (_oa[i] == 0) { continue; }
+            var d = _ox[i] - (_dinoX + _dw);
+            if (d < -16) { continue; }
+            if (d < nearestDist) { nearestDist = d; nearestI = i; }
+        }
+        if (nearestI < 0) { return; }
+
+        var type = _ot[nearestI];
+        var oh   = _oh[nearestI];
+
+        if (type == OT_PTERO) {
+            // Trigger the duck early enough that we're already low when it
+            // arrives. Trigger window scales mildly with speed.
+            var duckAt = 50 + _spd * 2;
+            if (_onGrd == 1 && _crouching == 0 && nearestDist < duckAt) {
+                _performCrouch();
+            }
+        } else {
+            // Cactus — primary jump trigger.
+            var jumpAt = 38 + _spd * 5;
+            if (oh > _dh * 70 / 100) { jumpAt = jumpAt + 8; }   // taller → earlier
+            if (_onGrd == 1 && nearestDist < jumpAt) {
+                _performJump();
+                return;
+            }
+            // Safety double-jump — if we're falling toward a still-uncleared
+            // cactus and have a jump in reserve, use it.
+            if (_onGrd == 0 && _vy > -3 && _jumpsLeft > 0 && nearestDist < 22) {
+                _performJump();
+            }
+        }
     }
 
     // ── drawing ───────────────────────────────────────────────────────────────
 
     function onUpdate(dc) {
-        dc.setColor(0x0d0d0d, 0x0d0d0d);
+        // Background — slightly darker at "night" for variety.
+        var bg = (_theme == 1) ? 0x080810 : 0x0d0d0d;
+        dc.setColor(bg, bg);
         dc.clear();
 
-        _drawClouds(dc);
+        if (_theme == 1) { _drawStars(dc); }
+        else             { _drawClouds(dc); }
+
         _drawGround(dc);
         _drawObstacles(dc);
         _drawDino(dc);
         _drawSparkle(dc);
+        _drawNearMiss(dc);
 
-        if (_state == GS_TITLE) {
+        if (_state == GS_TITLE || _state == GS_DEMO) {
             _drawTitle(dc);
         } else if (_state == GS_OVER) {
             _drawScore(dc);
@@ -353,6 +607,30 @@ class DinosaurView extends WatchUi.View {
             _drawScore(dc);
             _drawNotify(dc);
         }
+    }
+
+    // Background stars (night theme). Twinkle by toggling brightness based on
+    // index parity and frame counter — cheap to render, no allocations.
+    hidden function _drawStars(dc) {
+        var twinkle = (_frame / 12) & 1;
+        for (var i = 0; i < STAR_MAX; i++) {
+            var bright = ((i + twinkle) & 1) == 0;
+            dc.setColor(bright ? 0x666688 : 0x33334a, Graphics.COLOR_TRANSPARENT);
+            if (_starsR[i] >= 2) {
+                dc.fillRectangle(_starsX[i], _starsY[i], 2, 2);
+            } else {
+                dc.fillRectangle(_starsX[i], _starsY[i], 1, 1);
+            }
+        }
+    }
+
+    // Floating "+5" pop-up shown on near-miss bonus.
+    hidden function _drawNearMiss(dc) {
+        if (_missTxtT <= 0) { return; }
+        var lift = 22 - _missTxtT;             // text drifts upward
+        dc.setColor(0xFFE066, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_missTxtX, _missTxtY - lift, Graphics.FONT_XTINY,
+            "+" + NEAR_MISS_BONUS, Graphics.TEXT_JUSTIFY_LEFT);
     }
 
     hidden function _drawGround(dc) {
@@ -481,7 +759,9 @@ class DinosaurView extends WatchUi.View {
         }
 
         // ── sweat drop when obstacle dangerously close ────────────────────────
-        if (_state == GS_RUN && _onGrd == 1) {
+        // Bug fix: previously drawn over the back/tail at dw*18 — now it
+        // hovers above the dino's HEAD (where a sweat drop belongs).
+        if ((_state == GS_RUN || _state == GS_DEMO) && _onGrd == 1) {
             var closest = _sw;
             for (var i = 0; i < OBS_MAX; i++) {
                 if (_oa[i] == 0) { continue; }
@@ -490,8 +770,8 @@ class DinosaurView extends WatchUi.View {
             }
             if (closest < 44) {
                 dc.setColor(0x3399DD, Graphics.COLOR_TRANSPARENT);
-                var swX = x + dw*18/100;
-                var swY = y - 2;
+                var swX = x + dw*72/100;
+                var swY = y - 3;
                 dc.fillCircle(swX, swY, 3);
                 dc.fillRoundedRectangle(swX - 2, swY - 8, 4, 8, 1);
             }
@@ -624,16 +904,26 @@ class DinosaurView extends WatchUi.View {
 
     hidden function _drawTitle(dc) {
         dc.setColor(0x30B348, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_sw / 2, _sh * 24 / 100, Graphics.FONT_MEDIUM,
+        dc.drawText(_sw / 2, _sh * 18 / 100, Graphics.FONT_MEDIUM,
             "DINO RUN", Graphics.TEXT_JUSTIFY_CENTER);
+
+        // Auto-AI badge — visible only while the demo runs. Blinks softly.
+        if (_state == GS_DEMO) {
+            var on = (_frame / 14) % 2 == 0;
+            dc.setColor(on ? 0xFF9933 : 0x553311, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_sw / 2, _sh * 33 / 100, Graphics.FONT_XTINY,
+                "AUTO-AI DEMO", Graphics.TEXT_JUSTIFY_CENTER);
+        }
+
         dc.setColor(0x4a4a4a, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_sw / 2, _sh * 43 / 100, Graphics.FONT_XTINY,
+        var promptY = (_state == GS_DEMO) ? 41 : 43;
+        dc.drawText(_sw / 2, _sh * promptY / 100, Graphics.FONT_XTINY,
             "any key = jump", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(_sw / 2, _sh * 51 / 100, Graphics.FONT_XTINY,
+        dc.drawText(_sw / 2, _sh * (promptY + 8) / 100, Graphics.FONT_XTINY,
             "DOWN = duck (lv3)", Graphics.TEXT_JUSTIFY_CENTER);
         if (_hiScore > 0) {
             dc.setColor(0x363636, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_sw / 2, _sh * 60 / 100, Graphics.FONT_XTINY,
+            dc.drawText(_sw / 2, _sh * (promptY + 17) / 100, Graphics.FONT_XTINY,
                 "best " + _hiScore.format("%05d"), Graphics.TEXT_JUSTIFY_CENTER);
         }
     }

@@ -88,6 +88,20 @@ class GameView extends WatchUi.View {
     // ── Timer ─────────────────────────────────────────────────────────────
     hidden var _timer;
 
+    // ── Tick-spread 2-ply placement search (Hard only) ──────────────────
+    // The 2-ply search runs incrementally across timer ticks so that each
+    // single callback executes only ~4-5 K ops — well under the Fenix 8 Solar
+    // watchdog (~30 K ops/tick). One tick per top-K candidate (K=5).
+    hidden var _ai2pActive;        // true while a search is in progress
+    hidden var _ai2pBufN;          // candidate node indices (top-K)
+    hidden var _ai2pBufS;          // 1-ply scores for those candidates
+    hidden var _ai2pK;             // top-K count
+    hidden var _ai2pIdx;           // next candidate to evaluate
+    hidden var _ai2pBestDelta;     // running best 2-ply delta
+    hidden var _ai2pBestN;         // running best move
+    hidden var _ai2pCol;           // mark searching for
+    hidden var _ai2pOpp;           // opponent mark
+
     // ─────────────────────────────────────────────────────────────────────
     function initialize() {
         View.initialize();
@@ -106,6 +120,15 @@ class GameView extends WatchUi.View {
         _menuSel = 0;
         _playerFirst = true;
         _p2Sel   = -1;
+        _ai2pActive    = false;
+        _ai2pBufN      = new [MN];
+        _ai2pBufS      = new [MN];
+        _ai2pK         = 0;
+        _ai2pIdx       = 0;
+        _ai2pBestDelta = -999999;
+        _ai2pBestN     = -1;
+        _ai2pCol       = MC_AI;
+        _ai2pOpp       = MC_PLAYER;
         _initTables();
         _startGame();
         _state   = GS_MENU;
@@ -275,6 +298,8 @@ class GameView extends WatchUi.View {
         _p2Sel    = -1;
         _millN    = -1;
         _overType = 0;
+        // Cancel any in-progress AI search from a previous game.
+        _ai2pActive = false;
         if (_mode == MODE_AIAI) {
             _state = MGS_AI;
         } else if (_mode == MODE_PVAI && !_playerFirst) {
@@ -565,43 +590,207 @@ class GameView extends WatchUi.View {
         return _aiScoreFor(n, MC_AI, MC_PLAYER);
     }
 
-    // ── AI: placing phase ─────────────────────────────────────────────────
-    // Pure 1-ply scoring — fast enough on all devices (24 × ~48 ops ≈ 1 150).
-    // Hard difficulty is distinguished by near-zero noise in _aiScoreFor.
-    hidden function _aiPlace() {
-        var best = -99999; var pick = -1;
-        var i = 0;
-        while (i < MN) {
-            if (_nodes[i] == MC_EMPTY) {
-                var sc = _aiScore(i);
-                if (sc > best) { best = sc; pick = i; }
+    // Lean version of _aiScoreFor for use inside 2-ply opponent reply scoring.
+    //
+    // Performance: drops the per-call O(MN × _inMill) oscillating-mill check
+    // (~720+ ops) and several HARD-only refinements. Cost: ~180 ops vs ~1700.
+    //
+    // Trade-off: opponent's REPLY scoring is less nuanced, but since we just
+    // need the rough best-reply score for the (own − opp) delta, this is fine.
+    // The outer top-K candidate selection still uses the full _aiScoreFor.
+    hidden function _aiScoreCheap(n, col, opp) {
+        if (_wouldMill(n, col)) { return 3000; }
+        if (_wouldMill(n, opp)) { return 2000; }
+        var pot = 0; var millsOpen = 0; var oppMillsOpen = 0;
+        var m = 0;
+        while (m < 16) {
+            var a = _mills[m*3]; var b = _mills[m*3+1]; var c = _mills[m*3+2];
+            if (a == n || b == n || c == n) {
+                var colCnt = 0; var oppCnt = 0;
+                var x = 0;
+                while (x < 3) {
+                    var nd = _mills[m*3+x];
+                    if (_nodes[nd] == col) { colCnt = colCnt + 1; }
+                    if (_nodes[nd] == opp) { oppCnt = oppCnt + 1; }
+                    x = x + 1;
+                }
+                if (oppCnt == 0) {
+                    pot = pot + colCnt * 22;
+                    millsOpen = millsOpen + 1;
+                }
+                if (colCnt == 0 && oppCnt == 2) {
+                    pot = pot + 30;
+                    oppMillsOpen = oppMillsOpen + 1;
+                }
             }
-            i = i + 1;
+            m = m + 1;
         }
-        if (pick < 0) { _state = MGS_P_SEL; return; }
+        if (millsOpen >= 2)    { pot = pot + 150; }
+        if (oppMillsOpen >= 2) { pot = pot + 120; }
+        var dx = _gx[n] - 3; if (dx < 0) { dx = -dx; }
+        var dy = _gy[n] - 3; if (dy < 0) { dy = -dy; }
+        return pot + (6 - dx - dy) * 2;
+    }
+
+    // ── AI: placing phase ─────────────────────────────────────────────────
+    // Med/Easy: pure 1-ply scoring (single tick, ~24 × ~180 ops cheap eval).
+    // Hard: tick-spread 2-ply — setup tick + K=5 candidate-step ticks
+    // (~6 ticks × 450 ms ≈ 2.7 s thinking). Each tick stays well under the
+    // Fenix 8 Solar 51mm watchdog limit.
+    hidden function _aiPlace() {
+        if (_diff != DIFF_HARD) {
+            var pick = _aiPlace1Ply(MC_AI);
+            if (pick < 0) { _state = MGS_P_SEL; return; }
+            _commitAiPlace(pick);
+            return;
+        }
+        // HARD: tick-spread 2-ply search.
+        if (!_ai2pActive) {
+            _aiPlace2PlySetup(MC_AI, MC_PLAYER);
+            // First tick processes setup only; resume next tick to evaluate.
+            return;
+        }
+        _aiPlace2PlyStep();
+        if (!_ai2pActive) {
+            var p = _ai2pBestN;
+            if (p < 0) { _state = MGS_P_SEL; return; }
+            _commitAiPlace(p);
+        }
+        // else: more candidates to evaluate — gameTick will call again.
+    }
+
+    // Apply an AI placement and transition state. Extracted so both the
+    // single-tick (Easy/Med) and multi-tick (Hard) paths share the commit.
+    hidden function _commitAiPlace(pick) {
         _nodes[pick] = MC_AI;
         _aH = _aH - 1; _aB = _aB + 1;
         if (_inMill(pick, MC_AI)) { _millN = pick; _aiRemove(); }
         else { _checkPlayerLoss(); if (_state != MGS_OVER) { _state = MGS_P_SEL; } }
     }
 
+    // 1-ply placement pick — used by Easy/Med.
+    hidden function _aiPlace1Ply(col) {
+        var best = -99999; var pick = -1;
+        var i = 0;
+        while (i < MN) {
+            if (_nodes[i] == MC_EMPTY) {
+                var sc = _aiScoreFor(i, col, (col == MC_AI) ? MC_PLAYER : MC_AI);
+                if (sc > best) { best = sc; pick = i; }
+            }
+            i = i + 1;
+        }
+        return pick;
+    }
+
+    // ── Tick-spread 2-ply placement (Hard) ─────────────────────────────
+    //
+    // Why tick-spread? On Fenix 8 Solar 51mm the per-callback watchdog is
+    // ~30 K ops. The old single-tick 2-ply (62 K ops) tripped repeatedly.
+    // Splitting the search across timer ticks keeps each callback under
+    // ~5 K ops — comfortably safe on every supported device.
+    //
+    // Flow:
+    //   tick 1 (setup) : 24 × _aiScoreCheap (~180 ops) + sort  ≈ 4.4 K ops
+    //   tick 2..K+1    : 1 candidate × (24 × _aiScoreCheap)    ≈ 4.4 K ops
+    //   Total          : K+1 ticks ≈ 6 × 450 ms = 2.7 s thinking.
+    //
+    // Quality: uses _aiScoreCheap throughout (skips the expensive oscillating-
+    // mill scan). The 2-ply own-vs-opp delta still drives strong tactical play,
+    // combined with the existing immediate-mill and oscillation bonuses.
+    hidden function _aiPlace2PlySetup(col, opp) {
+        var nC = 0;
+        var i = 0;
+        while (i < MN) {
+            if (_nodes[i] == MC_EMPTY) {
+                _ai2pBufN[nC] = i;
+                _ai2pBufS[nC] = _aiScoreCheap(i, col, opp);
+                nC = nC + 1;
+            }
+            i = i + 1;
+        }
+        if (nC == 0) {
+            _ai2pActive = false; _ai2pBestN = -1; _ai2pK = 0;
+            return;
+        }
+        var K = (nC < 5) ? nC : 5;
+        var s = 0;
+        while (s < K) {
+            var bj = s; var bv = _ai2pBufS[s];
+            var j = s + 1;
+            while (j < nC) {
+                if (_ai2pBufS[j] > bv) { bv = _ai2pBufS[j]; bj = j; }
+                j = j + 1;
+            }
+            if (bj != s) {
+                var t = _ai2pBufN[s]; _ai2pBufN[s] = _ai2pBufN[bj]; _ai2pBufN[bj] = t;
+                var u = _ai2pBufS[s]; _ai2pBufS[s] = _ai2pBufS[bj]; _ai2pBufS[bj] = u;
+            }
+            s = s + 1;
+        }
+        _ai2pK         = K;
+        _ai2pIdx       = 0;
+        _ai2pBestDelta = -999999;
+        _ai2pBestN     = _ai2pBufN[0];  // pre-seed with top-1 so we always have a fallback
+        _ai2pCol       = col;
+        _ai2pOpp       = opp;
+        _ai2pActive    = true;
+    }
+
+    // Process ONE candidate. Called once per timer tick after setup.
+    // When all candidates done: _ai2pActive=false, _ai2pBestN holds the move.
+    hidden function _aiPlace2PlyStep() {
+        var k = _ai2pIdx;
+        if (k >= _ai2pK) { _ai2pActive = false; return; }
+        var col = _ai2pCol; var opp = _ai2pOpp;
+        var mv  = _ai2pBufN[k];
+        _nodes[mv] = col;
+        var aiMills = _inMill(mv, col);
+        var aiBonus = aiMills ? 2500 : 0;
+        var oppBest = -999999;
+        var p = 0;
+        while (p < MN) {
+            if (_nodes[p] == MC_EMPTY) {
+                var os = _aiScoreCheap(p, opp, col);
+                if (os > oppBest) { oppBest = os; }
+            }
+            p = p + 1;
+        }
+        _nodes[mv] = MC_EMPTY;
+        if (oppBest < 0) { oppBest = 0; }
+        var delta = _ai2pBufS[k] * 10 + aiBonus - oppBest * 5;
+        if (delta > _ai2pBestDelta) {
+            _ai2pBestDelta = delta;
+            _ai2pBestN     = mv;
+        }
+        _ai2pIdx = k + 1;
+        if (_ai2pIdx >= _ai2pK) { _ai2pActive = false; }
+    }
+
     // ── AI: moving / flying phase ─────────────────────────────────────────
     hidden function _aiMove(fly) {
         var best = -99999; var fromN = -1; var toN = -1;
+        var hard = (_diff == DIFF_HARD);
         var i = 0;
         while (i < MN) {
             if (_nodes[i] == MC_AI) {
-                _nodes[i] = MC_EMPTY;   // temporarily lift piece
+                _nodes[i] = MC_EMPTY;
                 var depart = _scoreDepartFor(i, MC_AI, MC_PLAYER);
                 var j = 0;
                 while (j < (fly ? MN : 4)) {
                     var nb = fly ? j : _adj[i*4+j];
                     if (nb < 0 || nb == i || _nodes[nb] != MC_EMPTY) { j = j + 1; continue; }
                     var sc = _aiScore(nb) + depart;
+                    // HARD: 2-ply — penalise moves that let opp mill on response.
+                    if (hard) {
+                        _nodes[nb] = MC_AI;
+                        var oppMill = _oppCanMillFast(MC_PLAYER);
+                        _nodes[nb] = MC_EMPTY;
+                        if (oppMill) { sc = sc - 1200; }
+                    }
                     if (sc > best) { best = sc; fromN = i; toN = nb; }
                     j = j + 1;
                 }
-                _nodes[i] = MC_AI;      // restore
+                _nodes[i] = MC_AI;
             }
             i = i + 1;
         }
@@ -612,6 +801,17 @@ class GameView extends WatchUi.View {
         _nodes[toN]   = MC_AI;
         if (_inMill(toN, MC_AI)) { _millN = toN; _aiRemove(); }
         else { _checkPlayerLoss(); if (_state != MGS_OVER) { _state = MGS_P_SEL; } }
+    }
+
+    // Fast check: can 'col' complete a mill in their next placement?
+    // Used in Hard-mode move analysis. Returns true if any empty node would mill.
+    hidden function _oppCanMillFast(col) {
+        var i = 0;
+        while (i < MN) {
+            if (_nodes[i] == MC_EMPTY && _wouldMill(i, col)) { return true; }
+            i = i + 1;
+        }
+        return false;
     }
 
     // ── AI: removing a player piece after forming a mill ──────────────────

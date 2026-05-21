@@ -526,14 +526,21 @@ class GameView extends WatchUi.View {
             e = e + 1;
         }
 
-        // Hard/Med: prefer short chains (len ≤ 2) to avoid giving long runs
+        // Hard/Med: prefer short chains (len ≤ 2) to avoid giving long runs.
+        // BUT: on Hard, if this is the LAST chain on the board, take it greedy
+        // (no double-cross needed — endgame, take all the boxes).
         if (_diff != DIFF_EASY && bestShort >= 0) { return bestShort; }
 
-        // Must open a long chain — use double-cross for Med/Hard
+        // Must open a long chain — use double-cross for Med/Hard, but only if
+        // there's more than ONE long chain remaining (else take whole chain).
         var best = (bestShort >= 0) ? bestShort : bestLong;
         var bestLen = (bestShort >= 0) ? bestShortLen : bestLongLen;
         if (best >= 0 && bestLen >= 3 && _diff != DIFF_EASY) {
-            return _dcEdge(best);
+            // Count how many long chains exist. If only 1, no double-cross.
+            var nLong = _countLongChains();
+            if (nLong > 1) { return _dcEdge(best); }
+            // Single chain left: take greedily — the standard endgame heuristic.
+            return best;
         }
         return (best >= 0) ? best : 0;
     }

@@ -3,6 +3,7 @@ using Toybox.Graphics;
 using Toybox.Timer;
 using Toybox.Math;
 using Toybox.Attention;
+using Toybox.Application;
 
 // ── Module-level constants ─────────────────────────────────────────────────
 // (visible to all source files in this project)
@@ -74,7 +75,6 @@ class GameView extends WatchUi.View {
     function initialize() {
         View.initialize();
         _state      = GS_TITLE;
-        _hiScore    = 0;
         _timer      = null;
         _flash      = 0;
         _phaseNotif = 0;
@@ -88,6 +88,20 @@ class GameView extends WatchUi.View {
         _pY         = 0;
         _partT      = 0;
         _nearMissTimer = 0;
+        // Load hi-score from persistent storage (survives app restart).
+        _hiScore = _loadHi();
+    }
+
+    hidden function _loadHi() {
+        try {
+            var v = Application.Storage.getValue("hi");
+            if (v != null && v instanceof Number && v > 0) { return v; }
+        } catch (e) { }
+        return 0;
+    }
+
+    hidden function _saveHi() {
+        try { Application.Storage.setValue("hi", _hiScore); } catch (e) { }
     }
 
     function onLayout(dc) {
@@ -116,6 +130,10 @@ class GameView extends WatchUi.View {
             _partX[i] = _cx; _partY[i] = _cy;
             _partVx[i] = 0;  _partVy[i] = 0;
         }
+        // Pre-seed player screen position so we don't render at (0,0) on
+        // the title screen before _step() ever runs.
+        _pX = _cx + _cosTab[270] * _edgeR / 1000;
+        _pY = _cy + _sinTab[270] * _edgeR / 1000;
     }
 
     function onShow() {
@@ -140,6 +158,15 @@ class GameView extends WatchUi.View {
     // ── public controls ───────────────────────────────────────────────────
     function setKeyRight(v) { keyRight = v; }
     function setKeyLeft(v)  { keyLeft  = v; }
+
+    // True when the game is at the title or game-over screen and a key
+    // press should start a new run. Game-over screen needs a tiny delay
+    // so a final key press from the previous run can't auto-restart.
+    function canStart() {
+        if (_state == GS_TITLE) { return true; }
+        if (_state == GS_OVER && _flash == 0) { return true; }
+        return false;
+    }
 
     function doAction() {
         if (_state != GS_RUN) { _startGame(); return; }
@@ -183,7 +210,10 @@ class GameView extends WatchUi.View {
     }
 
     hidden function _killPlayer() {
-        if (_score > _hiScore) { _hiScore = _score; }
+        if (_score > _hiScore) {
+            _hiScore = _score;
+            _saveHi();
+        }
         _flash = 14;
         _spawnDeathParticles();
         _state = GS_OVER;
@@ -222,10 +252,13 @@ class GameView extends WatchUi.View {
         // ── near-miss detection (bullet passing close but not hitting) ───
         _checkNearMiss(pa);
 
-        // ── collision ────────────────────────────────────────────────────
-        if (_enemies.checkCollision(pa, _edgeR)) {
-            _killPlayer();
-            return;
+        // ── collision (dash grants brief i-frames so the player can
+        // dash THROUGH bullets — much fairer feel) ───────────────────────
+        if (_player.isDashing == 0) {
+            if (_enemies.checkCollision(pa, _edgeR)) {
+                _killPlayer();
+                return;
+            }
         }
 
         _score = _score + 1;
@@ -286,10 +319,16 @@ class GameView extends WatchUi.View {
 
         _drawDepthRings(dc);
         _drawEdge(dc);
-        _drawEnemies(dc);
-        _drawPlayerTrail(dc);
-        _drawPlayer(dc);
-        _drawParticles(dc);
+
+        // Skip live-action sprites on the title screen so it isn't cluttered
+        // by stale enemies/trails from the previous run (or by the player
+        // dot stuck at its starting position).
+        if (_state != GS_TITLE) {
+            _drawEnemies(dc);
+            _drawPlayerTrail(dc);
+            _drawPlayer(dc);
+            _drawParticles(dc);
+        }
 
         if (_state == GS_TITLE) {
             _drawTitle(dc);
@@ -299,8 +338,10 @@ class GameView extends WatchUi.View {
             _drawHUD(dc);
         }
 
-        if (_phaseNotif > 0)    { _drawPhaseNotif(dc); }
-        if (_nearMissTimer > 0) { _drawNearMiss(dc); }
+        if (_state == GS_RUN) {
+            if (_phaseNotif > 0)    { _drawPhaseNotif(dc); }
+            if (_nearMissTimer > 0) { _drawNearMiss(dc); }
+        }
     }
 
     // Faint concentric circles — depth / scale reference

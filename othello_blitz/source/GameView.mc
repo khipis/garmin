@@ -179,6 +179,7 @@ class GameView extends WatchUi.View {
 
     hidden function _startGame() {
         _board.newGame();
+        _ai.setDifficulty(_diff);
         _animTick  = 0;
         _passNotif = 0;
         _curX = 3; _curY = 3;

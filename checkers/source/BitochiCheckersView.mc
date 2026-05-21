@@ -764,6 +764,26 @@ class BitochiCheckersView extends WatchUi.View {
                     }
                 }
 
+                // Hard 2-ply lite: penalise moves that let opponent king up next turn.
+                // Detect: any opp man one step away from promotion row that now has
+                // an empty path to advance.
+                var oppKingThreat = _oppKingingThreat();
+                if (oppKingThreat) { score -= 220; }
+
+                // Hard 2-ply lite: bonus for moves that king-up ourselves next turn.
+                // Detect own man at second-to-last rank with an empty forward slot.
+                if (np == CK_WHITE || np == CK_BLACK) {
+                    var promoR = _aiW ? 6 : 1;
+                    var promoDir = _aiW ? 1 : -1;
+                    if (toR == promoR) {
+                        var fwd = toR + promoDir;
+                        if (fwd >= 0 && fwd < 8) {
+                            if (toC > 0 && _board[fwd * 8 + toC - 1] == CK_EMPTY) { score += 60; }
+                            if (toC < 7 && _board[fwd * 8 + toC + 1] == CK_EMPTY) { score += 60; }
+                        }
+                    }
+                }
+
                 var pTotal = 0;
                 for (var sq = 0; sq < 64; sq++) { if (_board[sq] != CK_EMPTY) { pTotal++; } }
                 if (pTotal <= 8) {
@@ -800,6 +820,31 @@ class BitochiCheckersView extends WatchUi.View {
 
         _aiMvI = end;
         if (_aiMvI >= _aiMvN) { _doAiApply(); }
+    }
+
+    // True if opponent has a man one square from their promotion rank
+    // with an empty diagonal advance square (will likely king up next move).
+    // Iterative — no recursion. ~64 reads.
+    hidden function _oppKingingThreat() {
+        var oppW = !_aiW;
+        // Opp white kings on row 7 (advancing downward in row index? actually white pieces are CK_WHITE,
+        // moves forward = +r in this codebase). White promotes at row 7; black promotes at row 0.
+        var preRank = oppW ? 6 : 1;
+        var dir = oppW ? 1 : -1;
+        var c = 0;
+        while (c < 8) {
+            var p = _board[preRank * 8 + c];
+            var isOppMan = oppW ? (p == CK_WHITE) : (p == CK_BLACK);
+            if (isOppMan) {
+                var nr = preRank + dir;
+                if (nr >= 0 && nr < 8) {
+                    if (c > 0 && _board[nr * 8 + c - 1] == CK_EMPTY) { return true; }
+                    if (c < 7 && _board[nr * 8 + c + 1] == CK_EMPTY) { return true; }
+                }
+            }
+            c = c + 1;
+        }
+        return false;
     }
 
     hidden function _worstCapLoss() {

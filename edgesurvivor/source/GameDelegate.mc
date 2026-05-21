@@ -23,12 +23,19 @@ class GameDelegate extends WatchUi.BehaviorDelegate {
         // getType() returns 0 for press, non-zero for release
         var pressed = (evt.getType() == 0) ? 1 : 0;
 
+        // From title / game-over: any key press starts the game.
+        if (pressed == 1 && _v.canStart()) {
+            _v.doAction();
+            WatchUi.requestUpdate();
+            return true;
+        }
+
         if (k == WatchUi.KEY_UP) {
             _v.setKeyRight(pressed);
         } else if (k == WatchUi.KEY_DOWN) {
             _v.setKeyLeft(pressed);
         } else if (pressed == 1) {
-            // any other key: action (start / dash)
+            // any other key: action (dash)
             _v.doAction();
         }
         WatchUi.requestUpdate();

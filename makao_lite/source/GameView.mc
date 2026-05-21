@@ -387,11 +387,22 @@ class GameView extends WatchUi.View {
     }
 
     // Return index of best card for AI to play, or −1.
+    // Hard improvements:
+    //  - Save action cards (J, 2, 3) for endgame instead of wasting them early.
+    //  - When playing a regular, prefer one from suit AI has the MOST of
+    //    (forces opp to either match suit or play their rank elsewhere).
+    //  - Boost rank-matching plays heavily — it constrains opp's response set.
     hidden function _aiPickCard() {
         if (_diff == DIFF_EASY && Math.rand() % 3 == 0) {
             var j = 0;
             while (j < _aiCount) { if (_isValid(_aiHand[j])) { return j; } j++; }
             return -1;
+        }
+        // Pre-tally suit counts in AI hand (for Hard mode suit pressure logic).
+        var sCount = [0, 0, 0, 0];
+        if (_diff == DIFF_HARD) {
+            var si = 0;
+            while (si < _aiCount) { sCount[_aiHand[si] / MK_RANKS] += 1; si += 1; }
         }
         var bestIdx = -1; var bestPri = -1;
         var topRank = _topCard % MK_RANKS;
@@ -399,6 +410,7 @@ class GameView extends WatchUi.View {
         while (i < _aiCount) {
             if (_isValid(_aiHand[i])) {
                 var r   = _aiHand[i] % MK_RANKS;
+                var s   = _aiHand[i] / MK_RANKS;
                 var pri = 0;
                 if (r == MK_RJ) {
                     // Scale priority by endgame state (Med/Hard)
@@ -411,21 +423,33 @@ class GameView extends WatchUi.View {
                     }
                     // Hard: if 1 card left, prefer winning outright over skipping
                     if (_diff == DIFF_HARD && _aiCount == 1) { pri = 5; }
+                    // Hard: save Jack when opponent has many cards (>4) — they can't
+                    // capitalize quickly so wasting a skip is suboptimal.
+                    if (_diff == DIFF_HARD && _pCount >= 5) { pri = pri - 10; }
                 } else if (r == MK_R2) {
                     pri = 30;
-                    // Endgame defence: force opponent to draw when they're close to winning
                     if (_diff >= DIFF_MED && _pCount <= 2) { pri = 45; }
+                    // Hard: hold "2" when opp has many cards — they can absorb it easily.
+                    if (_diff == DIFF_HARD && _pCount >= 5) { pri = pri - 5; }
                 } else if (r == MK_R3) {
                     pri = 25;
                     if (_diff >= DIFF_MED && _pCount <= 2) { pri = 42; }
+                    if (_diff == DIFF_HARD && _pCount >= 5) { pri = pri - 5; }
                 } else if (r == MK_RA) {
                     pri = 20;
+                    // Hard: Aces are gold late game — slight boost when AI close to win.
+                    if (_diff == DIFF_HARD && _aiCount <= 3) { pri = 28; }
                 } else {
                     // Regular card: prefer rank match (keeps suit pressure) over suit-only
-                    if (r == topRank) { pri = 15; }
+                    if (r == topRank) { pri = 17; }
                     else              { pri = 10; }
                     // Endgame: boost regular cards when AI is close to winning
                     if (_diff == DIFF_HARD && _aiCount <= 2) { pri = pri + 15; }
+                    // Hard: prefer dropping cards from our majority suit (we'll
+                    // still have backup; opp is forced to find another suit/rank).
+                    if (_diff == DIFF_HARD) {
+                        if (sCount[s] >= 3) { pri = pri + 5; }
+                    }
                 }
                 if (_diff == DIFF_EASY) { pri = pri + Math.rand() % 50; }
                 if (pri > bestPri) { bestPri = pri; bestIdx = i; }

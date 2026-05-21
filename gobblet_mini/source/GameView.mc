@@ -469,6 +469,8 @@ class GameView extends WatchUi.View {
     //   Total ≈ 24 480 ops — safe on all devices.
 
     // Score a single win-line for 'who' vs 'enemy'.
+    // Hard: 3-in-a-row open lines are weighted much higher (treats them as
+    // near-winning threats requiring immediate response).
     hidden function _aiScoreLine(who, enemy, l) {
         var aCnt = 0; var pCnt = 0; var i = 0; var base = l * GM;
         while (i < GM) {
@@ -477,11 +479,43 @@ class GameView extends WatchUi.View {
             else if (own == enemy) { pCnt = pCnt + 1; }
             i = i + 1;
         }
-        if (aCnt > 0 && pCnt > 0) { return 0; }       // contested — no value
-        if (pCnt == 0) { return aCnt * aCnt; }         // own progress
+        if (aCnt > 0 && pCnt > 0) { return 0; }
+        if (pCnt == 0) {
+            // Own-only line. 3-in-a-row is a winning threat.
+            if (aCnt == 3) { return (_diff == DIFF_HARD) ? 220 : 90; }
+            return aCnt * aCnt;
+        }
         var pen = pCnt * pCnt * 2;
-        if (pCnt == 3) { pen = pen + ((_diff == DIFF_HARD) ? 160 : 80); }
+        if (pCnt == 3) { pen = pen + ((_diff == DIFF_HARD) ? 240 : 80); }
         return -pen;
+    }
+
+    // After hypothetically placing 'who's piece at 'lastDst', count distinct
+    // empty cells where 'who' could mill on the NEXT turn (fork detector).
+    //
+    // Performance: considers ONLY the TOP-1 available size. Smaller-piece
+    // forks are weak (opponent gobbles them anyway) and the largest size
+    // captures the strongest fork threats. Cost: GM2 × _checkWinAt ≈ ~650 ops.
+    //
+    // Early-exit at cnt>=2 (that's all a caller needs — "fork or no fork").
+    // Iterative; no recursion.
+    hidden function _selfThreatCount(who, ah) {
+        var cnt = 0;
+        var s = GSIZES;
+        // Find largest available size (only one iteration of the outer pass).
+        while (s >= 1 && ah[s - 1] == 0) { s = s - 1; }
+        if (s < 1) { return 0; }
+        var v = _makeVal(who, s);
+        var d = 0;
+        while (d < GM2 && cnt < 2) {
+            if (_canPlace(s, d)) {
+                _place(v, d);
+                if (_checkWinAt(who, d)) { cnt = cnt + 1; }
+                _pop(d);
+            }
+            d = d + 1;
+        }
+        return cnt;
     }
 
     // Fast positional score: only checks the 2-4 lines through cell 'dst'.
@@ -535,11 +569,20 @@ class GameView extends WatchUi.View {
 
     // Choose and execute the best move for player 'who' (1=P1/player, 2=AI).
     //
-    // Watchdog budget (see block comment above for full breakdown):
-    //   _enemyThreatMask : ~5 600 ops  (once per turn)
-    //   Phase A          : ~7 680 ops  (64 candidates × ~120 ops)
-    //   Phase B          : ~11 200 ops (32 budget × ~350 ops, dst-only score)
-    //   Total            : ~24 480 ops — safely within watchdog limits.
+    // Watchdog budget (Fenix 8 Solar 51mm — tightest device):
+    //   _enemyThreatMask    : ~2 500 ops (once per turn)
+    //   Phase A base        : ~7 680 ops (64 candidates × ~120 ops)
+    //   Phase A fork (HARD) : ~3 900 ops (forkBudget=6 × ~650 ops, early-exit at cnt=2)
+    //   Phase B             : ~7 000 ops (phBudget=20 × ~350 ops)
+    //   Total HARD          : ~21 000 ops — comfortably under watchdog.
+    //
+    // PREVIOUS bug history:
+    //   - 64×_selfThreatCount = ~160 000 ops → tripped on every device.
+    //   - forkBudget=16, 2-size scan = ~40 000 ops → still tripped on
+    //     Fenix 8 Solar (slow CPU + tight watchdog).
+    //   - Current: forkBudget=6 with 1-size scan + early-exit at cnt=2.
+    //     Phase A enumerates largest sizes first so the 6 fork checks always
+    //     cover the strongest threats.
     hidden function _aiDoMoveFor(who) {
         var enemy = (who == 2) ? 1 : 2;
         var ah  = (who == 2) ? _aih : _ph;
@@ -558,6 +601,12 @@ class GameView extends WatchUi.View {
             eThreat = _enemyThreatMask(enemy, eh);
             ePen = (_diff == DIFF_HARD) ? 20000 : 8000;
         }
+
+        // Hard-only: cap on _selfThreatCount calls per turn. Phase A enumerates
+        // sizes 4→1 and cells 0→15, so the first 6 candidates cover the largest
+        // pieces (which create the strongest forks). Reduced from 16 → 6 to
+        // fit the Fenix 8 Solar 51mm watchdog (≤ ~21K total ops/turn).
+        var forkBudget = 6;
 
         // ── Phase A: place from hand (prefer larger pieces first) ─────────
         var s = GSIZES;
@@ -586,6 +635,19 @@ class GameView extends WatchUi.View {
                                     sc = sc - ePen;
                                 }
                             }
+                            // HARD: fork detection — after this move, do we have 2+
+                            // distinct winning replies? If so, that's almost a win.
+                            // Temporarily decrement own hand to simulate piece used.
+                            // Budget-capped (see forkBudget above) to keep the
+                            // watchdog satisfied on slow devices.
+                            if (_diff == DIFF_HARD && forkBudget > 0) {
+                                forkBudget = forkBudget - 1;
+                                ah[s - 1] = ah[s - 1] - 1;
+                                var tc = _selfThreatCount(who, ah);
+                                ah[s - 1] = ah[s - 1] + 1;
+                                if (tc >= 2) { sc = sc + 8000; }
+                                else if (tc == 1) { sc = sc + 400; }
+                            }
                             if (_diff == DIFF_EASY) { sc = sc + Math.rand() % 25 - 12; }
                         }
                         _pop(dst);
@@ -600,10 +662,10 @@ class GameView extends WatchUi.View {
         }
 
         // ── Phase B: move a board piece ───────────────────────────────────
-        // Budget capped at 32/20 to stay within watchdog.
+        // Budget capped tightly to stay within Fenix 8 Solar 51mm watchdog.
         // Score only dst (not src) to halve Phase B eval cost; src contribution
         // is approximated as zero (neutral) — fast and watchdog-safe.
-        var src = 0; var phBudget = (_diff == DIFF_HARD) ? 32 : 20;
+        var src = 0; var phBudget = (_diff == DIFF_HARD) ? 20 : 14;
         while (src < GM2 && phBudget > 0) {
             if (_topOwner(src) == who) {
                 var sz = _topSize(src);

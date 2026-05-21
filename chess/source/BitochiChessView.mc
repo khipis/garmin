@@ -711,6 +711,44 @@ class BitochiChessView extends WatchUi.View {
                         }
                     }
                 }
+
+                // Hard 2-ply lite: full-board hanging-piece scan after our move.
+                // For each of our pieces (except king), if opp attacks it and
+                // we cannot recapture, deduct its full value. Iterative; no recursion.
+                // Worst case: 64 squares × _pieceVal lookup × sqAttacked = ~16K ops.
+                var hangingLoss = 0;
+                for (var sqH = 0; sqH < 64; sqH++) {
+                    var pH = _board[sqH];
+                    if (pH == PC_EMPTY) { continue; }
+                    var oursH = _aiIsWhite ? (pH > 0) : (pH < 0);
+                    if (!oursH) { continue; }
+                    var apH = pH > 0 ? pH : -pH;
+                    if (apH == PC_KING) { continue; }
+                    if (sqAttacked(sqH, !_aiIsWhite) && !sqAttacked(sqH, _aiIsWhite)) {
+                        var lossH = _pieceVal[apH];
+                        if (lossH > hangingLoss) { hangingLoss = lossH; }
+                    }
+                }
+                score -= hangingLoss;
+
+                // Hard: king safety — count opp-attacked squares around our king.
+                var kingSq = -1;
+                for (var sqK = 0; sqK < 64; sqK++) {
+                    var pK = _board[sqK];
+                    if (_aiIsWhite && pK ==  PC_KING) { kingSq = sqK; break; }
+                    if (!_aiIsWhite && pK == -PC_KING) { kingSq = sqK; break; }
+                }
+                if (kingSq >= 0) {
+                    var kr = kingSq / 8; var kf = kingSq % 8;
+                    var attCnt = 0;
+                    for (var dk = 0; dk < 8; dk++) {
+                        var krn = kr + _queenDR[dk]; var kfn = kf + _queenDF[dk];
+                        if (krn < 0 || krn >= 8 || kfn < 0 || kfn >= 8) { continue; }
+                        if (sqAttacked(krn * 8 + kfn, !_aiIsWhite)) { attCnt = attCnt + 1; }
+                    }
+                    // Endgame: king safety less critical
+                    if (_moveCount < 30 && attCnt >= 3) { score -= 40 * (attCnt - 2); }
+                }
             }
 
             if (_difficulty == 0) {
