@@ -1,0 +1,1269 @@
+[ @file = "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc"; @line = 18; @position = 6; @symbol_constdef = [SZ_4,18,6,10]; ]
+const SZ_4 = 4;
+[ @file = "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc"; @line = 19; @position = 6; @symbol_constdef = [SZ_9,19,6,10]; ]
+const SZ_9 = 9;
+[ @file = "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc"; @line = 20; @position = 6; @symbol_constdef = [BOX_4,20,6,11]; ]
+const BOX_4 = 2;
+[ @file = "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc"; @line = 21; @position = 6; @symbol_constdef = [BOX_9,21,6,11]; ]
+const BOX_9 = 3;
+[ @file = "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc"; @line = 23; @symbol_classdef = [SudokuGrid,23,6,16]; ]
+class SudokuGrid {
+    [ @file = "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc"; @line = 23; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc"; @line = 23; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc"; @line = 24; @position = 8; @symbol_vardef = [n,24,8,9]; ]
+    var n;
+    [ @file = "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc"; @line = 25; @position = 8; @symbol_vardef = [box,25,8,11]; ]
+    var box;
+    [ @file = "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc"; @line = 26; @position = 8; @symbol_vardef = [cells,26,8,13]; ]
+    var cells;
+    [ @file = "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc"; @line = 27; @position = 8; @symbol_vardef = [solution,27,8,16]; ]
+    var solution;
+    [ @file = "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc"; @line = 28; @position = 8; @symbol_vardef = [fixed,28,8,13]; ]
+    var fixed;
+    [ @file = "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc"; @line = 29; @position = 8; @symbol_vardef = [errors,29,8,14]; ]
+    var errors;
+    [ @file = "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc"; @line = 31; @symbol_functiondef = [initialize,31,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_31_26_37_4_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 32 8 ]
+        symbol [ SZ_9 %tmp.2 32 12 16 ];
+        %tmp.2 = getv ? :SZ_9;
+        symbol [ n ? 32 8 9 ];
+        putv self :n %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 32 18 ]
+        symbol [ BOX_9 %tmp.4 32 24 29 ];
+        %tmp.4 = getv ? :BOX_9;
+        symbol [ box ? 32 18 21 ];
+        putv self :box %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 33 8 ]
+        %tmp.6 = 81;
+        %tmp.5 = newa %tmp.6;
+        symbol [ cells ? 33 8 13 ];
+        putv self :cells %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 34 8 ]
+        %tmp.8 = 81;
+        %tmp.7 = newa %tmp.8;
+        symbol [ solution ? 34 8 16 ];
+        putv self :solution %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 35 8 ]
+        %tmp.10 = 81;
+        %tmp.9 = newa %tmp.10;
+        symbol [ fixed ? 35 8 13 ];
+        putv self :fixed %tmp.9;
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 36 8 ]
+        %tmp.12 = 81;
+        %tmp.11 = newa %tmp.12;
+        symbol [ errors ? 36 8 14 ];
+        putv self :errors %tmp.11;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_31_26_37_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc"; @line = 40; @symbol_functiondef = [setSize,40,13,20]; @symbol_param<0> = [size,40,21,25]; ]
+    function setSize(size) {
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_40_27_51_4_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 41 8 ]
+        %tmp.1 = lgetv %size;
+        symbol [ size %tmp.1 41 12 16 ];
+        symbol [ n ? 41 8 9 ];
+        putv self :n %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 42 8 ]
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_42_14_42_39_begin:
+        %tmp.2 = lgetv %size;
+        symbol [ size %tmp.2 42 15 19 ];
+        symbol [ SZ_4 %tmp.4 42 23 27 ];
+        %tmp.4 = getv ? :SZ_4;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_42_14_42_39_else_false;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_42_14_42_39_true:
+        symbol [ BOX_4 %tmp.7 42 31 36 ];
+        %tmp.7 = getv ? :BOX_4;
+        push %tmp.7;
+        goto @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_42_14_42_39_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_42_14_42_39_else_false:
+        symbol [ BOX_9 %tmp.9 42 39 44 ];
+        %tmp.9 = getv ? :BOX_9;
+        push %tmp.9;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_42_14_42_39_end:
+        %tmp.10 = phi [%tmp.5 @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_42_14_42_39_begin] [%tmp.7 @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_42_14_42_39_true] [%tmp.9 @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_42_14_42_39_else_false] [%tmp.10 @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_42_14_42_39_end];
+        symbol [ box ? 42 8 11 ];
+        putv self :box %tmp.10;
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 43 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_40_27_51_4_start" "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_40_27_51_4_stop" ]
+        %total.1 = local;
+        symbol [ total %total.1 43 12 17 ];
+        symbol [ n %tmp.12 43 20 21 ];
+        %tmp.12 = getv ? :n;
+        symbol [ n %tmp.14 43 24 25 ];
+        %tmp.14 = getv ? :n;
+        %tmp.15 = mul %tmp.12 %tmp.14;
+        lputv %total.1 %tmp.15;
+        symbol [ total %total.1 43 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 44 8 ]
+        %tmp.17 = lgetv %total.1;
+        symbol [ total %tmp.17 44 24 29 ];
+        %tmp.16 = newa %tmp.17;
+        symbol [ cells ? 44 8 13 ];
+        putv self :cells %tmp.16;
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 45 8 ]
+        %tmp.19 = lgetv %total.1;
+        symbol [ total %tmp.19 45 24 29 ];
+        %tmp.18 = newa %tmp.19;
+        symbol [ solution ? 45 8 16 ];
+        putv self :solution %tmp.18;
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 46 8 ]
+        %tmp.21 = lgetv %total.1;
+        symbol [ total %tmp.21 46 24 29 ];
+        %tmp.20 = newa %tmp.21;
+        symbol [ fixed ? 46 8 13 ];
+        putv self :fixed %tmp.20;
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 47 8 ]
+        %tmp.23 = lgetv %total.1;
+        symbol [ total %tmp.23 47 24 29 ];
+        %tmp.22 = newa %tmp.23;
+        symbol [ errors ? 47 8 14 ];
+        putv self :errors %tmp.22;
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 48 8 ]
+        for @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_48_8_50_8_for_test @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_48_8_50_8_for_incr @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_48_8_50_8_for_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_48_8_50_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_48_8_50_8_for_begin" "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_48_8_50_8_for_end" ]
+        %i.2 = local;
+        symbol [ i %i.2 48 17 18 ];
+        %tmp.24 = 0;
+        lputv %i.2 %tmp.24;
+        symbol [ i %i.2 48 17 18 ];
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_48_8_50_8_for_test:
+        %tmp.25 = lgetv %i.2;
+        symbol [ i %tmp.25 48 24 25 ];
+        %tmp.26 = lgetv %total.1;
+        symbol [ total %tmp.26 48 28 33 ];
+        %tmp.27 = lt %tmp.25 %tmp.26;
+        bf %tmp.27 @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_48_8_50_8_for_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_48_8_50_8_for_begin:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_48_40_50_8_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 49 12 ]
+        symbol [ cells %tmp.28 49 12 17 ];
+        %tmp.28 = getv self :cells;
+        %tmp.29 = 0;
+        %tmp.30 = lgetv %i.2;
+        symbol [ i %tmp.30 49 18 19 ];
+        aputv %tmp.28 %tmp.30 %tmp.29;
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 49 26 ]
+        symbol [ solution %tmp.31 49 26 34 ];
+        %tmp.31 = getv self :solution;
+        %tmp.32 = 0;
+        %tmp.33 = lgetv %i.2;
+        symbol [ i %tmp.33 49 35 36 ];
+        aputv %tmp.31 %tmp.33 %tmp.32;
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 49 43 ]
+        symbol [ fixed %tmp.34 49 43 48 ];
+        %tmp.34 = getv self :fixed;
+        %tmp.35 = false;
+        %tmp.36 = lgetv %i.2;
+        symbol [ i %tmp.36 49 49 50 ];
+        aputv %tmp.34 %tmp.36 %tmp.35;
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 49 61 ]
+        symbol [ errors %tmp.37 49 61 67 ];
+        %tmp.37 = getv self :errors;
+        %tmp.38 = false;
+        %tmp.39 = lgetv %i.2;
+        symbol [ i %tmp.39 49 68 69 ];
+        aputv %tmp.37 %tmp.39 %tmp.38;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_48_40_50_8_stop:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_48_8_50_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 48 ]
+        %tmp.42 = lgetv %i.2;
+        symbol [ i %tmp.42 48 35 36 ];
+        %tmp.43 = add %tmp.42 1;
+        lputv %i.2 %tmp.43;
+        symbol [ i %i.2 48 35 36 ];
+        goto @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_48_8_50_8_for_test;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_48_8_50_8_for_end:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_40_27_51_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc"; @line = 55; @symbol_functiondef = [loadPuzzle,55,13,23]; @symbol_param<0> = [puzzle,55,24,30]; @symbol_param<1> = [sol,55,32,35]; ]
+    function loadPuzzle(puzzle, sol) {
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_55_37_63_4_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 56 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_55_37_63_4_start" "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_55_37_63_4_stop" ]
+        %total.1 = local;
+        symbol [ total %total.1 56 12 17 ];
+        symbol [ n %tmp.2 56 20 21 ];
+        %tmp.2 = getv ? :n;
+        symbol [ n %tmp.4 56 24 25 ];
+        %tmp.4 = getv ? :n;
+        %tmp.5 = mul %tmp.2 %tmp.4;
+        lputv %total.1 %tmp.5;
+        symbol [ total %total.1 56 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 57 8 ]
+        for @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_57_8_62_8_for_test @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_57_8_62_8_for_incr @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_57_8_62_8_for_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_57_8_62_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_57_8_62_8_for_begin" "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_57_8_62_8_for_end" ]
+        %i.2 = local;
+        symbol [ i %i.2 57 17 18 ];
+        %tmp.6 = 0;
+        lputv %i.2 %tmp.6;
+        symbol [ i %i.2 57 17 18 ];
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_57_8_62_8_for_test:
+        %tmp.7 = lgetv %i.2;
+        symbol [ i %tmp.7 57 24 25 ];
+        %tmp.8 = lgetv %total.1;
+        symbol [ total %tmp.8 57 28 33 ];
+        %tmp.9 = lt %tmp.7 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_57_8_62_8_for_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_57_8_62_8_for_begin:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_57_40_62_8_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 58 12 ]
+        symbol [ cells %tmp.10 58 12 17 ];
+        %tmp.10 = getv self :cells;
+        %tmp.11 = lgetv %puzzle;
+        symbol [ puzzle %tmp.11 58 26 32 ];
+        %tmp.12 = lgetv %i.2;
+        symbol [ i %tmp.12 58 33 34 ];
+        %tmp.13 = agetv %tmp.11 %tmp.12;
+        %tmp.14 = lgetv %i.2;
+        symbol [ i %tmp.14 58 18 19 ];
+        aputv %tmp.10 %tmp.14 %tmp.13;
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 59 12 ]
+        symbol [ solution %tmp.15 59 12 20 ];
+        %tmp.15 = getv self :solution;
+        %tmp.16 = lgetv %sol;
+        symbol [ sol %tmp.16 59 26 29 ];
+        %tmp.17 = lgetv %i.2;
+        symbol [ i %tmp.17 59 30 31 ];
+        %tmp.18 = agetv %tmp.16 %tmp.17;
+        %tmp.19 = lgetv %i.2;
+        symbol [ i %tmp.19 59 21 22 ];
+        aputv %tmp.15 %tmp.19 %tmp.18;
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 60 12 ]
+        symbol [ fixed %tmp.20 60 12 17 ];
+        %tmp.20 = getv self :fixed;
+        %tmp.21 = lgetv %puzzle;
+        symbol [ puzzle %tmp.21 60 27 33 ];
+        %tmp.22 = lgetv %i.2;
+        symbol [ i %tmp.22 60 34 35 ];
+        %tmp.23 = agetv %tmp.21 %tmp.22;
+        %tmp.24 = 0;
+        %tmp.25 = ne %tmp.23 %tmp.24;
+        %tmp.26 = lgetv %i.2;
+        symbol [ i %tmp.26 60 18 19 ];
+        aputv %tmp.20 %tmp.26 %tmp.25;
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 61 12 ]
+        symbol [ errors %tmp.27 61 12 18 ];
+        %tmp.27 = getv self :errors;
+        %tmp.28 = false;
+        %tmp.29 = lgetv %i.2;
+        symbol [ i %tmp.29 61 19 20 ];
+        aputv %tmp.27 %tmp.29 %tmp.28;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_57_40_62_8_stop:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_57_8_62_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 57 ]
+        %tmp.32 = lgetv %i.2;
+        symbol [ i %tmp.32 57 35 36 ];
+        %tmp.33 = add %tmp.32 1;
+        lputv %i.2 %tmp.33;
+        symbol [ i %i.2 57 35 36 ];
+        goto @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_57_8_62_8_for_test;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_57_8_62_8_for_end:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_55_37_63_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc"; @line = 67; @symbol_functiondef = [setValue,67,13,21]; @symbol_param<0> = [row,67,22,25]; @symbol_param<1> = [col,67,27,30]; @symbol_param<2> = [value,67,32,37]; ]
+    function setValue(row, col, value) {
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_67_39_72_4_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 68 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_67_39_72_4_start" "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_67_39_72_4_stop" ]
+        %idx.1 = local;
+        symbol [ idx %idx.1 68 12 15 ];
+        %tmp.1 = lgetv %row;
+        symbol [ row %tmp.1 68 18 21 ];
+        symbol [ n %tmp.3 68 24 25 ];
+        %tmp.3 = getv ? :n;
+        %tmp.4 = mul %tmp.1 %tmp.3;
+        %tmp.5 = lgetv %col;
+        symbol [ col %tmp.5 68 28 31 ];
+        %tmp.6 = add %tmp.4 %tmp.5;
+        lputv %idx.1 %tmp.6;
+        symbol [ idx %idx.1 68 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 69 8 ]
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_69_8_69_40_if_stmt:
+        symbol [ fixed %tmp.8 69 12 17 ];
+        %tmp.8 = getv ? :fixed;
+        %tmp.9 = lgetv %idx.1;
+        symbol [ idx %tmp.9 69 18 21 ];
+        %tmp.10 = agetv %tmp.8 %tmp.9;
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_69_8_69_40_if_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_69_8_69_40_if_true:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_69_24_69_40_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 69 26 ]
+        %tmp.11 = false;
+        ret %tmp.11;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_69_24_69_40_stop:
+        goto @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_69_8_69_40_if_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_69_8_69_40_if_end:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 70 8 ]
+        symbol [ cells %tmp.12 70 8 13 ];
+        %tmp.12 = getv self :cells;
+        %tmp.13 = lgetv %value;
+        symbol [ value %tmp.13 70 21 26 ];
+        %tmp.14 = lgetv %idx.1;
+        symbol [ idx %tmp.14 70 14 17 ];
+        aputv %tmp.12 %tmp.14 %tmp.13;
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 71 8 ]
+        %tmp.15 = true;
+        ret %tmp.15;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_67_39_72_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc"; @line = 74; @symbol_functiondef = [getValue,74,13,21]; @symbol_param<0> = [row,74,22,25]; @symbol_param<1> = [col,74,27,30]; ]
+    function getValue(row, col) {
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_74_35_74_69_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 74 37 ]
+        symbol [ cells %tmp.2 74 44 49 ];
+        %tmp.2 = getv ? :cells;
+        %tmp.3 = lgetv %row;
+        symbol [ row %tmp.3 74 50 53 ];
+        symbol [ n %tmp.5 74 56 57 ];
+        %tmp.5 = getv ? :n;
+        %tmp.6 = mul %tmp.3 %tmp.5;
+        %tmp.7 = lgetv %col;
+        symbol [ col %tmp.7 74 60 63 ];
+        %tmp.8 = add %tmp.6 %tmp.7;
+        %tmp.9 = agetv %tmp.2 %tmp.8;
+        ret %tmp.9;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_74_35_74_69_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc"; @line = 75; @symbol_functiondef = [isFixed,75,13,20]; @symbol_param<0> = [row,75,21,24]; @symbol_param<1> = [col,75,26,29]; ]
+    function isFixed(row, col) {
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_75_35_75_69_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 75 37 ]
+        symbol [ fixed %tmp.2 75 44 49 ];
+        %tmp.2 = getv ? :fixed;
+        %tmp.3 = lgetv %row;
+        symbol [ row %tmp.3 75 50 53 ];
+        symbol [ n %tmp.5 75 56 57 ];
+        %tmp.5 = getv ? :n;
+        %tmp.6 = mul %tmp.3 %tmp.5;
+        %tmp.7 = lgetv %col;
+        symbol [ col %tmp.7 75 60 63 ];
+        %tmp.8 = add %tmp.6 %tmp.7;
+        %tmp.9 = agetv %tmp.2 %tmp.8;
+        ret %tmp.9;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_75_35_75_69_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc"; @line = 76; @symbol_functiondef = [isError,76,13,20]; @symbol_param<0> = [row,76,21,24]; @symbol_param<1> = [col,76,26,29]; ]
+    function isError(row, col) {
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_76_35_76_69_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 76 37 ]
+        symbol [ errors %tmp.2 76 44 50 ];
+        %tmp.2 = getv ? :errors;
+        %tmp.3 = lgetv %row;
+        symbol [ row %tmp.3 76 51 54 ];
+        symbol [ n %tmp.5 76 57 58 ];
+        %tmp.5 = getv ? :n;
+        %tmp.6 = mul %tmp.3 %tmp.5;
+        %tmp.7 = lgetv %col;
+        symbol [ col %tmp.7 76 61 64 ];
+        %tmp.8 = add %tmp.6 %tmp.7;
+        %tmp.9 = agetv %tmp.2 %tmp.8;
+        ret %tmp.9;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_76_35_76_69_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc"; @line = 77; @symbol_functiondef = [getSolution,77,13,24]; @symbol_param<0> = [row,77,25,28]; @symbol_param<1> = [col,77,30,33]; ]
+    function getSolution(row, col) {
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_77_35_77_69_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 77 37 ]
+        symbol [ solution %tmp.2 77 44 52 ];
+        %tmp.2 = getv ? :solution;
+        %tmp.3 = lgetv %row;
+        symbol [ row %tmp.3 77 53 56 ];
+        symbol [ n %tmp.5 77 59 60 ];
+        %tmp.5 = getv ? :n;
+        %tmp.6 = mul %tmp.3 %tmp.5;
+        %tmp.7 = lgetv %col;
+        symbol [ col %tmp.7 77 63 66 ];
+        %tmp.8 = add %tmp.6 %tmp.7;
+        %tmp.9 = agetv %tmp.2 %tmp.8;
+        ret %tmp.9;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_77_35_77_69_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc"; @line = 80; @symbol_functiondef = [isComplete,80,13,23]; ]
+    function isComplete() {
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_80_26_86_4_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 81 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_80_26_86_4_start" "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_80_26_86_4_stop" ]
+        %total.1 = local;
+        symbol [ total %total.1 81 12 17 ];
+        symbol [ n %tmp.2 81 20 21 ];
+        %tmp.2 = getv ? :n;
+        symbol [ n %tmp.4 81 24 25 ];
+        %tmp.4 = getv ? :n;
+        %tmp.5 = mul %tmp.2 %tmp.4;
+        lputv %total.1 %tmp.5;
+        symbol [ total %total.1 81 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 82 8 ]
+        for @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_82_8_84_8_for_test @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_82_8_84_8_for_incr @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_82_8_84_8_for_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_82_8_84_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_82_8_84_8_for_begin" "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_82_8_84_8_for_end" ]
+        %i.2 = local;
+        symbol [ i %i.2 82 17 18 ];
+        %tmp.6 = 0;
+        lputv %i.2 %tmp.6;
+        symbol [ i %i.2 82 17 18 ];
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_82_8_84_8_for_test:
+        %tmp.7 = lgetv %i.2;
+        symbol [ i %tmp.7 82 24 25 ];
+        %tmp.8 = lgetv %total.1;
+        symbol [ total %tmp.8 82 28 33 ];
+        %tmp.9 = lt %tmp.7 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_82_8_84_8_for_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_82_8_84_8_for_begin:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_82_40_84_8_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 83 12 ]
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_83_12_83_57_if_stmt:
+        symbol [ cells %tmp.11 83 16 21 ];
+        %tmp.11 = getv ? :cells;
+        %tmp.12 = lgetv %i.2;
+        symbol [ i %tmp.12 83 22 23 ];
+        %tmp.13 = agetv %tmp.11 %tmp.12;
+        symbol [ solution %tmp.15 83 28 36 ];
+        %tmp.15 = getv ? :solution;
+        %tmp.16 = lgetv %i.2;
+        symbol [ i %tmp.16 83 37 38 ];
+        %tmp.17 = agetv %tmp.15 %tmp.16;
+        %tmp.18 = ne %tmp.13 %tmp.17;
+        bf %tmp.18 @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_83_12_83_57_if_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_83_12_83_57_if_true:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_83_41_83_57_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 83 43 ]
+        %tmp.19 = false;
+        ret %tmp.19;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_83_41_83_57_stop:
+        goto @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_83_12_83_57_if_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_83_12_83_57_if_end:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_82_40_84_8_stop:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_82_8_84_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 82 ]
+        %tmp.22 = lgetv %i.2;
+        symbol [ i %tmp.22 82 35 36 ];
+        %tmp.23 = add %tmp.22 1;
+        lputv %i.2 %tmp.23;
+        symbol [ i %i.2 82 35 36 ];
+        goto @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_82_8_84_8_for_test;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_82_8_84_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 85 8 ]
+        %tmp.24 = true;
+        ret %tmp.24;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_80_26_86_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc"; @line = 92; @symbol_functiondef = [isFilledAndValid,92,13,29]; ]
+    function isFilledAndValid() {
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_92_32_100_4_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 93 8 ]
+        %tmp.1 = self;
+        symbol [ recomputeErrors %tmp.2 93 8 23 ];
+        %tmp.2 = getv function %tmp.1 :recomputeErrors;
+        invoke %tmp.1 %tmp.2();
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 94 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_92_32_100_4_start" "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_92_32_100_4_stop" ]
+        %total.1 = local;
+        symbol [ total %total.1 94 12 17 ];
+        symbol [ n %tmp.4 94 20 21 ];
+        %tmp.4 = getv ? :n;
+        symbol [ n %tmp.6 94 24 25 ];
+        %tmp.6 = getv ? :n;
+        %tmp.7 = mul %tmp.4 %tmp.6;
+        lputv %total.1 %tmp.7;
+        symbol [ total %total.1 94 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 95 8 ]
+        for @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_95_8_98_8_for_test @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_95_8_98_8_for_incr @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_95_8_98_8_for_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_95_8_98_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_95_8_98_8_for_begin" "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_95_8_98_8_for_end" ]
+        %i.2 = local;
+        symbol [ i %i.2 95 17 18 ];
+        %tmp.8 = 0;
+        lputv %i.2 %tmp.8;
+        symbol [ i %i.2 95 17 18 ];
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_95_8_98_8_for_test:
+        %tmp.9 = lgetv %i.2;
+        symbol [ i %tmp.9 95 24 25 ];
+        %tmp.10 = lgetv %total.1;
+        symbol [ total %tmp.10 95 28 33 ];
+        %tmp.11 = lt %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_95_8_98_8_for_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_95_8_98_8_for_begin:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_95_40_98_8_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 96 12 ]
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_96_12_96_49_if_stmt:
+        symbol [ cells %tmp.13 96 16 21 ];
+        %tmp.13 = getv ? :cells;
+        %tmp.14 = lgetv %i.2;
+        symbol [ i %tmp.14 96 22 23 ];
+        %tmp.15 = agetv %tmp.13 %tmp.14;
+        %tmp.16 = 0;
+        %tmp.17 = eq %tmp.15 %tmp.16;
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_96_12_96_49_if_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_96_12_96_49_if_true:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_96_33_96_49_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 96 35 ]
+        %tmp.18 = false;
+        ret %tmp.18;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_96_33_96_49_stop:
+        goto @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_96_12_96_49_if_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_96_12_96_49_if_end:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 97 12 ]
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_97_12_97_49_if_stmt:
+        symbol [ errors %tmp.20 97 16 22 ];
+        %tmp.20 = getv ? :errors;
+        %tmp.21 = lgetv %i.2;
+        symbol [ i %tmp.21 97 23 24 ];
+        %tmp.22 = agetv %tmp.20 %tmp.21;
+        bf %tmp.22 @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_97_12_97_49_if_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_97_12_97_49_if_true:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_97_33_97_49_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 97 35 ]
+        %tmp.23 = false;
+        ret %tmp.23;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_97_33_97_49_stop:
+        goto @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_97_12_97_49_if_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_97_12_97_49_if_end:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_95_40_98_8_stop:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_95_8_98_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 95 ]
+        %tmp.26 = lgetv %i.2;
+        symbol [ i %tmp.26 95 35 36 ];
+        %tmp.27 = add %tmp.26 1;
+        lputv %i.2 %tmp.27;
+        symbol [ i %i.2 95 35 36 ];
+        goto @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_95_8_98_8_for_test;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_95_8_98_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 99 8 ]
+        %tmp.28 = true;
+        ret %tmp.28;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_92_32_100_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc"; @line = 104; @symbol_functiondef = [recomputeErrors,104,13,28]; ]
+    function recomputeErrors() {
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_104_31_154_4_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 105 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_104_31_154_4_start" "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_104_31_154_4_stop" ]
+        %total.1 = local;
+        symbol [ total %total.1 105 12 17 ];
+        symbol [ n %tmp.2 105 20 21 ];
+        %tmp.2 = getv ? :n;
+        symbol [ n %tmp.4 105 24 25 ];
+        %tmp.4 = getv ? :n;
+        %tmp.5 = mul %tmp.2 %tmp.4;
+        lputv %total.1 %tmp.5;
+        symbol [ total %total.1 105 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 106 8 ]
+        for @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_106_8_106_61_for_test @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_106_8_106_61_for_incr @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_106_8_106_61_for_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_106_8_106_61_for_init:
+        [ "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_106_8_106_61_for_begin" "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_106_8_106_61_for_end" ]
+        %i.2 = local;
+        symbol [ i %i.2 106 17 18 ];
+        %tmp.6 = 0;
+        lputv %i.2 %tmp.6;
+        symbol [ i %i.2 106 17 18 ];
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_106_8_106_61_for_test:
+        %tmp.7 = lgetv %i.2;
+        symbol [ i %tmp.7 106 24 25 ];
+        %tmp.8 = lgetv %total.1;
+        symbol [ total %tmp.8 106 28 33 ];
+        %tmp.9 = lt %tmp.7 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_106_8_106_61_for_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_106_8_106_61_for_begin:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_106_40_106_61_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 106 42 ]
+        symbol [ errors %tmp.10 106 42 48 ];
+        %tmp.10 = getv self :errors;
+        %tmp.11 = false;
+        %tmp.12 = lgetv %i.2;
+        symbol [ i %tmp.12 106 49 50 ];
+        aputv %tmp.10 %tmp.12 %tmp.11;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_106_40_106_61_stop:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_106_8_106_61_for_incr:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 106 ]
+        %tmp.15 = lgetv %i.2;
+        symbol [ i %tmp.15 106 35 36 ];
+        %tmp.16 = add %tmp.15 1;
+        lputv %i.2 %tmp.16;
+        symbol [ i %i.2 106 35 36 ];
+        goto @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_106_8_106_61_for_test;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_106_8_106_61_for_end:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 109 8 ]
+        for @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_109_8_120_8_for_test @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_109_8_120_8_for_incr @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_109_8_120_8_for_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_109_8_120_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_109_8_120_8_for_begin" "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_109_8_120_8_for_end" ]
+        %r.3 = local;
+        symbol [ r %r.3 109 17 18 ];
+        %tmp.17 = 0;
+        lputv %r.3 %tmp.17;
+        symbol [ r %r.3 109 17 18 ];
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_109_8_120_8_for_test:
+        %tmp.18 = lgetv %r.3;
+        symbol [ r %tmp.18 109 24 25 ];
+        symbol [ n %tmp.20 109 28 29 ];
+        %tmp.20 = getv ? :n;
+        %tmp.21 = lt %tmp.18 %tmp.20;
+        bf %tmp.21 @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_109_8_120_8_for_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_109_8_120_8_for_begin:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_109_36_120_8_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 110 12 ]
+        for @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_110_12_119_12_for_test @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_110_12_119_12_for_incr @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_110_12_119_12_for_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_110_12_119_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_110_12_119_12_for_begin" "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_110_12_119_12_for_end" ]
+        %c1.4 = local;
+        symbol [ c1 %c1.4 110 21 23 ];
+        %tmp.22 = 0;
+        lputv %c1.4 %tmp.22;
+        symbol [ c1 %c1.4 110 21 23 ];
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_110_12_119_12_for_test:
+        %tmp.23 = lgetv %c1.4;
+        symbol [ c1 %tmp.23 110 29 31 ];
+        symbol [ n %tmp.25 110 34 35 ];
+        %tmp.25 = getv ? :n;
+        %tmp.26 = lt %tmp.23 %tmp.25;
+        bf %tmp.26 @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_110_12_119_12_for_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_110_12_119_12_for_begin:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_110_43_119_12_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 111 16 ]
+        [ "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_110_43_119_12_start" "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_110_43_119_12_stop" ]
+        %v.5 = local;
+        symbol [ v %v.5 111 20 21 ];
+        symbol [ cells %tmp.28 111 24 29 ];
+        %tmp.28 = getv ? :cells;
+        %tmp.29 = lgetv %r.3;
+        symbol [ r %tmp.29 111 30 31 ];
+        symbol [ n %tmp.31 111 34 35 ];
+        %tmp.31 = getv ? :n;
+        %tmp.32 = mul %tmp.29 %tmp.31;
+        %tmp.33 = lgetv %c1.4;
+        symbol [ c1 %tmp.33 111 38 40 ];
+        %tmp.34 = add %tmp.32 %tmp.33;
+        %tmp.35 = agetv %tmp.28 %tmp.34;
+        lputv %v.5 %tmp.35;
+        symbol [ v %v.5 111 20 21 ];
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 112 16 ]
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_112_16_112_40_if_stmt:
+        %tmp.36 = lgetv %v.5;
+        symbol [ v %tmp.36 112 20 21 ];
+        %tmp.37 = 0;
+        %tmp.38 = eq %tmp.36 %tmp.37;
+        bf %tmp.38 @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_112_16_112_40_if_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_112_16_112_40_if_true:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_112_28_112_40_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 112 30 ]
+        goto break @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_110_12_119_12_for_incr;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_112_28_112_40_stop:
+        goto @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_112_16_112_40_if_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_112_16_112_40_if_end:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 113 16 ]
+        for @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_113_16_118_16_for_test @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_113_16_118_16_for_incr @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_113_16_118_16_for_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_113_16_118_16_for_init:
+        [ "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_113_16_118_16_for_begin" "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_113_16_118_16_for_end" ]
+        %c2.6 = local;
+        symbol [ c2 %c2.6 113 25 27 ];
+        %tmp.39 = lgetv %c1.4;
+        symbol [ c1 %tmp.39 113 30 32 ];
+        %tmp.40 = 1;
+        %tmp.41 = add %tmp.39 %tmp.40;
+        lputv %c2.6 %tmp.41;
+        symbol [ c2 %c2.6 113 25 27 ];
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_113_16_118_16_for_test:
+        %tmp.42 = lgetv %c2.6;
+        symbol [ c2 %tmp.42 113 38 40 ];
+        symbol [ n %tmp.44 113 43 44 ];
+        %tmp.44 = getv ? :n;
+        %tmp.45 = lt %tmp.42 %tmp.44;
+        bf %tmp.45 @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_113_16_118_16_for_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_113_16_118_16_for_begin:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_113_52_118_16_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 114 20 ]
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_114_20_117_20_if_stmt:
+        symbol [ cells %tmp.47 114 24 29 ];
+        %tmp.47 = getv ? :cells;
+        %tmp.48 = lgetv %r.3;
+        symbol [ r %tmp.48 114 30 31 ];
+        symbol [ n %tmp.50 114 34 35 ];
+        %tmp.50 = getv ? :n;
+        %tmp.51 = mul %tmp.48 %tmp.50;
+        %tmp.52 = lgetv %c2.6;
+        symbol [ c2 %tmp.52 114 38 40 ];
+        %tmp.53 = add %tmp.51 %tmp.52;
+        %tmp.54 = agetv %tmp.47 %tmp.53;
+        %tmp.55 = lgetv %v.5;
+        symbol [ v %tmp.55 114 45 46 ];
+        %tmp.56 = eq %tmp.54 %tmp.55;
+        bf %tmp.56 @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_114_20_117_20_if_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_114_20_117_20_if_true:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_114_48_117_20_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 115 24 ]
+        symbol [ errors %tmp.57 115 24 30 ];
+        %tmp.57 = getv self :errors;
+        %tmp.58 = true;
+        %tmp.59 = lgetv %r.3;
+        symbol [ r %tmp.59 115 31 32 ];
+        symbol [ n %tmp.61 115 35 36 ];
+        %tmp.61 = getv ? :n;
+        %tmp.62 = mul %tmp.59 %tmp.61;
+        %tmp.63 = lgetv %c1.4;
+        symbol [ c1 %tmp.63 115 39 41 ];
+        %tmp.64 = add %tmp.62 %tmp.63;
+        aputv %tmp.57 %tmp.64 %tmp.58;
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 116 24 ]
+        symbol [ errors %tmp.65 116 24 30 ];
+        %tmp.65 = getv self :errors;
+        %tmp.66 = true;
+        %tmp.67 = lgetv %r.3;
+        symbol [ r %tmp.67 116 31 32 ];
+        symbol [ n %tmp.69 116 35 36 ];
+        %tmp.69 = getv ? :n;
+        %tmp.70 = mul %tmp.67 %tmp.69;
+        %tmp.71 = lgetv %c2.6;
+        symbol [ c2 %tmp.71 116 39 41 ];
+        %tmp.72 = add %tmp.70 %tmp.71;
+        aputv %tmp.65 %tmp.72 %tmp.66;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_114_48_117_20_stop:
+        goto @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_114_20_117_20_if_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_114_20_117_20_if_end:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_113_52_118_16_stop:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_113_16_118_16_for_incr:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 113 ]
+        %tmp.75 = lgetv %c2.6;
+        symbol [ c2 %tmp.75 113 46 48 ];
+        %tmp.76 = add %tmp.75 1;
+        lputv %c2.6 %tmp.76;
+        symbol [ c2 %c2.6 113 46 48 ];
+        goto @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_113_16_118_16_for_test;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_113_16_118_16_for_end:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_110_43_119_12_stop:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_110_12_119_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 110 ]
+        %tmp.79 = lgetv %c1.4;
+        symbol [ c1 %tmp.79 110 37 39 ];
+        %tmp.80 = add %tmp.79 1;
+        lputv %c1.4 %tmp.80;
+        symbol [ c1 %c1.4 110 37 39 ];
+        goto @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_110_12_119_12_for_test;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_110_12_119_12_for_end:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_109_36_120_8_stop:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_109_8_120_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 109 ]
+        %tmp.83 = lgetv %r.3;
+        symbol [ r %tmp.83 109 31 32 ];
+        %tmp.84 = add %tmp.83 1;
+        lputv %r.3 %tmp.84;
+        symbol [ r %r.3 109 31 32 ];
+        goto @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_109_8_120_8_for_test;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_109_8_120_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 122 8 ]
+        for @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_122_8_133_8_for_test @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_122_8_133_8_for_incr @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_122_8_133_8_for_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_122_8_133_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_122_8_133_8_for_begin" "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_122_8_133_8_for_end" ]
+        %c.7 = local;
+        symbol [ c %c.7 122 17 18 ];
+        %tmp.85 = 0;
+        lputv %c.7 %tmp.85;
+        symbol [ c %c.7 122 17 18 ];
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_122_8_133_8_for_test:
+        %tmp.86 = lgetv %c.7;
+        symbol [ c %tmp.86 122 24 25 ];
+        symbol [ n %tmp.88 122 28 29 ];
+        %tmp.88 = getv ? :n;
+        %tmp.89 = lt %tmp.86 %tmp.88;
+        bf %tmp.89 @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_122_8_133_8_for_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_122_8_133_8_for_begin:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_122_36_133_8_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 123 12 ]
+        for @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_123_12_132_12_for_test @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_123_12_132_12_for_incr @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_123_12_132_12_for_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_123_12_132_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_123_12_132_12_for_begin" "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_123_12_132_12_for_end" ]
+        %r1.8 = local;
+        symbol [ r1 %r1.8 123 21 23 ];
+        %tmp.90 = 0;
+        lputv %r1.8 %tmp.90;
+        symbol [ r1 %r1.8 123 21 23 ];
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_123_12_132_12_for_test:
+        %tmp.91 = lgetv %r1.8;
+        symbol [ r1 %tmp.91 123 29 31 ];
+        symbol [ n %tmp.93 123 34 35 ];
+        %tmp.93 = getv ? :n;
+        %tmp.94 = lt %tmp.91 %tmp.93;
+        bf %tmp.94 @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_123_12_132_12_for_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_123_12_132_12_for_begin:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_123_43_132_12_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 124 16 ]
+        [ "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_123_43_132_12_start" "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_123_43_132_12_stop" ]
+        %v.9 = local;
+        symbol [ v %v.9 124 20 21 ];
+        symbol [ cells %tmp.96 124 24 29 ];
+        %tmp.96 = getv ? :cells;
+        %tmp.97 = lgetv %r1.8;
+        symbol [ r1 %tmp.97 124 30 32 ];
+        symbol [ n %tmp.99 124 35 36 ];
+        %tmp.99 = getv ? :n;
+        %tmp.100 = mul %tmp.97 %tmp.99;
+        %tmp.101 = lgetv %c.7;
+        symbol [ c %tmp.101 124 39 40 ];
+        %tmp.102 = add %tmp.100 %tmp.101;
+        %tmp.103 = agetv %tmp.96 %tmp.102;
+        lputv %v.9 %tmp.103;
+        symbol [ v %v.9 124 20 21 ];
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 125 16 ]
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_125_16_125_40_if_stmt:
+        %tmp.104 = lgetv %v.9;
+        symbol [ v %tmp.104 125 20 21 ];
+        %tmp.105 = 0;
+        %tmp.106 = eq %tmp.104 %tmp.105;
+        bf %tmp.106 @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_125_16_125_40_if_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_125_16_125_40_if_true:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_125_28_125_40_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 125 30 ]
+        goto break @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_123_12_132_12_for_incr;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_125_28_125_40_stop:
+        goto @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_125_16_125_40_if_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_125_16_125_40_if_end:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 126 16 ]
+        for @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_126_16_131_16_for_test @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_126_16_131_16_for_incr @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_126_16_131_16_for_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_126_16_131_16_for_init:
+        [ "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_126_16_131_16_for_begin" "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_126_16_131_16_for_end" ]
+        %r2.10 = local;
+        symbol [ r2 %r2.10 126 25 27 ];
+        %tmp.107 = lgetv %r1.8;
+        symbol [ r1 %tmp.107 126 30 32 ];
+        %tmp.108 = 1;
+        %tmp.109 = add %tmp.107 %tmp.108;
+        lputv %r2.10 %tmp.109;
+        symbol [ r2 %r2.10 126 25 27 ];
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_126_16_131_16_for_test:
+        %tmp.110 = lgetv %r2.10;
+        symbol [ r2 %tmp.110 126 38 40 ];
+        symbol [ n %tmp.112 126 43 44 ];
+        %tmp.112 = getv ? :n;
+        %tmp.113 = lt %tmp.110 %tmp.112;
+        bf %tmp.113 @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_126_16_131_16_for_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_126_16_131_16_for_begin:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_126_52_131_16_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 127 20 ]
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_127_20_130_20_if_stmt:
+        symbol [ cells %tmp.115 127 24 29 ];
+        %tmp.115 = getv ? :cells;
+        %tmp.116 = lgetv %r2.10;
+        symbol [ r2 %tmp.116 127 30 32 ];
+        symbol [ n %tmp.118 127 35 36 ];
+        %tmp.118 = getv ? :n;
+        %tmp.119 = mul %tmp.116 %tmp.118;
+        %tmp.120 = lgetv %c.7;
+        symbol [ c %tmp.120 127 39 40 ];
+        %tmp.121 = add %tmp.119 %tmp.120;
+        %tmp.122 = agetv %tmp.115 %tmp.121;
+        %tmp.123 = lgetv %v.9;
+        symbol [ v %tmp.123 127 45 46 ];
+        %tmp.124 = eq %tmp.122 %tmp.123;
+        bf %tmp.124 @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_127_20_130_20_if_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_127_20_130_20_if_true:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_127_48_130_20_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 128 24 ]
+        symbol [ errors %tmp.125 128 24 30 ];
+        %tmp.125 = getv self :errors;
+        %tmp.126 = true;
+        %tmp.127 = lgetv %r1.8;
+        symbol [ r1 %tmp.127 128 31 33 ];
+        symbol [ n %tmp.129 128 36 37 ];
+        %tmp.129 = getv ? :n;
+        %tmp.130 = mul %tmp.127 %tmp.129;
+        %tmp.131 = lgetv %c.7;
+        symbol [ c %tmp.131 128 40 41 ];
+        %tmp.132 = add %tmp.130 %tmp.131;
+        aputv %tmp.125 %tmp.132 %tmp.126;
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 129 24 ]
+        symbol [ errors %tmp.133 129 24 30 ];
+        %tmp.133 = getv self :errors;
+        %tmp.134 = true;
+        %tmp.135 = lgetv %r2.10;
+        symbol [ r2 %tmp.135 129 31 33 ];
+        symbol [ n %tmp.137 129 36 37 ];
+        %tmp.137 = getv ? :n;
+        %tmp.138 = mul %tmp.135 %tmp.137;
+        %tmp.139 = lgetv %c.7;
+        symbol [ c %tmp.139 129 40 41 ];
+        %tmp.140 = add %tmp.138 %tmp.139;
+        aputv %tmp.133 %tmp.140 %tmp.134;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_127_48_130_20_stop:
+        goto @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_127_20_130_20_if_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_127_20_130_20_if_end:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_126_52_131_16_stop:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_126_16_131_16_for_incr:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 126 ]
+        %tmp.143 = lgetv %r2.10;
+        symbol [ r2 %tmp.143 126 46 48 ];
+        %tmp.144 = add %tmp.143 1;
+        lputv %r2.10 %tmp.144;
+        symbol [ r2 %r2.10 126 46 48 ];
+        goto @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_126_16_131_16_for_test;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_126_16_131_16_for_end:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_123_43_132_12_stop:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_123_12_132_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 123 ]
+        %tmp.147 = lgetv %r1.8;
+        symbol [ r1 %tmp.147 123 37 39 ];
+        %tmp.148 = add %tmp.147 1;
+        lputv %r1.8 %tmp.148;
+        symbol [ r1 %r1.8 123 37 39 ];
+        goto @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_123_12_132_12_for_test;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_123_12_132_12_for_end:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_122_36_133_8_stop:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_122_8_133_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 122 ]
+        %tmp.151 = lgetv %c.7;
+        symbol [ c %tmp.151 122 31 32 ];
+        %tmp.152 = add %tmp.151 1;
+        lputv %c.7 %tmp.152;
+        symbol [ c %c.7 122 31 32 ];
+        goto @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_122_8_133_8_for_test;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_122_8_133_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 135 8 ]
+        for @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_135_8_153_8_for_test @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_135_8_153_8_for_incr @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_135_8_153_8_for_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_135_8_153_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_135_8_153_8_for_begin" "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_135_8_153_8_for_end" ]
+        %br.11 = local;
+        symbol [ br %br.11 135 17 19 ];
+        %tmp.153 = 0;
+        lputv %br.11 %tmp.153;
+        symbol [ br %br.11 135 17 19 ];
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_135_8_153_8_for_test:
+        %tmp.154 = lgetv %br.11;
+        symbol [ br %tmp.154 135 25 27 ];
+        symbol [ n %tmp.156 135 30 31 ];
+        %tmp.156 = getv ? :n;
+        %tmp.157 = lt %tmp.154 %tmp.156;
+        bf %tmp.157 @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_135_8_153_8_for_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_135_8_153_8_for_begin:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_135_44_153_8_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 136 12 ]
+        for @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_136_12_152_12_for_test @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_136_12_152_12_for_incr @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_136_12_152_12_for_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_136_12_152_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_136_12_152_12_for_begin" "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_136_12_152_12_for_end" ]
+        %bc.12 = local;
+        symbol [ bc %bc.12 136 21 23 ];
+        %tmp.158 = 0;
+        lputv %bc.12 %tmp.158;
+        symbol [ bc %bc.12 136 21 23 ];
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_136_12_152_12_for_test:
+        %tmp.159 = lgetv %bc.12;
+        symbol [ bc %tmp.159 136 29 31 ];
+        symbol [ n %tmp.161 136 34 35 ];
+        %tmp.161 = getv ? :n;
+        %tmp.162 = lt %tmp.159 %tmp.161;
+        bf %tmp.162 @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_136_12_152_12_for_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_136_12_152_12_for_begin:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_136_48_152_12_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 138 16 ]
+        for @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_138_16_151_16_for_test @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_138_16_151_16_for_incr @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_138_16_151_16_for_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_138_16_151_16_for_init:
+        [ "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_138_16_151_16_for_begin" "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_138_16_151_16_for_end" ]
+        %i1.13 = local;
+        symbol [ i1 %i1.13 138 25 27 ];
+        %tmp.163 = 0;
+        lputv %i1.13 %tmp.163;
+        symbol [ i1 %i1.13 138 25 27 ];
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_138_16_151_16_for_test:
+        %tmp.164 = lgetv %i1.13;
+        symbol [ i1 %tmp.164 138 33 35 ];
+        symbol [ box %tmp.166 138 38 41 ];
+        %tmp.166 = getv ? :box;
+        symbol [ box %tmp.168 138 44 47 ];
+        %tmp.168 = getv ? :box;
+        %tmp.169 = mul %tmp.166 %tmp.168;
+        %tmp.170 = lt %tmp.164 %tmp.169;
+        bf %tmp.170 @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_138_16_151_16_for_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_138_16_151_16_for_begin:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_138_55_151_16_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 139 20 ]
+        [ "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_138_55_151_16_start" "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_138_55_151_16_stop" ]
+        %r1.14 = local;
+        symbol [ r1 %r1.14 139 24 26 ];
+        %tmp.171 = lgetv %br.11;
+        symbol [ br %tmp.171 139 29 31 ];
+        %tmp.172 = lgetv %i1.13;
+        symbol [ i1 %tmp.172 139 35 37 ];
+        symbol [ box %tmp.174 139 40 43 ];
+        %tmp.174 = getv ? :box;
+        %tmp.175 = div %tmp.172 %tmp.174;
+        %tmp.176 = add %tmp.171 %tmp.175;
+        lputv %r1.14 %tmp.176;
+        symbol [ r1 %r1.14 139 24 26 ];
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 140 20 ]
+        [ "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_138_55_151_16_start" "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_138_55_151_16_stop" ]
+        %c1.15 = local;
+        symbol [ c1 %c1.15 140 24 26 ];
+        %tmp.177 = lgetv %bc.12;
+        symbol [ bc %tmp.177 140 29 31 ];
+        %tmp.178 = lgetv %i1.13;
+        symbol [ i1 %tmp.178 140 35 37 ];
+        symbol [ box %tmp.180 140 40 43 ];
+        %tmp.180 = getv ? :box;
+        %tmp.181 = mod %tmp.178 %tmp.180;
+        %tmp.182 = add %tmp.177 %tmp.181;
+        lputv %c1.15 %tmp.182;
+        symbol [ c1 %c1.15 140 24 26 ];
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 141 20 ]
+        [ "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_138_55_151_16_start" "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_138_55_151_16_stop" ]
+        %v.16 = local;
+        symbol [ v %v.16 141 24 25 ];
+        symbol [ cells %tmp.184 141 28 33 ];
+        %tmp.184 = getv ? :cells;
+        %tmp.185 = lgetv %r1.14;
+        symbol [ r1 %tmp.185 141 34 36 ];
+        symbol [ n %tmp.187 141 39 40 ];
+        %tmp.187 = getv ? :n;
+        %tmp.188 = mul %tmp.185 %tmp.187;
+        %tmp.189 = lgetv %c1.15;
+        symbol [ c1 %tmp.189 141 43 45 ];
+        %tmp.190 = add %tmp.188 %tmp.189;
+        %tmp.191 = agetv %tmp.184 %tmp.190;
+        lputv %v.16 %tmp.191;
+        symbol [ v %v.16 141 24 25 ];
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 142 20 ]
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_142_20_142_44_if_stmt:
+        %tmp.192 = lgetv %v.16;
+        symbol [ v %tmp.192 142 24 25 ];
+        %tmp.193 = 0;
+        %tmp.194 = eq %tmp.192 %tmp.193;
+        bf %tmp.194 @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_142_20_142_44_if_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_142_20_142_44_if_true:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_142_32_142_44_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 142 34 ]
+        goto break @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_138_16_151_16_for_incr;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_142_32_142_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_142_20_142_44_if_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_142_20_142_44_if_end:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 143 20 ]
+        for @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_143_20_150_20_for_test @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_143_20_150_20_for_incr @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_143_20_150_20_for_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_143_20_150_20_for_init:
+        [ "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_143_20_150_20_for_begin" "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_143_20_150_20_for_end" ]
+        %i2.17 = local;
+        symbol [ i2 %i2.17 143 29 31 ];
+        %tmp.195 = lgetv %i1.13;
+        symbol [ i1 %tmp.195 143 34 36 ];
+        %tmp.196 = 1;
+        %tmp.197 = add %tmp.195 %tmp.196;
+        lputv %i2.17 %tmp.197;
+        symbol [ i2 %i2.17 143 29 31 ];
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_143_20_150_20_for_test:
+        %tmp.198 = lgetv %i2.17;
+        symbol [ i2 %tmp.198 143 42 44 ];
+        symbol [ box %tmp.200 143 47 50 ];
+        %tmp.200 = getv ? :box;
+        symbol [ box %tmp.202 143 53 56 ];
+        %tmp.202 = getv ? :box;
+        %tmp.203 = mul %tmp.200 %tmp.202;
+        %tmp.204 = lt %tmp.198 %tmp.203;
+        bf %tmp.204 @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_143_20_150_20_for_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_143_20_150_20_for_begin:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_143_64_150_20_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 144 24 ]
+        [ "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_143_64_150_20_start" "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_143_64_150_20_stop" ]
+        %r2.18 = local;
+        symbol [ r2 %r2.18 144 28 30 ];
+        %tmp.205 = lgetv %br.11;
+        symbol [ br %tmp.205 144 33 35 ];
+        %tmp.206 = lgetv %i2.17;
+        symbol [ i2 %tmp.206 144 39 41 ];
+        symbol [ box %tmp.208 144 44 47 ];
+        %tmp.208 = getv ? :box;
+        %tmp.209 = div %tmp.206 %tmp.208;
+        %tmp.210 = add %tmp.205 %tmp.209;
+        lputv %r2.18 %tmp.210;
+        symbol [ r2 %r2.18 144 28 30 ];
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 145 24 ]
+        [ "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_143_64_150_20_start" "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_143_64_150_20_stop" ]
+        %c2.19 = local;
+        symbol [ c2 %c2.19 145 28 30 ];
+        %tmp.211 = lgetv %bc.12;
+        symbol [ bc %tmp.211 145 33 35 ];
+        %tmp.212 = lgetv %i2.17;
+        symbol [ i2 %tmp.212 145 39 41 ];
+        symbol [ box %tmp.214 145 44 47 ];
+        %tmp.214 = getv ? :box;
+        %tmp.215 = mod %tmp.212 %tmp.214;
+        %tmp.216 = add %tmp.211 %tmp.215;
+        lputv %c2.19 %tmp.216;
+        symbol [ c2 %c2.19 145 28 30 ];
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 146 24 ]
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_146_24_149_24_if_stmt:
+        symbol [ cells %tmp.218 146 28 33 ];
+        %tmp.218 = getv ? :cells;
+        %tmp.219 = lgetv %r2.18;
+        symbol [ r2 %tmp.219 146 34 36 ];
+        symbol [ n %tmp.221 146 39 40 ];
+        %tmp.221 = getv ? :n;
+        %tmp.222 = mul %tmp.219 %tmp.221;
+        %tmp.223 = lgetv %c2.19;
+        symbol [ c2 %tmp.223 146 43 45 ];
+        %tmp.224 = add %tmp.222 %tmp.223;
+        %tmp.225 = agetv %tmp.218 %tmp.224;
+        %tmp.226 = lgetv %v.16;
+        symbol [ v %tmp.226 146 50 51 ];
+        %tmp.227 = eq %tmp.225 %tmp.226;
+        bf %tmp.227 @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_146_24_149_24_if_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_146_24_149_24_if_true:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_146_53_149_24_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 147 28 ]
+        symbol [ errors %tmp.228 147 28 34 ];
+        %tmp.228 = getv self :errors;
+        %tmp.229 = true;
+        %tmp.230 = lgetv %r1.14;
+        symbol [ r1 %tmp.230 147 35 37 ];
+        symbol [ n %tmp.232 147 40 41 ];
+        %tmp.232 = getv ? :n;
+        %tmp.233 = mul %tmp.230 %tmp.232;
+        %tmp.234 = lgetv %c1.15;
+        symbol [ c1 %tmp.234 147 44 46 ];
+        %tmp.235 = add %tmp.233 %tmp.234;
+        aputv %tmp.228 %tmp.235 %tmp.229;
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 148 28 ]
+        symbol [ errors %tmp.236 148 28 34 ];
+        %tmp.236 = getv self :errors;
+        %tmp.237 = true;
+        %tmp.238 = lgetv %r2.18;
+        symbol [ r2 %tmp.238 148 35 37 ];
+        symbol [ n %tmp.240 148 40 41 ];
+        %tmp.240 = getv ? :n;
+        %tmp.241 = mul %tmp.238 %tmp.240;
+        %tmp.242 = lgetv %c2.19;
+        symbol [ c2 %tmp.242 148 44 46 ];
+        %tmp.243 = add %tmp.241 %tmp.242;
+        aputv %tmp.236 %tmp.243 %tmp.237;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_146_53_149_24_stop:
+        goto @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_146_24_149_24_if_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_146_24_149_24_if_end:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_143_64_150_20_stop:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_143_20_150_20_for_incr:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 143 ]
+        %tmp.246 = lgetv %i2.17;
+        symbol [ i2 %tmp.246 143 58 60 ];
+        %tmp.247 = add %tmp.246 1;
+        lputv %i2.17 %tmp.247;
+        symbol [ i2 %i2.17 143 58 60 ];
+        goto @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_143_20_150_20_for_test;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_143_20_150_20_for_end:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_138_55_151_16_stop:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_138_16_151_16_for_incr:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 138 ]
+        %tmp.250 = lgetv %i1.13;
+        symbol [ i1 %tmp.250 138 49 51 ];
+        %tmp.251 = add %tmp.250 1;
+        lputv %i1.13 %tmp.251;
+        symbol [ i1 %i1.13 138 49 51 ];
+        goto @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_138_16_151_16_for_test;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_138_16_151_16_for_end:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_136_48_152_12_stop:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_136_12_152_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 136 ]
+        %tmp.252 = lgetv %bc.12;
+        symbol [ bc %tmp.252 136 37 39 ];
+        symbol [ box %tmp.254 136 43 46 ];
+        %tmp.254 = getv ? :box;
+        %tmp.255 = add %tmp.252 %tmp.254;
+        lputv %bc.12 %tmp.255;
+        symbol [ bc %bc.12 136 37 39 ];
+        goto @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_136_12_152_12_for_test;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_136_12_152_12_for_end:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_135_44_153_8_stop:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_135_8_153_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 135 ]
+        %tmp.256 = lgetv %br.11;
+        symbol [ br %tmp.256 135 33 35 ];
+        symbol [ box %tmp.258 135 39 42 ];
+        %tmp.258 = getv ? :box;
+        %tmp.259 = add %tmp.256 %tmp.258;
+        lputv %br.11 %tmp.259;
+        symbol [ br %br.11 135 33 35 ];
+        goto @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_135_8_153_8_for_test;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_135_8_153_8_for_end:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_104_31_154_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc"; @line = 157; @symbol_functiondef = [emptyCount,157,13,23]; ]
+    function emptyCount() {
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_157_26_162_4_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 158 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_157_26_162_4_start" "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_157_26_162_4_stop" ]
+        %total.1 = local;
+        symbol [ total %total.1 158 12 17 ];
+        symbol [ n %tmp.2 158 20 21 ];
+        %tmp.2 = getv ? :n;
+        symbol [ n %tmp.4 158 24 25 ];
+        %tmp.4 = getv ? :n;
+        %tmp.5 = mul %tmp.2 %tmp.4;
+        lputv %total.1 %tmp.5;
+        symbol [ total %total.1 158 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 159 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_157_26_162_4_start" "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_157_26_162_4_stop" ]
+        %k.2 = local;
+        symbol [ k %k.2 159 12 13 ];
+        %tmp.6 = 0;
+        lputv %k.2 %tmp.6;
+        symbol [ k %k.2 159 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 160 8 ]
+        for @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_160_8_160_76_for_test @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_160_8_160_76_for_incr @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_160_8_160_76_for_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_160_8_160_76_for_init:
+        [ "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_160_8_160_76_for_begin" "_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_160_8_160_76_for_end" ]
+        %i.3 = local;
+        symbol [ i %i.3 160 17 18 ];
+        %tmp.7 = 0;
+        lputv %i.3 %tmp.7;
+        symbol [ i %i.3 160 17 18 ];
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_160_8_160_76_for_test:
+        %tmp.8 = lgetv %i.3;
+        symbol [ i %tmp.8 160 24 25 ];
+        %tmp.9 = lgetv %total.1;
+        symbol [ total %tmp.9 160 28 33 ];
+        %tmp.10 = lt %tmp.8 %tmp.9;
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_160_8_160_76_for_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_160_8_160_76_for_begin:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_160_40_160_76_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 160 42 ]
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_160_42_160_74_if_stmt:
+        symbol [ cells %tmp.12 160 46 51 ];
+        %tmp.12 = getv ? :cells;
+        %tmp.13 = lgetv %i.3;
+        symbol [ i %tmp.13 160 52 53 ];
+        %tmp.14 = agetv %tmp.12 %tmp.13;
+        %tmp.15 = 0;
+        %tmp.16 = eq %tmp.14 %tmp.15;
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_160_42_160_74_if_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_160_42_160_74_if_true:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_160_61_160_74_start:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 160 63 ]
+        %tmp.17 = lgetv %k.2;
+        symbol [ k %tmp.17 160 67 68 ];
+        %tmp.18 = 1;
+        %tmp.19 = add %tmp.17 %tmp.18;
+        lputv %k.2 %tmp.19;
+        symbol [ k %k.2 160 63 64 ];
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_160_61_160_74_stop:
+        goto @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_160_42_160_74_if_end;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_160_42_160_74_if_end:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_160_40_160_76_stop:
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_160_8_160_76_for_incr:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 160 ]
+        %tmp.22 = lgetv %i.3;
+        symbol [ i %tmp.22 160 35 36 ];
+        %tmp.23 = add %tmp.22 1;
+        lputv %i.3 %tmp.23;
+        symbol [ i %i.3 160 35 36 ];
+        goto @_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_160_8_160_76_for_test;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_160_8_160_76_for_end:
+[ "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc" 161 8 ]
+        %tmp.24 = lgetv %k.2;
+        symbol [ k %tmp.24 161 15 16 ];
+        ret %tmp.24;
+_Users_kkorolczuk_work_garmin_sudoku_source_SudokuGrid_mc_157_26_162_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/sudoku/source/SudokuGrid.mc"; @line = 18; ]
+<init> {
+}

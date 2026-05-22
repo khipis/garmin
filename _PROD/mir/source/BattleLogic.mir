@@ -1,0 +1,828 @@
+[ @file = "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc"; @line = 20; @symbol_usingdef<0> = [Toybox,20,6,12]; @symbol_usingdef<1> = [Math,20,13,17]; ]
+using Toybox.Math;
+[ @file = "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc"; @line = 22; @symbol_classdef = [ShotResult,22,6,16]; ]
+class ShotResult {
+    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc"; @line = 22; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc"; @line = 22; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc"; @line = 23; @position = 8; @symbol_vardef = [hit,23,8,11]; ]
+    var hit;
+    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc"; @line = 24; @position = 8; @symbol_vardef = [sunkId,24,8,14]; ]
+    var sunkId;
+    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc"; @line = 25; @position = 8; @symbol_vardef = [alreadyShot,25,8,19]; ]
+    var alreadyShot;
+    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc"; @line = 26; @symbol_functiondef = [initialize,26,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_26_26_30_4_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 27 8 ]
+        %tmp.1 = false;
+        symbol [ hit ? 27 8 11 ];
+        putv self :hit %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 28 8 ]
+        %tmp.2 = -1;
+        symbol [ sunkId ? 28 8 14 ];
+        putv self :sunkId %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 29 8 ]
+        %tmp.3 = false;
+        symbol [ alreadyShot ? 29 8 19 ];
+        putv self :alreadyShot %tmp.3;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_26_26_30_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc"; @line = 33; @symbol_classdef = [BattleLogic,33,6,17]; ]
+class BattleLogic {
+    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc"; @line = 33; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc"; @line = 33; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc"; @line = 43; @symbol_functiondef = [fire,43,20,24]; @symbol_param<0> = [grid,43,25,29]; @symbol_param<1> = [ships,43,31,36]; @symbol_param<2> = [r,43,38,39]; @symbol_param<3> = [c,43,41,42]; ]
+    static
+    function fire(grid, ships, r, c) {
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_43_44_59_4_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 44 8 ]
+        [ "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_43_44_59_4_start" "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_43_44_59_4_stop" ]
+        %res.1 = local;
+        symbol [ res %res.1 44 12 15 ];
+        symbol [ ShotResult %tmp.4 44 22 32 ];
+        %tmp.4 = getv ? :ShotResult;
+        %tmp.1 = newc %tmp.4 ();
+        lputv %res.1 %tmp.1;
+        symbol [ res %res.1 44 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 45 8 ]
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_45_8_48_8_if_stmt:
+        %tmp.5 = lgetv %grid;
+        symbol [ grid %tmp.5 45 12 16 ];
+        symbol [ isShot %tmp.6 45 17 23 ];
+        %tmp.6 = getv function %tmp.5 :isShot;
+        %tmp.7 = lgetv %r;
+        symbol [ r %tmp.7 45 24 25 ];
+        %tmp.8 = lgetv %c;
+        symbol [ c %tmp.8 45 27 28 ];
+        %tmp.9 = invoke %tmp.5 %tmp.6(%tmp.7, %tmp.8);
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_45_8_48_8_if_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_45_8_48_8_if_true:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_45_31_48_8_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 46 12 ]
+        %tmp.10 = lgetv %res.1;
+        symbol [ res %tmp.10 46 12 15 ];
+        %tmp.11 = true;
+        symbol [ alreadyShot ? 46 16 27 ];
+        putv %tmp.10 :alreadyShot %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 47 12 ]
+        %tmp.12 = lgetv %res.1;
+        symbol [ res %tmp.12 47 19 22 ];
+        ret %tmp.12;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_45_31_48_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_45_8_48_8_if_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_45_8_48_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 49 8 ]
+        %tmp.13 = lgetv %grid;
+        symbol [ grid %tmp.13 49 8 12 ];
+        symbol [ markShot %tmp.14 49 13 21 ];
+        %tmp.14 = getv function %tmp.13 :markShot;
+        %tmp.15 = lgetv %r;
+        symbol [ r %tmp.15 49 22 23 ];
+        %tmp.16 = lgetv %c;
+        symbol [ c %tmp.16 49 25 26 ];
+        invoke %tmp.13 %tmp.14(%tmp.15, %tmp.16);
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 50 8 ]
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_50_8_57_8_if_stmt:
+        %tmp.17 = lgetv %grid;
+        symbol [ grid %tmp.17 50 12 16 ];
+        symbol [ hasShip %tmp.18 50 17 24 ];
+        %tmp.18 = getv function %tmp.17 :hasShip;
+        %tmp.19 = lgetv %r;
+        symbol [ r %tmp.19 50 25 26 ];
+        %tmp.20 = lgetv %c;
+        symbol [ c %tmp.20 50 28 29 ];
+        %tmp.21 = invoke %tmp.17 %tmp.18(%tmp.19, %tmp.20);
+        bf %tmp.21 @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_50_8_57_8_if_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_50_8_57_8_if_true:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_50_32_57_8_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 51 12 ]
+        %tmp.22 = lgetv %res.1;
+        symbol [ res %tmp.22 51 12 15 ];
+        %tmp.23 = true;
+        symbol [ hit ? 51 16 19 ];
+        putv %tmp.22 :hit %tmp.23;
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 52 12 ]
+        [ "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_50_32_57_8_start" "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_50_32_57_8_stop" ]
+        %sid.2 = local;
+        symbol [ sid %sid.2 52 16 19 ];
+        %tmp.24 = lgetv %grid;
+        symbol [ grid %tmp.24 52 22 26 ];
+        symbol [ getShipId %tmp.25 52 27 36 ];
+        %tmp.25 = getv function %tmp.24 :getShipId;
+        %tmp.26 = lgetv %r;
+        symbol [ r %tmp.26 52 37 38 ];
+        %tmp.27 = lgetv %c;
+        symbol [ c %tmp.27 52 40 41 ];
+        %tmp.28 = invoke %tmp.24 %tmp.25(%tmp.26, %tmp.27);
+        lputv %sid.2 %tmp.28;
+        symbol [ sid %sid.2 52 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 53 12 ]
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_53_12_56_12_if_stmt:
+        %tmp.29 = lgetv %ships;
+        symbol [ ships %tmp.29 53 16 21 ];
+        symbol [ applyHit %tmp.30 53 22 30 ];
+        %tmp.30 = getv function %tmp.29 :applyHit;
+        %tmp.31 = lgetv %sid.2;
+        symbol [ sid %tmp.31 53 31 34 ];
+        %tmp.32 = invoke %tmp.29 %tmp.30(%tmp.31);
+        bf %tmp.32 @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_53_12_56_12_if_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_53_12_56_12_if_true:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_53_37_56_12_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 54 16 ]
+        %tmp.33 = lgetv %res.1;
+        symbol [ res %tmp.33 54 16 19 ];
+        %tmp.34 = lgetv %sid.2;
+        symbol [ sid %tmp.34 54 29 32 ];
+        symbol [ sunkId ? 54 20 26 ];
+        putv %tmp.33 :sunkId %tmp.34;
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 55 16 ]
+        %tmp.35 = self;
+        symbol [ _markShipHalo %tmp.36 55 16 29 ];
+        %tmp.36 = getv function %tmp.35 :_markShipHalo;
+        %tmp.37 = lgetv %grid;
+        symbol [ grid %tmp.37 55 30 34 ];
+        %tmp.38 = lgetv %sid.2;
+        symbol [ sid %tmp.38 55 36 39 ];
+        invoke %tmp.35 %tmp.36(%tmp.37, %tmp.38);
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_53_37_56_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_53_12_56_12_if_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_53_12_56_12_if_end:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_50_32_57_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_50_8_57_8_if_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_50_8_57_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 58 8 ]
+        %tmp.39 = lgetv %res.1;
+        symbol [ res %tmp.39 58 15 18 ];
+        ret %tmp.39;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_43_44_59_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc"; @line = 64; @symbol_functiondef = [autoPlace,64,20,29]; @symbol_param<0> = [grid,64,30,34]; @symbol_param<1> = [ships,64,36,41]; ]
+    static
+    function autoPlace(grid, ships) {
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_64_43_73_4_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 65 8 ]
+        %tmp.1 = lgetv %grid;
+        symbol [ grid %tmp.1 65 8 12 ];
+        symbol [ clear %tmp.2 65 13 18 ];
+        %tmp.2 = getv function %tmp.1 :clear;
+        invoke %tmp.1 %tmp.2();
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 66 8 ]
+        %tmp.3 = lgetv %ships;
+        symbol [ ships %tmp.3 66 8 13 ];
+        symbol [ reset %tmp.4 66 14 19 ];
+        %tmp.4 = getv function %tmp.3 :reset;
+        invoke %tmp.3 %tmp.4();
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 67 8 ]
+        for @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_67_8_72_8_for_test @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_67_8_72_8_for_incr @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_67_8_72_8_for_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_67_8_72_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_67_8_72_8_for_begin" "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_67_8_72_8_for_end" ]
+        %id.1 = local;
+        symbol [ id %id.1 67 17 19 ];
+        %tmp.5 = 0;
+        lputv %id.1 %tmp.5;
+        symbol [ id %id.1 67 17 19 ];
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_67_8_72_8_for_test:
+        %tmp.6 = lgetv %id.1;
+        symbol [ id %tmp.6 67 25 27 ];
+        symbol [ NUM_SHIPS %tmp.8 67 30 39 ];
+        %tmp.8 = getv ? :NUM_SHIPS;
+        %tmp.9 = lt %tmp.6 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_67_8_72_8_for_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_67_8_72_8_for_begin:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_67_47_72_8_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 68 12 ]
+        [ "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_67_47_72_8_start" "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_67_47_72_8_stop" ]
+        %len.2 = local;
+        symbol [ len %len.2 68 16 19 ];
+        symbol [ SHIP_LENS %tmp.11 68 22 31 ];
+        %tmp.11 = getv ? :SHIP_LENS;
+        %tmp.12 = lgetv %id.1;
+        symbol [ id %tmp.12 68 32 34 ];
+        %tmp.13 = agetv %tmp.11 %tmp.12;
+        lputv %len.2 %tmp.13;
+        symbol [ len %len.2 68 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 69 12 ]
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_69_12_71_12_if_stmt:
+        %tmp.14 = self;
+        symbol [ _tryRandomPlace %tmp.15 69 17 32 ];
+        %tmp.15 = getv function %tmp.14 :_tryRandomPlace;
+        %tmp.16 = lgetv %grid;
+        symbol [ grid %tmp.16 69 33 37 ];
+        %tmp.17 = lgetv %id.1;
+        symbol [ id %tmp.17 69 39 41 ];
+        %tmp.18 = lgetv %len.2;
+        symbol [ len %tmp.18 69 43 46 ];
+        %tmp.19 = 600;
+        %tmp.20 = invoke %tmp.14 %tmp.15(%tmp.16, %tmp.17, %tmp.18, %tmp.19);
+        %tmp.21 = not %tmp.20;
+        bf %tmp.21 @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_69_12_71_12_if_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_69_12_71_12_if_true:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_69_54_71_12_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 70 16 ]
+        %tmp.22 = self;
+        symbol [ _deterministicPlace %tmp.23 70 16 35 ];
+        %tmp.23 = getv function %tmp.22 :_deterministicPlace;
+        %tmp.24 = lgetv %grid;
+        symbol [ grid %tmp.24 70 36 40 ];
+        %tmp.25 = lgetv %id.1;
+        symbol [ id %tmp.25 70 42 44 ];
+        %tmp.26 = lgetv %len.2;
+        symbol [ len %tmp.26 70 46 49 ];
+        invoke %tmp.22 %tmp.23(%tmp.24, %tmp.25, %tmp.26);
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_69_54_71_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_69_12_71_12_if_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_69_12_71_12_if_end:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_67_47_72_8_stop:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_67_8_72_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 67 ]
+        %tmp.29 = lgetv %id.1;
+        symbol [ id %tmp.29 67 41 43 ];
+        %tmp.30 = add %tmp.29 1;
+        lputv %id.1 %tmp.30;
+        symbol [ id %id.1 67 41 43 ];
+        goto @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_67_8_72_8_for_test;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_67_8_72_8_for_end:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_64_43_73_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc"; @line = 79; @symbol_functiondef = [_markShipHalo,79,27,40]; @symbol_param<0> = [grid,79,41,45]; @symbol_param<1> = [sid,79,47,50]; ]
+    protected static
+    function _markShipHalo(grid, sid) {
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_79_52_95_4_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 80 8 ]
+        [ "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_79_52_95_4_start" "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_79_52_95_4_stop" ]
+        %cells.1 = local;
+        symbol [ cells %cells.1 80 12 17 ];
+        %tmp.1 = lgetv %grid;
+        symbol [ grid %tmp.1 80 20 24 ];
+        symbol [ cellsForShip %tmp.2 80 25 37 ];
+        %tmp.2 = getv function %tmp.1 :cellsForShip;
+        %tmp.3 = lgetv %sid;
+        symbol [ sid %tmp.3 80 38 41 ];
+        %tmp.4 = invoke %tmp.1 %tmp.2(%tmp.3);
+        lputv %cells.1 %tmp.4;
+        symbol [ cells %cells.1 80 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 81 8 ]
+        for @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_81_8_94_8_for_test @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_81_8_94_8_for_incr @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_81_8_94_8_for_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_81_8_94_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_81_8_94_8_for_begin" "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_81_8_94_8_for_end" ]
+        %i.2 = local;
+        symbol [ i %i.2 81 17 18 ];
+        %tmp.5 = 0;
+        lputv %i.2 %tmp.5;
+        symbol [ i %i.2 81 17 18 ];
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_81_8_94_8_for_test:
+        %tmp.6 = lgetv %i.2;
+        symbol [ i %tmp.6 81 24 25 ];
+        %tmp.7 = lgetv %cells.1;
+        symbol [ cells %tmp.7 81 28 33 ];
+        symbol [ size %tmp.8 81 34 38 ];
+        %tmp.8 = getv function %tmp.7 :size;
+        %tmp.9 = invoke %tmp.7 %tmp.8();
+        %tmp.10 = lt %tmp.6 %tmp.9;
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_81_8_94_8_for_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_81_8_94_8_for_begin:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_81_47_94_8_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 82 12 ]
+        [ "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_81_47_94_8_start" "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_81_47_94_8_stop" ]
+        %rc.3 = local;
+        symbol [ rc %rc.3 82 16 18 ];
+        %tmp.11 = lgetv %cells.1;
+        symbol [ cells %tmp.11 82 21 26 ];
+        %tmp.12 = lgetv %i.2;
+        symbol [ i %tmp.12 82 27 28 ];
+        %tmp.13 = agetv %tmp.11 %tmp.12;
+        lputv %rc.3 %tmp.13;
+        symbol [ rc %rc.3 82 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 83 12 ]
+        for @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_83_12_93_12_for_test @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_83_12_93_12_for_incr @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_83_12_93_12_for_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_83_12_93_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_83_12_93_12_for_begin" "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_83_12_93_12_for_end" ]
+        %dr.4 = local;
+        symbol [ dr %dr.4 83 21 23 ];
+        %tmp.14 = -1;
+        lputv %dr.4 %tmp.14;
+        symbol [ dr %dr.4 83 21 23 ];
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_83_12_93_12_for_test:
+        %tmp.15 = lgetv %dr.4;
+        symbol [ dr %tmp.15 83 30 32 ];
+        %tmp.16 = 1;
+        %tmp.17 = lte %tmp.15 %tmp.16;
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_83_12_93_12_for_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_83_12_93_12_for_begin:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_83_45_93_12_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 84 16 ]
+        for @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_84_16_92_16_for_test @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_84_16_92_16_for_incr @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_84_16_92_16_for_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_84_16_92_16_for_init:
+        [ "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_84_16_92_16_for_begin" "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_84_16_92_16_for_end" ]
+        %dc.5 = local;
+        symbol [ dc %dc.5 84 25 27 ];
+        %tmp.18 = -1;
+        lputv %dc.5 %tmp.18;
+        symbol [ dc %dc.5 84 25 27 ];
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_84_16_92_16_for_test:
+        %tmp.19 = lgetv %dc.5;
+        symbol [ dc %tmp.19 84 34 36 ];
+        %tmp.20 = 1;
+        %tmp.21 = lte %tmp.19 %tmp.20;
+        bf %tmp.21 @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_84_16_92_16_for_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_84_16_92_16_for_begin:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_84_49_92_16_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 85 20 ]
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_85_20_85_56_if_stmt:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_85_24_85_41_begin:
+        %tmp.22 = lgetv %dr.4;
+        symbol [ dr %tmp.22 85 24 26 ];
+        %tmp.23 = 0;
+        %tmp.24 = eq %tmp.22 %tmp.23;
+        bf %tmp.24 @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_85_20_85_56_if_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_85_35_85_41_true:
+        %tmp.25 = lgetv %dc.5;
+        symbol [ dc %tmp.25 85 35 37 ];
+        %tmp.26 = 0;
+        %tmp.27 = eq %tmp.25 %tmp.26;
+        push %tmp.27;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_85_35_85_41_end:
+        %tmp.28 = phi [%tmp.24 @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_85_24_85_41_begin] [%tmp.27 @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_85_35_85_41_true] [%tmp.28 @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_85_35_85_41_end];
+        bf %tmp.28 @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_85_20_85_56_if_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_85_20_85_56_if_true:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_85_44_85_56_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 85 46 ]
+        goto break @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_84_16_92_16_for_incr;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_85_44_85_56_stop:
+        goto @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_85_20_85_56_if_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_85_20_85_56_if_end:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 86 20 ]
+        [ "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_84_49_92_16_start" "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_84_49_92_16_stop" ]
+        %nr.6 = local;
+        symbol [ nr %nr.6 86 24 26 ];
+        %tmp.29 = lgetv %rc.3;
+        symbol [ rc %tmp.29 86 29 31 ];
+        %tmp.30 = 0;
+        %tmp.31 = agetv %tmp.29 %tmp.30;
+        %tmp.32 = lgetv %dr.4;
+        symbol [ dr %tmp.32 86 37 39 ];
+        %tmp.33 = add %tmp.31 %tmp.32;
+        lputv %nr.6 %tmp.33;
+        symbol [ nr %nr.6 86 24 26 ];
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 87 20 ]
+        [ "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_84_49_92_16_start" "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_84_49_92_16_stop" ]
+        %nc.7 = local;
+        symbol [ nc %nc.7 87 24 26 ];
+        %tmp.34 = lgetv %rc.3;
+        symbol [ rc %tmp.34 87 29 31 ];
+        %tmp.35 = 1;
+        %tmp.36 = agetv %tmp.34 %tmp.35;
+        %tmp.37 = lgetv %dc.5;
+        symbol [ dc %tmp.37 87 37 39 ];
+        %tmp.38 = add %tmp.36 %tmp.37;
+        lputv %nc.7 %tmp.38;
+        symbol [ nc %nc.7 87 24 26 ];
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 88 20 ]
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_88_20_88_69_if_stmt:
+        symbol [ GridManager %tmp.40 88 25 36 ];
+        %tmp.40 = getv ? :GridManager;
+        symbol [ inBoundsRC %tmp.41 88 37 47 ];
+        %tmp.41 = getv function %tmp.40 :inBoundsRC;
+        %tmp.42 = lgetv %nr.6;
+        symbol [ nr %tmp.42 88 48 50 ];
+        %tmp.43 = lgetv %nc.7;
+        symbol [ nc %tmp.43 88 52 54 ];
+        %tmp.44 = invoke %tmp.40 %tmp.41(%tmp.42, %tmp.43);
+        %tmp.45 = not %tmp.44;
+        bf %tmp.45 @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_88_20_88_69_if_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_88_20_88_69_if_true:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_88_57_88_69_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 88 59 ]
+        goto break @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_84_16_92_16_for_incr;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_88_57_88_69_stop:
+        goto @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_88_20_88_69_if_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_88_20_88_69_if_end:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 89 20 ]
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_89_20_89_69_if_stmt:
+        %tmp.46 = lgetv %grid;
+        symbol [ grid %tmp.46 89 24 28 ];
+        symbol [ hasShip %tmp.47 89 29 36 ];
+        %tmp.47 = getv function %tmp.46 :hasShip;
+        %tmp.48 = lgetv %nr.6;
+        symbol [ nr %tmp.48 89 37 39 ];
+        %tmp.49 = lgetv %nc.7;
+        symbol [ nc %tmp.49 89 41 43 ];
+        %tmp.50 = invoke %tmp.46 %tmp.47(%tmp.48, %tmp.49);
+        bf %tmp.50 @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_89_20_89_69_if_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_89_20_89_69_if_true:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_89_57_89_69_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 89 59 ]
+        goto break @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_84_16_92_16_for_incr;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_89_57_89_69_stop:
+        goto @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_89_20_89_69_if_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_89_20_89_69_if_end:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 90 20 ]
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_90_20_90_69_if_stmt:
+        %tmp.51 = lgetv %grid;
+        symbol [ grid %tmp.51 90 24 28 ];
+        symbol [ isShot %tmp.52 90 29 35 ];
+        %tmp.52 = getv function %tmp.51 :isShot;
+        %tmp.53 = lgetv %nr.6;
+        symbol [ nr %tmp.53 90 36 38 ];
+        %tmp.54 = lgetv %nc.7;
+        symbol [ nc %tmp.54 90 40 42 ];
+        %tmp.55 = invoke %tmp.51 %tmp.52(%tmp.53, %tmp.54);
+        bf %tmp.55 @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_90_20_90_69_if_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_90_20_90_69_if_true:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_90_57_90_69_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 90 59 ]
+        goto break @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_84_16_92_16_for_incr;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_90_57_90_69_stop:
+        goto @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_90_20_90_69_if_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_90_20_90_69_if_end:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 91 20 ]
+        %tmp.56 = lgetv %grid;
+        symbol [ grid %tmp.56 91 20 24 ];
+        symbol [ markShot %tmp.57 91 25 33 ];
+        %tmp.57 = getv function %tmp.56 :markShot;
+        %tmp.58 = lgetv %nr.6;
+        symbol [ nr %tmp.58 91 34 36 ];
+        %tmp.59 = lgetv %nc.7;
+        symbol [ nc %tmp.59 91 38 40 ];
+        invoke %tmp.56 %tmp.57(%tmp.58, %tmp.59);
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_84_49_92_16_stop:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_84_16_92_16_for_incr:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 84 ]
+        %tmp.62 = lgetv %dc.5;
+        symbol [ dc %tmp.62 84 43 45 ];
+        %tmp.63 = add %tmp.62 1;
+        lputv %dc.5 %tmp.63;
+        symbol [ dc %dc.5 84 43 45 ];
+        goto @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_84_16_92_16_for_test;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_84_16_92_16_for_end:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_83_45_93_12_stop:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_83_12_93_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 83 ]
+        %tmp.66 = lgetv %dr.4;
+        symbol [ dr %tmp.66 83 39 41 ];
+        %tmp.67 = add %tmp.66 1;
+        lputv %dr.4 %tmp.67;
+        symbol [ dr %dr.4 83 39 41 ];
+        goto @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_83_12_93_12_for_test;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_83_12_93_12_for_end:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_81_47_94_8_stop:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_81_8_94_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 81 ]
+        %tmp.70 = lgetv %i.2;
+        symbol [ i %tmp.70 81 42 43 ];
+        %tmp.71 = add %tmp.70 1;
+        lputv %i.2 %tmp.71;
+        symbol [ i %i.2 81 42 43 ];
+        goto @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_81_8_94_8_for_test;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_81_8_94_8_for_end:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_79_52_95_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc"; @line = 98; @symbol_functiondef = [_tryRandomPlace,98,27,42]; @symbol_param<0> = [grid,98,43,47]; @symbol_param<1> = [id,98,49,51]; @symbol_param<2> = [len,98,53,56]; @symbol_param<3> = [attempts,98,58,66]; ]
+    protected static
+    function _tryRandomPlace(grid, id, len, attempts) {
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_98_68_112_4_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 99 8 ]
+        for @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_99_8_110_8_for_test @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_99_8_110_8_for_incr @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_99_8_110_8_for_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_99_8_110_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_99_8_110_8_for_begin" "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_99_8_110_8_for_end" ]
+        %t.1 = local;
+        symbol [ t %t.1 99 17 18 ];
+        %tmp.1 = 0;
+        lputv %t.1 %tmp.1;
+        symbol [ t %t.1 99 17 18 ];
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_99_8_110_8_for_test:
+        %tmp.2 = lgetv %t.1;
+        symbol [ t %tmp.2 99 24 25 ];
+        %tmp.3 = lgetv %attempts;
+        symbol [ attempts %tmp.3 99 28 36 ];
+        %tmp.4 = lt %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_99_8_110_8_for_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_99_8_110_8_for_begin:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_99_43_110_8_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 100 12 ]
+        [ "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_99_43_110_8_start" "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_99_43_110_8_stop" ]
+        %horizontal.2 = local;
+        symbol [ horizontal %horizontal.2 100 16 26 ];
+        symbol [ Math %tmp.5 100 30 34 ];
+        %tmp.5 = getm $.Toybox.Math;
+        symbol [ rand %tmp.6 100 35 39 ];
+        %tmp.6 = getv function %tmp.5 :rand;
+        %tmp.7 = invoke %tmp.5 %tmp.6();
+        %tmp.8 = 2;
+        %tmp.9 = mod %tmp.7 %tmp.8;
+        %tmp.10 = 0;
+        %tmp.11 = eq %tmp.9 %tmp.10;
+        lputv %horizontal.2 %tmp.11;
+        symbol [ horizontal %horizontal.2 100 16 26 ];
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 101 12 ]
+        [ "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_99_43_110_8_start" "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_99_43_110_8_stop" ]
+        %maxR.3 = local;
+        symbol [ maxR %maxR.3 101 16 20 ];
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_101_23_101_68_begin:
+        %tmp.12 = lgetv %horizontal.2;
+        symbol [ horizontal %tmp.12 101 23 33 ];
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_101_23_101_68_else_false;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_101_23_101_68_true:
+        symbol [ GRID_SIZE %tmp.14 101 36 45 ];
+        %tmp.14 = getv ? :GRID_SIZE;
+        push %tmp.14;
+        goto @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_101_23_101_68_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_101_23_101_68_else_false:
+        symbol [ GRID_SIZE %tmp.16 101 49 58 ];
+        %tmp.16 = getv ? :GRID_SIZE;
+        %tmp.17 = lgetv %len;
+        symbol [ len %tmp.17 101 61 64 ];
+        %tmp.18 = sub %tmp.16 %tmp.17;
+        %tmp.19 = 1;
+        %tmp.20 = add %tmp.18 %tmp.19;
+        push %tmp.20;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_101_23_101_68_end:
+        %tmp.21 = phi [%tmp.12 @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_101_23_101_68_begin] [%tmp.14 @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_101_23_101_68_true] [%tmp.20 @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_101_23_101_68_else_false] [%tmp.21 @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_101_23_101_68_end];
+        lputv %maxR.3 %tmp.21;
+        symbol [ maxR %maxR.3 101 16 20 ];
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 102 12 ]
+        [ "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_99_43_110_8_start" "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_99_43_110_8_stop" ]
+        %maxC.4 = local;
+        symbol [ maxC %maxC.4 102 16 20 ];
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_102_23_102_60_begin:
+        %tmp.22 = lgetv %horizontal.2;
+        symbol [ horizontal %tmp.22 102 23 33 ];
+        bf %tmp.22 @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_102_23_102_60_else_false;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_102_23_102_60_true:
+        symbol [ GRID_SIZE %tmp.24 102 37 46 ];
+        %tmp.24 = getv ? :GRID_SIZE;
+        %tmp.25 = lgetv %len;
+        symbol [ len %tmp.25 102 49 52 ];
+        %tmp.26 = sub %tmp.24 %tmp.25;
+        %tmp.27 = 1;
+        %tmp.28 = add %tmp.26 %tmp.27;
+        push %tmp.28;
+        goto @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_102_23_102_60_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_102_23_102_60_else_false:
+        symbol [ GRID_SIZE %tmp.30 102 60 69 ];
+        %tmp.30 = getv ? :GRID_SIZE;
+        push %tmp.30;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_102_23_102_60_end:
+        %tmp.31 = phi [%tmp.22 @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_102_23_102_60_begin] [%tmp.28 @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_102_23_102_60_true] [%tmp.30 @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_102_23_102_60_else_false] [%tmp.31 @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_102_23_102_60_end];
+        lputv %maxC.4 %tmp.31;
+        symbol [ maxC %maxC.4 102 16 20 ];
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 103 12 ]
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_103_12_103_52_if_stmt:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_103_16_103_37_begin:
+        %tmp.32 = lgetv %maxR.3;
+        symbol [ maxR %tmp.32 103 16 20 ];
+        %tmp.33 = 0;
+        %tmp.34 = lte %tmp.32 %tmp.33;
+        bt %tmp.34 @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_103_12_103_52_if_true;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_103_29_103_37_false:
+        %tmp.35 = lgetv %maxC.4;
+        symbol [ maxC %tmp.35 103 29 33 ];
+        %tmp.36 = 0;
+        %tmp.37 = lte %tmp.35 %tmp.36;
+        push %tmp.37;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_103_29_103_37_end:
+        %tmp.38 = phi [%tmp.34 @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_103_16_103_37_begin] [%tmp.37 @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_103_29_103_37_false] [%tmp.38 @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_103_29_103_37_end];
+        bf %tmp.38 @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_103_12_103_52_if_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_103_12_103_52_if_true:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_103_40_103_52_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 103 42 ]
+        goto break @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_99_8_110_8_for_incr;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_103_40_103_52_stop:
+        goto @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_103_12_103_52_if_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_103_12_103_52_if_end:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 104 12 ]
+        [ "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_99_43_110_8_start" "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_99_43_110_8_stop" ]
+        %r.5 = local;
+        symbol [ r %r.5 104 16 17 ];
+        symbol [ Math %tmp.39 104 20 24 ];
+        %tmp.39 = getm $.Toybox.Math;
+        symbol [ rand %tmp.40 104 25 29 ];
+        %tmp.40 = getv function %tmp.39 :rand;
+        %tmp.41 = invoke %tmp.39 %tmp.40();
+        %tmp.42 = lgetv %maxR.3;
+        symbol [ maxR %tmp.42 104 34 38 ];
+        %tmp.43 = mod %tmp.41 %tmp.42;
+        lputv %r.5 %tmp.43;
+        symbol [ r %r.5 104 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 105 12 ]
+        [ "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_99_43_110_8_start" "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_99_43_110_8_stop" ]
+        %c.6 = local;
+        symbol [ c %c.6 105 16 17 ];
+        symbol [ Math %tmp.44 105 20 24 ];
+        %tmp.44 = getm $.Toybox.Math;
+        symbol [ rand %tmp.45 105 25 29 ];
+        %tmp.45 = getv function %tmp.44 :rand;
+        %tmp.46 = invoke %tmp.44 %tmp.45();
+        %tmp.47 = lgetv %maxC.4;
+        symbol [ maxC %tmp.47 105 34 38 ];
+        %tmp.48 = mod %tmp.46 %tmp.47;
+        lputv %c.6 %tmp.48;
+        symbol [ c %c.6 105 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 106 12 ]
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_106_12_109_12_if_stmt:
+        %tmp.49 = lgetv %grid;
+        symbol [ grid %tmp.49 106 16 20 ];
+        symbol [ canPlace %tmp.50 106 21 29 ];
+        %tmp.50 = getv function %tmp.49 :canPlace;
+        %tmp.51 = lgetv %r.5;
+        symbol [ r %tmp.51 106 30 31 ];
+        %tmp.52 = lgetv %c.6;
+        symbol [ c %tmp.52 106 33 34 ];
+        %tmp.53 = lgetv %len;
+        symbol [ len %tmp.53 106 36 39 ];
+        %tmp.54 = lgetv %horizontal.2;
+        symbol [ horizontal %tmp.54 106 41 51 ];
+        %tmp.55 = invoke %tmp.49 %tmp.50(%tmp.51, %tmp.52, %tmp.53, %tmp.54);
+        bf %tmp.55 @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_106_12_109_12_if_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_106_12_109_12_if_true:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_106_54_109_12_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 107 16 ]
+        %tmp.56 = lgetv %grid;
+        symbol [ grid %tmp.56 107 16 20 ];
+        symbol [ placeShip %tmp.57 107 21 30 ];
+        %tmp.57 = getv function %tmp.56 :placeShip;
+        %tmp.58 = lgetv %r.5;
+        symbol [ r %tmp.58 107 31 32 ];
+        %tmp.59 = lgetv %c.6;
+        symbol [ c %tmp.59 107 34 35 ];
+        %tmp.60 = lgetv %len;
+        symbol [ len %tmp.60 107 37 40 ];
+        %tmp.61 = lgetv %horizontal.2;
+        symbol [ horizontal %tmp.61 107 42 52 ];
+        %tmp.62 = lgetv %id;
+        symbol [ id %tmp.62 107 54 56 ];
+        invoke %tmp.56 %tmp.57(%tmp.58, %tmp.59, %tmp.60, %tmp.61, %tmp.62);
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 108 16 ]
+        %tmp.63 = true;
+        ret %tmp.63;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_106_54_109_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_106_12_109_12_if_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_106_12_109_12_if_end:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_99_43_110_8_stop:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_99_8_110_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 99 ]
+        %tmp.66 = lgetv %t.1;
+        symbol [ t %tmp.66 99 38 39 ];
+        %tmp.67 = add %tmp.66 1;
+        lputv %t.1 %tmp.67;
+        symbol [ t %t.1 99 38 39 ];
+        goto @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_99_8_110_8_for_test;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_99_8_110_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 111 8 ]
+        %tmp.68 = false;
+        ret %tmp.68;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_98_68_112_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc"; @line = 114; @symbol_functiondef = [_deterministicPlace,114,27,46]; @symbol_param<0> = [grid,114,47,51]; @symbol_param<1> = [id,114,53,55]; @symbol_param<2> = [len,114,57,60]; ]
+    protected static
+    function _deterministicPlace(grid, id, len) {
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_114_62_126_4_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 115 8 ]
+        for @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_115_8_125_8_for_test @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_115_8_125_8_for_incr @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_115_8_125_8_for_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_115_8_125_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_115_8_125_8_for_begin" "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_115_8_125_8_for_end" ]
+        %orientations.1 = local;
+        symbol [ orientations %orientations.1 115 17 29 ];
+        %tmp.1 = 0;
+        lputv %orientations.1 %tmp.1;
+        symbol [ orientations %orientations.1 115 17 29 ];
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_115_8_125_8_for_test:
+        %tmp.2 = lgetv %orientations.1;
+        symbol [ orientations %tmp.2 115 35 47 ];
+        %tmp.3 = 2;
+        %tmp.4 = lt %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_115_8_125_8_for_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_115_8_125_8_for_begin:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_115_69_125_8_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 116 12 ]
+        [ "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_115_69_125_8_start" "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_115_69_125_8_stop" ]
+        %horizontal.2 = local;
+        symbol [ horizontal %horizontal.2 116 16 26 ];
+        %tmp.5 = lgetv %orientations.1;
+        symbol [ orientations %tmp.5 116 30 42 ];
+        %tmp.6 = 0;
+        %tmp.7 = eq %tmp.5 %tmp.6;
+        lputv %horizontal.2 %tmp.7;
+        symbol [ horizontal %horizontal.2 116 16 26 ];
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 117 12 ]
+        for @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_117_12_124_12_for_test @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_117_12_124_12_for_incr @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_117_12_124_12_for_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_117_12_124_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_117_12_124_12_for_begin" "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_117_12_124_12_for_end" ]
+        %r.3 = local;
+        symbol [ r %r.3 117 21 22 ];
+        %tmp.8 = 0;
+        lputv %r.3 %tmp.8;
+        symbol [ r %r.3 117 21 22 ];
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_117_12_124_12_for_test:
+        %tmp.9 = lgetv %r.3;
+        symbol [ r %tmp.9 117 28 29 ];
+        symbol [ GRID_SIZE %tmp.11 117 32 41 ];
+        %tmp.11 = getv ? :GRID_SIZE;
+        %tmp.12 = lt %tmp.9 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_117_12_124_12_for_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_117_12_124_12_for_begin:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_117_48_124_12_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 118 16 ]
+        for @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_118_16_123_16_for_test @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_118_16_123_16_for_incr @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_118_16_123_16_for_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_118_16_123_16_for_init:
+        [ "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_118_16_123_16_for_begin" "_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_118_16_123_16_for_end" ]
+        %c.4 = local;
+        symbol [ c %c.4 118 25 26 ];
+        %tmp.13 = 0;
+        lputv %c.4 %tmp.13;
+        symbol [ c %c.4 118 25 26 ];
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_118_16_123_16_for_test:
+        %tmp.14 = lgetv %c.4;
+        symbol [ c %tmp.14 118 32 33 ];
+        symbol [ GRID_SIZE %tmp.16 118 36 45 ];
+        %tmp.16 = getv ? :GRID_SIZE;
+        %tmp.17 = lt %tmp.14 %tmp.16;
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_118_16_123_16_for_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_118_16_123_16_for_begin:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_118_52_123_16_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 119 20 ]
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_119_20_122_20_if_stmt:
+        %tmp.18 = lgetv %grid;
+        symbol [ grid %tmp.18 119 24 28 ];
+        symbol [ canPlace %tmp.19 119 29 37 ];
+        %tmp.19 = getv function %tmp.18 :canPlace;
+        %tmp.20 = lgetv %r.3;
+        symbol [ r %tmp.20 119 38 39 ];
+        %tmp.21 = lgetv %c.4;
+        symbol [ c %tmp.21 119 41 42 ];
+        %tmp.22 = lgetv %len;
+        symbol [ len %tmp.22 119 44 47 ];
+        %tmp.23 = lgetv %horizontal.2;
+        symbol [ horizontal %tmp.23 119 49 59 ];
+        %tmp.24 = invoke %tmp.18 %tmp.19(%tmp.20, %tmp.21, %tmp.22, %tmp.23);
+        bf %tmp.24 @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_119_20_122_20_if_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_119_20_122_20_if_true:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_119_62_122_20_start:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 120 24 ]
+        %tmp.25 = lgetv %grid;
+        symbol [ grid %tmp.25 120 24 28 ];
+        symbol [ placeShip %tmp.26 120 29 38 ];
+        %tmp.26 = getv function %tmp.25 :placeShip;
+        %tmp.27 = lgetv %r.3;
+        symbol [ r %tmp.27 120 39 40 ];
+        %tmp.28 = lgetv %c.4;
+        symbol [ c %tmp.28 120 42 43 ];
+        %tmp.29 = lgetv %len;
+        symbol [ len %tmp.29 120 45 48 ];
+        %tmp.30 = lgetv %horizontal.2;
+        symbol [ horizontal %tmp.30 120 50 60 ];
+        %tmp.31 = lgetv %id;
+        symbol [ id %tmp.31 120 62 64 ];
+        invoke %tmp.25 %tmp.26(%tmp.27, %tmp.28, %tmp.29, %tmp.30, %tmp.31);
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 121 24 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_119_62_122_20_stop:
+        goto @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_119_20_122_20_if_end;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_119_20_122_20_if_end:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_118_52_123_16_stop:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_118_16_123_16_for_incr:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 118 ]
+        %tmp.34 = lgetv %c.4;
+        symbol [ c %tmp.34 118 47 48 ];
+        %tmp.35 = add %tmp.34 1;
+        lputv %c.4 %tmp.35;
+        symbol [ c %c.4 118 47 48 ];
+        goto @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_118_16_123_16_for_test;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_118_16_123_16_for_end:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_117_48_124_12_stop:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_117_12_124_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 117 ]
+        %tmp.38 = lgetv %r.3;
+        symbol [ r %tmp.38 117 43 44 ];
+        %tmp.39 = add %tmp.38 1;
+        lputv %r.3 %tmp.39;
+        symbol [ r %r.3 117 43 44 ];
+        goto @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_117_12_124_12_for_test;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_117_12_124_12_for_end:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_115_69_125_8_stop:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_115_8_125_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc" 115 ]
+        %tmp.42 = lgetv %orientations.1;
+        symbol [ orientations %tmp.42 115 53 65 ];
+        %tmp.43 = add %tmp.42 1;
+        lputv %orientations.1 %tmp.43;
+        symbol [ orientations %orientations.1 115 53 65 ];
+        goto @_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_115_8_125_8_for_test;
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_115_8_125_8_for_end:
+_Users_kkorolczuk_work_garmin_battleship_source_BattleLogic_mc_114_62_126_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/battleship/source/BattleLogic.mc"; @line = 20; ]
+<init> {
+}

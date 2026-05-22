@@ -1,0 +1,678 @@
+[ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc"; @line = 16; @symbol_usingdef<0> = [Toybox,16,6,12]; @symbol_usingdef<1> = [Math,16,13,17]; ]
+using Toybox.Math;
+[ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc"; @line = 18; @position = 6; @symbol_constdef = [DIFF_EASY,18,6,15]; ]
+const DIFF_EASY = 0;
+[ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc"; @line = 19; @position = 6; @symbol_constdef = [DIFF_MEDIUM,19,6,17]; ]
+const DIFF_MEDIUM = 1;
+[ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc"; @line = 20; @position = 6; @symbol_constdef = [DIFF_HARD,20,6,15]; ]
+const DIFF_HARD = 2;
+[ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc"; @line = 22; @symbol_classdef = [AIController,22,6,18]; ]
+class AIController {
+    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc"; @line = 22; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc"; @line = 22; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc"; @line = 23; @position = 8; @symbol_vardef = [difficulty,23,8,18]; ]
+    var difficulty;
+    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc"; @line = 24; @position = 8; @symbol_vardef = [error,24,8,13]; ]
+    var error;
+    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc"; @line = 25; @position = 8; @symbol_vardef = [maxSpeed,25,8,16]; ]
+    var maxSpeed;
+    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc"; @line = 26; @position = 8; @symbol_vardef = [deadband,26,8,16]; ]
+    var deadband;
+    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc"; @line = 27; @position = 8; @symbol_vardef = [reactCounter,27,8,20]; ]
+    var reactCounter;
+    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc"; @line = 28; @position = 8; @symbol_vardef = [reactDelay,28,8,18]; ]
+    var reactDelay;
+    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc"; @line = 30; @symbol_functiondef = [initialize,30,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_30_26_37_4_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 31 8 ]
+        symbol [ DIFF_MEDIUM %tmp.2 31 23 34 ];
+        %tmp.2 = getv ? :DIFF_MEDIUM;
+        symbol [ difficulty ? 31 8 18 ];
+        putv self :difficulty %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 32 8 ]
+        %tmp.3 = 0;
+        symbol [ error ? 32 8 13 ];
+        putv self :error %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 33 8 ]
+        %tmp.4 = 3.0;
+        symbol [ maxSpeed ? 33 8 16 ];
+        putv self :maxSpeed %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 34 8 ]
+        %tmp.5 = 2;
+        symbol [ deadband ? 34 8 16 ];
+        putv self :deadband %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 35 8 ]
+        %tmp.6 = 0;
+        symbol [ reactCounter ? 35 8 20 ];
+        putv self :reactCounter %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 36 8 ]
+        %tmp.7 = 0;
+        symbol [ reactDelay ? 36 8 18 ];
+        putv self :reactDelay %tmp.7;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_30_26_37_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc"; @line = 39; @symbol_functiondef = [setDifficulty,39,13,26]; @symbol_param<0> = [d,39,27,28]; ]
+    function setDifficulty(d) {
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_39_30_54_4_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 40 8 ]
+        %tmp.1 = lgetv %d;
+        symbol [ d %tmp.1 40 21 22 ];
+        symbol [ difficulty ? 40 8 18 ];
+        putv self :difficulty %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 41 8 ]
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_41_8_53_8_if_stmt:
+        %tmp.2 = lgetv %d;
+        symbol [ d %tmp.2 41 12 13 ];
+        symbol [ DIFF_EASY %tmp.4 41 17 26 ];
+        %tmp.4 = getv ? :DIFF_EASY;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_41_8_53_8_if_false;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_41_8_53_8_if_true:
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_41_28_45_8_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 42 12 ]
+        %tmp.6 = 2.4;
+        symbol [ maxSpeed ? 42 12 20 ];
+        putv self :maxSpeed %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 43 12 ]
+        %tmp.7 = 4;
+        symbol [ deadband ? 43 12 20 ];
+        putv self :deadband %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 44 12 ]
+        %tmp.8 = 6;
+        symbol [ reactDelay ? 44 12 22 ];
+        putv self :reactDelay %tmp.8;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_41_28_45_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_41_8_53_8_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_41_8_53_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 45 15 ]
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_45_15_53_8_if_stmt:
+        %tmp.9 = lgetv %d;
+        symbol [ d %tmp.9 45 19 20 ];
+        symbol [ DIFF_MEDIUM %tmp.11 45 24 35 ];
+        %tmp.11 = getv ? :DIFF_MEDIUM;
+        %tmp.12 = eq %tmp.9 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_45_15_53_8_if_else_false;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_45_15_53_8_if_true:
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_45_37_49_8_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 46 12 ]
+        %tmp.13 = 3.4;
+        symbol [ maxSpeed ? 46 12 20 ];
+        putv self :maxSpeed %tmp.13;
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 47 12 ]
+        %tmp.14 = 2;
+        symbol [ deadband ? 47 12 20 ];
+        putv self :deadband %tmp.14;
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 48 12 ]
+        %tmp.15 = 3;
+        symbol [ reactDelay ? 48 12 22 ];
+        putv self :reactDelay %tmp.15;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_45_37_49_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_45_15_53_8_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_45_15_53_8_if_else_false:
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_49_15_53_8_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 50 12 ]
+        %tmp.16 = 4.6;
+        symbol [ maxSpeed ? 50 12 20 ];
+        putv self :maxSpeed %tmp.16;
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 51 12 ]
+        %tmp.17 = 1;
+        symbol [ deadband ? 51 12 20 ];
+        putv self :deadband %tmp.17;
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 52 12 ]
+        %tmp.18 = 0;
+        symbol [ reactDelay ? 52 12 22 ];
+        putv self :reactDelay %tmp.18;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_49_15_53_8_stop:
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_45_15_53_8_if_end:
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_41_8_53_8_if_end:
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_39_30_54_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc"; @line = 58; @symbol_functiondef = [onServe,58,13,20]; @symbol_param<0> = [maxError,58,21,29]; ]
+    function onServe(maxError) {
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_58_31_68_4_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 59 8 ]
+        symbol [ reactDelay %tmp.2 59 23 33 ];
+        %tmp.2 = getv ? :reactDelay;
+        symbol [ reactCounter ? 59 8 20 ];
+        putv self :reactCounter %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 60 8 ]
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_60_8_67_8_if_stmt:
+        symbol [ difficulty %tmp.4 60 12 22 ];
+        %tmp.4 = getv ? :difficulty;
+        symbol [ DIFF_HARD %tmp.6 60 26 35 ];
+        %tmp.6 = getv ? :DIFF_HARD;
+        %tmp.7 = eq %tmp.4 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_60_8_67_8_if_else_false;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_60_8_67_8_if_true:
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_60_37_62_8_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 61 12 ]
+        %tmp.8 = 0;
+        symbol [ error ? 61 12 17 ];
+        putv self :error %tmp.8;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_60_37_62_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_60_8_67_8_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_60_8_67_8_if_else_false:
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_62_15_67_8_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 64 12 ]
+        [ "_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_62_15_67_8_start" "_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_62_15_67_8_stop" ]
+        %range.1 = local;
+        symbol [ range %range.1 64 16 21 ];
+        %tmp.9 = lgetv %maxError;
+        symbol [ maxError %tmp.9 64 24 32 ];
+        lputv %range.1 %tmp.9;
+        symbol [ range %range.1 64 16 21 ];
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 65 12 ]
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_65_12_65_67_if_stmt:
+        symbol [ difficulty %tmp.11 65 16 26 ];
+        %tmp.11 = getv ? :difficulty;
+        symbol [ DIFF_MEDIUM %tmp.13 65 30 41 ];
+        %tmp.13 = getv ? :DIFF_MEDIUM;
+        %tmp.14 = eq %tmp.11 %tmp.13;
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_65_12_65_67_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_65_12_65_67_if_true:
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_65_43_65_67_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 65 45 ]
+        %tmp.15 = lgetv %maxError;
+        symbol [ maxError %tmp.15 65 53 61 ];
+        %tmp.16 = 2;
+        %tmp.17 = div %tmp.15 %tmp.16;
+        lputv %range.1 %tmp.17;
+        symbol [ range %range.1 65 45 50 ];
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_65_43_65_67_stop:
+        goto @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_65_12_65_67_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_65_12_65_67_if_end:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 66 12 ]
+        symbol [ Math %tmp.18 66 21 25 ];
+        %tmp.18 = getm $.Toybox.Math;
+        symbol [ rand %tmp.19 66 26 30 ];
+        %tmp.19 = getv function %tmp.18 :rand;
+        %tmp.20 = invoke %tmp.18 %tmp.19();
+        %tmp.21 = lgetv %range.1;
+        symbol [ range %tmp.21 66 36 41 ];
+        %tmp.22 = 2;
+        %tmp.23 = mul %tmp.21 %tmp.22;
+        %tmp.24 = 1;
+        %tmp.25 = add %tmp.23 %tmp.24;
+        %tmp.26 = mod %tmp.20 %tmp.25;
+        %tmp.27 = lgetv %range.1;
+        symbol [ range %tmp.27 66 54 59 ];
+        %tmp.28 = sub %tmp.26 %tmp.27;
+        symbol [ error ? 66 12 17 ];
+        putv self :error %tmp.28;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_62_15_67_8_stop:
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_60_8_67_8_if_end:
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_58_31_68_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc"; @line = 71; @symbol_functiondef = [step,71,13,17]; @symbol_param<0> = [paddle,71,18,24]; @symbol_param<1> = [ball,71,26,30]; @symbol_param<2> = [playX0,71,32,38]; @symbol_param<3> = [playY0,71,40,46]; @symbol_param<4> = [playX1,71,48,54]; @symbol_param<5> = [playY1,71,56,62]; ]
+    function step(paddle, ball, playX0, playY0, playX1, playY1) {
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_71_64_89_4_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 72 8 ]
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_72_8_76_8_if_stmt:
+        symbol [ reactCounter %tmp.2 72 12 24 ];
+        %tmp.2 = getv ? :reactCounter;
+        %tmp.3 = 0;
+        %tmp.4 = gt %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_72_8_76_8_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_72_8_76_8_if_true:
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_72_30_76_8_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 73 12 ]
+        symbol [ reactCounter %tmp.6 73 27 39 ];
+        %tmp.6 = getv ? :reactCounter;
+        %tmp.7 = 1;
+        %tmp.8 = sub %tmp.6 %tmp.7;
+        symbol [ reactCounter ? 73 12 24 ];
+        putv self :reactCounter %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 74 12 ]
+        %tmp.9 = lgetv %paddle;
+        symbol [ paddle %tmp.9 74 12 18 ];
+        %tmp.10 = 0.0;
+        symbol [ vy ? 74 19 21 ];
+        putv %tmp.9 :vy %tmp.10;
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 75 12 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_72_30_76_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_72_8_76_8_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_72_8_76_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 78 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_71_64_89_4_start" "_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_71_64_89_4_stop" ]
+        %targetY.1 = local;
+        symbol [ targetY %targetY.1 78 12 19 ];
+        %tmp.11 = self;
+        symbol [ _computeTargetY %tmp.12 78 22 37 ];
+        %tmp.12 = getv function %tmp.11 :_computeTargetY;
+        %tmp.13 = lgetv %paddle;
+        symbol [ paddle %tmp.13 78 38 44 ];
+        %tmp.14 = lgetv %ball;
+        symbol [ ball %tmp.14 78 46 50 ];
+        %tmp.15 = lgetv %playX0;
+        symbol [ playX0 %tmp.15 78 52 58 ];
+        %tmp.16 = lgetv %playY0;
+        symbol [ playY0 %tmp.16 78 60 66 ];
+        %tmp.17 = lgetv %playX1;
+        symbol [ playX1 %tmp.17 78 68 74 ];
+        %tmp.18 = lgetv %playY1;
+        symbol [ playY1 %tmp.18 78 76 82 ];
+        %tmp.19 = invoke %tmp.11 %tmp.12(%tmp.13, %tmp.14, %tmp.15, %tmp.16, %tmp.17, %tmp.18);
+        lputv %targetY.1 %tmp.19;
+        symbol [ targetY %targetY.1 78 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 79 8 ]
+        %tmp.20 = lgetv %targetY.1;
+        symbol [ targetY %tmp.20 79 18 25 ];
+        symbol [ error %tmp.22 79 28 33 ];
+        %tmp.22 = getv ? :error;
+        %tmp.23 = add %tmp.20 %tmp.22;
+        lputv %targetY.1 %tmp.23;
+        symbol [ targetY %targetY.1 79 8 15 ];
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 81 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_71_64_89_4_start" "_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_71_64_89_4_stop" ]
+        %dy.2 = local;
+        symbol [ dy %dy.2 81 12 14 ];
+        %tmp.24 = lgetv %targetY.1;
+        symbol [ targetY %tmp.24 81 17 24 ];
+        %tmp.25 = lgetv %paddle;
+        symbol [ paddle %tmp.25 81 27 33 ];
+        symbol [ centerY %tmp.26 81 34 41 ];
+        %tmp.26 = getv function %tmp.25 :centerY;
+        %tmp.27 = invoke %tmp.25 %tmp.26();
+        %tmp.28 = sub %tmp.24 %tmp.27;
+        lputv %dy.2 %tmp.28;
+        symbol [ dy %dy.2 81 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 82 8 ]
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_82_8_88_8_if_stmt:
+        %tmp.29 = lgetv %dy.2;
+        symbol [ dy %tmp.29 82 12 14 ];
+        symbol [ deadband %tmp.31 82 18 26 ];
+        %tmp.31 = getv ? :deadband;
+        %tmp.32 = gt %tmp.29 %tmp.31;
+        bf %tmp.32 @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_82_8_88_8_if_false;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_82_8_88_8_if_true:
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_82_28_84_8_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 83 12 ]
+        %tmp.33 = lgetv %paddle;
+        symbol [ paddle %tmp.33 83 12 18 ];
+        symbol [ maxSpeed %tmp.35 83 25 33 ];
+        %tmp.35 = getv ? :maxSpeed;
+        symbol [ vy ? 83 19 21 ];
+        putv %tmp.33 :vy %tmp.35;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_82_28_84_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_82_8_88_8_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_82_8_88_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 84 15 ]
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_84_15_88_8_if_stmt:
+        %tmp.36 = lgetv %dy.2;
+        symbol [ dy %tmp.36 84 19 21 ];
+        symbol [ deadband %tmp.38 84 25 33 ];
+        %tmp.38 = getv ? :deadband;
+        %tmp.39 = sub 0 %tmp.38;
+        %tmp.40 = lt %tmp.36 %tmp.39;
+        bf %tmp.40 @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_84_15_88_8_if_else_false;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_84_15_88_8_if_true:
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_84_35_86_8_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 85 12 ]
+        %tmp.41 = lgetv %paddle;
+        symbol [ paddle %tmp.41 85 12 18 ];
+        symbol [ maxSpeed %tmp.43 85 25 33 ];
+        %tmp.43 = getv ? :maxSpeed;
+        %tmp.44 = sub 0 %tmp.43;
+        symbol [ vy ? 85 19 21 ];
+        putv %tmp.41 :vy %tmp.44;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_84_35_86_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_84_15_88_8_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_84_15_88_8_if_else_false:
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_86_15_88_8_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 87 12 ]
+        %tmp.45 = lgetv %paddle;
+        symbol [ paddle %tmp.45 87 12 18 ];
+        %tmp.46 = 0.0;
+        symbol [ vy ? 87 19 21 ];
+        putv %tmp.45 :vy %tmp.46;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_86_15_88_8_stop:
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_84_15_88_8_if_end:
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_82_8_88_8_if_end:
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_71_64_89_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc"; @line = 92; @symbol_functiondef = [_computeTargetY,92,20,35]; @symbol_param<0> = [paddle,92,36,42]; @symbol_param<1> = [ball,92,44,48]; @symbol_param<2> = [playX0,92,50,56]; @symbol_param<3> = [playY0,92,58,64]; @symbol_param<4> = [playX1,92,66,72]; @symbol_param<5> = [playY1,92,74,80]; ]
+    protected
+    function _computeTargetY(paddle, ball, playX0, playY0, playX1, playY1) {
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_92_82_111_4_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 93 8 ]
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_93_8_100_8_if_stmt:
+        symbol [ difficulty %tmp.2 93 12 22 ];
+        %tmp.2 = getv ? :difficulty;
+        symbol [ DIFF_EASY %tmp.4 93 26 35 ];
+        %tmp.4 = getv ? :DIFF_EASY;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_93_8_100_8_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_93_8_100_8_if_true:
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_93_37_100_8_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 95 12 ]
+        [ "_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_93_37_100_8_start" "_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_93_37_100_8_stop" ]
+        %midX.1 = local;
+        symbol [ midX %midX.1 95 16 20 ];
+        %tmp.6 = lgetv %playX0;
+        symbol [ playX0 %tmp.6 95 24 30 ];
+        %tmp.7 = lgetv %playX1;
+        symbol [ playX1 %tmp.7 95 33 39 ];
+        %tmp.8 = add %tmp.6 %tmp.7;
+        %tmp.9 = 2;
+        %tmp.10 = div %tmp.8 %tmp.9;
+        lputv %midX.1 %tmp.10;
+        symbol [ midX %midX.1 95 16 20 ];
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 96 12 ]
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_96_12_98_12_if_stmt:
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_96_16_96_41_begin:
+        %tmp.11 = lgetv %ball;
+        symbol [ ball %tmp.11 96 16 20 ];
+        symbol [ vx %tmp.12 96 21 23 ];
+        %tmp.12 = getv %tmp.11 :vx;
+        %tmp.13 = 0;
+        %tmp.14 = lte %tmp.12 %tmp.13;
+        bt %tmp.14 @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_96_12_98_12_if_true;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_96_32_96_41_false:
+        %tmp.15 = lgetv %ball;
+        symbol [ ball %tmp.15 96 32 36 ];
+        symbol [ x %tmp.16 96 37 38 ];
+        %tmp.16 = getv %tmp.15 :x;
+        %tmp.17 = lgetv %midX.1;
+        symbol [ midX %tmp.17 96 41 45 ];
+        %tmp.18 = lt %tmp.16 %tmp.17;
+        push %tmp.18;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_96_32_96_41_end:
+        %tmp.19 = phi [%tmp.14 @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_96_16_96_41_begin] [%tmp.18 @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_96_32_96_41_false] [%tmp.19 @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_96_32_96_41_end];
+        bf %tmp.19 @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_96_12_98_12_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_96_12_98_12_if_true:
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_96_47_98_12_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 97 16 ]
+        %tmp.20 = lgetv %playY0;
+        symbol [ playY0 %tmp.20 97 24 30 ];
+        %tmp.21 = lgetv %playY1;
+        symbol [ playY1 %tmp.21 97 33 39 ];
+        %tmp.22 = add %tmp.20 %tmp.21;
+        %tmp.23 = 2;
+        %tmp.24 = div %tmp.22 %tmp.23;
+        ret %tmp.24;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_96_47_98_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_96_12_98_12_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_96_12_98_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 99 12 ]
+        %tmp.25 = lgetv %ball;
+        symbol [ ball %tmp.25 99 19 23 ];
+        symbol [ y %tmp.26 99 24 25 ];
+        %tmp.26 = getv %tmp.25 :y;
+        ret %tmp.26;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_93_37_100_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_93_8_100_8_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_93_8_100_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 101 8 ]
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_101_8_104_8_if_stmt:
+        symbol [ difficulty %tmp.28 101 12 22 ];
+        %tmp.28 = getv ? :difficulty;
+        symbol [ DIFF_MEDIUM %tmp.30 101 26 37 ];
+        %tmp.30 = getv ? :DIFF_MEDIUM;
+        %tmp.31 = eq %tmp.28 %tmp.30;
+        bf %tmp.31 @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_101_8_104_8_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_101_8_104_8_if_true:
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_101_39_104_8_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 103 12 ]
+        %tmp.32 = lgetv %ball;
+        symbol [ ball %tmp.32 103 19 23 ];
+        symbol [ y %tmp.33 103 24 25 ];
+        %tmp.33 = getv %tmp.32 :y;
+        ret %tmp.33;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_101_39_104_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_101_8_104_8_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_101_8_104_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 107 8 ]
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_107_8_109_8_if_stmt:
+        %tmp.34 = lgetv %ball;
+        symbol [ ball %tmp.34 107 12 16 ];
+        symbol [ vx %tmp.35 107 17 19 ];
+        %tmp.35 = getv %tmp.34 :vx;
+        %tmp.36 = 0;
+        %tmp.37 = lte %tmp.35 %tmp.36;
+        bf %tmp.37 @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_107_8_109_8_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_107_8_109_8_if_true:
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_107_26_109_8_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 108 12 ]
+        %tmp.38 = lgetv %playY0;
+        symbol [ playY0 %tmp.38 108 20 26 ];
+        %tmp.39 = lgetv %playY1;
+        symbol [ playY1 %tmp.39 108 29 35 ];
+        %tmp.40 = add %tmp.38 %tmp.39;
+        %tmp.41 = 2;
+        %tmp.42 = div %tmp.40 %tmp.41;
+        ret %tmp.42;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_107_26_109_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_107_8_109_8_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_107_8_109_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 110 8 ]
+        %tmp.43 = self;
+        symbol [ _predictImpactY %tmp.44 110 15 30 ];
+        %tmp.44 = getv function %tmp.43 :_predictImpactY;
+        %tmp.45 = lgetv %ball;
+        symbol [ ball %tmp.45 110 31 35 ];
+        %tmp.46 = lgetv %playY0;
+        symbol [ playY0 %tmp.46 110 37 43 ];
+        %tmp.47 = lgetv %playY1;
+        symbol [ playY1 %tmp.47 110 45 51 ];
+        %tmp.48 = lgetv %paddle;
+        symbol [ paddle %tmp.48 110 53 59 ];
+        symbol [ x %tmp.49 110 60 61 ];
+        %tmp.49 = getv %tmp.48 :x;
+        %tmp.50 = invoke %tmp.43 %tmp.44(%tmp.45, %tmp.46, %tmp.47, %tmp.49);
+        ret %tmp.50;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_92_82_111_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc"; @line = 115; @symbol_functiondef = [_predictImpactY,115,20,35]; @symbol_param<0> = [ball,115,36,40]; @symbol_param<1> = [playY0,115,42,48]; @symbol_param<2> = [playY1,115,50,56]; @symbol_param<3> = [targetX,115,58,65]; ]
+    protected
+    function _predictImpactY(ball, playY0, playY1, targetX) {
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_115_67_135_4_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 116 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_115_67_135_4_start" "_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_115_67_135_4_stop" ]
+        %height.1 = local;
+        symbol [ height %height.1 116 12 18 ];
+        %tmp.1 = lgetv %playY1;
+        symbol [ playY1 %tmp.1 116 21 27 ];
+        %tmp.2 = lgetv %playY0;
+        symbol [ playY0 %tmp.2 116 30 36 ];
+        %tmp.3 = sub %tmp.1 %tmp.2;
+        lputv %height.1 %tmp.3;
+        symbol [ height %height.1 116 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 117 8 ]
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_117_8_117_42_if_stmt:
+        %tmp.4 = lgetv %height.1;
+        symbol [ height %tmp.4 117 12 18 ];
+        %tmp.5 = 0;
+        %tmp.6 = lte %tmp.4 %tmp.5;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_117_8_117_42_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_117_8_117_42_if_true:
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_117_25_117_42_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 117 27 ]
+        %tmp.7 = lgetv %ball;
+        symbol [ ball %tmp.7 117 34 38 ];
+        symbol [ y %tmp.8 117 39 40 ];
+        %tmp.8 = getv %tmp.7 :y;
+        ret %tmp.8;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_117_25_117_42_stop:
+        goto @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_117_8_117_42_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_117_8_117_42_if_end:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 118 8 ]
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_118_8_118_43_if_stmt:
+        %tmp.9 = lgetv %ball;
+        symbol [ ball %tmp.9 118 12 16 ];
+        symbol [ vx %tmp.10 118 17 19 ];
+        %tmp.10 = getv %tmp.9 :vx;
+        %tmp.11 = 0;
+        %tmp.12 = eq %tmp.10 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_118_8_118_43_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_118_8_118_43_if_true:
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_118_26_118_43_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 118 28 ]
+        %tmp.13 = lgetv %ball;
+        symbol [ ball %tmp.13 118 35 39 ];
+        symbol [ y %tmp.14 118 40 41 ];
+        %tmp.14 = getv %tmp.13 :y;
+        ret %tmp.14;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_118_26_118_43_stop:
+        goto @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_118_8_118_43_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_118_8_118_43_if_end:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 121 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_115_67_135_4_start" "_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_115_67_135_4_stop" ]
+        %t.2 = local;
+        symbol [ t %t.2 121 12 13 ];
+        %tmp.15 = lgetv %targetX;
+        symbol [ targetX %tmp.15 121 17 24 ];
+        %tmp.16 = lgetv %ball;
+        symbol [ ball %tmp.16 121 27 31 ];
+        symbol [ x %tmp.17 121 32 33 ];
+        %tmp.17 = getv %tmp.16 :x;
+        %tmp.18 = sub %tmp.15 %tmp.17;
+        %tmp.19 = 1.0;
+        %tmp.20 = mul %tmp.18 %tmp.19;
+        %tmp.21 = lgetv %ball;
+        symbol [ ball %tmp.21 121 43 47 ];
+        symbol [ vx %tmp.22 121 48 50 ];
+        %tmp.22 = getv %tmp.21 :vx;
+        %tmp.23 = div %tmp.20 %tmp.22;
+        lputv %t.2 %tmp.23;
+        symbol [ t %t.2 121 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 122 8 ]
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_122_8_122_36_if_stmt:
+        %tmp.24 = lgetv %t.2;
+        symbol [ t %tmp.24 122 12 13 ];
+        %tmp.25 = 0;
+        %tmp.26 = lt %tmp.24 %tmp.25;
+        bf %tmp.26 @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_122_8_122_36_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_122_8_122_36_if_true:
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_122_19_122_36_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 122 21 ]
+        %tmp.27 = lgetv %ball;
+        symbol [ ball %tmp.27 122 28 32 ];
+        symbol [ y %tmp.28 122 33 34 ];
+        %tmp.28 = getv %tmp.27 :y;
+        ret %tmp.28;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_122_19_122_36_stop:
+        goto @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_122_8_122_36_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_122_8_122_36_if_end:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 125 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_115_67_135_4_start" "_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_115_67_135_4_stop" ]
+        %yRaw.3 = local;
+        symbol [ yRaw %yRaw.3 125 12 16 ];
+        %tmp.29 = lgetv %ball;
+        symbol [ ball %tmp.29 125 19 23 ];
+        symbol [ y %tmp.30 125 24 25 ];
+        %tmp.30 = getv %tmp.29 :y;
+        %tmp.31 = lgetv %playY0;
+        symbol [ playY0 %tmp.31 125 28 34 ];
+        %tmp.32 = sub %tmp.30 %tmp.31;
+        %tmp.33 = lgetv %ball;
+        symbol [ ball %tmp.33 125 37 41 ];
+        symbol [ vy %tmp.34 125 42 44 ];
+        %tmp.34 = getv %tmp.33 :vy;
+        %tmp.35 = lgetv %t.2;
+        symbol [ t %tmp.35 125 47 48 ];
+        %tmp.36 = mul %tmp.34 %tmp.35;
+        %tmp.37 = add %tmp.32 %tmp.36;
+        lputv %yRaw.3 %tmp.37;
+        symbol [ yRaw %yRaw.3 125 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 128 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_115_67_135_4_start" "_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_115_67_135_4_stop" ]
+        %period.4 = local;
+        symbol [ period %period.4 128 12 18 ];
+        %tmp.38 = 2;
+        %tmp.39 = lgetv %height.1;
+        symbol [ height %tmp.39 128 25 31 ];
+        %tmp.40 = mul %tmp.38 %tmp.39;
+        lputv %period.4 %tmp.40;
+        symbol [ period %period.4 128 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 129 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_115_67_135_4_start" "_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_115_67_135_4_stop" ]
+        %m.5 = local;
+        symbol [ m %m.5 129 12 13 ];
+        %tmp.41 = lgetv %yRaw.3;
+        symbol [ yRaw %tmp.41 129 16 20 ];
+        lputv %m.5 %tmp.41;
+        symbol [ m %m.5 129 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 131 8 ]
+        while @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_131_8_131_46_while_test @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_131_8_131_46_while_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_131_8_131_46_while_test:
+        %tmp.42 = lgetv %m.5;
+        symbol [ m %tmp.42 131 15 16 ];
+        %tmp.43 = 0;
+        %tmp.44 = lt %tmp.42 %tmp.43;
+        bf %tmp.44 @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_131_8_131_46_while_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_131_8_131_46_while_begin:
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_131_28_131_46_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 131 30 ]
+        %tmp.45 = lgetv %m.5;
+        symbol [ m %tmp.45 131 34 35 ];
+        %tmp.46 = lgetv %period.4;
+        symbol [ period %tmp.46 131 38 44 ];
+        %tmp.47 = add %tmp.45 %tmp.46;
+        lputv %m.5 %tmp.47;
+        symbol [ m %m.5 131 30 31 ];
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_131_28_131_46_stop:
+        goto @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_131_8_131_46_while_test;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_131_8_131_46_while_end:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 132 8 ]
+        while @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_132_8_132_46_while_test @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_132_8_132_46_while_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_132_8_132_46_while_test:
+        %tmp.48 = lgetv %m.5;
+        symbol [ m %tmp.48 132 15 16 ];
+        %tmp.49 = lgetv %period.4;
+        symbol [ period %tmp.49 132 20 26 ];
+        %tmp.50 = gte %tmp.48 %tmp.49;
+        bf %tmp.50 @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_132_8_132_46_while_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_132_8_132_46_while_begin:
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_132_28_132_46_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 132 30 ]
+        %tmp.51 = lgetv %m.5;
+        symbol [ m %tmp.51 132 34 35 ];
+        %tmp.52 = lgetv %period.4;
+        symbol [ period %tmp.52 132 38 44 ];
+        %tmp.53 = sub %tmp.51 %tmp.52;
+        lputv %m.5 %tmp.53;
+        symbol [ m %m.5 132 30 31 ];
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_132_28_132_46_stop:
+        goto @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_132_8_132_46_while_test;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_132_8_132_46_while_end:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 133 8 ]
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_133_8_133_46_if_stmt:
+        %tmp.54 = lgetv %m.5;
+        symbol [ m %tmp.54 133 12 13 ];
+        %tmp.55 = lgetv %height.1;
+        symbol [ height %tmp.55 133 16 22 ];
+        %tmp.56 = gt %tmp.54 %tmp.55;
+        bf %tmp.56 @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_133_8_133_46_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_133_8_133_46_if_true:
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_133_28_133_46_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 133 30 ]
+        %tmp.57 = lgetv %period.4;
+        symbol [ period %tmp.57 133 34 40 ];
+        %tmp.58 = lgetv %m.5;
+        symbol [ m %tmp.58 133 43 44 ];
+        %tmp.59 = sub %tmp.57 %tmp.58;
+        lputv %m.5 %tmp.59;
+        symbol [ m %m.5 133 30 31 ];
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_133_28_133_46_stop:
+        goto @_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_133_8_133_46_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_133_8_133_46_if_end:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc" 134 8 ]
+        %tmp.60 = lgetv %playY0;
+        symbol [ playY0 %tmp.60 134 15 21 ];
+        %tmp.61 = lgetv %m.5;
+        symbol [ m %tmp.61 134 24 25 ];
+        %tmp.62 = add %tmp.60 %tmp.61;
+        ret %tmp.62;
+_Users_kkorolczuk_work_garmin_pongpro_source_AIController_mc_115_67_135_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/AIController.mc"; @line = 16; ]
+<init> {
+}

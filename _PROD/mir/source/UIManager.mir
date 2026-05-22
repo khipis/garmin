@@ -1,0 +1,2226 @@
+[ @file = "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc"; @line = 15; @symbol_usingdef<0> = [Toybox,15,6,12]; @symbol_usingdef<1> = [Graphics,15,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc"; @line = 16; @symbol_usingdef<0> = [Toybox,16,6,12]; @symbol_usingdef<1> = [WatchUi,16,13,20]; ]
+using Toybox.WatchUi;
+[ @file = "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc"; @line = 19; @position = 6; @symbol_constdef = [COL_PAPER,19,6,15]; ]
+const COL_PAPER = 0xF4E8D8;
+[ @file = "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc"; @line = 20; @position = 6; @symbol_constdef = [COL_INK,20,6,13]; ]
+const COL_INK = 0x222222;
+[ @file = "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc"; @line = 21; @position = 6; @symbol_constdef = [COL_INK_DIM,21,6,17]; ]
+const COL_INK_DIM = 0x666666;
+[ @file = "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc"; @line = 22; @position = 6; @symbol_constdef = [COL_HIT,22,6,13]; ]
+const COL_HIT = 0x2A8A3E;
+[ @file = "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc"; @line = 23; @position = 6; @symbol_constdef = [COL_MISS,23,6,14]; ]
+const COL_MISS = 0xC83A3A;
+[ @file = "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc"; @line = 24; @position = 6; @symbol_constdef = [COL_SELECT,24,6,16]; ]
+const COL_SELECT = 0x1F6FEB;
+[ @file = "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc"; @line = 27; @symbol_classdef = [KbLayout,27,6,14]; ]
+class KbLayout {
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc"; @line = 27; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc"; @line = 27; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc"; @line = 28; @position = 8; @symbol_vardef = [x0,28,8,10]; ]
+    var x0;
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc"; @line = 29; @position = 8; @symbol_vardef = [y0,29,8,10]; ]
+    var y0;
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc"; @line = 30; @position = 8; @symbol_vardef = [cellW,30,8,13]; ]
+    var cellW;
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc"; @line = 31; @position = 8; @symbol_vardef = [cellH,31,8,13]; ]
+    var cellH;
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc"; @line = 32; @position = 8; @symbol_vardef = [cols,32,8,12]; ]
+    var cols;
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc"; @line = 33; @position = 8; @symbol_vardef = [rows,33,8,12]; ]
+    var rows;
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc"; @line = 34; @symbol_functiondef = [initialize,34,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_34_26_36_4_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 35 8 ]
+        %tmp.1 = 0;
+        symbol [ x0 ? 35 8 10 ];
+        putv self :x0 %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 35 16 ]
+        %tmp.2 = 0;
+        symbol [ y0 ? 35 16 18 ];
+        putv self :y0 %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 35 24 ]
+        %tmp.3 = 0;
+        symbol [ cellW ? 35 24 29 ];
+        putv self :cellW %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 35 35 ]
+        %tmp.4 = 0;
+        symbol [ cellH ? 35 35 40 ];
+        putv self :cellH %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 35 46 ]
+        symbol [ KB_COLS %tmp.6 35 53 60 ];
+        %tmp.6 = getv ? :KB_COLS;
+        symbol [ cols ? 35 46 50 ];
+        putv self :cols %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 35 62 ]
+        symbol [ KB_ROWS %tmp.8 35 69 76 ];
+        %tmp.8 = getv ? :KB_ROWS;
+        symbol [ rows ? 35 62 66 ];
+        putv self :rows %tmp.8;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_34_26_36_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc"; @line = 37; @symbol_functiondef = [rectFor,37,13,20]; @symbol_param<0> = [idx,37,21,24]; ]
+    function rectFor(idx) {
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_37_26_41_4_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 38 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_37_26_41_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_37_26_41_4_stop" ]
+        %r.1 = local;
+        symbol [ r %r.1 38 12 13 ];
+        %tmp.1 = lgetv %idx;
+        symbol [ idx %tmp.1 38 16 19 ];
+        symbol [ cols %tmp.3 38 22 26 ];
+        %tmp.3 = getv ? :cols;
+        %tmp.4 = div %tmp.1 %tmp.3;
+        lputv %r.1 %tmp.4;
+        symbol [ r %r.1 38 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 39 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_37_26_41_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_37_26_41_4_stop" ]
+        %c.2 = local;
+        symbol [ c %c.2 39 12 13 ];
+        %tmp.5 = lgetv %idx;
+        symbol [ idx %tmp.5 39 16 19 ];
+        symbol [ cols %tmp.7 39 22 26 ];
+        %tmp.7 = getv ? :cols;
+        %tmp.8 = mod %tmp.5 %tmp.7;
+        lputv %c.2 %tmp.8;
+        symbol [ c %c.2 39 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 40 8 ]
+        %tmp.9 = newa 4;
+        symbol [ x0 %tmp.11 40 16 18 ];
+        %tmp.11 = getv ? :x0;
+        %tmp.12 = lgetv %c.2;
+        symbol [ c %tmp.12 40 21 22 ];
+        symbol [ cellW %tmp.14 40 25 30 ];
+        %tmp.14 = getv ? :cellW;
+        %tmp.15 = mul %tmp.12 %tmp.14;
+        %tmp.16 = add %tmp.11 %tmp.15;
+        %tmp.17 = dup %tmp.9;
+        %tmp.18 = aputv %tmp.17 0 %tmp.16;
+        symbol [ y0 %tmp.20 40 32 34 ];
+        %tmp.20 = getv ? :y0;
+        %tmp.21 = lgetv %r.1;
+        symbol [ r %tmp.21 40 37 38 ];
+        symbol [ cellH %tmp.23 40 41 46 ];
+        %tmp.23 = getv ? :cellH;
+        %tmp.24 = mul %tmp.21 %tmp.23;
+        %tmp.25 = add %tmp.20 %tmp.24;
+        %tmp.26 = dup %tmp.18;
+        %tmp.27 = aputv %tmp.26 1 %tmp.25;
+        symbol [ cellW %tmp.29 40 48 53 ];
+        %tmp.29 = getv ? :cellW;
+        %tmp.30 = dup %tmp.27;
+        %tmp.31 = aputv %tmp.30 2 %tmp.29;
+        symbol [ cellH %tmp.33 40 55 60 ];
+        %tmp.33 = getv ? :cellH;
+        %tmp.34 = dup %tmp.31;
+        %tmp.35 = aputv %tmp.34 3 %tmp.33;
+        ret %tmp.35;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_37_26_41_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc"; @line = 54; @symbol_functiondef = [indexAt,54,13,20]; @symbol_param<0> = [px,54,21,23]; @symbol_param<1> = [py,54,25,27]; ]
+    function indexAt(px, py) {
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_54_29_66_4_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 55 8 ]
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_55_8_55_51_if_stmt:
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_55_12_55_35_begin:
+        symbol [ cellW %tmp.2 55 12 17 ];
+        %tmp.2 = getv ? :cellW;
+        %tmp.3 = 0;
+        %tmp.4 = lte %tmp.2 %tmp.3;
+        bt %tmp.4 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_55_8_55_51_if_true;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_55_26_55_35_false:
+        symbol [ cellH %tmp.6 55 26 31 ];
+        %tmp.6 = getv ? :cellH;
+        %tmp.7 = 0;
+        %tmp.8 = lte %tmp.6 %tmp.7;
+        push %tmp.8;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_55_26_55_35_end:
+        %tmp.9 = phi [%tmp.4 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_55_12_55_35_begin] [%tmp.8 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_55_26_55_35_false] [%tmp.9 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_55_26_55_35_end];
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_55_8_55_51_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_55_8_55_51_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_55_38_55_51_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 55 40 ]
+        %tmp.10 = -1;
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_55_38_55_51_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_55_8_55_51_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_55_8_55_51_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 56 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_54_29_66_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_54_29_66_4_stop" ]
+        %c.1 = local;
+        symbol [ c %c.1 56 12 13 ];
+        %tmp.11 = lgetv %px;
+        symbol [ px %tmp.11 56 17 19 ];
+        symbol [ x0 %tmp.13 56 22 24 ];
+        %tmp.13 = getv ? :x0;
+        %tmp.14 = sub %tmp.11 %tmp.13;
+        symbol [ cellW %tmp.16 56 28 33 ];
+        %tmp.16 = getv ? :cellW;
+        %tmp.17 = div %tmp.14 %tmp.16;
+        lputv %c.1 %tmp.17;
+        symbol [ c %c.1 56 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 57 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_54_29_66_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_54_29_66_4_stop" ]
+        %r.2 = local;
+        symbol [ r %r.2 57 12 13 ];
+        %tmp.18 = lgetv %py;
+        symbol [ py %tmp.18 57 17 19 ];
+        symbol [ y0 %tmp.20 57 22 24 ];
+        %tmp.20 = getv ? :y0;
+        %tmp.21 = sub %tmp.18 %tmp.20;
+        symbol [ cellH %tmp.23 57 28 33 ];
+        %tmp.23 = getv ? :cellH;
+        %tmp.24 = div %tmp.21 %tmp.23;
+        lputv %r.2 %tmp.24;
+        symbol [ r %r.2 57 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 58 8 ]
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_58_8_58_41_if_stmt:
+        %tmp.25 = lgetv %c.1;
+        symbol [ c %tmp.25 58 12 13 ];
+        %tmp.26 = 0;
+        %tmp.27 = lt %tmp.25 %tmp.26;
+        bf %tmp.27 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_58_8_58_41_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_58_8_58_41_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_58_25_58_41_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 58 27 ]
+        %tmp.28 = 0;
+        lputv %c.1 %tmp.28;
+        symbol [ c %c.1 58 27 28 ];
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_58_25_58_41_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_58_8_58_41_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_58_8_58_41_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 59 8 ]
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_59_8_59_41_if_stmt:
+        %tmp.29 = lgetv %c.1;
+        symbol [ c %tmp.29 59 12 13 ];
+        symbol [ cols %tmp.31 59 17 21 ];
+        %tmp.31 = getv ? :cols;
+        %tmp.32 = gte %tmp.29 %tmp.31;
+        bf %tmp.32 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_59_8_59_41_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_59_8_59_41_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_59_25_59_41_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 59 27 ]
+        symbol [ cols %tmp.34 59 31 35 ];
+        %tmp.34 = getv ? :cols;
+        %tmp.35 = 1;
+        %tmp.36 = sub %tmp.34 %tmp.35;
+        lputv %c.1 %tmp.36;
+        symbol [ c %c.1 59 27 28 ];
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_59_25_59_41_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_59_8_59_41_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_59_8_59_41_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 60 8 ]
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_60_8_60_41_if_stmt:
+        %tmp.37 = lgetv %r.2;
+        symbol [ r %tmp.37 60 12 13 ];
+        %tmp.38 = 0;
+        %tmp.39 = lt %tmp.37 %tmp.38;
+        bf %tmp.39 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_60_8_60_41_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_60_8_60_41_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_60_25_60_41_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 60 27 ]
+        %tmp.40 = 0;
+        lputv %r.2 %tmp.40;
+        symbol [ r %r.2 60 27 28 ];
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_60_25_60_41_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_60_8_60_41_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_60_8_60_41_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 61 8 ]
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_61_8_61_41_if_stmt:
+        %tmp.41 = lgetv %r.2;
+        symbol [ r %tmp.41 61 12 13 ];
+        symbol [ rows %tmp.43 61 17 21 ];
+        %tmp.43 = getv ? :rows;
+        %tmp.44 = gte %tmp.41 %tmp.43;
+        bf %tmp.44 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_61_8_61_41_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_61_8_61_41_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_61_25_61_41_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 61 27 ]
+        symbol [ rows %tmp.46 61 31 35 ];
+        %tmp.46 = getv ? :rows;
+        %tmp.47 = 1;
+        %tmp.48 = sub %tmp.46 %tmp.47;
+        lputv %r.2 %tmp.48;
+        symbol [ r %r.2 61 27 28 ];
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_61_25_61_41_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_61_8_61_41_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_61_8_61_41_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 62 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_54_29_66_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_54_29_66_4_stop" ]
+        %idx.3 = local;
+        symbol [ idx %idx.3 62 12 15 ];
+        %tmp.49 = lgetv %r.2;
+        symbol [ r %tmp.49 62 18 19 ];
+        symbol [ cols %tmp.51 62 22 26 ];
+        %tmp.51 = getv ? :cols;
+        %tmp.52 = mul %tmp.49 %tmp.51;
+        %tmp.53 = lgetv %c.1;
+        symbol [ c %tmp.53 62 29 30 ];
+        %tmp.54 = add %tmp.52 %tmp.53;
+        lputv %idx.3 %tmp.54;
+        symbol [ idx %idx.3 62 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 63 8 ]
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_63_8_63_41_if_stmt:
+        %tmp.55 = lgetv %idx.3;
+        symbol [ idx %tmp.55 63 12 15 ];
+        %tmp.56 = 0;
+        %tmp.57 = lt %tmp.55 %tmp.56;
+        bf %tmp.57 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_63_8_63_41_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_63_8_63_41_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_63_25_63_41_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 63 27 ]
+        %tmp.58 = 0;
+        lputv %idx.3 %tmp.58;
+        symbol [ idx %idx.3 63 27 30 ];
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_63_25_63_41_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_63_8_63_41_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_63_8_63_41_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 64 8 ]
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_64_8_64_41_if_stmt:
+        %tmp.59 = lgetv %idx.3;
+        symbol [ idx %tmp.59 64 12 15 ];
+        %tmp.60 = 26;
+        %tmp.61 = gte %tmp.59 %tmp.60;
+        bf %tmp.61 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_64_8_64_41_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_64_8_64_41_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_64_25_64_41_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 64 27 ]
+        %tmp.62 = 25;
+        lputv %idx.3 %tmp.62;
+        symbol [ idx %idx.3 64 27 30 ];
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_64_25_64_41_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_64_8_64_41_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_64_8_64_41_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 65 8 ]
+        %tmp.63 = lgetv %idx.3;
+        symbol [ idx %tmp.63 65 15 18 ];
+        ret %tmp.63;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_54_29_66_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc"; @line = 69; @symbol_classdef = [UIManager,69,6,15]; ]
+class UIManager {
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc"; @line = 69; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc"; @line = 69; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc"; @line = 75; @symbol_functiondef = [drawMenu,75,20,28]; @symbol_param<0> = [dc,75,29,31]; @symbol_param<1> = [ctrl,75,33,37]; @symbol_param<2> = [w,75,39,40]; @symbol_param<3> = [h,75,42,43]; ]
+    static
+    function drawMenu(dc, ctrl, w, h) {
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_75_45_136_4_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 76 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_75_45_136_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_75_45_136_4_stop" ]
+        %cx.1 = local;
+        symbol [ cx %cx.1 76 12 14 ];
+        %tmp.1 = lgetv %w;
+        symbol [ w %tmp.1 76 17 18 ];
+        %tmp.2 = 2;
+        %tmp.3 = div %tmp.1 %tmp.2;
+        lputv %cx.1 %tmp.3;
+        symbol [ cx %cx.1 76 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 77 8 ]
+        %tmp.4 = lgetv %dc;
+        symbol [ dc %tmp.4 77 8 10 ];
+        symbol [ setColor %tmp.5 77 11 19 ];
+        %tmp.5 = getv function %tmp.4 :setColor;
+        %tmp.6 = 0x080808;
+        %tmp.7 = 0x080808;
+        invoke %tmp.4 %tmp.5(%tmp.6, %tmp.7);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 77 41 ]
+        %tmp.8 = lgetv %dc;
+        symbol [ dc %tmp.8 77 41 43 ];
+        symbol [ clear %tmp.9 77 44 49 ];
+        %tmp.9 = getv function %tmp.8 :clear;
+        invoke %tmp.8 %tmp.9();
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 78 8 ]
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_78_8_81_8_if_stmt:
+        %tmp.10 = lgetv %w;
+        symbol [ w %tmp.10 78 12 13 ];
+        %tmp.11 = lgetv %h;
+        symbol [ h %tmp.11 78 17 18 ];
+        %tmp.12 = eq %tmp.10 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_78_8_81_8_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_78_8_81_8_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_78_20_81_8_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 79 12 ]
+        %tmp.13 = lgetv %dc;
+        symbol [ dc %tmp.13 79 12 14 ];
+        symbol [ setColor %tmp.14 79 15 23 ];
+        %tmp.14 = getv function %tmp.13 :setColor;
+        %tmp.15 = 0x101418;
+        symbol [ Graphics %tmp.16 79 34 42 ];
+        %tmp.16 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.17 79 43 60 ];
+        %tmp.17 = getv %tmp.16 :COLOR_TRANSPARENT;
+        invoke %tmp.13 %tmp.14(%tmp.15, %tmp.17);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 80 12 ]
+        %tmp.18 = lgetv %dc;
+        symbol [ dc %tmp.18 80 12 14 ];
+        symbol [ fillCircle %tmp.19 80 15 25 ];
+        %tmp.19 = getv function %tmp.18 :fillCircle;
+        %tmp.20 = lgetv %cx.1;
+        symbol [ cx %tmp.20 80 26 28 ];
+        %tmp.21 = lgetv %h;
+        symbol [ h %tmp.21 80 30 31 ];
+        %tmp.22 = 2;
+        %tmp.23 = div %tmp.21 %tmp.22;
+        %tmp.24 = lgetv %w;
+        symbol [ w %tmp.24 80 37 38 ];
+        %tmp.25 = 2;
+        %tmp.26 = div %tmp.24 %tmp.25;
+        %tmp.27 = 1;
+        %tmp.28 = sub %tmp.26 %tmp.27;
+        invoke %tmp.18 %tmp.19(%tmp.20, %tmp.23, %tmp.28);
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_78_20_81_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_78_8_81_8_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_78_8_81_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 84 8 ]
+        %tmp.29 = lgetv %dc;
+        symbol [ dc %tmp.29 84 8 10 ];
+        symbol [ setColor %tmp.30 84 11 19 ];
+        %tmp.30 = getv function %tmp.29 :setColor;
+        %tmp.31 = 0xFFCC22;
+        symbol [ Graphics %tmp.32 84 30 38 ];
+        %tmp.32 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.33 84 39 56 ];
+        %tmp.33 = getv %tmp.32 :COLOR_TRANSPARENT;
+        invoke %tmp.29 %tmp.30(%tmp.31, %tmp.33);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 85 8 ]
+        %tmp.34 = lgetv %dc;
+        symbol [ dc %tmp.34 85 8 10 ];
+        symbol [ drawText %tmp.35 85 11 19 ];
+        %tmp.35 = getv function %tmp.34 :drawText;
+        %tmp.36 = lgetv %cx.1;
+        symbol [ cx %tmp.36 85 20 22 ];
+        %tmp.37 = lgetv %h;
+        symbol [ h %tmp.37 85 24 25 ];
+        %tmp.38 = 8;
+        %tmp.39 = mul %tmp.37 %tmp.38;
+        %tmp.40 = 100;
+        %tmp.41 = div %tmp.39 %tmp.40;
+        symbol [ Graphics %tmp.42 85 37 45 ];
+        %tmp.42 = getm $.Toybox.Graphics;
+        symbol [ FONT_SMALL %tmp.43 85 46 56 ];
+        %tmp.43 = getv %tmp.42 :FONT_SMALL;
+        %tmp.44 = "HANGMAN";
+        symbol [ Graphics %tmp.45 86 31 39 ];
+        %tmp.45 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.46 86 40 59 ];
+        %tmp.46 = getv %tmp.45 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.34 %tmp.35(%tmp.36, %tmp.41, %tmp.43, %tmp.44, %tmp.46);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 87 8 ]
+        %tmp.47 = lgetv %dc;
+        symbol [ dc %tmp.47 87 8 10 ];
+        symbol [ setColor %tmp.48 87 11 19 ];
+        %tmp.48 = getv function %tmp.47 :setColor;
+        %tmp.49 = 0x778899;
+        symbol [ Graphics %tmp.50 87 30 38 ];
+        %tmp.50 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.51 87 39 56 ];
+        %tmp.51 = getv %tmp.50 :COLOR_TRANSPARENT;
+        invoke %tmp.47 %tmp.48(%tmp.49, %tmp.51);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 88 8 ]
+        %tmp.52 = lgetv %dc;
+        symbol [ dc %tmp.52 88 8 10 ];
+        symbol [ drawText %tmp.53 88 11 19 ];
+        %tmp.53 = getv function %tmp.52 :drawText;
+        %tmp.54 = lgetv %cx.1;
+        symbol [ cx %tmp.54 88 20 22 ];
+        %tmp.55 = lgetv %h;
+        symbol [ h %tmp.55 88 24 25 ];
+        %tmp.56 = 20;
+        %tmp.57 = mul %tmp.55 %tmp.56;
+        %tmp.58 = 100;
+        %tmp.59 = div %tmp.57 %tmp.58;
+        symbol [ Graphics %tmp.60 88 38 46 ];
+        %tmp.60 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.61 88 47 57 ];
+        %tmp.61 = getv %tmp.60 :FONT_XTINY;
+        %tmp.62 = "by Bitochi";
+        symbol [ Graphics %tmp.63 89 34 42 ];
+        %tmp.63 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.64 89 43 62 ];
+        %tmp.64 = getv %tmp.63 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.52 %tmp.53(%tmp.54, %tmp.59, %tmp.61, %tmp.62, %tmp.64);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 92 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_75_45_136_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_75_45_136_4_stop" ]
+        %rowH.2 = local;
+        symbol [ rowH %rowH.2 92 12 16 ];
+        %tmp.65 = lgetv %h;
+        symbol [ h %tmp.65 92 20 21 ];
+        %tmp.66 = 13;
+        %tmp.67 = mul %tmp.65 %tmp.66;
+        %tmp.68 = 100;
+        %tmp.69 = div %tmp.67 %tmp.68;
+        lputv %rowH.2 %tmp.69;
+        symbol [ rowH %rowH.2 92 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 92 35 ]
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_92_35_92_63_if_stmt:
+        %tmp.70 = lgetv %rowH.2;
+        symbol [ rowH %tmp.70 92 39 43 ];
+        %tmp.71 = 24;
+        %tmp.72 = lt %tmp.70 %tmp.71;
+        bf %tmp.72 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_92_35_92_63_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_92_35_92_63_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_92_50_92_63_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 92 52 ]
+        %tmp.73 = 24;
+        lputv %rowH.2 %tmp.73;
+        symbol [ rowH %rowH.2 92 52 56 ];
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_92_50_92_63_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_92_35_92_63_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_92_35_92_63_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 92 65 ]
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_92_65_92_93_if_stmt:
+        %tmp.74 = lgetv %rowH.2;
+        symbol [ rowH %tmp.74 92 69 73 ];
+        %tmp.75 = 36;
+        %tmp.76 = gt %tmp.74 %tmp.75;
+        bf %tmp.76 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_92_65_92_93_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_92_65_92_93_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_92_80_92_93_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 92 82 ]
+        %tmp.77 = 36;
+        lputv %rowH.2 %tmp.77;
+        symbol [ rowH %rowH.2 92 82 86 ];
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_92_80_92_93_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_92_65_92_93_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_92_65_92_93_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 93 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_75_45_136_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_75_45_136_4_stop" ]
+        %rowW.3 = local;
+        symbol [ rowW %rowW.3 93 12 16 ];
+        %tmp.78 = lgetv %w;
+        symbol [ w %tmp.78 93 20 21 ];
+        %tmp.79 = 78;
+        %tmp.80 = mul %tmp.78 %tmp.79;
+        %tmp.81 = 100;
+        %tmp.82 = div %tmp.80 %tmp.81;
+        lputv %rowW.3 %tmp.82;
+        symbol [ rowW %rowW.3 93 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 93 35 ]
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_93_35_93_65_if_stmt:
+        %tmp.83 = lgetv %rowW.3;
+        symbol [ rowW %tmp.83 93 39 43 ];
+        %tmp.84 = 140;
+        %tmp.85 = lt %tmp.83 %tmp.84;
+        bf %tmp.85 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_93_35_93_65_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_93_35_93_65_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_93_51_93_65_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 93 53 ]
+        %tmp.86 = 140;
+        lputv %rowW.3 %tmp.86;
+        symbol [ rowW %rowW.3 93 53 57 ];
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_93_51_93_65_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_93_35_93_65_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_93_35_93_65_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 94 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_75_45_136_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_75_45_136_4_stop" ]
+        %rowX.4 = local;
+        symbol [ rowX %rowX.4 94 12 16 ];
+        %tmp.87 = lgetv %w;
+        symbol [ w %tmp.87 94 20 21 ];
+        %tmp.88 = lgetv %rowW.3;
+        symbol [ rowW %tmp.88 94 24 28 ];
+        %tmp.89 = sub %tmp.87 %tmp.88;
+        %tmp.90 = 2;
+        %tmp.91 = div %tmp.89 %tmp.90;
+        lputv %rowX.4 %tmp.91;
+        symbol [ rowX %rowX.4 94 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 95 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_75_45_136_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_75_45_136_4_stop" ]
+        %gap.5 = local;
+        symbol [ gap %gap.5 95 12 15 ];
+        %tmp.92 = lgetv %h;
+        symbol [ h %tmp.92 95 20 21 ];
+        %tmp.93 = 2;
+        %tmp.94 = mul %tmp.92 %tmp.93;
+        %tmp.95 = 100;
+        %tmp.96 = div %tmp.94 %tmp.95;
+        lputv %gap.5 %tmp.96;
+        symbol [ gap %gap.5 95 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 95 35 ]
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_95_35_95_59_if_stmt:
+        %tmp.97 = lgetv %gap.5;
+        symbol [ gap %tmp.97 95 39 42 ];
+        %tmp.98 = 4;
+        %tmp.99 = lt %tmp.97 %tmp.98;
+        bf %tmp.99 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_95_35_95_59_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_95_35_95_59_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_95_48_95_59_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 95 50 ]
+        %tmp.100 = 4;
+        lputv %gap.5 %tmp.100;
+        symbol [ gap %gap.5 95 50 53 ];
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_95_48_95_59_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_95_35_95_59_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_95_35_95_59_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 96 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_75_45_136_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_75_45_136_4_stop" ]
+        %nRows.6 = local;
+        symbol [ nRows %nRows.6 96 12 17 ];
+        %tmp.101 = 3;
+        lputv %nRows.6 %tmp.101;
+        symbol [ nRows %nRows.6 96 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 97 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_75_45_136_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_75_45_136_4_stop" ]
+        %total.7 = local;
+        symbol [ total %total.7 97 12 17 ];
+        %tmp.102 = lgetv %nRows.6;
+        symbol [ nRows %tmp.102 97 20 25 ];
+        %tmp.103 = lgetv %rowH.2;
+        symbol [ rowH %tmp.103 97 28 32 ];
+        %tmp.104 = mul %tmp.102 %tmp.103;
+        %tmp.105 = lgetv %nRows.6;
+        symbol [ nRows %tmp.105 97 36 41 ];
+        %tmp.106 = 1;
+        %tmp.107 = sub %tmp.105 %tmp.106;
+        %tmp.108 = lgetv %gap.5;
+        symbol [ gap %tmp.108 97 49 52 ];
+        %tmp.109 = mul %tmp.107 %tmp.108;
+        %tmp.110 = add %tmp.104 %tmp.109;
+        lputv %total.7 %tmp.110;
+        symbol [ total %total.7 97 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 98 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_75_45_136_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_75_45_136_4_stop" ]
+        %rowY0.8 = local;
+        symbol [ rowY0 %rowY0.8 98 12 17 ];
+        %tmp.111 = lgetv %h;
+        symbol [ h %tmp.111 98 21 22 ];
+        %tmp.112 = lgetv %total.7;
+        symbol [ total %tmp.112 98 25 30 ];
+        %tmp.113 = sub %tmp.111 %tmp.112;
+        %tmp.114 = 2;
+        %tmp.115 = div %tmp.113 %tmp.114;
+        %tmp.116 = lgetv %h;
+        symbol [ h %tmp.116 98 39 40 ];
+        %tmp.117 = 4;
+        %tmp.118 = mul %tmp.116 %tmp.117;
+        %tmp.119 = 100;
+        %tmp.120 = div %tmp.118 %tmp.119;
+        %tmp.121 = add %tmp.115 %tmp.120;
+        lputv %rowY0.8 %tmp.121;
+        symbol [ rowY0 %rowY0.8 98 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 100 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_75_45_136_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_75_45_136_4_stop" ]
+        %labels.9 = local;
+        symbol [ labels %labels.9 100 12 18 ];
+        %tmp.122 = newa 3;
+        %tmp.123 = "Category: ";
+        symbol [ WordList %tmp.125 101 27 35 ];
+        %tmp.125 = getv ? :WordList;
+        symbol [ categoryName %tmp.126 101 36 48 ];
+        %tmp.126 = getv function %tmp.125 :categoryName;
+        %tmp.127 = lgetv %ctrl;
+        symbol [ ctrl %tmp.127 101 49 53 ];
+        symbol [ category %tmp.128 101 54 62 ];
+        %tmp.128 = getv %tmp.127 :category;
+        %tmp.129 = invoke %tmp.125 %tmp.126(%tmp.128);
+        %tmp.130 = add %tmp.123 %tmp.129;
+        %tmp.131 = dup %tmp.122;
+        %tmp.132 = aputv %tmp.131 0 %tmp.130;
+        %tmp.133 = "Diff: ";
+        symbol [ WordList %tmp.135 102 27 35 ];
+        %tmp.135 = getv ? :WordList;
+        symbol [ difficultyName %tmp.136 102 36 50 ];
+        %tmp.136 = getv function %tmp.135 :difficultyName;
+        %tmp.137 = lgetv %ctrl;
+        symbol [ ctrl %tmp.137 102 51 55 ];
+        symbol [ difficulty %tmp.138 102 56 66 ];
+        %tmp.138 = getv %tmp.137 :difficulty;
+        %tmp.139 = invoke %tmp.135 %tmp.136(%tmp.138);
+        %tmp.140 = add %tmp.133 %tmp.139;
+        %tmp.141 = dup %tmp.132;
+        %tmp.142 = aputv %tmp.141 1 %tmp.140;
+        %tmp.143 = "START";
+        %tmp.144 = dup %tmp.142;
+        %tmp.145 = aputv %tmp.144 2 %tmp.143;
+        lputv %labels.9 %tmp.145;
+        symbol [ labels %labels.9 100 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 105 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_75_45_136_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_75_45_136_4_stop" ]
+        %selRow.10 = local;
+        symbol [ selRow %selRow.10 105 12 18 ];
+        %tmp.146 = lgetv %ctrl;
+        symbol [ ctrl %tmp.146 105 21 25 ];
+        symbol [ menuCursor %tmp.147 105 26 36 ];
+        %tmp.147 = getv %tmp.146 :menuCursor;
+        lputv %selRow.10 %tmp.147;
+        symbol [ selRow %selRow.10 105 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 106 8 ]
+        for @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_106_8_130_8_for_test @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_106_8_130_8_for_incr @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_106_8_130_8_for_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_106_8_130_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_106_8_130_8_for_begin" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_106_8_130_8_for_end" ]
+        %i.11 = local;
+        symbol [ i %i.11 106 17 18 ];
+        %tmp.148 = 0;
+        lputv %i.11 %tmp.148;
+        symbol [ i %i.11 106 17 18 ];
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_106_8_130_8_for_test:
+        %tmp.149 = lgetv %i.11;
+        symbol [ i %tmp.149 106 24 25 ];
+        %tmp.150 = lgetv %nRows.6;
+        symbol [ nRows %tmp.150 106 28 33 ];
+        %tmp.151 = lt %tmp.149 %tmp.150;
+        bf %tmp.151 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_106_8_130_8_for_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_106_8_130_8_for_begin:
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_106_40_130_8_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 107 12 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_106_40_130_8_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_106_40_130_8_stop" ]
+        %ry.12 = local;
+        symbol [ ry %ry.12 107 16 18 ];
+        %tmp.152 = lgetv %rowY0.8;
+        symbol [ rowY0 %tmp.152 107 26 31 ];
+        %tmp.153 = lgetv %i.11;
+        symbol [ i %tmp.153 107 34 35 ];
+        %tmp.154 = lgetv %rowH.2;
+        symbol [ rowH %tmp.154 107 39 43 ];
+        %tmp.155 = lgetv %gap.5;
+        symbol [ gap %tmp.155 107 46 49 ];
+        %tmp.156 = add %tmp.154 %tmp.155;
+        %tmp.157 = mul %tmp.153 %tmp.156;
+        %tmp.158 = add %tmp.152 %tmp.157;
+        lputv %ry.12 %tmp.158;
+        symbol [ ry %ry.12 107 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 108 12 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_106_40_130_8_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_106_40_130_8_stop" ]
+        %sel.13 = local;
+        symbol [ sel %sel.13 108 16 19 ];
+        %tmp.159 = lgetv %i.11;
+        symbol [ i %tmp.159 108 27 28 ];
+        %tmp.160 = lgetv %selRow.10;
+        symbol [ selRow %tmp.160 108 32 38 ];
+        %tmp.161 = eq %tmp.159 %tmp.160;
+        lputv %sel.13 %tmp.161;
+        symbol [ sel %sel.13 108 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 109 12 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_106_40_130_8_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_106_40_130_8_stop" ]
+        %isStart.14 = local;
+        symbol [ isStart %isStart.14 109 16 23 ];
+        %tmp.162 = lgetv %i.11;
+        symbol [ i %tmp.162 109 27 28 ];
+        %tmp.163 = lgetv %nRows.6;
+        symbol [ nRows %tmp.163 109 32 37 ];
+        %tmp.164 = 1;
+        %tmp.165 = sub %tmp.163 %tmp.164;
+        %tmp.166 = eq %tmp.162 %tmp.165;
+        lputv %isStart.14 %tmp.166;
+        symbol [ isStart %isStart.14 109 16 23 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 111 12 ]
+        %tmp.167 = lgetv %dc;
+        symbol [ dc %tmp.167 111 12 14 ];
+        symbol [ setColor %tmp.168 111 15 23 ];
+        %tmp.168 = getv function %tmp.167 :setColor;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_111_24_111_64_begin:
+        %tmp.169 = lgetv %sel.13;
+        symbol [ sel %tmp.169 111 24 27 ];
+        bf %tmp.169 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_111_24_111_64_else_false;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_111_24_111_64_true:
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_111_31_111_52_begin:
+        %tmp.170 = lgetv %isStart.14;
+        symbol [ isStart %tmp.170 111 31 38 ];
+        bf %tmp.170 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_111_31_111_52_else_false;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_111_31_111_52_true:
+        %tmp.171 = 0x1A4400;
+        push %tmp.171;
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_111_31_111_52_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_111_31_111_52_else_false:
+        %tmp.172 = 0x1A3A6A;
+        push %tmp.172;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_111_31_111_52_end:
+        %tmp.173 = phi [%tmp.170 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_111_31_111_52_begin] [%tmp.171 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_111_31_111_52_true] [%tmp.172 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_111_31_111_52_else_false] [%tmp.173 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_111_31_111_52_end];
+        push %tmp.173;
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_111_24_111_64_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_111_24_111_64_else_false:
+        %tmp.174 = 0x111820;
+        push %tmp.174;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_111_24_111_64_end:
+        %tmp.175 = phi [%tmp.169 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_111_24_111_64_begin] [%tmp.173 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_111_24_111_64_true] [%tmp.174 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_111_24_111_64_else_false] [%tmp.175 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_111_24_111_64_end];
+        symbol [ Graphics %tmp.176 112 24 32 ];
+        %tmp.176 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.177 112 33 50 ];
+        %tmp.177 = getv %tmp.176 :COLOR_TRANSPARENT;
+        invoke %tmp.167 %tmp.168(%tmp.175, %tmp.177);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 113 12 ]
+        %tmp.178 = lgetv %dc;
+        symbol [ dc %tmp.178 113 12 14 ];
+        symbol [ fillRoundedRectangle %tmp.179 113 15 35 ];
+        %tmp.179 = getv function %tmp.178 :fillRoundedRectangle;
+        %tmp.180 = lgetv %rowX.4;
+        symbol [ rowX %tmp.180 113 36 40 ];
+        %tmp.181 = lgetv %ry.12;
+        symbol [ ry %tmp.181 113 42 44 ];
+        %tmp.182 = lgetv %rowW.3;
+        symbol [ rowW %tmp.182 113 46 50 ];
+        %tmp.183 = lgetv %rowH.2;
+        symbol [ rowH %tmp.183 113 52 56 ];
+        %tmp.184 = 5;
+        invoke %tmp.178 %tmp.179(%tmp.180, %tmp.181, %tmp.182, %tmp.183, %tmp.184);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 114 12 ]
+        %tmp.185 = lgetv %dc;
+        symbol [ dc %tmp.185 114 12 14 ];
+        symbol [ setColor %tmp.186 114 15 23 ];
+        %tmp.186 = getv function %tmp.185 :setColor;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_114_24_114_64_begin:
+        %tmp.187 = lgetv %sel.13;
+        symbol [ sel %tmp.187 114 24 27 ];
+        bf %tmp.187 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_114_24_114_64_else_false;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_114_24_114_64_true:
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_114_31_114_52_begin:
+        %tmp.188 = lgetv %isStart.14;
+        symbol [ isStart %tmp.188 114 31 38 ];
+        bf %tmp.188 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_114_31_114_52_else_false;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_114_31_114_52_true:
+        %tmp.189 = 0x44BB22;
+        push %tmp.189;
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_114_31_114_52_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_114_31_114_52_else_false:
+        %tmp.190 = 0x55AAFF;
+        push %tmp.190;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_114_31_114_52_end:
+        %tmp.191 = phi [%tmp.188 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_114_31_114_52_begin] [%tmp.189 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_114_31_114_52_true] [%tmp.190 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_114_31_114_52_else_false] [%tmp.191 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_114_31_114_52_end];
+        push %tmp.191;
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_114_24_114_64_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_114_24_114_64_else_false:
+        %tmp.192 = 0x2A3A4A;
+        push %tmp.192;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_114_24_114_64_end:
+        %tmp.193 = phi [%tmp.187 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_114_24_114_64_begin] [%tmp.191 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_114_24_114_64_true] [%tmp.192 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_114_24_114_64_else_false] [%tmp.193 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_114_24_114_64_end];
+        symbol [ Graphics %tmp.194 115 24 32 ];
+        %tmp.194 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.195 115 33 50 ];
+        %tmp.195 = getv %tmp.194 :COLOR_TRANSPARENT;
+        invoke %tmp.185 %tmp.186(%tmp.193, %tmp.195);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 116 12 ]
+        %tmp.196 = lgetv %dc;
+        symbol [ dc %tmp.196 116 12 14 ];
+        symbol [ drawRoundedRectangle %tmp.197 116 15 35 ];
+        %tmp.197 = getv function %tmp.196 :drawRoundedRectangle;
+        %tmp.198 = lgetv %rowX.4;
+        symbol [ rowX %tmp.198 116 36 40 ];
+        %tmp.199 = lgetv %ry.12;
+        symbol [ ry %tmp.199 116 42 44 ];
+        %tmp.200 = lgetv %rowW.3;
+        symbol [ rowW %tmp.200 116 46 50 ];
+        %tmp.201 = lgetv %rowH.2;
+        symbol [ rowH %tmp.201 116 52 56 ];
+        %tmp.202 = 5;
+        invoke %tmp.196 %tmp.197(%tmp.198, %tmp.199, %tmp.200, %tmp.201, %tmp.202);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 118 12 ]
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_118_12_125_12_if_stmt:
+        %tmp.203 = lgetv %sel.13;
+        symbol [ sel %tmp.203 118 16 19 ];
+        bf %tmp.203 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_118_12_125_12_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_118_12_125_12_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_118_21_125_12_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 119 16 ]
+        %tmp.204 = lgetv %dc;
+        symbol [ dc %tmp.204 119 16 18 ];
+        symbol [ setColor %tmp.205 119 19 27 ];
+        %tmp.205 = getv function %tmp.204 :setColor;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_119_28_119_49_begin:
+        %tmp.206 = lgetv %isStart.14;
+        symbol [ isStart %tmp.206 119 28 35 ];
+        bf %tmp.206 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_119_28_119_49_else_false;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_119_28_119_49_true:
+        %tmp.207 = 0x44BB22;
+        push %tmp.207;
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_119_28_119_49_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_119_28_119_49_else_false:
+        %tmp.208 = 0x55AAFF;
+        push %tmp.208;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_119_28_119_49_end:
+        %tmp.209 = phi [%tmp.206 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_119_28_119_49_begin] [%tmp.207 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_119_28_119_49_true] [%tmp.208 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_119_28_119_49_else_false] [%tmp.209 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_119_28_119_49_end];
+        symbol [ Graphics %tmp.210 120 28 36 ];
+        %tmp.210 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.211 120 37 54 ];
+        %tmp.211 = getv %tmp.210 :COLOR_TRANSPARENT;
+        invoke %tmp.204 %tmp.205(%tmp.209, %tmp.211);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 121 16 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_118_21_125_12_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_118_21_125_12_stop" ]
+        %ay.15 = local;
+        symbol [ ay %ay.15 121 20 22 ];
+        %tmp.212 = lgetv %ry.12;
+        symbol [ ry %tmp.212 121 25 27 ];
+        %tmp.213 = lgetv %rowH.2;
+        symbol [ rowH %tmp.213 121 30 34 ];
+        %tmp.214 = 2;
+        %tmp.215 = div %tmp.213 %tmp.214;
+        %tmp.216 = add %tmp.212 %tmp.215;
+        lputv %ay.15 %tmp.216;
+        symbol [ ay %ay.15 121 20 22 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 122 16 ]
+        %tmp.217 = lgetv %dc;
+        symbol [ dc %tmp.217 122 16 18 ];
+        symbol [ fillPolygon %tmp.218 122 19 30 ];
+        %tmp.218 = getv function %tmp.217 :fillPolygon;
+        %tmp.219 = newa 3;
+        %tmp.220 = newa 2;
+        %tmp.221 = lgetv %rowX.4;
+        symbol [ rowX %tmp.221 122 33 37 ];
+        %tmp.222 = 5;
+        %tmp.223 = add %tmp.221 %tmp.222;
+        %tmp.224 = dup %tmp.220;
+        %tmp.225 = aputv %tmp.224 0 %tmp.223;
+        %tmp.226 = lgetv %ay.15;
+        symbol [ ay %tmp.226 122 43 45 ];
+        %tmp.227 = 4;
+        %tmp.228 = sub %tmp.226 %tmp.227;
+        %tmp.229 = dup %tmp.225;
+        %tmp.230 = aputv %tmp.229 1 %tmp.228;
+        %tmp.231 = dup %tmp.219;
+        %tmp.232 = aputv %tmp.231 0 %tmp.230;
+        %tmp.233 = newa 2;
+        %tmp.234 = lgetv %rowX.4;
+        symbol [ rowX %tmp.234 123 33 37 ];
+        %tmp.235 = 5;
+        %tmp.236 = add %tmp.234 %tmp.235;
+        %tmp.237 = dup %tmp.233;
+        %tmp.238 = aputv %tmp.237 0 %tmp.236;
+        %tmp.239 = lgetv %ay.15;
+        symbol [ ay %tmp.239 123 43 45 ];
+        %tmp.240 = 4;
+        %tmp.241 = add %tmp.239 %tmp.240;
+        %tmp.242 = dup %tmp.238;
+        %tmp.243 = aputv %tmp.242 1 %tmp.241;
+        %tmp.244 = dup %tmp.232;
+        %tmp.245 = aputv %tmp.244 1 %tmp.243;
+        %tmp.246 = newa 2;
+        %tmp.247 = lgetv %rowX.4;
+        symbol [ rowX %tmp.247 124 33 37 ];
+        %tmp.248 = 11;
+        %tmp.249 = add %tmp.247 %tmp.248;
+        %tmp.250 = dup %tmp.246;
+        %tmp.251 = aputv %tmp.250 0 %tmp.249;
+        %tmp.252 = lgetv %ay.15;
+        symbol [ ay %tmp.252 124 44 46 ];
+        %tmp.253 = dup %tmp.251;
+        %tmp.254 = aputv %tmp.253 1 %tmp.252;
+        %tmp.255 = dup %tmp.245;
+        %tmp.256 = aputv %tmp.255 2 %tmp.254;
+        invoke %tmp.217 %tmp.218(%tmp.256);
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_118_21_125_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_118_12_125_12_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_118_12_125_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 126 12 ]
+        %tmp.257 = lgetv %dc;
+        symbol [ dc %tmp.257 126 12 14 ];
+        symbol [ setColor %tmp.258 126 15 23 ];
+        %tmp.258 = getv function %tmp.257 :setColor;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_126_24_126_64_begin:
+        %tmp.259 = lgetv %sel.13;
+        symbol [ sel %tmp.259 126 24 27 ];
+        bf %tmp.259 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_126_24_126_64_else_false;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_126_24_126_64_true:
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_126_31_126_52_begin:
+        %tmp.260 = lgetv %isStart.14;
+        symbol [ isStart %tmp.260 126 31 38 ];
+        bf %tmp.260 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_126_31_126_52_else_false;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_126_31_126_52_true:
+        %tmp.261 = 0xAAFF66;
+        push %tmp.261;
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_126_31_126_52_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_126_31_126_52_else_false:
+        %tmp.262 = 0xCCEEFF;
+        push %tmp.262;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_126_31_126_52_end:
+        %tmp.263 = phi [%tmp.260 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_126_31_126_52_begin] [%tmp.261 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_126_31_126_52_true] [%tmp.262 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_126_31_126_52_else_false] [%tmp.263 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_126_31_126_52_end];
+        push %tmp.263;
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_126_24_126_64_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_126_24_126_64_else_false:
+        %tmp.264 = 0x778899;
+        push %tmp.264;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_126_24_126_64_end:
+        %tmp.265 = phi [%tmp.259 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_126_24_126_64_begin] [%tmp.263 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_126_24_126_64_true] [%tmp.264 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_126_24_126_64_else_false] [%tmp.265 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_126_24_126_64_end];
+        symbol [ Graphics %tmp.266 127 24 32 ];
+        %tmp.266 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.267 127 33 50 ];
+        %tmp.267 = getv %tmp.266 :COLOR_TRANSPARENT;
+        invoke %tmp.257 %tmp.258(%tmp.265, %tmp.267);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 128 12 ]
+        %tmp.268 = lgetv %dc;
+        symbol [ dc %tmp.268 128 12 14 ];
+        symbol [ drawText %tmp.269 128 15 23 ];
+        %tmp.269 = getv function %tmp.268 :drawText;
+        %tmp.270 = lgetv %cx.1;
+        symbol [ cx %tmp.270 128 24 26 ];
+        %tmp.271 = lgetv %ry.12;
+        symbol [ ry %tmp.271 128 28 30 ];
+        %tmp.272 = lgetv %rowH.2;
+        symbol [ rowH %tmp.272 128 34 38 ];
+        %tmp.273 = 14;
+        %tmp.274 = sub %tmp.272 %tmp.273;
+        %tmp.275 = 2;
+        %tmp.276 = div %tmp.274 %tmp.275;
+        %tmp.277 = add %tmp.271 %tmp.276;
+        symbol [ Graphics %tmp.278 128 50 58 ];
+        %tmp.278 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.279 128 59 69 ];
+        %tmp.279 = getv %tmp.278 :FONT_XTINY;
+        %tmp.280 = lgetv %labels.9;
+        symbol [ labels %tmp.280 129 24 30 ];
+        %tmp.281 = lgetv %i.11;
+        symbol [ i %tmp.281 129 31 32 ];
+        %tmp.282 = agetv %tmp.280 %tmp.281;
+        symbol [ Graphics %tmp.283 129 35 43 ];
+        %tmp.283 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.284 129 44 63 ];
+        %tmp.284 = getv %tmp.283 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.268 %tmp.269(%tmp.270, %tmp.277, %tmp.279, %tmp.282, %tmp.284);
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_106_40_130_8_stop:
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_106_8_130_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 106 ]
+        %tmp.287 = lgetv %i.11;
+        symbol [ i %tmp.287 106 35 36 ];
+        %tmp.288 = add %tmp.287 1;
+        lputv %i.11 %tmp.288;
+        symbol [ i %i.11 106 35 36 ];
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_106_8_130_8_for_test;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_106_8_130_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 133 8 ]
+        %tmp.289 = lgetv %dc;
+        symbol [ dc %tmp.289 133 8 10 ];
+        symbol [ setColor %tmp.290 133 11 19 ];
+        %tmp.290 = getv function %tmp.289 :setColor;
+        %tmp.291 = 0x778899;
+        symbol [ Graphics %tmp.292 133 30 38 ];
+        %tmp.292 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.293 133 39 56 ];
+        %tmp.293 = getv %tmp.292 :COLOR_TRANSPARENT;
+        invoke %tmp.289 %tmp.290(%tmp.291, %tmp.293);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 134 8 ]
+        %tmp.294 = lgetv %dc;
+        symbol [ dc %tmp.294 134 8 10 ];
+        symbol [ drawText %tmp.295 134 11 19 ];
+        %tmp.295 = getv function %tmp.294 :drawText;
+        %tmp.296 = lgetv %cx.1;
+        symbol [ cx %tmp.296 134 20 22 ];
+        %tmp.297 = lgetv %h;
+        symbol [ h %tmp.297 134 24 25 ];
+        %tmp.298 = 14;
+        %tmp.299 = sub %tmp.297 %tmp.298;
+        symbol [ Graphics %tmp.300 134 32 40 ];
+        %tmp.300 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.301 134 41 51 ];
+        %tmp.301 = getv %tmp.300 :FONT_XTINY;
+        %tmp.302 = "UP=row  DN=letter  tap=guess";
+        symbol [ Graphics %tmp.303 135 52 60 ];
+        %tmp.303 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.304 135 61 80 ];
+        %tmp.304 = getv %tmp.303 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.294 %tmp.295(%tmp.296, %tmp.299, %tmp.301, %tmp.302, %tmp.304);
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_75_45_136_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc"; @line = 139; @symbol_functiondef = [_drawNotebookLines,139,27,45]; @symbol_param<0> = [dc,139,46,48]; @symbol_param<1> = [w,139,50,51]; @symbol_param<2> = [h,139,53,54]; ]
+    protected static
+    function _drawNotebookLines(dc, w, h) {
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_139_56_150_4_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 140 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 140 8 10 ];
+        symbol [ setColor %tmp.2 140 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        %tmp.3 = 0xE3D6C0;
+        symbol [ Graphics %tmp.4 140 30 38 ];
+        %tmp.4 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.5 140 39 56 ];
+        %tmp.5 = getv %tmp.4 :COLOR_TRANSPARENT;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.5);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 141 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_139_56_150_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_139_56_150_4_stop" ]
+        %step.1 = local;
+        symbol [ step %step.1 141 12 16 ];
+        %tmp.6 = lgetv %h;
+        symbol [ h %tmp.6 141 19 20 ];
+        %tmp.7 = 14;
+        %tmp.8 = div %tmp.6 %tmp.7;
+        lputv %step.1 %tmp.8;
+        symbol [ step %step.1 141 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 142 8 ]
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_142_8_142_34_if_stmt:
+        %tmp.9 = lgetv %step.1;
+        symbol [ step %tmp.9 142 12 16 ];
+        %tmp.10 = 6;
+        %tmp.11 = lt %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_142_8_142_34_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_142_8_142_34_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_142_22_142_34_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 142 24 ]
+        %tmp.12 = 6;
+        lputv %step.1 %tmp.12;
+        symbol [ step %step.1 142 24 28 ];
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_142_22_142_34_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_142_8_142_34_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_142_8_142_34_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 143 8 ]
+        for @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_143_8_145_8_for_test @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_143_8_145_8_for_incr @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_143_8_145_8_for_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_143_8_145_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_143_8_145_8_for_begin" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_143_8_145_8_for_end" ]
+        %y.2 = local;
+        symbol [ y %y.2 143 17 18 ];
+        %tmp.13 = lgetv %step.1;
+        symbol [ step %tmp.13 143 21 25 ];
+        lputv %y.2 %tmp.13;
+        symbol [ y %y.2 143 17 18 ];
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_143_8_145_8_for_test:
+        %tmp.14 = lgetv %y.2;
+        symbol [ y %tmp.14 143 27 28 ];
+        %tmp.15 = lgetv %h;
+        symbol [ h %tmp.15 143 31 32 ];
+        %tmp.16 = lt %tmp.14 %tmp.15;
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_143_8_145_8_for_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_143_8_145_8_for_begin:
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_143_45_145_8_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 144 12 ]
+        %tmp.17 = lgetv %dc;
+        symbol [ dc %tmp.17 144 12 14 ];
+        symbol [ drawLine %tmp.18 144 15 23 ];
+        %tmp.18 = getv function %tmp.17 :drawLine;
+        %tmp.19 = 0;
+        %tmp.20 = lgetv %y.2;
+        symbol [ y %tmp.20 144 27 28 ];
+        %tmp.21 = lgetv %w;
+        symbol [ w %tmp.21 144 30 31 ];
+        %tmp.22 = lgetv %y.2;
+        symbol [ y %tmp.22 144 33 34 ];
+        invoke %tmp.17 %tmp.18(%tmp.19, %tmp.20, %tmp.21, %tmp.22);
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_143_45_145_8_stop:
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_143_8_145_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 143 ]
+        %tmp.23 = lgetv %y.2;
+        symbol [ y %tmp.23 143 34 35 ];
+        %tmp.24 = lgetv %step.1;
+        symbol [ step %tmp.24 143 39 43 ];
+        %tmp.25 = add %tmp.23 %tmp.24;
+        lputv %y.2 %tmp.25;
+        symbol [ y %y.2 143 34 35 ];
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_143_8_145_8_for_test;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_143_8_145_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 147 8 ]
+        %tmp.26 = lgetv %dc;
+        symbol [ dc %tmp.26 147 8 10 ];
+        symbol [ setColor %tmp.27 147 11 19 ];
+        %tmp.27 = getv function %tmp.26 :setColor;
+        %tmp.28 = 0xDC6E6E;
+        symbol [ Graphics %tmp.29 147 30 38 ];
+        %tmp.29 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.30 147 39 56 ];
+        %tmp.30 = getv %tmp.29 :COLOR_TRANSPARENT;
+        invoke %tmp.26 %tmp.27(%tmp.28, %tmp.30);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 148 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_139_56_150_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_139_56_150_4_stop" ]
+        %margin.3 = local;
+        symbol [ margin %margin.3 148 12 18 ];
+        %tmp.31 = lgetv %w;
+        symbol [ w %tmp.31 148 21 22 ];
+        %tmp.32 = 10;
+        %tmp.33 = div %tmp.31 %tmp.32;
+        lputv %margin.3 %tmp.33;
+        symbol [ margin %margin.3 148 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 149 8 ]
+        %tmp.34 = lgetv %dc;
+        symbol [ dc %tmp.34 149 8 10 ];
+        symbol [ drawLine %tmp.35 149 11 19 ];
+        %tmp.35 = getv function %tmp.34 :drawLine;
+        %tmp.36 = lgetv %margin.3;
+        symbol [ margin %tmp.36 149 20 26 ];
+        %tmp.37 = 0;
+        %tmp.38 = lgetv %margin.3;
+        symbol [ margin %tmp.38 149 31 37 ];
+        %tmp.39 = lgetv %h;
+        symbol [ h %tmp.39 149 39 40 ];
+        invoke %tmp.34 %tmp.35(%tmp.36, %tmp.37, %tmp.38, %tmp.39);
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_139_56_150_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc"; @line = 162; @symbol_functiondef = [drawGame,162,20,28]; @symbol_param<0> = [dc,162,29,31]; @symbol_param<1> = [ctrl,162,33,37]; @symbol_param<2> = [w,162,39,40]; @symbol_param<3> = [h,162,42,43]; ]
+    static
+    function drawGame(dc, ctrl, w, h) {
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_162_45_201_4_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 163 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 163 8 10 ];
+        symbol [ setColor %tmp.2 163 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        symbol [ COL_PAPER %tmp.4 163 20 29 ];
+        %tmp.4 = getv ? :COL_PAPER;
+        symbol [ COL_PAPER %tmp.6 163 31 40 ];
+        %tmp.6 = getv ? :COL_PAPER;
+        invoke %tmp.1 %tmp.2(%tmp.4, %tmp.6);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 164 8 ]
+        %tmp.7 = lgetv %dc;
+        symbol [ dc %tmp.7 164 8 10 ];
+        symbol [ clear %tmp.8 164 11 16 ];
+        %tmp.8 = getv function %tmp.7 :clear;
+        invoke %tmp.7 %tmp.8();
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 165 8 ]
+        %tmp.9 = self;
+        symbol [ _drawNotebookLines %tmp.10 165 8 26 ];
+        %tmp.10 = getv function %tmp.9 :_drawNotebookLines;
+        %tmp.11 = lgetv %dc;
+        symbol [ dc %tmp.11 165 27 29 ];
+        %tmp.12 = lgetv %w;
+        symbol [ w %tmp.12 165 31 32 ];
+        %tmp.13 = lgetv %h;
+        symbol [ h %tmp.13 165 34 35 ];
+        invoke %tmp.9 %tmp.10(%tmp.11, %tmp.12, %tmp.13);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 167 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_162_45_201_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_162_45_201_4_stop" ]
+        %lives.1 = local;
+        symbol [ lives %lives.1 167 12 17 ];
+        %tmp.14 = lgetv %ctrl;
+        symbol [ ctrl %tmp.14 167 20 24 ];
+        symbol [ attemptsLeft %tmp.15 167 25 37 ];
+        %tmp.15 = getv function %tmp.14 :attemptsLeft;
+        %tmp.16 = invoke %tmp.14 %tmp.15();
+        lputv %lives.1 %tmp.16;
+        symbol [ lives %lives.1 167 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 169 8 ]
+        %tmp.17 = lgetv %dc;
+        symbol [ dc %tmp.17 169 8 10 ];
+        symbol [ setColor %tmp.18 169 11 19 ];
+        %tmp.18 = getv function %tmp.17 :setColor;
+        symbol [ COL_INK %tmp.20 169 20 27 ];
+        %tmp.20 = getv ? :COL_INK;
+        symbol [ Graphics %tmp.21 169 29 37 ];
+        %tmp.21 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.22 169 38 55 ];
+        %tmp.22 = getv %tmp.21 :COLOR_TRANSPARENT;
+        invoke %tmp.17 %tmp.18(%tmp.20, %tmp.22);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 170 8 ]
+        %tmp.23 = lgetv %dc;
+        symbol [ dc %tmp.23 170 8 10 ];
+        symbol [ drawText %tmp.24 170 11 19 ];
+        %tmp.24 = getv function %tmp.23 :drawText;
+        %tmp.25 = lgetv %w;
+        symbol [ w %tmp.25 170 20 21 ];
+        %tmp.26 = 2;
+        %tmp.27 = div %tmp.25 %tmp.26;
+        %tmp.28 = lgetv %h;
+        symbol [ h %tmp.28 170 27 28 ];
+        %tmp.29 = 7;
+        %tmp.30 = mul %tmp.28 %tmp.29;
+        %tmp.31 = 100;
+        %tmp.32 = div %tmp.30 %tmp.31;
+        symbol [ Graphics %tmp.33 170 40 48 ];
+        %tmp.33 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.34 170 49 59 ];
+        %tmp.34 = getv %tmp.33 :FONT_XTINY;
+        %tmp.35 = "Lives ";
+        %tmp.36 = lgetv %lives.1;
+        symbol [ lives %tmp.36 171 31 36 ];
+        symbol [ toString %tmp.37 171 37 45 ];
+        %tmp.37 = getv function %tmp.36 :toString;
+        %tmp.38 = invoke %tmp.36 %tmp.37();
+        %tmp.39 = add %tmp.35 %tmp.38;
+        symbol [ Graphics %tmp.40 172 20 28 ];
+        %tmp.40 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.41 172 29 48 ];
+        %tmp.41 = getv %tmp.40 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.23 %tmp.24(%tmp.27, %tmp.32, %tmp.34, %tmp.39, %tmp.41);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 175 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_162_45_201_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_162_45_201_4_stop" ]
+        %gx.2 = local;
+        symbol [ gx %gx.2 175 12 14 ];
+        %tmp.42 = lgetv %w;
+        symbol [ w %tmp.42 175 17 18 ];
+        %tmp.43 = 12;
+        %tmp.44 = mul %tmp.42 %tmp.43;
+        %tmp.45 = 100;
+        %tmp.46 = div %tmp.44 %tmp.45;
+        lputv %gx.2 %tmp.46;
+        symbol [ gx %gx.2 175 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 176 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_162_45_201_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_162_45_201_4_stop" ]
+        %gy.3 = local;
+        symbol [ gy %gy.3 176 12 14 ];
+        %tmp.47 = lgetv %h;
+        symbol [ h %tmp.47 176 17 18 ];
+        %tmp.48 = 13;
+        %tmp.49 = mul %tmp.47 %tmp.48;
+        %tmp.50 = 100;
+        %tmp.51 = div %tmp.49 %tmp.50;
+        lputv %gy.3 %tmp.51;
+        symbol [ gy %gy.3 176 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 177 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_162_45_201_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_162_45_201_4_stop" ]
+        %gw.4 = local;
+        symbol [ gw %gw.4 177 12 14 ];
+        %tmp.52 = lgetv %w;
+        symbol [ w %tmp.52 177 17 18 ];
+        %tmp.53 = 31;
+        %tmp.54 = mul %tmp.52 %tmp.53;
+        %tmp.55 = 100;
+        %tmp.56 = div %tmp.54 %tmp.55;
+        lputv %gw.4 %tmp.56;
+        symbol [ gw %gw.4 177 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 178 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_162_45_201_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_162_45_201_4_stop" ]
+        %gh.5 = local;
+        symbol [ gh %gh.5 178 12 14 ];
+        %tmp.57 = lgetv %h;
+        symbol [ h %tmp.57 178 17 18 ];
+        %tmp.58 = 27;
+        %tmp.59 = mul %tmp.57 %tmp.58;
+        %tmp.60 = 100;
+        %tmp.61 = div %tmp.59 %tmp.60;
+        lputv %gh.5 %tmp.61;
+        symbol [ gh %gh.5 178 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 179 8 ]
+        symbol [ HangmanRenderer %tmp.63 179 8 23 ];
+        %tmp.63 = getv ? :HangmanRenderer;
+        symbol [ draw %tmp.64 179 24 28 ];
+        %tmp.64 = getv function %tmp.63 :draw;
+        %tmp.65 = lgetv %dc;
+        symbol [ dc %tmp.65 179 29 31 ];
+        %tmp.66 = lgetv %gx.2;
+        symbol [ gx %tmp.66 179 33 35 ];
+        %tmp.67 = lgetv %gy.3;
+        symbol [ gy %tmp.67 179 37 39 ];
+        %tmp.68 = lgetv %gw.4;
+        symbol [ gw %tmp.68 179 41 43 ];
+        %tmp.69 = lgetv %gh.5;
+        symbol [ gh %tmp.69 179 45 47 ];
+        %tmp.70 = lgetv %ctrl;
+        symbol [ ctrl %tmp.70 179 49 53 ];
+        symbol [ misses %tmp.71 179 54 60 ];
+        %tmp.71 = getv %tmp.70 :misses;
+        invoke %tmp.63 %tmp.64(%tmp.65, %tmp.66, %tmp.67, %tmp.68, %tmp.69, %tmp.71);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 182 8 ]
+        %tmp.72 = lgetv %dc;
+        symbol [ dc %tmp.72 182 8 10 ];
+        symbol [ setColor %tmp.73 182 11 19 ];
+        %tmp.73 = getv function %tmp.72 :setColor;
+        symbol [ COL_INK_DIM %tmp.75 182 20 31 ];
+        %tmp.75 = getv ? :COL_INK_DIM;
+        symbol [ Graphics %tmp.76 182 33 41 ];
+        %tmp.76 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.77 182 42 59 ];
+        %tmp.77 = getv %tmp.76 :COLOR_TRANSPARENT;
+        invoke %tmp.72 %tmp.73(%tmp.75, %tmp.77);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 183 8 ]
+        %tmp.78 = lgetv %dc;
+        symbol [ dc %tmp.78 183 8 10 ];
+        symbol [ drawText %tmp.79 183 11 19 ];
+        %tmp.79 = getv function %tmp.78 :drawText;
+        %tmp.80 = lgetv %w;
+        symbol [ w %tmp.80 183 20 21 ];
+        %tmp.81 = 88;
+        %tmp.82 = mul %tmp.80 %tmp.81;
+        %tmp.83 = 100;
+        %tmp.84 = div %tmp.82 %tmp.83;
+        %tmp.85 = lgetv %h;
+        symbol [ h %tmp.85 183 34 35 ];
+        %tmp.86 = 17;
+        %tmp.87 = mul %tmp.85 %tmp.86;
+        %tmp.88 = 100;
+        %tmp.89 = div %tmp.87 %tmp.88;
+        symbol [ Graphics %tmp.90 183 48 56 ];
+        %tmp.90 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.91 183 57 67 ];
+        %tmp.91 = getv %tmp.90 :FONT_XTINY;
+        symbol [ WordList %tmp.93 184 20 28 ];
+        %tmp.93 = getv ? :WordList;
+        symbol [ categoryName %tmp.94 184 29 41 ];
+        %tmp.94 = getv function %tmp.93 :categoryName;
+        %tmp.95 = lgetv %ctrl;
+        symbol [ ctrl %tmp.95 184 42 46 ];
+        symbol [ category %tmp.96 184 47 55 ];
+        %tmp.96 = getv %tmp.95 :category;
+        %tmp.97 = invoke %tmp.93 %tmp.94(%tmp.96);
+        symbol [ Graphics %tmp.98 185 20 28 ];
+        %tmp.98 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_RIGHT %tmp.99 185 29 47 ];
+        %tmp.99 = getv %tmp.98 :TEXT_JUSTIFY_RIGHT;
+        invoke %tmp.78 %tmp.79(%tmp.84, %tmp.89, %tmp.91, %tmp.97, %tmp.99);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 188 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_162_45_201_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_162_45_201_4_stop" ]
+        %maskedY.6 = local;
+        symbol [ maskedY %maskedY.6 188 12 19 ];
+        %tmp.100 = lgetv %h;
+        symbol [ h %tmp.100 188 22 23 ];
+        %tmp.101 = 45;
+        %tmp.102 = mul %tmp.100 %tmp.101;
+        %tmp.103 = 100;
+        %tmp.104 = div %tmp.102 %tmp.103;
+        lputv %maskedY.6 %tmp.104;
+        symbol [ maskedY %maskedY.6 188 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 189 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_162_45_201_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_162_45_201_4_stop" ]
+        %maskedFont.7 = local;
+        symbol [ maskedFont %maskedFont.7 189 12 22 ];
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_189_25_190_44_begin:
+        %tmp.105 = lgetv %ctrl;
+        symbol [ ctrl %tmp.105 189 26 30 ];
+        symbol [ word %tmp.106 189 31 35 ];
+        %tmp.106 = getv %tmp.105 :word;
+        symbol [ length %tmp.107 189 36 42 ];
+        %tmp.107 = getv function %tmp.106 :length;
+        %tmp.108 = invoke %tmp.106 %tmp.107();
+        %tmp.109 = 9;
+        %tmp.110 = gt %tmp.108 %tmp.109;
+        bf %tmp.110 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_189_25_190_44_else_false;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_189_25_190_44_true:
+        symbol [ Graphics %tmp.111 190 14 22 ];
+        %tmp.111 = getm $.Toybox.Graphics;
+        symbol [ FONT_TINY %tmp.112 190 23 32 ];
+        %tmp.112 = getv %tmp.111 :FONT_TINY;
+        push %tmp.112;
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_189_25_190_44_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_189_25_190_44_else_false:
+        symbol [ Graphics %tmp.113 190 35 43 ];
+        %tmp.113 = getm $.Toybox.Graphics;
+        symbol [ FONT_SMALL %tmp.114 190 44 54 ];
+        %tmp.114 = getv %tmp.113 :FONT_SMALL;
+        push %tmp.114;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_189_25_190_44_end:
+        %tmp.115 = phi [%tmp.110 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_189_25_190_44_begin] [%tmp.112 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_189_25_190_44_true] [%tmp.114 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_189_25_190_44_else_false] [%tmp.115 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_189_25_190_44_end];
+        lputv %maskedFont.7 %tmp.115;
+        symbol [ maskedFont %maskedFont.7 189 12 22 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 191 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_162_45_201_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_162_45_201_4_stop" ]
+        %mfh.8 = local;
+        symbol [ mfh %mfh.8 191 12 15 ];
+        %tmp.116 = lgetv %dc;
+        symbol [ dc %tmp.116 191 18 20 ];
+        symbol [ getFontHeight %tmp.117 191 21 34 ];
+        %tmp.117 = getv function %tmp.116 :getFontHeight;
+        %tmp.118 = lgetv %maskedFont.7;
+        symbol [ maskedFont %tmp.118 191 35 45 ];
+        %tmp.119 = invoke %tmp.116 %tmp.117(%tmp.118);
+        lputv %mfh.8 %tmp.119;
+        symbol [ mfh %mfh.8 191 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 192 8 ]
+        %tmp.120 = lgetv %dc;
+        symbol [ dc %tmp.120 192 8 10 ];
+        symbol [ setColor %tmp.121 192 11 19 ];
+        %tmp.121 = getv function %tmp.120 :setColor;
+        symbol [ COL_INK %tmp.123 192 20 27 ];
+        %tmp.123 = getv ? :COL_INK;
+        symbol [ Graphics %tmp.124 192 29 37 ];
+        %tmp.124 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.125 192 38 55 ];
+        %tmp.125 = getv %tmp.124 :COLOR_TRANSPARENT;
+        invoke %tmp.120 %tmp.121(%tmp.123, %tmp.125);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 193 8 ]
+        %tmp.126 = lgetv %dc;
+        symbol [ dc %tmp.126 193 8 10 ];
+        symbol [ drawText %tmp.127 193 11 19 ];
+        %tmp.127 = getv function %tmp.126 :drawText;
+        %tmp.128 = lgetv %w;
+        symbol [ w %tmp.128 193 20 21 ];
+        %tmp.129 = 2;
+        %tmp.130 = div %tmp.128 %tmp.129;
+        %tmp.131 = lgetv %maskedY.6;
+        symbol [ maskedY %tmp.131 193 27 34 ];
+        %tmp.132 = lgetv %mfh.8;
+        symbol [ mfh %tmp.132 193 37 40 ];
+        %tmp.133 = 2;
+        %tmp.134 = div %tmp.132 %tmp.133;
+        %tmp.135 = sub %tmp.131 %tmp.134;
+        %tmp.136 = lgetv %maskedFont.7;
+        symbol [ maskedFont %tmp.136 193 46 56 ];
+        %tmp.137 = lgetv %ctrl;
+        symbol [ ctrl %tmp.137 194 20 24 ];
+        symbol [ maskedWord %tmp.138 194 25 35 ];
+        %tmp.138 = getv function %tmp.137 :maskedWord;
+        %tmp.139 = invoke %tmp.137 %tmp.138();
+        symbol [ Graphics %tmp.140 194 39 47 ];
+        %tmp.140 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.141 194 48 67 ];
+        %tmp.141 = getv %tmp.140 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.126 %tmp.127(%tmp.130, %tmp.135, %tmp.136, %tmp.139, %tmp.141);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 197 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_162_45_201_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_162_45_201_4_stop" ]
+        %kb.9 = local;
+        symbol [ kb %kb.9 197 12 14 ];
+        %tmp.142 = self;
+        symbol [ layoutKeyboard %tmp.143 197 17 31 ];
+        %tmp.143 = getv function %tmp.142 :layoutKeyboard;
+        %tmp.144 = lgetv %w;
+        symbol [ w %tmp.144 197 32 33 ];
+        %tmp.145 = lgetv %h;
+        symbol [ h %tmp.145 197 35 36 ];
+        %tmp.146 = invoke %tmp.142 %tmp.143(%tmp.144, %tmp.145);
+        lputv %kb.9 %tmp.146;
+        symbol [ kb %kb.9 197 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 198 8 ]
+        %tmp.147 = self;
+        symbol [ _drawKeyboard %tmp.148 198 8 21 ];
+        %tmp.148 = getv function %tmp.147 :_drawKeyboard;
+        %tmp.149 = lgetv %dc;
+        symbol [ dc %tmp.149 198 22 24 ];
+        %tmp.150 = lgetv %ctrl;
+        symbol [ ctrl %tmp.150 198 26 30 ];
+        %tmp.151 = lgetv %kb.9;
+        symbol [ kb %tmp.151 198 32 34 ];
+        invoke %tmp.147 %tmp.148(%tmp.149, %tmp.150, %tmp.151);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 200 8 ]
+        %tmp.152 = lgetv %kb.9;
+        symbol [ kb %tmp.152 200 15 17 ];
+        ret %tmp.152;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_162_45_201_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc"; @line = 211; @symbol_functiondef = [layoutKeyboard,211,20,34]; @symbol_param<0> = [w,211,35,36]; @symbol_param<1> = [h,211,38,39]; ]
+    static
+    function layoutKeyboard(w, h) {
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_211_41_221_4_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 212 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_211_41_221_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_211_41_221_4_stop" ]
+        %kb.1 = local;
+        symbol [ kb %kb.1 212 12 14 ];
+        symbol [ KbLayout %tmp.4 212 21 29 ];
+        %tmp.4 = getv ? :KbLayout;
+        %tmp.1 = newc %tmp.4 ();
+        lputv %kb.1 %tmp.1;
+        symbol [ kb %kb.1 212 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 213 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_211_41_221_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_211_41_221_4_stop" ]
+        %marginX.2 = local;
+        symbol [ marginX %marginX.2 213 12 19 ];
+        %tmp.5 = lgetv %w;
+        symbol [ w %tmp.5 213 22 23 ];
+        %tmp.6 = 17;
+        %tmp.7 = mul %tmp.5 %tmp.6;
+        %tmp.8 = 100;
+        %tmp.9 = div %tmp.7 %tmp.8;
+        lputv %marginX.2 %tmp.9;
+        symbol [ marginX %marginX.2 213 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 214 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_211_41_221_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_211_41_221_4_stop" ]
+        %bandY.3 = local;
+        symbol [ bandY %bandY.3 214 12 17 ];
+        %tmp.10 = lgetv %h;
+        symbol [ h %tmp.10 214 22 23 ];
+        %tmp.11 = 53;
+        %tmp.12 = mul %tmp.10 %tmp.11;
+        %tmp.13 = 100;
+        %tmp.14 = div %tmp.12 %tmp.13;
+        lputv %bandY.3 %tmp.14;
+        symbol [ bandY %bandY.3 214 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 215 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_211_41_221_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_211_41_221_4_stop" ]
+        %bandH.4 = local;
+        symbol [ bandH %bandH.4 215 12 17 ];
+        %tmp.15 = lgetv %h;
+        symbol [ h %tmp.15 215 22 23 ];
+        %tmp.16 = 30;
+        %tmp.17 = mul %tmp.15 %tmp.16;
+        %tmp.18 = 100;
+        %tmp.19 = div %tmp.17 %tmp.18;
+        lputv %bandH.4 %tmp.19;
+        symbol [ bandH %bandH.4 215 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 216 8 ]
+        %tmp.20 = lgetv %kb.1;
+        symbol [ kb %tmp.20 216 8 10 ];
+        %tmp.21 = lgetv %marginX.2;
+        symbol [ marginX %tmp.21 216 18 25 ];
+        symbol [ x0 ? 216 11 13 ];
+        putv %tmp.20 :x0 %tmp.21;
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 217 8 ]
+        %tmp.22 = lgetv %kb.1;
+        symbol [ kb %tmp.22 217 8 10 ];
+        %tmp.23 = lgetv %bandY.3;
+        symbol [ bandY %tmp.23 217 18 23 ];
+        symbol [ y0 ? 217 11 13 ];
+        putv %tmp.22 :y0 %tmp.23;
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 218 8 ]
+        %tmp.24 = lgetv %kb.1;
+        symbol [ kb %tmp.24 218 8 10 ];
+        %tmp.25 = lgetv %w;
+        symbol [ w %tmp.25 218 20 21 ];
+        %tmp.26 = lgetv %marginX.2;
+        symbol [ marginX %tmp.26 218 24 31 ];
+        %tmp.27 = 2;
+        %tmp.28 = mul %tmp.26 %tmp.27;
+        %tmp.29 = sub %tmp.25 %tmp.28;
+        symbol [ KB_COLS %tmp.31 218 39 46 ];
+        %tmp.31 = getv ? :KB_COLS;
+        %tmp.32 = div %tmp.29 %tmp.31;
+        symbol [ cellW ? 218 11 16 ];
+        putv %tmp.24 :cellW %tmp.32;
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 219 8 ]
+        %tmp.33 = lgetv %kb.1;
+        symbol [ kb %tmp.33 219 8 10 ];
+        %tmp.34 = lgetv %bandH.4;
+        symbol [ bandH %tmp.34 219 19 24 ];
+        symbol [ KB_ROWS %tmp.36 219 27 34 ];
+        %tmp.36 = getv ? :KB_ROWS;
+        %tmp.37 = div %tmp.34 %tmp.36;
+        symbol [ cellH ? 219 11 16 ];
+        putv %tmp.33 :cellH %tmp.37;
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 220 8 ]
+        %tmp.38 = lgetv %kb.1;
+        symbol [ kb %tmp.38 220 15 17 ];
+        ret %tmp.38;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_211_41_221_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc"; @line = 223; @symbol_functiondef = [_drawKeyboard,223,27,40]; @symbol_param<0> = [dc,223,41,43]; @symbol_param<1> = [ctrl,223,45,49]; @symbol_param<2> = [kb,223,51,53]; ]
+    protected static
+    function _drawKeyboard(dc, ctrl, kb) {
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_223_55_254_4_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 224 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 224 8 10 ];
+        symbol [ setPenWidth %tmp.2 224 11 22 ];
+        %tmp.2 = getv function %tmp.1 :setPenWidth;
+        %tmp.3 = 1;
+        invoke %tmp.1 %tmp.2(%tmp.3);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 225 8 ]
+        for @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_225_8_253_8_for_test @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_225_8_253_8_for_incr @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_225_8_253_8_for_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_225_8_253_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_225_8_253_8_for_begin" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_225_8_253_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 225 17 18 ];
+        %tmp.4 = 0;
+        lputv %i.1 %tmp.4;
+        symbol [ i %i.1 225 17 18 ];
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_225_8_253_8_for_test:
+        %tmp.5 = lgetv %i.1;
+        symbol [ i %tmp.5 225 24 25 ];
+        %tmp.6 = 26;
+        %tmp.7 = lt %tmp.5 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_225_8_253_8_for_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_225_8_253_8_for_begin:
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_225_37_253_8_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 226 12 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_225_37_253_8_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_225_37_253_8_stop" ]
+        %rect.2 = local;
+        symbol [ rect %rect.2 226 16 20 ];
+        %tmp.8 = lgetv %kb;
+        symbol [ kb %tmp.8 226 23 25 ];
+        symbol [ rectFor %tmp.9 226 26 33 ];
+        %tmp.9 = getv function %tmp.8 :rectFor;
+        %tmp.10 = lgetv %i.1;
+        symbol [ i %tmp.10 226 34 35 ];
+        %tmp.11 = invoke %tmp.8 %tmp.9(%tmp.10);
+        lputv %rect.2 %tmp.11;
+        symbol [ rect %rect.2 226 16 20 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 227 12 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_225_37_253_8_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_225_37_253_8_stop" ]
+        %x.3 = local;
+        symbol [ x %x.3 227 16 17 ];
+        %tmp.12 = lgetv %rect.2;
+        symbol [ rect %tmp.12 227 20 24 ];
+        %tmp.13 = 0;
+        %tmp.14 = agetv %tmp.12 %tmp.13;
+        lputv %x.3 %tmp.14;
+        symbol [ x %x.3 227 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 227 29 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_225_37_253_8_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_225_37_253_8_stop" ]
+        %y.4 = local;
+        symbol [ y %y.4 227 33 34 ];
+        %tmp.15 = lgetv %rect.2;
+        symbol [ rect %tmp.15 227 37 41 ];
+        %tmp.16 = 1;
+        %tmp.17 = agetv %tmp.15 %tmp.16;
+        lputv %y.4 %tmp.17;
+        symbol [ y %y.4 227 33 34 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 228 12 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_225_37_253_8_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_225_37_253_8_stop" ]
+        %cw.5 = local;
+        symbol [ cw %cw.5 228 16 18 ];
+        %tmp.18 = lgetv %rect.2;
+        symbol [ rect %tmp.18 228 21 25 ];
+        %tmp.19 = 2;
+        %tmp.20 = agetv %tmp.18 %tmp.19;
+        lputv %cw.5 %tmp.20;
+        symbol [ cw %cw.5 228 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 228 30 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_225_37_253_8_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_225_37_253_8_stop" ]
+        %ch.6 = local;
+        symbol [ ch %ch.6 228 34 36 ];
+        %tmp.21 = lgetv %rect.2;
+        symbol [ rect %tmp.21 228 39 43 ];
+        %tmp.22 = 3;
+        %tmp.23 = agetv %tmp.21 %tmp.22;
+        lputv %ch.6 %tmp.23;
+        symbol [ ch %ch.6 228 34 36 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 229 12 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_225_37_253_8_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_225_37_253_8_stop" ]
+        %ch_str.7 = local;
+        symbol [ ch_str %ch_str.7 229 16 22 ];
+        symbol [ GameController %tmp.25 229 25 39 ];
+        %tmp.25 = getv ? :GameController;
+        symbol [ _letterChar %tmp.26 229 40 51 ];
+        %tmp.26 = getv function %tmp.25 :_letterChar;
+        %tmp.27 = lgetv %i.1;
+        symbol [ i %tmp.27 229 52 53 ];
+        %tmp.28 = invoke %tmp.25 %tmp.26(%tmp.27);
+        lputv %ch_str.7 %tmp.28;
+        symbol [ ch_str %ch_str.7 229 16 22 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 230 12 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_225_37_253_8_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_225_37_253_8_stop" ]
+        %col.8 = local;
+        symbol [ col %col.8 230 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 231 12 ]
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_231_12_235_12_if_stmt:
+        %tmp.29 = lgetv %ctrl;
+        symbol [ ctrl %tmp.29 231 16 20 ];
+        symbol [ isGuessed %tmp.30 231 21 30 ];
+        %tmp.30 = getv function %tmp.29 :isGuessed;
+        %tmp.31 = lgetv %i.1;
+        symbol [ i %tmp.31 231 31 32 ];
+        %tmp.32 = invoke %tmp.29 %tmp.30(%tmp.31);
+        bf %tmp.32 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_231_12_235_12_if_else_false;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_231_12_235_12_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_231_35_233_12_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 232 16 ]
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_232_22_232_52_begin:
+        %tmp.33 = lgetv %ctrl;
+        symbol [ ctrl %tmp.33 232 22 26 ];
+        symbol [ isCorrect %tmp.34 232 27 36 ];
+        %tmp.34 = getv function %tmp.33 :isCorrect;
+        %tmp.35 = lgetv %i.1;
+        symbol [ i %tmp.35 232 37 38 ];
+        %tmp.36 = invoke %tmp.33 %tmp.34(%tmp.35);
+        bf %tmp.36 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_232_22_232_52_else_false;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_232_22_232_52_true:
+        symbol [ COL_HIT %tmp.38 232 42 49 ];
+        %tmp.38 = getv ? :COL_HIT;
+        push %tmp.38;
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_232_22_232_52_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_232_22_232_52_else_false:
+        symbol [ COL_MISS %tmp.40 232 52 60 ];
+        %tmp.40 = getv ? :COL_MISS;
+        push %tmp.40;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_232_22_232_52_end:
+        %tmp.41 = phi [%tmp.36 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_232_22_232_52_begin] [%tmp.38 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_232_22_232_52_true] [%tmp.40 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_232_22_232_52_else_false] [%tmp.41 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_232_22_232_52_end];
+        lputv %col.8 %tmp.41;
+        symbol [ col %col.8 232 16 19 ];
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_231_35_233_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_231_12_235_12_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_231_12_235_12_if_else_false:
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_233_19_235_12_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 234 16 ]
+        symbol [ COL_INK %tmp.43 234 22 29 ];
+        %tmp.43 = getv ? :COL_INK;
+        lputv %col.8 %tmp.43;
+        symbol [ col %col.8 234 16 19 ];
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_233_19_235_12_stop:
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_231_12_235_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 237 12 ]
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_237_12_242_12_if_stmt:
+        %tmp.44 = lgetv %i.1;
+        symbol [ i %tmp.44 237 16 17 ];
+        %tmp.45 = lgetv %ctrl;
+        symbol [ ctrl %tmp.45 237 21 25 ];
+        symbol [ cursor %tmp.46 237 26 32 ];
+        %tmp.46 = getv %tmp.45 :cursor;
+        %tmp.47 = eq %tmp.44 %tmp.46;
+        bf %tmp.47 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_237_12_242_12_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_237_12_242_12_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_237_34_242_12_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 238 16 ]
+        %tmp.48 = lgetv %dc;
+        symbol [ dc %tmp.48 238 16 18 ];
+        symbol [ setColor %tmp.49 238 19 27 ];
+        %tmp.49 = getv function %tmp.48 :setColor;
+        symbol [ COL_SELECT %tmp.51 238 28 38 ];
+        %tmp.51 = getv ? :COL_SELECT;
+        symbol [ Graphics %tmp.52 238 40 48 ];
+        %tmp.52 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.53 238 49 66 ];
+        %tmp.53 = getv %tmp.52 :COLOR_TRANSPARENT;
+        invoke %tmp.48 %tmp.49(%tmp.51, %tmp.53);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 239 16 ]
+        %tmp.54 = lgetv %dc;
+        symbol [ dc %tmp.54 239 16 18 ];
+        symbol [ setPenWidth %tmp.55 239 19 30 ];
+        %tmp.55 = getv function %tmp.54 :setPenWidth;
+        %tmp.56 = 2;
+        invoke %tmp.54 %tmp.55(%tmp.56);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 240 16 ]
+        %tmp.57 = lgetv %dc;
+        symbol [ dc %tmp.57 240 16 18 ];
+        symbol [ drawRoundedRectangle %tmp.58 240 19 39 ];
+        %tmp.58 = getv function %tmp.57 :drawRoundedRectangle;
+        %tmp.59 = lgetv %x.3;
+        symbol [ x %tmp.59 240 40 41 ];
+        %tmp.60 = 1;
+        %tmp.61 = add %tmp.59 %tmp.60;
+        %tmp.62 = lgetv %y.4;
+        symbol [ y %tmp.62 240 47 48 ];
+        %tmp.63 = 1;
+        %tmp.64 = add %tmp.62 %tmp.63;
+        %tmp.65 = lgetv %cw.5;
+        symbol [ cw %tmp.65 240 54 56 ];
+        %tmp.66 = 2;
+        %tmp.67 = sub %tmp.65 %tmp.66;
+        %tmp.68 = lgetv %ch.6;
+        symbol [ ch %tmp.68 240 62 64 ];
+        %tmp.69 = 2;
+        %tmp.70 = sub %tmp.68 %tmp.69;
+        %tmp.71 = 3;
+        invoke %tmp.57 %tmp.58(%tmp.61, %tmp.64, %tmp.67, %tmp.70, %tmp.71);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 241 16 ]
+        %tmp.72 = lgetv %dc;
+        symbol [ dc %tmp.72 241 16 18 ];
+        symbol [ setPenWidth %tmp.73 241 19 30 ];
+        %tmp.73 = getv function %tmp.72 :setPenWidth;
+        %tmp.74 = 1;
+        invoke %tmp.72 %tmp.73(%tmp.74);
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_237_34_242_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_237_12_242_12_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_237_12_242_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 244 12 ]
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_244_12_247_12_if_stmt:
+        %tmp.75 = lgetv %ctrl;
+        symbol [ ctrl %tmp.75 244 16 20 ];
+        symbol [ isGuessed %tmp.76 244 21 30 ];
+        %tmp.76 = getv function %tmp.75 :isGuessed;
+        %tmp.77 = lgetv %i.1;
+        symbol [ i %tmp.77 244 31 32 ];
+        %tmp.78 = invoke %tmp.75 %tmp.76(%tmp.77);
+        bf %tmp.78 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_244_12_247_12_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_244_12_247_12_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_244_35_247_12_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 245 16 ]
+        %tmp.79 = lgetv %dc;
+        symbol [ dc %tmp.79 245 16 18 ];
+        symbol [ setColor %tmp.80 245 19 27 ];
+        %tmp.80 = getv function %tmp.79 :setColor;
+        %tmp.81 = 0xE3D6C0;
+        symbol [ Graphics %tmp.82 245 38 46 ];
+        %tmp.82 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.83 245 47 64 ];
+        %tmp.83 = getv %tmp.82 :COLOR_TRANSPARENT;
+        invoke %tmp.79 %tmp.80(%tmp.81, %tmp.83);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 246 16 ]
+        %tmp.84 = lgetv %dc;
+        symbol [ dc %tmp.84 246 16 18 ];
+        symbol [ fillRectangle %tmp.85 246 19 32 ];
+        %tmp.85 = getv function %tmp.84 :fillRectangle;
+        %tmp.86 = lgetv %x.3;
+        symbol [ x %tmp.86 246 33 34 ];
+        %tmp.87 = 2;
+        %tmp.88 = add %tmp.86 %tmp.87;
+        %tmp.89 = lgetv %y.4;
+        symbol [ y %tmp.89 246 40 41 ];
+        %tmp.90 = 2;
+        %tmp.91 = add %tmp.89 %tmp.90;
+        %tmp.92 = lgetv %cw.5;
+        symbol [ cw %tmp.92 246 47 49 ];
+        %tmp.93 = 4;
+        %tmp.94 = sub %tmp.92 %tmp.93;
+        %tmp.95 = lgetv %ch.6;
+        symbol [ ch %tmp.95 246 55 57 ];
+        %tmp.96 = 4;
+        %tmp.97 = sub %tmp.95 %tmp.96;
+        invoke %tmp.84 %tmp.85(%tmp.88, %tmp.91, %tmp.94, %tmp.97);
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_244_35_247_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_244_12_247_12_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_244_12_247_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 248 12 ]
+        %tmp.98 = lgetv %dc;
+        symbol [ dc %tmp.98 248 12 14 ];
+        symbol [ setColor %tmp.99 248 15 23 ];
+        %tmp.99 = getv function %tmp.98 :setColor;
+        %tmp.100 = lgetv %col.8;
+        symbol [ col %tmp.100 248 24 27 ];
+        symbol [ Graphics %tmp.101 248 29 37 ];
+        %tmp.101 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.102 248 38 55 ];
+        %tmp.102 = getv %tmp.101 :COLOR_TRANSPARENT;
+        invoke %tmp.98 %tmp.99(%tmp.100, %tmp.102);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 249 12 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_225_37_253_8_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_225_37_253_8_stop" ]
+        %fh.9 = local;
+        symbol [ fh %fh.9 249 16 18 ];
+        %tmp.103 = lgetv %dc;
+        symbol [ dc %tmp.103 249 21 23 ];
+        symbol [ getFontHeight %tmp.104 249 24 37 ];
+        %tmp.104 = getv function %tmp.103 :getFontHeight;
+        symbol [ Graphics %tmp.105 249 38 46 ];
+        %tmp.105 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.106 249 47 57 ];
+        %tmp.106 = getv %tmp.105 :FONT_XTINY;
+        %tmp.107 = invoke %tmp.103 %tmp.104(%tmp.106);
+        lputv %fh.9 %tmp.107;
+        symbol [ fh %fh.9 249 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 250 12 ]
+        %tmp.108 = lgetv %dc;
+        symbol [ dc %tmp.108 250 12 14 ];
+        symbol [ drawText %tmp.109 250 15 23 ];
+        %tmp.109 = getv function %tmp.108 :drawText;
+        %tmp.110 = lgetv %x.3;
+        symbol [ x %tmp.110 250 24 25 ];
+        %tmp.111 = lgetv %cw.5;
+        symbol [ cw %tmp.111 250 28 30 ];
+        %tmp.112 = 2;
+        %tmp.113 = div %tmp.111 %tmp.112;
+        %tmp.114 = add %tmp.110 %tmp.113;
+        %tmp.115 = lgetv %y.4;
+        symbol [ y %tmp.115 250 36 37 ];
+        %tmp.116 = lgetv %ch.6;
+        symbol [ ch %tmp.116 250 40 42 ];
+        %tmp.117 = 2;
+        %tmp.118 = div %tmp.116 %tmp.117;
+        %tmp.119 = add %tmp.115 %tmp.118;
+        %tmp.120 = lgetv %fh.9;
+        symbol [ fh %tmp.120 250 49 51 ];
+        %tmp.121 = 2;
+        %tmp.122 = div %tmp.120 %tmp.121;
+        %tmp.123 = sub %tmp.119 %tmp.122;
+        symbol [ Graphics %tmp.124 251 24 32 ];
+        %tmp.124 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.125 251 33 43 ];
+        %tmp.125 = getv %tmp.124 :FONT_XTINY;
+        %tmp.126 = lgetv %ch_str.7;
+        symbol [ ch_str %tmp.126 251 45 51 ];
+        symbol [ Graphics %tmp.127 252 24 32 ];
+        %tmp.127 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.128 252 33 52 ];
+        %tmp.128 = getv %tmp.127 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.108 %tmp.109(%tmp.114, %tmp.123, %tmp.125, %tmp.126, %tmp.128);
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_225_37_253_8_stop:
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_225_8_253_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 225 ]
+        %tmp.131 = lgetv %i.1;
+        symbol [ i %tmp.131 225 32 33 ];
+        %tmp.132 = add %tmp.131 1;
+        lputv %i.1 %tmp.132;
+        symbol [ i %i.1 225 32 33 ];
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_225_8_253_8_for_test;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_225_8_253_8_for_end:
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_223_55_254_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc"; @line = 257; @symbol_functiondef = [drawOverlay,257,20,31]; @symbol_param<0> = [dc,257,32,34]; @symbol_param<1> = [ctrl,257,36,40]; @symbol_param<2> = [w,257,42,43]; @symbol_param<3> = [h,257,45,46]; ]
+    static
+    function drawOverlay(dc, ctrl, w, h) {
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_257_48_291_4_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 258 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_257_48_291_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_257_48_291_4_stop" ]
+        %isWin.1 = local;
+        symbol [ isWin %isWin.1 258 12 17 ];
+        %tmp.1 = lgetv %ctrl;
+        symbol [ ctrl %tmp.1 258 21 25 ];
+        symbol [ state %tmp.2 258 26 31 ];
+        %tmp.2 = getv %tmp.1 :state;
+        symbol [ GS_WIN %tmp.4 258 35 41 ];
+        %tmp.4 = getv ? :GS_WIN;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        lputv %isWin.1 %tmp.5;
+        symbol [ isWin %isWin.1 258 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 260 8 ]
+        %tmp.6 = lgetv %dc;
+        symbol [ dc %tmp.6 260 8 10 ];
+        symbol [ setColor %tmp.7 260 11 19 ];
+        %tmp.7 = getv function %tmp.6 :setColor;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_260_20_260_39_begin:
+        %tmp.8 = lgetv %isWin.1;
+        symbol [ isWin %tmp.8 260 20 25 ];
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_260_20_260_39_else_false;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_260_20_260_39_true:
+        %tmp.9 = 0xC8EFD1;
+        push %tmp.9;
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_260_20_260_39_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_260_20_260_39_else_false:
+        %tmp.10 = 0xF6D4D4;
+        push %tmp.10;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_260_20_260_39_end:
+        %tmp.11 = phi [%tmp.8 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_260_20_260_39_begin] [%tmp.9 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_260_20_260_39_true] [%tmp.10 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_260_20_260_39_else_false] [%tmp.11 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_260_20_260_39_end];
+        symbol [ COL_PAPER %tmp.13 260 49 58 ];
+        %tmp.13 = getv ? :COL_PAPER;
+        invoke %tmp.6 %tmp.7(%tmp.11, %tmp.13);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 261 8 ]
+        %tmp.14 = lgetv %dc;
+        symbol [ dc %tmp.14 261 8 10 ];
+        symbol [ clear %tmp.15 261 11 16 ];
+        %tmp.15 = getv function %tmp.14 :clear;
+        invoke %tmp.14 %tmp.15();
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 262 8 ]
+        %tmp.16 = self;
+        symbol [ _drawNotebookLines %tmp.17 262 8 26 ];
+        %tmp.17 = getv function %tmp.16 :_drawNotebookLines;
+        %tmp.18 = lgetv %dc;
+        symbol [ dc %tmp.18 262 27 29 ];
+        %tmp.19 = lgetv %w;
+        symbol [ w %tmp.19 262 31 32 ];
+        %tmp.20 = lgetv %h;
+        symbol [ h %tmp.20 262 34 35 ];
+        invoke %tmp.16 %tmp.17(%tmp.18, %tmp.19, %tmp.20);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 264 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_257_48_291_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_257_48_291_4_stop" ]
+        %titleCol.2 = local;
+        symbol [ titleCol %titleCol.2 264 12 20 ];
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_264_23_264_41_begin:
+        %tmp.21 = lgetv %isWin.1;
+        symbol [ isWin %tmp.21 264 23 28 ];
+        bf %tmp.21 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_264_23_264_41_else_false;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_264_23_264_41_true:
+        symbol [ COL_HIT %tmp.23 264 31 38 ];
+        %tmp.23 = getv ? :COL_HIT;
+        push %tmp.23;
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_264_23_264_41_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_264_23_264_41_else_false:
+        symbol [ COL_MISS %tmp.25 264 41 49 ];
+        %tmp.25 = getv ? :COL_MISS;
+        push %tmp.25;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_264_23_264_41_end:
+        %tmp.26 = phi [%tmp.21 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_264_23_264_41_begin] [%tmp.23 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_264_23_264_41_true] [%tmp.25 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_264_23_264_41_else_false] [%tmp.26 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_264_23_264_41_end];
+        lputv %titleCol.2 %tmp.26;
+        symbol [ titleCol %titleCol.2 264 12 20 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 265 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_257_48_291_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_257_48_291_4_stop" ]
+        %title.3 = local;
+        symbol [ title %title.3 265 12 17 ];
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_265_23_265_44_begin:
+        %tmp.27 = lgetv %isWin.1;
+        symbol [ isWin %tmp.27 265 23 28 ];
+        bf %tmp.27 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_265_23_265_44_else_false;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_265_23_265_44_true:
+        %tmp.28 = "YOU WIN!";
+        push %tmp.28;
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_265_23_265_44_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_265_23_265_44_else_false:
+        %tmp.29 = "HANGED!";
+        push %tmp.29;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_265_23_265_44_end:
+        %tmp.30 = phi [%tmp.27 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_265_23_265_44_begin] [%tmp.28 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_265_23_265_44_true] [%tmp.29 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_265_23_265_44_else_false] [%tmp.30 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_265_23_265_44_end];
+        lputv %title.3 %tmp.30;
+        symbol [ title %title.3 265 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 267 8 ]
+        %tmp.31 = lgetv %dc;
+        symbol [ dc %tmp.31 267 8 10 ];
+        symbol [ setColor %tmp.32 267 11 19 ];
+        %tmp.32 = getv function %tmp.31 :setColor;
+        %tmp.33 = lgetv %titleCol.2;
+        symbol [ titleCol %tmp.33 267 20 28 ];
+        symbol [ Graphics %tmp.34 267 30 38 ];
+        %tmp.34 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.35 267 39 56 ];
+        %tmp.35 = getv %tmp.34 :COLOR_TRANSPARENT;
+        invoke %tmp.31 %tmp.32(%tmp.33, %tmp.35);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 268 8 ]
+        %tmp.36 = lgetv %dc;
+        symbol [ dc %tmp.36 268 8 10 ];
+        symbol [ drawText %tmp.37 268 11 19 ];
+        %tmp.37 = getv function %tmp.36 :drawText;
+        %tmp.38 = lgetv %w;
+        symbol [ w %tmp.38 268 20 21 ];
+        %tmp.39 = 2;
+        %tmp.40 = div %tmp.38 %tmp.39;
+        %tmp.41 = lgetv %h;
+        symbol [ h %tmp.41 268 27 28 ];
+        %tmp.42 = 20;
+        %tmp.43 = mul %tmp.41 %tmp.42;
+        %tmp.44 = 100;
+        %tmp.45 = div %tmp.43 %tmp.44;
+        symbol [ Graphics %tmp.46 268 41 49 ];
+        %tmp.46 = getm $.Toybox.Graphics;
+        symbol [ FONT_MEDIUM %tmp.47 268 50 61 ];
+        %tmp.47 = getv %tmp.46 :FONT_MEDIUM;
+        %tmp.48 = lgetv %title.3;
+        symbol [ title %tmp.48 269 20 25 ];
+        symbol [ Graphics %tmp.49 269 27 35 ];
+        %tmp.49 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.50 269 36 55 ];
+        %tmp.50 = getv %tmp.49 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.36 %tmp.37(%tmp.40, %tmp.45, %tmp.47, %tmp.48, %tmp.50);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 272 8 ]
+        %tmp.51 = lgetv %dc;
+        symbol [ dc %tmp.51 272 8 10 ];
+        symbol [ setColor %tmp.52 272 11 19 ];
+        %tmp.52 = getv function %tmp.51 :setColor;
+        symbol [ COL_INK %tmp.54 272 20 27 ];
+        %tmp.54 = getv ? :COL_INK;
+        symbol [ Graphics %tmp.55 272 29 37 ];
+        %tmp.55 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.56 272 38 55 ];
+        %tmp.56 = getv %tmp.55 :COLOR_TRANSPARENT;
+        invoke %tmp.51 %tmp.52(%tmp.54, %tmp.56);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 273 8 ]
+        %tmp.57 = lgetv %dc;
+        symbol [ dc %tmp.57 273 8 10 ];
+        symbol [ drawText %tmp.58 273 11 19 ];
+        %tmp.58 = getv function %tmp.57 :drawText;
+        %tmp.59 = lgetv %w;
+        symbol [ w %tmp.59 273 20 21 ];
+        %tmp.60 = 2;
+        %tmp.61 = div %tmp.59 %tmp.60;
+        %tmp.62 = lgetv %h;
+        symbol [ h %tmp.62 273 27 28 ];
+        %tmp.63 = 40;
+        %tmp.64 = mul %tmp.62 %tmp.63;
+        %tmp.65 = 100;
+        %tmp.66 = div %tmp.64 %tmp.65;
+        symbol [ Graphics %tmp.67 273 41 49 ];
+        %tmp.67 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.68 273 50 60 ];
+        %tmp.68 = getv %tmp.67 :FONT_XTINY;
+        %tmp.69 = "Word:";
+        symbol [ Graphics %tmp.70 274 29 37 ];
+        %tmp.70 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.71 274 38 57 ];
+        %tmp.71 = getv %tmp.70 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.57 %tmp.58(%tmp.61, %tmp.66, %tmp.68, %tmp.69, %tmp.71);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 275 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_257_48_291_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_257_48_291_4_stop" ]
+        %wordFont.4 = local;
+        symbol [ wordFont %wordFont.4 275 12 20 ];
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_275_23_276_45_begin:
+        %tmp.72 = lgetv %ctrl;
+        symbol [ ctrl %tmp.72 275 24 28 ];
+        symbol [ word %tmp.73 275 29 33 ];
+        %tmp.73 = getv %tmp.72 :word;
+        symbol [ length %tmp.74 275 34 40 ];
+        %tmp.74 = getv function %tmp.73 :length;
+        %tmp.75 = invoke %tmp.73 %tmp.74();
+        %tmp.76 = 9;
+        %tmp.77 = gt %tmp.75 %tmp.76;
+        bf %tmp.77 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_275_23_276_45_else_false;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_275_23_276_45_true:
+        symbol [ Graphics %tmp.78 276 14 22 ];
+        %tmp.78 = getm $.Toybox.Graphics;
+        symbol [ FONT_SMALL %tmp.79 276 23 33 ];
+        %tmp.79 = getv %tmp.78 :FONT_SMALL;
+        push %tmp.79;
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_275_23_276_45_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_275_23_276_45_else_false:
+        symbol [ Graphics %tmp.80 276 36 44 ];
+        %tmp.80 = getm $.Toybox.Graphics;
+        symbol [ FONT_MEDIUM %tmp.81 276 45 56 ];
+        %tmp.81 = getv %tmp.80 :FONT_MEDIUM;
+        push %tmp.81;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_275_23_276_45_end:
+        %tmp.82 = phi [%tmp.77 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_275_23_276_45_begin] [%tmp.79 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_275_23_276_45_true] [%tmp.81 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_275_23_276_45_else_false] [%tmp.82 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_275_23_276_45_end];
+        lputv %wordFont.4 %tmp.82;
+        symbol [ wordFont %wordFont.4 275 12 20 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 277 8 ]
+        %tmp.83 = lgetv %dc;
+        symbol [ dc %tmp.83 277 8 10 ];
+        symbol [ drawText %tmp.84 277 11 19 ];
+        %tmp.84 = getv function %tmp.83 :drawText;
+        %tmp.85 = lgetv %w;
+        symbol [ w %tmp.85 277 20 21 ];
+        %tmp.86 = 2;
+        %tmp.87 = div %tmp.85 %tmp.86;
+        %tmp.88 = lgetv %h;
+        symbol [ h %tmp.88 277 27 28 ];
+        %tmp.89 = 48;
+        %tmp.90 = mul %tmp.88 %tmp.89;
+        %tmp.91 = 100;
+        %tmp.92 = div %tmp.90 %tmp.91;
+        %tmp.93 = lgetv %wordFont.4;
+        symbol [ wordFont %tmp.93 277 41 49 ];
+        %tmp.94 = lgetv %ctrl;
+        symbol [ ctrl %tmp.94 277 51 55 ];
+        symbol [ word %tmp.95 277 56 60 ];
+        %tmp.95 = getv %tmp.94 :word;
+        symbol [ Graphics %tmp.96 278 20 28 ];
+        %tmp.96 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.97 278 29 48 ];
+        %tmp.97 = getv %tmp.96 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.83 %tmp.84(%tmp.87, %tmp.92, %tmp.93, %tmp.95, %tmp.97);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 282 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_257_48_291_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_257_48_291_4_stop" ]
+        %stage.5 = local;
+        symbol [ stage %stage.5 282 12 17 ];
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_282_20_282_32_begin:
+        %tmp.98 = lgetv %isWin.1;
+        symbol [ isWin %tmp.98 282 20 25 ];
+        bf %tmp.98 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_282_20_282_32_else_false;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_282_20_282_32_true:
+        %tmp.99 = 0;
+        push %tmp.99;
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_282_20_282_32_end;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_282_20_282_32_else_false:
+        symbol [ MAX_MISSES %tmp.101 282 32 42 ];
+        %tmp.101 = getv ? :MAX_MISSES;
+        push %tmp.101;
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_282_20_282_32_end:
+        %tmp.102 = phi [%tmp.98 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_282_20_282_32_begin] [%tmp.99 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_282_20_282_32_true] [%tmp.101 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_282_20_282_32_else_false] [%tmp.102 @_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_282_20_282_32_end];
+        lputv %stage.5 %tmp.102;
+        symbol [ stage %stage.5 282 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 283 8 ]
+        symbol [ HangmanRenderer %tmp.104 283 8 23 ];
+        %tmp.104 = getv ? :HangmanRenderer;
+        symbol [ draw %tmp.105 283 24 28 ];
+        %tmp.105 = getv function %tmp.104 :draw;
+        %tmp.106 = lgetv %dc;
+        symbol [ dc %tmp.106 283 29 31 ];
+        %tmp.107 = lgetv %w;
+        symbol [ w %tmp.107 284 29 30 ];
+        %tmp.108 = 2;
+        %tmp.109 = div %tmp.107 %tmp.108;
+        %tmp.110 = lgetv %w;
+        symbol [ w %tmp.110 284 37 38 ];
+        %tmp.111 = 14;
+        %tmp.112 = mul %tmp.110 %tmp.111;
+        %tmp.113 = 100;
+        %tmp.114 = div %tmp.112 %tmp.113;
+        %tmp.115 = sub %tmp.109 %tmp.114;
+        %tmp.116 = lgetv %h;
+        symbol [ h %tmp.116 284 51 52 ];
+        %tmp.117 = 62;
+        %tmp.118 = mul %tmp.116 %tmp.117;
+        %tmp.119 = 100;
+        %tmp.120 = div %tmp.118 %tmp.119;
+        %tmp.121 = lgetv %w;
+        symbol [ w %tmp.121 285 29 30 ];
+        %tmp.122 = 28;
+        %tmp.123 = mul %tmp.121 %tmp.122;
+        %tmp.124 = 100;
+        %tmp.125 = div %tmp.123 %tmp.124;
+        %tmp.126 = lgetv %h;
+        symbol [ h %tmp.126 285 50 51 ];
+        %tmp.127 = 20;
+        %tmp.128 = mul %tmp.126 %tmp.127;
+        %tmp.129 = 100;
+        %tmp.130 = div %tmp.128 %tmp.129;
+        %tmp.131 = lgetv %stage.5;
+        symbol [ stage %tmp.131 286 29 34 ];
+        invoke %tmp.104 %tmp.105(%tmp.106, %tmp.115, %tmp.120, %tmp.125, %tmp.130, %tmp.131);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 288 8 ]
+        %tmp.132 = lgetv %dc;
+        symbol [ dc %tmp.132 288 8 10 ];
+        symbol [ setColor %tmp.133 288 11 19 ];
+        %tmp.133 = getv function %tmp.132 :setColor;
+        symbol [ COL_INK_DIM %tmp.135 288 20 31 ];
+        %tmp.135 = getv ? :COL_INK_DIM;
+        symbol [ Graphics %tmp.136 288 33 41 ];
+        %tmp.136 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.137 288 42 59 ];
+        %tmp.137 = getv %tmp.136 :COLOR_TRANSPARENT;
+        invoke %tmp.132 %tmp.133(%tmp.135, %tmp.137);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc" 289 8 ]
+        %tmp.138 = lgetv %dc;
+        symbol [ dc %tmp.138 289 8 10 ];
+        symbol [ drawText %tmp.139 289 11 19 ];
+        %tmp.139 = getv function %tmp.138 :drawText;
+        %tmp.140 = lgetv %w;
+        symbol [ w %tmp.140 289 20 21 ];
+        %tmp.141 = 2;
+        %tmp.142 = div %tmp.140 %tmp.141;
+        %tmp.143 = lgetv %h;
+        symbol [ h %tmp.143 289 27 28 ];
+        %tmp.144 = 88;
+        %tmp.145 = mul %tmp.143 %tmp.144;
+        %tmp.146 = 100;
+        %tmp.147 = div %tmp.145 %tmp.146;
+        symbol [ Graphics %tmp.148 289 41 49 ];
+        %tmp.148 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.149 289 50 60 ];
+        %tmp.149 = getv %tmp.148 :FONT_XTINY;
+        %tmp.150 = "Press any key";
+        symbol [ Graphics %tmp.151 290 37 45 ];
+        %tmp.151 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.152 290 46 65 ];
+        %tmp.152 = getv %tmp.151 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.138 %tmp.139(%tmp.142, %tmp.147, %tmp.149, %tmp.150, %tmp.152);
+_Users_kkorolczuk_work_garmin_hangman_source_UIManager_mc_257_48_291_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/hangman/source/UIManager.mc"; @line = 15; ]
+<init> {
+}

@@ -1,0 +1,1656 @@
+[ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 18; @symbol_usingdef<0> = [Toybox,18,6,12]; @symbol_usingdef<1> = [Math,18,13,17]; ]
+using Toybox.Math;
+[ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 20; @position = 6; @symbol_constdef = [REV_OK,20,6,12]; ]
+const REV_OK = 0;
+[ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 21; @position = 6; @symbol_constdef = [REV_BOOM,21,6,14]; ]
+const REV_BOOM = 1;
+[ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 22; @position = 6; @symbol_constdef = [REV_NOOP,22,6,14]; ]
+const REV_NOOP = 2;
+[ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 27; @position = 6; @symbol_constdef = [MAX_FLOOD_PER_STEP,27,6,24]; ]
+const MAX_FLOOD_PER_STEP = 30;
+[ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 29; @symbol_classdef = [GridManager,29,6,17]; ]
+class GridManager {
+    [ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 29; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 29; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 30; @position = 8; @symbol_vardef = [n,30,8,9]; ]
+    var n;
+    [ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 31; @position = 8; @symbol_vardef = [total,31,8,13]; ]
+    var total;
+    [ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 32; @position = 8; @symbol_vardef = [mineCount,32,8,17]; ]
+    var mineCount;
+    [ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 34; @position = 8; @symbol_vardef = [mines,34,8,13]; ]
+    var mines;
+    [ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 35; @position = 8; @symbol_vardef = [state,35,8,13]; ]
+    var state;
+    [ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 36; @position = 8; @symbol_vardef = [numbers,36,8,15]; ]
+    var numbers;
+    [ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 38; @position = 8; @symbol_vardef = [revealedCount,38,8,21]; ]
+    var revealedCount;
+    [ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 39; @position = 8; @symbol_vardef = [flagCount,39,8,17]; ]
+    var flagCount;
+    [ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 40; @position = 8; @symbol_vardef = [minesPlaced,40,8,19]; ]
+    var minesPlaced;
+    [ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 43; @position = 15; @symbol_vardef = [_queueR,43,15,22]; ]
+    protected
+    var _queueR;
+    [ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 44; @position = 15; @symbol_vardef = [_queueC,44,15,22]; ]
+    protected
+    var _queueC;
+    [ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 45; @position = 15; @symbol_vardef = [_qHead,45,15,21]; ]
+    protected
+    var _qHead;
+    [ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 46; @position = 15; @symbol_vardef = [_qTail,46,15,21]; ]
+    protected
+    var _qTail;
+    [ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 49; @position = 8; @symbol_vardef = [floodPending,49,8,20]; ]
+    var floodPending;
+    [ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 51; @symbol_functiondef = [initialize,51,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_51_26_51_46_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 51 28 ]
+        %tmp.1 = self;
+        symbol [ configure %tmp.2 51 28 37 ];
+        %tmp.2 = getv function %tmp.1 :configure;
+        %tmp.3 = 8;
+        %tmp.4 = 10;
+        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.4);
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_51_26_51_46_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 53; @symbol_functiondef = [configure,53,13,22]; @symbol_param<0> = [size,53,23,27]; @symbol_param<1> = [mines_,53,29,35]; ]
+    function configure(size, mines_) {
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_53_37_68_4_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 54 8 ]
+        %tmp.1 = lgetv %size;
+        symbol [ size %tmp.1 54 24 28 ];
+        symbol [ n ? 54 8 9 ];
+        putv self :n %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 55 8 ]
+        %tmp.2 = lgetv %size;
+        symbol [ size %tmp.2 55 24 28 ];
+        %tmp.3 = lgetv %size;
+        symbol [ size %tmp.3 55 31 35 ];
+        %tmp.4 = mul %tmp.2 %tmp.3;
+        symbol [ total ? 55 8 13 ];
+        putv self :total %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 56 8 ]
+        %tmp.5 = lgetv %mines_;
+        symbol [ mines_ %tmp.5 56 24 30 ];
+        symbol [ mineCount ? 56 8 17 ];
+        putv self :mineCount %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 57 8 ]
+        symbol [ total %tmp.8 57 29 34 ];
+        %tmp.8 = getv ? :total;
+        %tmp.6 = newba %tmp.8;
+        symbol [ mines ? 57 8 13 ];
+        putv self :mines %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 58 8 ]
+        symbol [ total %tmp.11 58 29 34 ];
+        %tmp.11 = getv ? :total;
+        %tmp.9 = newba %tmp.11;
+        symbol [ state ? 58 8 13 ];
+        putv self :state %tmp.9;
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 59 8 ]
+        symbol [ total %tmp.14 59 29 34 ];
+        %tmp.14 = getv ? :total;
+        %tmp.12 = newba %tmp.14;
+        symbol [ numbers ? 59 8 15 ];
+        putv self :numbers %tmp.12;
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 60 8 ]
+        %tmp.15 = 0;
+        symbol [ revealedCount ? 60 8 21 ];
+        putv self :revealedCount %tmp.15;
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 61 8 ]
+        %tmp.16 = 0;
+        symbol [ flagCount ? 61 8 17 ];
+        putv self :flagCount %tmp.16;
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 62 8 ]
+        %tmp.17 = false;
+        symbol [ minesPlaced ? 62 8 19 ];
+        putv self :minesPlaced %tmp.17;
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 63 8 ]
+        %tmp.18 = false;
+        symbol [ floodPending ? 63 8 20 ];
+        putv self :floodPending %tmp.18;
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 64 8 ]
+        symbol [ total %tmp.21 64 23 28 ];
+        %tmp.21 = getv ? :total;
+        %tmp.19 = newa %tmp.21;
+        symbol [ _queueR ? 64 8 15 ];
+        putv self :_queueR %tmp.19;
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 65 8 ]
+        symbol [ total %tmp.24 65 23 28 ];
+        %tmp.24 = getv ? :total;
+        %tmp.22 = newa %tmp.24;
+        symbol [ _queueC ? 65 8 15 ];
+        putv self :_queueC %tmp.22;
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 66 8 ]
+        %tmp.25 = 0;
+        symbol [ _qHead ? 66 8 14 ];
+        putv self :_qHead %tmp.25;
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 67 8 ]
+        %tmp.26 = 0;
+        symbol [ _qTail ? 67 8 14 ];
+        putv self :_qTail %tmp.26;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_53_37_68_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 70; @symbol_functiondef = [idx,70,13,16]; @symbol_param<0> = [r,70,17,18]; @symbol_param<1> = [c,70,20,21]; ]
+    function idx(r, c) {
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_70_23_70_43_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 70 25 ]
+        %tmp.1 = lgetv %r;
+        symbol [ r %tmp.1 70 32 33 ];
+        symbol [ n %tmp.3 70 36 37 ];
+        %tmp.3 = getv ? :n;
+        %tmp.4 = mul %tmp.1 %tmp.3;
+        %tmp.5 = lgetv %c;
+        symbol [ c %tmp.5 70 40 41 ];
+        %tmp.6 = add %tmp.4 %tmp.5;
+        ret %tmp.6;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_70_23_70_43_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 73; @symbol_functiondef = [toggleFlag,73,13,23]; @symbol_param<0> = [r,73,24,25]; @symbol_param<1> = [c,73,27,28]; ]
+    function toggleFlag(r, c) {
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_73_30_84_4_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 74 8 ]
+        [ "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_73_30_84_4_start" "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_73_30_84_4_stop" ]
+        %i.1 = local;
+        symbol [ i %i.1 74 12 13 ];
+        %tmp.1 = self;
+        symbol [ idx %tmp.2 74 16 19 ];
+        %tmp.2 = getv function %tmp.1 :idx;
+        %tmp.3 = lgetv %r;
+        symbol [ r %tmp.3 74 20 21 ];
+        %tmp.4 = lgetv %c;
+        symbol [ c %tmp.4 74 23 24 ];
+        %tmp.5 = invoke %tmp.1 %tmp.2(%tmp.3, %tmp.4);
+        lputv %i.1 %tmp.5;
+        symbol [ i %i.1 74 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 75 8 ]
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_75_8_75_59_if_stmt:
+        symbol [ state %tmp.7 75 13 18 ];
+        %tmp.7 = getv ? :state;
+        %tmp.8 = lgetv %i.1;
+        symbol [ i %tmp.8 75 19 20 ];
+        %tmp.9 = agetv %tmp.7 %tmp.8;
+        symbol [ ST_REVEALED %tmp.11 75 24 35 ];
+        %tmp.11 = getv ? :ST_REVEALED;
+        %tmp.12 = bitand %tmp.9 %tmp.11;
+        %tmp.13 = 0;
+        %tmp.14 = ne %tmp.12 %tmp.13;
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_75_8_75_59_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_75_8_75_59_if_true:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_75_43_75_59_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 75 45 ]
+        %tmp.15 = false;
+        ret %tmp.15;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_75_43_75_59_stop:
+        goto @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_75_8_75_59_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_75_8_75_59_if_end:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 76 8 ]
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_76_8_82_8_if_stmt:
+        symbol [ state %tmp.17 76 13 18 ];
+        %tmp.17 = getv ? :state;
+        %tmp.18 = lgetv %i.1;
+        symbol [ i %tmp.18 76 19 20 ];
+        %tmp.19 = agetv %tmp.17 %tmp.18;
+        symbol [ ST_FLAGGED %tmp.21 76 24 34 ];
+        %tmp.21 = getv ? :ST_FLAGGED;
+        %tmp.22 = bitand %tmp.19 %tmp.21;
+        %tmp.23 = 0;
+        %tmp.24 = ne %tmp.22 %tmp.23;
+        bf %tmp.24 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_76_8_82_8_if_else_false;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_76_8_82_8_if_true:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_76_43_79_8_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 77 12 ]
+        symbol [ state %tmp.25 77 12 17 ];
+        %tmp.25 = getv self :state;
+        symbol [ state %tmp.27 77 23 28 ];
+        %tmp.27 = getv ? :state;
+        %tmp.28 = lgetv %i.1;
+        symbol [ i %tmp.28 77 29 30 ];
+        %tmp.29 = agetv %tmp.27 %tmp.28;
+        symbol [ ST_FLAGGED %tmp.31 77 35 45 ];
+        %tmp.31 = getv ? :ST_FLAGGED;
+        %tmp.32 = compl %tmp.31;
+        %tmp.33 = bitand %tmp.29 %tmp.32;
+        %tmp.34 = lgetv %i.1;
+        symbol [ i %tmp.34 77 18 19 ];
+        aputv %tmp.25 %tmp.34 %tmp.33;
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 78 12 ]
+        symbol [ flagCount %tmp.36 78 24 33 ];
+        %tmp.36 = getv ? :flagCount;
+        %tmp.37 = 1;
+        %tmp.38 = sub %tmp.36 %tmp.37;
+        symbol [ flagCount ? 78 12 21 ];
+        putv self :flagCount %tmp.38;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_76_43_79_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_76_8_82_8_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_76_8_82_8_if_else_false:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_79_15_82_8_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 80 12 ]
+        symbol [ state %tmp.39 80 12 17 ];
+        %tmp.39 = getv self :state;
+        symbol [ state %tmp.41 80 23 28 ];
+        %tmp.41 = getv ? :state;
+        %tmp.42 = lgetv %i.1;
+        symbol [ i %tmp.42 80 29 30 ];
+        %tmp.43 = agetv %tmp.41 %tmp.42;
+        symbol [ ST_FLAGGED %tmp.45 80 34 44 ];
+        %tmp.45 = getv ? :ST_FLAGGED;
+        %tmp.46 = bitor %tmp.43 %tmp.45;
+        %tmp.47 = lgetv %i.1;
+        symbol [ i %tmp.47 80 18 19 ];
+        aputv %tmp.39 %tmp.47 %tmp.46;
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 81 12 ]
+        symbol [ flagCount %tmp.49 81 24 33 ];
+        %tmp.49 = getv ? :flagCount;
+        %tmp.50 = 1;
+        %tmp.51 = add %tmp.49 %tmp.50;
+        symbol [ flagCount ? 81 12 21 ];
+        putv self :flagCount %tmp.51;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_79_15_82_8_stop:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_76_8_82_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 83 8 ]
+        %tmp.52 = true;
+        ret %tmp.52;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_73_30_84_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 89; @symbol_functiondef = [reveal,89,13,19]; @symbol_param<0> = [r,89,20,21]; @symbol_param<1> = [c,89,23,24]; ]
+    function reveal(r, c) {
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_89_26_103_4_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 90 8 ]
+        [ "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_89_26_103_4_start" "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_89_26_103_4_stop" ]
+        %i.1 = local;
+        symbol [ i %i.1 90 12 13 ];
+        %tmp.1 = self;
+        symbol [ idx %tmp.2 90 16 19 ];
+        %tmp.2 = getv function %tmp.1 :idx;
+        %tmp.3 = lgetv %r;
+        symbol [ r %tmp.3 90 20 21 ];
+        %tmp.4 = lgetv %c;
+        symbol [ c %tmp.4 90 23 24 ];
+        %tmp.5 = invoke %tmp.1 %tmp.2(%tmp.3, %tmp.4);
+        lputv %i.1 %tmp.5;
+        symbol [ i %i.1 90 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 91 8 ]
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_91_8_91_62_if_stmt:
+        symbol [ state %tmp.7 91 13 18 ];
+        %tmp.7 = getv ? :state;
+        %tmp.8 = lgetv %i.1;
+        symbol [ i %tmp.8 91 19 20 ];
+        %tmp.9 = agetv %tmp.7 %tmp.8;
+        symbol [ ST_REVEALED %tmp.11 91 24 35 ];
+        %tmp.11 = getv ? :ST_REVEALED;
+        %tmp.12 = bitand %tmp.9 %tmp.11;
+        %tmp.13 = 0;
+        %tmp.14 = ne %tmp.12 %tmp.13;
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_91_8_91_62_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_91_8_91_62_if_true:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_91_43_91_62_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 91 45 ]
+        symbol [ REV_NOOP %tmp.16 91 52 60 ];
+        %tmp.16 = getv ? :REV_NOOP;
+        ret %tmp.16;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_91_43_91_62_stop:
+        goto @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_91_8_91_62_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_91_8_91_62_if_end:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 92 8 ]
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_92_8_92_62_if_stmt:
+        symbol [ state %tmp.18 92 13 18 ];
+        %tmp.18 = getv ? :state;
+        %tmp.19 = lgetv %i.1;
+        symbol [ i %tmp.19 92 19 20 ];
+        %tmp.20 = agetv %tmp.18 %tmp.19;
+        symbol [ ST_FLAGGED %tmp.22 92 24 34 ];
+        %tmp.22 = getv ? :ST_FLAGGED;
+        %tmp.23 = bitand %tmp.20 %tmp.22;
+        %tmp.24 = 0;
+        %tmp.25 = ne %tmp.23 %tmp.24;
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_92_8_92_62_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_92_8_92_62_if_true:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_92_43_92_62_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 92 45 ]
+        symbol [ REV_NOOP %tmp.27 92 52 60 ];
+        %tmp.27 = getv ? :REV_NOOP;
+        ret %tmp.27;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_92_43_92_62_stop:
+        goto @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_92_8_92_62_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_92_8_92_62_if_end:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 94 8 ]
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_94_8_94_67_if_stmt:
+        symbol [ minesPlaced %tmp.29 94 13 24 ];
+        %tmp.29 = getv ? :minesPlaced;
+        %tmp.30 = not %tmp.29;
+        bf %tmp.30 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_94_8_94_67_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_94_8_94_67_if_true:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_94_26_94_67_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 94 28 ]
+        %tmp.31 = self;
+        symbol [ _placeMines %tmp.32 94 28 39 ];
+        %tmp.32 = getv function %tmp.31 :_placeMines;
+        %tmp.33 = lgetv %r;
+        symbol [ r %tmp.33 94 40 41 ];
+        %tmp.34 = lgetv %c;
+        symbol [ c %tmp.34 94 43 44 ];
+        invoke %tmp.31 %tmp.32(%tmp.33, %tmp.34);
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 94 47 ]
+        %tmp.35 = true;
+        symbol [ minesPlaced ? 94 47 58 ];
+        putv self :minesPlaced %tmp.35;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_94_26_94_67_stop:
+        goto @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_94_8_94_67_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_94_8_94_67_if_end:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 96 8 ]
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_96_8_99_8_if_stmt:
+        symbol [ mines %tmp.37 96 12 17 ];
+        %tmp.37 = getv ? :mines;
+        %tmp.38 = lgetv %i.1;
+        symbol [ i %tmp.38 96 18 19 ];
+        %tmp.39 = agetv %tmp.37 %tmp.38;
+        %tmp.40 = 1;
+        %tmp.41 = eq %tmp.39 %tmp.40;
+        bf %tmp.41 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_96_8_99_8_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_96_8_99_8_if_true:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_96_27_99_8_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 97 12 ]
+        symbol [ state %tmp.42 97 12 17 ];
+        %tmp.42 = getv self :state;
+        symbol [ state %tmp.44 97 23 28 ];
+        %tmp.44 = getv ? :state;
+        %tmp.45 = lgetv %i.1;
+        symbol [ i %tmp.45 97 29 30 ];
+        %tmp.46 = agetv %tmp.44 %tmp.45;
+        symbol [ ST_REVEALED %tmp.48 97 34 45 ];
+        %tmp.48 = getv ? :ST_REVEALED;
+        %tmp.49 = bitor %tmp.46 %tmp.48;
+        %tmp.50 = lgetv %i.1;
+        symbol [ i %tmp.50 97 18 19 ];
+        aputv %tmp.42 %tmp.50 %tmp.49;
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 98 12 ]
+        symbol [ REV_BOOM %tmp.52 98 19 27 ];
+        %tmp.52 = getv ? :REV_BOOM;
+        ret %tmp.52;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_96_27_99_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_96_8_99_8_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_96_8_99_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 100 8 ]
+        %tmp.53 = self;
+        symbol [ _startFlood %tmp.54 100 8 19 ];
+        %tmp.54 = getv function %tmp.53 :_startFlood;
+        %tmp.55 = lgetv %r;
+        symbol [ r %tmp.55 100 20 21 ];
+        %tmp.56 = lgetv %c;
+        symbol [ c %tmp.56 100 23 24 ];
+        invoke %tmp.53 %tmp.54(%tmp.55, %tmp.56);
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 101 8 ]
+        symbol [ REV_OK %tmp.58 101 15 21 ];
+        %tmp.58 = getv ? :REV_OK;
+        ret %tmp.58;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_89_26_103_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 107; @symbol_functiondef = [_startFlood,107,20,31]; @symbol_param<0> = [startR,107,32,38]; @symbol_param<1> = [startC,107,40,46]; ]
+    protected
+    function _startFlood(startR, startC) {
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_107_48_124_4_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 108 8 ]
+        %tmp.1 = 0;
+        symbol [ _qHead ? 108 8 14 ];
+        putv self :_qHead %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 108 20 ]
+        %tmp.2 = 0;
+        symbol [ _qTail ? 108 20 26 ];
+        putv self :_qTail %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 109 8 ]
+        %tmp.3 = false;
+        symbol [ floodPending ? 109 8 20 ];
+        putv self :floodPending %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 111 8 ]
+        [ "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_107_48_124_4_start" "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_107_48_124_4_stop" ]
+        %si.1 = local;
+        symbol [ si %si.1 111 12 14 ];
+        %tmp.4 = lgetv %startR;
+        symbol [ startR %tmp.4 111 18 24 ];
+        symbol [ n %tmp.6 111 27 28 ];
+        %tmp.6 = getv ? :n;
+        %tmp.7 = mul %tmp.4 %tmp.6;
+        %tmp.8 = lgetv %startC;
+        symbol [ startC %tmp.8 111 31 37 ];
+        %tmp.9 = add %tmp.7 %tmp.8;
+        lputv %si.1 %tmp.9;
+        symbol [ si %si.1 111 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 112 8 ]
+        [ "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_107_48_124_4_start" "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_107_48_124_4_stop" ]
+        %cnt.2 = local;
+        symbol [ cnt %cnt.2 112 12 15 ];
+        %tmp.10 = self;
+        symbol [ _countAround %tmp.11 112 18 30 ];
+        %tmp.11 = getv function %tmp.10 :_countAround;
+        %tmp.12 = lgetv %startR;
+        symbol [ startR %tmp.12 112 31 37 ];
+        %tmp.13 = lgetv %startC;
+        symbol [ startC %tmp.13 112 39 45 ];
+        %tmp.14 = invoke %tmp.10 %tmp.11(%tmp.12, %tmp.13);
+        lputv %cnt.2 %tmp.14;
+        symbol [ cnt %cnt.2 112 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 113 8 ]
+        symbol [ numbers %tmp.15 113 8 15 ];
+        %tmp.15 = getv self :numbers;
+        %tmp.16 = lgetv %cnt.2;
+        symbol [ cnt %tmp.16 113 22 25 ];
+        %tmp.17 = lgetv %si.1;
+        symbol [ si %tmp.17 113 16 18 ];
+        aputv %tmp.15 %tmp.17 %tmp.16;
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 114 8 ]
+        symbol [ state %tmp.18 114 8 13 ];
+        %tmp.18 = getv self :state;
+        symbol [ state %tmp.20 114 22 27 ];
+        %tmp.20 = getv ? :state;
+        %tmp.21 = lgetv %si.1;
+        symbol [ si %tmp.21 114 28 30 ];
+        %tmp.22 = agetv %tmp.20 %tmp.21;
+        symbol [ ST_REVEALED %tmp.24 114 34 45 ];
+        %tmp.24 = getv ? :ST_REVEALED;
+        %tmp.25 = bitor %tmp.22 %tmp.24;
+        %tmp.26 = lgetv %si.1;
+        symbol [ si %tmp.26 114 14 16 ];
+        aputv %tmp.18 %tmp.26 %tmp.25;
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 115 8 ]
+        symbol [ revealedCount %tmp.28 115 24 37 ];
+        %tmp.28 = getv ? :revealedCount;
+        %tmp.29 = 1;
+        %tmp.30 = add %tmp.28 %tmp.29;
+        symbol [ revealedCount ? 115 8 21 ];
+        putv self :revealedCount %tmp.30;
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 117 8 ]
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_117_8_117_32_if_stmt:
+        %tmp.31 = lgetv %cnt.2;
+        symbol [ cnt %tmp.31 117 12 15 ];
+        %tmp.32 = 0;
+        %tmp.33 = ne %tmp.31 %tmp.32;
+        bf %tmp.33 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_117_8_117_32_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_117_8_117_32_if_true:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_117_22_117_32_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 117 24 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_117_22_117_32_stop:
+        goto @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_117_8_117_32_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_117_8_117_32_if_end:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 119 8 ]
+        symbol [ _queueR %tmp.34 119 8 15 ];
+        %tmp.34 = getv self :_queueR;
+        %tmp.35 = lgetv %startR;
+        symbol [ startR %tmp.35 119 21 27 ];
+        %tmp.36 = 0;
+        aputv %tmp.34 %tmp.36 %tmp.35;
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 120 8 ]
+        symbol [ _queueC %tmp.37 120 8 15 ];
+        %tmp.37 = getv self :_queueC;
+        %tmp.38 = lgetv %startC;
+        symbol [ startC %tmp.38 120 21 27 ];
+        %tmp.39 = 0;
+        aputv %tmp.37 %tmp.39 %tmp.38;
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 121 8 ]
+        %tmp.40 = 1;
+        symbol [ _qTail ? 121 8 14 ];
+        putv self :_qTail %tmp.40;
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 122 8 ]
+        %tmp.41 = true;
+        symbol [ floodPending ? 122 8 20 ];
+        putv self :floodPending %tmp.41;
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 123 8 ]
+        %tmp.42 = self;
+        symbol [ _bfsChunk %tmp.43 123 8 17 ];
+        %tmp.43 = getv function %tmp.42 :_bfsChunk;
+        invoke %tmp.42 %tmp.43();
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_107_48_124_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 127; @symbol_functiondef = [bfsStep,127,13,20]; ]
+    function bfsStep() {
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_127_23_130_4_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 128 8 ]
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_128_8_128_37_if_stmt:
+        symbol [ floodPending %tmp.2 128 13 25 ];
+        %tmp.2 = getv ? :floodPending;
+        %tmp.3 = not %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_128_8_128_37_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_128_8_128_37_if_true:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_128_27_128_37_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 128 29 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_128_27_128_37_stop:
+        goto @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_128_8_128_37_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_128_8_128_37_if_end:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 129 8 ]
+        %tmp.4 = self;
+        symbol [ _bfsChunk %tmp.5 129 8 17 ];
+        %tmp.5 = getv function %tmp.4 :_bfsChunk;
+        invoke %tmp.4 %tmp.5();
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_127_23_130_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 133; @symbol_functiondef = [_bfsChunk,133,20,29]; ]
+    protected
+    function _bfsChunk() {
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_133_32_166_4_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 134 8 ]
+        [ "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_133_32_166_4_start" "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_133_32_166_4_stop" ]
+        %steps.1 = local;
+        symbol [ steps %steps.1 134 12 17 ];
+        %tmp.1 = 0;
+        lputv %steps.1 %tmp.1;
+        symbol [ steps %steps.1 134 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 135 8 ]
+        while @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_135_8_164_8_while_test @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_135_8_164_8_while_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_135_8_164_8_while_test:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_135_15_135_42_begin:
+        symbol [ _qHead %tmp.3 135 15 21 ];
+        %tmp.3 = getv ? :_qHead;
+        symbol [ _qTail %tmp.5 135 24 30 ];
+        %tmp.5 = getv ? :_qTail;
+        %tmp.6 = lt %tmp.3 %tmp.5;
+        %tmp.7 = dup %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_135_34_135_42_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_135_34_135_42_true:
+        %tmp.8 = lgetv %steps.1;
+        symbol [ steps %tmp.8 135 34 39 ];
+        symbol [ MAX_FLOOD_PER_STEP %tmp.10 135 42 60 ];
+        %tmp.10 = getv ? :MAX_FLOOD_PER_STEP;
+        %tmp.11 = lt %tmp.8 %tmp.10;
+        %tmp.12 = and %tmp.6 %tmp.11;
+        push %tmp.12;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_135_34_135_42_end:
+        %tmp.13 = phi [%tmp.7 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_135_15_135_42_begin] [%tmp.12 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_135_34_135_42_true] [%tmp.13 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_135_34_135_42_end];
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_135_8_164_8_while_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_135_8_164_8_while_begin:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_135_62_164_8_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 136 12 ]
+        [ "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_135_62_164_8_start" "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_135_62_164_8_stop" ]
+        %qr.2 = local;
+        symbol [ qr %qr.2 136 16 18 ];
+        symbol [ _queueR %tmp.15 136 21 28 ];
+        %tmp.15 = getv ? :_queueR;
+        symbol [ _qHead %tmp.17 136 29 35 ];
+        %tmp.17 = getv ? :_qHead;
+        %tmp.18 = agetv %tmp.15 %tmp.17;
+        lputv %qr.2 %tmp.18;
+        symbol [ qr %qr.2 136 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 137 12 ]
+        [ "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_135_62_164_8_start" "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_135_62_164_8_stop" ]
+        %qc.3 = local;
+        symbol [ qc %qc.3 137 16 18 ];
+        symbol [ _queueC %tmp.20 137 21 28 ];
+        %tmp.20 = getv ? :_queueC;
+        symbol [ _qHead %tmp.22 137 29 35 ];
+        %tmp.22 = getv ? :_qHead;
+        %tmp.23 = agetv %tmp.20 %tmp.22;
+        lputv %qc.3 %tmp.23;
+        symbol [ qc %qc.3 137 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 138 12 ]
+        symbol [ _qHead %tmp.25 138 21 27 ];
+        %tmp.25 = getv ? :_qHead;
+        %tmp.26 = 1;
+        %tmp.27 = add %tmp.25 %tmp.26;
+        symbol [ _qHead ? 138 12 18 ];
+        putv self :_qHead %tmp.27;
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 139 12 ]
+        %tmp.28 = lgetv %steps.1;
+        symbol [ steps %tmp.28 139 21 26 ];
+        %tmp.29 = 1;
+        %tmp.30 = add %tmp.28 %tmp.29;
+        lputv %steps.1 %tmp.30;
+        symbol [ steps %steps.1 139 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 141 12 ]
+        for @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_141_12_163_12_for_test @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_141_12_163_12_for_incr @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_141_12_163_12_for_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_141_12_163_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_141_12_163_12_for_begin" "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_141_12_163_12_for_end" ]
+        %dr.4 = local;
+        symbol [ dr %dr.4 141 21 23 ];
+        %tmp.31 = -1;
+        lputv %dr.4 %tmp.31;
+        symbol [ dr %dr.4 141 21 23 ];
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_141_12_163_12_for_test:
+        %tmp.32 = lgetv %dr.4;
+        symbol [ dr %tmp.32 141 30 32 ];
+        %tmp.33 = 1;
+        %tmp.34 = lte %tmp.32 %tmp.33;
+        bf %tmp.34 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_141_12_163_12_for_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_141_12_163_12_for_begin:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_141_45_163_12_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 142 16 ]
+        for @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_142_16_162_16_for_test @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_142_16_162_16_for_incr @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_142_16_162_16_for_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_142_16_162_16_for_init:
+        [ "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_142_16_162_16_for_begin" "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_142_16_162_16_for_end" ]
+        %dc.5 = local;
+        symbol [ dc %dc.5 142 25 27 ];
+        %tmp.35 = -1;
+        lputv %dc.5 %tmp.35;
+        symbol [ dc %dc.5 142 25 27 ];
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_142_16_162_16_for_test:
+        %tmp.36 = lgetv %dc.5;
+        symbol [ dc %tmp.36 142 34 36 ];
+        %tmp.37 = 1;
+        %tmp.38 = lte %tmp.36 %tmp.37;
+        bf %tmp.38 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_142_16_162_16_for_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_142_16_162_16_for_begin:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_142_49_162_16_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 143 20 ]
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_143_20_143_56_if_stmt:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_143_24_143_41_begin:
+        %tmp.39 = lgetv %dr.4;
+        symbol [ dr %tmp.39 143 24 26 ];
+        %tmp.40 = 0;
+        %tmp.41 = eq %tmp.39 %tmp.40;
+        bf %tmp.41 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_143_20_143_56_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_143_35_143_41_true:
+        %tmp.42 = lgetv %dc.5;
+        symbol [ dc %tmp.42 143 35 37 ];
+        %tmp.43 = 0;
+        %tmp.44 = eq %tmp.42 %tmp.43;
+        push %tmp.44;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_143_35_143_41_end:
+        %tmp.45 = phi [%tmp.41 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_143_24_143_41_begin] [%tmp.44 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_143_35_143_41_true] [%tmp.45 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_143_35_143_41_end];
+        bf %tmp.45 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_143_20_143_56_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_143_20_143_56_if_true:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_143_44_143_56_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 143 46 ]
+        goto break @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_142_16_162_16_for_incr;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_143_44_143_56_stop:
+        goto @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_143_20_143_56_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_143_20_143_56_if_end:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 144 20 ]
+        [ "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_142_49_162_16_start" "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_142_49_162_16_stop" ]
+        %nr.6 = local;
+        symbol [ nr %nr.6 144 24 26 ];
+        %tmp.46 = lgetv %qr.2;
+        symbol [ qr %tmp.46 144 29 31 ];
+        %tmp.47 = lgetv %dr.4;
+        symbol [ dr %tmp.47 144 34 36 ];
+        %tmp.48 = add %tmp.46 %tmp.47;
+        lputv %nr.6 %tmp.48;
+        symbol [ nr %nr.6 144 24 26 ];
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 145 20 ]
+        [ "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_142_49_162_16_start" "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_142_49_162_16_stop" ]
+        %nc.7 = local;
+        symbol [ nc %nc.7 145 24 26 ];
+        %tmp.49 = lgetv %qc.3;
+        symbol [ qc %tmp.49 145 29 31 ];
+        %tmp.50 = lgetv %dc.5;
+        symbol [ dc %tmp.50 145 34 36 ];
+        %tmp.51 = add %tmp.49 %tmp.50;
+        lputv %nc.7 %tmp.51;
+        symbol [ nc %nc.7 145 24 26 ];
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 146 20 ]
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_146_20_146_76_if_stmt:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_146_24_146_61_begin:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_146_24_146_50_begin:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_146_24_146_40_begin:
+        %tmp.52 = lgetv %nr.6;
+        symbol [ nr %tmp.52 146 24 26 ];
+        %tmp.53 = 0;
+        %tmp.54 = lt %tmp.52 %tmp.53;
+        bt %tmp.54 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_146_20_146_76_if_true;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_146_34_146_40_false:
+        %tmp.55 = lgetv %nr.6;
+        symbol [ nr %tmp.55 146 34 36 ];
+        symbol [ n %tmp.57 146 40 41 ];
+        %tmp.57 = getv ? :n;
+        %tmp.58 = gte %tmp.55 %tmp.57;
+        push %tmp.58;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_146_34_146_40_end:
+        %tmp.59 = phi [%tmp.54 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_146_24_146_40_begin] [%tmp.58 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_146_34_146_40_false] [%tmp.59 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_146_34_146_40_end];
+        bt %tmp.59 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_146_20_146_76_if_true;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_146_45_146_50_false:
+        %tmp.60 = lgetv %nc.7;
+        symbol [ nc %tmp.60 146 45 47 ];
+        %tmp.61 = 0;
+        %tmp.62 = lt %tmp.60 %tmp.61;
+        push %tmp.62;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_146_45_146_50_end:
+        %tmp.63 = phi [%tmp.59 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_146_24_146_50_begin] [%tmp.62 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_146_45_146_50_false] [%tmp.63 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_146_45_146_50_end];
+        bt %tmp.63 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_146_20_146_76_if_true;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_146_55_146_61_false:
+        %tmp.64 = lgetv %nc.7;
+        symbol [ nc %tmp.64 146 55 57 ];
+        symbol [ n %tmp.66 146 61 62 ];
+        %tmp.66 = getv ? :n;
+        %tmp.67 = gte %tmp.64 %tmp.66;
+        push %tmp.67;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_146_55_146_61_end:
+        %tmp.68 = phi [%tmp.63 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_146_24_146_61_begin] [%tmp.67 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_146_55_146_61_false] [%tmp.68 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_146_55_146_61_end];
+        bf %tmp.68 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_146_20_146_76_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_146_20_146_76_if_true:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_146_64_146_76_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 146 66 ]
+        goto break @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_142_16_162_16_for_incr;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_146_64_146_76_stop:
+        goto @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_146_20_146_76_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_146_20_146_76_if_end:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 147 20 ]
+        [ "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_142_49_162_16_start" "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_142_49_162_16_stop" ]
+        %ni.8 = local;
+        symbol [ ni %ni.8 147 24 26 ];
+        %tmp.69 = lgetv %nr.6;
+        symbol [ nr %tmp.69 147 29 31 ];
+        symbol [ n %tmp.71 147 34 35 ];
+        %tmp.71 = getv ? :n;
+        %tmp.72 = mul %tmp.69 %tmp.71;
+        %tmp.73 = lgetv %nc.7;
+        symbol [ nc %tmp.73 147 38 40 ];
+        %tmp.74 = add %tmp.72 %tmp.73;
+        lputv %ni.8 %tmp.74;
+        symbol [ ni %ni.8 147 24 26 ];
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 148 20 ]
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_148_20_148_68_if_stmt:
+        symbol [ mines %tmp.76 148 24 29 ];
+        %tmp.76 = getv ? :mines;
+        %tmp.77 = lgetv %ni.8;
+        symbol [ ni %tmp.77 148 30 32 ];
+        %tmp.78 = agetv %tmp.76 %tmp.77;
+        %tmp.79 = 1;
+        %tmp.80 = eq %tmp.78 %tmp.79;
+        bf %tmp.80 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_148_20_148_68_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_148_20_148_68_if_true:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_148_56_148_68_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 148 58 ]
+        goto break @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_142_16_162_16_for_incr;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_148_56_148_68_stop:
+        goto @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_148_20_148_68_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_148_20_148_68_if_end:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 149 20 ]
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_149_20_149_68_if_stmt:
+        symbol [ state %tmp.82 149 25 30 ];
+        %tmp.82 = getv ? :state;
+        %tmp.83 = lgetv %ni.8;
+        symbol [ ni %tmp.83 149 31 33 ];
+        %tmp.84 = agetv %tmp.82 %tmp.83;
+        symbol [ ST_REVEALED %tmp.86 149 37 48 ];
+        %tmp.86 = getv ? :ST_REVEALED;
+        %tmp.87 = bitand %tmp.84 %tmp.86;
+        %tmp.88 = 0;
+        %tmp.89 = ne %tmp.87 %tmp.88;
+        bf %tmp.89 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_149_20_149_68_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_149_20_149_68_if_true:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_149_56_149_68_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 149 58 ]
+        goto break @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_142_16_162_16_for_incr;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_149_56_149_68_stop:
+        goto @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_149_20_149_68_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_149_20_149_68_if_end:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 150 20 ]
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_150_20_150_68_if_stmt:
+        symbol [ state %tmp.91 150 25 30 ];
+        %tmp.91 = getv ? :state;
+        %tmp.92 = lgetv %ni.8;
+        symbol [ ni %tmp.92 150 31 33 ];
+        %tmp.93 = agetv %tmp.91 %tmp.92;
+        symbol [ ST_FLAGGED %tmp.95 150 37 47 ];
+        %tmp.95 = getv ? :ST_FLAGGED;
+        %tmp.96 = bitand %tmp.93 %tmp.95;
+        %tmp.97 = 0;
+        %tmp.98 = ne %tmp.96 %tmp.97;
+        bf %tmp.98 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_150_20_150_68_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_150_20_150_68_if_true:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_150_56_150_68_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 150 58 ]
+        goto break @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_142_16_162_16_for_incr;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_150_56_150_68_stop:
+        goto @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_150_20_150_68_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_150_20_150_68_if_end:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 152 20 ]
+        [ "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_142_49_162_16_start" "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_142_49_162_16_stop" ]
+        %cnt.9 = local;
+        symbol [ cnt %cnt.9 152 24 27 ];
+        %tmp.99 = self;
+        symbol [ _countAround %tmp.100 152 30 42 ];
+        %tmp.100 = getv function %tmp.99 :_countAround;
+        %tmp.101 = lgetv %nr.6;
+        symbol [ nr %tmp.101 152 43 45 ];
+        %tmp.102 = lgetv %nc.7;
+        symbol [ nc %tmp.102 152 47 49 ];
+        %tmp.103 = invoke %tmp.99 %tmp.100(%tmp.101, %tmp.102);
+        lputv %cnt.9 %tmp.103;
+        symbol [ cnt %cnt.9 152 24 27 ];
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 153 20 ]
+        symbol [ numbers %tmp.104 153 20 27 ];
+        %tmp.104 = getv self :numbers;
+        %tmp.105 = lgetv %cnt.9;
+        symbol [ cnt %tmp.105 153 34 37 ];
+        %tmp.106 = lgetv %ni.8;
+        symbol [ ni %tmp.106 153 28 30 ];
+        aputv %tmp.104 %tmp.106 %tmp.105;
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 154 20 ]
+        symbol [ state %tmp.107 154 20 25 ];
+        %tmp.107 = getv self :state;
+        symbol [ state %tmp.109 154 34 39 ];
+        %tmp.109 = getv ? :state;
+        %tmp.110 = lgetv %ni.8;
+        symbol [ ni %tmp.110 154 40 42 ];
+        %tmp.111 = agetv %tmp.109 %tmp.110;
+        symbol [ ST_REVEALED %tmp.113 154 46 57 ];
+        %tmp.113 = getv ? :ST_REVEALED;
+        %tmp.114 = bitor %tmp.111 %tmp.113;
+        %tmp.115 = lgetv %ni.8;
+        symbol [ ni %tmp.115 154 26 28 ];
+        aputv %tmp.107 %tmp.115 %tmp.114;
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 155 20 ]
+        symbol [ revealedCount %tmp.117 155 36 49 ];
+        %tmp.117 = getv ? :revealedCount;
+        %tmp.118 = 1;
+        %tmp.119 = add %tmp.117 %tmp.118;
+        symbol [ revealedCount ? 155 20 33 ];
+        putv self :revealedCount %tmp.119;
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 157 20 ]
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_157_20_161_20_if_stmt:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_157_24_157_45_begin:
+        %tmp.120 = lgetv %cnt.9;
+        symbol [ cnt %tmp.120 157 24 27 ];
+        %tmp.121 = 0;
+        %tmp.122 = eq %tmp.120 %tmp.121;
+        bf %tmp.122 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_157_20_161_20_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_157_36_157_45_true:
+        symbol [ _qTail %tmp.124 157 36 42 ];
+        %tmp.124 = getv ? :_qTail;
+        symbol [ total %tmp.126 157 45 50 ];
+        %tmp.126 = getv ? :total;
+        %tmp.127 = lt %tmp.124 %tmp.126;
+        push %tmp.127;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_157_36_157_45_end:
+        %tmp.128 = phi [%tmp.122 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_157_24_157_45_begin] [%tmp.127 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_157_36_157_45_true] [%tmp.128 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_157_36_157_45_end];
+        bf %tmp.128 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_157_20_161_20_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_157_20_161_20_if_true:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_157_52_161_20_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 158 24 ]
+        symbol [ _queueR %tmp.129 158 24 31 ];
+        %tmp.129 = getv self :_queueR;
+        %tmp.130 = lgetv %nr.6;
+        symbol [ nr %tmp.130 158 42 44 ];
+        symbol [ _qTail %tmp.132 158 32 38 ];
+        %tmp.132 = getv ? :_qTail;
+        aputv %tmp.129 %tmp.132 %tmp.130;
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 159 24 ]
+        symbol [ _queueC %tmp.133 159 24 31 ];
+        %tmp.133 = getv self :_queueC;
+        %tmp.134 = lgetv %nc.7;
+        symbol [ nc %tmp.134 159 42 44 ];
+        symbol [ _qTail %tmp.136 159 32 38 ];
+        %tmp.136 = getv ? :_qTail;
+        aputv %tmp.133 %tmp.136 %tmp.134;
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 160 24 ]
+        symbol [ _qTail %tmp.138 160 33 39 ];
+        %tmp.138 = getv ? :_qTail;
+        %tmp.139 = 1;
+        %tmp.140 = add %tmp.138 %tmp.139;
+        symbol [ _qTail ? 160 24 30 ];
+        putv self :_qTail %tmp.140;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_157_52_161_20_stop:
+        goto @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_157_20_161_20_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_157_20_161_20_if_end:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_142_49_162_16_stop:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_142_16_162_16_for_incr:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 142 ]
+        %tmp.143 = lgetv %dc.5;
+        symbol [ dc %tmp.143 142 43 45 ];
+        %tmp.144 = add %tmp.143 1;
+        lputv %dc.5 %tmp.144;
+        symbol [ dc %dc.5 142 43 45 ];
+        goto @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_142_16_162_16_for_test;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_142_16_162_16_for_end:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_141_45_163_12_stop:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_141_12_163_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 141 ]
+        %tmp.147 = lgetv %dr.4;
+        symbol [ dr %tmp.147 141 39 41 ];
+        %tmp.148 = add %tmp.147 1;
+        lputv %dr.4 %tmp.148;
+        symbol [ dr %dr.4 141 39 41 ];
+        goto @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_141_12_163_12_for_test;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_141_12_163_12_for_end:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_135_62_164_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_135_8_164_8_while_test;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_135_8_164_8_while_end:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 165 8 ]
+        symbol [ _qHead %tmp.150 165 24 30 ];
+        %tmp.150 = getv ? :_qHead;
+        symbol [ _qTail %tmp.152 165 33 39 ];
+        %tmp.152 = getv ? :_qTail;
+        %tmp.153 = lt %tmp.150 %tmp.152;
+        symbol [ floodPending ? 165 8 20 ];
+        putv self :floodPending %tmp.153;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_133_32_166_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 169; @symbol_functiondef = [_countAround,169,20,32]; @symbol_param<0> = [r,169,33,34]; @symbol_param<1> = [c,169,36,37]; ]
+    protected
+    function _countAround(r, c) {
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_169_39_180_4_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 170 8 ]
+        [ "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_169_39_180_4_start" "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_169_39_180_4_stop" ]
+        %cnt.1 = local;
+        symbol [ cnt %cnt.1 170 12 15 ];
+        %tmp.1 = 0;
+        lputv %cnt.1 %tmp.1;
+        symbol [ cnt %cnt.1 170 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 171 8 ]
+        for @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_171_8_178_8_for_test @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_171_8_178_8_for_incr @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_171_8_178_8_for_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_171_8_178_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_171_8_178_8_for_begin" "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_171_8_178_8_for_end" ]
+        %dr.2 = local;
+        symbol [ dr %dr.2 171 17 19 ];
+        %tmp.2 = -1;
+        lputv %dr.2 %tmp.2;
+        symbol [ dr %dr.2 171 17 19 ];
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_171_8_178_8_for_test:
+        %tmp.3 = lgetv %dr.2;
+        symbol [ dr %tmp.3 171 26 28 ];
+        %tmp.4 = 1;
+        %tmp.5 = lte %tmp.3 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_171_8_178_8_for_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_171_8_178_8_for_begin:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_171_41_178_8_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 172 12 ]
+        for @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_172_12_177_12_for_test @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_172_12_177_12_for_incr @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_172_12_177_12_for_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_172_12_177_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_172_12_177_12_for_begin" "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_172_12_177_12_for_end" ]
+        %dc.3 = local;
+        symbol [ dc %dc.3 172 21 23 ];
+        %tmp.6 = -1;
+        lputv %dc.3 %tmp.6;
+        symbol [ dc %dc.3 172 21 23 ];
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_172_12_177_12_for_test:
+        %tmp.7 = lgetv %dc.3;
+        symbol [ dc %tmp.7 172 30 32 ];
+        %tmp.8 = 1;
+        %tmp.9 = lte %tmp.7 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_172_12_177_12_for_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_172_12_177_12_for_begin:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_172_45_177_12_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 173 16 ]
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_173_16_173_52_if_stmt:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_173_20_173_37_begin:
+        %tmp.10 = lgetv %dr.2;
+        symbol [ dr %tmp.10 173 20 22 ];
+        %tmp.11 = 0;
+        %tmp.12 = eq %tmp.10 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_173_16_173_52_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_173_31_173_37_true:
+        %tmp.13 = lgetv %dc.3;
+        symbol [ dc %tmp.13 173 31 33 ];
+        %tmp.14 = 0;
+        %tmp.15 = eq %tmp.13 %tmp.14;
+        push %tmp.15;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_173_31_173_37_end:
+        %tmp.16 = phi [%tmp.12 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_173_20_173_37_begin] [%tmp.15 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_173_31_173_37_true] [%tmp.16 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_173_31_173_37_end];
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_173_16_173_52_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_173_16_173_52_if_true:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_173_40_173_52_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 173 42 ]
+        goto break @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_172_12_177_12_for_incr;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_173_40_173_52_stop:
+        goto @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_173_16_173_52_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_173_16_173_52_if_end:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 174 16 ]
+        [ "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_172_45_177_12_start" "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_172_45_177_12_stop" ]
+        %nr.4 = local;
+        symbol [ nr %nr.4 174 20 22 ];
+        %tmp.17 = lgetv %r;
+        symbol [ r %tmp.17 174 25 26 ];
+        %tmp.18 = lgetv %dr.2;
+        symbol [ dr %tmp.18 174 29 31 ];
+        %tmp.19 = add %tmp.17 %tmp.18;
+        lputv %nr.4 %tmp.19;
+        symbol [ nr %nr.4 174 20 22 ];
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 174 33 ]
+        [ "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_172_45_177_12_start" "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_172_45_177_12_stop" ]
+        %nc.5 = local;
+        symbol [ nc %nc.5 174 37 39 ];
+        %tmp.20 = lgetv %c;
+        symbol [ c %tmp.20 174 42 43 ];
+        %tmp.21 = lgetv %dc.3;
+        symbol [ dc %tmp.21 174 46 48 ];
+        %tmp.22 = add %tmp.20 %tmp.21;
+        lputv %nc.5 %tmp.22;
+        symbol [ nc %nc.5 174 37 39 ];
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 175 16 ]
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_175_16_175_72_if_stmt:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_175_20_175_57_begin:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_175_20_175_46_begin:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_175_20_175_36_begin:
+        %tmp.23 = lgetv %nr.4;
+        symbol [ nr %tmp.23 175 20 22 ];
+        %tmp.24 = 0;
+        %tmp.25 = lt %tmp.23 %tmp.24;
+        bt %tmp.25 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_175_16_175_72_if_true;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_175_30_175_36_false:
+        %tmp.26 = lgetv %nr.4;
+        symbol [ nr %tmp.26 175 30 32 ];
+        symbol [ n %tmp.28 175 36 37 ];
+        %tmp.28 = getv ? :n;
+        %tmp.29 = gte %tmp.26 %tmp.28;
+        push %tmp.29;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_175_30_175_36_end:
+        %tmp.30 = phi [%tmp.25 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_175_20_175_36_begin] [%tmp.29 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_175_30_175_36_false] [%tmp.30 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_175_30_175_36_end];
+        bt %tmp.30 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_175_16_175_72_if_true;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_175_41_175_46_false:
+        %tmp.31 = lgetv %nc.5;
+        symbol [ nc %tmp.31 175 41 43 ];
+        %tmp.32 = 0;
+        %tmp.33 = lt %tmp.31 %tmp.32;
+        push %tmp.33;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_175_41_175_46_end:
+        %tmp.34 = phi [%tmp.30 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_175_20_175_46_begin] [%tmp.33 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_175_41_175_46_false] [%tmp.34 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_175_41_175_46_end];
+        bt %tmp.34 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_175_16_175_72_if_true;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_175_51_175_57_false:
+        %tmp.35 = lgetv %nc.5;
+        symbol [ nc %tmp.35 175 51 53 ];
+        symbol [ n %tmp.37 175 57 58 ];
+        %tmp.37 = getv ? :n;
+        %tmp.38 = gte %tmp.35 %tmp.37;
+        push %tmp.38;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_175_51_175_57_end:
+        %tmp.39 = phi [%tmp.34 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_175_20_175_57_begin] [%tmp.38 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_175_51_175_57_false] [%tmp.39 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_175_51_175_57_end];
+        bf %tmp.39 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_175_16_175_72_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_175_16_175_72_if_true:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_175_60_175_72_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 175 62 ]
+        goto break @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_172_12_177_12_for_incr;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_175_60_175_72_stop:
+        goto @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_175_16_175_72_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_175_16_175_72_if_end:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 176 16 ]
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_176_16_176_62_if_stmt:
+        symbol [ mines %tmp.41 176 20 25 ];
+        %tmp.41 = getv ? :mines;
+        %tmp.42 = lgetv %nr.4;
+        symbol [ nr %tmp.42 176 26 28 ];
+        symbol [ n %tmp.44 176 31 32 ];
+        %tmp.44 = getv ? :n;
+        %tmp.45 = mul %tmp.42 %tmp.44;
+        %tmp.46 = lgetv %nc.5;
+        symbol [ nc %tmp.46 176 35 37 ];
+        %tmp.47 = add %tmp.45 %tmp.46;
+        %tmp.48 = agetv %tmp.41 %tmp.47;
+        %tmp.49 = 1;
+        %tmp.50 = eq %tmp.48 %tmp.49;
+        bf %tmp.50 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_176_16_176_62_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_176_16_176_62_if_true:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_176_45_176_62_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 176 47 ]
+        %tmp.51 = lgetv %cnt.1;
+        symbol [ cnt %tmp.51 176 53 56 ];
+        %tmp.52 = 1;
+        %tmp.53 = add %tmp.51 %tmp.52;
+        lputv %cnt.1 %tmp.53;
+        symbol [ cnt %cnt.1 176 47 50 ];
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_176_45_176_62_stop:
+        goto @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_176_16_176_62_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_176_16_176_62_if_end:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_172_45_177_12_stop:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_172_12_177_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 172 ]
+        %tmp.56 = lgetv %dc.3;
+        symbol [ dc %tmp.56 172 39 41 ];
+        %tmp.57 = add %tmp.56 1;
+        lputv %dc.3 %tmp.57;
+        symbol [ dc %dc.3 172 39 41 ];
+        goto @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_172_12_177_12_for_test;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_172_12_177_12_for_end:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_171_41_178_8_stop:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_171_8_178_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 171 ]
+        %tmp.60 = lgetv %dr.2;
+        symbol [ dr %tmp.60 171 35 37 ];
+        %tmp.61 = add %tmp.60 1;
+        lputv %dr.2 %tmp.61;
+        symbol [ dr %dr.2 171 35 37 ];
+        goto @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_171_8_178_8_for_test;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_171_8_178_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 179 8 ]
+        %tmp.62 = lgetv %cnt.1;
+        symbol [ cnt %tmp.62 179 15 18 ];
+        ret %tmp.62;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_169_39_180_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 183; @symbol_functiondef = [_placeMines,183,20,31]; @symbol_param<0> = [sr,183,32,34]; @symbol_param<1> = [sc,183,36,38]; ]
+    protected
+    function _placeMines(sr, sc) {
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_183_40_202_4_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 184 8 ]
+        [ "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_183_40_202_4_start" "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_183_40_202_4_stop" ]
+        %pool.1 = local;
+        symbol [ pool %pool.1 184 12 16 ];
+        symbol [ total %tmp.3 184 24 29 ];
+        %tmp.3 = getv ? :total;
+        %tmp.1 = newa %tmp.3;
+        lputv %pool.1 %tmp.1;
+        symbol [ pool %pool.1 184 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 185 8 ]
+        [ "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_183_40_202_4_start" "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_183_40_202_4_stop" ]
+        %pN.2 = local;
+        symbol [ pN %pN.2 185 12 14 ];
+        %tmp.4 = 0;
+        lputv %pN.2 %tmp.4;
+        symbol [ pN %pN.2 185 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 186 8 ]
+        [ "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_183_40_202_4_start" "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_183_40_202_4_stop" ]
+        %r.3 = local;
+        symbol [ r %r.3 186 12 13 ];
+        %tmp.5 = 0;
+        lputv %r.3 %tmp.5;
+        symbol [ r %r.3 186 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 186 22 ]
+        [ "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_183_40_202_4_start" "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_183_40_202_4_stop" ]
+        %c.4 = local;
+        symbol [ c %c.4 186 26 27 ];
+        %tmp.6 = 0;
+        lputv %c.4 %tmp.6;
+        symbol [ c %c.4 186 26 27 ];
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 187 8 ]
+        for @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_187_8_193_8_for_test @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_187_8_193_8_for_incr @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_187_8_193_8_for_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_187_8_193_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_187_8_193_8_for_begin" "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_187_8_193_8_for_end" ]
+        %i.5 = local;
+        symbol [ i %i.5 187 17 18 ];
+        %tmp.7 = 0;
+        lputv %i.5 %tmp.7;
+        symbol [ i %i.5 187 17 18 ];
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_187_8_193_8_for_test:
+        %tmp.8 = lgetv %i.5;
+        symbol [ i %tmp.8 187 24 25 ];
+        symbol [ total %tmp.10 187 28 33 ];
+        %tmp.10 = getv ? :total;
+        %tmp.11 = lt %tmp.8 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_187_8_193_8_for_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_187_8_193_8_for_begin:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_187_40_193_8_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 188 12 ]
+        [ "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_187_40_193_8_start" "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_187_40_193_8_stop" ]
+        %dr.6 = local;
+        symbol [ dr %dr.6 188 16 18 ];
+        %tmp.12 = lgetv %r.3;
+        symbol [ r %tmp.12 188 21 22 ];
+        %tmp.13 = lgetv %sr;
+        symbol [ sr %tmp.13 188 25 27 ];
+        %tmp.14 = sub %tmp.12 %tmp.13;
+        lputv %dr.6 %tmp.14;
+        symbol [ dr %dr.6 188 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 188 29 ]
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_188_29_188_53_if_stmt:
+        %tmp.15 = lgetv %dr.6;
+        symbol [ dr %tmp.15 188 33 35 ];
+        %tmp.16 = 0;
+        %tmp.17 = lt %tmp.15 %tmp.16;
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_188_29_188_53_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_188_29_188_53_if_true:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_188_41_188_53_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 188 43 ]
+        %tmp.18 = lgetv %dr.6;
+        symbol [ dr %tmp.18 188 49 51 ];
+        %tmp.19 = sub 0 %tmp.18;
+        lputv %dr.6 %tmp.19;
+        symbol [ dr %dr.6 188 43 45 ];
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_188_41_188_53_stop:
+        goto @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_188_29_188_53_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_188_29_188_53_if_end:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 189 12 ]
+        [ "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_187_40_193_8_start" "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_187_40_193_8_stop" ]
+        %dc.7 = local;
+        symbol [ dc %dc.7 189 16 18 ];
+        %tmp.20 = lgetv %c.4;
+        symbol [ c %tmp.20 189 21 22 ];
+        %tmp.21 = lgetv %sc;
+        symbol [ sc %tmp.21 189 25 27 ];
+        %tmp.22 = sub %tmp.20 %tmp.21;
+        lputv %dc.7 %tmp.22;
+        symbol [ dc %dc.7 189 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 189 29 ]
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_189_29_189_53_if_stmt:
+        %tmp.23 = lgetv %dc.7;
+        symbol [ dc %tmp.23 189 33 35 ];
+        %tmp.24 = 0;
+        %tmp.25 = lt %tmp.23 %tmp.24;
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_189_29_189_53_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_189_29_189_53_if_true:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_189_41_189_53_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 189 43 ]
+        %tmp.26 = lgetv %dc.7;
+        symbol [ dc %tmp.26 189 49 51 ];
+        %tmp.27 = sub 0 %tmp.26;
+        lputv %dc.7 %tmp.27;
+        symbol [ dc %dc.7 189 43 45 ];
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_189_41_189_53_stop:
+        goto @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_189_29_189_53_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_189_29_189_53_if_end:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 190 12 ]
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_190_12_190_63_if_stmt:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_190_16_190_31_begin:
+        %tmp.28 = lgetv %dr.6;
+        symbol [ dr %tmp.28 190 16 18 ];
+        %tmp.29 = 1;
+        %tmp.30 = gt %tmp.28 %tmp.29;
+        bt %tmp.30 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_190_12_190_63_if_true;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_190_26_190_31_false:
+        %tmp.31 = lgetv %dc.7;
+        symbol [ dc %tmp.31 190 26 28 ];
+        %tmp.32 = 1;
+        %tmp.33 = gt %tmp.31 %tmp.32;
+        push %tmp.33;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_190_26_190_31_end:
+        %tmp.34 = phi [%tmp.30 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_190_16_190_31_begin] [%tmp.33 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_190_26_190_31_false] [%tmp.34 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_190_26_190_31_end];
+        bf %tmp.34 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_190_12_190_63_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_190_12_190_63_if_true:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_190_34_190_63_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 190 36 ]
+        %tmp.35 = lgetv %pool.1;
+        symbol [ pool %tmp.35 190 36 40 ];
+        %tmp.36 = lgetv %i.5;
+        symbol [ i %tmp.36 190 47 48 ];
+        %tmp.37 = lgetv %pN.2;
+        symbol [ pN %tmp.37 190 41 43 ];
+        aputv %tmp.35 %tmp.37 %tmp.36;
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 190 50 ]
+        %tmp.38 = lgetv %pN.2;
+        symbol [ pN %tmp.38 190 55 57 ];
+        %tmp.39 = 1;
+        %tmp.40 = add %tmp.38 %tmp.39;
+        lputv %pN.2 %tmp.40;
+        symbol [ pN %pN.2 190 50 52 ];
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_190_34_190_63_stop:
+        goto @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_190_12_190_63_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_190_12_190_63_if_end:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 191 12 ]
+        %tmp.41 = lgetv %c.4;
+        symbol [ c %tmp.41 191 16 17 ];
+        %tmp.42 = 1;
+        %tmp.43 = add %tmp.41 %tmp.42;
+        lputv %c.4 %tmp.43;
+        symbol [ c %c.4 191 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 192 12 ]
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_192_12_192_44_if_stmt:
+        %tmp.44 = lgetv %c.4;
+        symbol [ c %tmp.44 192 16 17 ];
+        symbol [ n %tmp.46 192 21 22 ];
+        %tmp.46 = getv ? :n;
+        %tmp.47 = gte %tmp.44 %tmp.46;
+        bf %tmp.47 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_192_12_192_44_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_192_12_192_44_if_true:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_192_24_192_44_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 192 26 ]
+        %tmp.48 = 0;
+        lputv %c.4 %tmp.48;
+        symbol [ c %c.4 192 26 27 ];
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 192 33 ]
+        %tmp.49 = lgetv %r.3;
+        symbol [ r %tmp.49 192 37 38 ];
+        %tmp.50 = 1;
+        %tmp.51 = add %tmp.49 %tmp.50;
+        lputv %r.3 %tmp.51;
+        symbol [ r %r.3 192 33 34 ];
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_192_24_192_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_192_12_192_44_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_192_12_192_44_if_end:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_187_40_193_8_stop:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_187_8_193_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 187 ]
+        %tmp.54 = lgetv %i.5;
+        symbol [ i %tmp.54 187 35 36 ];
+        %tmp.55 = add %tmp.54 1;
+        lputv %i.5 %tmp.55;
+        symbol [ i %i.5 187 35 36 ];
+        goto @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_187_8_193_8_for_test;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_187_8_193_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 194 8 ]
+        [ "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_183_40_202_4_start" "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_183_40_202_4_stop" ]
+        %goal.8 = local;
+        symbol [ goal %goal.8 194 12 16 ];
+        symbol [ mineCount %tmp.57 194 19 28 ];
+        %tmp.57 = getv ? :mineCount;
+        lputv %goal.8 %tmp.57;
+        symbol [ goal %goal.8 194 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 194 30 ]
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_194_30_194_58_if_stmt:
+        %tmp.58 = lgetv %goal.8;
+        symbol [ goal %tmp.58 194 34 38 ];
+        %tmp.59 = lgetv %pN.2;
+        symbol [ pN %tmp.59 194 41 43 ];
+        %tmp.60 = gt %tmp.58 %tmp.59;
+        bf %tmp.60 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_194_30_194_58_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_194_30_194_58_if_true:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_194_45_194_58_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 194 47 ]
+        %tmp.61 = lgetv %pN.2;
+        symbol [ pN %tmp.61 194 54 56 ];
+        lputv %goal.8 %tmp.61;
+        symbol [ goal %goal.8 194 47 51 ];
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_194_45_194_58_stop:
+        goto @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_194_30_194_58_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_194_30_194_58_if_end:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 195 8 ]
+        for @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_195_8_200_8_for_test @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_195_8_200_8_for_incr @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_195_8_200_8_for_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_195_8_200_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_195_8_200_8_for_begin" "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_195_8_200_8_for_end" ]
+        %k.9 = local;
+        symbol [ k %k.9 195 17 18 ];
+        %tmp.62 = 0;
+        lputv %k.9 %tmp.62;
+        symbol [ k %k.9 195 17 18 ];
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_195_8_200_8_for_test:
+        %tmp.63 = lgetv %k.9;
+        symbol [ k %tmp.63 195 24 25 ];
+        %tmp.64 = lgetv %goal.8;
+        symbol [ goal %tmp.64 195 28 32 ];
+        %tmp.65 = lt %tmp.63 %tmp.64;
+        bf %tmp.65 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_195_8_200_8_for_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_195_8_200_8_for_begin:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_195_39_200_8_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 196 12 ]
+        [ "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_195_39_200_8_start" "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_195_39_200_8_stop" ]
+        %j.10 = local;
+        symbol [ j %j.10 196 16 17 ];
+        %tmp.66 = lgetv %k.9;
+        symbol [ k %tmp.66 196 20 21 ];
+        symbol [ Math %tmp.67 196 25 29 ];
+        %tmp.67 = getm $.Toybox.Math;
+        symbol [ rand %tmp.68 196 30 34 ];
+        %tmp.68 = getv function %tmp.67 :rand;
+        %tmp.69 = invoke %tmp.67 %tmp.68();
+        %tmp.70 = lgetv %pN.2;
+        symbol [ pN %tmp.70 196 40 42 ];
+        %tmp.71 = lgetv %k.9;
+        symbol [ k %tmp.71 196 45 46 ];
+        %tmp.72 = sub %tmp.70 %tmp.71;
+        %tmp.73 = mod %tmp.69 %tmp.72;
+        %tmp.74 = add %tmp.66 %tmp.73;
+        lputv %j.10 %tmp.74;
+        symbol [ j %j.10 196 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 197 12 ]
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_197_12_197_32_if_stmt:
+        %tmp.75 = lgetv %j.10;
+        symbol [ j %tmp.75 197 16 17 ];
+        %tmp.76 = lgetv %k.9;
+        symbol [ k %tmp.76 197 20 21 ];
+        %tmp.77 = lt %tmp.75 %tmp.76;
+        bf %tmp.77 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_197_12_197_32_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_197_12_197_32_if_true:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_197_23_197_32_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 197 25 ]
+        %tmp.78 = lgetv %k.9;
+        symbol [ k %tmp.78 197 29 30 ];
+        lputv %j.10 %tmp.78;
+        symbol [ j %j.10 197 25 26 ];
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_197_23_197_32_stop:
+        goto @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_197_12_197_32_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_197_12_197_32_if_end:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 198 12 ]
+        [ "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_195_39_200_8_start" "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_195_39_200_8_stop" ]
+        %tmp.11 = local;
+        symbol [ tmp %tmp.11 198 16 19 ];
+        %tmp.79 = lgetv %pool.1;
+        symbol [ pool %tmp.79 198 22 26 ];
+        %tmp.80 = lgetv %k.9;
+        symbol [ k %tmp.80 198 27 28 ];
+        %tmp.81 = agetv %tmp.79 %tmp.80;
+        lputv %tmp.11 %tmp.81;
+        symbol [ tmp %tmp.11 198 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 198 31 ]
+        %tmp.82 = lgetv %pool.1;
+        symbol [ pool %tmp.82 198 31 35 ];
+        %tmp.83 = lgetv %pool.1;
+        symbol [ pool %tmp.83 198 41 45 ];
+        %tmp.84 = lgetv %j.10;
+        symbol [ j %tmp.84 198 46 47 ];
+        %tmp.85 = agetv %tmp.83 %tmp.84;
+        %tmp.86 = lgetv %k.9;
+        symbol [ k %tmp.86 198 36 37 ];
+        aputv %tmp.82 %tmp.86 %tmp.85;
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 198 50 ]
+        %tmp.87 = lgetv %pool.1;
+        symbol [ pool %tmp.87 198 50 54 ];
+        %tmp.88 = lgetv %tmp.11;
+        symbol [ tmp %tmp.88 198 60 63 ];
+        %tmp.89 = lgetv %j.10;
+        symbol [ j %tmp.89 198 55 56 ];
+        aputv %tmp.87 %tmp.89 %tmp.88;
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 199 12 ]
+        symbol [ mines %tmp.90 199 12 17 ];
+        %tmp.90 = getv self :mines;
+        %tmp.91 = 1;
+        %tmp.92 = lgetv %pool.1;
+        symbol [ pool %tmp.92 199 18 22 ];
+        %tmp.93 = lgetv %k.9;
+        symbol [ k %tmp.93 199 23 24 ];
+        %tmp.94 = agetv %tmp.92 %tmp.93;
+        aputv %tmp.90 %tmp.94 %tmp.91;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_195_39_200_8_stop:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_195_8_200_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 195 ]
+        %tmp.97 = lgetv %k.9;
+        symbol [ k %tmp.97 195 34 35 ];
+        %tmp.98 = add %tmp.97 1;
+        lputv %k.9 %tmp.98;
+        symbol [ k %k.9 195 34 35 ];
+        goto @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_195_8_200_8_for_test;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_195_8_200_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 201 8 ]
+        %tmp.99 = lgetv %goal.8;
+        symbol [ goal %tmp.99 201 20 24 ];
+        symbol [ mineCount ? 201 8 17 ];
+        putv self :mineCount %tmp.99;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_183_40_202_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 205; @symbol_functiondef = [isRevealed,205,13,23]; @symbol_param<0> = [r,205,24,25]; @symbol_param<1> = [c,205,27,28]; ]
+    function isRevealed(r, c) {
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_205_30_205_77_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 205 32 ]
+        symbol [ state %tmp.2 205 40 45 ];
+        %tmp.2 = getv ? :state;
+        %tmp.3 = self;
+        symbol [ idx %tmp.4 205 46 49 ];
+        %tmp.4 = getv function %tmp.3 :idx;
+        %tmp.5 = lgetv %r;
+        symbol [ r %tmp.5 205 50 51 ];
+        %tmp.6 = lgetv %c;
+        symbol [ c %tmp.6 205 52 53 ];
+        %tmp.7 = invoke %tmp.3 %tmp.4(%tmp.5, %tmp.6);
+        %tmp.8 = agetv %tmp.2 %tmp.7;
+        symbol [ ST_REVEALED %tmp.10 205 58 69 ];
+        %tmp.10 = getv ? :ST_REVEALED;
+        %tmp.11 = bitand %tmp.8 %tmp.10;
+        %tmp.12 = 0;
+        %tmp.13 = ne %tmp.11 %tmp.12;
+        ret %tmp.13;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_205_30_205_77_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 206; @symbol_functiondef = [isFlagged,206,13,22]; @symbol_param<0> = [r,206,24,25]; @symbol_param<1> = [c,206,27,28]; ]
+    function isFlagged(r, c) {
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_206_30_206_77_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 206 32 ]
+        symbol [ state %tmp.2 206 40 45 ];
+        %tmp.2 = getv ? :state;
+        %tmp.3 = self;
+        symbol [ idx %tmp.4 206 46 49 ];
+        %tmp.4 = getv function %tmp.3 :idx;
+        %tmp.5 = lgetv %r;
+        symbol [ r %tmp.5 206 50 51 ];
+        %tmp.6 = lgetv %c;
+        symbol [ c %tmp.6 206 52 53 ];
+        %tmp.7 = invoke %tmp.3 %tmp.4(%tmp.5, %tmp.6);
+        %tmp.8 = agetv %tmp.2 %tmp.7;
+        symbol [ ST_FLAGGED %tmp.10 206 58 68 ];
+        %tmp.10 = getv ? :ST_FLAGGED;
+        %tmp.11 = bitand %tmp.8 %tmp.10;
+        %tmp.12 = 0;
+        %tmp.13 = ne %tmp.11 %tmp.12;
+        ret %tmp.13;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_206_30_206_77_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 207; @symbol_functiondef = [getNumber,207,13,22]; @symbol_param<0> = [r,207,24,25]; @symbol_param<1> = [c,207,27,28]; ]
+    function getNumber(r, c) {
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_207_30_207_58_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 207 32 ]
+        symbol [ numbers %tmp.2 207 39 46 ];
+        %tmp.2 = getv ? :numbers;
+        %tmp.3 = self;
+        symbol [ idx %tmp.4 207 47 50 ];
+        %tmp.4 = getv function %tmp.3 :idx;
+        %tmp.5 = lgetv %r;
+        symbol [ r %tmp.5 207 51 52 ];
+        %tmp.6 = lgetv %c;
+        symbol [ c %tmp.6 207 53 54 ];
+        %tmp.7 = invoke %tmp.3 %tmp.4(%tmp.5, %tmp.6);
+        %tmp.8 = agetv %tmp.2 %tmp.7;
+        ret %tmp.8;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_207_30_207_58_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 208; @symbol_functiondef = [isMine,208,13,19]; @symbol_param<0> = [r,208,24,25]; @symbol_param<1> = [c,208,27,28]; ]
+    function isMine(r, c) {
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_208_30_208_61_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 208 32 ]
+        symbol [ mines %tmp.2 208 39 44 ];
+        %tmp.2 = getv ? :mines;
+        %tmp.3 = self;
+        symbol [ idx %tmp.4 208 45 48 ];
+        %tmp.4 = getv function %tmp.3 :idx;
+        %tmp.5 = lgetv %r;
+        symbol [ r %tmp.5 208 49 50 ];
+        %tmp.6 = lgetv %c;
+        symbol [ c %tmp.6 208 51 52 ];
+        %tmp.7 = invoke %tmp.3 %tmp.4(%tmp.5, %tmp.6);
+        %tmp.8 = agetv %tmp.2 %tmp.7;
+        %tmp.9 = 1;
+        %tmp.10 = eq %tmp.8 %tmp.9;
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_208_30_208_61_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 209; @symbol_functiondef = [inBounds,209,13,21]; @symbol_param<0> = [r,209,24,25]; @symbol_param<1> = [c,209,27,28]; ]
+    function inBounds(r, c) {
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_209_30_209_75_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 209 32 ]
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_209_39_209_72_begin:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_209_39_209_63_begin:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_209_39_209_53_begin:
+        %tmp.1 = lgetv %r;
+        symbol [ r %tmp.1 209 39 40 ];
+        %tmp.2 = 0;
+        %tmp.3 = gte %tmp.1 %tmp.2;
+        %tmp.4 = dup %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_209_49_209_53_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_209_49_209_53_true:
+        %tmp.5 = lgetv %r;
+        symbol [ r %tmp.5 209 49 50 ];
+        symbol [ n %tmp.7 209 53 54 ];
+        %tmp.7 = getv ? :n;
+        %tmp.8 = lt %tmp.5 %tmp.7;
+        %tmp.9 = and %tmp.3 %tmp.8;
+        push %tmp.9;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_209_49_209_53_end:
+        %tmp.10 = phi [%tmp.4 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_209_39_209_53_begin] [%tmp.9 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_209_49_209_53_true] [%tmp.10 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_209_49_209_53_end];
+        %tmp.11 = dup %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_209_58_209_63_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_209_58_209_63_true:
+        %tmp.12 = lgetv %c;
+        symbol [ c %tmp.12 209 58 59 ];
+        %tmp.13 = 0;
+        %tmp.14 = gte %tmp.12 %tmp.13;
+        %tmp.15 = and %tmp.10 %tmp.14;
+        push %tmp.15;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_209_58_209_63_end:
+        %tmp.16 = phi [%tmp.11 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_209_39_209_63_begin] [%tmp.15 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_209_58_209_63_true] [%tmp.16 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_209_58_209_63_end];
+        %tmp.17 = dup %tmp.16;
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_209_68_209_72_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_209_68_209_72_true:
+        %tmp.18 = lgetv %c;
+        symbol [ c %tmp.18 209 68 69 ];
+        symbol [ n %tmp.20 209 72 73 ];
+        %tmp.20 = getv ? :n;
+        %tmp.21 = lt %tmp.18 %tmp.20;
+        %tmp.22 = and %tmp.16 %tmp.21;
+        push %tmp.22;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_209_68_209_72_end:
+        %tmp.23 = phi [%tmp.17 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_209_39_209_72_begin] [%tmp.22 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_209_68_209_72_true] [%tmp.23 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_209_68_209_72_end];
+        ret %tmp.23;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_209_30_209_75_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 210; @symbol_functiondef = [isWon,210,13,18]; ]
+    function isWon() {
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_210_30_210_75_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 210 32 ]
+        symbol [ revealedCount %tmp.2 210 39 52 ];
+        %tmp.2 = getv ? :revealedCount;
+        symbol [ total %tmp.4 210 56 61 ];
+        %tmp.4 = getv ? :total;
+        symbol [ mineCount %tmp.6 210 64 73 ];
+        %tmp.6 = getv ? :mineCount;
+        %tmp.7 = sub %tmp.4 %tmp.6;
+        %tmp.8 = eq %tmp.2 %tmp.7;
+        ret %tmp.8;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_210_30_210_75_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 212; @symbol_functiondef = [revealAllMines,212,13,27]; ]
+    function revealAllMines() {
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_212_30_216_4_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 213 8 ]
+        for @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_213_8_215_8_for_test @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_213_8_215_8_for_incr @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_213_8_215_8_for_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_213_8_215_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_213_8_215_8_for_begin" "_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_213_8_215_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 213 17 18 ];
+        %tmp.1 = 0;
+        lputv %i.1 %tmp.1;
+        symbol [ i %i.1 213 17 18 ];
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_213_8_215_8_for_test:
+        %tmp.2 = lgetv %i.1;
+        symbol [ i %tmp.2 213 24 25 ];
+        symbol [ total %tmp.4 213 28 33 ];
+        %tmp.4 = getv ? :total;
+        %tmp.5 = lt %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_213_8_215_8_for_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_213_8_215_8_for_begin:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_213_40_215_8_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 214 12 ]
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_214_12_214_68_if_stmt:
+        symbol [ mines %tmp.7 214 16 21 ];
+        %tmp.7 = getv ? :mines;
+        %tmp.8 = lgetv %i.1;
+        symbol [ i %tmp.8 214 22 23 ];
+        %tmp.9 = agetv %tmp.7 %tmp.8;
+        %tmp.10 = 1;
+        %tmp.11 = eq %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_214_12_214_68_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_214_12_214_68_if_true:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_214_31_214_68_start:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 214 33 ]
+        symbol [ state %tmp.12 214 33 38 ];
+        %tmp.12 = getv self :state;
+        symbol [ state %tmp.14 214 44 49 ];
+        %tmp.14 = getv ? :state;
+        %tmp.15 = lgetv %i.1;
+        symbol [ i %tmp.15 214 50 51 ];
+        %tmp.16 = agetv %tmp.14 %tmp.15;
+        symbol [ ST_REVEALED %tmp.18 214 55 66 ];
+        %tmp.18 = getv ? :ST_REVEALED;
+        %tmp.19 = bitor %tmp.16 %tmp.18;
+        %tmp.20 = lgetv %i.1;
+        symbol [ i %tmp.20 214 39 40 ];
+        aputv %tmp.12 %tmp.20 %tmp.19;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_214_31_214_68_stop:
+        goto @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_214_12_214_68_if_end;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_214_12_214_68_if_end:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_213_40_215_8_stop:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_213_8_215_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc" 213 ]
+        %tmp.23 = lgetv %i.1;
+        symbol [ i %tmp.23 213 35 36 ];
+        %tmp.24 = add %tmp.23 1;
+        lputv %i.1 %tmp.24;
+        symbol [ i %i.1 213 35 36 ];
+        goto @_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_213_8_215_8_for_test;
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_213_8_215_8_for_end:
+_Users_kkorolczuk_work_garmin_minesweeper_source_GridManager_mc_212_30_216_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/minesweeper/source/GridManager.mc"; @line = 18; ]
+<init> {
+}

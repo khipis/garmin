@@ -1,0 +1,1328 @@
+[ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc"; @line = 25; @symbol_usingdef<0> = [Toybox,25,6,12]; @symbol_usingdef<1> = [Math,25,13,17]; ]
+using Toybox.Math;
+[ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc"; @line = 27; @position = 6; @symbol_constdef = [MAX_PLATFORMS,27,6,19]; ]
+const MAX_PLATFORMS = 12;
+[ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc"; @line = 29; @position = 6; @symbol_constdef = [PT_NORMAL,29,6,15]; ]
+const PT_NORMAL = 0;
+[ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc"; @line = 30; @position = 6; @symbol_constdef = [PT_MOVING,30,6,15]; ]
+const PT_MOVING = 1;
+[ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc"; @line = 31; @position = 6; @symbol_constdef = [PT_BREAKABLE,31,6,18]; ]
+const PT_BREAKABLE = 2;
+[ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc"; @line = 32; @position = 6; @symbol_constdef = [PT_SPRING,32,6,15]; ]
+const PT_SPRING = 3;
+[ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc"; @line = 34; @symbol_classdef = [Platform,34,6,14]; ]
+class Platform {
+    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc"; @line = 34; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc"; @line = 34; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc"; @line = 35; @position = 8; @symbol_vardef = [x,35,8,9]; ]
+    var x;
+    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc"; @line = 36; @position = 8; @symbol_vardef = [y,36,8,9]; ]
+    var y;
+    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc"; @line = 37; @position = 8; @symbol_vardef = [w,37,8,9]; ]
+    var w;
+    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc"; @line = 38; @position = 8; @symbol_vardef = [type,38,8,12]; ]
+    var type;
+    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc"; @line = 39; @position = 8; @symbol_vardef = [alive,39,8,13]; ]
+    var alive;
+    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc"; @line = 40; @position = 8; @symbol_vardef = [vx,40,8,10]; ]
+    var vx;
+    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc"; @line = 41; @symbol_functiondef = [initialize,41,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_41_26_43_4_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 42 8 ]
+        %tmp.1 = 0;
+        symbol [ x ? 42 8 9 ];
+        putv self :x %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 42 15 ]
+        %tmp.2 = 0;
+        symbol [ y ? 42 15 16 ];
+        putv self :y %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 42 22 ]
+        %tmp.3 = 50;
+        symbol [ w ? 42 22 23 ];
+        putv self :w %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 42 30 ]
+        symbol [ PT_NORMAL %tmp.5 42 37 46 ];
+        %tmp.5 = getv ? :PT_NORMAL;
+        symbol [ type ? 42 30 34 ];
+        putv self :type %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 42 48 ]
+        %tmp.6 = false;
+        symbol [ alive ? 42 48 53 ];
+        putv self :alive %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 42 63 ]
+        %tmp.7 = 0.0;
+        symbol [ vx ? 42 63 65 ];
+        putv self :vx %tmp.7;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_41_26_43_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc"; @line = 46; @symbol_classdef = [PlatformManager,46,6,21]; ]
+class PlatformManager {
+    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc"; @line = 46; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc"; @line = 46; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc"; @line = 47; @position = 8; @symbol_vardef = [plats,47,8,13]; ]
+    var plats;
+    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc"; @line = 48; @position = 8; @symbol_vardef = [screenW,48,8,15]; ]
+    var screenW;
+    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc"; @line = 49; @position = 8; @symbol_vardef = [worldMinX,49,8,17]; ]
+    var worldMinX;
+    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc"; @line = 50; @position = 8; @symbol_vardef = [worldMaxX,50,8,17]; ]
+    var worldMaxX;
+    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc"; @line = 51; @position = 8; @symbol_vardef = [platW,51,8,13]; ]
+    var platW;
+    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc"; @line = 52; @position = 8; @symbol_vardef = [platH,52,8,13]; ]
+    var platH;
+    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc"; @line = 53; @position = 8; @symbol_vardef = [verticalGap,53,8,19]; ]
+    var verticalGap;
+    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc"; @line = 55; @symbol_functiondef = [initialize,55,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_55_26_63_4_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 56 8 ]
+        symbol [ MAX_PLATFORMS %tmp.3 56 21 34 ];
+        %tmp.3 = getv ? :MAX_PLATFORMS;
+        %tmp.1 = newa %tmp.3;
+        symbol [ plats ? 56 8 13 ];
+        putv self :plats %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 57 8 ]
+        for @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_57_8_57_77_for_test @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_57_8_57_77_for_incr @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_57_8_57_77_for_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_57_8_57_77_for_init:
+        [ "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_57_8_57_77_for_begin" "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_57_8_57_77_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 57 17 18 ];
+        %tmp.4 = 0;
+        lputv %i.1 %tmp.4;
+        symbol [ i %i.1 57 17 18 ];
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_57_8_57_77_for_test:
+        %tmp.5 = lgetv %i.1;
+        symbol [ i %tmp.5 57 24 25 ];
+        symbol [ MAX_PLATFORMS %tmp.7 57 28 41 ];
+        %tmp.7 = getv ? :MAX_PLATFORMS;
+        %tmp.8 = lt %tmp.5 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_57_8_57_77_for_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_57_8_57_77_for_begin:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_57_48_57_77_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 57 50 ]
+        symbol [ plats %tmp.9 57 50 55 ];
+        %tmp.9 = getv self :plats;
+        symbol [ Platform %tmp.13 57 65 73 ];
+        %tmp.13 = getv ? :Platform;
+        %tmp.10 = newc %tmp.13 ();
+        %tmp.14 = lgetv %i.1;
+        symbol [ i %tmp.14 57 56 57 ];
+        aputv %tmp.9 %tmp.14 %tmp.10;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_57_48_57_77_stop:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_57_8_57_77_for_incr:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 57 ]
+        %tmp.17 = lgetv %i.1;
+        symbol [ i %tmp.17 57 43 44 ];
+        %tmp.18 = add %tmp.17 1;
+        lputv %i.1 %tmp.18;
+        symbol [ i %i.1 57 43 44 ];
+        goto @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_57_8_57_77_for_test;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_57_8_57_77_for_end:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 58 8 ]
+        %tmp.19 = 240;
+        symbol [ screenW ? 58 8 15 ];
+        putv self :screenW %tmp.19;
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 59 8 ]
+        %tmp.20 = 2;
+        symbol [ worldMinX ? 59 8 17 ];
+        putv self :worldMinX %tmp.20;
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 59 23 ]
+        %tmp.21 = 238;
+        symbol [ worldMaxX ? 59 23 32 ];
+        putv self :worldMaxX %tmp.21;
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 60 8 ]
+        %tmp.22 = 50;
+        symbol [ platW ? 60 8 13 ];
+        putv self :platW %tmp.22;
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 61 8 ]
+        %tmp.23 = 6;
+        symbol [ platH ? 61 8 13 ];
+        putv self :platH %tmp.23;
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 62 8 ]
+        %tmp.24 = 42;
+        symbol [ verticalGap ? 62 8 19 ];
+        putv self :verticalGap %tmp.24;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_55_26_63_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc"; @line = 65; @symbol_functiondef = [setBounds,65,13,22]; @symbol_param<0> = [w,65,23,24]; @symbol_param<1> = [pW,65,26,28]; @symbol_param<2> = [pH,65,30,32]; @symbol_param<3> = [gap,65,34,37]; ]
+    function setBounds(w, pW, pH, gap) {
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_65_39_72_4_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 66 8 ]
+        %tmp.1 = lgetv %w;
+        symbol [ w %tmp.1 66 20 21 ];
+        symbol [ screenW ? 66 8 15 ];
+        putv self :screenW %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 67 8 ]
+        %tmp.2 = 2;
+        symbol [ worldMinX ? 67 8 17 ];
+        putv self :worldMinX %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 68 8 ]
+        %tmp.3 = lgetv %w;
+        symbol [ w %tmp.3 68 20 21 ];
+        %tmp.4 = 2;
+        %tmp.5 = sub %tmp.3 %tmp.4;
+        symbol [ worldMaxX ? 68 8 17 ];
+        putv self :worldMaxX %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 69 8 ]
+        %tmp.6 = lgetv %pW;
+        symbol [ pW %tmp.6 69 20 22 ];
+        symbol [ platW ? 69 8 13 ];
+        putv self :platW %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 70 8 ]
+        %tmp.7 = lgetv %pH;
+        symbol [ pH %tmp.7 70 20 22 ];
+        symbol [ platH ? 70 8 13 ];
+        putv self :platH %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 71 8 ]
+        %tmp.8 = lgetv %gap;
+        symbol [ gap %tmp.8 71 22 25 ];
+        symbol [ verticalGap ? 71 8 19 ];
+        putv self :verticalGap %tmp.8;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_65_39_72_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc"; @line = 74; @symbol_functiondef = [reset,74,13,18]; ]
+    function reset() {
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_74_21_76_4_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 75 8 ]
+        for @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_75_8_75_74_for_test @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_75_8_75_74_for_incr @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_75_8_75_74_for_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_75_8_75_74_for_init:
+        [ "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_75_8_75_74_for_begin" "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_75_8_75_74_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 75 17 18 ];
+        %tmp.1 = 0;
+        lputv %i.1 %tmp.1;
+        symbol [ i %i.1 75 17 18 ];
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_75_8_75_74_for_test:
+        %tmp.2 = lgetv %i.1;
+        symbol [ i %tmp.2 75 24 25 ];
+        symbol [ MAX_PLATFORMS %tmp.4 75 28 41 ];
+        %tmp.4 = getv ? :MAX_PLATFORMS;
+        %tmp.5 = lt %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_75_8_75_74_for_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_75_8_75_74_for_begin:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_75_48_75_74_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 75 50 ]
+        symbol [ plats %tmp.6 75 50 55 ];
+        %tmp.6 = getv self :plats;
+        %tmp.7 = lgetv %i.1;
+        symbol [ i %tmp.7 75 56 57 ];
+        %tmp.8 = agetv %tmp.6 %tmp.7;
+        %tmp.9 = false;
+        symbol [ alive ? 75 59 64 ];
+        putv %tmp.8 :alive %tmp.9;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_75_48_75_74_stop:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_75_8_75_74_for_incr:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 75 ]
+        %tmp.12 = lgetv %i.1;
+        symbol [ i %tmp.12 75 43 44 ];
+        %tmp.13 = add %tmp.12 1;
+        lputv %i.1 %tmp.13;
+        symbol [ i %i.1 75 43 44 ];
+        goto @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_75_8_75_74_for_test;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_75_8_75_74_for_end:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_74_21_76_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc"; @line = 82; @symbol_functiondef = [seed,82,13,17]; @symbol_param<0> = [baseY,82,18,23]; @symbol_param<1> = [difficulty,82,25,35]; ]
+    function seed(baseY, difficulty) {
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_82_37_104_4_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 83 8 ]
+        [ "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_82_37_104_4_start" "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_82_37_104_4_stop" ]
+        %y.1 = local;
+        symbol [ y %y.1 83 12 13 ];
+        %tmp.1 = lgetv %baseY;
+        symbol [ baseY %tmp.1 83 16 21 ];
+        lputv %y.1 %tmp.1;
+        symbol [ y %y.1 83 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 84 8 ]
+        for @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_84_8_102_8_for_test @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_84_8_102_8_for_incr @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_84_8_102_8_for_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_84_8_102_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_84_8_102_8_for_begin" "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_84_8_102_8_for_end" ]
+        %i.2 = local;
+        symbol [ i %i.2 84 17 18 ];
+        %tmp.2 = 0;
+        lputv %i.2 %tmp.2;
+        symbol [ i %i.2 84 17 18 ];
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_84_8_102_8_for_test:
+        %tmp.3 = lgetv %i.2;
+        symbol [ i %tmp.3 84 24 25 ];
+        symbol [ MAX_PLATFORMS %tmp.5 84 28 41 ];
+        %tmp.5 = getv ? :MAX_PLATFORMS;
+        %tmp.6 = lt %tmp.3 %tmp.5;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_84_8_102_8_for_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_84_8_102_8_for_begin:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_84_48_102_8_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 85 12 ]
+        [ "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_84_48_102_8_start" "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_84_48_102_8_stop" ]
+        %p.3 = local;
+        symbol [ p %p.3 85 16 17 ];
+        symbol [ plats %tmp.8 85 20 25 ];
+        %tmp.8 = getv ? :plats;
+        %tmp.9 = lgetv %i.2;
+        symbol [ i %tmp.9 85 26 27 ];
+        %tmp.10 = agetv %tmp.8 %tmp.9;
+        lputv %p.3 %tmp.10;
+        symbol [ p %p.3 85 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 86 12 ]
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_86_12_99_12_if_stmt:
+        %tmp.11 = lgetv %i.2;
+        symbol [ i %tmp.11 86 16 17 ];
+        %tmp.12 = 0;
+        %tmp.13 = eq %tmp.11 %tmp.12;
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_86_12_99_12_if_else_false;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_86_12_99_12_if_true:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_86_24_94_12_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 88 16 ]
+        %tmp.14 = lgetv %p.3;
+        symbol [ p %tmp.14 88 16 17 ];
+        symbol [ worldMinX %tmp.16 88 23 32 ];
+        %tmp.16 = getv ? :worldMinX;
+        symbol [ worldMaxX %tmp.18 88 35 44 ];
+        %tmp.18 = getv ? :worldMaxX;
+        %tmp.19 = add %tmp.16 %tmp.18;
+        %tmp.20 = 2;
+        %tmp.21 = div %tmp.19 %tmp.20;
+        symbol [ platW %tmp.23 88 52 57 ];
+        %tmp.23 = getv ? :platW;
+        %tmp.24 = 2;
+        %tmp.25 = div %tmp.23 %tmp.24;
+        %tmp.26 = sub %tmp.21 %tmp.25;
+        symbol [ x ? 88 18 19 ];
+        putv %tmp.14 :x %tmp.26;
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 89 16 ]
+        %tmp.27 = lgetv %p.3;
+        symbol [ p %tmp.27 89 16 17 ];
+        %tmp.28 = lgetv %y.1;
+        symbol [ y %tmp.28 89 22 23 ];
+        symbol [ y ? 89 18 19 ];
+        putv %tmp.27 :y %tmp.28;
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 90 16 ]
+        %tmp.29 = lgetv %p.3;
+        symbol [ p %tmp.29 90 16 17 ];
+        symbol [ platW %tmp.31 90 22 27 ];
+        %tmp.31 = getv ? :platW;
+        symbol [ w ? 90 18 19 ];
+        putv %tmp.29 :w %tmp.31;
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 91 16 ]
+        %tmp.32 = lgetv %p.3;
+        symbol [ p %tmp.32 91 16 17 ];
+        symbol [ PT_NORMAL %tmp.34 91 25 34 ];
+        %tmp.34 = getv ? :PT_NORMAL;
+        symbol [ type ? 91 18 22 ];
+        putv %tmp.32 :type %tmp.34;
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 92 16 ]
+        %tmp.35 = lgetv %p.3;
+        symbol [ p %tmp.35 92 16 17 ];
+        %tmp.36 = true;
+        symbol [ alive ? 92 18 23 ];
+        putv %tmp.35 :alive %tmp.36;
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 93 16 ]
+        %tmp.37 = lgetv %p.3;
+        symbol [ p %tmp.37 93 16 17 ];
+        %tmp.38 = 0.0;
+        symbol [ vx ? 93 18 20 ];
+        putv %tmp.37 :vx %tmp.38;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_86_24_94_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_86_12_99_12_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_86_12_99_12_if_else_false:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_94_19_99_12_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 95 16 ]
+        %tmp.39 = self;
+        symbol [ _spawnAt %tmp.40 95 16 24 ];
+        %tmp.40 = getv function %tmp.39 :_spawnAt;
+        %tmp.41 = lgetv %p.3;
+        symbol [ p %tmp.41 95 25 26 ];
+        %tmp.42 = lgetv %y.1;
+        symbol [ y %tmp.42 95 28 29 ];
+        %tmp.43 = lgetv %difficulty;
+        symbol [ difficulty %tmp.43 95 31 41 ];
+        invoke %tmp.39 %tmp.40(%tmp.41, %tmp.42, %tmp.43);
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 98 16 ]
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_98_16_98_61_if_stmt:
+        %tmp.44 = lgetv %i.2;
+        symbol [ i %tmp.44 98 20 21 ];
+        %tmp.45 = 3;
+        %tmp.46 = lt %tmp.44 %tmp.45;
+        bf %tmp.46 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_98_16_98_61_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_98_16_98_61_if_true:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_98_27_98_61_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 98 29 ]
+        %tmp.47 = lgetv %p.3;
+        symbol [ p %tmp.47 98 29 30 ];
+        symbol [ PT_NORMAL %tmp.49 98 38 47 ];
+        %tmp.49 = getv ? :PT_NORMAL;
+        symbol [ type ? 98 31 35 ];
+        putv %tmp.47 :type %tmp.49;
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 98 49 ]
+        %tmp.50 = lgetv %p.3;
+        symbol [ p %tmp.50 98 49 50 ];
+        %tmp.51 = 0.0;
+        symbol [ vx ? 98 51 53 ];
+        putv %tmp.50 :vx %tmp.51;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_98_27_98_61_stop:
+        goto @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_98_16_98_61_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_98_16_98_61_if_end:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_94_19_99_12_stop:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_86_12_99_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 101 12 ]
+        %tmp.52 = lgetv %y.1;
+        symbol [ y %tmp.52 101 16 17 ];
+        symbol [ verticalGap %tmp.54 101 20 31 ];
+        %tmp.54 = getv ? :verticalGap;
+        %tmp.55 = sub %tmp.52 %tmp.54;
+        lputv %y.1 %tmp.55;
+        symbol [ y %y.1 101 12 13 ];
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_84_48_102_8_stop:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_84_8_102_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 84 ]
+        %tmp.58 = lgetv %i.2;
+        symbol [ i %tmp.58 84 43 44 ];
+        %tmp.59 = add %tmp.58 1;
+        lputv %i.2 %tmp.59;
+        symbol [ i %i.2 84 43 44 ];
+        goto @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_84_8_102_8_for_test;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_84_8_102_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 103 8 ]
+        %tmp.60 = lgetv %y.1;
+        symbol [ y %tmp.60 103 15 16 ];
+        symbol [ verticalGap %tmp.62 103 19 30 ];
+        %tmp.62 = getv ? :verticalGap;
+        %tmp.63 = add %tmp.60 %tmp.62;
+        ret %tmp.63;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_82_37_104_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc"; @line = 107; @symbol_functiondef = [step,107,13,17]; ]
+    function step() {
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_107_20_117_4_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 108 8 ]
+        for @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_108_8_116_8_for_test @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_108_8_116_8_for_incr @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_108_8_116_8_for_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_108_8_116_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_108_8_116_8_for_begin" "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_108_8_116_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 108 17 18 ];
+        %tmp.1 = 0;
+        lputv %i.1 %tmp.1;
+        symbol [ i %i.1 108 17 18 ];
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_108_8_116_8_for_test:
+        %tmp.2 = lgetv %i.1;
+        symbol [ i %tmp.2 108 24 25 ];
+        symbol [ MAX_PLATFORMS %tmp.4 108 28 41 ];
+        %tmp.4 = getv ? :MAX_PLATFORMS;
+        %tmp.5 = lt %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_108_8_116_8_for_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_108_8_116_8_for_begin:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_108_48_116_8_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 109 12 ]
+        [ "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_108_48_116_8_start" "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_108_48_116_8_stop" ]
+        %p.2 = local;
+        symbol [ p %p.2 109 16 17 ];
+        symbol [ plats %tmp.7 109 20 25 ];
+        %tmp.7 = getv ? :plats;
+        %tmp.8 = lgetv %i.1;
+        symbol [ i %tmp.8 109 26 27 ];
+        %tmp.9 = agetv %tmp.7 %tmp.8;
+        lputv %p.2 %tmp.9;
+        symbol [ p %p.2 109 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 110 12 ]
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_110_12_110_38_if_stmt:
+        %tmp.10 = lgetv %p.2;
+        symbol [ p %tmp.10 110 17 18 ];
+        symbol [ alive %tmp.11 110 19 24 ];
+        %tmp.11 = getv %tmp.10 :alive;
+        %tmp.12 = not %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_110_12_110_38_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_110_12_110_38_if_true:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_110_26_110_38_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 110 28 ]
+        goto break @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_108_8_116_8_for_incr;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_110_26_110_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_110_12_110_38_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_110_12_110_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 111 12 ]
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_111_12_115_12_if_stmt:
+        %tmp.13 = lgetv %p.2;
+        symbol [ p %tmp.13 111 16 17 ];
+        symbol [ type %tmp.14 111 18 22 ];
+        %tmp.14 = getv %tmp.13 :type;
+        symbol [ PT_MOVING %tmp.16 111 26 35 ];
+        %tmp.16 = getv ? :PT_MOVING;
+        %tmp.17 = eq %tmp.14 %tmp.16;
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_111_12_115_12_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_111_12_115_12_if_true:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_111_37_115_12_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 112 16 ]
+        %tmp.18 = lgetv %p.2;
+        symbol [ p %tmp.18 112 16 17 ];
+        %tmp.19 = lgetv %p.2;
+        symbol [ p %tmp.19 112 22 23 ];
+        symbol [ x %tmp.20 112 24 25 ];
+        %tmp.20 = getv %tmp.19 :x;
+        %tmp.21 = lgetv %p.2;
+        symbol [ p %tmp.21 112 28 29 ];
+        symbol [ vx %tmp.22 112 30 32 ];
+        %tmp.22 = getv %tmp.21 :vx;
+        %tmp.23 = add %tmp.20 %tmp.22;
+        symbol [ x ? 112 18 19 ];
+        putv %tmp.18 :x %tmp.23;
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 113 16 ]
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_113_16_113_70_if_stmt:
+        %tmp.24 = lgetv %p.2;
+        symbol [ p %tmp.24 113 20 21 ];
+        symbol [ x %tmp.25 113 22 23 ];
+        %tmp.25 = getv %tmp.24 :x;
+        symbol [ worldMinX %tmp.27 113 26 35 ];
+        %tmp.27 = getv ? :worldMinX;
+        %tmp.28 = lt %tmp.25 %tmp.27;
+        bf %tmp.28 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_113_16_113_70_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_113_16_113_70_if_true:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_113_37_113_70_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 113 39 ]
+        %tmp.29 = lgetv %p.2;
+        symbol [ p %tmp.29 113 39 40 ];
+        symbol [ worldMinX %tmp.31 113 45 54 ];
+        %tmp.31 = getv ? :worldMinX;
+        symbol [ x ? 113 41 42 ];
+        putv %tmp.29 :x %tmp.31;
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 113 56 ]
+        %tmp.32 = lgetv %p.2;
+        symbol [ p %tmp.32 113 56 57 ];
+        %tmp.33 = lgetv %p.2;
+        symbol [ p %tmp.33 113 64 65 ];
+        symbol [ vx %tmp.34 113 66 68 ];
+        %tmp.34 = getv %tmp.33 :vx;
+        %tmp.35 = sub 0 %tmp.34;
+        symbol [ vx ? 113 58 60 ];
+        putv %tmp.32 :vx %tmp.35;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_113_37_113_70_stop:
+        goto @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_113_16_113_70_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_113_16_113_70_if_end:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 114 16 ]
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_114_16_114_82_if_stmt:
+        %tmp.36 = lgetv %p.2;
+        symbol [ p %tmp.36 114 20 21 ];
+        symbol [ x %tmp.37 114 22 23 ];
+        %tmp.37 = getv %tmp.36 :x;
+        %tmp.38 = lgetv %p.2;
+        symbol [ p %tmp.38 114 26 27 ];
+        symbol [ w %tmp.39 114 28 29 ];
+        %tmp.39 = getv %tmp.38 :w;
+        %tmp.40 = add %tmp.37 %tmp.39;
+        symbol [ worldMaxX %tmp.42 114 32 41 ];
+        %tmp.42 = getv ? :worldMaxX;
+        %tmp.43 = gt %tmp.40 %tmp.42;
+        bf %tmp.43 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_114_16_114_82_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_114_16_114_82_if_true:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_114_43_114_82_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 114 45 ]
+        %tmp.44 = lgetv %p.2;
+        symbol [ p %tmp.44 114 45 46 ];
+        symbol [ worldMaxX %tmp.46 114 51 60 ];
+        %tmp.46 = getv ? :worldMaxX;
+        %tmp.47 = lgetv %p.2;
+        symbol [ p %tmp.47 114 63 64 ];
+        symbol [ w %tmp.48 114 65 66 ];
+        %tmp.48 = getv %tmp.47 :w;
+        %tmp.49 = sub %tmp.46 %tmp.48;
+        symbol [ x ? 114 47 48 ];
+        putv %tmp.44 :x %tmp.49;
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 114 68 ]
+        %tmp.50 = lgetv %p.2;
+        symbol [ p %tmp.50 114 68 69 ];
+        %tmp.51 = lgetv %p.2;
+        symbol [ p %tmp.51 114 76 77 ];
+        symbol [ vx %tmp.52 114 78 80 ];
+        %tmp.52 = getv %tmp.51 :vx;
+        %tmp.53 = sub 0 %tmp.52;
+        symbol [ vx ? 114 70 72 ];
+        putv %tmp.50 :vx %tmp.53;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_114_43_114_82_stop:
+        goto @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_114_16_114_82_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_114_16_114_82_if_end:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_111_37_115_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_111_12_115_12_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_111_12_115_12_if_end:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_108_48_116_8_stop:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_108_8_116_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 108 ]
+        %tmp.56 = lgetv %i.1;
+        symbol [ i %tmp.56 108 43 44 ];
+        %tmp.57 = add %tmp.56 1;
+        lputv %i.1 %tmp.57;
+        symbol [ i %i.1 108 43 44 ];
+        goto @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_108_8_116_8_for_test;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_108_8_116_8_for_end:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_107_20_117_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc"; @line = 123; @symbol_functiondef = [tryBounce,123,13,22]; @symbol_param<0> = [playerLeft,123,23,33]; @symbol_param<1> = [playerRight,123,35,46]; @symbol_param<2> = [playerFeetPrev,123,48,62]; @symbol_param<3> = [playerFeet,123,64,74]; @symbol_param<4> = [falling,123,76,83]; ]
+    function tryBounce(playerLeft, playerRight, playerFeetPrev, playerFeet, falling) {
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_123_85_143_4_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 124 8 ]
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_124_8_124_34_if_stmt:
+        %tmp.1 = lgetv %falling;
+        symbol [ falling %tmp.1 124 13 20 ];
+        %tmp.2 = not %tmp.1;
+        bf %tmp.2 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_124_8_124_34_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_124_8_124_34_if_true:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_124_22_124_34_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 124 24 ]
+        %tmp.3 = 0;
+        ret %tmp.3;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_124_22_124_34_stop:
+        goto @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_124_8_124_34_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_124_8_124_34_if_end:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 125 8 ]
+        for @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_125_8_141_8_for_test @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_125_8_141_8_for_incr @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_125_8_141_8_for_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_125_8_141_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_125_8_141_8_for_begin" "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_125_8_141_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 125 17 18 ];
+        %tmp.4 = 0;
+        lputv %i.1 %tmp.4;
+        symbol [ i %i.1 125 17 18 ];
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_125_8_141_8_for_test:
+        %tmp.5 = lgetv %i.1;
+        symbol [ i %tmp.5 125 24 25 ];
+        symbol [ MAX_PLATFORMS %tmp.7 125 28 41 ];
+        %tmp.7 = getv ? :MAX_PLATFORMS;
+        %tmp.8 = lt %tmp.5 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_125_8_141_8_for_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_125_8_141_8_for_begin:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_125_48_141_8_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 126 12 ]
+        [ "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_125_48_141_8_start" "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_125_48_141_8_stop" ]
+        %p.2 = local;
+        symbol [ p %p.2 126 16 17 ];
+        symbol [ plats %tmp.10 126 20 25 ];
+        %tmp.10 = getv ? :plats;
+        %tmp.11 = lgetv %i.1;
+        symbol [ i %tmp.11 126 26 27 ];
+        %tmp.12 = agetv %tmp.10 %tmp.11;
+        lputv %p.2 %tmp.12;
+        symbol [ p %p.2 126 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 127 12 ]
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_127_12_127_38_if_stmt:
+        %tmp.13 = lgetv %p.2;
+        symbol [ p %tmp.13 127 17 18 ];
+        symbol [ alive %tmp.14 127 19 24 ];
+        %tmp.14 = getv %tmp.13 :alive;
+        %tmp.15 = not %tmp.14;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_127_12_127_38_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_127_12_127_38_if_true:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_127_26_127_38_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 127 28 ]
+        goto break @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_125_8_141_8_for_incr;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_127_26_127_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_127_12_127_38_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_127_12_127_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 129 12 ]
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_129_12_129_73_if_stmt:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_129_16_129_49_begin:
+        %tmp.16 = lgetv %p.2;
+        symbol [ p %tmp.16 129 16 17 ];
+        symbol [ x %tmp.17 129 18 19 ];
+        %tmp.17 = getv %tmp.16 :x;
+        %tmp.18 = lgetv %playerRight;
+        symbol [ playerRight %tmp.18 129 22 33 ];
+        %tmp.19 = gt %tmp.17 %tmp.18;
+        bt %tmp.19 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_129_12_129_73_if_true;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_129_37_129_49_false:
+        %tmp.20 = lgetv %p.2;
+        symbol [ p %tmp.20 129 37 38 ];
+        symbol [ x %tmp.21 129 39 40 ];
+        %tmp.21 = getv %tmp.20 :x;
+        %tmp.22 = lgetv %p.2;
+        symbol [ p %tmp.22 129 43 44 ];
+        symbol [ w %tmp.23 129 45 46 ];
+        %tmp.23 = getv %tmp.22 :w;
+        %tmp.24 = add %tmp.21 %tmp.23;
+        %tmp.25 = lgetv %playerLeft;
+        symbol [ playerLeft %tmp.25 129 49 59 ];
+        %tmp.26 = lt %tmp.24 %tmp.25;
+        push %tmp.26;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_129_37_129_49_end:
+        %tmp.27 = phi [%tmp.19 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_129_16_129_49_begin] [%tmp.26 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_129_37_129_49_false] [%tmp.27 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_129_37_129_49_end];
+        bf %tmp.27 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_129_12_129_73_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_129_12_129_73_if_true:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_129_61_129_73_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 129 63 ]
+        goto break @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_125_8_141_8_for_incr;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_129_61_129_73_stop:
+        goto @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_129_12_129_73_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_129_12_129_73_if_end:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 131 12 ]
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_131_12_140_12_if_stmt:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_131_16_131_82_begin:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_131_16_131_57_begin:
+        %tmp.28 = lgetv %playerFeetPrev;
+        symbol [ playerFeetPrev %tmp.28 131 16 30 ];
+        %tmp.29 = lgetv %p.2;
+        symbol [ p %tmp.29 131 34 35 ];
+        symbol [ y %tmp.30 131 36 37 ];
+        %tmp.30 = getv %tmp.29 :y;
+        %tmp.31 = lte %tmp.28 %tmp.30;
+        bf %tmp.31 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_131_12_140_12_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_131_41_131_57_true:
+        %tmp.32 = lgetv %playerFeet;
+        symbol [ playerFeet %tmp.32 131 41 51 ];
+        %tmp.33 = lgetv %p.2;
+        symbol [ p %tmp.33 131 55 56 ];
+        symbol [ y %tmp.34 131 57 58 ];
+        %tmp.34 = getv %tmp.33 :y;
+        %tmp.35 = gte %tmp.32 %tmp.34;
+        push %tmp.35;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_131_41_131_57_end:
+        %tmp.36 = phi [%tmp.31 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_131_16_131_57_begin] [%tmp.35 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_131_41_131_57_true] [%tmp.36 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_131_41_131_57_end];
+        bf %tmp.36 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_131_12_140_12_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_131_62_131_82_true:
+        %tmp.37 = lgetv %playerFeet;
+        symbol [ playerFeet %tmp.37 131 62 72 ];
+        %tmp.38 = lgetv %p.2;
+        symbol [ p %tmp.38 131 76 77 ];
+        symbol [ y %tmp.39 131 78 79 ];
+        %tmp.39 = getv %tmp.38 :y;
+        %tmp.40 = 8;
+        %tmp.41 = add %tmp.39 %tmp.40;
+        %tmp.42 = lte %tmp.37 %tmp.41;
+        push %tmp.42;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_131_62_131_82_end:
+        %tmp.43 = phi [%tmp.36 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_131_16_131_82_begin] [%tmp.42 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_131_62_131_82_true] [%tmp.43 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_131_62_131_82_end];
+        bf %tmp.43 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_131_12_140_12_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_131_12_140_12_if_true:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_131_85_140_12_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 132 16 ]
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_132_16_135_16_if_stmt:
+        %tmp.44 = lgetv %p.2;
+        symbol [ p %tmp.44 132 20 21 ];
+        symbol [ type %tmp.45 132 22 26 ];
+        %tmp.45 = getv %tmp.44 :type;
+        symbol [ PT_BREAKABLE %tmp.47 132 30 42 ];
+        %tmp.47 = getv ? :PT_BREAKABLE;
+        %tmp.48 = eq %tmp.45 %tmp.47;
+        bf %tmp.48 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_132_16_135_16_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_132_16_135_16_if_true:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_132_44_135_16_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 133 20 ]
+        %tmp.49 = lgetv %p.2;
+        symbol [ p %tmp.49 133 20 21 ];
+        %tmp.50 = false;
+        symbol [ alive ? 133 22 27 ];
+        putv %tmp.49 :alive %tmp.50;
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 134 20 ]
+        %tmp.51 = 1;
+        ret %tmp.51;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_132_44_135_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_132_16_135_16_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_132_16_135_16_if_end:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 136 16 ]
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_136_16_138_16_if_stmt:
+        %tmp.52 = lgetv %p.2;
+        symbol [ p %tmp.52 136 20 21 ];
+        symbol [ type %tmp.53 136 22 26 ];
+        %tmp.53 = getv %tmp.52 :type;
+        symbol [ PT_SPRING %tmp.55 136 30 39 ];
+        %tmp.55 = getv ? :PT_SPRING;
+        %tmp.56 = eq %tmp.53 %tmp.55;
+        bf %tmp.56 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_136_16_138_16_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_136_16_138_16_if_true:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_136_41_138_16_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 137 20 ]
+        %tmp.57 = 2;
+        ret %tmp.57;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_136_41_138_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_136_16_138_16_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_136_16_138_16_if_end:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 139 16 ]
+        %tmp.58 = 1;
+        ret %tmp.58;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_131_85_140_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_131_12_140_12_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_131_12_140_12_if_end:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_125_48_141_8_stop:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_125_8_141_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 125 ]
+        %tmp.61 = lgetv %i.1;
+        symbol [ i %tmp.61 125 43 44 ];
+        %tmp.62 = add %tmp.61 1;
+        lputv %i.1 %tmp.62;
+        symbol [ i %i.1 125 43 44 ];
+        goto @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_125_8_141_8_for_test;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_125_8_141_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 142 8 ]
+        %tmp.63 = 0;
+        ret %tmp.63;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_123_85_143_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc"; @line = 149; @symbol_functiondef = [applyScroll,149,13,24]; @symbol_param<0> = [dy,149,25,27]; @symbol_param<1> = [topRecycleY,149,29,40]; @symbol_param<2> = [difficulty,149,42,52]; ]
+    function applyScroll(dy, topRecycleY, difficulty) {
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_149_54_158_4_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 150 8 ]
+        for @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_150_8_157_8_for_test @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_150_8_157_8_for_incr @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_150_8_157_8_for_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_150_8_157_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_150_8_157_8_for_begin" "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_150_8_157_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 150 17 18 ];
+        %tmp.1 = 0;
+        lputv %i.1 %tmp.1;
+        symbol [ i %i.1 150 17 18 ];
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_150_8_157_8_for_test:
+        %tmp.2 = lgetv %i.1;
+        symbol [ i %tmp.2 150 24 25 ];
+        symbol [ MAX_PLATFORMS %tmp.4 150 28 41 ];
+        %tmp.4 = getv ? :MAX_PLATFORMS;
+        %tmp.5 = lt %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_150_8_157_8_for_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_150_8_157_8_for_begin:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_150_48_157_8_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 151 12 ]
+        [ "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_150_48_157_8_start" "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_150_48_157_8_stop" ]
+        %p.2 = local;
+        symbol [ p %p.2 151 16 17 ];
+        symbol [ plats %tmp.7 151 20 25 ];
+        %tmp.7 = getv ? :plats;
+        %tmp.8 = lgetv %i.1;
+        symbol [ i %tmp.8 151 26 27 ];
+        %tmp.9 = agetv %tmp.7 %tmp.8;
+        lputv %p.2 %tmp.9;
+        symbol [ p %p.2 151 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 152 12 ]
+        %tmp.10 = lgetv %p.2;
+        symbol [ p %tmp.10 152 12 13 ];
+        %tmp.11 = lgetv %p.2;
+        symbol [ p %tmp.11 152 18 19 ];
+        symbol [ y %tmp.12 152 20 21 ];
+        %tmp.12 = getv %tmp.11 :y;
+        %tmp.13 = lgetv %dy;
+        symbol [ dy %tmp.13 152 24 26 ];
+        %tmp.14 = add %tmp.12 %tmp.13;
+        symbol [ y ? 152 14 15 ];
+        putv %tmp.10 :y %tmp.14;
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 154 12 ]
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_154_12_156_12_if_stmt:
+        %tmp.15 = lgetv %p.2;
+        symbol [ p %tmp.15 154 16 17 ];
+        symbol [ y %tmp.16 154 18 19 ];
+        %tmp.16 = getv %tmp.15 :y;
+        %tmp.17 = lgetv %topRecycleY;
+        symbol [ topRecycleY %tmp.17 154 22 33 ];
+        %tmp.18 = gt %tmp.16 %tmp.17;
+        bf %tmp.18 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_154_12_156_12_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_154_12_156_12_if_true:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_154_35_156_12_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 155 16 ]
+        %tmp.19 = self;
+        symbol [ _spawnAt %tmp.20 155 16 24 ];
+        %tmp.20 = getv function %tmp.19 :_spawnAt;
+        %tmp.21 = lgetv %p.2;
+        symbol [ p %tmp.21 155 25 26 ];
+        %tmp.22 = self;
+        symbol [ _highestY %tmp.23 155 28 37 ];
+        %tmp.23 = getv function %tmp.22 :_highestY;
+        %tmp.24 = invoke %tmp.22 %tmp.23();
+        symbol [ verticalGap %tmp.26 155 42 53 ];
+        %tmp.26 = getv ? :verticalGap;
+        %tmp.27 = sub %tmp.24 %tmp.26;
+        %tmp.28 = lgetv %difficulty;
+        symbol [ difficulty %tmp.28 155 55 65 ];
+        invoke %tmp.19 %tmp.20(%tmp.21, %tmp.27, %tmp.28);
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_154_35_156_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_154_12_156_12_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_154_12_156_12_if_end:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_150_48_157_8_stop:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_150_8_157_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 150 ]
+        %tmp.31 = lgetv %i.1;
+        symbol [ i %tmp.31 150 43 44 ];
+        %tmp.32 = add %tmp.31 1;
+        lputv %i.1 %tmp.32;
+        symbol [ i %i.1 150 43 44 ];
+        goto @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_150_8_157_8_for_test;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_150_8_157_8_for_end:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_149_54_158_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc"; @line = 160; @symbol_functiondef = [_highestY,160,20,29]; ]
+    protected
+    function _highestY() {
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_160_32_168_4_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 161 8 ]
+        [ "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_160_32_168_4_start" "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_160_32_168_4_stop" ]
+        %y.1 = local;
+        symbol [ y %y.1 161 12 13 ];
+        %tmp.1 = 0;
+        lputv %y.1 %tmp.1;
+        symbol [ y %y.1 161 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 161 19 ]
+        [ "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_160_32_168_4_start" "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_160_32_168_4_stop" ]
+        %first.2 = local;
+        symbol [ first %first.2 161 23 28 ];
+        %tmp.2 = true;
+        lputv %first.2 %tmp.2;
+        symbol [ first %first.2 161 23 28 ];
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 162 8 ]
+        for @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_162_8_166_8_for_test @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_162_8_166_8_for_incr @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_162_8_166_8_for_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_162_8_166_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_162_8_166_8_for_begin" "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_162_8_166_8_for_end" ]
+        %i.3 = local;
+        symbol [ i %i.3 162 17 18 ];
+        %tmp.3 = 0;
+        lputv %i.3 %tmp.3;
+        symbol [ i %i.3 162 17 18 ];
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_162_8_166_8_for_test:
+        %tmp.4 = lgetv %i.3;
+        symbol [ i %tmp.4 162 24 25 ];
+        symbol [ MAX_PLATFORMS %tmp.6 162 28 41 ];
+        %tmp.6 = getv ? :MAX_PLATFORMS;
+        %tmp.7 = lt %tmp.4 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_162_8_166_8_for_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_162_8_166_8_for_begin:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_162_48_166_8_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 163 12 ]
+        [ "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_162_48_166_8_start" "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_162_48_166_8_stop" ]
+        %p.4 = local;
+        symbol [ p %p.4 163 16 17 ];
+        symbol [ plats %tmp.9 163 20 25 ];
+        %tmp.9 = getv ? :plats;
+        %tmp.10 = lgetv %i.3;
+        symbol [ i %tmp.10 163 26 27 ];
+        %tmp.11 = agetv %tmp.9 %tmp.10;
+        lputv %p.4 %tmp.11;
+        symbol [ p %p.4 163 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 164 12 ]
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_164_12_164_38_if_stmt:
+        %tmp.12 = lgetv %p.4;
+        symbol [ p %tmp.12 164 17 18 ];
+        symbol [ alive %tmp.13 164 19 24 ];
+        %tmp.13 = getv %tmp.12 :alive;
+        %tmp.14 = not %tmp.13;
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_164_12_164_38_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_164_12_164_38_if_true:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_164_26_164_38_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 164 28 ]
+        goto break @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_162_8_166_8_for_incr;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_164_26_164_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_164_12_164_38_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_164_12_164_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 165 12 ]
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_165_12_165_60_if_stmt:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_165_16_165_31_begin:
+        %tmp.15 = lgetv %first.2;
+        symbol [ first %tmp.15 165 16 21 ];
+        bt %tmp.15 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_165_12_165_60_if_true;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_165_25_165_31_false:
+        %tmp.16 = lgetv %p.4;
+        symbol [ p %tmp.16 165 25 26 ];
+        symbol [ y %tmp.17 165 27 28 ];
+        %tmp.17 = getv %tmp.16 :y;
+        %tmp.18 = lgetv %y.1;
+        symbol [ y %tmp.18 165 31 32 ];
+        %tmp.19 = lt %tmp.17 %tmp.18;
+        push %tmp.19;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_165_25_165_31_end:
+        %tmp.20 = phi [%tmp.15 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_165_16_165_31_begin] [%tmp.19 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_165_25_165_31_false] [%tmp.20 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_165_25_165_31_end];
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_165_12_165_60_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_165_12_165_60_if_true:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_165_34_165_60_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 165 36 ]
+        %tmp.21 = lgetv %p.4;
+        symbol [ p %tmp.21 165 40 41 ];
+        symbol [ y %tmp.22 165 42 43 ];
+        %tmp.22 = getv %tmp.21 :y;
+        lputv %y.1 %tmp.22;
+        symbol [ y %y.1 165 36 37 ];
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 165 45 ]
+        %tmp.23 = false;
+        lputv %first.2 %tmp.23;
+        symbol [ first %first.2 165 45 50 ];
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_165_34_165_60_stop:
+        goto @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_165_12_165_60_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_165_12_165_60_if_end:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_162_48_166_8_stop:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_162_8_166_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 162 ]
+        %tmp.26 = lgetv %i.3;
+        symbol [ i %tmp.26 162 43 44 ];
+        %tmp.27 = add %tmp.26 1;
+        lputv %i.3 %tmp.27;
+        symbol [ i %i.3 162 43 44 ];
+        goto @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_162_8_166_8_for_test;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_162_8_166_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 167 8 ]
+        %tmp.28 = lgetv %y.1;
+        symbol [ y %tmp.28 167 15 16 ];
+        ret %tmp.28;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_160_32_168_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc"; @line = 172; @symbol_functiondef = [_spawnAt,172,20,28]; @symbol_param<0> = [p,172,29,30]; @symbol_param<1> = [y,172,32,33]; @symbol_param<2> = [difficulty,172,35,45]; ]
+    protected
+    function _spawnAt(p, y, difficulty) {
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_172_47_206_4_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 173 8 ]
+        [ "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_172_47_206_4_start" "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_172_47_206_4_stop" ]
+        %span.1 = local;
+        symbol [ span %span.1 173 12 16 ];
+        symbol [ worldMaxX %tmp.2 173 19 28 ];
+        %tmp.2 = getv ? :worldMaxX;
+        symbol [ worldMinX %tmp.4 173 31 40 ];
+        %tmp.4 = getv ? :worldMinX;
+        %tmp.5 = sub %tmp.2 %tmp.4;
+        symbol [ platW %tmp.7 173 43 48 ];
+        %tmp.7 = getv ? :platW;
+        %tmp.8 = sub %tmp.5 %tmp.7;
+        lputv %span.1 %tmp.8;
+        symbol [ span %span.1 173 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 174 8 ]
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_174_8_174_34_if_stmt:
+        %tmp.9 = lgetv %span.1;
+        symbol [ span %tmp.9 174 12 16 ];
+        %tmp.10 = 4;
+        %tmp.11 = lt %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_174_8_174_34_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_174_8_174_34_if_true:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_174_22_174_34_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 174 24 ]
+        %tmp.12 = 4;
+        lputv %span.1 %tmp.12;
+        symbol [ span %span.1 174 24 28 ];
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_174_22_174_34_stop:
+        goto @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_174_8_174_34_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_174_8_174_34_if_end:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 175 8 ]
+        %tmp.13 = lgetv %p;
+        symbol [ p %tmp.13 175 8 9 ];
+        symbol [ worldMinX %tmp.15 175 18 27 ];
+        %tmp.15 = getv ? :worldMinX;
+        symbol [ Math %tmp.16 175 31 35 ];
+        %tmp.16 = getm $.Toybox.Math;
+        symbol [ rand %tmp.17 175 36 40 ];
+        %tmp.17 = getv function %tmp.16 :rand;
+        %tmp.18 = invoke %tmp.16 %tmp.17();
+        %tmp.19 = lgetv %span.1;
+        symbol [ span %tmp.19 175 45 49 ];
+        %tmp.20 = mod %tmp.18 %tmp.19;
+        %tmp.21 = add %tmp.15 %tmp.20;
+        symbol [ x ? 175 10 11 ];
+        putv %tmp.13 :x %tmp.21;
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 176 8 ]
+        %tmp.22 = lgetv %p;
+        symbol [ p %tmp.22 176 8 9 ];
+        %tmp.23 = lgetv %y;
+        symbol [ y %tmp.23 176 18 19 ];
+        symbol [ y ? 176 10 11 ];
+        putv %tmp.22 :y %tmp.23;
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 177 8 ]
+        %tmp.24 = lgetv %p;
+        symbol [ p %tmp.24 177 8 9 ];
+        symbol [ platW %tmp.26 177 18 23 ];
+        %tmp.26 = getv ? :platW;
+        symbol [ w ? 177 10 11 ];
+        putv %tmp.24 :w %tmp.26;
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 178 8 ]
+        %tmp.27 = lgetv %p;
+        symbol [ p %tmp.27 178 8 9 ];
+        %tmp.28 = true;
+        symbol [ alive ? 178 10 15 ];
+        putv %tmp.27 :alive %tmp.28;
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 179 8 ]
+        %tmp.29 = lgetv %p;
+        symbol [ p %tmp.29 179 8 9 ];
+        %tmp.30 = 0.0;
+        symbol [ vx ? 179 10 12 ];
+        putv %tmp.29 :vx %tmp.30;
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 182 8 ]
+        [ "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_172_47_206_4_start" "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_172_47_206_4_stop" ]
+        %d.2 = local;
+        symbol [ d %d.2 182 12 13 ];
+        %tmp.31 = lgetv %difficulty;
+        symbol [ difficulty %tmp.31 182 18 28 ];
+        lputv %d.2 %tmp.31;
+        symbol [ d %d.2 182 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 183 8 ]
+        [ "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_172_47_206_4_start" "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_172_47_206_4_stop" ]
+        %r.3 = local;
+        symbol [ r %r.3 183 12 13 ];
+        symbol [ Math %tmp.32 183 18 22 ];
+        %tmp.32 = getm $.Toybox.Math;
+        symbol [ rand %tmp.33 183 23 27 ];
+        %tmp.33 = getv function %tmp.32 :rand;
+        %tmp.34 = invoke %tmp.32 %tmp.33();
+        %tmp.35 = 100;
+        %tmp.36 = mod %tmp.34 %tmp.35;
+        lputv %r.3 %tmp.36;
+        symbol [ r %r.3 183 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 184 8 ]
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_184_8_205_8_if_stmt:
+        %tmp.37 = lgetv %d.2;
+        symbol [ d %tmp.37 184 12 13 ];
+        %tmp.38 = 1;
+        %tmp.39 = lte %tmp.37 %tmp.38;
+        bf %tmp.39 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_184_8_205_8_if_else_false;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_184_8_205_8_if_true:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_184_20_188_8_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 186 12 ]
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_186_12_187_46_if_stmt:
+        %tmp.40 = lgetv %r.3;
+        symbol [ r %tmp.40 186 16 17 ];
+        %tmp.41 = 90;
+        %tmp.42 = lt %tmp.40 %tmp.41;
+        bf %tmp.42 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_186_12_187_46_if_else_false;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_186_12_187_46_if_true:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_186_24_186_46_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 186 26 ]
+        %tmp.43 = lgetv %p;
+        symbol [ p %tmp.43 186 26 27 ];
+        symbol [ PT_NORMAL %tmp.45 186 35 44 ];
+        %tmp.45 = getv ? :PT_NORMAL;
+        symbol [ type ? 186 28 32 ];
+        putv %tmp.43 :type %tmp.45;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_186_24_186_46_stop:
+        goto @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_186_12_187_46_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_186_12_187_46_if_else_false:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_187_24_187_46_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 187 26 ]
+        %tmp.46 = lgetv %p;
+        symbol [ p %tmp.46 187 26 27 ];
+        symbol [ PT_SPRING %tmp.48 187 35 44 ];
+        %tmp.48 = getv ? :PT_SPRING;
+        symbol [ type ? 187 28 32 ];
+        putv %tmp.46 :type %tmp.48;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_187_24_187_46_stop:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_186_12_187_46_if_end:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_184_20_188_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_184_8_205_8_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_184_8_205_8_if_else_false:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_188_15_205_8_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 190 12 ]
+        [ "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_188_15_205_8_start" "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_188_15_205_8_stop" ]
+        %brk.4 = local;
+        symbol [ brk %brk.4 190 16 19 ];
+        %tmp.49 = 3;
+        %tmp.50 = lgetv %d.2;
+        symbol [ d %tmp.50 190 26 27 ];
+        %tmp.51 = 3;
+        %tmp.52 = mul %tmp.50 %tmp.51;
+        %tmp.53 = add %tmp.49 %tmp.52;
+        lputv %brk.4 %tmp.53;
+        symbol [ brk %brk.4 190 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 190 35 ]
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_190_35_190_61_if_stmt:
+        %tmp.54 = lgetv %brk.4;
+        symbol [ brk %tmp.54 190 39 42 ];
+        %tmp.55 = 30;
+        %tmp.56 = gt %tmp.54 %tmp.55;
+        bf %tmp.56 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_190_35_190_61_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_190_35_190_61_if_true:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_190_49_190_61_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 190 51 ]
+        %tmp.57 = 30;
+        lputv %brk.4 %tmp.57;
+        symbol [ brk %brk.4 190 51 54 ];
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_190_49_190_61_stop:
+        goto @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_190_35_190_61_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_190_35_190_61_if_end:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 191 12 ]
+        [ "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_188_15_205_8_start" "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_188_15_205_8_stop" ]
+        %mov.5 = local;
+        symbol [ mov %mov.5 191 16 19 ];
+        %tmp.58 = 5;
+        %tmp.59 = lgetv %d.2;
+        symbol [ d %tmp.59 191 26 27 ];
+        %tmp.60 = 4;
+        %tmp.61 = mul %tmp.59 %tmp.60;
+        %tmp.62 = add %tmp.58 %tmp.61;
+        lputv %mov.5 %tmp.62;
+        symbol [ mov %mov.5 191 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 191 35 ]
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_191_35_191_61_if_stmt:
+        %tmp.63 = lgetv %mov.5;
+        symbol [ mov %tmp.63 191 39 42 ];
+        %tmp.64 = 35;
+        %tmp.65 = gt %tmp.63 %tmp.64;
+        bf %tmp.65 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_191_35_191_61_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_191_35_191_61_if_true:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_191_49_191_61_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 191 51 ]
+        %tmp.66 = 35;
+        lputv %mov.5 %tmp.66;
+        symbol [ mov %mov.5 191 51 54 ];
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_191_49_191_61_stop:
+        goto @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_191_35_191_61_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_191_35_191_61_if_end:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 192 12 ]
+        [ "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_188_15_205_8_start" "_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_188_15_205_8_stop" ]
+        %spr.6 = local;
+        symbol [ spr %spr.6 192 16 19 ];
+        %tmp.67 = 5;
+        lputv %spr.6 %tmp.67;
+        symbol [ spr %spr.6 192 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 193 12 ]
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_193_12_204_12_if_stmt:
+        %tmp.68 = lgetv %r.3;
+        symbol [ r %tmp.68 193 16 17 ];
+        %tmp.69 = lgetv %spr.6;
+        symbol [ spr %tmp.69 193 20 23 ];
+        %tmp.70 = lt %tmp.68 %tmp.69;
+        bf %tmp.70 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_193_12_204_12_if_false;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_193_12_204_12_if_true:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_193_25_195_12_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 194 16 ]
+        %tmp.71 = lgetv %p;
+        symbol [ p %tmp.71 194 16 17 ];
+        symbol [ PT_SPRING %tmp.73 194 25 34 ];
+        %tmp.73 = getv ? :PT_SPRING;
+        symbol [ type ? 194 18 22 ];
+        putv %tmp.71 :type %tmp.73;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_193_25_195_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_193_12_204_12_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_193_12_204_12_if_false:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 195 19 ]
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_195_19_204_12_if_stmt:
+        %tmp.74 = lgetv %r.3;
+        symbol [ r %tmp.74 195 23 24 ];
+        %tmp.75 = lgetv %spr.6;
+        symbol [ spr %tmp.75 195 27 30 ];
+        %tmp.76 = lgetv %brk.4;
+        symbol [ brk %tmp.76 195 33 36 ];
+        %tmp.77 = add %tmp.75 %tmp.76;
+        %tmp.78 = lt %tmp.74 %tmp.77;
+        bf %tmp.78 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_195_19_204_12_if_false;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_195_19_204_12_if_true:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_195_38_197_12_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 196 16 ]
+        %tmp.79 = lgetv %p;
+        symbol [ p %tmp.79 196 16 17 ];
+        symbol [ PT_BREAKABLE %tmp.81 196 25 37 ];
+        %tmp.81 = getv ? :PT_BREAKABLE;
+        symbol [ type ? 196 18 22 ];
+        putv %tmp.79 :type %tmp.81;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_195_38_197_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_195_19_204_12_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_195_19_204_12_if_false:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 197 19 ]
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_197_19_204_12_if_stmt:
+        %tmp.82 = lgetv %r.3;
+        symbol [ r %tmp.82 197 23 24 ];
+        %tmp.83 = lgetv %spr.6;
+        symbol [ spr %tmp.83 197 27 30 ];
+        %tmp.84 = lgetv %brk.4;
+        symbol [ brk %tmp.84 197 33 36 ];
+        %tmp.85 = add %tmp.83 %tmp.84;
+        %tmp.86 = lgetv %mov.5;
+        symbol [ mov %tmp.86 197 39 42 ];
+        %tmp.87 = add %tmp.85 %tmp.86;
+        %tmp.88 = lt %tmp.82 %tmp.87;
+        bf %tmp.88 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_197_19_204_12_if_else_false;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_197_19_204_12_if_true:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_197_44_202_12_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 198 16 ]
+        %tmp.89 = lgetv %p;
+        symbol [ p %tmp.89 198 16 17 ];
+        symbol [ PT_MOVING %tmp.91 198 25 34 ];
+        %tmp.91 = getv ? :PT_MOVING;
+        symbol [ type ? 198 18 22 ];
+        putv %tmp.89 :type %tmp.91;
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 199 16 ]
+        %tmp.92 = lgetv %p;
+        symbol [ p %tmp.92 199 16 17 ];
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_199_26_199_56_begin:
+        symbol [ Math %tmp.93 199 27 31 ];
+        %tmp.93 = getm $.Toybox.Math;
+        symbol [ rand %tmp.94 199 32 36 ];
+        %tmp.94 = getv function %tmp.93 :rand;
+        %tmp.95 = invoke %tmp.93 %tmp.94();
+        %tmp.96 = 2;
+        %tmp.97 = mod %tmp.95 %tmp.96;
+        %tmp.98 = 0;
+        %tmp.99 = eq %tmp.97 %tmp.98;
+        bf %tmp.99 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_199_26_199_56_else_false;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_199_26_199_56_true:
+        %tmp.100 = -1;
+        push %tmp.100;
+        goto @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_199_26_199_56_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_199_26_199_56_else_false:
+        %tmp.101 = 1;
+        push %tmp.101;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_199_26_199_56_end:
+        %tmp.102 = phi [%tmp.99 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_199_26_199_56_begin] [%tmp.100 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_199_26_199_56_true] [%tmp.101 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_199_26_199_56_else_false] [%tmp.102 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_199_26_199_56_end];
+        %tmp.103 = 1.0;
+        %tmp.104 = lgetv %d.2;
+        symbol [ d %tmp.104 199 68 69 ];
+        %tmp.105 = 0.1;
+        %tmp.106 = mul %tmp.104 %tmp.105;
+        %tmp.107 = add %tmp.103 %tmp.106;
+        %tmp.108 = mul %tmp.102 %tmp.107;
+        symbol [ vx ? 199 18 20 ];
+        putv %tmp.92 :vx %tmp.108;
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 200 16 ]
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_200_16_200_48_if_stmt:
+        %tmp.109 = lgetv %p;
+        symbol [ p %tmp.109 200 20 21 ];
+        symbol [ vx %tmp.110 200 22 24 ];
+        %tmp.110 = getv %tmp.109 :vx;
+        %tmp.111 = 2.4;
+        %tmp.112 = gt %tmp.110 %tmp.111;
+        bf %tmp.112 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_200_16_200_48_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_200_16_200_48_if_true:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_200_33_200_48_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 200 35 ]
+        %tmp.113 = lgetv %p;
+        symbol [ p %tmp.113 200 35 36 ];
+        %tmp.114 = 2.4;
+        symbol [ vx ? 200 37 39 ];
+        putv %tmp.113 :vx %tmp.114;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_200_33_200_48_stop:
+        goto @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_200_16_200_48_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_200_16_200_48_if_end:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 201 16 ]
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_201_16_201_48_if_stmt:
+        %tmp.115 = lgetv %p;
+        symbol [ p %tmp.115 201 20 21 ];
+        symbol [ vx %tmp.116 201 22 24 ];
+        %tmp.116 = getv %tmp.115 :vx;
+        %tmp.117 = -2.4;
+        %tmp.118 = lt %tmp.116 %tmp.117;
+        bf %tmp.118 @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_201_16_201_48_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_201_16_201_48_if_true:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_201_33_201_48_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 201 35 ]
+        %tmp.119 = lgetv %p;
+        symbol [ p %tmp.119 201 35 36 ];
+        %tmp.120 = -2.4;
+        symbol [ vx ? 201 37 39 ];
+        putv %tmp.119 :vx %tmp.120;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_201_33_201_48_stop:
+        goto @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_201_16_201_48_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_201_16_201_48_if_end:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_197_44_202_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_197_19_204_12_if_end;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_197_19_204_12_if_else_false:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_202_19_204_12_start:
+[ "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc" 203 16 ]
+        %tmp.121 = lgetv %p;
+        symbol [ p %tmp.121 203 16 17 ];
+        symbol [ PT_NORMAL %tmp.123 203 25 34 ];
+        %tmp.123 = getv ? :PT_NORMAL;
+        symbol [ type ? 203 18 22 ];
+        putv %tmp.121 :type %tmp.123;
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_202_19_204_12_stop:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_197_19_204_12_if_end:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_195_19_204_12_if_end:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_193_12_204_12_if_end:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_188_15_205_8_stop:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_184_8_205_8_if_end:
+_Users_kkorolczuk_work_garmin_jumptower_source_PlatformManager_mc_172_47_206_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/PlatformManager.mc"; @line = 25; ]
+<init> {
+}

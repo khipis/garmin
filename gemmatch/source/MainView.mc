@@ -1,0 +1,487 @@
+// ═══════════════════════════════════════════════════════════════
+// MainView.mc — WatchUi.View — owns layout + rendering.
+//
+// 50 ms tick (20 fps) drives both the animation state machine and
+// the round clock. The clock is delta-time based so the period
+// does not affect timing accuracy.
+//
+// Menu (GS_MENU):
+//   Chess-style 3 rows — MODE / PARAM / START.
+//   Tap hit-tests individual rows; UP/DOWN navigate rows.
+//
+// Play rendering:
+//   ANIM_SWAP  — two gems drawn at interpolated positions.
+//   ANIM_FLASH — matched gems rendered with drawFlash().
+//
+// HUD is mode-aware:
+//   GM_TIME  — countdown timer (left) | score (centre) | best (right)
+//   GM_ZEN   — elapsed time +  (left) | score (centre) | best (right)
+//   GM_MOVES — moves remaining (left) | score (centre) | best (right)
+//
+// Game-over overlay is also mode-aware.
+// ═══════════════════════════════════════════════════════════════
+
+using Toybox.WatchUi;
+using Toybox.Graphics;
+using Toybox.Timer;
+
+class MainView extends WatchUi.View {
+
+    hidden var _ctrl;
+    hidden var _timer;
+
+    // Cached layout (recomputed on every onUpdate).
+    hidden var _sw;
+    hidden var _sh;
+    hidden var _cellPx;
+    hidden var _bx;
+    hidden var _by;
+
+    function initialize() {
+        View.initialize();
+        _ctrl = new GameController();
+        _timer = null;
+        _sw = 0; _sh = 0; _cellPx = 0; _bx = 0; _by = 0;
+    }
+
+    function onShow() {
+        if (_timer == null) { _timer = new Timer.Timer(); }
+        _timer.start(method(:onTick), 50, true);
+    }
+
+    function onHide() {
+        if (_timer != null) { _timer.stop(); }
+    }
+
+    function onTick() {
+        _ctrl.tick50ms();
+        WatchUi.requestUpdate();
+    }
+
+    // ── Drawing ──────────────────────────────────────────────────────
+    function onUpdate(dc) {
+        _sw = dc.getWidth();
+        _sh = dc.getHeight();
+
+        dc.setColor(0x000000, 0x000000); dc.clear();
+
+        if (_ctrl.state == GS_MENU) { _drawMenu(dc); return; }
+
+        _layoutBoard();
+        _drawBoard(dc);
+        _drawHUD(dc);
+        if (_ctrl.state == GS_OVER) { _drawOver(dc); }
+    }
+
+    // ── Layout helper ────────────────────────────────────────────────
+    hidden function _layoutBoard() {
+        var grid = _ctrl.grid;
+        var topPad = _sh * 13 / 100; if (topPad < 22) { topPad = 22; }
+        var botPad = _sh * 8  / 100; if (botPad < 14) { botPad = 14; }
+        var maxH   = _sh - topPad - botPad;
+        var maxW   = _sw - 8;
+        var cellW  = maxW / grid.cols;
+        var cellH  = maxH / grid.rows;
+        _cellPx    = (cellW < cellH) ? cellW : cellH;
+        if (_cellPx < 12) { _cellPx = 12; }
+        var boardW = _cellPx * grid.cols;
+        var boardH = _cellPx * grid.rows;
+        _bx = (_sw - boardW) / 2;
+        _by = topPad + (maxH - boardH) / 2;
+    }
+
+    // ── Menu geometry (shared by render + hit-test) ───────────────────
+    hidden function _menuRowGeom() {
+        var rowH = _sh * 12 / 100;
+        if (rowH < 22) { rowH = 22; }
+        if (rowH > 34) { rowH = 34; }
+        var rowW = _sw * 78 / 100;
+        var rowX = (_sw - rowW) / 2;
+        var gap  = _sh * 1  / 100; if (gap < 2) { gap = 2; }
+        var total  = MENU_ROW_COUNT * rowH + (MENU_ROW_COUNT - 1) * gap;
+        // Centre the row block in the screen, shifted down by one rowH
+        // to leave room for the title band at the top.
+        var rowY0 = (_sh - total) / 2 + rowH;
+        return [rowH, rowW, rowX, rowY0, gap];
+    }
+
+    // ── Menu screen ──────────────────────────────────────────────────
+    hidden function _drawMenu(dc) {
+        var cx = _sw / 2;
+
+        // Background
+        dc.setColor(0x080808, 0x080808); dc.clear();
+        if (_sw == _sh) {
+            dc.setColor(0x101418, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(cx, _sh / 2, _sw / 2 - 1);
+        }
+
+        // Title
+        dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, _sh * 10 / 100, Graphics.FONT_SMALL,
+                    "GEM MATCH", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x778899, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, _sh * 22 / 100, Graphics.FONT_XTINY,
+                    "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
+
+        var rowGeom = _menuRowGeom();
+        var rowH  = rowGeom[0];
+        var rowW  = rowGeom[1];
+        var rowX  = rowGeom[2];
+        var rowY0 = rowGeom[3];
+        var gap   = rowGeom[4];
+
+        // Row labels
+        var labels = [_ctrl.modeLabel(), _ctrl.paramLabel(), "START"];
+        // ROW colors: focused = bright, others = dim
+        for (var i = 0; i < MENU_ROW_COUNT; i++) {
+            var ry     = rowY0 + i * (rowH + gap);
+            var focused = (i == _ctrl.menuRow);
+            var isStart = (i == MENU_START);
+            var paramInert = (i == MENU_PARAM && _ctrl.gameMode == GM_ZEN);
+
+            // Background fill
+            if (isStart) {
+                dc.setColor(focused ? 0x1A4400 : 0x0C2200, Graphics.COLOR_TRANSPARENT);
+            } else if (paramInert) {
+                dc.setColor(focused ? 0x1A1A1A : 0x111111, Graphics.COLOR_TRANSPARENT);
+            } else {
+                dc.setColor(focused ? 0x0E2040 : 0x081020, Graphics.COLOR_TRANSPARENT);
+            }
+            dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);
+
+            // Border
+            if (isStart) {
+                dc.setColor(focused ? 0x44BB22 : 0x225511, Graphics.COLOR_TRANSPARENT);
+            } else if (paramInert) {
+                dc.setColor(focused ? 0x334455 : 0x223344, Graphics.COLOR_TRANSPARENT);
+            } else {
+                dc.setColor(focused ? 0x4488CC : 0x224466, Graphics.COLOR_TRANSPARENT);
+            }
+            dc.drawRoundedRectangle(rowX, ry, rowW, rowH, 5);
+
+            // Arrow indicator on left for non-inert rows
+            if (!paramInert) {
+                var ay = ry + rowH / 2;
+                dc.fillPolygon([[rowX + 4, ay - 4],
+                                [rowX + 4, ay + 4],
+                                [rowX + 10, ay]]);
+            }
+
+            // Label text
+            if (isStart) {
+                dc.setColor(focused ? 0xAAFF66 : 0x558833, Graphics.COLOR_TRANSPARENT);
+            } else if (paramInert) {
+                dc.setColor(0x446677, Graphics.COLOR_TRANSPARENT);
+            } else {
+                dc.setColor(focused ? 0xDDEEFF : 0x6699AA, Graphics.COLOR_TRANSPARENT);
+            }
+            dc.drawText(cx, ry + (rowH - 14) / 2, Graphics.FONT_XTINY,
+                        labels[i], Graphics.TEXT_JUSTIFY_CENTER);
+        }
+
+        // Best score for current mode
+        var best = _ctrl.currentBest();
+        if (best > 0) {
+            dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, rowY0 + MENU_ROW_COUNT * (rowH + gap) + 2,
+                        Graphics.FONT_XTINY,
+                        "BEST " + best.format("%d"),
+                        Graphics.TEXT_JUSTIFY_CENTER);
+        }
+
+        // Footer hint
+        dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, _sh - 26, Graphics.FONT_XTINY,
+                    "UP/DN row  tap row = act",
+                    Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x8899AA, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, _sh - 14, Graphics.FONT_XTINY,
+                    "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    // ── Board ────────────────────────────────────────────────────────
+    hidden function _drawBoard(dc) {
+        var g       = _ctrl.grid;
+        var aState  = _ctrl.animState;
+        var isSwap  = (aState == ANIM_SWAP);
+        var isFlash = (aState == ANIM_FLASH);
+        var flashOn = isFlash && (_ctrl.animFrame % 2 == 0);
+
+        // Cell backgrounds
+        for (var r = 0; r < g.rows; r++) {
+            for (var c = 0; c < g.cols; c++) {
+                var px = _bx + c * _cellPx;
+                var py = _by + r * _cellPx;
+                dc.setColor(0x0A0A18, Graphics.COLOR_TRANSPARENT);
+                dc.fillRectangle(px + 1, py + 1, _cellPx - 2, _cellPx - 2);
+            }
+        }
+
+        // Selected tile background
+        if (_ctrl.selR >= 0) {
+            var px = _bx + _ctrl.selC * _cellPx;
+            var py = _by + _ctrl.selR * _cellPx;
+            dc.setColor(0x222800, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(px + 1, py + 1, _cellPx - 2, _cellPx - 2);
+        }
+
+        // Cursor highlight
+        if (_ctrl.state == GS_PLAY) {
+            var cx0 = _bx + _ctrl.curC * _cellPx;
+            var cy0 = _by + _ctrl.curR * _cellPx;
+            var col = (_ctrl.invalidFlash > 0) ? 0xFF3333 : 0x44CCFF;
+            dc.setColor(col, Graphics.COLOR_TRANSPARENT);
+            dc.drawRectangle(cx0, cy0, _cellPx, _cellPx);
+            dc.drawRectangle(cx0 + 1, cy0 + 1, _cellPx - 2, _cellPx - 2);
+        }
+
+        // Gems — skip the two animating cells during ANIM_SWAP
+        var marks = _ctrl.animMarks;
+        for (var r2 = 0; r2 < g.rows; r2++) {
+            for (var c2 = 0; c2 < g.cols; c2++) {
+                if (isSwap &&
+                    ((r2 == _ctrl.animR1 && c2 == _ctrl.animC1) ||
+                     (r2 == _ctrl.animR2 && c2 == _ctrl.animC2))) {
+                    continue;
+                }
+                var t  = g.get(r2, c2);
+                var gx = _bx + c2 * _cellPx + _cellPx / 2;
+                var gy = _by + r2 * _cellPx + _cellPx / 2;
+                var picked = (_ctrl.selR == r2 && _ctrl.selC == c2);
+                if (flashOn && marks != null && marks[r2 * g.cols + c2]) {
+                    Tile.drawFlash(dc, t, gx, gy, _cellPx);
+                } else {
+                    Tile.draw(dc, t, gx, gy, _cellPx, picked);
+                }
+            }
+        }
+
+        if (isSwap) { _drawSwapGems(dc); }
+
+        // Board border
+        dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT);
+        dc.drawRectangle(_bx - 1, _by - 1,
+                         _cellPx * g.cols + 2, _cellPx * g.rows + 2);
+    }
+
+    hidden function _drawSwapGems(dc) {
+        var r1 = _ctrl.animR1; var c1 = _ctrl.animC1;
+        var r2 = _ctrl.animR2; var c2 = _ctrl.animC2;
+        var f  = _ctrl.animFrame;
+        if (f < 0) { f = 0; }
+        if (f > ANIM_SWAP_FRAMES) { f = ANIM_SWAP_FRAMES; }
+        var p256 = (f * 256) / ANIM_SWAP_FRAMES;
+
+        var x1s; var y1s; var x1e; var y1e;
+        var x2s; var y2s; var x2e; var y2e;
+        if (!_ctrl.animReverse) {
+            x1s = _bx + c1 * _cellPx + _cellPx / 2;
+            y1s = _by + r1 * _cellPx + _cellPx / 2;
+            x1e = _bx + c2 * _cellPx + _cellPx / 2;
+            y1e = _by + r2 * _cellPx + _cellPx / 2;
+            x2s = x1e; y2s = y1e; x2e = x1s; y2e = y1s;
+        } else {
+            x1s = _bx + c2 * _cellPx + _cellPx / 2;
+            y1s = _by + r2 * _cellPx + _cellPx / 2;
+            x1e = _bx + c1 * _cellPx + _cellPx / 2;
+            y1e = _by + r1 * _cellPx + _cellPx / 2;
+            x2s = x1e; y2s = y1e; x2e = x1s; y2e = y1s;
+        }
+        var gx1 = x1s + (x1e - x1s) * p256 / 256;
+        var gy1 = y1s + (y1e - y1s) * p256 / 256;
+        var gx2 = x2s + (x2e - x2s) * p256 / 256;
+        var gy2 = y2s + (y2e - y2s) * p256 / 256;
+        Tile.draw(dc, _ctrl.animGem1, gx1, gy1, _cellPx, false);
+        Tile.draw(dc, _ctrl.animGem2, gx2, gy2, _cellPx, false);
+    }
+
+    // ── HUD ──────────────────────────────────────────────────────────
+    hidden function _drawHUD(dc) {
+        var cx = _sw / 2;
+        var ty = _sh * 2 / 100; if (ty < 3) { ty = 3; }
+
+        // Left — mode-specific status
+        if (_ctrl.gameMode == GM_TIME) {
+            dc.setColor(0x44CCFF, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(6, ty, Graphics.FONT_XTINY,
+                        _ctrl.fmtSec(_ctrl.timeLeftMs()),
+                        Graphics.TEXT_JUSTIFY_LEFT);
+        } else if (_ctrl.gameMode == GM_ZEN) {
+            dc.setColor(0x44CC88, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(6, ty, Graphics.FONT_XTINY,
+                        "+" + _ctrl.fmtSec(_ctrl.elapsedMs),
+                        Graphics.TEXT_JUSTIFY_LEFT);
+        } else {
+            // GM_MOVES
+            dc.setColor(0xFF9922, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(6, ty, Graphics.FONT_XTINY,
+                        _ctrl.movesLeft.format("%d") + "mv",
+                        Graphics.TEXT_JUSTIFY_LEFT);
+        }
+
+        // Centre — score
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, ty, Graphics.FONT_XTINY,
+                    _ctrl.score.format("%d"), Graphics.TEXT_JUSTIFY_CENTER);
+
+        // Right — best for current mode
+        var best = _ctrl.currentBest();
+        if (best > 0) {
+            dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_sw - 6, ty, Graphics.FONT_XTINY,
+                        "B " + best.format("%d"),
+                        Graphics.TEXT_JUSTIFY_RIGHT);
+        }
+
+        // Bottom — transient message or hint
+        if (_ctrl.msgT > 0 && _ctrl.msg.length() > 0) {
+            dc.setColor(0xFF66AA, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, _sh - 16, Graphics.FONT_XTINY,
+                        _ctrl.msg, Graphics.TEXT_JUSTIFY_CENTER);
+        } else {
+            dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT);
+            var hint;
+            if (_ctrl.selR < 0) {
+                hint = "swipe=swap  tap=cursor";
+            } else {
+                hint = "tap adj=swap  SEL=cancel";
+            }
+            dc.drawText(cx, _sh - 16, Graphics.FONT_XTINY,
+                        hint, Graphics.TEXT_JUSTIFY_CENTER);
+        }
+    }
+
+    // ── Game-over overlay ────────────────────────────────────────────
+    hidden function _drawOver(dc) {
+        var bw = _sw * 64 / 100; if (bw < 150) { bw = 150; }
+        var bh = _sh * 34 / 100; if (bh < 100) { bh = 100; }
+        var bx = (_sw - bw) / 2;
+        var by = (_sh - bh) / 2;
+        dc.setColor(0x0A0A14, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(bx, by, bw, bh, 9);
+        dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(bx, by, bw, bh, 9);
+
+        var cx = _sw / 2;
+
+        // Title line (mode-specific)
+        var title;
+        if (_ctrl.gameMode == GM_TIME) {
+            title = "TIME UP";
+        } else if (_ctrl.gameMode == GM_ZEN) {
+            title = "ZEN " + _ctrl.fmtSec(_ctrl.elapsedMs);
+        } else {
+            title = "MOVES: 0";
+        }
+        dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, by + 6, Graphics.FONT_SMALL,
+                    title, Graphics.TEXT_JUSTIFY_CENTER);
+
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, by + 30, Graphics.FONT_XTINY,
+                    "Score " + _ctrl.score.format("%d"),
+                    Graphics.TEXT_JUSTIFY_CENTER);
+
+        var best = _ctrl.currentBest();
+        if (_ctrl.score > 0 && _ctrl.score == best) {
+            dc.setColor(0x44FF66, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, by + 46, Graphics.FONT_XTINY,
+                        "NEW BEST!", Graphics.TEXT_JUSTIFY_CENTER);
+        } else if (best > 0) {
+            dc.setColor(0x88AABB, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, by + 46, Graphics.FONT_XTINY,
+                        "Best " + best.format("%d"),
+                        Graphics.TEXT_JUSTIFY_CENTER);
+        }
+        dc.setColor(0x88AABB, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, by + bh - 14, Graphics.FONT_XTINY,
+                    "Any key for menu", Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    // ── Input intents ────────────────────────────────────────────────
+    // navUp: menu → go to previous row; play → move cursor left (col-wrap)
+    function navUp() {
+        if (_ctrl.state == GS_MENU) {
+            _ctrl.menuPrev();
+        } else if (_ctrl.state == GS_OVER) {
+            _ctrl.gotoMenu();
+        } else {
+            _ctrl.moveCursor(0, -1);
+        }
+    }
+
+    // navDown: menu → go to next row; play → move cursor down (row-wrap)
+    function navDown() {
+        if (_ctrl.state == GS_MENU) {
+            _ctrl.menuNext();
+        } else if (_ctrl.state == GS_OVER) {
+            _ctrl.gotoMenu();
+        } else {
+            _ctrl.moveCursor(1, 0);
+        }
+    }
+
+    // Direct-swap intent used by swipe gestures.
+    function handleSwap(dr, dc) {
+        if (_ctrl.state != GS_PLAY || _ctrl.isAnimating()) { return; }
+        var tr = _ctrl.curR + dr;
+        var tc = _ctrl.curC + dc;
+        if (tr < 0 || tr >= _ctrl.grid.rows ||
+            tc < 0 || tc >= _ctrl.grid.cols) {
+            _ctrl.moveCursor(dr, dc);
+            return;
+        }
+        _ctrl.beginSwap(_ctrl.curR, _ctrl.curC, tr, tc);
+    }
+
+    function navSelect() { _ctrl.selectAction(); }
+
+    function navBack() {
+        if (_ctrl.state == GS_PLAY) {
+            // ZEN: pressing back ends the session and shows the score
+            if (_ctrl.gameMode == GM_ZEN) {
+                _ctrl.endZen();
+                return true;
+            }
+            if (_ctrl.selR >= 0) { _ctrl.selR = -1; _ctrl.selC = -1; return true; }
+            _ctrl.gotoMenu();
+            return true;
+        }
+        if (_ctrl.state == GS_OVER) {
+            _ctrl.gotoMenu();
+            return true;
+        }
+        return false;
+    }
+
+    // handleTap: menu hit-tests rows; play moves cursor to tapped cell.
+    function handleTap(x, y) {
+        if (_ctrl.state == GS_MENU) {
+            var rowGeom = _menuRowGeom();
+            var rowH  = rowGeom[0];
+            var rowW  = rowGeom[1];
+            var rowX  = rowGeom[2];
+            var rowY0 = rowGeom[3];
+            var gap   = rowGeom[4];
+            for (var i = 0; i < MENU_ROW_COUNT; i++) {
+                var ry = rowY0 + i * (rowH + gap);
+                if (x >= rowX && x < rowX + rowW && y >= ry && y < ry + rowH) {
+                    _ctrl.setMenuRow(i);
+                    _ctrl.menuActivate();
+                    return;
+                }
+            }
+            return;   // tap missed all rows
+        }
+        if (_ctrl.state == GS_OVER) { _ctrl.gotoMenu(); return; }
+        // Play: tap moves cursor to the tapped cell
+        if (_cellPx <= 0) { return; }
+        if (x < _bx || y < _by) { return; }
+        var c = (x - _bx) / _cellPx;
+        var r = (y - _by) / _cellPx;
+        if (c < 0 || c >= _ctrl.grid.cols) { return; }
+        if (r < 0 || r >= _ctrl.grid.rows) { return; }
+        _ctrl.tapCell(r, c);
+    }
+}

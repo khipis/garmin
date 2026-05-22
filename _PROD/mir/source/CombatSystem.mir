@@ -1,0 +1,573 @@
+[ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc"; @line = 16; @symbol_usingdef<0> = [Toybox,16,6,12]; @symbol_usingdef<1> = [Math,16,13,17]; ]
+using Toybox.Math;
+[ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc"; @line = 19; @position = 6; @symbol_constdef = [PA_ATTACK,19,6,15]; ]
+const PA_ATTACK = 0;
+[ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc"; @line = 20; @position = 6; @symbol_constdef = [PA_DEFEND,20,6,15]; ]
+const PA_DEFEND = 1;
+[ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc"; @line = 21; @position = 6; @symbol_constdef = [PA_ITEM,21,6,13]; ]
+const PA_ITEM = 2;
+[ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc"; @line = 22; @position = 6; @symbol_constdef = [PA_RUN,22,6,12]; ]
+const PA_RUN = 3;
+[ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc"; @line = 25; @position = 6; @symbol_constdef = [CR_CONTINUE,25,6,17]; ]
+const CR_CONTINUE = 0;
+[ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc"; @line = 26; @position = 6; @symbol_constdef = [CR_VICTORY,26,6,16]; ]
+const CR_VICTORY = 1;
+[ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc"; @line = 27; @position = 6; @symbol_constdef = [CR_DEATH,27,6,14]; ]
+const CR_DEATH = 2;
+[ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc"; @line = 28; @position = 6; @symbol_constdef = [CR_FLED,28,6,13]; ]
+const CR_FLED = 3;
+[ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc"; @line = 30; @symbol_classdef = [CombatResult,30,6,18]; ]
+class CombatResult {
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc"; @line = 30; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc"; @line = 30; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc"; @line = 31; @position = 8; @symbol_vardef = [playerLog,31,8,17]; ]
+    var playerLog;
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc"; @line = 32; @position = 8; @symbol_vardef = [enemyLog,32,8,16]; ]
+    var enemyLog;
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc"; @line = 33; @position = 8; @symbol_vardef = [outcome,33,8,15]; ]
+    var outcome;
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc"; @line = 34; @position = 8; @symbol_vardef = [playerDefendingThisRound,34,8,32]; ]
+    var playerDefendingThisRound;
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc"; @line = 35; @symbol_functiondef = [initialize,35,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_35_26_40_4_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 36 8 ]
+        %tmp.1 = "";
+        symbol [ playerLog ? 36 8 17 ];
+        putv self :playerLog %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 37 8 ]
+        %tmp.2 = "";
+        symbol [ enemyLog ? 37 8 16 ];
+        putv self :enemyLog %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 38 8 ]
+        symbol [ CR_CONTINUE %tmp.4 38 20 31 ];
+        %tmp.4 = getv ? :CR_CONTINUE;
+        symbol [ outcome ? 38 8 15 ];
+        putv self :outcome %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 39 8 ]
+        %tmp.5 = false;
+        symbol [ playerDefendingThisRound ? 39 8 32 ];
+        putv self :playerDefendingThisRound %tmp.5;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_35_26_40_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc"; @line = 43; @symbol_classdef = [CombatSystem,43,6,18]; ]
+class CombatSystem {
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc"; @line = 43; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc"; @line = 43; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc"; @line = 47; @symbol_functiondef = [resolveRound,47,20,32]; @symbol_param<0> = [player,47,33,39]; @symbol_param<1> = [enemy,47,41,46]; @symbol_param<2> = [action,47,48,54]; @symbol_param<3> = [isBoss,47,56,62]; @symbol_param<4> = [itemDamage,47,64,74]; ]
+    static
+    function resolveRound(player, enemy, action, isBoss, itemDamage) {
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_47_76_109_4_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 48 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_47_76_109_4_start" "_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_47_76_109_4_stop" ]
+        %res.1 = local;
+        symbol [ res %res.1 48 12 15 ];
+        symbol [ CombatResult %tmp.4 48 22 34 ];
+        %tmp.4 = getv ? :CombatResult;
+        %tmp.1 = newc %tmp.4 ();
+        lputv %res.1 %tmp.1;
+        symbol [ res %res.1 48 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 49 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_47_76_109_4_start" "_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_47_76_109_4_stop" ]
+        %playerDefending.2 = local;
+        symbol [ playerDefending %playerDefending.2 49 12 27 ];
+        %tmp.5 = false;
+        lputv %playerDefending.2 %tmp.5;
+        symbol [ playerDefending %playerDefending.2 49 12 27 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 52 8 ]
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_52_8_83_8_if_stmt:
+        %tmp.6 = lgetv %action;
+        symbol [ action %tmp.6 52 12 18 ];
+        symbol [ PA_ATTACK %tmp.8 52 22 31 ];
+        %tmp.8 = getv ? :PA_ATTACK;
+        %tmp.9 = eq %tmp.6 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_52_8_83_8_if_false;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_52_8_83_8_if_true:
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_52_33_59_8_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 53 12 ]
+        [ "_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_52_33_59_8_start" "_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_52_33_59_8_stop" ]
+        %raw.3 = local;
+        symbol [ raw %raw.3 53 16 19 ];
+        %tmp.10 = lgetv %player;
+        symbol [ player %tmp.10 53 22 28 ];
+        symbol [ atk %tmp.11 53 29 32 ];
+        %tmp.11 = getv %tmp.10 :atk;
+        symbol [ Math %tmp.12 53 36 40 ];
+        %tmp.12 = getm $.Toybox.Math;
+        symbol [ rand %tmp.13 53 41 45 ];
+        %tmp.13 = getv function %tmp.12 :rand;
+        %tmp.14 = invoke %tmp.12 %tmp.13();
+        %tmp.15 = 3;
+        %tmp.16 = mod %tmp.14 %tmp.15;
+        %tmp.17 = add %tmp.11 %tmp.16;
+        lputv %raw.3 %tmp.17;
+        symbol [ raw %raw.3 53 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 54 12 ]
+        [ "_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_52_33_59_8_start" "_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_52_33_59_8_stop" ]
+        %dmg.4 = local;
+        symbol [ dmg %dmg.4 54 16 19 ];
+        %tmp.18 = lgetv %raw.3;
+        symbol [ raw %tmp.18 54 22 25 ];
+        %tmp.19 = lgetv %enemy;
+        symbol [ enemy %tmp.19 54 28 33 ];
+        symbol [ def %tmp.20 54 34 37 ];
+        %tmp.20 = getv %tmp.19 :def;
+        %tmp.21 = sub %tmp.18 %tmp.20;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_54_41_54_68_begin:
+        %tmp.22 = lgetv %enemy;
+        symbol [ enemy %tmp.22 54 41 46 ];
+        symbol [ defending %tmp.23 54 47 56 ];
+        %tmp.23 = getv %tmp.22 :defending;
+        %tmp.24 = 1;
+        %tmp.25 = eq %tmp.23 %tmp.24;
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_54_41_54_68_else_false;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_54_41_54_68_true:
+        %tmp.26 = 2;
+        push %tmp.26;
+        goto @_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_54_41_54_68_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_54_41_54_68_else_false:
+        %tmp.27 = 0;
+        push %tmp.27;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_54_41_54_68_end:
+        %tmp.28 = phi [%tmp.25 @_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_54_41_54_68_begin] [%tmp.26 @_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_54_41_54_68_true] [%tmp.27 @_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_54_41_54_68_else_false] [%tmp.28 @_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_54_41_54_68_end];
+        %tmp.29 = sub %tmp.21 %tmp.28;
+        lputv %dmg.4 %tmp.29;
+        symbol [ dmg %dmg.4 54 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 55 12 ]
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_55_12_55_36_if_stmt:
+        %tmp.30 = lgetv %dmg.4;
+        symbol [ dmg %tmp.30 55 16 19 ];
+        %tmp.31 = 1;
+        %tmp.32 = lt %tmp.30 %tmp.31;
+        bf %tmp.32 @_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_55_12_55_36_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_55_12_55_36_if_true:
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_55_25_55_36_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 55 27 ]
+        %tmp.33 = 1;
+        lputv %dmg.4 %tmp.33;
+        symbol [ dmg %dmg.4 55 27 30 ];
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_55_25_55_36_stop:
+        goto @_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_55_12_55_36_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_55_12_55_36_if_end:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 56 12 ]
+        %tmp.34 = lgetv %enemy;
+        symbol [ enemy %tmp.34 56 12 17 ];
+        %tmp.35 = lgetv %enemy;
+        symbol [ enemy %tmp.35 56 23 28 ];
+        symbol [ hp %tmp.36 56 29 31 ];
+        %tmp.36 = getv %tmp.35 :hp;
+        %tmp.37 = lgetv %dmg.4;
+        symbol [ dmg %tmp.37 56 34 37 ];
+        %tmp.38 = sub %tmp.36 %tmp.37;
+        symbol [ hp ? 56 18 20 ];
+        putv %tmp.34 :hp %tmp.38;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 57 12 ]
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_57_12_57_46_if_stmt:
+        %tmp.39 = lgetv %enemy;
+        symbol [ enemy %tmp.39 57 16 21 ];
+        symbol [ hp %tmp.40 57 22 24 ];
+        %tmp.40 = getv %tmp.39 :hp;
+        %tmp.41 = 0;
+        %tmp.42 = lt %tmp.40 %tmp.41;
+        bf %tmp.42 @_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_57_12_57_46_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_57_12_57_46_if_true:
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_57_30_57_46_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 57 32 ]
+        %tmp.43 = lgetv %enemy;
+        symbol [ enemy %tmp.43 57 32 37 ];
+        %tmp.44 = 0;
+        symbol [ hp ? 57 38 40 ];
+        putv %tmp.43 :hp %tmp.44;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_57_30_57_46_stop:
+        goto @_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_57_12_57_46_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_57_12_57_46_if_end:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 58 12 ]
+        %tmp.45 = lgetv %res.1;
+        symbol [ res %tmp.45 58 12 15 ];
+        %tmp.46 = "You strike for ";
+        %tmp.47 = lgetv %dmg.4;
+        symbol [ dmg %tmp.47 58 48 51 ];
+        symbol [ format %tmp.48 58 52 58 ];
+        %tmp.48 = getv function %tmp.47 :format;
+        %tmp.49 = "%d";
+        %tmp.50 = invoke %tmp.47 %tmp.48(%tmp.49);
+        %tmp.51 = add %tmp.46 %tmp.50;
+        %tmp.52 = ".";
+        %tmp.53 = add %tmp.51 %tmp.52;
+        symbol [ playerLog ? 58 16 25 ];
+        putv %tmp.45 :playerLog %tmp.53;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_52_33_59_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_52_8_83_8_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_52_8_83_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 59 15 ]
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_59_15_83_8_if_stmt:
+        %tmp.54 = lgetv %action;
+        symbol [ action %tmp.54 59 19 25 ];
+        symbol [ PA_DEFEND %tmp.56 59 29 38 ];
+        %tmp.56 = getv ? :PA_DEFEND;
+        %tmp.57 = eq %tmp.54 %tmp.56;
+        bf %tmp.57 @_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_59_15_83_8_if_false;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_59_15_83_8_if_true:
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_59_40_62_8_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 60 12 ]
+        %tmp.58 = true;
+        lputv %playerDefending.2 %tmp.58;
+        symbol [ playerDefending %playerDefending.2 60 12 27 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 61 12 ]
+        %tmp.59 = lgetv %res.1;
+        symbol [ res %tmp.59 61 12 15 ];
+        %tmp.60 = "You raise your guard.";
+        symbol [ playerLog ? 61 16 25 ];
+        putv %tmp.59 :playerLog %tmp.60;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_59_40_62_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_59_15_83_8_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_59_15_83_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 62 15 ]
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_62_15_83_8_if_stmt:
+        %tmp.61 = lgetv %action;
+        symbol [ action %tmp.61 62 19 25 ];
+        symbol [ PA_ITEM %tmp.63 62 29 36 ];
+        %tmp.63 = getv ? :PA_ITEM;
+        %tmp.64 = eq %tmp.61 %tmp.63;
+        bf %tmp.64 @_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_62_15_83_8_if_false;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_62_15_83_8_if_true:
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_62_38_71_8_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 64 12 ]
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_64_12_70_12_if_stmt:
+        %tmp.65 = lgetv %itemDamage;
+        symbol [ itemDamage %tmp.65 64 16 26 ];
+        %tmp.66 = 0;
+        %tmp.67 = gt %tmp.65 %tmp.66;
+        bf %tmp.67 @_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_64_12_70_12_if_false;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_64_12_70_12_if_true:
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_64_32_66_12_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 65 16 ]
+        %tmp.68 = lgetv %res.1;
+        symbol [ res %tmp.68 65 16 19 ];
+        %tmp.69 = "Bomb hits for ";
+        %tmp.70 = lgetv %itemDamage;
+        symbol [ itemDamage %tmp.70 65 51 61 ];
+        symbol [ format %tmp.71 65 62 68 ];
+        %tmp.71 = getv function %tmp.70 :format;
+        %tmp.72 = "%d";
+        %tmp.73 = invoke %tmp.70 %tmp.71(%tmp.72);
+        %tmp.74 = add %tmp.69 %tmp.73;
+        %tmp.75 = "!";
+        %tmp.76 = add %tmp.74 %tmp.75;
+        symbol [ playerLog ? 65 20 29 ];
+        putv %tmp.68 :playerLog %tmp.76;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_64_32_66_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_64_12_70_12_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_64_12_70_12_if_false:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 66 19 ]
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_66_19_70_12_if_stmt:
+        %tmp.77 = lgetv %itemDamage;
+        symbol [ itemDamage %tmp.77 66 23 33 ];
+        %tmp.78 = 0;
+        %tmp.79 = lt %tmp.77 %tmp.78;
+        bf %tmp.79 @_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_66_19_70_12_if_else_false;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_66_19_70_12_if_true:
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_66_39_68_12_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 67 16 ]
+        %tmp.80 = lgetv %res.1;
+        symbol [ res %tmp.80 67 16 19 ];
+        %tmp.81 = "You heal ";
+        %tmp.82 = lgetv %itemDamage;
+        symbol [ itemDamage %tmp.82 67 48 58 ];
+        %tmp.83 = sub 0 %tmp.82;
+        symbol [ format %tmp.84 67 60 66 ];
+        %tmp.84 = getv function %tmp.83 :format;
+        %tmp.85 = "%d";
+        %tmp.86 = invoke %tmp.83 %tmp.84(%tmp.85);
+        %tmp.87 = add %tmp.81 %tmp.86;
+        %tmp.88 = " HP.";
+        %tmp.89 = add %tmp.87 %tmp.88;
+        symbol [ playerLog ? 67 20 29 ];
+        putv %tmp.80 :playerLog %tmp.89;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_66_39_68_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_66_19_70_12_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_66_19_70_12_if_else_false:
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_68_19_70_12_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 69 16 ]
+        %tmp.90 = lgetv %res.1;
+        symbol [ res %tmp.90 69 16 19 ];
+        %tmp.91 = "You ready a shield.";
+        symbol [ playerLog ? 69 20 29 ];
+        putv %tmp.90 :playerLog %tmp.91;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_68_19_70_12_stop:
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_66_19_70_12_if_end:
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_64_12_70_12_if_end:
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_62_38_71_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_62_15_83_8_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_62_15_83_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 71 15 ]
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_71_15_83_8_if_stmt:
+        %tmp.92 = lgetv %action;
+        symbol [ action %tmp.92 71 19 25 ];
+        symbol [ PA_RUN %tmp.94 71 29 35 ];
+        %tmp.94 = getv ? :PA_RUN;
+        %tmp.95 = eq %tmp.92 %tmp.94;
+        bf %tmp.95 @_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_71_15_83_8_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_71_15_83_8_if_true:
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_71_37_83_8_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 72 12 ]
+        [ "_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_71_37_83_8_start" "_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_71_37_83_8_stop" ]
+        %roll.5 = local;
+        symbol [ roll %roll.5 72 16 20 ];
+        symbol [ Math %tmp.96 72 23 27 ];
+        %tmp.96 = getm $.Toybox.Math;
+        symbol [ rand %tmp.97 72 28 32 ];
+        %tmp.97 = getv function %tmp.96 :rand;
+        %tmp.98 = invoke %tmp.96 %tmp.97();
+        %tmp.99 = 100;
+        %tmp.100 = mod %tmp.98 %tmp.99;
+        lputv %roll.5 %tmp.100;
+        symbol [ roll %roll.5 72 16 20 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 73 12 ]
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_73_12_82_12_if_stmt:
+        %tmp.101 = lgetv %isBoss;
+        symbol [ isBoss %tmp.101 73 16 22 ];
+        bf %tmp.101 @_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_73_12_82_12_if_false;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_73_12_82_12_if_true:
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_73_24_76_12_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 74 16 ]
+        %tmp.102 = lgetv %res.1;
+        symbol [ res %tmp.102 74 16 19 ];
+        %tmp.103 = "The boss blocks you!";
+        symbol [ playerLog ? 74 20 29 ];
+        putv %tmp.102 :playerLog %tmp.103;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_73_24_76_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_73_12_82_12_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_73_12_82_12_if_false:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 76 19 ]
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_76_19_82_12_if_stmt:
+        %tmp.104 = lgetv %roll.5;
+        symbol [ roll %tmp.104 76 23 27 ];
+        %tmp.105 = 60;
+        %tmp.106 = lt %tmp.104 %tmp.105;
+        bf %tmp.106 @_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_76_19_82_12_if_else_false;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_76_19_82_12_if_true:
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_76_34_80_12_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 77 16 ]
+        %tmp.107 = lgetv %res.1;
+        symbol [ res %tmp.107 77 16 19 ];
+        %tmp.108 = "You escape!";
+        symbol [ playerLog ? 77 20 29 ];
+        putv %tmp.107 :playerLog %tmp.108;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 78 16 ]
+        %tmp.109 = lgetv %res.1;
+        symbol [ res %tmp.109 78 16 19 ];
+        symbol [ CR_FLED %tmp.111 78 32 39 ];
+        %tmp.111 = getv ? :CR_FLED;
+        symbol [ outcome ? 78 20 27 ];
+        putv %tmp.109 :outcome %tmp.111;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 79 16 ]
+        %tmp.112 = lgetv %res.1;
+        symbol [ res %tmp.112 79 23 26 ];
+        ret %tmp.112;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_76_34_80_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_76_19_82_12_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_76_19_82_12_if_else_false:
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_80_19_82_12_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 81 16 ]
+        %tmp.113 = lgetv %res.1;
+        symbol [ res %tmp.113 81 16 19 ];
+        %tmp.114 = "You stumble — escape failed.";
+        symbol [ playerLog ? 81 20 29 ];
+        putv %tmp.113 :playerLog %tmp.114;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_80_19_82_12_stop:
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_76_19_82_12_if_end:
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_73_12_82_12_if_end:
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_71_37_83_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_71_15_83_8_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_71_15_83_8_if_end:
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_62_15_83_8_if_end:
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_59_15_83_8_if_end:
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_52_8_83_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 86 8 ]
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_86_8_90_8_if_stmt:
+        %tmp.115 = lgetv %enemy;
+        symbol [ enemy %tmp.115 86 12 17 ];
+        symbol [ hp %tmp.116 86 18 20 ];
+        %tmp.116 = getv %tmp.115 :hp;
+        %tmp.117 = 0;
+        %tmp.118 = lte %tmp.116 %tmp.117;
+        bf %tmp.118 @_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_86_8_90_8_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_86_8_90_8_if_true:
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_86_27_90_8_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 87 12 ]
+        %tmp.119 = lgetv %res.1;
+        symbol [ res %tmp.119 87 12 15 ];
+        %tmp.120 = lgetv %enemy;
+        symbol [ enemy %tmp.120 87 27 32 ];
+        symbol [ name %tmp.121 87 33 37 ];
+        %tmp.121 = getv %tmp.120 :name;
+        %tmp.122 = " is slain!";
+        %tmp.123 = add %tmp.121 %tmp.122;
+        symbol [ enemyLog ? 87 16 24 ];
+        putv %tmp.119 :enemyLog %tmp.123;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 88 12 ]
+        %tmp.124 = lgetv %res.1;
+        symbol [ res %tmp.124 88 12 15 ];
+        symbol [ CR_VICTORY %tmp.126 88 27 37 ];
+        %tmp.126 = getv ? :CR_VICTORY;
+        symbol [ outcome ? 88 16 23 ];
+        putv %tmp.124 :outcome %tmp.126;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 89 12 ]
+        %tmp.127 = lgetv %res.1;
+        symbol [ res %tmp.127 89 19 22 ];
+        ret %tmp.127;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_86_27_90_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_86_8_90_8_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_86_8_90_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 93 8 ]
+        %tmp.128 = lgetv %enemy;
+        symbol [ enemy %tmp.128 93 8 13 ];
+        %tmp.129 = 0;
+        symbol [ defending ? 93 14 23 ];
+        putv %tmp.128 :defending %tmp.129;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 94 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_47_76_109_4_start" "_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_47_76_109_4_stop" ]
+        %ea.6 = local;
+        symbol [ ea %ea.6 94 12 14 ];
+        %tmp.130 = lgetv %enemy;
+        symbol [ enemy %tmp.130 94 17 22 ];
+        symbol [ pickAction %tmp.131 94 23 33 ];
+        %tmp.131 = getv function %tmp.130 :pickAction;
+        %tmp.132 = lgetv %isBoss;
+        symbol [ isBoss %tmp.132 94 34 40 ];
+        %tmp.133 = invoke %tmp.130 %tmp.131(%tmp.132);
+        lputv %ea.6 %tmp.133;
+        symbol [ ea %ea.6 94 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 95 8 ]
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_95_8_106_8_if_stmt:
+        %tmp.134 = lgetv %ea.6;
+        symbol [ ea %tmp.134 95 12 14 ];
+        symbol [ EA_DEFEND %tmp.136 95 18 27 ];
+        %tmp.136 = getv ? :EA_DEFEND;
+        %tmp.137 = eq %tmp.134 %tmp.136;
+        bf %tmp.137 @_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_95_8_106_8_if_else_false;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_95_8_106_8_if_true:
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_95_29_98_8_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 96 12 ]
+        %tmp.138 = lgetv %enemy;
+        symbol [ enemy %tmp.138 96 12 17 ];
+        %tmp.139 = 1;
+        symbol [ defending ? 96 18 27 ];
+        putv %tmp.138 :defending %tmp.139;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 97 12 ]
+        %tmp.140 = lgetv %res.1;
+        symbol [ res %tmp.140 97 12 15 ];
+        %tmp.141 = lgetv %enemy;
+        symbol [ enemy %tmp.141 97 27 32 ];
+        symbol [ name %tmp.142 97 33 37 ];
+        %tmp.142 = getv %tmp.141 :name;
+        %tmp.143 = " braces.";
+        %tmp.144 = add %tmp.142 %tmp.143;
+        symbol [ enemyLog ? 97 16 24 ];
+        putv %tmp.140 :enemyLog %tmp.144;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_95_29_98_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_95_8_106_8_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_95_8_106_8_if_else_false:
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_98_15_106_8_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 99 12 ]
+        [ "_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_98_15_106_8_start" "_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_98_15_106_8_stop" ]
+        %raw.7 = local;
+        symbol [ raw %raw.7 99 16 19 ];
+        %tmp.145 = lgetv %enemy;
+        symbol [ enemy %tmp.145 99 22 27 ];
+        symbol [ rollAttack %tmp.146 99 28 38 ];
+        %tmp.146 = getv function %tmp.145 :rollAttack;
+        %tmp.147 = invoke %tmp.145 %tmp.146();
+        lputv %raw.7 %tmp.147;
+        symbol [ raw %raw.7 99 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 100 12 ]
+        [ "_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_98_15_106_8_start" "_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_98_15_106_8_stop" ]
+        %taken.8 = local;
+        symbol [ taken %taken.8 100 16 21 ];
+        %tmp.148 = lgetv %player;
+        symbol [ player %tmp.148 100 24 30 ];
+        symbol [ takeDamage %tmp.149 100 31 41 ];
+        %tmp.149 = getv function %tmp.148 :takeDamage;
+        %tmp.150 = lgetv %raw.7;
+        symbol [ raw %tmp.150 100 42 45 ];
+        %tmp.151 = lgetv %playerDefending.2;
+        symbol [ playerDefending %tmp.151 100 47 62 ];
+        %tmp.152 = invoke %tmp.148 %tmp.149(%tmp.150, %tmp.151);
+        lputv %taken.8 %tmp.152;
+        symbol [ taken %taken.8 100 16 21 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 101 12 ]
+        %tmp.153 = lgetv %res.1;
+        symbol [ res %tmp.153 101 12 15 ];
+        %tmp.154 = lgetv %enemy;
+        symbol [ enemy %tmp.154 101 27 32 ];
+        symbol [ name %tmp.155 101 33 37 ];
+        %tmp.155 = getv %tmp.154 :name;
+        %tmp.156 = " hits you ";
+        %tmp.157 = add %tmp.155 %tmp.156;
+        %tmp.158 = lgetv %taken.8;
+        symbol [ taken %tmp.158 101 55 60 ];
+        symbol [ format %tmp.159 101 61 67 ];
+        %tmp.159 = getv function %tmp.158 :format;
+        %tmp.160 = "%d";
+        %tmp.161 = invoke %tmp.158 %tmp.159(%tmp.160);
+        %tmp.162 = add %tmp.157 %tmp.161;
+        %tmp.163 = ".";
+        %tmp.164 = add %tmp.162 %tmp.163;
+        symbol [ enemyLog ? 101 16 24 ];
+        putv %tmp.153 :enemyLog %tmp.164;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 102 12 ]
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_102_12_105_12_if_stmt:
+        %tmp.165 = lgetv %player;
+        symbol [ player %tmp.165 102 17 23 ];
+        symbol [ isAlive %tmp.166 102 24 31 ];
+        %tmp.166 = getv function %tmp.165 :isAlive;
+        %tmp.167 = invoke %tmp.165 %tmp.166();
+        %tmp.168 = not %tmp.167;
+        bf %tmp.168 @_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_102_12_105_12_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_102_12_105_12_if_true:
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_102_35_105_12_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 103 16 ]
+        %tmp.169 = lgetv %res.1;
+        symbol [ res %tmp.169 103 16 19 ];
+        symbol [ CR_DEATH %tmp.171 103 30 38 ];
+        %tmp.171 = getv ? :CR_DEATH;
+        symbol [ outcome ? 103 20 27 ];
+        putv %tmp.169 :outcome %tmp.171;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 104 16 ]
+        %tmp.172 = lgetv %res.1;
+        symbol [ res %tmp.172 104 23 26 ];
+        ret %tmp.172;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_102_35_105_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_102_12_105_12_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_102_12_105_12_if_end:
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_98_15_106_8_stop:
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_95_8_106_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 107 8 ]
+        %tmp.173 = lgetv %res.1;
+        symbol [ res %tmp.173 107 8 11 ];
+        %tmp.174 = lgetv %playerDefending.2;
+        symbol [ playerDefending %tmp.174 107 39 54 ];
+        symbol [ playerDefendingThisRound ? 107 12 36 ];
+        putv %tmp.173 :playerDefendingThisRound %tmp.174;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc" 108 8 ]
+        %tmp.175 = lgetv %res.1;
+        symbol [ res %tmp.175 108 15 18 ];
+        ret %tmp.175;
+_Users_kkorolczuk_work_garmin_mudrogue_source_CombatSystem_mc_47_76_109_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/CombatSystem.mc"; @line = 16; ]
+<init> {
+}

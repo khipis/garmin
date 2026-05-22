@@ -51,6 +51,17 @@ APPS=(
   gobblet_mini
   makao_lite
   territory_clash
+  gemmatch
+  stacktower
+  flappypidgeon
+  jumptower
+  pongpro
+  minesweeper
+  pinballpro
+  mudrogue
+  hangman
+  twentyfortyeight
+  battleship
   intervalbeeper
   jazzball
   billiards
@@ -64,6 +75,7 @@ APPS=(
   serpent
   skijump
   solitare
+  sudoku
   timer
 )
 

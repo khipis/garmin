@@ -1,0 +1,583 @@
+[ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc"; @line = 13; @symbol_usingdef<0> = [Toybox,13,6,12]; @symbol_usingdef<1> = [Math,13,13,17]; ]
+using Toybox.Math;
+[ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc"; @line = 16; @position = 6; @symbol_constdef = [EA_ATTACK,16,6,15]; ]
+const EA_ATTACK = 0;
+[ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc"; @line = 17; @position = 6; @symbol_constdef = [EA_DEFEND,17,6,15]; ]
+const EA_DEFEND = 1;
+[ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc"; @line = 20; @position = 6; @symbol_constdef = [ET_NAME,20,6,13]; ]
+const ET_NAME = 0;
+[ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc"; @line = 21; @position = 6; @symbol_constdef = [ET_HP,21,6,11]; ]
+const ET_HP = 1;
+[ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc"; @line = 22; @position = 6; @symbol_constdef = [ET_ATK,22,6,12]; ]
+const ET_ATK = 2;
+[ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc"; @line = 23; @position = 6; @symbol_constdef = [ET_DEF,23,6,12]; ]
+const ET_DEF = 3;
+[ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc"; @line = 24; @position = 6; @symbol_constdef = [ET_XP,24,6,11]; ]
+const ET_XP = 4;
+[ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc"; @line = 25; @position = 6; @symbol_constdef = [ET_GOLD,25,6,13]; ]
+const ET_GOLD = 5;
+[ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc"; @line = 27; @symbol_classdef = [Enemy,27,6,11]; ]
+class Enemy {
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc"; @line = 27; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc"; @line = 27; ]
+    static
+    <init> {
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 39 15 ]
+        %tmp.1 = newa 6;
+        %tmp.2 = newa 6;
+        %tmp.3 = "Rat";
+        %tmp.4 = dup %tmp.2;
+        %tmp.5 = aputv %tmp.4 0 %tmp.3;
+        %tmp.6 = 8;
+        %tmp.7 = dup %tmp.5;
+        %tmp.8 = aputv %tmp.7 1 %tmp.6;
+        %tmp.9 = 2;
+        %tmp.10 = dup %tmp.8;
+        %tmp.11 = aputv %tmp.10 2 %tmp.9;
+        %tmp.12 = 0;
+        %tmp.13 = dup %tmp.11;
+        %tmp.14 = aputv %tmp.13 3 %tmp.12;
+        %tmp.15 = 4;
+        %tmp.16 = dup %tmp.14;
+        %tmp.17 = aputv %tmp.16 4 %tmp.15;
+        %tmp.18 = 5;
+        %tmp.19 = dup %tmp.17;
+        %tmp.20 = aputv %tmp.19 5 %tmp.18;
+        %tmp.21 = dup %tmp.1;
+        %tmp.22 = aputv %tmp.21 0 %tmp.20;
+        %tmp.23 = newa 6;
+        %tmp.24 = "Goblin";
+        %tmp.25 = dup %tmp.23;
+        %tmp.26 = aputv %tmp.25 0 %tmp.24;
+        %tmp.27 = 14;
+        %tmp.28 = dup %tmp.26;
+        %tmp.29 = aputv %tmp.28 1 %tmp.27;
+        %tmp.30 = 4;
+        %tmp.31 = dup %tmp.29;
+        %tmp.32 = aputv %tmp.31 2 %tmp.30;
+        %tmp.33 = 1;
+        %tmp.34 = dup %tmp.32;
+        %tmp.35 = aputv %tmp.34 3 %tmp.33;
+        %tmp.36 = 8;
+        %tmp.37 = dup %tmp.35;
+        %tmp.38 = aputv %tmp.37 4 %tmp.36;
+        %tmp.39 = 12;
+        %tmp.40 = dup %tmp.38;
+        %tmp.41 = aputv %tmp.40 5 %tmp.39;
+        %tmp.42 = dup %tmp.22;
+        %tmp.43 = aputv %tmp.42 1 %tmp.41;
+        %tmp.44 = newa 6;
+        %tmp.45 = "Skeleton";
+        %tmp.46 = dup %tmp.44;
+        %tmp.47 = aputv %tmp.46 0 %tmp.45;
+        %tmp.48 = 20;
+        %tmp.49 = dup %tmp.47;
+        %tmp.50 = aputv %tmp.49 1 %tmp.48;
+        %tmp.51 = 5;
+        %tmp.52 = dup %tmp.50;
+        %tmp.53 = aputv %tmp.52 2 %tmp.51;
+        %tmp.54 = 2;
+        %tmp.55 = dup %tmp.53;
+        %tmp.56 = aputv %tmp.55 3 %tmp.54;
+        %tmp.57 = 12;
+        %tmp.58 = dup %tmp.56;
+        %tmp.59 = aputv %tmp.58 4 %tmp.57;
+        %tmp.60 = 18;
+        %tmp.61 = dup %tmp.59;
+        %tmp.62 = aputv %tmp.61 5 %tmp.60;
+        %tmp.63 = dup %tmp.43;
+        %tmp.64 = aputv %tmp.63 2 %tmp.62;
+        %tmp.65 = newa 6;
+        %tmp.66 = "Orc";
+        %tmp.67 = dup %tmp.65;
+        %tmp.68 = aputv %tmp.67 0 %tmp.66;
+        %tmp.69 = 28;
+        %tmp.70 = dup %tmp.68;
+        %tmp.71 = aputv %tmp.70 1 %tmp.69;
+        %tmp.72 = 7;
+        %tmp.73 = dup %tmp.71;
+        %tmp.74 = aputv %tmp.73 2 %tmp.72;
+        %tmp.75 = 2;
+        %tmp.76 = dup %tmp.74;
+        %tmp.77 = aputv %tmp.76 3 %tmp.75;
+        %tmp.78 = 18;
+        %tmp.79 = dup %tmp.77;
+        %tmp.80 = aputv %tmp.79 4 %tmp.78;
+        %tmp.81 = 25;
+        %tmp.82 = dup %tmp.80;
+        %tmp.83 = aputv %tmp.82 5 %tmp.81;
+        %tmp.84 = dup %tmp.64;
+        %tmp.85 = aputv %tmp.84 3 %tmp.83;
+        %tmp.86 = newa 6;
+        %tmp.87 = "Troll";
+        %tmp.88 = dup %tmp.86;
+        %tmp.89 = aputv %tmp.88 0 %tmp.87;
+        %tmp.90 = 40;
+        %tmp.91 = dup %tmp.89;
+        %tmp.92 = aputv %tmp.91 1 %tmp.90;
+        %tmp.93 = 9;
+        %tmp.94 = dup %tmp.92;
+        %tmp.95 = aputv %tmp.94 2 %tmp.93;
+        %tmp.96 = 3;
+        %tmp.97 = dup %tmp.95;
+        %tmp.98 = aputv %tmp.97 3 %tmp.96;
+        %tmp.99 = 28;
+        %tmp.100 = dup %tmp.98;
+        %tmp.101 = aputv %tmp.100 4 %tmp.99;
+        %tmp.102 = 40;
+        %tmp.103 = dup %tmp.101;
+        %tmp.104 = aputv %tmp.103 5 %tmp.102;
+        %tmp.105 = dup %tmp.85;
+        %tmp.106 = aputv %tmp.105 4 %tmp.104;
+        %tmp.107 = newa 6;
+        %tmp.108 = "Wraith";
+        %tmp.109 = dup %tmp.107;
+        %tmp.110 = aputv %tmp.109 0 %tmp.108;
+        %tmp.111 = 32;
+        %tmp.112 = dup %tmp.110;
+        %tmp.113 = aputv %tmp.112 1 %tmp.111;
+        %tmp.114 = 12;
+        %tmp.115 = dup %tmp.113;
+        %tmp.116 = aputv %tmp.115 2 %tmp.114;
+        %tmp.117 = 1;
+        %tmp.118 = dup %tmp.116;
+        %tmp.119 = aputv %tmp.118 3 %tmp.117;
+        %tmp.120 = 35;
+        %tmp.121 = dup %tmp.119;
+        %tmp.122 = aputv %tmp.121 4 %tmp.120;
+        %tmp.123 = 50;
+        %tmp.124 = dup %tmp.122;
+        %tmp.125 = aputv %tmp.124 5 %tmp.123;
+        %tmp.126 = dup %tmp.106;
+        %tmp.127 = aputv %tmp.126 5 %tmp.125;
+        putv self :TEMPLATES %tmp.127;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 48 15 ]
+        %tmp.128 = newa 6;
+        %tmp.129 = "Dragon";
+        %tmp.130 = dup %tmp.128;
+        %tmp.131 = aputv %tmp.130 0 %tmp.129;
+        %tmp.132 = 60;
+        %tmp.133 = dup %tmp.131;
+        %tmp.134 = aputv %tmp.133 1 %tmp.132;
+        %tmp.135 = 11;
+        %tmp.136 = dup %tmp.134;
+        %tmp.137 = aputv %tmp.136 2 %tmp.135;
+        %tmp.138 = 4;
+        %tmp.139 = dup %tmp.137;
+        %tmp.140 = aputv %tmp.139 3 %tmp.138;
+        %tmp.141 = 80;
+        %tmp.142 = dup %tmp.140;
+        %tmp.143 = aputv %tmp.142 4 %tmp.141;
+        %tmp.144 = 120;
+        %tmp.145 = dup %tmp.143;
+        %tmp.146 = aputv %tmp.145 5 %tmp.144;
+        putv self :BOSS_TEMPLATE %tmp.146;
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc"; @line = 28; @position = 8; @symbol_vardef = [name,28,8,12]; ]
+    var name;
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc"; @line = 29; @position = 8; @symbol_vardef = [hp,29,8,10]; ]
+    var hp;
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc"; @line = 30; @position = 8; @symbol_vardef = [maxHp,30,8,13]; ]
+    var maxHp;
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc"; @line = 31; @position = 8; @symbol_vardef = [atk,31,8,11]; ]
+    var atk;
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc"; @line = 32; @position = 8; @symbol_vardef = [def,32,8,11]; ]
+    var def;
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc"; @line = 33; @position = 8; @symbol_vardef = [xpReward,33,8,16]; ]
+    var xpReward;
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc"; @line = 34; @position = 8; @symbol_vardef = [goldReward,34,8,18]; ]
+    var goldReward;
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc"; @line = 35; @position = 8; @symbol_vardef = [defending,35,8,17]; ]
+    var defending;
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc"; @line = 39; @position = 15; @symbol_vardef = [TEMPLATES,39,15,24]; ]
+    static
+    var TEMPLATES;
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc"; @line = 48; @position = 15; @symbol_vardef = [BOSS_TEMPLATE,48,15,28]; ]
+    static
+    var BOSS_TEMPLATE;
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc"; @line = 51; @symbol_functiondef = [initialize,51,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_51_26_54_4_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 52 8 ]
+        %tmp.1 = "";
+        symbol [ name ? 52 8 12 ];
+        putv self :name %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 52 19 ]
+        %tmp.2 = 0;
+        symbol [ hp ? 52 19 21 ];
+        putv self :hp %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 52 27 ]
+        %tmp.3 = 0;
+        symbol [ maxHp ? 52 27 32 ];
+        putv self :maxHp %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 52 38 ]
+        %tmp.4 = 0;
+        symbol [ atk ? 52 38 41 ];
+        putv self :atk %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 52 47 ]
+        %tmp.5 = 0;
+        symbol [ def ? 52 47 50 ];
+        putv self :def %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 53 8 ]
+        %tmp.6 = 0;
+        symbol [ xpReward ? 53 8 16 ];
+        putv self :xpReward %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 53 22 ]
+        %tmp.7 = 0;
+        symbol [ goldReward ? 53 22 32 ];
+        putv self :goldReward %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 53 38 ]
+        %tmp.8 = 0;
+        symbol [ defending ? 53 38 47 ];
+        putv self :defending %tmp.8;
+_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_51_26_54_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc"; @line = 57; @symbol_functiondef = [fromTemplate,57,13,25]; @symbol_param<0> = [idx,57,26,29]; @symbol_param<1> = [floor,57,31,36]; ]
+    function fromTemplate(idx, floor) {
+_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_57_38_70_4_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 58 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_57_38_70_4_start" "_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_57_38_70_4_stop" ]
+        %t.1 = local;
+        symbol [ t %t.1 58 12 13 ];
+        symbol [ TEMPLATES %tmp.2 58 16 25 ];
+        %tmp.2 = getv ? :TEMPLATES;
+        %tmp.3 = lgetv %idx;
+        symbol [ idx %tmp.3 58 26 29 ];
+        %tmp.4 = agetv %tmp.2 %tmp.3;
+        lputv %t.1 %tmp.4;
+        symbol [ t %t.1 58 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 60 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_57_38_70_4_start" "_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_57_38_70_4_stop" ]
+        %scaleNum.2 = local;
+        symbol [ scaleNum %scaleNum.2 60 12 20 ];
+        %tmp.5 = 9;
+        %tmp.6 = lgetv %floor;
+        symbol [ floor %tmp.6 60 27 32 ];
+        %tmp.7 = add %tmp.5 %tmp.6;
+        lputv %scaleNum.2 %tmp.7;
+        symbol [ scaleNum %scaleNum.2 60 12 20 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 61 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_57_38_70_4_start" "_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_57_38_70_4_stop" ]
+        %scaleDen.3 = local;
+        symbol [ scaleDen %scaleDen.3 61 12 20 ];
+        %tmp.8 = 9;
+        lputv %scaleDen.3 %tmp.8;
+        symbol [ scaleDen %scaleDen.3 61 12 20 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 62 8 ]
+        %tmp.9 = lgetv %t.1;
+        symbol [ t %tmp.9 62 21 22 ];
+        symbol [ ET_NAME %tmp.11 62 23 30 ];
+        %tmp.11 = getv ? :ET_NAME;
+        %tmp.12 = agetv %tmp.9 %tmp.11;
+        symbol [ name ? 62 8 12 ];
+        putv self :name %tmp.12;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 63 8 ]
+        %tmp.13 = lgetv %t.1;
+        symbol [ t %tmp.13 63 22 23 ];
+        symbol [ ET_HP %tmp.15 63 24 29 ];
+        %tmp.15 = getv ? :ET_HP;
+        %tmp.16 = agetv %tmp.13 %tmp.15;
+        %tmp.17 = lgetv %scaleNum.2;
+        symbol [ scaleNum %tmp.17 63 34 42 ];
+        %tmp.18 = mul %tmp.16 %tmp.17;
+        %tmp.19 = lgetv %scaleDen.3;
+        symbol [ scaleDen %tmp.19 63 46 54 ];
+        %tmp.20 = div %tmp.18 %tmp.19;
+        symbol [ maxHp ? 63 8 13 ];
+        putv self :maxHp %tmp.20;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 64 8 ]
+        symbol [ maxHp %tmp.22 64 21 26 ];
+        %tmp.22 = getv ? :maxHp;
+        symbol [ hp ? 64 8 10 ];
+        putv self :hp %tmp.22;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 65 8 ]
+        %tmp.23 = lgetv %t.1;
+        symbol [ t %tmp.23 65 22 23 ];
+        symbol [ ET_ATK %tmp.25 65 24 30 ];
+        %tmp.25 = getv ? :ET_ATK;
+        %tmp.26 = agetv %tmp.23 %tmp.25;
+        %tmp.27 = lgetv %scaleNum.2;
+        symbol [ scaleNum %tmp.27 65 34 42 ];
+        %tmp.28 = mul %tmp.26 %tmp.27;
+        %tmp.29 = lgetv %scaleDen.3;
+        symbol [ scaleDen %tmp.29 65 46 54 ];
+        %tmp.30 = div %tmp.28 %tmp.29;
+        symbol [ atk ? 65 8 11 ];
+        putv self :atk %tmp.30;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 66 8 ]
+        %tmp.31 = lgetv %t.1;
+        symbol [ t %tmp.31 66 21 22 ];
+        symbol [ ET_DEF %tmp.33 66 23 29 ];
+        %tmp.33 = getv ? :ET_DEF;
+        %tmp.34 = agetv %tmp.31 %tmp.33;
+        symbol [ def ? 66 8 11 ];
+        putv self :def %tmp.34;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 67 8 ]
+        %tmp.35 = lgetv %t.1;
+        symbol [ t %tmp.35 67 22 23 ];
+        symbol [ ET_XP %tmp.37 67 24 29 ];
+        %tmp.37 = getv ? :ET_XP;
+        %tmp.38 = agetv %tmp.35 %tmp.37;
+        %tmp.39 = lgetv %scaleNum.2;
+        symbol [ scaleNum %tmp.39 67 34 42 ];
+        %tmp.40 = mul %tmp.38 %tmp.39;
+        %tmp.41 = lgetv %scaleDen.3;
+        symbol [ scaleDen %tmp.41 67 46 54 ];
+        %tmp.42 = div %tmp.40 %tmp.41;
+        symbol [ xpReward ? 67 8 16 ];
+        putv self :xpReward %tmp.42;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 68 8 ]
+        %tmp.43 = lgetv %t.1;
+        symbol [ t %tmp.43 68 22 23 ];
+        symbol [ ET_GOLD %tmp.45 68 24 31 ];
+        %tmp.45 = getv ? :ET_GOLD;
+        %tmp.46 = agetv %tmp.43 %tmp.45;
+        %tmp.47 = lgetv %scaleNum.2;
+        symbol [ scaleNum %tmp.47 68 35 43 ];
+        %tmp.48 = mul %tmp.46 %tmp.47;
+        %tmp.49 = lgetv %scaleDen.3;
+        symbol [ scaleDen %tmp.49 68 47 55 ];
+        %tmp.50 = div %tmp.48 %tmp.49;
+        symbol [ goldReward ? 68 8 18 ];
+        putv self :goldReward %tmp.50;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 69 8 ]
+        %tmp.51 = 0;
+        symbol [ defending ? 69 8 17 ];
+        putv self :defending %tmp.51;
+_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_57_38_70_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc"; @line = 72; @symbol_functiondef = [fromBoss,72,13,21]; @symbol_param<0> = [floor,72,22,27]; ]
+    function fromBoss(floor) {
+_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_72_29_84_4_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 73 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_72_29_84_4_start" "_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_72_29_84_4_stop" ]
+        %t.1 = local;
+        symbol [ t %t.1 73 12 13 ];
+        symbol [ BOSS_TEMPLATE %tmp.2 73 16 29 ];
+        %tmp.2 = getv ? :BOSS_TEMPLATE;
+        lputv %t.1 %tmp.2;
+        symbol [ t %t.1 73 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 74 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_72_29_84_4_start" "_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_72_29_84_4_stop" ]
+        %scaleNum.2 = local;
+        symbol [ scaleNum %scaleNum.2 74 12 20 ];
+        %tmp.3 = 6;
+        %tmp.4 = lgetv %floor;
+        symbol [ floor %tmp.4 74 27 32 ];
+        %tmp.5 = add %tmp.3 %tmp.4;
+        lputv %scaleNum.2 %tmp.5;
+        symbol [ scaleNum %scaleNum.2 74 12 20 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 75 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_72_29_84_4_start" "_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_72_29_84_4_stop" ]
+        %scaleDen.3 = local;
+        symbol [ scaleDen %scaleDen.3 75 12 20 ];
+        %tmp.6 = 6;
+        lputv %scaleDen.3 %tmp.6;
+        symbol [ scaleDen %scaleDen.3 75 12 20 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 76 8 ]
+        %tmp.7 = "Boss ";
+        %tmp.8 = lgetv %t.1;
+        symbol [ t %tmp.8 76 31 32 ];
+        symbol [ ET_NAME %tmp.10 76 33 40 ];
+        %tmp.10 = getv ? :ET_NAME;
+        %tmp.11 = agetv %tmp.8 %tmp.10;
+        %tmp.12 = add %tmp.7 %tmp.11;
+        symbol [ name ? 76 8 12 ];
+        putv self :name %tmp.12;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 77 8 ]
+        %tmp.13 = lgetv %t.1;
+        symbol [ t %tmp.13 77 23 24 ];
+        symbol [ ET_HP %tmp.15 77 25 30 ];
+        %tmp.15 = getv ? :ET_HP;
+        %tmp.16 = agetv %tmp.13 %tmp.15;
+        %tmp.17 = lgetv %scaleNum.2;
+        symbol [ scaleNum %tmp.17 77 35 43 ];
+        %tmp.18 = mul %tmp.16 %tmp.17;
+        %tmp.19 = lgetv %scaleDen.3;
+        symbol [ scaleDen %tmp.19 77 47 55 ];
+        %tmp.20 = div %tmp.18 %tmp.19;
+        %tmp.21 = lgetv %floor;
+        symbol [ floor %tmp.21 77 59 64 ];
+        %tmp.22 = 3;
+        %tmp.23 = mul %tmp.21 %tmp.22;
+        %tmp.24 = add %tmp.20 %tmp.23;
+        symbol [ maxHp ? 77 8 13 ];
+        putv self :maxHp %tmp.24;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 78 8 ]
+        symbol [ maxHp %tmp.26 78 21 26 ];
+        %tmp.26 = getv ? :maxHp;
+        symbol [ hp ? 78 8 10 ];
+        putv self :hp %tmp.26;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 79 8 ]
+        %tmp.27 = lgetv %t.1;
+        symbol [ t %tmp.27 79 23 24 ];
+        symbol [ ET_ATK %tmp.29 79 25 31 ];
+        %tmp.29 = getv ? :ET_ATK;
+        %tmp.30 = agetv %tmp.27 %tmp.29;
+        %tmp.31 = lgetv %scaleNum.2;
+        symbol [ scaleNum %tmp.31 79 35 43 ];
+        %tmp.32 = mul %tmp.30 %tmp.31;
+        %tmp.33 = lgetv %scaleDen.3;
+        symbol [ scaleDen %tmp.33 79 47 55 ];
+        %tmp.34 = div %tmp.32 %tmp.33;
+        %tmp.35 = lgetv %floor;
+        symbol [ floor %tmp.35 79 59 64 ];
+        %tmp.36 = 3;
+        %tmp.37 = div %tmp.35 %tmp.36;
+        %tmp.38 = add %tmp.34 %tmp.37;
+        symbol [ atk ? 79 8 11 ];
+        putv self :atk %tmp.38;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 80 8 ]
+        %tmp.39 = lgetv %t.1;
+        symbol [ t %tmp.39 80 21 22 ];
+        symbol [ ET_DEF %tmp.41 80 23 29 ];
+        %tmp.41 = getv ? :ET_DEF;
+        %tmp.42 = agetv %tmp.39 %tmp.41;
+        symbol [ def ? 80 8 11 ];
+        putv self :def %tmp.42;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 81 8 ]
+        %tmp.43 = lgetv %t.1;
+        symbol [ t %tmp.43 81 23 24 ];
+        symbol [ ET_XP %tmp.45 81 25 30 ];
+        %tmp.45 = getv ? :ET_XP;
+        %tmp.46 = agetv %tmp.43 %tmp.45;
+        %tmp.47 = lgetv %scaleNum.2;
+        symbol [ scaleNum %tmp.47 81 35 43 ];
+        %tmp.48 = mul %tmp.46 %tmp.47;
+        %tmp.49 = lgetv %scaleDen.3;
+        symbol [ scaleDen %tmp.49 81 47 55 ];
+        %tmp.50 = div %tmp.48 %tmp.49;
+        symbol [ xpReward ? 81 8 16 ];
+        putv self :xpReward %tmp.50;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 82 8 ]
+        %tmp.51 = lgetv %t.1;
+        symbol [ t %tmp.51 82 23 24 ];
+        symbol [ ET_GOLD %tmp.53 82 25 32 ];
+        %tmp.53 = getv ? :ET_GOLD;
+        %tmp.54 = agetv %tmp.51 %tmp.53;
+        %tmp.55 = lgetv %scaleNum.2;
+        symbol [ scaleNum %tmp.55 82 36 44 ];
+        %tmp.56 = mul %tmp.54 %tmp.55;
+        %tmp.57 = lgetv %scaleDen.3;
+        symbol [ scaleDen %tmp.57 82 48 56 ];
+        %tmp.58 = div %tmp.56 %tmp.57;
+        symbol [ goldReward ? 82 8 18 ];
+        putv self :goldReward %tmp.58;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 83 8 ]
+        %tmp.59 = 0;
+        symbol [ defending ? 83 8 17 ];
+        putv self :defending %tmp.59;
+_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_72_29_84_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc"; @line = 86; @symbol_functiondef = [isAlive,86,13,20]; ]
+    function isAlive() {
+_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_86_23_86_40_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 86 25 ]
+        symbol [ hp %tmp.2 86 32 34 ];
+        %tmp.2 = getv ? :hp;
+        %tmp.3 = 0;
+        %tmp.4 = gt %tmp.2 %tmp.3;
+        ret %tmp.4;
+_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_86_23_86_40_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc"; @line = 90; @symbol_functiondef = [pickAction,90,13,23]; @symbol_param<0> = [isBoss,90,24,30]; ]
+    function pickAction(isBoss) {
+_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_90_32_96_4_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 91 8 ]
+_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_91_8_91_40_if_stmt:
+        %tmp.1 = lgetv %isBoss;
+        symbol [ isBoss %tmp.1 91 12 18 ];
+        bf %tmp.1 @_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_91_8_91_40_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_91_8_91_40_if_true:
+_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_91_20_91_40_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 91 22 ]
+        symbol [ EA_ATTACK %tmp.3 91 29 38 ];
+        %tmp.3 = getv ? :EA_ATTACK;
+        ret %tmp.3;
+_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_91_20_91_40_stop:
+        goto @_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_91_8_91_40_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_91_8_91_40_if_end:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 92 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_90_32_96_4_start" "_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_90_32_96_4_stop" ]
+        %threshold.1 = local;
+        symbol [ threshold %threshold.1 92 12 21 ];
+        %tmp.4 = 20;
+        lputv %threshold.1 %tmp.4;
+        symbol [ threshold %threshold.1 92 12 21 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 93 8 ]
+_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_93_8_93_46_if_stmt:
+        symbol [ hp %tmp.6 93 12 14 ];
+        %tmp.6 = getv ? :hp;
+        %tmp.7 = 3;
+        %tmp.8 = mul %tmp.6 %tmp.7;
+        symbol [ maxHp %tmp.10 93 21 26 ];
+        %tmp.10 = getv ? :maxHp;
+        %tmp.11 = lt %tmp.8 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_93_8_93_46_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_93_8_93_46_if_true:
+_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_93_28_93_46_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 93 30 ]
+        %tmp.12 = 50;
+        lputv %threshold.1 %tmp.12;
+        symbol [ threshold %threshold.1 93 30 39 ];
+_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_93_28_93_46_stop:
+        goto @_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_93_8_93_46_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_93_8_93_46_if_end:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 94 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_90_32_96_4_start" "_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_90_32_96_4_stop" ]
+        %roll.2 = local;
+        symbol [ roll %roll.2 94 12 16 ];
+        symbol [ Math %tmp.13 94 19 23 ];
+        %tmp.13 = getm $.Toybox.Math;
+        symbol [ rand %tmp.14 94 24 28 ];
+        %tmp.14 = getv function %tmp.13 :rand;
+        %tmp.15 = invoke %tmp.13 %tmp.14();
+        %tmp.16 = 100;
+        %tmp.17 = mod %tmp.15 %tmp.16;
+        lputv %roll.2 %tmp.17;
+        symbol [ roll %roll.2 94 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 95 8 ]
+_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_95_15_95_48_begin:
+        %tmp.18 = lgetv %roll.2;
+        symbol [ roll %tmp.18 95 16 20 ];
+        %tmp.19 = lgetv %threshold.1;
+        symbol [ threshold %tmp.19 95 23 32 ];
+        %tmp.20 = lt %tmp.18 %tmp.19;
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_95_15_95_48_else_false;
+_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_95_15_95_48_true:
+        symbol [ EA_DEFEND %tmp.22 95 36 45 ];
+        %tmp.22 = getv ? :EA_DEFEND;
+        push %tmp.22;
+        goto @_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_95_15_95_48_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_95_15_95_48_else_false:
+        symbol [ EA_ATTACK %tmp.24 95 48 57 ];
+        %tmp.24 = getv ? :EA_ATTACK;
+        push %tmp.24;
+_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_95_15_95_48_end:
+        %tmp.25 = phi [%tmp.20 @_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_95_15_95_48_begin] [%tmp.22 @_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_95_15_95_48_true] [%tmp.24 @_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_95_15_95_48_else_false] [%tmp.25 @_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_95_15_95_48_end];
+        ret %tmp.25;
+_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_90_32_96_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc"; @line = 99; @symbol_functiondef = [rollAttack,99,13,23]; ]
+    function rollAttack() {
+_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_99_26_101_4_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc" 100 8 ]
+        symbol [ atk %tmp.2 100 15 18 ];
+        %tmp.2 = getv ? :atk;
+        symbol [ Math %tmp.3 100 22 26 ];
+        %tmp.3 = getm $.Toybox.Math;
+        symbol [ rand %tmp.4 100 27 31 ];
+        %tmp.4 = getv function %tmp.3 :rand;
+        %tmp.5 = invoke %tmp.3 %tmp.4();
+        %tmp.6 = 3;
+        %tmp.7 = mod %tmp.5 %tmp.6;
+        %tmp.8 = add %tmp.2 %tmp.7;
+        ret %tmp.8;
+_Users_kkorolczuk_work_garmin_mudrogue_source_Enemy_mc_99_26_101_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/Enemy.mc"; @line = 13; ]
+<init> {
+}

@@ -1,0 +1,569 @@
+[ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc"; @line = 20; @position = 6; @symbol_constdef = [DIR_LEFT,20,6,14]; ]
+const DIR_LEFT = 0;
+[ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc"; @line = 21; @position = 6; @symbol_constdef = [DIR_RIGHT,21,6,15]; ]
+const DIR_RIGHT = 1;
+[ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc"; @line = 22; @position = 6; @symbol_constdef = [DIR_UP,22,6,12]; ]
+const DIR_UP = 2;
+[ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc"; @line = 23; @position = 6; @symbol_constdef = [DIR_DOWN,23,6,14]; ]
+const DIR_DOWN = 3;
+[ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc"; @line = 25; @symbol_classdef = [MoveResult,25,6,16]; ]
+class MoveResult {
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc"; @line = 25; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc"; @line = 25; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc"; @line = 26; @position = 8; @symbol_vardef = [moved,26,8,13]; ]
+    var moved;
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc"; @line = 27; @position = 8; @symbol_vardef = [gained,27,8,14]; ]
+    var gained;
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc"; @line = 28; @position = 8; @symbol_vardef = [reached2048,28,8,19]; ]
+    var reached2048;
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc"; @line = 29; @symbol_functiondef = [initialize,29,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_29_26_33_4_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 30 8 ]
+        %tmp.1 = false;
+        symbol [ moved ? 30 8 13 ];
+        putv self :moved %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 31 8 ]
+        %tmp.2 = 0;
+        symbol [ gained ? 31 8 14 ];
+        putv self :gained %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 32 8 ]
+        %tmp.3 = false;
+        symbol [ reached2048 ? 32 8 19 ];
+        putv self :reached2048 %tmp.3;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_29_26_33_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc"; @line = 36; @symbol_classdef = [MergeEngine,36,6,17]; ]
+class MergeEngine {
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc"; @line = 36; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc"; @line = 36; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc"; @line = 40; @symbol_functiondef = [applyMove,40,20,29]; @symbol_param<0> = [grid,40,30,34]; @symbol_param<1> = [dir,40,36,39]; ]
+    static
+    function applyMove(grid, dir) {
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_40_41_68_4_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 41 8 ]
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_40_41_68_4_start" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_40_41_68_4_stop" ]
+        %res.1 = local;
+        symbol [ res %res.1 41 12 15 ];
+        symbol [ MoveResult %tmp.4 41 22 32 ];
+        %tmp.4 = getv ? :MoveResult;
+        %tmp.1 = newc %tmp.4 ();
+        lputv %res.1 %tmp.1;
+        symbol [ res %res.1 41 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 42 8 ]
+        %tmp.5 = lgetv %grid;
+        symbol [ grid %tmp.5 42 8 12 ];
+        symbol [ clearMerged %tmp.6 42 13 24 ];
+        %tmp.6 = getv function %tmp.5 :clearMerged;
+        invoke %tmp.5 %tmp.6();
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 44 8 ]
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_40_41_68_4_start" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_40_41_68_4_stop" ]
+        %row.2 = local;
+        symbol [ row %row.2 44 12 15 ];
+        %tmp.7 = newa 4;
+        %tmp.8 = 0;
+        %tmp.9 = dup %tmp.7;
+        %tmp.10 = aputv %tmp.9 0 %tmp.8;
+        %tmp.11 = 0;
+        %tmp.12 = dup %tmp.10;
+        %tmp.13 = aputv %tmp.12 1 %tmp.11;
+        %tmp.14 = 0;
+        %tmp.15 = dup %tmp.13;
+        %tmp.16 = aputv %tmp.15 2 %tmp.14;
+        %tmp.17 = 0;
+        %tmp.18 = dup %tmp.16;
+        %tmp.19 = aputv %tmp.18 3 %tmp.17;
+        lputv %row.2 %tmp.19;
+        symbol [ row %row.2 44 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 45 8 ]
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_40_41_68_4_start" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_40_41_68_4_stop" ]
+        %merged.3 = local;
+        symbol [ merged %merged.3 45 12 18 ];
+        %tmp.20 = newa 4;
+        %tmp.21 = false;
+        %tmp.22 = dup %tmp.20;
+        %tmp.23 = aputv %tmp.22 0 %tmp.21;
+        %tmp.24 = false;
+        %tmp.25 = dup %tmp.23;
+        %tmp.26 = aputv %tmp.25 1 %tmp.24;
+        %tmp.27 = false;
+        %tmp.28 = dup %tmp.26;
+        %tmp.29 = aputv %tmp.28 2 %tmp.27;
+        %tmp.30 = false;
+        %tmp.31 = dup %tmp.29;
+        %tmp.32 = aputv %tmp.31 3 %tmp.30;
+        lputv %merged.3 %tmp.32;
+        symbol [ merged %merged.3 45 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 47 8 ]
+        for @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_47_8_66_8_for_test @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_47_8_66_8_for_incr @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_47_8_66_8_for_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_47_8_66_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_47_8_66_8_for_begin" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_47_8_66_8_for_end" ]
+        %line.4 = local;
+        symbol [ line %line.4 47 17 21 ];
+        %tmp.33 = 0;
+        lputv %line.4 %tmp.33;
+        symbol [ line %line.4 47 17 21 ];
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_47_8_66_8_for_test:
+        %tmp.34 = lgetv %line.4;
+        symbol [ line %tmp.34 47 27 31 ];
+        symbol [ GRID_SIZE %tmp.36 47 34 43 ];
+        %tmp.36 = getv ? :GRID_SIZE;
+        %tmp.37 = lt %tmp.34 %tmp.36;
+        bf %tmp.37 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_47_8_66_8_for_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_47_8_66_8_for_begin:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_47_53_66_8_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 49 12 ]
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_47_53_66_8_start" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_47_53_66_8_stop" ]
+        %orig.5 = local;
+        symbol [ orig %orig.5 49 16 20 ];
+        %tmp.38 = newa 4;
+        %tmp.39 = 0;
+        %tmp.40 = dup %tmp.38;
+        %tmp.41 = aputv %tmp.40 0 %tmp.39;
+        %tmp.42 = 0;
+        %tmp.43 = dup %tmp.41;
+        %tmp.44 = aputv %tmp.43 1 %tmp.42;
+        %tmp.45 = 0;
+        %tmp.46 = dup %tmp.44;
+        %tmp.47 = aputv %tmp.46 2 %tmp.45;
+        %tmp.48 = 0;
+        %tmp.49 = dup %tmp.47;
+        %tmp.50 = aputv %tmp.49 3 %tmp.48;
+        lputv %orig.5 %tmp.50;
+        symbol [ orig %orig.5 49 16 20 ];
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 53 12 ]
+        for @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_53_12_56_12_for_test @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_53_12_56_12_for_incr @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_53_12_56_12_for_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_53_12_56_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_53_12_56_12_for_begin" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_53_12_56_12_for_end" ]
+        %k.6 = local;
+        symbol [ k %k.6 53 21 22 ];
+        %tmp.51 = 0;
+        lputv %k.6 %tmp.51;
+        symbol [ k %k.6 53 21 22 ];
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_53_12_56_12_for_test:
+        %tmp.52 = lgetv %k.6;
+        symbol [ k %tmp.52 53 28 29 ];
+        symbol [ GRID_SIZE %tmp.54 53 32 41 ];
+        %tmp.54 = getv ? :GRID_SIZE;
+        %tmp.55 = lt %tmp.52 %tmp.54;
+        bf %tmp.55 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_53_12_56_12_for_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_53_12_56_12_for_begin:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_53_48_56_12_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 54 16 ]
+        %tmp.56 = lgetv %row.2;
+        symbol [ row %tmp.56 54 16 19 ];
+        %tmp.57 = self;
+        symbol [ _read %tmp.58 54 25 30 ];
+        %tmp.58 = getv function %tmp.57 :_read;
+        %tmp.59 = lgetv %grid;
+        symbol [ grid %tmp.59 54 31 35 ];
+        %tmp.60 = lgetv %dir;
+        symbol [ dir %tmp.60 54 37 40 ];
+        %tmp.61 = lgetv %line.4;
+        symbol [ line %tmp.61 54 42 46 ];
+        %tmp.62 = lgetv %k.6;
+        symbol [ k %tmp.62 54 48 49 ];
+        %tmp.63 = invoke %tmp.57 %tmp.58(%tmp.59, %tmp.60, %tmp.61, %tmp.62);
+        %tmp.64 = lgetv %k.6;
+        symbol [ k %tmp.64 54 20 21 ];
+        aputv %tmp.56 %tmp.64 %tmp.63;
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 55 16 ]
+        %tmp.65 = lgetv %orig.5;
+        symbol [ orig %tmp.65 55 16 20 ];
+        %tmp.66 = lgetv %row.2;
+        symbol [ row %tmp.66 55 26 29 ];
+        %tmp.67 = lgetv %k.6;
+        symbol [ k %tmp.67 55 30 31 ];
+        %tmp.68 = agetv %tmp.66 %tmp.67;
+        %tmp.69 = lgetv %k.6;
+        symbol [ k %tmp.69 55 21 22 ];
+        aputv %tmp.65 %tmp.69 %tmp.68;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_53_48_56_12_stop:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_53_12_56_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 53 ]
+        %tmp.72 = lgetv %k.6;
+        symbol [ k %tmp.72 53 43 44 ];
+        %tmp.73 = add %tmp.72 1;
+        lputv %k.6 %tmp.73;
+        symbol [ k %k.6 53 43 44 ];
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_53_12_56_12_for_test;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_53_12_56_12_for_end:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 57 12 ]
+        %tmp.74 = lgetv %res.1;
+        symbol [ res %tmp.74 57 12 15 ];
+        %tmp.75 = lgetv %res.1;
+        symbol [ res %tmp.75 57 25 28 ];
+        symbol [ gained %tmp.76 57 29 35 ];
+        %tmp.76 = getv %tmp.75 :gained;
+        symbol [ GridManager %tmp.78 57 38 49 ];
+        %tmp.78 = getv ? :GridManager;
+        symbol [ collapseLeft %tmp.79 57 50 62 ];
+        %tmp.79 = getv function %tmp.78 :collapseLeft;
+        %tmp.80 = lgetv %row.2;
+        symbol [ row %tmp.80 57 63 66 ];
+        %tmp.81 = lgetv %merged.3;
+        symbol [ merged %tmp.81 57 68 74 ];
+        %tmp.82 = invoke %tmp.78 %tmp.79(%tmp.80, %tmp.81);
+        %tmp.83 = add %tmp.76 %tmp.82;
+        symbol [ gained ? 57 16 22 ];
+        putv %tmp.74 :gained %tmp.83;
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 58 12 ]
+        for @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_58_12_65_12_for_test @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_58_12_65_12_for_incr @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_58_12_65_12_for_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_58_12_65_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_58_12_65_12_for_begin" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_58_12_65_12_for_end" ]
+        %k2.7 = local;
+        symbol [ k2 %k2.7 58 21 23 ];
+        %tmp.84 = 0;
+        lputv %k2.7 %tmp.84;
+        symbol [ k2 %k2.7 58 21 23 ];
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_58_12_65_12_for_test:
+        %tmp.85 = lgetv %k2.7;
+        symbol [ k2 %tmp.85 58 29 31 ];
+        symbol [ GRID_SIZE %tmp.87 58 34 43 ];
+        %tmp.87 = getv ? :GRID_SIZE;
+        %tmp.88 = lt %tmp.85 %tmp.87;
+        bf %tmp.88 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_58_12_65_12_for_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_58_12_65_12_for_begin:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_58_51_65_12_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 59 16 ]
+        %tmp.89 = self;
+        symbol [ _write %tmp.90 59 16 22 ];
+        %tmp.90 = getv function %tmp.89 :_write;
+        %tmp.91 = lgetv %grid;
+        symbol [ grid %tmp.91 59 23 27 ];
+        %tmp.92 = lgetv %dir;
+        symbol [ dir %tmp.92 59 29 32 ];
+        %tmp.93 = lgetv %line.4;
+        symbol [ line %tmp.93 59 34 38 ];
+        %tmp.94 = lgetv %k2.7;
+        symbol [ k2 %tmp.94 59 40 42 ];
+        %tmp.95 = lgetv %row.2;
+        symbol [ row %tmp.95 59 44 47 ];
+        %tmp.96 = lgetv %k2.7;
+        symbol [ k2 %tmp.96 59 48 50 ];
+        %tmp.97 = agetv %tmp.95 %tmp.96;
+        invoke %tmp.89 %tmp.90(%tmp.91, %tmp.92, %tmp.93, %tmp.94, %tmp.97);
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 60 16 ]
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_60_16_63_16_if_stmt:
+        %tmp.98 = lgetv %merged.3;
+        symbol [ merged %tmp.98 60 20 26 ];
+        %tmp.99 = lgetv %k2.7;
+        symbol [ k2 %tmp.99 60 27 29 ];
+        %tmp.100 = agetv %tmp.98 %tmp.99;
+        bf %tmp.100 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_60_16_63_16_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_60_16_63_16_if_true:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_60_32_63_16_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 61 20 ]
+        %tmp.101 = self;
+        symbol [ _markMerged %tmp.102 61 20 31 ];
+        %tmp.102 = getv function %tmp.101 :_markMerged;
+        %tmp.103 = lgetv %grid;
+        symbol [ grid %tmp.103 61 32 36 ];
+        %tmp.104 = lgetv %dir;
+        symbol [ dir %tmp.104 61 38 41 ];
+        %tmp.105 = lgetv %line.4;
+        symbol [ line %tmp.105 61 43 47 ];
+        %tmp.106 = lgetv %k2.7;
+        symbol [ k2 %tmp.106 61 49 51 ];
+        invoke %tmp.101 %tmp.102(%tmp.103, %tmp.104, %tmp.105, %tmp.106);
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 62 20 ]
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_62_20_62_70_if_stmt:
+        %tmp.107 = lgetv %row.2;
+        symbol [ row %tmp.107 62 24 27 ];
+        %tmp.108 = lgetv %k2.7;
+        symbol [ k2 %tmp.108 62 28 30 ];
+        %tmp.109 = agetv %tmp.107 %tmp.108;
+        symbol [ WIN_EXP %tmp.111 62 35 42 ];
+        %tmp.111 = getv ? :WIN_EXP;
+        %tmp.112 = gte %tmp.109 %tmp.111;
+        bf %tmp.112 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_62_20_62_70_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_62_20_62_70_if_true:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_62_44_62_70_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 62 46 ]
+        %tmp.113 = lgetv %res.1;
+        symbol [ res %tmp.113 62 46 49 ];
+        %tmp.114 = true;
+        symbol [ reached2048 ? 62 50 61 ];
+        putv %tmp.113 :reached2048 %tmp.114;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_62_44_62_70_stop:
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_62_20_62_70_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_62_20_62_70_if_end:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_60_32_63_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_60_16_63_16_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_60_16_63_16_if_end:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 64 16 ]
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_64_16_64_61_if_stmt:
+        %tmp.115 = lgetv %orig.5;
+        symbol [ orig %tmp.115 64 20 24 ];
+        %tmp.116 = lgetv %k2.7;
+        symbol [ k2 %tmp.116 64 25 27 ];
+        %tmp.117 = agetv %tmp.115 %tmp.116;
+        %tmp.118 = lgetv %row.2;
+        symbol [ row %tmp.118 64 32 35 ];
+        %tmp.119 = lgetv %k2.7;
+        symbol [ k2 %tmp.119 64 36 38 ];
+        %tmp.120 = agetv %tmp.118 %tmp.119;
+        %tmp.121 = ne %tmp.117 %tmp.120;
+        bf %tmp.121 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_64_16_64_61_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_64_16_64_61_if_true:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_64_41_64_61_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 64 43 ]
+        %tmp.122 = lgetv %res.1;
+        symbol [ res %tmp.122 64 43 46 ];
+        %tmp.123 = true;
+        symbol [ moved ? 64 47 52 ];
+        putv %tmp.122 :moved %tmp.123;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_64_41_64_61_stop:
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_64_16_64_61_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_64_16_64_61_if_end:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_58_51_65_12_stop:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_58_12_65_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 58 ]
+        %tmp.126 = lgetv %k2.7;
+        symbol [ k2 %tmp.126 58 45 47 ];
+        %tmp.127 = add %tmp.126 1;
+        lputv %k2.7 %tmp.127;
+        symbol [ k2 %k2.7 58 45 47 ];
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_58_12_65_12_for_test;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_58_12_65_12_for_end:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_47_53_66_8_stop:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_47_8_66_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 47 ]
+        %tmp.130 = lgetv %line.4;
+        symbol [ line %tmp.130 47 45 49 ];
+        %tmp.131 = add %tmp.130 1;
+        lputv %line.4 %tmp.131;
+        symbol [ line %line.4 47 45 49 ];
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_47_8_66_8_for_test;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_47_8_66_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 67 8 ]
+        %tmp.132 = lgetv %res.1;
+        symbol [ res %tmp.132 67 15 18 ];
+        ret %tmp.132;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_40_41_68_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc"; @line = 76; @symbol_functiondef = [_coords,76,27,34]; @symbol_param<0> = [dir,76,35,38]; @symbol_param<1> = [line,76,40,44]; @symbol_param<2> = [k,76,46,47]; ]
+    protected static
+    function _coords(dir, line, k) {
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_76_49_82_4_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 78 8 ]
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_78_8_78_68_if_stmt:
+        %tmp.1 = lgetv %dir;
+        symbol [ dir %tmp.1 78 12 15 ];
+        symbol [ DIR_LEFT %tmp.3 78 19 27 ];
+        %tmp.3 = getv ? :DIR_LEFT;
+        %tmp.4 = eq %tmp.1 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_78_8_78_68_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_78_8_78_68_if_true:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_78_30_78_68_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 78 32 ]
+        %tmp.5 = newa 2;
+        %tmp.6 = lgetv %line;
+        symbol [ line %tmp.6 78 40 44 ];
+        %tmp.7 = dup %tmp.5;
+        %tmp.8 = aputv %tmp.7 0 %tmp.6;
+        %tmp.9 = lgetv %k;
+        symbol [ k %tmp.9 78 46 47 ];
+        %tmp.10 = dup %tmp.8;
+        %tmp.11 = aputv %tmp.10 1 %tmp.9;
+        ret %tmp.11;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_78_30_78_68_stop:
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_78_8_78_68_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_78_8_78_68_if_end:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 79 8 ]
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_79_8_79_68_if_stmt:
+        %tmp.12 = lgetv %dir;
+        symbol [ dir %tmp.12 79 12 15 ];
+        symbol [ DIR_RIGHT %tmp.14 79 19 28 ];
+        %tmp.14 = getv ? :DIR_RIGHT;
+        %tmp.15 = eq %tmp.12 %tmp.14;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_79_8_79_68_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_79_8_79_68_if_true:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_79_30_79_68_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 79 32 ]
+        %tmp.16 = newa 2;
+        %tmp.17 = lgetv %line;
+        symbol [ line %tmp.17 79 40 44 ];
+        %tmp.18 = dup %tmp.16;
+        %tmp.19 = aputv %tmp.18 0 %tmp.17;
+        symbol [ GRID_SIZE %tmp.21 79 46 55 ];
+        %tmp.21 = getv ? :GRID_SIZE;
+        %tmp.22 = 1;
+        %tmp.23 = sub %tmp.21 %tmp.22;
+        %tmp.24 = lgetv %k;
+        symbol [ k %tmp.24 79 62 63 ];
+        %tmp.25 = sub %tmp.23 %tmp.24;
+        %tmp.26 = dup %tmp.19;
+        %tmp.27 = aputv %tmp.26 1 %tmp.25;
+        ret %tmp.27;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_79_30_79_68_stop:
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_79_8_79_68_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_79_8_79_68_if_end:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 80 8 ]
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_80_8_80_68_if_stmt:
+        %tmp.28 = lgetv %dir;
+        symbol [ dir %tmp.28 80 12 15 ];
+        symbol [ DIR_UP %tmp.30 80 19 25 ];
+        %tmp.30 = getv ? :DIR_UP;
+        %tmp.31 = eq %tmp.28 %tmp.30;
+        bf %tmp.31 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_80_8_80_68_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_80_8_80_68_if_true:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_80_30_80_68_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 80 32 ]
+        %tmp.32 = newa 2;
+        %tmp.33 = lgetv %k;
+        symbol [ k %tmp.33 80 40 41 ];
+        %tmp.34 = dup %tmp.32;
+        %tmp.35 = aputv %tmp.34 0 %tmp.33;
+        %tmp.36 = lgetv %line;
+        symbol [ line %tmp.36 80 43 47 ];
+        %tmp.37 = dup %tmp.35;
+        %tmp.38 = aputv %tmp.37 1 %tmp.36;
+        ret %tmp.38;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_80_30_80_68_stop:
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_80_8_80_68_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_80_8_80_68_if_end:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 81 8 ]
+        %tmp.39 = newa 2;
+        symbol [ GRID_SIZE %tmp.41 81 38 47 ];
+        %tmp.41 = getv ? :GRID_SIZE;
+        %tmp.42 = 1;
+        %tmp.43 = sub %tmp.41 %tmp.42;
+        %tmp.44 = lgetv %k;
+        symbol [ k %tmp.44 81 54 55 ];
+        %tmp.45 = sub %tmp.43 %tmp.44;
+        %tmp.46 = dup %tmp.39;
+        %tmp.47 = aputv %tmp.46 0 %tmp.45;
+        %tmp.48 = lgetv %line;
+        symbol [ line %tmp.48 81 57 61 ];
+        %tmp.49 = dup %tmp.47;
+        %tmp.50 = aputv %tmp.49 1 %tmp.48;
+        ret %tmp.50;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_76_49_82_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc"; @line = 84; @symbol_functiondef = [_read,84,27,32]; @symbol_param<0> = [grid,84,33,37]; @symbol_param<1> = [dir,84,39,42]; @symbol_param<2> = [line,84,44,48]; @symbol_param<3> = [k,84,50,51]; ]
+    protected static
+    function _read(grid, dir, line, k) {
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_84_53_87_4_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 85 8 ]
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_84_53_87_4_start" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_84_53_87_4_stop" ]
+        %rc.1 = local;
+        symbol [ rc %rc.1 85 12 14 ];
+        %tmp.1 = self;
+        symbol [ _coords %tmp.2 85 17 24 ];
+        %tmp.2 = getv function %tmp.1 :_coords;
+        %tmp.3 = lgetv %dir;
+        symbol [ dir %tmp.3 85 25 28 ];
+        %tmp.4 = lgetv %line;
+        symbol [ line %tmp.4 85 30 34 ];
+        %tmp.5 = lgetv %k;
+        symbol [ k %tmp.5 85 36 37 ];
+        %tmp.6 = invoke %tmp.1 %tmp.2(%tmp.3, %tmp.4, %tmp.5);
+        lputv %rc.1 %tmp.6;
+        symbol [ rc %rc.1 85 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 86 8 ]
+        %tmp.7 = lgetv %grid;
+        symbol [ grid %tmp.7 86 15 19 ];
+        symbol [ get %tmp.8 86 20 23 ];
+        %tmp.8 = getv function %tmp.7 :get;
+        %tmp.9 = lgetv %rc.1;
+        symbol [ rc %tmp.9 86 24 26 ];
+        %tmp.10 = 0;
+        %tmp.11 = agetv %tmp.9 %tmp.10;
+        %tmp.12 = lgetv %rc.1;
+        symbol [ rc %tmp.12 86 31 33 ];
+        %tmp.13 = 1;
+        %tmp.14 = agetv %tmp.12 %tmp.13;
+        %tmp.15 = invoke %tmp.7 %tmp.8(%tmp.11, %tmp.14);
+        ret %tmp.15;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_84_53_87_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc"; @line = 89; @symbol_functiondef = [_write,89,27,33]; @symbol_param<0> = [grid,89,34,38]; @symbol_param<1> = [dir,89,40,43]; @symbol_param<2> = [line,89,45,49]; @symbol_param<3> = [k,89,51,52]; @symbol_param<4> = [v,89,54,55]; ]
+    protected static
+    function _write(grid, dir, line, k, v) {
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_89_57_92_4_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 90 8 ]
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_89_57_92_4_start" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_89_57_92_4_stop" ]
+        %rc.1 = local;
+        symbol [ rc %rc.1 90 12 14 ];
+        %tmp.1 = self;
+        symbol [ _coords %tmp.2 90 17 24 ];
+        %tmp.2 = getv function %tmp.1 :_coords;
+        %tmp.3 = lgetv %dir;
+        symbol [ dir %tmp.3 90 25 28 ];
+        %tmp.4 = lgetv %line;
+        symbol [ line %tmp.4 90 30 34 ];
+        %tmp.5 = lgetv %k;
+        symbol [ k %tmp.5 90 36 37 ];
+        %tmp.6 = invoke %tmp.1 %tmp.2(%tmp.3, %tmp.4, %tmp.5);
+        lputv %rc.1 %tmp.6;
+        symbol [ rc %rc.1 90 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 91 8 ]
+        %tmp.7 = lgetv %grid;
+        symbol [ grid %tmp.7 91 8 12 ];
+        symbol [ set %tmp.8 91 13 16 ];
+        %tmp.8 = getv function %tmp.7 :set;
+        %tmp.9 = lgetv %rc.1;
+        symbol [ rc %tmp.9 91 17 19 ];
+        %tmp.10 = 0;
+        %tmp.11 = agetv %tmp.9 %tmp.10;
+        %tmp.12 = lgetv %rc.1;
+        symbol [ rc %tmp.12 91 24 26 ];
+        %tmp.13 = 1;
+        %tmp.14 = agetv %tmp.12 %tmp.13;
+        %tmp.15 = lgetv %v;
+        symbol [ v %tmp.15 91 31 32 ];
+        invoke %tmp.7 %tmp.8(%tmp.11, %tmp.14, %tmp.15);
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_89_57_92_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc"; @line = 94; @symbol_functiondef = [_markMerged,94,27,38]; @symbol_param<0> = [grid,94,39,43]; @symbol_param<1> = [dir,94,45,48]; @symbol_param<2> = [line,94,50,54]; @symbol_param<3> = [k,94,56,57]; ]
+    protected static
+    function _markMerged(grid, dir, line, k) {
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_94_59_97_4_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 95 8 ]
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_94_59_97_4_start" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_94_59_97_4_stop" ]
+        %rc.1 = local;
+        symbol [ rc %rc.1 95 12 14 ];
+        %tmp.1 = self;
+        symbol [ _coords %tmp.2 95 17 24 ];
+        %tmp.2 = getv function %tmp.1 :_coords;
+        %tmp.3 = lgetv %dir;
+        symbol [ dir %tmp.3 95 25 28 ];
+        %tmp.4 = lgetv %line;
+        symbol [ line %tmp.4 95 30 34 ];
+        %tmp.5 = lgetv %k;
+        symbol [ k %tmp.5 95 36 37 ];
+        %tmp.6 = invoke %tmp.1 %tmp.2(%tmp.3, %tmp.4, %tmp.5);
+        lputv %rc.1 %tmp.6;
+        symbol [ rc %rc.1 95 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc" 96 8 ]
+        %tmp.7 = lgetv %grid;
+        symbol [ grid %tmp.7 96 8 12 ];
+        symbol [ markMerged %tmp.8 96 13 23 ];
+        %tmp.8 = getv function %tmp.7 :markMerged;
+        %tmp.9 = lgetv %rc.1;
+        symbol [ rc %tmp.9 96 24 26 ];
+        %tmp.10 = 0;
+        %tmp.11 = agetv %tmp.9 %tmp.10;
+        %tmp.12 = lgetv %rc.1;
+        symbol [ rc %tmp.12 96 31 33 ];
+        %tmp.13 = 1;
+        %tmp.14 = agetv %tmp.12 %tmp.13;
+        invoke %tmp.7 %tmp.8(%tmp.11, %tmp.14);
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_MergeEngine_mc_94_59_97_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/MergeEngine.mc"; @line = 20; ]
+<init> {
+}

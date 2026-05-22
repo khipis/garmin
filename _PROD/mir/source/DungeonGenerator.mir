@@ -1,0 +1,908 @@
+[ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc"; @line = 20; @symbol_usingdef<0> = [Toybox,20,6,12]; @symbol_usingdef<1> = [Math,20,13,17]; ]
+using Toybox.Math;
+[ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc"; @line = 22; @position = 6; @symbol_constdef = [BOSS_INTERVAL,22,6,19]; ]
+const BOSS_INTERVAL = 5;
+[ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc"; @line = 24; @symbol_classdef = [DungeonGenerator,24,6,22]; ]
+class DungeonGenerator {
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc"; @line = 24; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc"; @line = 24; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc"; @line = 26; @symbol_functiondef = [buildFloor,26,20,30]; @symbol_param<0> = [floor,26,31,36]; ]
+    static
+    function buildFloor(floor) {
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_26_38_43_4_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 27 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_26_38_43_4_start" "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_26_38_43_4_stop" ]
+        %events.1 = local;
+        symbol [ events %events.1 27 12 18 ];
+        %tmp.1 = newa 0;
+        lputv %events.1 %tmp.1;
+        symbol [ events %events.1 27 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 28 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_26_38_43_4_start" "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_26_38_43_4_stop" ]
+        %nEvents.2 = local;
+        symbol [ nEvents %nEvents.2 28 12 19 ];
+        %tmp.2 = 4;
+        symbol [ Math %tmp.3 28 27 31 ];
+        %tmp.3 = getm $.Toybox.Math;
+        symbol [ rand %tmp.4 28 32 36 ];
+        %tmp.4 = getv function %tmp.3 :rand;
+        %tmp.5 = invoke %tmp.3 %tmp.4();
+        %tmp.6 = 3;
+        %tmp.7 = mod %tmp.5 %tmp.6;
+        %tmp.8 = add %tmp.2 %tmp.7;
+        lputv %nEvents.2 %tmp.8;
+        symbol [ nEvents %nEvents.2 28 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 29 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_26_38_43_4_start" "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_26_38_43_4_stop" ]
+        %isBossFloor.3 = local;
+        symbol [ isBossFloor %isBossFloor.3 29 12 23 ];
+        %tmp.9 = lgetv %floor;
+        symbol [ floor %tmp.9 29 27 32 ];
+        symbol [ BOSS_INTERVAL %tmp.11 29 35 48 ];
+        %tmp.11 = getv ? :BOSS_INTERVAL;
+        %tmp.12 = mod %tmp.9 %tmp.11;
+        %tmp.13 = 0;
+        %tmp.14 = eq %tmp.12 %tmp.13;
+        lputv %isBossFloor.3 %tmp.14;
+        symbol [ isBossFloor %isBossFloor.3 29 12 23 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 30 8 ]
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_30_8_30_60_if_stmt:
+        %tmp.15 = lgetv %isBossFloor.3;
+        symbol [ isBossFloor %tmp.15 30 12 23 ];
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_30_8_30_60_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_30_8_30_60_if_true:
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_30_25_30_60_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 30 27 ]
+        %tmp.16 = 3;
+        symbol [ Math %tmp.17 30 42 46 ];
+        %tmp.17 = getm $.Toybox.Math;
+        symbol [ rand %tmp.18 30 47 51 ];
+        %tmp.18 = getv function %tmp.17 :rand;
+        %tmp.19 = invoke %tmp.17 %tmp.18();
+        %tmp.20 = 2;
+        %tmp.21 = mod %tmp.19 %tmp.20;
+        %tmp.22 = add %tmp.16 %tmp.21;
+        lputv %nEvents.2 %tmp.22;
+        symbol [ nEvents %nEvents.2 30 27 34 ];
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_30_25_30_60_stop:
+        goto @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_30_8_30_60_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_30_8_30_60_if_end:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 32 8 ]
+        for @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_32_8_34_8_for_test @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_32_8_34_8_for_incr @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_32_8_34_8_for_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_32_8_34_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_32_8_34_8_for_begin" "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_32_8_34_8_for_end" ]
+        %i.4 = local;
+        symbol [ i %i.4 32 17 18 ];
+        %tmp.23 = 0;
+        lputv %i.4 %tmp.23;
+        symbol [ i %i.4 32 17 18 ];
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_32_8_34_8_for_test:
+        %tmp.24 = lgetv %i.4;
+        symbol [ i %tmp.24 32 24 25 ];
+        %tmp.25 = lgetv %nEvents.2;
+        symbol [ nEvents %tmp.25 32 28 35 ];
+        %tmp.26 = lt %tmp.24 %tmp.25;
+        bf %tmp.26 @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_32_8_34_8_for_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_32_8_34_8_for_begin:
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_32_42_34_8_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 33 12 ]
+        %tmp.27 = lgetv %events.1;
+        symbol [ events %tmp.27 33 12 18 ];
+        symbol [ add %tmp.28 33 19 22 ];
+        %tmp.28 = getv function %tmp.27 :add;
+        %tmp.29 = self;
+        symbol [ _rollEvent %tmp.30 33 23 33 ];
+        %tmp.30 = getv function %tmp.29 :_rollEvent;
+        %tmp.31 = lgetv %floor;
+        symbol [ floor %tmp.31 33 34 39 ];
+        %tmp.32 = invoke %tmp.29 %tmp.30(%tmp.31);
+        invoke %tmp.27 %tmp.28(%tmp.32);
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_32_42_34_8_stop:
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_32_8_34_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 32 ]
+        %tmp.35 = lgetv %i.4;
+        symbol [ i %tmp.35 32 37 38 ];
+        %tmp.36 = add %tmp.35 1;
+        lputv %i.4 %tmp.36;
+        symbol [ i %i.4 32 37 38 ];
+        goto @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_32_8_34_8_for_test;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_32_8_34_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 35 8 ]
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_35_8_41_8_if_stmt:
+        %tmp.37 = lgetv %isBossFloor.3;
+        symbol [ isBossFloor %tmp.37 35 12 23 ];
+        bf %tmp.37 @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_35_8_41_8_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_35_8_41_8_if_true:
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_35_25_41_8_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 36 12 ]
+        [ "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_35_25_41_8_start" "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_35_25_41_8_stop" ]
+        %b.5 = local;
+        symbol [ b %b.5 36 16 17 ];
+        symbol [ GameEvent %tmp.41 36 24 33 ];
+        %tmp.41 = getv ? :GameEvent;
+        symbol [ EV_BOSS %tmp.43 36 34 41 ];
+        %tmp.43 = getv ? :EV_BOSS;
+        %tmp.38 = newc %tmp.41 (%tmp.43);
+        lputv %b.5 %tmp.38;
+        symbol [ b %b.5 36 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 37 12 ]
+        %tmp.44 = lgetv %b.5;
+        symbol [ b %tmp.44 37 12 13 ];
+        symbol [ Enemy %tmp.48 37 26 31 ];
+        %tmp.48 = getv ? :Enemy;
+        %tmp.45 = newc %tmp.48 ();
+        symbol [ enemy ? 37 14 19 ];
+        putv %tmp.44 :enemy %tmp.45;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 38 12 ]
+        %tmp.49 = lgetv %b.5;
+        symbol [ b %tmp.49 38 12 13 ];
+        symbol [ enemy %tmp.50 38 14 19 ];
+        %tmp.50 = getv %tmp.49 :enemy;
+        symbol [ fromBoss %tmp.51 38 20 28 ];
+        %tmp.51 = getv function %tmp.50 :fromBoss;
+        %tmp.52 = lgetv %floor;
+        symbol [ floor %tmp.52 38 29 34 ];
+        invoke %tmp.50 %tmp.51(%tmp.52);
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 39 12 ]
+        %tmp.53 = lgetv %b.5;
+        symbol [ b %tmp.53 39 12 13 ];
+        %tmp.54 = lgetv %b.5;
+        symbol [ b %tmp.54 39 22 23 ];
+        symbol [ enemy %tmp.55 39 24 29 ];
+        %tmp.55 = getv %tmp.54 :enemy;
+        symbol [ name %tmp.56 39 30 34 ];
+        %tmp.56 = getv %tmp.55 :name;
+        %tmp.57 = " appears!";
+        %tmp.58 = add %tmp.56 %tmp.57;
+        symbol [ label ? 39 14 19 ];
+        putv %tmp.53 :label %tmp.58;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 40 12 ]
+        %tmp.59 = lgetv %events.1;
+        symbol [ events %tmp.59 40 12 18 ];
+        symbol [ add %tmp.60 40 19 22 ];
+        %tmp.60 = getv function %tmp.59 :add;
+        %tmp.61 = lgetv %b.5;
+        symbol [ b %tmp.61 40 23 24 ];
+        invoke %tmp.59 %tmp.60(%tmp.61);
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_35_25_41_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_35_8_41_8_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_35_8_41_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 42 8 ]
+        %tmp.62 = lgetv %events.1;
+        symbol [ events %tmp.62 42 15 21 ];
+        ret %tmp.62;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_26_38_43_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc"; @line = 46; @symbol_functiondef = [_rollEvent,46,27,37]; @symbol_param<0> = [floor,46,38,43]; ]
+    protected static
+    function _rollEvent(floor) {
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_46_45_64_4_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 47 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_46_45_64_4_start" "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_46_45_64_4_stop" ]
+        %roll.1 = local;
+        symbol [ roll %roll.1 47 12 16 ];
+        symbol [ Math %tmp.1 47 19 23 ];
+        %tmp.1 = getm $.Toybox.Math;
+        symbol [ rand %tmp.2 47 24 28 ];
+        %tmp.2 = getv function %tmp.1 :rand;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        %tmp.4 = 100;
+        %tmp.5 = mod %tmp.3 %tmp.4;
+        lputv %roll.1 %tmp.5;
+        symbol [ roll %roll.1 47 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 48 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_46_45_64_4_start" "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_46_45_64_4_stop" ]
+        %w_enemy.2 = local;
+        symbol [ w_enemy %w_enemy.2 48 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 48 21 ]
+        [ "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_46_45_64_4_start" "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_46_45_64_4_stop" ]
+        %w_treasure.3 = local;
+        symbol [ w_treasure %w_treasure.3 48 25 35 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 48 37 ]
+        [ "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_46_45_64_4_start" "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_46_45_64_4_stop" ]
+        %w_trap.4 = local;
+        symbol [ w_trap %w_trap.4 48 41 47 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 48 49 ]
+        [ "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_46_45_64_4_start" "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_46_45_64_4_stop" ]
+        %w_merch.5 = local;
+        symbol [ w_merch %w_merch.5 48 53 60 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 48 62 ]
+        [ "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_46_45_64_4_start" "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_46_45_64_4_stop" ]
+        %w_rest.6 = local;
+        symbol [ w_rest %w_rest.6 48 66 72 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 49 8 ]
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_49_8_58_8_if_stmt:
+        %tmp.6 = lgetv %floor;
+        symbol [ floor %tmp.6 49 12 17 ];
+        %tmp.7 = 2;
+        %tmp.8 = lte %tmp.6 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_49_8_58_8_if_false;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_49_8_58_8_if_true:
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_49_24_52_8_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 50 12 ]
+        %tmp.9 = 60;
+        lputv %w_enemy.2 %tmp.9;
+        symbol [ w_enemy %w_enemy.2 50 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 50 26 ]
+        %tmp.10 = 80;
+        lputv %w_treasure.3 %tmp.10;
+        symbol [ w_treasure %w_treasure.3 50 26 36 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 50 43 ]
+        %tmp.11 = 90;
+        lputv %w_trap.4 %tmp.11;
+        symbol [ w_trap %w_trap.4 50 43 49 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 51 12 ]
+        %tmp.12 = 90;
+        lputv %w_merch.5 %tmp.12;
+        symbol [ w_merch %w_merch.5 51 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 51 26 ]
+        %tmp.13 = 100;
+        lputv %w_rest.6 %tmp.13;
+        symbol [ w_rest %w_rest.6 51 26 32 ];
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_49_24_52_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_49_8_58_8_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_49_8_58_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 52 15 ]
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_52_15_58_8_if_stmt:
+        %tmp.14 = lgetv %floor;
+        symbol [ floor %tmp.14 52 19 24 ];
+        %tmp.15 = 9;
+        %tmp.16 = lte %tmp.14 %tmp.15;
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_52_15_58_8_if_else_false;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_52_15_58_8_if_true:
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_52_31_55_8_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 53 12 ]
+        %tmp.17 = 55;
+        lputv %w_enemy.2 %tmp.17;
+        symbol [ w_enemy %w_enemy.2 53 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 53 26 ]
+        %tmp.18 = 70;
+        lputv %w_treasure.3 %tmp.18;
+        symbol [ w_treasure %w_treasure.3 53 26 36 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 53 43 ]
+        %tmp.19 = 85;
+        lputv %w_trap.4 %tmp.19;
+        symbol [ w_trap %w_trap.4 53 43 49 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 54 12 ]
+        %tmp.20 = 95;
+        lputv %w_merch.5 %tmp.20;
+        symbol [ w_merch %w_merch.5 54 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 54 26 ]
+        %tmp.21 = 100;
+        lputv %w_rest.6 %tmp.21;
+        symbol [ w_rest %w_rest.6 54 26 32 ];
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_52_31_55_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_52_15_58_8_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_52_15_58_8_if_else_false:
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_55_15_58_8_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 56 12 ]
+        %tmp.22 = 60;
+        lputv %w_enemy.2 %tmp.22;
+        symbol [ w_enemy %w_enemy.2 56 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 56 26 ]
+        %tmp.23 = 75;
+        lputv %w_treasure.3 %tmp.23;
+        symbol [ w_treasure %w_treasure.3 56 26 36 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 56 43 ]
+        %tmp.24 = 90;
+        lputv %w_trap.4 %tmp.24;
+        symbol [ w_trap %w_trap.4 56 43 49 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 57 12 ]
+        %tmp.25 = 95;
+        lputv %w_merch.5 %tmp.25;
+        symbol [ w_merch %w_merch.5 57 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 57 26 ]
+        %tmp.26 = 100;
+        lputv %w_rest.6 %tmp.26;
+        symbol [ w_rest %w_rest.6 57 26 32 ];
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_55_15_58_8_stop:
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_52_15_58_8_if_end:
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_49_8_58_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 59 8 ]
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_59_8_59_64_if_stmt:
+        %tmp.27 = lgetv %roll.1;
+        symbol [ roll %tmp.27 59 12 16 ];
+        %tmp.28 = lgetv %w_enemy.2;
+        symbol [ w_enemy %tmp.28 59 19 26 ];
+        %tmp.29 = lt %tmp.27 %tmp.28;
+        bf %tmp.29 @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_59_8_59_64_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_59_8_59_64_if_true:
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_59_33_59_64_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 59 35 ]
+        %tmp.30 = self;
+        symbol [ _makeEnemy %tmp.31 59 42 52 ];
+        %tmp.31 = getv function %tmp.30 :_makeEnemy;
+        %tmp.32 = lgetv %floor;
+        symbol [ floor %tmp.32 59 53 58 ];
+        %tmp.33 = invoke %tmp.30 %tmp.31(%tmp.32);
+        ret %tmp.33;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_59_33_59_64_stop:
+        goto @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_59_8_59_64_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_59_8_59_64_if_end:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 60 8 ]
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_60_8_60_64_if_stmt:
+        %tmp.34 = lgetv %roll.1;
+        symbol [ roll %tmp.34 60 12 16 ];
+        %tmp.35 = lgetv %w_treasure.3;
+        symbol [ w_treasure %tmp.35 60 19 29 ];
+        %tmp.36 = lt %tmp.34 %tmp.35;
+        bf %tmp.36 @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_60_8_60_64_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_60_8_60_64_if_true:
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_60_33_60_64_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 60 35 ]
+        %tmp.37 = self;
+        symbol [ _makeTreasure %tmp.38 60 42 55 ];
+        %tmp.38 = getv function %tmp.37 :_makeTreasure;
+        %tmp.39 = lgetv %floor;
+        symbol [ floor %tmp.39 60 56 61 ];
+        %tmp.40 = invoke %tmp.37 %tmp.38(%tmp.39);
+        ret %tmp.40;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_60_33_60_64_stop:
+        goto @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_60_8_60_64_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_60_8_60_64_if_end:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 61 8 ]
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_61_8_61_64_if_stmt:
+        %tmp.41 = lgetv %roll.1;
+        symbol [ roll %tmp.41 61 12 16 ];
+        %tmp.42 = lgetv %w_trap.4;
+        symbol [ w_trap %tmp.42 61 19 25 ];
+        %tmp.43 = lt %tmp.41 %tmp.42;
+        bf %tmp.43 @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_61_8_61_64_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_61_8_61_64_if_true:
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_61_33_61_64_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 61 35 ]
+        %tmp.44 = self;
+        symbol [ _makeTrap %tmp.45 61 42 51 ];
+        %tmp.45 = getv function %tmp.44 :_makeTrap;
+        %tmp.46 = lgetv %floor;
+        symbol [ floor %tmp.46 61 52 57 ];
+        %tmp.47 = invoke %tmp.44 %tmp.45(%tmp.46);
+        ret %tmp.47;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_61_33_61_64_stop:
+        goto @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_61_8_61_64_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_61_8_61_64_if_end:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 62 8 ]
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_62_8_62_64_if_stmt:
+        %tmp.48 = lgetv %roll.1;
+        symbol [ roll %tmp.48 62 12 16 ];
+        %tmp.49 = lgetv %w_merch.5;
+        symbol [ w_merch %tmp.49 62 19 26 ];
+        %tmp.50 = lt %tmp.48 %tmp.49;
+        bf %tmp.50 @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_62_8_62_64_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_62_8_62_64_if_true:
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_62_33_62_64_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 62 35 ]
+        %tmp.51 = self;
+        symbol [ _makeMerchant %tmp.52 62 42 55 ];
+        %tmp.52 = getv function %tmp.51 :_makeMerchant;
+        %tmp.53 = lgetv %floor;
+        symbol [ floor %tmp.53 62 56 61 ];
+        %tmp.54 = invoke %tmp.51 %tmp.52(%tmp.53);
+        ret %tmp.54;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_62_33_62_64_stop:
+        goto @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_62_8_62_64_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_62_8_62_64_if_end:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 63 8 ]
+        %tmp.55 = self;
+        symbol [ _makeRest %tmp.56 63 15 24 ];
+        %tmp.56 = getv function %tmp.55 :_makeRest;
+        %tmp.57 = lgetv %floor;
+        symbol [ floor %tmp.57 63 25 30 ];
+        %tmp.58 = invoke %tmp.55 %tmp.56(%tmp.57);
+        ret %tmp.58;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_46_45_64_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc"; @line = 66; @symbol_functiondef = [_makeEnemy,66,27,37]; @symbol_param<0> = [floor,66,38,43]; ]
+    protected static
+    function _makeEnemy(floor) {
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_66_45_84_4_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 67 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_66_45_84_4_start" "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_66_45_84_4_stop" ]
+        %e.1 = local;
+        symbol [ e %e.1 67 12 13 ];
+        symbol [ GameEvent %tmp.4 67 20 29 ];
+        %tmp.4 = getv ? :GameEvent;
+        symbol [ EV_ENEMY %tmp.6 67 30 38 ];
+        %tmp.6 = getv ? :EV_ENEMY;
+        %tmp.1 = newc %tmp.4 (%tmp.6);
+        lputv %e.1 %tmp.1;
+        symbol [ e %e.1 67 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 68 8 ]
+        %tmp.7 = lgetv %e.1;
+        symbol [ e %tmp.7 68 8 9 ];
+        symbol [ Enemy %tmp.11 68 22 27 ];
+        %tmp.11 = getv ? :Enemy;
+        %tmp.8 = newc %tmp.11 ();
+        symbol [ enemy ? 68 10 15 ];
+        putv %tmp.7 :enemy %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 70 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_66_45_84_4_start" "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_66_45_84_4_stop" ]
+        %poolMax.2 = local;
+        symbol [ poolMax %poolMax.2 70 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 71 8 ]
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_71_8_73_70_if_stmt:
+        %tmp.12 = lgetv %floor;
+        symbol [ floor %tmp.12 71 12 17 ];
+        %tmp.13 = 2;
+        %tmp.14 = lte %tmp.12 %tmp.13;
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_71_8_73_70_if_false;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_71_8_73_70_if_true:
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_71_30_71_45_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 71 32 ]
+        %tmp.15 = 2;
+        lputv %poolMax.2 %tmp.15;
+        symbol [ poolMax %poolMax.2 71 32 39 ];
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_71_30_71_45_stop:
+        goto @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_71_8_73_70_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_71_8_73_70_if_false:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 72 13 ]
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_72_13_73_70_if_stmt:
+        %tmp.16 = lgetv %floor;
+        symbol [ floor %tmp.16 72 17 22 ];
+        %tmp.17 = 5;
+        %tmp.18 = lte %tmp.16 %tmp.17;
+        bf %tmp.18 @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_72_13_73_70_if_else_false;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_72_13_73_70_if_true:
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_72_30_72_45_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 72 32 ]
+        %tmp.19 = 4;
+        lputv %poolMax.2 %tmp.19;
+        symbol [ poolMax %poolMax.2 72 32 39 ];
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_72_30_72_45_stop:
+        goto @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_72_13_73_70_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_72_13_73_70_if_else_false:
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_73_30_73_70_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 73 32 ]
+        symbol [ Enemy %tmp.21 73 42 47 ];
+        %tmp.21 = getv ? :Enemy;
+        symbol [ TEMPLATES %tmp.22 73 48 57 ];
+        %tmp.22 = getv %tmp.21 :TEMPLATES;
+        symbol [ size %tmp.23 73 58 62 ];
+        %tmp.23 = getv function %tmp.22 :size;
+        %tmp.24 = invoke %tmp.22 %tmp.23();
+        %tmp.25 = 1;
+        %tmp.26 = sub %tmp.24 %tmp.25;
+        lputv %poolMax.2 %tmp.26;
+        symbol [ poolMax %poolMax.2 73 32 39 ];
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_73_30_73_70_stop:
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_72_13_73_70_if_end:
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_71_8_73_70_if_end:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 74 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_66_45_84_4_start" "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_66_45_84_4_stop" ]
+        %poolMin.3 = local;
+        symbol [ poolMin %poolMin.3 74 12 19 ];
+        %tmp.27 = 0;
+        lputv %poolMin.3 %tmp.27;
+        symbol [ poolMin %poolMin.3 74 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 75 8 ]
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_75_8_75_45_if_stmt:
+        %tmp.28 = lgetv %floor;
+        symbol [ floor %tmp.28 75 12 17 ];
+        %tmp.29 = 4;
+        %tmp.30 = gte %tmp.28 %tmp.29;
+        bf %tmp.30 @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_75_8_75_45_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_75_8_75_45_if_true:
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_75_30_75_45_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 75 32 ]
+        %tmp.31 = 1;
+        lputv %poolMin.3 %tmp.31;
+        symbol [ poolMin %poolMin.3 75 32 39 ];
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_75_30_75_45_stop:
+        goto @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_75_8_75_45_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_75_8_75_45_if_end:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 76 8 ]
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_76_8_76_45_if_stmt:
+        %tmp.32 = lgetv %floor;
+        symbol [ floor %tmp.32 76 12 17 ];
+        %tmp.33 = 8;
+        %tmp.34 = gte %tmp.32 %tmp.33;
+        bf %tmp.34 @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_76_8_76_45_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_76_8_76_45_if_true:
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_76_30_76_45_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 76 32 ]
+        %tmp.35 = 2;
+        lputv %poolMin.3 %tmp.35;
+        symbol [ poolMin %poolMin.3 76 32 39 ];
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_76_30_76_45_stop:
+        goto @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_76_8_76_45_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_76_8_76_45_if_end:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 77 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_66_45_84_4_start" "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_66_45_84_4_stop" ]
+        %span.4 = local;
+        symbol [ span %span.4 77 12 16 ];
+        %tmp.36 = lgetv %poolMax.2;
+        symbol [ poolMax %tmp.36 77 19 26 ];
+        %tmp.37 = lgetv %poolMin.3;
+        symbol [ poolMin %tmp.37 77 29 36 ];
+        %tmp.38 = sub %tmp.36 %tmp.37;
+        %tmp.39 = 1;
+        %tmp.40 = add %tmp.38 %tmp.39;
+        lputv %span.4 %tmp.40;
+        symbol [ span %span.4 77 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 78 8 ]
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_78_8_78_34_if_stmt:
+        %tmp.41 = lgetv %span.4;
+        symbol [ span %tmp.41 78 12 16 ];
+        %tmp.42 = 1;
+        %tmp.43 = lt %tmp.41 %tmp.42;
+        bf %tmp.43 @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_78_8_78_34_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_78_8_78_34_if_true:
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_78_22_78_34_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 78 24 ]
+        %tmp.44 = 1;
+        lputv %span.4 %tmp.44;
+        symbol [ span %span.4 78 24 28 ];
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_78_22_78_34_stop:
+        goto @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_78_8_78_34_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_78_8_78_34_if_end:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 79 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_66_45_84_4_start" "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_66_45_84_4_stop" ]
+        %idx.5 = local;
+        symbol [ idx %idx.5 79 12 15 ];
+        %tmp.45 = lgetv %poolMin.3;
+        symbol [ poolMin %tmp.45 79 18 25 ];
+        symbol [ Math %tmp.46 79 29 33 ];
+        %tmp.46 = getm $.Toybox.Math;
+        symbol [ rand %tmp.47 79 34 38 ];
+        %tmp.47 = getv function %tmp.46 :rand;
+        %tmp.48 = invoke %tmp.46 %tmp.47();
+        %tmp.49 = lgetv %span.4;
+        symbol [ span %tmp.49 79 43 47 ];
+        %tmp.50 = mod %tmp.48 %tmp.49;
+        %tmp.51 = add %tmp.45 %tmp.50;
+        lputv %idx.5 %tmp.51;
+        symbol [ idx %idx.5 79 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 80 8 ]
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_80_8_80_82_if_stmt:
+        %tmp.52 = lgetv %idx.5;
+        symbol [ idx %tmp.52 80 12 15 ];
+        symbol [ Enemy %tmp.54 80 18 23 ];
+        %tmp.54 = getv ? :Enemy;
+        symbol [ TEMPLATES %tmp.55 80 24 33 ];
+        %tmp.55 = getv %tmp.54 :TEMPLATES;
+        symbol [ size %tmp.56 80 34 38 ];
+        %tmp.56 = getv function %tmp.55 :size;
+        %tmp.57 = invoke %tmp.55 %tmp.56();
+        %tmp.58 = 1;
+        %tmp.59 = sub %tmp.57 %tmp.58;
+        %tmp.60 = gt %tmp.52 %tmp.59;
+        bf %tmp.60 @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_80_8_80_82_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_80_8_80_82_if_true:
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_80_46_80_82_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 80 48 ]
+        symbol [ Enemy %tmp.62 80 54 59 ];
+        %tmp.62 = getv ? :Enemy;
+        symbol [ TEMPLATES %tmp.63 80 60 69 ];
+        %tmp.63 = getv %tmp.62 :TEMPLATES;
+        symbol [ size %tmp.64 80 70 74 ];
+        %tmp.64 = getv function %tmp.63 :size;
+        %tmp.65 = invoke %tmp.63 %tmp.64();
+        %tmp.66 = 1;
+        %tmp.67 = sub %tmp.65 %tmp.66;
+        lputv %idx.5 %tmp.67;
+        symbol [ idx %idx.5 80 48 51 ];
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_80_46_80_82_stop:
+        goto @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_80_8_80_82_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_80_8_80_82_if_end:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 81 8 ]
+        %tmp.68 = lgetv %e.1;
+        symbol [ e %tmp.68 81 8 9 ];
+        symbol [ enemy %tmp.69 81 10 15 ];
+        %tmp.69 = getv %tmp.68 :enemy;
+        symbol [ fromTemplate %tmp.70 81 16 28 ];
+        %tmp.70 = getv function %tmp.69 :fromTemplate;
+        %tmp.71 = lgetv %idx.5;
+        symbol [ idx %tmp.71 81 29 32 ];
+        %tmp.72 = lgetv %floor;
+        symbol [ floor %tmp.72 81 34 39 ];
+        invoke %tmp.69 %tmp.70(%tmp.71, %tmp.72);
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 82 8 ]
+        %tmp.73 = lgetv %e.1;
+        symbol [ e %tmp.73 82 8 9 ];
+        %tmp.74 = "A ";
+        %tmp.75 = lgetv %e.1;
+        symbol [ e %tmp.75 82 25 26 ];
+        symbol [ enemy %tmp.76 82 27 32 ];
+        %tmp.76 = getv %tmp.75 :enemy;
+        symbol [ name %tmp.77 82 33 37 ];
+        %tmp.77 = getv %tmp.76 :name;
+        %tmp.78 = add %tmp.74 %tmp.77;
+        %tmp.79 = " blocks the path!";
+        %tmp.80 = add %tmp.78 %tmp.79;
+        symbol [ label ? 82 10 15 ];
+        putv %tmp.73 :label %tmp.80;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 83 8 ]
+        %tmp.81 = lgetv %e.1;
+        symbol [ e %tmp.81 83 15 16 ];
+        ret %tmp.81;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_66_45_84_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc"; @line = 86; @symbol_functiondef = [_makeTreasure,86,27,40]; @symbol_param<0> = [floor,86,41,46]; ]
+    protected static
+    function _makeTreasure(floor) {
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_86_48_98_4_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 87 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_86_48_98_4_start" "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_86_48_98_4_stop" ]
+        %e.1 = local;
+        symbol [ e %e.1 87 12 13 ];
+        symbol [ GameEvent %tmp.4 87 20 29 ];
+        %tmp.4 = getv ? :GameEvent;
+        symbol [ EV_TREASURE %tmp.6 87 30 41 ];
+        %tmp.6 = getv ? :EV_TREASURE;
+        %tmp.1 = newc %tmp.4 (%tmp.6);
+        lputv %e.1 %tmp.1;
+        symbol [ e %e.1 87 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 89 8 ]
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_89_8_96_8_if_stmt:
+        symbol [ Math %tmp.7 89 13 17 ];
+        %tmp.7 = getm $.Toybox.Math;
+        symbol [ rand %tmp.8 89 18 22 ];
+        %tmp.8 = getv function %tmp.7 :rand;
+        %tmp.9 = invoke %tmp.7 %tmp.8();
+        %tmp.10 = 10;
+        %tmp.11 = mod %tmp.9 %tmp.10;
+        %tmp.12 = 7;
+        %tmp.13 = lt %tmp.11 %tmp.12;
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_89_8_96_8_if_else_false;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_89_8_96_8_if_true:
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_89_36_92_8_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 90 12 ]
+        %tmp.14 = lgetv %e.1;
+        symbol [ e %tmp.14 90 12 13 ];
+        %tmp.15 = 6;
+        symbol [ Math %tmp.16 90 29 33 ];
+        %tmp.16 = getm $.Toybox.Math;
+        symbol [ rand %tmp.17 90 34 38 ];
+        %tmp.17 = getv function %tmp.16 :rand;
+        %tmp.18 = invoke %tmp.16 %tmp.17();
+        %tmp.19 = 12;
+        %tmp.20 = mod %tmp.18 %tmp.19;
+        %tmp.21 = add %tmp.15 %tmp.20;
+        %tmp.22 = lgetv %floor;
+        symbol [ floor %tmp.22 90 49 54 ];
+        %tmp.23 = add %tmp.21 %tmp.22;
+        symbol [ goldAmt ? 90 14 21 ];
+        putv %tmp.14 :goldAmt %tmp.23;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 91 12 ]
+        %tmp.24 = lgetv %e.1;
+        symbol [ e %tmp.24 91 12 13 ];
+        %tmp.25 = "Chest! +";
+        %tmp.26 = lgetv %e.1;
+        symbol [ e %tmp.26 91 37 38 ];
+        symbol [ goldAmt %tmp.27 91 39 46 ];
+        %tmp.27 = getv %tmp.26 :goldAmt;
+        symbol [ format %tmp.28 91 47 53 ];
+        %tmp.28 = getv function %tmp.27 :format;
+        %tmp.29 = "%d";
+        %tmp.30 = invoke %tmp.27 %tmp.28(%tmp.29);
+        %tmp.31 = add %tmp.25 %tmp.30;
+        %tmp.32 = " gold.";
+        %tmp.33 = add %tmp.31 %tmp.32;
+        symbol [ label ? 91 14 19 ];
+        putv %tmp.24 :label %tmp.33;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_89_36_92_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_89_8_96_8_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_89_8_96_8_if_else_false:
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_92_15_96_8_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 93 12 ]
+        %tmp.34 = lgetv %e.1;
+        symbol [ e %tmp.34 93 12 13 ];
+        symbol [ Math %tmp.35 93 25 29 ];
+        %tmp.35 = getm $.Toybox.Math;
+        symbol [ rand %tmp.36 93 30 34 ];
+        %tmp.36 = getv function %tmp.35 :rand;
+        %tmp.37 = invoke %tmp.35 %tmp.36();
+        %tmp.38 = 3;
+        %tmp.39 = mod %tmp.37 %tmp.38;
+        symbol [ itemKind ? 93 14 22 ];
+        putv %tmp.34 :itemKind %tmp.39;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 94 12 ]
+        [ "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_92_15_96_8_start" "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_92_15_96_8_stop" ]
+        %itemName.2 = local;
+        symbol [ itemName %itemName.2 94 16 24 ];
+        %tmp.40 = self;
+        symbol [ _itemName %tmp.41 94 27 36 ];
+        %tmp.41 = getv function %tmp.40 :_itemName;
+        %tmp.42 = lgetv %e.1;
+        symbol [ e %tmp.42 94 37 38 ];
+        symbol [ itemKind %tmp.43 94 39 47 ];
+        %tmp.43 = getv %tmp.42 :itemKind;
+        %tmp.44 = invoke %tmp.40 %tmp.41(%tmp.43);
+        lputv %itemName.2 %tmp.44;
+        symbol [ itemName %itemName.2 94 16 24 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 95 12 ]
+        %tmp.45 = lgetv %e.1;
+        symbol [ e %tmp.45 95 12 13 ];
+        %tmp.46 = "Chest! +1 ";
+        %tmp.47 = lgetv %itemName.2;
+        symbol [ itemName %tmp.47 95 40 48 ];
+        %tmp.48 = add %tmp.46 %tmp.47;
+        %tmp.49 = ".";
+        %tmp.50 = add %tmp.48 %tmp.49;
+        symbol [ label ? 95 14 19 ];
+        putv %tmp.45 :label %tmp.50;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_92_15_96_8_stop:
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_89_8_96_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 97 8 ]
+        %tmp.51 = lgetv %e.1;
+        symbol [ e %tmp.51 97 15 16 ];
+        ret %tmp.51;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_86_48_98_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc"; @line = 100; @symbol_functiondef = [_makeTrap,100,27,36]; @symbol_param<0> = [floor,100,37,42]; ]
+    protected static
+    function _makeTrap(floor) {
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_100_44_105_4_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 101 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_100_44_105_4_start" "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_100_44_105_4_stop" ]
+        %e.1 = local;
+        symbol [ e %e.1 101 12 13 ];
+        symbol [ GameEvent %tmp.4 101 20 29 ];
+        %tmp.4 = getv ? :GameEvent;
+        symbol [ EV_TRAP %tmp.6 101 30 37 ];
+        %tmp.6 = getv ? :EV_TRAP;
+        %tmp.1 = newc %tmp.4 (%tmp.6);
+        lputv %e.1 %tmp.1;
+        symbol [ e %e.1 101 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 102 8 ]
+        %tmp.7 = lgetv %e.1;
+        symbol [ e %tmp.7 102 8 9 ];
+        %tmp.8 = 3;
+        symbol [ Math %tmp.9 102 24 28 ];
+        %tmp.9 = getm $.Toybox.Math;
+        symbol [ rand %tmp.10 102 29 33 ];
+        %tmp.10 = getv function %tmp.9 :rand;
+        %tmp.11 = invoke %tmp.9 %tmp.10();
+        %tmp.12 = 5;
+        %tmp.13 = mod %tmp.11 %tmp.12;
+        %tmp.14 = add %tmp.8 %tmp.13;
+        %tmp.15 = lgetv %floor;
+        symbol [ floor %tmp.15 102 44 49 ];
+        %tmp.16 = 3;
+        %tmp.17 = div %tmp.15 %tmp.16;
+        %tmp.18 = add %tmp.14 %tmp.17;
+        symbol [ damage ? 102 10 16 ];
+        putv %tmp.7 :damage %tmp.18;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 103 8 ]
+        %tmp.19 = lgetv %e.1;
+        symbol [ e %tmp.19 103 8 9 ];
+        %tmp.20 = "A trap! -";
+        %tmp.21 = lgetv %e.1;
+        symbol [ e %tmp.21 103 33 34 ];
+        symbol [ damage %tmp.22 103 35 41 ];
+        %tmp.22 = getv %tmp.21 :damage;
+        symbol [ format %tmp.23 103 42 48 ];
+        %tmp.23 = getv function %tmp.22 :format;
+        %tmp.24 = "%d";
+        %tmp.25 = invoke %tmp.22 %tmp.23(%tmp.24);
+        %tmp.26 = add %tmp.20 %tmp.25;
+        %tmp.27 = " HP.";
+        %tmp.28 = add %tmp.26 %tmp.27;
+        symbol [ label ? 103 10 15 ];
+        putv %tmp.19 :label %tmp.28;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 104 8 ]
+        %tmp.29 = lgetv %e.1;
+        symbol [ e %tmp.29 104 15 16 ];
+        ret %tmp.29;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_100_44_105_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc"; @line = 107; @symbol_functiondef = [_makeMerchant,107,27,40]; @symbol_param<0> = [floor,107,41,46]; ]
+    protected static
+    function _makeMerchant(floor) {
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_107_48_117_4_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 108 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_107_48_117_4_start" "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_107_48_117_4_stop" ]
+        %e.1 = local;
+        symbol [ e %e.1 108 12 13 ];
+        symbol [ GameEvent %tmp.4 108 20 29 ];
+        %tmp.4 = getv ? :GameEvent;
+        symbol [ EV_MERCHANT %tmp.6 108 30 41 ];
+        %tmp.6 = getv ? :EV_MERCHANT;
+        %tmp.1 = newc %tmp.4 (%tmp.6);
+        lputv %e.1 %tmp.1;
+        symbol [ e %e.1 108 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 114 8 ]
+        %tmp.7 = lgetv %e.1;
+        symbol [ e %tmp.7 114 8 9 ];
+        %tmp.8 = 8;
+        %tmp.9 = lgetv %floor;
+        symbol [ floor %tmp.9 114 24 29 ];
+        %tmp.10 = add %tmp.8 %tmp.9;
+        symbol [ goldAmt ? 114 10 17 ];
+        putv %tmp.7 :goldAmt %tmp.10;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 115 8 ]
+        %tmp.11 = lgetv %e.1;
+        symbol [ e %tmp.11 115 8 9 ];
+        %tmp.12 = "A wandering merchant.";
+        symbol [ label ? 115 10 15 ];
+        putv %tmp.11 :label %tmp.12;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 116 8 ]
+        %tmp.13 = lgetv %e.1;
+        symbol [ e %tmp.13 116 15 16 ];
+        ret %tmp.13;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_107_48_117_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc"; @line = 119; @symbol_functiondef = [_makeRest,119,27,36]; @symbol_param<0> = [floor,119,37,42]; ]
+    protected static
+    function _makeRest(floor) {
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_119_44_124_4_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 120 8 ]
+        [ "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_119_44_124_4_start" "_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_119_44_124_4_stop" ]
+        %e.1 = local;
+        symbol [ e %e.1 120 12 13 ];
+        symbol [ GameEvent %tmp.4 120 20 29 ];
+        %tmp.4 = getv ? :GameEvent;
+        symbol [ EV_REST %tmp.6 120 30 37 ];
+        %tmp.6 = getv ? :EV_REST;
+        %tmp.1 = newc %tmp.4 (%tmp.6);
+        lputv %e.1 %tmp.1;
+        symbol [ e %e.1 120 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 121 8 ]
+        %tmp.7 = lgetv %e.1;
+        symbol [ e %tmp.7 121 8 9 ];
+        %tmp.8 = 6;
+        %tmp.9 = lgetv %floor;
+        symbol [ floor %tmp.9 121 24 29 ];
+        %tmp.10 = add %tmp.8 %tmp.9;
+        symbol [ goldAmt ? 121 10 17 ];
+        putv %tmp.7 :goldAmt %tmp.10;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 122 8 ]
+        %tmp.11 = lgetv %e.1;
+        symbol [ e %tmp.11 122 8 9 ];
+        %tmp.12 = "A quiet sanctuary.";
+        symbol [ label ? 122 10 15 ];
+        putv %tmp.11 :label %tmp.12;
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 123 8 ]
+        %tmp.13 = lgetv %e.1;
+        symbol [ e %tmp.13 123 15 16 ];
+        ret %tmp.13;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_119_44_124_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc"; @line = 126; @symbol_functiondef = [_itemName,126,20,29]; @symbol_param<0> = [k,126,30,31]; ]
+    static
+    function _itemName(k) {
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_126_33_130_4_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 127 8 ]
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_127_8_127_39_if_stmt:
+        %tmp.1 = lgetv %k;
+        symbol [ k %tmp.1 127 12 13 ];
+        %tmp.2 = 0;
+        %tmp.3 = eq %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_127_8_127_39_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_127_8_127_39_if_true:
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_127_20_127_39_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 127 22 ]
+        %tmp.4 = "potion";
+        ret %tmp.4;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_127_20_127_39_stop:
+        goto @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_127_8_127_39_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_127_8_127_39_if_end:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 128 8 ]
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_128_8_128_39_if_stmt:
+        %tmp.5 = lgetv %k;
+        symbol [ k %tmp.5 128 12 13 ];
+        %tmp.6 = 1;
+        %tmp.7 = eq %tmp.5 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_128_8_128_39_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_128_8_128_39_if_true:
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_128_20_128_39_start:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 128 22 ]
+        %tmp.8 = "bomb";
+        ret %tmp.8;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_128_20_128_39_stop:
+        goto @_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_128_8_128_39_if_end;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_128_8_128_39_if_end:
+[ "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc" 129 8 ]
+        %tmp.9 = "shield";
+        ret %tmp.9;
+_Users_kkorolczuk_work_garmin_mudrogue_source_DungeonGenerator_mc_126_33_130_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/mudrogue/source/DungeonGenerator.mc"; @line = 20; ]
+<init> {
+}
