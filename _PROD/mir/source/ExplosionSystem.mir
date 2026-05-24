@@ -1,0 +1,633 @@
+[ @file = "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc"; @line = 17; @symbol_classdef = [ExplosionSystem,17,6,21]; ]
+class ExplosionSystem {
+    [ @file = "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc"; @line = 17; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc"; @line = 17; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc"; @line = 18; @position = 8; @symbol_vardef = [_flames,18,8,15]; ]
+    var _flames;
+    [ @file = "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc"; @line = 19; @position = 8; @symbol_vardef = [flameDurMs,19,8,18]; ]
+    var flameDurMs;
+    [ @file = "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc"; @line = 21; @symbol_functiondef = [initialize,21,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_21_26_24_4_start:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 22 8 ]
+        %tmp.1 = newa 0;
+        symbol [ _flames ? 22 8 15 ];
+        putv self :_flames %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 23 8 ]
+        %tmp.2 = 320;
+        symbol [ flameDurMs ? 23 8 18 ];
+        putv self :flameDurMs %tmp.2;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_21_26_24_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc"; @line = 26; @symbol_functiondef = [reset,26,13,18]; ]
+    function reset() {
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_26_21_26_37_start:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 26 23 ]
+        %tmp.1 = newa 0;
+        symbol [ _flames ? 26 23 30 ];
+        putv self :_flames %tmp.1;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_26_21_26_37_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc"; @line = 27; @symbol_functiondef = [each,27,13,17]; ]
+    function each() {
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_27_21_27_39_start:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 27 23 ]
+        symbol [ _flames %tmp.2 27 30 37 ];
+        %tmp.2 = getv ? :_flames;
+        ret %tmp.2;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_27_21_27_39_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc"; @line = 29; @symbol_functiondef = [isFlameAt,29,13,22]; @symbol_param<0> = [r,29,23,24]; @symbol_param<1> = [c,29,26,27]; ]
+    function isFlameAt(r, c) {
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_29_29_35_4_start:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 30 8 ]
+        for @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_30_8_33_8_for_test @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_30_8_33_8_for_incr @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_30_8_33_8_for_end;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_30_8_33_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_30_8_33_8_for_begin" "_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_30_8_33_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 30 17 18 ];
+        %tmp.1 = 0;
+        lputv %i.1 %tmp.1;
+        symbol [ i %i.1 30 17 18 ];
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_30_8_33_8_for_test:
+        %tmp.2 = lgetv %i.1;
+        symbol [ i %tmp.2 30 24 25 ];
+        symbol [ _flames %tmp.4 30 28 35 ];
+        %tmp.4 = getv ? :_flames;
+        symbol [ size %tmp.5 30 36 40 ];
+        %tmp.5 = getv function %tmp.4 :size;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        %tmp.7 = lt %tmp.2 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_30_8_33_8_for_end;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_30_8_33_8_for_begin:
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_30_49_33_8_start:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 31 12 ]
+        [ "_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_30_49_33_8_start" "_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_30_49_33_8_stop" ]
+        %f.2 = local;
+        symbol [ f %f.2 31 16 17 ];
+        symbol [ _flames %tmp.9 31 20 27 ];
+        %tmp.9 = getv ? :_flames;
+        %tmp.10 = lgetv %i.1;
+        symbol [ i %tmp.10 31 28 29 ];
+        %tmp.11 = agetv %tmp.9 %tmp.10;
+        lputv %f.2 %tmp.11;
+        symbol [ f %f.2 31 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 32 12 ]
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_32_12_32_67_if_stmt:
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_32_16_32_49_begin:
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_32_16_32_37_begin:
+        %tmp.12 = lgetv %f.2;
+        symbol [ f %tmp.12 32 16 17 ];
+        %tmp.13 = 0;
+        %tmp.14 = agetv %tmp.12 %tmp.13;
+        %tmp.15 = lgetv %r;
+        symbol [ r %tmp.15 32 24 25 ];
+        %tmp.16 = eq %tmp.14 %tmp.15;
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_32_12_32_67_if_end;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_32_29_32_37_true:
+        %tmp.17 = lgetv %f.2;
+        symbol [ f %tmp.17 32 29 30 ];
+        %tmp.18 = 1;
+        %tmp.19 = agetv %tmp.17 %tmp.18;
+        %tmp.20 = lgetv %c;
+        symbol [ c %tmp.20 32 37 38 ];
+        %tmp.21 = eq %tmp.19 %tmp.20;
+        push %tmp.21;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_32_29_32_37_end:
+        %tmp.22 = phi [%tmp.16 @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_32_16_32_37_begin] [%tmp.21 @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_32_29_32_37_true] [%tmp.22 @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_32_29_32_37_end];
+        bf %tmp.22 @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_32_12_32_67_if_end;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_32_42_32_49_true:
+        %tmp.23 = lgetv %f.2;
+        symbol [ f %tmp.23 32 42 43 ];
+        %tmp.24 = 2;
+        %tmp.25 = agetv %tmp.23 %tmp.24;
+        %tmp.26 = 0;
+        %tmp.27 = gt %tmp.25 %tmp.26;
+        push %tmp.27;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_32_42_32_49_end:
+        %tmp.28 = phi [%tmp.22 @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_32_16_32_49_begin] [%tmp.27 @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_32_42_32_49_true] [%tmp.28 @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_32_42_32_49_end];
+        bf %tmp.28 @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_32_12_32_67_if_end;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_32_12_32_67_if_true:
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_32_52_32_67_start:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 32 54 ]
+        %tmp.29 = true;
+        ret %tmp.29;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_32_52_32_67_stop:
+        goto @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_32_12_32_67_if_end;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_32_12_32_67_if_end:
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_30_49_33_8_stop:
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_30_8_33_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 30 ]
+        %tmp.32 = lgetv %i.1;
+        symbol [ i %tmp.32 30 44 45 ];
+        %tmp.33 = add %tmp.32 1;
+        lputv %i.1 %tmp.33;
+        symbol [ i %i.1 30 44 45 ];
+        goto @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_30_8_33_8_for_test;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_30_8_33_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 34 8 ]
+        %tmp.34 = false;
+        ret %tmp.34;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_29_29_35_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc"; @line = 40; @symbol_functiondef = [ignite,40,13,19]; @symbol_param<0> = [grid,40,20,24]; @symbol_param<1> = [bombSys,40,26,33]; @symbol_param<2> = [r,40,35,36]; @symbol_param<3> = [c,40,38,39]; @symbol_param<4> = [range,40,41,46]; ]
+    function ignite(grid, bombSys, r, c, range) {
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_40_48_66_4_start:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 41 8 ]
+        [ "_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_40_48_66_4_start" "_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_40_48_66_4_stop" ]
+        %destroyed.1 = local;
+        symbol [ destroyed %destroyed.1 41 12 21 ];
+        %tmp.1 = 0;
+        lputv %destroyed.1 %tmp.1;
+        symbol [ destroyed %destroyed.1 41 12 21 ];
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 42 8 ]
+        %tmp.2 = self;
+        symbol [ _addFlame %tmp.3 42 8 17 ];
+        %tmp.3 = getv function %tmp.2 :_addFlame;
+        %tmp.4 = lgetv %r;
+        symbol [ r %tmp.4 42 18 19 ];
+        %tmp.5 = lgetv %c;
+        symbol [ c %tmp.5 42 21 22 ];
+        invoke %tmp.2 %tmp.3(%tmp.4, %tmp.5);
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 43 8 ]
+        for @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_43_8_64_8_for_test @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_43_8_64_8_for_incr @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_43_8_64_8_for_end;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_43_8_64_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_43_8_64_8_for_begin" "_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_43_8_64_8_for_end" ]
+        %d.2 = local;
+        symbol [ d %d.2 43 17 18 ];
+        %tmp.6 = 0;
+        lputv %d.2 %tmp.6;
+        symbol [ d %d.2 43 17 18 ];
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_43_8_64_8_for_test:
+        %tmp.7 = lgetv %d.2;
+        symbol [ d %tmp.7 43 24 25 ];
+        %tmp.8 = 4;
+        %tmp.9 = lt %tmp.7 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_43_8_64_8_for_end;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_43_8_64_8_for_begin:
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_43_36_64_8_start:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 44 12 ]
+        [ "_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_43_36_64_8_start" "_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_43_36_64_8_stop" ]
+        %dr.3 = local;
+        symbol [ dr %dr.3 44 16 18 ];
+        %tmp.10 = 0;
+        lputv %dr.3 %tmp.10;
+        symbol [ dr %dr.3 44 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 44 24 ]
+        [ "_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_43_36_64_8_start" "_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_43_36_64_8_stop" ]
+        %dc.4 = local;
+        symbol [ dc %dc.4 44 28 30 ];
+        %tmp.11 = 0;
+        lputv %dc.4 %tmp.11;
+        symbol [ dc %dc.4 44 28 30 ];
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 45 12 ]
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_45_12_48_40_if_stmt:
+        %tmp.12 = lgetv %d.2;
+        symbol [ d %tmp.12 45 21 22 ];
+        %tmp.13 = 0;
+        %tmp.14 = eq %tmp.12 %tmp.13;
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_45_12_48_40_if_false;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_45_12_48_40_if_true:
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_45_29_45_40_start:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 45 31 ]
+        %tmp.15 = -1;
+        lputv %dr.3 %tmp.15;
+        symbol [ dr %dr.3 45 31 33 ];
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_45_29_45_40_stop:
+        goto @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_45_12_48_40_if_end;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_45_12_48_40_if_false:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 46 17 ]
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_46_17_48_40_if_stmt:
+        %tmp.16 = lgetv %d.2;
+        symbol [ d %tmp.16 46 21 22 ];
+        %tmp.17 = 1;
+        %tmp.18 = eq %tmp.16 %tmp.17;
+        bf %tmp.18 @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_46_17_48_40_if_false;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_46_17_48_40_if_true:
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_46_29_46_40_start:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 46 31 ]
+        %tmp.19 = 1;
+        lputv %dr.3 %tmp.19;
+        symbol [ dr %dr.3 46 31 33 ];
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_46_29_46_40_stop:
+        goto @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_46_17_48_40_if_end;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_46_17_48_40_if_false:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 47 17 ]
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_47_17_48_40_if_stmt:
+        %tmp.20 = lgetv %d.2;
+        symbol [ d %tmp.20 47 21 22 ];
+        %tmp.21 = 2;
+        %tmp.22 = eq %tmp.20 %tmp.21;
+        bf %tmp.22 @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_47_17_48_40_if_else_false;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_47_17_48_40_if_true:
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_47_29_47_40_start:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 47 31 ]
+        %tmp.23 = -1;
+        lputv %dc.4 %tmp.23;
+        symbol [ dc %dc.4 47 31 33 ];
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_47_29_47_40_stop:
+        goto @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_47_17_48_40_if_end;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_47_17_48_40_if_else_false:
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_48_29_48_40_start:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 48 31 ]
+        %tmp.24 = 1;
+        lputv %dc.4 %tmp.24;
+        symbol [ dc %dc.4 48 31 33 ];
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_48_29_48_40_stop:
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_47_17_48_40_if_end:
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_46_17_48_40_if_end:
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_45_12_48_40_if_end:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 49 12 ]
+        for @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_49_12_63_12_for_test @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_49_12_63_12_for_incr @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_49_12_63_12_for_end;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_49_12_63_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_49_12_63_12_for_begin" "_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_49_12_63_12_for_end" ]
+        %k.5 = local;
+        symbol [ k %k.5 49 21 22 ];
+        %tmp.25 = 1;
+        lputv %k.5 %tmp.25;
+        symbol [ k %k.5 49 21 22 ];
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_49_12_63_12_for_test:
+        %tmp.26 = lgetv %k.5;
+        symbol [ k %tmp.26 49 28 29 ];
+        %tmp.27 = lgetv %range;
+        symbol [ range %tmp.27 49 33 38 ];
+        %tmp.28 = lte %tmp.26 %tmp.27;
+        bf %tmp.28 @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_49_12_63_12_for_end;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_49_12_63_12_for_begin:
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_49_45_63_12_start:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 50 16 ]
+        [ "_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_49_45_63_12_start" "_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_49_45_63_12_stop" ]
+        %rr.6 = local;
+        symbol [ rr %rr.6 50 20 22 ];
+        %tmp.29 = lgetv %r;
+        symbol [ r %tmp.29 50 25 26 ];
+        %tmp.30 = lgetv %dr.3;
+        symbol [ dr %tmp.30 50 29 31 ];
+        %tmp.31 = lgetv %k.5;
+        symbol [ k %tmp.31 50 34 35 ];
+        %tmp.32 = mul %tmp.30 %tmp.31;
+        %tmp.33 = add %tmp.29 %tmp.32;
+        lputv %rr.6 %tmp.33;
+        symbol [ rr %rr.6 50 20 22 ];
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 51 16 ]
+        [ "_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_49_45_63_12_start" "_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_49_45_63_12_stop" ]
+        %cc.7 = local;
+        symbol [ cc %cc.7 51 20 22 ];
+        %tmp.34 = lgetv %c;
+        symbol [ c %tmp.34 51 25 26 ];
+        %tmp.35 = lgetv %dc.4;
+        symbol [ dc %tmp.35 51 29 31 ];
+        %tmp.36 = lgetv %k.5;
+        symbol [ k %tmp.36 51 34 35 ];
+        %tmp.37 = mul %tmp.35 %tmp.36;
+        %tmp.38 = add %tmp.34 %tmp.37;
+        lputv %cc.7 %tmp.38;
+        symbol [ cc %cc.7 51 20 22 ];
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 52 16 ]
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_52_16_52_57_if_stmt:
+        %tmp.39 = lgetv %grid;
+        symbol [ grid %tmp.39 52 21 25 ];
+        symbol [ inBounds %tmp.40 52 26 34 ];
+        %tmp.40 = getv function %tmp.39 :inBounds;
+        %tmp.41 = lgetv %rr.6;
+        symbol [ rr %tmp.41 52 35 37 ];
+        %tmp.42 = lgetv %cc.7;
+        symbol [ cc %tmp.42 52 39 41 ];
+        %tmp.43 = invoke %tmp.39 %tmp.40(%tmp.41, %tmp.42);
+        %tmp.44 = not %tmp.43;
+        bf %tmp.44 @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_52_16_52_57_if_end;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_52_16_52_57_if_true:
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_52_48_52_57_start:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 52 50 ]
+        goto break @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_49_12_63_12_for_end;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_52_48_52_57_stop:
+        goto @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_52_16_52_57_if_end;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_52_16_52_57_if_end:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 53 16 ]
+        [ "_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_49_45_63_12_start" "_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_49_45_63_12_stop" ]
+        %v.8 = local;
+        symbol [ v %v.8 53 20 21 ];
+        %tmp.45 = lgetv %grid;
+        symbol [ grid %tmp.45 53 24 28 ];
+        symbol [ tileAt %tmp.46 53 29 35 ];
+        %tmp.46 = getv function %tmp.45 :tileAt;
+        %tmp.47 = lgetv %rr.6;
+        symbol [ rr %tmp.47 53 36 38 ];
+        %tmp.48 = lgetv %cc.7;
+        symbol [ cc %tmp.48 53 40 42 ];
+        %tmp.49 = invoke %tmp.45 %tmp.46(%tmp.47, %tmp.48);
+        lputv %v.8 %tmp.49;
+        symbol [ v %v.8 53 20 21 ];
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 54 16 ]
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_54_16_54_43_if_stmt:
+        %tmp.50 = lgetv %v.8;
+        symbol [ v %tmp.50 54 20 21 ];
+        symbol [ BT_WALL %tmp.52 54 25 32 ];
+        %tmp.52 = getv ? :BT_WALL;
+        %tmp.53 = eq %tmp.50 %tmp.52;
+        bf %tmp.53 @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_54_16_54_43_if_end;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_54_16_54_43_if_true:
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_54_34_54_43_start:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 54 36 ]
+        goto break @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_49_12_63_12_for_end;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_54_34_54_43_stop:
+        goto @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_54_16_54_43_if_end;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_54_16_54_43_if_end:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 55 16 ]
+        %tmp.54 = self;
+        symbol [ _addFlame %tmp.55 55 16 25 ];
+        %tmp.55 = getv function %tmp.54 :_addFlame;
+        %tmp.56 = lgetv %rr.6;
+        symbol [ rr %tmp.56 55 26 28 ];
+        %tmp.57 = lgetv %cc.7;
+        symbol [ cc %tmp.57 55 30 32 ];
+        invoke %tmp.54 %tmp.55(%tmp.56, %tmp.57);
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 56 16 ]
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_56_16_60_16_if_stmt:
+        %tmp.58 = lgetv %v.8;
+        symbol [ v %tmp.58 56 20 21 ];
+        symbol [ BT_BLOCK %tmp.60 56 25 33 ];
+        %tmp.60 = getv ? :BT_BLOCK;
+        %tmp.61 = eq %tmp.58 %tmp.60;
+        bf %tmp.61 @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_56_16_60_16_if_end;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_56_16_60_16_if_true:
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_56_35_60_16_start:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 57 20 ]
+        %tmp.62 = lgetv %grid;
+        symbol [ grid %tmp.62 57 20 24 ];
+        symbol [ damageTile %tmp.63 57 25 35 ];
+        %tmp.63 = getv function %tmp.62 :damageTile;
+        %tmp.64 = lgetv %rr.6;
+        symbol [ rr %tmp.64 57 36 38 ];
+        %tmp.65 = lgetv %cc.7;
+        symbol [ cc %tmp.65 57 40 42 ];
+        invoke %tmp.62 %tmp.63(%tmp.64, %tmp.65);
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 58 20 ]
+        %tmp.66 = lgetv %destroyed.1;
+        symbol [ destroyed %tmp.66 58 32 41 ];
+        %tmp.67 = 1;
+        %tmp.68 = add %tmp.66 %tmp.67;
+        lputv %destroyed.1 %tmp.68;
+        symbol [ destroyed %destroyed.1 58 20 29 ];
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 59 20 ]
+        goto break @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_49_12_63_12_for_end;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_56_35_60_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_56_16_60_16_if_end;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_56_16_60_16_if_end:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 62 16 ]
+        %tmp.69 = lgetv %bombSys;
+        symbol [ bombSys %tmp.69 62 16 23 ];
+        symbol [ igniteAt %tmp.70 62 24 32 ];
+        %tmp.70 = getv function %tmp.69 :igniteAt;
+        %tmp.71 = lgetv %rr.6;
+        symbol [ rr %tmp.71 62 33 35 ];
+        %tmp.72 = lgetv %cc.7;
+        symbol [ cc %tmp.72 62 37 39 ];
+        invoke %tmp.69 %tmp.70(%tmp.71, %tmp.72);
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_49_45_63_12_stop:
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_49_12_63_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 49 ]
+        %tmp.75 = lgetv %k.5;
+        symbol [ k %tmp.75 49 40 41 ];
+        %tmp.76 = add %tmp.75 1;
+        lputv %k.5 %tmp.76;
+        symbol [ k %k.5 49 40 41 ];
+        goto @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_49_12_63_12_for_test;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_49_12_63_12_for_end:
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_43_36_64_8_stop:
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_43_8_64_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 43 ]
+        %tmp.79 = lgetv %d.2;
+        symbol [ d %tmp.79 43 31 32 ];
+        %tmp.80 = add %tmp.79 1;
+        lputv %d.2 %tmp.80;
+        symbol [ d %d.2 43 31 32 ];
+        goto @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_43_8_64_8_for_test;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_43_8_64_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 65 8 ]
+        %tmp.81 = lgetv %destroyed.1;
+        symbol [ destroyed %tmp.81 65 15 24 ];
+        ret %tmp.81;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_40_48_66_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc"; @line = 68; @symbol_functiondef = [_addFlame,68,20,29]; @symbol_param<0> = [r,68,30,31]; @symbol_param<1> = [c,68,33,34]; ]
+    protected
+    function _addFlame(r, c) {
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_68_36_78_4_start:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 70 8 ]
+        for @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_70_8_76_8_for_test @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_70_8_76_8_for_incr @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_70_8_76_8_for_end;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_70_8_76_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_70_8_76_8_for_begin" "_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_70_8_76_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 70 17 18 ];
+        %tmp.1 = 0;
+        lputv %i.1 %tmp.1;
+        symbol [ i %i.1 70 17 18 ];
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_70_8_76_8_for_test:
+        %tmp.2 = lgetv %i.1;
+        symbol [ i %tmp.2 70 24 25 ];
+        symbol [ _flames %tmp.4 70 28 35 ];
+        %tmp.4 = getv ? :_flames;
+        symbol [ size %tmp.5 70 36 40 ];
+        %tmp.5 = getv function %tmp.4 :size;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        %tmp.7 = lt %tmp.2 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_70_8_76_8_for_end;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_70_8_76_8_for_begin:
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_70_49_76_8_start:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 71 12 ]
+        [ "_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_70_49_76_8_start" "_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_70_49_76_8_stop" ]
+        %f.2 = local;
+        symbol [ f %f.2 71 16 17 ];
+        symbol [ _flames %tmp.9 71 20 27 ];
+        %tmp.9 = getv ? :_flames;
+        %tmp.10 = lgetv %i.1;
+        symbol [ i %tmp.10 71 28 29 ];
+        %tmp.11 = agetv %tmp.9 %tmp.10;
+        lputv %f.2 %tmp.11;
+        symbol [ f %f.2 71 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 72 12 ]
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_72_12_75_12_if_stmt:
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_72_16_72_37_begin:
+        %tmp.12 = lgetv %f.2;
+        symbol [ f %tmp.12 72 16 17 ];
+        %tmp.13 = 0;
+        %tmp.14 = agetv %tmp.12 %tmp.13;
+        %tmp.15 = lgetv %r;
+        symbol [ r %tmp.15 72 24 25 ];
+        %tmp.16 = eq %tmp.14 %tmp.15;
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_72_12_75_12_if_end;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_72_29_72_37_true:
+        %tmp.17 = lgetv %f.2;
+        symbol [ f %tmp.17 72 29 30 ];
+        %tmp.18 = 1;
+        %tmp.19 = agetv %tmp.17 %tmp.18;
+        %tmp.20 = lgetv %c;
+        symbol [ c %tmp.20 72 37 38 ];
+        %tmp.21 = eq %tmp.19 %tmp.20;
+        push %tmp.21;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_72_29_72_37_end:
+        %tmp.22 = phi [%tmp.16 @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_72_16_72_37_begin] [%tmp.21 @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_72_29_72_37_true] [%tmp.22 @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_72_29_72_37_end];
+        bf %tmp.22 @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_72_12_75_12_if_end;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_72_12_75_12_if_true:
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_72_40_75_12_start:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 73 16 ]
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_73_16_73_60_if_stmt:
+        %tmp.23 = lgetv %f.2;
+        symbol [ f %tmp.23 73 20 21 ];
+        %tmp.24 = 2;
+        %tmp.25 = agetv %tmp.23 %tmp.24;
+        symbol [ flameDurMs %tmp.27 73 27 37 ];
+        %tmp.27 = getv ? :flameDurMs;
+        %tmp.28 = lt %tmp.25 %tmp.27;
+        bf %tmp.28 @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_73_16_73_60_if_end;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_73_16_73_60_if_true:
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_73_39_73_60_start:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 73 41 ]
+        %tmp.29 = lgetv %f.2;
+        symbol [ f %tmp.29 73 41 42 ];
+        symbol [ flameDurMs %tmp.31 73 48 58 ];
+        %tmp.31 = getv ? :flameDurMs;
+        %tmp.32 = 2;
+        aputv %tmp.29 %tmp.32 %tmp.31;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_73_39_73_60_stop:
+        goto @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_73_16_73_60_if_end;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_73_16_73_60_if_end:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 74 16 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_72_40_75_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_72_12_75_12_if_end;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_72_12_75_12_if_end:
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_70_49_76_8_stop:
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_70_8_76_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 70 ]
+        %tmp.35 = lgetv %i.1;
+        symbol [ i %tmp.35 70 44 45 ];
+        %tmp.36 = add %tmp.35 1;
+        lputv %i.1 %tmp.36;
+        symbol [ i %i.1 70 44 45 ];
+        goto @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_70_8_76_8_for_test;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_70_8_76_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 77 8 ]
+        symbol [ _flames %tmp.38 77 8 15 ];
+        %tmp.38 = getv ? :_flames;
+        symbol [ add %tmp.39 77 16 19 ];
+        %tmp.39 = getv function %tmp.38 :add;
+        %tmp.40 = newa 3;
+        %tmp.41 = lgetv %r;
+        symbol [ r %tmp.41 77 21 22 ];
+        %tmp.42 = dup %tmp.40;
+        %tmp.43 = aputv %tmp.42 0 %tmp.41;
+        %tmp.44 = lgetv %c;
+        symbol [ c %tmp.44 77 24 25 ];
+        %tmp.45 = dup %tmp.43;
+        %tmp.46 = aputv %tmp.45 1 %tmp.44;
+        symbol [ flameDurMs %tmp.48 77 27 37 ];
+        %tmp.48 = getv ? :flameDurMs;
+        %tmp.49 = dup %tmp.46;
+        %tmp.50 = aputv %tmp.49 2 %tmp.48;
+        invoke %tmp.38 %tmp.39(%tmp.50);
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_68_36_78_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc"; @line = 80; @symbol_functiondef = [tick,80,13,17]; @symbol_param<0> = [dtMs,80,18,22]; ]
+    function tick(dtMs) {
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_80_24_88_4_start:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 81 8 ]
+        [ "_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_80_24_88_4_start" "_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_80_24_88_4_stop" ]
+        %keep.1 = local;
+        symbol [ keep %keep.1 81 12 16 ];
+        %tmp.1 = newa 0;
+        lputv %keep.1 %tmp.1;
+        symbol [ keep %keep.1 81 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 82 8 ]
+        for @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_82_8_86_8_for_test @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_82_8_86_8_for_incr @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_82_8_86_8_for_end;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_82_8_86_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_82_8_86_8_for_begin" "_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_82_8_86_8_for_end" ]
+        %i.2 = local;
+        symbol [ i %i.2 82 17 18 ];
+        %tmp.2 = 0;
+        lputv %i.2 %tmp.2;
+        symbol [ i %i.2 82 17 18 ];
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_82_8_86_8_for_test:
+        %tmp.3 = lgetv %i.2;
+        symbol [ i %tmp.3 82 24 25 ];
+        symbol [ _flames %tmp.5 82 28 35 ];
+        %tmp.5 = getv ? :_flames;
+        symbol [ size %tmp.6 82 36 40 ];
+        %tmp.6 = getv function %tmp.5 :size;
+        %tmp.7 = invoke %tmp.5 %tmp.6();
+        %tmp.8 = lt %tmp.3 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_82_8_86_8_for_end;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_82_8_86_8_for_begin:
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_82_49_86_8_start:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 83 12 ]
+        [ "_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_82_49_86_8_start" "_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_82_49_86_8_stop" ]
+        %f.3 = local;
+        symbol [ f %f.3 83 16 17 ];
+        symbol [ _flames %tmp.10 83 20 27 ];
+        %tmp.10 = getv ? :_flames;
+        %tmp.11 = lgetv %i.2;
+        symbol [ i %tmp.11 83 28 29 ];
+        %tmp.12 = agetv %tmp.10 %tmp.11;
+        lputv %f.3 %tmp.12;
+        symbol [ f %f.3 83 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 84 12 ]
+        %tmp.13 = lgetv %f.3;
+        symbol [ f %tmp.13 84 12 13 ];
+        %tmp.14 = lgetv %f.3;
+        symbol [ f %tmp.14 84 19 20 ];
+        %tmp.15 = 2;
+        %tmp.16 = agetv %tmp.14 %tmp.15;
+        %tmp.17 = lgetv %dtMs;
+        symbol [ dtMs %tmp.17 84 26 30 ];
+        %tmp.18 = sub %tmp.16 %tmp.17;
+        %tmp.19 = 2;
+        aputv %tmp.13 %tmp.19 %tmp.18;
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 85 12 ]
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_85_12_85_41_if_stmt:
+        %tmp.20 = lgetv %f.3;
+        symbol [ f %tmp.20 85 16 17 ];
+        %tmp.21 = 2;
+        %tmp.22 = agetv %tmp.20 %tmp.21;
+        %tmp.23 = 0;
+        %tmp.24 = gt %tmp.22 %tmp.23;
+        bf %tmp.24 @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_85_12_85_41_if_end;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_85_12_85_41_if_true:
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_85_26_85_41_start:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 85 28 ]
+        %tmp.25 = lgetv %keep.1;
+        symbol [ keep %tmp.25 85 28 32 ];
+        symbol [ add %tmp.26 85 33 36 ];
+        %tmp.26 = getv function %tmp.25 :add;
+        %tmp.27 = lgetv %f.3;
+        symbol [ f %tmp.27 85 37 38 ];
+        invoke %tmp.25 %tmp.26(%tmp.27);
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_85_26_85_41_stop:
+        goto @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_85_12_85_41_if_end;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_85_12_85_41_if_end:
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_82_49_86_8_stop:
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_82_8_86_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 82 ]
+        %tmp.30 = lgetv %i.2;
+        symbol [ i %tmp.30 82 44 45 ];
+        %tmp.31 = add %tmp.30 1;
+        lputv %i.2 %tmp.31;
+        symbol [ i %i.2 82 44 45 ];
+        goto @_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_82_8_86_8_for_test;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_82_8_86_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc" 87 8 ]
+        %tmp.32 = lgetv %keep.1;
+        symbol [ keep %tmp.32 87 18 22 ];
+        symbol [ _flames ? 87 8 15 ];
+        putv self :_flames %tmp.32;
+_Users_kkorolczuk_work_garmin_bomber_source_ExplosionSystem_mc_80_24_88_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/bomber/source/ExplosionSystem.mc"; @line = 17; ]
+<init> {
+}

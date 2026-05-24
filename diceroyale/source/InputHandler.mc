@@ -1,0 +1,108 @@
+// ═══════════════════════════════════════════════════════════════
+// InputHandler.mc — Buttons + tap for DiceRoyale.
+//
+//   MENU:
+//     UP / onPreviousPage   → previous row
+//     DOWN / onNextPage     → next row
+//     SELECT / onEnter      → activate row
+//     tap on a row          → activate that row
+//
+//   PLAY  (PHASE_ROLL or PHASE_SCORE):
+//     UP / onPreviousPage   → cursor prev
+//     DOWN / onNextPage     → cursor next
+//     SELECT / onEnter      → activate (toggle / roll / score)
+//     tap (on die/btn/cat)  → set cursor + activate
+//     ESC                   → back to menu
+//
+//   OVER:
+//     any key / tap         → menu
+//
+// Touch handling mirrors the dice-game style used elsewhere:
+// firmware `onSwipe` is ignored, and `onDrag` resolves any
+// small-displacement gesture as a TAP (≤40 px window).
+// ═══════════════════════════════════════════════════════════════
+
+using Toybox.WatchUi;
+using Toybox.System;
+
+class InputHandler extends WatchUi.BehaviorDelegate {
+    hidden var _v;
+
+    hidden var _dx0;
+    hidden var _dy0;
+    hidden var _dragActive;
+    hidden var _handled;
+    hidden var _lastTouchMs;
+
+    function initialize(view) {
+        BehaviorDelegate.initialize();
+        _v           = view;
+        _dx0         = 0;
+        _dy0         = 0;
+        _dragActive  = false;
+        _handled     = false;
+        _lastTouchMs = 0;
+    }
+
+    function onKey(evt) {
+        var k = evt.getKey();
+        if      (k == WatchUi.KEY_ESC)  { return onBack(); }
+        else if (k == WatchUi.KEY_UP)   { _v.navPrev();   }
+        else if (k == WatchUi.KEY_DOWN) { _v.navNext();   }
+        else                            { _v.navSelect(); }
+        WatchUi.requestUpdate();
+        return true;
+    }
+
+    function onSelect()       { _v.navSelect(); WatchUi.requestUpdate(); return true; }
+    function onPreviousPage() { _v.navPrev();   WatchUi.requestUpdate(); return true; }
+    function onNextPage()     { _v.navNext();   WatchUi.requestUpdate(); return true; }
+
+    function onBack() {
+        var consumed = _v.navBack();
+        WatchUi.requestUpdate();
+        if (consumed) { return true; }
+        WatchUi.popView(WatchUi.SLIDE_RIGHT);
+        return true;
+    }
+
+    function onSwipe(evt) { return true; }
+
+    function onTap(evt) {
+        if (_handled) { _handled = false; return true; }
+        var now = System.getTimer();
+        if (_lastTouchMs != 0 && (now - _lastTouchMs) < 120) { return true; }
+        _lastTouchMs = now;
+        var xy = evt.getCoordinates();
+        _v.handleTap(xy[0], xy[1]);
+        WatchUi.requestUpdate();
+        return true;
+    }
+
+    function onDrag(evt) {
+        var xy = evt.getCoordinates();
+        var t  = evt.getType();
+
+        if (t == WatchUi.DRAG_TYPE_START) {
+            _dx0        = xy[0];
+            _dy0        = xy[1];
+            _dragActive = true;
+            _handled    = false;
+            return true;
+        }
+        if (t == WatchUi.DRAG_TYPE_STOP && _dragActive) {
+            _dragActive  = false;
+            _handled     = true;
+            _lastTouchMs = System.getTimer();
+            var dx  = xy[0] - _dx0;
+            var dy  = xy[1] - _dy0;
+            var adx = (dx < 0) ? -dx : dx;
+            var ady = (dy < 0) ? -dy : dy;
+            if (adx < 40 && ady < 40) {
+                _v.handleTap(xy[0], xy[1]);
+                WatchUi.requestUpdate();
+            }
+        }
+        return true;
+    }
+}

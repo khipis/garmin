@@ -1,0 +1,434 @@
+[ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc"; @line = 21; @symbol_usingdef<0> = [Toybox,21,6,12]; @symbol_usingdef<1> = [Math,21,13,17]; ]
+using Toybox.Math;
+[ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc"; @line = 23; @position = 6; @symbol_constdef = [VR_TWO_PI,23,6,15]; ]
+const VR_TWO_PI = 6.28319;
+[ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc"; @line = 24; @position = 6; @symbol_constdef = [VR_ROT_STEP,24,6,17]; ]
+const VR_ROT_STEP = 0.22;
+[ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc"; @line = 25; @position = 6; @symbol_constdef = [VR_THRUST_ACC,25,6,19]; ]
+const VR_THRUST_ACC = 0.42;
+[ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc"; @line = 26; @position = 6; @symbol_constdef = [VR_FRICTION,26,6,17]; ]
+const VR_FRICTION = 0.985;
+[ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc"; @line = 27; @position = 6; @symbol_constdef = [VR_MAX_V,27,6,14]; ]
+const VR_MAX_V = 5.5;
+[ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc"; @line = 29; @symbol_classdef = [Ship,29,6,10]; ]
+class Ship {
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc"; @line = 29; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc"; @line = 29; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc"; @line = 30; @position = 8; @symbol_vardef = [x,30,8,9]; ]
+    var x;
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc"; @line = 31; @position = 8; @symbol_vardef = [y,31,8,9]; ]
+    var y;
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc"; @line = 32; @position = 8; @symbol_vardef = [vx,32,8,10]; ]
+    var vx;
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc"; @line = 33; @position = 8; @symbol_vardef = [vy,33,8,10]; ]
+    var vy;
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc"; @line = 34; @position = 8; @symbol_vardef = [angle,34,8,13]; ]
+    var angle;
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc"; @line = 35; @position = 8; @symbol_vardef = [radius,35,8,14]; ]
+    var radius;
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc"; @line = 36; @position = 8; @symbol_vardef = [alive,36,8,13]; ]
+    var alive;
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc"; @line = 37; @position = 8; @symbol_vardef = [invul,37,8,13]; ]
+    var invul;
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc"; @line = 38; @position = 8; @symbol_vardef = [thrustOn,38,8,16]; ]
+    var thrustOn;
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc"; @line = 40; @symbol_functiondef = [initialize,40,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_40_26_47_4_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 41 8 ]
+        %tmp.1 = 0.0;
+        symbol [ x ? 41 8 9 ];
+        putv self :x %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 41 17 ]
+        %tmp.2 = 0.0;
+        symbol [ y ? 41 17 18 ];
+        putv self :y %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 41 26 ]
+        %tmp.3 = 0.0;
+        symbol [ vx ? 41 26 28 ];
+        putv self :vx %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 41 36 ]
+        %tmp.4 = 0.0;
+        symbol [ vy ? 41 36 38 ];
+        putv self :vy %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 42 8 ]
+        %tmp.5 = 0.0;
+        symbol [ angle ? 42 8 13 ];
+        putv self :angle %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 43 8 ]
+        %tmp.6 = 8;
+        symbol [ radius ? 43 8 14 ];
+        putv self :radius %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 44 8 ]
+        %tmp.7 = true;
+        symbol [ alive ? 44 8 13 ];
+        putv self :alive %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 45 8 ]
+        %tmp.8 = 0;
+        symbol [ invul ? 45 8 13 ];
+        putv self :invul %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 46 8 ]
+        %tmp.9 = false;
+        symbol [ thrustOn ? 46 8 16 ];
+        putv self :thrustOn %tmp.9;
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_40_26_47_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc"; @line = 49; @symbol_functiondef = [respawn,49,13,20]; @symbol_param<0> = [sw,49,21,23]; @symbol_param<1> = [sh,49,25,27]; @symbol_param<2> = [r,49,29,30]; ]
+    function respawn(sw, sh, r) {
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_49_32_57_4_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 50 8 ]
+        %tmp.1 = lgetv %sw;
+        symbol [ sw %tmp.1 50 12 14 ];
+        %tmp.2 = 2.0;
+        %tmp.3 = div %tmp.1 %tmp.2;
+        symbol [ x ? 50 8 9 ];
+        putv self :x %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 50 22 ]
+        %tmp.4 = lgetv %sh;
+        symbol [ sh %tmp.4 50 26 28 ];
+        %tmp.5 = 2.0;
+        %tmp.6 = div %tmp.4 %tmp.5;
+        symbol [ y ? 50 22 23 ];
+        putv self :y %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 51 8 ]
+        %tmp.7 = 0.0;
+        symbol [ vx ? 51 8 10 ];
+        putv self :vx %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 51 22 ]
+        %tmp.8 = 0.0;
+        symbol [ vy ? 51 22 24 ];
+        putv self :vy %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 52 8 ]
+        %tmp.9 = 0.0;
+        symbol [ angle ? 52 8 13 ];
+        putv self :angle %tmp.9;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 53 8 ]
+        %tmp.10 = lgetv %r;
+        symbol [ r %tmp.10 53 17 18 ];
+        symbol [ radius ? 53 8 14 ];
+        putv self :radius %tmp.10;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 54 8 ]
+        %tmp.11 = true;
+        symbol [ alive ? 54 8 13 ];
+        putv self :alive %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 55 8 ]
+        %tmp.12 = 60;
+        symbol [ invul ? 55 8 13 ];
+        putv self :invul %tmp.12;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 56 8 ]
+        %tmp.13 = false;
+        symbol [ thrustOn ? 56 8 16 ];
+        putv self :thrustOn %tmp.13;
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_49_32_57_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc"; @line = 59; @symbol_functiondef = [rotateLeft,59,13,23]; ]
+    function rotateLeft() {
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_59_27_59_104_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 59 29 ]
+        symbol [ angle %tmp.2 59 37 42 ];
+        %tmp.2 = getv ? :angle;
+        symbol [ VR_ROT_STEP %tmp.4 59 45 56 ];
+        %tmp.4 = getv ? :VR_ROT_STEP;
+        %tmp.5 = sub %tmp.2 %tmp.4;
+        symbol [ angle ? 59 29 34 ];
+        putv self :angle %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 59 58 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_59_58_59_102_if_stmt:
+        symbol [ angle %tmp.7 59 62 67 ];
+        %tmp.7 = getv ? :angle;
+        %tmp.8 = 0;
+        %tmp.9 = lt %tmp.7 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_59_58_59_102_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_59_58_59_102_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_59_73_59_102_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 59 75 ]
+        symbol [ angle %tmp.11 59 83 88 ];
+        %tmp.11 = getv ? :angle;
+        symbol [ VR_TWO_PI %tmp.13 59 91 100 ];
+        %tmp.13 = getv ? :VR_TWO_PI;
+        %tmp.14 = add %tmp.11 %tmp.13;
+        symbol [ angle ? 59 75 80 ];
+        putv self :angle %tmp.14;
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_59_73_59_102_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_59_58_59_102_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_59_58_59_102_if_end:
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_59_27_59_104_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc"; @line = 60; @symbol_functiondef = [rotateRight,60,13,24]; ]
+    function rotateRight() {
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_60_27_60_113_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 60 29 ]
+        symbol [ angle %tmp.2 60 37 42 ];
+        %tmp.2 = getv ? :angle;
+        symbol [ VR_ROT_STEP %tmp.4 60 45 56 ];
+        %tmp.4 = getv ? :VR_ROT_STEP;
+        %tmp.5 = add %tmp.2 %tmp.4;
+        symbol [ angle ? 60 29 34 ];
+        putv self :angle %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 60 58 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_60_58_60_111_if_stmt:
+        symbol [ angle %tmp.7 60 62 67 ];
+        %tmp.7 = getv ? :angle;
+        symbol [ VR_TWO_PI %tmp.9 60 71 80 ];
+        %tmp.9 = getv ? :VR_TWO_PI;
+        %tmp.10 = gte %tmp.7 %tmp.9;
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_60_58_60_111_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_60_58_60_111_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_60_82_60_111_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 60 84 ]
+        symbol [ angle %tmp.12 60 92 97 ];
+        %tmp.12 = getv ? :angle;
+        symbol [ VR_TWO_PI %tmp.14 60 100 109 ];
+        %tmp.14 = getv ? :VR_TWO_PI;
+        %tmp.15 = sub %tmp.12 %tmp.14;
+        symbol [ angle ? 60 84 89 ];
+        putv self :angle %tmp.15;
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_60_82_60_111_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_60_58_60_111_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_60_58_60_111_if_end:
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_60_27_60_113_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc"; @line = 62; @symbol_functiondef = [applyThrust,62,13,24]; ]
+    function applyThrust() {
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_62_27_68_4_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 63 8 ]
+        symbol [ vx %tmp.2 63 13 15 ];
+        %tmp.2 = getv ? :vx;
+        symbol [ VR_THRUST_ACC %tmp.4 63 18 31 ];
+        %tmp.4 = getv ? :VR_THRUST_ACC;
+        symbol [ Math %tmp.5 63 35 39 ];
+        %tmp.5 = getm $.Toybox.Math;
+        symbol [ sin %tmp.6 63 40 43 ];
+        %tmp.6 = getv function %tmp.5 :sin;
+        symbol [ angle %tmp.8 63 44 49 ];
+        %tmp.8 = getv ? :angle;
+        %tmp.9 = invoke %tmp.5 %tmp.6(%tmp.8);
+        %tmp.10 = mul %tmp.4 %tmp.9;
+        %tmp.11 = add %tmp.2 %tmp.10;
+        symbol [ vx ? 63 8 10 ];
+        putv self :vx %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 64 8 ]
+        symbol [ vy %tmp.13 64 13 15 ];
+        %tmp.13 = getv ? :vy;
+        symbol [ VR_THRUST_ACC %tmp.15 64 18 31 ];
+        %tmp.15 = getv ? :VR_THRUST_ACC;
+        symbol [ Math %tmp.16 64 35 39 ];
+        %tmp.16 = getm $.Toybox.Math;
+        symbol [ cos %tmp.17 64 40 43 ];
+        %tmp.17 = getv function %tmp.16 :cos;
+        symbol [ angle %tmp.19 64 44 49 ];
+        %tmp.19 = getv ? :angle;
+        %tmp.20 = invoke %tmp.16 %tmp.17(%tmp.19);
+        %tmp.21 = sub 0 %tmp.20;
+        %tmp.22 = mul %tmp.15 %tmp.21;
+        %tmp.23 = add %tmp.13 %tmp.22;
+        symbol [ vy ? 64 8 10 ];
+        putv self :vy %tmp.23;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 65 8 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_62_27_68_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_62_27_68_4_stop" ]
+        %c.1 = local;
+        symbol [ c %c.1 65 12 13 ];
+        symbol [ PhysicsEngine %tmp.25 65 16 29 ];
+        %tmp.25 = getv ? :PhysicsEngine;
+        symbol [ capV %tmp.26 65 30 34 ];
+        %tmp.26 = getv function %tmp.25 :capV;
+        symbol [ vx %tmp.28 65 35 37 ];
+        %tmp.28 = getv ? :vx;
+        symbol [ vy %tmp.30 65 39 41 ];
+        %tmp.30 = getv ? :vy;
+        symbol [ VR_MAX_V %tmp.32 65 43 51 ];
+        %tmp.32 = getv ? :VR_MAX_V;
+        %tmp.33 = invoke %tmp.25 %tmp.26(%tmp.28, %tmp.30, %tmp.32);
+        lputv %c.1 %tmp.33;
+        symbol [ c %c.1 65 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 66 8 ]
+        %tmp.34 = lgetv %c.1;
+        symbol [ c %tmp.34 66 13 14 ];
+        %tmp.35 = 0;
+        %tmp.36 = agetv %tmp.34 %tmp.35;
+        symbol [ vx ? 66 8 10 ];
+        putv self :vx %tmp.36;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 66 19 ]
+        %tmp.37 = lgetv %c.1;
+        symbol [ c %tmp.37 66 24 25 ];
+        %tmp.38 = 1;
+        %tmp.39 = agetv %tmp.37 %tmp.38;
+        symbol [ vy ? 66 19 21 ];
+        putv self :vy %tmp.39;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 67 8 ]
+        %tmp.40 = true;
+        symbol [ thrustOn ? 67 8 16 ];
+        putv self :thrustOn %tmp.40;
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_62_27_68_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc"; @line = 71; @symbol_functiondef = [integrate,71,13,22]; @symbol_param<0> = [sw,71,23,25]; @symbol_param<1> = [sh,71,27,29]; ]
+    function integrate(sw, sh) {
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_71_31_82_4_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 73 8 ]
+        symbol [ vx %tmp.2 73 13 15 ];
+        %tmp.2 = getv ? :vx;
+        symbol [ VR_FRICTION %tmp.4 73 18 29 ];
+        %tmp.4 = getv ? :VR_FRICTION;
+        %tmp.5 = mul %tmp.2 %tmp.4;
+        symbol [ vx ? 73 8 10 ];
+        putv self :vx %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 74 8 ]
+        symbol [ vy %tmp.7 74 13 15 ];
+        %tmp.7 = getv ? :vy;
+        symbol [ VR_FRICTION %tmp.9 74 18 29 ];
+        %tmp.9 = getv ? :VR_FRICTION;
+        %tmp.10 = mul %tmp.7 %tmp.9;
+        symbol [ vy ? 74 8 10 ];
+        putv self :vy %tmp.10;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 75 8 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_75_8_75_49_if_stmt:
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_75_12_75_31_begin:
+        symbol [ vx %tmp.12 75 12 14 ];
+        %tmp.12 = getv ? :vx;
+        %tmp.13 = 0.02;
+        %tmp.14 = lt %tmp.12 %tmp.13;
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_75_8_75_49_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_75_25_75_31_true:
+        symbol [ vx %tmp.16 75 25 27 ];
+        %tmp.16 = getv ? :vx;
+        %tmp.17 = -0.02;
+        %tmp.18 = gt %tmp.16 %tmp.17;
+        push %tmp.18;
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_75_25_75_31_end:
+        %tmp.19 = phi [%tmp.14 @_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_75_12_75_31_begin] [%tmp.18 @_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_75_25_75_31_true] [%tmp.19 @_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_75_25_75_31_end];
+        bf %tmp.19 @_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_75_8_75_49_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_75_8_75_49_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_75_37_75_49_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 75 39 ]
+        %tmp.20 = 0.0;
+        symbol [ vx ? 75 39 41 ];
+        putv self :vx %tmp.20;
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_75_37_75_49_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_75_8_75_49_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_75_8_75_49_if_end:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 76 8 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_76_8_76_49_if_stmt:
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_76_12_76_31_begin:
+        symbol [ vy %tmp.22 76 12 14 ];
+        %tmp.22 = getv ? :vy;
+        %tmp.23 = 0.02;
+        %tmp.24 = lt %tmp.22 %tmp.23;
+        bf %tmp.24 @_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_76_8_76_49_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_76_25_76_31_true:
+        symbol [ vy %tmp.26 76 25 27 ];
+        %tmp.26 = getv ? :vy;
+        %tmp.27 = -0.02;
+        %tmp.28 = gt %tmp.26 %tmp.27;
+        push %tmp.28;
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_76_25_76_31_end:
+        %tmp.29 = phi [%tmp.24 @_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_76_12_76_31_begin] [%tmp.28 @_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_76_25_76_31_true] [%tmp.29 @_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_76_25_76_31_end];
+        bf %tmp.29 @_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_76_8_76_49_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_76_8_76_49_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_76_37_76_49_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 76 39 ]
+        %tmp.30 = 0.0;
+        symbol [ vy ? 76 39 41 ];
+        putv self :vy %tmp.30;
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_76_37_76_49_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_76_8_76_49_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_76_8_76_49_if_end:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 77 8 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_71_31_82_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_71_31_82_4_stop" ]
+        %p.1 = local;
+        symbol [ p %p.1 77 12 13 ];
+        symbol [ PhysicsEngine %tmp.32 77 16 29 ];
+        %tmp.32 = getv ? :PhysicsEngine;
+        symbol [ step %tmp.33 77 30 34 ];
+        %tmp.33 = getv function %tmp.32 :step;
+        symbol [ x %tmp.35 77 35 36 ];
+        %tmp.35 = getv ? :x;
+        symbol [ y %tmp.37 77 38 39 ];
+        %tmp.37 = getv ? :y;
+        symbol [ vx %tmp.39 77 41 43 ];
+        %tmp.39 = getv ? :vx;
+        symbol [ vy %tmp.41 77 45 47 ];
+        %tmp.41 = getv ? :vy;
+        %tmp.42 = lgetv %sw;
+        symbol [ sw %tmp.42 77 49 51 ];
+        %tmp.43 = lgetv %sh;
+        symbol [ sh %tmp.43 77 53 55 ];
+        %tmp.44 = invoke %tmp.32 %tmp.33(%tmp.35, %tmp.37, %tmp.39, %tmp.41, %tmp.42, %tmp.43);
+        lputv %p.1 %tmp.44;
+        symbol [ p %p.1 77 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 78 8 ]
+        %tmp.45 = lgetv %p.1;
+        symbol [ p %tmp.45 78 12 13 ];
+        %tmp.46 = 0;
+        %tmp.47 = agetv %tmp.45 %tmp.46;
+        symbol [ x ? 78 8 9 ];
+        putv self :x %tmp.47;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 78 18 ]
+        %tmp.48 = lgetv %p.1;
+        symbol [ p %tmp.48 78 22 23 ];
+        %tmp.49 = 1;
+        %tmp.50 = agetv %tmp.48 %tmp.49;
+        symbol [ y ? 78 18 19 ];
+        putv self :y %tmp.50;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 79 8 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_79_8_79_44_if_stmt:
+        symbol [ invul %tmp.52 79 12 17 ];
+        %tmp.52 = getv ? :invul;
+        %tmp.53 = 0;
+        %tmp.54 = gt %tmp.52 %tmp.53;
+        bf %tmp.54 @_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_79_8_79_44_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_79_8_79_44_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_79_23_79_44_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 79 25 ]
+        symbol [ invul %tmp.56 79 33 38 ];
+        %tmp.56 = getv ? :invul;
+        %tmp.57 = 1;
+        %tmp.58 = sub %tmp.56 %tmp.57;
+        symbol [ invul ? 79 25 30 ];
+        putv self :invul %tmp.58;
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_79_23_79_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_79_8_79_44_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_79_8_79_44_if_end:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 81 8 ]
+        %tmp.59 = false;
+        symbol [ thrustOn ? 81 8 16 ];
+        putv self :thrustOn %tmp.59;
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_71_31_82_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc"; @line = 85; @symbol_functiondef = [noseDx,85,13,19]; ]
+    function noseDx() {
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_85_22_85_49_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 85 24 ]
+        symbol [ Math %tmp.1 85 32 36 ];
+        %tmp.1 = getm $.Toybox.Math;
+        symbol [ sin %tmp.2 85 37 40 ];
+        %tmp.2 = getv function %tmp.1 :sin;
+        symbol [ angle %tmp.4 85 41 46 ];
+        %tmp.4 = getv ? :angle;
+        %tmp.5 = invoke %tmp.1 %tmp.2(%tmp.4);
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_85_22_85_49_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc"; @line = 86; @symbol_functiondef = [noseDy,86,13,19]; ]
+    function noseDy() {
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_86_22_86_49_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc" 86 24 ]
+        symbol [ Math %tmp.1 86 32 36 ];
+        %tmp.1 = getm $.Toybox.Math;
+        symbol [ cos %tmp.2 86 37 40 ];
+        %tmp.2 = getv function %tmp.1 :cos;
+        symbol [ angle %tmp.4 86 41 46 ];
+        %tmp.4 = getv ? :angle;
+        %tmp.5 = invoke %tmp.1 %tmp.2(%tmp.4);
+        %tmp.6 = sub 0 %tmp.5;
+        ret %tmp.6;
+_Users_kkorolczuk_work_garmin_voidrocks_source_Ship_mc_86_22_86_49_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/Ship.mc"; @line = 21; ]
+<init> {
+}

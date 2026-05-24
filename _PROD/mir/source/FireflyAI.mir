@@ -1,0 +1,306 @@
+[ @file = "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc"; @line = 15; @symbol_classdef = [Firefly,15,6,13]; ]
+class Firefly {
+    [ @file = "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc"; @line = 15; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc"; @line = 15; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc"; @line = 16; @position = 8; @symbol_vardef = [r,16,8,9]; ]
+    var r;
+    [ @file = "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc"; @line = 17; @position = 8; @symbol_vardef = [c,17,8,9]; ]
+    var c;
+    [ @file = "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc"; @line = 18; @position = 8; @symbol_vardef = [dir,18,8,11]; ]
+    var dir;
+    [ @file = "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc"; @line = 19; @position = 8; @symbol_vardef = [alive,19,8,13]; ]
+    var alive;
+    [ @file = "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc"; @line = 21; @symbol_functiondef = [initialize,21,13,23]; @symbol_param<0> = [r0,21,24,26]; @symbol_param<1> = [c0,21,28,30]; @symbol_param<2> = [d0,21,32,34]; ]
+    function initialize(r0, c0, d0) as Void {
+_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_21_36_23_4_start:
+[ "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc" 22 8 ]
+        %tmp.1 = lgetv %r0;
+        symbol [ r0 %tmp.1 22 12 14 ];
+        symbol [ r ? 22 8 9 ];
+        putv self :r %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc" 22 16 ]
+        %tmp.2 = lgetv %c0;
+        symbol [ c0 %tmp.2 22 20 22 ];
+        symbol [ c ? 22 16 17 ];
+        putv self :c %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc" 22 24 ]
+        %tmp.3 = lgetv %d0;
+        symbol [ d0 %tmp.3 22 30 32 ];
+        symbol [ dir ? 22 24 27 ];
+        putv self :dir %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc" 22 34 ]
+        %tmp.4 = true;
+        symbol [ alive ? 22 34 39 ];
+        putv self :alive %tmp.4;
+_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_21_36_23_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc"; @line = 26; @symbol_functiondef = [turnLeft,26,20,28]; @symbol_param<0> = [d,26,29,30]; ]
+    static
+    function turnLeft(d) {
+_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_26_33_26_55_start:
+[ "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc" 26 35 ]
+        %tmp.1 = lgetv %d;
+        symbol [ d %tmp.1 26 43 44 ];
+        %tmp.2 = 3;
+        %tmp.3 = add %tmp.1 %tmp.2;
+        %tmp.4 = 4;
+        %tmp.5 = mod %tmp.3 %tmp.4;
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_26_33_26_55_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc"; @line = 28; @symbol_functiondef = [turnRight,28,20,29]; @symbol_param<0> = [d,28,30,31]; ]
+    static
+    function turnRight(d) {
+_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_28_33_28_55_start:
+[ "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc" 28 35 ]
+        %tmp.1 = lgetv %d;
+        symbol [ d %tmp.1 28 43 44 ];
+        %tmp.2 = 1;
+        %tmp.3 = add %tmp.1 %tmp.2;
+        %tmp.4 = 4;
+        %tmp.5 = mod %tmp.3 %tmp.4;
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_28_33_28_55_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc"; @line = 30; @symbol_functiondef = [turnAround,30,20,30]; @symbol_param<0> = [d,30,31,32]; ]
+    static
+    function turnAround(d) {
+_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_30_33_30_55_start:
+[ "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc" 30 35 ]
+        %tmp.1 = lgetv %d;
+        symbol [ d %tmp.1 30 43 44 ];
+        %tmp.2 = 2;
+        %tmp.3 = add %tmp.1 %tmp.2;
+        %tmp.4 = 4;
+        %tmp.5 = mod %tmp.3 %tmp.4;
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_30_33_30_55_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc"; @line = 36; @symbol_functiondef = [passable,36,20,28]; @symbol_param<0> = [grid,36,29,33]; @symbol_param<1> = [r,36,35,36]; @symbol_param<2> = [c,36,38,39]; ]
+    static
+    function passable(grid, r, c) {
+_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_36_41_39_4_start:
+[ "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc" 37 8 ]
+_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_37_8_37_50_if_stmt:
+        %tmp.1 = lgetv %grid;
+        symbol [ grid %tmp.1 37 13 17 ];
+        symbol [ inBounds %tmp.2 37 18 26 ];
+        %tmp.2 = getv function %tmp.1 :inBounds;
+        %tmp.3 = lgetv %r;
+        symbol [ r %tmp.3 37 27 28 ];
+        %tmp.4 = lgetv %c;
+        symbol [ c %tmp.4 37 30 31 ];
+        %tmp.5 = invoke %tmp.1 %tmp.2(%tmp.3, %tmp.4);
+        %tmp.6 = not %tmp.5;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_37_8_37_50_if_end;
+_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_37_8_37_50_if_true:
+_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_37_34_37_50_start:
+[ "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc" 37 36 ]
+        %tmp.7 = false;
+        ret %tmp.7;
+_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_37_34_37_50_stop:
+        goto @_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_37_8_37_50_if_end;
+_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_37_8_37_50_if_end:
+[ "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc" 38 8 ]
+        %tmp.8 = lgetv %grid;
+        symbol [ grid %tmp.8 38 15 19 ];
+        symbol [ get %tmp.9 38 20 23 ];
+        %tmp.9 = getv function %tmp.8 :get;
+        %tmp.10 = lgetv %r;
+        symbol [ r %tmp.10 38 24 25 ];
+        %tmp.11 = lgetv %c;
+        symbol [ c %tmp.11 38 27 28 ];
+        %tmp.12 = invoke %tmp.8 %tmp.9(%tmp.10, %tmp.11);
+        symbol [ TC_EMPTY %tmp.14 38 33 41 ];
+        %tmp.14 = getv ? :TC_EMPTY;
+        %tmp.15 = eq %tmp.12 %tmp.14;
+        ret %tmp.15;
+_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_36_41_39_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc"; @line = 42; @symbol_functiondef = [step,42,13,17]; @symbol_param<0> = [grid,42,18,22]; ]
+    function step(grid) {
+_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_42_24_61_4_start:
+[ "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc" 43 8 ]
+_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_43_8_43_30_if_stmt:
+        symbol [ alive %tmp.2 43 13 18 ];
+        %tmp.2 = getv ? :alive;
+        %tmp.3 = not %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_43_8_43_30_if_end;
+_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_43_8_43_30_if_true:
+_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_43_20_43_30_start:
+[ "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc" 43 22 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_43_20_43_30_stop:
+        goto @_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_43_8_43_30_if_end;
+_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_43_8_43_30_if_end:
+[ "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc" 46 8 ]
+        [ "_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_42_24_61_4_start" "_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_42_24_61_4_stop" ]
+        %probe.1 = local;
+        symbol [ probe %probe.1 46 12 17 ];
+        %tmp.4 = newa 4;
+        %tmp.5 = self;
+        symbol [ turnLeft %tmp.6 46 21 29 ];
+        %tmp.6 = getv function %tmp.5 :turnLeft;
+        symbol [ dir %tmp.8 46 30 33 ];
+        %tmp.8 = getv ? :dir;
+        %tmp.9 = invoke %tmp.5 %tmp.6(%tmp.8);
+        %tmp.10 = dup %tmp.4;
+        %tmp.11 = aputv %tmp.10 0 %tmp.9;
+        symbol [ dir %tmp.13 46 36 39 ];
+        %tmp.13 = getv ? :dir;
+        %tmp.14 = dup %tmp.11;
+        %tmp.15 = aputv %tmp.14 1 %tmp.13;
+        %tmp.16 = self;
+        symbol [ turnRight %tmp.17 46 41 50 ];
+        %tmp.17 = getv function %tmp.16 :turnRight;
+        symbol [ dir %tmp.19 46 51 54 ];
+        %tmp.19 = getv ? :dir;
+        %tmp.20 = invoke %tmp.16 %tmp.17(%tmp.19);
+        %tmp.21 = dup %tmp.15;
+        %tmp.22 = aputv %tmp.21 2 %tmp.20;
+        %tmp.23 = self;
+        symbol [ turnAround %tmp.24 46 57 67 ];
+        %tmp.24 = getv function %tmp.23 :turnAround;
+        symbol [ dir %tmp.26 46 68 71 ];
+        %tmp.26 = getv ? :dir;
+        %tmp.27 = invoke %tmp.23 %tmp.24(%tmp.26);
+        %tmp.28 = dup %tmp.22;
+        %tmp.29 = aputv %tmp.28 3 %tmp.27;
+        lputv %probe.1 %tmp.29;
+        symbol [ probe %probe.1 46 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc" 47 8 ]
+        for @_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_47_8_57_8_for_test @_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_47_8_57_8_for_incr @_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_47_8_57_8_for_end;
+_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_47_8_57_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_47_8_57_8_for_begin" "_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_47_8_57_8_for_end" ]
+        %i.2 = local;
+        symbol [ i %i.2 47 17 18 ];
+        %tmp.30 = 0;
+        lputv %i.2 %tmp.30;
+        symbol [ i %i.2 47 17 18 ];
+_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_47_8_57_8_for_test:
+        %tmp.31 = lgetv %i.2;
+        symbol [ i %tmp.31 47 24 25 ];
+        %tmp.32 = lgetv %probe.1;
+        symbol [ probe %tmp.32 47 28 33 ];
+        symbol [ size %tmp.33 47 34 38 ];
+        %tmp.33 = getv function %tmp.32 :size;
+        %tmp.34 = invoke %tmp.32 %tmp.33();
+        %tmp.35 = lt %tmp.31 %tmp.34;
+        bf %tmp.35 @_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_47_8_57_8_for_end;
+_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_47_8_57_8_for_begin:
+_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_47_47_57_8_start:
+[ "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc" 48 12 ]
+        [ "_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_47_47_57_8_start" "_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_47_47_57_8_stop" ]
+        %d.3 = local;
+        symbol [ d %d.3 48 16 17 ];
+        %tmp.36 = lgetv %probe.1;
+        symbol [ probe %tmp.36 48 22 27 ];
+        %tmp.37 = lgetv %i.2;
+        symbol [ i %tmp.37 48 28 29 ];
+        %tmp.38 = agetv %tmp.36 %tmp.37;
+        lputv %d.3 %tmp.38;
+        symbol [ d %d.3 48 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc" 49 12 ]
+        [ "_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_47_47_57_8_start" "_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_47_47_57_8_stop" ]
+        %de.4 = local;
+        symbol [ de %de.4 49 16 18 ];
+        symbol [ GridManager %tmp.40 49 22 33 ];
+        %tmp.40 = getv ? :GridManager;
+        symbol [ dirDelta %tmp.41 49 34 42 ];
+        %tmp.41 = getv function %tmp.40 :dirDelta;
+        %tmp.42 = lgetv %d.3;
+        symbol [ d %tmp.42 49 43 44 ];
+        %tmp.43 = invoke %tmp.40 %tmp.41(%tmp.42);
+        lputv %de.4 %tmp.43;
+        symbol [ de %de.4 49 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc" 50 12 ]
+        [ "_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_47_47_57_8_start" "_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_47_47_57_8_stop" ]
+        %nr.5 = local;
+        symbol [ nr %nr.5 50 16 18 ];
+        symbol [ r %tmp.45 50 22 23 ];
+        %tmp.45 = getv ? :r;
+        %tmp.46 = lgetv %de.4;
+        symbol [ de %tmp.46 50 26 28 ];
+        %tmp.47 = 0;
+        %tmp.48 = agetv %tmp.46 %tmp.47;
+        %tmp.49 = add %tmp.45 %tmp.48;
+        lputv %nr.5 %tmp.49;
+        symbol [ nr %nr.5 50 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc" 51 12 ]
+        [ "_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_47_47_57_8_start" "_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_47_47_57_8_stop" ]
+        %nc.6 = local;
+        symbol [ nc %nc.6 51 16 18 ];
+        symbol [ c %tmp.51 51 22 23 ];
+        %tmp.51 = getv ? :c;
+        %tmp.52 = lgetv %de.4;
+        symbol [ de %tmp.52 51 26 28 ];
+        %tmp.53 = 1;
+        %tmp.54 = agetv %tmp.52 %tmp.53;
+        %tmp.55 = add %tmp.51 %tmp.54;
+        lputv %nc.6 %tmp.55;
+        symbol [ nc %nc.6 51 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc" 52 12 ]
+_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_52_12_56_12_if_stmt:
+        %tmp.56 = self;
+        symbol [ passable %tmp.57 52 16 24 ];
+        %tmp.57 = getv function %tmp.56 :passable;
+        %tmp.58 = lgetv %grid;
+        symbol [ grid %tmp.58 52 25 29 ];
+        %tmp.59 = lgetv %nr.5;
+        symbol [ nr %tmp.59 52 31 33 ];
+        %tmp.60 = lgetv %nc.6;
+        symbol [ nc %tmp.60 52 35 37 ];
+        %tmp.61 = invoke %tmp.56 %tmp.57(%tmp.58, %tmp.59, %tmp.60);
+        bf %tmp.61 @_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_52_12_56_12_if_end;
+_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_52_12_56_12_if_true:
+_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_52_40_56_12_start:
+[ "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc" 53 16 ]
+        %tmp.62 = lgetv %d.3;
+        symbol [ d %tmp.62 53 22 23 ];
+        symbol [ dir ? 53 16 19 ];
+        putv self :dir %tmp.62;
+[ "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc" 54 16 ]
+        %tmp.63 = lgetv %nr.5;
+        symbol [ nr %tmp.63 54 20 22 ];
+        symbol [ r ? 54 16 17 ];
+        putv self :r %tmp.63;
+[ "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc" 54 24 ]
+        %tmp.64 = lgetv %nc.6;
+        symbol [ nc %tmp.64 54 28 30 ];
+        symbol [ c ? 54 24 25 ];
+        putv self :c %tmp.64;
+[ "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc" 55 16 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_52_40_56_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_52_12_56_12_if_end;
+_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_52_12_56_12_if_end:
+_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_47_47_57_8_stop:
+_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_47_8_57_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc" 47 ]
+        %tmp.67 = lgetv %i.2;
+        symbol [ i %tmp.67 47 42 43 ];
+        %tmp.68 = add %tmp.67 1;
+        lputv %i.2 %tmp.68;
+        symbol [ i %i.2 47 42 43 ];
+        goto @_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_47_8_57_8_for_test;
+_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_47_8_57_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc" 60 8 ]
+        %tmp.69 = self;
+        symbol [ turnAround %tmp.70 60 14 24 ];
+        %tmp.70 = getv function %tmp.69 :turnAround;
+        symbol [ dir %tmp.72 60 25 28 ];
+        %tmp.72 = getv ? :dir;
+        %tmp.73 = invoke %tmp.69 %tmp.70(%tmp.72);
+        symbol [ dir ? 60 8 11 ];
+        putv self :dir %tmp.73;
+_Users_kkorolczuk_work_garmin_digcore_source_FireflyAI_mc_42_24_61_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/digcore/source/FireflyAI.mc"; @line = 15; ]
+<init> {
+}

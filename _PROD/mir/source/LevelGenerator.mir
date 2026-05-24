@@ -1,0 +1,861 @@
+[ @file = "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc"; @line = 31; @position = 6; @symbol_constdef = [LO_TOTAL_LEVELS,31,6,21]; ]
+const LO_TOTAL_LEVELS = 50;
+[ @file = "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc"; @line = 32; @position = 6; @symbol_constdef = [LO_EASY_LAST,32,6,18]; ]
+const LO_EASY_LAST = 17;
+[ @file = "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc"; @line = 33; @position = 6; @symbol_constdef = [LO_MED_LAST,33,6,17]; ]
+const LO_MED_LAST = 34;
+[ @file = "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc"; @line = 36; @symbol_classdef = [LevelGenerator,36,6,20]; ]
+class LevelGenerator {
+    [ @file = "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc"; @line = 36; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc"; @line = 36; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc"; @line = 38; @symbol_functiondef = [gridSizeForLevel,38,20,36]; @symbol_param<0> = [level,38,37,42]; ]
+    static
+    function gridSizeForLevel(level) {
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_38_44_42_4_start:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 39 8 ]
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_39_8_39_47_if_stmt:
+        %tmp.1 = lgetv %level;
+        symbol [ level %tmp.1 39 12 17 ];
+        symbol [ LO_EASY_LAST %tmp.3 39 21 33 ];
+        %tmp.3 = getv ? :LO_EASY_LAST;
+        %tmp.4 = lte %tmp.1 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_39_8_39_47_if_end;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_39_8_39_47_if_true:
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_39_35_39_47_start:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 39 37 ]
+        %tmp.5 = 3;
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_39_35_39_47_stop:
+        goto @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_39_8_39_47_if_end;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_39_8_39_47_if_end:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 40 8 ]
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_40_8_40_47_if_stmt:
+        %tmp.6 = lgetv %level;
+        symbol [ level %tmp.6 40 12 17 ];
+        symbol [ LO_MED_LAST %tmp.8 40 21 32 ];
+        %tmp.8 = getv ? :LO_MED_LAST;
+        %tmp.9 = lte %tmp.6 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_40_8_40_47_if_end;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_40_8_40_47_if_true:
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_40_35_40_47_start:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 40 37 ]
+        %tmp.10 = 4;
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_40_35_40_47_stop:
+        goto @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_40_8_40_47_if_end;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_40_8_40_47_if_end:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 41 8 ]
+        %tmp.11 = 5;
+        ret %tmp.11;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_38_44_42_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc"; @line = 45; @symbol_functiondef = [pressCountForLevel,45,20,38]; @symbol_param<0> = [level,45,39,44]; ]
+    static
+    function pressCountForLevel(level) {
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_45_46_58_4_start:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 46 8 ]
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_46_8_49_8_if_stmt:
+        %tmp.1 = lgetv %level;
+        symbol [ level %tmp.1 46 12 17 ];
+        symbol [ LO_EASY_LAST %tmp.3 46 21 33 ];
+        %tmp.3 = getv ? :LO_EASY_LAST;
+        %tmp.4 = lte %tmp.1 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_46_8_49_8_if_end;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_46_8_49_8_if_true:
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_46_35_49_8_start:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 48 12 ]
+        %tmp.5 = 2;
+        %tmp.6 = lgetv %level;
+        symbol [ level %tmp.6 48 25 30 ];
+        %tmp.7 = 1;
+        %tmp.8 = sub %tmp.6 %tmp.7;
+        %tmp.9 = 5;
+        %tmp.10 = mul %tmp.8 %tmp.9;
+        symbol [ LO_EASY_LAST %tmp.12 48 42 54 ];
+        %tmp.12 = getv ? :LO_EASY_LAST;
+        %tmp.13 = div %tmp.10 %tmp.12;
+        %tmp.14 = add %tmp.5 %tmp.13;
+        ret %tmp.14;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_46_35_49_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_46_8_49_8_if_end;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_46_8_49_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 50 8 ]
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_50_8_54_8_if_stmt:
+        %tmp.15 = lgetv %level;
+        symbol [ level %tmp.15 50 12 17 ];
+        symbol [ LO_MED_LAST %tmp.17 50 21 32 ];
+        %tmp.17 = getv ? :LO_MED_LAST;
+        %tmp.18 = lte %tmp.15 %tmp.17;
+        bf %tmp.18 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_50_8_54_8_if_end;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_50_8_54_8_if_true:
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_50_34_54_8_start:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 51 12 ]
+        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_50_34_54_8_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_50_34_54_8_stop" ]
+        %i.1 = local;
+        symbol [ i %i.1 51 16 17 ];
+        %tmp.19 = lgetv %level;
+        symbol [ level %tmp.19 51 20 25 ];
+        symbol [ LO_EASY_LAST %tmp.21 51 28 40 ];
+        %tmp.21 = getv ? :LO_EASY_LAST;
+        %tmp.22 = sub %tmp.19 %tmp.21;
+        %tmp.23 = 1;
+        %tmp.24 = sub %tmp.22 %tmp.23;
+        lputv %i.1 %tmp.24;
+        symbol [ i %i.1 51 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 52 12 ]
+        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_50_34_54_8_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_50_34_54_8_stop" ]
+        %span.2 = local;
+        symbol [ span %span.2 52 16 20 ];
+        symbol [ LO_MED_LAST %tmp.26 52 23 34 ];
+        %tmp.26 = getv ? :LO_MED_LAST;
+        symbol [ LO_EASY_LAST %tmp.28 52 37 49 ];
+        %tmp.28 = getv ? :LO_EASY_LAST;
+        %tmp.29 = sub %tmp.26 %tmp.28;
+        lputv %span.2 %tmp.29;
+        symbol [ span %span.2 52 16 20 ];
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 53 12 ]
+        %tmp.30 = 3;
+        %tmp.31 = lgetv %i.1;
+        symbol [ i %tmp.31 53 24 25 ];
+        %tmp.32 = 7;
+        %tmp.33 = mul %tmp.31 %tmp.32;
+        %tmp.34 = lgetv %span.2;
+        symbol [ span %tmp.34 53 32 36 ];
+        %tmp.35 = div %tmp.33 %tmp.34;
+        %tmp.36 = add %tmp.30 %tmp.35;
+        ret %tmp.36;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_50_34_54_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_50_8_54_8_if_end;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_50_8_54_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 55 8 ]
+        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_45_46_58_4_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_45_46_58_4_stop" ]
+        %i.3 = local;
+        symbol [ i %i.3 55 12 13 ];
+        %tmp.37 = lgetv %level;
+        symbol [ level %tmp.37 55 16 21 ];
+        symbol [ LO_MED_LAST %tmp.39 55 24 35 ];
+        %tmp.39 = getv ? :LO_MED_LAST;
+        %tmp.40 = sub %tmp.37 %tmp.39;
+        %tmp.41 = 1;
+        %tmp.42 = sub %tmp.40 %tmp.41;
+        lputv %i.3 %tmp.42;
+        symbol [ i %i.3 55 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 56 8 ]
+        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_45_46_58_4_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_45_46_58_4_stop" ]
+        %span.4 = local;
+        symbol [ span %span.4 56 12 16 ];
+        symbol [ LO_TOTAL_LEVELS %tmp.44 56 19 34 ];
+        %tmp.44 = getv ? :LO_TOTAL_LEVELS;
+        symbol [ LO_MED_LAST %tmp.46 56 37 48 ];
+        %tmp.46 = getv ? :LO_MED_LAST;
+        %tmp.47 = sub %tmp.44 %tmp.46;
+        lputv %span.4 %tmp.47;
+        symbol [ span %span.4 56 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 57 8 ]
+        %tmp.48 = 4;
+        %tmp.49 = lgetv %i.3;
+        symbol [ i %tmp.49 57 20 21 ];
+        %tmp.50 = 9;
+        %tmp.51 = mul %tmp.49 %tmp.50;
+        %tmp.52 = lgetv %span.4;
+        symbol [ span %tmp.52 57 28 32 ];
+        %tmp.53 = div %tmp.51 %tmp.52;
+        %tmp.54 = add %tmp.48 %tmp.53;
+        ret %tmp.54;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_45_46_58_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc"; @line = 60; @symbol_functiondef = [gridSizeForDiff,60,20,35]; @symbol_param<0> = [diff,60,36,40]; ]
+    static
+    function gridSizeForDiff(diff) {
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_60_42_64_4_start:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 61 8 ]
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_61_8_61_35_if_stmt:
+        %tmp.1 = lgetv %diff;
+        symbol [ diff %tmp.1 61 12 16 ];
+        %tmp.2 = 0;
+        %tmp.3 = eq %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_61_8_61_35_if_end;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_61_8_61_35_if_true:
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_61_23_61_35_start:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 61 25 ]
+        %tmp.4 = 3;
+        ret %tmp.4;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_61_23_61_35_stop:
+        goto @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_61_8_61_35_if_end;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_61_8_61_35_if_end:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 62 8 ]
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_62_8_62_35_if_stmt:
+        %tmp.5 = lgetv %diff;
+        symbol [ diff %tmp.5 62 12 16 ];
+        %tmp.6 = 1;
+        %tmp.7 = eq %tmp.5 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_62_8_62_35_if_end;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_62_8_62_35_if_true:
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_62_23_62_35_start:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 62 25 ]
+        %tmp.8 = 4;
+        ret %tmp.8;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_62_23_62_35_stop:
+        goto @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_62_8_62_35_if_end;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_62_8_62_35_if_end:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 63 8 ]
+        %tmp.9 = 5;
+        ret %tmp.9;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_60_42_64_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc"; @line = 67; @symbol_functiondef = [_lcg,67,27,31]; @symbol_param<0> = [seed,67,32,36]; ]
+    protected static
+    function _lcg(seed) {
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_67_38_69_4_start:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 68 8 ]
+        %tmp.1 = lgetv %seed;
+        symbol [ seed %tmp.1 68 17 21 ];
+        %tmp.2 = 1103515245;
+        %tmp.3 = mul %tmp.1 %tmp.2;
+        %tmp.4 = 12345;
+        %tmp.5 = add %tmp.3 %tmp.4;
+        %tmp.6 = 0x7FFFFFFF;
+        %tmp.7 = bitand %tmp.5 %tmp.6;
+        ret %tmp.7;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_67_38_69_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc"; @line = 70; @symbol_functiondef = [_rnd,70,27,31]; @symbol_param<0> = [state,70,32,37]; @symbol_param<1> = [mod,70,39,42]; ]
+    protected static
+    function _rnd(state, mod) {
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_70_44_72_4_start:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 71 8 ]
+        %tmp.1 = lgetv %state;
+        symbol [ state %tmp.1 71 15 20 ];
+        %tmp.2 = lgetv %mod;
+        symbol [ mod %tmp.2 71 23 26 ];
+        %tmp.3 = mod %tmp.1 %tmp.2;
+        ret %tmp.3;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_70_44_72_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc"; @line = 79; @position = 22; @symbol_vardef = [SEED_MIX,79,22,30]; ]
+    protected static
+    var SEED_MIX = -1640531527;
+    [ @file = "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc"; @line = 81; @symbol_functiondef = [generateForLevel,81,20,36]; @symbol_param<0> = [level,81,37,42]; ]
+    static
+    function generateForLevel(level) {
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_81_44_86_4_start:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 82 8 ]
+        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_81_44_86_4_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_81_44_86_4_stop" ]
+        %n.1 = local;
+        symbol [ n %n.1 82 12 13 ];
+        %tmp.1 = self;
+        symbol [ gridSizeForLevel %tmp.2 82 16 32 ];
+        %tmp.2 = getv function %tmp.1 :gridSizeForLevel;
+        %tmp.3 = lgetv %level;
+        symbol [ level %tmp.3 82 33 38 ];
+        %tmp.4 = invoke %tmp.1 %tmp.2(%tmp.3);
+        lputv %n.1 %tmp.4;
+        symbol [ n %n.1 82 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 83 8 ]
+        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_81_44_86_4_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_81_44_86_4_stop" ]
+        %k.2 = local;
+        symbol [ k %k.2 83 12 13 ];
+        %tmp.5 = self;
+        symbol [ pressCountForLevel %tmp.6 83 16 34 ];
+        %tmp.6 = getv function %tmp.5 :pressCountForLevel;
+        %tmp.7 = lgetv %level;
+        symbol [ level %tmp.7 83 35 40 ];
+        %tmp.8 = invoke %tmp.5 %tmp.6(%tmp.7);
+        lputv %k.2 %tmp.8;
+        symbol [ k %k.2 83 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 84 8 ]
+        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_81_44_86_4_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_81_44_86_4_stop" ]
+        %seed.3 = local;
+        symbol [ seed %seed.3 84 12 16 ];
+        %tmp.9 = lgetv %level;
+        symbol [ level %tmp.9 84 20 25 ];
+        symbol [ SEED_MIX %tmp.11 84 28 36 ];
+        %tmp.11 = getv ? :SEED_MIX;
+        %tmp.12 = mul %tmp.9 %tmp.11;
+        %tmp.13 = 0x7FFFFFFF;
+        %tmp.14 = bitand %tmp.12 %tmp.13;
+        lputv %seed.3 %tmp.14;
+        symbol [ seed %seed.3 84 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 85 8 ]
+        %tmp.15 = self;
+        symbol [ _generate %tmp.16 85 15 24 ];
+        %tmp.16 = getv function %tmp.15 :_generate;
+        %tmp.17 = lgetv %n.1;
+        symbol [ n %tmp.17 85 25 26 ];
+        %tmp.18 = lgetv %k.2;
+        symbol [ k %tmp.18 85 28 29 ];
+        %tmp.19 = lgetv %seed.3;
+        symbol [ seed %tmp.19 85 31 35 ];
+        %tmp.20 = invoke %tmp.15 %tmp.16(%tmp.17, %tmp.18, %tmp.19);
+        ret %tmp.20;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_81_44_86_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc"; @line = 88; @symbol_functiondef = [generateDaily,88,20,33]; @symbol_param<0> = [daySeed,88,34,41]; @symbol_param<1> = [diff,88,43,47]; ]
+    static
+    function generateDaily(daySeed, diff) {
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_88_49_94_4_start:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 89 8 ]
+        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_88_49_94_4_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_88_49_94_4_stop" ]
+        %n.1 = local;
+        symbol [ n %n.1 89 12 13 ];
+        %tmp.1 = self;
+        symbol [ gridSizeForDiff %tmp.2 89 16 31 ];
+        %tmp.2 = getv function %tmp.1 :gridSizeForDiff;
+        %tmp.3 = lgetv %diff;
+        symbol [ diff %tmp.3 89 32 36 ];
+        %tmp.4 = invoke %tmp.1 %tmp.2(%tmp.3);
+        lputv %n.1 %tmp.4;
+        symbol [ n %n.1 89 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 90 8 ]
+        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_88_49_94_4_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_88_49_94_4_stop" ]
+        %k.2 = local;
+        symbol [ k %k.2 90 12 13 ];
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_16_90_55_begin:
+        %tmp.5 = lgetv %diff;
+        symbol [ diff %tmp.5 90 17 21 ];
+        %tmp.6 = 0;
+        %tmp.7 = eq %tmp.5 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_16_90_55_else_false;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_16_90_55_true:
+        %tmp.8 = 4;
+        push %tmp.8;
+        goto @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_16_90_55_end;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_16_90_55_else_false:
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_35_90_53_begin:
+        %tmp.9 = lgetv %diff;
+        symbol [ diff %tmp.9 90 36 40 ];
+        %tmp.10 = 1;
+        %tmp.11 = eq %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_35_90_53_else_false;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_35_90_53_true:
+        %tmp.12 = 7;
+        push %tmp.12;
+        goto @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_35_90_53_end;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_35_90_53_else_false:
+        %tmp.13 = 10;
+        push %tmp.13;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_35_90_53_end:
+        %tmp.14 = phi [%tmp.11 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_35_90_53_begin] [%tmp.12 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_35_90_53_true] [%tmp.13 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_35_90_53_else_false] [%tmp.14 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_35_90_53_end];
+        push %tmp.14;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_16_90_55_end:
+        %tmp.15 = phi [%tmp.7 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_16_90_55_begin] [%tmp.8 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_16_90_55_true] [%tmp.14 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_16_90_55_else_false] [%tmp.15 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_16_90_55_end];
+        lputv %k.2 %tmp.15;
+        symbol [ k %k.2 90 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 91 8 ]
+        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_88_49_94_4_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_88_49_94_4_stop" ]
+        %seed.3 = local;
+        symbol [ seed %seed.3 91 12 16 ];
+        %tmp.16 = lgetv %daySeed;
+        symbol [ daySeed %tmp.16 91 20 27 ];
+        symbol [ SEED_MIX %tmp.18 91 30 38 ];
+        %tmp.18 = getv ? :SEED_MIX;
+        %tmp.19 = mul %tmp.16 %tmp.18;
+        %tmp.20 = 0x7FFFFFFF;
+        %tmp.21 = bitand %tmp.19 %tmp.20;
+        lputv %seed.3 %tmp.21;
+        symbol [ seed %seed.3 91 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 92 8 ]
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_92_8_92_35_if_stmt:
+        %tmp.22 = lgetv %seed.3;
+        symbol [ seed %tmp.22 92 12 16 ];
+        %tmp.23 = 0;
+        %tmp.24 = eq %tmp.22 %tmp.23;
+        bf %tmp.24 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_92_8_92_35_if_end;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_92_8_92_35_if_true:
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_92_23_92_35_start:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 92 25 ]
+        %tmp.25 = 1;
+        lputv %seed.3 %tmp.25;
+        symbol [ seed %seed.3 92 25 29 ];
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_92_23_92_35_stop:
+        goto @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_92_8_92_35_if_end;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_92_8_92_35_if_end:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 93 8 ]
+        %tmp.26 = self;
+        symbol [ _generate %tmp.27 93 15 24 ];
+        %tmp.27 = getv function %tmp.26 :_generate;
+        %tmp.28 = lgetv %n.1;
+        symbol [ n %tmp.28 93 25 26 ];
+        %tmp.29 = lgetv %k.2;
+        symbol [ k %tmp.29 93 28 29 ];
+        %tmp.30 = lgetv %seed.3;
+        symbol [ seed %tmp.30 93 31 35 ];
+        %tmp.31 = invoke %tmp.26 %tmp.27(%tmp.28, %tmp.29, %tmp.30);
+        ret %tmp.31;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_88_49_94_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc"; @line = 96; @symbol_functiondef = [_generate,96,27,36]; @symbol_param<0> = [n,96,37,38]; @symbol_param<1> = [k,96,40,41]; @symbol_param<2> = [seed,96,43,47]; ]
+    protected static
+    function _generate(n, k, seed) {
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_96_49_124_4_start:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 97 8 ]
+        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_96_49_124_4_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_96_49_124_4_stop" ]
+        %grid.1 = local;
+        symbol [ grid %grid.1 97 12 16 ];
+        %tmp.2 = lgetv %n;
+        symbol [ n %tmp.2 97 27 28 ];
+        %tmp.3 = lgetv %n;
+        symbol [ n %tmp.3 97 31 32 ];
+        %tmp.4 = mul %tmp.2 %tmp.3;
+        %tmp.1 = newa %tmp.4;
+        lputv %grid.1 %tmp.1;
+        symbol [ grid %grid.1 97 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 98 8 ]
+        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_96_49_124_4_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_96_49_124_4_stop" ]
+        %presses.2 = local;
+        symbol [ presses %presses.2 98 12 19 ];
+        %tmp.5 = newa 0;
+        lputv %presses.2 %tmp.5;
+        symbol [ presses %presses.2 98 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 99 8 ]
+        for @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_99_8_99_55_for_test @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_99_8_99_55_for_incr @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_99_8_99_55_for_end;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_99_8_99_55_for_init:
+        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_99_8_99_55_for_begin" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_99_8_99_55_for_end" ]
+        %i.3 = local;
+        symbol [ i %i.3 99 17 18 ];
+        %tmp.6 = 0;
+        lputv %i.3 %tmp.6;
+        symbol [ i %i.3 99 17 18 ];
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_99_8_99_55_for_test:
+        %tmp.7 = lgetv %i.3;
+        symbol [ i %tmp.7 99 24 25 ];
+        %tmp.8 = lgetv %n;
+        symbol [ n %tmp.8 99 28 29 ];
+        %tmp.9 = lgetv %n;
+        symbol [ n %tmp.9 99 32 33 ];
+        %tmp.10 = mul %tmp.8 %tmp.9;
+        %tmp.11 = lt %tmp.7 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_99_8_99_55_for_end;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_99_8_99_55_for_begin:
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_99_40_99_55_start:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 99 42 ]
+        %tmp.12 = lgetv %grid.1;
+        symbol [ grid %tmp.12 99 42 46 ];
+        %tmp.13 = 0;
+        %tmp.14 = lgetv %i.3;
+        symbol [ i %tmp.14 99 47 48 ];
+        aputv %tmp.12 %tmp.14 %tmp.13;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_99_40_99_55_stop:
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_99_8_99_55_for_incr:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 99 ]
+        %tmp.17 = lgetv %i.3;
+        symbol [ i %tmp.17 99 35 36 ];
+        %tmp.18 = add %tmp.17 1;
+        lputv %i.3 %tmp.18;
+        symbol [ i %i.3 99 35 36 ];
+        goto @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_99_8_99_55_for_test;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_99_8_99_55_for_end:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 101 8 ]
+        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_96_49_124_4_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_96_49_124_4_stop" ]
+        %sz.4 = local;
+        symbol [ sz %sz.4 101 12 14 ];
+        %tmp.19 = lgetv %n;
+        symbol [ n %tmp.19 101 17 18 ];
+        %tmp.20 = lgetv %n;
+        symbol [ n %tmp.20 101 21 22 ];
+        %tmp.21 = mul %tmp.19 %tmp.20;
+        lputv %sz.4 %tmp.21;
+        symbol [ sz %sz.4 101 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 102 8 ]
+        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_96_49_124_4_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_96_49_124_4_stop" ]
+        %state.5 = local;
+        symbol [ state %state.5 102 12 17 ];
+        %tmp.22 = lgetv %seed;
+        symbol [ seed %tmp.22 102 20 24 ];
+        lputv %state.5 %tmp.22;
+        symbol [ state %state.5 102 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 103 8 ]
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_103_8_103_37_if_stmt:
+        %tmp.23 = lgetv %state.5;
+        symbol [ state %tmp.23 103 12 17 ];
+        %tmp.24 = 0;
+        %tmp.25 = eq %tmp.23 %tmp.24;
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_103_8_103_37_if_end;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_103_8_103_37_if_true:
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_103_24_103_37_start:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 103 26 ]
+        %tmp.26 = 1;
+        lputv %state.5 %tmp.26;
+        symbol [ state %state.5 103 26 31 ];
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_103_24_103_37_stop:
+        goto @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_103_8_103_37_if_end;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_103_8_103_37_if_end:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 107 8 ]
+        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_96_49_124_4_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_96_49_124_4_stop" ]
+        %used.6 = local;
+        symbol [ used %used.6 107 12 16 ];
+        %tmp.28 = lgetv %sz.4;
+        symbol [ sz %tmp.28 107 24 26 ];
+        %tmp.27 = newa %tmp.28;
+        lputv %used.6 %tmp.27;
+        symbol [ used %used.6 107 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 108 8 ]
+        for @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_108_8_108_52_for_test @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_108_8_108_52_for_incr @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_108_8_108_52_for_end;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_108_8_108_52_for_init:
+        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_108_8_108_52_for_begin" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_108_8_108_52_for_end" ]
+        %i.7 = local;
+        symbol [ i %i.7 108 17 18 ];
+        %tmp.29 = 0;
+        lputv %i.7 %tmp.29;
+        symbol [ i %i.7 108 17 18 ];
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_108_8_108_52_for_test:
+        %tmp.30 = lgetv %i.7;
+        symbol [ i %tmp.30 108 24 25 ];
+        %tmp.31 = lgetv %sz.4;
+        symbol [ sz %tmp.31 108 28 30 ];
+        %tmp.32 = lt %tmp.30 %tmp.31;
+        bf %tmp.32 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_108_8_108_52_for_end;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_108_8_108_52_for_begin:
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_108_37_108_52_start:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 108 39 ]
+        %tmp.33 = lgetv %used.6;
+        symbol [ used %tmp.33 108 39 43 ];
+        %tmp.34 = 0;
+        %tmp.35 = lgetv %i.7;
+        symbol [ i %tmp.35 108 44 45 ];
+        aputv %tmp.33 %tmp.35 %tmp.34;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_108_37_108_52_stop:
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_108_8_108_52_for_incr:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 108 ]
+        %tmp.38 = lgetv %i.7;
+        symbol [ i %tmp.38 108 32 33 ];
+        %tmp.39 = add %tmp.38 1;
+        lputv %i.7 %tmp.39;
+        symbol [ i %i.7 108 32 33 ];
+        goto @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_108_8_108_52_for_test;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_108_8_108_52_for_end:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 110 8 ]
+        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_96_49_124_4_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_96_49_124_4_stop" ]
+        %picked.8 = local;
+        symbol [ picked %picked.8 110 12 18 ];
+        %tmp.40 = 0;
+        lputv %picked.8 %tmp.40;
+        symbol [ picked %picked.8 110 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 111 8 ]
+        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_96_49_124_4_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_96_49_124_4_stop" ]
+        %safety.9 = local;
+        symbol [ safety %safety.9 111 12 18 ];
+        %tmp.41 = 0;
+        lputv %safety.9 %tmp.41;
+        symbol [ safety %safety.9 111 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 112 8 ]
+        while @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_112_8_122_8_while_test @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_112_8_122_8_while_end;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_112_8_122_8_while_test:
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_112_15_112_38_begin:
+        %tmp.42 = lgetv %picked.8;
+        symbol [ picked %tmp.42 112 15 21 ];
+        %tmp.43 = lgetv %k;
+        symbol [ k %tmp.43 112 24 25 ];
+        %tmp.44 = lt %tmp.42 %tmp.43;
+        %tmp.45 = dup %tmp.44;
+        bf %tmp.45 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_112_29_112_38_end;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_112_29_112_38_true:
+        %tmp.46 = lgetv %safety.9;
+        symbol [ safety %tmp.46 112 29 35 ];
+        %tmp.47 = 200;
+        %tmp.48 = lt %tmp.46 %tmp.47;
+        %tmp.49 = and %tmp.44 %tmp.48;
+        push %tmp.49;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_112_29_112_38_end:
+        %tmp.50 = phi [%tmp.45 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_112_15_112_38_begin] [%tmp.49 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_112_29_112_38_true] [%tmp.50 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_112_29_112_38_end];
+        bf %tmp.50 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_112_8_122_8_while_end;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_112_8_122_8_while_begin:
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_112_43_122_8_start:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 113 12 ]
+        %tmp.51 = self;
+        symbol [ _lcg %tmp.52 113 20 24 ];
+        %tmp.52 = getv function %tmp.51 :_lcg;
+        %tmp.53 = lgetv %state.5;
+        symbol [ state %tmp.53 113 25 30 ];
+        %tmp.54 = invoke %tmp.51 %tmp.52(%tmp.53);
+        lputv %state.5 %tmp.54;
+        symbol [ state %state.5 113 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 114 12 ]
+        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_112_43_122_8_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_112_43_122_8_stop" ]
+        %p.10 = local;
+        symbol [ p %p.10 114 16 17 ];
+        %tmp.55 = self;
+        symbol [ _rnd %tmp.56 114 20 24 ];
+        %tmp.56 = getv function %tmp.55 :_rnd;
+        %tmp.57 = lgetv %state.5;
+        symbol [ state %tmp.57 114 25 30 ];
+        %tmp.58 = lgetv %sz.4;
+        symbol [ sz %tmp.58 114 32 34 ];
+        %tmp.59 = invoke %tmp.55 %tmp.56(%tmp.57, %tmp.58);
+        lputv %p.10 %tmp.59;
+        symbol [ p %p.10 114 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 115 12 ]
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_115_12_120_12_if_stmt:
+        %tmp.60 = lgetv %used.6;
+        symbol [ used %tmp.60 115 16 20 ];
+        %tmp.61 = lgetv %p.10;
+        symbol [ p %tmp.61 115 21 22 ];
+        %tmp.62 = agetv %tmp.60 %tmp.61;
+        %tmp.63 = 0;
+        %tmp.64 = eq %tmp.62 %tmp.63;
+        bf %tmp.64 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_115_12_120_12_if_end;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_115_12_120_12_if_true:
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_115_30_120_12_start:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 116 16 ]
+        %tmp.65 = lgetv %used.6;
+        symbol [ used %tmp.65 116 16 20 ];
+        %tmp.66 = 1;
+        %tmp.67 = lgetv %p.10;
+        symbol [ p %tmp.67 116 21 22 ];
+        aputv %tmp.65 %tmp.67 %tmp.66;
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 117 16 ]
+        %tmp.68 = lgetv %presses.2;
+        symbol [ presses %tmp.68 117 16 23 ];
+        symbol [ add %tmp.69 117 24 27 ];
+        %tmp.69 = getv function %tmp.68 :add;
+        %tmp.70 = lgetv %p.10;
+        symbol [ p %tmp.70 117 28 29 ];
+        invoke %tmp.68 %tmp.69(%tmp.70);
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 118 16 ]
+        %tmp.71 = self;
+        symbol [ _pressOnFlat %tmp.72 118 16 28 ];
+        %tmp.72 = getv function %tmp.71 :_pressOnFlat;
+        %tmp.73 = lgetv %grid.1;
+        symbol [ grid %tmp.73 118 29 33 ];
+        %tmp.74 = lgetv %n;
+        symbol [ n %tmp.74 118 35 36 ];
+        %tmp.75 = lgetv %p.10;
+        symbol [ p %tmp.75 118 38 39 ];
+        invoke %tmp.71 %tmp.72(%tmp.73, %tmp.74, %tmp.75);
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 119 16 ]
+        %tmp.76 = lgetv %picked.8;
+        symbol [ picked %tmp.76 119 25 31 ];
+        %tmp.77 = 1;
+        %tmp.78 = add %tmp.76 %tmp.77;
+        lputv %picked.8 %tmp.78;
+        symbol [ picked %picked.8 119 16 22 ];
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_115_30_120_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_115_12_120_12_if_end;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_115_12_120_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 121 12 ]
+        %tmp.79 = lgetv %safety.9;
+        symbol [ safety %tmp.79 121 21 27 ];
+        %tmp.80 = 1;
+        %tmp.81 = add %tmp.79 %tmp.80;
+        lputv %safety.9 %tmp.81;
+        symbol [ safety %safety.9 121 12 18 ];
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_112_43_122_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_112_8_122_8_while_test;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_112_8_122_8_while_end:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 123 8 ]
+        %tmp.82 = newa 3;
+        %tmp.83 = lgetv %n;
+        symbol [ n %tmp.83 123 16 17 ];
+        %tmp.84 = dup %tmp.82;
+        %tmp.85 = aputv %tmp.84 0 %tmp.83;
+        %tmp.86 = lgetv %grid.1;
+        symbol [ grid %tmp.86 123 19 23 ];
+        %tmp.87 = dup %tmp.85;
+        %tmp.88 = aputv %tmp.87 1 %tmp.86;
+        %tmp.89 = lgetv %presses.2;
+        symbol [ presses %tmp.89 123 25 32 ];
+        %tmp.90 = dup %tmp.88;
+        %tmp.91 = aputv %tmp.90 2 %tmp.89;
+        ret %tmp.91;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_96_49_124_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc"; @line = 128; @symbol_functiondef = [_pressOnFlat,128,27,39]; @symbol_param<0> = [g,128,40,41]; @symbol_param<1> = [n,128,43,44]; @symbol_param<2> = [p,128,46,47]; ]
+    protected static
+    function _pressOnFlat(g, n, p) {
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_128_49_136_4_start:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 129 8 ]
+        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_128_49_136_4_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_128_49_136_4_stop" ]
+        %r.1 = local;
+        symbol [ r %r.1 129 12 13 ];
+        %tmp.1 = lgetv %p;
+        symbol [ p %tmp.1 129 16 17 ];
+        %tmp.2 = lgetv %n;
+        symbol [ n %tmp.2 129 20 21 ];
+        %tmp.3 = div %tmp.1 %tmp.2;
+        lputv %r.1 %tmp.3;
+        symbol [ r %r.1 129 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 130 8 ]
+        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_128_49_136_4_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_128_49_136_4_stop" ]
+        %c.2 = local;
+        symbol [ c %c.2 130 12 13 ];
+        %tmp.4 = lgetv %p;
+        symbol [ p %tmp.4 130 16 17 ];
+        %tmp.5 = lgetv %n;
+        symbol [ n %tmp.5 130 20 21 ];
+        %tmp.6 = mod %tmp.4 %tmp.5;
+        lputv %c.2 %tmp.6;
+        symbol [ c %c.2 130 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 131 8 ]
+        %tmp.7 = self;
+        symbol [ _flip %tmp.8 131 8 13 ];
+        %tmp.8 = getv function %tmp.7 :_flip;
+        %tmp.9 = lgetv %g;
+        symbol [ g %tmp.9 131 14 15 ];
+        %tmp.10 = lgetv %n;
+        symbol [ n %tmp.10 131 17 18 ];
+        %tmp.11 = lgetv %r.1;
+        symbol [ r %tmp.11 131 20 21 ];
+        %tmp.12 = lgetv %c.2;
+        symbol [ c %tmp.12 131 27 28 ];
+        invoke %tmp.7 %tmp.8(%tmp.9, %tmp.10, %tmp.11, %tmp.12);
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 132 8 ]
+        %tmp.13 = self;
+        symbol [ _flip %tmp.14 132 8 13 ];
+        %tmp.14 = getv function %tmp.13 :_flip;
+        %tmp.15 = lgetv %g;
+        symbol [ g %tmp.15 132 14 15 ];
+        %tmp.16 = lgetv %n;
+        symbol [ n %tmp.16 132 17 18 ];
+        %tmp.17 = lgetv %r.1;
+        symbol [ r %tmp.17 132 20 21 ];
+        %tmp.18 = 1;
+        %tmp.19 = sub %tmp.17 %tmp.18;
+        %tmp.20 = lgetv %c.2;
+        symbol [ c %tmp.20 132 27 28 ];
+        invoke %tmp.13 %tmp.14(%tmp.15, %tmp.16, %tmp.19, %tmp.20);
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 133 8 ]
+        %tmp.21 = self;
+        symbol [ _flip %tmp.22 133 8 13 ];
+        %tmp.22 = getv function %tmp.21 :_flip;
+        %tmp.23 = lgetv %g;
+        symbol [ g %tmp.23 133 14 15 ];
+        %tmp.24 = lgetv %n;
+        symbol [ n %tmp.24 133 17 18 ];
+        %tmp.25 = lgetv %r.1;
+        symbol [ r %tmp.25 133 20 21 ];
+        %tmp.26 = 1;
+        %tmp.27 = add %tmp.25 %tmp.26;
+        %tmp.28 = lgetv %c.2;
+        symbol [ c %tmp.28 133 27 28 ];
+        invoke %tmp.21 %tmp.22(%tmp.23, %tmp.24, %tmp.27, %tmp.28);
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 134 8 ]
+        %tmp.29 = self;
+        symbol [ _flip %tmp.30 134 8 13 ];
+        %tmp.30 = getv function %tmp.29 :_flip;
+        %tmp.31 = lgetv %g;
+        symbol [ g %tmp.31 134 14 15 ];
+        %tmp.32 = lgetv %n;
+        symbol [ n %tmp.32 134 17 18 ];
+        %tmp.33 = lgetv %r.1;
+        symbol [ r %tmp.33 134 20 21 ];
+        %tmp.34 = lgetv %c.2;
+        symbol [ c %tmp.34 134 27 28 ];
+        %tmp.35 = 1;
+        %tmp.36 = sub %tmp.34 %tmp.35;
+        invoke %tmp.29 %tmp.30(%tmp.31, %tmp.32, %tmp.33, %tmp.36);
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 135 8 ]
+        %tmp.37 = self;
+        symbol [ _flip %tmp.38 135 8 13 ];
+        %tmp.38 = getv function %tmp.37 :_flip;
+        %tmp.39 = lgetv %g;
+        symbol [ g %tmp.39 135 14 15 ];
+        %tmp.40 = lgetv %n;
+        symbol [ n %tmp.40 135 17 18 ];
+        %tmp.41 = lgetv %r.1;
+        symbol [ r %tmp.41 135 20 21 ];
+        %tmp.42 = lgetv %c.2;
+        symbol [ c %tmp.42 135 27 28 ];
+        %tmp.43 = 1;
+        %tmp.44 = add %tmp.42 %tmp.43;
+        invoke %tmp.37 %tmp.38(%tmp.39, %tmp.40, %tmp.41, %tmp.44);
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_128_49_136_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc"; @line = 137; @symbol_functiondef = [_flip,137,27,32]; @symbol_param<0> = [g,137,33,34]; @symbol_param<1> = [n,137,36,37]; @symbol_param<2> = [r,137,39,40]; @symbol_param<3> = [c,137,42,43]; ]
+    protected static
+    function _flip(g, n, r, c) {
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_137_45_141_4_start:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 138 8 ]
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_8_138_58_if_stmt:
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_12_138_45_begin:
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_12_138_35_begin:
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_12_138_25_begin:
+        %tmp.1 = lgetv %r;
+        symbol [ r %tmp.1 138 12 13 ];
+        %tmp.2 = 0;
+        %tmp.3 = lt %tmp.1 %tmp.2;
+        bt %tmp.3 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_8_138_58_if_true;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_21_138_25_false:
+        %tmp.4 = lgetv %c;
+        symbol [ c %tmp.4 138 21 22 ];
+        %tmp.5 = 0;
+        %tmp.6 = lt %tmp.4 %tmp.5;
+        push %tmp.6;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_21_138_25_end:
+        %tmp.7 = phi [%tmp.3 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_12_138_25_begin] [%tmp.6 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_21_138_25_false] [%tmp.7 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_21_138_25_end];
+        bt %tmp.7 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_8_138_58_if_true;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_30_138_35_false:
+        %tmp.8 = lgetv %r;
+        symbol [ r %tmp.8 138 30 31 ];
+        %tmp.9 = lgetv %n;
+        symbol [ n %tmp.9 138 35 36 ];
+        %tmp.10 = gte %tmp.8 %tmp.9;
+        push %tmp.10;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_30_138_35_end:
+        %tmp.11 = phi [%tmp.7 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_12_138_35_begin] [%tmp.10 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_30_138_35_false] [%tmp.11 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_30_138_35_end];
+        bt %tmp.11 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_8_138_58_if_true;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_40_138_45_false:
+        %tmp.12 = lgetv %c;
+        symbol [ c %tmp.12 138 40 41 ];
+        %tmp.13 = lgetv %n;
+        symbol [ n %tmp.13 138 45 46 ];
+        %tmp.14 = gte %tmp.12 %tmp.13;
+        push %tmp.14;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_40_138_45_end:
+        %tmp.15 = phi [%tmp.11 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_12_138_45_begin] [%tmp.14 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_40_138_45_false] [%tmp.15 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_40_138_45_end];
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_8_138_58_if_end;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_8_138_58_if_true:
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_48_138_58_start:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 138 50 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_48_138_58_stop:
+        goto @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_8_138_58_if_end;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_8_138_58_if_end:
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 139 8 ]
+        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_137_45_141_4_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_137_45_141_4_stop" ]
+        %i.1 = local;
+        symbol [ i %i.1 139 12 13 ];
+        %tmp.16 = lgetv %r;
+        symbol [ r %tmp.16 139 16 17 ];
+        %tmp.17 = lgetv %n;
+        symbol [ n %tmp.17 139 20 21 ];
+        %tmp.18 = mul %tmp.16 %tmp.17;
+        %tmp.19 = lgetv %c;
+        symbol [ c %tmp.19 139 24 25 ];
+        %tmp.20 = add %tmp.18 %tmp.19;
+        lputv %i.1 %tmp.20;
+        symbol [ i %i.1 139 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 140 8 ]
+        %tmp.21 = lgetv %g;
+        symbol [ g %tmp.21 140 8 9 ];
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_140_15_140_33_begin:
+        %tmp.22 = lgetv %g;
+        symbol [ g %tmp.22 140 16 17 ];
+        %tmp.23 = lgetv %i.1;
+        symbol [ i %tmp.23 140 18 19 ];
+        %tmp.24 = agetv %tmp.22 %tmp.23;
+        %tmp.25 = 0;
+        %tmp.26 = ne %tmp.24 %tmp.25;
+        bf %tmp.26 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_140_15_140_33_else_false;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_140_15_140_33_true:
+        %tmp.27 = 0;
+        push %tmp.27;
+        goto @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_140_15_140_33_end;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_140_15_140_33_else_false:
+        %tmp.28 = 1;
+        push %tmp.28;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_140_15_140_33_end:
+        %tmp.29 = phi [%tmp.26 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_140_15_140_33_begin] [%tmp.27 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_140_15_140_33_true] [%tmp.28 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_140_15_140_33_else_false] [%tmp.29 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_140_15_140_33_end];
+        %tmp.30 = lgetv %i.1;
+        symbol [ i %tmp.30 140 10 11 ];
+        aputv %tmp.21 %tmp.30 %tmp.29;
+_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_137_45_141_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc"; @line = 31; ]
+<init> {
+}

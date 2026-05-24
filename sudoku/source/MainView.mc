@@ -152,6 +152,7 @@ class MainView extends WatchUi.View {
         } else {
             _ctrl.startGame();
         }
+        if (s < 3) { _ctrl.saveMenuSettings(); }
         _ctrl.dirty = true;
     }
 

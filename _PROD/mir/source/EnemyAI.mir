@@ -1,0 +1,1254 @@
+[ @file = "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc"; @line = 11; @symbol_usingdef<0> = [Toybox,11,6,12]; @symbol_usingdef<1> = [Math,11,13,17]; ]
+using Toybox.Math;
+[ @file = "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc"; @line = 13; @position = 6; @symbol_constdef = [HUNT_RANDOM,13,6,17]; ]
+const HUNT_RANDOM = 0;
+[ @file = "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc"; @line = 14; @position = 6; @symbol_constdef = [HUNT_TRACKER,14,6,18]; ]
+const HUNT_TRACKER = 1;
+[ @file = "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc"; @line = 15; @position = 6; @symbol_constdef = [HUNT_PREDICT,15,6,18]; ]
+const HUNT_PREDICT = 2;
+[ @file = "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc"; @line = 17; @symbol_classdef = [EnemyAI,17,6,13]; ]
+class EnemyAI {
+    [ @file = "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc"; @line = 17; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc"; @line = 17; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc"; @line = 18; @position = 8; @symbol_vardef = [r,18,8,9]; ]
+    var r;
+    [ @file = "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc"; @line = 19; @position = 8; @symbol_vardef = [c,19,8,9]; ]
+    var c;
+    [ @file = "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc"; @line = 20; @position = 8; @symbol_vardef = [dir,20,8,11]; ]
+    var dir;
+    [ @file = "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc"; @line = 21; @position = 8; @symbol_vardef = [type,21,8,12]; ]
+    var type;
+    [ @file = "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc"; @line = 22; @position = 8; @symbol_vardef = [slowed,22,8,14]; ]
+    var slowed;
+    [ @file = "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc"; @line = 23; @position = 8; @symbol_vardef = [skipFlag,23,8,16]; ]
+    var skipFlag;
+    [ @file = "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc"; @line = 25; @symbol_functiondef = [initialize,25,13,23]; @symbol_param<0> = [initR,25,24,29]; @symbol_param<1> = [initC,25,31,36]; @symbol_param<2> = [t,25,38,39]; ]
+    function initialize(initR, initC, t) as Void {
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_25_41_31_4_start:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 26 8 ]
+        %tmp.1 = lgetv %initR;
+        symbol [ initR %tmp.1 26 12 17 ];
+        symbol [ r ? 26 8 9 ];
+        putv self :r %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 26 19 ]
+        %tmp.2 = lgetv %initC;
+        symbol [ initC %tmp.2 26 23 28 ];
+        symbol [ c ? 26 19 20 ];
+        putv self :c %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 27 8 ]
+        symbol [ DIR_R %tmp.4 27 14 19 ];
+        %tmp.4 = getv ? :DIR_R;
+        symbol [ dir ? 27 8 11 ];
+        putv self :dir %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 28 8 ]
+        %tmp.5 = lgetv %t;
+        symbol [ t %tmp.5 28 15 16 ];
+        symbol [ type ? 28 8 12 ];
+        putv self :type %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 29 8 ]
+        %tmp.6 = false;
+        symbol [ slowed ? 29 8 14 ];
+        putv self :slowed %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 30 8 ]
+        %tmp.7 = false;
+        symbol [ skipFlag ? 30 8 16 ];
+        putv self :skipFlag %tmp.7;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_25_41_31_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc"; @line = 34; @symbol_functiondef = [_walk,34,27,32]; @symbol_param<0> = [grid,34,33,37]; @symbol_param<1> = [n,34,39,40]; @symbol_param<2> = [r,34,42,43]; @symbol_param<3> = [c,34,45,46]; ]
+    protected static
+    function _walk(grid, n, r, c) {
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_34_48_38_4_start:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 35 8 ]
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_35_8_35_63_if_stmt:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_35_12_35_44_begin:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_35_12_35_35_begin:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_35_12_35_26_begin:
+        %tmp.1 = lgetv %r;
+        symbol [ r %tmp.1 35 12 13 ];
+        %tmp.2 = 0;
+        %tmp.3 = lt %tmp.1 %tmp.2;
+        bt %tmp.3 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_35_8_35_63_if_true;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_35_21_35_26_false:
+        %tmp.4 = lgetv %r;
+        symbol [ r %tmp.4 35 21 22 ];
+        %tmp.5 = lgetv %n;
+        symbol [ n %tmp.5 35 26 27 ];
+        %tmp.6 = gte %tmp.4 %tmp.5;
+        push %tmp.6;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_35_21_35_26_end:
+        %tmp.7 = phi [%tmp.3 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_35_12_35_26_begin] [%tmp.6 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_35_21_35_26_false] [%tmp.7 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_35_21_35_26_end];
+        bt %tmp.7 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_35_8_35_63_if_true;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_35_31_35_35_false:
+        %tmp.8 = lgetv %c;
+        symbol [ c %tmp.8 35 31 32 ];
+        %tmp.9 = 0;
+        %tmp.10 = lt %tmp.8 %tmp.9;
+        push %tmp.10;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_35_31_35_35_end:
+        %tmp.11 = phi [%tmp.7 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_35_12_35_35_begin] [%tmp.10 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_35_31_35_35_false] [%tmp.11 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_35_31_35_35_end];
+        bt %tmp.11 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_35_8_35_63_if_true;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_35_40_35_44_false:
+        %tmp.12 = lgetv %c;
+        symbol [ c %tmp.12 35 40 41 ];
+        %tmp.13 = 0;
+        %tmp.14 = lt %tmp.12 %tmp.13;
+        push %tmp.14;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_35_40_35_44_end:
+        %tmp.15 = phi [%tmp.11 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_35_12_35_44_begin] [%tmp.14 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_35_40_35_44_false] [%tmp.15 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_35_40_35_44_end];
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_35_8_35_63_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_35_8_35_63_if_true:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_35_47_35_63_start:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 35 49 ]
+        %tmp.16 = false;
+        ret %tmp.16;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_35_47_35_63_stop:
+        goto @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_35_8_35_63_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_35_8_35_63_if_end:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 36 8 ]
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_36_8_36_36_if_stmt:
+        %tmp.17 = lgetv %c;
+        symbol [ c %tmp.17 36 12 13 ];
+        %tmp.18 = lgetv %n;
+        symbol [ n %tmp.18 36 17 18 ];
+        %tmp.19 = gte %tmp.17 %tmp.18;
+        bf %tmp.19 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_36_8_36_36_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_36_8_36_36_if_true:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_36_20_36_36_start:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 36 22 ]
+        %tmp.20 = false;
+        ret %tmp.20;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_36_20_36_36_stop:
+        goto @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_36_8_36_36_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_36_8_36_36_if_end:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 37 8 ]
+        %tmp.21 = lgetv %grid;
+        symbol [ grid %tmp.21 37 15 19 ];
+        %tmp.22 = lgetv %r;
+        symbol [ r %tmp.22 37 20 21 ];
+        %tmp.23 = lgetv %n;
+        symbol [ n %tmp.23 37 24 25 ];
+        %tmp.24 = mul %tmp.22 %tmp.23;
+        %tmp.25 = lgetv %c;
+        symbol [ c %tmp.25 37 28 29 ];
+        %tmp.26 = add %tmp.24 %tmp.25;
+        %tmp.27 = agetv %tmp.21 %tmp.26;
+        symbol [ TILE_WALL %tmp.29 37 34 43 ];
+        %tmp.29 = getv ? :TILE_WALL;
+        %tmp.30 = ne %tmp.27 %tmp.29;
+        ret %tmp.30;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_34_48_38_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc"; @line = 41; @symbol_functiondef = [step,41,13,17]; @symbol_param<0> = [grid,41,18,22]; @symbol_param<1> = [n,41,24,25]; @symbol_param<2> = [target,41,27,33]; ]
+    function step(grid, n, target) {
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_41_35_84_4_start:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 42 8 ]
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_42_8_45_8_if_stmt:
+        symbol [ slowed %tmp.2 42 12 18 ];
+        %tmp.2 = getv ? :slowed;
+        bf %tmp.2 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_42_8_45_8_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_42_8_45_8_if_true:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_42_20_45_8_start:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 43 12 ]
+        symbol [ skipFlag %tmp.4 43 24 32 ];
+        %tmp.4 = getv ? :skipFlag;
+        %tmp.5 = not %tmp.4;
+        symbol [ skipFlag ? 43 12 20 ];
+        putv self :skipFlag %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 44 12 ]
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_44_12_44_36_if_stmt:
+        symbol [ skipFlag %tmp.7 44 16 24 ];
+        %tmp.7 = getv ? :skipFlag;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_44_12_44_36_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_44_12_44_36_if_true:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_44_26_44_36_start:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 44 28 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_44_26_44_36_stop:
+        goto @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_44_12_44_36_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_44_12_44_36_if_end:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_42_20_45_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_42_8_45_8_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_42_8_45_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 47 8 ]
+        [ "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_41_35_84_4_start" "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_41_35_84_4_stop" ]
+        %dr.1 = local;
+        symbol [ dr %dr.1 47 12 14 ];
+        %tmp.8 = 0;
+        lputv %dr.1 %tmp.8;
+        symbol [ dr %dr.1 47 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 47 20 ]
+        [ "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_41_35_84_4_start" "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_41_35_84_4_stop" ]
+        %dc.2 = local;
+        symbol [ dc %dc.2 47 24 26 ];
+        %tmp.9 = 0;
+        lputv %dc.2 %tmp.9;
+        symbol [ dc %dc.2 47 24 26 ];
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 48 8 ]
+        [ "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_41_35_84_4_start" "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_41_35_84_4_stop" ]
+        %rt.3 = local;
+        symbol [ rt %rt.3 48 12 14 ];
+        %tmp.10 = lgetv %target;
+        symbol [ target %tmp.10 48 17 23 ];
+        %tmp.11 = 0;
+        %tmp.12 = agetv %tmp.10 %tmp.11;
+        lputv %rt.3 %tmp.12;
+        symbol [ rt %rt.3 48 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 48 28 ]
+        [ "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_41_35_84_4_start" "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_41_35_84_4_stop" ]
+        %ct.4 = local;
+        symbol [ ct %ct.4 48 32 34 ];
+        %tmp.13 = lgetv %target;
+        symbol [ target %tmp.13 48 37 43 ];
+        %tmp.14 = 1;
+        %tmp.15 = agetv %tmp.13 %tmp.14;
+        lputv %ct.4 %tmp.15;
+        symbol [ ct %ct.4 48 32 34 ];
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 50 8 ]
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_50_8_53_8_if_stmt:
+        symbol [ type %tmp.17 50 12 16 ];
+        %tmp.17 = getv ? :type;
+        symbol [ HUNT_RANDOM %tmp.19 50 20 31 ];
+        %tmp.19 = getv ? :HUNT_RANDOM;
+        %tmp.20 = eq %tmp.17 %tmp.19;
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_50_8_53_8_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_50_8_53_8_if_true:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_50_33_53_8_start:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 51 12 ]
+        %tmp.21 = self;
+        symbol [ _stepRandom %tmp.22 51 12 23 ];
+        %tmp.22 = getv function %tmp.21 :_stepRandom;
+        %tmp.23 = lgetv %grid;
+        symbol [ grid %tmp.23 51 24 28 ];
+        %tmp.24 = lgetv %n;
+        symbol [ n %tmp.24 51 30 31 ];
+        invoke %tmp.21 %tmp.22(%tmp.23, %tmp.24);
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 52 12 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_50_33_53_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_50_8_53_8_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_50_8_53_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 57 8 ]
+        [ "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_41_35_84_4_start" "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_41_35_84_4_stop" ]
+        %best.5 = local;
+        symbol [ best %best.5 57 12 16 ];
+        %tmp.25 = -1;
+        lputv %best.5 %tmp.25;
+        symbol [ best %best.5 57 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 58 8 ]
+        [ "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_41_35_84_4_start" "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_41_35_84_4_stop" ]
+        %bestD.6 = local;
+        symbol [ bestD %bestD.6 58 12 17 ];
+        %tmp.26 = 99999;
+        lputv %bestD.6 %tmp.26;
+        symbol [ bestD %bestD.6 58 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 59 8 ]
+        [ "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_41_35_84_4_start" "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_41_35_84_4_stop" ]
+        %bestDir.7 = local;
+        symbol [ bestDir %bestDir.7 59 12 19 ];
+        symbol [ dir %tmp.28 59 22 25 ];
+        %tmp.28 = getv ? :dir;
+        lputv %bestDir.7 %tmp.28;
+        symbol [ bestDir %bestDir.7 59 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 60 8 ]
+        for @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_60_8_68_8_for_test @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_60_8_68_8_for_incr @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_60_8_68_8_for_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_60_8_68_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_60_8_68_8_for_begin" "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_60_8_68_8_for_end" ]
+        %d.8 = local;
+        symbol [ d %d.8 60 17 18 ];
+        %tmp.29 = 0;
+        lputv %d.8 %tmp.29;
+        symbol [ d %d.8 60 17 18 ];
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_60_8_68_8_for_test:
+        %tmp.30 = lgetv %d.8;
+        symbol [ d %tmp.30 60 24 25 ];
+        %tmp.31 = 4;
+        %tmp.32 = lt %tmp.30 %tmp.31;
+        bf %tmp.32 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_60_8_68_8_for_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_60_8_68_8_for_begin:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_60_36_68_8_start:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 61 12 ]
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_61_12_61_48_if_stmt:
+        %tmp.33 = self;
+        symbol [ _isReverse %tmp.34 61 16 26 ];
+        %tmp.34 = getv function %tmp.33 :_isReverse;
+        %tmp.35 = lgetv %d.8;
+        symbol [ d %tmp.35 61 27 28 ];
+        symbol [ dir %tmp.37 61 30 33 ];
+        %tmp.37 = getv ? :dir;
+        %tmp.38 = invoke %tmp.33 %tmp.34(%tmp.35, %tmp.37);
+        bf %tmp.38 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_61_12_61_48_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_61_12_61_48_if_true:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_61_36_61_48_start:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 61 38 ]
+        goto break @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_60_8_68_8_for_incr;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_61_36_61_48_stop:
+        goto @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_61_12_61_48_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_61_12_61_48_if_end:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 62 12 ]
+        [ "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_60_36_68_8_start" "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_60_36_68_8_stop" ]
+        %de.9 = local;
+        symbol [ de %de.9 62 16 18 ];
+        symbol [ Player %tmp.40 62 21 27 ];
+        %tmp.40 = getv ? :Player;
+        symbol [ delta %tmp.41 62 28 33 ];
+        %tmp.41 = getv function %tmp.40 :delta;
+        %tmp.42 = lgetv %d.8;
+        symbol [ d %tmp.42 62 34 35 ];
+        %tmp.43 = invoke %tmp.40 %tmp.41(%tmp.42);
+        lputv %de.9 %tmp.43;
+        symbol [ de %de.9 62 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 63 12 ]
+        [ "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_60_36_68_8_start" "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_60_36_68_8_stop" ]
+        %nr.10 = local;
+        symbol [ nr %nr.10 63 16 18 ];
+        symbol [ r %tmp.45 63 21 22 ];
+        %tmp.45 = getv ? :r;
+        %tmp.46 = lgetv %de.9;
+        symbol [ de %tmp.46 63 25 27 ];
+        %tmp.47 = 0;
+        %tmp.48 = agetv %tmp.46 %tmp.47;
+        %tmp.49 = add %tmp.45 %tmp.48;
+        lputv %nr.10 %tmp.49;
+        symbol [ nr %nr.10 63 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 63 32 ]
+        [ "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_60_36_68_8_start" "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_60_36_68_8_stop" ]
+        %nc.11 = local;
+        symbol [ nc %nc.11 63 36 38 ];
+        symbol [ c %tmp.51 63 41 42 ];
+        %tmp.51 = getv ? :c;
+        %tmp.52 = lgetv %de.9;
+        symbol [ de %tmp.52 63 45 47 ];
+        %tmp.53 = 1;
+        %tmp.54 = agetv %tmp.52 %tmp.53;
+        %tmp.55 = add %tmp.51 %tmp.54;
+        lputv %nc.11 %tmp.55;
+        symbol [ nc %nc.11 63 36 38 ];
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 64 12 ]
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_64_12_64_68_if_stmt:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_64_16_64_53_begin:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_64_16_64_42_begin:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_64_16_64_32_begin:
+        %tmp.56 = lgetv %nr.10;
+        symbol [ nr %tmp.56 64 16 18 ];
+        %tmp.57 = 0;
+        %tmp.58 = lt %tmp.56 %tmp.57;
+        bt %tmp.58 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_64_12_64_68_if_true;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_64_26_64_32_false:
+        %tmp.59 = lgetv %nr.10;
+        symbol [ nr %tmp.59 64 26 28 ];
+        %tmp.60 = lgetv %n;
+        symbol [ n %tmp.60 64 32 33 ];
+        %tmp.61 = gte %tmp.59 %tmp.60;
+        push %tmp.61;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_64_26_64_32_end:
+        %tmp.62 = phi [%tmp.58 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_64_16_64_32_begin] [%tmp.61 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_64_26_64_32_false] [%tmp.62 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_64_26_64_32_end];
+        bt %tmp.62 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_64_12_64_68_if_true;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_64_37_64_42_false:
+        %tmp.63 = lgetv %nc.11;
+        symbol [ nc %tmp.63 64 37 39 ];
+        %tmp.64 = 0;
+        %tmp.65 = lt %tmp.63 %tmp.64;
+        push %tmp.65;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_64_37_64_42_end:
+        %tmp.66 = phi [%tmp.62 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_64_16_64_42_begin] [%tmp.65 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_64_37_64_42_false] [%tmp.66 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_64_37_64_42_end];
+        bt %tmp.66 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_64_12_64_68_if_true;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_64_47_64_53_false:
+        %tmp.67 = lgetv %nc.11;
+        symbol [ nc %tmp.67 64 47 49 ];
+        %tmp.68 = lgetv %n;
+        symbol [ n %tmp.68 64 53 54 ];
+        %tmp.69 = gte %tmp.67 %tmp.68;
+        push %tmp.69;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_64_47_64_53_end:
+        %tmp.70 = phi [%tmp.66 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_64_16_64_53_begin] [%tmp.69 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_64_47_64_53_false] [%tmp.70 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_64_47_64_53_end];
+        bf %tmp.70 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_64_12_64_68_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_64_12_64_68_if_true:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_64_56_64_68_start:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 64 58 ]
+        goto break @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_60_8_68_8_for_incr;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_64_56_64_68_stop:
+        goto @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_64_12_64_68_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_64_12_64_68_if_end:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 65 12 ]
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_65_12_65_60_if_stmt:
+        %tmp.71 = lgetv %grid;
+        symbol [ grid %tmp.71 65 16 20 ];
+        %tmp.72 = lgetv %nr.10;
+        symbol [ nr %tmp.72 65 21 23 ];
+        %tmp.73 = lgetv %n;
+        symbol [ n %tmp.73 65 26 27 ];
+        %tmp.74 = mul %tmp.72 %tmp.73;
+        %tmp.75 = lgetv %nc.11;
+        symbol [ nc %tmp.75 65 30 32 ];
+        %tmp.76 = add %tmp.74 %tmp.75;
+        %tmp.77 = agetv %tmp.71 %tmp.76;
+        symbol [ TILE_WALL %tmp.79 65 37 46 ];
+        %tmp.79 = getv ? :TILE_WALL;
+        %tmp.80 = eq %tmp.77 %tmp.79;
+        bf %tmp.80 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_65_12_65_60_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_65_12_65_60_if_true:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_65_48_65_60_start:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 65 50 ]
+        goto break @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_60_8_68_8_for_incr;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_65_48_65_60_stop:
+        goto @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_65_12_65_60_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_65_12_65_60_if_end:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 66 12 ]
+        [ "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_60_36_68_8_start" "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_60_36_68_8_stop" ]
+        %dist.12 = local;
+        symbol [ dist %dist.12 66 16 20 ];
+        %tmp.81 = lgetv %nr.10;
+        symbol [ nr %tmp.81 66 24 26 ];
+        %tmp.82 = lgetv %rt.3;
+        symbol [ rt %tmp.82 66 29 31 ];
+        %tmp.83 = sub %tmp.81 %tmp.82;
+        symbol [ abs %tmp.84 66 33 36 ];
+        %tmp.84 = getv function %tmp.83 :abs;
+        %tmp.85 = invoke %tmp.83 %tmp.84();
+        %tmp.86 = lgetv %nc.11;
+        symbol [ nc %tmp.86 66 42 44 ];
+        %tmp.87 = lgetv %ct.4;
+        symbol [ ct %tmp.87 66 47 49 ];
+        %tmp.88 = sub %tmp.86 %tmp.87;
+        symbol [ abs %tmp.89 66 51 54 ];
+        %tmp.89 = getv function %tmp.88 :abs;
+        %tmp.90 = invoke %tmp.88 %tmp.89();
+        %tmp.91 = add %tmp.85 %tmp.90;
+        lputv %dist.12 %tmp.91;
+        symbol [ dist %dist.12 66 16 20 ];
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 67 12 ]
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_67_12_67_69_if_stmt:
+        %tmp.92 = lgetv %dist.12;
+        symbol [ dist %tmp.92 67 16 20 ];
+        %tmp.93 = lgetv %bestD.6;
+        symbol [ bestD %tmp.93 67 23 28 ];
+        %tmp.94 = lt %tmp.92 %tmp.93;
+        bf %tmp.94 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_67_12_67_69_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_67_12_67_69_if_true:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_67_30_67_69_start:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 67 32 ]
+        %tmp.95 = lgetv %dist.12;
+        symbol [ dist %tmp.95 67 40 44 ];
+        lputv %bestD.6 %tmp.95;
+        symbol [ bestD %bestD.6 67 32 37 ];
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 67 46 ]
+        %tmp.96 = lgetv %d.8;
+        symbol [ d %tmp.96 67 56 57 ];
+        lputv %bestDir.7 %tmp.96;
+        symbol [ bestDir %bestDir.7 67 46 53 ];
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 67 59 ]
+        %tmp.97 = lgetv %d.8;
+        symbol [ d %tmp.97 67 66 67 ];
+        lputv %best.5 %tmp.97;
+        symbol [ best %best.5 67 59 63 ];
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_67_30_67_69_stop:
+        goto @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_67_12_67_69_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_67_12_67_69_if_end:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_60_36_68_8_stop:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_60_8_68_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 60 ]
+        %tmp.100 = lgetv %d.8;
+        symbol [ d %tmp.100 60 31 32 ];
+        %tmp.101 = add %tmp.100 1;
+        lputv %d.8 %tmp.101;
+        symbol [ d %d.8 60 31 32 ];
+        goto @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_60_8_68_8_for_test;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_60_8_68_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 69 8 ]
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_69_8_78_8_if_stmt:
+        %tmp.102 = lgetv %best.5;
+        symbol [ best %tmp.102 69 12 16 ];
+        %tmp.103 = 0;
+        %tmp.104 = lt %tmp.102 %tmp.103;
+        bf %tmp.104 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_69_8_78_8_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_69_8_78_8_if_true:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_69_22_78_8_start:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 71 12 ]
+        for @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_71_12_77_12_for_test @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_71_12_77_12_for_incr @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_71_12_77_12_for_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_71_12_77_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_71_12_77_12_for_begin" "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_71_12_77_12_for_end" ]
+        %d2.13 = local;
+        symbol [ d2 %d2.13 71 21 23 ];
+        %tmp.105 = 0;
+        lputv %d2.13 %tmp.105;
+        symbol [ d2 %d2.13 71 21 23 ];
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_71_12_77_12_for_test:
+        %tmp.106 = lgetv %d2.13;
+        symbol [ d2 %tmp.106 71 29 31 ];
+        %tmp.107 = 4;
+        %tmp.108 = lt %tmp.106 %tmp.107;
+        bf %tmp.108 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_71_12_77_12_for_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_71_12_77_12_for_begin:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_71_43_77_12_start:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 72 16 ]
+        [ "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_71_43_77_12_start" "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_71_43_77_12_stop" ]
+        %de2.14 = local;
+        symbol [ de2 %de2.14 72 20 23 ];
+        symbol [ Player %tmp.110 72 26 32 ];
+        %tmp.110 = getv ? :Player;
+        symbol [ delta %tmp.111 72 33 38 ];
+        %tmp.111 = getv function %tmp.110 :delta;
+        %tmp.112 = lgetv %d2.13;
+        symbol [ d2 %tmp.112 72 39 41 ];
+        %tmp.113 = invoke %tmp.110 %tmp.111(%tmp.112);
+        lputv %de2.14 %tmp.113;
+        symbol [ de2 %de2.14 72 20 23 ];
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 73 16 ]
+        [ "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_71_43_77_12_start" "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_71_43_77_12_stop" ]
+        %nr2.15 = local;
+        symbol [ nr2 %nr2.15 73 20 23 ];
+        symbol [ r %tmp.115 73 26 27 ];
+        %tmp.115 = getv ? :r;
+        %tmp.116 = lgetv %de2.14;
+        symbol [ de2 %tmp.116 73 30 33 ];
+        %tmp.117 = 0;
+        %tmp.118 = agetv %tmp.116 %tmp.117;
+        %tmp.119 = add %tmp.115 %tmp.118;
+        lputv %nr2.15 %tmp.119;
+        symbol [ nr2 %nr2.15 73 20 23 ];
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 73 38 ]
+        [ "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_71_43_77_12_start" "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_71_43_77_12_stop" ]
+        %nc2.16 = local;
+        symbol [ nc2 %nc2.16 73 42 45 ];
+        symbol [ c %tmp.121 73 48 49 ];
+        %tmp.121 = getv ? :c;
+        %tmp.122 = lgetv %de2.14;
+        symbol [ de2 %tmp.122 73 52 55 ];
+        %tmp.123 = 1;
+        %tmp.124 = agetv %tmp.122 %tmp.123;
+        %tmp.125 = add %tmp.121 %tmp.124;
+        lputv %nc2.16 %tmp.125;
+        symbol [ nc2 %nc2.16 73 42 45 ];
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 74 16 ]
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_74_16_74_76_if_stmt:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_74_20_74_61_begin:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_74_20_74_49_begin:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_74_20_74_38_begin:
+        %tmp.126 = lgetv %nr2.15;
+        symbol [ nr2 %tmp.126 74 20 23 ];
+        %tmp.127 = 0;
+        %tmp.128 = lt %tmp.126 %tmp.127;
+        bt %tmp.128 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_74_16_74_76_if_true;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_74_31_74_38_false:
+        %tmp.129 = lgetv %nr2.15;
+        symbol [ nr2 %tmp.129 74 31 34 ];
+        %tmp.130 = lgetv %n;
+        symbol [ n %tmp.130 74 38 39 ];
+        %tmp.131 = gte %tmp.129 %tmp.130;
+        push %tmp.131;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_74_31_74_38_end:
+        %tmp.132 = phi [%tmp.128 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_74_20_74_38_begin] [%tmp.131 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_74_31_74_38_false] [%tmp.132 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_74_31_74_38_end];
+        bt %tmp.132 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_74_16_74_76_if_true;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_74_43_74_49_false:
+        %tmp.133 = lgetv %nc2.16;
+        symbol [ nc2 %tmp.133 74 43 46 ];
+        %tmp.134 = 0;
+        %tmp.135 = lt %tmp.133 %tmp.134;
+        push %tmp.135;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_74_43_74_49_end:
+        %tmp.136 = phi [%tmp.132 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_74_20_74_49_begin] [%tmp.135 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_74_43_74_49_false] [%tmp.136 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_74_43_74_49_end];
+        bt %tmp.136 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_74_16_74_76_if_true;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_74_54_74_61_false:
+        %tmp.137 = lgetv %nc2.16;
+        symbol [ nc2 %tmp.137 74 54 57 ];
+        %tmp.138 = lgetv %n;
+        symbol [ n %tmp.138 74 61 62 ];
+        %tmp.139 = gte %tmp.137 %tmp.138;
+        push %tmp.139;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_74_54_74_61_end:
+        %tmp.140 = phi [%tmp.136 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_74_20_74_61_begin] [%tmp.139 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_74_54_74_61_false] [%tmp.140 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_74_54_74_61_end];
+        bf %tmp.140 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_74_16_74_76_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_74_16_74_76_if_true:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_74_64_74_76_start:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 74 66 ]
+        goto break @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_71_12_77_12_for_incr;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_74_64_74_76_stop:
+        goto @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_74_16_74_76_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_74_16_74_76_if_end:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 75 16 ]
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_75_16_75_66_if_stmt:
+        %tmp.141 = lgetv %grid;
+        symbol [ grid %tmp.141 75 20 24 ];
+        %tmp.142 = lgetv %nr2.15;
+        symbol [ nr2 %tmp.142 75 25 28 ];
+        %tmp.143 = lgetv %n;
+        symbol [ n %tmp.143 75 31 32 ];
+        %tmp.144 = mul %tmp.142 %tmp.143;
+        %tmp.145 = lgetv %nc2.16;
+        symbol [ nc2 %tmp.145 75 35 38 ];
+        %tmp.146 = add %tmp.144 %tmp.145;
+        %tmp.147 = agetv %tmp.141 %tmp.146;
+        symbol [ TILE_WALL %tmp.149 75 43 52 ];
+        %tmp.149 = getv ? :TILE_WALL;
+        %tmp.150 = eq %tmp.147 %tmp.149;
+        bf %tmp.150 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_75_16_75_66_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_75_16_75_66_if_true:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_75_54_75_66_start:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 75 56 ]
+        goto break @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_71_12_77_12_for_incr;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_75_54_75_66_stop:
+        goto @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_75_16_75_66_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_75_16_75_66_if_end:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 76 16 ]
+        %tmp.151 = lgetv %d2.13;
+        symbol [ d2 %tmp.151 76 26 28 ];
+        lputv %bestDir.7 %tmp.151;
+        symbol [ bestDir %bestDir.7 76 16 23 ];
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 76 30 ]
+        %tmp.152 = lgetv %d2.13;
+        symbol [ d2 %tmp.152 76 37 39 ];
+        lputv %best.5 %tmp.152;
+        symbol [ best %best.5 76 30 34 ];
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 76 41 ]
+        goto break @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_71_12_77_12_for_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_71_43_77_12_stop:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_71_12_77_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 71 ]
+        %tmp.155 = lgetv %d2.13;
+        symbol [ d2 %tmp.155 71 37 39 ];
+        %tmp.156 = add %tmp.155 1;
+        lputv %d2.13 %tmp.156;
+        symbol [ d2 %d2.13 71 37 39 ];
+        goto @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_71_12_77_12_for_test;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_71_12_77_12_for_end:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_69_22_78_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_69_8_78_8_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_69_8_78_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 79 8 ]
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_79_8_83_8_if_stmt:
+        %tmp.157 = lgetv %best.5;
+        symbol [ best %tmp.157 79 12 16 ];
+        %tmp.158 = 0;
+        %tmp.159 = gte %tmp.157 %tmp.158;
+        bf %tmp.159 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_79_8_83_8_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_79_8_83_8_if_true:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_79_23_83_8_start:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 80 12 ]
+        %tmp.160 = lgetv %bestDir.7;
+        symbol [ bestDir %tmp.160 80 18 25 ];
+        symbol [ dir ? 80 12 15 ];
+        putv self :dir %tmp.160;
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 81 12 ]
+        [ "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_79_23_83_8_start" "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_79_23_83_8_stop" ]
+        %ded.17 = local;
+        symbol [ ded %ded.17 81 16 19 ];
+        symbol [ Player %tmp.162 81 22 28 ];
+        %tmp.162 = getv ? :Player;
+        symbol [ delta %tmp.163 81 29 34 ];
+        %tmp.163 = getv function %tmp.162 :delta;
+        symbol [ dir %tmp.165 81 35 38 ];
+        %tmp.165 = getv ? :dir;
+        %tmp.166 = invoke %tmp.162 %tmp.163(%tmp.165);
+        lputv %ded.17 %tmp.166;
+        symbol [ ded %ded.17 81 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 82 12 ]
+        symbol [ r %tmp.168 82 16 17 ];
+        %tmp.168 = getv ? :r;
+        %tmp.169 = lgetv %ded.17;
+        symbol [ ded %tmp.169 82 20 23 ];
+        %tmp.170 = 0;
+        %tmp.171 = agetv %tmp.169 %tmp.170;
+        %tmp.172 = add %tmp.168 %tmp.171;
+        symbol [ r ? 82 12 13 ];
+        putv self :r %tmp.172;
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 82 28 ]
+        symbol [ c %tmp.174 82 32 33 ];
+        %tmp.174 = getv ? :c;
+        %tmp.175 = lgetv %ded.17;
+        symbol [ ded %tmp.175 82 36 39 ];
+        %tmp.176 = 1;
+        %tmp.177 = agetv %tmp.175 %tmp.176;
+        %tmp.178 = add %tmp.174 %tmp.177;
+        symbol [ c ? 82 28 29 ];
+        putv self :c %tmp.178;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_79_23_83_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_79_8_83_8_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_79_8_83_8_if_end:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_41_35_84_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc"; @line = 86; @symbol_functiondef = [_isReverse,86,20,30]; @symbol_param<0> = [d1,86,31,33]; @symbol_param<1> = [d2,86,35,37]; ]
+    protected
+    function _isReverse(d1, d2) {
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_86_39_92_4_start:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 87 8 ]
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_87_8_87_55_if_stmt:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_87_12_87_33_begin:
+        %tmp.1 = lgetv %d1;
+        symbol [ d1 %tmp.1 87 12 14 ];
+        symbol [ DIR_U %tmp.3 87 18 23 ];
+        %tmp.3 = getv ? :DIR_U;
+        %tmp.4 = eq %tmp.1 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_87_8_87_55_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_87_27_87_33_true:
+        %tmp.5 = lgetv %d2;
+        symbol [ d2 %tmp.5 87 27 29 ];
+        symbol [ DIR_D %tmp.7 87 33 38 ];
+        %tmp.7 = getv ? :DIR_D;
+        %tmp.8 = eq %tmp.5 %tmp.7;
+        push %tmp.8;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_87_27_87_33_end:
+        %tmp.9 = phi [%tmp.4 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_87_12_87_33_begin] [%tmp.8 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_87_27_87_33_true] [%tmp.9 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_87_27_87_33_end];
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_87_8_87_55_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_87_8_87_55_if_true:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_87_40_87_55_start:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 87 42 ]
+        %tmp.10 = true;
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_87_40_87_55_stop:
+        goto @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_87_8_87_55_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_87_8_87_55_if_end:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 88 8 ]
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_88_8_88_55_if_stmt:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_88_12_88_33_begin:
+        %tmp.11 = lgetv %d1;
+        symbol [ d1 %tmp.11 88 12 14 ];
+        symbol [ DIR_D %tmp.13 88 18 23 ];
+        %tmp.13 = getv ? :DIR_D;
+        %tmp.14 = eq %tmp.11 %tmp.13;
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_88_8_88_55_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_88_27_88_33_true:
+        %tmp.15 = lgetv %d2;
+        symbol [ d2 %tmp.15 88 27 29 ];
+        symbol [ DIR_U %tmp.17 88 33 38 ];
+        %tmp.17 = getv ? :DIR_U;
+        %tmp.18 = eq %tmp.15 %tmp.17;
+        push %tmp.18;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_88_27_88_33_end:
+        %tmp.19 = phi [%tmp.14 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_88_12_88_33_begin] [%tmp.18 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_88_27_88_33_true] [%tmp.19 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_88_27_88_33_end];
+        bf %tmp.19 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_88_8_88_55_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_88_8_88_55_if_true:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_88_40_88_55_start:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 88 42 ]
+        %tmp.20 = true;
+        ret %tmp.20;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_88_40_88_55_stop:
+        goto @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_88_8_88_55_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_88_8_88_55_if_end:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 89 8 ]
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_89_8_89_55_if_stmt:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_89_12_89_33_begin:
+        %tmp.21 = lgetv %d1;
+        symbol [ d1 %tmp.21 89 12 14 ];
+        symbol [ DIR_L %tmp.23 89 18 23 ];
+        %tmp.23 = getv ? :DIR_L;
+        %tmp.24 = eq %tmp.21 %tmp.23;
+        bf %tmp.24 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_89_8_89_55_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_89_27_89_33_true:
+        %tmp.25 = lgetv %d2;
+        symbol [ d2 %tmp.25 89 27 29 ];
+        symbol [ DIR_R %tmp.27 89 33 38 ];
+        %tmp.27 = getv ? :DIR_R;
+        %tmp.28 = eq %tmp.25 %tmp.27;
+        push %tmp.28;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_89_27_89_33_end:
+        %tmp.29 = phi [%tmp.24 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_89_12_89_33_begin] [%tmp.28 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_89_27_89_33_true] [%tmp.29 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_89_27_89_33_end];
+        bf %tmp.29 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_89_8_89_55_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_89_8_89_55_if_true:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_89_40_89_55_start:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 89 42 ]
+        %tmp.30 = true;
+        ret %tmp.30;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_89_40_89_55_stop:
+        goto @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_89_8_89_55_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_89_8_89_55_if_end:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 90 8 ]
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_90_8_90_55_if_stmt:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_90_12_90_33_begin:
+        %tmp.31 = lgetv %d1;
+        symbol [ d1 %tmp.31 90 12 14 ];
+        symbol [ DIR_R %tmp.33 90 18 23 ];
+        %tmp.33 = getv ? :DIR_R;
+        %tmp.34 = eq %tmp.31 %tmp.33;
+        bf %tmp.34 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_90_8_90_55_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_90_27_90_33_true:
+        %tmp.35 = lgetv %d2;
+        symbol [ d2 %tmp.35 90 27 29 ];
+        symbol [ DIR_L %tmp.37 90 33 38 ];
+        %tmp.37 = getv ? :DIR_L;
+        %tmp.38 = eq %tmp.35 %tmp.37;
+        push %tmp.38;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_90_27_90_33_end:
+        %tmp.39 = phi [%tmp.34 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_90_12_90_33_begin] [%tmp.38 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_90_27_90_33_true] [%tmp.39 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_90_27_90_33_end];
+        bf %tmp.39 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_90_8_90_55_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_90_8_90_55_if_true:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_90_40_90_55_start:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 90 42 ]
+        %tmp.40 = true;
+        ret %tmp.40;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_90_40_90_55_stop:
+        goto @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_90_8_90_55_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_90_8_90_55_if_end:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 91 8 ]
+        %tmp.41 = false;
+        ret %tmp.41;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_86_39_92_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc"; @line = 94; @symbol_functiondef = [_stepRandom,94,20,31]; @symbol_param<0> = [grid,94,32,36]; @symbol_param<1> = [n,94,38,39]; ]
+    protected
+    function _stepRandom(grid, n) {
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_94_41_119_4_start:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 95 8 ]
+        [ "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_94_41_119_4_start" "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_94_41_119_4_stop" ]
+        %legal.1 = local;
+        symbol [ legal %legal.1 95 12 17 ];
+        %tmp.1 = newa 0;
+        lputv %legal.1 %tmp.1;
+        symbol [ legal %legal.1 95 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 96 8 ]
+        for @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_96_8_103_8_for_test @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_96_8_103_8_for_incr @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_96_8_103_8_for_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_96_8_103_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_96_8_103_8_for_begin" "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_96_8_103_8_for_end" ]
+        %d.2 = local;
+        symbol [ d %d.2 96 17 18 ];
+        %tmp.2 = 0;
+        lputv %d.2 %tmp.2;
+        symbol [ d %d.2 96 17 18 ];
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_96_8_103_8_for_test:
+        %tmp.3 = lgetv %d.2;
+        symbol [ d %tmp.3 96 24 25 ];
+        %tmp.4 = 4;
+        %tmp.5 = lt %tmp.3 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_96_8_103_8_for_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_96_8_103_8_for_begin:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_96_36_103_8_start:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 97 12 ]
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_97_12_97_48_if_stmt:
+        %tmp.6 = self;
+        symbol [ _isReverse %tmp.7 97 16 26 ];
+        %tmp.7 = getv function %tmp.6 :_isReverse;
+        %tmp.8 = lgetv %d.2;
+        symbol [ d %tmp.8 97 27 28 ];
+        symbol [ dir %tmp.10 97 30 33 ];
+        %tmp.10 = getv ? :dir;
+        %tmp.11 = invoke %tmp.6 %tmp.7(%tmp.8, %tmp.10);
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_97_12_97_48_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_97_12_97_48_if_true:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_97_36_97_48_start:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 97 38 ]
+        goto break @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_96_8_103_8_for_incr;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_97_36_97_48_stop:
+        goto @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_97_12_97_48_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_97_12_97_48_if_end:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 98 12 ]
+        [ "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_96_36_103_8_start" "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_96_36_103_8_stop" ]
+        %de.3 = local;
+        symbol [ de %de.3 98 16 18 ];
+        symbol [ Player %tmp.13 98 21 27 ];
+        %tmp.13 = getv ? :Player;
+        symbol [ delta %tmp.14 98 28 33 ];
+        %tmp.14 = getv function %tmp.13 :delta;
+        %tmp.15 = lgetv %d.2;
+        symbol [ d %tmp.15 98 34 35 ];
+        %tmp.16 = invoke %tmp.13 %tmp.14(%tmp.15);
+        lputv %de.3 %tmp.16;
+        symbol [ de %de.3 98 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 99 12 ]
+        [ "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_96_36_103_8_start" "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_96_36_103_8_stop" ]
+        %nr.4 = local;
+        symbol [ nr %nr.4 99 16 18 ];
+        symbol [ r %tmp.18 99 21 22 ];
+        %tmp.18 = getv ? :r;
+        %tmp.19 = lgetv %de.3;
+        symbol [ de %tmp.19 99 25 27 ];
+        %tmp.20 = 0;
+        %tmp.21 = agetv %tmp.19 %tmp.20;
+        %tmp.22 = add %tmp.18 %tmp.21;
+        lputv %nr.4 %tmp.22;
+        symbol [ nr %nr.4 99 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 99 32 ]
+        [ "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_96_36_103_8_start" "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_96_36_103_8_stop" ]
+        %nc.5 = local;
+        symbol [ nc %nc.5 99 36 38 ];
+        symbol [ c %tmp.24 99 41 42 ];
+        %tmp.24 = getv ? :c;
+        %tmp.25 = lgetv %de.3;
+        symbol [ de %tmp.25 99 45 47 ];
+        %tmp.26 = 1;
+        %tmp.27 = agetv %tmp.25 %tmp.26;
+        %tmp.28 = add %tmp.24 %tmp.27;
+        lputv %nc.5 %tmp.28;
+        symbol [ nc %nc.5 99 36 38 ];
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 100 12 ]
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_100_12_100_68_if_stmt:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_100_16_100_53_begin:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_100_16_100_42_begin:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_100_16_100_32_begin:
+        %tmp.29 = lgetv %nr.4;
+        symbol [ nr %tmp.29 100 16 18 ];
+        %tmp.30 = 0;
+        %tmp.31 = lt %tmp.29 %tmp.30;
+        bt %tmp.31 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_100_12_100_68_if_true;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_100_26_100_32_false:
+        %tmp.32 = lgetv %nr.4;
+        symbol [ nr %tmp.32 100 26 28 ];
+        %tmp.33 = lgetv %n;
+        symbol [ n %tmp.33 100 32 33 ];
+        %tmp.34 = gte %tmp.32 %tmp.33;
+        push %tmp.34;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_100_26_100_32_end:
+        %tmp.35 = phi [%tmp.31 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_100_16_100_32_begin] [%tmp.34 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_100_26_100_32_false] [%tmp.35 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_100_26_100_32_end];
+        bt %tmp.35 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_100_12_100_68_if_true;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_100_37_100_42_false:
+        %tmp.36 = lgetv %nc.5;
+        symbol [ nc %tmp.36 100 37 39 ];
+        %tmp.37 = 0;
+        %tmp.38 = lt %tmp.36 %tmp.37;
+        push %tmp.38;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_100_37_100_42_end:
+        %tmp.39 = phi [%tmp.35 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_100_16_100_42_begin] [%tmp.38 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_100_37_100_42_false] [%tmp.39 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_100_37_100_42_end];
+        bt %tmp.39 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_100_12_100_68_if_true;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_100_47_100_53_false:
+        %tmp.40 = lgetv %nc.5;
+        symbol [ nc %tmp.40 100 47 49 ];
+        %tmp.41 = lgetv %n;
+        symbol [ n %tmp.41 100 53 54 ];
+        %tmp.42 = gte %tmp.40 %tmp.41;
+        push %tmp.42;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_100_47_100_53_end:
+        %tmp.43 = phi [%tmp.39 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_100_16_100_53_begin] [%tmp.42 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_100_47_100_53_false] [%tmp.43 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_100_47_100_53_end];
+        bf %tmp.43 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_100_12_100_68_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_100_12_100_68_if_true:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_100_56_100_68_start:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 100 58 ]
+        goto break @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_96_8_103_8_for_incr;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_100_56_100_68_stop:
+        goto @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_100_12_100_68_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_100_12_100_68_if_end:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 101 12 ]
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_101_12_101_60_if_stmt:
+        %tmp.44 = lgetv %grid;
+        symbol [ grid %tmp.44 101 16 20 ];
+        %tmp.45 = lgetv %nr.4;
+        symbol [ nr %tmp.45 101 21 23 ];
+        %tmp.46 = lgetv %n;
+        symbol [ n %tmp.46 101 26 27 ];
+        %tmp.47 = mul %tmp.45 %tmp.46;
+        %tmp.48 = lgetv %nc.5;
+        symbol [ nc %tmp.48 101 30 32 ];
+        %tmp.49 = add %tmp.47 %tmp.48;
+        %tmp.50 = agetv %tmp.44 %tmp.49;
+        symbol [ TILE_WALL %tmp.52 101 37 46 ];
+        %tmp.52 = getv ? :TILE_WALL;
+        %tmp.53 = eq %tmp.50 %tmp.52;
+        bf %tmp.53 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_101_12_101_60_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_101_12_101_60_if_true:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_101_48_101_60_start:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 101 50 ]
+        goto break @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_96_8_103_8_for_incr;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_101_48_101_60_stop:
+        goto @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_101_12_101_60_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_101_12_101_60_if_end:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 102 12 ]
+        %tmp.54 = lgetv %legal.1;
+        symbol [ legal %tmp.54 102 12 17 ];
+        symbol [ add %tmp.55 102 18 21 ];
+        %tmp.55 = getv function %tmp.54 :add;
+        %tmp.56 = lgetv %d.2;
+        symbol [ d %tmp.56 102 22 23 ];
+        invoke %tmp.54 %tmp.55(%tmp.56);
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_96_36_103_8_stop:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_96_8_103_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 96 ]
+        %tmp.59 = lgetv %d.2;
+        symbol [ d %tmp.59 96 31 32 ];
+        %tmp.60 = add %tmp.59 1;
+        lputv %d.2 %tmp.60;
+        symbol [ d %d.2 96 31 32 ];
+        goto @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_96_8_103_8_for_test;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_96_8_103_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 104 8 ]
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_104_8_113_8_if_stmt:
+        %tmp.61 = lgetv %legal.1;
+        symbol [ legal %tmp.61 104 12 17 ];
+        symbol [ size %tmp.62 104 18 22 ];
+        %tmp.62 = getv function %tmp.61 :size;
+        %tmp.63 = invoke %tmp.61 %tmp.62();
+        %tmp.64 = 0;
+        %tmp.65 = eq %tmp.63 %tmp.64;
+        bf %tmp.65 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_104_8_113_8_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_104_8_113_8_if_true:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_104_31_113_8_start:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 106 12 ]
+        for @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_106_12_112_12_for_test @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_106_12_112_12_for_incr @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_106_12_112_12_for_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_106_12_112_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_106_12_112_12_for_begin" "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_106_12_112_12_for_end" ]
+        %d2.6 = local;
+        symbol [ d2 %d2.6 106 21 23 ];
+        %tmp.66 = 0;
+        lputv %d2.6 %tmp.66;
+        symbol [ d2 %d2.6 106 21 23 ];
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_106_12_112_12_for_test:
+        %tmp.67 = lgetv %d2.6;
+        symbol [ d2 %tmp.67 106 29 31 ];
+        %tmp.68 = 4;
+        %tmp.69 = lt %tmp.67 %tmp.68;
+        bf %tmp.69 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_106_12_112_12_for_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_106_12_112_12_for_begin:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_106_43_112_12_start:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 107 16 ]
+        [ "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_106_43_112_12_start" "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_106_43_112_12_stop" ]
+        %de2.7 = local;
+        symbol [ de2 %de2.7 107 20 23 ];
+        symbol [ Player %tmp.71 107 26 32 ];
+        %tmp.71 = getv ? :Player;
+        symbol [ delta %tmp.72 107 33 38 ];
+        %tmp.72 = getv function %tmp.71 :delta;
+        %tmp.73 = lgetv %d2.6;
+        symbol [ d2 %tmp.73 107 39 41 ];
+        %tmp.74 = invoke %tmp.71 %tmp.72(%tmp.73);
+        lputv %de2.7 %tmp.74;
+        symbol [ de2 %de2.7 107 20 23 ];
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 108 16 ]
+        [ "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_106_43_112_12_start" "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_106_43_112_12_stop" ]
+        %nr2.8 = local;
+        symbol [ nr2 %nr2.8 108 20 23 ];
+        symbol [ r %tmp.76 108 26 27 ];
+        %tmp.76 = getv ? :r;
+        %tmp.77 = lgetv %de2.7;
+        symbol [ de2 %tmp.77 108 30 33 ];
+        %tmp.78 = 0;
+        %tmp.79 = agetv %tmp.77 %tmp.78;
+        %tmp.80 = add %tmp.76 %tmp.79;
+        lputv %nr2.8 %tmp.80;
+        symbol [ nr2 %nr2.8 108 20 23 ];
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 108 38 ]
+        [ "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_106_43_112_12_start" "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_106_43_112_12_stop" ]
+        %nc2.9 = local;
+        symbol [ nc2 %nc2.9 108 42 45 ];
+        symbol [ c %tmp.82 108 48 49 ];
+        %tmp.82 = getv ? :c;
+        %tmp.83 = lgetv %de2.7;
+        symbol [ de2 %tmp.83 108 52 55 ];
+        %tmp.84 = 1;
+        %tmp.85 = agetv %tmp.83 %tmp.84;
+        %tmp.86 = add %tmp.82 %tmp.85;
+        lputv %nc2.9 %tmp.86;
+        symbol [ nc2 %nc2.9 108 42 45 ];
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 109 16 ]
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_109_16_109_76_if_stmt:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_109_20_109_61_begin:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_109_20_109_49_begin:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_109_20_109_38_begin:
+        %tmp.87 = lgetv %nr2.8;
+        symbol [ nr2 %tmp.87 109 20 23 ];
+        %tmp.88 = 0;
+        %tmp.89 = lt %tmp.87 %tmp.88;
+        bt %tmp.89 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_109_16_109_76_if_true;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_109_31_109_38_false:
+        %tmp.90 = lgetv %nr2.8;
+        symbol [ nr2 %tmp.90 109 31 34 ];
+        %tmp.91 = lgetv %n;
+        symbol [ n %tmp.91 109 38 39 ];
+        %tmp.92 = gte %tmp.90 %tmp.91;
+        push %tmp.92;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_109_31_109_38_end:
+        %tmp.93 = phi [%tmp.89 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_109_20_109_38_begin] [%tmp.92 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_109_31_109_38_false] [%tmp.93 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_109_31_109_38_end];
+        bt %tmp.93 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_109_16_109_76_if_true;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_109_43_109_49_false:
+        %tmp.94 = lgetv %nc2.9;
+        symbol [ nc2 %tmp.94 109 43 46 ];
+        %tmp.95 = 0;
+        %tmp.96 = lt %tmp.94 %tmp.95;
+        push %tmp.96;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_109_43_109_49_end:
+        %tmp.97 = phi [%tmp.93 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_109_20_109_49_begin] [%tmp.96 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_109_43_109_49_false] [%tmp.97 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_109_43_109_49_end];
+        bt %tmp.97 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_109_16_109_76_if_true;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_109_54_109_61_false:
+        %tmp.98 = lgetv %nc2.9;
+        symbol [ nc2 %tmp.98 109 54 57 ];
+        %tmp.99 = lgetv %n;
+        symbol [ n %tmp.99 109 61 62 ];
+        %tmp.100 = gte %tmp.98 %tmp.99;
+        push %tmp.100;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_109_54_109_61_end:
+        %tmp.101 = phi [%tmp.97 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_109_20_109_61_begin] [%tmp.100 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_109_54_109_61_false] [%tmp.101 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_109_54_109_61_end];
+        bf %tmp.101 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_109_16_109_76_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_109_16_109_76_if_true:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_109_64_109_76_start:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 109 66 ]
+        goto break @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_106_12_112_12_for_incr;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_109_64_109_76_stop:
+        goto @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_109_16_109_76_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_109_16_109_76_if_end:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 110 16 ]
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_110_16_110_66_if_stmt:
+        %tmp.102 = lgetv %grid;
+        symbol [ grid %tmp.102 110 20 24 ];
+        %tmp.103 = lgetv %nr2.8;
+        symbol [ nr2 %tmp.103 110 25 28 ];
+        %tmp.104 = lgetv %n;
+        symbol [ n %tmp.104 110 31 32 ];
+        %tmp.105 = mul %tmp.103 %tmp.104;
+        %tmp.106 = lgetv %nc2.9;
+        symbol [ nc2 %tmp.106 110 35 38 ];
+        %tmp.107 = add %tmp.105 %tmp.106;
+        %tmp.108 = agetv %tmp.102 %tmp.107;
+        symbol [ TILE_WALL %tmp.110 110 43 52 ];
+        %tmp.110 = getv ? :TILE_WALL;
+        %tmp.111 = eq %tmp.108 %tmp.110;
+        bf %tmp.111 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_110_16_110_66_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_110_16_110_66_if_true:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_110_54_110_66_start:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 110 56 ]
+        goto break @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_106_12_112_12_for_incr;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_110_54_110_66_stop:
+        goto @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_110_16_110_66_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_110_16_110_66_if_end:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 111 16 ]
+        %tmp.112 = lgetv %legal.1;
+        symbol [ legal %tmp.112 111 16 21 ];
+        symbol [ add %tmp.113 111 22 25 ];
+        %tmp.113 = getv function %tmp.112 :add;
+        %tmp.114 = lgetv %d2.6;
+        symbol [ d2 %tmp.114 111 26 28 ];
+        invoke %tmp.112 %tmp.113(%tmp.114);
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_106_43_112_12_stop:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_106_12_112_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 106 ]
+        %tmp.117 = lgetv %d2.6;
+        symbol [ d2 %tmp.117 106 37 39 ];
+        %tmp.118 = add %tmp.117 1;
+        lputv %d2.6 %tmp.118;
+        symbol [ d2 %d2.6 106 37 39 ];
+        goto @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_106_12_112_12_for_test;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_106_12_112_12_for_end:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_104_31_113_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_104_8_113_8_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_104_8_113_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 114 8 ]
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_114_8_114_41_if_stmt:
+        %tmp.119 = lgetv %legal.1;
+        symbol [ legal %tmp.119 114 12 17 ];
+        symbol [ size %tmp.120 114 18 22 ];
+        %tmp.120 = getv function %tmp.119 :size;
+        %tmp.121 = invoke %tmp.119 %tmp.120();
+        %tmp.122 = 0;
+        %tmp.123 = eq %tmp.121 %tmp.122;
+        bf %tmp.123 @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_114_8_114_41_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_114_8_114_41_if_true:
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_114_31_114_41_start:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 114 33 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_114_31_114_41_stop:
+        goto @_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_114_8_114_41_if_end;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_114_8_114_41_if_end:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 115 8 ]
+        [ "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_94_41_119_4_start" "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_94_41_119_4_stop" ]
+        %pick.10 = local;
+        symbol [ pick %pick.10 115 12 16 ];
+        %tmp.124 = lgetv %legal.1;
+        symbol [ legal %tmp.124 115 19 24 ];
+        symbol [ Math %tmp.125 115 25 29 ];
+        %tmp.125 = getm $.Toybox.Math;
+        symbol [ rand %tmp.126 115 30 34 ];
+        %tmp.126 = getv function %tmp.125 :rand;
+        %tmp.127 = invoke %tmp.125 %tmp.126();
+        %tmp.128 = lgetv %legal.1;
+        symbol [ legal %tmp.128 115 39 44 ];
+        symbol [ size %tmp.129 115 45 49 ];
+        %tmp.129 = getv function %tmp.128 :size;
+        %tmp.130 = invoke %tmp.128 %tmp.129();
+        %tmp.131 = mod %tmp.127 %tmp.130;
+        %tmp.132 = agetv %tmp.124 %tmp.131;
+        lputv %pick.10 %tmp.132;
+        symbol [ pick %pick.10 115 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 116 8 ]
+        %tmp.133 = lgetv %pick.10;
+        symbol [ pick %tmp.133 116 14 18 ];
+        symbol [ dir ? 116 8 11 ];
+        putv self :dir %tmp.133;
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 117 8 ]
+        [ "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_94_41_119_4_start" "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_94_41_119_4_stop" ]
+        %ded.11 = local;
+        symbol [ ded %ded.11 117 12 15 ];
+        symbol [ Player %tmp.135 117 18 24 ];
+        %tmp.135 = getv ? :Player;
+        symbol [ delta %tmp.136 117 25 30 ];
+        %tmp.136 = getv function %tmp.135 :delta;
+        symbol [ dir %tmp.138 117 31 34 ];
+        %tmp.138 = getv ? :dir;
+        %tmp.139 = invoke %tmp.135 %tmp.136(%tmp.138);
+        lputv %ded.11 %tmp.139;
+        symbol [ ded %ded.11 117 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 118 8 ]
+        symbol [ r %tmp.141 118 12 13 ];
+        %tmp.141 = getv ? :r;
+        %tmp.142 = lgetv %ded.11;
+        symbol [ ded %tmp.142 118 16 19 ];
+        %tmp.143 = 0;
+        %tmp.144 = agetv %tmp.142 %tmp.143;
+        %tmp.145 = add %tmp.141 %tmp.144;
+        symbol [ r ? 118 8 9 ];
+        putv self :r %tmp.145;
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 118 24 ]
+        symbol [ c %tmp.147 118 28 29 ];
+        %tmp.147 = getv ? :c;
+        %tmp.148 = lgetv %ded.11;
+        symbol [ ded %tmp.148 118 32 35 ];
+        %tmp.149 = 1;
+        %tmp.150 = agetv %tmp.148 %tmp.149;
+        %tmp.151 = add %tmp.147 %tmp.150;
+        symbol [ c ? 118 24 25 ];
+        putv self :c %tmp.151;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_94_41_119_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc"; @line = 122; @symbol_functiondef = [predictTarget,122,20,33]; @symbol_param<0> = [player,122,34,40]; ]
+    static
+    function predictTarget(player) {
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_122_42_125_4_start:
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 123 8 ]
+        [ "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_122_42_125_4_start" "_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_122_42_125_4_stop" ]
+        %d.1 = local;
+        symbol [ d %d.1 123 12 13 ];
+        symbol [ Player %tmp.2 123 16 22 ];
+        %tmp.2 = getv ? :Player;
+        symbol [ delta %tmp.3 123 23 28 ];
+        %tmp.3 = getv function %tmp.2 :delta;
+        %tmp.4 = lgetv %player;
+        symbol [ player %tmp.4 123 29 35 ];
+        symbol [ dir %tmp.5 123 36 39 ];
+        %tmp.5 = getv %tmp.4 :dir;
+        %tmp.6 = invoke %tmp.2 %tmp.3(%tmp.5);
+        lputv %d.1 %tmp.6;
+        symbol [ d %d.1 123 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc" 124 8 ]
+        %tmp.7 = newa 2;
+        %tmp.8 = lgetv %player;
+        symbol [ player %tmp.8 124 16 22 ];
+        symbol [ r %tmp.9 124 23 24 ];
+        %tmp.9 = getv %tmp.8 :r;
+        %tmp.10 = lgetv %d.1;
+        symbol [ d %tmp.10 124 27 28 ];
+        %tmp.11 = 0;
+        %tmp.12 = agetv %tmp.10 %tmp.11;
+        %tmp.13 = 2;
+        %tmp.14 = mul %tmp.12 %tmp.13;
+        %tmp.15 = add %tmp.9 %tmp.14;
+        %tmp.16 = dup %tmp.7;
+        %tmp.17 = aputv %tmp.16 0 %tmp.15;
+        %tmp.18 = lgetv %player;
+        symbol [ player %tmp.18 124 37 43 ];
+        symbol [ c %tmp.19 124 44 45 ];
+        %tmp.19 = getv %tmp.18 :c;
+        %tmp.20 = lgetv %d.1;
+        symbol [ d %tmp.20 124 48 49 ];
+        %tmp.21 = 1;
+        %tmp.22 = agetv %tmp.20 %tmp.21;
+        %tmp.23 = 2;
+        %tmp.24 = mul %tmp.22 %tmp.23;
+        %tmp.25 = add %tmp.19 %tmp.24;
+        %tmp.26 = dup %tmp.17;
+        %tmp.27 = aputv %tmp.26 1 %tmp.25;
+        ret %tmp.27;
+_Users_kkorolczuk_work_garmin_neonwyrm_source_EnemyAI_mc_122_42_125_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/neonwyrm/source/EnemyAI.mc"; @line = 11; ]
+<init> {
+}

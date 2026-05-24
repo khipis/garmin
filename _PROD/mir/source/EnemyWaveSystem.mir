@@ -1,0 +1,1212 @@
+[ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 24; @symbol_usingdef<0> = [Toybox,24,6,12]; @symbol_usingdef<1> = [Math,24,13,17]; ]
+using Toybox.Math;
+[ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 26; @position = 6; @symbol_constdef = [E_FORMATION,26,6,17]; ]
+const E_FORMATION = 0;
+[ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 27; @position = 6; @symbol_constdef = [E_DIVING,27,6,14]; ]
+const E_DIVING = 1;
+[ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 28; @position = 6; @symbol_constdef = [E_DEAD,28,6,12]; ]
+const E_DEAD = 2;
+[ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 30; @position = 6; @symbol_constdef = [E_TYPE_DRONE,30,6,18]; ]
+const E_TYPE_DRONE = 0;
+[ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 31; @position = 6; @symbol_constdef = [E_TYPE_GUARD,31,6,18]; ]
+const E_TYPE_GUARD = 1;
+[ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 32; @position = 6; @symbol_constdef = [E_TYPE_BOSS,32,6,17]; ]
+const E_TYPE_BOSS = 2;
+[ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 34; @position = 6; @symbol_constdef = [SS_FORM_ROW_TOP,34,6,21]; ]
+const SS_FORM_ROW_TOP = 1;
+[ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 35; @position = 6; @symbol_constdef = [SS_FORM_ROW_COUNT,35,6,23]; ]
+const SS_FORM_ROW_COUNT = 4;
+[ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 36; @position = 6; @symbol_constdef = [SS_FORM_COLS,36,6,18]; ]
+const SS_FORM_COLS = 6;
+[ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 37; @position = 6; @symbol_constdef = [SS_FORM_COL_OFF,37,6,21]; ]
+const SS_FORM_COL_OFF = 1;
+[ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 39; @symbol_classdef = [Enemy,39,6,11]; ]
+class Enemy {
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 39; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 39; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 40; @position = 8; @symbol_vardef = [state,40,8,13]; ]
+    var state;
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 41; @position = 8; @symbol_vardef = [type,41,8,12]; ]
+    var type;
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 43; @position = 8; @symbol_vardef = [formR,43,8,13]; ]
+    var formR;
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 44; @position = 8; @symbol_vardef = [formC,44,8,13]; ]
+    var formC;
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 46; @position = 8; @symbol_vardef = [col,46,8,11]; ]
+    var col;
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 47; @position = 8; @symbol_vardef = [row,47,8,11]; ]
+    var row;
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 49; @position = 8; @symbol_vardef = [diveT,49,8,13]; ]
+    var diveT;
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 50; @position = 8; @symbol_vardef = [diveTargetC,50,8,19]; ]
+    var diveTargetC;
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 51; @position = 8; @symbol_vardef = [curlSide,51,8,16]; ]
+    var curlSide;
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 52; @position = 8; @symbol_vardef = [curlAmp,52,8,15]; ]
+    var curlAmp;
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 54; @symbol_functiondef = [initialize,54,13,23]; @symbol_param<0> = [type_,54,24,29]; @symbol_param<1> = [fr,54,31,33]; @symbol_param<2> = [fc,54,35,37]; ]
+    function initialize(type_, fr, fc) as Void {
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_54_39_60_4_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 55 8 ]
+        symbol [ E_FORMATION %tmp.2 55 16 27 ];
+        %tmp.2 = getv ? :E_FORMATION;
+        symbol [ state ? 55 8 13 ];
+        putv self :state %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 55 29 ]
+        %tmp.3 = lgetv %type_;
+        symbol [ type_ %tmp.3 55 36 41 ];
+        symbol [ type ? 55 29 33 ];
+        putv self :type %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 56 8 ]
+        %tmp.4 = lgetv %fr;
+        symbol [ fr %tmp.4 56 16 18 ];
+        symbol [ formR ? 56 8 13 ];
+        putv self :formR %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 56 20 ]
+        %tmp.5 = lgetv %fc;
+        symbol [ fc %tmp.5 56 28 30 ];
+        symbol [ formC ? 56 20 25 ];
+        putv self :formC %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 57 8 ]
+        %tmp.6 = lgetv %fc;
+        symbol [ fc %tmp.6 57 16 18 ];
+        %tmp.7 = 0.0;
+        %tmp.8 = add %tmp.6 %tmp.7;
+        symbol [ col ? 57 8 11 ];
+        putv self :col %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 57 26 ]
+        %tmp.9 = lgetv %fr;
+        symbol [ fr %tmp.9 57 32 34 ];
+        %tmp.10 = 0.0;
+        %tmp.11 = add %tmp.9 %tmp.10;
+        symbol [ row ? 57 26 29 ];
+        putv self :row %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 58 8 ]
+        %tmp.12 = 0.0;
+        symbol [ diveT ? 58 8 13 ];
+        putv self :diveT %tmp.12;
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 58 21 ]
+        %tmp.13 = 0.0;
+        symbol [ diveTargetC ? 58 21 32 ];
+        putv self :diveTargetC %tmp.13;
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 59 8 ]
+        %tmp.14 = 1;
+        symbol [ curlSide ? 59 8 16 ];
+        putv self :curlSide %tmp.14;
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 59 22 ]
+        %tmp.15 = 2.0;
+        symbol [ curlAmp ? 59 22 29 ];
+        putv self :curlAmp %tmp.15;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_54_39_60_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 62; @symbol_functiondef = [intCol,62,13,19]; ]
+    function intCol() {
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_62_22_67_4_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 63 8 ]
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_62_22_67_4_start" "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_62_22_67_4_stop" ]
+        %c.1 = local;
+        symbol [ c %c.1 63 12 13 ];
+        symbol [ col %tmp.2 63 17 20 ];
+        %tmp.2 = getv ? :col;
+        %tmp.3 = 0.5;
+        %tmp.4 = add %tmp.2 %tmp.3;
+        symbol [ toNumber %tmp.5 63 28 36 ];
+        %tmp.5 = getv function %tmp.4 :toNumber;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        lputv %c.1 %tmp.6;
+        symbol [ c %c.1 63 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 64 8 ]
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_64_8_64_45_if_stmt:
+        %tmp.7 = lgetv %c.1;
+        symbol [ c %tmp.7 64 12 13 ];
+        %tmp.8 = 0;
+        %tmp.9 = lt %tmp.7 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_64_8_64_45_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_64_8_64_45_if_true:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_64_36_64_45_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 64 38 ]
+        %tmp.10 = 0;
+        lputv %c.1 %tmp.10;
+        symbol [ c %c.1 64 38 39 ];
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_64_36_64_45_stop:
+        goto @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_64_8_64_45_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_64_8_64_45_if_end:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 65 8 ]
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_65_8_65_61_if_stmt:
+        %tmp.11 = lgetv %c.1;
+        symbol [ c %tmp.11 65 12 13 ];
+        symbol [ SS_BOARD_COLS %tmp.13 65 17 30 ];
+        %tmp.13 = getv ? :SS_BOARD_COLS;
+        %tmp.14 = gte %tmp.11 %tmp.13;
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_65_8_65_61_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_65_8_65_61_if_true:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_65_36_65_61_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 65 38 ]
+        symbol [ SS_BOARD_COLS %tmp.16 65 42 55 ];
+        %tmp.16 = getv ? :SS_BOARD_COLS;
+        %tmp.17 = 1;
+        %tmp.18 = sub %tmp.16 %tmp.17;
+        lputv %c.1 %tmp.18;
+        symbol [ c %c.1 65 38 39 ];
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_65_36_65_61_stop:
+        goto @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_65_8_65_61_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_65_8_65_61_if_end:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 66 8 ]
+        %tmp.19 = lgetv %c.1;
+        symbol [ c %tmp.19 66 15 16 ];
+        ret %tmp.19;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_62_22_67_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 68; @symbol_functiondef = [intRow,68,13,19]; ]
+    function intRow() {
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_68_22_72_4_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 69 8 ]
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_68_22_72_4_start" "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_68_22_72_4_stop" ]
+        %r.1 = local;
+        symbol [ r %r.1 69 12 13 ];
+        symbol [ row %tmp.2 69 17 20 ];
+        %tmp.2 = getv ? :row;
+        %tmp.3 = 0.5;
+        %tmp.4 = add %tmp.2 %tmp.3;
+        symbol [ toNumber %tmp.5 69 28 36 ];
+        %tmp.5 = getv function %tmp.4 :toNumber;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        lputv %r.1 %tmp.6;
+        symbol [ r %r.1 69 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 70 8 ]
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_70_8_70_29_if_stmt:
+        %tmp.7 = lgetv %r.1;
+        symbol [ r %tmp.7 70 12 13 ];
+        %tmp.8 = 0;
+        %tmp.9 = lt %tmp.7 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_70_8_70_29_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_70_8_70_29_if_true:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_70_19_70_29_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 70 21 ]
+        %tmp.10 = -1;
+        lputv %r.1 %tmp.10;
+        symbol [ r %r.1 70 21 22 ];
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_70_19_70_29_stop:
+        goto @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_70_8_70_29_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_70_8_70_29_if_end:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 71 8 ]
+        %tmp.11 = lgetv %r.1;
+        symbol [ r %tmp.11 71 15 16 ];
+        ret %tmp.11;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_68_22_72_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 75; @symbol_classdef = [EnemyWaveSystem,75,6,21]; ]
+class EnemyWaveSystem {
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 75; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 75; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 76; @position = 8; @symbol_vardef = [enemies,76,8,15]; ]
+    var enemies;
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 77; @position = 8; @symbol_vardef = [swayPhase,77,8,17]; ]
+    var swayPhase;
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 78; @position = 8; @symbol_vardef = [diveSpeed,78,8,17]; ]
+    var diveSpeed;
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 79; @position = 8; @symbol_vardef = [wave,79,8,12]; ]
+    var wave;
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 81; @symbol_functiondef = [initialize,81,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_81_26_86_4_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 82 8 ]
+        %tmp.1 = newa 0;
+        symbol [ enemies ? 82 8 15 ];
+        putv self :enemies %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 83 8 ]
+        %tmp.2 = 0.0;
+        symbol [ swayPhase ? 83 8 17 ];
+        putv self :swayPhase %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 84 8 ]
+        %tmp.3 = 0.020;
+        symbol [ diveSpeed ? 84 8 17 ];
+        putv self :diveSpeed %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 85 8 ]
+        %tmp.4 = 1;
+        symbol [ wave ? 85 8 12 ];
+        putv self :wave %tmp.4;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_81_26_86_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 88; @symbol_functiondef = [reset,88,13,18]; ]
+    function reset() {
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_88_21_88_54_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 88 23 ]
+        %tmp.1 = newa 0;
+        symbol [ enemies ? 88 23 30 ];
+        putv self :enemies %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 88 37 ]
+        %tmp.2 = 0.0;
+        symbol [ swayPhase ? 88 37 46 ];
+        putv self :swayPhase %tmp.2;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_88_21_88_54_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 91; @symbol_functiondef = [_slotsForWave,91,20,33]; @symbol_param<0> = [w,91,34,35]; ]
+    protected
+    function _slotsForWave(w) {
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_91_37_96_4_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 92 8 ]
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_91_37_96_4_start" "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_91_37_96_4_stop" ]
+        %n.1 = local;
+        symbol [ n %n.1 92 12 13 ];
+        %tmp.1 = 12;
+        %tmp.2 = lgetv %w;
+        symbol [ w %tmp.2 92 22 23 ];
+        %tmp.3 = 1;
+        %tmp.4 = sub %tmp.2 %tmp.3;
+        %tmp.5 = 3;
+        %tmp.6 = mul %tmp.4 %tmp.5;
+        %tmp.7 = add %tmp.1 %tmp.6;
+        lputv %n.1 %tmp.7;
+        symbol [ n %n.1 92 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 93 8 ]
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_91_37_96_4_start" "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_91_37_96_4_stop" ]
+        %maxN.2 = local;
+        symbol [ maxN %maxN.2 93 12 16 ];
+        symbol [ SS_FORM_ROW_COUNT %tmp.9 93 19 36 ];
+        %tmp.9 = getv ? :SS_FORM_ROW_COUNT;
+        symbol [ SS_FORM_COLS %tmp.11 93 39 51 ];
+        %tmp.11 = getv ? :SS_FORM_COLS;
+        %tmp.12 = mul %tmp.9 %tmp.11;
+        lputv %maxN.2 %tmp.12;
+        symbol [ maxN %maxN.2 93 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 94 8 ]
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_94_8_94_34_if_stmt:
+        %tmp.13 = lgetv %n.1;
+        symbol [ n %tmp.13 94 12 13 ];
+        %tmp.14 = lgetv %maxN.2;
+        symbol [ maxN %tmp.14 94 16 20 ];
+        %tmp.15 = gt %tmp.13 %tmp.14;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_94_8_94_34_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_94_8_94_34_if_true:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_94_22_94_34_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 94 24 ]
+        %tmp.16 = lgetv %maxN.2;
+        symbol [ maxN %tmp.16 94 28 32 ];
+        lputv %n.1 %tmp.16;
+        symbol [ n %n.1 94 24 25 ];
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_94_22_94_34_stop:
+        goto @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_94_8_94_34_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_94_8_94_34_if_end:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 95 8 ]
+        %tmp.17 = lgetv %n.1;
+        symbol [ n %tmp.17 95 15 16 ];
+        ret %tmp.17;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_91_37_96_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 98; @symbol_functiondef = [populate,98,13,21]; @symbol_param<0> = [w,98,22,23]; @symbol_param<1> = [baseDiveSpeed,98,25,38]; ]
+    function populate(w, baseDiveSpeed) {
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_98_40_120_4_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 99 8 ]
+        %tmp.1 = lgetv %w;
+        symbol [ w %tmp.1 99 20 21 ];
+        symbol [ wave ? 99 8 12 ];
+        putv self :wave %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 100 8 ]
+        %tmp.2 = lgetv %baseDiveSpeed;
+        symbol [ baseDiveSpeed %tmp.2 100 20 33 ];
+        %tmp.3 = 0.0035;
+        %tmp.4 = lgetv %w;
+        symbol [ w %tmp.4 100 46 47 ];
+        %tmp.5 = 1;
+        %tmp.6 = sub %tmp.4 %tmp.5;
+        %tmp.7 = mul %tmp.3 %tmp.6;
+        %tmp.8 = add %tmp.2 %tmp.7;
+        symbol [ diveSpeed ? 100 8 17 ];
+        putv self :diveSpeed %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 101 8 ]
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_101_8_101_52_if_stmt:
+        symbol [ diveSpeed %tmp.10 101 12 21 ];
+        %tmp.10 = getv ? :diveSpeed;
+        %tmp.11 = 0.055;
+        %tmp.12 = gt %tmp.10 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_101_8_101_52_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_101_8_101_52_if_true:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_101_31_101_52_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 101 33 ]
+        %tmp.13 = 0.055;
+        symbol [ diveSpeed ? 101 33 42 ];
+        putv self :diveSpeed %tmp.13;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_101_31_101_52_stop:
+        goto @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_101_8_101_52_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_101_8_101_52_if_end:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 102 8 ]
+        %tmp.14 = newa 0;
+        symbol [ enemies ? 102 8 15 ];
+        putv self :enemies %tmp.14;
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 103 8 ]
+        %tmp.15 = 0.0;
+        symbol [ swayPhase ? 103 8 17 ];
+        putv self :swayPhase %tmp.15;
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 104 8 ]
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_98_40_120_4_start" "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_98_40_120_4_stop" ]
+        %n.1 = local;
+        symbol [ n %n.1 104 12 13 ];
+        %tmp.16 = self;
+        symbol [ _slotsForWave %tmp.17 104 16 29 ];
+        %tmp.17 = getv function %tmp.16 :_slotsForWave;
+        %tmp.18 = lgetv %w;
+        symbol [ w %tmp.18 104 30 31 ];
+        %tmp.19 = invoke %tmp.16 %tmp.17(%tmp.18);
+        lputv %n.1 %tmp.19;
+        symbol [ n %n.1 104 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 105 8 ]
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_98_40_120_4_start" "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_98_40_120_4_stop" ]
+        %placed.2 = local;
+        symbol [ placed %placed.2 105 12 18 ];
+        %tmp.20 = 0;
+        lputv %placed.2 %tmp.20;
+        symbol [ placed %placed.2 105 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 107 8 ]
+        for @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_107_8_119_8_for_test @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_107_8_119_8_for_incr @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_107_8_119_8_for_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_107_8_119_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_107_8_119_8_for_begin" "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_107_8_119_8_for_end" ]
+        %fr.3 = local;
+        symbol [ fr %fr.3 107 17 19 ];
+        %tmp.21 = 0;
+        lputv %fr.3 %tmp.21;
+        symbol [ fr %fr.3 107 17 19 ];
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_107_8_119_8_for_test:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_107_25_107_60_begin:
+        %tmp.22 = lgetv %fr.3;
+        symbol [ fr %tmp.22 107 25 27 ];
+        symbol [ SS_FORM_ROW_COUNT %tmp.24 107 30 47 ];
+        %tmp.24 = getv ? :SS_FORM_ROW_COUNT;
+        %tmp.25 = lt %tmp.22 %tmp.24;
+        %tmp.26 = dup %tmp.25;
+        bf %tmp.26 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_107_51_107_60_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_107_51_107_60_true:
+        %tmp.27 = lgetv %placed.2;
+        symbol [ placed %tmp.27 107 51 57 ];
+        %tmp.28 = lgetv %n.1;
+        symbol [ n %tmp.28 107 60 61 ];
+        %tmp.29 = lt %tmp.27 %tmp.28;
+        %tmp.30 = and %tmp.25 %tmp.29;
+        push %tmp.30;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_107_51_107_60_end:
+        %tmp.31 = phi [%tmp.26 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_107_25_107_60_begin] [%tmp.30 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_107_51_107_60_true] [%tmp.31 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_107_51_107_60_end];
+        bf %tmp.31 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_107_8_119_8_for_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_107_8_119_8_for_begin:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_107_69_119_8_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 108 12 ]
+        for @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_108_12_118_12_for_test @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_108_12_118_12_for_incr @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_108_12_118_12_for_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_108_12_118_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_108_12_118_12_for_begin" "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_108_12_118_12_for_end" ]
+        %fc.4 = local;
+        symbol [ fc %fc.4 108 21 23 ];
+        %tmp.32 = 0;
+        lputv %fc.4 %tmp.32;
+        symbol [ fc %fc.4 108 21 23 ];
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_108_12_118_12_for_test:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_108_29_108_59_begin:
+        %tmp.33 = lgetv %fc.4;
+        symbol [ fc %tmp.33 108 29 31 ];
+        symbol [ SS_FORM_COLS %tmp.35 108 34 46 ];
+        %tmp.35 = getv ? :SS_FORM_COLS;
+        %tmp.36 = lt %tmp.33 %tmp.35;
+        %tmp.37 = dup %tmp.36;
+        bf %tmp.37 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_108_50_108_59_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_108_50_108_59_true:
+        %tmp.38 = lgetv %placed.2;
+        symbol [ placed %tmp.38 108 50 56 ];
+        %tmp.39 = lgetv %n.1;
+        symbol [ n %tmp.39 108 59 60 ];
+        %tmp.40 = lt %tmp.38 %tmp.39;
+        %tmp.41 = and %tmp.36 %tmp.40;
+        push %tmp.41;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_108_50_108_59_end:
+        %tmp.42 = phi [%tmp.37 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_108_29_108_59_begin] [%tmp.41 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_108_50_108_59_true] [%tmp.42 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_108_50_108_59_end];
+        bf %tmp.42 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_108_12_118_12_for_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_108_12_118_12_for_begin:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_108_68_118_12_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 109 16 ]
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_108_68_118_12_start" "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_108_68_118_12_stop" ]
+        %typ.5 = local;
+        symbol [ typ %typ.5 109 20 23 ];
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 110 16 ]
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_110_16_112_56_if_stmt:
+        %tmp.43 = lgetv %fr.3;
+        symbol [ fr %tmp.43 110 20 22 ];
+        %tmp.44 = 0;
+        %tmp.45 = eq %tmp.43 %tmp.44;
+        bf %tmp.45 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_110_16_112_56_if_false;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_110_16_112_56_if_true:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_110_34_110_56_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 110 36 ]
+        symbol [ E_TYPE_BOSS %tmp.47 110 42 53 ];
+        %tmp.47 = getv ? :E_TYPE_BOSS;
+        lputv %typ.5 %tmp.47;
+        symbol [ typ %typ.5 110 36 39 ];
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_110_34_110_56_stop:
+        goto @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_110_16_112_56_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_110_16_112_56_if_false:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 111 21 ]
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_111_21_112_56_if_stmt:
+        %tmp.48 = lgetv %fr.3;
+        symbol [ fr %tmp.48 111 25 27 ];
+        %tmp.49 = 1;
+        %tmp.50 = lte %tmp.48 %tmp.49;
+        bf %tmp.50 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_111_21_112_56_if_else_false;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_111_21_112_56_if_true:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_111_34_111_56_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 111 36 ]
+        symbol [ E_TYPE_GUARD %tmp.52 111 42 54 ];
+        %tmp.52 = getv ? :E_TYPE_GUARD;
+        lputv %typ.5 %tmp.52;
+        symbol [ typ %typ.5 111 36 39 ];
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_111_34_111_56_stop:
+        goto @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_111_21_112_56_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_111_21_112_56_if_else_false:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_112_34_112_56_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 112 36 ]
+        symbol [ E_TYPE_DRONE %tmp.54 112 42 54 ];
+        %tmp.54 = getv ? :E_TYPE_DRONE;
+        lputv %typ.5 %tmp.54;
+        symbol [ typ %typ.5 112 36 39 ];
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_112_34_112_56_stop:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_111_21_112_56_if_end:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_110_16_112_56_if_end:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 113 16 ]
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_108_68_118_12_start" "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_108_68_118_12_stop" ]
+        %e.6 = local;
+        symbol [ e %e.6 113 20 21 ];
+        symbol [ Enemy %tmp.58 113 28 33 ];
+        %tmp.58 = getv ? :Enemy;
+        %tmp.59 = lgetv %typ.5;
+        symbol [ typ %tmp.59 113 34 37 ];
+        symbol [ SS_FORM_ROW_TOP %tmp.61 114 34 49 ];
+        %tmp.61 = getv ? :SS_FORM_ROW_TOP;
+        %tmp.62 = lgetv %fr.3;
+        symbol [ fr %tmp.62 114 52 54 ];
+        %tmp.63 = add %tmp.61 %tmp.62;
+        symbol [ SS_FORM_COL_OFF %tmp.65 115 34 49 ];
+        %tmp.65 = getv ? :SS_FORM_COL_OFF;
+        %tmp.66 = lgetv %fc.4;
+        symbol [ fc %tmp.66 115 52 54 ];
+        %tmp.67 = add %tmp.65 %tmp.66;
+        %tmp.55 = newc %tmp.58 (%tmp.59, %tmp.63, %tmp.67);
+        lputv %e.6 %tmp.55;
+        symbol [ e %e.6 113 20 21 ];
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 116 16 ]
+        symbol [ enemies %tmp.69 116 16 23 ];
+        %tmp.69 = getv ? :enemies;
+        symbol [ add %tmp.70 116 24 27 ];
+        %tmp.70 = getv function %tmp.69 :add;
+        %tmp.71 = lgetv %e.6;
+        symbol [ e %tmp.71 116 28 29 ];
+        invoke %tmp.69 %tmp.70(%tmp.71);
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 117 16 ]
+        %tmp.72 = lgetv %placed.2;
+        symbol [ placed %tmp.72 117 25 31 ];
+        %tmp.73 = 1;
+        %tmp.74 = add %tmp.72 %tmp.73;
+        lputv %placed.2 %tmp.74;
+        symbol [ placed %placed.2 117 16 22 ];
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_108_68_118_12_stop:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_108_12_118_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 108 ]
+        %tmp.77 = lgetv %fc.4;
+        symbol [ fc %tmp.77 108 62 64 ];
+        %tmp.78 = add %tmp.77 1;
+        lputv %fc.4 %tmp.78;
+        symbol [ fc %fc.4 108 62 64 ];
+        goto @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_108_12_118_12_for_test;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_108_12_118_12_for_end:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_107_69_119_8_stop:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_107_8_119_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 107 ]
+        %tmp.81 = lgetv %fr.3;
+        symbol [ fr %tmp.81 107 63 65 ];
+        %tmp.82 = add %tmp.81 1;
+        lputv %fr.3 %tmp.82;
+        symbol [ fr %fr.3 107 63 65 ];
+        goto @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_107_8_119_8_for_test;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_107_8_119_8_for_end:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_98_40_120_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 124; @symbol_functiondef = [tickFormation,124,13,26]; ]
+    function tickFormation() {
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_124_29_134_4_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 125 8 ]
+        symbol [ swayPhase %tmp.2 125 20 29 ];
+        %tmp.2 = getv ? :swayPhase;
+        %tmp.3 = 0.06;
+        %tmp.4 = add %tmp.2 %tmp.3;
+        symbol [ swayPhase ? 125 8 17 ];
+        putv self :swayPhase %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 126 8 ]
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_126_8_126_64_if_stmt:
+        symbol [ swayPhase %tmp.6 126 12 21 ];
+        %tmp.6 = getv ? :swayPhase;
+        %tmp.7 = 100.0;
+        %tmp.8 = gt %tmp.6 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_126_8_126_64_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_126_8_126_64_if_true:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_126_31_126_64_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 126 33 ]
+        symbol [ swayPhase %tmp.10 126 45 54 ];
+        %tmp.10 = getv ? :swayPhase;
+        %tmp.11 = 100.0;
+        %tmp.12 = sub %tmp.10 %tmp.11;
+        symbol [ swayPhase ? 126 33 42 ];
+        putv self :swayPhase %tmp.12;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_126_31_126_64_stop:
+        goto @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_126_8_126_64_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_126_8_126_64_if_end:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 127 8 ]
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_124_29_134_4_start" "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_124_29_134_4_stop" ]
+        %dx.1 = local;
+        symbol [ dx %dx.1 127 12 14 ];
+        %tmp.13 = 0.9;
+        symbol [ Math %tmp.14 127 23 27 ];
+        %tmp.14 = getm $.Toybox.Math;
+        symbol [ sin %tmp.15 127 28 31 ];
+        %tmp.15 = getv function %tmp.14 :sin;
+        symbol [ swayPhase %tmp.17 127 32 41 ];
+        %tmp.17 = getv ? :swayPhase;
+        %tmp.18 = invoke %tmp.14 %tmp.15(%tmp.17);
+        %tmp.19 = mul %tmp.13 %tmp.18;
+        lputv %dx.1 %tmp.19;
+        symbol [ dx %dx.1 127 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 128 8 ]
+        for @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_128_8_133_8_for_test @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_128_8_133_8_for_incr @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_128_8_133_8_for_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_128_8_133_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_128_8_133_8_for_begin" "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_128_8_133_8_for_end" ]
+        %i.2 = local;
+        symbol [ i %i.2 128 17 18 ];
+        %tmp.20 = 0;
+        lputv %i.2 %tmp.20;
+        symbol [ i %i.2 128 17 18 ];
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_128_8_133_8_for_test:
+        %tmp.21 = lgetv %i.2;
+        symbol [ i %tmp.21 128 24 25 ];
+        symbol [ enemies %tmp.23 128 28 35 ];
+        %tmp.23 = getv ? :enemies;
+        symbol [ size %tmp.24 128 36 40 ];
+        %tmp.24 = getv function %tmp.23 :size;
+        %tmp.25 = invoke %tmp.23 %tmp.24();
+        %tmp.26 = lt %tmp.21 %tmp.25;
+        bf %tmp.26 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_128_8_133_8_for_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_128_8_133_8_for_begin:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_128_49_133_8_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 129 12 ]
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_128_49_133_8_start" "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_128_49_133_8_stop" ]
+        %e.3 = local;
+        symbol [ e %e.3 129 16 17 ];
+        symbol [ enemies %tmp.28 129 20 27 ];
+        %tmp.28 = getv ? :enemies;
+        %tmp.29 = lgetv %i.2;
+        symbol [ i %tmp.29 129 28 29 ];
+        %tmp.30 = agetv %tmp.28 %tmp.29;
+        lputv %e.3 %tmp.30;
+        symbol [ e %e.3 129 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 130 12 ]
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_130_12_130_52_if_stmt:
+        %tmp.31 = lgetv %e.3;
+        symbol [ e %tmp.31 130 16 17 ];
+        symbol [ state %tmp.32 130 18 23 ];
+        %tmp.32 = getv %tmp.31 :state;
+        symbol [ E_FORMATION %tmp.34 130 27 38 ];
+        %tmp.34 = getv ? :E_FORMATION;
+        %tmp.35 = ne %tmp.32 %tmp.34;
+        bf %tmp.35 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_130_12_130_52_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_130_12_130_52_if_true:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_130_40_130_52_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 130 42 ]
+        goto break @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_128_8_133_8_for_incr;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_130_40_130_52_stop:
+        goto @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_130_12_130_52_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_130_12_130_52_if_end:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 131 12 ]
+        %tmp.36 = lgetv %e.3;
+        symbol [ e %tmp.36 131 12 13 ];
+        %tmp.37 = lgetv %e.3;
+        symbol [ e %tmp.37 131 20 21 ];
+        symbol [ formC %tmp.38 131 22 27 ];
+        %tmp.38 = getv %tmp.37 :formC;
+        %tmp.39 = lgetv %dx.1;
+        symbol [ dx %tmp.39 131 30 32 ];
+        %tmp.40 = add %tmp.38 %tmp.39;
+        symbol [ col ? 131 14 17 ];
+        putv %tmp.36 :col %tmp.40;
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 132 12 ]
+        %tmp.41 = lgetv %e.3;
+        symbol [ e %tmp.41 132 12 13 ];
+        %tmp.42 = lgetv %e.3;
+        symbol [ e %tmp.42 132 20 21 ];
+        symbol [ formR %tmp.43 132 22 27 ];
+        %tmp.43 = getv %tmp.42 :formR;
+        %tmp.44 = 0.0;
+        %tmp.45 = add %tmp.43 %tmp.44;
+        symbol [ row ? 132 14 17 ];
+        putv %tmp.41 :row %tmp.45;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_128_49_133_8_stop:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_128_8_133_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 128 ]
+        %tmp.48 = lgetv %i.2;
+        symbol [ i %tmp.48 128 44 45 ];
+        %tmp.49 = add %tmp.48 1;
+        lputv %i.2 %tmp.49;
+        symbol [ i %i.2 128 44 45 ];
+        goto @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_128_8_133_8_for_test;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_128_8_133_8_for_end:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_124_29_134_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 137; @symbol_functiondef = [tickDives,137,13,22]; ]
+    function tickDives() {
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_137_25_152_4_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 138 8 ]
+        for @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_138_8_151_8_for_test @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_138_8_151_8_for_incr @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_138_8_151_8_for_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_138_8_151_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_138_8_151_8_for_begin" "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_138_8_151_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 138 17 18 ];
+        %tmp.1 = 0;
+        lputv %i.1 %tmp.1;
+        symbol [ i %i.1 138 17 18 ];
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_138_8_151_8_for_test:
+        %tmp.2 = lgetv %i.1;
+        symbol [ i %tmp.2 138 24 25 ];
+        symbol [ enemies %tmp.4 138 28 35 ];
+        %tmp.4 = getv ? :enemies;
+        symbol [ size %tmp.5 138 36 40 ];
+        %tmp.5 = getv function %tmp.4 :size;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        %tmp.7 = lt %tmp.2 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_138_8_151_8_for_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_138_8_151_8_for_begin:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_138_49_151_8_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 139 12 ]
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_138_49_151_8_start" "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_138_49_151_8_stop" ]
+        %e.2 = local;
+        symbol [ e %e.2 139 16 17 ];
+        symbol [ enemies %tmp.9 139 20 27 ];
+        %tmp.9 = getv ? :enemies;
+        %tmp.10 = lgetv %i.1;
+        symbol [ i %tmp.10 139 28 29 ];
+        %tmp.11 = agetv %tmp.9 %tmp.10;
+        lputv %e.2 %tmp.11;
+        symbol [ e %e.2 139 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 140 12 ]
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_140_12_140_49_if_stmt:
+        %tmp.12 = lgetv %e.2;
+        symbol [ e %tmp.12 140 16 17 ];
+        symbol [ state %tmp.13 140 18 23 ];
+        %tmp.13 = getv %tmp.12 :state;
+        symbol [ E_DIVING %tmp.15 140 27 35 ];
+        %tmp.15 = getv ? :E_DIVING;
+        %tmp.16 = ne %tmp.13 %tmp.15;
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_140_12_140_49_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_140_12_140_49_if_true:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_140_37_140_49_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 140 39 ]
+        goto break @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_138_8_151_8_for_incr;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_140_37_140_49_stop:
+        goto @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_140_12_140_49_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_140_12_140_49_if_end:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 141 12 ]
+        %tmp.17 = lgetv %e.2;
+        symbol [ e %tmp.17 141 12 13 ];
+        %tmp.18 = lgetv %e.2;
+        symbol [ e %tmp.18 141 22 23 ];
+        symbol [ diveT %tmp.19 141 24 29 ];
+        %tmp.19 = getv %tmp.18 :diveT;
+        symbol [ diveSpeed %tmp.21 141 32 41 ];
+        %tmp.21 = getv ? :diveSpeed;
+        %tmp.22 = add %tmp.19 %tmp.21;
+        symbol [ diveT ? 141 14 19 ];
+        putv %tmp.17 :diveT %tmp.22;
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 142 12 ]
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_142_12_145_12_if_stmt:
+        %tmp.23 = lgetv %e.2;
+        symbol [ e %tmp.23 142 16 17 ];
+        symbol [ diveT %tmp.24 142 18 23 ];
+        %tmp.24 = getv %tmp.23 :diveT;
+        %tmp.25 = 1.0;
+        %tmp.26 = gte %tmp.24 %tmp.25;
+        bf %tmp.26 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_142_12_145_12_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_142_12_145_12_if_true:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_142_32_145_12_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 143 16 ]
+        %tmp.27 = lgetv %e.2;
+        symbol [ e %tmp.27 143 16 17 ];
+        symbol [ E_DEAD %tmp.29 143 26 32 ];
+        %tmp.29 = getv ? :E_DEAD;
+        symbol [ state ? 143 18 23 ];
+        putv %tmp.27 :state %tmp.29;
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 144 16 ]
+        goto break @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_138_8_151_8_for_incr;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_142_32_145_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_142_12_145_12_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_142_12_145_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 146 12 ]
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_138_49_151_8_start" "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_138_49_151_8_stop" ]
+        %p.3 = local;
+        symbol [ p %p.3 146 16 17 ];
+        symbol [ DiveAI %tmp.31 146 20 26 ];
+        %tmp.31 = getv ? :DiveAI;
+        symbol [ pointFor %tmp.32 146 27 35 ];
+        %tmp.32 = getv function %tmp.31 :pointFor;
+        %tmp.33 = lgetv %e.2;
+        symbol [ e %tmp.33 146 36 37 ];
+        symbol [ diveT %tmp.34 146 38 43 ];
+        %tmp.34 = getv %tmp.33 :diveT;
+        %tmp.35 = lgetv %e.2;
+        symbol [ e %tmp.35 147 37 38 ];
+        symbol [ formC %tmp.36 147 39 44 ];
+        %tmp.36 = getv %tmp.35 :formC;
+        %tmp.37 = lgetv %e.2;
+        symbol [ e %tmp.37 147 46 47 ];
+        symbol [ formR %tmp.38 147 48 53 ];
+        %tmp.38 = getv %tmp.37 :formR;
+        %tmp.39 = lgetv %e.2;
+        symbol [ e %tmp.39 148 37 38 ];
+        symbol [ diveTargetC %tmp.40 148 39 50 ];
+        %tmp.40 = getv %tmp.39 :diveTargetC;
+        %tmp.41 = lgetv %e.2;
+        symbol [ e %tmp.41 149 37 38 ];
+        symbol [ curlSide %tmp.42 149 39 47 ];
+        %tmp.42 = getv %tmp.41 :curlSide;
+        %tmp.43 = lgetv %e.2;
+        symbol [ e %tmp.43 149 49 50 ];
+        symbol [ curlAmp %tmp.44 149 51 58 ];
+        %tmp.44 = getv %tmp.43 :curlAmp;
+        %tmp.45 = invoke %tmp.31 %tmp.32(%tmp.34, %tmp.36, %tmp.38, %tmp.40, %tmp.42, %tmp.44);
+        lputv %p.3 %tmp.45;
+        symbol [ p %p.3 146 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 150 12 ]
+        %tmp.46 = lgetv %e.2;
+        symbol [ e %tmp.46 150 12 13 ];
+        %tmp.47 = lgetv %p.3;
+        symbol [ p %tmp.47 150 20 21 ];
+        %tmp.48 = 0;
+        %tmp.49 = agetv %tmp.47 %tmp.48;
+        symbol [ col ? 150 14 17 ];
+        putv %tmp.46 :col %tmp.49;
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 150 26 ]
+        %tmp.50 = lgetv %e.2;
+        symbol [ e %tmp.50 150 26 27 ];
+        %tmp.51 = lgetv %p.3;
+        symbol [ p %tmp.51 150 34 35 ];
+        %tmp.52 = 1;
+        %tmp.53 = agetv %tmp.51 %tmp.52;
+        symbol [ row ? 150 28 31 ];
+        putv %tmp.50 :row %tmp.53;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_138_49_151_8_stop:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_138_8_151_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 138 ]
+        %tmp.56 = lgetv %i.1;
+        symbol [ i %tmp.56 138 44 45 ];
+        %tmp.57 = add %tmp.56 1;
+        lputv %i.1 %tmp.57;
+        symbol [ i %i.1 138 44 45 ];
+        goto @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_138_8_151_8_for_test;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_138_8_151_8_for_end:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_137_25_152_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 157; @symbol_functiondef = [pickDivers,157,13,23]; @symbol_param<0> = [maxDivers,157,24,33]; @symbol_param<1> = [playerCol,157,35,44]; ]
+    function pickDivers(maxDivers, playerCol) {
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_157_46_173_4_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 158 8 ]
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_157_46_173_4_start" "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_157_46_173_4_stop" ]
+        %current.1 = local;
+        symbol [ current %current.1 158 12 19 ];
+        %tmp.1 = 0;
+        lputv %current.1 %tmp.1;
+        symbol [ current %current.1 158 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 159 8 ]
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_157_46_173_4_start" "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_157_46_173_4_stop" ]
+        %candidates.2 = local;
+        symbol [ candidates %candidates.2 159 12 22 ];
+        %tmp.2 = newa 0;
+        lputv %candidates.2 %tmp.2;
+        symbol [ candidates %candidates.2 159 12 22 ];
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 160 8 ]
+        for @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_160_8_164_8_for_test @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_160_8_164_8_for_incr @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_160_8_164_8_for_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_160_8_164_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_160_8_164_8_for_begin" "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_160_8_164_8_for_end" ]
+        %i.3 = local;
+        symbol [ i %i.3 160 17 18 ];
+        %tmp.3 = 0;
+        lputv %i.3 %tmp.3;
+        symbol [ i %i.3 160 17 18 ];
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_160_8_164_8_for_test:
+        %tmp.4 = lgetv %i.3;
+        symbol [ i %tmp.4 160 24 25 ];
+        symbol [ enemies %tmp.6 160 28 35 ];
+        %tmp.6 = getv ? :enemies;
+        symbol [ size %tmp.7 160 36 40 ];
+        %tmp.7 = getv function %tmp.6 :size;
+        %tmp.8 = invoke %tmp.6 %tmp.7();
+        %tmp.9 = lt %tmp.4 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_160_8_164_8_for_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_160_8_164_8_for_begin:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_160_49_164_8_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 161 12 ]
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_160_49_164_8_start" "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_160_49_164_8_stop" ]
+        %e.4 = local;
+        symbol [ e %e.4 161 16 17 ];
+        symbol [ enemies %tmp.11 161 20 27 ];
+        %tmp.11 = getv ? :enemies;
+        %tmp.12 = lgetv %i.3;
+        symbol [ i %tmp.12 161 28 29 ];
+        %tmp.13 = agetv %tmp.11 %tmp.12;
+        lputv %e.4 %tmp.13;
+        symbol [ e %e.4 161 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 162 12 ]
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_162_12_163_66_if_stmt:
+        %tmp.14 = lgetv %e.4;
+        symbol [ e %tmp.14 162 16 17 ];
+        symbol [ state %tmp.15 162 18 23 ];
+        %tmp.15 = getv %tmp.14 :state;
+        symbol [ E_DIVING %tmp.17 162 27 35 ];
+        %tmp.17 = getv ? :E_DIVING;
+        %tmp.18 = eq %tmp.15 %tmp.17;
+        bf %tmp.18 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_162_12_163_66_if_false;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_162_12_163_66_if_true:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_162_41_162_66_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 162 43 ]
+        %tmp.19 = lgetv %current.1;
+        symbol [ current %tmp.19 162 53 60 ];
+        %tmp.20 = 1;
+        %tmp.21 = add %tmp.19 %tmp.20;
+        lputv %current.1 %tmp.21;
+        symbol [ current %current.1 162 43 50 ];
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_162_41_162_66_stop:
+        goto @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_162_12_163_66_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_162_12_163_66_if_false:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 163 17 ]
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_163_17_163_66_if_stmt:
+        %tmp.22 = lgetv %e.4;
+        symbol [ e %tmp.22 163 21 22 ];
+        symbol [ state %tmp.23 163 23 28 ];
+        %tmp.23 = getv %tmp.22 :state;
+        symbol [ E_FORMATION %tmp.25 163 32 43 ];
+        %tmp.25 = getv ? :E_FORMATION;
+        %tmp.26 = eq %tmp.23 %tmp.25;
+        bf %tmp.26 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_163_17_163_66_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_163_17_163_66_if_true:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_163_45_163_66_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 163 47 ]
+        %tmp.27 = lgetv %candidates.2;
+        symbol [ candidates %tmp.27 163 47 57 ];
+        symbol [ add %tmp.28 163 58 61 ];
+        %tmp.28 = getv function %tmp.27 :add;
+        %tmp.29 = lgetv %e.4;
+        symbol [ e %tmp.29 163 62 63 ];
+        invoke %tmp.27 %tmp.28(%tmp.29);
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_163_45_163_66_stop:
+        goto @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_163_17_163_66_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_163_17_163_66_if_end:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_162_12_163_66_if_end:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_160_49_164_8_stop:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_160_8_164_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 160 ]
+        %tmp.32 = lgetv %i.3;
+        symbol [ i %tmp.32 160 44 45 ];
+        %tmp.33 = add %tmp.32 1;
+        lputv %i.3 %tmp.33;
+        symbol [ i %i.3 160 44 45 ];
+        goto @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_160_8_164_8_for_test;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_160_8_164_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 165 8 ]
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_165_8_165_70_if_stmt:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_165_12_165_57_begin:
+        %tmp.34 = lgetv %current.1;
+        symbol [ current %tmp.34 165 12 19 ];
+        %tmp.35 = lgetv %maxDivers;
+        symbol [ maxDivers %tmp.35 165 23 32 ];
+        %tmp.36 = gte %tmp.34 %tmp.35;
+        bt %tmp.36 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_165_8_165_70_if_true;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_165_36_165_57_false:
+        %tmp.37 = lgetv %candidates.2;
+        symbol [ candidates %tmp.37 165 36 46 ];
+        symbol [ size %tmp.38 165 47 51 ];
+        %tmp.38 = getv function %tmp.37 :size;
+        %tmp.39 = invoke %tmp.37 %tmp.38();
+        %tmp.40 = 0;
+        %tmp.41 = eq %tmp.39 %tmp.40;
+        push %tmp.41;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_165_36_165_57_end:
+        %tmp.42 = phi [%tmp.36 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_165_12_165_57_begin] [%tmp.41 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_165_36_165_57_false] [%tmp.42 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_165_36_165_57_end];
+        bf %tmp.42 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_165_8_165_70_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_165_8_165_70_if_true:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_165_60_165_70_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 165 62 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_165_60_165_70_stop:
+        goto @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_165_8_165_70_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_165_8_165_70_if_end:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 166 8 ]
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_166_8_166_48_if_stmt:
+        symbol [ Math %tmp.43 166 13 17 ];
+        %tmp.43 = getm $.Toybox.Math;
+        symbol [ rand %tmp.44 166 18 22 ];
+        %tmp.44 = getv function %tmp.43 :rand;
+        %tmp.45 = invoke %tmp.43 %tmp.44();
+        %tmp.46 = 100;
+        %tmp.47 = mod %tmp.45 %tmp.46;
+        %tmp.48 = 22;
+        %tmp.49 = gt %tmp.47 %tmp.48;
+        bf %tmp.49 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_166_8_166_48_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_166_8_166_48_if_true:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_166_38_166_48_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 166 40 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_166_38_166_48_stop:
+        goto @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_166_8_166_48_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_166_8_166_48_if_end:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 167 8 ]
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_157_46_173_4_start" "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_157_46_173_4_stop" ]
+        %pick.5 = local;
+        symbol [ pick %pick.5 167 12 16 ];
+        %tmp.50 = lgetv %candidates.2;
+        symbol [ candidates %tmp.50 167 19 29 ];
+        symbol [ Math %tmp.51 167 30 34 ];
+        %tmp.51 = getm $.Toybox.Math;
+        symbol [ rand %tmp.52 167 35 39 ];
+        %tmp.52 = getv function %tmp.51 :rand;
+        %tmp.53 = invoke %tmp.51 %tmp.52();
+        %tmp.54 = lgetv %candidates.2;
+        symbol [ candidates %tmp.54 167 44 54 ];
+        symbol [ size %tmp.55 167 55 59 ];
+        %tmp.55 = getv function %tmp.54 :size;
+        %tmp.56 = invoke %tmp.54 %tmp.55();
+        %tmp.57 = mod %tmp.53 %tmp.56;
+        %tmp.58 = agetv %tmp.50 %tmp.57;
+        lputv %pick.5 %tmp.58;
+        symbol [ pick %pick.5 167 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 168 8 ]
+        %tmp.59 = lgetv %pick.5;
+        symbol [ pick %tmp.59 168 8 12 ];
+        symbol [ E_DIVING %tmp.61 168 27 35 ];
+        %tmp.61 = getv ? :E_DIVING;
+        symbol [ state ? 168 13 18 ];
+        putv %tmp.59 :state %tmp.61;
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 169 8 ]
+        %tmp.62 = lgetv %pick.5;
+        symbol [ pick %tmp.62 169 8 12 ];
+        %tmp.63 = 0.0;
+        symbol [ diveT ? 169 13 18 ];
+        putv %tmp.62 :diveT %tmp.63;
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 170 8 ]
+        %tmp.64 = lgetv %pick.5;
+        symbol [ pick %tmp.64 170 8 12 ];
+        %tmp.65 = lgetv %playerCol;
+        symbol [ playerCol %tmp.65 170 27 36 ];
+        symbol [ diveTargetC ? 170 13 24 ];
+        putv %tmp.64 :diveTargetC %tmp.65;
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 171 8 ]
+        %tmp.66 = lgetv %pick.5;
+        symbol [ pick %tmp.66 171 8 12 ];
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_171_27_171_59_begin:
+        symbol [ Math %tmp.67 171 29 33 ];
+        %tmp.67 = getm $.Toybox.Math;
+        symbol [ rand %tmp.68 171 34 38 ];
+        %tmp.68 = getv function %tmp.67 :rand;
+        %tmp.69 = invoke %tmp.67 %tmp.68();
+        %tmp.70 = 2;
+        %tmp.71 = mod %tmp.69 %tmp.70;
+        %tmp.72 = 0;
+        %tmp.73 = eq %tmp.71 %tmp.72;
+        bf %tmp.73 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_171_27_171_59_else_false;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_171_27_171_59_true:
+        %tmp.74 = -1;
+        push %tmp.74;
+        goto @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_171_27_171_59_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_171_27_171_59_else_false:
+        %tmp.75 = 1;
+        push %tmp.75;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_171_27_171_59_end:
+        %tmp.76 = phi [%tmp.73 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_171_27_171_59_begin] [%tmp.74 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_171_27_171_59_true] [%tmp.75 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_171_27_171_59_else_false] [%tmp.76 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_171_27_171_59_end];
+        symbol [ curlSide ? 171 13 21 ];
+        putv %tmp.66 :curlSide %tmp.76;
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 172 8 ]
+        %tmp.77 = lgetv %pick.5;
+        symbol [ pick %tmp.77 172 8 12 ];
+        %tmp.78 = 1.5;
+        symbol [ Math %tmp.79 172 35 39 ];
+        %tmp.79 = getm $.Toybox.Math;
+        symbol [ rand %tmp.80 172 40 44 ];
+        %tmp.80 = getv function %tmp.79 :rand;
+        %tmp.81 = invoke %tmp.79 %tmp.80();
+        %tmp.82 = 20;
+        %tmp.83 = mod %tmp.81 %tmp.82;
+        %tmp.84 = 10.0;
+        %tmp.85 = div %tmp.83 %tmp.84;
+        %tmp.86 = add %tmp.78 %tmp.85;
+        symbol [ curlAmp ? 172 13 20 ];
+        putv %tmp.77 :curlAmp %tmp.86;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_157_46_173_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 176; @symbol_functiondef = [allDead,176,13,20]; ]
+    function allDead() {
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_176_23_181_4_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 177 8 ]
+        for @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_177_8_179_8_for_test @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_177_8_179_8_for_incr @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_177_8_179_8_for_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_177_8_179_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_177_8_179_8_for_begin" "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_177_8_179_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 177 17 18 ];
+        %tmp.1 = 0;
+        lputv %i.1 %tmp.1;
+        symbol [ i %i.1 177 17 18 ];
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_177_8_179_8_for_test:
+        %tmp.2 = lgetv %i.1;
+        symbol [ i %tmp.2 177 24 25 ];
+        symbol [ enemies %tmp.4 177 28 35 ];
+        %tmp.4 = getv ? :enemies;
+        symbol [ size %tmp.5 177 36 40 ];
+        %tmp.5 = getv function %tmp.4 :size;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        %tmp.7 = lt %tmp.2 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_177_8_179_8_for_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_177_8_179_8_for_begin:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_177_49_179_8_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 178 12 ]
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_178_12_178_60_if_stmt:
+        symbol [ enemies %tmp.9 178 16 23 ];
+        %tmp.9 = getv ? :enemies;
+        %tmp.10 = lgetv %i.1;
+        symbol [ i %tmp.10 178 24 25 ];
+        %tmp.11 = agetv %tmp.9 %tmp.10;
+        symbol [ state %tmp.12 178 27 32 ];
+        %tmp.12 = getv %tmp.11 :state;
+        symbol [ E_DEAD %tmp.14 178 36 42 ];
+        %tmp.14 = getv ? :E_DEAD;
+        %tmp.15 = ne %tmp.12 %tmp.14;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_178_12_178_60_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_178_12_178_60_if_true:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_178_44_178_60_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 178 46 ]
+        %tmp.16 = false;
+        ret %tmp.16;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_178_44_178_60_stop:
+        goto @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_178_12_178_60_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_178_12_178_60_if_end:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_177_49_179_8_stop:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_177_8_179_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 177 ]
+        %tmp.19 = lgetv %i.1;
+        symbol [ i %tmp.19 177 44 45 ];
+        %tmp.20 = add %tmp.19 1;
+        lputv %i.1 %tmp.20;
+        symbol [ i %i.1 177 44 45 ];
+        goto @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_177_8_179_8_for_test;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_177_8_179_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 180 8 ]
+        %tmp.21 = true;
+        ret %tmp.21;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_176_23_181_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 185; @symbol_functiondef = [divingCells,185,13,24]; ]
+    function divingCells() {
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_185_27_193_4_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 186 8 ]
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_185_27_193_4_start" "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_185_27_193_4_stop" ]
+        %out.1 = local;
+        symbol [ out %out.1 186 12 15 ];
+        %tmp.1 = newa 0;
+        lputv %out.1 %tmp.1;
+        symbol [ out %out.1 186 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 187 8 ]
+        for @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_187_8_191_8_for_test @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_187_8_191_8_for_incr @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_187_8_191_8_for_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_187_8_191_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_187_8_191_8_for_begin" "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_187_8_191_8_for_end" ]
+        %i.2 = local;
+        symbol [ i %i.2 187 17 18 ];
+        %tmp.2 = 0;
+        lputv %i.2 %tmp.2;
+        symbol [ i %i.2 187 17 18 ];
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_187_8_191_8_for_test:
+        %tmp.3 = lgetv %i.2;
+        symbol [ i %tmp.3 187 24 25 ];
+        symbol [ enemies %tmp.5 187 28 35 ];
+        %tmp.5 = getv ? :enemies;
+        symbol [ size %tmp.6 187 36 40 ];
+        %tmp.6 = getv function %tmp.5 :size;
+        %tmp.7 = invoke %tmp.5 %tmp.6();
+        %tmp.8 = lt %tmp.3 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_187_8_191_8_for_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_187_8_191_8_for_begin:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_187_49_191_8_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 188 12 ]
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_187_49_191_8_start" "_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_187_49_191_8_stop" ]
+        %e.3 = local;
+        symbol [ e %e.3 188 16 17 ];
+        symbol [ enemies %tmp.10 188 20 27 ];
+        %tmp.10 = getv ? :enemies;
+        %tmp.11 = lgetv %i.2;
+        symbol [ i %tmp.11 188 28 29 ];
+        %tmp.12 = agetv %tmp.10 %tmp.11;
+        lputv %e.3 %tmp.12;
+        symbol [ e %e.3 188 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 189 12 ]
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_189_12_189_49_if_stmt:
+        %tmp.13 = lgetv %e.3;
+        symbol [ e %tmp.13 189 16 17 ];
+        symbol [ state %tmp.14 189 18 23 ];
+        %tmp.14 = getv %tmp.13 :state;
+        symbol [ E_DIVING %tmp.16 189 27 35 ];
+        %tmp.16 = getv ? :E_DIVING;
+        %tmp.17 = ne %tmp.14 %tmp.16;
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_189_12_189_49_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_189_12_189_49_if_true:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_189_37_189_49_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 189 39 ]
+        goto break @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_187_8_191_8_for_incr;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_189_37_189_49_stop:
+        goto @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_189_12_189_49_if_end;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_189_12_189_49_if_end:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 190 12 ]
+        %tmp.18 = lgetv %out.1;
+        symbol [ out %tmp.18 190 12 15 ];
+        symbol [ add %tmp.19 190 16 19 ];
+        %tmp.19 = getv function %tmp.18 :add;
+        %tmp.20 = newa 2;
+        %tmp.21 = lgetv %e.3;
+        symbol [ e %tmp.21 190 21 22 ];
+        symbol [ intCol %tmp.22 190 23 29 ];
+        %tmp.22 = getv function %tmp.21 :intCol;
+        %tmp.23 = invoke %tmp.21 %tmp.22();
+        %tmp.24 = dup %tmp.20;
+        %tmp.25 = aputv %tmp.24 0 %tmp.23;
+        %tmp.26 = lgetv %e.3;
+        symbol [ e %tmp.26 190 33 34 ];
+        symbol [ intRow %tmp.27 190 35 41 ];
+        %tmp.27 = getv function %tmp.26 :intRow;
+        %tmp.28 = invoke %tmp.26 %tmp.27();
+        %tmp.29 = dup %tmp.25;
+        %tmp.30 = aputv %tmp.29 1 %tmp.28;
+        invoke %tmp.18 %tmp.19(%tmp.30);
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_187_49_191_8_stop:
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_187_8_191_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 187 ]
+        %tmp.33 = lgetv %i.2;
+        symbol [ i %tmp.33 187 44 45 ];
+        %tmp.34 = add %tmp.33 1;
+        lputv %i.2 %tmp.34;
+        symbol [ i %i.2 187 44 45 ];
+        goto @_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_187_8_191_8_for_test;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_187_8_191_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc" 192 8 ]
+        %tmp.35 = lgetv %out.1;
+        symbol [ out %tmp.35 192 15 18 ];
+        ret %tmp.35;
+_Users_kkorolczuk_work_garmin_starswarm_source_EnemyWaveSystem_mc_185_27_193_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/EnemyWaveSystem.mc"; @line = 24; ]
+<init> {
+}

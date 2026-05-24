@@ -1,0 +1,632 @@
+[ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc"; @line = 16; @position = 6; @symbol_constdef = [VR_BULLET_LIFE,16,6,20]; ]
+const VR_BULLET_LIFE = 30;
+[ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc"; @line = 17; @position = 6; @symbol_constdef = [VR_MAX_SHOTS,17,6,18]; ]
+const VR_MAX_SHOTS = 4;
+[ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc"; @line = 18; @position = 6; @symbol_constdef = [VR_BULLET_SPEED,18,6,21]; ]
+const VR_BULLET_SPEED = 6.5;
+[ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc"; @line = 20; @symbol_classdef = [Bullet,20,6,12]; ]
+class Bullet {
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc"; @line = 20; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc"; @line = 20; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc"; @line = 21; @position = 8; @symbol_vardef = [x,21,8,9]; ]
+    var x;
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc"; @line = 21; @position = 15; @symbol_vardef = [y,21,15,16]; ]
+    var y;
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc"; @line = 21; @position = 22; @symbol_vardef = [vx,21,22,24]; ]
+    var vx;
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc"; @line = 21; @position = 30; @symbol_vardef = [vy,21,30,32]; ]
+    var vy;
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc"; @line = 22; @position = 8; @symbol_vardef = [life,22,8,12]; ]
+    var life;
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc"; @line = 23; @position = 8; @symbol_vardef = [alive,23,8,13]; ]
+    var alive;
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc"; @line = 25; @symbol_functiondef = [initialize,25,13,23]; @symbol_param<0> = [x_,25,24,26]; @symbol_param<1> = [y_,25,28,30]; @symbol_param<2> = [vx_,25,32,35]; @symbol_param<3> = [vy_,25,37,40]; ]
+    function initialize(x_, y_, vx_, vy_) as Void {
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_25_42_28_4_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 26 8 ]
+        %tmp.1 = lgetv %x_;
+        symbol [ x_ %tmp.1 26 12 14 ];
+        symbol [ x ? 26 8 9 ];
+        putv self :x %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 26 16 ]
+        %tmp.2 = lgetv %y_;
+        symbol [ y_ %tmp.2 26 20 22 ];
+        symbol [ y ? 26 16 17 ];
+        putv self :y %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 26 24 ]
+        %tmp.3 = lgetv %vx_;
+        symbol [ vx_ %tmp.3 26 29 32 ];
+        symbol [ vx ? 26 24 26 ];
+        putv self :vx %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 26 34 ]
+        %tmp.4 = lgetv %vy_;
+        symbol [ vy_ %tmp.4 26 39 42 ];
+        symbol [ vy ? 26 34 36 ];
+        putv self :vy %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 27 8 ]
+        symbol [ VR_BULLET_LIFE %tmp.6 27 15 29 ];
+        %tmp.6 = getv ? :VR_BULLET_LIFE;
+        symbol [ life ? 27 8 12 ];
+        putv self :life %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 27 31 ]
+        %tmp.7 = true;
+        symbol [ alive ? 27 31 36 ];
+        putv self :alive %tmp.7;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_25_42_28_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc"; @line = 31; @symbol_classdef = [ProjectileSystem,31,6,22]; ]
+class ProjectileSystem {
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc"; @line = 31; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc"; @line = 31; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc"; @line = 32; @position = 8; @symbol_vardef = [bullets,32,8,15]; ]
+    var bullets;
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc"; @line = 34; @symbol_functiondef = [initialize,34,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_34_26_34_42_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 34 28 ]
+        %tmp.1 = newa 0;
+        symbol [ bullets ? 34 28 35 ];
+        putv self :bullets %tmp.1;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_34_26_34_42_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc"; @line = 36; @symbol_functiondef = [reset,36,13,18]; ]
+    function reset() {
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_36_21_36_37_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 36 23 ]
+        %tmp.1 = newa 0;
+        symbol [ bullets ? 36 23 30 ];
+        putv self :bullets %tmp.1;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_36_21_36_37_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc"; @line = 40; @symbol_functiondef = [fire,40,13,17]; @symbol_param<0> = [ship,40,18,22]; ]
+    function fire(ship) {
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_40_24_50_4_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 41 8 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_41_8_41_60_if_stmt:
+        symbol [ bullets %tmp.2 41 12 19 ];
+        %tmp.2 = getv ? :bullets;
+        symbol [ size %tmp.3 41 20 24 ];
+        %tmp.3 = getv function %tmp.2 :size;
+        %tmp.4 = invoke %tmp.2 %tmp.3();
+        symbol [ VR_MAX_SHOTS %tmp.6 41 30 42 ];
+        %tmp.6 = getv ? :VR_MAX_SHOTS;
+        %tmp.7 = gte %tmp.4 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_41_8_41_60_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_41_8_41_60_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_41_44_41_60_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 41 46 ]
+        %tmp.8 = false;
+        ret %tmp.8;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_41_44_41_60_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_41_8_41_60_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_41_8_41_60_if_end:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 42 8 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_40_24_50_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_40_24_50_4_stop" ]
+        %dx.1 = local;
+        symbol [ dx %dx.1 42 12 14 ];
+        %tmp.9 = lgetv %ship;
+        symbol [ ship %tmp.9 42 17 21 ];
+        symbol [ noseDx %tmp.10 42 22 28 ];
+        %tmp.10 = getv function %tmp.9 :noseDx;
+        %tmp.11 = invoke %tmp.9 %tmp.10();
+        lputv %dx.1 %tmp.11;
+        symbol [ dx %dx.1 42 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 43 8 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_40_24_50_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_40_24_50_4_stop" ]
+        %dy.2 = local;
+        symbol [ dy %dy.2 43 12 14 ];
+        %tmp.12 = lgetv %ship;
+        symbol [ ship %tmp.12 43 17 21 ];
+        symbol [ noseDy %tmp.13 43 22 28 ];
+        %tmp.13 = getv function %tmp.12 :noseDy;
+        %tmp.14 = invoke %tmp.12 %tmp.13();
+        lputv %dy.2 %tmp.14;
+        symbol [ dy %dy.2 43 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 44 8 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_40_24_50_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_40_24_50_4_stop" ]
+        %sx.3 = local;
+        symbol [ sx %sx.3 44 12 14 ];
+        %tmp.15 = lgetv %ship;
+        symbol [ ship %tmp.15 44 17 21 ];
+        symbol [ x %tmp.16 44 22 23 ];
+        %tmp.16 = getv %tmp.15 :x;
+        %tmp.17 = lgetv %dx.1;
+        symbol [ dx %tmp.17 44 26 28 ];
+        %tmp.18 = lgetv %ship;
+        symbol [ ship %tmp.18 44 32 36 ];
+        symbol [ radius %tmp.19 44 37 43 ];
+        %tmp.19 = getv %tmp.18 :radius;
+        %tmp.20 = 1;
+        %tmp.21 = add %tmp.19 %tmp.20;
+        %tmp.22 = mul %tmp.17 %tmp.21;
+        %tmp.23 = add %tmp.16 %tmp.22;
+        lputv %sx.3 %tmp.23;
+        symbol [ sx %sx.3 44 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 45 8 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_40_24_50_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_40_24_50_4_stop" ]
+        %sy.4 = local;
+        symbol [ sy %sy.4 45 12 14 ];
+        %tmp.24 = lgetv %ship;
+        symbol [ ship %tmp.24 45 17 21 ];
+        symbol [ y %tmp.25 45 22 23 ];
+        %tmp.25 = getv %tmp.24 :y;
+        %tmp.26 = lgetv %dy.2;
+        symbol [ dy %tmp.26 45 26 28 ];
+        %tmp.27 = lgetv %ship;
+        symbol [ ship %tmp.27 45 32 36 ];
+        symbol [ radius %tmp.28 45 37 43 ];
+        %tmp.28 = getv %tmp.27 :radius;
+        %tmp.29 = 1;
+        %tmp.30 = add %tmp.28 %tmp.29;
+        %tmp.31 = mul %tmp.26 %tmp.30;
+        %tmp.32 = add %tmp.25 %tmp.31;
+        lputv %sy.4 %tmp.32;
+        symbol [ sy %sy.4 45 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 46 8 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_40_24_50_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_40_24_50_4_stop" ]
+        %bvx.5 = local;
+        symbol [ bvx %bvx.5 46 12 15 ];
+        %tmp.33 = lgetv %dx.1;
+        symbol [ dx %tmp.33 46 18 20 ];
+        symbol [ VR_BULLET_SPEED %tmp.35 46 23 38 ];
+        %tmp.35 = getv ? :VR_BULLET_SPEED;
+        %tmp.36 = mul %tmp.33 %tmp.35;
+        %tmp.37 = lgetv %ship;
+        symbol [ ship %tmp.37 46 41 45 ];
+        symbol [ vx %tmp.38 46 46 48 ];
+        %tmp.38 = getv %tmp.37 :vx;
+        %tmp.39 = 0.5;
+        %tmp.40 = mul %tmp.38 %tmp.39;
+        %tmp.41 = add %tmp.36 %tmp.40;
+        lputv %bvx.5 %tmp.41;
+        symbol [ bvx %bvx.5 46 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 47 8 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_40_24_50_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_40_24_50_4_stop" ]
+        %bvy.6 = local;
+        symbol [ bvy %bvy.6 47 12 15 ];
+        %tmp.42 = lgetv %dy.2;
+        symbol [ dy %tmp.42 47 18 20 ];
+        symbol [ VR_BULLET_SPEED %tmp.44 47 23 38 ];
+        %tmp.44 = getv ? :VR_BULLET_SPEED;
+        %tmp.45 = mul %tmp.42 %tmp.44;
+        %tmp.46 = lgetv %ship;
+        symbol [ ship %tmp.46 47 41 45 ];
+        symbol [ vy %tmp.47 47 46 48 ];
+        %tmp.47 = getv %tmp.46 :vy;
+        %tmp.48 = 0.5;
+        %tmp.49 = mul %tmp.47 %tmp.48;
+        %tmp.50 = add %tmp.45 %tmp.49;
+        lputv %bvy.6 %tmp.50;
+        symbol [ bvy %bvy.6 47 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 48 8 ]
+        symbol [ bullets %tmp.52 48 8 15 ];
+        %tmp.52 = getv ? :bullets;
+        symbol [ add %tmp.53 48 16 19 ];
+        %tmp.53 = getv function %tmp.52 :add;
+        symbol [ Bullet %tmp.57 48 24 30 ];
+        %tmp.57 = getv ? :Bullet;
+        %tmp.58 = lgetv %sx.3;
+        symbol [ sx %tmp.58 48 31 33 ];
+        %tmp.59 = lgetv %sy.4;
+        symbol [ sy %tmp.59 48 35 37 ];
+        %tmp.60 = lgetv %bvx.5;
+        symbol [ bvx %tmp.60 48 39 42 ];
+        %tmp.61 = lgetv %bvy.6;
+        symbol [ bvy %tmp.61 48 44 47 ];
+        %tmp.54 = newc %tmp.57 (%tmp.58, %tmp.59, %tmp.60, %tmp.61);
+        invoke %tmp.52 %tmp.53(%tmp.54);
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 49 8 ]
+        %tmp.62 = true;
+        ret %tmp.62;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_40_24_50_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc"; @line = 52; @symbol_functiondef = [tick,52,13,17]; @symbol_param<0> = [sw,52,18,20]; @symbol_param<1> = [sh,52,22,24]; ]
+    function tick(sw, sh) {
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_52_26_67_4_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 53 8 ]
+        for @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_53_8_60_8_for_test @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_53_8_60_8_for_incr @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_53_8_60_8_for_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_53_8_60_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_53_8_60_8_for_begin" "_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_53_8_60_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 53 17 18 ];
+        %tmp.1 = 0;
+        lputv %i.1 %tmp.1;
+        symbol [ i %i.1 53 17 18 ];
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_53_8_60_8_for_test:
+        %tmp.2 = lgetv %i.1;
+        symbol [ i %tmp.2 53 24 25 ];
+        symbol [ bullets %tmp.4 53 28 35 ];
+        %tmp.4 = getv ? :bullets;
+        symbol [ size %tmp.5 53 36 40 ];
+        %tmp.5 = getv function %tmp.4 :size;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        %tmp.7 = lt %tmp.2 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_53_8_60_8_for_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_53_8_60_8_for_begin:
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_53_49_60_8_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 54 12 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_53_49_60_8_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_53_49_60_8_stop" ]
+        %b.2 = local;
+        symbol [ b %b.2 54 16 17 ];
+        symbol [ bullets %tmp.9 54 20 27 ];
+        %tmp.9 = getv ? :bullets;
+        %tmp.10 = lgetv %i.1;
+        symbol [ i %tmp.10 54 28 29 ];
+        %tmp.11 = agetv %tmp.9 %tmp.10;
+        lputv %b.2 %tmp.11;
+        symbol [ b %b.2 54 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 55 12 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_55_12_55_38_if_stmt:
+        %tmp.12 = lgetv %b.2;
+        symbol [ b %tmp.12 55 17 18 ];
+        symbol [ alive %tmp.13 55 19 24 ];
+        %tmp.13 = getv %tmp.12 :alive;
+        %tmp.14 = not %tmp.13;
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_55_12_55_38_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_55_12_55_38_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_55_26_55_38_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 55 28 ]
+        goto break @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_53_8_60_8_for_incr;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_55_26_55_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_55_12_55_38_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_55_12_55_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 56 12 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_53_49_60_8_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_53_49_60_8_stop" ]
+        %p.3 = local;
+        symbol [ p %p.3 56 16 17 ];
+        symbol [ PhysicsEngine %tmp.16 56 20 33 ];
+        %tmp.16 = getv ? :PhysicsEngine;
+        symbol [ step %tmp.17 56 34 38 ];
+        %tmp.17 = getv function %tmp.16 :step;
+        %tmp.18 = lgetv %b.2;
+        symbol [ b %tmp.18 56 39 40 ];
+        symbol [ x %tmp.19 56 41 42 ];
+        %tmp.19 = getv %tmp.18 :x;
+        %tmp.20 = lgetv %b.2;
+        symbol [ b %tmp.20 56 44 45 ];
+        symbol [ y %tmp.21 56 46 47 ];
+        %tmp.21 = getv %tmp.20 :y;
+        %tmp.22 = lgetv %b.2;
+        symbol [ b %tmp.22 56 49 50 ];
+        symbol [ vx %tmp.23 56 51 53 ];
+        %tmp.23 = getv %tmp.22 :vx;
+        %tmp.24 = lgetv %b.2;
+        symbol [ b %tmp.24 56 55 56 ];
+        symbol [ vy %tmp.25 56 57 59 ];
+        %tmp.25 = getv %tmp.24 :vy;
+        %tmp.26 = lgetv %sw;
+        symbol [ sw %tmp.26 56 61 63 ];
+        %tmp.27 = lgetv %sh;
+        symbol [ sh %tmp.27 56 65 67 ];
+        %tmp.28 = invoke %tmp.16 %tmp.17(%tmp.19, %tmp.21, %tmp.23, %tmp.25, %tmp.26, %tmp.27);
+        lputv %p.3 %tmp.28;
+        symbol [ p %p.3 56 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 57 12 ]
+        %tmp.29 = lgetv %b.2;
+        symbol [ b %tmp.29 57 12 13 ];
+        %tmp.30 = lgetv %p.3;
+        symbol [ p %tmp.30 57 18 19 ];
+        %tmp.31 = 0;
+        %tmp.32 = agetv %tmp.30 %tmp.31;
+        symbol [ x ? 57 14 15 ];
+        putv %tmp.29 :x %tmp.32;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 57 24 ]
+        %tmp.33 = lgetv %b.2;
+        symbol [ b %tmp.33 57 24 25 ];
+        %tmp.34 = lgetv %p.3;
+        symbol [ p %tmp.34 57 30 31 ];
+        %tmp.35 = 1;
+        %tmp.36 = agetv %tmp.34 %tmp.35;
+        symbol [ y ? 57 26 27 ];
+        putv %tmp.33 :y %tmp.36;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 58 12 ]
+        %tmp.37 = lgetv %b.2;
+        symbol [ b %tmp.37 58 12 13 ];
+        %tmp.38 = lgetv %b.2;
+        symbol [ b %tmp.38 58 21 22 ];
+        symbol [ life %tmp.39 58 23 27 ];
+        %tmp.39 = getv %tmp.38 :life;
+        %tmp.40 = 1;
+        %tmp.41 = sub %tmp.39 %tmp.40;
+        symbol [ life ? 58 14 18 ];
+        putv %tmp.37 :life %tmp.41;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 59 12 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_59_12_59_48_if_stmt:
+        %tmp.42 = lgetv %b.2;
+        symbol [ b %tmp.42 59 16 17 ];
+        symbol [ life %tmp.43 59 18 22 ];
+        %tmp.43 = getv %tmp.42 :life;
+        %tmp.44 = 0;
+        %tmp.45 = lte %tmp.43 %tmp.44;
+        bf %tmp.45 @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_59_12_59_48_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_59_12_59_48_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_59_29_59_48_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 59 31 ]
+        %tmp.46 = lgetv %b.2;
+        symbol [ b %tmp.46 59 31 32 ];
+        %tmp.47 = false;
+        symbol [ alive ? 59 33 38 ];
+        putv %tmp.46 :alive %tmp.47;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_59_29_59_48_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_59_12_59_48_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_59_12_59_48_if_end:
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_53_49_60_8_stop:
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_53_8_60_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 53 ]
+        %tmp.50 = lgetv %i.1;
+        symbol [ i %tmp.50 53 44 45 ];
+        %tmp.51 = add %tmp.50 1;
+        lputv %i.1 %tmp.51;
+        symbol [ i %i.1 53 44 45 ];
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_53_8_60_8_for_test;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_53_8_60_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 62 8 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_52_26_67_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_52_26_67_4_stop" ]
+        %nb.4 = local;
+        symbol [ nb %nb.4 62 12 14 ];
+        %tmp.52 = newa 0;
+        lputv %nb.4 %tmp.52;
+        symbol [ nb %nb.4 62 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 63 8 ]
+        for @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_63_8_65_8_for_test @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_63_8_65_8_for_incr @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_63_8_65_8_for_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_63_8_65_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_63_8_65_8_for_begin" "_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_63_8_65_8_for_end" ]
+        %j.5 = local;
+        symbol [ j %j.5 63 17 18 ];
+        %tmp.53 = 0;
+        lputv %j.5 %tmp.53;
+        symbol [ j %j.5 63 17 18 ];
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_63_8_65_8_for_test:
+        %tmp.54 = lgetv %j.5;
+        symbol [ j %tmp.54 63 24 25 ];
+        symbol [ bullets %tmp.56 63 28 35 ];
+        %tmp.56 = getv ? :bullets;
+        symbol [ size %tmp.57 63 36 40 ];
+        %tmp.57 = getv function %tmp.56 :size;
+        %tmp.58 = invoke %tmp.56 %tmp.57();
+        %tmp.59 = lt %tmp.54 %tmp.58;
+        bf %tmp.59 @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_63_8_65_8_for_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_63_8_65_8_for_begin:
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_63_49_65_8_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 64 12 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_64_12_64_56_if_stmt:
+        symbol [ bullets %tmp.61 64 16 23 ];
+        %tmp.61 = getv ? :bullets;
+        %tmp.62 = lgetv %j.5;
+        symbol [ j %tmp.62 64 24 25 ];
+        %tmp.63 = agetv %tmp.61 %tmp.62;
+        symbol [ alive %tmp.64 64 27 32 ];
+        %tmp.64 = getv %tmp.63 :alive;
+        bf %tmp.64 @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_64_12_64_56_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_64_12_64_56_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_64_34_64_56_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 64 36 ]
+        %tmp.65 = lgetv %nb.4;
+        symbol [ nb %tmp.65 64 36 38 ];
+        symbol [ add %tmp.66 64 39 42 ];
+        %tmp.66 = getv function %tmp.65 :add;
+        symbol [ bullets %tmp.68 64 43 50 ];
+        %tmp.68 = getv ? :bullets;
+        %tmp.69 = lgetv %j.5;
+        symbol [ j %tmp.69 64 51 52 ];
+        %tmp.70 = agetv %tmp.68 %tmp.69;
+        invoke %tmp.65 %tmp.66(%tmp.70);
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_64_34_64_56_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_64_12_64_56_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_64_12_64_56_if_end:
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_63_49_65_8_stop:
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_63_8_65_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 63 ]
+        %tmp.73 = lgetv %j.5;
+        symbol [ j %tmp.73 63 44 45 ];
+        %tmp.74 = add %tmp.73 1;
+        lputv %j.5 %tmp.74;
+        symbol [ j %j.5 63 44 45 ];
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_63_8_65_8_for_test;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_63_8_65_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 66 8 ]
+        %tmp.75 = lgetv %nb.4;
+        symbol [ nb %tmp.75 66 18 20 ];
+        symbol [ bullets ? 66 8 15 ];
+        putv self :bullets %tmp.75;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_52_26_67_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc"; @line = 72; @symbol_functiondef = [collideAsteroids,72,13,29]; @symbol_param<0> = [asteroids,72,30,39]; @symbol_param<1> = [sw,72,41,43]; @symbol_param<2> = [sh,72,45,47]; ]
+    function collideAsteroids(asteroids, sw, sh) {
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_72_49_90_4_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 73 8 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_72_49_90_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_72_49_90_4_stop" ]
+        %hits.1 = local;
+        symbol [ hits %hits.1 73 12 16 ];
+        %tmp.1 = newa 0;
+        lputv %hits.1 %tmp.1;
+        symbol [ hits %hits.1 73 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 74 8 ]
+        for @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_74_8_88_8_for_test @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_74_8_88_8_for_incr @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_74_8_88_8_for_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_74_8_88_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_74_8_88_8_for_begin" "_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_74_8_88_8_for_end" ]
+        %i.2 = local;
+        symbol [ i %i.2 74 17 18 ];
+        %tmp.2 = 0;
+        lputv %i.2 %tmp.2;
+        symbol [ i %i.2 74 17 18 ];
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_74_8_88_8_for_test:
+        %tmp.3 = lgetv %i.2;
+        symbol [ i %tmp.3 74 24 25 ];
+        symbol [ bullets %tmp.5 74 28 35 ];
+        %tmp.5 = getv ? :bullets;
+        symbol [ size %tmp.6 74 36 40 ];
+        %tmp.6 = getv function %tmp.5 :size;
+        %tmp.7 = invoke %tmp.5 %tmp.6();
+        %tmp.8 = lt %tmp.3 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_74_8_88_8_for_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_74_8_88_8_for_begin:
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_74_49_88_8_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 75 12 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_74_49_88_8_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_74_49_88_8_stop" ]
+        %b.3 = local;
+        symbol [ b %b.3 75 16 17 ];
+        symbol [ bullets %tmp.10 75 20 27 ];
+        %tmp.10 = getv ? :bullets;
+        %tmp.11 = lgetv %i.2;
+        symbol [ i %tmp.11 75 28 29 ];
+        %tmp.12 = agetv %tmp.10 %tmp.11;
+        lputv %b.3 %tmp.12;
+        symbol [ b %b.3 75 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 76 12 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_76_12_76_38_if_stmt:
+        %tmp.13 = lgetv %b.3;
+        symbol [ b %tmp.13 76 17 18 ];
+        symbol [ alive %tmp.14 76 19 24 ];
+        %tmp.14 = getv %tmp.13 :alive;
+        %tmp.15 = not %tmp.14;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_76_12_76_38_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_76_12_76_38_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_76_26_76_38_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 76 28 ]
+        goto break @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_74_8_88_8_for_incr;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_76_26_76_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_76_12_76_38_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_76_12_76_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 77 12 ]
+        for @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_77_12_87_12_for_test @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_77_12_87_12_for_incr @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_77_12_87_12_for_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_77_12_87_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_77_12_87_12_for_begin" "_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_77_12_87_12_for_end" ]
+        %k.4 = local;
+        symbol [ k %k.4 77 21 22 ];
+        %tmp.16 = 0;
+        lputv %k.4 %tmp.16;
+        symbol [ k %k.4 77 21 22 ];
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_77_12_87_12_for_test:
+        %tmp.17 = lgetv %k.4;
+        symbol [ k %tmp.17 77 28 29 ];
+        %tmp.18 = lgetv %asteroids;
+        symbol [ asteroids %tmp.18 77 32 41 ];
+        symbol [ size %tmp.19 77 42 46 ];
+        %tmp.19 = getv function %tmp.18 :size;
+        %tmp.20 = invoke %tmp.18 %tmp.19();
+        %tmp.21 = lt %tmp.17 %tmp.20;
+        bf %tmp.21 @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_77_12_87_12_for_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_77_12_87_12_for_begin:
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_77_55_87_12_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 78 16 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_77_55_87_12_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_77_55_87_12_stop" ]
+        %a.5 = local;
+        symbol [ a %a.5 78 20 21 ];
+        %tmp.22 = lgetv %asteroids;
+        symbol [ asteroids %tmp.22 78 24 33 ];
+        %tmp.23 = lgetv %k.4;
+        symbol [ k %tmp.23 78 34 35 ];
+        %tmp.24 = agetv %tmp.22 %tmp.23;
+        lputv %a.5 %tmp.24;
+        symbol [ a %a.5 78 20 21 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 79 16 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_79_16_79_42_if_stmt:
+        %tmp.25 = lgetv %a.5;
+        symbol [ a %tmp.25 79 21 22 ];
+        symbol [ alive %tmp.26 79 23 28 ];
+        %tmp.26 = getv %tmp.25 :alive;
+        %tmp.27 = not %tmp.26;
+        bf %tmp.27 @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_79_16_79_42_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_79_16_79_42_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_79_30_79_42_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 79 32 ]
+        goto break @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_77_12_87_12_for_incr;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_79_30_79_42_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_79_16_79_42_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_79_16_79_42_if_end:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 80 16 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_80_16_86_16_if_stmt:
+        symbol [ PhysicsEngine %tmp.29 80 20 33 ];
+        %tmp.29 = getv ? :PhysicsEngine;
+        symbol [ circlesHit %tmp.30 80 34 44 ];
+        %tmp.30 = getv function %tmp.29 :circlesHit;
+        %tmp.31 = lgetv %b.3;
+        symbol [ b %tmp.31 80 45 46 ];
+        symbol [ x %tmp.32 80 47 48 ];
+        %tmp.32 = getv %tmp.31 :x;
+        %tmp.33 = lgetv %b.3;
+        symbol [ b %tmp.33 80 50 51 ];
+        symbol [ y %tmp.34 80 52 53 ];
+        %tmp.34 = getv %tmp.33 :y;
+        %tmp.35 = 2.0;
+        %tmp.36 = lgetv %a.5;
+        symbol [ a %tmp.36 81 46 47 ];
+        symbol [ x %tmp.37 81 48 49 ];
+        %tmp.37 = getv %tmp.36 :x;
+        %tmp.38 = lgetv %a.5;
+        symbol [ a %tmp.38 81 51 52 ];
+        symbol [ y %tmp.39 81 53 54 ];
+        %tmp.39 = getv %tmp.38 :y;
+        %tmp.40 = lgetv %a.5;
+        symbol [ a %tmp.40 81 56 57 ];
+        symbol [ radius %tmp.41 81 58 64 ];
+        %tmp.41 = getv %tmp.40 :radius;
+        %tmp.42 = lgetv %sw;
+        symbol [ sw %tmp.42 82 46 48 ];
+        %tmp.43 = lgetv %sh;
+        symbol [ sh %tmp.43 82 50 52 ];
+        %tmp.44 = invoke %tmp.29 %tmp.30(%tmp.32, %tmp.34, %tmp.35, %tmp.37, %tmp.39, %tmp.41, %tmp.42, %tmp.43);
+        bf %tmp.44 @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_80_16_86_16_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_80_16_86_16_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_82_55_86_16_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 83 20 ]
+        %tmp.45 = lgetv %b.3;
+        symbol [ b %tmp.45 83 20 21 ];
+        %tmp.46 = false;
+        symbol [ alive ? 83 22 27 ];
+        putv %tmp.45 :alive %tmp.46;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 84 20 ]
+        %tmp.47 = lgetv %hits.1;
+        symbol [ hits %tmp.47 84 20 24 ];
+        symbol [ add %tmp.48 84 25 28 ];
+        %tmp.48 = getv function %tmp.47 :add;
+        %tmp.49 = lgetv %k.4;
+        symbol [ k %tmp.49 84 29 30 ];
+        invoke %tmp.47 %tmp.48(%tmp.49);
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 85 20 ]
+        goto break @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_77_12_87_12_for_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_82_55_86_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_80_16_86_16_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_80_16_86_16_if_end:
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_77_55_87_12_stop:
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_77_12_87_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 77 ]
+        %tmp.52 = lgetv %k.4;
+        symbol [ k %tmp.52 77 50 51 ];
+        %tmp.53 = add %tmp.52 1;
+        lputv %k.4 %tmp.53;
+        symbol [ k %k.4 77 50 51 ];
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_77_12_87_12_for_test;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_77_12_87_12_for_end:
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_74_49_88_8_stop:
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_74_8_88_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 74 ]
+        %tmp.56 = lgetv %i.2;
+        symbol [ i %tmp.56 74 44 45 ];
+        %tmp.57 = add %tmp.56 1;
+        lputv %i.2 %tmp.57;
+        symbol [ i %i.2 74 44 45 ];
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_74_8_88_8_for_test;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_74_8_88_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc" 89 8 ]
+        %tmp.58 = lgetv %hits.1;
+        symbol [ hits %tmp.58 89 15 19 ];
+        ret %tmp.58;
+_Users_kkorolczuk_work_garmin_voidrocks_source_ProjectileSystem_mc_72_49_90_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/ProjectileSystem.mc"; @line = 16; ]
+<init> {
+}

@@ -21,12 +21,16 @@
 //                            the ship fits + place permanently
 //     BACK                   auto-place remaining ships
 //
-//   GS_AIM — single-axis wrap walk, no orientation
-//     DOWN     cursor.r = (r + 1) % 8
-//     UP       cursor.c = (c + 1) % 8
-//     SELECT   fire at cursor
-//     TAP      fire at tapped cell
-//     BACK     return to menu
+//   GS_AIM — buttons + swipes move the crosshair, SELECT/TAP fires
+//     DOWN              cursor.r = (r + 1) % 8
+//     UP                cursor.c = (c + 1) % 8
+//     SWIPE ↑↓←→        move crosshair one cell in that direction
+//                       (clamped to the board edges).  Resolved
+//                       inside onDrag with a 30 px threshold so a
+//                       finger flick never fires a shot.
+//     SELECT            fire at cursor
+//     TAP               fire at tapped cell (single, stationary tap)
+//     BACK              return to menu
 //
 //   GS_INFO / GS_WIN / GS_LOSE
 //     any input → continue
@@ -46,17 +50,22 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     var view;
 
     // Manual swipe detector — some Fenix models don't reliably fire
-    // onSwipe for short flicks. We track raw drag start/stop and
-    // synthesize a swipe direction ourselves on STOP.
+    // onSwipe for short flicks, and even when they do the subsequent
+    // onTap can still fire and trigger a shot.  We resolve every
+    // touch ourselves in onDrag and use `_justSwiped` to swallow the
+    // follow-up onTap so a finger flick during AIM never accidentally
+    // fires at whichever cell the gesture started on.
     hidden var _dragStartX;
     hidden var _dragStartY;
-    hidden const _SWIPE_THRESHOLD = 20;
+    hidden var _justSwiped;
+    hidden const _SWIPE_THRESHOLD = 30;
 
     function initialize(v) {
         BehaviorDelegate.initialize();
         view = v;
         _dragStartX = -1;
         _dragStartY = -1;
+        _justSwiped = false;
     }
 
     hidden function _refresh() { WatchUi.requestUpdate(); }
@@ -119,7 +128,12 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     function onPreviousPage() { return _handleKeyCode(WatchUi.KEY_UP);    }
 
     // ── Touch / swipe ───────────────────────────────────────────────
+    // During AIM/SETUP we ignore the native onSwipe entirely and
+    // resolve everything inside onDrag so we can also swallow the
+    // post-swipe onTap.  In MENU the legacy native handler is fine.
     function onSwipe(evt) {
+        var c = _ctrl();
+        if (c.state == GS_AIM || c.state == GS_SETUP) { return true; }
         return _applySwipe(evt.getDirection());
     }
 
@@ -131,6 +145,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
         var py = coords[1];
         if (t == WatchUi.DRAG_TYPE_START) {
             _dragStartX = px; _dragStartY = py;
+            _justSwiped = false;
             return true;
         }
         if (t == WatchUi.DRAG_TYPE_STOP) {
@@ -140,13 +155,17 @@ class InputHandler extends WatchUi.BehaviorDelegate {
             _dragStartX = -1; _dragStartY = -1;
             var adx = dx < 0 ? -dx : dx;
             var ady = dy < 0 ? -dy : dy;
-            if (adx < _SWIPE_THRESHOLD && ady < _SWIPE_THRESHOLD) { return false; }
+            if (adx < _SWIPE_THRESHOLD && ady < _SWIPE_THRESHOLD) {
+                // Treat as a stationary press → let onTap handle it.
+                return false;
+            }
             var dir;
             if (adx >= ady) {
                 dir = (dx > 0) ? WatchUi.SWIPE_RIGHT : WatchUi.SWIPE_LEFT;
             } else {
                 dir = (dy > 0) ? WatchUi.SWIPE_DOWN  : WatchUi.SWIPE_UP;
             }
+            _justSwiped = true;
             return _applySwipe(dir);
         }
         return false;
@@ -176,6 +195,10 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     }
 
     function onTap(evt) {
+        // Swallow the tap that always fires after onDrag resolved a
+        // swipe — otherwise a finger flick on the aim grid would also
+        // fire a shot at whichever cell the gesture started on.
+        if (_justSwiped) { _justSwiped = false; return true; }
         var c = _ctrl();
         var coords = evt.getCoordinates();
         if (coords == null) { return false; }

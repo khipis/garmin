@@ -1,0 +1,1344 @@
+[ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc"; @line = 24; @symbol_usingdef<0> = [Toybox,24,6,12]; @symbol_usingdef<1> = [Math,24,13,17]; ]
+using Toybox.Math;
+[ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc"; @line = 26; @position = 6; @symbol_constdef = [AST_LARGE,26,6,15]; ]
+const AST_LARGE = 3;
+[ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc"; @line = 27; @position = 6; @symbol_constdef = [AST_MED,27,6,13]; ]
+const AST_MED = 2;
+[ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc"; @line = 28; @position = 6; @symbol_constdef = [AST_SMALL,28,6,15]; ]
+const AST_SMALL = 1;
+[ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc"; @line = 30; @position = 6; @symbol_constdef = [SHAPE_VERTS,30,6,17]; ]
+const SHAPE_VERTS = 8;
+[ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc"; @line = 32; @symbol_classdef = [Asteroid,32,6,14]; ]
+class Asteroid {
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc"; @line = 32; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc"; @line = 32; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc"; @line = 33; @position = 8; @symbol_vardef = [x,33,8,9]; ]
+    var x;
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc"; @line = 33; @position = 15; @symbol_vardef = [y,33,15,16]; ]
+    var y;
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc"; @line = 33; @position = 22; @symbol_vardef = [vx,33,22,24]; ]
+    var vx;
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc"; @line = 33; @position = 30; @symbol_vardef = [vy,33,30,32]; ]
+    var vy;
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc"; @line = 34; @position = 8; @symbol_vardef = [size,34,8,12]; ]
+    var size;
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc"; @line = 35; @position = 8; @symbol_vardef = [radius,35,8,14]; ]
+    var radius;
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc"; @line = 36; @position = 8; @symbol_vardef = [angle,36,8,13]; ]
+    var angle;
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc"; @line = 37; @position = 8; @symbol_vardef = [spin,37,8,12]; ]
+    var spin;
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc"; @line = 38; @position = 8; @symbol_vardef = [shape,38,8,13]; ]
+    var shape;
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc"; @line = 39; @position = 8; @symbol_vardef = [alive,39,8,13]; ]
+    var alive;
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc"; @line = 41; @symbol_functiondef = [initialize,41,13,23]; @symbol_param<0> = [x_,41,24,26]; @symbol_param<1> = [y_,41,28,30]; @symbol_param<2> = [vx_,41,32,35]; @symbol_param<3> = [vy_,41,37,40]; @symbol_param<4> = [size_,41,42,47]; @symbol_param<5> = [radius_,41,49,56]; @symbol_param<6> = [shape_,41,58,64]; ]
+    function initialize(x_, y_, vx_, vy_, size_, radius_, shape_) as Void {
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_41_66_48_4_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 42 8 ]
+        %tmp.1 = lgetv %x_;
+        symbol [ x_ %tmp.1 42 12 14 ];
+        symbol [ x ? 42 8 9 ];
+        putv self :x %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 42 16 ]
+        %tmp.2 = lgetv %y_;
+        symbol [ y_ %tmp.2 42 20 22 ];
+        symbol [ y ? 42 16 17 ];
+        putv self :y %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 42 24 ]
+        %tmp.3 = lgetv %vx_;
+        symbol [ vx_ %tmp.3 42 29 32 ];
+        symbol [ vx ? 42 24 26 ];
+        putv self :vx %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 42 34 ]
+        %tmp.4 = lgetv %vy_;
+        symbol [ vy_ %tmp.4 42 39 42 ];
+        symbol [ vy ? 42 34 36 ];
+        putv self :vy %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 43 8 ]
+        %tmp.5 = lgetv %size_;
+        symbol [ size_ %tmp.5 43 15 20 ];
+        symbol [ size ? 43 8 12 ];
+        putv self :size %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 43 22 ]
+        %tmp.6 = lgetv %radius_;
+        symbol [ radius_ %tmp.6 43 31 38 ];
+        symbol [ radius ? 43 22 28 ];
+        putv self :radius %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 44 8 ]
+        %tmp.7 = 0.0;
+        symbol [ angle ? 44 8 13 ];
+        putv self :angle %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 45 8 ]
+        symbol [ Math %tmp.8 45 18 22 ];
+        %tmp.8 = getm $.Toybox.Math;
+        symbol [ rand %tmp.9 45 23 27 ];
+        %tmp.9 = getv function %tmp.8 :rand;
+        %tmp.10 = invoke %tmp.8 %tmp.9();
+        %tmp.11 = 200;
+        %tmp.12 = mod %tmp.10 %tmp.11;
+        %tmp.13 = 100;
+        %tmp.14 = sub %tmp.12 %tmp.13;
+        %tmp.15 = 1500.0;
+        %tmp.16 = div %tmp.14 %tmp.15;
+        symbol [ spin ? 45 8 12 ];
+        putv self :spin %tmp.16;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 46 8 ]
+        %tmp.17 = lgetv %shape_;
+        symbol [ shape_ %tmp.17 46 16 22 ];
+        symbol [ shape ? 46 8 13 ];
+        putv self :shape %tmp.17;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 47 8 ]
+        %tmp.18 = true;
+        symbol [ alive ? 47 8 13 ];
+        putv self :alive %tmp.18;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_41_66_48_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc"; @line = 51; @symbol_classdef = [AsteroidManager,51,6,21]; ]
+class AsteroidManager {
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc"; @line = 51; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc"; @line = 51; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc"; @line = 52; @position = 8; @symbol_vardef = [rocks,52,8,13]; ]
+    var rocks;
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc"; @line = 53; @position = 15; @symbol_vardef = [_baseSpeed,53,15,25]; ]
+    protected
+    var _baseSpeed;
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc"; @line = 55; @symbol_functiondef = [initialize,55,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_55_26_58_4_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 56 8 ]
+        %tmp.1 = newa 0;
+        symbol [ rocks ? 56 8 13 ];
+        putv self :rocks %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 57 8 ]
+        %tmp.2 = 1.2;
+        symbol [ _baseSpeed ? 57 8 18 ];
+        putv self :_baseSpeed %tmp.2;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_55_26_58_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc"; @line = 60; @symbol_functiondef = [reset,60,13,18]; ]
+    function reset() {
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_60_21_60_35_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 60 23 ]
+        %tmp.1 = newa 0;
+        symbol [ rocks ? 60 23 28 ];
+        putv self :rocks %tmp.1;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_60_21_60_35_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc"; @line = 63; @symbol_functiondef = [_makeShape,63,20,30]; ]
+    protected
+    function _makeShape() {
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_63_33_74_4_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 64 8 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_63_33_74_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_63_33_74_4_stop" ]
+        %verts.1 = local;
+        symbol [ verts %verts.1 64 12 17 ];
+        %tmp.1 = newa 0;
+        lputv %verts.1 %tmp.1;
+        symbol [ verts %verts.1 64 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 65 8 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_63_33_74_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_63_33_74_4_stop" ]
+        %step.2 = local;
+        symbol [ step %step.2 65 12 16 ];
+        symbol [ VR_TWO_PI %tmp.3 65 19 28 ];
+        %tmp.3 = getv ? :VR_TWO_PI;
+        symbol [ SHAPE_VERTS %tmp.5 65 31 42 ];
+        %tmp.5 = getv ? :SHAPE_VERTS;
+        %tmp.6 = div %tmp.3 %tmp.5;
+        lputv %step.2 %tmp.6;
+        symbol [ step %step.2 65 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 66 8 ]
+        for @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_66_8_72_8_for_test @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_66_8_72_8_for_incr @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_66_8_72_8_for_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_66_8_72_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_66_8_72_8_for_begin" "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_66_8_72_8_for_end" ]
+        %i.3 = local;
+        symbol [ i %i.3 66 17 18 ];
+        %tmp.7 = 0;
+        lputv %i.3 %tmp.7;
+        symbol [ i %i.3 66 17 18 ];
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_66_8_72_8_for_test:
+        %tmp.8 = lgetv %i.3;
+        symbol [ i %tmp.8 66 24 25 ];
+        symbol [ SHAPE_VERTS %tmp.10 66 28 39 ];
+        %tmp.10 = getv ? :SHAPE_VERTS;
+        %tmp.11 = lt %tmp.8 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_66_8_72_8_for_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_66_8_72_8_for_begin:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_66_46_72_8_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 67 12 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_66_46_72_8_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_66_46_72_8_stop" ]
+        %a.4 = local;
+        symbol [ a %a.4 67 16 17 ];
+        %tmp.12 = lgetv %i.3;
+        symbol [ i %tmp.12 67 20 21 ];
+        %tmp.13 = lgetv %step.2;
+        symbol [ step %tmp.13 67 24 28 ];
+        %tmp.14 = mul %tmp.12 %tmp.13;
+        lputv %a.4 %tmp.14;
+        symbol [ a %a.4 67 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 70 12 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_66_46_72_8_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_66_46_72_8_stop" ]
+        %r.5 = local;
+        symbol [ r %r.5 70 16 17 ];
+        %tmp.15 = 0.78;
+        symbol [ Math %tmp.16 70 29 33 ];
+        %tmp.16 = getm $.Toybox.Math;
+        symbol [ rand %tmp.17 70 34 38 ];
+        %tmp.17 = getv function %tmp.16 :rand;
+        %tmp.18 = invoke %tmp.16 %tmp.17();
+        %tmp.19 = 27;
+        %tmp.20 = mod %tmp.18 %tmp.19;
+        %tmp.21 = 100.0;
+        %tmp.22 = div %tmp.20 %tmp.21;
+        %tmp.23 = add %tmp.15 %tmp.22;
+        lputv %r.5 %tmp.23;
+        symbol [ r %r.5 70 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 71 12 ]
+        %tmp.24 = lgetv %verts.1;
+        symbol [ verts %tmp.24 71 12 17 ];
+        symbol [ add %tmp.25 71 18 21 ];
+        %tmp.25 = getv function %tmp.24 :add;
+        %tmp.26 = newa 2;
+        symbol [ Math %tmp.27 71 23 27 ];
+        %tmp.27 = getm $.Toybox.Math;
+        symbol [ cos %tmp.28 71 28 31 ];
+        %tmp.28 = getv function %tmp.27 :cos;
+        %tmp.29 = lgetv %a.4;
+        symbol [ a %tmp.29 71 32 33 ];
+        %tmp.30 = invoke %tmp.27 %tmp.28(%tmp.29);
+        %tmp.31 = lgetv %r.5;
+        symbol [ r %tmp.31 71 37 38 ];
+        %tmp.32 = mul %tmp.30 %tmp.31;
+        %tmp.33 = dup %tmp.26;
+        %tmp.34 = aputv %tmp.33 0 %tmp.32;
+        symbol [ Math %tmp.35 71 40 44 ];
+        %tmp.35 = getm $.Toybox.Math;
+        symbol [ sin %tmp.36 71 45 48 ];
+        %tmp.36 = getv function %tmp.35 :sin;
+        %tmp.37 = lgetv %a.4;
+        symbol [ a %tmp.37 71 49 50 ];
+        %tmp.38 = invoke %tmp.35 %tmp.36(%tmp.37);
+        %tmp.39 = lgetv %r.5;
+        symbol [ r %tmp.39 71 54 55 ];
+        %tmp.40 = mul %tmp.38 %tmp.39;
+        %tmp.41 = dup %tmp.34;
+        %tmp.42 = aputv %tmp.41 1 %tmp.40;
+        invoke %tmp.24 %tmp.25(%tmp.42);
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_66_46_72_8_stop:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_66_8_72_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 66 ]
+        %tmp.45 = lgetv %i.3;
+        symbol [ i %tmp.45 66 41 42 ];
+        %tmp.46 = add %tmp.45 1;
+        lputv %i.3 %tmp.46;
+        symbol [ i %i.3 66 41 42 ];
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_66_8_72_8_for_test;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_66_8_72_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 73 8 ]
+        %tmp.47 = lgetv %verts.1;
+        symbol [ verts %tmp.47 73 15 20 ];
+        ret %tmp.47;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_63_33_74_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc"; @line = 76; @symbol_functiondef = [_radiusFor,76,20,30]; @symbol_param<0> = [size,76,31,35]; @symbol_param<1> = [baseR,76,37,42]; ]
+    protected
+    function _radiusFor(size, baseR) {
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_76_44_80_4_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 77 8 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_77_8_77_47_if_stmt:
+        %tmp.1 = lgetv %size;
+        symbol [ size %tmp.1 77 12 16 ];
+        symbol [ AST_LARGE %tmp.3 77 20 29 ];
+        %tmp.3 = getv ? :AST_LARGE;
+        %tmp.4 = eq %tmp.1 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_77_8_77_47_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_77_8_77_47_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_77_31_77_47_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 77 33 ]
+        %tmp.5 = lgetv %baseR;
+        symbol [ baseR %tmp.5 77 40 45 ];
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_77_31_77_47_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_77_8_77_47_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_77_8_77_47_if_end:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 78 8 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_78_8_78_58_if_stmt:
+        %tmp.6 = lgetv %size;
+        symbol [ size %tmp.6 78 12 16 ];
+        symbol [ AST_MED %tmp.8 78 20 27 ];
+        %tmp.8 = getv ? :AST_MED;
+        %tmp.9 = eq %tmp.6 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_78_8_78_58_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_78_8_78_58_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_78_31_78_58_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 78 33 ]
+        %tmp.10 = lgetv %baseR;
+        symbol [ baseR %tmp.10 78 40 45 ];
+        %tmp.11 = 65;
+        %tmp.12 = mul %tmp.10 %tmp.11;
+        %tmp.13 = 100;
+        %tmp.14 = div %tmp.12 %tmp.13;
+        ret %tmp.14;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_78_31_78_58_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_78_8_78_58_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_78_8_78_58_if_end:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 79 8 ]
+        %tmp.15 = lgetv %baseR;
+        symbol [ baseR %tmp.15 79 15 20 ];
+        %tmp.16 = 38;
+        %tmp.17 = mul %tmp.15 %tmp.16;
+        %tmp.18 = 100;
+        %tmp.19 = div %tmp.17 %tmp.18;
+        ret %tmp.19;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_76_44_80_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc"; @line = 82; @symbol_functiondef = [_scoreFor,82,20,29]; @symbol_param<0> = [size,82,30,34]; ]
+    protected
+    function _scoreFor(size) {
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_82_36_86_4_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 83 8 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_83_8_83_45_if_stmt:
+        %tmp.1 = lgetv %size;
+        symbol [ size %tmp.1 83 12 16 ];
+        symbol [ AST_LARGE %tmp.3 83 20 29 ];
+        %tmp.3 = getv ? :AST_LARGE;
+        %tmp.4 = eq %tmp.1 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_83_8_83_45_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_83_8_83_45_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_83_31_83_45_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 83 33 ]
+        %tmp.5 = 20;
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_83_31_83_45_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_83_8_83_45_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_83_8_83_45_if_end:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 84 8 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_84_8_84_45_if_stmt:
+        %tmp.6 = lgetv %size;
+        symbol [ size %tmp.6 84 12 16 ];
+        symbol [ AST_MED %tmp.8 84 20 27 ];
+        %tmp.8 = getv ? :AST_MED;
+        %tmp.9 = eq %tmp.6 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_84_8_84_45_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_84_8_84_45_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_84_31_84_45_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 84 33 ]
+        %tmp.10 = 50;
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_84_31_84_45_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_84_8_84_45_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_84_8_84_45_if_end:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 85 8 ]
+        %tmp.11 = 100;
+        ret %tmp.11;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_82_36_86_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc"; @line = 89; @symbol_functiondef = [_randomDir,89,20,30]; ]
+    protected
+    function _randomDir() {
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_89_33_92_4_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 90 8 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_89_33_92_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_89_33_92_4_stop" ]
+        %a.1 = local;
+        symbol [ a %a.1 90 12 13 ];
+        symbol [ Math %tmp.1 90 17 21 ];
+        %tmp.1 = getm $.Toybox.Math;
+        symbol [ rand %tmp.2 90 22 26 ];
+        %tmp.2 = getv function %tmp.1 :rand;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        %tmp.4 = 1000;
+        %tmp.5 = mod %tmp.3 %tmp.4;
+        %tmp.6 = 1000.0;
+        %tmp.7 = div %tmp.5 %tmp.6;
+        symbol [ VR_TWO_PI %tmp.9 90 48 57 ];
+        %tmp.9 = getv ? :VR_TWO_PI;
+        %tmp.10 = mul %tmp.7 %tmp.9;
+        lputv %a.1 %tmp.10;
+        symbol [ a %a.1 90 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 91 8 ]
+        %tmp.11 = newa 2;
+        symbol [ Math %tmp.12 91 16 20 ];
+        %tmp.12 = getm $.Toybox.Math;
+        symbol [ cos %tmp.13 91 21 24 ];
+        %tmp.13 = getv function %tmp.12 :cos;
+        %tmp.14 = lgetv %a.1;
+        symbol [ a %tmp.14 91 25 26 ];
+        %tmp.15 = invoke %tmp.12 %tmp.13(%tmp.14);
+        %tmp.16 = dup %tmp.11;
+        %tmp.17 = aputv %tmp.16 0 %tmp.15;
+        symbol [ Math %tmp.18 91 29 33 ];
+        %tmp.18 = getm $.Toybox.Math;
+        symbol [ sin %tmp.19 91 34 37 ];
+        %tmp.19 = getv function %tmp.18 :sin;
+        %tmp.20 = lgetv %a.1;
+        symbol [ a %tmp.20 91 38 39 ];
+        %tmp.21 = invoke %tmp.18 %tmp.19(%tmp.20);
+        %tmp.22 = dup %tmp.17;
+        %tmp.23 = aputv %tmp.22 1 %tmp.21;
+        ret %tmp.23;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_89_33_92_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc"; @line = 95; @symbol_functiondef = [_spawn,95,20,26]; @symbol_param<0> = [x,95,27,28]; @symbol_param<1> = [y,95,30,31]; @symbol_param<2> = [size,95,33,37]; @symbol_param<3> = [baseR,95,39,44]; @symbol_param<4> = [speed,95,46,51]; ]
+    protected
+    function _spawn(x, y, size, baseR, speed) {
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_95_53_101_4_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 96 8 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_95_53_101_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_95_53_101_4_stop" ]
+        %d.1 = local;
+        symbol [ d %d.1 96 12 13 ];
+        %tmp.1 = self;
+        symbol [ _randomDir %tmp.2 96 16 26 ];
+        %tmp.2 = getv function %tmp.1 :_randomDir;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        lputv %d.1 %tmp.3;
+        symbol [ d %d.1 96 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 97 8 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_95_53_101_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_95_53_101_4_stop" ]
+        %r.2 = local;
+        symbol [ r %r.2 97 12 13 ];
+        %tmp.4 = self;
+        symbol [ _radiusFor %tmp.5 97 16 26 ];
+        %tmp.5 = getv function %tmp.4 :_radiusFor;
+        %tmp.6 = lgetv %size;
+        symbol [ size %tmp.6 97 27 31 ];
+        %tmp.7 = lgetv %baseR;
+        symbol [ baseR %tmp.7 97 33 38 ];
+        %tmp.8 = invoke %tmp.4 %tmp.5(%tmp.6, %tmp.7);
+        lputv %r.2 %tmp.8;
+        symbol [ r %r.2 97 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 98 8 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_95_53_101_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_95_53_101_4_stop" ]
+        %a.3 = local;
+        symbol [ a %a.3 98 12 13 ];
+        symbol [ Asteroid %tmp.12 98 20 28 ];
+        %tmp.12 = getv ? :Asteroid;
+        %tmp.13 = lgetv %x;
+        symbol [ x %tmp.13 98 29 30 ];
+        %tmp.14 = lgetv %y;
+        symbol [ y %tmp.14 98 32 33 ];
+        %tmp.15 = lgetv %d.1;
+        symbol [ d %tmp.15 98 35 36 ];
+        %tmp.16 = 0;
+        %tmp.17 = agetv %tmp.15 %tmp.16;
+        %tmp.18 = lgetv %speed;
+        symbol [ speed %tmp.18 98 42 47 ];
+        %tmp.19 = mul %tmp.17 %tmp.18;
+        %tmp.20 = lgetv %d.1;
+        symbol [ d %tmp.20 98 49 50 ];
+        %tmp.21 = 1;
+        %tmp.22 = agetv %tmp.20 %tmp.21;
+        %tmp.23 = lgetv %speed;
+        symbol [ speed %tmp.23 98 56 61 ];
+        %tmp.24 = mul %tmp.22 %tmp.23;
+        %tmp.25 = lgetv %size;
+        symbol [ size %tmp.25 99 30 34 ];
+        %tmp.26 = lgetv %r.2;
+        symbol [ r %tmp.26 99 36 37 ];
+        %tmp.27 = self;
+        symbol [ _makeShape %tmp.28 99 39 49 ];
+        %tmp.28 = getv function %tmp.27 :_makeShape;
+        %tmp.29 = invoke %tmp.27 %tmp.28();
+        %tmp.9 = newc %tmp.12 (%tmp.13, %tmp.14, %tmp.19, %tmp.24, %tmp.25, %tmp.26, %tmp.29);
+        lputv %a.3 %tmp.9;
+        symbol [ a %a.3 98 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 100 8 ]
+        symbol [ rocks %tmp.31 100 8 13 ];
+        %tmp.31 = getv ? :rocks;
+        symbol [ add %tmp.32 100 14 17 ];
+        %tmp.32 = getv function %tmp.31 :add;
+        %tmp.33 = lgetv %a.3;
+        symbol [ a %tmp.33 100 18 19 ];
+        invoke %tmp.31 %tmp.32(%tmp.33);
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_95_53_101_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc"; @line = 103; @symbol_functiondef = [spawnWave,103,13,22]; @symbol_param<0> = [wave,103,23,27]; @symbol_param<1> = [sw,103,29,31]; @symbol_param<2> = [sh,103,33,35]; @symbol_param<3> = [baseR,103,37,42]; @symbol_param<4> = [baseSpeed,103,44,53]; @symbol_param<5> = [shipX,103,55,60]; @symbol_param<6> = [shipY,103,62,67]; ]
+    function spawnWave(wave, sw, sh, baseR, baseSpeed, shipX, shipY) {
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_103_69_134_4_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 104 8 ]
+        %tmp.1 = newa 0;
+        symbol [ rocks ? 104 8 13 ];
+        putv self :rocks %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 105 8 ]
+        %tmp.2 = lgetv %baseSpeed;
+        symbol [ baseSpeed %tmp.2 105 21 30 ];
+        symbol [ _baseSpeed ? 105 8 18 ];
+        putv self :_baseSpeed %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 108 8 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_103_69_134_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_103_69_134_4_stop" ]
+        %n.1 = local;
+        symbol [ n %n.1 108 12 13 ];
+        %tmp.3 = 3;
+        %tmp.4 = lgetv %wave;
+        symbol [ wave %tmp.4 108 20 24 ];
+        %tmp.5 = add %tmp.3 %tmp.4;
+        lputv %n.1 %tmp.5;
+        symbol [ n %n.1 108 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 109 8 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_109_8_109_30_if_stmt:
+        %tmp.6 = lgetv %n.1;
+        symbol [ n %tmp.6 109 12 13 ];
+        %tmp.7 = 10;
+        %tmp.8 = gt %tmp.6 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_109_8_109_30_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_109_8_109_30_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_109_20_109_30_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 109 22 ]
+        %tmp.9 = 10;
+        lputv %n.1 %tmp.9;
+        symbol [ n %n.1 109 22 23 ];
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_109_20_109_30_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_109_8_109_30_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_109_8_109_30_if_end:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 112 8 ]
+        for @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_112_8_133_8_for_test @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_112_8_133_8_for_incr @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_112_8_133_8_for_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_112_8_133_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_112_8_133_8_for_begin" "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_112_8_133_8_for_end" ]
+        %i.2 = local;
+        symbol [ i %i.2 112 17 18 ];
+        %tmp.10 = 0;
+        lputv %i.2 %tmp.10;
+        symbol [ i %i.2 112 17 18 ];
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_112_8_133_8_for_test:
+        %tmp.11 = lgetv %i.2;
+        symbol [ i %tmp.11 112 24 25 ];
+        %tmp.12 = lgetv %n.1;
+        symbol [ n %tmp.12 112 28 29 ];
+        %tmp.13 = lt %tmp.11 %tmp.12;
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_112_8_133_8_for_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_112_8_133_8_for_begin:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_112_36_133_8_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 113 12 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_112_36_133_8_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_112_36_133_8_stop" ]
+        %x.3 = local;
+        symbol [ x %x.3 113 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 113 19 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_112_36_133_8_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_112_36_133_8_stop" ]
+        %y.4 = local;
+        symbol [ y %y.4 113 23 24 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 114 12 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_112_36_133_8_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_112_36_133_8_stop" ]
+        %tries.5 = local;
+        symbol [ tries %tries.5 114 16 21 ];
+        %tmp.14 = 0;
+        lputv %tries.5 %tmp.14;
+        symbol [ tries %tries.5 114 16 21 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 115 12 ]
+        while @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_115_12_126_12_while_test @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_115_12_126_12_while_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_115_12_126_12_while_test:
+        %tmp.15 = true;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_115_12_126_12_while_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_115_12_126_12_while_begin:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_115_25_126_12_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 117 16 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_115_25_126_12_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_115_25_126_12_stop" ]
+        %edge.6 = local;
+        symbol [ edge %edge.6 117 20 24 ];
+        symbol [ Math %tmp.16 117 27 31 ];
+        %tmp.16 = getm $.Toybox.Math;
+        symbol [ rand %tmp.17 117 32 36 ];
+        %tmp.17 = getv function %tmp.16 :rand;
+        %tmp.18 = invoke %tmp.16 %tmp.17();
+        %tmp.19 = 4;
+        %tmp.20 = mod %tmp.18 %tmp.19;
+        lputv %edge.6 %tmp.20;
+        symbol [ edge %edge.6 117 20 24 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 118 16 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_118_16_121_83_if_stmt:
+        %tmp.21 = lgetv %edge.6;
+        symbol [ edge %tmp.21 118 25 29 ];
+        %tmp.22 = 0;
+        %tmp.23 = eq %tmp.21 %tmp.22;
+        bf %tmp.23 @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_118_16_121_83_if_false;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_118_16_121_83_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_118_36_118_67_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 118 38 ]
+        symbol [ Math %tmp.24 118 42 46 ];
+        %tmp.24 = getm $.Toybox.Math;
+        symbol [ rand %tmp.25 118 47 51 ];
+        %tmp.25 = getv function %tmp.24 :rand;
+        %tmp.26 = invoke %tmp.24 %tmp.25();
+        %tmp.27 = lgetv %sw;
+        symbol [ sw %tmp.27 118 56 58 ];
+        %tmp.28 = mod %tmp.26 %tmp.27;
+        lputv %x.3 %tmp.28;
+        symbol [ x %x.3 118 38 39 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 118 60 ]
+        %tmp.29 = 0;
+        lputv %y.4 %tmp.29;
+        symbol [ y %y.4 118 60 61 ];
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_118_36_118_67_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_118_16_121_83_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_118_16_121_83_if_false:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 119 21 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_119_21_121_83_if_stmt:
+        %tmp.30 = lgetv %edge.6;
+        symbol [ edge %tmp.30 119 25 29 ];
+        %tmp.31 = 1;
+        %tmp.32 = eq %tmp.30 %tmp.31;
+        bf %tmp.32 @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_119_21_121_83_if_false;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_119_21_121_83_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_119_36_119_83_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 119 38 ]
+        %tmp.33 = lgetv %sw;
+        symbol [ sw %tmp.33 119 42 44 ];
+        %tmp.34 = 1;
+        %tmp.35 = sub %tmp.33 %tmp.34;
+        lputv %x.3 %tmp.35;
+        symbol [ x %x.3 119 38 39 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 119 61 ]
+        symbol [ Math %tmp.36 119 65 69 ];
+        %tmp.36 = getm $.Toybox.Math;
+        symbol [ rand %tmp.37 119 70 74 ];
+        %tmp.37 = getv function %tmp.36 :rand;
+        %tmp.38 = invoke %tmp.36 %tmp.37();
+        %tmp.39 = lgetv %sh;
+        symbol [ sh %tmp.39 119 79 81 ];
+        %tmp.40 = mod %tmp.38 %tmp.39;
+        lputv %y.4 %tmp.40;
+        symbol [ y %y.4 119 61 62 ];
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_119_36_119_83_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_119_21_121_83_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_119_21_121_83_if_false:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 120 21 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_120_21_121_83_if_stmt:
+        %tmp.41 = lgetv %edge.6;
+        symbol [ edge %tmp.41 120 25 29 ];
+        %tmp.42 = 2;
+        %tmp.43 = eq %tmp.41 %tmp.42;
+        bf %tmp.43 @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_120_21_121_83_if_else_false;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_120_21_121_83_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_120_36_120_72_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 120 38 ]
+        symbol [ Math %tmp.44 120 42 46 ];
+        %tmp.44 = getm $.Toybox.Math;
+        symbol [ rand %tmp.45 120 47 51 ];
+        %tmp.45 = getv function %tmp.44 :rand;
+        %tmp.46 = invoke %tmp.44 %tmp.45();
+        %tmp.47 = lgetv %sw;
+        symbol [ sw %tmp.47 120 56 58 ];
+        %tmp.48 = mod %tmp.46 %tmp.47;
+        lputv %x.3 %tmp.48;
+        symbol [ x %x.3 120 38 39 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 120 60 ]
+        %tmp.49 = lgetv %sh;
+        symbol [ sh %tmp.49 120 64 66 ];
+        %tmp.50 = 1;
+        %tmp.51 = sub %tmp.49 %tmp.50;
+        lputv %y.4 %tmp.51;
+        symbol [ y %y.4 120 60 61 ];
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_120_36_120_72_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_120_21_121_83_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_120_21_121_83_if_else_false:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_121_37_121_83_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 121 39 ]
+        %tmp.52 = 0;
+        lputv %x.3 %tmp.52;
+        symbol [ x %x.3 121 39 40 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 121 61 ]
+        symbol [ Math %tmp.53 121 65 69 ];
+        %tmp.53 = getm $.Toybox.Math;
+        symbol [ rand %tmp.54 121 70 74 ];
+        %tmp.54 = getv function %tmp.53 :rand;
+        %tmp.55 = invoke %tmp.53 %tmp.54();
+        %tmp.56 = lgetv %sh;
+        symbol [ sh %tmp.56 121 79 81 ];
+        %tmp.57 = mod %tmp.55 %tmp.56;
+        lputv %y.4 %tmp.57;
+        symbol [ y %y.4 121 61 62 ];
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_121_37_121_83_stop:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_120_21_121_83_if_end:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_119_21_121_83_if_end:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_118_16_121_83_if_end:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 122 16 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_115_25_126_12_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_115_25_126_12_stop" ]
+        %dx.7 = local;
+        symbol [ dx %dx.7 122 20 22 ];
+        %tmp.58 = lgetv %x.3;
+        symbol [ x %tmp.58 122 25 26 ];
+        %tmp.59 = lgetv %shipX;
+        symbol [ shipX %tmp.59 122 29 34 ];
+        %tmp.60 = sub %tmp.58 %tmp.59;
+        lputv %dx.7 %tmp.60;
+        symbol [ dx %dx.7 122 20 22 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 122 36 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_115_25_126_12_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_115_25_126_12_stop" ]
+        %dy.8 = local;
+        symbol [ dy %dy.8 122 40 42 ];
+        %tmp.61 = lgetv %y.4;
+        symbol [ y %tmp.61 122 45 46 ];
+        %tmp.62 = lgetv %shipY;
+        symbol [ shipY %tmp.62 122 49 54 ];
+        %tmp.63 = sub %tmp.61 %tmp.62;
+        lputv %dy.8 %tmp.63;
+        symbol [ dy %dy.8 122 40 42 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 123 16 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_123_16_123_76_if_stmt:
+        %tmp.64 = lgetv %dx.7;
+        symbol [ dx %tmp.64 123 20 22 ];
+        %tmp.65 = lgetv %dx.7;
+        symbol [ dx %tmp.65 123 25 27 ];
+        %tmp.66 = mul %tmp.64 %tmp.65;
+        %tmp.67 = lgetv %dy.8;
+        symbol [ dy %tmp.67 123 30 32 ];
+        %tmp.68 = lgetv %dy.8;
+        symbol [ dy %tmp.68 123 35 37 ];
+        %tmp.69 = mul %tmp.67 %tmp.68;
+        %tmp.70 = add %tmp.66 %tmp.69;
+        %tmp.71 = lgetv %baseR;
+        symbol [ baseR %tmp.71 123 41 46 ];
+        %tmp.72 = 4;
+        %tmp.73 = mul %tmp.71 %tmp.72;
+        %tmp.74 = lgetv %baseR;
+        symbol [ baseR %tmp.74 123 55 60 ];
+        %tmp.75 = 4;
+        %tmp.76 = mul %tmp.74 %tmp.75;
+        %tmp.77 = mul %tmp.73 %tmp.76;
+        %tmp.78 = gt %tmp.70 %tmp.77;
+        bf %tmp.78 @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_123_16_123_76_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_123_16_123_76_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_123_67_123_76_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 123 69 ]
+        goto break @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_115_12_126_12_while_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_123_67_123_76_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_123_16_123_76_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_123_16_123_76_if_end:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 124 16 ]
+        %tmp.79 = lgetv %tries.5;
+        symbol [ tries %tmp.79 124 24 29 ];
+        %tmp.80 = 1;
+        %tmp.81 = add %tmp.79 %tmp.80;
+        lputv %tries.5 %tmp.81;
+        symbol [ tries %tries.5 124 16 21 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 125 16 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_125_16_125_40_if_stmt:
+        %tmp.82 = lgetv %tries.5;
+        symbol [ tries %tmp.82 125 20 25 ];
+        %tmp.83 = 6;
+        %tmp.84 = gt %tmp.82 %tmp.83;
+        bf %tmp.84 @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_125_16_125_40_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_125_16_125_40_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_125_31_125_40_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 125 33 ]
+        goto break @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_115_12_126_12_while_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_125_31_125_40_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_125_16_125_40_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_125_16_125_40_if_end:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_115_25_126_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_115_12_126_12_while_test;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_115_12_126_12_while_end:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 127 12 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_112_36_133_8_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_112_36_133_8_stop" ]
+        %spd.9 = local;
+        symbol [ spd %spd.9 127 16 19 ];
+        %tmp.85 = lgetv %baseSpeed;
+        symbol [ baseSpeed %tmp.85 127 22 31 ];
+        %tmp.86 = 0.7;
+        symbol [ Math %tmp.87 127 42 46 ];
+        %tmp.87 = getm $.Toybox.Math;
+        symbol [ rand %tmp.88 127 47 51 ];
+        %tmp.88 = getv function %tmp.87 :rand;
+        %tmp.89 = invoke %tmp.87 %tmp.88();
+        %tmp.90 = 80;
+        %tmp.91 = mod %tmp.89 %tmp.90;
+        %tmp.92 = 100.0;
+        %tmp.93 = div %tmp.91 %tmp.92;
+        %tmp.94 = add %tmp.86 %tmp.93;
+        %tmp.95 = mul %tmp.85 %tmp.94;
+        lputv %spd.9 %tmp.95;
+        symbol [ spd %spd.9 127 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 128 12 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_112_36_133_8_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_112_36_133_8_stop" ]
+        %d.10 = local;
+        symbol [ d %d.10 128 16 17 ];
+        %tmp.96 = self;
+        symbol [ _randomDir %tmp.97 128 20 30 ];
+        %tmp.97 = getv function %tmp.96 :_randomDir;
+        %tmp.98 = invoke %tmp.96 %tmp.97();
+        lputv %d.10 %tmp.98;
+        symbol [ d %d.10 128 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 129 12 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_112_36_133_8_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_112_36_133_8_stop" ]
+        %rad.11 = local;
+        symbol [ rad %rad.11 129 16 19 ];
+        %tmp.99 = self;
+        symbol [ _radiusFor %tmp.100 129 22 32 ];
+        %tmp.100 = getv function %tmp.99 :_radiusFor;
+        symbol [ AST_LARGE %tmp.102 129 33 42 ];
+        %tmp.102 = getv ? :AST_LARGE;
+        %tmp.103 = lgetv %baseR;
+        symbol [ baseR %tmp.103 129 44 49 ];
+        %tmp.104 = invoke %tmp.99 %tmp.100(%tmp.102, %tmp.103);
+        lputv %rad.11 %tmp.104;
+        symbol [ rad %rad.11 129 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 130 12 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_112_36_133_8_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_112_36_133_8_stop" ]
+        %a.12 = local;
+        symbol [ a %a.12 130 16 17 ];
+        symbol [ Asteroid %tmp.108 130 24 32 ];
+        %tmp.108 = getv ? :Asteroid;
+        %tmp.109 = lgetv %x.3;
+        symbol [ x %tmp.109 130 33 34 ];
+        %tmp.110 = lgetv %y.4;
+        symbol [ y %tmp.110 130 36 37 ];
+        %tmp.111 = lgetv %d.10;
+        symbol [ d %tmp.111 130 39 40 ];
+        %tmp.112 = 0;
+        %tmp.113 = agetv %tmp.111 %tmp.112;
+        %tmp.114 = lgetv %spd.9;
+        symbol [ spd %tmp.114 130 46 49 ];
+        %tmp.115 = mul %tmp.113 %tmp.114;
+        %tmp.116 = lgetv %d.10;
+        symbol [ d %tmp.116 130 51 52 ];
+        %tmp.117 = 1;
+        %tmp.118 = agetv %tmp.116 %tmp.117;
+        %tmp.119 = lgetv %spd.9;
+        symbol [ spd %tmp.119 130 58 61 ];
+        %tmp.120 = mul %tmp.118 %tmp.119;
+        symbol [ AST_LARGE %tmp.122 131 34 43 ];
+        %tmp.122 = getv ? :AST_LARGE;
+        %tmp.123 = lgetv %rad.11;
+        symbol [ rad %tmp.123 131 45 48 ];
+        %tmp.124 = self;
+        symbol [ _makeShape %tmp.125 131 50 60 ];
+        %tmp.125 = getv function %tmp.124 :_makeShape;
+        %tmp.126 = invoke %tmp.124 %tmp.125();
+        %tmp.105 = newc %tmp.108 (%tmp.109, %tmp.110, %tmp.115, %tmp.120, %tmp.122, %tmp.123, %tmp.126);
+        lputv %a.12 %tmp.105;
+        symbol [ a %a.12 130 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 132 12 ]
+        symbol [ rocks %tmp.128 132 12 17 ];
+        %tmp.128 = getv ? :rocks;
+        symbol [ add %tmp.129 132 18 21 ];
+        %tmp.129 = getv function %tmp.128 :add;
+        %tmp.130 = lgetv %a.12;
+        symbol [ a %tmp.130 132 22 23 ];
+        invoke %tmp.128 %tmp.129(%tmp.130);
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_112_36_133_8_stop:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_112_8_133_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 112 ]
+        %tmp.133 = lgetv %i.2;
+        symbol [ i %tmp.133 112 31 32 ];
+        %tmp.134 = add %tmp.133 1;
+        lputv %i.2 %tmp.134;
+        symbol [ i %i.2 112 31 32 ];
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_112_8_133_8_for_test;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_112_8_133_8_for_end:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_103_69_134_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc"; @line = 136; @symbol_functiondef = [tick,136,13,17]; @symbol_param<0> = [sw,136,18,20]; @symbol_param<1> = [sh,136,22,24]; ]
+    function tick(sw, sh) {
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_136_26_146_4_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 137 8 ]
+        for @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_137_8_145_8_for_test @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_137_8_145_8_for_incr @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_137_8_145_8_for_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_137_8_145_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_137_8_145_8_for_begin" "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_137_8_145_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 137 17 18 ];
+        %tmp.1 = 0;
+        lputv %i.1 %tmp.1;
+        symbol [ i %i.1 137 17 18 ];
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_137_8_145_8_for_test:
+        %tmp.2 = lgetv %i.1;
+        symbol [ i %tmp.2 137 24 25 ];
+        symbol [ rocks %tmp.4 137 28 33 ];
+        %tmp.4 = getv ? :rocks;
+        symbol [ size %tmp.5 137 34 38 ];
+        %tmp.5 = getv function %tmp.4 :size;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        %tmp.7 = lt %tmp.2 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_137_8_145_8_for_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_137_8_145_8_for_begin:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_137_47_145_8_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 138 12 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_137_47_145_8_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_137_47_145_8_stop" ]
+        %a.2 = local;
+        symbol [ a %a.2 138 16 17 ];
+        symbol [ rocks %tmp.9 138 20 25 ];
+        %tmp.9 = getv ? :rocks;
+        %tmp.10 = lgetv %i.1;
+        symbol [ i %tmp.10 138 26 27 ];
+        %tmp.11 = agetv %tmp.9 %tmp.10;
+        lputv %a.2 %tmp.11;
+        symbol [ a %a.2 138 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 139 12 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_139_12_139_38_if_stmt:
+        %tmp.12 = lgetv %a.2;
+        symbol [ a %tmp.12 139 17 18 ];
+        symbol [ alive %tmp.13 139 19 24 ];
+        %tmp.13 = getv %tmp.12 :alive;
+        %tmp.14 = not %tmp.13;
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_139_12_139_38_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_139_12_139_38_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_139_26_139_38_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 139 28 ]
+        goto break @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_137_8_145_8_for_incr;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_139_26_139_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_139_12_139_38_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_139_12_139_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 140 12 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_137_47_145_8_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_137_47_145_8_stop" ]
+        %p.3 = local;
+        symbol [ p %p.3 140 16 17 ];
+        symbol [ PhysicsEngine %tmp.16 140 20 33 ];
+        %tmp.16 = getv ? :PhysicsEngine;
+        symbol [ step %tmp.17 140 34 38 ];
+        %tmp.17 = getv function %tmp.16 :step;
+        %tmp.18 = lgetv %a.2;
+        symbol [ a %tmp.18 140 39 40 ];
+        symbol [ x %tmp.19 140 41 42 ];
+        %tmp.19 = getv %tmp.18 :x;
+        %tmp.20 = lgetv %a.2;
+        symbol [ a %tmp.20 140 44 45 ];
+        symbol [ y %tmp.21 140 46 47 ];
+        %tmp.21 = getv %tmp.20 :y;
+        %tmp.22 = lgetv %a.2;
+        symbol [ a %tmp.22 140 49 50 ];
+        symbol [ vx %tmp.23 140 51 53 ];
+        %tmp.23 = getv %tmp.22 :vx;
+        %tmp.24 = lgetv %a.2;
+        symbol [ a %tmp.24 140 55 56 ];
+        symbol [ vy %tmp.25 140 57 59 ];
+        %tmp.25 = getv %tmp.24 :vy;
+        %tmp.26 = lgetv %sw;
+        symbol [ sw %tmp.26 140 61 63 ];
+        %tmp.27 = lgetv %sh;
+        symbol [ sh %tmp.27 140 65 67 ];
+        %tmp.28 = invoke %tmp.16 %tmp.17(%tmp.19, %tmp.21, %tmp.23, %tmp.25, %tmp.26, %tmp.27);
+        lputv %p.3 %tmp.28;
+        symbol [ p %p.3 140 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 141 12 ]
+        %tmp.29 = lgetv %a.2;
+        symbol [ a %tmp.29 141 12 13 ];
+        %tmp.30 = lgetv %p.3;
+        symbol [ p %tmp.30 141 18 19 ];
+        %tmp.31 = 0;
+        %tmp.32 = agetv %tmp.30 %tmp.31;
+        symbol [ x ? 141 14 15 ];
+        putv %tmp.29 :x %tmp.32;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 141 24 ]
+        %tmp.33 = lgetv %a.2;
+        symbol [ a %tmp.33 141 24 25 ];
+        %tmp.34 = lgetv %p.3;
+        symbol [ p %tmp.34 141 30 31 ];
+        %tmp.35 = 1;
+        %tmp.36 = agetv %tmp.34 %tmp.35;
+        symbol [ y ? 141 26 27 ];
+        putv %tmp.33 :y %tmp.36;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 142 12 ]
+        %tmp.37 = lgetv %a.2;
+        symbol [ a %tmp.37 142 12 13 ];
+        %tmp.38 = lgetv %a.2;
+        symbol [ a %tmp.38 142 22 23 ];
+        symbol [ angle %tmp.39 142 24 29 ];
+        %tmp.39 = getv %tmp.38 :angle;
+        %tmp.40 = lgetv %a.2;
+        symbol [ a %tmp.40 142 32 33 ];
+        symbol [ spin %tmp.41 142 34 38 ];
+        %tmp.41 = getv %tmp.40 :spin;
+        %tmp.42 = add %tmp.39 %tmp.41;
+        symbol [ angle ? 142 14 19 ];
+        putv %tmp.37 :angle %tmp.42;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 143 12 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_143_12_143_71_if_stmt:
+        %tmp.43 = lgetv %a.2;
+        symbol [ a %tmp.43 143 16 17 ];
+        symbol [ angle %tmp.44 143 18 23 ];
+        %tmp.44 = getv %tmp.43 :angle;
+        symbol [ VR_TWO_PI %tmp.46 143 27 36 ];
+        %tmp.46 = getv ? :VR_TWO_PI;
+        %tmp.47 = gte %tmp.44 %tmp.46;
+        bf %tmp.47 @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_143_12_143_71_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_143_12_143_71_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_143_38_143_71_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 143 40 ]
+        %tmp.48 = lgetv %a.2;
+        symbol [ a %tmp.48 143 40 41 ];
+        %tmp.49 = lgetv %a.2;
+        symbol [ a %tmp.49 143 50 51 ];
+        symbol [ angle %tmp.50 143 52 57 ];
+        %tmp.50 = getv %tmp.49 :angle;
+        symbol [ VR_TWO_PI %tmp.52 143 60 69 ];
+        %tmp.52 = getv ? :VR_TWO_PI;
+        %tmp.53 = sub %tmp.50 %tmp.52;
+        symbol [ angle ? 143 42 47 ];
+        putv %tmp.48 :angle %tmp.53;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_143_38_143_71_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_143_12_143_71_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_143_12_143_71_if_end:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 144 12 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_144_12_144_72_if_stmt:
+        %tmp.54 = lgetv %a.2;
+        symbol [ a %tmp.54 144 16 17 ];
+        symbol [ angle %tmp.55 144 18 23 ];
+        %tmp.55 = getv %tmp.54 :angle;
+        %tmp.56 = 0;
+        %tmp.57 = lt %tmp.55 %tmp.56;
+        bf %tmp.57 @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_144_12_144_72_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_144_12_144_72_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_144_39_144_72_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 144 41 ]
+        %tmp.58 = lgetv %a.2;
+        symbol [ a %tmp.58 144 41 42 ];
+        %tmp.59 = lgetv %a.2;
+        symbol [ a %tmp.59 144 51 52 ];
+        symbol [ angle %tmp.60 144 53 58 ];
+        %tmp.60 = getv %tmp.59 :angle;
+        symbol [ VR_TWO_PI %tmp.62 144 61 70 ];
+        %tmp.62 = getv ? :VR_TWO_PI;
+        %tmp.63 = add %tmp.60 %tmp.62;
+        symbol [ angle ? 144 43 48 ];
+        putv %tmp.58 :angle %tmp.63;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_144_39_144_72_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_144_12_144_72_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_144_12_144_72_if_end:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_137_47_145_8_stop:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_137_8_145_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 137 ]
+        %tmp.66 = lgetv %i.1;
+        symbol [ i %tmp.66 137 42 43 ];
+        %tmp.67 = add %tmp.66 1;
+        lputv %i.1 %tmp.67;
+        symbol [ i %i.1 137 42 43 ];
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_137_8_145_8_for_test;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_137_8_145_8_for_end:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_136_26_146_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc"; @line = 150; @symbol_functiondef = [hit,150,13,16]; @symbol_param<0> = [idx,150,17,20]; @symbol_param<1> = [baseR,150,22,27]; ]
+    function hit(idx, baseR) {
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_150_29_168_4_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 151 8 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_150_29_168_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_150_29_168_4_stop" ]
+        %a.1 = local;
+        symbol [ a %a.1 151 12 13 ];
+        symbol [ rocks %tmp.2 151 16 21 ];
+        %tmp.2 = getv ? :rocks;
+        %tmp.3 = lgetv %idx;
+        symbol [ idx %tmp.3 151 22 25 ];
+        %tmp.4 = agetv %tmp.2 %tmp.3;
+        lputv %a.1 %tmp.4;
+        symbol [ a %a.1 151 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 152 8 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_152_8_152_34_if_stmt:
+        %tmp.5 = lgetv %a.1;
+        symbol [ a %tmp.5 152 13 14 ];
+        symbol [ alive %tmp.6 152 15 20 ];
+        %tmp.6 = getv %tmp.5 :alive;
+        %tmp.7 = not %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_152_8_152_34_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_152_8_152_34_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_152_22_152_34_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 152 24 ]
+        %tmp.8 = 0;
+        ret %tmp.8;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_152_22_152_34_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_152_8_152_34_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_152_8_152_34_if_end:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 153 8 ]
+        %tmp.9 = lgetv %a.1;
+        symbol [ a %tmp.9 153 8 9 ];
+        %tmp.10 = false;
+        symbol [ alive ? 153 10 15 ];
+        putv %tmp.9 :alive %tmp.10;
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 154 8 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_150_29_168_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_150_29_168_4_stop" ]
+        %pts.2 = local;
+        symbol [ pts %pts.2 154 12 15 ];
+        %tmp.11 = self;
+        symbol [ _scoreFor %tmp.12 154 18 27 ];
+        %tmp.12 = getv function %tmp.11 :_scoreFor;
+        %tmp.13 = lgetv %a.1;
+        symbol [ a %tmp.13 154 28 29 ];
+        symbol [ size %tmp.14 154 30 34 ];
+        %tmp.14 = getv %tmp.13 :size;
+        %tmp.15 = invoke %tmp.11 %tmp.12(%tmp.14);
+        lputv %pts.2 %tmp.15;
+        symbol [ pts %pts.2 154 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 155 8 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_155_8_166_8_if_stmt:
+        %tmp.16 = lgetv %a.1;
+        symbol [ a %tmp.16 155 12 13 ];
+        symbol [ size %tmp.17 155 14 18 ];
+        %tmp.17 = getv %tmp.16 :size;
+        symbol [ AST_SMALL %tmp.19 155 21 30 ];
+        %tmp.19 = getv ? :AST_SMALL;
+        %tmp.20 = gt %tmp.17 %tmp.19;
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_155_8_166_8_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_155_8_166_8_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_155_32_166_8_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 156 12 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_155_32_166_8_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_155_32_166_8_stop" ]
+        %childSize.3 = local;
+        symbol [ childSize %childSize.3 156 16 25 ];
+        %tmp.21 = lgetv %a.1;
+        symbol [ a %tmp.21 156 28 29 ];
+        symbol [ size %tmp.22 156 30 34 ];
+        %tmp.22 = getv %tmp.21 :size;
+        %tmp.23 = 1;
+        %tmp.24 = sub %tmp.22 %tmp.23;
+        lputv %childSize.3 %tmp.24;
+        symbol [ childSize %childSize.3 156 16 25 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 157 12 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_155_32_166_8_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_155_32_166_8_stop" ]
+        %childR.4 = local;
+        symbol [ childR %childR.4 157 16 22 ];
+        %tmp.25 = self;
+        symbol [ _radiusFor %tmp.26 157 25 35 ];
+        %tmp.26 = getv function %tmp.25 :_radiusFor;
+        %tmp.27 = lgetv %childSize.3;
+        symbol [ childSize %tmp.27 157 36 45 ];
+        %tmp.28 = lgetv %baseR;
+        symbol [ baseR %tmp.28 157 47 52 ];
+        %tmp.29 = invoke %tmp.25 %tmp.26(%tmp.27, %tmp.28);
+        lputv %childR.4 %tmp.29;
+        symbol [ childR %childR.4 157 16 22 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 159 12 ]
+        for @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_159_12_165_12_for_test @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_159_12_165_12_for_incr @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_159_12_165_12_for_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_159_12_165_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_159_12_165_12_for_begin" "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_159_12_165_12_for_end" ]
+        %k.5 = local;
+        symbol [ k %k.5 159 21 22 ];
+        %tmp.30 = 0;
+        lputv %k.5 %tmp.30;
+        symbol [ k %k.5 159 21 22 ];
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_159_12_165_12_for_test:
+        %tmp.31 = lgetv %k.5;
+        symbol [ k %tmp.31 159 28 29 ];
+        %tmp.32 = 2;
+        %tmp.33 = lt %tmp.31 %tmp.32;
+        bf %tmp.33 @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_159_12_165_12_for_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_159_12_165_12_for_begin:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_159_40_165_12_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 160 16 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_159_40_165_12_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_159_40_165_12_stop" ]
+        %d.6 = local;
+        symbol [ d %d.6 160 20 21 ];
+        %tmp.34 = self;
+        symbol [ _randomDir %tmp.35 160 24 34 ];
+        %tmp.35 = getv function %tmp.34 :_randomDir;
+        %tmp.36 = invoke %tmp.34 %tmp.35();
+        lputv %d.6 %tmp.36;
+        symbol [ d %d.6 160 20 21 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 161 16 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_159_40_165_12_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_159_40_165_12_stop" ]
+        %spd.7 = local;
+        symbol [ spd %spd.7 161 20 23 ];
+        symbol [ _baseSpeed %tmp.38 161 26 36 ];
+        %tmp.38 = getv ? :_baseSpeed;
+        %tmp.39 = 1.0;
+        symbol [ Math %tmp.40 161 47 51 ];
+        %tmp.40 = getm $.Toybox.Math;
+        symbol [ rand %tmp.41 161 52 56 ];
+        %tmp.41 = getv function %tmp.40 :rand;
+        %tmp.42 = invoke %tmp.40 %tmp.41();
+        %tmp.43 = 60;
+        %tmp.44 = mod %tmp.42 %tmp.43;
+        %tmp.45 = 100.0;
+        %tmp.46 = div %tmp.44 %tmp.45;
+        %tmp.47 = add %tmp.39 %tmp.46;
+        %tmp.48 = mul %tmp.38 %tmp.47;
+        lputv %spd.7 %tmp.48;
+        symbol [ spd %spd.7 161 20 23 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 162 16 ]
+        symbol [ rocks %tmp.50 162 16 21 ];
+        %tmp.50 = getv ? :rocks;
+        symbol [ add %tmp.51 162 22 25 ];
+        %tmp.51 = getv function %tmp.50 :add;
+        symbol [ Asteroid %tmp.55 162 30 38 ];
+        %tmp.55 = getv ? :Asteroid;
+        %tmp.56 = lgetv %a.1;
+        symbol [ a %tmp.56 162 39 40 ];
+        symbol [ x %tmp.57 162 41 42 ];
+        %tmp.57 = getv %tmp.56 :x;
+        %tmp.58 = lgetv %a.1;
+        symbol [ a %tmp.58 162 44 45 ];
+        symbol [ y %tmp.59 162 46 47 ];
+        %tmp.59 = getv %tmp.58 :y;
+        %tmp.60 = lgetv %d.6;
+        symbol [ d %tmp.60 163 40 41 ];
+        %tmp.61 = 0;
+        %tmp.62 = agetv %tmp.60 %tmp.61;
+        %tmp.63 = lgetv %spd.7;
+        symbol [ spd %tmp.63 163 47 50 ];
+        %tmp.64 = mul %tmp.62 %tmp.63;
+        %tmp.65 = lgetv %d.6;
+        symbol [ d %tmp.65 163 52 53 ];
+        %tmp.66 = 1;
+        %tmp.67 = agetv %tmp.65 %tmp.66;
+        %tmp.68 = lgetv %spd.7;
+        symbol [ spd %tmp.68 163 59 62 ];
+        %tmp.69 = mul %tmp.67 %tmp.68;
+        %tmp.70 = lgetv %childSize.3;
+        symbol [ childSize %tmp.70 164 40 49 ];
+        %tmp.71 = lgetv %childR.4;
+        symbol [ childR %tmp.71 164 51 57 ];
+        %tmp.72 = self;
+        symbol [ _makeShape %tmp.73 164 59 69 ];
+        %tmp.73 = getv function %tmp.72 :_makeShape;
+        %tmp.74 = invoke %tmp.72 %tmp.73();
+        %tmp.52 = newc %tmp.55 (%tmp.57, %tmp.59, %tmp.64, %tmp.69, %tmp.70, %tmp.71, %tmp.74);
+        invoke %tmp.50 %tmp.51(%tmp.52);
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_159_40_165_12_stop:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_159_12_165_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 159 ]
+        %tmp.77 = lgetv %k.5;
+        symbol [ k %tmp.77 159 35 36 ];
+        %tmp.78 = add %tmp.77 1;
+        lputv %k.5 %tmp.78;
+        symbol [ k %k.5 159 35 36 ];
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_159_12_165_12_for_test;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_159_12_165_12_for_end:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_155_32_166_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_155_8_166_8_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_155_8_166_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 167 8 ]
+        %tmp.79 = lgetv %pts.2;
+        symbol [ pts %tmp.79 167 15 18 ];
+        ret %tmp.79;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_150_29_168_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc"; @line = 170; @symbol_functiondef = [compact,170,13,20]; ]
+    function compact() {
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_170_23_176_4_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 171 8 ]
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_170_23_176_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_170_23_176_4_stop" ]
+        %nr.1 = local;
+        symbol [ nr %nr.1 171 12 14 ];
+        %tmp.1 = newa 0;
+        lputv %nr.1 %tmp.1;
+        symbol [ nr %nr.1 171 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 172 8 ]
+        for @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_172_8_174_8_for_test @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_172_8_174_8_for_incr @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_172_8_174_8_for_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_172_8_174_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_172_8_174_8_for_begin" "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_172_8_174_8_for_end" ]
+        %i.2 = local;
+        symbol [ i %i.2 172 17 18 ];
+        %tmp.2 = 0;
+        lputv %i.2 %tmp.2;
+        symbol [ i %i.2 172 17 18 ];
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_172_8_174_8_for_test:
+        %tmp.3 = lgetv %i.2;
+        symbol [ i %tmp.3 172 24 25 ];
+        symbol [ rocks %tmp.5 172 28 33 ];
+        %tmp.5 = getv ? :rocks;
+        symbol [ size %tmp.6 172 34 38 ];
+        %tmp.6 = getv function %tmp.5 :size;
+        %tmp.7 = invoke %tmp.5 %tmp.6();
+        %tmp.8 = lt %tmp.3 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_172_8_174_8_for_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_172_8_174_8_for_begin:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_172_47_174_8_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 173 12 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_173_12_173_52_if_stmt:
+        symbol [ rocks %tmp.10 173 16 21 ];
+        %tmp.10 = getv ? :rocks;
+        %tmp.11 = lgetv %i.2;
+        symbol [ i %tmp.11 173 22 23 ];
+        %tmp.12 = agetv %tmp.10 %tmp.11;
+        symbol [ alive %tmp.13 173 25 30 ];
+        %tmp.13 = getv %tmp.12 :alive;
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_173_12_173_52_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_173_12_173_52_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_173_32_173_52_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 173 34 ]
+        %tmp.14 = lgetv %nr.1;
+        symbol [ nr %tmp.14 173 34 36 ];
+        symbol [ add %tmp.15 173 37 40 ];
+        %tmp.15 = getv function %tmp.14 :add;
+        symbol [ rocks %tmp.17 173 41 46 ];
+        %tmp.17 = getv ? :rocks;
+        %tmp.18 = lgetv %i.2;
+        symbol [ i %tmp.18 173 47 48 ];
+        %tmp.19 = agetv %tmp.17 %tmp.18;
+        invoke %tmp.14 %tmp.15(%tmp.19);
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_173_32_173_52_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_173_12_173_52_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_173_12_173_52_if_end:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_172_47_174_8_stop:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_172_8_174_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 172 ]
+        %tmp.22 = lgetv %i.2;
+        symbol [ i %tmp.22 172 42 43 ];
+        %tmp.23 = add %tmp.22 1;
+        lputv %i.2 %tmp.23;
+        symbol [ i %i.2 172 42 43 ];
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_172_8_174_8_for_test;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_172_8_174_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 175 8 ]
+        %tmp.24 = lgetv %nr.1;
+        symbol [ nr %tmp.24 175 16 18 ];
+        symbol [ rocks ? 175 8 13 ];
+        putv self :rocks %tmp.24;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_170_23_176_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc"; @line = 178; @symbol_functiondef = [allDead,178,13,20]; ]
+    function allDead() {
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_178_23_183_4_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 179 8 ]
+        for @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_179_8_181_8_for_test @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_179_8_181_8_for_incr @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_179_8_181_8_for_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_179_8_181_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_179_8_181_8_for_begin" "_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_179_8_181_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 179 17 18 ];
+        %tmp.1 = 0;
+        lputv %i.1 %tmp.1;
+        symbol [ i %i.1 179 17 18 ];
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_179_8_181_8_for_test:
+        %tmp.2 = lgetv %i.1;
+        symbol [ i %tmp.2 179 24 25 ];
+        symbol [ rocks %tmp.4 179 28 33 ];
+        %tmp.4 = getv ? :rocks;
+        symbol [ size %tmp.5 179 34 38 ];
+        %tmp.5 = getv function %tmp.4 :size;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        %tmp.7 = lt %tmp.2 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_179_8_181_8_for_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_179_8_181_8_for_begin:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_179_47_181_8_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 180 12 ]
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_180_12_180_48_if_stmt:
+        symbol [ rocks %tmp.9 180 16 21 ];
+        %tmp.9 = getv ? :rocks;
+        %tmp.10 = lgetv %i.1;
+        symbol [ i %tmp.10 180 22 23 ];
+        %tmp.11 = agetv %tmp.9 %tmp.10;
+        symbol [ alive %tmp.12 180 25 30 ];
+        %tmp.12 = getv %tmp.11 :alive;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_180_12_180_48_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_180_12_180_48_if_true:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_180_32_180_48_start:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 180 34 ]
+        %tmp.13 = false;
+        ret %tmp.13;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_180_32_180_48_stop:
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_180_12_180_48_if_end;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_180_12_180_48_if_end:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_179_47_181_8_stop:
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_179_8_181_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 179 ]
+        %tmp.16 = lgetv %i.1;
+        symbol [ i %tmp.16 179 42 43 ];
+        %tmp.17 = add %tmp.16 1;
+        lputv %i.1 %tmp.17;
+        symbol [ i %i.1 179 42 43 ];
+        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_179_8_181_8_for_test;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_179_8_181_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc" 182 8 ]
+        %tmp.18 = true;
+        ret %tmp.18;
+_Users_kkorolczuk_work_garmin_voidrocks_source_AsteroidManager_mc_178_23_183_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/AsteroidManager.mc"; @line = 24; ]
+<init> {
+}

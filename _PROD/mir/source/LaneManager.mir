@@ -1,0 +1,374 @@
+[ @file = "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc"; @line = 28; @position = 6; @symbol_constdef = [BOARD_ROWS,28,6,16]; ]
+const BOARD_ROWS = 12;
+[ @file = "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc"; @line = 29; @position = 6; @symbol_constdef = [BOARD_COLS,29,6,16]; ]
+const BOARD_COLS = 9;
+[ @file = "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc"; @line = 31; @position = 6; @symbol_constdef = [LANE_GRASS,31,6,16]; ]
+const LANE_GRASS = 0;
+[ @file = "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc"; @line = 32; @position = 6; @symbol_constdef = [LANE_ROAD,32,6,15]; ]
+const LANE_ROAD = 1;
+[ @file = "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc"; @line = 33; @position = 6; @symbol_constdef = [LANE_RIVER,33,6,16]; ]
+const LANE_RIVER = 2;
+[ @file = "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc"; @line = 34; @position = 6; @symbol_constdef = [LANE_GOAL,34,6,15]; ]
+const LANE_GOAL = 3;
+[ @file = "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc"; @line = 36; @position = 6; @symbol_constdef = [KIND_CAR,36,6,14]; ]
+const KIND_CAR = 0;
+[ @file = "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc"; @line = 37; @position = 6; @symbol_constdef = [KIND_TRUCK,37,6,16]; ]
+const KIND_TRUCK = 1;
+[ @file = "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc"; @line = 38; @position = 6; @symbol_constdef = [KIND_LOG,38,6,14]; ]
+const KIND_LOG = 2;
+[ @file = "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc"; @line = 40; @symbol_classdef = [Lane,40,6,10]; ]
+class Lane {
+    [ @file = "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc"; @line = 40; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc"; @line = 40; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc"; @line = 41; @position = 8; @symbol_vardef = [row,41,8,11]; ]
+    var row;
+    [ @file = "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc"; @line = 42; @position = 8; @symbol_vardef = [type,42,8,12]; ]
+    var type;
+    [ @file = "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc"; @line = 43; @position = 8; @symbol_vardef = [dir,43,8,11]; ]
+    var dir;
+    [ @file = "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc"; @line = 44; @position = 8; @symbol_vardef = [speedMul,44,8,16]; ]
+    var speedMul;
+    [ @file = "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc"; @line = 45; @position = 8; @symbol_vardef = [spawnGap,45,8,16]; ]
+    var spawnGap;
+    [ @file = "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc"; @line = 46; @position = 8; @symbol_vardef = [kindBias,46,8,16]; ]
+    var kindBias;
+    [ @file = "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc"; @line = 48; @symbol_functiondef = [initialize,48,13,23]; @symbol_param<0> = [r,48,24,25]; @symbol_param<1> = [t,48,27,28]; @symbol_param<2> = [d,48,30,31]; @symbol_param<3> = [sm,48,33,35]; @symbol_param<4> = [sg,48,37,39]; @symbol_param<5> = [kb,48,41,43]; ]
+    function initialize(r, t, d, sm, sg, kb) as Void {
+_Users_kkorolczuk_work_garmin_chickencross_source_LaneManager_mc_48_45_51_4_start:
+[ "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc" 49 8 ]
+        %tmp.1 = lgetv %r;
+        symbol [ r %tmp.1 49 14 15 ];
+        symbol [ row ? 49 8 11 ];
+        putv self :row %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc" 49 17 ]
+        %tmp.2 = lgetv %t;
+        symbol [ t %tmp.2 49 24 25 ];
+        symbol [ type ? 49 17 21 ];
+        putv self :type %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc" 49 27 ]
+        %tmp.3 = lgetv %d;
+        symbol [ d %tmp.3 49 33 34 ];
+        symbol [ dir ? 49 27 30 ];
+        putv self :dir %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc" 50 8 ]
+        %tmp.4 = lgetv %sm;
+        symbol [ sm %tmp.4 50 19 21 ];
+        symbol [ speedMul ? 50 8 16 ];
+        putv self :speedMul %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc" 50 23 ]
+        %tmp.5 = lgetv %sg;
+        symbol [ sg %tmp.5 50 34 36 ];
+        symbol [ spawnGap ? 50 23 31 ];
+        putv self :spawnGap %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc" 50 38 ]
+        %tmp.6 = lgetv %kb;
+        symbol [ kb %tmp.6 50 49 51 ];
+        symbol [ kindBias ? 50 38 46 ];
+        putv self :kindBias %tmp.6;
+_Users_kkorolczuk_work_garmin_chickencross_source_LaneManager_mc_48_45_51_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc"; @line = 54; @symbol_classdef = [LaneManager,54,6,17]; ]
+class LaneManager {
+    [ @file = "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc"; @line = 54; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc"; @line = 54; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc"; @line = 57; @symbol_functiondef = [buildLanes,57,20,30]; ]
+    static
+    function buildLanes() {
+_Users_kkorolczuk_work_garmin_chickencross_source_LaneManager_mc_57_33_72_4_start:
+[ "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc" 58 8 ]
+        [ "_Users_kkorolczuk_work_garmin_chickencross_source_LaneManager_mc_57_33_72_4_start" "_Users_kkorolczuk_work_garmin_chickencross_source_LaneManager_mc_57_33_72_4_stop" ]
+        %ls.1 = local;
+        symbol [ ls %ls.1 58 12 14 ];
+        %tmp.1 = newa 0;
+        lputv %ls.1 %tmp.1;
+        symbol [ ls %ls.1 58 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc" 59 8 ]
+        %tmp.2 = lgetv %ls.1;
+        symbol [ ls %tmp.2 59 8 10 ];
+        symbol [ add %tmp.3 59 11 14 ];
+        %tmp.3 = getv function %tmp.2 :add;
+        symbol [ Lane %tmp.7 59 19 23 ];
+        %tmp.7 = getv ? :Lane;
+        %tmp.8 = 0;
+        symbol [ LANE_GRASS %tmp.10 59 28 38 ];
+        %tmp.10 = getv ? :LANE_GRASS;
+        %tmp.11 = 0;
+        %tmp.12 = 0.0;
+        %tmp.13 = 0;
+        symbol [ KIND_CAR %tmp.15 59 52 60 ];
+        %tmp.15 = getv ? :KIND_CAR;
+        %tmp.4 = newc %tmp.7 (%tmp.8, %tmp.10, %tmp.11, %tmp.12, %tmp.13, %tmp.15);
+        invoke %tmp.2 %tmp.3(%tmp.4);
+[ "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc" 60 8 ]
+        %tmp.16 = lgetv %ls.1;
+        symbol [ ls %tmp.16 60 8 10 ];
+        symbol [ add %tmp.17 60 11 14 ];
+        %tmp.17 = getv function %tmp.16 :add;
+        symbol [ Lane %tmp.21 60 19 23 ];
+        %tmp.21 = getv ? :Lane;
+        %tmp.22 = 1;
+        symbol [ LANE_GRASS %tmp.24 60 28 38 ];
+        %tmp.24 = getv ? :LANE_GRASS;
+        %tmp.25 = 0;
+        %tmp.26 = 0.0;
+        %tmp.27 = 0;
+        symbol [ KIND_CAR %tmp.29 60 52 60 ];
+        %tmp.29 = getv ? :KIND_CAR;
+        %tmp.18 = newc %tmp.21 (%tmp.22, %tmp.24, %tmp.25, %tmp.26, %tmp.27, %tmp.29);
+        invoke %tmp.16 %tmp.17(%tmp.18);
+[ "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc" 61 8 ]
+        %tmp.30 = lgetv %ls.1;
+        symbol [ ls %tmp.30 61 8 10 ];
+        symbol [ add %tmp.31 61 11 14 ];
+        %tmp.31 = getv function %tmp.30 :add;
+        symbol [ Lane %tmp.35 61 19 23 ];
+        %tmp.35 = getv ? :Lane;
+        %tmp.36 = 2;
+        symbol [ LANE_ROAD %tmp.38 61 28 37 ];
+        %tmp.38 = getv ? :LANE_ROAD;
+        %tmp.39 = 1;
+        %tmp.40 = 0.9;
+        %tmp.41 = 4;
+        symbol [ KIND_CAR %tmp.43 61 52 60 ];
+        %tmp.43 = getv ? :KIND_CAR;
+        %tmp.32 = newc %tmp.35 (%tmp.36, %tmp.38, %tmp.39, %tmp.40, %tmp.41, %tmp.43);
+        invoke %tmp.30 %tmp.31(%tmp.32);
+[ "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc" 62 8 ]
+        %tmp.44 = lgetv %ls.1;
+        symbol [ ls %tmp.44 62 8 10 ];
+        symbol [ add %tmp.45 62 11 14 ];
+        %tmp.45 = getv function %tmp.44 :add;
+        symbol [ Lane %tmp.49 62 19 23 ];
+        %tmp.49 = getv ? :Lane;
+        %tmp.50 = 3;
+        symbol [ LANE_ROAD %tmp.52 62 28 37 ];
+        %tmp.52 = getv ? :LANE_ROAD;
+        %tmp.53 = -1;
+        %tmp.54 = 0.6;
+        %tmp.55 = 6;
+        symbol [ KIND_TRUCK %tmp.57 62 52 62 ];
+        %tmp.57 = getv ? :KIND_TRUCK;
+        %tmp.46 = newc %tmp.49 (%tmp.50, %tmp.52, %tmp.53, %tmp.54, %tmp.55, %tmp.57);
+        invoke %tmp.44 %tmp.45(%tmp.46);
+[ "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc" 63 8 ]
+        %tmp.58 = lgetv %ls.1;
+        symbol [ ls %tmp.58 63 8 10 ];
+        symbol [ add %tmp.59 63 11 14 ];
+        %tmp.59 = getv function %tmp.58 :add;
+        symbol [ Lane %tmp.63 63 19 23 ];
+        %tmp.63 = getv ? :Lane;
+        %tmp.64 = 4;
+        symbol [ LANE_ROAD %tmp.66 63 28 37 ];
+        %tmp.66 = getv ? :LANE_ROAD;
+        %tmp.67 = 1;
+        %tmp.68 = 1.2;
+        %tmp.69 = 3;
+        symbol [ KIND_CAR %tmp.71 63 52 60 ];
+        %tmp.71 = getv ? :KIND_CAR;
+        %tmp.60 = newc %tmp.63 (%tmp.64, %tmp.66, %tmp.67, %tmp.68, %tmp.69, %tmp.71);
+        invoke %tmp.58 %tmp.59(%tmp.60);
+[ "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc" 64 8 ]
+        %tmp.72 = lgetv %ls.1;
+        symbol [ ls %tmp.72 64 8 10 ];
+        symbol [ add %tmp.73 64 11 14 ];
+        %tmp.73 = getv function %tmp.72 :add;
+        symbol [ Lane %tmp.77 64 19 23 ];
+        %tmp.77 = getv ? :Lane;
+        %tmp.78 = 5;
+        symbol [ LANE_ROAD %tmp.80 64 28 37 ];
+        %tmp.80 = getv ? :LANE_ROAD;
+        %tmp.81 = -1;
+        %tmp.82 = 0.8;
+        %tmp.83 = 4;
+        symbol [ KIND_CAR %tmp.85 64 52 60 ];
+        %tmp.85 = getv ? :KIND_CAR;
+        %tmp.74 = newc %tmp.77 (%tmp.78, %tmp.80, %tmp.81, %tmp.82, %tmp.83, %tmp.85);
+        invoke %tmp.72 %tmp.73(%tmp.74);
+[ "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc" 65 8 ]
+        %tmp.86 = lgetv %ls.1;
+        symbol [ ls %tmp.86 65 8 10 ];
+        symbol [ add %tmp.87 65 11 14 ];
+        %tmp.87 = getv function %tmp.86 :add;
+        symbol [ Lane %tmp.91 65 19 23 ];
+        %tmp.91 = getv ? :Lane;
+        %tmp.92 = 6;
+        symbol [ LANE_GRASS %tmp.94 65 28 38 ];
+        %tmp.94 = getv ? :LANE_GRASS;
+        %tmp.95 = 0;
+        %tmp.96 = 0.0;
+        %tmp.97 = 0;
+        symbol [ KIND_CAR %tmp.99 65 52 60 ];
+        %tmp.99 = getv ? :KIND_CAR;
+        %tmp.88 = newc %tmp.91 (%tmp.92, %tmp.94, %tmp.95, %tmp.96, %tmp.97, %tmp.99);
+        invoke %tmp.86 %tmp.87(%tmp.88);
+[ "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc" 66 8 ]
+        %tmp.100 = lgetv %ls.1;
+        symbol [ ls %tmp.100 66 8 10 ];
+        symbol [ add %tmp.101 66 11 14 ];
+        %tmp.101 = getv function %tmp.100 :add;
+        symbol [ Lane %tmp.105 66 19 23 ];
+        %tmp.105 = getv ? :Lane;
+        %tmp.106 = 7;
+        symbol [ LANE_RIVER %tmp.108 66 28 38 ];
+        %tmp.108 = getv ? :LANE_RIVER;
+        %tmp.109 = 1;
+        %tmp.110 = 0.7;
+        %tmp.111 = 5;
+        symbol [ KIND_LOG %tmp.113 66 52 60 ];
+        %tmp.113 = getv ? :KIND_LOG;
+        %tmp.102 = newc %tmp.105 (%tmp.106, %tmp.108, %tmp.109, %tmp.110, %tmp.111, %tmp.113);
+        invoke %tmp.100 %tmp.101(%tmp.102);
+[ "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc" 67 8 ]
+        %tmp.114 = lgetv %ls.1;
+        symbol [ ls %tmp.114 67 8 10 ];
+        symbol [ add %tmp.115 67 11 14 ];
+        %tmp.115 = getv function %tmp.114 :add;
+        symbol [ Lane %tmp.119 67 19 23 ];
+        %tmp.119 = getv ? :Lane;
+        %tmp.120 = 8;
+        symbol [ LANE_RIVER %tmp.122 67 28 38 ];
+        %tmp.122 = getv ? :LANE_RIVER;
+        %tmp.123 = -1;
+        %tmp.124 = 1.0;
+        %tmp.125 = 4;
+        symbol [ KIND_LOG %tmp.127 67 52 60 ];
+        %tmp.127 = getv ? :KIND_LOG;
+        %tmp.116 = newc %tmp.119 (%tmp.120, %tmp.122, %tmp.123, %tmp.124, %tmp.125, %tmp.127);
+        invoke %tmp.114 %tmp.115(%tmp.116);
+[ "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc" 68 8 ]
+        %tmp.128 = lgetv %ls.1;
+        symbol [ ls %tmp.128 68 8 10 ];
+        symbol [ add %tmp.129 68 11 14 ];
+        %tmp.129 = getv function %tmp.128 :add;
+        symbol [ Lane %tmp.133 68 19 23 ];
+        %tmp.133 = getv ? :Lane;
+        %tmp.134 = 9;
+        symbol [ LANE_RIVER %tmp.136 68 28 38 ];
+        %tmp.136 = getv ? :LANE_RIVER;
+        %tmp.137 = 1;
+        %tmp.138 = 0.5;
+        %tmp.139 = 6;
+        symbol [ KIND_LOG %tmp.141 68 52 60 ];
+        %tmp.141 = getv ? :KIND_LOG;
+        %tmp.130 = newc %tmp.133 (%tmp.134, %tmp.136, %tmp.137, %tmp.138, %tmp.139, %tmp.141);
+        invoke %tmp.128 %tmp.129(%tmp.130);
+[ "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc" 69 8 ]
+        %tmp.142 = lgetv %ls.1;
+        symbol [ ls %tmp.142 69 8 10 ];
+        symbol [ add %tmp.143 69 11 14 ];
+        %tmp.143 = getv function %tmp.142 :add;
+        symbol [ Lane %tmp.147 69 19 23 ];
+        %tmp.147 = getv ? :Lane;
+        %tmp.148 = 10;
+        symbol [ LANE_GRASS %tmp.150 69 28 38 ];
+        %tmp.150 = getv ? :LANE_GRASS;
+        %tmp.151 = 0;
+        %tmp.152 = 0.0;
+        %tmp.153 = 0;
+        symbol [ KIND_CAR %tmp.155 69 52 60 ];
+        %tmp.155 = getv ? :KIND_CAR;
+        %tmp.144 = newc %tmp.147 (%tmp.148, %tmp.150, %tmp.151, %tmp.152, %tmp.153, %tmp.155);
+        invoke %tmp.142 %tmp.143(%tmp.144);
+[ "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc" 70 8 ]
+        %tmp.156 = lgetv %ls.1;
+        symbol [ ls %tmp.156 70 8 10 ];
+        symbol [ add %tmp.157 70 11 14 ];
+        %tmp.157 = getv function %tmp.156 :add;
+        symbol [ Lane %tmp.161 70 19 23 ];
+        %tmp.161 = getv ? :Lane;
+        %tmp.162 = 11;
+        symbol [ LANE_GOAL %tmp.164 70 28 37 ];
+        %tmp.164 = getv ? :LANE_GOAL;
+        %tmp.165 = 0;
+        %tmp.166 = 0.0;
+        %tmp.167 = 0;
+        symbol [ KIND_CAR %tmp.169 70 52 60 ];
+        %tmp.169 = getv ? :KIND_CAR;
+        %tmp.158 = newc %tmp.161 (%tmp.162, %tmp.164, %tmp.165, %tmp.166, %tmp.167, %tmp.169);
+        invoke %tmp.156 %tmp.157(%tmp.158);
+[ "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc" 71 8 ]
+        %tmp.170 = lgetv %ls.1;
+        symbol [ ls %tmp.170 71 15 17 ];
+        ret %tmp.170;
+_Users_kkorolczuk_work_garmin_chickencross_source_LaneManager_mc_57_33_72_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc"; @line = 76; @symbol_functiondef = [laneAt,76,20,26]; @symbol_param<0> = [lanes,76,27,32]; @symbol_param<1> = [row,76,34,37]; ]
+    static
+    function laneAt(lanes, row) {
+_Users_kkorolczuk_work_garmin_chickencross_source_LaneManager_mc_76_39_81_4_start:
+[ "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc" 77 8 ]
+        for @_Users_kkorolczuk_work_garmin_chickencross_source_LaneManager_mc_77_8_79_8_for_test @_Users_kkorolczuk_work_garmin_chickencross_source_LaneManager_mc_77_8_79_8_for_incr @_Users_kkorolczuk_work_garmin_chickencross_source_LaneManager_mc_77_8_79_8_for_end;
+_Users_kkorolczuk_work_garmin_chickencross_source_LaneManager_mc_77_8_79_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_chickencross_source_LaneManager_mc_77_8_79_8_for_begin" "_Users_kkorolczuk_work_garmin_chickencross_source_LaneManager_mc_77_8_79_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 77 17 18 ];
+        %tmp.1 = 0;
+        lputv %i.1 %tmp.1;
+        symbol [ i %i.1 77 17 18 ];
+_Users_kkorolczuk_work_garmin_chickencross_source_LaneManager_mc_77_8_79_8_for_test:
+        %tmp.2 = lgetv %i.1;
+        symbol [ i %tmp.2 77 24 25 ];
+        %tmp.3 = lgetv %lanes;
+        symbol [ lanes %tmp.3 77 28 33 ];
+        symbol [ size %tmp.4 77 34 38 ];
+        %tmp.4 = getv function %tmp.3 :size;
+        %tmp.5 = invoke %tmp.3 %tmp.4();
+        %tmp.6 = lt %tmp.2 %tmp.5;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_chickencross_source_LaneManager_mc_77_8_79_8_for_end;
+_Users_kkorolczuk_work_garmin_chickencross_source_LaneManager_mc_77_8_79_8_for_begin:
+_Users_kkorolczuk_work_garmin_chickencross_source_LaneManager_mc_77_47_79_8_start:
+[ "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc" 78 12 ]
+_Users_kkorolczuk_work_garmin_chickencross_source_LaneManager_mc_78_12_78_56_if_stmt:
+        %tmp.7 = lgetv %lanes;
+        symbol [ lanes %tmp.7 78 16 21 ];
+        %tmp.8 = lgetv %i.1;
+        symbol [ i %tmp.8 78 22 23 ];
+        %tmp.9 = agetv %tmp.7 %tmp.8;
+        symbol [ row %tmp.10 78 25 28 ];
+        %tmp.10 = getv %tmp.9 :row;
+        %tmp.11 = lgetv %row;
+        symbol [ row %tmp.11 78 32 35 ];
+        %tmp.12 = eq %tmp.10 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_chickencross_source_LaneManager_mc_78_12_78_56_if_end;
+_Users_kkorolczuk_work_garmin_chickencross_source_LaneManager_mc_78_12_78_56_if_true:
+_Users_kkorolczuk_work_garmin_chickencross_source_LaneManager_mc_78_37_78_56_start:
+[ "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc" 78 39 ]
+        %tmp.13 = lgetv %lanes;
+        symbol [ lanes %tmp.13 78 46 51 ];
+        %tmp.14 = lgetv %i.1;
+        symbol [ i %tmp.14 78 52 53 ];
+        %tmp.15 = agetv %tmp.13 %tmp.14;
+        ret %tmp.15;
+_Users_kkorolczuk_work_garmin_chickencross_source_LaneManager_mc_78_37_78_56_stop:
+        goto @_Users_kkorolczuk_work_garmin_chickencross_source_LaneManager_mc_78_12_78_56_if_end;
+_Users_kkorolczuk_work_garmin_chickencross_source_LaneManager_mc_78_12_78_56_if_end:
+_Users_kkorolczuk_work_garmin_chickencross_source_LaneManager_mc_77_47_79_8_stop:
+_Users_kkorolczuk_work_garmin_chickencross_source_LaneManager_mc_77_8_79_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc" 77 ]
+        %tmp.18 = lgetv %i.1;
+        symbol [ i %tmp.18 77 42 43 ];
+        %tmp.19 = add %tmp.18 1;
+        lputv %i.1 %tmp.19;
+        symbol [ i %i.1 77 42 43 ];
+        goto @_Users_kkorolczuk_work_garmin_chickencross_source_LaneManager_mc_77_8_79_8_for_test;
+_Users_kkorolczuk_work_garmin_chickencross_source_LaneManager_mc_77_8_79_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc" 80 8 ]
+        %tmp.20 = null;
+        ret %tmp.20;
+_Users_kkorolczuk_work_garmin_chickencross_source_LaneManager_mc_76_39_81_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/chickencross/source/LaneManager.mc"; @line = 28; ]
+<init> {
+}

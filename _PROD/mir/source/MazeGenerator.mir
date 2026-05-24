@@ -1,0 +1,576 @@
+[ @file = "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc"; @line = 16; @position = 6; @symbol_constdef = [TILE_FLOOR,16,6,16]; ]
+const TILE_FLOOR = 0;
+[ @file = "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc"; @line = 17; @position = 6; @symbol_constdef = [TILE_WALL,17,6,15]; ]
+const TILE_WALL = 1;
+[ @file = "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc"; @line = 18; @position = 6; @symbol_constdef = [TILE_PELLET,18,6,17]; ]
+const TILE_PELLET = 2;
+[ @file = "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc"; @line = 19; @position = 6; @symbol_constdef = [TILE_POWER,19,6,16]; ]
+const TILE_POWER = 3;
+[ @file = "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc"; @line = 21; @position = 6; @symbol_constdef = [MAZE_SIZE,21,6,15]; ]
+const MAZE_SIZE = 13;
+[ @file = "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc"; @line = 22; @position = 6; @symbol_constdef = [MAZE_COUNT,22,6,16]; ]
+const MAZE_COUNT = 3;
+[ @file = "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc"; @line = 24; @symbol_classdef = [MazeGenerator,24,6,19]; ]
+class MazeGenerator {
+    [ @file = "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc"; @line = 24; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc"; @line = 24; ]
+    static
+    <init> {
+[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 28 15 ]
+        %tmp.1 = newa 3;
+        %tmp.2 = newa 13;
+        %tmp.3 = "#############";
+        %tmp.4 = dup %tmp.2;
+        %tmp.5 = aputv %tmp.4 0 %tmp.3;
+        %tmp.6 = "#o.........o#";
+        %tmp.7 = dup %tmp.5;
+        %tmp.8 = aputv %tmp.7 1 %tmp.6;
+        %tmp.9 = "#.##.###.##.#";
+        %tmp.10 = dup %tmp.8;
+        %tmp.11 = aputv %tmp.10 2 %tmp.9;
+        %tmp.12 = "#...........#";
+        %tmp.13 = dup %tmp.11;
+        %tmp.14 = aputv %tmp.13 3 %tmp.12;
+        %tmp.15 = "#.##.#.#.##.#";
+        %tmp.16 = dup %tmp.14;
+        %tmp.17 = aputv %tmp.16 4 %tmp.15;
+        %tmp.18 = "#....#.#....#";
+        %tmp.19 = dup %tmp.17;
+        %tmp.20 = aputv %tmp.19 5 %tmp.18;
+        %tmp.21 = "##.#.#.#.#.##";
+        %tmp.22 = dup %tmp.20;
+        %tmp.23 = aputv %tmp.22 6 %tmp.21;
+        %tmp.24 = "#....#.#....#";
+        %tmp.25 = dup %tmp.23;
+        %tmp.26 = aputv %tmp.25 7 %tmp.24;
+        %tmp.27 = "#.##.#.#.##.#";
+        %tmp.28 = dup %tmp.26;
+        %tmp.29 = aputv %tmp.28 8 %tmp.27;
+        %tmp.30 = "#...........#";
+        %tmp.31 = dup %tmp.29;
+        %tmp.32 = aputv %tmp.31 9 %tmp.30;
+        %tmp.33 = "#.##.###.##.#";
+        %tmp.34 = dup %tmp.32;
+        %tmp.35 = aputv %tmp.34 10 %tmp.33;
+        %tmp.36 = "#o.........o#";
+        %tmp.37 = dup %tmp.35;
+        %tmp.38 = aputv %tmp.37 11 %tmp.36;
+        %tmp.39 = "#############";
+        %tmp.40 = dup %tmp.38;
+        %tmp.41 = aputv %tmp.40 12 %tmp.39;
+        %tmp.42 = dup %tmp.1;
+        %tmp.43 = aputv %tmp.42 0 %tmp.41;
+        %tmp.44 = newa 13;
+        %tmp.45 = "#############";
+        %tmp.46 = dup %tmp.44;
+        %tmp.47 = aputv %tmp.46 0 %tmp.45;
+        %tmp.48 = "#.....#.....#";
+        %tmp.49 = dup %tmp.47;
+        %tmp.50 = aputv %tmp.49 1 %tmp.48;
+        %tmp.51 = "#o###.#.###o#";
+        %tmp.52 = dup %tmp.50;
+        %tmp.53 = aputv %tmp.52 2 %tmp.51;
+        %tmp.54 = "#...........#";
+        %tmp.55 = dup %tmp.53;
+        %tmp.56 = aputv %tmp.55 3 %tmp.54;
+        %tmp.57 = "###.#####.###";
+        %tmp.58 = dup %tmp.56;
+        %tmp.59 = aputv %tmp.58 4 %tmp.57;
+        %tmp.60 = "#...#...#...#";
+        %tmp.61 = dup %tmp.59;
+        %tmp.62 = aputv %tmp.61 5 %tmp.60;
+        %tmp.63 = "#.#.#.#.#.#.#";
+        %tmp.64 = dup %tmp.62;
+        %tmp.65 = aputv %tmp.64 6 %tmp.63;
+        %tmp.66 = "#...#...#...#";
+        %tmp.67 = dup %tmp.65;
+        %tmp.68 = aputv %tmp.67 7 %tmp.66;
+        %tmp.69 = "###.#####.###";
+        %tmp.70 = dup %tmp.68;
+        %tmp.71 = aputv %tmp.70 8 %tmp.69;
+        %tmp.72 = "#...........#";
+        %tmp.73 = dup %tmp.71;
+        %tmp.74 = aputv %tmp.73 9 %tmp.72;
+        %tmp.75 = "#o###.#.###o#";
+        %tmp.76 = dup %tmp.74;
+        %tmp.77 = aputv %tmp.76 10 %tmp.75;
+        %tmp.78 = "#.....#.....#";
+        %tmp.79 = dup %tmp.77;
+        %tmp.80 = aputv %tmp.79 11 %tmp.78;
+        %tmp.81 = "#############";
+        %tmp.82 = dup %tmp.80;
+        %tmp.83 = aputv %tmp.82 12 %tmp.81;
+        %tmp.84 = dup %tmp.43;
+        %tmp.85 = aputv %tmp.84 1 %tmp.83;
+        %tmp.86 = newa 13;
+        %tmp.87 = "#############";
+        %tmp.88 = dup %tmp.86;
+        %tmp.89 = aputv %tmp.88 0 %tmp.87;
+        %tmp.90 = "#o.#.....#.o#";
+        %tmp.91 = dup %tmp.89;
+        %tmp.92 = aputv %tmp.91 1 %tmp.90;
+        %tmp.93 = "#.###.#.###.#";
+        %tmp.94 = dup %tmp.92;
+        %tmp.95 = aputv %tmp.94 2 %tmp.93;
+        %tmp.96 = "#...........#";
+        %tmp.97 = dup %tmp.95;
+        %tmp.98 = aputv %tmp.97 3 %tmp.96;
+        %tmp.99 = "#.#.#####.#.#";
+        %tmp.100 = dup %tmp.98;
+        %tmp.101 = aputv %tmp.100 4 %tmp.99;
+        %tmp.102 = "#.#.......#.#";
+        %tmp.103 = dup %tmp.101;
+        %tmp.104 = aputv %tmp.103 5 %tmp.102;
+        %tmp.105 = "#...#.#.#...#";
+        %tmp.106 = dup %tmp.104;
+        %tmp.107 = aputv %tmp.106 6 %tmp.105;
+        %tmp.108 = "#.#.......#.#";
+        %tmp.109 = dup %tmp.107;
+        %tmp.110 = aputv %tmp.109 7 %tmp.108;
+        %tmp.111 = "#.#.#####.#.#";
+        %tmp.112 = dup %tmp.110;
+        %tmp.113 = aputv %tmp.112 8 %tmp.111;
+        %tmp.114 = "#...........#";
+        %tmp.115 = dup %tmp.113;
+        %tmp.116 = aputv %tmp.115 9 %tmp.114;
+        %tmp.117 = "#.###.#.###.#";
+        %tmp.118 = dup %tmp.116;
+        %tmp.119 = aputv %tmp.118 10 %tmp.117;
+        %tmp.120 = "#o.#.....#.o#";
+        %tmp.121 = dup %tmp.119;
+        %tmp.122 = aputv %tmp.121 11 %tmp.120;
+        %tmp.123 = "#############";
+        %tmp.124 = dup %tmp.122;
+        %tmp.125 = aputv %tmp.124 12 %tmp.123;
+        %tmp.126 = dup %tmp.85;
+        %tmp.127 = aputv %tmp.126 2 %tmp.125;
+        putv self :LAYOUTS %tmp.127;
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc"; @line = 28; @position = 15; @symbol_vardef = [LAYOUTS,28,15,22]; ]
+    static
+    var LAYOUTS;
+    [ @file = "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc"; @line = 75; @symbol_functiondef = [build,75,20,25]; @symbol_param<0> = [idx,75,26,29]; ]
+    static
+    function build(idx) {
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_75_31_91_4_start:
+[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 76 8 ]
+        [ "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_75_31_91_4_start" "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_75_31_91_4_stop" ]
+        %lay.1 = local;
+        symbol [ lay %lay.1 76 12 15 ];
+        symbol [ LAYOUTS %tmp.2 76 18 25 ];
+        %tmp.2 = getv ? :LAYOUTS;
+        %tmp.3 = lgetv %idx;
+        symbol [ idx %tmp.3 76 28 31 ];
+        symbol [ MAZE_COUNT %tmp.5 76 34 44 ];
+        %tmp.5 = getv ? :MAZE_COUNT;
+        %tmp.6 = mod %tmp.3 %tmp.5;
+        symbol [ MAZE_COUNT %tmp.8 76 48 58 ];
+        %tmp.8 = getv ? :MAZE_COUNT;
+        %tmp.9 = add %tmp.6 %tmp.8;
+        symbol [ MAZE_COUNT %tmp.11 76 62 72 ];
+        %tmp.11 = getv ? :MAZE_COUNT;
+        %tmp.12 = mod %tmp.9 %tmp.11;
+        %tmp.13 = agetv %tmp.2 %tmp.12;
+        lputv %lay.1 %tmp.13;
+        symbol [ lay %lay.1 76 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 77 8 ]
+        [ "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_75_31_91_4_start" "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_75_31_91_4_stop" ]
+        %n.2 = local;
+        symbol [ n %n.2 77 12 13 ];
+        symbol [ MAZE_SIZE %tmp.15 77 18 27 ];
+        %tmp.15 = getv ? :MAZE_SIZE;
+        lputv %n.2 %tmp.15;
+        symbol [ n %n.2 77 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 78 8 ]
+        [ "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_75_31_91_4_start" "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_75_31_91_4_stop" ]
+        %g.3 = local;
+        symbol [ g %g.3 78 12 13 ];
+        %tmp.17 = lgetv %n.2;
+        symbol [ n %tmp.17 78 23 24 ];
+        %tmp.18 = lgetv %n.2;
+        symbol [ n %tmp.18 78 27 28 ];
+        %tmp.19 = mul %tmp.17 %tmp.18;
+        %tmp.16 = newba %tmp.19;
+        lputv %g.3 %tmp.16;
+        symbol [ g %g.3 78 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 79 8 ]
+        for @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_79_8_89_8_for_test @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_79_8_89_8_for_incr @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_79_8_89_8_for_end;
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_79_8_89_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_79_8_89_8_for_begin" "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_79_8_89_8_for_end" ]
+        %r.4 = local;
+        symbol [ r %r.4 79 17 18 ];
+        %tmp.20 = 0;
+        lputv %r.4 %tmp.20;
+        symbol [ r %r.4 79 17 18 ];
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_79_8_89_8_for_test:
+        %tmp.21 = lgetv %r.4;
+        symbol [ r %tmp.21 79 24 25 ];
+        %tmp.22 = lgetv %n.2;
+        symbol [ n %tmp.22 79 28 29 ];
+        %tmp.23 = lt %tmp.21 %tmp.22;
+        bf %tmp.23 @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_79_8_89_8_for_end;
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_79_8_89_8_for_begin:
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_79_36_89_8_start:
+[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 80 12 ]
+        [ "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_79_36_89_8_start" "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_79_36_89_8_stop" ]
+        %row.5 = local;
+        symbol [ row %row.5 80 16 19 ];
+        %tmp.24 = lgetv %lay.1;
+        symbol [ lay %tmp.24 80 22 25 ];
+        %tmp.25 = lgetv %r.4;
+        symbol [ r %tmp.25 80 26 27 ];
+        %tmp.26 = agetv %tmp.24 %tmp.25;
+        lputv %row.5 %tmp.26;
+        symbol [ row %row.5 80 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 81 12 ]
+        for @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_81_12_88_12_for_test @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_81_12_88_12_for_incr @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_81_12_88_12_for_end;
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_81_12_88_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_81_12_88_12_for_begin" "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_81_12_88_12_for_end" ]
+        %c.6 = local;
+        symbol [ c %c.6 81 21 22 ];
+        %tmp.27 = 0;
+        lputv %c.6 %tmp.27;
+        symbol [ c %c.6 81 21 22 ];
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_81_12_88_12_for_test:
+        %tmp.28 = lgetv %c.6;
+        symbol [ c %tmp.28 81 28 29 ];
+        %tmp.29 = lgetv %n.2;
+        symbol [ n %tmp.29 81 32 33 ];
+        %tmp.30 = lt %tmp.28 %tmp.29;
+        bf %tmp.30 @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_81_12_88_12_for_end;
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_81_12_88_12_for_begin:
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_81_40_88_12_start:
+[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 82 16 ]
+        [ "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_81_40_88_12_start" "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_81_40_88_12_stop" ]
+        %ch.7 = local;
+        symbol [ ch %ch.7 82 20 22 ];
+        %tmp.31 = lgetv %row.5;
+        symbol [ row %tmp.31 82 25 28 ];
+        symbol [ substring %tmp.32 82 29 38 ];
+        %tmp.32 = getv function %tmp.31 :substring;
+        %tmp.33 = lgetv %c.6;
+        symbol [ c %tmp.33 82 39 40 ];
+        %tmp.34 = lgetv %c.6;
+        symbol [ c %tmp.34 82 42 43 ];
+        %tmp.35 = 1;
+        %tmp.36 = add %tmp.34 %tmp.35;
+        %tmp.37 = invoke %tmp.31 %tmp.32(%tmp.33, %tmp.36);
+        lputv %ch.7 %tmp.37;
+        symbol [ ch %ch.7 82 20 22 ];
+[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 83 16 ]
+        [ "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_81_40_88_12_start" "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_81_40_88_12_stop" ]
+        %t.8 = local;
+        symbol [ t %t.8 83 20 21 ];
+        symbol [ TILE_FLOOR %tmp.39 83 25 35 ];
+        %tmp.39 = getv ? :TILE_FLOOR;
+        lputv %t.8 %tmp.39;
+        symbol [ t %t.8 83 20 21 ];
+[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 84 16 ]
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_84_16_86_60_if_stmt:
+        %tmp.40 = lgetv %ch.7;
+        symbol [ ch %tmp.40 84 20 22 ];
+        symbol [ equals %tmp.41 84 23 29 ];
+        %tmp.41 = getv function %tmp.40 :equals;
+        %tmp.42 = "#";
+        %tmp.43 = invoke %tmp.40 %tmp.41(%tmp.42);
+        bf %tmp.43 @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_84_16_86_60_if_false;
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_84_16_86_60_if_true:
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_84_41_84_60_start:
+[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 84 43 ]
+        symbol [ TILE_WALL %tmp.45 84 47 56 ];
+        %tmp.45 = getv ? :TILE_WALL;
+        lputv %t.8 %tmp.45;
+        symbol [ t %t.8 84 43 44 ];
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_84_41_84_60_stop:
+        goto @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_84_16_86_60_if_end;
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_84_16_86_60_if_false:
+[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 85 21 ]
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_85_21_86_60_if_stmt:
+        %tmp.46 = lgetv %ch.7;
+        symbol [ ch %tmp.46 85 25 27 ];
+        symbol [ equals %tmp.47 85 28 34 ];
+        %tmp.47 = getv function %tmp.46 :equals;
+        %tmp.48 = ".";
+        %tmp.49 = invoke %tmp.46 %tmp.47(%tmp.48);
+        bf %tmp.49 @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_85_21_86_60_if_false;
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_85_21_86_60_if_true:
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_85_41_85_60_start:
+[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 85 43 ]
+        symbol [ TILE_PELLET %tmp.51 85 47 58 ];
+        %tmp.51 = getv ? :TILE_PELLET;
+        lputv %t.8 %tmp.51;
+        symbol [ t %t.8 85 43 44 ];
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_85_41_85_60_stop:
+        goto @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_85_21_86_60_if_end;
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_85_21_86_60_if_false:
+[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 86 21 ]
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_86_21_86_60_if_stmt:
+        %tmp.52 = lgetv %ch.7;
+        symbol [ ch %tmp.52 86 25 27 ];
+        symbol [ equals %tmp.53 86 28 34 ];
+        %tmp.53 = getv function %tmp.52 :equals;
+        %tmp.54 = "o";
+        %tmp.55 = invoke %tmp.52 %tmp.53(%tmp.54);
+        bf %tmp.55 @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_86_21_86_60_if_end;
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_86_21_86_60_if_true:
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_86_41_86_60_start:
+[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 86 43 ]
+        symbol [ TILE_POWER %tmp.57 86 47 57 ];
+        %tmp.57 = getv ? :TILE_POWER;
+        lputv %t.8 %tmp.57;
+        symbol [ t %t.8 86 43 44 ];
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_86_41_86_60_stop:
+        goto @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_86_21_86_60_if_end;
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_86_21_86_60_if_end:
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_85_21_86_60_if_end:
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_84_16_86_60_if_end:
+[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 87 16 ]
+        %tmp.58 = lgetv %g.3;
+        symbol [ g %tmp.58 87 16 17 ];
+        %tmp.59 = lgetv %t.8;
+        symbol [ t %tmp.59 87 31 32 ];
+        %tmp.60 = lgetv %r.4;
+        symbol [ r %tmp.60 87 18 19 ];
+        %tmp.61 = lgetv %n.2;
+        symbol [ n %tmp.61 87 22 23 ];
+        %tmp.62 = mul %tmp.60 %tmp.61;
+        %tmp.63 = lgetv %c.6;
+        symbol [ c %tmp.63 87 26 27 ];
+        %tmp.64 = add %tmp.62 %tmp.63;
+        aputv %tmp.58 %tmp.64 %tmp.59;
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_81_40_88_12_stop:
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_81_12_88_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 81 ]
+        %tmp.67 = lgetv %c.6;
+        symbol [ c %tmp.67 81 35 36 ];
+        %tmp.68 = add %tmp.67 1;
+        lputv %c.6 %tmp.68;
+        symbol [ c %c.6 81 35 36 ];
+        goto @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_81_12_88_12_for_test;
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_81_12_88_12_for_end:
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_79_36_89_8_stop:
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_79_8_89_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 79 ]
+        %tmp.71 = lgetv %r.4;
+        symbol [ r %tmp.71 79 31 32 ];
+        %tmp.72 = add %tmp.71 1;
+        lputv %r.4 %tmp.72;
+        symbol [ r %r.4 79 31 32 ];
+        goto @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_79_8_89_8_for_test;
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_79_8_89_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 90 8 ]
+        %tmp.73 = lgetv %g.3;
+        symbol [ g %tmp.73 90 15 16 ];
+        ret %tmp.73;
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_75_31_91_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc"; @line = 94; @symbol_functiondef = [countPellets,94,20,32]; @symbol_param<0> = [grid,94,33,37]; ]
+    static
+    function countPellets(grid) {
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_94_39_101_4_start:
+[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 95 8 ]
+        [ "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_94_39_101_4_start" "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_94_39_101_4_stop" ]
+        %c.1 = local;
+        symbol [ c %c.1 95 12 13 ];
+        %tmp.1 = 0;
+        lputv %c.1 %tmp.1;
+        symbol [ c %c.1 95 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 96 8 ]
+        for @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_96_8_99_8_for_test @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_96_8_99_8_for_incr @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_96_8_99_8_for_end;
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_96_8_99_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_96_8_99_8_for_begin" "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_96_8_99_8_for_end" ]
+        %i.2 = local;
+        symbol [ i %i.2 96 17 18 ];
+        %tmp.2 = 0;
+        lputv %i.2 %tmp.2;
+        symbol [ i %i.2 96 17 18 ];
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_96_8_99_8_for_test:
+        %tmp.3 = lgetv %i.2;
+        symbol [ i %tmp.3 96 24 25 ];
+        %tmp.4 = lgetv %grid;
+        symbol [ grid %tmp.4 96 28 32 ];
+        symbol [ size %tmp.5 96 33 37 ];
+        %tmp.5 = getv function %tmp.4 :size;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        %tmp.7 = lt %tmp.3 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_96_8_99_8_for_end;
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_96_8_99_8_for_begin:
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_96_46_99_8_start:
+[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 97 12 ]
+        [ "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_96_46_99_8_start" "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_96_46_99_8_stop" ]
+        %t.3 = local;
+        symbol [ t %t.3 97 16 17 ];
+        %tmp.8 = lgetv %grid;
+        symbol [ grid %tmp.8 97 20 24 ];
+        %tmp.9 = lgetv %i.2;
+        symbol [ i %tmp.9 97 25 26 ];
+        %tmp.10 = agetv %tmp.8 %tmp.9;
+        lputv %t.3 %tmp.10;
+        symbol [ t %t.3 97 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 98 12 ]
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_98_12_98_66_if_stmt:
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_98_16_98_41_begin:
+        %tmp.11 = lgetv %t.3;
+        symbol [ t %tmp.11 98 16 17 ];
+        symbol [ TILE_PELLET %tmp.13 98 21 32 ];
+        %tmp.13 = getv ? :TILE_PELLET;
+        %tmp.14 = eq %tmp.11 %tmp.13;
+        bt %tmp.14 @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_98_12_98_66_if_true;
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_98_36_98_41_false:
+        %tmp.15 = lgetv %t.3;
+        symbol [ t %tmp.15 98 36 37 ];
+        symbol [ TILE_POWER %tmp.17 98 41 51 ];
+        %tmp.17 = getv ? :TILE_POWER;
+        %tmp.18 = eq %tmp.15 %tmp.17;
+        push %tmp.18;
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_98_36_98_41_end:
+        %tmp.19 = phi [%tmp.14 @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_98_16_98_41_begin] [%tmp.18 @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_98_36_98_41_false] [%tmp.19 @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_98_36_98_41_end];
+        bf %tmp.19 @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_98_12_98_66_if_end;
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_98_12_98_66_if_true:
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_98_53_98_66_start:
+[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 98 55 ]
+        %tmp.20 = lgetv %c.1;
+        symbol [ c %tmp.20 98 59 60 ];
+        %tmp.21 = 1;
+        %tmp.22 = add %tmp.20 %tmp.21;
+        lputv %c.1 %tmp.22;
+        symbol [ c %c.1 98 55 56 ];
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_98_53_98_66_stop:
+        goto @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_98_12_98_66_if_end;
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_98_12_98_66_if_end:
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_96_46_99_8_stop:
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_96_8_99_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 96 ]
+        %tmp.25 = lgetv %i.2;
+        symbol [ i %tmp.25 96 41 42 ];
+        %tmp.26 = add %tmp.25 1;
+        lputv %i.2 %tmp.26;
+        symbol [ i %i.2 96 41 42 ];
+        goto @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_96_8_99_8_for_test;
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_96_8_99_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 100 8 ]
+        %tmp.27 = lgetv %c.1;
+        symbol [ c %tmp.27 100 15 16 ];
+        ret %tmp.27;
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_94_39_101_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc"; @line = 104; @symbol_functiondef = [spawnPlayer,104,20,31]; ]
+    static
+    function spawnPlayer() {
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_104_34_104_51_start:
+[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 104 36 ]
+        %tmp.1 = newa 2;
+        %tmp.2 = 9;
+        %tmp.3 = dup %tmp.1;
+        %tmp.4 = aputv %tmp.3 0 %tmp.2;
+        %tmp.5 = 6;
+        %tmp.6 = dup %tmp.4;
+        %tmp.7 = aputv %tmp.6 1 %tmp.5;
+        ret %tmp.7;
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_104_34_104_51_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc"; @line = 107; @symbol_functiondef = [spawnGhost,107,20,30]; @symbol_param<0> = [idx,107,31,34]; ]
+    static
+    function spawnGhost(idx) {
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_107_36_114_4_start:
+[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 108 8 ]
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_108_8_108_41_if_stmt:
+        %tmp.1 = lgetv %idx;
+        symbol [ idx %tmp.1 108 12 15 ];
+        %tmp.2 = 0;
+        %tmp.3 = eq %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_108_8_108_41_if_end;
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_108_8_108_41_if_true:
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_108_22_108_41_start:
+[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 108 24 ]
+        %tmp.4 = newa 2;
+        %tmp.5 = 1;
+        %tmp.6 = dup %tmp.4;
+        %tmp.7 = aputv %tmp.6 0 %tmp.5;
+        %tmp.8 = 1;
+        %tmp.9 = dup %tmp.7;
+        %tmp.10 = aputv %tmp.9 1 %tmp.8;
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_108_22_108_41_stop:
+        goto @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_108_8_108_41_if_end;
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_108_8_108_41_if_end:
+[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 109 8 ]
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_109_8_109_41_if_stmt:
+        %tmp.11 = lgetv %idx;
+        symbol [ idx %tmp.11 109 12 15 ];
+        %tmp.12 = 1;
+        %tmp.13 = eq %tmp.11 %tmp.12;
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_109_8_109_41_if_end;
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_109_8_109_41_if_true:
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_109_22_109_41_start:
+[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 109 24 ]
+        %tmp.14 = newa 2;
+        %tmp.15 = 1;
+        %tmp.16 = dup %tmp.14;
+        %tmp.17 = aputv %tmp.16 0 %tmp.15;
+        %tmp.18 = 11;
+        %tmp.19 = dup %tmp.17;
+        %tmp.20 = aputv %tmp.19 1 %tmp.18;
+        ret %tmp.20;
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_109_22_109_41_stop:
+        goto @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_109_8_109_41_if_end;
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_109_8_109_41_if_end:
+[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 110 8 ]
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_110_8_110_41_if_stmt:
+        %tmp.21 = lgetv %idx;
+        symbol [ idx %tmp.21 110 12 15 ];
+        %tmp.22 = 2;
+        %tmp.23 = eq %tmp.21 %tmp.22;
+        bf %tmp.23 @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_110_8_110_41_if_end;
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_110_8_110_41_if_true:
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_110_22_110_41_start:
+[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 110 24 ]
+        %tmp.24 = newa 2;
+        %tmp.25 = 11;
+        %tmp.26 = dup %tmp.24;
+        %tmp.27 = aputv %tmp.26 0 %tmp.25;
+        %tmp.28 = 1;
+        %tmp.29 = dup %tmp.27;
+        %tmp.30 = aputv %tmp.29 1 %tmp.28;
+        ret %tmp.30;
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_110_22_110_41_stop:
+        goto @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_110_8_110_41_if_end;
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_110_8_110_41_if_end:
+[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 111 8 ]
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_111_8_111_41_if_stmt:
+        %tmp.31 = lgetv %idx;
+        symbol [ idx %tmp.31 111 12 15 ];
+        %tmp.32 = 3;
+        %tmp.33 = eq %tmp.31 %tmp.32;
+        bf %tmp.33 @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_111_8_111_41_if_end;
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_111_8_111_41_if_true:
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_111_22_111_41_start:
+[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 111 24 ]
+        %tmp.34 = newa 2;
+        %tmp.35 = 11;
+        %tmp.36 = dup %tmp.34;
+        %tmp.37 = aputv %tmp.36 0 %tmp.35;
+        %tmp.38 = 11;
+        %tmp.39 = dup %tmp.37;
+        %tmp.40 = aputv %tmp.39 1 %tmp.38;
+        ret %tmp.40;
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_111_22_111_41_stop:
+        goto @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_111_8_111_41_if_end;
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_111_8_111_41_if_end:
+[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 113 8 ]
+        %tmp.41 = newa 2;
+        %tmp.42 = 6;
+        %tmp.43 = dup %tmp.41;
+        %tmp.44 = aputv %tmp.43 0 %tmp.42;
+        %tmp.45 = 6;
+        %tmp.46 = dup %tmp.44;
+        %tmp.47 = aputv %tmp.46 1 %tmp.45;
+        ret %tmp.47;
+_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_107_36_114_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc"; @line = 16; ]
+<init> {
+}

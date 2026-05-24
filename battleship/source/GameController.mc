@@ -86,6 +86,9 @@ class GameController {
         lastSinkText   = "";
 
         winsTotal    = _loadInt("winsTotal", 0);
+        difficulty   = _loadInt("bs_diff", AI_MEDIUM);
+        if (difficulty < 0 || difficulty > 2) { difficulty = AI_MEDIUM; }
+        ai.setDifficulty(difficulty);
         state        = GS_MENU;
     }
 
@@ -111,6 +114,7 @@ class GameController {
         if (menuCursor == MI_DIFFICULTY) {
             difficulty = (difficulty + 1) % 3;
             ai.setDifficulty(difficulty);
+            _saveInt("bs_diff", difficulty);
         } else if (menuCursor == MI_START) {
             beginSetup();
         }

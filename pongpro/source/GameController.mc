@@ -76,10 +76,8 @@ class GameController {
         serveCounter = 0; serveDelay = 24;
         difficulty = DIFF_MEDIUM;
         baseBallSpeed = 3.6;
-        // Continuous paddle-hold flags must be primed so the first
-        // onKeyPressed call doesn't dereference a null in the
-        // boolean expressions inside _recomputePlayerVy().
         _holdUp = false; _holdDown = false;
+        _loadSettings();
     }
 
     hidden function _loadStat() {
@@ -91,6 +89,15 @@ class GameController {
     }
     hidden function _saveStat() {
         try { Application.Storage.setValue("wins", hiPlayerWins); } catch (e) { }
+    }
+    hidden function _loadSettings() {
+        try {
+            var d = Application.Storage.getValue("pp_diff");
+            if (d instanceof Number && d >= DIFF_EASY && d <= DIFF_HARD) { setDifficulty(d); }
+        } catch (e) {}
+    }
+    hidden function _saveDifficulty() {
+        try { Application.Storage.setValue("pp_diff", difficulty); } catch (e) {}
     }
 
     function setScreen(w, h) {
@@ -139,6 +146,7 @@ class GameController {
         var d = difficulty + 1;
         if (d > DIFF_HARD) { d = DIFF_EASY; }
         setDifficulty(d);
+        _saveDifficulty();
     }
 
     function startMatch() {

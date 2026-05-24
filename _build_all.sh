@@ -77,6 +77,20 @@ APPS=(
   solitare
   sudoku
   timer
+  manpac
+  chickencross
+  digcore
+  gravityminer
+  hologrid
+  starswarm
+  voidrocks
+  pixelinvaders
+  diceroyale
+  kakuro
+  lightsout
+  nonogram
+  bomber
+  akari
 )
 
 FILTER=""

@@ -1,0 +1,313 @@
+[ @file = "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc"; @line = 8; @symbol_usingdef<0> = [Toybox,8,6,12]; @symbol_usingdef<1> = [Application,8,13,24]; ]
+using Toybox.Application;
+[ @file = "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc"; @line = 10; @position = 6; @symbol_constdef = [GM_BEST_KEY,10,6,17]; ]
+const GM_BEST_KEY = "gm_best";
+[ @file = "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc"; @line = 12; @symbol_classdef = [ResourceManager,12,6,21]; ]
+class ResourceManager {
+    [ @file = "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc"; @line = 12; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc"; @line = 12; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc"; @line = 13; @position = 8; @symbol_vardef = [oreCount,13,8,16]; ]
+    var oreCount;
+    [ @file = "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc"; @line = 14; @position = 8; @symbol_vardef = [gemCount,14,8,16]; ]
+    var gemCount;
+    [ @file = "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc"; @line = 15; @position = 8; @symbol_vardef = [score,15,8,13]; ]
+    var score;
+    [ @file = "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc"; @line = 16; @position = 8; @symbol_vardef = [level,16,8,13]; ]
+    var level;
+    [ @file = "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc"; @line = 17; @position = 8; @symbol_vardef = [bestScore,17,8,17]; ]
+    var bestScore;
+    [ @file = "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc"; @line = 19; @symbol_functiondef = [initialize,19,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_19_26_23_4_start:
+[ "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc" 20 8 ]
+        %tmp.1 = 0;
+        symbol [ oreCount ? 20 8 16 ];
+        putv self :oreCount %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc" 20 22 ]
+        %tmp.2 = 0;
+        symbol [ gemCount ? 20 22 30 ];
+        putv self :gemCount %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc" 20 36 ]
+        %tmp.3 = 0;
+        symbol [ score ? 20 36 41 ];
+        putv self :score %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc" 20 47 ]
+        %tmp.4 = 1;
+        symbol [ level ? 20 47 52 ];
+        putv self :level %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc" 21 8 ]
+        %tmp.5 = 0;
+        symbol [ bestScore ? 21 8 17 ];
+        putv self :bestScore %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc" 22 8 ]
+        %tmp.6 = self;
+        symbol [ loadBest %tmp.7 22 8 16 ];
+        %tmp.7 = getv function %tmp.6 :loadBest;
+        invoke %tmp.6 %tmp.7();
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_19_26_23_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc"; @line = 25; @symbol_functiondef = [reset,25,13,18]; ]
+    function reset() {
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_25_21_27_4_start:
+[ "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc" 26 8 ]
+        %tmp.1 = 0;
+        symbol [ oreCount ? 26 8 16 ];
+        putv self :oreCount %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc" 26 22 ]
+        %tmp.2 = 0;
+        symbol [ gemCount ? 26 22 30 ];
+        putv self :gemCount %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc" 26 36 ]
+        %tmp.3 = 0;
+        symbol [ score ? 26 36 41 ];
+        putv self :score %tmp.3;
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_25_21_27_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc"; @line = 29; @symbol_functiondef = [tilePoints,29,20,30]; @symbol_param<0> = [t,29,31,32]; ]
+    static
+    function tilePoints(t) {
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_29_34_33_4_start:
+[ "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc" 30 8 ]
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_30_8_30_38_if_stmt:
+        %tmp.1 = lgetv %t;
+        symbol [ t %tmp.1 30 12 13 ];
+        symbol [ GM_ORE %tmp.3 30 17 23 ];
+        %tmp.3 = getv ? :GM_ORE;
+        %tmp.4 = eq %tmp.1 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_30_8_30_38_if_end;
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_30_8_30_38_if_true:
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_30_25_30_38_start:
+[ "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc" 30 27 ]
+        %tmp.5 = 25;
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_30_25_30_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_30_8_30_38_if_end;
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_30_8_30_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc" 31 8 ]
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_31_8_31_39_if_stmt:
+        %tmp.6 = lgetv %t;
+        symbol [ t %tmp.6 31 12 13 ];
+        symbol [ GM_GEM %tmp.8 31 17 23 ];
+        %tmp.8 = getv ? :GM_GEM;
+        %tmp.9 = eq %tmp.6 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_31_8_31_39_if_end;
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_31_8_31_39_if_true:
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_31_25_31_39_start:
+[ "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc" 31 27 ]
+        %tmp.10 = 100;
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_31_25_31_39_stop:
+        goto @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_31_8_31_39_if_end;
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_31_8_31_39_if_end:
+[ "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc" 32 8 ]
+        %tmp.11 = 0;
+        ret %tmp.11;
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_29_34_33_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc"; @line = 36; @symbol_functiondef = [collect,36,13,20]; @symbol_param<0> = [t,36,21,22]; ]
+    function collect(t) {
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_36_24_42_4_start:
+[ "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc" 37 8 ]
+        [ "_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_36_24_42_4_start" "_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_36_24_42_4_stop" ]
+        %pts.1 = local;
+        symbol [ pts %pts.1 37 12 15 ];
+        %tmp.1 = self;
+        symbol [ tilePoints %tmp.2 37 18 28 ];
+        %tmp.2 = getv function %tmp.1 :tilePoints;
+        %tmp.3 = lgetv %t;
+        symbol [ t %tmp.3 37 29 30 ];
+        %tmp.4 = invoke %tmp.1 %tmp.2(%tmp.3);
+        lputv %pts.1 %tmp.4;
+        symbol [ pts %pts.1 37 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc" 38 8 ]
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_38_8_38_52_if_stmt:
+        %tmp.5 = lgetv %t;
+        symbol [ t %tmp.5 38 12 13 ];
+        symbol [ GM_ORE %tmp.7 38 17 23 ];
+        %tmp.7 = getv ? :GM_ORE;
+        %tmp.8 = eq %tmp.5 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_38_8_38_52_if_end;
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_38_8_38_52_if_true:
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_38_25_38_52_start:
+[ "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc" 38 27 ]
+        symbol [ oreCount %tmp.10 38 38 46 ];
+        %tmp.10 = getv ? :oreCount;
+        %tmp.11 = 1;
+        %tmp.12 = add %tmp.10 %tmp.11;
+        symbol [ oreCount ? 38 27 35 ];
+        putv self :oreCount %tmp.12;
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_38_25_38_52_stop:
+        goto @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_38_8_38_52_if_end;
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_38_8_38_52_if_end:
+[ "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc" 39 8 ]
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_39_8_39_52_if_stmt:
+        %tmp.13 = lgetv %t;
+        symbol [ t %tmp.13 39 12 13 ];
+        symbol [ GM_GEM %tmp.15 39 17 23 ];
+        %tmp.15 = getv ? :GM_GEM;
+        %tmp.16 = eq %tmp.13 %tmp.15;
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_39_8_39_52_if_end;
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_39_8_39_52_if_true:
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_39_25_39_52_start:
+[ "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc" 39 27 ]
+        symbol [ gemCount %tmp.18 39 38 46 ];
+        %tmp.18 = getv ? :gemCount;
+        %tmp.19 = 1;
+        %tmp.20 = add %tmp.18 %tmp.19;
+        symbol [ gemCount ? 39 27 35 ];
+        putv self :gemCount %tmp.20;
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_39_25_39_52_stop:
+        goto @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_39_8_39_52_if_end;
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_39_8_39_52_if_end:
+[ "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc" 40 8 ]
+        symbol [ score %tmp.22 40 16 21 ];
+        %tmp.22 = getv ? :score;
+        %tmp.23 = lgetv %pts.1;
+        symbol [ pts %tmp.23 40 24 27 ];
+        %tmp.24 = add %tmp.22 %tmp.23;
+        symbol [ score ? 40 8 13 ];
+        putv self :score %tmp.24;
+[ "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc" 41 8 ]
+        %tmp.25 = lgetv %pts.1;
+        symbol [ pts %tmp.25 41 15 18 ];
+        ret %tmp.25;
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_36_24_42_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc"; @line = 44; @symbol_functiondef = [loadBest,44,13,21]; ]
+    function loadBest() {
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_44_24_49_4_start:
+[ "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc" 45 8 ]
+        try @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_45_8_48_21_beginTry @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_45_8_48_21_endTry @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_45_8_48_21_catch @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_45_8_48_21_finally;
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_45_8_48_21_beginTry:
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_45_12_48_8_start:
+[ "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc" 46 12 ]
+        [ "_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_45_12_48_8_start" "_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_45_12_48_8_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 46 16 17 ];
+        symbol [ Application %tmp.1 46 20 31 ];
+        %tmp.1 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.2 46 32 39 ];
+        %tmp.2 = getv %tmp.1 :Storage;
+        symbol [ getValue %tmp.3 46 40 48 ];
+        %tmp.3 = getv function %tmp.2 :getValue;
+        symbol [ GM_BEST_KEY %tmp.5 46 49 60 ];
+        %tmp.5 = getv ? :GM_BEST_KEY;
+        %tmp.6 = invoke %tmp.2 %tmp.3(%tmp.5);
+        lputv %v.1 %tmp.6;
+        symbol [ v %v.1 46 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc" 47 12 ]
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_47_12_47_44_if_stmt:
+        %tmp.7 = lgetv %v.1;
+        symbol [ v %tmp.7 47 16 17 ];
+        %tmp.8 = null;
+        %tmp.9 = ne %tmp.7 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_47_12_47_44_if_end;
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_47_12_47_44_if_true:
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_47_27_47_44_start:
+[ "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc" 47 29 ]
+        %tmp.10 = lgetv %v.1;
+        symbol [ v %tmp.10 47 41 42 ];
+        %tmp.11 = as %tmp.10 { (!Null) };
+        symbol [ bestScore ? 47 29 38 ];
+        putv self :bestScore %tmp.11;
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_47_27_47_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_47_12_47_44_if_end;
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_47_12_47_44_if_end:
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_45_12_48_8_stop:
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_45_8_48_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_45_8_48_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_45_8_48_21_end;
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_45_8_48_21_catch:
+        %tmp.12 = exception;
+        push %tmp.12;
+[ "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc" 48 10 ]
+        [ "_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_45_8_48_21_catch" "_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_48_10_48_21_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 48 17 18 ];
+        %tmp.13 = dup %tmp.12;
+        lputv %e.2 %tmp.13;
+        symbol [ e %e.2 48 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_45_8_48_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_45_8_48_21_end;
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_48_10_48_21_end:
+        try @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_45_8_48_21_catch @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_48_10_48_21_end @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_48_10_48_21_end @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_45_8_48_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_45_8_48_21_finally;
+        throw %tmp.12;
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_45_8_48_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_45_8_48_21_end:
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_44_24_49_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc"; @line = 51; @symbol_functiondef = [commitBest,51,13,23]; ]
+    function commitBest() {
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_51_26_56_4_start:
+[ "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc" 52 8 ]
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_52_8_55_8_if_stmt:
+        symbol [ score %tmp.2 52 12 17 ];
+        %tmp.2 = getv ? :score;
+        symbol [ bestScore %tmp.4 52 20 29 ];
+        %tmp.4 = getv ? :bestScore;
+        %tmp.5 = gt %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_52_8_55_8_if_end;
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_52_8_55_8_if_true:
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_52_31_55_8_start:
+[ "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc" 53 12 ]
+        symbol [ score %tmp.7 53 24 29 ];
+        %tmp.7 = getv ? :score;
+        symbol [ bestScore ? 53 12 21 ];
+        putv self :bestScore %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc" 54 12 ]
+        try @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_54_12_54_85_beginTry @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_54_12_54_85_endTry @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_54_12_54_85_catch @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_54_12_54_85_finally;
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_54_12_54_85_beginTry:
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_54_16_54_72_start:
+[ "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc" 54 18 ]
+        symbol [ Application %tmp.8 54 18 29 ];
+        %tmp.8 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.9 54 30 37 ];
+        %tmp.9 = getv %tmp.8 :Storage;
+        symbol [ setValue %tmp.10 54 38 46 ];
+        %tmp.10 = getv function %tmp.9 :setValue;
+        symbol [ GM_BEST_KEY %tmp.12 54 47 58 ];
+        %tmp.12 = getv ? :GM_BEST_KEY;
+        symbol [ bestScore %tmp.14 54 60 69 ];
+        %tmp.14 = getv ? :bestScore;
+        invoke %tmp.9 %tmp.10(%tmp.12, %tmp.14);
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_54_16_54_72_stop:
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_54_12_54_85_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_54_12_54_85_finally;
+        goto @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_54_12_54_85_end;
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_54_12_54_85_catch:
+        %tmp.15 = exception;
+        push %tmp.15;
+[ "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc" 54 74 ]
+        [ "_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_54_12_54_85_catch" "_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_54_74_54_85_end" ]
+        %e.1 = local;
+        symbol [ e %e.1 54 81 82 ];
+        %tmp.16 = dup %tmp.15;
+        lputv %e.1 %tmp.16;
+        symbol [ e %e.1 54 81 82 ];
+        jsr @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_54_12_54_85_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_54_12_54_85_end;
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_54_74_54_85_end:
+        try @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_54_12_54_85_catch @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_54_74_54_85_end @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_54_74_54_85_end @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_54_12_54_85_finally;
+        jsr @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_54_12_54_85_finally;
+        throw %tmp.15;
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_54_12_54_85_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_54_12_54_85_end:
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_52_31_55_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_52_8_55_8_if_end;
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_52_8_55_8_if_end:
+_Users_kkorolczuk_work_garmin_gravityminer_source_ResourceManager_mc_51_26_56_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/gravityminer/source/ResourceManager.mc"; @line = 8; ]
+<init> {
+}

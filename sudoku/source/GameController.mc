@@ -80,6 +80,27 @@ class GameController {
         bestMs      = -1;
         lastTimeMs  = 0;
         dirty       = true;
+        _loadMenuSettings();
+    }
+
+    hidden function _loadMenuSettings() {
+        try {
+            var m = Application.Storage.getValue("sk_mode");
+            if (m instanceof Number && m >= 0 && m < 2) { mode = m; }
+        } catch (e) {}
+        try {
+            var d = Application.Storage.getValue("sk_diff");
+            if (d instanceof Number && d >= 0 && d < 3) { diff = d; }
+        } catch (e) {}
+        try {
+            var v = Application.Storage.getValue("sk_val");
+            if (v instanceof Number && v >= 0 && v < 2) { valMode = v; }
+        } catch (e) {}
+    }
+    function saveMenuSettings() {
+        try { Application.Storage.setValue("sk_mode", mode);    } catch (e) {}
+        try { Application.Storage.setValue("sk_diff", diff);    } catch (e) {}
+        try { Application.Storage.setValue("sk_val",  valMode); } catch (e) {}
     }
 
     // Persisted-best key (one record per mode+difficulty).

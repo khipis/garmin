@@ -1,0 +1,119 @@
+[ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/DiveAI.mc"; @line = 22; @symbol_usingdef<0> = [Toybox,22,6,12]; @symbol_usingdef<1> = [Math,22,13,17]; ]
+using Toybox.Math;
+[ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/DiveAI.mc"; @line = 24; @position = 6; @symbol_constdef = [PI_F,24,6,10]; ]
+const PI_F = 3.14159;
+[ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/DiveAI.mc"; @line = 26; @symbol_classdef = [DiveAI,26,6,12]; ]
+class DiveAI {
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/DiveAI.mc"; @line = 26; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/DiveAI.mc"; @line = 26; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/DiveAI.mc"; @line = 33; @symbol_functiondef = [pointFor,33,20,28]; @symbol_param<0> = [t,33,29,30]; @symbol_param<1> = [startC,33,32,38]; @symbol_param<2> = [startR,33,40,46]; @symbol_param<3> = [targetC,33,48,55]; @symbol_param<4> = [curlSide,33,57,65]; @symbol_param<5> = [curlAmp,33,67,74]; ]
+    static
+    function pointFor(t, startC, startR, targetC, curlSide, curlAmp) {
+_Users_kkorolczuk_work_garmin_starswarm_source_DiveAI_mc_33_76_42_4_start:
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/DiveAI.mc" 34 8 ]
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_DiveAI_mc_33_76_42_4_start" "_Users_kkorolczuk_work_garmin_starswarm_source_DiveAI_mc_33_76_42_4_stop" ]
+        %endR.1 = local;
+        symbol [ endR %endR.1 34 12 16 ];
+        symbol [ SS_BOARD_ROWS %tmp.2 34 19 32 ];
+        %tmp.2 = getv ? :SS_BOARD_ROWS;
+        %tmp.3 = 1.0;
+        %tmp.4 = add %tmp.2 %tmp.3;
+        lputv %endR.1 %tmp.4;
+        symbol [ endR %endR.1 34 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/DiveAI.mc" 35 8 ]
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_DiveAI_mc_33_76_42_4_start" "_Users_kkorolczuk_work_garmin_starswarm_source_DiveAI_mc_33_76_42_4_stop" ]
+        %endC.2 = local;
+        symbol [ endC %endC.2 35 12 16 ];
+        %tmp.5 = lgetv %targetC;
+        symbol [ targetC %tmp.5 35 19 26 ];
+        lputv %endC.2 %tmp.5;
+        symbol [ endC %endC.2 35 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/DiveAI.mc" 37 8 ]
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_DiveAI_mc_33_76_42_4_start" "_Users_kkorolczuk_work_garmin_starswarm_source_DiveAI_mc_33_76_42_4_stop" ]
+        %lerp.3 = local;
+        symbol [ lerp %lerp.3 37 12 16 ];
+        %tmp.6 = lgetv %startC;
+        symbol [ startC %tmp.6 37 19 25 ];
+        %tmp.7 = lgetv %endC.2;
+        symbol [ endC %tmp.7 37 29 33 ];
+        %tmp.8 = lgetv %startC;
+        symbol [ startC %tmp.8 37 36 42 ];
+        %tmp.9 = sub %tmp.7 %tmp.8;
+        %tmp.10 = lgetv %t;
+        symbol [ t %tmp.10 37 46 47 ];
+        %tmp.11 = mul %tmp.9 %tmp.10;
+        %tmp.12 = add %tmp.6 %tmp.11;
+        lputv %lerp.3 %tmp.12;
+        symbol [ lerp %lerp.3 37 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/DiveAI.mc" 38 8 ]
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_DiveAI_mc_33_76_42_4_start" "_Users_kkorolczuk_work_garmin_starswarm_source_DiveAI_mc_33_76_42_4_stop" ]
+        %curl.4 = local;
+        symbol [ curl %curl.4 38 12 16 ];
+        %tmp.13 = lgetv %curlAmp;
+        symbol [ curlAmp %tmp.13 38 19 26 ];
+        %tmp.14 = lgetv %curlSide;
+        symbol [ curlSide %tmp.14 38 29 37 ];
+        %tmp.15 = mul %tmp.13 %tmp.14;
+        symbol [ Math %tmp.16 38 40 44 ];
+        %tmp.16 = getm $.Toybox.Math;
+        symbol [ sin %tmp.17 38 45 48 ];
+        %tmp.17 = getv function %tmp.16 :sin;
+        %tmp.18 = lgetv %t;
+        symbol [ t %tmp.18 38 49 50 ];
+        symbol [ PI_F %tmp.20 38 53 57 ];
+        %tmp.20 = getv ? :PI_F;
+        %tmp.21 = mul %tmp.18 %tmp.20;
+        %tmp.22 = invoke %tmp.16 %tmp.17(%tmp.21);
+        %tmp.23 = mul %tmp.15 %tmp.22;
+        lputv %curl.4 %tmp.23;
+        symbol [ curl %curl.4 38 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/DiveAI.mc" 39 8 ]
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_DiveAI_mc_33_76_42_4_start" "_Users_kkorolczuk_work_garmin_starswarm_source_DiveAI_mc_33_76_42_4_stop" ]
+        %c.5 = local;
+        symbol [ c %c.5 39 12 13 ];
+        %tmp.24 = lgetv %lerp.3;
+        symbol [ lerp %tmp.24 39 16 20 ];
+        %tmp.25 = lgetv %curl.4;
+        symbol [ curl %tmp.25 39 23 27 ];
+        %tmp.26 = add %tmp.24 %tmp.25;
+        lputv %c.5 %tmp.26;
+        symbol [ c %c.5 39 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/DiveAI.mc" 40 8 ]
+        [ "_Users_kkorolczuk_work_garmin_starswarm_source_DiveAI_mc_33_76_42_4_start" "_Users_kkorolczuk_work_garmin_starswarm_source_DiveAI_mc_33_76_42_4_stop" ]
+        %r.6 = local;
+        symbol [ r %r.6 40 12 13 ];
+        %tmp.27 = lgetv %startR;
+        symbol [ startR %tmp.27 40 16 22 ];
+        %tmp.28 = lgetv %endR.1;
+        symbol [ endR %tmp.28 40 26 30 ];
+        %tmp.29 = lgetv %startR;
+        symbol [ startR %tmp.29 40 33 39 ];
+        %tmp.30 = sub %tmp.28 %tmp.29;
+        %tmp.31 = lgetv %t;
+        symbol [ t %tmp.31 40 43 44 ];
+        %tmp.32 = mul %tmp.30 %tmp.31;
+        %tmp.33 = add %tmp.27 %tmp.32;
+        lputv %r.6 %tmp.33;
+        symbol [ r %r.6 40 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/starswarm/source/DiveAI.mc" 41 8 ]
+        %tmp.34 = newa 2;
+        %tmp.35 = lgetv %c.5;
+        symbol [ c %tmp.35 41 16 17 ];
+        %tmp.36 = dup %tmp.34;
+        %tmp.37 = aputv %tmp.36 0 %tmp.35;
+        %tmp.38 = lgetv %r.6;
+        symbol [ r %tmp.38 41 19 20 ];
+        %tmp.39 = dup %tmp.37;
+        %tmp.40 = aputv %tmp.39 1 %tmp.38;
+        ret %tmp.40;
+_Users_kkorolczuk_work_garmin_starswarm_source_DiveAI_mc_33_76_42_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/starswarm/source/DiveAI.mc"; @line = 22; ]
+<init> {
+}

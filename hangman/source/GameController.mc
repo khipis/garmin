@@ -66,6 +66,7 @@ class GameController {
         cursor      = 0;
         menuCursor  = MENU_START;
         totalWins   = _loadWins();
+        _loadSettings();
     }
 
     hidden function _loadWins() {
@@ -78,13 +79,29 @@ class GameController {
     hidden function _saveWins() {
         try { Application.Storage.setValue("wins", totalWins); } catch (e) { }
     }
+    hidden function _loadSettings() {
+        try {
+            var c = Application.Storage.getValue("hm_cat");
+            if (c instanceof Number && c >= 0 && c < NUM_CATEGORIES) { category = c; }
+        } catch (e) {}
+        try {
+            var d = Application.Storage.getValue("hm_diff");
+            if (d instanceof Number && d >= 0 && d < NUM_DIFFICULTIES) { difficulty = d; }
+        } catch (e) {}
+    }
+    hidden function _saveSettings() {
+        try { Application.Storage.setValue("hm_cat",  category);   } catch (e) {}
+        try { Application.Storage.setValue("hm_diff", difficulty); } catch (e) {}
+    }
 
     // ── Menu actions ────────────────────────────────────────────────
     function cycleCategory()   {
         category = (category + 1) % NUM_CATEGORIES;
+        _saveSettings();
     }
     function cycleDifficulty() {
         difficulty = (difficulty + 1) % NUM_DIFFICULTIES;
+        _saveSettings();
     }
 
     function startGame() {
