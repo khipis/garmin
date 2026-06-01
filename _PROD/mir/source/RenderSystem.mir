@@ -1,0 +1,1745 @@
+[ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc"; @line = 15; @symbol_usingdef<0> = [Toybox,15,6,12]; @symbol_usingdef<1> = [Graphics,15,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc"; @line = 16; @symbol_usingdef<0> = [Toybox,16,6,12]; @symbol_usingdef<1> = [Math,16,13,17]; ]
+using Toybox.Math;
+[ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc"; @line = 18; @symbol_classdef = [RenderSystem,18,6,18]; ]
+class RenderSystem {
+    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc"; @line = 18; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc"; @line = 18; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc"; @line = 21; @symbol_functiondef = [drawSky,21,20,27]; @symbol_param<0> = [dc,21,28,30]; @symbol_param<1> = [ctrl,21,32,36]; ]
+    static
+    function drawSky(dc, ctrl) {
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_21_38_44_4_start:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 22 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_21_38_44_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_21_38_44_4_stop" ]
+        %w.1 = local;
+        symbol [ w %w.1 22 12 13 ];
+        %tmp.1 = lgetv %ctrl;
+        symbol [ ctrl %tmp.1 22 16 20 ];
+        symbol [ sw %tmp.2 22 21 23 ];
+        %tmp.2 = getv %tmp.1 :sw;
+        lputv %w.1 %tmp.2;
+        symbol [ w %w.1 22 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 22 25 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_21_38_44_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_21_38_44_4_stop" ]
+        %h.2 = local;
+        symbol [ h %h.2 22 29 30 ];
+        %tmp.3 = lgetv %ctrl;
+        symbol [ ctrl %tmp.3 22 33 37 ];
+        symbol [ sh %tmp.4 22 38 40 ];
+        %tmp.4 = getv %tmp.3 :sh;
+        lputv %h.2 %tmp.4;
+        symbol [ h %h.2 22 29 30 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 24 8 ]
+        %tmp.5 = lgetv %dc;
+        symbol [ dc %tmp.5 24 8 10 ];
+        symbol [ setColor %tmp.6 24 11 19 ];
+        %tmp.6 = getv function %tmp.5 :setColor;
+        %tmp.7 = 0x081424;
+        %tmp.8 = 0x081424;
+        invoke %tmp.5 %tmp.6(%tmp.7, %tmp.8);
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 24 41 ]
+        %tmp.9 = lgetv %dc;
+        symbol [ dc %tmp.9 24 41 43 ];
+        symbol [ clear %tmp.10 24 44 49 ];
+        %tmp.10 = getv function %tmp.9 :clear;
+        invoke %tmp.9 %tmp.10();
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 26 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_21_38_44_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_21_38_44_4_stop" ]
+        %bands.3 = local;
+        symbol [ bands %bands.3 26 12 17 ];
+        %tmp.11 = 7;
+        lputv %bands.3 %tmp.11;
+        symbol [ bands %bands.3 26 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 27 8 ]
+        for @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_27_8_33_8_for_test @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_27_8_33_8_for_incr @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_27_8_33_8_for_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_27_8_33_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_27_8_33_8_for_begin" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_27_8_33_8_for_end" ]
+        %i.4 = local;
+        symbol [ i %i.4 27 17 18 ];
+        %tmp.12 = 0;
+        lputv %i.4 %tmp.12;
+        symbol [ i %i.4 27 17 18 ];
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_27_8_33_8_for_test:
+        %tmp.13 = lgetv %i.4;
+        symbol [ i %tmp.13 27 24 25 ];
+        %tmp.14 = lgetv %bands.3;
+        symbol [ bands %tmp.14 27 28 33 ];
+        %tmp.15 = lt %tmp.13 %tmp.14;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_27_8_33_8_for_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_27_8_33_8_for_begin:
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_27_40_33_8_start:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 28 12 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_27_40_33_8_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_27_40_33_8_stop" ]
+        %col.5 = local;
+        symbol [ col %col.5 28 16 19 ];
+        %tmp.16 = self;
+        symbol [ _lerpCol %tmp.17 28 22 30 ];
+        %tmp.17 = getv function %tmp.16 :_lerpCol;
+        %tmp.18 = 0x183258;
+        %tmp.19 = 0x6080B0;
+        %tmp.20 = lgetv %i.4;
+        symbol [ i %tmp.20 28 51 52 ];
+        %tmp.21 = lgetv %bands.3;
+        symbol [ bands %tmp.21 28 54 59 ];
+        %tmp.22 = invoke %tmp.16 %tmp.17(%tmp.18, %tmp.19, %tmp.20, %tmp.21);
+        lputv %col.5 %tmp.22;
+        symbol [ col %col.5 28 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 29 12 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_27_40_33_8_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_27_40_33_8_stop" ]
+        %y0.6 = local;
+        symbol [ y0 %y0.6 29 16 18 ];
+        %tmp.23 = lgetv %h.2;
+        symbol [ h %tmp.23 29 21 22 ];
+        %tmp.24 = 28;
+        %tmp.25 = lgetv %i.4;
+        symbol [ i %tmp.25 29 31 32 ];
+        %tmp.26 = 4;
+        %tmp.27 = mul %tmp.25 %tmp.26;
+        %tmp.28 = add %tmp.24 %tmp.27;
+        %tmp.29 = mul %tmp.23 %tmp.28;
+        %tmp.30 = 100;
+        %tmp.31 = div %tmp.29 %tmp.30;
+        lputv %y0.6 %tmp.31;
+        symbol [ y0 %y0.6 29 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 30 12 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_27_40_33_8_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_27_40_33_8_stop" ]
+        %bh.7 = local;
+        symbol [ bh %bh.7 30 16 18 ];
+        %tmp.32 = lgetv %h.2;
+        symbol [ h %tmp.32 30 21 22 ];
+        %tmp.33 = 4;
+        %tmp.34 = mul %tmp.32 %tmp.33;
+        %tmp.35 = 100;
+        %tmp.36 = div %tmp.34 %tmp.35;
+        lputv %bh.7 %tmp.36;
+        symbol [ bh %bh.7 30 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 30 34 ]
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_30_34_30_56_if_stmt:
+        %tmp.37 = lgetv %bh.7;
+        symbol [ bh %tmp.37 30 38 40 ];
+        %tmp.38 = 3;
+        %tmp.39 = lt %tmp.37 %tmp.38;
+        bf %tmp.39 @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_30_34_30_56_if_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_30_34_30_56_if_true:
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_30_46_30_56_start:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 30 48 ]
+        %tmp.40 = 3;
+        lputv %bh.7 %tmp.40;
+        symbol [ bh %bh.7 30 48 50 ];
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_30_46_30_56_stop:
+        goto @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_30_34_30_56_if_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_30_34_30_56_if_end:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 31 12 ]
+        %tmp.41 = lgetv %dc;
+        symbol [ dc %tmp.41 31 12 14 ];
+        symbol [ setColor %tmp.42 31 15 23 ];
+        %tmp.42 = getv function %tmp.41 :setColor;
+        %tmp.43 = lgetv %col.5;
+        symbol [ col %tmp.43 31 24 27 ];
+        symbol [ Graphics %tmp.44 31 29 37 ];
+        %tmp.44 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.45 31 38 55 ];
+        %tmp.45 = getv %tmp.44 :COLOR_TRANSPARENT;
+        invoke %tmp.41 %tmp.42(%tmp.43, %tmp.45);
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 32 12 ]
+        %tmp.46 = lgetv %dc;
+        symbol [ dc %tmp.46 32 12 14 ];
+        symbol [ fillRectangle %tmp.47 32 15 28 ];
+        %tmp.47 = getv function %tmp.46 :fillRectangle;
+        %tmp.48 = 0;
+        %tmp.49 = lgetv %y0.6;
+        symbol [ y0 %tmp.49 32 32 34 ];
+        %tmp.50 = lgetv %w.1;
+        symbol [ w %tmp.50 32 36 37 ];
+        %tmp.51 = lgetv %bh.7;
+        symbol [ bh %tmp.51 32 39 41 ];
+        invoke %tmp.46 %tmp.47(%tmp.48, %tmp.49, %tmp.50, %tmp.51);
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_27_40_33_8_stop:
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_27_8_33_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 27 ]
+        %tmp.54 = lgetv %i.4;
+        symbol [ i %tmp.54 27 35 36 ];
+        %tmp.55 = add %tmp.54 1;
+        lputv %i.4 %tmp.55;
+        symbol [ i %i.4 27 35 36 ];
+        goto @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_27_8_33_8_for_test;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_27_8_33_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 35 8 ]
+        %tmp.56 = lgetv %dc;
+        symbol [ dc %tmp.56 35 8 10 ];
+        symbol [ setColor %tmp.57 35 11 19 ];
+        %tmp.57 = getv function %tmp.56 :setColor;
+        %tmp.58 = 0xE8F0FF;
+        symbol [ Graphics %tmp.59 35 30 38 ];
+        %tmp.59 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.60 35 39 56 ];
+        %tmp.60 = getv %tmp.59 :COLOR_TRANSPARENT;
+        invoke %tmp.56 %tmp.57(%tmp.58, %tmp.60);
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 36 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_21_38_44_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_21_38_44_4_stop" ]
+        %seed.8 = local;
+        symbol [ seed %seed.8 36 12 16 ];
+        %tmp.61 = 7793;
+        lputv %seed.8 %tmp.61;
+        symbol [ seed %seed.8 36 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 37 8 ]
+        for @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_37_8_43_8_for_test @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_37_8_43_8_for_incr @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_37_8_43_8_for_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_37_8_43_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_37_8_43_8_for_begin" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_37_8_43_8_for_end" ]
+        %k.9 = local;
+        symbol [ k %k.9 37 17 18 ];
+        %tmp.62 = 0;
+        lputv %k.9 %tmp.62;
+        symbol [ k %k.9 37 17 18 ];
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_37_8_43_8_for_test:
+        %tmp.63 = lgetv %k.9;
+        symbol [ k %tmp.63 37 24 25 ];
+        %tmp.64 = 18;
+        %tmp.65 = lt %tmp.63 %tmp.64;
+        bf %tmp.65 @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_37_8_43_8_for_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_37_8_43_8_for_begin:
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_37_37_43_8_start:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 38 12 ]
+        %tmp.66 = lgetv %seed.8;
+        symbol [ seed %tmp.66 38 20 24 ];
+        %tmp.67 = 1103515245;
+        %tmp.68 = mul %tmp.66 %tmp.67;
+        %tmp.69 = 12345;
+        %tmp.70 = add %tmp.68 %tmp.69;
+        %tmp.71 = 0x7FFFFFFF;
+        %tmp.72 = bitand %tmp.70 %tmp.71;
+        lputv %seed.8 %tmp.72;
+        symbol [ seed %seed.8 38 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 39 12 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_37_37_43_8_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_37_37_43_8_stop" ]
+        %sx.10 = local;
+        symbol [ sx %sx.10 39 16 18 ];
+        %tmp.73 = lgetv %seed.8;
+        symbol [ seed %tmp.73 39 21 25 ];
+        %tmp.74 = lgetv %w.1;
+        symbol [ w %tmp.74 39 28 29 ];
+        %tmp.75 = mod %tmp.73 %tmp.74;
+        lputv %sx.10 %tmp.75;
+        symbol [ sx %sx.10 39 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 40 12 ]
+        %tmp.76 = lgetv %seed.8;
+        symbol [ seed %tmp.76 40 20 24 ];
+        %tmp.77 = 1103515245;
+        %tmp.78 = mul %tmp.76 %tmp.77;
+        %tmp.79 = 12345;
+        %tmp.80 = add %tmp.78 %tmp.79;
+        %tmp.81 = 0x7FFFFFFF;
+        %tmp.82 = bitand %tmp.80 %tmp.81;
+        lputv %seed.8 %tmp.82;
+        symbol [ seed %seed.8 40 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 41 12 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_37_37_43_8_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_37_37_43_8_stop" ]
+        %sy.11 = local;
+        symbol [ sy %sy.11 41 16 18 ];
+        %tmp.83 = lgetv %seed.8;
+        symbol [ seed %tmp.83 41 22 26 ];
+        %tmp.84 = lgetv %h.2;
+        symbol [ h %tmp.84 41 30 31 ];
+        %tmp.85 = 25;
+        %tmp.86 = mul %tmp.84 %tmp.85;
+        %tmp.87 = 100;
+        %tmp.88 = div %tmp.86 %tmp.87;
+        %tmp.89 = mod %tmp.83 %tmp.88;
+        lputv %sy.11 %tmp.89;
+        symbol [ sy %sy.11 41 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 42 12 ]
+        %tmp.90 = lgetv %dc;
+        symbol [ dc %tmp.90 42 12 14 ];
+        symbol [ drawPoint %tmp.91 42 15 24 ];
+        %tmp.91 = getv function %tmp.90 :drawPoint;
+        %tmp.92 = lgetv %sx.10;
+        symbol [ sx %tmp.92 42 25 27 ];
+        %tmp.93 = lgetv %sy.11;
+        symbol [ sy %tmp.93 42 29 31 ];
+        invoke %tmp.90 %tmp.91(%tmp.92, %tmp.93);
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_37_37_43_8_stop:
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_37_8_43_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 37 ]
+        %tmp.96 = lgetv %k.9;
+        symbol [ k %tmp.96 37 32 33 ];
+        %tmp.97 = add %tmp.96 1;
+        lputv %k.9 %tmp.97;
+        symbol [ k %k.9 37 32 33 ];
+        goto @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_37_8_43_8_for_test;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_37_8_43_8_for_end:
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_21_38_44_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc"; @line = 46; @symbol_functiondef = [_lerpCol,46,27,35]; @symbol_param<0> = [a,46,36,37]; @symbol_param<1> = [b,46,39,40]; @symbol_param<2> = [i,46,42,43]; @symbol_param<3> = [n,46,45,46]; ]
+    protected static
+    function _lerpCol(a, b, i, n) {
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_46_48_54_4_start:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 47 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_46_48_54_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_46_48_54_4_stop" ]
+        %t.1 = local;
+        symbol [ t %t.1 47 12 13 ];
+        %tmp.1 = lgetv %i;
+        symbol [ i %tmp.1 47 17 18 ];
+        symbol [ toFloat %tmp.2 47 19 26 ];
+        %tmp.2 = getv function %tmp.1 :toFloat;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        %tmp.4 = lgetv %n;
+        symbol [ n %tmp.4 47 32 33 ];
+        %tmp.5 = 1;
+        %tmp.6 = sub %tmp.4 %tmp.5;
+        symbol [ toFloat %tmp.7 47 39 46 ];
+        %tmp.7 = getv function %tmp.6 :toFloat;
+        %tmp.8 = invoke %tmp.6 %tmp.7();
+        %tmp.9 = div %tmp.3 %tmp.8;
+        lputv %t.1 %tmp.9;
+        symbol [ t %t.1 47 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 48 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_46_48_54_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_46_48_54_4_stop" ]
+        %ar.2 = local;
+        symbol [ ar %ar.2 48 12 14 ];
+        %tmp.10 = lgetv %a;
+        symbol [ a %tmp.10 48 18 19 ];
+        %tmp.11 = 16;
+        %tmp.12 = shr %tmp.10 %tmp.11;
+        %tmp.13 = 0xFF;
+        %tmp.14 = bitand %tmp.12 %tmp.13;
+        lputv %ar.2 %tmp.14;
+        symbol [ ar %ar.2 48 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 48 35 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_46_48_54_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_46_48_54_4_stop" ]
+        %ag.3 = local;
+        symbol [ ag %ag.3 48 39 41 ];
+        %tmp.15 = lgetv %a;
+        symbol [ a %tmp.15 48 45 46 ];
+        %tmp.16 = 8;
+        %tmp.17 = shr %tmp.15 %tmp.16;
+        %tmp.18 = 0xFF;
+        %tmp.19 = bitand %tmp.17 %tmp.18;
+        lputv %ag.3 %tmp.19;
+        symbol [ ag %ag.3 48 39 41 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 48 61 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_46_48_54_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_46_48_54_4_stop" ]
+        %ab.4 = local;
+        symbol [ ab %ab.4 48 65 67 ];
+        %tmp.20 = lgetv %a;
+        symbol [ a %tmp.20 48 70 71 ];
+        %tmp.21 = 0xFF;
+        %tmp.22 = bitand %tmp.20 %tmp.21;
+        lputv %ab.4 %tmp.22;
+        symbol [ ab %ab.4 48 65 67 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 49 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_46_48_54_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_46_48_54_4_stop" ]
+        %br.5 = local;
+        symbol [ br %br.5 49 12 14 ];
+        %tmp.23 = lgetv %b;
+        symbol [ b %tmp.23 49 18 19 ];
+        %tmp.24 = 16;
+        %tmp.25 = shr %tmp.23 %tmp.24;
+        %tmp.26 = 0xFF;
+        %tmp.27 = bitand %tmp.25 %tmp.26;
+        lputv %br.5 %tmp.27;
+        symbol [ br %br.5 49 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 49 35 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_46_48_54_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_46_48_54_4_stop" ]
+        %bg.6 = local;
+        symbol [ bg %bg.6 49 39 41 ];
+        %tmp.28 = lgetv %b;
+        symbol [ b %tmp.28 49 45 46 ];
+        %tmp.29 = 8;
+        %tmp.30 = shr %tmp.28 %tmp.29;
+        %tmp.31 = 0xFF;
+        %tmp.32 = bitand %tmp.30 %tmp.31;
+        lputv %bg.6 %tmp.32;
+        symbol [ bg %bg.6 49 39 41 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 49 61 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_46_48_54_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_46_48_54_4_stop" ]
+        %bb.7 = local;
+        symbol [ bb %bb.7 49 65 67 ];
+        %tmp.33 = lgetv %b;
+        symbol [ b %tmp.33 49 70 71 ];
+        %tmp.34 = 0xFF;
+        %tmp.35 = bitand %tmp.33 %tmp.34;
+        lputv %bb.7 %tmp.35;
+        symbol [ bb %bb.7 49 65 67 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 50 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_46_48_54_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_46_48_54_4_stop" ]
+        %r.8 = local;
+        symbol [ r %r.8 50 12 13 ];
+        %tmp.36 = lgetv %ar.2;
+        symbol [ ar %tmp.36 50 16 18 ];
+        %tmp.37 = lgetv %br.5;
+        symbol [ br %tmp.37 50 23 25 ];
+        %tmp.38 = lgetv %ar.2;
+        symbol [ ar %tmp.38 50 28 30 ];
+        %tmp.39 = sub %tmp.37 %tmp.38;
+        symbol [ toFloat %tmp.40 50 32 39 ];
+        %tmp.40 = getv function %tmp.39 :toFloat;
+        %tmp.41 = invoke %tmp.39 %tmp.40();
+        %tmp.42 = lgetv %t.1;
+        symbol [ t %tmp.42 50 44 45 ];
+        %tmp.43 = mul %tmp.41 %tmp.42;
+        symbol [ toNumber %tmp.44 50 47 55 ];
+        %tmp.44 = getv function %tmp.43 :toNumber;
+        %tmp.45 = invoke %tmp.43 %tmp.44();
+        %tmp.46 = add %tmp.36 %tmp.45;
+        lputv %r.8 %tmp.46;
+        symbol [ r %r.8 50 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 51 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_46_48_54_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_46_48_54_4_stop" ]
+        %g.9 = local;
+        symbol [ g %g.9 51 12 13 ];
+        %tmp.47 = lgetv %ag.3;
+        symbol [ ag %tmp.47 51 16 18 ];
+        %tmp.48 = lgetv %bg.6;
+        symbol [ bg %tmp.48 51 23 25 ];
+        %tmp.49 = lgetv %ag.3;
+        symbol [ ag %tmp.49 51 28 30 ];
+        %tmp.50 = sub %tmp.48 %tmp.49;
+        symbol [ toFloat %tmp.51 51 32 39 ];
+        %tmp.51 = getv function %tmp.50 :toFloat;
+        %tmp.52 = invoke %tmp.50 %tmp.51();
+        %tmp.53 = lgetv %t.1;
+        symbol [ t %tmp.53 51 44 45 ];
+        %tmp.54 = mul %tmp.52 %tmp.53;
+        symbol [ toNumber %tmp.55 51 47 55 ];
+        %tmp.55 = getv function %tmp.54 :toNumber;
+        %tmp.56 = invoke %tmp.54 %tmp.55();
+        %tmp.57 = add %tmp.47 %tmp.56;
+        lputv %g.9 %tmp.57;
+        symbol [ g %g.9 51 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 52 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_46_48_54_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_46_48_54_4_stop" ]
+        %bl.10 = local;
+        symbol [ bl %bl.10 52 12 14 ];
+        %tmp.58 = lgetv %ab.4;
+        symbol [ ab %tmp.58 52 16 18 ];
+        %tmp.59 = lgetv %bb.7;
+        symbol [ bb %tmp.59 52 23 25 ];
+        %tmp.60 = lgetv %ab.4;
+        symbol [ ab %tmp.60 52 28 30 ];
+        %tmp.61 = sub %tmp.59 %tmp.60;
+        symbol [ toFloat %tmp.62 52 32 39 ];
+        %tmp.62 = getv function %tmp.61 :toFloat;
+        %tmp.63 = invoke %tmp.61 %tmp.62();
+        %tmp.64 = lgetv %t.1;
+        symbol [ t %tmp.64 52 44 45 ];
+        %tmp.65 = mul %tmp.63 %tmp.64;
+        symbol [ toNumber %tmp.66 52 47 55 ];
+        %tmp.66 = getv function %tmp.65 :toNumber;
+        %tmp.67 = invoke %tmp.65 %tmp.66();
+        %tmp.68 = add %tmp.58 %tmp.67;
+        lputv %bl.10 %tmp.68;
+        symbol [ bl %bl.10 52 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 53 8 ]
+        %tmp.69 = lgetv %r.8;
+        symbol [ r %tmp.69 53 16 17 ];
+        %tmp.70 = 16;
+        %tmp.71 = shl %tmp.69 %tmp.70;
+        %tmp.72 = lgetv %g.9;
+        symbol [ g %tmp.72 53 28 29 ];
+        %tmp.73 = 8;
+        %tmp.74 = shl %tmp.72 %tmp.73;
+        %tmp.75 = bitor %tmp.71 %tmp.74;
+        %tmp.76 = lgetv %bl.10;
+        symbol [ bl %tmp.76 53 38 40 ];
+        %tmp.77 = bitor %tmp.75 %tmp.76;
+        ret %tmp.77;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_46_48_54_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc"; @line = 57; @symbol_functiondef = [drawPath,57,20,28]; @symbol_param<0> = [dc,57,29,31]; @symbol_param<1> = [ctrl,57,33,37]; ]
+    static
+    function drawPath(dc, ctrl) {
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_57_39_80_4_start:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 58 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_57_39_80_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_57_39_80_4_stop" ]
+        %path.1 = local;
+        symbol [ path %path.1 58 12 16 ];
+        %tmp.1 = lgetv %ctrl;
+        symbol [ ctrl %tmp.1 58 19 23 ];
+        symbol [ path %tmp.2 58 24 28 ];
+        %tmp.2 = getv %tmp.1 :path;
+        lputv %path.1 %tmp.2;
+        symbol [ path %path.1 58 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 59 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_57_39_80_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_57_39_80_4_stop" ]
+        %cam.2 = local;
+        symbol [ cam %cam.2 59 12 15 ];
+        %tmp.3 = lgetv %ctrl;
+        symbol [ ctrl %tmp.3 59 19 23 ];
+        symbol [ cam %tmp.4 59 24 27 ];
+        %tmp.4 = getv %tmp.3 :cam;
+        lputv %cam.2 %tmp.4;
+        symbol [ cam %cam.2 59 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 63 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_57_39_80_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_57_39_80_4_stop" ]
+        %by.3 = local;
+        symbol [ by %by.3 63 12 14 ];
+        %tmp.5 = lgetv %ctrl;
+        symbol [ ctrl %tmp.5 63 19 23 ];
+        symbol [ physics %tmp.6 63 24 31 ];
+        %tmp.6 = getv %tmp.5 :physics;
+        symbol [ py %tmp.7 63 32 34 ];
+        %tmp.7 = getv %tmp.6 :py;
+        symbol [ toNumber %tmp.8 63 35 43 ];
+        %tmp.8 = getv function %tmp.7 :toNumber;
+        %tmp.9 = invoke %tmp.7 %tmp.8();
+        lputv %by.3 %tmp.9;
+        symbol [ by %by.3 63 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 64 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_57_39_80_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_57_39_80_4_stop" ]
+        %yLo.4 = local;
+        symbol [ yLo %yLo.4 64 12 15 ];
+        %tmp.10 = lgetv %by.3;
+        symbol [ by %tmp.10 64 19 21 ];
+        %tmp.11 = 4;
+        %tmp.12 = sub %tmp.10 %tmp.11;
+        lputv %yLo.4 %tmp.12;
+        symbol [ yLo %yLo.4 64 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 65 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_57_39_80_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_57_39_80_4_stop" ]
+        %yHi.5 = local;
+        symbol [ yHi %yHi.5 65 12 15 ];
+        %tmp.13 = lgetv %by.3;
+        symbol [ by %tmp.13 65 19 21 ];
+        %tmp.14 = 20;
+        %tmp.15 = add %tmp.13 %tmp.14;
+        lputv %yHi.5 %tmp.15;
+        symbol [ yHi %yHi.5 65 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 66 8 ]
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_66_8_66_32_if_stmt:
+        %tmp.16 = lgetv %yLo.4;
+        symbol [ yLo %tmp.16 66 12 15 ];
+        %tmp.17 = 0;
+        %tmp.18 = lt %tmp.16 %tmp.17;
+        bf %tmp.18 @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_66_8_66_32_if_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_66_8_66_32_if_true:
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_66_21_66_32_start:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 66 23 ]
+        %tmp.19 = 0;
+        lputv %yLo.4 %tmp.19;
+        symbol [ yLo %yLo.4 66 23 26 ];
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_66_21_66_32_stop:
+        goto @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_66_8_66_32_if_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_66_8_66_32_if_end:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 67 8 ]
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_67_8_67_58_if_stmt:
+        %tmp.20 = lgetv %yHi.5;
+        symbol [ yHi %tmp.20 67 12 15 ];
+        %tmp.21 = lgetv %path.1;
+        symbol [ path %tmp.21 67 18 22 ];
+        symbol [ nextY %tmp.22 67 23 28 ];
+        %tmp.22 = getv %tmp.21 :nextY;
+        %tmp.23 = 1;
+        %tmp.24 = sub %tmp.22 %tmp.23;
+        %tmp.25 = gt %tmp.20 %tmp.24;
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_67_8_67_58_if_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_67_8_67_58_if_true:
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_67_34_67_58_start:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 67 36 ]
+        %tmp.26 = lgetv %path.1;
+        symbol [ path %tmp.26 67 42 46 ];
+        symbol [ nextY %tmp.27 67 47 52 ];
+        %tmp.27 = getv %tmp.26 :nextY;
+        %tmp.28 = 1;
+        %tmp.29 = sub %tmp.27 %tmp.28;
+        lputv %yHi.5 %tmp.29;
+        symbol [ yHi %yHi.5 67 36 39 ];
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_67_34_67_58_stop:
+        goto @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_67_8_67_58_if_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_67_8_67_58_if_end:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 69 8 ]
+        for @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_69_8_79_8_for_test @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_69_8_79_8_for_incr @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_69_8_79_8_for_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_69_8_79_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_69_8_79_8_for_begin" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_69_8_79_8_for_end" ]
+        %y.6 = local;
+        symbol [ y %y.6 69 17 18 ];
+        %tmp.30 = lgetv %yHi.5;
+        symbol [ yHi %tmp.30 69 21 24 ];
+        lputv %y.6 %tmp.30;
+        symbol [ y %y.6 69 17 18 ];
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_69_8_79_8_for_test:
+        %tmp.31 = lgetv %y.6;
+        symbol [ y %tmp.31 69 26 27 ];
+        %tmp.32 = lgetv %yLo.4;
+        symbol [ yLo %tmp.32 69 31 34 ];
+        %tmp.33 = gte %tmp.31 %tmp.32;
+        bf %tmp.33 @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_69_8_79_8_for_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_69_8_79_8_for_begin:
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_69_41_79_8_start:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 73 12 ]
+        for @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_73_12_78_12_for_test @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_73_12_78_12_for_incr @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_73_12_78_12_for_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_73_12_78_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_73_12_78_12_for_begin" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_73_12_78_12_for_end" ]
+        %x.7 = local;
+        symbol [ x %x.7 73 21 22 ];
+        symbol [ SR_X_HALF %tmp.35 73 26 35 ];
+        %tmp.35 = getv ? :SR_X_HALF;
+        %tmp.36 = sub 0 %tmp.35;
+        lputv %x.7 %tmp.36;
+        symbol [ x %x.7 73 21 22 ];
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_73_12_78_12_for_test:
+        %tmp.37 = lgetv %x.7;
+        symbol [ x %tmp.37 73 37 38 ];
+        symbol [ SR_X_HALF %tmp.39 73 41 50 ];
+        %tmp.39 = getv ? :SR_X_HALF;
+        %tmp.40 = lt %tmp.37 %tmp.39;
+        bf %tmp.40 @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_73_12_78_12_for_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_73_12_78_12_for_begin:
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_73_57_78_12_start:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 74 16 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_73_57_78_12_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_73_57_78_12_stop" ]
+        %t.8 = local;
+        symbol [ t %t.8 74 20 21 ];
+        %tmp.41 = lgetv %path.1;
+        symbol [ path %tmp.41 74 24 28 ];
+        symbol [ tileAt %tmp.42 74 29 35 ];
+        %tmp.42 = getv function %tmp.41 :tileAt;
+        %tmp.43 = lgetv %x.7;
+        symbol [ x %tmp.43 74 36 37 ];
+        %tmp.44 = lgetv %y.6;
+        symbol [ y %tmp.44 74 39 40 ];
+        %tmp.45 = invoke %tmp.41 %tmp.42(%tmp.43, %tmp.44);
+        lputv %t.8 %tmp.45;
+        symbol [ t %t.8 74 20 21 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 75 16 ]
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_75_16_75_48_if_stmt:
+        %tmp.46 = lgetv %t.8;
+        symbol [ t %tmp.46 75 20 21 ];
+        symbol [ SR_T_NONE %tmp.48 75 25 34 ];
+        %tmp.48 = getv ? :SR_T_NONE;
+        %tmp.49 = eq %tmp.46 %tmp.48;
+        bf %tmp.49 @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_75_16_75_48_if_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_75_16_75_48_if_true:
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_75_36_75_48_start:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 75 38 ]
+        goto break @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_73_12_78_12_for_incr;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_75_36_75_48_stop:
+        goto @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_75_16_75_48_if_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_75_16_75_48_if_end:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 76 16 ]
+        %tmp.50 = self;
+        symbol [ _drawTile %tmp.51 76 16 25 ];
+        %tmp.51 = getv function %tmp.50 :_drawTile;
+        %tmp.52 = lgetv %dc;
+        symbol [ dc %tmp.52 76 26 28 ];
+        %tmp.53 = lgetv %ctrl;
+        symbol [ ctrl %tmp.53 76 30 34 ];
+        %tmp.54 = lgetv %x.7;
+        symbol [ x %tmp.54 76 36 37 ];
+        %tmp.55 = lgetv %y.6;
+        symbol [ y %tmp.55 76 39 40 ];
+        %tmp.56 = lgetv %t.8;
+        symbol [ t %tmp.56 76 42 43 ];
+        %tmp.57 = lgetv %path.1;
+        symbol [ path %tmp.57 77 26 30 ];
+        symbol [ breakAt %tmp.58 77 31 38 ];
+        %tmp.58 = getv function %tmp.57 :breakAt;
+        %tmp.59 = lgetv %x.7;
+        symbol [ x %tmp.59 77 39 40 ];
+        %tmp.60 = lgetv %y.6;
+        symbol [ y %tmp.60 77 42 43 ];
+        %tmp.61 = invoke %tmp.57 %tmp.58(%tmp.59, %tmp.60);
+        invoke %tmp.50 %tmp.51(%tmp.52, %tmp.53, %tmp.54, %tmp.55, %tmp.56, %tmp.61);
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_73_57_78_12_stop:
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_73_12_78_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 73 ]
+        %tmp.64 = lgetv %x.7;
+        symbol [ x %tmp.64 73 52 53 ];
+        %tmp.65 = add %tmp.64 1;
+        lputv %x.7 %tmp.65;
+        symbol [ x %x.7 73 52 53 ];
+        goto @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_73_12_78_12_for_test;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_73_12_78_12_for_end:
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_69_41_79_8_stop:
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_69_8_79_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 69 ]
+        %tmp.68 = lgetv %y.6;
+        symbol [ y %tmp.68 69 36 37 ];
+        %tmp.69 = sub %tmp.68 1;
+        lputv %y.6 %tmp.69;
+        symbol [ y %y.6 69 36 37 ];
+        goto @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_69_8_79_8_for_test;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_69_8_79_8_for_end:
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_57_39_80_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc"; @line = 82; @symbol_functiondef = [_drawTile,82,27,36]; @symbol_param<0> = [dc,82,37,39]; @symbol_param<1> = [ctrl,82,41,45]; @symbol_param<2> = [wx,82,47,49]; @symbol_param<3> = [wy,82,51,53]; @symbol_param<4> = [t,82,55,56]; @symbol_param<5> = [breakRem,82,58,66]; ]
+    protected static
+    function _drawTile(dc, ctrl, wx, wy, t, breakRem) {
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_82_68_141_4_start:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 83 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_82_68_141_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_82_68_141_4_stop" ]
+        %p.1 = local;
+        symbol [ p %p.1 83 12 13 ];
+        %tmp.1 = lgetv %ctrl;
+        symbol [ ctrl %tmp.1 83 18 22 ];
+        symbol [ cam %tmp.2 83 23 26 ];
+        %tmp.2 = getv %tmp.1 :cam;
+        symbol [ worldToScreen %tmp.3 83 27 40 ];
+        %tmp.3 = getv function %tmp.2 :worldToScreen;
+        %tmp.4 = lgetv %wx;
+        symbol [ wx %tmp.4 83 41 43 ];
+        symbol [ toFloat %tmp.5 83 44 51 ];
+        %tmp.5 = getv function %tmp.4 :toFloat;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        %tmp.7 = lgetv %wy;
+        symbol [ wy %tmp.7 83 55 57 ];
+        symbol [ toFloat %tmp.8 83 58 65 ];
+        %tmp.8 = getv function %tmp.7 :toFloat;
+        %tmp.9 = invoke %tmp.7 %tmp.8();
+        %tmp.10 = lgetv %ctrl;
+        symbol [ ctrl %tmp.10 84 42 46 ];
+        symbol [ cx %tmp.11 84 47 49 ];
+        %tmp.11 = getv %tmp.10 :cx;
+        %tmp.12 = lgetv %ctrl;
+        symbol [ ctrl %tmp.12 84 51 55 ];
+        symbol [ cy %tmp.13 84 56 58 ];
+        %tmp.13 = getv %tmp.12 :cy;
+        %tmp.14 = invoke %tmp.2 %tmp.3(%tmp.6, %tmp.9, %tmp.11, %tmp.13);
+        lputv %p.1 %tmp.14;
+        symbol [ p %p.1 83 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 85 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_82_68_141_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_82_68_141_4_stop" ]
+        %bx0.2 = local;
+        symbol [ bx0 %bx0.2 85 12 15 ];
+        %tmp.15 = lgetv %p.1;
+        symbol [ p %tmp.15 85 18 19 ];
+        %tmp.16 = 0;
+        %tmp.17 = agetv %tmp.15 %tmp.16;
+        lputv %bx0.2 %tmp.17;
+        symbol [ bx0 %bx0.2 85 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 85 24 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_82_68_141_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_82_68_141_4_stop" ]
+        %by0.3 = local;
+        symbol [ by0 %by0.3 85 28 31 ];
+        %tmp.18 = lgetv %p.1;
+        symbol [ p %tmp.18 85 34 35 ];
+        %tmp.19 = 1;
+        %tmp.20 = agetv %tmp.18 %tmp.19;
+        lputv %by0.3 %tmp.20;
+        symbol [ by0 %by0.3 85 28 31 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 87 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_82_68_141_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_82_68_141_4_stop" ]
+        %hw.4 = local;
+        symbol [ hw %hw.4 87 12 14 ];
+        symbol [ SR_TILE_HW %tmp.22 87 18 28 ];
+        %tmp.22 = getv ? :SR_TILE_HW;
+        lputv %hw.4 %tmp.22;
+        symbol [ hw %hw.4 87 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 87 30 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_82_68_141_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_82_68_141_4_stop" ]
+        %hh.5 = local;
+        symbol [ hh %hh.5 87 34 36 ];
+        symbol [ SR_TILE_HH %tmp.24 87 39 49 ];
+        %tmp.24 = getv ? :SR_TILE_HH;
+        lputv %hh.5 %tmp.24;
+        symbol [ hh %hh.5 87 34 36 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 88 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_82_68_141_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_82_68_141_4_stop" ]
+        %top.6 = local;
+        symbol [ top %top.6 88 12 15 ];
+        %tmp.25 = newa 2;
+        %tmp.26 = lgetv %bx0.2;
+        symbol [ bx0 %tmp.26 88 22 25 ];
+        %tmp.27 = dup %tmp.25;
+        %tmp.28 = aputv %tmp.27 0 %tmp.26;
+        %tmp.29 = lgetv %by0.3;
+        symbol [ by0 %tmp.29 88 33 36 ];
+        %tmp.30 = 2;
+        %tmp.31 = lgetv %hh.5;
+        symbol [ hh %tmp.31 88 43 45 ];
+        %tmp.32 = mul %tmp.30 %tmp.31;
+        %tmp.33 = sub %tmp.29 %tmp.32;
+        %tmp.34 = dup %tmp.28;
+        %tmp.35 = aputv %tmp.34 1 %tmp.33;
+        lputv %top.6 %tmp.35;
+        symbol [ top %top.6 88 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 89 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_82_68_141_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_82_68_141_4_stop" ]
+        %right.7 = local;
+        symbol [ right %right.7 89 12 17 ];
+        %tmp.36 = newa 2;
+        %tmp.37 = lgetv %bx0.2;
+        symbol [ bx0 %tmp.37 89 22 25 ];
+        %tmp.38 = lgetv %hw.4;
+        symbol [ hw %tmp.38 89 28 30 ];
+        %tmp.39 = add %tmp.37 %tmp.38;
+        %tmp.40 = dup %tmp.36;
+        %tmp.41 = aputv %tmp.40 0 %tmp.39;
+        %tmp.42 = lgetv %by0.3;
+        symbol [ by0 %tmp.42 89 33 36 ];
+        %tmp.43 = lgetv %hh.5;
+        symbol [ hh %tmp.43 89 39 41 ];
+        %tmp.44 = sub %tmp.42 %tmp.43;
+        %tmp.45 = dup %tmp.41;
+        %tmp.46 = aputv %tmp.45 1 %tmp.44;
+        lputv %right.7 %tmp.46;
+        symbol [ right %right.7 89 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 90 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_82_68_141_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_82_68_141_4_stop" ]
+        %bottom.8 = local;
+        symbol [ bottom %bottom.8 90 12 18 ];
+        %tmp.47 = newa 2;
+        %tmp.48 = lgetv %bx0.2;
+        symbol [ bx0 %tmp.48 90 22 25 ];
+        %tmp.49 = dup %tmp.47;
+        %tmp.50 = aputv %tmp.49 0 %tmp.48;
+        %tmp.51 = lgetv %by0.3;
+        symbol [ by0 %tmp.51 90 33 36 ];
+        %tmp.52 = dup %tmp.50;
+        %tmp.53 = aputv %tmp.52 1 %tmp.51;
+        lputv %bottom.8 %tmp.53;
+        symbol [ bottom %bottom.8 90 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 91 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_82_68_141_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_82_68_141_4_stop" ]
+        %left.9 = local;
+        symbol [ left %left.9 91 12 16 ];
+        %tmp.54 = newa 2;
+        %tmp.55 = lgetv %bx0.2;
+        symbol [ bx0 %tmp.55 91 22 25 ];
+        %tmp.56 = lgetv %hw.4;
+        symbol [ hw %tmp.56 91 28 30 ];
+        %tmp.57 = sub %tmp.55 %tmp.56;
+        %tmp.58 = dup %tmp.54;
+        %tmp.59 = aputv %tmp.58 0 %tmp.57;
+        %tmp.60 = lgetv %by0.3;
+        symbol [ by0 %tmp.60 91 33 36 ];
+        %tmp.61 = lgetv %hh.5;
+        symbol [ hh %tmp.61 91 39 41 ];
+        %tmp.62 = sub %tmp.60 %tmp.61;
+        %tmp.63 = dup %tmp.59;
+        %tmp.64 = aputv %tmp.63 1 %tmp.62;
+        lputv %left.9 %tmp.64;
+        symbol [ left %left.9 91 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 95 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_82_68_141_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_82_68_141_4_stop" ]
+        %skirt.10 = local;
+        symbol [ skirt %skirt.10 95 12 17 ];
+        %tmp.65 = 4;
+        lputv %skirt.10 %tmp.65;
+        symbol [ skirt %skirt.10 95 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 96 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_82_68_141_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_82_68_141_4_stop" ]
+        %sbot.11 = local;
+        symbol [ sbot %sbot.11 96 12 16 ];
+        %tmp.66 = newa 2;
+        %tmp.67 = lgetv %bx0.2;
+        symbol [ bx0 %tmp.67 96 21 24 ];
+        %tmp.68 = dup %tmp.66;
+        %tmp.69 = aputv %tmp.68 0 %tmp.67;
+        %tmp.70 = lgetv %by0.3;
+        symbol [ by0 %tmp.70 96 26 29 ];
+        %tmp.71 = lgetv %skirt.10;
+        symbol [ skirt %tmp.71 96 32 37 ];
+        %tmp.72 = add %tmp.70 %tmp.71;
+        %tmp.73 = dup %tmp.69;
+        %tmp.74 = aputv %tmp.73 1 %tmp.72;
+        lputv %sbot.11 %tmp.74;
+        symbol [ sbot %sbot.11 96 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 97 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_82_68_141_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_82_68_141_4_stop" ]
+        %sleft.12 = local;
+        symbol [ sleft %sleft.12 97 12 17 ];
+        %tmp.75 = newa 2;
+        %tmp.76 = lgetv %bx0.2;
+        symbol [ bx0 %tmp.76 97 21 24 ];
+        %tmp.77 = lgetv %hw.4;
+        symbol [ hw %tmp.77 97 27 29 ];
+        %tmp.78 = sub %tmp.76 %tmp.77;
+        %tmp.79 = dup %tmp.75;
+        %tmp.80 = aputv %tmp.79 0 %tmp.78;
+        %tmp.81 = lgetv %by0.3;
+        symbol [ by0 %tmp.81 97 31 34 ];
+        %tmp.82 = lgetv %hh.5;
+        symbol [ hh %tmp.82 97 37 39 ];
+        %tmp.83 = sub %tmp.81 %tmp.82;
+        %tmp.84 = lgetv %skirt.10;
+        symbol [ skirt %tmp.84 97 42 47 ];
+        %tmp.85 = add %tmp.83 %tmp.84;
+        %tmp.86 = dup %tmp.80;
+        %tmp.87 = aputv %tmp.86 1 %tmp.85;
+        lputv %sleft.12 %tmp.87;
+        symbol [ sleft %sleft.12 97 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 98 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_82_68_141_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_82_68_141_4_stop" ]
+        %srght.13 = local;
+        symbol [ srght %srght.13 98 12 17 ];
+        %tmp.88 = newa 2;
+        %tmp.89 = lgetv %bx0.2;
+        symbol [ bx0 %tmp.89 98 21 24 ];
+        %tmp.90 = lgetv %hw.4;
+        symbol [ hw %tmp.90 98 27 29 ];
+        %tmp.91 = add %tmp.89 %tmp.90;
+        %tmp.92 = dup %tmp.88;
+        %tmp.93 = aputv %tmp.92 0 %tmp.91;
+        %tmp.94 = lgetv %by0.3;
+        symbol [ by0 %tmp.94 98 31 34 ];
+        %tmp.95 = lgetv %hh.5;
+        symbol [ hh %tmp.95 98 37 39 ];
+        %tmp.96 = sub %tmp.94 %tmp.95;
+        %tmp.97 = lgetv %skirt.10;
+        symbol [ skirt %tmp.97 98 42 47 ];
+        %tmp.98 = add %tmp.96 %tmp.97;
+        %tmp.99 = dup %tmp.93;
+        %tmp.100 = aputv %tmp.99 1 %tmp.98;
+        lputv %srght.13 %tmp.100;
+        symbol [ srght %srght.13 98 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 99 8 ]
+        %tmp.101 = lgetv %dc;
+        symbol [ dc %tmp.101 99 8 10 ];
+        symbol [ setColor %tmp.102 99 11 19 ];
+        %tmp.102 = getv function %tmp.101 :setColor;
+        %tmp.103 = 0x0F1830;
+        symbol [ Graphics %tmp.104 99 30 38 ];
+        %tmp.104 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.105 99 39 56 ];
+        %tmp.105 = getv %tmp.104 :COLOR_TRANSPARENT;
+        invoke %tmp.101 %tmp.102(%tmp.103, %tmp.105);
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 100 8 ]
+        %tmp.106 = lgetv %dc;
+        symbol [ dc %tmp.106 100 8 10 ];
+        symbol [ fillPolygon %tmp.107 100 11 22 ];
+        %tmp.107 = getv function %tmp.106 :fillPolygon;
+        %tmp.108 = newa 4;
+        %tmp.109 = lgetv %bottom.8;
+        symbol [ bottom %tmp.109 100 24 30 ];
+        %tmp.110 = dup %tmp.108;
+        %tmp.111 = aputv %tmp.110 0 %tmp.109;
+        %tmp.112 = lgetv %left.9;
+        symbol [ left %tmp.112 100 32 36 ];
+        %tmp.113 = dup %tmp.111;
+        %tmp.114 = aputv %tmp.113 1 %tmp.112;
+        %tmp.115 = lgetv %sleft.12;
+        symbol [ sleft %tmp.115 100 39 44 ];
+        %tmp.116 = dup %tmp.114;
+        %tmp.117 = aputv %tmp.116 2 %tmp.115;
+        %tmp.118 = lgetv %sbot.11;
+        symbol [ sbot %tmp.118 100 46 50 ];
+        %tmp.119 = dup %tmp.117;
+        %tmp.120 = aputv %tmp.119 3 %tmp.118;
+        invoke %tmp.106 %tmp.107(%tmp.120);
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 101 8 ]
+        %tmp.121 = lgetv %dc;
+        symbol [ dc %tmp.121 101 8 10 ];
+        symbol [ setColor %tmp.122 101 11 19 ];
+        %tmp.122 = getv function %tmp.121 :setColor;
+        %tmp.123 = 0x182338;
+        symbol [ Graphics %tmp.124 101 30 38 ];
+        %tmp.124 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.125 101 39 56 ];
+        %tmp.125 = getv %tmp.124 :COLOR_TRANSPARENT;
+        invoke %tmp.121 %tmp.122(%tmp.123, %tmp.125);
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 102 8 ]
+        %tmp.126 = lgetv %dc;
+        symbol [ dc %tmp.126 102 8 10 ];
+        symbol [ fillPolygon %tmp.127 102 11 22 ];
+        %tmp.127 = getv function %tmp.126 :fillPolygon;
+        %tmp.128 = newa 4;
+        %tmp.129 = lgetv %bottom.8;
+        symbol [ bottom %tmp.129 102 24 30 ];
+        %tmp.130 = dup %tmp.128;
+        %tmp.131 = aputv %tmp.130 0 %tmp.129;
+        %tmp.132 = lgetv %right.7;
+        symbol [ right %tmp.132 102 32 37 ];
+        %tmp.133 = dup %tmp.131;
+        %tmp.134 = aputv %tmp.133 1 %tmp.132;
+        %tmp.135 = lgetv %srght.13;
+        symbol [ srght %tmp.135 102 39 44 ];
+        %tmp.136 = dup %tmp.134;
+        %tmp.137 = aputv %tmp.136 2 %tmp.135;
+        %tmp.138 = lgetv %sbot.11;
+        symbol [ sbot %tmp.138 102 46 50 ];
+        %tmp.139 = dup %tmp.137;
+        %tmp.140 = aputv %tmp.139 3 %tmp.138;
+        invoke %tmp.126 %tmp.127(%tmp.140);
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 105 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_82_68_141_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_82_68_141_4_stop" ]
+        %col.14 = local;
+        symbol [ col %col.14 105 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 106 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_82_68_141_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_82_68_141_4_stop" ]
+        %rim.15 = local;
+        symbol [ rim %rim.15 106 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 107 8 ]
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_107_8_117_70_if_stmt:
+        %tmp.141 = lgetv %t;
+        symbol [ t %tmp.141 107 17 18 ];
+        symbol [ SR_T_NORMAL %tmp.143 107 22 33 ];
+        %tmp.143 = getv ? :SR_T_NORMAL;
+        %tmp.144 = eq %tmp.141 %tmp.143;
+        bf %tmp.144 @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_107_8_117_70_if_false;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_107_8_117_70_if_true:
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_107_36_107_70_start:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 107 38 ]
+        %tmp.145 = 0xC8D4DC;
+        lputv %col.14 %tmp.145;
+        symbol [ col %col.14 107 38 41 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 107 54 ]
+        %tmp.146 = 0x7A8898;
+        lputv %rim.15 %tmp.146;
+        symbol [ rim %rim.15 107 54 57 ];
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_107_36_107_70_stop:
+        goto @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_107_8_117_70_if_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_107_8_117_70_if_false:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 108 13 ]
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_108_13_117_70_if_stmt:
+        %tmp.147 = lgetv %t;
+        symbol [ t %tmp.147 108 17 18 ];
+        symbol [ SR_T_SOFT %tmp.149 108 22 31 ];
+        %tmp.149 = getv ? :SR_T_SOFT;
+        %tmp.150 = eq %tmp.147 %tmp.149;
+        bf %tmp.150 @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_108_13_117_70_if_false;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_108_13_117_70_if_true:
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_108_36_108_70_start:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 108 38 ]
+        %tmp.151 = 0xA0D8A4;
+        lputv %col.14 %tmp.151;
+        symbol [ col %col.14 108 38 41 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 108 54 ]
+        %tmp.152 = 0x4E8458;
+        lputv %rim.15 %tmp.152;
+        symbol [ rim %rim.15 108 54 57 ];
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_108_36_108_70_stop:
+        goto @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_108_13_117_70_if_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_108_13_117_70_if_false:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 109 13 ]
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_109_13_117_70_if_stmt:
+        %tmp.153 = lgetv %t;
+        symbol [ t %tmp.153 109 17 18 ];
+        symbol [ SR_T_BOOST %tmp.155 109 22 32 ];
+        %tmp.155 = getv ? :SR_T_BOOST;
+        %tmp.156 = eq %tmp.153 %tmp.155;
+        bf %tmp.156 @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_109_13_117_70_if_false;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_109_13_117_70_if_true:
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_109_36_109_70_start:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 109 38 ]
+        %tmp.157 = 0xFFE07A;
+        lputv %col.14 %tmp.157;
+        symbol [ col %col.14 109 38 41 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 109 54 ]
+        %tmp.158 = 0xC8941A;
+        lputv %rim.15 %tmp.158;
+        symbol [ rim %rim.15 109 54 57 ];
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_109_36_109_70_stop:
+        goto @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_109_13_117_70_if_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_109_13_117_70_if_false:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 110 13 ]
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_110_13_117_70_if_stmt:
+        %tmp.159 = lgetv %t;
+        symbol [ t %tmp.159 110 17 18 ];
+        symbol [ SR_T_FRAGILE %tmp.161 110 22 34 ];
+        %tmp.161 = getv ? :SR_T_FRAGILE;
+        %tmp.162 = eq %tmp.159 %tmp.161;
+        bf %tmp.162 @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_110_13_117_70_if_false;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_110_13_117_70_if_true:
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_110_36_110_70_start:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 110 38 ]
+        %tmp.163 = 0xE6A86A;
+        lputv %col.14 %tmp.163;
+        symbol [ col %col.14 110 38 41 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 110 54 ]
+        %tmp.164 = 0x9A5A28;
+        lputv %rim.15 %tmp.164;
+        symbol [ rim %rim.15 110 54 57 ];
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_110_36_110_70_stop:
+        goto @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_110_13_117_70_if_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_110_13_117_70_if_false:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 111 13 ]
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_111_13_117_70_if_stmt:
+        %tmp.165 = lgetv %t;
+        symbol [ t %tmp.165 111 17 18 ];
+        symbol [ SR_T_BREAK %tmp.167 111 22 32 ];
+        %tmp.167 = getv ? :SR_T_BREAK;
+        %tmp.168 = eq %tmp.165 %tmp.167;
+        bf %tmp.168 @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_111_13_117_70_if_else_false;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_111_13_117_70_if_true:
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_111_36_116_8_start:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 113 12 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_111_36_116_8_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_111_36_116_8_stop" ]
+        %k.16 = local;
+        symbol [ k %k.16 113 16 17 ];
+        %tmp.169 = lgetv %breakRem;
+        symbol [ breakRem %tmp.169 113 20 28 ];
+        %tmp.170 = 30;
+        %tmp.171 = mul %tmp.169 %tmp.170;
+        symbol [ SR_BREAK_TICKS %tmp.173 113 36 50 ];
+        %tmp.173 = getv ? :SR_BREAK_TICKS;
+        %tmp.174 = div %tmp.171 %tmp.173;
+        lputv %k.16 %tmp.174;
+        symbol [ k %k.16 113 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 114 12 ]
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_114_12_114_32_if_stmt:
+        %tmp.175 = lgetv %k.16;
+        symbol [ k %tmp.175 114 16 17 ];
+        %tmp.176 = 0;
+        %tmp.177 = lt %tmp.175 %tmp.176;
+        bf %tmp.177 @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_114_12_114_32_if_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_114_12_114_32_if_true:
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_114_23_114_32_start:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 114 25 ]
+        %tmp.178 = 0;
+        lputv %k.16 %tmp.178;
+        symbol [ k %k.16 114 25 26 ];
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_114_23_114_32_stop:
+        goto @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_114_12_114_32_if_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_114_12_114_32_if_end:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 114 34 ]
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_114_34_114_56_if_stmt:
+        %tmp.179 = lgetv %k.16;
+        symbol [ k %tmp.179 114 38 39 ];
+        %tmp.180 = 30;
+        %tmp.181 = gt %tmp.179 %tmp.180;
+        bf %tmp.181 @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_114_34_114_56_if_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_114_34_114_56_if_true:
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_114_46_114_56_start:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 114 48 ]
+        %tmp.182 = 30;
+        lputv %k.16 %tmp.182;
+        symbol [ k %k.16 114 48 49 ];
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_114_46_114_56_stop:
+        goto @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_114_34_114_56_if_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_114_34_114_56_if_end:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 115 12 ]
+        %tmp.183 = 0x884420;
+        %tmp.184 = lgetv %k.16;
+        symbol [ k %tmp.184 115 30 31 ];
+        %tmp.185 = 16;
+        %tmp.186 = shl %tmp.184 %tmp.185;
+        %tmp.187 = add %tmp.183 %tmp.186;
+        lputv %col.14 %tmp.187;
+        symbol [ col %col.14 115 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 115 40 ]
+        %tmp.188 = 0x422010;
+        lputv %rim.15 %tmp.188;
+        symbol [ rim %rim.15 115 40 43 ];
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_111_36_116_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_111_13_117_70_if_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_111_13_117_70_if_else_false:
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_117_36_117_70_start:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 117 38 ]
+        %tmp.189 = 0xC8D4DC;
+        lputv %col.14 %tmp.189;
+        symbol [ col %col.14 117 38 41 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 117 54 ]
+        %tmp.190 = 0x7A8898;
+        lputv %rim.15 %tmp.190;
+        symbol [ rim %rim.15 117 54 57 ];
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_117_36_117_70_stop:
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_111_13_117_70_if_end:
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_110_13_117_70_if_end:
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_109_13_117_70_if_end:
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_108_13_117_70_if_end:
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_107_8_117_70_if_end:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 118 8 ]
+        %tmp.191 = lgetv %dc;
+        symbol [ dc %tmp.191 118 8 10 ];
+        symbol [ setColor %tmp.192 118 11 19 ];
+        %tmp.192 = getv function %tmp.191 :setColor;
+        %tmp.193 = lgetv %col.14;
+        symbol [ col %tmp.193 118 20 23 ];
+        symbol [ Graphics %tmp.194 118 25 33 ];
+        %tmp.194 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.195 118 34 51 ];
+        %tmp.195 = getv %tmp.194 :COLOR_TRANSPARENT;
+        invoke %tmp.191 %tmp.192(%tmp.193, %tmp.195);
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 119 8 ]
+        %tmp.196 = lgetv %dc;
+        symbol [ dc %tmp.196 119 8 10 ];
+        symbol [ fillPolygon %tmp.197 119 11 22 ];
+        %tmp.197 = getv function %tmp.196 :fillPolygon;
+        %tmp.198 = newa 4;
+        %tmp.199 = lgetv %top.6;
+        symbol [ top %tmp.199 119 24 27 ];
+        %tmp.200 = dup %tmp.198;
+        %tmp.201 = aputv %tmp.200 0 %tmp.199;
+        %tmp.202 = lgetv %right.7;
+        symbol [ right %tmp.202 119 29 34 ];
+        %tmp.203 = dup %tmp.201;
+        %tmp.204 = aputv %tmp.203 1 %tmp.202;
+        %tmp.205 = lgetv %bottom.8;
+        symbol [ bottom %tmp.205 119 36 42 ];
+        %tmp.206 = dup %tmp.204;
+        %tmp.207 = aputv %tmp.206 2 %tmp.205;
+        %tmp.208 = lgetv %left.9;
+        symbol [ left %tmp.208 119 44 48 ];
+        %tmp.209 = dup %tmp.207;
+        %tmp.210 = aputv %tmp.209 3 %tmp.208;
+        invoke %tmp.196 %tmp.197(%tmp.210);
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 120 8 ]
+        %tmp.211 = lgetv %dc;
+        symbol [ dc %tmp.211 120 8 10 ];
+        symbol [ setColor %tmp.212 120 11 19 ];
+        %tmp.212 = getv function %tmp.211 :setColor;
+        %tmp.213 = lgetv %rim.15;
+        symbol [ rim %tmp.213 120 20 23 ];
+        symbol [ Graphics %tmp.214 120 25 33 ];
+        %tmp.214 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.215 120 34 51 ];
+        %tmp.215 = getv %tmp.214 :COLOR_TRANSPARENT;
+        invoke %tmp.211 %tmp.212(%tmp.213, %tmp.215);
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 121 8 ]
+        %tmp.216 = lgetv %dc;
+        symbol [ dc %tmp.216 121 8 10 ];
+        symbol [ drawLine %tmp.217 121 11 19 ];
+        %tmp.217 = getv function %tmp.216 :drawLine;
+        %tmp.218 = lgetv %top.6;
+        symbol [ top %tmp.218 121 20 23 ];
+        %tmp.219 = 0;
+        %tmp.220 = agetv %tmp.218 %tmp.219;
+        %tmp.221 = lgetv %top.6;
+        symbol [ top %tmp.221 121 31 34 ];
+        %tmp.222 = 1;
+        %tmp.223 = agetv %tmp.221 %tmp.222;
+        %tmp.224 = lgetv %right.7;
+        symbol [ right %tmp.224 121 42 47 ];
+        %tmp.225 = 0;
+        %tmp.226 = agetv %tmp.224 %tmp.225;
+        %tmp.227 = lgetv %right.7;
+        symbol [ right %tmp.227 121 53 58 ];
+        %tmp.228 = 1;
+        %tmp.229 = agetv %tmp.227 %tmp.228;
+        invoke %tmp.216 %tmp.217(%tmp.220, %tmp.223, %tmp.226, %tmp.229);
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 122 8 ]
+        %tmp.230 = lgetv %dc;
+        symbol [ dc %tmp.230 122 8 10 ];
+        symbol [ drawLine %tmp.231 122 11 19 ];
+        %tmp.231 = getv function %tmp.230 :drawLine;
+        %tmp.232 = lgetv %right.7;
+        symbol [ right %tmp.232 122 20 25 ];
+        %tmp.233 = 0;
+        %tmp.234 = agetv %tmp.232 %tmp.233;
+        %tmp.235 = lgetv %right.7;
+        symbol [ right %tmp.235 122 31 36 ];
+        %tmp.236 = 1;
+        %tmp.237 = agetv %tmp.235 %tmp.236;
+        %tmp.238 = lgetv %bottom.8;
+        symbol [ bottom %tmp.238 122 42 48 ];
+        %tmp.239 = 0;
+        %tmp.240 = agetv %tmp.238 %tmp.239;
+        %tmp.241 = lgetv %bottom.8;
+        symbol [ bottom %tmp.241 122 53 59 ];
+        %tmp.242 = 1;
+        %tmp.243 = agetv %tmp.241 %tmp.242;
+        invoke %tmp.230 %tmp.231(%tmp.234, %tmp.237, %tmp.240, %tmp.243);
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 123 8 ]
+        %tmp.244 = lgetv %dc;
+        symbol [ dc %tmp.244 123 8 10 ];
+        symbol [ drawLine %tmp.245 123 11 19 ];
+        %tmp.245 = getv function %tmp.244 :drawLine;
+        %tmp.246 = lgetv %bottom.8;
+        symbol [ bottom %tmp.246 123 20 26 ];
+        %tmp.247 = 0;
+        %tmp.248 = agetv %tmp.246 %tmp.247;
+        %tmp.249 = lgetv %bottom.8;
+        symbol [ bottom %tmp.249 123 31 37 ];
+        %tmp.250 = 1;
+        %tmp.251 = agetv %tmp.249 %tmp.250;
+        %tmp.252 = lgetv %left.9;
+        symbol [ left %tmp.252 123 42 46 ];
+        %tmp.253 = 0;
+        %tmp.254 = agetv %tmp.252 %tmp.253;
+        %tmp.255 = lgetv %left.9;
+        symbol [ left %tmp.255 123 53 57 ];
+        %tmp.256 = 1;
+        %tmp.257 = agetv %tmp.255 %tmp.256;
+        invoke %tmp.244 %tmp.245(%tmp.248, %tmp.251, %tmp.254, %tmp.257);
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 124 8 ]
+        %tmp.258 = lgetv %dc;
+        symbol [ dc %tmp.258 124 8 10 ];
+        symbol [ drawLine %tmp.259 124 11 19 ];
+        %tmp.259 = getv function %tmp.258 :drawLine;
+        %tmp.260 = lgetv %left.9;
+        symbol [ left %tmp.260 124 20 24 ];
+        %tmp.261 = 0;
+        %tmp.262 = agetv %tmp.260 %tmp.261;
+        %tmp.263 = lgetv %left.9;
+        symbol [ left %tmp.263 124 31 35 ];
+        %tmp.264 = 1;
+        %tmp.265 = agetv %tmp.263 %tmp.264;
+        %tmp.266 = lgetv %top.6;
+        symbol [ top %tmp.266 124 42 45 ];
+        %tmp.267 = 0;
+        %tmp.268 = agetv %tmp.266 %tmp.267;
+        %tmp.269 = lgetv %top.6;
+        symbol [ top %tmp.269 124 53 56 ];
+        %tmp.270 = 1;
+        %tmp.271 = agetv %tmp.269 %tmp.270;
+        invoke %tmp.258 %tmp.259(%tmp.262, %tmp.265, %tmp.268, %tmp.271);
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 127 8 ]
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_127_8_134_8_if_stmt:
+        %tmp.272 = lgetv %t;
+        symbol [ t %tmp.272 127 12 13 ];
+        symbol [ SR_T_BOOST %tmp.274 127 17 27 ];
+        %tmp.274 = getv ? :SR_T_BOOST;
+        %tmp.275 = eq %tmp.272 %tmp.274;
+        bf %tmp.275 @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_127_8_134_8_if_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_127_8_134_8_if_true:
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_127_29_134_8_start:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 128 12 ]
+        %tmp.276 = lgetv %dc;
+        symbol [ dc %tmp.276 128 12 14 ];
+        symbol [ setColor %tmp.277 128 15 23 ];
+        %tmp.277 = getv function %tmp.276 :setColor;
+        %tmp.278 = 0xFF6622;
+        symbol [ Graphics %tmp.279 128 34 42 ];
+        %tmp.279 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.280 128 43 60 ];
+        %tmp.280 = getv %tmp.279 :COLOR_TRANSPARENT;
+        invoke %tmp.276 %tmp.277(%tmp.278, %tmp.280);
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 129 12 ]
+        %tmp.281 = lgetv %dc;
+        symbol [ dc %tmp.281 129 12 14 ];
+        symbol [ fillPolygon %tmp.282 129 15 26 ];
+        %tmp.282 = getv function %tmp.281 :fillPolygon;
+        %tmp.283 = newa 3;
+        %tmp.284 = newa 2;
+        %tmp.285 = lgetv %bx0.2;
+        symbol [ bx0 %tmp.285 130 17 20 ];
+        %tmp.286 = 4;
+        %tmp.287 = sub %tmp.285 %tmp.286;
+        %tmp.288 = dup %tmp.284;
+        %tmp.289 = aputv %tmp.288 0 %tmp.287;
+        %tmp.290 = lgetv %by0.3;
+        symbol [ by0 %tmp.290 130 26 29 ];
+        %tmp.291 = lgetv %hh.5;
+        symbol [ hh %tmp.291 130 32 34 ];
+        %tmp.292 = sub %tmp.290 %tmp.291;
+        %tmp.293 = 2;
+        %tmp.294 = sub %tmp.292 %tmp.293;
+        %tmp.295 = dup %tmp.289;
+        %tmp.296 = aputv %tmp.295 1 %tmp.294;
+        %tmp.297 = dup %tmp.283;
+        %tmp.298 = aputv %tmp.297 0 %tmp.296;
+        %tmp.299 = newa 2;
+        %tmp.300 = lgetv %bx0.2;
+        symbol [ bx0 %tmp.300 131 17 20 ];
+        %tmp.301 = 4;
+        %tmp.302 = add %tmp.300 %tmp.301;
+        %tmp.303 = dup %tmp.299;
+        %tmp.304 = aputv %tmp.303 0 %tmp.302;
+        %tmp.305 = lgetv %by0.3;
+        symbol [ by0 %tmp.305 131 26 29 ];
+        %tmp.306 = lgetv %hh.5;
+        symbol [ hh %tmp.306 131 32 34 ];
+        %tmp.307 = sub %tmp.305 %tmp.306;
+        %tmp.308 = 2;
+        %tmp.309 = sub %tmp.307 %tmp.308;
+        %tmp.310 = dup %tmp.304;
+        %tmp.311 = aputv %tmp.310 1 %tmp.309;
+        %tmp.312 = dup %tmp.298;
+        %tmp.313 = aputv %tmp.312 1 %tmp.311;
+        %tmp.314 = newa 2;
+        %tmp.315 = lgetv %bx0.2;
+        symbol [ bx0 %tmp.315 132 17 20 ];
+        %tmp.316 = dup %tmp.314;
+        %tmp.317 = aputv %tmp.316 0 %tmp.315;
+        %tmp.318 = lgetv %by0.3;
+        symbol [ by0 %tmp.318 132 26 29 ];
+        %tmp.319 = lgetv %hh.5;
+        symbol [ hh %tmp.319 132 32 34 ];
+        %tmp.320 = sub %tmp.318 %tmp.319;
+        %tmp.321 = 6;
+        %tmp.322 = sub %tmp.320 %tmp.321;
+        %tmp.323 = dup %tmp.317;
+        %tmp.324 = aputv %tmp.323 1 %tmp.322;
+        %tmp.325 = dup %tmp.313;
+        %tmp.326 = aputv %tmp.325 2 %tmp.324;
+        invoke %tmp.281 %tmp.282(%tmp.326);
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_127_29_134_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_127_8_134_8_if_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_127_8_134_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 136 8 ]
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_136_8_140_8_if_stmt:
+        %tmp.327 = lgetv %t;
+        symbol [ t %tmp.327 136 12 13 ];
+        symbol [ SR_T_FRAGILE %tmp.329 136 17 29 ];
+        %tmp.329 = getv ? :SR_T_FRAGILE;
+        %tmp.330 = eq %tmp.327 %tmp.329;
+        bf %tmp.330 @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_136_8_140_8_if_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_136_8_140_8_if_true:
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_136_31_140_8_start:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 137 12 ]
+        %tmp.331 = lgetv %dc;
+        symbol [ dc %tmp.331 137 12 14 ];
+        symbol [ setColor %tmp.332 137 15 23 ];
+        %tmp.332 = getv function %tmp.331 :setColor;
+        %tmp.333 = 0x6A3010;
+        symbol [ Graphics %tmp.334 137 34 42 ];
+        %tmp.334 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.335 137 43 60 ];
+        %tmp.335 = getv %tmp.334 :COLOR_TRANSPARENT;
+        invoke %tmp.331 %tmp.332(%tmp.333, %tmp.335);
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 138 12 ]
+        %tmp.336 = lgetv %dc;
+        symbol [ dc %tmp.336 138 12 14 ];
+        symbol [ drawLine %tmp.337 138 15 23 ];
+        %tmp.337 = getv function %tmp.336 :drawLine;
+        %tmp.338 = lgetv %bx0.2;
+        symbol [ bx0 %tmp.338 138 24 27 ];
+        %tmp.339 = 3;
+        %tmp.340 = sub %tmp.338 %tmp.339;
+        %tmp.341 = lgetv %by0.3;
+        symbol [ by0 %tmp.341 138 33 36 ];
+        %tmp.342 = lgetv %hh.5;
+        symbol [ hh %tmp.342 138 39 41 ];
+        %tmp.343 = sub %tmp.341 %tmp.342;
+        %tmp.344 = lgetv %bx0.2;
+        symbol [ bx0 %tmp.344 138 47 50 ];
+        %tmp.345 = lgetv %by0.3;
+        symbol [ by0 %tmp.345 138 56 59 ];
+        %tmp.346 = lgetv %hh.5;
+        symbol [ hh %tmp.346 138 62 64 ];
+        %tmp.347 = sub %tmp.345 %tmp.346;
+        %tmp.348 = 2;
+        %tmp.349 = sub %tmp.347 %tmp.348;
+        invoke %tmp.336 %tmp.337(%tmp.340, %tmp.343, %tmp.344, %tmp.349);
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 139 12 ]
+        %tmp.350 = lgetv %dc;
+        symbol [ dc %tmp.350 139 12 14 ];
+        symbol [ drawLine %tmp.351 139 15 23 ];
+        %tmp.351 = getv function %tmp.350 :drawLine;
+        %tmp.352 = lgetv %bx0.2;
+        symbol [ bx0 %tmp.352 139 24 27 ];
+        %tmp.353 = lgetv %by0.3;
+        symbol [ by0 %tmp.353 139 33 36 ];
+        %tmp.354 = lgetv %hh.5;
+        symbol [ hh %tmp.354 139 39 41 ];
+        %tmp.355 = sub %tmp.353 %tmp.354;
+        %tmp.356 = 2;
+        %tmp.357 = sub %tmp.355 %tmp.356;
+        %tmp.358 = lgetv %bx0.2;
+        symbol [ bx0 %tmp.358 139 47 50 ];
+        %tmp.359 = 3;
+        %tmp.360 = add %tmp.358 %tmp.359;
+        %tmp.361 = lgetv %by0.3;
+        symbol [ by0 %tmp.361 139 56 59 ];
+        %tmp.362 = lgetv %hh.5;
+        symbol [ hh %tmp.362 139 62 64 ];
+        %tmp.363 = sub %tmp.361 %tmp.362;
+        %tmp.364 = 1;
+        %tmp.365 = add %tmp.363 %tmp.364;
+        invoke %tmp.350 %tmp.351(%tmp.352, %tmp.357, %tmp.360, %tmp.365);
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_136_31_140_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_136_8_140_8_if_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_136_8_140_8_if_end:
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_82_68_141_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc"; @line = 144; @symbol_functiondef = [drawBall,144,20,28]; @symbol_param<0> = [dc,144,29,31]; @symbol_param<1> = [ctrl,144,33,37]; ]
+    static
+    function drawBall(dc, ctrl) {
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_144_39_176_4_start:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 145 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_144_39_176_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_144_39_176_4_stop" ]
+        %p.1 = local;
+        symbol [ p %p.1 145 12 13 ];
+        %tmp.1 = lgetv %ctrl;
+        symbol [ ctrl %tmp.1 145 18 22 ];
+        symbol [ cam %tmp.2 145 23 26 ];
+        %tmp.2 = getv %tmp.1 :cam;
+        symbol [ worldToScreen %tmp.3 145 27 40 ];
+        %tmp.3 = getv function %tmp.2 :worldToScreen;
+        %tmp.4 = lgetv %ctrl;
+        symbol [ ctrl %tmp.4 145 41 45 ];
+        symbol [ physics %tmp.5 145 46 53 ];
+        %tmp.5 = getv %tmp.4 :physics;
+        symbol [ px %tmp.6 145 54 56 ];
+        %tmp.6 = getv %tmp.5 :px;
+        %tmp.7 = lgetv %ctrl;
+        symbol [ ctrl %tmp.7 146 42 46 ];
+        symbol [ physics %tmp.8 146 47 54 ];
+        %tmp.8 = getv %tmp.7 :physics;
+        symbol [ py %tmp.9 146 55 57 ];
+        %tmp.9 = getv %tmp.8 :py;
+        %tmp.10 = lgetv %ctrl;
+        symbol [ ctrl %tmp.10 147 42 46 ];
+        symbol [ cx %tmp.11 147 47 49 ];
+        %tmp.11 = getv %tmp.10 :cx;
+        %tmp.12 = lgetv %ctrl;
+        symbol [ ctrl %tmp.12 147 51 55 ];
+        symbol [ cy %tmp.13 147 56 58 ];
+        %tmp.13 = getv %tmp.12 :cy;
+        %tmp.14 = invoke %tmp.2 %tmp.3(%tmp.6, %tmp.9, %tmp.11, %tmp.13);
+        lputv %p.1 %tmp.14;
+        symbol [ p %p.1 145 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 148 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_144_39_176_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_144_39_176_4_stop" ]
+        %bx.2 = local;
+        symbol [ bx %bx.2 148 12 14 ];
+        %tmp.15 = lgetv %p.1;
+        symbol [ p %tmp.15 148 18 19 ];
+        %tmp.16 = 0;
+        %tmp.17 = agetv %tmp.15 %tmp.16;
+        lputv %bx.2 %tmp.17;
+        symbol [ bx %bx.2 148 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 148 24 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_144_39_176_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_144_39_176_4_stop" ]
+        %by.3 = local;
+        symbol [ by %by.3 148 28 30 ];
+        %tmp.18 = lgetv %p.1;
+        symbol [ p %tmp.18 148 33 34 ];
+        %tmp.19 = 1;
+        %tmp.20 = agetv %tmp.18 %tmp.19;
+        lputv %by.3 %tmp.20;
+        symbol [ by %by.3 148 28 30 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 150 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_144_39_176_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_144_39_176_4_stop" ]
+        %dropY.4 = local;
+        symbol [ dropY %dropY.4 150 12 17 ];
+        %tmp.21 = 0;
+        lputv %dropY.4 %tmp.21;
+        symbol [ dropY %dropY.4 150 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 151 8 ]
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_151_8_154_8_if_stmt:
+        %tmp.22 = lgetv %ctrl;
+        symbol [ ctrl %tmp.22 151 12 16 ];
+        symbol [ state %tmp.23 151 17 22 ];
+        %tmp.23 = getv %tmp.22 :state;
+        symbol [ SR_FALL %tmp.25 151 26 33 ];
+        %tmp.25 = getv ? :SR_FALL;
+        %tmp.26 = eq %tmp.23 %tmp.25;
+        bf %tmp.26 @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_151_8_154_8_if_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_151_8_154_8_if_true:
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_151_35_154_8_start:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 152 12 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_151_35_154_8_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_151_35_154_8_stop" ]
+        %t.5 = local;
+        symbol [ t %t.5 152 16 17 ];
+        %tmp.27 = lgetv %ctrl;
+        symbol [ ctrl %tmp.27 152 20 24 ];
+        symbol [ fallT %tmp.28 152 25 30 ];
+        %tmp.28 = getv %tmp.27 :fallT;
+        symbol [ toFloat %tmp.29 152 31 38 ];
+        %tmp.29 = getv function %tmp.28 :toFloat;
+        %tmp.30 = invoke %tmp.28 %tmp.29();
+        lputv %t.5 %tmp.30;
+        symbol [ t %t.5 152 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 153 12 ]
+        symbol [ SR_FALL_GRAV %tmp.32 153 22 34 ];
+        %tmp.32 = getv ? :SR_FALL_GRAV;
+        symbol [ toFloat %tmp.33 153 35 42 ];
+        %tmp.33 = getv function %tmp.32 :toFloat;
+        %tmp.34 = invoke %tmp.32 %tmp.33();
+        %tmp.35 = 100.0;
+        %tmp.36 = div %tmp.34 %tmp.35;
+        %tmp.37 = lgetv %t.5;
+        symbol [ t %tmp.37 153 56 57 ];
+        %tmp.38 = mul %tmp.36 %tmp.37;
+        %tmp.39 = lgetv %t.5;
+        symbol [ t %tmp.39 153 60 61 ];
+        %tmp.40 = mul %tmp.38 %tmp.39;
+        symbol [ toNumber %tmp.41 153 63 71 ];
+        %tmp.41 = getv function %tmp.40 :toNumber;
+        %tmp.42 = invoke %tmp.40 %tmp.41();
+        lputv %dropY.4 %tmp.42;
+        symbol [ dropY %dropY.4 153 12 17 ];
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_151_35_154_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_151_8_154_8_if_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_151_8_154_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 156 8 ]
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_156_8_159_8_if_stmt:
+        %tmp.43 = lgetv %ctrl;
+        symbol [ ctrl %tmp.43 156 12 16 ];
+        symbol [ state %tmp.44 156 17 22 ];
+        %tmp.44 = getv %tmp.43 :state;
+        symbol [ SR_PLAY %tmp.46 156 26 33 ];
+        %tmp.46 = getv ? :SR_PLAY;
+        %tmp.47 = eq %tmp.44 %tmp.46;
+        bf %tmp.47 @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_156_8_159_8_if_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_156_8_159_8_if_true:
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_156_35_159_8_start:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 157 12 ]
+        %tmp.48 = lgetv %dc;
+        symbol [ dc %tmp.48 157 12 14 ];
+        symbol [ setColor %tmp.49 157 15 23 ];
+        %tmp.49 = getv function %tmp.48 :setColor;
+        %tmp.50 = 0x0A0F18;
+        symbol [ Graphics %tmp.51 157 34 42 ];
+        %tmp.51 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.52 157 43 60 ];
+        %tmp.52 = getv %tmp.51 :COLOR_TRANSPARENT;
+        invoke %tmp.48 %tmp.49(%tmp.50, %tmp.52);
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 158 12 ]
+        %tmp.53 = lgetv %dc;
+        symbol [ dc %tmp.53 158 12 14 ];
+        symbol [ fillRectangle %tmp.54 158 15 28 ];
+        %tmp.54 = getv function %tmp.53 :fillRectangle;
+        %tmp.55 = lgetv %bx.2;
+        symbol [ bx %tmp.55 158 29 31 ];
+        %tmp.56 = 5;
+        %tmp.57 = sub %tmp.55 %tmp.56;
+        %tmp.58 = lgetv %by.3;
+        symbol [ by %tmp.58 158 37 39 ];
+        %tmp.59 = 1;
+        %tmp.60 = sub %tmp.58 %tmp.59;
+        %tmp.61 = 11;
+        %tmp.62 = 3;
+        invoke %tmp.53 %tmp.54(%tmp.57, %tmp.60, %tmp.61, %tmp.62);
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_156_35_159_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_156_8_159_8_if_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_156_8_159_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 161 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_144_39_176_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_144_39_176_4_stop" ]
+        %ballR.6 = local;
+        symbol [ ballR %ballR.6 161 12 17 ];
+        %tmp.63 = 6;
+        lputv %ballR.6 %tmp.63;
+        symbol [ ballR %ballR.6 161 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 162 8 ]
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_162_8_165_8_if_stmt:
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_162_12_162_66_begin:
+        %tmp.64 = lgetv %ctrl;
+        symbol [ ctrl %tmp.64 162 12 16 ];
+        symbol [ state %tmp.65 162 17 22 ];
+        %tmp.65 = getv %tmp.64 :state;
+        symbol [ SR_FALL %tmp.67 162 26 33 ];
+        %tmp.67 = getv ? :SR_FALL;
+        %tmp.68 = eq %tmp.65 %tmp.67;
+        bf %tmp.68 @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_162_8_165_8_if_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_162_37_162_66_true:
+        %tmp.69 = lgetv %ctrl;
+        symbol [ ctrl %tmp.69 162 37 41 ];
+        symbol [ fallT %tmp.70 162 42 47 ];
+        %tmp.70 = getv %tmp.69 :fallT;
+        symbol [ SR_FALL_TICKS %tmp.72 162 50 63 ];
+        %tmp.72 = getv ? :SR_FALL_TICKS;
+        %tmp.73 = 6;
+        %tmp.74 = sub %tmp.72 %tmp.73;
+        %tmp.75 = gt %tmp.70 %tmp.74;
+        push %tmp.75;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_162_37_162_66_end:
+        %tmp.76 = phi [%tmp.68 @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_162_12_162_66_begin] [%tmp.75 @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_162_37_162_66_true] [%tmp.76 @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_162_37_162_66_end];
+        bf %tmp.76 @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_162_8_165_8_if_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_162_8_165_8_if_true:
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_162_69_165_8_start:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 163 12 ]
+        %tmp.77 = lgetv %ballR.6;
+        symbol [ ballR %tmp.77 163 20 25 ];
+        symbol [ SR_FALL_TICKS %tmp.79 163 29 42 ];
+        %tmp.79 = getv ? :SR_FALL_TICKS;
+        %tmp.80 = lgetv %ctrl;
+        symbol [ ctrl %tmp.80 163 45 49 ];
+        symbol [ fallT %tmp.81 163 50 55 ];
+        %tmp.81 = getv %tmp.80 :fallT;
+        %tmp.82 = sub %tmp.79 %tmp.81;
+        %tmp.83 = 2;
+        %tmp.84 = div %tmp.82 %tmp.83;
+        %tmp.85 = sub %tmp.77 %tmp.84;
+        lputv %ballR.6 %tmp.85;
+        symbol [ ballR %ballR.6 163 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 164 12 ]
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_164_12_164_40_if_stmt:
+        %tmp.86 = lgetv %ballR.6;
+        symbol [ ballR %tmp.86 164 16 21 ];
+        %tmp.87 = 2;
+        %tmp.88 = lt %tmp.86 %tmp.87;
+        bf %tmp.88 @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_164_12_164_40_if_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_164_12_164_40_if_true:
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_164_27_164_40_start:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 164 29 ]
+        %tmp.89 = 2;
+        lputv %ballR.6 %tmp.89;
+        symbol [ ballR %ballR.6 164 29 34 ];
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_164_27_164_40_stop:
+        goto @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_164_12_164_40_if_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_164_12_164_40_if_end:
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_162_69_165_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_162_8_165_8_if_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_162_8_165_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 166 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_144_39_176_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_144_39_176_4_stop" ]
+        %by2.7 = local;
+        symbol [ by2 %by2.7 166 12 15 ];
+        %tmp.90 = lgetv %by.3;
+        symbol [ by %tmp.90 166 18 20 ];
+        %tmp.91 = 6;
+        %tmp.92 = sub %tmp.90 %tmp.91;
+        %tmp.93 = lgetv %dropY.4;
+        symbol [ dropY %tmp.93 166 27 32 ];
+        %tmp.94 = add %tmp.92 %tmp.93;
+        lputv %by2.7 %tmp.94;
+        symbol [ by2 %by2.7 166 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 168 8 ]
+        %tmp.95 = lgetv %dc;
+        symbol [ dc %tmp.95 168 8 10 ];
+        symbol [ setColor %tmp.96 168 11 19 ];
+        %tmp.96 = getv function %tmp.95 :setColor;
+        %tmp.97 = 0x223044;
+        symbol [ Graphics %tmp.98 168 30 38 ];
+        %tmp.98 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.99 168 39 56 ];
+        %tmp.99 = getv %tmp.98 :COLOR_TRANSPARENT;
+        invoke %tmp.95 %tmp.96(%tmp.97, %tmp.99);
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 169 8 ]
+        %tmp.100 = lgetv %dc;
+        symbol [ dc %tmp.100 169 8 10 ];
+        symbol [ fillCircle %tmp.101 169 11 21 ];
+        %tmp.101 = getv function %tmp.100 :fillCircle;
+        %tmp.102 = lgetv %bx.2;
+        symbol [ bx %tmp.102 169 22 24 ];
+        %tmp.103 = lgetv %by2.7;
+        symbol [ by2 %tmp.103 169 26 29 ];
+        %tmp.104 = lgetv %ballR.6;
+        symbol [ ballR %tmp.104 169 31 36 ];
+        %tmp.105 = 1;
+        %tmp.106 = add %tmp.104 %tmp.105;
+        invoke %tmp.100 %tmp.101(%tmp.102, %tmp.103, %tmp.106);
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 171 8 ]
+        %tmp.107 = lgetv %dc;
+        symbol [ dc %tmp.107 171 8 10 ];
+        symbol [ setColor %tmp.108 171 11 19 ];
+        %tmp.108 = getv function %tmp.107 :setColor;
+        %tmp.109 = 0xDCE6F8;
+        symbol [ Graphics %tmp.110 171 30 38 ];
+        %tmp.110 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.111 171 39 56 ];
+        %tmp.111 = getv %tmp.110 :COLOR_TRANSPARENT;
+        invoke %tmp.107 %tmp.108(%tmp.109, %tmp.111);
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 172 8 ]
+        %tmp.112 = lgetv %dc;
+        symbol [ dc %tmp.112 172 8 10 ];
+        symbol [ fillCircle %tmp.113 172 11 21 ];
+        %tmp.113 = getv function %tmp.112 :fillCircle;
+        %tmp.114 = lgetv %bx.2;
+        symbol [ bx %tmp.114 172 22 24 ];
+        %tmp.115 = lgetv %by2.7;
+        symbol [ by2 %tmp.115 172 26 29 ];
+        %tmp.116 = lgetv %ballR.6;
+        symbol [ ballR %tmp.116 172 31 36 ];
+        invoke %tmp.112 %tmp.113(%tmp.114, %tmp.115, %tmp.116);
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 174 8 ]
+        %tmp.117 = lgetv %dc;
+        symbol [ dc %tmp.117 174 8 10 ];
+        symbol [ setColor %tmp.118 174 11 19 ];
+        %tmp.118 = getv function %tmp.117 :setColor;
+        %tmp.119 = 0xFFFFFF;
+        symbol [ Graphics %tmp.120 174 30 38 ];
+        %tmp.120 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.121 174 39 56 ];
+        %tmp.121 = getv %tmp.120 :COLOR_TRANSPARENT;
+        invoke %tmp.117 %tmp.118(%tmp.119, %tmp.121);
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc" 175 8 ]
+        %tmp.122 = lgetv %dc;
+        symbol [ dc %tmp.122 175 8 10 ];
+        symbol [ fillRectangle %tmp.123 175 11 24 ];
+        %tmp.123 = getv function %tmp.122 :fillRectangle;
+        %tmp.124 = lgetv %bx.2;
+        symbol [ bx %tmp.124 175 25 27 ];
+        %tmp.125 = 2;
+        %tmp.126 = sub %tmp.124 %tmp.125;
+        %tmp.127 = lgetv %by2.7;
+        symbol [ by2 %tmp.127 175 33 36 ];
+        %tmp.128 = 3;
+        %tmp.129 = sub %tmp.127 %tmp.128;
+        %tmp.130 = 2;
+        %tmp.131 = 2;
+        invoke %tmp.122 %tmp.123(%tmp.126, %tmp.129, %tmp.130, %tmp.131);
+_Users_kkorolczuk_work_garmin_skyroll_source_RenderSystem_mc_144_39_176_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/RenderSystem.mc"; @line = 15; ]
+<init> {
+}

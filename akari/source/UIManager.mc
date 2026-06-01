@@ -190,10 +190,18 @@ class UIManager {
         }
 
         if (ctrl.curR == r && ctrl.curC == c) {
-            dc.setColor(0xFFEE66, Graphics.COLOR_TRANSPARENT);
-            for (var t = 0; t < 2; t++) {
-                dc.drawRectangle(x + t, y + t, s - 2 * t, s - 2 * t);
-            }
+            // High-contrast cursor: dark outer ring + saturated red-
+            // orange band.  The previous light-yellow frame blended
+            // into the warm-cream lit-cell background; this version
+            // pops against BOTH light (white/lit) and dark (wall)
+            // cells because the dark ring guarantees edge contrast
+            // and the bright band guarantees fill contrast.
+            dc.setColor(0x331100, Graphics.COLOR_TRANSPARENT);
+            dc.drawRectangle(x,     y,     s,     s);
+            dc.drawRectangle(x + 3, y + 3, s - 6, s - 6);
+            dc.setColor(0xFF4422, Graphics.COLOR_TRANSPARENT);
+            dc.drawRectangle(x + 1, y + 1, s - 2, s - 2);
+            dc.drawRectangle(x + 2, y + 2, s - 4, s - 4);
         }
     }
 

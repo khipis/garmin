@@ -97,9 +97,9 @@ class BitochiMinigolfView extends WatchUi.View {
         _ballR = 14; _holeR = 20;
         // Par tuned per layout difficulty (warm-up → finale).
         _par = [
-            2, 3, 3, 3, 3,    // 1-5  intro / shapes / hazards
-            3, 3, 3, 4, 3,    // 6-10 windmill / pinball / lake / funnel
-            3, 4, 3, 4, 3,    // 11-15 slalom / eye / tunnel / pinball / cross
+            2, 3, 3, 4, 3,    // 1-5  intro / L-bend / U-block / Z-corridor / island
+            3, 3, 3, 4, 3,    // 6-10 windmill / diamond / bumpers / hourglass / funnel
+            3, 4, 3, 4, 4,    // 11-15 slalom / eye / tunnel / pinball / cross-turn
             4, 3, 4, 4, 5     // 16-20 volcano / snake / triangle / spiral / boss
         ];
         _scoreCard = new [MG_HOLES];
@@ -154,21 +154,48 @@ class BitochiMinigolfView extends WatchUi.View {
         _vx = _vx * 96 / 100;
         _vy = _vy * 96 / 100;
 
-        // Adaptive substep: faster ball → more steps so we never miss a wall
+        // ── Tunneling-proof adaptive substep ──────────────────────────
+        // The wall-collision routine only inspects the ball's position
+        // AFTER each substep.  If the per-substep displacement ever
+        // exceeds the ball radius, a fast-moving ball can leap over a
+        // thin wall without the test ever seeing the ball within range
+        // of the segment — i.e. it tunnels through.  Players read this
+        // as "white lines can be crossed with a hard enough shot".
+        //
+        // We pick SUB so per-substep displacement is well under HALF
+        // the ball radius — that's a 2× safety margin over the bare
+        // minimum (radius).  In course-space×10 fixed units that means
+        // step ≤ _ballR · 5 = 70 for the default _ballR = 14.  Max
+        // possible shot speed at full power ≈ 2522 → SUB ≈ 37, capped
+        // at 40 to keep per-tick cost bounded.  The extra margin makes
+        // bounces against thin white rails feel as solid as the chunky
+        // brown bumper walls — they catch the ball even at a glancing
+        // angle near a corner where a tighter substep budget could
+        // squeeze a fast ball through the seam.
         var spd2 = _vx * _vx + _vy * _vy;
+        var safeStepFixed = _ballR * 5;   // = 70 for default ballR
         var SUB = 3;
-        if (spd2 > 90000)   { SUB = 4; }
-        if (spd2 > 250000)  { SUB = 5; }
-        if (spd2 > 500000)  { SUB = 6; }
+        if (spd2 > safeStepFixed * safeStepFixed * 9) {
+            var spdF = Math.sqrt(spd2.toFloat());
+            SUB = (spdF / safeStepFixed.toFloat() + 1.0).toNumber();
+            if (SUB < 3)  { SUB = 3;  }
+            if (SUB > 40) { SUB = 40; }
+        }
         var svx = _vx / SUB; var svy = _vy / SUB;
 
         for (var s = 0; s < SUB; s++) {
+            // Stash the pre-step position so `resolveWall` can do
+            // side-aware collision (i.e. detect a tunneling pass and
+            // bounce the ball back to the side it CAME FROM, not the
+            // side it currently happens to be on after over-shooting).
+            var pbx = _bx;
+            var pby = _by;
             _bx += svx;
             _by += svy;
 
             for (var i = 0; i < _walls.size(); i++) {
                 var w = _walls[i];
-                resolveWall(w[0], w[1], w[2], w[3]);
+                resolveWall(w[0], w[1], w[2], w[3], pbx, pby);
             }
             for (var i = 0; i < _obstacles.size(); i++) {
                 var ob = _obstacles[i];
@@ -202,13 +229,28 @@ class BitochiMinigolfView extends WatchUi.View {
             }
         }
 
-        // Out-of-bounds check (course space 0-1000) — restore last shot origin
-        var cx = _bx / 10; var cy = _by / 10;
-        if (cx < -50 || cx > 1050 || cy < -50 || cy > 1050) {
-            _bx = _lastBx; _by = _lastBy;
-            _vx = 0; _vy = 0;
-            _gs = MG_AIM;
-            return;
+        // Course-perimeter safety net — invisible bouncy fence around
+        // the entire 0-1000 play area.  If a ball ever squeezes past
+        // a corner of the hole's walls, it ricochets back inward
+        // instead of disappearing off-screen and respawning at the
+        // tee.  Players expect the white visible edges of the play
+        // area to bounce the ball just like a solid wall, and this
+        // guarantees that — even on holes whose `_walls` don't fully
+        // hug the green's outline.
+        var rFixed = _ballR * 10;
+        if (_bx < rFixed) {
+            _bx = rFixed;
+            if (_vx < 0) { _vx = -_vx * 97 / 100; }
+        } else if (_bx > 10000 - rFixed) {
+            _bx = 10000 - rFixed;
+            if (_vx > 0) { _vx = -_vx * 97 / 100; }
+        }
+        if (_by < rFixed) {
+            _by = rFixed;
+            if (_vy < 0) { _vy = -_vy * 97 / 100; }
+        } else if (_by > 10000 - rFixed) {
+            _by = 10000 - rFixed;
+            if (_vy > 0) { _vy = -_vy * 97 / 100; }
         }
 
         // Stop threshold — slightly higher so ball settles cleanly near hole
@@ -219,56 +261,143 @@ class BitochiMinigolfView extends WatchUi.View {
         }
     }
 
-    // Wall segment collision (line segment reflection).
-    // Handles ball arriving from EITHER side of the wall — normal is flipped
-    // based on which side the ball is on, so inner walls bounce correctly.
-    hidden function resolveWall(x1, y1, x2, y2) {
+    // Wall segment collision — TUNNEL-PROOF, billiards-style reflection.
+    //
+    // Units bible (this is where the old code was secretly broken):
+    //   _bx, _by   : course units × 10        (fixed-point position)
+    //   _vx, _vy   : course units × 10 / tick (fixed-point velocity)
+    //   wx, wy     : course units             (wall direction vector)
+    //   len        : course units             (wall length, integer)
+    //   nx, ny     : unit_vector × 10         (wall normal, ×10 scale)
+    //
+    // Dot product of velocity with the UNIT normal (n_unit = n / 10):
+    //   v · n_unit = (_vx + _vy) · (nx/10, ny/10)
+    //              = (_vx · nx + _vy · ny) / 10
+    // Reflection in FIXED units:
+    //   _vx_new = _vx − 2 · (v · n_unit) · nx_unit
+    //           = _vx − 2 · ((_vx*nx + _vy*ny)/10) · (nx/10)
+    //           = _vx − 2 · (_vx*nx + _vy*ny) * nx / 100
+    //
+    // So the canonical billiards-style reflection here is:
+    //   var vd = (_vx*nxOut + _vy*nyOut);   // ×100 of v·n_unit
+    //   _vx -= nxOut * vd / 50;             //  ÷50 = ÷100 × 2
+    //   _vy -= nyOut * vd / 50;
+    //
+    // The old code used `vd / 100` for the dot and then `* 2 / 10`
+    // for the reflection — that's 10× weaker than physically
+    // correct.  Players saw the ball lose the perpendicular
+    // component asymptotically over many substeps with the parallel
+    // component fully preserved → it "slid" along the wall instead
+    // of bouncing off.  Fixed below.
+    //
+    // Side tracking (tunnel-proof): `pbx, pby` is the ball position
+    // BEFORE this substep.  We compute the signed perp distance
+    // before/after and detect sign flips — if it flipped while
+    // inside the segment, the ball tunneled; we push it back to the
+    // ORIGINAL side and reflect velocity.
+    //
+    // Both white rails and brown bumpers: 97 % restitution.
+    hidden function resolveWall(x1, y1, x2, y2, pbx, pby) {
         var wx = (x2 - x1); var wy = (y2 - y1);
         var lenSq = wx * wx + wy * wy;
         if (lenSq == 0) { return; }
         var len = Math.sqrt(lenSq).toNumber();
-        // Unit normal × 10 (CCW perpendicular)
+        if (len == 0) { return; }
+
+        // Wall normal × 10 (CCW perpendicular).
         var nx = -wy * 10 / len; var ny = wx * 10 / len;
 
-        // Project ball onto the segment — clamp t to [0, lenSq] so endcaps
-        // are handled like a rounded capsule (push from nearest endpoint).
-        var dx = _bx / 10 - x1; var dy = _by / 10 - y1;
+        var bcx = _bx / 10; var bcy = _by / 10;
+        var pcx = pbx / 10; var pcy = pby / 10;
+
+        // Signed perp distance × 10  (sign-only checks below).
+        var sdNowS  = (bcx - x1) * nx + (bcy - y1) * ny;
+        var sdPrevS = (pcx - x1) * nx + (pcy - y1) * ny;
+
+        // Find nearest point on segment to the CURRENT ball.
+        var dx = bcx - x1; var dy = bcy - y1;
         var t = dx * wx + dy * wy;
         var px; var py;
-        if (t <= 0) {
-            px = x1; py = y1;
-        } else if (t >= lenSq) {
-            px = x2; py = y2;
-        } else {
-            // Project to interior of segment
+        var inSegment = (t > 0 && t < lenSq);
+        if (t <= 0)         { px = x1; py = y1; }
+        else if (t >= lenSq) { px = x2; py = y2; }
+        else {
             px = x1 + (wx * t / lenSq);
             py = y1 + (wy * t / lenSq);
         }
-        var rx = _bx / 10 - px; var ry = _by / 10 - py;
+        var rx = bcx - px; var ry = bcy - py;
         var dist2 = rx * rx + ry * ry;
-        if (dist2 >= _ballR * _ballR) { return; }
 
-        var dist = Math.sqrt(dist2).toNumber();
-        if (dist == 0) {
-            // Degenerate — push along the wall normal arbitrarily
-            rx = nx; ry = ny; dist = 10;
+        // Tunnel: sign flipped between substeps & crossing inside segment.
+        var tunneled = (inSegment && sdPrevS != 0 && sdNowS != 0
+                        && ((sdPrevS > 0) != (sdNowS > 0)));
+        var normalCollide = (dist2 < _ballR * _ballR);
+        if (!tunneled && !normalCollide) { return; }
+
+        // Outward direction = toward the side the ball came from.
+        var fromPlus = (sdPrevS >= 0);
+
+        // Endcap fallback (ball nearer an endpoint than the wall line)
+        if (!inSegment && !tunneled) {
+            var dist = Math.sqrt(dist2).toNumber();
+            if (dist == 0) {
+                // Exactly on endpoint — push along the prev-side normal.
+                var ex = fromPlus ? nx : -nx;
+                var ey = fromPlus ? ny : -ny;
+                _bx += ex * _ballR;
+                _by += ey * _ballR;
+                // Reflect along ex, ey (×10 unit vector).
+                var ved = (_vx * ex + _vy * ey);
+                if (ved < 0) {
+                    // Reflection: subtract 2·(v·n_unit)·n_unit, scaled
+                    // to fixed:  ved / 50  (see units bible above).
+                    _vx -= ex * ved / 50;
+                    _vy -= ey * ved / 50;
+                    _vx = _vx * 97 / 100;
+                    _vy = _vy * 97 / 100;
+                }
+                return;
+            }
+            // Radial push from endpoint (×10 unit vector toward ball).
+            var ux = rx * 10 / dist; var uy = ry * 10 / dist;
+            var overlap = _ballR - dist;
+            _bx += ux * overlap;
+            _by += uy * overlap;
+            var vdu = (_vx * ux + _vy * uy);
+            if (vdu < 0) {
+                _vx -= ux * vdu / 50;
+                _vy -= uy * vdu / 50;
+                _vx = _vx * 97 / 100;
+                _vy = _vy * 97 / 100;
+            }
+            return;
         }
-        // Outward unit vector toward ball centre × 10 (scaled like nx/ny)
-        var ux = rx * 10 / dist; var uy = ry * 10 / dist;
-        // Push out so ball just touches the wall
-        var overlap = _ballR - dist;
-        _bx += ux * overlap;
-        _by += uy * overlap;
 
-        // Reflect velocity only if moving toward the wall
-        var vDotU = (_vx * ux + _vy * uy) / 100;
-        if (vDotU < 0) {
-            _vx -= ux * vDotU * 2 / 10;
-            _vy -= uy * vDotU * 2 / 10;
-            // White rails lose ~5%; brown bumper walls only ~3% (very springy).
-            var keep = _brownWalls ? 97 : 95;
-            _vx = _vx * keep / 100;
-            _vy = _vy * keep / 100;
+        // In-segment resolution — push along the WALL NORMAL toward
+        // the prev side, regardless of whether the ball tunneled or
+        // is just inside R.  Then reflect velocity along that normal.
+        var nxOut = fromPlus ? nx : -nx;
+        var nyOut = fromPlus ? ny : -ny;
+
+        // Signed distance in course units; positive on the prev side.
+        var sdNowCu = sdNowS / 10;
+        var signedFromPrev = fromPlus ? sdNowCu : -sdNowCu;
+        var pushAmt = _ballR - signedFromPrev;
+        if (pushAmt < 0) { pushAmt = 0; }
+        // nxOut/nyOut are ×10, pushAmt is course units → product is
+        // in fixed (course × 10), same scale as _bx/_by.
+        _bx += nxOut * pushAmt;
+        _by += nyOut * pushAmt;
+
+        // Billiards-style reflection.  vdn = (_vx*nxOut + _vy*nyOut)
+        // is 100× the actual v·n_unit; the reflection is
+        // 2·(v·n_unit)·n_unit_fixed = vdn / 50 along nxOut, nyOut.
+        var vdn = (_vx * nxOut + _vy * nyOut);
+        if (vdn < 0) {
+            _vx -= nxOut * vdn / 50;
+            _vy -= nyOut * vdn / 50;
+            _vx = _vx * 97 / 100;
+            _vy = _vy * 97 / 100;
         }
     }
 
@@ -471,36 +600,40 @@ class BitochiMinigolfView extends WatchUi.View {
             ];
             _obstacles = [[470,300, 18,160]];
         } else if (idx == 2) {
-            // 3. Dogleg (inverted U) — go up, around, then down
-            _tx=140; _ty=820; _hx=860; _hy=820;
+            // 3. U-Turn — central block sticking up from the bottom
+            //    rail forces the player to loft the ball OVER the
+            //    obstacle (or thread the narrow lane along one side).
+            //    Cleaner geometry than the old inverted-U dogleg —
+            //    just a closed outer rectangle with a 3-walled inner
+            //    "tongue" rooted on the bottom rail.
+            _tx=140; _ty=800; _hx=860; _hy=800;
             _walls = [
-                [100,200, 900,200],     // top wall
-                [900,200, 900,900],     // right outer
-                [900,900, 600,900],     // bottom right
-                [600,900, 600,400],     // inner divider right
-                [600,400, 400,400],     // inner divider top
-                [400,400, 400,900],     // inner divider left
-                [400,900, 100,900],     // bottom left
-                [100,900, 100,200]      // left outer
+                [100,200, 900,200],     // outer top
+                [900,200, 900,900],     // outer right
+                [900,900, 100,900],     // outer bottom
+                [100,900, 100,200],     // outer left
+                [350,420, 650,420],     // block top
+                [650,420, 650,900],     // block right (touches outer bottom)
+                [350,900, 350,420]      // block left (touches outer bottom)
             ];
-            _obstacles = [[250,300, 50,30], [750,300, 50,30]];
         } else if (idx == 3) {
-            // 4. Z-corridor — three connected lanes with proper openings
-            // Bottom lane (x100..700, y700..900) opens up at x300..700 → bridge.
-            // Bridge (x300..700, y400..700) opens up at x300..700 to top lane.
-            // Top lane (x300..900, y100..400).
-            _tx=160; _ty=820; _hx=840; _hy=180;
+            // 4. Z-Corridor — three connected lanes shaped like a Z.
+            //    Bottom lane (full width) → vertical bridge on the
+            //    right → top lane (full width).  Tee and hole sit on
+            //    opposite ends of the LEFT edge so the ball has to
+            //    trace the full Z: right ⇒ up ⇒ left.
+            _tx=180; _ty=800; _hx=180; _hy=200;
             _walls = [
-                [100,700, 300,700],   // bottom lane top (left half — opening x300..700)
-                [700,700, 700,900],   // bottom lane right
-                [700,900, 100,900],   // bottom lane bottom
-                [100,900, 100,700],   // bottom lane left
-                [300,400, 300,700],   // bridge left
-                [700,400, 700,700],   // bridge right
-                [300,100, 300,400],   // top lane left
-                [300,100, 900,100],   // top lane top
-                [900,100, 900,400],   // top lane right
-                [700,400, 900,400]    // top lane bottom (right half — opening x300..700)
+                // outer rect
+                [100,100, 900,100],
+                [900,100, 900,900],
+                [900,900, 100,900],
+                [100,900, 100,100],
+                // inner Z dividers (each leaves the right 1/3 open
+                // so balls transition between lanes via the bridge)
+                [100,400, 600,400],     // top divider (gap at x=600..900)
+                [600,400, 600,700],     // bridge left wall
+                [100,700, 600,700]      // bottom divider (gap at x=600..900)
             ];
         } else if (idx == 4) {
             // 5. Island Green — water lake, two channels around it (top & bottom)
@@ -557,22 +690,31 @@ class BitochiMinigolfView extends WatchUi.View {
                 [500,500, 32,32]
             ];
         } else if (idx == 8) {
-            // 9. Bowtie / Hourglass — two trapezoid bowls joined by a narrow waist.
-            // Must thread the 60-wide waist (~3 ball diameters) without scraping.
-            _tx=200; _ty=200; _hx=800; _hy=800;
+            // 9. Hourglass — two trapezoid bowls joined by a narrow
+            //    waist.  Must thread the 60-wide waist (~3 ball
+            //    diameters) without scraping the converging walls.
+            //
+            //    Bowls widened from x=150 → x=100 (and 850 → 900) vs
+            //    the earlier design.  The previous geometry placed
+            //    the tee at (200, 200), but the left slope at that y
+            //    sat at x ≈ 208 — i.e. the tee was actually ~8 px
+            //    *outside* the bowl.  The resolver pushed the ball
+            //    sideways on frame 1 and the hole started with the
+            //    ball glued against the diagonal wall.
+            _tx=200; _ty=220; _hx=800; _hy=780;
             _brownWalls = true;
             _walls = [
                 // top bowl
-                [150,140, 850,140],   // top
-                [850,140, 530,470],   // right wall slopes inward
-                [150,140, 470,470],   // left wall slopes inward
-                // waist (vertical channel)
+                [100,140, 900,140],   // top
+                [900,140, 530,470],   // right slope
+                [100,140, 470,470],   // left slope
+                // waist (vertical channel — 60 c.u. wide ≈ 3 ball Ø)
                 [470,470, 470,530],
                 [530,470, 530,530],
                 // bottom bowl
-                [470,530, 150,860],
-                [530,530, 850,860],
-                [150,860, 850,860]    // bottom
+                [470,530, 100,860],
+                [530,530, 900,860],
+                [100,860, 900,860]    // bottom
             ];
             _obstacles = new [0];
             _water = new [0];
@@ -658,10 +800,13 @@ class BitochiMinigolfView extends WatchUi.View {
                 [380,720, 24,24], [620,720, 24,24]
             ];
         } else if (idx == 14) {
-            // 15. Cross — 4 arms meeting at centre, hole at far end
-            _tx=160; _ty=500; _hx=840; _hy=500;
+            // 15. Crossroads — plus-shaped fairway, but the hole is
+            //     now in the TOP arm (was at the far end of the
+            //     horizontal arm).  Tee in the left arm, hole in the
+            //     top arm, so the player has to make a clean 90° turn
+            //     at the centre using bumper-deflected bank shots.
+            _tx=160; _ty=500; _hx=500; _hy=200;
             _walls = [
-                // Horizontal arm
                 [100,400, 400,400],
                 [400,400, 400,150],
                 [400,150, 600,150],
@@ -675,7 +820,7 @@ class BitochiMinigolfView extends WatchUi.View {
                 [400,600, 100,600],
                 [100,600, 100,400]
             ];
-            _obstacles = [[500,500, 30,30]];
+            _obstacles = [[500,500, 24,24]];
         } else if (idx == 15) {
             // 16. Volcano — hole sits inside a water ring, narrow north approach lane
             _tx=140; _ty=500; _hx=580; _hy=500;

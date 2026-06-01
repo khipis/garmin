@@ -1,401 +1,2399 @@
-[ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc"; @line = 14; @symbol_usingdef<0> = [Toybox,14,6,12]; @symbol_usingdef<1> = [Math,14,13,17]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc"; @line = 27; @symbol_usingdef<0> = [Toybox,27,6,12]; @symbol_usingdef<1> = [Math,27,13,17]; ]
 using Toybox.Math;
-[ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc"; @line = 16; @symbol_classdef = [PhysicsEngine,16,6,19]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc"; @line = 29; @symbol_classdef = [PhysicsEngine,29,6,19]; ]
 class PhysicsEngine {
-    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc"; @line = 16; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc"; @line = 29; ]
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc"; @line = 16; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc"; @line = 29; ]
     static
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc"; @line = 20; @symbol_functiondef = [step,20,20,24]; @symbol_param<0> = [x,20,25,26]; @symbol_param<1> = [y,20,28,29]; @symbol_param<2> = [vx,20,31,33]; @symbol_param<3> = [vy,20,35,37]; @symbol_param<4> = [sw,20,39,41]; @symbol_param<5> = [sh,20,43,45]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc"; @line = 30; @position = 15; @symbol_vardef = [GRAVITY,30,15,22]; ]
     static
-    function step(x, y, vx, vy, sw, sh) {
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_20_47_28_4_start:
-[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 21 8 ]
-        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_20_47_28_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_20_47_28_4_stop" ]
-        %nx.1 = local;
-        symbol [ nx %nx.1 21 12 14 ];
-        %tmp.1 = lgetv %x;
-        symbol [ x %tmp.1 21 17 18 ];
-        %tmp.2 = lgetv %vx;
-        symbol [ vx %tmp.2 21 21 23 ];
-        %tmp.3 = add %tmp.1 %tmp.2;
-        lputv %nx.1 %tmp.3;
-        symbol [ nx %nx.1 21 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 22 8 ]
-        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_20_47_28_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_20_47_28_4_stop" ]
-        %ny.2 = local;
-        symbol [ ny %ny.2 22 12 14 ];
-        %tmp.4 = lgetv %y;
-        symbol [ y %tmp.4 22 17 18 ];
-        %tmp.5 = lgetv %vy;
-        symbol [ vy %tmp.5 22 21 23 ];
-        %tmp.6 = add %tmp.4 %tmp.5;
-        lputv %ny.2 %tmp.6;
-        symbol [ ny %ny.2 22 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 23 8 ]
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_23_8_24_43_if_stmt:
-        %tmp.7 = lgetv %nx.1;
-        symbol [ nx %tmp.7 23 12 14 ];
-        %tmp.8 = 0;
-        %tmp.9 = lt %tmp.7 %tmp.8;
-        bf %tmp.9 @_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_23_8_24_43_if_false;
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_23_8_24_43_if_true:
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_23_27_23_43_start:
-[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 23 29 ]
-        %tmp.10 = lgetv %nx.1;
-        symbol [ nx %tmp.10 23 34 36 ];
-        %tmp.11 = lgetv %sw;
-        symbol [ sw %tmp.11 23 39 41 ];
-        %tmp.12 = add %tmp.10 %tmp.11;
-        lputv %nx.1 %tmp.12;
-        symbol [ nx %nx.1 23 29 31 ];
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_23_27_23_43_stop:
-        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_23_8_24_43_if_end;
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_23_8_24_43_if_false:
-[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 24 13 ]
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_24_13_24_43_if_stmt:
-        %tmp.13 = lgetv %nx.1;
-        symbol [ nx %tmp.13 24 17 19 ];
-        %tmp.14 = lgetv %sw;
-        symbol [ sw %tmp.14 24 23 25 ];
-        %tmp.15 = gte %tmp.13 %tmp.14;
-        bf %tmp.15 @_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_24_13_24_43_if_end;
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_24_13_24_43_if_true:
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_24_27_24_43_start:
-[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 24 29 ]
-        %tmp.16 = lgetv %nx.1;
-        symbol [ nx %tmp.16 24 34 36 ];
-        %tmp.17 = lgetv %sw;
-        symbol [ sw %tmp.17 24 39 41 ];
-        %tmp.18 = sub %tmp.16 %tmp.17;
-        lputv %nx.1 %tmp.18;
-        symbol [ nx %nx.1 24 29 31 ];
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_24_27_24_43_stop:
-        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_24_13_24_43_if_end;
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_24_13_24_43_if_end:
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_23_8_24_43_if_end:
-[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 25 8 ]
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_25_8_26_43_if_stmt:
-        %tmp.19 = lgetv %ny.2;
-        symbol [ ny %tmp.19 25 12 14 ];
-        %tmp.20 = 0;
-        %tmp.21 = lt %tmp.19 %tmp.20;
-        bf %tmp.21 @_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_25_8_26_43_if_false;
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_25_8_26_43_if_true:
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_25_27_25_43_start:
-[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 25 29 ]
-        %tmp.22 = lgetv %ny.2;
-        symbol [ ny %tmp.22 25 34 36 ];
-        %tmp.23 = lgetv %sh;
-        symbol [ sh %tmp.23 25 39 41 ];
-        %tmp.24 = add %tmp.22 %tmp.23;
-        lputv %ny.2 %tmp.24;
-        symbol [ ny %ny.2 25 29 31 ];
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_25_27_25_43_stop:
-        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_25_8_26_43_if_end;
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_25_8_26_43_if_false:
-[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 26 13 ]
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_26_13_26_43_if_stmt:
-        %tmp.25 = lgetv %ny.2;
-        symbol [ ny %tmp.25 26 17 19 ];
-        %tmp.26 = lgetv %sh;
-        symbol [ sh %tmp.26 26 23 25 ];
-        %tmp.27 = gte %tmp.25 %tmp.26;
-        bf %tmp.27 @_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_26_13_26_43_if_end;
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_26_13_26_43_if_true:
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_26_27_26_43_start:
-[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 26 29 ]
-        %tmp.28 = lgetv %ny.2;
-        symbol [ ny %tmp.28 26 34 36 ];
-        %tmp.29 = lgetv %sh;
-        symbol [ sh %tmp.29 26 39 41 ];
-        %tmp.30 = sub %tmp.28 %tmp.29;
-        lputv %ny.2 %tmp.30;
-        symbol [ ny %ny.2 26 29 31 ];
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_26_27_26_43_stop:
-        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_26_13_26_43_if_end;
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_26_13_26_43_if_end:
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_25_8_26_43_if_end:
-[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 27 8 ]
-        %tmp.31 = newa 2;
-        %tmp.32 = lgetv %nx.1;
-        symbol [ nx %tmp.32 27 16 18 ];
-        %tmp.33 = dup %tmp.31;
-        %tmp.34 = aputv %tmp.33 0 %tmp.32;
-        %tmp.35 = lgetv %ny.2;
-        symbol [ ny %tmp.35 27 20 22 ];
-        %tmp.36 = dup %tmp.34;
-        %tmp.37 = aputv %tmp.36 1 %tmp.35;
-        ret %tmp.37;
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_20_47_28_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc"; @line = 31; @symbol_functiondef = [capV,31,20,24]; @symbol_param<0> = [vx,31,25,27]; @symbol_param<1> = [vy,31,29,31]; @symbol_param<2> = [maxMag,31,33,39]; ]
+    var GRAVITY = 0.28;
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc"; @line = 31; @position = 15; @symbol_vardef = [WALL_RESTIT,31,15,26]; ]
     static
-    function capV(vx, vy, maxMag) {
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_31_41_37_4_start:
-[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 32 8 ]
-        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_31_41_37_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_31_41_37_4_stop" ]
-        %v2.1 = local;
-        symbol [ v2 %v2.1 32 12 14 ];
-        %tmp.1 = lgetv %vx;
-        symbol [ vx %tmp.1 32 17 19 ];
-        %tmp.2 = lgetv %vx;
-        symbol [ vx %tmp.2 32 22 24 ];
-        %tmp.3 = mul %tmp.1 %tmp.2;
-        %tmp.4 = lgetv %vy;
-        symbol [ vy %tmp.4 32 27 29 ];
-        %tmp.5 = lgetv %vy;
-        symbol [ vy %tmp.5 32 32 34 ];
-        %tmp.6 = mul %tmp.4 %tmp.5;
-        %tmp.7 = add %tmp.3 %tmp.6;
-        lputv %v2.1 %tmp.7;
-        symbol [ v2 %v2.1 32 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 33 8 ]
-        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_31_41_37_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_31_41_37_4_stop" ]
-        %m2.2 = local;
-        symbol [ m2 %m2.2 33 12 14 ];
-        %tmp.8 = lgetv %maxMag;
-        symbol [ maxMag %tmp.8 33 17 23 ];
-        %tmp.9 = lgetv %maxMag;
-        symbol [ maxMag %tmp.9 33 26 32 ];
-        %tmp.10 = mul %tmp.8 %tmp.9;
-        lputv %m2.2 %tmp.10;
-        symbol [ m2 %m2.2 33 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 34 8 ]
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_34_8_34_41_if_stmt:
-        %tmp.11 = lgetv %v2.1;
-        symbol [ v2 %tmp.11 34 12 14 ];
-        %tmp.12 = lgetv %m2.2;
-        symbol [ m2 %tmp.12 34 18 20 ];
-        %tmp.13 = lte %tmp.11 %tmp.12;
-        bf %tmp.13 @_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_34_8_34_41_if_end;
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_34_8_34_41_if_true:
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_34_22_34_41_start:
-[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 34 24 ]
-        %tmp.14 = newa 2;
-        %tmp.15 = lgetv %vx;
-        symbol [ vx %tmp.15 34 32 34 ];
-        %tmp.16 = dup %tmp.14;
-        %tmp.17 = aputv %tmp.16 0 %tmp.15;
-        %tmp.18 = lgetv %vy;
-        symbol [ vy %tmp.18 34 36 38 ];
-        %tmp.19 = dup %tmp.17;
-        %tmp.20 = aputv %tmp.19 1 %tmp.18;
-        ret %tmp.20;
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_34_22_34_41_stop:
-        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_34_8_34_41_if_end;
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_34_8_34_41_if_end:
-[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 35 8 ]
-        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_31_41_37_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_31_41_37_4_stop" ]
-        %inv.3 = local;
-        symbol [ inv %inv.3 35 12 15 ];
-        %tmp.21 = lgetv %maxMag;
-        symbol [ maxMag %tmp.21 35 18 24 ];
-        symbol [ Math %tmp.22 35 27 31 ];
-        %tmp.22 = getm $.Toybox.Math;
-        symbol [ sqrt %tmp.23 35 32 36 ];
-        %tmp.23 = getv function %tmp.22 :sqrt;
-        %tmp.24 = lgetv %v2.1;
-        symbol [ v2 %tmp.24 35 37 39 ];
-        %tmp.25 = invoke %tmp.22 %tmp.23(%tmp.24);
-        %tmp.26 = div %tmp.21 %tmp.25;
-        lputv %inv.3 %tmp.26;
-        symbol [ inv %inv.3 35 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 36 8 ]
-        %tmp.27 = newa 2;
-        %tmp.28 = lgetv %vx;
-        symbol [ vx %tmp.28 36 16 18 ];
-        %tmp.29 = lgetv %inv.3;
-        symbol [ inv %tmp.29 36 21 24 ];
-        %tmp.30 = mul %tmp.28 %tmp.29;
-        %tmp.31 = dup %tmp.27;
-        %tmp.32 = aputv %tmp.31 0 %tmp.30;
-        %tmp.33 = lgetv %vy;
-        symbol [ vy %tmp.33 36 26 28 ];
-        %tmp.34 = lgetv %inv.3;
-        symbol [ inv %tmp.34 36 31 34 ];
-        %tmp.35 = mul %tmp.33 %tmp.34;
-        %tmp.36 = dup %tmp.32;
-        %tmp.37 = aputv %tmp.36 1 %tmp.35;
-        ret %tmp.37;
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_31_41_37_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc"; @line = 40; @symbol_functiondef = [distSq,40,20,26]; @symbol_param<0> = [x1,40,27,29]; @symbol_param<1> = [y1,40,31,33]; @symbol_param<2> = [x2,40,35,37]; @symbol_param<3> = [y2,40,39,41]; @symbol_param<4> = [sw,40,43,45]; @symbol_param<5> = [sh,40,47,49]; ]
+    var WALL_RESTIT = 0.86;
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc"; @line = 32; @position = 15; @symbol_vardef = [BUMP_RESTIT,32,15,26]; ]
     static
-    function distSq(x1, y1, x2, y2, sw, sh) {
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_40_51_46_4_start:
-[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 41 8 ]
-        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_40_51_46_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_40_51_46_4_stop" ]
-        %dx.1 = local;
-        symbol [ dx %dx.1 41 12 14 ];
-        %tmp.1 = lgetv %x1;
-        symbol [ x1 %tmp.1 41 17 19 ];
-        %tmp.2 = lgetv %x2;
-        symbol [ x2 %tmp.2 41 22 24 ];
-        %tmp.3 = sub %tmp.1 %tmp.2;
-        lputv %dx.1 %tmp.3;
-        symbol [ dx %dx.1 41 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 41 26 ]
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_41_26_41_50_if_stmt:
-        %tmp.4 = lgetv %dx.1;
-        symbol [ dx %tmp.4 41 30 32 ];
-        %tmp.5 = 0;
-        %tmp.6 = lt %tmp.4 %tmp.5;
-        bf %tmp.6 @_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_41_26_41_50_if_end;
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_41_26_41_50_if_true:
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_41_38_41_50_start:
-[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 41 40 ]
-        %tmp.7 = lgetv %dx.1;
-        symbol [ dx %tmp.7 41 46 48 ];
-        %tmp.8 = sub 0 %tmp.7;
-        lputv %dx.1 %tmp.8;
-        symbol [ dx %dx.1 41 40 42 ];
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_41_38_41_50_stop:
-        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_41_26_41_50_if_end;
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_41_26_41_50_if_end:
-[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 42 8 ]
-        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_40_51_46_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_40_51_46_4_stop" ]
-        %dy.2 = local;
-        symbol [ dy %dy.2 42 12 14 ];
-        %tmp.9 = lgetv %y1;
-        symbol [ y1 %tmp.9 42 17 19 ];
-        %tmp.10 = lgetv %y2;
-        symbol [ y2 %tmp.10 42 22 24 ];
-        %tmp.11 = sub %tmp.9 %tmp.10;
-        lputv %dy.2 %tmp.11;
-        symbol [ dy %dy.2 42 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 42 26 ]
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_42_26_42_50_if_stmt:
-        %tmp.12 = lgetv %dy.2;
-        symbol [ dy %tmp.12 42 30 32 ];
-        %tmp.13 = 0;
-        %tmp.14 = lt %tmp.12 %tmp.13;
-        bf %tmp.14 @_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_42_26_42_50_if_end;
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_42_26_42_50_if_true:
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_42_38_42_50_start:
-[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 42 40 ]
-        %tmp.15 = lgetv %dy.2;
-        symbol [ dy %tmp.15 42 46 48 ];
-        %tmp.16 = sub 0 %tmp.15;
-        lputv %dy.2 %tmp.16;
-        symbol [ dy %dy.2 42 40 42 ];
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_42_38_42_50_stop:
-        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_42_26_42_50_if_end;
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_42_26_42_50_if_end:
-[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 43 8 ]
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_43_8_43_41_if_stmt:
-        %tmp.17 = lgetv %dx.1;
-        symbol [ dx %tmp.17 43 12 14 ];
-        %tmp.18 = lgetv %sw;
-        symbol [ sw %tmp.18 43 17 19 ];
-        %tmp.19 = 2;
-        %tmp.20 = div %tmp.18 %tmp.19;
-        %tmp.21 = gt %tmp.17 %tmp.20;
-        bf %tmp.21 @_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_43_8_43_41_if_end;
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_43_8_43_41_if_true:
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_43_25_43_41_start:
-[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 43 27 ]
-        %tmp.22 = lgetv %sw;
-        symbol [ sw %tmp.22 43 32 34 ];
-        %tmp.23 = lgetv %dx.1;
-        symbol [ dx %tmp.23 43 37 39 ];
-        %tmp.24 = sub %tmp.22 %tmp.23;
-        lputv %dx.1 %tmp.24;
-        symbol [ dx %dx.1 43 27 29 ];
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_43_25_43_41_stop:
-        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_43_8_43_41_if_end;
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_43_8_43_41_if_end:
-[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 44 8 ]
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_44_8_44_41_if_stmt:
-        %tmp.25 = lgetv %dy.2;
-        symbol [ dy %tmp.25 44 12 14 ];
-        %tmp.26 = lgetv %sh;
-        symbol [ sh %tmp.26 44 17 19 ];
-        %tmp.27 = 2;
-        %tmp.28 = div %tmp.26 %tmp.27;
-        %tmp.29 = gt %tmp.25 %tmp.28;
-        bf %tmp.29 @_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_44_8_44_41_if_end;
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_44_8_44_41_if_true:
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_44_25_44_41_start:
-[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 44 27 ]
-        %tmp.30 = lgetv %sh;
-        symbol [ sh %tmp.30 44 32 34 ];
-        %tmp.31 = lgetv %dy.2;
-        symbol [ dy %tmp.31 44 37 39 ];
-        %tmp.32 = sub %tmp.30 %tmp.31;
-        lputv %dy.2 %tmp.32;
-        symbol [ dy %dy.2 44 27 29 ];
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_44_25_44_41_stop:
-        goto @_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_44_8_44_41_if_end;
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_44_8_44_41_if_end:
-[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 45 8 ]
-        %tmp.33 = lgetv %dx.1;
-        symbol [ dx %tmp.33 45 15 17 ];
-        %tmp.34 = lgetv %dx.1;
-        symbol [ dx %tmp.34 45 20 22 ];
-        %tmp.35 = mul %tmp.33 %tmp.34;
-        %tmp.36 = lgetv %dy.2;
-        symbol [ dy %tmp.36 45 25 27 ];
-        %tmp.37 = lgetv %dy.2;
-        symbol [ dy %tmp.37 45 30 32 ];
-        %tmp.38 = mul %tmp.36 %tmp.37;
-        %tmp.39 = add %tmp.35 %tmp.38;
-        ret %tmp.39;
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_40_51_46_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc"; @line = 49; @symbol_functiondef = [circlesHit,49,20,30]; @symbol_param<0> = [cx1,49,31,34]; @symbol_param<1> = [cy1,49,36,39]; @symbol_param<2> = [r1,49,41,43]; @symbol_param<3> = [cx2,49,45,48]; @symbol_param<4> = [cy2,49,50,53]; @symbol_param<5> = [r2,49,55,57]; @symbol_param<6> = [sw,49,59,61]; @symbol_param<7> = [sh,49,63,65]; ]
+    var BUMP_RESTIT = 0.92;
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc"; @line = 33; @position = 15; @symbol_vardef = [BUMP_KICK,33,15,24]; ]
     static
-    function circlesHit(cx1, cy1, r1, cx2, cy2, r2, sw, sh) {
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_49_67_53_4_start:
-[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 50 8 ]
-        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_49_67_53_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_49_67_53_4_stop" ]
-        %d2.1 = local;
-        symbol [ d2 %d2.1 50 12 14 ];
+    var BUMP_KICK = 2.1;
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc"; @line = 34; @position = 15; @symbol_vardef = [FLIP_RESTIT,34,15,26]; ]
+    static
+    var FLIP_RESTIT = 0.86;
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc"; @line = 35; @position = 15; @symbol_vardef = [FLIP_KICK,35,15,24]; ]
+    static
+    var FLIP_KICK = 1.4;
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc"; @line = 36; @position = 15; @symbol_vardef = [FLIP_BASE,36,15,24]; ]
+    static
+    var FLIP_BASE = 4.5;
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc"; @line = 37; @position = 15; @symbol_vardef = [FLIP_PASSIVE,37,15,27]; ]
+    static
+    var FLIP_PASSIVE = 1.6;
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc"; @line = 38; @position = 15; @symbol_vardef = [SLING_KICK,38,15,25]; ]
+    static
+    var SLING_KICK = 4.2;
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc"; @line = 39; @position = 15; @symbol_vardef = [MAX_SPEED,39,15,24]; ]
+    static
+    var MAX_SPEED = 14.0;
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc"; @line = 40; @position = 15; @symbol_vardef = [MIN_BOUNCE,40,15,25]; ]
+    static
+    var MIN_BOUNCE = 0.4;
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc"; @line = 47; @symbol_functiondef = [integrate,47,20,29]; @symbol_param<0> = [ball,47,30,34]; ]
+    static
+    function integrate(ball) {
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_47_36_52_4_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 48 8 ]
         %tmp.1 = self;
-        symbol [ distSq %tmp.2 50 17 23 ];
-        %tmp.2 = getv function %tmp.1 :distSq;
-        %tmp.3 = lgetv %cx1;
-        symbol [ cx1 %tmp.3 50 24 27 ];
-        %tmp.4 = lgetv %cy1;
-        symbol [ cy1 %tmp.4 50 29 32 ];
-        %tmp.5 = lgetv %cx2;
-        symbol [ cx2 %tmp.5 50 34 37 ];
-        %tmp.6 = lgetv %cy2;
-        symbol [ cy2 %tmp.6 50 39 42 ];
-        %tmp.7 = lgetv %sw;
-        symbol [ sw %tmp.7 50 44 46 ];
-        %tmp.8 = lgetv %sh;
-        symbol [ sh %tmp.8 50 48 50 ];
-        %tmp.9 = invoke %tmp.1 %tmp.2(%tmp.3, %tmp.4, %tmp.5, %tmp.6, %tmp.7, %tmp.8);
-        lputv %d2.1 %tmp.9;
-        symbol [ d2 %d2.1 50 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 51 8 ]
-        [ "_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_49_67_53_4_start" "_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_49_67_53_4_stop" ]
-        %rs.2 = local;
-        symbol [ rs %rs.2 51 12 14 ];
-        %tmp.10 = lgetv %r1;
-        symbol [ r1 %tmp.10 51 17 19 ];
-        %tmp.11 = lgetv %r2;
-        symbol [ r2 %tmp.11 51 22 24 ];
+        symbol [ applyForces %tmp.2 48 8 19 ];
+        %tmp.2 = getv function %tmp.1 :applyForces;
+        %tmp.3 = lgetv %ball;
+        symbol [ ball %tmp.3 48 20 24 ];
+        invoke %tmp.1 %tmp.2(%tmp.3);
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 49 8 ]
+        %tmp.4 = lgetv %ball;
+        symbol [ ball %tmp.4 49 8 12 ];
+        symbol [ rollTrail %tmp.5 49 13 22 ];
+        %tmp.5 = getv function %tmp.4 :rollTrail;
+        invoke %tmp.4 %tmp.5();
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 50 8 ]
+        %tmp.6 = lgetv %ball;
+        symbol [ ball %tmp.6 50 8 12 ];
+        %tmp.7 = lgetv %ball;
+        symbol [ ball %tmp.7 50 17 21 ];
+        symbol [ x %tmp.8 50 22 23 ];
+        %tmp.8 = getv %tmp.7 :x;
+        %tmp.9 = lgetv %ball;
+        symbol [ ball %tmp.9 50 26 30 ];
+        symbol [ vx %tmp.10 50 31 33 ];
+        %tmp.10 = getv %tmp.9 :vx;
+        %tmp.11 = add %tmp.8 %tmp.10;
+        symbol [ x ? 50 13 14 ];
+        putv %tmp.6 :x %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 51 8 ]
+        %tmp.12 = lgetv %ball;
+        symbol [ ball %tmp.12 51 8 12 ];
+        %tmp.13 = lgetv %ball;
+        symbol [ ball %tmp.13 51 17 21 ];
+        symbol [ y %tmp.14 51 22 23 ];
+        %tmp.14 = getv %tmp.13 :y;
+        %tmp.15 = lgetv %ball;
+        symbol [ ball %tmp.15 51 26 30 ];
+        symbol [ vy %tmp.16 51 31 33 ];
+        %tmp.16 = getv %tmp.15 :vy;
+        %tmp.17 = add %tmp.14 %tmp.16;
+        symbol [ y ? 51 13 14 ];
+        putv %tmp.12 :y %tmp.17;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_47_36_52_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc"; @line = 55; @symbol_functiondef = [applyForces,55,20,31]; @symbol_param<0> = [ball,55,32,36]; ]
+    static
+    function applyForces(ball) {
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_55_38_63_4_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 56 8 ]
+        %tmp.1 = lgetv %ball;
+        symbol [ ball %tmp.1 56 8 12 ];
+        %tmp.2 = lgetv %ball;
+        symbol [ ball %tmp.2 56 18 22 ];
+        symbol [ vy %tmp.3 56 23 25 ];
+        %tmp.3 = getv %tmp.2 :vy;
+        symbol [ GRAVITY %tmp.5 56 28 35 ];
+        %tmp.5 = getv ? :GRAVITY;
+        %tmp.6 = add %tmp.3 %tmp.5;
+        symbol [ vy ? 56 13 15 ];
+        putv %tmp.1 :vy %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 57 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_55_38_63_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_55_38_63_4_stop" ]
+        %spd.1 = local;
+        symbol [ spd %spd.1 57 12 15 ];
+        symbol [ Math %tmp.7 57 18 22 ];
+        %tmp.7 = getm $.Toybox.Math;
+        symbol [ sqrt %tmp.8 57 23 27 ];
+        %tmp.8 = getv function %tmp.7 :sqrt;
+        %tmp.9 = lgetv %ball;
+        symbol [ ball %tmp.9 57 28 32 ];
+        symbol [ vx %tmp.10 57 33 35 ];
+        %tmp.10 = getv %tmp.9 :vx;
+        %tmp.11 = lgetv %ball;
+        symbol [ ball %tmp.11 57 38 42 ];
+        symbol [ vx %tmp.12 57 43 45 ];
+        %tmp.12 = getv %tmp.11 :vx;
+        %tmp.13 = mul %tmp.10 %tmp.12;
+        %tmp.14 = lgetv %ball;
+        symbol [ ball %tmp.14 57 48 52 ];
+        symbol [ vy %tmp.15 57 53 55 ];
+        %tmp.15 = getv %tmp.14 :vy;
+        %tmp.16 = lgetv %ball;
+        symbol [ ball %tmp.16 57 58 62 ];
+        symbol [ vy %tmp.17 57 63 65 ];
+        %tmp.17 = getv %tmp.16 :vy;
+        %tmp.18 = mul %tmp.15 %tmp.17;
+        %tmp.19 = add %tmp.13 %tmp.18;
+        %tmp.20 = invoke %tmp.7 %tmp.8(%tmp.19);
+        lputv %spd.1 %tmp.20;
+        symbol [ spd %spd.1 57 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 58 8 ]
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_58_8_62_8_if_stmt:
+        %tmp.21 = lgetv %spd.1;
+        symbol [ spd %tmp.21 58 12 15 ];
+        symbol [ MAX_SPEED %tmp.23 58 18 27 ];
+        %tmp.23 = getv ? :MAX_SPEED;
+        %tmp.24 = gt %tmp.21 %tmp.23;
+        bf %tmp.24 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_58_8_62_8_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_58_8_62_8_if_true:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_58_29_62_8_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 59 12 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_58_29_62_8_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_58_29_62_8_stop" ]
+        %scale.2 = local;
+        symbol [ scale %scale.2 59 16 21 ];
+        symbol [ MAX_SPEED %tmp.26 59 24 33 ];
+        %tmp.26 = getv ? :MAX_SPEED;
+        %tmp.27 = lgetv %spd.1;
+        symbol [ spd %tmp.27 59 36 39 ];
+        %tmp.28 = div %tmp.26 %tmp.27;
+        lputv %scale.2 %tmp.28;
+        symbol [ scale %scale.2 59 16 21 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 60 12 ]
+        %tmp.29 = lgetv %ball;
+        symbol [ ball %tmp.29 60 12 16 ];
+        %tmp.30 = lgetv %ball;
+        symbol [ ball %tmp.30 60 22 26 ];
+        symbol [ vx %tmp.31 60 27 29 ];
+        %tmp.31 = getv %tmp.30 :vx;
+        %tmp.32 = lgetv %scale.2;
+        symbol [ scale %tmp.32 60 32 37 ];
+        %tmp.33 = mul %tmp.31 %tmp.32;
+        symbol [ vx ? 60 17 19 ];
+        putv %tmp.29 :vx %tmp.33;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 61 12 ]
+        %tmp.34 = lgetv %ball;
+        symbol [ ball %tmp.34 61 12 16 ];
+        %tmp.35 = lgetv %ball;
+        symbol [ ball %tmp.35 61 22 26 ];
+        symbol [ vy %tmp.36 61 27 29 ];
+        %tmp.36 = getv %tmp.35 :vy;
+        %tmp.37 = lgetv %scale.2;
+        symbol [ scale %tmp.37 61 32 37 ];
+        %tmp.38 = mul %tmp.36 %tmp.37;
+        symbol [ vy ? 61 17 19 ];
+        putv %tmp.34 :vy %tmp.38;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_58_29_62_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_58_8_62_8_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_58_8_62_8_if_end:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_55_38_63_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc"; @line = 67; @symbol_functiondef = [advance,67,20,27]; @symbol_param<0> = [ball,67,28,32]; @symbol_param<1> = [dtFrac,67,34,40]; ]
+    static
+    function advance(ball, dtFrac) {
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_67_42_70_4_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 68 8 ]
+        %tmp.1 = lgetv %ball;
+        symbol [ ball %tmp.1 68 8 12 ];
+        %tmp.2 = lgetv %ball;
+        symbol [ ball %tmp.2 68 17 21 ];
+        symbol [ x %tmp.3 68 22 23 ];
+        %tmp.3 = getv %tmp.2 :x;
+        %tmp.4 = lgetv %ball;
+        symbol [ ball %tmp.4 68 26 30 ];
+        symbol [ vx %tmp.5 68 31 33 ];
+        %tmp.5 = getv %tmp.4 :vx;
+        %tmp.6 = lgetv %dtFrac;
+        symbol [ dtFrac %tmp.6 68 36 42 ];
+        %tmp.7 = mul %tmp.5 %tmp.6;
+        %tmp.8 = add %tmp.3 %tmp.7;
+        symbol [ x ? 68 13 14 ];
+        putv %tmp.1 :x %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 69 8 ]
+        %tmp.9 = lgetv %ball;
+        symbol [ ball %tmp.9 69 8 12 ];
+        %tmp.10 = lgetv %ball;
+        symbol [ ball %tmp.10 69 17 21 ];
+        symbol [ y %tmp.11 69 22 23 ];
+        %tmp.11 = getv %tmp.10 :y;
+        %tmp.12 = lgetv %ball;
+        symbol [ ball %tmp.12 69 26 30 ];
+        symbol [ vy %tmp.13 69 31 33 ];
+        %tmp.13 = getv %tmp.12 :vy;
+        %tmp.14 = lgetv %dtFrac;
+        symbol [ dtFrac %tmp.14 69 36 42 ];
+        %tmp.15 = mul %tmp.13 %tmp.14;
+        %tmp.16 = add %tmp.11 %tmp.15;
+        symbol [ y ? 69 13 14 ];
+        putv %tmp.9 :y %tmp.16;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_67_42_70_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc"; @line = 73; @symbol_functiondef = [clampToWalls,73,20,32]; @symbol_param<0> = [ball,73,33,37]; @symbol_param<1> = [x0,73,39,41]; @symbol_param<2> = [y0,73,43,45]; @symbol_param<3> = [x1,73,47,49]; @symbol_param<4> = [y1,73,51,53]; ]
+    static
+    function clampToWalls(ball, x0, y0, x1, y1) {
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_73_55_89_4_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 74 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_73_55_89_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_73_55_89_4_stop" ]
+        %r.1 = local;
+        symbol [ r %r.1 74 12 13 ];
+        %tmp.1 = lgetv %ball;
+        symbol [ ball %tmp.1 74 16 20 ];
+        symbol [ radius %tmp.2 74 21 27 ];
+        %tmp.2 = getv %tmp.1 :radius;
+        lputv %r.1 %tmp.2;
+        symbol [ r %r.1 74 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 75 8 ]
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_75_8_78_8_if_stmt:
+        %tmp.3 = lgetv %ball;
+        symbol [ ball %tmp.3 75 12 16 ];
+        symbol [ x %tmp.4 75 17 18 ];
+        %tmp.4 = getv %tmp.3 :x;
+        %tmp.5 = lgetv %r.1;
+        symbol [ r %tmp.5 75 21 22 ];
+        %tmp.6 = sub %tmp.4 %tmp.5;
+        %tmp.7 = lgetv %x0;
+        symbol [ x0 %tmp.7 75 25 27 ];
+        %tmp.8 = lt %tmp.6 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_75_8_78_8_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_75_8_78_8_if_true:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_75_29_78_8_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 76 12 ]
+        %tmp.9 = lgetv %ball;
+        symbol [ ball %tmp.9 76 12 16 ];
+        %tmp.10 = lgetv %x0;
+        symbol [ x0 %tmp.10 76 21 23 ];
+        %tmp.11 = lgetv %r.1;
+        symbol [ r %tmp.11 76 26 27 ];
         %tmp.12 = add %tmp.10 %tmp.11;
-        lputv %rs.2 %tmp.12;
-        symbol [ rs %rs.2 51 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc" 52 8 ]
-        %tmp.13 = lgetv %d2.1;
-        symbol [ d2 %tmp.13 52 15 17 ];
-        %tmp.14 = lgetv %rs.2;
-        symbol [ rs %tmp.14 52 21 23 ];
-        %tmp.15 = lgetv %rs.2;
-        symbol [ rs %tmp.15 52 26 28 ];
+        symbol [ x ? 76 17 18 ];
+        putv %tmp.9 :x %tmp.12;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 77 12 ]
+        %tmp.13 = lgetv %ball;
+        symbol [ ball %tmp.13 77 12 16 ];
+        %tmp.14 = lgetv %ball;
+        symbol [ ball %tmp.14 77 23 27 ];
+        symbol [ vx %tmp.15 77 28 30 ];
+        %tmp.15 = getv %tmp.14 :vx;
+        %tmp.16 = sub 0 %tmp.15;
+        symbol [ WALL_RESTIT %tmp.18 77 33 44 ];
+        %tmp.18 = getv ? :WALL_RESTIT;
+        %tmp.19 = mul %tmp.16 %tmp.18;
+        symbol [ vx ? 77 17 19 ];
+        putv %tmp.13 :vx %tmp.19;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_75_29_78_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_75_8_78_8_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_75_8_78_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 79 8 ]
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_79_8_82_8_if_stmt:
+        %tmp.20 = lgetv %ball;
+        symbol [ ball %tmp.20 79 12 16 ];
+        symbol [ x %tmp.21 79 17 18 ];
+        %tmp.21 = getv %tmp.20 :x;
+        %tmp.22 = lgetv %r.1;
+        symbol [ r %tmp.22 79 21 22 ];
+        %tmp.23 = add %tmp.21 %tmp.22;
+        %tmp.24 = lgetv %x1;
+        symbol [ x1 %tmp.24 79 25 27 ];
+        %tmp.25 = gt %tmp.23 %tmp.24;
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_79_8_82_8_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_79_8_82_8_if_true:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_79_29_82_8_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 80 12 ]
+        %tmp.26 = lgetv %ball;
+        symbol [ ball %tmp.26 80 12 16 ];
+        %tmp.27 = lgetv %x1;
+        symbol [ x1 %tmp.27 80 21 23 ];
+        %tmp.28 = lgetv %r.1;
+        symbol [ r %tmp.28 80 26 27 ];
+        %tmp.29 = sub %tmp.27 %tmp.28;
+        symbol [ x ? 80 17 18 ];
+        putv %tmp.26 :x %tmp.29;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 81 12 ]
+        %tmp.30 = lgetv %ball;
+        symbol [ ball %tmp.30 81 12 16 ];
+        %tmp.31 = lgetv %ball;
+        symbol [ ball %tmp.31 81 23 27 ];
+        symbol [ vx %tmp.32 81 28 30 ];
+        %tmp.32 = getv %tmp.31 :vx;
+        %tmp.33 = sub 0 %tmp.32;
+        symbol [ WALL_RESTIT %tmp.35 81 33 44 ];
+        %tmp.35 = getv ? :WALL_RESTIT;
+        %tmp.36 = mul %tmp.33 %tmp.35;
+        symbol [ vx ? 81 17 19 ];
+        putv %tmp.30 :vx %tmp.36;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_79_29_82_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_79_8_82_8_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_79_8_82_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 83 8 ]
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_83_8_86_8_if_stmt:
+        %tmp.37 = lgetv %ball;
+        symbol [ ball %tmp.37 83 12 16 ];
+        symbol [ y %tmp.38 83 17 18 ];
+        %tmp.38 = getv %tmp.37 :y;
+        %tmp.39 = lgetv %r.1;
+        symbol [ r %tmp.39 83 21 22 ];
+        %tmp.40 = sub %tmp.38 %tmp.39;
+        %tmp.41 = lgetv %y0;
+        symbol [ y0 %tmp.41 83 25 27 ];
+        %tmp.42 = lt %tmp.40 %tmp.41;
+        bf %tmp.42 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_83_8_86_8_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_83_8_86_8_if_true:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_83_29_86_8_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 84 12 ]
+        %tmp.43 = lgetv %ball;
+        symbol [ ball %tmp.43 84 12 16 ];
+        %tmp.44 = lgetv %y0;
+        symbol [ y0 %tmp.44 84 21 23 ];
+        %tmp.45 = lgetv %r.1;
+        symbol [ r %tmp.45 84 26 27 ];
+        %tmp.46 = add %tmp.44 %tmp.45;
+        symbol [ y ? 84 17 18 ];
+        putv %tmp.43 :y %tmp.46;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 85 12 ]
+        %tmp.47 = lgetv %ball;
+        symbol [ ball %tmp.47 85 12 16 ];
+        %tmp.48 = lgetv %ball;
+        symbol [ ball %tmp.48 85 23 27 ];
+        symbol [ vy %tmp.49 85 28 30 ];
+        %tmp.49 = getv %tmp.48 :vy;
+        %tmp.50 = sub 0 %tmp.49;
+        symbol [ WALL_RESTIT %tmp.52 85 33 44 ];
+        %tmp.52 = getv ? :WALL_RESTIT;
+        %tmp.53 = mul %tmp.50 %tmp.52;
+        symbol [ vy ? 85 17 19 ];
+        putv %tmp.47 :vy %tmp.53;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_83_29_86_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_83_8_86_8_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_83_8_86_8_if_end:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_73_55_89_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc"; @line = 93; @symbol_functiondef = [collideBumper,93,20,33]; @symbol_param<0> = [ball,93,34,38]; @symbol_param<1> = [bx,93,40,42]; @symbol_param<2> = [by,93,44,46]; @symbol_param<3> = [br,93,48,50]; ]
+    static
+    function collideBumper(ball, bx, by, br) {
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_93_52_123_4_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 94 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_93_52_123_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_93_52_123_4_stop" ]
+        %dx.1 = local;
+        symbol [ dx %dx.1 94 12 14 ];
+        %tmp.1 = lgetv %ball;
+        symbol [ ball %tmp.1 94 17 21 ];
+        symbol [ x %tmp.2 94 22 23 ];
+        %tmp.2 = getv %tmp.1 :x;
+        %tmp.3 = lgetv %bx;
+        symbol [ bx %tmp.3 94 26 28 ];
+        %tmp.4 = sub %tmp.2 %tmp.3;
+        lputv %dx.1 %tmp.4;
+        symbol [ dx %dx.1 94 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 95 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_93_52_123_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_93_52_123_4_stop" ]
+        %dy.2 = local;
+        symbol [ dy %dy.2 95 12 14 ];
+        %tmp.5 = lgetv %ball;
+        symbol [ ball %tmp.5 95 17 21 ];
+        symbol [ y %tmp.6 95 22 23 ];
+        %tmp.6 = getv %tmp.5 :y;
+        %tmp.7 = lgetv %by;
+        symbol [ by %tmp.7 95 26 28 ];
+        %tmp.8 = sub %tmp.6 %tmp.7;
+        lputv %dy.2 %tmp.8;
+        symbol [ dy %dy.2 95 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 96 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_93_52_123_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_93_52_123_4_stop" ]
+        %distSq.3 = local;
+        symbol [ distSq %distSq.3 96 12 18 ];
+        %tmp.9 = lgetv %dx.1;
+        symbol [ dx %tmp.9 96 21 23 ];
+        %tmp.10 = lgetv %dx.1;
+        symbol [ dx %tmp.10 96 26 28 ];
+        %tmp.11 = mul %tmp.9 %tmp.10;
+        %tmp.12 = lgetv %dy.2;
+        symbol [ dy %tmp.12 96 31 33 ];
+        %tmp.13 = lgetv %dy.2;
+        symbol [ dy %tmp.13 96 36 38 ];
+        %tmp.14 = mul %tmp.12 %tmp.13;
+        %tmp.15 = add %tmp.11 %tmp.14;
+        lputv %distSq.3 %tmp.15;
+        symbol [ distSq %distSq.3 96 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 97 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_93_52_123_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_93_52_123_4_stop" ]
+        %minDist.4 = local;
+        symbol [ minDist %minDist.4 97 12 19 ];
+        %tmp.16 = lgetv %ball;
+        symbol [ ball %tmp.16 97 22 26 ];
+        symbol [ radius %tmp.17 97 27 33 ];
+        %tmp.17 = getv %tmp.16 :radius;
+        %tmp.18 = lgetv %br;
+        symbol [ br %tmp.18 97 36 38 ];
+        %tmp.19 = add %tmp.17 %tmp.18;
+        lputv %minDist.4 %tmp.19;
+        symbol [ minDist %minDist.4 97 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 98 8 ]
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_98_8_98_57_if_stmt:
+        %tmp.20 = lgetv %distSq.3;
+        symbol [ distSq %tmp.20 98 12 18 ];
+        %tmp.21 = lgetv %minDist.4;
+        symbol [ minDist %tmp.21 98 22 29 ];
+        %tmp.22 = lgetv %minDist.4;
+        symbol [ minDist %tmp.22 98 32 39 ];
+        %tmp.23 = mul %tmp.21 %tmp.22;
+        %tmp.24 = gte %tmp.20 %tmp.23;
+        bf %tmp.24 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_98_8_98_57_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_98_8_98_57_if_true:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_98_41_98_57_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 98 43 ]
+        %tmp.25 = false;
+        ret %tmp.25;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_98_41_98_57_stop:
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_98_8_98_57_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_98_8_98_57_if_end:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 100 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_93_52_123_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_93_52_123_4_stop" ]
+        %dist.5 = local;
+        symbol [ dist %dist.5 100 12 16 ];
+        symbol [ Math %tmp.26 100 19 23 ];
+        %tmp.26 = getm $.Toybox.Math;
+        symbol [ sqrt %tmp.27 100 24 28 ];
+        %tmp.27 = getv function %tmp.26 :sqrt;
+        %tmp.28 = lgetv %distSq.3;
+        symbol [ distSq %tmp.28 100 29 35 ];
+        %tmp.29 = invoke %tmp.26 %tmp.27(%tmp.28);
+        lputv %dist.5 %tmp.29;
+        symbol [ dist %dist.5 100 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 101 8 ]
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_101_8_106_8_if_stmt:
+        %tmp.30 = lgetv %dist.5;
+        symbol [ dist %tmp.30 101 12 16 ];
+        %tmp.31 = 0.001;
+        %tmp.32 = lt %tmp.30 %tmp.31;
+        bf %tmp.32 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_101_8_106_8_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_101_8_106_8_if_true:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_101_26_106_8_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 103 12 ]
+        %tmp.33 = lgetv %ball;
+        symbol [ ball %tmp.33 103 12 16 ];
+        %tmp.34 = lgetv %by;
+        symbol [ by %tmp.34 103 22 24 ];
+        %tmp.35 = lgetv %minDist.4;
+        symbol [ minDist %tmp.35 103 27 34 ];
+        %tmp.36 = sub %tmp.34 %tmp.35;
+        symbol [ y ? 103 17 18 ];
+        putv %tmp.33 :y %tmp.36;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 104 12 ]
+        %tmp.37 = lgetv %ball;
+        symbol [ ball %tmp.37 104 12 16 ];
+        symbol [ BUMP_KICK %tmp.39 104 23 32 ];
+        %tmp.39 = getv ? :BUMP_KICK;
+        %tmp.40 = sub 0 %tmp.39;
+        symbol [ vy ? 104 17 19 ];
+        putv %tmp.37 :vy %tmp.40;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 105 12 ]
+        %tmp.41 = true;
+        ret %tmp.41;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_101_26_106_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_101_8_106_8_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_101_8_106_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 108 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_93_52_123_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_93_52_123_4_stop" ]
+        %nx.6 = local;
+        symbol [ nx %nx.6 108 12 14 ];
+        %tmp.42 = lgetv %dx.1;
+        symbol [ dx %tmp.42 108 17 19 ];
+        %tmp.43 = lgetv %dist.5;
+        symbol [ dist %tmp.43 108 22 26 ];
+        %tmp.44 = div %tmp.42 %tmp.43;
+        lputv %nx.6 %tmp.44;
+        symbol [ nx %nx.6 108 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 109 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_93_52_123_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_93_52_123_4_stop" ]
+        %ny.7 = local;
+        symbol [ ny %ny.7 109 12 14 ];
+        %tmp.45 = lgetv %dy.2;
+        symbol [ dy %tmp.45 109 17 19 ];
+        %tmp.46 = lgetv %dist.5;
+        symbol [ dist %tmp.46 109 22 26 ];
+        %tmp.47 = div %tmp.45 %tmp.46;
+        lputv %ny.7 %tmp.47;
+        symbol [ ny %ny.7 109 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 110 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_93_52_123_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_93_52_123_4_stop" ]
+        %pen.8 = local;
+        symbol [ pen %pen.8 110 12 15 ];
+        %tmp.48 = lgetv %minDist.4;
+        symbol [ minDist %tmp.48 110 18 25 ];
+        %tmp.49 = lgetv %dist.5;
+        symbol [ dist %tmp.49 110 28 32 ];
+        %tmp.50 = sub %tmp.48 %tmp.49;
+        lputv %pen.8 %tmp.50;
+        symbol [ pen %pen.8 110 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 111 8 ]
+        %tmp.51 = lgetv %ball;
+        symbol [ ball %tmp.51 111 8 12 ];
+        %tmp.52 = lgetv %ball;
+        symbol [ ball %tmp.52 111 17 21 ];
+        symbol [ x %tmp.53 111 22 23 ];
+        %tmp.53 = getv %tmp.52 :x;
+        %tmp.54 = lgetv %nx.6;
+        symbol [ nx %tmp.54 111 26 28 ];
+        %tmp.55 = lgetv %pen.8;
+        symbol [ pen %tmp.55 111 32 35 ];
+        %tmp.56 = 0.5;
+        %tmp.57 = add %tmp.55 %tmp.56;
+        %tmp.58 = mul %tmp.54 %tmp.57;
+        %tmp.59 = add %tmp.53 %tmp.58;
+        symbol [ x ? 111 13 14 ];
+        putv %tmp.51 :x %tmp.59;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 112 8 ]
+        %tmp.60 = lgetv %ball;
+        symbol [ ball %tmp.60 112 8 12 ];
+        %tmp.61 = lgetv %ball;
+        symbol [ ball %tmp.61 112 17 21 ];
+        symbol [ y %tmp.62 112 22 23 ];
+        %tmp.62 = getv %tmp.61 :y;
+        %tmp.63 = lgetv %ny.7;
+        symbol [ ny %tmp.63 112 26 28 ];
+        %tmp.64 = lgetv %pen.8;
+        symbol [ pen %tmp.64 112 32 35 ];
+        %tmp.65 = 0.5;
+        %tmp.66 = add %tmp.64 %tmp.65;
+        %tmp.67 = mul %tmp.63 %tmp.66;
+        %tmp.68 = add %tmp.62 %tmp.67;
+        symbol [ y ? 112 13 14 ];
+        putv %tmp.60 :y %tmp.68;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 115 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_93_52_123_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_93_52_123_4_stop" ]
+        %vDotN.9 = local;
+        symbol [ vDotN %vDotN.9 115 12 17 ];
+        %tmp.69 = lgetv %ball;
+        symbol [ ball %tmp.69 115 20 24 ];
+        symbol [ vx %tmp.70 115 25 27 ];
+        %tmp.70 = getv %tmp.69 :vx;
+        %tmp.71 = lgetv %nx.6;
+        symbol [ nx %tmp.71 115 30 32 ];
+        %tmp.72 = mul %tmp.70 %tmp.71;
+        %tmp.73 = lgetv %ball;
+        symbol [ ball %tmp.73 115 35 39 ];
+        symbol [ vy %tmp.74 115 40 42 ];
+        %tmp.74 = getv %tmp.73 :vy;
+        %tmp.75 = lgetv %ny.7;
+        symbol [ ny %tmp.75 115 45 47 ];
+        %tmp.76 = mul %tmp.74 %tmp.75;
+        %tmp.77 = add %tmp.72 %tmp.76;
+        lputv %vDotN.9 %tmp.77;
+        symbol [ vDotN %vDotN.9 115 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 116 8 ]
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_116_8_119_8_if_stmt:
+        %tmp.78 = lgetv %vDotN.9;
+        symbol [ vDotN %tmp.78 116 12 17 ];
+        %tmp.79 = 0;
+        %tmp.80 = lt %tmp.78 %tmp.79;
+        bf %tmp.80 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_116_8_119_8_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_116_8_119_8_if_true:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_116_23_119_8_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 117 12 ]
+        %tmp.81 = lgetv %ball;
+        symbol [ ball %tmp.81 117 12 16 ];
+        %tmp.82 = lgetv %ball;
+        symbol [ ball %tmp.82 117 22 26 ];
+        symbol [ vx %tmp.83 117 27 29 ];
+        %tmp.83 = getv %tmp.82 :vx;
+        %tmp.84 = 2;
+        %tmp.85 = lgetv %vDotN.9;
+        symbol [ vDotN %tmp.85 117 36 41 ];
+        %tmp.86 = mul %tmp.84 %tmp.85;
+        %tmp.87 = lgetv %nx.6;
+        symbol [ nx %tmp.87 117 44 46 ];
+        %tmp.88 = mul %tmp.86 %tmp.87;
+        %tmp.89 = sub %tmp.83 %tmp.88;
+        symbol [ vx ? 117 17 19 ];
+        putv %tmp.81 :vx %tmp.89;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 118 12 ]
+        %tmp.90 = lgetv %ball;
+        symbol [ ball %tmp.90 118 12 16 ];
+        %tmp.91 = lgetv %ball;
+        symbol [ ball %tmp.91 118 22 26 ];
+        symbol [ vy %tmp.92 118 27 29 ];
+        %tmp.92 = getv %tmp.91 :vy;
+        %tmp.93 = 2;
+        %tmp.94 = lgetv %vDotN.9;
+        symbol [ vDotN %tmp.94 118 36 41 ];
+        %tmp.95 = mul %tmp.93 %tmp.94;
+        %tmp.96 = lgetv %ny.7;
+        symbol [ ny %tmp.96 118 44 46 ];
+        %tmp.97 = mul %tmp.95 %tmp.96;
+        %tmp.98 = sub %tmp.92 %tmp.97;
+        symbol [ vy ? 118 17 19 ];
+        putv %tmp.90 :vy %tmp.98;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_116_23_119_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_116_8_119_8_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_116_8_119_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 120 8 ]
+        %tmp.99 = lgetv %ball;
+        symbol [ ball %tmp.99 120 8 12 ];
+        %tmp.100 = lgetv %ball;
+        symbol [ ball %tmp.100 120 19 23 ];
+        symbol [ vx %tmp.101 120 24 26 ];
+        %tmp.101 = getv %tmp.100 :vx;
+        symbol [ BUMP_RESTIT %tmp.103 120 29 40 ];
+        %tmp.103 = getv ? :BUMP_RESTIT;
+        %tmp.104 = mul %tmp.101 %tmp.103;
+        %tmp.105 = lgetv %nx.6;
+        symbol [ nx %tmp.105 120 44 46 ];
+        symbol [ BUMP_KICK %tmp.107 120 49 58 ];
+        %tmp.107 = getv ? :BUMP_KICK;
+        %tmp.108 = mul %tmp.105 %tmp.107;
+        %tmp.109 = add %tmp.104 %tmp.108;
+        symbol [ vx ? 120 13 15 ];
+        putv %tmp.99 :vx %tmp.109;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 121 8 ]
+        %tmp.110 = lgetv %ball;
+        symbol [ ball %tmp.110 121 8 12 ];
+        %tmp.111 = lgetv %ball;
+        symbol [ ball %tmp.111 121 19 23 ];
+        symbol [ vy %tmp.112 121 24 26 ];
+        %tmp.112 = getv %tmp.111 :vy;
+        symbol [ BUMP_RESTIT %tmp.114 121 29 40 ];
+        %tmp.114 = getv ? :BUMP_RESTIT;
+        %tmp.115 = mul %tmp.112 %tmp.114;
+        %tmp.116 = lgetv %ny.7;
+        symbol [ ny %tmp.116 121 44 46 ];
+        symbol [ BUMP_KICK %tmp.118 121 49 58 ];
+        %tmp.118 = getv ? :BUMP_KICK;
+        %tmp.119 = mul %tmp.116 %tmp.118;
+        %tmp.120 = add %tmp.115 %tmp.119;
+        symbol [ vy ? 121 13 15 ];
+        putv %tmp.110 :vy %tmp.120;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 122 8 ]
+        %tmp.121 = true;
+        ret %tmp.121;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_93_52_123_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc"; @line = 130; @symbol_functiondef = [collideRect,130,20,31]; @symbol_param<0> = [ball,130,32,36]; @symbol_param<1> = [rx,130,38,40]; @symbol_param<2> = [ry,130,42,44]; @symbol_param<3> = [rw,130,46,48]; @symbol_param<4> = [rh,130,50,52]; ]
+    static
+    function collideRect(ball, rx, ry, rw, rh) {
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_130_54_176_4_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 131 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_130_54_176_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_130_54_176_4_stop" ]
+        %r.1 = local;
+        symbol [ r %r.1 131 12 13 ];
+        %tmp.1 = lgetv %ball;
+        symbol [ ball %tmp.1 131 17 21 ];
+        symbol [ radius %tmp.2 131 22 28 ];
+        %tmp.2 = getv %tmp.1 :radius;
+        lputv %r.1 %tmp.2;
+        symbol [ r %r.1 131 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 133 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_130_54_176_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_130_54_176_4_stop" ]
+        %closestX.2 = local;
+        symbol [ closestX %closestX.2 133 12 20 ];
+        %tmp.3 = lgetv %ball;
+        symbol [ ball %tmp.3 133 23 27 ];
+        symbol [ x %tmp.4 133 28 29 ];
+        %tmp.4 = getv %tmp.3 :x;
+        lputv %closestX.2 %tmp.4;
+        symbol [ closestX %closestX.2 133 12 20 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 134 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_130_54_176_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_130_54_176_4_stop" ]
+        %closestY.3 = local;
+        symbol [ closestY %closestY.3 134 12 20 ];
+        %tmp.5 = lgetv %ball;
+        symbol [ ball %tmp.5 134 23 27 ];
+        symbol [ y %tmp.6 134 28 29 ];
+        %tmp.6 = getv %tmp.5 :y;
+        lputv %closestY.3 %tmp.6;
+        symbol [ closestY %closestY.3 134 12 20 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 135 8 ]
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_135_8_135_52_if_stmt:
+        %tmp.7 = lgetv %closestX.2;
+        symbol [ closestX %tmp.7 135 12 20 ];
+        %tmp.8 = lgetv %rx;
+        symbol [ rx %tmp.8 135 23 25 ];
+        %tmp.9 = lt %tmp.7 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_135_8_135_52_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_135_8_135_52_if_true:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_135_35_135_52_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 135 37 ]
+        %tmp.10 = lgetv %rx;
+        symbol [ rx %tmp.10 135 48 50 ];
+        lputv %closestX.2 %tmp.10;
+        symbol [ closestX %closestX.2 135 37 45 ];
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_135_35_135_52_stop:
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_135_8_135_52_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_135_8_135_52_if_end:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 136 8 ]
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_136_8_136_57_if_stmt:
+        %tmp.11 = lgetv %closestX.2;
+        symbol [ closestX %tmp.11 136 12 20 ];
+        %tmp.12 = lgetv %rx;
+        symbol [ rx %tmp.12 136 23 25 ];
+        %tmp.13 = lgetv %rw;
+        symbol [ rw %tmp.13 136 28 30 ];
+        %tmp.14 = add %tmp.12 %tmp.13;
+        %tmp.15 = gt %tmp.11 %tmp.14;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_136_8_136_57_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_136_8_136_57_if_true:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_136_35_136_57_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 136 37 ]
+        %tmp.16 = lgetv %rx;
+        symbol [ rx %tmp.16 136 48 50 ];
+        %tmp.17 = lgetv %rw;
+        symbol [ rw %tmp.17 136 53 55 ];
+        %tmp.18 = add %tmp.16 %tmp.17;
+        lputv %closestX.2 %tmp.18;
+        symbol [ closestX %closestX.2 136 37 45 ];
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_136_35_136_57_stop:
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_136_8_136_57_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_136_8_136_57_if_end:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 137 8 ]
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_137_8_137_52_if_stmt:
+        %tmp.19 = lgetv %closestY.3;
+        symbol [ closestY %tmp.19 137 12 20 ];
+        %tmp.20 = lgetv %ry;
+        symbol [ ry %tmp.20 137 23 25 ];
+        %tmp.21 = lt %tmp.19 %tmp.20;
+        bf %tmp.21 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_137_8_137_52_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_137_8_137_52_if_true:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_137_35_137_52_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 137 37 ]
+        %tmp.22 = lgetv %ry;
+        symbol [ ry %tmp.22 137 48 50 ];
+        lputv %closestY.3 %tmp.22;
+        symbol [ closestY %closestY.3 137 37 45 ];
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_137_35_137_52_stop:
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_137_8_137_52_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_137_8_137_52_if_end:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 138 8 ]
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_138_8_138_57_if_stmt:
+        %tmp.23 = lgetv %closestY.3;
+        symbol [ closestY %tmp.23 138 12 20 ];
+        %tmp.24 = lgetv %ry;
+        symbol [ ry %tmp.24 138 23 25 ];
+        %tmp.25 = lgetv %rh;
+        symbol [ rh %tmp.25 138 28 30 ];
+        %tmp.26 = add %tmp.24 %tmp.25;
+        %tmp.27 = gt %tmp.23 %tmp.26;
+        bf %tmp.27 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_138_8_138_57_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_138_8_138_57_if_true:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_138_35_138_57_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 138 37 ]
+        %tmp.28 = lgetv %ry;
+        symbol [ ry %tmp.28 138 48 50 ];
+        %tmp.29 = lgetv %rh;
+        symbol [ rh %tmp.29 138 53 55 ];
+        %tmp.30 = add %tmp.28 %tmp.29;
+        lputv %closestY.3 %tmp.30;
+        symbol [ closestY %closestY.3 138 37 45 ];
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_138_35_138_57_stop:
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_138_8_138_57_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_138_8_138_57_if_end:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 140 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_130_54_176_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_130_54_176_4_stop" ]
+        %dx.4 = local;
+        symbol [ dx %dx.4 140 12 14 ];
+        %tmp.31 = lgetv %ball;
+        symbol [ ball %tmp.31 140 17 21 ];
+        symbol [ x %tmp.32 140 22 23 ];
+        %tmp.32 = getv %tmp.31 :x;
+        %tmp.33 = lgetv %closestX.2;
+        symbol [ closestX %tmp.33 140 26 34 ];
+        %tmp.34 = sub %tmp.32 %tmp.33;
+        lputv %dx.4 %tmp.34;
+        symbol [ dx %dx.4 140 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 141 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_130_54_176_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_130_54_176_4_stop" ]
+        %dy.5 = local;
+        symbol [ dy %dy.5 141 12 14 ];
+        %tmp.35 = lgetv %ball;
+        symbol [ ball %tmp.35 141 17 21 ];
+        symbol [ y %tmp.36 141 22 23 ];
+        %tmp.36 = getv %tmp.35 :y;
+        %tmp.37 = lgetv %closestY.3;
+        symbol [ closestY %tmp.37 141 26 34 ];
+        %tmp.38 = sub %tmp.36 %tmp.37;
+        lputv %dy.5 %tmp.38;
+        symbol [ dy %dy.5 141 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 142 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_130_54_176_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_130_54_176_4_stop" ]
+        %distSq.6 = local;
+        symbol [ distSq %distSq.6 142 12 18 ];
+        %tmp.39 = lgetv %dx.4;
+        symbol [ dx %tmp.39 142 21 23 ];
+        %tmp.40 = lgetv %dx.4;
+        symbol [ dx %tmp.40 142 26 28 ];
+        %tmp.41 = mul %tmp.39 %tmp.40;
+        %tmp.42 = lgetv %dy.5;
+        symbol [ dy %tmp.42 142 31 33 ];
+        %tmp.43 = lgetv %dy.5;
+        symbol [ dy %tmp.43 142 36 38 ];
+        %tmp.44 = mul %tmp.42 %tmp.43;
+        %tmp.45 = add %tmp.41 %tmp.44;
+        lputv %distSq.6 %tmp.45;
+        symbol [ distSq %distSq.6 142 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 143 8 ]
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_143_8_143_45_if_stmt:
+        %tmp.46 = lgetv %distSq.6;
+        symbol [ distSq %tmp.46 143 12 18 ];
+        %tmp.47 = lgetv %r.1;
+        symbol [ r %tmp.47 143 22 23 ];
+        %tmp.48 = lgetv %r.1;
+        symbol [ r %tmp.48 143 26 27 ];
+        %tmp.49 = mul %tmp.47 %tmp.48;
+        %tmp.50 = gte %tmp.46 %tmp.49;
+        bf %tmp.50 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_143_8_143_45_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_143_8_143_45_if_true:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_143_29_143_45_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 143 31 ]
+        %tmp.51 = false;
+        ret %tmp.51;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_143_29_143_45_stop:
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_143_8_143_45_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_143_8_143_45_if_end:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 144 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_130_54_176_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_130_54_176_4_stop" ]
+        %dist.7 = local;
+        symbol [ dist %dist.7 144 12 16 ];
+        symbol [ Math %tmp.52 144 19 23 ];
+        %tmp.52 = getm $.Toybox.Math;
+        symbol [ sqrt %tmp.53 144 24 28 ];
+        %tmp.53 = getv function %tmp.52 :sqrt;
+        %tmp.54 = lgetv %distSq.6;
+        symbol [ distSq %tmp.54 144 29 35 ];
+        %tmp.55 = invoke %tmp.52 %tmp.53(%tmp.54);
+        lputv %dist.7 %tmp.55;
+        symbol [ dist %dist.7 144 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 145 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_130_54_176_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_130_54_176_4_stop" ]
+        %nx.8 = local;
+        symbol [ nx %nx.8 145 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 145 16 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_130_54_176_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_130_54_176_4_stop" ]
+        %ny.9 = local;
+        symbol [ ny %ny.9 145 20 22 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 146 8 ]
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_146_8_167_8_if_stmt:
+        %tmp.56 = lgetv %dist.7;
+        symbol [ dist %tmp.56 146 12 16 ];
+        %tmp.57 = 0.001;
+        %tmp.58 = lt %tmp.56 %tmp.57;
+        bf %tmp.58 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_146_8_167_8_if_else_false;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_146_8_167_8_if_true:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_146_26_161_8_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 150 12 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_146_26_161_8_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_146_26_161_8_stop" ]
+        %leftPen.10 = local;
+        symbol [ leftPen %leftPen.10 150 16 23 ];
+        %tmp.59 = lgetv %ball;
+        symbol [ ball %tmp.59 150 28 32 ];
+        symbol [ x %tmp.60 150 33 34 ];
+        %tmp.60 = getv %tmp.59 :x;
+        %tmp.61 = lgetv %rx;
+        symbol [ rx %tmp.61 150 37 39 ];
+        %tmp.62 = sub %tmp.60 %tmp.61;
+        lputv %leftPen.10 %tmp.62;
+        symbol [ leftPen %leftPen.10 150 16 23 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 151 12 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_146_26_161_8_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_146_26_161_8_stop" ]
+        %rightPen.11 = local;
+        symbol [ rightPen %rightPen.11 151 16 24 ];
+        %tmp.63 = lgetv %rx;
+        symbol [ rx %tmp.63 151 29 31 ];
+        %tmp.64 = lgetv %rw;
+        symbol [ rw %tmp.64 151 34 36 ];
+        %tmp.65 = add %tmp.63 %tmp.64;
+        %tmp.66 = lgetv %ball;
+        symbol [ ball %tmp.66 151 40 44 ];
+        symbol [ x %tmp.67 151 45 46 ];
+        %tmp.67 = getv %tmp.66 :x;
+        %tmp.68 = sub %tmp.65 %tmp.67;
+        lputv %rightPen.11 %tmp.68;
+        symbol [ rightPen %rightPen.11 151 16 24 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 152 12 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_146_26_161_8_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_146_26_161_8_stop" ]
+        %topPen.12 = local;
+        symbol [ topPen %topPen.12 152 16 22 ];
+        %tmp.69 = lgetv %ball;
+        symbol [ ball %tmp.69 152 28 32 ];
+        symbol [ y %tmp.70 152 33 34 ];
+        %tmp.70 = getv %tmp.69 :y;
+        %tmp.71 = lgetv %ry;
+        symbol [ ry %tmp.71 152 37 39 ];
+        %tmp.72 = sub %tmp.70 %tmp.71;
+        lputv %topPen.12 %tmp.72;
+        symbol [ topPen %topPen.12 152 16 22 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 153 12 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_146_26_161_8_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_146_26_161_8_stop" ]
+        %bottomPen.13 = local;
+        symbol [ bottomPen %bottomPen.13 153 16 25 ];
+        %tmp.73 = lgetv %ry;
+        symbol [ ry %tmp.73 153 29 31 ];
+        %tmp.74 = lgetv %rh;
+        symbol [ rh %tmp.74 153 34 36 ];
+        %tmp.75 = add %tmp.73 %tmp.74;
+        %tmp.76 = lgetv %ball;
+        symbol [ ball %tmp.76 153 40 44 ];
+        symbol [ y %tmp.77 153 45 46 ];
+        %tmp.77 = getv %tmp.76 :y;
+        %tmp.78 = sub %tmp.75 %tmp.77;
+        lputv %bottomPen.13 %tmp.78;
+        symbol [ bottomPen %bottomPen.13 153 16 25 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 154 12 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_146_26_161_8_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_146_26_161_8_stop" ]
+        %minPen.14 = local;
+        symbol [ minPen %minPen.14 154 16 22 ];
+        %tmp.79 = lgetv %leftPen.10;
+        symbol [ leftPen %tmp.79 154 25 32 ];
+        lputv %minPen.14 %tmp.79;
+        symbol [ minPen %minPen.14 154 16 22 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 155 12 ]
+        %tmp.80 = -1.0;
+        lputv %nx.8 %tmp.80;
+        symbol [ nx %nx.8 155 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 155 23 ]
+        %tmp.81 = 0.0;
+        lputv %ny.9 %tmp.81;
+        symbol [ ny %ny.9 155 23 25 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 156 12 ]
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_156_12_156_80_if_stmt:
+        %tmp.82 = lgetv %rightPen.11;
+        symbol [ rightPen %tmp.82 156 16 24 ];
+        %tmp.83 = lgetv %minPen.14;
+        symbol [ minPen %tmp.83 156 28 34 ];
+        %tmp.84 = lt %tmp.82 %tmp.83;
+        bf %tmp.84 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_156_12_156_80_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_156_12_156_80_if_true:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_156_36_156_80_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 156 38 ]
+        %tmp.85 = lgetv %rightPen.11;
+        symbol [ rightPen %tmp.85 156 47 55 ];
+        lputv %minPen.14 %tmp.85;
+        symbol [ minPen %minPen.14 156 38 44 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 156 58 ]
+        %tmp.86 = 1.0;
+        lputv %nx.8 %tmp.86;
+        symbol [ nx %nx.8 156 58 60 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 156 69 ]
+        %tmp.87 = 0.0;
+        lputv %ny.9 %tmp.87;
+        symbol [ ny %ny.9 156 69 71 ];
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_156_36_156_80_stop:
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_156_12_156_80_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_156_12_156_80_if_end:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 157 12 ]
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_157_12_157_80_if_stmt:
+        %tmp.88 = lgetv %topPen.12;
+        symbol [ topPen %tmp.88 157 16 22 ];
+        %tmp.89 = lgetv %minPen.14;
+        symbol [ minPen %tmp.89 157 28 34 ];
+        %tmp.90 = lt %tmp.88 %tmp.89;
+        bf %tmp.90 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_157_12_157_80_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_157_12_157_80_if_true:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_157_36_157_80_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 157 38 ]
+        %tmp.91 = lgetv %topPen.12;
+        symbol [ topPen %tmp.91 157 47 53 ];
+        lputv %minPen.14 %tmp.91;
+        symbol [ minPen %minPen.14 157 38 44 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 157 58 ]
+        %tmp.92 = 0.0;
+        lputv %nx.8 %tmp.92;
+        symbol [ nx %nx.8 157 58 60 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 157 69 ]
+        %tmp.93 = -1.0;
+        lputv %ny.9 %tmp.93;
+        symbol [ ny %ny.9 157 69 71 ];
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_157_36_157_80_stop:
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_157_12_157_80_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_157_12_157_80_if_end:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 158 12 ]
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_158_12_158_80_if_stmt:
+        %tmp.94 = lgetv %bottomPen.13;
+        symbol [ bottomPen %tmp.94 158 16 25 ];
+        %tmp.95 = lgetv %minPen.14;
+        symbol [ minPen %tmp.95 158 28 34 ];
+        %tmp.96 = lt %tmp.94 %tmp.95;
+        bf %tmp.96 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_158_12_158_80_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_158_12_158_80_if_true:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_158_36_158_80_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 158 38 ]
+        %tmp.97 = lgetv %bottomPen.13;
+        symbol [ bottomPen %tmp.97 158 47 56 ];
+        lputv %minPen.14 %tmp.97;
+        symbol [ minPen %minPen.14 158 38 44 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 158 58 ]
+        %tmp.98 = 0.0;
+        lputv %nx.8 %tmp.98;
+        symbol [ nx %nx.8 158 58 60 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 158 69 ]
+        %tmp.99 = 1.0;
+        lputv %ny.9 %tmp.99;
+        symbol [ ny %ny.9 158 69 71 ];
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_158_36_158_80_stop:
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_158_12_158_80_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_158_12_158_80_if_end:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 159 12 ]
+        %tmp.100 = lgetv %ball;
+        symbol [ ball %tmp.100 159 12 16 ];
+        %tmp.101 = lgetv %ball;
+        symbol [ ball %tmp.101 159 21 25 ];
+        symbol [ x %tmp.102 159 26 27 ];
+        %tmp.102 = getv %tmp.101 :x;
+        %tmp.103 = lgetv %nx.8;
+        symbol [ nx %tmp.103 159 30 32 ];
+        %tmp.104 = lgetv %r.1;
+        symbol [ r %tmp.104 159 36 37 ];
+        %tmp.105 = 1.0;
+        %tmp.106 = add %tmp.104 %tmp.105;
+        %tmp.107 = mul %tmp.103 %tmp.106;
+        %tmp.108 = add %tmp.102 %tmp.107;
+        symbol [ x ? 159 17 18 ];
+        putv %tmp.100 :x %tmp.108;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 160 12 ]
+        %tmp.109 = lgetv %ball;
+        symbol [ ball %tmp.109 160 12 16 ];
+        %tmp.110 = lgetv %ball;
+        symbol [ ball %tmp.110 160 21 25 ];
+        symbol [ y %tmp.111 160 26 27 ];
+        %tmp.111 = getv %tmp.110 :y;
+        %tmp.112 = lgetv %ny.9;
+        symbol [ ny %tmp.112 160 30 32 ];
+        %tmp.113 = lgetv %r.1;
+        symbol [ r %tmp.113 160 36 37 ];
+        %tmp.114 = 1.0;
+        %tmp.115 = add %tmp.113 %tmp.114;
+        %tmp.116 = mul %tmp.112 %tmp.115;
+        %tmp.117 = add %tmp.111 %tmp.116;
+        symbol [ y ? 160 17 18 ];
+        putv %tmp.109 :y %tmp.117;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_146_26_161_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_146_8_167_8_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_146_8_167_8_if_else_false:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_161_15_167_8_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 162 12 ]
+        %tmp.118 = lgetv %dx.4;
+        symbol [ dx %tmp.118 162 17 19 ];
+        %tmp.119 = lgetv %dist.7;
+        symbol [ dist %tmp.119 162 22 26 ];
+        %tmp.120 = div %tmp.118 %tmp.119;
+        lputv %nx.8 %tmp.120;
+        symbol [ nx %nx.8 162 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 163 12 ]
+        %tmp.121 = lgetv %dy.5;
+        symbol [ dy %tmp.121 163 17 19 ];
+        %tmp.122 = lgetv %dist.7;
+        symbol [ dist %tmp.122 163 22 26 ];
+        %tmp.123 = div %tmp.121 %tmp.122;
+        lputv %ny.9 %tmp.123;
+        symbol [ ny %ny.9 163 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 164 12 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_161_15_167_8_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_161_15_167_8_stop" ]
+        %pen.15 = local;
+        symbol [ pen %pen.15 164 16 19 ];
+        %tmp.124 = lgetv %r.1;
+        symbol [ r %tmp.124 164 22 23 ];
+        %tmp.125 = lgetv %dist.7;
+        symbol [ dist %tmp.125 164 26 30 ];
+        %tmp.126 = sub %tmp.124 %tmp.125;
+        lputv %pen.15 %tmp.126;
+        symbol [ pen %pen.15 164 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 165 12 ]
+        %tmp.127 = lgetv %ball;
+        symbol [ ball %tmp.127 165 12 16 ];
+        %tmp.128 = lgetv %ball;
+        symbol [ ball %tmp.128 165 21 25 ];
+        symbol [ x %tmp.129 165 26 27 ];
+        %tmp.129 = getv %tmp.128 :x;
+        %tmp.130 = lgetv %nx.8;
+        symbol [ nx %tmp.130 165 30 32 ];
+        %tmp.131 = lgetv %pen.15;
+        symbol [ pen %tmp.131 165 36 39 ];
+        %tmp.132 = 0.5;
+        %tmp.133 = add %tmp.131 %tmp.132;
+        %tmp.134 = mul %tmp.130 %tmp.133;
+        %tmp.135 = add %tmp.129 %tmp.134;
+        symbol [ x ? 165 17 18 ];
+        putv %tmp.127 :x %tmp.135;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 166 12 ]
+        %tmp.136 = lgetv %ball;
+        symbol [ ball %tmp.136 166 12 16 ];
+        %tmp.137 = lgetv %ball;
+        symbol [ ball %tmp.137 166 21 25 ];
+        symbol [ y %tmp.138 166 26 27 ];
+        %tmp.138 = getv %tmp.137 :y;
+        %tmp.139 = lgetv %ny.9;
+        symbol [ ny %tmp.139 166 30 32 ];
+        %tmp.140 = lgetv %pen.15;
+        symbol [ pen %tmp.140 166 36 39 ];
+        %tmp.141 = 0.5;
+        %tmp.142 = add %tmp.140 %tmp.141;
+        %tmp.143 = mul %tmp.139 %tmp.142;
+        %tmp.144 = add %tmp.138 %tmp.143;
+        symbol [ y ? 166 17 18 ];
+        putv %tmp.136 :y %tmp.144;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_161_15_167_8_stop:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_146_8_167_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 168 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_130_54_176_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_130_54_176_4_stop" ]
+        %vDotN.16 = local;
+        symbol [ vDotN %vDotN.16 168 12 17 ];
+        %tmp.145 = lgetv %ball;
+        symbol [ ball %tmp.145 168 20 24 ];
+        symbol [ vx %tmp.146 168 25 27 ];
+        %tmp.146 = getv %tmp.145 :vx;
+        %tmp.147 = lgetv %nx.8;
+        symbol [ nx %tmp.147 168 30 32 ];
+        %tmp.148 = mul %tmp.146 %tmp.147;
+        %tmp.149 = lgetv %ball;
+        symbol [ ball %tmp.149 168 35 39 ];
+        symbol [ vy %tmp.150 168 40 42 ];
+        %tmp.150 = getv %tmp.149 :vy;
+        %tmp.151 = lgetv %ny.9;
+        symbol [ ny %tmp.151 168 45 47 ];
+        %tmp.152 = mul %tmp.150 %tmp.151;
+        %tmp.153 = add %tmp.148 %tmp.152;
+        lputv %vDotN.16 %tmp.153;
+        symbol [ vDotN %vDotN.16 168 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 169 8 ]
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_169_8_172_8_if_stmt:
+        %tmp.154 = lgetv %vDotN.16;
+        symbol [ vDotN %tmp.154 169 12 17 ];
+        %tmp.155 = 0;
+        %tmp.156 = lt %tmp.154 %tmp.155;
+        bf %tmp.156 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_169_8_172_8_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_169_8_172_8_if_true:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_169_23_172_8_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 170 12 ]
+        %tmp.157 = lgetv %ball;
+        symbol [ ball %tmp.157 170 12 16 ];
+        %tmp.158 = lgetv %ball;
+        symbol [ ball %tmp.158 170 22 26 ];
+        symbol [ vx %tmp.159 170 27 29 ];
+        %tmp.159 = getv %tmp.158 :vx;
+        %tmp.160 = 2;
+        %tmp.161 = lgetv %vDotN.16;
+        symbol [ vDotN %tmp.161 170 36 41 ];
+        %tmp.162 = mul %tmp.160 %tmp.161;
+        %tmp.163 = lgetv %nx.8;
+        symbol [ nx %tmp.163 170 44 46 ];
+        %tmp.164 = mul %tmp.162 %tmp.163;
+        %tmp.165 = sub %tmp.159 %tmp.164;
+        symbol [ vx ? 170 17 19 ];
+        putv %tmp.157 :vx %tmp.165;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 171 12 ]
+        %tmp.166 = lgetv %ball;
+        symbol [ ball %tmp.166 171 12 16 ];
+        %tmp.167 = lgetv %ball;
+        symbol [ ball %tmp.167 171 22 26 ];
+        symbol [ vy %tmp.168 171 27 29 ];
+        %tmp.168 = getv %tmp.167 :vy;
+        %tmp.169 = 2;
+        %tmp.170 = lgetv %vDotN.16;
+        symbol [ vDotN %tmp.170 171 36 41 ];
+        %tmp.171 = mul %tmp.169 %tmp.170;
+        %tmp.172 = lgetv %ny.9;
+        symbol [ ny %tmp.172 171 44 46 ];
+        %tmp.173 = mul %tmp.171 %tmp.172;
+        %tmp.174 = sub %tmp.168 %tmp.173;
+        symbol [ vy ? 171 17 19 ];
+        putv %tmp.166 :vy %tmp.174;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_169_23_172_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_169_8_172_8_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_169_8_172_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 173 8 ]
+        %tmp.175 = lgetv %ball;
+        symbol [ ball %tmp.175 173 8 12 ];
+        %tmp.176 = lgetv %ball;
+        symbol [ ball %tmp.176 173 18 22 ];
+        symbol [ vx %tmp.177 173 23 25 ];
+        %tmp.177 = getv %tmp.176 :vx;
+        %tmp.178 = 0.72;
+        %tmp.179 = mul %tmp.177 %tmp.178;
+        symbol [ vx ? 173 13 15 ];
+        putv %tmp.175 :vx %tmp.179;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 174 8 ]
+        %tmp.180 = lgetv %ball;
+        symbol [ ball %tmp.180 174 8 12 ];
+        %tmp.181 = lgetv %ball;
+        symbol [ ball %tmp.181 174 18 22 ];
+        symbol [ vy %tmp.182 174 23 25 ];
+        %tmp.182 = getv %tmp.181 :vy;
+        %tmp.183 = 0.72;
+        %tmp.184 = mul %tmp.182 %tmp.183;
+        symbol [ vy ? 174 13 15 ];
+        putv %tmp.180 :vy %tmp.184;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 175 8 ]
+        %tmp.185 = true;
+        ret %tmp.185;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_130_54_176_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc"; @line = 183; @symbol_functiondef = [collideSlingshot,183,20,36]; @symbol_param<0> = [ball,183,37,41]; @symbol_param<1> = [sling,183,43,48]; ]
+    static
+    function collideSlingshot(ball, sling) {
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_183_50_227_4_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 184 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_183_50_227_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_183_50_227_4_stop" ]
+        %sx.1 = local;
+        symbol [ sx %sx.1 184 12 14 ];
+        %tmp.1 = lgetv %sling;
+        symbol [ sling %tmp.1 184 17 22 ];
+        symbol [ bx %tmp.2 184 23 25 ];
+        %tmp.2 = getv %tmp.1 :bx;
+        %tmp.3 = lgetv %sling;
+        symbol [ sling %tmp.3 184 28 33 ];
+        symbol [ ax %tmp.4 184 34 36 ];
+        %tmp.4 = getv %tmp.3 :ax;
+        %tmp.5 = sub %tmp.2 %tmp.4;
+        lputv %sx.1 %tmp.5;
+        symbol [ sx %sx.1 184 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 185 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_183_50_227_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_183_50_227_4_stop" ]
+        %sy.2 = local;
+        symbol [ sy %sy.2 185 12 14 ];
+        %tmp.6 = lgetv %sling;
+        symbol [ sling %tmp.6 185 17 22 ];
+        symbol [ by %tmp.7 185 23 25 ];
+        %tmp.7 = getv %tmp.6 :by;
+        %tmp.8 = lgetv %sling;
+        symbol [ sling %tmp.8 185 28 33 ];
+        symbol [ ay %tmp.9 185 34 36 ];
+        %tmp.9 = getv %tmp.8 :ay;
+        %tmp.10 = sub %tmp.7 %tmp.9;
+        lputv %sy.2 %tmp.10;
+        symbol [ sy %sy.2 185 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 186 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_183_50_227_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_183_50_227_4_stop" ]
+        %sLen2.3 = local;
+        symbol [ sLen2 %sLen2.3 186 12 17 ];
+        %tmp.11 = lgetv %sx.1;
+        symbol [ sx %tmp.11 186 20 22 ];
+        %tmp.12 = lgetv %sx.1;
+        symbol [ sx %tmp.12 186 25 27 ];
+        %tmp.13 = mul %tmp.11 %tmp.12;
+        %tmp.14 = lgetv %sy.2;
+        symbol [ sy %tmp.14 186 30 32 ];
+        %tmp.15 = lgetv %sy.2;
+        symbol [ sy %tmp.15 186 35 37 ];
         %tmp.16 = mul %tmp.14 %tmp.15;
-        %tmp.17 = lt %tmp.13 %tmp.16;
-        ret %tmp.17;
-_Users_kkorolczuk_work_garmin_voidrocks_source_PhysicsEngine_mc_49_67_53_4_stop:
+        %tmp.17 = add %tmp.13 %tmp.16;
+        lputv %sLen2.3 %tmp.17;
+        symbol [ sLen2 %sLen2.3 186 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 187 8 ]
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_187_8_187_43_if_stmt:
+        %tmp.18 = lgetv %sLen2.3;
+        symbol [ sLen2 %tmp.18 187 12 17 ];
+        %tmp.19 = 0.001;
+        %tmp.20 = lt %tmp.18 %tmp.19;
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_187_8_187_43_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_187_8_187_43_if_true:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_187_27_187_43_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 187 29 ]
+        %tmp.21 = false;
+        ret %tmp.21;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_187_27_187_43_stop:
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_187_8_187_43_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_187_8_187_43_if_end:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 189 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_183_50_227_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_183_50_227_4_stop" ]
+        %t.4 = local;
+        symbol [ t %t.4 189 12 13 ];
+        %tmp.22 = lgetv %ball;
+        symbol [ ball %tmp.22 189 18 22 ];
+        symbol [ x %tmp.23 189 23 24 ];
+        %tmp.23 = getv %tmp.22 :x;
+        %tmp.24 = lgetv %sling;
+        symbol [ sling %tmp.24 189 27 32 ];
+        symbol [ ax %tmp.25 189 33 35 ];
+        %tmp.25 = getv %tmp.24 :ax;
+        %tmp.26 = sub %tmp.23 %tmp.25;
+        %tmp.27 = lgetv %sx.1;
+        symbol [ sx %tmp.27 189 39 41 ];
+        %tmp.28 = mul %tmp.26 %tmp.27;
+        %tmp.29 = lgetv %ball;
+        symbol [ ball %tmp.29 189 45 49 ];
+        symbol [ y %tmp.30 189 50 51 ];
+        %tmp.30 = getv %tmp.29 :y;
+        %tmp.31 = lgetv %sling;
+        symbol [ sling %tmp.31 189 54 59 ];
+        symbol [ ay %tmp.32 189 60 62 ];
+        %tmp.32 = getv %tmp.31 :ay;
+        %tmp.33 = sub %tmp.30 %tmp.32;
+        %tmp.34 = lgetv %sy.2;
+        symbol [ sy %tmp.34 189 66 68 ];
+        %tmp.35 = mul %tmp.33 %tmp.34;
+        %tmp.36 = add %tmp.28 %tmp.35;
+        %tmp.37 = lgetv %sLen2.3;
+        symbol [ sLen2 %tmp.37 189 72 77 ];
+        %tmp.38 = div %tmp.36 %tmp.37;
+        lputv %t.4 %tmp.38;
+        symbol [ t %t.4 189 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 190 8 ]
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_190_8_190_28_if_stmt:
+        %tmp.39 = lgetv %t.4;
+        symbol [ t %tmp.39 190 12 13 ];
+        %tmp.40 = 0;
+        %tmp.41 = lt %tmp.39 %tmp.40;
+        bf %tmp.41 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_190_8_190_28_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_190_8_190_28_if_true:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_190_19_190_28_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 190 21 ]
+        %tmp.42 = 0;
+        lputv %t.4 %tmp.42;
+        symbol [ t %t.4 190 21 22 ];
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_190_19_190_28_stop:
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_190_8_190_28_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_190_8_190_28_if_end:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 190 30 ]
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_190_30_190_50_if_stmt:
+        %tmp.43 = lgetv %t.4;
+        symbol [ t %tmp.43 190 34 35 ];
+        %tmp.44 = 1;
+        %tmp.45 = gt %tmp.43 %tmp.44;
+        bf %tmp.45 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_190_30_190_50_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_190_30_190_50_if_true:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_190_41_190_50_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 190 43 ]
+        %tmp.46 = 1;
+        lputv %t.4 %tmp.46;
+        symbol [ t %t.4 190 43 44 ];
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_190_41_190_50_stop:
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_190_30_190_50_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_190_30_190_50_if_end:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 191 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_183_50_227_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_183_50_227_4_stop" ]
+        %qx.5 = local;
+        symbol [ qx %qx.5 191 12 14 ];
+        %tmp.47 = lgetv %sling;
+        symbol [ sling %tmp.47 191 17 22 ];
+        symbol [ ax %tmp.48 191 23 25 ];
+        %tmp.48 = getv %tmp.47 :ax;
+        %tmp.49 = lgetv %sx.1;
+        symbol [ sx %tmp.49 191 28 30 ];
+        %tmp.50 = lgetv %t.4;
+        symbol [ t %tmp.50 191 33 34 ];
+        %tmp.51 = mul %tmp.49 %tmp.50;
+        %tmp.52 = add %tmp.48 %tmp.51;
+        lputv %qx.5 %tmp.52;
+        symbol [ qx %qx.5 191 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 192 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_183_50_227_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_183_50_227_4_stop" ]
+        %qy.6 = local;
+        symbol [ qy %qy.6 192 12 14 ];
+        %tmp.53 = lgetv %sling;
+        symbol [ sling %tmp.53 192 17 22 ];
+        symbol [ ay %tmp.54 192 23 25 ];
+        %tmp.54 = getv %tmp.53 :ay;
+        %tmp.55 = lgetv %sy.2;
+        symbol [ sy %tmp.55 192 28 30 ];
+        %tmp.56 = lgetv %t.4;
+        symbol [ t %tmp.56 192 33 34 ];
+        %tmp.57 = mul %tmp.55 %tmp.56;
+        %tmp.58 = add %tmp.54 %tmp.57;
+        lputv %qy.6 %tmp.58;
+        symbol [ qy %qy.6 192 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 193 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_183_50_227_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_183_50_227_4_stop" ]
+        %dx.7 = local;
+        symbol [ dx %dx.7 193 12 14 ];
+        %tmp.59 = lgetv %ball;
+        symbol [ ball %tmp.59 193 17 21 ];
+        symbol [ x %tmp.60 193 22 23 ];
+        %tmp.60 = getv %tmp.59 :x;
+        %tmp.61 = lgetv %qx.5;
+        symbol [ qx %tmp.61 193 26 28 ];
+        %tmp.62 = sub %tmp.60 %tmp.61;
+        lputv %dx.7 %tmp.62;
+        symbol [ dx %dx.7 193 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 194 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_183_50_227_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_183_50_227_4_stop" ]
+        %dy.8 = local;
+        symbol [ dy %dy.8 194 12 14 ];
+        %tmp.63 = lgetv %ball;
+        symbol [ ball %tmp.63 194 17 21 ];
+        symbol [ y %tmp.64 194 22 23 ];
+        %tmp.64 = getv %tmp.63 :y;
+        %tmp.65 = lgetv %qy.6;
+        symbol [ qy %tmp.65 194 26 28 ];
+        %tmp.66 = sub %tmp.64 %tmp.65;
+        lputv %dy.8 %tmp.66;
+        symbol [ dy %dy.8 194 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 195 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_183_50_227_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_183_50_227_4_stop" ]
+        %distSq.9 = local;
+        symbol [ distSq %distSq.9 195 12 18 ];
+        %tmp.67 = lgetv %dx.7;
+        symbol [ dx %tmp.67 195 21 23 ];
+        %tmp.68 = lgetv %dx.7;
+        symbol [ dx %tmp.68 195 26 28 ];
+        %tmp.69 = mul %tmp.67 %tmp.68;
+        %tmp.70 = lgetv %dy.8;
+        symbol [ dy %tmp.70 195 31 33 ];
+        %tmp.71 = lgetv %dy.8;
+        symbol [ dy %tmp.71 195 36 38 ];
+        %tmp.72 = mul %tmp.70 %tmp.71;
+        %tmp.73 = add %tmp.69 %tmp.72;
+        lputv %distSq.9 %tmp.73;
+        symbol [ distSq %distSq.9 195 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 196 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_183_50_227_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_183_50_227_4_stop" ]
+        %r.10 = local;
+        symbol [ r %r.10 196 12 13 ];
+        %tmp.74 = lgetv %ball;
+        symbol [ ball %tmp.74 196 16 20 ];
+        symbol [ radius %tmp.75 196 21 27 ];
+        %tmp.75 = getv %tmp.74 :radius;
+        lputv %r.10 %tmp.75;
+        symbol [ r %r.10 196 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 197 8 ]
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_197_8_197_45_if_stmt:
+        %tmp.76 = lgetv %distSq.9;
+        symbol [ distSq %tmp.76 197 12 18 ];
+        %tmp.77 = lgetv %r.10;
+        symbol [ r %tmp.77 197 22 23 ];
+        %tmp.78 = lgetv %r.10;
+        symbol [ r %tmp.78 197 26 27 ];
+        %tmp.79 = mul %tmp.77 %tmp.78;
+        %tmp.80 = gte %tmp.76 %tmp.79;
+        bf %tmp.80 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_197_8_197_45_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_197_8_197_45_if_true:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_197_29_197_45_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 197 31 ]
+        %tmp.81 = false;
+        ret %tmp.81;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_197_29_197_45_stop:
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_197_8_197_45_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_197_8_197_45_if_end:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 199 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_183_50_227_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_183_50_227_4_stop" ]
+        %dist.11 = local;
+        symbol [ dist %dist.11 199 12 16 ];
+        symbol [ Math %tmp.82 199 19 23 ];
+        %tmp.82 = getm $.Toybox.Math;
+        symbol [ sqrt %tmp.83 199 24 28 ];
+        %tmp.83 = getv function %tmp.82 :sqrt;
+        %tmp.84 = lgetv %distSq.9;
+        symbol [ distSq %tmp.84 199 29 35 ];
+        %tmp.85 = invoke %tmp.82 %tmp.83(%tmp.84);
+        lputv %dist.11 %tmp.85;
+        symbol [ dist %dist.11 199 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 202 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_183_50_227_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_183_50_227_4_stop" ]
+        %nx.12 = local;
+        symbol [ nx %nx.12 202 12 14 ];
+        %tmp.86 = lgetv %sling;
+        symbol [ sling %tmp.86 202 17 22 ];
+        symbol [ nx %tmp.87 202 23 25 ];
+        %tmp.87 = getv %tmp.86 :nx;
+        lputv %nx.12 %tmp.87;
+        symbol [ nx %nx.12 202 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 203 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_183_50_227_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_183_50_227_4_stop" ]
+        %ny.13 = local;
+        symbol [ ny %ny.13 203 12 14 ];
+        %tmp.88 = lgetv %sling;
+        symbol [ sling %tmp.88 203 17 22 ];
+        symbol [ ny %tmp.89 203 23 25 ];
+        %tmp.89 = getv %tmp.88 :ny;
+        lputv %ny.13 %tmp.89;
+        symbol [ ny %ny.13 203 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 204 8 ]
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_204_8_213_8_if_stmt:
+        %tmp.90 = lgetv %dist.11;
+        symbol [ dist %tmp.90 204 12 16 ];
+        %tmp.91 = 0.001;
+        %tmp.92 = gt %tmp.90 %tmp.91;
+        bf %tmp.92 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_204_8_213_8_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_204_8_213_8_if_true:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_204_26_213_8_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 208 12 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_204_26_213_8_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_204_26_213_8_stop" ]
+        %gx.14 = local;
+        symbol [ gx %gx.14 208 16 18 ];
+        %tmp.93 = lgetv %dx.7;
+        symbol [ dx %tmp.93 208 21 23 ];
+        %tmp.94 = lgetv %dist.11;
+        symbol [ dist %tmp.94 208 26 30 ];
+        %tmp.95 = div %tmp.93 %tmp.94;
+        lputv %gx.14 %tmp.95;
+        symbol [ gx %gx.14 208 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 209 12 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_204_26_213_8_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_204_26_213_8_stop" ]
+        %gy.15 = local;
+        symbol [ gy %gy.15 209 16 18 ];
+        %tmp.96 = lgetv %dy.8;
+        symbol [ dy %tmp.96 209 21 23 ];
+        %tmp.97 = lgetv %dist.11;
+        symbol [ dist %tmp.97 209 26 30 ];
+        %tmp.98 = div %tmp.96 %tmp.97;
+        lputv %gy.15 %tmp.98;
+        symbol [ gy %gy.15 209 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 210 12 ]
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_210_12_212_12_if_stmt:
+        %tmp.99 = lgetv %gx.14;
+        symbol [ gx %tmp.99 210 16 18 ];
+        %tmp.100 = lgetv %sling;
+        symbol [ sling %tmp.100 210 21 26 ];
+        symbol [ nx %tmp.101 210 27 29 ];
+        %tmp.101 = getv %tmp.100 :nx;
+        %tmp.102 = mul %tmp.99 %tmp.101;
+        %tmp.103 = lgetv %gy.15;
+        symbol [ gy %tmp.103 210 32 34 ];
+        %tmp.104 = lgetv %sling;
+        symbol [ sling %tmp.104 210 37 42 ];
+        symbol [ ny %tmp.105 210 43 45 ];
+        %tmp.105 = getv %tmp.104 :ny;
+        %tmp.106 = mul %tmp.103 %tmp.105;
+        %tmp.107 = add %tmp.102 %tmp.106;
+        %tmp.108 = 0;
+        %tmp.109 = gt %tmp.107 %tmp.108;
+        bf %tmp.109 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_210_12_212_12_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_210_12_212_12_if_true:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_210_51_212_12_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 211 16 ]
+        %tmp.110 = lgetv %gx.14;
+        symbol [ gx %tmp.110 211 21 23 ];
+        lputv %nx.12 %tmp.110;
+        symbol [ nx %nx.12 211 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 211 25 ]
+        %tmp.111 = lgetv %gy.15;
+        symbol [ gy %tmp.111 211 30 32 ];
+        lputv %ny.13 %tmp.111;
+        symbol [ ny %ny.13 211 25 27 ];
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_210_51_212_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_210_12_212_12_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_210_12_212_12_if_end:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_204_26_213_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_204_8_213_8_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_204_8_213_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 214 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_183_50_227_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_183_50_227_4_stop" ]
+        %pen.16 = local;
+        symbol [ pen %pen.16 214 12 15 ];
+        %tmp.112 = lgetv %r.10;
+        symbol [ r %tmp.112 214 18 19 ];
+        %tmp.113 = lgetv %dist.11;
+        symbol [ dist %tmp.113 214 22 26 ];
+        %tmp.114 = sub %tmp.112 %tmp.113;
+        lputv %pen.16 %tmp.114;
+        symbol [ pen %pen.16 214 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 215 8 ]
+        %tmp.115 = lgetv %ball;
+        symbol [ ball %tmp.115 215 8 12 ];
+        %tmp.116 = lgetv %ball;
+        symbol [ ball %tmp.116 215 17 21 ];
+        symbol [ x %tmp.117 215 22 23 ];
+        %tmp.117 = getv %tmp.116 :x;
+        %tmp.118 = lgetv %nx.12;
+        symbol [ nx %tmp.118 215 26 28 ];
+        %tmp.119 = lgetv %pen.16;
+        symbol [ pen %tmp.119 215 32 35 ];
+        %tmp.120 = 1.0;
+        %tmp.121 = add %tmp.119 %tmp.120;
+        %tmp.122 = mul %tmp.118 %tmp.121;
+        %tmp.123 = add %tmp.117 %tmp.122;
+        symbol [ x ? 215 13 14 ];
+        putv %tmp.115 :x %tmp.123;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 216 8 ]
+        %tmp.124 = lgetv %ball;
+        symbol [ ball %tmp.124 216 8 12 ];
+        %tmp.125 = lgetv %ball;
+        symbol [ ball %tmp.125 216 17 21 ];
+        symbol [ y %tmp.126 216 22 23 ];
+        %tmp.126 = getv %tmp.125 :y;
+        %tmp.127 = lgetv %ny.13;
+        symbol [ ny %tmp.127 216 26 28 ];
+        %tmp.128 = lgetv %pen.16;
+        symbol [ pen %tmp.128 216 32 35 ];
+        %tmp.129 = 1.0;
+        %tmp.130 = add %tmp.128 %tmp.129;
+        %tmp.131 = mul %tmp.127 %tmp.130;
+        %tmp.132 = add %tmp.126 %tmp.131;
+        symbol [ y ? 216 13 14 ];
+        putv %tmp.124 :y %tmp.132;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 218 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_183_50_227_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_183_50_227_4_stop" ]
+        %vDotN.17 = local;
+        symbol [ vDotN %vDotN.17 218 12 17 ];
+        %tmp.133 = lgetv %ball;
+        symbol [ ball %tmp.133 218 20 24 ];
+        symbol [ vx %tmp.134 218 25 27 ];
+        %tmp.134 = getv %tmp.133 :vx;
+        %tmp.135 = lgetv %nx.12;
+        symbol [ nx %tmp.135 218 30 32 ];
+        %tmp.136 = mul %tmp.134 %tmp.135;
+        %tmp.137 = lgetv %ball;
+        symbol [ ball %tmp.137 218 35 39 ];
+        symbol [ vy %tmp.138 218 40 42 ];
+        %tmp.138 = getv %tmp.137 :vy;
+        %tmp.139 = lgetv %ny.13;
+        symbol [ ny %tmp.139 218 45 47 ];
+        %tmp.140 = mul %tmp.138 %tmp.139;
+        %tmp.141 = add %tmp.136 %tmp.140;
+        lputv %vDotN.17 %tmp.141;
+        symbol [ vDotN %vDotN.17 218 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 219 8 ]
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_219_8_222_8_if_stmt:
+        %tmp.142 = lgetv %vDotN.17;
+        symbol [ vDotN %tmp.142 219 12 17 ];
+        %tmp.143 = 0;
+        %tmp.144 = lt %tmp.142 %tmp.143;
+        bf %tmp.144 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_219_8_222_8_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_219_8_222_8_if_true:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_219_23_222_8_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 220 12 ]
+        %tmp.145 = lgetv %ball;
+        symbol [ ball %tmp.145 220 12 16 ];
+        %tmp.146 = lgetv %ball;
+        symbol [ ball %tmp.146 220 22 26 ];
+        symbol [ vx %tmp.147 220 27 29 ];
+        %tmp.147 = getv %tmp.146 :vx;
+        %tmp.148 = 2;
+        %tmp.149 = lgetv %vDotN.17;
+        symbol [ vDotN %tmp.149 220 36 41 ];
+        %tmp.150 = mul %tmp.148 %tmp.149;
+        %tmp.151 = lgetv %nx.12;
+        symbol [ nx %tmp.151 220 44 46 ];
+        %tmp.152 = mul %tmp.150 %tmp.151;
+        %tmp.153 = sub %tmp.147 %tmp.152;
+        symbol [ vx ? 220 17 19 ];
+        putv %tmp.145 :vx %tmp.153;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 221 12 ]
+        %tmp.154 = lgetv %ball;
+        symbol [ ball %tmp.154 221 12 16 ];
+        %tmp.155 = lgetv %ball;
+        symbol [ ball %tmp.155 221 22 26 ];
+        symbol [ vy %tmp.156 221 27 29 ];
+        %tmp.156 = getv %tmp.155 :vy;
+        %tmp.157 = 2;
+        %tmp.158 = lgetv %vDotN.17;
+        symbol [ vDotN %tmp.158 221 36 41 ];
+        %tmp.159 = mul %tmp.157 %tmp.158;
+        %tmp.160 = lgetv %ny.13;
+        symbol [ ny %tmp.160 221 44 46 ];
+        %tmp.161 = mul %tmp.159 %tmp.160;
+        %tmp.162 = sub %tmp.156 %tmp.161;
+        symbol [ vy ? 221 17 19 ];
+        putv %tmp.154 :vy %tmp.162;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_219_23_222_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_219_8_222_8_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_219_8_222_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 224 8 ]
+        %tmp.163 = lgetv %ball;
+        symbol [ ball %tmp.163 224 8 12 ];
+        %tmp.164 = lgetv %ball;
+        symbol [ ball %tmp.164 224 18 22 ];
+        symbol [ vx %tmp.165 224 23 25 ];
+        %tmp.165 = getv %tmp.164 :vx;
+        %tmp.166 = lgetv %nx.12;
+        symbol [ nx %tmp.166 224 28 30 ];
+        symbol [ SLING_KICK %tmp.168 224 33 43 ];
+        %tmp.168 = getv ? :SLING_KICK;
+        %tmp.169 = mul %tmp.166 %tmp.168;
+        %tmp.170 = add %tmp.165 %tmp.169;
+        symbol [ vx ? 224 13 15 ];
+        putv %tmp.163 :vx %tmp.170;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 225 8 ]
+        %tmp.171 = lgetv %ball;
+        symbol [ ball %tmp.171 225 8 12 ];
+        %tmp.172 = lgetv %ball;
+        symbol [ ball %tmp.172 225 18 22 ];
+        symbol [ vy %tmp.173 225 23 25 ];
+        %tmp.173 = getv %tmp.172 :vy;
+        %tmp.174 = lgetv %ny.13;
+        symbol [ ny %tmp.174 225 28 30 ];
+        symbol [ SLING_KICK %tmp.176 225 33 43 ];
+        %tmp.176 = getv ? :SLING_KICK;
+        %tmp.177 = mul %tmp.174 %tmp.176;
+        %tmp.178 = add %tmp.173 %tmp.177;
+        symbol [ vy ? 225 13 15 ];
+        putv %tmp.171 :vy %tmp.178;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 226 8 ]
+        %tmp.179 = true;
+        ret %tmp.179;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_183_50_227_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc"; @line = 243; @symbol_functiondef = [collideFlipper,243,20,34]; @symbol_param<0> = [ball,243,35,39]; @symbol_param<1> = [flipper,243,41,48]; ]
+    static
+    function collideFlipper(ball, flipper) {
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 244 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_stop" ]
+        %px.1 = local;
+        symbol [ px %px.1 244 12 14 ];
+        %tmp.1 = lgetv %flipper;
+        symbol [ flipper %tmp.1 244 17 24 ];
+        symbol [ pivotX %tmp.2 244 25 31 ];
+        %tmp.2 = getv %tmp.1 :pivotX;
+        lputv %px.1 %tmp.2;
+        symbol [ px %px.1 244 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 245 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_stop" ]
+        %py.2 = local;
+        symbol [ py %py.2 245 12 14 ];
+        %tmp.3 = lgetv %flipper;
+        symbol [ flipper %tmp.3 245 17 24 ];
+        symbol [ pivotY %tmp.4 245 25 31 ];
+        %tmp.4 = getv %tmp.3 :pivotY;
+        lputv %py.2 %tmp.4;
+        symbol [ py %py.2 245 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 246 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_stop" ]
+        %tx.3 = local;
+        symbol [ tx %tx.3 246 12 14 ];
+        %tmp.5 = lgetv %flipper;
+        symbol [ flipper %tmp.5 246 17 24 ];
+        symbol [ tipX %tmp.6 246 25 29 ];
+        %tmp.6 = getv function %tmp.5 :tipX;
+        %tmp.7 = invoke %tmp.5 %tmp.6();
+        lputv %tx.3 %tmp.7;
+        symbol [ tx %tx.3 246 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 247 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_stop" ]
+        %ty.4 = local;
+        symbol [ ty %ty.4 247 12 14 ];
+        %tmp.8 = lgetv %flipper;
+        symbol [ flipper %tmp.8 247 17 24 ];
+        symbol [ tipY %tmp.9 247 25 29 ];
+        %tmp.9 = getv function %tmp.8 :tipY;
+        %tmp.10 = invoke %tmp.8 %tmp.9();
+        lputv %ty.4 %tmp.10;
+        symbol [ ty %ty.4 247 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 248 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_stop" ]
+        %sx.5 = local;
+        symbol [ sx %sx.5 248 12 14 ];
+        %tmp.11 = lgetv %tx.3;
+        symbol [ tx %tmp.11 248 17 19 ];
+        %tmp.12 = lgetv %px.1;
+        symbol [ px %tmp.12 248 22 24 ];
+        %tmp.13 = sub %tmp.11 %tmp.12;
+        lputv %sx.5 %tmp.13;
+        symbol [ sx %sx.5 248 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 249 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_stop" ]
+        %sy.6 = local;
+        symbol [ sy %sy.6 249 12 14 ];
+        %tmp.14 = lgetv %ty.4;
+        symbol [ ty %tmp.14 249 17 19 ];
+        %tmp.15 = lgetv %py.2;
+        symbol [ py %tmp.15 249 22 24 ];
+        %tmp.16 = sub %tmp.14 %tmp.15;
+        lputv %sy.6 %tmp.16;
+        symbol [ sy %sy.6 249 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 250 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_stop" ]
+        %sLen2.7 = local;
+        symbol [ sLen2 %sLen2.7 250 12 17 ];
+        %tmp.17 = lgetv %sx.5;
+        symbol [ sx %tmp.17 250 20 22 ];
+        %tmp.18 = lgetv %sx.5;
+        symbol [ sx %tmp.18 250 25 27 ];
+        %tmp.19 = mul %tmp.17 %tmp.18;
+        %tmp.20 = lgetv %sy.6;
+        symbol [ sy %tmp.20 250 30 32 ];
+        %tmp.21 = lgetv %sy.6;
+        symbol [ sy %tmp.21 250 35 37 ];
+        %tmp.22 = mul %tmp.20 %tmp.21;
+        %tmp.23 = add %tmp.19 %tmp.22;
+        lputv %sLen2.7 %tmp.23;
+        symbol [ sLen2 %sLen2.7 250 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 251 8 ]
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_251_8_251_43_if_stmt:
+        %tmp.24 = lgetv %sLen2.7;
+        symbol [ sLen2 %tmp.24 251 12 17 ];
+        %tmp.25 = 0.001;
+        %tmp.26 = lt %tmp.24 %tmp.25;
+        bf %tmp.26 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_251_8_251_43_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_251_8_251_43_if_true:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_251_27_251_43_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 251 29 ]
+        %tmp.27 = false;
+        ret %tmp.27;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_251_27_251_43_stop:
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_251_8_251_43_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_251_8_251_43_if_end:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 254 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_stop" ]
+        %t.8 = local;
+        symbol [ t %t.8 254 12 13 ];
+        %tmp.28 = lgetv %ball;
+        symbol [ ball %tmp.28 254 18 22 ];
+        symbol [ x %tmp.29 254 23 24 ];
+        %tmp.29 = getv %tmp.28 :x;
+        %tmp.30 = lgetv %px.1;
+        symbol [ px %tmp.30 254 27 29 ];
+        %tmp.31 = sub %tmp.29 %tmp.30;
+        %tmp.32 = lgetv %sx.5;
+        symbol [ sx %tmp.32 254 33 35 ];
+        %tmp.33 = mul %tmp.31 %tmp.32;
+        %tmp.34 = lgetv %ball;
+        symbol [ ball %tmp.34 254 39 43 ];
+        symbol [ y %tmp.35 254 44 45 ];
+        %tmp.35 = getv %tmp.34 :y;
+        %tmp.36 = lgetv %py.2;
+        symbol [ py %tmp.36 254 48 50 ];
+        %tmp.37 = sub %tmp.35 %tmp.36;
+        %tmp.38 = lgetv %sy.6;
+        symbol [ sy %tmp.38 254 54 56 ];
+        %tmp.39 = mul %tmp.37 %tmp.38;
+        %tmp.40 = add %tmp.33 %tmp.39;
+        %tmp.41 = lgetv %sLen2.7;
+        symbol [ sLen2 %tmp.41 254 60 65 ];
+        %tmp.42 = div %tmp.40 %tmp.41;
+        lputv %t.8 %tmp.42;
+        symbol [ t %t.8 254 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 255 8 ]
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_255_8_255_28_if_stmt:
+        %tmp.43 = lgetv %t.8;
+        symbol [ t %tmp.43 255 12 13 ];
+        %tmp.44 = 0;
+        %tmp.45 = lt %tmp.43 %tmp.44;
+        bf %tmp.45 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_255_8_255_28_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_255_8_255_28_if_true:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_255_19_255_28_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 255 21 ]
+        %tmp.46 = 0;
+        lputv %t.8 %tmp.46;
+        symbol [ t %t.8 255 21 22 ];
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_255_19_255_28_stop:
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_255_8_255_28_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_255_8_255_28_if_end:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 255 30 ]
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_255_30_255_50_if_stmt:
+        %tmp.47 = lgetv %t.8;
+        symbol [ t %tmp.47 255 34 35 ];
+        %tmp.48 = 1;
+        %tmp.49 = gt %tmp.47 %tmp.48;
+        bf %tmp.49 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_255_30_255_50_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_255_30_255_50_if_true:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_255_41_255_50_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 255 43 ]
+        %tmp.50 = 1;
+        lputv %t.8 %tmp.50;
+        symbol [ t %t.8 255 43 44 ];
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_255_41_255_50_stop:
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_255_30_255_50_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_255_30_255_50_if_end:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 256 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_stop" ]
+        %qx.9 = local;
+        symbol [ qx %qx.9 256 12 14 ];
+        %tmp.51 = lgetv %px.1;
+        symbol [ px %tmp.51 256 17 19 ];
+        %tmp.52 = lgetv %sx.5;
+        symbol [ sx %tmp.52 256 22 24 ];
+        %tmp.53 = lgetv %t.8;
+        symbol [ t %tmp.53 256 27 28 ];
+        %tmp.54 = mul %tmp.52 %tmp.53;
+        %tmp.55 = add %tmp.51 %tmp.54;
+        lputv %qx.9 %tmp.55;
+        symbol [ qx %qx.9 256 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 257 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_stop" ]
+        %qy.10 = local;
+        symbol [ qy %qy.10 257 12 14 ];
+        %tmp.56 = lgetv %py.2;
+        symbol [ py %tmp.56 257 17 19 ];
+        %tmp.57 = lgetv %sy.6;
+        symbol [ sy %tmp.57 257 22 24 ];
+        %tmp.58 = lgetv %t.8;
+        symbol [ t %tmp.58 257 27 28 ];
+        %tmp.59 = mul %tmp.57 %tmp.58;
+        %tmp.60 = add %tmp.56 %tmp.59;
+        lputv %qy.10 %tmp.60;
+        symbol [ qy %qy.10 257 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 258 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_stop" ]
+        %dx.11 = local;
+        symbol [ dx %dx.11 258 12 14 ];
+        %tmp.61 = lgetv %ball;
+        symbol [ ball %tmp.61 258 17 21 ];
+        symbol [ x %tmp.62 258 22 23 ];
+        %tmp.62 = getv %tmp.61 :x;
+        %tmp.63 = lgetv %qx.9;
+        symbol [ qx %tmp.63 258 26 28 ];
+        %tmp.64 = sub %tmp.62 %tmp.63;
+        lputv %dx.11 %tmp.64;
+        symbol [ dx %dx.11 258 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 259 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_stop" ]
+        %dy.12 = local;
+        symbol [ dy %dy.12 259 12 14 ];
+        %tmp.65 = lgetv %ball;
+        symbol [ ball %tmp.65 259 17 21 ];
+        symbol [ y %tmp.66 259 22 23 ];
+        %tmp.66 = getv %tmp.65 :y;
+        %tmp.67 = lgetv %qy.10;
+        symbol [ qy %tmp.67 259 26 28 ];
+        %tmp.68 = sub %tmp.66 %tmp.67;
+        lputv %dy.12 %tmp.68;
+        symbol [ dy %dy.12 259 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 260 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_stop" ]
+        %distSq.13 = local;
+        symbol [ distSq %distSq.13 260 12 18 ];
+        %tmp.69 = lgetv %dx.11;
+        symbol [ dx %tmp.69 260 21 23 ];
+        %tmp.70 = lgetv %dx.11;
+        symbol [ dx %tmp.70 260 26 28 ];
+        %tmp.71 = mul %tmp.69 %tmp.70;
+        %tmp.72 = lgetv %dy.12;
+        symbol [ dy %tmp.72 260 31 33 ];
+        %tmp.73 = lgetv %dy.12;
+        symbol [ dy %tmp.73 260 36 38 ];
+        %tmp.74 = mul %tmp.72 %tmp.73;
+        %tmp.75 = add %tmp.71 %tmp.74;
+        lputv %distSq.13 %tmp.75;
+        symbol [ distSq %distSq.13 260 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 261 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_stop" ]
+        %minDist.14 = local;
+        symbol [ minDist %minDist.14 261 12 19 ];
+        %tmp.76 = lgetv %ball;
+        symbol [ ball %tmp.76 261 22 26 ];
+        symbol [ radius %tmp.77 261 27 33 ];
+        %tmp.77 = getv %tmp.76 :radius;
+        %tmp.78 = lgetv %flipper;
+        symbol [ flipper %tmp.78 261 36 43 ];
+        symbol [ radius %tmp.79 261 44 50 ];
+        %tmp.79 = getv %tmp.78 :radius;
+        %tmp.80 = add %tmp.77 %tmp.79;
+        lputv %minDist.14 %tmp.80;
+        symbol [ minDist %minDist.14 261 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 262 8 ]
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_262_8_262_57_if_stmt:
+        %tmp.81 = lgetv %distSq.13;
+        symbol [ distSq %tmp.81 262 12 18 ];
+        %tmp.82 = lgetv %minDist.14;
+        symbol [ minDist %tmp.82 262 22 29 ];
+        %tmp.83 = lgetv %minDist.14;
+        symbol [ minDist %tmp.83 262 32 39 ];
+        %tmp.84 = mul %tmp.82 %tmp.83;
+        %tmp.85 = gte %tmp.81 %tmp.84;
+        bf %tmp.85 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_262_8_262_57_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_262_8_262_57_if_true:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_262_41_262_57_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 262 43 ]
+        %tmp.86 = false;
+        ret %tmp.86;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_262_41_262_57_stop:
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_262_8_262_57_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_262_8_262_57_if_end:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 264 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_stop" ]
+        %dist.15 = local;
+        symbol [ dist %dist.15 264 12 16 ];
+        symbol [ Math %tmp.87 264 19 23 ];
+        %tmp.87 = getm $.Toybox.Math;
+        symbol [ sqrt %tmp.88 264 24 28 ];
+        %tmp.88 = getv function %tmp.87 :sqrt;
+        %tmp.89 = lgetv %distSq.13;
+        symbol [ distSq %tmp.89 264 29 35 ];
+        %tmp.90 = invoke %tmp.87 %tmp.88(%tmp.89);
+        lputv %dist.15 %tmp.90;
+        symbol [ dist %dist.15 264 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 265 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_stop" ]
+        %nx.16 = local;
+        symbol [ nx %nx.16 265 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 265 16 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_stop" ]
+        %ny.17 = local;
+        symbol [ ny %ny.17 265 20 22 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 266 8 ]
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_266_8_273_8_if_stmt:
+        %tmp.91 = lgetv %dist.15;
+        symbol [ dist %tmp.91 266 12 16 ];
+        %tmp.92 = 0.001;
+        %tmp.93 = lt %tmp.91 %tmp.92;
+        bf %tmp.93 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_266_8_273_8_if_else_false;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_266_8_273_8_if_true:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_266_26_270_8_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 267 12 ]
+        %tmp.94 = lgetv %sy.6;
+        symbol [ sy %tmp.94 267 18 20 ];
+        %tmp.95 = sub 0 %tmp.94;
+        symbol [ Math %tmp.96 267 23 27 ];
+        %tmp.96 = getm $.Toybox.Math;
+        symbol [ sqrt %tmp.97 267 28 32 ];
+        %tmp.97 = getv function %tmp.96 :sqrt;
+        %tmp.98 = lgetv %sLen2.7;
+        symbol [ sLen2 %tmp.98 267 33 38 ];
+        %tmp.99 = invoke %tmp.96 %tmp.97(%tmp.98);
+        %tmp.100 = div %tmp.95 %tmp.99;
+        lputv %nx.16 %tmp.100;
+        symbol [ nx %nx.16 267 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 268 12 ]
+        %tmp.101 = lgetv %sx.5;
+        symbol [ sx %tmp.101 268 18 20 ];
+        symbol [ Math %tmp.102 268 23 27 ];
+        %tmp.102 = getm $.Toybox.Math;
+        symbol [ sqrt %tmp.103 268 28 32 ];
+        %tmp.103 = getv function %tmp.102 :sqrt;
+        %tmp.104 = lgetv %sLen2.7;
+        symbol [ sLen2 %tmp.104 268 33 38 ];
+        %tmp.105 = invoke %tmp.102 %tmp.103(%tmp.104);
+        %tmp.106 = div %tmp.101 %tmp.105;
+        lputv %ny.17 %tmp.106;
+        symbol [ ny %ny.17 268 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 269 12 ]
+        %tmp.107 = 0.001;
+        lputv %dist.15 %tmp.107;
+        symbol [ dist %dist.15 269 12 16 ];
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_266_26_270_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_266_8_273_8_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_266_8_273_8_if_else_false:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_270_15_273_8_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 271 12 ]
+        %tmp.108 = lgetv %dx.11;
+        symbol [ dx %tmp.108 271 17 19 ];
+        %tmp.109 = lgetv %dist.15;
+        symbol [ dist %tmp.109 271 22 26 ];
+        %tmp.110 = div %tmp.108 %tmp.109;
+        lputv %nx.16 %tmp.110;
+        symbol [ nx %nx.16 271 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 272 12 ]
+        %tmp.111 = lgetv %dy.12;
+        symbol [ dy %tmp.111 272 17 19 ];
+        %tmp.112 = lgetv %dist.15;
+        symbol [ dist %tmp.112 272 22 26 ];
+        %tmp.113 = div %tmp.111 %tmp.112;
+        lputv %ny.17 %tmp.113;
+        symbol [ ny %ny.17 272 12 14 ];
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_270_15_273_8_stop:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_266_8_273_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 274 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_stop" ]
+        %pen.18 = local;
+        symbol [ pen %pen.18 274 12 15 ];
+        %tmp.114 = lgetv %minDist.14;
+        symbol [ minDist %tmp.114 274 18 25 ];
+        %tmp.115 = lgetv %dist.15;
+        symbol [ dist %tmp.115 274 28 32 ];
+        %tmp.116 = sub %tmp.114 %tmp.115;
+        lputv %pen.18 %tmp.116;
+        symbol [ pen %pen.18 274 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 275 8 ]
+        %tmp.117 = lgetv %ball;
+        symbol [ ball %tmp.117 275 8 12 ];
+        %tmp.118 = lgetv %ball;
+        symbol [ ball %tmp.118 275 17 21 ];
+        symbol [ x %tmp.119 275 22 23 ];
+        %tmp.119 = getv %tmp.118 :x;
+        %tmp.120 = lgetv %nx.16;
+        symbol [ nx %tmp.120 275 26 28 ];
+        %tmp.121 = lgetv %pen.18;
+        symbol [ pen %tmp.121 275 32 35 ];
+        %tmp.122 = 0.5;
+        %tmp.123 = add %tmp.121 %tmp.122;
+        %tmp.124 = mul %tmp.120 %tmp.123;
+        %tmp.125 = add %tmp.119 %tmp.124;
+        symbol [ x ? 275 13 14 ];
+        putv %tmp.117 :x %tmp.125;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 276 8 ]
+        %tmp.126 = lgetv %ball;
+        symbol [ ball %tmp.126 276 8 12 ];
+        %tmp.127 = lgetv %ball;
+        symbol [ ball %tmp.127 276 17 21 ];
+        symbol [ y %tmp.128 276 22 23 ];
+        %tmp.128 = getv %tmp.127 :y;
+        %tmp.129 = lgetv %ny.17;
+        symbol [ ny %tmp.129 276 26 28 ];
+        %tmp.130 = lgetv %pen.18;
+        symbol [ pen %tmp.130 276 32 35 ];
+        %tmp.131 = 0.5;
+        %tmp.132 = add %tmp.130 %tmp.131;
+        %tmp.133 = mul %tmp.129 %tmp.132;
+        %tmp.134 = add %tmp.128 %tmp.133;
+        symbol [ y ? 276 13 14 ];
+        putv %tmp.126 :y %tmp.134;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 283 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_stop" ]
+        %vDotN.19 = local;
+        symbol [ vDotN %vDotN.19 283 12 17 ];
+        %tmp.135 = lgetv %ball;
+        symbol [ ball %tmp.135 283 20 24 ];
+        symbol [ vx %tmp.136 283 25 27 ];
+        %tmp.136 = getv %tmp.135 :vx;
+        %tmp.137 = lgetv %nx.16;
+        symbol [ nx %tmp.137 283 30 32 ];
+        %tmp.138 = mul %tmp.136 %tmp.137;
+        %tmp.139 = lgetv %ball;
+        symbol [ ball %tmp.139 283 35 39 ];
+        symbol [ vy %tmp.140 283 40 42 ];
+        %tmp.140 = getv %tmp.139 :vy;
+        %tmp.141 = lgetv %ny.17;
+        symbol [ ny %tmp.141 283 45 47 ];
+        %tmp.142 = mul %tmp.140 %tmp.141;
+        %tmp.143 = add %tmp.138 %tmp.142;
+        lputv %vDotN.19 %tmp.143;
+        symbol [ vDotN %vDotN.19 283 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 284 8 ]
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_284_8_289_8_if_stmt:
+        %tmp.144 = lgetv %vDotN.19;
+        symbol [ vDotN %tmp.144 284 12 17 ];
+        %tmp.145 = 0;
+        %tmp.146 = lt %tmp.144 %tmp.145;
+        bf %tmp.146 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_284_8_289_8_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_284_8_289_8_if_true:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_284_23_289_8_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 285 12 ]
+        %tmp.147 = lgetv %ball;
+        symbol [ ball %tmp.147 285 12 16 ];
+        %tmp.148 = lgetv %ball;
+        symbol [ ball %tmp.148 285 22 26 ];
+        symbol [ vx %tmp.149 285 27 29 ];
+        %tmp.149 = getv %tmp.148 :vx;
+        %tmp.150 = 2;
+        %tmp.151 = lgetv %vDotN.19;
+        symbol [ vDotN %tmp.151 285 36 41 ];
+        %tmp.152 = mul %tmp.150 %tmp.151;
+        %tmp.153 = lgetv %nx.16;
+        symbol [ nx %tmp.153 285 44 46 ];
+        %tmp.154 = mul %tmp.152 %tmp.153;
+        %tmp.155 = sub %tmp.149 %tmp.154;
+        symbol [ vx ? 285 17 19 ];
+        putv %tmp.147 :vx %tmp.155;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 286 12 ]
+        %tmp.156 = lgetv %ball;
+        symbol [ ball %tmp.156 286 12 16 ];
+        %tmp.157 = lgetv %ball;
+        symbol [ ball %tmp.157 286 22 26 ];
+        symbol [ vy %tmp.158 286 27 29 ];
+        %tmp.158 = getv %tmp.157 :vy;
+        %tmp.159 = 2;
+        %tmp.160 = lgetv %vDotN.19;
+        symbol [ vDotN %tmp.160 286 36 41 ];
+        %tmp.161 = mul %tmp.159 %tmp.160;
+        %tmp.162 = lgetv %ny.17;
+        symbol [ ny %tmp.162 286 44 46 ];
+        %tmp.163 = mul %tmp.161 %tmp.162;
+        %tmp.164 = sub %tmp.158 %tmp.163;
+        symbol [ vy ? 286 17 19 ];
+        putv %tmp.156 :vy %tmp.164;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 287 12 ]
+        %tmp.165 = lgetv %ball;
+        symbol [ ball %tmp.165 287 12 16 ];
+        %tmp.166 = lgetv %ball;
+        symbol [ ball %tmp.166 287 22 26 ];
+        symbol [ vx %tmp.167 287 27 29 ];
+        %tmp.167 = getv %tmp.166 :vx;
+        symbol [ FLIP_RESTIT %tmp.169 287 32 43 ];
+        %tmp.169 = getv ? :FLIP_RESTIT;
+        %tmp.170 = mul %tmp.167 %tmp.169;
+        symbol [ vx ? 287 17 19 ];
+        putv %tmp.165 :vx %tmp.170;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 288 12 ]
+        %tmp.171 = lgetv %ball;
+        symbol [ ball %tmp.171 288 12 16 ];
+        %tmp.172 = lgetv %ball;
+        symbol [ ball %tmp.172 288 22 26 ];
+        symbol [ vy %tmp.173 288 27 29 ];
+        %tmp.173 = getv %tmp.172 :vy;
+        symbol [ FLIP_RESTIT %tmp.175 288 32 43 ];
+        %tmp.175 = getv ? :FLIP_RESTIT;
+        %tmp.176 = mul %tmp.173 %tmp.175;
+        symbol [ vy ? 288 17 19 ];
+        putv %tmp.171 :vy %tmp.176;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_284_23_289_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_284_8_289_8_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_284_8_289_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 292 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_stop" ]
+        %angVel.20 = local;
+        symbol [ angVel %angVel.20 292 12 18 ];
+        %tmp.177 = lgetv %flipper;
+        symbol [ flipper %tmp.177 292 21 28 ];
+        symbol [ angularVelocity %tmp.178 292 29 44 ];
+        %tmp.178 = getv function %tmp.177 :angularVelocity;
+        %tmp.179 = invoke %tmp.177 %tmp.178();
+        lputv %angVel.20 %tmp.179;
+        symbol [ angVel %angVel.20 292 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 293 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_stop" ]
+        %mag.21 = local;
+        symbol [ mag %mag.21 293 12 15 ];
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_293_18_293_41_begin:
+        %tmp.180 = lgetv %angVel.20;
+        symbol [ angVel %tmp.180 293 18 24 ];
+        %tmp.181 = 0;
+        %tmp.182 = lt %tmp.180 %tmp.181;
+        bf %tmp.182 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_293_18_293_41_else_false;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_293_18_293_41_true:
+        %tmp.183 = lgetv %angVel.20;
+        symbol [ angVel %tmp.183 293 32 38 ];
+        %tmp.184 = sub 0 %tmp.183;
+        push %tmp.184;
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_293_18_293_41_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_293_18_293_41_else_false:
+        %tmp.185 = lgetv %angVel.20;
+        symbol [ angVel %tmp.185 293 41 47 ];
+        push %tmp.185;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_293_18_293_41_end:
+        %tmp.186 = phi [%tmp.182 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_293_18_293_41_begin] [%tmp.184 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_293_18_293_41_true] [%tmp.185 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_293_18_293_41_else_false] [%tmp.186 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_293_18_293_41_end];
+        lputv %mag.21 %tmp.186;
+        symbol [ mag %mag.21 293 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 294 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_stop" ]
+        %contactR.22 = local;
+        symbol [ contactR %contactR.22 294 12 20 ];
+        symbol [ Math %tmp.187 294 23 27 ];
+        %tmp.187 = getm $.Toybox.Math;
+        symbol [ sqrt %tmp.188 294 28 32 ];
+        %tmp.188 = getv function %tmp.187 :sqrt;
+        %tmp.189 = lgetv %qx.9;
+        symbol [ qx %tmp.189 294 34 36 ];
+        %tmp.190 = lgetv %px.1;
+        symbol [ px %tmp.190 294 39 41 ];
+        %tmp.191 = sub %tmp.189 %tmp.190;
+        %tmp.192 = lgetv %qx.9;
+        symbol [ qx %tmp.192 294 46 48 ];
+        %tmp.193 = lgetv %px.1;
+        symbol [ px %tmp.193 294 51 53 ];
+        %tmp.194 = sub %tmp.192 %tmp.193;
+        %tmp.195 = mul %tmp.191 %tmp.194;
+        %tmp.196 = lgetv %qy.10;
+        symbol [ qy %tmp.196 295 34 36 ];
+        %tmp.197 = lgetv %py.2;
+        symbol [ py %tmp.197 295 39 41 ];
+        %tmp.198 = sub %tmp.196 %tmp.197;
+        %tmp.199 = lgetv %qy.10;
+        symbol [ qy %tmp.199 295 46 48 ];
+        %tmp.200 = lgetv %py.2;
+        symbol [ py %tmp.200 295 51 53 ];
+        %tmp.201 = sub %tmp.199 %tmp.200;
+        %tmp.202 = mul %tmp.198 %tmp.201;
+        %tmp.203 = add %tmp.195 %tmp.202;
+        %tmp.204 = invoke %tmp.187 %tmp.188(%tmp.203);
+        lputv %contactR.22 %tmp.204;
+        symbol [ contactR %contactR.22 294 12 20 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 296 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_stop" ]
+        %kickImpulse.23 = local;
+        symbol [ kickImpulse %kickImpulse.23 296 12 23 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 297 8 ]
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_297_8_303_8_if_stmt:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_297_12_297_36_begin:
+        %tmp.205 = lgetv %flipper;
+        symbol [ flipper %tmp.205 297 12 19 ];
+        symbol [ active %tmp.206 297 20 26 ];
+        %tmp.206 = getv %tmp.205 :active;
+        bf %tmp.206 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_297_8_303_8_if_else_false;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_297_30_297_36_true:
+        %tmp.207 = lgetv %mag.21;
+        symbol [ mag %tmp.207 297 30 33 ];
+        %tmp.208 = 0.5;
+        %tmp.209 = gt %tmp.207 %tmp.208;
+        push %tmp.209;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_297_30_297_36_end:
+        %tmp.210 = phi [%tmp.206 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_297_12_297_36_begin] [%tmp.209 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_297_30_297_36_true] [%tmp.210 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_297_30_297_36_end];
+        bf %tmp.210 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_297_8_303_8_if_else_false;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_297_8_303_8_if_true:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_297_41_301_8_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 299 12 ]
+        symbol [ FLIP_BASE %tmp.212 299 26 35 ];
+        %tmp.212 = getv ? :FLIP_BASE;
+        %tmp.213 = lgetv %mag.21;
+        symbol [ mag %tmp.213 300 28 31 ];
+        %tmp.214 = 3.14159;
+        %tmp.215 = 180.0;
+        %tmp.216 = div %tmp.214 %tmp.215;
+        %tmp.217 = mul %tmp.213 %tmp.216;
+        %tmp.218 = lgetv %contactR.22;
+        symbol [ contactR %tmp.218 300 54 62 ];
+        %tmp.219 = mul %tmp.217 %tmp.218;
+        symbol [ FLIP_KICK %tmp.221 300 65 74 ];
+        %tmp.221 = getv ? :FLIP_KICK;
+        %tmp.222 = mul %tmp.219 %tmp.221;
+        %tmp.223 = add %tmp.212 %tmp.222;
+        lputv %kickImpulse.23 %tmp.223;
+        symbol [ kickImpulse %kickImpulse.23 299 12 23 ];
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_297_41_301_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_297_8_303_8_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_297_8_303_8_if_else_false:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_301_15_303_8_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 302 12 ]
+        symbol [ FLIP_PASSIVE %tmp.225 302 26 38 ];
+        %tmp.225 = getv ? :FLIP_PASSIVE;
+        lputv %kickImpulse.23 %tmp.225;
+        symbol [ kickImpulse %kickImpulse.23 302 12 23 ];
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_301_15_303_8_stop:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_297_8_303_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 307 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_stop" ]
+        %outV.24 = local;
+        symbol [ outV %outV.24 307 12 16 ];
+        %tmp.226 = lgetv %ball;
+        symbol [ ball %tmp.226 307 19 23 ];
+        symbol [ vx %tmp.227 307 24 26 ];
+        %tmp.227 = getv %tmp.226 :vx;
+        %tmp.228 = lgetv %nx.16;
+        symbol [ nx %tmp.228 307 29 31 ];
+        %tmp.229 = mul %tmp.227 %tmp.228;
+        %tmp.230 = lgetv %ball;
+        symbol [ ball %tmp.230 307 34 38 ];
+        symbol [ vy %tmp.231 307 39 41 ];
+        %tmp.231 = getv %tmp.230 :vy;
+        %tmp.232 = lgetv %ny.17;
+        symbol [ ny %tmp.232 307 44 46 ];
+        %tmp.233 = mul %tmp.231 %tmp.232;
+        %tmp.234 = add %tmp.229 %tmp.233;
+        lputv %outV.24 %tmp.234;
+        symbol [ outV %outV.24 307 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 308 8 ]
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_308_8_312_8_if_stmt:
+        %tmp.235 = lgetv %outV.24;
+        symbol [ outV %tmp.235 308 12 16 ];
+        %tmp.236 = lgetv %kickImpulse.23;
+        symbol [ kickImpulse %tmp.236 308 19 30 ];
+        %tmp.237 = lt %tmp.235 %tmp.236;
+        bf %tmp.237 @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_308_8_312_8_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_308_8_312_8_if_true:
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_308_32_312_8_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 309 12 ]
+        [ "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_308_32_312_8_start" "_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_308_32_312_8_stop" ]
+        %deltaV.25 = local;
+        symbol [ deltaV %deltaV.25 309 16 22 ];
+        %tmp.238 = lgetv %kickImpulse.23;
+        symbol [ kickImpulse %tmp.238 309 25 36 ];
+        %tmp.239 = lgetv %outV.24;
+        symbol [ outV %tmp.239 309 39 43 ];
+        %tmp.240 = sub %tmp.238 %tmp.239;
+        lputv %deltaV.25 %tmp.240;
+        symbol [ deltaV %deltaV.25 309 16 22 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 310 12 ]
+        %tmp.241 = lgetv %ball;
+        symbol [ ball %tmp.241 310 12 16 ];
+        %tmp.242 = lgetv %ball;
+        symbol [ ball %tmp.242 310 22 26 ];
+        symbol [ vx %tmp.243 310 27 29 ];
+        %tmp.243 = getv %tmp.242 :vx;
+        %tmp.244 = lgetv %nx.16;
+        symbol [ nx %tmp.244 310 32 34 ];
+        %tmp.245 = lgetv %deltaV.25;
+        symbol [ deltaV %tmp.245 310 37 43 ];
+        %tmp.246 = mul %tmp.244 %tmp.245;
+        %tmp.247 = add %tmp.243 %tmp.246;
+        symbol [ vx ? 310 17 19 ];
+        putv %tmp.241 :vx %tmp.247;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 311 12 ]
+        %tmp.248 = lgetv %ball;
+        symbol [ ball %tmp.248 311 12 16 ];
+        %tmp.249 = lgetv %ball;
+        symbol [ ball %tmp.249 311 22 26 ];
+        symbol [ vy %tmp.250 311 27 29 ];
+        %tmp.250 = getv %tmp.249 :vy;
+        %tmp.251 = lgetv %ny.17;
+        symbol [ ny %tmp.251 311 32 34 ];
+        %tmp.252 = lgetv %deltaV.25;
+        symbol [ deltaV %tmp.252 311 37 43 ];
+        %tmp.253 = mul %tmp.251 %tmp.252;
+        %tmp.254 = add %tmp.250 %tmp.253;
+        symbol [ vy ? 311 17 19 ];
+        putv %tmp.248 :vy %tmp.254;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_308_32_312_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_308_8_312_8_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_308_8_312_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc" 313 8 ]
+        %tmp.255 = true;
+        ret %tmp.255;
+_Users_kkorolczuk_work_garmin_pinballpro_source_PhysicsEngine_mc_243_50_314_4_stop:
     }
 }
-[ @file = "/Users/kkorolczuk/work/garmin/voidrocks/source/PhysicsEngine.mc"; @line = 14; ]
+[ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/PhysicsEngine.mc"; @line = 27; ]
 <init> {
 }

@@ -116,30 +116,60 @@ class PlatformManager {
         }
     }
 
-    // Collision: returns 0 (no bounce), 1 (normal bounce) or 2 (spring).
+    // Collision: returns [hitType, platformTopY].
+    //   hitType: 0 = no bounce, 1 = normal bounce, 2 = spring.
+    //   platformTopY: the y of the platform that was hit (used by
+    //                 GameController to snap the player's feet so
+    //                 the next tick starts cleanly above the rail).
     // Mutates breakable platforms (kills them after one bounce).
     // playerFeetPrev = player's feet y BEFORE this tick (used to ensure
     // we crossed the boundary downward — avoids snagging on rising frame).
+    //
+    // ── Tunneling fix ──────────────────────────────────────────────
+    // The original test also required `playerFeet <= p.y + 8`, i.e.
+    // the feet could only penetrate the platform by 8 px in one tick.
+    // But `Physics.MAX_FALL_VY` is scaled per screen height, so on a
+    // 416–448 px Garmin (s ≈ 1.87) terminal fall is ≈ 20 px/tick.
+    // At terminal speed the feet routinely jump from `p.y − 4` to
+    // `p.y + 16` in a single tick — the swept line clearly crosses
+    // the platform, but the 8 px window rejected it and the frog
+    // tunneled straight through.  The bracket has been removed:
+    // `feetPrev <= p.y && feet >= p.y` alone is the correct swept
+    // crossing test, and "already past this platform" cases are
+    // already rejected because feetPrev becomes > p.y after passing.
     function tryBounce(playerLeft, playerRight, playerFeetPrev, playerFeet, falling) {
-        if (!falling) { return 0; }
+        if (!falling) { return [0, 0]; }
+        // Iterate platforms; if the swept feet trajectory crosses any
+        // platform top, pick the HIGHEST (smallest y) such platform so
+        // that two stacked platforms can't both register a bounce on
+        // the same tick.
+        var bestY    = 0;
+        var bestType = -1;
+        var bestIdx  = -1;
+        var found    = false;
         for (var i = 0; i < MAX_PLATFORMS; i++) {
             var p = plats[i];
             if (!p.alive) { continue; }
-            // Quick reject by x
             if (p.x > playerRight || p.x + p.w < playerLeft) { continue; }
-            // Player must have been above and now at-or-below the platform top.
-            if (playerFeetPrev <= p.y && playerFeet >= p.y && playerFeet <= p.y + 8) {
-                if (p.type == PT_BREAKABLE) {
-                    p.alive = false;
-                    return 1;
+            if (playerFeetPrev <= p.y && playerFeet >= p.y) {
+                if (!found || p.y < bestY) {
+                    bestY    = p.y;
+                    bestType = p.type;
+                    bestIdx  = i;
+                    found    = true;
                 }
-                if (p.type == PT_SPRING) {
-                    return 2;
-                }
-                return 1;
             }
         }
-        return 0;
+        if (!found) { return [0, 0]; }
+        // Apply the consequences for the chosen platform.
+        if (bestType == PT_BREAKABLE) {
+            plats[bestIdx].alive = false;
+            return [1, bestY];
+        }
+        if (bestType == PT_SPRING) {
+            return [2, bestY];
+        }
+        return [1, bestY];
     }
 
     // Called by GameController when the camera scrolls upward — apply the

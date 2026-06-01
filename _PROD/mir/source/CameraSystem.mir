@@ -1,0 +1,304 @@
+[ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc"; @line = 15; @symbol_classdef = [CameraSystem,15,6,18]; ]
+class CameraSystem {
+    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc"; @line = 15; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc"; @line = 15; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc"; @line = 17; @position = 8; @symbol_vardef = [camIX,17,8,13]; ]
+    var camIX;
+    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc"; @line = 18; @position = 8; @symbol_vardef = [camIY,18,8,13]; ]
+    var camIY;
+    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc"; @line = 20; @position = 15; @symbol_vardef = [_init,20,15,20]; ]
+    protected
+    var _init;
+    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc"; @line = 22; @symbol_functiondef = [initialize,22,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_skyroll_source_CameraSystem_mc_22_26_25_4_start:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc" 23 8 ]
+        %tmp.1 = 0.0;
+        symbol [ camIX ? 23 8 13 ];
+        putv self :camIX %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc" 23 21 ]
+        %tmp.2 = 0.0;
+        symbol [ camIY ? 23 21 26 ];
+        putv self :camIY %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc" 24 8 ]
+        %tmp.3 = false;
+        symbol [ _init ? 24 8 13 ];
+        putv self :_init %tmp.3;
+_Users_kkorolczuk_work_garmin_skyroll_source_CameraSystem_mc_22_26_25_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc"; @line = 27; @symbol_functiondef = [reset,27,13,18]; ]
+    function reset() {
+_Users_kkorolczuk_work_garmin_skyroll_source_CameraSystem_mc_27_22_27_65_start:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc" 27 24 ]
+        %tmp.1 = false;
+        symbol [ _init ? 27 24 29 ];
+        putv self :_init %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc" 27 39 ]
+        %tmp.2 = 0.0;
+        symbol [ camIX ? 27 39 44 ];
+        putv self :camIX %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc" 27 52 ]
+        %tmp.3 = 0.0;
+        symbol [ camIY ? 27 52 57 ];
+        putv self :camIY %tmp.3;
+_Users_kkorolczuk_work_garmin_skyroll_source_CameraSystem_mc_27_22_27_65_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc"; @line = 30; @symbol_functiondef = [snapTo,30,13,19]; @symbol_param<0> = [px,30,20,22]; @symbol_param<1> = [py,30,24,26]; ]
+    function snapTo(px, py) {
+_Users_kkorolczuk_work_garmin_skyroll_source_CameraSystem_mc_30_28_36_4_start:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc" 31 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_CameraSystem_mc_30_28_36_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_CameraSystem_mc_30_28_36_4_stop" ]
+        %ix.1 = local;
+        symbol [ ix %ix.1 31 12 14 ];
+        %tmp.1 = lgetv %px;
+        symbol [ px %tmp.1 31 18 20 ];
+        %tmp.2 = lgetv %py;
+        symbol [ py %tmp.2 31 23 25 ];
+        %tmp.3 = sub %tmp.1 %tmp.2;
+        symbol [ SR_TILE_HW %tmp.5 31 29 39 ];
+        %tmp.5 = getv ? :SR_TILE_HW;
+        symbol [ toFloat %tmp.6 31 40 47 ];
+        %tmp.6 = getv function %tmp.5 :toFloat;
+        %tmp.7 = invoke %tmp.5 %tmp.6();
+        %tmp.8 = mul %tmp.3 %tmp.7;
+        lputv %ix.1 %tmp.8;
+        symbol [ ix %ix.1 31 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc" 32 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_CameraSystem_mc_30_28_36_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_CameraSystem_mc_30_28_36_4_stop" ]
+        %iy.2 = local;
+        symbol [ iy %iy.2 32 12 14 ];
+        %tmp.9 = lgetv %px;
+        symbol [ px %tmp.9 32 19 21 ];
+        %tmp.10 = lgetv %py;
+        symbol [ py %tmp.10 32 24 26 ];
+        %tmp.11 = add %tmp.9 %tmp.10;
+        %tmp.12 = sub 0 %tmp.11;
+        symbol [ SR_TILE_HH %tmp.14 32 30 40 ];
+        %tmp.14 = getv ? :SR_TILE_HH;
+        symbol [ toFloat %tmp.15 32 41 48 ];
+        %tmp.15 = getv function %tmp.14 :toFloat;
+        %tmp.16 = invoke %tmp.14 %tmp.15();
+        %tmp.17 = mul %tmp.12 %tmp.16;
+        lputv %iy.2 %tmp.17;
+        symbol [ iy %iy.2 32 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc" 33 8 ]
+        %tmp.18 = lgetv %ix.1;
+        symbol [ ix %tmp.18 33 16 18 ];
+        symbol [ camIX ? 33 8 13 ];
+        putv self :camIX %tmp.18;
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc" 34 8 ]
+        %tmp.19 = lgetv %iy.2;
+        symbol [ iy %tmp.19 34 16 18 ];
+        symbol [ camIY ? 34 8 13 ];
+        putv self :camIY %tmp.19;
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc" 35 8 ]
+        %tmp.20 = true;
+        symbol [ _init ? 35 8 13 ];
+        putv self :_init %tmp.20;
+_Users_kkorolczuk_work_garmin_skyroll_source_CameraSystem_mc_30_28_36_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc"; @line = 38; @symbol_functiondef = [tick,38,13,17]; @symbol_param<0> = [px,38,18,20]; @symbol_param<1> = [py,38,22,24]; ]
+    function tick(px, py) {
+_Users_kkorolczuk_work_garmin_skyroll_source_CameraSystem_mc_38_26_49_4_start:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc" 39 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_CameraSystem_mc_38_26_49_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_CameraSystem_mc_38_26_49_4_stop" ]
+        %ix.1 = local;
+        symbol [ ix %ix.1 39 12 14 ];
+        %tmp.1 = lgetv %px;
+        symbol [ px %tmp.1 39 18 20 ];
+        %tmp.2 = lgetv %py;
+        symbol [ py %tmp.2 39 23 25 ];
+        %tmp.3 = sub %tmp.1 %tmp.2;
+        symbol [ SR_TILE_HW %tmp.5 39 29 39 ];
+        %tmp.5 = getv ? :SR_TILE_HW;
+        symbol [ toFloat %tmp.6 39 40 47 ];
+        %tmp.6 = getv function %tmp.5 :toFloat;
+        %tmp.7 = invoke %tmp.5 %tmp.6();
+        %tmp.8 = mul %tmp.3 %tmp.7;
+        lputv %ix.1 %tmp.8;
+        symbol [ ix %ix.1 39 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc" 40 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_CameraSystem_mc_38_26_49_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_CameraSystem_mc_38_26_49_4_stop" ]
+        %iy.2 = local;
+        symbol [ iy %iy.2 40 12 14 ];
+        %tmp.9 = lgetv %px;
+        symbol [ px %tmp.9 40 19 21 ];
+        %tmp.10 = lgetv %py;
+        symbol [ py %tmp.10 40 24 26 ];
+        %tmp.11 = add %tmp.9 %tmp.10;
+        %tmp.12 = sub 0 %tmp.11;
+        symbol [ SR_TILE_HH %tmp.14 40 30 40 ];
+        %tmp.14 = getv ? :SR_TILE_HH;
+        symbol [ toFloat %tmp.15 40 41 48 ];
+        %tmp.15 = getv function %tmp.14 :toFloat;
+        %tmp.16 = invoke %tmp.14 %tmp.15();
+        %tmp.17 = mul %tmp.12 %tmp.16;
+        lputv %iy.2 %tmp.17;
+        symbol [ iy %iy.2 40 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc" 41 8 ]
+_Users_kkorolczuk_work_garmin_skyroll_source_CameraSystem_mc_41_8_45_8_if_stmt:
+        symbol [ _init %tmp.19 41 13 18 ];
+        %tmp.19 = getv ? :_init;
+        %tmp.20 = not %tmp.19;
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_skyroll_source_CameraSystem_mc_41_8_45_8_if_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_CameraSystem_mc_41_8_45_8_if_true:
+_Users_kkorolczuk_work_garmin_skyroll_source_CameraSystem_mc_41_20_45_8_start:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc" 42 12 ]
+        %tmp.21 = lgetv %ix.1;
+        symbol [ ix %tmp.21 42 20 22 ];
+        symbol [ camIX ? 42 12 17 ];
+        putv self :camIX %tmp.21;
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc" 42 24 ]
+        %tmp.22 = lgetv %iy.2;
+        symbol [ iy %tmp.22 42 32 34 ];
+        symbol [ camIY ? 42 24 29 ];
+        putv self :camIY %tmp.22;
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc" 43 12 ]
+        %tmp.23 = true;
+        symbol [ _init ? 43 12 17 ];
+        putv self :_init %tmp.23;
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc" 44 12 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_skyroll_source_CameraSystem_mc_41_20_45_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_skyroll_source_CameraSystem_mc_41_8_45_8_if_end;
+_Users_kkorolczuk_work_garmin_skyroll_source_CameraSystem_mc_41_8_45_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc" 46 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_CameraSystem_mc_38_26_49_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_CameraSystem_mc_38_26_49_4_stop" ]
+        %a.3 = local;
+        symbol [ a %a.3 46 12 13 ];
+        symbol [ SR_CAM_LERP %tmp.25 46 16 27 ];
+        %tmp.25 = getv ? :SR_CAM_LERP;
+        symbol [ toFloat %tmp.26 46 28 35 ];
+        %tmp.26 = getv function %tmp.25 :toFloat;
+        %tmp.27 = invoke %tmp.25 %tmp.26();
+        %tmp.28 = 100.0;
+        %tmp.29 = div %tmp.27 %tmp.28;
+        lputv %a.3 %tmp.29;
+        symbol [ a %a.3 46 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc" 47 8 ]
+        symbol [ camIX %tmp.31 47 16 21 ];
+        %tmp.31 = getv ? :camIX;
+        %tmp.32 = lgetv %ix.1;
+        symbol [ ix %tmp.32 47 25 27 ];
+        symbol [ camIX %tmp.34 47 30 35 ];
+        %tmp.34 = getv ? :camIX;
+        %tmp.35 = sub %tmp.32 %tmp.34;
+        %tmp.36 = lgetv %a.3;
+        symbol [ a %tmp.36 47 39 40 ];
+        %tmp.37 = mul %tmp.35 %tmp.36;
+        %tmp.38 = add %tmp.31 %tmp.37;
+        symbol [ camIX ? 47 8 13 ];
+        putv self :camIX %tmp.38;
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc" 48 8 ]
+        symbol [ camIY %tmp.40 48 16 21 ];
+        %tmp.40 = getv ? :camIY;
+        %tmp.41 = lgetv %iy.2;
+        symbol [ iy %tmp.41 48 25 27 ];
+        symbol [ camIY %tmp.43 48 30 35 ];
+        %tmp.43 = getv ? :camIY;
+        %tmp.44 = sub %tmp.41 %tmp.43;
+        %tmp.45 = lgetv %a.3;
+        symbol [ a %tmp.45 48 39 40 ];
+        %tmp.46 = mul %tmp.44 %tmp.45;
+        %tmp.47 = add %tmp.40 %tmp.46;
+        symbol [ camIY ? 48 8 13 ];
+        putv self :camIY %tmp.47;
+_Users_kkorolczuk_work_garmin_skyroll_source_CameraSystem_mc_38_26_49_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc"; @line = 54; @symbol_functiondef = [worldToScreen,54,13,26]; @symbol_param<0> = [wx,54,27,29]; @symbol_param<1> = [wy,54,31,33]; @symbol_param<2> = [cx,54,35,37]; @symbol_param<3> = [cy,54,39,41]; ]
+    function worldToScreen(wx, wy, cx, cy) {
+_Users_kkorolczuk_work_garmin_skyroll_source_CameraSystem_mc_54_43_60_4_start:
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc" 55 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_CameraSystem_mc_54_43_60_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_CameraSystem_mc_54_43_60_4_stop" ]
+        %ix.1 = local;
+        symbol [ ix %ix.1 55 12 14 ];
+        %tmp.1 = lgetv %wx;
+        symbol [ wx %tmp.1 55 18 20 ];
+        %tmp.2 = lgetv %wy;
+        symbol [ wy %tmp.2 55 23 25 ];
+        %tmp.3 = sub %tmp.1 %tmp.2;
+        symbol [ SR_TILE_HW %tmp.5 55 29 39 ];
+        %tmp.5 = getv ? :SR_TILE_HW;
+        symbol [ toFloat %tmp.6 55 40 47 ];
+        %tmp.6 = getv function %tmp.5 :toFloat;
+        %tmp.7 = invoke %tmp.5 %tmp.6();
+        %tmp.8 = mul %tmp.3 %tmp.7;
+        lputv %ix.1 %tmp.8;
+        symbol [ ix %ix.1 55 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc" 56 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_CameraSystem_mc_54_43_60_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_CameraSystem_mc_54_43_60_4_stop" ]
+        %iy.2 = local;
+        symbol [ iy %iy.2 56 12 14 ];
+        %tmp.9 = lgetv %wx;
+        symbol [ wx %tmp.9 56 19 21 ];
+        %tmp.10 = lgetv %wy;
+        symbol [ wy %tmp.10 56 24 26 ];
+        %tmp.11 = add %tmp.9 %tmp.10;
+        %tmp.12 = sub 0 %tmp.11;
+        symbol [ SR_TILE_HH %tmp.14 56 30 40 ];
+        %tmp.14 = getv ? :SR_TILE_HH;
+        symbol [ toFloat %tmp.15 56 41 48 ];
+        %tmp.15 = getv function %tmp.14 :toFloat;
+        %tmp.16 = invoke %tmp.14 %tmp.15();
+        %tmp.17 = mul %tmp.12 %tmp.16;
+        lputv %iy.2 %tmp.17;
+        symbol [ iy %iy.2 56 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc" 57 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_CameraSystem_mc_54_43_60_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_CameraSystem_mc_54_43_60_4_stop" ]
+        %sx.3 = local;
+        symbol [ sx %sx.3 57 12 14 ];
+        %tmp.18 = lgetv %ix.1;
+        symbol [ ix %tmp.18 57 18 20 ];
+        symbol [ camIX %tmp.20 57 23 28 ];
+        %tmp.20 = getv ? :camIX;
+        %tmp.21 = sub %tmp.18 %tmp.20;
+        symbol [ toNumber %tmp.22 57 30 38 ];
+        %tmp.22 = getv function %tmp.21 :toNumber;
+        %tmp.23 = invoke %tmp.21 %tmp.22();
+        %tmp.24 = lgetv %cx;
+        symbol [ cx %tmp.24 57 43 45 ];
+        %tmp.25 = add %tmp.23 %tmp.24;
+        lputv %sx.3 %tmp.25;
+        symbol [ sx %sx.3 57 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc" 58 8 ]
+        [ "_Users_kkorolczuk_work_garmin_skyroll_source_CameraSystem_mc_54_43_60_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_CameraSystem_mc_54_43_60_4_stop" ]
+        %sy.4 = local;
+        symbol [ sy %sy.4 58 12 14 ];
+        %tmp.26 = lgetv %iy.2;
+        symbol [ iy %tmp.26 58 18 20 ];
+        symbol [ camIY %tmp.28 58 23 28 ];
+        %tmp.28 = getv ? :camIY;
+        %tmp.29 = sub %tmp.26 %tmp.28;
+        symbol [ toNumber %tmp.30 58 30 38 ];
+        %tmp.30 = getv function %tmp.29 :toNumber;
+        %tmp.31 = invoke %tmp.29 %tmp.30();
+        %tmp.32 = lgetv %cy;
+        symbol [ cy %tmp.32 58 43 45 ];
+        %tmp.33 = add %tmp.31 %tmp.32;
+        symbol [ SR_BALL_Y_OFFSET %tmp.35 58 48 64 ];
+        %tmp.35 = getv ? :SR_BALL_Y_OFFSET;
+        %tmp.36 = add %tmp.33 %tmp.35;
+        lputv %sy.4 %tmp.36;
+        symbol [ sy %sy.4 58 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc" 59 8 ]
+        %tmp.37 = newa 2;
+        %tmp.38 = lgetv %sx.3;
+        symbol [ sx %tmp.38 59 16 18 ];
+        %tmp.39 = dup %tmp.37;
+        %tmp.40 = aputv %tmp.39 0 %tmp.38;
+        %tmp.41 = lgetv %sy.4;
+        symbol [ sy %tmp.41 59 20 22 ];
+        %tmp.42 = dup %tmp.40;
+        %tmp.43 = aputv %tmp.42 1 %tmp.41;
+        ret %tmp.43;
+_Users_kkorolczuk_work_garmin_skyroll_source_CameraSystem_mc_54_43_60_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/CameraSystem.mc"; @line = 15; ]
+<init> {
+}

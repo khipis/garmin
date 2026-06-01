@@ -1,861 +1,1650 @@
-[ @file = "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc"; @line = 31; @position = 6; @symbol_constdef = [LO_TOTAL_LEVELS,31,6,21]; ]
-const LO_TOTAL_LEVELS = 50;
-[ @file = "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc"; @line = 32; @position = 6; @symbol_constdef = [LO_EASY_LAST,32,6,18]; ]
-const LO_EASY_LAST = 17;
-[ @file = "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc"; @line = 33; @position = 6; @symbol_constdef = [LO_MED_LAST,33,6,17]; ]
-const LO_MED_LAST = 34;
-[ @file = "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc"; @line = 36; @symbol_classdef = [LevelGenerator,36,6,20]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc"; @line = 29; @symbol_usingdef<0> = [Toybox,29,6,12]; @symbol_usingdef<1> = [Math,29,13,17]; ]
+using Toybox.Math;
+[ @file = "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc"; @line = 31; @position = 6; @symbol_constdef = [HG_GRID_N,31,6,15]; ]
+const HG_GRID_N = 10;
+[ @file = "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc"; @line = 32; @position = 6; @symbol_constdef = [HG_MAX_LEVEL,32,6,18]; ]
+const HG_MAX_LEVEL = 30;
+[ @file = "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc"; @line = 34; @position = 6; @symbol_constdef = [HG_BL_STATIC,34,6,18]; ]
+const HG_BL_STATIC = 0;
+[ @file = "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc"; @line = 35; @position = 6; @symbol_constdef = [HG_BL_MOVING,35,6,18]; ]
+const HG_BL_MOVING = 1;
+[ @file = "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc"; @line = 36; @position = 6; @symbol_constdef = [HG_BL_PREDICT,36,6,19]; ]
+const HG_BL_PREDICT = 2;
+[ @file = "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc"; @line = 38; @symbol_classdef = [LevelGenerator,38,6,20]; ]
 class LevelGenerator {
-    [ @file = "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc"; @line = 36; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc"; @line = 38; ]
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc"; @line = 36; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc"; @line = 38; ]
     static
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc"; @line = 38; @symbol_functiondef = [gridSizeForLevel,38,20,36]; @symbol_param<0> = [level,38,37,42]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc"; @line = 41; @symbol_functiondef = [build,41,20,25]; @symbol_param<0> = [level,41,26,31]; ]
     static
-    function gridSizeForLevel(level) {
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_38_44_42_4_start:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 39 8 ]
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_39_8_39_47_if_stmt:
+    function build(level) {
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_41_33_87_4_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 42 8 ]
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_42_8_42_61_if_stmt:
         %tmp.1 = lgetv %level;
-        symbol [ level %tmp.1 39 12 17 ];
-        symbol [ LO_EASY_LAST %tmp.3 39 21 33 ];
-        %tmp.3 = getv ? :LO_EASY_LAST;
-        %tmp.4 = lte %tmp.1 %tmp.3;
-        bf %tmp.4 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_39_8_39_47_if_end;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_39_8_39_47_if_true:
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_39_35_39_47_start:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 39 37 ]
-        %tmp.5 = 3;
-        ret %tmp.5;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_39_35_39_47_stop:
-        goto @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_39_8_39_47_if_end;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_39_8_39_47_if_end:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 40 8 ]
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_40_8_40_47_if_stmt:
-        %tmp.6 = lgetv %level;
-        symbol [ level %tmp.6 40 12 17 ];
-        symbol [ LO_MED_LAST %tmp.8 40 21 32 ];
-        %tmp.8 = getv ? :LO_MED_LAST;
-        %tmp.9 = lte %tmp.6 %tmp.8;
-        bf %tmp.9 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_40_8_40_47_if_end;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_40_8_40_47_if_true:
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_40_35_40_47_start:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 40 37 ]
-        %tmp.10 = 4;
-        ret %tmp.10;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_40_35_40_47_stop:
-        goto @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_40_8_40_47_if_end;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_40_8_40_47_if_end:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 41 8 ]
-        %tmp.11 = 5;
-        ret %tmp.11;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_38_44_42_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc"; @line = 45; @symbol_functiondef = [pressCountForLevel,45,20,38]; @symbol_param<0> = [level,45,39,44]; ]
-    static
-    function pressCountForLevel(level) {
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_45_46_58_4_start:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 46 8 ]
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_46_8_49_8_if_stmt:
-        %tmp.1 = lgetv %level;
-        symbol [ level %tmp.1 46 12 17 ];
-        symbol [ LO_EASY_LAST %tmp.3 46 21 33 ];
-        %tmp.3 = getv ? :LO_EASY_LAST;
-        %tmp.4 = lte %tmp.1 %tmp.3;
-        bf %tmp.4 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_46_8_49_8_if_end;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_46_8_49_8_if_true:
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_46_35_49_8_start:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 48 12 ]
-        %tmp.5 = 2;
-        %tmp.6 = lgetv %level;
-        symbol [ level %tmp.6 48 25 30 ];
-        %tmp.7 = 1;
-        %tmp.8 = sub %tmp.6 %tmp.7;
-        %tmp.9 = 5;
-        %tmp.10 = mul %tmp.8 %tmp.9;
-        symbol [ LO_EASY_LAST %tmp.12 48 42 54 ];
-        %tmp.12 = getv ? :LO_EASY_LAST;
-        %tmp.13 = div %tmp.10 %tmp.12;
-        %tmp.14 = add %tmp.5 %tmp.13;
-        ret %tmp.14;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_46_35_49_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_46_8_49_8_if_end;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_46_8_49_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 50 8 ]
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_50_8_54_8_if_stmt:
-        %tmp.15 = lgetv %level;
-        symbol [ level %tmp.15 50 12 17 ];
-        symbol [ LO_MED_LAST %tmp.17 50 21 32 ];
-        %tmp.17 = getv ? :LO_MED_LAST;
-        %tmp.18 = lte %tmp.15 %tmp.17;
-        bf %tmp.18 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_50_8_54_8_if_end;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_50_8_54_8_if_true:
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_50_34_54_8_start:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 51 12 ]
-        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_50_34_54_8_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_50_34_54_8_stop" ]
-        %i.1 = local;
-        symbol [ i %i.1 51 16 17 ];
+        symbol [ level %tmp.1 42 12 17 ];
+        %tmp.2 = 1;
+        %tmp.3 = lt %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_42_8_42_61_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_42_8_42_61_if_true:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_42_36_42_61_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 42 38 ]
+        %tmp.4 = 1;
+        lputv %level %tmp.4;
+        symbol [ level %level 42 38 43 ];
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_42_36_42_61_stop:
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_42_8_42_61_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_42_8_42_61_if_end:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 43 8 ]
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_43_8_43_61_if_stmt:
+        %tmp.5 = lgetv %level;
+        symbol [ level %tmp.5 43 12 17 ];
+        symbol [ HG_MAX_LEVEL %tmp.7 43 20 32 ];
+        %tmp.7 = getv ? :HG_MAX_LEVEL;
+        %tmp.8 = gt %tmp.5 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_43_8_43_61_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_43_8_43_61_if_true:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_43_36_43_61_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 43 38 ]
+        symbol [ HG_MAX_LEVEL %tmp.10 43 46 58 ];
+        %tmp.10 = getv ? :HG_MAX_LEVEL;
+        lputv %level %tmp.10;
+        symbol [ level %level 43 38 43 ];
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_43_36_43_61_stop:
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_43_8_43_61_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_43_8_43_61_if_end:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 44 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_41_33_87_4_start" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_41_33_87_4_stop" ]
+        %n.1 = local;
+        symbol [ n %n.1 44 12 13 ];
+        symbol [ HG_GRID_N %tmp.12 44 16 25 ];
+        %tmp.12 = getv ? :HG_GRID_N;
+        lputv %n.1 %tmp.12;
+        symbol [ n %n.1 44 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 45 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_41_33_87_4_start" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_41_33_87_4_stop" ]
+        %g.2 = local;
+        symbol [ g %g.2 45 12 13 ];
+        symbol [ GridSystem %tmp.16 45 20 30 ];
+        %tmp.16 = getv ? :GridSystem;
+        %tmp.17 = lgetv %n.1;
+        symbol [ n %tmp.17 45 31 32 ];
+        %tmp.13 = newc %tmp.16 (%tmp.17);
+        lputv %g.2 %tmp.13;
+        symbol [ g %g.2 45 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 48 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_41_33_87_4_start" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_41_33_87_4_stop" ]
+        %wallPct.3 = local;
+        symbol [ wallPct %wallPct.3 48 12 19 ];
+        %tmp.18 = 8;
         %tmp.19 = lgetv %level;
-        symbol [ level %tmp.19 51 20 25 ];
-        symbol [ LO_EASY_LAST %tmp.21 51 28 40 ];
-        %tmp.21 = getv ? :LO_EASY_LAST;
-        %tmp.22 = sub %tmp.19 %tmp.21;
-        %tmp.23 = 1;
-        %tmp.24 = sub %tmp.22 %tmp.23;
-        lputv %i.1 %tmp.24;
-        symbol [ i %i.1 51 16 17 ];
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 52 12 ]
-        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_50_34_54_8_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_50_34_54_8_stop" ]
-        %span.2 = local;
-        symbol [ span %span.2 52 16 20 ];
-        symbol [ LO_MED_LAST %tmp.26 52 23 34 ];
-        %tmp.26 = getv ? :LO_MED_LAST;
-        symbol [ LO_EASY_LAST %tmp.28 52 37 49 ];
-        %tmp.28 = getv ? :LO_EASY_LAST;
-        %tmp.29 = sub %tmp.26 %tmp.28;
-        lputv %span.2 %tmp.29;
-        symbol [ span %span.2 52 16 20 ];
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 53 12 ]
-        %tmp.30 = 3;
-        %tmp.31 = lgetv %i.1;
-        symbol [ i %tmp.31 53 24 25 ];
-        %tmp.32 = 7;
-        %tmp.33 = mul %tmp.31 %tmp.32;
-        %tmp.34 = lgetv %span.2;
-        symbol [ span %tmp.34 53 32 36 ];
-        %tmp.35 = div %tmp.33 %tmp.34;
-        %tmp.36 = add %tmp.30 %tmp.35;
-        ret %tmp.36;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_50_34_54_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_50_8_54_8_if_end;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_50_8_54_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 55 8 ]
-        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_45_46_58_4_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_45_46_58_4_stop" ]
-        %i.3 = local;
-        symbol [ i %i.3 55 12 13 ];
-        %tmp.37 = lgetv %level;
-        symbol [ level %tmp.37 55 16 21 ];
-        symbol [ LO_MED_LAST %tmp.39 55 24 35 ];
-        %tmp.39 = getv ? :LO_MED_LAST;
-        %tmp.40 = sub %tmp.37 %tmp.39;
-        %tmp.41 = 1;
-        %tmp.42 = sub %tmp.40 %tmp.41;
-        lputv %i.3 %tmp.42;
-        symbol [ i %i.3 55 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 56 8 ]
-        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_45_46_58_4_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_45_46_58_4_stop" ]
-        %span.4 = local;
-        symbol [ span %span.4 56 12 16 ];
-        symbol [ LO_TOTAL_LEVELS %tmp.44 56 19 34 ];
-        %tmp.44 = getv ? :LO_TOTAL_LEVELS;
-        symbol [ LO_MED_LAST %tmp.46 56 37 48 ];
-        %tmp.46 = getv ? :LO_MED_LAST;
-        %tmp.47 = sub %tmp.44 %tmp.46;
-        lputv %span.4 %tmp.47;
-        symbol [ span %span.4 56 12 16 ];
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 57 8 ]
-        %tmp.48 = 4;
-        %tmp.49 = lgetv %i.3;
-        symbol [ i %tmp.49 57 20 21 ];
-        %tmp.50 = 9;
-        %tmp.51 = mul %tmp.49 %tmp.50;
-        %tmp.52 = lgetv %span.4;
-        symbol [ span %tmp.52 57 28 32 ];
-        %tmp.53 = div %tmp.51 %tmp.52;
-        %tmp.54 = add %tmp.48 %tmp.53;
-        ret %tmp.54;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_45_46_58_4_stop:
+        symbol [ level %tmp.19 48 27 32 ];
+        %tmp.20 = 1;
+        %tmp.21 = sub %tmp.19 %tmp.20;
+        %tmp.22 = add %tmp.18 %tmp.21;
+        lputv %wallPct.3 %tmp.22;
+        symbol [ wallPct %wallPct.3 48 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 49 8 ]
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_49_8_49_42_if_stmt:
+        %tmp.23 = lgetv %wallPct.3;
+        symbol [ wallPct %tmp.23 49 12 19 ];
+        %tmp.24 = 32;
+        %tmp.25 = gt %tmp.23 %tmp.24;
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_49_8_49_42_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_49_8_49_42_if_true:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_49_26_49_42_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 49 28 ]
+        %tmp.26 = 32;
+        lputv %wallPct.3 %tmp.26;
+        symbol [ wallPct %wallPct.3 49 28 35 ];
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_49_26_49_42_stop:
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_49_8_49_42_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_49_8_49_42_if_end:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 51 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_41_33_87_4_start" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_41_33_87_4_stop" ]
+        %blkCnt.4 = local;
+        symbol [ blkCnt %blkCnt.4 51 12 18 ];
+        %tmp.27 = 2;
+        %tmp.28 = lgetv %level;
+        symbol [ level %tmp.28 51 27 32 ];
+        %tmp.29 = 1;
+        %tmp.30 = sub %tmp.28 %tmp.29;
+        %tmp.31 = 4;
+        %tmp.32 = div %tmp.30 %tmp.31;
+        %tmp.33 = add %tmp.27 %tmp.32;
+        lputv %blkCnt.4 %tmp.33;
+        symbol [ blkCnt %blkCnt.4 51 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 52 8 ]
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_52_8_52_38_if_stmt:
+        %tmp.34 = lgetv %blkCnt.4;
+        symbol [ blkCnt %tmp.34 52 12 18 ];
+        %tmp.35 = 8;
+        %tmp.36 = gt %tmp.34 %tmp.35;
+        bf %tmp.36 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_52_8_52_38_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_52_8_52_38_if_true:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_52_24_52_38_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 52 26 ]
+        %tmp.37 = 8;
+        lputv %blkCnt.4 %tmp.37;
+        symbol [ blkCnt %blkCnt.4 52 26 32 ];
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_52_24_52_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_52_8_52_38_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_52_8_52_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 54 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_41_33_87_4_start" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_41_33_87_4_stop" ]
+        %predPct.5 = local;
+        symbol [ predPct %predPct.5 54 12 19 ];
+        %tmp.38 = 5;
+        %tmp.39 = lgetv %level;
+        symbol [ level %tmp.39 54 27 32 ];
+        %tmp.40 = 1;
+        %tmp.41 = sub %tmp.39 %tmp.40;
+        %tmp.42 = 3;
+        %tmp.43 = mul %tmp.41 %tmp.42;
+        %tmp.44 = add %tmp.38 %tmp.43;
+        lputv %predPct.5 %tmp.44;
+        symbol [ predPct %predPct.5 54 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 55 8 ]
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_55_8_55_42_if_stmt:
+        %tmp.45 = lgetv %predPct.5;
+        symbol [ predPct %tmp.45 55 12 19 ];
+        %tmp.46 = 80;
+        %tmp.47 = gt %tmp.45 %tmp.46;
+        bf %tmp.47 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_55_8_55_42_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_55_8_55_42_if_true:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_55_26_55_42_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 55 28 ]
+        %tmp.48 = 80;
+        lputv %predPct.5 %tmp.48;
+        symbol [ predPct %predPct.5 55 28 35 ];
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_55_26_55_42_stop:
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_55_8_55_42_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_55_8_55_42_if_end:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 57 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_41_33_87_4_start" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_41_33_87_4_stop" ]
+        %movPct.6 = local;
+        symbol [ movPct %movPct.6 57 12 18 ];
+        %tmp.49 = 60;
+        %tmp.50 = lgetv %level;
+        symbol [ level %tmp.50 57 27 32 ];
+        %tmp.51 = sub %tmp.49 %tmp.50;
+        lputv %movPct.6 %tmp.51;
+        symbol [ movPct %movPct.6 57 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 58 8 ]
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_58_8_58_40_if_stmt:
+        %tmp.52 = lgetv %movPct.6;
+        symbol [ movPct %tmp.52 58 12 18 ];
+        %tmp.53 = 15;
+        %tmp.54 = lt %tmp.52 %tmp.53;
+        bf %tmp.54 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_58_8_58_40_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_58_8_58_40_if_true:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_58_25_58_40_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 58 27 ]
+        %tmp.55 = 15;
+        lputv %movPct.6 %tmp.55;
+        symbol [ movPct %movPct.6 58 27 33 ];
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_58_25_58_40_stop:
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_58_8_58_40_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_58_8_58_40_if_end:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 61 8 ]
+        %tmp.56 = self;
+        symbol [ _initBorderAndWalls %tmp.57 61 8 27 ];
+        %tmp.57 = getv function %tmp.56 :_initBorderAndWalls;
+        %tmp.58 = lgetv %g.2;
+        symbol [ g %tmp.58 61 28 29 ];
+        %tmp.59 = lgetv %n.1;
+        symbol [ n %tmp.59 61 31 32 ];
+        %tmp.60 = lgetv %wallPct.3;
+        symbol [ wallPct %tmp.60 61 34 41 ];
+        invoke %tmp.56 %tmp.57(%tmp.58, %tmp.59, %tmp.60);
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 64 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_41_33_87_4_start" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_41_33_87_4_stop" ]
+        %corners.7 = local;
+        symbol [ corners %corners.7 64 12 19 ];
+        %tmp.61 = self;
+        symbol [ _cornersForLevel %tmp.62 64 22 38 ];
+        %tmp.62 = getv function %tmp.61 :_cornersForLevel;
+        %tmp.63 = lgetv %level;
+        symbol [ level %tmp.63 64 39 44 ];
+        %tmp.64 = lgetv %n.1;
+        symbol [ n %tmp.64 64 46 47 ];
+        %tmp.65 = invoke %tmp.61 %tmp.62(%tmp.63, %tmp.64);
+        lputv %corners.7 %tmp.65;
+        symbol [ corners %corners.7 64 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 65 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_41_33_87_4_start" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_41_33_87_4_stop" ]
+        %sr.8 = local;
+        symbol [ sr %sr.8 65 12 14 ];
+        %tmp.66 = lgetv %corners.7;
+        symbol [ corners %tmp.66 65 17 24 ];
+        %tmp.67 = 0;
+        %tmp.68 = agetv %tmp.66 %tmp.67;
+        lputv %sr.8 %tmp.68;
+        symbol [ sr %sr.8 65 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 65 29 ]
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_41_33_87_4_start" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_41_33_87_4_stop" ]
+        %sc.9 = local;
+        symbol [ sc %sc.9 65 33 35 ];
+        %tmp.69 = lgetv %corners.7;
+        symbol [ corners %tmp.69 65 38 45 ];
+        %tmp.70 = 1;
+        %tmp.71 = agetv %tmp.69 %tmp.70;
+        lputv %sc.9 %tmp.71;
+        symbol [ sc %sc.9 65 33 35 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 66 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_41_33_87_4_start" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_41_33_87_4_stop" ]
+        %er.10 = local;
+        symbol [ er %er.10 66 12 14 ];
+        %tmp.72 = lgetv %corners.7;
+        symbol [ corners %tmp.72 66 17 24 ];
+        %tmp.73 = 2;
+        %tmp.74 = agetv %tmp.72 %tmp.73;
+        lputv %er.10 %tmp.74;
+        symbol [ er %er.10 66 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 66 29 ]
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_41_33_87_4_start" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_41_33_87_4_stop" ]
+        %ec.11 = local;
+        symbol [ ec %ec.11 66 33 35 ];
+        %tmp.75 = lgetv %corners.7;
+        symbol [ corners %tmp.75 66 38 45 ];
+        %tmp.76 = 3;
+        %tmp.77 = agetv %tmp.75 %tmp.76;
+        lputv %ec.11 %tmp.77;
+        symbol [ ec %ec.11 66 33 35 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 70 8 ]
+        %tmp.78 = self;
+        symbol [ _clearPocket %tmp.79 70 8 20 ];
+        %tmp.79 = getv function %tmp.78 :_clearPocket;
+        %tmp.80 = lgetv %g.2;
+        symbol [ g %tmp.80 70 21 22 ];
+        %tmp.81 = lgetv %sr.8;
+        symbol [ sr %tmp.81 70 24 26 ];
+        %tmp.82 = lgetv %sc.9;
+        symbol [ sc %tmp.82 70 28 30 ];
+        invoke %tmp.78 %tmp.79(%tmp.80, %tmp.81, %tmp.82);
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 71 8 ]
+        %tmp.83 = self;
+        symbol [ _clearPocket %tmp.84 71 8 20 ];
+        %tmp.84 = getv function %tmp.83 :_clearPocket;
+        %tmp.85 = lgetv %g.2;
+        symbol [ g %tmp.85 71 21 22 ];
+        %tmp.86 = lgetv %er.10;
+        symbol [ er %tmp.86 71 24 26 ];
+        %tmp.87 = lgetv %ec.11;
+        symbol [ ec %tmp.87 71 28 30 ];
+        invoke %tmp.83 %tmp.84(%tmp.85, %tmp.86, %tmp.87);
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 76 8 ]
+        %tmp.88 = self;
+        symbol [ _carvePath %tmp.89 76 8 18 ];
+        %tmp.89 = getv function %tmp.88 :_carvePath;
+        %tmp.90 = lgetv %g.2;
+        symbol [ g %tmp.90 76 19 20 ];
+        %tmp.91 = lgetv %sr.8;
+        symbol [ sr %tmp.91 76 22 24 ];
+        %tmp.92 = lgetv %sc.9;
+        symbol [ sc %tmp.92 76 26 28 ];
+        %tmp.93 = lgetv %er.10;
+        symbol [ er %tmp.93 76 30 32 ];
+        %tmp.94 = lgetv %ec.11;
+        symbol [ ec %tmp.94 76 34 36 ];
+        %tmp.95 = lgetv %level;
+        symbol [ level %tmp.95 76 39 44 ];
+        %tmp.96 = 1;
+        %tmp.97 = sub %tmp.95 %tmp.96;
+        %tmp.98 = 2;
+        %tmp.99 = mod %tmp.97 %tmp.98;
+        invoke %tmp.88 %tmp.89(%tmp.90, %tmp.91, %tmp.92, %tmp.93, %tmp.94, %tmp.99);
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 79 8 ]
+        %tmp.100 = lgetv %g.2;
+        symbol [ g %tmp.100 79 8 9 ];
+        symbol [ set %tmp.101 79 10 13 ];
+        %tmp.101 = getv function %tmp.100 :set;
+        %tmp.102 = lgetv %er.10;
+        symbol [ er %tmp.102 79 14 16 ];
+        %tmp.103 = lgetv %ec.11;
+        symbol [ ec %tmp.103 79 18 20 ];
+        symbol [ HG_EXIT %tmp.105 79 22 29 ];
+        %tmp.105 = getv ? :HG_EXIT;
+        invoke %tmp.100 %tmp.101(%tmp.102, %tmp.103, %tmp.105);
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 80 8 ]
+        %tmp.106 = lgetv %g.2;
+        symbol [ g %tmp.106 80 8 9 ];
+        %tmp.107 = lgetv %er.10;
+        symbol [ er %tmp.107 80 18 20 ];
+        symbol [ exitR ? 80 10 15 ];
+        putv %tmp.106 :exitR %tmp.107;
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 80 22 ]
+        %tmp.108 = lgetv %g.2;
+        symbol [ g %tmp.108 80 22 23 ];
+        %tmp.109 = lgetv %ec.11;
+        symbol [ ec %tmp.109 80 32 34 ];
+        symbol [ exitC ? 80 24 29 ];
+        putv %tmp.108 :exitC %tmp.109;
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 83 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_41_33_87_4_start" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_41_33_87_4_stop" ]
+        %blockers.12 = local;
+        symbol [ blockers %blockers.12 83 12 20 ];
+        %tmp.110 = self;
+        symbol [ _placeBlockers %tmp.111 83 23 37 ];
+        %tmp.111 = getv function %tmp.110 :_placeBlockers;
+        %tmp.112 = lgetv %g.2;
+        symbol [ g %tmp.112 83 38 39 ];
+        %tmp.113 = lgetv %n.1;
+        symbol [ n %tmp.113 83 41 42 ];
+        %tmp.114 = lgetv %blkCnt.4;
+        symbol [ blkCnt %tmp.114 83 44 50 ];
+        %tmp.115 = lgetv %predPct.5;
+        symbol [ predPct %tmp.115 83 52 59 ];
+        %tmp.116 = lgetv %movPct.6;
+        symbol [ movPct %tmp.116 83 61 67 ];
+        %tmp.117 = lgetv %sr.8;
+        symbol [ sr %tmp.117 84 39 41 ];
+        %tmp.118 = lgetv %sc.9;
+        symbol [ sc %tmp.118 84 43 45 ];
+        %tmp.119 = lgetv %er.10;
+        symbol [ er %tmp.119 84 47 49 ];
+        %tmp.120 = lgetv %ec.11;
+        symbol [ ec %tmp.120 84 51 53 ];
+        %tmp.121 = invoke %tmp.110 %tmp.111(%tmp.112, %tmp.113, %tmp.114, %tmp.115, %tmp.116, %tmp.117, %tmp.118, %tmp.119, %tmp.120);
+        lputv %blockers.12 %tmp.121;
+        symbol [ blockers %blockers.12 83 12 20 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 86 8 ]
+        %tmp.122 = newa 4;
+        %tmp.123 = lgetv %g.2;
+        symbol [ g %tmp.123 86 16 17 ];
+        %tmp.124 = dup %tmp.122;
+        %tmp.125 = aputv %tmp.124 0 %tmp.123;
+        %tmp.126 = newa 2;
+        %tmp.127 = lgetv %sr.8;
+        symbol [ sr %tmp.127 86 20 22 ];
+        %tmp.128 = dup %tmp.126;
+        %tmp.129 = aputv %tmp.128 0 %tmp.127;
+        %tmp.130 = lgetv %sc.9;
+        symbol [ sc %tmp.130 86 24 26 ];
+        %tmp.131 = dup %tmp.129;
+        %tmp.132 = aputv %tmp.131 1 %tmp.130;
+        %tmp.133 = dup %tmp.125;
+        %tmp.134 = aputv %tmp.133 1 %tmp.132;
+        %tmp.135 = newa 2;
+        %tmp.136 = lgetv %er.10;
+        symbol [ er %tmp.136 86 30 32 ];
+        %tmp.137 = dup %tmp.135;
+        %tmp.138 = aputv %tmp.137 0 %tmp.136;
+        %tmp.139 = lgetv %ec.11;
+        symbol [ ec %tmp.139 86 34 36 ];
+        %tmp.140 = dup %tmp.138;
+        %tmp.141 = aputv %tmp.140 1 %tmp.139;
+        %tmp.142 = dup %tmp.134;
+        %tmp.143 = aputv %tmp.142 2 %tmp.141;
+        %tmp.144 = lgetv %blockers.12;
+        symbol [ blockers %tmp.144 86 39 47 ];
+        %tmp.145 = dup %tmp.143;
+        %tmp.146 = aputv %tmp.145 3 %tmp.144;
+        ret %tmp.146;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_41_33_87_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc"; @line = 60; @symbol_functiondef = [gridSizeForDiff,60,20,35]; @symbol_param<0> = [diff,60,36,40]; ]
-    static
-    function gridSizeForDiff(diff) {
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_60_42_64_4_start:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 61 8 ]
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_61_8_61_35_if_stmt:
-        %tmp.1 = lgetv %diff;
-        symbol [ diff %tmp.1 61 12 16 ];
+    [ @file = "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc"; @line = 91; @symbol_functiondef = [_initBorderAndWalls,91,27,46]; @symbol_param<0> = [g,91,47,48]; @symbol_param<1> = [n,91,50,51]; @symbol_param<2> = [wallPct,91,53,60]; ]
+    protected static
+    function _initBorderAndWalls(g, n, wallPct) {
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_91_62_108_4_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 92 8 ]
+        for @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_92_8_100_8_for_test @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_92_8_100_8_for_incr @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_92_8_100_8_for_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_92_8_100_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_92_8_100_8_for_begin" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_92_8_100_8_for_end" ]
+        %r.1 = local;
+        symbol [ r %r.1 92 17 18 ];
+        %tmp.1 = 0;
+        lputv %r.1 %tmp.1;
+        symbol [ r %r.1 92 17 18 ];
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_92_8_100_8_for_test:
+        %tmp.2 = lgetv %r.1;
+        symbol [ r %tmp.2 92 24 25 ];
+        %tmp.3 = lgetv %n;
+        symbol [ n %tmp.3 92 28 29 ];
+        %tmp.4 = lt %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_92_8_100_8_for_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_92_8_100_8_for_begin:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_92_36_100_8_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 93 12 ]
+        for @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_93_12_99_12_for_test @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_93_12_99_12_for_incr @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_93_12_99_12_for_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_93_12_99_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_93_12_99_12_for_begin" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_93_12_99_12_for_end" ]
+        %c.2 = local;
+        symbol [ c %c.2 93 21 22 ];
+        %tmp.5 = 0;
+        lputv %c.2 %tmp.5;
+        symbol [ c %c.2 93 21 22 ];
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_93_12_99_12_for_test:
+        %tmp.6 = lgetv %c.2;
+        symbol [ c %tmp.6 93 28 29 ];
+        %tmp.7 = lgetv %n;
+        symbol [ n %tmp.7 93 32 33 ];
+        %tmp.8 = lt %tmp.6 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_93_12_99_12_for_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_93_12_99_12_for_begin:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_93_40_99_12_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 94 16 ]
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_94_16_98_16_if_stmt:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_94_20_94_63_begin:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_94_20_94_49_begin:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_94_20_94_39_begin:
+        %tmp.9 = lgetv %r.1;
+        symbol [ r %tmp.9 94 20 21 ];
+        %tmp.10 = 0;
+        %tmp.11 = eq %tmp.9 %tmp.10;
+        bt %tmp.11 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_94_16_98_16_if_true;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_94_30_94_39_false:
+        %tmp.12 = lgetv %r.1;
+        symbol [ r %tmp.12 94 30 31 ];
+        %tmp.13 = lgetv %n;
+        symbol [ n %tmp.13 94 35 36 ];
+        %tmp.14 = 1;
+        %tmp.15 = sub %tmp.13 %tmp.14;
+        %tmp.16 = eq %tmp.12 %tmp.15;
+        push %tmp.16;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_94_30_94_39_end:
+        %tmp.17 = phi [%tmp.11 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_94_20_94_39_begin] [%tmp.16 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_94_30_94_39_false] [%tmp.17 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_94_30_94_39_end];
+        bt %tmp.17 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_94_16_98_16_if_true;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_94_44_94_49_false:
+        %tmp.18 = lgetv %c.2;
+        symbol [ c %tmp.18 94 44 45 ];
+        %tmp.19 = 0;
+        %tmp.20 = eq %tmp.18 %tmp.19;
+        push %tmp.20;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_94_44_94_49_end:
+        %tmp.21 = phi [%tmp.17 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_94_20_94_49_begin] [%tmp.20 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_94_44_94_49_false] [%tmp.21 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_94_44_94_49_end];
+        bt %tmp.21 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_94_16_98_16_if_true;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_94_54_94_63_false:
+        %tmp.22 = lgetv %c.2;
+        symbol [ c %tmp.22 94 54 55 ];
+        %tmp.23 = lgetv %n;
+        symbol [ n %tmp.23 94 59 60 ];
+        %tmp.24 = 1;
+        %tmp.25 = sub %tmp.23 %tmp.24;
+        %tmp.26 = eq %tmp.22 %tmp.25;
+        push %tmp.26;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_94_54_94_63_end:
+        %tmp.27 = phi [%tmp.21 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_94_20_94_63_begin] [%tmp.26 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_94_54_94_63_false] [%tmp.27 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_94_54_94_63_end];
+        bf %tmp.27 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_94_16_98_16_if_else_false;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_94_16_98_16_if_true:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_94_66_96_16_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 95 20 ]
+        %tmp.28 = lgetv %g;
+        symbol [ g %tmp.28 95 20 21 ];
+        symbol [ set %tmp.29 95 22 25 ];
+        %tmp.29 = getv function %tmp.28 :set;
+        %tmp.30 = lgetv %r.1;
+        symbol [ r %tmp.30 95 26 27 ];
+        %tmp.31 = lgetv %c.2;
+        symbol [ c %tmp.31 95 29 30 ];
+        symbol [ HG_WALL %tmp.33 95 32 39 ];
+        %tmp.33 = getv ? :HG_WALL;
+        invoke %tmp.28 %tmp.29(%tmp.30, %tmp.31, %tmp.33);
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_94_66_96_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_94_16_98_16_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_94_16_98_16_if_else_false:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_96_23_98_16_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 97 20 ]
+        %tmp.34 = lgetv %g;
+        symbol [ g %tmp.34 97 20 21 ];
+        symbol [ set %tmp.35 97 22 25 ];
+        %tmp.35 = getv function %tmp.34 :set;
+        %tmp.36 = lgetv %r.1;
+        symbol [ r %tmp.36 97 26 27 ];
+        %tmp.37 = lgetv %c.2;
+        symbol [ c %tmp.37 97 29 30 ];
+        symbol [ HG_FLOOR %tmp.39 97 32 40 ];
+        %tmp.39 = getv ? :HG_FLOOR;
+        invoke %tmp.34 %tmp.35(%tmp.36, %tmp.37, %tmp.39);
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_96_23_98_16_stop:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_94_16_98_16_if_end:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_93_40_99_12_stop:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_93_12_99_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 93 ]
+        %tmp.42 = lgetv %c.2;
+        symbol [ c %tmp.42 93 35 36 ];
+        %tmp.43 = add %tmp.42 1;
+        lputv %c.2 %tmp.43;
+        symbol [ c %c.2 93 35 36 ];
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_93_12_99_12_for_test;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_93_12_99_12_for_end:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_92_36_100_8_stop:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_92_8_100_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 92 ]
+        %tmp.46 = lgetv %r.1;
+        symbol [ r %tmp.46 92 31 32 ];
+        %tmp.47 = add %tmp.46 1;
+        lputv %r.1 %tmp.47;
+        symbol [ r %r.1 92 31 32 ];
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_92_8_100_8_for_test;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_92_8_100_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 101 8 ]
+        for @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_101_8_107_8_for_test @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_101_8_107_8_for_incr @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_101_8_107_8_for_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_101_8_107_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_101_8_107_8_for_begin" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_101_8_107_8_for_end" ]
+        %r2.3 = local;
+        symbol [ r2 %r2.3 101 17 19 ];
+        %tmp.48 = 2;
+        lputv %r2.3 %tmp.48;
+        symbol [ r2 %r2.3 101 17 19 ];
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_101_8_107_8_for_test:
+        %tmp.49 = lgetv %r2.3;
+        symbol [ r2 %tmp.49 101 25 27 ];
+        %tmp.50 = lgetv %n;
+        symbol [ n %tmp.50 101 30 31 ];
+        %tmp.51 = 2;
+        %tmp.52 = sub %tmp.50 %tmp.51;
+        %tmp.53 = lt %tmp.49 %tmp.52;
+        bf %tmp.53 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_101_8_107_8_for_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_101_8_107_8_for_begin:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_101_43_107_8_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 102 12 ]
+        for @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_102_12_106_12_for_test @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_102_12_106_12_for_incr @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_102_12_106_12_for_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_102_12_106_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_102_12_106_12_for_begin" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_102_12_106_12_for_end" ]
+        %c2.4 = local;
+        symbol [ c2 %c2.4 102 21 23 ];
+        %tmp.54 = 2;
+        lputv %c2.4 %tmp.54;
+        symbol [ c2 %c2.4 102 21 23 ];
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_102_12_106_12_for_test:
+        %tmp.55 = lgetv %c2.4;
+        symbol [ c2 %tmp.55 102 29 31 ];
+        %tmp.56 = lgetv %n;
+        symbol [ n %tmp.56 102 34 35 ];
+        %tmp.57 = 2;
+        %tmp.58 = sub %tmp.56 %tmp.57;
+        %tmp.59 = lt %tmp.55 %tmp.58;
+        bf %tmp.59 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_102_12_106_12_for_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_102_12_106_12_for_begin:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_102_47_106_12_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 103 16 ]
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_103_16_105_16_if_stmt:
+        symbol [ Math %tmp.60 103 20 24 ];
+        %tmp.60 = getm $.Toybox.Math;
+        symbol [ rand %tmp.61 103 25 29 ];
+        %tmp.61 = getv function %tmp.60 :rand;
+        %tmp.62 = invoke %tmp.60 %tmp.61();
+        %tmp.63 = 100;
+        %tmp.64 = mod %tmp.62 %tmp.63;
+        %tmp.65 = lgetv %wallPct;
+        symbol [ wallPct %tmp.65 103 40 47 ];
+        %tmp.66 = lt %tmp.64 %tmp.65;
+        bf %tmp.66 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_103_16_105_16_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_103_16_105_16_if_true:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_103_49_105_16_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 104 20 ]
+        %tmp.67 = lgetv %g;
+        symbol [ g %tmp.67 104 20 21 ];
+        symbol [ set %tmp.68 104 22 25 ];
+        %tmp.68 = getv function %tmp.67 :set;
+        %tmp.69 = lgetv %r2.3;
+        symbol [ r2 %tmp.69 104 26 28 ];
+        %tmp.70 = lgetv %c2.4;
+        symbol [ c2 %tmp.70 104 30 32 ];
+        symbol [ HG_WALL %tmp.72 104 34 41 ];
+        %tmp.72 = getv ? :HG_WALL;
+        invoke %tmp.67 %tmp.68(%tmp.69, %tmp.70, %tmp.72);
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_103_49_105_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_103_16_105_16_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_103_16_105_16_if_end:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_102_47_106_12_stop:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_102_12_106_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 102 ]
+        %tmp.75 = lgetv %c2.4;
+        symbol [ c2 %tmp.75 102 41 43 ];
+        %tmp.76 = add %tmp.75 1;
+        lputv %c2.4 %tmp.76;
+        symbol [ c2 %c2.4 102 41 43 ];
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_102_12_106_12_for_test;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_102_12_106_12_for_end:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_101_43_107_8_stop:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_101_8_107_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 101 ]
+        %tmp.79 = lgetv %r2.3;
+        symbol [ r2 %tmp.79 101 37 39 ];
+        %tmp.80 = add %tmp.79 1;
+        lputv %r2.3 %tmp.80;
+        symbol [ r2 %r2.3 101 37 39 ];
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_101_8_107_8_for_test;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_101_8_107_8_for_end:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_91_62_108_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc"; @line = 112; @symbol_functiondef = [_cornersForLevel,112,27,43]; @symbol_param<0> = [level,112,44,49]; @symbol_param<1> = [n,112,51,52]; ]
+    protected static
+    function _cornersForLevel(level, n) {
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_112_54_118_4_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 113 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_112_54_118_4_start" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_112_54_118_4_stop" ]
+        %idx.1 = local;
+        symbol [ idx %idx.1 113 12 15 ];
+        %tmp.1 = lgetv %level;
+        symbol [ level %tmp.1 113 19 24 ];
+        %tmp.2 = 1;
+        %tmp.3 = sub %tmp.1 %tmp.2;
+        %tmp.4 = 4;
+        %tmp.5 = mod %tmp.3 %tmp.4;
+        lputv %idx.1 %tmp.5;
+        symbol [ idx %idx.1 113 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 114 8 ]
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_114_8_114_61_if_stmt:
+        %tmp.6 = lgetv %idx.1;
+        symbol [ idx %tmp.6 114 12 15 ];
+        %tmp.7 = 0;
+        %tmp.8 = eq %tmp.6 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_114_8_114_61_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_114_8_114_61_if_true:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_114_22_114_61_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 114 24 ]
+        %tmp.9 = newa 4;
+        %tmp.10 = 1;
+        %tmp.11 = dup %tmp.9;
+        %tmp.12 = aputv %tmp.11 0 %tmp.10;
+        %tmp.13 = 1;
+        %tmp.14 = dup %tmp.12;
+        %tmp.15 = aputv %tmp.14 1 %tmp.13;
+        %tmp.16 = lgetv %n;
+        symbol [ n %tmp.16 114 46 47 ];
+        %tmp.17 = 2;
+        %tmp.18 = sub %tmp.16 %tmp.17;
+        %tmp.19 = dup %tmp.15;
+        %tmp.20 = aputv %tmp.19 2 %tmp.18;
+        %tmp.21 = lgetv %n;
+        symbol [ n %tmp.21 114 53 54 ];
+        %tmp.22 = 2;
+        %tmp.23 = sub %tmp.21 %tmp.22;
+        %tmp.24 = dup %tmp.20;
+        %tmp.25 = aputv %tmp.24 3 %tmp.23;
+        ret %tmp.25;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_114_22_114_61_stop:
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_114_8_114_61_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_114_8_114_61_if_end:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 115 8 ]
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_115_8_115_61_if_stmt:
+        %tmp.26 = lgetv %idx.1;
+        symbol [ idx %tmp.26 115 12 15 ];
+        %tmp.27 = 1;
+        %tmp.28 = eq %tmp.26 %tmp.27;
+        bf %tmp.28 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_115_8_115_61_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_115_8_115_61_if_true:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_115_22_115_61_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 115 24 ]
+        %tmp.29 = newa 4;
+        %tmp.30 = 1;
+        %tmp.31 = dup %tmp.29;
+        %tmp.32 = aputv %tmp.31 0 %tmp.30;
+        %tmp.33 = lgetv %n;
+        symbol [ n %tmp.33 115 39 40 ];
+        %tmp.34 = 2;
+        %tmp.35 = sub %tmp.33 %tmp.34;
+        %tmp.36 = dup %tmp.32;
+        %tmp.37 = aputv %tmp.36 1 %tmp.35;
+        %tmp.38 = lgetv %n;
+        symbol [ n %tmp.38 115 46 47 ];
+        %tmp.39 = 2;
+        %tmp.40 = sub %tmp.38 %tmp.39;
+        %tmp.41 = dup %tmp.37;
+        %tmp.42 = aputv %tmp.41 2 %tmp.40;
+        %tmp.43 = 1;
+        %tmp.44 = dup %tmp.42;
+        %tmp.45 = aputv %tmp.44 3 %tmp.43;
+        ret %tmp.45;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_115_22_115_61_stop:
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_115_8_115_61_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_115_8_115_61_if_end:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 116 8 ]
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_116_8_116_61_if_stmt:
+        %tmp.46 = lgetv %idx.1;
+        symbol [ idx %tmp.46 116 12 15 ];
+        %tmp.47 = 2;
+        %tmp.48 = eq %tmp.46 %tmp.47;
+        bf %tmp.48 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_116_8_116_61_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_116_8_116_61_if_true:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_116_22_116_61_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 116 24 ]
+        %tmp.49 = newa 4;
+        %tmp.50 = lgetv %n;
+        symbol [ n %tmp.50 116 32 33 ];
+        %tmp.51 = 2;
+        %tmp.52 = sub %tmp.50 %tmp.51;
+        %tmp.53 = dup %tmp.49;
+        %tmp.54 = aputv %tmp.53 0 %tmp.52;
+        %tmp.55 = 1;
+        %tmp.56 = dup %tmp.54;
+        %tmp.57 = aputv %tmp.56 1 %tmp.55;
+        %tmp.58 = 1;
+        %tmp.59 = dup %tmp.57;
+        %tmp.60 = aputv %tmp.59 2 %tmp.58;
+        %tmp.61 = lgetv %n;
+        symbol [ n %tmp.61 116 53 54 ];
+        %tmp.62 = 2;
+        %tmp.63 = sub %tmp.61 %tmp.62;
+        %tmp.64 = dup %tmp.60;
+        %tmp.65 = aputv %tmp.64 3 %tmp.63;
+        ret %tmp.65;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_116_22_116_61_stop:
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_116_8_116_61_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_116_8_116_61_if_end:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 117 8 ]
+        %tmp.66 = newa 4;
+        %tmp.67 = lgetv %n;
+        symbol [ n %tmp.67 117 23 24 ];
+        %tmp.68 = 2;
+        %tmp.69 = sub %tmp.67 %tmp.68;
+        %tmp.70 = dup %tmp.66;
+        %tmp.71 = aputv %tmp.70 0 %tmp.69;
+        %tmp.72 = lgetv %n;
+        symbol [ n %tmp.72 117 30 31 ];
+        %tmp.73 = 2;
+        %tmp.74 = sub %tmp.72 %tmp.73;
+        %tmp.75 = dup %tmp.71;
+        %tmp.76 = aputv %tmp.75 1 %tmp.74;
+        %tmp.77 = 1;
+        %tmp.78 = dup %tmp.76;
+        %tmp.79 = aputv %tmp.78 2 %tmp.77;
+        %tmp.80 = 1;
+        %tmp.81 = dup %tmp.79;
+        %tmp.82 = aputv %tmp.81 3 %tmp.80;
+        ret %tmp.82;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_112_54_118_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc"; @line = 121; @symbol_functiondef = [_clearPocket,121,27,39]; @symbol_param<0> = [g,121,40,41]; @symbol_param<1> = [r,121,43,44]; @symbol_param<2> = [c,121,46,47]; ]
+    protected static
+    function _clearPocket(g, r, c) {
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_121_49_128_4_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 122 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_121_49_128_4_start" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_121_49_128_4_stop" ]
+        %dr.1 = local;
+        symbol [ dr %dr.1 122 12 14 ];
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_122_17_122_33_begin:
+        %tmp.1 = lgetv %r;
+        symbol [ r %tmp.1 122 18 19 ];
+        %tmp.2 = 1;
+        %tmp.3 = lte %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_122_17_122_33_else_false;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_122_17_122_33_true:
+        %tmp.4 = 1;
+        push %tmp.4;
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_122_17_122_33_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_122_17_122_33_else_false:
+        %tmp.5 = -1;
+        push %tmp.5;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_122_17_122_33_end:
+        %tmp.6 = phi [%tmp.3 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_122_17_122_33_begin] [%tmp.4 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_122_17_122_33_true] [%tmp.5 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_122_17_122_33_else_false] [%tmp.6 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_122_17_122_33_end];
+        lputv %dr.1 %tmp.6;
+        symbol [ dr %dr.1 122 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 123 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_121_49_128_4_start" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_121_49_128_4_stop" ]
+        %dc.2 = local;
+        symbol [ dc %dc.2 123 12 14 ];
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_123_17_123_33_begin:
+        %tmp.7 = lgetv %c;
+        symbol [ c %tmp.7 123 18 19 ];
+        %tmp.8 = 1;
+        %tmp.9 = lte %tmp.7 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_123_17_123_33_else_false;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_123_17_123_33_true:
+        %tmp.10 = 1;
+        push %tmp.10;
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_123_17_123_33_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_123_17_123_33_else_false:
+        %tmp.11 = -1;
+        push %tmp.11;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_123_17_123_33_end:
+        %tmp.12 = phi [%tmp.9 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_123_17_123_33_begin] [%tmp.10 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_123_17_123_33_true] [%tmp.11 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_123_17_123_33_else_false] [%tmp.12 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_123_17_123_33_end];
+        lputv %dc.2 %tmp.12;
+        symbol [ dc %dc.2 123 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 124 8 ]
+        %tmp.13 = lgetv %g;
+        symbol [ g %tmp.13 124 8 9 ];
+        symbol [ set %tmp.14 124 10 13 ];
+        %tmp.14 = getv function %tmp.13 :set;
+        %tmp.15 = lgetv %r;
+        symbol [ r %tmp.15 124 14 15 ];
+        %tmp.16 = lgetv %c;
+        symbol [ c %tmp.16 124 25 26 ];
+        symbol [ HG_FLOOR %tmp.18 124 36 44 ];
+        %tmp.18 = getv ? :HG_FLOOR;
+        invoke %tmp.13 %tmp.14(%tmp.15, %tmp.16, %tmp.18);
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 125 8 ]
+        %tmp.19 = lgetv %g;
+        symbol [ g %tmp.19 125 8 9 ];
+        symbol [ set %tmp.20 125 10 13 ];
+        %tmp.20 = getv function %tmp.19 :set;
+        %tmp.21 = lgetv %r;
+        symbol [ r %tmp.21 125 14 15 ];
+        %tmp.22 = lgetv %dr.1;
+        symbol [ dr %tmp.22 125 18 20 ];
+        %tmp.23 = add %tmp.21 %tmp.22;
+        %tmp.24 = lgetv %c;
+        symbol [ c %tmp.24 125 25 26 ];
+        symbol [ HG_FLOOR %tmp.26 125 36 44 ];
+        %tmp.26 = getv ? :HG_FLOOR;
+        invoke %tmp.19 %tmp.20(%tmp.23, %tmp.24, %tmp.26);
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 126 8 ]
+        %tmp.27 = lgetv %g;
+        symbol [ g %tmp.27 126 8 9 ];
+        symbol [ set %tmp.28 126 10 13 ];
+        %tmp.28 = getv function %tmp.27 :set;
+        %tmp.29 = lgetv %r;
+        symbol [ r %tmp.29 126 14 15 ];
+        %tmp.30 = lgetv %c;
+        symbol [ c %tmp.30 126 25 26 ];
+        %tmp.31 = lgetv %dc.2;
+        symbol [ dc %tmp.31 126 29 31 ];
+        %tmp.32 = add %tmp.30 %tmp.31;
+        symbol [ HG_FLOOR %tmp.34 126 36 44 ];
+        %tmp.34 = getv ? :HG_FLOOR;
+        invoke %tmp.27 %tmp.28(%tmp.29, %tmp.32, %tmp.34);
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 127 8 ]
+        %tmp.35 = lgetv %g;
+        symbol [ g %tmp.35 127 8 9 ];
+        symbol [ set %tmp.36 127 10 13 ];
+        %tmp.36 = getv function %tmp.35 :set;
+        %tmp.37 = lgetv %r;
+        symbol [ r %tmp.37 127 14 15 ];
+        %tmp.38 = lgetv %dr.1;
+        symbol [ dr %tmp.38 127 18 20 ];
+        %tmp.39 = add %tmp.37 %tmp.38;
+        %tmp.40 = lgetv %c;
+        symbol [ c %tmp.40 127 25 26 ];
+        %tmp.41 = lgetv %dc.2;
+        symbol [ dc %tmp.41 127 29 31 ];
+        %tmp.42 = add %tmp.40 %tmp.41;
+        symbol [ HG_FLOOR %tmp.44 127 36 44 ];
+        %tmp.44 = getv ? :HG_FLOOR;
+        invoke %tmp.35 %tmp.36(%tmp.39, %tmp.42, %tmp.44);
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_121_49_128_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc"; @line = 131; @symbol_functiondef = [_inPocket,131,27,36]; @symbol_param<0> = [r,131,37,38]; @symbol_param<1> = [c,131,40,41]; @symbol_param<2> = [pr,131,43,45]; @symbol_param<3> = [pc,131,47,49]; ]
+    protected static
+    function _inPocket(r, c, pr, pc) {
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_131_51_137_4_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 132 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_131_51_137_4_start" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_131_51_137_4_stop" ]
+        %dr.1 = local;
+        symbol [ dr %dr.1 132 12 14 ];
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_132_17_132_34_begin:
+        %tmp.1 = lgetv %pr;
+        symbol [ pr %tmp.1 132 18 20 ];
+        %tmp.2 = 1;
+        %tmp.3 = lte %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_132_17_132_34_else_false;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_132_17_132_34_true:
+        %tmp.4 = 1;
+        push %tmp.4;
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_132_17_132_34_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_132_17_132_34_else_false:
+        %tmp.5 = -1;
+        push %tmp.5;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_132_17_132_34_end:
+        %tmp.6 = phi [%tmp.3 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_132_17_132_34_begin] [%tmp.4 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_132_17_132_34_true] [%tmp.5 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_132_17_132_34_else_false] [%tmp.6 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_132_17_132_34_end];
+        lputv %dr.1 %tmp.6;
+        symbol [ dr %dr.1 132 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 133 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_131_51_137_4_start" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_131_51_137_4_stop" ]
+        %dc.2 = local;
+        symbol [ dc %dc.2 133 12 14 ];
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_133_17_133_34_begin:
+        %tmp.7 = lgetv %pc;
+        symbol [ pc %tmp.7 133 18 20 ];
+        %tmp.8 = 1;
+        %tmp.9 = lte %tmp.7 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_133_17_133_34_else_false;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_133_17_133_34_true:
+        %tmp.10 = 1;
+        push %tmp.10;
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_133_17_133_34_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_133_17_133_34_else_false:
+        %tmp.11 = -1;
+        push %tmp.11;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_133_17_133_34_end:
+        %tmp.12 = phi [%tmp.9 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_133_17_133_34_begin] [%tmp.10 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_133_17_133_34_true] [%tmp.11 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_133_17_133_34_else_false] [%tmp.12 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_133_17_133_34_end];
+        lputv %dc.2 %tmp.12;
+        symbol [ dc %dc.2 133 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 134 8 ]
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_134_8_134_53_if_stmt:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_134_12_134_33_begin:
+        %tmp.13 = lgetv %r;
+        symbol [ r %tmp.13 134 12 13 ];
+        %tmp.14 = lgetv %pr;
+        symbol [ pr %tmp.14 134 17 19 ];
+        %tmp.15 = ne %tmp.13 %tmp.14;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_134_8_134_53_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_134_23_134_33_true:
+        %tmp.16 = lgetv %r;
+        symbol [ r %tmp.16 134 23 24 ];
+        %tmp.17 = lgetv %pr;
+        symbol [ pr %tmp.17 134 28 30 ];
+        %tmp.18 = lgetv %dr.1;
+        symbol [ dr %tmp.18 134 33 35 ];
+        %tmp.19 = add %tmp.17 %tmp.18;
+        %tmp.20 = ne %tmp.16 %tmp.19;
+        push %tmp.20;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_134_23_134_33_end:
+        %tmp.21 = phi [%tmp.15 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_134_12_134_33_begin] [%tmp.20 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_134_23_134_33_true] [%tmp.21 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_134_23_134_33_end];
+        bf %tmp.21 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_134_8_134_53_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_134_8_134_53_if_true:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_134_37_134_53_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 134 39 ]
+        %tmp.22 = false;
+        ret %tmp.22;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_134_37_134_53_stop:
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_134_8_134_53_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_134_8_134_53_if_end:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 135 8 ]
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_135_8_135_53_if_stmt:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_135_12_135_33_begin:
+        %tmp.23 = lgetv %c;
+        symbol [ c %tmp.23 135 12 13 ];
+        %tmp.24 = lgetv %pc;
+        symbol [ pc %tmp.24 135 17 19 ];
+        %tmp.25 = ne %tmp.23 %tmp.24;
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_135_8_135_53_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_135_23_135_33_true:
+        %tmp.26 = lgetv %c;
+        symbol [ c %tmp.26 135 23 24 ];
+        %tmp.27 = lgetv %pc;
+        symbol [ pc %tmp.27 135 28 30 ];
+        %tmp.28 = lgetv %dc.2;
+        symbol [ dc %tmp.28 135 33 35 ];
+        %tmp.29 = add %tmp.27 %tmp.28;
+        %tmp.30 = ne %tmp.26 %tmp.29;
+        push %tmp.30;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_135_23_135_33_end:
+        %tmp.31 = phi [%tmp.25 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_135_12_135_33_begin] [%tmp.30 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_135_23_135_33_true] [%tmp.31 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_135_23_135_33_end];
+        bf %tmp.31 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_135_8_135_53_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_135_8_135_53_if_true:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_135_37_135_53_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 135 39 ]
+        %tmp.32 = false;
+        ret %tmp.32;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_135_37_135_53_stop:
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_135_8_135_53_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_135_8_135_53_if_end:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 136 8 ]
+        %tmp.33 = true;
+        ret %tmp.33;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_131_51_137_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc"; @line = 143; @symbol_functiondef = [_carvePath,143,27,37]; @symbol_param<0> = [g,143,38,39]; @symbol_param<1> = [sr,143,41,43]; @symbol_param<2> = [sc,143,45,47]; @symbol_param<3> = [er,143,49,51]; @symbol_param<4> = [ec,143,53,55]; @symbol_param<5> = [style,143,57,62]; ]
+    protected static
+    function _carvePath(g, sr, sc, er, ec, style) {
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_143_64_159_4_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 144 8 ]
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_144_8_158_8_if_stmt:
+        %tmp.1 = lgetv %style;
+        symbol [ style %tmp.1 144 12 17 ];
         %tmp.2 = 0;
         %tmp.3 = eq %tmp.1 %tmp.2;
-        bf %tmp.3 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_61_8_61_35_if_end;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_61_8_61_35_if_true:
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_61_23_61_35_start:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 61 25 ]
-        %tmp.4 = 3;
-        ret %tmp.4;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_61_23_61_35_stop:
-        goto @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_61_8_61_35_if_end;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_61_8_61_35_if_end:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 62 8 ]
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_62_8_62_35_if_stmt:
-        %tmp.5 = lgetv %diff;
-        symbol [ diff %tmp.5 62 12 16 ];
-        %tmp.6 = 1;
-        %tmp.7 = eq %tmp.5 %tmp.6;
-        bf %tmp.7 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_62_8_62_35_if_end;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_62_8_62_35_if_true:
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_62_23_62_35_start:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 62 25 ]
-        %tmp.8 = 4;
-        ret %tmp.8;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_62_23_62_35_stop:
-        goto @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_62_8_62_35_if_end;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_62_8_62_35_if_end:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 63 8 ]
-        %tmp.9 = 5;
-        ret %tmp.9;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_60_42_64_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc"; @line = 67; @symbol_functiondef = [_lcg,67,27,31]; @symbol_param<0> = [seed,67,32,36]; ]
-    protected static
-    function _lcg(seed) {
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_67_38_69_4_start:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 68 8 ]
-        %tmp.1 = lgetv %seed;
-        symbol [ seed %tmp.1 68 17 21 ];
-        %tmp.2 = 1103515245;
-        %tmp.3 = mul %tmp.1 %tmp.2;
-        %tmp.4 = 12345;
-        %tmp.5 = add %tmp.3 %tmp.4;
-        %tmp.6 = 0x7FFFFFFF;
-        %tmp.7 = bitand %tmp.5 %tmp.6;
-        ret %tmp.7;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_67_38_69_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc"; @line = 70; @symbol_functiondef = [_rnd,70,27,31]; @symbol_param<0> = [state,70,32,37]; @symbol_param<1> = [mod,70,39,42]; ]
-    protected static
-    function _rnd(state, mod) {
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_70_44_72_4_start:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 71 8 ]
-        %tmp.1 = lgetv %state;
-        symbol [ state %tmp.1 71 15 20 ];
-        %tmp.2 = lgetv %mod;
-        symbol [ mod %tmp.2 71 23 26 ];
-        %tmp.3 = mod %tmp.1 %tmp.2;
-        ret %tmp.3;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_70_44_72_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc"; @line = 79; @position = 22; @symbol_vardef = [SEED_MIX,79,22,30]; ]
-    protected static
-    var SEED_MIX = -1640531527;
-    [ @file = "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc"; @line = 81; @symbol_functiondef = [generateForLevel,81,20,36]; @symbol_param<0> = [level,81,37,42]; ]
-    static
-    function generateForLevel(level) {
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_81_44_86_4_start:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 82 8 ]
-        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_81_44_86_4_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_81_44_86_4_stop" ]
-        %n.1 = local;
-        symbol [ n %n.1 82 12 13 ];
-        %tmp.1 = self;
-        symbol [ gridSizeForLevel %tmp.2 82 16 32 ];
-        %tmp.2 = getv function %tmp.1 :gridSizeForLevel;
-        %tmp.3 = lgetv %level;
-        symbol [ level %tmp.3 82 33 38 ];
-        %tmp.4 = invoke %tmp.1 %tmp.2(%tmp.3);
-        lputv %n.1 %tmp.4;
-        symbol [ n %n.1 82 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 83 8 ]
-        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_81_44_86_4_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_81_44_86_4_stop" ]
-        %k.2 = local;
-        symbol [ k %k.2 83 12 13 ];
-        %tmp.5 = self;
-        symbol [ pressCountForLevel %tmp.6 83 16 34 ];
-        %tmp.6 = getv function %tmp.5 :pressCountForLevel;
-        %tmp.7 = lgetv %level;
-        symbol [ level %tmp.7 83 35 40 ];
-        %tmp.8 = invoke %tmp.5 %tmp.6(%tmp.7);
-        lputv %k.2 %tmp.8;
-        symbol [ k %k.2 83 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 84 8 ]
-        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_81_44_86_4_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_81_44_86_4_stop" ]
-        %seed.3 = local;
-        symbol [ seed %seed.3 84 12 16 ];
-        %tmp.9 = lgetv %level;
-        symbol [ level %tmp.9 84 20 25 ];
-        symbol [ SEED_MIX %tmp.11 84 28 36 ];
-        %tmp.11 = getv ? :SEED_MIX;
-        %tmp.12 = mul %tmp.9 %tmp.11;
-        %tmp.13 = 0x7FFFFFFF;
-        %tmp.14 = bitand %tmp.12 %tmp.13;
-        lputv %seed.3 %tmp.14;
-        symbol [ seed %seed.3 84 12 16 ];
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 85 8 ]
-        %tmp.15 = self;
-        symbol [ _generate %tmp.16 85 15 24 ];
-        %tmp.16 = getv function %tmp.15 :_generate;
-        %tmp.17 = lgetv %n.1;
-        symbol [ n %tmp.17 85 25 26 ];
-        %tmp.18 = lgetv %k.2;
-        symbol [ k %tmp.18 85 28 29 ];
-        %tmp.19 = lgetv %seed.3;
-        symbol [ seed %tmp.19 85 31 35 ];
-        %tmp.20 = invoke %tmp.15 %tmp.16(%tmp.17, %tmp.18, %tmp.19);
-        ret %tmp.20;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_81_44_86_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc"; @line = 88; @symbol_functiondef = [generateDaily,88,20,33]; @symbol_param<0> = [daySeed,88,34,41]; @symbol_param<1> = [diff,88,43,47]; ]
-    static
-    function generateDaily(daySeed, diff) {
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_88_49_94_4_start:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 89 8 ]
-        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_88_49_94_4_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_88_49_94_4_stop" ]
-        %n.1 = local;
-        symbol [ n %n.1 89 12 13 ];
-        %tmp.1 = self;
-        symbol [ gridSizeForDiff %tmp.2 89 16 31 ];
-        %tmp.2 = getv function %tmp.1 :gridSizeForDiff;
-        %tmp.3 = lgetv %diff;
-        symbol [ diff %tmp.3 89 32 36 ];
-        %tmp.4 = invoke %tmp.1 %tmp.2(%tmp.3);
-        lputv %n.1 %tmp.4;
-        symbol [ n %n.1 89 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 90 8 ]
-        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_88_49_94_4_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_88_49_94_4_stop" ]
-        %k.2 = local;
-        symbol [ k %k.2 90 12 13 ];
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_16_90_55_begin:
-        %tmp.5 = lgetv %diff;
-        symbol [ diff %tmp.5 90 17 21 ];
-        %tmp.6 = 0;
-        %tmp.7 = eq %tmp.5 %tmp.6;
-        bf %tmp.7 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_16_90_55_else_false;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_16_90_55_true:
-        %tmp.8 = 4;
-        push %tmp.8;
-        goto @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_16_90_55_end;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_16_90_55_else_false:
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_35_90_53_begin:
-        %tmp.9 = lgetv %diff;
-        symbol [ diff %tmp.9 90 36 40 ];
-        %tmp.10 = 1;
-        %tmp.11 = eq %tmp.9 %tmp.10;
-        bf %tmp.11 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_35_90_53_else_false;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_35_90_53_true:
-        %tmp.12 = 7;
-        push %tmp.12;
-        goto @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_35_90_53_end;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_35_90_53_else_false:
-        %tmp.13 = 10;
-        push %tmp.13;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_35_90_53_end:
-        %tmp.14 = phi [%tmp.11 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_35_90_53_begin] [%tmp.12 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_35_90_53_true] [%tmp.13 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_35_90_53_else_false] [%tmp.14 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_35_90_53_end];
-        push %tmp.14;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_16_90_55_end:
-        %tmp.15 = phi [%tmp.7 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_16_90_55_begin] [%tmp.8 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_16_90_55_true] [%tmp.14 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_16_90_55_else_false] [%tmp.15 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_90_16_90_55_end];
-        lputv %k.2 %tmp.15;
-        symbol [ k %k.2 90 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 91 8 ]
-        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_88_49_94_4_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_88_49_94_4_stop" ]
-        %seed.3 = local;
-        symbol [ seed %seed.3 91 12 16 ];
-        %tmp.16 = lgetv %daySeed;
-        symbol [ daySeed %tmp.16 91 20 27 ];
-        symbol [ SEED_MIX %tmp.18 91 30 38 ];
-        %tmp.18 = getv ? :SEED_MIX;
-        %tmp.19 = mul %tmp.16 %tmp.18;
-        %tmp.20 = 0x7FFFFFFF;
-        %tmp.21 = bitand %tmp.19 %tmp.20;
-        lputv %seed.3 %tmp.21;
-        symbol [ seed %seed.3 91 12 16 ];
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 92 8 ]
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_92_8_92_35_if_stmt:
-        %tmp.22 = lgetv %seed.3;
-        symbol [ seed %tmp.22 92 12 16 ];
-        %tmp.23 = 0;
-        %tmp.24 = eq %tmp.22 %tmp.23;
-        bf %tmp.24 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_92_8_92_35_if_end;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_92_8_92_35_if_true:
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_92_23_92_35_start:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 92 25 ]
-        %tmp.25 = 1;
-        lputv %seed.3 %tmp.25;
-        symbol [ seed %seed.3 92 25 29 ];
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_92_23_92_35_stop:
-        goto @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_92_8_92_35_if_end;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_92_8_92_35_if_end:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 93 8 ]
-        %tmp.26 = self;
-        symbol [ _generate %tmp.27 93 15 24 ];
-        %tmp.27 = getv function %tmp.26 :_generate;
-        %tmp.28 = lgetv %n.1;
-        symbol [ n %tmp.28 93 25 26 ];
-        %tmp.29 = lgetv %k.2;
-        symbol [ k %tmp.29 93 28 29 ];
-        %tmp.30 = lgetv %seed.3;
-        symbol [ seed %tmp.30 93 31 35 ];
-        %tmp.31 = invoke %tmp.26 %tmp.27(%tmp.28, %tmp.29, %tmp.30);
-        ret %tmp.31;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_88_49_94_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc"; @line = 96; @symbol_functiondef = [_generate,96,27,36]; @symbol_param<0> = [n,96,37,38]; @symbol_param<1> = [k,96,40,41]; @symbol_param<2> = [seed,96,43,47]; ]
-    protected static
-    function _generate(n, k, seed) {
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_96_49_124_4_start:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 97 8 ]
-        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_96_49_124_4_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_96_49_124_4_stop" ]
-        %grid.1 = local;
-        symbol [ grid %grid.1 97 12 16 ];
-        %tmp.2 = lgetv %n;
-        symbol [ n %tmp.2 97 27 28 ];
-        %tmp.3 = lgetv %n;
-        symbol [ n %tmp.3 97 31 32 ];
-        %tmp.4 = mul %tmp.2 %tmp.3;
-        %tmp.1 = newa %tmp.4;
-        lputv %grid.1 %tmp.1;
-        symbol [ grid %grid.1 97 12 16 ];
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 98 8 ]
-        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_96_49_124_4_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_96_49_124_4_stop" ]
-        %presses.2 = local;
-        symbol [ presses %presses.2 98 12 19 ];
-        %tmp.5 = newa 0;
-        lputv %presses.2 %tmp.5;
-        symbol [ presses %presses.2 98 12 19 ];
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 99 8 ]
-        for @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_99_8_99_55_for_test @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_99_8_99_55_for_incr @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_99_8_99_55_for_end;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_99_8_99_55_for_init:
-        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_99_8_99_55_for_begin" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_99_8_99_55_for_end" ]
-        %i.3 = local;
-        symbol [ i %i.3 99 17 18 ];
-        %tmp.6 = 0;
-        lputv %i.3 %tmp.6;
-        symbol [ i %i.3 99 17 18 ];
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_99_8_99_55_for_test:
-        %tmp.7 = lgetv %i.3;
-        symbol [ i %tmp.7 99 24 25 ];
-        %tmp.8 = lgetv %n;
-        symbol [ n %tmp.8 99 28 29 ];
-        %tmp.9 = lgetv %n;
-        symbol [ n %tmp.9 99 32 33 ];
-        %tmp.10 = mul %tmp.8 %tmp.9;
-        %tmp.11 = lt %tmp.7 %tmp.10;
-        bf %tmp.11 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_99_8_99_55_for_end;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_99_8_99_55_for_begin:
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_99_40_99_55_start:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 99 42 ]
-        %tmp.12 = lgetv %grid.1;
-        symbol [ grid %tmp.12 99 42 46 ];
-        %tmp.13 = 0;
-        %tmp.14 = lgetv %i.3;
-        symbol [ i %tmp.14 99 47 48 ];
-        aputv %tmp.12 %tmp.14 %tmp.13;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_99_40_99_55_stop:
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_99_8_99_55_for_incr:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 99 ]
-        %tmp.17 = lgetv %i.3;
-        symbol [ i %tmp.17 99 35 36 ];
-        %tmp.18 = add %tmp.17 1;
-        lputv %i.3 %tmp.18;
-        symbol [ i %i.3 99 35 36 ];
-        goto @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_99_8_99_55_for_test;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_99_8_99_55_for_end:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 101 8 ]
-        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_96_49_124_4_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_96_49_124_4_stop" ]
-        %sz.4 = local;
-        symbol [ sz %sz.4 101 12 14 ];
-        %tmp.19 = lgetv %n;
-        symbol [ n %tmp.19 101 17 18 ];
-        %tmp.20 = lgetv %n;
-        symbol [ n %tmp.20 101 21 22 ];
-        %tmp.21 = mul %tmp.19 %tmp.20;
-        lputv %sz.4 %tmp.21;
-        symbol [ sz %sz.4 101 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 102 8 ]
-        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_96_49_124_4_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_96_49_124_4_stop" ]
-        %state.5 = local;
-        symbol [ state %state.5 102 12 17 ];
-        %tmp.22 = lgetv %seed;
-        symbol [ seed %tmp.22 102 20 24 ];
-        lputv %state.5 %tmp.22;
-        symbol [ state %state.5 102 12 17 ];
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 103 8 ]
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_103_8_103_37_if_stmt:
-        %tmp.23 = lgetv %state.5;
-        symbol [ state %tmp.23 103 12 17 ];
-        %tmp.24 = 0;
-        %tmp.25 = eq %tmp.23 %tmp.24;
-        bf %tmp.25 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_103_8_103_37_if_end;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_103_8_103_37_if_true:
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_103_24_103_37_start:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 103 26 ]
-        %tmp.26 = 1;
-        lputv %state.5 %tmp.26;
-        symbol [ state %state.5 103 26 31 ];
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_103_24_103_37_stop:
-        goto @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_103_8_103_37_if_end;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_103_8_103_37_if_end:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 107 8 ]
-        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_96_49_124_4_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_96_49_124_4_stop" ]
-        %used.6 = local;
-        symbol [ used %used.6 107 12 16 ];
-        %tmp.28 = lgetv %sz.4;
-        symbol [ sz %tmp.28 107 24 26 ];
-        %tmp.27 = newa %tmp.28;
-        lputv %used.6 %tmp.27;
-        symbol [ used %used.6 107 12 16 ];
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 108 8 ]
-        for @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_108_8_108_52_for_test @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_108_8_108_52_for_incr @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_108_8_108_52_for_end;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_108_8_108_52_for_init:
-        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_108_8_108_52_for_begin" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_108_8_108_52_for_end" ]
-        %i.7 = local;
-        symbol [ i %i.7 108 17 18 ];
-        %tmp.29 = 0;
-        lputv %i.7 %tmp.29;
-        symbol [ i %i.7 108 17 18 ];
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_108_8_108_52_for_test:
-        %tmp.30 = lgetv %i.7;
-        symbol [ i %tmp.30 108 24 25 ];
-        %tmp.31 = lgetv %sz.4;
-        symbol [ sz %tmp.31 108 28 30 ];
-        %tmp.32 = lt %tmp.30 %tmp.31;
-        bf %tmp.32 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_108_8_108_52_for_end;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_108_8_108_52_for_begin:
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_108_37_108_52_start:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 108 39 ]
-        %tmp.33 = lgetv %used.6;
-        symbol [ used %tmp.33 108 39 43 ];
-        %tmp.34 = 0;
-        %tmp.35 = lgetv %i.7;
-        symbol [ i %tmp.35 108 44 45 ];
-        aputv %tmp.33 %tmp.35 %tmp.34;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_108_37_108_52_stop:
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_108_8_108_52_for_incr:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 108 ]
-        %tmp.38 = lgetv %i.7;
-        symbol [ i %tmp.38 108 32 33 ];
-        %tmp.39 = add %tmp.38 1;
-        lputv %i.7 %tmp.39;
-        symbol [ i %i.7 108 32 33 ];
-        goto @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_108_8_108_52_for_test;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_108_8_108_52_for_end:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 110 8 ]
-        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_96_49_124_4_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_96_49_124_4_stop" ]
-        %picked.8 = local;
-        symbol [ picked %picked.8 110 12 18 ];
-        %tmp.40 = 0;
-        lputv %picked.8 %tmp.40;
-        symbol [ picked %picked.8 110 12 18 ];
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 111 8 ]
-        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_96_49_124_4_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_96_49_124_4_stop" ]
-        %safety.9 = local;
-        symbol [ safety %safety.9 111 12 18 ];
-        %tmp.41 = 0;
-        lputv %safety.9 %tmp.41;
-        symbol [ safety %safety.9 111 12 18 ];
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 112 8 ]
-        while @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_112_8_122_8_while_test @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_112_8_122_8_while_end;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_112_8_122_8_while_test:
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_112_15_112_38_begin:
-        %tmp.42 = lgetv %picked.8;
-        symbol [ picked %tmp.42 112 15 21 ];
-        %tmp.43 = lgetv %k;
-        symbol [ k %tmp.43 112 24 25 ];
-        %tmp.44 = lt %tmp.42 %tmp.43;
-        %tmp.45 = dup %tmp.44;
-        bf %tmp.45 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_112_29_112_38_end;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_112_29_112_38_true:
-        %tmp.46 = lgetv %safety.9;
-        symbol [ safety %tmp.46 112 29 35 ];
-        %tmp.47 = 200;
-        %tmp.48 = lt %tmp.46 %tmp.47;
-        %tmp.49 = and %tmp.44 %tmp.48;
-        push %tmp.49;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_112_29_112_38_end:
-        %tmp.50 = phi [%tmp.45 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_112_15_112_38_begin] [%tmp.49 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_112_29_112_38_true] [%tmp.50 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_112_29_112_38_end];
-        bf %tmp.50 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_112_8_122_8_while_end;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_112_8_122_8_while_begin:
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_112_43_122_8_start:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 113 12 ]
-        %tmp.51 = self;
-        symbol [ _lcg %tmp.52 113 20 24 ];
-        %tmp.52 = getv function %tmp.51 :_lcg;
-        %tmp.53 = lgetv %state.5;
-        symbol [ state %tmp.53 113 25 30 ];
-        %tmp.54 = invoke %tmp.51 %tmp.52(%tmp.53);
-        lputv %state.5 %tmp.54;
-        symbol [ state %state.5 113 12 17 ];
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 114 12 ]
-        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_112_43_122_8_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_112_43_122_8_stop" ]
-        %p.10 = local;
-        symbol [ p %p.10 114 16 17 ];
-        %tmp.55 = self;
-        symbol [ _rnd %tmp.56 114 20 24 ];
-        %tmp.56 = getv function %tmp.55 :_rnd;
-        %tmp.57 = lgetv %state.5;
-        symbol [ state %tmp.57 114 25 30 ];
-        %tmp.58 = lgetv %sz.4;
-        symbol [ sz %tmp.58 114 32 34 ];
-        %tmp.59 = invoke %tmp.55 %tmp.56(%tmp.57, %tmp.58);
-        lputv %p.10 %tmp.59;
-        symbol [ p %p.10 114 16 17 ];
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 115 12 ]
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_115_12_120_12_if_stmt:
-        %tmp.60 = lgetv %used.6;
-        symbol [ used %tmp.60 115 16 20 ];
-        %tmp.61 = lgetv %p.10;
-        symbol [ p %tmp.61 115 21 22 ];
-        %tmp.62 = agetv %tmp.60 %tmp.61;
-        %tmp.63 = 0;
-        %tmp.64 = eq %tmp.62 %tmp.63;
-        bf %tmp.64 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_115_12_120_12_if_end;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_115_12_120_12_if_true:
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_115_30_120_12_start:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 116 16 ]
-        %tmp.65 = lgetv %used.6;
-        symbol [ used %tmp.65 116 16 20 ];
-        %tmp.66 = 1;
-        %tmp.67 = lgetv %p.10;
-        symbol [ p %tmp.67 116 21 22 ];
-        aputv %tmp.65 %tmp.67 %tmp.66;
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 117 16 ]
-        %tmp.68 = lgetv %presses.2;
-        symbol [ presses %tmp.68 117 16 23 ];
-        symbol [ add %tmp.69 117 24 27 ];
-        %tmp.69 = getv function %tmp.68 :add;
-        %tmp.70 = lgetv %p.10;
-        symbol [ p %tmp.70 117 28 29 ];
-        invoke %tmp.68 %tmp.69(%tmp.70);
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 118 16 ]
-        %tmp.71 = self;
-        symbol [ _pressOnFlat %tmp.72 118 16 28 ];
-        %tmp.72 = getv function %tmp.71 :_pressOnFlat;
-        %tmp.73 = lgetv %grid.1;
-        symbol [ grid %tmp.73 118 29 33 ];
-        %tmp.74 = lgetv %n;
-        symbol [ n %tmp.74 118 35 36 ];
-        %tmp.75 = lgetv %p.10;
-        symbol [ p %tmp.75 118 38 39 ];
-        invoke %tmp.71 %tmp.72(%tmp.73, %tmp.74, %tmp.75);
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 119 16 ]
-        %tmp.76 = lgetv %picked.8;
-        symbol [ picked %tmp.76 119 25 31 ];
-        %tmp.77 = 1;
-        %tmp.78 = add %tmp.76 %tmp.77;
-        lputv %picked.8 %tmp.78;
-        symbol [ picked %picked.8 119 16 22 ];
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_115_30_120_12_stop:
-        goto @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_115_12_120_12_if_end;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_115_12_120_12_if_end:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 121 12 ]
-        %tmp.79 = lgetv %safety.9;
-        symbol [ safety %tmp.79 121 21 27 ];
-        %tmp.80 = 1;
-        %tmp.81 = add %tmp.79 %tmp.80;
-        lputv %safety.9 %tmp.81;
-        symbol [ safety %safety.9 121 12 18 ];
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_112_43_122_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_112_8_122_8_while_test;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_112_8_122_8_while_end:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 123 8 ]
-        %tmp.82 = newa 3;
-        %tmp.83 = lgetv %n;
-        symbol [ n %tmp.83 123 16 17 ];
-        %tmp.84 = dup %tmp.82;
-        %tmp.85 = aputv %tmp.84 0 %tmp.83;
-        %tmp.86 = lgetv %grid.1;
-        symbol [ grid %tmp.86 123 19 23 ];
-        %tmp.87 = dup %tmp.85;
-        %tmp.88 = aputv %tmp.87 1 %tmp.86;
-        %tmp.89 = lgetv %presses.2;
-        symbol [ presses %tmp.89 123 25 32 ];
-        %tmp.90 = dup %tmp.88;
-        %tmp.91 = aputv %tmp.90 2 %tmp.89;
-        ret %tmp.91;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_96_49_124_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc"; @line = 128; @symbol_functiondef = [_pressOnFlat,128,27,39]; @symbol_param<0> = [g,128,40,41]; @symbol_param<1> = [n,128,43,44]; @symbol_param<2> = [p,128,46,47]; ]
-    protected static
-    function _pressOnFlat(g, n, p) {
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_128_49_136_4_start:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 129 8 ]
-        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_128_49_136_4_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_128_49_136_4_stop" ]
-        %r.1 = local;
-        symbol [ r %r.1 129 12 13 ];
-        %tmp.1 = lgetv %p;
-        symbol [ p %tmp.1 129 16 17 ];
-        %tmp.2 = lgetv %n;
-        symbol [ n %tmp.2 129 20 21 ];
-        %tmp.3 = div %tmp.1 %tmp.2;
-        lputv %r.1 %tmp.3;
-        symbol [ r %r.1 129 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 130 8 ]
-        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_128_49_136_4_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_128_49_136_4_stop" ]
-        %c.2 = local;
-        symbol [ c %c.2 130 12 13 ];
-        %tmp.4 = lgetv %p;
-        symbol [ p %tmp.4 130 16 17 ];
-        %tmp.5 = lgetv %n;
-        symbol [ n %tmp.5 130 20 21 ];
-        %tmp.6 = mod %tmp.4 %tmp.5;
-        lputv %c.2 %tmp.6;
-        symbol [ c %c.2 130 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 131 8 ]
-        %tmp.7 = self;
-        symbol [ _flip %tmp.8 131 8 13 ];
-        %tmp.8 = getv function %tmp.7 :_flip;
-        %tmp.9 = lgetv %g;
-        symbol [ g %tmp.9 131 14 15 ];
-        %tmp.10 = lgetv %n;
-        symbol [ n %tmp.10 131 17 18 ];
-        %tmp.11 = lgetv %r.1;
-        symbol [ r %tmp.11 131 20 21 ];
-        %tmp.12 = lgetv %c.2;
-        symbol [ c %tmp.12 131 27 28 ];
-        invoke %tmp.7 %tmp.8(%tmp.9, %tmp.10, %tmp.11, %tmp.12);
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 132 8 ]
-        %tmp.13 = self;
-        symbol [ _flip %tmp.14 132 8 13 ];
-        %tmp.14 = getv function %tmp.13 :_flip;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_144_8_158_8_if_else_false;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_144_8_158_8_if_true:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_144_24_151_8_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 145 12 ]
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_144_24_151_8_start" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_144_24_151_8_stop" ]
+        %ca.1 = local;
+        symbol [ ca %ca.1 145 16 18 ];
+        %tmp.4 = lgetv %sc;
+        symbol [ sc %tmp.4 145 21 23 ];
+        lputv %ca.1 %tmp.4;
+        symbol [ ca %ca.1 145 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 145 25 ]
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_144_24_151_8_start" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_144_24_151_8_stop" ]
+        %cb.2 = local;
+        symbol [ cb %cb.2 145 29 31 ];
+        %tmp.5 = lgetv %ec;
+        symbol [ ec %tmp.5 145 34 36 ];
+        lputv %cb.2 %tmp.5;
+        symbol [ cb %cb.2 145 29 31 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 146 12 ]
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_146_12_146_45_if_stmt:
+        %tmp.6 = lgetv %cb.2;
+        symbol [ cb %tmp.6 146 16 18 ];
+        %tmp.7 = lgetv %ca.1;
+        symbol [ ca %tmp.7 146 21 23 ];
+        %tmp.8 = lt %tmp.6 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_146_12_146_45_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_146_12_146_45_if_true:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_146_25_146_45_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 146 27 ]
+        %tmp.9 = lgetv %ec;
+        symbol [ ec %tmp.9 146 32 34 ];
+        lputv %ca.1 %tmp.9;
+        symbol [ ca %ca.1 146 27 29 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 146 36 ]
+        %tmp.10 = lgetv %sc;
+        symbol [ sc %tmp.10 146 41 43 ];
+        lputv %cb.2 %tmp.10;
+        symbol [ cb %cb.2 146 36 38 ];
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_146_25_146_45_stop:
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_146_12_146_45_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_146_12_146_45_if_end:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 147 12 ]
+        for @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_147_12_147_69_for_test @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_147_12_147_69_for_incr @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_147_12_147_69_for_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_147_12_147_69_for_init:
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_147_12_147_69_for_begin" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_147_12_147_69_for_end" ]
+        %c.3 = local;
+        symbol [ c %c.3 147 21 22 ];
+        %tmp.11 = lgetv %ca.1;
+        symbol [ ca %tmp.11 147 25 27 ];
+        lputv %c.3 %tmp.11;
+        symbol [ c %c.3 147 21 22 ];
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_147_12_147_69_for_test:
+        %tmp.12 = lgetv %c.3;
+        symbol [ c %tmp.12 147 29 30 ];
+        %tmp.13 = lgetv %cb.2;
+        symbol [ cb %tmp.13 147 34 36 ];
+        %tmp.14 = lte %tmp.12 %tmp.13;
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_147_12_147_69_for_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_147_12_147_69_for_begin:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_147_43_147_69_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 147 45 ]
         %tmp.15 = lgetv %g;
-        symbol [ g %tmp.15 132 14 15 ];
-        %tmp.16 = lgetv %n;
-        symbol [ n %tmp.16 132 17 18 ];
-        %tmp.17 = lgetv %r.1;
-        symbol [ r %tmp.17 132 20 21 ];
-        %tmp.18 = 1;
-        %tmp.19 = sub %tmp.17 %tmp.18;
-        %tmp.20 = lgetv %c.2;
-        symbol [ c %tmp.20 132 27 28 ];
-        invoke %tmp.13 %tmp.14(%tmp.15, %tmp.16, %tmp.19, %tmp.20);
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 133 8 ]
-        %tmp.21 = self;
-        symbol [ _flip %tmp.22 133 8 13 ];
-        %tmp.22 = getv function %tmp.21 :_flip;
-        %tmp.23 = lgetv %g;
-        symbol [ g %tmp.23 133 14 15 ];
-        %tmp.24 = lgetv %n;
-        symbol [ n %tmp.24 133 17 18 ];
-        %tmp.25 = lgetv %r.1;
-        symbol [ r %tmp.25 133 20 21 ];
-        %tmp.26 = 1;
-        %tmp.27 = add %tmp.25 %tmp.26;
-        %tmp.28 = lgetv %c.2;
-        symbol [ c %tmp.28 133 27 28 ];
-        invoke %tmp.21 %tmp.22(%tmp.23, %tmp.24, %tmp.27, %tmp.28);
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 134 8 ]
-        %tmp.29 = self;
-        symbol [ _flip %tmp.30 134 8 13 ];
-        %tmp.30 = getv function %tmp.29 :_flip;
-        %tmp.31 = lgetv %g;
-        symbol [ g %tmp.31 134 14 15 ];
-        %tmp.32 = lgetv %n;
-        symbol [ n %tmp.32 134 17 18 ];
-        %tmp.33 = lgetv %r.1;
-        symbol [ r %tmp.33 134 20 21 ];
-        %tmp.34 = lgetv %c.2;
-        symbol [ c %tmp.34 134 27 28 ];
-        %tmp.35 = 1;
-        %tmp.36 = sub %tmp.34 %tmp.35;
-        invoke %tmp.29 %tmp.30(%tmp.31, %tmp.32, %tmp.33, %tmp.36);
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 135 8 ]
-        %tmp.37 = self;
-        symbol [ _flip %tmp.38 135 8 13 ];
-        %tmp.38 = getv function %tmp.37 :_flip;
-        %tmp.39 = lgetv %g;
-        symbol [ g %tmp.39 135 14 15 ];
-        %tmp.40 = lgetv %n;
-        symbol [ n %tmp.40 135 17 18 ];
-        %tmp.41 = lgetv %r.1;
-        symbol [ r %tmp.41 135 20 21 ];
-        %tmp.42 = lgetv %c.2;
-        symbol [ c %tmp.42 135 27 28 ];
-        %tmp.43 = 1;
-        %tmp.44 = add %tmp.42 %tmp.43;
-        invoke %tmp.37 %tmp.38(%tmp.39, %tmp.40, %tmp.41, %tmp.44);
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_128_49_136_4_stop:
+        symbol [ g %tmp.15 147 45 46 ];
+        symbol [ set %tmp.16 147 47 50 ];
+        %tmp.16 = getv function %tmp.15 :set;
+        %tmp.17 = lgetv %sr;
+        symbol [ sr %tmp.17 147 51 53 ];
+        %tmp.18 = lgetv %c.3;
+        symbol [ c %tmp.18 147 55 56 ];
+        symbol [ HG_FLOOR %tmp.20 147 58 66 ];
+        %tmp.20 = getv ? :HG_FLOOR;
+        invoke %tmp.15 %tmp.16(%tmp.17, %tmp.18, %tmp.20);
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_147_43_147_69_stop:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_147_12_147_69_for_incr:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 147 ]
+        %tmp.23 = lgetv %c.3;
+        symbol [ c %tmp.23 147 38 39 ];
+        %tmp.24 = add %tmp.23 1;
+        lputv %c.3 %tmp.24;
+        symbol [ c %c.3 147 38 39 ];
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_147_12_147_69_for_test;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_147_12_147_69_for_end:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 148 12 ]
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_144_24_151_8_start" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_144_24_151_8_stop" ]
+        %ra.4 = local;
+        symbol [ ra %ra.4 148 16 18 ];
+        %tmp.25 = lgetv %sr;
+        symbol [ sr %tmp.25 148 21 23 ];
+        lputv %ra.4 %tmp.25;
+        symbol [ ra %ra.4 148 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 148 25 ]
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_144_24_151_8_start" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_144_24_151_8_stop" ]
+        %rb.5 = local;
+        symbol [ rb %rb.5 148 29 31 ];
+        %tmp.26 = lgetv %er;
+        symbol [ er %tmp.26 148 34 36 ];
+        lputv %rb.5 %tmp.26;
+        symbol [ rb %rb.5 148 29 31 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 149 12 ]
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_149_12_149_45_if_stmt:
+        %tmp.27 = lgetv %rb.5;
+        symbol [ rb %tmp.27 149 16 18 ];
+        %tmp.28 = lgetv %ra.4;
+        symbol [ ra %tmp.28 149 21 23 ];
+        %tmp.29 = lt %tmp.27 %tmp.28;
+        bf %tmp.29 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_149_12_149_45_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_149_12_149_45_if_true:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_149_25_149_45_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 149 27 ]
+        %tmp.30 = lgetv %er;
+        symbol [ er %tmp.30 149 32 34 ];
+        lputv %ra.4 %tmp.30;
+        symbol [ ra %ra.4 149 27 29 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 149 36 ]
+        %tmp.31 = lgetv %sr;
+        symbol [ sr %tmp.31 149 41 43 ];
+        lputv %rb.5 %tmp.31;
+        symbol [ rb %rb.5 149 36 38 ];
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_149_25_149_45_stop:
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_149_12_149_45_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_149_12_149_45_if_end:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 150 12 ]
+        for @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_150_12_150_69_for_test @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_150_12_150_69_for_incr @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_150_12_150_69_for_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_150_12_150_69_for_init:
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_150_12_150_69_for_begin" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_150_12_150_69_for_end" ]
+        %r.6 = local;
+        symbol [ r %r.6 150 21 22 ];
+        %tmp.32 = lgetv %ra.4;
+        symbol [ ra %tmp.32 150 25 27 ];
+        lputv %r.6 %tmp.32;
+        symbol [ r %r.6 150 21 22 ];
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_150_12_150_69_for_test:
+        %tmp.33 = lgetv %r.6;
+        symbol [ r %tmp.33 150 29 30 ];
+        %tmp.34 = lgetv %rb.5;
+        symbol [ rb %tmp.34 150 34 36 ];
+        %tmp.35 = lte %tmp.33 %tmp.34;
+        bf %tmp.35 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_150_12_150_69_for_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_150_12_150_69_for_begin:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_150_43_150_69_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 150 45 ]
+        %tmp.36 = lgetv %g;
+        symbol [ g %tmp.36 150 45 46 ];
+        symbol [ set %tmp.37 150 47 50 ];
+        %tmp.37 = getv function %tmp.36 :set;
+        %tmp.38 = lgetv %r.6;
+        symbol [ r %tmp.38 150 51 52 ];
+        %tmp.39 = lgetv %ec;
+        symbol [ ec %tmp.39 150 54 56 ];
+        symbol [ HG_FLOOR %tmp.41 150 58 66 ];
+        %tmp.41 = getv ? :HG_FLOOR;
+        invoke %tmp.36 %tmp.37(%tmp.38, %tmp.39, %tmp.41);
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_150_43_150_69_stop:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_150_12_150_69_for_incr:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 150 ]
+        %tmp.44 = lgetv %r.6;
+        symbol [ r %tmp.44 150 38 39 ];
+        %tmp.45 = add %tmp.44 1;
+        lputv %r.6 %tmp.45;
+        symbol [ r %r.6 150 38 39 ];
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_150_12_150_69_for_test;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_150_12_150_69_for_end:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_144_24_151_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_144_8_158_8_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_144_8_158_8_if_else_false:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_151_15_158_8_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 152 12 ]
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_151_15_158_8_start" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_151_15_158_8_stop" ]
+        %ra2.7 = local;
+        symbol [ ra2 %ra2.7 152 16 19 ];
+        %tmp.46 = lgetv %sr;
+        symbol [ sr %tmp.46 152 22 24 ];
+        lputv %ra2.7 %tmp.46;
+        symbol [ ra2 %ra2.7 152 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 152 26 ]
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_151_15_158_8_start" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_151_15_158_8_stop" ]
+        %rb2.8 = local;
+        symbol [ rb2 %rb2.8 152 30 33 ];
+        %tmp.47 = lgetv %er;
+        symbol [ er %tmp.47 152 36 38 ];
+        lputv %rb2.8 %tmp.47;
+        symbol [ rb2 %rb2.8 152 30 33 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 153 12 ]
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_153_12_153_49_if_stmt:
+        %tmp.48 = lgetv %rb2.8;
+        symbol [ rb2 %tmp.48 153 16 19 ];
+        %tmp.49 = lgetv %ra2.7;
+        symbol [ ra2 %tmp.49 153 22 25 ];
+        %tmp.50 = lt %tmp.48 %tmp.49;
+        bf %tmp.50 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_153_12_153_49_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_153_12_153_49_if_true:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_153_27_153_49_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 153 29 ]
+        %tmp.51 = lgetv %er;
+        symbol [ er %tmp.51 153 35 37 ];
+        lputv %ra2.7 %tmp.51;
+        symbol [ ra2 %ra2.7 153 29 32 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 153 39 ]
+        %tmp.52 = lgetv %sr;
+        symbol [ sr %tmp.52 153 45 47 ];
+        lputv %rb2.8 %tmp.52;
+        symbol [ rb2 %rb2.8 153 39 42 ];
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_153_27_153_49_stop:
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_153_12_153_49_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_153_12_153_49_if_end:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 154 12 ]
+        for @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_154_12_154_75_for_test @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_154_12_154_75_for_incr @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_154_12_154_75_for_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_154_12_154_75_for_init:
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_154_12_154_75_for_begin" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_154_12_154_75_for_end" ]
+        %r2.9 = local;
+        symbol [ r2 %r2.9 154 21 23 ];
+        %tmp.53 = lgetv %ra2.7;
+        symbol [ ra2 %tmp.53 154 26 29 ];
+        lputv %r2.9 %tmp.53;
+        symbol [ r2 %r2.9 154 21 23 ];
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_154_12_154_75_for_test:
+        %tmp.54 = lgetv %r2.9;
+        symbol [ r2 %tmp.54 154 31 33 ];
+        %tmp.55 = lgetv %rb2.8;
+        symbol [ rb2 %tmp.55 154 37 40 ];
+        %tmp.56 = lte %tmp.54 %tmp.55;
+        bf %tmp.56 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_154_12_154_75_for_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_154_12_154_75_for_begin:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_154_48_154_75_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 154 50 ]
+        %tmp.57 = lgetv %g;
+        symbol [ g %tmp.57 154 50 51 ];
+        symbol [ set %tmp.58 154 52 55 ];
+        %tmp.58 = getv function %tmp.57 :set;
+        %tmp.59 = lgetv %r2.9;
+        symbol [ r2 %tmp.59 154 56 58 ];
+        %tmp.60 = lgetv %sc;
+        symbol [ sc %tmp.60 154 60 62 ];
+        symbol [ HG_FLOOR %tmp.62 154 64 72 ];
+        %tmp.62 = getv ? :HG_FLOOR;
+        invoke %tmp.57 %tmp.58(%tmp.59, %tmp.60, %tmp.62);
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_154_48_154_75_stop:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_154_12_154_75_for_incr:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 154 ]
+        %tmp.65 = lgetv %r2.9;
+        symbol [ r2 %tmp.65 154 42 44 ];
+        %tmp.66 = add %tmp.65 1;
+        lputv %r2.9 %tmp.66;
+        symbol [ r2 %r2.9 154 42 44 ];
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_154_12_154_75_for_test;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_154_12_154_75_for_end:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 155 12 ]
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_151_15_158_8_start" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_151_15_158_8_stop" ]
+        %ca2.10 = local;
+        symbol [ ca2 %ca2.10 155 16 19 ];
+        %tmp.67 = lgetv %sc;
+        symbol [ sc %tmp.67 155 22 24 ];
+        lputv %ca2.10 %tmp.67;
+        symbol [ ca2 %ca2.10 155 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 155 26 ]
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_151_15_158_8_start" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_151_15_158_8_stop" ]
+        %cb2.11 = local;
+        symbol [ cb2 %cb2.11 155 30 33 ];
+        %tmp.68 = lgetv %ec;
+        symbol [ ec %tmp.68 155 36 38 ];
+        lputv %cb2.11 %tmp.68;
+        symbol [ cb2 %cb2.11 155 30 33 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 156 12 ]
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_156_12_156_49_if_stmt:
+        %tmp.69 = lgetv %cb2.11;
+        symbol [ cb2 %tmp.69 156 16 19 ];
+        %tmp.70 = lgetv %ca2.10;
+        symbol [ ca2 %tmp.70 156 22 25 ];
+        %tmp.71 = lt %tmp.69 %tmp.70;
+        bf %tmp.71 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_156_12_156_49_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_156_12_156_49_if_true:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_156_27_156_49_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 156 29 ]
+        %tmp.72 = lgetv %ec;
+        symbol [ ec %tmp.72 156 35 37 ];
+        lputv %ca2.10 %tmp.72;
+        symbol [ ca2 %ca2.10 156 29 32 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 156 39 ]
+        %tmp.73 = lgetv %sc;
+        symbol [ sc %tmp.73 156 45 47 ];
+        lputv %cb2.11 %tmp.73;
+        symbol [ cb2 %cb2.11 156 39 42 ];
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_156_27_156_49_stop:
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_156_12_156_49_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_156_12_156_49_if_end:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 157 12 ]
+        for @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_157_12_157_75_for_test @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_157_12_157_75_for_incr @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_157_12_157_75_for_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_157_12_157_75_for_init:
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_157_12_157_75_for_begin" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_157_12_157_75_for_end" ]
+        %c2.12 = local;
+        symbol [ c2 %c2.12 157 21 23 ];
+        %tmp.74 = lgetv %ca2.10;
+        symbol [ ca2 %tmp.74 157 26 29 ];
+        lputv %c2.12 %tmp.74;
+        symbol [ c2 %c2.12 157 21 23 ];
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_157_12_157_75_for_test:
+        %tmp.75 = lgetv %c2.12;
+        symbol [ c2 %tmp.75 157 31 33 ];
+        %tmp.76 = lgetv %cb2.11;
+        symbol [ cb2 %tmp.76 157 37 40 ];
+        %tmp.77 = lte %tmp.75 %tmp.76;
+        bf %tmp.77 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_157_12_157_75_for_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_157_12_157_75_for_begin:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_157_48_157_75_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 157 50 ]
+        %tmp.78 = lgetv %g;
+        symbol [ g %tmp.78 157 50 51 ];
+        symbol [ set %tmp.79 157 52 55 ];
+        %tmp.79 = getv function %tmp.78 :set;
+        %tmp.80 = lgetv %er;
+        symbol [ er %tmp.80 157 56 58 ];
+        %tmp.81 = lgetv %c2.12;
+        symbol [ c2 %tmp.81 157 60 62 ];
+        symbol [ HG_FLOOR %tmp.83 157 64 72 ];
+        %tmp.83 = getv ? :HG_FLOOR;
+        invoke %tmp.78 %tmp.79(%tmp.80, %tmp.81, %tmp.83);
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_157_48_157_75_stop:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_157_12_157_75_for_incr:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 157 ]
+        %tmp.86 = lgetv %c2.12;
+        symbol [ c2 %tmp.86 157 42 44 ];
+        %tmp.87 = add %tmp.86 1;
+        lputv %c2.12 %tmp.87;
+        symbol [ c2 %c2.12 157 42 44 ];
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_157_12_157_75_for_test;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_157_12_157_75_for_end:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_151_15_158_8_stop:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_144_8_158_8_if_end:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_143_64_159_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc"; @line = 137; @symbol_functiondef = [_flip,137,27,32]; @symbol_param<0> = [g,137,33,34]; @symbol_param<1> = [n,137,36,37]; @symbol_param<2> = [r,137,39,40]; @symbol_param<3> = [c,137,42,43]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc"; @line = 161; @symbol_functiondef = [_placeBlockers,161,27,41]; @symbol_param<0> = [g,161,42,43]; @symbol_param<1> = [n,161,45,46]; @symbol_param<2> = [blkCnt,161,48,54]; @symbol_param<3> = [predPct,161,56,63]; @symbol_param<4> = [movPct,161,65,71]; @symbol_param<5> = [sr,162,42,44]; @symbol_param<6> = [sc,162,46,48]; @symbol_param<7> = [er,162,50,52]; @symbol_param<8> = [ec,162,54,56]; ]
     protected static
-    function _flip(g, n, r, c) {
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_137_45_141_4_start:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 138 8 ]
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_8_138_58_if_stmt:
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_12_138_45_begin:
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_12_138_35_begin:
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_12_138_25_begin:
-        %tmp.1 = lgetv %r;
-        symbol [ r %tmp.1 138 12 13 ];
+    function _placeBlockers(g, n, blkCnt, predPct, movPct, sr, sc, er, ec) {
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_162_58_188_4_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 163 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_162_58_188_4_start" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_162_58_188_4_stop" ]
+        %blockers.1 = local;
+        symbol [ blockers %blockers.1 163 12 20 ];
+        %tmp.1 = newa 0;
+        lputv %blockers.1 %tmp.1;
+        symbol [ blockers %blockers.1 163 12 20 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 164 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_162_58_188_4_start" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_162_58_188_4_stop" ]
+        %guard.2 = local;
+        symbol [ guard %guard.2 164 12 17 ];
         %tmp.2 = 0;
-        %tmp.3 = lt %tmp.1 %tmp.2;
-        bt %tmp.3 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_8_138_58_if_true;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_21_138_25_false:
-        %tmp.4 = lgetv %c;
-        symbol [ c %tmp.4 138 21 22 ];
-        %tmp.5 = 0;
-        %tmp.6 = lt %tmp.4 %tmp.5;
-        push %tmp.6;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_21_138_25_end:
-        %tmp.7 = phi [%tmp.3 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_12_138_25_begin] [%tmp.6 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_21_138_25_false] [%tmp.7 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_21_138_25_end];
-        bt %tmp.7 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_8_138_58_if_true;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_30_138_35_false:
-        %tmp.8 = lgetv %r;
-        symbol [ r %tmp.8 138 30 31 ];
-        %tmp.9 = lgetv %n;
-        symbol [ n %tmp.9 138 35 36 ];
-        %tmp.10 = gte %tmp.8 %tmp.9;
-        push %tmp.10;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_30_138_35_end:
-        %tmp.11 = phi [%tmp.7 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_12_138_35_begin] [%tmp.10 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_30_138_35_false] [%tmp.11 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_30_138_35_end];
-        bt %tmp.11 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_8_138_58_if_true;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_40_138_45_false:
-        %tmp.12 = lgetv %c;
-        symbol [ c %tmp.12 138 40 41 ];
-        %tmp.13 = lgetv %n;
-        symbol [ n %tmp.13 138 45 46 ];
-        %tmp.14 = gte %tmp.12 %tmp.13;
-        push %tmp.14;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_40_138_45_end:
-        %tmp.15 = phi [%tmp.11 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_12_138_45_begin] [%tmp.14 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_40_138_45_false] [%tmp.15 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_40_138_45_end];
-        bf %tmp.15 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_8_138_58_if_end;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_8_138_58_if_true:
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_48_138_58_start:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 138 50 ]
-        ret ?;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_48_138_58_stop:
-        goto @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_8_138_58_if_end;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_138_8_138_58_if_end:
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 139 8 ]
-        [ "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_137_45_141_4_start" "_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_137_45_141_4_stop" ]
-        %i.1 = local;
-        symbol [ i %i.1 139 12 13 ];
-        %tmp.16 = lgetv %r;
-        symbol [ r %tmp.16 139 16 17 ];
-        %tmp.17 = lgetv %n;
-        symbol [ n %tmp.17 139 20 21 ];
-        %tmp.18 = mul %tmp.16 %tmp.17;
-        %tmp.19 = lgetv %c;
-        symbol [ c %tmp.19 139 24 25 ];
-        %tmp.20 = add %tmp.18 %tmp.19;
-        lputv %i.1 %tmp.20;
-        symbol [ i %i.1 139 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc" 140 8 ]
-        %tmp.21 = lgetv %g;
-        symbol [ g %tmp.21 140 8 9 ];
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_140_15_140_33_begin:
-        %tmp.22 = lgetv %g;
-        symbol [ g %tmp.22 140 16 17 ];
-        %tmp.23 = lgetv %i.1;
-        symbol [ i %tmp.23 140 18 19 ];
-        %tmp.24 = agetv %tmp.22 %tmp.23;
-        %tmp.25 = 0;
-        %tmp.26 = ne %tmp.24 %tmp.25;
-        bf %tmp.26 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_140_15_140_33_else_false;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_140_15_140_33_true:
-        %tmp.27 = 0;
-        push %tmp.27;
-        goto @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_140_15_140_33_end;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_140_15_140_33_else_false:
-        %tmp.28 = 1;
-        push %tmp.28;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_140_15_140_33_end:
-        %tmp.29 = phi [%tmp.26 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_140_15_140_33_begin] [%tmp.27 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_140_15_140_33_true] [%tmp.28 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_140_15_140_33_else_false] [%tmp.29 @_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_140_15_140_33_end];
-        %tmp.30 = lgetv %i.1;
-        symbol [ i %tmp.30 140 10 11 ];
-        aputv %tmp.21 %tmp.30 %tmp.29;
-_Users_kkorolczuk_work_garmin_lightsout_source_LevelGenerator_mc_137_45_141_4_stop:
+        lputv %guard.2 %tmp.2;
+        symbol [ guard %guard.2 164 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 165 8 ]
+        while @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_165_8_186_8_while_test @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_165_8_186_8_while_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_165_8_186_8_while_test:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_165_15_165_51_begin:
+        %tmp.3 = lgetv %blockers.1;
+        symbol [ blockers %tmp.3 165 15 23 ];
+        symbol [ size %tmp.4 165 24 28 ];
+        %tmp.4 = getv function %tmp.3 :size;
+        %tmp.5 = invoke %tmp.3 %tmp.4();
+        %tmp.6 = lgetv %blkCnt;
+        symbol [ blkCnt %tmp.6 165 33 39 ];
+        %tmp.7 = lt %tmp.5 %tmp.6;
+        %tmp.8 = dup %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_165_43_165_51_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_165_43_165_51_true:
+        %tmp.9 = lgetv %guard.2;
+        symbol [ guard %tmp.9 165 43 48 ];
+        %tmp.10 = 250;
+        %tmp.11 = lt %tmp.9 %tmp.10;
+        %tmp.12 = and %tmp.7 %tmp.11;
+        push %tmp.12;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_165_43_165_51_end:
+        %tmp.13 = phi [%tmp.8 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_165_15_165_51_begin] [%tmp.12 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_165_43_165_51_true] [%tmp.13 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_165_43_165_51_end];
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_165_8_186_8_while_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_165_8_186_8_while_begin:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_165_56_186_8_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 166 12 ]
+        %tmp.14 = lgetv %guard.2;
+        symbol [ guard %tmp.14 166 20 25 ];
+        %tmp.15 = 1;
+        %tmp.16 = add %tmp.14 %tmp.15;
+        lputv %guard.2 %tmp.16;
+        symbol [ guard %guard.2 166 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 167 12 ]
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_165_56_186_8_start" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_165_56_186_8_stop" ]
+        %rr.3 = local;
+        symbol [ rr %rr.3 167 16 18 ];
+        %tmp.17 = 1;
+        symbol [ Math %tmp.18 167 25 29 ];
+        %tmp.18 = getm $.Toybox.Math;
+        symbol [ rand %tmp.19 167 30 34 ];
+        %tmp.19 = getv function %tmp.18 :rand;
+        %tmp.20 = invoke %tmp.18 %tmp.19();
+        %tmp.21 = lgetv %n;
+        symbol [ n %tmp.21 167 40 41 ];
+        %tmp.22 = 2;
+        %tmp.23 = sub %tmp.21 %tmp.22;
+        %tmp.24 = mod %tmp.20 %tmp.23;
+        %tmp.25 = add %tmp.17 %tmp.24;
+        lputv %rr.3 %tmp.25;
+        symbol [ rr %rr.3 167 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 168 12 ]
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_165_56_186_8_start" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_165_56_186_8_stop" ]
+        %cc.4 = local;
+        symbol [ cc %cc.4 168 16 18 ];
+        %tmp.26 = 1;
+        symbol [ Math %tmp.27 168 25 29 ];
+        %tmp.27 = getm $.Toybox.Math;
+        symbol [ rand %tmp.28 168 30 34 ];
+        %tmp.28 = getv function %tmp.27 :rand;
+        %tmp.29 = invoke %tmp.27 %tmp.28();
+        %tmp.30 = lgetv %n;
+        symbol [ n %tmp.30 168 40 41 ];
+        %tmp.31 = 2;
+        %tmp.32 = sub %tmp.30 %tmp.31;
+        %tmp.33 = mod %tmp.29 %tmp.32;
+        %tmp.34 = add %tmp.26 %tmp.33;
+        lputv %cc.4 %tmp.34;
+        symbol [ cc %cc.4 168 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 170 12 ]
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_170_12_170_55_if_stmt:
+        %tmp.35 = self;
+        symbol [ _inPocket %tmp.36 170 16 25 ];
+        %tmp.36 = getv function %tmp.35 :_inPocket;
+        %tmp.37 = lgetv %rr.3;
+        symbol [ rr %tmp.37 170 26 28 ];
+        %tmp.38 = lgetv %cc.4;
+        symbol [ cc %tmp.38 170 30 32 ];
+        %tmp.39 = lgetv %sr;
+        symbol [ sr %tmp.39 170 34 36 ];
+        %tmp.40 = lgetv %sc;
+        symbol [ sc %tmp.40 170 38 40 ];
+        %tmp.41 = invoke %tmp.35 %tmp.36(%tmp.37, %tmp.38, %tmp.39, %tmp.40);
+        bf %tmp.41 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_170_12_170_55_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_170_12_170_55_if_true:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_170_43_170_55_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 170 45 ]
+        goto break @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_165_8_186_8_while_test;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_170_43_170_55_stop:
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_170_12_170_55_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_170_12_170_55_if_end:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 171 12 ]
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_171_12_171_55_if_stmt:
+        %tmp.42 = self;
+        symbol [ _inPocket %tmp.43 171 16 25 ];
+        %tmp.43 = getv function %tmp.42 :_inPocket;
+        %tmp.44 = lgetv %rr.3;
+        symbol [ rr %tmp.44 171 26 28 ];
+        %tmp.45 = lgetv %cc.4;
+        symbol [ cc %tmp.45 171 30 32 ];
+        %tmp.46 = lgetv %er;
+        symbol [ er %tmp.46 171 34 36 ];
+        %tmp.47 = lgetv %ec;
+        symbol [ ec %tmp.47 171 38 40 ];
+        %tmp.48 = invoke %tmp.42 %tmp.43(%tmp.44, %tmp.45, %tmp.46, %tmp.47);
+        bf %tmp.48 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_171_12_171_55_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_171_12_171_55_if_true:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_171_43_171_55_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 171 45 ]
+        goto break @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_165_8_186_8_while_test;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_171_43_171_55_stop:
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_171_12_171_55_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_171_12_171_55_if_end:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 172 12 ]
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_172_12_172_55_if_stmt:
+        %tmp.49 = lgetv %g;
+        symbol [ g %tmp.49 172 16 17 ];
+        symbol [ get %tmp.50 172 18 21 ];
+        %tmp.50 = getv function %tmp.49 :get;
+        %tmp.51 = lgetv %rr.3;
+        symbol [ rr %tmp.51 172 22 24 ];
+        %tmp.52 = lgetv %cc.4;
+        symbol [ cc %tmp.52 172 26 28 ];
+        %tmp.53 = invoke %tmp.49 %tmp.50(%tmp.51, %tmp.52);
+        symbol [ HG_FLOOR %tmp.55 172 33 41 ];
+        %tmp.55 = getv ? :HG_FLOOR;
+        %tmp.56 = ne %tmp.53 %tmp.55;
+        bf %tmp.56 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_172_12_172_55_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_172_12_172_55_if_true:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_172_43_172_55_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 172 45 ]
+        goto break @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_165_8_186_8_while_test;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_172_43_172_55_stop:
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_172_12_172_55_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_172_12_172_55_if_end:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 173 12 ]
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_165_56_186_8_start" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_165_56_186_8_stop" ]
+        %dup.5 = local;
+        symbol [ dup %dup.5 173 16 19 ];
+        %tmp.57 = false;
+        lputv %dup.5 %tmp.57;
+        symbol [ dup %dup.5 173 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 174 12 ]
+        for @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_174_12_176_12_for_test @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_174_12_176_12_for_incr @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_174_12_176_12_for_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_174_12_176_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_174_12_176_12_for_begin" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_174_12_176_12_for_end" ]
+        %i.6 = local;
+        symbol [ i %i.6 174 21 22 ];
+        %tmp.58 = 0;
+        lputv %i.6 %tmp.58;
+        symbol [ i %i.6 174 21 22 ];
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_174_12_176_12_for_test:
+        %tmp.59 = lgetv %i.6;
+        symbol [ i %tmp.59 174 28 29 ];
+        %tmp.60 = lgetv %blockers.1;
+        symbol [ blockers %tmp.60 174 32 40 ];
+        symbol [ size %tmp.61 174 41 45 ];
+        %tmp.61 = getv function %tmp.60 :size;
+        %tmp.62 = invoke %tmp.60 %tmp.61();
+        %tmp.63 = lt %tmp.59 %tmp.62;
+        bf %tmp.63 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_174_12_176_12_for_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_174_12_176_12_for_begin:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_174_54_176_12_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 175 16 ]
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_175_16_175_87_if_stmt:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_175_20_175_62_begin:
+        %tmp.64 = lgetv %blockers.1;
+        symbol [ blockers %tmp.64 175 20 28 ];
+        %tmp.65 = lgetv %i.6;
+        symbol [ i %tmp.65 175 29 30 ];
+        %tmp.66 = agetv %tmp.64 %tmp.65;
+        %tmp.67 = 0;
+        %tmp.68 = agetv %tmp.66 %tmp.67;
+        %tmp.69 = lgetv %rr.3;
+        symbol [ rr %tmp.69 175 38 40 ];
+        %tmp.70 = eq %tmp.68 %tmp.69;
+        bf %tmp.70 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_175_16_175_87_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_175_44_175_62_true:
+        %tmp.71 = lgetv %blockers.1;
+        symbol [ blockers %tmp.71 175 44 52 ];
+        %tmp.72 = lgetv %i.6;
+        symbol [ i %tmp.72 175 53 54 ];
+        %tmp.73 = agetv %tmp.71 %tmp.72;
+        %tmp.74 = 1;
+        %tmp.75 = agetv %tmp.73 %tmp.74;
+        %tmp.76 = lgetv %cc.4;
+        symbol [ cc %tmp.76 175 62 64 ];
+        %tmp.77 = eq %tmp.75 %tmp.76;
+        push %tmp.77;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_175_44_175_62_end:
+        %tmp.78 = phi [%tmp.70 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_175_20_175_62_begin] [%tmp.77 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_175_44_175_62_true] [%tmp.78 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_175_44_175_62_end];
+        bf %tmp.78 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_175_16_175_87_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_175_16_175_87_if_true:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_175_66_175_87_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 175 68 ]
+        %tmp.79 = true;
+        lputv %dup.5 %tmp.79;
+        symbol [ dup %dup.5 175 68 71 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 175 80 ]
+        goto break @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_174_12_176_12_for_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_175_66_175_87_stop:
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_175_16_175_87_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_175_16_175_87_if_end:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_174_54_176_12_stop:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_174_12_176_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 174 ]
+        %tmp.82 = lgetv %i.6;
+        symbol [ i %tmp.82 174 49 50 ];
+        %tmp.83 = add %tmp.82 1;
+        lputv %i.6 %tmp.83;
+        symbol [ i %i.6 174 49 50 ];
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_174_12_176_12_for_test;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_174_12_176_12_for_end:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 177 12 ]
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_177_12_177_33_if_stmt:
+        %tmp.84 = lgetv %dup.5;
+        symbol [ dup %tmp.84 177 16 19 ];
+        bf %tmp.84 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_177_12_177_33_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_177_12_177_33_if_true:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_177_21_177_33_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 177 23 ]
+        goto break @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_165_8_186_8_while_test;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_177_21_177_33_stop:
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_177_12_177_33_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_177_12_177_33_if_end:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 178 12 ]
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_165_56_186_8_start" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_165_56_186_8_stop" ]
+        %typ.7 = local;
+        symbol [ typ %typ.7 178 16 19 ];
+        symbol [ HG_BL_STATIC %tmp.86 178 23 35 ];
+        %tmp.86 = getv ? :HG_BL_STATIC;
+        lputv %typ.7 %tmp.86;
+        symbol [ typ %typ.7 178 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 179 12 ]
+        [ "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_165_56_186_8_start" "_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_165_56_186_8_stop" ]
+        %roll.8 = local;
+        symbol [ roll %roll.8 179 16 20 ];
+        symbol [ Math %tmp.87 179 23 27 ];
+        %tmp.87 = getm $.Toybox.Math;
+        symbol [ rand %tmp.88 179 28 32 ];
+        %tmp.88 = getv function %tmp.87 :rand;
+        %tmp.89 = invoke %tmp.87 %tmp.88();
+        %tmp.90 = 100;
+        %tmp.91 = mod %tmp.89 %tmp.90;
+        lputv %roll.8 %tmp.91;
+        symbol [ roll %roll.8 179 16 20 ];
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 180 12 ]
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_180_12_184_12_if_stmt:
+        %tmp.92 = lgetv %roll.8;
+        symbol [ roll %tmp.92 180 16 20 ];
+        %tmp.93 = lgetv %predPct;
+        symbol [ predPct %tmp.93 180 23 30 ];
+        %tmp.94 = lt %tmp.92 %tmp.93;
+        bf %tmp.94 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_180_12_184_12_if_false;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_180_12_184_12_if_true:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_180_32_182_12_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 181 16 ]
+        symbol [ HG_BL_PREDICT %tmp.96 181 22 35 ];
+        %tmp.96 = getv ? :HG_BL_PREDICT;
+        lputv %typ.7 %tmp.96;
+        symbol [ typ %typ.7 181 16 19 ];
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_180_32_182_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_180_12_184_12_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_180_12_184_12_if_false:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 182 19 ]
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_182_19_184_12_if_stmt:
+        %tmp.97 = lgetv %roll.8;
+        symbol [ roll %tmp.97 182 23 27 ];
+        %tmp.98 = lgetv %predPct;
+        symbol [ predPct %tmp.98 182 30 37 ];
+        %tmp.99 = lgetv %movPct;
+        symbol [ movPct %tmp.99 182 40 46 ];
+        %tmp.100 = add %tmp.98 %tmp.99;
+        %tmp.101 = lt %tmp.97 %tmp.100;
+        bf %tmp.101 @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_182_19_184_12_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_182_19_184_12_if_true:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_182_48_184_12_start:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 183 16 ]
+        symbol [ HG_BL_MOVING %tmp.103 183 22 34 ];
+        %tmp.103 = getv ? :HG_BL_MOVING;
+        lputv %typ.7 %tmp.103;
+        symbol [ typ %typ.7 183 16 19 ];
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_182_48_184_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_182_19_184_12_if_end;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_182_19_184_12_if_end:
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_180_12_184_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 185 12 ]
+        %tmp.104 = lgetv %blockers.1;
+        symbol [ blockers %tmp.104 185 12 20 ];
+        symbol [ add %tmp.105 185 21 24 ];
+        %tmp.105 = getv function %tmp.104 :add;
+        %tmp.106 = newa 3;
+        %tmp.107 = lgetv %rr.3;
+        symbol [ rr %tmp.107 185 26 28 ];
+        %tmp.108 = dup %tmp.106;
+        %tmp.109 = aputv %tmp.108 0 %tmp.107;
+        %tmp.110 = lgetv %cc.4;
+        symbol [ cc %tmp.110 185 30 32 ];
+        %tmp.111 = dup %tmp.109;
+        %tmp.112 = aputv %tmp.111 1 %tmp.110;
+        %tmp.113 = lgetv %typ.7;
+        symbol [ typ %tmp.113 185 34 37 ];
+        %tmp.114 = dup %tmp.112;
+        %tmp.115 = aputv %tmp.114 2 %tmp.113;
+        invoke %tmp.104 %tmp.105(%tmp.115);
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_165_56_186_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_165_8_186_8_while_test;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_165_8_186_8_while_end:
+[ "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc" 187 8 ]
+        %tmp.116 = lgetv %blockers.1;
+        symbol [ blockers %tmp.116 187 15 23 ];
+        ret %tmp.116;
+_Users_kkorolczuk_work_garmin_hologrid_source_LevelGenerator_mc_162_58_188_4_stop:
     }
 }
-[ @file = "/Users/kkorolczuk/work/garmin/lightsout/source/LevelGenerator.mc"; @line = 31; ]
+[ @file = "/Users/kkorolczuk/work/garmin/hologrid/source/LevelGenerator.mc"; @line = 29; ]
 <init> {
 }

@@ -28,6 +28,16 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     hidden var _swipeHandled;
     hidden var _lastTapMs;
 
+    // Phantom-back guard.  On Garmin touch panels a right-edge swipe
+    // delivers BOTH an onSwipe/onDrag (which is real gameplay input)
+    // AND an onBack (which the system reads as the back gesture).
+    // Without this guard the user's in-game swipe causes the view to
+    // pop, which from the player's perspective looks like the game
+    // exited mid-play.  We stamp the time of every touch gesture and
+    // swallow any onBack that arrives within _PHANTOM_BACK_MS of it.
+    hidden var _lastGestureMs;
+    hidden const _PHANTOM_BACK_MS = 500;
+
     function initialize(view) {
         BehaviorDelegate.initialize();
         _v                = view;
@@ -37,6 +47,14 @@ class InputHandler extends WatchUi.BehaviorDelegate {
         _dragHandledInput = false;
         _swipeHandled     = false;
         _lastTapMs        = 0;
+        _lastGestureMs    = 0;
+    }
+
+    hidden function _markGesture() { _lastGestureMs = System.getTimer(); }
+    hidden function _isPhantomBack() {
+        if (_lastGestureMs == 0) { return false; }
+        var dt = System.getTimer() - _lastGestureMs;
+        return (dt >= 0 && dt < _PHANTOM_BACK_MS);
     }
 
     function onKey(evt) {
@@ -54,6 +72,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     function onNextPage()     { _v.navDown();   WatchUi.requestUpdate(); return true; }
 
     function onBack() {
+        if (_isPhantomBack()) { _lastGestureMs = 0; return true; }
         var consumed = _v.navBack();
         WatchUi.requestUpdate();
         if (consumed) { return true; }
@@ -64,6 +83,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     // ── Touch ────────────────────────────────────────────────────
 
     function onTap(evt) {
+        _markGesture();
         if (_swipeHandled)     { _swipeHandled     = false; return true; }
         if (_dragHandledInput) { _dragHandledInput = false; return true; }
         var now = System.getTimer();
@@ -76,6 +96,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     }
 
     function onSwipe(evt) {
+        _markGesture();
         _swipeHandled = true;
         var d = evt.getDirection();
         if      (d == WatchUi.SWIPE_UP)    { _v.handleSwipe(-1,  0); }
@@ -101,6 +122,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
 
         if (t == WatchUi.DRAG_TYPE_STOP && _dragActive) {
             _dragActive = false;
+            _markGesture();
             if (_swipeHandled) { _swipeHandled = false; return true; }
 
             var dx  = xy[0] - _dragStartX;

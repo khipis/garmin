@@ -28,6 +28,8 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     hidden var _dragHandledInput;
     hidden var _swipeHandled;
     hidden var _lastTapMs;
+    // Phantom-back guard — see onBack.
+    hidden var _lastGestureMs;
 
     function initialize(view) {
         BehaviorDelegate.initialize();
@@ -38,6 +40,14 @@ class InputHandler extends WatchUi.BehaviorDelegate {
         _dragHandledInput = false;
         _swipeHandled     = false;
         _lastTapMs        = 0;
+        _lastGestureMs    = 0;
+    }
+
+    hidden function _markGesture() { _lastGestureMs = System.getTimer(); }
+    hidden function _isPhantomBack() {
+        if (_lastGestureMs == 0) { return false; }
+        var dt = System.getTimer() - _lastGestureMs;
+        return (dt >= 0 && dt < 500);
     }
 
     function onKey(evt) {
@@ -55,6 +65,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     function onNextPage()     { _v.navDown();   WatchUi.requestUpdate(); return true; }
 
     function onBack() {
+        if (_isPhantomBack()) { _lastGestureMs = 0; return true; }
         var consumed = _v.navBack();
         WatchUi.requestUpdate();
         if (consumed) { return true; }
@@ -65,6 +76,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     // ── Touch ────────────────────────────────────────────────────
 
     function onTap(evt) {
+        _markGesture();
         if (_swipeHandled)     { _swipeHandled     = false; return true; }
         if (_dragHandledInput) { _dragHandledInput = false; return true; }
         var now = System.getTimer();
@@ -77,6 +89,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     }
 
     function onSwipe(evt) {
+        _markGesture();
         _swipeHandled = true;
         var d = evt.getDirection();
         if      (d == WatchUi.SWIPE_UP)    { _v.handleSwipe(-1,  0); }
@@ -102,6 +115,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
 
         if (t == WatchUi.DRAG_TYPE_STOP && _dragActive) {
             _dragActive = false;
+            _markGesture();
             if (_swipeHandled) { _swipeHandled = false; return true; }
 
             var dx  = xy[0] - _dragStartX;

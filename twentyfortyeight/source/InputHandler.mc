@@ -28,6 +28,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 using Toybox.WatchUi;
+using Toybox.System;
 
 // Minimum finger travel (in pixels) for our manual swipe detector
 // to register a swipe. Anything smaller is treated as a tap.
@@ -40,12 +41,25 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     // DRAG_TYPE_STOP. -1 = no drag in progress.
     hidden var _dragStartX;
     hidden var _dragStartY;
+    // Phantom-back guard — Garmin touch panels deliver an onBack
+    // alongside an onSwipe/onDrag for a single right-edge gesture;
+    // without this guard a right-swipe to merge tiles also pops the
+    // view back to menu (or out of the app entirely).
+    hidden var _lastGestureMs;
 
     function initialize(v) {
         BehaviorDelegate.initialize();
         view = v;
         _dragStartX = -1;
         _dragStartY = -1;
+        _lastGestureMs = 0;
+    }
+
+    hidden function _markGesture() { _lastGestureMs = System.getTimer(); }
+    hidden function _isPhantomBack() {
+        if (_lastGestureMs == 0) { return false; }
+        var dt = System.getTimer() - _lastGestureMs;
+        return (dt >= 0 && dt < 500);
     }
 
     hidden function _refresh() { WatchUi.requestUpdate(); }
@@ -99,7 +113,10 @@ class InputHandler extends WatchUi.BehaviorDelegate {
 
     // ── BehaviorDelegate convenience overrides ──────────────────────
     function onSelect()       { return _handleKeyCode(WatchUi.KEY_ENTER); }
-    function onBack()         { return _handleKeyCode(WatchUi.KEY_ESC);   }
+    function onBack() {
+        if (_isPhantomBack()) { _lastGestureMs = 0; return true; }
+        return _handleKeyCode(WatchUi.KEY_ESC);
+    }
     function onNextPage()     { return _handleKeyCode(WatchUi.KEY_DOWN);  }
     function onPreviousPage() { return _handleKeyCode(WatchUi.KEY_UP);    }
 
@@ -118,6 +135,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
 
     // ── Touch — system-detected swipe ───────────────────────────────
     function onSwipe(evt) {
+        _markGesture();
         var d = evt.getDirection();
         return _applySwipe(d);
     }
@@ -145,6 +163,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
             var dx = px - _dragStartX;
             var dy = py - _dragStartY;
             _dragStartX = -1; _dragStartY = -1;
+            _markGesture();
             var adx = dx < 0 ? -dx : dx;
             var ady = dy < 0 ? -dy : dy;
             if (adx < SWIPE_THRESHOLD && ady < SWIPE_THRESHOLD) {
@@ -184,6 +203,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     // Tap is only used outside of GS_PLAY — returning false during
     // play lets the drag detector own all in-game touch input.
     function onTap(evt) {
+        _markGesture();
         var c = _ctrl();
         if (c.state == GS_MENU) { c.menuActivate();     _refresh(); return true; }
         if (c.state == GS_WIN)  { c.continueAfterWin(); _refresh(); return true; }

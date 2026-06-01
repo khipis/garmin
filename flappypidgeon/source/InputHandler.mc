@@ -5,13 +5,23 @@
 // ═══════════════════════════════════════════════════════════════
 
 using Toybox.WatchUi;
+using Toybox.System;
 
 class InputHandler extends WatchUi.BehaviorDelegate {
     hidden var _v;
+    hidden var _lastGestureMs;
 
     function initialize(view) {
         BehaviorDelegate.initialize();
-        _v = view;
+        _v             = view;
+        _lastGestureMs = 0;
+    }
+
+    hidden function _markGesture() { _lastGestureMs = System.getTimer(); }
+    hidden function _isPhantomBack() {
+        if (_lastGestureMs == 0) { return false; }
+        var dt = System.getTimer() - _lastGestureMs;
+        return (dt >= 0 && dt < 500);
     }
 
     function onKey(evt) {
@@ -24,11 +34,12 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     function onSelect()       { _v.handleFlap(); WatchUi.requestUpdate(); return true; }
     function onPreviousPage() { _v.handleFlap(); WatchUi.requestUpdate(); return true; }
     function onNextPage()     { _v.handleFlap(); WatchUi.requestUpdate(); return true; }
-    function onTap(evt)       { _v.handleFlap(); WatchUi.requestUpdate(); return true; }
-    function onSwipe(evt)     { _v.handleFlap(); WatchUi.requestUpdate(); return true; }
+    function onTap(evt)       { _markGesture(); _v.handleFlap(); WatchUi.requestUpdate(); return true; }
+    function onSwipe(evt)     { _markGesture(); _v.handleFlap(); WatchUi.requestUpdate(); return true; }
     function onHold(evt)      { _v.handleFlap(); WatchUi.requestUpdate(); return true; }
 
     function onBack() {
+        if (_isPhantomBack()) { _lastGestureMs = 0; return true; }
         if (_v.handleBack()) {
             WatchUi.requestUpdate();
             return true;

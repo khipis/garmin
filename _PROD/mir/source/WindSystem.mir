@@ -1,0 +1,271 @@
+[ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/WindSystem.mc"; @line = 14; @symbol_classdef = [WindSystem,14,6,16]; ]
+class WindSystem {
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/WindSystem.mc"; @line = 14; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/WindSystem.mc"; @line = 14; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/WindSystem.mc"; @line = 16; @position = 8; @symbol_vardef = [strength,16,8,16]; ]
+    var strength;
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/WindSystem.mc"; @line = 18; @position = 15; @symbol_vardef = [_rng,18,15,19]; ]
+    protected
+    var _rng;
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/WindSystem.mc"; @line = 20; @symbol_functiondef = [initialize,20,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_20_26_23_4_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/WindSystem.mc" 21 8 ]
+        %tmp.1 = 0.0;
+        symbol [ strength ? 21 8 16 ];
+        putv self :strength %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/WindSystem.mc" 22 8 ]
+        %tmp.2 = 271828;
+        symbol [ _rng ? 22 8 12 ];
+        putv self :_rng %tmp.2;
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_20_26_23_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/WindSystem.mc"; @line = 25; @symbol_functiondef = [setSeed,25,13,20]; @symbol_param<0> = [s,25,21,22]; ]
+    function setSeed(s) {
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_25_24_25_65_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/WindSystem.mc" 25 26 ]
+        %tmp.1 = lgetv %s;
+        symbol [ s %tmp.1 25 33 34 ];
+        symbol [ _rng ? 25 26 30 ];
+        putv self :_rng %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/WindSystem.mc" 25 36 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_25_36_25_63_if_stmt:
+        symbol [ _rng %tmp.3 25 40 44 ];
+        %tmp.3 = getv ? :_rng;
+        %tmp.4 = 0;
+        %tmp.5 = eq %tmp.3 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_25_36_25_63_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_25_36_25_63_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_25_51_25_63_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/WindSystem.mc" 25 53 ]
+        %tmp.6 = 1;
+        symbol [ _rng ? 25 53 57 ];
+        putv self :_rng %tmp.6;
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_25_51_25_63_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_25_36_25_63_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_25_36_25_63_if_end:
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_25_24_25_65_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/WindSystem.mc"; @line = 30; @symbol_functiondef = [roll,30,13,17]; @symbol_param<0> = [diff,30,18,22]; ]
+    function roll(diff) {
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_30_24_42_4_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/WindSystem.mc" 31 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_30_24_42_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_30_24_42_4_stop" ]
+        %cap.1 = local;
+        symbol [ cap %cap.1 31 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/WindSystem.mc" 32 8 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_32_8_34_53_if_stmt:
+        %tmp.1 = lgetv %diff;
+        symbol [ diff %tmp.1 32 17 21 ];
+        symbol [ SS_DIFF_EASY %tmp.3 32 25 37 ];
+        %tmp.3 = getv ? :SS_DIFF_EASY;
+        %tmp.4 = eq %tmp.1 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_32_8_34_53_if_false;
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_32_8_34_53_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_32_39_32_52_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/WindSystem.mc" 32 41 ]
+        %tmp.5 = 1.2;
+        lputv %cap.1 %tmp.5;
+        symbol [ cap %cap.1 32 41 44 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_32_39_32_52_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_32_8_34_53_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_32_8_34_53_if_false:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/WindSystem.mc" 33 13 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_33_13_34_53_if_stmt:
+        %tmp.6 = lgetv %diff;
+        symbol [ diff %tmp.6 33 17 21 ];
+        symbol [ SS_DIFF_HARD %tmp.8 33 25 37 ];
+        %tmp.8 = getv ? :SS_DIFF_HARD;
+        %tmp.9 = eq %tmp.6 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_33_13_34_53_if_else_false;
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_33_13_34_53_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_33_39_33_52_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/WindSystem.mc" 33 41 ]
+        %tmp.10 = 3.0;
+        lputv %cap.1 %tmp.10;
+        symbol [ cap %cap.1 33 41 44 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_33_39_33_52_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_33_13_34_53_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_33_13_34_53_if_else_false:
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_34_40_34_53_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/WindSystem.mc" 34 42 ]
+        %tmp.11 = 2.0;
+        lputv %cap.1 %tmp.11;
+        symbol [ cap %cap.1 34 42 45 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_34_40_34_53_stop:
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_33_13_34_53_if_end:
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_32_8_34_53_if_end:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/WindSystem.mc" 36 8 ]
+        symbol [ _rng %tmp.13 36 16 20 ];
+        %tmp.13 = getv ? :_rng;
+        %tmp.14 = 1103515245;
+        %tmp.15 = mul %tmp.13 %tmp.14;
+        %tmp.16 = 12345;
+        %tmp.17 = add %tmp.15 %tmp.16;
+        %tmp.18 = 0x7FFFFFFF;
+        %tmp.19 = bitand %tmp.17 %tmp.18;
+        symbol [ _rng ? 36 8 12 ];
+        putv self :_rng %tmp.19;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/WindSystem.mc" 37 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_30_24_42_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_30_24_42_4_stop" ]
+        %a.2 = local;
+        symbol [ a %a.2 37 12 13 ];
+        symbol [ _rng %tmp.21 37 17 21 ];
+        %tmp.21 = getv ? :_rng;
+        %tmp.22 = 10000;
+        %tmp.23 = mod %tmp.21 %tmp.22;
+        symbol [ toFloat %tmp.24 37 31 38 ];
+        %tmp.24 = getv function %tmp.23 :toFloat;
+        %tmp.25 = invoke %tmp.23 %tmp.24();
+        %tmp.26 = 10000.0;
+        %tmp.27 = div %tmp.25 %tmp.26;
+        lputv %a.2 %tmp.27;
+        symbol [ a %a.2 37 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/WindSystem.mc" 38 8 ]
+        symbol [ _rng %tmp.29 38 16 20 ];
+        %tmp.29 = getv ? :_rng;
+        %tmp.30 = 1103515245;
+        %tmp.31 = mul %tmp.29 %tmp.30;
+        %tmp.32 = 12345;
+        %tmp.33 = add %tmp.31 %tmp.32;
+        %tmp.34 = 0x7FFFFFFF;
+        %tmp.35 = bitand %tmp.33 %tmp.34;
+        symbol [ _rng ? 38 8 12 ];
+        putv self :_rng %tmp.35;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/WindSystem.mc" 39 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_30_24_42_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_30_24_42_4_stop" ]
+        %b.3 = local;
+        symbol [ b %b.3 39 12 13 ];
+        symbol [ _rng %tmp.37 39 17 21 ];
+        %tmp.37 = getv ? :_rng;
+        %tmp.38 = 10000;
+        %tmp.39 = mod %tmp.37 %tmp.38;
+        symbol [ toFloat %tmp.40 39 31 38 ];
+        %tmp.40 = getv function %tmp.39 :toFloat;
+        %tmp.41 = invoke %tmp.39 %tmp.40();
+        %tmp.42 = 10000.0;
+        %tmp.43 = div %tmp.41 %tmp.42;
+        lputv %b.3 %tmp.43;
+        symbol [ b %b.3 39 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/WindSystem.mc" 40 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_30_24_42_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_30_24_42_4_stop" ]
+        %v.4 = local;
+        symbol [ v %v.4 40 12 13 ];
+        %tmp.44 = lgetv %a.2;
+        symbol [ a %tmp.44 40 17 18 ];
+        %tmp.45 = 0.5;
+        %tmp.46 = sub %tmp.44 %tmp.45;
+        %tmp.47 = lgetv %b.3;
+        symbol [ b %tmp.47 40 27 28 ];
+        %tmp.48 = add %tmp.46 %tmp.47;
+        %tmp.49 = 0.5;
+        %tmp.50 = sub %tmp.48 %tmp.49;
+        lputv %v.4 %tmp.50;
+        symbol [ v %v.4 40 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/WindSystem.mc" 41 8 ]
+        %tmp.51 = lgetv %v.4;
+        symbol [ v %tmp.51 41 19 20 ];
+        %tmp.52 = lgetv %cap.1;
+        symbol [ cap %tmp.52 41 23 26 ];
+        %tmp.53 = mul %tmp.51 %tmp.52;
+        symbol [ strength ? 41 8 16 ];
+        putv self :strength %tmp.53;
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_30_24_42_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/WindSystem.mc"; @line = 45; @symbol_functiondef = [label,45,13,18]; ]
+    function label() {
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_45_21_53_4_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/WindSystem.mc" 46 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_45_21_53_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_45_21_53_4_stop" ]
+        %w.1 = local;
+        symbol [ w %w.1 46 12 13 ];
+        symbol [ strength %tmp.2 46 16 24 ];
+        %tmp.2 = getv ? :strength;
+        lputv %w.1 %tmp.2;
+        symbol [ w %w.1 46 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/WindSystem.mc" 47 8 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_47_8_47_31_if_stmt:
+        %tmp.3 = lgetv %w.1;
+        symbol [ w %tmp.3 47 12 13 ];
+        %tmp.4 = 0.0;
+        %tmp.5 = lt %tmp.3 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_47_8_47_31_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_47_8_47_31_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_47_21_47_31_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/WindSystem.mc" 47 23 ]
+        %tmp.6 = lgetv %w.1;
+        symbol [ w %tmp.6 47 28 29 ];
+        %tmp.7 = sub 0 %tmp.6;
+        lputv %w.1 %tmp.7;
+        symbol [ w %w.1 47 23 24 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_47_21_47_31_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_47_8_47_31_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_47_8_47_31_if_end:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/WindSystem.mc" 48 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_45_21_53_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_45_21_53_4_stop" ]
+        %sign.2 = local;
+        symbol [ sign %sign.2 48 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/WindSystem.mc" 49 8 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_49_8_51_50_if_stmt:
+        symbol [ strength %tmp.9 49 17 25 ];
+        %tmp.9 = getv ? :strength;
+        %tmp.10 = 0.05;
+        %tmp.11 = gt %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_49_8_51_50_if_false;
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_49_8_51_50_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_49_35_49_49_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/WindSystem.mc" 49 37 ]
+        %tmp.12 = ">";
+        lputv %sign.2 %tmp.12;
+        symbol [ sign %sign.2 49 37 41 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_49_35_49_49_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_49_8_51_50_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_49_8_51_50_if_false:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/WindSystem.mc" 50 13 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_50_13_51_50_if_stmt:
+        symbol [ strength %tmp.14 50 17 25 ];
+        %tmp.14 = getv ? :strength;
+        %tmp.15 = -0.05;
+        %tmp.16 = lt %tmp.14 %tmp.15;
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_50_13_51_50_if_else_false;
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_50_13_51_50_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_50_35_50_49_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/WindSystem.mc" 50 37 ]
+        %tmp.17 = "<";
+        lputv %sign.2 %tmp.17;
+        symbol [ sign %sign.2 50 37 41 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_50_35_50_49_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_50_13_51_50_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_50_13_51_50_if_else_false:
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_51_36_51_50_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/WindSystem.mc" 51 38 ]
+        %tmp.18 = "·";
+        lputv %sign.2 %tmp.18;
+        symbol [ sign %sign.2 51 38 42 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_51_36_51_50_stop:
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_50_13_51_50_if_end:
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_49_8_51_50_if_end:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/WindSystem.mc" 52 8 ]
+        %tmp.19 = lgetv %sign.2;
+        symbol [ sign %tmp.19 52 15 19 ];
+        %tmp.20 = " ";
+        %tmp.21 = add %tmp.19 %tmp.20;
+        %tmp.22 = lgetv %w.1;
+        symbol [ w %tmp.22 52 28 29 ];
+        symbol [ format %tmp.23 52 30 36 ];
+        %tmp.23 = getv function %tmp.22 :format;
+        %tmp.24 = "%.1f";
+        %tmp.25 = invoke %tmp.22 %tmp.23(%tmp.24);
+        %tmp.26 = add %tmp.21 %tmp.25;
+        ret %tmp.26;
+_Users_kkorolczuk_work_garmin_sniperscope_source_WindSystem_mc_45_21_53_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/WindSystem.mc"; @line = 14; ]
+<init> {
+}

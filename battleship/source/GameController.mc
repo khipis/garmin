@@ -30,12 +30,27 @@
 using Toybox.Application;
 using Toybox.Math;
 
-const GS_MENU  = 0;
-const GS_SETUP = 1;
-const GS_AIM   = 2;
-const GS_INFO  = 3;
-const GS_WIN   = 4;
-const GS_LOSE  = 5;
+const GS_MENU         = 0;
+const GS_SETUP        = 1;
+const GS_AIM          = 2;
+const GS_INFO         = 3;
+const GS_WIN          = 4;
+const GS_LOSE         = 5;
+// Transient animation states.  Driven by a 45 ms timer in MainView
+// — the controller's `animAdvance()` counts ticks and chains to the
+// next state when the animation completes.
+//   GS_FIRE_PLAYER  → render the enemy board with a hit/splash
+//                     overlay on the player's shot cell
+//   GS_FIRE_AI      → switch to the player board and render the
+//                     same overlay on the AI's shot cell
+// After GS_FIRE_AI we fall through to GS_INFO (or GS_WIN/LOSE).
+const GS_FIRE_PLAYER  = 6;
+const GS_FIRE_AI      = 7;
+
+// Total ticks per animation phase.  At 45 ms per tick this is ~630 ms,
+// kept deliberately short so the round still feels snappy.  Split into
+// three sub-phases: CHARGE (0..4), IMPACT (5..7), SETTLE (8..13).
+const ANIM_TICKS = 14;
 
 // Menu items
 const MI_DIFFICULTY = 0;
@@ -65,6 +80,11 @@ class GameController {
     var lastAIShot;
     var lastSinkText;     // brief flash text e.g. "You sank a Cruiser!"
 
+    // Animation bookkeeping.  `animTick` runs 0..ANIM_TICKS in the
+    // two transient fire-states; UIManager reads it to render the
+    // charge → impact → settle overlay on the shot cell.
+    var animTick;
+
     // Persisted stats
     var winsTotal;
 
@@ -84,6 +104,7 @@ class GameController {
         lastPlayerShot = null;
         lastAIShot     = null;
         lastSinkText   = "";
+        animTick       = 0;
 
         winsTotal    = _loadInt("winsTotal", 0);
         difficulty   = _loadInt("bs_diff", AI_MEDIUM);
@@ -280,8 +301,10 @@ class GameController {
         cursor = [r, c];
     }
 
-    // Fire the player's shot. Drives the full turn through AI response.
-    // No-op if the cell was already fired on.
+    // Fire the player's shot.  Resolves the player's hit/miss
+    // immediately and enters the GS_FIRE_PLAYER animation state.
+    // The AI's response is deferred to the end of the player
+    // animation (see `animAdvance()`).
     function playerFire() {
         if (state != GS_AIM) { return; }
         var r = cursor[0];
@@ -294,22 +317,49 @@ class GameController {
         if (pres.sunkId >= 0) {
             lastSinkText = "Sank " + SHIP_NAMES[pres.sunkId] + "!";
         }
+        animTick = 0;
+        state    = GS_FIRE_PLAYER;
+    }
 
-        if (enemyShips.allSunk()) {
-            winsTotal = winsTotal + 1;
-            _saveInt("winsTotal", winsTotal);
-            state = GS_WIN;
+    // Animation driver — called every 45 ms by MainView's timer
+    // while we're in GS_FIRE_PLAYER or GS_FIRE_AI.  When a phase
+    // finishes we chain into the next state.  This is what makes
+    // the player see the enemy board light up, then the player
+    // board light up, before the GS_INFO summary appears.
+    function animAdvance() {
+        if (state != GS_FIRE_PLAYER && state != GS_FIRE_AI) { return; }
+        animTick++;
+        if (animTick < ANIM_TICKS) { return; }
+
+        if (state == GS_FIRE_PLAYER) {
+            // Player shot just finished animating on the enemy
+            // board.  Check for victory first; otherwise resolve
+            // the AI's response and start its animation on the
+            // player board.
+            if (enemyShips.allSunk()) {
+                winsTotal = winsTotal + 1;
+                _saveInt("winsTotal", winsTotal);
+                state = GS_WIN;
+                return;
+            }
+            _resolveAITurn();
+            animTick = 0;
+            state    = GS_FIRE_AI;
             return;
         }
 
-        _resolveAITurn();
-
+        // GS_FIRE_AI just finished animating on the player board.
         if (playerShips.allSunk()) {
             state = GS_LOSE;
             return;
         }
-
         state = GS_INFO;
+    }
+
+    // True while a fire animation is playing — used by MainView to
+    // decide whether to keep the 45 ms timer alive.
+    function isFiring() {
+        return (state == GS_FIRE_PLAYER || state == GS_FIRE_AI);
     }
 
     // Player presses any key on the GS_INFO screen → back to aiming.

@@ -44,9 +44,12 @@
 // ═══════════════════════════════════════════════════════════════
 
 using Toybox.WatchUi;
+using Toybox.System;
 
 class InputHandler extends WatchUi.BehaviorDelegate {
     hidden var _v;
+    // Phantom-back guard — see onBack.
+    hidden var _lastGestureMs;
 
     // Drag state — tracks one in-progress touch.
     hidden var _dragStartX;
@@ -72,6 +75,14 @@ class InputHandler extends WatchUi.BehaviorDelegate {
         _dragActive = false;
         _touchHoldingFlippers = false;
         _touchFrameCount = 0;
+        _lastGestureMs = 0;
+    }
+
+    hidden function _markGesture() { _lastGestureMs = System.getTimer(); }
+    hidden function _isPhantomBack() {
+        if (_lastGestureMs == 0) { return false; }
+        var dt = System.getTimer() - _lastGestureMs;
+        return (dt >= 0 && dt < 500);
     }
 
     // Called once per game tick by MainView while a touch hold is active.
@@ -111,6 +122,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     // Pure-`onTap` fallback. Pulses the flippers for ~400 ms because
     // we don't get a touch-up signal — see Flipper.pulse.
     function onTap(evt) {
+        _markGesture();
         var xy = evt.getCoordinates();
         var ctrl = _v._ctrl;
         if (ctrl.state == GS_MENU)   { _v.confirm();                       WatchUi.requestUpdate(); return true; }
@@ -123,6 +135,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     }
 
     function onSwipe(evt) {
+        _markGesture();
         // A real swipe means the finger moved a lot — not a tap.
         // Clean up any in-progress touch state and treat as confirm.
         if (_touchHoldingFlippers) {
@@ -154,6 +167,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
                 _touchHoldingFlippers = true;
             }
         } else if (t == WatchUi.DRAG_TYPE_STOP) {
+            _markGesture();
             var wasTouchHolding = _touchHoldingFlippers;
             _touchHoldingFlippers = false;
 
@@ -193,6 +207,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     }
 
     function onBack() {
+        if (_isPhantomBack()) { _lastGestureMs = 0; return true; }
         if (_v.handleBack()) {
             WatchUi.requestUpdate();
             return true;

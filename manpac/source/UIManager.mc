@@ -9,10 +9,12 @@ class UIManager {
     // Geometry for a chess-style menu row.  Returns:
     //   [ rowH, rowW, rowX, rowY0, gap ]
     static function rowGeom(sw, sh) {
-        var rowH = (sh * 11) / 100; if (rowH < 22) { rowH = 22; } if (rowH > 30) { rowH = 30; }
+        // Tighter than the original 3-row layout so the 4th row
+        // (Speed) fits cleanly under the title.
+        var rowH = (sh * 9) / 100;  if (rowH < 20) { rowH = 20; } if (rowH > 26) { rowH = 26; }
         var rowW = (sw * 78) / 100; if (rowW < 140) { rowW = 140; }
         var rowX = (sw - rowW) / 2;
-        var gap  = (sh * 2)  / 100; if (gap  < 4)  { gap  = 4;  }
+        var gap  = (sh * 15) / 1000; if (gap < 3) { gap = 3; }
         var total = MENU_ROWS * rowH + (MENU_ROWS - 1) * gap;
         var rowY0 = (sh - total) / 2 + (sh * 6) / 100;
         return [rowH, rowW, rowX, rowY0, gap];
@@ -41,12 +43,13 @@ class UIManager {
         var labels = [
             "Start L: " + ctrl.menuStartLevel.format("%d"),
             "Lives:   " + ctrl.menuLives.format("%d"),
+            "Speed:   " + ctrl.speedName(),
             "START"
         ];
         for (var i = 0; i < MENU_ROWS; i++) {
             var ry      = rowY0 + i * (rowH + gap);
             var sel     = (i == ctrl.menuRow);
-            var isStart = (i == MENU_ROWS - 1);
+            var isStart = (i == MP_ROW_START);
             dc.setColor(sel ? (isStart ? 0x332200 : 0x102040) : 0x0C1622, Graphics.COLOR_TRANSPARENT);
             dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);
             dc.setColor(sel ? (isStart ? 0xFFE100 : 0x55AAFF) : 0x223344, Graphics.COLOR_TRANSPARENT);

@@ -35,17 +35,31 @@ const GS_PLAY = 1;
 const GS_WIN  = 2;
 const GS_OVER = 3;
 
-const MENU_ROWS = 3;
+const MENU_ROWS = 4;
+const MP_ROW_LEVEL = 0;
+const MP_ROW_LIVES = 1;
+const MP_ROW_SPEED = 2;
+const MP_ROW_START = 3;
 
-const MP_BEST_KEY = "mp_best";
-const MP_SLVL_KEY = "mp_slvl";
+// Speed difficulty presets — each one defines (base_ms, step_ms, min_ms)
+// for the level-driven `tickMs()` curve.  "Slow" makes Manpac roughly
+// 30 % more relaxed than the original; "Fast" matches the previous
+// (frankly hectic) behaviour for hardcore players.
+const MP_SPEED_SLOW = 0;
+const MP_SPEED_NORM = 1;
+const MP_SPEED_FAST = 2;
+
+const MP_BEST_KEY  = "mp_best";
+const MP_SLVL_KEY  = "mp_slvl";
 const MP_LIVES_KEY = "mp_lives";
+const MP_SPEED_KEY = "mp_speed";
 
 class GameController {
     var state;
     var menuRow;
     var menuStartLevel;
     var menuLives;
+    var menuSpeed;            // MP_SPEED_*
 
     var grid;
     var n;
@@ -67,6 +81,7 @@ class GameController {
         menuRow = 0;
         menuStartLevel = 1;
         menuLives      = 3;
+        menuSpeed      = MP_SPEED_NORM;
         n = MAZE_SIZE;
         grid = MazeGenerator.build(0);
         player = new Player();
@@ -100,10 +115,22 @@ class GameController {
             var l = Application.Storage.getValue(MP_LIVES_KEY);
             if (l instanceof Number && l >= 1 && l <= 5) { menuLives = l; }
         } catch (e) {}
+        try {
+            var sp = Application.Storage.getValue(MP_SPEED_KEY);
+            if (sp instanceof Number && sp >= 0 && sp <= 2) { menuSpeed = sp; }
+        } catch (e) {}
     }
     hidden function _saveSettings() {
         try { Application.Storage.setValue(MP_SLVL_KEY,  menuStartLevel); } catch (e) {}
         try { Application.Storage.setValue(MP_LIVES_KEY, menuLives);      } catch (e) {}
+        try { Application.Storage.setValue(MP_SPEED_KEY, menuSpeed);      } catch (e) {}
+    }
+
+    // Human-readable name for the current speed preset.
+    function speedName() {
+        if (menuSpeed == MP_SPEED_SLOW) { return "Slow"; }
+        if (menuSpeed == MP_SPEED_FAST) { return "Fast"; }
+        return "Norm";
     }
 
     // ── Menu navigation ──────────────────────────────────────────
@@ -111,11 +138,14 @@ class GameController {
     function menuPrev()    { menuRow = (menuRow + MENU_ROWS - 1) % MENU_ROWS; }
     function setMenuRow(i) { if (i >= 0 && i < MENU_ROWS) { menuRow = i; } }
     function menuActivate() {
-        if (menuRow == 0) {
+        if      (menuRow == MP_ROW_LEVEL) {
             menuStartLevel = (menuStartLevel % 9) + 1;
             _saveSettings();
-        } else if (menuRow == 1) {
+        } else if (menuRow == MP_ROW_LIVES) {
             menuLives = (menuLives % 5) + 1;
+            _saveSettings();
+        } else if (menuRow == MP_ROW_SPEED) {
+            menuSpeed = (menuSpeed + 1) % 3;
             _saveSettings();
         } else {
             _startGame();
@@ -131,11 +161,22 @@ class GameController {
         return g;
     }
 
-    // Tick interval in ms for this level — faster each level.
+    // Tick interval (ms) for the current level + difficulty.
+    //
+    //   Slow : L1 = 295, ramps down −12 ms / level, floor 160 ms
+    //   Norm : L1 = 250, ramps down −13 ms / level, floor 125 ms
+    //   Fast : L1 = 210, ramps down −14 ms / level, floor  95 ms
+    //
+    // Norm (the default) is noticeably more relaxed than the old
+    // single-curve behaviour which was the equivalent of Fast.
     function tickMs() {
-        var v = 210 - (level - 1) * 14;   // L1=210, L2=196, ... L9=98
-        if (v < 90)  { v = 90;  }
-        if (v > 240) { v = 240; }
+        var base; var step; var floor;
+        if (menuSpeed == MP_SPEED_SLOW)      { base = 295; step = 12; floor = 160; }
+        else if (menuSpeed == MP_SPEED_FAST) { base = 210; step = 14; floor =  95; }
+        else                                  { base = 250; step = 13; floor = 125; }
+        var v = base - (level - 1) * step;
+        if (v < floor) { v = floor; }
+        if (v > 320)   { v = 320;   }
         return v;
     }
 

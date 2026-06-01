@@ -31,7 +31,16 @@ const GT_COUNT   = 4;
 const MAX_BALLS = 16;    // upper bound — 8-ball uses all 16 (cue + 15)
 const BALL_R    = 26;    // ball radius in course units
 const BALL_D    = 52;    // 2*BALL_R — collision diameter
-const POCKET_R  = 42;    // pocket capture radius
+// Pocket capture: trimmed once more for an even tighter, more
+// realistic pocket footprint (diameter ≈ 1.42× ball diameter).
+// The "rail-open" radius around each pocket is slightly larger so
+// a ball approaching the corner can roll past the cushion line
+// into the capture zone instead of being deflected by it. Capture
+// margin (POCKET_R − BALL_R = 11) is still ~42 % of the ball
+// radius — comfortable forgiveness on off-centre approaches
+// without looking cartoonish.
+const POCKET_R       = 37;
+const POCKET_OPEN_R  = 49;
 const NUM_POCKETS = 6;
 
 // ── Table geometry (course space 0-1000 × 0-700) ────────────
@@ -255,14 +264,18 @@ class BilliardGame {
         var botH = h * 9  / 100; if (botH < 9)  { botH = 9; }
         vpX = 4; vpY = hudH;
         vpW = w - 8; vpH = h - hudH - botH;
-        // Fit 1000×700 course uniformly into vpW×vpH, then scale to ~80%
-        // of available area — slightly bigger table than before while
-        // keeping the power bar at the bottom visible on round faces.
+        // Fit 1000×700 course uniformly into vpW×vpH, then scale to 83%
+        // of available area (was 80% — +3% per user request).  The
+        // table is now also biased toward the TOP of the viewport
+        // (offset = 28% of the slack instead of centred 50%), which
+        // shifts it noticeably upward on the screen and frees up room
+        // for the (newly narrowed) power bar at the bottom on round
+        // watch faces.
         var sW = vpW;
         var sH = vpH * 1000 / 700;
-        vpScale = (sW < sH ? sW : sH) * 80 / 100;
+        vpScale = (sW < sH ? sW : sH) * 83 / 100;
         vpOffX = (vpW - vpScale) / 2;
-        vpOffY = (vpH - vpScale * 700 / 1000) / 2;
+        vpOffY = (vpH - vpScale * 700 / 1000) * 28 / 100;
     }
 
     // ── Coordinate helpers (course → screen, integer result) ──
@@ -502,51 +515,101 @@ class BilliardGame {
     // ── PhysicsEngine ────────────────────────────────────────
     // Loops iterate over numBalls (active balls only) so 8-ball mode with 16
     // balls runs as smoothly as 9-ball (per-tick cost ∝ numBalls²).
+    //
+    // Substeps were 2× per tick (dt=0.5). With the stronger shot speeds
+    // pushed by the new _commitShot formula (max ≈137 course units/tick),
+    // that gave a substep move of 68 — bigger than BALL_D=52 → tunneling
+    // possible. We use 3 substeps (dt≈0.333), which caps the per-substep
+    // move at ≈46 < BALL_D and keeps ball-ball collisions reliable.
+    //
+    // Pocket-aware walls: near each pocket the rail is "open" so a ball
+    // approaching the cushion right next to a pocket isn't deflected — it
+    // rolls past the rail line into the capture zone. This fixes the
+    // long-standing feel where a ball had to be hit "perfectly clean" to
+    // drop and would otherwise bounce off the corner.
+    //
+    // Pocket check now runs once per substep (not just once per tick) so
+    // a fast-moving ball passing through the capture zone in mid-substep
+    // is still caught instead of escaping past the pocket.
     hidden function _stepPhysics() {
-        // Two substeps per tick to avoid tunneling at high speeds
-        for (var s = 0; s < 2; s++) {
+        var subDt = 1.0 / 3.0;
+        for (var s = 0; s < 3; s++) {
             for (var i = 0; i < numBalls; i++) {
                 if (!bAlive[i]) { continue; }
-                bx[i] += bvx[i] * 0.5;
-                by[i] += bvy[i] * 0.5;
-                // Elastic wall bounce with ~15% energy loss
-                if (bx[i] < WL.toFloat()) {
-                    bx[i] = WL.toFloat();
-                    if (bvx[i] < 0.0) { bvx[i] = -bvx[i] * 0.85; }
-                }
-                if (bx[i] > WR.toFloat()) {
-                    bx[i] = WR.toFloat();
-                    if (bvx[i] > 0.0) { bvx[i] = -bvx[i] * 0.85; }
-                }
-                if (by[i] < WT.toFloat()) {
-                    by[i] = WT.toFloat();
-                    if (bvy[i] < 0.0) { bvy[i] = -bvy[i] * 0.85; }
-                }
-                if (by[i] > WB.toFloat()) {
-                    by[i] = WB.toFloat();
-                    if (bvy[i] > 0.0) { bvy[i] = -bvy[i] * 0.85; }
+                bx[i] += bvx[i] * subDt;
+                by[i] += bvy[i] * subDt;
+                // Wall bounce — but only when this ball isn't currently
+                // inside the open-rail zone of any pocket.  Bounce
+                // restitution bumped from 0.85 → 0.90 so the table
+                // plays livelier (per user request: "mocniejsze
+                // odbijanie się od bandy").
+                if (!_nearPocketOpen(i)) {
+                    if (bx[i] < WL.toFloat()) {
+                        bx[i] = WL.toFloat();
+                        if (bvx[i] < 0.0) { bvx[i] = -bvx[i] * 0.90; }
+                    }
+                    if (bx[i] > WR.toFloat()) {
+                        bx[i] = WR.toFloat();
+                        if (bvx[i] > 0.0) { bvx[i] = -bvx[i] * 0.90; }
+                    }
+                    if (by[i] < WT.toFloat()) {
+                        by[i] = WT.toFloat();
+                        if (bvy[i] < 0.0) { bvy[i] = -bvy[i] * 0.90; }
+                    }
+                    if (by[i] > WB.toFloat()) {
+                        by[i] = WB.toFloat();
+                        if (bvy[i] > 0.0) { bvy[i] = -bvy[i] * 0.90; }
+                    }
                 }
             }
             _resolveBallCollisions();
+            _checkPockets();
         }
-        // Rolling friction (once per full tick) — 0.980 lets balls roll noticeably further
+        // Speed-tiered friction.  Fast balls (the meaty travel phase)
+        // get an even gentler 0.974 so big shots — especially the
+        // glancing/angled cue-ball rolls after an off-centre contact
+        // — carry a noticeable extra stretch across the table.
+        // Medium balls also decay a touch slower (0.948 vs 0.930) so
+        // the satisfying mid-roll phase after a clean angled hit
+        // doesn't die just as the ball lines up with a pocket.  Slow
+        // balls still die quickly so the simulation wraps up cleanly
+        // instead of dragging out with sub-perceptible trickling.
         for (var i = 0; i < numBalls; i++) {
             if (!bAlive[i]) { continue; }
-            bvx[i] *= 0.980;
-            bvy[i] *= 0.980;
+            var v2 = bvx[i]*bvx[i] + bvy[i]*bvy[i];
+            var f;
+            if      (v2 > 25.0) { f = 0.974; }   // fast — long carry
+            else if (v2 > 4.0)  { f = 0.948; }   // medium — extra roll
+            else                 { f = 0.860; }   // slow / settling
+            bvx[i] *= f;
+            bvy[i] *= f;
         }
-        _checkPockets();
-
-        // Stop when all balls slow enough
+        // Stop when all balls slow enough.  Threshold raised from 0.09
+        // to 0.50 so we end the shot before each ball reaches the
+        // imperceptible 0.3 c.u./tick trickle.
         var allStopped = true;
         for (var i = 0; i < numBalls; i++) {
             if (!bAlive[i]) { continue; }
-            if (bvx[i]*bvx[i] + bvy[i]*bvy[i] > 0.09) { allStopped = false; break; }
+            if (bvx[i]*bvx[i] + bvy[i]*bvy[i] > 0.50) { allStopped = false; break; }
         }
         if (allStopped) {
             for (var i = 0; i < numBalls; i++) { bvx[i] = 0.0; bvy[i] = 0.0; }
             _onRollingComplete();
         }
+    }
+
+    // True iff ball `i`'s centre is inside the open-rail zone of any
+    // pocket. While inside, wall bouncing is suppressed so the ball
+    // can actually enter the pocket instead of being deflected by the
+    // cushion right next to it.
+    hidden function _nearPocketOpen(i) {
+        var r2 = POCKET_OPEN_R.toFloat() * POCKET_OPEN_R.toFloat();
+        for (var p = 0; p < NUM_POCKETS; p++) {
+            var dx = bx[i] - pX[p].toFloat();
+            var dy = by[i] - pY[p].toFloat();
+            if (dx*dx + dy*dy < r2) { return true; }
+        }
+        return false;
     }
 
     // Ball-ball elastic collision (equal mass).
@@ -566,8 +629,27 @@ class BilliardGame {
                 var dvx = bvx[j] - bvx[i]; var dvy = bvy[j] - bvy[i];
                 var dvn = dvx * nx + dvy * ny;
                 if (dvn < 0.0) {  // approaching
-                    bvx[i] += dvn * nx * 0.97; bvy[i] += dvn * ny * 0.97;
-                    bvx[j] -= dvn * nx * 0.97; bvy[j] -= dvn * ny * 0.97;
+                    // Equal-mass collision with a small spin-aware
+                    // restitution shortfall (k=0.97) — i.e. only 97 %
+                    // of the normal-component velocity transfers
+                    // from cue to target.  The remaining 3 % stays
+                    // with the striking ball as residual roll along
+                    // the line of impact.  Effect: a glancing/angled
+                    // hit no longer dead-stops the cue's
+                    // line-of-impact component, so the cue keeps
+                    // travelling a touch further along its original
+                    // trajectory — the way a real cue ball does
+                    // thanks to natural top-spin.  Head-on hits
+                    // still look right (cue almost stops; target
+                    // sprints off with ~97 % of the energy and a
+                    // tiny bit of follow-through), and the
+                    // tangential component is preserved exactly,
+                    // which is what gives angled shots their
+                    // satisfying "carry" after contact.
+                    var k = 0.97;
+                    var jn = dvn * k;
+                    bvx[i] += jn * nx; bvy[i] += jn * ny;
+                    bvx[j] -= jn * nx; bvy[j] -= jn * ny;
                     // First-hit tracking for rules engine
                     if (firstHit == -1) {
                         if (i == 0)      { firstHit = j; }
@@ -582,13 +664,26 @@ class BilliardGame {
     }
 
     hidden function _checkPockets() {
+        var capR2 = POCKET_R.toFloat() * POCKET_R.toFloat();
         for (var i = 0; i < numBalls; i++) {
             if (!bAlive[i]) { continue; }
+            // Standard pocket capture
             for (var p = 0; p < NUM_POCKETS; p++) {
                 var pdx = bx[i] - pX[p]; var pdy = by[i] - pY[p];
-                if (pdx*pdx + pdy*pdy < POCKET_R.toFloat() * POCKET_R.toFloat()) {
+                if (pdx*pdx + pdy*pdy < capR2) {
                     _pocketBall(i); break;
                 }
+            }
+            if (!bAlive[i]) { continue; }
+            // Safety net: with the rail-open zone around pockets, a
+            // very fast ball could in theory squirt past a pocket and
+            // out beyond the table edge before _checkPockets sees it.
+            // If that happens, just drop it into the nearest pocket
+            // — physically equivalent ("it went off the table where
+            // the pocket is") and keeps the game state consistent.
+            if (bx[i] < TL - 4 || bx[i] > TR + 4
+             || by[i] < TT - 4 || by[i] > TB + 4) {
+                _pocketBall(i);
             }
         }
     }
@@ -984,10 +1079,14 @@ class BilliardGame {
     // ── Shot mechanics ────────────────────────────────────────
     hidden function _commitShot() {
         var rad = aimAngle * Math.PI / 180.0;
-        // +20% over the previous formula (per user request — shots felt weak).
-        // spd range: ~6 (power=0) … ~90 (power=100)
-        // substep move = spd/2 ≤ 45 < BALL_D(52) → still no tunneling.
-        var spd = power.toFloat() * 0.84 + 6.0;
+        // Significantly stronger shot than before — user feedback was
+        // that shots felt weak even at max power.  New range:
+        //   power=0   → spd ≈ 12  (gentle tap)
+        //   power=50  → spd ≈ 74
+        //   power=100 → spd ≈ 137 (booming break-shot)
+        // Per-substep move (3 substeps) = spd/3 ≤ 46 < BALL_D(52)
+        // so ball-ball tunneling is still impossible.
+        var spd = power.toFloat() * 1.25 + 12.0;
         bvx[0] = Math.cos(rad) * spd;
         bvy[0] = Math.sin(rad) * spd;
         // Reset per-shot trackers

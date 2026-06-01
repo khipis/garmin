@@ -166,17 +166,27 @@ class GameController {
         // we're rising → pass UP through platforms.
         var falling = (player.vy >= 0);
         var feetNow = player.y + player.h;
-        var hit = platforms.tryBounce(player.x - player.w,
-                                      player.x + player.w,
-                                      feetPrev, feetNow, falling);
-        if (hit == 1) {
-            player.bounce();
-            // Snap feet to platform top to avoid clipping next tick.
-            // (Not strictly needed but stops jitter on slow ticks.)
-        } else if (hit == 2) {
-            // Spring: 1.5× the normal jump.
-            player.vy = Physics.JUMP_VY * 1.5;
-            lastSpringFlash = 6;
+        var hitInfo = platforms.tryBounce(player.x - player.w,
+                                          player.x + player.w,
+                                          feetPrev, feetNow, falling);
+        var hit     = hitInfo[0];
+        var platTop = hitInfo[1];
+        if (hit > 0) {
+            // Snap the player's feet to the platform top.  At terminal
+            // fall speed the frog can be 15+ px BELOW the rail by the
+            // time the collision is detected; without this snap the
+            // jump impulse alone may not be enough to climb back above
+            // the platform on the next tick, causing visible jitter
+            // and — worst case — a re-tunnel on the very next tick.
+            player.y = platTop - player.h;
+            feetPrev = platTop;
+            if (hit == 1) {
+                player.bounce();
+            } else {
+                // Spring: 1.5× the normal jump.
+                player.vy = Physics.JUMP_VY * 1.5;
+                lastSpringFlash = 6;
+            }
         }
 
         // Camera scroll — if player rises above the lock line on screen,

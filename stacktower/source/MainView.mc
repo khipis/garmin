@@ -205,8 +205,20 @@ class MainView extends WatchUi.View {
         }
     }
 
+    // Geometry for the 2-row chess-style menu.  Returns
+    //   [ rowH, rowW, rowX, rowY0, gap ]
+    function menuRowGeom() {
+        var rowH = (_sh * 11) / 100; if (rowH < 24) { rowH = 24; } if (rowH > 30) { rowH = 30; }
+        var rowW = (_sw * 78) / 100; if (rowW < 140) { rowW = 140; }
+        var rowX = (_sw - rowW) / 2;
+        var gap  = (_sh * 25) / 1000; if (gap < 5) { gap = 5; }
+        var total = ST_MENU_ROWS * rowH + (ST_MENU_ROWS - 1) * gap;
+        var rowY0 = _sh - 22 - total;
+        return [rowH, rowW, rowX, rowY0, gap];
+    }
+
     // Chess-style menu — dark base, "by Bitochi" attribution,
-    // decorative mini-tower of blocks, single START row.
+    // decorative mini-tower, two interactive rows (Diff + START).
     hidden function _drawMenu(dc) {
         var cx = _sw / 2;
         dc.setColor(0x080808, 0x080808); dc.clear();
@@ -217,51 +229,63 @@ class MainView extends WatchUi.View {
 
         // Title
         dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _sh * 8 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, _sh * 7 / 100, Graphics.FONT_SMALL,
                     "STACK", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x44CCFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _sh * 19 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, _sh * 17 / 100, Graphics.FONT_SMALL,
                     "TOWER", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x778899, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _sh * 30 / 100, Graphics.FONT_XTINY,
+        dc.drawText(cx, _sh * 28 / 100, Graphics.FONT_XTINY,
                     "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Decorative mini-tower
+        // Decorative mini-tower (smaller to leave room for two rows)
         var towerX = cx - 14;
-        var palette = [0xFF3344, 0xFFCC22, 0x44FF55, 0x44CCFF, 0x8866FF, 0xFF44AA];
-        for (var i = 0; i < 6; i++) {
+        var palette = [0xFF3344, 0xFFCC22, 0x44FF55, 0x44CCFF, 0x8866FF];
+        for (var i = 0; i < 5; i++) {
             var off = (i % 2 == 0) ? -3 : 3;
-            _drawBlock(dc, towerX + off, _sh * 58 / 100 - i * 7,
-                       30, 6, palette[i], false);
+            _drawBlock(dc, towerX + off, _sh * 52 / 100 - i * 6,
+                       30, 5, palette[i], false);
         }
 
         if (_ctrl.hi > 0) {
             dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, _sh * 64 / 100, Graphics.FONT_XTINY,
+            dc.drawText(cx, _sh * 57 / 100, Graphics.FONT_XTINY,
                         "BEST " + _ctrl.hi.format("%d"),
                         Graphics.TEXT_JUSTIFY_CENTER);
         }
 
-        // Chess-style START row
-        var rowH = (_sh * 13) / 100; if (rowH < 26) { rowH = 26; }
-        var rowW = (_sw * 78) / 100; if (rowW < 140) { rowW = 140; }
-        var rowX = (_sw - rowW) / 2;
-        var ry   = _sh * 73 / 100;
-        dc.setColor(0x1A4400, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);
-        dc.setColor(0x44BB22, Graphics.COLOR_TRANSPARENT);
-        dc.drawRoundedRectangle(rowX, ry, rowW, rowH, 5);
-        var ay = ry + rowH / 2;
-        dc.fillPolygon([[rowX + 5, ay - 4],
-                        [rowX + 5, ay + 4],
-                        [rowX + 11, ay]]);
-        dc.setColor(0xAAFF66, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, ry + (rowH - 14) / 2, Graphics.FONT_XTINY,
-                    "START", Graphics.TEXT_JUSTIFY_CENTER);
+        // Two chess-style rows: Diff + START.
+        var rg   = menuRowGeom();
+        var rowH = rg[0]; var rowW = rg[1];
+        var rowX = rg[2]; var rowY0 = rg[3]; var gap = rg[4];
+        var labels = ["Diff:  " + _ctrl.diffName(), "START"];
+        for (var i = 0; i < ST_MENU_ROWS; i++) {
+            var ry      = rowY0 + i * (rowH + gap);
+            var sel     = (i == _ctrl.menuRow);
+            var isStart = (i == ST_ROW_START);
+            var bg; var bd; var fg;
+            if      (sel && isStart) { bg = 0x1A4400; bd = 0x44BB22; fg = 0xAAFF66; }
+            else if (sel)             { bg = 0x002244; bd = 0x44CCFF; fg = 0xCCEEFF; }
+            else if (isStart)         { bg = 0x102010; bd = 0x224422; fg = 0x88AA88; }
+            else                       { bg = 0x101820; bd = 0x223344; fg = 0x88AABB; }
+            dc.setColor(bg, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);
+            dc.setColor(bd, Graphics.COLOR_TRANSPARENT);
+            dc.drawRoundedRectangle(rowX, ry, rowW, rowH, 5);
+            if (sel) {
+                var ay = ry + rowH / 2;
+                dc.fillPolygon([[rowX + 5, ay - 4],
+                                [rowX + 5, ay + 4],
+                                [rowX + 11, ay]]);
+            }
+            dc.setColor(fg, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, ry + (rowH - 14) / 2, Graphics.FONT_XTINY,
+                        labels[i], Graphics.TEXT_JUSTIFY_CENTER);
+        }
 
         dc.setColor(0x556677, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, _sh - 14, Graphics.FONT_XTINY,
-                    "SEL / TAP to stack",
+                    "UP/DN  tap = act",
                     Graphics.TEXT_JUSTIFY_CENTER);
     }
 
@@ -302,7 +326,39 @@ class MainView extends WatchUi.View {
     }
 
     // ── Input intents ───────────────────────────────────────────────
+    function inMenu()       { return _ctrl.state == GS_MENU; }
     function handleDrop()   { _ctrl.dropAction(); }
+    function navUp() {
+        if (_ctrl.state == GS_MENU) { _ctrl.menuPrev(); return; }
+        // In play / over, treat as drop / dismiss like before.
+        _ctrl.dropAction();
+    }
+    function navDown() {
+        if (_ctrl.state == GS_MENU) { _ctrl.menuNext(); return; }
+        _ctrl.dropAction();
+    }
+    function navSelect() {
+        if (_ctrl.state == GS_MENU) { _ctrl.menuActivate(); return; }
+        _ctrl.dropAction();
+    }
+    function handleTap(x, y) {
+        if (_ctrl.state == GS_MENU) {
+            var rg = menuRowGeom();
+            var rowH = rg[0]; var rowW = rg[1];
+            var rowX = rg[2]; var rowY0 = rg[3]; var gap = rg[4];
+            for (var i = 0; i < ST_MENU_ROWS; i++) {
+                var ry = rowY0 + i * (rowH + gap);
+                if (x >= rowX && x < rowX + rowW &&
+                    y >= ry    && y < ry    + rowH) {
+                    _ctrl.setMenuRow(i);
+                    _ctrl.menuActivate();
+                    return;
+                }
+            }
+            return;
+        }
+        _ctrl.dropAction();
+    }
     function handleBack() {
         if (_ctrl.state == GS_PLAY) { _ctrl.gotoMenu(); return true; }
         if (_ctrl.state == GS_OVER) { _ctrl.gotoMenu(); return true; }

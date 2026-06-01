@@ -1,0 +1,1358 @@
+[ @file = "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc"; @line = 30; @symbol_usingdef<0> = [Toybox,30,6,12]; @symbol_usingdef<1> = [Math,30,13,17]; ]
+using Toybox.Math;
+[ @file = "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc"; @line = 32; @symbol_classdef = [BowSystem,32,6,15]; ]
+class BowSystem {
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc"; @line = 32; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc"; @line = 32; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc"; @line = 34; @position = 8; @symbol_vardef = [draw,34,8,12]; ]
+    var draw;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc"; @line = 35; @position = 8; @symbol_vardef = [drawing,35,8,15]; ]
+    var drawing;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc"; @line = 38; @position = 8; @symbol_vardef = [aLive,38,8,13]; ]
+    var aLive;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc"; @line = 39; @position = 8; @symbol_vardef = [aTx,39,8,11]; ]
+    var aTx;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc"; @line = 40; @position = 8; @symbol_vardef = [aTy,40,8,11]; ]
+    var aTy;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc"; @line = 41; @position = 8; @symbol_vardef = [aPwr,41,8,12]; ]
+    var aPwr;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc"; @line = 42; @position = 8; @symbol_vardef = [aAge,42,8,12]; ]
+    var aAge;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc"; @line = 43; @position = 8; @symbol_vardef = [aZone,43,8,13]; ]
+    var aZone;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc"; @line = 44; @position = 8; @symbol_vardef = [aEnemy,44,8,14]; ]
+    var aEnemy;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc"; @line = 45; @position = 8; @symbol_vardef = [aBowX,45,8,13]; ]
+    var aBowX;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc"; @line = 46; @position = 8; @symbol_vardef = [aBowY,46,8,13]; ]
+    var aBowY;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc"; @line = 47; @position = 8; @symbol_vardef = [aLandX,47,8,14]; ]
+    var aLandX;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc"; @line = 48; @position = 8; @symbol_vardef = [aLandY,48,8,14]; ]
+    var aLandY;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc"; @line = 49; @position = 8; @symbol_vardef = [aFinalT,49,8,15]; ]
+    var aFinalT;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc"; @line = 51; @symbol_functiondef = [initialize,51,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_51_26_69_4_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 52 8 ]
+        %tmp.1 = 0;
+        symbol [ draw ? 52 8 12 ];
+        putv self :draw %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 53 8 ]
+        %tmp.2 = 0;
+        symbol [ drawing ? 53 8 15 ];
+        putv self :drawing %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 54 8 ]
+        symbol [ AR_MAX_ARROWS %tmp.5 54 23 36 ];
+        %tmp.5 = getv ? :AR_MAX_ARROWS;
+        %tmp.3 = newa %tmp.5;
+        symbol [ aLive ? 54 8 13 ];
+        putv self :aLive %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 55 8 ]
+        symbol [ AR_MAX_ARROWS %tmp.8 55 23 36 ];
+        %tmp.8 = getv ? :AR_MAX_ARROWS;
+        %tmp.6 = newa %tmp.8;
+        symbol [ aTx ? 55 8 11 ];
+        putv self :aTx %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 56 8 ]
+        symbol [ AR_MAX_ARROWS %tmp.11 56 23 36 ];
+        %tmp.11 = getv ? :AR_MAX_ARROWS;
+        %tmp.9 = newa %tmp.11;
+        symbol [ aTy ? 56 8 11 ];
+        putv self :aTy %tmp.9;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 57 8 ]
+        symbol [ AR_MAX_ARROWS %tmp.14 57 23 36 ];
+        %tmp.14 = getv ? :AR_MAX_ARROWS;
+        %tmp.12 = newa %tmp.14;
+        symbol [ aPwr ? 57 8 12 ];
+        putv self :aPwr %tmp.12;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 58 8 ]
+        symbol [ AR_MAX_ARROWS %tmp.17 58 23 36 ];
+        %tmp.17 = getv ? :AR_MAX_ARROWS;
+        %tmp.15 = newa %tmp.17;
+        symbol [ aAge ? 58 8 12 ];
+        putv self :aAge %tmp.15;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 59 8 ]
+        symbol [ AR_MAX_ARROWS %tmp.20 59 23 36 ];
+        %tmp.20 = getv ? :AR_MAX_ARROWS;
+        %tmp.18 = newa %tmp.20;
+        symbol [ aZone ? 59 8 13 ];
+        putv self :aZone %tmp.18;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 60 8 ]
+        symbol [ AR_MAX_ARROWS %tmp.23 60 23 36 ];
+        %tmp.23 = getv ? :AR_MAX_ARROWS;
+        %tmp.21 = newa %tmp.23;
+        symbol [ aEnemy ? 60 8 14 ];
+        putv self :aEnemy %tmp.21;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 61 8 ]
+        symbol [ AR_MAX_ARROWS %tmp.26 61 23 36 ];
+        %tmp.26 = getv ? :AR_MAX_ARROWS;
+        %tmp.24 = newa %tmp.26;
+        symbol [ aBowX ? 61 8 13 ];
+        putv self :aBowX %tmp.24;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 62 8 ]
+        symbol [ AR_MAX_ARROWS %tmp.29 62 23 36 ];
+        %tmp.29 = getv ? :AR_MAX_ARROWS;
+        %tmp.27 = newa %tmp.29;
+        symbol [ aBowY ? 62 8 13 ];
+        putv self :aBowY %tmp.27;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 63 8 ]
+        symbol [ AR_MAX_ARROWS %tmp.32 63 23 36 ];
+        %tmp.32 = getv ? :AR_MAX_ARROWS;
+        %tmp.30 = newa %tmp.32;
+        symbol [ aLandX ? 63 8 14 ];
+        putv self :aLandX %tmp.30;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 64 8 ]
+        symbol [ AR_MAX_ARROWS %tmp.35 64 23 36 ];
+        %tmp.35 = getv ? :AR_MAX_ARROWS;
+        %tmp.33 = newa %tmp.35;
+        symbol [ aLandY ? 64 8 14 ];
+        putv self :aLandY %tmp.33;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 65 8 ]
+        symbol [ AR_MAX_ARROWS %tmp.38 65 23 36 ];
+        %tmp.38 = getv ? :AR_MAX_ARROWS;
+        %tmp.36 = newa %tmp.38;
+        symbol [ aFinalT ? 65 8 15 ];
+        putv self :aFinalT %tmp.36;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 66 8 ]
+        for @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_66_8_68_8_for_test @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_66_8_68_8_for_incr @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_66_8_68_8_for_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_66_8_68_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_66_8_68_8_for_begin" "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_66_8_68_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 66 17 18 ];
+        %tmp.39 = 0;
+        lputv %i.1 %tmp.39;
+        symbol [ i %i.1 66 17 18 ];
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_66_8_68_8_for_test:
+        %tmp.40 = lgetv %i.1;
+        symbol [ i %tmp.40 66 24 25 ];
+        symbol [ AR_MAX_ARROWS %tmp.42 66 28 41 ];
+        %tmp.42 = getv ? :AR_MAX_ARROWS;
+        %tmp.43 = lt %tmp.40 %tmp.42;
+        bf %tmp.43 @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_66_8_68_8_for_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_66_8_68_8_for_begin:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_66_48_68_8_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 67 12 ]
+        symbol [ aLive %tmp.44 67 12 17 ];
+        %tmp.44 = getv self :aLive;
+        %tmp.45 = 0;
+        %tmp.46 = lgetv %i.1;
+        symbol [ i %tmp.46 67 18 19 ];
+        aputv %tmp.44 %tmp.46 %tmp.45;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 67 26 ]
+        symbol [ aAge %tmp.47 67 26 30 ];
+        %tmp.47 = getv self :aAge;
+        %tmp.48 = 0;
+        %tmp.49 = lgetv %i.1;
+        symbol [ i %tmp.49 67 31 32 ];
+        aputv %tmp.47 %tmp.49 %tmp.48;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 67 39 ]
+        symbol [ aZone %tmp.50 67 39 44 ];
+        %tmp.50 = getv self :aZone;
+        %tmp.51 = -1;
+        %tmp.52 = lgetv %i.1;
+        symbol [ i %tmp.52 67 45 46 ];
+        aputv %tmp.50 %tmp.52 %tmp.51;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 67 54 ]
+        symbol [ aEnemy %tmp.53 67 54 60 ];
+        %tmp.53 = getv self :aEnemy;
+        %tmp.54 = -1;
+        %tmp.55 = lgetv %i.1;
+        symbol [ i %tmp.55 67 61 62 ];
+        aputv %tmp.53 %tmp.55 %tmp.54;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_66_48_68_8_stop:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_66_8_68_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 66 ]
+        %tmp.58 = lgetv %i.1;
+        symbol [ i %tmp.58 66 43 44 ];
+        %tmp.59 = add %tmp.58 1;
+        lputv %i.1 %tmp.59;
+        symbol [ i %i.1 66 43 44 ];
+        goto @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_66_8_68_8_for_test;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_66_8_68_8_for_end:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_51_26_69_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc"; @line = 71; @symbol_functiondef = [reset,71,13,18]; ]
+    function reset() {
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_71_21_76_4_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 72 8 ]
+        %tmp.1 = 0;
+        symbol [ draw ? 72 8 12 ];
+        putv self :draw %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 72 18 ]
+        %tmp.2 = 0;
+        symbol [ drawing ? 72 18 25 ];
+        putv self :drawing %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 73 8 ]
+        for @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_73_8_75_8_for_test @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_73_8_75_8_for_incr @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_73_8_75_8_for_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_73_8_75_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_73_8_75_8_for_begin" "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_73_8_75_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 73 17 18 ];
+        %tmp.3 = 0;
+        lputv %i.1 %tmp.3;
+        symbol [ i %i.1 73 17 18 ];
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_73_8_75_8_for_test:
+        %tmp.4 = lgetv %i.1;
+        symbol [ i %tmp.4 73 24 25 ];
+        symbol [ AR_MAX_ARROWS %tmp.6 73 28 41 ];
+        %tmp.6 = getv ? :AR_MAX_ARROWS;
+        %tmp.7 = lt %tmp.4 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_73_8_75_8_for_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_73_8_75_8_for_begin:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_73_48_75_8_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 74 12 ]
+        symbol [ aLive %tmp.8 74 12 17 ];
+        %tmp.8 = getv self :aLive;
+        %tmp.9 = 0;
+        %tmp.10 = lgetv %i.1;
+        symbol [ i %tmp.10 74 18 19 ];
+        aputv %tmp.8 %tmp.10 %tmp.9;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 74 26 ]
+        symbol [ aAge %tmp.11 74 26 30 ];
+        %tmp.11 = getv self :aAge;
+        %tmp.12 = 0;
+        %tmp.13 = lgetv %i.1;
+        symbol [ i %tmp.13 74 31 32 ];
+        aputv %tmp.11 %tmp.13 %tmp.12;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 74 39 ]
+        symbol [ aZone %tmp.14 74 39 44 ];
+        %tmp.14 = getv self :aZone;
+        %tmp.15 = -1;
+        %tmp.16 = lgetv %i.1;
+        symbol [ i %tmp.16 74 45 46 ];
+        aputv %tmp.14 %tmp.16 %tmp.15;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 74 54 ]
+        symbol [ aEnemy %tmp.17 74 54 60 ];
+        %tmp.17 = getv self :aEnemy;
+        %tmp.18 = -1;
+        %tmp.19 = lgetv %i.1;
+        symbol [ i %tmp.19 74 61 62 ];
+        aputv %tmp.17 %tmp.19 %tmp.18;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_73_48_75_8_stop:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_73_8_75_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 73 ]
+        %tmp.22 = lgetv %i.1;
+        symbol [ i %tmp.22 73 43 44 ];
+        %tmp.23 = add %tmp.22 1;
+        lputv %i.1 %tmp.23;
+        symbol [ i %i.1 73 43 44 ];
+        goto @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_73_8_75_8_for_test;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_73_8_75_8_for_end:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_71_21_76_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc"; @line = 78; @symbol_functiondef = [startDraw,78,13,22]; ]
+    function startDraw() {
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_78_25_78_40_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 78 27 ]
+        %tmp.1 = 1;
+        symbol [ drawing ? 78 27 34 ];
+        putv self :drawing %tmp.1;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_78_25_78_40_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc"; @line = 83; @symbol_functiondef = [release,83,13,20]; @symbol_param<0> = [bowX,83,21,25]; @symbol_param<1> = [bowY,83,27,31]; @symbol_param<2> = [targetX,83,33,40]; @symbol_param<3> = [targetY,83,42,49]; ]
+    function release(bowX, bowY, targetX, targetY) {
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_83_51_116_4_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 84 8 ]
+        %tmp.1 = 0;
+        symbol [ drawing ? 84 8 15 ];
+        putv self :drawing %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 85 8 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_83_51_116_4_start" "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_83_51_116_4_stop" ]
+        %p.1 = local;
+        symbol [ p %p.1 85 12 13 ];
+        symbol [ draw %tmp.3 85 16 20 ];
+        %tmp.3 = getv ? :draw;
+        lputv %p.1 %tmp.3;
+        symbol [ p %p.1 85 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 86 8 ]
+        %tmp.4 = 0;
+        symbol [ draw ? 86 8 12 ];
+        putv self :draw %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 87 8 ]
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_87_8_87_45_if_stmt:
+        %tmp.5 = lgetv %p.1;
+        symbol [ p %tmp.5 87 12 13 ];
+        symbol [ AR_MIN_DRAW %tmp.7 87 16 27 ];
+        %tmp.7 = getv ? :AR_MIN_DRAW;
+        %tmp.8 = lt %tmp.5 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_87_8_87_45_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_87_8_87_45_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_87_29_87_45_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 87 31 ]
+        %tmp.9 = false;
+        ret %tmp.9;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_87_29_87_45_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_87_8_87_45_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_87_8_87_45_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 92 8 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_83_51_116_4_start" "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_83_51_116_4_stop" ]
+        %shortfall.2 = local;
+        symbol [ shortfall %shortfall.2 92 12 21 ];
+        %tmp.10 = 100;
+        %tmp.11 = lgetv %p.1;
+        symbol [ p %tmp.11 92 30 31 ];
+        %tmp.12 = sub %tmp.10 %tmp.11;
+        lputv %shortfall.2 %tmp.12;
+        symbol [ shortfall %shortfall.2 92 12 21 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 93 8 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_83_51_116_4_start" "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_83_51_116_4_stop" ]
+        %drop.3 = local;
+        symbol [ drop %drop.3 93 12 16 ];
+        %tmp.13 = lgetv %shortfall.2;
+        symbol [ shortfall %tmp.13 93 19 28 ];
+        %tmp.14 = 60;
+        %tmp.15 = mul %tmp.13 %tmp.14;
+        %tmp.16 = 100;
+        %tmp.17 = div %tmp.15 %tmp.16;
+        lputv %drop.3 %tmp.17;
+        symbol [ drop %drop.3 93 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 94 8 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_83_51_116_4_start" "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_83_51_116_4_stop" ]
+        %lx.4 = local;
+        symbol [ lx %lx.4 94 12 14 ];
+        %tmp.18 = lgetv %targetX;
+        symbol [ targetX %tmp.18 94 17 24 ];
+        lputv %lx.4 %tmp.18;
+        symbol [ lx %lx.4 94 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 95 8 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_83_51_116_4_start" "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_83_51_116_4_stop" ]
+        %ly.5 = local;
+        symbol [ ly %ly.5 95 12 14 ];
+        %tmp.19 = lgetv %targetY;
+        symbol [ targetY %tmp.19 95 17 24 ];
+        %tmp.20 = lgetv %drop.3;
+        symbol [ drop %tmp.20 95 27 31 ];
+        %tmp.21 = add %tmp.19 %tmp.20;
+        lputv %ly.5 %tmp.21;
+        symbol [ ly %ly.5 95 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 98 8 ]
+        for @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_98_8_114_8_for_test @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_98_8_114_8_for_incr @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_98_8_114_8_for_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_98_8_114_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_98_8_114_8_for_begin" "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_98_8_114_8_for_end" ]
+        %i.6 = local;
+        symbol [ i %i.6 98 17 18 ];
+        %tmp.22 = 0;
+        lputv %i.6 %tmp.22;
+        symbol [ i %i.6 98 17 18 ];
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_98_8_114_8_for_test:
+        %tmp.23 = lgetv %i.6;
+        symbol [ i %tmp.23 98 24 25 ];
+        symbol [ AR_MAX_ARROWS %tmp.25 98 28 41 ];
+        %tmp.25 = getv ? :AR_MAX_ARROWS;
+        %tmp.26 = lt %tmp.23 %tmp.25;
+        bf %tmp.26 @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_98_8_114_8_for_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_98_8_114_8_for_begin:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_98_48_114_8_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 99 12 ]
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_99_12_113_12_if_stmt:
+        symbol [ aLive %tmp.28 99 16 21 ];
+        %tmp.28 = getv ? :aLive;
+        %tmp.29 = lgetv %i.6;
+        symbol [ i %tmp.29 99 22 23 ];
+        %tmp.30 = agetv %tmp.28 %tmp.29;
+        %tmp.31 = 0;
+        %tmp.32 = eq %tmp.30 %tmp.31;
+        bf %tmp.32 @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_99_12_113_12_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_99_12_113_12_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_99_31_113_12_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 100 16 ]
+        symbol [ aLive %tmp.33 100 16 21 ];
+        %tmp.33 = getv self :aLive;
+        %tmp.34 = 1;
+        %tmp.35 = lgetv %i.6;
+        symbol [ i %tmp.35 100 22 23 ];
+        aputv %tmp.33 %tmp.35 %tmp.34;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 101 16 ]
+        symbol [ aTx %tmp.36 101 16 19 ];
+        %tmp.36 = getv self :aTx;
+        %tmp.37 = lgetv %targetX;
+        symbol [ targetX %tmp.37 101 29 36 ];
+        %tmp.38 = lgetv %i.6;
+        symbol [ i %tmp.38 101 20 21 ];
+        aputv %tmp.36 %tmp.38 %tmp.37;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 102 16 ]
+        symbol [ aTy %tmp.39 102 16 19 ];
+        %tmp.39 = getv self :aTy;
+        %tmp.40 = lgetv %targetY;
+        symbol [ targetY %tmp.40 102 29 36 ];
+        %tmp.41 = lgetv %i.6;
+        symbol [ i %tmp.41 102 20 21 ];
+        aputv %tmp.39 %tmp.41 %tmp.40;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 103 16 ]
+        symbol [ aPwr %tmp.42 103 16 20 ];
+        %tmp.42 = getv self :aPwr;
+        %tmp.43 = lgetv %p.1;
+        symbol [ p %tmp.43 103 29 30 ];
+        %tmp.44 = lgetv %i.6;
+        symbol [ i %tmp.44 103 21 22 ];
+        aputv %tmp.42 %tmp.44 %tmp.43;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 104 16 ]
+        symbol [ aAge %tmp.45 104 16 20 ];
+        %tmp.45 = getv self :aAge;
+        %tmp.46 = 0;
+        %tmp.47 = lgetv %i.6;
+        symbol [ i %tmp.47 104 21 22 ];
+        aputv %tmp.45 %tmp.47 %tmp.46;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 105 16 ]
+        symbol [ aZone %tmp.48 105 16 21 ];
+        %tmp.48 = getv self :aZone;
+        %tmp.49 = -1;
+        %tmp.50 = lgetv %i.6;
+        symbol [ i %tmp.50 105 22 23 ];
+        aputv %tmp.48 %tmp.50 %tmp.49;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 106 16 ]
+        symbol [ aEnemy %tmp.51 106 16 22 ];
+        %tmp.51 = getv self :aEnemy;
+        %tmp.52 = -1;
+        %tmp.53 = lgetv %i.6;
+        symbol [ i %tmp.53 106 23 24 ];
+        aputv %tmp.51 %tmp.53 %tmp.52;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 107 16 ]
+        symbol [ aBowX %tmp.54 107 16 21 ];
+        %tmp.54 = getv self :aBowX;
+        %tmp.55 = lgetv %bowX;
+        symbol [ bowX %tmp.55 107 29 33 ];
+        %tmp.56 = lgetv %i.6;
+        symbol [ i %tmp.56 107 22 23 ];
+        aputv %tmp.54 %tmp.56 %tmp.55;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 108 16 ]
+        symbol [ aBowY %tmp.57 108 16 21 ];
+        %tmp.57 = getv self :aBowY;
+        %tmp.58 = lgetv %bowY;
+        symbol [ bowY %tmp.58 108 29 33 ];
+        %tmp.59 = lgetv %i.6;
+        symbol [ i %tmp.59 108 22 23 ];
+        aputv %tmp.57 %tmp.59 %tmp.58;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 109 16 ]
+        symbol [ aLandX %tmp.60 109 16 22 ];
+        %tmp.60 = getv self :aLandX;
+        %tmp.61 = lgetv %lx.4;
+        symbol [ lx %tmp.61 109 29 31 ];
+        %tmp.62 = lgetv %i.6;
+        symbol [ i %tmp.62 109 23 24 ];
+        aputv %tmp.60 %tmp.62 %tmp.61;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 110 16 ]
+        symbol [ aLandY %tmp.63 110 16 22 ];
+        %tmp.63 = getv self :aLandY;
+        %tmp.64 = lgetv %ly.5;
+        symbol [ ly %tmp.64 110 29 31 ];
+        %tmp.65 = lgetv %i.6;
+        symbol [ i %tmp.65 110 23 24 ];
+        aputv %tmp.63 %tmp.65 %tmp.64;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 111 16 ]
+        symbol [ aFinalT %tmp.66 111 16 23 ];
+        %tmp.66 = getv self :aFinalT;
+        symbol [ AR_RELEASE_FLY_TICKS %tmp.68 111 29 49 ];
+        %tmp.68 = getv ? :AR_RELEASE_FLY_TICKS;
+        %tmp.69 = lgetv %i.6;
+        symbol [ i %tmp.69 111 24 25 ];
+        aputv %tmp.66 %tmp.69 %tmp.68;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 112 16 ]
+        %tmp.70 = true;
+        ret %tmp.70;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_99_31_113_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_99_12_113_12_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_99_12_113_12_if_end:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_98_48_114_8_stop:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_98_8_114_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 98 ]
+        %tmp.73 = lgetv %i.6;
+        symbol [ i %tmp.73 98 43 44 ];
+        %tmp.74 = add %tmp.73 1;
+        lputv %i.6 %tmp.74;
+        symbol [ i %i.6 98 43 44 ];
+        goto @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_98_8_114_8_for_test;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_98_8_114_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 115 8 ]
+        %tmp.75 = false;
+        ret %tmp.75;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_83_51_116_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc"; @line = 121; @symbol_functiondef = [tick,121,13,17]; @symbol_param<0> = [enemies,121,18,25]; @symbol_param<1> = [cx,121,27,29]; @symbol_param<2> = [cy,121,31,33]; @symbol_param<3> = [sw,121,35,37]; @symbol_param<4> = [sh,121,39,41]; ]
+    function tick(enemies, cx, cy, sw, sh) {
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_121_43_149_4_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 123 8 ]
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_123_8_126_8_if_stmt:
+        symbol [ drawing %tmp.2 123 12 19 ];
+        %tmp.2 = getv ? :drawing;
+        %tmp.3 = 0;
+        %tmp.4 = ne %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_123_8_126_8_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_123_8_126_8_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_123_26_126_8_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 124 12 ]
+        symbol [ draw %tmp.6 124 19 23 ];
+        %tmp.6 = getv ? :draw;
+        %tmp.7 = 100;
+        symbol [ AR_DRAW_TICKS_FULL %tmp.9 124 33 51 ];
+        %tmp.9 = getv ? :AR_DRAW_TICKS_FULL;
+        %tmp.10 = div %tmp.7 %tmp.9;
+        %tmp.11 = add %tmp.6 %tmp.10;
+        %tmp.12 = 1;
+        %tmp.13 = add %tmp.11 %tmp.12;
+        symbol [ draw ? 124 12 16 ];
+        putv self :draw %tmp.13;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 125 12 ]
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_125_12_125_42_if_stmt:
+        symbol [ draw %tmp.15 125 16 20 ];
+        %tmp.15 = getv ? :draw;
+        %tmp.16 = 100;
+        %tmp.17 = gt %tmp.15 %tmp.16;
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_125_12_125_42_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_125_12_125_42_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_125_28_125_42_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 125 30 ]
+        %tmp.18 = 100;
+        symbol [ draw ? 125 30 34 ];
+        putv self :draw %tmp.18;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_125_28_125_42_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_125_12_125_42_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_125_12_125_42_if_end:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_123_26_126_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_123_8_126_8_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_123_8_126_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 128 8 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_121_43_149_4_start" "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_121_43_149_4_stop" ]
+        %hits.1 = local;
+        symbol [ hits %hits.1 128 12 16 ];
+        %tmp.19 = newa 0;
+        lputv %hits.1 %tmp.19;
+        symbol [ hits %hits.1 128 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 129 8 ]
+        for @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_129_8_147_8_for_test @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_129_8_147_8_for_incr @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_129_8_147_8_for_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_129_8_147_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_129_8_147_8_for_begin" "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_129_8_147_8_for_end" ]
+        %i.2 = local;
+        symbol [ i %i.2 129 17 18 ];
+        %tmp.20 = 0;
+        lputv %i.2 %tmp.20;
+        symbol [ i %i.2 129 17 18 ];
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_129_8_147_8_for_test:
+        %tmp.21 = lgetv %i.2;
+        symbol [ i %tmp.21 129 24 25 ];
+        symbol [ AR_MAX_ARROWS %tmp.23 129 28 41 ];
+        %tmp.23 = getv ? :AR_MAX_ARROWS;
+        %tmp.24 = lt %tmp.21 %tmp.23;
+        bf %tmp.24 @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_129_8_147_8_for_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_129_8_147_8_for_begin:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_129_48_147_8_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 130 12 ]
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_130_12_130_43_if_stmt:
+        symbol [ aLive %tmp.26 130 16 21 ];
+        %tmp.26 = getv ? :aLive;
+        %tmp.27 = lgetv %i.2;
+        symbol [ i %tmp.27 130 22 23 ];
+        %tmp.28 = agetv %tmp.26 %tmp.27;
+        %tmp.29 = 0;
+        %tmp.30 = eq %tmp.28 %tmp.29;
+        bf %tmp.30 @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_130_12_130_43_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_130_12_130_43_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_130_31_130_43_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 130 33 ]
+        goto break @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_129_8_147_8_for_incr;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_130_31_130_43_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_130_12_130_43_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_130_12_130_43_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 131 12 ]
+        symbol [ aAge %tmp.31 131 12 16 ];
+        %tmp.31 = getv self :aAge;
+        symbol [ aAge %tmp.34 131 12 16 ];
+        %tmp.34 = getv ? :aAge;
+        %tmp.35 = lgetv %i.2;
+        symbol [ i %tmp.35 131 17 18 ];
+        %tmp.36 = agetv %tmp.34 %tmp.35;
+        %tmp.37 = add %tmp.36 1;
+        %tmp.38 = lgetv %i.2;
+        symbol [ i %tmp.38 131 17 18 ];
+        aputv %tmp.31 %tmp.38 dup %tmp.37;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 134 12 ]
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_134_12_141_12_if_stmt:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_134_16_134_54_begin:
+        symbol [ aAge %tmp.40 134 16 20 ];
+        %tmp.40 = getv ? :aAge;
+        %tmp.41 = lgetv %i.2;
+        symbol [ i %tmp.41 134 21 22 ];
+        %tmp.42 = agetv %tmp.40 %tmp.41;
+        symbol [ aFinalT %tmp.44 134 27 34 ];
+        %tmp.44 = getv ? :aFinalT;
+        %tmp.45 = lgetv %i.2;
+        symbol [ i %tmp.45 134 35 36 ];
+        %tmp.46 = agetv %tmp.44 %tmp.45;
+        %tmp.47 = eq %tmp.42 %tmp.46;
+        bf %tmp.47 @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_134_12_141_12_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_134_41_134_54_true:
+        symbol [ aZone %tmp.49 134 41 46 ];
+        %tmp.49 = getv ? :aZone;
+        %tmp.50 = lgetv %i.2;
+        symbol [ i %tmp.50 134 47 48 ];
+        %tmp.51 = agetv %tmp.49 %tmp.50;
+        %tmp.52 = -1;
+        %tmp.53 = eq %tmp.51 %tmp.52;
+        push %tmp.53;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_134_41_134_54_end:
+        %tmp.54 = phi [%tmp.47 @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_134_16_134_54_begin] [%tmp.53 @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_134_41_134_54_true] [%tmp.54 @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_134_41_134_54_end];
+        bf %tmp.54 @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_134_12_141_12_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_134_12_141_12_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_134_57_141_12_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 135 16 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_134_57_141_12_start" "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_134_57_141_12_stop" ]
+        %res.3 = local;
+        symbol [ res %res.3 135 20 23 ];
+        %tmp.55 = self;
+        symbol [ _resolveHit %tmp.56 135 26 37 ];
+        %tmp.56 = getv function %tmp.55 :_resolveHit;
+        %tmp.57 = lgetv %enemies;
+        symbol [ enemies %tmp.57 135 38 45 ];
+        symbol [ aLandX %tmp.59 135 47 53 ];
+        %tmp.59 = getv ? :aLandX;
+        %tmp.60 = lgetv %i.2;
+        symbol [ i %tmp.60 135 54 55 ];
+        %tmp.61 = agetv %tmp.59 %tmp.60;
+        symbol [ aLandY %tmp.63 135 58 64 ];
+        %tmp.63 = getv ? :aLandY;
+        %tmp.64 = lgetv %i.2;
+        symbol [ i %tmp.64 135 65 66 ];
+        %tmp.65 = agetv %tmp.63 %tmp.64;
+        %tmp.66 = invoke %tmp.55 %tmp.56(%tmp.57, %tmp.61, %tmp.65);
+        lputv %res.3 %tmp.66;
+        symbol [ res %res.3 135 20 23 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 136 16 ]
+        symbol [ aEnemy %tmp.67 136 16 22 ];
+        %tmp.67 = getv self :aEnemy;
+        %tmp.68 = lgetv %res.3;
+        symbol [ res %tmp.68 136 28 31 ];
+        %tmp.69 = 0;
+        %tmp.70 = agetv %tmp.68 %tmp.69;
+        %tmp.71 = lgetv %i.2;
+        symbol [ i %tmp.71 136 23 24 ];
+        aputv %tmp.67 %tmp.71 %tmp.70;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 137 16 ]
+        symbol [ aZone %tmp.72 137 16 21 ];
+        %tmp.72 = getv self :aZone;
+        %tmp.73 = lgetv %res.3;
+        symbol [ res %tmp.73 137 28 31 ];
+        %tmp.74 = 1;
+        %tmp.75 = agetv %tmp.73 %tmp.74;
+        %tmp.76 = lgetv %i.2;
+        symbol [ i %tmp.76 137 22 23 ];
+        aputv %tmp.72 %tmp.76 %tmp.75;
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 138 16 ]
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_138_16_140_16_if_stmt:
+        %tmp.77 = lgetv %res.3;
+        symbol [ res %tmp.77 138 20 23 ];
+        %tmp.78 = 0;
+        %tmp.79 = agetv %tmp.77 %tmp.78;
+        %tmp.80 = 0;
+        %tmp.81 = gte %tmp.79 %tmp.80;
+        bf %tmp.81 @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_138_16_140_16_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_138_16_140_16_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_138_33_140_16_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 139 20 ]
+        %tmp.82 = lgetv %hits.1;
+        symbol [ hits %tmp.82 139 20 24 ];
+        symbol [ add %tmp.83 139 25 28 ];
+        %tmp.83 = getv function %tmp.82 :add;
+        %tmp.84 = newa 4;
+        %tmp.85 = lgetv %res.3;
+        symbol [ res %tmp.85 139 30 33 ];
+        %tmp.86 = 0;
+        %tmp.87 = agetv %tmp.85 %tmp.86;
+        %tmp.88 = dup %tmp.84;
+        %tmp.89 = aputv %tmp.88 0 %tmp.87;
+        %tmp.90 = lgetv %res.3;
+        symbol [ res %tmp.90 139 38 41 ];
+        %tmp.91 = 1;
+        %tmp.92 = agetv %tmp.90 %tmp.91;
+        %tmp.93 = dup %tmp.89;
+        %tmp.94 = aputv %tmp.93 1 %tmp.92;
+        symbol [ aLandX %tmp.96 139 46 52 ];
+        %tmp.96 = getv ? :aLandX;
+        %tmp.97 = lgetv %i.2;
+        symbol [ i %tmp.97 139 53 54 ];
+        %tmp.98 = agetv %tmp.96 %tmp.97;
+        %tmp.99 = dup %tmp.94;
+        %tmp.100 = aputv %tmp.99 2 %tmp.98;
+        symbol [ aLandY %tmp.102 139 57 63 ];
+        %tmp.102 = getv ? :aLandY;
+        %tmp.103 = lgetv %i.2;
+        symbol [ i %tmp.103 139 64 65 ];
+        %tmp.104 = agetv %tmp.102 %tmp.103;
+        %tmp.105 = dup %tmp.100;
+        %tmp.106 = aputv %tmp.105 3 %tmp.104;
+        invoke %tmp.82 %tmp.83(%tmp.106);
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_138_33_140_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_138_16_140_16_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_138_16_140_16_if_end:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_134_57_141_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_134_12_141_12_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_134_12_141_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 144 12 ]
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_144_12_146_12_if_stmt:
+        symbol [ aAge %tmp.108 144 16 20 ];
+        %tmp.108 = getv ? :aAge;
+        %tmp.109 = lgetv %i.2;
+        symbol [ i %tmp.109 144 21 22 ];
+        %tmp.110 = agetv %tmp.108 %tmp.109;
+        symbol [ aFinalT %tmp.112 144 26 33 ];
+        %tmp.112 = getv ? :aFinalT;
+        %tmp.113 = lgetv %i.2;
+        symbol [ i %tmp.113 144 34 35 ];
+        %tmp.114 = agetv %tmp.112 %tmp.113;
+        %tmp.115 = 4;
+        %tmp.116 = add %tmp.114 %tmp.115;
+        %tmp.117 = gt %tmp.110 %tmp.116;
+        bf %tmp.117 @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_144_12_146_12_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_144_12_146_12_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_144_42_146_12_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 145 16 ]
+        symbol [ aLive %tmp.118 145 16 21 ];
+        %tmp.118 = getv self :aLive;
+        %tmp.119 = 0;
+        %tmp.120 = lgetv %i.2;
+        symbol [ i %tmp.120 145 22 23 ];
+        aputv %tmp.118 %tmp.120 %tmp.119;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_144_42_146_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_144_12_146_12_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_144_12_146_12_if_end:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_129_48_147_8_stop:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_129_8_147_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 129 ]
+        %tmp.123 = lgetv %i.2;
+        symbol [ i %tmp.123 129 43 44 ];
+        %tmp.124 = add %tmp.123 1;
+        lputv %i.2 %tmp.124;
+        symbol [ i %i.2 129 43 44 ];
+        goto @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_129_8_147_8_for_test;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_129_8_147_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 148 8 ]
+        %tmp.125 = lgetv %hits.1;
+        symbol [ hits %tmp.125 148 15 19 ];
+        ret %tmp.125;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_121_43_149_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc"; @line = 153; @symbol_functiondef = [arrowPos,153,13,21]; @symbol_param<0> = [i,153,22,23]; ]
+    function arrowPos(i) {
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_153_25_156_4_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 154 8 ]
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_154_8_154_50_if_stmt:
+        symbol [ aLive %tmp.2 154 12 17 ];
+        %tmp.2 = getv ? :aLive;
+        %tmp.3 = lgetv %i;
+        symbol [ i %tmp.3 154 18 19 ];
+        %tmp.4 = agetv %tmp.2 %tmp.3;
+        %tmp.5 = 0;
+        %tmp.6 = eq %tmp.4 %tmp.5;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_154_8_154_50_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_154_8_154_50_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_154_27_154_50_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 154 29 ]
+        %tmp.7 = newa 2;
+        %tmp.8 = -999;
+        %tmp.9 = dup %tmp.7;
+        %tmp.10 = aputv %tmp.9 0 %tmp.8;
+        %tmp.11 = -999;
+        %tmp.12 = dup %tmp.10;
+        %tmp.13 = aputv %tmp.12 1 %tmp.11;
+        ret %tmp.13;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_154_27_154_50_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_154_8_154_50_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_154_8_154_50_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 155 8 ]
+        %tmp.14 = self;
+        symbol [ arrowPosAt %tmp.15 155 15 25 ];
+        %tmp.15 = getv function %tmp.14 :arrowPosAt;
+        %tmp.16 = lgetv %i;
+        symbol [ i %tmp.16 155 26 27 ];
+        symbol [ aAge %tmp.18 155 29 33 ];
+        %tmp.18 = getv ? :aAge;
+        %tmp.19 = lgetv %i;
+        symbol [ i %tmp.19 155 34 35 ];
+        %tmp.20 = agetv %tmp.18 %tmp.19;
+        %tmp.21 = invoke %tmp.14 %tmp.15(%tmp.16, %tmp.20);
+        ret %tmp.21;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_153_25_156_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc"; @line = 161; @symbol_functiondef = [arrowPosAt,161,13,23]; @symbol_param<0> = [i,161,24,25]; @symbol_param<1> = [age,161,27,30]; ]
+    function arrowPosAt(i, age) {
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_161_32_173_4_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 162 8 ]
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_162_8_162_50_if_stmt:
+        symbol [ aLive %tmp.2 162 12 17 ];
+        %tmp.2 = getv ? :aLive;
+        %tmp.3 = lgetv %i;
+        symbol [ i %tmp.3 162 18 19 ];
+        %tmp.4 = agetv %tmp.2 %tmp.3;
+        %tmp.5 = 0;
+        %tmp.6 = eq %tmp.4 %tmp.5;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_162_8_162_50_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_162_8_162_50_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_162_27_162_50_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 162 29 ]
+        %tmp.7 = newa 2;
+        %tmp.8 = -999;
+        %tmp.9 = dup %tmp.7;
+        %tmp.10 = aputv %tmp.9 0 %tmp.8;
+        %tmp.11 = -999;
+        %tmp.12 = dup %tmp.10;
+        %tmp.13 = aputv %tmp.12 1 %tmp.11;
+        ret %tmp.13;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_162_27_162_50_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_162_8_162_50_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_162_8_162_50_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 163 8 ]
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_163_8_163_90_if_stmt:
+        %tmp.14 = lgetv %age;
+        symbol [ age %tmp.14 163 12 15 ];
+        %tmp.15 = 0;
+        %tmp.16 = lte %tmp.14 %tmp.15;
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_163_8_163_90_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_163_8_163_90_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_163_36_163_90_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 163 38 ]
+        %tmp.17 = newa 2;
+        symbol [ aBowX %tmp.19 163 46 51 ];
+        %tmp.19 = getv ? :aBowX;
+        %tmp.20 = lgetv %i;
+        symbol [ i %tmp.20 163 52 53 ];
+        %tmp.21 = agetv %tmp.19 %tmp.20;
+        symbol [ toNumber %tmp.22 163 55 63 ];
+        %tmp.22 = getv function %tmp.21 :toNumber;
+        %tmp.23 = invoke %tmp.21 %tmp.22();
+        %tmp.24 = dup %tmp.17;
+        %tmp.25 = aputv %tmp.24 0 %tmp.23;
+        symbol [ aBowY %tmp.27 163 68 73 ];
+        %tmp.27 = getv ? :aBowY;
+        %tmp.28 = lgetv %i;
+        symbol [ i %tmp.28 163 74 75 ];
+        %tmp.29 = agetv %tmp.27 %tmp.28;
+        symbol [ toNumber %tmp.30 163 77 85 ];
+        %tmp.30 = getv function %tmp.29 :toNumber;
+        %tmp.31 = invoke %tmp.29 %tmp.30();
+        %tmp.32 = dup %tmp.25;
+        %tmp.33 = aputv %tmp.32 1 %tmp.31;
+        ret %tmp.33;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_163_36_163_90_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_163_8_163_90_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_163_8_163_90_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 164 8 ]
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_164_8_164_69_if_stmt:
+        %tmp.34 = lgetv %age;
+        symbol [ age %tmp.34 164 12 15 ];
+        symbol [ aFinalT %tmp.36 164 19 26 ];
+        %tmp.36 = getv ? :aFinalT;
+        %tmp.37 = lgetv %i;
+        symbol [ i %tmp.37 164 27 28 ];
+        %tmp.38 = agetv %tmp.36 %tmp.37;
+        %tmp.39 = gte %tmp.34 %tmp.38;
+        bf %tmp.39 @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_164_8_164_69_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_164_8_164_69_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_164_36_164_69_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 164 38 ]
+        %tmp.40 = newa 2;
+        symbol [ aLandX %tmp.42 164 46 52 ];
+        %tmp.42 = getv ? :aLandX;
+        %tmp.43 = lgetv %i;
+        symbol [ i %tmp.43 164 53 54 ];
+        %tmp.44 = agetv %tmp.42 %tmp.43;
+        %tmp.45 = dup %tmp.40;
+        %tmp.46 = aputv %tmp.45 0 %tmp.44;
+        symbol [ aLandY %tmp.48 164 57 63 ];
+        %tmp.48 = getv ? :aLandY;
+        %tmp.49 = lgetv %i;
+        symbol [ i %tmp.49 164 64 65 ];
+        %tmp.50 = agetv %tmp.48 %tmp.49;
+        %tmp.51 = dup %tmp.46;
+        %tmp.52 = aputv %tmp.51 1 %tmp.50;
+        ret %tmp.52;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_164_36_164_69_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_164_8_164_69_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_164_8_164_69_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 165 8 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_161_32_173_4_start" "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_161_32_173_4_stop" ]
+        %t.1 = local;
+        symbol [ t %t.1 165 12 13 ];
+        %tmp.53 = lgetv %age;
+        symbol [ age %tmp.53 165 16 19 ];
+        symbol [ toFloat %tmp.54 165 20 27 ];
+        %tmp.54 = getv function %tmp.53 :toFloat;
+        %tmp.55 = invoke %tmp.53 %tmp.54();
+        symbol [ aFinalT %tmp.57 165 32 39 ];
+        %tmp.57 = getv ? :aFinalT;
+        %tmp.58 = lgetv %i;
+        symbol [ i %tmp.58 165 40 41 ];
+        %tmp.59 = agetv %tmp.57 %tmp.58;
+        symbol [ toFloat %tmp.60 165 43 50 ];
+        %tmp.60 = getv function %tmp.59 :toFloat;
+        %tmp.61 = invoke %tmp.59 %tmp.60();
+        %tmp.62 = div %tmp.55 %tmp.61;
+        lputv %t.1 %tmp.62;
+        symbol [ t %t.1 165 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 166 8 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_161_32_173_4_start" "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_161_32_173_4_stop" ]
+        %x.2 = local;
+        symbol [ x %x.2 166 12 13 ];
+        symbol [ aBowX %tmp.64 166 16 21 ];
+        %tmp.64 = getv ? :aBowX;
+        %tmp.65 = lgetv %i;
+        symbol [ i %tmp.65 166 22 23 ];
+        %tmp.66 = agetv %tmp.64 %tmp.65;
+        symbol [ aLandX %tmp.68 166 28 34 ];
+        %tmp.68 = getv ? :aLandX;
+        %tmp.69 = lgetv %i;
+        symbol [ i %tmp.69 166 35 36 ];
+        %tmp.70 = agetv %tmp.68 %tmp.69;
+        symbol [ aBowX %tmp.72 166 40 45 ];
+        %tmp.72 = getv ? :aBowX;
+        %tmp.73 = lgetv %i;
+        symbol [ i %tmp.73 166 46 47 ];
+        %tmp.74 = agetv %tmp.72 %tmp.73;
+        %tmp.75 = sub %tmp.70 %tmp.74;
+        %tmp.76 = lgetv %t.1;
+        symbol [ t %tmp.76 166 52 53 ];
+        %tmp.77 = mul %tmp.75 %tmp.76;
+        %tmp.78 = add %tmp.66 %tmp.77;
+        lputv %x.2 %tmp.78;
+        symbol [ x %x.2 166 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 167 8 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_161_32_173_4_start" "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_161_32_173_4_stop" ]
+        %y.3 = local;
+        symbol [ y %y.3 167 12 13 ];
+        symbol [ aBowY %tmp.80 167 16 21 ];
+        %tmp.80 = getv ? :aBowY;
+        %tmp.81 = lgetv %i;
+        symbol [ i %tmp.81 167 22 23 ];
+        %tmp.82 = agetv %tmp.80 %tmp.81;
+        symbol [ aLandY %tmp.84 167 28 34 ];
+        %tmp.84 = getv ? :aLandY;
+        %tmp.85 = lgetv %i;
+        symbol [ i %tmp.85 167 35 36 ];
+        %tmp.86 = agetv %tmp.84 %tmp.85;
+        symbol [ aBowY %tmp.88 167 40 45 ];
+        %tmp.88 = getv ? :aBowY;
+        %tmp.89 = lgetv %i;
+        symbol [ i %tmp.89 167 46 47 ];
+        %tmp.90 = agetv %tmp.88 %tmp.89;
+        %tmp.91 = sub %tmp.86 %tmp.90;
+        %tmp.92 = lgetv %t.1;
+        symbol [ t %tmp.92 167 52 53 ];
+        %tmp.93 = mul %tmp.91 %tmp.92;
+        %tmp.94 = add %tmp.82 %tmp.93;
+        lputv %y.3 %tmp.94;
+        symbol [ y %y.3 167 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 169 8 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_161_32_173_4_start" "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_161_32_173_4_stop" ]
+        %H.4 = local;
+        symbol [ H %H.4 169 12 13 ];
+        %tmp.95 = 30.0;
+        %tmp.96 = 100;
+        symbol [ aPwr %tmp.98 169 30 34 ];
+        %tmp.98 = getv ? :aPwr;
+        %tmp.99 = lgetv %i;
+        symbol [ i %tmp.99 169 35 36 ];
+        %tmp.100 = agetv %tmp.98 %tmp.99;
+        %tmp.101 = sub %tmp.96 %tmp.100;
+        %tmp.102 = 0.7;
+        %tmp.103 = mul %tmp.101 %tmp.102;
+        %tmp.104 = add %tmp.95 %tmp.103;
+        lputv %H.4 %tmp.104;
+        symbol [ H %H.4 169 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 170 8 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_161_32_173_4_start" "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_161_32_173_4_stop" ]
+        %bow.5 = local;
+        symbol [ bow %bow.5 170 12 15 ];
+        %tmp.105 = 4.0;
+        %tmp.106 = lgetv %t.1;
+        symbol [ t %tmp.106 170 24 25 ];
+        %tmp.107 = mul %tmp.105 %tmp.106;
+        %tmp.108 = 1.0;
+        %tmp.109 = lgetv %t.1;
+        symbol [ t %tmp.109 170 35 36 ];
+        %tmp.110 = sub %tmp.108 %tmp.109;
+        %tmp.111 = mul %tmp.107 %tmp.110;
+        %tmp.112 = lgetv %H.4;
+        symbol [ H %tmp.112 170 40 41 ];
+        %tmp.113 = mul %tmp.111 %tmp.112;
+        lputv %bow.5 %tmp.113;
+        symbol [ bow %bow.5 170 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 171 8 ]
+        %tmp.114 = lgetv %y.3;
+        symbol [ y %tmp.114 171 12 13 ];
+        %tmp.115 = lgetv %bow.5;
+        symbol [ bow %tmp.115 171 16 19 ];
+        %tmp.116 = sub %tmp.114 %tmp.115;
+        lputv %y.3 %tmp.116;
+        symbol [ y %y.3 171 8 9 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 172 8 ]
+        %tmp.117 = newa 2;
+        %tmp.118 = lgetv %x.2;
+        symbol [ x %tmp.118 172 16 17 ];
+        symbol [ toNumber %tmp.119 172 18 26 ];
+        %tmp.119 = getv function %tmp.118 :toNumber;
+        %tmp.120 = invoke %tmp.118 %tmp.119();
+        %tmp.121 = dup %tmp.117;
+        %tmp.122 = aputv %tmp.121 0 %tmp.120;
+        %tmp.123 = lgetv %y.3;
+        symbol [ y %tmp.123 172 30 31 ];
+        symbol [ toNumber %tmp.124 172 32 40 ];
+        %tmp.124 = getv function %tmp.123 :toNumber;
+        %tmp.125 = invoke %tmp.123 %tmp.124();
+        %tmp.126 = dup %tmp.122;
+        %tmp.127 = aputv %tmp.126 1 %tmp.125;
+        ret %tmp.127;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_161_32_173_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc"; @line = 177; @symbol_functiondef = [_resolveHit,177,20,31]; @symbol_param<0> = [enemies,177,32,39]; @symbol_param<1> = [lx,177,41,43]; @symbol_param<2> = [ly,177,45,47]; ]
+    protected
+    function _resolveHit(enemies, lx, ly) {
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_177_49_215_4_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 178 8 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_177_49_215_4_start" "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_177_49_215_4_stop" ]
+        %best.1 = local;
+        symbol [ best %best.1 178 12 16 ];
+        %tmp.1 = -1;
+        lputv %best.1 %tmp.1;
+        symbol [ best %best.1 178 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 179 8 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_177_49_215_4_start" "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_177_49_215_4_stop" ]
+        %bestZ.2 = local;
+        symbol [ bestZ %bestZ.2 179 12 17 ];
+        %tmp.2 = -1;
+        lputv %bestZ.2 %tmp.2;
+        symbol [ bestZ %bestZ.2 179 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 180 8 ]
+        for @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_180_8_213_8_for_test @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_180_8_213_8_for_incr @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_180_8_213_8_for_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_180_8_213_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_180_8_213_8_for_begin" "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_180_8_213_8_for_end" ]
+        %i.3 = local;
+        symbol [ i %i.3 180 17 18 ];
+        %tmp.3 = 0;
+        lputv %i.3 %tmp.3;
+        symbol [ i %i.3 180 17 18 ];
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_180_8_213_8_for_test:
+        %tmp.4 = lgetv %i.3;
+        symbol [ i %tmp.4 180 24 25 ];
+        symbol [ AR_MAX_ENEMIES %tmp.6 180 28 42 ];
+        %tmp.6 = getv ? :AR_MAX_ENEMIES;
+        %tmp.7 = lt %tmp.4 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_180_8_213_8_for_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_180_8_213_8_for_begin:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_180_49_213_8_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 181 12 ]
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_181_12_181_50_if_stmt:
+        %tmp.8 = lgetv %enemies;
+        symbol [ enemies %tmp.8 181 16 23 ];
+        symbol [ live %tmp.9 181 24 28 ];
+        %tmp.9 = getv %tmp.8 :live;
+        %tmp.10 = lgetv %i.3;
+        symbol [ i %tmp.10 181 29 30 ];
+        %tmp.11 = agetv %tmp.9 %tmp.10;
+        %tmp.12 = 0;
+        %tmp.13 = eq %tmp.11 %tmp.12;
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_181_12_181_50_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_181_12_181_50_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_181_38_181_50_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 181 40 ]
+        goto break @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_180_8_213_8_for_incr;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_181_38_181_50_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_181_12_181_50_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_181_12_181_50_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 182 12 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_180_49_213_8_start" "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_180_49_213_8_stop" ]
+        %sx.4 = local;
+        symbol [ sx %sx.4 182 16 18 ];
+        %tmp.14 = lgetv %enemies;
+        symbol [ enemies %tmp.14 182 21 28 ];
+        symbol [ sx %tmp.15 182 29 31 ];
+        %tmp.15 = getv %tmp.14 :sx;
+        %tmp.16 = lgetv %i.3;
+        symbol [ i %tmp.16 182 32 33 ];
+        %tmp.17 = agetv %tmp.15 %tmp.16;
+        lputv %sx.4 %tmp.17;
+        symbol [ sx %sx.4 182 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 183 12 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_180_49_213_8_start" "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_180_49_213_8_stop" ]
+        %sy.5 = local;
+        symbol [ sy %sy.5 183 16 18 ];
+        %tmp.18 = lgetv %enemies;
+        symbol [ enemies %tmp.18 183 21 28 ];
+        symbol [ sy %tmp.19 183 29 31 ];
+        %tmp.19 = getv %tmp.18 :sy;
+        %tmp.20 = lgetv %i.3;
+        symbol [ i %tmp.20 183 32 33 ];
+        %tmp.21 = agetv %tmp.19 %tmp.20;
+        lputv %sy.5 %tmp.21;
+        symbol [ sy %sy.5 183 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 184 12 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_180_49_213_8_start" "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_180_49_213_8_stop" ]
+        %sz.6 = local;
+        symbol [ sz %sz.6 184 16 18 ];
+        %tmp.22 = lgetv %enemies;
+        symbol [ enemies %tmp.22 184 21 28 ];
+        symbol [ sz %tmp.23 184 29 31 ];
+        %tmp.23 = getv %tmp.22 :sz;
+        %tmp.24 = lgetv %i.3;
+        symbol [ i %tmp.24 184 32 33 ];
+        %tmp.25 = agetv %tmp.23 %tmp.24;
+        lputv %sz.6 %tmp.25;
+        symbol [ sz %sz.6 184 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 185 12 ]
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_185_12_185_34_if_stmt:
+        %tmp.26 = lgetv %sz.6;
+        symbol [ sz %tmp.26 185 16 18 ];
+        %tmp.27 = 4;
+        %tmp.28 = lt %tmp.26 %tmp.27;
+        bf %tmp.28 @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_185_12_185_34_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_185_12_185_34_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_185_24_185_34_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 185 26 ]
+        %tmp.29 = 4;
+        lputv %sz.6 %tmp.29;
+        symbol [ sz %sz.6 185 26 28 ];
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_185_24_185_34_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_185_12_185_34_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_185_12_185_34_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 188 12 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_180_49_213_8_start" "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_180_49_213_8_stop" ]
+        %halfW.7 = local;
+        symbol [ halfW %halfW.7 188 16 21 ];
+        %tmp.30 = lgetv %sz.6;
+        symbol [ sz %tmp.30 188 24 26 ];
+        %tmp.31 = 70;
+        %tmp.32 = mul %tmp.30 %tmp.31;
+        %tmp.33 = 100;
+        %tmp.34 = div %tmp.32 %tmp.33;
+        lputv %halfW.7 %tmp.34;
+        symbol [ halfW %halfW.7 188 16 21 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 189 12 ]
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_189_12_189_64_if_stmt:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_189_16_189_45_begin:
+        %tmp.35 = lgetv %lx;
+        symbol [ lx %tmp.35 189 16 18 ];
+        %tmp.36 = lgetv %sx.4;
+        symbol [ sx %tmp.36 189 21 23 ];
+        %tmp.37 = lgetv %halfW.7;
+        symbol [ halfW %tmp.37 189 26 31 ];
+        %tmp.38 = sub %tmp.36 %tmp.37;
+        %tmp.39 = lt %tmp.35 %tmp.38;
+        bt %tmp.39 @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_189_12_189_64_if_true;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_189_35_189_45_false:
+        %tmp.40 = lgetv %lx;
+        symbol [ lx %tmp.40 189 35 37 ];
+        %tmp.41 = lgetv %sx.4;
+        symbol [ sx %tmp.41 189 40 42 ];
+        %tmp.42 = lgetv %halfW.7;
+        symbol [ halfW %tmp.42 189 45 50 ];
+        %tmp.43 = add %tmp.41 %tmp.42;
+        %tmp.44 = gt %tmp.40 %tmp.43;
+        push %tmp.44;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_189_35_189_45_end:
+        %tmp.45 = phi [%tmp.39 @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_189_16_189_45_begin] [%tmp.44 @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_189_35_189_45_false] [%tmp.45 @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_189_35_189_45_end];
+        bf %tmp.45 @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_189_12_189_64_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_189_12_189_64_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_189_52_189_64_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 189 54 ]
+        goto break @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_180_8_213_8_for_incr;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_189_52_189_64_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_189_12_189_64_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_189_12_189_64_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 195 12 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_180_49_213_8_start" "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_180_49_213_8_stop" ]
+        %top.8 = local;
+        symbol [ top %top.8 195 16 19 ];
+        %tmp.46 = lgetv %sy.5;
+        symbol [ sy %tmp.46 195 25 27 ];
+        %tmp.47 = lgetv %sz.6;
+        symbol [ sz %tmp.47 195 30 32 ];
+        %tmp.48 = 65;
+        %tmp.49 = mul %tmp.47 %tmp.48;
+        %tmp.50 = 100;
+        %tmp.51 = div %tmp.49 %tmp.50;
+        %tmp.52 = sub %tmp.46 %tmp.51;
+        lputv %top.8 %tmp.52;
+        symbol [ top %top.8 195 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 196 12 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_180_49_213_8_start" "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_180_49_213_8_stop" ]
+        %chestT.9 = local;
+        symbol [ chestT %chestT.9 196 16 22 ];
+        %tmp.53 = lgetv %sy.5;
+        symbol [ sy %tmp.53 196 25 27 ];
+        %tmp.54 = lgetv %sz.6;
+        symbol [ sz %tmp.54 196 30 32 ];
+        %tmp.55 = 45;
+        %tmp.56 = mul %tmp.54 %tmp.55;
+        %tmp.57 = 100;
+        %tmp.58 = div %tmp.56 %tmp.57;
+        %tmp.59 = sub %tmp.53 %tmp.58;
+        lputv %chestT.9 %tmp.59;
+        symbol [ chestT %chestT.9 196 16 22 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 197 12 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_180_49_213_8_start" "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_180_49_213_8_stop" ]
+        %chestB.10 = local;
+        symbol [ chestB %chestB.10 197 16 22 ];
+        %tmp.60 = lgetv %sy.5;
+        symbol [ sy %tmp.60 197 25 27 ];
+        %tmp.61 = lgetv %sz.6;
+        symbol [ sz %tmp.61 197 30 32 ];
+        %tmp.62 = 10;
+        %tmp.63 = mul %tmp.61 %tmp.62;
+        %tmp.64 = 100;
+        %tmp.65 = div %tmp.63 %tmp.64;
+        %tmp.66 = sub %tmp.60 %tmp.65;
+        lputv %chestB.10 %tmp.66;
+        symbol [ chestB %chestB.10 197 16 22 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 198 12 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_180_49_213_8_start" "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_180_49_213_8_stop" ]
+        %legsB.11 = local;
+        symbol [ legsB %legsB.11 198 16 21 ];
+        %tmp.67 = lgetv %sy.5;
+        symbol [ sy %tmp.67 198 25 27 ];
+        %tmp.68 = lgetv %sz.6;
+        symbol [ sz %tmp.68 198 30 32 ];
+        %tmp.69 = 25;
+        %tmp.70 = mul %tmp.68 %tmp.69;
+        %tmp.71 = 100;
+        %tmp.72 = div %tmp.70 %tmp.71;
+        %tmp.73 = add %tmp.67 %tmp.72;
+        lputv %legsB.11 %tmp.73;
+        symbol [ legsB %legsB.11 198 16 21 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 199 12 ]
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_199_12_199_52_if_stmt:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_199_16_199_33_begin:
+        %tmp.74 = lgetv %ly;
+        symbol [ ly %tmp.74 199 16 18 ];
+        %tmp.75 = lgetv %top.8;
+        symbol [ top %tmp.75 199 21 24 ];
+        %tmp.76 = lt %tmp.74 %tmp.75;
+        bt %tmp.76 @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_199_12_199_52_if_true;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_199_28_199_33_false:
+        %tmp.77 = lgetv %ly;
+        symbol [ ly %tmp.77 199 28 30 ];
+        %tmp.78 = lgetv %legsB.11;
+        symbol [ legsB %tmp.78 199 33 38 ];
+        %tmp.79 = gt %tmp.77 %tmp.78;
+        push %tmp.79;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_199_28_199_33_end:
+        %tmp.80 = phi [%tmp.76 @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_199_16_199_33_begin] [%tmp.79 @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_199_28_199_33_false] [%tmp.80 @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_199_28_199_33_end];
+        bf %tmp.80 @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_199_12_199_52_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_199_12_199_52_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_199_40_199_52_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 199 42 ]
+        goto break @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_180_8_213_8_for_incr;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_199_40_199_52_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_199_12_199_52_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_199_12_199_52_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 201 12 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_180_49_213_8_start" "_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_180_49_213_8_stop" ]
+        %z.12 = local;
+        symbol [ z %z.12 201 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 202 12 ]
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_202_12_204_54_if_stmt:
+        %tmp.81 = lgetv %ly;
+        symbol [ ly %tmp.81 202 21 23 ];
+        %tmp.82 = lgetv %chestT.9;
+        symbol [ chestT %tmp.82 202 26 32 ];
+        %tmp.83 = lt %tmp.81 %tmp.82;
+        bf %tmp.83 @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_202_12_204_54_if_false;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_202_12_204_54_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_202_34_202_53_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 202 36 ]
+        symbol [ AR_HZ_HEAD %tmp.85 202 40 50 ];
+        %tmp.85 = getv ? :AR_HZ_HEAD;
+        lputv %z.12 %tmp.85;
+        symbol [ z %z.12 202 36 37 ];
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_202_34_202_53_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_202_12_204_54_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_202_12_204_54_if_false:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 203 17 ]
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_203_17_204_54_if_stmt:
+        %tmp.86 = lgetv %ly;
+        symbol [ ly %tmp.86 203 21 23 ];
+        %tmp.87 = lgetv %chestB.10;
+        symbol [ chestB %tmp.87 203 26 32 ];
+        %tmp.88 = lt %tmp.86 %tmp.87;
+        bf %tmp.88 @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_203_17_204_54_if_else_false;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_203_17_204_54_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_203_34_203_53_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 203 36 ]
+        symbol [ AR_HZ_CHEST %tmp.90 203 40 51 ];
+        %tmp.90 = getv ? :AR_HZ_CHEST;
+        lputv %z.12 %tmp.90;
+        symbol [ z %z.12 203 36 37 ];
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_203_34_203_53_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_203_17_204_54_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_203_17_204_54_if_else_false:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_204_35_204_54_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 204 37 ]
+        symbol [ AR_HZ_LEGS %tmp.92 204 41 51 ];
+        %tmp.92 = getv ? :AR_HZ_LEGS;
+        lputv %z.12 %tmp.92;
+        symbol [ z %z.12 204 37 38 ];
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_204_35_204_54_stop:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_203_17_204_54_if_end:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_202_12_204_54_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 208 12 ]
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_208_12_208_55_if_stmt:
+        %tmp.93 = lgetv %enemies;
+        symbol [ enemies %tmp.93 208 17 24 ];
+        symbol [ canHitZone %tmp.94 208 25 35 ];
+        %tmp.94 = getv function %tmp.93 :canHitZone;
+        %tmp.95 = lgetv %i.3;
+        symbol [ i %tmp.95 208 36 37 ];
+        %tmp.96 = lgetv %z.12;
+        symbol [ z %tmp.96 208 39 40 ];
+        %tmp.97 = invoke %tmp.93 %tmp.94(%tmp.95, %tmp.96);
+        %tmp.98 = not %tmp.97;
+        bf %tmp.98 @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_208_12_208_55_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_208_12_208_55_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_208_43_208_55_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 208 45 ]
+        goto break @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_180_8_213_8_for_incr;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_208_43_208_55_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_208_12_208_55_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_208_12_208_55_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 210 12 ]
+        %tmp.99 = lgetv %i.3;
+        symbol [ i %tmp.99 210 20 21 ];
+        lputv %best.1 %tmp.99;
+        symbol [ best %best.1 210 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 211 12 ]
+        %tmp.100 = lgetv %z.12;
+        symbol [ z %tmp.100 211 20 21 ];
+        lputv %bestZ.2 %tmp.100;
+        symbol [ bestZ %bestZ.2 211 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 212 12 ]
+        goto break @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_180_8_213_8_for_end;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_180_49_213_8_stop:
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_180_8_213_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 180 ]
+        %tmp.103 = lgetv %i.3;
+        symbol [ i %tmp.103 180 44 45 ];
+        %tmp.104 = add %tmp.103 1;
+        lputv %i.3 %tmp.104;
+        symbol [ i %i.3 180 44 45 ];
+        goto @_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_180_8_213_8_for_test;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_180_8_213_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc" 214 8 ]
+        %tmp.105 = newa 2;
+        %tmp.106 = lgetv %best.1;
+        symbol [ best %tmp.106 214 16 20 ];
+        %tmp.107 = dup %tmp.105;
+        %tmp.108 = aputv %tmp.107 0 %tmp.106;
+        %tmp.109 = lgetv %bestZ.2;
+        symbol [ bestZ %tmp.109 214 22 27 ];
+        %tmp.110 = dup %tmp.108;
+        %tmp.111 = aputv %tmp.110 1 %tmp.109;
+        ret %tmp.111;
+_Users_kkorolczuk_work_garmin_archery_source_BowSystem_mc_177_49_215_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/archery/source/BowSystem.mc"; @line = 30; ]
+<init> {
+}

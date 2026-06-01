@@ -28,12 +28,32 @@ const GS_MENU = 0;
 const GS_PLAY = 1;
 const GS_OVER = 2;
 
+// Chess-style menu with two rows:
+//   row 0 = Diff selector (cycles through Slow / Norm / Fast)
+//   row 1 = START
+const ST_MENU_ROWS = 2;
+const ST_ROW_DIFF  = 0;
+const ST_ROW_START = 1;
+
+// Speed-difficulty presets — each one defines (base, coef, max)
+// used by `_computeSpeed(height)`:
+//
+//   speed = clamp(base + height * coef, _, max)
+//
+// Slow keeps even the late game playable for casual sessions; Fast
+// matches the original numbers from before this option existed.
+const ST_DIFF_SLOW = 0;
+const ST_DIFF_NORM = 1;
+const ST_DIFF_FAST = 2;
+
 // Block colour palette — colour rotates through the list as the
 // tower grows to give a rainbow effect.
 const PALETTE = [
     0xFF3344, 0xFF8822, 0xFFCC22, 0x44FF55, 0x22CCCC,
     0x3388FF, 0x8866FF, 0xFF44AA
 ];
+
+const ST_DIFF_KEY = "st_diff";
 
 class GameController {
     var state;
@@ -44,6 +64,10 @@ class GameController {
     var perfectStreak;
     var lastPerfect;       // ticks remaining for "PERFECT!" flash
     var lastShake;         // ticks remaining for game-over screen shake
+
+    // Menu state.
+    var menuRow;
+    var menuDiff;          // ST_DIFF_*
 
     // Visual world: defined in world-x pixels matching the screen pixels
     // 1:1 so we don't need a scaler. Bounds are set by the view.
@@ -62,6 +86,8 @@ class GameController {
         perfectStreak   = 0;
         lastPerfect     = 0;
         lastShake       = 0;
+        menuRow         = ST_ROW_START;     // land on START by default
+        menuDiff        = _loadDiff();
         worldMinX       = 0;
         worldMaxX       = 200;
         foundationW     = 56;
@@ -76,6 +102,34 @@ class GameController {
     }
     hidden function _saveHi() {
         try { Application.Storage.setValue("hi", hi); } catch (e) { }
+    }
+    hidden function _loadDiff() {
+        try {
+            var v = Application.Storage.getValue(ST_DIFF_KEY);
+            if (v != null && v instanceof Number && v >= 0 && v <= 2) { return v; }
+        } catch (e) {}
+        return ST_DIFF_NORM;
+    }
+    hidden function _saveDiff() {
+        try { Application.Storage.setValue(ST_DIFF_KEY, menuDiff); } catch (e) {}
+    }
+
+    // ── Menu nav ────────────────────────────────────────────
+    function menuPrev()    { menuRow = (menuRow + ST_MENU_ROWS - 1) % ST_MENU_ROWS; }
+    function menuNext()    { menuRow = (menuRow + 1) % ST_MENU_ROWS; }
+    function setMenuRow(i) { if (i >= 0 && i < ST_MENU_ROWS) { menuRow = i; } }
+    function menuActivate() {
+        if (menuRow == ST_ROW_DIFF) {
+            menuDiff = (menuDiff + 1) % 3;
+            _saveDiff();
+        } else {
+            startGame();
+        }
+    }
+    function diffName() {
+        if (menuDiff == ST_DIFF_SLOW) { return "Slow"; }
+        if (menuDiff == ST_DIFF_FAST) { return "Fast"; }
+        return "Norm";
     }
 
     // Called by the view once it knows screen size.
@@ -108,13 +162,24 @@ class GameController {
         state = GS_MENU;
     }
 
-    // Compute speed for the upcoming block given current height.
-    // ~2.0 at start → ~7.0 once you've stacked ~40 blocks.
+    // Compute speed for the upcoming block given current height +
+    // the player-chosen difficulty.
+    //
+    //   Slow : 1.2 → ~4.5 at h=40 (relaxed even late-game)
+    //   Norm : 1.7 → ~6.5 at h=40 (≈ 25 % easier than the old curve)
+    //   Fast : 2.2 → ~7.8 at h=40 (≈ original tuning)
     hidden function _computeSpeed() {
         var h = tower.height();
-        // Linear early, soft logarithmic-ish curve later.
-        var s = 2.0 + h * 0.15;
-        if (s > 7.5) { s = 7.5; }
+        var base; var coef; var cap;
+        if (menuDiff == ST_DIFF_SLOW) {
+            base = 1.2; coef = 0.085; cap = 4.8;
+        } else if (menuDiff == ST_DIFF_FAST) {
+            base = 2.2; coef = 0.150; cap = 7.8;
+        } else {
+            base = 1.7; coef = 0.120; cap = 6.5;
+        }
+        var s = base + h * coef;
+        if (s > cap) { s = cap; }
         return s;
     }
 

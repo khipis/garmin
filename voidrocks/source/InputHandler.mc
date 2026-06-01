@@ -52,6 +52,8 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     hidden var _handled;
     hidden var _lastTouchMs;
     hidden var _lastDragEndMs;
+    // Phantom-back guard — see onBack.
+    hidden var _lastGestureMs;
 
     function initialize(view) {
         BehaviorDelegate.initialize();
@@ -62,6 +64,14 @@ class InputHandler extends WatchUi.BehaviorDelegate {
         _handled       = false;
         _lastTouchMs   = 0;
         _lastDragEndMs = 0;
+        _lastGestureMs = 0;
+    }
+
+    hidden function _markGesture() { _lastGestureMs = System.getTimer(); }
+    hidden function _isPhantomBack() {
+        if (_lastGestureMs == 0) { return false; }
+        var dt = System.getTimer() - _lastGestureMs;
+        return (dt >= 0 && dt < 500);
     }
 
     hidden function _pageFromTouch() {
@@ -96,6 +106,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     }
 
     function onBack() {
+        if (_isPhantomBack()) { _lastGestureMs = 0; return true; }
         var consumed = _v.navBack();
         WatchUi.requestUpdate();
         if (consumed) { return true; }
@@ -106,9 +117,10 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     // ── Touch ────────────────────────────────────────────────────
 
     // Firmware swipe — fully ignored; we resolve in onDrag.
-    function onSwipe(evt) { return true; }
+    function onSwipe(evt) { _markGesture(); return true; }
 
     function onTap(evt) {
+        _markGesture();
         if (_handled) { _handled = false; return true; }
         var now = System.getTimer();
         if (_lastTouchMs != 0 && (now - _lastTouchMs) < 120) { return true; }
@@ -136,6 +148,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
             _handled       = true;
             _lastTouchMs   = System.getTimer();
             _lastDragEndMs = _lastTouchMs;
+            _markGesture();
 
             var dx  = xy[0] - _dx0;
             var dy  = xy[1] - _dy0;

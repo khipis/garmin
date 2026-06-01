@@ -1,0 +1,1309 @@
+[ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc"; @line = 21; @symbol_usingdef<0> = [Toybox,21,6,12]; @symbol_usingdef<1> = [Math,21,13,17]; ]
+using Toybox.Math;
+[ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc"; @line = 23; @position = 6; @symbol_constdef = [SS_TGT_MAX,23,6,16]; ]
+const SS_TGT_MAX = 4;
+[ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc"; @line = 25; @symbol_classdef = [TargetManager,25,6,19]; ]
+class TargetManager {
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc"; @line = 25; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc"; @line = 25; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc"; @line = 27; @position = 8; @symbol_vardef = [live,27,8,12]; ]
+    var live;
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc"; @line = 28; @position = 8; @symbol_vardef = [yaw,28,8,11]; ]
+    var yaw;
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc"; @line = 29; @position = 8; @symbol_vardef = [pitch,29,8,13]; ]
+    var pitch;
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc"; @line = 30; @position = 8; @symbol_vardef = [dy,30,8,10]; ]
+    var dy;
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc"; @line = 31; @position = 8; @symbol_vardef = [dp,31,8,10]; ]
+    var dp;
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc"; @line = 32; @position = 8; @symbol_vardef = [z,32,8,9]; ]
+    var z;
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc"; @line = 33; @position = 8; @symbol_vardef = [cover,33,8,13]; ]
+    var cover;
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc"; @line = 34; @position = 8; @symbol_vardef = [primary,34,8,15]; ]
+    var primary;
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc"; @line = 35; @position = 8; @symbol_vardef = [primaryIdx,35,8,18]; ]
+    var primaryIdx;
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc"; @line = 37; @position = 15; @symbol_vardef = [_rng,37,15,19]; ]
+    protected
+    var _rng;
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc"; @line = 38; @position = 15; @symbol_vardef = [_diff,38,15,20]; ]
+    protected
+    var _diff;
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc"; @line = 40; @symbol_functiondef = [initialize,40,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_40_26_57_4_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 41 8 ]
+        symbol [ SS_TGT_MAX %tmp.3 41 23 33 ];
+        %tmp.3 = getv ? :SS_TGT_MAX;
+        %tmp.1 = newa %tmp.3;
+        symbol [ live ? 41 8 12 ];
+        putv self :live %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 42 8 ]
+        symbol [ SS_TGT_MAX %tmp.6 42 23 33 ];
+        %tmp.6 = getv ? :SS_TGT_MAX;
+        %tmp.4 = newa %tmp.6;
+        symbol [ yaw ? 42 8 11 ];
+        putv self :yaw %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 43 8 ]
+        symbol [ SS_TGT_MAX %tmp.9 43 23 33 ];
+        %tmp.9 = getv ? :SS_TGT_MAX;
+        %tmp.7 = newa %tmp.9;
+        symbol [ pitch ? 43 8 13 ];
+        putv self :pitch %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 44 8 ]
+        symbol [ SS_TGT_MAX %tmp.12 44 23 33 ];
+        %tmp.12 = getv ? :SS_TGT_MAX;
+        %tmp.10 = newa %tmp.12;
+        symbol [ dy ? 44 8 10 ];
+        putv self :dy %tmp.10;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 45 8 ]
+        symbol [ SS_TGT_MAX %tmp.15 45 23 33 ];
+        %tmp.15 = getv ? :SS_TGT_MAX;
+        %tmp.13 = newa %tmp.15;
+        symbol [ dp ? 45 8 10 ];
+        putv self :dp %tmp.13;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 46 8 ]
+        symbol [ SS_TGT_MAX %tmp.18 46 23 33 ];
+        %tmp.18 = getv ? :SS_TGT_MAX;
+        %tmp.16 = newa %tmp.18;
+        symbol [ z ? 46 8 9 ];
+        putv self :z %tmp.16;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 47 8 ]
+        symbol [ SS_TGT_MAX %tmp.21 47 23 33 ];
+        %tmp.21 = getv ? :SS_TGT_MAX;
+        %tmp.19 = newa %tmp.21;
+        symbol [ cover ? 47 8 13 ];
+        putv self :cover %tmp.19;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 48 8 ]
+        symbol [ SS_TGT_MAX %tmp.24 48 23 33 ];
+        %tmp.24 = getv ? :SS_TGT_MAX;
+        %tmp.22 = newa %tmp.24;
+        symbol [ primary ? 48 8 15 ];
+        putv self :primary %tmp.22;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 49 8 ]
+        for @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_49_8_53_8_for_test @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_49_8_53_8_for_incr @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_49_8_53_8_for_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_49_8_53_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_49_8_53_8_for_begin" "_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_49_8_53_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 49 17 18 ];
+        %tmp.25 = 0;
+        lputv %i.1 %tmp.25;
+        symbol [ i %i.1 49 17 18 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_49_8_53_8_for_test:
+        %tmp.26 = lgetv %i.1;
+        symbol [ i %tmp.26 49 24 25 ];
+        symbol [ SS_TGT_MAX %tmp.28 49 28 38 ];
+        %tmp.28 = getv ? :SS_TGT_MAX;
+        %tmp.29 = lt %tmp.26 %tmp.28;
+        bf %tmp.29 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_49_8_53_8_for_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_49_8_53_8_for_begin:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_49_45_53_8_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 50 12 ]
+        symbol [ live %tmp.30 50 12 16 ];
+        %tmp.30 = getv self :live;
+        %tmp.31 = 0;
+        %tmp.32 = lgetv %i.1;
+        symbol [ i %tmp.32 50 17 18 ];
+        aputv %tmp.30 %tmp.32 %tmp.31;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 50 25 ]
+        symbol [ yaw %tmp.33 50 25 28 ];
+        %tmp.33 = getv self :yaw;
+        %tmp.34 = 0.0;
+        %tmp.35 = lgetv %i.1;
+        symbol [ i %tmp.35 50 29 30 ];
+        aputv %tmp.33 %tmp.35 %tmp.34;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 50 39 ]
+        symbol [ pitch %tmp.36 50 39 44 ];
+        %tmp.36 = getv self :pitch;
+        %tmp.37 = 0.0;
+        %tmp.38 = lgetv %i.1;
+        symbol [ i %tmp.38 50 45 46 ];
+        aputv %tmp.36 %tmp.38 %tmp.37;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 51 12 ]
+        symbol [ dy %tmp.39 51 12 14 ];
+        %tmp.39 = getv self :dy;
+        %tmp.40 = 0.0;
+        %tmp.41 = lgetv %i.1;
+        symbol [ i %tmp.41 51 15 16 ];
+        aputv %tmp.39 %tmp.41 %tmp.40;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 51 27 ]
+        symbol [ dp %tmp.42 51 27 29 ];
+        %tmp.42 = getv self :dp;
+        %tmp.43 = 0.0;
+        %tmp.44 = lgetv %i.1;
+        symbol [ i %tmp.44 51 30 31 ];
+        aputv %tmp.42 %tmp.44 %tmp.43;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 51 40 ]
+        symbol [ z %tmp.45 51 40 41 ];
+        %tmp.45 = getv self :z;
+        symbol [ SS_TARGET_MED %tmp.47 51 47 60 ];
+        %tmp.47 = getv ? :SS_TARGET_MED;
+        %tmp.48 = lgetv %i.1;
+        symbol [ i %tmp.48 51 42 43 ];
+        aputv %tmp.45 %tmp.48 %tmp.47;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 52 12 ]
+        symbol [ cover %tmp.49 52 12 17 ];
+        %tmp.49 = getv self :cover;
+        %tmp.50 = 0;
+        %tmp.51 = lgetv %i.1;
+        symbol [ i %tmp.51 52 18 19 ];
+        aputv %tmp.49 %tmp.51 %tmp.50;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 52 27 ]
+        symbol [ primary %tmp.52 52 27 34 ];
+        %tmp.52 = getv self :primary;
+        %tmp.53 = 0;
+        %tmp.54 = lgetv %i.1;
+        symbol [ i %tmp.54 52 35 36 ];
+        aputv %tmp.52 %tmp.54 %tmp.53;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_49_45_53_8_stop:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_49_8_53_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 49 ]
+        %tmp.57 = lgetv %i.1;
+        symbol [ i %tmp.57 49 40 41 ];
+        %tmp.58 = add %tmp.57 1;
+        lputv %i.1 %tmp.58;
+        symbol [ i %i.1 49 40 41 ];
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_49_8_53_8_for_test;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_49_8_53_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 54 8 ]
+        %tmp.59 = -1;
+        symbol [ primaryIdx ? 54 8 18 ];
+        putv self :primaryIdx %tmp.59;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 55 8 ]
+        %tmp.60 = 1618033;
+        symbol [ _rng ? 55 8 12 ];
+        putv self :_rng %tmp.60;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 56 8 ]
+        symbol [ SS_DIFF_NORMAL %tmp.62 56 21 35 ];
+        %tmp.62 = getv ? :SS_DIFF_NORMAL;
+        symbol [ _diff ? 56 8 13 ];
+        putv self :_diff %tmp.62;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_40_26_57_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc"; @line = 59; @symbol_functiondef = [setSeed,59,13,20]; @symbol_param<0> = [s,59,21,22]; ]
+    function setSeed(s) {
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_59_24_59_65_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 59 26 ]
+        %tmp.1 = lgetv %s;
+        symbol [ s %tmp.1 59 33 34 ];
+        symbol [ _rng ? 59 26 30 ];
+        putv self :_rng %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 59 36 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_59_36_59_63_if_stmt:
+        symbol [ _rng %tmp.3 59 40 44 ];
+        %tmp.3 = getv ? :_rng;
+        %tmp.4 = 0;
+        %tmp.5 = eq %tmp.3 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_59_36_59_63_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_59_36_59_63_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_59_51_59_63_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 59 53 ]
+        %tmp.6 = 1;
+        symbol [ _rng ? 59 53 57 ];
+        putv self :_rng %tmp.6;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_59_51_59_63_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_59_36_59_63_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_59_36_59_63_if_end:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_59_24_59_65_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc"; @line = 60; @symbol_functiondef = [setDifficulty,60,13,26]; @symbol_param<0> = [d,60,27,28]; ]
+    function setDifficulty(d) {
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_60_30_60_43_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 60 32 ]
+        %tmp.1 = lgetv %d;
+        symbol [ d %tmp.1 60 40 41 ];
+        symbol [ _diff ? 60 32 37 ];
+        putv self :_diff %tmp.1;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_60_30_60_43_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc"; @line = 62; @symbol_functiondef = [_lcg,62,20,24]; ]
+    protected
+    function _lcg() {
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_62_30_62_94_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 62 32 ]
+        symbol [ _rng %tmp.2 62 40 44 ];
+        %tmp.2 = getv ? :_rng;
+        %tmp.3 = 1103515245;
+        %tmp.4 = mul %tmp.2 %tmp.3;
+        %tmp.5 = 12345;
+        %tmp.6 = add %tmp.4 %tmp.5;
+        %tmp.7 = 0x7FFFFFFF;
+        %tmp.8 = bitand %tmp.6 %tmp.7;
+        symbol [ _rng ? 62 32 36 ];
+        putv self :_rng %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 62 81 ]
+        symbol [ _rng %tmp.10 62 88 92 ];
+        %tmp.10 = getv ? :_rng;
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_62_30_62_94_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc"; @line = 63; @symbol_functiondef = [_rand,63,20,25]; @symbol_param<0> = [n,63,26,27]; ]
+    protected
+    function _rand(n) {
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_63_30_63_66_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 63 32 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_63_39_63_63_begin:
+        %tmp.1 = lgetv %n;
+        symbol [ n %tmp.1 63 40 41 ];
+        %tmp.2 = 1;
+        %tmp.3 = lte %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_63_39_63_63_else_false;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_63_39_63_63_true:
+        %tmp.4 = 0;
+        push %tmp.4;
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_63_39_63_63_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_63_39_63_63_else_false:
+        %tmp.5 = self;
+        symbol [ _lcg %tmp.6 63 54 58 ];
+        %tmp.6 = getv function %tmp.5 :_lcg;
+        %tmp.7 = invoke %tmp.5 %tmp.6();
+        %tmp.8 = lgetv %n;
+        symbol [ n %tmp.8 63 63 64 ];
+        %tmp.9 = mod %tmp.7 %tmp.8;
+        push %tmp.9;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_63_39_63_63_end:
+        %tmp.10 = phi [%tmp.3 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_63_39_63_63_begin] [%tmp.4 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_63_39_63_63_true] [%tmp.9 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_63_39_63_63_else_false] [%tmp.10 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_63_39_63_63_end];
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_63_30_63_66_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc"; @line = 64; @symbol_functiondef = [_randf,64,20,26]; ]
+    protected
+    function _randf() {
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_64_30_64_76_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 64 32 ]
+        %tmp.1 = self;
+        symbol [ _lcg %tmp.2 64 40 44 ];
+        %tmp.2 = getv function %tmp.1 :_lcg;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        %tmp.4 = 10000;
+        %tmp.5 = mod %tmp.3 %tmp.4;
+        symbol [ toFloat %tmp.6 64 56 63 ];
+        %tmp.6 = getv function %tmp.5 :toFloat;
+        %tmp.7 = invoke %tmp.5 %tmp.6();
+        %tmp.8 = 0.0001;
+        %tmp.9 = mul %tmp.7 %tmp.8;
+        ret %tmp.9;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_64_30_64_76_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc"; @line = 68; @symbol_functiondef = [spawnRound,68,13,23]; @symbol_param<0> = [round,68,24,29]; ]
+    function spawnRound(round) {
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_68_31_110_4_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 69 8 ]
+        for @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_69_8_71_8_for_test @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_69_8_71_8_for_incr @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_69_8_71_8_for_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_69_8_71_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_69_8_71_8_for_begin" "_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_69_8_71_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 69 17 18 ];
+        %tmp.1 = 0;
+        lputv %i.1 %tmp.1;
+        symbol [ i %i.1 69 17 18 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_69_8_71_8_for_test:
+        %tmp.2 = lgetv %i.1;
+        symbol [ i %tmp.2 69 24 25 ];
+        symbol [ SS_TGT_MAX %tmp.4 69 28 38 ];
+        %tmp.4 = getv ? :SS_TGT_MAX;
+        %tmp.5 = lt %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_69_8_71_8_for_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_69_8_71_8_for_begin:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_69_45_71_8_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 70 12 ]
+        symbol [ live %tmp.6 70 12 16 ];
+        %tmp.6 = getv self :live;
+        %tmp.7 = 0;
+        %tmp.8 = lgetv %i.1;
+        symbol [ i %tmp.8 70 17 18 ];
+        aputv %tmp.6 %tmp.8 %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 70 25 ]
+        symbol [ primary %tmp.9 70 25 32 ];
+        %tmp.9 = getv self :primary;
+        %tmp.10 = 0;
+        %tmp.11 = lgetv %i.1;
+        symbol [ i %tmp.11 70 33 34 ];
+        aputv %tmp.9 %tmp.11 %tmp.10;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_69_45_71_8_stop:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_69_8_71_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 69 ]
+        %tmp.14 = lgetv %i.1;
+        symbol [ i %tmp.14 69 40 41 ];
+        %tmp.15 = add %tmp.14 1;
+        lputv %i.1 %tmp.15;
+        symbol [ i %i.1 69 40 41 ];
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_69_8_71_8_for_test;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_69_8_71_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 74 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_68_31_110_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_68_31_110_4_stop" ]
+        %dist.2 = local;
+        symbol [ dist %dist.2 74 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 75 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_68_31_110_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_68_31_110_4_stop" ]
+        %r.3 = local;
+        symbol [ r %r.3 75 12 13 ];
+        %tmp.16 = self;
+        symbol [ _rand %tmp.17 75 16 21 ];
+        %tmp.17 = getv function %tmp.16 :_rand;
+        %tmp.18 = 100;
+        %tmp.19 = invoke %tmp.16 %tmp.17(%tmp.18);
+        lputv %r.3 %tmp.19;
+        symbol [ r %r.3 75 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 76 8 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_76_8_85_8_if_stmt:
+        %tmp.20 = lgetv %round;
+        symbol [ round %tmp.20 76 12 17 ];
+        %tmp.21 = 0;
+        %tmp.22 = lte %tmp.20 %tmp.21;
+        bf %tmp.22 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_76_8_85_8_if_false;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_76_8_85_8_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_76_24_79_8_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 78 12 ]
+        symbol [ SS_TARGET_NEAR %tmp.24 78 19 33 ];
+        %tmp.24 = getv ? :SS_TARGET_NEAR;
+        lputv %dist.2 %tmp.24;
+        symbol [ dist %dist.2 78 12 16 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_76_24_79_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_76_8_85_8_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_76_8_85_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 79 15 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_79_15_85_8_if_stmt:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_79_19_79_42_begin:
+        %tmp.25 = lgetv %round;
+        symbol [ round %tmp.25 79 19 24 ];
+        %tmp.26 = 1;
+        %tmp.27 = eq %tmp.25 %tmp.26;
+        bt %tmp.27 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_79_15_85_8_if_true;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_79_33_79_42_false:
+        %tmp.28 = lgetv %round;
+        symbol [ round %tmp.28 79 33 38 ];
+        %tmp.29 = 2;
+        %tmp.30 = eq %tmp.28 %tmp.29;
+        push %tmp.30;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_79_33_79_42_end:
+        %tmp.31 = phi [%tmp.27 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_79_19_79_42_begin] [%tmp.30 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_79_33_79_42_false] [%tmp.31 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_79_33_79_42_end];
+        bf %tmp.31 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_79_15_85_8_if_else_false;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_79_15_85_8_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_79_45_81_8_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 80 12 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_80_19_80_47_begin:
+        %tmp.32 = lgetv %r.3;
+        symbol [ r %tmp.32 80 20 21 ];
+        %tmp.33 = 50;
+        %tmp.34 = lt %tmp.32 %tmp.33;
+        bf %tmp.34 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_80_19_80_47_else_false;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_80_19_80_47_true:
+        symbol [ SS_TARGET_NEAR %tmp.36 80 30 44 ];
+        %tmp.36 = getv ? :SS_TARGET_NEAR;
+        push %tmp.36;
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_80_19_80_47_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_80_19_80_47_else_false:
+        symbol [ SS_TARGET_MED %tmp.38 80 47 60 ];
+        %tmp.38 = getv ? :SS_TARGET_MED;
+        push %tmp.38;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_80_19_80_47_end:
+        %tmp.39 = phi [%tmp.34 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_80_19_80_47_begin] [%tmp.36 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_80_19_80_47_true] [%tmp.38 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_80_19_80_47_else_false] [%tmp.39 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_80_19_80_47_end];
+        lputv %dist.2 %tmp.39;
+        symbol [ dist %dist.2 80 12 16 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_79_45_81_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_79_15_85_8_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_79_15_85_8_if_else_false:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_81_15_85_8_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 82 12 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_82_12_84_54_if_stmt:
+        %tmp.40 = lgetv %r.3;
+        symbol [ r %tmp.40 82 21 22 ];
+        %tmp.41 = 25;
+        %tmp.42 = lt %tmp.40 %tmp.41;
+        bf %tmp.42 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_82_12_84_54_if_false;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_82_12_84_54_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_82_29_82_54_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 82 31 ]
+        symbol [ SS_TARGET_NEAR %tmp.44 82 38 52 ];
+        %tmp.44 = getv ? :SS_TARGET_NEAR;
+        lputv %dist.2 %tmp.44;
+        symbol [ dist %dist.2 82 31 35 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_82_29_82_54_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_82_12_84_54_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_82_12_84_54_if_false:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 83 17 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_83_17_84_54_if_stmt:
+        %tmp.45 = lgetv %r.3;
+        symbol [ r %tmp.45 83 21 22 ];
+        %tmp.46 = 65;
+        %tmp.47 = lt %tmp.45 %tmp.46;
+        bf %tmp.47 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_83_17_84_54_if_else_false;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_83_17_84_54_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_83_29_83_54_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 83 31 ]
+        symbol [ SS_TARGET_MED %tmp.49 83 38 51 ];
+        %tmp.49 = getv ? :SS_TARGET_MED;
+        lputv %dist.2 %tmp.49;
+        symbol [ dist %dist.2 83 31 35 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_83_29_83_54_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_83_17_84_54_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_83_17_84_54_if_else_false:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_84_30_84_54_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 84 32 ]
+        symbol [ SS_TARGET_FAR %tmp.51 84 39 52 ];
+        %tmp.51 = getv ? :SS_TARGET_FAR;
+        lputv %dist.2 %tmp.51;
+        symbol [ dist %dist.2 84 32 36 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_84_30_84_54_stop:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_83_17_84_54_if_end:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_82_12_84_54_if_end:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_81_15_85_8_stop:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_79_15_85_8_if_end:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_76_8_85_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 88 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_68_31_110_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_68_31_110_4_stop" ]
+        %decoys.4 = local;
+        symbol [ decoys %decoys.4 88 12 18 ];
+        %tmp.52 = lgetv %round;
+        symbol [ round %tmp.52 88 21 26 ];
+        %tmp.53 = 2;
+        %tmp.54 = div %tmp.52 %tmp.53;
+        symbol [ _diff %tmp.56 88 33 38 ];
+        %tmp.56 = getv ? :_diff;
+        %tmp.57 = add %tmp.54 %tmp.56;
+        lputv %decoys.4 %tmp.57;
+        symbol [ decoys %decoys.4 88 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 89 8 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_89_8_89_38_if_stmt:
+        %tmp.58 = lgetv %decoys.4;
+        symbol [ decoys %tmp.58 89 12 18 ];
+        %tmp.59 = 0;
+        %tmp.60 = lt %tmp.58 %tmp.59;
+        bf %tmp.60 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_89_8_89_38_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_89_8_89_38_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_89_24_89_38_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 89 26 ]
+        %tmp.61 = 0;
+        lputv %decoys.4 %tmp.61;
+        symbol [ decoys %decoys.4 89 26 32 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_89_24_89_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_89_8_89_38_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_89_8_89_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 90 8 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_90_8_90_64_if_stmt:
+        %tmp.62 = lgetv %decoys.4;
+        symbol [ decoys %tmp.62 90 12 18 ];
+        symbol [ SS_TGT_MAX %tmp.64 90 21 31 ];
+        %tmp.64 = getv ? :SS_TGT_MAX;
+        %tmp.65 = 1;
+        %tmp.66 = sub %tmp.64 %tmp.65;
+        %tmp.67 = gt %tmp.62 %tmp.66;
+        bf %tmp.67 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_90_8_90_64_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_90_8_90_64_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_90_37_90_64_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 90 39 ]
+        symbol [ SS_TGT_MAX %tmp.69 90 48 58 ];
+        %tmp.69 = getv ? :SS_TGT_MAX;
+        %tmp.70 = 1;
+        %tmp.71 = sub %tmp.69 %tmp.70;
+        lputv %decoys.4 %tmp.71;
+        symbol [ decoys %decoys.4 90 39 45 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_90_37_90_64_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_90_8_90_64_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_90_8_90_64_if_end:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 95 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_68_31_110_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_68_31_110_4_stop" ]
+        %slot.5 = local;
+        symbol [ slot %slot.5 95 12 16 ];
+        %tmp.72 = 0;
+        lputv %slot.5 %tmp.72;
+        symbol [ slot %slot.5 95 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 96 8 ]
+        %tmp.73 = lgetv %slot.5;
+        symbol [ slot %tmp.73 96 21 25 ];
+        symbol [ primaryIdx ? 96 8 18 ];
+        putv self :primaryIdx %tmp.73;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 97 8 ]
+        %tmp.74 = self;
+        symbol [ _placeSlot %tmp.75 97 8 18 ];
+        %tmp.75 = getv function %tmp.74 :_placeSlot;
+        %tmp.76 = lgetv %slot.5;
+        symbol [ slot %tmp.76 97 19 23 ];
+        %tmp.77 = lgetv %dist.2;
+        symbol [ dist %tmp.77 97 25 29 ];
+        %tmp.78 = true;
+        %tmp.79 = lgetv %round;
+        symbol [ round %tmp.79 97 37 42 ];
+        invoke %tmp.74 %tmp.75(%tmp.76, %tmp.77, %tmp.78, %tmp.79);
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 98 8 ]
+        %tmp.82 = lgetv %slot.5;
+        symbol [ slot %tmp.82 98 8 12 ];
+        %tmp.83 = add %tmp.82 1;
+        lputv %slot.5 %tmp.83;
+        symbol [ slot %slot.5 98 8 12 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 101 8 ]
+        for @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_101_8_109_8_for_test @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_101_8_109_8_for_incr @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_101_8_109_8_for_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_101_8_109_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_101_8_109_8_for_begin" "_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_101_8_109_8_for_end" ]
+        %k.6 = local;
+        symbol [ k %k.6 101 17 18 ];
+        %tmp.84 = 0;
+        lputv %k.6 %tmp.84;
+        symbol [ k %k.6 101 17 18 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_101_8_109_8_for_test:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_101_24_101_45_begin:
+        %tmp.85 = lgetv %k.6;
+        symbol [ k %tmp.85 101 24 25 ];
+        %tmp.86 = lgetv %decoys.4;
+        symbol [ decoys %tmp.86 101 28 34 ];
+        %tmp.87 = lt %tmp.85 %tmp.86;
+        %tmp.88 = dup %tmp.87;
+        bf %tmp.88 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_101_38_101_45_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_101_38_101_45_true:
+        %tmp.89 = lgetv %slot.5;
+        symbol [ slot %tmp.89 101 38 42 ];
+        symbol [ SS_TGT_MAX %tmp.91 101 45 55 ];
+        %tmp.91 = getv ? :SS_TGT_MAX;
+        %tmp.92 = lt %tmp.89 %tmp.91;
+        %tmp.93 = and %tmp.87 %tmp.92;
+        push %tmp.93;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_101_38_101_45_end:
+        %tmp.94 = phi [%tmp.88 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_101_24_101_45_begin] [%tmp.93 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_101_38_101_45_true] [%tmp.94 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_101_38_101_45_end];
+        bf %tmp.94 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_101_8_109_8_for_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_101_8_109_8_for_begin:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_101_62_109_8_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 102 12 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_101_62_109_8_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_101_62_109_8_stop" ]
+        %dd.7 = local;
+        symbol [ dd %dd.7 102 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 103 12 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_101_62_109_8_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_101_62_109_8_stop" ]
+        %rr.8 = local;
+        symbol [ rr %rr.8 103 16 18 ];
+        %tmp.95 = self;
+        symbol [ _rand %tmp.96 103 21 26 ];
+        %tmp.96 = getv function %tmp.95 :_rand;
+        %tmp.97 = 3;
+        %tmp.98 = invoke %tmp.95 %tmp.96(%tmp.97);
+        lputv %rr.8 %tmp.98;
+        symbol [ rr %rr.8 103 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 104 12 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_104_12_106_53_if_stmt:
+        %tmp.99 = lgetv %rr.8;
+        symbol [ rr %tmp.99 104 21 23 ];
+        %tmp.100 = 0;
+        %tmp.101 = eq %tmp.99 %tmp.100;
+        bf %tmp.101 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_104_12_106_53_if_false;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_104_12_106_53_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_104_30_104_53_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 104 32 ]
+        symbol [ SS_TARGET_NEAR %tmp.103 104 37 51 ];
+        %tmp.103 = getv ? :SS_TARGET_NEAR;
+        lputv %dd.7 %tmp.103;
+        symbol [ dd %dd.7 104 32 34 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_104_30_104_53_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_104_12_106_53_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_104_12_106_53_if_false:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 105 17 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_105_17_106_53_if_stmt:
+        %tmp.104 = lgetv %rr.8;
+        symbol [ rr %tmp.104 105 21 23 ];
+        %tmp.105 = 1;
+        %tmp.106 = eq %tmp.104 %tmp.105;
+        bf %tmp.106 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_105_17_106_53_if_else_false;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_105_17_106_53_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_105_30_105_53_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 105 32 ]
+        symbol [ SS_TARGET_MED %tmp.108 105 37 50 ];
+        %tmp.108 = getv ? :SS_TARGET_MED;
+        lputv %dd.7 %tmp.108;
+        symbol [ dd %dd.7 105 32 34 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_105_30_105_53_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_105_17_106_53_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_105_17_106_53_if_else_false:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_106_31_106_53_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 106 33 ]
+        symbol [ SS_TARGET_FAR %tmp.110 106 38 51 ];
+        %tmp.110 = getv ? :SS_TARGET_FAR;
+        lputv %dd.7 %tmp.110;
+        symbol [ dd %dd.7 106 33 35 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_106_31_106_53_stop:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_105_17_106_53_if_end:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_104_12_106_53_if_end:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 107 12 ]
+        %tmp.111 = self;
+        symbol [ _placeSlot %tmp.112 107 12 22 ];
+        %tmp.112 = getv function %tmp.111 :_placeSlot;
+        %tmp.113 = lgetv %slot.5;
+        symbol [ slot %tmp.113 107 23 27 ];
+        %tmp.114 = lgetv %dd.7;
+        symbol [ dd %tmp.114 107 29 31 ];
+        %tmp.115 = false;
+        %tmp.116 = lgetv %round;
+        symbol [ round %tmp.116 107 40 45 ];
+        invoke %tmp.111 %tmp.112(%tmp.113, %tmp.114, %tmp.115, %tmp.116);
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 108 12 ]
+        %tmp.119 = lgetv %slot.5;
+        symbol [ slot %tmp.119 108 12 16 ];
+        %tmp.120 = add %tmp.119 1;
+        lputv %slot.5 %tmp.120;
+        symbol [ slot %slot.5 108 12 16 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_101_62_109_8_stop:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_101_8_109_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 101 ]
+        %tmp.123 = lgetv %k.6;
+        symbol [ k %tmp.123 101 57 58 ];
+        %tmp.124 = add %tmp.123 1;
+        lputv %k.6 %tmp.124;
+        symbol [ k %k.6 101 57 58 ];
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_101_8_109_8_for_test;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_101_8_109_8_for_end:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_68_31_110_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc"; @line = 112; @symbol_functiondef = [_placeSlot,112,20,30]; @symbol_param<0> = [i,112,31,32]; @symbol_param<1> = [distance,112,34,42]; @symbol_param<2> = [isPrimary,112,44,53]; @symbol_param<3> = [round,112,55,60]; ]
+    protected
+    function _placeSlot(i, distance, isPrimary, round) {
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_112_62_153_4_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 113 8 ]
+        symbol [ live %tmp.1 113 8 12 ];
+        %tmp.1 = getv self :live;
+        %tmp.2 = 1;
+        %tmp.3 = lgetv %i;
+        symbol [ i %tmp.3 113 13 14 ];
+        aputv %tmp.1 %tmp.3 %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 114 8 ]
+        symbol [ primary %tmp.4 114 8 15 ];
+        %tmp.4 = getv self :primary;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_114_21_114_37_begin:
+        %tmp.5 = lgetv %isPrimary;
+        symbol [ isPrimary %tmp.5 114 21 30 ];
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_114_21_114_37_else_false;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_114_21_114_37_true:
+        %tmp.6 = 1;
+        push %tmp.6;
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_114_21_114_37_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_114_21_114_37_else_false:
+        %tmp.7 = 0;
+        push %tmp.7;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_114_21_114_37_end:
+        %tmp.8 = phi [%tmp.5 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_114_21_114_37_begin] [%tmp.6 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_114_21_114_37_true] [%tmp.7 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_114_21_114_37_else_false] [%tmp.8 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_114_21_114_37_end];
+        %tmp.9 = lgetv %i;
+        symbol [ i %tmp.9 114 16 17 ];
+        aputv %tmp.4 %tmp.9 %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 115 8 ]
+        symbol [ z %tmp.10 115 8 9 ];
+        %tmp.10 = getv self :z;
+        %tmp.11 = lgetv %distance;
+        symbol [ distance %tmp.11 115 21 29 ];
+        %tmp.12 = lgetv %i;
+        symbol [ i %tmp.12 115 10 11 ];
+        aputv %tmp.10 %tmp.12 %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 118 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_112_62_153_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_112_62_153_4_stop" ]
+        %ny.1 = local;
+        symbol [ ny %ny.1 118 12 14 ];
+        %tmp.13 = self;
+        symbol [ _randf %tmp.14 118 18 24 ];
+        %tmp.14 = getv function %tmp.13 :_randf;
+        %tmp.15 = invoke %tmp.13 %tmp.14();
+        %tmp.16 = 1.8;
+        %tmp.17 = mul %tmp.15 %tmp.16;
+        %tmp.18 = 0.9;
+        %tmp.19 = sub %tmp.17 %tmp.18;
+        lputv %ny.1 %tmp.19;
+        symbol [ ny %ny.1 118 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 120 8 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_120_8_127_8_if_stmt:
+        %tmp.20 = lgetv %isPrimary;
+        symbol [ isPrimary %tmp.20 120 12 21 ];
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_120_8_127_8_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_120_8_127_8_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_120_23_127_8_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 121 12 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_120_23_127_8_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_120_23_127_8_stop" ]
+        %bias.2 = local;
+        symbol [ bias %bias.2 121 16 20 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_121_23_121_44_begin:
+        %tmp.21 = lgetv %round;
+        symbol [ round %tmp.21 121 24 29 ];
+        %tmp.22 = 2;
+        %tmp.23 = gt %tmp.21 %tmp.22;
+        bf %tmp.23 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_121_23_121_44_else_false;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_121_23_121_44_true:
+        %tmp.24 = 0.55;
+        push %tmp.24;
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_121_23_121_44_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_121_23_121_44_else_false:
+        %tmp.25 = 0.35;
+        push %tmp.25;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_121_23_121_44_end:
+        %tmp.26 = phi [%tmp.23 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_121_23_121_44_begin] [%tmp.24 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_121_23_121_44_true] [%tmp.25 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_121_23_121_44_else_false] [%tmp.26 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_121_23_121_44_end];
+        lputv %bias.2 %tmp.26;
+        symbol [ bias %bias.2 121 16 20 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 122 12 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_122_12_124_12_if_stmt:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_122_16_122_35_begin:
+        %tmp.27 = lgetv %ny.1;
+        symbol [ ny %tmp.27 122 16 18 ];
+        %tmp.28 = lgetv %bias.2;
+        symbol [ bias %tmp.28 122 22 26 ];
+        %tmp.29 = sub 0 %tmp.28;
+        %tmp.30 = gt %tmp.27 %tmp.29;
+        bf %tmp.30 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_122_12_124_12_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_122_30_122_35_true:
+        %tmp.31 = lgetv %ny.1;
+        symbol [ ny %tmp.31 122 30 32 ];
+        %tmp.32 = lgetv %bias.2;
+        symbol [ bias %tmp.32 122 35 39 ];
+        %tmp.33 = lt %tmp.31 %tmp.32;
+        push %tmp.33;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_122_30_122_35_end:
+        %tmp.34 = phi [%tmp.30 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_122_16_122_35_begin] [%tmp.33 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_122_30_122_35_true] [%tmp.34 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_122_30_122_35_end];
+        bf %tmp.34 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_122_12_124_12_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_122_12_124_12_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_122_41_124_12_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 123 16 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_123_21_123_50_begin:
+        %tmp.35 = lgetv %ny.1;
+        symbol [ ny %tmp.35 123 22 24 ];
+        %tmp.36 = 0;
+        %tmp.37 = gte %tmp.35 %tmp.36;
+        bf %tmp.37 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_123_21_123_50_else_false;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_123_21_123_50_true:
+        %tmp.38 = lgetv %ny.1;
+        symbol [ ny %tmp.38 123 33 35 ];
+        %tmp.39 = lgetv %bias.2;
+        symbol [ bias %tmp.39 123 38 42 ];
+        %tmp.40 = add %tmp.38 %tmp.39;
+        push %tmp.40;
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_123_21_123_50_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_123_21_123_50_else_false:
+        %tmp.41 = lgetv %ny.1;
+        symbol [ ny %tmp.41 123 45 47 ];
+        %tmp.42 = lgetv %bias.2;
+        symbol [ bias %tmp.42 123 50 54 ];
+        %tmp.43 = sub %tmp.41 %tmp.42;
+        push %tmp.43;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_123_21_123_50_end:
+        %tmp.44 = phi [%tmp.37 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_123_21_123_50_begin] [%tmp.40 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_123_21_123_50_true] [%tmp.43 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_123_21_123_50_else_false] [%tmp.44 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_123_21_123_50_end];
+        lputv %ny.1 %tmp.44;
+        symbol [ ny %ny.1 123 16 18 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_122_41_124_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_122_12_124_12_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_122_12_124_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 125 12 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_125_12_125_40_if_stmt:
+        %tmp.45 = lgetv %ny.1;
+        symbol [ ny %tmp.45 125 16 18 ];
+        %tmp.46 = 1.3;
+        %tmp.47 = gt %tmp.45 %tmp.46;
+        bf %tmp.47 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_125_12_125_40_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_125_12_125_40_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_125_27_125_40_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 125 29 ]
+        %tmp.48 = 1.3;
+        lputv %ny.1 %tmp.48;
+        symbol [ ny %ny.1 125 29 31 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_125_27_125_40_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_125_12_125_40_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_125_12_125_40_if_end:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 126 12 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_126_12_126_40_if_stmt:
+        %tmp.49 = lgetv %ny.1;
+        symbol [ ny %tmp.49 126 16 18 ];
+        %tmp.50 = -1.3;
+        %tmp.51 = lt %tmp.49 %tmp.50;
+        bf %tmp.51 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_126_12_126_40_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_126_12_126_40_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_126_27_126_40_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 126 29 ]
+        %tmp.52 = -1.3;
+        lputv %ny.1 %tmp.52;
+        symbol [ ny %ny.1 126 29 31 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_126_27_126_40_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_126_12_126_40_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_126_12_126_40_if_end:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_120_23_127_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_120_8_127_8_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_120_8_127_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 128 8 ]
+        symbol [ yaw %tmp.53 128 8 11 ];
+        %tmp.53 = getv self :yaw;
+        %tmp.54 = lgetv %ny.1;
+        symbol [ ny %tmp.54 128 19 21 ];
+        %tmp.55 = lgetv %i;
+        symbol [ i %tmp.55 128 12 13 ];
+        aputv %tmp.53 %tmp.55 %tmp.54;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 131 8 ]
+        symbol [ pitch %tmp.56 131 8 13 ];
+        %tmp.56 = getv self :pitch;
+        %tmp.57 = self;
+        symbol [ _randf %tmp.58 131 20 26 ];
+        %tmp.58 = getv function %tmp.57 :_randf;
+        %tmp.59 = invoke %tmp.57 %tmp.58();
+        %tmp.60 = 0.7;
+        %tmp.61 = mul %tmp.59 %tmp.60;
+        %tmp.62 = 0.15;
+        %tmp.63 = sub %tmp.61 %tmp.62;
+        %tmp.64 = lgetv %i;
+        symbol [ i %tmp.64 131 14 15 ];
+        aputv %tmp.56 %tmp.64 %tmp.63;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 134 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_112_62_153_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_112_62_153_4_stop" ]
+        %moveRoll.3 = local;
+        symbol [ moveRoll %moveRoll.3 134 12 20 ];
+        %tmp.65 = self;
+        symbol [ _rand %tmp.66 134 23 28 ];
+        %tmp.66 = getv function %tmp.65 :_rand;
+        %tmp.67 = 100;
+        %tmp.68 = invoke %tmp.65 %tmp.66(%tmp.67);
+        lputv %moveRoll.3 %tmp.68;
+        symbol [ moveRoll %moveRoll.3 134 12 20 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 135 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_112_62_153_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_112_62_153_4_stop" ]
+        %canMove.4 = local;
+        symbol [ canMove %canMove.4 135 12 19 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_135_23_136_48_begin:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_135_24_135_38_begin:
+        %tmp.69 = lgetv %round;
+        symbol [ round %tmp.69 135 24 29 ];
+        %tmp.70 = 1;
+        %tmp.71 = gte %tmp.69 %tmp.70;
+        %tmp.72 = dup %tmp.71;
+        bf %tmp.72 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_135_38_135_38_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_135_38_135_38_true:
+        %tmp.73 = lgetv %isPrimary;
+        symbol [ isPrimary %tmp.73 135 38 47 ];
+        %tmp.74 = and %tmp.71 %tmp.73;
+        push %tmp.74;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_135_38_135_38_end:
+        %tmp.75 = phi [%tmp.72 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_135_24_135_38_begin] [%tmp.74 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_135_38_135_38_true] [%tmp.75 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_135_38_135_38_end];
+        %tmp.76 = dup %tmp.75;
+        bt %tmp.76 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_136_23_136_48_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_136_23_136_48_false:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_136_24_136_39_begin:
+        %tmp.77 = lgetv %round;
+        symbol [ round %tmp.77 136 24 29 ];
+        %tmp.78 = 2;
+        %tmp.79 = gte %tmp.77 %tmp.78;
+        %tmp.80 = dup %tmp.79;
+        bf %tmp.80 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_136_38_136_39_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_136_38_136_39_true:
+        %tmp.81 = lgetv %isPrimary;
+        symbol [ isPrimary %tmp.81 136 39 48 ];
+        %tmp.82 = not %tmp.81;
+        %tmp.83 = and %tmp.79 %tmp.82;
+        push %tmp.83;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_136_38_136_39_end:
+        %tmp.84 = phi [%tmp.80 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_136_24_136_39_begin] [%tmp.83 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_136_38_136_39_true] [%tmp.84 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_136_38_136_39_end];
+        %tmp.85 = or %tmp.75 %tmp.84;
+        push %tmp.85;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_136_23_136_48_end:
+        %tmp.86 = phi [%tmp.76 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_135_23_136_48_begin] [%tmp.85 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_136_23_136_48_false] [%tmp.86 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_136_23_136_48_end];
+        lputv %canMove.4 %tmp.86;
+        symbol [ canMove %canMove.4 135 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 137 8 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_137_8_144_8_if_stmt:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_137_12_137_59_begin:
+        %tmp.87 = lgetv %canMove.4;
+        symbol [ canMove %tmp.87 137 12 19 ];
+        bf %tmp.87 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_137_8_144_8_if_else_false;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_137_23_137_59_true:
+        %tmp.88 = lgetv %moveRoll.3;
+        symbol [ moveRoll %tmp.88 137 23 31 ];
+        %tmp.89 = 50;
+        %tmp.90 = lgetv %round;
+        symbol [ round %tmp.90 137 39 44 ];
+        %tmp.91 = 8;
+        %tmp.92 = mul %tmp.90 %tmp.91;
+        %tmp.93 = add %tmp.89 %tmp.92;
+        symbol [ _diff %tmp.95 137 51 56 ];
+        %tmp.95 = getv ? :_diff;
+        %tmp.96 = 5;
+        %tmp.97 = mul %tmp.95 %tmp.96;
+        %tmp.98 = add %tmp.93 %tmp.97;
+        %tmp.99 = lt %tmp.88 %tmp.98;
+        push %tmp.99;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_137_23_137_59_end:
+        %tmp.100 = phi [%tmp.87 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_137_12_137_59_begin] [%tmp.99 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_137_23_137_59_true] [%tmp.100 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_137_23_137_59_end];
+        bf %tmp.100 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_137_8_144_8_if_else_false;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_137_8_144_8_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_137_62_142_8_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 139 12 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_137_62_142_8_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_137_62_142_8_stop" ]
+        %sign.5 = local;
+        symbol [ sign %sign.5 139 16 20 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_139_23_139_48_begin:
+        %tmp.101 = self;
+        symbol [ _rand %tmp.102 139 24 29 ];
+        %tmp.102 = getv function %tmp.101 :_rand;
+        %tmp.103 = 2;
+        %tmp.104 = invoke %tmp.101 %tmp.102(%tmp.103);
+        %tmp.105 = 0;
+        %tmp.106 = eq %tmp.104 %tmp.105;
+        bf %tmp.106 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_139_23_139_48_else_false;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_139_23_139_48_true:
+        %tmp.107 = -1.0;
+        push %tmp.107;
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_139_23_139_48_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_139_23_139_48_else_false:
+        %tmp.108 = 1.0;
+        push %tmp.108;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_139_23_139_48_end:
+        %tmp.109 = phi [%tmp.106 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_139_23_139_48_begin] [%tmp.107 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_139_23_139_48_true] [%tmp.108 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_139_23_139_48_else_false] [%tmp.109 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_139_23_139_48_end];
+        lputv %sign.5 %tmp.109;
+        symbol [ sign %sign.5 139 16 20 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 140 12 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_137_62_142_8_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_137_62_142_8_stop" ]
+        %spd.6 = local;
+        symbol [ spd %spd.6 140 16 19 ];
+        %tmp.110 = 0.0007;
+        %tmp.111 = self;
+        symbol [ _randf %tmp.112 140 32 38 ];
+        %tmp.112 = getv function %tmp.111 :_randf;
+        %tmp.113 = invoke %tmp.111 %tmp.112();
+        %tmp.114 = 0.0010;
+        %tmp.115 = mul %tmp.113 %tmp.114;
+        %tmp.116 = add %tmp.110 %tmp.115;
+        %tmp.117 = lgetv %round;
+        symbol [ round %tmp.117 140 52 57 ];
+        %tmp.118 = 0.0001;
+        %tmp.119 = mul %tmp.117 %tmp.118;
+        %tmp.120 = add %tmp.116 %tmp.119;
+        lputv %spd.6 %tmp.120;
+        symbol [ spd %spd.6 140 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 141 12 ]
+        symbol [ dy %tmp.121 141 12 14 ];
+        %tmp.121 = getv self :dy;
+        %tmp.122 = lgetv %sign.5;
+        symbol [ sign %tmp.122 141 20 24 ];
+        %tmp.123 = lgetv %spd.6;
+        symbol [ spd %tmp.123 141 27 30 ];
+        %tmp.124 = mul %tmp.122 %tmp.123;
+        %tmp.125 = lgetv %i;
+        symbol [ i %tmp.125 141 15 16 ];
+        aputv %tmp.121 %tmp.125 %tmp.124;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_137_62_142_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_137_8_144_8_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_137_8_144_8_if_else_false:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_142_15_144_8_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 143 12 ]
+        symbol [ dy %tmp.126 143 12 14 ];
+        %tmp.126 = getv self :dy;
+        %tmp.127 = 0.0;
+        %tmp.128 = lgetv %i;
+        symbol [ i %tmp.128 143 15 16 ];
+        aputv %tmp.126 %tmp.128 %tmp.127;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_142_15_144_8_stop:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_137_8_144_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 145 8 ]
+        symbol [ dp %tmp.129 145 8 10 ];
+        %tmp.129 = getv self :dp;
+        %tmp.130 = 0.0;
+        %tmp.131 = lgetv %i;
+        symbol [ i %tmp.131 145 11 12 ];
+        aputv %tmp.129 %tmp.131 %tmp.130;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 148 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_112_62_153_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_112_62_153_4_stop" ]
+        %cv.7 = local;
+        symbol [ cv %cv.7 148 12 14 ];
+        %tmp.132 = 0;
+        lputv %cv.7 %tmp.132;
+        symbol [ cv %cv.7 148 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 149 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_112_62_153_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_112_62_153_4_stop" ]
+        %cr.8 = local;
+        symbol [ cr %cr.8 149 12 14 ];
+        %tmp.133 = self;
+        symbol [ _rand %tmp.134 149 17 22 ];
+        %tmp.134 = getv function %tmp.133 :_rand;
+        %tmp.135 = 100;
+        %tmp.136 = invoke %tmp.133 %tmp.134(%tmp.135);
+        lputv %cr.8 %tmp.136;
+        symbol [ cr %cr.8 149 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 150 8 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_150_8_150_58_if_stmt:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_150_12_150_44_begin:
+        %tmp.137 = lgetv %round;
+        symbol [ round %tmp.137 150 12 17 ];
+        %tmp.138 = 2;
+        %tmp.139 = gte %tmp.137 %tmp.138;
+        bf %tmp.139 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_150_8_150_58_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_150_26_150_44_true:
+        %tmp.140 = lgetv %cr.8;
+        symbol [ cr %tmp.140 150 26 28 ];
+        %tmp.141 = 25;
+        symbol [ _diff %tmp.143 150 36 41 ];
+        %tmp.143 = getv ? :_diff;
+        %tmp.144 = 10;
+        %tmp.145 = mul %tmp.143 %tmp.144;
+        %tmp.146 = add %tmp.141 %tmp.145;
+        %tmp.147 = lt %tmp.140 %tmp.146;
+        push %tmp.147;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_150_26_150_44_end:
+        %tmp.148 = phi [%tmp.139 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_150_12_150_44_begin] [%tmp.147 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_150_26_150_44_true] [%tmp.148 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_150_26_150_44_end];
+        bf %tmp.148 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_150_8_150_58_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_150_8_150_58_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_150_48_150_58_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 150 50 ]
+        %tmp.149 = 1;
+        lputv %cv.7 %tmp.149;
+        symbol [ cv %cv.7 150 50 52 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_150_48_150_58_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_150_8_150_58_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_150_8_150_58_if_end:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 151 8 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_151_8_151_58_if_stmt:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_151_12_151_45_begin:
+        %tmp.150 = lgetv %round;
+        symbol [ round %tmp.150 151 12 17 ];
+        %tmp.151 = 4;
+        %tmp.152 = gte %tmp.150 %tmp.151;
+        bf %tmp.152 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_151_8_151_58_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_151_26_151_45_true:
+        %tmp.153 = lgetv %cr.8;
+        symbol [ cr %tmp.153 151 26 28 ];
+        %tmp.154 = 12;
+        symbol [ _diff %tmp.156 151 36 41 ];
+        %tmp.156 = getv ? :_diff;
+        %tmp.157 = 6;
+        %tmp.158 = mul %tmp.156 %tmp.157;
+        %tmp.159 = add %tmp.154 %tmp.158;
+        %tmp.160 = lt %tmp.153 %tmp.159;
+        push %tmp.160;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_151_26_151_45_end:
+        %tmp.161 = phi [%tmp.152 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_151_12_151_45_begin] [%tmp.160 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_151_26_151_45_true] [%tmp.161 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_151_26_151_45_end];
+        bf %tmp.161 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_151_8_151_58_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_151_8_151_58_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_151_48_151_58_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 151 50 ]
+        %tmp.162 = 2;
+        lputv %cv.7 %tmp.162;
+        symbol [ cv %cv.7 151 50 52 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_151_48_151_58_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_151_8_151_58_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_151_8_151_58_if_end:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 152 8 ]
+        symbol [ cover %tmp.163 152 8 13 ];
+        %tmp.163 = getv self :cover;
+        %tmp.164 = lgetv %cv.7;
+        symbol [ cv %tmp.164 152 19 21 ];
+        %tmp.165 = lgetv %i;
+        symbol [ i %tmp.165 152 14 15 ];
+        aputv %tmp.163 %tmp.165 %tmp.164;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_112_62_153_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc"; @line = 156; @symbol_functiondef = [tick,156,13,17]; ]
+    function tick() {
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_156_20_165_4_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 157 8 ]
+        for @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_157_8_164_8_for_test @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_157_8_164_8_for_incr @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_157_8_164_8_for_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_157_8_164_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_157_8_164_8_for_begin" "_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_157_8_164_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 157 17 18 ];
+        %tmp.1 = 0;
+        lputv %i.1 %tmp.1;
+        symbol [ i %i.1 157 17 18 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_157_8_164_8_for_test:
+        %tmp.2 = lgetv %i.1;
+        symbol [ i %tmp.2 157 24 25 ];
+        symbol [ SS_TGT_MAX %tmp.4 157 28 38 ];
+        %tmp.4 = getv ? :SS_TGT_MAX;
+        %tmp.5 = lt %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_157_8_164_8_for_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_157_8_164_8_for_begin:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_157_45_164_8_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 158 12 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_158_12_158_42_if_stmt:
+        symbol [ live %tmp.7 158 16 20 ];
+        %tmp.7 = getv ? :live;
+        %tmp.8 = lgetv %i.1;
+        symbol [ i %tmp.8 158 21 22 ];
+        %tmp.9 = agetv %tmp.7 %tmp.8;
+        %tmp.10 = 0;
+        %tmp.11 = eq %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_158_12_158_42_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_158_12_158_42_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_158_30_158_42_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 158 32 ]
+        goto break @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_157_8_164_8_for_incr;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_158_30_158_42_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_158_12_158_42_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_158_12_158_42_if_end:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 159 12 ]
+        symbol [ yaw %tmp.12 159 12 15 ];
+        %tmp.12 = getv self :yaw;
+        symbol [ yaw %tmp.14 159 23 26 ];
+        %tmp.14 = getv ? :yaw;
+        %tmp.15 = lgetv %i.1;
+        symbol [ i %tmp.15 159 27 28 ];
+        %tmp.16 = agetv %tmp.14 %tmp.15;
+        symbol [ dy %tmp.18 159 34 36 ];
+        %tmp.18 = getv ? :dy;
+        %tmp.19 = lgetv %i.1;
+        symbol [ i %tmp.19 159 37 38 ];
+        %tmp.20 = agetv %tmp.18 %tmp.19;
+        %tmp.21 = add %tmp.16 %tmp.20;
+        %tmp.22 = lgetv %i.1;
+        symbol [ i %tmp.22 159 16 17 ];
+        aputv %tmp.12 %tmp.22 %tmp.21;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 160 12 ]
+        symbol [ pitch %tmp.23 160 12 17 ];
+        %tmp.23 = getv self :pitch;
+        symbol [ pitch %tmp.25 160 23 28 ];
+        %tmp.25 = getv ? :pitch;
+        %tmp.26 = lgetv %i.1;
+        symbol [ i %tmp.26 160 29 30 ];
+        %tmp.27 = agetv %tmp.25 %tmp.26;
+        symbol [ dp %tmp.29 160 34 36 ];
+        %tmp.29 = getv ? :dp;
+        %tmp.30 = lgetv %i.1;
+        symbol [ i %tmp.30 160 37 38 ];
+        %tmp.31 = agetv %tmp.29 %tmp.30;
+        %tmp.32 = add %tmp.27 %tmp.31;
+        %tmp.33 = lgetv %i.1;
+        symbol [ i %tmp.33 160 18 19 ];
+        aputv %tmp.23 %tmp.33 %tmp.32;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 162 12 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_162_12_162_64_if_stmt:
+        symbol [ yaw %tmp.35 162 16 19 ];
+        %tmp.35 = getv ? :yaw;
+        %tmp.36 = lgetv %i.1;
+        symbol [ i %tmp.36 162 20 21 ];
+        %tmp.37 = agetv %tmp.35 %tmp.36;
+        %tmp.38 = 1.4;
+        %tmp.39 = gt %tmp.37 %tmp.38;
+        bf %tmp.39 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_162_12_162_64_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_162_12_162_64_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_162_31_162_64_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 162 33 ]
+        symbol [ yaw %tmp.40 162 33 36 ];
+        %tmp.40 = getv self :yaw;
+        %tmp.41 = 1.4;
+        %tmp.42 = lgetv %i.1;
+        symbol [ i %tmp.42 162 37 38 ];
+        aputv %tmp.40 %tmp.42 %tmp.41;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 162 48 ]
+        symbol [ dy %tmp.43 162 48 50 ];
+        %tmp.43 = getv self :dy;
+        symbol [ dy %tmp.45 162 57 59 ];
+        %tmp.45 = getv ? :dy;
+        %tmp.46 = lgetv %i.1;
+        symbol [ i %tmp.46 162 60 61 ];
+        %tmp.47 = agetv %tmp.45 %tmp.46;
+        %tmp.48 = sub 0 %tmp.47;
+        %tmp.49 = lgetv %i.1;
+        symbol [ i %tmp.49 162 51 52 ];
+        aputv %tmp.43 %tmp.49 %tmp.48;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_162_31_162_64_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_162_12_162_64_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_162_12_162_64_if_end:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 163 12 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_163_12_163_64_if_stmt:
+        symbol [ yaw %tmp.51 163 16 19 ];
+        %tmp.51 = getv ? :yaw;
+        %tmp.52 = lgetv %i.1;
+        symbol [ i %tmp.52 163 20 21 ];
+        %tmp.53 = agetv %tmp.51 %tmp.52;
+        %tmp.54 = -1.4;
+        %tmp.55 = lt %tmp.53 %tmp.54;
+        bf %tmp.55 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_163_12_163_64_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_163_12_163_64_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_163_31_163_64_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 163 33 ]
+        symbol [ yaw %tmp.56 163 33 36 ];
+        %tmp.56 = getv self :yaw;
+        %tmp.57 = -1.4;
+        %tmp.58 = lgetv %i.1;
+        symbol [ i %tmp.58 163 37 38 ];
+        aputv %tmp.56 %tmp.58 %tmp.57;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 163 48 ]
+        symbol [ dy %tmp.59 163 48 50 ];
+        %tmp.59 = getv self :dy;
+        symbol [ dy %tmp.61 163 57 59 ];
+        %tmp.61 = getv ? :dy;
+        %tmp.62 = lgetv %i.1;
+        symbol [ i %tmp.62 163 60 61 ];
+        %tmp.63 = agetv %tmp.61 %tmp.62;
+        %tmp.64 = sub 0 %tmp.63;
+        %tmp.65 = lgetv %i.1;
+        symbol [ i %tmp.65 163 51 52 ];
+        aputv %tmp.59 %tmp.65 %tmp.64;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_163_31_163_64_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_163_12_163_64_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_163_12_163_64_if_end:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_157_45_164_8_stop:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_157_8_164_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 157 ]
+        %tmp.68 = lgetv %i.1;
+        symbol [ i %tmp.68 157 40 41 ];
+        %tmp.69 = add %tmp.68 1;
+        lputv %i.1 %tmp.69;
+        symbol [ i %i.1 157 40 41 ];
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_157_8_164_8_for_test;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_157_8_164_8_for_end:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_156_20_165_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc"; @line = 168; @symbol_functiondef = [primaryDown,168,13,24]; ]
+    function primaryDown() {
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_168_27_170_4_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 169 8 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_169_16_169_54_begin:
+        symbol [ primaryIdx %tmp.2 169 16 26 ];
+        %tmp.2 = getv ? :primaryIdx;
+        %tmp.3 = 0;
+        %tmp.4 = lt %tmp.2 %tmp.3;
+        %tmp.5 = dup %tmp.4;
+        bt %tmp.5 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_169_34_169_54_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_169_34_169_54_false:
+        symbol [ live %tmp.7 169 34 38 ];
+        %tmp.7 = getv ? :live;
+        symbol [ primaryIdx %tmp.9 169 39 49 ];
+        %tmp.9 = getv ? :primaryIdx;
+        %tmp.10 = agetv %tmp.7 %tmp.9;
+        %tmp.11 = 0;
+        %tmp.12 = eq %tmp.10 %tmp.11;
+        %tmp.13 = or %tmp.4 %tmp.12;
+        push %tmp.13;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_169_34_169_54_end:
+        %tmp.14 = phi [%tmp.5 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_169_16_169_54_begin] [%tmp.13 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_169_34_169_54_false] [%tmp.14 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_169_34_169_54_end];
+        ret %tmp.14;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_168_27_170_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc"; @line = 173; @symbol_functiondef = [kill,173,13,17]; @symbol_param<0> = [i,173,18,19]; ]
+    function kill(i) {
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_173_21_173_70_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 173 23 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_173_23_173_68_if_stmt:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_173_27_173_41_begin:
+        %tmp.1 = lgetv %i;
+        symbol [ i %tmp.1 173 27 28 ];
+        %tmp.2 = 0;
+        %tmp.3 = gte %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_173_23_173_68_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_173_37_173_41_true:
+        %tmp.4 = lgetv %i;
+        symbol [ i %tmp.4 173 37 38 ];
+        symbol [ SS_TGT_MAX %tmp.6 173 41 51 ];
+        %tmp.6 = getv ? :SS_TGT_MAX;
+        %tmp.7 = lt %tmp.4 %tmp.6;
+        push %tmp.7;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_173_37_173_41_end:
+        %tmp.8 = phi [%tmp.3 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_173_27_173_41_begin] [%tmp.7 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_173_37_173_41_true] [%tmp.8 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_173_37_173_41_end];
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_173_23_173_68_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_173_23_173_68_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_173_53_173_68_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc" 173 55 ]
+        symbol [ live %tmp.9 173 55 59 ];
+        %tmp.9 = getv self :live;
+        %tmp.10 = 0;
+        %tmp.11 = lgetv %i;
+        symbol [ i %tmp.11 173 60 61 ];
+        aputv %tmp.9 %tmp.11 %tmp.10;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_173_53_173_68_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_173_23_173_68_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_173_23_173_68_if_end:
+_Users_kkorolczuk_work_garmin_sniperscope_source_TargetManager_mc_173_21_173_70_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/TargetManager.mc"; @line = 21; ]
+<init> {
+}

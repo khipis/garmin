@@ -48,14 +48,25 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     // happens on some Garmin firmware).
     hidden var _tapGuard;     // ms timestamp of last routed tap
 
+    // Phantom-back guard — see onBack.
+    hidden var _lastGestureMs;
+
     function initialize(v) {
         BehaviorDelegate.initialize();
-        view         = v;
-        _dragStartX  = -1;
-        _dragStartY  = -1;
-        _dragActive  = false;
-        _swipeHandled = false;
-        _tapGuard    = 0;
+        view           = v;
+        _dragStartX    = -1;
+        _dragStartY    = -1;
+        _dragActive    = false;
+        _swipeHandled  = false;
+        _tapGuard      = 0;
+        _lastGestureMs = 0;
+    }
+
+    hidden function _markGesture() { _lastGestureMs = System.getTimer(); }
+    hidden function _isPhantomBack() {
+        if (_lastGestureMs == 0) { return false; }
+        var dt = System.getTimer() - _lastGestureMs;
+        return (dt >= 0 && dt < 500);
     }
 
     hidden function _refresh() { WatchUi.requestUpdate(); }
@@ -98,7 +109,10 @@ class InputHandler extends WatchUi.BehaviorDelegate {
 
     // ── BehaviorDelegate convenience overrides ──────────────────────
     function onSelect()        { return onKey(_synthKey(WatchUi.KEY_ENTER)); }
-    function onBack()          { return onKey(_synthKey(WatchUi.KEY_ESC));   }
+    function onBack() {
+        if (_isPhantomBack()) { _lastGestureMs = 0; return true; }
+        return onKey(_synthKey(WatchUi.KEY_ESC));
+    }
     function onNextPage()      { return onKey(_synthKey(WatchUi.KEY_DOWN));  }
     function onPreviousPage()  { return onKey(_synthKey(WatchUi.KEY_UP));    }
 
@@ -107,6 +121,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     // subsequent onDrag-STOP (and onTap on some devices) won't also
     // fire a guess for the same touch.
     function onSwipe(evt) {
+        _markGesture();
         var ctrl = view.ctrl;
         _swipeHandled = true;
 
@@ -134,6 +149,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     // silently so we don't also fire a guess.
     function onTap(evt) {
         if (evt == null) { return false; }
+        _markGesture();
         if (_swipeHandled) { _swipeHandled = false; return true; }
         var xy = evt.getCoordinates();
         return _routeTap(xy[0], xy[1]);
@@ -155,6 +171,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
             _dragActive   = true;
             _swipeHandled = false;   // fresh touch — reset guard
         } else if (t == WatchUi.DRAG_TYPE_STOP) {
+            _markGesture();
             if (_dragActive) {
                 _dragActive = false;
                 if (!_swipeHandled) {

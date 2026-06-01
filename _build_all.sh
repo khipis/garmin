@@ -91,6 +91,11 @@ APPS=(
   nonogram
   bomber
   akari
+  gyromaze
+  starcombat
+  archery
+  sniperscope
+  skyroll
 )
 
 FILTER=""

@@ -45,15 +45,25 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     hidden var _dragActive;
     hidden var _handled;
     hidden var _lastTouchMs;
+    // Phantom-back guard — see onBack.
+    hidden var _lastGestureMs;
 
     function initialize(view) {
         BehaviorDelegate.initialize();
-        _v           = view;
-        _dx0         = 0;
-        _dy0         = 0;
-        _dragActive  = false;
-        _handled     = false;
-        _lastTouchMs = 0;
+        _v             = view;
+        _dx0           = 0;
+        _dy0           = 0;
+        _dragActive    = false;
+        _handled       = false;
+        _lastTouchMs   = 0;
+        _lastGestureMs = 0;
+    }
+
+    hidden function _markGesture() { _lastGestureMs = System.getTimer(); }
+    hidden function _isPhantomBack() {
+        if (_lastGestureMs == 0) { return false; }
+        var dt = System.getTimer() - _lastGestureMs;
+        return (dt >= 0 && dt < 500);
     }
 
     function onKey(evt) {
@@ -78,6 +88,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     }
 
     function onBack() {
+        if (_isPhantomBack()) { _lastGestureMs = 0; return true; }
         var consumed = _v.navBack();
         WatchUi.requestUpdate();
         if (consumed) { return true; }
@@ -87,9 +98,10 @@ class InputHandler extends WatchUi.BehaviorDelegate {
 
     // ── Touch ────────────────────────────────────────────────────
 
-    function onSwipe(evt) { return true; }
+    function onSwipe(evt) { _markGesture(); return true; }
 
     function onTap(evt) {
+        _markGesture();
         if (_handled) { _handled = false; return true; }
         var now = System.getTimer();
         if (_lastTouchMs != 0 && (now - _lastTouchMs) < 120) { return true; }
@@ -116,6 +128,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
             _dragActive  = false;
             _handled     = true;
             _lastTouchMs = System.getTimer();
+            _markGesture();
 
             var dx  = xy[0] - _dx0;
             var dy  = xy[1] - _dy0;

@@ -1,0 +1,555 @@
+[ @file = "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc"; @line = 21; @symbol_usingdef<0> = [Toybox,21,6,12]; @symbol_usingdef<1> = [Sensor,21,13,19]; ]
+using Toybox.Sensor;
+[ @file = "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc"; @line = 22; @symbol_usingdef<0> = [Toybox,22,6,12]; @symbol_usingdef<1> = [Math,22,13,17]; ]
+using Toybox.Math;
+[ @file = "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc"; @line = 24; @symbol_classdef = [GyroAim,24,6,13]; ]
+class GyroAim {
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc"; @line = 24; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc"; @line = 24; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc"; @line = 25; @position = 8; @symbol_vardef = [aimYaw,25,8,14]; ]
+    var aimYaw;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc"; @line = 26; @position = 8; @symbol_vardef = [aimPitch,26,8,16]; ]
+    var aimPitch;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc"; @line = 28; @position = 15; @symbol_vardef = [_tYaw,28,15,20]; ]
+    protected
+    var _tYaw;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc"; @line = 29; @position = 15; @symbol_vardef = [_tPitch,29,15,22]; ]
+    protected
+    var _tPitch;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc"; @line = 30; @position = 15; @symbol_vardef = [_calX,30,15,20]; ]
+    protected
+    var _calX;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc"; @line = 31; @position = 15; @symbol_vardef = [_calY,31,15,20]; ]
+    protected
+    var _calY;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc"; @line = 32; @position = 15; @symbol_vardef = [_calibrated,32,15,26]; ]
+    protected
+    var _calibrated;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc"; @line = 33; @position = 15; @symbol_vardef = [_sens,33,15,20]; ]
+    protected
+    var _sens;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc"; @line = 34; @position = 15; @symbol_vardef = [_rng,34,15,19]; ]
+    protected
+    var _rng;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc"; @line = 36; @symbol_functiondef = [initialize,36,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_36_26_46_4_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 37 8 ]
+        %tmp.1 = 0.0;
+        symbol [ aimYaw ? 37 8 14 ];
+        putv self :aimYaw %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 38 8 ]
+        %tmp.2 = 0.0;
+        symbol [ aimPitch ? 38 8 16 ];
+        putv self :aimPitch %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 39 8 ]
+        %tmp.3 = 0.0;
+        symbol [ _tYaw ? 39 8 13 ];
+        putv self :_tYaw %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 40 8 ]
+        %tmp.4 = 0.0;
+        symbol [ _tPitch ? 40 8 15 ];
+        putv self :_tPitch %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 41 8 ]
+        %tmp.5 = 0;
+        symbol [ _calX ? 41 8 13 ];
+        putv self :_calX %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 42 8 ]
+        %tmp.6 = 0;
+        symbol [ _calY ? 42 8 13 ];
+        putv self :_calY %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 43 8 ]
+        %tmp.7 = false;
+        symbol [ _calibrated ? 43 8 19 ];
+        putv self :_calibrated %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 44 8 ]
+        symbol [ AR_SENS_NORMAL %tmp.9 44 19 33 ];
+        %tmp.9 = getv ? :AR_SENS_NORMAL;
+        symbol [ _sens ? 44 8 13 ];
+        putv self :_sens %tmp.9;
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 45 8 ]
+        %tmp.10 = 271828;
+        symbol [ _rng ? 45 8 12 ];
+        putv self :_rng %tmp.10;
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_36_26_46_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc"; @line = 48; @symbol_functiondef = [setSensitivity,48,13,27]; @symbol_param<0> = [s,48,28,29]; ]
+    function setSensitivity(s) {
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_48_31_48_44_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 48 33 ]
+        %tmp.1 = lgetv %s;
+        symbol [ s %tmp.1 48 41 42 ];
+        symbol [ _sens ? 48 33 38 ];
+        putv self :_sens %tmp.1;
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_48_31_48_44_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc"; @line = 50; @symbol_functiondef = [recalibrate,50,13,24]; ]
+    function recalibrate() {
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_50_27_50_50_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 50 29 ]
+        %tmp.1 = false;
+        symbol [ _calibrated ? 50 29 40 ];
+        putv self :_calibrated %tmp.1;
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_50_27_50_50_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc"; @line = 54; @symbol_functiondef = [update,54,13,19]; @symbol_param<0> = [ax,54,20,22]; @symbol_param<1> = [ay,54,24,26]; @symbol_param<2> = [tension,54,28,35]; ]
+    function update(ax, ay, tension) {
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_54_37_104_4_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 55 8 ]
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_55_8_57_8_if_stmt:
+        symbol [ _calibrated %tmp.2 55 13 24 ];
+        %tmp.2 = getv ? :_calibrated;
+        %tmp.3 = not %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_55_8_57_8_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_55_8_57_8_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_55_26_57_8_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 56 12 ]
+        %tmp.4 = lgetv %ax;
+        symbol [ ax %tmp.4 56 20 22 ];
+        symbol [ _calX ? 56 12 17 ];
+        putv self :_calX %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 56 24 ]
+        %tmp.5 = lgetv %ay;
+        symbol [ ay %tmp.5 56 32 34 ];
+        symbol [ _calY ? 56 24 29 ];
+        putv self :_calY %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 56 36 ]
+        %tmp.6 = true;
+        symbol [ _calibrated ? 56 36 47 ];
+        putv self :_calibrated %tmp.6;
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_55_26_57_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_55_8_57_8_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_55_8_57_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 58 8 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_54_37_104_4_start" "_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_54_37_104_4_stop" ]
+        %dx.1 = local;
+        symbol [ dx %dx.1 58 12 14 ];
+        %tmp.7 = lgetv %ax;
+        symbol [ ax %tmp.7 58 17 19 ];
+        symbol [ _calX %tmp.9 58 22 27 ];
+        %tmp.9 = getv ? :_calX;
+        %tmp.10 = sub %tmp.7 %tmp.9;
+        lputv %dx.1 %tmp.10;
+        symbol [ dx %dx.1 58 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 59 8 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_54_37_104_4_start" "_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_54_37_104_4_stop" ]
+        %dy.2 = local;
+        symbol [ dy %dy.2 59 12 14 ];
+        %tmp.11 = lgetv %ay;
+        symbol [ ay %tmp.11 59 17 19 ];
+        symbol [ _calY %tmp.13 59 22 27 ];
+        %tmp.13 = getv ? :_calY;
+        %tmp.14 = sub %tmp.11 %tmp.13;
+        lputv %dy.2 %tmp.14;
+        symbol [ dy %dy.2 59 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 60 8 ]
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_60_8_60_43_if_stmt:
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_60_12_60_29_begin:
+        %tmp.15 = lgetv %dx.1;
+        symbol [ dx %tmp.15 60 12 14 ];
+        %tmp.16 = -22;
+        %tmp.17 = gt %tmp.15 %tmp.16;
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_60_8_60_43_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_60_24_60_29_true:
+        %tmp.18 = lgetv %dx.1;
+        symbol [ dx %tmp.18 60 24 26 ];
+        %tmp.19 = 22;
+        %tmp.20 = lt %tmp.18 %tmp.19;
+        push %tmp.20;
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_60_24_60_29_end:
+        %tmp.21 = phi [%tmp.17 @_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_60_12_60_29_begin] [%tmp.20 @_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_60_24_60_29_true] [%tmp.21 @_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_60_24_60_29_end];
+        bf %tmp.21 @_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_60_8_60_43_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_60_8_60_43_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_60_33_60_43_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 60 35 ]
+        %tmp.22 = 0;
+        lputv %dx.1 %tmp.22;
+        symbol [ dx %dx.1 60 35 37 ];
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_60_33_60_43_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_60_8_60_43_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_60_8_60_43_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 61 8 ]
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_61_8_61_43_if_stmt:
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_61_12_61_29_begin:
+        %tmp.23 = lgetv %dy.2;
+        symbol [ dy %tmp.23 61 12 14 ];
+        %tmp.24 = -22;
+        %tmp.25 = gt %tmp.23 %tmp.24;
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_61_8_61_43_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_61_24_61_29_true:
+        %tmp.26 = lgetv %dy.2;
+        symbol [ dy %tmp.26 61 24 26 ];
+        %tmp.27 = 22;
+        %tmp.28 = lt %tmp.26 %tmp.27;
+        push %tmp.28;
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_61_24_61_29_end:
+        %tmp.29 = phi [%tmp.25 @_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_61_12_61_29_begin] [%tmp.28 @_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_61_24_61_29_true] [%tmp.29 @_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_61_24_61_29_end];
+        bf %tmp.29 @_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_61_8_61_43_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_61_8_61_43_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_61_33_61_43_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 61 35 ]
+        %tmp.30 = 0;
+        lputv %dy.2 %tmp.30;
+        symbol [ dy %dy.2 61 35 37 ];
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_61_33_61_43_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_61_8_61_43_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_61_8_61_43_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 66 8 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_54_37_104_4_start" "_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_54_37_104_4_stop" ]
+        %sc.3 = local;
+        symbol [ sc %sc.3 66 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 67 8 ]
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_67_8_69_56_if_stmt:
+        symbol [ _sens %tmp.32 67 17 22 ];
+        %tmp.32 = getv ? :_sens;
+        symbol [ AR_SENS_LOW %tmp.34 67 26 37 ];
+        %tmp.34 = getv ? :AR_SENS_LOW;
+        %tmp.35 = eq %tmp.32 %tmp.34;
+        bf %tmp.35 @_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_67_8_69_56_if_false;
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_67_8_69_56_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_67_40_67_55_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 67 42 ]
+        %tmp.36 = 0.0046;
+        lputv %sc.3 %tmp.36;
+        symbol [ sc %sc.3 67 42 44 ];
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_67_40_67_55_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_67_8_69_56_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_67_8_69_56_if_false:
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 68 13 ]
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_68_13_69_56_if_stmt:
+        symbol [ _sens %tmp.38 68 17 22 ];
+        %tmp.38 = getv ? :_sens;
+        symbol [ AR_SENS_HIGH %tmp.40 68 26 38 ];
+        %tmp.40 = getv ? :AR_SENS_HIGH;
+        %tmp.41 = eq %tmp.38 %tmp.40;
+        bf %tmp.41 @_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_68_13_69_56_if_else_false;
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_68_13_69_56_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_68_40_68_55_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 68 42 ]
+        %tmp.42 = 0.0082;
+        lputv %sc.3 %tmp.42;
+        symbol [ sc %sc.3 68 42 44 ];
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_68_40_68_55_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_68_13_69_56_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_68_13_69_56_if_else_false:
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_69_41_69_56_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 69 43 ]
+        %tmp.43 = 0.0062;
+        lputv %sc.3 %tmp.43;
+        symbol [ sc %sc.3 69 43 45 ];
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_69_41_69_56_stop:
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_68_13_69_56_if_end:
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_67_8_69_56_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 70 8 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_54_37_104_4_start" "_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_54_37_104_4_stop" ]
+        %ty.4 = local;
+        symbol [ ty %ty.4 70 12 14 ];
+        %tmp.44 = lgetv %dx.1;
+        symbol [ dx %tmp.44 70 18 20 ];
+        symbol [ toFloat %tmp.45 70 21 28 ];
+        %tmp.45 = getv function %tmp.44 :toFloat;
+        %tmp.46 = invoke %tmp.44 %tmp.45();
+        %tmp.47 = lgetv %sc.3;
+        symbol [ sc %tmp.47 70 33 35 ];
+        %tmp.48 = mul %tmp.46 %tmp.47;
+        lputv %ty.4 %tmp.48;
+        symbol [ ty %ty.4 70 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 71 8 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_54_37_104_4_start" "_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_54_37_104_4_stop" ]
+        %tp.5 = local;
+        symbol [ tp %tp.5 71 12 14 ];
+        %tmp.49 = lgetv %dy.2;
+        symbol [ dy %tmp.49 71 18 20 ];
+        symbol [ toFloat %tmp.50 71 21 28 ];
+        %tmp.50 = getv function %tmp.49 :toFloat;
+        %tmp.51 = invoke %tmp.49 %tmp.50();
+        %tmp.52 = sub 0 %tmp.51;
+        %tmp.53 = lgetv %sc.3;
+        symbol [ sc %tmp.53 71 33 35 ];
+        %tmp.54 = mul %tmp.52 %tmp.53;
+        lputv %tp.5 %tmp.54;
+        symbol [ tp %tp.5 71 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 77 8 ]
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_77_8_77_56_if_stmt:
+        %tmp.55 = lgetv %tp.5;
+        symbol [ tp %tmp.55 77 12 14 ];
+        %tmp.56 = 0.15;
+        %tmp.57 = gt %tmp.55 %tmp.56;
+        bf %tmp.57 @_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_77_8_77_56_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_77_8_77_56_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_77_23_77_56_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 77 25 ]
+        %tmp.58 = 0.15;
+        %tmp.59 = lgetv %tp.5;
+        symbol [ tp %tmp.59 77 38 40 ];
+        %tmp.60 = 0.15;
+        %tmp.61 = sub %tmp.59 %tmp.60;
+        %tmp.62 = 1.7;
+        %tmp.63 = mul %tmp.61 %tmp.62;
+        %tmp.64 = add %tmp.58 %tmp.63;
+        lputv %tp.5 %tmp.64;
+        symbol [ tp %tp.5 77 25 27 ];
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_77_23_77_56_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_77_8_77_56_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_77_8_77_56_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 81 8 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_54_37_104_4_start" "_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_54_37_104_4_stop" ]
+        %limU.6 = local;
+        symbol [ limU %limU.6 81 12 16 ];
+        %tmp.65 = 1.2;
+        lputv %limU.6 %tmp.65;
+        symbol [ limU %limU.6 81 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 82 8 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_54_37_104_4_start" "_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_54_37_104_4_stop" ]
+        %limD.7 = local;
+        symbol [ limD %limD.7 82 12 16 ];
+        %tmp.66 = 1.8;
+        lputv %limD.7 %tmp.66;
+        symbol [ limD %limD.7 82 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 83 8 ]
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_83_8_83_36_if_stmt:
+        %tmp.67 = lgetv %ty.4;
+        symbol [ ty %tmp.67 83 12 14 ];
+        %tmp.68 = 1.4;
+        %tmp.69 = gt %tmp.67 %tmp.68;
+        bf %tmp.69 @_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_83_8_83_36_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_83_8_83_36_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_83_23_83_36_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 83 25 ]
+        %tmp.70 = 1.4;
+        lputv %ty.4 %tmp.70;
+        symbol [ ty %ty.4 83 25 27 ];
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_83_23_83_36_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_83_8_83_36_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_83_8_83_36_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 84 8 ]
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_84_8_84_36_if_stmt:
+        %tmp.71 = lgetv %ty.4;
+        symbol [ ty %tmp.71 84 12 14 ];
+        %tmp.72 = -1.4;
+        %tmp.73 = lt %tmp.71 %tmp.72;
+        bf %tmp.73 @_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_84_8_84_36_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_84_8_84_36_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_84_23_84_36_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 84 25 ]
+        %tmp.74 = -1.4;
+        lputv %ty.4 %tmp.74;
+        symbol [ ty %ty.4 84 25 27 ];
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_84_23_84_36_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_84_8_84_36_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_84_8_84_36_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 85 8 ]
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_85_8_85_38_if_stmt:
+        %tmp.75 = lgetv %tp.5;
+        symbol [ tp %tmp.75 85 12 14 ];
+        %tmp.76 = lgetv %limD.7;
+        symbol [ limD %tmp.76 85 18 22 ];
+        %tmp.77 = gt %tmp.75 %tmp.76;
+        bf %tmp.77 @_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_85_8_85_38_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_85_8_85_38_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_85_24_85_38_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 85 26 ]
+        %tmp.78 = lgetv %limD.7;
+        symbol [ limD %tmp.78 85 32 36 ];
+        lputv %tp.5 %tmp.78;
+        symbol [ tp %tp.5 85 26 28 ];
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_85_24_85_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_85_8_85_38_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_85_8_85_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 86 8 ]
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_86_8_86_38_if_stmt:
+        %tmp.79 = lgetv %tp.5;
+        symbol [ tp %tmp.79 86 12 14 ];
+        %tmp.80 = lgetv %limU.6;
+        symbol [ limU %tmp.80 86 18 22 ];
+        %tmp.81 = sub 0 %tmp.80;
+        %tmp.82 = lt %tmp.79 %tmp.81;
+        bf %tmp.82 @_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_86_8_86_38_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_86_8_86_38_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_86_24_86_38_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 86 26 ]
+        %tmp.83 = lgetv %limU.6;
+        symbol [ limU %tmp.83 86 32 36 ];
+        %tmp.84 = sub 0 %tmp.83;
+        lputv %tp.5 %tmp.84;
+        symbol [ tp %tp.5 86 26 28 ];
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_86_24_86_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_86_8_86_38_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_86_8_86_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 89 8 ]
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_89_8_93_8_if_stmt:
+        %tmp.85 = lgetv %tension;
+        symbol [ tension %tmp.85 89 12 19 ];
+        %tmp.86 = 0.0;
+        %tmp.87 = gt %tmp.85 %tmp.86;
+        bf %tmp.87 @_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_89_8_93_8_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_89_8_93_8_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_89_27_93_8_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 90 12 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_89_27_93_8_start" "_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_89_27_93_8_stop" ]
+        %amp.8 = local;
+        symbol [ amp %amp.8 90 16 19 ];
+        %tmp.88 = 0.004;
+        %tmp.89 = 0.014;
+        %tmp.90 = lgetv %tension;
+        symbol [ tension %tmp.90 90 38 45 ];
+        %tmp.91 = mul %tmp.89 %tmp.90;
+        %tmp.92 = add %tmp.88 %tmp.91;
+        lputv %amp.8 %tmp.92;
+        symbol [ amp %amp.8 90 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 91 12 ]
+        %tmp.93 = lgetv %ty.4;
+        symbol [ ty %tmp.93 91 17 19 ];
+        %tmp.94 = self;
+        symbol [ _randf %tmp.95 91 23 29 ];
+        %tmp.95 = getv function %tmp.94 :_randf;
+        %tmp.96 = invoke %tmp.94 %tmp.95();
+        %tmp.97 = 0.5;
+        %tmp.98 = sub %tmp.96 %tmp.97;
+        %tmp.99 = lgetv %amp.8;
+        symbol [ amp %tmp.99 91 41 44 ];
+        %tmp.100 = mul %tmp.98 %tmp.99;
+        %tmp.101 = add %tmp.93 %tmp.100;
+        lputv %ty.4 %tmp.101;
+        symbol [ ty %ty.4 91 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 92 12 ]
+        %tmp.102 = lgetv %tp.5;
+        symbol [ tp %tmp.102 92 17 19 ];
+        %tmp.103 = self;
+        symbol [ _randf %tmp.104 92 23 29 ];
+        %tmp.104 = getv function %tmp.103 :_randf;
+        %tmp.105 = invoke %tmp.103 %tmp.104();
+        %tmp.106 = 0.5;
+        %tmp.107 = sub %tmp.105 %tmp.106;
+        %tmp.108 = lgetv %amp.8;
+        symbol [ amp %tmp.108 92 41 44 ];
+        %tmp.109 = mul %tmp.107 %tmp.108;
+        %tmp.110 = add %tmp.102 %tmp.109;
+        lputv %tp.5 %tmp.110;
+        symbol [ tp %tp.5 92 12 14 ];
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_89_27_93_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_89_8_93_8_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_89_8_93_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 94 8 ]
+        %tmp.111 = lgetv %ty.4;
+        symbol [ ty %tmp.111 94 18 20 ];
+        symbol [ _tYaw ? 94 8 13 ];
+        putv self :_tYaw %tmp.111;
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 95 8 ]
+        %tmp.112 = lgetv %tp.5;
+        symbol [ tp %tmp.112 95 18 20 ];
+        symbol [ _tPitch ? 95 8 15 ];
+        putv self :_tPitch %tmp.112;
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 98 8 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_54_37_104_4_start" "_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_54_37_104_4_stop" ]
+        %a.9 = local;
+        symbol [ a %a.9 98 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 99 8 ]
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_99_8_101_53_if_stmt:
+        symbol [ _sens %tmp.114 99 17 22 ];
+        %tmp.114 = getv ? :_sens;
+        symbol [ AR_SENS_LOW %tmp.116 99 26 37 ];
+        %tmp.116 = getv ? :AR_SENS_LOW;
+        %tmp.117 = eq %tmp.114 %tmp.116;
+        bf %tmp.117 @_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_99_8_101_53_if_false;
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_99_8_101_53_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_99_40_99_52_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 99 42 ]
+        %tmp.118 = 0.16;
+        lputv %a.9 %tmp.118;
+        symbol [ a %a.9 99 42 43 ];
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_99_40_99_52_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_99_8_101_53_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_99_8_101_53_if_false:
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 100 13 ]
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_100_13_101_53_if_stmt:
+        symbol [ _sens %tmp.120 100 17 22 ];
+        %tmp.120 = getv ? :_sens;
+        symbol [ AR_SENS_HIGH %tmp.122 100 26 38 ];
+        %tmp.122 = getv ? :AR_SENS_HIGH;
+        %tmp.123 = eq %tmp.120 %tmp.122;
+        bf %tmp.123 @_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_100_13_101_53_if_else_false;
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_100_13_101_53_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_100_40_100_52_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 100 42 ]
+        %tmp.124 = 0.30;
+        lputv %a.9 %tmp.124;
+        symbol [ a %a.9 100 42 43 ];
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_100_40_100_52_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_100_13_101_53_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_100_13_101_53_if_else_false:
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_101_41_101_53_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 101 43 ]
+        %tmp.125 = 0.22;
+        lputv %a.9 %tmp.125;
+        symbol [ a %a.9 101 43 44 ];
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_101_41_101_53_stop:
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_100_13_101_53_if_end:
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_99_8_101_53_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 102 8 ]
+        symbol [ aimYaw %tmp.127 102 19 25 ];
+        %tmp.127 = getv ? :aimYaw;
+        symbol [ _tYaw %tmp.129 102 31 36 ];
+        %tmp.129 = getv ? :_tYaw;
+        symbol [ aimYaw %tmp.131 102 41 47 ];
+        %tmp.131 = getv ? :aimYaw;
+        %tmp.132 = sub %tmp.129 %tmp.131;
+        %tmp.133 = lgetv %a.9;
+        symbol [ a %tmp.133 102 53 54 ];
+        %tmp.134 = mul %tmp.132 %tmp.133;
+        %tmp.135 = add %tmp.127 %tmp.134;
+        symbol [ aimYaw ? 102 8 14 ];
+        putv self :aimYaw %tmp.135;
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 103 8 ]
+        symbol [ aimPitch %tmp.137 103 19 27 ];
+        %tmp.137 = getv ? :aimPitch;
+        symbol [ _tPitch %tmp.139 103 31 38 ];
+        %tmp.139 = getv ? :_tPitch;
+        symbol [ aimPitch %tmp.141 103 41 49 ];
+        %tmp.141 = getv ? :aimPitch;
+        %tmp.142 = sub %tmp.139 %tmp.141;
+        %tmp.143 = lgetv %a.9;
+        symbol [ a %tmp.143 103 53 54 ];
+        %tmp.144 = mul %tmp.142 %tmp.143;
+        %tmp.145 = add %tmp.137 %tmp.144;
+        symbol [ aimPitch ? 103 8 16 ];
+        putv self :aimPitch %tmp.145;
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_54_37_104_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc"; @line = 106; @symbol_functiondef = [_randf,106,20,26]; ]
+    protected
+    function _randf() {
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_106_29_109_4_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 107 8 ]
+        symbol [ _rng %tmp.2 107 16 20 ];
+        %tmp.2 = getv ? :_rng;
+        %tmp.3 = 1103515245;
+        %tmp.4 = mul %tmp.2 %tmp.3;
+        %tmp.5 = 12345;
+        %tmp.6 = add %tmp.4 %tmp.5;
+        %tmp.7 = 0x7FFFFFFF;
+        %tmp.8 = bitand %tmp.6 %tmp.7;
+        symbol [ _rng ? 107 8 12 ];
+        putv self :_rng %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc" 108 8 ]
+        symbol [ _rng %tmp.10 108 16 20 ];
+        %tmp.10 = getv ? :_rng;
+        %tmp.11 = 10000;
+        %tmp.12 = mod %tmp.10 %tmp.11;
+        symbol [ toFloat %tmp.13 108 30 37 ];
+        %tmp.13 = getv function %tmp.12 :toFloat;
+        %tmp.14 = invoke %tmp.12 %tmp.13();
+        %tmp.15 = 0.0001;
+        %tmp.16 = mul %tmp.14 %tmp.15;
+        ret %tmp.16;
+_Users_kkorolczuk_work_garmin_archery_source_GyroAim_mc_106_29_109_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/archery/source/GyroAim.mc"; @line = 21; ]
+<init> {
+}

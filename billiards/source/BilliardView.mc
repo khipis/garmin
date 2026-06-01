@@ -286,6 +286,18 @@ class BilliardView extends WatchUi.View {
     }
 
     // ── AIM LINE + GHOST-BALL PREVIEW ─────────────────────────
+    // Physically-correct preview:
+    //   • Cue line  : cue ball → ghost-ball (contact point on aim ray)
+    //   • Target line: target centre → along the LINE OF CENTRES
+    //                  (ghost→target).  This is the actual direction
+    //                  the target will fly after impact and preserves
+    //                  cut angles — previously this line was drawn in
+    //                  the cue's own direction, which is unphysical.
+    //   • Cue-deflection line: perpendicular to the line of centres
+    //                  (tangent-line rule for equal-mass elastic
+    //                  collision).  Length scales with the cut angle:
+    //                  a full hit ⇒ cue stops, a thin cut ⇒ cue keeps
+    //                  rolling almost full speed sideways.
     hidden function _drawAimLine(dc, g) {
         var rad = g.aimAngle * Math.PI / 180.0;
         var dirx = Math.cos(rad); var diry = Math.sin(rad);
@@ -294,9 +306,11 @@ class BilliardView extends WatchUi.View {
         var lineClr = flash ? 0xEEEEEE : 0xAAAAAA;
 
         if (g.aimHitBall >= 0) {
-            // Line from cue ball to contact point
-            var hitSx = g.csx(g.bx[0] + dirx * g.aimHitT);
-            var hitSy = g.csy(g.by[0] + diry * g.aimHitT);
+            // Cue → ghost-ball line
+            var ghostCx = g.bx[0] + dirx * g.aimHitT;
+            var ghostCy = g.by[0] + diry * g.aimHitT;
+            var hitSx = g.csx(ghostCx);
+            var hitSy = g.csy(ghostCy);
             dc.setColor(lineClr, Graphics.COLOR_TRANSPARENT);
             dc.drawLine(csx0, csy0, hitSx, hitSy);
 
@@ -305,14 +319,45 @@ class BilliardView extends WatchUi.View {
             dc.setColor(0xCCCCCC, Graphics.COLOR_TRANSPARENT);
             dc.drawCircle(hitSx, hitSy, ghR);
 
-            // Target ball trajectory preview
-            var tbSx = g.csx(g.bx[g.aimHitBall]);
-            var tbSy = g.csy(g.by[g.aimHitBall]);
-            var predLen = g.csr(280);
-            dc.setColor(g.bCol[g.aimHitBall], Graphics.COLOR_TRANSPARENT);
-            dc.drawLine(tbSx, tbSy,
-                        tbSx + (dirx * predLen).toNumber(),
-                        tbSy + (diry * predLen).toNumber());
+            // Line-of-centres unit vector ghost → target
+            var tdx = g.bx[g.aimHitBall] - ghostCx;
+            var tdy = g.by[g.aimHitBall] - ghostCy;
+            var td2 = tdx*tdx + tdy*tdy;
+            if (td2 > 0.01) {
+                var td = Math.sqrt(td2);
+                var nx = tdx / td; var ny = tdy / td;
+
+                // Cosine of the cut angle (1=full hit, 0=90° cut).
+                var cosCut = dirx * nx + diry * ny;
+                if (cosCut < 0.0) { cosCut = 0.0; }
+
+                // Target trajectory — length proportional to the
+                // normal velocity transferred to the target (cosCut).
+                // Full hit ⇒ long line; thin cut ⇒ short stub.
+                var tLen = 60.0 + 280.0 * cosCut;
+                var teCx = g.bx[g.aimHitBall] + nx * tLen;
+                var teCy = g.by[g.aimHitBall] + ny * tLen;
+                dc.setColor(g.bCol[g.aimHitBall], Graphics.COLOR_TRANSPARENT);
+                dc.drawLine(g.csx(g.bx[g.aimHitBall]), g.csy(g.by[g.aimHitBall]),
+                            g.csx(teCx), g.csy(teCy));
+
+                // Cue deflection — perpendicular to (nx, ny).
+                // Use vector subtraction so the perpendicular has the
+                // correct sign automatically.
+                var perpX = dirx - cosCut * nx;
+                var perpY = diry - cosCut * ny;
+                var perpL = Math.sqrt(perpX*perpX + perpY*perpY);
+                if (perpL > 0.05) {
+                    var pnx = perpX / perpL;
+                    var pny = perpY / perpL;
+                    var cLen = 40.0 + 220.0 * perpL;
+                    var ceCx = ghostCx + pnx * cLen;
+                    var ceCy = ghostCy + pny * cLen;
+                    dc.setColor(0x88BBFF, Graphics.COLOR_TRANSPARENT);
+                    dc.drawLine(hitSx, hitSy,
+                                g.csx(ceCx), g.csy(ceCy));
+                }
+            }
         } else {
             // Straight aim line into empty space (clip to ~table width)
             var lineLen = g.csr(680);
@@ -324,14 +369,18 @@ class BilliardView extends WatchUi.View {
     }
 
     // ── POWER BAR ─────────────────────────────────────────────
-    // Drawn at the bottom of the screen — table is shrunk 10% specifically
-    // so this bar is always fully visible on small/round watch faces.
+    // Drawn at the bottom of the screen.  Width was 75% of screen and
+    // crept off the visible round face on small Garmin watches —
+    // narrowed by 40% (75 → 45) per user request so the entire bar
+    // sits comfortably inside the round face.  Also lifted up from
+    // the bottom edge (was 4% margin, now 9%) so the curved chrome
+    // doesn't clip the bottom row of pixels.
     hidden function _drawPowerBar(dc, g) {
         var w = g.sw; var h = g.sh;
-        var bw = w * 75 / 100;
+        var bw = w * 45 / 100;
         var bh = h * 8  / 100; if (bh < 9) { bh = 9; }
         var bx = (w - bw) / 2;
-        var by = h - bh - h * 4 / 100;
+        var by = h - bh - h * 9 / 100;
         // Drop shadow for contrast against table felt
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
         dc.fillRoundedRectangle(bx-2, by-2, bw+4, bh+4, 4);

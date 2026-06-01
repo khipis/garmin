@@ -17,13 +17,24 @@
 // ═══════════════════════════════════════════════════════════════
 
 using Toybox.WatchUi;
+using Toybox.System;
 
 class InputHandler extends WatchUi.BehaviorDelegate {
     hidden var _v;
+    // Phantom-back guard — see onBack.
+    hidden var _lastGestureMs;
 
     function initialize(view) {
         BehaviorDelegate.initialize();
-        _v = view;
+        _v             = view;
+        _lastGestureMs = 0;
+    }
+
+    hidden function _markGesture() { _lastGestureMs = System.getTimer(); }
+    hidden function _isPhantomBack() {
+        if (_lastGestureMs == 0) { return false; }
+        var dt = System.getTimer() - _lastGestureMs;
+        return (dt >= 0 && dt < 500);
     }
 
     function onKeyPressed(evt) {
@@ -55,6 +66,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     function onNextPage()     { _v.tap( 1);   WatchUi.requestUpdate(); return true; }
 
     function onTap(evt) {
+        _markGesture();
         var xy = evt.getCoordinates();
         _v.handleTap(xy[0]);
         WatchUi.requestUpdate();
@@ -62,6 +74,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     }
 
     function onSwipe(evt) {
+        _markGesture();
         var d = evt.getDirection();
         if      (d == WatchUi.SWIPE_LEFT)  { _v.tap(-1); }
         else if (d == WatchUi.SWIPE_RIGHT) { _v.tap( 1); }
@@ -71,6 +84,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     }
 
     function onBack() {
+        if (_isPhantomBack()) { _lastGestureMs = 0; return true; }
         if (_v.handleBack()) {
             WatchUi.requestUpdate();
             return true;

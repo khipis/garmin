@@ -217,6 +217,154 @@ class UIManager {
         return "HARD";
     }
 
+    // ── FIRE PLAYER (animation on enemy board) ──────────────────────
+    // Mirrors drawAim() but replaces the steady cursor with the
+    // shot-impact overlay on the player's just-fired cell.  The
+    // hit/miss mark underneath is already painted by
+    // `_drawEnemyCells` so the animation visually transitions from
+    // a reticle onto the resolved cell state.
+    static function drawFirePlayer(dc, ctrl, w, h) {
+        dc.setColor(COL_BG, COL_BG);
+        dc.clear();
+        var cx = w / 2;
+        dc.setColor(COL_ACCENT, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, h * 7 / 100, Graphics.FONT_XTINY,
+                    "FIRE!", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(COL_TEXT_DIM, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, h * 14 / 100, Graphics.FONT_XTINY,
+                    "Enemy waters", Graphics.TEXT_JUSTIFY_CENTER);
+
+        var gl = _layoutGrid(w, h);
+        _drawGridBg(dc, gl);
+        _drawEnemyCells(dc, ctrl.enemyGrid, gl);
+        _drawShipStatus(dc, ctrl, w, h);
+
+        var ps = ctrl.lastPlayerShot;
+        if (ps != null) {
+            _drawShotAnim(dc, gl, ps[0], ps[1], ps[2], ctrl.animTick);
+        }
+        return gl;
+    }
+
+    // ── FIRE AI (animation on player board) ─────────────────────────
+    // Mirrors drawInfo() — switches us to the player's board so the
+    // user sees the AI's shot land on their own ships.
+    static function drawFireAI(dc, ctrl, w, h) {
+        dc.setColor(COL_BG, COL_BG);
+        dc.clear();
+        var cx = w / 2;
+        dc.setColor(COL_ACCENT, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, h * 7 / 100, Graphics.FONT_XTINY,
+                    "INCOMING", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(COL_TEXT_DIM, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, h * 14 / 100, Graphics.FONT_XTINY,
+                    "Your fleet", Graphics.TEXT_JUSTIFY_CENTER);
+
+        var gl = _layoutGrid(w, h);
+        _drawGridBg(dc, gl);
+        _drawPlayerCells(dc, ctrl.playerGrid, gl, true, true /* show shots */);
+
+        var la = ctrl.lastAIShot;
+        if (la != null) {
+            _drawShotAnim(dc, gl, la[0], la[1], la[2], ctrl.animTick);
+        }
+        return gl;
+    }
+
+    // Shot animation overlay (3 phases):
+    //   CHARGE  (t = 0..4)  — yellow reticle pulsing inward + cross
+    //                         hair, the "missile is on its way"
+    //   IMPACT  (t = 5..7)  — bright white/orange or white/cyan flash
+    //                         filling the cell, with a star burst
+    //   SETTLE  (t = 8..13) — expanding ring fading out, sparks for
+    //                         a hit or droplets for a splash
+    hidden static function _drawShotAnim(dc, gl, r, c, hit, t) {
+        var x  = gl.x0 + c * gl.cell;
+        var y  = gl.y0 + r * gl.cell;
+        var s  = gl.cell;
+        if (s < 6) { s = 6; }
+        var ax = x + s / 2;
+        var ay = y + s / 2;
+
+        if (t < 5) {
+            // CHARGE — three converging rectangles + crosshair
+            var k    = (t < 0) ? 0 : t;
+            var mult = 14 - k * 2;        // 14, 12, 10, 8, 6
+            var half = s * mult / 20;
+            if (half < 2) { half = 2; }
+            // Outer dark ring for contrast against the sea
+            dc.setColor(0x331100, Graphics.COLOR_TRANSPARENT);
+            dc.drawRectangle(ax - half - 1, ay - half - 1,
+                             half * 2 + 2,  half * 2 + 2);
+            dc.setColor(0xFFDD33, Graphics.COLOR_TRANSPARENT);
+            dc.drawRectangle(ax - half, ay - half, half * 2, half * 2);
+            // Inner crosshair (brightens as we close in)
+            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+            var ch = (s / 4) + k;
+            if (ch < 3) { ch = 3; }
+            dc.drawLine(ax - ch, ay,      ax + ch, ay);
+            dc.drawLine(ax,      ay - ch, ax,      ay + ch);
+        } else if (t < 8) {
+            // IMPACT — fill the cell with a flashing burst
+            var phase = t - 5;
+            var bright;
+            if (hit) {
+                bright = (phase == 0) ? 0xFFFFFF
+                       : (phase == 1) ? 0xFFCC22 : 0xFF6622;
+            } else {
+                bright = (phase == 0) ? 0xFFFFFF
+                       : (phase == 1) ? 0xBBEEFF : 0x66BBEE;
+            }
+            dc.setColor(bright, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(x, y, s, s, 3);
+            // Cross-shaped burst spokes
+            var sp = (s * 7) / 10;
+            dc.setColor(hit ? 0xFF8822 : 0x4488CC,
+                        Graphics.COLOR_TRANSPARENT);
+            dc.drawLine(ax - sp, ay,      ax + sp, ay);
+            dc.drawLine(ax,      ay - sp, ax,      ay + sp);
+            dc.drawLine(ax - sp + 2, ay - sp + 2,
+                        ax + sp - 2, ay + sp - 2);
+            dc.drawLine(ax - sp + 2, ay + sp - 2,
+                        ax + sp - 2, ay - sp + 2);
+            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(ax, ay, (s / 5) + 1);
+        } else {
+            // SETTLE — expanding ring + sparks / droplets
+            var k2  = t - 8;          // 0..5
+            var rad = s * (4 + k2 * 4) / 10;
+            if (rad < 2) { rad = 2; }
+            var col2;
+            if (hit) {
+                col2 = (k2 < 2) ? 0xFFAA22
+                     : (k2 < 4) ? 0xFF6622 : 0xCC3311;
+            } else {
+                col2 = (k2 < 2) ? 0xCCEEFF
+                     : (k2 < 4) ? 0x66BBEE : 0x4488CC;
+            }
+            dc.setColor(col2, Graphics.COLOR_TRANSPARENT);
+            dc.drawCircle(ax, ay, rad);
+            if (k2 < 3) {
+                dc.drawCircle(ax, ay, rad - 1);
+            }
+            // Particles — deterministic offsets so they don't jitter.
+            if (hit) {
+                dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
+                var sp2 = rad * 7 / 10;
+                dc.fillCircle(ax - sp2 + 2, ay - sp2 / 2, 1);
+                dc.fillCircle(ax + sp2 - 1, ay - sp2 / 3, 1);
+                dc.fillCircle(ax - sp2 / 2, ay + sp2 - 1, 1);
+                dc.fillCircle(ax + sp2 / 3, ay + sp2 - 2, 1);
+            } else {
+                dc.setColor(0xCCEEFF, Graphics.COLOR_TRANSPARENT);
+                var sp3 = rad * 8 / 10;
+                dc.fillCircle(ax - sp3 + 1, ay - sp3 / 3, 1);
+                dc.fillCircle(ax + sp3 - 1, ay + sp3 / 4, 1);
+                dc.fillCircle(ax - sp3 / 4, ay + sp3 - 1, 1);
+            }
+        }
+    }
+
     // ── INFO (between-turn summary) ─────────────────────────────────
     static function drawInfo(dc, ctrl, w, h) {
         dc.setColor(COL_BG, COL_BG);
