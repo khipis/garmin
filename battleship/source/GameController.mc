@@ -54,8 +54,15 @@ const ANIM_TICKS = 14;
 
 // Menu items
 const MI_DIFFICULTY = 0;
-const MI_START      = 1;
-const MI_ITEMS      = 2;
+const MI_SHOTS      = 1;
+const MI_START      = 2;
+const MI_ITEMS      = 3;
+
+// Shots-per-turn presets (the menu toggles between just these two —
+// classic 1-shot rules vs "salvo" rules with three shots per side
+// before turns swap).
+const SHOTS_SINGLE = 1;
+const SHOTS_BURST  = 3;
 
 class GameController {
     var state;
@@ -66,6 +73,14 @@ class GameController {
     var enemyShips;
     var ai;
     var difficulty;
+
+    // Salvo rules — both sides fire `shotsPerTurn` shots before
+    // turns swap.  `playerShotsLeft` and `aiShotsLeft` are counters
+    // for the CURRENT burst; reset to `shotsPerTurn` at the start
+    // of each side's turn.
+    var shotsPerTurn;
+    var playerShotsLeft;
+    var aiShotsLeft;
 
     // Cursor on the active grid (board-cell coords)
     var cursor;           // [r, c]
@@ -110,6 +125,18 @@ class GameController {
         difficulty   = _loadInt("bs_diff", AI_MEDIUM);
         if (difficulty < 0 || difficulty > 2) { difficulty = AI_MEDIUM; }
         ai.setDifficulty(difficulty);
+
+        // shotsPerTurn lives on disk as the raw shot count (1 or 3)
+        // so a future "burst x5" preset would be additive without
+        // breaking the existing key.  Any unrecognised value falls
+        // back to single-shot.
+        shotsPerTurn = _loadInt("bs_shots", SHOTS_SINGLE);
+        if (shotsPerTurn != SHOTS_SINGLE && shotsPerTurn != SHOTS_BURST) {
+            shotsPerTurn = SHOTS_SINGLE;
+        }
+        playerShotsLeft = shotsPerTurn;
+        aiShotsLeft     = 0;
+
         state        = GS_MENU;
     }
 
@@ -136,6 +163,10 @@ class GameController {
             difficulty = (difficulty + 1) % 3;
             ai.setDifficulty(difficulty);
             _saveInt("bs_diff", difficulty);
+        } else if (menuCursor == MI_SHOTS) {
+            shotsPerTurn = (shotsPerTurn == SHOTS_SINGLE)
+                            ? SHOTS_BURST : SHOTS_SINGLE;
+            _saveInt("bs_shots", shotsPerTurn);
         } else if (menuCursor == MI_START) {
             beginSetup();
         }
@@ -144,6 +175,9 @@ class GameController {
         if (difficulty == AI_EASY) { return "Easy"; }
         if (difficulty == AI_MEDIUM){ return "Medium"; }
         return "Hard";
+    }
+    function shotsName() {
+        return (shotsPerTurn == SHOTS_BURST) ? "Burst x3" : "Single";
     }
 
     // ── Setup phase ─────────────────────────────────────────────────
@@ -158,9 +192,11 @@ class GameController {
         setupIdx   = 0;
         setupHoriz = true;
         cursor     = [0, 0];
-        lastPlayerShot = null;
-        lastAIShot     = null;
-        lastSinkText   = "";
+        lastPlayerShot   = null;
+        lastAIShot       = null;
+        lastSinkText     = "";
+        playerShotsLeft  = shotsPerTurn;
+        aiShotsLeft      = 0;
         state      = GS_SETUP;
     }
 
@@ -303,20 +339,38 @@ class GameController {
 
     // Fire the player's shot.  Resolves the player's hit/miss
     // immediately and enters the GS_FIRE_PLAYER animation state.
-    // The AI's response is deferred to the end of the player
-    // animation (see `animAdvance()`).
+    //
+    // Salvo handling:
+    //   • At the START of a new burst (playerShotsLeft == shotsPerTurn)
+    //     we wipe lastSinkText so it summarises only this turn.
+    //   • Mid-burst we APPEND sink notifications so the eventual
+    //     GS_INFO screen shows everything the player did before the
+    //     AI's response — e.g. "Sank Cruiser! Sank Sub!".
+    //   • playerShotsLeft is decremented here.  animAdvance() decides
+    //     whether to loop back into GS_AIM (more shots in the burst)
+    //     or hand turn to the AI (burst spent).
     function playerFire() {
         if (state != GS_AIM) { return; }
+        if (playerShotsLeft <= 0) { return; }
         var r = cursor[0];
         var c = cursor[1];
         if (enemyGrid.isShot(r, c)) { return; }   // refuse double-shot
 
         var pres = BattleLogic.fire(enemyGrid, enemyShips, r, c);
         lastPlayerShot = [r, c, pres.hit, pres.sunkId];
-        lastSinkText   = "";
-        if (pres.sunkId >= 0) {
-            lastSinkText = "Sank " + SHIP_NAMES[pres.sunkId] + "!";
+
+        if (playerShotsLeft == shotsPerTurn) {
+            // First shot of a fresh player burst — clear residue from
+            // last turn's sink log.
+            lastSinkText = "";
         }
+        if (pres.sunkId >= 0) {
+            var msg = "Sank " + SHIP_NAMES[pres.sunkId] + "!";
+            lastSinkText = (lastSinkText.length() == 0)
+                            ? msg
+                            : (lastSinkText + " " + msg);
+        }
+        playerShotsLeft = playerShotsLeft - 1;
         animTick = 0;
         state    = GS_FIRE_PLAYER;
     }
@@ -332,16 +386,28 @@ class GameController {
         if (animTick < ANIM_TICKS) { return; }
 
         if (state == GS_FIRE_PLAYER) {
-            // Player shot just finished animating on the enemy
-            // board.  Check for victory first; otherwise resolve
-            // the AI's response and start its animation on the
-            // player board.
+            // Player shot just finished animating on the enemy board.
+            //
+            // Order matters:
+            //   1. Did this shot sink the last enemy ship? → WIN.
+            //   2. Is the player still in the middle of a burst? →
+            //      loop back to GS_AIM so they can fire the next
+            //      shot.  (No AI yet — that's the point of "salvo".)
+            //   3. Burst spent → seed AI burst counter to (shots-1),
+            //      resolve its first shot, kick off GS_FIRE_AI anim.
             if (enemyShips.allSunk()) {
                 winsTotal = winsTotal + 1;
                 _saveInt("winsTotal", winsTotal);
+                playerShotsLeft = shotsPerTurn;   // for next game
                 state = GS_WIN;
                 return;
             }
+            if (playerShotsLeft > 0) {
+                state = GS_AIM;
+                return;
+            }
+            // Player burst is spent — AI's turn.
+            aiShotsLeft = shotsPerTurn - 1;       // remaining after this one
             _resolveAITurn();
             animTick = 0;
             state    = GS_FIRE_AI;
@@ -350,9 +416,22 @@ class GameController {
 
         // GS_FIRE_AI just finished animating on the player board.
         if (playerShips.allSunk()) {
+            playerShotsLeft = shotsPerTurn;       // for next game
             state = GS_LOSE;
             return;
         }
+        if (aiShotsLeft > 0) {
+            // AI still has shots in this burst — fire the next one,
+            // restart the anim on the player board.
+            aiShotsLeft = aiShotsLeft - 1;
+            _resolveAITurn();
+            animTick = 0;
+            state    = GS_FIRE_AI;
+            return;
+        }
+        // Both sides have fired their bursts — refill player counter
+        // and surface the round summary.
+        playerShotsLeft = shotsPerTurn;
         state = GS_INFO;
     }
 
@@ -389,11 +468,10 @@ class GameController {
 
         lastAIShot = [r, c, ares.hit, ares.sunkId];
         if (ares.sunkId >= 0) {
-            if (lastSinkText.length() == 0) {
-                lastSinkText = "Enemy sank " + SHIP_NAMES[ares.sunkId] + "!";
-            } else {
-                lastSinkText = lastSinkText + " Enemy sank " + SHIP_NAMES[ares.sunkId] + "!";
-            }
+            var msg = "Enemy sank " + SHIP_NAMES[ares.sunkId] + "!";
+            lastSinkText = (lastSinkText.length() == 0)
+                            ? msg
+                            : (lastSinkText + " " + msg);
         }
     }
 }

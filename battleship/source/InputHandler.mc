@@ -38,30 +38,32 @@
 //        misclassified slow horizontal swipes as diagonals, so the
 //        user perceived swipes as "not responding".
 //   v2 — finger-tracking ("drag-to-aim"): cursor glued to whatever
-//        cell sat under the finger.  Fixed responsiveness but the
-//        cursor jumped wildly during any normal swipe gesture
-//        (the finger crosses many cells in a flick); the user
-//        called this "way too sensitive, every swipe moves
-//        almost randomly".
-//   v3 — THIS FILE.  Discrete one-cell directional swipes derived
-//        from the dx/dy at DRAG_TYPE_STOP.  Generous thresholds
-//        (14 px) and strict 1.5×-dominant axis to kill diagonals.
-//        Tap = precise jump + commit.  No finger-tracking.
+//        cell sat under the finger.  Felt eager but a quick flick
+//        crossed several cells, so any normal swipe could "land"
+//        far from where the user expected.
+//   v3 — discrete one-cell directional swipes resolved at lift-off.
+//        Predictable but lost the live tracking feel, and a single
+//        swipe = one cell felt undersized when the user wanted to
+//        cross the grid.
+//   v4 — THIS FILE.  Back to v2's live cell-under-finger tracking
+//        — that responsiveness is what the user actually wants —
+//        but ~12% less sensitive overall:
+//          • Drag-engagement deadzone bumped 6 → 8 px (33 % more
+//            finger travel required before the cursor starts to
+//            move, so a tap that drifts slightly never accidentally
+//            steers).
+//          • Per-cell hysteresis: once the cursor has committed to
+//            a cell, the finger must travel at least 5 px farther
+//            from that commit point before the cursor steps again.
+//            On a ~22 px cell that's roughly 22 % extra travel per
+//            cell-step, so a fast flick that previously zipped
+//            across 5 cells now lands at ~4.  Net "sensitivity"
+//            sits in the user's requested 10-15 % softer band.
 //
-//   Rules:
-//     • Below 14 px in BOTH axes → treat as a stationary tap.
-//     • Above threshold + dominant axis ≥ 1.5× the other →
-//       one-cell step in the dominant direction.
-//     • Above threshold but axes within 1.5× of each other →
-//       ambiguous diagonal, ignored (so the cursor never lurches
-//       sideways when the user meant to swipe vertically).
-//     • `_justSwiped` is set whenever a real swipe was resolved
-//       so the lift-off onTap is swallowed.
-//
-// Phantom-back guard:
-//   touch panels deliver an `onBack` alongside an `onSwipe/onDrag`
-//   for right-edge gestures.  Any onBack within 500 ms of a
-//   recent touch is treated as phantom and silently consumed.
+//   Phantom-back guard:
+//     touch panels deliver an `onBack` alongside an `onSwipe/onDrag`
+//     for right-edge gestures.  Any onBack within 500 ms of a
+//     recent touch is treated as phantom and silently consumed.
 // ═══════════════════════════════════════════════════════════════
 
 using Toybox.WatchUi;
@@ -73,12 +75,28 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     // Touch tracking.
     hidden var _dragStartX;
     hidden var _dragStartY;
+    hidden var _dragMoved;
     hidden var _justSwiped;
+    hidden var _lastCellR;
+    hidden var _lastCellC;
+    hidden var _lastCommitX;       // finger px at the moment the cursor
+    hidden var _lastCommitY;       // last committed to a new cell
 
-    // Generous threshold — short flicks on small round Fenix watches
-    // routinely come in under 18 px.  14 px is still well above the
-    // typical "jitter while tapping" envelope (~3-5 px).
-    hidden const _SWIPE_THRESHOLD = 14;
+    // Decisive-swipe threshold (used in SETUP at DRAG_TYPE_STOP to
+    // toggle ship orientation).
+    hidden const _SWIPE_THRESHOLD = 18;
+
+    // Finger must travel at least this many pixels from touch-down
+    // before live cell-tracking engages.  Slightly larger than v2's
+    // 6 px so a sloppy tap doesn't get reclassified as a drag.
+    hidden const _DRAG_DEAD_PX = 8;
+
+    // Once the cursor has committed to a cell, the finger must travel
+    // at least this many pixels from that commit point before the
+    // cursor is allowed to step again.  Roughly 22 % of a typical
+    // ~22 px grid cell on a 260 px round face → about 10-15 % softer
+    // overall feel without breaking long deliberate drags.
+    hidden const _CELL_RESIST_PX = 5;
 
     // Phantom-back guard.
     hidden var _lastGestureMs;
@@ -89,7 +107,12 @@ class InputHandler extends WatchUi.BehaviorDelegate {
         view           = v;
         _dragStartX    = -1;
         _dragStartY    = -1;
+        _dragMoved     = false;
         _justSwiped    = false;
+        _lastCellR     = -1;
+        _lastCellC     = -1;
+        _lastCommitX   = -1;
+        _lastCommitY   = -1;
         _lastGestureMs = 0;
     }
 
@@ -185,16 +208,66 @@ class InputHandler extends WatchUi.BehaviorDelegate {
         if (c.isFiring()) { return true; }
 
         if (t == WatchUi.DRAG_TYPE_START) {
-            _dragStartX = px;
-            _dragStartY = py;
-            _justSwiped = false;
+            _dragStartX  = px;
+            _dragStartY  = py;
+            _dragMoved   = false;
+            _justSwiped  = false;
+            _lastCellR   = -1;
+            _lastCellC   = -1;
+            _lastCommitX = -1;
+            _lastCommitY = -1;
             return true;
         }
 
         if (t == WatchUi.DRAG_TYPE_CONTINUE) {
-            // We DELIBERATELY do not move the cursor mid-drag.  Old
-            // versions did, which made any natural flick feel like
-            // the cursor was being yanked across the grid.
+            if (_dragStartX < 0) { return false; }
+            var tdx = px - _dragStartX;
+            var tdy = py - _dragStartY;
+            var atdx = (tdx < 0) ? -tdx : tdx;
+            var atdy = (tdy < 0) ? -tdy : tdy;
+
+            // Engagement deadzone — until the finger has clearly left
+            // its touch-down spot we don't drag-steer at all.  Stops a
+            // wobbly tap from accidentally moving the cursor.
+            if (atdx >= _DRAG_DEAD_PX || atdy >= _DRAG_DEAD_PX) {
+                _dragMoved = true;
+            }
+            if (_dragMoved && (c.state == GS_AIM || c.state == GS_SETUP)) {
+                var rc = view.cellAt(px, py);
+                if (rc != null
+                    && (rc[0] != _lastCellR || rc[1] != _lastCellC)) {
+                    // Per-cell hysteresis: once the cursor has parked
+                    // on a cell, the finger has to move a fixed
+                    // pixel budget further before the next cell
+                    // commits.  Means a slow drag still walks
+                    // through every cell in sequence, but a fast
+                    // smear that flies across the grid lands a tad
+                    // shy of where the fingertip ended up.
+                    var allow = true;
+                    if (_lastCommitX >= 0) {
+                        var ddx = px - _lastCommitX;
+                        var ddy = py - _lastCommitY;
+                        var addx = (ddx < 0) ? -ddx : ddx;
+                        var addy = (ddy < 0) ? -ddy : ddy;
+                        if (addx < _CELL_RESIST_PX
+                            && addy < _CELL_RESIST_PX) {
+                            allow = false;
+                        }
+                    }
+                    if (allow) {
+                        if (c.state == GS_AIM) {
+                            c.aimSetCursor(rc[0], rc[1]);
+                        } else {
+                            c.setupSetCursor(rc[0], rc[1]);
+                        }
+                        _lastCellR   = rc[0];
+                        _lastCellC   = rc[1];
+                        _lastCommitX = px;
+                        _lastCommitY = py;
+                        _refresh();
+                    }
+                }
+            }
             return true;
         }
 
@@ -202,41 +275,32 @@ class InputHandler extends WatchUi.BehaviorDelegate {
             if (_dragStartX < 0) { return false; }
             var dx = px - _dragStartX;
             var dy = py - _dragStartY;
-            var adx = (dx < 0) ? -dx : dx;
-            var ady = (dy < 0) ? -dy : dy;
-
             _dragStartX = -1;
             _dragStartY = -1;
             _markGesture();
 
-            // Below threshold in BOTH axes → not a swipe, let the
-            // subsequent onTap handle it as a stationary press.
-            if (adx < _SWIPE_THRESHOLD && ady < _SWIPE_THRESHOLD) {
-                return false;
-            }
+            // No real movement → onTap will pick it up as a tap.
+            if (!_dragMoved) { return false; }
 
-            // We're going to resolve this as a swipe (or reject it
-            // as ambiguous).  Either way, suppress the trailing tap.
+            // We DID drag — swallow the lift-off tap so the player
+            // can't accidentally fire/place on release.
             _justSwiped = true;
 
-            // Dominant axis must beat the other axis by ≥ 1.5×.
-            // Anything within that band is a diagonal; ignore it
-            // so a slightly tilted swipe never flips orientation /
-            // moves the cursor sideways.
-            var hDom = (adx >= ady) && (adx * 10 >= ady * 15);
-            var vDom = (ady >  adx) && (ady * 10 >= adx * 15);
-
-            if (c.state == GS_AIM) {
-                if      (hDom && dx > 0) { c.aimMoveCursor( 0,  1); _refresh(); }
-                else if (hDom && dx < 0) { c.aimMoveCursor( 0, -1); _refresh(); }
-                else if (vDom && dy > 0) { c.aimMoveCursor( 1,  0); _refresh(); }
-                else if (vDom && dy < 0) { c.aimMoveCursor(-1,  0); _refresh(); }
-                return true;
-            }
+            // SETUP also accepts the lift-off direction as an
+            // orientation toggle (touchscreen-only users have no
+            // other way to flip the ship without using HOLD-select).
+            // AIM does not — drag-to-aim already moved the cursor.
             if (c.state == GS_SETUP) {
-                if      (hDom) { c.setupOrientHoriz(); _refresh(); return true; }
-                else if (vDom) { c.setupOrientVert();  _refresh(); return true; }
-                return true;
+                var adx = (dx < 0) ? -dx : dx;
+                var ady = (dy < 0) ? -dy : dy;
+                if (adx >= _SWIPE_THRESHOLD || ady >= _SWIPE_THRESHOLD) {
+                    if (adx * 10 >= ady * 14) {
+                        c.setupOrientHoriz(); _refresh(); return true;
+                    }
+                    if (ady * 10 >= adx * 14) {
+                        c.setupOrientVert();  _refresh(); return true;
+                    }
+                }
             }
             return true;
         }

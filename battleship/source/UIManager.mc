@@ -103,16 +103,19 @@ class UIManager {
                         Graphics.TEXT_JUSTIFY_CENTER);
         }
 
-        // Chess-style rows
+        // Chess-style rows.  Three rows now (added "Shots") — the
+        // dial budget is tight so we shrink row height a touch and
+        // start the block slightly higher when in 3-row mode.
         var labels = [
-            "Difficulty: " + ctrl.difficultyName(),
+            "Diff:  " + ctrl.difficultyName(),
+            "Shots: " + ctrl.shotsName(),
             "START"
         ];
-        var rowH = (h * 13) / 100; if (rowH < 24) { rowH = 24; } if (rowH > 34) { rowH = 34; }
+        var rowH = (h * 11) / 100; if (rowH < 22) { rowH = 22; } if (rowH > 30) { rowH = 30; }
         var rowW = (w * 78) / 100; if (rowW < 140) { rowW = 140; }
         var rowX = (w - rowW) / 2;
         var gap  = (h * 2) / 100;  if (gap < 4) { gap = 4; }
-        var rowY0 = h * 54 / 100;
+        var rowY0 = h * 50 / 100;
         for (var i = 0; i < MI_ITEMS; i++) {
             var ry = rowY0 + i * (rowH + gap);
             var sel = (ctrl.menuCursor == i);
@@ -196,6 +199,20 @@ class UIManager {
                     ctrl.enemyShips.sunkCount().toString()
                         + "/" + NUM_SHIPS.toString() + " sunk",
                     Graphics.TEXT_JUSTIFY_CENTER);
+        // Burst badge — only when the salvo mode is active.  Tells
+        // the player which shot of the burst they are about to fire,
+        // since 3 shots without an AI response in between is
+        // unfamiliar territory for a Battleship player.
+        if (ctrl.shotsPerTurn > 1) {
+            var taken = ctrl.shotsPerTurn - ctrl.playerShotsLeft + 1;
+            if (taken < 1) { taken = 1; }
+            if (taken > ctrl.shotsPerTurn) { taken = ctrl.shotsPerTurn; }
+            dc.setColor(0xFFAA22, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, h * 21 / 100, Graphics.FONT_XTINY,
+                        "Shot " + taken.toString()
+                            + "/" + ctrl.shotsPerTurn.toString(),
+                        Graphics.TEXT_JUSTIFY_CENTER);
+        }
 
         var gl = _layoutGrid(w, h);
         _drawGridBg(dc, gl);

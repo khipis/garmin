@@ -362,4 +362,27 @@ class MainView extends WatchUi.View {
         }
         return false;
     }
+
+    // ── Drag-based steering ────────────────────────────────────────
+    // While the finger is on the screen we keep the character moving
+    // toward whichever side the finger is currently on.  Direct,
+    // intuitive, and immune to the SWIPE_LEFT / SWIPE_RIGHT direction
+    // convention on whatever device the player is wearing.
+    //
+    //   side > 0  → finger on right half → holdRight on
+    //   side < 0  → finger on left half  → holdLeft on
+    //   side == 0 → finger lifted        → both holds released
+    function touchSteer(side) {
+        if (side > 0) {
+            _ctrl.setHoldLeft(false);
+            _ctrl.setHoldRight(true);
+        } else if (side < 0) {
+            _ctrl.setHoldLeft(true);
+            _ctrl.setHoldRight(false);
+        } else {
+            _ctrl.setHoldLeft(false);
+            _ctrl.setHoldRight(false);
+        }
+    }
+    function screenW() { return _ctrl.screenW; }
 }
