@@ -29,31 +29,39 @@ class ScopeRenderer {
     }
 
     // ── Sky / ground + scenery (depends on aim yaw for parallax). ──
+    //
+    // Brightened revision: the prior palette (sky 0x14181E, ground
+    // 0x0A1208, skyline 0x0F1A12) read as "near black" through the
+    // scope vignette, so silhouettes had almost no background to
+    // contrast against and the player struggled to scan the field.
+    // All in-scope colours are now lifted by ~40-60 RGB points so
+    // the scene is recognisably "dusk-lit terrain" rather than
+    // "scope on opaque mud".
     static function drawScene(dc, ctrl, ox, oy) {
         var w = ctrl.sw; var h = ctrl.sh;
-        // Horizon Y is pulled down by the player's pitch — looking
-        // UP raises the horizon, looking DOWN lowers it.
         var horizonY = ctrl.cy + (ctrl.aim.aimPitch * SS_FOV * 0.45).toNumber() + oy;
         if (horizonY < h * 20 / 100) { horizonY = h * 20 / 100; }
         if (horizonY > h * 80 / 100) { horizonY = h * 80 / 100; }
 
-        // Sky band — soft dawn-ish hue, just barely lighter near the
-        // horizon for a sense of depth.
-        dc.setColor(0x14181E, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(0, 0, w, horizonY);
-        // Faint horizon glow.
-        dc.setColor(0x232B22, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(0, horizonY - 6, w, 6);
+        // Sky band — deeper top fading to a brighter mid-tone near
+        // the horizon.
+        dc.setColor(0x2A3848, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, 0, w, horizonY - 10);
+        dc.setColor(0x3F5066, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, horizonY - 10, w, 6);
+        // Horizon glow — warm dawn band.
+        dc.setColor(0x6A6A4A, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, horizonY - 4, w, 4);
 
-        // Ground band.
-        dc.setColor(0x0A1208, Graphics.COLOR_TRANSPARENT);
+        // Ground band — olive/green-ish mid-tone so silhouettes pop.
+        dc.setColor(0x223A1E, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, horizonY, w, h - horizonY);
 
         // Parallax X based on yaw — buildings slide opposite gaze.
         var px = (-ctrl.aim.aimYaw * SS_FOV * 0.5).toNumber() + ox;
 
-        // Distant skyline — a few rectangular shapes seeded by an LCG
-        // for visual variety.  Cheap (12 buildings, fixed seed).
+        // Distant skyline — darker than the sky behind it but still
+        // far brighter than before so the buildings actually read.
         var seed = 24061;
         for (var i = 0; i < 18; i++) {
             seed = (seed * 1103515245 + 12345) & 0x7FFFFFFF;
@@ -62,18 +70,19 @@ class ScopeRenderer {
             var bw = 18 + seed % 22;
             seed = (seed * 1103515245 + 12345) & 0x7FFFFFFF;
             var bh = 10 + seed % 32;
-            dc.setColor(0x0F1A12, Graphics.COLOR_TRANSPARENT);
+            dc.setColor(0x1A2A24, Graphics.COLOR_TRANSPARENT);
             dc.fillRectangle(bx0, horizonY - bh, bw, bh);
-            // Lit window dot.
             if ((seed & 7) == 0 && bh >= 12) {
-                dc.setColor(0x554422, Graphics.COLOR_TRANSPARENT);
+                dc.setColor(0xAA7733, Graphics.COLOR_TRANSPARENT);
                 dc.fillRectangle(bx0 + bw / 2 - 1, horizonY - bh / 2, 2, 2);
             }
         }
 
-        // Foreground grass tufts — drift with wind.
+        // Foreground grass tufts — drift with wind.  Lifted to a
+        // brighter olive so the ground texture is visible without
+        // demanding the player squint.
         var ws = (ctrl.wind.strength * 4.0).toNumber();
-        dc.setColor(0x182A12, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0x3A5C24, Graphics.COLOR_TRANSPARENT);
         var s2 = 90217;
         for (var k = 0; k < 28; k++) {
             s2 = (s2 * 1103515245 + 12345) & 0x7FFFFFFF;
@@ -91,7 +100,7 @@ class ScopeRenderer {
         if (ws > -0.05 && ws < 0.05) { return; }
         // Step the streak phase from the game tick.
         var phase = (ctrl.tick * (ws * 2.0).toNumber()) & 0xFF;
-        dc.setColor(0x2C3429, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0x556644, Graphics.COLOR_TRANSPARENT);
         for (var i = 0; i < 7; i++) {
             var y = (h * (15 + i * 11)) / 100 + oy;
             var len = (ws > 0 ? 1 : -1) * (5 + i);
@@ -193,26 +202,35 @@ class ScopeRenderer {
         var bx = ba[0] + ox; var by = ba[1] + oy;
         var mx = ba[2] + ox; var my = ba[3] + oy;
 
-        // Tail tip — bullet position a few ticks ago, on the same
-        // ballistic curve we just integrated.  We don't store a
-        // history so we back-solve approximately: the average
-        // velocity over the last `tail` ticks is the current
-        // velocity minus half of (tail-1) accelerations.  For
-        // visual purposes a simple lerp toward the muzzle is more
-        // than good enough.
+        // Tail tip — for an IN-FLIGHT bullet (live == 1) this is the
+        // last few ticks of trajectory.  For a FROZEN bullet
+        // (live == 2, sitting on the RESULT screen) the head is
+        // already at the impact, so we render a LONGER tracer to
+        // signal "this is where the shot came from" — the player
+        // sees the line connecting their muzzle to the impact.
         var tail = 5;
+        var denom = 28;
+        if (ctrl.bullet.live == 2) {
+            // Static post-shot trace: pull the tail further toward
+            // the muzzle so it reads as a sniper's bullet line.
+            tail  = 12;
+            denom = 16;
+        }
         if (ctrl.bullet.ttl < tail) { tail = ctrl.bullet.ttl; }
         if (tail < 1) { tail = 1; }
-        var tx = bx + ((mx - bx) * tail) / 28;     // ~18 % toward muzzle
-        var ty = by + ((my - by) * tail) / 28;
+        var tx = bx + ((mx - bx) * tail) / denom;
+        var ty = by + ((my - by) * tail) / denom;
 
         // Faint orange tail behind the head.
         dc.setColor(0x442200, Graphics.COLOR_TRANSPARENT);
         dc.drawLine(tx, ty, bx, by);
         dc.setColor(0xFFAA33, Graphics.COLOR_TRANSPARENT);
         dc.drawLine(tx + 1, ty, bx + 1, by);
-        // Bullet head — a hot 3x3 pixel.
-        dc.setColor(0xFFEE88, Graphics.COLOR_TRANSPARENT);
+        // Bullet head — a hot 3x3 pixel.  Slightly cooler on the
+        // frozen post-shot trace so it doesn't compete with the
+        // impact splash colour.
+        var headCol = (ctrl.bullet.live == 2) ? 0xFFCC66 : 0xFFEE88;
+        dc.setColor(headCol, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(bx - 1, by - 1, 3, 3);
     }
 

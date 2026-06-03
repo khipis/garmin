@@ -45,6 +45,15 @@ class PathGenerator {
     var breakT;          // int[SR_BUF_Y][SR_BUF_X] — break countdown
     var nextY;           // next world.y row to fill
 
+    // Per-row content bounds (world coords).  rowMinX[yi] is the
+    // smallest world.x with a non-empty tile in row yi; rowMaxX[yi]
+    // is the largest.  Empty rows store rowMinX > rowMaxX so the
+    // renderer can skip them in one comparison instead of scanning
+    // SR_BUF_X columns per row.  Cuts the per-frame tileAt call
+    // count from ~16 × visible-rows to ~3-5 × visible-rows.
+    var rowMinX;
+    var rowMaxX;
+
     // Segment state.
     var segKind;
     var segLen;
@@ -61,8 +70,10 @@ class PathGenerator {
     hidden var _diff;
 
     function initialize() {
-        tile   = new [SR_BUF_Y];
-        breakT = new [SR_BUF_Y];
+        tile    = new [SR_BUF_Y];
+        breakT  = new [SR_BUF_Y];
+        rowMinX = new [SR_BUF_Y];
+        rowMaxX = new [SR_BUF_Y];
         for (var i = 0; i < SR_BUF_Y; i++) {
             tile[i]   = new [SR_BUF_X];
             breakT[i] = new [SR_BUF_X];
@@ -70,13 +81,15 @@ class PathGenerator {
                 tile[i][j]   = SR_T_NONE;
                 breakT[i][j] = 0;
             }
+            rowMinX[i] = 1;   // empty marker: min > max
+            rowMaxX[i] = -1;
         }
         nextY     = 0;
         segKind   = SR_SEG_WIDE;
         segLen    = 6;
         segCur    = 0;
         centerX   = 0;
-        halfW     = 1;          // 3 tiles wide initial pad
+        halfW     = 2;          // 5 tiles wide initial pad (matches WIDE)
         zigPhase  = 0;
         distScore = 0.0;
         _rng      = 9182;
@@ -91,13 +104,15 @@ class PathGenerator {
                 tile[i][j]   = SR_T_NONE;
                 breakT[i][j] = 0;
             }
+            rowMinX[i] = 1;
+            rowMaxX[i] = -1;
         }
         nextY     = 0;
         segKind   = SR_SEG_WIDE;
         segLen    = 6;
         segCur    = 0;
         centerX   = 0;
-        halfW     = 1;
+        halfW     = 2;
         zigPhase  = 0;
         distScore = 0.0;
     }
@@ -194,15 +209,30 @@ class PathGenerator {
         segKind = kind;
         segLen  = len;
         segCur  = 0;
-        // Width is reset by the new segment kind.
-        if      (kind == SR_SEG_WIDE)    { halfW = 1; }   // 3-wide
-        else if (kind == SR_SEG_NARROW)  { halfW = 0; }   // 1-wide
-        else if (kind == SR_SEG_ZIGZAG)  { halfW = 0; }
-        else if (kind == SR_SEG_FRAGILE) { halfW = 0; }
-        else if (kind == SR_SEG_BOOST)   { halfW = 0; }
-        else if (kind == SR_SEG_TURN_L)  { halfW = 0; }
-        else if (kind == SR_SEG_TURN_R)  { halfW = 0; }
-        else                              { halfW = (_rand(3) == 0) ? 1 : 0; }
+        // ── Width policy (v1.1) ─────────────────────────────────
+        // Original release used halfW=0 (1-tile) for everything
+        // except WIDE/STRAIGHT-bonus, which made narrow stretches
+        // basically impossible at the higher speed-mul end of the
+        // difficulty ramp (the ball moves >2 tiles/tick by then,
+        // a 1-tile corridor leaves zero margin).  Player feedback
+        // confirmed the 1-tile passages felt unfair, not hard.
+        //
+        // New floor: every segment is at least 3-tile (halfW=1).
+        // WIDE rest zones bump to 5-tile (halfW=2).  Difficulty
+        // ramp still tightens the run via:
+        //   • segment-kind probability shift (more NARROW/ZIGZAG/
+        //     FRAGILE later, fewer WIDE rests)
+        //   • forward-speed multiplier (up to 2.1×)
+        // — so the game keeps its identity, just stops being a
+        // pixel-perfect deathtrap on harder runs.
+        if      (kind == SR_SEG_WIDE)    { halfW = 2; }   // 5-wide rest
+        else if (kind == SR_SEG_NARROW)  { halfW = 1; }   // 3-wide pinch
+        else if (kind == SR_SEG_ZIGZAG)  { halfW = 1; }
+        else if (kind == SR_SEG_FRAGILE) { halfW = 1; }
+        else if (kind == SR_SEG_BOOST)   { halfW = 1; }
+        else if (kind == SR_SEG_TURN_L)  { halfW = 1; }
+        else if (kind == SR_SEG_TURN_R)  { halfW = 1; }
+        else                              { halfW = (_rand(4) == 0) ? 2 : 1; }
     }
 
     // ── Row writer ──────────────────────────────────────────
@@ -233,19 +263,31 @@ class PathGenerator {
         }
 
         // Write the path tiles for this row.
+        var yi = _yi(nextY);
+        var rMin =  9999;
+        var rMax = -9999;
         for (var i = -halfW; i <= halfW; i++) {
             var x = centerX + i;
             if (x < -SR_X_HALF || x >= SR_X_HALF) { continue; }
-            tile[_yi(nextY)][_xi(x)] = placeT;
-            breakT[_yi(nextY)][_xi(x)] = 0;
+            tile[yi][_xi(x)] = placeT;
+            breakT[yi][_xi(x)] = 0;
+            if (x < rMin) { rMin = x; }
+            if (x > rMax) { rMax = x; }
         }
         // Make sure rest of the row is clear (e.g. a previous turn
         // segment left tiles behind that this narrower segment
         // shouldn't keep).
         for (var x2 = -SR_X_HALF; x2 < SR_X_HALF; x2++) {
             if (x2 < centerX - halfW || x2 > centerX + halfW) {
-                tile[_yi(nextY)][_xi(x2)] = SR_T_NONE;
+                tile[yi][_xi(x2)] = SR_T_NONE;
             }
+        }
+        // Publish row bounds for the renderer's inner-loop short-cut.
+        if (rMax >= rMin) {
+            rowMinX[yi] = rMin;
+            rowMaxX[yi] = rMax;
+        } else {
+            rowMinX[yi] = 1; rowMaxX[yi] = -1;   // empty marker
         }
 
         nextY++;
@@ -260,15 +302,34 @@ class PathGenerator {
         for (var y = y0; y < y1; y++) {
             if (!_inBuf(0, y)) { continue; }
             var yi = _yi(y);
-            for (var x = -SR_X_HALF; x < SR_X_HALF; x++) {
+            var lo = rowMinX[yi];
+            var hi = rowMaxX[yi];
+            if (lo > hi) { continue; }      // empty row
+            var newLo =  9999;
+            var newHi = -9999;
+            var anyContent = false;
+            for (var x = lo; x <= hi; x++) {
                 var xi = _xi(x);
-                if (tile[yi][xi] == SR_T_BREAK) {
+                var t  = tile[yi][xi];
+                if (t == SR_T_BREAK) {
                     breakT[yi][xi] = breakT[yi][xi] - 1;
                     if (breakT[yi][xi] <= 0) {
                         tile[yi][xi]   = SR_T_NONE;
                         breakT[yi][xi] = 0;
+                        t = SR_T_NONE;
                     }
                 }
+                if (t != SR_T_NONE) {
+                    anyContent = true;
+                    if (x < newLo) { newLo = x; }
+                    if (x > newHi) { newHi = x; }
+                }
+            }
+            if (anyContent) {
+                rowMinX[yi] = newLo;
+                rowMaxX[yi] = newHi;
+            } else {
+                rowMinX[yi] = 1; rowMaxX[yi] = -1;
             }
         }
     }

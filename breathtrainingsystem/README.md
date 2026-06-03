@@ -50,7 +50,8 @@ W odroznieniu od **Breath Training Tool** (wersja LITE), System zachowuje *muscl
 | **Bradycardia detection (mammalian dive reflex) podczas apnea** | — | OK |
 | **HR-based "CALM" cue podczas breathe-up** | — | OK |
 | **Sensor toggle (Customize → Sensors ON/OFF)** | — | OK |
-| **Guide / Legenda (More → Guide, 65 wpisow, scrollowalny) (PRO++ v5.3)** | — | OK |
+| **Guide / Legenda (More → Guide, 71 wpisow, scrollowalny) (PRO++ v5.3, +PRE-START w v5.4)** | — | OK |
+| **Pre-start alert (konfigurowalna wibracja przed holdem, Off / 3s / 5s / 10s / 15s) (PRO++ v5.4)** | — | OK |
 
 ---
 
@@ -71,7 +72,7 @@ W odroznieniu od **Breath Training Tool** (wersja LITE), System zachowuje *muscl
 | FT_PLAN | 10 | Training Plan (wybor / progres) |
 | FT_READY | 11 | Readiness Check |
 | FT_RST | 12 | Factory reset |
-| FT_HELP | 13 | Guide / Legenda (scrollowalna, 65 wpisow) |
+| FT_HELP | 13 | Guide / Legenda (scrollowalna, 71 wpisow) |
 | FT_GTU  | 14 | Gen Test User — ekran potwierdzenia (ostrzezenie o nadpisaniu danych) |
 
 ---
@@ -152,8 +153,8 @@ Po wyborze z tapa natychmiast wywolywany `doSelect()` — zero dodatkowych kroko
 | 2 | O2 Table | Konfiguracja O2 + manualny start (hidden fallback) | bialy |
 | 3 | **Training Plan** | Wybor / zarzadzanie planem | zloty (#FFDD44) |
 | 4 | Stats | Statystyki (5 stron) | motyw |
-| 5 | Customize | Theme + imie + vibration + **sensors** | motyw |
-| 6 | **Guide** | Scrollowalna legenda / samouczek (65 wpisow, 10 sekcji) | zielony akcent |
+| 5 | Customize | Theme + imie + vibration + **pre-start** + **sensors** | motyw |
+| 6 | **Guide** | Scrollowalna legenda / samouczek (71 wpisow, 11 sekcji) | zielony akcent |
 | 7 | Reset | Factory reset | czerwony akcent |
 
 BACK → HOME. Tap → wybor + select.
@@ -164,21 +165,24 @@ Wejscie w `Breathe`/`CO2`/`O2` ustawia `_plFromPlan = false` — to oddziela rcz
 
 ## FT_HELP — Guide / Legenda (scrollowalna)
 
-Dostepna przez `More → Guide` (mSel = 6). Zawiera **65 wpisow** pogrupowanych w **10 sekcji** — kompletna legenda wszystkich akronimow, symboli i pojec uzywanych w aplikacji.
+Dostepna przez `More → Guide` (mSel = 6). Zawiera **71 wpisow** pogrupowanych w **11 sekcji** — kompletna legenda wszystkich akronimow, symboli i pojec uzywanych w aplikacji.
 
 **Nawigacja**: UP/DN scrolluje po wpisach; BACK wraca do More. Naglowki sekcji wyrozniaja sie kolorem i pozycja centralnie. Wskaznik przewijania (kropki) u dolu jak w Training Paths.
 
 **Sekcje**:
-1. NAVIGATION — skroty i gesty
-2. TRAINING MODES — opis kazdego trybu treningu
-3. BREATHE CONFIG — wszystkie pola konfiguracji
-4. TRAINING FEEDBACK — interpretacja wiadomosci po sesji
-5. STATS PAGES — co wyswietla kazda ze 5 stron statystyk
-6. SENSOR HUB — live HR chip, brady, calm, readiness BB
-7. READINESS CHECK — fazy i interpretacja wyniku
-8. TRAINING PLANS — jak dzialaja plany, Skip/Repeat, ETA
-9. PRO++ MODELS — CO2/O2/Recovery score, pattern detection
-10. SYMBOLS — tabela wszystkich symboli (`^`, `v`, `~`, `!`, `*`, `>`)
+1. NAVIGATION — skroty i gesty (SELECT, BACK, UP/DN, HOME upper/lower)
+2. TRAINING MODES — BR / CO2 / O2 / APNEA / TABLE z krotkim opisem
+3. STATS PAGES — co pokazuja poszczegolne strony (P1..P5)
+4. SYMBOLS & ACRONYMS — PB, `^`, `v`, Xd, Wk
+5. PHYSIOLOGY SCORES — CO2/O2/REC 0-100, PLATEAU/DECLINE/OVERTRAIN, PB prediction
+6. DIVER CLASSES — BEGINNER / CO2 / O2 / BALANCED / ADVANCED
+7. LIVE SENSOR CHIP — format `72-8` / `72+5`, dive reflex cue
+8. SENSOR TRENDS PAGE — DIVE REFLEX, CALM, BB dots, RHR, SpO2
+9. READINESS CHECK — fazy i interpretacja READY / LIGHT / REST
+10. **PRE-START ALERT (PRO++ v5.4)** — opis funkcji, gdzie sie ustawia, wartosci, gdzie sie odpala
+11. TRAINING PLAN — adaptive multi-week, dostep przez More
+
+**Naglowki sekcji** uzywaja prefixu ASCII `# ` (zamiast Unicode em-dash), co gwarantuje poprawne renderowanie na FONT_XTINY wszystkich zegarków Garmin. Prefix jest stripowany przed wyswietleniem.
 
 
 
@@ -676,6 +680,27 @@ Nowy 4-ty wiersz Customize (przed `Gen Test User` / `SAVE`):
 - **Sensors  OFF** — wszystkie badge'y znikaja, `Sensor.setEnabledSensors([])` oszczedza baterie.
 - Toggle persistowany jako `usr_sn` (Boolean).
 
+#### Customize — Pre-start alert (PRO++ v5.4)
+
+Wiersz `Pre-start  Off / 3s / 5s / 10s / 15s` (4-ty wiersz Customize, miedzy `Vibration` a `Sensors`).
+
+Konfigurowalna **wibracja ostrzegawcza** ktora odpala sie `N` sekund przed startem wstrzymania oddechu w trybie tabel CO2/O2 oraz w fazie BREATHE Readiness Check. Daje uzytkownikowi czas na przygotowanie sie do nadchodzacego holdu (rozluznienie, ostatni gleboki wdech, zamkniecie oczu).
+
+- **Wartosci**: `Off` / `3s` / `5s` / `10s` / `15s` — cyklicznie tap/SELECT/LEFT-RIGHT.
+- **Wzor**: trzy krotkie miekkie pulsy (intensywnosc 55, 80 ms wibracji, 140 ms przerwy ×3) — celowo rozny od pojedynczego mocnego pulsu `_vibe(100, 260)` ktory sygnalizuje **start** holdu. Rytm trojtaktowy czyta sie jako "uwaga, zaraz start" a nie "TERAZ".
+- **Audition** — kazda zmiana wartosci w menu (poza `Off`) odtwarza wzor, zeby user mogl od razu poczuc roznice wzgledem start signal.
+- **Persisted** jako `usr_pst` (Number, index 0..4 do `PS_OPTS = [0, 3, 5, 10, 15]`).
+- **Master switch respect** — jesli `Vibration  OFF`, pre-start jest tez wyciszony (`_vibePreStart()` od razu wraca jak `_vibe`).
+- **Edge cases**:
+  - Jesli okres odpoczynku jest krotszy niz wybrana wartosc Pre-start (np. ostatnia runda `Hard CO2` ma 20 s rest a Pre-start = 15 s) → warunek `_tPS - _tPE == pre` nie wyzwoli sie, alert sie nie odpali (zamiast nakladac na sygnal startu).
+  - Strażnik `_tPE > 0` zapobiega sytuacji gdy `rest_period == pre_start` (nie odpala alertu w tej samej sekundzie co start).
+  - Flaga `_preAlertFired` gwarantuje **jeden alert na rest period** — resetowana w `_nxTblPh`, `_startTbl`, `_rdStart`.
+
+**Gdzie sie odpala**:
+1. **CO2 / O2 tables** (`FT_ACT`, faza `BP_RST`) — glowny use case z feature requestu.
+2. **Readiness Check** (`FT_READY`, faza `RP_BREATHE` przed apnea attempt).
+3. **Pure breathing modes** (Box, Wim Hof, Pranayama itd.) — celowo bez zmian, brak struktury rest→hold do wyprzedzenia.
+
 **Battery footprint**: HR sampling jest rate-limited do **1Hz** (~1 read/s podczas treningu, ~0.2 read/s na HOME). SensorHistory reads sa cached i czyta sie je tylko podczas idle na HOME (co ~5s). Whole hub adds < 1% extra battery drain w trakcie typowej 15-min sesji breathwork.
 
 ### Co sie liczy do statystyk a co nie
@@ -693,7 +718,7 @@ Nowy 4-ty wiersz Customize (przed `Gen Test User` / `SAVE`):
 
 ## FT_CUST / FT_NAME / FT_BCFG
 
-- **Customize (PRO++ v5)** — 5 wierszy: `Theme` / `Name` / `Vibration ON-OFF` / `Sensors ON-OFF-N/A` / `SAVE` (+ `Gen Test User` gdy `DBG_ENABLED = true`). 10 motywow (5 LITE-compat + 5 PRO).
+- **Customize (PRO++ v5.4)** — 6 wierszy: `Theme` / `Name` / `Vibration ON-OFF` / `Pre-start  Off / 3s / 5s / 10s / 15s` / `Sensors ON-OFF-N/A` / `SAVE` (+ `Gen Test User` gdy `DBG_ENABLED = true` → 7 wierszy). 10 motywow (5 LITE-compat + 5 PRO).
 - **Gen Test User** — dostepny jako ostatni wiersz Customize gdy `DBG_ENABLED`. SELECT otwiera ekran potwierdzenia `FT_GTU` (nie uruchamia bezposrednio). Umozliwia uzytkownikowi bezpieczne zapoznanie sie z apka bez ryzyka przypadkowego nadpisania danych.
 - **Name editor** — 8-znakowy edytor z wheel pickerem
 - **Breathe config** — **6 trybow**:
@@ -769,7 +794,7 @@ Identyczne wzorce jak w LITE + dodatkowe:
 
 ---
 
-## Storage — klucze (~61)
+## Storage — klucze (~62)
 
 ### Presety
 `lst_md`, `sv_co_mx`, `sv_co_rn`, `sv_co_df`, `sv_o2_mx`, `sv_o2_rn`, `sv_o2_df`, `sv_br_m`, `sv_br_ii`, `sv_br_hi`, `sv_br_ei`, `sv_br_xi`, `sv_br_si`
@@ -777,7 +802,7 @@ Identyczne wzorce jak w LITE + dodatkowe:
 Presety aktualizowane automatycznie przez `_savePreset()` przy kazdej sesji (obojetnie czy rekomendowana, z planu, czy z manualnej konfiguracji).
 
 ### Customize
-`usr_thm`, `usr_nm`, `usr_vib`, `usr_sn`
+`usr_thm`, `usr_nm`, `usr_vib`, `usr_pst`, `usr_sn`
 
 ### Apnea
 `ap_pb`, `ap_lg0`, `ap_lg1`, `ap_lg2`, `ap_h0`, `ap_h1`, `ap_h2`, `ap_h3`, `ap_h4`
@@ -842,7 +867,7 @@ Apnea i "More..." uzywaja `_cINH` (kolor INHALE motywu).
 | PAU | — | Wznow | HOME + track FAIL | Wznow |
 | DONE | — | HOME | HOME | HOME |
 | STAT | Zmienia strone | HOME | HOME | Zmienia strone |
-| CUST | Zmienia pole (4 lub 5 gdy DBG) | Cycle/Edit/Toggle/**→GTU**/Save | Prev / HOME | Row-based tap |
+| CUST | Zmienia pole (5 lub 6 gdy DBG) | Cycle/Edit/Toggle/**Pre-start cycle**/Toggle/**→GTU**/Save | Prev / HOME | Row-based tap |
 | NAME | Zmienia znak | Next pozycja | Prev / CUST | UP/DN |
 | RST | — | Reset → HOME | MORE | — |
 | GTU | — | _genTestUser() → HOME | CUST | — |
@@ -857,13 +882,57 @@ Apnea i "More..." uzywaja `_cINH` (kolor INHALE motywu).
 - **ID:** 44886d01-5977-4c0d-9871-2f2e8e80f7ae
 - **Stany:** 15
 - **Timer UI:** 100ms tick (10 Hz)
-- **Storage:** ~66 kluczy (w tym 5 x `ap_h0..4`, 8 x `wk_s/wk_h` weekly, `dy_bits`/`dy_ref` activity bitmap, 8 x sensor: `usr_sn`/`sn_brad_last`/`sn_brad_best`/`sn_brad_hist`/`sn_calm_last`/`sn_calm_avg`/`sn_bb_start`/`sn_hr_drop_avg`)
+- **Storage:** ~67 kluczy (w tym 5 x `ap_h0..4`, 8 x `wk_s/wk_h` weekly, `dy_bits`/`dy_ref` activity bitmap, 8 x sensor: `usr_sn`/`sn_brad_last`/`sn_brad_best`/`sn_brad_hist`/`sn_calm_last`/`sn_calm_avg`/`sn_bb_start`/`sn_hr_drop_avg`, `usr_pst` pre-start alert)
 - **Kompatybilnosc:** 80 zegarkow Garmin
 - **Build:** `_PROD/breathtrainingsystem.prg` + `_STORE/breathtrainingsystem.iq`
 
 ---
 
 ## Ostatnie zmiany (changelog)
+
+### Najnowsze (PRO++ v5.4) — Pre-start vibration alert (feature request)
+
+**Geneza**: feature request od uzytkownika trenujacego CO2/O2 tables — prosba o opcjonalny "alert ostrzegawczy" kilka sekund przed startem holdu, zeby zdazyc sie przygotowac (rozluznienie, wstrzymanie myslowe, zamkniecie oczu) zamiast byc zaskoczonym pojedynczym mocnym pulsem startowym.
+
+**Nowy wiersz w Customize**: `Pre-start  Off / 3s / 5s / 10s / 15s` — 4-ty wiersz, miedzy `Vibration` a `Sensors`. Tap albo LEFT/RIGHT cyklicznie po 5 wartosciach. Zapisywane jako `usr_pst` (Number 0..4 indeks do `PS_OPTS = [0, 3, 5, 10, 15]`).
+
+**Dystynktywny wzor wibracji** — funkcja `_vibePreStart()` odpala **trzy krotkie miekkie pulsy** (intensywnosc 55, 80 ms wibracji, 140 ms przerwy ×3). Celowo rozny od wszystkich istniejacych sygnalow:
+
+| Sygnal | Wzor | Znaczenie |
+|---|---|---|
+| Hold start ("GO") | `_vibe(100, 260)` — jedno mocne uderzenie | "TERAZ wstrzymaj oddech" |
+| Rest start | `_vibe(60, 140)` — jeden sredni puls | "zaczyna sie przerwa" |
+| Koniec rundy | `_vibeDouble(80, 120, 80)` — dwa szybkie | "runda zakonczona" |
+| **Pre-start (NOWE)** | **trzy delikatne pulsy z przerwami** | **"uwaga, zaraz start"** |
+
+Trzy-taktowy delikatny rytm czyta sie jako "przygotuj sie" a nie "TERAZ" — rozpoznawalny samym wyczuciem, oczy moga zostac zamkniete.
+
+**Audition w menu** — kazda zmiana wartosci (poza `Off`) odtwarza wzor, zeby user mogl od razu poczuc roznice wzgledem start signal.
+
+**Gdzie sie odpala**:
+1. **CO2 / O2 tables** (`FT_ACT`, faza `BP_RST`) — glowny use case. Hook w `onTick`: gdy `_tPS - _tPE == preStartSec` → odpala raz, ustawia `_preAlertFired`.
+2. **Readiness Check** (`FT_READY`, faza `RP_BREATHE`) — analogiczna logika dla 30 s breathe-up przed swobodnym apnea attempt.
+3. **Pure breathing modes** — celowo bez zmian, brak struktury rest→hold.
+
+**Edge cases pokryte**:
+- `Off` → alert nie odpala sie nigdy (kompatybilnosc z userami ktorzy chca starego flow).
+- `Vibration  OFF` master switch → `_vibePreStart()` od razu wraca, jak `_vibe`/`_vibeDouble`.
+- Okres odpoczynku krotszy niz wybrana wartosc (np. `Hard CO2` ostatnia runda ma 20 s rest a Pre-start = 15 s) → warunek nie wyzwoli sie, alert sie nie odpali (zamiast nakladac na sygnal startu).
+- Strażnik `_tPE > 0` blokuje fire'a w pierwszym tick'u rest period (zapobiega sytuacji `rest_period == pre_start` -> alert+start w tej samej sekundzie).
+- Reset fabryczny (`_resetAll()`) — `_psIdx = 0`, `_preAlertFired = false`.
+
+**Flaga `_preAlertFired`** — gwarantuje **jeden alert na rest period**. Resetowana w `_nxTblPh()` (przejscie PRP→RST i HLD→RST), `_startTbl()` (start nowej tabeli), `_rdStart()` (start Readiness Check).
+
+**Generalizacja tap hit-test w `FT_CUST`** — poprzednia implementacja miala hard-coded `m34` i `m45` dla 5-6 wierszy. Nowa wersja uzywa loopa z stalym `rowStep` i obsluguje dowolna liczbe wierszy (przyszle dodatki nie beda wymagaly zmian w hit-test math).
+
+**Guide / Legenda** — dodana nowa sekcja `# PRE-START ALERT` w `FT_HELP` (5 wpisow):
+- "Soft warn before each hold"
+- "Customize -> Pre-start"
+- "Off / 3s / 5s / 10s / 15s"
+- "Distinct from start signal"
+- "Fires in CO2/O2 + Readiness"
+
+Sekcja wstawiona miedzy `# READINESS CHECK` a `# TRAINING PLAN` (logiczny flow: pre-start fires *during* readiness check breath-up). Liczba wpisow w guide: 65 → 71, liczba sekcji: 10 → 11. Przy okazji naprawiono pre-existing off-by-one w `HLP_N` (poprzednio 65 zamiast 66 — ostatni wpis `Access via More -> Train Plan` byl niedostepny w UI; teraz `HLP_N = 71` matchuje rzeczywista dlugosc tablicy).
 
 ### Najnowsze (PRO++ v5.3) — Gen Test User confirmation + Guide / Legenda
 

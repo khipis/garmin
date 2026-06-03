@@ -30,36 +30,42 @@
 
 class CollisionSystem {
 
+    // Reusable return array — sample() is called from a single
+    // controller path so it's safe to recycle.  Saves a 5-int
+    // allocation every tick.
+    hidden static var _ret;
+
     // Returns [fell, tile, boosted, tileX, tileY].
     static function sample(px, py, path, physics) {
-        // Probe 5 points (centre + N / S / E / W at 0.30 tile).
-        var probes = [
-            [px,        py       ],
-            [px + 0.30, py       ],
-            [px - 0.30, py       ],
-            [px,        py + 0.30],
-            [px,        py - 0.30]
-        ];
-        var anySolid    = false;
-        var ctrTile     = SR_T_NONE;
-        var ctrTX       = px.toNumber();
-        var ctrTY       = py.toNumber();
-        var boostedNow  = false;
+        // Inlined 5-point probe (centre + N / S / E / W at 0.30
+        // tile).  Earlier revisions built an array of [px, py]
+        // pairs and looped over it — fine for correctness but
+        // wasted ~6 allocations per tick just to walk a fixed
+        // sequence we can spell out directly.
+        var ctrTX = px.toNumber();
+        var ctrTY = py.toNumber();
+        var ctrTile = path.tileAt(ctrTX, ctrTY);
+        var anySolid = (ctrTile != SR_T_NONE);
 
-        for (var i = 0; i < probes.size(); i++) {
-            var p   = probes[i];
-            var tx  = p[0].toNumber();
-            var ty  = p[1].toNumber();
-            var t   = path.tileAt(tx, ty);
-            if (t != SR_T_NONE) { anySolid = true; }
-            if (i == 0) {
-                ctrTile = t;
-                ctrTX   = tx;
-                ctrTY   = ty;
-            }
+        if (!anySolid) {
+            var t1 = path.tileAt((px + 0.30).toNumber(), ctrTY);
+            if (t1 != SR_T_NONE) { anySolid = true; }
+        }
+        if (!anySolid) {
+            var t2 = path.tileAt((px - 0.30).toNumber(), ctrTY);
+            if (t2 != SR_T_NONE) { anySolid = true; }
+        }
+        if (!anySolid) {
+            var t3 = path.tileAt(ctrTX, (py + 0.30).toNumber());
+            if (t3 != SR_T_NONE) { anySolid = true; }
+        }
+        if (!anySolid) {
+            var t4 = path.tileAt(ctrTX, (py - 0.30).toNumber());
+            if (t4 != SR_T_NONE) { anySolid = true; }
         }
 
-        var fell = !anySolid;
+        var fell       = !anySolid;
+        var boostedNow = false;
 
         // Side effects only on the CENTRE-probe tile so a glancing
         // hover near the edge of a boost doesn't fire it.
@@ -74,6 +80,12 @@ class CollisionSystem {
             }
         }
 
-        return [fell, ctrTile, boostedNow, ctrTX, ctrTY];
+        if (_ret == null) { _ret = new [5]; }
+        _ret[0] = fell;
+        _ret[1] = ctrTile;
+        _ret[2] = boostedNow;
+        _ret[3] = ctrTX;
+        _ret[4] = ctrTY;
+        return _ret;
     }
 }

@@ -72,12 +72,21 @@ class BallisticsSystem {
 
     function clear() { live = 0; targetIdx = -1; }
 
+    // "Soft clear" — freeze the bullet at its current position
+    // (still renderable as a static trail) but stop integrating
+    // motion.  Used to keep the trace visible for a few RESULT
+    // ticks so the player sees WHERE the bullet hit, then it
+    // fades.  Renderer treats `live > 0` as "draw me".
+    function freeze() { live = 2; }
+
     // Advance the bullet by one tick.  `wind` is the active wind
     // strength.  Only DRIFT is integrated here — the muzzle
     // direction is constant by construction.  Returns true when
     // the bullet has finished its flight (caller resolves the hit).
+    // Frozen bullets (live == 2) do not tick; the caller never
+    // calls tick() on them anyway, but we guard for safety.
     function tick(wind) {
-        if (live == 0) { return false; }
+        if (live != 1) { return false; }
         ttl++;
         vy = vy + SS_GRAVITY;
         vx = vx + wind * SS_WIND_PER_TICK;

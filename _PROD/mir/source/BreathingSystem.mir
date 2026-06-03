@@ -97,299 +97,320 @@ _Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_50_21_53_4_s
         putv self :_steadyRemain %tmp.5;
 _Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_50_21_53_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc"; @line = 58; @symbol_functiondef = [tick,58,13,17]; @symbol_param<0> = [gy,58,18,20]; @symbol_param<1> = [gp,58,22,24]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc"; @line = 59; @symbol_functiondef = [softReset,59,13,22]; ]
+    function softReset() {
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_59_25_62_4_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 60 8 ]
+        %tmp.1 = 0;
+        symbol [ steady ? 60 8 14 ];
+        putv self :steady %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 60 20 ]
+        %tmp.2 = 0;
+        symbol [ holdT ? 60 20 25 ];
+        putv self :holdT %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 60 31 ]
+        %tmp.3 = 1.0;
+        symbol [ fatigue ? 60 31 38 ];
+        putv self :fatigue %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 61 8 ]
+        %tmp.4 = 0;
+        symbol [ _steadyRemain ? 61 8 21 ];
+        putv self :_steadyRemain %tmp.4;
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_59_25_62_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc"; @line = 67; @symbol_functiondef = [tick,67,13,17]; @symbol_param<0> = [gy,67,18,20]; @symbol_param<1> = [gp,67,22,24]; ]
     function tick(gy, gp) {
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_58_26_116_4_start:
-[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 59 8 ]
-        symbol [ _t %tmp.3 59 8 10 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_67_26_125_4_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 68 8 ]
+        symbol [ _t %tmp.3 68 8 10 ];
         %tmp.3 = getv ? :_t;
         %tmp.4 = add %tmp.3 1;
-        symbol [ _t ? 59 8 10 ];
+        symbol [ _t ? 68 8 10 ];
         putv self :_t dup %tmp.4;
-[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 61 8 ]
-        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_58_26_116_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_58_26_116_4_stop" ]
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 70 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_67_26_125_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_67_26_125_4_stop" ]
         %dy.1 = local;
-        symbol [ dy %dy.1 61 12 14 ];
+        symbol [ dy %dy.1 70 12 14 ];
         %tmp.5 = lgetv %gy;
-        symbol [ gy %tmp.5 61 17 19 ];
-        symbol [ _lastYaw %tmp.7 61 22 30 ];
+        symbol [ gy %tmp.5 70 17 19 ];
+        symbol [ _lastYaw %tmp.7 70 22 30 ];
         %tmp.7 = getv ? :_lastYaw;
         %tmp.8 = sub %tmp.5 %tmp.7;
         lputv %dy.1 %tmp.8;
-        symbol [ dy %dy.1 61 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 62 8 ]
-        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_58_26_116_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_58_26_116_4_stop" ]
+        symbol [ dy %dy.1 70 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 71 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_67_26_125_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_67_26_125_4_stop" ]
         %dp.2 = local;
-        symbol [ dp %dp.2 62 12 14 ];
+        symbol [ dp %dp.2 71 12 14 ];
         %tmp.9 = lgetv %gp;
-        symbol [ gp %tmp.9 62 17 19 ];
-        symbol [ _lastPitch %tmp.11 62 22 32 ];
+        symbol [ gp %tmp.9 71 17 19 ];
+        symbol [ _lastPitch %tmp.11 71 22 32 ];
         %tmp.11 = getv ? :_lastPitch;
         %tmp.12 = sub %tmp.9 %tmp.11;
         lputv %dp.2 %tmp.12;
-        symbol [ dp %dp.2 62 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 63 8 ]
+        symbol [ dp %dp.2 71 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 72 8 ]
         %tmp.13 = lgetv %gy;
-        symbol [ gy %tmp.13 63 19 21 ];
-        symbol [ _lastYaw ? 63 8 16 ];
+        symbol [ gy %tmp.13 72 19 21 ];
+        symbol [ _lastYaw ? 72 8 16 ];
         putv self :_lastYaw %tmp.13;
-[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 63 23 ]
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 72 23 ]
         %tmp.14 = lgetv %gp;
-        symbol [ gp %tmp.14 63 36 38 ];
-        symbol [ _lastPitch ? 63 23 33 ];
+        symbol [ gp %tmp.14 72 36 38 ];
+        symbol [ _lastPitch ? 72 23 33 ];
         putv self :_lastPitch %tmp.14;
-[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 64 8 ]
-        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_58_26_116_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_58_26_116_4_stop" ]
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 73 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_67_26_125_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_67_26_125_4_stop" ]
         %motion.3 = local;
-        symbol [ motion %motion.3 64 12 18 ];
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_64_22_64_37_begin:
+        symbol [ motion %motion.3 73 12 18 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_73_22_73_37_begin:
         %tmp.15 = lgetv %dy.1;
-        symbol [ dy %tmp.15 64 22 24 ];
+        symbol [ dy %tmp.15 73 22 24 ];
         %tmp.16 = 0;
         %tmp.17 = lt %tmp.15 %tmp.16;
-        bf %tmp.17 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_64_22_64_37_else_false;
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_64_22_64_37_true:
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_73_22_73_37_else_false;
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_73_22_73_37_true:
         %tmp.18 = lgetv %dy.1;
-        symbol [ dy %tmp.18 64 32 34 ];
+        symbol [ dy %tmp.18 73 32 34 ];
         %tmp.19 = sub 0 %tmp.18;
         push %tmp.19;
-        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_64_22_64_37_end;
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_64_22_64_37_else_false:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_73_22_73_37_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_73_22_73_37_else_false:
         %tmp.20 = lgetv %dy.1;
-        symbol [ dy %tmp.20 64 37 39 ];
+        symbol [ dy %tmp.20 73 37 39 ];
         push %tmp.20;
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_64_22_64_37_end:
-        %tmp.21 = phi [%tmp.17 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_64_22_64_37_begin] [%tmp.19 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_64_22_64_37_true] [%tmp.20 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_64_22_64_37_else_false] [%tmp.21 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_64_22_64_37_end];
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_64_44_64_59_begin:
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_73_22_73_37_end:
+        %tmp.21 = phi [%tmp.17 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_73_22_73_37_begin] [%tmp.19 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_73_22_73_37_true] [%tmp.20 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_73_22_73_37_else_false] [%tmp.21 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_73_22_73_37_end];
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_73_44_73_59_begin:
         %tmp.22 = lgetv %dp.2;
-        symbol [ dp %tmp.22 64 44 46 ];
+        symbol [ dp %tmp.22 73 44 46 ];
         %tmp.23 = 0;
         %tmp.24 = lt %tmp.22 %tmp.23;
-        bf %tmp.24 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_64_44_64_59_else_false;
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_64_44_64_59_true:
+        bf %tmp.24 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_73_44_73_59_else_false;
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_73_44_73_59_true:
         %tmp.25 = lgetv %dp.2;
-        symbol [ dp %tmp.25 64 54 56 ];
+        symbol [ dp %tmp.25 73 54 56 ];
         %tmp.26 = sub 0 %tmp.25;
         push %tmp.26;
-        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_64_44_64_59_end;
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_64_44_64_59_else_false:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_73_44_73_59_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_73_44_73_59_else_false:
         %tmp.27 = lgetv %dp.2;
-        symbol [ dp %tmp.27 64 59 61 ];
+        symbol [ dp %tmp.27 73 59 61 ];
         push %tmp.27;
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_64_44_64_59_end:
-        %tmp.28 = phi [%tmp.24 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_64_44_64_59_begin] [%tmp.26 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_64_44_64_59_true] [%tmp.27 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_64_44_64_59_else_false] [%tmp.28 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_64_44_64_59_end];
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_73_44_73_59_end:
+        %tmp.28 = phi [%tmp.24 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_73_44_73_59_begin] [%tmp.26 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_73_44_73_59_true] [%tmp.27 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_73_44_73_59_else_false] [%tmp.28 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_73_44_73_59_end];
         %tmp.29 = add %tmp.21 %tmp.28;
         lputv %motion.3 %tmp.29;
-        symbol [ motion %motion.3 64 12 18 ];
-[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 69 8 ]
-        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_58_26_116_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_58_26_116_4_stop" ]
+        symbol [ motion %motion.3 73 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 78 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_67_26_125_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_67_26_125_4_stop" ]
         %STILL.4 = local;
-        symbol [ STILL %STILL.4 69 12 17 ];
+        symbol [ STILL %STILL.4 78 12 17 ];
         %tmp.30 = 0.012;
         lputv %STILL.4 %tmp.30;
-        symbol [ STILL %STILL.4 69 12 17 ];
-[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 70 8 ]
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_70_8_75_8_if_stmt:
+        symbol [ STILL %STILL.4 78 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 79 8 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_79_8_84_8_if_stmt:
         %tmp.31 = lgetv %motion.3;
-        symbol [ motion %tmp.31 70 12 18 ];
+        symbol [ motion %tmp.31 79 12 18 ];
         %tmp.32 = lgetv %STILL.4;
-        symbol [ STILL %tmp.32 70 21 26 ];
+        symbol [ STILL %tmp.32 79 21 26 ];
         %tmp.33 = lt %tmp.31 %tmp.32;
-        bf %tmp.33 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_70_8_75_8_if_else_false;
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_70_8_75_8_if_true:
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_70_28_72_8_start:
-[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 71 12 ]
-        symbol [ holdT %tmp.36 71 12 17 ];
+        bf %tmp.33 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_79_8_84_8_if_else_false;
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_79_8_84_8_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_79_28_81_8_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 80 12 ]
+        symbol [ holdT %tmp.36 80 12 17 ];
         %tmp.36 = getv ? :holdT;
         %tmp.37 = add %tmp.36 1;
-        symbol [ holdT ? 71 12 17 ];
+        symbol [ holdT ? 80 12 17 ];
         putv self :holdT dup %tmp.37;
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_70_28_72_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_70_8_75_8_if_end;
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_70_8_75_8_if_else_false:
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_72_15_75_8_start:
-[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 73 12 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_79_28_81_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_79_8_84_8_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_79_8_84_8_if_else_false:
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_81_15_84_8_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 82 12 ]
         %tmp.38 = 0;
-        symbol [ holdT ? 73 12 17 ];
+        symbol [ holdT ? 82 12 17 ];
         putv self :holdT %tmp.38;
-[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 74 12 ]
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 83 12 ]
         %tmp.39 = 0;
-        symbol [ _steadyRemain ? 74 12 25 ];
+        symbol [ _steadyRemain ? 83 12 25 ];
         putv self :_steadyRemain %tmp.39;
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_72_15_75_8_stop:
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_70_8_75_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 80 8 ]
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_80_8_82_8_if_stmt:
-        symbol [ holdT %tmp.41 80 12 17 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_81_15_84_8_stop:
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_79_8_84_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 89 8 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_89_8_91_8_if_stmt:
+        symbol [ holdT %tmp.41 89 12 17 ];
         %tmp.41 = getv ? :holdT;
-        symbol [ SS_STEADY_HOLD %tmp.43 80 21 35 ];
+        symbol [ SS_STEADY_HOLD %tmp.43 89 21 35 ];
         %tmp.43 = getv ? :SS_STEADY_HOLD;
         %tmp.44 = eq %tmp.41 %tmp.43;
-        bf %tmp.44 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_80_8_82_8_if_end;
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_80_8_82_8_if_true:
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_80_37_82_8_start:
-[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 81 12 ]
-        symbol [ SS_STEADY_WINDOW %tmp.46 81 28 44 ];
+        bf %tmp.44 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_89_8_91_8_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_89_8_91_8_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_89_37_91_8_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 90 12 ]
+        symbol [ SS_STEADY_WINDOW %tmp.46 90 28 44 ];
         %tmp.46 = getv ? :SS_STEADY_WINDOW;
-        symbol [ _steadyRemain ? 81 12 25 ];
+        symbol [ _steadyRemain ? 90 12 25 ];
         putv self :_steadyRemain %tmp.46;
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_80_37_82_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_80_8_82_8_if_end;
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_80_8_82_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 84 8 ]
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_84_8_89_8_if_stmt:
-        symbol [ _steadyRemain %tmp.48 84 12 25 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_89_37_91_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_89_8_91_8_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_89_8_91_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 93 8 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_93_8_98_8_if_stmt:
+        symbol [ _steadyRemain %tmp.48 93 12 25 ];
         %tmp.48 = getv ? :_steadyRemain;
         %tmp.49 = 0;
         %tmp.50 = gt %tmp.48 %tmp.49;
-        bf %tmp.50 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_84_8_89_8_if_else_false;
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_84_8_89_8_if_true:
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_84_31_87_8_start:
-[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 85 12 ]
-        symbol [ _steadyRemain %tmp.53 85 12 25 ];
+        bf %tmp.50 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_93_8_98_8_if_else_false;
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_93_8_98_8_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_93_31_96_8_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 94 12 ]
+        symbol [ _steadyRemain %tmp.53 94 12 25 ];
         %tmp.53 = getv ? :_steadyRemain;
         %tmp.54 = sub %tmp.53 1;
-        symbol [ _steadyRemain ? 85 12 25 ];
+        symbol [ _steadyRemain ? 94 12 25 ];
         putv self :_steadyRemain dup %tmp.54;
-[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 86 12 ]
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 95 12 ]
         %tmp.55 = 1;
-        symbol [ steady ? 86 12 18 ];
+        symbol [ steady ? 95 12 18 ];
         putv self :steady %tmp.55;
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_84_31_87_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_84_8_89_8_if_end;
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_84_8_89_8_if_else_false:
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_87_15_89_8_start:
-[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 88 12 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_93_31_96_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_93_8_98_8_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_93_8_98_8_if_else_false:
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_96_15_98_8_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 97 12 ]
         %tmp.56 = 0;
-        symbol [ steady ? 88 12 18 ];
+        symbol [ steady ? 97 12 18 ];
         putv self :steady %tmp.56;
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_87_15_89_8_stop:
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_84_8_89_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 92 8 ]
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_92_8_99_8_if_stmt:
-        symbol [ holdT %tmp.58 92 12 17 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_96_15_98_8_stop:
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_93_8_98_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 101 8 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_101_8_108_8_if_stmt:
+        symbol [ holdT %tmp.58 101 12 17 ];
         %tmp.58 = getv ? :holdT;
-        symbol [ SS_HOLD_DECAY %tmp.60 92 20 33 ];
+        symbol [ SS_HOLD_DECAY %tmp.60 101 20 33 ];
         %tmp.60 = getv ? :SS_HOLD_DECAY;
         %tmp.61 = gt %tmp.58 %tmp.60;
-        bf %tmp.61 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_92_8_99_8_if_else_false;
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_92_8_99_8_if_true:
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_92_35_97_8_start:
-[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 94 12 ]
-        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_92_35_97_8_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_92_35_97_8_stop" ]
+        bf %tmp.61 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_101_8_108_8_if_else_false;
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_101_8_108_8_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_101_35_106_8_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 103 12 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_101_35_106_8_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_101_35_106_8_stop" ]
         %over.5 = local;
-        symbol [ over %over.5 94 16 20 ];
-        symbol [ holdT %tmp.63 94 23 28 ];
+        symbol [ over %over.5 103 16 20 ];
+        symbol [ holdT %tmp.63 103 23 28 ];
         %tmp.63 = getv ? :holdT;
-        symbol [ SS_HOLD_DECAY %tmp.65 94 31 44 ];
+        symbol [ SS_HOLD_DECAY %tmp.65 103 31 44 ];
         %tmp.65 = getv ? :SS_HOLD_DECAY;
         %tmp.66 = sub %tmp.63 %tmp.65;
         lputv %over.5 %tmp.66;
-        symbol [ over %over.5 94 16 20 ];
-[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 95 12 ]
-        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_92_35_97_8_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_92_35_97_8_stop" ]
+        symbol [ over %over.5 103 16 20 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 104 12 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_101_35_106_8_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_101_35_106_8_stop" ]
         %ramp.6 = local;
-        symbol [ ramp %ramp.6 95 16 20 ];
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_95_23_95_60_begin:
+        symbol [ ramp %ramp.6 104 16 20 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_104_23_104_60_begin:
         %tmp.67 = lgetv %over.5;
-        symbol [ over %tmp.67 95 24 28 ];
+        symbol [ over %tmp.67 104 24 28 ];
         %tmp.68 = 60;
         %tmp.69 = gt %tmp.67 %tmp.68;
-        bf %tmp.69 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_95_23_95_60_else_false;
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_95_23_95_60_true:
+        bf %tmp.69 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_104_23_104_60_else_false;
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_104_23_104_60_true:
         %tmp.70 = 1.0;
         push %tmp.70;
-        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_95_23_95_60_end;
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_95_23_95_60_else_false:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_104_23_104_60_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_104_23_104_60_else_false:
         %tmp.71 = lgetv %over.5;
-        symbol [ over %tmp.71 95 43 47 ];
-        symbol [ toFloat %tmp.72 95 48 55 ];
+        symbol [ over %tmp.71 104 43 47 ];
+        symbol [ toFloat %tmp.72 104 48 55 ];
         %tmp.72 = getv function %tmp.71 :toFloat;
         %tmp.73 = invoke %tmp.71 %tmp.72();
         %tmp.74 = 60.0;
         %tmp.75 = div %tmp.73 %tmp.74;
         push %tmp.75;
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_95_23_95_60_end:
-        %tmp.76 = phi [%tmp.69 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_95_23_95_60_begin] [%tmp.70 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_95_23_95_60_true] [%tmp.75 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_95_23_95_60_else_false] [%tmp.76 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_95_23_95_60_end];
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_104_23_104_60_end:
+        %tmp.76 = phi [%tmp.69 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_104_23_104_60_begin] [%tmp.70 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_104_23_104_60_true] [%tmp.75 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_104_23_104_60_else_false] [%tmp.76 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_104_23_104_60_end];
         lputv %ramp.6 %tmp.76;
-        symbol [ ramp %ramp.6 95 16 20 ];
-[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 96 12 ]
+        symbol [ ramp %ramp.6 104 16 20 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 105 12 ]
         %tmp.77 = 1.0;
-        symbol [ SS_BR_HOLD_PENALTY %tmp.79 96 29 47 ];
+        symbol [ SS_BR_HOLD_PENALTY %tmp.79 105 29 47 ];
         %tmp.79 = getv ? :SS_BR_HOLD_PENALTY;
         %tmp.80 = 1.0;
         %tmp.81 = sub %tmp.79 %tmp.80;
         %tmp.82 = lgetv %ramp.6;
-        symbol [ ramp %tmp.82 96 57 61 ];
+        symbol [ ramp %tmp.82 105 57 61 ];
         %tmp.83 = mul %tmp.81 %tmp.82;
         %tmp.84 = add %tmp.77 %tmp.83;
-        symbol [ fatigue ? 96 12 19 ];
+        symbol [ fatigue ? 105 12 19 ];
         putv self :fatigue %tmp.84;
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_92_35_97_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_92_8_99_8_if_end;
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_92_8_99_8_if_else_false:
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_97_15_99_8_start:
-[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 98 12 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_101_35_106_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_101_8_108_8_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_101_8_108_8_if_else_false:
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_106_15_108_8_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 107 12 ]
         %tmp.85 = 1.0;
-        symbol [ fatigue ? 98 12 19 ];
+        symbol [ fatigue ? 107 12 19 ];
         putv self :fatigue %tmp.85;
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_97_15_99_8_stop:
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_92_8_99_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 103 8 ]
-        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_58_26_116_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_58_26_116_4_stop" ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_106_15_108_8_stop:
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_101_8_108_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 112 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_67_26_125_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_67_26_125_4_stop" ]
         %phA.7 = local;
-        symbol [ phA %phA.7 103 12 15 ];
-        symbol [ _t %tmp.87 103 18 20 ];
+        symbol [ phA %phA.7 112 12 15 ];
+        symbol [ _t %tmp.87 112 18 20 ];
         %tmp.87 = getv ? :_t;
-        symbol [ toFloat %tmp.88 103 21 28 ];
+        symbol [ toFloat %tmp.88 112 21 28 ];
         %tmp.88 = getv function %tmp.87 :toFloat;
         %tmp.89 = invoke %tmp.87 %tmp.88();
         %tmp.90 = 6.2832;
         %tmp.91 = mul %tmp.89 %tmp.90;
-        symbol [ SS_BR_PER_A_TICKS %tmp.93 103 42 59 ];
+        symbol [ SS_BR_PER_A_TICKS %tmp.93 112 42 59 ];
         %tmp.93 = getv ? :SS_BR_PER_A_TICKS;
-        symbol [ toFloat %tmp.94 103 60 67 ];
+        symbol [ toFloat %tmp.94 112 60 67 ];
         %tmp.94 = getv function %tmp.93 :toFloat;
         %tmp.95 = invoke %tmp.93 %tmp.94();
         %tmp.96 = div %tmp.91 %tmp.95;
         lputv %phA.7 %tmp.96;
-        symbol [ phA %phA.7 103 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 104 8 ]
-        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_58_26_116_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_58_26_116_4_stop" ]
+        symbol [ phA %phA.7 112 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 113 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_67_26_125_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_67_26_125_4_stop" ]
         %phB.8 = local;
-        symbol [ phB %phB.8 104 12 15 ];
-        symbol [ _t %tmp.98 104 18 20 ];
+        symbol [ phB %phB.8 113 12 15 ];
+        symbol [ _t %tmp.98 113 18 20 ];
         %tmp.98 = getv ? :_t;
-        symbol [ toFloat %tmp.99 104 21 28 ];
+        symbol [ toFloat %tmp.99 113 21 28 ];
         %tmp.99 = getv function %tmp.98 :toFloat;
         %tmp.100 = invoke %tmp.98 %tmp.99();
         %tmp.101 = 6.2832;
         %tmp.102 = mul %tmp.100 %tmp.101;
-        symbol [ SS_BR_PER_B_TICKS %tmp.104 104 42 59 ];
+        symbol [ SS_BR_PER_B_TICKS %tmp.104 113 42 59 ];
         %tmp.104 = getv ? :SS_BR_PER_B_TICKS;
-        symbol [ toFloat %tmp.105 104 60 67 ];
+        symbol [ toFloat %tmp.105 113 60 67 ];
         %tmp.105 = getv function %tmp.104 :toFloat;
         %tmp.106 = invoke %tmp.104 %tmp.105();
         %tmp.107 = div %tmp.102 %tmp.106;
         lputv %phB.8 %tmp.107;
-        symbol [ phB %phB.8 104 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 105 8 ]
-        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_58_26_116_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_58_26_116_4_stop" ]
+        symbol [ phB %phB.8 113 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 114 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_67_26_125_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_67_26_125_4_stop" ]
         %sY.9 = local;
-        symbol [ sY %sY.9 105 12 14 ];
-        symbol [ Math %tmp.108 105 18 22 ];
+        symbol [ sY %sY.9 114 12 14 ];
+        symbol [ Math %tmp.108 114 18 22 ];
         %tmp.108 = getm $.Toybox.Math;
-        symbol [ sin %tmp.109 105 23 26 ];
+        symbol [ sin %tmp.109 114 23 26 ];
         %tmp.109 = getv function %tmp.108 :sin;
         %tmp.110 = lgetv %phA.7;
-        symbol [ phA %tmp.110 105 27 30 ];
+        symbol [ phA %tmp.110 114 27 30 ];
         %tmp.111 = invoke %tmp.108 %tmp.109(%tmp.110);
-        symbol [ Math %tmp.112 105 42 46 ];
+        symbol [ Math %tmp.112 114 42 46 ];
         %tmp.112 = getm $.Toybox.Math;
-        symbol [ sin %tmp.113 105 47 50 ];
+        symbol [ sin %tmp.113 114 47 50 ];
         %tmp.113 = getv function %tmp.112 :sin;
         %tmp.114 = lgetv %phB.8;
-        symbol [ phB %tmp.114 105 51 54 ];
+        symbol [ phB %tmp.114 114 51 54 ];
         %tmp.115 = 1.31;
         %tmp.116 = add %tmp.114 %tmp.115;
         %tmp.117 = invoke %tmp.112 %tmp.113(%tmp.116);
@@ -397,26 +418,26 @@ _Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_92_8_99_8_if
         %tmp.119 = mul %tmp.117 %tmp.118;
         %tmp.120 = add %tmp.111 %tmp.119;
         lputv %sY.9 %tmp.120;
-        symbol [ sY %sY.9 105 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 106 8 ]
-        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_58_26_116_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_58_26_116_4_stop" ]
+        symbol [ sY %sY.9 114 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 115 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_67_26_125_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_67_26_125_4_stop" ]
         %sP.10 = local;
-        symbol [ sP %sP.10 106 12 14 ];
-        symbol [ Math %tmp.121 106 18 22 ];
+        symbol [ sP %sP.10 115 12 14 ];
+        symbol [ Math %tmp.121 115 18 22 ];
         %tmp.121 = getm $.Toybox.Math;
-        symbol [ cos %tmp.122 106 23 26 ];
+        symbol [ cos %tmp.122 115 23 26 ];
         %tmp.122 = getv function %tmp.121 :cos;
         %tmp.123 = lgetv %phA.7;
-        symbol [ phA %tmp.123 106 27 30 ];
+        symbol [ phA %tmp.123 115 27 30 ];
         %tmp.124 = 0.95;
         %tmp.125 = mul %tmp.123 %tmp.124;
         %tmp.126 = invoke %tmp.121 %tmp.122(%tmp.125);
-        symbol [ Math %tmp.127 106 42 46 ];
+        symbol [ Math %tmp.127 115 42 46 ];
         %tmp.127 = getm $.Toybox.Math;
-        symbol [ sin %tmp.128 106 47 50 ];
+        symbol [ sin %tmp.128 115 47 50 ];
         %tmp.128 = getv function %tmp.127 :sin;
         %tmp.129 = lgetv %phB.8;
-        symbol [ phB %tmp.129 106 51 54 ];
+        symbol [ phB %tmp.129 115 51 54 ];
         %tmp.130 = 1.07;
         %tmp.131 = mul %tmp.129 %tmp.130;
         %tmp.132 = 0.7;
@@ -426,65 +447,65 @@ _Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_92_8_99_8_if
         %tmp.136 = mul %tmp.134 %tmp.135;
         %tmp.137 = add %tmp.126 %tmp.136;
         lputv %sP.10 %tmp.137;
-        symbol [ sP %sP.10 106 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 109 8 ]
-        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_58_26_116_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_58_26_116_4_stop" ]
+        symbol [ sP %sP.10 115 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 118 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_67_26_125_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_67_26_125_4_stop" ]
         %damp.11 = local;
-        symbol [ damp %damp.11 109 12 16 ];
+        symbol [ damp %damp.11 118 12 16 ];
         %tmp.138 = 1.0;
         lputv %damp.11 %tmp.138;
-        symbol [ damp %damp.11 109 12 16 ];
-[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 110 8 ]
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_110_8_112_8_if_stmt:
-        symbol [ steady %tmp.140 110 12 18 ];
+        symbol [ damp %damp.11 118 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 119 8 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_119_8_121_8_if_stmt:
+        symbol [ steady %tmp.140 119 12 18 ];
         %tmp.140 = getv ? :steady;
         %tmp.141 = 1;
         %tmp.142 = eq %tmp.140 %tmp.141;
-        bf %tmp.142 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_110_8_112_8_if_end;
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_110_8_112_8_if_true:
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_110_25_112_8_start:
-[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 111 12 ]
-        symbol [ SS_BR_STEADY_GAIN %tmp.144 111 19 36 ];
+        bf %tmp.142 @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_119_8_121_8_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_119_8_121_8_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_119_25_121_8_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 120 12 ]
+        symbol [ SS_BR_STEADY_GAIN %tmp.144 120 19 36 ];
         %tmp.144 = getv ? :SS_BR_STEADY_GAIN;
-        symbol [ toFloat %tmp.145 111 37 44 ];
+        symbol [ toFloat %tmp.145 120 37 44 ];
         %tmp.145 = getv function %tmp.144 :toFloat;
         %tmp.146 = invoke %tmp.144 %tmp.145();
         %tmp.147 = 100.0;
         %tmp.148 = div %tmp.146 %tmp.147;
         lputv %damp.11 %tmp.148;
-        symbol [ damp %damp.11 111 12 16 ];
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_110_25_112_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_110_8_112_8_if_end;
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_110_8_112_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 114 8 ]
+        symbol [ damp %damp.11 120 12 16 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_119_25_121_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_119_8_121_8_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_119_8_121_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 123 8 ]
         %tmp.149 = lgetv %sY.9;
-        symbol [ sY %tmp.149 114 20 22 ];
-        symbol [ SS_BR_AMP_YAW %tmp.151 114 25 38 ];
+        symbol [ sY %tmp.149 123 20 22 ];
+        symbol [ SS_BR_AMP_YAW %tmp.151 123 25 38 ];
         %tmp.151 = getv ? :SS_BR_AMP_YAW;
         %tmp.152 = mul %tmp.149 %tmp.151;
-        symbol [ fatigue %tmp.154 114 43 50 ];
+        symbol [ fatigue %tmp.154 123 43 50 ];
         %tmp.154 = getv ? :fatigue;
         %tmp.155 = mul %tmp.152 %tmp.154;
         %tmp.156 = lgetv %damp.11;
-        symbol [ damp %tmp.156 114 53 57 ];
+        symbol [ damp %tmp.156 123 53 57 ];
         %tmp.157 = mul %tmp.155 %tmp.156;
-        symbol [ swayYaw ? 114 8 15 ];
+        symbol [ swayYaw ? 123 8 15 ];
         putv self :swayYaw %tmp.157;
-[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 115 8 ]
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc" 124 8 ]
         %tmp.158 = lgetv %sP.10;
-        symbol [ sP %tmp.158 115 20 22 ];
-        symbol [ SS_BR_AMP_PITCH %tmp.160 115 25 40 ];
+        symbol [ sP %tmp.158 124 20 22 ];
+        symbol [ SS_BR_AMP_PITCH %tmp.160 124 25 40 ];
         %tmp.160 = getv ? :SS_BR_AMP_PITCH;
         %tmp.161 = mul %tmp.158 %tmp.160;
-        symbol [ fatigue %tmp.163 115 43 50 ];
+        symbol [ fatigue %tmp.163 124 43 50 ];
         %tmp.163 = getv ? :fatigue;
         %tmp.164 = mul %tmp.161 %tmp.163;
         %tmp.165 = lgetv %damp.11;
-        symbol [ damp %tmp.165 115 53 57 ];
+        symbol [ damp %tmp.165 124 53 57 ];
         %tmp.166 = mul %tmp.164 %tmp.165;
-        symbol [ swayPitch ? 115 8 17 ];
+        symbol [ swayPitch ? 124 8 17 ];
         putv self :swayPitch %tmp.166;
-_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_58_26_116_4_stop:
+_Users_kkorolczuk_work_garmin_sniperscope_source_BreathingSystem_mc_67_26_125_4_stop:
     }
 }
 [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/BreathingSystem.mc"; @line = 23; ]

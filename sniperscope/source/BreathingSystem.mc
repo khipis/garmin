@@ -52,6 +52,15 @@ class BreathingSystem {
         _t = 0; _steadyRemain = 0;
     }
 
+    // Inter-round reset: zero the fatigue / hold counters but keep
+    // the breathing PHASE counter `_t` rolling.  This way the scope
+    // sway doesn't visibly snap to a different oscillation phase
+    // when a new round begins — the world feels continuous.
+    function softReset() {
+        steady = 0; holdT = 0; fatigue = 1.0;
+        _steadyRemain = 0;
+    }
+
     // Called once per tick.  `gy, gp` are the CURRENT smoothed
     // gaze angles AFTER the AimSystem update — we use the
     // frame-to-frame delta to detect "is the player holding still".

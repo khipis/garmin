@@ -78,6 +78,14 @@ const DP_STD  = 1;
 const DP_HARD = 2;
 const DP_LBL = ["Easy", "Standard", "Hard"];
 
+// Pre-start vibration alert before a breath hold begins (table mode + READY).
+// Off / 3s / 5s / 10s / 15s, indexed by _psIdx.  The alert pattern is
+// intentionally different from the hold-start signal so the user can tell
+// them apart by feel alone (eyes can stay closed during prep).
+const PS_OPTS = [0, 3, 5, 10, 15];
+const PS_LBL  = ["Off", "3s", "5s", "10s", "15s"];
+const PS_COUNT = 5;
+
 const PL_NONE = -1;
 const PL_BEG  = 0;
 const PL_CO2  = 1;
@@ -99,7 +107,7 @@ const PL_DESC = ["4 weeks intro", "Build CO2 tolerance", "Grow your hold",
 // Each entry is one text line.  Lines starting with "# " are section headers
 // — the "# " prefix is stripped before rendering (only used for detection).
 // Lines starting with "  " are indented sub-items.
-const HLP_N = 65;
+const HLP_N = 71;
 const HLP = [
     "# NAVIGATION",
     "SELECT: start / confirm",
@@ -163,6 +171,12 @@ const HLP = [
     "READY: full intensity OK",
     "LIGHT SESSION: easy today",
     "REST: skip training today",
+    "# PRE-START ALERT",
+    "Soft warn before each hold",
+    "Customize -> Pre-start",
+    "Off / 3s / 5s / 10s / 15s",
+    "Distinct from start signal",
+    "Fires in CO2/O2 + Readiness",
     "# TRAINING PLAN",
     "Adaptive multi-week program",
     "Plan adjusts to your results",
@@ -262,6 +276,10 @@ class BreathTrainingSystemView extends WatchUi.View {
 
     hidden var _cF; hidden var _nmPos; hidden var _nmChrs; hidden var _thIdx; hidden var _nmStr;
     hidden var _vibOn;
+    // Pre-start alert (Off / 3s / 5s / 10s / 15s).
+    //   _psIdx           — index into PS_OPTS
+    //   _preAlertFired   — guard so we only fire once per rest period
+    hidden var _psIdx; hidden var _preAlertFired;
     hidden var _cstRowY0; hidden var _cstRowY1; hidden var _cstRowY2; hidden var _cstRowY3;
     hidden var _cINH; hidden var _cHI; hidden var _cEXH; hidden var _cHE;
     hidden var _cPRP; hidden var _cRST; hidden var _cHLD;
@@ -411,6 +429,9 @@ class BreathTrainingSystemView extends WatchUi.View {
         _thIdx = (th instanceof Number) ? th : 0;
         var vb = Application.Storage.getValue("usr_vib");
         _vibOn = (vb instanceof Toybox.Lang.Boolean) ? vb : true;
+        var ps = Application.Storage.getValue("usr_pst");
+        _psIdx = (ps instanceof Number && ps >= 0 && ps < PS_COUNT) ? ps : 0;
+        _preAlertFired = false;
         _nmChrs = new [8];
         var nm = Application.Storage.getValue("usr_nm");
         if (!(nm instanceof Toybox.Lang.String)) { nm = "USER"; }
@@ -1283,6 +1304,13 @@ class BreathTrainingSystemView extends WatchUi.View {
                     if (_rdT >= 30) {
                         _rdPh = RP_APNEA; _rdT = 0; _rdApE = 0; _vibe(80, 200);
                     } else {
+                        // Pre-start alert before the apnea attempt: fires once,
+                        // exactly preStart seconds before the BREATHE→APNEA flip.
+                        var preR = PS_OPTS[_psIdx];
+                        if (preR > 0 && !_preAlertFired && _rdT == 30 - preR) {
+                            _preAlertFired = true;
+                            _vibePreStart();
+                        }
                         var inPh = _rdT % 8;
                         if (inPh == 0) { _vibe(60, 120); _rdBrPh = 0; }
                         else if (inPh == 4) { _vibe(50, 80); _rdBrPh = 1; }
@@ -1330,6 +1358,17 @@ class BreathTrainingSystemView extends WatchUi.View {
                 _tPSub++;
                 if (_tPSub >= 10) {
                     _tPSub = 0; _tPE++;
+                    // Optional pre-start alert: when in the rest period before
+                    // a breath-hold, fire a soft triple-beat exactly preStart
+                    // seconds before BP_RST flips to BP_HLD so the user has
+                    // time to settle before the hard "GO" pulse.
+                    if (_tPh == BP_RST && !_preAlertFired) {
+                        var pre = PS_OPTS[_psIdx];
+                        if (pre > 0 && _tPS - _tPE == pre && _tPE > 0) {
+                            _preAlertFired = true;
+                            _vibePreStart();
+                        }
+                    }
                     if (_tPE >= _tPS) { _nxTblPh(); }
                 }
             }
@@ -1363,6 +1402,7 @@ class BreathTrainingSystemView extends WatchUi.View {
     hidden function _nxTblPh() {
         if (_tPh == BP_PRP) {
             _tPh = BP_RST; _tPS = _tR[_tRnd]; _tPE = 0; _tPSub = 0;
+            _preAlertFired = false;
             _vibe(60, 140);
         } else if (_tPh == BP_RST) {
             _tPh = BP_HLD; _tPS = _tH[_tRnd]; _tPE = 0; _tPSub = 0;
@@ -1392,6 +1432,7 @@ class BreathTrainingSystemView extends WatchUi.View {
                 _vibeDone(); _gs = FT_DONE;
             } else {
                 _tPh = BP_RST; _tPS = _tR[_tRnd]; _tPE = 0; _tPSub = 0;
+                _preAlertFired = false;
                 _vibe(60, 140);
             }
         }
@@ -1491,6 +1532,24 @@ class BreathTrainingSystemView extends WatchUi.View {
                     new Toybox.Attention.VibeProfile(inten, dur),
                     new Toybox.Attention.VibeProfile(0, gap),
                     new Toybox.Attention.VibeProfile(inten, dur)]);
+            }
+        }
+    }
+
+    // Pre-start alert pattern.  Three short low-intensity beats with longer
+    // gaps — deliberately distinct from `_vibe(100, 260)` (single hard pulse,
+    // = "GO!") and from `_vibeDouble(60, 100, 80)` (rest start).  The triple
+    // rhythm reads as "heads-up, almost time" rather than "fire now".
+    hidden function _vibePreStart() {
+        if (!_vibOn) { return; }
+        if (Toybox has :Attention) {
+            if (Toybox.Attention has :vibrate) {
+                Toybox.Attention.vibrate([
+                    new Toybox.Attention.VibeProfile(55, 80),
+                    new Toybox.Attention.VibeProfile(0,  140),
+                    new Toybox.Attention.VibeProfile(55, 80),
+                    new Toybox.Attention.VibeProfile(0,  140),
+                    new Toybox.Attention.VibeProfile(55, 80)]);
             }
         }
     }
@@ -1606,7 +1665,7 @@ class BreathTrainingSystemView extends WatchUi.View {
     }
 
     hidden function _custRows() {
-        return DBG_ENABLED ? 6 : 5;
+        return DBG_ENABLED ? 7 : 6;
     }
 
     hidden function _actCustRow() {
@@ -1614,6 +1673,12 @@ class BreathTrainingSystemView extends WatchUi.View {
         else if (_cF == 1) { _nmPos = 0; _gs = FT_NAME; }
         else if (_cF == 2) { _vibOn = !_vibOn; if (_vibOn) { _vibe(60, 120); } }
         else if (_cF == 3) {
+            // Pre-start alert: cycle through Off / 3s / 5s / 10s / 15s.
+            // Buzz the new pattern on every step so the user can audition it.
+            _psIdx = (_psIdx + 1) % PS_COUNT;
+            if (_vibOn && PS_OPTS[_psIdx] > 0) { _vibePreStart(); }
+        }
+        else if (_cF == 4) {
             _snOn = !_snOn;
             Application.Storage.setValue("usr_sn", _snOn);
             if (_snOn) {
@@ -1625,7 +1690,7 @@ class BreathTrainingSystemView extends WatchUi.View {
                 _snHrEnabled = false; _snHrCur = 0; _snAvail = 0;
             }
         }
-        else if (DBG_ENABLED && _cF == 4) { _gs = FT_GTU; }
+        else if (DBG_ENABLED && _cF == 5) { _gs = FT_GTU; }
         else { _saveCustom(); _gs = FT_HOME; }
     }
 
@@ -1927,14 +1992,21 @@ class BreathTrainingSystemView extends WatchUi.View {
                 var m01 = (_cstRowY0 + _cstRowY1) / 2;
                 var m12 = (_cstRowY1 + _cstRowY2) / 2;
                 var m23 = (_cstRowY2 + _cstRowY3) / 2;
-                var m34 = _cstRowY3 + rowStep / 2;
-                var m45 = _cstRowY3 + rowStep + rowStep / 2;
-                if (y < m01)             { r = 0; }
-                else if (y < m12)        { r = 1; }
-                else if (y < m23)        { r = 2; }
-                else if (y < m34)        { r = 3; }
-                else if (nRows > 5 && y < m45) { r = 4; }
-                else                     { r = nRows - 1; }
+                if      (y < m01) { r = 0; }
+                else if (y < m12) { r = 1; }
+                else if (y < m23) { r = 2; }
+                else {
+                    // Beyond row 3 anchor — extrapolate by uniform rowStep.
+                    // Each subsequent midpoint sits at _cstRowY3 + rowStep/2,
+                    // _cstRowY3 + 3*rowStep/2, _cstRowY3 + 5*rowStep/2, ...
+                    var idx = 3;
+                    var threshold = _cstRowY3 + rowStep / 2;
+                    while (idx < nRows - 1 && y >= threshold) {
+                        idx++;
+                        threshold += rowStep;
+                    }
+                    r = idx;
+                }
             } else {
                 var rowPct = 100 / nRows;
                 r = nRows - 1;
@@ -2017,6 +2089,7 @@ class BreathTrainingSystemView extends WatchUi.View {
         if (_mode == FM_CO) { _genCO2(maxH, _tTR); }
         else { _genO2(maxH, _tTR); }
         _tRnd = 0; _tPh = BP_PRP; _tPS = 3; _tPE = 0; _tPSub = 0;
+        _preAlertFired = false;
         _actStart(_mode == FM_CO ? "CO2 Table" : "O2 Table");
         _gs = FT_ACT; _vibe(80, 300);
         _snSessionStart();
@@ -2049,6 +2122,10 @@ class BreathTrainingSystemView extends WatchUi.View {
     hidden function _adjCust(dir) {
         if (_cF == 0) { _thIdx = (_thIdx + dir + 10 + 10) % 10; _applyTheme(); }
         else if (_cF == 2) { _vibOn = !_vibOn; if (_vibOn) { _vibe(60, 120); } }
+        else if (_cF == 3) {
+            _psIdx = (_psIdx + dir + PS_COUNT) % PS_COUNT;
+            if (_vibOn && PS_OPTS[_psIdx] > 0) { _vibePreStart(); }
+        }
     }
 
     hidden function _adjNmCh(dir) {
@@ -2388,6 +2465,7 @@ class BreathTrainingSystemView extends WatchUi.View {
     hidden function _rdStart() {
         _gs = FT_READY;
         _rdPh = RP_BREATHE; _rdT = 0; _rdSub = 0; _rdApE = 0; _rdBrPh = 0;
+        _preAlertFired = false;
         _vibe(70, 150);
     }
 
@@ -2516,6 +2594,7 @@ class BreathTrainingSystemView extends WatchUi.View {
         Application.Storage.setValue("usr_nm", _nmStr);
         Application.Storage.setValue("usr_thm", _thIdx);
         Application.Storage.setValue("usr_vib", _vibOn);
+        Application.Storage.setValue("usr_pst", _psIdx);
         Application.Storage.setValue("usr_sn", _snOn);
     }
 
@@ -3103,6 +3182,8 @@ class BreathTrainingSystemView extends WatchUi.View {
         _nmStr = _bldNm();
         _applyTheme();
         _vibOn = true;
+        _psIdx = 0;
+        _preAlertFired = false;
         _stBrC = 0; _stBrT = 0; _stApC = 0; _stCoC = 0; _stO2C = 0; _stTotT = 0;
         _stSucCo = 0; _stFailCo = 0; _stSucO2 = 0; _stFailO2 = 0;
         _stSucAp = 0; _stFailAp = 0; _stStreak = 0; _stLastDay = 0; _stHoldT = 0;
@@ -4485,24 +4566,30 @@ class BreathTrainingSystemView extends WatchUi.View {
         dc.setColor((_cF == 2) ? _cINH : 0x444444, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, y2 + 2, Graphics.FONT_XTINY, "Vibration  " + (_vibOn ? "ON" : "OFF"), Graphics.TEXT_JUSTIFY_CENTER);
 
+        // Pre-start alert: configurable warning vibration that fires N seconds
+        // before a breath-hold begins (Off / 3s / 5s / 10s / 15s).  The pulse
+        // pattern is intentionally distinct from the hold-start signal.
         var y3 = y2 + itemH;
         _cstRowY3 = y3;
-        // Sensors row — shows ON/OFF + tiny availability hint when ON
-        var snLbl = "Sensors  " + (_snOn ? "ON" : "OFF");
-        if (_snOn && _snAvail == 0) { snLbl = "Sensors  N/A"; }
         dc.setColor((_cF == 3) ? _cINH : 0x444444, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, y3 + 2, Graphics.FONT_XTINY, snLbl, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, y3 + 2, Graphics.FONT_XTINY, "Pre-start  " + PS_LBL[_psIdx], Graphics.TEXT_JUSTIFY_CENTER);
 
         var y4 = y3 + itemH;
+        var snLbl = "Sensors  " + (_snOn ? "ON" : "OFF");
+        if (_snOn && _snAvail == 0) { snLbl = "Sensors  N/A"; }
+        dc.setColor((_cF == 4) ? _cINH : 0x444444, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, y4 + 2, Graphics.FONT_XTINY, snLbl, Graphics.TEXT_JUSTIFY_CENTER);
+
+        var y5 = y4 + itemH;
         if (DBG_ENABLED) {
-            dc.setColor((_cF == 4) ? 0xFF8833 : 0x442211, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, y4 + 2, Graphics.FONT_XTINY, "Gen Test User", Graphics.TEXT_JUSTIFY_CENTER);
-            var y5 = y4 + itemH;
+            dc.setColor((_cF == 5) ? 0xFF8833 : 0x442211, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, y5 + 2, Graphics.FONT_XTINY, "Gen Test User", Graphics.TEXT_JUSTIFY_CENTER);
+            var y6 = y5 + itemH;
+            dc.setColor((_cF == 6) ? 0xFFFFFF : 0x444444, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, y6 + 2, Graphics.FONT_XTINY, "SAVE", Graphics.TEXT_JUSTIFY_CENTER);
+        } else {
             dc.setColor((_cF == 5) ? 0xFFFFFF : 0x444444, Graphics.COLOR_TRANSPARENT);
             dc.drawText(cx, y5 + 2, Graphics.FONT_XTINY, "SAVE", Graphics.TEXT_JUSTIFY_CENTER);
-        } else {
-            dc.setColor((_cF == 4) ? 0xFFFFFF : 0x444444, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, y4 + 2, Graphics.FONT_XTINY, "SAVE", Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 

@@ -119,4 +119,6 @@ const SS_SCENE_ROOFTOP   = 2;   // skyline with chimneys
 const SS_K_SENS = "ss_sens";
 const SS_K_DIFF = "ss_diff";
 const SS_K_BEST = "ss_best";
-const SS_K_HS   = "ss_hs";    // best headshot streak ever
+const SS_K_HS   = "ss_hs";    // best headshots in a single mission
+const SS_K_DIST = "ss_dist";  // longest one-shot kill (metres)
+const SS_K_KILL = "ss_kill";  // lifetime hostiles eliminated

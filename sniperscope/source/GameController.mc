@@ -56,6 +56,12 @@ class GameController {
     var bestHeadshots;
     var roundTimer;     // ticks remaining before auto-miss
 
+    // ── Spectacular-shot stats (persistent across missions) ──
+    // bestDistance — furthest hostile ever taken down in metres
+    // lifetimeKills — total hostiles killed across all sessions
+    var bestDistance;
+    var lifetimeKills;
+
     // ── Last shot result (for the RESULT screen) ─────────────
     var lastZone;       // SS_ZONE_*
     var lastWasPrimary;
@@ -97,6 +103,8 @@ class GameController {
         headshots     = 0;
         bestHeadshots = 0;
         roundTimer    = 0;
+        bestDistance  = 0;
+        lifetimeKills = 0;
 
         lastZone        = SS_ZONE_MISS;
         lastWasPrimary  = false;
@@ -133,12 +141,16 @@ class GameController {
         if (diff < 0 || diff > 2) { diff = SS_DIFF_NORMAL; }
         bestScore     = _li(SS_K_BEST, 0);
         bestHeadshots = _li(SS_K_HS, 0);
+        bestDistance  = _li(SS_K_DIST, 0);
+        lifetimeKills = _li(SS_K_KILL, 0);
     }
     function savePrefs() {
         _sv(SS_K_SENS, sens);
         _sv(SS_K_DIFF, diff);
         _sv(SS_K_BEST, bestScore);
         _sv(SS_K_HS,   bestHeadshots);
+        _sv(SS_K_DIST, bestDistance);
+        _sv(SS_K_KILL, lifetimeKills);
     }
 
     // ── Menu ─────────────────────────────────────────────────
@@ -191,9 +203,21 @@ class GameController {
     }
     hidden function _beginRound() {
         targets.spawnRound(round);
-        wind.roll(diff);
+        // Wind continuity — earlier revisions rerolled wind every
+        // single round, which made the scene "feel" like a hard
+        // reset after every shot (the player had to relearn the
+        // hold-over each time).  Now wind only refreshes on the
+        // FIRST round and then every 2nd round after, so the
+        // player gets to use what they learned for at least one
+        // follow-up shot.
+        if (round == 0 || (round & 1) == 0) {
+            wind.roll(diff);
+        }
         bullet.clear();
-        breath.reset();
+        // Soft-reset breath: clear the fatigue counter but keep the
+        // sway phase running so the scope doesn't visibly snap to
+        // a different oscillation phase between rounds.
+        breath.softReset();
         resultT = 0; recoilT = 0; slowmoT = 0;
         roundTimer = SS_ROUND_TIMEOUT;
         state = SS_PLAY;
@@ -343,7 +367,7 @@ class GameController {
             lastTargetY    = sp[1];
             lastWasPrimary = (targets.primary[tIdx] == 1);
             if (lastWasPrimary) {
-                _registerHit(zone);
+                _registerHit(zone, targets.z[tIdx]);
             } else {
                 _registerDecoyHit();
             }
@@ -351,7 +375,12 @@ class GameController {
         } else {
             _registerMiss(false);
         }
-        bullet.clear();
+        // Freeze (not clear) the bullet so the renderer keeps the
+        // tracer on screen for the RESULT freeze frame.  This bridges
+        // the shot and the impact visually — earlier revisions made
+        // the trace vanish instantly, contributing to the "this is a
+        // brand new screen" reset feeling.  Cleared on round advance.
+        bullet.freeze();
         state   = SS_RESULT;
         resultT = SS_RESULT_TICKS;
         slowmoT = (zone == SS_ZONE_HEAD) ? SS_SLOWMO_TICKS * 2
@@ -360,18 +389,28 @@ class GameController {
                 : (zone != SS_ZONE_MISS ? 3 : 1);
     }
 
-    hidden function _registerHit(zone) {
+    hidden function _registerHit(zone, distanceM) {
         var pts;
         if      (zone == SS_ZONE_HEAD)  { pts = 250; headshots++; }
         else if (zone == SS_ZONE_CHEST) { pts = 120; }
         else                              { pts =  60; }
         // Difficulty bonus.
         pts = pts + diff * 20;
-        // Distance bonus (further → more points).
-        // (Handled implicitly via the target spawn distance — far
-        // targets are smaller and harder to hit, so getting them at
-        // all already feels like more reward.)
+        // Distance bonus — explicitly rewards taking the harder shot.
+        // 1 pt per metre at far range adds ~480 to a far-distance kill.
+        pts = pts + distanceM;
         score = score + pts;
+
+        // Persistent spectacular-shot stats.
+        lifetimeKills = lifetimeKills + 1;
+        if (distanceM > bestDistance) {
+            bestDistance = distanceM;
+            savePrefs();
+        } else if ((lifetimeKills & 7) == 0) {
+            // Periodically flush so the kill count doesn't get
+            // lost if the player quits mid-mission.
+            savePrefs();
+        }
     }
     hidden function _registerDecoyHit() {
         score = score - 100;
