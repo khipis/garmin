@@ -38,6 +38,11 @@ class GameController {
     var boostFlash;
     var fallT;
     var startY;
+    // Grace period counter — how many consecutive ticks the ball
+    // has been "off" the path.  We only enter SR_FALL after 2+
+    // consecutive misses so a single numerical edge-of-tile artefact
+    // (common at turn-segment transitions) doesn't kill the player.
+    hidden var _missStreak;
 
     function initialize() {
         gyro      = new GyroInput();
@@ -138,6 +143,7 @@ class GameController {
         boostFlash= 0;
         fallT     = 0;
         distance  = 0;
+        _missStreak = 0;
         state     = SR_PLAY;
     }
 
@@ -174,9 +180,18 @@ class GameController {
             if (boosted)             { boostFlash = 12; }
             if (boostFlash > 0)      { boostFlash = boostFlash - 1; }
 
+            // Grace period: require 2 consecutive missed-tile ticks
+            // before triggering SR_FALL.  A single artefact tick at
+            // a turn-segment boundary is absorbed silently.
             if (fell) {
+                _missStreak = _missStreak + 1;
+            } else {
+                _missStreak = 0;
+            }
+            if (_missStreak >= 2) {
                 state = SR_FALL;
                 fallT = 0;
+                _missStreak = 0;
                 if (distance > bestScore) {
                     bestScore = distance;
                     _savePersist();

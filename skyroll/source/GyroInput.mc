@@ -14,9 +14,9 @@
 //
 // Both are unit-less (≈ ±1.0) and pre-clamped.
 //
-// Dead zone: ±35 mg around the calibrated rest.  Anything inside
-// is treated as exactly zero so the ball doesn't drift on a
-// motionless wrist.
+// Dead zone: ±20 mg around the calibrated rest (was ±35 mg).
+// Smaller zone means the ball responds sooner to a wrist tilt
+// without increasing drift on a steady wrist.
 // ═══════════════════════════════════════════════════════════════
 
 class GyroInput {
@@ -51,8 +51,8 @@ class GyroInput {
         else                             { sc = 0.0036; }
         var dx = ax - _calX;
         var dy = ay - _calY;
-        if (dx > -35 && dx < 35) { dx = 0; }
-        if (dy > -35 && dy < 35) { dy = 0; }
+        if (dx > -20 && dx < 20) { dx = 0; }
+        if (dy > -20 && dy < 20) { dy = 0; }
         var tx =  dx.toFloat() * sc;
         var ty = -dy.toFloat() * sc;
         // Saturating clamp — past ~±1.2 the player has tipped the

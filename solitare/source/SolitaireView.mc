@@ -152,22 +152,33 @@ class SolitaireView extends WatchUi.View {
 
     function doTap(tx, ty) {
         if (_gs == SOL_MENU) {
-            var y1 = _h * 52 / 100;
-            var y3 = _h * 64 / 100;
-            var rowH = _h * 10 / 100;
-            if (ty >= y1 && ty < y1 + rowH) { _menuSel = 0; }
-            else if (ty >= y3 && ty < y3 + rowH) { _menuSel = 1; }
-            else {
-                _drawCount = (_menuSel == 0) ? 1 : 3;
-                _deal();
+            var g = _menuGeo();
+            var rowX = g[0]; var rowY0 = g[1]; var rowW = g[2]; var rowH = g[3]; var gap = g[4];
+            for (var i = 0; i < 2; i++) {
+                var ry = rowY0 + i * (rowH + gap);
+                if (tx >= rowX && tx < rowX + rowW && ty >= ry && ty < ry + rowH) {
+                    // Tapping the already-selected row deals; otherwise just select.
+                    if (_menuSel == i) {
+                        _drawCount = (i == 0) ? 1 : 3;
+                        _deal();
+                    } else {
+                        _menuSel = i;
+                    }
+                    return;
+                }
             }
             return;
         }
         if (_gs == SOL_WON) { _gs = SOL_MENU; return; }
         if (_gs != SOL_PLAY || _autoFndQ) { return; }
+
         var p = _hitTest(tx, ty);
         if (p < 0) { return; }
+
         var now = System.getTimer();
+
+        // ── Double-tap anywhere → auto-best-move for selected card (or hovered) ──
+        // This is the "smart move" shortcut: two quick taps on the same spot.
         if (p == _lastTapP && (now - _lastTapT) < 500 && (now - _lastTapT) > 0) {
             _lastTapP = -1; _lastTapT = 0;
             _cur = p;
@@ -181,7 +192,28 @@ class SolitaireView extends WatchUi.View {
             return;
         }
         _lastTapP = p; _lastTapT = now;
-        _cur = p; _interact(p);
+
+        // ── Single tap when a card is already in hand ─────────────────────────
+        // • Tap the selected pile  → deselect (cancel pick-up).
+        // • Tap anywhere else      → just reposition the cursor; the card stays
+        //   in hand.  The player must tap that destination a second time to
+        //   confirm the placement.  This prevents accidental moves.
+        if (_sel >= 0) {
+            if (p == _sel) {
+                _cancel();
+            } else {
+                _cur = p;
+            }
+            return;
+        }
+
+        // ── Single tap with nothing selected → normal immediate interact ───────
+        // Move cursor to the tapped pile and act on it (pick up, flip stock, etc.)
+        _cur = p;
+        _tapSubIdx = -1;
+        // Re-run hit-test to capture _tapSubIdx for tableau sub-card selection
+        _hitTest(tx, ty);
+        _interact(p);
     }
 
     function doBack() {
@@ -634,38 +666,72 @@ class SolitaireView extends WatchUi.View {
         _drCur(dc);
     }
 
-    hidden function _drMenu(dc) {
-        dc.setColor(0x33AA55, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 14 / 100, Graphics.FONT_LARGE,
-            "SOLITAIRE", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0x77CC99, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 32 / 100, Graphics.FONT_SMALL,
-            "Klondike", Graphics.TEXT_JUSTIFY_CENTER);
+    // Chess-style menu geometry: [rowX, rowY0, rowW, rowH, gap]
+    hidden function _menuGeo() {
+        var rowH = _h * 13 / 100; if (rowH < 24) { rowH = 24; } if (rowH > 34) { rowH = 34; }
+        var rowW = _w * 70 / 100; if (rowW < 110) { rowW = 110; }
+        var rowX = (_w - rowW) / 2;
+        var gap  = _h * 2 / 100;  if (gap < 4) { gap = 4; }
+        var rowY0 = _h * 50 / 100;
+        return [rowX, rowY0, rowW, rowH, gap];
+    }
 
-        var sy = _h * 44 / 100;
+    hidden function _drMenu(dc) {
+        var cx = _w / 2;
+
+        if (_w == _h) {
+            dc.setColor(0x08220F, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(cx, _h / 2, _w / 2 - 1);
+        }
+
+        // Title
+        dc.setColor(0x33CC66, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, _h * 9 / 100, Graphics.FONT_MEDIUM,
+            "SOLITAIRE", Graphics.TEXT_JUSTIFY_CENTER);
+
+        // by Bitochi
+        dc.setColor(0x668877, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, _h * 25 / 100, Graphics.FONT_XTINY,
+            "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
+
+        // Suit preview
+        var sy = _h * 37 / 100;
         var ss = _w * 3 / 100; if (ss < 5) { ss = 5; }
         var sp = ss * 3;
-        dc.setColor(0x335544, Graphics.COLOR_TRANSPARENT);
-        _drSuit(dc, _w / 2 - sp - sp / 2, sy, 0, ss);
-        dc.setColor(0x553344, Graphics.COLOR_TRANSPARENT);
-        _drSuit(dc, _w / 2 - sp / 2, sy, 1, ss);
-        _drSuit(dc, _w / 2 + sp / 2, sy, 2, ss);
-        dc.setColor(0x335544, Graphics.COLOR_TRANSPARENT);
-        _drSuit(dc, _w / 2 + sp + sp / 2, sy, 3, ss);
+        dc.setColor(0x2A5540, Graphics.COLOR_TRANSPARENT);
+        _drSuit(dc, cx - sp - sp / 2, sy, 0, ss);
+        dc.setColor(0x803344, Graphics.COLOR_TRANSPARENT);
+        _drSuit(dc, cx - sp / 2, sy, 1, ss);
+        _drSuit(dc, cx + sp / 2, sy, 2, ss);
+        dc.setColor(0x2A5540, Graphics.COLOR_TRANSPARENT);
+        _drSuit(dc, cx + sp + sp / 2, sy, 3, ss);
 
-        var y1 = _h * 53 / 100;
-        var y3 = _h * 64 / 100;
-        dc.setColor((_menuSel == 0) ? 0xFFFFFF : 0x555555, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, y1, Graphics.FONT_SMALL,
-            "1 DRAW", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor((_menuSel == 1) ? 0xFFFFFF : 0x555555, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, y3, Graphics.FONT_SMALL,
-            "3 DRAW", Graphics.TEXT_JUSTIFY_CENTER);
+        // Rows (chess-style rounded buttons)
+        var rowLabels = ["1 DRAW", "3 DRAW"];
+        var g = _menuGeo();
+        var rowX = g[0]; var rowY0 = g[1]; var rowW = g[2]; var rowH = g[3]; var gap = g[4];
+        for (var i = 0; i < 2; i++) {
+            var ry  = rowY0 + i * (rowH + gap);
+            var sel = (i == _menuSel);
+            dc.setColor(sel ? 0x0A3A1A : 0x10201A, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);
+            dc.setColor(sel ? 0x44CC66 : 0x2A4A38, Graphics.COLOR_TRANSPARENT);
+            dc.drawRoundedRectangle(rowX, ry, rowW, rowH, 5);
+            if (sel) {
+                dc.setColor(0x44CC66, Graphics.COLOR_TRANSPARENT);
+                var ay = ry + rowH / 2;
+                dc.fillPolygon([[rowX + 5, ay - 4], [rowX + 5, ay + 4], [rowX + 11, ay]]);
+            }
+            dc.setColor(sel ? 0xAAFF99 : 0x668877, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, ry + (rowH - 16) / 2, Graphics.FONT_XTINY,
+                rowLabels[i], Graphics.TEXT_JUSTIFY_CENTER);
+        }
 
-        var pc = (_tick % 20 < 10) ? 0xFFCC44 : 0xAA8822;
+        // Footer hint
+        var pc = (_tick % 20 < 10) ? 0x447755 : 0x335544;
         dc.setColor(pc, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 79 / 100, Graphics.FONT_XTINY,
-            "SELECT TO DEAL", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, _h - 14, Graphics.FONT_XTINY,
+            "UP/DN move  SELECT deal", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function _drWinAnim(dc) {

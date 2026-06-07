@@ -77,7 +77,7 @@ const SR_X_HALF =  8;   // world.x range is [-SR_X_HALF .. SR_X_HALF-1]
 // values feel like a heavy steel marble on slightly-banked rails.
 const SR_FWD_BASE  =  7;   // ÷100 = 0.07 t/tick base forward roll
 const SR_FWD_TILT  =  3;   // ÷100 = 0.03 t/tick² pitch accel (±)
-const SR_SIDE_ACC  =  6;   // ÷100 = 0.06 t/tick² side accel (±)
+const SR_SIDE_ACC  =  9;   // ÷100 = 0.09 t/tick² side accel (was 6; snappier lateral response)
 const SR_FRIC_X    = 86;   // ÷100 = 0.86 (sideways friction)
 const SR_FRIC_Y    = 96;   // ÷100 = 0.96 (forward friction)
 const SR_MAX_VX    = 26;   // ÷100 = 0.26 t/tick

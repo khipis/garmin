@@ -96,6 +96,7 @@ APPS=(
   archery
   sniperscope
   skyroll
+  memo
 )
 
 FILTER=""
