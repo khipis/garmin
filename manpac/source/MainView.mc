@@ -81,7 +81,7 @@ class MainView extends WatchUi.View {
 
     hidden function _drawFooter(dc) {
         dc.setColor(0x666688, Graphics.COLOR_TRANSPARENT);
-        var hint = (ctrl.state == GS_PLAY) ? "swipe = turn" : "tap = menu";
+        var hint = (ctrl.state == GS_PLAY) ? "swipe / btns turn" : "tap = menu";
         dc.drawText(_sw / 2, _sh - 14, Graphics.FONT_XTINY,
                     hint, Graphics.TEXT_JUSTIFY_CENTER);
     }
@@ -98,6 +98,31 @@ class MainView extends WatchUi.View {
     function navSelect() {
         if (ctrl.state == GS_MENU) { ctrl.menuActivate(); return; }
         if (ctrl.state == GS_WIN || ctrl.state == GS_OVER) { ctrl.gotoMenu(); return; }
+    }
+
+    // True while a live game is running (used by the input handler to
+    // separate in-game button turns from menu navigation).
+    function isPlaying() { return ctrl.state == GS_PLAY; }
+
+    // Context-aware steering for the two left buttons.  Each button
+    // always drives the axis PERPENDICULAR to Pac-Man's current heading,
+    // so the controls feel natural relative to what's on screen:
+    //
+    //   heading UP / DOWN   →  middle = LEFT,  bottom = RIGHT
+    //   heading LEFT / RIGHT →  middle = UP,    bottom = DOWN
+    //
+    // (middle = left-middle button, bottom = left-bottom button.)
+    function steerMiddle() {
+        if (ctrl.state != GS_PLAY) { return; }
+        var d = ctrl.player.dir;
+        if (d == DIR_U || d == DIR_D) { ctrl.setDir(DIR_L); }
+        else                          { ctrl.setDir(DIR_U); }
+    }
+    function steerBottom() {
+        if (ctrl.state != GS_PLAY) { return; }
+        var d = ctrl.player.dir;
+        if (d == DIR_U || d == DIR_D) { ctrl.setDir(DIR_R); }
+        else                          { ctrl.setDir(DIR_D); }
     }
     function navBack() {
         if (ctrl.state == GS_PLAY || ctrl.state == GS_WIN || ctrl.state == GS_OVER) {

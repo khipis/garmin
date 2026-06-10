@@ -49,7 +49,10 @@ class BilliardView extends WatchUi.View {
         if (g.turn == TURN_PLAYER && (g.gs == BS_AIM || g.gs == BS_POWER)) {
             _drawAimLine(dc, g);
         }
-        if (g.gs == BS_AI_WAIT) { _drawAiThinking(dc, g); }
+        if (!g.pvpMode && g.gs == BS_AI_WAIT) { _drawAiThinking(dc, g); }
+        if (g.pvpMode && g.turn == TURN_AI && (g.gs == BS_AIM || g.gs == BS_POWER)) {
+            _drawAimLine(dc, g);
+        }
         if (g.gs == BS_POWER)   { _drawPowerBar(dc, g); }
         _drawHUD(dc, g);
         if (g.msgT > 0) { _drawMessage(dc, g); }
@@ -62,64 +65,79 @@ class BilliardView extends WatchUi.View {
         // Felt background
         dc.setColor(0x0C3010, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, 0, w, h);
-        // Mini table decoration
-        var tx1 = w*14/100; var tx2 = w*86/100;
-        var ty1 = h*24/100; var ty2 = h*45/100;
+        // Mini table — compact so rows have breathing room below
+        var tx1 = w*16/100; var tx2 = w*84/100;
+        var ty1 = h*21/100; var ty2 = h*34/100;
         dc.setColor(0x5C3010, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(tx1-4, ty1-4, tx2-tx1+8, ty2-ty1+8);
+        dc.fillRectangle(tx1-3, ty1-3, tx2-tx1+6, ty2-ty1+6);
         dc.setColor(0x0F5020, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(tx1, ty1, tx2-tx1, ty2-ty1);
         // Pocket dots
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(tx1, ty1, 4); dc.fillCircle(tx2, ty1, 4);
-        dc.fillCircle(tx1, ty2, 4); dc.fillCircle(tx2, ty2, 4);
-        dc.fillCircle((tx1+tx2)/2, ty1, 4); dc.fillCircle((tx1+tx2)/2, ty2, 4);
-        // Decorative balls — show colours from the CURRENT game type
+        dc.fillCircle(tx1, ty1, 3); dc.fillCircle(tx2, ty1, 3);
+        dc.fillCircle(tx1, ty2, 3); dc.fillCircle(tx2, ty2, 3);
+        dc.fillCircle((tx1+tx2)/2, ty1, 3); dc.fillCircle((tx1+tx2)/2, ty2, 3);
+        // Decorative balls
         _drawMenuRack(dc, g, tx1, ty1, tx2, ty2);
-        // Title
+        // Title + subtitle
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w/2, h*4/100, Graphics.FONT_MEDIUM, "BILLIARDS", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w/2, h*9/100, Graphics.FONT_SMALL, "BILLIARDS", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x44CC66, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w/2, h*16/100, Graphics.FONT_XTINY, "BITOCHI GAMES", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w/2, h*15/100, Graphics.FONT_XTINY, "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Three menu rows: MODE, DIFF, START. menuSel cursor highlights one.
-        // TAP / SELECT activates the focused row (cycle value or start).
-        // DN moves cursor down, UP moves cursor up.
-        var rowYs   = [h*49/100, h*62/100, h*78/100];
+        // Row positions — evenly spaced so nothing overlaps.
+        // Row 0 spans two lines (label + rules hint), so row 1 starts after both.
+        var r0y = h*38/100;   // GAME MODE label
+        var r0s = h*44/100;   // rules hint (smaller, dimmer)
+        var r1y = h*52/100;   // VS MODE
+        var r2y = h*61/100;   // DIFFICULTY
+        var r3y = h*72/100;   // START
         var dLabels = ["EASY", "MEDIUM", "HARD"];
         var dColors = [0x44CC44, 0xFFAA00, 0xEE3322];
 
-        // Row 0 — MODE
+        // Row 0 — GAME MODE
         var sel0 = (g.menuSel == 0);
         dc.setColor(sel0 ? 0xFFFFFF : 0x88AABB, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w/2, rowYs[0], Graphics.FONT_XTINY,
+        dc.drawText(w/2, r0y, Graphics.FONT_XTINY,
                     (sel0 ? "> " : "  ") + g.gameTypeLabel() + (sel0 ? " <" : "  "),
                     Graphics.TEXT_JUSTIFY_CENTER);
-        // Tiny rules subtitle below MODE row (always visible)
         var rules = (g.gameType == GT_3BALL)   ? "race - 3 balls"
                   : (g.gameType == GT_8BALL)   ? "groups - pot 8 to win"
                   : (g.gameType == GT_SNOOKER) ? "reds 1pt - black 7pt"
                                                : "lowest first - pot 9 wins";
-        dc.setColor(0x88BB88, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w/2, rowYs[0] + h*5/100, Graphics.FONT_XTINY,
-                    rules, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x567856, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w/2, r0s, Graphics.FONT_XTINY, rules, Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Row 1 — DIFFICULTY
+        // Row 1 — VS MODE
         var sel1 = (g.menuSel == 1);
+        var vsLabel = g.pvpMode ? "P vs P" : "P vs AI";
         dc.setColor(sel1 ? 0xFFFFFF : 0x88AABB, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w/2 - 2, rowYs[1], Graphics.FONT_XTINY,
-                    (sel1 ? "> " : "  ") + "Diff: ", Graphics.TEXT_JUSTIFY_RIGHT);
-        dc.setColor(dColors[g.diff], Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w/2 - 2, rowYs[1], Graphics.FONT_XTINY,
-                    dLabels[g.diff] + (sel1 ? " <" : "  "), Graphics.TEXT_JUSTIFY_LEFT);
+        dc.drawText(w/2, r1y, Graphics.FONT_XTINY,
+                    (sel1 ? "> " : "  ") + vsLabel + (sel1 ? " <" : "  "),
+                    Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Row 2 — START (blinking when focused so user knows to press)
-        var sel2  = (g.menuSel == 2);
+        // Row 2 — DIFFICULTY (dimmed/dashed when P vs P — AI is unused)
+        var sel2 = (g.menuSel == 2);
+        if (g.pvpMode) {
+            dc.setColor(0x384838, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w/2, r2y, Graphics.FONT_XTINY, "  Diff: —  ",
+                        Graphics.TEXT_JUSTIFY_CENTER);
+        } else {
+            dc.setColor(sel2 ? 0xFFFFFF : 0x88AABB, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w/2 - 2, r2y, Graphics.FONT_XTINY,
+                        (sel2 ? "> " : "  ") + "Diff: ", Graphics.TEXT_JUSTIFY_RIGHT);
+            dc.setColor(dColors[g.diff], Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w/2 - 2, r2y, Graphics.FONT_XTINY,
+                        dLabels[g.diff] + (sel2 ? " <" : "  "), Graphics.TEXT_JUSTIFY_LEFT);
+        }
+
+        // Row 3 — START (blinking when focused)
+        var sel3  = (g.menuSel == 3);
         var bright = (_tick % 14 < 7);
-        var startClr = sel2 ? (bright ? 0x44FF88 : 0xFFFFFF) : 0x228855;
+        var startClr = sel3 ? (bright ? 0x44FF88 : 0xFFFFFF) : 0x228855;
         dc.setColor(startClr, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w/2, rowYs[2], Graphics.FONT_XTINY,
-                    (sel2 ? "> START <" : "  START  "),
+        dc.drawText(w/2, r3y, Graphics.FONT_XTINY,
+                    (sel3 ? "> START <" : "  START  "),
                     Graphics.TEXT_JUSTIFY_CENTER);
     }
 
@@ -419,14 +437,19 @@ class BilliardView extends WatchUi.View {
     // ── HUD ───────────────────────────────────────────────────
     hidden function _drawHUD(dc, g) {
         var w = g.sw; var h = g.sh;
+        var pvp = g.pvpMode;
+        var p1Label = pvp ? "P1" : "YOU";
+        var p2Label = pvp ? "P2" : "AI";
+        var p1Clr   = 0x44CCFF;
+        var p2Clr   = pvp ? 0xFFCC44 : 0xFF8844;
         // HUD strip background
         dc.setColor(0x050D05, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, 0, w, g.vpY);
         // Player score (8-ball: show group, else: count of balls)
-        dc.setColor(0x44CCFF, Graphics.COLOR_TRANSPARENT);
-        var pLabel = "YOU:" + g.playerScore;
+        dc.setColor(p1Clr, Graphics.COLOR_TRANSPARENT);
+        var pLabel = p1Label + ":" + g.playerScore;
         if (g.gameType == GT_8BALL && g.playerGroup[0] != 0) {
-            pLabel = "YOU " + (g.playerGroup[0] == 1 ? "SOL" : "STR") + ":" + g.playerScore;
+            pLabel = p1Label + " " + (g.playerGroup[0] == 1 ? "SOL" : "STR") + ":" + g.playerScore;
         }
         dc.drawText(4, 1, Graphics.FONT_XTINY, pLabel, Graphics.TEXT_JUSTIFY_LEFT);
         // Turn / status + rules hint
@@ -434,17 +457,17 @@ class BilliardView extends WatchUi.View {
         if (g.gs == BS_ROLLING) {
             turnStr = "ROLLING..."; tClr = 0xBBBBBB;
         } else if (g.turn == TURN_PLAYER) {
-            turnStr = "YOUR TURN"; tClr = 0x44FF88;
+            turnStr = pvp ? "P1 TURN" : "YOUR TURN"; tClr = 0x44FF88;
         } else {
-            turnStr = "AI TURN"; tClr = 0xFF8844;
+            turnStr = pvp ? "P2 TURN" : "AI TURN"; tClr = pvp ? 0xFFCC44 : 0xFF8844;
         }
         dc.setColor(tClr, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w/2, 1, Graphics.FONT_XTINY, turnStr, Graphics.TEXT_JUSTIFY_CENTER);
-        // AI score (mirror of player label)
-        dc.setColor(0xFF8844, Graphics.COLOR_TRANSPARENT);
-        var aLabel = "AI:" + g.aiScore;
+        // Opponent score (mirror of player label)
+        dc.setColor(p2Clr, Graphics.COLOR_TRANSPARENT);
+        var aLabel = p2Label + ":" + g.aiScore;
         if (g.gameType == GT_8BALL && g.playerGroup[1] != 0) {
-            aLabel = "AI " + (g.playerGroup[1] == 1 ? "SOL" : "STR") + ":" + g.aiScore;
+            aLabel = p2Label + " " + (g.playerGroup[1] == 1 ? "SOL" : "STR") + ":" + g.aiScore;
         }
         dc.drawText(w-4, 1, Graphics.FONT_XTINY, aLabel, Graphics.TEXT_JUSTIFY_RIGHT);
 
@@ -479,6 +502,37 @@ class BilliardView extends WatchUi.View {
                         "UP/DN=aim  O=charge",
                         Graphics.TEXT_JUSTIFY_CENTER);
         }
+        // P2 turn hint in PvP when it's P2's turn
+        if (pvp && g.gs == BS_AIM && g.turn == TURN_AI) {
+            var hint2 = null;
+            if (g.gameType == GT_9BALL) {
+                var low2 = -1;
+                for (var b3 = 1; b3 < g.numBalls; b3++) {
+                    if (g.bAlive[b3]) { low2 = b3; break; }
+                }
+                if (low2 > 0) { hint2 = "hit " + low2 + " first"; }
+            } else if (g.gameType == GT_8BALL) {
+                var pg2 = g.playerGroup[1];
+                if (pg2 == 1)      { hint2 = "pot SOLIDS (1-7)"; }
+                else if (pg2 == 2) { hint2 = "pot STRIPES (9-15)"; }
+                else               { hint2 = "open table - any group"; }
+            } else if (g.gameType == GT_SNOOKER) {
+                var anyRed2 = false;
+                for (var b4 = 1; b4 <= 6; b4++) {
+                    if (g.bAlive[b4]) { anyRed2 = true; break; }
+                }
+                hint2 = anyRed2 ? "hit RED first" : "pot BLACK to win";
+            }
+            if (hint2 != null) {
+                dc.setColor(0xCCDDAA, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(w/2, h - h*15/100, Graphics.FONT_XTINY, hint2,
+                            Graphics.TEXT_JUSTIFY_CENTER);
+            }
+            dc.setColor(0x3D7755, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w/2, h - h*9/100, Graphics.FONT_XTINY,
+                        "UP/DN=aim  O=charge",
+                        Graphics.TEXT_JUSTIFY_CENTER);
+        }
     }
 
     // ── FLOATING MESSAGE ──────────────────────────────────────
@@ -497,21 +551,24 @@ class BilliardView extends WatchUi.View {
 
         // Winner from winReason (set by rules engine); fallback to score.
         var winner; var wClr; var sub = null;
+        var pvp = g.pvpMode;
         if (g.winReason == 1) {
-            winner = "YOU WIN!"; wClr = 0x44FF88;
+            winner = pvp ? "P1 WINS!" : "YOU WIN!"; wClr = 0x44FF88;
         } else if (g.winReason == 2) {
-            winner = "AI WINS!"; wClr = 0xFF4444;
+            winner = pvp ? "P2 WINS!" : "AI WINS!"; wClr = pvp ? 0xFFCC44 : 0xFF4444;
         } else if (g.winReason == 3) {
-            // Player won because AI illegally potted 8
-            winner = "YOU WIN!"; wClr = 0x44FF88;
-            sub = "AI fouled on 8-ball";
+            winner = pvp ? "P1 WINS!" : "YOU WIN!"; wClr = 0x44FF88;
+            sub = pvp ? "P2 fouled on 8-ball" : "AI fouled on 8-ball";
         } else if (g.winReason == 4) {
-            // AI won because player illegally potted 8
-            winner = "AI WINS!"; wClr = 0xFF4444;
-            sub = "You fouled on 8-ball";
-        } else if (g.playerScore > g.aiScore) { winner = "YOU WIN!"; wClr = 0x44FF88; }
-        else if (g.aiScore > g.playerScore)   { winner = "AI WINS!"; wClr = 0xFF4444; }
-        else                                  { winner = "DRAW!";    wClr = 0xFFCC44; }
+            winner = pvp ? "P2 WINS!" : "AI WINS!"; wClr = pvp ? 0xFFCC44 : 0xFF4444;
+            sub = pvp ? "P1 fouled on 8-ball" : "You fouled on 8-ball";
+        } else if (g.playerScore > g.aiScore) {
+            winner = pvp ? "P1 WINS!" : "YOU WIN!"; wClr = 0x44FF88;
+        } else if (g.aiScore > g.playerScore) {
+            winner = pvp ? "P2 WINS!" : "AI WINS!"; wClr = pvp ? 0xFFCC44 : 0xFF4444;
+        } else {
+            winner = "DRAW!"; wClr = 0xFFCC44;
+        }
 
         dc.setColor(wClr, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w/2, h*12/100, Graphics.FONT_MEDIUM, winner, Graphics.TEXT_JUSTIFY_CENTER);
@@ -521,15 +578,18 @@ class BilliardView extends WatchUi.View {
         }
 
         // Score boxes — "pts" for snooker, "balls" for the rest.
-        var unit = (g.gameType == GT_SNOOKER) ? "pts" : ("ball" + (g.playerScore == 1 ? "" : "s"));
+        var unit   = (g.gameType == GT_SNOOKER) ? "pts" : ("ball" + (g.playerScore == 1 ? "" : "s"));
         var aiUnit = (g.gameType == GT_SNOOKER) ? "pts" : ("ball" + (g.aiScore == 1 ? "" : "s"));
+        var p1Lbl  = pvp ? "P1" : "YOU";
+        var p2Lbl  = pvp ? "P2" : "AI";
+        var p2Clr  = pvp ? 0xFFCC44 : 0xFF8844;
         dc.setColor(0x44CCFF, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w/2, h*32/100, Graphics.FONT_XTINY,
-                    "YOU:  " + g.playerScore + " " + unit,
+                    p1Lbl + ":  " + g.playerScore + " " + unit,
                     Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xFF8844, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(p2Clr, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w/2, h*44/100, Graphics.FONT_XTINY,
-                    "AI:   " + g.aiScore   + " " + aiUnit,
+                    p2Lbl + ":  " + g.aiScore   + " " + aiUnit,
                     Graphics.TEXT_JUSTIFY_CENTER);
 
         // Mode + difficulty reminder

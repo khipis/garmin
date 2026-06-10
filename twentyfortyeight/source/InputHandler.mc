@@ -117,8 +117,23 @@ class InputHandler extends WatchUi.BehaviorDelegate {
         if (_isPhantomBack()) { _lastGestureMs = 0; return true; }
         return _handleKeyCode(WatchUi.KEY_ESC);
     }
-    function onNextPage()     { return _handleKeyCode(WatchUi.KEY_DOWN);  }
-    function onPreviousPage() { return _handleKeyCode(WatchUi.KEY_UP);    }
+    // onNextPage / onPreviousPage are produced by SWIPE gestures (and
+    // dedicated page buttons) — physical UP/DOWN keys are consumed by
+    // onKey and never reach here. During play the swipe is already
+    // handled by onDrag (raw pixel deltas, always correct), so acting on
+    // these page events too would fire a SECOND, oppositely-mapped
+    // vertical move — that double-trigger is what made "swipe down" move
+    // the tiles up. We therefore only use them for menu navigation.
+    function onNextPage() {
+        var c = _ctrl();
+        if (c.state == GS_MENU) { c.menuNext(); _refresh(); return true; }
+        return true;
+    }
+    function onPreviousPage() {
+        var c = _ctrl();
+        if (c.state == GS_MENU) { c.menuPrev(); _refresh(); return true; }
+        return true;
+    }
 
     // onMenu fires on long-press UP (Fenix, Forerunner) or the
     // dedicated MENU button (Edge). Map it to LEFT so the player
@@ -133,19 +148,18 @@ class InputHandler extends WatchUi.BehaviorDelegate {
         return false;
     }
 
-    // ── Touch — system-detected swipe ───────────────────────────────
-    function onSwipe(evt) {
-        _markGesture();
-        var d = evt.getDirection();
-        return _applySwipe(d);
-    }
+    // ── Touch ───────────────────────────────────────────────────────
+    //
+    // We deliberately do NOT override onSwipe. The system-level SWIPE_UP /
+    // SWIPE_DOWN constants are reported inverted (relative to finger travel)
+    // on some Garmin firmware versions, making vertical swipes move tiles in
+    // the wrong direction. onDrag tracks raw pixel deltas so dy > 0 always
+    // means the finger moved DOWN, guaranteeing correct behaviour on every
+    // device regardless of firmware quirks.
+    //
+    // Menu navigation (swipe up/down outside GS_PLAY) is also driven from
+    // the same raw-coordinate path for the same reason.
 
-    // ── Touch — manual swipe detector via raw drag positions ────────
-    // Some Garmin watches (notably the Fenix 8 Solar 51 mm) only fire
-    // onSwipe for very long, fast flicks. We track drag start/stop
-    // ourselves and synthesize a direction on STOP so any decisive
-    // finger motion of ≥ SWIPE_THRESHOLD pixels in either axis turns
-    // into a tile move.
     function onDrag(evt) {
         var t = evt.getType();
         var coords = evt.getCoordinates();
@@ -169,38 +183,32 @@ class InputHandler extends WatchUi.BehaviorDelegate {
             if (adx < SWIPE_THRESHOLD && ady < SWIPE_THRESHOLD) {
                 return false;
             }
-            // Pick the dominant axis.
-            var dir;
-            if (adx >= ady) {
-                dir = (dx > 0) ? WatchUi.SWIPE_RIGHT : WatchUi.SWIPE_LEFT;
-            } else {
-                dir = (dy > 0) ? WatchUi.SWIPE_DOWN  : WatchUi.SWIPE_UP;
+            var c = _ctrl();
+            if (c.state == GS_PLAY) {
+                // Use raw deltas — never touches SWIPE_* constants.
+                if (adx >= ady) {
+                    c.tryMove(dx > 0 ? DIR_RIGHT : DIR_LEFT);
+                } else {
+                    c.tryMove(dy > 0 ? DIR_DOWN : DIR_UP);
+                }
+                _refresh();
+                return true;
+            } else if (c.state == GS_MENU) {
+                if (ady >= adx) {
+                    if (dy < 0) { c.menuPrev(); } else { c.menuNext(); }
+                    _refresh();
+                }
+                return true;
+            } else if (c.state == GS_WIN) {
+                c.continueAfterWin(); _refresh(); return true;
+            } else if (c.state == GS_OVER) {
+                c.gotoMenu(); _refresh(); return true;
             }
-            return _applySwipe(dir);
         }
         return false;
     }
 
-    // Common dispatch shared by onSwipe + onDrag synthesised swipes.
-    hidden function _applySwipe(d) {
-        var c = _ctrl();
-        if (c.state == GS_PLAY) {
-            if (d == WatchUi.SWIPE_UP)    { c.tryMove(DIR_UP);    _refresh(); return true; }
-            if (d == WatchUi.SWIPE_DOWN)  { c.tryMove(DIR_DOWN);  _refresh(); return true; }
-            if (d == WatchUi.SWIPE_LEFT)  { c.tryMove(DIR_LEFT);  _refresh(); return true; }
-            if (d == WatchUi.SWIPE_RIGHT) { c.tryMove(DIR_RIGHT); _refresh(); return true; }
-        } else if (c.state == GS_MENU) {
-            if (d == WatchUi.SWIPE_UP)    { c.menuPrev(); _refresh(); return true; }
-            if (d == WatchUi.SWIPE_DOWN)  { c.menuNext(); _refresh(); return true; }
-        } else if (c.state == GS_WIN) {
-            c.continueAfterWin(); _refresh(); return true;
-        } else if (c.state == GS_OVER) {
-            c.gotoMenu(); _refresh(); return true;
-        }
-        return false;
-    }
-
-    // Tap is only used outside of GS_PLAY — returning false during
+    // Tap is only used outside GS_PLAY — returning false during
     // play lets the drag detector own all in-game touch input.
     function onTap(evt) {
         _markGesture();

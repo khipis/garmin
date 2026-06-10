@@ -1,811 +1,1091 @@
-[ @file = "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc"; @line = 30; @position = 6; @symbol_constdef = [GRID_SIZE,30,6,15]; ]
-const GRID_SIZE = 10;
-[ @file = "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc"; @line = 31; @position = 6; @symbol_constdef = [NUM_CELLS,31,6,15]; ]
-const NUM_CELLS = 100;
-[ @file = "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc"; @line = 34; @position = 6; @symbol_constdef = [CELL_SHIP,34,6,15]; ]
-const CELL_SHIP = 1;
-[ @file = "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc"; @line = 35; @position = 6; @symbol_constdef = [CELL_SHOT,35,6,15]; ]
-const CELL_SHOT = 2;
-[ @file = "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc"; @line = 37; @symbol_classdef = [GridManager,37,6,17]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc"; @line = 18; @symbol_usingdef<0> = [Toybox,18,6,12]; @symbol_usingdef<1> = [Math,18,13,17]; ]
+using Toybox.Math;
+[ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc"; @line = 20; @symbol_classdef = [GridManager,20,6,17]; ]
 class GridManager {
-    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc"; @line = 37; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc"; @line = 20; ]
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc"; @line = 37; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc"; @line = 20; ]
     static
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc"; @line = 38; @position = 8; @symbol_vardef = [cells,38,8,13]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc"; @line = 21; @position = 8; @symbol_vardef = [cells,21,8,13]; ]
     var cells;
-    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc"; @line = 39; @position = 8; @symbol_vardef = [shipId,39,8,14]; ]
-    var shipId;
-    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc"; @line = 41; @symbol_functiondef = [initialize,41,13,23]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc"; @line = 22; @position = 8; @symbol_vardef = [_merged,22,8,15]; ]
+    var _merged;
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc"; @line = 23; @position = 8; @symbol_vardef = [_scratch,23,8,16]; ]
+    var _scratch;
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc"; @line = 25; @symbol_functiondef = [initialize,25,13,23]; ]
     function initialize() as Void {
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_41_26_45_4_start:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 42 8 ]
-        symbol [ NUM_CELLS %tmp.3 42 22 31 ];
-        %tmp.3 = getv ? :NUM_CELLS;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_25_26_30_4_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 26 8 ]
+        symbol [ GRID_CELLS %tmp.3 26 23 33 ];
+        %tmp.3 = getv ? :GRID_CELLS;
         %tmp.1 = newa %tmp.3;
-        symbol [ cells ? 42 8 13 ];
+        symbol [ cells ? 26 8 13 ];
         putv self :cells %tmp.1;
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 43 8 ]
-        symbol [ NUM_CELLS %tmp.6 43 22 31 ];
-        %tmp.6 = getv ? :NUM_CELLS;
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 27 8 ]
+        symbol [ GRID_CELLS %tmp.6 27 23 33 ];
+        %tmp.6 = getv ? :GRID_CELLS;
         %tmp.4 = newa %tmp.6;
-        symbol [ shipId ? 43 8 14 ];
-        putv self :shipId %tmp.4;
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 44 8 ]
-        %tmp.7 = self;
-        symbol [ clear %tmp.8 44 8 13 ];
-        %tmp.8 = getv function %tmp.7 :clear;
-        invoke %tmp.7 %tmp.8();
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_41_26_45_4_stop:
+        symbol [ _merged ? 27 8 15 ];
+        putv self :_merged %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 28 8 ]
+        symbol [ GRID_SIZE %tmp.9 28 24 33 ];
+        %tmp.9 = getv ? :GRID_SIZE;
+        %tmp.7 = newa %tmp.9;
+        symbol [ _scratch ? 28 8 16 ];
+        putv self :_scratch %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 29 8 ]
+        %tmp.10 = self;
+        symbol [ clear %tmp.11 29 8 13 ];
+        %tmp.11 = getv function %tmp.10 :clear;
+        invoke %tmp.10 %tmp.11();
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_25_26_30_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc"; @line = 47; @symbol_functiondef = [clear,47,13,18]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc"; @line = 32; @symbol_functiondef = [clear,32,13,18]; ]
     function clear() {
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_47_21_52_4_start:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 48 8 ]
-        for @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_48_8_51_8_for_test @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_48_8_51_8_for_incr @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_48_8_51_8_for_end;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_48_8_51_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_48_8_51_8_for_begin" "_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_48_8_51_8_for_end" ]
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_32_21_37_4_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 33 8 ]
+        for @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_33_8_36_8_for_test @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_33_8_36_8_for_incr @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_33_8_36_8_for_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_33_8_36_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_33_8_36_8_for_begin" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_33_8_36_8_for_end" ]
         %i.1 = local;
-        symbol [ i %i.1 48 17 18 ];
+        symbol [ i %i.1 33 17 18 ];
         %tmp.1 = 0;
         lputv %i.1 %tmp.1;
-        symbol [ i %i.1 48 17 18 ];
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_48_8_51_8_for_test:
+        symbol [ i %i.1 33 17 18 ];
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_33_8_36_8_for_test:
         %tmp.2 = lgetv %i.1;
-        symbol [ i %tmp.2 48 24 25 ];
-        symbol [ NUM_CELLS %tmp.4 48 28 37 ];
-        %tmp.4 = getv ? :NUM_CELLS;
+        symbol [ i %tmp.2 33 24 25 ];
+        symbol [ GRID_CELLS %tmp.4 33 28 38 ];
+        %tmp.4 = getv ? :GRID_CELLS;
         %tmp.5 = lt %tmp.2 %tmp.4;
-        bf %tmp.5 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_48_8_51_8_for_end;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_48_8_51_8_for_begin:
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_48_44_51_8_start:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 49 12 ]
-        symbol [ cells %tmp.6 49 12 17 ];
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_33_8_36_8_for_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_33_8_36_8_for_begin:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_33_45_36_8_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 34 12 ]
+        symbol [ cells %tmp.6 34 12 17 ];
         %tmp.6 = getv self :cells;
         %tmp.7 = 0;
         %tmp.8 = lgetv %i.1;
-        symbol [ i %tmp.8 49 18 19 ];
+        symbol [ i %tmp.8 34 18 19 ];
         aputv %tmp.6 %tmp.8 %tmp.7;
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 50 12 ]
-        symbol [ shipId %tmp.9 50 12 18 ];
-        %tmp.9 = getv self :shipId;
-        %tmp.10 = -1;
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 35 12 ]
+        symbol [ _merged %tmp.9 35 12 19 ];
+        %tmp.9 = getv self :_merged;
+        %tmp.10 = 0;
         %tmp.11 = lgetv %i.1;
-        symbol [ i %tmp.11 50 19 20 ];
+        symbol [ i %tmp.11 35 20 21 ];
         aputv %tmp.9 %tmp.11 %tmp.10;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_48_44_51_8_stop:
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_48_8_51_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 48 ]
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_33_45_36_8_stop:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_33_8_36_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 33 ]
         %tmp.14 = lgetv %i.1;
-        symbol [ i %tmp.14 48 39 40 ];
+        symbol [ i %tmp.14 33 40 41 ];
         %tmp.15 = add %tmp.14 1;
         lputv %i.1 %tmp.15;
-        symbol [ i %i.1 48 39 40 ];
-        goto @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_48_8_51_8_for_test;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_48_8_51_8_for_end:
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_47_21_52_4_stop:
+        symbol [ i %i.1 33 40 41 ];
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_33_8_36_8_for_test;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_33_8_36_8_for_end:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_32_21_37_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc"; @line = 55; @symbol_functiondef = [inBoundsRC,55,20,30]; @symbol_param<0> = [r,55,31,32]; @symbol_param<1> = [c,55,34,35]; ]
-    static
-    function inBoundsRC(r, c) {
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_55_37_57_4_start:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 56 8 ]
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_56_15_56_56_begin:
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_56_15_56_39_begin:
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_56_15_56_30_begin:
-        %tmp.1 = lgetv %r;
-        symbol [ r %tmp.1 56 15 16 ];
-        %tmp.2 = 0;
-        %tmp.3 = gte %tmp.1 %tmp.2;
-        %tmp.4 = dup %tmp.3;
-        bf %tmp.4 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_56_25_56_30_end;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_56_25_56_30_true:
-        %tmp.5 = lgetv %c;
-        symbol [ c %tmp.5 56 25 26 ];
-        %tmp.6 = 0;
-        %tmp.7 = gte %tmp.5 %tmp.6;
-        %tmp.8 = and %tmp.3 %tmp.7;
-        push %tmp.8;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_56_25_56_30_end:
-        %tmp.9 = phi [%tmp.4 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_56_15_56_30_begin] [%tmp.8 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_56_25_56_30_true] [%tmp.9 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_56_25_56_30_end];
-        %tmp.10 = dup %tmp.9;
-        bf %tmp.10 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_56_35_56_39_end;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_56_35_56_39_true:
-        %tmp.11 = lgetv %r;
-        symbol [ r %tmp.11 56 35 36 ];
-        symbol [ GRID_SIZE %tmp.13 56 39 48 ];
-        %tmp.13 = getv ? :GRID_SIZE;
-        %tmp.14 = lt %tmp.11 %tmp.13;
-        %tmp.15 = and %tmp.9 %tmp.14;
-        push %tmp.15;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_56_35_56_39_end:
-        %tmp.16 = phi [%tmp.10 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_56_15_56_39_begin] [%tmp.15 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_56_35_56_39_true] [%tmp.16 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_56_35_56_39_end];
-        %tmp.17 = dup %tmp.16;
-        bf %tmp.17 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_56_52_56_56_end;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_56_52_56_56_true:
-        %tmp.18 = lgetv %c;
-        symbol [ c %tmp.18 56 52 53 ];
-        symbol [ GRID_SIZE %tmp.20 56 56 65 ];
-        %tmp.20 = getv ? :GRID_SIZE;
-        %tmp.21 = lt %tmp.18 %tmp.20;
-        %tmp.22 = and %tmp.16 %tmp.21;
-        push %tmp.22;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_56_52_56_56_end:
-        %tmp.23 = phi [%tmp.17 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_56_15_56_56_begin] [%tmp.22 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_56_52_56_56_true] [%tmp.23 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_56_52_56_56_end];
-        ret %tmp.23;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_55_37_57_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc"; @line = 58; @symbol_functiondef = [inBounds,58,13,21]; @symbol_param<0> = [r,58,22,23]; @symbol_param<1> = [c,58,25,26]; ]
-    function inBounds(r, c) {
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_58_28_58_67_start:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 58 30 ]
-        symbol [ GridManager %tmp.2 58 37 48 ];
-        %tmp.2 = getv ? :GridManager;
-        symbol [ inBoundsRC %tmp.3 58 49 59 ];
-        %tmp.3 = getv function %tmp.2 :inBoundsRC;
-        %tmp.4 = lgetv %r;
-        symbol [ r %tmp.4 58 60 61 ];
-        %tmp.5 = lgetv %c;
-        symbol [ c %tmp.5 58 63 64 ];
-        %tmp.6 = invoke %tmp.2 %tmp.3(%tmp.4, %tmp.5);
-        ret %tmp.6;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_58_28_58_67_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc"; @line = 60; @symbol_functiondef = [get,60,13,16]; @symbol_param<0> = [r,60,17,18]; @symbol_param<1> = [c,60,20,21]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc"; @line = 39; @symbol_functiondef = [get,39,13,16]; @symbol_param<0> = [r,39,17,18]; @symbol_param<1> = [c,39,20,21]; ]
     function get(r, c) {
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_60_35_60_70_start:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 60 37 ]
-        symbol [ cells %tmp.2 60 44 49 ];
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_39_30_39_65_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 39 32 ]
+        symbol [ cells %tmp.2 39 39 44 ];
         %tmp.2 = getv ? :cells;
         %tmp.3 = lgetv %r;
-        symbol [ r %tmp.3 60 50 51 ];
-        symbol [ GRID_SIZE %tmp.5 60 54 63 ];
+        symbol [ r %tmp.3 39 45 46 ];
+        symbol [ GRID_SIZE %tmp.5 39 49 58 ];
         %tmp.5 = getv ? :GRID_SIZE;
         %tmp.6 = mul %tmp.3 %tmp.5;
         %tmp.7 = lgetv %c;
-        symbol [ c %tmp.7 60 66 67 ];
+        symbol [ c %tmp.7 39 61 62 ];
         %tmp.8 = add %tmp.6 %tmp.7;
         %tmp.9 = agetv %tmp.2 %tmp.8;
         ret %tmp.9;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_60_35_60_70_stop:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_39_30_39_65_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc"; @line = 61; @symbol_functiondef = [set,61,13,16]; @symbol_param<0> = [r,61,17,18]; @symbol_param<1> = [c,61,20,21]; @symbol_param<2> = [v,61,23,24]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc"; @line = 40; @symbol_functiondef = [set,40,13,16]; @symbol_param<0> = [r,40,17,18]; @symbol_param<1> = [c,40,20,21]; @symbol_param<2> = [v,40,23,24]; ]
     function set(r, c, v) {
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_61_35_61_67_start:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 61 37 ]
-        symbol [ cells %tmp.1 61 37 42 ];
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_40_30_40_65_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 40 32 ]
+        symbol [ cells %tmp.1 40 32 37 ];
         %tmp.1 = getv self :cells;
         %tmp.2 = lgetv %v;
-        symbol [ v %tmp.2 61 64 65 ];
+        symbol [ v %tmp.2 40 59 60 ];
         %tmp.3 = lgetv %r;
-        symbol [ r %tmp.3 61 43 44 ];
-        symbol [ GRID_SIZE %tmp.5 61 47 56 ];
+        symbol [ r %tmp.3 40 38 39 ];
+        symbol [ GRID_SIZE %tmp.5 40 42 51 ];
         %tmp.5 = getv ? :GRID_SIZE;
         %tmp.6 = mul %tmp.3 %tmp.5;
         %tmp.7 = lgetv %c;
-        symbol [ c %tmp.7 61 59 60 ];
+        symbol [ c %tmp.7 40 54 55 ];
         %tmp.8 = add %tmp.6 %tmp.7;
         aputv %tmp.1 %tmp.8 %tmp.2;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_61_35_61_67_stop:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_40_30_40_65_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc"; @line = 62; @symbol_functiondef = [getShipId,62,13,22]; @symbol_param<0> = [r,62,23,24]; @symbol_param<1> = [c,62,26,27]; ]
-    function getShipId(r, c) {
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_62_35_62_71_start:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 62 37 ]
-        symbol [ shipId %tmp.2 62 44 50 ];
-        %tmp.2 = getv ? :shipId;
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc"; @line = 41; @symbol_functiondef = [isMerged,41,13,21]; @symbol_param<0> = [r,41,22,23]; @symbol_param<1> = [c,41,25,26]; ]
+    function isMerged(r, c) {
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_41_30_41_72_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 41 32 ]
+        symbol [ _merged %tmp.2 41 39 46 ];
+        %tmp.2 = getv ? :_merged;
         %tmp.3 = lgetv %r;
-        symbol [ r %tmp.3 62 51 52 ];
-        symbol [ GRID_SIZE %tmp.5 62 55 64 ];
+        symbol [ r %tmp.3 41 47 48 ];
+        symbol [ GRID_SIZE %tmp.5 41 51 60 ];
         %tmp.5 = getv ? :GRID_SIZE;
         %tmp.6 = mul %tmp.3 %tmp.5;
         %tmp.7 = lgetv %c;
-        symbol [ c %tmp.7 62 67 68 ];
+        symbol [ c %tmp.7 41 63 64 ];
         %tmp.8 = add %tmp.6 %tmp.7;
         %tmp.9 = agetv %tmp.2 %tmp.8;
-        ret %tmp.9;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_62_35_62_71_stop:
+        %tmp.10 = 0;
+        %tmp.11 = ne %tmp.9 %tmp.10;
+        ret %tmp.11;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_41_30_41_72_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc"; @line = 63; @symbol_functiondef = [setShipId,63,13,22]; @symbol_param<0> = [r,63,23,24]; @symbol_param<1> = [c,63,26,27]; @symbol_param<2> = [id,63,29,31]; ]
-    function setShipId(r, c, id) {
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_63_35_63_69_start:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 63 37 ]
-        symbol [ shipId %tmp.1 63 37 43 ];
-        %tmp.1 = getv self :shipId;
-        %tmp.2 = lgetv %id;
-        symbol [ id %tmp.2 63 65 67 ];
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc"; @line = 42; @symbol_functiondef = [clearMerged,42,13,24]; ]
+    function clearMerged() {
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_42_27_44_4_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 43 8 ]
+        for @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_43_8_43_63_for_test @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_43_8_43_63_for_incr @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_43_8_43_63_for_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_43_8_43_63_for_init:
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_43_8_43_63_for_begin" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_43_8_43_63_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 43 17 18 ];
+        %tmp.1 = 0;
+        lputv %i.1 %tmp.1;
+        symbol [ i %i.1 43 17 18 ];
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_43_8_43_63_for_test:
+        %tmp.2 = lgetv %i.1;
+        symbol [ i %tmp.2 43 24 25 ];
+        symbol [ GRID_CELLS %tmp.4 43 28 38 ];
+        %tmp.4 = getv ? :GRID_CELLS;
+        %tmp.5 = lt %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_43_8_43_63_for_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_43_8_43_63_for_begin:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_43_45_43_63_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 43 47 ]
+        symbol [ _merged %tmp.6 43 47 54 ];
+        %tmp.6 = getv self :_merged;
+        %tmp.7 = 0;
+        %tmp.8 = lgetv %i.1;
+        symbol [ i %tmp.8 43 55 56 ];
+        aputv %tmp.6 %tmp.8 %tmp.7;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_43_45_43_63_stop:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_43_8_43_63_for_incr:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 43 ]
+        %tmp.11 = lgetv %i.1;
+        symbol [ i %tmp.11 43 40 41 ];
+        %tmp.12 = add %tmp.11 1;
+        lputv %i.1 %tmp.12;
+        symbol [ i %i.1 43 40 41 ];
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_43_8_43_63_for_test;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_43_8_43_63_for_end:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_42_27_44_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc"; @line = 45; @symbol_functiondef = [markMerged,45,13,23]; @symbol_param<0> = [r,45,24,25]; @symbol_param<1> = [c,45,27,28]; ]
+    function markMerged(r, c) {
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_45_30_45_64_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 45 32 ]
+        symbol [ _merged %tmp.1 45 32 39 ];
+        %tmp.1 = getv self :_merged;
+        %tmp.2 = 1;
         %tmp.3 = lgetv %r;
-        symbol [ r %tmp.3 63 44 45 ];
-        symbol [ GRID_SIZE %tmp.5 63 48 57 ];
+        symbol [ r %tmp.3 45 40 41 ];
+        symbol [ GRID_SIZE %tmp.5 45 44 53 ];
         %tmp.5 = getv ? :GRID_SIZE;
         %tmp.6 = mul %tmp.3 %tmp.5;
         %tmp.7 = lgetv %c;
-        symbol [ c %tmp.7 63 60 61 ];
+        symbol [ c %tmp.7 45 56 57 ];
         %tmp.8 = add %tmp.6 %tmp.7;
         aputv %tmp.1 %tmp.8 %tmp.2;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_63_35_63_69_stop:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_45_30_45_64_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc"; @line = 65; @symbol_functiondef = [hasShip,65,13,20]; @symbol_param<0> = [r,65,21,22]; @symbol_param<1> = [c,65,24,25]; ]
-    function hasShip(r, c) {
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_65_27_65_66_start:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 65 29 ]
-        %tmp.1 = self;
-        symbol [ get %tmp.2 65 37 40 ];
-        %tmp.2 = getv function %tmp.1 :get;
-        %tmp.3 = lgetv %r;
-        symbol [ r %tmp.3 65 41 42 ];
-        %tmp.4 = lgetv %c;
-        symbol [ c %tmp.4 65 44 45 ];
-        %tmp.5 = invoke %tmp.1 %tmp.2(%tmp.3, %tmp.4);
-        symbol [ CELL_SHIP %tmp.7 65 49 58 ];
-        %tmp.7 = getv ? :CELL_SHIP;
-        %tmp.8 = bitand %tmp.5 %tmp.7;
-        %tmp.9 = 0;
-        %tmp.10 = ne %tmp.8 %tmp.9;
-        ret %tmp.10;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_65_27_65_66_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc"; @line = 66; @symbol_functiondef = [isShot,66,13,19]; @symbol_param<0> = [r,66,20,21]; @symbol_param<1> = [c,66,23,24]; ]
-    function isShot(r, c) {
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_66_27_66_66_start:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 66 29 ]
-        %tmp.1 = self;
-        symbol [ get %tmp.2 66 37 40 ];
-        %tmp.2 = getv function %tmp.1 :get;
-        %tmp.3 = lgetv %r;
-        symbol [ r %tmp.3 66 41 42 ];
-        %tmp.4 = lgetv %c;
-        symbol [ c %tmp.4 66 44 45 ];
-        %tmp.5 = invoke %tmp.1 %tmp.2(%tmp.3, %tmp.4);
-        symbol [ CELL_SHOT %tmp.7 66 49 58 ];
-        %tmp.7 = getv ? :CELL_SHOT;
-        %tmp.8 = bitand %tmp.5 %tmp.7;
-        %tmp.9 = 0;
-        %tmp.10 = ne %tmp.8 %tmp.9;
-        ret %tmp.10;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_66_27_66_66_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc"; @line = 67; @symbol_functiondef = [isHit,67,13,18]; @symbol_param<0> = [r,67,19,20]; @symbol_param<1> = [c,67,22,23]; ]
-    function isHit(r, c) {
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_67_27_70_4_start:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 68 8 ]
-        [ "_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_67_27_70_4_start" "_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_67_27_70_4_stop" ]
-        %v.1 = local;
-        symbol [ v %v.1 68 12 13 ];
-        %tmp.1 = self;
-        symbol [ get %tmp.2 68 16 19 ];
-        %tmp.2 = getv function %tmp.1 :get;
-        %tmp.3 = lgetv %r;
-        symbol [ r %tmp.3 68 20 21 ];
-        %tmp.4 = lgetv %c;
-        symbol [ c %tmp.4 68 23 24 ];
-        %tmp.5 = invoke %tmp.1 %tmp.2(%tmp.3, %tmp.4);
-        lputv %v.1 %tmp.5;
-        symbol [ v %v.1 68 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 69 8 ]
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_69_15_69_58_begin:
-        %tmp.6 = lgetv %v.1;
-        symbol [ v %tmp.6 69 16 17 ];
-        symbol [ CELL_SHIP %tmp.8 69 20 29 ];
-        %tmp.8 = getv ? :CELL_SHIP;
-        %tmp.9 = bitand %tmp.6 %tmp.8;
-        %tmp.10 = 0;
-        %tmp.11 = ne %tmp.9 %tmp.10;
-        %tmp.12 = dup %tmp.11;
-        bf %tmp.12 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_69_39_69_58_end;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_69_39_69_58_true:
-        %tmp.13 = lgetv %v.1;
-        symbol [ v %tmp.13 69 40 41 ];
-        symbol [ CELL_SHOT %tmp.15 69 44 53 ];
-        %tmp.15 = getv ? :CELL_SHOT;
-        %tmp.16 = bitand %tmp.13 %tmp.15;
-        %tmp.17 = 0;
-        %tmp.18 = ne %tmp.16 %tmp.17;
-        %tmp.19 = and %tmp.11 %tmp.18;
-        push %tmp.19;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_69_39_69_58_end:
-        %tmp.20 = phi [%tmp.12 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_69_15_69_58_begin] [%tmp.19 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_69_39_69_58_true] [%tmp.20 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_69_39_69_58_end];
-        ret %tmp.20;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_67_27_70_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc"; @line = 71; @symbol_functiondef = [isMiss,71,13,19]; @symbol_param<0> = [r,71,20,21]; @symbol_param<1> = [c,71,23,24]; ]
-    function isMiss(r, c) {
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_71_27_74_4_start:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 72 8 ]
-        [ "_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_71_27_74_4_start" "_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_71_27_74_4_stop" ]
-        %v.1 = local;
-        symbol [ v %v.1 72 12 13 ];
-        %tmp.1 = self;
-        symbol [ get %tmp.2 72 16 19 ];
-        %tmp.2 = getv function %tmp.1 :get;
-        %tmp.3 = lgetv %r;
-        symbol [ r %tmp.3 72 20 21 ];
-        %tmp.4 = lgetv %c;
-        symbol [ c %tmp.4 72 23 24 ];
-        %tmp.5 = invoke %tmp.1 %tmp.2(%tmp.3, %tmp.4);
-        lputv %v.1 %tmp.5;
-        symbol [ v %v.1 72 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 73 8 ]
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_73_15_73_58_begin:
-        %tmp.6 = lgetv %v.1;
-        symbol [ v %tmp.6 73 16 17 ];
-        symbol [ CELL_SHIP %tmp.8 73 20 29 ];
-        %tmp.8 = getv ? :CELL_SHIP;
-        %tmp.9 = bitand %tmp.6 %tmp.8;
-        %tmp.10 = 0;
-        %tmp.11 = eq %tmp.9 %tmp.10;
-        %tmp.12 = dup %tmp.11;
-        bf %tmp.12 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_73_39_73_58_end;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_73_39_73_58_true:
-        %tmp.13 = lgetv %v.1;
-        symbol [ v %tmp.13 73 40 41 ];
-        symbol [ CELL_SHOT %tmp.15 73 44 53 ];
-        %tmp.15 = getv ? :CELL_SHOT;
-        %tmp.16 = bitand %tmp.13 %tmp.15;
-        %tmp.17 = 0;
-        %tmp.18 = ne %tmp.16 %tmp.17;
-        %tmp.19 = and %tmp.11 %tmp.18;
-        push %tmp.19;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_73_39_73_58_end:
-        %tmp.20 = phi [%tmp.12 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_73_15_73_58_begin] [%tmp.19 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_73_39_73_58_true] [%tmp.20 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_73_39_73_58_end];
-        ret %tmp.20;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_71_27_74_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc"; @line = 78; @symbol_functiondef = [markShot,78,13,21]; @symbol_param<0> = [r,78,22,23]; @symbol_param<1> = [c,78,25,26]; ]
-    function markShot(r, c) {
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_78_28_80_4_start:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 79 8 ]
-        symbol [ cells %tmp.1 79 8 13 ];
-        %tmp.1 = getv self :cells;
-        symbol [ cells %tmp.3 79 35 40 ];
-        %tmp.3 = getv ? :cells;
-        %tmp.4 = lgetv %r;
-        symbol [ r %tmp.4 79 41 42 ];
-        symbol [ GRID_SIZE %tmp.6 79 45 54 ];
-        %tmp.6 = getv ? :GRID_SIZE;
-        %tmp.7 = mul %tmp.4 %tmp.6;
-        %tmp.8 = lgetv %c;
-        symbol [ c %tmp.8 79 57 58 ];
-        %tmp.9 = add %tmp.7 %tmp.8;
-        %tmp.10 = agetv %tmp.3 %tmp.9;
-        symbol [ CELL_SHOT %tmp.12 79 62 71 ];
-        %tmp.12 = getv ? :CELL_SHOT;
-        %tmp.13 = bitor %tmp.10 %tmp.12;
-        %tmp.14 = lgetv %r;
-        symbol [ r %tmp.14 79 14 15 ];
-        symbol [ GRID_SIZE %tmp.16 79 18 27 ];
-        %tmp.16 = getv ? :GRID_SIZE;
-        %tmp.17 = mul %tmp.14 %tmp.16;
-        %tmp.18 = lgetv %c;
-        symbol [ c %tmp.18 79 30 31 ];
-        %tmp.19 = add %tmp.17 %tmp.18;
-        aputv %tmp.1 %tmp.19 %tmp.13;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_78_28_80_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc"; @line = 90; @symbol_functiondef = [canPlace,90,13,21]; @symbol_param<0> = [r,90,22,23]; @symbol_param<1> = [c,90,25,26]; @symbol_param<2> = [len,90,28,31]; @symbol_param<3> = [horizontal,90,33,43]; ]
-    function canPlace(r, c, len, horizontal) {
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_90_45_105_4_start:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 91 8 ]
-        for @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_91_8_103_8_for_test @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_91_8_103_8_for_incr @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_91_8_103_8_for_end;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_91_8_103_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_91_8_103_8_for_begin" "_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_91_8_103_8_for_end" ]
-        %i.1 = local;
-        symbol [ i %i.1 91 17 18 ];
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc"; @line = 51; @symbol_functiondef = [spawnRandom,51,13,24]; ]
+    function spawnRandom() {
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_51_27_68_4_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 52 8 ]
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_51_27_68_4_start" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_51_27_68_4_stop" ]
+        %emptyCount.1 = local;
+        symbol [ emptyCount %emptyCount.1 52 12 22 ];
         %tmp.1 = 0;
-        lputv %i.1 %tmp.1;
-        symbol [ i %i.1 91 17 18 ];
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_91_8_103_8_for_test:
-        %tmp.2 = lgetv %i.1;
-        symbol [ i %tmp.2 91 24 25 ];
-        %tmp.3 = lgetv %len;
-        symbol [ len %tmp.3 91 28 31 ];
-        %tmp.4 = lt %tmp.2 %tmp.3;
-        bf %tmp.4 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_91_8_103_8_for_end;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_91_8_103_8_for_begin:
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_91_38_103_8_start:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 92 12 ]
-        [ "_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_91_38_103_8_start" "_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_91_38_103_8_stop" ]
-        %rr.2 = local;
-        symbol [ rr %rr.2 92 16 18 ];
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_92_21_92_42_begin:
-        %tmp.5 = lgetv %horizontal;
-        symbol [ horizontal %tmp.5 92 21 31 ];
-        bf %tmp.5 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_92_21_92_42_else_false;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_92_21_92_42_true:
-        %tmp.6 = lgetv %r;
-        symbol [ r %tmp.6 92 34 35 ];
-        push %tmp.6;
-        goto @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_92_21_92_42_end;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_92_21_92_42_else_false:
-        %tmp.7 = lgetv %r;
-        symbol [ r %tmp.7 92 38 39 ];
-        %tmp.8 = lgetv %i.1;
-        symbol [ i %tmp.8 92 42 43 ];
-        %tmp.9 = add %tmp.7 %tmp.8;
-        push %tmp.9;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_92_21_92_42_end:
-        %tmp.10 = phi [%tmp.5 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_92_21_92_42_begin] [%tmp.6 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_92_21_92_42_true] [%tmp.9 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_92_21_92_42_else_false] [%tmp.10 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_92_21_92_42_end];
-        lputv %rr.2 %tmp.10;
-        symbol [ rr %rr.2 92 16 18 ];
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 93 12 ]
-        [ "_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_91_38_103_8_start" "_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_91_38_103_8_stop" ]
-        %cc.3 = local;
-        symbol [ cc %cc.3 93 16 18 ];
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_93_21_93_42_begin:
-        %tmp.11 = lgetv %horizontal;
-        symbol [ horizontal %tmp.11 93 21 31 ];
-        bf %tmp.11 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_93_21_93_42_else_false;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_93_21_93_42_true:
-        %tmp.12 = lgetv %c;
-        symbol [ c %tmp.12 93 34 35 ];
-        %tmp.13 = lgetv %i.1;
-        symbol [ i %tmp.13 93 38 39 ];
-        %tmp.14 = add %tmp.12 %tmp.13;
-        push %tmp.14;
-        goto @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_93_21_93_42_end;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_93_21_93_42_else_false:
-        %tmp.15 = lgetv %c;
-        symbol [ c %tmp.15 93 42 43 ];
-        push %tmp.15;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_93_21_93_42_end:
-        %tmp.16 = phi [%tmp.11 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_93_21_93_42_begin] [%tmp.14 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_93_21_93_42_true] [%tmp.15 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_93_21_93_42_else_false] [%tmp.16 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_93_21_93_42_end];
-        lputv %cc.3 %tmp.16;
-        symbol [ cc %cc.3 93 16 18 ];
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 94 12 ]
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_94_12_94_51_if_stmt:
-        %tmp.17 = self;
-        symbol [ inBounds %tmp.18 94 17 25 ];
-        %tmp.18 = getv function %tmp.17 :inBounds;
-        %tmp.19 = lgetv %rr.2;
-        symbol [ rr %tmp.19 94 26 28 ];
-        %tmp.20 = lgetv %cc.3;
-        symbol [ cc %tmp.20 94 30 32 ];
-        %tmp.21 = invoke %tmp.17 %tmp.18(%tmp.19, %tmp.20);
-        %tmp.22 = not %tmp.21;
-        bf %tmp.22 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_94_12_94_51_if_end;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_94_12_94_51_if_true:
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_94_35_94_51_start:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 94 37 ]
-        %tmp.23 = false;
-        ret %tmp.23;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_94_35_94_51_stop:
-        goto @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_94_12_94_51_if_end;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_94_12_94_51_if_end:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 95 12 ]
-        for @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_95_12_102_12_for_test @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_95_12_102_12_for_incr @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_95_12_102_12_for_end;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_95_12_102_12_for_init:
-        [ "_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_95_12_102_12_for_begin" "_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_95_12_102_12_for_end" ]
-        %dr.4 = local;
-        symbol [ dr %dr.4 95 21 23 ];
-        %tmp.24 = -1;
-        lputv %dr.4 %tmp.24;
-        symbol [ dr %dr.4 95 21 23 ];
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_95_12_102_12_for_test:
-        %tmp.25 = lgetv %dr.4;
-        symbol [ dr %tmp.25 95 30 32 ];
-        %tmp.26 = 1;
-        %tmp.27 = lte %tmp.25 %tmp.26;
-        bf %tmp.27 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_95_12_102_12_for_end;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_95_12_102_12_for_begin:
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_95_45_102_12_start:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 96 16 ]
-        for @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_96_16_101_16_for_test @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_96_16_101_16_for_incr @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_96_16_101_16_for_end;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_96_16_101_16_for_init:
-        [ "_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_96_16_101_16_for_begin" "_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_96_16_101_16_for_end" ]
-        %dc.5 = local;
-        symbol [ dc %dc.5 96 25 27 ];
-        %tmp.28 = -1;
-        lputv %dc.5 %tmp.28;
-        symbol [ dc %dc.5 96 25 27 ];
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_96_16_101_16_for_test:
-        %tmp.29 = lgetv %dc.5;
-        symbol [ dc %tmp.29 96 34 36 ];
-        %tmp.30 = 1;
-        %tmp.31 = lte %tmp.29 %tmp.30;
-        bf %tmp.31 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_96_16_101_16_for_end;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_96_16_101_16_for_begin:
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_96_49_101_16_start:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 97 20 ]
-        [ "_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_96_49_101_16_start" "_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_96_49_101_16_stop" ]
-        %nr.6 = local;
-        symbol [ nr %nr.6 97 24 26 ];
-        %tmp.32 = lgetv %rr.2;
-        symbol [ rr %tmp.32 97 29 31 ];
-        %tmp.33 = lgetv %dr.4;
-        symbol [ dr %tmp.33 97 34 36 ];
-        %tmp.34 = add %tmp.32 %tmp.33;
-        lputv %nr.6 %tmp.34;
-        symbol [ nr %nr.6 97 24 26 ];
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 98 20 ]
-        [ "_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_96_49_101_16_start" "_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_96_49_101_16_stop" ]
-        %nc.7 = local;
-        symbol [ nc %nc.7 98 24 26 ];
-        %tmp.35 = lgetv %cc.3;
-        symbol [ cc %tmp.35 98 29 31 ];
-        %tmp.36 = lgetv %dc.5;
-        symbol [ dc %tmp.36 98 34 36 ];
-        %tmp.37 = add %tmp.35 %tmp.36;
-        lputv %nc.7 %tmp.37;
-        symbol [ nc %nc.7 98 24 26 ];
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 99 20 ]
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_99_20_99_55_if_stmt:
-        %tmp.38 = self;
-        symbol [ inBounds %tmp.39 99 25 33 ];
-        %tmp.39 = getv function %tmp.38 :inBounds;
-        %tmp.40 = lgetv %nr.6;
-        symbol [ nr %tmp.40 99 34 36 ];
-        %tmp.41 = lgetv %nc.7;
-        symbol [ nc %tmp.41 99 38 40 ];
-        %tmp.42 = invoke %tmp.38 %tmp.39(%tmp.40, %tmp.41);
-        %tmp.43 = not %tmp.42;
-        bf %tmp.43 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_99_20_99_55_if_end;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_99_20_99_55_if_true:
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_99_43_99_55_start:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 99 45 ]
-        goto break @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_96_16_101_16_for_incr;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_99_43_99_55_stop:
-        goto @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_99_20_99_55_if_end;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_99_20_99_55_if_end:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 100 20 ]
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_100_20_100_59_if_stmt:
-        %tmp.44 = self;
-        symbol [ hasShip %tmp.45 100 24 31 ];
-        %tmp.45 = getv function %tmp.44 :hasShip;
-        %tmp.46 = lgetv %nr.6;
-        symbol [ nr %tmp.46 100 32 34 ];
-        %tmp.47 = lgetv %nc.7;
-        symbol [ nc %tmp.47 100 36 38 ];
-        %tmp.48 = invoke %tmp.44 %tmp.45(%tmp.46, %tmp.47);
-        bf %tmp.48 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_100_20_100_59_if_end;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_100_20_100_59_if_true:
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_100_43_100_59_start:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 100 45 ]
-        %tmp.49 = false;
-        ret %tmp.49;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_100_43_100_59_stop:
-        goto @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_100_20_100_59_if_end;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_100_20_100_59_if_end:
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_96_49_101_16_stop:
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_96_16_101_16_for_incr:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 96 ]
-        %tmp.52 = lgetv %dc.5;
-        symbol [ dc %tmp.52 96 43 45 ];
-        %tmp.53 = add %tmp.52 1;
-        lputv %dc.5 %tmp.53;
-        symbol [ dc %dc.5 96 43 45 ];
-        goto @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_96_16_101_16_for_test;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_96_16_101_16_for_end:
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_95_45_102_12_stop:
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_95_12_102_12_for_incr:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 95 ]
-        %tmp.56 = lgetv %dr.4;
-        symbol [ dr %tmp.56 95 39 41 ];
-        %tmp.57 = add %tmp.56 1;
-        lputv %dr.4 %tmp.57;
-        symbol [ dr %dr.4 95 39 41 ];
-        goto @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_95_12_102_12_for_test;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_95_12_102_12_for_end:
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_91_38_103_8_stop:
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_91_8_103_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 91 ]
-        %tmp.60 = lgetv %i.1;
-        symbol [ i %tmp.60 91 33 34 ];
-        %tmp.61 = add %tmp.60 1;
-        lputv %i.1 %tmp.61;
-        symbol [ i %i.1 91 33 34 ];
-        goto @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_91_8_103_8_for_test;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_91_8_103_8_for_end:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 104 8 ]
-        %tmp.62 = true;
-        ret %tmp.62;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_90_45_105_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc"; @line = 107; @symbol_functiondef = [placeShip,107,13,22]; @symbol_param<0> = [r,107,23,24]; @symbol_param<1> = [c,107,26,27]; @symbol_param<2> = [len,107,29,32]; @symbol_param<3> = [horizontal,107,34,44]; @symbol_param<4> = [id,107,46,48]; ]
-    function placeShip(r, c, len, horizontal, id) {
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_107_50_114_4_start:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 108 8 ]
-        for @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_108_8_113_8_for_test @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_108_8_113_8_for_incr @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_108_8_113_8_for_end;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_108_8_113_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_108_8_113_8_for_begin" "_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_108_8_113_8_for_end" ]
-        %i.1 = local;
-        symbol [ i %i.1 108 17 18 ];
-        %tmp.1 = 0;
-        lputv %i.1 %tmp.1;
-        symbol [ i %i.1 108 17 18 ];
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_108_8_113_8_for_test:
-        %tmp.2 = lgetv %i.1;
-        symbol [ i %tmp.2 108 24 25 ];
-        %tmp.3 = lgetv %len;
-        symbol [ len %tmp.3 108 28 31 ];
-        %tmp.4 = lt %tmp.2 %tmp.3;
-        bf %tmp.4 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_108_8_113_8_for_end;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_108_8_113_8_for_begin:
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_108_38_113_8_start:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 109 12 ]
-        [ "_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_108_38_113_8_start" "_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_108_38_113_8_stop" ]
-        %rr.2 = local;
-        symbol [ rr %rr.2 109 16 18 ];
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_109_21_109_42_begin:
-        %tmp.5 = lgetv %horizontal;
-        symbol [ horizontal %tmp.5 109 21 31 ];
-        bf %tmp.5 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_109_21_109_42_else_false;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_109_21_109_42_true:
-        %tmp.6 = lgetv %r;
-        symbol [ r %tmp.6 109 34 35 ];
-        push %tmp.6;
-        goto @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_109_21_109_42_end;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_109_21_109_42_else_false:
-        %tmp.7 = lgetv %r;
-        symbol [ r %tmp.7 109 38 39 ];
-        %tmp.8 = lgetv %i.1;
-        symbol [ i %tmp.8 109 42 43 ];
-        %tmp.9 = add %tmp.7 %tmp.8;
-        push %tmp.9;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_109_21_109_42_end:
-        %tmp.10 = phi [%tmp.5 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_109_21_109_42_begin] [%tmp.6 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_109_21_109_42_true] [%tmp.9 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_109_21_109_42_else_false] [%tmp.10 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_109_21_109_42_end];
-        lputv %rr.2 %tmp.10;
-        symbol [ rr %rr.2 109 16 18 ];
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 110 12 ]
-        [ "_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_108_38_113_8_start" "_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_108_38_113_8_stop" ]
-        %cc.3 = local;
-        symbol [ cc %cc.3 110 16 18 ];
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_110_21_110_42_begin:
-        %tmp.11 = lgetv %horizontal;
-        symbol [ horizontal %tmp.11 110 21 31 ];
-        bf %tmp.11 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_110_21_110_42_else_false;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_110_21_110_42_true:
-        %tmp.12 = lgetv %c;
-        symbol [ c %tmp.12 110 34 35 ];
-        %tmp.13 = lgetv %i.1;
-        symbol [ i %tmp.13 110 38 39 ];
-        %tmp.14 = add %tmp.12 %tmp.13;
-        push %tmp.14;
-        goto @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_110_21_110_42_end;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_110_21_110_42_else_false:
-        %tmp.15 = lgetv %c;
-        symbol [ c %tmp.15 110 42 43 ];
-        push %tmp.15;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_110_21_110_42_end:
-        %tmp.16 = phi [%tmp.11 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_110_21_110_42_begin] [%tmp.14 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_110_21_110_42_true] [%tmp.15 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_110_21_110_42_else_false] [%tmp.16 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_110_21_110_42_end];
-        lputv %cc.3 %tmp.16;
-        symbol [ cc %cc.3 110 16 18 ];
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 111 12 ]
-        symbol [ cells %tmp.17 111 12 17 ];
-        %tmp.17 = getv self :cells;
-        symbol [ cells %tmp.19 111 41 46 ];
-        %tmp.19 = getv ? :cells;
-        %tmp.20 = lgetv %rr.2;
-        symbol [ rr %tmp.20 111 47 49 ];
-        symbol [ GRID_SIZE %tmp.22 111 52 61 ];
-        %tmp.22 = getv ? :GRID_SIZE;
-        %tmp.23 = mul %tmp.20 %tmp.22;
-        %tmp.24 = lgetv %cc.3;
-        symbol [ cc %tmp.24 111 64 66 ];
-        %tmp.25 = add %tmp.23 %tmp.24;
-        %tmp.26 = agetv %tmp.19 %tmp.25;
-        symbol [ CELL_SHIP %tmp.28 111 70 79 ];
-        %tmp.28 = getv ? :CELL_SHIP;
-        %tmp.29 = bitor %tmp.26 %tmp.28;
-        %tmp.30 = lgetv %rr.2;
-        symbol [ rr %tmp.30 111 18 20 ];
-        symbol [ GRID_SIZE %tmp.32 111 23 32 ];
-        %tmp.32 = getv ? :GRID_SIZE;
-        %tmp.33 = mul %tmp.30 %tmp.32;
-        %tmp.34 = lgetv %cc.3;
-        symbol [ cc %tmp.34 111 35 37 ];
-        %tmp.35 = add %tmp.33 %tmp.34;
-        aputv %tmp.17 %tmp.35 %tmp.29;
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 112 12 ]
-        symbol [ shipId %tmp.36 112 12 18 ];
-        %tmp.36 = getv self :shipId;
-        %tmp.37 = lgetv %id;
-        symbol [ id %tmp.37 112 42 44 ];
-        %tmp.38 = lgetv %rr.2;
-        symbol [ rr %tmp.38 112 19 21 ];
-        symbol [ GRID_SIZE %tmp.40 112 24 33 ];
-        %tmp.40 = getv ? :GRID_SIZE;
-        %tmp.41 = mul %tmp.38 %tmp.40;
-        %tmp.42 = lgetv %cc.3;
-        symbol [ cc %tmp.42 112 36 38 ];
-        %tmp.43 = add %tmp.41 %tmp.42;
-        aputv %tmp.36 %tmp.43 %tmp.37;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_108_38_113_8_stop:
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_108_8_113_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 108 ]
-        %tmp.46 = lgetv %i.1;
-        symbol [ i %tmp.46 108 33 34 ];
-        %tmp.47 = add %tmp.46 1;
-        lputv %i.1 %tmp.47;
-        symbol [ i %i.1 108 33 34 ];
-        goto @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_108_8_113_8_for_test;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_108_8_113_8_for_end:
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_107_50_114_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc"; @line = 118; @symbol_functiondef = [cellsForShip,118,13,25]; @symbol_param<0> = [id,118,26,28]; ]
-    function cellsForShip(id) {
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_118_30_126_4_start:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 119 8 ]
-        [ "_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_118_30_126_4_start" "_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_118_30_126_4_stop" ]
-        %out.1 = local;
-        symbol [ out %out.1 119 12 15 ];
-        %tmp.1 = newa 0;
-        lputv %out.1 %tmp.1;
-        symbol [ out %out.1 119 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 120 8 ]
-        for @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_120_8_124_8_for_test @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_120_8_124_8_for_incr @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_120_8_124_8_for_end;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_120_8_124_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_120_8_124_8_for_begin" "_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_120_8_124_8_for_end" ]
+        lputv %emptyCount.1 %tmp.1;
+        symbol [ emptyCount %emptyCount.1 52 12 22 ];
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 53 8 ]
+        for @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_53_8_55_8_for_test @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_53_8_55_8_for_incr @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_53_8_55_8_for_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_53_8_55_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_53_8_55_8_for_begin" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_53_8_55_8_for_end" ]
         %i.2 = local;
-        symbol [ i %i.2 120 17 18 ];
+        symbol [ i %i.2 53 17 18 ];
         %tmp.2 = 0;
         lputv %i.2 %tmp.2;
-        symbol [ i %i.2 120 17 18 ];
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_120_8_124_8_for_test:
+        symbol [ i %i.2 53 17 18 ];
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_53_8_55_8_for_test:
         %tmp.3 = lgetv %i.2;
-        symbol [ i %tmp.3 120 24 25 ];
-        symbol [ NUM_CELLS %tmp.5 120 28 37 ];
-        %tmp.5 = getv ? :NUM_CELLS;
+        symbol [ i %tmp.3 53 24 25 ];
+        symbol [ GRID_CELLS %tmp.5 53 28 38 ];
+        %tmp.5 = getv ? :GRID_CELLS;
         %tmp.6 = lt %tmp.3 %tmp.5;
-        bf %tmp.6 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_120_8_124_8_for_end;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_120_8_124_8_for_begin:
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_120_44_124_8_start:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 121 12 ]
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_121_12_123_12_if_stmt:
-        symbol [ shipId %tmp.8 121 16 22 ];
-        %tmp.8 = getv ? :shipId;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_53_8_55_8_for_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_53_8_55_8_for_begin:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_53_45_55_8_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 54 12 ]
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_54_12_54_47_if_stmt:
+        symbol [ cells %tmp.8 54 16 21 ];
+        %tmp.8 = getv ? :cells;
         %tmp.9 = lgetv %i.2;
-        symbol [ i %tmp.9 121 23 24 ];
+        symbol [ i %tmp.9 54 22 23 ];
         %tmp.10 = agetv %tmp.8 %tmp.9;
-        %tmp.11 = lgetv %id;
-        symbol [ id %tmp.11 121 29 31 ];
+        %tmp.11 = 0;
         %tmp.12 = eq %tmp.10 %tmp.11;
-        bf %tmp.12 @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_121_12_123_12_if_end;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_121_12_123_12_if_true:
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_121_33_123_12_start:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 122 16 ]
-        %tmp.13 = lgetv %out.1;
-        symbol [ out %tmp.13 122 16 19 ];
-        symbol [ add %tmp.14 122 20 23 ];
-        %tmp.14 = getv function %tmp.13 :add;
-        %tmp.15 = newa 2;
-        %tmp.16 = lgetv %i.2;
-        symbol [ i %tmp.16 122 25 26 ];
-        symbol [ GRID_SIZE %tmp.18 122 29 38 ];
-        %tmp.18 = getv ? :GRID_SIZE;
-        %tmp.19 = div %tmp.16 %tmp.18;
-        %tmp.20 = dup %tmp.15;
-        %tmp.21 = aputv %tmp.20 0 %tmp.19;
-        %tmp.22 = lgetv %i.2;
-        symbol [ i %tmp.22 122 40 41 ];
-        symbol [ GRID_SIZE %tmp.24 122 44 53 ];
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_54_12_54_47_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_54_12_54_47_if_true:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_54_31_54_47_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 54 33 ]
+        %tmp.15 = lgetv %emptyCount.1;
+        symbol [ emptyCount %tmp.15 54 33 43 ];
+        %tmp.16 = add %tmp.15 1;
+        lputv %emptyCount.1 %tmp.16;
+        symbol [ emptyCount %emptyCount.1 54 33 43 ];
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_54_31_54_47_stop:
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_54_12_54_47_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_54_12_54_47_if_end:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_53_45_55_8_stop:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_53_8_55_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 53 ]
+        %tmp.19 = lgetv %i.2;
+        symbol [ i %tmp.19 53 40 41 ];
+        %tmp.20 = add %tmp.19 1;
+        lputv %i.2 %tmp.20;
+        symbol [ i %i.2 53 40 41 ];
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_53_8_55_8_for_test;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_53_8_55_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 56 8 ]
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_56_8_56_45_if_stmt:
+        %tmp.21 = lgetv %emptyCount.1;
+        symbol [ emptyCount %tmp.21 56 12 22 ];
+        %tmp.22 = 0;
+        %tmp.23 = eq %tmp.21 %tmp.22;
+        bf %tmp.23 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_56_8_56_45_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_56_8_56_45_if_true:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_56_29_56_45_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 56 31 ]
+        %tmp.24 = false;
+        ret %tmp.24;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_56_29_56_45_stop:
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_56_8_56_45_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_56_8_56_45_if_end:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 57 8 ]
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_51_27_68_4_start" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_51_27_68_4_stop" ]
+        %pick.3 = local;
+        symbol [ pick %pick.3 57 12 16 ];
+        symbol [ Math %tmp.25 57 19 23 ];
+        %tmp.25 = getm $.Toybox.Math;
+        symbol [ rand %tmp.26 57 24 28 ];
+        %tmp.26 = getv function %tmp.25 :rand;
+        %tmp.27 = invoke %tmp.25 %tmp.26();
+        %tmp.28 = lgetv %emptyCount.1;
+        symbol [ emptyCount %tmp.28 57 33 43 ];
+        %tmp.29 = mod %tmp.27 %tmp.28;
+        lputv %pick.3 %tmp.29;
+        symbol [ pick %pick.3 57 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 58 8 ]
+        for @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_58_8_66_8_for_test @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_58_8_66_8_for_incr @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_58_8_66_8_for_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_58_8_66_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_58_8_66_8_for_begin" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_58_8_66_8_for_end" ]
+        %j.4 = local;
+        symbol [ j %j.4 58 17 18 ];
+        %tmp.30 = 0;
+        lputv %j.4 %tmp.30;
+        symbol [ j %j.4 58 17 18 ];
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_58_8_66_8_for_test:
+        %tmp.31 = lgetv %j.4;
+        symbol [ j %tmp.31 58 24 25 ];
+        symbol [ GRID_CELLS %tmp.33 58 28 38 ];
+        %tmp.33 = getv ? :GRID_CELLS;
+        %tmp.34 = lt %tmp.31 %tmp.33;
+        bf %tmp.34 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_58_8_66_8_for_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_58_8_66_8_for_begin:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_58_45_66_8_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 59 12 ]
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_59_12_65_12_if_stmt:
+        symbol [ cells %tmp.36 59 16 21 ];
+        %tmp.36 = getv ? :cells;
+        %tmp.37 = lgetv %j.4;
+        symbol [ j %tmp.37 59 22 23 ];
+        %tmp.38 = agetv %tmp.36 %tmp.37;
+        %tmp.39 = 0;
+        %tmp.40 = eq %tmp.38 %tmp.39;
+        bf %tmp.40 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_59_12_65_12_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_59_12_65_12_if_true:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_59_31_65_12_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 60 16 ]
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_60_16_63_16_if_stmt:
+        %tmp.41 = lgetv %pick.3;
+        symbol [ pick %tmp.41 60 20 24 ];
+        %tmp.42 = 0;
+        %tmp.43 = eq %tmp.41 %tmp.42;
+        bf %tmp.43 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_60_16_63_16_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_60_16_63_16_if_true:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_60_31_63_16_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 61 20 ]
+        symbol [ cells %tmp.44 61 20 25 ];
+        %tmp.44 = getv self :cells;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_61_31_61_61_begin:
+        symbol [ Math %tmp.45 61 32 36 ];
+        %tmp.45 = getm $.Toybox.Math;
+        symbol [ rand %tmp.46 61 37 41 ];
+        %tmp.46 = getv function %tmp.45 :rand;
+        %tmp.47 = invoke %tmp.45 %tmp.46();
+        %tmp.48 = 10;
+        %tmp.49 = mod %tmp.47 %tmp.48;
+        %tmp.50 = 0;
+        %tmp.51 = eq %tmp.49 %tmp.50;
+        bf %tmp.51 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_61_31_61_61_else_false;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_61_31_61_61_true:
+        %tmp.52 = 2;
+        push %tmp.52;
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_61_31_61_61_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_61_31_61_61_else_false:
+        %tmp.53 = 1;
+        push %tmp.53;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_61_31_61_61_end:
+        %tmp.54 = phi [%tmp.51 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_61_31_61_61_begin] [%tmp.52 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_61_31_61_61_true] [%tmp.53 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_61_31_61_61_else_false] [%tmp.54 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_61_31_61_61_end];
+        %tmp.55 = lgetv %j.4;
+        symbol [ j %tmp.55 61 26 27 ];
+        aputv %tmp.44 %tmp.55 %tmp.54;
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 62 20 ]
+        %tmp.56 = true;
+        ret %tmp.56;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_60_31_63_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_60_16_63_16_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_60_16_63_16_if_end:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 64 16 ]
+        %tmp.59 = lgetv %pick.3;
+        symbol [ pick %tmp.59 64 16 20 ];
+        %tmp.60 = sub %tmp.59 1;
+        lputv %pick.3 %tmp.60;
+        symbol [ pick %pick.3 64 16 20 ];
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_59_31_65_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_59_12_65_12_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_59_12_65_12_if_end:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_58_45_66_8_stop:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_58_8_66_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 58 ]
+        %tmp.63 = lgetv %j.4;
+        symbol [ j %tmp.63 58 40 41 ];
+        %tmp.64 = add %tmp.63 1;
+        lputv %j.4 %tmp.64;
+        symbol [ j %j.4 58 40 41 ];
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_58_8_66_8_for_test;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_58_8_66_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 67 8 ]
+        %tmp.65 = false;
+        ret %tmp.65;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_51_27_68_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc"; @line = 70; @symbol_functiondef = [hasEmpty,70,13,21]; ]
+    function hasEmpty() {
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_70_24_75_4_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 71 8 ]
+        for @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_71_8_73_8_for_test @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_71_8_73_8_for_incr @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_71_8_73_8_for_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_71_8_73_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_71_8_73_8_for_begin" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_71_8_73_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 71 17 18 ];
+        %tmp.1 = 0;
+        lputv %i.1 %tmp.1;
+        symbol [ i %i.1 71 17 18 ];
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_71_8_73_8_for_test:
+        %tmp.2 = lgetv %i.1;
+        symbol [ i %tmp.2 71 24 25 ];
+        symbol [ GRID_CELLS %tmp.4 71 28 38 ];
+        %tmp.4 = getv ? :GRID_CELLS;
+        %tmp.5 = lt %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_71_8_73_8_for_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_71_8_73_8_for_begin:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_71_45_73_8_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 72 12 ]
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_72_12_72_46_if_stmt:
+        symbol [ cells %tmp.7 72 16 21 ];
+        %tmp.7 = getv ? :cells;
+        %tmp.8 = lgetv %i.1;
+        symbol [ i %tmp.8 72 22 23 ];
+        %tmp.9 = agetv %tmp.7 %tmp.8;
+        %tmp.10 = 0;
+        %tmp.11 = eq %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_72_12_72_46_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_72_12_72_46_if_true:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_72_31_72_46_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 72 33 ]
+        %tmp.12 = true;
+        ret %tmp.12;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_72_31_72_46_stop:
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_72_12_72_46_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_72_12_72_46_if_end:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_71_45_73_8_stop:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_71_8_73_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 71 ]
+        %tmp.15 = lgetv %i.1;
+        symbol [ i %tmp.15 71 40 41 ];
+        %tmp.16 = add %tmp.15 1;
+        lputv %i.1 %tmp.16;
+        symbol [ i %i.1 71 40 41 ];
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_71_8_73_8_for_test;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_71_8_73_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 74 8 ]
+        %tmp.17 = false;
+        ret %tmp.17;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_70_24_75_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc"; @line = 78; @symbol_functiondef = [maxExp,78,13,19]; ]
+    function maxExp() {
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_78_22_84_4_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 79 8 ]
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_78_22_84_4_start" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_78_22_84_4_stop" ]
+        %m.1 = local;
+        symbol [ m %m.1 79 12 13 ];
+        %tmp.1 = 0;
+        lputv %m.1 %tmp.1;
+        symbol [ m %m.1 79 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 80 8 ]
+        for @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_80_8_82_8_for_test @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_80_8_82_8_for_incr @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_80_8_82_8_for_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_80_8_82_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_80_8_82_8_for_begin" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_80_8_82_8_for_end" ]
+        %i.2 = local;
+        symbol [ i %i.2 80 17 18 ];
+        %tmp.2 = 0;
+        lputv %i.2 %tmp.2;
+        symbol [ i %i.2 80 17 18 ];
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_80_8_82_8_for_test:
+        %tmp.3 = lgetv %i.2;
+        symbol [ i %tmp.3 80 24 25 ];
+        symbol [ GRID_CELLS %tmp.5 80 28 38 ];
+        %tmp.5 = getv ? :GRID_CELLS;
+        %tmp.6 = lt %tmp.3 %tmp.5;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_80_8_82_8_for_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_80_8_82_8_for_begin:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_80_45_82_8_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 81 12 ]
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_81_12_81_46_if_stmt:
+        symbol [ cells %tmp.8 81 16 21 ];
+        %tmp.8 = getv ? :cells;
+        %tmp.9 = lgetv %i.2;
+        symbol [ i %tmp.9 81 22 23 ];
+        %tmp.10 = agetv %tmp.8 %tmp.9;
+        %tmp.11 = lgetv %m.1;
+        symbol [ m %tmp.11 81 27 28 ];
+        %tmp.12 = gt %tmp.10 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_81_12_81_46_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_81_12_81_46_if_true:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_81_30_81_46_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 81 32 ]
+        symbol [ cells %tmp.14 81 36 41 ];
+        %tmp.14 = getv ? :cells;
+        %tmp.15 = lgetv %i.2;
+        symbol [ i %tmp.15 81 42 43 ];
+        %tmp.16 = agetv %tmp.14 %tmp.15;
+        lputv %m.1 %tmp.16;
+        symbol [ m %m.1 81 32 33 ];
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_81_30_81_46_stop:
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_81_12_81_46_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_81_12_81_46_if_end:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_80_45_82_8_stop:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_80_8_82_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 80 ]
+        %tmp.19 = lgetv %i.2;
+        symbol [ i %tmp.19 80 40 41 ];
+        %tmp.20 = add %tmp.19 1;
+        lputv %i.2 %tmp.20;
+        symbol [ i %i.2 80 40 41 ];
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_80_8_82_8_for_test;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_80_8_82_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 83 8 ]
+        %tmp.21 = lgetv %m.1;
+        symbol [ m %tmp.21 83 15 16 ];
+        ret %tmp.21;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_78_22_84_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc"; @line = 90; @symbol_functiondef = [hasAnyMove,90,13,23]; ]
+    function hasAnyMove() {
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_90_26_100_4_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 91 8 ]
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_91_8_91_39_if_stmt:
+        %tmp.1 = self;
+        symbol [ hasEmpty %tmp.2 91 12 20 ];
+        %tmp.2 = getv function %tmp.1 :hasEmpty;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_91_8_91_39_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_91_8_91_39_if_true:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_91_24_91_39_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 91 26 ]
+        %tmp.4 = true;
+        ret %tmp.4;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_91_24_91_39_stop:
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_91_8_91_39_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_91_8_91_39_if_end:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 92 8 ]
+        for @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_92_8_98_8_for_test @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_92_8_98_8_for_incr @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_92_8_98_8_for_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_92_8_98_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_92_8_98_8_for_begin" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_92_8_98_8_for_end" ]
+        %r.1 = local;
+        symbol [ r %r.1 92 17 18 ];
+        %tmp.5 = 0;
+        lputv %r.1 %tmp.5;
+        symbol [ r %r.1 92 17 18 ];
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_92_8_98_8_for_test:
+        %tmp.6 = lgetv %r.1;
+        symbol [ r %tmp.6 92 24 25 ];
+        symbol [ GRID_SIZE %tmp.8 92 28 37 ];
+        %tmp.8 = getv ? :GRID_SIZE;
+        %tmp.9 = lt %tmp.6 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_92_8_98_8_for_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_92_8_98_8_for_begin:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_92_44_98_8_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 93 12 ]
+        for @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_93_12_97_12_for_test @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_93_12_97_12_for_incr @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_93_12_97_12_for_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_93_12_97_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_93_12_97_12_for_begin" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_93_12_97_12_for_end" ]
+        %c.2 = local;
+        symbol [ c %c.2 93 21 22 ];
+        %tmp.10 = 0;
+        lputv %c.2 %tmp.10;
+        symbol [ c %c.2 93 21 22 ];
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_93_12_97_12_for_test:
+        %tmp.11 = lgetv %c.2;
+        symbol [ c %tmp.11 93 28 29 ];
+        symbol [ GRID_SIZE %tmp.13 93 32 41 ];
+        %tmp.13 = getv ? :GRID_SIZE;
+        %tmp.14 = lt %tmp.11 %tmp.13;
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_93_12_97_12_for_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_93_12_97_12_for_begin:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_93_48_97_12_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 94 16 ]
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_93_48_97_12_start" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_93_48_97_12_stop" ]
+        %v.3 = local;
+        symbol [ v %v.3 94 20 21 ];
+        %tmp.15 = self;
+        symbol [ get %tmp.16 94 24 27 ];
+        %tmp.16 = getv function %tmp.15 :get;
+        %tmp.17 = lgetv %r.1;
+        symbol [ r %tmp.17 94 28 29 ];
+        %tmp.18 = lgetv %c.2;
+        symbol [ c %tmp.18 94 31 32 ];
+        %tmp.19 = invoke %tmp.15 %tmp.16(%tmp.17, %tmp.18);
+        lputv %v.3 %tmp.19;
+        symbol [ v %v.3 94 20 21 ];
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 95 16 ]
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_95_16_95_76_if_stmt:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_95_20_95_58_begin:
+        %tmp.20 = lgetv %c.2;
+        symbol [ c %tmp.20 95 20 21 ];
+        %tmp.21 = 1;
+        %tmp.22 = add %tmp.20 %tmp.21;
+        symbol [ GRID_SIZE %tmp.24 95 28 37 ];
         %tmp.24 = getv ? :GRID_SIZE;
-        %tmp.25 = mod %tmp.22 %tmp.24;
-        %tmp.26 = dup %tmp.21;
-        %tmp.27 = aputv %tmp.26 1 %tmp.25;
-        invoke %tmp.13 %tmp.14(%tmp.27);
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_121_33_123_12_stop:
-        goto @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_121_12_123_12_if_end;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_121_12_123_12_if_end:
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_120_44_124_8_stop:
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_120_8_124_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 120 ]
-        %tmp.30 = lgetv %i.2;
-        symbol [ i %tmp.30 120 39 40 ];
-        %tmp.31 = add %tmp.30 1;
-        lputv %i.2 %tmp.31;
-        symbol [ i %i.2 120 39 40 ];
-        goto @_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_120_8_124_8_for_test;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_120_8_124_8_for_end:
-[ "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc" 125 8 ]
-        %tmp.32 = lgetv %out.1;
-        symbol [ out %tmp.32 125 15 18 ];
-        ret %tmp.32;
-_Users_kkorolczuk_work_garmin_battleship_source_GridManager_mc_118_30_126_4_stop:
+        %tmp.25 = lt %tmp.22 %tmp.24;
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_95_16_95_76_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_95_41_95_58_true:
+        %tmp.26 = self;
+        symbol [ get %tmp.27 95 41 44 ];
+        %tmp.27 = getv function %tmp.26 :get;
+        %tmp.28 = lgetv %r.1;
+        symbol [ r %tmp.28 95 45 46 ];
+        %tmp.29 = lgetv %c.2;
+        symbol [ c %tmp.29 95 48 49 ];
+        %tmp.30 = 1;
+        %tmp.31 = add %tmp.29 %tmp.30;
+        %tmp.32 = invoke %tmp.26 %tmp.27(%tmp.28, %tmp.31);
+        %tmp.33 = lgetv %v.3;
+        symbol [ v %tmp.33 95 58 59 ];
+        %tmp.34 = eq %tmp.32 %tmp.33;
+        push %tmp.34;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_95_41_95_58_end:
+        %tmp.35 = phi [%tmp.25 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_95_20_95_58_begin] [%tmp.34 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_95_41_95_58_true] [%tmp.35 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_95_41_95_58_end];
+        bf %tmp.35 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_95_16_95_76_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_95_16_95_76_if_true:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_95_61_95_76_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 95 63 ]
+        %tmp.36 = true;
+        ret %tmp.36;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_95_61_95_76_stop:
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_95_16_95_76_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_95_16_95_76_if_end:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 96 16 ]
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_96_16_96_76_if_stmt:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_96_20_96_58_begin:
+        %tmp.37 = lgetv %r.1;
+        symbol [ r %tmp.37 96 20 21 ];
+        %tmp.38 = 1;
+        %tmp.39 = add %tmp.37 %tmp.38;
+        symbol [ GRID_SIZE %tmp.41 96 28 37 ];
+        %tmp.41 = getv ? :GRID_SIZE;
+        %tmp.42 = lt %tmp.39 %tmp.41;
+        bf %tmp.42 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_96_16_96_76_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_96_41_96_58_true:
+        %tmp.43 = self;
+        symbol [ get %tmp.44 96 41 44 ];
+        %tmp.44 = getv function %tmp.43 :get;
+        %tmp.45 = lgetv %r.1;
+        symbol [ r %tmp.45 96 45 46 ];
+        %tmp.46 = 1;
+        %tmp.47 = add %tmp.45 %tmp.46;
+        %tmp.48 = lgetv %c.2;
+        symbol [ c %tmp.48 96 52 53 ];
+        %tmp.49 = invoke %tmp.43 %tmp.44(%tmp.47, %tmp.48);
+        %tmp.50 = lgetv %v.3;
+        symbol [ v %tmp.50 96 58 59 ];
+        %tmp.51 = eq %tmp.49 %tmp.50;
+        push %tmp.51;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_96_41_96_58_end:
+        %tmp.52 = phi [%tmp.42 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_96_20_96_58_begin] [%tmp.51 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_96_41_96_58_true] [%tmp.52 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_96_41_96_58_end];
+        bf %tmp.52 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_96_16_96_76_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_96_16_96_76_if_true:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_96_61_96_76_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 96 63 ]
+        %tmp.53 = true;
+        ret %tmp.53;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_96_61_96_76_stop:
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_96_16_96_76_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_96_16_96_76_if_end:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_93_48_97_12_stop:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_93_12_97_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 93 ]
+        %tmp.56 = lgetv %c.2;
+        symbol [ c %tmp.56 93 43 44 ];
+        %tmp.57 = add %tmp.56 1;
+        lputv %c.2 %tmp.57;
+        symbol [ c %c.2 93 43 44 ];
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_93_12_97_12_for_test;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_93_12_97_12_for_end:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_92_44_98_8_stop:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_92_8_98_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 92 ]
+        %tmp.60 = lgetv %r.1;
+        symbol [ r %tmp.60 92 39 40 ];
+        %tmp.61 = add %tmp.60 1;
+        lputv %r.1 %tmp.61;
+        symbol [ r %r.1 92 39 40 ];
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_92_8_98_8_for_test;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_92_8_98_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 99 8 ]
+        %tmp.62 = false;
+        ret %tmp.62;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_90_26_100_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc"; @line = 110; @symbol_functiondef = [collapseLeft,110,20,32]; @symbol_param<0> = [row,110,33,36]; @symbol_param<1> = [merged,110,38,44]; ]
+    static
+    function collapseLeft(row, merged) {
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_110_46_153_4_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 112 8 ]
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_110_46_153_4_start" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_110_46_153_4_stop" ]
+        %write.1 = local;
+        symbol [ write %write.1 112 12 17 ];
+        %tmp.1 = 0;
+        lputv %write.1 %tmp.1;
+        symbol [ write %write.1 112 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 113 8 ]
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_110_46_153_4_start" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_110_46_153_4_stop" ]
+        %tmp.2 = local;
+        symbol [ tmp %tmp.2 113 12 15 ];
+        %tmp.2 = newa 4;
+        %tmp.3 = 0;
+        %tmp.4 = dup %tmp.2;
+        %tmp.5 = aputv %tmp.4 0 %tmp.3;
+        %tmp.6 = 0;
+        %tmp.7 = dup %tmp.5;
+        %tmp.8 = aputv %tmp.7 1 %tmp.6;
+        %tmp.9 = 0;
+        %tmp.10 = dup %tmp.8;
+        %tmp.11 = aputv %tmp.10 2 %tmp.9;
+        %tmp.12 = 0;
+        %tmp.13 = dup %tmp.11;
+        %tmp.14 = aputv %tmp.13 3 %tmp.12;
+        lputv %tmp.2 %tmp.14;
+        symbol [ tmp %tmp.2 113 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 114 8 ]
+        for @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_114_8_119_8_for_test @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_114_8_119_8_for_incr @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_114_8_119_8_for_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_114_8_119_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_114_8_119_8_for_begin" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_114_8_119_8_for_end" ]
+        %i.3 = local;
+        symbol [ i %i.3 114 17 18 ];
+        %tmp.15 = 0;
+        lputv %i.3 %tmp.15;
+        symbol [ i %i.3 114 17 18 ];
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_114_8_119_8_for_test:
+        %tmp.16 = lgetv %i.3;
+        symbol [ i %tmp.16 114 24 25 ];
+        symbol [ GRID_SIZE %tmp.18 114 28 37 ];
+        %tmp.18 = getv ? :GRID_SIZE;
+        %tmp.19 = lt %tmp.16 %tmp.18;
+        bf %tmp.19 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_114_8_119_8_for_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_114_8_119_8_for_begin:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_114_44_119_8_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 115 12 ]
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_115_12_118_12_if_stmt:
+        %tmp.20 = lgetv %row;
+        symbol [ row %tmp.20 115 16 19 ];
+        %tmp.21 = lgetv %i.3;
+        symbol [ i %tmp.21 115 20 21 ];
+        %tmp.22 = agetv %tmp.20 %tmp.21;
+        %tmp.23 = 0;
+        %tmp.24 = ne %tmp.22 %tmp.23;
+        bf %tmp.24 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_115_12_118_12_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_115_12_118_12_if_true:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_115_29_118_12_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 116 16 ]
+        %tmp.25 = lgetv %tmp.2;
+        symbol [ tmp %tmp.25 116 16 19 ];
+        %tmp.26 = lgetv %row;
+        symbol [ row %tmp.26 116 29 32 ];
+        %tmp.27 = lgetv %i.3;
+        symbol [ i %tmp.27 116 33 34 ];
+        %tmp.28 = agetv %tmp.26 %tmp.27;
+        %tmp.29 = lgetv %write.1;
+        symbol [ write %tmp.29 116 20 25 ];
+        aputv %tmp.25 %tmp.29 %tmp.28;
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 117 16 ]
+        %tmp.32 = lgetv %write.1;
+        symbol [ write %tmp.32 117 16 21 ];
+        %tmp.33 = add %tmp.32 1;
+        lputv %write.1 %tmp.33;
+        symbol [ write %write.1 117 16 21 ];
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_115_29_118_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_115_12_118_12_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_115_12_118_12_if_end:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_114_44_119_8_stop:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_114_8_119_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 114 ]
+        %tmp.36 = lgetv %i.3;
+        symbol [ i %tmp.36 114 39 40 ];
+        %tmp.37 = add %tmp.36 1;
+        lputv %i.3 %tmp.37;
+        symbol [ i %i.3 114 39 40 ];
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_114_8_119_8_for_test;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_114_8_119_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 120 8 ]
+        for @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_120_8_120_62_for_test @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_120_8_120_62_for_incr @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_120_8_120_62_for_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_120_8_120_62_for_init:
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_120_8_120_62_for_begin" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_120_8_120_62_for_end" ]
+        %k.4 = local;
+        symbol [ k %k.4 120 17 18 ];
+        %tmp.38 = lgetv %write.1;
+        symbol [ write %tmp.38 120 21 26 ];
+        lputv %k.4 %tmp.38;
+        symbol [ k %k.4 120 17 18 ];
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_120_8_120_62_for_test:
+        %tmp.39 = lgetv %k.4;
+        symbol [ k %tmp.39 120 28 29 ];
+        symbol [ GRID_SIZE %tmp.41 120 32 41 ];
+        %tmp.41 = getv ? :GRID_SIZE;
+        %tmp.42 = lt %tmp.39 %tmp.41;
+        bf %tmp.42 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_120_8_120_62_for_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_120_8_120_62_for_begin:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_120_48_120_62_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 120 50 ]
+        %tmp.43 = lgetv %tmp.2;
+        symbol [ tmp %tmp.43 120 50 53 ];
+        %tmp.44 = 0;
+        %tmp.45 = lgetv %k.4;
+        symbol [ k %tmp.45 120 54 55 ];
+        aputv %tmp.43 %tmp.45 %tmp.44;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_120_48_120_62_stop:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_120_8_120_62_for_incr:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 120 ]
+        %tmp.48 = lgetv %k.4;
+        symbol [ k %tmp.48 120 43 44 ];
+        %tmp.49 = add %tmp.48 1;
+        lputv %k.4 %tmp.49;
+        symbol [ k %k.4 120 43 44 ];
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_120_8_120_62_for_test;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_120_8_120_62_for_end:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 124 8 ]
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_110_46_153_4_start" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_110_46_153_4_stop" ]
+        %out.5 = local;
+        symbol [ out %out.5 124 12 15 ];
+        %tmp.50 = newa 4;
+        %tmp.51 = 0;
+        %tmp.52 = dup %tmp.50;
+        %tmp.53 = aputv %tmp.52 0 %tmp.51;
+        %tmp.54 = 0;
+        %tmp.55 = dup %tmp.53;
+        %tmp.56 = aputv %tmp.55 1 %tmp.54;
+        %tmp.57 = 0;
+        %tmp.58 = dup %tmp.56;
+        %tmp.59 = aputv %tmp.58 2 %tmp.57;
+        %tmp.60 = 0;
+        %tmp.61 = dup %tmp.59;
+        %tmp.62 = aputv %tmp.61 3 %tmp.60;
+        lputv %out.5 %tmp.62;
+        symbol [ out %out.5 124 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 125 8 ]
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_110_46_153_4_start" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_110_46_153_4_stop" ]
+        %mout.6 = local;
+        symbol [ mout %mout.6 125 12 16 ];
+        %tmp.63 = newa 4;
+        %tmp.64 = false;
+        %tmp.65 = dup %tmp.63;
+        %tmp.66 = aputv %tmp.65 0 %tmp.64;
+        %tmp.67 = false;
+        %tmp.68 = dup %tmp.66;
+        %tmp.69 = aputv %tmp.68 1 %tmp.67;
+        %tmp.70 = false;
+        %tmp.71 = dup %tmp.69;
+        %tmp.72 = aputv %tmp.71 2 %tmp.70;
+        %tmp.73 = false;
+        %tmp.74 = dup %tmp.72;
+        %tmp.75 = aputv %tmp.74 3 %tmp.73;
+        lputv %mout.6 %tmp.75;
+        symbol [ mout %mout.6 125 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 126 8 ]
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_110_46_153_4_start" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_110_46_153_4_stop" ]
+        %wi.7 = local;
+        symbol [ wi %wi.7 126 12 14 ];
+        %tmp.76 = 0;
+        lputv %wi.7 %tmp.76;
+        symbol [ wi %wi.7 126 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 127 8 ]
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_110_46_153_4_start" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_110_46_153_4_stop" ]
+        %i2.8 = local;
+        symbol [ i2 %i2.8 127 12 14 ];
+        %tmp.77 = 0;
+        lputv %i2.8 %tmp.77;
+        symbol [ i2 %i2.8 127 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 128 8 ]
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_110_46_153_4_start" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_110_46_153_4_stop" ]
+        %gained.9 = local;
+        symbol [ gained %gained.9 128 12 18 ];
+        %tmp.78 = 0;
+        lputv %gained.9 %tmp.78;
+        symbol [ gained %gained.9 128 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 129 8 ]
+        while @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_129_8_145_8_while_test @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_129_8_145_8_while_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_129_8_145_8_while_test:
+        %tmp.79 = lgetv %i2.8;
+        symbol [ i2 %tmp.79 129 15 17 ];
+        symbol [ GRID_SIZE %tmp.81 129 20 29 ];
+        %tmp.81 = getv ? :GRID_SIZE;
+        %tmp.82 = lt %tmp.79 %tmp.81;
+        bf %tmp.82 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_129_8_145_8_while_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_129_8_145_8_while_begin:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_129_31_145_8_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 130 12 ]
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_129_31_145_8_start" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_129_31_145_8_stop" ]
+        %v.10 = local;
+        symbol [ v %v.10 130 16 17 ];
+        %tmp.83 = lgetv %tmp.2;
+        symbol [ tmp %tmp.83 130 20 23 ];
+        %tmp.84 = lgetv %i2.8;
+        symbol [ i2 %tmp.84 130 24 26 ];
+        %tmp.85 = agetv %tmp.83 %tmp.84;
+        lputv %v.10 %tmp.85;
+        symbol [ v %v.10 130 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 131 12 ]
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_131_12_131_42_if_stmt:
+        %tmp.86 = lgetv %v.10;
+        symbol [ v %tmp.86 131 16 17 ];
+        %tmp.87 = 0;
+        %tmp.88 = eq %tmp.86 %tmp.87;
+        bf %tmp.88 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_131_12_131_42_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_131_12_131_42_if_true:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_131_24_131_42_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 131 26 ]
+        %tmp.91 = lgetv %i2.8;
+        symbol [ i2 %tmp.91 131 26 28 ];
+        %tmp.92 = add %tmp.91 1;
+        lputv %i2.8 %tmp.92;
+        symbol [ i2 %i2.8 131 26 28 ];
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 131 32 ]
+        goto break @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_129_8_145_8_while_test;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_131_24_131_42_stop:
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_131_12_131_42_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_131_12_131_42_if_end:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 132 12 ]
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_132_12_144_12_if_stmt:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_132_16_132_63_begin:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_132_16_132_53_begin:
+        %tmp.93 = lgetv %i2.8;
+        symbol [ i2 %tmp.93 132 16 18 ];
+        %tmp.94 = 1;
+        %tmp.95 = add %tmp.93 %tmp.94;
+        symbol [ GRID_SIZE %tmp.97 132 25 34 ];
+        %tmp.97 = getv ? :GRID_SIZE;
+        %tmp.98 = lt %tmp.95 %tmp.97;
+        bf %tmp.98 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_132_12_144_12_if_else_false;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_132_38_132_53_true:
+        %tmp.99 = lgetv %tmp.2;
+        symbol [ tmp %tmp.99 132 38 41 ];
+        %tmp.100 = lgetv %i2.8;
+        symbol [ i2 %tmp.100 132 42 44 ];
+        %tmp.101 = 1;
+        %tmp.102 = add %tmp.100 %tmp.101;
+        %tmp.103 = agetv %tmp.99 %tmp.102;
+        %tmp.104 = lgetv %v.10;
+        symbol [ v %tmp.104 132 53 54 ];
+        %tmp.105 = eq %tmp.103 %tmp.104;
+        push %tmp.105;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_132_38_132_53_end:
+        %tmp.106 = phi [%tmp.98 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_132_16_132_53_begin] [%tmp.105 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_132_38_132_53_true] [%tmp.106 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_132_38_132_53_end];
+        bf %tmp.106 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_132_12_144_12_if_else_false;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_132_58_132_63_true:
+        %tmp.107 = lgetv %v.10;
+        symbol [ v %tmp.107 132 58 59 ];
+        %tmp.108 = 0;
+        %tmp.109 = ne %tmp.107 %tmp.108;
+        push %tmp.109;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_132_58_132_63_end:
+        %tmp.110 = phi [%tmp.106 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_132_16_132_63_begin] [%tmp.109 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_132_58_132_63_true] [%tmp.110 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_132_58_132_63_end];
+        bf %tmp.110 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_132_12_144_12_if_else_false;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_132_12_144_12_if_true:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_132_66_139_12_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 133 16 ]
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_132_66_139_12_start" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_132_66_139_12_stop" ]
+        %merged_e.11 = local;
+        symbol [ merged_e %merged_e.11 133 20 28 ];
+        %tmp.111 = lgetv %v.10;
+        symbol [ v %tmp.111 133 31 32 ];
+        %tmp.112 = 1;
+        %tmp.113 = add %tmp.111 %tmp.112;
+        lputv %merged_e.11 %tmp.113;
+        symbol [ merged_e %merged_e.11 133 20 28 ];
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 134 16 ]
+        %tmp.114 = lgetv %out.5;
+        symbol [ out %tmp.114 134 16 19 ];
+        %tmp.115 = lgetv %merged_e.11;
+        symbol [ merged_e %tmp.115 134 26 34 ];
+        %tmp.116 = lgetv %wi.7;
+        symbol [ wi %tmp.116 134 20 22 ];
+        aputv %tmp.114 %tmp.116 %tmp.115;
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 135 16 ]
+        %tmp.117 = lgetv %mout.6;
+        symbol [ mout %tmp.117 135 16 20 ];
+        %tmp.118 = true;
+        %tmp.119 = lgetv %wi.7;
+        symbol [ wi %tmp.119 135 21 23 ];
+        aputv %tmp.117 %tmp.119 %tmp.118;
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 136 16 ]
+        %tmp.120 = lgetv %gained.9;
+        symbol [ gained %tmp.120 136 25 31 ];
+        symbol [ Tile %tmp.122 136 34 38 ];
+        %tmp.122 = getv ? :Tile;
+        symbol [ valueOf %tmp.123 136 39 46 ];
+        %tmp.123 = getv function %tmp.122 :valueOf;
+        %tmp.124 = lgetv %merged_e.11;
+        symbol [ merged_e %tmp.124 136 47 55 ];
+        %tmp.125 = invoke %tmp.122 %tmp.123(%tmp.124);
+        %tmp.126 = add %tmp.120 %tmp.125;
+        lputv %gained.9 %tmp.126;
+        symbol [ gained %gained.9 136 16 22 ];
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 137 16 ]
+        %tmp.129 = lgetv %wi.7;
+        symbol [ wi %tmp.129 137 16 18 ];
+        %tmp.130 = add %tmp.129 1;
+        lputv %wi.7 %tmp.130;
+        symbol [ wi %wi.7 137 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 138 16 ]
+        %tmp.131 = lgetv %i2.8;
+        symbol [ i2 %tmp.131 138 21 23 ];
+        %tmp.132 = 2;
+        %tmp.133 = add %tmp.131 %tmp.132;
+        lputv %i2.8 %tmp.133;
+        symbol [ i2 %i2.8 138 16 18 ];
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_132_66_139_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_132_12_144_12_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_132_12_144_12_if_else_false:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_139_19_144_12_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 140 16 ]
+        %tmp.134 = lgetv %out.5;
+        symbol [ out %tmp.134 140 16 19 ];
+        %tmp.135 = lgetv %v.10;
+        symbol [ v %tmp.135 140 26 27 ];
+        %tmp.136 = lgetv %wi.7;
+        symbol [ wi %tmp.136 140 20 22 ];
+        aputv %tmp.134 %tmp.136 %tmp.135;
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 141 16 ]
+        %tmp.137 = lgetv %mout.6;
+        symbol [ mout %tmp.137 141 16 20 ];
+        %tmp.138 = false;
+        %tmp.139 = lgetv %wi.7;
+        symbol [ wi %tmp.139 141 21 23 ];
+        aputv %tmp.137 %tmp.139 %tmp.138;
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 142 16 ]
+        %tmp.142 = lgetv %wi.7;
+        symbol [ wi %tmp.142 142 16 18 ];
+        %tmp.143 = add %tmp.142 1;
+        lputv %wi.7 %tmp.143;
+        symbol [ wi %wi.7 142 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 143 16 ]
+        %tmp.146 = lgetv %i2.8;
+        symbol [ i2 %tmp.146 143 16 18 ];
+        %tmp.147 = add %tmp.146 1;
+        lputv %i2.8 %tmp.147;
+        symbol [ i2 %i2.8 143 16 18 ];
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_139_19_144_12_stop:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_132_12_144_12_if_end:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_129_31_145_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_129_8_145_8_while_test;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_129_8_145_8_while_end:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 148 8 ]
+        for @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_148_8_151_8_for_test @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_148_8_151_8_for_incr @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_148_8_151_8_for_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_148_8_151_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_148_8_151_8_for_begin" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_148_8_151_8_for_end" ]
+        %j.12 = local;
+        symbol [ j %j.12 148 17 18 ];
+        %tmp.148 = 0;
+        lputv %j.12 %tmp.148;
+        symbol [ j %j.12 148 17 18 ];
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_148_8_151_8_for_test:
+        %tmp.149 = lgetv %j.12;
+        symbol [ j %tmp.149 148 24 25 ];
+        symbol [ GRID_SIZE %tmp.151 148 28 37 ];
+        %tmp.151 = getv ? :GRID_SIZE;
+        %tmp.152 = lt %tmp.149 %tmp.151;
+        bf %tmp.152 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_148_8_151_8_for_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_148_8_151_8_for_begin:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_148_44_151_8_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 149 12 ]
+        %tmp.153 = lgetv %row;
+        symbol [ row %tmp.153 149 12 15 ];
+        %tmp.154 = lgetv %out.5;
+        symbol [ out %tmp.154 149 24 27 ];
+        %tmp.155 = lgetv %j.12;
+        symbol [ j %tmp.155 149 28 29 ];
+        %tmp.156 = agetv %tmp.154 %tmp.155;
+        %tmp.157 = lgetv %j.12;
+        symbol [ j %tmp.157 149 16 17 ];
+        aputv %tmp.153 %tmp.157 %tmp.156;
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 150 12 ]
+        %tmp.158 = lgetv %merged;
+        symbol [ merged %tmp.158 150 12 18 ];
+        %tmp.159 = lgetv %mout.6;
+        symbol [ mout %tmp.159 150 24 28 ];
+        %tmp.160 = lgetv %j.12;
+        symbol [ j %tmp.160 150 29 30 ];
+        %tmp.161 = agetv %tmp.159 %tmp.160;
+        %tmp.162 = lgetv %j.12;
+        symbol [ j %tmp.162 150 19 20 ];
+        aputv %tmp.158 %tmp.162 %tmp.161;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_148_44_151_8_stop:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_148_8_151_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 148 ]
+        %tmp.165 = lgetv %j.12;
+        symbol [ j %tmp.165 148 39 40 ];
+        %tmp.166 = add %tmp.165 1;
+        lputv %j.12 %tmp.166;
+        symbol [ j %j.12 148 39 40 ];
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_148_8_151_8_for_test;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_148_8_151_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc" 152 8 ]
+        %tmp.167 = lgetv %gained.9;
+        symbol [ gained %tmp.167 152 15 21 ];
+        ret %tmp.167;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GridManager_mc_110_46_153_4_stop:
     }
 }
-[ @file = "/Users/kkorolczuk/work/garmin/battleship/source/GridManager.mc"; @line = 30; ]
+[ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GridManager.mc"; @line = 18; ]
 <init> {
 }

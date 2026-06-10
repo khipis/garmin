@@ -63,7 +63,8 @@ class BilliardGame {
     var turn;     // TURN_PLAYER or TURN_AI
     var gameType; // GT_3BALL / GT_9BALL / GT_8BALL / GT_SNOOKER
     var numBalls; // active ball count for current mode (4, 8, 10, or 16)
-    var menuSel;  // menu cursor: 0=mode, 1=difficulty, 2=START
+    var menuSel;  // menu cursor: 0=mode, 1=vs, 2=difficulty, 3=START
+    var pvpMode;  // false = P vs AI, true = P vs P (Player 2 uses same controls)
 
     // ── Per-shot tracking (rules engine) ─────────────────────
     var firstHit;          // index of first non-cue ball cue contacted; -1 = miss
@@ -128,7 +129,7 @@ class BilliardGame {
     // ─────────────────────────────────────────────────────────
     function initialize() {
         gs = BS_MENU; diff = DIFF_MED; turn = TURN_PLAYER;
-        gameType = GT_9BALL; numBalls = 10; menuSel = 0;
+        gameType = GT_9BALL; numBalls = 10; menuSel = 0; pvpMode = false;
         aimAngle = 0.0; power = 50; powerDir = 1;
         _aimRptDir = 0; _aimRptStreak = 0; _aimRptIdle = 0;
         playerScore = 0; aiScore = 0;
@@ -162,6 +163,8 @@ class BilliardGame {
         if (sd != null) { diff = sd; }
         var sgt = Application.Storage.getValue("billGT");
         if (sgt != null && sgt >= 0 && sgt < GT_COUNT) { gameType = sgt; }
+        var spvp = Application.Storage.getValue("billPvP");
+        if (spvp != null) { pvpMode = spvp; }
 
         _applyGameType();
         _setupVP(260, 260);
@@ -333,6 +336,20 @@ class BilliardGame {
         return "OPEN";
     }
 
+    // Return shooter label for messages — "You"/"AI" in PvAI, "P1"/"P2" in PvP.
+    hidden function _shooterLabel(t) {
+        if (pvpMode) {
+            return (t == TURN_PLAYER) ? "P1" : "P2";
+        }
+        return (t == TURN_PLAYER) ? "You" : "AI";
+    }
+    hidden function _opponentLabel(t) {
+        if (pvpMode) {
+            return (t == TURN_PLAYER) ? "P2" : "P1";
+        }
+        return (t == TURN_PLAYER) ? "AI" : "You";
+    }
+
     // ── Rack layouts ──────────────────────────────────────────
     // All racks place balls so they touch (BALL_D=52 pitch); column step ≈ 45.
 
@@ -409,21 +426,21 @@ class BilliardGame {
     //   SEL/TAP commits power / starts charging.
     function doUp() {
         if (gs == BS_MENU) {
-            menuSel = (menuSel + 2) % 3;  // -1 mod 3
+            menuSel = (menuSel + 3) % 4;  // -1 mod 4
             return;
         }
         if (gs == BS_GAMEOVER) { gs = BS_MENU; return; }
-        if (gs == BS_AIM && turn == TURN_PLAYER) { _aimStep(-1); }
+        if (gs == BS_AIM && (turn == TURN_PLAYER || pvpMode)) { _aimStep(-1); }
         if (gs == BS_POWER) { _commitShot(); }
     }
 
     function doDown() {
         if (gs == BS_MENU) {
-            menuSel = (menuSel + 1) % 3;
+            menuSel = (menuSel + 1) % 4;
             return;
         }
         if (gs == BS_GAMEOVER) { gs = BS_MENU; return; }
-        if (gs == BS_AIM && turn == TURN_PLAYER) { _aimStep(1); }
+        if (gs == BS_AIM && (turn == TURN_PLAYER || pvpMode)) { _aimStep(1); }
         if (gs == BS_POWER) { _commitShot(); }
     }
 
@@ -450,7 +467,7 @@ class BilliardGame {
     function doSelect() {
         if (gs == BS_MENU)    { _menuActivate(); return; }
         if (gs == BS_GAMEOVER){ gs = BS_MENU; return; }
-        if (gs == BS_AIM  && turn == TURN_PLAYER) { gs = BS_POWER; power = 0; powerDir = 1; return; }
+        if (gs == BS_AIM  && (turn == TURN_PLAYER || pvpMode)) { gs = BS_POWER; power = 0; powerDir = 1; return; }
         if (gs == BS_POWER)   { _commitShot(); return; }
     }
 
@@ -461,6 +478,9 @@ class BilliardGame {
             Application.Storage.setValue("billGT", gameType);
             _applyGameType();
         } else if (menuSel == 1) {
+            pvpMode = !pvpMode;
+            Application.Storage.setValue("billPvP", pvpMode);
+        } else if (menuSel == 2) {
             diff = (diff + 1) % 3;
             Application.Storage.setValue("billDiff", diff);
         } else {
@@ -477,7 +497,7 @@ class BilliardGame {
         if (gs == BS_MENU)     { _menuActivate(); return; }
         if (gs == BS_GAMEOVER) { gs = BS_MENU; return; }
         if (gs == BS_POWER)    { _commitShot(); return; }
-        if (gs != BS_AIM || turn != TURN_PLAYER) { return; }
+        if (gs != BS_AIM || (turn != TURN_PLAYER && !pvpMode)) { return; }
 
         // Tap away from cue ball → set aim direction (touch-to-aim)
         var csx0 = csx(bx[0]); var csy0 = csy(by[0]);
@@ -752,8 +772,14 @@ class BilliardGame {
             gs = BS_AIM;
             _computeAimIntersect();
         } else {
-            _aiThink();
-            gs = BS_AI_WAIT;
+            if (pvpMode) {
+                // P vs P — Player 2 uses the same aim/shoot controls
+                gs = BS_AIM;
+                _computeAimIntersect();
+            } else {
+                _aiThink();
+                gs = BS_AI_WAIT;
+            }
         }
     }
 
@@ -782,7 +808,7 @@ class BilliardGame {
                 else                     { aiScore++;    }
             }
             if (pottedCnt > 0) {
-                msg = (turn == TURN_PLAYER) ? "You scored!" : "AI scored!";
+                msg = _shooterLabel(turn) + " scored!";
                 msgT = 40;
                 pocketedThisTurn = true;
             } else {
@@ -847,7 +873,7 @@ class BilliardGame {
             else                     { aiScore++;    }
         }
         if (pottedCnt > 0) {
-            msg = (turn == TURN_PLAYER) ? "You scored!" : "AI scored!";
+            msg = _shooterLabel(turn) + " scored!";
             msgT = 40;
             pocketedThisTurn = true;
         } else {
@@ -883,11 +909,11 @@ class BilliardGame {
                 }
             }
             if (cleared && !cueScratched) {
-                msg = (turn == TURN_PLAYER) ? "You win!" : "AI wins!";
+                msg = _shooterLabel(turn) + " wins!";
                 msgT = 60;
                 winReason = (turn == TURN_PLAYER) ? 1 : 2;
             } else {
-                msg = (turn == TURN_PLAYER) ? "8-ball foul - AI wins" : "8-ball foul - you win";
+                msg = "8-ball foul - " + _opponentLabel(turn) + " wins";
                 msgT = 60;
                 winReason = (turn == TURN_PLAYER) ? 4 : 3;
             }
@@ -951,7 +977,7 @@ class BilliardGame {
         _eight_recountScores();
         if (myPotted > 0 && oppPotted == 0) {
             pocketedThisTurn = true;
-            if (msgT == 0) { msg = (turn == TURN_PLAYER) ? "You scored!" : "AI scored!"; msgT = 40; }
+            if (msgT == 0) { msg = _shooterLabel(turn) + " scored!"; msgT = 40; }
         } else if (oppPotted > 0) {
             pocketedThisTurn = false;
             msg = "Wrong group potted"; msgT = 45;
@@ -1061,14 +1087,14 @@ class BilliardGame {
             // Highest score wins (in equal scores, the player who potted black wins).
             if (playerScore >= aiScore) { winReason = 1; }
             else                        { winReason = 2; }
-            msg = (turn == TURN_PLAYER) ? "You win!" : "AI wins!";
+            msg = _shooterLabel(turn) + " wins!";
             msgT = 60;
             gs = BS_GAMEOVER;
             return;
         }
         // Any legal pot = continue, no pots = switch turn.
         if (pottedCnt > 0) {
-            msg = (turn == TURN_PLAYER) ? "You scored!" : "AI scored!";
+            msg = _shooterLabel(turn) + " scored!";
             msgT = 40;
             pocketedThisTurn = true;
         } else {

@@ -193,27 +193,44 @@ class SolitaireView extends WatchUi.View {
         }
         _lastTapP = p; _lastTapT = now;
 
-        // ── Single tap when a card is already in hand ─────────────────────────
-        // • Tap the selected pile  → deselect (cancel pick-up).
-        // • Tap anywhere else      → just reposition the cursor; the card stays
-        //   in hand.  The player must tap that destination a second time to
-        //   confirm the placement.  This prevents accidental moves.
+        // ── Single tap when a card is already in hand (selection mode) ─────────
+        // • Tap the selected pile → deselect (cancel pick-up).
+        // • Tap anywhere else      → nothing.  By design you must deselect first
+        //   (or double-tap for the smart auto-move).  This prevents accidental
+        //   placements and matches the requested behaviour.
         if (_sel >= 0) {
-            if (p == _sel) {
-                _cancel();
-            } else {
-                _cur = p;
-            }
+            if (p == _sel) { _cancel(); }
             return;
         }
 
-        // ── Single tap with nothing selected → normal immediate interact ───────
-        // Move cursor to the tapped pile and act on it (pick up, flip stock, etc.)
+        // ── Single tap with nothing selected → move cursor here and interact ───
+        // Cursor jumps to the tapped pile, then picks up the card / flips stock.
         _cur = p;
         _tapSubIdx = -1;
         // Re-run hit-test to capture _tapSubIdx for tableau sub-card selection
         _hitTest(tx, ty);
         _interact(p);
+    }
+
+    // ─── Touch: drag (cursor follows the finger) ──────────────────────────────
+    function doDrag(tx, ty) {
+        if (_gs != SOL_PLAY || _autoFndQ) { return; }
+        var p = _hitTest(tx, ty);
+        _tapSubIdx = -1;
+        if (p >= 0) { _cur = p; }
+    }
+
+    // ─── Touch: swipe (discrete cursor step) ──────────────────────────────────
+    function doSwipe(dir) {
+        if (_gs == SOL_MENU) {
+            if (dir == WatchUi.SWIPE_UP || dir == WatchUi.SWIPE_DOWN) {
+                _menuSel = (_menuSel + 1) % 2;
+            }
+            return;
+        }
+        if (_gs != SOL_PLAY || _autoFndQ) { return; }
+        if (dir == WatchUi.SWIPE_LEFT)       { _cur = (_cur + 12) % 13; }
+        else if (dir == WatchUi.SWIPE_RIGHT) { _cur = (_cur + 1) % 13; }
     }
 
     function doBack() {

@@ -42,39 +42,45 @@ class UIManager {
             dc.fillCircle(cx, h / 2, w / 2 - 1);
         }
 
-        // Title "2048" as a single big colored tile.
-        var tileSide = h * 22 / 100; if (tileSide < 52) { tileSide = 52; }
+        // Title "2048" as a single colored tile (kept compact so the
+        // attribution, best line and the two rows all clear each other).
+        var tileSide = h * 17 / 100; if (tileSide < 44) { tileSide = 44; } if (tileSide > 66) { tileSide = 66; }
         var tx = cx - tileSide / 2;
-        var ty = h * 9 / 100;
+        var ty = h * 6 / 100;
         dc.setColor(COL_ACCENT, Graphics.COLOR_TRANSPARENT);
         dc.fillRoundedRectangle(tx, ty, tileSide, tileSide, 8);
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        var titleFont = (tileSide >= 90) ? Graphics.FONT_LARGE
-                       : (tileSide >= 70) ? Graphics.FONT_MEDIUM
-                                          : Graphics.FONT_SMALL;
+        var titleFont = (tileSide >= 70) ? Graphics.FONT_MEDIUM : Graphics.FONT_SMALL;
         var thT = dc.getFontHeight(titleFont);
         dc.drawText(cx, ty + tileSide / 2 - thT / 2, titleFont,
                     "2048", Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Bitochi attribution + best score
+        var tileBottom = ty + tileSide;
+        var xtinyH = dc.getFontHeight(Graphics.FONT_XTINY);
+
+        // Bitochi attribution
+        var attrY = tileBottom + 8;
         dc.setColor(0x778899, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, ty + tileSide + 4, Graphics.FONT_XTINY,
+        dc.drawText(cx, attrY, Graphics.FONT_XTINY,
                     "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
+
+        // Best score, one full line below the attribution so they never touch
+        var bestY = attrY + xtinyH + 2;
         var bestLine = "Best " + ctrl.best.toString();
         if (ctrl.bestExp > 0) {
             bestLine = bestLine + "  -  Max " + Tile.valueOf(ctrl.bestExp).toString();
         }
         dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, ty + tileSide + 18, Graphics.FONT_XTINY,
+        dc.drawText(cx, bestY, Graphics.FONT_XTINY,
                     bestLine, Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Two chess-style rows
+        // Two chess-style rows below everything
         var labels = ["START", "Reset Best"];
-        var rowH = (h * 13) / 100; if (rowH < 26) { rowH = 26; } if (rowH > 36) { rowH = 36; }
-        var rowW = (w * 78) / 100; if (rowW < 140) { rowW = 140; }
+        var rowH = (h * 13) / 100; if (rowH < 26) { rowH = 26; } if (rowH > 34) { rowH = 34; }
+        var rowW = (w * 72) / 100; if (rowW < 130) { rowW = 130; }
         var rowX = (w - rowW) / 2;
-        var gap  = (h * 2) / 100;  if (gap < 4) { gap = 4; }
-        var rowY0 = ty + tileSide + 36;
+        var gap  = (h * 3) / 100;  if (gap < 6) { gap = 6; }
+        var rowY0 = bestY + xtinyH + 8;
         for (var i = 0; i < MI_ITEMS; i++) {
             var ry = rowY0 + i * (rowH + gap);
             var sel = (ctrl.menuCursor == i);
@@ -113,8 +119,8 @@ class UIManager {
         _drawHud(dc, ctrl, w, h);
 
         // ── Board layout ────────────────────────────────────────────
-        var boardSide = w * 78 / 100;
-        var maxByH    = h * 65 / 100;
+        var boardSide = w * 74 / 100;     // 78% → 74% (−5%)
+        var maxByH    = h * 62 / 100;     // 65% → 62% (−5%)
         if (boardSide > maxByH) { boardSide = maxByH; }
         var bx = (w - boardSide) / 2;
         var by = h * 26 / 100;
