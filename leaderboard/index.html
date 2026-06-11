@@ -440,7 +440,7 @@
 // ── Config ──────────────────────────────────────────────────────────────────
 const API_BASE    = 'https://garmin-leaderboard.YOURSUBDOMAIN.workers.dev';
 const GITHUB_RAW  = 'https://raw.githubusercontent.com/khipis/garmin/main/_LOGOS';
-const CIQ_STORE   = 'https://apps.garmin.com/apps/';
+const CIQ_SEARCH  = 'https://apps.garmin.com/search?query=bitochi+';
 
 // ── Game descriptions (from README files) ───────────────────────────────────
 const GAME_DESCS = {
@@ -644,8 +644,8 @@ function selectGame(g, pushState = true) {
   heroImg.src = `${GITHUB_RAW}/${g.id}_hero.png`;
   heroName.textContent = g.label.toUpperCase();
 
-  if (g.ciq) {
-    ciqLink.href = CIQ_STORE + g.ciq;
+  if (g.ciq || g.label) {
+    ciqLink.href = CIQ_SEARCH + encodeURIComponent(g.label);
     ciqLink.style.display = 'inline-flex';
   } else {
     ciqLink.style.display = 'none';
@@ -811,8 +811,8 @@ function renderGameInfo(gameId, prominent) {
 
   const extIcon = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`;
 
-  const ciqBtn = g.ciq
-    ? `<a href="${CIQ_STORE}${g.ciq}" target="_blank" rel="noopener" class="game-info-ciq">${extIcon} Download on Connect IQ</a>`
+  const ciqBtn = g.label
+    ? `<a href="${CIQ_SEARCH}${encodeURIComponent(g.label)}" target="_blank" rel="noopener" class="game-info-ciq">${extIcon} Find on Connect IQ</a>`
     : '';
 
   gameInfoEl.style.display = '';
