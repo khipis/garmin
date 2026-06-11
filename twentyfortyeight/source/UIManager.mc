@@ -78,15 +78,16 @@ class UIManager {
         // the row height shrinks to whatever fits between the best line and
         // the bottom margin, so adding the LEADERBOARD row never overlaps.
         var labels = ["START", "", "Reset Best"];   // [1] = LEADERBOARD (special)
-        var rowW = (w * 72) / 100; if (rowW < 130) { rowW = 130; }
+        // Rows ~15% smaller so all three fit comfortably.
+        var rowW = (w * 61) / 100; if (rowW < 120) { rowW = 120; }
         var rowX = (w - rowW) / 2;
         var rowY0 = bestY + xtinyH + 8;
         var bottomMargin = (h * 4) / 100;
         var gap  = (h * 2) / 100; if (gap < 5) { gap = 5; }
         var avail = h - rowY0 - bottomMargin;
         var rowH = (avail - gap * (MI_ITEMS - 1)) / MI_ITEMS;
-        if (rowH > 34) { rowH = 34; }
-        if (rowH < 20) { rowH = 20; }
+        if (rowH > 29) { rowH = 29; }
+        if (rowH < 17) { rowH = 17; }
 
         for (var i = 0; i < MI_ITEMS; i++) {
             var ry  = rowY0 + i * (rowH + gap);

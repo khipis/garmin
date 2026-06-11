@@ -283,41 +283,54 @@ class LbScoresView extends WatchUi.View {
 
         dc.setColor(LB_BG, LB_BG); dc.clear();
 
-        // Header
+        // Footer is reserved on every screen so the "view online" hint and
+        // the score rows never collide. Drawn first; rows fit above it.
+        var footerY = _h - _h * 6 / 100;
+        dc.setColor(LB_MUTED, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, footerY, Graphics.FONT_XTINY,
+                    "bitochi.com", Graphics.TEXT_JUSTIFY_CENTER);
+
+        // Header (~15% more compact than before so the panel fits)
+        var hasVar = (_variant != null && _variant.length() > 0);
         dc.setColor(LB_ACCENT, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _h * 6 / 100, Graphics.FONT_XTINY,
+        dc.drawText(cx, _h * 5 / 100, Graphics.FONT_XTINY,
                     _title, Graphics.TEXT_JUSTIFY_CENTER);
-        if (_variant != null && _variant.length() > 0) {
+        if (hasVar) {
             dc.setColor(LB_GOLD, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, _h * 14 / 100, Graphics.FONT_XTINY,
+            dc.drawText(cx, _h * 12 / 100, Graphics.FONT_XTINY,
                         _variant, Graphics.TEXT_JUSTIFY_CENTER);
         }
 
         if (_state == 0) {
             dc.setColor(LB_MUTED, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, _h / 2, Graphics.FONT_XTINY,
+            dc.drawText(cx, _h * 45 / 100, Graphics.FONT_XTINY,
                         "Loading...", Graphics.TEXT_JUSTIFY_CENTER);
             return;
         }
         if (_state == 2) {
             dc.setColor(LB_MUTED, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, _h / 2 - 10, Graphics.FONT_XTINY,
+            dc.drawText(cx, _h * 42 / 100, Graphics.FONT_XTINY,
                         "No connection", Graphics.TEXT_JUSTIFY_CENTER);
-            dc.drawText(cx, _h / 2 + 10, Graphics.FONT_XTINY,
+            dc.drawText(cx, _h * 52 / 100, Graphics.FONT_XTINY,
                         "try again later", Graphics.TEXT_JUSTIFY_CENTER);
             return;
         }
         if (_state == 3) {
             dc.setColor(LB_MUTED, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, _h / 2, Graphics.FONT_XTINY,
+            dc.drawText(cx, _h * 45 / 100, Graphics.FONT_XTINY,
                         "No scores yet -- be first!", Graphics.TEXT_JUSTIFY_CENTER);
             return;
         }
 
-        // Rows (top 10)
-        var top = (_variant != null && _variant.length() > 0) ? _h * 22 / 100 : _h * 18 / 100;
-        var lineH = dc.getFontHeight(Graphics.FONT_XTINY) + 2;
-        var n = _rows.size(); if (n > 10) { n = 10; }
+        // Rows — start tighter and use compact line spacing (~15% smaller),
+        // capped to however many fit above the footer.
+        var top   = hasVar ? _h * 19 / 100 : _h * 14 / 100;
+        var fh    = dc.getFontHeight(Graphics.FONT_XTINY);
+        var lineH = (fh * 85) / 100; if (lineH < 12) { lineH = 12; }
+        var fit   = (footerY - top) / lineH;
+        var n = _rows.size();
+        if (n > 10)  { n = 10; }
+        if (n > fit) { n = fit; }
         for (var i = 0; i < n; i++) {
             var row  = _rows[i];
             var rank = row["r"];
@@ -330,11 +343,11 @@ class LbScoresView extends WatchUi.View {
 
             var y = top + i * lineH;
             dc.setColor(clr, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w * 10 / 100, y, Graphics.FONT_XTINY,
+            dc.drawText(_w * 12 / 100, y, Graphics.FONT_XTINY,
                         rank.toString(), Graphics.TEXT_JUSTIFY_LEFT);
-            dc.drawText(_w * 22 / 100, y, Graphics.FONT_XTINY,
+            dc.drawText(_w * 24 / 100, y, Graphics.FONT_XTINY,
                         (u != null) ? u : "anon", Graphics.TEXT_JUSTIFY_LEFT);
-            dc.drawText(_w * 90 / 100, y, Graphics.FONT_XTINY,
+            dc.drawText(_w * 88 / 100, y, Graphics.FONT_XTINY,
                         (s != null) ? s.toString() : "0", Graphics.TEXT_JUSTIFY_RIGHT);
         }
     }

@@ -215,9 +215,10 @@ class MainView extends WatchUi.View {
         var gap          = (_sh * 2) / 100; if (gap < 4) { gap = 4; }
         var avail        = (_sh - bottomMargin) - topZone;
         var rowH         = (avail - gap * (ST_MENU_ROWS - 1)) / ST_MENU_ROWS;
-        if (rowH > 30) { rowH = 30; }
-        if (rowH < 20) { rowH = 20; }
-        var rowW = (_sw * 78) / 100; if (rowW < 140) { rowW = 140; }
+        // Rows ~15% smaller so all three fit comfortably.
+        if (rowH > 26) { rowH = 26; }
+        if (rowH < 17) { rowH = 17; }
+        var rowW = (_sw * 66) / 100; if (rowW < 120) { rowW = 120; }
         var rowX = (_sw - rowW) / 2;
         var used = ST_MENU_ROWS * rowH + (ST_MENU_ROWS - 1) * gap;
         var rowY0 = topZone + (avail - used) / 2;
