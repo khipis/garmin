@@ -440,7 +440,7 @@
 // ── Config ──────────────────────────────────────────────────────────────────
 const API_BASE    = 'https://garmin-leaderboard.YOURSUBDOMAIN.workers.dev';
 const GITHUB_RAW  = 'https://raw.githubusercontent.com/khipis/garmin/main/_LOGOS';
-const CIQ_SEARCH  = 'https://apps.garmin.com/search?query=bitochi+';
+const CIQ_STORE   = 'https://apps.garmin.com/apps/';
 
 // ── Game descriptions (from README files) ───────────────────────────────────
 const GAME_DESCS = {
@@ -575,7 +575,7 @@ const GAMES = [
   { id: 'pinballpro',        label: 'Pinball Pro',         ciq: '9e1b3d5f7a9c1e3b5d7f9a1c3e5b7d9f' },
   { id: 'pixelinvaders',     label: 'Pixel Invaders',      ciq: 'f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2' },
   { id: 'poker',             label: 'Poker',               ciq: '0d0cc420-c955-4da8-92c9-e9297cabe3f0' },
-  { id: 'pongpro',           label: 'Pong Pro',            ciq: '5f8a2c4e6b9d1f3a5c7e9b1d3f5a7c9e' },
+  { id: 'pongpro',           label: 'Pong Pro',            ciq: '946795c7-5d75-47b5-8616-f1a0ce8f5011' },
   { id: 'serpent',           label: 'Serpent',             ciq: '91dd9af8-e3ff-40b0-a377-e0cef3a3c98f' },
   { id: 'shadowclonerunner', label: 'Shadow Clone Runner', ciq: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' },
   { id: 'skijump',           label: 'Ski Jump',            ciq: '801743d2-daa9-4c0b-8818-70ccec08d521' },
@@ -644,8 +644,8 @@ function selectGame(g, pushState = true) {
   heroImg.src = `${GITHUB_RAW}/${g.id}_hero.png`;
   heroName.textContent = g.label.toUpperCase();
 
-  if (g.ciq || g.label) {
-    ciqLink.href = CIQ_SEARCH + encodeURIComponent(g.label);
+  if (g.ciq) {
+    ciqLink.href = CIQ_STORE + g.ciq;
     ciqLink.style.display = 'inline-flex';
   } else {
     ciqLink.style.display = 'none';
@@ -811,8 +811,8 @@ function renderGameInfo(gameId, prominent) {
 
   const extIcon = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`;
 
-  const ciqBtn = g.label
-    ? `<a href="${CIQ_SEARCH}${encodeURIComponent(g.label)}" target="_blank" rel="noopener" class="game-info-ciq">${extIcon} Find on Connect IQ</a>`
+  const ciqBtn = g.ciq
+    ? `<a href="${CIQ_STORE}${g.ciq}" target="_blank" rel="noopener" class="game-info-ciq">${extIcon} View on Connect IQ</a>`
     : '';
 
   gameInfoEl.style.display = '';
