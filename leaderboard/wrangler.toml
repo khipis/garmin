@@ -8,6 +8,10 @@ binding      = "DB"                          # env.DB in Worker code
 database_name = "bitochi-leaderboard"
 database_id  = "3bea63ef-e758-4489-84c4-8b72933fd98e"
 
-# ── Routes (optional — Workers.dev subdomain works out of the box) ────────────
-# [env.production]
-# routes = [{ pattern = "lb.yourdomain.com/*", zone_name = "yourdomain.com" }]
+# ── Custom domain (bypasses Cisco Umbrella / OpenDNS *.workers.dev block) ─────
+# Enable AFTER bitochi.com is active on this Cloudflare account (nameservers
+# moved to Cloudflare). `custom_domain = true` makes Cloudflare auto-create the
+# proxied DNS record + TLS cert for api.bitochi.com on the next `wrangler deploy`.
+# routes = [
+#   { pattern = "api.bitochi.com", custom_domain = true }
+# ]
