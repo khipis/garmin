@@ -26,7 +26,7 @@ module Leaderboard {
 
     // ── CONFIG ──────────────────────────────────────────────────────────────
     // Replace with the deployed Worker URL (or custom domain mapped to it).
-    const API_BASE = "https://garmin.krzysztofkorolczuk2.workers.dev";
+    const API_BASE = "https://api.bitochi.com";
 
     const USER_KEY  = "lb_user";   // Application.Storage key for the username
     const NAME_LEN  = 8;           // max username characters

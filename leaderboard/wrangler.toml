@@ -2,16 +2,14 @@ name = "garmin"
 main = "src/index.ts"
 compatibility_date = "2024-09-23"
 
+# ── Custom domain (bypasses Cisco Umbrella / OpenDNS *.workers.dev block) ─────
+# Cloudflare auto-creates the proxied DNS record + TLS cert for api.bitochi.com.
+routes = [
+  { pattern = "api.bitochi.com", custom_domain = true }
+]
+
 # ── D1 Database ───────────────────────────────────────────────────────────────
 [[d1_databases]]
 binding      = "DB"                          # env.DB in Worker code
 database_name = "bitochi-leaderboard"
 database_id  = "3bea63ef-e758-4489-84c4-8b72933fd98e"
-
-# ── Custom domain (bypasses Cisco Umbrella / OpenDNS *.workers.dev block) ─────
-# Enable AFTER bitochi.com is active on this Cloudflare account (nameservers
-# moved to Cloudflare). `custom_domain = true` makes Cloudflare auto-create the
-# proxied DNS record + TLS cert for api.bitochi.com on the next `wrangler deploy`.
-# routes = [
-#   { pattern = "api.bitochi.com", custom_domain = true }
-# ]
