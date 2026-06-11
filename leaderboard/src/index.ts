@@ -17,6 +17,17 @@ const RATE_LIMIT_MAX       = 20;
 const LEADERBOARD_CACHE_S  = 45;
 const TOP_N                = 50;
 
+// Games where a LOWER score is better (completion time in seconds, move/stroke
+// counts). Everything else defaults to higher-is-better (DESC).
+const ASC_GAMES = new Set<string>([
+  "sudoku",
+  "minesweeper",
+  "solitaire",
+  "lightsout",
+  "minigolf",
+  "battleship",
+]);
+
 const ipHits = new Map<string, { count: number; windowStart: number }>();
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -117,11 +128,13 @@ async function handleGetLeaderboard(url: URL, env: Env): Promise<Response> {
 
   const variant = sanitizeVariant(variantRaw);
 
+  const order = ASC_GAMES.has(game) ? "ASC" : "DESC";
+
   let rows: { user: string; score: number }[] = [];
   try {
     const result = await env.DB
       .prepare(
-        "SELECT user, score FROM scores WHERE game = ? AND variant = ? ORDER BY score DESC LIMIT ?"
+        `SELECT user, score FROM scores WHERE game = ? AND variant = ? ORDER BY score ${order} LIMIT ?`
       )
       .bind(game, variant, TOP_N)
       .all<{ user: string; score: number }>();
