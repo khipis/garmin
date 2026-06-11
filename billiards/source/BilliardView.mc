@@ -143,12 +143,20 @@ class BilliardView extends WatchUi.View {
                         dLabels[g.diff] + (sel2 ? " <" : "  "), Graphics.TEXT_JUSTIFY_LEFT);
         }
 
-        // Row 3 — LEADERBOARD (gold, slightly standout to drive hype)
+        // Row 3 — LEADERBOARD (gold, slightly standout to drive hype).
+        // Greyed + "N/A" on watches that can't make web requests.
         var sel3 = (g.menuSel == 3);
-        dc.setColor(sel3 ? 0xFFD24A : 0xBB8A1A, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w/2, rLBy, Graphics.FONT_XTINY,
-                    (sel3 ? "> LEADERBOARD <" : "  LEADERBOARD  "),
-                    Graphics.TEXT_JUSTIFY_CENTER);
+        if (Leaderboard.isSupported()) {
+            dc.setColor(sel3 ? 0xFFD24A : 0xBB8A1A, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w/2, rLBy, Graphics.FONT_XTINY,
+                        (sel3 ? "> LEADERBOARD <" : "  LEADERBOARD  "),
+                        Graphics.TEXT_JUSTIFY_CENTER);
+        } else {
+            dc.setColor(0x555555, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w/2, rLBy, Graphics.FONT_XTINY,
+                        (sel3 ? "> LEADERBOARD N/A <" : "  LEADERBOARD N/A  "),
+                        Graphics.TEXT_JUSTIFY_CENTER);
+        }
 
         // Row 4 — START (blinking when focused)
         var sel4  = (g.menuSel == 4);

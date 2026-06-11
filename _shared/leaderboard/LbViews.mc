@@ -44,7 +44,10 @@ class LbSubmitter {
         }
         var opts = {
             :method       => Communications.HTTP_REQUEST_METHOD_POST,
-            :headers      => { "Content-Type" => Communications.REQUEST_CONTENT_TYPE_JSON },
+            :headers      => {
+                "Content-Type" => Communications.REQUEST_CONTENT_TYPE_JSON,
+                "X-LB-Key"     => Leaderboard.SUBMIT_KEY
+            },
             :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
         };
         try {
@@ -262,6 +265,11 @@ class LbScoresView extends WatchUi.View {
     }
 
     function onShow() {
+        if (!Leaderboard.isSupported()) {
+            _state = 4;   // device cannot make web requests
+            WatchUi.requestUpdate();
+            return;
+        }
         if (!Leaderboard.hasUser()) {
             var nv = new LbNameEntryView();
             WatchUi.pushView(nv, new LbNameEntryDelegate(nv), WatchUi.SLIDE_LEFT);
@@ -333,6 +341,12 @@ class LbScoresView extends WatchUi.View {
         if (_state == 0) {
             dc.setColor(LB_MUTED, Graphics.COLOR_TRANSPARENT);
             dc.drawText(cx, _h / 2, Graphics.FONT_XTINY, "Loading...", VC);
+            return;
+        }
+        if (_state == 4) {
+            dc.setColor(LB_MUTED, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, _h / 2 - fh, Graphics.FONT_XTINY, "Not available", VC);
+            dc.drawText(cx, _h / 2 + fh, Graphics.FONT_XTINY, "on this watch", VC);
             return;
         }
         if (_state == 2) {
@@ -422,7 +436,25 @@ class LbScoresDelegate extends WatchUi.BehaviorDelegate {
 // Returns nothing; the caller positions it. Gold-accented so it stands out.
 // ═══════════════════════════════════════════════════════════════════════════
 module LbBadge {
+    // True when the leaderboard is usable on this watch. Games may call this to
+    // skip the row from menu navigation entirely; drawRow also greys itself out.
+    function isActive() {
+        return Leaderboard.isSupported();
+    }
+
     function drawRow(dc, x, y, w, rowH, selected) {
+        // Inactive (no network capability) → flat grey, "unavailable" label.
+        if (!Leaderboard.isSupported()) {
+            dc.setColor(0x161616, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(x, y, w, rowH, 5);
+            dc.setColor(0x333333, Graphics.COLOR_TRANSPARENT);
+            dc.drawRoundedRectangle(x, y, w, rowH, 5);
+            dc.setColor(0x555555, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(x + w / 2, y + (rowH - 14) / 2, Graphics.FONT_XTINY,
+                        "LEADERBOARD N/A", Graphics.TEXT_JUSTIFY_CENTER);
+            return;
+        }
+
         dc.setColor(selected ? 0x4A3A10 : 0x2A2410, Graphics.COLOR_TRANSPARENT);
         dc.fillRoundedRectangle(x, y, w, rowH, 5);
         dc.setColor(selected ? 0xFFD24A : 0xBB8A1A, Graphics.COLOR_TRANSPARENT);

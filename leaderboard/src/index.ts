@@ -3,6 +3,12 @@
 
 export interface Env {
   DB: D1Database;
+  // Shared submit key. POST /score is rejected (403) unless the request
+  // carries a matching `X-LB-Key` header. Set via `wrangler secret put LB_KEY`.
+  LB_KEY?: string;
+  // Optional salt for the anonymised IP hash used in player stats. Falls back
+  // to LB_KEY, then a constant, so stats keep working even if unset.
+  IP_SALT?: string;
 }
 
 // ── Config ────────────────────────────────────────────────────────────────────
@@ -60,6 +66,18 @@ function sanitizeVariant(raw: string): string {
   return raw.replace(/[^a-zA-Z0-9 _-]/g, "").slice(0, 60).trim();
 }
 
+// Anonymised, non-reversible per-device fingerprint for unique-player stats.
+// 64-bit salted SHA-256 prefix — enough to estimate uniqueness without storing
+// or exposing the raw IP.
+async function hashIp(ip: string, salt: string): Promise<string> {
+  const data = new TextEncoder().encode(salt + "|" + ip);
+  const digest = await crypto.subtle.digest("SHA-256", data);
+  const bytes = new Uint8Array(digest);
+  let hex = "";
+  for (let i = 0; i < 8; i++) hex += bytes[i].toString(16).padStart(2, "0");
+  return hex;
+}
+
 function checkRateLimit(ip: string): boolean {
   const now = Date.now();
   const rec = ipHits.get(ip);
@@ -74,6 +92,11 @@ function checkRateLimit(ip: string): boolean {
 // ── Route handlers ────────────────────────────────────────────────────────────
 
 async function handlePostScore(req: Request, env: Env): Promise<Response> {
+  // Anti-abuse: writes require the shared submit key. Fail closed if the
+  // server has no key configured.
+  const reqKey = req.headers.get("X-LB-Key") ?? "";
+  if (!env.LB_KEY || reqKey !== env.LB_KEY) return err("forbidden", 403);
+
   let body: unknown;
   try { body = await req.json(); } catch { return err("invalid JSON"); }
 
@@ -102,12 +125,15 @@ async function handlePostScore(req: Request, env: Env): Promise<Response> {
     ? JSON.stringify(b.meta).slice(0, 512)
     : null;
 
+  const ip      = req.headers.get("CF-Connecting-IP") ?? "0.0.0.0";
+  const ipHash  = await hashIp(ip, env.IP_SALT ?? env.LB_KEY ?? "bito-lb");
+
   try {
     await env.DB
       .prepare(
-        "INSERT INTO scores (game, user, score, timestamp, variant, meta) VALUES (?, ?, ?, ?, ?, ?)"
+        "INSERT INTO scores (game, user, score, timestamp, variant, meta, ip_hash) VALUES (?, ?, ?, ?, ?, ?, ?)"
       )
-      .bind(game, user, Math.round(score), ts, variant, metaStr)
+      .bind(game, user, Math.round(score), ts, variant, metaStr, ipHash)
       .run();
   } catch (e) {
     console.error("DB insert error:", e);
@@ -172,6 +198,49 @@ async function handleGetGames(env: Env): Promise<Response> {
   );
 }
 
+// Aggregate player stats, computed live from the scores table. Used by the
+// "Stats" tab on bitochi.com for development/planning.
+async function handleGetStats(env: Env): Promise<Response> {
+  type PerGame = { game: string; scores: number; players: number; devices: number };
+  let perGame: PerGame[] = [];
+  let totals = { games: 0, scores: 0, players: 0, devices: 0 };
+
+  try {
+    const byGame = await env.DB
+      .prepare(
+        `SELECT game,
+                COUNT(*)                  AS scores,
+                COUNT(DISTINCT user)      AS players,
+                COUNT(DISTINCT ip_hash)   AS devices
+         FROM scores
+         GROUP BY game
+         ORDER BY players DESC, scores DESC`
+      )
+      .all<PerGame>();
+    perGame = byGame.results ?? [];
+
+    const agg = await env.DB
+      .prepare(
+        `SELECT COUNT(DISTINCT game)     AS games,
+                COUNT(*)                 AS scores,
+                COUNT(DISTINCT user)     AS players,
+                COUNT(DISTINCT ip_hash)  AS devices
+         FROM scores`
+      )
+      .first<typeof totals>();
+    if (agg) totals = agg;
+  } catch (e) {
+    console.error("DB stats error:", e);
+    return err("db error", 500);
+  }
+
+  return json(
+    { updated: Math.floor(Date.now() / 1000), totals, perGame },
+    200,
+    { "Cache-Control": `public, max-age=${LEADERBOARD_CACHE_S}, stale-while-revalidate=60` }
+  );
+}
+
 async function handleGetVariants(url: URL, env: Env): Promise<Response> {
   const gameRaw = (url.searchParams.get("game") ?? "").trim();
   if (!gameRaw) return err("missing: game");
@@ -223,6 +292,7 @@ export default {
     if (method === "POST" && path === "/score")       return handlePostScore(req, env);
     if (method === "GET"  && path === "/leaderboard") return handleGetLeaderboard(url, env);
     if (method === "GET"  && path === "/games")       return handleGetGames(env);
+    if (method === "GET"  && path === "/stats")       return handleGetStats(env);
     if (method === "GET"  && path === "/variants")    return handleGetVariants(url, env);
     if (method === "GET"  && path === "/health")      return json({ ok: true, ts: Date.now() });
 

@@ -28,11 +28,27 @@ module Leaderboard {
     // Replace with the deployed Worker URL (or custom domain mapped to it).
     const API_BASE = "https://api.bitochi.com";
 
+    // Shared submit key sent as the X-LB-Key header on POST /score. The backend
+    // rejects writes without it (403). NOTE: this ships inside every app binary,
+    // so it is obfuscation-grade — it stops casual/script spam against the
+    // public endpoint, not a determined attacker who extracts it. Rotate by
+    // changing this value, `wrangler secret put LB_KEY`, and rebuilding apps.
+    const SUBMIT_KEY = "a7f3c9e21d8b45069c2af7b4d80e1635";
+
     const USER_KEY  = "lb_user";   // Application.Storage key for the username
     const NAME_LEN  = 8;           // max username characters
     // Character wheel: A-Z, 0-9, space (index 36 == space, shown as "_").
     const ALPHABET  = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ";
     const SPACE_IDX = 36;
+
+    // ── Capability check ─────────────────────────────────────────────────────
+    // True only on watches that can make HTTPS requests. Older/limited devices
+    // lack Communications.makeWebRequest — there the leaderboard is shown as
+    // inactive and submissions are skipped instead of throwing.
+    function isSupported() as Lang.Boolean {
+        if (!(Toybox has :Communications)) { return false; }
+        return Communications has :makeWebRequest;
+    }
 
     // ── Username persistence ─────────────────────────────────────────────────
     function loadUser() as Lang.String or Null {
@@ -62,6 +78,7 @@ module Leaderboard {
 
     function submitScore(game as Lang.String, score as Lang.Number,
                          variant as Lang.String or Null) as Void {
+        if (!isSupported()) { return; }
         var user = loadUser();
         if (user == null) { user = "anon"; }
         _sender = new LbSubmitter();

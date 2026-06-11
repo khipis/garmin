@@ -373,10 +373,70 @@
   footer a { color: var(--accent); text-decoration: none; }
   footer a:hover { text-decoration: underline; }
 
+  /* ── Tab nav ──────────────────────────────────────────────────────── */
+  #tab-nav {
+    position: relative; z-index: 1;
+    display: flex; gap: 8px; justify-content: center;
+    padding: 14px 16px 0;
+    max-width: 760px; margin: 0 auto;
+  }
+  .tab-btn {
+    flex: 0 0 auto;
+    background: var(--card); color: var(--muted);
+    border: 1px solid var(--border); border-radius: 999px;
+    padding: 9px 20px; font-size: .9rem; font-weight: 600;
+    cursor: pointer; transition: all .15s ease; letter-spacing: .02em;
+  }
+  .tab-btn:hover { color: var(--text); border-color: var(--accent); }
+  .tab-btn.active {
+    color: #04121a; border-color: transparent;
+    background: linear-gradient(135deg, var(--accent), #7c3aed);
+    box-shadow: 0 0 16px rgba(0,212,255,.32);
+  }
+
+  /* ── Stats view ───────────────────────────────────────────────────── */
+  #view-stats { max-width: 760px; margin: 0 auto; padding: 6px 16px 0; }
+  .stats-cards {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 10px; margin: 18px 0 6px;
+  }
+  .stat-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 16px 12px; text-align: center;
+  }
+  .stat-card .num {
+    font-size: 1.7rem; font-weight: 800; line-height: 1.1;
+    background: linear-gradient(135deg, var(--accent), #7c3aed);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .stat-card .lbl {
+    font-size: .68rem; color: var(--muted); margin-top: 6px;
+    text-transform: uppercase; letter-spacing: .08em;
+  }
+  .stat-row {
+    display: grid; grid-template-columns: 1fr auto auto auto; gap: 10px;
+    align-items: center;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 11px 14px; margin-bottom: 7px;
+  }
+  .stat-row .sg-name { font-weight: 700; color: var(--text); }
+  .stat-row .sg-val  { font-variant-numeric: tabular-nums; text-align: right; min-width: 52px; }
+  .stat-row .sg-val b { color: var(--accent); }
+  .stat-row .sg-val small { display: block; color: var(--muted); font-size: .6rem; letter-spacing: .06em; text-transform: uppercase; }
+  .stat-head {
+    display: grid; grid-template-columns: 1fr auto auto auto; gap: 10px;
+    padding: 2px 14px 8px; font-size: .62rem; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .08em;
+  }
+  .stat-head span:not(:first-child) { text-align: right; min-width: 52px; }
+
   /* ── Responsive ───────────────────────────────────────────────────── */
   @media (max-width: 480px) {
     header { padding: 0 14px; }
     .lb-row { padding: 12px 14px; }
+    .stats-cards { grid-template-columns: repeat(2, 1fr); }
+    .stat-card .num { font-size: 1.4rem; }
   }
 </style>
 </head>
@@ -388,6 +448,15 @@
   <div class="sep"></div>
   <div class="live-dot">Live Rankings</div>
 </header>
+
+<!-- ── Tab nav ─────────────────────────────────────────────────────────────── -->
+<nav id="tab-nav">
+  <button class="tab-btn active" data-tab="rankings">🏆 Rankings</button>
+  <button class="tab-btn" data-tab="stats">📊 Stats</button>
+</nav>
+
+<!-- ── Rankings view ───────────────────────────────────────────────────────── -->
+<div id="view-rankings">
 
 <!-- ── Hero banner ─────────────────────────────────────────────────────────── -->
 <div id="hero">
@@ -430,6 +499,19 @@
   <!-- Game info card (shown below leaderboard) -->
   <div id="game-info" style="display:none"></div>
 </main>
+
+</div><!-- /#view-rankings -->
+
+<!-- ── Stats view ──────────────────────────────────────────────────────────── -->
+<section id="view-stats" style="display:none">
+  <div id="stats-totals" class="stats-cards"></div>
+  <div class="section-header">
+    <span class="section-title">Players per game</span>
+    <span class="section-line"></span>
+    <span class="update-tag" id="stats-updated"></span>
+  </div>
+  <div id="stats-table"><div class="state-msg"><div class="spinner"></div><br>Loading stats…</div></div>
+</section>
 
 <footer>
   Powered by <a href="https://github.com/khipis/garmin" target="_blank">Bitochi Games</a>
@@ -845,6 +927,61 @@ function escHtml(s) {
   return String(s)
     .replace(/&/g,'&amp;').replace(/</g,'&lt;')
     .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── Tabs ──────────────────────────────────────────────────────────────────────
+let statsLoaded = false;
+function showTab(tab) {
+  document.querySelectorAll('.tab-btn').forEach(b =>
+    b.classList.toggle('active', b.dataset.tab === tab));
+  document.getElementById('view-rankings').style.display = (tab === 'rankings') ? '' : 'none';
+  document.getElementById('view-stats').style.display    = (tab === 'stats')    ? '' : 'none';
+  if (tab === 'stats' && !statsLoaded) { loadStats(); }
+}
+document.querySelectorAll('.tab-btn').forEach(b =>
+  b.addEventListener('click', () => showTab(b.dataset.tab)));
+
+// ── Stats ─────────────────────────────────────────────────────────────────────
+async function loadStats() {
+  const totalsEl = document.getElementById('stats-totals');
+  const tableEl  = document.getElementById('stats-table');
+  try {
+    const r = await fetch(`${API_BASE}/stats`, { cache: 'no-store' });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const d = await r.json();
+    statsLoaded = true;
+
+    const t = d.totals || { games: 0, scores: 0, players: 0, devices: 0 };
+    totalsEl.innerHTML = `
+      <div class="stat-card"><div class="num">${(t.players||0).toLocaleString()}</div><div class="lbl">Players</div></div>
+      <div class="stat-card"><div class="num">${(t.devices||0).toLocaleString()}</div><div class="lbl">Devices</div></div>
+      <div class="stat-card"><div class="num">${(t.scores||0).toLocaleString()}</div><div class="lbl">Scores</div></div>
+      <div class="stat-card"><div class="num">${(t.games||0).toLocaleString()}</div><div class="lbl">Games</div></div>`;
+
+    const ts = d.updated ? new Date(d.updated * 1000) : null;
+    document.getElementById('stats-updated').textContent = ts
+      ? 'Updated ' + ts.toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' }) : '';
+
+    const rows = d.perGame || [];
+    if (!rows.length) {
+      tableEl.innerHTML = `<div class="state-msg">No data yet — play a game to seed the stats! 🎮</div>`;
+      return;
+    }
+    tableEl.innerHTML =
+      `<div class="stat-head"><span>Game</span><span>Players</span><span>Devices</span><span>Scores</span></div>` +
+      rows.map(g => {
+        const label = (GAME_MAP[g.game] && GAME_MAP[g.game].label) || g.game;
+        return `
+          <div class="stat-row">
+            <div class="sg-name">${escHtml(label)}</div>
+            <div class="sg-val"><b>${(g.players||0).toLocaleString()}</b></div>
+            <div class="sg-val">${(g.devices||0).toLocaleString()}</div>
+            <div class="sg-val">${(g.scores||0).toLocaleString()}</div>
+          </div>`;
+      }).join('');
+  } catch (e) {
+    tableEl.innerHTML = `<div class="state-msg">⚠️ Could not load stats.</div>`;
+  }
 }
 
 // ── Init: list every game; games without rankings just show their description ─
