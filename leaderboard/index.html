@@ -419,7 +419,7 @@
 
 <!-- ── Leaderboard ─────────────────────────────────────────────────────────── -->
 <main>
-  <div class="section-header">
+  <div class="section-header" id="lb-header">
     <span class="section-title" id="lb-title">Top 10</span>
     <span class="section-line"></span>
     <span class="update-tag" id="update-tag"></span>
@@ -612,6 +612,7 @@ const lbWrap        = document.getElementById('lb-wrap');
 const lbTitle       = document.getElementById('lb-title');
 const updateTag     = document.getElementById('update-tag');
 const gameScroll    = document.getElementById('game-scroll');
+const lbHeaderEl    = document.getElementById('lb-header');
 const variantWrap   = document.getElementById('variant-selector-wrap');
 const variantScroll = document.getElementById('variant-scroll');
 const gameInfoEl    = document.getElementById('game-info');
@@ -666,8 +667,11 @@ function selectGame(g, pushState = true) {
   variantScroll.innerHTML   = '';
 
   // Show placeholder leaderboard immediately
+  lbHeaderEl.style.display = '';
+  lbWrap.style.display = '';
   lbWrap.innerHTML = `<div class="state-msg"><div class="spinner"></div><br>Loading…</div>`;
   updateTag.textContent = '';
+  gameInfoEl.style.display = 'none';
 
   fetchVariantsThenLoad(g);
 }
@@ -779,11 +783,16 @@ function renderLeaderboard(data, game) {
   const rows = (data.top || []).slice(0, 10);
 
   if (!rows.length) {
-    lbWrap.innerHTML = `<div class="state-msg">No scores yet — be the first! 🎮</div>`;
+    // No leaderboard for this game/variant → show ONLY the game description + store link
+    lbHeaderEl.style.display = 'none';
+    lbWrap.style.display = 'none';
     updateTag.textContent = '';
-    renderGameInfo(game, true);   // prominent when no scores
+    renderGameInfo(game, true);   // prominent, stands alone
     return;
   }
+
+  lbHeaderEl.style.display = '';
+  lbWrap.style.display = '';
 
   const maxScore = rows[0].s || 1;
   const ts = data.updated ? new Date(data.updated * 1000) : null;
@@ -838,37 +847,15 @@ function escHtml(s) {
     .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// ── Init: only show games that actually have rankings ────────────────────────
-async function init() {
-  // Default to all games; narrow down to the ones with at least one score.
-  let available = GAMES;
-  try {
-    const r = await fetch(`${API_BASE}/games`, { cache: 'no-store' });
-    if (r.ok) {
-      const have = new Set((await r.json()).games || []);
-      available = GAMES.filter(g => have.has(g.id));
-    }
-  } catch { /* backend unreachable → fall back to showing all games */ }
-
-  if (!available.length) {
-    buildGameChips([]);
-    heroName.textContent = '';
-    heroImg.src = '';
-    ciqLink.style.display = 'none';
-    variantWrap.style.display = 'none';
-    gameInfoEl.style.display = 'none';
-    lbWrap.innerHTML = `<div class="state-msg">No rankings yet — play a game to be the first! 🎮</div>`;
-    updateTag.textContent = '';
-    return;
-  }
-
-  buildGameChips(available);
+// ── Init: list every game; games without rankings just show their description ─
+function init() {
+  buildGameChips(GAMES);
 
   const params  = new URL(location.href).searchParams;
   const initId  = params.get('game');
-  const wanted  = initId && available.find(g => g.id === initId);
+  const wanted  = initId && GAMES.find(g => g.id === initId);
   // variant is set after fetchVariantsThenLoad resolves
-  selectGame(wanted || available[0], !wanted);
+  selectGame(wanted || GAMES[0], !wanted);
 }
 init();
 </script>
