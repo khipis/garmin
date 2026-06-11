@@ -3,6 +3,11 @@
 // ═══════════════════════════════════════════════════════════════
 using Toybox.Math;
 using Toybox.Application;
+using Toybox.Lang;
+
+// ── Leaderboard (win-streak vs AI; variant = game type) ──────
+const LB_GAME_ID    = "billiards";
+const LB_STREAK_KEY = "billiards_streak";
 
 // ── Game states ──────────────────────────────────────────────
 const BS_MENU     = 0;
@@ -63,8 +68,10 @@ class BilliardGame {
     var turn;     // TURN_PLAYER or TURN_AI
     var gameType; // GT_3BALL / GT_9BALL / GT_8BALL / GT_SNOOKER
     var numBalls; // active ball count for current mode (4, 8, 10, or 16)
-    var menuSel;  // menu cursor: 0=mode, 1=vs, 2=difficulty, 3=START
+    var menuSel;  // menu cursor: 0=mode, 1=vs, 2=difficulty, 3=leaderboard, 4=START
     var pvpMode;  // false = P vs AI, true = P vs P (Player 2 uses same controls)
+    var lbRequested;  // set true when the menu LEADERBOARD row is activated (View opens it)
+    hidden var _lbHandled;  // guard so a finished game submits its result only once
 
     // ── Per-shot tracking (rules engine) ─────────────────────
     var firstHit;          // index of first non-cue ball cue contacted; -1 = miss
@@ -130,6 +137,7 @@ class BilliardGame {
     function initialize() {
         gs = BS_MENU; diff = DIFF_MED; turn = TURN_PLAYER;
         gameType = GT_9BALL; numBalls = 10; menuSel = 0; pvpMode = false;
+        lbRequested = false; _lbHandled = false;
         aimAngle = 0.0; power = 50; powerDir = 1;
         _aimRptDir = 0; _aimRptStreak = 0; _aimRptIdle = 0;
         playerScore = 0; aiScore = 0;
@@ -316,8 +324,46 @@ class BilliardGame {
         firstHit = -1; cueScratched = false; pottedCnt = 0;
         playerGroup[0] = 0; playerGroup[1] = 0;
         winReason = 0;
+        _lbHandled = false;
         gs = BS_AIM;
         _computeAimIntersect();
+    }
+
+    // ── Leaderboard helpers ───────────────────────────────────
+    // Variant = current game type (e.g. "9-ball"), so each pool game has its
+    // own win-streak ranking.
+    function lbVariant() {
+        if (gameType == GT_3BALL)   { return "3-ball"; }
+        if (gameType == GT_8BALL)   { return "8-ball"; }
+        if (gameType == GT_SNOOKER) { return "snooker"; }
+        return "9-ball";
+    }
+
+    hidden function _loadStreak() {
+        var v = Application.Storage.getValue(LB_STREAK_KEY);
+        if (v instanceof Lang.Number) { return v; }
+        return 0;
+    }
+
+    hidden function _saveStreak(n) {
+        try { Application.Storage.setValue(LB_STREAK_KEY, n); } catch (e) {}
+    }
+
+    // Called by the View once the game reaches BS_GAMEOVER. Win streak counts
+    // consecutive player wins vs the AI; P-vs-P matches are never submitted.
+    // winReason: 1/3 = player win, 2/4 = AI win.
+    function reportResult() {
+        if (_lbHandled) { return; }
+        _lbHandled = true;
+        if (pvpMode) { return; }
+        var playerWon = (winReason == 1 || winReason == 3);
+        if (playerWon) {
+            var s = _loadStreak() + 1;
+            _saveStreak(s);
+            Leaderboard.submitScore(LB_GAME_ID, s, lbVariant());
+        } else {
+            _saveStreak(0);
+        }
     }
 
     // ── Ball-group classification (8-ball mode) ─────────────
@@ -426,7 +472,7 @@ class BilliardGame {
     //   SEL/TAP commits power / starts charging.
     function doUp() {
         if (gs == BS_MENU) {
-            menuSel = (menuSel + 3) % 4;  // -1 mod 4
+            menuSel = (menuSel + 4) % 5;  // -1 mod 5
             return;
         }
         if (gs == BS_GAMEOVER) { gs = BS_MENU; return; }
@@ -436,7 +482,7 @@ class BilliardGame {
 
     function doDown() {
         if (gs == BS_MENU) {
-            menuSel = (menuSel + 1) % 4;
+            menuSel = (menuSel + 1) % 5;
             return;
         }
         if (gs == BS_GAMEOVER) { gs = BS_MENU; return; }
@@ -483,6 +529,8 @@ class BilliardGame {
         } else if (menuSel == 2) {
             diff = (diff + 1) % 3;
             Application.Storage.setValue("billDiff", diff);
+        } else if (menuSel == 3) {
+            lbRequested = true;   // View opens the leaderboard panel
         } else {
             startGame();
         }

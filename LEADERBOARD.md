@@ -437,6 +437,7 @@ Dla tych gier leaderboard ma sens tylko jeśli aplikacja zlicza coś przez dłu�
 | **Nonogram** | Czas ukończenia | 🏗️ |
 | **Makao** | Win streak / rundy wygranych | 🏗️ |
 | **Checkers** | Jak Tier 3 | 🏗️ |
+| **Billiards** | Win streak vs AI, `variant` = odmiana gry (9-ball / 8-ball / 3-ball / snooker) — tryb P vs P nie wysyła wyniku | ✅ wdrożone |
 
 ---
 

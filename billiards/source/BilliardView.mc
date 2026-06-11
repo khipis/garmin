@@ -28,7 +28,18 @@ class BilliardView extends WatchUi.View {
     function onTick() as Void {
         _tick++;
         _game.step();
+        if (_game.gs == BS_GAMEOVER) { _game.reportResult(); }
+        if (_game.lbRequested) {
+            _game.lbRequested = false;
+            openLeaderboard();
+        }
         WatchUi.requestUpdate();
+    }
+
+    // Open the shared global-leaderboard panel for the current pool game.
+    function openLeaderboard() {
+        var v = new LbScoresView(LB_GAME_ID, _game.lbVariant(), "BILLIARDS");
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
     // ── Input passthrough ─────────────────────────────────────
@@ -65,9 +76,9 @@ class BilliardView extends WatchUi.View {
         // Felt background
         dc.setColor(0x0C3010, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, 0, w, h);
-        // Mini table — compact so rows have breathing room below
-        var tx1 = w*16/100; var tx2 = w*84/100;
-        var ty1 = h*21/100; var ty2 = h*34/100;
+        // Mini table — compact so the five rows below have breathing room
+        var tx1 = w*20/100; var tx2 = w*80/100;
+        var ty1 = h*19/100; var ty2 = h*29/100;
         dc.setColor(0x5C3010, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(tx1-3, ty1-3, tx2-tx1+6, ty2-ty1+6);
         dc.setColor(0x0F5020, Graphics.COLOR_TRANSPARENT);
@@ -81,17 +92,18 @@ class BilliardView extends WatchUi.View {
         _drawMenuRack(dc, g, tx1, ty1, tx2, ty2);
         // Title + subtitle
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w/2, h*9/100, Graphics.FONT_SMALL, "BILLIARDS", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w/2, h*7/100, Graphics.FONT_SMALL, "BILLIARDS", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x44CC66, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w/2, h*15/100, Graphics.FONT_XTINY, "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w/2, h*14/100, Graphics.FONT_XTINY, "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Row positions — evenly spaced so nothing overlaps.
+        // Row positions — evenly spaced so nothing overlaps (5 rows + rules hint).
         // Row 0 spans two lines (label + rules hint), so row 1 starts after both.
-        var r0y = h*38/100;   // GAME MODE label
-        var r0s = h*44/100;   // rules hint (smaller, dimmer)
-        var r1y = h*52/100;   // VS MODE
-        var r2y = h*61/100;   // DIFFICULTY
-        var r3y = h*72/100;   // START
+        var r0y  = h*34/100;   // GAME MODE label
+        var r0s  = h*40/100;   // rules hint (smaller, dimmer)
+        var r1y  = h*48/100;   // VS MODE
+        var r2y  = h*56/100;   // DIFFICULTY
+        var rLBy = h*65/100;   // LEADERBOARD
+        var r3y  = h*75/100;   // START
         var dLabels = ["EASY", "MEDIUM", "HARD"];
         var dColors = [0x44CC44, 0xFFAA00, 0xEE3322];
 
@@ -131,13 +143,20 @@ class BilliardView extends WatchUi.View {
                         dLabels[g.diff] + (sel2 ? " <" : "  "), Graphics.TEXT_JUSTIFY_LEFT);
         }
 
-        // Row 3 — START (blinking when focused)
-        var sel3  = (g.menuSel == 3);
+        // Row 3 — LEADERBOARD (gold, slightly standout to drive hype)
+        var sel3 = (g.menuSel == 3);
+        dc.setColor(sel3 ? 0xFFD24A : 0xBB8A1A, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w/2, rLBy, Graphics.FONT_XTINY,
+                    (sel3 ? "> LEADERBOARD <" : "  LEADERBOARD  "),
+                    Graphics.TEXT_JUSTIFY_CENTER);
+
+        // Row 4 — START (blinking when focused)
+        var sel4  = (g.menuSel == 4);
         var bright = (_tick % 14 < 7);
-        var startClr = sel3 ? (bright ? 0x44FF88 : 0xFFFFFF) : 0x228855;
+        var startClr = sel4 ? (bright ? 0x44FF88 : 0xFFFFFF) : 0x228855;
         dc.setColor(startClr, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w/2, r3y, Graphics.FONT_XTINY,
-                    (sel3 ? "> START <" : "  START  "),
+                    (sel4 ? "> START <" : "  START  "),
                     Graphics.TEXT_JUSTIFY_CENTER);
     }
 
