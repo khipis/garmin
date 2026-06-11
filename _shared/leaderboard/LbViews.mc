@@ -15,6 +15,7 @@ using Toybox.WatchUi;
 using Toybox.Graphics;
 using Toybox.Communications;
 using Toybox.Lang;
+using Toybox.PersistedContent;
 
 // Palette (matches the web leaderboard at bitochi.com)
 const LB_BG       = 0x080C10;
@@ -24,6 +25,39 @@ const LB_SILVER   = 0x94A3B8;
 const LB_BRONZE   = 0xCD7C3A;
 const LB_MUTED    = 0x4A6278;
 const LB_TEXT     = 0xD6E4F0;
+
+// ═══════════════════════════════════════════════════════════════════════════
+// Score submitter — POST /score (fire-and-forget). Instance lives in
+// Leaderboard._sender until the response arrives.
+// ═══════════════════════════════════════════════════════════════════════════
+class LbSubmitter {
+    function initialize() {}
+
+    function send(game, user, score, variant) {
+        var body = {
+            "game"  => game,
+            "user"  => user,
+            "score" => score
+        };
+        if (variant != null && variant.length() > 0) {
+            body["variant"] = variant;
+        }
+        var opts = {
+            :method       => Communications.HTTP_REQUEST_METHOD_POST,
+            :headers      => { "Content-Type" => Communications.REQUEST_CONTENT_TYPE_JSON },
+            :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
+        };
+        try {
+            Communications.makeWebRequest(Leaderboard.API_BASE + "/score",
+                                          body, opts, method(:_onDone));
+        } catch (e) {}
+    }
+
+    function _onDone(responseCode as Lang.Number,
+                     data as Null or Lang.Dictionary or Lang.String or PersistedContent.Iterator) as Void {
+        // Silent — never block or interrupt the player on a network result.
+    }
+}
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Network fetch helper — notifies a listener implementing onLeaderboard(ok,rows)
@@ -50,8 +84,9 @@ class LbFetch {
         }
     }
 
-    function _onResp(code, data) {
-        if (code == 200 && data instanceof Lang.Dictionary) {
+    function _onResp(responseCode as Lang.Number,
+                     data as Null or Lang.Dictionary or Lang.String or PersistedContent.Iterator) as Void {
+        if (responseCode == 200 && data instanceof Lang.Dictionary) {
             var top = data["top"];
             if (top instanceof Lang.Array) { _notify(true, top); return; }
         }

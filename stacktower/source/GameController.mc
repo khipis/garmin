@@ -28,12 +28,17 @@ const GS_MENU = 0;
 const GS_PLAY = 1;
 const GS_OVER = 2;
 
-// Chess-style menu with two rows:
+// Chess-style menu with three rows:
 //   row 0 = Diff selector (cycles through Slow / Norm / Fast)
 //   row 1 = START
-const ST_MENU_ROWS = 2;
+//   row 2 = LEADERBOARD (global; difficulty is used as the variant)
+const ST_MENU_ROWS = 3;
 const ST_ROW_DIFF  = 0;
 const ST_ROW_START = 1;
+const ST_ROW_LB    = 2;
+
+// Global leaderboard game id (matches _LOGOS / web id).
+const LB_GAME_ID = "stacktower";
 
 // Speed-difficulty presets — each one defines (base, coef, max)
 // used by `_computeSpeed(height)`:
@@ -118,13 +123,16 @@ class GameController {
     function menuPrev()    { menuRow = (menuRow + ST_MENU_ROWS - 1) % ST_MENU_ROWS; }
     function menuNext()    { menuRow = (menuRow + 1) % ST_MENU_ROWS; }
     function setMenuRow(i) { if (i >= 0 && i < ST_MENU_ROWS) { menuRow = i; } }
+    // Returns true when the activated row needs the view layer to act
+    // (the LEADERBOARD row pushes a view, which the controller can't do).
     function menuActivate() {
         if (menuRow == ST_ROW_DIFF) {
             menuDiff = (menuDiff + 1) % 3;
             _saveDiff();
-        } else {
+        } else if (menuRow == ST_ROW_START) {
             startGame();
         }
+        // ST_ROW_LB is handled by MainView.openLeaderboard().
     }
     function diffName() {
         if (menuDiff == ST_DIFF_SLOW) { return "Slow"; }
@@ -217,6 +225,8 @@ class GameController {
             lastShake = 8;
             if (score > hi) { hi = score; _saveHi(); }
             state = GS_OVER;
+            // Submit to the global leaderboard, split by difficulty variant.
+            Leaderboard.submitScore(LB_GAME_ID, score, diffName());
             return;
         }
 

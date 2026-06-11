@@ -11,13 +11,19 @@ A **shared Monkey C library** now lives in `_shared/leaderboard/`:
 | `Leaderboard.mc` | `module Leaderboard` — `submitScore(game,score,variant)`, `loadUser/saveUser/hasUser`, config (`API_BASE`), `buildName()` |
 | `LbViews.mc` | `LbNameEntryView`/`Delegate` (wheel keyboard for username), `LbScoresView`/`Delegate` (fetches + renders top-10), `LbFetch` (GET helper), `LbBadge` (gold menu-row drawer) |
 
-**Reference integration: `twentyfortyeight` (2048)** — wired end-to-end:
-- `monkey.jungle`: `base.sourcePath = source;../_shared/leaderboard`
-- `manifest.xml`: added `Communications` permission
-- `GameController.mc`: new `MI_LEADERBOARD` menu row + `Leaderboard.submitScore(...)` on game over
-- `UIManager.mc`: space-aware 3-row menu (auto-shrinks so rows never overlap) + gold `LbBadge` row
-- `InputHandler.mc`: `_activateMenu()` opens `LbScoresView`
-- `MainView.mc`: `openLeaderboard()` helper
+**Reference integrations (both build clean, PROD + STORE):**
+
+`stacktower` — first fully integrated game. Difficulty (**Slow/Norm/Fast**) is
+passed as the leaderboard **variant**, so each difficulty has its own ranking:
+- `monkey.jungle` / `manifest.xml`: shared source path + `Communications` perm
+- `GameController.mc`: 3rd menu row `ST_ROW_LB` + `submitScore(LB_GAME_ID, score, diffName())` on miss
+- `MainView.mc`: space-aware 3-row menu (rows auto-shrink so nothing overlaps), gold `LbBadge` row, `openLeaderboard()` opening the current difficulty's board
+- decorative tower/BEST moved up to clear the third row
+
+`twentyfortyeight` (2048) — same pattern, no variant:
+- `GameController.mc`: `MI_LEADERBOARD` row + `submitScore(...)` on game over
+- `UIManager.mc`: space-aware 3-row menu + gold `LbBadge` row
+- `InputHandler.mc` `_activateMenu()` / `MainView.openLeaderboard()`
 
 **Username:** stored per-app in `Application.Storage["lb_user"]`. Entered once via the
 wheel keyboard (`LbScoresView` auto-prompts on first open), then remembered.
@@ -30,7 +36,7 @@ Cloudflare Worker URL (currently a placeholder), and apply the `variant` D1 migr
 
 ### Rollout recipe for every other game
 1. `monkey.jungle` → append `;../_shared/leaderboard` to `base.sourcePath`
-2. `manifest.xml` → add `<iq:permission id="Communications"/>`
+2. `manifest.xml` → add `<iq:uses-permission id="Communications"/>`
 3. Menu → add a `LEADERBOARD` row (use `LbBadge.drawRow`), open `LbScoresView` on activate
 4. Game over → `Leaderboard.submitScore(GAME_ID, score, VARIANT)`
 

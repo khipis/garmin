@@ -15,7 +15,7 @@
 //   identity could unify these; out of scope for the skeleton.)
 //
 // Permission required in each game's manifest.xml:
-//   <iq:permissions><iq:permission id="Communications"/></iq:permissions>
+//   <iq:permissions><iq:uses-permission id="Communications"/></iq:permissions>
 // ═══════════════════════════════════════════════════════════════════════════
 
 using Toybox.Application;
@@ -53,34 +53,19 @@ module Leaderboard {
 
     // ── Score submission (fire-and-forget) ───────────────────────────────────
     // variant may be null or "" for games without sub-categories.
+    //
+    // The actual request lives on LbSubmitter (a class) because Garmin's
+    // makeWebRequest callback must be a bound method() and module functions
+    // have no instance to bind to. We hold the sender in a module var so it
+    // survives until the async response arrives.
+    var _sender = null;
+
     function submitScore(game as Lang.String, score as Lang.Number,
                          variant as Lang.String or Null) as Void {
         var user = loadUser();
         if (user == null) { user = "anon"; }
-
-        var body = {
-            "game"  => game,
-            "user"  => user,
-            "score" => score
-        };
-        if (variant != null && variant.length() > 0) {
-            body["variant"] = variant;
-        }
-
-        var opts = {
-            :method       => Communications.HTTP_REQUEST_METHOD_POST,
-            :headers      => { "Content-Type" => Communications.REQUEST_CONTENT_TYPE_JSON },
-            :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
-        };
-
-        try {
-            Communications.makeWebRequest(API_BASE + "/score", body, opts,
-                                          method(:_onSubmit));
-        } catch (e) {}
-    }
-
-    function _onSubmit(code as Lang.Number, data) as Void {
-        // Silent — never block or interrupt the player on a network result.
+        _sender = new LbSubmitter();
+        _sender.send(game, user, score, variant);
     }
 
     // ── Build a clean username from a wheel-index array ───────────────────────
