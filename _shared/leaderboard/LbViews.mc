@@ -183,8 +183,9 @@ class LbNameEntryView extends WatchUi.View {
                     _chAt((ci + 1) % cLen), Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(LB_MUTED, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _h - 16, Graphics.FONT_XTINY,
-                    "UP/DN pick  SEL next", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, _h - dc.getFontHeight(Graphics.FONT_XTINY), Graphics.FONT_XTINY,
+                    "UP/DN  SEL next",
+                    Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
     }
 }
 
@@ -302,71 +303,79 @@ class LbScoresView extends WatchUi.View {
         _w = dc.getWidth();
         _h = dc.getHeight();
         var cx = _w / 2;
+        var fh = dc.getFontHeight(Graphics.FONT_XTINY);
+
+        // Anchor every label by its CENTER so nothing ever spills off the
+        // (round) screen edge the way a top-anchored line would.
+        var VC = Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER;
 
         dc.setColor(LB_BG, LB_BG); dc.clear();
 
-        // Footer — fixed 14px from bottom so it always shows on every watch.
-        var footerY = _h - 14;
+        // Footer — center kept ~1 line-height above the bottom, well inside the
+        // round safe-zone, short text so it isn't clipped at the narrow chord.
+        var footerCY = _h - fh;
         dc.setColor(LB_MUTED, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, footerY, Graphics.FONT_XTINY,
-                    "bitochi.com  |  hold=rename", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, footerCY, Graphics.FONT_XTINY, "bitochi.com", VC);
 
-        // Header
+        // Header — pulled down from the very top edge.
         var hasVar = (_variant != null && _variant.length() > 0);
+        var titleCY = fh;
         dc.setColor(LB_ACCENT, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, 4, Graphics.FONT_XTINY, _title, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, titleCY, Graphics.FONT_XTINY, _title, VC);
+        var headerBottom = titleCY + fh / 2;
         if (hasVar) {
+            var varCY = titleCY + fh;
             dc.setColor(LB_GOLD, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, 4 + dc.getFontHeight(Graphics.FONT_XTINY),
-                        Graphics.FONT_XTINY, _variant, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(cx, varCY, Graphics.FONT_XTINY, _variant, VC);
+            headerBottom = varCY + fh / 2;
         }
 
         if (_state == 0) {
             dc.setColor(LB_MUTED, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, _h / 2, Graphics.FONT_XTINY,
-                        "Loading...", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(cx, _h / 2, Graphics.FONT_XTINY, "Loading...", VC);
             return;
         }
         if (_state == 2) {
             dc.setColor(LB_MUTED, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, _h * 42 / 100, Graphics.FONT_XTINY,
-                        "No connection", Graphics.TEXT_JUSTIFY_CENTER);
-            dc.drawText(cx, _h * 54 / 100, Graphics.FONT_XTINY,
-                        "try again later", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(cx, _h / 2 - fh, Graphics.FONT_XTINY, "No connection", VC);
+            dc.drawText(cx, _h / 2 + fh, Graphics.FONT_XTINY, "try again later", VC);
             return;
         }
         if (_state == 3) {
             dc.setColor(LB_MUTED, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, _h / 2, Graphics.FONT_XTINY,
-                        "No scores yet!", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(cx, _h / 2, Graphics.FONT_XTINY, "No scores yet!", VC);
             return;
         }
 
         // Score rows — scrollable viewport between header and footer.
-        var fh    = dc.getFontHeight(Graphics.FONT_XTINY);
-        var lineH = fh + 2; if (lineH < 13) { lineH = 13; }
-        var headerBottom = hasVar ? (4 + fh * 2 + 2) : (4 + fh + 2);
-        var scrollAreaH  = footerY - 2 - headerBottom;
-        _fitCount = scrollAreaH / lineH;
+        var footerTop = footerCY - fh;
+        var lineH = fh + 3; if (lineH < 14) { lineH = 14; }
+        var areaTop = headerBottom + 2;
+        var areaH   = footerTop - 2 - areaTop;
+        _fitCount = areaH / lineH;
         if (_fitCount < 1) { _fitCount = 1; }
 
         var total = _rows.size(); if (total > 10) { total = 10; }
 
-        // Scroll arrows
+        var rowsTop = areaTop;
+        // Scroll arrows reserve one row each when shown.
         if (_scrollOff > 0) {
             dc.setColor(LB_MUTED, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, headerBottom, Graphics.FONT_XTINY,
-                        "^", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(cx, areaTop + fh / 2, Graphics.FONT_XTINY, "^", VC);
+            rowsTop = areaTop + lineH;
+            _fitCount = (footerTop - 2 - rowsTop) / lineH;
+            if (_fitCount < 1) { _fitCount = 1; }
         }
         if (_scrollOff + _fitCount < total) {
             dc.setColor(LB_MUTED, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, footerY - 2 - fh, Graphics.FONT_XTINY,
-                        "v", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(cx, footerTop - fh / 2, Graphics.FONT_XTINY, "v", VC);
         }
 
-        var top = headerBottom + (_scrollOff > 0 ? fh + 1 : 0);
         var end = _scrollOff + _fitCount;
         if (end > total) { end = total; }
+
+        var lcol = _w * 20 / 100;   // rank + name (left)
+        var rcol = _w * 80 / 100;   // score (right)
 
         for (var i = _scrollOff; i < end; i++) {
             var row  = _rows[i];
@@ -378,14 +387,14 @@ class LbScoresView extends WatchUi.View {
             else if (rank == 2) { clr = LB_SILVER; }
             else if (rank == 3) { clr = LB_BRONZE; }
 
-            var y = top + (i - _scrollOff) * lineH;
+            var cy = rowsTop + (i - _scrollOff) * lineH + lineH / 2;
             dc.setColor(clr, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w * 12 / 100, y, Graphics.FONT_XTINY,
-                        rank.toString(), Graphics.TEXT_JUSTIFY_LEFT);
-            dc.drawText(_w * 24 / 100, y, Graphics.FONT_XTINY,
-                        (u != null) ? u : "anon", Graphics.TEXT_JUSTIFY_LEFT);
-            dc.drawText(_w * 88 / 100, y, Graphics.FONT_XTINY,
-                        (s != null) ? s.toString() : "0", Graphics.TEXT_JUSTIFY_RIGHT);
+            dc.drawText(lcol, cy, Graphics.FONT_XTINY,
+                        rank.toString() + "  " + ((u != null) ? u : "anon"),
+                        Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER);
+            dc.drawText(rcol, cy, Graphics.FONT_XTINY,
+                        (s != null) ? s.toString() : "0",
+                        Graphics.TEXT_JUSTIFY_RIGHT | Graphics.TEXT_JUSTIFY_VCENTER);
         }
     }
 }
