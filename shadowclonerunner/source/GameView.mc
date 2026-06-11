@@ -17,6 +17,14 @@ const MAX_FRAMES = 800;  // max frames recorded per run (~26 s @ 30 fps)
 const OBS_MAX    = 4;    // max simultaneous obstacles
 const CLONE_GRACE = 80;  // ticks before clone-player collision is checked
 
+// Title-screen menu rows (navigable like a tiny chess menu).
+const SCR_MENU_ROWS = 2;
+const SCR_ROW_START = 0;
+const SCR_ROW_LB    = 1;
+
+// Global leaderboard game id (matches _LOGOS / web id).
+const LB_GAME_ID = "shadowclonerunner";
+
 // ── GameView ──────────────────────────────────────────────────────────────────
 class GameView extends WatchUi.View {
 
@@ -46,6 +54,9 @@ class GameView extends WatchUi.View {
     hidden var _flash;    // white-flash countdown after death
     hidden var _scrollX;  // ground-dot scroll offset
 
+    // title-screen menu selection (SCR_ROW_*)
+    hidden var _menuRow;
+
     function initialize() {
         View.initialize();
         _state   = GS_TITLE;
@@ -59,6 +70,7 @@ class GameView extends WatchUi.View {
         _pDw     = 0;
         _pDh     = 0;
         _pDx     = 0;
+        _menuRow = SCR_ROW_START;
     }
 
     function onLayout(dc) {
@@ -126,7 +138,62 @@ class GameView extends WatchUi.View {
     hidden function _endRun() {
         _shadows.saveRun();
         if (_score > _hiScore) { _hiScore = _score; }
+        // Submit the run score to the global leaderboard (no variant).
+        Leaderboard.submitScore(LB_GAME_ID, _score, "");
         _state = GS_OVER;
+    }
+
+    // ── title-screen menu ──────────────────────────────────────────────────────
+    function inTitle()  { return _state == GS_TITLE; }
+    function menuUp()   { if (_state == GS_TITLE) { _menuRow = (_menuRow + SCR_MENU_ROWS - 1) % SCR_MENU_ROWS; } }
+    function menuDown() { if (_state == GS_TITLE) { _menuRow = (_menuRow + 1) % SCR_MENU_ROWS; } }
+
+    function menuActivate() {
+        if (_menuRow == SCR_ROW_LB) { openLeaderboard(); }
+        else { _startRun(); }
+    }
+
+    // Open the shared global leaderboard.
+    function openLeaderboard() {
+        var v = new LbScoresView(LB_GAME_ID, "", "SHADOW RUN");
+        WatchUi.pushView(v, new LbScoresDelegate(), WatchUi.SLIDE_LEFT);
+    }
+
+    // Hit-test the title menu rows (called for taps while on the title screen).
+    function handleTap(x, y) {
+        if (_state != GS_TITLE) { doJump(); return; }
+        var rg = menuRowGeom();
+        var rowH = rg[0]; var rowW = rg[1];
+        var rowX = rg[2]; var rowY0 = rg[3]; var gap = rg[4];
+        for (var i = 0; i < SCR_MENU_ROWS; i++) {
+            var ry = rowY0 + i * (rowH + gap);
+            if (x >= rowX && x < rowX + rowW && y >= ry && y < ry + rowH) {
+                _menuRow = i;
+                menuActivate();
+                return;
+            }
+        }
+    }
+
+    // Geometry for the title menu rows. Space-aware: the rows shrink to fit
+    // between the title/info zone and the bottom margin so nothing overlaps on
+    // small round watches. Sized ~18% smaller than a standard menu row.
+    //   [ rowH, rowW, rowX, rowY0, gap ]
+    function menuRowGeom() {
+        var topZone      = (_sh * 56) / 100;          // rows live below the title/info
+        var bottomMargin = (_sh * 7) / 100; if (bottomMargin < 12) { bottomMargin = 12; }
+        var gap          = (_sh * 2) / 100; if (gap < 4) { gap = 4; }
+        var avail        = (_sh - bottomMargin) - topZone;
+        var rowH         = (avail - gap * (SCR_MENU_ROWS - 1)) / SCR_MENU_ROWS;
+        // ~18% smaller than the standard menu row (cap 26→21, min 17→14).
+        if (rowH > 21) { rowH = 21; }
+        if (rowH < 14) { rowH = 14; }
+        var rowW = (_sw * 54) / 100; if (rowW < 98) { rowW = 98; }
+        var rowX = (_sw - rowW) / 2;
+        var used = SCR_MENU_ROWS * rowH + (SCR_MENU_ROWS - 1) * gap;
+        var rowY0 = topZone + (avail - used) / 2;
+        if (rowY0 < topZone) { rowY0 = topZone; }
+        return [rowH, rowW, rowX, rowY0, gap];
     }
 
     hidden function _step() {
@@ -393,31 +460,61 @@ class GameView extends WatchUi.View {
 
     // ── title screen ──────────────────────────────────────────────────────────
     hidden function _drawTitle(dc) {
-        // Title
+        var cx = _sw / 2;
+
+        // Title (moved up to leave room for the two menu rows below).
         dc.setColor(0x2255CC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_sw / 2, _sh * 20 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, _sh * 7 / 100, Graphics.FONT_SMALL,
             "SHADOW", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x882299, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_sw / 2, _sh * 31 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, _sh * 17 / 100, Graphics.FONT_SMALL,
             "CLONE", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x229944, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_sw / 2, _sh * 42 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, _sh * 27 / 100, Graphics.FONT_SMALL,
             "RUNNER", Graphics.TEXT_JUSTIFY_CENTER);
 
-        dc.setColor(0x303055, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_sw / 2, _sh * 56 / 100, Graphics.FONT_XTINY,
-            "any key to start", Graphics.TEXT_JUSTIFY_CENTER);
-
+        // Info line(s) — clones waiting and best score, stacked compactly.
+        var infoY = _sh * 40 / 100;
         if (_shadows.runCount() > 0) {
-            dc.setColor(0x1a1a44, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_sw / 2, _sh * 64 / 100, Graphics.FONT_XTINY,
+            dc.setColor(0x3a3a66, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, infoY, Graphics.FONT_XTINY,
                 _shadows.runCount().format("%d") + " clone(s) waiting",
                 Graphics.TEXT_JUSTIFY_CENTER);
+            infoY = infoY + _sh * 7 / 100;
         }
         if (_hiScore > 0) {
-            dc.setColor(0x252535, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_sw / 2, _sh * 72 / 100, Graphics.FONT_XTINY,
+            dc.setColor(0x303050, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, infoY, Graphics.FONT_XTINY,
                 "best " + _hiScore.format("%05d"), Graphics.TEXT_JUSTIFY_CENTER);
+        }
+
+        // Two chess-style rows: START + LEADERBOARD (shared gold badge).
+        var rg   = menuRowGeom();
+        var rowH = rg[0]; var rowW = rg[1];
+        var rowX = rg[2]; var rowY0 = rg[3]; var gap = rg[4];
+        for (var i = 0; i < SCR_MENU_ROWS; i++) {
+            var ry  = rowY0 + i * (rowH + gap);
+            var sel = (i == _menuRow);
+
+            if (i == SCR_ROW_LB) {
+                LbBadge.drawRow(dc, rowX, ry, rowW, rowH, sel);
+                continue;
+            }
+
+            var bg; var bd; var fg;
+            if (sel) { bg = 0x12305A; bd = 0x4488FF; fg = 0xCCE0FF; }
+            else     { bg = 0x101828; bd = 0x223355; fg = 0x8899BB; }
+            dc.setColor(bg, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);
+            dc.setColor(bd, Graphics.COLOR_TRANSPARENT);
+            dc.drawRoundedRectangle(rowX, ry, rowW, rowH, 5);
+            if (sel) {
+                var ay = ry + rowH / 2;
+                dc.fillPolygon([[rowX + 5, ay - 4], [rowX + 5, ay + 4], [rowX + 11, ay]]);
+            }
+            dc.setColor(fg, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, ry + (rowH - 14) / 2, Graphics.FONT_XTINY,
+                "START", Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 

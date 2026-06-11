@@ -1,256 +1,359 @@
-[ @file = "/Users/kkorolczuk/work/garmin/manpac/source/CollisionSystem.mc"; @line = 5; @symbol_classdef = [CollisionSystem,5,6,21]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/CollisionSystem.mc"; @line = 14; @symbol_classdef = [CollisionSystem,14,6,21]; ]
 class CollisionSystem {
-    [ @file = "/Users/kkorolczuk/work/garmin/manpac/source/CollisionSystem.mc"; @line = 5; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/CollisionSystem.mc"; @line = 14; ]
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/manpac/source/CollisionSystem.mc"; @line = 5; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/CollisionSystem.mc"; @line = 14; ]
     static
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/manpac/source/CollisionSystem.mc"; @line = 7; @symbol_functiondef = [isWall,7,20,26]; @symbol_param<0> = [grid,7,27,31]; @symbol_param<1> = [n,7,33,34]; @symbol_param<2> = [r,7,36,37]; @symbol_param<3> = [c,7,39,40]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/CollisionSystem.mc"; @line = 18; @symbol_functiondef = [playerBulletsVsEnemies,18,20,42]; @symbol_param<0> = [pShots,18,43,49]; @symbol_param<1> = [enemies,18,51,58]; ]
     static
-    function isWall(grid, n, r, c) {
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_7_42_10_4_start:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/CollisionSystem.mc" 8 8 ]
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_8_8_8_63_if_stmt:
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_8_12_8_45_begin:
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_8_12_8_35_begin:
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_8_12_8_26_begin:
-        %tmp.1 = lgetv %r;
-        symbol [ r %tmp.1 8 12 13 ];
-        %tmp.2 = 0;
-        %tmp.3 = lt %tmp.1 %tmp.2;
-        bt %tmp.3 @_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_8_8_8_63_if_true;
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_8_21_8_26_false:
-        %tmp.4 = lgetv %r;
-        symbol [ r %tmp.4 8 21 22 ];
-        %tmp.5 = lgetv %n;
-        symbol [ n %tmp.5 8 26 27 ];
-        %tmp.6 = gte %tmp.4 %tmp.5;
-        push %tmp.6;
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_8_21_8_26_end:
-        %tmp.7 = phi [%tmp.3 @_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_8_12_8_26_begin] [%tmp.6 @_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_8_21_8_26_false] [%tmp.7 @_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_8_21_8_26_end];
-        bt %tmp.7 @_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_8_8_8_63_if_true;
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_8_31_8_35_false:
-        %tmp.8 = lgetv %c;
-        symbol [ c %tmp.8 8 31 32 ];
-        %tmp.9 = 0;
-        %tmp.10 = lt %tmp.8 %tmp.9;
-        push %tmp.10;
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_8_31_8_35_end:
-        %tmp.11 = phi [%tmp.7 @_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_8_12_8_35_begin] [%tmp.10 @_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_8_31_8_35_false] [%tmp.11 @_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_8_31_8_35_end];
-        bt %tmp.11 @_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_8_8_8_63_if_true;
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_8_40_8_45_false:
-        %tmp.12 = lgetv %c;
-        symbol [ c %tmp.12 8 40 41 ];
-        %tmp.13 = lgetv %n;
-        symbol [ n %tmp.13 8 45 46 ];
-        %tmp.14 = gte %tmp.12 %tmp.13;
-        push %tmp.14;
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_8_40_8_45_end:
-        %tmp.15 = phi [%tmp.11 @_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_8_12_8_45_begin] [%tmp.14 @_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_8_40_8_45_false] [%tmp.15 @_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_8_40_8_45_end];
-        bf %tmp.15 @_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_8_8_8_63_if_end;
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_8_8_8_63_if_true:
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_8_48_8_63_start:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/CollisionSystem.mc" 8 50 ]
-        %tmp.16 = true;
-        ret %tmp.16;
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_8_48_8_63_stop:
-        goto @_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_8_8_8_63_if_end;
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_8_8_8_63_if_end:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/CollisionSystem.mc" 9 8 ]
-        %tmp.17 = lgetv %grid;
-        symbol [ grid %tmp.17 9 15 19 ];
-        %tmp.18 = lgetv %r;
-        symbol [ r %tmp.18 9 20 21 ];
-        %tmp.19 = lgetv %n;
-        symbol [ n %tmp.19 9 24 25 ];
-        %tmp.20 = mul %tmp.18 %tmp.19;
-        %tmp.21 = lgetv %c;
-        symbol [ c %tmp.21 9 28 29 ];
-        %tmp.22 = add %tmp.20 %tmp.21;
-        %tmp.23 = agetv %tmp.17 %tmp.22;
-        symbol [ TILE_WALL %tmp.25 9 34 43 ];
-        %tmp.25 = getv ? :TILE_WALL;
-        %tmp.26 = eq %tmp.23 %tmp.25;
-        ret %tmp.26;
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_7_42_10_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/manpac/source/CollisionSystem.mc"; @line = 14; @symbol_functiondef = [consume,14,20,27]; @symbol_param<0> = [grid,14,28,32]; @symbol_param<1> = [n,14,34,35]; @symbol_param<2> = [player,14,37,43]; ]
-    static
-    function consume(grid, n, player) {
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_14_45_21_4_start:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/CollisionSystem.mc" 15 8 ]
-        [ "_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_14_45_21_4_start" "_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_14_45_21_4_stop" ]
-        %i.1 = local;
-        symbol [ i %i.1 15 12 13 ];
-        %tmp.1 = lgetv %player;
-        symbol [ player %tmp.1 15 16 22 ];
-        symbol [ r %tmp.2 15 23 24 ];
-        %tmp.2 = getv %tmp.1 :r;
-        %tmp.3 = lgetv %n;
-        symbol [ n %tmp.3 15 27 28 ];
-        %tmp.4 = mul %tmp.2 %tmp.3;
-        %tmp.5 = lgetv %player;
-        symbol [ player %tmp.5 15 31 37 ];
-        symbol [ c %tmp.6 15 38 39 ];
-        %tmp.6 = getv %tmp.5 :c;
-        %tmp.7 = add %tmp.4 %tmp.6;
-        lputv %i.1 %tmp.7;
-        symbol [ i %i.1 15 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/manpac/source/CollisionSystem.mc" 16 8 ]
-        [ "_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_14_45_21_4_start" "_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_14_45_21_4_stop" ]
-        %t.2 = local;
-        symbol [ t %t.2 16 12 13 ];
-        %tmp.8 = lgetv %grid;
-        symbol [ grid %tmp.8 16 16 20 ];
-        %tmp.9 = lgetv %i.1;
-        symbol [ i %tmp.9 16 21 22 ];
-        %tmp.10 = agetv %tmp.8 %tmp.9;
-        lputv %t.2 %tmp.10;
-        symbol [ t %t.2 16 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/manpac/source/CollisionSystem.mc" 17 8 ]
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_17_8_19_8_if_stmt:
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_17_12_17_37_begin:
-        %tmp.11 = lgetv %t.2;
-        symbol [ t %tmp.11 17 12 13 ];
-        symbol [ TILE_PELLET %tmp.13 17 17 28 ];
-        %tmp.13 = getv ? :TILE_PELLET;
-        %tmp.14 = eq %tmp.11 %tmp.13;
-        bt %tmp.14 @_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_17_8_19_8_if_true;
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_17_32_17_37_false:
-        %tmp.15 = lgetv %t.2;
-        symbol [ t %tmp.15 17 32 33 ];
-        symbol [ TILE_POWER %tmp.17 17 37 47 ];
-        %tmp.17 = getv ? :TILE_POWER;
-        %tmp.18 = eq %tmp.15 %tmp.17;
-        push %tmp.18;
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_17_32_17_37_end:
-        %tmp.19 = phi [%tmp.14 @_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_17_12_17_37_begin] [%tmp.18 @_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_17_32_17_37_false] [%tmp.19 @_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_17_32_17_37_end];
-        bf %tmp.19 @_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_17_8_19_8_if_end;
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_17_8_19_8_if_true:
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_17_49_19_8_start:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/CollisionSystem.mc" 18 12 ]
-        %tmp.20 = lgetv %grid;
-        symbol [ grid %tmp.20 18 12 16 ];
-        symbol [ TILE_FLOOR %tmp.22 18 22 32 ];
-        %tmp.22 = getv ? :TILE_FLOOR;
-        %tmp.23 = lgetv %i.1;
-        symbol [ i %tmp.23 18 17 18 ];
-        aputv %tmp.20 %tmp.23 %tmp.22;
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_17_49_19_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_17_8_19_8_if_end;
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_17_8_19_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/CollisionSystem.mc" 20 8 ]
-        %tmp.24 = lgetv %t.2;
-        symbol [ t %tmp.24 20 15 16 ];
-        ret %tmp.24;
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_14_45_21_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/manpac/source/CollisionSystem.mc"; @line = 26; @symbol_functiondef = [ghostOnPlayer,26,20,33]; @symbol_param<0> = [ghosts,26,34,40]; @symbol_param<1> = [player,26,42,48]; ]
-    static
-    function ghostOnPlayer(ghosts, player) {
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_26_50_33_4_start:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/CollisionSystem.mc" 27 8 ]
-        for @_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_27_8_31_8_for_test @_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_27_8_31_8_for_incr @_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_27_8_31_8_for_end;
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_27_8_31_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_27_8_31_8_for_begin" "_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_27_8_31_8_for_end" ]
-        %i.1 = local;
-        symbol [ i %i.1 27 17 18 ];
+    function playerBulletsVsEnemies(pShots, enemies) {
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_18_60_36_4_start:
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/CollisionSystem.mc" 19 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_18_60_36_4_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_18_60_36_4_stop" ]
+        %pts.1 = local;
+        symbol [ pts %pts.1 19 12 15 ];
         %tmp.1 = 0;
-        lputv %i.1 %tmp.1;
-        symbol [ i %i.1 27 17 18 ];
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_27_8_31_8_for_test:
-        %tmp.2 = lgetv %i.1;
-        symbol [ i %tmp.2 27 24 25 ];
-        %tmp.3 = lgetv %ghosts;
-        symbol [ ghosts %tmp.3 27 28 34 ];
-        symbol [ size %tmp.4 27 35 39 ];
-        %tmp.4 = getv function %tmp.3 :size;
-        %tmp.5 = invoke %tmp.3 %tmp.4();
-        %tmp.6 = lt %tmp.2 %tmp.5;
-        bf %tmp.6 @_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_27_8_31_8_for_end;
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_27_8_31_8_for_begin:
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_27_48_31_8_start:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/CollisionSystem.mc" 28 12 ]
-        [ "_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_27_48_31_8_start" "_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_27_48_31_8_stop" ]
-        %g.2 = local;
-        symbol [ g %g.2 28 16 17 ];
-        %tmp.7 = lgetv %ghosts;
-        symbol [ ghosts %tmp.7 28 20 26 ];
-        %tmp.8 = lgetv %i.1;
-        symbol [ i %tmp.8 28 27 28 ];
-        %tmp.9 = agetv %tmp.7 %tmp.8;
-        lputv %g.2 %tmp.9;
-        symbol [ g %g.2 28 16 17 ];
-[ "/Users/kkorolczuk/work/garmin/manpac/source/CollisionSystem.mc" 29 12 ]
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_29_12_29_43_if_stmt:
-        %tmp.10 = lgetv %g.2;
-        symbol [ g %tmp.10 29 17 18 ];
-        symbol [ isActive %tmp.11 29 19 27 ];
-        %tmp.11 = getv function %tmp.10 :isActive;
-        %tmp.12 = invoke %tmp.10 %tmp.11();
+        lputv %pts.1 %tmp.1;
+        symbol [ pts %pts.1 19 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/CollisionSystem.mc" 20 8 ]
+        for @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_20_8_34_8_for_test @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_20_8_34_8_for_incr @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_20_8_34_8_for_end;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_20_8_34_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_20_8_34_8_for_begin" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_20_8_34_8_for_end" ]
+        %i.2 = local;
+        symbol [ i %i.2 20 17 18 ];
+        %tmp.2 = 0;
+        lputv %i.2 %tmp.2;
+        symbol [ i %i.2 20 17 18 ];
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_20_8_34_8_for_test:
+        %tmp.3 = lgetv %i.2;
+        symbol [ i %tmp.3 20 24 25 ];
+        %tmp.4 = lgetv %pShots;
+        symbol [ pShots %tmp.4 20 28 34 ];
+        symbol [ size %tmp.5 20 35 39 ];
+        %tmp.5 = getv function %tmp.4 :size;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        %tmp.7 = lt %tmp.3 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_20_8_34_8_for_end;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_20_8_34_8_for_begin:
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_20_48_34_8_start:
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/CollisionSystem.mc" 21 12 ]
+        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_20_48_34_8_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_20_48_34_8_stop" ]
+        %b.3 = local;
+        symbol [ b %b.3 21 16 17 ];
+        %tmp.8 = lgetv %pShots;
+        symbol [ pShots %tmp.8 21 20 26 ];
+        %tmp.9 = lgetv %i.2;
+        symbol [ i %tmp.9 21 27 28 ];
+        %tmp.10 = agetv %tmp.8 %tmp.9;
+        lputv %b.3 %tmp.10;
+        symbol [ b %b.3 21 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/CollisionSystem.mc" 22 12 ]
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_22_12_22_38_if_stmt:
+        %tmp.11 = lgetv %b.3;
+        symbol [ b %tmp.11 22 17 18 ];
+        symbol [ alive %tmp.12 22 19 24 ];
+        %tmp.12 = getv %tmp.11 :alive;
         %tmp.13 = not %tmp.12;
-        bf %tmp.13 @_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_29_12_29_43_if_end;
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_29_12_29_43_if_true:
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_29_31_29_43_start:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/CollisionSystem.mc" 29 33 ]
-        goto break @_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_27_8_31_8_for_incr;
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_29_31_29_43_stop:
-        goto @_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_29_12_29_43_if_end;
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_29_12_29_43_if_end:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/CollisionSystem.mc" 30 12 ]
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_30_12_30_64_if_stmt:
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_30_16_30_49_begin:
-        %tmp.14 = lgetv %g.2;
-        symbol [ g %tmp.14 30 16 17 ];
-        symbol [ r %tmp.15 30 18 19 ];
-        %tmp.15 = getv %tmp.14 :r;
-        %tmp.16 = lgetv %player;
-        symbol [ player %tmp.16 30 23 29 ];
-        symbol [ r %tmp.17 30 30 31 ];
-        %tmp.17 = getv %tmp.16 :r;
-        %tmp.18 = eq %tmp.15 %tmp.17;
-        bf %tmp.18 @_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_30_12_30_64_if_end;
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_30_35_30_49_true:
-        %tmp.19 = lgetv %g.2;
-        symbol [ g %tmp.19 30 35 36 ];
-        symbol [ c %tmp.20 30 37 38 ];
-        %tmp.20 = getv %tmp.19 :c;
-        %tmp.21 = lgetv %player;
-        symbol [ player %tmp.21 30 42 48 ];
-        symbol [ c %tmp.22 30 49 50 ];
-        %tmp.22 = getv %tmp.21 :c;
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_22_12_22_38_if_end;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_22_12_22_38_if_true:
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_22_26_22_38_start:
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/CollisionSystem.mc" 22 28 ]
+        goto break @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_20_8_34_8_for_incr;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_22_26_22_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_22_12_22_38_if_end;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_22_12_22_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/CollisionSystem.mc" 23 12 ]
+        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_20_48_34_8_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_20_48_34_8_stop" ]
+        %br.4 = local;
+        symbol [ br %br.4 23 16 18 ];
+        %tmp.14 = lgetv %b.3;
+        symbol [ b %tmp.14 23 22 23 ];
+        symbol [ row %tmp.15 23 24 27 ];
+        %tmp.15 = getv %tmp.14 :row;
+        %tmp.16 = 0.5;
+        %tmp.17 = add %tmp.15 %tmp.16;
+        symbol [ toNumber %tmp.18 23 35 43 ];
+        %tmp.18 = getv function %tmp.17 :toNumber;
+        %tmp.19 = invoke %tmp.17 %tmp.18();
+        lputv %br.4 %tmp.19;
+        symbol [ br %br.4 23 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/CollisionSystem.mc" 24 12 ]
+        for @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_24_12_33_12_for_test @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_24_12_33_12_for_incr @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_24_12_33_12_for_end;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_24_12_33_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_24_12_33_12_for_begin" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_24_12_33_12_for_end" ]
+        %k.5 = local;
+        symbol [ k %k.5 24 21 22 ];
+        %tmp.20 = 0;
+        lputv %k.5 %tmp.20;
+        symbol [ k %k.5 24 21 22 ];
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_24_12_33_12_for_test:
+        %tmp.21 = lgetv %k.5;
+        symbol [ k %tmp.21 24 28 29 ];
+        %tmp.22 = lgetv %enemies;
+        symbol [ enemies %tmp.22 24 32 39 ];
+        symbol [ size %tmp.23 24 40 44 ];
+        %tmp.23 = getv function %tmp.22 :size;
+        %tmp.24 = invoke %tmp.22 %tmp.23();
+        %tmp.25 = lt %tmp.21 %tmp.24;
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_24_12_33_12_for_end;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_24_12_33_12_for_begin:
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_24_53_33_12_start:
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/CollisionSystem.mc" 25 16 ]
+        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_24_53_33_12_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_24_53_33_12_stop" ]
+        %e.6 = local;
+        symbol [ e %e.6 25 20 21 ];
+        %tmp.26 = lgetv %enemies;
+        symbol [ enemies %tmp.26 25 24 31 ];
+        %tmp.27 = lgetv %k.5;
+        symbol [ k %tmp.27 25 32 33 ];
+        %tmp.28 = agetv %tmp.26 %tmp.27;
+        lputv %e.6 %tmp.28;
+        symbol [ e %e.6 25 20 21 ];
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/CollisionSystem.mc" 26 16 ]
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_26_16_26_42_if_stmt:
+        %tmp.29 = lgetv %e.6;
+        symbol [ e %tmp.29 26 21 22 ];
+        symbol [ alive %tmp.30 26 23 28 ];
+        %tmp.30 = getv %tmp.29 :alive;
+        %tmp.31 = not %tmp.30;
+        bf %tmp.31 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_26_16_26_42_if_end;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_26_16_26_42_if_true:
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_26_30_26_42_start:
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/CollisionSystem.mc" 26 32 ]
+        goto break @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_24_12_33_12_for_incr;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_26_30_26_42_stop:
+        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_26_16_26_42_if_end;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_26_16_26_42_if_end:
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/CollisionSystem.mc" 27 16 ]
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_27_16_32_16_if_stmt:
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_27_20_27_47_begin:
+        %tmp.32 = lgetv %e.6;
+        symbol [ e %tmp.32 27 20 21 ];
+        symbol [ col %tmp.33 27 22 25 ];
+        %tmp.33 = getv %tmp.32 :col;
+        %tmp.34 = lgetv %b.3;
+        symbol [ b %tmp.34 27 29 30 ];
+        symbol [ col %tmp.35 27 31 34 ];
+        %tmp.35 = getv %tmp.34 :col;
+        %tmp.36 = eq %tmp.33 %tmp.35;
+        bf %tmp.36 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_27_16_32_16_if_end;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_27_38_27_47_true:
+        %tmp.37 = lgetv %e.6;
+        symbol [ e %tmp.37 27 38 39 ];
+        symbol [ row %tmp.38 27 40 43 ];
+        %tmp.38 = getv %tmp.37 :row;
+        %tmp.39 = lgetv %br.4;
+        symbol [ br %tmp.39 27 47 49 ];
+        %tmp.40 = eq %tmp.38 %tmp.39;
+        push %tmp.40;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_27_38_27_47_end:
+        %tmp.41 = phi [%tmp.36 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_27_20_27_47_begin] [%tmp.40 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_27_38_27_47_true] [%tmp.41 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_27_38_27_47_end];
+        bf %tmp.41 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_27_16_32_16_if_end;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_27_16_32_16_if_true:
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_27_51_32_16_start:
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/CollisionSystem.mc" 28 20 ]
+        %tmp.42 = lgetv %e.6;
+        symbol [ e %tmp.42 28 20 21 ];
+        %tmp.43 = false;
+        symbol [ alive ? 28 22 27 ];
+        putv %tmp.42 :alive %tmp.43;
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/CollisionSystem.mc" 29 20 ]
+        %tmp.44 = lgetv %b.3;
+        symbol [ b %tmp.44 29 20 21 ];
+        %tmp.45 = false;
+        symbol [ alive ? 29 22 27 ];
+        putv %tmp.44 :alive %tmp.45;
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/CollisionSystem.mc" 30 20 ]
+        %tmp.46 = lgetv %pts.1;
+        symbol [ pts %tmp.46 30 26 29 ];
+        symbol [ EnemyManager %tmp.48 30 32 44 ];
+        %tmp.48 = getv ? :EnemyManager;
+        symbol [ scoreFor %tmp.49 30 45 53 ];
+        %tmp.49 = getv function %tmp.48 :scoreFor;
+        %tmp.50 = lgetv %e.6;
+        symbol [ e %tmp.50 30 54 55 ];
+        symbol [ type %tmp.51 30 56 60 ];
+        %tmp.51 = getv %tmp.50 :type;
+        %tmp.52 = invoke %tmp.48 %tmp.49(%tmp.51);
+        %tmp.53 = add %tmp.46 %tmp.52;
+        lputv %pts.1 %tmp.53;
+        symbol [ pts %pts.1 30 20 23 ];
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/CollisionSystem.mc" 31 20 ]
+        goto break @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_24_12_33_12_for_end;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_27_51_32_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_27_16_32_16_if_end;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_27_16_32_16_if_end:
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_24_53_33_12_stop:
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_24_12_33_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/CollisionSystem.mc" 24 ]
+        %tmp.56 = lgetv %k.5;
+        symbol [ k %tmp.56 24 48 49 ];
+        %tmp.57 = add %tmp.56 1;
+        lputv %k.5 %tmp.57;
+        symbol [ k %k.5 24 48 49 ];
+        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_24_12_33_12_for_test;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_24_12_33_12_for_end:
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_20_48_34_8_stop:
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_20_8_34_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/CollisionSystem.mc" 20 ]
+        %tmp.60 = lgetv %i.2;
+        symbol [ i %tmp.60 20 43 44 ];
+        %tmp.61 = add %tmp.60 1;
+        lputv %i.2 %tmp.61;
+        symbol [ i %i.2 20 43 44 ];
+        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_20_8_34_8_for_test;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_20_8_34_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/CollisionSystem.mc" 35 8 ]
+        %tmp.62 = lgetv %pts.1;
+        symbol [ pts %tmp.62 35 15 18 ];
+        ret %tmp.62;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_18_60_36_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/CollisionSystem.mc"; @line = 41; @symbol_functiondef = [enemyBulletsVsPlayer,41,20,40]; @symbol_param<0> = [eShots,41,41,47]; @symbol_param<1> = [player,41,49,55]; ]
+    static
+    function enemyBulletsVsPlayer(eShots, player) {
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_41_57_53_4_start:
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/CollisionSystem.mc" 42 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_41_57_53_4_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_41_57_53_4_stop" ]
+        %hit.1 = local;
+        symbol [ hit %hit.1 42 12 15 ];
+        %tmp.1 = false;
+        lputv %hit.1 %tmp.1;
+        symbol [ hit %hit.1 42 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/CollisionSystem.mc" 43 8 ]
+        for @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_43_8_51_8_for_test @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_43_8_51_8_for_incr @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_43_8_51_8_for_end;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_43_8_51_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_43_8_51_8_for_begin" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_43_8_51_8_for_end" ]
+        %i.2 = local;
+        symbol [ i %i.2 43 17 18 ];
+        %tmp.2 = 0;
+        lputv %i.2 %tmp.2;
+        symbol [ i %i.2 43 17 18 ];
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_43_8_51_8_for_test:
+        %tmp.3 = lgetv %i.2;
+        symbol [ i %tmp.3 43 24 25 ];
+        %tmp.4 = lgetv %eShots;
+        symbol [ eShots %tmp.4 43 28 34 ];
+        symbol [ size %tmp.5 43 35 39 ];
+        %tmp.5 = getv function %tmp.4 :size;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        %tmp.7 = lt %tmp.3 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_43_8_51_8_for_end;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_43_8_51_8_for_begin:
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_43_48_51_8_start:
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/CollisionSystem.mc" 44 12 ]
+        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_43_48_51_8_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_43_48_51_8_stop" ]
+        %b.3 = local;
+        symbol [ b %b.3 44 16 17 ];
+        %tmp.8 = lgetv %eShots;
+        symbol [ eShots %tmp.8 44 20 26 ];
+        %tmp.9 = lgetv %i.2;
+        symbol [ i %tmp.9 44 27 28 ];
+        %tmp.10 = agetv %tmp.8 %tmp.9;
+        lputv %b.3 %tmp.10;
+        symbol [ b %b.3 44 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/CollisionSystem.mc" 45 12 ]
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_45_12_45_38_if_stmt:
+        %tmp.11 = lgetv %b.3;
+        symbol [ b %tmp.11 45 17 18 ];
+        symbol [ alive %tmp.12 45 19 24 ];
+        %tmp.12 = getv %tmp.11 :alive;
+        %tmp.13 = not %tmp.12;
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_45_12_45_38_if_end;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_45_12_45_38_if_true:
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_45_26_45_38_start:
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/CollisionSystem.mc" 45 28 ]
+        goto break @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_43_8_51_8_for_incr;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_45_26_45_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_45_12_45_38_if_end;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_45_12_45_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/CollisionSystem.mc" 46 12 ]
+        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_43_48_51_8_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_43_48_51_8_stop" ]
+        %br.4 = local;
+        symbol [ br %br.4 46 16 18 ];
+        %tmp.14 = lgetv %b.3;
+        symbol [ b %tmp.14 46 22 23 ];
+        symbol [ row %tmp.15 46 24 27 ];
+        %tmp.15 = getv %tmp.14 :row;
+        %tmp.16 = 0.5;
+        %tmp.17 = add %tmp.15 %tmp.16;
+        symbol [ toNumber %tmp.18 46 35 43 ];
+        %tmp.18 = getv function %tmp.17 :toNumber;
+        %tmp.19 = invoke %tmp.17 %tmp.18();
+        lputv %br.4 %tmp.19;
+        symbol [ br %br.4 46 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/CollisionSystem.mc" 47 12 ]
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_47_12_50_12_if_stmt:
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_47_16_47_55_begin:
+        %tmp.20 = lgetv %br.4;
+        symbol [ br %tmp.20 47 16 18 ];
+        symbol [ PI_PLAYER_ROW %tmp.22 47 22 35 ];
+        %tmp.22 = getv ? :PI_PLAYER_ROW;
         %tmp.23 = eq %tmp.20 %tmp.22;
-        push %tmp.23;
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_30_35_30_49_end:
-        %tmp.24 = phi [%tmp.18 @_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_30_16_30_49_begin] [%tmp.23 @_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_30_35_30_49_true] [%tmp.24 @_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_30_35_30_49_end];
-        bf %tmp.24 @_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_30_12_30_64_if_end;
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_30_12_30_64_if_true:
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_30_52_30_64_start:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/CollisionSystem.mc" 30 54 ]
-        %tmp.25 = lgetv %i.1;
-        symbol [ i %tmp.25 30 61 62 ];
-        ret %tmp.25;
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_30_52_30_64_stop:
-        goto @_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_30_12_30_64_if_end;
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_30_12_30_64_if_end:
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_27_48_31_8_stop:
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_27_8_31_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/CollisionSystem.mc" 27 ]
-        %tmp.28 = lgetv %i.1;
-        symbol [ i %tmp.28 27 43 44 ];
-        %tmp.29 = add %tmp.28 1;
-        lputv %i.1 %tmp.29;
-        symbol [ i %i.1 27 43 44 ];
-        goto @_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_27_8_31_8_for_test;
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_27_8_31_8_for_end:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/CollisionSystem.mc" 32 8 ]
-        %tmp.30 = -1;
-        ret %tmp.30;
-_Users_kkorolczuk_work_garmin_manpac_source_CollisionSystem_mc_26_50_33_4_stop:
+        bf %tmp.23 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_47_12_50_12_if_end;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_47_39_47_55_true:
+        %tmp.24 = lgetv %b.3;
+        symbol [ b %tmp.24 47 39 40 ];
+        symbol [ col %tmp.25 47 41 44 ];
+        %tmp.25 = getv %tmp.24 :col;
+        %tmp.26 = lgetv %player;
+        symbol [ player %tmp.26 47 48 54 ];
+        symbol [ col %tmp.27 47 55 58 ];
+        %tmp.27 = getv %tmp.26 :col;
+        %tmp.28 = eq %tmp.25 %tmp.27;
+        push %tmp.28;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_47_39_47_55_end:
+        %tmp.29 = phi [%tmp.23 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_47_16_47_55_begin] [%tmp.28 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_47_39_47_55_true] [%tmp.29 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_47_39_47_55_end];
+        bf %tmp.29 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_47_12_50_12_if_end;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_47_12_50_12_if_true:
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_47_60_50_12_start:
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/CollisionSystem.mc" 48 16 ]
+        %tmp.30 = lgetv %b.3;
+        symbol [ b %tmp.30 48 16 17 ];
+        %tmp.31 = false;
+        symbol [ alive ? 48 18 23 ];
+        putv %tmp.30 :alive %tmp.31;
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/CollisionSystem.mc" 49 16 ]
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_49_16_49_60_if_stmt:
+        %tmp.32 = lgetv %player;
+        symbol [ player %tmp.32 49 21 27 ];
+        symbol [ isInvulnerable %tmp.33 49 28 42 ];
+        %tmp.33 = getv function %tmp.32 :isInvulnerable;
+        %tmp.34 = invoke %tmp.32 %tmp.33();
+        %tmp.35 = not %tmp.34;
+        bf %tmp.35 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_49_16_49_60_if_end;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_49_16_49_60_if_true:
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_49_46_49_60_start:
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/CollisionSystem.mc" 49 48 ]
+        %tmp.36 = true;
+        lputv %hit.1 %tmp.36;
+        symbol [ hit %hit.1 49 48 51 ];
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_49_46_49_60_stop:
+        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_49_16_49_60_if_end;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_49_16_49_60_if_end:
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_47_60_50_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_47_12_50_12_if_end;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_47_12_50_12_if_end:
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_43_48_51_8_stop:
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_43_8_51_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/CollisionSystem.mc" 43 ]
+        %tmp.39 = lgetv %i.2;
+        symbol [ i %tmp.39 43 43 44 ];
+        %tmp.40 = add %tmp.39 1;
+        lputv %i.2 %tmp.40;
+        symbol [ i %i.2 43 43 44 ];
+        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_43_8_51_8_for_test;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_43_8_51_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/CollisionSystem.mc" 52 8 ]
+        %tmp.41 = lgetv %hit.1;
+        symbol [ hit %tmp.41 52 15 18 ];
+        ret %tmp.41;
+_Users_kkorolczuk_work_garmin_pixelinvaders_source_CollisionSystem_mc_41_57_53_4_stop:
     }
 }
-[ @file = "/Users/kkorolczuk/work/garmin/manpac/source/CollisionSystem.mc"; @line = 5; ]
+[ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/CollisionSystem.mc"; @line = 14; ]
 <init> {
 }

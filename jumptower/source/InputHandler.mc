@@ -83,12 +83,19 @@ class InputHandler extends WatchUi.BehaviorDelegate {
 
     function onKeyPressed(evt) {
         var k = evt.getKey();
+        // On the menu, UP/DOWN move the row cursor instead of steering.
+        if (_v.inMenu()) {
+            if      (k == WatchUi.KEY_UP)   { _v.navUp();   WatchUi.requestUpdate(); }
+            else if (k == WatchUi.KEY_DOWN) { _v.navDown(); WatchUi.requestUpdate(); }
+            return true;
+        }
         if      (k == WatchUi.KEY_UP)    { _v.holdLeft(true);  }
         else if (k == WatchUi.KEY_DOWN)  { _v.holdRight(true); }
         return true;
     }
     function onKeyReleased(evt) {
         var k = evt.getKey();
+        if (_v.inMenu()) { return true; }
         if      (k == WatchUi.KEY_UP)    { _v.holdLeft(false);  }
         else if (k == WatchUi.KEY_DOWN)  { _v.holdRight(false); }
         return true;
@@ -109,6 +116,9 @@ class InputHandler extends WatchUi.BehaviorDelegate {
             }
             return false;
         }
+        // UP/DOWN are handled by onKeyPressed (menu nav / in-play steering);
+        // never let them fall through to "confirm" on the menu.
+        if (k == WatchUi.KEY_UP || k == WatchUi.KEY_DOWN) { return true; }
         // For ENTER and others — treat as "confirm" on menu/over screens.
         if (_v.isPassiveState()) {
             _v.confirm();
@@ -165,7 +175,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
         // a fallback for very-short touches that don't generate an
         // onDrag sequence.
         var xy = evt.getCoordinates();
-        _v.handleTap(xy[0]);
+        _v.handleTap(xy[0], xy[1]);
         WatchUi.requestUpdate();
         return true;
     }

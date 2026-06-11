@@ -23,7 +23,17 @@ class GameDelegate extends WatchUi.BehaviorDelegate {
         // getType() returns 0 for press, non-zero for release
         var pressed = (evt.getType() == 0) ? 1 : 0;
 
-        // From title / game-over: any key press starts the game.
+        // Title menu: UP/DOWN navigate rows, any other key activates.
+        if (_v.inMenu()) {
+            if (pressed == 1) {
+                if      (k == WatchUi.KEY_UP)   { _v.menuUp(); }
+                else if (k == WatchUi.KEY_DOWN) { _v.menuDown(); }
+                else                            { _v.menuSelect(); }
+            }
+            return true;
+        }
+
+        // Game-over: any key press restarts.
         if (pressed == 1 && _v.canStart()) {
             _v.doAction();
             WatchUi.requestUpdate();
@@ -42,10 +52,27 @@ class GameDelegate extends WatchUi.BehaviorDelegate {
         return true;
     }
 
-    function onSelect()       { _v.doAction();   WatchUi.requestUpdate(); return true; }
-    function onPreviousPage() { _v.doPrevPage(); WatchUi.requestUpdate(); return true; }
-    function onNextPage()     { _v.doNextPage(); WatchUi.requestUpdate(); return true; }
-    function onTap(evt)       { _v.doAction();   WatchUi.requestUpdate(); return true; }
+    function onSelect() {
+        if (_v.inMenu()) { _v.menuSelect(); WatchUi.requestUpdate(); return true; }
+        _v.doAction(); WatchUi.requestUpdate(); return true;
+    }
+    function onPreviousPage() {
+        if (_v.inMenu()) { _v.menuUp(); return true; }
+        _v.doPrevPage(); WatchUi.requestUpdate(); return true;
+    }
+    function onNextPage() {
+        if (_v.inMenu()) { _v.menuDown(); return true; }
+        _v.doNextPage(); WatchUi.requestUpdate(); return true;
+    }
+    function onTap(evt) {
+        if (_v.inMenu()) {
+            var c = evt.getCoordinates();
+            _v.menuTap(c[0], c[1]);
+            WatchUi.requestUpdate();
+            return true;
+        }
+        _v.doAction(); WatchUi.requestUpdate(); return true;
+    }
 
     function onBack() {
         if (_v.doBack()) { WatchUi.requestUpdate(); return true; }

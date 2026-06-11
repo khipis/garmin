@@ -9,14 +9,23 @@ class UIManager {
     // Geometry for a chess-style menu row.  Returns:
     //   [ rowH, rowW, rowX, rowY0, gap ]
     static function rowGeom(sw, sh) {
-        // Tighter than the original 3-row layout so the 4th row
-        // (Speed) fits cleanly under the title.
-        var rowH = (sh * 9) / 100;  if (rowH < 20) { rowH = 20; } if (rowH > 26) { rowH = 26; }
-        var rowW = (sw * 78) / 100; if (rowW < 140) { rowW = 140; }
+        // Space-aware layout for the 5 rows (Level, Lives, Speed, START,
+        // LEADERBOARD).  The whole menu is ~18% more compact than before
+        // (height, width and gaps) and the rows are packed into the band
+        // between the title block and the bottom hint, so nothing ever
+        // overlaps even on small round watches.
+        var topZone      = (sh * 26) / 100;                  // rows start below "by Bitochi"
+        var bottomMargin = (sh * 8) / 100; if (bottomMargin < 16) { bottomMargin = 16; }
+        var gap          = (sh * 12) / 1000; if (gap < 3) { gap = 3; }   // ~18% < old 1.5%
+        var avail        = (sh - bottomMargin) - topZone;
+        var rowH         = (avail - gap * (MENU_ROWS - 1)) / MENU_ROWS;
+        if (rowH > 21) { rowH = 21; }                        // old cap 26 → ~18% smaller
+        if (rowH < 14) { rowH = 14; }
+        var rowW = (sw * 64) / 100; if (rowW < 115) { rowW = 115; }      // old 78% → ~18% smaller
         var rowX = (sw - rowW) / 2;
-        var gap  = (sh * 15) / 1000; if (gap < 3) { gap = 3; }
-        var total = MENU_ROWS * rowH + (MENU_ROWS - 1) * gap;
-        var rowY0 = (sh - total) / 2 + (sh * 6) / 100;
+        var used  = MENU_ROWS * rowH + (MENU_ROWS - 1) * gap;
+        var rowY0 = topZone + (avail - used) / 2;
+        if (rowY0 < topZone) { rowY0 = topZone; }
         return [rowH, rowW, rowX, rowY0, gap];
     }
 
@@ -44,11 +53,19 @@ class UIManager {
             "Start L: " + ctrl.menuStartLevel.format("%d"),
             "Lives:   " + ctrl.menuLives.format("%d"),
             "Speed:   " + ctrl.speedName(),
-            "START"
+            "START",
+            ""
         ];
         for (var i = 0; i < MENU_ROWS; i++) {
             var ry      = rowY0 + i * (rowH + gap);
             var sel     = (i == ctrl.menuRow);
+
+            if (i == MP_ROW_LB) {
+                // Hype-y gold leaderboard row from the shared library.
+                LbBadge.drawRow(dc, rowX, ry, rowW, rowH, sel);
+                continue;
+            }
+
             var isStart = (i == MP_ROW_START);
             dc.setColor(sel ? (isStart ? 0x332200 : 0x102040) : 0x0C1622, Graphics.COLOR_TRANSPARENT);
             dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);

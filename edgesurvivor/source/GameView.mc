@@ -20,6 +20,15 @@ const MAX_ENEMIES     = 8;
 const TRAIL_LEN       = 5;
 const PART_COUNT      = 8;
 
+// ── Title-screen menu (chess-style rows) ─────────────────────────────────────
+// Two selectable rows: START and the shared global LEADERBOARD.
+const ES_MENU_ROWS = 2;
+const ES_ROW_START = 0;
+const ES_ROW_LB    = 1;
+
+// Global leaderboard game id (matches _LOGOS / web id).
+const LB_GAME_ID = "edgesurvivor";
+
 const PLAYER_MAX_VEL  = 5;    // deg/tick max angular speed
 const DASH_DEGREES    = 34;   // degrees covered by a dash
 const DASH_COOLDOWN   = 46;   // ticks (~1.5 s @ 30 fps)
@@ -72,9 +81,13 @@ class GameView extends WatchUi.View {
     // ── near-miss tracking ────────────────────────────────────────────────
     hidden var _nearMissTimer;  // brief display timer for near-miss text
 
+    // ── title menu selection ──────────────────────────────────────────────
+    hidden var _menuRow;        // ES_ROW_*
+
     function initialize() {
         View.initialize();
         _state      = GS_TITLE;
+        _menuRow    = ES_ROW_START;
         _timer      = null;
         _flash      = 0;
         _phaseNotif = 0;
@@ -189,6 +202,63 @@ class GameView extends WatchUi.View {
         return false;
     }
 
+    // ── title menu (START + LEADERBOARD) ──────────────────────────────────
+    function inMenu() { return _state == GS_TITLE; }
+
+    function menuUp() {
+        _menuRow = (_menuRow + ES_MENU_ROWS - 1) % ES_MENU_ROWS;
+        WatchUi.requestUpdate();
+    }
+    function menuDown() {
+        _menuRow = (_menuRow + 1) % ES_MENU_ROWS;
+        WatchUi.requestUpdate();
+    }
+    function menuSelect() {
+        if (_menuRow == ES_ROW_LB) { openLeaderboard(); return; }
+        _startGame();
+    }
+    // Tap routing: pick the row under (x,y) and activate it.
+    function menuTap(x, y) {
+        var rg   = _menuRowGeom();
+        var rowH = rg[0]; var rowW = rg[1];
+        var rowX = rg[2]; var rowY0 = rg[3]; var gap = rg[4];
+        for (var i = 0; i < ES_MENU_ROWS; i++) {
+            var ry = rowY0 + i * (rowH + gap);
+            if (x >= rowX && x < rowX + rowW &&
+                y >= ry    && y < ry    + rowH) {
+                _menuRow = i;
+                menuSelect();
+                return;
+            }
+        }
+    }
+    // Open the shared global leaderboard.
+    function openLeaderboard() {
+        var v = new LbScoresView(LB_GAME_ID, "", "EDGE SURVIVOR");
+        WatchUi.pushView(v, new LbScoresDelegate(), WatchUi.SLIDE_LEFT);
+    }
+
+    // Space-aware geometry for the two title rows. Rows live between a top
+    // zone (under the title) and a reserved bottom margin (hint + best), so
+    // nothing overlaps on small round watches. Sized ~18% smaller than the
+    // reference menu (height / width / gaps all shrunk).
+    //   [ rowH, rowW, rowX, rowY0, gap ]
+    function _menuRowGeom() {
+        var topZone      = (_sh * 48) / 100;
+        var bottomMargin = (_sh * 16) / 100; if (bottomMargin < 26) { bottomMargin = 26; }
+        var gap          = (_sh * 2) / 100;  if (gap < 3) { gap = 3; }
+        var avail        = (_sh - bottomMargin) - topZone;
+        var rowH         = (avail - gap * (ES_MENU_ROWS - 1)) / ES_MENU_ROWS;
+        if (rowH > 21) { rowH = 21; }   // ~18% smaller than the 26 px reference
+        if (rowH < 14) { rowH = 14; }
+        var rowW = (_sw * 54) / 100; if (rowW < 98) { rowW = 98; }
+        var rowX = (_sw - rowW) / 2;
+        var used  = ES_MENU_ROWS * rowH + (ES_MENU_ROWS - 1) * gap;
+        var rowY0 = topZone + (avail - used) / 2;
+        if (rowY0 < topZone) { rowY0 = topZone; }
+        return [rowH, rowW, rowX, rowY0, gap];
+    }
+
     // ── game lifecycle ────────────────────────────────────────────────────
     hidden function _startGame() {
         _player.reset();
@@ -217,6 +287,8 @@ class GameView extends WatchUi.View {
         _flash = 14;
         _spawnDeathParticles();
         _state = GS_OVER;
+        // Submit this run's score to the global leaderboard (fire-and-forget).
+        Leaderboard.submitScore(LB_GAME_ID, _score, "");
         // haptic feedback
         if (Attention has :vibrate) {
             Attention.vibrate([new Attention.VibeProfile(100, 180)]);
@@ -529,29 +601,55 @@ class GameView extends WatchUi.View {
     // ── title screen ──────────────────────────────────────────────────────
     hidden function _drawTitle(dc) {
         dc.setColor(0x2255CC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _sh * 20 / 100, Graphics.FONT_MEDIUM,
+        dc.drawText(_cx, _sh * 13 / 100, Graphics.FONT_MEDIUM,
             "EDGE", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xCC2222, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _sh * 34 / 100, Graphics.FONT_MEDIUM,
+        dc.drawText(_cx, _sh * 26 / 100, Graphics.FONT_MEDIUM,
             "SURVIVOR", Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0x2a2a44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _sh * 52 / 100, Graphics.FONT_XTINY,
+        dc.drawText(_cx, _sh * 41 / 100, Graphics.FONT_XTINY,
             "stay on the edge", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(_cx, _sh * 60 / 100, Graphics.FONT_XTINY,
-            "avoid everything", Graphics.TEXT_JUSTIFY_CENTER);
+
+        // Two chess-style rows: START + LEADERBOARD (space-aware geometry).
+        var rg   = _menuRowGeom();
+        var rowH = rg[0]; var rowW = rg[1];
+        var rowX = rg[2]; var rowY0 = rg[3]; var gap = rg[4];
+        for (var i = 0; i < ES_MENU_ROWS; i++) {
+            var ry  = rowY0 + i * (rowH + gap);
+            var sel = (i == _menuRow);
+
+            if (i == ES_ROW_LB) {
+                // Hype-y gold leaderboard row from the shared library.
+                LbBadge.drawRow(dc, rowX, ry, rowW, rowH, sel);
+                continue;
+            }
+
+            // START row.
+            var bg; var bd; var fg;
+            if (sel) { bg = 0x1A4400; bd = 0x44BB22; fg = 0xAAFF66; }
+            else     { bg = 0x102010; bd = 0x224422; fg = 0x88AA88; }
+            dc.setColor(bg, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);
+            dc.setColor(bd, Graphics.COLOR_TRANSPARENT);
+            dc.drawRoundedRectangle(rowX, ry, rowW, rowH, 5);
+            if (sel) {
+                var ay = ry + rowH / 2;
+                dc.fillPolygon([[rowX + 5, ay - 4],
+                                [rowX + 5, ay + 4],
+                                [rowX + 11, ay]]);
+            }
+            dc.setColor(fg, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_cx, ry + (rowH - 14) / 2, Graphics.FONT_XTINY,
+                "START", Graphics.TEXT_JUSTIFY_CENTER);
+        }
 
         dc.setColor(0x1a1a33, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _sh * 71 / 100, Graphics.FONT_XTINY,
-            "UP/DOWN: rotate", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(_cx, _sh * 78 / 100, Graphics.FONT_XTINY,
-            "SELECT: dash", Graphics.TEXT_JUSTIFY_CENTER);
-
-        dc.setColor(0x131326, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _sh * 87 / 100, Graphics.FONT_XTINY,
-            "any key to start", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_cx, _sh * 88 / 100, Graphics.FONT_XTINY,
+            "UP/DN  SEL", Graphics.TEXT_JUSTIFY_CENTER);
         if (_hiScore > 0) {
-            dc.drawText(_cx, _sh * 93 / 100, Graphics.FONT_XTINY,
+            dc.setColor(0x2a2a44, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_cx, _sh * 94 / 100, Graphics.FONT_XTINY,
                 "best " + _hiScore.format("%05d"), Graphics.TEXT_JUSTIFY_CENTER);
         }
     }

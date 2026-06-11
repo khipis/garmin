@@ -45,7 +45,11 @@ const GM_MOVES = 2;   // Limited moves
 const MENU_MODE  = 0;
 const MENU_PARAM = 1;   // time limit or move count (inert in ZEN)
 const MENU_START = 2;
-const MENU_ROW_COUNT = 3;
+const MENU_LB    = 3;   // global leaderboard (pushed by the view layer)
+const MENU_ROW_COUNT = 4;
+
+// Global leaderboard game id (matches _LOGOS / web id).
+const LB_GAME_ID = "gemmatch";
 
 const ANIM_NONE  = 0;
 const ANIM_SWAP  = 1;
@@ -200,7 +204,8 @@ class GameController {
     function menuActivate() {
         if (menuRow == MENU_MODE)  { _cycleMode(1);  return; }
         if (menuRow == MENU_PARAM) { _cycleParam(1); return; }
-        startGame();
+        if (menuRow == MENU_START) { startGame();    return; }
+        // MENU_LB is handled by MainView.openLeaderboard() (pushes a view).
     }
     function menuValueNext() {
         if (menuRow == MENU_MODE)  { _cycleMode(1);  return; }
@@ -381,6 +386,8 @@ class GameController {
     hidden function _endGame() {
         state = GS_OVER;
         _updateBest();
+        // Submit the finished round's score to the global leaderboard.
+        Leaderboard.submitScore(LB_GAME_ID, score, "");
     }
 
     function gotoMenu() {

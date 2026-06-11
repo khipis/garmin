@@ -49,7 +49,16 @@ const DR_MODE_CLASSIC = 0;
 const DR_MODE_QUICK   = 1;
 const DR_MODE_DAILY   = 2;
 
-const DR_MENU_ROWS = 3;
+// Chess-style menu rows. A 4th LEADERBOARD row pushes the shared
+// global leaderboard (split by mode via the variant string).
+const DR_MENU_ROWS = 4;
+const DR_ROW_MODE    = 0;
+const DR_ROW_REROLLS = 1;
+const DR_ROW_START   = 2;
+const DR_ROW_LB      = 3;
+
+// Global leaderboard game id (matches _LOGOS / web id).
+const LB_GAME_ID = "diceroyale";
 
 const DR_POS_ROLL  = 5;     // PHASE_ROLL cursor positions
 const DR_POS_SCORE = 6;
@@ -172,15 +181,22 @@ class GameController {
     function setMenuRow(i) { if (i >= 0 && i < DR_MENU_ROWS) { menuRow = i; } }
 
     function menuActivate() {
-        if (menuRow == 0) {
+        if (menuRow == DR_ROW_MODE) {
             menuMode = (menuMode + 1) % 3;
             _saveSettings();
-        } else if (menuRow == 1) {
+        } else if (menuRow == DR_ROW_REROLLS) {
             menuRerolls = (menuRerolls % 3) + 1;
             _saveSettings();
-        } else {
+        } else if (menuRow == DR_ROW_START) {
             _startGame();
         }
+        // DR_ROW_LB is handled by MainView.openLeaderboard().
+    }
+
+    // Lowercased mode name used as the leaderboard variant so each
+    // mode keeps its own ranking ("classic" / "quick" / "daily").
+    function variantName() {
+        return modeName().toLower();
     }
 
     function gotoMenu() {
@@ -361,6 +377,10 @@ class GameController {
             _save(DR_KEY_DAILY_DATE, dailyDate);
             _save(DR_KEY_STREAK,     streak);
         }
+
+        // Submit the final scorecard total to the global leaderboard,
+        // split by mode variant.
+        Leaderboard.submitScore(LB_GAME_ID, final, variantName());
 
         state = DR_OVER;
     }

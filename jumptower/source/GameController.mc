@@ -22,10 +22,23 @@ const GS_READY = 1;
 const GS_PLAY  = 2;
 const GS_OVER  = 3;
 
+// Chess-style menu rows:
+//   row 0 = START
+//   row 1 = LEADERBOARD (global; no variant)
+const JT_MENU_ROWS = 2;
+const JT_ROW_START = 0;
+const JT_ROW_LB    = 1;
+
+// Global leaderboard game id (matches _LOGOS / web id).
+const LB_GAME_ID = "jumptower";
+
 class GameController {
     var state;
     var player;
     var platforms;
+
+    // Menu state.
+    var menuRow;
 
     var score;            // == worldHeight, in screen pixels
     var hi;
@@ -47,6 +60,7 @@ class GameController {
 
     function initialize() {
         state          = GS_MENU;
+        menuRow        = JT_ROW_START;
         player         = new Player();
         platforms      = new PlatformManager();
         score          = 0;
@@ -134,6 +148,16 @@ class GameController {
 
     function gotoMenu() { state = GS_MENU; }
 
+    // ── Menu nav ────────────────────────────────────────────
+    function menuPrev()    { menuRow = (menuRow + JT_MENU_ROWS - 1) % JT_MENU_ROWS; }
+    function menuNext()    { menuRow = (menuRow + 1) % JT_MENU_ROWS; }
+    function setMenuRow(i) { if (i >= 0 && i < JT_MENU_ROWS) { menuRow = i; } }
+    // START launches a run; the LEADERBOARD row is handled by the view
+    // (MainView.openLeaderboard) because the controller can't push views.
+    function menuActivate() {
+        if (menuRow == JT_ROW_START) { ready(); state = GS_PLAY; }
+    }
+
     // Hold inputs (continuous)
     function setHoldLeft(b)  { player.holdLeft  = b; }
     function setHoldRight(b) { player.holdRight = b; }
@@ -220,6 +244,9 @@ class GameController {
         if (score > hi) { hi = score; }
         _saveHi();
         state = GS_OVER;
+        // Submit the run's height (the metres value shown to the player)
+        // to the global leaderboard. No variant for Jump Tower.
+        Leaderboard.submitScore(LB_GAME_ID, heightMetres().toNumber(), "");
     }
 
     hidden function _updateDifficulty() {

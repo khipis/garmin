@@ -96,8 +96,18 @@ class MainView extends WatchUi.View {
         if (ctrl.state == GS_WIN || ctrl.state == GS_OVER) { ctrl.gotoMenu(); return; }
     }
     function navSelect() {
-        if (ctrl.state == GS_MENU) { ctrl.menuActivate(); return; }
+        if (ctrl.state == GS_MENU) {
+            if (ctrl.menuRow == MP_ROW_LB) { openLeaderboard(); return; }
+            ctrl.menuActivate(); return;
+        }
         if (ctrl.state == GS_WIN || ctrl.state == GS_OVER) { ctrl.gotoMenu(); return; }
+    }
+
+    // Open the shared global leaderboard (pushed from the view layer
+    // because the controller can't manipulate the view stack).
+    function openLeaderboard() {
+        var v = new LbScoresView("manpac", "", "MANPAC");
+        WatchUi.pushView(v, new LbScoresDelegate(), WatchUi.SLIDE_LEFT);
     }
 
     // True while a live game is running (used by the input handler to
@@ -154,7 +164,10 @@ class MainView extends WatchUi.View {
             for (var i = 0; i < MENU_ROWS; i++) {
                 var ry = rowY0 + i * (rowH + gap);
                 if (x >= rowX && x < rowX + rowW && y >= ry && y < ry + rowH) {
-                    ctrl.setMenuRow(i); ctrl.menuActivate(); return;
+                    ctrl.setMenuRow(i);
+                    if (i == MP_ROW_LB) { openLeaderboard(); }
+                    else { ctrl.menuActivate(); }
+                    return;
                 }
             }
             return;

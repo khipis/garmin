@@ -45,7 +45,11 @@ const EXTRA_BALL_EVERY = 10000;
 // Menu items
 const MI_TABLE = 0;
 const MI_START = 1;
-const MI_ITEMS = 2;
+const MI_LB    = 2;   // global leaderboard (pushed by MainView)
+const MI_ITEMS = 3;
+
+// Global leaderboard game id (matches _LOGOS / web id).
+const LB_GAME_ID = "pinballpro";
 
 class GameController {
     var state;
@@ -465,6 +469,8 @@ class GameController {
         if (score > hi) { hi = score; _saveInt("hi", hi); }
         if (lives <= 0) {
             state = GS_OVER;
+            // Submit to the global leaderboard, split by table variant.
+            Leaderboard.submitScore(LB_GAME_ID, score, TableLibrary.NAMES[tableIdx]);
             return;
         }
         _parkBallForLaunch();

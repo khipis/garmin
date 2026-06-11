@@ -244,8 +244,40 @@ class MainView extends WatchUi.View {
                     "UP/DN to move", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
+    // Geometry for the chess-style menu.  Space-aware: the row height
+    // shrinks to whatever fits between the BEST line and the bottom
+    // margin, so the LEADERBOARD row never overlaps anything on small
+    // round watches.  Rows are ~18% smaller than the old single START
+    // row to leave room for two rows.
+    //   [ rowH, rowW, rowX, rowY0, gap ]
+    function menuRowGeom() {
+        var W = _ctrl.screenW;
+        var H = _ctrl.screenH;
+        var topZone      = (H * 57) / 100;          // rows live below BEST
+        var bottomMargin = (H * 6) / 100; if (bottomMargin < 12) { bottomMargin = 12; }
+        var gap          = (H * 2) / 100; if (gap < 4) { gap = 4; }
+        var avail        = (H - bottomMargin) - topZone;
+        var rowH         = (avail - gap * (JT_MENU_ROWS - 1)) / JT_MENU_ROWS;
+        // Clamp ~18% smaller than the old 26 px row.
+        if (rowH > 23) { rowH = 23; }
+        if (rowH < 16) { rowH = 16; }
+        var rowW = (W * 64) / 100; if (rowW < 115) { rowW = 115; }
+        var rowX = (W - rowW) / 2;
+        var used = JT_MENU_ROWS * rowH + (JT_MENU_ROWS - 1) * gap;
+        var rowY0 = topZone + (avail - used) / 2;
+        if (rowY0 < topZone) { rowY0 = topZone; }
+        return [rowH, rowW, rowX, rowY0, gap];
+    }
+
+    // Open the shared global leaderboard (no variant for Jump Tower).
+    function openLeaderboard() {
+        var v = new LbScoresView(LB_GAME_ID, "", "JUMP TOWER");
+        WatchUi.pushView(v, new LbScoresDelegate(), WatchUi.SLIDE_LEFT);
+    }
+
     // Chess-style menu — dark base, two-line title, "by Bitochi"
-    // attribution, decorative frog, single full-width START row.
+    // attribution, decorative frog, START + LEADERBOARD rows.
+    // Decorations are nudged up (~18% tighter) so two rows fit.
     hidden function _drawMenu(dc) {
         var cx = _ctrl.screenW / 2;
         var W  = _ctrl.screenW;
@@ -259,49 +291,65 @@ class MainView extends WatchUi.View {
 
         // Title
         dc.setColor(0x44FFAA, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, H * 8 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, H * 6 / 100, Graphics.FONT_SMALL,
                     "JUMP", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x66CCFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, H * 19 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, H * 16 / 100, Graphics.FONT_SMALL,
                     "TOWER", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x778899, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, H * 30 / 100, Graphics.FONT_XTINY,
+        dc.drawText(cx, H * 26 / 100, Graphics.FONT_XTINY,
                     "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Decorative frog
+        // Decorative frog (moved up to leave room for two rows)
         var fr = (H * 5) / 100; if (fr < 8) { fr = 8; }
         var pl = new Player();
-        pl.reset(cx, H * 48 / 100, fr, fr + 2);
+        pl.reset(cx, H * 40 / 100, fr, fr + 2);
         pl.vy = -2.0;
-        pl.draw(dc, cx, (H * 48) / 100);
+        pl.draw(dc, cx, (H * 40) / 100);
 
         if (_ctrl.hi > 0) {
             dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, H * 60 / 100, Graphics.FONT_XTINY,
+            dc.drawText(cx, H * 50 / 100, Graphics.FONT_XTINY,
                         "BEST " + (_ctrl.hi / 6).format("%d") + "m",
                         Graphics.TEXT_JUSTIFY_CENTER);
         }
 
-        // Chess-style START row
-        var rowH = (H * 13) / 100; if (rowH < 26) { rowH = 26; }
-        var rowW = (W * 78) / 100; if (rowW < 140) { rowW = 140; }
-        var rowX = (W - rowW) / 2;
-        var ry   = H * 70 / 100;
-        dc.setColor(0x1A4400, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);
-        dc.setColor(0x44BB22, Graphics.COLOR_TRANSPARENT);
-        dc.drawRoundedRectangle(rowX, ry, rowW, rowH, 5);
-        var ay = ry + rowH / 2;
-        dc.fillPolygon([[rowX + 5, ay - 4],
-                        [rowX + 5, ay + 4],
-                        [rowX + 11, ay]]);
-        dc.setColor(0xAAFF66, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, ry + (rowH - 14) / 2, Graphics.FONT_XTINY,
-                    "START", Graphics.TEXT_JUSTIFY_CENTER);
+        // Two chess-style rows: START + LEADERBOARD.
+        var rg   = menuRowGeom();
+        var rowH = rg[0]; var rowW = rg[1];
+        var rowX = rg[2]; var rowY0 = rg[3]; var gap = rg[4];
+        for (var i = 0; i < JT_MENU_ROWS; i++) {
+            var ry  = rowY0 + i * (rowH + gap);
+            var sel = (i == _ctrl.menuRow);
+
+            if (i == JT_ROW_LB) {
+                // Hype-y gold leaderboard row from the shared library.
+                LbBadge.drawRow(dc, rowX, ry, rowW, rowH, sel);
+                continue;
+            }
+
+            // START row.
+            var bg; var bd; var fg;
+            if (sel) { bg = 0x1A4400; bd = 0x44BB22; fg = 0xAAFF66; }
+            else      { bg = 0x102010; bd = 0x224422; fg = 0x88AA88; }
+            dc.setColor(bg, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);
+            dc.setColor(bd, Graphics.COLOR_TRANSPARENT);
+            dc.drawRoundedRectangle(rowX, ry, rowW, rowH, 5);
+            if (sel) {
+                var ay = ry + rowH / 2;
+                dc.fillPolygon([[rowX + 5, ay - 4],
+                                [rowX + 5, ay + 4],
+                                [rowX + 11, ay]]);
+            }
+            dc.setColor(fg, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, ry + (rowH - 14) / 2, Graphics.FONT_XTINY,
+                        "START", Graphics.TEXT_JUSTIFY_CENTER);
+        }
 
         dc.setColor(0x556677, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, H - 14, Graphics.FONT_XTINY,
-                    "SEL / TAP to hop",
+                    "UP/DN  SEL/tap",
                     Graphics.TEXT_JUSTIFY_CENTER);
     }
 
@@ -344,12 +392,37 @@ class MainView extends WatchUi.View {
     function isPassiveState() {
         return _ctrl.state == GS_MENU || _ctrl.state == GS_OVER;
     }
+    function inMenu() { return _ctrl.state == GS_MENU; }
+    function navUp()   { if (_ctrl.state == GS_MENU) { _ctrl.menuPrev(); } }
+    function navDown() { if (_ctrl.state == GS_MENU) { _ctrl.menuNext(); } }
     function confirm() {
-        if (_ctrl.state == GS_MENU) { _ctrl.ready(); _ctrl.state = GS_PLAY; }
-        else if (_ctrl.state == GS_OVER) { _ctrl.gotoMenu(); }
+        if (_ctrl.state == GS_MENU) {
+            if (_ctrl.menuRow == JT_ROW_LB) { openLeaderboard(); return; }
+            _ctrl.menuActivate();
+        } else if (_ctrl.state == GS_OVER) {
+            _ctrl.gotoMenu();
+        }
     }
-    function handleTap(x) {
-        if (_ctrl.state == GS_MENU)  { _ctrl.ready(); _ctrl.state = GS_PLAY; return; }
+    function handleTap(x, y) {
+        if (_ctrl.state == GS_MENU) {
+            var rg = menuRowGeom();
+            var rowH = rg[0]; var rowW = rg[1];
+            var rowX = rg[2]; var rowY0 = rg[3]; var gap = rg[4];
+            for (var i = 0; i < JT_MENU_ROWS; i++) {
+                var ry = rowY0 + i * (rowH + gap);
+                if (x >= rowX && x < rowX + rowW &&
+                    y >= ry    && y < ry    + rowH) {
+                    _ctrl.setMenuRow(i);
+                    if (i == JT_ROW_LB) { openLeaderboard(); }
+                    else { _ctrl.menuActivate(); }
+                    return;
+                }
+            }
+            // Tap outside the rows: activate whatever is selected.
+            if (_ctrl.menuRow == JT_ROW_LB) { openLeaderboard(); }
+            else { _ctrl.menuActivate(); }
+            return;
+        }
         if (_ctrl.state == GS_OVER)  { _ctrl.gotoMenu(); return; }
         var dir = (x < _ctrl.screenW / 2) ? -1 : 1;
         _ctrl.tapDir(dir);

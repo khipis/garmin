@@ -359,21 +359,30 @@ class MainView extends WatchUi.View {
         dc.setColor(0x44FF66, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(cx + 28, H * 41 / 100, 6);
 
-        // Chess-style rows
+        // Chess-style rows — now THREE: Table + START + LEADERBOARD.
+        // Whole menu is ~18% more compact than the two-row layout and
+        // space-aware: row height shrinks to whatever fits between the
+        // demo bumpers and the BEST line so nothing overlaps on small
+        // round watches.
         var labels = [
             "Table: " + TableLibrary.NAMES[_ctrl.tableIdx],
-            "START"
+            "START",
+            ""
         ];
-        var rowH = (H * 13) / 100; if (rowH < 24) { rowH = 24; } if (rowH > 34) { rowH = 34; }
-        var rowW = (W * 78) / 100; if (rowW < 140) { rowW = 140; }
-        var rowX = (W - rowW) / 2;
-        var gap  = (H * 2) / 100;  if (gap < 4) { gap = 4; }
-        var nRows = 2;
-        var rowY0 = H * 52 / 100;
+        var rg   = menuRowGeom();
+        var rowH = rg[0]; var rowW = rg[1];
+        var rowX = rg[2]; var rowY0 = rg[3]; var gap = rg[4];
         var selRow = _ctrl.menuCursor;
-        for (var i = 0; i < nRows; i++) {
+        for (var i = 0; i < MI_ITEMS; i++) {
             var ry = rowY0 + i * (rowH + gap);
             var sel = (i == selRow);
+
+            if (i == MI_LB) {
+                // Hype-y gold leaderboard row from the shared library.
+                LbBadge.drawRow(dc, rowX, ry, rowW, rowH, sel);
+                continue;
+            }
+
             var isStart = (i == MI_START);
             dc.setColor(sel ? (isStart ? 0x1A4400 : 0x1A3A6A) : 0x111820,
                         Graphics.COLOR_TRANSPARENT);
@@ -398,10 +407,33 @@ class MainView extends WatchUi.View {
         // Best score
         if (_ctrl.hi > 0) {
             dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, H * 88 / 100, Graphics.FONT_XTINY,
+            dc.drawText(cx, H * 91 / 100, Graphics.FONT_XTINY,
                         "BEST " + _formatScore(_ctrl.hi),
                         Graphics.TEXT_JUSTIFY_CENTER);
         }
+    }
+
+    // Space-aware geometry for the three-row chess menu. Rows live
+    // below the demo bumpers and above the BEST line; the row height
+    // shrinks to fit so the LEADERBOARD row never overlaps anything on
+    // small round watches. All numbers ~18% smaller than the old
+    // two-row layout. Returns [rowH, rowW, rowX, rowY0, gap].
+    function menuRowGeom() {
+        var W = _ctrl.screenW;
+        var H = _ctrl.screenH;
+        var topZone      = (H * 47) / 100;          // rows start below bumpers
+        var bottomMargin = (H * 16) / 100; if (bottomMargin < 16) { bottomMargin = 16; }
+        var gap          = (H * 2) / 100;  if (gap < 3) { gap = 3; }
+        var avail        = (H - bottomMargin) - topZone;
+        var rowH         = (avail - gap * (MI_ITEMS - 1)) / MI_ITEMS;
+        if (rowH > 28) { rowH = 28; }               // ~18% under the old 34 cap
+        if (rowH < 14) { rowH = 14; }
+        var rowW = (W * 64) / 100; if (rowW < 115) { rowW = 115; }
+        var rowX = (W - rowW) / 2;
+        var used = MI_ITEMS * rowH + (MI_ITEMS - 1) * gap;
+        var rowY0 = topZone + (avail - used) / 2;
+        if (rowY0 < topZone) { rowY0 = topZone; }
+        return [rowH, rowW, rowX, rowY0, gap];
     }
 
     // Comma-grouped thousands.
@@ -428,9 +460,25 @@ class MainView extends WatchUi.View {
     // when the player taps in launch/menu/over state).
     function launchBall() { _ctrl.launchBall(); }
     function gotoMenu()   { _ctrl.gotoMenu();   }
-    function confirm()    { _ctrl.selectAction(); }
+    function confirm() {
+        // The LEADERBOARD row pushes a view, which the controller can't
+        // do — intercept it here before delegating to the controller.
+        if (_ctrl.state == GS_MENU && _ctrl.menuCursor == MI_LB) {
+            openLeaderboard();
+            return;
+        }
+        _ctrl.selectAction();
+    }
     function menuPrev()   { _ctrl.menuPrev(); }
     function menuNext()   { _ctrl.menuNext(); }
+
+    // Open the shared global leaderboard for the current table.
+    function openLeaderboard() {
+        var v = new LbScoresView(LB_GAME_ID,
+                                 TableLibrary.NAMES[_ctrl.tableIdx],
+                                 "PINBALL PRO");
+        WatchUi.pushView(v, new LbScoresDelegate(), WatchUi.SLIDE_LEFT);
+    }
 
     function handleBack() {
         if (_ctrl.state == GS_PLAY || _ctrl.state == GS_LAUNCH

@@ -28,7 +28,11 @@ const MATCH_POINTS = 7;
 // Chess-style menu rows
 const MI_DIFFICULTY = 0;
 const MI_START      = 1;
-const MI_ITEMS      = 2;
+const MI_LEADERBOARD = 2;   // global; AI difficulty is used as the variant
+const MI_ITEMS      = 3;
+
+// Global leaderboard game id (matches _LOGOS / web id).
+const LB_GAME_ID = "pongpro";
 
 class GameController {
     var state;
@@ -149,6 +153,13 @@ class GameController {
         _saveDifficulty();
     }
 
+    // Difficulty name used as the leaderboard variant (split per level).
+    function diffName() {
+        if (difficulty == DIFF_EASY) { return "Easy"; }
+        if (difficulty == DIFF_HARD) { return "Hard"; }
+        return "Medium";
+    }
+
     function startMatch() {
         scoreP = 0; scoreCpu = 0;
         lastWinner = -1;
@@ -229,6 +240,10 @@ class GameController {
             if (scoreP > scoreCpu) {
                 hiPlayerWins = hiPlayerWins + 1;
                 _saveStat();
+                // Submit the win margin to the global leaderboard, split
+                // by AI difficulty. A 7-0 sweep scores higher than a 7-6
+                // nail-biter. Only single-player vs-AI wins are recorded.
+                Leaderboard.submitScore(LB_GAME_ID, scoreP - scoreCpu, diffName());
             }
             state = GS_OVER;
             return;

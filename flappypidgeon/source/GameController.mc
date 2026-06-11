@@ -150,5 +150,7 @@ class GameController {
         deathFlash = 4;
         if (score > hi) { hi = score; _saveHi(); }
         state = GS_OVER;
+        // Submit to the shared global leaderboard (fire-and-forget).
+        Leaderboard.submitScore("flappypidgeon", score, "");
     }
 }

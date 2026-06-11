@@ -797,6 +797,7 @@ class BitochiBlobsView extends WatchUi.View {
                     gameState = GS_OVER; _resultTick = 0;
                     var s = _round - 1; if (s < 0) { s = 0; }
                     if (s > _bestStreak) { _bestStreak = s; _newBest = true; Application.Storage.setValue("blobBest", _bestStreak); }
+                    Leaderboard.submitScore("blobs", s, "");
                     doVibe(100, 300);
                 }
                 return;
@@ -806,6 +807,7 @@ class BitochiBlobsView extends WatchUi.View {
                 gameState = GS_OVER; _resultTick = 0;
                 var s2 = _round - 1; if (s2 < 0) { s2 = 0; }
                 if (s2 > _bestStreak) { _bestStreak = s2; _newBest = true; Application.Storage.setValue("blobBest", _bestStreak); }
+                Leaderboard.submitScore("blobs", s2, "");
                 doVibe(100, 300); return;
             }
             nextTurn();
@@ -823,6 +825,7 @@ class BitochiBlobsView extends WatchUi.View {
                 gameState = GS_OVER; _resultTick = 0;
                 var streak = _round - 1; if (streak < 0) { streak = 0; }
                 if (streak > _bestStreak) { _bestStreak = streak; _newBest = true; Application.Storage.setValue("blobBest", _bestStreak); }
+                Leaderboard.submitScore("blobs", streak, "");
                 doVibe(100, 300); return;
             }
             nextTurn();
@@ -901,8 +904,16 @@ class BitochiBlobsView extends WatchUi.View {
         } }
     }
 
+    function openLeaderboard() {
+        var v = new LbScoresView("blobs", "", "BLOBS");
+        WatchUi.pushView(v, new LbScoresDelegate(), WatchUi.SLIDE_LEFT);
+    }
+
     function doAction() {
-        if (gameState == GS_MENU) { _twoPlayer = (_menuSel == 1); startRound(); }
+        if (gameState == GS_MENU) {
+            if (_menuSel == 2) { openLeaderboard(); return; }
+            _twoPlayer = (_menuSel == 1); startRound();
+        }
         else if (gameState == GS_MOVE && isHumanTurn()) {
             gameState = GS_AIM; _aimPhase = 0; _aimAnglePhase = 0.0;
         }
@@ -922,7 +933,7 @@ class BitochiBlobsView extends WatchUi.View {
 
     function doWeapon(dir) {
         if (gameState == GS_MENU) {
-            _menuSel = (_menuSel + dir + 2) % 2;
+            _menuSel = (_menuSel + dir + 3) % 3;
             doVibe(15, 30);
             return;
         }
@@ -1428,88 +1439,84 @@ class BitochiBlobsView extends WatchUi.View {
         if (_resultTick > 30) { dc.setColor((_resultTick % 10 < 5) ? 0xFFAA44 : 0xDD8833, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, by + bh * 75 / 100, Graphics.FONT_XTINY, "Tap to retry", Graphics.TEXT_JUSTIFY_CENTER); }
     }
 
+    // Space-aware menu geometry — three rows (1P / 2P / LEADERBOARD) sit
+    // between the title and the bottom hint zone. Row height shrinks to
+    // whatever fits so nothing overlaps on small round watches; capped
+    // ~18% smaller than the old fixed rows.
+    //   [ rowH, rowW, rowX, rowY0, gap ]
+    hidden function menuGeom(dc) {
+        var fhx          = dc.getFontHeight(Graphics.FONT_XTINY);
+        var topZone      = (_h * 30) / 100;            // rows live below the title
+        var bottomMargin = fhx * 2 + 8;                // BEST + tap-hint lines
+        var gap          = (_h * 2) / 100; if (gap < 3) { gap = 3; }
+        var avail        = (_h - bottomMargin) - topZone;
+        var rowH         = (avail - gap * 2) / 3;
+        if (rowH > 20) { rowH = 20; }                  // ~18% smaller than old 24px
+        if (rowH < 14) { rowH = 14; }
+        var rowW = (_w * 66) / 100; if (rowW < 110) { rowW = 110; }
+        var rowX = (_w - rowW) / 2;
+        var used = 3 * rowH + 2 * gap;
+        var rowY0 = topZone + (avail - used) / 2;
+        if (rowY0 < topZone) { rowY0 = topZone; }
+        return [rowH, rowW, rowX, rowY0, gap];
+    }
+
     hidden function drawMenu(dc) {
+        var cx = _w / 2;
         // Full dark background — covers the entire screen so all UI is always legible
         dc.setColor(0x0E1828, 0x0E1828); dc.clear();
-
-        // Landscape pushed to the bottom quarter so it never overlaps text
-        dc.setColor(0x2A4A7A, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h * 74 / 100, _w, _h);
-        dc.setColor(0x44AA44, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h * 86 / 100, _w, 3);
-        dc.setColor(0x5A3A1A, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h * 89 / 100, _w, _h);
 
         // Title
         var tc = (_tick % 14 < 7) ? 0xFF6644 : 0xFF8866;
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2 + 1, _h * 3 / 100 + 1, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx + 1, _h * 3 / 100 + 1, Graphics.FONT_SMALL, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(tc, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 3 / 100, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, _h * 3 / 100, Graphics.FONT_SMALL, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 15 / 100, Graphics.FONT_LARGE, "BLOBS", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, _h * 14 / 100, Graphics.FONT_MEDIUM, "BLOBS", Graphics.TEXT_JUSTIFY_CENTER);
 
-        // ── Dark panel covering the FULL selector + instruction area ─────
-        var cardTop = _h * 27 / 100;
-        var cardH   = _h * 32 / 100;   // tall enough for both rows + instruction
-        var cardW   = _w * 78 / 100;
-        var cardX   = (_w - cardW) / 2;
-        dc.setColor(0x080F1C, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(cardX, cardTop, cardW, cardH, 6);
-        dc.setColor(0x1A2E4A, Graphics.COLOR_TRANSPARENT);
-        dc.drawRoundedRectangle(cardX, cardTop, cardW, cardH, 6);
+        // ── Three space-aware rows: 1 PLAYER / 2 PLAYERS / LEADERBOARD ───
+        var rg   = menuGeom(dc);
+        var rowH = rg[0]; var rowW = rg[1];
+        var rowX = rg[2]; var rowY0 = rg[3]; var gap = rg[4];
+        var labels = ["1 PLAYER", "2 PLAYERS", ""];
+        for (var i = 0; i < 3; i++) {
+            var ry  = rowY0 + i * (rowH + gap);
+            var sel = (i == _menuSel);
 
-        // ── Mode selector rows ───────────────────────────────────────────
-        var rowH  = _h * 10 / 100;   // ~24px on 240, scales with screen
-        var padV  = rowH / 4;        // vertical text padding inside row
-        var selW2 = cardW - 16;
-        var selX2 = cardX + 8;
-        var selY0 = cardTop + 8;
-        var selY1 = selY0 + rowH + 6;
+            if (i == 2) {
+                // Hype-y gold leaderboard row from the shared library.
+                LbBadge.drawRow(dc, rowX, ry, rowW, rowH, sel);
+                continue;
+            }
 
-        // 1 PLAYER row
-        if (_menuSel == 0) {
-            dc.setColor(0x22BBFF, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(selX2, selY0, selW2, rowH, 4);
-            dc.setColor(0x00080E, Graphics.COLOR_TRANSPARENT);
-        } else {
-            dc.setColor(0x5577AA, Graphics.COLOR_TRANSPARENT);
-        }
-        dc.drawText(_w / 2, selY0 + padV, Graphics.FONT_XTINY,
-            (_menuSel == 0) ? "> 1 PLAYER <" : "  1 PLAYER  ", Graphics.TEXT_JUSTIFY_CENTER);
-
-        // 2 PLAYERS row
-        if (_menuSel == 1) {
-            dc.setColor(0x44FF88, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(selX2, selY1, selW2, rowH, 4);
-            dc.setColor(0x001408, Graphics.COLOR_TRANSPARENT);
-        } else {
-            dc.setColor(0x5577AA, Graphics.COLOR_TRANSPARENT);
-        }
-        dc.drawText(_w / 2, selY1 + padV, Graphics.FONT_XTINY,
-            (_menuSel == 1) ? "> 2 PLAYERS <" : "  2 PLAYERS  ", Graphics.TEXT_JUSTIFY_CENTER);
-
-        // Instruction row (still inside the dark panel)
-        dc.setColor(0x3A5577, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, selY1 + rowH + 8, Graphics.FONT_XTINY,
-            "Up/Down: choose", Graphics.TEXT_JUSTIFY_CENTER);
-
-        // ── Blobs illustration ───────────────────────────────────────────
-        var by = _h * 65 / 100;
-        var positions = [_w * 20 / 100, _w * 35 / 100, _w * 50 / 100, _w * 65 / 100, _w * 80 / 100];
-        for (var i = 0; i < 5; i++) {
-            var wob = ((_tick / 5 + i * 3) % 5) - 2;
-            dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(positions[i] - 5, by + wob - 5, 12, 12);
-            dc.setColor(_bCol[i], Graphics.COLOR_TRANSPARENT); dc.fillRectangle(positions[i] - 6, by + wob - 6, 12, 12);
-            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(positions[i] - 2, by + wob - 1, 1); dc.fillCircle(positions[i] + 2, by + wob - 1, 1);
+            var bg; var bd; var fg;
+            if (i == 0) {
+                bg = sel ? 0x0A2A44 : 0x101820; bd = sel ? 0x22BBFF : 0x223344; fg = sel ? 0xCCEEFF : 0x5577AA;
+            } else {
+                bg = sel ? 0x0A3320 : 0x101820; bd = sel ? 0x44FF88 : 0x223344; fg = sel ? 0xCCFFDD : 0x5577AA;
+            }
+            dc.setColor(bg, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);
+            dc.setColor(bd, Graphics.COLOR_TRANSPARENT);
+            dc.drawRoundedRectangle(rowX, ry, rowW, rowH, 5);
+            if (sel) {
+                var ay = ry + rowH / 2;
+                dc.fillPolygon([[rowX + 5, ay - 4], [rowX + 5, ay + 4], [rowX + 11, ay]]);
+            }
+            dc.setColor(fg, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, ry + (rowH - 14) / 2, Graphics.FONT_XTINY,
+                labels[i], Graphics.TEXT_JUSTIFY_CENTER);
         }
 
-        // ── Bottom info texts — always on the dark background ────────────
+        // ── Bottom hint zone — BEST streak + tap prompt, no overlap ──────
+        var fhx = dc.getFontHeight(Graphics.FONT_XTINY);
+        var hintY = _h - fhx - 2;
+        dc.setColor((_tick % 10 < 5) ? 0xFF6644 : 0xFF8866, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, hintY, Graphics.FONT_XTINY, "Up/Dn  tap = act", Graphics.TEXT_JUSTIFY_CENTER);
         if (_bestStreak > 0) {
             dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 74 / 100, Graphics.FONT_XTINY, "BEST: " + _bestStreak, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(cx, hintY - fhx - 1, Graphics.FONT_XTINY, "BEST: " + _bestStreak, Graphics.TEXT_JUSTIFY_CENTER);
         }
-        dc.setColor(0x5577AA, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 81 / 100, Graphics.FONT_XTINY, "angle / power / fire", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor((_tick % 10 < 5) ? 0xFF6644 : 0xFF8866, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 89 / 100, Graphics.FONT_XTINY, "Tap to fight!", Graphics.TEXT_JUSTIFY_CENTER);
     }
 }

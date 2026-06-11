@@ -27,14 +27,34 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     function onKey(evt) {
         var k = evt.getKey();
         if (k == WatchUi.KEY_ESC) { return onBack(); }
+        // MENU only: a discrete button (UP / MENU) opens the leaderboard.
+        // In-game these keys still flap (gameplay untouched).
+        if (_v.inMenu() && (k == WatchUi.KEY_UP || k == WatchUi.KEY_MENU)) {
+            _v.openLeaderboard();
+            return true;
+        }
         _v.handleFlap();
         WatchUi.requestUpdate();
         return true;
     }
     function onSelect()       { _v.handleFlap(); WatchUi.requestUpdate(); return true; }
-    function onPreviousPage() { _v.handleFlap(); WatchUi.requestUpdate(); return true; }
+    function onMenu() {
+        if (_v.inMenu()) { _v.openLeaderboard(); return true; }
+        _v.handleFlap(); WatchUi.requestUpdate(); return true;
+    }
+    // Page-up on the menu opens the board; otherwise it flaps as before.
+    function onPreviousPage() {
+        if (_v.inMenu()) { _v.openLeaderboard(); return true; }
+        _v.handleFlap(); WatchUi.requestUpdate(); return true;
+    }
     function onNextPage()     { _v.handleFlap(); WatchUi.requestUpdate(); return true; }
-    function onTap(evt)       { _markGesture(); _v.handleFlap(); WatchUi.requestUpdate(); return true; }
+    function onTap(evt) {
+        _markGesture();
+        var c = evt.getCoordinates();
+        _v.handleTap(c[0], c[1]);
+        WatchUi.requestUpdate();
+        return true;
+    }
     function onSwipe(evt)     { _markGesture(); _v.handleFlap(); WatchUi.requestUpdate(); return true; }
     function onHold(evt)      { _v.handleFlap(); WatchUi.requestUpdate(); return true; }
 

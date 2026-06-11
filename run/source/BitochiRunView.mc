@@ -119,6 +119,9 @@ class BitochiRunView extends WatchUi.View {
 
     hidden var _betweenLevelLines;
 
+    // Main-menu selection: 0 = START, 1 = LEADERBOARD (shared global board).
+    hidden var _menuRow;
+
     function initialize() {
         View.initialize();
         Math.srand(Time.now().value());
@@ -191,6 +194,7 @@ class BitochiRunView extends WatchUi.View {
         accelZ = 0;
         shakeMag = 0;
         _dodgeLane = 1;
+        _menuRow = 0;
 
         gameState = RS_MENU;
     }
@@ -209,6 +213,29 @@ class BitochiRunView extends WatchUi.View {
 
     function inRunPhase() {
         return gameState == RS_RUN;
+    }
+
+    function inMenu() {
+        return gameState == RS_MENU;
+    }
+
+    // Cycle the two main-menu rows (START / LEADERBOARD).
+    function menuNav(dir) {
+        if (gameState != RS_MENU) { return; }
+        _menuRow = _menuRow + dir;
+        if (_menuRow < 0) { _menuRow = 1; }
+        if (_menuRow > 1) { _menuRow = 0; }
+    }
+
+    // Push the shared global leaderboard view (auto-prompts for a username).
+    function openLeaderboard() {
+        var v = new LbScoresView("run", "", "MONSTER ESC");
+        WatchUi.pushView(v, new LbScoresDelegate(), WatchUi.SLIDE_LEFT);
+    }
+
+    // Submit the final session score to the global board on game over.
+    hidden function submitToLeaderboard() {
+        Leaderboard.submitScore("run", _sessionScore, "");
     }
 
     function nudgeDodge(dir) {
@@ -388,6 +415,7 @@ class BitochiRunView extends WatchUi.View {
             gameState = RS_CAUGHT;
             _introTick = 0;
             doVibe(100, 800);
+            submitToLeaderboard();
             return;
         }
 
@@ -715,6 +743,7 @@ class BitochiRunView extends WatchUi.View {
                     _introTick = 0;
                     doVibe(100, 1000);
                     finalizeScore(false);
+                    submitToLeaderboard();
                     return;
                 }
             }
@@ -758,6 +787,7 @@ class BitochiRunView extends WatchUi.View {
                 _introTick = 0;
                 doVibe(100, 1000);
                 finalizeScore(false);
+                submitToLeaderboard();
                 return;
             }
         }
@@ -813,6 +843,10 @@ class BitochiRunView extends WatchUi.View {
 
     function doAction() {
         if (gameState == RS_MENU) {
+            if (_menuRow == 1) {
+                openLeaderboard();
+                return;
+            }
             _sessionScore = 0;
             startLevel();
         } else if (gameState == RS_SCAN) {
@@ -824,6 +858,7 @@ class BitochiRunView extends WatchUi.View {
             startLevel();
         } else if (gameState == RS_ESCAPE) {
             if (_level >= _maxLevels) {
+                submitToLeaderboard();
                 gameState = RS_LEVELS;
                 _introTick = 0;
             } else {
@@ -1059,54 +1094,83 @@ class BitochiRunView extends WatchUi.View {
         dc.fillCircle(w * 60 / 100 + 1, h * 58 / 100, 5);
     }
 
+    // Space-aware geometry for the two stacked menu rows (START +
+    // LEADERBOARD). The rows fill whatever room is left between the HI line
+    // and the bottom hint, shrinking on small round watches so nothing ever
+    // overlaps or clips off the curve.  Returns [rowH, rowW, rowX, rowY0, gap].
+    function menuRowGeom() {
+        var rowCount     = 2;
+        var topZone      = (_h * 53) / 100;          // rows live below the HI line
+        var bottomMargin = (_h * 13) / 100; if (bottomMargin < 16) { bottomMargin = 16; }
+        var gap          = (_h * 3) / 100;  if (gap < 5) { gap = 5; }
+        var avail        = (_h - bottomMargin) - topZone;
+        var rowH         = (avail - gap * (rowCount - 1)) / rowCount;
+        if (rowH > 30) { rowH = 30; }
+        if (rowH < 16) { rowH = 16; }
+        var rowW = (_w * 56) / 100; if (rowW < 96) { rowW = 96; }
+        var rowX = (_w - rowW) / 2;
+        var used = rowCount * rowH + (rowCount - 1) * gap;
+        var rowY0 = topZone + (avail - used) / 2;
+        if (rowY0 < topZone) { rowY0 = topZone; }
+        return [rowH, rowW, rowX, rowY0, gap];
+    }
+
+    // Menu is ~18% more compact than before (FONT_SMALL title, tighter
+    // vertical rhythm) to make room for the two interactive rows.
     hidden function drawMenu(dc, w, h) {
         drawStoneBg(dc, w, h);
         drawDust(dc, w, h, 0x0A0006);
-
-        var aw = w * 38 / 100;
-        var ah = h * 36 / 100;
-        var ax = (w - aw) / 2;
-        var ay = h * 28 / 100;
-
-        dc.setColor(0x1A1614, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(ax - 5, ay - 4, aw + 10, 5);
-        dc.fillRectangle(ax - 5, ay, 5, ah);
-        dc.fillRectangle(ax + aw, ay, 5, ah);
-        dc.setColor(0x141210, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(ax - 3, ay + 2, 3, ah - 4);
-        dc.fillRectangle(ax + aw, ay + 2, 3, ah - 4);
-        dc.setColor(0x020102, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(ax, ay, aw, ah);
-
-        drawTorch(dc, ax - 14, ay + ah / 3);
-        drawTorch(dc, ax + aw + 14, ay + ah / 3);
-
         drawFogWisps(dc, w, h);
-        drawBlood(dc, w, h, 3);
-        drawPulsingDarkness(dc, w, h, 6);
+        drawBlood(dc, w, h, 2);
+        drawPulsingDarkness(dc, w, h, 5);
+
+        drawTorch(dc, w * 13 / 100, h * 14 / 100);
+        drawTorch(dc, w * 87 / 100, h * 14 / 100);
 
         var pulse = (_tick % 40 < 20) ? 0xFF0000 : 0xAA0000;
         dc.setColor(0x550000, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2 + 1, h * 12 / 100 + 1, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2 + 1, h * 8 / 100 + 1, Graphics.FONT_SMALL, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(pulse, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 12 / 100, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 8 / 100, Graphics.FONT_SMALL, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x880000, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2 + 1, h * 22 / 100 + 1, Graphics.FONT_MEDIUM, "RUN", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2 + 1, h * 18 / 100 + 1, Graphics.FONT_SMALL, "RUN", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 22 / 100, Graphics.FONT_MEDIUM, "RUN", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 18 / 100, Graphics.FONT_SMALL, "RUN", Graphics.TEXT_JUSTIFY_CENTER);
 
-        drawMonsterEyes(dc, w / 2, ay + ah / 2, 0xFF0000, true);
-        drawMonsterEyes(dc, ax + 10, ay + ah - 10, 0x880000, false);
-        drawMonsterEyes(dc, ax + aw - 10, ay + ah - 10, 0x880000, false);
+        drawMonsterEyes(dc, w / 2, h * 31 / 100, 0xFF0000, true);
 
         dc.setColor(0x886655, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 68 / 100, Graphics.FONT_XTINY, "They hunger.", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(w / 2, h * 75 / 100, Graphics.FONT_XTINY, "Find the exit.", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 39 / 100, Graphics.FONT_XTINY, "They hunger.", Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0x888888, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 83 / 100, Graphics.FONT_XTINY, "HI " + _highScore, Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor((_tick % 10 < 5) ? 0xFFAA44 : 0xDD8833, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 89 / 100, Graphics.FONT_XTINY, "Tap to start", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 47 / 100, Graphics.FONT_XTINY, "HI " + _highScore, Graphics.TEXT_JUSTIFY_CENTER);
+
+        // Two interactive rows: START (custom) + LEADERBOARD (shared badge).
+        var rg   = menuRowGeom();
+        var rowH = rg[0]; var rowW = rg[1];
+        var rowX = rg[2]; var rowY0 = rg[3]; var gap = rg[4];
+
+        var sry = rowY0;
+        var sSel = (_menuRow == 0);
+        var bg; var bd; var fg;
+        if (sSel) { bg = 0x2A0A0A; bd = 0xFF4444; fg = 0xFFCCAA; }
+        else      { bg = 0x180808; bd = 0x662222; fg = 0xAA6655; }
+        dc.setColor(bg, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(rowX, sry, rowW, rowH, 5);
+        dc.setColor(bd, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(rowX, sry, rowW, rowH, 5);
+        if (sSel) {
+            var ay = sry + rowH / 2;
+            dc.fillPolygon([[rowX + 5, ay - 4], [rowX + 5, ay + 4], [rowX + 11, ay]]);
+        }
+        dc.setColor(fg, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w / 2, sry + (rowH - 14) / 2, Graphics.FONT_XTINY, "START", Graphics.TEXT_JUSTIFY_CENTER);
+
+        var lry = rowY0 + (rowH + gap);
+        LbBadge.drawRow(dc, rowX, lry, rowW, rowH, _menuRow == 1);
+
+        dc.setColor(0x556655, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w / 2, h - 14, Graphics.FONT_XTINY, "UP/DN  SELECT", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawIntro(dc, w, h) {

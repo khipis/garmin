@@ -51,13 +51,22 @@ class MainView extends WatchUi.View {
         ctrl.navNext();
     }
     function navSelect() {
-        if (ctrl.state == DR_MENU) { ctrl.menuActivate(); return; }
+        if (ctrl.state == DR_MENU) {
+            if (ctrl.menuRow == DR_ROW_LB) { openLeaderboard(); return; }
+            ctrl.menuActivate(); return;
+        }
         if (ctrl.state == DR_OVER) { ctrl.gotoMenu(); return; }
         ctrl.selectAction();
     }
     function navBack() {
         if (ctrl.state != DR_MENU) { ctrl.gotoMenu(); return true; }
         return false;
+    }
+
+    // Open the shared global leaderboard for the current mode.
+    function openLeaderboard() {
+        var v = new LbScoresView(LB_GAME_ID, ctrl.variantName(), "DICE ROYALE");
+        WatchUi.pushView(v, new LbScoresDelegate(), WatchUi.SLIDE_LEFT);
     }
 
     // Tap hit-test for menu rows / dice / buttons / categories.
@@ -69,7 +78,10 @@ class MainView extends WatchUi.View {
             for (var i = 0; i < DR_MENU_ROWS; i++) {
                 var ry = rowY0 + i * (rowH + gap);
                 if (x >= rowX && x < rowX + rowW && y >= ry && y < ry + rowH) {
-                    ctrl.setMenuRow(i); ctrl.menuActivate(); return;
+                    ctrl.setMenuRow(i);
+                    if (i == DR_ROW_LB) { openLeaderboard(); }
+                    else { ctrl.menuActivate(); }
+                    return;
                 }
             }
             return;

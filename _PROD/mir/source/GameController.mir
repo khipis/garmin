@@ -1,600 +1,2221 @@
-[ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc"; @line = 22; @symbol_usingdef<0> = [Toybox,22,6,12]; @symbol_usingdef<1> = [Application,22,13,24]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 36; @symbol_usingdef<0> = [Toybox,36,6,12]; @symbol_usingdef<1> = [Application,36,13,24]; ]
 using Toybox.Application;
-[ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc"; @line = 24; @position = 6; @symbol_constdef = [GS_MENU,24,6,13]; ]
-const GS_MENU = 0;
-[ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc"; @line = 25; @position = 6; @symbol_constdef = [GS_PLAY,25,6,13]; ]
-const GS_PLAY = 1;
-[ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc"; @line = 26; @position = 6; @symbol_constdef = [GS_WIN,26,6,12]; ]
-const GS_WIN = 2;
-[ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc"; @line = 27; @position = 6; @symbol_constdef = [GS_OVER,27,6,13]; ]
-const GS_OVER = 3;
-[ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc"; @line = 30; @position = 6; @symbol_constdef = [MI_START,30,6,14]; ]
-const MI_START = 0;
-[ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc"; @line = 31; @position = 6; @symbol_constdef = [MI_LEADERBOARD,31,6,20]; ]
-const MI_LEADERBOARD = 1;
-[ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc"; @line = 32; @position = 6; @symbol_constdef = [MI_RESET_BEST,32,6,19]; ]
-const MI_RESET_BEST = 2;
-[ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc"; @line = 33; @position = 6; @symbol_constdef = [MI_ITEMS,33,6,14]; ]
-const MI_ITEMS = 3;
-[ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc"; @line = 36; @position = 6; @symbol_constdef = [LB_GAME_ID,36,6,16]; ]
-const LB_GAME_ID = "twentyfortyeight";
-[ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc"; @line = 38; @symbol_classdef = [GameController,38,6,20]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 37; @symbol_usingdef<0> = [Toybox,37,6,12]; @symbol_usingdef<1> = [Time,37,13,17]; ]
+using Toybox.Time;
+[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 38; @symbol_usingdef<0> = [Toybox,38,6,12]; @symbol_usingdef<1> = [Time,38,13,17]; @symbol_usingdef<2> = [Gregorian,38,18,27]; ]
+using Toybox.Time.Gregorian;
+[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 39; @symbol_usingdef<0> = [Toybox,39,6,12]; @symbol_usingdef<1> = [System,39,13,19]; ]
+using Toybox.System;
+[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 41; @position = 6; @symbol_constdef = [DR_MENU,41,6,13]; ]
+const DR_MENU = 0;
+[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 42; @position = 6; @symbol_constdef = [DR_PLAY,42,6,13]; ]
+const DR_PLAY = 1;
+[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 43; @position = 6; @symbol_constdef = [DR_OVER,43,6,13]; ]
+const DR_OVER = 2;
+[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 45; @position = 6; @symbol_constdef = [DR_PHASE_ROLL,45,6,19]; ]
+const DR_PHASE_ROLL = 0;
+[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 46; @position = 6; @symbol_constdef = [DR_PHASE_SCORE,46,6,20]; ]
+const DR_PHASE_SCORE = 1;
+[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 48; @position = 6; @symbol_constdef = [DR_MODE_CLASSIC,48,6,21]; ]
+const DR_MODE_CLASSIC = 0;
+[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 49; @position = 6; @symbol_constdef = [DR_MODE_QUICK,49,6,19]; ]
+const DR_MODE_QUICK = 1;
+[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 50; @position = 6; @symbol_constdef = [DR_MODE_DAILY,50,6,19]; ]
+const DR_MODE_DAILY = 2;
+[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 54; @position = 6; @symbol_constdef = [DR_MENU_ROWS,54,6,18]; ]
+const DR_MENU_ROWS = 4;
+[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 55; @position = 6; @symbol_constdef = [DR_ROW_MODE,55,6,17]; ]
+const DR_ROW_MODE = 0;
+[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 56; @position = 6; @symbol_constdef = [DR_ROW_REROLLS,56,6,20]; ]
+const DR_ROW_REROLLS = 1;
+[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 57; @position = 6; @symbol_constdef = [DR_ROW_START,57,6,18]; ]
+const DR_ROW_START = 2;
+[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 58; @position = 6; @symbol_constdef = [DR_ROW_LB,58,6,15]; ]
+const DR_ROW_LB = 3;
+[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 61; @position = 6; @symbol_constdef = [LB_GAME_ID,61,6,16]; ]
+const LB_GAME_ID = "diceroyale";
+[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 63; @position = 6; @symbol_constdef = [DR_POS_ROLL,63,6,17]; ]
+const DR_POS_ROLL = 5;
+[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 64; @position = 6; @symbol_constdef = [DR_POS_SCORE,64,6,18]; ]
+const DR_POS_SCORE = 6;
+[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 67; @position = 6; @symbol_constdef = [DR_KEY_MODE,67,6,17]; ]
+const DR_KEY_MODE = "dr_mode";
+[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 68; @position = 6; @symbol_constdef = [DR_KEY_REROLLS,68,6,20]; ]
+const DR_KEY_REROLLS = "dr_rerolls";
+[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 69; @position = 6; @symbol_constdef = [DR_KEY_BEST_CLASSIC,69,6,25]; ]
+const DR_KEY_BEST_CLASSIC = "dr_best_classic";
+[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 70; @position = 6; @symbol_constdef = [DR_KEY_BEST_QUICK,70,6,23]; ]
+const DR_KEY_BEST_QUICK = "dr_best_quick";
+[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 71; @position = 6; @symbol_constdef = [DR_KEY_BEST_DAILY,71,6,23]; ]
+const DR_KEY_BEST_DAILY = "dr_best_daily";
+[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 72; @position = 6; @symbol_constdef = [DR_KEY_DAILY_DATE,72,6,23]; ]
+const DR_KEY_DAILY_DATE = "dr_daily_date";
+[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 73; @position = 6; @symbol_constdef = [DR_KEY_GAMES,73,6,18]; ]
+const DR_KEY_GAMES = "dr_games";
+[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 74; @position = 6; @symbol_constdef = [DR_KEY_STREAK,74,6,19]; ]
+const DR_KEY_STREAK = "dr_streak";
+[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 76; @symbol_classdef = [GameController,76,6,20]; ]
 class GameController {
-    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc"; @line = 38; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 76; ]
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc"; @line = 38; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 76; ]
     static
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc"; @line = 39; @position = 8; @symbol_vardef = [state,39,8,13]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 77; @position = 8; @symbol_vardef = [state,77,8,13]; ]
     var state;
-    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc"; @line = 40; @position = 8; @symbol_vardef = [grid,40,8,12]; ]
-    var grid;
-    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc"; @line = 41; @position = 8; @symbol_vardef = [score,41,8,13]; ]
-    var score;
-    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc"; @line = 42; @position = 8; @symbol_vardef = [best,42,8,12]; ]
-    var best;
-    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc"; @line = 43; @position = 8; @symbol_vardef = [bestExp,43,8,15]; ]
-    var bestExp;
-    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc"; @line = 44; @position = 8; @symbol_vardef = [hasWonThisRun,44,8,21]; ]
-    var hasWonThisRun;
-    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc"; @line = 45; @position = 8; @symbol_vardef = [menuCursor,45,8,18]; ]
-    var menuCursor;
-    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc"; @line = 47; @symbol_functiondef = [initialize,47,13,23]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 78; @position = 8; @symbol_vardef = [menuRow,78,8,15]; ]
+    var menuRow;
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 79; @position = 8; @symbol_vardef = [menuMode,79,8,16]; ]
+    var menuMode;
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 80; @position = 8; @symbol_vardef = [menuRerolls,80,8,19]; ]
+    var menuRerolls;
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 82; @position = 8; @symbol_vardef = [dice,82,8,12]; ]
+    var dice;
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 83; @position = 8; @symbol_vardef = [scores,83,8,14]; ]
+    var scores;
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 85; @position = 8; @symbol_vardef = [phase,85,8,13]; ]
+    var phase;
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 86; @position = 8; @symbol_vardef = [rollCursor,86,8,18]; ]
+    var rollCursor;
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 87; @position = 8; @symbol_vardef = [scoreCursor,87,8,19]; ]
+    var scoreCursor;
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 89; @position = 8; @symbol_vardef = [roundsPlayed,89,8,20]; ]
+    var roundsPlayed;
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 90; @position = 8; @symbol_vardef = [maxRounds,90,8,17]; ]
+    var maxRounds;
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 92; @position = 8; @symbol_vardef = [bestClassic,92,8,19]; ]
+    var bestClassic;
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 93; @position = 8; @symbol_vardef = [bestQuick,93,8,17]; ]
+    var bestQuick;
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 94; @position = 8; @symbol_vardef = [bestDaily,94,8,17]; ]
+    var bestDaily;
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 95; @position = 8; @symbol_vardef = [dailyDate,95,8,17]; ]
+    var dailyDate;
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 96; @position = 8; @symbol_vardef = [dailyPlayedToday,96,8,24]; ]
+    var dailyPlayedToday;
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 97; @position = 8; @symbol_vardef = [gamesPlayed,97,8,19]; ]
+    var gamesPlayed;
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 98; @position = 8; @symbol_vardef = [streak,98,8,14]; ]
+    var streak;
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 100; @symbol_functiondef = [initialize,100,13,23]; ]
     function initialize() as Void {
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_47_26_55_4_start:
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 48 8 ]
-        symbol [ GS_MENU %tmp.2 48 25 32 ];
-        %tmp.2 = getv ? :GS_MENU;
-        symbol [ state ? 48 8 13 ];
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_100_26_125_4_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 101 8 ]
+        symbol [ DR_MENU %tmp.2 101 24 31 ];
+        %tmp.2 = getv ? :DR_MENU;
+        symbol [ state ? 101 8 13 ];
         putv self :state %tmp.2;
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 49 8 ]
-        symbol [ GridManager %tmp.6 49 29 40 ];
-        %tmp.6 = getv ? :GridManager;
-        %tmp.3 = newc %tmp.6 ();
-        symbol [ grid ? 49 8 12 ];
-        putv self :grid %tmp.3;
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 50 8 ]
-        %tmp.7 = 0;
-        symbol [ score ? 50 8 13 ];
-        putv self :score %tmp.7;
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 51 8 ]
-        %tmp.8 = self;
-        symbol [ _loadInt %tmp.9 51 25 33 ];
-        %tmp.9 = getv function %tmp.8 :_loadInt;
-        %tmp.10 = "best";
-        %tmp.11 = 0;
-        %tmp.12 = invoke %tmp.8 %tmp.9(%tmp.10, %tmp.11);
-        symbol [ best ? 51 8 12 ];
-        putv self :best %tmp.12;
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 52 8 ]
-        %tmp.13 = self;
-        symbol [ _loadInt %tmp.14 52 25 33 ];
-        %tmp.14 = getv function %tmp.13 :_loadInt;
-        %tmp.15 = "bestExp";
-        %tmp.16 = 0;
-        %tmp.17 = invoke %tmp.13 %tmp.14(%tmp.15, %tmp.16);
-        symbol [ bestExp ? 52 8 15 ];
-        putv self :bestExp %tmp.17;
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 53 8 ]
-        %tmp.18 = false;
-        symbol [ hasWonThisRun ? 53 8 21 ];
-        putv self :hasWonThisRun %tmp.18;
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 54 8 ]
-        symbol [ MI_START %tmp.20 54 25 33 ];
-        %tmp.20 = getv ? :MI_START;
-        symbol [ menuCursor ? 54 8 18 ];
-        putv self :menuCursor %tmp.20;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_47_26_55_4_stop:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 102 8 ]
+        %tmp.3 = 0;
+        symbol [ menuRow ? 102 8 15 ];
+        putv self :menuRow %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 103 8 ]
+        symbol [ DR_MODE_CLASSIC %tmp.5 103 24 39 ];
+        %tmp.5 = getv ? :DR_MODE_CLASSIC;
+        symbol [ menuMode ? 103 8 16 ];
+        putv self :menuMode %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 104 8 ]
+        %tmp.6 = 2;
+        symbol [ menuRerolls ? 104 8 19 ];
+        putv self :menuRerolls %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 106 8 ]
+        symbol [ DiceManager %tmp.10 106 22 33 ];
+        %tmp.10 = getv ? :DiceManager;
+        %tmp.7 = newc %tmp.10 ();
+        symbol [ dice ? 106 8 12 ];
+        putv self :dice %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 107 8 ]
+        symbol [ ScoreSystem %tmp.14 107 22 33 ];
+        %tmp.14 = getv ? :ScoreSystem;
+        %tmp.11 = newc %tmp.14 ();
+        symbol [ scores ? 107 8 14 ];
+        putv self :scores %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 109 8 ]
+        symbol [ DR_PHASE_ROLL %tmp.16 109 23 36 ];
+        %tmp.16 = getv ? :DR_PHASE_ROLL;
+        symbol [ phase ? 109 8 13 ];
+        putv self :phase %tmp.16;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 110 8 ]
+        %tmp.17 = 0;
+        symbol [ rollCursor ? 110 8 18 ];
+        putv self :rollCursor %tmp.17;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 111 8 ]
+        %tmp.18 = 0;
+        symbol [ scoreCursor ? 111 8 19 ];
+        putv self :scoreCursor %tmp.18;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 112 8 ]
+        %tmp.19 = 0;
+        symbol [ roundsPlayed ? 112 8 20 ];
+        putv self :roundsPlayed %tmp.19;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 113 8 ]
+        symbol [ DR_CAT_COUNT %tmp.21 113 23 35 ];
+        %tmp.21 = getv ? :DR_CAT_COUNT;
+        symbol [ maxRounds ? 113 8 17 ];
+        putv self :maxRounds %tmp.21;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 115 8 ]
+        %tmp.22 = 0;
+        symbol [ bestClassic ? 115 8 19 ];
+        putv self :bestClassic %tmp.22;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 116 8 ]
+        %tmp.23 = 0;
+        symbol [ bestQuick ? 116 8 17 ];
+        putv self :bestQuick %tmp.23;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 117 8 ]
+        %tmp.24 = 0;
+        symbol [ bestDaily ? 117 8 17 ];
+        putv self :bestDaily %tmp.24;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 118 8 ]
+        %tmp.25 = 0;
+        symbol [ dailyDate ? 118 8 17 ];
+        putv self :dailyDate %tmp.25;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 119 8 ]
+        %tmp.26 = false;
+        symbol [ dailyPlayedToday ? 119 8 24 ];
+        putv self :dailyPlayedToday %tmp.26;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 120 8 ]
+        %tmp.27 = 0;
+        symbol [ gamesPlayed ? 120 8 19 ];
+        putv self :gamesPlayed %tmp.27;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 121 8 ]
+        %tmp.28 = 0;
+        symbol [ streak ? 121 8 14 ];
+        putv self :streak %tmp.28;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 123 8 ]
+        %tmp.29 = self;
+        symbol [ _loadAll %tmp.30 123 8 16 ];
+        %tmp.30 = getv function %tmp.29 :_loadAll;
+        invoke %tmp.29 %tmp.30();
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 124 8 ]
+        %tmp.31 = self;
+        symbol [ _refreshDailyStatus %tmp.32 124 8 27 ];
+        %tmp.32 = getv function %tmp.31 :_refreshDailyStatus;
+        invoke %tmp.31 %tmp.32();
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_100_26_125_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc"; @line = 57; @symbol_functiondef = [_loadInt,57,20,28]; @symbol_param<0> = [key,57,29,32]; @symbol_param<1> = [dflt,57,34,38]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 128; @symbol_functiondef = [_loadAll,128,20,28]; ]
     protected
-    function _loadInt(key, dflt) {
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_57_40_63_4_start:
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 58 8 ]
-        try @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_58_8_61_21_beginTry @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_58_8_61_21_endTry @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_58_8_61_21_catch @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_58_8_61_21_finally;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_58_8_61_21_beginTry:
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_58_12_61_8_start:
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 59 12 ]
-        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_58_12_61_8_start" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_58_12_61_8_stop" ]
+    function _loadAll() {
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_128_31_140_4_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 129 8 ]
+        %tmp.1 = self;
+        symbol [ _loadInt %tmp.2 129 22 30 ];
+        %tmp.2 = getv function %tmp.1 :_loadInt;
+        symbol [ DR_KEY_BEST_CLASSIC %tmp.4 129 31 50 ];
+        %tmp.4 = getv ? :DR_KEY_BEST_CLASSIC;
+        %tmp.5 = 0;
+        %tmp.6 = invoke %tmp.1 %tmp.2(%tmp.4, %tmp.5);
+        symbol [ bestClassic ? 129 8 19 ];
+        putv self :bestClassic %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 130 8 ]
+        %tmp.7 = self;
+        symbol [ _loadInt %tmp.8 130 22 30 ];
+        %tmp.8 = getv function %tmp.7 :_loadInt;
+        symbol [ DR_KEY_BEST_QUICK %tmp.10 130 31 48 ];
+        %tmp.10 = getv ? :DR_KEY_BEST_QUICK;
+        %tmp.11 = 0;
+        %tmp.12 = invoke %tmp.7 %tmp.8(%tmp.10, %tmp.11);
+        symbol [ bestQuick ? 130 8 17 ];
+        putv self :bestQuick %tmp.12;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 131 8 ]
+        %tmp.13 = self;
+        symbol [ _loadInt %tmp.14 131 22 30 ];
+        %tmp.14 = getv function %tmp.13 :_loadInt;
+        symbol [ DR_KEY_BEST_DAILY %tmp.16 131 31 48 ];
+        %tmp.16 = getv ? :DR_KEY_BEST_DAILY;
+        %tmp.17 = 0;
+        %tmp.18 = invoke %tmp.13 %tmp.14(%tmp.16, %tmp.17);
+        symbol [ bestDaily ? 131 8 17 ];
+        putv self :bestDaily %tmp.18;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 132 8 ]
+        %tmp.19 = self;
+        symbol [ _loadInt %tmp.20 132 22 30 ];
+        %tmp.20 = getv function %tmp.19 :_loadInt;
+        symbol [ DR_KEY_DAILY_DATE %tmp.22 132 31 48 ];
+        %tmp.22 = getv ? :DR_KEY_DAILY_DATE;
+        %tmp.23 = 0;
+        %tmp.24 = invoke %tmp.19 %tmp.20(%tmp.22, %tmp.23);
+        symbol [ dailyDate ? 132 8 17 ];
+        putv self :dailyDate %tmp.24;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 133 8 ]
+        %tmp.25 = self;
+        symbol [ _loadInt %tmp.26 133 22 30 ];
+        %tmp.26 = getv function %tmp.25 :_loadInt;
+        symbol [ DR_KEY_GAMES %tmp.28 133 31 43 ];
+        %tmp.28 = getv ? :DR_KEY_GAMES;
+        %tmp.29 = 0;
+        %tmp.30 = invoke %tmp.25 %tmp.26(%tmp.28, %tmp.29);
+        symbol [ gamesPlayed ? 133 8 19 ];
+        putv self :gamesPlayed %tmp.30;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 134 8 ]
+        %tmp.31 = self;
+        symbol [ _loadInt %tmp.32 134 22 30 ];
+        %tmp.32 = getv function %tmp.31 :_loadInt;
+        symbol [ DR_KEY_STREAK %tmp.34 134 31 44 ];
+        %tmp.34 = getv ? :DR_KEY_STREAK;
+        %tmp.35 = 0;
+        %tmp.36 = invoke %tmp.31 %tmp.32(%tmp.34, %tmp.35);
+        symbol [ streak ? 134 8 14 ];
+        putv self :streak %tmp.36;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 136 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_128_31_140_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_128_31_140_4_stop" ]
+        %m.1 = local;
+        symbol [ m %m.1 136 12 13 ];
+        %tmp.37 = self;
+        symbol [ _loadInt %tmp.38 136 16 24 ];
+        %tmp.38 = getv function %tmp.37 :_loadInt;
+        symbol [ DR_KEY_MODE %tmp.40 136 25 36 ];
+        %tmp.40 = getv ? :DR_KEY_MODE;
+        symbol [ DR_MODE_CLASSIC %tmp.42 136 38 53 ];
+        %tmp.42 = getv ? :DR_MODE_CLASSIC;
+        %tmp.43 = invoke %tmp.37 %tmp.38(%tmp.40, %tmp.42);
+        lputv %m.1 %tmp.43;
+        symbol [ m %m.1 136 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 137 8 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_137_8_137_46_if_stmt:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_137_12_137_27_begin:
+        %tmp.44 = lgetv %m.1;
+        symbol [ m %tmp.44 137 12 13 ];
+        %tmp.45 = 0;
+        %tmp.46 = gte %tmp.44 %tmp.45;
+        bf %tmp.46 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_137_8_137_46_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_137_22_137_27_true:
+        %tmp.47 = lgetv %m.1;
+        symbol [ m %tmp.47 137 22 23 ];
+        %tmp.48 = 2;
+        %tmp.49 = lte %tmp.47 %tmp.48;
+        push %tmp.49;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_137_22_137_27_end:
+        %tmp.50 = phi [%tmp.46 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_137_12_137_27_begin] [%tmp.49 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_137_22_137_27_true] [%tmp.50 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_137_22_137_27_end];
+        bf %tmp.50 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_137_8_137_46_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_137_8_137_46_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_137_30_137_46_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 137 32 ]
+        %tmp.51 = lgetv %m.1;
+        symbol [ m %tmp.51 137 43 44 ];
+        symbol [ menuMode ? 137 32 40 ];
+        putv self :menuMode %tmp.51;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_137_30_137_46_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_137_8_137_46_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_137_8_137_46_if_end:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 138 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_128_31_140_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_128_31_140_4_stop" ]
+        %r.2 = local;
+        symbol [ r %r.2 138 12 13 ];
+        %tmp.52 = self;
+        symbol [ _loadInt %tmp.53 138 16 24 ];
+        %tmp.53 = getv function %tmp.52 :_loadInt;
+        symbol [ DR_KEY_REROLLS %tmp.55 138 25 39 ];
+        %tmp.55 = getv ? :DR_KEY_REROLLS;
+        %tmp.56 = 2;
+        %tmp.57 = invoke %tmp.52 %tmp.53(%tmp.55, %tmp.56);
+        lputv %r.2 %tmp.57;
+        symbol [ r %r.2 138 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 139 8 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_139_8_139_49_if_stmt:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_139_12_139_27_begin:
+        %tmp.58 = lgetv %r.2;
+        symbol [ r %tmp.58 139 12 13 ];
+        %tmp.59 = 1;
+        %tmp.60 = gte %tmp.58 %tmp.59;
+        bf %tmp.60 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_139_8_139_49_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_139_22_139_27_true:
+        %tmp.61 = lgetv %r.2;
+        symbol [ r %tmp.61 139 22 23 ];
+        %tmp.62 = 3;
+        %tmp.63 = lte %tmp.61 %tmp.62;
+        push %tmp.63;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_139_22_139_27_end:
+        %tmp.64 = phi [%tmp.60 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_139_12_139_27_begin] [%tmp.63 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_139_22_139_27_true] [%tmp.64 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_139_22_139_27_end];
+        bf %tmp.64 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_139_8_139_49_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_139_8_139_49_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_139_30_139_49_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 139 32 ]
+        %tmp.65 = lgetv %r.2;
+        symbol [ r %tmp.65 139 46 47 ];
+        symbol [ menuRerolls ? 139 32 43 ];
+        putv self :menuRerolls %tmp.65;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_139_30_139_49_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_139_8_139_49_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_139_8_139_49_if_end:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_128_31_140_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 141; @symbol_functiondef = [_loadInt,141,20,28]; @symbol_param<0> = [key,141,29,32]; @symbol_param<1> = [defv,141,34,38]; ]
+    protected
+    function _loadInt(key, defv) {
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_141_40_147_4_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 142 8 ]
+        try @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_142_8_145_21_beginTry @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_142_8_145_21_endTry @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_142_8_145_21_catch @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_142_8_145_21_finally;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_142_8_145_21_beginTry:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_142_12_145_8_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 143 12 ]
+        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_142_12_145_8_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_142_12_145_8_stop" ]
         %v.1 = local;
-        symbol [ v %v.1 59 16 17 ];
-        symbol [ Application %tmp.1 59 20 31 ];
+        symbol [ v %v.1 143 16 17 ];
+        symbol [ Application %tmp.1 143 20 31 ];
         %tmp.1 = getm $.Toybox.Application;
-        symbol [ Storage %tmp.2 59 32 39 ];
+        symbol [ Storage %tmp.2 143 32 39 ];
         %tmp.2 = getv %tmp.1 :Storage;
-        symbol [ getValue %tmp.3 59 40 48 ];
+        symbol [ getValue %tmp.3 143 40 48 ];
         %tmp.3 = getv function %tmp.2 :getValue;
         %tmp.4 = lgetv %key;
-        symbol [ key %tmp.4 59 49 52 ];
+        symbol [ key %tmp.4 143 49 52 ];
         %tmp.5 = invoke %tmp.2 %tmp.3(%tmp.4);
         lputv %v.1 %tmp.5;
-        symbol [ v %v.1 59 16 17 ];
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 60 12 ]
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_60_12_60_72_if_stmt:
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_60_16_60_57_begin:
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_60_16_60_42_begin:
+        symbol [ v %v.1 143 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 144 12 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_144_12_144_49_if_stmt:
         %tmp.6 = lgetv %v.1;
-        symbol [ v %tmp.6 60 16 17 ];
-        %tmp.7 = null;
-        %tmp.8 = ne %tmp.6 %tmp.7;
-        bf %tmp.8 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_60_12_60_72_if_end;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_60_29_60_42_true:
-        %tmp.9 = lgetv %v.1;
-        symbol [ v %tmp.9 60 29 30 ];
-        %tmp.10 = as %tmp.9 { (!Null) };
-        symbol [ Number %tmp.12 60 42 48 ];
-        %tmp.12 = getv ? :Number;
-        %tmp.13 = isa %tmp.10 %tmp.12;
-        push %tmp.13;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_60_29_60_42_end:
-        %tmp.14 = phi [%tmp.8 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_60_16_60_42_begin] [%tmp.13 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_60_29_60_42_true] [%tmp.14 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_60_29_60_42_end];
-        bf %tmp.14 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_60_12_60_72_if_end;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_60_52_60_57_true:
-        %tmp.15 = lgetv %v.1;
-        symbol [ v %tmp.15 60 52 53 ];
-        %tmp.16 = as %tmp.15 { (Number) && (!Null) };
-        %tmp.17 = 0;
-        %tmp.18 = gte %tmp.16 %tmp.17;
-        push %tmp.18;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_60_52_60_57_end:
-        %tmp.19 = phi [%tmp.14 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_60_16_60_57_begin] [%tmp.18 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_60_52_60_57_true] [%tmp.19 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_60_52_60_57_end];
-        bf %tmp.19 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_60_12_60_72_if_end;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_60_12_60_72_if_true:
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_60_60_60_72_start:
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 60 62 ]
-        %tmp.20 = lgetv %v.1;
-        symbol [ v %tmp.20 60 69 70 ];
-        %tmp.21 = as %tmp.20 { (Number) && (!Null) };
-        jsr @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_58_8_61_21_finally;
-        ret %tmp.21;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_60_60_60_72_stop:
-        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_60_12_60_72_if_end;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_60_12_60_72_if_end:
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_58_12_61_8_stop:
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_58_8_61_21_endTry:
-        jsr @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_58_8_61_21_finally;
-        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_58_8_61_21_end;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_58_8_61_21_catch:
-        %tmp.22 = exception;
-        push %tmp.22;
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 61 10 ]
-        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_58_8_61_21_catch" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_61_10_61_21_end" ]
+        symbol [ v %tmp.6 144 16 17 ];
+        symbol [ Number %tmp.8 144 29 35 ];
+        %tmp.8 = getv ? :Number;
+        %tmp.9 = isa %tmp.6 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_144_12_144_49_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_144_12_144_49_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_144_37_144_49_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 144 39 ]
+        %tmp.10 = lgetv %v.1;
+        symbol [ v %tmp.10 144 46 47 ];
+        %tmp.11 = as %tmp.10 { (Number) };
+        jsr @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_142_8_145_21_finally;
+        ret %tmp.11;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_144_37_144_49_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_144_12_144_49_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_144_12_144_49_if_end:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_142_12_145_8_stop:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_142_8_145_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_142_8_145_21_finally;
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_142_8_145_21_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_142_8_145_21_catch:
+        %tmp.12 = exception;
+        push %tmp.12;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 145 10 ]
+        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_142_8_145_21_catch" "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_145_10_145_21_end" ]
         %e.2 = local;
-        symbol [ e %e.2 61 17 18 ];
-        %tmp.23 = dup %tmp.22;
-        lputv %e.2 %tmp.23;
-        symbol [ e %e.2 61 17 18 ];
-        jsr @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_58_8_61_21_finally;
+        symbol [ e %e.2 145 17 18 ];
+        %tmp.13 = dup %tmp.12;
+        lputv %e.2 %tmp.13;
+        symbol [ e %e.2 145 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_142_8_145_21_finally;
         pop;
-        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_58_8_61_21_end;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_61_10_61_21_end:
-        try @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_58_8_61_21_catch @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_61_10_61_21_end @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_61_10_61_21_end @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_58_8_61_21_finally;
-        jsr @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_58_8_61_21_finally;
-        throw %tmp.22;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_58_8_61_21_finally:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_142_8_145_21_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_145_10_145_21_end:
+        try @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_142_8_145_21_catch @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_145_10_145_21_end @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_145_10_145_21_end @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_142_8_145_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_142_8_145_21_finally;
+        throw %tmp.12;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_142_8_145_21_finally:
         jsrret;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_58_8_61_21_end:
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 62 8 ]
-        %tmp.24 = lgetv %dflt;
-        symbol [ dflt %tmp.24 62 15 19 ];
-        ret %tmp.24;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_57_40_63_4_stop:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_142_8_145_21_end:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 146 8 ]
+        %tmp.14 = lgetv %defv;
+        symbol [ defv %tmp.14 146 15 19 ];
+        ret %tmp.14;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_141_40_147_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc"; @line = 64; @symbol_functiondef = [_saveInt,64,20,28]; @symbol_param<0> = [key,64,29,32]; @symbol_param<1> = [v,64,34,35]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 148; @symbol_functiondef = [_save,148,20,25]; @symbol_param<0> = [key,148,26,29]; @symbol_param<1> = [val,148,31,34]; ]
     protected
-    function _saveInt(key, v) {
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_64_37_66_4_start:
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 65 8 ]
-        try @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_65_8_65_65_beginTry @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_65_8_65_65_endTry @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_65_8_65_65_catch @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_65_8_65_65_finally;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_65_8_65_65_beginTry:
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_65_12_65_52_start:
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 65 14 ]
-        symbol [ Application %tmp.1 65 14 25 ];
+    function _save(key, val) {
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_148_36_150_4_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 149 8 ]
+        try @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_149_8_149_67_beginTry @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_149_8_149_67_endTry @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_149_8_149_67_catch @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_149_8_149_67_finally;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_149_8_149_67_beginTry:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_149_12_149_54_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 149 14 ]
+        symbol [ Application %tmp.1 149 14 25 ];
         %tmp.1 = getm $.Toybox.Application;
-        symbol [ Storage %tmp.2 65 26 33 ];
+        symbol [ Storage %tmp.2 149 26 33 ];
         %tmp.2 = getv %tmp.1 :Storage;
-        symbol [ setValue %tmp.3 65 34 42 ];
+        symbol [ setValue %tmp.3 149 34 42 ];
         %tmp.3 = getv function %tmp.2 :setValue;
         %tmp.4 = lgetv %key;
-        symbol [ key %tmp.4 65 43 46 ];
-        %tmp.5 = lgetv %v;
-        symbol [ v %tmp.5 65 48 49 ];
+        symbol [ key %tmp.4 149 43 46 ];
+        %tmp.5 = lgetv %val;
+        symbol [ val %tmp.5 149 48 51 ];
         invoke %tmp.2 %tmp.3(%tmp.4, %tmp.5);
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_65_12_65_52_stop:
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_65_8_65_65_endTry:
-        jsr @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_65_8_65_65_finally;
-        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_65_8_65_65_end;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_65_8_65_65_catch:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_149_12_149_54_stop:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_149_8_149_67_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_149_8_149_67_finally;
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_149_8_149_67_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_149_8_149_67_catch:
         %tmp.6 = exception;
         push %tmp.6;
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 65 54 ]
-        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_65_8_65_65_catch" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_65_54_65_65_end" ]
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 149 56 ]
+        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_149_8_149_67_catch" "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_149_56_149_67_end" ]
         %e.1 = local;
-        symbol [ e %e.1 65 61 62 ];
+        symbol [ e %e.1 149 63 64 ];
         %tmp.7 = dup %tmp.6;
         lputv %e.1 %tmp.7;
-        symbol [ e %e.1 65 61 62 ];
-        jsr @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_65_8_65_65_finally;
+        symbol [ e %e.1 149 63 64 ];
+        jsr @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_149_8_149_67_finally;
         pop;
-        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_65_8_65_65_end;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_65_54_65_65_end:
-        try @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_65_8_65_65_catch @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_65_54_65_65_end @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_65_54_65_65_end @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_65_8_65_65_finally;
-        jsr @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_65_8_65_65_finally;
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_149_8_149_67_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_149_56_149_67_end:
+        try @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_149_8_149_67_catch @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_149_56_149_67_end @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_149_56_149_67_end @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_149_8_149_67_finally;
+        jsr @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_149_8_149_67_finally;
         throw %tmp.6;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_65_8_65_65_finally:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_149_8_149_67_finally:
         jsrret;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_65_8_65_65_end:
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_64_37_66_4_stop:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_149_8_149_67_end:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_148_36_150_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc"; @line = 69; @symbol_functiondef = [menuPrev,69,13,21]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 151; @symbol_functiondef = [_saveSettings,151,20,33]; ]
+    protected
+    function _saveSettings() {
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_151_36_154_4_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 152 8 ]
+        %tmp.1 = self;
+        symbol [ _save %tmp.2 152 8 13 ];
+        %tmp.2 = getv function %tmp.1 :_save;
+        symbol [ DR_KEY_MODE %tmp.4 152 14 25 ];
+        %tmp.4 = getv ? :DR_KEY_MODE;
+        symbol [ menuMode %tmp.6 152 30 38 ];
+        %tmp.6 = getv ? :menuMode;
+        invoke %tmp.1 %tmp.2(%tmp.4, %tmp.6);
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 153 8 ]
+        %tmp.7 = self;
+        symbol [ _save %tmp.8 153 8 13 ];
+        %tmp.8 = getv function %tmp.7 :_save;
+        symbol [ DR_KEY_REROLLS %tmp.10 153 14 28 ];
+        %tmp.10 = getv ? :DR_KEY_REROLLS;
+        symbol [ menuRerolls %tmp.12 153 30 41 ];
+        %tmp.12 = getv ? :menuRerolls;
+        invoke %tmp.7 %tmp.8(%tmp.10, %tmp.12);
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_151_36_154_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 158; @symbol_functiondef = [_todayDOY,158,20,29]; ]
+    protected
+    function _todayDOY() {
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_158_32_167_4_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 159 8 ]
+        try @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_159_8_166_8_beginTry @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_159_8_166_8_endTry @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_159_8_166_8_catch @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_159_8_166_8_finally;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_159_8_166_8_beginTry:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_159_12_164_8_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 160 12 ]
+        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_159_12_164_8_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_159_12_164_8_stop" ]
+        %now.1 = local;
+        symbol [ now %now.1 160 16 19 ];
+        symbol [ Gregorian %tmp.1 160 22 31 ];
+        %tmp.1 = getm $.Toybox.Time.Gregorian;
+        symbol [ info %tmp.2 160 32 36 ];
+        %tmp.2 = getv function %tmp.1 :info;
+        symbol [ Time %tmp.3 160 37 41 ];
+        %tmp.3 = getm $.Toybox.Time;
+        symbol [ now %tmp.4 160 42 45 ];
+        %tmp.4 = getv function %tmp.3 :now;
+        %tmp.5 = invoke %tmp.3 %tmp.4();
+        symbol [ Time %tmp.6 160 49 53 ];
+        %tmp.6 = getm $.Toybox.Time;
+        symbol [ FORMAT_SHORT %tmp.7 160 54 66 ];
+        %tmp.7 = getv %tmp.6 :FORMAT_SHORT;
+        %tmp.8 = invoke %tmp.1 %tmp.2(%tmp.5, %tmp.7);
+        lputv %now.1 %tmp.8;
+        symbol [ now %now.1 160 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 163 12 ]
+        %tmp.9 = 31;
+        %tmp.10 = lgetv %now.1;
+        symbol [ now %tmp.10 163 25 28 ];
+        symbol [ month %tmp.11 163 29 34 ];
+        %tmp.11 = getv %tmp.10 :month;
+        %tmp.12 = 1;
+        %tmp.13 = sub %tmp.11 %tmp.12;
+        %tmp.14 = mul %tmp.9 %tmp.13;
+        %tmp.15 = lgetv %now.1;
+        symbol [ now %tmp.15 163 42 45 ];
+        symbol [ day %tmp.16 163 46 49 ];
+        %tmp.16 = getv %tmp.15 :day;
+        %tmp.17 = add %tmp.14 %tmp.16;
+        %tmp.18 = 1000;
+        %tmp.19 = lgetv %now.1;
+        symbol [ now %tmp.19 163 60 63 ];
+        symbol [ year %tmp.20 163 64 68 ];
+        %tmp.20 = getv %tmp.19 :year;
+        %tmp.21 = 100;
+        %tmp.22 = mod %tmp.20 %tmp.21;
+        %tmp.23 = mul %tmp.18 %tmp.22;
+        %tmp.24 = add %tmp.17 %tmp.23;
+        jsr @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_159_8_166_8_finally;
+        ret %tmp.24;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_159_12_164_8_stop:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_159_8_166_8_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_159_8_166_8_finally;
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_159_8_166_8_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_159_8_166_8_catch:
+        %tmp.25 = exception;
+        push %tmp.25;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 164 10 ]
+        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_159_8_166_8_catch" "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_164_10_166_8_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 164 17 18 ];
+        %tmp.26 = dup %tmp.25;
+        lputv %e.2 %tmp.26;
+        symbol [ e %e.2 164 17 18 ];
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_164_20_166_8_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 165 12 ]
+        pop;
+        %tmp.27 = 0;
+        jsr @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_159_8_166_8_finally;
+        ret %tmp.27;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_164_20_166_8_stop:
+        jsr @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_159_8_166_8_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_159_8_166_8_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_164_10_166_8_end:
+        try @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_159_8_166_8_catch @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_164_10_166_8_end @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_164_10_166_8_end @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_159_8_166_8_finally;
+        jsr @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_159_8_166_8_finally;
+        throw %tmp.25;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_159_8_166_8_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_159_8_166_8_end:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_158_32_167_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 168; @symbol_functiondef = [_refreshDailyStatus,168,20,39]; ]
+    protected
+    function _refreshDailyStatus() {
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_168_42_171_4_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 169 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_168_42_171_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_168_42_171_4_stop" ]
+        %t.1 = local;
+        symbol [ t %t.1 169 12 13 ];
+        %tmp.1 = self;
+        symbol [ _todayDOY %tmp.2 169 16 25 ];
+        %tmp.2 = getv function %tmp.1 :_todayDOY;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        lputv %t.1 %tmp.3;
+        symbol [ t %t.1 169 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 170 8 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_170_28_170_51_begin:
+        %tmp.4 = lgetv %t.1;
+        symbol [ t %tmp.4 170 28 29 ];
+        %tmp.5 = 0;
+        %tmp.6 = ne %tmp.4 %tmp.5;
+        %tmp.7 = dup %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_170_38_170_51_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_170_38_170_51_true:
+        symbol [ dailyDate %tmp.9 170 38 47 ];
+        %tmp.9 = getv ? :dailyDate;
+        %tmp.10 = lgetv %t.1;
+        symbol [ t %tmp.10 170 51 52 ];
+        %tmp.11 = eq %tmp.9 %tmp.10;
+        %tmp.12 = and %tmp.6 %tmp.11;
+        push %tmp.12;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_170_38_170_51_end:
+        %tmp.13 = phi [%tmp.7 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_170_28_170_51_begin] [%tmp.12 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_170_38_170_51_true] [%tmp.13 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_170_38_170_51_end];
+        symbol [ dailyPlayedToday ? 170 8 24 ];
+        putv self :dailyPlayedToday %tmp.13;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_168_42_171_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 172; @symbol_functiondef = [_todaySeed,172,20,30]; ]
+    protected
+    function _todaySeed() {
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_172_33_176_4_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 173 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_172_33_176_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_172_33_176_4_stop" ]
+        %t.1 = local;
+        symbol [ t %t.1 173 12 13 ];
+        %tmp.1 = self;
+        symbol [ _todayDOY %tmp.2 173 16 25 ];
+        %tmp.2 = getv function %tmp.1 :_todayDOY;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        lputv %t.1 %tmp.3;
+        symbol [ t %t.1 173 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 174 8 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_174_8_174_28_if_stmt:
+        %tmp.4 = lgetv %t.1;
+        symbol [ t %tmp.4 174 12 13 ];
+        %tmp.5 = 1;
+        %tmp.6 = lt %tmp.4 %tmp.5;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_174_8_174_28_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_174_8_174_28_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_174_19_174_28_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 174 21 ]
+        %tmp.7 = 1;
+        lputv %t.1 %tmp.7;
+        symbol [ t %t.1 174 21 22 ];
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_174_19_174_28_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_174_8_174_28_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_174_8_174_28_if_end:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 175 8 ]
+        %tmp.8 = lgetv %t.1;
+        symbol [ t %tmp.8 175 15 16 ];
+        ret %tmp.8;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_172_33_176_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 179; @symbol_functiondef = [menuNext,179,13,21]; ]
+    function menuNext() {
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_179_24_179_66_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 179 26 ]
+        symbol [ menuRow %tmp.2 179 37 44 ];
+        %tmp.2 = getv ? :menuRow;
+        %tmp.3 = 1;
+        %tmp.4 = add %tmp.2 %tmp.3;
+        symbol [ DR_MENU_ROWS %tmp.6 179 52 64 ];
+        %tmp.6 = getv ? :DR_MENU_ROWS;
+        %tmp.7 = mod %tmp.4 %tmp.6;
+        symbol [ menuRow ? 179 26 33 ];
+        putv self :menuRow %tmp.7;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_179_24_179_66_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 180; @symbol_functiondef = [menuPrev,180,13,21]; ]
     function menuPrev() {
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_69_24_71_4_start:
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 70 8 ]
-        symbol [ menuCursor %tmp.2 70 22 32 ];
-        %tmp.2 = getv ? :menuCursor;
-        symbol [ MI_ITEMS %tmp.4 70 35 43 ];
-        %tmp.4 = getv ? :MI_ITEMS;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_180_24_180_81_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 180 26 ]
+        symbol [ menuRow %tmp.2 180 37 44 ];
+        %tmp.2 = getv ? :menuRow;
+        symbol [ DR_MENU_ROWS %tmp.4 180 47 59 ];
+        %tmp.4 = getv ? :DR_MENU_ROWS;
         %tmp.5 = add %tmp.2 %tmp.4;
         %tmp.6 = 1;
         %tmp.7 = sub %tmp.5 %tmp.6;
-        symbol [ MI_ITEMS %tmp.9 70 51 59 ];
-        %tmp.9 = getv ? :MI_ITEMS;
+        symbol [ DR_MENU_ROWS %tmp.9 180 67 79 ];
+        %tmp.9 = getv ? :DR_MENU_ROWS;
         %tmp.10 = mod %tmp.7 %tmp.9;
-        symbol [ menuCursor ? 70 8 18 ];
-        putv self :menuCursor %tmp.10;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_69_24_71_4_stop:
+        symbol [ menuRow ? 180 26 33 ];
+        putv self :menuRow %tmp.10;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_180_24_180_81_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc"; @line = 72; @symbol_functiondef = [menuNext,72,13,21]; ]
-    function menuNext() {
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_72_24_74_4_start:
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 73 8 ]
-        symbol [ menuCursor %tmp.2 73 22 32 ];
-        %tmp.2 = getv ? :menuCursor;
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 181; @symbol_functiondef = [setMenuRow,181,13,23]; @symbol_param<0> = [i,181,24,25]; ]
+    function setMenuRow(i) {
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_181_27_181_78_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 181 29 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_181_29_181_76_if_stmt:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_181_33_181_47_begin:
+        %tmp.1 = lgetv %i;
+        symbol [ i %tmp.1 181 33 34 ];
+        %tmp.2 = 0;
+        %tmp.3 = gte %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_181_29_181_76_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_181_43_181_47_true:
+        %tmp.4 = lgetv %i;
+        symbol [ i %tmp.4 181 43 44 ];
+        symbol [ DR_MENU_ROWS %tmp.6 181 47 59 ];
+        %tmp.6 = getv ? :DR_MENU_ROWS;
+        %tmp.7 = lt %tmp.4 %tmp.6;
+        push %tmp.7;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_181_43_181_47_end:
+        %tmp.8 = phi [%tmp.3 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_181_33_181_47_begin] [%tmp.7 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_181_43_181_47_true] [%tmp.8 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_181_43_181_47_end];
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_181_29_181_76_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_181_29_181_76_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_181_61_181_76_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 181 63 ]
+        %tmp.9 = lgetv %i;
+        symbol [ i %tmp.9 181 73 74 ];
+        symbol [ menuRow ? 181 63 70 ];
+        putv self :menuRow %tmp.9;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_181_61_181_76_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_181_29_181_76_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_181_29_181_76_if_end:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_181_27_181_78_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 183; @symbol_functiondef = [menuActivate,183,13,25]; ]
+    function menuActivate() {
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_183_28_194_4_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 184 8 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_184_8_192_8_if_stmt:
+        symbol [ menuRow %tmp.2 184 12 19 ];
+        %tmp.2 = getv ? :menuRow;
+        symbol [ DR_ROW_MODE %tmp.4 184 23 34 ];
+        %tmp.4 = getv ? :DR_ROW_MODE;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_184_8_192_8_if_false;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_184_8_192_8_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_184_36_187_8_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 185 12 ]
+        symbol [ menuMode %tmp.7 185 24 32 ];
+        %tmp.7 = getv ? :menuMode;
+        %tmp.8 = 1;
+        %tmp.9 = add %tmp.7 %tmp.8;
+        %tmp.10 = 3;
+        %tmp.11 = mod %tmp.9 %tmp.10;
+        symbol [ menuMode ? 185 12 20 ];
+        putv self :menuMode %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 186 12 ]
+        %tmp.12 = self;
+        symbol [ _saveSettings %tmp.13 186 12 25 ];
+        %tmp.13 = getv function %tmp.12 :_saveSettings;
+        invoke %tmp.12 %tmp.13();
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_184_36_187_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_184_8_192_8_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_184_8_192_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 187 15 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_187_15_192_8_if_stmt:
+        symbol [ menuRow %tmp.15 187 19 26 ];
+        %tmp.15 = getv ? :menuRow;
+        symbol [ DR_ROW_REROLLS %tmp.17 187 30 44 ];
+        %tmp.17 = getv ? :DR_ROW_REROLLS;
+        %tmp.18 = eq %tmp.15 %tmp.17;
+        bf %tmp.18 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_187_15_192_8_if_false;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_187_15_192_8_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_187_46_190_8_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 188 12 ]
+        symbol [ menuRerolls %tmp.20 188 27 38 ];
+        %tmp.20 = getv ? :menuRerolls;
+        %tmp.21 = 3;
+        %tmp.22 = mod %tmp.20 %tmp.21;
+        %tmp.23 = 1;
+        %tmp.24 = add %tmp.22 %tmp.23;
+        symbol [ menuRerolls ? 188 12 23 ];
+        putv self :menuRerolls %tmp.24;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 189 12 ]
+        %tmp.25 = self;
+        symbol [ _saveSettings %tmp.26 189 12 25 ];
+        %tmp.26 = getv function %tmp.25 :_saveSettings;
+        invoke %tmp.25 %tmp.26();
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_187_46_190_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_187_15_192_8_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_187_15_192_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 190 15 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_190_15_192_8_if_stmt:
+        symbol [ menuRow %tmp.28 190 19 26 ];
+        %tmp.28 = getv ? :menuRow;
+        symbol [ DR_ROW_START %tmp.30 190 30 42 ];
+        %tmp.30 = getv ? :DR_ROW_START;
+        %tmp.31 = eq %tmp.28 %tmp.30;
+        bf %tmp.31 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_190_15_192_8_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_190_15_192_8_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_190_44_192_8_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 191 12 ]
+        %tmp.32 = self;
+        symbol [ _startGame %tmp.33 191 12 22 ];
+        %tmp.33 = getv function %tmp.32 :_startGame;
+        invoke %tmp.32 %tmp.33();
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_190_44_192_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_190_15_192_8_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_190_15_192_8_if_end:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_187_15_192_8_if_end:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_184_8_192_8_if_end:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_183_28_194_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 198; @symbol_functiondef = [variantName,198,13,24]; ]
+    function variantName() {
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_198_27_200_4_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 199 8 ]
+        %tmp.1 = self;
+        symbol [ modeName %tmp.2 199 15 23 ];
+        %tmp.2 = getv function %tmp.1 :modeName;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        symbol [ toLower %tmp.4 199 26 33 ];
+        %tmp.4 = getv function %tmp.3 :toLower;
+        %tmp.5 = invoke %tmp.3 %tmp.4();
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_198_27_200_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 202; @symbol_functiondef = [gotoMenu,202,13,21]; ]
+    function gotoMenu() {
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_202_24_205_4_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 203 8 ]
+        symbol [ DR_MENU %tmp.2 203 16 23 ];
+        %tmp.2 = getv ? :DR_MENU;
+        symbol [ state ? 203 8 13 ];
+        putv self :state %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 204 8 ]
+        %tmp.3 = self;
+        symbol [ _refreshDailyStatus %tmp.4 204 8 27 ];
+        %tmp.4 = getv function %tmp.3 :_refreshDailyStatus;
+        invoke %tmp.3 %tmp.4();
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_202_24_205_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 207; @symbol_functiondef = [modeName,207,13,21]; ]
+    function modeName() {
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_207_24_211_4_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 208 8 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_208_8_208_61_if_stmt:
+        symbol [ menuMode %tmp.2 208 12 20 ];
+        %tmp.2 = getv ? :menuMode;
+        symbol [ DR_MODE_CLASSIC %tmp.4 208 24 39 ];
+        %tmp.4 = getv ? :DR_MODE_CLASSIC;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_208_8_208_61_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_208_8_208_61_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_208_41_208_61_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 208 43 ]
+        %tmp.6 = "Classic";
+        ret %tmp.6;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_208_41_208_61_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_208_8_208_61_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_208_8_208_61_if_end:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 209 8 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_209_8_209_61_if_stmt:
+        symbol [ menuMode %tmp.8 209 12 20 ];
+        %tmp.8 = getv ? :menuMode;
+        symbol [ DR_MODE_QUICK %tmp.10 209 24 37 ];
+        %tmp.10 = getv ? :DR_MODE_QUICK;
+        %tmp.11 = eq %tmp.8 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_209_8_209_61_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_209_8_209_61_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_209_41_209_61_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 209 43 ]
+        %tmp.12 = "Quick";
+        ret %tmp.12;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_209_41_209_61_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_209_8_209_61_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_209_8_209_61_if_end:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 210 8 ]
+        %tmp.13 = "Daily";
+        ret %tmp.13;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_207_24_211_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 214; @symbol_functiondef = [bestForMode,214,13,24]; ]
+    function bestForMode() {
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_214_27_218_4_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 215 8 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_215_8_215_63_if_stmt:
+        symbol [ menuMode %tmp.2 215 12 20 ];
+        %tmp.2 = getv ? :menuMode;
+        symbol [ DR_MODE_CLASSIC %tmp.4 215 24 39 ];
+        %tmp.4 = getv ? :DR_MODE_CLASSIC;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_215_8_215_63_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_215_8_215_63_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_215_41_215_63_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 215 43 ]
+        symbol [ bestClassic %tmp.7 215 50 61 ];
+        %tmp.7 = getv ? :bestClassic;
+        ret %tmp.7;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_215_41_215_63_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_215_8_215_63_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_215_8_215_63_if_end:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 216 8 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_216_8_216_63_if_stmt:
+        symbol [ menuMode %tmp.9 216 12 20 ];
+        %tmp.9 = getv ? :menuMode;
+        symbol [ DR_MODE_QUICK %tmp.11 216 24 37 ];
+        %tmp.11 = getv ? :DR_MODE_QUICK;
+        %tmp.12 = eq %tmp.9 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_216_8_216_63_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_216_8_216_63_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_216_41_216_63_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 216 43 ]
+        symbol [ bestQuick %tmp.14 216 50 59 ];
+        %tmp.14 = getv ? :bestQuick;
+        ret %tmp.14;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_216_41_216_63_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_216_8_216_63_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_216_8_216_63_if_end:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 217 8 ]
+        symbol [ bestDaily %tmp.16 217 15 24 ];
+        %tmp.16 = getv ? :bestDaily;
+        ret %tmp.16;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_214_27_218_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 221; @symbol_functiondef = [_startGame,221,20,30]; ]
+    protected
+    function _startGame() {
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_221_33_248_4_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 222 8 ]
+        %tmp.1 = self;
+        symbol [ _refreshDailyStatus %tmp.2 222 8 27 ];
+        %tmp.2 = getv function %tmp.1 :_refreshDailyStatus;
+        invoke %tmp.1 %tmp.2();
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 223 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_221_33_248_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_221_33_248_4_stop" ]
+        %mask.1 = local;
+        symbol [ mask %mask.1 223 12 16 ];
+        symbol [ DR_MODE_CLASSIC_MASK %tmp.4 223 19 39 ];
+        %tmp.4 = getv ? :DR_MODE_CLASSIC_MASK;
+        lputv %mask.1 %tmp.4;
+        symbol [ mask %mask.1 223 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 224 8 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_224_8_224_68_if_stmt:
+        symbol [ menuMode %tmp.6 224 12 20 ];
+        %tmp.6 = getv ? :menuMode;
+        symbol [ DR_MODE_QUICK %tmp.8 224 24 37 ];
+        %tmp.8 = getv ? :DR_MODE_QUICK;
+        %tmp.9 = eq %tmp.6 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_224_8_224_68_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_224_8_224_68_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_224_39_224_68_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 224 41 ]
+        symbol [ DR_MODE_QUICK_MASK %tmp.11 224 48 66 ];
+        %tmp.11 = getv ? :DR_MODE_QUICK_MASK;
+        lputv %mask.1 %tmp.11;
+        symbol [ mask %mask.1 224 41 45 ];
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_224_39_224_68_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_224_8_224_68_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_224_8_224_68_if_end:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 225 8 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_225_8_225_68_if_stmt:
+        symbol [ menuMode %tmp.13 225 12 20 ];
+        %tmp.13 = getv ? :menuMode;
+        symbol [ DR_MODE_DAILY %tmp.15 225 24 37 ];
+        %tmp.15 = getv ? :DR_MODE_DAILY;
+        %tmp.16 = eq %tmp.13 %tmp.15;
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_225_8_225_68_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_225_8_225_68_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_225_39_225_68_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 225 41 ]
+        symbol [ DR_MODE_DAILY_MASK %tmp.18 225 48 66 ];
+        %tmp.18 = getv ? :DR_MODE_DAILY_MASK;
+        lputv %mask.1 %tmp.18;
+        symbol [ mask %mask.1 225 41 45 ];
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_225_39_225_68_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_225_8_225_68_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_225_8_225_68_if_end:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 229 8 ]
+        %tmp.19 = 0;
+        symbol [ maxRounds ? 229 8 17 ];
+        putv self :maxRounds %tmp.19;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 230 8 ]
+        for @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_230_8_232_8_for_test @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_230_8_232_8_for_incr @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_230_8_232_8_for_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_230_8_232_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_230_8_232_8_for_begin" "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_230_8_232_8_for_end" ]
+        %i.2 = local;
+        symbol [ i %i.2 230 17 18 ];
+        %tmp.20 = 0;
+        lputv %i.2 %tmp.20;
+        symbol [ i %i.2 230 17 18 ];
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_230_8_232_8_for_test:
+        %tmp.21 = lgetv %i.2;
+        symbol [ i %tmp.21 230 24 25 ];
+        symbol [ DR_CAT_COUNT %tmp.23 230 28 40 ];
+        %tmp.23 = getv ? :DR_CAT_COUNT;
+        %tmp.24 = lt %tmp.21 %tmp.23;
+        bf %tmp.24 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_230_8_232_8_for_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_230_8_232_8_for_begin:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_230_47_232_8_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 231 12 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_231_12_231_69_if_stmt:
+        %tmp.25 = lgetv %mask.1;
+        symbol [ mask %tmp.25 231 17 21 ];
+        %tmp.26 = 1;
+        %tmp.27 = lgetv %i.2;
+        symbol [ i %tmp.27 231 30 31 ];
+        %tmp.28 = shl %tmp.26 %tmp.27;
+        %tmp.29 = bitand %tmp.25 %tmp.28;
+        %tmp.30 = 0;
+        %tmp.31 = ne %tmp.29 %tmp.30;
+        bf %tmp.31 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_231_12_231_69_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_231_12_231_69_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_231_40_231_69_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 231 42 ]
+        symbol [ maxRounds %tmp.33 231 54 63 ];
+        %tmp.33 = getv ? :maxRounds;
+        %tmp.34 = 1;
+        %tmp.35 = add %tmp.33 %tmp.34;
+        symbol [ maxRounds ? 231 42 51 ];
+        putv self :maxRounds %tmp.35;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_231_40_231_69_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_231_12_231_69_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_231_12_231_69_if_end:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_230_47_232_8_stop:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_230_8_232_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 230 ]
+        %tmp.38 = lgetv %i.2;
+        symbol [ i %tmp.38 230 42 43 ];
+        %tmp.39 = add %tmp.38 1;
+        lputv %i.2 %tmp.39;
+        symbol [ i %i.2 230 42 43 ];
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_230_8_232_8_for_test;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_230_8_232_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 234 8 ]
+        symbol [ scores %tmp.41 234 8 14 ];
+        %tmp.41 = getv ? :scores;
+        symbol [ reset %tmp.42 234 15 20 ];
+        %tmp.42 = getv function %tmp.41 :reset;
+        %tmp.43 = lgetv %mask.1;
+        symbol [ mask %tmp.43 234 21 25 ];
+        invoke %tmp.41 %tmp.42(%tmp.43);
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 235 8 ]
+        symbol [ dice %tmp.44 235 8 12 ];
+        %tmp.44 = getv self :dice;
+        symbol [ menuRerolls %tmp.46 235 28 39 ];
+        %tmp.46 = getv ? :menuRerolls;
+        symbol [ initialRolls ? 235 13 25 ];
+        putv %tmp.44 :initialRolls %tmp.46;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 236 8 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_236_8_240_8_if_stmt:
+        symbol [ menuMode %tmp.48 236 12 20 ];
+        %tmp.48 = getv ? :menuMode;
+        symbol [ DR_MODE_DAILY %tmp.50 236 24 37 ];
+        %tmp.50 = getv ? :DR_MODE_DAILY;
+        %tmp.51 = eq %tmp.48 %tmp.50;
+        bf %tmp.51 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_236_8_240_8_if_else_false;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_236_8_240_8_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_236_39_238_8_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 237 12 ]
+        symbol [ dice %tmp.53 237 12 16 ];
+        %tmp.53 = getv ? :dice;
+        symbol [ setSeed %tmp.54 237 17 24 ];
+        %tmp.54 = getv function %tmp.53 :setSeed;
+        %tmp.55 = self;
+        symbol [ _todaySeed %tmp.56 237 25 35 ];
+        %tmp.56 = getv function %tmp.55 :_todaySeed;
+        %tmp.57 = invoke %tmp.55 %tmp.56();
+        invoke %tmp.53 %tmp.54(%tmp.57);
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_236_39_238_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_236_8_240_8_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_236_8_240_8_if_else_false:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_238_15_240_8_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 239 12 ]
+        symbol [ dice %tmp.59 239 12 16 ];
+        %tmp.59 = getv ? :dice;
+        symbol [ clearSeed %tmp.60 239 17 26 ];
+        %tmp.60 = getv function %tmp.59 :clearSeed;
+        invoke %tmp.59 %tmp.60();
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_238_15_240_8_stop:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_236_8_240_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 241 8 ]
+        symbol [ dice %tmp.62 241 8 12 ];
+        %tmp.62 = getv ? :dice;
+        symbol [ rollInitial %tmp.63 241 13 24 ];
+        %tmp.63 = getv function %tmp.62 :rollInitial;
+        invoke %tmp.62 %tmp.63();
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 243 8 ]
+        %tmp.64 = 0;
+        symbol [ roundsPlayed ? 243 8 20 ];
+        putv self :roundsPlayed %tmp.64;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 244 8 ]
+        symbol [ DR_PHASE_ROLL %tmp.66 244 23 36 ];
+        %tmp.66 = getv ? :DR_PHASE_ROLL;
+        symbol [ phase ? 244 8 13 ];
+        putv self :phase %tmp.66;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 245 8 ]
+        %tmp.67 = 0;
+        symbol [ rollCursor ? 245 8 18 ];
+        putv self :rollCursor %tmp.67;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 246 8 ]
+        %tmp.68 = self;
+        symbol [ _firstAvailableCategory %tmp.69 246 23 46 ];
+        %tmp.69 = getv function %tmp.68 :_firstAvailableCategory;
+        %tmp.70 = invoke %tmp.68 %tmp.69();
+        symbol [ scoreCursor ? 246 8 19 ];
+        putv self :scoreCursor %tmp.70;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 247 8 ]
+        symbol [ DR_PLAY %tmp.72 247 23 30 ];
+        %tmp.72 = getv ? :DR_PLAY;
+        symbol [ state ? 247 8 13 ];
+        putv self :state %tmp.72;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_221_33_248_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 250; @symbol_functiondef = [_firstAvailableCategory,250,20,43]; ]
+    protected
+    function _firstAvailableCategory() {
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_250_46_255_4_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 251 8 ]
+        for @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_251_8_253_8_for_test @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_251_8_253_8_for_incr @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_251_8_253_8_for_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_251_8_253_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_251_8_253_8_for_begin" "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_251_8_253_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 251 17 18 ];
+        %tmp.1 = 0;
+        lputv %i.1 %tmp.1;
+        symbol [ i %i.1 251 17 18 ];
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_251_8_253_8_for_test:
+        %tmp.2 = lgetv %i.1;
+        symbol [ i %tmp.2 251 24 25 ];
+        symbol [ DR_CAT_COUNT %tmp.4 251 28 40 ];
+        %tmp.4 = getv ? :DR_CAT_COUNT;
+        %tmp.5 = lt %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_251_8_253_8_for_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_251_8_253_8_for_begin:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_251_47_253_8_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 252 12 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_252_12_252_72_if_stmt:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_252_16_252_57_begin:
+        symbol [ scores %tmp.7 252 16 22 ];
+        %tmp.7 = getv ? :scores;
+        symbol [ isAvailable %tmp.8 252 23 34 ];
+        %tmp.8 = getv function %tmp.7 :isAvailable;
+        %tmp.9 = lgetv %i.1;
+        symbol [ i %tmp.9 252 35 36 ];
+        %tmp.10 = invoke %tmp.7 %tmp.8(%tmp.9);
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_252_12_252_72_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_252_41_252_57_true:
+        symbol [ scores %tmp.12 252 42 48 ];
+        %tmp.12 = getv ? :scores;
+        symbol [ isUsed %tmp.13 252 49 55 ];
+        %tmp.13 = getv function %tmp.12 :isUsed;
+        %tmp.14 = lgetv %i.1;
+        symbol [ i %tmp.14 252 56 57 ];
+        %tmp.15 = invoke %tmp.12 %tmp.13(%tmp.14);
+        %tmp.16 = not %tmp.15;
+        push %tmp.16;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_252_41_252_57_end:
+        %tmp.17 = phi [%tmp.10 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_252_16_252_57_begin] [%tmp.16 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_252_41_252_57_true] [%tmp.17 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_252_41_252_57_end];
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_252_12_252_72_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_252_12_252_72_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_252_60_252_72_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 252 62 ]
+        %tmp.18 = lgetv %i.1;
+        symbol [ i %tmp.18 252 69 70 ];
+        ret %tmp.18;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_252_60_252_72_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_252_12_252_72_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_252_12_252_72_if_end:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_251_47_253_8_stop:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_251_8_253_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 251 ]
+        %tmp.21 = lgetv %i.1;
+        symbol [ i %tmp.21 251 42 43 ];
+        %tmp.22 = add %tmp.21 1;
+        lputv %i.1 %tmp.22;
+        symbol [ i %i.1 251 42 43 ];
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_251_8_253_8_for_test;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_251_8_253_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 254 8 ]
+        %tmp.23 = 0;
+        ret %tmp.23;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_250_46_255_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 259; @symbol_functiondef = [navPrev,259,13,20]; ]
+    function navPrev() {
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_259_23_276_4_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 260 8 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_260_8_260_40_if_stmt:
+        symbol [ state %tmp.2 260 12 17 ];
+        %tmp.2 = getv ? :state;
+        symbol [ DR_PLAY %tmp.4 260 21 28 ];
+        %tmp.4 = getv ? :DR_PLAY;
+        %tmp.5 = ne %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_260_8_260_40_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_260_8_260_40_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_260_30_260_40_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 260 32 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_260_30_260_40_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_260_8_260_40_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_260_8_260_40_if_end:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 261 8 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_261_8_275_8_if_stmt:
+        symbol [ phase %tmp.7 261 12 17 ];
+        %tmp.7 = getv ? :phase;
+        symbol [ DR_PHASE_ROLL %tmp.9 261 21 34 ];
+        %tmp.9 = getv ? :DR_PHASE_ROLL;
+        %tmp.10 = eq %tmp.7 %tmp.9;
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_261_8_275_8_if_else_false;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_261_8_275_8_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_261_36_267_8_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 262 12 ]
+        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_261_36_267_8_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_261_36_267_8_stop" ]
+        %i.1 = local;
+        symbol [ i %i.1 262 16 17 ];
+        symbol [ rollCursor %tmp.12 262 20 30 ];
+        %tmp.12 = getv ? :rollCursor;
+        lputv %i.1 %tmp.12;
+        symbol [ i %i.1 262 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 263 12 ]
+        for @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_263_12_266_12_for_test @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_263_12_266_12_for_incr @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_263_12_266_12_for_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_263_12_266_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_263_12_266_12_for_begin" "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_263_12_266_12_for_end" ]
+        %k.2 = local;
+        symbol [ k %k.2 263 21 22 ];
+        %tmp.13 = 0;
+        lputv %k.2 %tmp.13;
+        symbol [ k %k.2 263 21 22 ];
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_263_12_266_12_for_test:
+        %tmp.14 = lgetv %k.2;
+        symbol [ k %tmp.14 263 28 29 ];
+        %tmp.15 = 8;
+        %tmp.16 = lt %tmp.14 %tmp.15;
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_263_12_266_12_for_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_263_12_266_12_for_begin:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_263_40_266_12_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 264 16 ]
+        %tmp.17 = lgetv %i.1;
+        symbol [ i %tmp.17 264 21 22 ];
+        %tmp.18 = 6;
+        %tmp.19 = add %tmp.17 %tmp.18;
+        %tmp.20 = 7;
+        %tmp.21 = mod %tmp.19 %tmp.20;
+        lputv %i.1 %tmp.21;
+        symbol [ i %i.1 264 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 265 16 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_265_16_265_64_if_stmt:
+        %tmp.22 = self;
+        symbol [ _rollPosValid %tmp.23 265 20 33 ];
+        %tmp.23 = getv function %tmp.22 :_rollPosValid;
+        %tmp.24 = lgetv %i.1;
+        symbol [ i %tmp.24 265 34 35 ];
+        %tmp.25 = invoke %tmp.22 %tmp.23(%tmp.24);
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_265_16_265_64_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_265_16_265_64_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_265_38_265_64_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 265 40 ]
+        %tmp.26 = lgetv %i.1;
+        symbol [ i %tmp.26 265 53 54 ];
+        symbol [ rollCursor ? 265 40 50 ];
+        putv self :rollCursor %tmp.26;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 265 56 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_265_38_265_64_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_265_16_265_64_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_265_16_265_64_if_end:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_263_40_266_12_stop:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_263_12_266_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 263 ]
+        %tmp.29 = lgetv %k.2;
+        symbol [ k %tmp.29 263 35 36 ];
+        %tmp.30 = add %tmp.29 1;
+        lputv %k.2 %tmp.30;
+        symbol [ k %k.2 263 35 36 ];
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_263_12_266_12_for_test;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_263_12_266_12_for_end:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_261_36_267_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_261_8_275_8_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_261_8_275_8_if_else_false:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_267_15_275_8_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 268 12 ]
+        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_267_15_275_8_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_267_15_275_8_stop" ]
+        %c.3 = local;
+        symbol [ c %c.3 268 16 17 ];
+        symbol [ scoreCursor %tmp.32 268 20 31 ];
+        %tmp.32 = getv ? :scoreCursor;
+        lputv %c.3 %tmp.32;
+        symbol [ c %c.3 268 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 269 12 ]
+        for @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_269_12_274_12_for_test @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_269_12_274_12_for_incr @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_269_12_274_12_for_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_269_12_274_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_269_12_274_12_for_begin" "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_269_12_274_12_for_end" ]
+        %n.4 = local;
+        symbol [ n %n.4 269 21 22 ];
+        %tmp.33 = 0;
+        lputv %n.4 %tmp.33;
+        symbol [ n %n.4 269 21 22 ];
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_269_12_274_12_for_test:
+        %tmp.34 = lgetv %n.4;
+        symbol [ n %tmp.34 269 28 29 ];
+        symbol [ DR_CAT_COUNT %tmp.36 269 32 44 ];
+        %tmp.36 = getv ? :DR_CAT_COUNT;
+        %tmp.37 = lt %tmp.34 %tmp.36;
+        bf %tmp.37 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_269_12_274_12_for_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_269_12_274_12_for_begin:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_269_51_274_12_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 270 16 ]
+        %tmp.38 = lgetv %c.3;
+        symbol [ c %tmp.38 270 21 22 ];
+        symbol [ DR_CAT_COUNT %tmp.40 270 25 37 ];
+        %tmp.40 = getv ? :DR_CAT_COUNT;
+        %tmp.41 = add %tmp.38 %tmp.40;
+        %tmp.42 = 1;
+        %tmp.43 = sub %tmp.41 %tmp.42;
+        symbol [ DR_CAT_COUNT %tmp.45 270 45 57 ];
+        %tmp.45 = getv ? :DR_CAT_COUNT;
+        %tmp.46 = mod %tmp.43 %tmp.45;
+        lputv %c.3 %tmp.46;
+        symbol [ c %c.3 270 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 271 16 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_271_16_273_16_if_stmt:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_271_20_271_61_begin:
+        symbol [ scores %tmp.48 271 20 26 ];
+        %tmp.48 = getv ? :scores;
+        symbol [ isAvailable %tmp.49 271 27 38 ];
+        %tmp.49 = getv function %tmp.48 :isAvailable;
+        %tmp.50 = lgetv %c.3;
+        symbol [ c %tmp.50 271 39 40 ];
+        %tmp.51 = invoke %tmp.48 %tmp.49(%tmp.50);
+        bf %tmp.51 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_271_16_273_16_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_271_45_271_61_true:
+        symbol [ scores %tmp.53 271 46 52 ];
+        %tmp.53 = getv ? :scores;
+        symbol [ isUsed %tmp.54 271 53 59 ];
+        %tmp.54 = getv function %tmp.53 :isUsed;
+        %tmp.55 = lgetv %c.3;
+        symbol [ c %tmp.55 271 60 61 ];
+        %tmp.56 = invoke %tmp.53 %tmp.54(%tmp.55);
+        %tmp.57 = not %tmp.56;
+        push %tmp.57;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_271_45_271_61_end:
+        %tmp.58 = phi [%tmp.51 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_271_20_271_61_begin] [%tmp.57 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_271_45_271_61_true] [%tmp.58 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_271_45_271_61_end];
+        bf %tmp.58 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_271_16_273_16_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_271_16_273_16_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_271_64_273_16_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 272 20 ]
+        %tmp.59 = lgetv %c.3;
+        symbol [ c %tmp.59 272 34 35 ];
+        symbol [ scoreCursor ? 272 20 31 ];
+        putv self :scoreCursor %tmp.59;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 272 37 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_271_64_273_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_271_16_273_16_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_271_16_273_16_if_end:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_269_51_274_12_stop:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_269_12_274_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 269 ]
+        %tmp.62 = lgetv %n.4;
+        symbol [ n %tmp.62 269 46 47 ];
+        %tmp.63 = add %tmp.62 1;
+        lputv %n.4 %tmp.63;
+        symbol [ n %n.4 269 46 47 ];
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_269_12_274_12_for_test;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_269_12_274_12_for_end:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_267_15_275_8_stop:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_261_8_275_8_if_end:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_259_23_276_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 277; @symbol_functiondef = [navNext,277,13,20]; ]
+    function navNext() {
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_277_23_294_4_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 278 8 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_278_8_278_40_if_stmt:
+        symbol [ state %tmp.2 278 12 17 ];
+        %tmp.2 = getv ? :state;
+        symbol [ DR_PLAY %tmp.4 278 21 28 ];
+        %tmp.4 = getv ? :DR_PLAY;
+        %tmp.5 = ne %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_278_8_278_40_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_278_8_278_40_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_278_30_278_40_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 278 32 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_278_30_278_40_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_278_8_278_40_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_278_8_278_40_if_end:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 279 8 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_279_8_293_8_if_stmt:
+        symbol [ phase %tmp.7 279 12 17 ];
+        %tmp.7 = getv ? :phase;
+        symbol [ DR_PHASE_ROLL %tmp.9 279 21 34 ];
+        %tmp.9 = getv ? :DR_PHASE_ROLL;
+        %tmp.10 = eq %tmp.7 %tmp.9;
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_279_8_293_8_if_else_false;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_279_8_293_8_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_279_36_285_8_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 280 12 ]
+        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_279_36_285_8_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_279_36_285_8_stop" ]
+        %i.1 = local;
+        symbol [ i %i.1 280 16 17 ];
+        symbol [ rollCursor %tmp.12 280 20 30 ];
+        %tmp.12 = getv ? :rollCursor;
+        lputv %i.1 %tmp.12;
+        symbol [ i %i.1 280 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 281 12 ]
+        for @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_281_12_284_12_for_test @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_281_12_284_12_for_incr @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_281_12_284_12_for_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_281_12_284_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_281_12_284_12_for_begin" "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_281_12_284_12_for_end" ]
+        %k.2 = local;
+        symbol [ k %k.2 281 21 22 ];
+        %tmp.13 = 0;
+        lputv %k.2 %tmp.13;
+        symbol [ k %k.2 281 21 22 ];
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_281_12_284_12_for_test:
+        %tmp.14 = lgetv %k.2;
+        symbol [ k %tmp.14 281 28 29 ];
+        %tmp.15 = 8;
+        %tmp.16 = lt %tmp.14 %tmp.15;
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_281_12_284_12_for_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_281_12_284_12_for_begin:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_281_40_284_12_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 282 16 ]
+        %tmp.17 = lgetv %i.1;
+        symbol [ i %tmp.17 282 21 22 ];
+        %tmp.18 = 1;
+        %tmp.19 = add %tmp.17 %tmp.18;
+        %tmp.20 = 7;
+        %tmp.21 = mod %tmp.19 %tmp.20;
+        lputv %i.1 %tmp.21;
+        symbol [ i %i.1 282 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 283 16 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_283_16_283_64_if_stmt:
+        %tmp.22 = self;
+        symbol [ _rollPosValid %tmp.23 283 20 33 ];
+        %tmp.23 = getv function %tmp.22 :_rollPosValid;
+        %tmp.24 = lgetv %i.1;
+        symbol [ i %tmp.24 283 34 35 ];
+        %tmp.25 = invoke %tmp.22 %tmp.23(%tmp.24);
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_283_16_283_64_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_283_16_283_64_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_283_38_283_64_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 283 40 ]
+        %tmp.26 = lgetv %i.1;
+        symbol [ i %tmp.26 283 53 54 ];
+        symbol [ rollCursor ? 283 40 50 ];
+        putv self :rollCursor %tmp.26;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 283 56 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_283_38_283_64_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_283_16_283_64_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_283_16_283_64_if_end:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_281_40_284_12_stop:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_281_12_284_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 281 ]
+        %tmp.29 = lgetv %k.2;
+        symbol [ k %tmp.29 281 35 36 ];
+        %tmp.30 = add %tmp.29 1;
+        lputv %k.2 %tmp.30;
+        symbol [ k %k.2 281 35 36 ];
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_281_12_284_12_for_test;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_281_12_284_12_for_end:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_279_36_285_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_279_8_293_8_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_279_8_293_8_if_else_false:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_285_15_293_8_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 286 12 ]
+        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_285_15_293_8_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_285_15_293_8_stop" ]
+        %c.3 = local;
+        symbol [ c %c.3 286 16 17 ];
+        symbol [ scoreCursor %tmp.32 286 20 31 ];
+        %tmp.32 = getv ? :scoreCursor;
+        lputv %c.3 %tmp.32;
+        symbol [ c %c.3 286 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 287 12 ]
+        for @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_287_12_292_12_for_test @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_287_12_292_12_for_incr @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_287_12_292_12_for_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_287_12_292_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_287_12_292_12_for_begin" "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_287_12_292_12_for_end" ]
+        %n.4 = local;
+        symbol [ n %n.4 287 21 22 ];
+        %tmp.33 = 0;
+        lputv %n.4 %tmp.33;
+        symbol [ n %n.4 287 21 22 ];
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_287_12_292_12_for_test:
+        %tmp.34 = lgetv %n.4;
+        symbol [ n %tmp.34 287 28 29 ];
+        symbol [ DR_CAT_COUNT %tmp.36 287 32 44 ];
+        %tmp.36 = getv ? :DR_CAT_COUNT;
+        %tmp.37 = lt %tmp.34 %tmp.36;
+        bf %tmp.37 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_287_12_292_12_for_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_287_12_292_12_for_begin:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_287_51_292_12_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 288 16 ]
+        %tmp.38 = lgetv %c.3;
+        symbol [ c %tmp.38 288 21 22 ];
+        %tmp.39 = 1;
+        %tmp.40 = add %tmp.38 %tmp.39;
+        symbol [ DR_CAT_COUNT %tmp.42 288 30 42 ];
+        %tmp.42 = getv ? :DR_CAT_COUNT;
+        %tmp.43 = mod %tmp.40 %tmp.42;
+        lputv %c.3 %tmp.43;
+        symbol [ c %c.3 288 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 289 16 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_289_16_291_16_if_stmt:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_289_20_289_61_begin:
+        symbol [ scores %tmp.45 289 20 26 ];
+        %tmp.45 = getv ? :scores;
+        symbol [ isAvailable %tmp.46 289 27 38 ];
+        %tmp.46 = getv function %tmp.45 :isAvailable;
+        %tmp.47 = lgetv %c.3;
+        symbol [ c %tmp.47 289 39 40 ];
+        %tmp.48 = invoke %tmp.45 %tmp.46(%tmp.47);
+        bf %tmp.48 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_289_16_291_16_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_289_45_289_61_true:
+        symbol [ scores %tmp.50 289 46 52 ];
+        %tmp.50 = getv ? :scores;
+        symbol [ isUsed %tmp.51 289 53 59 ];
+        %tmp.51 = getv function %tmp.50 :isUsed;
+        %tmp.52 = lgetv %c.3;
+        symbol [ c %tmp.52 289 60 61 ];
+        %tmp.53 = invoke %tmp.50 %tmp.51(%tmp.52);
+        %tmp.54 = not %tmp.53;
+        push %tmp.54;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_289_45_289_61_end:
+        %tmp.55 = phi [%tmp.48 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_289_20_289_61_begin] [%tmp.54 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_289_45_289_61_true] [%tmp.55 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_289_45_289_61_end];
+        bf %tmp.55 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_289_16_291_16_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_289_16_291_16_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_289_64_291_16_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 290 20 ]
+        %tmp.56 = lgetv %c.3;
+        symbol [ c %tmp.56 290 34 35 ];
+        symbol [ scoreCursor ? 290 20 31 ];
+        putv self :scoreCursor %tmp.56;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 290 37 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_289_64_291_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_289_16_291_16_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_289_16_291_16_if_end:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_287_51_292_12_stop:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_287_12_292_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 287 ]
+        %tmp.59 = lgetv %n.4;
+        symbol [ n %tmp.59 287 46 47 ];
+        %tmp.60 = add %tmp.59 1;
+        lputv %n.4 %tmp.60;
+        symbol [ n %n.4 287 46 47 ];
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_287_12_292_12_for_test;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_287_12_292_12_for_end:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_285_15_293_8_stop:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_279_8_293_8_if_end:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_277_23_294_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 295; @symbol_functiondef = [_rollPosValid,295,20,33]; @symbol_param<0> = [i,295,34,35]; ]
+    protected
+    function _rollPosValid(i) {
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_295_37_300_4_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 296 8 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_296_8_296_56_if_stmt:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_296_12_296_26_begin:
+        %tmp.1 = lgetv %i;
+        symbol [ i %tmp.1 296 12 13 ];
+        %tmp.2 = 0;
+        %tmp.3 = gte %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_296_8_296_56_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_296_22_296_26_true:
+        %tmp.4 = lgetv %i;
+        symbol [ i %tmp.4 296 22 23 ];
+        symbol [ DR_DICE_COUNT %tmp.6 296 26 39 ];
+        %tmp.6 = getv ? :DR_DICE_COUNT;
+        %tmp.7 = lt %tmp.4 %tmp.6;
+        push %tmp.7;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_296_22_296_26_end:
+        %tmp.8 = phi [%tmp.3 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_296_12_296_26_begin] [%tmp.7 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_296_22_296_26_true] [%tmp.8 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_296_22_296_26_end];
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_296_8_296_56_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_296_8_296_56_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_296_41_296_56_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 296 43 ]
+        %tmp.9 = true;
+        ret %tmp.9;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_296_41_296_56_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_296_8_296_56_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_296_8_296_56_if_end:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 297 8 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_297_8_297_62_if_stmt:
+        %tmp.10 = lgetv %i;
+        symbol [ i %tmp.10 297 12 13 ];
+        symbol [ DR_POS_ROLL %tmp.12 297 17 28 ];
+        %tmp.12 = getv ? :DR_POS_ROLL;
+        %tmp.13 = eq %tmp.10 %tmp.12;
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_297_8_297_62_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_297_8_297_62_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_297_31_297_62_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 297 33 ]
+        symbol [ dice %tmp.15 297 40 44 ];
+        %tmp.15 = getv ? :dice;
+        symbol [ rerollsLeft %tmp.16 297 45 56 ];
+        %tmp.16 = getv %tmp.15 :rerollsLeft;
+        %tmp.17 = 0;
+        %tmp.18 = gt %tmp.16 %tmp.17;
+        ret %tmp.18;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_297_31_297_62_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_297_8_297_62_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_297_8_297_62_if_end:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 298 8 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_298_8_298_46_if_stmt:
+        %tmp.19 = lgetv %i;
+        symbol [ i %tmp.19 298 12 13 ];
+        symbol [ DR_POS_SCORE %tmp.21 298 17 29 ];
+        %tmp.21 = getv ? :DR_POS_SCORE;
+        %tmp.22 = eq %tmp.19 %tmp.21;
+        bf %tmp.22 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_298_8_298_46_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_298_8_298_46_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_298_31_298_46_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 298 33 ]
+        %tmp.23 = true;
+        ret %tmp.23;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_298_31_298_46_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_298_8_298_46_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_298_8_298_46_if_end:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 299 8 ]
+        %tmp.24 = false;
+        ret %tmp.24;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_295_37_300_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 302; @symbol_functiondef = [selectAction,302,13,25]; ]
+    function selectAction() {
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_302_28_323_4_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 303 8 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_303_8_303_40_if_stmt:
+        symbol [ state %tmp.2 303 12 17 ];
+        %tmp.2 = getv ? :state;
+        symbol [ DR_PLAY %tmp.4 303 21 28 ];
+        %tmp.4 = getv ? :DR_PLAY;
+        %tmp.5 = ne %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_303_8_303_40_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_303_8_303_40_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_303_30_303_40_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 303 32 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_303_30_303_40_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_303_8_303_40_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_303_8_303_40_if_end:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 304 8 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_304_8_322_8_if_stmt:
+        symbol [ phase %tmp.7 304 12 17 ];
+        %tmp.7 = getv ? :phase;
+        symbol [ DR_PHASE_ROLL %tmp.9 304 21 34 ];
+        %tmp.9 = getv ? :DR_PHASE_ROLL;
+        %tmp.10 = eq %tmp.7 %tmp.9;
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_304_8_322_8_if_else_false;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_304_8_322_8_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_304_36_316_8_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 305 12 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_305_12_315_12_if_stmt:
+        symbol [ rollCursor %tmp.12 305 16 26 ];
+        %tmp.12 = getv ? :rollCursor;
+        symbol [ DR_DICE_COUNT %tmp.14 305 29 42 ];
+        %tmp.14 = getv ? :DR_DICE_COUNT;
+        %tmp.15 = lt %tmp.12 %tmp.14;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_305_12_315_12_if_false;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_305_12_315_12_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_305_44_307_12_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 306 16 ]
+        symbol [ dice %tmp.17 306 16 20 ];
+        %tmp.17 = getv ? :dice;
+        symbol [ toggleHold %tmp.18 306 21 31 ];
+        %tmp.18 = getv function %tmp.17 :toggleHold;
+        symbol [ rollCursor %tmp.20 306 32 42 ];
+        %tmp.20 = getv ? :rollCursor;
+        invoke %tmp.17 %tmp.18(%tmp.20);
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_305_44_307_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_305_12_315_12_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_305_12_315_12_if_false:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 307 19 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_307_19_315_12_if_stmt:
+        symbol [ rollCursor %tmp.22 307 23 33 ];
+        %tmp.22 = getv ? :rollCursor;
+        symbol [ DR_POS_ROLL %tmp.24 307 37 48 ];
+        %tmp.24 = getv ? :DR_POS_ROLL;
+        %tmp.25 = eq %tmp.22 %tmp.24;
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_307_19_315_12_if_false;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_307_19_315_12_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_307_50_312_12_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 308 16 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_308_16_311_16_if_stmt:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_308_20_309_37_begin:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_308_20_308_57_begin:
+        symbol [ dice %tmp.27 308 20 24 ];
+        %tmp.27 = getv ? :dice;
+        symbol [ reroll %tmp.28 308 25 31 ];
+        %tmp.28 = getv function %tmp.27 :reroll;
+        %tmp.29 = invoke %tmp.27 %tmp.28();
+        bf %tmp.29 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_308_16_311_16_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_308_37_308_57_true:
+        symbol [ dice %tmp.31 308 37 41 ];
+        %tmp.31 = getv ? :dice;
+        symbol [ rerollsLeft %tmp.32 308 42 53 ];
+        %tmp.32 = getv %tmp.31 :rerollsLeft;
+        %tmp.33 = 0;
+        %tmp.34 = eq %tmp.32 %tmp.33;
+        push %tmp.34;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_308_37_308_57_end:
+        %tmp.35 = phi [%tmp.29 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_308_20_308_57_begin] [%tmp.34 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_308_37_308_57_true] [%tmp.35 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_308_37_308_57_end];
+        bf %tmp.35 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_308_16_311_16_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_309_23_309_37_true:
+        symbol [ rollCursor %tmp.37 309 23 33 ];
+        %tmp.37 = getv ? :rollCursor;
+        symbol [ DR_POS_ROLL %tmp.39 309 37 48 ];
+        %tmp.39 = getv ? :DR_POS_ROLL;
+        %tmp.40 = eq %tmp.37 %tmp.39;
+        push %tmp.40;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_309_23_309_37_end:
+        %tmp.41 = phi [%tmp.35 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_308_20_309_37_begin] [%tmp.40 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_309_23_309_37_true] [%tmp.41 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_309_23_309_37_end];
+        bf %tmp.41 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_308_16_311_16_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_308_16_311_16_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_309_50_311_16_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 310 20 ]
+        symbol [ DR_POS_SCORE %tmp.43 310 33 45 ];
+        %tmp.43 = getv ? :DR_POS_SCORE;
+        symbol [ rollCursor ? 310 20 30 ];
+        putv self :rollCursor %tmp.43;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_309_50_311_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_308_16_311_16_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_308_16_311_16_if_end:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_307_50_312_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_307_19_315_12_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_307_19_315_12_if_false:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 312 19 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_312_19_315_12_if_stmt:
+        symbol [ rollCursor %tmp.45 312 23 33 ];
+        %tmp.45 = getv ? :rollCursor;
+        symbol [ DR_POS_SCORE %tmp.47 312 37 49 ];
+        %tmp.47 = getv ? :DR_POS_SCORE;
+        %tmp.48 = eq %tmp.45 %tmp.47;
+        bf %tmp.48 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_312_19_315_12_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_312_19_315_12_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_312_51_315_12_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 313 16 ]
+        symbol [ DR_PHASE_SCORE %tmp.50 313 30 44 ];
+        %tmp.50 = getv ? :DR_PHASE_SCORE;
+        symbol [ phase ? 313 16 21 ];
+        putv self :phase %tmp.50;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 314 16 ]
+        %tmp.51 = self;
+        symbol [ _firstAvailableCategory %tmp.52 314 30 53 ];
+        %tmp.52 = getv function %tmp.51 :_firstAvailableCategory;
+        %tmp.53 = invoke %tmp.51 %tmp.52();
+        symbol [ scoreCursor ? 314 16 27 ];
+        putv self :scoreCursor %tmp.53;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_312_51_315_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_312_19_315_12_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_312_19_315_12_if_end:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_307_19_315_12_if_end:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_305_12_315_12_if_end:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_304_36_316_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_304_8_322_8_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_304_8_322_8_if_else_false:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_316_15_322_8_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 318 12 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_318_12_321_12_if_stmt:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_318_16_318_77_begin:
+        symbol [ scores %tmp.55 318 16 22 ];
+        %tmp.55 = getv ? :scores;
+        symbol [ isAvailable %tmp.56 318 23 34 ];
+        %tmp.56 = getv function %tmp.55 :isAvailable;
+        symbol [ scoreCursor %tmp.58 318 35 46 ];
+        %tmp.58 = getv ? :scoreCursor;
+        %tmp.59 = invoke %tmp.55 %tmp.56(%tmp.58);
+        bf %tmp.59 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_318_12_321_12_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_318_51_318_77_true:
+        symbol [ scores %tmp.61 318 52 58 ];
+        %tmp.61 = getv ? :scores;
+        symbol [ isUsed %tmp.62 318 59 65 ];
+        %tmp.62 = getv function %tmp.61 :isUsed;
+        symbol [ scoreCursor %tmp.64 318 66 77 ];
+        %tmp.64 = getv ? :scoreCursor;
+        %tmp.65 = invoke %tmp.61 %tmp.62(%tmp.64);
+        %tmp.66 = not %tmp.65;
+        push %tmp.66;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_318_51_318_77_end:
+        %tmp.67 = phi [%tmp.59 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_318_16_318_77_begin] [%tmp.66 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_318_51_318_77_true] [%tmp.67 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_318_51_318_77_end];
+        bf %tmp.67 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_318_12_321_12_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_318_12_321_12_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_318_80_321_12_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 319 16 ]
+        symbol [ scores %tmp.69 319 16 22 ];
+        %tmp.69 = getv ? :scores;
+        symbol [ commit %tmp.70 319 23 29 ];
+        %tmp.70 = getv function %tmp.69 :commit;
+        symbol [ scoreCursor %tmp.72 319 30 41 ];
+        %tmp.72 = getv ? :scoreCursor;
+        symbol [ dice %tmp.74 319 43 47 ];
+        %tmp.74 = getv ? :dice;
+        symbol [ dice %tmp.75 319 48 52 ];
+        %tmp.75 = getv %tmp.74 :dice;
+        invoke %tmp.69 %tmp.70(%tmp.72, %tmp.75);
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 320 16 ]
+        %tmp.76 = self;
+        symbol [ _advanceRound %tmp.77 320 16 29 ];
+        %tmp.77 = getv function %tmp.76 :_advanceRound;
+        invoke %tmp.76 %tmp.77();
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_318_80_321_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_318_12_321_12_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_318_12_321_12_if_end:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_316_15_322_8_stop:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_304_8_322_8_if_end:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_302_28_323_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 326; @symbol_functiondef = [setRollCursor,326,13,26]; @symbol_param<0> = [i,326,27,28]; ]
+    function setRollCursor(i) {
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_326_30_330_4_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 327 8 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_327_8_329_8_if_stmt:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_327_12_327_73_begin:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_327_12_327_41_begin:
+        symbol [ state %tmp.2 327 12 17 ];
+        %tmp.2 = getv ? :state;
+        symbol [ DR_PLAY %tmp.4 327 21 28 ];
+        %tmp.4 = getv ? :DR_PLAY;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_327_8_329_8_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_327_32_327_41_true:
+        symbol [ phase %tmp.7 327 32 37 ];
+        %tmp.7 = getv ? :phase;
+        symbol [ DR_PHASE_ROLL %tmp.9 327 41 54 ];
+        %tmp.9 = getv ? :DR_PHASE_ROLL;
+        %tmp.10 = eq %tmp.7 %tmp.9;
+        push %tmp.10;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_327_32_327_41_end:
+        %tmp.11 = phi [%tmp.5 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_327_12_327_41_begin] [%tmp.10 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_327_32_327_41_true] [%tmp.11 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_327_32_327_41_end];
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_327_8_329_8_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_327_58_327_73_true:
+        %tmp.12 = self;
+        symbol [ _rollPosValid %tmp.13 327 58 71 ];
+        %tmp.13 = getv function %tmp.12 :_rollPosValid;
+        %tmp.14 = lgetv %i;
+        symbol [ i %tmp.14 327 72 73 ];
+        %tmp.15 = invoke %tmp.12 %tmp.13(%tmp.14);
+        push %tmp.15;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_327_58_327_73_end:
+        %tmp.16 = phi [%tmp.11 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_327_12_327_73_begin] [%tmp.15 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_327_58_327_73_true] [%tmp.16 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_327_58_327_73_end];
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_327_8_329_8_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_327_8_329_8_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_327_76_329_8_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 328 12 ]
+        %tmp.17 = lgetv %i;
+        symbol [ i %tmp.17 328 25 26 ];
+        symbol [ rollCursor ? 328 12 22 ];
+        putv self :rollCursor %tmp.17;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_327_76_329_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_327_8_329_8_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_327_8_329_8_if_end:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_326_30_330_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 331; @symbol_functiondef = [setScoreCursor,331,13,27]; @symbol_param<0> = [i,331,28,29]; ]
+    function setScoreCursor(i) {
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_331_31_336_4_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 332 8 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_332_8_335_8_if_stmt:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_332_12_333_56_begin:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_332_12_333_35_begin:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_332_12_332_41_begin:
+        symbol [ state %tmp.2 332 12 17 ];
+        %tmp.2 = getv ? :state;
+        symbol [ DR_PLAY %tmp.4 332 21 28 ];
+        %tmp.4 = getv ? :DR_PLAY;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_332_8_335_8_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_332_32_332_41_true:
+        symbol [ phase %tmp.7 332 32 37 ];
+        %tmp.7 = getv ? :phase;
+        symbol [ DR_PHASE_SCORE %tmp.9 332 41 55 ];
+        %tmp.9 = getv ? :DR_PHASE_SCORE;
+        %tmp.10 = eq %tmp.7 %tmp.9;
+        push %tmp.10;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_332_32_332_41_end:
+        %tmp.11 = phi [%tmp.5 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_332_12_332_41_begin] [%tmp.10 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_332_32_332_41_true] [%tmp.11 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_332_32_332_41_end];
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_332_8_335_8_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_333_15_333_35_true:
+        symbol [ scores %tmp.13 333 15 21 ];
+        %tmp.13 = getv ? :scores;
+        symbol [ isAvailable %tmp.14 333 22 33 ];
+        %tmp.14 = getv function %tmp.13 :isAvailable;
+        %tmp.15 = lgetv %i;
+        symbol [ i %tmp.15 333 34 35 ];
+        %tmp.16 = invoke %tmp.13 %tmp.14(%tmp.15);
+        push %tmp.16;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_333_15_333_35_end:
+        %tmp.17 = phi [%tmp.11 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_332_12_333_35_begin] [%tmp.16 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_333_15_333_35_true] [%tmp.17 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_333_15_333_35_end];
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_332_8_335_8_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_333_40_333_56_true:
+        symbol [ scores %tmp.19 333 41 47 ];
+        %tmp.19 = getv ? :scores;
+        symbol [ isUsed %tmp.20 333 48 54 ];
+        %tmp.20 = getv function %tmp.19 :isUsed;
+        %tmp.21 = lgetv %i;
+        symbol [ i %tmp.21 333 55 56 ];
+        %tmp.22 = invoke %tmp.19 %tmp.20(%tmp.21);
+        %tmp.23 = not %tmp.22;
+        push %tmp.23;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_333_40_333_56_end:
+        %tmp.24 = phi [%tmp.17 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_332_12_333_56_begin] [%tmp.23 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_333_40_333_56_true] [%tmp.24 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_333_40_333_56_end];
+        bf %tmp.24 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_332_8_335_8_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_332_8_335_8_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_333_59_335_8_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 334 12 ]
+        %tmp.25 = lgetv %i;
+        symbol [ i %tmp.25 334 26 27 ];
+        symbol [ scoreCursor ? 334 12 23 ];
+        putv self :scoreCursor %tmp.25;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_333_59_335_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_332_8_335_8_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_332_8_335_8_if_end:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_331_31_336_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 338; @symbol_functiondef = [_advanceRound,338,20,33]; ]
+    protected
+    function _advanceRound() {
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_338_36_347_4_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 339 8 ]
+        symbol [ roundsPlayed %tmp.2 339 23 35 ];
+        %tmp.2 = getv ? :roundsPlayed;
         %tmp.3 = 1;
         %tmp.4 = add %tmp.2 %tmp.3;
-        symbol [ MI_ITEMS %tmp.6 73 40 48 ];
-        %tmp.6 = getv ? :MI_ITEMS;
-        %tmp.7 = mod %tmp.4 %tmp.6;
-        symbol [ menuCursor ? 73 8 18 ];
-        putv self :menuCursor %tmp.7;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_72_24_74_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc"; @line = 75; @symbol_functiondef = [menuActivate,75,13,25]; ]
-    function menuActivate() {
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_75_28_84_4_start:
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 76 8 ]
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_76_8_83_8_if_stmt:
-        symbol [ menuCursor %tmp.2 76 12 22 ];
-        %tmp.2 = getv ? :menuCursor;
-        symbol [ MI_START %tmp.4 76 26 34 ];
-        %tmp.4 = getv ? :MI_START;
-        %tmp.5 = eq %tmp.2 %tmp.4;
-        bf %tmp.5 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_76_8_83_8_if_false;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_76_8_83_8_if_true:
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_76_36_78_8_start:
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 77 12 ]
-        %tmp.6 = self;
-        symbol [ newGame %tmp.7 77 12 19 ];
-        %tmp.7 = getv function %tmp.6 :newGame;
-        invoke %tmp.6 %tmp.7();
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_76_36_78_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_76_8_83_8_if_end;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_76_8_83_8_if_false:
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 78 15 ]
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_78_15_83_8_if_stmt:
-        symbol [ menuCursor %tmp.9 78 19 29 ];
-        %tmp.9 = getv ? :menuCursor;
-        symbol [ MI_RESET_BEST %tmp.11 78 33 46 ];
-        %tmp.11 = getv ? :MI_RESET_BEST;
-        %tmp.12 = eq %tmp.9 %tmp.11;
-        bf %tmp.12 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_78_15_83_8_if_end;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_78_15_83_8_if_true:
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_78_48_83_8_start:
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 79 12 ]
-        %tmp.13 = 0;
-        symbol [ best ? 79 12 16 ];
-        putv self :best %tmp.13;
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 80 12 ]
-        %tmp.14 = 0;
-        symbol [ bestExp ? 80 12 19 ];
-        putv self :bestExp %tmp.14;
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 81 12 ]
-        %tmp.15 = self;
-        symbol [ _saveInt %tmp.16 81 12 20 ];
-        %tmp.16 = getv function %tmp.15 :_saveInt;
-        %tmp.17 = "best";
-        %tmp.18 = 0;
-        invoke %tmp.15 %tmp.16(%tmp.17, %tmp.18);
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 82 12 ]
-        %tmp.19 = self;
-        symbol [ _saveInt %tmp.20 82 12 20 ];
-        %tmp.20 = getv function %tmp.19 :_saveInt;
-        %tmp.21 = "bestExp";
-        %tmp.22 = 0;
-        invoke %tmp.19 %tmp.20(%tmp.21, %tmp.22);
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_78_48_83_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_78_15_83_8_if_end;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_78_15_83_8_if_end:
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_76_8_83_8_if_end:
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_75_28_84_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc"; @line = 87; @symbol_functiondef = [newGame,87,13,20]; ]
-    function newGame() {
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_87_23_94_4_start:
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 88 8 ]
-        symbol [ grid %tmp.2 88 8 12 ];
-        %tmp.2 = getv ? :grid;
-        symbol [ clear %tmp.3 88 13 18 ];
-        %tmp.3 = getv function %tmp.2 :clear;
-        invoke %tmp.2 %tmp.3();
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 89 8 ]
-        symbol [ grid %tmp.5 89 8 12 ];
-        %tmp.5 = getv ? :grid;
-        symbol [ spawnRandom %tmp.6 89 13 24 ];
-        %tmp.6 = getv function %tmp.5 :spawnRandom;
-        invoke %tmp.5 %tmp.6();
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 90 8 ]
-        symbol [ grid %tmp.8 90 8 12 ];
-        %tmp.8 = getv ? :grid;
-        symbol [ spawnRandom %tmp.9 90 13 24 ];
-        %tmp.9 = getv function %tmp.8 :spawnRandom;
-        invoke %tmp.8 %tmp.9();
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 91 8 ]
-        %tmp.10 = 0;
-        symbol [ score ? 91 8 13 ];
-        putv self :score %tmp.10;
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 92 8 ]
-        %tmp.11 = false;
-        symbol [ hasWonThisRun ? 92 8 21 ];
-        putv self :hasWonThisRun %tmp.11;
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 93 8 ]
-        symbol [ GS_PLAY %tmp.13 93 16 23 ];
-        %tmp.13 = getv ? :GS_PLAY;
-        symbol [ state ? 93 8 13 ];
-        putv self :state %tmp.13;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_87_23_94_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc"; @line = 96; @symbol_functiondef = [gotoMenu,96,13,21]; ]
-    function gotoMenu() {
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_96_24_96_43_start:
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 96 26 ]
-        symbol [ GS_MENU %tmp.2 96 34 41 ];
-        %tmp.2 = getv ? :GS_MENU;
-        symbol [ state ? 96 26 31 ];
-        putv self :state %tmp.2;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_96_24_96_43_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc"; @line = 99; @symbol_functiondef = [continueAfterWin,99,13,29]; ]
-    function continueAfterWin() {
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_99_32_101_4_start:
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 100 8 ]
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_100_8_100_48_if_stmt:
-        symbol [ state %tmp.2 100 12 17 ];
-        %tmp.2 = getv ? :state;
-        symbol [ GS_WIN %tmp.4 100 21 27 ];
-        %tmp.4 = getv ? :GS_WIN;
-        %tmp.5 = eq %tmp.2 %tmp.4;
-        bf %tmp.5 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_100_8_100_48_if_end;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_100_8_100_48_if_true:
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_100_29_100_48_start:
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 100 31 ]
-        symbol [ GS_PLAY %tmp.7 100 39 46 ];
-        %tmp.7 = getv ? :GS_PLAY;
-        symbol [ state ? 100 31 36 ];
-        putv self :state %tmp.7;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_100_29_100_48_stop:
-        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_100_8_100_48_if_end;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_100_8_100_48_if_end:
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_99_32_101_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc"; @line = 107; @symbol_functiondef = [tryMove,107,13,20]; @symbol_param<0> = [dir,107,21,24]; ]
-    function tryMove(dir) {
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_107_26_141_4_start:
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 108 8 ]
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_108_8_108_40_if_stmt:
-        symbol [ state %tmp.2 108 12 17 ];
-        %tmp.2 = getv ? :state;
-        symbol [ GS_PLAY %tmp.4 108 21 28 ];
-        %tmp.4 = getv ? :GS_PLAY;
-        %tmp.5 = ne %tmp.2 %tmp.4;
-        bf %tmp.5 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_108_8_108_40_if_end;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_108_8_108_40_if_true:
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_108_30_108_40_start:
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 108 32 ]
+        symbol [ roundsPlayed ? 339 8 20 ];
+        putv self :roundsPlayed %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 340 8 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_340_8_343_8_if_stmt:
+        symbol [ scores %tmp.6 340 12 18 ];
+        %tmp.6 = getv ? :scores;
+        symbol [ allDone %tmp.7 340 19 26 ];
+        %tmp.7 = getv function %tmp.6 :allDone;
+        %tmp.8 = invoke %tmp.6 %tmp.7();
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_340_8_343_8_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_340_8_343_8_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_340_30_343_8_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 341 12 ]
+        %tmp.9 = self;
+        symbol [ _onGameComplete %tmp.10 341 12 27 ];
+        %tmp.10 = getv function %tmp.9 :_onGameComplete;
+        invoke %tmp.9 %tmp.10();
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 342 12 ]
         ret ?;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_108_30_108_40_stop:
-        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_108_8_108_40_if_end;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_108_8_108_40_if_end:
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 109 8 ]
-        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_107_26_141_4_start" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_107_26_141_4_stop" ]
-        %r.1 = local;
-        symbol [ r %r.1 109 12 13 ];
-        symbol [ MergeEngine %tmp.7 109 16 27 ];
-        %tmp.7 = getv ? :MergeEngine;
-        symbol [ applyMove %tmp.8 109 28 37 ];
-        %tmp.8 = getv function %tmp.7 :applyMove;
-        symbol [ grid %tmp.10 109 38 42 ];
-        %tmp.10 = getv ? :grid;
-        %tmp.11 = lgetv %dir;
-        symbol [ dir %tmp.11 109 44 47 ];
-        %tmp.12 = invoke %tmp.7 %tmp.8(%tmp.10, %tmp.11);
-        lputv %r.1 %tmp.12;
-        symbol [ r %r.1 109 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 110 8 ]
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_110_8_110_32_if_stmt:
-        %tmp.13 = lgetv %r.1;
-        symbol [ r %tmp.13 110 13 14 ];
-        symbol [ moved %tmp.14 110 15 20 ];
-        %tmp.14 = getv %tmp.13 :moved;
-        %tmp.15 = not %tmp.14;
-        bf %tmp.15 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_110_8_110_32_if_end;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_110_8_110_32_if_true:
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_110_22_110_32_start:
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 110 24 ]
-        ret ?;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_110_22_110_32_stop:
-        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_110_8_110_32_if_end;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_110_8_110_32_if_end:
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 112 8 ]
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_112_8_118_8_if_stmt:
-        %tmp.16 = lgetv %r.1;
-        symbol [ r %tmp.16 112 12 13 ];
-        symbol [ gained %tmp.17 112 14 20 ];
-        %tmp.17 = getv %tmp.16 :gained;
-        %tmp.18 = 0;
-        %tmp.19 = gt %tmp.17 %tmp.18;
-        bf %tmp.19 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_112_8_118_8_if_end;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_112_8_118_8_if_true:
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_112_26_118_8_start:
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 113 12 ]
-        symbol [ score %tmp.21 113 20 25 ];
-        %tmp.21 = getv ? :score;
-        %tmp.22 = lgetv %r.1;
-        symbol [ r %tmp.22 113 28 29 ];
-        symbol [ gained %tmp.23 113 30 36 ];
-        %tmp.23 = getv %tmp.22 :gained;
-        %tmp.24 = add %tmp.21 %tmp.23;
-        symbol [ score ? 113 12 17 ];
-        putv self :score %tmp.24;
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 114 12 ]
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_114_12_117_12_if_stmt:
-        symbol [ score %tmp.26 114 16 21 ];
-        %tmp.26 = getv ? :score;
-        symbol [ best %tmp.28 114 24 28 ];
-        %tmp.28 = getv ? :best;
-        %tmp.29 = gt %tmp.26 %tmp.28;
-        bf %tmp.29 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_114_12_117_12_if_end;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_114_12_117_12_if_true:
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_114_30_117_12_start:
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 115 16 ]
-        symbol [ score %tmp.31 115 23 28 ];
-        %tmp.31 = getv ? :score;
-        symbol [ best ? 115 16 20 ];
-        putv self :best %tmp.31;
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 116 16 ]
-        %tmp.32 = self;
-        symbol [ _saveInt %tmp.33 116 16 24 ];
-        %tmp.33 = getv function %tmp.32 :_saveInt;
-        %tmp.34 = "best";
-        symbol [ best %tmp.36 116 33 37 ];
-        %tmp.36 = getv ? :best;
-        invoke %tmp.32 %tmp.33(%tmp.34, %tmp.36);
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_114_30_117_12_stop:
-        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_114_12_117_12_if_end;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_114_12_117_12_if_end:
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_112_26_118_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_112_8_118_8_if_end;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_112_8_118_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 120 8 ]
-        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_107_26_141_4_start" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_107_26_141_4_stop" ]
-        %top.2 = local;
-        symbol [ top %top.2 120 12 15 ];
-        symbol [ grid %tmp.38 120 18 22 ];
-        %tmp.38 = getv ? :grid;
-        symbol [ maxExp %tmp.39 120 23 29 ];
-        %tmp.39 = getv function %tmp.38 :maxExp;
-        %tmp.40 = invoke %tmp.38 %tmp.39();
-        lputv %top.2 %tmp.40;
-        symbol [ top %top.2 120 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 121 8 ]
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_121_8_124_8_if_stmt:
-        %tmp.41 = lgetv %top.2;
-        symbol [ top %tmp.41 121 12 15 ];
-        symbol [ bestExp %tmp.43 121 18 25 ];
-        %tmp.43 = getv ? :bestExp;
-        %tmp.44 = gt %tmp.41 %tmp.43;
-        bf %tmp.44 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_121_8_124_8_if_end;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_121_8_124_8_if_true:
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_121_27_124_8_start:
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 122 12 ]
-        %tmp.45 = lgetv %top.2;
-        symbol [ top %tmp.45 122 22 25 ];
-        symbol [ bestExp ? 122 12 19 ];
-        putv self :bestExp %tmp.45;
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 123 12 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_340_30_343_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_340_8_343_8_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_340_8_343_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 344 8 ]
+        symbol [ dice %tmp.12 344 8 12 ];
+        %tmp.12 = getv ? :dice;
+        symbol [ rollInitial %tmp.13 344 13 24 ];
+        %tmp.13 = getv function %tmp.12 :rollInitial;
+        invoke %tmp.12 %tmp.13();
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 345 8 ]
+        symbol [ DR_PHASE_ROLL %tmp.15 345 21 34 ];
+        %tmp.15 = getv ? :DR_PHASE_ROLL;
+        symbol [ phase ? 345 8 13 ];
+        putv self :phase %tmp.15;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 346 8 ]
+        %tmp.16 = 0;
+        symbol [ rollCursor ? 346 8 18 ];
+        putv self :rollCursor %tmp.16;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_338_36_347_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 349; @symbol_functiondef = [_onGameComplete,349,20,35]; ]
+    protected
+    function _onGameComplete() {
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_349_38_386_4_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 350 8 ]
+        symbol [ gamesPlayed %tmp.2 350 22 33 ];
+        %tmp.2 = getv ? :gamesPlayed;
+        %tmp.3 = 1;
+        %tmp.4 = add %tmp.2 %tmp.3;
+        symbol [ gamesPlayed ? 350 8 19 ];
+        putv self :gamesPlayed %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 351 8 ]
+        %tmp.5 = self;
+        symbol [ _save %tmp.6 351 8 13 ];
+        %tmp.6 = getv function %tmp.5 :_save;
+        symbol [ DR_KEY_GAMES %tmp.8 351 14 26 ];
+        %tmp.8 = getv ? :DR_KEY_GAMES;
+        symbol [ gamesPlayed %tmp.10 351 28 39 ];
+        %tmp.10 = getv ? :gamesPlayed;
+        invoke %tmp.5 %tmp.6(%tmp.8, %tmp.10);
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 353 8 ]
+        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_349_38_386_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_349_38_386_4_stop" ]
+        %final.1 = local;
+        symbol [ final %final.1 353 12 17 ];
+        symbol [ scores %tmp.12 353 20 26 ];
+        %tmp.12 = getv ? :scores;
+        symbol [ total %tmp.13 353 27 32 ];
+        %tmp.13 = getv %tmp.12 :total;
+        lputv %final.1 %tmp.13;
+        symbol [ final %final.1 353 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 354 8 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_354_8_379_8_if_stmt:
+        symbol [ menuMode %tmp.15 354 12 20 ];
+        %tmp.15 = getv ? :menuMode;
+        symbol [ DR_MODE_CLASSIC %tmp.17 354 24 39 ];
+        %tmp.17 = getv ? :DR_MODE_CLASSIC;
+        %tmp.18 = eq %tmp.15 %tmp.17;
+        bf %tmp.18 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_354_8_379_8_if_false;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_354_8_379_8_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_354_41_359_8_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 355 12 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_355_12_358_12_if_stmt:
+        %tmp.19 = lgetv %final.1;
+        symbol [ final %tmp.19 355 16 21 ];
+        symbol [ bestClassic %tmp.21 355 24 35 ];
+        %tmp.21 = getv ? :bestClassic;
+        %tmp.22 = gt %tmp.19 %tmp.21;
+        bf %tmp.22 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_355_12_358_12_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_355_12_358_12_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_355_37_358_12_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 356 16 ]
+        %tmp.23 = lgetv %final.1;
+        symbol [ final %tmp.23 356 30 35 ];
+        symbol [ bestClassic ? 356 16 27 ];
+        putv self :bestClassic %tmp.23;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 357 16 ]
+        %tmp.24 = self;
+        symbol [ _save %tmp.25 357 16 21 ];
+        %tmp.25 = getv function %tmp.24 :_save;
+        symbol [ DR_KEY_BEST_CLASSIC %tmp.27 357 22 41 ];
+        %tmp.27 = getv ? :DR_KEY_BEST_CLASSIC;
+        symbol [ bestClassic %tmp.29 357 43 54 ];
+        %tmp.29 = getv ? :bestClassic;
+        invoke %tmp.24 %tmp.25(%tmp.27, %tmp.29);
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_355_37_358_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_355_12_358_12_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_355_12_358_12_if_end:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_354_41_359_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_354_8_379_8_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_354_8_379_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 359 15 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_359_15_379_8_if_stmt:
+        symbol [ menuMode %tmp.31 359 19 27 ];
+        %tmp.31 = getv ? :menuMode;
+        symbol [ DR_MODE_QUICK %tmp.33 359 31 44 ];
+        %tmp.33 = getv ? :DR_MODE_QUICK;
+        %tmp.34 = eq %tmp.31 %tmp.33;
+        bf %tmp.34 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_359_15_379_8_if_else_false;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_359_15_379_8_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_359_46_364_8_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 360 12 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_360_12_363_12_if_stmt:
+        %tmp.35 = lgetv %final.1;
+        symbol [ final %tmp.35 360 16 21 ];
+        symbol [ bestQuick %tmp.37 360 24 33 ];
+        %tmp.37 = getv ? :bestQuick;
+        %tmp.38 = gt %tmp.35 %tmp.37;
+        bf %tmp.38 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_360_12_363_12_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_360_12_363_12_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_360_35_363_12_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 361 16 ]
+        %tmp.39 = lgetv %final.1;
+        symbol [ final %tmp.39 361 28 33 ];
+        symbol [ bestQuick ? 361 16 25 ];
+        putv self :bestQuick %tmp.39;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 362 16 ]
+        %tmp.40 = self;
+        symbol [ _save %tmp.41 362 16 21 ];
+        %tmp.41 = getv function %tmp.40 :_save;
+        symbol [ DR_KEY_BEST_QUICK %tmp.43 362 22 39 ];
+        %tmp.43 = getv ? :DR_KEY_BEST_QUICK;
+        symbol [ bestQuick %tmp.45 362 41 50 ];
+        %tmp.45 = getv ? :bestQuick;
+        invoke %tmp.40 %tmp.41(%tmp.43, %tmp.45);
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_360_35_363_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_360_12_363_12_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_360_12_363_12_if_end:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_359_46_364_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_359_15_379_8_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_359_15_379_8_if_else_false:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_364_15_379_8_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 366 12 ]
+        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_364_15_379_8_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_364_15_379_8_stop" ]
+        %t.2 = local;
+        symbol [ t %t.2 366 16 17 ];
         %tmp.46 = self;
-        symbol [ _saveInt %tmp.47 123 12 20 ];
-        %tmp.47 = getv function %tmp.46 :_saveInt;
-        %tmp.48 = "bestExp";
-        symbol [ bestExp %tmp.50 123 32 39 ];
-        %tmp.50 = getv ? :bestExp;
-        invoke %tmp.46 %tmp.47(%tmp.48, %tmp.50);
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_121_27_124_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_121_8_124_8_if_end;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_121_8_124_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 128 8 ]
-        symbol [ grid %tmp.52 128 8 12 ];
-        %tmp.52 = getv ? :grid;
-        symbol [ spawnRandom %tmp.53 128 13 24 ];
-        %tmp.53 = getv function %tmp.52 :spawnRandom;
-        invoke %tmp.52 %tmp.53();
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 130 8 ]
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_130_8_134_8_if_stmt:
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_130_12_130_30_begin:
-        %tmp.54 = lgetv %r.1;
-        symbol [ r %tmp.54 130 12 13 ];
-        symbol [ reached2048 %tmp.55 130 14 25 ];
-        %tmp.55 = getv %tmp.54 :reached2048;
-        bf %tmp.55 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_130_8_134_8_if_end;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_130_29_130_30_true:
-        symbol [ hasWonThisRun %tmp.57 130 30 43 ];
-        %tmp.57 = getv ? :hasWonThisRun;
-        %tmp.58 = not %tmp.57;
-        push %tmp.58;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_130_29_130_30_end:
-        %tmp.59 = phi [%tmp.55 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_130_12_130_30_begin] [%tmp.58 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_130_29_130_30_true] [%tmp.59 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_130_29_130_30_end];
-        bf %tmp.59 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_130_8_134_8_if_end;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_130_8_134_8_if_true:
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_130_45_134_8_start:
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 131 12 ]
-        %tmp.60 = true;
-        symbol [ hasWonThisRun ? 131 12 25 ];
-        putv self :hasWonThisRun %tmp.60;
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 132 12 ]
-        symbol [ GS_WIN %tmp.62 132 20 26 ];
-        %tmp.62 = getv ? :GS_WIN;
-        symbol [ state ? 132 12 17 ];
-        putv self :state %tmp.62;
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 133 12 ]
-        ret ?;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_130_45_134_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_130_8_134_8_if_end;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_130_8_134_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 136 8 ]
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_136_8_140_8_if_stmt:
-        symbol [ grid %tmp.64 136 13 17 ];
-        %tmp.64 = getv ? :grid;
-        symbol [ hasAnyMove %tmp.65 136 18 28 ];
-        %tmp.65 = getv function %tmp.64 :hasAnyMove;
-        %tmp.66 = invoke %tmp.64 %tmp.65();
-        %tmp.67 = not %tmp.66;
-        bf %tmp.67 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_136_8_140_8_if_end;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_136_8_140_8_if_true:
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_136_32_140_8_start:
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 137 12 ]
-        symbol [ GS_OVER %tmp.69 137 20 27 ];
-        %tmp.69 = getv ? :GS_OVER;
-        symbol [ state ? 137 12 17 ];
-        putv self :state %tmp.69;
-[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc" 139 12 ]
-        symbol [ Leaderboard %tmp.71 139 12 23 ];
-        %tmp.71 = getv ? :Leaderboard;
-        symbol [ submitScore %tmp.72 139 24 35 ];
-        %tmp.72 = getv function %tmp.71 :submitScore;
-        symbol [ LB_GAME_ID %tmp.74 139 36 46 ];
-        %tmp.74 = getv ? :LB_GAME_ID;
-        symbol [ score %tmp.76 139 48 53 ];
-        %tmp.76 = getv ? :score;
-        %tmp.77 = "";
-        invoke %tmp.71 %tmp.72(%tmp.74, %tmp.76, %tmp.77);
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_136_32_140_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_136_8_140_8_if_end;
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_136_8_140_8_if_end:
-_Users_kkorolczuk_work_garmin_twentyfortyeight_source_GameController_mc_107_26_141_4_stop:
+        symbol [ _todaySeed %tmp.47 366 20 30 ];
+        %tmp.47 = getv function %tmp.46 :_todaySeed;
+        %tmp.48 = invoke %tmp.46 %tmp.47();
+        lputv %t.2 %tmp.48;
+        symbol [ t %t.2 366 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 369 12 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_369_12_370_51_if_stmt:
+        symbol [ dailyDate %tmp.50 369 16 25 ];
+        %tmp.50 = getv ? :dailyDate;
+        %tmp.51 = lgetv %t.2;
+        symbol [ t %tmp.51 369 29 30 ];
+        %tmp.52 = 1;
+        %tmp.53 = sub %tmp.51 %tmp.52;
+        %tmp.54 = eq %tmp.50 %tmp.53;
+        bf %tmp.54 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_369_12_370_51_if_else_false;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_369_12_370_51_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_369_36_369_59_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 369 38 ]
+        symbol [ streak %tmp.56 369 47 53 ];
+        %tmp.56 = getv ? :streak;
+        %tmp.57 = 1;
+        %tmp.58 = add %tmp.56 %tmp.57;
+        symbol [ streak ? 369 38 44 ];
+        putv self :streak %tmp.58;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_369_36_369_59_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_369_12_370_51_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_369_12_370_51_if_else_false:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_370_37_370_51_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 370 39 ]
+        %tmp.59 = 1;
+        symbol [ streak ? 370 39 45 ];
+        putv self :streak %tmp.59;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_370_37_370_51_stop:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_369_12_370_51_if_end:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 371 12 ]
+        %tmp.60 = lgetv %t.2;
+        symbol [ t %tmp.60 371 24 25 ];
+        symbol [ dailyDate ? 371 12 21 ];
+        putv self :dailyDate %tmp.60;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 372 12 ]
+        %tmp.61 = true;
+        symbol [ dailyPlayedToday ? 372 12 28 ];
+        putv self :dailyPlayedToday %tmp.61;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 373 12 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_373_12_376_12_if_stmt:
+        %tmp.62 = lgetv %final.1;
+        symbol [ final %tmp.62 373 16 21 ];
+        symbol [ bestDaily %tmp.64 373 24 33 ];
+        %tmp.64 = getv ? :bestDaily;
+        %tmp.65 = gt %tmp.62 %tmp.64;
+        bf %tmp.65 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_373_12_376_12_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_373_12_376_12_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_373_35_376_12_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 374 16 ]
+        %tmp.66 = lgetv %final.1;
+        symbol [ final %tmp.66 374 28 33 ];
+        symbol [ bestDaily ? 374 16 25 ];
+        putv self :bestDaily %tmp.66;
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 375 16 ]
+        %tmp.67 = self;
+        symbol [ _save %tmp.68 375 16 21 ];
+        %tmp.68 = getv function %tmp.67 :_save;
+        symbol [ DR_KEY_BEST_DAILY %tmp.70 375 22 39 ];
+        %tmp.70 = getv ? :DR_KEY_BEST_DAILY;
+        symbol [ bestDaily %tmp.72 375 41 50 ];
+        %tmp.72 = getv ? :bestDaily;
+        invoke %tmp.67 %tmp.68(%tmp.70, %tmp.72);
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_373_35_376_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_373_12_376_12_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_373_12_376_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 377 12 ]
+        %tmp.73 = self;
+        symbol [ _save %tmp.74 377 12 17 ];
+        %tmp.74 = getv function %tmp.73 :_save;
+        symbol [ DR_KEY_DAILY_DATE %tmp.76 377 18 35 ];
+        %tmp.76 = getv ? :DR_KEY_DAILY_DATE;
+        symbol [ dailyDate %tmp.78 377 37 46 ];
+        %tmp.78 = getv ? :dailyDate;
+        invoke %tmp.73 %tmp.74(%tmp.76, %tmp.78);
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 378 12 ]
+        %tmp.79 = self;
+        symbol [ _save %tmp.80 378 12 17 ];
+        %tmp.80 = getv function %tmp.79 :_save;
+        symbol [ DR_KEY_STREAK %tmp.82 378 18 31 ];
+        %tmp.82 = getv ? :DR_KEY_STREAK;
+        symbol [ streak %tmp.84 378 37 43 ];
+        %tmp.84 = getv ? :streak;
+        invoke %tmp.79 %tmp.80(%tmp.82, %tmp.84);
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_364_15_379_8_stop:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_359_15_379_8_if_end:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_354_8_379_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 383 8 ]
+        symbol [ Leaderboard %tmp.86 383 8 19 ];
+        %tmp.86 = getv ? :Leaderboard;
+        symbol [ submitScore %tmp.87 383 20 31 ];
+        %tmp.87 = getv function %tmp.86 :submitScore;
+        symbol [ LB_GAME_ID %tmp.89 383 32 42 ];
+        %tmp.89 = getv ? :LB_GAME_ID;
+        %tmp.90 = lgetv %final.1;
+        symbol [ final %tmp.90 383 44 49 ];
+        %tmp.91 = self;
+        symbol [ variantName %tmp.92 383 51 62 ];
+        %tmp.92 = getv function %tmp.91 :variantName;
+        %tmp.93 = invoke %tmp.91 %tmp.92();
+        invoke %tmp.86 %tmp.87(%tmp.89, %tmp.90, %tmp.93);
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 385 8 ]
+        symbol [ DR_OVER %tmp.95 385 16 23 ];
+        %tmp.95 = getv ? :DR_OVER;
+        symbol [ state ? 385 8 13 ];
+        putv self :state %tmp.95;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_349_38_386_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 391; @symbol_functiondef = [previewScore,391,13,25]; @symbol_param<0> = [cat,391,26,29]; ]
+    function previewScore(cat) {
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_391_31_394_4_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 392 8 ]
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_392_8_392_73_if_stmt:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_392_12_392_57_begin:
+        symbol [ scores %tmp.2 392 13 19 ];
+        %tmp.2 = getv ? :scores;
+        symbol [ isAvailable %tmp.3 392 20 31 ];
+        %tmp.3 = getv function %tmp.2 :isAvailable;
+        %tmp.4 = lgetv %cat;
+        symbol [ cat %tmp.4 392 32 35 ];
+        %tmp.5 = invoke %tmp.2 %tmp.3(%tmp.4);
+        %tmp.6 = not %tmp.5;
+        bt %tmp.6 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_392_8_392_73_if_true;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_392_40_392_57_false:
+        symbol [ scores %tmp.8 392 40 46 ];
+        %tmp.8 = getv ? :scores;
+        symbol [ isUsed %tmp.9 392 47 53 ];
+        %tmp.9 = getv function %tmp.8 :isUsed;
+        %tmp.10 = lgetv %cat;
+        symbol [ cat %tmp.10 392 54 57 ];
+        %tmp.11 = invoke %tmp.8 %tmp.9(%tmp.10);
+        push %tmp.11;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_392_40_392_57_end:
+        %tmp.12 = phi [%tmp.6 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_392_12_392_57_begin] [%tmp.11 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_392_40_392_57_false] [%tmp.12 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_392_40_392_57_end];
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_392_8_392_73_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_392_8_392_73_if_true:
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_392_60_392_73_start:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 392 62 ]
+        %tmp.13 = -1;
+        ret %tmp.13;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_392_60_392_73_stop:
+        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_392_8_392_73_if_end;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_392_8_392_73_if_end:
+[ "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc" 393 8 ]
+        symbol [ scores %tmp.15 393 15 21 ];
+        %tmp.15 = getv ? :scores;
+        symbol [ score %tmp.16 393 22 27 ];
+        %tmp.16 = getv function %tmp.15 :score;
+        %tmp.17 = lgetv %cat;
+        symbol [ cat %tmp.17 393 28 31 ];
+        symbol [ dice %tmp.19 393 33 37 ];
+        %tmp.19 = getv ? :dice;
+        symbol [ dice %tmp.20 393 38 42 ];
+        %tmp.20 = getv %tmp.19 :dice;
+        %tmp.21 = invoke %tmp.15 %tmp.16(%tmp.17, %tmp.20);
+        ret %tmp.21;
+_Users_kkorolczuk_work_garmin_diceroyale_source_GameController_mc_391_31_394_4_stop:
     }
 }
-[ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/GameController.mc"; @line = 22; ]
+[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/GameController.mc"; @line = 36; ]
 <init> {
 }

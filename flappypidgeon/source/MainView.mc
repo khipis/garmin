@@ -171,8 +171,31 @@ class MainView extends WatchUi.View {
         }
     }
 
+    // Menu row geometry — shared by the renderer and the tap hit-test so
+    // they can never drift apart. The whole block is scaled ~18% smaller
+    // than the old single-row menu so the START + LEADERBOARD rows both
+    // fit without overlapping (incl. round-watch insets).
+    //   [ rowH, rowW, rowX, startY, lbY ]
+    function menuRowGeom() {
+        var W = _ctrl.screenW;
+        var H = _ctrl.screenH;
+        var rowH = (H * 11) / 100; if (rowH < 22) { rowH = 22; }
+        var rowW = (W * 64) / 100; if (rowW < 116) { rowW = 116; }
+        var rowX = (W - rowW) / 2;
+        var gap  = (H * 3) / 100;  if (gap < 6) { gap = 6; }
+        var startY = (H * 58) / 100;
+        var lbY    = startY + rowH + gap;
+        return [rowH, rowW, rowX, startY, lbY];
+    }
+
+    // Open the shared global leaderboard for Flappy Pidgeon.
+    function openLeaderboard() {
+        var v = new LbScoresView("flappypidgeon", "", "FLAPPY");
+        WatchUi.pushView(v, new LbScoresDelegate(), WatchUi.SLIDE_LEFT);
+    }
+
     // Chess-style menu — dark base, "by Bitochi" attribution,
-    // decorative bird, single START row.
+    // decorative bird, START row + shared LEADERBOARD row.
     hidden function _drawMenu(dc) {
         var cx = _ctrl.screenW / 2;
         var W  = _ctrl.screenW;
@@ -184,52 +207,55 @@ class MainView extends WatchUi.View {
             dc.fillCircle(cx, H / 2, W / 2 - 1);
         }
 
-        // Title
+        // Title (~18% more compact than before to make room for the row)
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, H * 8 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, H * 6 / 100, Graphics.FONT_SMALL,
                     "FLAPPY", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, H * 19 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, H * 16 / 100, Graphics.FONT_SMALL,
                     "PIDGEON", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x778899, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, H * 30 / 100, Graphics.FONT_XTINY,
+        dc.drawText(cx, H * 26 / 100, Graphics.FONT_XTINY,
                     "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
 
         // Decorative bird
-        var br = (H * 5) / 100; if (br < 8) { br = 8; }
+        var br = (H * 4) / 100; if (br < 7) { br = 7; }
         var b  = new Bird();
-        b.reset(cx, H * 48 / 100, br);
+        b.reset(cx, H * 39 / 100, br);
         b.vy = -1.0;
         b.draw(dc);
 
         // Best
         if (_ctrl.hi > 0) {
             dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, H * 60 / 100, Graphics.FONT_XTINY,
+            dc.drawText(cx, H * 49 / 100, Graphics.FONT_XTINY,
                         "BEST " + _ctrl.hi.format("%d"),
                         Graphics.TEXT_JUSTIFY_CENTER);
         }
 
-        // Chess-style START row
-        var rowH = (H * 13) / 100; if (rowH < 26) { rowH = 26; }
-        var rowW = (W * 78) / 100; if (rowW < 140) { rowW = 140; }
-        var rowX = (W - rowW) / 2;
-        var ry   = H * 70 / 100;
+        var rg     = menuRowGeom();
+        var rowH   = rg[0]; var rowW = rg[1]; var rowX = rg[2];
+        var startY = rg[3]; var lbY  = rg[4];
+
+        // Chess-style START row (primary action — also the default flap).
         dc.setColor(0x1A4400, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);
+        dc.fillRoundedRectangle(rowX, startY, rowW, rowH, 5);
         dc.setColor(0x44BB22, Graphics.COLOR_TRANSPARENT);
-        dc.drawRoundedRectangle(rowX, ry, rowW, rowH, 5);
-        var ay = ry + rowH / 2;
+        dc.drawRoundedRectangle(rowX, startY, rowW, rowH, 5);
+        var ay = startY + rowH / 2;
         dc.fillPolygon([[rowX + 5, ay - 4],
                         [rowX + 5, ay + 4],
                         [rowX + 11, ay]]);
         dc.setColor(0xAAFF66, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, ry + (rowH - 14) / 2, Graphics.FONT_XTINY,
+        dc.drawText(cx, startY + (rowH - 14) / 2, Graphics.FONT_XTINY,
                     "START", Graphics.TEXT_JUSTIFY_CENTER);
 
+        // Shared global LEADERBOARD row.
+        LbBadge.drawRow(dc, rowX, lbY, rowW, rowH, false);
+
         dc.setColor(0x556677, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, H - 14, Graphics.FONT_XTINY,
-                    "SEL / TAP to flap",
+        dc.drawText(cx, H - 13, Graphics.FONT_XTINY,
+                    "flap=play  UP=board",
                     Graphics.TEXT_JUSTIFY_CENTER);
     }
 
@@ -276,7 +302,25 @@ class MainView extends WatchUi.View {
     }
 
     // ── Input intents ──────────────────────────────────────────────
+    function inMenu() { return _ctrl.state == GS_MENU; }
     function handleFlap() { _ctrl.flapAction(); }
+
+    // Tap router. On the MENU screen a tap inside the LEADERBOARD row
+    // opens the board; every other tap (and any tap outside the menu)
+    // is a flap, preserving the all-input-is-flap feel.
+    function handleTap(x, y) {
+        if (_ctrl.state == GS_MENU) {
+            var rg   = menuRowGeom();
+            var rowH = rg[0]; var rowW = rg[1]; var rowX = rg[2];
+            var lbY  = rg[4];
+            if (x >= rowX && x < rowX + rowW &&
+                y >= lbY  && y < lbY  + rowH) {
+                openLeaderboard();
+                return;
+            }
+        }
+        _ctrl.flapAction();
+    }
     function handleBack() {
         if (_ctrl.state == GS_PLAY || _ctrl.state == GS_OVER
             || _ctrl.state == GS_READY) {

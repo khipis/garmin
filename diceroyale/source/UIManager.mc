@@ -17,12 +17,25 @@ using Toybox.Graphics;
 class UIManager {
 
     // ── Chess-style menu geometry (shared with hit-test) ────────
+    //
+    // Space-aware: with the 4th LEADERBOARD row the whole menu is
+    // ~18% smaller (height / width / gaps) than before, and the rows
+    // are fitted into the band between the title block and the bottom
+    // subtitle so nothing overlaps on small round watches.
     static function rowGeom(sw, sh) {
-        var rowH = (sh * 11) / 100; if (rowH < 18) { rowH = 18; }
-        var gap  = (sh *  2) / 100; if (gap  <  3) { gap  =  3; }
-        var rowW = (sw * 68) / 100; if (rowW < 130) { rowW = 130; }
+        var topZone      = (sh * 34) / 100;                 // rows start below "by Bitochi"
+        var bottomMargin = (sh * 11) / 100; if (bottomMargin < 22) { bottomMargin = 22; } // leave room for subtitle
+        var gap          = (sh *  2) / 100; if (gap < 3) { gap = 3; }
+        var avail        = (sh - bottomMargin) - topZone;
+        var rowH         = (avail - gap * (DR_MENU_ROWS - 1)) / DR_MENU_ROWS;
+        // Cap ~18% below the old sizing so all four rows stay compact.
+        if (rowH > 22) { rowH = 22; }
+        if (rowH < 14) { rowH = 14; }
+        var rowW = (sw * 56) / 100; if (rowW < 110) { rowW = 110; }
         var rowX = (sw - rowW) / 2;
-        var rowY0 = (sh * 38) / 100;
+        var used  = DR_MENU_ROWS * rowH + (DR_MENU_ROWS - 1) * gap;
+        var rowY0 = topZone + (avail - used) / 2;
+        if (rowY0 < topZone) { rowY0 = topZone; }
         return [rowH, rowW, rowX, rowY0, gap];
     }
 
@@ -52,12 +65,19 @@ class UIManager {
         var modeLabel    = "Mode:   " + ctrl.modeName();
         var rerollsLabel = "Rolls:  " + ctrl.menuRerolls.format("%d");
         var startLabel   = "START";
-        var labels = [modeLabel, rerollsLabel, startLabel];
+        var labels = [modeLabel, rerollsLabel, startLabel, ""];
 
         for (var i = 0; i < DR_MENU_ROWS; i++) {
             var ry      = rowY0 + i * (rowH + gap);
             var sel     = (i == ctrl.menuRow);
-            var isStart = (i == DR_MENU_ROWS - 1);
+
+            if (i == DR_ROW_LB) {
+                // Hype-y gold leaderboard row from the shared library.
+                LbBadge.drawRow(dc, rowX, ry, rowW, rowH, sel);
+                continue;
+            }
+
+            var isStart = (i == DR_ROW_START);
             dc.setColor(sel ? (isStart ? 0x223300 : 0x182030) : 0x0A1018,
                         Graphics.COLOR_TRANSPARENT);
             dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);

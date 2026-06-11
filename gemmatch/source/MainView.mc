@@ -91,18 +91,31 @@ class MainView extends WatchUi.View {
     }
 
     // ── Menu geometry (shared by render + hit-test) ───────────────────
+    // Space-aware: the row height is derived from the space available
+    // between the title/best band and the footer, divided by the row
+    // count, then clamped. Everything is ~18% smaller than before so all
+    // four rows (incl. LEADERBOARD) fit on small round watches.
     hidden function _menuRowGeom() {
-        var rowH = _sh * 12 / 100;
-        if (rowH < 22) { rowH = 22; }
-        if (rowH > 34) { rowH = 34; }
-        var rowW = _sw * 78 / 100;
+        var topZone      = _sh * 30 / 100;                 // rows live below title + best
+        var bottomMargin = _sh * 13 / 100; if (bottomMargin < 28) { bottomMargin = 28; }
+        var gap          = _sh * 2 / 100;  if (gap < 3) { gap = 3; }
+        var avail        = (_sh - bottomMargin) - topZone;
+        var rowH         = (avail - gap * (MENU_ROW_COUNT - 1)) / MENU_ROW_COUNT;
+        if (rowH > 28) { rowH = 28; }
+        if (rowH < 14) { rowH = 14; }
+        var rowW = _sw * 64 / 100; if (rowW < 110) { rowW = 110; }
         var rowX = (_sw - rowW) / 2;
-        var gap  = _sh * 1  / 100; if (gap < 2) { gap = 2; }
-        var total  = MENU_ROW_COUNT * rowH + (MENU_ROW_COUNT - 1) * gap;
-        // Centre the row block in the screen, shifted down by one rowH
-        // to leave room for the title band at the top.
-        var rowY0 = (_sh - total) / 2 + rowH;
+        var used  = MENU_ROW_COUNT * rowH + (MENU_ROW_COUNT - 1) * gap;
+        var rowY0 = topZone + (avail - used) / 2;
+        if (rowY0 < topZone) { rowY0 = topZone; }
         return [rowH, rowW, rowX, rowY0, gap];
+    }
+
+    // Open the shared global leaderboard. Pushed from the view layer
+    // because the controller can't push WatchUi views.
+    function openLeaderboard() {
+        var v = new LbScoresView("gemmatch", "", "GEM MATCH");
+        WatchUi.pushView(v, new LbScoresDelegate(), WatchUi.SLIDE_LEFT);
     }
 
     // ── Menu screen ──────────────────────────────────────────────────
@@ -118,11 +131,21 @@ class MainView extends WatchUi.View {
 
         // Title
         dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _sh * 10 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, _sh * 8 / 100, Graphics.FONT_SMALL,
                     "GEM MATCH", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x778899, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _sh * 22 / 100, Graphics.FONT_XTINY,
+        dc.drawText(cx, _sh * 18 / 100, Graphics.FONT_XTINY,
                     "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
+
+        // Best score for current mode — sits in the title band, above the
+        // rows, so the space-aware row block stays clear of it.
+        var best = _ctrl.currentBest();
+        if (best > 0) {
+            dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, _sh * 25 / 100, Graphics.FONT_XTINY,
+                        "BEST " + best.format("%d"),
+                        Graphics.TEXT_JUSTIFY_CENTER);
+        }
 
         var rowGeom = _menuRowGeom();
         var rowH  = rowGeom[0];
@@ -131,12 +154,19 @@ class MainView extends WatchUi.View {
         var rowY0 = rowGeom[3];
         var gap   = rowGeom[4];
 
-        // Row labels
-        var labels = [_ctrl.modeLabel(), _ctrl.paramLabel(), "START"];
+        // Row labels (LEADERBOARD row is drawn via the shared badge below)
+        var labels = [_ctrl.modeLabel(), _ctrl.paramLabel(), "START", ""];
         // ROW colors: focused = bright, others = dim
         for (var i = 0; i < MENU_ROW_COUNT; i++) {
             var ry     = rowY0 + i * (rowH + gap);
             var focused = (i == _ctrl.menuRow);
+
+            if (i == MENU_LB) {
+                // Hype-y gold leaderboard row from the shared library.
+                LbBadge.drawRow(dc, rowX, ry, rowW, rowH, focused);
+                continue;
+            }
+
             var isStart = (i == MENU_START);
             var paramInert = (i == MENU_PARAM && _ctrl.gameMode == GM_ZEN);
 
@@ -180,24 +210,11 @@ class MainView extends WatchUi.View {
                         labels[i], Graphics.TEXT_JUSTIFY_CENTER);
         }
 
-        // Best score for current mode
-        var best = _ctrl.currentBest();
-        if (best > 0) {
-            dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, rowY0 + MENU_ROW_COUNT * (rowH + gap) + 2,
-                        Graphics.FONT_XTINY,
-                        "BEST " + best.format("%d"),
-                        Graphics.TEXT_JUSTIFY_CENTER);
-        }
-
         // Footer hint
         dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _sh - 26, Graphics.FONT_XTINY,
+        dc.drawText(cx, _sh - 14, Graphics.FONT_XTINY,
                     "UP/DN row  tap row = act",
                     Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0x8899AA, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _sh - 14, Graphics.FONT_XTINY,
-                    "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     // ── Board ────────────────────────────────────────────────────────
@@ -435,7 +452,13 @@ class MainView extends WatchUi.View {
         _ctrl.beginSwap(_ctrl.curR, _ctrl.curC, tr, tc);
     }
 
-    function navSelect() { _ctrl.selectAction(); }
+    function navSelect() {
+        if (_ctrl.state == GS_MENU && _ctrl.menuRow == MENU_LB) {
+            openLeaderboard();
+            return;
+        }
+        _ctrl.selectAction();
+    }
 
     function navBack() {
         if (_ctrl.state == GS_PLAY) {
@@ -468,7 +491,8 @@ class MainView extends WatchUi.View {
                 var ry = rowY0 + i * (rowH + gap);
                 if (x >= rowX && x < rowX + rowW && y >= ry && y < ry + rowH) {
                     _ctrl.setMenuRow(i);
-                    _ctrl.menuActivate();
+                    if (i == MENU_LB) { openLeaderboard(); }
+                    else { _ctrl.menuActivate(); }
                     return;
                 }
             }

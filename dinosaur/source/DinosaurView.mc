@@ -25,6 +25,15 @@ const NEAR_MISS_BONUS = 5;
 // Storage keys
 const SK_BEST = "dinoBest";
 
+// ── Global leaderboard ────────────────────────────────────────────────────────
+// Shared library (../_shared/leaderboard) game id — matches the web id.
+const LB_GAME_ID = "dinosaur";
+
+// Title-screen menu rows: START (begin a run) + LEADERBOARD (push shared view).
+const DINO_ROW_START = 0;
+const DINO_ROW_LB    = 1;
+const DINO_MENU_ROWS = 2;
+
 // ─────────────────────────────────────────────────────────────────────────────
 //  Phases
 //  0 < 300  : single jump, ground only, slow
@@ -104,6 +113,9 @@ class DinosaurView extends WatchUi.View {
     // ── AUTO-AI demo (title screen) ──────────────────────────────────────────
     hidden var _demoIdle;       // ticks player has been idle on title
 
+    // ── title-screen menu selection (START / LEADERBOARD) ─────────────────────
+    hidden var _menuSel;
+
     // ── init ──────────────────────────────────────────────────────────────────
 
     function initialize() {
@@ -124,6 +136,7 @@ class DinosaurView extends WatchUi.View {
         _missTxtY  = 0;
         _shakeT    = 0;
         _demoIdle  = 0;
+        _menuSel   = DINO_ROW_START;
 
         // Restore best score from storage so it survives app restarts.
         var stored = Application.Storage.getValue(SK_BEST);
@@ -191,7 +204,9 @@ class DinosaurView extends WatchUi.View {
         // user immediately sees gameplay in motion.
         if (_state == GS_TITLE) {
             _demoIdle = _demoIdle + 1;
-            if (_demoIdle > 36) {
+            // Only fall into the attract demo while the player is parked on
+            // START — never yank them off the LEADERBOARD row mid-browse.
+            if (_demoIdle > 36 && _menuSel == DINO_ROW_START) {
                 _resetGame();
                 _state = GS_DEMO;
             }
@@ -282,6 +297,8 @@ class DinosaurView extends WatchUi.View {
             if (_score > _hiScore) {
                 _hiScore = _score; _flash = 70; _saveHiScore();
             }
+            // Bailing still ends the run — submit the score to the leaderboard.
+            Leaderboard.submitScore(LB_GAME_ID, _score, "");
             _state = GS_OVER;
             return true;
         }
@@ -298,6 +315,66 @@ class DinosaurView extends WatchUi.View {
     // Persist hi-score to storage so it survives app restart.
     hidden function _saveHiScore() {
         Application.Storage.setValue(SK_BEST, _hiScore);
+    }
+
+    // ── title-screen menu (START / LEADERBOARD) ───────────────────────────────
+    function inTitle() { return _state == GS_TITLE; }
+
+    function menuPrev() {
+        _menuSel  = (_menuSel + DINO_MENU_ROWS - 1) % DINO_MENU_ROWS;
+        _demoIdle = 0;
+    }
+    function menuNext() {
+        _menuSel  = (_menuSel + 1) % DINO_MENU_ROWS;
+        _demoIdle = 0;
+    }
+    function menuActivate() {
+        if (_menuSel == DINO_ROW_LB) { openLeaderboard(); return; }
+        _resetGame();
+        _state = GS_RUN;
+    }
+
+    // Tap routing on the title screen — hit-test the rows so touch watches
+    // can select START or LEADERBOARD directly.
+    function handleTap(x, y) {
+        var rg   = menuRowGeom();
+        var rowH = rg[0]; var rowW = rg[1]; var rowX = rg[2];
+        var rowY0 = rg[3]; var gap = rg[4];
+        for (var i = 0; i < DINO_MENU_ROWS; i++) {
+            var ry = rowY0 + i * (rowH + gap);
+            if (x >= rowX && x < rowX + rowW && y >= ry && y < ry + rowH) {
+                _menuSel  = i;
+                _demoIdle = 0;
+                menuActivate();
+                return;
+            }
+        }
+    }
+
+    // Open the shared global leaderboard view (no variant for dinosaur).
+    function openLeaderboard() {
+        var v = new LbScoresView(LB_GAME_ID, "", "DINOSAUR");
+        WatchUi.pushView(v, new LbScoresDelegate(), WatchUi.SLIDE_LEFT);
+    }
+
+    // Geometry for the title menu. Space-aware: row height is derived from the
+    // free space below the title block divided by the row count, then clamped
+    // (~18% smaller than a full-size button) so nothing overlaps on small round
+    // watches.  Returns [rowH, rowW, rowX, rowY0, gap].
+    function menuRowGeom() {
+        var topZone      = (_sh * 50) / 100;          // rows live below title/best
+        var bottomMargin = (_sh * 9) / 100; if (bottomMargin < 14) { bottomMargin = 14; }
+        var gap          = (_sh * 3) / 100; if (gap < 4) { gap = 4; }
+        var avail        = (_sh - bottomMargin) - topZone;
+        var rowH         = (avail - gap * (DINO_MENU_ROWS - 1)) / DINO_MENU_ROWS;
+        if (rowH > 24) { rowH = 24; }                 // clamp max (~18% smaller)
+        if (rowH < 15) { rowH = 15; }
+        var rowW = (_sw * 58) / 100; if (rowW < 104) { rowW = 104; }
+        var rowX = (_sw - rowW) / 2;
+        var used = DINO_MENU_ROWS * rowH + (DINO_MENU_ROWS - 1) * gap;
+        var rowY0 = topZone + (avail - used) / 2;
+        if (rowY0 < topZone) { rowY0 = topZone; }
+        return [rowH, rowW, rowX, rowY0, gap];
     }
 
     // ── game logic ────────────────────────────────────────────────────────────
@@ -424,10 +501,14 @@ class DinosaurView extends WatchUi.View {
             var wasDemo = (_state == GS_DEMO);
             _state  = GS_OVER;
             _shakeT = 8;
-            if (!wasDemo && _score > _hiScore) {
-                _hiScore = _score;
-                _flash   = 70;
-                _saveHiScore();
+            if (!wasDemo) {
+                if (_score > _hiScore) {
+                    _hiScore = _score;
+                    _flash   = 70;
+                    _saveHiScore();
+                }
+                // Submit the finished run to the global leaderboard (once).
+                Leaderboard.submitScore(LB_GAME_ID, _score, "");
             }
             return;
         }
@@ -903,28 +984,70 @@ class DinosaurView extends WatchUi.View {
     }
 
     hidden function _drawTitle(dc) {
+        var cx = _sw / 2;
         dc.setColor(0x30B348, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_sw / 2, _sh * 18 / 100, Graphics.FONT_MEDIUM,
+        dc.drawText(cx, _sh * 15 / 100, Graphics.FONT_MEDIUM,
             "DINO RUN", Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Auto-AI badge — visible only while the demo runs. Blinks softly.
         if (_state == GS_DEMO) {
+            // Attract loop — keep the AI-demo overlay & control hints; no menu.
             var on = (_frame / 14) % 2 == 0;
             dc.setColor(on ? 0xFF9933 : 0x553311, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_sw / 2, _sh * 33 / 100, Graphics.FONT_XTINY,
+            dc.drawText(cx, _sh * 33 / 100, Graphics.FONT_XTINY,
                 "AUTO-AI DEMO", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(0x4a4a4a, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, _sh * 41 / 100, Graphics.FONT_XTINY,
+                "any key = jump", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(cx, _sh * 49 / 100, Graphics.FONT_XTINY,
+                "DOWN = duck (lv3)", Graphics.TEXT_JUSTIFY_CENTER);
+            if (_hiScore > 0) {
+                dc.setColor(0x363636, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(cx, _sh * 58 / 100, Graphics.FONT_XTINY,
+                    "best " + _hiScore.format("%05d"), Graphics.TEXT_JUSTIFY_CENTER);
+            }
+            return;
         }
 
-        dc.setColor(0x4a4a4a, Graphics.COLOR_TRANSPARENT);
-        var promptY = (_state == GS_DEMO) ? 41 : 43;
-        dc.drawText(_sw / 2, _sh * promptY / 100, Graphics.FONT_XTINY,
-            "any key = jump", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(_sw / 2, _sh * (promptY + 8) / 100, Graphics.FONT_XTINY,
-            "DOWN = duck (lv3)", Graphics.TEXT_JUSTIFY_CENTER);
+        // TITLE: best score, then the START / LEADERBOARD menu.
         if (_hiScore > 0) {
             dc.setColor(0x363636, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_sw / 2, _sh * (promptY + 17) / 100, Graphics.FONT_XTINY,
+            dc.drawText(cx, _sh * 33 / 100, Graphics.FONT_XTINY,
                 "best " + _hiScore.format("%05d"), Graphics.TEXT_JUSTIFY_CENTER);
+        }
+        dc.setColor(0x4a4a4a, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, _sh * 41 / 100, Graphics.FONT_XTINY,
+            "UP/DN  tap = act", Graphics.TEXT_JUSTIFY_CENTER);
+
+        var rg   = menuRowGeom();
+        var rowH = rg[0]; var rowW = rg[1]; var rowX = rg[2];
+        var rowY0 = rg[3]; var gap = rg[4];
+        for (var i = 0; i < DINO_MENU_ROWS; i++) {
+            var ry  = rowY0 + i * (rowH + gap);
+            var sel = (i == _menuSel);
+
+            if (i == DINO_ROW_LB) {
+                // Gold leaderboard row from the shared library.
+                LbBadge.drawRow(dc, rowX, ry, rowW, rowH, sel);
+                continue;
+            }
+
+            // START row.
+            var bg; var bd; var fg;
+            if (sel) { bg = 0x1A4400; bd = 0x44BB22; fg = 0xAAFF66; }
+            else     { bg = 0x102010; bd = 0x224422; fg = 0x88AA88; }
+            dc.setColor(bg, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);
+            dc.setColor(bd, Graphics.COLOR_TRANSPARENT);
+            dc.drawRoundedRectangle(rowX, ry, rowW, rowH, 5);
+            if (sel) {
+                var ay = ry + rowH / 2;
+                dc.fillPolygon([[rowX + 5, ay - 4],
+                                [rowX + 5, ay + 4],
+                                [rowX + 11, ay]]);
+            }
+            dc.setColor(fg, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, ry + (rowH - 14) / 2, Graphics.FONT_XTINY,
+                "START", Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 

@@ -159,22 +159,27 @@ class MainView extends WatchUi.View {
         dc.setColor(0x00EEFF, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(cx - 2, H * 47 / 100, 4, 4);
 
-        // Two chess-style rows
+        // Three chess-style rows: Difficulty + START + LEADERBOARD.
         var diffNames = ["EASY", "MED", "HARD"];
         var labels = [
             "Diff: " + diffNames[_ctrl.difficulty],
-            "START"
+            "START",
+            ""
         ];
-        var rowH = (H * 13) / 100; if (rowH < 24) { rowH = 24; } if (rowH > 34) { rowH = 34; }
-        var rowW = (W * 78) / 100; if (rowW < 140) { rowW = 140; }
-        var rowX = (W - rowW) / 2;
-        var gap  = (H * 2) / 100; if (gap < 4) { gap = 4; }
-        var rowY0 = H * 56 / 100;
+        var rg   = menuRowGeom();
+        var rowH = rg[0]; var rowW = rg[1];
+        var rowX = rg[2]; var rowY0 = rg[3]; var gap = rg[4];
         for (var i = 0; i < MI_ITEMS; i++) {
             var ry = rowY0 + i * (rowH + gap);
             var sel = (i == _ctrl.menuRow);
-            var isStart = (i == MI_START);
 
+            if (i == MI_LEADERBOARD) {
+                // Hype-y gold leaderboard row from the shared library.
+                LbBadge.drawRow(dc, rowX, ry, rowW, rowH, sel);
+                continue;
+            }
+
+            var isStart = (i == MI_START);
             dc.setColor(sel ? (isStart ? 0x1A4400 : 0x1A3A6A) : 0x111820,
                         Graphics.COLOR_TRANSPARENT);
             dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);
@@ -198,10 +203,41 @@ class MainView extends WatchUi.View {
         // Wins counter
         if (_ctrl.hiPlayerWins > 0) {
             dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, H * 88 / 100, Graphics.FONT_XTINY,
+            dc.drawText(cx, H * 94 / 100, Graphics.FONT_XTINY,
                         "WINS " + _ctrl.hiPlayerWins.format("%d"),
                         Graphics.TEXT_JUSTIFY_CENTER);
         }
+    }
+
+    // Geometry for the chess-style menu. Space-aware: the row height
+    // shrinks to whatever fits between the demo zone and the bottom
+    // margin (which reserves room for the WINS line), so the third
+    // (LEADERBOARD) row never overlaps anything on small round watches.
+    // Overall ~18% smaller than the old two-row layout.
+    //   [ rowH, rowW, rowX, rowY0, gap ]
+    function menuRowGeom() {
+        var W = _ctrl.screenW;
+        var H = _ctrl.screenH;
+        var topZone      = (H * 52) / 100;            // rows live below the demo
+        var bottomMargin = (H * 14) / 100; if (bottomMargin < 18) { bottomMargin = 18; }
+        var gap          = (H * 2)  / 100; if (gap < 3) { gap = 3; }
+        var avail        = (H - bottomMargin) - topZone;
+        var rowH         = (avail - gap * (MI_ITEMS - 1)) / MI_ITEMS;
+        // ~18% smaller than the previous 24..34 row band.
+        if (rowH > 28) { rowH = 28; }
+        if (rowH < 16) { rowH = 16; }
+        var rowW = (W * 64) / 100; if (rowW < 116) { rowW = 116; }
+        var rowX = (W - rowW) / 2;
+        var used  = MI_ITEMS * rowH + (MI_ITEMS - 1) * gap;
+        var rowY0 = topZone + (avail - used) / 2;
+        if (rowY0 < topZone) { rowY0 = topZone; }
+        return [rowH, rowW, rowX, rowY0, gap];
+    }
+
+    // Open the shared global leaderboard for the current AI difficulty.
+    function openLeaderboard() {
+        var v = new LbScoresView(LB_GAME_ID, _ctrl.diffName(), "PONG PRO");
+        WatchUi.pushView(v, new LbScoresDelegate(), WatchUi.SLIDE_LEFT);
     }
 
     // ── Game over ───────────────────────────────────────────────────
@@ -252,9 +288,11 @@ class MainView extends WatchUi.View {
     }
     function menuStart() {
         if (_ctrl.menuRow == MI_DIFFICULTY) {
-            var d = _ctrl.difficulty + 1;
-            if (d > 2) { d = 0; }
-            _ctrl.setDifficulty(d);
+            _ctrl.cycleDifficulty();
+            return;
+        }
+        if (_ctrl.menuRow == MI_LEADERBOARD) {
+            openLeaderboard();
             return;
         }
         _ctrl.startMatch();
@@ -272,13 +310,9 @@ class MainView extends WatchUi.View {
     function handleTap(x, y) {
         if (_ctrl.state == GS_MENU) {
             // Tap on a chess-style row → focus + activate it.
-            var H = _ctrl.screenH;
-            var W = _ctrl.screenW;
-            var rowH = (H * 13) / 100; if (rowH < 24) { rowH = 24; } if (rowH > 34) { rowH = 34; }
-            var rowW = (W * 78) / 100;
-            var rowX = (W - rowW) / 2;
-            var gap  = (H * 2) / 100; if (gap < 4) { gap = 4; }
-            var rowY0 = H * 56 / 100;
+            var rg = menuRowGeom();
+            var rowH = rg[0]; var rowW = rg[1];
+            var rowX = rg[2]; var rowY0 = rg[3]; var gap = rg[4];
             for (var i = 0; i < MI_ITEMS; i++) {
                 var ry = rowY0 + i * (rowH + gap);
                 if (x >= rowX && x < rowX + rowW

@@ -71,6 +71,8 @@ class BitochiRunDelegate extends WatchUi.BehaviorDelegate {
     function onPreviousPage() {
         if (_view.inRunPhase()) {
             _view.nudgeDodge(-1);
+        } else if (_view.inMenu()) {
+            _view.menuNav(-1);
         } else {
             _view.doAction();
         }
@@ -81,6 +83,8 @@ class BitochiRunDelegate extends WatchUi.BehaviorDelegate {
     function onNextPage() {
         if (_view.inRunPhase()) {
             _view.nudgeDodge(1);
+        } else if (_view.inMenu()) {
+            _view.menuNav(1);
         } else {
             _view.doAction();
         }

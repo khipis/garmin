@@ -38,7 +38,17 @@ const PI_PLAY = 1;
 const PI_WIN  = 2;     // unused — endless waves, but kept for clarity
 const PI_OVER = 3;
 
-const PI_MENU_ROWS = 3;
+// Chess-style menu rows. Row 3 is the global LEADERBOARD (split by
+// difficulty variant); it pushes a view from the View layer.
+const PI_MENU_ROWS = 4;
+const PI_ROW_DIFF  = 0;
+const PI_ROW_LIVES = 1;
+const PI_ROW_START = 2;
+const PI_ROW_LB    = 3;
+
+// Global leaderboard game id (matches _LOGOS / web id).
+const PI_LB_GAME_ID = "pixelinvaders";
+
 const PI_BEST_KEY  = "pi_best";
 const PI_DIFF_KEY  = "pi_diff";
 const PI_LIVES_KEY = "pi_lives";
@@ -104,15 +114,16 @@ class GameController {
     function menuPrev() { menuRow = (menuRow + PI_MENU_ROWS - 1) % PI_MENU_ROWS; }
     function setMenuRow(i) { if (i >= 0 && i < PI_MENU_ROWS) { menuRow = i; } }
     function menuActivate() {
-        if (menuRow == 0) {
+        if (menuRow == PI_ROW_DIFF) {
             menuDiff = (menuDiff + 1) % 3;
             _saveSettings();
-        } else if (menuRow == 1) {
+        } else if (menuRow == PI_ROW_LIVES) {
             menuLives = (menuLives % 5) + 1;
             _saveSettings();
-        } else {
+        } else if (menuRow == PI_ROW_START) {
             _startGame();
         }
+        // PI_ROW_LB is handled by MainView.openLeaderboard().
     }
 
     function gotoMenu() { state = PI_MENU; }
@@ -223,5 +234,7 @@ class GameController {
     hidden function _gameOver() {
         state = PI_OVER;
         if (score > bestScore) { bestScore = score; _saveBest(); }
+        // Submit to the global leaderboard, split by difficulty variant.
+        Leaderboard.submitScore(PI_LB_GAME_ID, score, difficultyName());
     }
 }

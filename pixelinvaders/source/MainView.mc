@@ -104,9 +104,18 @@ class MainView extends WatchUi.View {
         ctrl.fire();
     }
     function navSelect() {
-        if (ctrl.state == PI_MENU) { ctrl.menuActivate(); return; }
+        if (ctrl.state == PI_MENU) {
+            if (ctrl.menuRow == PI_ROW_LB) { openLeaderboard(); return; }
+            ctrl.menuActivate(); return;
+        }
         if (ctrl.state == PI_OVER) { ctrl.gotoMenu(); return; }
         ctrl.fire();
+    }
+
+    // Open the shared global leaderboard for the current difficulty.
+    function openLeaderboard() {
+        var v = new LbScoresView(PI_LB_GAME_ID, ctrl.difficultyName(), "PIXEL INVADERS");
+        WatchUi.pushView(v, new LbScoresDelegate(), WatchUi.SLIDE_LEFT);
     }
     function navBack() {
         if (ctrl.state != PI_MENU) { ctrl.gotoMenu(); return true; }
@@ -134,7 +143,10 @@ class MainView extends WatchUi.View {
             for (var i = 0; i < PI_MENU_ROWS; i++) {
                 var ry = rowY0 + i * (rowH + gap);
                 if (x >= rowX && x < rowX + rowW && y >= ry && y < ry + rowH) {
-                    ctrl.setMenuRow(i); ctrl.menuActivate(); return;
+                    ctrl.setMenuRow(i);
+                    if (i == PI_ROW_LB) { openLeaderboard(); }
+                    else { ctrl.menuActivate(); }
+                    return;
                 }
             }
             return;

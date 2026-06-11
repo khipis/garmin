@@ -11,6 +11,19 @@ enum { JS_MENU, JS_INRUN, JS_FLIGHT, JS_LANDING, JS_RESULT, JS_STANDINGS, JS_FIN
 const NUM_JUMPERS = 6;
 const HILL_PTS    = 100;
 
+// Global leaderboard game id (matches _LOGOS / web id).
+const LB_GAME_ID = "skijump";
+
+// Menu focus rows. UP/DOWN edits the focused selector (jumper / difficulty)
+// and navigates the action rows; SELECT advances / activates the focused row.
+//   0 = jumper selector   1 = difficulty selector
+//   2 = START             3 = LEADERBOARD (global; split by jumper name)
+const SJ_ROW_JUMPER = 0;
+const SJ_ROW_DIFF   = 1;
+const SJ_ROW_START  = 2;
+const SJ_ROW_LB     = 3;
+const SJ_MENU_ROWS  = 4;
+
 class BitochiJumpView extends WatchUi.View {
 
     var gameState;
@@ -643,6 +656,8 @@ class BitochiJumpView extends WatchUi.View {
             Application.Storage.setValue("jumpBest" + _venue, dist);
             _newHillRecord = true;
         }
+        // Submit this jump's total to the global leaderboard, split by jumper.
+        Leaderboard.submitScore(LB_GAME_ID, _lastScore.toNumber(), _jumperNames[_jumperIdx]);
         gameState = JS_RESULT;
     }
 
@@ -666,8 +681,10 @@ class BitochiJumpView extends WatchUi.View {
 
     function doAction() {
         if (gameState == JS_MENU) {
-            if (_menuRow == 0) { _menuRow = 1; return; }   // first tap: go to difficulty row
-            startCompetition();                              // second tap: start
+            if      (_menuRow == SJ_ROW_JUMPER) { _menuRow = SJ_ROW_DIFF; }   // confirm jumper → difficulty
+            else if (_menuRow == SJ_ROW_DIFF)   { _menuRow = SJ_ROW_START; }  // confirm difficulty → START
+            else if (_menuRow == SJ_ROW_START)  { startCompetition(); }
+            else if (_menuRow == SJ_ROW_LB)     { openLeaderboard(); }
             return;
         }
         else if (gameState == JS_INRUN) { executeTakeoff(true); }
@@ -677,15 +694,24 @@ class BitochiJumpView extends WatchUi.View {
         else if (gameState == JS_FINAL) { _menuRow = 0; gameState = JS_MENU; }
     }
     function cycleJumper(dir) { if (gameState == JS_MENU) { _jumperIdx = (_jumperIdx + dir + NUM_JUMPERS) % NUM_JUMPERS; } }
-    // Unified UP/DOWN handler for menu: acts on whichever row is focused
+    // Unified UP/DOWN handler for menu: edits the focused selector, or moves
+    // focus between the action rows (START / LEADERBOARD).
     function cycleMenuSel(dir) {
         if (gameState != JS_MENU) { return; }
-        if (_menuRow == 0) {
+        if (_menuRow == SJ_ROW_JUMPER) {
             _jumperIdx = (_jumperIdx + dir + NUM_JUMPERS) % NUM_JUMPERS;
-        } else {
+        } else if (_menuRow == SJ_ROW_DIFF) {
             _diff = (_diff + dir + 3) % 3;
             Application.Storage.setValue("sjDiff", _diff);
+        } else {
+            _menuRow = (_menuRow + dir + SJ_MENU_ROWS) % SJ_MENU_ROWS;
         }
+    }
+
+    // Open the shared global leaderboard, split by the current jumper's name.
+    function openLeaderboard() {
+        var v = new LbScoresView(LB_GAME_ID, _jumperNames[_jumperIdx], "SKI JUMP");
+        WatchUi.pushView(v, new LbScoresDelegate(), WatchUi.SLIDE_LEFT);
     }
 
     hidden function startCompetition() {
@@ -1142,52 +1168,49 @@ class BitochiJumpView extends WatchUi.View {
         dc.drawText(_w / 2, _h - 14, Graphics.FONT_XTINY, "R" + _currentRound, Graphics.TEXT_JUSTIFY_CENTER);
     }
 
+    // Menu — compact (~18% smaller than before) and space-aware so the
+    // jumper, difficulty, START and LEADERBOARD rows never overlap on small
+    // round watches. Four focusable rows (SJ_ROW_*): UP/DOWN edits the focused
+    // selector or moves between the action rows, SELECT advances / activates.
     hidden function drawMenu(dc) {
+        var cx = _w / 2;
+
+        // Background — light sky over snowy hill (plain colour strips).
         dc.setColor(0xBBCCDD, 0xBBCCDD); dc.clear();
         dc.setColor(0xD8E8F2, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, 0, _w, _h / 2);
-        // Snowy hill background — fillRectangle strips (no allocation)
-        dc.setColor(0xEEF4F8, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(0, _h * 48 / 100, _w, _h - _h * 48 / 100);
-        dc.fillRectangle(0, _h * 34 / 100, _w * 52 / 100, _h * 14 / 100);
-        dc.fillRectangle(_w * 14 / 100, _h * 26 / 100, _w * 38 / 100, _h * 8 / 100);
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(0, _h * 54 / 100, _w, _h - _h * 54 / 100);
-        dc.fillRectangle(0, _h * 46 / 100, _w * 56 / 100, _h * 8 / 100);
-        dc.fillRectangle(_w * 10 / 100, _h * 38 / 100, _w * 46 / 100, _h * 8 / 100);
-        // Yellow fence in menu
-        dc.setColor(0xCC9900, Graphics.COLOR_TRANSPARENT);
-        dc.drawLine(0, _h * 55 / 100, _w, _h * 57 / 100);
-        dc.drawLine(0, _h * 57 / 100, _w, _h * 59 / 100);
+        dc.setColor(0xEEF4F8, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h * 50 / 100, _w, _h - _h * 50 / 100);
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h * 60 / 100, _w, _h - _h * 60 / 100);
 
-        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2 + 1, _h * 4 / 100 + 1, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor((_tick % 14 < 7) ? 0x2244BB : 0x1133AA, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 4 / 100, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0x111122, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 17 / 100, Graphics.FONT_LARGE, "SKI JUMP", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 30 / 100, Graphics.FONT_XTINY, "4-Hills Tournament", Graphics.TEXT_JUSTIFY_CENTER);
+        // Title (shrunk: brand XTINY, title SMALL).
+        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(cx + 1, _h * 2 / 100 + 1, Graphics.FONT_XTINY, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor((_tick % 14 < 7) ? 0x2244BB : 0x1133AA, Graphics.COLOR_TRANSPARENT); dc.drawText(cx, _h * 2 / 100, Graphics.FONT_XTINY, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x111122, Graphics.COLOR_TRANSPARENT); dc.drawText(cx, _h * 10 / 100, Graphics.FONT_SMALL, "SKI JUMP", Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Jumper selector — highlighted border when this row is focused
+        // ── Row 0: jumper selector (compact figure + name + nat) ──
         var col = _jumperColors[_jumperIdx]; var acc = _jumperAccents[_jumperIdx];
-        var jx = _w / 2; var jy = _h * 48 / 100;
-        if (_menuRow == 0) {
+        var jx = cx; var jy = _h * 31 / 100;
+        if (_menuRow == SJ_ROW_JUMPER) {
             dc.setColor(0x2244BB, Graphics.COLOR_TRANSPARENT);
-            dc.drawRectangle(jx - 36, jy - 20, 72, 46);
+            dc.drawRectangle(jx - 34, jy - 18, 68, 40);
         }
-        dc.setColor(0xDDAA77, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(jx - 4, jy - 16, 8, 7);
-        dc.setColor(acc, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(jx - 4, jy - 14, 8, 3);
-        dc.setColor(col, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(jx - 4, jy - 9, 8, 11);
+        dc.setColor(0xDDAA77, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(jx - 4, jy - 15, 8, 7);
+        dc.setColor(acc, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(jx - 4, jy - 13, 8, 3);
+        dc.setColor(col, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(jx - 4, jy - 8, 8, 10);
         dc.setColor(0x444455, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(jx - 7, jy + 2, 14, 2);
-        dc.setColor(col, Graphics.COLOR_TRANSPARENT); dc.drawText(jx, jy + 8, Graphics.FONT_XTINY, _jumperNames[_jumperIdx], Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT); dc.drawText(jx, jy + 18, Graphics.FONT_XTINY, _jumperNat[_jumperIdx], Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor((_menuRow == 0) ? 0x2244BB : 0x778899, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(jx - 28, jy - 4, Graphics.FONT_XTINY, "<", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(jx + 28, jy - 4, Graphics.FONT_XTINY, ">", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(col, Graphics.COLOR_TRANSPARENT); dc.drawText(jx, jy + 5, Graphics.FONT_XTINY, _jumperNames[_jumperIdx], Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT); dc.drawText(jx, jy + 14, Graphics.FONT_XTINY, _jumperNat[_jumperIdx], Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor((_menuRow == SJ_ROW_JUMPER) ? 0x2244BB : 0x778899, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(jx - 27, jy - 3, Graphics.FONT_XTINY, "<", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(jx + 27, jy - 3, Graphics.FONT_XTINY, ">", Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Difficulty row — three boxes, active box highlighted; border when row focused
-        var diffY = _h * 68 / 100;
-        var boxW = _w * 22 / 100; var boxH = _h * 9 / 100;
+        // ── Row 1: difficulty selector (three boxes) ──
+        var diffY = _h * 47 / 100;
+        var boxH = _h * 8 / 100; if (boxH < 14) { boxH = 14; } if (boxH > 20) { boxH = 20; }
+        var boxW = _w * 22 / 100; if (boxW < 40) { boxW = 40; }
         var totalBoxW = boxW * 3 + _w * 4 / 100;
         var boxStartX = (_w - totalBoxW) / 2;
         var diffColors = [0x33AA44, 0xFFAA00, 0xDD2222];
-        if (_menuRow == 1) {
+        if (_menuRow == SJ_ROW_DIFF) {
             dc.setColor(0x2244BB, Graphics.COLOR_TRANSPARENT);
             dc.drawRectangle(boxStartX - 3, diffY - 3, totalBoxW + 6, boxH + 6);
         }
@@ -1204,16 +1227,48 @@ class BitochiJumpView extends WatchUi.View {
             }
             dc.drawText(bx + boxW / 2, diffY + boxH / 2 - dc.getFontHeight(Graphics.FONT_XTINY) / 2, Graphics.FONT_XTINY, _diffNames[d], Graphics.TEXT_JUSTIFY_CENTER);
         }
-        if (_menuRow == 1) {
-            dc.setColor(0x778899, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, diffY - 14, Graphics.FONT_XTINY, "< >", Graphics.TEXT_JUSTIFY_CENTER);
-        }
 
-        if (_bestDist > 0.0) { dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 83 / 100, Graphics.FONT_XTINY, "BEST " + _bestDist.toNumber() + "m", Graphics.TEXT_JUSTIFY_CENTER); }
-        // Hint changes depending on active row
-        var hint = (_menuRow == 0) ? "Tap = set difficulty" : "Tap = START";
+        // ── Rows 2 & 3: START + LEADERBOARD — space-aware geometry that fits
+        // whatever room is left above the bottom hint, so nothing overlaps. ──
+        var fhX = dc.getFontHeight(Graphics.FONT_XTINY);
+        var hintY = _h - fhX - 2;
+        var bottomMargin = fhX + 4;
+        var topZone = _h * 58 / 100;
+        var gap = _h * 2 / 100; if (gap < 3) { gap = 3; }
+        var avail = (_h - bottomMargin) - topZone;
+        var rowH = (avail - gap) / 2;
+        if (rowH > 24) { rowH = 24; } if (rowH < 14) { rowH = 14; }
+        var rowW = _w * 62 / 100; if (rowW < 96) { rowW = 96; } if (rowW > _w - 8) { rowW = _w - 8; }
+        var rowX = (_w - rowW) / 2;
+        var used = 2 * rowH + gap;
+        var rowY0 = topZone + (avail - used) / 2;
+        if (rowY0 < topZone) { rowY0 = topZone; }
+
+        // START row
+        var startSel = (_menuRow == SJ_ROW_START);
+        dc.setColor(startSel ? 0x1A4400 : 0x102010, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(rowX, rowY0, rowW, rowH, 5);
+        dc.setColor(startSel ? 0x44BB22 : 0x224422, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(rowX, rowY0, rowW, rowH, 5);
+        if (startSel) {
+            var ay = rowY0 + rowH / 2;
+            dc.fillPolygon([[rowX + 5, ay - 4], [rowX + 5, ay + 4], [rowX + 11, ay]]);
+        }
+        dc.setColor(startSel ? 0xAAFF66 : 0x88AA88, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, rowY0 + (rowH - fhX) / 2, Graphics.FONT_XTINY, "START", Graphics.TEXT_JUSTIFY_CENTER);
+
+        // LEADERBOARD row (shared gold badge)
+        var lbY = rowY0 + rowH + gap;
+        LbBadge.drawRow(dc, rowX, lbY, rowW, rowH, _menuRow == SJ_ROW_LB);
+
+        // Hint — context-sensitive
+        var hint;
+        if      (_menuRow == SJ_ROW_JUMPER) { hint = "UP/DN pick  SEL >"; }
+        else if (_menuRow == SJ_ROW_DIFF)   { hint = "UP/DN diff  SEL >"; }
+        else if (_menuRow == SJ_ROW_START)  { hint = "UP/DN move  SEL go"; }
+        else                                 { hint = "UP/DN move  SEL open"; }
         dc.setColor((_tick % 10 < 5) ? 0x2244BB : 0x1133AA, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 91 / 100, Graphics.FONT_XTINY, hint, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, hintY, Graphics.FONT_XTINY, hint, Graphics.TEXT_JUSTIFY_CENTER);
 
         for (var i = 0; i < SNOW_N; i++) { dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(_snowX[i].toNumber(), _snowY[i].toNumber(), 1, 1); }
     }

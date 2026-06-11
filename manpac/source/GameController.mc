@@ -35,11 +35,15 @@ const GS_PLAY = 1;
 const GS_WIN  = 2;
 const GS_OVER = 3;
 
-const MENU_ROWS = 4;
+const MENU_ROWS = 5;
 const MP_ROW_LEVEL = 0;
 const MP_ROW_LIVES = 1;
 const MP_ROW_SPEED = 2;
 const MP_ROW_START = 3;
+const MP_ROW_LB    = 4;   // global leaderboard (pushes a view from MainView)
+
+// Global leaderboard game id (matches _LOGOS / web id).
+const LB_GAME_ID = "manpac";
 
 // Speed difficulty presets — each one defines (base_ms, step_ms, min_ms)
 // for the level-driven `tickMs()` curve.  "Slow" makes Manpac roughly
@@ -147,9 +151,11 @@ class GameController {
         } else if (menuRow == MP_ROW_SPEED) {
             menuSpeed = (menuSpeed + 1) % 3;
             _saveSettings();
-        } else {
+        } else if (menuRow == MP_ROW_START) {
             _startGame();
         }
+        // MP_ROW_LB is handled by MainView.openLeaderboard() (the
+        // controller can't push a view).
     }
 
     // ── Level progression ───────────────────────────────────────
@@ -330,9 +336,13 @@ class GameController {
     hidden function _onWin() {
         state = GS_WIN;
         if (score > bestScore) { bestScore = score; _saveBest(); }
+        // Submit the run to the shared global leaderboard.
+        Leaderboard.submitScore(LB_GAME_ID, score, "");
     }
     hidden function _onGameOver() {
         state = GS_OVER;
         if (score > bestScore) { bestScore = score; _saveBest(); }
+        // Submit the run to the shared global leaderboard.
+        Leaderboard.submitScore(LB_GAME_ID, score, "");
     }
 }

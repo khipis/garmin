@@ -26,6 +26,16 @@ const SMAX_PU    = 3;
 const SMAX_FOOD  = 4;
 const SPART_N    = 12;
 
+// Main-menu rows (navigable like a chess-style menu):
+//   row 0 = PLAY
+//   row 1 = LEADERBOARD (shared global board)
+const SMENU_ROWS = 2;
+const SROW_PLAY  = 0;
+const SROW_LB    = 1;
+
+// Global leaderboard game id (matches _LOGOS / web id).
+const SLB_GAME_ID = "serpent";
+
 class BitochiSerpentView extends WatchUi.View {
 
     var accelX;
@@ -81,6 +91,7 @@ class BitochiSerpentView extends WatchUi.View {
     // Menu/UI
     hidden var _wobble;
     hidden var _flashTick;
+    hidden var _menuRow;
 
     // Accel smoothing + auto-turn cooldown
     hidden var _smoothAx;
@@ -95,6 +106,7 @@ class BitochiSerpentView extends WatchUi.View {
         _w = 0; _h = 0;
         _tick = 0; _gs = SS_MENU;
         _wobble = 0.0; _flashTick = 0;
+        _menuRow = SROW_PLAY;
         _smoothAx = 0.0; _accelCooldown = 0;
 
         _best = Application.Storage.getValue("serpent_best");
@@ -516,6 +528,8 @@ class BitochiSerpentView extends WatchUi.View {
             _best = _score;
             Application.Storage.setValue("serpent_best", _best);
         }
+        // Submit the run score to the global leaderboard (fire-and-forget).
+        Leaderboard.submitScore(SLB_GAME_ID, _score, "");
         doVibe(2);
     }
 
@@ -544,13 +558,21 @@ class BitochiSerpentView extends WatchUi.View {
     }
 
     function doAction() {
-        if (_gs == SS_MENU) { startGame(); }
+        if (_gs == SS_MENU) { menuActivate(); }
         else if (_gs == SS_PLAY) { turnRight(); }
         else if (_gs == SS_OVER) { _gs = SS_MENU; }
     }
 
-    function doLeft()  { turnLeft(); }
-    function doRight() { turnRight(); }
+    // UP — navigate menu, else turn left.
+    function doLeft() {
+        if (_gs == SS_MENU) { menuPrev(); return; }
+        turnLeft();
+    }
+    // DOWN — navigate menu, else turn right.
+    function doRight() {
+        if (_gs == SS_MENU) { menuNext(); return; }
+        turnRight();
+    }
 
     function doBack() {
         if (_gs == SS_PLAY) { turnLeft(); return true; }
@@ -558,6 +580,42 @@ class BitochiSerpentView extends WatchUi.View {
     }
 
     function isPlaying() { return _gs == SS_PLAY; }
+    function isMenu()    { return _gs == SS_MENU; }
+
+    // ── Menu navigation ────────────────────────────────────────────────────────
+
+    function menuPrev() { _menuRow = (_menuRow + SMENU_ROWS - 1) % SMENU_ROWS; }
+    function menuNext() { _menuRow = (_menuRow + 1) % SMENU_ROWS; }
+
+    function menuActivate() {
+        if (_menuRow == SROW_LB) { openLeaderboard(); }
+        else { startGame(); }
+    }
+
+    // Open the shared global leaderboard for serpent.
+    function openLeaderboard() {
+        var v = new LbScoresView(SLB_GAME_ID, "", "SERPENT");
+        WatchUi.pushView(v, new LbScoresDelegate(), WatchUi.SLIDE_LEFT);
+    }
+
+    // Geometry for the two-row main menu.  Space-aware: rows shrink to fit
+    // between the BEST line and the bottom margin so nothing overlaps on
+    // small round watches.  Returns [rowH, rowW, rowX, rowY0, gap].
+    function menuRowGeom() {
+        var topZone      = (_h * 60) / 100;            // rows live below BEST
+        var bottomMargin = (_h * 8) / 100; if (bottomMargin < 14) { bottomMargin = 14; }
+        var gap          = (_h * 3) / 100; if (gap < 5) { gap = 5; }
+        var avail        = (_h - bottomMargin) - topZone;
+        var rowH         = (avail - gap * (SMENU_ROWS - 1)) / SMENU_ROWS;
+        if (rowH > 28) { rowH = 28; }
+        if (rowH < 18) { rowH = 18; }
+        var rowW = (_w * 62) / 100; if (rowW < 110) { rowW = 110; }
+        var rowX = (_w - rowW) / 2;
+        var used = SMENU_ROWS * rowH + (SMENU_ROWS - 1) * gap;
+        var rowY0 = topZone + (avail - used) / 2;
+        if (rowY0 < topZone) { rowY0 = topZone; }
+        return [rowH, rowW, rowX, rowY0, gap];
+    }
 
     // ── Vibration ─────────────────────────────────────────────────────────────
 
@@ -584,25 +642,27 @@ class BitochiSerpentView extends WatchUi.View {
 
     hidden function drawMenu(dc) {
         dc.setColor(0x07101C, 0x07101C); dc.clear();
+        var cx = _w / 2;
 
-        // Animated snake coil decoration
+        // Animated snake coil decoration — ~18% smaller and moved up to
+        // leave room for the two interactive rows below.
         var t = _wobble;
-        var cx = _w / 2; var cy = _h * 35 / 100;
+        var cy = _h * 22 / 100;
         for (var i = 7; i >= 0; i--) {
             var ang = t - i.toFloat() * 0.75;
-            var r = 30.0 - i.toFloat() * 2.8;
+            var r = 24.0 - i.toFloat() * 2.3;
             var sx = cx + (Math.cos(ang) * r).toNumber();
             var sy = cy + (Math.sin(ang) * r * 0.65).toNumber();
             var colIdx = i * _snakePalette.size() / 8;
             if (colIdx >= _snakePalette.size()) { colIdx = _snakePalette.size() - 1; }
             dc.setColor(_snakePalette[colIdx], Graphics.COLOR_TRANSPARENT);
-            var sz = (i == 7) ? 7 : (5 - i / 3);
+            var sz = (i == 7) ? 6 : (4 - i / 3);
             if (sz < 2) { sz = 2; }
             dc.fillCircle(sx, sy, sz);
         }
         // Eyes on animated head
         var headAng = t;
-        var hr = 30.0;
+        var hr = 24.0;
         var hsx = cx + (Math.cos(headAng) * hr).toNumber();
         var hsy = cy + (Math.sin(headAng) * hr * 0.65).toNumber();
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
@@ -610,20 +670,49 @@ class BitochiSerpentView extends WatchUi.View {
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(hsx + 2, hsy - 1, 1);
 
-        // Title
+        // Title (~18% smaller: FONT_SMALL instead of FONT_MEDIUM)
         dc.setColor(0x44FF88, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 54 / 100, Graphics.FONT_MEDIUM, "SERPENT", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, _h * 36 / 100, Graphics.FONT_SMALL, "SERPENT", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x226644, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 67 / 100, Graphics.FONT_XTINY, "BITOCHI GAMES", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, _h * 47 / 100, Graphics.FONT_XTINY, "BITOCHI GAMES", Graphics.TEXT_JUSTIFY_CENTER);
 
         if (_best > 0) {
             dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 76 / 100, Graphics.FONT_XTINY, "BEST: " + _best, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(cx, _h * 54 / 100, Graphics.FONT_XTINY, "BEST: " + _best, Graphics.TEXT_JUSTIFY_CENTER);
         }
 
-        // Blink "tap to play"
-        dc.setColor((_tick % 12 < 6) ? 0xAAFFCC : 0x44BB77, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 87 / 100, Graphics.FONT_XTINY, "Tap to play!", Graphics.TEXT_JUSTIFY_CENTER);
+        // Two interactive rows: PLAY + LEADERBOARD.
+        var rg   = menuRowGeom();
+        var rowH = rg[0]; var rowW = rg[1];
+        var rowX = rg[2]; var rowY0 = rg[3]; var gap = rg[4];
+        for (var i = 0; i < SMENU_ROWS; i++) {
+            var ry  = rowY0 + i * (rowH + gap);
+            var sel = (i == _menuRow);
+
+            if (i == SROW_LB) {
+                // Gold leaderboard row from the shared library.
+                LbBadge.drawRow(dc, rowX, ry, rowW, rowH, sel);
+                continue;
+            }
+
+            // PLAY row — green-accented to match the snake theme.
+            var bg; var bd; var fg;
+            if (sel) { bg = 0x1A4400; bd = 0x44BB22; fg = 0xAAFF66; }
+            else     { bg = 0x102010; bd = 0x224422; fg = 0x88AA88; }
+            dc.setColor(bg, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);
+            dc.setColor(bd, Graphics.COLOR_TRANSPARENT);
+            dc.drawRoundedRectangle(rowX, ry, rowW, rowH, 5);
+            if (sel) {
+                var ay = ry + rowH / 2;
+                dc.fillPolygon([[rowX + 5, ay - 4],
+                                [rowX + 5, ay + 4],
+                                [rowX + 11, ay]]);
+            }
+            dc.setColor(fg, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, ry + (rowH - 14) / 2, Graphics.FONT_XTINY,
+                        "PLAY", Graphics.TEXT_JUSTIFY_CENTER);
+        }
     }
 
     // ── Game screen ──────────────────────────────────────────────────────────

@@ -153,6 +153,11 @@ class BitochiCatapultView extends WatchUi.View {
     hidden var _boomSubN;
     hidden var _chainLimit;
 
+    // Leaderboard: row selection on the READY menu (0 = START, 1 = LEADERBOARD)
+    // and a one-shot guard so a finished match submits its score only once.
+    hidden var _readySel;
+    hidden var _scoreSubmitted;
+
     function initialize() {
         View.initialize();
         Math.srand(Time.now().value());
@@ -223,6 +228,9 @@ class BitochiCatapultView extends WatchUi.View {
         _boomSubWx = new [2]; _boomSubWy = new [2];
         _boomSubWx[0] = 0.0; _boomSubWx[1] = 0.0; _boomSubWy[0] = 0.0; _boomSubWy[1] = 0.0;
 
+        _readySel = 0;
+        _scoreSubmitted = false;
+
         initRound();
     }
 
@@ -274,6 +282,7 @@ class BitochiCatapultView extends WatchUi.View {
         _camTargetX = _catWX;
         gameState = GS_READY;
         _previewTick = 0;
+        _readySel = 0;
     }
 
     hidden function applyTheme() {
@@ -517,8 +526,7 @@ class BitochiCatapultView extends WatchUi.View {
             if (gameState == GS_RESULT && _enemyHp <= 0 && _resultTick > 58) {
                 if (_round >= 16) {
                     _beatGame = true;
-                    gameState = GS_GAMEOVER;
-                    _resultTick = 0;
+                    toGameOver();
                 } else {
                     gameState = GS_SHOP;
                     _shopSel = 7;
@@ -941,10 +949,31 @@ class BitochiCatapultView extends WatchUi.View {
         }
     }
 
+    // Open the shared global leaderboard for catapult (no variants).
+    function openLeaderboard() {
+        var v = new LbScoresView("catapult", "", "CATAPULT");
+        WatchUi.pushView(v, new LbScoresDelegate(), WatchUi.SLIDE_LEFT);
+    }
+
+    // Enter the final GAME OVER screen, submitting the match's total score to
+    // the global leaderboard exactly once.
+    hidden function toGameOver() {
+        if (!_scoreSubmitted) {
+            Leaderboard.submitScore("catapult", _score, "");
+            _scoreSubmitted = true;
+        }
+        gameState = GS_GAMEOVER;
+        _resultTick = 0;
+    }
+
     function doAction() {
         if (gameState == GS_READY) {
-            gameState = GS_PREVIEW;
-            _previewTick = 0;
+            if (_readySel == 1) {
+                openLeaderboard();
+            } else {
+                gameState = GS_PREVIEW;
+                _previewTick = 0;
+            }
         } else if (gameState == GS_PREVIEW) {
             _previewTick = 90;
         } else if (gameState == GS_ANGLE) {
@@ -957,8 +986,7 @@ class BitochiCatapultView extends WatchUi.View {
             if (_enemyHp <= 0) {
                 if (_round >= 16) {
                     _beatGame = true;
-                    gameState = GS_GAMEOVER;
-                    _resultTick = 0;
+                    toGameOver();
                 } else {
                     gameState = GS_SHOP;
                     _shopSel = 7;
@@ -966,8 +994,7 @@ class BitochiCatapultView extends WatchUi.View {
                 }
             } else {
                 _beatGame = false;
-                gameState = GS_GAMEOVER;
-                _resultTick = 0;
+                toGameOver();
             }
         } else if (gameState == GS_SHOP) {
             shopBuy();
@@ -977,6 +1004,7 @@ class BitochiCatapultView extends WatchUi.View {
             _bestShots = (catBsGo != null) ? catBsGo : 99;
             _gold = 0;
             _activePow = PW_NONE;
+            _scoreSubmitted = false;
             initRound();
         }
     }
@@ -985,6 +1013,8 @@ class BitochiCatapultView extends WatchUi.View {
         if (gameState == GS_SHOP) {
             _shopSel--;
             if (_shopSel < 0) { _shopSel = 7; }
+        } else if (gameState == GS_READY) {
+            _readySel = (_readySel + 1) % 2;
         } else {
             doAction();
         }
@@ -994,6 +1024,8 @@ class BitochiCatapultView extends WatchUi.View {
         if (gameState == GS_SHOP) {
             _shopSel++;
             if (_shopSel > 7) { _shopSel = 0; }
+        } else if (gameState == GS_READY) {
+            _readySel = (_readySel + 1) % 2;
         } else {
             doAction();
         }
@@ -2069,16 +2101,37 @@ class BitochiCatapultView extends WatchUi.View {
         }
     }
 
+    // Geometry for the READY-screen menu (START + LEADERBOARD). Space-aware:
+    // rows live in the bottom zone and shrink to whatever fits above the
+    // bottom margin so they never overlap on small round watches. Kept ~18%
+    // more compact than a standard menu row (height / width / gaps).
+    function readyRowGeom() {
+        var topZone      = (_h * 62) / 100;
+        var bottomMargin = (_h * 6) / 100; if (bottomMargin < 10) { bottomMargin = 10; }
+        var gap          = (_h * 2) / 100; if (gap < 3) { gap = 3; }
+        var avail        = (_h - bottomMargin) - topZone;
+        var rowH         = (avail - gap) / 2;
+        if (rowH > 21) { rowH = 21; }
+        if (rowH < 14) { rowH = 14; }
+        var rowW = (_w * 58) / 100; if (rowW < 104) { rowW = 104; }
+        if (rowW > _w - 8) { rowW = _w - 8; }
+        var rowX = (_w - rowW) / 2;
+        var used = 2 * rowH + gap;
+        var rowY0 = topZone + (avail - used) / 2;
+        if (rowY0 < topZone) { rowY0 = topZone; }
+        return [rowH, rowW, rowX, rowY0, gap];
+    }
+
     hidden function drawReady(dc, w, h) {
         dc.setColor(_skyC1, _skyC1);
         dc.clear();
 
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 8 / 100, Graphics.FONT_MEDIUM, "ROUND " + _round, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 4 / 100, Graphics.FONT_MEDIUM, "ROUND " + _round, Graphics.TEXT_JUSTIFY_CENTER);
 
-        var r = w * 14 / 100;
-        if (r < 12) { r = 12; }
-        var cy = h * 38 / 100;
+        var r = w * 11 / 100;
+        if (r < 10) { r = 10; }
+        var cy = h * 28 / 100;
 
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(w / 2 + 2, cy + r + 2, r * 80 / 100);
@@ -2101,14 +2154,35 @@ class BitochiCatapultView extends WatchUi.View {
         dc.fillCircle(w / 2 + eo + 1, headY - eo / 3, eo / 3 + 1);
 
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 55 / 100, Graphics.FONT_SMALL, "vs " + _enemyName, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 44 / 100, Graphics.FONT_SMALL, "vs " + _enemyName, Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFF6666, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 66 / 100, Graphics.FONT_XTINY, "HP:" + _enemyMaxHp + " Dist:" + _castleWX.toNumber(), Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 52 / 100, Graphics.FONT_XTINY, "HP:" + _enemyMaxHp + " Dist:" + _castleWX.toNumber(), Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xAACCFF, Graphics.COLOR_TRANSPARENT);
         var wl = "Wind:" + ((_windDisplay >= 0) ? "+" : "") + _windDisplay;
-        dc.drawText(w / 2, h * 74 / 100, Graphics.FONT_XTINY, wl, Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0x88AACC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 86 / 100, Graphics.FONT_XTINY, "Press to scout", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 58 / 100, Graphics.FONT_XTINY, wl, Graphics.TEXT_JUSTIFY_CENTER);
+
+        // Two-row menu: SCOUT (start) + LEADERBOARD (shared badge).
+        var rg   = readyRowGeom();
+        var rowH = rg[0]; var rowW = rg[1];
+        var rowX = rg[2]; var rowY0 = rg[3]; var gap = rg[4];
+
+        var sel0 = (_readySel == 0);
+        var bg = sel0 ? 0x1A4400 : 0x102010;
+        var bd = sel0 ? 0x44BB22 : 0x224422;
+        var fg = sel0 ? 0xAAFF66 : 0x88AA88;
+        dc.setColor(bg, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(rowX, rowY0, rowW, rowH, 5);
+        dc.setColor(bd, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(rowX, rowY0, rowW, rowH, 5);
+        if (sel0) {
+            var ay = rowY0 + rowH / 2;
+            dc.fillPolygon([[rowX + 5, ay - 4], [rowX + 5, ay + 4], [rowX + 11, ay]]);
+        }
+        dc.setColor(fg, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w / 2, rowY0 + (rowH - 14) / 2, Graphics.FONT_XTINY, "SCOUT >>", Graphics.TEXT_JUSTIFY_CENTER);
+
+        var ry1 = rowY0 + rowH + gap;
+        LbBadge.drawRow(dc, rowX, ry1, rowW, rowH, _readySel == 1);
     }
 
     hidden function drawResult(dc, w, h) {
