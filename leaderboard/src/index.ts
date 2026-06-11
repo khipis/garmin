@@ -3,25 +3,20 @@
 
 export interface Env {
   DB: D1Database;
-  // Optional: GAME_KEYS KV namespace for key-based auth
 }
 
 // ── Config ────────────────────────────────────────────────────────────────────
 
-// Optional per-game API keys.  Set to {} to disable key checking entirely.
-// To require a key for a game, add it here and the client must send the
-// matching "key" field in the POST body.
+// Optional per-game API keys.  Set {} to disable.
 const GAME_KEYS: Record<string, string> = {
   // "mygame": "supersecretkey123",
 };
 
-const RATE_LIMIT_WINDOW_MS = 10_000; // 10 s window
-const RATE_LIMIT_MAX       = 20;     // max requests per IP per window
-const LEADERBOARD_CACHE_S  = 45;     // CDN cache for GET /leaderboard
+const RATE_LIMIT_WINDOW_MS = 10_000;
+const RATE_LIMIT_MAX       = 20;
+const LEADERBOARD_CACHE_S  = 45;
 const TOP_N                = 50;
 
-// In-memory rate-limit store (resets when the Worker isolate is recycled,
-// which is fine — this is a soft limit, not a security boundary).
 const ipHits = new Map<string, { count: number; windowStart: number }>();
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -29,7 +24,11 @@ const ipHits = new Map<string, { count: number; windowStart: number }>();
 function json(body: unknown, status = 200, extra: HeadersInit = {}): Response {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { "Content-Type": "application/json", ...extra },
+    headers: {
+      "Content-Type": "application/json",
+      "Access-Control-Allow-Origin": "*",
+      ...extra,
+    },
   });
 }
 
@@ -38,13 +37,16 @@ function err(msg: string, status = 400): Response {
 }
 
 function sanitizeGame(raw: string): string {
-  // lowercase, only alphanum + dash/underscore, max 40 chars
   return raw.toLowerCase().replace(/[^a-z0-9_-]/g, "").slice(0, 40);
 }
 
 function sanitizeUser(raw: string): string {
-  // strip control chars, max 32 chars
   return raw.replace(/[\x00-\x1f\x7f]/g, "").slice(0, 32) || "anon";
+}
+
+function sanitizeVariant(raw: string): string {
+  // Allow alphanumeric, spaces, dash, underscore — max 60 chars
+  return raw.replace(/[^a-zA-Z0-9 _-]/g, "").slice(0, 60).trim();
 }
 
 function checkRateLimit(ip: string): boolean {
@@ -62,41 +64,39 @@ function checkRateLimit(ip: string): boolean {
 
 async function handlePostScore(req: Request, env: Env): Promise<Response> {
   let body: unknown;
-  try {
-    body = await req.json();
-  } catch {
-    return err("invalid JSON");
-  }
+  try { body = await req.json(); } catch { return err("invalid JSON"); }
 
   const b = body as Record<string, unknown>;
 
-  // Validate required fields
-  const gameRaw = typeof b.game  === "string" ? b.game.trim()  : "";
-  const userRaw = typeof b.user  === "string" ? b.user.trim()  : "anon";
-  const score   = typeof b.score === "number"  ? b.score        : null;
+  const gameRaw    = typeof b.game    === "string" ? b.game.trim()    : "";
+  const userRaw    = typeof b.user    === "string" ? b.user.trim()    : "anon";
+  const variantRaw = typeof b.variant === "string" ? b.variant.trim() : "";
+  const score      = typeof b.score   === "number"  ? b.score          : null;
 
-  if (!gameRaw)         return err("missing: game");
+  if (!gameRaw) return err("missing: game");
   if (score === null || !Number.isFinite(score)) return err("missing/invalid: score");
 
-  const game = sanitizeGame(gameRaw);
-  if (!game)            return err("invalid game name");
+  const game    = sanitizeGame(gameRaw);
+  if (!game)    return err("invalid game name");
 
-  const user = sanitizeUser(userRaw || "anon");
+  const user    = sanitizeUser(userRaw || "anon");
+  const variant = sanitizeVariant(variantRaw);
 
-  // Optional per-game key check
   if (GAME_KEYS[game] !== undefined) {
     if (b.key !== GAME_KEYS[game]) return err("invalid game key", 403);
   }
 
-  const ts = Math.floor(Date.now() / 1000);
+  const ts      = Math.floor(Date.now() / 1000);
   const metaStr = b.meta && typeof b.meta === "object"
     ? JSON.stringify(b.meta).slice(0, 512)
     : null;
 
   try {
     await env.DB
-      .prepare("INSERT INTO scores (game, user, score, timestamp, meta) VALUES (?, ?, ?, ?, ?)")
-      .bind(game, user, Math.round(score), ts, metaStr)
+      .prepare(
+        "INSERT INTO scores (game, user, score, timestamp, variant, meta) VALUES (?, ?, ?, ?, ?, ?)"
+      )
+      .bind(game, user, Math.round(score), ts, variant, metaStr)
       .run();
   } catch (e) {
     console.error("DB insert error:", e);
@@ -107,19 +107,23 @@ async function handlePostScore(req: Request, env: Env): Promise<Response> {
 }
 
 async function handleGetLeaderboard(url: URL, env: Env): Promise<Response> {
-  const gameRaw = (url.searchParams.get("game") ?? "").trim();
+  const gameRaw    = (url.searchParams.get("game")    ?? "").trim();
+  const variantRaw = (url.searchParams.get("variant") ?? "").trim();
+
   if (!gameRaw) return err("missing: game");
 
-  const game = sanitizeGame(gameRaw);
-  if (!game)   return err("invalid game name");
+  const game    = sanitizeGame(gameRaw);
+  if (!game)    return err("invalid game name");
+
+  const variant = sanitizeVariant(variantRaw);
 
   let rows: { user: string; score: number }[] = [];
   try {
     const result = await env.DB
       .prepare(
-        "SELECT user, score FROM scores WHERE game = ? ORDER BY score DESC LIMIT ?"
+        "SELECT user, score FROM scores WHERE game = ? AND variant = ? ORDER BY score DESC LIMIT ?"
       )
-      .bind(game, TOP_N)
+      .bind(game, variant, TOP_N)
       .all<{ user: string; score: number }>();
     rows = result.results ?? [];
   } catch (e) {
@@ -130,13 +134,34 @@ async function handleGetLeaderboard(url: URL, env: Env): Promise<Response> {
   const top = rows.map((r, i) => ({ r: i + 1, u: r.user, s: r.score }));
 
   return json(
-    { game, updated: Math.floor(Date.now() / 1000), top },
+    { game, variant, updated: Math.floor(Date.now() / 1000), top },
     200,
-    {
-      // CDN-level cache; Cloudflare will serve stale while revalidating.
-      "Cache-Control": `public, max-age=${LEADERBOARD_CACHE_S}, stale-while-revalidate=60`,
-    }
+    { "Cache-Control": `public, max-age=${LEADERBOARD_CACHE_S}, stale-while-revalidate=60` }
   );
+}
+
+async function handleGetVariants(url: URL, env: Env): Promise<Response> {
+  const gameRaw = (url.searchParams.get("game") ?? "").trim();
+  if (!gameRaw) return err("missing: game");
+
+  const game = sanitizeGame(gameRaw);
+  if (!game)   return err("invalid game name");
+
+  let variants: string[] = [];
+  try {
+    const result = await env.DB
+      .prepare(
+        "SELECT DISTINCT variant FROM scores WHERE game = ? AND variant != '' ORDER BY variant ASC"
+      )
+      .bind(game)
+      .all<{ variant: string }>();
+    variants = (result.results ?? []).map(r => r.variant);
+  } catch (e) {
+    console.error("DB query error:", e);
+    return err("db error", 500);
+  }
+
+  return json({ game, variants });
 }
 
 // ── Main entry ────────────────────────────────────────────────────────────────
@@ -147,7 +172,6 @@ export default {
     const path   = url.pathname;
     const method = req.method.toUpperCase();
 
-    // CORS pre-flight (Garmin apps don't need this but handy for web dashboards)
     if (method === "OPTIONS") {
       return new Response(null, {
         status: 204,
@@ -159,24 +183,15 @@ export default {
       });
     }
 
-    // Rate limit by IP
     const ip = req.headers.get("CF-Connecting-IP") ?? "unknown";
     if (!checkRateLimit(ip)) {
       return err("rate limit exceeded — try again shortly", 429);
     }
 
-    // ── Routes ─────────────────────────────────────────────────────────────
-    if (method === "POST" && path === "/score") {
-      return handlePostScore(req, env);
-    }
-
-    if (method === "GET" && path === "/leaderboard") {
-      return handleGetLeaderboard(url, env);
-    }
-
-    if (method === "GET" && path === "/health") {
-      return json({ ok: true, ts: Date.now() });
-    }
+    if (method === "POST" && path === "/score")       return handlePostScore(req, env);
+    if (method === "GET"  && path === "/leaderboard") return handleGetLeaderboard(url, env);
+    if (method === "GET"  && path === "/variants")    return handleGetVariants(url, env);
+    if (method === "GET"  && path === "/health")      return json({ ok: true, ts: Date.now() });
 
     return err("not found", 404);
   },

@@ -302,6 +302,67 @@
     transition: width .6s cubic-bezier(.4,0,.2,1);
   }
 
+  /* ── Variant selector ────────────────────────────────────────────── */
+  #variant-selector-wrap {
+    position: relative; z-index: 1;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 8px 20px;
+  }
+
+  #variant-scroll {
+    display: flex; gap: 8px;
+    overflow-x: auto; padding-bottom: 2px;
+    scrollbar-width: none;
+  }
+  #variant-scroll::-webkit-scrollbar { display: none; }
+
+  .variant-chip {
+    flex-shrink: 0;
+    padding: 5px 14px; border-radius: 999px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted); font-size: .75rem; font-weight: 600;
+    letter-spacing: .04em; text-transform: uppercase;
+    cursor: pointer; white-space: nowrap;
+    transition: background .15s, border-color .15s, color .15s;
+  }
+  .variant-chip:hover  { border-color: var(--accent); color: var(--accent); }
+  .variant-chip.active {
+    background: rgba(0,212,255,.12);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* ── Game info card ───────────────────────────────────────────────── */
+  #game-info {
+    margin-top: 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px 22px;
+    box-shadow: var(--shadow);
+  }
+  .game-info-desc {
+    font-size: .9rem; line-height: 1.65;
+    color: var(--text); opacity: .85;
+    margin-bottom: 14px;
+  }
+  .game-info-ciq {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 8px 18px; border-radius: 999px;
+    background: linear-gradient(135deg, rgba(0,212,255,.12), rgba(124,58,237,.12));
+    border: 1px solid rgba(0,212,255,.35);
+    color: var(--accent); font-size: .8rem; font-weight: 700;
+    letter-spacing: .06em; text-transform: uppercase;
+    text-decoration: none;
+    transition: background .2s, box-shadow .2s;
+  }
+  .game-info-ciq:hover {
+    background: linear-gradient(135deg, rgba(0,212,255,.22), rgba(124,58,237,.22));
+    box-shadow: 0 0 18px rgba(0,212,255,.3);
+  }
+
   /* ── Footer ───────────────────────────────────────────────────────── */
   footer {
     position: relative; z-index: 1;
@@ -351,16 +412,23 @@
   <div id="game-scroll"></div>
 </div>
 
+<!-- ── Variant selector ─────────────────────────────────────────────────────── -->
+<div id="variant-selector-wrap" style="display:none">
+  <div id="variant-scroll"></div>
+</div>
+
 <!-- ── Leaderboard ─────────────────────────────────────────────────────────── -->
 <main>
   <div class="section-header">
-    <span class="section-title">Top 10</span>
+    <span class="section-title" id="lb-title">Top 10</span>
     <span class="section-line"></span>
     <span class="update-tag" id="update-tag"></span>
   </div>
   <div id="lb-wrap">
     <div class="state-msg">← Select a game to view rankings</div>
   </div>
+  <!-- Game info card (shown below leaderboard) -->
+  <div id="game-info" style="display:none"></div>
 </main>
 
 <footer>
@@ -370,132 +438,212 @@
 
 <script>
 // ── Config ──────────────────────────────────────────────────────────────────
-// Replace with your actual Cloudflare Worker URL after deploying:
-const API_BASE = 'https://garmin-leaderboard.YOURSUBDOMAIN.workers.dev';
-
+const API_BASE    = 'https://garmin-leaderboard.YOURSUBDOMAIN.workers.dev';
 const GITHUB_RAW  = 'https://raw.githubusercontent.com/khipis/garmin/main/_LOGOS';
 const CIQ_STORE   = 'https://apps.garmin.com/apps/';
 
+// ── Game descriptions (from README files) ───────────────────────────────────
+const GAME_DESCS = {
+  '8ball':             'Shake your wrist to consult the Magic 8-Ball and receive a mystical answer to any yes/no question. Perfect for quick decisions on the go.',
+  'arcade':            'Knife-hit style arcade game — throw axes at a spinning log and try not to hit the ones already lodged in it. Pure reflex challenge.',
+  'battleship':        'Classic Sea Battle on a 10×10 grid. Place your fleet, hunt the enemy ships, and sink everything before the AI sinks you.',
+  'billiards':         'Pool on your wrist — aim, power up, and shoot to pocket balls. Supports P vs AI and P vs P modes with adjustable difficulty.',
+  'blackjack':         'Classic Blackjack card game. Hit, stand, or double down against the dealer and try to reach 21 without busting.',
+  'blobs':             'Free-for-all artillery deathmatch on a scrolling battlefield. Destroy all enemy blobs before they obliterate you.',
+  'bomb':              'Retro bomb-dropping arcade game. Fly over targets and release your payload at exactly the right moment for maximum damage.',
+  'boxing':            'Fast-paced boxing match on your wrist. Time your punches and blocks to defeat your opponent round by round.',
+  'breathtrainingsystem': 'Guided breathing trainer with customisable inhale/hold/exhale cycles and visual pacing for stress relief and focus.',
+  'breathtrainingtool':   'Simple breathing tool with a live animated guide. Set your own rhythm and follow the on-screen cues.',
+  'bricks':            'Classic brick-breaker — control the paddle, launch the ball, and demolish all the bricks without letting it drop.',
+  'catapult':          'Medieval siege game: adjust your catapult angle and power, then launch boulders at the castle walls.',
+  'cellwars':          'Cellular automata battle simulator. Watch eight evolutionary algorithms compete for territory — or just let a single ruleset evolve in silence.',
+  'checkers':          'Classic draughts/checkers against an AI opponent. Capture all enemy pieces by jumping over them to win.',
+  'chess':             'Full chess game with AI opponent at multiple difficulty levels. Touch or button controls for every move on your Garmin watch.',
+  'chickencross':      'Help the chicken cross the busy road without getting squashed. Dodge cars, trucks, and other hazards in this Frogger-style classic.',
+  'connect_four_lite': 'Drop coloured discs and line up four in a row — horizontally, vertically, or diagonally — before your opponent does.',
+  'diceroyale':        'Yahtzee-inspired dice game. Roll five dice up to three times and aim for the highest-scoring combination on the scorecard.',
+  'digcore':           'Mine deeper and deeper, collecting ore and dodging hazards. Spend your loot on upgrades and see how far you can drill.',
+  'dinosaur':          'Chrome-style endless T-Rex runner. Press any button to jump over cacti and duck under pterodactyls. Unlock new abilities as your score climbs.',
+  'diveboatmodeplanner':'Dive planning companion: calculate mode gas requirements, partial pressures, and equivalent air depths for scuba divers.',
+  'divegasblender':    'Gas blending calculator for technical divers. Compute top-up mixes and validate O₂/He fractions quickly on your wrist.',
+  'diveplantoolkit':   'Full dive-planning toolkit: MOD, EAD, END, gas duration, and deco obligation helpers in one compact app.',
+  'divequickcalculator':'Quick dive calculator for partial pressures and maximum operating depth — designed for a fast pre-dive safety check.',
+  'divercommunicator': 'Underwater communication helper with a visual signal library and diver-to-diver message cards for buddy communication.',
+  'diveriskindicator': 'Real-time dive-risk dashboard tracking cumulative nitrogen load and surfacing thresholds to help divers stay safe.',
+  'divesafetytoolkit': 'Comprehensive dive-safety reference: emergency procedures, decompression tables, and surface-interval calculators.',
+  'dots_boxes':        'Classic pencil-and-paper Dots & Boxes strategy game. Draw lines to complete squares, claim the most boxes, and outsmart the AI.',
+  'edgesurvivor':      'Minimalist circular survival for round Garmin watches. You\'re locked to the screen edge while projectiles race from the centre — dodge everything for as long as you can.',
+  'fakenotificationescape': 'Escape awkward situations by triggering a convincing fake notification or phone call on your watch.',
+  'fish':              'Fishing game with casting physics and fish-fighting mechanics. Cast your line, feel the bite, and reel in your catch.',
+  'flappypidgeon':     'Garmin\'s take on Flappy Bird — tap to flap, skim through obstacle gaps, and chase your best distance as speed and difficulty escalate.',
+  'gemmatch':          'Match-3 time-attack: swap adjacent gems, trigger cascades for bonus points, and score as high as possible in 90 seconds.',
+  'gobblet_mini':      'Gobblet — the strategy board game where you stack pieces on top of opponents\' to capture them. Think two moves ahead to win.',
+  'gravityminer':      'Mine through procedurally generated caves, fight gravity, and collect rare minerals before your fuel runs out.',
+  'gyromaze':          'Tilt your wrist to roll a ball through a labyrinth using the watch\'s gyroscope. Reach the exit before time runs out.',
+  'hangman':           'Word-guessing game with four categories and three difficulty tiers. Tap the on-screen keyboard to reveal the hidden word before the gallows fills.',
+  'hex_mini':          'Hex — the classic connection strategy game on a compact board. Build a chain of tiles from one side to the other before your opponent does.',
+  'hologrid':          'Sci-fi grid-based puzzle game. Activate the correct pattern of cells to clear each level and advance through the holographic matrix.',
+  'intervalbeeper':    'Customisable interval timer with audio and vibration alerts. Perfect for HIIT, Tabata, or any timed workout routine.',
+  'jazzball':          'Classic JezzBall arcade game. Draw walls to partition the playfield and reduce it to under 25% while avoiding the bouncing balls.',
+  'jumptower':         'Doodle Jump-style endless climber. Bounce up procedurally generated platforms, ride moving ones, launch off springs, and chase maximum height.',
+  'kakuro':            'Cross-sums puzzle (numerical crossword). Fill the grid so that each run of cells adds up to the clue number, with no digit repeated.',
+  'lightsout':         'Toggle lights in a grid to turn them all off. Every switch flips its neighbours too — solve the puzzle in the fewest moves.',
+  'makao_lite':        'Makao (Polish Crazy Eights / Macao) card game. Match suits or values, play special cards, and empty your hand before anyone else.',
+  'manpac':            'Pac-Man on your wrist. Navigate the maze, eat all the pellets, grab power-ups to turn the tables on ghosts — swipe or buttons to steer.',
+  'memo':              'Classic memory card-flip game. Match all pairs in the fewest turns to win.',
+  'minesweeper':       'Classic Minesweeper in six board sizes up to 100×100. Safe first click, scrolling viewport for large boards, best-time tracking per size.',
+  'mini_go_9x9':       '9×9 Go — the ancient strategy game of territory and capture, condensed for a watch screen. Place stones and outmanoeuvre your AI opponent.',
+  'minigolf':          'Mini-golf on your wrist. Aim, choose your power, and sink the ball in as few strokes as possible across hand-crafted holes.',
+  'moon':              'Lunar-lander style game. Control your descent, manage fuel, and touch down on the moon\'s surface without crashing.',
+  'morris_classic':    'Nine Men\'s Morris (Mill) — the ancient alignment board game. Place, move, and remove pieces to reduce your opponent to two or trap them.',
+  'mudrogue':          'Roguelike dungeon crawler. Explore procedurally generated levels, battle monsters, and collect loot on your wrist.',
+  'nonogram':          'Picross / Nonogram logic puzzles. Use the row and column clue numbers to reveal a hidden pixel image cell by cell.',
+  'othello_blitz':     'Othello/Reversi blitz mode — flip your opponent\'s discs and control the board. Fast-paced timed rounds against an AI opponent.',
+  'parachute':         'Classic parachute drop game. Guide your parachutist to safety, avoiding obstacles, and land as accurately as possible.',
+  'pets':              'Virtual pet simulator for your Garmin watch. Feed, play with, and care for your tiny wrist companion.',
+  'pinballpro':        'NES-arcade-style pinball with five hand-crafted tables, multi-ball, drop targets, slingshots, a launch power meter, and stable flipper physics.',
+  'pixelinvaders':     'Space Invaders-style shooter. Defend Earth from waves of descending pixel aliens — shoot fast, dodge their fire, use cover wisely.',
+  'poker':             'Texas Hold\'em on your wrist. Bet, raise, or fold against AI opponents in a full poker game with hand rankings and pot management.',
+  'pongpro':           'Classic Pong vs. AI with three difficulty levels. Angle returns, speed escalation per rally, and predictive Hard AI make every match intense.',
+  'recoverytimer':     'Post-workout recovery timer. Track heart-rate recovery and rest intervals between high-intensity efforts.',
+  'run':               'Monster-escape endless runner. Sprint as fast as you can while monsters chase you — tap to jump over obstacles and survive as long as possible.',
+  'serpent':           'Classic Snake game on your Garmin. Eat food to grow longer, avoid walls and your own tail, and chase the highest score.',
+  'shadowclonerunner': 'Endless runner with a twist: your past runs reappear as shadow clones you must dodge while repeating the course.',
+  'skijump':           'Ski jumping with realistic physics. Time your take-off on the in-run, control your in-flight lean with wrist tilt, and stick the landing for distance and style points.',
+  'skyroll':           'High-altitude endless roll — navigate through procedurally generated sky lanes and dodge oncoming obstacles.',
+  'sniperscope':       'Sniper simulation with breath-hold mechanics. Stabilise your aim, account for wind, and hit the target with one shot.',
+  'solitare':          'Classic Klondike Solitaire. Build four foundation piles from Ace to King and clear the tableau before time runs out.',
+  'stacktower':        'Tap to drop sliding blocks and build the tallest tower you can. Overhang is trimmed — precision drops keep the block full width.',
+  'starcombat':        'Space shoot-\'em-up. Pilot your ship through asteroid fields and enemy waves, collect power-ups, and survive as long as possible.',
+  'starswarm':         'Wave-based space survival. Hold off swarms of enemy ships with your small craft — upgrades between waves keep things fresh.',
+  'sudoku':            'Classic Sudoku — a quick 4×4 game for a coffee break or a full 9×9 puzzle in Easy, Medium, or Hard. Best times saved per mode.',
+  'territory_clash':   'Turn-based territory conquest. Expand your domain by capturing adjacent cells — outsmart the AI to control the whole board.',
+  'tic_tac_pro':       'Tic-Tac-Toe with a competitive twist: play on larger boards, trigger power cells, and outthink the AI in this enhanced classic.',
+  'twentyfortyeight':  'Slide tiles in four directions, merge equal values, and reach the 2048 tile. Clean 4×4 board with swipe and button controls.',
+  'voidrocks':         'Asteroids-style space game. Pilot your ship through a debris field, blast rocks before they blast you, and rack up the highest score.',
+};
+
 const GAMES = [
-  { id: '8ball',             label: '8 Ball',             ciq: 'a1d2e3f4-8b7c-4a5d-9e6f-1a2b3c4d5e6f' },
-  { id: 'akari',             label: 'Akari',              ciq: 'a37fb1e5d6c7e8f9a0b1c2d3e4f5a6b7' },
-  { id: 'arcade',            label: 'Arcade',             ciq: 'c1d2e3f4-5a6b-7c8d-9e0f-a1b2c3d4e5f6' },
-  { id: 'archery',           label: 'Archery',            ciq: 'd72e8c1f4a9b6d3e0f1a2b3c4d5e6f7a' },
-  { id: 'battleship',        label: 'Battleship',         ciq: '5a7c9e1b3d5f7a9c1e3b5d7f9a1c3e5b' },
-  { id: 'billiards',         label: 'Billiards',          ciq: 'c5d6e7f8-a9b0-4102-e3f4-a5b6c7d8e9f0' },
-  { id: 'blackjack',         label: 'Blackjack',          ciq: 'a03e4ed2-aa66-4881-985e-98a915b87bdd' },
-  { id: 'blobs',             label: 'Blobs',              ciq: 'b8a220ec-63ed-4191-b82b-d157a3febc36' },
-  { id: 'blocks',            label: 'Blocks',             ciq: '7587047a-57be-48ce-ae53-cae72fd6ee46' },
-  { id: 'bomb',              label: 'Bomb',               ciq: 'c3d4e5f6-7a8b-9c0d-1e2f-3a4b5c6d7e8f' },
-  { id: 'boxing',            label: 'Boxing',             ciq: 'c4d92f1a-7b83-4e5c-a1d9-3f8e6c2b5a7d' },
-  { id: 'bricks',            label: 'Bricks',             ciq: 'ef926737-01ec-4bff-a70e-f197c75ae0c2' },
-  { id: 'catapult',          label: 'Catapult',           ciq: 'c4e5f6a7-2b3c-4d5e-8f9a-1b2c3d4e5f6a' },
-  { id: 'cellwars',          label: 'Cell Wars',          ciq: '9f3e1a2b-4c5d-6e7f-8a9b-0c1d2e3f4a5b' },
-  { id: 'checkers',          label: 'Checkers',           ciq: '90720dc8-1b2e-4bde-aa54-f724f71dadb2' },
-  { id: 'chess',             label: 'Chess',              ciq: '35974dee-22af-4ffc-b85a-1c64b3aed889' },
-  { id: 'chickencross',      label: 'Chicken Cross',      ciq: 'c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9' },
-  { id: 'connect_four_lite', label: 'Connect Four',       ciq: 'f6a7b8c9-d0e1-2345-fabc-456789012345' },
-  { id: 'diceroyale',        label: 'Dice Royale',        ciq: 'd1c3e040b1c2d3e4f5a6b7c8d9e0f1a2' },
-  { id: 'digcore',           label: 'Dig Core',           ciq: 'b2d3f6a8c0e2f4b6d8a0c2e4f6b8d0a2' },
-  { id: 'dinosaur',          label: 'Dinosaur',           ciq: '3f7a1c2e-4b8d-5e9f-6a0b-7c1d2e3f4a5b' },
-  { id: 'dots_boxes',        label: 'Dots & Boxes',       ciq: '6833d75a-f53f-4c95-8009-acd7edc757d0' },
-  { id: 'edgesurvivor',      label: 'Edge Survivor',      ciq: '0be5cdda-6916-4e03-90ad-11074d599749' },
-  { id: 'fish',              label: 'Fish',               ciq: 'e709f012-c3b4-4e82-ad79-b849f6004ec6' },
-  { id: 'flappypidgeon',     label: 'Flappy Pidgeon',     ciq: '2f4d6e8a1c3b5d7f9e2a4c6e8b0d2f4a' },
-  { id: 'gemmatch',          label: 'Gem Match',          ciq: 'c4b2a8903f5e4d6a9b1c8e7f0a2d4c6e' },
-  { id: 'gobblet_mini',      label: 'Gobblet Mini',       ciq: 'c3b9b0c6-2039-4c89-ad59-ad2501f05efe' },
-  { id: 'gravityminer',      label: 'Gravity Miner',      ciq: 'c3e4a7b9d1f3a5c7e9b1d3f5a7c9e1b3' },
-  { id: 'gyromaze',          label: 'Gyro Maze',          ciq: 'b48ac2f6e7d8e9f0a1b2c3d4e5f6a7b8' },
-  { id: 'hangman',           label: 'Hangman',            ciq: '3e5b7d9f1c3a5e7b9d1f3a5c7e9b1d3f' },
-  { id: 'hex_mini',          label: 'Hex Mini',           ciq: 'de7fd966-cd80-46db-8e84-ecb9cd58fc2b' },
-  { id: 'hologrid',          label: 'Hologrid',           ciq: 'd4f5b8c0e2a4b6d8f0a2c4e6b8d0f2a4' },
-  { id: 'jazzball',          label: 'Jazzball',           ciq: 'b5a62136-9bf1-4ddd-afdf-3b9aedf1fad6' },
-  { id: 'jumptower',         label: 'Jump Tower',         ciq: '3e5f7a9b1c3d5f7a9c1e3b5d7f9a1c3e' },
-  { id: 'kakuro',            label: 'Kakuro',             ciq: 'ba12c34d56e789f0a1b2c3d4e5f60718' },
-  { id: 'lightsout',         label: 'Lights Out',         ciq: '704c8b1a2d3e4f5a6b7c8d9e0f1a2b3c' },
-  { id: 'makao_lite',        label: 'Makao',              ciq: 'ead77edd-ebd6-4aad-b20d-e3c0d79a069d' },
-  { id: 'manpac',            label: 'Manpac',             ciq: 'b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8' },
-  { id: 'memo',              label: 'Memo',               ciq: '7c4a2f91-83d6-4e5b-a017-2c8b3f9e6d01' },
-  { id: 'minesweeper',       label: 'Minesweeper',        ciq: '7b9d1f3a5c7e9b1d3f5a7c9e1b3d5f7a' },
-  { id: 'mini_go_9x9',       label: 'Mini Go',            ciq: 'c3d4e5f6-a7b8-9012-cdef-123456789012' },
-  { id: 'minigolf',          label: 'Minigolf',           ciq: '44fe6a3a-c0c8-4f82-8346-b3c6ec982018' },
-  { id: 'moon',              label: 'Moon',               ciq: '347718c8-bc8c-4c22-a669-72ded83be86e' },
-  { id: 'morris_classic',    label: 'Morris',             ciq: '82fdd62b-746d-493c-871c-13c5e5db2c8a' },
-  { id: 'mudrogue',          label: 'Mud Rogue',          ciq: '1c3e5b7d9f1a3c5e7b9d1f3a5c7e9b1d' },
-  { id: 'nonogram',          label: 'Nonogram',           ciq: '815d9c2b3e4f5a6b7c8d9e0f1a2b3c4d' },
-  { id: 'othello_blitz',     label: 'Othello Blitz',      ciq: 'd4e5f6a7-b8c9-0123-defa-234567890123' },
-  { id: 'parachute',         label: 'Parachute',          ciq: 'f1a2b3c4-5d6e-7f8a-9b0c-1d2e3f4a5b6c' },
-  { id: 'pinballpro',        label: 'Pinball Pro',        ciq: '9e1b3d5f7a9c1e3b5d7f9a1c3e5b7d9f' },
-  { id: 'pixelinvaders',     label: 'Pixel Invaders',     ciq: 'f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2' },
-  { id: 'poker',             label: 'Poker',              ciq: '0d0cc420-c955-4da8-92c9-e9297cabe3f0' },
-  { id: 'pongpro',           label: 'Pong Pro',           ciq: '5f8a2c4e6b9d1f3a5c7e9b1d3f5a7c9e' },
-  { id: 'serpent',           label: 'Serpent',            ciq: '91dd9af8-e3ff-40b0-a377-e0cef3a3c98f' },
-  { id: 'shadowclonerunner', label: 'Shadow Clone Runner',ciq: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' },
-  { id: 'skijump',           label: 'Ski Jump',           ciq: '801743d2-daa9-4c0b-8818-70ccec08d521' },
-  { id: 'skyroll',           label: 'Sky Roll',           ciq: 'e3a9bc7d5f8214e0a6c9d2b4f7e5a3c1' },
-  { id: 'sniperscope',       label: 'Sniper Scope',       ciq: 'd27aec4b9f6a1c3e8b5d7f0a4c2e6b81' },
-  { id: 'solitare',          label: 'Solitaire',          ciq: '5653b282-419e-43dc-96be-81ddfdd039c8' },
-  { id: 'stacktower',        label: 'Stack Tower',        ciq: '9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d' },
-  { id: 'starcombat',        label: 'Star Combat',        ciq: 'c59bd3e7f8a9b0c1d2e3f4a5b6c7d8e9' },
-  { id: 'starswarm',         label: 'Star Swarm',         ciq: 'd5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0' },
-  { id: 'sudoku',            label: 'Sudoku',             ciq: '7f2e1a5c8d3b4f6e9a1c2b4d6e8f0a2c' },
-  { id: 'territory_clash',   label: 'Territory Clash',    ciq: '0d3e5814-d995-49d1-bfb0-c9e1e5028a92' },
-  { id: 'tic_tac_pro',       label: 'Tic Tac Pro',        ciq: 'e5f6a7b8-c9d0-1234-efab-345678901234' },
-  { id: 'twentyfortyeight',  label: '2048',               ciq: '4f6a8c0e2b4d6f8a0c2e4b6d8f0a2c4e' },
-  { id: 'voidrocks',         label: 'Void Rocks',         ciq: 'e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1' },
+  { id: '8ball',             label: '8 Ball',              ciq: 'a1d2e3f4-8b7c-4a5d-9e6f-1a2b3c4d5e6f' },
+  { id: 'akari',             label: 'Akari',               ciq: 'a37fb1e5d6c7e8f9a0b1c2d3e4f5a6b7' },
+  { id: 'arcade',            label: 'Arcade',              ciq: 'c1d2e3f4-5a6b-7c8d-9e0f-a1b2c3d4e5f6' },
+  { id: 'archery',           label: 'Archery',             ciq: 'd72e8c1f4a9b6d3e0f1a2b3c4d5e6f7a' },
+  { id: 'battleship',        label: 'Battleship',          ciq: '5a7c9e1b3d5f7a9c1e3b5d7f9a1c3e5b' },
+  { id: 'billiards',         label: 'Billiards',           ciq: 'c5d6e7f8-a9b0-4102-e3f4-a5b6c7d8e9f0' },
+  { id: 'blackjack',         label: 'Blackjack',           ciq: 'a03e4ed2-aa66-4881-985e-98a915b87bdd' },
+  { id: 'blobs',             label: 'Blobs',               ciq: 'b8a220ec-63ed-4191-b82b-d157a3febc36' },
+  { id: 'blocks',            label: 'Blocks',              ciq: '7587047a-57be-48ce-ae53-cae72fd6ee46' },
+  { id: 'bomb',              label: 'Bomb',                ciq: 'c3d4e5f6-7a8b-9c0d-1e2f-3a4b5c6d7e8f' },
+  { id: 'boxing',            label: 'Boxing',              ciq: 'c4d92f1a-7b83-4e5c-a1d9-3f8e6c2b5a7d' },
+  { id: 'bricks',            label: 'Bricks',              ciq: 'ef926737-01ec-4bff-a70e-f197c75ae0c2' },
+  { id: 'catapult',          label: 'Catapult',            ciq: 'c4e5f6a7-2b3c-4d5e-8f9a-1b2c3d4e5f6a' },
+  { id: 'cellwars',          label: 'Cell Wars',           ciq: '9f3e1a2b-4c5d-6e7f-8a9b-0c1d2e3f4a5b' },
+  { id: 'checkers',          label: 'Checkers',            ciq: '90720dc8-1b2e-4bde-aa54-f724f71dadb2' },
+  { id: 'chess',             label: 'Chess',               ciq: '35974dee-22af-4ffc-b85a-1c64b3aed889' },
+  { id: 'chickencross',      label: 'Chicken Cross',       ciq: 'c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9' },
+  { id: 'connect_four_lite', label: 'Connect Four',        ciq: 'f6a7b8c9-d0e1-2345-fabc-456789012345' },
+  { id: 'diceroyale',        label: 'Dice Royale',         ciq: 'd1c3e040b1c2d3e4f5a6b7c8d9e0f1a2' },
+  { id: 'digcore',           label: 'Dig Core',            ciq: 'b2d3f6a8c0e2f4b6d8a0c2e4f6b8d0a2' },
+  { id: 'dinosaur',          label: 'Dinosaur',            ciq: '3f7a1c2e-4b8d-5e9f-6a0b-7c1d2e3f4a5b' },
+  { id: 'dots_boxes',        label: 'Dots & Boxes',        ciq: '6833d75a-f53f-4c95-8009-acd7edc757d0' },
+  { id: 'edgesurvivor',      label: 'Edge Survivor',       ciq: '0be5cdda-6916-4e03-90ad-11074d599749' },
+  { id: 'fish',              label: 'Fish',                ciq: 'e709f012-c3b4-4e82-ad79-b849f6004ec6' },
+  { id: 'flappypidgeon',     label: 'Flappy Pidgeon',      ciq: '2f4d6e8a1c3b5d7f9e2a4c6e8b0d2f4a' },
+  { id: 'gemmatch',          label: 'Gem Match',           ciq: 'c4b2a8903f5e4d6a9b1c8e7f0a2d4c6e' },
+  { id: 'gobblet_mini',      label: 'Gobblet Mini',        ciq: 'c3b9b0c6-2039-4c89-ad59-ad2501f05efe' },
+  { id: 'gravityminer',      label: 'Gravity Miner',       ciq: 'c3e4a7b9d1f3a5c7e9b1d3f5a7c9e1b3' },
+  { id: 'gyromaze',          label: 'Gyro Maze',           ciq: 'b48ac2f6e7d8e9f0a1b2c3d4e5f6a7b8' },
+  { id: 'hangman',           label: 'Hangman',             ciq: '3e5b7d9f1c3a5e7b9d1f3a5c7e9b1d3f' },
+  { id: 'hex_mini',          label: 'Hex Mini',            ciq: 'de7fd966-cd80-46db-8e84-ecb9cd58fc2b' },
+  { id: 'hologrid',          label: 'Hologrid',            ciq: 'd4f5b8c0e2a4b6d8f0a2c4e6b8d0f2a4' },
+  { id: 'jazzball',          label: 'Jazzball',            ciq: 'b5a62136-9bf1-4ddd-afdf-3b9aedf1fad6' },
+  { id: 'jumptower',         label: 'Jump Tower',          ciq: '3e5f7a9b1c3d5f7a9c1e3b5d7f9a1c3e' },
+  { id: 'kakuro',            label: 'Kakuro',              ciq: 'ba12c34d56e789f0a1b2c3d4e5f60718' },
+  { id: 'lightsout',         label: 'Lights Out',          ciq: '704c8b1a2d3e4f5a6b7c8d9e0f1a2b3c' },
+  { id: 'makao_lite',        label: 'Makao',               ciq: 'ead77edd-ebd6-4aad-b20d-e3c0d79a069d' },
+  { id: 'manpac',            label: 'Manpac',              ciq: 'b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8' },
+  { id: 'memo',              label: 'Memo',                ciq: '7c4a2f91-83d6-4e5b-a017-2c8b3f9e6d01' },
+  { id: 'minesweeper',       label: 'Minesweeper',         ciq: '7b9d1f3a5c7e9b1d3f5a7c9e1b3d5f7a' },
+  { id: 'mini_go_9x9',       label: 'Mini Go',             ciq: 'c3d4e5f6-a7b8-9012-cdef-123456789012' },
+  { id: 'minigolf',          label: 'Minigolf',            ciq: '44fe6a3a-c0c8-4f82-8346-b3c6ec982018' },
+  { id: 'moon',              label: 'Moon',                ciq: '347718c8-bc8c-4c22-a669-72ded83be86e' },
+  { id: 'morris_classic',    label: 'Morris',              ciq: '82fdd62b-746d-493c-871c-13c5e5db2c8a' },
+  { id: 'mudrogue',          label: 'Mud Rogue',           ciq: '1c3e5b7d9f1a3c5e7b9d1f3a5c7e9b1d' },
+  { id: 'nonogram',          label: 'Nonogram',            ciq: '815d9c2b3e4f5a6b7c8d9e0f1a2b3c4d' },
+  { id: 'othello_blitz',     label: 'Othello Blitz',       ciq: 'd4e5f6a7-b8c9-0123-defa-234567890123' },
+  { id: 'parachute',         label: 'Parachute',           ciq: 'f1a2b3c4-5d6e-7f8a-9b0c-1d2e3f4a5b6c' },
+  { id: 'pinballpro',        label: 'Pinball Pro',         ciq: '9e1b3d5f7a9c1e3b5d7f9a1c3e5b7d9f' },
+  { id: 'pixelinvaders',     label: 'Pixel Invaders',      ciq: 'f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2' },
+  { id: 'poker',             label: 'Poker',               ciq: '0d0cc420-c955-4da8-92c9-e9297cabe3f0' },
+  { id: 'pongpro',           label: 'Pong Pro',            ciq: '5f8a2c4e6b9d1f3a5c7e9b1d3f5a7c9e' },
+  { id: 'serpent',           label: 'Serpent',             ciq: '91dd9af8-e3ff-40b0-a377-e0cef3a3c98f' },
+  { id: 'shadowclonerunner', label: 'Shadow Clone Runner', ciq: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890' },
+  { id: 'skijump',           label: 'Ski Jump',            ciq: '801743d2-daa9-4c0b-8818-70ccec08d521' },
+  { id: 'skyroll',           label: 'Sky Roll',            ciq: 'e3a9bc7d5f8214e0a6c9d2b4f7e5a3c1' },
+  { id: 'sniperscope',       label: 'Sniper Scope',        ciq: 'd27aec4b9f6a1c3e8b5d7f0a4c2e6b81' },
+  { id: 'solitare',          label: 'Solitaire',           ciq: '5653b282-419e-43dc-96be-81ddfdd039c8' },
+  { id: 'stacktower',        label: 'Stack Tower',         ciq: '9a8b7c6d5e4f3a2b1c0d9e8f7a6b5c4d' },
+  { id: 'starcombat',        label: 'Star Combat',         ciq: 'c59bd3e7f8a9b0c1d2e3f4a5b6c7d8e9' },
+  { id: 'starswarm',         label: 'Star Swarm',          ciq: 'd5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0' },
+  { id: 'sudoku',            label: 'Sudoku',              ciq: '7f2e1a5c8d3b4f6e9a1c2b4d6e8f0a2c' },
+  { id: 'territory_clash',   label: 'Territory Clash',     ciq: '0d3e5814-d995-49d1-bfb0-c9e1e5028a92' },
+  { id: 'tic_tac_pro',       label: 'Tic Tac Pro',         ciq: 'e5f6a7b8-c9d0-1234-efab-345678901234' },
+  { id: 'twentyfortyeight',  label: '2048',                ciq: '4f6a8c0e2b4d6f8a0c2e4b6d8f0a2c4e' },
+  { id: 'voidrocks',         label: 'Void Rocks',          ciq: 'e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1' },
 ];
 
 const RANK_ICONS = ['🥇','🥈','🥉'];
 const GAME_MAP   = Object.fromEntries(GAMES.map(g => [g.id, g]));
 
 // ── State ───────────────────────────────────────────────────────────────────
-let currentGame = null;
+let currentGame    = null;
+let currentVariant = '';
 let fetchController = null;
 
 // ── DOM refs ────────────────────────────────────────────────────────────────
-const heroImg      = document.getElementById('hero-img');
-const heroName     = document.getElementById('hero-game-name');
-const ciqLink      = document.getElementById('ciq-link');
-const lbWrap       = document.getElementById('lb-wrap');
-const updateTag    = document.getElementById('update-tag');
-const gameScroll   = document.getElementById('game-scroll');
+const heroImg       = document.getElementById('hero-img');
+const heroName      = document.getElementById('hero-game-name');
+const ciqLink       = document.getElementById('ciq-link');
+const lbWrap        = document.getElementById('lb-wrap');
+const lbTitle       = document.getElementById('lb-title');
+const updateTag     = document.getElementById('update-tag');
+const gameScroll    = document.getElementById('game-scroll');
+const variantWrap   = document.getElementById('variant-selector-wrap');
+const variantScroll = document.getElementById('variant-scroll');
+const gameInfoEl    = document.getElementById('game-info');
 
-// ── Build chip list ─────────────────────────────────────────────────────────
+// ── Build game chips ─────────────────────────────────────────────────────────
 GAMES.forEach(g => {
   const btn = document.createElement('button');
-  btn.className = 'game-chip';
-  btn.textContent = g.label;
-  btn.addEventListener('click', () => selectGame(g));
-  btn.dataset.id = g.id;
+  btn.className    = 'game-chip';
+  btn.dataset.id   = g.id;
+  btn.textContent  = g.label;
+  btn.onclick      = () => selectGame(g);
   gameScroll.appendChild(btn);
 });
 
 // ── Select game ─────────────────────────────────────────────────────────────
 function selectGame(g, pushState = true) {
   if (currentGame === g.id) return;
-  currentGame = g.id;
+  currentGame    = g.id;
+  currentVariant = '';
 
-  // Sync URL query param so the link is shareable/bookmarkable
   if (pushState) {
     const u = new URL(location.href);
     u.searchParams.set('game', g.id);
-    history.pushState({ game: g.id }, '', u);
+    u.searchParams.delete('variant');
+    history.pushState({ game: g.id, variant: '' }, '', u);
   }
 
-  // Update chips
-  document.querySelectorAll('.game-chip').forEach(c => {
-    c.classList.toggle('active', c.dataset.id === g.id);
-  });
+  document.querySelectorAll('.game-chip').forEach(c =>
+    c.classList.toggle('active', c.dataset.id === g.id));
 
-  // Hero image
   heroImg.classList.remove('loaded');
-  const src = `${GITHUB_RAW}/${g.id}_hero.png`;
   heroImg.onload  = () => heroImg.classList.add('loaded');
   heroImg.onerror = () => { heroImg.src = ''; };
-  heroImg.src = src;
+  heroImg.src = `${GITHUB_RAW}/${g.id}_hero.png`;
   heroName.textContent = g.label.toUpperCase();
 
-  // Connect IQ store link
   if (g.ciq) {
     ciqLink.href = CIQ_STORE + g.ciq;
     ciqLink.style.display = 'inline-flex';
@@ -503,43 +651,109 @@ function selectGame(g, pushState = true) {
     ciqLink.style.display = 'none';
   }
 
-  // Scroll chip into view
   const chip = document.querySelector(`.game-chip[data-id="${g.id}"]`);
   if (chip) chip.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
 
-  // Fetch leaderboard
-  loadLeaderboard(g.id);
+  // Clear variant bar while we fetch
+  variantWrap.style.display = 'none';
+  variantScroll.innerHTML   = '';
+
+  // Show placeholder leaderboard immediately
+  lbWrap.innerHTML = `<div class="state-msg"><div class="spinner"></div><br>Loading…</div>`;
+  updateTag.textContent = '';
+
+  fetchVariantsThenLoad(g);
 }
 
-// ── Browser back/forward navigation ─────────────────────────────────────────
+// ── Fetch variants, then load leaderboard ────────────────────────────────────
+async function fetchVariantsThenLoad(g) {
+  let variants = [];
+  try {
+    const r = await fetch(`${API_BASE}/variants?game=${encodeURIComponent(g.id)}`);
+    if (r.ok) {
+      const d = await r.json();
+      variants = d.variants || [];
+    }
+  } catch { /* ignore — variants stay empty */ }
+
+  if (g.id !== currentGame) return; // stale
+
+  if (variants.length > 0) {
+    buildVariantChips(variants);
+    variantWrap.style.display = '';
+    currentVariant = variants[0];
+    updateVariantChips();
+  }
+
+  loadLeaderboard(g.id, currentVariant);
+}
+
+// ── Build variant chips ──────────────────────────────────────────────────────
+function buildVariantChips(variants) {
+  variantScroll.innerHTML = '';
+  variants.forEach(v => {
+    const btn = document.createElement('button');
+    btn.className   = 'variant-chip';
+    btn.dataset.v   = v;
+    btn.textContent = v;
+    btn.onclick     = () => selectVariant(v);
+    variantScroll.appendChild(btn);
+  });
+}
+
+function updateVariantChips() {
+  document.querySelectorAll('.variant-chip').forEach(c =>
+    c.classList.toggle('active', c.dataset.v === currentVariant));
+  lbTitle.textContent = currentVariant ? currentVariant : 'Top 10';
+}
+
+// ── Select variant ───────────────────────────────────────────────────────────
+function selectVariant(v) {
+  if (currentVariant === v) return;
+  currentVariant = v;
+
+  const u = new URL(location.href);
+  if (v) u.searchParams.set('variant', v);
+  else   u.searchParams.delete('variant');
+  history.pushState({ game: currentGame, variant: v }, '', u);
+
+  updateVariantChips();
+  loadLeaderboard(currentGame, v);
+}
+
+// ── Browser back/forward ─────────────────────────────────────────────────────
 window.addEventListener('popstate', (e) => {
-  const id = e.state?.game || new URL(location.href).searchParams.get('game');
-  const g  = id && GAME_MAP[id];
-  if (g) selectGame(g, false);
+  const params = new URL(location.href).searchParams;
+  const id  = e.state?.game    || params.get('game');
+  const v   = e.state?.variant ?? params.get('variant') ?? '';
+  const g   = id && GAME_MAP[id];
+  if (!g) return;
+  if (g.id !== currentGame) {
+    selectGame(g, false);
+  } else if (v !== currentVariant) {
+    currentVariant = v;
+    updateVariantChips();
+    loadLeaderboard(currentGame, v);
+  }
 });
 
-// ── Load leaderboard ────────────────────────────────────────────────────────
-async function loadLeaderboard(game) {
-  // Cancel any in-flight request
+// ── Load leaderboard ─────────────────────────────────────────────────────────
+async function loadLeaderboard(game, variant) {
   if (fetchController) fetchController.abort();
   fetchController = new AbortController();
 
   updateTag.textContent = '';
-  lbWrap.innerHTML = `
-    <div class="state-msg">
-      <div class="spinner"></div><br>Loading rankings…
-    </div>`;
+  lbWrap.innerHTML = `<div class="state-msg"><div class="spinner"></div><br>Loading rankings…</div>`;
+
+  let url = `${API_BASE}/leaderboard?game=${encodeURIComponent(game)}`;
+  if (variant) url += `&variant=${encodeURIComponent(variant)}`;
 
   try {
-    const resp = await fetch(`${API_BASE}/leaderboard?game=${encodeURIComponent(game)}`,
-      { signal: fetchController.signal, cache: 'no-store' });
-
+    const resp = await fetch(url, { signal: fetchController.signal, cache: 'no-store' });
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const data = await resp.json();
-
-    if (game !== currentGame) return; // stale response
-
-    renderLeaderboard(data);
+    if (game !== currentGame) return;
+    renderLeaderboard(data, game);
   } catch (e) {
     if (e.name === 'AbortError') return;
     if (game !== currentGame) return;
@@ -549,15 +763,18 @@ async function loadLeaderboard(game) {
         <small style="opacity:.6;font-size:.78rem">Check API_BASE in index.html</small>
       </div>`;
     updateTag.textContent = '';
+    renderGameInfo(game, true);
   }
 }
 
-// ── Render ───────────────────────────────────────────────────────────────────
-function renderLeaderboard(data) {
+// ── Render leaderboard ───────────────────────────────────────────────────────
+function renderLeaderboard(data, game) {
   const rows = (data.top || []).slice(0, 10);
+
   if (!rows.length) {
-    lbWrap.innerHTML = `<div class="state-msg">No scores yet — be the first!</div>`;
+    lbWrap.innerHTML = `<div class="state-msg">No scores yet — be the first! 🎮</div>`;
     updateTag.textContent = '';
+    renderGameInfo(game, true);   // prominent when no scores
     return;
   }
 
@@ -568,31 +785,58 @@ function renderLeaderboard(data) {
   }
 
   lbWrap.innerHTML = rows.map((row, i) => {
-    const rank  = i + 1;
-    const cls   = rank <= 3 ? `rank-${rank}` : '';
-    const icon  = rank <= 3 ? RANK_ICONS[i] : rank;
-    const pct   = Math.round((row.s / maxScore) * 100);
-    const scoreFormatted = Number(row.s).toLocaleString();
+    const rank = i + 1;
+    const cls  = rank <= 3 ? `rank-${rank}` : '';
+    const icon = rank <= 3 ? RANK_ICONS[i] : rank;
+    const pct  = Math.round((row.s / maxScore) * 100);
     return `
       <div class="lb-row ${cls}" style="animation-delay:${.02 + i * .03}s">
         <div class="lb-rank">${icon}</div>
         <div class="lb-user">${escHtml(row.u || 'anon')}</div>
-        <div class="lb-score">${scoreFormatted}</div>
+        <div class="lb-score">${Number(row.s).toLocaleString()}</div>
+        <div class="lb-bar-wrap" style="grid-column:2/4">
+          <div class="lb-bar" style="width:${pct}%"></div>
+        </div>
       </div>`;
   }).join('');
+
+  renderGameInfo(game, false);  // below leaderboard
 }
 
-// ── Utils ───────────────────────────────────────────────────────────────────
+// ── Render game info card ────────────────────────────────────────────────────
+function renderGameInfo(gameId, prominent) {
+  const g    = GAME_MAP[gameId];
+  const desc = GAME_DESCS[gameId];
+  if (!g || (!desc && !g.ciq)) { gameInfoEl.style.display = 'none'; return; }
+
+  const extIcon = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 01-2 2H5a2 2 0 01-2-2V8a2 2 0 012-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>`;
+
+  const ciqBtn = g.ciq
+    ? `<a href="${CIQ_STORE}${g.ciq}" target="_blank" rel="noopener" class="game-info-ciq">${extIcon} Download on Connect IQ</a>`
+    : '';
+
+  gameInfoEl.style.display = '';
+  gameInfoEl.style.marginTop = prominent ? '0' : '20px';
+  gameInfoEl.style.borderColor = prominent ? 'rgba(0,212,255,.3)' : 'var(--border)';
+
+  gameInfoEl.innerHTML = `
+    ${desc ? `<p class="game-info-desc">${escHtml(desc)}</p>` : ''}
+    ${ciqBtn}`;
+}
+
+// ── Utils ────────────────────────────────────────────────────────────────────
 function escHtml(s) {
   return String(s)
     .replace(/&/g,'&amp;').replace(/</g,'&lt;')
     .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// ── Select game from URL param, or default to first game ────────────────────
-const _initId = new URL(location.href).searchParams.get('game');
+// ── Init: read URL param ─────────────────────────────────────────────────────
+const _params   = new URL(location.href).searchParams;
+const _initId   = _params.get('game');
 const _initGame = (_initId && GAME_MAP[_initId]) || GAMES[0];
-selectGame(_initGame, !_initId);  // don't push state if already in URL
+// variant will be set after fetchVariantsThenLoad resolves
+selectGame(_initGame, !_initId);
 </script>
 </body>
 </html>
