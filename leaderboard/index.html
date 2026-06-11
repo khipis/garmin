@@ -438,7 +438,7 @@
 
 <script>
 // ── Config ──────────────────────────────────────────────────────────────────
-const API_BASE    = 'https://garmin-leaderboard.YOURSUBDOMAIN.workers.dev';
+const API_BASE    = 'https://garmin.krzysztofkorolczuk2.workers.dev';
 const GITHUB_RAW  = 'https://raw.githubusercontent.com/khipis/garmin/main/_LOGOS';
 const CIQ_STORE   = 'https://apps.garmin.com/apps/';
 
@@ -617,14 +617,17 @@ const variantScroll = document.getElementById('variant-scroll');
 const gameInfoEl    = document.getElementById('game-info');
 
 // ── Build game chips ─────────────────────────────────────────────────────────
-GAMES.forEach(g => {
-  const btn = document.createElement('button');
-  btn.className    = 'game-chip';
-  btn.dataset.id   = g.id;
-  btn.textContent  = g.label;
-  btn.onclick      = () => selectGame(g);
-  gameScroll.appendChild(btn);
-});
+function buildGameChips(list) {
+  gameScroll.innerHTML = '';
+  list.forEach(g => {
+    const btn = document.createElement('button');
+    btn.className    = 'game-chip';
+    btn.dataset.id   = g.id;
+    btn.textContent  = g.label;
+    btn.onclick      = () => selectGame(g);
+    gameScroll.appendChild(btn);
+  });
+}
 
 // ── Select game ─────────────────────────────────────────────────────────────
 function selectGame(g, pushState = true) {
@@ -835,12 +838,39 @@ function escHtml(s) {
     .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
-// ── Init: read URL param ─────────────────────────────────────────────────────
-const _params   = new URL(location.href).searchParams;
-const _initId   = _params.get('game');
-const _initGame = (_initId && GAME_MAP[_initId]) || GAMES[0];
-// variant will be set after fetchVariantsThenLoad resolves
-selectGame(_initGame, !_initId);
+// ── Init: only show games that actually have rankings ────────────────────────
+async function init() {
+  // Default to all games; narrow down to the ones with at least one score.
+  let available = GAMES;
+  try {
+    const r = await fetch(`${API_BASE}/games`, { cache: 'no-store' });
+    if (r.ok) {
+      const have = new Set((await r.json()).games || []);
+      available = GAMES.filter(g => have.has(g.id));
+    }
+  } catch { /* backend unreachable → fall back to showing all games */ }
+
+  if (!available.length) {
+    buildGameChips([]);
+    heroName.textContent = '';
+    heroImg.src = '';
+    ciqLink.style.display = 'none';
+    variantWrap.style.display = 'none';
+    gameInfoEl.style.display = 'none';
+    lbWrap.innerHTML = `<div class="state-msg">No rankings yet — play a game to be the first! 🎮</div>`;
+    updateTag.textContent = '';
+    return;
+  }
+
+  buildGameChips(available);
+
+  const params  = new URL(location.href).searchParams;
+  const initId  = params.get('game');
+  const wanted  = initId && available.find(g => g.id === initId);
+  // variant is set after fetchVariantsThenLoad resolves
+  selectGame(wanted || available[0], !wanted);
+}
+init();
 </script>
 </body>
 </html>

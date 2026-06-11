@@ -153,6 +153,25 @@ async function handleGetLeaderboard(url: URL, env: Env): Promise<Response> {
   );
 }
 
+async function handleGetGames(env: Env): Promise<Response> {
+  let games: string[] = [];
+  try {
+    const result = await env.DB
+      .prepare("SELECT DISTINCT game FROM scores ORDER BY game ASC")
+      .all<{ game: string }>();
+    games = (result.results ?? []).map(r => r.game);
+  } catch (e) {
+    console.error("DB query error:", e);
+    return err("db error", 500);
+  }
+
+  return json(
+    { games },
+    200,
+    { "Cache-Control": `public, max-age=${LEADERBOARD_CACHE_S}, stale-while-revalidate=60` }
+  );
+}
+
 async function handleGetVariants(url: URL, env: Env): Promise<Response> {
   const gameRaw = (url.searchParams.get("game") ?? "").trim();
   if (!gameRaw) return err("missing: game");
@@ -203,6 +222,7 @@ export default {
 
     if (method === "POST" && path === "/score")       return handlePostScore(req, env);
     if (method === "GET"  && path === "/leaderboard") return handleGetLeaderboard(url, env);
+    if (method === "GET"  && path === "/games")       return handleGetGames(env);
     if (method === "GET"  && path === "/variants")    return handleGetVariants(url, env);
     if (method === "GET"  && path === "/health")      return json({ ok: true, ts: Date.now() });
 
