@@ -711,7 +711,7 @@ class BitochiJumpView extends WatchUi.View {
     // Open the shared global leaderboard, split by the current jumper's name.
     function openLeaderboard() {
         var v = new LbScoresView(LB_GAME_ID, _jumperNames[_jumperIdx], "SKI JUMP");
-        WatchUi.pushView(v, new LbScoresDelegate(), WatchUi.SLIDE_LEFT);
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
     hidden function startCompetition() {

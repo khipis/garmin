@@ -66,7 +66,7 @@ class MainView extends WatchUi.View {
     // Open the shared global leaderboard for the current mode.
     function openLeaderboard() {
         var v = new LbScoresView(LB_GAME_ID, ctrl.variantName(), "DICE ROYALE");
-        WatchUi.pushView(v, new LbScoresDelegate(), WatchUi.SLIDE_LEFT);
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
     // Tap hit-test for menu rows / dice / buttons / categories.

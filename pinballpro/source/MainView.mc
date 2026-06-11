@@ -477,7 +477,7 @@ class MainView extends WatchUi.View {
         var v = new LbScoresView(LB_GAME_ID,
                                  TableLibrary.NAMES[_ctrl.tableIdx],
                                  "PINBALL PRO");
-        WatchUi.pushView(v, new LbScoresDelegate(), WatchUi.SLIDE_LEFT);
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
     function handleBack() {

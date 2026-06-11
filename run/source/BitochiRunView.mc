@@ -230,7 +230,7 @@ class BitochiRunView extends WatchUi.View {
     // Push the shared global leaderboard view (auto-prompts for a username).
     function openLeaderboard() {
         var v = new LbScoresView("run", "", "MONSTER ESC");
-        WatchUi.pushView(v, new LbScoresDelegate(), WatchUi.SLIDE_LEFT);
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
     // Submit the final session score to the global board on game over.

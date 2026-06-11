@@ -595,7 +595,7 @@ class BitochiSerpentView extends WatchUi.View {
     // Open the shared global leaderboard for serpent.
     function openLeaderboard() {
         var v = new LbScoresView(SLB_GAME_ID, "", "SERPENT");
-        WatchUi.pushView(v, new LbScoresDelegate(), WatchUi.SLIDE_LEFT);
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
     // Geometry for the two-row main menu.  Space-aware: rows shrink to fit

@@ -906,7 +906,7 @@ class BitochiBlobsView extends WatchUi.View {
 
     function openLeaderboard() {
         var v = new LbScoresView("blobs", "", "BLOBS");
-        WatchUi.pushView(v, new LbScoresDelegate(), WatchUi.SLIDE_LEFT);
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
     function doAction() {

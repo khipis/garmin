@@ -3,8 +3,8 @@
 //
 // SKELETON. These are pushable WatchUi views so a game only needs to:
 //   1. add a "LEADERBOARD" row to its menu
-//   2. on activate:  WatchUi.pushView(new LbScoresView(GAME, VARIANT, TITLE),
-//                                     new LbScoresDelegate(), WatchUi.SLIDE_LEFT)
+//   2. on activate:  var v = new LbScoresView(GAME, VARIANT, TITLE);
+//                   WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT)
 //   3. on game over: Leaderboard.submitScore(GAME, score, VARIANT)
 //
 // LbScoresView auto-prompts for a username (LbNameEntryView) the first time
@@ -233,46 +233,68 @@ class LbNameEntryDelegate extends WatchUi.BehaviorDelegate {
 // ═══════════════════════════════════════════════════════════════════════════
 // Scores list — fetches top-N for a game[/variant] and renders it.
 // Auto-prompts for a username on first use.
+// Supports UP/DOWN scrolling when rows overflow. HOLD = reset username.
 // ═══════════════════════════════════════════════════════════════════════════
 class LbScoresView extends WatchUi.View {
     hidden var _game;
     hidden var _variant;
     hidden var _title;
     hidden var _rows;
-    hidden var _state;   // 0 loading, 1 ok, 2 error, 3 empty
+    hidden var _state;        // 0 loading, 1 ok, 2 error, 3 empty
     hidden var _fetch;
+    hidden var _scrollOff;    // first visible row index
+    hidden var _fitCount;     // rows that fit in the viewport
     hidden var _w;
     hidden var _h;
 
     function initialize(game, variant, title) {
         View.initialize();
-        _game    = game;
-        _variant = variant;
-        _title   = (title != null) ? title : "LEADERBOARD";
-        _rows    = null;
-        _state   = 0;
-        _fetch   = null;
+        _game      = game;
+        _variant   = variant;
+        _title     = (title != null) ? title : "LEADERBOARD";
+        _rows      = null;
+        _state     = 0;
+        _fetch     = null;
+        _scrollOff = 0;
+        _fitCount  = 0;
         _w = 0; _h = 0;
     }
 
     function onShow() {
-        // First-run: collect a username, then this view becomes visible again.
         if (!Leaderboard.hasUser()) {
             var nv = new LbNameEntryView();
             WatchUi.pushView(nv, new LbNameEntryDelegate(nv), WatchUi.SLIDE_LEFT);
             return;
         }
-        _state = 0;
-        _fetch = new LbFetch();
+        _state     = 0;
+        _scrollOff = 0;
+        _fetch     = new LbFetch();
         _fetch.fetch(_game, _variant, self);
         WatchUi.requestUpdate();
     }
 
+    function scroll(d) {
+        if (_rows == null) { return; }
+        var total = _rows.size(); if (total > 10) { total = 10; }
+        _scrollOff = _scrollOff + d;
+        if (_scrollOff < 0) { _scrollOff = 0; }
+        var maxOff = total - _fitCount;
+        if (maxOff < 0) { maxOff = 0; }
+        if (_scrollOff > maxOff) { _scrollOff = maxOff; }
+        WatchUi.requestUpdate();
+    }
+
+    function resetName() {
+        var nv = new LbNameEntryView();
+        WatchUi.pushView(nv, new LbNameEntryDelegate(nv), WatchUi.SLIDE_LEFT);
+    }
+
     // LbFetch listener callback
     function onLeaderboard(ok, rows) {
-        if (!ok)                              { _state = 2; }
+        if (!ok)                                   { _state = 2; }
         else if (rows == null || rows.size() == 0) { _state = 3; }
         else { _rows = rows; _state = 1; }
+        _scrollOff = 0;
         WatchUi.requestUpdate();
     }
 
@@ -283,27 +305,25 @@ class LbScoresView extends WatchUi.View {
 
         dc.setColor(LB_BG, LB_BG); dc.clear();
 
-        // Footer is reserved on every screen so the "view online" hint and
-        // the score rows never collide. Drawn first; rows fit above it.
-        var footerY = _h - _h * 6 / 100;
+        // Footer — fixed 14px from bottom so it always shows on every watch.
+        var footerY = _h - 14;
         dc.setColor(LB_MUTED, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, footerY, Graphics.FONT_XTINY,
-                    "bitochi.com", Graphics.TEXT_JUSTIFY_CENTER);
+                    "bitochi.com  |  hold=rename", Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Header (~15% more compact than before so the panel fits)
+        // Header
         var hasVar = (_variant != null && _variant.length() > 0);
         dc.setColor(LB_ACCENT, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _h * 5 / 100, Graphics.FONT_XTINY,
-                    _title, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, 4, Graphics.FONT_XTINY, _title, Graphics.TEXT_JUSTIFY_CENTER);
         if (hasVar) {
             dc.setColor(LB_GOLD, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, _h * 12 / 100, Graphics.FONT_XTINY,
-                        _variant, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(cx, 4 + dc.getFontHeight(Graphics.FONT_XTINY),
+                        Graphics.FONT_XTINY, _variant, Graphics.TEXT_JUSTIFY_CENTER);
         }
 
         if (_state == 0) {
             dc.setColor(LB_MUTED, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, _h * 45 / 100, Graphics.FONT_XTINY,
+            dc.drawText(cx, _h / 2, Graphics.FONT_XTINY,
                         "Loading...", Graphics.TEXT_JUSTIFY_CENTER);
             return;
         }
@@ -311,37 +331,54 @@ class LbScoresView extends WatchUi.View {
             dc.setColor(LB_MUTED, Graphics.COLOR_TRANSPARENT);
             dc.drawText(cx, _h * 42 / 100, Graphics.FONT_XTINY,
                         "No connection", Graphics.TEXT_JUSTIFY_CENTER);
-            dc.drawText(cx, _h * 52 / 100, Graphics.FONT_XTINY,
+            dc.drawText(cx, _h * 54 / 100, Graphics.FONT_XTINY,
                         "try again later", Graphics.TEXT_JUSTIFY_CENTER);
             return;
         }
         if (_state == 3) {
             dc.setColor(LB_MUTED, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, _h * 45 / 100, Graphics.FONT_XTINY,
-                        "No scores yet -- be first!", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(cx, _h / 2, Graphics.FONT_XTINY,
+                        "No scores yet!", Graphics.TEXT_JUSTIFY_CENTER);
             return;
         }
 
-        // Rows — start tighter and use compact line spacing (~15% smaller),
-        // capped to however many fit above the footer.
-        var top   = hasVar ? _h * 19 / 100 : _h * 14 / 100;
+        // Score rows — scrollable viewport between header and footer.
         var fh    = dc.getFontHeight(Graphics.FONT_XTINY);
-        var lineH = (fh * 85) / 100; if (lineH < 12) { lineH = 12; }
-        var fit   = (footerY - top) / lineH;
-        var n = _rows.size();
-        if (n > 10)  { n = 10; }
-        if (n > fit) { n = fit; }
-        for (var i = 0; i < n; i++) {
+        var lineH = fh + 2; if (lineH < 13) { lineH = 13; }
+        var headerBottom = hasVar ? (4 + fh * 2 + 2) : (4 + fh + 2);
+        var scrollAreaH  = footerY - 2 - headerBottom;
+        _fitCount = scrollAreaH / lineH;
+        if (_fitCount < 1) { _fitCount = 1; }
+
+        var total = _rows.size(); if (total > 10) { total = 10; }
+
+        // Scroll arrows
+        if (_scrollOff > 0) {
+            dc.setColor(LB_MUTED, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, headerBottom, Graphics.FONT_XTINY,
+                        "^", Graphics.TEXT_JUSTIFY_CENTER);
+        }
+        if (_scrollOff + _fitCount < total) {
+            dc.setColor(LB_MUTED, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, footerY - 2 - fh, Graphics.FONT_XTINY,
+                        "v", Graphics.TEXT_JUSTIFY_CENTER);
+        }
+
+        var top = headerBottom + (_scrollOff > 0 ? fh + 1 : 0);
+        var end = _scrollOff + _fitCount;
+        if (end > total) { end = total; }
+
+        for (var i = _scrollOff; i < end; i++) {
             var row  = _rows[i];
             var rank = row["r"];
             var u    = row["u"];
             var s    = row["s"];
             var clr  = LB_TEXT;
-            if (rank == 1) { clr = LB_GOLD; }
+            if (rank == 1)      { clr = LB_GOLD; }
             else if (rank == 2) { clr = LB_SILVER; }
             else if (rank == 3) { clr = LB_BRONZE; }
 
-            var y = top + i * lineH;
+            var y = top + (i - _scrollOff) * lineH;
             dc.setColor(clr, Graphics.COLOR_TRANSPARENT);
             dc.drawText(_w * 12 / 100, y, Graphics.FONT_XTINY,
                         rank.toString(), Graphics.TEXT_JUSTIFY_LEFT);
@@ -354,9 +391,21 @@ class LbScoresView extends WatchUi.View {
 }
 
 class LbScoresDelegate extends WatchUi.BehaviorDelegate {
-    function initialize() { BehaviorDelegate.initialize(); }
-    function onBack()   { WatchUi.popView(WatchUi.SLIDE_RIGHT); return true; }
-    function onSelect() { WatchUi.popView(WatchUi.SLIDE_RIGHT); return true; }
+    hidden var _view;
+
+    function initialize(v) { BehaviorDelegate.initialize(); _view = v; }
+
+    function onKey(evt) {
+        var k = evt.getKey();
+        if (k == WatchUi.KEY_UP)   { _view.scroll(-1); return true; }
+        if (k == WatchUi.KEY_DOWN) { _view.scroll(1);  return true; }
+        return false;
+    }
+    function onNextPage()     { _view.scroll(1);  return true; }
+    function onPreviousPage() { _view.scroll(-1); return true; }
+    function onHold(evt)      { _view.resetName(); return true; }
+    function onBack()         { WatchUi.popView(WatchUi.SLIDE_RIGHT); return true; }
+    function onSelect()       { WatchUi.popView(WatchUi.SLIDE_RIGHT); return true; }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════

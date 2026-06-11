@@ -952,7 +952,7 @@ class BitochiCatapultView extends WatchUi.View {
     // Open the shared global leaderboard for catapult (no variants).
     function openLeaderboard() {
         var v = new LbScoresView("catapult", "", "CATAPULT");
-        WatchUi.pushView(v, new LbScoresDelegate(), WatchUi.SLIDE_LEFT);
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
     // Enter the final GAME OVER screen, submitting the match's total score to

@@ -107,7 +107,7 @@ class MainView extends WatchUi.View {
     // because the controller can't manipulate the view stack).
     function openLeaderboard() {
         var v = new LbScoresView("manpac", "", "MANPAC");
-        WatchUi.pushView(v, new LbScoresDelegate(), WatchUi.SLIDE_LEFT);
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
     // True while a live game is running (used by the input handler to

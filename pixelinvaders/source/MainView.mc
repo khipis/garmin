@@ -115,7 +115,7 @@ class MainView extends WatchUi.View {
     // Open the shared global leaderboard for the current difficulty.
     function openLeaderboard() {
         var v = new LbScoresView(PI_LB_GAME_ID, ctrl.difficultyName(), "PIXEL INVADERS");
-        WatchUi.pushView(v, new LbScoresDelegate(), WatchUi.SLIDE_LEFT);
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
     function navBack() {
         if (ctrl.state != PI_MENU) { ctrl.gotoMenu(); return true; }

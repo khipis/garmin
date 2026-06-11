@@ -272,7 +272,7 @@ class MainView extends WatchUi.View {
     // Open the shared global leaderboard (no variant for Jump Tower).
     function openLeaderboard() {
         var v = new LbScoresView(LB_GAME_ID, "", "JUMP TOWER");
-        WatchUi.pushView(v, new LbScoresDelegate(), WatchUi.SLIDE_LEFT);
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
     // Chess-style menu — dark base, two-line title, "by Bitochi"

@@ -229,7 +229,7 @@ class MainView extends WatchUi.View {
     // Open the shared global leaderboard for the current difficulty.
     function openLeaderboard() {
         var v = new LbScoresView(LB_GAME_ID, _ctrl.diffName(), "STACK TOWER");
-        WatchUi.pushView(v, new LbScoresDelegate(), WatchUi.SLIDE_LEFT);
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
     // Chess-style menu — dark base, "by Bitochi" attribution,

@@ -354,7 +354,7 @@ class DinosaurView extends WatchUi.View {
     // Open the shared global leaderboard view (no variant for dinosaur).
     function openLeaderboard() {
         var v = new LbScoresView(LB_GAME_ID, "", "DINOSAUR");
-        WatchUi.pushView(v, new LbScoresDelegate(), WatchUi.SLIDE_LEFT);
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
     // Geometry for the title menu. Space-aware: row height is derived from the

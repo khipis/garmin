@@ -235,7 +235,7 @@ class GameView extends WatchUi.View {
     // Open the shared global leaderboard.
     function openLeaderboard() {
         var v = new LbScoresView(LB_GAME_ID, "", "EDGE SURVIVOR");
-        WatchUi.pushView(v, new LbScoresDelegate(), WatchUi.SLIDE_LEFT);
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
     // Space-aware geometry for the two title rows. Rows live between a top

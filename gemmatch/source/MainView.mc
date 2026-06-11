@@ -115,7 +115,7 @@ class MainView extends WatchUi.View {
     // because the controller can't push WatchUi views.
     function openLeaderboard() {
         var v = new LbScoresView("gemmatch", "", "GEM MATCH");
-        WatchUi.pushView(v, new LbScoresDelegate(), WatchUi.SLIDE_LEFT);
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
     // ── Menu screen ──────────────────────────────────────────────────

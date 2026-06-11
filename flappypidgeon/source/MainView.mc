@@ -191,7 +191,7 @@ class MainView extends WatchUi.View {
     // Open the shared global leaderboard for Flappy Pidgeon.
     function openLeaderboard() {
         var v = new LbScoresView("flappypidgeon", "", "FLAPPY");
-        WatchUi.pushView(v, new LbScoresDelegate(), WatchUi.SLIDE_LEFT);
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
     // Chess-style menu — dark base, "by Bitochi" attribution,

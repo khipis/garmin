@@ -237,7 +237,7 @@ class MainView extends WatchUi.View {
     // Open the shared global leaderboard for the current AI difficulty.
     function openLeaderboard() {
         var v = new LbScoresView(LB_GAME_ID, _ctrl.diffName(), "PONG PRO");
-        WatchUi.pushView(v, new LbScoresDelegate(), WatchUi.SLIDE_LEFT);
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
     // ── Game over ───────────────────────────────────────────────────

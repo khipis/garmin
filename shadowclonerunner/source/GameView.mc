@@ -156,7 +156,7 @@ class GameView extends WatchUi.View {
     // Open the shared global leaderboard.
     function openLeaderboard() {
         var v = new LbScoresView(LB_GAME_ID, "", "SHADOW RUN");
-        WatchUi.pushView(v, new LbScoresDelegate(), WatchUi.SLIDE_LEFT);
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
     // Hit-test the title menu rows (called for taps while on the title screen).
