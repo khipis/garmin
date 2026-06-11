@@ -4,6 +4,9 @@ using Toybox.Timer;
 using Toybox.Math;
 using Toybox.System;
 
+// Global leaderboard game identifier (must match the backend key).
+const LB_GAME_ID = "solitaire";
+
 const SOL_MENU    = 0;
 const SOL_PLAY    = 1;
 const SOL_WINANIM = 2;
@@ -57,6 +60,10 @@ class SolitaireView extends WatchUi.View {
     hidden var _drawCount;
     hidden var _menuSel;
 
+    // Completion-time tracking (leaderboard metric = whole seconds, lower wins)
+    hidden var _startMs;
+    hidden var _elapsedSecs;
+
     function initialize() {
         View.initialize();
         _tick = 0; _gs = SOL_MENU;
@@ -75,6 +82,7 @@ class SolitaireView extends WatchUi.View {
         _autoFndQ = false;
         _winTick = 0;
         _winParts = null;
+        _startMs = 0; _elapsedSecs = 0;
         _timer = new Timer.Timer();
         _timer.start(method(:onTick), 150, true);
     }
@@ -118,19 +126,22 @@ class SolitaireView extends WatchUi.View {
     // ─── Input ────────────────────────────────────────────────────────────────────
 
     function doUp() {
-        if (_gs == SOL_MENU) { _menuSel = (_menuSel + 1) % 2; return; }
+        if (_gs == SOL_MENU) { _menuSel = (_menuSel + 2) % 3; return; }
         if (_gs != SOL_PLAY || _autoFndQ) { return; }
         _cur = (_cur + 12) % 13;
     }
 
     function doDown() {
-        if (_gs == SOL_MENU) { _menuSel = (_menuSel + 1) % 2; return; }
+        if (_gs == SOL_MENU) { _menuSel = (_menuSel + 1) % 3; return; }
         if (_gs != SOL_PLAY || _autoFndQ) { return; }
         _cur = (_cur + 1) % 13;
     }
 
     function doSelect() {
-        if (_gs == SOL_MENU) { _drawCount = (_menuSel == 0) ? 1 : 3; _deal(); return; }
+        if (_gs == SOL_MENU) {
+            if (_menuSel == 2) { openLeaderboard(); return; }
+            _drawCount = (_menuSel == 0) ? 1 : 3; _deal(); return;
+        }
         if (_gs == SOL_WON) { _gs = SOL_MENU; return; }
         if (_gs != SOL_PLAY || _autoFndQ) { return; }
         var now = System.getTimer();
@@ -154,11 +165,12 @@ class SolitaireView extends WatchUi.View {
         if (_gs == SOL_MENU) {
             var g = _menuGeo();
             var rowX = g[0]; var rowY0 = g[1]; var rowW = g[2]; var rowH = g[3]; var gap = g[4];
-            for (var i = 0; i < 2; i++) {
+            for (var i = 0; i < 3; i++) {
                 var ry = rowY0 + i * (rowH + gap);
                 if (tx >= rowX && tx < rowX + rowW && ty >= ry && ty < ry + rowH) {
-                    // Tapping the already-selected row deals; otherwise just select.
+                    // Tapping the already-selected row activates it; otherwise select.
                     if (_menuSel == i) {
+                        if (i == 2) { openLeaderboard(); return; }
                         _drawCount = (i == 0) ? 1 : 3;
                         _deal();
                     } else {
@@ -223,9 +235,8 @@ class SolitaireView extends WatchUi.View {
     // ─── Touch: swipe (discrete cursor step) ──────────────────────────────────
     function doSwipe(dir) {
         if (_gs == SOL_MENU) {
-            if (dir == WatchUi.SWIPE_UP || dir == WatchUi.SWIPE_DOWN) {
-                _menuSel = (_menuSel + 1) % 2;
-            }
+            if (dir == WatchUi.SWIPE_UP)        { _menuSel = (_menuSel + 2) % 3; }
+            else if (dir == WatchUi.SWIPE_DOWN) { _menuSel = (_menuSel + 1) % 3; }
             return;
         }
         if (_gs != SOL_PLAY || _autoFndQ) { return; }
@@ -541,6 +552,7 @@ class SolitaireView extends WatchUi.View {
         _sel = -1; _sN = 0; _cur = 0; _moves = 0;
         _tapSubIdx = -1;
         _autoFndQ = false; _winTick = 0; _winParts = null;
+        _startMs = System.getTimer(); _elapsedSecs = 0;
         _gs = SOL_PLAY;
         _autoFndQ = true;
     }
@@ -614,7 +626,19 @@ class SolitaireView extends WatchUi.View {
             _gs = SOL_WINANIM;
             _winTick = 0;
             _initWinParts();
+
+            // Completion time in WHOLE SECONDS (positive). LOWER is better —
+            // the backend sorts this game ASCENDING, so submit the raw value.
+            var secs = (System.getTimer() - _startMs) / 1000;
+            if (secs < 1) { secs = 1; }
+            _elapsedSecs = secs;
+            Leaderboard.submitScore(LB_GAME_ID, _elapsedSecs, null);
         }
+    }
+
+    function openLeaderboard() {
+        var v = new LbScoresView(LB_GAME_ID, null, "SOLITAIRE");
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
     // ─── Win Animation ────────────────────────────────────────────────────────────
@@ -684,12 +708,14 @@ class SolitaireView extends WatchUi.View {
     }
 
     // Chess-style menu geometry: [rowX, rowY0, rowW, rowH, gap]
+    // Sized ~18% more compact (and space-aware) so all three rows — the two
+    // draw modes plus the LEADERBOARD badge — never overlap on round watches.
     hidden function _menuGeo() {
-        var rowH = _h * 13 / 100; if (rowH < 24) { rowH = 24; } if (rowH > 34) { rowH = 34; }
+        var rowH = _h * 11 / 100; if (rowH < 18) { rowH = 18; } if (rowH > 28) { rowH = 28; }
         var rowW = _w * 70 / 100; if (rowW < 110) { rowW = 110; }
         var rowX = (_w - rowW) / 2;
-        var gap  = _h * 2 / 100;  if (gap < 4) { gap = 4; }
-        var rowY0 = _h * 50 / 100;
+        var gap  = _h * 2 / 100;  if (gap < 3) { gap = 3; }
+        var rowY0 = _h * 44 / 100;
         return [rowX, rowY0, rowW, rowH, gap];
     }
 
@@ -712,7 +738,7 @@ class SolitaireView extends WatchUi.View {
             "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
 
         // Suit preview
-        var sy = _h * 37 / 100;
+        var sy = _h * 34 / 100;
         var ss = _w * 3 / 100; if (ss < 5) { ss = 5; }
         var sp = ss * 3;
         dc.setColor(0x2A5540, Graphics.COLOR_TRANSPARENT);
@@ -744,11 +770,15 @@ class SolitaireView extends WatchUi.View {
                 rowLabels[i], Graphics.TEXT_JUSTIFY_CENTER);
         }
 
+        // LEADERBOARD badge row (index 2) — drawn by the shared library.
+        var lbY = rowY0 + 2 * (rowH + gap);
+        LbBadge.drawRow(dc, rowX, lbY, rowW, rowH, (_menuSel == 2));
+
         // Footer hint
         var pc = (_tick % 20 < 10) ? 0x447755 : 0x335544;
         dc.setColor(pc, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, _h - 14, Graphics.FONT_XTINY,
-            "UP/DN move  SELECT deal", Graphics.TEXT_JUSTIFY_CENTER);
+            "UP/DN move  SELECT act", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function _drWinAnim(dc) {

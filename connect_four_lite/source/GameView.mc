@@ -2,6 +2,12 @@ using Toybox.WatchUi;
 using Toybox.Graphics;
 using Toybox.Timer;
 using Toybox.Math;
+using Toybox.Application;
+using Toybox.Lang;
+
+// ── Global leaderboard ──────────────────────────────────────────────────────
+const LB_GAME_ID = "connectfour";
+const LB_STREAK_KEY = "connectfour_streak";
 
 // ── Board dimensions ───────────────────────────────────────────────────────
 const COLS    = 7;
@@ -150,8 +156,8 @@ class GameView extends WatchUi.View {
     // Wraps at board edges.
     function moveColumn(dir) {
         if (_state == GS_MENU) {
-            if (dir < 0) { _menuSel = (_menuSel + 3) % 4; }
-            else if (dir > 0) { _menuSel = (_menuSel + 1) % 4; }
+            if (dir < 0) { _menuSel = (_menuSel + 4) % 5; }
+            else if (dir > 0) { _menuSel = (_menuSel + 1) % 5; }
             return;
         }
         if (_state != GS_PLAY) { return; }
@@ -175,8 +181,10 @@ class GameView extends WatchUi.View {
                 if (_cfMode != CF_MODE_PVP) { _cfDiff = (_cfDiff + 1) % 3; }
             } else if (_menuSel == 2) {
                 if (_cfMode == CF_MODE_PVAI) { _playerFirst = !_playerFirst; }
-            } else {
+            } else if (_menuSel == 3) {
                 _startGame();
+            } else {
+                openLeaderboard();
             }
             return;
         }
@@ -187,10 +195,45 @@ class GameView extends WatchUi.View {
         if (r < 0) { return; }
         _dropDisc(_curCol, r, MARK_P);
         if (_checkWin(MARK_P)) {
-            _overType = OVER_PWIN; _scoreP = _scoreP + 1; _state = GS_OVER; return;
+            _overType = OVER_PWIN; _scoreP = _scoreP + 1; _state = GS_OVER; _onGameEnd(); return;
         }
-        if (_moveCount == COLS * ROWS) { _overType = OVER_DRAW; _state = GS_OVER; return; }
+        if (_moveCount == COLS * ROWS) { _overType = OVER_DRAW; _state = GS_OVER; _onGameEnd(); return; }
         _state = GS_AI;
+    }
+
+    // ── Global leaderboard ────────────────────────────────────────────────
+    // Metric = WIN STREAK: consecutive wins vs the AI. Higher is better.
+    // Persisted across games in Application.Storage[LB_STREAK_KEY].
+    // Variant = difficulty so each level keeps its own ranking.
+    hidden function _variant() {
+        return (_cfDiff == CF_DIFF_EASY) ? "Easy"
+               : ((_cfDiff == CF_DIFF_MED) ? "Med" : "Hard");
+    }
+
+    hidden function _loadStreak() {
+        var s = Application.Storage.getValue(LB_STREAK_KEY);
+        if (s instanceof Lang.Number) { return s; }
+        return 0;
+    }
+
+    // Called whenever a game reaches GS_OVER. Win streak only counts the
+    // human beating the AI, so it's a no-op outside Player-vs-AI mode.
+    hidden function _onGameEnd() {
+        if (_cfMode != CF_MODE_PVAI) { return; }
+        if (_overType == OVER_PWIN) {
+            var newStreak = _loadStreak() + 1;
+            Application.Storage.setValue(LB_STREAK_KEY, newStreak);
+            Leaderboard.submitScore(LB_GAME_ID, newStreak, _variant());
+        } else {
+            // Loss or draw breaks the streak.
+            Application.Storage.setValue(LB_STREAK_KEY, 0);
+        }
+    }
+
+    function openLeaderboard() {
+        var variant = _variant();
+        var v = new LbScoresView(LB_GAME_ID, variant, "CONNECT FOUR");
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
     // ── Timer tick ────────────────────────────────────────────────────────
@@ -203,9 +246,9 @@ class GameView extends WatchUi.View {
             var committed = _aiTickFor(MARK_AI, MARK_P);
             if (committed) {
                 if (_checkWin(MARK_AI)) {
-                    _overType = OVER_AIWIN; _scoreAI = _scoreAI + 1; _state = GS_OVER;
+                    _overType = OVER_AIWIN; _scoreAI = _scoreAI + 1; _state = GS_OVER; _onGameEnd();
                 } else if (_moveCount == COLS * ROWS) {
-                    _overType = OVER_DRAW; _state = GS_OVER;
+                    _overType = OVER_DRAW; _state = GS_OVER; _onGameEnd();
                 } else {
                     _state = GS_PLAY;
                 }
@@ -750,6 +793,27 @@ class GameView extends WatchUi.View {
     }
 
     // ── Pre-game menu ─────────────────────────────────────────────────────
+    // Layout for the 5-row menu (Mode / Diff / Side / START / LEADERBOARD).
+    // Space-aware: rows are sized to fit between the title and footer and the
+    // height is capped ~18% smaller than the old 4-row layout so the extra
+    // LEADERBOARD row never overlaps anything on round watches.
+    // Returns [nR, rowX, rowY0, rowW, rowH, gap]. Shared by _drawMenu/doTap.
+    hidden function _menuGeom() {
+        var nR   = 5;
+        var gap  = 4;
+        var topY = _sh * 20 / 100;   // below the title
+        var botY = _sh - 18;          // above the footer hint
+        var avail = botY - topY;
+        var rowH = (avail - (nR - 1) * gap) / nR;
+        if (rowH > 25) { rowH = 25; }  // ~18% smaller than the prior 30px cap
+        if (rowH < 14) { rowH = 14; }
+        var rowW = _sw * 74 / 100;
+        var rowX = (_sw - rowW) / 2;
+        var tot  = nR * rowH + (nR - 1) * gap;
+        var rowY0 = topY + (avail - tot) / 2;
+        return [nR, rowX, rowY0, rowW, rowH, gap];
+    }
+
     hidden function _drawMenu(dc) {
         dc.setColor(0x060610, 0x060610);
         dc.clear();
@@ -766,20 +830,26 @@ class GameView extends WatchUi.View {
                       : ((_cfDiff == CF_DIFF_MED) ? "Med" : "Hard");
         var sideStr = _playerFirst ? "Side: Red" : "Side: Yel";
         var rows = ["Mode: " + modeStr, "Diff: " + diffStr, sideStr, "START"];
-        var nR   = 4;
-        var rowH = _sh * 10 / 100;
-        if (rowH < 22) { rowH = 22; }
-        if (rowH > 30) { rowH = 30; }
-        var rowW = _sw * 74 / 100;
-        var rowX = (_sw - rowW) / 2;
-        var gap  = 6;
-        var tot  = nR * rowH + (nR - 1) * gap;
-        var rowY0 = (_sh - tot) / 2 + rowH;
+
+        var g    = _menuGeom();
+        var nR   = g[0];
+        var rowX = g[1];
+        var rowY0 = g[2];
+        var rowW = g[3];
+        var rowH = g[4];
+        var gap  = g[5];
+
         var i = 0;
         while (i < nR) {
-            var ry      = rowY0 + i * (rowH + gap);
-            var sel     = (i == _menuSel);
-            var isStart = (i == nR - 1);
+            var ry  = rowY0 + i * (rowH + gap);
+            var sel = (i == _menuSel);
+            if (i == nR - 1) {
+                // Gold "LEADERBOARD" row from the shared library.
+                LbBadge.drawRow(dc, rowX, ry, rowW, rowH, sel);
+                i = i + 1;
+                continue;
+            }
+            var isStart = (i == 3);
             dc.setColor(sel ? (isStart ? 0x3A0000 : 0x0A2040) : 0x06060E,
                         Graphics.COLOR_TRANSPARENT);
             dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);
@@ -962,13 +1032,13 @@ class GameView extends WatchUi.View {
 
     function doTap(tx, ty) {
         if (_state == GS_MENU) {
-            var nR   = 4;
-            var rowH = _sh * 10 / 100; if (rowH < 22) { rowH = 22; } if (rowH > 30) { rowH = 30; }
-            var rowW = _sw * 74 / 100;
-            var rowX = (_sw - rowW) / 2;
-            var gap  = 6;
-            var tot  = nR * rowH + (nR - 1) * gap;
-            var rowY0 = (_sh - tot) / 2 + rowH;
+            var g    = _menuGeom();
+            var nR   = g[0];
+            var rowX = g[1];
+            var rowY0 = g[2];
+            var rowW = g[3];
+            var rowH = g[4];
+            var gap  = g[5];
             for (var i = 0; i < nR; i++) {
                 var ry = rowY0 + i * (rowH + gap);
                 if (tx >= rowX && tx < rowX + rowW && ty >= ry && ty < ry + rowH) {

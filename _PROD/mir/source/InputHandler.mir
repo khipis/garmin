@@ -1,719 +1,1506 @@
-[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc"; @line = 25; @symbol_usingdef<0> = [Toybox,25,6,12]; @symbol_usingdef<1> = [WatchUi,25,13,20]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc"; @line = 31; @symbol_usingdef<0> = [Toybox,31,6,12]; @symbol_usingdef<1> = [WatchUi,31,13,20]; ]
 using Toybox.WatchUi;
-[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc"; @line = 26; @symbol_usingdef<0> = [Toybox,26,6,12]; @symbol_usingdef<1> = [System,26,13,19]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc"; @line = 32; @symbol_usingdef<0> = [Toybox,32,6,12]; @symbol_usingdef<1> = [System,32,13,19]; ]
 using Toybox.System;
-[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc"; @line = 28; @symbol_classdef = [InputHandler,28,6,18]; @symbol_extends<0> = [WatchUi,28,27,34]; @symbol_extends<1> = [BehaviorDelegate,28,35,51]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc"; @line = 34; @symbol_classdef = [InputHandler,34,6,18]; @symbol_extends<0> = [WatchUi,34,27,34]; @symbol_extends<1> = [BehaviorDelegate,34,35,51]; ]
 class InputHandler extends WatchUi.BehaviorDelegate {
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc"; @line = 28; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc"; @line = 34; ]
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc"; @line = 28; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc"; @line = 34; ]
     static
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc"; @line = 29; @position = 15; @symbol_vardef = [_v,29,15,17]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc"; @line = 35; @position = 8; @symbol_vardef = [view,35,8,12]; ]
+    var view;
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc"; @line = 38; @position = 15; @symbol_vardef = [_dragStartX,38,15,26]; ]
     protected
-    var _v;
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc"; @line = 31; @position = 15; @symbol_vardef = [_dx0,31,15,19]; ]
+    var _dragStartX;
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc"; @line = 39; @position = 15; @symbol_vardef = [_dragStartY,39,15,26]; ]
     protected
-    var _dx0;
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc"; @line = 32; @position = 15; @symbol_vardef = [_dy0,32,15,19]; ]
-    protected
-    var _dy0;
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc"; @line = 33; @position = 15; @symbol_vardef = [_dragActive,33,15,26]; ]
+    var _dragStartY;
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc"; @line = 40; @position = 15; @symbol_vardef = [_dragActive,40,15,26]; ]
     protected
     var _dragActive;
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc"; @line = 34; @position = 15; @symbol_vardef = [_handled,34,15,23]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc"; @line = 44; @position = 15; @symbol_vardef = [_swipeHandled,44,15,28]; ]
     protected
-    var _handled;
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc"; @line = 35; @position = 15; @symbol_vardef = [_lastTouchMs,35,15,27]; ]
+    var _swipeHandled;
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc"; @line = 49; @position = 15; @symbol_vardef = [_tapGuard,49,15,24]; ]
     protected
-    var _lastTouchMs;
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc"; @line = 37; @position = 15; @symbol_vardef = [_lastGestureMs,37,15,29]; ]
+    var _tapGuard;
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc"; @line = 52; @position = 15; @symbol_vardef = [_lastGestureMs,52,15,29]; ]
     protected
     var _lastGestureMs;
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc"; @line = 39; @symbol_functiondef = [initialize,39,13,23]; @symbol_param<0> = [view,39,24,28]; ]
-    function initialize(view) as Void {
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_39_30_48_4_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 40 8 ]
-        symbol [ BehaviorDelegate %tmp.2 40 8 24 ];
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc"; @line = 54; @symbol_functiondef = [initialize,54,13,23]; @symbol_param<0> = [v,54,24,25]; ]
+    function initialize(v) as Void {
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_54_27_63_4_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 55 8 ]
+        symbol [ BehaviorDelegate %tmp.2 55 8 24 ];
         %tmp.2 = getv ? :BehaviorDelegate;
-        symbol [ initialize %tmp.3 40 25 35 ];
+        symbol [ initialize %tmp.3 55 25 35 ];
         %tmp.3 = getv function %tmp.2 :initialize;
         invoke %tmp.2 %tmp.3();
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 41 8 ]
-        %tmp.4 = lgetv %view;
-        symbol [ view %tmp.4 41 25 29 ];
-        symbol [ _v ? 41 8 10 ];
-        putv self :_v %tmp.4;
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 42 8 ]
-        %tmp.5 = 0;
-        symbol [ _dx0 ? 42 8 12 ];
-        putv self :_dx0 %tmp.5;
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 43 8 ]
-        %tmp.6 = 0;
-        symbol [ _dy0 ? 43 8 12 ];
-        putv self :_dy0 %tmp.6;
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 44 8 ]
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 56 8 ]
+        %tmp.4 = lgetv %v;
+        symbol [ v %tmp.4 56 25 26 ];
+        symbol [ view ? 56 8 12 ];
+        putv self :view %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 57 8 ]
+        %tmp.5 = -1;
+        symbol [ _dragStartX ? 57 8 19 ];
+        putv self :_dragStartX %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 58 8 ]
+        %tmp.6 = -1;
+        symbol [ _dragStartY ? 58 8 19 ];
+        putv self :_dragStartY %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 59 8 ]
         %tmp.7 = false;
-        symbol [ _dragActive ? 44 8 19 ];
+        symbol [ _dragActive ? 59 8 19 ];
         putv self :_dragActive %tmp.7;
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 45 8 ]
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 60 8 ]
         %tmp.8 = false;
-        symbol [ _handled ? 45 8 16 ];
-        putv self :_handled %tmp.8;
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 46 8 ]
+        symbol [ _swipeHandled ? 60 8 21 ];
+        putv self :_swipeHandled %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 61 8 ]
         %tmp.9 = 0;
-        symbol [ _lastTouchMs ? 46 8 20 ];
-        putv self :_lastTouchMs %tmp.9;
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 47 8 ]
+        symbol [ _tapGuard ? 61 8 17 ];
+        putv self :_tapGuard %tmp.9;
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 62 8 ]
         %tmp.10 = 0;
-        symbol [ _lastGestureMs ? 47 8 22 ];
+        symbol [ _lastGestureMs ? 62 8 22 ];
         putv self :_lastGestureMs %tmp.10;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_39_30_48_4_stop:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_54_27_63_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc"; @line = 50; @symbol_functiondef = [_markGesture,50,20,32]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc"; @line = 65; @symbol_functiondef = [_markGesture,65,20,32]; ]
     protected
     function _markGesture() {
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_50_35_50_73_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 50 37 ]
-        symbol [ System %tmp.1 50 54 60 ];
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_65_35_65_73_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 65 37 ]
+        symbol [ System %tmp.1 65 54 60 ];
         %tmp.1 = getm $.Toybox.System;
-        symbol [ getTimer %tmp.2 50 61 69 ];
+        symbol [ getTimer %tmp.2 65 61 69 ];
         %tmp.2 = getv function %tmp.1 :getTimer;
         %tmp.3 = invoke %tmp.1 %tmp.2();
-        symbol [ _lastGestureMs ? 50 37 51 ];
+        symbol [ _lastGestureMs ? 65 37 51 ];
         putv self :_lastGestureMs %tmp.3;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_50_35_50_73_stop:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_65_35_65_73_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc"; @line = 51; @symbol_functiondef = [_isPhantomBack,51,20,34]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc"; @line = 66; @symbol_functiondef = [_isPhantomBack,66,20,34]; ]
     protected
     function _isPhantomBack() {
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_51_37_55_4_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 52 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_52_8_52_49_if_stmt:
-        symbol [ _lastGestureMs %tmp.2 52 12 26 ];
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_66_37_70_4_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 67 8 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_67_8_67_49_if_stmt:
+        symbol [ _lastGestureMs %tmp.2 67 12 26 ];
         %tmp.2 = getv ? :_lastGestureMs;
         %tmp.3 = 0;
         %tmp.4 = eq %tmp.2 %tmp.3;
-        bf %tmp.4 @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_52_8_52_49_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_52_8_52_49_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_52_33_52_49_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 52 35 ]
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_67_8_67_49_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_67_8_67_49_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_67_33_67_49_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 67 35 ]
         %tmp.5 = false;
         ret %tmp.5;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_52_33_52_49_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_52_8_52_49_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_52_8_52_49_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 53 8 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_51_37_55_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_51_37_55_4_stop" ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_67_33_67_49_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_67_8_67_49_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_67_8_67_49_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 68 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_66_37_70_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_66_37_70_4_stop" ]
         %dt.1 = local;
-        symbol [ dt %dt.1 53 12 14 ];
-        symbol [ System %tmp.6 53 17 23 ];
+        symbol [ dt %dt.1 68 12 14 ];
+        symbol [ System %tmp.6 68 17 23 ];
         %tmp.6 = getm $.Toybox.System;
-        symbol [ getTimer %tmp.7 53 24 32 ];
+        symbol [ getTimer %tmp.7 68 24 32 ];
         %tmp.7 = getv function %tmp.6 :getTimer;
         %tmp.8 = invoke %tmp.6 %tmp.7();
-        symbol [ _lastGestureMs %tmp.10 53 37 51 ];
+        symbol [ _lastGestureMs %tmp.10 68 37 51 ];
         %tmp.10 = getv ? :_lastGestureMs;
         %tmp.11 = sub %tmp.8 %tmp.10;
         lputv %dt.1 %tmp.11;
-        symbol [ dt %dt.1 53 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 54 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_54_16_54_32_begin:
+        symbol [ dt %dt.1 68 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 69 8 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_69_16_69_32_begin:
         %tmp.12 = lgetv %dt.1;
-        symbol [ dt %tmp.12 54 16 18 ];
+        symbol [ dt %tmp.12 69 16 18 ];
         %tmp.13 = 0;
         %tmp.14 = gte %tmp.12 %tmp.13;
         %tmp.15 = dup %tmp.14;
-        bf %tmp.15 @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_54_27_54_32_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_54_27_54_32_true:
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_69_27_69_32_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_69_27_69_32_true:
         %tmp.16 = lgetv %dt.1;
-        symbol [ dt %tmp.16 54 27 29 ];
+        symbol [ dt %tmp.16 69 27 29 ];
         %tmp.17 = 500;
         %tmp.18 = lt %tmp.16 %tmp.17;
         %tmp.19 = and %tmp.14 %tmp.18;
         push %tmp.19;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_54_27_54_32_end:
-        %tmp.20 = phi [%tmp.15 @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_54_16_54_32_begin] [%tmp.19 @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_54_27_54_32_true] [%tmp.20 @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_54_27_54_32_end];
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_69_27_69_32_end:
+        %tmp.20 = phi [%tmp.15 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_69_16_69_32_begin] [%tmp.19 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_69_27_69_32_true] [%tmp.20 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_69_27_69_32_end];
         ret %tmp.20;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_51_37_55_4_stop:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_66_37_70_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc"; @line = 57; @symbol_functiondef = [onKey,57,13,18]; @symbol_param<0> = [evt,57,19,22]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc"; @line = 72; @symbol_functiondef = [_refresh,72,20,28]; ]
+    protected
+    function _refresh() {
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_72_31_72_58_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 72 33 ]
+        symbol [ WatchUi %tmp.1 72 33 40 ];
+        %tmp.1 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.2 72 41 54 ];
+        %tmp.2 = getv function %tmp.1 :requestUpdate;
+        invoke %tmp.1 %tmp.2();
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_72_31_72_58_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc"; @line = 75; @symbol_functiondef = [onKey,75,13,18]; @symbol_param<0> = [evt,75,19,22]; ]
     function onKey(evt) {
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_57_24_65_4_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 58 8 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_57_24_65_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_57_24_65_4_stop" ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_75_24_97_4_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 76 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_75_24_97_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_75_24_97_4_stop" ]
         %k.1 = local;
-        symbol [ k %k.1 58 12 13 ];
+        symbol [ k %k.1 76 12 13 ];
         %tmp.1 = lgetv %evt;
-        symbol [ evt %tmp.1 58 16 19 ];
-        symbol [ getKey %tmp.2 58 20 26 ];
+        symbol [ evt %tmp.1 76 19 22 ];
+        symbol [ getKey %tmp.2 76 23 29 ];
         %tmp.2 = getv function %tmp.1 :getKey;
         %tmp.3 = invoke %tmp.1 %tmp.2();
         lputv %k.1 %tmp.3;
-        symbol [ k %k.1 58 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 59 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_59_8_62_58_if_stmt:
-        %tmp.4 = lgetv %k.1;
-        symbol [ k %tmp.4 59 17 18 ];
-        symbol [ WatchUi %tmp.5 59 22 29 ];
-        %tmp.5 = getm $.Toybox.WatchUi;
-        symbol [ KEY_ESC %tmp.6 59 30 37 ];
-        %tmp.6 = getv %tmp.5 :KEY_ESC;
-        %tmp.7 = eq %tmp.4 %tmp.6;
-        bf %tmp.7 @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_59_8_62_58_if_false;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_59_8_62_58_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_59_40_59_59_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 59 42 ]
-        %tmp.8 = self;
-        symbol [ onBack %tmp.9 59 49 55 ];
-        %tmp.9 = getv function %tmp.8 :onBack;
-        %tmp.10 = invoke %tmp.8 %tmp.9();
-        ret %tmp.10;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_59_40_59_59_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_59_8_62_58_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_59_8_62_58_if_false:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 60 13 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_60_13_62_58_if_stmt:
-        %tmp.11 = lgetv %k.1;
-        symbol [ k %tmp.11 60 17 18 ];
-        symbol [ WatchUi %tmp.12 60 22 29 ];
-        %tmp.12 = getm $.Toybox.WatchUi;
-        symbol [ KEY_UP %tmp.13 60 30 36 ];
-        %tmp.13 = getv %tmp.12 :KEY_UP;
-        %tmp.14 = eq %tmp.11 %tmp.13;
-        bf %tmp.14 @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_60_13_62_58_if_false;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_60_13_62_58_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_60_40_60_58_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 60 42 ]
-        symbol [ _v %tmp.16 60 42 44 ];
-        %tmp.16 = getv ? :_v;
-        symbol [ navPrev %tmp.17 60 45 52 ];
-        %tmp.17 = getv function %tmp.16 :navPrev;
-        invoke %tmp.16 %tmp.17();
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_60_40_60_58_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_60_13_62_58_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_60_13_62_58_if_false:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 61 13 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_61_13_62_58_if_stmt:
-        %tmp.18 = lgetv %k.1;
-        symbol [ k %tmp.18 61 17 18 ];
-        symbol [ WatchUi %tmp.19 61 22 29 ];
-        %tmp.19 = getm $.Toybox.WatchUi;
-        symbol [ KEY_DOWN %tmp.20 61 30 38 ];
-        %tmp.20 = getv %tmp.19 :KEY_DOWN;
-        %tmp.21 = eq %tmp.18 %tmp.20;
-        bf %tmp.21 @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_61_13_62_58_if_else_false;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_61_13_62_58_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_61_40_61_58_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 61 42 ]
-        symbol [ _v %tmp.23 61 42 44 ];
-        %tmp.23 = getv ? :_v;
-        symbol [ navNext %tmp.24 61 45 52 ];
-        %tmp.24 = getv function %tmp.23 :navNext;
-        invoke %tmp.23 %tmp.24();
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_61_40_61_58_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_61_13_62_58_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_61_13_62_58_if_else_false:
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_62_40_62_58_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 62 42 ]
-        symbol [ _v %tmp.26 62 42 44 ];
-        %tmp.26 = getv ? :_v;
-        symbol [ navSelect %tmp.27 62 45 54 ];
-        %tmp.27 = getv function %tmp.26 :navSelect;
-        invoke %tmp.26 %tmp.27();
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_62_40_62_58_stop:
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_61_13_62_58_if_end:
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_60_13_62_58_if_end:
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_59_8_62_58_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 63 8 ]
-        symbol [ WatchUi %tmp.28 63 8 15 ];
-        %tmp.28 = getm $.Toybox.WatchUi;
-        symbol [ requestUpdate %tmp.29 63 16 29 ];
-        %tmp.29 = getv function %tmp.28 :requestUpdate;
-        invoke %tmp.28 %tmp.29();
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 64 8 ]
-        %tmp.30 = true;
-        ret %tmp.30;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_57_24_65_4_stop:
+        symbol [ k %k.1 76 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 77 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_75_24_97_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_75_24_97_4_stop" ]
+        %ctrl.2 = local;
+        symbol [ ctrl %ctrl.2 77 12 16 ];
+        symbol [ view %tmp.5 77 19 23 ];
+        %tmp.5 = getv ? :view;
+        symbol [ ctrl %tmp.6 77 24 28 ];
+        %tmp.6 = getv %tmp.5 :ctrl;
+        lputv %ctrl.2 %tmp.6;
+        symbol [ ctrl %ctrl.2 77 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 79 8 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_79_8_95_8_if_stmt:
+        %tmp.7 = lgetv %ctrl.2;
+        symbol [ ctrl %tmp.7 79 12 16 ];
+        symbol [ state %tmp.8 79 17 22 ];
+        %tmp.8 = getv %tmp.7 :state;
+        symbol [ GS_MENU %tmp.10 79 26 33 ];
+        %tmp.10 = getv ? :GS_MENU;
+        %tmp.11 = eq %tmp.8 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_79_8_95_8_if_false;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_79_8_95_8_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_79_35_84_8_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 80 12 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_80_12_80_134_if_stmt:
+        %tmp.12 = lgetv %k.1;
+        symbol [ k %tmp.12 80 16 17 ];
+        symbol [ WatchUi %tmp.13 80 21 28 ];
+        %tmp.13 = getm $.Toybox.WatchUi;
+        symbol [ KEY_UP %tmp.14 80 29 35 ];
+        %tmp.14 = getv %tmp.13 :KEY_UP;
+        %tmp.15 = eq %tmp.12 %tmp.14;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_80_12_80_134_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_80_12_80_134_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_80_40_80_134_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 80 42 ]
+        %tmp.16 = lgetv %ctrl.2;
+        symbol [ ctrl %tmp.16 80 42 46 ];
+        %tmp.17 = lgetv %ctrl.2;
+        symbol [ ctrl %tmp.17 80 61 65 ];
+        symbol [ menuCursor %tmp.18 80 66 76 ];
+        %tmp.18 = getv %tmp.17 :menuCursor;
+        symbol [ MENU_ITEMS %tmp.20 80 79 89 ];
+        %tmp.20 = getv ? :MENU_ITEMS;
+        %tmp.21 = add %tmp.18 %tmp.20;
+        %tmp.22 = 1;
+        %tmp.23 = sub %tmp.21 %tmp.22;
+        symbol [ MENU_ITEMS %tmp.25 80 97 107 ];
+        %tmp.25 = getv ? :MENU_ITEMS;
+        %tmp.26 = mod %tmp.23 %tmp.25;
+        symbol [ menuCursor ? 80 47 57 ];
+        putv %tmp.16 :menuCursor %tmp.26;
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 80 109 ]
+        %tmp.27 = self;
+        symbol [ _refresh %tmp.28 80 109 117 ];
+        %tmp.28 = getv function %tmp.27 :_refresh;
+        invoke %tmp.27 %tmp.28();
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 80 121 ]
+        %tmp.29 = true;
+        ret %tmp.29;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_80_40_80_134_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_80_12_80_134_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_80_12_80_134_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 81 12 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_81_12_81_134_if_stmt:
+        %tmp.30 = lgetv %k.1;
+        symbol [ k %tmp.30 81 16 17 ];
+        symbol [ WatchUi %tmp.31 81 21 28 ];
+        %tmp.31 = getm $.Toybox.WatchUi;
+        symbol [ KEY_DOWN %tmp.32 81 29 37 ];
+        %tmp.32 = getv %tmp.31 :KEY_DOWN;
+        %tmp.33 = eq %tmp.30 %tmp.32;
+        bf %tmp.33 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_81_12_81_134_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_81_12_81_134_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_81_40_81_134_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 81 42 ]
+        %tmp.34 = lgetv %ctrl.2;
+        symbol [ ctrl %tmp.34 81 42 46 ];
+        %tmp.35 = lgetv %ctrl.2;
+        symbol [ ctrl %tmp.35 81 61 65 ];
+        symbol [ menuCursor %tmp.36 81 66 76 ];
+        %tmp.36 = getv %tmp.35 :menuCursor;
+        %tmp.37 = 1;
+        %tmp.38 = add %tmp.36 %tmp.37;
+        symbol [ MENU_ITEMS %tmp.40 81 84 94 ];
+        %tmp.40 = getv ? :MENU_ITEMS;
+        %tmp.41 = mod %tmp.38 %tmp.40;
+        symbol [ menuCursor ? 81 47 57 ];
+        putv %tmp.34 :menuCursor %tmp.41;
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 81 109 ]
+        %tmp.42 = self;
+        symbol [ _refresh %tmp.43 81 109 117 ];
+        %tmp.43 = getv function %tmp.42 :_refresh;
+        invoke %tmp.42 %tmp.43();
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 81 121 ]
+        %tmp.44 = true;
+        ret %tmp.44;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_81_40_81_134_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_81_12_81_134_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_81_12_81_134_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 82 12 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_82_12_82_134_if_stmt:
+        %tmp.45 = lgetv %k.1;
+        symbol [ k %tmp.45 82 16 17 ];
+        symbol [ WatchUi %tmp.46 82 21 28 ];
+        %tmp.46 = getm $.Toybox.WatchUi;
+        symbol [ KEY_ENTER %tmp.47 82 29 38 ];
+        %tmp.47 = getv %tmp.46 :KEY_ENTER;
+        %tmp.48 = eq %tmp.45 %tmp.47;
+        bf %tmp.48 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_82_12_82_134_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_82_12_82_134_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_82_40_82_134_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 82 42 ]
+        %tmp.49 = self;
+        symbol [ _activateMenu %tmp.50 82 42 55 ];
+        %tmp.50 = getv function %tmp.49 :_activateMenu;
+        %tmp.51 = lgetv %ctrl.2;
+        symbol [ ctrl %tmp.51 82 56 60 ];
+        invoke %tmp.49 %tmp.50(%tmp.51);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 82 109 ]
+        %tmp.52 = self;
+        symbol [ _refresh %tmp.53 82 109 117 ];
+        %tmp.53 = getv function %tmp.52 :_refresh;
+        invoke %tmp.52 %tmp.53();
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 82 121 ]
+        %tmp.54 = true;
+        ret %tmp.54;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_82_40_82_134_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_82_12_82_134_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_82_12_82_134_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 83 12 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_83_12_83_56_if_stmt:
+        %tmp.55 = lgetv %k.1;
+        symbol [ k %tmp.55 83 16 17 ];
+        symbol [ WatchUi %tmp.56 83 21 28 ];
+        %tmp.56 = getm $.Toybox.WatchUi;
+        symbol [ KEY_ESC %tmp.57 83 29 36 ];
+        %tmp.57 = getv %tmp.56 :KEY_ESC;
+        %tmp.58 = eq %tmp.55 %tmp.57;
+        bf %tmp.58 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_83_12_83_56_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_83_12_83_56_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_83_40_83_56_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 83 42 ]
+        %tmp.59 = false;
+        ret %tmp.59;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_83_40_83_56_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_83_12_83_56_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_83_12_83_56_if_end:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_79_35_84_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_79_8_95_8_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_79_8_95_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 84 15 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_84_15_95_8_if_stmt:
+        %tmp.60 = lgetv %ctrl.2;
+        symbol [ ctrl %tmp.60 84 19 23 ];
+        symbol [ state %tmp.61 84 24 29 ];
+        %tmp.61 = getv %tmp.60 :state;
+        symbol [ GS_PLAY %tmp.63 84 33 40 ];
+        %tmp.63 = getv ? :GS_PLAY;
+        %tmp.64 = eq %tmp.61 %tmp.63;
+        bf %tmp.64 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_84_15_95_8_if_else_false;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_84_15_95_8_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_84_42_91_8_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 87 12 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_87_12_87_92_if_stmt:
+        %tmp.65 = lgetv %k.1;
+        symbol [ k %tmp.65 87 16 17 ];
+        symbol [ WatchUi %tmp.66 87 21 28 ];
+        %tmp.66 = getm $.Toybox.WatchUi;
+        symbol [ KEY_UP %tmp.67 87 29 35 ];
+        %tmp.67 = getv %tmp.66 :KEY_UP;
+        %tmp.68 = eq %tmp.65 %tmp.67;
+        bf %tmp.68 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_87_12_87_92_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_87_12_87_92_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_87_40_87_92_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 87 42 ]
+        %tmp.69 = lgetv %ctrl.2;
+        symbol [ ctrl %tmp.69 87 42 46 ];
+        symbol [ moveCursorVert %tmp.70 87 47 61 ];
+        %tmp.70 = getv function %tmp.69 :moveCursorVert;
+        %tmp.71 = -1;
+        invoke %tmp.69 %tmp.70(%tmp.71);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 87 67 ]
+        %tmp.72 = self;
+        symbol [ _refresh %tmp.73 87 67 75 ];
+        %tmp.73 = getv function %tmp.72 :_refresh;
+        invoke %tmp.72 %tmp.73();
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 87 79 ]
+        %tmp.74 = true;
+        ret %tmp.74;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_87_40_87_92_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_87_12_87_92_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_87_12_87_92_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 88 12 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_88_12_88_92_if_stmt:
+        %tmp.75 = lgetv %k.1;
+        symbol [ k %tmp.75 88 16 17 ];
+        symbol [ WatchUi %tmp.76 88 21 28 ];
+        %tmp.76 = getm $.Toybox.WatchUi;
+        symbol [ KEY_DOWN %tmp.77 88 29 37 ];
+        %tmp.77 = getv %tmp.76 :KEY_DOWN;
+        %tmp.78 = eq %tmp.75 %tmp.77;
+        bf %tmp.78 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_88_12_88_92_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_88_12_88_92_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_88_40_88_92_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 88 42 ]
+        %tmp.79 = lgetv %ctrl.2;
+        symbol [ ctrl %tmp.79 88 42 46 ];
+        symbol [ moveCursorHoriz %tmp.80 88 47 62 ];
+        %tmp.80 = getv function %tmp.79 :moveCursorHoriz;
+        %tmp.81 = 1;
+        invoke %tmp.79 %tmp.80(%tmp.81);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 88 67 ]
+        %tmp.82 = self;
+        symbol [ _refresh %tmp.83 88 67 75 ];
+        %tmp.83 = getv function %tmp.82 :_refresh;
+        invoke %tmp.82 %tmp.83();
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 88 79 ]
+        %tmp.84 = true;
+        ret %tmp.84;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_88_40_88_92_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_88_12_88_92_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_88_12_88_92_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 89 12 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_89_12_89_92_if_stmt:
+        %tmp.85 = lgetv %k.1;
+        symbol [ k %tmp.85 89 16 17 ];
+        symbol [ WatchUi %tmp.86 89 21 28 ];
+        %tmp.86 = getm $.Toybox.WatchUi;
+        symbol [ KEY_ENTER %tmp.87 89 29 38 ];
+        %tmp.87 = getv %tmp.86 :KEY_ENTER;
+        %tmp.88 = eq %tmp.85 %tmp.87;
+        bf %tmp.88 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_89_12_89_92_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_89_12_89_92_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_89_40_89_92_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 89 42 ]
+        %tmp.89 = lgetv %ctrl.2;
+        symbol [ ctrl %tmp.89 89 42 46 ];
+        symbol [ guessCurrent %tmp.90 89 47 59 ];
+        %tmp.90 = getv function %tmp.89 :guessCurrent;
+        invoke %tmp.89 %tmp.90();
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 89 67 ]
+        %tmp.91 = self;
+        symbol [ _refresh %tmp.92 89 67 75 ];
+        %tmp.92 = getv function %tmp.91 :_refresh;
+        invoke %tmp.91 %tmp.92();
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 89 79 ]
+        %tmp.93 = true;
+        ret %tmp.93;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_89_40_89_92_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_89_12_89_92_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_89_12_89_92_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 90 12 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_90_12_90_92_if_stmt:
+        %tmp.94 = lgetv %k.1;
+        symbol [ k %tmp.94 90 16 17 ];
+        symbol [ WatchUi %tmp.95 90 21 28 ];
+        %tmp.95 = getm $.Toybox.WatchUi;
+        symbol [ KEY_ESC %tmp.96 90 29 36 ];
+        %tmp.96 = getv %tmp.95 :KEY_ESC;
+        %tmp.97 = eq %tmp.94 %tmp.96;
+        bf %tmp.97 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_90_12_90_92_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_90_12_90_92_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_90_40_90_92_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 90 42 ]
+        %tmp.98 = lgetv %ctrl.2;
+        symbol [ ctrl %tmp.98 90 42 46 ];
+        symbol [ gotoMenu %tmp.99 90 47 55 ];
+        %tmp.99 = getv function %tmp.98 :gotoMenu;
+        invoke %tmp.98 %tmp.99();
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 90 67 ]
+        %tmp.100 = self;
+        symbol [ _refresh %tmp.101 90 67 75 ];
+        %tmp.101 = getv function %tmp.100 :_refresh;
+        invoke %tmp.100 %tmp.101();
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 90 79 ]
+        %tmp.102 = true;
+        ret %tmp.102;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_90_40_90_92_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_90_12_90_92_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_90_12_90_92_if_end:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_84_42_91_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_84_15_95_8_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_84_15_95_8_if_else_false:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_91_15_95_8_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 93 12 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_93_12_93_82_if_stmt:
+        %tmp.103 = lgetv %k.1;
+        symbol [ k %tmp.103 93 16 17 ];
+        symbol [ WatchUi %tmp.104 93 21 28 ];
+        %tmp.104 = getm $.Toybox.WatchUi;
+        symbol [ KEY_ESC %tmp.105 93 29 36 ];
+        %tmp.105 = getv %tmp.104 :KEY_ESC;
+        %tmp.106 = eq %tmp.103 %tmp.105;
+        bf %tmp.106 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_93_12_93_82_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_93_12_93_82_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_93_38_93_82_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 93 40 ]
+        %tmp.107 = lgetv %ctrl.2;
+        symbol [ ctrl %tmp.107 93 40 44 ];
+        symbol [ gotoMenu %tmp.108 93 45 53 ];
+        %tmp.108 = getv function %tmp.107 :gotoMenu;
+        invoke %tmp.107 %tmp.108();
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 93 57 ]
+        %tmp.109 = self;
+        symbol [ _refresh %tmp.110 93 57 65 ];
+        %tmp.110 = getv function %tmp.109 :_refresh;
+        invoke %tmp.109 %tmp.110();
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 93 69 ]
+        %tmp.111 = true;
+        ret %tmp.111;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_93_38_93_82_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_93_12_93_82_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_93_12_93_82_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 94 12 ]
+        %tmp.112 = lgetv %ctrl.2;
+        symbol [ ctrl %tmp.112 94 12 16 ];
+        symbol [ gotoMenu %tmp.113 94 17 25 ];
+        %tmp.113 = getv function %tmp.112 :gotoMenu;
+        invoke %tmp.112 %tmp.113();
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 94 29 ]
+        %tmp.114 = self;
+        symbol [ _refresh %tmp.115 94 29 37 ];
+        %tmp.115 = getv function %tmp.114 :_refresh;
+        invoke %tmp.114 %tmp.115();
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 94 41 ]
+        %tmp.116 = true;
+        ret %tmp.116;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_91_15_95_8_stop:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_84_15_95_8_if_end:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_79_8_95_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 96 8 ]
+        %tmp.117 = false;
+        ret %tmp.117;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_75_24_97_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc"; @line = 67; @symbol_functiondef = [onSelect,67,13,21]; ]
-    function onSelect() {
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_67_30_67_86_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 67 32 ]
-        symbol [ _v %tmp.2 67 32 34 ];
-        %tmp.2 = getv ? :_v;
-        symbol [ navSelect %tmp.3 67 35 44 ];
-        %tmp.3 = getv function %tmp.2 :navSelect;
-        invoke %tmp.2 %tmp.3();
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 67 48 ]
-        symbol [ WatchUi %tmp.4 67 48 55 ];
-        %tmp.4 = getm $.Toybox.WatchUi;
-        symbol [ requestUpdate %tmp.5 67 56 69 ];
-        %tmp.5 = getv function %tmp.4 :requestUpdate;
-        invoke %tmp.4 %tmp.5();
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 67 73 ]
-        %tmp.6 = true;
-        ret %tmp.6;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_67_30_67_86_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc"; @line = 68; @symbol_functiondef = [onPreviousPage,68,13,27]; ]
-    function onPreviousPage() {
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_68_30_68_86_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 68 32 ]
-        symbol [ _v %tmp.2 68 32 34 ];
-        %tmp.2 = getv ? :_v;
-        symbol [ navPrev %tmp.3 68 35 42 ];
-        %tmp.3 = getv function %tmp.2 :navPrev;
-        invoke %tmp.2 %tmp.3();
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 68 48 ]
-        symbol [ WatchUi %tmp.4 68 48 55 ];
-        %tmp.4 = getm $.Toybox.WatchUi;
-        symbol [ requestUpdate %tmp.5 68 56 69 ];
-        %tmp.5 = getv function %tmp.4 :requestUpdate;
-        invoke %tmp.4 %tmp.5();
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 68 73 ]
-        %tmp.6 = true;
-        ret %tmp.6;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_68_30_68_86_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc"; @line = 69; @symbol_functiondef = [onNextPage,69,13,23]; ]
-    function onNextPage() {
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_69_30_69_86_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 69 32 ]
-        symbol [ _v %tmp.2 69 32 34 ];
-        %tmp.2 = getv ? :_v;
-        symbol [ navNext %tmp.3 69 35 42 ];
-        %tmp.3 = getv function %tmp.2 :navNext;
-        invoke %tmp.2 %tmp.3();
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 69 48 ]
-        symbol [ WatchUi %tmp.4 69 48 55 ];
-        %tmp.4 = getm $.Toybox.WatchUi;
-        symbol [ requestUpdate %tmp.5 69 56 69 ];
-        %tmp.5 = getv function %tmp.4 :requestUpdate;
-        invoke %tmp.4 %tmp.5();
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 69 73 ]
-        %tmp.6 = true;
-        ret %tmp.6;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_69_30_69_86_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc"; @line = 71; @symbol_functiondef = [onBack,71,13,19]; ]
-    function onBack() {
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_71_22_78_4_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 72 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_72_8_72_65_if_stmt:
-        %tmp.1 = self;
-        symbol [ _isPhantomBack %tmp.2 72 12 26 ];
-        %tmp.2 = getv function %tmp.1 :_isPhantomBack;
-        %tmp.3 = invoke %tmp.1 %tmp.2();
-        bf %tmp.3 @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_72_8_72_65_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_72_8_72_65_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_72_30_72_65_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 72 32 ]
-        %tmp.4 = 0;
-        symbol [ _lastGestureMs ? 72 32 46 ];
-        putv self :_lastGestureMs %tmp.4;
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 72 52 ]
-        %tmp.5 = true;
-        ret %tmp.5;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_72_30_72_65_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_72_8_72_65_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_72_8_72_65_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 73 8 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_71_22_78_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_71_22_78_4_stop" ]
-        %consumed.1 = local;
-        symbol [ consumed %consumed.1 73 12 20 ];
-        symbol [ _v %tmp.7 73 23 25 ];
-        %tmp.7 = getv ? :_v;
-        symbol [ navBack %tmp.8 73 26 33 ];
-        %tmp.8 = getv function %tmp.7 :navBack;
-        %tmp.9 = invoke %tmp.7 %tmp.8();
-        lputv %consumed.1 %tmp.9;
-        symbol [ consumed %consumed.1 73 12 20 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 74 8 ]
-        symbol [ WatchUi %tmp.10 74 8 15 ];
-        %tmp.10 = getm $.Toybox.WatchUi;
-        symbol [ requestUpdate %tmp.11 74 16 29 ];
-        %tmp.11 = getv function %tmp.10 :requestUpdate;
-        invoke %tmp.10 %tmp.11();
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 75 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_75_8_75_37_if_stmt:
-        %tmp.12 = lgetv %consumed.1;
-        symbol [ consumed %tmp.12 75 12 20 ];
-        bf %tmp.12 @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_75_8_75_37_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_75_8_75_37_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_75_22_75_37_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 75 24 ]
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc"; @line = 100; @symbol_functiondef = [onHold,100,13,19]; @symbol_param<0> = [evt,100,20,23]; ]
+    function onHold(evt) {
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_100_25_108_4_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 101 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_100_25_108_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_100_25_108_4_stop" ]
+        %ctrl.1 = local;
+        symbol [ ctrl %ctrl.1 101 12 16 ];
+        symbol [ view %tmp.2 101 19 23 ];
+        %tmp.2 = getv ? :view;
+        symbol [ ctrl %tmp.3 101 24 28 ];
+        %tmp.3 = getv %tmp.2 :ctrl;
+        lputv %ctrl.1 %tmp.3;
+        symbol [ ctrl %ctrl.1 101 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 102 8 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_102_8_106_8_if_stmt:
+        %tmp.4 = lgetv %ctrl.1;
+        symbol [ ctrl %tmp.4 102 12 16 ];
+        symbol [ state %tmp.5 102 17 22 ];
+        %tmp.5 = getv %tmp.4 :state;
+        symbol [ GS_PLAY %tmp.7 102 26 33 ];
+        %tmp.7 = getv ? :GS_PLAY;
+        %tmp.8 = eq %tmp.5 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_102_8_106_8_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_102_8_106_8_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_102_35_106_8_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 103 12 ]
+        %tmp.9 = lgetv %ctrl.1;
+        symbol [ ctrl %tmp.9 103 12 16 ];
+        symbol [ guessCurrent %tmp.10 103 17 29 ];
+        %tmp.10 = getv function %tmp.9 :guessCurrent;
+        invoke %tmp.9 %tmp.10();
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 104 12 ]
+        %tmp.11 = self;
+        symbol [ _refresh %tmp.12 104 12 20 ];
+        %tmp.12 = getv function %tmp.11 :_refresh;
+        invoke %tmp.11 %tmp.12();
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 105 12 ]
         %tmp.13 = true;
         ret %tmp.13;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_75_22_75_37_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_75_8_75_37_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_75_8_75_37_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 76 8 ]
-        symbol [ WatchUi %tmp.14 76 8 15 ];
-        %tmp.14 = getm $.Toybox.WatchUi;
-        symbol [ popView %tmp.15 76 16 23 ];
-        %tmp.15 = getv function %tmp.14 :popView;
-        symbol [ WatchUi %tmp.16 76 24 31 ];
-        %tmp.16 = getm $.Toybox.WatchUi;
-        symbol [ SLIDE_RIGHT %tmp.17 76 32 43 ];
-        %tmp.17 = getv %tmp.16 :SLIDE_RIGHT;
-        invoke %tmp.14 %tmp.15(%tmp.17);
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 77 8 ]
-        %tmp.18 = true;
-        ret %tmp.18;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_71_22_78_4_stop:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_102_35_106_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_102_8_106_8_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_102_8_106_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 107 8 ]
+        %tmp.14 = false;
+        ret %tmp.14;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_100_25_108_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc"; @line = 80; @symbol_functiondef = [onSwipe,80,13,20]; @symbol_param<0> = [evt,80,21,24]; ]
-    function onSwipe(evt) {
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_80_26_80_57_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 80 28 ]
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc"; @line = 111; @symbol_functiondef = [onSelect,111,13,21]; ]
+    function onSelect() {
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_111_31_111_77_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 111 33 ]
         %tmp.1 = self;
-        symbol [ _markGesture %tmp.2 80 28 40 ];
-        %tmp.2 = getv function %tmp.1 :_markGesture;
-        invoke %tmp.1 %tmp.2();
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 80 44 ]
-        %tmp.3 = true;
-        ret %tmp.3;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_80_26_80_57_stop:
+        symbol [ onKey %tmp.2 111 40 45 ];
+        %tmp.2 = getv function %tmp.1 :onKey;
+        %tmp.3 = self;
+        symbol [ _synthKey %tmp.4 111 46 55 ];
+        %tmp.4 = getv function %tmp.3 :_synthKey;
+        symbol [ WatchUi %tmp.5 111 56 63 ];
+        %tmp.5 = getm $.Toybox.WatchUi;
+        symbol [ KEY_ENTER %tmp.6 111 64 73 ];
+        %tmp.6 = getv %tmp.5 :KEY_ENTER;
+        %tmp.7 = invoke %tmp.3 %tmp.4(%tmp.6);
+        %tmp.8 = invoke %tmp.1 %tmp.2(%tmp.7);
+        ret %tmp.8;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_111_31_111_77_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc"; @line = 82; @symbol_functiondef = [onTap,82,13,18]; @symbol_param<0> = [evt,82,19,22]; ]
-    function onTap(evt) {
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_82_24_92_4_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 83 8 ]
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc"; @line = 112; @symbol_functiondef = [onBack,112,13,19]; ]
+    function onBack() {
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_112_22_115_4_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 113 8 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_113_8_113_65_if_stmt:
         %tmp.1 = self;
-        symbol [ _markGesture %tmp.2 83 8 20 ];
-        %tmp.2 = getv function %tmp.1 :_markGesture;
-        invoke %tmp.1 %tmp.2();
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 84 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_84_8_84_55_if_stmt:
-        symbol [ _handled %tmp.4 84 12 20 ];
-        %tmp.4 = getv ? :_handled;
-        bf %tmp.4 @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_84_8_84_55_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_84_8_84_55_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_84_22_84_55_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 84 24 ]
-        %tmp.5 = false;
-        symbol [ _handled ? 84 24 32 ];
-        putv self :_handled %tmp.5;
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 84 42 ]
-        %tmp.6 = true;
-        ret %tmp.6;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_84_22_84_55_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_84_8_84_55_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_84_8_84_55_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 85 8 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_82_24_92_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_82_24_92_4_stop" ]
-        %now.1 = local;
-        symbol [ now %now.1 85 12 15 ];
-        symbol [ System %tmp.7 85 18 24 ];
-        %tmp.7 = getm $.Toybox.System;
-        symbol [ getTimer %tmp.8 85 25 33 ];
-        %tmp.8 = getv function %tmp.7 :getTimer;
-        %tmp.9 = invoke %tmp.7 %tmp.8();
-        lputv %now.1 %tmp.9;
-        symbol [ now %now.1 85 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 86 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_86_8_86_76_if_stmt:
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_86_12_86_56_begin:
-        symbol [ _lastTouchMs %tmp.11 86 12 24 ];
-        %tmp.11 = getv ? :_lastTouchMs;
-        %tmp.12 = 0;
-        %tmp.13 = ne %tmp.11 %tmp.12;
-        bf %tmp.13 @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_86_8_86_76_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_86_33_86_56_true:
-        %tmp.14 = lgetv %now.1;
-        symbol [ now %tmp.14 86 34 37 ];
-        symbol [ _lastTouchMs %tmp.16 86 40 52 ];
-        %tmp.16 = getv ? :_lastTouchMs;
-        %tmp.17 = sub %tmp.14 %tmp.16;
-        %tmp.18 = 120;
-        %tmp.19 = lt %tmp.17 %tmp.18;
-        push %tmp.19;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_86_33_86_56_end:
-        %tmp.20 = phi [%tmp.13 @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_86_12_86_56_begin] [%tmp.19 @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_86_33_86_56_true] [%tmp.20 @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_86_33_86_56_end];
-        bf %tmp.20 @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_86_8_86_76_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_86_8_86_76_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_86_61_86_76_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 86 63 ]
-        %tmp.21 = true;
-        ret %tmp.21;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_86_61_86_76_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_86_8_86_76_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_86_8_86_76_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 87 8 ]
-        %tmp.22 = lgetv %now.1;
-        symbol [ now %tmp.22 87 23 26 ];
-        symbol [ _lastTouchMs ? 87 8 20 ];
-        putv self :_lastTouchMs %tmp.22;
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 88 8 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_82_24_92_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_82_24_92_4_stop" ]
-        %xy.2 = local;
-        symbol [ xy %xy.2 88 12 14 ];
-        %tmp.23 = lgetv %evt;
-        symbol [ evt %tmp.23 88 17 20 ];
-        symbol [ getCoordinates %tmp.24 88 21 35 ];
-        %tmp.24 = getv function %tmp.23 :getCoordinates;
-        %tmp.25 = invoke %tmp.23 %tmp.24();
-        lputv %xy.2 %tmp.25;
-        symbol [ xy %xy.2 88 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 89 8 ]
-        symbol [ _v %tmp.27 89 8 10 ];
-        %tmp.27 = getv ? :_v;
-        symbol [ handleTap %tmp.28 89 11 20 ];
-        %tmp.28 = getv function %tmp.27 :handleTap;
-        %tmp.29 = lgetv %xy.2;
-        symbol [ xy %tmp.29 89 21 23 ];
-        %tmp.30 = 0;
-        %tmp.31 = agetv %tmp.29 %tmp.30;
-        %tmp.32 = lgetv %xy.2;
-        symbol [ xy %tmp.32 89 28 30 ];
-        %tmp.33 = 1;
-        %tmp.34 = agetv %tmp.32 %tmp.33;
-        invoke %tmp.27 %tmp.28(%tmp.31, %tmp.34);
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 90 8 ]
-        symbol [ WatchUi %tmp.35 90 8 15 ];
-        %tmp.35 = getm $.Toybox.WatchUi;
-        symbol [ requestUpdate %tmp.36 90 16 29 ];
-        %tmp.36 = getv function %tmp.35 :requestUpdate;
-        invoke %tmp.35 %tmp.36();
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 91 8 ]
-        %tmp.37 = true;
-        ret %tmp.37;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_82_24_92_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc"; @line = 94; @symbol_functiondef = [onDrag,94,13,19]; @symbol_param<0> = [evt,94,20,23]; ]
-    function onDrag(evt) {
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_94_25_120_4_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 95 8 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_94_25_120_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_94_25_120_4_stop" ]
-        %xy.1 = local;
-        symbol [ xy %xy.1 95 12 14 ];
-        %tmp.1 = lgetv %evt;
-        symbol [ evt %tmp.1 95 17 20 ];
-        symbol [ getCoordinates %tmp.2 95 21 35 ];
-        %tmp.2 = getv function %tmp.1 :getCoordinates;
+        symbol [ _isPhantomBack %tmp.2 113 12 26 ];
+        %tmp.2 = getv function %tmp.1 :_isPhantomBack;
         %tmp.3 = invoke %tmp.1 %tmp.2();
-        lputv %xy.1 %tmp.3;
-        symbol [ xy %xy.1 95 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 96 8 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_94_25_120_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_94_25_120_4_stop" ]
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_113_8_113_65_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_113_8_113_65_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_113_30_113_65_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 113 32 ]
+        %tmp.4 = 0;
+        symbol [ _lastGestureMs ? 113 32 46 ];
+        putv self :_lastGestureMs %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 113 52 ]
+        %tmp.5 = true;
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_113_30_113_65_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_113_8_113_65_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_113_8_113_65_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 114 8 ]
+        %tmp.6 = self;
+        symbol [ onKey %tmp.7 114 15 20 ];
+        %tmp.7 = getv function %tmp.6 :onKey;
+        %tmp.8 = self;
+        symbol [ _synthKey %tmp.9 114 21 30 ];
+        %tmp.9 = getv function %tmp.8 :_synthKey;
+        symbol [ WatchUi %tmp.10 114 31 38 ];
+        %tmp.10 = getm $.Toybox.WatchUi;
+        symbol [ KEY_ESC %tmp.11 114 39 46 ];
+        %tmp.11 = getv %tmp.10 :KEY_ESC;
+        %tmp.12 = invoke %tmp.8 %tmp.9(%tmp.11);
+        %tmp.13 = invoke %tmp.6 %tmp.7(%tmp.12);
+        ret %tmp.13;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_112_22_115_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc"; @line = 116; @symbol_functiondef = [onNextPage,116,13,23]; ]
+    function onNextPage() {
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_116_31_116_77_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 116 33 ]
+        %tmp.1 = self;
+        symbol [ onKey %tmp.2 116 40 45 ];
+        %tmp.2 = getv function %tmp.1 :onKey;
+        %tmp.3 = self;
+        symbol [ _synthKey %tmp.4 116 46 55 ];
+        %tmp.4 = getv function %tmp.3 :_synthKey;
+        symbol [ WatchUi %tmp.5 116 56 63 ];
+        %tmp.5 = getm $.Toybox.WatchUi;
+        symbol [ KEY_DOWN %tmp.6 116 64 72 ];
+        %tmp.6 = getv %tmp.5 :KEY_DOWN;
+        %tmp.7 = invoke %tmp.3 %tmp.4(%tmp.6);
+        %tmp.8 = invoke %tmp.1 %tmp.2(%tmp.7);
+        ret %tmp.8;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_116_31_116_77_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc"; @line = 117; @symbol_functiondef = [onPreviousPage,117,13,27]; ]
+    function onPreviousPage() {
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_117_31_117_77_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 117 33 ]
+        %tmp.1 = self;
+        symbol [ onKey %tmp.2 117 40 45 ];
+        %tmp.2 = getv function %tmp.1 :onKey;
+        %tmp.3 = self;
+        symbol [ _synthKey %tmp.4 117 46 55 ];
+        %tmp.4 = getv function %tmp.3 :_synthKey;
+        symbol [ WatchUi %tmp.5 117 56 63 ];
+        %tmp.5 = getm $.Toybox.WatchUi;
+        symbol [ KEY_UP %tmp.6 117 64 70 ];
+        %tmp.6 = getv %tmp.5 :KEY_UP;
+        %tmp.7 = invoke %tmp.3 %tmp.4(%tmp.6);
+        %tmp.8 = invoke %tmp.1 %tmp.2(%tmp.7);
+        ret %tmp.8;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_117_31_117_77_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc"; @line = 123; @symbol_functiondef = [onSwipe,123,13,20]; @symbol_param<0> = [evt,123,21,24]; ]
+    function onSwipe(evt) {
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_123_26_145_4_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 124 8 ]
+        %tmp.1 = self;
+        symbol [ _markGesture %tmp.2 124 8 20 ];
+        %tmp.2 = getv function %tmp.1 :_markGesture;
+        invoke %tmp.1 %tmp.2();
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 125 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_123_26_145_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_123_26_145_4_stop" ]
+        %ctrl.1 = local;
+        symbol [ ctrl %ctrl.1 125 12 16 ];
+        symbol [ view %tmp.4 125 19 23 ];
+        %tmp.4 = getv ? :view;
+        symbol [ ctrl %tmp.5 125 24 28 ];
+        %tmp.5 = getv %tmp.4 :ctrl;
+        lputv %ctrl.1 %tmp.5;
+        symbol [ ctrl %ctrl.1 125 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 126 8 ]
+        %tmp.6 = true;
+        symbol [ _swipeHandled ? 126 8 21 ];
+        putv self :_swipeHandled %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 128 8 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_128_8_136_8_if_stmt:
+        %tmp.7 = lgetv %ctrl.1;
+        symbol [ ctrl %tmp.7 128 12 16 ];
+        symbol [ state %tmp.8 128 17 22 ];
+        %tmp.8 = getv %tmp.7 :state;
+        symbol [ GS_PLAY %tmp.10 128 26 33 ];
+        %tmp.10 = getv ? :GS_PLAY;
+        %tmp.11 = eq %tmp.8 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_128_8_136_8_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_128_8_136_8_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_128_35_136_8_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 129 12 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_128_35_136_8_start" "_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_128_35_136_8_stop" ]
+        %d.2 = local;
+        symbol [ d %d.2 129 16 17 ];
+        %tmp.12 = lgetv %evt;
+        symbol [ evt %tmp.12 129 20 23 ];
+        symbol [ getDirection %tmp.13 129 24 36 ];
+        %tmp.13 = getv function %tmp.12 :getDirection;
+        %tmp.14 = invoke %tmp.12 %tmp.13();
+        lputv %d.2 %tmp.14;
+        symbol [ d %d.2 129 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 130 12 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_130_12_130_70_if_stmt:
+        %tmp.15 = lgetv %d.2;
+        symbol [ d %tmp.15 130 16 17 ];
+        symbol [ WatchUi %tmp.16 130 21 28 ];
+        %tmp.16 = getm $.Toybox.WatchUi;
+        symbol [ SWIPE_UP %tmp.17 130 29 37 ];
+        %tmp.17 = getv %tmp.16 :SWIPE_UP;
+        %tmp.18 = eq %tmp.15 %tmp.17;
+        bf %tmp.18 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_130_12_130_70_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_130_12_130_70_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_130_42_130_70_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 130 44 ]
+        %tmp.19 = lgetv %ctrl.1;
+        symbol [ ctrl %tmp.19 130 44 48 ];
+        symbol [ moveCursorVert %tmp.20 130 49 63 ];
+        %tmp.20 = getv function %tmp.19 :moveCursorVert;
+        %tmp.21 = -1;
+        invoke %tmp.19 %tmp.20(%tmp.21);
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_130_42_130_70_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_130_12_130_70_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_130_12_130_70_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 131 12 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_131_12_131_70_if_stmt:
+        %tmp.22 = lgetv %d.2;
+        symbol [ d %tmp.22 131 16 17 ];
+        symbol [ WatchUi %tmp.23 131 21 28 ];
+        %tmp.23 = getm $.Toybox.WatchUi;
+        symbol [ SWIPE_DOWN %tmp.24 131 29 39 ];
+        %tmp.24 = getv %tmp.23 :SWIPE_DOWN;
+        %tmp.25 = eq %tmp.22 %tmp.24;
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_131_12_131_70_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_131_12_131_70_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_131_42_131_70_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 131 44 ]
+        %tmp.26 = lgetv %ctrl.1;
+        symbol [ ctrl %tmp.26 131 44 48 ];
+        symbol [ moveCursorVert %tmp.27 131 49 63 ];
+        %tmp.27 = getv function %tmp.26 :moveCursorVert;
+        %tmp.28 = 1;
+        invoke %tmp.26 %tmp.27(%tmp.28);
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_131_42_131_70_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_131_12_131_70_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_131_12_131_70_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 132 12 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_132_12_132_70_if_stmt:
+        %tmp.29 = lgetv %d.2;
+        symbol [ d %tmp.29 132 16 17 ];
+        symbol [ WatchUi %tmp.30 132 21 28 ];
+        %tmp.30 = getm $.Toybox.WatchUi;
+        symbol [ SWIPE_LEFT %tmp.31 132 29 39 ];
+        %tmp.31 = getv %tmp.30 :SWIPE_LEFT;
+        %tmp.32 = eq %tmp.29 %tmp.31;
+        bf %tmp.32 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_132_12_132_70_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_132_12_132_70_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_132_42_132_70_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 132 44 ]
+        %tmp.33 = lgetv %ctrl.1;
+        symbol [ ctrl %tmp.33 132 44 48 ];
+        symbol [ moveCursorHoriz %tmp.34 132 49 64 ];
+        %tmp.34 = getv function %tmp.33 :moveCursorHoriz;
+        %tmp.35 = -1;
+        invoke %tmp.33 %tmp.34(%tmp.35);
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_132_42_132_70_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_132_12_132_70_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_132_12_132_70_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 133 12 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_133_12_133_70_if_stmt:
+        %tmp.36 = lgetv %d.2;
+        symbol [ d %tmp.36 133 16 17 ];
+        symbol [ WatchUi %tmp.37 133 21 28 ];
+        %tmp.37 = getm $.Toybox.WatchUi;
+        symbol [ SWIPE_RIGHT %tmp.38 133 29 40 ];
+        %tmp.38 = getv %tmp.37 :SWIPE_RIGHT;
+        %tmp.39 = eq %tmp.36 %tmp.38;
+        bf %tmp.39 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_133_12_133_70_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_133_12_133_70_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_133_42_133_70_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 133 44 ]
+        %tmp.40 = lgetv %ctrl.1;
+        symbol [ ctrl %tmp.40 133 44 48 ];
+        symbol [ moveCursorHoriz %tmp.41 133 49 64 ];
+        %tmp.41 = getv function %tmp.40 :moveCursorHoriz;
+        %tmp.42 = 1;
+        invoke %tmp.40 %tmp.41(%tmp.42);
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_133_42_133_70_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_133_12_133_70_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_133_12_133_70_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 134 12 ]
+        %tmp.43 = self;
+        symbol [ _refresh %tmp.44 134 12 20 ];
+        %tmp.44 = getv function %tmp.43 :_refresh;
+        invoke %tmp.43 %tmp.44();
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 135 12 ]
+        %tmp.45 = true;
+        ret %tmp.45;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_128_35_136_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_128_8_136_8_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_128_8_136_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 137 8 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_137_8_143_8_if_stmt:
+        %tmp.46 = lgetv %ctrl.1;
+        symbol [ ctrl %tmp.46 137 12 16 ];
+        symbol [ state %tmp.47 137 17 22 ];
+        %tmp.47 = getv %tmp.46 :state;
+        symbol [ GS_MENU %tmp.49 137 26 33 ];
+        %tmp.49 = getv ? :GS_MENU;
+        %tmp.50 = eq %tmp.47 %tmp.49;
+        bf %tmp.50 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_137_8_143_8_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_137_8_143_8_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_137_35_143_8_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 138 12 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_137_35_143_8_start" "_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_137_35_143_8_stop" ]
+        %d.3 = local;
+        symbol [ d %d.3 138 16 17 ];
+        %tmp.51 = lgetv %evt;
+        symbol [ evt %tmp.51 138 20 23 ];
+        symbol [ getDirection %tmp.52 138 24 36 ];
+        %tmp.52 = getv function %tmp.51 :getDirection;
+        %tmp.53 = invoke %tmp.51 %tmp.52();
+        lputv %d.3 %tmp.53;
+        symbol [ d %d.3 138 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 139 12 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_139_12_139_110_if_stmt:
+        %tmp.54 = lgetv %d.3;
+        symbol [ d %tmp.54 139 16 17 ];
+        symbol [ WatchUi %tmp.55 139 21 28 ];
+        %tmp.55 = getm $.Toybox.WatchUi;
+        symbol [ SWIPE_UP %tmp.56 139 29 37 ];
+        %tmp.56 = getv %tmp.55 :SWIPE_UP;
+        %tmp.57 = eq %tmp.54 %tmp.56;
+        bf %tmp.57 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_139_12_139_110_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_139_12_139_110_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_139_41_139_110_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 139 43 ]
+        %tmp.58 = lgetv %ctrl.1;
+        symbol [ ctrl %tmp.58 139 43 47 ];
+        %tmp.59 = lgetv %ctrl.1;
+        symbol [ ctrl %tmp.59 139 62 66 ];
+        symbol [ menuCursor %tmp.60 139 67 77 ];
+        %tmp.60 = getv %tmp.59 :menuCursor;
+        symbol [ MENU_ITEMS %tmp.62 139 80 90 ];
+        %tmp.62 = getv ? :MENU_ITEMS;
+        %tmp.63 = add %tmp.60 %tmp.62;
+        %tmp.64 = 1;
+        %tmp.65 = sub %tmp.63 %tmp.64;
+        symbol [ MENU_ITEMS %tmp.67 139 98 108 ];
+        %tmp.67 = getv ? :MENU_ITEMS;
+        %tmp.68 = mod %tmp.65 %tmp.67;
+        symbol [ menuCursor ? 139 48 58 ];
+        putv %tmp.58 :menuCursor %tmp.68;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_139_41_139_110_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_139_12_139_110_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_139_12_139_110_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 140 12 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_140_12_140_110_if_stmt:
+        %tmp.69 = lgetv %d.3;
+        symbol [ d %tmp.69 140 16 17 ];
+        symbol [ WatchUi %tmp.70 140 21 28 ];
+        %tmp.70 = getm $.Toybox.WatchUi;
+        symbol [ SWIPE_DOWN %tmp.71 140 29 39 ];
+        %tmp.71 = getv %tmp.70 :SWIPE_DOWN;
+        %tmp.72 = eq %tmp.69 %tmp.71;
+        bf %tmp.72 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_140_12_140_110_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_140_12_140_110_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_140_41_140_110_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 140 43 ]
+        %tmp.73 = lgetv %ctrl.1;
+        symbol [ ctrl %tmp.73 140 43 47 ];
+        %tmp.74 = lgetv %ctrl.1;
+        symbol [ ctrl %tmp.74 140 62 66 ];
+        symbol [ menuCursor %tmp.75 140 67 77 ];
+        %tmp.75 = getv %tmp.74 :menuCursor;
+        %tmp.76 = 1;
+        %tmp.77 = add %tmp.75 %tmp.76;
+        symbol [ MENU_ITEMS %tmp.79 140 85 95 ];
+        %tmp.79 = getv ? :MENU_ITEMS;
+        %tmp.80 = mod %tmp.77 %tmp.79;
+        symbol [ menuCursor ? 140 48 58 ];
+        putv %tmp.73 :menuCursor %tmp.80;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_140_41_140_110_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_140_12_140_110_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_140_12_140_110_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 141 12 ]
+        %tmp.81 = self;
+        symbol [ _refresh %tmp.82 141 12 20 ];
+        %tmp.82 = getv function %tmp.81 :_refresh;
+        invoke %tmp.81 %tmp.82();
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 142 12 ]
+        %tmp.83 = true;
+        ret %tmp.83;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_137_35_143_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_137_8_143_8_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_137_8_143_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 144 8 ]
+        %tmp.84 = false;
+        ret %tmp.84;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_123_26_145_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc"; @line = 150; @symbol_functiondef = [onTap,150,13,18]; @symbol_param<0> = [evt,150,19,22]; ]
+    function onTap(evt) {
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_150_24_156_4_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 151 8 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_151_8_151_41_if_stmt:
+        %tmp.1 = lgetv %evt;
+        symbol [ evt %tmp.1 151 12 15 ];
+        %tmp.2 = null;
+        %tmp.3 = eq %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_151_8_151_41_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_151_8_151_41_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_151_25_151_41_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 151 27 ]
+        %tmp.4 = false;
+        ret %tmp.4;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_151_25_151_41_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_151_8_151_41_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_151_8_151_41_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 152 8 ]
+        %tmp.5 = self;
+        symbol [ _markGesture %tmp.6 152 8 20 ];
+        %tmp.6 = getv function %tmp.5 :_markGesture;
+        invoke %tmp.5 %tmp.6();
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 153 8 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_153_8_153_65_if_stmt:
+        symbol [ _swipeHandled %tmp.8 153 12 25 ];
+        %tmp.8 = getv ? :_swipeHandled;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_153_8_153_65_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_153_8_153_65_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_153_27_153_65_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 153 29 ]
+        %tmp.9 = false;
+        symbol [ _swipeHandled ? 153 29 42 ];
+        putv self :_swipeHandled %tmp.9;
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 153 52 ]
+        %tmp.10 = true;
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_153_27_153_65_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_153_8_153_65_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_153_8_153_65_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 154 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_150_24_156_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_150_24_156_4_stop" ]
+        %xy.1 = local;
+        symbol [ xy %xy.1 154 12 14 ];
+        %tmp.11 = lgetv %evt;
+        symbol [ evt %tmp.11 154 17 20 ];
+        symbol [ getCoordinates %tmp.12 154 21 35 ];
+        %tmp.12 = getv function %tmp.11 :getCoordinates;
+        %tmp.13 = invoke %tmp.11 %tmp.12();
+        lputv %xy.1 %tmp.13;
+        symbol [ xy %xy.1 154 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 155 8 ]
+        %tmp.14 = self;
+        symbol [ _routeTap %tmp.15 155 15 24 ];
+        %tmp.15 = getv function %tmp.14 :_routeTap;
+        %tmp.16 = lgetv %xy.1;
+        symbol [ xy %tmp.16 155 25 27 ];
+        %tmp.17 = 0;
+        %tmp.18 = agetv %tmp.16 %tmp.17;
+        %tmp.19 = lgetv %xy.1;
+        symbol [ xy %tmp.19 155 32 34 ];
+        %tmp.20 = 1;
+        %tmp.21 = agetv %tmp.19 %tmp.20;
+        %tmp.22 = invoke %tmp.14 %tmp.15(%tmp.18, %tmp.21);
+        ret %tmp.22;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_150_24_156_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc"; @line = 163; @symbol_functiondef = [onDrag,163,13,19]; @symbol_param<0> = [evt,163,20,23]; ]
+    function onDrag(evt) {
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_163_25_190_4_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 164 8 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_164_8_164_41_if_stmt:
+        %tmp.1 = lgetv %evt;
+        symbol [ evt %tmp.1 164 12 15 ];
+        %tmp.2 = null;
+        %tmp.3 = eq %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_164_8_164_41_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_164_8_164_41_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_164_25_164_41_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 164 27 ]
+        %tmp.4 = false;
+        ret %tmp.4;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_164_25_164_41_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_164_8_164_41_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_164_8_164_41_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 165 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_163_25_190_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_163_25_190_4_stop" ]
+        %xy.1 = local;
+        symbol [ xy %xy.1 165 12 14 ];
+        %tmp.5 = lgetv %evt;
+        symbol [ evt %tmp.5 165 17 20 ];
+        symbol [ getCoordinates %tmp.6 165 21 35 ];
+        %tmp.6 = getv function %tmp.5 :getCoordinates;
+        %tmp.7 = invoke %tmp.5 %tmp.6();
+        lputv %xy.1 %tmp.7;
+        symbol [ xy %xy.1 165 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 166 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_163_25_190_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_163_25_190_4_stop" ]
         %t.2 = local;
-        symbol [ t %t.2 96 12 13 ];
-        %tmp.4 = lgetv %evt;
-        symbol [ evt %tmp.4 96 17 20 ];
-        symbol [ getType %tmp.5 96 21 28 ];
-        %tmp.5 = getv function %tmp.4 :getType;
-        %tmp.6 = invoke %tmp.4 %tmp.5();
-        lputv %t.2 %tmp.6;
-        symbol [ t %t.2 96 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 98 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_98_8_104_8_if_stmt:
-        %tmp.7 = lgetv %t.2;
-        symbol [ t %tmp.7 98 12 13 ];
-        symbol [ WatchUi %tmp.8 98 17 24 ];
-        %tmp.8 = getm $.Toybox.WatchUi;
-        symbol [ DRAG_TYPE_START %tmp.9 98 25 40 ];
-        %tmp.9 = getv %tmp.8 :DRAG_TYPE_START;
-        %tmp.10 = eq %tmp.7 %tmp.9;
-        bf %tmp.10 @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_98_8_104_8_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_98_8_104_8_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_98_42_104_8_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 99 12 ]
-        %tmp.11 = lgetv %xy.1;
-        symbol [ xy %tmp.11 99 26 28 ];
-        %tmp.12 = 0;
-        %tmp.13 = agetv %tmp.11 %tmp.12;
-        symbol [ _dx0 ? 99 12 16 ];
-        putv self :_dx0 %tmp.13;
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 100 12 ]
-        %tmp.14 = lgetv %xy.1;
-        symbol [ xy %tmp.14 100 26 28 ];
-        %tmp.15 = 1;
-        %tmp.16 = agetv %tmp.14 %tmp.15;
-        symbol [ _dy0 ? 100 12 16 ];
-        putv self :_dy0 %tmp.16;
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 101 12 ]
-        %tmp.17 = true;
-        symbol [ _dragActive ? 101 12 23 ];
-        putv self :_dragActive %tmp.17;
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 102 12 ]
-        %tmp.18 = false;
-        symbol [ _handled ? 102 12 20 ];
-        putv self :_handled %tmp.18;
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 103 12 ]
-        %tmp.19 = true;
-        ret %tmp.19;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_98_42_104_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_98_8_104_8_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_98_8_104_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 105 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_105_8_118_8_if_stmt:
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_105_12_105_43_begin:
-        %tmp.20 = lgetv %t.2;
-        symbol [ t %tmp.20 105 12 13 ];
-        symbol [ WatchUi %tmp.21 105 17 24 ];
-        %tmp.21 = getm $.Toybox.WatchUi;
-        symbol [ DRAG_TYPE_STOP %tmp.22 105 25 39 ];
-        %tmp.22 = getv %tmp.21 :DRAG_TYPE_STOP;
-        %tmp.23 = eq %tmp.20 %tmp.22;
-        bf %tmp.23 @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_105_8_118_8_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_105_43_105_43_true:
-        symbol [ _dragActive %tmp.25 105 43 54 ];
-        %tmp.25 = getv ? :_dragActive;
-        push %tmp.25;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_105_43_105_43_end:
-        %tmp.26 = phi [%tmp.23 @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_105_12_105_43_begin] [%tmp.25 @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_105_43_105_43_true] [%tmp.26 @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_105_43_105_43_end];
-        bf %tmp.26 @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_105_8_118_8_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_105_8_118_8_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_105_56_118_8_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 106 12 ]
-        %tmp.27 = false;
-        symbol [ _dragActive ? 106 12 23 ];
-        putv self :_dragActive %tmp.27;
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 107 12 ]
-        %tmp.28 = true;
-        symbol [ _handled ? 107 12 20 ];
-        putv self :_handled %tmp.28;
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 108 12 ]
-        symbol [ System %tmp.29 108 27 33 ];
-        %tmp.29 = getm $.Toybox.System;
-        symbol [ getTimer %tmp.30 108 34 42 ];
-        %tmp.30 = getv function %tmp.29 :getTimer;
-        %tmp.31 = invoke %tmp.29 %tmp.30();
-        symbol [ _lastTouchMs ? 108 12 24 ];
-        putv self :_lastTouchMs %tmp.31;
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 109 12 ]
-        %tmp.32 = self;
-        symbol [ _markGesture %tmp.33 109 12 24 ];
-        %tmp.33 = getv function %tmp.32 :_markGesture;
-        invoke %tmp.32 %tmp.33();
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 110 12 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_105_56_118_8_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_105_56_118_8_stop" ]
+        symbol [ t %t.2 166 12 13 ];
+        %tmp.8 = lgetv %evt;
+        symbol [ evt %tmp.8 166 17 20 ];
+        symbol [ getType %tmp.9 166 21 28 ];
+        %tmp.9 = getv function %tmp.8 :getType;
+        %tmp.10 = invoke %tmp.8 %tmp.9();
+        lputv %t.2 %tmp.10;
+        symbol [ t %t.2 166 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 168 8 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_168_8_188_8_if_stmt:
+        %tmp.11 = lgetv %t.2;
+        symbol [ t %tmp.11 168 12 13 ];
+        symbol [ WatchUi %tmp.12 168 17 24 ];
+        %tmp.12 = getm $.Toybox.WatchUi;
+        symbol [ DRAG_TYPE_START %tmp.13 168 25 40 ];
+        %tmp.13 = getv %tmp.12 :DRAG_TYPE_START;
+        %tmp.14 = eq %tmp.11 %tmp.13;
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_168_8_188_8_if_false;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_168_8_188_8_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_168_42_173_8_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 169 12 ]
+        %tmp.15 = lgetv %xy.1;
+        symbol [ xy %tmp.15 169 28 30 ];
+        %tmp.16 = 0;
+        %tmp.17 = agetv %tmp.15 %tmp.16;
+        symbol [ _dragStartX ? 169 12 23 ];
+        putv self :_dragStartX %tmp.17;
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 170 12 ]
+        %tmp.18 = lgetv %xy.1;
+        symbol [ xy %tmp.18 170 28 30 ];
+        %tmp.19 = 1;
+        %tmp.20 = agetv %tmp.18 %tmp.19;
+        symbol [ _dragStartY ? 170 12 23 ];
+        putv self :_dragStartY %tmp.20;
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 171 12 ]
+        %tmp.21 = true;
+        symbol [ _dragActive ? 171 12 23 ];
+        putv self :_dragActive %tmp.21;
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 172 12 ]
+        %tmp.22 = false;
+        symbol [ _swipeHandled ? 172 12 25 ];
+        putv self :_swipeHandled %tmp.22;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_168_42_173_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_168_8_188_8_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_168_8_188_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 173 15 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_173_15_188_8_if_stmt:
+        %tmp.23 = lgetv %t.2;
+        symbol [ t %tmp.23 173 19 20 ];
+        symbol [ WatchUi %tmp.24 173 24 31 ];
+        %tmp.24 = getm $.Toybox.WatchUi;
+        symbol [ DRAG_TYPE_STOP %tmp.25 173 32 46 ];
+        %tmp.25 = getv %tmp.24 :DRAG_TYPE_STOP;
+        %tmp.26 = eq %tmp.23 %tmp.25;
+        bf %tmp.26 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_173_15_188_8_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_173_15_188_8_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_173_48_188_8_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 174 12 ]
+        %tmp.27 = self;
+        symbol [ _markGesture %tmp.28 174 12 24 ];
+        %tmp.28 = getv function %tmp.27 :_markGesture;
+        invoke %tmp.27 %tmp.28();
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 175 12 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_175_12_186_12_if_stmt:
+        symbol [ _dragActive %tmp.30 175 16 27 ];
+        %tmp.30 = getv ? :_dragActive;
+        bf %tmp.30 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_175_12_186_12_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_175_12_186_12_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_175_29_186_12_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 176 16 ]
+        %tmp.31 = false;
+        symbol [ _dragActive ? 176 16 27 ];
+        putv self :_dragActive %tmp.31;
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 177 16 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_177_16_185_16_if_stmt:
+        symbol [ _swipeHandled %tmp.33 177 21 34 ];
+        %tmp.33 = getv ? :_swipeHandled;
+        %tmp.34 = not %tmp.33;
+        bf %tmp.34 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_177_16_185_16_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_177_16_185_16_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_177_36_185_16_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 178 20 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_177_36_185_16_start" "_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_177_36_185_16_stop" ]
         %dx.3 = local;
-        symbol [ dx %dx.3 110 16 18 ];
-        %tmp.34 = lgetv %xy.1;
-        symbol [ xy %tmp.34 110 22 24 ];
-        %tmp.35 = 0;
-        %tmp.36 = agetv %tmp.34 %tmp.35;
-        symbol [ _dx0 %tmp.38 110 30 34 ];
-        %tmp.38 = getv ? :_dx0;
-        %tmp.39 = sub %tmp.36 %tmp.38;
-        lputv %dx.3 %tmp.39;
-        symbol [ dx %dx.3 110 16 18 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 111 12 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_105_56_118_8_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_105_56_118_8_stop" ]
+        symbol [ dx %dx.3 178 24 26 ];
+        %tmp.35 = lgetv %xy.1;
+        symbol [ xy %tmp.35 178 29 31 ];
+        %tmp.36 = 0;
+        %tmp.37 = agetv %tmp.35 %tmp.36;
+        symbol [ _dragStartX %tmp.39 178 37 48 ];
+        %tmp.39 = getv ? :_dragStartX;
+        %tmp.40 = sub %tmp.37 %tmp.39;
+        lputv %dx.3 %tmp.40;
+        symbol [ dx %dx.3 178 24 26 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 179 20 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_177_36_185_16_start" "_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_177_36_185_16_stop" ]
         %dy.4 = local;
-        symbol [ dy %dy.4 111 16 18 ];
-        %tmp.40 = lgetv %xy.1;
-        symbol [ xy %tmp.40 111 22 24 ];
-        %tmp.41 = 1;
-        %tmp.42 = agetv %tmp.40 %tmp.41;
-        symbol [ _dy0 %tmp.44 111 30 34 ];
-        %tmp.44 = getv ? :_dy0;
-        %tmp.45 = sub %tmp.42 %tmp.44;
-        lputv %dy.4 %tmp.45;
-        symbol [ dy %dy.4 111 16 18 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 112 12 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_105_56_118_8_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_105_56_118_8_stop" ]
-        %adx.5 = local;
-        symbol [ adx %adx.5 112 16 19 ];
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_112_22_112_39_begin:
-        %tmp.46 = lgetv %dx.3;
-        symbol [ dx %tmp.46 112 23 25 ];
-        %tmp.47 = 0;
-        %tmp.48 = lt %tmp.46 %tmp.47;
-        bf %tmp.48 @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_112_22_112_39_else_false;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_112_22_112_39_true:
-        %tmp.49 = lgetv %dx.3;
-        symbol [ dx %tmp.49 112 34 36 ];
-        %tmp.50 = sub 0 %tmp.49;
-        push %tmp.50;
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_112_22_112_39_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_112_22_112_39_else_false:
-        %tmp.51 = lgetv %dx.3;
-        symbol [ dx %tmp.51 112 39 41 ];
-        push %tmp.51;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_112_22_112_39_end:
-        %tmp.52 = phi [%tmp.48 @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_112_22_112_39_begin] [%tmp.50 @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_112_22_112_39_true] [%tmp.51 @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_112_22_112_39_else_false] [%tmp.52 @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_112_22_112_39_end];
-        lputv %adx.5 %tmp.52;
-        symbol [ adx %adx.5 112 16 19 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 113 12 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_105_56_118_8_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_105_56_118_8_stop" ]
-        %ady.6 = local;
-        symbol [ ady %ady.6 113 16 19 ];
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_113_22_113_39_begin:
-        %tmp.53 = lgetv %dy.4;
-        symbol [ dy %tmp.53 113 23 25 ];
-        %tmp.54 = 0;
-        %tmp.55 = lt %tmp.53 %tmp.54;
-        bf %tmp.55 @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_113_22_113_39_else_false;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_113_22_113_39_true:
-        %tmp.56 = lgetv %dy.4;
-        symbol [ dy %tmp.56 113 34 36 ];
-        %tmp.57 = sub 0 %tmp.56;
-        push %tmp.57;
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_113_22_113_39_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_113_22_113_39_else_false:
-        %tmp.58 = lgetv %dy.4;
-        symbol [ dy %tmp.58 113 39 41 ];
-        push %tmp.58;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_113_22_113_39_end:
-        %tmp.59 = phi [%tmp.55 @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_113_22_113_39_begin] [%tmp.57 @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_113_22_113_39_true] [%tmp.58 @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_113_22_113_39_else_false] [%tmp.59 @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_113_22_113_39_end];
-        lputv %ady.6 %tmp.59;
-        symbol [ ady %ady.6 113 16 19 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 114 12 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_114_12_117_12_if_stmt:
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_114_16_114_34_begin:
-        %tmp.60 = lgetv %adx.5;
-        symbol [ adx %tmp.60 114 16 19 ];
-        %tmp.61 = 40;
+        symbol [ dy %dy.4 179 24 26 ];
+        %tmp.41 = lgetv %xy.1;
+        symbol [ xy %tmp.41 179 29 31 ];
+        %tmp.42 = 1;
+        %tmp.43 = agetv %tmp.41 %tmp.42;
+        symbol [ _dragStartY %tmp.45 179 37 48 ];
+        %tmp.45 = getv ? :_dragStartY;
+        %tmp.46 = sub %tmp.43 %tmp.45;
+        lputv %dy.4 %tmp.46;
+        symbol [ dy %dy.4 179 24 26 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 180 20 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_180_20_180_44_if_stmt:
+        %tmp.47 = lgetv %dx.3;
+        symbol [ dx %tmp.47 180 24 26 ];
+        %tmp.48 = 0;
+        %tmp.49 = lt %tmp.47 %tmp.48;
+        bf %tmp.49 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_180_20_180_44_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_180_20_180_44_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_180_32_180_44_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 180 34 ]
+        %tmp.50 = lgetv %dx.3;
+        symbol [ dx %tmp.50 180 40 42 ];
+        %tmp.51 = sub 0 %tmp.50;
+        lputv %dx.3 %tmp.51;
+        symbol [ dx %dx.3 180 34 36 ];
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_180_32_180_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_180_20_180_44_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_180_20_180_44_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 181 20 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_181_20_181_44_if_stmt:
+        %tmp.52 = lgetv %dy.4;
+        symbol [ dy %tmp.52 181 24 26 ];
+        %tmp.53 = 0;
+        %tmp.54 = lt %tmp.52 %tmp.53;
+        bf %tmp.54 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_181_20_181_44_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_181_20_181_44_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_181_32_181_44_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 181 34 ]
+        %tmp.55 = lgetv %dy.4;
+        symbol [ dy %tmp.55 181 40 42 ];
+        %tmp.56 = sub 0 %tmp.55;
+        lputv %dy.4 %tmp.56;
+        symbol [ dy %dy.4 181 34 36 ];
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_181_32_181_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_181_20_181_44_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_181_20_181_44_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 182 20 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_182_20_184_20_if_stmt:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_182_24_182_40_begin:
+        %tmp.57 = lgetv %dx.3;
+        symbol [ dx %tmp.57 182 24 26 ];
+        %tmp.58 = 18;
+        %tmp.59 = lt %tmp.57 %tmp.58;
+        bf %tmp.59 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_182_20_184_20_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_182_35_182_40_true:
+        %tmp.60 = lgetv %dy.4;
+        symbol [ dy %tmp.60 182 35 37 ];
+        %tmp.61 = 18;
         %tmp.62 = lt %tmp.60 %tmp.61;
-        bf %tmp.62 @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_114_12_117_12_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_114_28_114_34_true:
-        %tmp.63 = lgetv %ady.6;
-        symbol [ ady %tmp.63 114 28 31 ];
-        %tmp.64 = 40;
-        %tmp.65 = lt %tmp.63 %tmp.64;
-        push %tmp.65;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_114_28_114_34_end:
-        %tmp.66 = phi [%tmp.62 @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_114_16_114_34_begin] [%tmp.65 @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_114_28_114_34_true] [%tmp.66 @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_114_28_114_34_end];
-        bf %tmp.66 @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_114_12_117_12_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_114_12_117_12_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_114_38_117_12_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 115 16 ]
-        symbol [ _v %tmp.68 115 16 18 ];
-        %tmp.68 = getv ? :_v;
-        symbol [ handleTap %tmp.69 115 19 28 ];
-        %tmp.69 = getv function %tmp.68 :handleTap;
-        %tmp.70 = lgetv %xy.1;
-        symbol [ xy %tmp.70 115 29 31 ];
-        %tmp.71 = 0;
-        %tmp.72 = agetv %tmp.70 %tmp.71;
-        %tmp.73 = lgetv %xy.1;
-        symbol [ xy %tmp.73 115 36 38 ];
-        %tmp.74 = 1;
-        %tmp.75 = agetv %tmp.73 %tmp.74;
-        invoke %tmp.68 %tmp.69(%tmp.72, %tmp.75);
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 116 16 ]
-        symbol [ WatchUi %tmp.76 116 16 23 ];
-        %tmp.76 = getm $.Toybox.WatchUi;
-        symbol [ requestUpdate %tmp.77 116 24 37 ];
-        %tmp.77 = getv function %tmp.76 :requestUpdate;
-        invoke %tmp.76 %tmp.77();
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_114_38_117_12_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_114_12_117_12_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_114_12_117_12_if_end:
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_105_56_118_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_105_8_118_8_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_105_8_118_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc" 119 8 ]
-        %tmp.78 = true;
-        ret %tmp.78;
-_Users_kkorolczuk_work_garmin_diceroyale_source_InputHandler_mc_94_25_120_4_stop:
+        push %tmp.62;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_182_35_182_40_end:
+        %tmp.63 = phi [%tmp.59 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_182_24_182_40_begin] [%tmp.62 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_182_35_182_40_true] [%tmp.63 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_182_35_182_40_end];
+        bf %tmp.63 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_182_20_184_20_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_182_20_184_20_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_182_44_184_20_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 183 24 ]
+        %tmp.64 = self;
+        symbol [ _routeTap %tmp.65 183 31 40 ];
+        %tmp.65 = getv function %tmp.64 :_routeTap;
+        %tmp.66 = lgetv %xy.1;
+        symbol [ xy %tmp.66 183 41 43 ];
+        %tmp.67 = 0;
+        %tmp.68 = agetv %tmp.66 %tmp.67;
+        %tmp.69 = lgetv %xy.1;
+        symbol [ xy %tmp.69 183 48 50 ];
+        %tmp.70 = 1;
+        %tmp.71 = agetv %tmp.69 %tmp.70;
+        %tmp.72 = invoke %tmp.64 %tmp.65(%tmp.68, %tmp.71);
+        ret %tmp.72;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_182_44_184_20_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_182_20_184_20_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_182_20_184_20_if_end:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_177_36_185_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_177_16_185_16_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_177_16_185_16_if_end:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_175_29_186_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_175_12_186_12_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_175_12_186_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 187 12 ]
+        %tmp.73 = false;
+        symbol [ _swipeHandled ? 187 12 25 ];
+        putv self :_swipeHandled %tmp.73;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_173_48_188_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_173_15_188_8_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_173_15_188_8_if_end:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_168_8_188_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 189 8 ]
+        %tmp.74 = true;
+        ret %tmp.74;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_163_25_190_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc"; @line = 199; @symbol_functiondef = [_routeTap,199,20,29]; @symbol_param<0> = [px,199,30,32]; @symbol_param<1> = [py,199,34,36]; ]
+    protected
+    function _routeTap(px, py) {
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_199_38_218_4_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 200 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_199_38_218_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_199_38_218_4_stop" ]
+        %now.1 = local;
+        symbol [ now %now.1 200 12 15 ];
+        symbol [ System %tmp.1 200 18 24 ];
+        %tmp.1 = getm $.Toybox.System;
+        symbol [ getTimer %tmp.2 200 25 33 ];
+        %tmp.2 = getv function %tmp.1 :getTimer;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        lputv %now.1 %tmp.3;
+        symbol [ now %now.1 200 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 201 8 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_201_8_201_68_if_stmt:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_201_12_201_48_begin:
+        symbol [ _tapGuard %tmp.5 201 12 21 ];
+        %tmp.5 = getv ? :_tapGuard;
+        %tmp.6 = 0;
+        %tmp.7 = ne %tmp.5 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_201_8_201_68_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_201_30_201_48_true:
+        %tmp.8 = lgetv %now.1;
+        symbol [ now %tmp.8 201 30 33 ];
+        symbol [ _tapGuard %tmp.10 201 36 45 ];
+        %tmp.10 = getv ? :_tapGuard;
+        %tmp.11 = sub %tmp.8 %tmp.10;
+        %tmp.12 = 200;
+        %tmp.13 = lt %tmp.11 %tmp.12;
+        push %tmp.13;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_201_30_201_48_end:
+        %tmp.14 = phi [%tmp.7 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_201_12_201_48_begin] [%tmp.13 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_201_30_201_48_true] [%tmp.14 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_201_30_201_48_end];
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_201_8_201_68_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_201_8_201_68_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_201_53_201_68_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 201 55 ]
+        %tmp.15 = true;
+        ret %tmp.15;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_201_53_201_68_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_201_8_201_68_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_201_8_201_68_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 202 8 ]
+        %tmp.16 = lgetv %now.1;
+        symbol [ now %tmp.16 202 20 23 ];
+        symbol [ _tapGuard ? 202 8 17 ];
+        putv self :_tapGuard %tmp.16;
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 204 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_199_38_218_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_199_38_218_4_stop" ]
+        %ctrl.2 = local;
+        symbol [ ctrl %ctrl.2 204 12 16 ];
+        symbol [ view %tmp.18 204 19 23 ];
+        %tmp.18 = getv ? :view;
+        symbol [ ctrl %tmp.19 204 24 28 ];
+        %tmp.19 = getv %tmp.18 :ctrl;
+        lputv %ctrl.2 %tmp.19;
+        symbol [ ctrl %ctrl.2 204 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 205 8 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_205_8_209_8_if_stmt:
+        %tmp.20 = lgetv %ctrl.2;
+        symbol [ ctrl %tmp.20 205 12 16 ];
+        symbol [ state %tmp.21 205 17 22 ];
+        %tmp.21 = getv %tmp.20 :state;
+        symbol [ GS_PLAY %tmp.23 205 26 33 ];
+        %tmp.23 = getv ? :GS_PLAY;
+        %tmp.24 = eq %tmp.21 %tmp.23;
+        bf %tmp.24 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_205_8_209_8_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_205_8_209_8_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_205_35_209_8_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 206 12 ]
+        %tmp.25 = lgetv %ctrl.2;
+        symbol [ ctrl %tmp.25 206 12 16 ];
+        symbol [ guessCurrent %tmp.26 206 17 29 ];
+        %tmp.26 = getv function %tmp.25 :guessCurrent;
+        invoke %tmp.25 %tmp.26();
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 207 12 ]
+        %tmp.27 = self;
+        symbol [ _refresh %tmp.28 207 12 20 ];
+        %tmp.28 = getv function %tmp.27 :_refresh;
+        invoke %tmp.27 %tmp.28();
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 208 12 ]
+        %tmp.29 = true;
+        ret %tmp.29;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_205_35_209_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_205_8_209_8_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_205_8_209_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 210 8 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_210_8_214_8_if_stmt:
+        %tmp.30 = lgetv %ctrl.2;
+        symbol [ ctrl %tmp.30 210 12 16 ];
+        symbol [ state %tmp.31 210 17 22 ];
+        %tmp.31 = getv %tmp.30 :state;
+        symbol [ GS_MENU %tmp.33 210 26 33 ];
+        %tmp.33 = getv ? :GS_MENU;
+        %tmp.34 = eq %tmp.31 %tmp.33;
+        bf %tmp.34 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_210_8_214_8_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_210_8_214_8_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_210_35_214_8_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 211 12 ]
+        %tmp.35 = self;
+        symbol [ _activateMenu %tmp.36 211 12 25 ];
+        %tmp.36 = getv function %tmp.35 :_activateMenu;
+        %tmp.37 = lgetv %ctrl.2;
+        symbol [ ctrl %tmp.37 211 26 30 ];
+        invoke %tmp.35 %tmp.36(%tmp.37);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 212 12 ]
+        %tmp.38 = self;
+        symbol [ _refresh %tmp.39 212 12 20 ];
+        %tmp.39 = getv function %tmp.38 :_refresh;
+        invoke %tmp.38 %tmp.39();
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 213 12 ]
+        %tmp.40 = true;
+        ret %tmp.40;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_210_35_214_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_210_8_214_8_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_210_8_214_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 215 8 ]
+        %tmp.41 = lgetv %ctrl.2;
+        symbol [ ctrl %tmp.41 215 8 12 ];
+        symbol [ gotoMenu %tmp.42 215 13 21 ];
+        %tmp.42 = getv function %tmp.41 :gotoMenu;
+        invoke %tmp.41 %tmp.42();
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 216 8 ]
+        %tmp.43 = self;
+        symbol [ _refresh %tmp.44 216 8 16 ];
+        %tmp.44 = getv function %tmp.43 :_refresh;
+        invoke %tmp.43 %tmp.44();
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 217 8 ]
+        %tmp.45 = true;
+        ret %tmp.45;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_199_38_218_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc"; @line = 221; @symbol_functiondef = [_activateMenu,221,20,33]; @symbol_param<0> = [ctrl,221,34,38]; ]
+    protected
+    function _activateMenu(ctrl) {
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_221_40_226_4_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 222 8 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_222_8_225_74_if_stmt:
+        %tmp.1 = lgetv %ctrl;
+        symbol [ ctrl %tmp.1 222 17 21 ];
+        symbol [ menuCursor %tmp.2 222 22 32 ];
+        %tmp.2 = getv %tmp.1 :menuCursor;
+        symbol [ MENU_CAT %tmp.4 222 36 44 ];
+        %tmp.4 = getv ? :MENU_CAT;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_222_8_225_74_if_false;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_222_8_225_74_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_222_48_222_74_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 222 50 ]
+        %tmp.6 = lgetv %ctrl;
+        symbol [ ctrl %tmp.6 222 50 54 ];
+        symbol [ cycleCategory %tmp.7 222 55 68 ];
+        %tmp.7 = getv function %tmp.6 :cycleCategory;
+        invoke %tmp.6 %tmp.7();
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_222_48_222_74_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_222_8_225_74_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_222_8_225_74_if_false:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 223 13 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_223_13_225_74_if_stmt:
+        %tmp.8 = lgetv %ctrl;
+        symbol [ ctrl %tmp.8 223 17 21 ];
+        symbol [ menuCursor %tmp.9 223 22 32 ];
+        %tmp.9 = getv %tmp.8 :menuCursor;
+        symbol [ MENU_DIFF %tmp.11 223 36 45 ];
+        %tmp.11 = getv ? :MENU_DIFF;
+        %tmp.12 = eq %tmp.9 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_223_13_225_74_if_false;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_223_13_225_74_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_223_48_223_74_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 223 50 ]
+        %tmp.13 = lgetv %ctrl;
+        symbol [ ctrl %tmp.13 223 50 54 ];
+        symbol [ cycleDifficulty %tmp.14 223 55 70 ];
+        %tmp.14 = getv function %tmp.13 :cycleDifficulty;
+        invoke %tmp.13 %tmp.14();
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_223_48_223_74_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_223_13_225_74_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_223_13_225_74_if_false:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 224 13 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_224_13_225_74_if_stmt:
+        %tmp.15 = lgetv %ctrl;
+        symbol [ ctrl %tmp.15 224 17 21 ];
+        symbol [ menuCursor %tmp.16 224 22 32 ];
+        %tmp.16 = getv %tmp.15 :menuCursor;
+        symbol [ MENU_START %tmp.18 224 36 46 ];
+        %tmp.18 = getv ? :MENU_START;
+        %tmp.19 = eq %tmp.16 %tmp.18;
+        bf %tmp.19 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_224_13_225_74_if_false;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_224_13_225_74_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_224_48_224_74_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 224 50 ]
+        %tmp.20 = lgetv %ctrl;
+        symbol [ ctrl %tmp.20 224 50 54 ];
+        symbol [ startGame %tmp.21 224 55 64 ];
+        %tmp.21 = getv function %tmp.20 :startGame;
+        invoke %tmp.20 %tmp.21();
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_224_48_224_74_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_224_13_225_74_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_224_13_225_74_if_false:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 225 13 ]
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_225_13_225_74_if_stmt:
+        %tmp.22 = lgetv %ctrl;
+        symbol [ ctrl %tmp.22 225 17 21 ];
+        symbol [ menuCursor %tmp.23 225 22 32 ];
+        %tmp.23 = getv %tmp.22 :menuCursor;
+        symbol [ MENU_LB %tmp.25 225 36 43 ];
+        %tmp.25 = getv ? :MENU_LB;
+        %tmp.26 = eq %tmp.23 %tmp.25;
+        bf %tmp.26 @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_225_13_225_74_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_225_13_225_74_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_225_48_225_74_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 225 50 ]
+        %tmp.27 = self;
+        symbol [ openLeaderboard %tmp.28 225 50 65 ];
+        %tmp.28 = getv function %tmp.27 :openLeaderboard;
+        %tmp.29 = lgetv %ctrl;
+        symbol [ ctrl %tmp.29 225 66 70 ];
+        invoke %tmp.27 %tmp.28(%tmp.29);
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_225_48_225_74_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_225_13_225_74_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_225_13_225_74_if_end:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_224_13_225_74_if_end:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_223_13_225_74_if_end:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_222_8_225_74_if_end:
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_221_40_226_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc"; @line = 228; @symbol_functiondef = [openLeaderboard,228,13,28]; @symbol_param<0> = [ctrl,228,29,33]; ]
+    function openLeaderboard(ctrl) {
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_228_35_232_4_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 229 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_228_35_232_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_228_35_232_4_stop" ]
+        %variant.1 = local;
+        symbol [ variant %variant.1 229 12 19 ];
+        %tmp.1 = lgetv %ctrl;
+        symbol [ ctrl %tmp.1 229 22 26 ];
+        symbol [ variant %tmp.2 229 27 34 ];
+        %tmp.2 = getv function %tmp.1 :variant;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        lputv %variant.1 %tmp.3;
+        symbol [ variant %variant.1 229 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 230 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_228_35_232_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_228_35_232_4_stop" ]
+        %v.2 = local;
+        symbol [ v %v.2 230 12 13 ];
+        symbol [ LbScoresView %tmp.7 230 20 32 ];
+        %tmp.7 = getv ? :LbScoresView;
+        symbol [ LB_GAME_ID %tmp.9 230 33 43 ];
+        %tmp.9 = getv ? :LB_GAME_ID;
+        %tmp.10 = lgetv %variant.1;
+        symbol [ variant %tmp.10 230 45 52 ];
+        %tmp.11 = "HANGMAN";
+        %tmp.4 = newc %tmp.7 (%tmp.9, %tmp.10, %tmp.11);
+        lputv %v.2 %tmp.4;
+        symbol [ v %v.2 230 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 231 8 ]
+        symbol [ WatchUi %tmp.12 231 8 15 ];
+        %tmp.12 = getm $.Toybox.WatchUi;
+        symbol [ pushView %tmp.13 231 16 24 ];
+        %tmp.13 = getv function %tmp.12 :pushView;
+        %tmp.14 = lgetv %v.2;
+        symbol [ v %tmp.14 231 25 26 ];
+        symbol [ LbScoresDelegate %tmp.18 231 32 48 ];
+        %tmp.18 = getv ? :LbScoresDelegate;
+        %tmp.19 = lgetv %v.2;
+        symbol [ v %tmp.19 231 49 50 ];
+        %tmp.15 = newc %tmp.18 (%tmp.19);
+        symbol [ WatchUi %tmp.20 231 53 60 ];
+        %tmp.20 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_LEFT %tmp.21 231 61 71 ];
+        %tmp.21 = getv %tmp.20 :SLIDE_LEFT;
+        invoke %tmp.12 %tmp.13(%tmp.14, %tmp.15, %tmp.21);
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_228_35_232_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc"; @line = 234; @symbol_functiondef = [_synthKey,234,20,29]; @symbol_param<0> = [code,234,30,34]; ]
+    protected
+    function _synthKey(code) {
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_234_36_234_69_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 234 38 ]
+        symbol [ SyntheticKey %tmp.4 234 49 61 ];
+        %tmp.4 = getv ? :SyntheticKey;
+        %tmp.5 = lgetv %code;
+        symbol [ code %tmp.5 234 62 66 ];
+        %tmp.1 = newc %tmp.4 (%tmp.5);
+        ret %tmp.1;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_234_36_234_69_stop:
     }
 }
-[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/InputHandler.mc"; @line = 25; ]
+[ @file = "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc"; @line = 238; @symbol_classdef = [SyntheticKey,238,6,18]; ]
+class SyntheticKey {
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc"; @line = 238; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc"; @line = 238; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc"; @line = 239; @position = 8; @symbol_vardef = [_k,239,8,10]; ]
+    var _k;
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc"; @line = 240; @symbol_functiondef = [initialize,240,13,23]; @symbol_param<0> = [k,240,24,25]; ]
+    function initialize(k) as Void {
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_240_27_240_37_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 240 29 ]
+        %tmp.1 = lgetv %k;
+        symbol [ k %tmp.1 240 34 35 ];
+        symbol [ _k ? 240 29 31 ];
+        putv self :_k %tmp.1;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_240_27_240_37_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc"; @line = 241; @symbol_functiondef = [getKey,241,13,19]; ]
+    function getKey() {
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_241_27_241_40_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc" 241 29 ]
+        symbol [ _k %tmp.2 241 36 38 ];
+        %tmp.2 = getv ? :_k;
+        ret %tmp.2;
+_Users_kkorolczuk_work_garmin_hangman_source_InputHandler_mc_241_27_241_40_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/hangman/source/InputHandler.mc"; @line = 31; ]
 <init> {
 }

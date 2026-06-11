@@ -19,6 +19,9 @@
 using Toybox.System;
 using Toybox.Application;
 
+// Global leaderboard game identifier (must match the backend key).
+const LB_GAME_ID = "sudoku";
+
 const GS_MENU     = 0;
 const GS_PLAY     = 1;
 const GS_PAUSED   = 2;
@@ -251,8 +254,24 @@ class GameController {
         tickTimer();
         lastTimeMs = elapsedMs;
         saveBestIfBetter(lastTimeMs);
+
+        // Submit solve time (whole seconds, LOWER is better — the backend
+        // sorts this game ASCENDING, so submit the raw positive value).
+        var secs = lastTimeMs / 1000;
+        if (secs < 1) { secs = 1; }
+        Leaderboard.submitScore(LB_GAME_ID, secs, lbVariant());
+
         state = GS_COMPLETE;
         dirty = true;
+    }
+
+    // Variant string for the leaderboard = board mode + difficulty,
+    // e.g. "9x9-hard", "4x4-easy". Shared by submitScore and the viewer.
+    function lbVariant() {
+        var m = (mode == MODE_QUICK) ? "4x4" : "9x9";
+        var d = (diff == DIFF_EASY) ? "easy"
+              : (diff == DIFF_MED)  ? "medium" : "hard";
+        return m + "-" + d;
     }
 
     // Format milliseconds as "mm:ss" (caps at 99:59).

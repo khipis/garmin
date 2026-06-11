@@ -6,6 +6,8 @@ using Toybox.Time;
 using Toybox.System;
 using Toybox.Application;
 
+const LB_GAME_ID = "bricks";
+
 enum { BS_MENU, BS_PLAY, BS_WIN, BS_OVER }
 
 const PU_MULTI = 1;
@@ -55,6 +57,11 @@ class BitochiBricksView extends WatchUi.View {
     hidden var _bestScore;
     hidden var _resultTick;
 
+    // Menu navigation (0 = PLAY, 1 = LEADERBOARD). Row rects cached for tap.
+    hidden var _menuSel;
+    hidden var _menuRowX; hidden var _menuRowW; hidden var _menuRowH;
+    hidden var _menuPlayY; hidden var _menuLbY;
+
     // Scaled layout values — all derived from _w and _h
     hidden var _bOffX;
     hidden var _bW;
@@ -96,6 +103,8 @@ class BitochiBricksView extends WatchUi.View {
         _laserReady = false; _laserOn = false; _laserX = 0; _laserY = 0.0;
         _slowTick = 0; _shakeTick = 0; _shakeX = 0; _shakeY = 0;
         _level = 1; _score = 0; _lives = 3; _resultTick = 0;
+        _menuSel = 0;
+        _menuRowX = 0; _menuRowW = 0; _menuRowH = 0; _menuPlayY = 0; _menuLbY = 0;
 
         computeLayout();
     }
@@ -314,6 +323,7 @@ class BitochiBricksView extends WatchUi.View {
                     _bestScore = _score;
                     Application.Storage.setValue("bricksBest", _bestScore);
                 }
+                Leaderboard.submitScore(LB_GAME_ID, _score, null);
                 _gameState = BS_OVER;
             } else {
                 spawnBall(-1);
@@ -421,6 +431,7 @@ class BitochiBricksView extends WatchUi.View {
 
     function doAction() {
         if (_gameState == BS_MENU) {
+            if (_menuSel == 1) { openLeaderboard(); return; }
             _level = 1; _score = 0; _lives = 3;
             initLevel(); _gameState = BS_PLAY;
         } else if (_gameState == BS_WIN && _resultTick > 18) {
@@ -438,6 +449,31 @@ class BitochiBricksView extends WatchUi.View {
     function doBack() {
         if (_gameState != BS_MENU) { _gameState = BS_MENU; return true; }
         return false;
+    }
+
+    // Cycle the menu selection (PLAY <-> LEADERBOARD).
+    function menuNav(d) {
+        if (_gameState != BS_MENU) { return; }
+        _menuSel = (_menuSel + d + 2) % 2;
+    }
+
+    // Map a tap on the menu screen to a row; default to PLAY elsewhere.
+    function doMenuTap(x, y) {
+        if (_gameState != BS_MENU) { doAction(); return; }
+        if (x >= _menuRowX && x <= _menuRowX + _menuRowW) {
+            if (y >= _menuLbY && y <= _menuLbY + _menuRowH) {
+                _menuSel = 1; openLeaderboard(); return;
+            }
+            if (y >= _menuPlayY && y <= _menuPlayY + _menuRowH) {
+                _menuSel = 0; doAction(); return;
+            }
+        }
+        _menuSel = 0; doAction();
+    }
+
+    function openLeaderboard() {
+        var v = new LbScoresView(LB_GAME_ID, null, "BRICKS");
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
     // ── Rendering ──────────────────────────────────────────────────────────
@@ -611,31 +647,56 @@ class BitochiBricksView extends WatchUi.View {
         dc.setColor(0x060C18, 0x060C18); dc.clear();
         var tc = (_tick % 14 < 7) ? 0x44AAFF : 0x2277CC;
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2 + 1, _h * 5 / 100 + 1, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2 + 1, _h * 4 / 100 + 1, Graphics.FONT_SMALL, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(tc, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 5 / 100, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 4 / 100, Graphics.FONT_SMALL, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 18 / 100, Graphics.FONT_LARGE, "BRICKS", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 13 / 100, Graphics.FONT_MEDIUM, "BRICKS", Graphics.TEXT_JUSTIFY_CENTER);
 
+        // Decorative brick rows (trimmed to 2 to free room for the menu rows).
         var cols6 = [0x22DDFF, 0x44FF88, 0xFFFF44, 0xFF9944, 0xFF44AA, 0xBB44FF];
-        for (var row = 0; row < 3; row++) {
+        for (var row = 0; row < 2; row++) {
             for (var col3 = 0; col3 < COLS; col3++) {
                 var ci = (_tick / 5 + row * 3 + col3) % 6;
                 dc.setColor(cols6[ci], Graphics.COLOR_TRANSPARENT);
-                dc.fillRectangle(_bOffX + col3 * _bW + 1, _h * 36 / 100 + row * _bH, _bW - 2, _bH - 2);
+                dc.fillRectangle(_bOffX + col3 * _bW + 1, _h * 27 / 100 + row * _bH, _bW - 2, _bH - 2);
                 var hlH = _bH > 10 ? 2 : 1;
                 dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-                dc.fillRectangle(_bOffX + col3 * _bW + 2, _h * 36 / 100 + row * _bH + 1, _bW - 6, hlH);
+                dc.fillRectangle(_bOffX + col3 * _bW + 2, _h * 27 / 100 + row * _bH + 1, _bW - 6, hlH);
             }
         }
         if (_bestScore > 0) {
             dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 68 / 100, Graphics.FONT_XTINY, "BEST: " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_w / 2, _h * 41 / 100, Graphics.FONT_XTINY, "BEST: " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER);
         }
-        dc.setColor((_tick % 12 < 6) ? 0xFFCC44 : 0xCC8822, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 78 / 100, Graphics.FONT_SMALL, "Tap to play!", Graphics.TEXT_JUSTIFY_CENTER);
+
+        // Space-aware menu rows: PLAY + LEADERBOARD, centred and ~18% smaller
+        // than a full-width control so nothing clips on round watches.
+        var rowW = _w * 62 / 100;
+        var rowH = _h * 11 / 100; if (rowH < 20) { rowH = 20; }
+        var gap  = _h * 3 / 100;  if (gap  < 4)  { gap  = 4;  }
+        var rowX = (_w - rowW) / 2;
+        var playY = _h * 50 / 100;
+        var lbY   = playY + rowH + gap;
+        _menuRowX = rowX; _menuRowW = rowW; _menuRowH = rowH;
+        _menuPlayY = playY; _menuLbY = lbY;
+
+        var pSel = (_menuSel == 0);
+        dc.setColor(pSel ? 0x103050 : 0x0C1828, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(rowX, playY, rowW, rowH, 5);
+        dc.setColor(pSel ? 0x44AAFF : 0x2277CC, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(rowX, playY, rowW, rowH, 5);
+        if (pSel) {
+            var ay = playY + rowH / 2;
+            dc.fillPolygon([[rowX + 5, ay - 4], [rowX + 5, ay + 4], [rowX + 11, ay]]);
+        }
+        dc.setColor(pSel ? 0xFFFFFF : 0xAACCEE, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2 + 6, playY + (rowH - 14) / 2, Graphics.FONT_XTINY, "PLAY", Graphics.TEXT_JUSTIFY_CENTER);
+
+        LbBadge.drawRow(dc, rowX, lbY, rowW, rowH, _menuSel == 1);
+
         dc.setColor(0x1E2D40, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 90 / 100, Graphics.FONT_XTINY, "M+ball W+wide S+slow +life L=laser", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 92 / 100, Graphics.FONT_XTINY, "M+ball W+wide S+slow +life L=laser", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawWin(dc) {

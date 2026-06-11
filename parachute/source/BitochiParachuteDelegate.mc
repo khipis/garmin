@@ -48,14 +48,26 @@ class BitochiParachuteDelegate extends WatchUi.BehaviorDelegate {
         return true;
     }
 
-    function onPreviousPage() {
+    function onTap(evt) {
+        if (_view.gameState == PS_MENU && _view.tapInLbRow(evt.getCoordinates())) {
+            _view.openLeaderboard();
+            return true;
+        }
         _view.doAction();
         WatchUi.requestUpdate();
         return true;
     }
 
+    function onPreviousPage() {
+        if (_view.gameState == PS_MENU) { _view.menuMove(-1); }
+        else { _view.doAction(); }
+        WatchUi.requestUpdate();
+        return true;
+    }
+
     function onNextPage() {
-        _view.doAction();
+        if (_view.gameState == PS_MENU) { _view.menuMove(1); }
+        else { _view.doAction(); }
         WatchUi.requestUpdate();
         return true;
     }

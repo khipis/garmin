@@ -24,7 +24,8 @@ class BitochiJazzBallDelegate extends WatchUi.InputDelegate {
     }
 
     function onTap(evt) {
-        _view.doSelect();
+        var c = evt.getCoordinates();
+        _view.doTap(c[0], c[1]);
         WatchUi.requestUpdate();
         return true;
     }

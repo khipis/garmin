@@ -36,7 +36,15 @@ const LS_WIN  = 2;
 const LO_MODE_LEVELS = 0;
 const LO_MODE_DAILY  = 1;
 
-const LO_MENU_ROWS = 3;
+// Global leaderboard game id (MUST match the backend / shared library).
+const LB_GAME_ID = "lightsout";
+
+// Menu rows (chess-style). A "LEADERBOARD" row is appended after START.
+const LO_ROW_DIFF        = 0;
+const LO_ROW_MODE        = 1;
+const LO_ROW_START       = 2;
+const LO_ROW_LEADERBOARD = 3;
+const LO_MENU_ROWS       = 4;
 
 class GameController {
     var state;
@@ -158,19 +166,33 @@ class GameController {
     function setMenuRow(i) { if (i >= 0 && i < LO_MENU_ROWS) { menuRow = i; } }
 
     function menuActivate() {
-        if (menuRow == 0) {
+        if (menuRow == LO_ROW_DIFF) {
             diff = (diff + 1) % 3;
             // Reset level to start of bucket so the diff change is
             // immediately reflected in the START button.
             level = _bucketStart(diff);
             saveMenuSettings();
-        } else if (menuRow == 1) {
+        } else if (menuRow == LO_ROW_MODE) {
             mode = (mode + 1) % 2;
             saveMenuSettings();
-        } else {
+        } else if (menuRow == LO_ROW_START) {
             _startGame();
         }
+        // LO_ROW_LEADERBOARD is handled by the view (openLeaderboard).
         dirty = true;
+    }
+
+    // Board-size variant string ("3x3" / "4x4" / "5x5") for the puzzle
+    // the player is configured to play. Used for both leaderboard
+    // submission and the leaderboard view so they always agree.
+    function boardVariant() {
+        var n;
+        if (mode == LO_MODE_DAILY) {
+            n = LevelGenerator.gridSizeForDiff(diff);
+        } else {
+            n = LevelGenerator.gridSizeForLevel(level);
+        }
+        return n.format("%d") + "x" + n.format("%d");
     }
     hidden function _bucketStart(d) {
         if (d == 0) { return 1; }
@@ -295,6 +317,12 @@ class GameController {
     }
 
     hidden function _finishWin() {
+        // Submit fewest-moves-to-solve to the global leaderboard BEFORE any
+        // level mutation below, so boardVariant() reflects the solved board.
+        // Lower is better; the backend sorts this game ascending, so we send
+        // the raw positive move count (do NOT negate).
+        Leaderboard.submitScore(LB_GAME_ID, moves, boardVariant());
+
         solvedTotal = solvedTotal + 1;
         _save("lo_solved_total", solvedTotal);
         if (mode == LO_MODE_LEVELS) {

@@ -19,6 +19,8 @@
 using Toybox.Application;
 using Toybox.System;
 
+const LB_GAME_ID = "hangman";
+
 const GS_MENU = 0;
 const GS_PLAY = 1;
 const GS_WIN  = 2;
@@ -33,7 +35,8 @@ const KB_ROWS = 4;
 const MENU_CAT    = 0;
 const MENU_DIFF   = 1;
 const MENU_START  = 2;
-const MENU_ITEMS  = 3;
+const MENU_LB     = 3;
+const MENU_ITEMS  = 4;
 
 class GameController {
     var state;
@@ -54,6 +57,7 @@ class GameController {
 
     // Persistent stats
     var totalWins;
+    var streak;          // consecutive words solved without a loss
 
     function initialize() {
         state       = GS_MENU;
@@ -66,6 +70,7 @@ class GameController {
         cursor      = 0;
         menuCursor  = MENU_START;
         totalWins   = _loadWins();
+        streak      = _loadStreak();
         _loadSettings();
     }
 
@@ -78,6 +83,22 @@ class GameController {
     }
     hidden function _saveWins() {
         try { Application.Storage.setValue("wins", totalWins); } catch (e) { }
+    }
+    hidden function _loadStreak() {
+        try {
+            var v = Application.Storage.getValue("hangman_streak");
+            if (v != null && v instanceof Number && v > 0) { return v; }
+        } catch (e) { }
+        return 0;
+    }
+    hidden function _saveStreak() {
+        try { Application.Storage.setValue("hangman_streak", streak); } catch (e) { }
+    }
+
+    // Variant = category+difficulty string, e.g. "animals-hard".
+    function variant() {
+        return WordList.categoryName(category).toLower() + "-"
+             + WordList.difficultyName(difficulty).toLower();
     }
     hidden function _loadSettings() {
         try {
@@ -176,11 +197,18 @@ class GameController {
                 state = GS_WIN;
                 totalWins = totalWins + 1;
                 _saveWins();
+                // Win streak: increment, persist, then submit to leaderboard.
+                streak = streak + 1;
+                _saveStreak();
+                Leaderboard.submitScore(LB_GAME_ID, streak, variant());
             }
         } else {
             misses = misses + 1;
             if (misses >= MAX_MISSES) {
                 state = GS_LOSE;
+                // Failed word breaks the streak.
+                streak = 0;
+                _saveStreak();
             }
         }
     }

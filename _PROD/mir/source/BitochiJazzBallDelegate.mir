@@ -195,23 +195,42 @@ _Users_kkorolczuk_work_garmin_jazzball_source_BitochiJazzBallDelegate_mc_20_26_2
     }
     [ @file = "/Users/kkorolczuk/work/garmin/jazzball/source/BitochiJazzBallDelegate.mc"; @line = 26; @symbol_functiondef = [onTap,26,13,18]; @symbol_param<0> = [evt,26,19,22]; ]
     function onTap(evt) {
-_Users_kkorolczuk_work_garmin_jazzball_source_BitochiJazzBallDelegate_mc_26_24_30_4_start:
+_Users_kkorolczuk_work_garmin_jazzball_source_BitochiJazzBallDelegate_mc_26_24_31_4_start:
 [ "/Users/kkorolczuk/work/garmin/jazzball/source/BitochiJazzBallDelegate.mc" 27 8 ]
-        symbol [ _view %tmp.2 27 8 13 ];
-        %tmp.2 = getv ? :_view;
-        symbol [ doSelect %tmp.3 27 14 22 ];
-        %tmp.3 = getv function %tmp.2 :doSelect;
-        invoke %tmp.2 %tmp.3();
+        [ "_Users_kkorolczuk_work_garmin_jazzball_source_BitochiJazzBallDelegate_mc_26_24_31_4_start" "_Users_kkorolczuk_work_garmin_jazzball_source_BitochiJazzBallDelegate_mc_26_24_31_4_stop" ]
+        %c.1 = local;
+        symbol [ c %c.1 27 12 13 ];
+        %tmp.1 = lgetv %evt;
+        symbol [ evt %tmp.1 27 16 19 ];
+        symbol [ getCoordinates %tmp.2 27 20 34 ];
+        %tmp.2 = getv function %tmp.1 :getCoordinates;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        lputv %c.1 %tmp.3;
+        symbol [ c %c.1 27 12 13 ];
 [ "/Users/kkorolczuk/work/garmin/jazzball/source/BitochiJazzBallDelegate.mc" 28 8 ]
-        symbol [ WatchUi %tmp.4 28 8 15 ];
-        %tmp.4 = getm $.Toybox.WatchUi;
-        symbol [ requestUpdate %tmp.5 28 16 29 ];
-        %tmp.5 = getv function %tmp.4 :requestUpdate;
-        invoke %tmp.4 %tmp.5();
+        symbol [ _view %tmp.5 28 8 13 ];
+        %tmp.5 = getv ? :_view;
+        symbol [ doTap %tmp.6 28 14 19 ];
+        %tmp.6 = getv function %tmp.5 :doTap;
+        %tmp.7 = lgetv %c.1;
+        symbol [ c %tmp.7 28 20 21 ];
+        %tmp.8 = 0;
+        %tmp.9 = agetv %tmp.7 %tmp.8;
+        %tmp.10 = lgetv %c.1;
+        symbol [ c %tmp.10 28 26 27 ];
+        %tmp.11 = 1;
+        %tmp.12 = agetv %tmp.10 %tmp.11;
+        invoke %tmp.5 %tmp.6(%tmp.9, %tmp.12);
 [ "/Users/kkorolczuk/work/garmin/jazzball/source/BitochiJazzBallDelegate.mc" 29 8 ]
-        %tmp.6 = true;
-        ret %tmp.6;
-_Users_kkorolczuk_work_garmin_jazzball_source_BitochiJazzBallDelegate_mc_26_24_30_4_stop:
+        symbol [ WatchUi %tmp.13 29 8 15 ];
+        %tmp.13 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.14 29 16 29 ];
+        %tmp.14 = getv function %tmp.13 :requestUpdate;
+        invoke %tmp.13 %tmp.14();
+[ "/Users/kkorolczuk/work/garmin/jazzball/source/BitochiJazzBallDelegate.mc" 30 8 ]
+        %tmp.15 = true;
+        ret %tmp.15;
+_Users_kkorolczuk_work_garmin_jazzball_source_BitochiJazzBallDelegate_mc_26_24_31_4_stop:
     }
 }
 [ @file = "/Users/kkorolczuk/work/garmin/jazzball/source/BitochiJazzBallDelegate.mc"; @line = 1; ]

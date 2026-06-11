@@ -16,6 +16,16 @@ const PK_GAMEOVER  = 5;
 const POKER_ANTE       = 20;
 const POKER_START_CHIPS = 500;
 
+// Main-menu rows (navigable):
+//   row 0 = PLAY
+//   row 1 = LEADERBOARD (shared global board)
+const PK_MENU_ROWS = 2;
+const PK_ROW_PLAY  = 0;
+const PK_ROW_LB    = 1;
+
+// Global leaderboard game id (matches _LOGOS / web id).
+const LB_GAME_ID = "poker";
+
 class BitochiPokerView extends WatchUi.View {
 
     hidden var _w; hidden var _h;
@@ -33,6 +43,10 @@ class BitochiPokerView extends WatchUi.View {
     hidden var _resultMsg;
     hidden var _aiDelay;
 
+    hidden var _menuRow;        // selected main-menu row
+    hidden var _peakChips;      // highest player stack reached this session
+    hidden var _scoreSubmitted; // guard: submit leaderboard score once per session
+
     hidden var _rankStr;
     hidden var _suitStr;
     hidden var _handNames;
@@ -46,6 +60,8 @@ class BitochiPokerView extends WatchUi.View {
         _tick = 0; _gs = PK_MENU;
         _pChips = POKER_START_CHIPS; _aChips = POKER_START_CHIPS; _pot = 0;
         _resultMsg = ""; _aiDelay = 0;
+        _menuRow = PK_ROW_PLAY;
+        _peakChips = POKER_START_CHIPS; _scoreSubmitted = false;
         _deck = new [52]; _deckTop = 0;
         _pHand = new [5]; _aHand = new [5];
         _discard = new [5];
@@ -94,19 +110,21 @@ class BitochiPokerView extends WatchUi.View {
     // ─── Input ─────────────────────────────────────────────────────────────────
 
     function doLeft() {
+        if (_gs == PK_MENU) { menuPrev(); return; }
         if (_gs == PK_EXCHANGE) {
             _cursor = (_cursor + 4) % 6;  // 0-5, wrap
         }
     }
 
     function doRight() {
+        if (_gs == PK_MENU) { menuNext(); return; }
         if (_gs == PK_EXCHANGE) {
             _cursor = (_cursor + 1) % 6;
         }
     }
 
     function doSelect() {
-        if (_gs == PK_MENU) { startGame(); return; }
+        if (_gs == PK_MENU) { menuActivate(); return; }
         if (_gs == PK_SHOWDOWN || _gs == PK_GAMEOVER) {
             if (_pChips <= 0 || _aChips <= 0) { resetGame(); }
             else { startRound(); }
@@ -122,7 +140,7 @@ class BitochiPokerView extends WatchUi.View {
     }
 
     function doTap(tx, ty) {
-        if (_gs == PK_MENU) { startGame(); return; }
+        if (_gs == PK_MENU) { menuTap(tx, ty); return; }
         if (_gs == PK_SHOWDOWN || _gs == PK_GAMEOVER) {
             if (_pChips <= 0 || _aChips <= 0) { resetGame(); }
             else { startRound(); }
@@ -151,20 +169,84 @@ class BitochiPokerView extends WatchUi.View {
 
     function doBack() {
         if (_gs != PK_MENU) {
-            _gs = PK_MENU; return true;
+            // Quitting back to the menu ends the session — submit the run.
+            endSession();
+            _gs = PK_MENU; _menuRow = PK_ROW_PLAY; return true;
         }
         return false;
+    }
+
+    // ─── Main-menu navigation ───────────────────────────────────────────────────
+
+    function menuPrev() { _menuRow = (_menuRow + PK_MENU_ROWS - 1) % PK_MENU_ROWS; }
+    function menuNext() { _menuRow = (_menuRow + 1) % PK_MENU_ROWS; }
+
+    function menuActivate() {
+        if (_menuRow == PK_ROW_LB) { openLeaderboard(); }
+        else { startGame(); }
+    }
+
+    hidden function menuTap(tx, ty) {
+        var rg   = menuRowGeom();
+        var rowH = rg[0]; var rowW = rg[1];
+        var rowX = rg[2]; var rowY0 = rg[3]; var gap = rg[4];
+        for (var i = 0; i < PK_MENU_ROWS; i++) {
+            var ry = rowY0 + i * (rowH + gap);
+            if (tx >= rowX && tx < rowX + rowW && ty >= ry && ty < ry + rowH) {
+                _menuRow = i;
+                menuActivate();
+                return;
+            }
+        }
+    }
+
+    // Open the shared global leaderboard for poker.
+    function openLeaderboard() {
+        var v = new LbScoresView(LB_GAME_ID, null, "POKER");
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
+    }
+
+    // Geometry for the two-row main menu.  Space-aware: rows shrink to fit
+    // between the title block and the bottom margin so nothing overlaps on
+    // small round watches.  Returns [rowH, rowW, rowX, rowY0, gap].
+    function menuRowGeom() {
+        var topZone      = (_h * 56) / 100;            // rows live below the title block
+        var bottomMargin = (_h * 8) / 100; if (bottomMargin < 14) { bottomMargin = 14; }
+        var gap          = (_h * 3) / 100; if (gap < 5) { gap = 5; }
+        var avail        = (_h - bottomMargin) - topZone;
+        var rowH         = (avail - gap * (PK_MENU_ROWS - 1)) / PK_MENU_ROWS;
+        if (rowH > 28) { rowH = 28; }
+        if (rowH < 18) { rowH = 18; }
+        var rowW = (_w * 62) / 100; if (rowW < 110) { rowW = 110; }
+        var rowX = (_w - rowW) / 2;
+        var used = PK_MENU_ROWS * rowH + (PK_MENU_ROWS - 1) * gap;
+        var rowY0 = topZone + (avail - used) / 2;
+        if (rowY0 < topZone) { rowY0 = topZone; }
+        return [rowH, rowW, rowX, rowY0, gap];
+    }
+
+    // ─── Leaderboard ────────────────────────────────────────────────────────────
+    // METRIC: peak chip stack reached during the session. Chip stacks fluctuate
+    // and a bust ends the session at 0, so the at-session-end value is not a
+    // meaningful high score; the peak stack rewards how high the player grew
+    // their chips. HIGHER is better. No variant.
+    hidden function endSession() {
+        if (_scoreSubmitted) { return; }
+        _scoreSubmitted = true;
+        Leaderboard.submitScore(LB_GAME_ID, _peakChips, null);
     }
 
     // ─── Game logic ────────────────────────────────────────────────────────────
 
     hidden function resetGame() {
         _pChips = POKER_START_CHIPS; _aChips = POKER_START_CHIPS;
+        _peakChips = POKER_START_CHIPS; _scoreSubmitted = false;
         startRound();
     }
 
     hidden function startGame() {
         _pChips = POKER_START_CHIPS; _aChips = POKER_START_CHIPS;
+        _peakChips = POKER_START_CHIPS; _scoreSubmitted = false;
         startRound();
     }
 
@@ -251,8 +333,9 @@ class BitochiPokerView extends WatchUi.View {
             _pChips += half; _aChips += _pot - half; _resultMsg = "TIE — chips returned";
         }
         _pot = 0;
-        if (_pChips <= 0) { _resultMsg = "BROKE! GAME OVER"; _gs = PK_GAMEOVER; return; }
-        if (_aChips <= 0) { _resultMsg = "AI BROKE! YOU WIN!"; _gs = PK_GAMEOVER; return; }
+        if (_pChips > _peakChips) { _peakChips = _pChips; }
+        if (_pChips <= 0) { _resultMsg = "BROKE! GAME OVER"; _gs = PK_GAMEOVER; endSession(); return; }
+        if (_aChips <= 0) { _resultMsg = "AI BROKE! YOU WIN!"; _gs = PK_GAMEOVER; endSession(); return; }
         _gs = PK_SHOWDOWN;
     }
 
@@ -322,17 +405,49 @@ class BitochiPokerView extends WatchUi.View {
     }
 
     hidden function drawMenu(dc) {
+        var cx = _w / 2;
+        // Title block ~18% smaller (FONT_MEDIUM/XTINY) and lifted up so the two
+        // interactive rows below never overlap on small round watches.
         dc.setColor(0xEE4400, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 10 / 100, Graphics.FONT_LARGE, "POKER", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, _h * 8 / 100, Graphics.FONT_MEDIUM, "POKER", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x888888, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 28 / 100, Graphics.FONT_SMALL, "5-Card Draw", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, _h * 26 / 100, Graphics.FONT_XTINY, "5-Card Draw", Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0x444444, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 44 / 100, Graphics.FONT_XTINY, "Chips: " + _pChips + " vs " + _aChips, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, _h * 40 / 100, Graphics.FONT_XTINY, "Chips: " + _pChips + " vs " + _aChips, Graphics.TEXT_JUSTIFY_CENTER);
 
-        var pc = (_tick % 12 < 6) ? 0xFFAA00 : 0xCC7700;
-        dc.setColor(pc, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 72 / 100, Graphics.FONT_MEDIUM, "TAP TO PLAY", Graphics.TEXT_JUSTIFY_CENTER);
+        // Two interactive rows: PLAY + LEADERBOARD.
+        var rg   = menuRowGeom();
+        var rowH = rg[0]; var rowW = rg[1];
+        var rowX = rg[2]; var rowY0 = rg[3]; var gap = rg[4];
+        for (var i = 0; i < PK_MENU_ROWS; i++) {
+            var ry  = rowY0 + i * (rowH + gap);
+            var sel = (i == _menuRow);
+
+            if (i == PK_ROW_LB) {
+                // Gold leaderboard row from the shared library.
+                LbBadge.drawRow(dc, rowX, ry, rowW, rowH, sel);
+                continue;
+            }
+
+            // PLAY row — amber-accented to match the poker theme.
+            var bg; var bd; var fg;
+            if (sel) { bg = 0x442200; bd = 0xEE8822; fg = 0xFFCC66; }
+            else     { bg = 0x201408; bd = 0x553311; fg = 0xAA8866; }
+            dc.setColor(bg, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);
+            dc.setColor(bd, Graphics.COLOR_TRANSPARENT);
+            dc.drawRoundedRectangle(rowX, ry, rowW, rowH, 5);
+            if (sel) {
+                var ay = ry + rowH / 2;
+                dc.fillPolygon([[rowX + 5, ay - 4],
+                                [rowX + 5, ay + 4],
+                                [rowX + 11, ay]]);
+            }
+            dc.setColor(fg, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, ry + (rowH - 14) / 2, Graphics.FONT_XTINY,
+                        "PLAY", Graphics.TEXT_JUSTIFY_CENTER);
+        }
     }
 
     hidden function drawGameOver(dc) {

@@ -234,70 +234,180 @@ _Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_45_22
         ret %tmp.6;
 _Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_45_22_49_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/parachute/source/BitochiParachuteDelegate.mc"; @line = 51; @symbol_functiondef = [onPreviousPage,51,13,27]; ]
-    function onPreviousPage() {
-_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_51_30_55_4_start:
+    [ @file = "/Users/kkorolczuk/work/garmin/parachute/source/BitochiParachuteDelegate.mc"; @line = 51; @symbol_functiondef = [onTap,51,13,18]; @symbol_param<0> = [evt,51,19,22]; ]
+    function onTap(evt) {
+_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_51_24_59_4_start:
 [ "/Users/kkorolczuk/work/garmin/parachute/source/BitochiParachuteDelegate.mc" 52 8 ]
-        symbol [ _view %tmp.2 52 8 13 ];
+_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_52_8_55_8_if_stmt:
+_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_52_12_52_79_begin:
+        symbol [ _view %tmp.2 52 12 17 ];
         %tmp.2 = getv ? :_view;
-        symbol [ doAction %tmp.3 52 14 22 ];
-        %tmp.3 = getv function %tmp.2 :doAction;
-        invoke %tmp.2 %tmp.3();
-[ "/Users/kkorolczuk/work/garmin/parachute/source/BitochiParachuteDelegate.mc" 53 8 ]
-        symbol [ WatchUi %tmp.4 53 8 15 ];
-        %tmp.4 = getm $.Toybox.WatchUi;
-        symbol [ requestUpdate %tmp.5 53 16 29 ];
-        %tmp.5 = getv function %tmp.4 :requestUpdate;
-        invoke %tmp.4 %tmp.5();
-[ "/Users/kkorolczuk/work/garmin/parachute/source/BitochiParachuteDelegate.mc" 54 8 ]
-        %tmp.6 = true;
-        ret %tmp.6;
-_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_51_30_55_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/parachute/source/BitochiParachuteDelegate.mc"; @line = 57; @symbol_functiondef = [onNextPage,57,13,23]; ]
-    function onNextPage() {
-_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_57_26_61_4_start:
+        symbol [ gameState %tmp.3 52 18 27 ];
+        %tmp.3 = getv %tmp.2 :gameState;
+        symbol [ PS_MENU %tmp.5 52 31 38 ];
+        %tmp.5 = getv ? :PS_MENU;
+        %tmp.6 = eq %tmp.3 %tmp.5;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_52_8_55_8_if_end;
+_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_52_42_52_79_true:
+        symbol [ _view %tmp.8 52 42 47 ];
+        %tmp.8 = getv ? :_view;
+        symbol [ tapInLbRow %tmp.9 52 48 58 ];
+        %tmp.9 = getv function %tmp.8 :tapInLbRow;
+        %tmp.10 = lgetv %evt;
+        symbol [ evt %tmp.10 52 59 62 ];
+        symbol [ getCoordinates %tmp.11 52 63 77 ];
+        %tmp.11 = getv function %tmp.10 :getCoordinates;
+        %tmp.12 = invoke %tmp.10 %tmp.11();
+        %tmp.13 = invoke %tmp.8 %tmp.9(%tmp.12);
+        push %tmp.13;
+_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_52_42_52_79_end:
+        %tmp.14 = phi [%tmp.6 @_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_52_12_52_79_begin] [%tmp.13 @_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_52_42_52_79_true] [%tmp.14 @_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_52_42_52_79_end];
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_52_8_55_8_if_end;
+_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_52_8_55_8_if_true:
+_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_52_82_55_8_start:
+[ "/Users/kkorolczuk/work/garmin/parachute/source/BitochiParachuteDelegate.mc" 53 12 ]
+        symbol [ _view %tmp.16 53 12 17 ];
+        %tmp.16 = getv ? :_view;
+        symbol [ openLeaderboard %tmp.17 53 18 33 ];
+        %tmp.17 = getv function %tmp.16 :openLeaderboard;
+        invoke %tmp.16 %tmp.17();
+[ "/Users/kkorolczuk/work/garmin/parachute/source/BitochiParachuteDelegate.mc" 54 12 ]
+        %tmp.18 = true;
+        ret %tmp.18;
+_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_52_82_55_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_52_8_55_8_if_end;
+_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_52_8_55_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/parachute/source/BitochiParachuteDelegate.mc" 56 8 ]
+        symbol [ _view %tmp.20 56 8 13 ];
+        %tmp.20 = getv ? :_view;
+        symbol [ doAction %tmp.21 56 14 22 ];
+        %tmp.21 = getv function %tmp.20 :doAction;
+        invoke %tmp.20 %tmp.21();
+[ "/Users/kkorolczuk/work/garmin/parachute/source/BitochiParachuteDelegate.mc" 57 8 ]
+        symbol [ WatchUi %tmp.22 57 8 15 ];
+        %tmp.22 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.23 57 16 29 ];
+        %tmp.23 = getv function %tmp.22 :requestUpdate;
+        invoke %tmp.22 %tmp.23();
 [ "/Users/kkorolczuk/work/garmin/parachute/source/BitochiParachuteDelegate.mc" 58 8 ]
-        symbol [ _view %tmp.2 58 8 13 ];
-        %tmp.2 = getv ? :_view;
-        symbol [ doAction %tmp.3 58 14 22 ];
-        %tmp.3 = getv function %tmp.2 :doAction;
-        invoke %tmp.2 %tmp.3();
-[ "/Users/kkorolczuk/work/garmin/parachute/source/BitochiParachuteDelegate.mc" 59 8 ]
-        symbol [ WatchUi %tmp.4 59 8 15 ];
-        %tmp.4 = getm $.Toybox.WatchUi;
-        symbol [ requestUpdate %tmp.5 59 16 29 ];
-        %tmp.5 = getv function %tmp.4 :requestUpdate;
-        invoke %tmp.4 %tmp.5();
-[ "/Users/kkorolczuk/work/garmin/parachute/source/BitochiParachuteDelegate.mc" 60 8 ]
-        %tmp.6 = true;
-        ret %tmp.6;
-_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_57_26_61_4_stop:
+        %tmp.24 = true;
+        ret %tmp.24;
+_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_51_24_59_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/parachute/source/BitochiParachuteDelegate.mc"; @line = 63; @symbol_functiondef = [onBack,63,13,19]; ]
-    function onBack() {
-_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_63_22_68_4_start:
+    [ @file = "/Users/kkorolczuk/work/garmin/parachute/source/BitochiParachuteDelegate.mc"; @line = 61; @symbol_functiondef = [onPreviousPage,61,13,27]; ]
+    function onPreviousPage() {
+_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_61_30_66_4_start:
+[ "/Users/kkorolczuk/work/garmin/parachute/source/BitochiParachuteDelegate.mc" 62 8 ]
+_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_62_8_63_33_if_stmt:
+        symbol [ _view %tmp.2 62 12 17 ];
+        %tmp.2 = getv ? :_view;
+        symbol [ gameState %tmp.3 62 18 27 ];
+        %tmp.3 = getv %tmp.2 :gameState;
+        symbol [ PS_MENU %tmp.5 62 31 38 ];
+        %tmp.5 = getv ? :PS_MENU;
+        %tmp.6 = eq %tmp.3 %tmp.5;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_62_8_63_33_if_else_false;
+_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_62_8_63_33_if_true:
+_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_62_40_62_62_start:
+[ "/Users/kkorolczuk/work/garmin/parachute/source/BitochiParachuteDelegate.mc" 62 42 ]
+        symbol [ _view %tmp.8 62 42 47 ];
+        %tmp.8 = getv ? :_view;
+        symbol [ menuMove %tmp.9 62 48 56 ];
+        %tmp.9 = getv function %tmp.8 :menuMove;
+        %tmp.10 = -1;
+        invoke %tmp.8 %tmp.9(%tmp.10);
+_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_62_40_62_62_stop:
+        goto @_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_62_8_63_33_if_end;
+_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_62_8_63_33_if_else_false:
+_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_63_13_63_33_start:
+[ "/Users/kkorolczuk/work/garmin/parachute/source/BitochiParachuteDelegate.mc" 63 15 ]
+        symbol [ _view %tmp.12 63 15 20 ];
+        %tmp.12 = getv ? :_view;
+        symbol [ doAction %tmp.13 63 21 29 ];
+        %tmp.13 = getv function %tmp.12 :doAction;
+        invoke %tmp.12 %tmp.13();
+_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_63_13_63_33_stop:
+_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_62_8_63_33_if_end:
 [ "/Users/kkorolczuk/work/garmin/parachute/source/BitochiParachuteDelegate.mc" 64 8 ]
-_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_64_8_66_8_if_stmt:
-        symbol [ _sensorEnabled %tmp.2 64 12 26 ];
+        symbol [ WatchUi %tmp.14 64 8 15 ];
+        %tmp.14 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.15 64 16 29 ];
+        %tmp.15 = getv function %tmp.14 :requestUpdate;
+        invoke %tmp.14 %tmp.15();
+[ "/Users/kkorolczuk/work/garmin/parachute/source/BitochiParachuteDelegate.mc" 65 8 ]
+        %tmp.16 = true;
+        ret %tmp.16;
+_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_61_30_66_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/parachute/source/BitochiParachuteDelegate.mc"; @line = 68; @symbol_functiondef = [onNextPage,68,13,23]; ]
+    function onNextPage() {
+_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_68_26_73_4_start:
+[ "/Users/kkorolczuk/work/garmin/parachute/source/BitochiParachuteDelegate.mc" 69 8 ]
+_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_69_8_70_33_if_stmt:
+        symbol [ _view %tmp.2 69 12 17 ];
+        %tmp.2 = getv ? :_view;
+        symbol [ gameState %tmp.3 69 18 27 ];
+        %tmp.3 = getv %tmp.2 :gameState;
+        symbol [ PS_MENU %tmp.5 69 31 38 ];
+        %tmp.5 = getv ? :PS_MENU;
+        %tmp.6 = eq %tmp.3 %tmp.5;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_69_8_70_33_if_else_false;
+_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_69_8_70_33_if_true:
+_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_69_40_69_61_start:
+[ "/Users/kkorolczuk/work/garmin/parachute/source/BitochiParachuteDelegate.mc" 69 42 ]
+        symbol [ _view %tmp.8 69 42 47 ];
+        %tmp.8 = getv ? :_view;
+        symbol [ menuMove %tmp.9 69 48 56 ];
+        %tmp.9 = getv function %tmp.8 :menuMove;
+        %tmp.10 = 1;
+        invoke %tmp.8 %tmp.9(%tmp.10);
+_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_69_40_69_61_stop:
+        goto @_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_69_8_70_33_if_end;
+_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_69_8_70_33_if_else_false:
+_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_70_13_70_33_start:
+[ "/Users/kkorolczuk/work/garmin/parachute/source/BitochiParachuteDelegate.mc" 70 15 ]
+        symbol [ _view %tmp.12 70 15 20 ];
+        %tmp.12 = getv ? :_view;
+        symbol [ doAction %tmp.13 70 21 29 ];
+        %tmp.13 = getv function %tmp.12 :doAction;
+        invoke %tmp.12 %tmp.13();
+_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_70_13_70_33_stop:
+_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_69_8_70_33_if_end:
+[ "/Users/kkorolczuk/work/garmin/parachute/source/BitochiParachuteDelegate.mc" 71 8 ]
+        symbol [ WatchUi %tmp.14 71 8 15 ];
+        %tmp.14 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.15 71 16 29 ];
+        %tmp.15 = getv function %tmp.14 :requestUpdate;
+        invoke %tmp.14 %tmp.15();
+[ "/Users/kkorolczuk/work/garmin/parachute/source/BitochiParachuteDelegate.mc" 72 8 ]
+        %tmp.16 = true;
+        ret %tmp.16;
+_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_68_26_73_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/parachute/source/BitochiParachuteDelegate.mc"; @line = 75; @symbol_functiondef = [onBack,75,13,19]; ]
+    function onBack() {
+_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_75_22_80_4_start:
+[ "/Users/kkorolczuk/work/garmin/parachute/source/BitochiParachuteDelegate.mc" 76 8 ]
+_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_76_8_78_8_if_stmt:
+        symbol [ _sensorEnabled %tmp.2 76 12 26 ];
         %tmp.2 = getv ? :_sensorEnabled;
-        bf %tmp.2 @_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_64_8_66_8_if_end;
-_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_64_8_66_8_if_true:
-_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_64_28_66_8_start:
-[ "/Users/kkorolczuk/work/garmin/parachute/source/BitochiParachuteDelegate.mc" 65 12 ]
-        symbol [ Sensor %tmp.3 65 12 18 ];
+        bf %tmp.2 @_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_76_8_78_8_if_end;
+_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_76_8_78_8_if_true:
+_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_76_28_78_8_start:
+[ "/Users/kkorolczuk/work/garmin/parachute/source/BitochiParachuteDelegate.mc" 77 12 ]
+        symbol [ Sensor %tmp.3 77 12 18 ];
         %tmp.3 = getm $.Toybox.Sensor;
-        symbol [ enableSensorEvents %tmp.4 65 19 37 ];
+        symbol [ enableSensorEvents %tmp.4 77 19 37 ];
         %tmp.4 = getv function %tmp.3 :enableSensorEvents;
         %tmp.5 = null;
         invoke %tmp.3 %tmp.4(%tmp.5);
-_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_64_28_66_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_64_8_66_8_if_end;
-_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_64_8_66_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/parachute/source/BitochiParachuteDelegate.mc" 67 8 ]
+_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_76_28_78_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_76_8_78_8_if_end;
+_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_76_8_78_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/parachute/source/BitochiParachuteDelegate.mc" 79 8 ]
         %tmp.6 = false;
         ret %tmp.6;
-_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_63_22_68_4_stop:
+_Users_kkorolczuk_work_garmin_parachute_source_BitochiParachuteDelegate_mc_75_22_80_4_stop:
     }
 }
 [ @file = "/Users/kkorolczuk/work/garmin/parachute/source/BitochiParachuteDelegate.mc"; @line = 1; ]

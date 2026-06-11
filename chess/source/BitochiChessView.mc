@@ -3,6 +3,10 @@ using Toybox.Graphics;
 using Toybox.Timer;
 using Toybox.Math;
 using Toybox.System;
+using Toybox.Application;
+using Toybox.Lang;
+
+const LB_GAME_ID = "chess";
 
 const PC_EMPTY  = 0;
 const PC_PAWN   = 1;
@@ -60,6 +64,7 @@ class BitochiChessView extends WatchUi.View {
     hidden var _pvp;
     hidden var _pieceVal;
     hidden var _menuRow;
+    hidden var _gameResultDone;
 
     // Pre-allocated direction arrays — created once, shared by sqAttacked / knightMovesPool / slideMovesPool.
     // Without this, sqAttacked alone creates 6 local arrays per call → hundreds of allocs per AI turn.
@@ -91,6 +96,7 @@ class BitochiChessView extends WatchUi.View {
         _aiVsAi = false;
         _pvp = false;
         _menuRow = 0;
+        _gameResultDone = false;
         _selSq = -1; _curSq = 36;
         _legalMoves = new [0];
         _promSq = -1; _promPick = 0;
@@ -182,7 +188,7 @@ class BitochiChessView extends WatchUi.View {
     // ═══════════════════════════════════════════════════════════════════════════
 
     function doNext() {
-        if (_gs == CS_MENU) { _menuRow = (_menuRow + 1) % 4; return; }
+        if (_gs == CS_MENU) { _menuRow = (_menuRow + 1) % 5; return; }
         if (_gs == CS_PROMOTE) { _promPick = (_promPick + 1) % 4; return; }
         if (_gs == CS_CHECKMATE || _gs == CS_STALEMATE) { return; }
         if (_gs != CS_PLAY) { return; }
@@ -192,7 +198,7 @@ class BitochiChessView extends WatchUi.View {
     }
 
     function doPrev() {
-        if (_gs == CS_MENU) { _menuRow = (_menuRow + 3) % 4; return; }
+        if (_gs == CS_MENU) { _menuRow = (_menuRow + 4) % 5; return; }
         if (_gs == CS_PROMOTE) { _promPick = (_promPick + 3) % 4; return; }
         if (_gs == CS_CHECKMATE || _gs == CS_STALEMATE) { return; }
         if (_gs != CS_PLAY) { return; }
@@ -232,7 +238,8 @@ class BitochiChessView extends WatchUi.View {
                 else if (_pvp) { _pvp = false; _aiVsAi = true; }
                 else { _aiVsAi = false; }
             }
-            else { startGame(); }
+            else if (_menuRow == 3) { startGame(); }
+            else { openLeaderboard(); }
             return;
         }
         if (_gs == CS_CHECKMATE || _gs == CS_STALEMATE) { _gs = CS_MENU; return; }
@@ -288,13 +295,9 @@ class BitochiChessView extends WatchUi.View {
 
     function doTap(tx, ty) {
         if (_gs == CS_MENU) {
-            var rowH  = _h * 14 / 100; if (rowH < 26) { rowH = 26; } if (rowH > 38) { rowH = 38; }
-            var rowW  = _w * 78 / 100;
-            var rowX  = (_w - rowW) / 2;
-            var gap   = _h * 2 / 100; if (gap < 4) { gap = 4; }
-            var nRows = 4;
-            var total = nRows * rowH + (nRows - 1) * gap;
-            var rowY0 = (_h - total) / 2 + rowH;
+            var g     = menuGeom();
+            var nRows = g[0]; var rowH = g[1]; var rowW = g[2];
+            var rowX  = g[3]; var gap  = g[4]; var rowY0 = g[5];
             for (var i = 0; i < nRows; i++) {
                 var ry = rowY0 + i * (rowH + gap);
                 if (tx >= rowX && tx < rowX + rowW && ty >= ry && ty < ry + rowH) {
@@ -306,7 +309,8 @@ class BitochiChessView extends WatchUi.View {
                         else if (_pvp) { _pvp = false; _aiVsAi = true; }
                         else { _aiVsAi = false; }
                     }
-                    else { startGame(); }
+                    else if (i == 3) { startGame(); }
+                    else { openLeaderboard(); }
                     return;
                 }
             }
@@ -380,6 +384,7 @@ class BitochiChessView extends WatchUi.View {
         _gs = CS_PLAY;
         _menuRow = 0;
         _selSq = -1;
+        _gameResultDone = false;
         if (_aiVsAi) {
             _playerIsWhite = true;
             _curSq = 4;
@@ -391,6 +396,59 @@ class BitochiChessView extends WatchUi.View {
             _gs = CS_AI_THINK; _aiTimer = 1;
         } else {
             _curSq = 4;
+        }
+    }
+
+    // ── Shared menu geometry (used by drawMenu + doTap so taps line up) ─────────
+    // Rows: 0 Color, 1 Diff, 2 Mode, 3 START, 4 LEADERBOARD.
+    // Sized ~18% smaller than the original 4-row menu so the extra row fits
+    // without overlapping on round watches.
+    hidden function menuGeom() {
+        var nRows = 5;
+        var rowH  = _h * 10 / 100; if (rowH < 18) { rowH = 18; } if (rowH > 28) { rowH = 28; }
+        var rowW  = _w * 78 / 100;
+        var rowX  = (_w - rowW) / 2;
+        var gap   = _h * 1 / 100; if (gap < 2) { gap = 2; }
+        var total = nRows * rowH + (nRows - 1) * gap;
+        var rowY0 = (_h - total) / 2 + rowH;
+        return [nRows, rowH, rowW, rowX, gap, rowY0];
+    }
+
+    // ── Leaderboard wiring ─────────────────────────────────────────────────────
+    hidden function _variantStr() {
+        return ["easy", "medium", "hard"][_difficulty];
+    }
+
+    hidden function openLeaderboard() {
+        var v = new LbScoresView(LB_GAME_ID, _variantStr(), "CHESS");
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
+    }
+
+    // Win-streak persistence (consecutive wins vs AI; higher is better).
+    hidden function _loadStreak() {
+        var v = Application.Storage.getValue("chess_streak");
+        if (v instanceof Lang.Number) { return v; }
+        return 0;
+    }
+
+    hidden function _saveStreak(v) {
+        Application.Storage.setValue("chess_streak", v);
+    }
+
+    // Called once per finished game (guarded). Only P-vs-AI games count toward
+    // the streak / leaderboard. Win → increment + submit; loss/draw → reset.
+    hidden function _processGameResult() {
+        if (_gameResultDone) { return; }
+        if (_gs != CS_CHECKMATE && _gs != CS_STALEMATE) { return; }
+        _gameResultDone = true;
+        if (_aiVsAi || _pvp) { return; }
+
+        if (_gs == CS_CHECKMATE && _whiteToMove != _playerIsWhite) {
+            var newStreak = _loadStreak() + 1;
+            _saveStreak(newStreak);
+            Leaderboard.submitScore(LB_GAME_ID, newStreak, _variantStr());
+        } else {
+            _saveStreak(0);
         }
     }
 
@@ -1231,6 +1289,7 @@ class BitochiChessView extends WatchUi.View {
     function onUpdate(dc) {
         if (_w == 0) { _w = dc.getWidth(); _h = dc.getHeight(); setupGeometry(); }
         if (_gs == CS_MENU) { drawMenu(dc); return; }
+        if (_gs == CS_CHECKMATE || _gs == CS_STALEMATE) { _processGameResult(); }
         drawGame(dc);
         if (_gs == CS_PROMOTE)   { drawPromoOverlay(dc); }
         if (_gs == CS_CHECKMATE) {
@@ -1256,18 +1315,17 @@ class BitochiChessView extends WatchUi.View {
             _aiVsAi ? "Mode: AI vs AI" : (_pvp ? "Mode: P vs P" : "Mode: P vs AI"),
             "START"
         ];
-        var nRows = 4;
-        var rowH  = _h * 12 / 100; if (rowH < 22) { rowH = 22; } if (rowH > 34) { rowH = 34; }
-        var rowW  = _w * 78 / 100;
-        var rowX  = (_w - rowW) / 2;
-        var gap   = _h * 1 / 100; if (gap < 2) { gap = 2; }
-        var total = nRows * rowH + (nRows - 1) * gap;
-        var rowY0 = (_h - total) / 2 + rowH;
+        var g     = menuGeom();
+        var nRows = g[0]; var rowH = g[1]; var rowW = g[2];
+        var rowX  = g[3]; var gap  = g[4]; var rowY0 = g[5];
 
         for (var i = 0; i < nRows; i++) {
             var ry  = rowY0 + i * (rowH + gap);
             var sel = (i == _menuRow);
-            var isStart = (i == nRows - 1);
+
+            if (i == 4) { LbBadge.drawRow(dc, rowX, ry, rowW, rowH, sel); continue; }
+
+            var isStart = (i == 3);
 
             dc.setColor(sel ? (isStart ? 0x1A4400 : 0x1A3A6A) : 0x111820, Graphics.COLOR_TRANSPARENT);
             dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);

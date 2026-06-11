@@ -114,13 +114,24 @@ class MainView extends WatchUi.View {
 
     // ── Menu ──────────────────────────────────────────────────────
     hidden function _menuRowGeom() {
-        var rowH  = (_sh * 11) / 100;
-        if (rowH < 22) { rowH = 22; } if (rowH > 28) { rowH = 28; }
+        // ~18% smaller rows than before so the extra LEADERBOARD row never
+        // overlaps neighbours on round watches.
+        var rowH  = (_sh * 9) / 100;
+        if (rowH < 18) { rowH = 18; } if (rowH > 23) { rowH = 23; }
         var rowW  = (_sw * 76) / 100; if (rowW < 140) { rowW = 140; }
         var rowX  = (_sw - rowW) / 2;
-        var gap   = (_sh * 2) / 100; if (gap < 4) { gap = 4; }
+        var gap   = (_sh * 2) / 100; if (gap < 3) { gap = 3; }
+        // Space-aware: keep all rows between the title and the footer text.
+        var top   = (_sh * 26) / 100;
+        var bot   = _sh - (_sh * 12) / 100;
+        var avail = bot - top;
         var total = MENU_ROW_COUNT * rowH + (MENU_ROW_COUNT - 1) * gap;
-        var rowY0 = (_sh - total) / 2 + (_sh * 6) / 100;
+        if (total > avail) {
+            rowH = (avail - (MENU_ROW_COUNT - 1) * gap) / MENU_ROW_COUNT;
+            if (rowH < 14) { rowH = 14; }
+            total = MENU_ROW_COUNT * rowH + (MENU_ROW_COUNT - 1) * gap;
+        }
+        var rowY0 = top + (avail - total) / 2;
         return [rowH, rowW, rowX, rowY0, gap];
     }
 
@@ -150,6 +161,10 @@ class MainView extends WatchUi.View {
         for (var i = 0; i < MENU_ROW_COUNT; i++) {
             var ry      = rowY0 + i * (rowH + gap);
             var sel     = (i == _ctrl.menuRow);
+            if (i == MENU_LEADER) {
+                LbBadge.drawRow(dc, rowX, ry, rowW, rowH, sel);
+                continue;
+            }
             var isStart = (i == MENU_START);
             dc.setColor(sel ? (isStart ? 0x1A4400 : 0x1A3A6A) : 0x111820,
                         Graphics.COLOR_TRANSPARENT);
@@ -215,6 +230,13 @@ class MainView extends WatchUi.View {
                     "Tap for menu", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
+    // ── Leaderboard ───────────────────────────────────────────────
+    function openLeaderboard() {
+        var variant = _ctrl.variantStr();
+        var v = new LbScoresView(LB_GAME_ID, variant, "MINESWEEPER");
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
+    }
+
     // ── Input intents (called by InputHandler) ────────────────────
 
     // Bottom button / onNextPage → step cursor right (col++ wrap)
@@ -237,7 +259,10 @@ class MainView extends WatchUi.View {
 
     // SELECT only → reveal cursor cell (or activate menu row)
     function navReveal() {
-        if (_ctrl.state == GS_MENU) { _ctrl.menuActivate(); return; }
+        if (_ctrl.state == GS_MENU) {
+            if (_ctrl.menuRow == MENU_LEADER) { openLeaderboard(); return; }
+            _ctrl.menuActivate(); return;
+        }
         if (_ctrl.state == GS_WIN || _ctrl.state == GS_LOSE) {
             _ctrl.gotoMenu(); return;
         }
@@ -264,7 +289,9 @@ class MainView extends WatchUi.View {
             for (var i = 0; i < MENU_ROW_COUNT; i++) {
                 var ry = rowY0 + i * (rowH + gap);
                 if (x >= rowX && x < rowX + rowW && y >= ry && y < ry + rowH) {
-                    _ctrl.setMenuRow(i); _ctrl.menuActivate(); return;
+                    _ctrl.setMenuRow(i);
+                    if (i == MENU_LEADER) { openLeaderboard(); return; }
+                    _ctrl.menuActivate(); return;
                 }
             }
             return;

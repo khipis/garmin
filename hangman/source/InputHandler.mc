@@ -222,6 +222,13 @@ class InputHandler extends WatchUi.BehaviorDelegate {
         if      (ctrl.menuCursor == MENU_CAT)   { ctrl.cycleCategory();   }
         else if (ctrl.menuCursor == MENU_DIFF)  { ctrl.cycleDifficulty(); }
         else if (ctrl.menuCursor == MENU_START) { ctrl.startGame();       }
+        else if (ctrl.menuCursor == MENU_LB)    { openLeaderboard(ctrl);  }
+    }
+
+    function openLeaderboard(ctrl) {
+        var variant = ctrl.variant();
+        var v = new LbScoresView(LB_GAME_ID, variant, "HANGMAN");
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
     hidden function _synthKey(code) { return new SyntheticKey(code); }

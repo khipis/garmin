@@ -24,6 +24,11 @@ enum { MS_MENU, MS_PLAY, MS_WIN, MS_CRASH }
 const ML_SEGS     = 12;    // terrain segments
 const ML_FUEL_MAX = 1000;  // starting fuel (units)
 
+// Global Bitochi leaderboard — higher composite landing score is better (DESC),
+// no variant. Score accumulates across all soft landings in a session and is
+// submitted once the player runs out of lives (end of game).
+const LB_GAME_ID  = "moon";
+
 class BitochiMoonView extends WatchUi.View {
 
     // Accelerometer values — set by delegate from sensor callbacks
@@ -61,6 +66,18 @@ class BitochiMoonView extends WatchUi.View {
     hidden var _resultTick;
     hidden var _crashFuel;      // true when crash was caused by empty fuel
 
+    // Leaderboard scoring (composite, cumulative across landings this session)
+    hidden var _score;          // total session score submitted at game over
+    hidden var _lastLand;       // points awarded for the most recent landing
+
+    // Menu selection: 0 = TAP TO LAUNCH, 1 = LEADERBOARD
+    hidden var _menuSel;
+    // Cached tap hit-region for the LEADERBOARD menu row
+    hidden var _lbRowX;
+    hidden var _lbRowY;
+    hidden var _lbRowW;
+    hidden var _lbRowH;
+
     // Starfield (fixed per session)
     hidden var _starX;
     hidden var _starY;
@@ -92,6 +109,9 @@ class BitochiMoonView extends WatchUi.View {
         _velX = 0.0; _velY = 0.0;
         _fuel = ML_FUEL_MAX;
         _level = 1; _lives = 3; _resultTick = 0; _crashFuel = false;
+        _score = 0; _lastLand = 0;
+        _menuSel = 0;
+        _lbRowX = 0; _lbRowY = 0; _lbRowW = 0; _lbRowH = 0;
 
         var bs = Application.Storage.getValue("moonBest");
         _best = (bs != null) ? bs : 0;
@@ -273,6 +293,8 @@ class BitochiMoonView extends WatchUi.View {
 
                 if (onPad && vDown < maxV && vSide < 0.55) {
                     // ── SOFT LANDING ─────────────────────────────────────────
+                    _lastLand = landingScore(vDown, vSide, _fuel, _level);
+                    _score += _lastLand;
                     _posY = (terrH - HH - LH).toFloat();
                     _velX = 0.0; _velY = 0.0;
                     _thrustTimer = 0;
@@ -288,6 +310,10 @@ class BitochiMoonView extends WatchUi.View {
                     _lives--;
                     if (_lives < 0) { _lives = 0; }
                     _gs = MS_CRASH;
+                    // End of game → submit cumulative session score (DESC, no variant)
+                    if (_lives <= 0) {
+                        Leaderboard.submitScore(LB_GAME_ID, _score, null);
+                    }
                     doVibe(2);
                 }
                 return;
@@ -295,10 +321,65 @@ class BitochiMoonView extends WatchUi.View {
         }
     }
 
+    // ── Composite landing score ──────────────────────────────────────────────
+    //  base success points + soft-landing bonus (gentler = more) +
+    //  remaining-fuel bonus + level bonus. Higher is better.
+    hidden function landingScore(vDown, vSide, fuelLeft, level) {
+        var v = vDown; if (v < 0.0) { v = -v; }
+        var softBonus = ((1.60 - v) * 100.0).toNumber();   // ~0..160
+        if (softBonus < 0) { softBonus = 0; }
+        var fuelBonus = fuelLeft / 2;                       // up to 500
+        if (fuelBonus < 0) { fuelBonus = 0; }
+        var levelBonus = level * 50;
+        return 100 + softBonus + fuelBonus + levelBonus;
+    }
+
+    // ── Menu / leaderboard navigation ─────────────────────────────────────────
+    function isMenu() { return _gs == MS_MENU; }
+
+    function menuMove(d) {
+        if (_gs != MS_MENU) { return; }
+        _menuSel = (_menuSel + d + 2) % 2;
+        WatchUi.requestUpdate();
+    }
+
+    function menuActivate() {
+        if (_gs != MS_MENU) { return; }
+        if (_menuSel == 1) {
+            openLeaderboard();
+        } else {
+            startGame();
+        }
+    }
+
+    // Touch: route a menu tap to the LEADERBOARD row or to launching the game.
+    function handleMenuTap(tx, ty) {
+        if (_gs != MS_MENU) { return false; }
+        if (tx >= _lbRowX && tx <= _lbRowX + _lbRowW &&
+            ty >= _lbRowY && ty <= _lbRowY + _lbRowH) {
+            _menuSel = 1;
+            openLeaderboard();
+            return true;
+        }
+        _menuSel = 0;
+        startGame();
+        return true;
+    }
+
+    hidden function startGame() {
+        _level = 1; _lives = 3; _score = 0; _lastLand = 0;
+        startLevel();
+    }
+
+    function openLeaderboard() {
+        var v = new LbScoresView(LB_GAME_ID, null, "MOON LANDER");
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
+    }
+
     // ── Input API (called from delegate) ─────────────────────────────────────
     function doAction() {
         if (_gs == MS_MENU) {
-            _level = 1; _lives = 3; startLevel();
+            menuActivate();
         } else if (_gs == MS_PLAY) {
             // Each press gives ~350 ms of thrust
             if (_thrustTimer < 7) { _thrustTimer = 7; }
@@ -719,8 +800,11 @@ class BitochiMoonView extends WatchUi.View {
             dc.drawText(_w / 2, _h * 43 / 100, Graphics.FONT_XTINY,
                 "Level " + _level + " clear", Graphics.TEXT_JUSTIFY_CENTER);
             dc.setColor(0x557799, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 53 / 100, Graphics.FONT_XTINY,
+            dc.drawText(_w / 2, _h * 52 / 100, Graphics.FONT_XTINY,
                 "Fuel left: " + _fuel, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(0xFFDD22, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2, _h * 60 / 100, Graphics.FONT_XTINY,
+                "+" + _lastLand + "  Score " + _score, Graphics.TEXT_JUSTIFY_CENTER);
         } else {
             var isGameOver = (_lives <= 0);
             dc.setColor(isGameOver ? 0xFF0000 : 0xFF3333, Graphics.COLOR_TRANSPARENT);
@@ -738,9 +822,12 @@ class BitochiMoonView extends WatchUi.View {
                     "Lives left: " + _lives, Graphics.TEXT_JUSTIFY_CENTER);
             } else {
                 if (_best > 0) {
-                    dc.drawText(_w / 2, _h * 53 / 100, Graphics.FONT_XTINY,
+                    dc.drawText(_w / 2, _h * 52 / 100, Graphics.FONT_XTINY,
                         "Best: Level " + _best, Graphics.TEXT_JUSTIFY_CENTER);
                 }
+                dc.setColor(0xFFDD22, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(_w / 2, _h * 60 / 100, Graphics.FONT_XTINY,
+                    "Score: " + _score, Graphics.TEXT_JUSTIFY_CENTER);
             }
         }
 
@@ -757,6 +844,9 @@ class BitochiMoonView extends WatchUi.View {
     }
 
     // ── Menu screen ───────────────────────────────────────────────────────────
+    //  Decorative art is compressed ~18% into the upper portion so the two
+    //  selectable rows (TAP TO LAUNCH + gold LEADERBOARD badge) sit clear of it
+    //  near the bottom without overlapping on round watches.
     hidden function drawMenu(dc) {
         // Stars
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
@@ -766,72 +856,75 @@ class BitochiMoonView extends WatchUi.View {
 
         // Earth (upper-right)
         dc.setColor(0x1133AA, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(_w * 82 / 100, _h * 13 / 100, 22);
+        dc.fillCircle(_w * 82 / 100, _h * 12 / 100, 20);
         dc.setColor(0x2255CC, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(_w * 82 / 100, _h * 13 / 100, 20);
+        dc.fillCircle(_w * 82 / 100, _h * 12 / 100, 18);
         dc.setColor(0x44AA33, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(_w * 76 / 100, _h * 9 / 100, 10, 7);
-        dc.fillRectangle(_w * 84 / 100, _h * 16 / 100, 8, 5);
+        dc.fillRectangle(_w * 76 / 100, _h * 8 / 100, 9, 6);
+        dc.fillRectangle(_w * 84 / 100, _h * 15 / 100, 7, 5);
         dc.setColor(0xEEEEFF, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(_w * 78 / 100, _h * 7 / 100, 14, 3);
-
-        // Moon surface at bottom
-        dc.setColor(0x444444, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(0, _h * 73 / 100, _w, _h);
-        dc.setColor(0x5A5A5A, Graphics.COLOR_TRANSPARENT);
-        dc.drawLine(0, _h * 73 / 100, _w, _h * 73 / 100);
-
-        // Craters
-        dc.setColor(0x333333, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(_w * 17 / 100, _h * 74 / 100, 12);
-        dc.fillCircle(_w * 56 / 100, _h * 74 / 100, 9);
-        dc.fillCircle(_w * 83 / 100, _h * 75 / 100, 15);
-
-        // Landing pad on surface
-        dc.setColor(0xFFDD22, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(_w * 40 / 100, _h * 72 / 100, _w * 18 / 100, 3);
-        dc.drawLine(_w * 40 / 100, _h * 69 / 100, _w * 40 / 100, _h * 72 / 100);
-        dc.drawLine(_w * 58 / 100, _h * 69 / 100, _w * 58 / 100, _h * 72 / 100);
-
-        // Lander hovering with tiny thruster flicker
-        var lx = _w * 49 / 100;
-        var ly = _h * 56 / 100 + ((_tick / 5) % 3);
-        drawMenuLander(dc, lx, ly);
+        dc.fillRectangle(_w * 78 / 100, _h * 6 / 100, 13, 3);
 
         // Title
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2 + 1, _h * 4 / 100 + 1, Graphics.FONT_MEDIUM,
+        dc.drawText(_w / 2 + 1, _h * 3 / 100 + 1, Graphics.FONT_MEDIUM,
             "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xCCDDEE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 4 / 100, Graphics.FONT_MEDIUM,
+        dc.drawText(_w / 2, _h * 3 / 100, Graphics.FONT_MEDIUM,
             "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFDD22, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 16 / 100, Graphics.FONT_LARGE,
+        dc.drawText(_w / 2, _h * 14 / 100, Graphics.FONT_LARGE,
             "MOON", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x88CCEE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 29 / 100, Graphics.FONT_SMALL,
+        dc.drawText(_w / 2, _h * 26 / 100, Graphics.FONT_SMALL,
             "LANDER", Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Controls hint
+        // Lander hovering with tiny thruster flicker
+        var lx = _w * 49 / 100;
+        var ly = _h * 41 / 100 + ((_tick / 5) % 3);
+        drawMenuLander(dc, lx, ly);
+
+        // Controls hint (compact)
         dc.setColor(0x3A5060, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 43 / 100, Graphics.FONT_XTINY,
-            "Tilt: side jets", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(_w / 2, _h * 52 / 100, Graphics.FONT_XTINY,
-            "TAP: main thruster", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(_w / 2, _h * 61 / 100, Graphics.FONT_XTINY,
-            "Land softly on flat pad", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 54 / 100, Graphics.FONT_XTINY,
+            "Tilt: jets   TAP: thrust", Graphics.TEXT_JUSTIFY_CENTER);
 
         // Best
         if (_best > 0) {
             dc.setColor(0x556677, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 82 / 100, Graphics.FONT_XTINY,
+            dc.drawText(_w / 2, _h * 62 / 100, Graphics.FONT_XTINY,
                 "BEST: Level " + _best, Graphics.TEXT_JUSTIFY_CENTER);
         }
 
-        // Tap prompt (blinks)
-        dc.setColor((_tick % 10 < 5) ? 0xFFDD22 : 0xAA9900, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 91 / 100, Graphics.FONT_XTINY,
-            "Tap to launch!", Graphics.TEXT_JUSTIFY_CENTER);
+        // ── Selectable rows ── (~18% smaller, space-aware, no overlap)
+        var rowH = _h * 11 / 100;
+        if (rowH < 18) { rowH = 18; }
+        if (rowH > 24) { rowH = 24; }
+        var gap   = 4;
+        var rowW  = _w * 64 / 100;
+        var rowX  = (_w - rowW) / 2;
+        var lbY   = _h * 88 / 100 - rowH;
+        var playY = lbY - gap - rowH;
+
+        // Cache the LEADERBOARD row hit-region for touch input
+        _lbRowX = rowX; _lbRowY = lbY; _lbRowW = rowW; _lbRowH = rowH;
+
+        // PLAY row
+        var pSel = (_menuSel == 0);
+        dc.setColor(pSel ? 0x10341A : 0x0A220F, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(rowX, playY, rowW, rowH, 5);
+        dc.setColor(pSel ? 0x4AFF8A : 0x1A8A3A, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(rowX, playY, rowW, rowH, 5);
+        if (pSel) {
+            var ay = playY + rowH / 2;
+            dc.fillPolygon([[rowX + 5, ay - 4], [rowX + 5, ay + 4], [rowX + 11, ay]]);
+        }
+        dc.setColor(pSel ? 0x9AFFC4 : 0x4AC07A, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(rowX + rowW / 2 + 6, playY + (rowH - 14) / 2, Graphics.FONT_XTINY,
+            "TAP TO LAUNCH", Graphics.TEXT_JUSTIFY_CENTER);
+
+        // LEADERBOARD badge row
+        LbBadge.drawRow(dc, rowX, lbY, rowW, rowH, _menuSel == 1);
     }
 
     hidden function drawMenuLander(dc, lx, ly) {

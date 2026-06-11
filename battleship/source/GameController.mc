@@ -52,11 +52,15 @@ const GS_FIRE_AI      = 7;
 // three sub-phases: CHARGE (0..4), IMPACT (5..7), SETTLE (8..13).
 const ANIM_TICKS = 14;
 
+// Global leaderboard game id — MUST match the backend key exactly.
+const LB_GAME_ID = "battleship";
+
 // Menu items
 const MI_DIFFICULTY = 0;
 const MI_SHOTS      = 1;
 const MI_START      = 2;
-const MI_ITEMS      = 3;
+const MI_LEADERBOARD = 3;
+const MI_ITEMS      = 4;
 
 // Shots-per-turn presets (the menu toggles between just these two —
 // classic 1-shot rules vs "salvo" rules with three shots per side
@@ -103,6 +107,11 @@ class GameController {
     // Persisted stats
     var winsTotal;
 
+    // Leaderboard metric — number of player shots taken this match.
+    // Counts EVERY player shot (hit or miss); lower is better. Reset at
+    // the start of each match (beginSetup) and submitted on a player win.
+    var shotCount;
+
     function initialize() {
         playerGrid   = new GridManager();
         enemyGrid    = new GridManager();
@@ -120,6 +129,7 @@ class GameController {
         lastAIShot     = null;
         lastSinkText   = "";
         animTick       = 0;
+        shotCount      = 0;
 
         winsTotal    = _loadInt("winsTotal", 0);
         difficulty   = _loadInt("bs_diff", AI_MEDIUM);
@@ -158,6 +168,8 @@ class GameController {
     function menuNext() {
         menuCursor = (menuCursor + 1) % MI_ITEMS;
     }
+    // Returns true when the activated row needs the view layer to open
+    // the leaderboard panel (the controller can't push WatchUi views).
     function menuActivate() {
         if (menuCursor == MI_DIFFICULTY) {
             difficulty = (difficulty + 1) % 3;
@@ -169,7 +181,10 @@ class GameController {
             _saveInt("bs_shots", shotsPerTurn);
         } else if (menuCursor == MI_START) {
             beginSetup();
+        } else if (menuCursor == MI_LEADERBOARD) {
+            return true;
         }
+        return false;
     }
     function difficultyName() {
         if (difficulty == AI_EASY) { return "Easy"; }
@@ -178,6 +193,14 @@ class GameController {
     }
     function shotsName() {
         return (shotsPerTurn == SHOTS_BURST) ? "Burst x3" : "Single";
+    }
+    // Leaderboard variant — AI difficulty as a lowercase string so each
+    // difficulty keeps its own ranking. MUST be identical in submitScore
+    // and the LbScoresView opened from the menu.
+    function lbVariant() {
+        if (difficulty == AI_EASY)   { return "easy"; }
+        if (difficulty == AI_MEDIUM) { return "medium"; }
+        return "hard";
     }
 
     // ── Setup phase ─────────────────────────────────────────────────
@@ -197,6 +220,7 @@ class GameController {
         lastSinkText     = "";
         playerShotsLeft  = shotsPerTurn;
         aiShotsLeft      = 0;
+        shotCount        = 0;          // fresh move counter for this match
         state      = GS_SETUP;
     }
 
@@ -358,6 +382,7 @@ class GameController {
 
         var pres = BattleLogic.fire(enemyGrid, enemyShips, r, c);
         lastPlayerShot = [r, c, pres.hit, pres.sunkId];
+        shotCount = shotCount + 1;     // leaderboard metric (lower = better)
 
         if (playerShotsLeft == shotsPerTurn) {
             // First shot of a fresh player burst — clear residue from
@@ -398,6 +423,10 @@ class GameController {
             if (enemyShips.allSunk()) {
                 winsTotal = winsTotal + 1;
                 _saveInt("winsTotal", winsTotal);
+                // Player WIN — submit raw positive move count. Backend
+                // sorts this game ASCENDING (fewer shots = better), so we
+                // do NOT negate. Variant = AI difficulty.
+                Leaderboard.submitScore(LB_GAME_ID, shotCount, lbVariant());
                 playerShotsLeft = shotsPerTurn;   // for next game
                 state = GS_WIN;
                 return;

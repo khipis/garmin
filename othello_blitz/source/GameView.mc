@@ -19,6 +19,15 @@ const DIFF_EASY   = 0;
 const DIFF_MED    = 1;
 const DIFF_HARD   = 2;
 
+// Global Bitochi leaderboard
+const LB_GAME_ID  = "othello";
+const NUM_MENU_ROWS = 5;  // Mode, Diff, Side, START, LEADERBOARD
+
+function openLeaderboard() {
+    var v = new LbScoresView(LB_GAME_ID, null, "OTHELLO");
+    WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
+}
+
 // ── GameView ───────────────────────────────────────────────────────────────
 class GameView extends WatchUi.View {
 
@@ -59,6 +68,7 @@ class GameView extends WatchUi.View {
     hidden var _playerFirst;
     hidden var _playerColor;  // DISC_BLACK or DISC_WHITE
     hidden var _aiColor;
+    hidden var _scoreSubmitted;  // guards against double leaderboard submit
 
     function initialize() {
         View.initialize();
@@ -76,6 +86,7 @@ class GameView extends WatchUi.View {
         _playerFirst = true;
         _playerColor = DISC_BLACK;
         _aiColor     = DISC_WHITE;
+        _scoreSubmitted = false;
         _gameState   = GS_MENU;
     }
 
@@ -103,8 +114,8 @@ class GameView extends WatchUi.View {
 
     function moveCursor(dx, dy) {
         if (_gameState == GS_MENU) {
-            if (dy < 0 || dx < 0) { _menuSel = (_menuSel + 3) % 4; }
-            else if (dy > 0 || dx > 0) { _menuSel = (_menuSel + 1) % 4; }
+            if (dy < 0 || dx < 0) { _menuSel = (_menuSel + NUM_MENU_ROWS - 1) % NUM_MENU_ROWS; }
+            else if (dy > 0 || dx > 0) { _menuSel = (_menuSel + 1) % NUM_MENU_ROWS; }
             WatchUi.requestUpdate();
             return;
         }
@@ -131,11 +142,12 @@ class GameView extends WatchUi.View {
             if (_menuSel == 0) { _mode = (_mode + 1) % 3; }
             else if (_menuSel == 1) { _diff = (_diff + 1) % 3; }
             else if (_menuSel == 2) { if (_mode == MODE_PVAI) { _playerFirst = !_playerFirst; } }
-            else {
+            else if (_menuSel == 3) {
                 _playerColor = _playerFirst ? DISC_BLACK : DISC_WHITE;
                 _aiColor     = _playerFirst ? DISC_WHITE : DISC_BLACK;
                 _startGame();
             }
+            else { openLeaderboard(); return; }
             WatchUi.requestUpdate();
             return;
         }
@@ -182,6 +194,7 @@ class GameView extends WatchUi.View {
         _ai.setDifficulty(_diff);
         _animTick  = 0;
         _passNotif = 0;
+        _scoreSubmitted = false;
         _curX = 3; _curY = 3;
         // Black always goes first in Othello
         if (_playerColor == DISC_BLACK || _mode == MODE_AIAI) {
@@ -227,6 +240,7 @@ class GameView extends WatchUi.View {
 
         if (!pCan && !aCan) {
             _gameState = GS_OVER;
+            _submitScoreIfWin();
             return;
         }
         if (!pCan) {
@@ -237,6 +251,19 @@ class GameView extends WatchUi.View {
         }
         _gameState = GS_PLAYER;
         if (_mode != MODE_AIAI) { _computeValidMoves(); }
+    }
+
+    // On a human-vs-AI win, submit the player's final disc count.
+    // Higher disc count = stronger domination (DESC ranking). No variant.
+    hidden function _submitScoreIfWin() {
+        if (_scoreSubmitted) { return; }
+        if (_mode != MODE_PVAI) { return; }  // only genuine player-vs-AI games count
+        var playerDiscCount = (_playerColor == DISC_BLACK) ? _board.blackCount : _board.whiteCount;
+        var aiDiscCount     = (_playerColor == DISC_BLACK) ? _board.whiteCount : _board.blackCount;
+        if (playerDiscCount > aiDiscCount) {
+            _scoreSubmitted = true;
+            Leaderboard.submitScore(LB_GAME_ID, playerDiscCount, null);
+        }
     }
 
     // Refresh valid-move cache: for the current human's turn.
@@ -276,18 +303,27 @@ class GameView extends WatchUi.View {
         var diffStr = (_diff == DIFF_EASY) ? "Easy" : ((_diff == DIFF_MED) ? "Med" : "Hard");
         var sideStr = _playerFirst ? "Side: Blk" : "Side: Wht";
         var rows = ["Mode: " + modeStr, "Diff: " + diffStr, sideStr, "START"];
-        var nR = 4;
-        var rowH = _sh * 10 / 100; if (rowH < 20) { rowH = 20; } if (rowH > 28) { rowH = 28; }
+        var nR = NUM_MENU_ROWS;
+        // ~18% smaller than the original sizing so 5 rows fit round watches.
+        var rowH = _sh * 10 / 100 * 82 / 100; if (rowH < 16) { rowH = 16; } if (rowH > 23) { rowH = 23; }
         var rowW = _sw * 74 / 100;
         var rowX = (_sw - rowW) / 2;
-        var gap  = 5;
+        var gap  = 4;
         var tot  = nR * rowH + (nR - 1) * gap;
-        var rowY0 = (_sh - tot) / 2 + rowH;
+        // Keep the block below the title and above the bottom hint.
+        var topLimit = _sh * 11 / 100 + 24;
+        var rowY0 = (_sh - tot) / 2 + rowH / 2;
+        if (rowY0 < topLimit) { rowY0 = topLimit; }
         var i = 0;
         while (i < nR) {
             var ry  = rowY0 + i * (rowH + gap);
             var sel = (i == _menuSel);
-            var isStart = (i == nR - 1);
+            if (i == 4) {
+                LbBadge.drawRow(dc, rowX, ry, rowW, rowH, sel);
+                i++;
+                continue;
+            }
+            var isStart = (i == 3);
             dc.setColor(sel ? (isStart ? 0x1A3A1A : 0x0A2040) : 0x0A0A0A, Graphics.COLOR_TRANSPARENT);
             dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);
             dc.setColor(sel ? (isStart ? 0x44CC44 : 0x4499FF) : 0x1A3A1A, Graphics.COLOR_TRANSPARENT);
@@ -497,13 +533,15 @@ class GameView extends WatchUi.View {
 
     function doTap(tx, ty) {
         if (_gameState == GS_MENU) {
-            var nR = 4;
-            var rowH = _sh * 10 / 100; if (rowH < 20) { rowH = 20; } if (rowH > 28) { rowH = 28; }
+            var nR = NUM_MENU_ROWS;
+            var rowH = _sh * 10 / 100 * 82 / 100; if (rowH < 16) { rowH = 16; } if (rowH > 23) { rowH = 23; }
             var rowW = _sw * 74 / 100;
             var rowX = (_sw - rowW) / 2;
-            var gap  = 5;
+            var gap  = 4;
             var tot  = nR * rowH + (nR - 1) * gap;
-            var rowY0 = (_sh - tot) / 2 + rowH;
+            var topLimit = _sh * 11 / 100 + 24;
+            var rowY0 = (_sh - tot) / 2 + rowH / 2;
+            if (rowY0 < topLimit) { rowY0 = topLimit; }
             for (var i = 0; i < nR; i++) {
                 var ry = rowY0 + i * (rowH + gap);
                 if (tx >= rowX && tx < rowX + rowW && ty >= ry && ty < ry + rowH) {

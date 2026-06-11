@@ -9,7 +9,12 @@ class BitochiBlackjackDelegate extends WatchUi.BehaviorDelegate {
     }
 
     function onSelect()       { _view.doHit();      WatchUi.requestUpdate(); return true; }
-    function onMenu()         { _view.doStand();    WatchUi.requestUpdate(); return true; }
+    function onMenu() {
+        if (_view.isMenu()) { _view.openLeaderboard(); }
+        else                { _view.doStand(); }
+        WatchUi.requestUpdate();
+        return true;
+    }
     function onPreviousPage() { _view.doHit();      WatchUi.requestUpdate(); return true; }
     function onNextPage()     { _view.doStand();    WatchUi.requestUpdate(); return true; }
 

@@ -27,11 +27,27 @@ class UIManager {
 
     // ── Menu ────────────────────────────────────────────────────
     static function rowGeom(sw, sh) {
-        var rowH = (sh * 11) / 100; if (rowH < 18) { rowH = 18; }
-        var gap  = (sh *  2) / 100; if (gap  <  3) { gap  =  3; }
+        // Space-aware: fit LO_MENU_ROWS rows between the title block and the
+        // footer, vertically centered. Rows are capped ~18% smaller than the
+        // legacy 3-row height so the extra LEADERBOARD row never overlaps the
+        // title/footer on round watches.
+        var rows = LO_MENU_ROWS;
+        var top  = (sh * 33) / 100;          // just below the "by Bitochi" line
+        var bot  = sh - (sh * 8) / 100;       // just above the footer
+        var avail = bot - top;
+        var gap   = (sh * 2) / 100; if (gap < 3) { gap = 3; }
+
+        var cap = ((sh * 11) / 100) * 82 / 100;   // ~18% smaller than before
+        var rowH = (avail - gap * (rows - 1)) / rows;
+        if (rowH > cap) { rowH = cap; }
+        if (rowH < 16) { rowH = 16; }
+
         var rowW = (sw * 68) / 100; if (rowW < 130) { rowW = 130; }
         var rowX = (sw - rowW) / 2;
-        var rowY0 = (sh * 40) / 100;
+
+        var totalH = rowH * rows + gap * (rows - 1);
+        var rowY0  = top + (avail - totalH) / 2;
+        if (rowY0 < top) { rowY0 = top; }
         return [rowH, rowW, rowX, rowY0, gap];
     }
 
@@ -73,7 +89,11 @@ class UIManager {
         for (var i = 0; i < LO_MENU_ROWS; i++) {
             var ry      = rowY0 + i * (rowH + gap);
             var sel     = (i == ctrl.menuRow);
-            var isStart = (i == LO_MENU_ROWS - 1);
+            if (i == LO_ROW_LEADERBOARD) {
+                LbBadge.drawRow(dc, rowX, ry, rowW, rowH, sel);
+                continue;
+            }
+            var isStart = (i == LO_ROW_START);
             dc.setColor(sel ? (isStart ? 0x223300 : 0x182030) : 0x0A1018,
                         Graphics.COLOR_TRANSPARENT);
             dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);

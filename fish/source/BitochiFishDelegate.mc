@@ -25,10 +25,43 @@ class BitochiFishDelegate extends WatchUi.BehaviorDelegate {
         _view.accelY = a[1];
     }
 
-    function onSelect() { _view.doAction(); WatchUi.requestUpdate(); return true; }
-    function onMenu() { _view.doAction(); WatchUi.requestUpdate(); return true; }
-    function onPreviousPage() { _view.doAction(); WatchUi.requestUpdate(); return true; }
-    function onNextPage() { _view.doAction(); WatchUi.requestUpdate(); return true; }
+    function onSelect() {
+        if (_view.inMenu()) { _view.menuActivate(); } else { _view.doAction(); }
+        WatchUi.requestUpdate(); return true;
+    }
+    function onMenu() {
+        if (_view.inMenu()) { _view.menuActivate(); } else { _view.doAction(); }
+        WatchUi.requestUpdate(); return true;
+    }
+    function onPreviousPage() {
+        if (_view.inMenu()) { _view.menuPrev(); } else { _view.doAction(); }
+        WatchUi.requestUpdate(); return true;
+    }
+    function onNextPage() {
+        if (_view.inMenu()) { _view.menuNext(); } else { _view.doAction(); }
+        WatchUi.requestUpdate(); return true;
+    }
+
+    function onKey(evt) {
+        if (_view.inMenu()) {
+            var k = evt.getKey();
+            if      (k == WatchUi.KEY_UP)   { _view.menuPrev(); }
+            else if (k == WatchUi.KEY_DOWN) { _view.menuNext(); }
+            else                            { _view.menuActivate(); }
+            WatchUi.requestUpdate(); return true;
+        }
+        return false;
+    }
+
+    function onTap(evt) {
+        if (_view.inMenu()) {
+            var c = evt.getCoordinates();
+            _view.handleMenuTap(c[0], c[1]);
+        } else {
+            _view.doAction();
+        }
+        WatchUi.requestUpdate(); return true;
+    }
 
     function onBack() {
         if (_sensorOn) { Sensor.enableSensorEvents(null); }

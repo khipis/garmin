@@ -103,22 +103,35 @@ class UIManager {
                         Graphics.TEXT_JUSTIFY_CENTER);
         }
 
-        // Chess-style rows.  Three rows now (added "Shots") — the
-        // dial budget is tight so we shrink row height a touch and
-        // start the block slightly higher when in 3-row mode.
+        // Chess-style rows.  Four rows now (Diff, Shots, START + the gold
+        // LEADERBOARD badge).  The dial budget is tight, so each row is
+        // ~18 % shorter than the old 3-row layout and the whole block is
+        // centred in the band between the title and the bottom hint so
+        // nothing overlaps on small round dials.
         var labels = [
             "Diff:  " + ctrl.difficultyName(),
             "Shots: " + ctrl.shotsName(),
             "START"
         ];
-        var rowH = (h * 11) / 100; if (rowH < 22) { rowH = 22; } if (rowH > 30) { rowH = 30; }
+        var rowH = (h * 9) / 100; if (rowH < 18) { rowH = 18; } if (rowH > 25) { rowH = 25; }
         var rowW = (w * 78) / 100; if (rowW < 140) { rowW = 140; }
         var rowX = (w - rowW) / 2;
-        var gap  = (h * 2) / 100;  if (gap < 4) { gap = 4; }
-        var rowY0 = h * 50 / 100;
+        var gap  = (h * 2) / 100;  if (gap < 3) { gap = 3; }
+        var bandTop = h * 46 / 100;
+        var bandBot = h * 87 / 100;
+        var blockH  = MI_ITEMS * rowH + (MI_ITEMS - 1) * gap;
+        var rowY0   = bandTop + ((bandBot - bandTop) - blockH) / 2;
+        if (rowY0 < bandTop) { rowY0 = bandTop; }
         for (var i = 0; i < MI_ITEMS; i++) {
             var ry = rowY0 + i * (rowH + gap);
             var sel = (ctrl.menuCursor == i);
+
+            // Gold shared "LEADERBOARD" badge row.
+            if (i == MI_LEADERBOARD) {
+                LbBadge.drawRow(dc, rowX, ry, rowW, rowH, sel);
+                continue;
+            }
+
             var isStart = (i == MI_START);
 
             dc.setColor(sel ? (isStart ? 0x1A4400 : 0x1A3A6A) : 0x111820,

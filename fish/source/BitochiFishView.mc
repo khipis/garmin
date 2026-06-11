@@ -8,6 +8,15 @@ using Toybox.Application;
 
 enum { GS_MENU, GS_IDLE, GS_POWER, GS_CAST, GS_WAIT, GS_BITE, GS_FIGHT, GS_REEL, GS_CAUGHT, GS_LOST, GS_SNAP, GS_GAMEOVER }
 
+// ── Global leaderboard ────────────────────────────────────────────────────────
+// Shared library (../_shared/leaderboard) game id — matches the web id.
+const LB_GAME_ID = "fish";
+
+// Title/menu rows: START (begin a session) + LEADERBOARD (push shared view).
+const FISH_ROW_START = 0;
+const FISH_ROW_LB    = 1;
+const FISH_MENU_ROWS = 2;
+
 class BitochiFishView extends WatchUi.View {
 
     var accelX;
@@ -58,6 +67,9 @@ class BitochiFishView extends WatchUi.View {
 
     hidden var _fishNames;
 
+    // ── title-screen menu selection (START / LEADERBOARD) ─────────────────────
+    hidden var _menuSel;
+
     function initialize() {
         View.initialize();
         Math.srand(Time.now().value());
@@ -107,6 +119,7 @@ class BitochiFishView extends WatchUi.View {
         for (var i = 0; i < MAX_AMB; i++) { _ambActive[i] = false; _ambX[i] = 0.0; _ambY[i] = 0.0; _ambVx[i] = 0.0; _ambType[i] = 0; _ambDir[i] = 1; }
 
         _fishNames = ["Minnow", "Shrimp", "Perch", "Roach", "Bass", "Carp", "Trout", "Pike", "Catfish", "Tuna"];
+        _menuSel = FISH_ROW_START;
         setLevelGoal();
         spawnAmbPool();
         gameState = GS_MENU;
@@ -205,7 +218,11 @@ class BitochiFishView extends WatchUi.View {
         } else if (gameState == GS_CAUGHT || gameState == GS_LOST || gameState == GS_SNAP) {
             _resultTick++;
             if (_resultTick > 70) {
-                if (_fishLives <= 0) { gameState = GS_GAMEOVER; _resultTick = 0; }
+                if (_fishLives <= 0) {
+                    gameState = GS_GAMEOVER; _resultTick = 0;
+                    // Session over — submit total catch value to the global leaderboard.
+                    Leaderboard.submitScore(LB_GAME_ID, _score, null);
+                }
                 else { gameState = GS_IDLE; _emotion = 0; }
             }
         } else if (gameState == GS_GAMEOVER) {
@@ -375,11 +392,7 @@ class BitochiFishView extends WatchUi.View {
             }
             return;
         }
-        if (gameState == GS_MENU) {
-            _score = 0; _fishCaught = 0; _combo = 0; _level = 1;
-            _fishLives = 3; _lineTensionBonus = 0.0;
-            setLevelGoal(); _envType = 0; spawnAmbPool(); gameState = GS_IDLE; return;
-        }
+        if (gameState == GS_MENU) { menuActivate(); return; }
         if (gameState == GS_IDLE) { _power = 0.0; _powerDir = 1; gameState = GS_POWER; return; }
         if (gameState == GS_POWER) {
             _castDist = _power; _bobX = _rodTipX.toFloat(); _bobY = _rodTipY.toFloat();
@@ -393,6 +406,64 @@ class BitochiFishView extends WatchUi.View {
         }
         if (gameState == GS_CAUGHT) { if (_resultTick > 15) { gameState = GS_IDLE; } return; }
         if (gameState == GS_LOST || gameState == GS_SNAP) { if (_resultTick > 15) { gameState = GS_IDLE; _emotion = 0; } return; }
+    }
+
+    // ── title-screen menu (START / LEADERBOARD) ───────────────────────────────
+    function inMenu() { return gameState == GS_MENU; }
+
+    function menuPrev() { _menuSel = (_menuSel + FISH_MENU_ROWS - 1) % FISH_MENU_ROWS; }
+    function menuNext() { _menuSel = (_menuSel + 1) % FISH_MENU_ROWS; }
+
+    function menuActivate() {
+        if (_menuSel == FISH_ROW_LB) { openLeaderboard(); return; }
+        startSession();
+    }
+
+    hidden function startSession() {
+        _score = 0; _fishCaught = 0; _combo = 0; _level = 1;
+        _fishLives = 3; _lineTensionBonus = 0.0;
+        setLevelGoal(); _envType = 0; spawnAmbPool(); gameState = GS_IDLE;
+    }
+
+    // Open the shared global leaderboard view (no variant for fish).
+    function openLeaderboard() {
+        var v = new LbScoresView(LB_GAME_ID, null, "FISHING");
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
+    }
+
+    // Hit-test the title menu rows for touch taps.
+    function handleMenuTap(tx, ty) {
+        var rg = menuRowGeom();
+        var rowH = rg[0]; var rowW = rg[1]; var rowX = rg[2];
+        var rowY0 = rg[3]; var gap = rg[4];
+        for (var i = 0; i < FISH_MENU_ROWS; i++) {
+            var ry = rowY0 + i * (rowH + gap);
+            if (tx >= rowX && tx < rowX + rowW && ty >= ry && ty < ry + rowH) {
+                _menuSel = i;
+                menuActivate();
+                return;
+            }
+        }
+    }
+
+    // Geometry for the title menu. Space-aware: row height is derived from the
+    // free space below the title block divided by the row count, then clamped
+    // (~18% smaller than a full-size button) so nothing overlaps on small round
+    // watches. Returns [rowH, rowW, rowX, rowY0, gap].
+    hidden function menuRowGeom() {
+        var topZone      = (_h * 46) / 100;
+        var bottomMargin = (_h * 9) / 100; if (bottomMargin < 14) { bottomMargin = 14; }
+        var gap          = (_h * 3) / 100; if (gap < 4) { gap = 4; }
+        var avail        = (_h - bottomMargin) - topZone;
+        var rowH         = (avail - gap * (FISH_MENU_ROWS - 1)) / FISH_MENU_ROWS;
+        if (rowH > 24) { rowH = 24; }
+        if (rowH < 15) { rowH = 15; }
+        var rowW = (_w * 58) / 100; if (rowW < 104) { rowW = 104; }
+        var rowX = (_w - rowW) / 2;
+        var used = FISH_MENU_ROWS * rowH + (FISH_MENU_ROWS - 1) * gap;
+        var rowY0 = topZone + (avail - used) / 2;
+        if (rowY0 < topZone) { rowY0 = topZone; }
+        return [rowH, rowW, rowX, rowY0, gap];
     }
 
     hidden function addRipple(rx) { for (var i = 0; i < RIPPLE_N; i++) { if (_ripLife[i] > 0) { continue; } _ripX[i] = rx; _ripR[i] = 2.0; _ripLife[i] = 18; break; } }
@@ -987,7 +1058,30 @@ class BitochiFishView extends WatchUi.View {
         dc.setColor((_tick % 14 < 7) ? 0x55DDFF : 0x33BBDD, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 4 / 100, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 18 / 100, Graphics.FONT_LARGE, "FISH", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x88CCEE, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 30 / 100, Graphics.FONT_XTINY, "Cast near the fish!", Graphics.TEXT_JUSTIFY_CENTER);
-        if (_bestScore > 0) { dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 78 / 100, Graphics.FONT_XTINY, "BEST " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER); }
-        dc.setColor((_tick % 10 < 5) ? 0x55DDFF : 0x33BBDD, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 88 / 100, Graphics.FONT_XTINY, "Tap to fish", Graphics.TEXT_JUSTIFY_CENTER);
+        if (_bestScore > 0) { dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 38 / 100, Graphics.FONT_XTINY, "BEST " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER); }
+
+        // START / LEADERBOARD menu rows.
+        var rg = menuRowGeom();
+        var rowH = rg[0]; var rowW = rg[1]; var rowX = rg[2];
+        var rowY0 = rg[3]; var gap = rg[4];
+        for (var i = 0; i < FISH_MENU_ROWS; i++) {
+            var ry = rowY0 + i * (rowH + gap);
+            var sel = (i == _menuSel);
+            if (i == FISH_ROW_LB) {
+                LbBadge.drawRow(dc, rowX, ry, rowW, rowH, sel);
+                continue;
+            }
+            var bg; var bd; var fg;
+            if (sel) { bg = 0x0A3A52; bd = 0x44BBDD; fg = 0xAAEEFF; }
+            else     { bg = 0x0A2030; bd = 0x225566; fg = 0x88BBCC; }
+            dc.setColor(bg, Graphics.COLOR_TRANSPARENT); dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);
+            dc.setColor(bd, Graphics.COLOR_TRANSPARENT); dc.drawRoundedRectangle(rowX, ry, rowW, rowH, 5);
+            if (sel) {
+                var ay = ry + rowH / 2;
+                dc.fillPolygon([[rowX + 5, ay - 4], [rowX + 5, ay + 4], [rowX + 11, ay]]);
+            }
+            dc.setColor(fg, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_cx, ry + (rowH - 14) / 2, Graphics.FONT_XTINY, "FISH!", Graphics.TEXT_JUSTIFY_CENTER);
+        }
     }
 }

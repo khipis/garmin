@@ -3,6 +3,9 @@ using Toybox.Graphics;
 using Toybox.Timer;
 using Toybox.Math;
 
+// ── Leaderboard ────────────────────────────────────────────────────────────────
+const LB_GAME_ID = "jazzball";
+
 // ── Game states ───────────────────────────────────────────────────────────────
 const JB_MENU      = 0;
 const JB_PLAY      = 1;
@@ -33,6 +36,16 @@ class BitochiJazzBallView extends WatchUi.View {
     hidden var _level;
     hidden var _lives;
     hidden var _targetPct;   // % needed to advance (starts 75)
+
+    // Score: accumulated across levels (filledPct * level per level cleared,
+    // plus the partial fill of the level you died on). HIGHER is better.
+    hidden var _score;
+    hidden var _finalScore;
+
+    // Menu selection (0 = PLAY, 1 = LEADERBOARD) and tap hit-test rects
+    hidden var _menuSel;
+    hidden var _menuRowX; hidden var _menuRowW; hidden var _menuRowH;
+    hidden var _playRowY; hidden var _lbRowY;
 
     // Grid: flat GCOLS×GROWS array of cell type
     hidden var _grid;
@@ -78,6 +91,9 @@ class BitochiJazzBallView extends WatchUi.View {
         _gs = JB_MENU;
         _level = 1; _lives = 3;
         _targetPct = 75;
+        _score = 0; _finalScore = 0;
+        _menuSel = 0;
+        _menuRowX = 0; _menuRowW = 0; _menuRowH = 0; _playRowY = 0; _lbRowY = 0;
         _totalCells = GCOLS * GROWS;
         _openCount  = _totalCells;
         _grid = new [_totalCells];
@@ -115,7 +131,7 @@ class BitochiJazzBallView extends WatchUi.View {
         } else if (_gs == JB_DEAD) {
             _deadFlash--;
             if (_deadFlash <= 0) {
-                if (_lives <= 0) { _gs = JB_GAMEOVER; }
+                if (_lives <= 0) { gameOver(); }
                 else { resetWall(); _gs = JB_PLAY; }
             }
         }
@@ -424,16 +440,28 @@ class BitochiJazzBallView extends WatchUi.View {
     hidden function checkLevelWin() {
         var filledPct = (_totalCells - _openCount) * 100 / _totalCells;
         if (filledPct >= _targetPct) {
+            // Reward clearing this level: fill % weighted by level reached.
+            _score += filledPct * _level;
             _gs = JB_LEVEL_WIN;
         }
+    }
+
+    // ── Game over: accumulate the partial fill of the failed level, then
+    // submit the final accumulated score to the global leaderboard (DESC, no
+    // variant) and show the game-over screen.
+    hidden function gameOver() {
+        var filledPct = (_totalCells - _openCount) * 100 / _totalCells;
+        _finalScore = _score + filledPct;
+        _gs = JB_GAMEOVER;
+        Leaderboard.submitScore(LB_GAME_ID, _finalScore, null);
     }
 
     // ── Input ─────────────────────────────────────────────────────────────────
 
     function doUp() {
-        if (_gs == JB_MENU)     { startGame(); return; }
+        if (_gs == JB_MENU)     { _menuSel = (_menuSel + 1) % 2; return; }
         if (_gs == JB_LEVEL_WIN){ nextLevel(); return; }
-        if (_gs == JB_GAMEOVER) { _gs = JB_MENU; return; }
+        if (_gs == JB_GAMEOVER) { _gs = JB_MENU; _menuSel = 0; return; }
         if (_gs != JB_PLAY || _wall != null) { return; }
         if (_tick - _swipeTick < 3) { return; }
         if (_nextHoriz) { _tryMove(0, -1); }
@@ -441,9 +469,9 @@ class BitochiJazzBallView extends WatchUi.View {
     }
 
     function doDown() {
-        if (_gs == JB_MENU)     { startGame(); return; }
+        if (_gs == JB_MENU)     { _menuSel = (_menuSel + 1) % 2; return; }
         if (_gs == JB_LEVEL_WIN){ nextLevel(); return; }
-        if (_gs == JB_GAMEOVER) { _gs = JB_MENU; return; }
+        if (_gs == JB_GAMEOVER) { _gs = JB_MENU; _menuSel = 0; return; }
         if (_gs != JB_PLAY || _wall != null) { return; }
         if (_tick - _swipeTick < 3) { return; }
         if (_nextHoriz) { _tryMove(0, 1); }
@@ -451,9 +479,9 @@ class BitochiJazzBallView extends WatchUi.View {
     }
 
     function doSelect() {
-        if (_gs == JB_MENU)     { startGame(); return; }
+        if (_gs == JB_MENU)     { activateMenu(); return; }
         if (_gs == JB_LEVEL_WIN){ nextLevel(); return; }
-        if (_gs == JB_GAMEOVER) { _gs = JB_MENU; return; }
+        if (_gs == JB_GAMEOVER) { _gs = JB_MENU; _menuSel = 0; return; }
         if (_gs != JB_PLAY || _wall != null) { return; }
         _fireLine();
     }
@@ -471,9 +499,18 @@ class BitochiJazzBallView extends WatchUi.View {
     }
 
     function doTap(tx, ty) {
-        if (_gs == JB_MENU)     { startGame(); return; }
+        if (_gs == JB_MENU) {
+            // Hit-test the LEADERBOARD row; anything else starts the game.
+            if (tx >= _menuRowX && tx <= _menuRowX + _menuRowW
+                && ty >= _lbRowY && ty <= _lbRowY + _menuRowH) {
+                _menuSel = 1; openLeaderboard();
+            } else {
+                _menuSel = 0; startGame();
+            }
+            return;
+        }
         if (_gs == JB_LEVEL_WIN){ nextLevel(); return; }
-        if (_gs == JB_GAMEOVER) { _gs = JB_MENU; return; }
+        if (_gs == JB_GAMEOVER) { _gs = JB_MENU; _menuSel = 0; return; }
         if (_gs != JB_PLAY || _wall != null) { return; }
         _fireLine();
     }
@@ -503,8 +540,19 @@ class BitochiJazzBallView extends WatchUi.View {
     // ── Game setup ────────────────────────────────────────────────────────────
     hidden function startGame() {
         _level = 1; _lives = 5; _targetPct = 75;
+        _score = 0; _finalScore = 0;
         loadLevel();
         _gs = JB_PLAY;
+    }
+
+    function openLeaderboard() {
+        var v = new LbScoresView(LB_GAME_ID, null, "JAZZBALL");
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
+    }
+
+    hidden function activateMenu() {
+        if (_menuSel == 1) { openLeaderboard(); }
+        else { startGame(); }
     }
 
     hidden function nextLevel() {
@@ -575,29 +623,52 @@ class BitochiJazzBallView extends WatchUi.View {
         dc.setColor(0x101A30, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(r, r, r - 14);
 
-        // Decorative bouncing dots
+        // Decorative bouncing dots — pulled up/compacted to clear the menu rows.
         var dotColors = [0xFF4422, 0xFF8800, 0x44FF88, 0x44AAFF, 0xFF44AA];
-        var dotX = [60, 100, 140, 180, 120];
-        var dotY = [60,  90,  60,  90, 110];
+        var dotX = [70, 100, 140, 170, 120];
+        var dotY = [44,  66,  44,  66,  78];
         for (var i = 0; i < 5; i++) {
             dc.setColor(dotColors[i], Graphics.COLOR_TRANSPARENT);
-            dc.fillCircle(dotX[i] * _w / 240, dotY[i] * _h / 240, 6);
+            dc.fillCircle(dotX[i] * _w / 240, dotY[i] * _h / 240, 5);
         }
 
+        // Title block (~18% more compact than before so the rows never overlap
+        // the text on round watches).
         dc.setColor(0x44AAFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h * 30 / 100, Graphics.FONT_MEDIUM, "JAZZBALL", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, _h * 22 / 100, Graphics.FONT_MEDIUM, "JAZZBALL", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x224466, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h * 44 / 100, Graphics.FONT_XTINY, "BITOCHI GAMES", Graphics.TEXT_JUSTIFY_CENTER);
-
+        dc.drawText(_w/2, _h * 35 / 100, Graphics.FONT_XTINY, "BITOCHI GAMES", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xCCDDEE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h * 52 / 100, Graphics.FONT_XTINY, "Draw walls to", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(_w/2, _h * 60 / 100, Graphics.FONT_XTINY, "trap the balls!", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0x557788, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h * 69 / 100, Graphics.FONT_XTINY, "UP: left  DOWN: down", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(_w/2, _h * 77 / 100, Graphics.FONT_XTINY, "Tap/Sel: fire line", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, _h * 43 / 100, Graphics.FONT_XTINY, "Trap the balls!", Graphics.TEXT_JUSTIFY_CENTER);
 
-        dc.setColor((_tick % 10 < 5) ? 0x44AAFF : 0x2266AA, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h * 84 / 100, Graphics.FONT_XTINY, "Tap to play!", Graphics.TEXT_JUSTIFY_CENTER);
+        // ── Menu rows (space-aware) ──────────────────────────────────────────
+        var rowW = _w * 60 / 100;
+        var rowH = _h * 13 / 100;
+        if (rowH < 22) { rowH = 22; }
+        var rowX = (_w - rowW) / 2;
+        var gap  = _h * 3 / 100;
+        var playY = _h * 56 / 100;
+        var lbY   = playY + rowH + gap;
+
+        _menuRowX = rowX; _menuRowW = rowW; _menuRowH = rowH;
+        _playRowY = playY; _lbRowY = lbY;
+
+        // PLAY row
+        var playSel = (_menuSel == 0);
+        dc.setColor(playSel ? 0x123A1E : 0x0E2014, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(rowX, playY, rowW, rowH, 5);
+        dc.setColor(playSel ? 0x44FF88 : 0x2A8050, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(rowX, playY, rowW, rowH, 5);
+        if (playSel) {
+            var ay = playY + rowH / 2;
+            dc.fillPolygon([[rowX + 6, ay - 4], [rowX + 6, ay + 4], [rowX + 12, ay]]);
+        }
+        dc.setColor(playSel ? 0xBFFFD0 : 0x6FBF90, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(rowX + rowW / 2 + 6, playY + (rowH - 14) / 2, Graphics.FONT_XTINY,
+                    "PLAY", Graphics.TEXT_JUSTIFY_CENTER);
+
+        // LEADERBOARD row (shared gold badge)
+        LbBadge.drawRow(dc, rowX, lbY, rowW, rowH, _menuSel == 1);
     }
 
     hidden function drawBoard(dc) {
@@ -750,9 +821,9 @@ class BitochiJazzBallView extends WatchUi.View {
         dc.setColor(0xFF4422, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w/2, _h * 25 / 100, Graphics.FONT_MEDIUM, "GAME OVER", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xCCDDEE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h * 44 / 100, Graphics.FONT_XTINY, "Reached level " + _level, Graphics.TEXT_JUSTIFY_CENTER);
-        var filledPct = (_totalCells - _openCount) * 100 / _totalCells;
-        dc.drawText(_w/2, _h * 56 / 100, Graphics.FONT_XTINY, "Last fill: " + filledPct + "%", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, _h * 42 / 100, Graphics.FONT_XTINY, "Reached level " + _level, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w/2, _h * 54 / 100, Graphics.FONT_SMALL, "Score " + _finalScore, Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor((_tick % 10 < 5) ? 0x44AAFF : 0x2266AA, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w/2, _h * 76 / 100, Graphics.FONT_XTINY, "Tap for menu", Graphics.TEXT_JUSTIFY_CENTER);
     }

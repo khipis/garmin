@@ -1,1437 +1,283 @@
-[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc"; @line = 8; @symbol_usingdef<0> = [Toybox,8,6,12]; @symbol_usingdef<1> = [WatchUi,8,13,20]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc"; @line = 12; @symbol_usingdef<0> = [Toybox,12,6,12]; @symbol_usingdef<1> = [WatchUi,12,13,20]; ]
 using Toybox.WatchUi;
-[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc"; @line = 9; @symbol_usingdef<0> = [Toybox,9,6,12]; @symbol_usingdef<1> = [Graphics,9,13,21]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc"; @line = 13; @symbol_usingdef<0> = [Toybox,13,6,12]; @symbol_usingdef<1> = [Graphics,13,13,21]; ]
 using Toybox.Graphics;
-[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc"; @line = 11; @symbol_classdef = [MainView,11,6,14]; @symbol_extends<0> = [WatchUi,11,23,30]; @symbol_extends<1> = [View,11,31,35]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc"; @line = 14; @symbol_usingdef<0> = [Toybox,14,6,12]; @symbol_usingdef<1> = [System,14,13,19]; ]
+using Toybox.System;
+[ @file = "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc"; @line = 16; @symbol_classdef = [MainView,16,6,14]; @symbol_extends<0> = [WatchUi,16,23,30]; @symbol_extends<1> = [View,16,31,35]; ]
 class MainView extends WatchUi.View {
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc"; @line = 11; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc"; @line = 16; ]
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc"; @line = 11; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc"; @line = 16; ]
     static
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc"; @line = 13; @position = 8; @symbol_vardef = [ctrl,13,8,12]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc"; @line = 17; @position = 8; @symbol_vardef = [ctrl,17,8,12]; ]
     var ctrl;
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc"; @line = 14; @position = 15; @symbol_vardef = [_sw,14,15,18]; ]
-    protected
-    var _sw;
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc"; @line = 15; @position = 15; @symbol_vardef = [_sh,15,15,18]; ]
-    protected
-    var _sh;
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc"; @line = 17; @symbol_functiondef = [initialize,17,13,23]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc"; @line = 18; @position = 8; @symbol_vardef = [_kb,18,8,11]; ]
+    var _kb;
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc"; @line = 19; @position = 8; @symbol_vardef = [_w,19,8,10]; ]
+    var _w;
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc"; @line = 20; @position = 8; @symbol_vardef = [_h,20,8,10]; ]
+    var _h;
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc"; @line = 22; @symbol_functiondef = [initialize,22,13,23]; ]
     function initialize() as Void {
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_17_26_21_4_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 18 8 ]
-        symbol [ View %tmp.2 18 8 12 ];
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_22_26_28_4_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc" 23 8 ]
+        symbol [ View %tmp.2 23 8 12 ];
         %tmp.2 = getv ? :View;
-        symbol [ initialize %tmp.3 18 13 23 ];
+        symbol [ initialize %tmp.3 23 13 23 ];
         %tmp.3 = getv function %tmp.2 :initialize;
         invoke %tmp.2 %tmp.3();
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 19 8 ]
-        symbol [ GameController %tmp.7 19 19 33 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc" 24 8 ]
+        symbol [ GameController %tmp.7 24 19 33 ];
         %tmp.7 = getv ? :GameController;
         %tmp.4 = newc %tmp.7 ();
-        symbol [ ctrl ? 19 8 12 ];
+        symbol [ ctrl ? 24 8 12 ];
         putv self :ctrl %tmp.4;
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 20 8 ]
-        %tmp.8 = 0;
-        symbol [ _sw ? 20 8 11 ];
-        putv self :_sw %tmp.8;
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 20 17 ]
+[ "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc" 25 8 ]
+        %tmp.8 = null;
+        symbol [ _kb ? 25 8 11 ];
+        putv self :_kb %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc" 26 8 ]
         %tmp.9 = 0;
-        symbol [ _sh ? 20 17 20 ];
-        putv self :_sh %tmp.9;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_17_26_21_4_stop:
+        symbol [ _w ? 26 8 10 ];
+        putv self :_w %tmp.9;
+[ "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc" 27 8 ]
+        %tmp.10 = 0;
+        symbol [ _h ? 27 8 10 ];
+        putv self :_h %tmp.10;
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_22_26_28_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc"; @line = 23; @symbol_functiondef = [onShow,23,13,19]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc"; @line = 30; @symbol_functiondef = [onShow,30,13,19]; ]
     function onShow() {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc"; @line = 24; @symbol_functiondef = [onHide,24,13,19]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc"; @line = 31; @symbol_functiondef = [onHide,31,13,19]; ]
     function onHide() {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc"; @line = 26; @symbol_functiondef = [onUpdate,26,13,21]; @symbol_param<0> = [dc,26,22,24]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc"; @line = 33; @symbol_functiondef = [onUpdate,33,13,21]; @symbol_param<0> = [dc,33,22,24]; ]
     function onUpdate(dc) {
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_26_26_40_4_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 27 8 ]
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_33_26_45_4_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc" 34 8 ]
         %tmp.1 = lgetv %dc;
-        symbol [ dc %tmp.1 27 14 16 ];
-        symbol [ getWidth %tmp.2 27 17 25 ];
+        symbol [ dc %tmp.1 34 13 15 ];
+        symbol [ getWidth %tmp.2 34 16 24 ];
         %tmp.2 = getv function %tmp.1 :getWidth;
         %tmp.3 = invoke %tmp.1 %tmp.2();
-        symbol [ _sw ? 27 8 11 ];
-        putv self :_sw %tmp.3;
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 27 29 ]
+        symbol [ _w ? 34 8 10 ];
+        putv self :_w %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc" 35 8 ]
         %tmp.4 = lgetv %dc;
-        symbol [ dc %tmp.4 27 35 37 ];
-        symbol [ getHeight %tmp.5 27 38 47 ];
+        symbol [ dc %tmp.4 35 13 15 ];
+        symbol [ getHeight %tmp.5 35 16 25 ];
         %tmp.5 = getv function %tmp.4 :getHeight;
         %tmp.6 = invoke %tmp.4 %tmp.5();
-        symbol [ _sh ? 27 29 32 ];
-        putv self :_sh %tmp.6;
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 28 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_28_8_30_8_if_stmt:
-        symbol [ ctrl %tmp.8 28 12 16 ];
+        symbol [ _h ? 35 8 10 ];
+        putv self :_h %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc" 36 8 ]
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_36_8_44_8_if_stmt:
+        symbol [ ctrl %tmp.8 36 12 16 ];
         %tmp.8 = getv ? :ctrl;
-        symbol [ state %tmp.9 28 17 22 ];
+        symbol [ state %tmp.9 36 17 22 ];
         %tmp.9 = getv %tmp.8 :state;
-        symbol [ DR_MENU %tmp.11 28 26 33 ];
-        %tmp.11 = getv ? :DR_MENU;
+        symbol [ GS_MENU %tmp.11 36 26 33 ];
+        %tmp.11 = getv ? :GS_MENU;
         %tmp.12 = eq %tmp.9 %tmp.11;
-        bf %tmp.12 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_28_8_30_8_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_28_8_30_8_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_28_35_30_8_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 29 12 ]
-        symbol [ UIManager %tmp.14 29 12 21 ];
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_36_8_44_8_if_false;
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_36_8_44_8_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_36_35_39_8_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc" 37 12 ]
+        symbol [ UIManager %tmp.14 37 12 21 ];
         %tmp.14 = getv ? :UIManager;
-        symbol [ drawMenu %tmp.15 29 22 30 ];
+        symbol [ drawMenu %tmp.15 37 22 30 ];
         %tmp.15 = getv function %tmp.14 :drawMenu;
         %tmp.16 = lgetv %dc;
-        symbol [ dc %tmp.16 29 31 33 ];
-        symbol [ _sw %tmp.18 29 35 38 ];
-        %tmp.18 = getv ? :_sw;
-        symbol [ _sh %tmp.20 29 40 43 ];
-        %tmp.20 = getv ? :_sh;
-        symbol [ ctrl %tmp.22 29 45 49 ];
-        %tmp.22 = getv ? :ctrl;
+        symbol [ dc %tmp.16 37 31 33 ];
+        symbol [ ctrl %tmp.18 37 35 39 ];
+        %tmp.18 = getv ? :ctrl;
+        symbol [ _w %tmp.20 37 41 43 ];
+        %tmp.20 = getv ? :_w;
+        symbol [ _h %tmp.22 37 45 47 ];
+        %tmp.22 = getv ? :_h;
         invoke %tmp.14 %tmp.15(%tmp.16, %tmp.18, %tmp.20, %tmp.22);
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 29 52 ]
-        ret ?;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_28_35_30_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_28_8_30_8_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_28_8_30_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 31 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_31_8_33_8_if_stmt:
-        symbol [ ctrl %tmp.24 31 12 16 ];
-        %tmp.24 = getv ? :ctrl;
-        symbol [ state %tmp.25 31 17 22 ];
-        %tmp.25 = getv %tmp.24 :state;
-        symbol [ DR_OVER %tmp.27 31 26 33 ];
-        %tmp.27 = getv ? :DR_OVER;
-        %tmp.28 = eq %tmp.25 %tmp.27;
-        bf %tmp.28 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_31_8_33_8_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_31_8_33_8_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_31_35_33_8_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 32 12 ]
-        symbol [ UIManager %tmp.30 32 12 21 ];
-        %tmp.30 = getv ? :UIManager;
-        symbol [ drawOver %tmp.31 32 22 30 ];
-        %tmp.31 = getv function %tmp.30 :drawOver;
-        %tmp.32 = lgetv %dc;
-        symbol [ dc %tmp.32 32 31 33 ];
-        symbol [ _sw %tmp.34 32 35 38 ];
-        %tmp.34 = getv ? :_sw;
-        symbol [ _sh %tmp.36 32 40 43 ];
-        %tmp.36 = getv ? :_sh;
-        symbol [ ctrl %tmp.38 32 45 49 ];
-        %tmp.38 = getv ? :ctrl;
-        invoke %tmp.30 %tmp.31(%tmp.32, %tmp.34, %tmp.36, %tmp.38);
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 32 52 ]
-        ret ?;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_31_35_33_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_31_8_33_8_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_31_8_33_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 35 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_35_8_39_8_if_stmt:
-        symbol [ ctrl %tmp.40 35 12 16 ];
-        %tmp.40 = getv ? :ctrl;
-        symbol [ phase %tmp.41 35 17 22 ];
-        %tmp.41 = getv %tmp.40 :phase;
-        symbol [ DR_PHASE_ROLL %tmp.43 35 26 39 ];
-        %tmp.43 = getv ? :DR_PHASE_ROLL;
-        %tmp.44 = eq %tmp.41 %tmp.43;
-        bf %tmp.44 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_35_8_39_8_if_else_false;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_35_8_39_8_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_35_41_37_8_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 36 12 ]
-        symbol [ UIManager %tmp.46 36 12 21 ];
-        %tmp.46 = getv ? :UIManager;
-        symbol [ drawPlay %tmp.47 36 22 30 ];
-        %tmp.47 = getv function %tmp.46 :drawPlay;
-        %tmp.48 = lgetv %dc;
-        symbol [ dc %tmp.48 36 31 33 ];
-        symbol [ _sw %tmp.50 36 35 38 ];
-        %tmp.50 = getv ? :_sw;
-        symbol [ _sh %tmp.52 36 40 43 ];
-        %tmp.52 = getv ? :_sh;
-        symbol [ ctrl %tmp.54 36 45 49 ];
-        %tmp.54 = getv ? :ctrl;
-        invoke %tmp.46 %tmp.47(%tmp.48, %tmp.50, %tmp.52, %tmp.54);
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_35_41_37_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_35_8_39_8_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_35_8_39_8_if_else_false:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_37_15_39_8_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 38 12 ]
-        symbol [ UIManager %tmp.56 38 12 21 ];
-        %tmp.56 = getv ? :UIManager;
-        symbol [ drawScoreScreen %tmp.57 38 22 37 ];
-        %tmp.57 = getv function %tmp.56 :drawScoreScreen;
-        %tmp.58 = lgetv %dc;
-        symbol [ dc %tmp.58 38 38 40 ];
-        symbol [ _sw %tmp.60 38 42 45 ];
-        %tmp.60 = getv ? :_sw;
-        symbol [ _sh %tmp.62 38 47 50 ];
-        %tmp.62 = getv ? :_sh;
-        symbol [ ctrl %tmp.64 38 52 56 ];
-        %tmp.64 = getv ? :ctrl;
-        invoke %tmp.56 %tmp.57(%tmp.58, %tmp.60, %tmp.62, %tmp.64);
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_37_15_39_8_stop:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_35_8_39_8_if_end:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_26_26_40_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc"; @line = 43; @symbol_functiondef = [navPrev,43,13,20]; ]
-    function navPrev() {
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_43_23_47_4_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 44 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_44_8_44_62_if_stmt:
-        symbol [ ctrl %tmp.2 44 12 16 ];
-        %tmp.2 = getv ? :ctrl;
-        symbol [ state %tmp.3 44 17 22 ];
-        %tmp.3 = getv %tmp.2 :state;
-        symbol [ DR_MENU %tmp.5 44 26 33 ];
-        %tmp.5 = getv ? :DR_MENU;
-        %tmp.6 = eq %tmp.3 %tmp.5;
-        bf %tmp.6 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_44_8_44_62_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_44_8_44_62_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_44_35_44_62_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 44 37 ]
-        symbol [ ctrl %tmp.8 44 37 41 ];
-        %tmp.8 = getv ? :ctrl;
-        symbol [ menuPrev %tmp.9 44 42 50 ];
-        %tmp.9 = getv function %tmp.8 :menuPrev;
-        invoke %tmp.8 %tmp.9();
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 44 54 ]
-        ret ?;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_44_35_44_62_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_44_8_44_62_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_44_8_44_62_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 45 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_45_8_45_62_if_stmt:
-        symbol [ ctrl %tmp.11 45 12 16 ];
-        %tmp.11 = getv ? :ctrl;
-        symbol [ state %tmp.12 45 17 22 ];
-        %tmp.12 = getv %tmp.11 :state;
-        symbol [ DR_OVER %tmp.14 45 26 33 ];
-        %tmp.14 = getv ? :DR_OVER;
-        %tmp.15 = eq %tmp.12 %tmp.14;
-        bf %tmp.15 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_45_8_45_62_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_45_8_45_62_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_45_35_45_62_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 45 37 ]
-        symbol [ ctrl %tmp.17 45 37 41 ];
-        %tmp.17 = getv ? :ctrl;
-        symbol [ gotoMenu %tmp.18 45 42 50 ];
-        %tmp.18 = getv function %tmp.17 :gotoMenu;
-        invoke %tmp.17 %tmp.18();
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 45 54 ]
-        ret ?;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_45_35_45_62_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_45_8_45_62_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_45_8_45_62_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 46 8 ]
-        symbol [ ctrl %tmp.20 46 8 12 ];
-        %tmp.20 = getv ? :ctrl;
-        symbol [ navPrev %tmp.21 46 13 20 ];
-        %tmp.21 = getv function %tmp.20 :navPrev;
-        invoke %tmp.20 %tmp.21();
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_43_23_47_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc"; @line = 48; @symbol_functiondef = [navNext,48,13,20]; ]
-    function navNext() {
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_48_23_52_4_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 49 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_49_8_49_62_if_stmt:
-        symbol [ ctrl %tmp.2 49 12 16 ];
-        %tmp.2 = getv ? :ctrl;
-        symbol [ state %tmp.3 49 17 22 ];
-        %tmp.3 = getv %tmp.2 :state;
-        symbol [ DR_MENU %tmp.5 49 26 33 ];
-        %tmp.5 = getv ? :DR_MENU;
-        %tmp.6 = eq %tmp.3 %tmp.5;
-        bf %tmp.6 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_49_8_49_62_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_49_8_49_62_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_49_35_49_62_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 49 37 ]
-        symbol [ ctrl %tmp.8 49 37 41 ];
-        %tmp.8 = getv ? :ctrl;
-        symbol [ menuNext %tmp.9 49 42 50 ];
-        %tmp.9 = getv function %tmp.8 :menuNext;
-        invoke %tmp.8 %tmp.9();
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 49 54 ]
-        ret ?;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_49_35_49_62_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_49_8_49_62_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_49_8_49_62_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 50 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_50_8_50_62_if_stmt:
-        symbol [ ctrl %tmp.11 50 12 16 ];
-        %tmp.11 = getv ? :ctrl;
-        symbol [ state %tmp.12 50 17 22 ];
-        %tmp.12 = getv %tmp.11 :state;
-        symbol [ DR_OVER %tmp.14 50 26 33 ];
-        %tmp.14 = getv ? :DR_OVER;
-        %tmp.15 = eq %tmp.12 %tmp.14;
-        bf %tmp.15 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_50_8_50_62_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_50_8_50_62_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_50_35_50_62_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 50 37 ]
-        symbol [ ctrl %tmp.17 50 37 41 ];
-        %tmp.17 = getv ? :ctrl;
-        symbol [ gotoMenu %tmp.18 50 42 50 ];
-        %tmp.18 = getv function %tmp.17 :gotoMenu;
-        invoke %tmp.17 %tmp.18();
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 50 54 ]
-        ret ?;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_50_35_50_62_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_50_8_50_62_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_50_8_50_62_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 51 8 ]
-        symbol [ ctrl %tmp.20 51 8 12 ];
-        %tmp.20 = getv ? :ctrl;
-        symbol [ navNext %tmp.21 51 13 20 ];
-        %tmp.21 = getv function %tmp.20 :navNext;
-        invoke %tmp.20 %tmp.21();
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_48_23_52_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc"; @line = 53; @symbol_functiondef = [navSelect,53,13,22]; ]
-    function navSelect() {
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_53_25_60_4_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 54 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_54_8_57_8_if_stmt:
-        symbol [ ctrl %tmp.2 54 12 16 ];
-        %tmp.2 = getv ? :ctrl;
-        symbol [ state %tmp.3 54 17 22 ];
-        %tmp.3 = getv %tmp.2 :state;
-        symbol [ DR_MENU %tmp.5 54 26 33 ];
-        %tmp.5 = getv ? :DR_MENU;
-        %tmp.6 = eq %tmp.3 %tmp.5;
-        bf %tmp.6 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_54_8_57_8_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_54_8_57_8_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_54_35_57_8_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 55 12 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_55_12_55_72_if_stmt:
-        symbol [ ctrl %tmp.8 55 16 20 ];
-        %tmp.8 = getv ? :ctrl;
-        symbol [ menuRow %tmp.9 55 21 28 ];
-        %tmp.9 = getv %tmp.8 :menuRow;
-        symbol [ DR_ROW_LB %tmp.11 55 32 41 ];
-        %tmp.11 = getv ? :DR_ROW_LB;
-        %tmp.12 = eq %tmp.9 %tmp.11;
-        bf %tmp.12 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_55_12_55_72_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_55_12_55_72_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_55_43_55_72_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 55 45 ]
-        %tmp.13 = self;
-        symbol [ openLeaderboard %tmp.14 55 45 60 ];
-        %tmp.14 = getv function %tmp.13 :openLeaderboard;
-        invoke %tmp.13 %tmp.14();
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 55 64 ]
-        ret ?;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_55_43_55_72_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_55_12_55_72_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_55_12_55_72_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 56 12 ]
-        symbol [ ctrl %tmp.16 56 12 16 ];
-        %tmp.16 = getv ? :ctrl;
-        symbol [ menuActivate %tmp.17 56 17 29 ];
-        %tmp.17 = getv function %tmp.16 :menuActivate;
-        invoke %tmp.16 %tmp.17();
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 56 33 ]
-        ret ?;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_54_35_57_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_54_8_57_8_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_54_8_57_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 58 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_58_8_58_62_if_stmt:
-        symbol [ ctrl %tmp.19 58 12 16 ];
-        %tmp.19 = getv ? :ctrl;
-        symbol [ state %tmp.20 58 17 22 ];
-        %tmp.20 = getv %tmp.19 :state;
-        symbol [ DR_OVER %tmp.22 58 26 33 ];
-        %tmp.22 = getv ? :DR_OVER;
-        %tmp.23 = eq %tmp.20 %tmp.22;
-        bf %tmp.23 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_58_8_58_62_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_58_8_58_62_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_58_35_58_62_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 58 37 ]
-        symbol [ ctrl %tmp.25 58 37 41 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc" 38 12 ]
+        %tmp.23 = null;
+        symbol [ _kb ? 38 12 15 ];
+        putv self :_kb %tmp.23;
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_36_35_39_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_36_8_44_8_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_36_8_44_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc" 39 15 ]
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_39_15_44_8_if_stmt:
+        symbol [ ctrl %tmp.25 39 19 23 ];
         %tmp.25 = getv ? :ctrl;
-        symbol [ gotoMenu %tmp.26 58 42 50 ];
-        %tmp.26 = getv function %tmp.25 :gotoMenu;
-        invoke %tmp.25 %tmp.26();
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 58 54 ]
-        ret ?;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_58_35_58_62_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_58_8_58_62_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_58_8_58_62_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 59 8 ]
-        symbol [ ctrl %tmp.28 59 8 12 ];
-        %tmp.28 = getv ? :ctrl;
-        symbol [ selectAction %tmp.29 59 13 25 ];
-        %tmp.29 = getv function %tmp.28 :selectAction;
-        invoke %tmp.28 %tmp.29();
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_53_25_60_4_stop:
+        symbol [ state %tmp.26 39 24 29 ];
+        %tmp.26 = getv %tmp.25 :state;
+        symbol [ GS_PLAY %tmp.28 39 33 40 ];
+        %tmp.28 = getv ? :GS_PLAY;
+        %tmp.29 = eq %tmp.26 %tmp.28;
+        bf %tmp.29 @_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_39_15_44_8_if_else_false;
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_39_15_44_8_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_39_42_41_8_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc" 40 12 ]
+        symbol [ UIManager %tmp.31 40 18 27 ];
+        %tmp.31 = getv ? :UIManager;
+        symbol [ drawGame %tmp.32 40 28 36 ];
+        %tmp.32 = getv function %tmp.31 :drawGame;
+        %tmp.33 = lgetv %dc;
+        symbol [ dc %tmp.33 40 37 39 ];
+        symbol [ ctrl %tmp.35 40 41 45 ];
+        %tmp.35 = getv ? :ctrl;
+        symbol [ _w %tmp.37 40 47 49 ];
+        %tmp.37 = getv ? :_w;
+        symbol [ _h %tmp.39 40 51 53 ];
+        %tmp.39 = getv ? :_h;
+        %tmp.40 = invoke %tmp.31 %tmp.32(%tmp.33, %tmp.35, %tmp.37, %tmp.39);
+        symbol [ _kb ? 40 12 15 ];
+        putv self :_kb %tmp.40;
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_39_42_41_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_39_15_44_8_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_39_15_44_8_if_else_false:
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_41_15_44_8_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc" 42 12 ]
+        symbol [ UIManager %tmp.42 42 12 21 ];
+        %tmp.42 = getv ? :UIManager;
+        symbol [ drawOverlay %tmp.43 42 22 33 ];
+        %tmp.43 = getv function %tmp.42 :drawOverlay;
+        %tmp.44 = lgetv %dc;
+        symbol [ dc %tmp.44 42 34 36 ];
+        symbol [ ctrl %tmp.46 42 38 42 ];
+        %tmp.46 = getv ? :ctrl;
+        symbol [ _w %tmp.48 42 44 46 ];
+        %tmp.48 = getv ? :_w;
+        symbol [ _h %tmp.50 42 48 50 ];
+        %tmp.50 = getv ? :_h;
+        invoke %tmp.42 %tmp.43(%tmp.44, %tmp.46, %tmp.48, %tmp.50);
+[ "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc" 43 12 ]
+        %tmp.51 = null;
+        symbol [ _kb ? 43 12 15 ];
+        putv self :_kb %tmp.51;
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_41_15_44_8_stop:
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_39_15_44_8_if_end:
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_36_8_44_8_if_end:
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_33_26_45_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc"; @line = 61; @symbol_functiondef = [navBack,61,13,20]; ]
-    function navBack() {
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_61_23_64_4_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 62 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_62_8_62_67_if_stmt:
-        symbol [ ctrl %tmp.2 62 12 16 ];
-        %tmp.2 = getv ? :ctrl;
-        symbol [ state %tmp.3 62 17 22 ];
-        %tmp.3 = getv %tmp.2 :state;
-        symbol [ DR_MENU %tmp.5 62 26 33 ];
-        %tmp.5 = getv ? :DR_MENU;
-        %tmp.6 = ne %tmp.3 %tmp.5;
-        bf %tmp.6 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_62_8_62_67_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_62_8_62_67_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_62_35_62_67_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 62 37 ]
-        symbol [ ctrl %tmp.8 62 37 41 ];
-        %tmp.8 = getv ? :ctrl;
-        symbol [ gotoMenu %tmp.9 62 42 50 ];
-        %tmp.9 = getv function %tmp.8 :gotoMenu;
-        invoke %tmp.8 %tmp.9();
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 62 54 ]
-        %tmp.10 = true;
-        ret %tmp.10;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_62_35_62_67_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_62_8_62_67_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_62_8_62_67_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 63 8 ]
-        %tmp.11 = false;
-        ret %tmp.11;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_61_23_64_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc"; @line = 67; @symbol_functiondef = [openLeaderboard,67,13,28]; ]
-    function openLeaderboard() {
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_67_31_70_4_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 68 8 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_67_31_70_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_67_31_70_4_stop" ]
-        %v.1 = local;
-        symbol [ v %v.1 68 12 13 ];
-        symbol [ LbScoresView %tmp.4 68 20 32 ];
-        %tmp.4 = getv ? :LbScoresView;
-        symbol [ LB_GAME_ID %tmp.6 68 33 43 ];
-        %tmp.6 = getv ? :LB_GAME_ID;
-        symbol [ ctrl %tmp.8 68 45 49 ];
-        %tmp.8 = getv ? :ctrl;
-        symbol [ variantName %tmp.9 68 50 61 ];
-        %tmp.9 = getv function %tmp.8 :variantName;
-        %tmp.10 = invoke %tmp.8 %tmp.9();
-        %tmp.11 = "DICE ROYALE";
-        %tmp.1 = newc %tmp.4 (%tmp.6, %tmp.10, %tmp.11);
-        lputv %v.1 %tmp.1;
-        symbol [ v %v.1 68 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 69 8 ]
-        symbol [ WatchUi %tmp.12 69 8 15 ];
-        %tmp.12 = getm $.Toybox.WatchUi;
-        symbol [ pushView %tmp.13 69 16 24 ];
-        %tmp.13 = getv function %tmp.12 :pushView;
-        %tmp.14 = lgetv %v.1;
-        symbol [ v %tmp.14 69 25 26 ];
-        symbol [ LbScoresDelegate %tmp.18 69 32 48 ];
-        %tmp.18 = getv ? :LbScoresDelegate;
-        %tmp.15 = newc %tmp.18 ();
-        symbol [ WatchUi %tmp.19 69 52 59 ];
-        %tmp.19 = getm $.Toybox.WatchUi;
-        symbol [ SLIDE_LEFT %tmp.20 69 60 70 ];
-        %tmp.20 = getv %tmp.19 :SLIDE_LEFT;
-        invoke %tmp.12 %tmp.13(%tmp.14, %tmp.15, %tmp.20);
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_67_31_70_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc"; @line = 73; @symbol_functiondef = [handleTap,73,13,22]; @symbol_param<0> = [x,73,23,24]; @symbol_param<1> = [y,73,26,27]; ]
-    function handleTap(x, y) {
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_73_29_97_4_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 74 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_74_8_88_8_if_stmt:
-        symbol [ ctrl %tmp.2 74 12 16 ];
-        %tmp.2 = getv ? :ctrl;
-        symbol [ state %tmp.3 74 17 22 ];
-        %tmp.3 = getv %tmp.2 :state;
-        symbol [ DR_MENU %tmp.5 74 26 33 ];
-        %tmp.5 = getv ? :DR_MENU;
-        %tmp.6 = eq %tmp.3 %tmp.5;
-        bf %tmp.6 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_74_8_88_8_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_74_8_88_8_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_74_35_88_8_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 75 12 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_74_35_88_8_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_74_35_88_8_stop" ]
-        %rg.1 = local;
-        symbol [ rg %rg.1 75 16 18 ];
-        symbol [ UIManager %tmp.8 75 21 30 ];
-        %tmp.8 = getv ? :UIManager;
-        symbol [ rowGeom %tmp.9 75 31 38 ];
-        %tmp.9 = getv function %tmp.8 :rowGeom;
-        symbol [ _sw %tmp.11 75 39 42 ];
-        %tmp.11 = getv ? :_sw;
-        symbol [ _sh %tmp.13 75 44 47 ];
-        %tmp.13 = getv ? :_sh;
-        %tmp.14 = invoke %tmp.8 %tmp.9(%tmp.11, %tmp.13);
-        lputv %rg.1 %tmp.14;
-        symbol [ rg %rg.1 75 16 18 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 76 12 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_74_35_88_8_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_74_35_88_8_stop" ]
-        %rowH.2 = local;
-        symbol [ rowH %rowH.2 76 16 20 ];
-        %tmp.15 = lgetv %rg.1;
-        symbol [ rg %tmp.15 76 23 25 ];
+    [ @file = "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc"; @line = 51; @symbol_functiondef = [letterAtTap,51,13,24]; @symbol_param<0> = [coords,51,25,31]; ]
+    function letterAtTap(coords) {
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_51_33_66_4_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc" 52 8 ]
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_52_8_52_41_if_stmt:
+        %tmp.1 = lgetv %coords;
+        symbol [ coords %tmp.1 52 12 18 ];
+        %tmp.2 = null;
+        %tmp.3 = eq %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_52_8_52_41_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_52_8_52_41_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_52_28_52_41_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc" 52 30 ]
+        %tmp.4 = -1;
+        ret %tmp.4;
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_52_28_52_41_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_52_8_52_41_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_52_8_52_41_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc" 53 8 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_51_33_66_4_start" "_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_51_33_66_4_stop" ]
+        %kb.1 = local;
+        symbol [ kb %kb.1 53 12 14 ];
+        symbol [ _kb %tmp.6 53 17 20 ];
+        %tmp.6 = getv ? :_kb;
+        lputv %kb.1 %tmp.6;
+        symbol [ kb %kb.1 53 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc" 54 8 ]
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_54_8_64_8_if_stmt:
+        %tmp.7 = lgetv %kb.1;
+        symbol [ kb %tmp.7 54 12 14 ];
+        %tmp.8 = null;
+        %tmp.9 = eq %tmp.7 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_54_8_64_8_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_54_8_64_8_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_54_24_64_8_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc" 55 12 ]
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_55_12_62_12_if_stmt:
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_55_16_55_33_begin:
+        symbol [ _w %tmp.11 55 16 18 ];
+        %tmp.11 = getv ? :_w;
+        %tmp.12 = 0;
+        %tmp.13 = lte %tmp.11 %tmp.12;
+        bt %tmp.13 @_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_55_12_62_12_if_true;
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_55_27_55_33_false:
+        symbol [ _h %tmp.15 55 27 29 ];
+        %tmp.15 = getv ? :_h;
         %tmp.16 = 0;
-        %tmp.17 = agetv %tmp.15 %tmp.16;
-        lputv %rowH.2 %tmp.17;
-        symbol [ rowH %rowH.2 76 16 20 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 76 30 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_74_35_88_8_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_74_35_88_8_stop" ]
-        %rowW.3 = local;
-        symbol [ rowW %rowW.3 76 34 38 ];
-        %tmp.18 = lgetv %rg.1;
-        symbol [ rg %tmp.18 76 41 43 ];
-        %tmp.19 = 1;
-        %tmp.20 = agetv %tmp.18 %tmp.19;
-        lputv %rowW.3 %tmp.20;
-        symbol [ rowW %rowW.3 76 34 38 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 77 12 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_74_35_88_8_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_74_35_88_8_stop" ]
-        %rowX.4 = local;
-        symbol [ rowX %rowX.4 77 16 20 ];
-        %tmp.21 = lgetv %rg.1;
-        symbol [ rg %tmp.21 77 23 25 ];
-        %tmp.22 = 2;
-        %tmp.23 = agetv %tmp.21 %tmp.22;
-        lputv %rowX.4 %tmp.23;
-        symbol [ rowX %rowX.4 77 16 20 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 77 30 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_74_35_88_8_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_74_35_88_8_stop" ]
-        %rowY0.5 = local;
-        symbol [ rowY0 %rowY0.5 77 34 39 ];
-        %tmp.24 = lgetv %rg.1;
-        symbol [ rg %tmp.24 77 42 44 ];
-        %tmp.25 = 3;
-        %tmp.26 = agetv %tmp.24 %tmp.25;
-        lputv %rowY0.5 %tmp.26;
-        symbol [ rowY0 %rowY0.5 77 34 39 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 77 49 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_74_35_88_8_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_74_35_88_8_stop" ]
-        %gap.6 = local;
-        symbol [ gap %gap.6 77 53 56 ];
-        %tmp.27 = lgetv %rg.1;
-        symbol [ rg %tmp.27 77 59 61 ];
-        %tmp.28 = 4;
-        %tmp.29 = agetv %tmp.27 %tmp.28;
-        lputv %gap.6 %tmp.29;
-        symbol [ gap %gap.6 77 53 56 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 78 12 ]
-        for @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_78_12_86_12_for_test @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_78_12_86_12_for_incr @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_78_12_86_12_for_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_78_12_86_12_for_init:
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_78_12_86_12_for_begin" "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_78_12_86_12_for_end" ]
-        %i.7 = local;
-        symbol [ i %i.7 78 21 22 ];
-        %tmp.30 = 0;
-        lputv %i.7 %tmp.30;
-        symbol [ i %i.7 78 21 22 ];
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_78_12_86_12_for_test:
-        %tmp.31 = lgetv %i.7;
-        symbol [ i %tmp.31 78 28 29 ];
-        symbol [ DR_MENU_ROWS %tmp.33 78 32 44 ];
-        %tmp.33 = getv ? :DR_MENU_ROWS;
-        %tmp.34 = lt %tmp.31 %tmp.33;
-        bf %tmp.34 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_78_12_86_12_for_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_78_12_86_12_for_begin:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_78_51_86_12_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 79 16 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_78_51_86_12_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_78_51_86_12_stop" ]
-        %ry.8 = local;
-        symbol [ ry %ry.8 79 20 22 ];
-        %tmp.35 = lgetv %rowY0.5;
-        symbol [ rowY0 %tmp.35 79 25 30 ];
-        %tmp.36 = lgetv %i.7;
-        symbol [ i %tmp.36 79 33 34 ];
-        %tmp.37 = lgetv %rowH.2;
-        symbol [ rowH %tmp.37 79 38 42 ];
-        %tmp.38 = lgetv %gap.6;
-        symbol [ gap %tmp.38 79 45 48 ];
-        %tmp.39 = add %tmp.37 %tmp.38;
-        %tmp.40 = mul %tmp.36 %tmp.39;
-        %tmp.41 = add %tmp.35 %tmp.40;
-        lputv %ry.8 %tmp.41;
-        symbol [ ry %ry.8 79 20 22 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 80 16 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_80_16_85_16_if_stmt:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_80_20_80_72_begin:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_80_20_80_57_begin:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_80_20_80_44_begin:
-        %tmp.42 = lgetv %x;
-        symbol [ x %tmp.42 80 20 21 ];
-        %tmp.43 = lgetv %rowX.4;
-        symbol [ rowX %tmp.43 80 25 29 ];
-        %tmp.44 = gte %tmp.42 %tmp.43;
-        bf %tmp.44 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_80_16_85_16_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_80_33_80_44_true:
-        %tmp.45 = lgetv %x;
-        symbol [ x %tmp.45 80 33 34 ];
-        %tmp.46 = lgetv %rowX.4;
-        symbol [ rowX %tmp.46 80 37 41 ];
-        %tmp.47 = lgetv %rowW.3;
-        symbol [ rowW %tmp.47 80 44 48 ];
-        %tmp.48 = add %tmp.46 %tmp.47;
-        %tmp.49 = lt %tmp.45 %tmp.48;
-        push %tmp.49;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_80_33_80_44_end:
-        %tmp.50 = phi [%tmp.44 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_80_20_80_44_begin] [%tmp.49 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_80_33_80_44_true] [%tmp.50 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_80_33_80_44_end];
-        bf %tmp.50 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_80_16_85_16_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_80_52_80_57_true:
-        %tmp.51 = lgetv %y;
-        symbol [ y %tmp.51 80 52 53 ];
-        %tmp.52 = lgetv %ry.8;
-        symbol [ ry %tmp.52 80 57 59 ];
-        %tmp.53 = gte %tmp.51 %tmp.52;
-        push %tmp.53;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_80_52_80_57_end:
-        %tmp.54 = phi [%tmp.50 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_80_20_80_57_begin] [%tmp.53 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_80_52_80_57_true] [%tmp.54 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_80_52_80_57_end];
-        bf %tmp.54 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_80_16_85_16_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_80_63_80_72_true:
-        %tmp.55 = lgetv %y;
-        symbol [ y %tmp.55 80 63 64 ];
-        %tmp.56 = lgetv %ry.8;
-        symbol [ ry %tmp.56 80 67 69 ];
-        %tmp.57 = lgetv %rowH.2;
-        symbol [ rowH %tmp.57 80 72 76 ];
-        %tmp.58 = add %tmp.56 %tmp.57;
-        %tmp.59 = lt %tmp.55 %tmp.58;
-        push %tmp.59;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_80_63_80_72_end:
-        %tmp.60 = phi [%tmp.54 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_80_20_80_72_begin] [%tmp.59 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_80_63_80_72_true] [%tmp.60 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_80_63_80_72_end];
-        bf %tmp.60 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_80_16_85_16_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_80_16_85_16_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_80_78_85_16_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 81 20 ]
-        symbol [ ctrl %tmp.62 81 20 24 ];
-        %tmp.62 = getv ? :ctrl;
-        symbol [ setMenuRow %tmp.63 81 25 35 ];
-        %tmp.63 = getv function %tmp.62 :setMenuRow;
-        %tmp.64 = lgetv %i.7;
-        symbol [ i %tmp.64 81 36 37 ];
-        invoke %tmp.62 %tmp.63(%tmp.64);
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 82 20 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_82_20_83_48_if_stmt:
-        %tmp.65 = lgetv %i.7;
-        symbol [ i %tmp.65 82 24 25 ];
-        symbol [ DR_ROW_LB %tmp.67 82 29 38 ];
-        %tmp.67 = getv ? :DR_ROW_LB;
-        %tmp.68 = eq %tmp.65 %tmp.67;
-        bf %tmp.68 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_82_20_83_48_if_else_false;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_82_20_83_48_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_82_40_82_61_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 82 42 ]
-        %tmp.69 = self;
-        symbol [ openLeaderboard %tmp.70 82 42 57 ];
-        %tmp.70 = getv function %tmp.69 :openLeaderboard;
-        invoke %tmp.69 %tmp.70();
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_82_40_82_61_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_82_20_83_48_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_82_20_83_48_if_else_false:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_83_25_83_48_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 83 27 ]
-        symbol [ ctrl %tmp.72 83 27 31 ];
-        %tmp.72 = getv ? :ctrl;
-        symbol [ menuActivate %tmp.73 83 32 44 ];
-        %tmp.73 = getv function %tmp.72 :menuActivate;
-        invoke %tmp.72 %tmp.73();
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_83_25_83_48_stop:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_82_20_83_48_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 84 20 ]
-        ret ?;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_80_78_85_16_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_80_16_85_16_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_80_16_85_16_if_end:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_78_51_86_12_stop:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_78_12_86_12_for_incr:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 78 ]
-        %tmp.76 = lgetv %i.7;
-        symbol [ i %tmp.76 78 46 47 ];
-        %tmp.77 = add %tmp.76 1;
-        lputv %i.7 %tmp.77;
-        symbol [ i %i.7 78 46 47 ];
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_78_12_86_12_for_test;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_78_12_86_12_for_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 87 12 ]
-        ret ?;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_74_35_88_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_74_8_88_8_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_74_8_88_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 89 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_89_8_89_62_if_stmt:
-        symbol [ ctrl %tmp.79 89 12 16 ];
-        %tmp.79 = getv ? :ctrl;
-        symbol [ state %tmp.80 89 17 22 ];
-        %tmp.80 = getv %tmp.79 :state;
-        symbol [ DR_OVER %tmp.82 89 26 33 ];
-        %tmp.82 = getv ? :DR_OVER;
-        %tmp.83 = eq %tmp.80 %tmp.82;
-        bf %tmp.83 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_89_8_89_62_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_89_8_89_62_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_89_35_89_62_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 89 37 ]
-        symbol [ ctrl %tmp.85 89 37 41 ];
-        %tmp.85 = getv ? :ctrl;
-        symbol [ gotoMenu %tmp.86 89 42 50 ];
-        %tmp.86 = getv function %tmp.85 :gotoMenu;
-        invoke %tmp.85 %tmp.86();
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 89 54 ]
-        ret ?;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_89_35_89_62_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_89_8_89_62_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_89_8_89_62_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 92 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_92_8_96_8_if_stmt:
-        symbol [ ctrl %tmp.88 92 12 16 ];
-        %tmp.88 = getv ? :ctrl;
-        symbol [ phase %tmp.89 92 17 22 ];
-        %tmp.89 = getv %tmp.88 :phase;
-        symbol [ DR_PHASE_ROLL %tmp.91 92 26 39 ];
-        %tmp.91 = getv ? :DR_PHASE_ROLL;
-        %tmp.92 = eq %tmp.89 %tmp.91;
-        bf %tmp.92 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_92_8_96_8_if_else_false;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_92_8_96_8_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_92_41_94_8_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 93 12 ]
-        %tmp.93 = self;
-        symbol [ _tapPhaseRoll %tmp.94 93 12 25 ];
-        %tmp.94 = getv function %tmp.93 :_tapPhaseRoll;
-        %tmp.95 = lgetv %x;
-        symbol [ x %tmp.95 93 26 27 ];
-        %tmp.96 = lgetv %y;
-        symbol [ y %tmp.96 93 29 30 ];
-        invoke %tmp.93 %tmp.94(%tmp.95, %tmp.96);
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_92_41_94_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_92_8_96_8_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_92_8_96_8_if_else_false:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_94_15_96_8_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 95 12 ]
-        %tmp.97 = self;
-        symbol [ _tapPhaseScore %tmp.98 95 12 26 ];
-        %tmp.98 = getv function %tmp.97 :_tapPhaseScore;
-        %tmp.99 = lgetv %x;
-        symbol [ x %tmp.99 95 27 28 ];
-        %tmp.100 = lgetv %y;
-        symbol [ y %tmp.100 95 30 31 ];
-        invoke %tmp.97 %tmp.98(%tmp.99, %tmp.100);
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_94_15_96_8_stop:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_92_8_96_8_if_end:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_73_29_97_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc"; @line = 99; @symbol_functiondef = [_tapPhaseRoll,99,20,33]; @symbol_param<0> = [x,99,34,35]; @symbol_param<1> = [y,99,37,38]; ]
-    protected
-    function _tapPhaseRoll(x, y) {
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_99_40_129_4_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 101 8 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_99_40_129_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_99_40_129_4_stop" ]
-        %dl.1 = local;
-        symbol [ dl %dl.1 101 12 14 ];
-        symbol [ UIManager %tmp.2 101 18 27 ];
-        %tmp.2 = getv ? :UIManager;
-        symbol [ diceLayout %tmp.3 101 28 38 ];
-        %tmp.3 = getv function %tmp.2 :diceLayout;
-        symbol [ _sw %tmp.5 101 39 42 ];
-        %tmp.5 = getv ? :_sw;
-        symbol [ _sh %tmp.7 101 44 47 ];
-        %tmp.7 = getv ? :_sh;
-        %tmp.8 = invoke %tmp.2 %tmp.3(%tmp.5, %tmp.7);
-        lputv %dl.1 %tmp.8;
-        symbol [ dl %dl.1 101 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 102 8 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_99_40_129_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_99_40_129_4_stop" ]
-        %s.2 = local;
-        symbol [ s %s.2 102 12 13 ];
-        %tmp.9 = lgetv %dl.1;
-        symbol [ dl %tmp.9 102 18 20 ];
-        %tmp.10 = 0;
-        %tmp.11 = agetv %tmp.9 %tmp.10;
-        lputv %s.2 %tmp.11;
-        symbol [ s %s.2 102 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 102 25 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_99_40_129_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_99_40_129_4_stop" ]
-        %gap.3 = local;
-        symbol [ gap %gap.3 102 29 32 ];
-        %tmp.12 = lgetv %dl.1;
-        symbol [ dl %tmp.12 102 35 37 ];
-        %tmp.13 = 1;
-        %tmp.14 = agetv %tmp.12 %tmp.13;
-        lputv %gap.3 %tmp.14;
-        symbol [ gap %gap.3 102 29 32 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 102 42 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_99_40_129_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_99_40_129_4_stop" ]
-        %x0.4 = local;
-        symbol [ x0 %x0.4 102 46 48 ];
-        %tmp.15 = lgetv %dl.1;
-        symbol [ dl %tmp.15 102 51 53 ];
-        %tmp.16 = 2;
-        %tmp.17 = agetv %tmp.15 %tmp.16;
-        lputv %x0.4 %tmp.17;
-        symbol [ x0 %x0.4 102 46 48 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 102 58 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_99_40_129_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_99_40_129_4_stop" ]
-        %y0.5 = local;
-        symbol [ y0 %y0.5 102 62 64 ];
-        %tmp.18 = lgetv %dl.1;
-        symbol [ dl %tmp.18 102 67 69 ];
-        %tmp.19 = 3;
-        %tmp.20 = agetv %tmp.18 %tmp.19;
-        lputv %y0.5 %tmp.20;
-        symbol [ y0 %y0.5 102 62 64 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 103 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_103_8_112_8_if_stmt:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_103_12_103_40_begin:
-        %tmp.21 = lgetv %y;
-        symbol [ y %tmp.21 103 12 13 ];
-        %tmp.22 = lgetv %y0.5;
-        symbol [ y0 %tmp.22 103 17 19 ];
-        %tmp.23 = 4;
-        %tmp.24 = sub %tmp.22 %tmp.23;
-        %tmp.25 = gte %tmp.21 %tmp.24;
-        bf %tmp.25 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_103_8_112_8_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_103_27_103_40_true:
-        %tmp.26 = lgetv %y;
-        symbol [ y %tmp.26 103 27 28 ];
-        %tmp.27 = lgetv %y0.5;
-        symbol [ y0 %tmp.27 103 31 33 ];
-        %tmp.28 = lgetv %s.2;
-        symbol [ s %tmp.28 103 36 37 ];
-        %tmp.29 = add %tmp.27 %tmp.28;
-        %tmp.30 = 4;
-        %tmp.31 = add %tmp.29 %tmp.30;
-        %tmp.32 = lt %tmp.26 %tmp.31;
-        push %tmp.32;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_103_27_103_40_end:
-        %tmp.33 = phi [%tmp.25 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_103_12_103_40_begin] [%tmp.32 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_103_27_103_40_true] [%tmp.33 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_103_27_103_40_end];
-        bf %tmp.33 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_103_8_112_8_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_103_8_112_8_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_103_43_112_8_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 104 12 ]
-        for @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_104_12_111_12_for_test @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_104_12_111_12_for_incr @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_104_12_111_12_for_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_104_12_111_12_for_init:
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_104_12_111_12_for_begin" "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_104_12_111_12_for_end" ]
-        %i.6 = local;
-        symbol [ i %i.6 104 21 22 ];
-        %tmp.34 = 0;
-        lputv %i.6 %tmp.34;
-        symbol [ i %i.6 104 21 22 ];
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_104_12_111_12_for_test:
-        %tmp.35 = lgetv %i.6;
-        symbol [ i %tmp.35 104 28 29 ];
-        symbol [ DR_DICE_COUNT %tmp.37 104 32 45 ];
-        %tmp.37 = getv ? :DR_DICE_COUNT;
-        %tmp.38 = lt %tmp.35 %tmp.37;
-        bf %tmp.38 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_104_12_111_12_for_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_104_12_111_12_for_begin:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_104_52_111_12_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 105 16 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_104_52_111_12_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_104_52_111_12_stop" ]
-        %dx.7 = local;
-        symbol [ dx %dx.7 105 20 22 ];
-        %tmp.39 = lgetv %x0.4;
-        symbol [ x0 %tmp.39 105 25 27 ];
-        %tmp.40 = lgetv %i.6;
-        symbol [ i %tmp.40 105 30 31 ];
-        %tmp.41 = lgetv %s.2;
-        symbol [ s %tmp.41 105 35 36 ];
-        %tmp.42 = lgetv %gap.3;
-        symbol [ gap %tmp.42 105 39 42 ];
-        %tmp.43 = add %tmp.41 %tmp.42;
-        %tmp.44 = mul %tmp.40 %tmp.43;
-        %tmp.45 = add %tmp.39 %tmp.44;
-        lputv %dx.7 %tmp.45;
-        symbol [ dx %dx.7 105 20 22 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 106 16 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_106_16_110_16_if_stmt:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_106_20_106_48_begin:
-        %tmp.46 = lgetv %x;
-        symbol [ x %tmp.46 106 20 21 ];
-        %tmp.47 = lgetv %dx.7;
-        symbol [ dx %tmp.47 106 25 27 ];
-        %tmp.48 = 2;
-        %tmp.49 = sub %tmp.47 %tmp.48;
-        %tmp.50 = gte %tmp.46 %tmp.49;
-        bf %tmp.50 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_106_16_110_16_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_106_35_106_48_true:
-        %tmp.51 = lgetv %x;
-        symbol [ x %tmp.51 106 35 36 ];
-        %tmp.52 = lgetv %dx.7;
-        symbol [ dx %tmp.52 106 39 41 ];
-        %tmp.53 = lgetv %s.2;
-        symbol [ s %tmp.53 106 44 45 ];
-        %tmp.54 = add %tmp.52 %tmp.53;
-        %tmp.55 = 2;
-        %tmp.56 = add %tmp.54 %tmp.55;
-        %tmp.57 = lt %tmp.51 %tmp.56;
-        push %tmp.57;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_106_35_106_48_end:
-        %tmp.58 = phi [%tmp.50 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_106_20_106_48_begin] [%tmp.57 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_106_35_106_48_true] [%tmp.58 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_106_35_106_48_end];
-        bf %tmp.58 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_106_16_110_16_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_106_16_110_16_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_106_51_110_16_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 107 20 ]
-        symbol [ ctrl %tmp.60 107 20 24 ];
-        %tmp.60 = getv ? :ctrl;
-        symbol [ setRollCursor %tmp.61 107 25 38 ];
-        %tmp.61 = getv function %tmp.60 :setRollCursor;
-        %tmp.62 = lgetv %i.6;
-        symbol [ i %tmp.62 107 39 40 ];
-        invoke %tmp.60 %tmp.61(%tmp.62);
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 108 20 ]
-        symbol [ ctrl %tmp.64 108 20 24 ];
-        %tmp.64 = getv ? :ctrl;
-        symbol [ selectAction %tmp.65 108 25 37 ];
-        %tmp.65 = getv function %tmp.64 :selectAction;
-        invoke %tmp.64 %tmp.65();
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 109 20 ]
-        ret ?;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_106_51_110_16_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_106_16_110_16_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_106_16_110_16_if_end:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_104_52_111_12_stop:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_104_12_111_12_for_incr:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 104 ]
-        %tmp.68 = lgetv %i.6;
-        symbol [ i %tmp.68 104 47 48 ];
-        %tmp.69 = add %tmp.68 1;
-        lputv %i.6 %tmp.69;
-        symbol [ i %i.6 104 47 48 ];
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_104_12_111_12_for_test;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_104_12_111_12_for_end:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_103_43_112_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_103_8_112_8_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_103_8_112_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 114 8 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_99_40_129_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_99_40_129_4_stop" ]
-        %bl.8 = local;
-        symbol [ bl %bl.8 114 12 14 ];
-        symbol [ UIManager %tmp.71 114 17 26 ];
-        %tmp.71 = getv ? :UIManager;
-        symbol [ buttonLayout %tmp.72 114 27 39 ];
-        %tmp.72 = getv function %tmp.71 :buttonLayout;
-        symbol [ _sw %tmp.74 114 40 43 ];
-        %tmp.74 = getv ? :_sw;
-        symbol [ _sh %tmp.76 114 45 48 ];
-        %tmp.76 = getv ? :_sh;
-        %tmp.77 = invoke %tmp.71 %tmp.72(%tmp.74, %tmp.76);
-        lputv %bl.8 %tmp.77;
-        symbol [ bl %bl.8 114 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 115 8 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_99_40_129_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_99_40_129_4_stop" ]
-        %bw.9 = local;
-        symbol [ bw %bw.9 115 12 14 ];
-        %tmp.78 = lgetv %bl.8;
-        symbol [ bl %tmp.78 115 17 19 ];
-        %tmp.79 = 0;
-        %tmp.80 = agetv %tmp.78 %tmp.79;
-        lputv %bw.9 %tmp.80;
-        symbol [ bw %bw.9 115 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 115 24 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_99_40_129_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_99_40_129_4_stop" ]
-        %bh.10 = local;
-        symbol [ bh %bh.10 115 28 30 ];
-        %tmp.81 = lgetv %bl.8;
-        symbol [ bl %tmp.81 115 33 35 ];
-        %tmp.82 = 1;
-        %tmp.83 = agetv %tmp.81 %tmp.82;
-        lputv %bh.10 %tmp.83;
-        symbol [ bh %bh.10 115 28 30 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 115 40 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_99_40_129_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_99_40_129_4_stop" ]
-        %bx0.11 = local;
-        symbol [ bx0 %bx0.11 115 44 47 ];
-        %tmp.84 = lgetv %bl.8;
-        symbol [ bl %tmp.84 115 50 52 ];
-        %tmp.85 = 2;
-        %tmp.86 = agetv %tmp.84 %tmp.85;
-        lputv %bx0.11 %tmp.86;
-        symbol [ bx0 %bx0.11 115 44 47 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 115 57 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_99_40_129_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_99_40_129_4_stop" ]
-        %by.12 = local;
-        symbol [ by %by.12 115 61 63 ];
-        %tmp.87 = lgetv %bl.8;
-        symbol [ bl %tmp.87 115 66 68 ];
-        %tmp.88 = 3;
-        %tmp.89 = agetv %tmp.87 %tmp.88;
-        lputv %by.12 %tmp.89;
-        symbol [ by %by.12 115 61 63 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 115 73 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_99_40_129_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_99_40_129_4_stop" ]
-        %bgap.13 = local;
-        symbol [ bgap %bgap.13 115 77 81 ];
-        %tmp.90 = lgetv %bl.8;
-        symbol [ bl %tmp.90 115 84 86 ];
-        %tmp.91 = 4;
-        %tmp.92 = agetv %tmp.90 %tmp.91;
-        lputv %bgap.13 %tmp.92;
-        symbol [ bgap %bgap.13 115 77 81 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 116 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_116_8_128_8_if_stmt:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_116_12_116_41_begin:
-        %tmp.93 = lgetv %y;
-        symbol [ y %tmp.93 116 12 13 ];
-        %tmp.94 = lgetv %by.12;
-        symbol [ by %tmp.94 116 17 19 ];
-        %tmp.95 = 4;
-        %tmp.96 = sub %tmp.94 %tmp.95;
-        %tmp.97 = gte %tmp.93 %tmp.96;
-        bf %tmp.97 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_116_8_128_8_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_116_27_116_41_true:
-        %tmp.98 = lgetv %y;
-        symbol [ y %tmp.98 116 27 28 ];
-        %tmp.99 = lgetv %by.12;
-        symbol [ by %tmp.99 116 31 33 ];
-        %tmp.100 = lgetv %bh.10;
-        symbol [ bh %tmp.100 116 36 38 ];
-        %tmp.101 = add %tmp.99 %tmp.100;
-        %tmp.102 = 4;
-        %tmp.103 = add %tmp.101 %tmp.102;
-        %tmp.104 = lt %tmp.98 %tmp.103;
-        push %tmp.104;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_116_27_116_41_end:
-        %tmp.105 = phi [%tmp.97 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_116_12_116_41_begin] [%tmp.104 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_116_27_116_41_true] [%tmp.105 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_116_27_116_41_end];
-        bf %tmp.105 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_116_8_128_8_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_116_8_128_8_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_116_44_128_8_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 117 12 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_117_12_121_12_if_stmt:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_117_16_117_47_begin:
-        %tmp.106 = lgetv %x;
-        symbol [ x %tmp.106 117 16 17 ];
-        %tmp.107 = lgetv %bx0.11;
-        symbol [ bx0 %tmp.107 117 21 24 ];
-        %tmp.108 = 2;
-        %tmp.109 = sub %tmp.107 %tmp.108;
-        %tmp.110 = gte %tmp.106 %tmp.109;
-        bf %tmp.110 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_117_12_121_12_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_117_32_117_47_true:
-        %tmp.111 = lgetv %x;
-        symbol [ x %tmp.111 117 32 33 ];
-        %tmp.112 = lgetv %bx0.11;
-        symbol [ bx0 %tmp.112 117 36 39 ];
-        %tmp.113 = lgetv %bw.9;
-        symbol [ bw %tmp.113 117 42 44 ];
-        %tmp.114 = add %tmp.112 %tmp.113;
-        %tmp.115 = 2;
-        %tmp.116 = add %tmp.114 %tmp.115;
-        %tmp.117 = lt %tmp.111 %tmp.116;
-        push %tmp.117;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_117_32_117_47_end:
-        %tmp.118 = phi [%tmp.110 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_117_16_117_47_begin] [%tmp.117 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_117_32_117_47_true] [%tmp.118 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_117_32_117_47_end];
-        bf %tmp.118 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_117_12_121_12_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_117_12_121_12_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_117_50_121_12_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 118 16 ]
-        symbol [ ctrl %tmp.120 118 16 20 ];
-        %tmp.120 = getv ? :ctrl;
-        symbol [ setRollCursor %tmp.121 118 21 34 ];
-        %tmp.121 = getv function %tmp.120 :setRollCursor;
-        symbol [ DR_POS_ROLL %tmp.123 118 35 46 ];
-        %tmp.123 = getv ? :DR_POS_ROLL;
-        invoke %tmp.120 %tmp.121(%tmp.123);
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 119 16 ]
-        symbol [ ctrl %tmp.125 119 16 20 ];
-        %tmp.125 = getv ? :ctrl;
-        symbol [ selectAction %tmp.126 119 21 33 ];
-        %tmp.126 = getv function %tmp.125 :selectAction;
-        invoke %tmp.125 %tmp.126();
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 120 16 ]
-        ret ?;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_117_50_121_12_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_117_12_121_12_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_117_12_121_12_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 122 12 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_116_44_128_8_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_116_44_128_8_stop" ]
-        %bx1.14 = local;
-        symbol [ bx1 %bx1.14 122 16 19 ];
-        %tmp.127 = lgetv %bx0.11;
-        symbol [ bx0 %tmp.127 122 22 25 ];
-        %tmp.128 = lgetv %bw.9;
-        symbol [ bw %tmp.128 122 28 30 ];
-        %tmp.129 = add %tmp.127 %tmp.128;
-        %tmp.130 = lgetv %bgap.13;
-        symbol [ bgap %tmp.130 122 33 37 ];
-        %tmp.131 = add %tmp.129 %tmp.130;
-        lputv %bx1.14 %tmp.131;
-        symbol [ bx1 %bx1.14 122 16 19 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 123 12 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_123_12_127_12_if_stmt:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_123_16_123_47_begin:
-        %tmp.132 = lgetv %x;
-        symbol [ x %tmp.132 123 16 17 ];
-        %tmp.133 = lgetv %bx1.14;
-        symbol [ bx1 %tmp.133 123 21 24 ];
-        %tmp.134 = 2;
-        %tmp.135 = sub %tmp.133 %tmp.134;
-        %tmp.136 = gte %tmp.132 %tmp.135;
-        bf %tmp.136 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_123_12_127_12_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_123_32_123_47_true:
-        %tmp.137 = lgetv %x;
-        symbol [ x %tmp.137 123 32 33 ];
-        %tmp.138 = lgetv %bx1.14;
-        symbol [ bx1 %tmp.138 123 36 39 ];
-        %tmp.139 = lgetv %bw.9;
-        symbol [ bw %tmp.139 123 42 44 ];
-        %tmp.140 = add %tmp.138 %tmp.139;
-        %tmp.141 = 2;
-        %tmp.142 = add %tmp.140 %tmp.141;
-        %tmp.143 = lt %tmp.137 %tmp.142;
-        push %tmp.143;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_123_32_123_47_end:
-        %tmp.144 = phi [%tmp.136 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_123_16_123_47_begin] [%tmp.143 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_123_32_123_47_true] [%tmp.144 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_123_32_123_47_end];
-        bf %tmp.144 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_123_12_127_12_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_123_12_127_12_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_123_50_127_12_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 124 16 ]
-        symbol [ ctrl %tmp.146 124 16 20 ];
-        %tmp.146 = getv ? :ctrl;
-        symbol [ setRollCursor %tmp.147 124 21 34 ];
-        %tmp.147 = getv function %tmp.146 :setRollCursor;
-        symbol [ DR_POS_SCORE %tmp.149 124 35 47 ];
-        %tmp.149 = getv ? :DR_POS_SCORE;
-        invoke %tmp.146 %tmp.147(%tmp.149);
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 125 16 ]
-        symbol [ ctrl %tmp.151 125 16 20 ];
-        %tmp.151 = getv ? :ctrl;
-        symbol [ selectAction %tmp.152 125 21 33 ];
-        %tmp.152 = getv function %tmp.151 :selectAction;
-        invoke %tmp.151 %tmp.152();
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 126 16 ]
-        ret ?;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_123_50_127_12_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_123_12_127_12_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_123_12_127_12_if_end:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_116_44_128_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_116_8_128_8_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_116_8_128_8_if_end:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_99_40_129_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc"; @line = 131; @symbol_functiondef = [_tapPhaseScore,131,20,34]; @symbol_param<0> = [x,131,35,36]; @symbol_param<1> = [y,131,38,39]; ]
-    protected
-    function _tapPhaseScore(x, y) {
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_131_41_155_4_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 132 8 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_131_41_155_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_131_41_155_4_stop" ]
-        %rg.1 = local;
-        symbol [ rg %rg.1 132 12 14 ];
-        symbol [ UIManager %tmp.2 132 17 26 ];
-        %tmp.2 = getv ? :UIManager;
-        symbol [ scoreRowGeom %tmp.3 132 27 39 ];
-        %tmp.3 = getv function %tmp.2 :scoreRowGeom;
-        symbol [ _sw %tmp.5 132 40 43 ];
-        %tmp.5 = getv ? :_sw;
-        symbol [ _sh %tmp.7 132 45 48 ];
-        %tmp.7 = getv ? :_sh;
-        %tmp.8 = invoke %tmp.2 %tmp.3(%tmp.5, %tmp.7);
-        lputv %rg.1 %tmp.8;
-        symbol [ rg %rg.1 132 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 133 8 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_131_41_155_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_131_41_155_4_stop" ]
-        %rowH.2 = local;
-        symbol [ rowH %rowH.2 133 12 16 ];
-        %tmp.9 = lgetv %rg.1;
-        symbol [ rg %tmp.9 133 19 21 ];
-        %tmp.10 = 0;
-        %tmp.11 = agetv %tmp.9 %tmp.10;
-        lputv %rowH.2 %tmp.11;
-        symbol [ rowH %rowH.2 133 12 16 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 133 26 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_131_41_155_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_131_41_155_4_stop" ]
-        %rowW.3 = local;
-        symbol [ rowW %rowW.3 133 30 34 ];
-        %tmp.12 = lgetv %rg.1;
-        symbol [ rg %tmp.12 133 37 39 ];
-        %tmp.13 = 1;
-        %tmp.14 = agetv %tmp.12 %tmp.13;
-        lputv %rowW.3 %tmp.14;
-        symbol [ rowW %rowW.3 133 30 34 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 133 44 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_131_41_155_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_131_41_155_4_stop" ]
-        %rowX.4 = local;
-        symbol [ rowX %rowX.4 133 48 52 ];
-        %tmp.15 = lgetv %rg.1;
-        symbol [ rg %tmp.15 133 55 57 ];
-        %tmp.16 = 2;
-        %tmp.17 = agetv %tmp.15 %tmp.16;
-        lputv %rowX.4 %tmp.17;
-        symbol [ rowX %rowX.4 133 48 52 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 133 62 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_131_41_155_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_131_41_155_4_stop" ]
-        %listY0.5 = local;
-        symbol [ listY0 %listY0.5 133 66 72 ];
-        %tmp.18 = lgetv %rg.1;
-        symbol [ rg %tmp.18 133 75 77 ];
-        %tmp.19 = 3;
-        %tmp.20 = agetv %tmp.18 %tmp.19;
-        lputv %listY0.5 %tmp.20;
-        symbol [ listY0 %listY0.5 133 66 72 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 136 8 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_131_41_155_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_131_41_155_4_stop" ]
-        %window.6 = local;
-        symbol [ window %window.6 136 12 18 ];
-        %tmp.21 = 7;
-        lputv %window.6 %tmp.21;
-        symbol [ window %window.6 136 12 18 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 137 8 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_131_41_155_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_131_41_155_4_stop" ]
-        %first.7 = local;
-        symbol [ first %first.7 137 12 17 ];
-        symbol [ ctrl %tmp.23 137 20 24 ];
-        %tmp.23 = getv ? :ctrl;
-        symbol [ scoreCursor %tmp.24 137 25 36 ];
-        %tmp.24 = getv %tmp.23 :scoreCursor;
-        %tmp.25 = lgetv %window.6;
-        symbol [ window %tmp.25 137 39 45 ];
-        %tmp.26 = 2;
-        %tmp.27 = div %tmp.25 %tmp.26;
-        %tmp.28 = sub %tmp.24 %tmp.27;
-        lputv %first.7 %tmp.28;
-        symbol [ first %first.7 137 12 17 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 138 8 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_131_41_155_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_131_41_155_4_stop" ]
-        %maxFirst.8 = local;
-        symbol [ maxFirst %maxFirst.8 138 12 20 ];
-        symbol [ DR_CAT_COUNT %tmp.30 138 23 35 ];
-        %tmp.30 = getv ? :DR_CAT_COUNT;
-        %tmp.31 = lgetv %window.6;
-        symbol [ window %tmp.31 138 38 44 ];
-        %tmp.32 = sub %tmp.30 %tmp.31;
-        lputv %maxFirst.8 %tmp.32;
-        symbol [ maxFirst %maxFirst.8 138 12 20 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 139 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_139_8_139_36_if_stmt:
-        %tmp.33 = lgetv %first.7;
-        symbol [ first %tmp.33 139 12 17 ];
-        %tmp.34 = 0;
-        %tmp.35 = lt %tmp.33 %tmp.34;
-        bf %tmp.35 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_139_8_139_36_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_139_8_139_36_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_139_23_139_36_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 139 25 ]
-        %tmp.36 = 0;
-        lputv %first.7 %tmp.36;
-        symbol [ first %first.7 139 25 30 ];
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_139_23_139_36_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_139_8_139_36_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_139_8_139_36_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 140 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_140_8_140_50_if_stmt:
-        %tmp.37 = lgetv %first.7;
-        symbol [ first %tmp.37 140 12 17 ];
-        %tmp.38 = lgetv %maxFirst.8;
-        symbol [ maxFirst %tmp.38 140 20 28 ];
-        %tmp.39 = gt %tmp.37 %tmp.38;
-        bf %tmp.39 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_140_8_140_50_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_140_8_140_50_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_140_30_140_50_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 140 32 ]
-        %tmp.40 = lgetv %maxFirst.8;
-        symbol [ maxFirst %tmp.40 140 40 48 ];
-        lputv %first.7 %tmp.40;
-        symbol [ first %first.7 140 32 37 ];
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_140_30_140_50_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_140_8_140_50_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_140_8_140_50_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 141 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_141_8_141_36_if_stmt:
-        %tmp.41 = lgetv %first.7;
-        symbol [ first %tmp.41 141 12 17 ];
-        %tmp.42 = 0;
-        %tmp.43 = lt %tmp.41 %tmp.42;
-        bf %tmp.43 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_141_8_141_36_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_141_8_141_36_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_141_23_141_36_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 141 25 ]
-        %tmp.44 = 0;
-        lputv %first.7 %tmp.44;
-        symbol [ first %first.7 141 25 30 ];
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_141_23_141_36_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_141_8_141_36_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_141_8_141_36_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 142 8 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_131_41_155_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_131_41_155_4_stop" ]
-        %last.9 = local;
-        symbol [ last %last.9 142 12 16 ];
-        %tmp.45 = lgetv %first.7;
-        symbol [ first %tmp.45 142 19 24 ];
-        %tmp.46 = lgetv %window.6;
-        symbol [ window %tmp.46 142 27 33 ];
-        %tmp.47 = add %tmp.45 %tmp.46;
-        lputv %last.9 %tmp.47;
-        symbol [ last %last.9 142 12 16 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 143 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_143_8_143_56_if_stmt:
-        %tmp.48 = lgetv %last.9;
-        symbol [ last %tmp.48 143 12 16 ];
-        symbol [ DR_CAT_COUNT %tmp.50 143 19 31 ];
-        %tmp.50 = getv ? :DR_CAT_COUNT;
-        %tmp.51 = gt %tmp.48 %tmp.50;
-        bf %tmp.51 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_143_8_143_56_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_143_8_143_56_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_143_33_143_56_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 143 35 ]
-        symbol [ DR_CAT_COUNT %tmp.53 143 42 54 ];
-        %tmp.53 = getv ? :DR_CAT_COUNT;
-        lputv %last.9 %tmp.53;
-        symbol [ last %last.9 143 35 39 ];
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_143_33_143_56_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_143_8_143_56_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_143_8_143_56_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 145 8 ]
-        for @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_145_8_154_8_for_test @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_145_8_154_8_for_incr @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_145_8_154_8_for_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_145_8_154_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_145_8_154_8_for_begin" "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_145_8_154_8_for_end" ]
-        %i.10 = local;
-        symbol [ i %i.10 145 17 18 ];
-        %tmp.54 = lgetv %first.7;
-        symbol [ first %tmp.54 145 21 26 ];
-        lputv %i.10 %tmp.54;
-        symbol [ i %i.10 145 17 18 ];
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_145_8_154_8_for_test:
-        %tmp.55 = lgetv %i.10;
-        symbol [ i %tmp.55 145 28 29 ];
-        %tmp.56 = lgetv %last.9;
-        symbol [ last %tmp.56 145 32 36 ];
-        %tmp.57 = lt %tmp.55 %tmp.56;
-        bf %tmp.57 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_145_8_154_8_for_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_145_8_154_8_for_begin:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_145_43_154_8_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 146 12 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_145_43_154_8_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_145_43_154_8_stop" ]
-        %ry.11 = local;
-        symbol [ ry %ry.11 146 16 18 ];
-        %tmp.58 = lgetv %listY0.5;
-        symbol [ listY0 %tmp.58 146 21 27 ];
-        %tmp.59 = lgetv %i.10;
-        symbol [ i %tmp.59 146 31 32 ];
-        %tmp.60 = lgetv %first.7;
-        symbol [ first %tmp.60 146 35 40 ];
-        %tmp.61 = sub %tmp.59 %tmp.60;
-        %tmp.62 = lgetv %rowH.2;
-        symbol [ rowH %tmp.62 146 44 48 ];
-        %tmp.63 = mul %tmp.61 %tmp.62;
-        %tmp.64 = add %tmp.58 %tmp.63;
-        lputv %ry.11 %tmp.64;
-        symbol [ ry %ry.11 146 16 18 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 147 12 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_147_12_153_12_if_stmt:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_147_16_147_75_begin:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_147_16_147_53_begin:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_147_16_147_40_begin:
-        %tmp.65 = lgetv %x;
-        symbol [ x %tmp.65 147 16 17 ];
-        %tmp.66 = lgetv %rowX.4;
-        symbol [ rowX %tmp.66 147 21 25 ];
-        %tmp.67 = gte %tmp.65 %tmp.66;
-        bf %tmp.67 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_147_12_153_12_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_147_29_147_40_true:
-        %tmp.68 = lgetv %x;
-        symbol [ x %tmp.68 147 29 30 ];
-        %tmp.69 = lgetv %rowX.4;
-        symbol [ rowX %tmp.69 147 33 37 ];
-        %tmp.70 = lgetv %rowW.3;
-        symbol [ rowW %tmp.70 147 40 44 ];
-        %tmp.71 = add %tmp.69 %tmp.70;
-        %tmp.72 = lt %tmp.68 %tmp.71;
-        push %tmp.72;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_147_29_147_40_end:
-        %tmp.73 = phi [%tmp.67 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_147_16_147_40_begin] [%tmp.72 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_147_29_147_40_true] [%tmp.73 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_147_29_147_40_end];
-        bf %tmp.73 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_147_12_153_12_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_147_48_147_53_true:
-        %tmp.74 = lgetv %y;
-        symbol [ y %tmp.74 147 48 49 ];
-        %tmp.75 = lgetv %ry.11;
-        symbol [ ry %tmp.75 147 53 55 ];
-        %tmp.76 = gte %tmp.74 %tmp.75;
-        push %tmp.76;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_147_48_147_53_end:
-        %tmp.77 = phi [%tmp.73 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_147_16_147_53_begin] [%tmp.76 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_147_48_147_53_true] [%tmp.77 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_147_48_147_53_end];
-        bf %tmp.77 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_147_12_153_12_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_147_59_147_75_true:
-        %tmp.78 = lgetv %y;
-        symbol [ y %tmp.78 147 59 60 ];
-        %tmp.79 = lgetv %ry.11;
-        symbol [ ry %tmp.79 147 63 65 ];
-        %tmp.80 = lgetv %rowH.2;
-        symbol [ rowH %tmp.80 147 68 72 ];
-        %tmp.81 = add %tmp.79 %tmp.80;
-        %tmp.82 = 2;
-        %tmp.83 = sub %tmp.81 %tmp.82;
-        %tmp.84 = lt %tmp.78 %tmp.83;
-        push %tmp.84;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_147_59_147_75_end:
-        %tmp.85 = phi [%tmp.77 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_147_16_147_75_begin] [%tmp.84 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_147_59_147_75_true] [%tmp.85 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_147_59_147_75_end];
-        bf %tmp.85 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_147_12_153_12_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_147_12_153_12_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_147_78_153_12_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 148 16 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_148_16_151_16_if_stmt:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_148_20_148_71_begin:
-        symbol [ ctrl %tmp.87 148 20 24 ];
-        %tmp.87 = getv ? :ctrl;
-        symbol [ scores %tmp.88 148 25 31 ];
-        %tmp.88 = getv %tmp.87 :scores;
-        symbol [ isAvailable %tmp.89 148 32 43 ];
-        %tmp.89 = getv function %tmp.88 :isAvailable;
-        %tmp.90 = lgetv %i.10;
-        symbol [ i %tmp.90 148 44 45 ];
-        %tmp.91 = invoke %tmp.88 %tmp.89(%tmp.90);
-        bf %tmp.91 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_148_16_151_16_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_148_50_148_71_true:
-        symbol [ ctrl %tmp.93 148 51 55 ];
-        %tmp.93 = getv ? :ctrl;
-        symbol [ scores %tmp.94 148 56 62 ];
-        %tmp.94 = getv %tmp.93 :scores;
-        symbol [ isUsed %tmp.95 148 63 69 ];
-        %tmp.95 = getv function %tmp.94 :isUsed;
-        %tmp.96 = lgetv %i.10;
-        symbol [ i %tmp.96 148 70 71 ];
-        %tmp.97 = invoke %tmp.94 %tmp.95(%tmp.96);
-        %tmp.98 = not %tmp.97;
-        push %tmp.98;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_148_50_148_71_end:
-        %tmp.99 = phi [%tmp.91 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_148_20_148_71_begin] [%tmp.98 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_148_50_148_71_true] [%tmp.99 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_148_50_148_71_end];
-        bf %tmp.99 @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_148_16_151_16_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_148_16_151_16_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_148_74_151_16_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 149 20 ]
-        symbol [ ctrl %tmp.101 149 20 24 ];
-        %tmp.101 = getv ? :ctrl;
-        symbol [ setScoreCursor %tmp.102 149 25 39 ];
-        %tmp.102 = getv function %tmp.101 :setScoreCursor;
-        %tmp.103 = lgetv %i.10;
-        symbol [ i %tmp.103 149 40 41 ];
-        invoke %tmp.101 %tmp.102(%tmp.103);
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 150 20 ]
-        symbol [ ctrl %tmp.105 150 20 24 ];
-        %tmp.105 = getv ? :ctrl;
-        symbol [ selectAction %tmp.106 150 25 37 ];
-        %tmp.106 = getv function %tmp.105 :selectAction;
-        invoke %tmp.105 %tmp.106();
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_148_74_151_16_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_148_16_151_16_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_148_16_151_16_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 152 16 ]
-        ret ?;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_147_78_153_12_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_147_12_153_12_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_147_12_153_12_if_end:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_145_43_154_8_stop:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_145_8_154_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc" 145 ]
-        %tmp.109 = lgetv %i.10;
-        symbol [ i %tmp.109 145 38 39 ];
-        %tmp.110 = add %tmp.109 1;
-        lputv %i.10 %tmp.110;
-        symbol [ i %i.10 145 38 39 ];
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_145_8_154_8_for_test;
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_145_8_154_8_for_end:
-_Users_kkorolczuk_work_garmin_diceroyale_source_MainView_mc_131_41_155_4_stop:
+        %tmp.17 = lte %tmp.15 %tmp.16;
+        push %tmp.17;
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_55_27_55_33_end:
+        %tmp.18 = phi [%tmp.13 @_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_55_16_55_33_begin] [%tmp.17 @_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_55_27_55_33_false] [%tmp.18 @_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_55_27_55_33_end];
+        bf %tmp.18 @_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_55_12_62_12_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_55_12_62_12_if_true:
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_55_36_62_12_start:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc" 59 16 ]
+        [ "_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_55_36_62_12_start" "_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_55_36_62_12_stop" ]
+        %dev.2 = local;
+        symbol [ dev %dev.2 59 20 23 ];
+        symbol [ System %tmp.19 59 26 32 ];
+        %tmp.19 = getm $.Toybox.System;
+        symbol [ getDeviceSettings %tmp.20 59 33 50 ];
+        %tmp.20 = getv function %tmp.19 :getDeviceSettings;
+        %tmp.21 = invoke %tmp.19 %tmp.20();
+        lputv %dev.2 %tmp.21;
+        symbol [ dev %dev.2 59 20 23 ];
+[ "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc" 60 16 ]
+        %tmp.22 = lgetv %dev.2;
+        symbol [ dev %tmp.22 60 21 24 ];
+        symbol [ screenWidth %tmp.23 60 25 36 ];
+        %tmp.23 = getv %tmp.22 :screenWidth;
+        symbol [ _w ? 60 16 18 ];
+        putv self :_w %tmp.23;
+[ "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc" 61 16 ]
+        %tmp.24 = lgetv %dev.2;
+        symbol [ dev %tmp.24 61 21 24 ];
+        symbol [ screenHeight %tmp.25 61 25 37 ];
+        %tmp.25 = getv %tmp.24 :screenHeight;
+        symbol [ _h ? 61 16 18 ];
+        putv self :_h %tmp.25;
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_55_36_62_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_55_12_62_12_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_55_12_62_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc" 63 12 ]
+        symbol [ UIManager %tmp.27 63 17 26 ];
+        %tmp.27 = getv ? :UIManager;
+        symbol [ layoutKeyboard %tmp.28 63 27 41 ];
+        %tmp.28 = getv function %tmp.27 :layoutKeyboard;
+        symbol [ _w %tmp.30 63 42 44 ];
+        %tmp.30 = getv ? :_w;
+        symbol [ _h %tmp.32 63 46 48 ];
+        %tmp.32 = getv ? :_h;
+        %tmp.33 = invoke %tmp.27 %tmp.28(%tmp.30, %tmp.32);
+        lputv %kb.1 %tmp.33;
+        symbol [ kb %kb.1 63 12 14 ];
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_54_24_64_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_54_8_64_8_if_end;
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_54_8_64_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc" 65 8 ]
+        %tmp.34 = lgetv %kb.1;
+        symbol [ kb %tmp.34 65 15 17 ];
+        symbol [ indexAt %tmp.35 65 18 25 ];
+        %tmp.35 = getv function %tmp.34 :indexAt;
+        %tmp.36 = lgetv %coords;
+        symbol [ coords %tmp.36 65 26 32 ];
+        %tmp.37 = 0;
+        %tmp.38 = agetv %tmp.36 %tmp.37;
+        %tmp.39 = lgetv %coords;
+        symbol [ coords %tmp.39 65 37 43 ];
+        %tmp.40 = 1;
+        %tmp.41 = agetv %tmp.39 %tmp.40;
+        %tmp.42 = invoke %tmp.34 %tmp.35(%tmp.38, %tmp.41);
+        ret %tmp.42;
+_Users_kkorolczuk_work_garmin_hangman_source_MainView_mc_51_33_66_4_stop:
     }
 }
-[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/MainView.mc"; @line = 8; ]
+[ @file = "/Users/kkorolczuk/work/garmin/hangman/source/MainView.mc"; @line = 12; ]
 <init> {
 }

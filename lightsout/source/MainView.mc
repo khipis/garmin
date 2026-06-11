@@ -61,8 +61,17 @@ class MainView extends WatchUi.View {
         i = (i + 1) % (n * n);
         ctrl.setCursor(i / n, i % n);
     }
+    function openLeaderboard() {
+        var v = new LbScoresView(LB_GAME_ID, ctrl.boardVariant(), "LIGHTS OUT");
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
+    }
+
     function navSelect() {
-        if (ctrl.state == LS_MENU) { ctrl.menuActivate(); return; }
+        if (ctrl.state == LS_MENU) {
+            if (ctrl.menuRow == LO_ROW_LEADERBOARD) { openLeaderboard(); return; }
+            ctrl.menuActivate();
+            return;
+        }
         if (ctrl.state == LS_WIN)  {
             if (ctrl.mode == LO_MODE_LEVELS && ctrl.level < LO_TOTAL_LEVELS) {
                 ctrl.nextLevel();
@@ -112,7 +121,10 @@ class MainView extends WatchUi.View {
         for (var i = 0; i < LO_MENU_ROWS; i++) {
             var ry = rowY0 + i * (rowH + gap);
             if (x >= rowX && x < rowX + rowW && y >= ry && y < ry + rowH) {
-                ctrl.setMenuRow(i); ctrl.menuActivate(); return;
+                ctrl.setMenuRow(i);
+                if (i == LO_ROW_LEADERBOARD) { openLeaderboard(); return; }
+                ctrl.menuActivate();
+                return;
             }
         }
     }

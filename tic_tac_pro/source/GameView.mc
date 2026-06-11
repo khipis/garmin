@@ -2,6 +2,12 @@ using Toybox.WatchUi;
 using Toybox.Graphics;
 using Toybox.Timer;
 using Toybox.Math;
+using Toybox.Application;
+using Toybox.Lang;
+
+// ── Leaderboard ─────────────────────────────────────────────────────────────
+const LB_GAME_ID    = "tictacpro";
+const LB_STREAK_KEY = "tictacpro_streak";  // Application.Storage: consecutive wins vs AI
 
 // ── Constants ─────────────────────────────────────────────────────────────────
 const MARK_NONE = 0;
@@ -76,6 +82,7 @@ class GameView extends WatchUi.View {
     // ── Game flow ─────────────────────────────────────────────────────────
     hidden var _state;
     hidden var _overType;
+    hidden var _gameOverHandled;   // streak/submit done once per game-over
 
     // ── Session score ─────────────────────────────────────────────────────
     hidden var _scoreX, _scoreO;
@@ -131,6 +138,7 @@ class GameView extends WatchUi.View {
         _sw          = 0;
         _sh      = 0;
         _timer   = null;
+        _gameOverHandled = false;
         _init3DTables();
         _startGame();
         _state   = GS_MENU;
@@ -348,7 +356,7 @@ class GameView extends WatchUi.View {
     // in 3D move RIGHT and cycle Z layer when wrapping.
     function advanceCursor() {
         if (_state == GS_MENU) {
-            _menuSel = (_menuSel + 1) % 5;
+            _menuSel = (_menuSel + 1) % 6;
             WatchUi.requestUpdate();
             return;
         }
@@ -369,7 +377,7 @@ class GameView extends WatchUi.View {
     // in 3D — cycle through Z layers (rotates active layer).
     function retreatCursor() {
         if (_state == GS_MENU) {
-            _menuSel = (_menuSel + 4) % 5;
+            _menuSel = (_menuSel + 5) % 6;
             WatchUi.requestUpdate();
             return;
         }
@@ -386,7 +394,7 @@ class GameView extends WatchUi.View {
     // move cursor up/down one row, same column, wrapping
     function moveCursorRow(delta) {
         if (_state == GS_MENU) {
-            _menuSel = (_menuSel + 5 + delta) % 5;
+            _menuSel = (_menuSel + 6 + delta) % 6;
             WatchUi.requestUpdate();
             return;
         }
@@ -506,8 +514,41 @@ class GameView extends WatchUi.View {
             }
         } else if (_menuSel == 3) {
             if (_mode == MODE_PVAI) { _playerFirst = !_playerFirst; }
-        } else {
+        } else if (_menuSel == 4) {
             _startGame();
+        } else {
+            openLeaderboard();
+        }
+    }
+
+    // ── Leaderboard ───────────────────────────────────────────────────────
+    // Variant = current AI difficulty (the win-streak is "vs AI", so each
+    // difficulty keeps its own ranking). Same expression is used on submit.
+    function variant() {
+        return (_diff == DIFF_EASY) ? "Easy" : ((_diff == DIFF_MED) ? "Med" : "Hard");
+    }
+
+    function openLeaderboard() {
+        var v = new LbScoresView(LB_GAME_ID, variant(), "TIC-TAC PRO");
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
+    }
+
+    // Called once when a game reaches GS_OVER. Tracks the consecutive-win
+    // streak vs the AI (PvAI only): increment + submit on a player win,
+    // reset to 0 on a loss or draw.
+    hidden function _handleGameOver() {
+        _gameOverHandled = true;
+        if (_mode != MODE_PVAI) { return; }
+        var playerWon = (_playerFirst && _overType == OVER_XWIN) ||
+                        (!_playerFirst && _overType == OVER_OWIN);
+        if (playerWon) {
+            var stored = Application.Storage.getValue(LB_STREAK_KEY);
+            var streak = (stored instanceof Lang.Number) ? stored : 0;
+            streak = streak + 1;
+            Application.Storage.setValue(LB_STREAK_KEY, streak);
+            Leaderboard.submitScore(LB_GAME_ID, streak, variant());
+        } else {
+            Application.Storage.setValue(LB_STREAK_KEY, 0);
         }
     }
 
@@ -917,6 +958,7 @@ class GameView extends WatchUi.View {
         i = 0;
         while (i < 4) { _winLine[i] = -1; _winLine3D[i] = -1; i = i + 1; }
         _moveCount = 0;
+        _gameOverHandled = false;
         if (_is3D) {
             _curX = _n3D / 2; _curY = _n3D / 2;
         } else {
@@ -1191,6 +1233,7 @@ class GameView extends WatchUi.View {
 
     // ── Rendering ─────────────────────────────────────────────────────────
     function onUpdate(dc) {
+        if (_state == GS_OVER && !_gameOverHandled) { _handleGameOver(); }
         if (_state == GS_MENU) { _drawMenu(dc); return; }
         dc.setColor(0x080810, 0x080810);
         dc.clear();
@@ -1547,18 +1590,25 @@ class GameView extends WatchUi.View {
                             : ("" + _gridN + "x" + _gridN);
         var sideStr = _playerFirst ? "Side: X" : "Side: O";
         var rows = ["Mode: " + modeStr, "Diff: " + diffStr, "Grid: " + gridStr, sideStr, "START"];
-        var nR   = 5;
-        var rowH = _sh * 10 / 100; if (rowH < 22) { rowH = 22; } if (rowH > 32) { rowH = 32; }
+        var nR   = 6;   // 5 settings/START rows + LEADERBOARD
+        // ~18% smaller than the old 5-row sizing so all 6 rows fit (incl. round watches).
+        var rowH = _sh * 82 / 1000; if (rowH < 18) { rowH = 18; } if (rowH > 26) { rowH = 26; }
         var rowW = _sw * 76 / 100;
         var rowX = (_sw - rowW) / 2;
-        var gap  = _sh * 2 / 100; if (gap < 3) { gap = 3; }
+        var gap  = _sh * 16 / 1000; if (gap < 3) { gap = 3; }
         var tot  = nR * rowH + (nR - 1) * gap;
-        var rowY0 = (_sh - tot) / 2 + rowH;
+        var rowY0 = (_sh - tot) / 2 + rowH / 2;
         var i = 0;
         while (i < nR) {
             var ry     = rowY0 + i * (rowH + gap);
             var sel    = (i == _menuSel);
-            var isStart = (i == nR - 1);
+            if (i == 5) {
+                // Gold "LEADERBOARD" row from the shared library.
+                LbBadge.drawRow(dc, rowX, ry, rowW, rowH, sel);
+                i++;
+                continue;
+            }
+            var isStart = (i == 4);
             dc.setColor(sel ? (isStart ? 0x3A1800 : 0x0A2040) : 0x0A0A18, Graphics.COLOR_TRANSPARENT);
             dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);
             dc.setColor(sel ? (isStart ? 0xFF8833 : 0x4499FF) : 0x1A2A3A, Graphics.COLOR_TRANSPARENT);
@@ -1584,13 +1634,13 @@ class GameView extends WatchUi.View {
 
     function doTap(tx, ty) {
         if (_state == GS_MENU) {
-            var gap  = _sh * 2 / 100; if (gap < 3) { gap = 3; }
-            var rowH = _sh * 10 / 100; if (rowH < 22) { rowH = 22; } if (rowH > 32) { rowH = 32; }
+            var gap  = _sh * 16 / 1000; if (gap < 3) { gap = 3; }
+            var rowH = _sh * 82 / 1000; if (rowH < 18) { rowH = 18; } if (rowH > 26) { rowH = 26; }
             var rowW = _sw * 76 / 100;
             var rowX = (_sw - rowW) / 2;
-            var nR = 5;
+            var nR = 6;
             var tot  = nR * rowH + (nR - 1) * gap;
-            var rowY0 = (_sh - tot) / 2 + rowH;
+            var rowY0 = (_sh - tot) / 2 + rowH / 2;
             for (var i = 0; i < nR; i++) {
                 var ry = rowY0 + i * (rowH + gap);
                 if (tx >= rowX && tx < rowX + rowW && ty >= ry && ty < ry + rowH) {

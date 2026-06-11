@@ -8,10 +8,14 @@ const GS_WIN  = 2;
 const GS_LOSE = 3;
 
 // ── Menu rows ─────────────────────────────────────────────────────
-const MENU_SIZE  = 0;
-const MENU_BOMBS = 1;
-const MENU_START = 2;
-const MENU_ROW_COUNT = 3;
+const MENU_SIZE   = 0;
+const MENU_BOMBS  = 1;
+const MENU_START  = 2;
+const MENU_LEADER = 3;
+const MENU_ROW_COUNT = 4;
+
+// Shared global-leaderboard game id (see _shared/leaderboard).
+const LB_GAME_ID = "minesweeper";
 
 const DIFF_COUNT = 6;
 const DENS_COUNT = 5;
@@ -73,7 +77,8 @@ class GameController {
     function menuActivate() {
         if      (menuRow == MENU_SIZE)  { _cycleSize(1); }
         else if (menuRow == MENU_BOMBS) { _cycleDens(1); }
-        else                            { startGame();   }
+        else if (menuRow == MENU_START) { startGame();   }
+        // MENU_LEADER is handled by the view (pushes the scores view).
     }
     function menuValuePrev() {
         if      (menuRow == MENU_SIZE)  { _cycleSize(-1); }
@@ -175,6 +180,10 @@ class GameController {
     }
     function currentName()        { return NAMES[difficulty];     }
     function currentDensityName() { return DENS_NAMES[bombDensity]; }
+    // Leaderboard variant — board size like "16x16".
+    function variantStr() {
+        return SIZES[difficulty].toString() + "x" + SIZES[difficulty].toString();
+    }
     function fmtTime(ms) {
         var s = ms / 1000; if (s > 9999) { s = 9999; } return s.format("%d");
     }
@@ -185,5 +194,9 @@ class GameController {
         if (bestMs[difficulty] <= 0 || elapsedMs < bestMs[difficulty]) {
             bestMs[difficulty] = elapsedMs; _save(SKEYS[difficulty], elapsedMs);
         }
+        // Submit solve time in whole seconds (lower is better → raw positive).
+        var secs = elapsedMs / 1000;
+        if (secs < 1) { secs = 1; }
+        Leaderboard.submitScore(LB_GAME_ID, secs, variantStr());
     }
 }

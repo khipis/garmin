@@ -14,6 +14,21 @@ const MG_GAMEOVER  = 5;   // all holes done
 // 20 holes total — see loadHole() for individual designs
 const MG_HOLES = 20;
 
+// ── Global leaderboard ─────────────────────────────────────────────────────
+// Metric submitted = total strokes to complete the whole course (positive).
+// LOWER is better; the backend sorts this game ASCENDING, so we submit the
+// raw positive stroke count (never negated). Variant = course length so the
+// board only compares like courses.
+const LB_GAME_ID = "minigolf";
+const LB_VARIANT = "20-holes";
+
+// Menu focus rows. UP/DOWN edits the focused selector (difficulty) or moves
+// focus between the action rows; SELECT activates the focused row.
+const MG_ROW_DIFF = 0;
+const MG_ROW_PLAY = 1;
+const MG_ROW_LB   = 2;
+const MG_MENU_ROWS = 3;
+
 // ── Wall segment: [x1, y1, x2, y2] (coords in 0..1000 space) ────────────────
 // Course space is 0-1000 × 0-1000, rendered into game viewport at runtime.
 
@@ -25,6 +40,7 @@ class BitochiMinigolfView extends WatchUi.View {
 
     // Difficulty / level selection
     hidden var _difficulty;  // 0=Easy 1=Normal 2=Hard
+    hidden var _menuRow;     // focused menu row (MG_ROW_*)
     // 20 holes total. Difficulty multiplies the target par allowance only,
     // not the level layout (every player faces the same 20 designs).
     hidden var _holeIdx;     // 0..MG_HOLES-1
@@ -91,7 +107,7 @@ class BitochiMinigolfView extends WatchUi.View {
     function initialize() {
         View.initialize();
         _w = 0; _h = 0; _tick = 0;
-        _gs = MG_MENU; _difficulty = 1;
+        _gs = MG_MENU; _difficulty = 1; _menuRow = MG_ROW_PLAY;
         _holeIdx = 0; _strokes = 0; _totalStrokes = 0;
         _aimAngle = 0; _power = 0; _powerDir = 1;
         _ballR = 14; _holeR = 20;
@@ -487,25 +503,47 @@ class BitochiMinigolfView extends WatchUi.View {
 
     // ── Input ─────────────────────────────────────────────────────────────────
     function doUp() {
-        if (_gs == MG_MENU)     { _difficulty = (_difficulty + 2) % 3; return; }
+        if (_gs == MG_MENU)     { menuNav(-1); return; }
         if (_gs == MG_GAMEOVER) { _gs = MG_MENU; return; }
         if (_gs == MG_AIM)      { _aimAngle = (_aimAngle + 350) % 360; }  // -10° per step
         if (_gs == MG_POWER)    { commitShot(); }
     }
 
     function doDown() {
-        if (_gs == MG_MENU)     { _difficulty = (_difficulty + 1) % 3; return; }
+        if (_gs == MG_MENU)     { menuNav(1); return; }
         if (_gs == MG_GAMEOVER) { _gs = MG_MENU; return; }
         if (_gs == MG_AIM)      { _aimAngle = (_aimAngle + 10) % 360; }   // +10° per step
         if (_gs == MG_POWER)    { commitShot(); }
     }
 
+    // UP/DOWN in the menu: when the difficulty row is focused, change the
+    // difficulty; otherwise move focus between the action rows.
+    hidden function menuNav(dir) {
+        if (_menuRow == MG_ROW_DIFF) {
+            _difficulty = (_difficulty + dir + 3) % 3;
+        } else {
+            _menuRow = (_menuRow + dir + MG_MENU_ROWS) % MG_MENU_ROWS;
+        }
+    }
+
     function doSelect() {
-        if (_gs == MG_MENU)     { startGame(); return; }
+        if (_gs == MG_MENU)     { menuActivate(); return; }
         if (_gs == MG_GAMEOVER) { _gs = MG_MENU; return; }
         if (_gs == MG_AIM)      { _gs = MG_POWER; _power = 0; _powerDir = 1; return; }
         if (_gs == MG_POWER)    { commitShot(); return; }
         if (_gs == MG_HOLED)    { nextHole(); return; }
+    }
+
+    hidden function menuActivate() {
+        if (_menuRow == MG_ROW_DIFF)      { _menuRow = MG_ROW_PLAY; }
+        else if (_menuRow == MG_ROW_PLAY) { startGame(); }
+        else if (_menuRow == MG_ROW_LB)   { openLeaderboard(); }
+    }
+
+    // Open the shared global leaderboard for this course length.
+    function openLeaderboard() {
+        var v = new LbScoresView(LB_GAME_ID, LB_VARIANT, "MINIGOLF");
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
     function doBack() {
@@ -516,7 +554,7 @@ class BitochiMinigolfView extends WatchUi.View {
     function doMenu() { return doBack(); }
 
     function doTap(tx, ty) {
-        if (_gs == MG_MENU)     { startGame(); return; }
+        if (_gs == MG_MENU)     { menuTap(tx, ty); return; }
         if (_gs == MG_GAMEOVER) { _gs = MG_MENU; return; }
         if (_gs == MG_HOLED && _holeWait <= 0) { nextHole(); return; }
         if (_gs == MG_ROLLING)  { return; }
@@ -551,6 +589,44 @@ class BitochiMinigolfView extends WatchUi.View {
         _power = 0;
     }
 
+    // Shared menu layout — returns [diffRect, playRect, lbRect], each [x,y,w,h].
+    // Buttons are ~18% smaller than the original single-button menu so the
+    // extra LEADERBOARD row never overlaps neighbours on round watch faces.
+    hidden function menuLayout() {
+        var diffW = _w * 50 / 100; var diffH = 24;
+        var diffX = (_w - diffW) / 2; var diffY = _h * 40 / 100;
+        var playW = _w * 46 / 100; var playH = 25;
+        var playX = (_w - playW) / 2; var playY = _h * 56 / 100;
+        var lbW = _w * 62 / 100; var lbH = 24;
+        var lbX = (_w - lbW) / 2; var lbY = _h * 73 / 100;
+        return [
+            [diffX, diffY, diffW, diffH],
+            [playX, playY, playW, playH],
+            [lbX, lbY, lbW, lbH]
+        ];
+    }
+
+    hidden function hitRect(tx, ty, r) {
+        return tx >= r[0] && tx <= r[0] + r[2] && ty >= r[1] && ty <= r[1] + r[3];
+    }
+
+    hidden function menuTap(tx, ty) {
+        var L = menuLayout();
+        if (hitRect(tx, ty, L[MG_ROW_DIFF])) {
+            _menuRow = MG_ROW_DIFF;
+            _difficulty = (_difficulty + 1) % 3;
+            return;
+        }
+        if (hitRect(tx, ty, L[MG_ROW_LB])) {
+            _menuRow = MG_ROW_LB;
+            openLeaderboard();
+            return;
+        }
+        // Anywhere else (including the PLAY button) starts the round.
+        _menuRow = MG_ROW_PLAY;
+        startGame();
+    }
+
     hidden function startGame() {
         _holeIdx = 0; _totalStrokes = 0; _strokes = 0;
         for (var i = 0; i < MG_HOLES; i++) { _scoreCard[i] = -1; }
@@ -560,7 +636,13 @@ class BitochiMinigolfView extends WatchUi.View {
 
     hidden function nextHole() {
         _holeIdx++;
-        if (_holeIdx >= MG_HOLES) { _gs = MG_GAMEOVER; return; }
+        if (_holeIdx >= MG_HOLES) {
+            // Course complete — submit total strokes (lower is better; backend
+            // sorts ascending, so submit the raw positive count, never negated).
+            Leaderboard.submitScore(LB_GAME_ID, _totalStrokes, LB_VARIANT);
+            _gs = MG_GAMEOVER;
+            return;
+        }
         _strokes = 0;
         loadHole(_holeIdx);
         _gs = MG_AIM;
@@ -951,34 +1033,41 @@ class BitochiMinigolfView extends WatchUi.View {
         dc.fillCircle(r, r, r - 14);
 
         dc.setColor(0x44FF88, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h * 14 / 100, Graphics.FONT_MEDIUM, "MINIGOLF", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, _h * 11 / 100, Graphics.FONT_MEDIUM, "MINIGOLF", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x226633, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h * 28 / 100, Graphics.FONT_XTINY, "BITOCHI GAMES", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, _h * 26 / 100, Graphics.FONT_XTINY, "BITOCHI GAMES", Graphics.TEXT_JUSTIFY_CENTER);
 
+        var L = menuLayout();
+
+        // Difficulty selector row
+        var diffSel = (_menuRow == MG_ROW_DIFF);
         var diffLabels = ["Easy (20 holes)", "Normal", "Hard"];
         dc.setColor(0xCCEEBB, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h * 40 / 100, Graphics.FONT_XTINY, "Difficulty:", Graphics.TEXT_JUSTIFY_CENTER);
-
-        var btnW = _w * 60 / 100; var btnH = 28; var btnX = (_w - btnW) / 2;
-        var btnY = _h * 48 / 100;
-        dc.setColor(0x1A5028, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(btnX, btnY, btnW, btnH, 6);
-        dc.setColor(0x2A7040, Graphics.COLOR_TRANSPARENT);
-        dc.drawRoundedRectangle(btnX, btnY, btnW, btnH, 6);
+        dc.drawText(_w/2, L[MG_ROW_DIFF][1] - _h * 8 / 100, Graphics.FONT_XTINY,
+            "Difficulty:", Graphics.TEXT_JUSTIFY_CENTER);
+        var d = L[MG_ROW_DIFF];
+        dc.setColor(diffSel ? 0x256838 : 0x1A5028, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(d[0], d[1], d[2], d[3], 6);
+        dc.setColor(diffSel ? 0x55CC77 : 0x2A7040, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(d[0], d[1], d[2], d[3], 6);
         dc.setColor(0xFFFF44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, btnY + 6, Graphics.FONT_XTINY, diffLabels[_difficulty], Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, d[1] + (d[3] - 14) / 2, Graphics.FONT_XTINY,
+            diffLabels[_difficulty], Graphics.TEXT_JUSTIFY_CENTER);
 
-        dc.setColor(0x448833, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h * 62 / 100, Graphics.FONT_XTINY, "UP/DOWN change", Graphics.TEXT_JUSTIFY_CENTER);
-
-        var sBtnW = _w * 55 / 100; var sBtnH = 30;
-        var sBtnX = (_w - sBtnW) / 2; var sBtnY = _h * 72 / 100;
-        dc.setColor(0x225500, Graphics.COLOR_TRANSPARENT);
-        dc.fillRoundedRectangle(sBtnX, sBtnY, sBtnW, sBtnH, 8);
-        dc.setColor(0x44AA22, Graphics.COLOR_TRANSPARENT);
-        dc.drawRoundedRectangle(sBtnX, sBtnY, sBtnW, sBtnH, 8);
+        // PLAY action row
+        var playSel = (_menuRow == MG_ROW_PLAY);
+        var p = L[MG_ROW_PLAY];
+        dc.setColor(playSel ? 0x2E7000 : 0x225500, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(p[0], p[1], p[2], p[3], 8);
+        dc.setColor(playSel ? 0x66DD33 : 0x44AA22, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(p[0], p[1], p[2], p[3], 8);
         dc.setColor((_tick % 10 < 5) ? 0x88FF44 : 0x55CC22, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, sBtnY + 7, Graphics.FONT_XTINY, "TAP TO PLAY", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, p[1] + (p[3] - 14) / 2, Graphics.FONT_XTINY,
+            playSel ? "> PLAY <" : "PLAY", Graphics.TEXT_JUSTIFY_CENTER);
+
+        // LEADERBOARD row (shared gold badge)
+        var lb = L[MG_ROW_LB];
+        LbBadge.drawRow(dc, lb[0], lb[1], lb[2], lb[3], _menuRow == MG_ROW_LB);
     }
 
     // ── Course ────────────────────────────────────────────────────────────────

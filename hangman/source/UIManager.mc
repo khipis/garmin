@@ -88,14 +88,21 @@ class UIManager {
         dc.drawText(cx, h * 20 / 100, Graphics.FONT_XTINY,
                     "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Three rows centred between title and footer.
-        var rowH = (h * 13) / 100; if (rowH < 24) { rowH = 24; } if (rowH > 36) { rowH = 36; }
+        // Four rows centred between title and footer. Rows are ~18%
+        // shorter than the original 3-row layout so the extra
+        // LEADERBOARD row fits without overlapping on small round
+        // watches, and the gap shrinks too when vertical space is tight.
+        var rowH = (h * 11) / 100; if (rowH < 20) { rowH = 20; } if (rowH > 30) { rowH = 30; }
         var rowW = (w * 78) / 100; if (rowW < 140) { rowW = 140; }
         var rowX = (w - rowW) / 2;
-        var gap  = (h * 2) / 100;  if (gap < 4) { gap = 4; }
-        var nRows = 3;
+        var gap  = (h * 15) / 1000; if (gap < 3) { gap = 3; }
+        var nRows = MENU_ITEMS;
         var total = nRows * rowH + (nRows - 1) * gap;
-        var rowY0 = (h - total) / 2 + (h * 4) / 100;
+        // Keep the stack inside the round-safe band: clamp the top so the
+        // last row never spills past the footer hint.
+        var rowY0 = (h - total) / 2 + (h * 3) / 100;
+        var topMin = h * 26 / 100;
+        if (rowY0 < topMin) { rowY0 = topMin; }
 
         var labels = [
             "Category: " + WordList.categoryName(ctrl.category),
@@ -104,10 +111,15 @@ class UIManager {
         ];
         var selRow = ctrl.menuCursor;
         for (var i = 0; i < nRows; i++) {
-            var ry      = rowY0 + i * (rowH + gap);
-            var sel     = (i == selRow);
-            var isStart = (i == nRows - 1);
+            var ry  = rowY0 + i * (rowH + gap);
+            var sel = (i == selRow);
 
+            if (i == MENU_LB) {
+                LbBadge.drawRow(dc, rowX, ry, rowW, rowH, sel);
+                continue;
+            }
+
+            var isStart = (i == MENU_START);
             dc.setColor(sel ? (isStart ? 0x1A4400 : 0x1A3A6A) : 0x111820,
                         Graphics.COLOR_TRANSPARENT);
             dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);

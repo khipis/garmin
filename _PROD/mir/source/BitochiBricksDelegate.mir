@@ -218,71 +218,136 @@ _Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_37_30_37_88
     }
     [ @file = "/Users/kkorolczuk/work/garmin/bricks/source/BitochiBricksDelegate.mc"; @line = 38; @symbol_functiondef = [onPreviousPage,38,13,27]; ]
     function onPreviousPage() {
-_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_38_30_38_45_start:
+_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_38_30_38_89_start:
 [ "/Users/kkorolczuk/work/garmin/bricks/source/BitochiBricksDelegate.mc" 38 32 ]
-        %tmp.1 = true;
-        ret %tmp.1;
-_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_38_30_38_45_stop:
+        symbol [ _view %tmp.2 38 32 37 ];
+        %tmp.2 = getv ? :_view;
+        symbol [ menuNav %tmp.3 38 38 45 ];
+        %tmp.3 = getv function %tmp.2 :menuNav;
+        %tmp.4 = -1;
+        invoke %tmp.2 %tmp.3(%tmp.4);
+[ "/Users/kkorolczuk/work/garmin/bricks/source/BitochiBricksDelegate.mc" 38 51 ]
+        symbol [ WatchUi %tmp.5 38 51 58 ];
+        %tmp.5 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.6 38 59 72 ];
+        %tmp.6 = getv function %tmp.5 :requestUpdate;
+        invoke %tmp.5 %tmp.6();
+[ "/Users/kkorolczuk/work/garmin/bricks/source/BitochiBricksDelegate.mc" 38 76 ]
+        %tmp.7 = true;
+        ret %tmp.7;
+_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_38_30_38_89_stop:
     }
     [ @file = "/Users/kkorolczuk/work/garmin/bricks/source/BitochiBricksDelegate.mc"; @line = 39; @symbol_functiondef = [onNextPage,39,13,23]; ]
     function onNextPage() {
-_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_39_30_39_45_start:
+_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_39_30_39_89_start:
 [ "/Users/kkorolczuk/work/garmin/bricks/source/BitochiBricksDelegate.mc" 39 32 ]
-        %tmp.1 = true;
-        ret %tmp.1;
-_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_39_30_39_45_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/bricks/source/BitochiBricksDelegate.mc"; @line = 40; @symbol_functiondef = [onBack,40,13,19]; ]
-    function onBack() {
-_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_40_22_45_4_start:
-[ "/Users/kkorolczuk/work/garmin/bricks/source/BitochiBricksDelegate.mc" 41 8 ]
-        [ "_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_40_22_45_4_start" "_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_40_22_45_4_stop" ]
-        %h.1 = local;
-        symbol [ h %h.1 41 12 13 ];
-        symbol [ _view %tmp.2 41 16 21 ];
+        symbol [ _view %tmp.2 39 32 37 ];
         %tmp.2 = getv ? :_view;
-        symbol [ doBack %tmp.3 41 22 28 ];
+        symbol [ menuNav %tmp.3 39 38 45 ];
+        %tmp.3 = getv function %tmp.2 :menuNav;
+        %tmp.4 = 1;
+        invoke %tmp.2 %tmp.3(%tmp.4);
+[ "/Users/kkorolczuk/work/garmin/bricks/source/BitochiBricksDelegate.mc" 39 51 ]
+        symbol [ WatchUi %tmp.5 39 51 58 ];
+        %tmp.5 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.6 39 59 72 ];
+        %tmp.6 = getv function %tmp.5 :requestUpdate;
+        invoke %tmp.5 %tmp.6();
+[ "/Users/kkorolczuk/work/garmin/bricks/source/BitochiBricksDelegate.mc" 39 76 ]
+        %tmp.7 = true;
+        ret %tmp.7;
+_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_39_30_39_89_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/bricks/source/BitochiBricksDelegate.mc"; @line = 41; @symbol_functiondef = [onTap,41,13,18]; @symbol_param<0> = [evt,41,19,22]; ]
+    function onTap(evt) {
+_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_41_24_46_4_start:
+[ "/Users/kkorolczuk/work/garmin/bricks/source/BitochiBricksDelegate.mc" 42 8 ]
+        [ "_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_41_24_46_4_start" "_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_41_24_46_4_stop" ]
+        %c.1 = local;
+        symbol [ c %c.1 42 12 13 ];
+        %tmp.1 = lgetv %evt;
+        symbol [ evt %tmp.1 42 16 19 ];
+        symbol [ getCoordinates %tmp.2 42 20 34 ];
+        %tmp.2 = getv function %tmp.1 :getCoordinates;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        lputv %c.1 %tmp.3;
+        symbol [ c %c.1 42 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/bricks/source/BitochiBricksDelegate.mc" 43 8 ]
+        symbol [ _view %tmp.5 43 8 13 ];
+        %tmp.5 = getv ? :_view;
+        symbol [ doMenuTap %tmp.6 43 14 23 ];
+        %tmp.6 = getv function %tmp.5 :doMenuTap;
+        %tmp.7 = lgetv %c.1;
+        symbol [ c %tmp.7 43 24 25 ];
+        %tmp.8 = 0;
+        %tmp.9 = agetv %tmp.7 %tmp.8;
+        %tmp.10 = lgetv %c.1;
+        symbol [ c %tmp.10 43 30 31 ];
+        %tmp.11 = 1;
+        %tmp.12 = agetv %tmp.10 %tmp.11;
+        invoke %tmp.5 %tmp.6(%tmp.9, %tmp.12);
+[ "/Users/kkorolczuk/work/garmin/bricks/source/BitochiBricksDelegate.mc" 44 8 ]
+        symbol [ WatchUi %tmp.13 44 8 15 ];
+        %tmp.13 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.14 44 16 29 ];
+        %tmp.14 = getv function %tmp.13 :requestUpdate;
+        invoke %tmp.13 %tmp.14();
+[ "/Users/kkorolczuk/work/garmin/bricks/source/BitochiBricksDelegate.mc" 45 8 ]
+        %tmp.15 = true;
+        ret %tmp.15;
+_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_41_24_46_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/bricks/source/BitochiBricksDelegate.mc"; @line = 47; @symbol_functiondef = [onBack,47,13,19]; ]
+    function onBack() {
+_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_47_22_52_4_start:
+[ "/Users/kkorolczuk/work/garmin/bricks/source/BitochiBricksDelegate.mc" 48 8 ]
+        [ "_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_47_22_52_4_start" "_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_47_22_52_4_stop" ]
+        %h.1 = local;
+        symbol [ h %h.1 48 12 13 ];
+        symbol [ _view %tmp.2 48 16 21 ];
+        %tmp.2 = getv ? :_view;
+        symbol [ doBack %tmp.3 48 22 28 ];
         %tmp.3 = getv function %tmp.2 :doBack;
         %tmp.4 = invoke %tmp.2 %tmp.3();
         lputv %h.1 %tmp.4;
-        symbol [ h %h.1 41 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/bricks/source/BitochiBricksDelegate.mc" 42 8 ]
-_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_42_8_42_69_if_stmt:
-_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_42_12_42_18_begin:
+        symbol [ h %h.1 48 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/bricks/source/BitochiBricksDelegate.mc" 49 8 ]
+_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_49_8_49_69_if_stmt:
+_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_49_12_49_18_begin:
         %tmp.5 = lgetv %h.1;
-        symbol [ h %tmp.5 42 13 14 ];
+        symbol [ h %tmp.5 49 13 14 ];
         %tmp.6 = not %tmp.5;
-        bf %tmp.6 @_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_42_8_42_69_if_end;
-_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_42_18_42_18_true:
-        symbol [ _sensorEnabled %tmp.8 42 18 32 ];
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_49_8_49_69_if_end;
+_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_49_18_49_18_true:
+        symbol [ _sensorEnabled %tmp.8 49 18 32 ];
         %tmp.8 = getv ? :_sensorEnabled;
         push %tmp.8;
-_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_42_18_42_18_end:
-        %tmp.9 = phi [%tmp.6 @_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_42_12_42_18_begin] [%tmp.8 @_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_42_18_42_18_true] [%tmp.9 @_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_42_18_42_18_end];
-        bf %tmp.9 @_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_42_8_42_69_if_end;
-_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_42_8_42_69_if_true:
-_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_42_34_42_69_start:
-[ "/Users/kkorolczuk/work/garmin/bricks/source/BitochiBricksDelegate.mc" 42 36 ]
-        symbol [ Sensor %tmp.10 42 36 42 ];
+_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_49_18_49_18_end:
+        %tmp.9 = phi [%tmp.6 @_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_49_12_49_18_begin] [%tmp.8 @_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_49_18_49_18_true] [%tmp.9 @_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_49_18_49_18_end];
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_49_8_49_69_if_end;
+_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_49_8_49_69_if_true:
+_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_49_34_49_69_start:
+[ "/Users/kkorolczuk/work/garmin/bricks/source/BitochiBricksDelegate.mc" 49 36 ]
+        symbol [ Sensor %tmp.10 49 36 42 ];
         %tmp.10 = getm $.Toybox.Sensor;
-        symbol [ enableSensorEvents %tmp.11 42 43 61 ];
+        symbol [ enableSensorEvents %tmp.11 49 43 61 ];
         %tmp.11 = getv function %tmp.10 :enableSensorEvents;
         %tmp.12 = null;
         invoke %tmp.10 %tmp.11(%tmp.12);
-_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_42_34_42_69_stop:
-        goto @_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_42_8_42_69_if_end;
-_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_42_8_42_69_if_end:
-[ "/Users/kkorolczuk/work/garmin/bricks/source/BitochiBricksDelegate.mc" 43 8 ]
-        symbol [ WatchUi %tmp.13 43 8 15 ];
+_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_49_34_49_69_stop:
+        goto @_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_49_8_49_69_if_end;
+_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_49_8_49_69_if_end:
+[ "/Users/kkorolczuk/work/garmin/bricks/source/BitochiBricksDelegate.mc" 50 8 ]
+        symbol [ WatchUi %tmp.13 50 8 15 ];
         %tmp.13 = getm $.Toybox.WatchUi;
-        symbol [ requestUpdate %tmp.14 43 16 29 ];
+        symbol [ requestUpdate %tmp.14 50 16 29 ];
         %tmp.14 = getv function %tmp.13 :requestUpdate;
         invoke %tmp.13 %tmp.14();
-[ "/Users/kkorolczuk/work/garmin/bricks/source/BitochiBricksDelegate.mc" 44 8 ]
+[ "/Users/kkorolczuk/work/garmin/bricks/source/BitochiBricksDelegate.mc" 51 8 ]
         %tmp.15 = lgetv %h.1;
-        symbol [ h %tmp.15 44 15 16 ];
+        symbol [ h %tmp.15 51 15 16 ];
         ret %tmp.15;
-_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_40_22_45_4_stop:
+_Users_kkorolczuk_work_garmin_bricks_source_BitochiBricksDelegate_mc_47_22_52_4_stop:
     }
 }
 [ @file = "/Users/kkorolczuk/work/garmin/bricks/source/BitochiBricksDelegate.mc"; @line = 1; ]

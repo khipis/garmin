@@ -75,11 +75,13 @@ class UIManager {
             "Errors: " + ((ctrl.valMode == VAL_RELAXED) ? "RELAX" : "STRICT"),
             "START"
         ];
-        var rowH = h * 11 / 100; if (rowH < 22) { rowH = 22; }
+        // Layout kept ~18% more compact (and space-aware) so all five rows
+        // — including the LEADERBOARD badge — never overlap on round watches.
+        var rowH = h * 9 / 100; if (rowH < 18) { rowH = 18; }
         var rowW = w * 78 / 100;
         var rowX = (w - rowW) / 2;
         var gap  = h * 2 / 100;  if (gap < 3)  { gap  = 3;  }
-        var startY = h * 24 / 100;
+        var startY = h * 21 / 100;
 
         for (var i = 0; i < 4; i++) {
             var ry = startY + i * (rowH + gap);
@@ -107,6 +109,10 @@ class UIManager {
             dc.drawText(cx, ry + (rowH - 14) / 2, Graphics.FONT_XTINY,
                         rows[i], Graphics.TEXT_JUSTIFY_CENTER);
         }
+
+        // LEADERBOARD badge row (index 4) — drawn by the shared library.
+        var lbY = startY + 4 * (rowH + gap);
+        LbBadge.drawRow(dc, rowX, lbY, rowW, rowH, (ctrl.menuSel == 4));
 
         // Hint footer
         dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT);

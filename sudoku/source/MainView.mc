@@ -68,7 +68,7 @@ class MainView extends WatchUi.View {
     // ── Public intents (called from InputHandler) ────────────────────
     function navUp() {
         if (_ctrl.state == GS_MENU) {
-            _ctrl.menuSel = (_ctrl.menuSel + 3) % 4;
+            _ctrl.menuSel = (_ctrl.menuSel + 4) % 5;
             _ctrl.dirty = true;
             return;
         }
@@ -81,7 +81,7 @@ class MainView extends WatchUi.View {
 
     function navDown() {
         if (_ctrl.state == GS_MENU) {
-            _ctrl.menuSel = (_ctrl.menuSel + 1) % 4;
+            _ctrl.menuSel = (_ctrl.menuSel + 1) % 5;
             _ctrl.dirty = true;
             return;
         }
@@ -149,11 +149,19 @@ class MainView extends WatchUi.View {
             _ctrl.diff = (_ctrl.diff + 1) % 3;
         } else if (s == 2) {
             _ctrl.valMode = (_ctrl.valMode + 1) % 2;
-        } else {
+        } else if (s == 3) {
             _ctrl.startGame();
+        } else {
+            openLeaderboard();
+            return;
         }
         if (s < 3) { _ctrl.saveMenuSettings(); }
         _ctrl.dirty = true;
+    }
+
+    function openLeaderboard() {
+        var v = new LbScoresView(LB_GAME_ID, _ctrl.lbVariant(), "SUDOKU");
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
     function handleTap(x, y) {
@@ -206,10 +214,10 @@ class MainView extends WatchUi.View {
         // We can ask the system for screen dims via System.getDeviceSettings.
         var ds = System.getDeviceSettings();
         var h  = ds.screenHeight;
-        var rowH = h * 11 / 100; if (rowH < 22) { rowH = 22; }
-        var gap  = h * 2  / 100; if (gap  < 3)  { gap  = 3;  }
-        var startY = h * 24 / 100;
-        for (var i = 0; i < 4; i++) {
+        var rowH = h * 9 / 100; if (rowH < 18) { rowH = 18; }
+        var gap  = h * 2 / 100; if (gap  < 3)  { gap  = 3;  }
+        var startY = h * 21 / 100;
+        for (var i = 0; i < 5; i++) {
             var ry = startY + i * (rowH + gap);
             if (y >= ry && y < ry + rowH) {
                 _ctrl.menuSel = i;

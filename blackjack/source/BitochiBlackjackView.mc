@@ -14,6 +14,9 @@ const BJ_RESULT   = 3;
 const BJ_START_CHIPS = 500;
 const BJ_BET         = 50;
 
+// Global leaderboard
+const LB_GAME_ID = "blackjack";
+
 class BitochiBlackjackView extends WatchUi.View {
 
     hidden var _w; hidden var _h;
@@ -27,6 +30,10 @@ class BitochiBlackjackView extends WatchUi.View {
     hidden var _chips; hidden var _resultMsg;
     hidden var _dealerDelay;
 
+    // Leaderboard: peak bankroll reached this session + session-end bookkeeping
+    hidden var _peakChips; hidden var _sessionActive;
+    hidden var _lbX; hidden var _lbY; hidden var _lbW; hidden var _lbH;
+
     hidden var _rankStr; hidden var _suitStr;
 
     // Layout
@@ -37,6 +44,8 @@ class BitochiBlackjackView extends WatchUi.View {
         View.initialize();
         _tick = 0; _gs = BJ_MENU;
         _chips = BJ_START_CHIPS;
+        _peakChips = BJ_START_CHIPS; _sessionActive = false;
+        _lbX = 0; _lbY = 0; _lbW = 0; _lbH = 0;
         _resultMsg = "";
         _deck = new [52]; _deckTop = 0;
         _pCards = new [12]; _pCount = 0;
@@ -100,7 +109,13 @@ class BitochiBlackjackView extends WatchUi.View {
     }
 
     function doTap(tx, ty) {
-        if (_gs == BJ_MENU) { startGame(); return; }
+        if (_gs == BJ_MENU) {
+            if (_lbW > 0 && tx >= _lbX && tx <= _lbX + _lbW
+                         && ty >= _lbY && ty <= _lbY + _lbH) {
+                openLeaderboard(); return;
+            }
+            startGame(); return;
+        }
         if (_gs == BJ_RESULT) { nextRound(); return; }
         if (_gs != BJ_PLAY) { return; }
         doHit();
@@ -108,9 +123,17 @@ class BitochiBlackjackView extends WatchUi.View {
 
     function doBack() {
         if (_gs != BJ_MENU) {
+            endSession();          // quitting to menu ends the session
             _gs = BJ_MENU; return true;
         }
         return false;
+    }
+
+    function isMenu() { return _gs == BJ_MENU; }
+
+    function openLeaderboard() {
+        var v = new LbScoresView(LB_GAME_ID, null, "BLACKJACK");
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
     // ─── Game logic ────────────────────────────────────────────────────────────
@@ -118,11 +141,31 @@ class BitochiBlackjackView extends WatchUi.View {
     hidden function startGame() {
         if (_cw == 0 && _w > 0) { setupLayout(); }
         _chips = BJ_START_CHIPS;
+        _peakChips = BJ_START_CHIPS;
+        _sessionActive = true;
         nextRound();
     }
 
+    // Submit the session's peak bankroll once, then close the session.
+    hidden function endSession() {
+        if (_sessionActive) {
+            Leaderboard.submitScore(LB_GAME_ID, _peakChips, null);
+            _sessionActive = false;
+        }
+    }
+
+    hidden function trackPeak() {
+        if (_chips > _peakChips) { _peakChips = _chips; }
+    }
+
     hidden function nextRound() {
-        if (_chips <= 0) { _chips = BJ_START_CHIPS; }
+        // Broke last round -> that session is over: submit it, then start fresh.
+        if (_chips <= 0) {
+            endSession();
+            _chips = BJ_START_CHIPS;
+            _peakChips = BJ_START_CHIPS;
+            _sessionActive = true;
+        }
         shuffleDeck();
         _pCount = 0; _dCount = 0;
         _pCards[_pCount] = dealCard(); _pCount++;
@@ -157,9 +200,11 @@ class BitochiBlackjackView extends WatchUi.View {
             if (dVal > 21) {
                 _resultMsg = "DEALER BUST! +" + BJ_BET;
                 _chips += BJ_BET;
+                trackPeak();
             } else if (pVal > dVal) {
                 _resultMsg = "YOU WIN! +" + BJ_BET;
                 _chips += BJ_BET;
+                trackPeak();
             } else if (dVal > pVal) {
                 _resultMsg = "DEALER WINS -" + BJ_BET;
                 _chips -= BJ_BET;
@@ -215,18 +260,33 @@ class BitochiBlackjackView extends WatchUi.View {
     }
 
     hidden function drawMenu(dc) {
+        // Reserve the bottom strip for the LEADERBOARD badge row, then lay out
+        // the rest of the menu in the space above it so nothing overlaps on
+        // round watches.
+        var fh    = dc.getFontHeight(Graphics.FONT_XTINY);
+        var rowH  = (fh + 8) * 82 / 100;   // ~18% smaller badge row
+        if (rowH < 15) { rowH = 15; }
+        var rowW  = _w * 64 / 100;
+        var rowX  = (_w - rowW) / 2;
+        var rowY  = _h - rowH - _h * 8 / 100;
+        if (rowY + rowH > _h - 3) { rowY = _h - rowH - 3; }
+
         dc.setColor(0x22AA44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 10 / 100, Graphics.FONT_LARGE, "BLACKJACK", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 8 / 100, Graphics.FONT_LARGE, "BLACKJACK", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 30 / 100, Graphics.FONT_SMALL, "Beat the dealer!", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 27 / 100, Graphics.FONT_SMALL, "Beat the dealer!", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 46 / 100, Graphics.FONT_XTINY,
+        dc.drawText(_w / 2, _h * 41 / 100, Graphics.FONT_XTINY,
             "HIT = Tap/Sel  STAND = Down", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x556677, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 58 / 100, Graphics.FONT_XTINY, "Chips: $" + _chips, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 51 / 100, Graphics.FONT_XTINY, "Chips: $" + _chips, Graphics.TEXT_JUSTIFY_CENTER);
         var pc = (_tick % 12 < 6) ? 0xFFAA00 : 0xCC7700;
         dc.setColor(pc, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 74 / 100, Graphics.FONT_MEDIUM, "TAP TO PLAY", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 63 / 100, Graphics.FONT_MEDIUM, "TAP TO PLAY", Graphics.TEXT_JUSTIFY_CENTER);
+
+        var sel = (_tick % 12 < 6);
+        LbBadge.drawRow(dc, rowX, rowY, rowW, rowH, sel);
+        _lbX = rowX; _lbY = rowY; _lbW = rowW; _lbH = rowH;
     }
 
     hidden function drawHUD(dc) {

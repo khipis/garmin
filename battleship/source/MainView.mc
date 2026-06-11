@@ -87,6 +87,14 @@ class MainView extends WatchUi.View {
         _syncAnimTimer();
     }
 
+    // Push the shared global-leaderboard panel for the current AI
+    // difficulty.  Same variant the controller submits scores under, so
+    // the player sees the board they are competing on.
+    function openLeaderboard() {
+        var v = new LbScoresView(LB_GAME_ID, ctrl.lbVariant(), "BATTLESHIP");
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
+    }
+
     // Used by InputHandler.onTap to convert tap coords → (r, c).
     // Returns null if no grid is currently rendered or the tap was
     // outside the board.

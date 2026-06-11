@@ -8,6 +8,8 @@ using Toybox.Application;
 
 enum { PS_MENU, PS_JUMP, PS_FREE, PS_CHUTE, PS_LAND, PS_CRASH, PS_GAMEOVER }
 
+const LB_GAME_ID = "parachute";
+
 class BitochiParachuteView extends WatchUi.View {
 
     var accelX;
@@ -82,6 +84,12 @@ class BitochiParachuteView extends WatchUi.View {
     hidden var _shakeT;
     hidden var _flashT;
 
+    hidden var _menuSel;
+    hidden var _lbX;
+    hidden var _lbY;
+    hidden var _lbW;
+    hidden var _lbH;
+
     function initialize() {
         View.initialize();
         Math.srand(Time.now().value());
@@ -119,6 +127,7 @@ class BitochiParachuteView extends WatchUi.View {
         _score = 0; _ringsHit = 0; _ringStreak = 0; _ringTotal = 0; _ringSpawnAcc = 0.0;
         _landX = 0; _landR = 20; _landDist = 0.0; _landGrade = "";
         _jumpTick = 0; _resultTick = 0; _shakeT = 0; _flashT = 0;
+        _menuSel = 0; _lbX = 0; _lbY = 0; _lbW = 0; _lbH = 0;
         gameState = PS_MENU;
     }
 
@@ -235,7 +244,10 @@ class BitochiParachuteView extends WatchUi.View {
             _landGrade = "SPLAT!";
             doVibe(100, 500); _shakeT = 15; _flashT = 8;
             finalScore(false);
-            if (_lives <= 0) { gameState = PS_GAMEOVER; _resultTick = 0; }
+            if (_lives <= 0) {
+                gameState = PS_GAMEOVER; _resultTick = 0;
+                Leaderboard.submitScore(LB_GAME_ID, _totalScore, null);
+            }
             else { gameState = PS_CRASH; _resultTick = 0; }
         }
     }
@@ -292,7 +304,10 @@ class BitochiParachuteView extends WatchUi.View {
 
             finalScore(true);
             _landAnimY = (_h * 10 / 100).toFloat();
-            if (_lives <= 0) { gameState = PS_GAMEOVER; _resultTick = 0; }
+            if (_lives <= 0) {
+                gameState = PS_GAMEOVER; _resultTick = 0;
+                Leaderboard.submitScore(LB_GAME_ID, _totalScore, null);
+            }
             else { gameState = PS_LAND; _resultTick = 0; }
         }
     }
@@ -408,8 +423,29 @@ class BitochiParachuteView extends WatchUi.View {
         } }
     }
 
+    function openLeaderboard() {
+        var v = new LbScoresView(LB_GAME_ID, null, "PARACHUTE");
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
+    }
+
+    function menuMove(d) {
+        _menuSel = (_menuSel + d) % 2;
+        if (_menuSel < 0) { _menuSel = _menuSel + 2; }
+    }
+
+    function tapInLbRow(coords) {
+        if (gameState != PS_MENU || _lbW <= 0) { return false; }
+        if (coords == null) { return false; }
+        var tx = coords[0];
+        var ty = coords[1];
+        return (tx >= _lbX && tx <= _lbX + _lbW && ty >= _lbY && ty <= _lbY + _lbH);
+    }
+
     function doAction() {
-        if (gameState == PS_MENU) { _level = 1; _totalScore = 0; _lives = 3; startLevel(); }
+        if (gameState == PS_MENU) {
+            if (_menuSel == 1) { openLeaderboard(); }
+            else { _level = 1; _totalScore = 0; _lives = 3; startLevel(); }
+        }
         else if (gameState == PS_FREE) {
             if (_altitude > 300.0) { _flashT = 6; return; }
             _chuteOpen = true; gameState = PS_CHUTE; doVibe(60, 150);
@@ -720,38 +756,56 @@ class BitochiParachuteView extends WatchUi.View {
 
     hidden function drawMenu(dc) {
         dc.setColor(0x0A1530, 0x0A1530); dc.clear();
-        dc.setColor(0x0A1E3A, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h * 30 / 100, _w, _h * 30 / 100);
-        dc.setColor(0x152848, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h * 60 / 100, _w, _h * 18 / 100);
+        dc.setColor(0x0A1E3A, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h * 26 / 100, _w, _h * 26 / 100);
+        dc.setColor(0x152848, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h * 52 / 100, _w, _h * 16 / 100);
 
-        dc.setColor(0x336633, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h * 78 / 100, _w, _h * 22 / 100);
-        dc.setColor(0x448844, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h * 78 / 100, _w, 2);
-        dc.setColor(0xFF4422, Graphics.COLOR_TRANSPARENT); dc.fillCircle(_w / 2, _h * 87 / 100, 6);
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillCircle(_w / 2, _h * 87 / 100, 4);
-        dc.setColor(0xFF4422, Graphics.COLOR_TRANSPARENT); dc.fillCircle(_w / 2, _h * 87 / 100, 2);
+        dc.setColor(0x336633, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h * 90 / 100, _w, _h * 10 / 100);
+        dc.setColor(0x448844, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h * 90 / 100, _w, 2);
 
         drawClouds(dc, 0, 0);
 
         dc.setColor(0xAADDFF, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(_w * 15 / 100, _h * 7 / 100, 1); dc.fillCircle(_w * 50 / 100, _h * 4 / 100, 1); dc.fillCircle(_w * 78 / 100, _h * 9 / 100, 2);
+        dc.fillCircle(_w * 15 / 100, _h * 6 / 100, 1); dc.fillCircle(_w * 50 / 100, _h * 4 / 100, 1); dc.fillCircle(_w * 78 / 100, _h * 8 / 100, 2);
 
-        dc.setColor(0x113355, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2 + 1, _h * 8 / 100 + 1, Graphics.FONT_SMALL, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x113355, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2 + 1, _h * 6 / 100 + 1, Graphics.FONT_SMALL, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor((_tick % 30 < 15) ? 0x44AAFF : 0x2288DD, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 8 / 100, Graphics.FONT_SMALL, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 20 / 100, Graphics.FONT_SMALL, "PARACHUTE", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 6 / 100, Graphics.FONT_SMALL, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 16 / 100, Graphics.FONT_SMALL, "PARACHUTE", Graphics.TEXT_JUSTIFY_CENTER);
 
-        drawPlayer(dc, _w / 2, _h * 44 / 100, true, 0, 0);
+        drawPlayer(dc, _w / 2, _h * 38 / 100, true, 0, 0);
 
         dc.setColor(0x7799BB, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 58 / 100, Graphics.FONT_XTINY, "Collect rings per level!", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(_w / 2, _h * 65 / 100, Graphics.FONT_XTINY, "Chute opens below 300m", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 50 / 100, Graphics.FONT_XTINY, "Collect rings per level!", Graphics.TEXT_JUSTIFY_CENTER);
         if (_bestScore > 0) {
             dc.setColor(0x888888, Graphics.COLOR_TRANSPARENT);
             var bTxt = "BEST " + _bestScore;
             if (_bestLevel > 0) { bTxt = bTxt + "  L" + _bestLevel; }
-            dc.drawText(_w / 2, _h * 74 / 100, Graphics.FONT_XTINY, bTxt, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_w / 2, _h * 56 / 100, Graphics.FONT_XTINY, bTxt, Graphics.TEXT_JUSTIFY_CENTER);
         }
-        dc.setColor((_tick % 10 < 5) ? 0x44AAFF : 0x33AADD, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 82 / 100, Graphics.FONT_XTINY, "Tap to jump", Graphics.TEXT_JUSTIFY_CENTER);
+
+        // ── Selectable PLAY row ──────────────────────────────────────────────
+        var playSel = (_menuSel == 0);
+        var pw = _w * 60 / 100;
+        var ph = _h * 12 / 100; if (ph < 20) { ph = 20; }
+        var px = (_w - pw) / 2;
+        var py = _h * 66 / 100;
+        dc.setColor(playSel ? 0x103A4A : 0x0E2436, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(px, py, pw, ph, 5);
+        dc.setColor(playSel ? 0x44CCFF : 0x2A6A8A, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(px, py, pw, ph, 5);
+        if (playSel) {
+            var ay = py + ph / 2;
+            dc.fillPolygon([[px + 5, ay - 4], [px + 5, ay + 4], [px + 11, ay]]);
+        }
+        dc.setColor(playSel ? 0xBFEFFF : 0x7FB8D0, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2 + 6, py + (ph - 14) / 2, Graphics.FONT_XTINY, "TAP TO JUMP", Graphics.TEXT_JUSTIFY_CENTER);
+
+        // ── Selectable LEADERBOARD badge row ─────────────────────────────────
+        _lbW = _w * 70 / 100;
+        _lbH = _h * 12 / 100; if (_lbH < 22) { _lbH = 22; }
+        _lbX = (_w - _lbW) / 2;
+        _lbY = _h * 80 / 100;
+        LbBadge.drawRow(dc, _lbX, _lbY, _lbW, _lbH, _menuSel == 1);
     }
 
     hidden function drawJump(dc, ox, oy) {

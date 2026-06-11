@@ -11,34 +11,72 @@ A **shared Monkey C library** now lives in `_shared/leaderboard/`:
 | `Leaderboard.mc` | `module Leaderboard` — `submitScore(game,score,variant)`, `loadUser/saveUser/hasUser`, config (`API_BASE`), `buildName()` |
 | `LbViews.mc` | `LbNameEntryView`/`Delegate` (wheel keyboard for username), `LbScoresView`/`Delegate` (fetches + renders top-10), `LbFetch` (GET helper), `LbBadge` (gold menu-row drawer) |
 
-**Reference integrations (both build clean, PROD + STORE):**
-
-`stacktower` — first fully integrated game. Difficulty (**Slow/Norm/Fast**) is
-passed as the leaderboard **variant**, so each difficulty has its own ranking:
-- `monkey.jungle` / `manifest.xml`: shared source path + `Communications` perm
-- `GameController.mc`: 3rd menu row `ST_ROW_LB` + `submitScore(LB_GAME_ID, score, diffName())` on miss
-- `MainView.mc`: space-aware 3-row menu (rows auto-shrink so nothing overlaps), gold `LbBadge` row, `openLeaderboard()` opening the current difficulty's board
-- decorative tower/BEST moved up to clear the third row
-
-`twentyfortyeight` (2048) — same pattern, no variant:
-- `GameController.mc`: `MI_LEADERBOARD` row + `submitScore(...)` on game over
-- `UIManager.mc`: space-aware 3-row menu + gold `LbBadge` row
-- `InputHandler.mc` `_activateMenu()` / `MainView.openLeaderboard()`
+### 🟢 LIVE
+- **Backend deployed:** Cloudflare Worker `garmin` at `https://garmin.krzysztofkorolczuk2.workers.dev`, D1 `bitochi-leaderboard` schema applied.
+- **`Leaderboard.API_BASE`** points at the live worker.
+- **ASC sorting:** the worker keeps a per-game `ASC_GAMES` set so time/move/stroke
+  games (`sudoku`, `minesweeper`, `solitaire`, `lightsout`, `minigolf`, `battleship`)
+  rank **lower = better**. Clients just render the pre-ranked `top` list — no
+  client-side sort logic and no score negation.
 
 **Username:** stored per-app in `Application.Storage["lb_user"]`. Entered once via the
-wheel keyboard (`LbScoresView` auto-prompts on first open), then remembered.
+wheel keyboard (`LbScoresView` auto-prompts on first open), then remembered. The
+scores panel scrolls (UP/DOWN), shows a fixed `bitochi.com` footer, and supports
+**hold-to-rename**.
 > ⚠️ Garmin has no cross-app shared storage, so each game keeps its own copy.
 
-### ⚠️ Before it works live
-Set `Leaderboard.API_BASE` (in `_shared/leaderboard/Leaderboard.mc`) to the deployed
-Cloudflare Worker URL (currently a placeholder), and apply the `variant` D1 migration
-(see `leaderboard/schema.sql`).
-
-### Rollout recipe for every other game
+### Rollout recipe (applied to every game below)
 1. `monkey.jungle` → append `;../_shared/leaderboard` to `base.sourcePath`
 2. `manifest.xml` → add `<iq:uses-permission id="Communications"/>`
-3. Menu → add a `LEADERBOARD` row (use `LbBadge.drawRow`), open `LbScoresView` on activate
-4. Game over → `Leaderboard.submitScore(GAME_ID, score, VARIANT)`
+3. Menu → add a gold `LbBadge.drawRow` `LEADERBOARD` row; ~18% smaller, space-aware
+   geometry so rows never overlap on round watches; `openLeaderboard()` pushes
+   `LbScoresView(GAME_ID, VARIANT, TITLE)` + `new LbScoresDelegate(v)` on activate
+4. Game over / completion → `Leaderboard.submitScore(GAME_ID, score, VARIANT)`
+
+### ✅ Integrated games (all build clean, PROD `-l 2` + STORE)
+
+| Game | game_id | Metric | Variant | Sort |
+|------|---------|--------|---------|------|
+| stacktower | `stacktower` | floors | difficulty | DESC |
+| twentyfortyeight | `twentyfortyeight` | score | — | DESC |
+| flappypidgeon | `flappypidgeon` | pillars | — | DESC |
+| jumptower | `jumptower` | height | — | DESC |
+| gemmatch | `gemmatch` | timed score | — | DESC |
+| dinosaur | `dinosaur` | survival score | — | DESC |
+| shadowclonerunner | `shadowclonerunner` | distance | — | DESC |
+| edgesurvivor | `edgesurvivor` | survival score | — | DESC |
+| serpent | `serpent` | combo score | — | DESC |
+| run (Monster Escape) | `run` | progress | — | DESC |
+| blobs | `blobs` | eliminations | — | DESC |
+| manpac | `manpac` | points | — | DESC |
+| pixelinvaders | `pixelinvaders` | points | difficulty | DESC |
+| catapult | `catapult` | 16-round points | — | DESC |
+| pinballpro | `pinballpro` | points | table | DESC |
+| skijump | `skijump` | jump points | jumper | DESC |
+| pongpro | `pongpro` | match score | AI difficulty | DESC |
+| diceroyale | `diceroyale` | scorecard | mode | DESC |
+| sudoku | `sudoku` | solve time (s) | mode-difficulty | **ASC** |
+| minesweeper | `minesweeper` | solve time (s) | board size | **ASC** |
+| parachute | `parachute` | landing points | — | DESC |
+| blackjack | `blackjack` | peak bankroll | — | DESC |
+| poker | `poker` | peak stack | — | DESC |
+| checkers | `checkers` | win streak | difficulty | DESC |
+| chess | `chess` | win streak | difficulty | DESC |
+| othello_blitz | `othello` | disc count (win) | — | DESC |
+| tic_tac_pro | `tictacpro` | win streak | difficulty | DESC |
+| connect_four_lite | `connectfour` | win streak | difficulty | DESC |
+| battleship | `battleship` | shots to win | AI difficulty | **ASC** |
+| solitare | `solitaire` | solve time (s) | — | **ASC** |
+| lightsout | `lightsout` | move count | board size | **ASC** |
+| hangman | `hangman` | win streak | category-difficulty | DESC |
+| minigolf | `minigolf` | total strokes | course | **ASC** |
+| fish | `fish` | session catch value | — | DESC |
+| bricks | `bricks` | points | — | DESC |
+| moon | `moon` | composite landing | — | DESC |
+| jazzball | `jazzball` | accumulated % | — | DESC |
+
+> Win-streak games persist their streak in `Application.Storage` (`<game>_streak`),
+> incrementing on a player win vs AI and resetting to 0 on loss/draw.
 
 ---
 

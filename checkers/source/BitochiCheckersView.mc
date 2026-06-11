@@ -3,6 +3,11 @@ using Toybox.Graphics;
 using Toybox.Timer;
 using Toybox.Math;
 using Toybox.System;
+using Toybox.Application;
+using Toybox.Lang;
+
+const LB_GAME_ID = "checkers";
+const LB_STREAK_KEY = "checkers_streak";
 
 const CK_EMPTY = 0;
 const CK_WHITE = 1;
@@ -42,6 +47,7 @@ class BitochiCheckersView extends WatchUi.View {
     hidden var _pvp;
 
     hidden var _menuRow;
+    hidden var _resultHandled;
 
     hidden var _dirsKing; hidden var _dirsWhite; hidden var _dirsBlack;
 
@@ -74,6 +80,7 @@ class BitochiCheckersView extends WatchUi.View {
         for (var i = 0; i < 64; i++) { _board[i] = CK_EMPTY; }
         _sq = 0; _ox = 0; _oy = 0;
         _menuRow = 0;
+        _resultHandled = false;
 
         _dirsKing  = [[-1,-1],[-1,1],[1,-1],[1,1]];
         _dirsWhite = [[1,-1],[1,1]];
@@ -134,7 +141,45 @@ class BitochiCheckersView extends WatchUi.View {
         } else if (_gs == GS_AI_EVAL) {
             _doAiEval();
         }
+        if (!_resultHandled && (_gs == GS_WIN || _gs == GS_LOSE || _gs == GS_DRAW)) {
+            _handleGameResult();
+        }
         WatchUi.requestUpdate();
+    }
+
+    // ── Leaderboard: win-streak metric ───────────────────────────────────────
+    // Streak counts consecutive player wins vs the AI; higher is better (DESC).
+    // Submitted with the AI difficulty as the leaderboard variant.
+    hidden function diffName() {
+        return ["easy", "medium", "hard"][_difficulty];
+    }
+
+    hidden function _loadStreak() {
+        var v = Application.Storage.getValue(LB_STREAK_KEY);
+        if (v instanceof Lang.Number) { return v; }
+        return 0;
+    }
+
+    hidden function _saveStreak(n) {
+        try { Application.Storage.setValue(LB_STREAK_KEY, n); } catch (e) {}
+    }
+
+    // Called once per finished game (single-player vs AI only).
+    hidden function _handleGameResult() {
+        _resultHandled = true;
+        if (_aiVsAi || _pvp) { return; }
+        if (_gs == GS_WIN) {
+            var newStreak = _loadStreak() + 1;
+            _saveStreak(newStreak);
+            Leaderboard.submitScore(LB_GAME_ID, newStreak, diffName());
+        } else {
+            _saveStreak(0);
+        }
+    }
+
+    function openLeaderboard() {
+        var v = new LbScoresView(LB_GAME_ID, diffName(), "CHECKERS");
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
     // ═══════════════════════════════════════════════════════════════════════════
@@ -144,7 +189,7 @@ class BitochiCheckersView extends WatchUi.View {
     // ═══════════════════════════════════════════════════════════════════════════
 
     function doNext() {
-        if (_gs == GS_MENU) { _menuRow = (_menuRow + 1) % 4; return; }
+        if (_gs == GS_MENU) { _menuRow = (_menuRow + 1) % 5; return; }
         if (_gs == GS_WIN || _gs == GS_LOSE || _gs == GS_DRAW) { return; }
         if (_gs != GS_PLAY) { return; }
         if (!isPlayerTurn()) { return; }
@@ -153,7 +198,7 @@ class BitochiCheckersView extends WatchUi.View {
     }
 
     function doPrev() {
-        if (_gs == GS_MENU) { _menuRow = (_menuRow + 3) % 4; return; }
+        if (_gs == GS_MENU) { _menuRow = (_menuRow + 4) % 5; return; }
         if (_gs == GS_WIN || _gs == GS_LOSE || _gs == GS_DRAW) { return; }
         if (_gs != GS_PLAY) { return; }
         if (!isPlayerTurn()) { return; }
@@ -209,6 +254,7 @@ class BitochiCheckersView extends WatchUi.View {
                 else if (_pvp) { _pvp = false; _aiVsAi = true; }
                 else { _aiVsAi = false; }
             }
+            else if (_menuRow == 3) { openLeaderboard(); }
             else { startGame(); }
             return;
         }
@@ -265,14 +311,10 @@ class BitochiCheckersView extends WatchUi.View {
 
     function doTap(tx, ty) {
         if (_gs == GS_MENU) {
-            // Recalculate row positions identical to drawMenu
-            var rowH  = _h * 14 / 100; if (rowH < 26) { rowH = 26; } if (rowH > 38) { rowH = 38; }
-            var rowW  = _w * 78 / 100;
-            var rowX  = (_w - rowW) / 2;
-            var gap   = _h * 2 / 100; if (gap < 4) { gap = 4; }
-            var nRows = 4;
-            var total = nRows * rowH + (nRows - 1) * gap;
-            var rowY0 = (_h - total) / 2 + rowH;
+            // Recalculate row positions identical to drawMenu via shared geometry
+            var g     = menuGeom();
+            var rowX  = g[0]; var rowW = g[1]; var rowY0 = g[2];
+            var rowH  = g[3]; var gap  = g[4]; var nRows = g[5];
             for (var i = 0; i < nRows; i++) {
                 var ry = rowY0 + i * (rowH + gap);
                 if (tx >= rowX && tx < rowX + rowW && ty >= ry && ty < ry + rowH) {
@@ -284,6 +326,7 @@ class BitochiCheckersView extends WatchUi.View {
                         else if (_pvp) { _pvp = false; _aiVsAi = true; }
                         else { _aiVsAi = false; }
                     }
+                    else if (i == 3) { openLeaderboard(); }
                     else { startGame(); }
                     return;
                 }
@@ -314,6 +357,7 @@ class BitochiCheckersView extends WatchUi.View {
     hidden function startGame() {
         resetBoard();
         _menuRow = 0;
+        _resultHandled = false;
         _gs = GS_PLAY;
         if (_aiVsAi) {
             _playerIsWhite = true;
@@ -1215,6 +1259,29 @@ class BitochiCheckersView extends WatchUi.View {
         if (_gs == GS_DRAW) { drawEndOverlay(dc, "DRAW", 0xCCCC55); }
     }
 
+    // Shared menu geometry — used by drawMenu and doTap so hit-testing always
+    // matches what's drawn. Space-aware: rows are ~18% smaller than before and
+    // shrink further to fit between the title and bottom hint on round watches.
+    hidden function menuGeom() {
+        var nRows = 5;
+        var rowH  = _h * 10 / 100; if (rowH < 16) { rowH = 16; } if (rowH > 28) { rowH = 28; }
+        var rowW  = _w * 78 / 100;
+        var rowX  = (_w - rowW) / 2;
+        var gap   = _h * 1 / 100; if (gap < 2) { gap = 2; }
+        var topLimit = _h * 20 / 100;
+        var botLimit = _h - 18;
+        var avail = botLimit - topLimit;
+        var total = nRows * rowH + (nRows - 1) * gap;
+        if (total > avail) {
+            rowH = (avail - (nRows - 1) * gap) / nRows;
+            if (rowH < 12) { rowH = 12; }
+            total = nRows * rowH + (nRows - 1) * gap;
+        }
+        var rowY0 = topLimit + (avail - total) / 2;
+        if (rowY0 < topLimit) { rowY0 = topLimit; }
+        return [rowX, rowW, rowY0, rowH, gap, nRows];
+    }
+
     hidden function drawMenu(dc) {
         dc.setColor(0x080808, 0x080808); dc.clear();
         var hw = _w / 2;
@@ -1229,19 +1296,22 @@ class BitochiCheckersView extends WatchUi.View {
             _playerIsWhite ? "Color: LIGHT" : "Color: DARK",
             "Diff: " + (["Easy","Normal","Hard"][_difficulty]),
             _aiVsAi ? "Mode: AI vs AI" : (_pvp ? "Mode: P vs P" : "Mode: P vs AI"),
+            "",          // row 3 = LEADERBOARD (drawn by LbBadge)
             "START"
         ];
-        var nRows = 4;
-        var rowH   = _h * 12 / 100; if (rowH < 22) { rowH = 22; } if (rowH > 34) { rowH = 34; }
-        var rowW   = _w * 78 / 100;
-        var rowX   = (_w - rowW) / 2;
-        var gap    = _h * 1 / 100; if (gap < 2) { gap = 2; }
-        var totalRows = nRows * rowH + (nRows - 1) * gap;
-        var rowY0  = (_h - totalRows) / 2 + rowH;
+        var g = menuGeom();
+        var rowX = g[0]; var rowW = g[1]; var rowY0 = g[2];
+        var rowH = g[3]; var gap = g[4]; var nRows = g[5];
 
         for (var i = 0; i < nRows; i++) {
             var ry = rowY0 + i * (rowH + gap);
             var sel = (i == _menuRow);
+
+            if (i == 3) {
+                LbBadge.drawRow(dc, rowX, ry, rowW, rowH, sel);
+                continue;
+            }
+
             var isStart = (i == nRows - 1);
 
             dc.setColor(sel ? (isStart ? 0x5C2200 : 0x1A3A6A) : 0x111820, Graphics.COLOR_TRANSPARENT);

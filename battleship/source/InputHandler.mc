@@ -140,7 +140,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
         if (c.state == GS_MENU) {
             if (k == WatchUi.KEY_UP)    { c.menuPrev();     _refresh(); return true; }
             if (k == WatchUi.KEY_DOWN)  { c.menuNext();     _refresh(); return true; }
-            if (k == WatchUi.KEY_ENTER) { c.menuActivate(); _refresh(); return true; }
+            if (k == WatchUi.KEY_ENTER) { if (c.menuActivate()) { view.openLeaderboard(); } _refresh(); return true; }
             if (k == WatchUi.KEY_ESC)   { return false; }
         } else if (c.state == GS_SETUP) {
             if (k == WatchUi.KEY_UP)    { c.setupStepRight(); _refresh(); return true; }
@@ -320,7 +320,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
         var py = coords[1];
 
         if (c.state == GS_MENU) {
-            c.menuActivate();
+            if (c.menuActivate()) { view.openLeaderboard(); }
             _refresh();
             return true;
         }
