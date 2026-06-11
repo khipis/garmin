@@ -65,6 +65,18 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     hidden function _refresh() { WatchUi.requestUpdate(); }
     hidden function _ctrl()    { return view.ctrl; }
 
+    // Activate the focused menu row. The LEADERBOARD row opens the shared
+    // leaderboard view; everything else is a normal controller action.
+    hidden function _activateMenu() {
+        var c = _ctrl();
+        if (c.menuCursor == MI_LEADERBOARD) {
+            view.openLeaderboard();
+        } else {
+            c.menuActivate();
+            _refresh();
+        }
+    }
+
     // ── Button events ───────────────────────────────────────────────
     function onKey(evt) {
         return _handleKeyCode(evt.getKey());
@@ -74,9 +86,9 @@ class InputHandler extends WatchUi.BehaviorDelegate {
         var c = _ctrl();
 
         if (c.state == GS_MENU) {
-            if (k == WatchUi.KEY_UP)    { c.menuPrev();     _refresh(); return true; }
-            if (k == WatchUi.KEY_DOWN)  { c.menuNext();     _refresh(); return true; }
-            if (k == WatchUi.KEY_ENTER) { c.menuActivate(); _refresh(); return true; }
+            if (k == WatchUi.KEY_UP)    { c.menuPrev();   _refresh(); return true; }
+            if (k == WatchUi.KEY_DOWN)  { c.menuNext();   _refresh(); return true; }
+            if (k == WatchUi.KEY_ENTER) { _activateMenu();            return true; }
             if (k == WatchUi.KEY_ESC)   { return false; }   // let system exit
         } else if (c.state == GS_PLAY) {
             if (k == WatchUi.KEY_UP)    { c.tryMove(DIR_UP);    _refresh(); return true; }
@@ -213,7 +225,7 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     function onTap(evt) {
         _markGesture();
         var c = _ctrl();
-        if (c.state == GS_MENU) { c.menuActivate();     _refresh(); return true; }
+        if (c.state == GS_MENU) { _activateMenu();                  return true; }
         if (c.state == GS_WIN)  { c.continueAfterWin(); _refresh(); return true; }
         if (c.state == GS_OVER) { c.gotoMenu();         _refresh(); return true; }
         return false;

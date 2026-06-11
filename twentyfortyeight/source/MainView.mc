@@ -24,6 +24,12 @@ class MainView extends WatchUi.View {
     function onShow() {}
     function onHide() {}
 
+    // Open the shared global leaderboard view (prompts for a name first run).
+    function openLeaderboard() {
+        var v = new LbScoresView(LB_GAME_ID, "", "2048");
+        WatchUi.pushView(v, new LbScoresDelegate(), WatchUi.SLIDE_LEFT);
+    }
+
     function onUpdate(dc) {
         var w = dc.getWidth();
         var h = dc.getHeight();

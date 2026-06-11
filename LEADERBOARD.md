@@ -1,5 +1,43 @@
 # Leaderboard Integration Analysis
 
+---
+
+## ✅ Implementation status (skeleton)
+
+A **shared Monkey C library** now lives in `_shared/leaderboard/`:
+
+| File | What it provides |
+|------|------------------|
+| `Leaderboard.mc` | `module Leaderboard` — `submitScore(game,score,variant)`, `loadUser/saveUser/hasUser`, config (`API_BASE`), `buildName()` |
+| `LbViews.mc` | `LbNameEntryView`/`Delegate` (wheel keyboard for username), `LbScoresView`/`Delegate` (fetches + renders top-10), `LbFetch` (GET helper), `LbBadge` (gold menu-row drawer) |
+
+**Reference integration: `twentyfortyeight` (2048)** — wired end-to-end:
+- `monkey.jungle`: `base.sourcePath = source;../_shared/leaderboard`
+- `manifest.xml`: added `Communications` permission
+- `GameController.mc`: new `MI_LEADERBOARD` menu row + `Leaderboard.submitScore(...)` on game over
+- `UIManager.mc`: space-aware 3-row menu (auto-shrinks so rows never overlap) + gold `LbBadge` row
+- `InputHandler.mc`: `_activateMenu()` opens `LbScoresView`
+- `MainView.mc`: `openLeaderboard()` helper
+
+**Username:** stored per-app in `Application.Storage["lb_user"]`. Entered once via the
+wheel keyboard (`LbScoresView` auto-prompts on first open), then remembered.
+> ⚠️ Garmin has no cross-app shared storage, so each game keeps its own copy.
+
+### ⚠️ Before it works live
+Set `Leaderboard.API_BASE` (in `_shared/leaderboard/Leaderboard.mc`) to the deployed
+Cloudflare Worker URL (currently a placeholder), and apply the `variant` D1 migration
+(see `leaderboard/schema.sql`).
+
+### Rollout recipe for every other game
+1. `monkey.jungle` → append `;../_shared/leaderboard` to `base.sourcePath`
+2. `manifest.xml` → add `<iq:permission id="Communications"/>`
+3. Menu → add a `LEADERBOARD` row (use `LbBadge.drawRow`), open `LbScoresView` on activate
+4. Game over → `Leaderboard.submitScore(GAME_ID, score, VARIANT)`
+
+---
+
+# Game-by-game analysis
+
 > Analiza wszystkich gier pod kątem globalnego leaderboard — czy się nadają,
 > jaka metryka, czy potrzebne warianty (`variant` field), co należy dodać.
 

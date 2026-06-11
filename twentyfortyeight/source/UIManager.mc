@@ -74,18 +74,31 @@ class UIManager {
         dc.drawText(cx, bestY, Graphics.FONT_XTINY,
                     bestLine, Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Two chess-style rows below everything
-        var labels = ["START", "Reset Best"];
-        var rowH = (h * 13) / 100; if (rowH < 26) { rowH = 26; } if (rowH > 34) { rowH = 34; }
+        // Three chess-style rows below everything. Layout is space-aware:
+        // the row height shrinks to whatever fits between the best line and
+        // the bottom margin, so adding the LEADERBOARD row never overlaps.
+        var labels = ["START", "", "Reset Best"];   // [1] = LEADERBOARD (special)
         var rowW = (w * 72) / 100; if (rowW < 130) { rowW = 130; }
         var rowX = (w - rowW) / 2;
-        var gap  = (h * 3) / 100;  if (gap < 6) { gap = 6; }
         var rowY0 = bestY + xtinyH + 8;
-        for (var i = 0; i < MI_ITEMS; i++) {
-            var ry = rowY0 + i * (rowH + gap);
-            var sel = (ctrl.menuCursor == i);
-            var isStart = (i == MI_START);
+        var bottomMargin = (h * 4) / 100;
+        var gap  = (h * 2) / 100; if (gap < 5) { gap = 5; }
+        var avail = h - rowY0 - bottomMargin;
+        var rowH = (avail - gap * (MI_ITEMS - 1)) / MI_ITEMS;
+        if (rowH > 34) { rowH = 34; }
+        if (rowH < 20) { rowH = 20; }
 
+        for (var i = 0; i < MI_ITEMS; i++) {
+            var ry  = rowY0 + i * (rowH + gap);
+            var sel = (ctrl.menuCursor == i);
+
+            if (i == MI_LEADERBOARD) {
+                // Hype-y gold leaderboard row from the shared library.
+                LbBadge.drawRow(dc, rowX, ry, rowW, rowH, sel);
+                continue;
+            }
+
+            var isStart = (i == MI_START);
             dc.setColor(sel ? (isStart ? 0x1A4400 : 0x1A3A6A) : 0x111820,
                         Graphics.COLOR_TRANSPARENT);
             dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);

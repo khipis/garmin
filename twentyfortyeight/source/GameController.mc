@@ -27,9 +27,13 @@ const GS_WIN  = 2;
 const GS_OVER = 3;
 
 // Menu items
-const MI_START      = 0;
-const MI_RESET_BEST = 1;
-const MI_ITEMS      = 2;
+const MI_START       = 0;
+const MI_LEADERBOARD = 1;
+const MI_RESET_BEST  = 2;
+const MI_ITEMS       = 3;
+
+// Leaderboard game id (matches _LOGOS / web id)
+const LB_GAME_ID = "twentyfortyeight";
 
 class GameController {
     var state;
@@ -131,6 +135,8 @@ class GameController {
 
         if (!grid.hasAnyMove()) {
             state = GS_OVER;
+            // Submit final score to the global leaderboard (fire-and-forget).
+            Leaderboard.submitScore(LB_GAME_ID, score, "");
         }
     }
 }
