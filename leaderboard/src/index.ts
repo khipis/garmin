@@ -154,6 +154,7 @@ async function handlePostScore(req: Request, env: Env): Promise<Response> {
     if (b.key !== GAME_KEYS[game]) return err("invalid game key", 403);
   }
 
+  const isBot   = b.is_bot === true ? 1 : 0;
   const ts      = Math.floor(Date.now() / 1000);
   const metaStr = b.meta && typeof b.meta === "object"
     ? JSON.stringify(b.meta).slice(0, 512)
@@ -162,15 +163,19 @@ async function handlePostScore(req: Request, env: Env): Promise<Response> {
   const ip      = req.headers.get("CF-Connecting-IP") ?? "0.0.0.0";
   const ipHash  = await hashIp(ip, env.IP_SALT ?? env.LB_KEY ?? "bito-lb");
   const cf      = (req as unknown as { cf?: { country?: string } }).cf;
-  const country = (cf && typeof cf.country === "string" && cf.country.length === 2)
+  // Bots carry an explicit country code in the body; real Garmin clients use CF edge.
+  const cfCountry = (cf && typeof cf.country === "string" && cf.country.length === 2)
     ? cf.country : null;
+  const botCountry = (isBot && typeof b.country === "string" && b.country.length === 2)
+    ? b.country.toUpperCase() : null;
+  const country = botCountry ?? cfCountry;
 
   try {
     await env.DB
       .prepare(
-        "INSERT INTO scores (game, user, score, timestamp, variant, meta, ip_hash, country) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+        "INSERT INTO scores (game, user, score, timestamp, variant, meta, ip_hash, country, is_bot) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
       )
-      .bind(game, user, Math.round(score), ts, variant, metaStr, ipHash, country)
+      .bind(game, user, Math.round(score), ts, variant, metaStr, ipHash, country, isBot)
       .run();
   } catch (e) {
     console.error("DB insert error:", e);
@@ -344,12 +349,16 @@ async function handleGetGames(env: Env): Promise<Response> {
 
 // Aggregate player stats, computed live from the scores table. Used by the
 // "Stats" tab on bitochi.com for development/planning.
-async function handleGetStats(env: Env): Promise<Response> {
+// ?real=1 → exclude bot-seeded rows so the owner sees authentic traffic only.
+async function handleGetStats(url: URL, env: Env): Promise<Response> {
   type PerGame    = { game: string; scores: number; players: number; devices: number };
   type PerCountry = { country: string | null; players: number; scores: number };
   let perGame:    PerGame[]    = [];
   let perCountry: PerCountry[] = [];
   let totals = { games: 0, scores: 0, players: 0, devices: 0 };
+
+  const realOnly = url.searchParams.get("real") === "1";
+  const botFilter = realOnly ? "WHERE is_bot = 0" : "";
 
   try {
     const byGame = await env.DB
@@ -359,6 +368,7 @@ async function handleGetStats(env: Env): Promise<Response> {
                 COUNT(DISTINCT user)      AS players,
                 COUNT(DISTINCT ip_hash)   AS devices
          FROM scores
+         ${botFilter}
          GROUP BY game
          ORDER BY players DESC, scores DESC`
       )
@@ -371,6 +381,7 @@ async function handleGetStats(env: Env): Promise<Response> {
                 COUNT(DISTINCT user) AS players,
                 COUNT(*)             AS scores
          FROM scores
+         ${botFilter}
          GROUP BY country
          ORDER BY players DESC, scores DESC`
       )
@@ -383,7 +394,8 @@ async function handleGetStats(env: Env): Promise<Response> {
                 COUNT(*)                 AS scores,
                 COUNT(DISTINCT user)     AS players,
                 COUNT(DISTINCT ip_hash)  AS devices
-         FROM scores`
+         FROM scores
+         ${botFilter}`
       )
       .first<typeof totals>();
     if (agg) totals = agg;
@@ -451,7 +463,7 @@ export default {
     if (method === "GET"  && path === "/leaderboard") return handleGetLeaderboard(url, env);
     if (method === "GET"  && path === "/recent")      return handleGetRecent(url, env);
     if (method === "GET"  && path === "/games")       return handleGetGames(env);
-    if (method === "GET"  && path === "/stats")       return handleGetStats(env);
+    if (method === "GET"  && path === "/stats")       return handleGetStats(url, env);
     if (method === "GET"  && path === "/variants")    return handleGetVariants(url, env);
     if (method === "GET"  && path === "/health")      return json({ ok: true, ts: Date.now() });
 

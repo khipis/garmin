@@ -13,6 +13,8 @@
 --   ALTER TABLE scores ADD COLUMN ip_hash TEXT;
 --   -- country flag (ISO-3166 alpha-2 from Cloudflare edge)
 --   ALTER TABLE scores ADD COLUMN country TEXT;
+--   -- bot-seeded rows flag (1 = bot, 0 = real player)
+--   ALTER TABLE scores ADD COLUMN is_bot INTEGER NOT NULL DEFAULT 0;
 
 CREATE TABLE IF NOT EXISTS scores (
   id        INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -23,7 +25,8 @@ CREATE TABLE IF NOT EXISTS scores (
   variant   TEXT    NOT NULL DEFAULT '',  -- optional sub-category (hill, difficulty, …)
   meta      TEXT,                         -- JSON blob, nullable
   ip_hash   TEXT,                         -- salted SHA-256 of client IP (anonymised), for unique-player stats
-  country   TEXT                          -- ISO-3166 alpha-2 from the Cloudflare edge (flags), nullable
+  country   TEXT,                         -- ISO-3166 alpha-2 from the Cloudflare edge (flags), nullable
+  is_bot    INTEGER NOT NULL DEFAULT 0    -- 1 = bot-seeded, 0 = real player
 );
 
 -- Covers WHERE game=? AND variant=? ORDER BY score DESC

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bitochi — Real Stats</title>
+<style>
+  :root {
+    --bg:      #07111a;
+    --card:    #0d1e2b;
+    --border:  #1a3040;
+    --text:    #e2eaf0;
+    --muted:   #5a7a90;
+    --accent:  #04d4ff;
+    --green:   #22c55e;
+    --red:     #ef4444;
+    --amber:   #f59e0b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+         background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 0 24px; height: 54px;
+    background: var(--card); border-bottom: 1px solid var(--border);
+    position: sticky; top: 0; z-index: 10;
+  }
+  .logo { font-weight: 800; font-size: 1rem; letter-spacing: .04em; }
+  .badge {
+    background: #1a3040; border: 1px solid var(--amber);
+    color: var(--amber); font-size: .65rem; font-weight: 700;
+    letter-spacing: .08em; text-transform: uppercase;
+    padding: 2px 8px; border-radius: 6px;
+  }
+  .spacer { flex: 1; }
+  .refresh-btn {
+    background: none; border: 1px solid var(--border); color: var(--muted);
+    padding: 5px 12px; border-radius: 8px; cursor: pointer; font-size: .75rem;
+  }
+  .refresh-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  main { max-width: 820px; margin: 0 auto; padding: 24px 16px 48px; }
+
+  h2 { font-size: .75rem; text-transform: uppercase; letter-spacing: .1em;
+       color: var(--muted); margin-bottom: 14px; display: flex; align-items: center; gap: 10px; }
+  h2 span { flex: 1; height: 1px; background: var(--border); }
+
+  .cards {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 10px; margin-bottom: 28px;
+  }
+  .card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 14px; padding: 18px 12px; text-align: center;
+  }
+  .card .num {
+    font-size: 1.8rem; font-weight: 800; line-height: 1.1;
+    background: linear-gradient(135deg, var(--accent), #7c3aed);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .card .lbl { font-size: .65rem; color: var(--muted); margin-top: 6px;
+               text-transform: uppercase; letter-spacing: .08em; }
+
+  table { width: 100%; border-collapse: collapse; margin-bottom: 28px; }
+  thead th {
+    padding: 4px 12px 10px; text-align: left; font-size: .62rem; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .08em;
+  }
+  thead th:not(:first-child) { text-align: right; }
+  tbody tr {
+    background: var(--card); border-bottom: 1px solid var(--border);
+  }
+  tbody tr:first-child td:first-child { border-radius: 12px 0 0 0; }
+  tbody tr:first-child td:last-child  { border-radius: 0 12px 0 0; }
+  tbody tr:last-child  td:first-child { border-radius: 0 0 0 12px; }
+  tbody tr:last-child  td:last-child  { border-radius: 0 0 12px 0; }
+  tbody tr:hover { background: #112030; }
+  td { padding: 10px 12px; font-size: .85rem; }
+  td:not(:first-child) { text-align: right; font-variant-numeric: tabular-nums; }
+  td b { color: var(--accent); }
+  td .muted { color: var(--muted); font-size: .75rem; }
+
+  .bar-cell { min-width: 120px; }
+  .bar-wrap { background: var(--border); border-radius: 3px; height: 4px; margin-top: 5px; }
+  .bar { height: 4px; border-radius: 3px;
+         background: linear-gradient(90deg, var(--accent), #7c3aed); }
+  .flag-name { display: flex; align-items: center; gap: 8px; }
+
+  .state { text-align: center; padding: 40px; color: var(--muted); font-size: .9rem; }
+  .spinner {
+    width: 28px; height: 28px; border: 3px solid var(--border);
+    border-top-color: var(--accent); border-radius: 50%;
+    animation: spin 0.8s linear infinite; margin: 0 auto 12px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .updated { font-size: .68rem; color: var(--muted); margin-bottom: 20px; }
+
+  @media (max-width: 480px) {
+    .cards { grid-template-columns: repeat(2, 1fr); }
+    .bar-cell { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">⌚ Bitochi</div>
+  <div class="badge">Admin · Real Traffic Only</div>
+  <div class="spacer"></div>
+  <button class="refresh-btn" onclick="load()">↺ Refresh</button>
+</header>
+
+<main>
+  <div id="updated" class="updated"></div>
+
+  <h2>Totals (bots excluded) <span></span></h2>
+  <div class="cards" id="cards">
+    <div class="card"><div class="spinner"></div></div>
+  </div>
+
+  <h2>Per game <span></span></h2>
+  <div id="per-game"><div class="state"><div class="spinner"></div>Loading…</div></div>
+
+  <h2>Per country <span></span></h2>
+  <div id="per-country"></div>
+</main>
+
+<script>
+const API = 'https://api.bitochi.com';
+
+function codeToFlag(cc) {
+  if (!cc || cc.length !== 2) return '';
+  const A = 0x1F1E6, base = 'A'.charCodeAt(0);
+  cc = cc.toUpperCase();
+  return String.fromCodePoint(A + cc.charCodeAt(0) - base, A + cc.charCodeAt(1) - base);
+}
+
+const COUNTRY_NAMES = {
+  'AD':'Andorra','AE':'UAE','AF':'Afghanistan','AG':'Antigua','AL':'Albania',
+  'AM':'Armenia','AO':'Angola','AR':'Argentina','AT':'Austria','AU':'Australia',
+  'AZ':'Azerbaijan','BA':'Bosnia','BB':'Barbados','BD':'Bangladesh','BE':'Belgium',
+  'BF':'Burkina Faso','BG':'Bulgaria','BH':'Bahrain','BI':'Burundi','BJ':'Benin',
+  'BN':'Brunei','BO':'Bolivia','BR':'Brazil','BS':'Bahamas','BT':'Bhutan',
+  'BW':'Botswana','BY':'Belarus','BZ':'Belize','CA':'Canada','CD':'DR Congo',
+  'CF':'Cent. Africa','CG':'Congo','CH':'Switzerland','CI':'Ivory Coast','CL':'Chile',
+  'CM':'Cameroon','CN':'China','CO':'Colombia','CR':'Costa Rica','CU':'Cuba',
+  'CV':'Cape Verde','CY':'Cyprus','CZ':'Czech Rep.','DE':'Germany','DJ':'Djibouti',
+  'DK':'Denmark','DM':'Dominica','DO':'Dominican Rep.','DZ':'Algeria','EC':'Ecuador',
+  'EE':'Estonia','EG':'Egypt','ER':'Eritrea','ES':'Spain','ET':'Ethiopia',
+  'FI':'Finland','FJ':'Fiji','FM':'Micronesia','FR':'France','GA':'Gabon',
+  'GB':'UK','GD':'Grenada','GE':'Georgia','GH':'Ghana','GM':'Gambia',
+  'GN':'Guinea','GQ':'Eq. Guinea','GR':'Greece','GT':'Guatemala','GW':'Guinea-Bissau',
+  'GY':'Guyana','HN':'Honduras','HR':'Croatia','HT':'Haiti','HU':'Hungary',
+  'ID':'Indonesia','IE':'Ireland','IL':'Israel','IN':'India','IQ':'Iraq',
+  'IR':'Iran','IS':'Iceland','IT':'Italy','JM':'Jamaica','JO':'Jordan',
+  'JP':'Japan','KE':'Kenya','KG':'Kyrgyzstan','KH':'Cambodia','KI':'Kiribati',
+  'KM':'Comoros','KN':'St Kitts','KP':'N Korea','KR':'S Korea','KW':'Kuwait',
+  'KZ':'Kazakhstan','LA':'Laos','LB':'Lebanon','LC':'St Lucia','LI':'Liechtenstein',
+  'LK':'Sri Lanka','LR':'Liberia','LS':'Lesotho','LT':'Lithuania','LU':'Luxembourg',
+  'LV':'Latvia','LY':'Libya','MA':'Morocco','MC':'Monaco','MD':'Moldova',
+  'ME':'Montenegro','MG':'Madagascar','MH':'Marshall Is.','MK':'N Macedonia',
+  'ML':'Mali','MM':'Myanmar','MN':'Mongolia','MR':'Mauritania','MT':'Malta',
+  'MU':'Mauritius','MV':'Maldives','MW':'Malawi','MX':'Mexico','MY':'Malaysia',
+  'MZ':'Mozambique','NA':'Namibia','NE':'Niger','NG':'Nigeria','NI':'Nicaragua',
+  'NL':'Netherlands','NO':'Norway','NP':'Nepal','NR':'Nauru','NZ':'New Zealand',
+  'OM':'Oman','PA':'Panama','PE':'Peru','PG':'Papua NG','PH':'Philippines',
+  'PK':'Pakistan','PL':'Poland','PT':'Portugal','PW':'Palau','PY':'Paraguay',
+  'QA':'Qatar','RO':'Romania','RS':'Serbia','RU':'Russia','RW':'Rwanda',
+  'SA':'Saudi Arabia','SB':'Solomon Is.','SC':'Seychelles','SD':'Sudan','SE':'Sweden',
+  'SG':'Singapore','SI':'Slovenia','SK':'Slovakia','SL':'Sierra Leone','SM':'San Marino',
+  'SN':'Senegal','SO':'Somalia','SR':'Suriname','SS':'S Sudan','ST':'Sao Tome',
+  'SV':'El Salvador','SY':'Syria','SZ':'Eswatini','TD':'Chad','TG':'Togo',
+  'TH':'Thailand','TJ':'Tajikistan','TL':'Timor-Leste','TM':'Turkmenistan','TN':'Tunisia',
+  'TO':'Tonga','TR':'Turkey','TT':'Trinidad','TV':'Tuvalu','TZ':'Tanzania',
+  'UA':'Ukraine','UG':'Uganda','US':'USA','UY':'Uruguay','UZ':'Uzbekistan',
+  'VA':'Vatican','VC':'St Vincent','VE':'Venezuela','VN':'Vietnam','VU':'Vanuatu',
+  'WS':'Samoa','YE':'Yemen','ZA':'S Africa','ZM':'Zambia','ZW':'Zimbabwe',
+};
+
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+async function load() {
+  document.getElementById('cards').innerHTML = '<div class="card"><div class="spinner"></div></div>';
+  document.getElementById('per-game').innerHTML = '<div class="state"><div class="spinner"></div>Loading…</div>';
+  document.getElementById('per-country').innerHTML = '';
+
+  try {
+    const r = await fetch(`${API}/stats?real=1`, { cache: 'no-store' });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const d = await r.json();
+
+    const ts = d.updated ? new Date(d.updated * 1000) : null;
+    document.getElementById('updated').textContent = ts
+      ? 'Last updated: ' + ts.toLocaleString() : '';
+
+    // ── Totals ──────────────────────────────────────────────────────────────
+    const t = d.totals || {};
+    document.getElementById('cards').innerHTML = `
+      <div class="card"><div class="num">${(t.players||0).toLocaleString()}</div><div class="lbl">Real Players</div></div>
+      <div class="card"><div class="num">${(t.devices||0).toLocaleString()}</div><div class="lbl">Devices</div></div>
+      <div class="card"><div class="num">${(t.scores||0).toLocaleString()}</div><div class="lbl">Real Scores</div></div>
+      <div class="card"><div class="num">${(t.games||0).toLocaleString()}</div><div class="lbl">Games Active</div></div>`;
+
+    // ── Per-game ─────────────────────────────────────────────────────────────
+    const rows = d.perGame || [];
+    if (!rows.length) {
+      document.getElementById('per-game').innerHTML = '<div class="state">No real scores yet.</div>';
+    } else {
+      const maxP = Math.max(...rows.map(g => g.players || 0), 1);
+      document.getElementById('per-game').innerHTML = `
+        <table>
+          <thead><tr><th>Game</th><th>Players</th><th>Devices</th><th>Scores</th><th class="bar-cell"></th></tr></thead>
+          <tbody>
+            ${rows.map(g => {
+              const pct = Math.round(((g.players||0)/maxP)*100);
+              return `<tr>
+                <td>${esc(g.game)}</td>
+                <td><b>${(g.players||0).toLocaleString()}</b></td>
+                <td class="muted">${(g.devices||0).toLocaleString()}</td>
+                <td class="muted">${(g.scores||0).toLocaleString()}</td>
+                <td class="bar-cell"><div class="bar-wrap"><div class="bar" style="width:${pct}%"></div></div></td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table>`;
+    }
+
+    // ── Per-country ──────────────────────────────────────────────────────────
+    const ctrs = d.perCountry || [];
+    if (ctrs.length) {
+      const maxP2 = Math.max(...ctrs.map(c => c.players || 0), 1);
+      document.getElementById('per-country').innerHTML = `
+        <table>
+          <thead><tr><th>Country</th><th>Players</th><th>Scores</th><th class="bar-cell"></th></tr></thead>
+          <tbody>
+            ${ctrs.map(c => {
+              const code = c.country || '??';
+              const flag = c.country ? codeToFlag(c.country) : '🌐';
+              const name = COUNTRY_NAMES[code] || code;
+              const pct  = Math.round(((c.players||0)/maxP2)*100);
+              return `<tr>
+                <td><span class="flag-name">${flag} ${esc(name)}</span></td>
+                <td><b>${(c.players||0).toLocaleString()}</b></td>
+                <td class="muted">${(c.scores||0).toLocaleString()}</td>
+                <td class="bar-cell"><div class="bar-wrap"><div class="bar" style="width:${pct}%"></div></div></td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table>`;
+    }
+
+  } catch(e) {
+    document.getElementById('per-game').innerHTML = `<div class="state">Error: ${esc(String(e))}</div>`;
+  }
+}
+
+load();
+</script>
+</body>
+</html>
