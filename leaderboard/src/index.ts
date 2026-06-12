@@ -345,8 +345,10 @@ async function handleGetGames(env: Env): Promise<Response> {
 // Aggregate player stats, computed live from the scores table. Used by the
 // "Stats" tab on bitochi.com for development/planning.
 async function handleGetStats(env: Env): Promise<Response> {
-  type PerGame = { game: string; scores: number; players: number; devices: number };
-  let perGame: PerGame[] = [];
+  type PerGame    = { game: string; scores: number; players: number; devices: number };
+  type PerCountry = { country: string | null; players: number; scores: number };
+  let perGame:    PerGame[]    = [];
+  let perCountry: PerCountry[] = [];
   let totals = { games: 0, scores: 0, players: 0, devices: 0 };
 
   try {
@@ -362,6 +364,18 @@ async function handleGetStats(env: Env): Promise<Response> {
       )
       .all<PerGame>();
     perGame = byGame.results ?? [];
+
+    const byCountry = await env.DB
+      .prepare(
+        `SELECT country,
+                COUNT(DISTINCT user) AS players,
+                COUNT(*)             AS scores
+         FROM scores
+         GROUP BY country
+         ORDER BY players DESC, scores DESC`
+      )
+      .all<PerCountry>();
+    perCountry = byCountry.results ?? [];
 
     const agg = await env.DB
       .prepare(
@@ -379,7 +393,7 @@ async function handleGetStats(env: Env): Promise<Response> {
   }
 
   return json(
-    { updated: Math.floor(Date.now() / 1000), totals, perGame },
+    { updated: Math.floor(Date.now() / 1000), totals, perGame, perCountry },
     200,
     { "Cache-Control": `public, max-age=${LEADERBOARD_CACHE_S}, stale-while-revalidate=60` }
   );

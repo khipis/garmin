@@ -540,6 +540,26 @@
   }
   .stat-head span:not(:first-child) { text-align: right; min-width: 52px; }
 
+  /* ── Country table ────────────────────────────────────────────────── */
+  .country-row {
+    display: grid; grid-template-columns: 1fr auto auto;
+    gap: 10px; align-items: center;
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 10px 14px; margin-bottom: 7px;
+  }
+  .country-row .cr-name { font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 8px; }
+  .country-row .cr-name .flag { font-size: 1.15rem; line-height: 1; }
+  .country-row .cr-val { font-variant-numeric: tabular-nums; text-align: right; min-width: 52px; color: var(--muted); }
+  .country-row .cr-val b { color: var(--accent); }
+  .country-head {
+    display: grid; grid-template-columns: 1fr auto auto; gap: 10px;
+    padding: 2px 14px 8px; font-size: .62rem; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .08em;
+  }
+  .country-head span:not(:first-child) { text-align: right; min-width: 52px; }
+  .country-bar-wrap { width: 100%; height: 3px; background: var(--border); border-radius: 2px; margin-top: 4px; }
+  .country-bar { height: 3px; border-radius: 2px; background: linear-gradient(90deg, var(--accent), #7c3aed); }
+
   /* ── Responsive ───────────────────────────────────────────────────── */
   @media (max-width: 480px) {
     header { padding: 0 14px; }
@@ -664,6 +684,12 @@
     <span class="update-tag" id="stats-updated"></span>
   </div>
   <div id="stats-table"><div class="state-msg"><div class="spinner"></div><br>Loading stats…</div></div>
+
+  <div class="section-header" id="stats-country-header" style="display:none">
+    <span class="section-title">Players by country</span>
+    <span class="section-line"></span>
+  </div>
+  <div id="stats-countries"></div>
 </section>
 
 <footer>
@@ -876,6 +902,50 @@ function codeToFlag(cc) {
   cc = cc.toUpperCase();
   return String.fromCodePoint(A + cc.charCodeAt(0) - base, A + cc.charCodeAt(1) - base);
 }
+
+
+// ISO-3166 alpha-2 → country name map (common names only).
+const COUNTRY_NAMES = {
+  'AD':'Andorra','AE':'UAE','AF':'Afghanistan','AG':'Antigua','AL':'Albania',
+  'AM':'Armenia','AO':'Angola','AR':'Argentina','AT':'Austria','AU':'Australia',
+  'AZ':'Azerbaijan','BA':'Bosnia','BB':'Barbados','BD':'Bangladesh','BE':'Belgium',
+  'BF':'Burkina Faso','BG':'Bulgaria','BH':'Bahrain','BI':'Burundi','BJ':'Benin',
+  'BN':'Brunei','BO':'Bolivia','BR':'Brazil','BS':'Bahamas','BT':'Bhutan',
+  'BW':'Botswana','BY':'Belarus','BZ':'Belize','CA':'Canada','CD':'DR Congo',
+  'CF':'Cent. Africa','CG':'Congo','CH':'Switzerland','CI':'Ivory Coast','CL':'Chile',
+  'CM':'Cameroon','CN':'China','CO':'Colombia','CR':'Costa Rica','CU':'Cuba',
+  'CV':'Cape Verde','CY':'Cyprus','CZ':'Czech Rep.','DE':'Germany','DJ':'Djibouti',
+  'DK':'Denmark','DM':'Dominica','DO':'Dominican Rep.','DZ':'Algeria','EC':'Ecuador',
+  'EE':'Estonia','EG':'Egypt','ER':'Eritrea','ES':'Spain','ET':'Ethiopia',
+  'FI':'Finland','FJ':'Fiji','FM':'Micronesia','FR':'France','GA':'Gabon',
+  'GB':'UK','GD':'Grenada','GE':'Georgia','GH':'Ghana','GM':'Gambia',
+  'GN':'Guinea','GQ':'Eq. Guinea','GR':'Greece','GT':'Guatemala','GW':'Guinea-Bissau',
+  'GY':'Guyana','HN':'Honduras','HR':'Croatia','HT':'Haiti','HU':'Hungary',
+  'ID':'Indonesia','IE':'Ireland','IL':'Israel','IN':'India','IQ':'Iraq',
+  'IR':'Iran','IS':'Iceland','IT':'Italy','JM':'Jamaica','JO':'Jordan',
+  'JP':'Japan','KE':'Kenya','KG':'Kyrgyzstan','KH':'Cambodia','KI':'Kiribati',
+  'KM':'Comoros','KN':'St Kitts','KP':'North Korea','KR':'South Korea','KW':'Kuwait',
+  'KZ':'Kazakhstan','LA':'Laos','LB':'Lebanon','LC':'St Lucia','LI':'Liechtenstein',
+  'LK':'Sri Lanka','LR':'Liberia','LS':'Lesotho','LT':'Lithuania','LU':'Luxembourg',
+  'LV':'Latvia','LY':'Libya','MA':'Morocco','MC':'Monaco','MD':'Moldova',
+  'ME':'Montenegro','MG':'Madagascar','MH':'Marshall Is.','MK':'North Macedonia',
+  'ML':'Mali','MM':'Myanmar','MN':'Mongolia','MR':'Mauritania','MT':'Malta',
+  'MU':'Mauritius','MV':'Maldives','MW':'Malawi','MX':'Mexico','MY':'Malaysia',
+  'MZ':'Mozambique','NA':'Namibia','NE':'Niger','NG':'Nigeria','NI':'Nicaragua',
+  'NL':'Netherlands','NO':'Norway','NP':'Nepal','NR':'Nauru','NZ':'New Zealand',
+  'OM':'Oman','PA':'Panama','PE':'Peru','PG':'Papua NG','PH':'Philippines',
+  'PK':'Pakistan','PL':'Poland','PT':'Portugal','PW':'Palau','PY':'Paraguay',
+  'QA':'Qatar','RO':'Romania','RS':'Serbia','RU':'Russia','RW':'Rwanda',
+  'SA':'Saudi Arabia','SB':'Solomon Is.','SC':'Seychelles','SD':'Sudan','SE':'Sweden',
+  'SG':'Singapore','SI':'Slovenia','SK':'Slovakia','SL':'Sierra Leone','SM':'San Marino',
+  'SN':'Senegal','SO':'Somalia','SR':'Suriname','SS':'South Sudan','ST':'São Tomé',
+  'SV':'El Salvador','SY':'Syria','SZ':'Eswatini','TD':'Chad','TG':'Togo',
+  'TH':'Thailand','TJ':'Tajikistan','TL':'Timor-Leste','TM':'Turkmenistan','TN':'Tunisia',
+  'TO':'Tonga','TR':'Turkey','TT':'Trinidad','TV':'Tuvalu','TZ':'Tanzania',
+  'UA':'Ukraine','UG':'Uganda','US':'USA','UY':'Uruguay','UZ':'Uzbekistan',
+  'VA':'Vatican','VC':'St Vincent','VE':'Venezuela','VN':'Vietnam','VU':'Vanuatu',
+  'WS':'Samoa','YE':'Yemen','ZA':'South Africa','ZM':'Zambia','ZW':'Zimbabwe',
+};
 
 // Rank tier derived purely from rank + total players (no backend needed).
 function tierFor(rank, count) {
@@ -1339,6 +1409,35 @@ async function loadStats() {
             <div class="sg-val">${(g.scores||0).toLocaleString()}</div>
           </div>`;
       }).join('');
+
+    // ── Country breakdown ────────────────────────────────────────────────────
+    const countryEl  = document.getElementById('stats-countries');
+    const countryHdr = document.getElementById('stats-country-header');
+    const countries  = d.perCountry || [];
+    if (countries.length && countryEl && countryHdr) {
+      const maxPlayers = Math.max(...countries.map(c => c.players || 0), 1);
+      countryHdr.style.display = '';
+      countryEl.innerHTML =
+        `<div class="country-head"><span>Country</span><span>Players</span><span>Scores</span></div>` +
+        countries.map(c => {
+          const code  = c.country || '??';
+          const flag  = c.country ? codeToFlag(c.country) : '🌐';
+          const name  = COUNTRY_NAMES[code] || code;
+          const pct   = Math.round(((c.players || 0) / maxPlayers) * 100);
+          return `
+            <div class="country-row">
+              <div class="cr-name">
+                <span class="flag">${flag}</span>
+                ${escHtml(name)}
+                <div class="country-bar-wrap" style="flex:1;margin-left:8px">
+                  <div class="country-bar" style="width:${pct}%"></div>
+                </div>
+              </div>
+              <div class="cr-val"><b>${(c.players||0).toLocaleString()}</b></div>
+              <div class="cr-val">${(c.scores||0).toLocaleString()}</div>
+            </div>`;
+        }).join('');
+    }
   } catch (e) {
     tableEl.innerHTML = `<div class="state-msg">⚠️ Could not load stats.</div>`;
   }
