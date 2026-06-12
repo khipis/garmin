@@ -36,6 +36,7 @@ const ASC_GAMES = new Set<string>([
   "akari",                   // light-up puzzle: fastest solve time
   "nonogram",                // picross: fastest solve time
   "kakuro",                  // kakuro: fastest solve time
+  "memo",                    // memo: fewest moves to match all pairs
 ]);
 
 const ipHits = new Map<string, { count: number; windowStart: number }>();
