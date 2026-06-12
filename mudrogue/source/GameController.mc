@@ -396,11 +396,8 @@ class GameController {
         }
         if (state == GS_INVENTORY) {
             if (cursor == 0) {
+                if (player.potions <= 0) { logLine2 = "No potions!"; return; }
                 var healed = player.usePotion();
-                if (healed == 0) {
-                    logLine2 = "No potions!";
-                    return;
-                }
                 _resolveCombatAction(PA_ITEM, -healed);
                 return;
             }

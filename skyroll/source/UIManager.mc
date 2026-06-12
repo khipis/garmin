@@ -21,14 +21,14 @@ class UIManager {
     // round watches.  Height/width/gaps are ~15 % tighter than the old
     // 3-row menu to make room for the new row.
     static function rowGeom(sw, sh) {
-        var topZone      = (sh * 38) / 100;            // rows live below "by Bitochi"
-        var bottomMargin = (sh * 11) / 100; if (bottomMargin < 30) { bottomMargin = 30; }
+        var topZone      = (sh * 39) / 100;            // rows live below "by Bitochi"
+        var bottomMargin = (sh * 15) / 100; if (bottomMargin < 27) { bottomMargin = 27; }
         var gap          = (sh * 2)  / 100; if (gap < 3) { gap = 3; }
         var avail        = (sh - bottomMargin) - topZone;
         var rowH         = (avail - gap * (SR_MENU_ROWS - 1)) / SR_MENU_ROWS;
-        if (rowH > 25) { rowH = 25; }                  // was 28 → ~15 % smaller
-        if (rowH < 13) { rowH = 13; }
-        var rowW = (sw * 60) / 100; if (rowW < 122) { rowW = 122; }  // was 64 %
+        if (rowH > 22) { rowH = 22; }                  // was 28 → ~15 % smaller
+        if (rowH < 12) { rowH = 12; }
+        var rowW = (sw * 54) / 100; if (rowW < 110) { rowW = 110; }  // was 64 %
         var rowX = (sw - rowW) / 2;
         var used  = SR_MENU_ROWS * rowH + (SR_MENU_ROWS - 1) * gap;
         var rowY0 = topZone + (avail - used) / 2;
@@ -115,13 +115,13 @@ class UIManager {
 
         // Title.
         dc.setColor(0xFFE066, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(ccx, sh * 11 / 100, Graphics.FONT_MEDIUM,
+        dc.drawText(ccx, sh * 15 / 100, Graphics.FONT_MEDIUM,
                     "SKY", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xCCEEFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(ccx, sh * 22 / 100, Graphics.FONT_SMALL,
+        dc.drawText(ccx, sh * 25 / 100, Graphics.FONT_SMALL,
                     "ROLL", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xAACCEE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(ccx, sh * 33 / 100, Graphics.FONT_XTINY,
+        dc.drawText(ccx, sh * 35 / 100, Graphics.FONT_XTINY,
                     "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
 
         var rg = rowGeom(sw, sh);
@@ -177,7 +177,7 @@ class UIManager {
     hidden static function _drawTitleTile(dc, ctrl) {
         // Decorative single iso tile + a ball, just under the title.
         var ccx = ctrl.cx;
-        var cy0 = ctrl.sh * 17 / 100;
+        var cy0 = ctrl.sh * 20 / 100;
         var hw  = SR_TILE_HW; var hh = SR_TILE_HH;
         var top    = [ccx,        cy0 - hh];
         var right  = [ccx + hw,   cy0     ];

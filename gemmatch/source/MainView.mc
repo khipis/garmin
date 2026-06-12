@@ -96,14 +96,14 @@ class MainView extends WatchUi.View {
     // count, then clamped. Everything is ~18% smaller than before so all
     // four rows (incl. LEADERBOARD) fit on small round watches.
     hidden function _menuRowGeom() {
-        var topZone      = _sh * 30 / 100;                 // rows live below title + best
-        var bottomMargin = _sh * 13 / 100; if (bottomMargin < 28) { bottomMargin = 28; }
+        var topZone      = _sh * 32 / 100;                 // rows live below title + best
+        var bottomMargin = _sh * 17 / 100; if (bottomMargin < 25) { bottomMargin = 25; }
         var gap          = _sh * 2 / 100;  if (gap < 3) { gap = 3; }
         var avail        = (_sh - bottomMargin) - topZone;
         var rowH         = (avail - gap * (MENU_ROW_COUNT - 1)) / MENU_ROW_COUNT;
-        if (rowH > 28) { rowH = 28; }
-        if (rowH < 14) { rowH = 14; }
-        var rowW = _sw * 64 / 100; if (rowW < 110) { rowW = 110; }
+        if (rowH > 25) { rowH = 25; }
+        if (rowH < 13) { rowH = 13; }
+        var rowW = _sw * 58 / 100; if (rowW < 99) { rowW = 99; }
         var rowX = (_sw - rowW) / 2;
         var used  = MENU_ROW_COUNT * rowH + (MENU_ROW_COUNT - 1) * gap;
         var rowY0 = topZone + (avail - used) / 2;
@@ -131,10 +131,10 @@ class MainView extends WatchUi.View {
 
         // Title
         dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _sh * 8 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, _sh * 12 / 100, Graphics.FONT_SMALL,
                     "GEM MATCH", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x778899, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _sh * 18 / 100, Graphics.FONT_XTINY,
+        dc.drawText(cx, _sh * 21 / 100, Graphics.FONT_XTINY,
                     "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
 
         // Best score for current mode — sits in the title band, above the
@@ -142,7 +142,7 @@ class MainView extends WatchUi.View {
         var best = _ctrl.currentBest();
         if (best > 0) {
             dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, _sh * 25 / 100, Graphics.FONT_XTINY,
+            dc.drawText(cx, _sh * 28 / 100, Graphics.FONT_XTINY,
                         "BEST " + best.format("%d"),
                         Graphics.TEXT_JUSTIFY_CENTER);
         }

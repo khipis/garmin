@@ -1,740 +1,556 @@
-[ @file = "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc"; @line = 26; @symbol_classdef = [ValidationEngine,26,6,22]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc"; @line = 20; @symbol_classdef = [ValidationEngine,20,6,22]; ]
 class ValidationEngine {
-    [ @file = "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc"; @line = 26; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc"; @line = 20; ]
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc"; @line = 26; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc"; @line = 20; ]
     static
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc"; @line = 28; @symbol_functiondef = [recomputeErrors,28,20,35]; @symbol_param<0> = [grid,28,36,40]; @symbol_param<1> = [errOut,28,42,48]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc"; @line = 22; @symbol_functiondef = [isSolved,22,20,28]; @symbol_param<0> = [grid,22,29,33]; @symbol_param<1> = [lit,22,35,38]; ]
     static
-    function recomputeErrors(grid, errOut) {
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_28_50_61_4_start:
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 29 8 ]
-        [ "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_28_50_61_4_start" "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_28_50_61_4_stop" ]
-        %sz.1 = local;
-        symbol [ sz %sz.1 29 12 14 ];
+    function isSolved(grid, lit) {
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_22_40_48_4_start:
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 23 8 ]
+        [ "_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_22_40_48_4_start" "_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_22_40_48_4_stop" ]
+        %n.1 = local;
+        symbol [ n %n.1 23 12 13 ];
         %tmp.1 = lgetv %grid;
-        symbol [ grid %tmp.1 29 17 21 ];
-        symbol [ n %tmp.2 29 22 23 ];
+        symbol [ grid %tmp.1 23 16 20 ];
+        symbol [ n %tmp.2 23 21 22 ];
         %tmp.2 = getv %tmp.1 :n;
-        %tmp.3 = lgetv %grid;
-        symbol [ grid %tmp.3 29 26 30 ];
-        symbol [ n %tmp.4 29 31 32 ];
-        %tmp.4 = getv %tmp.3 :n;
-        %tmp.5 = mul %tmp.2 %tmp.4;
-        lputv %sz.1 %tmp.5;
-        symbol [ sz %sz.1 29 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 30 8 ]
-        for @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_30_8_30_54_for_test @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_30_8_30_54_for_incr @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_30_8_30_54_for_end;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_30_8_30_54_for_init:
-        [ "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_30_8_30_54_for_begin" "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_30_8_30_54_for_end" ]
+        lputv %n.1 %tmp.2;
+        symbol [ n %n.1 23 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 25 8 ]
+        for @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_25_8_27_8_for_test @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_25_8_27_8_for_incr @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_25_8_27_8_for_end;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_25_8_27_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_25_8_27_8_for_begin" "_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_25_8_27_8_for_end" ]
         %i.2 = local;
-        symbol [ i %i.2 30 17 18 ];
-        %tmp.6 = 0;
-        lputv %i.2 %tmp.6;
-        symbol [ i %i.2 30 17 18 ];
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_30_8_30_54_for_test:
-        %tmp.7 = lgetv %i.2;
-        symbol [ i %tmp.7 30 24 25 ];
-        %tmp.8 = lgetv %sz.1;
-        symbol [ sz %tmp.8 30 28 30 ];
-        %tmp.9 = lt %tmp.7 %tmp.8;
-        bf %tmp.9 @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_30_8_30_54_for_end;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_30_8_30_54_for_begin:
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_30_37_30_54_start:
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 30 39 ]
-        %tmp.10 = lgetv %errOut;
-        symbol [ errOut %tmp.10 30 39 45 ];
-        %tmp.11 = 0;
-        %tmp.12 = lgetv %i.2;
-        symbol [ i %tmp.12 30 46 47 ];
-        aputv %tmp.10 %tmp.12 %tmp.11;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_30_37_30_54_stop:
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_30_8_30_54_for_incr:
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 30 ]
-        %tmp.15 = lgetv %i.2;
-        symbol [ i %tmp.15 30 32 33 ];
-        %tmp.16 = add %tmp.15 1;
-        lputv %i.2 %tmp.16;
-        symbol [ i %i.2 30 32 33 ];
-        goto @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_30_8_30_54_for_test;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_30_8_30_54_for_end:
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 34 8 ]
-        for @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_34_8_60_8_for_test @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_34_8_60_8_for_incr @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_34_8_60_8_for_end;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_34_8_60_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_34_8_60_8_for_begin" "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_34_8_60_8_for_end" ]
+        symbol [ i %i.2 25 17 18 ];
+        %tmp.3 = 0;
+        lputv %i.2 %tmp.3;
+        symbol [ i %i.2 25 17 18 ];
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_25_8_27_8_for_test:
+        %tmp.4 = lgetv %i.2;
+        symbol [ i %tmp.4 25 24 25 ];
+        %tmp.5 = lgetv %n.1;
+        symbol [ n %tmp.5 25 28 29 ];
+        %tmp.6 = lgetv %n.1;
+        symbol [ n %tmp.6 25 32 33 ];
+        %tmp.7 = mul %tmp.5 %tmp.6;
+        %tmp.8 = lt %tmp.4 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_25_8_27_8_for_end;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_25_8_27_8_for_begin:
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_25_40_27_8_start:
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 26 12 ]
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_26_12_26_67_if_stmt:
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_26_16_26_48_begin:
+        %tmp.9 = lgetv %grid;
+        symbol [ grid %tmp.9 26 16 20 ];
+        symbol [ cells %tmp.10 26 21 26 ];
+        %tmp.10 = getv %tmp.9 :cells;
+        %tmp.11 = lgetv %i.2;
+        symbol [ i %tmp.11 26 27 28 ];
+        %tmp.12 = agetv %tmp.10 %tmp.11;
+        %tmp.13 = 0;
+        %tmp.14 = eq %tmp.12 %tmp.13;
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_26_12_26_67_if_end;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_26_38_26_48_true:
+        %tmp.15 = lgetv %lit;
+        symbol [ lit %tmp.15 26 38 41 ];
+        %tmp.16 = lgetv %i.2;
+        symbol [ i %tmp.16 26 42 43 ];
+        %tmp.17 = agetv %tmp.15 %tmp.16;
+        %tmp.18 = 0;
+        %tmp.19 = eq %tmp.17 %tmp.18;
+        push %tmp.19;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_26_38_26_48_end:
+        %tmp.20 = phi [%tmp.14 @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_26_16_26_48_begin] [%tmp.19 @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_26_38_26_48_true] [%tmp.20 @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_26_38_26_48_end];
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_26_12_26_67_if_end;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_26_12_26_67_if_true:
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_26_51_26_67_start:
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 26 53 ]
+        %tmp.21 = false;
+        ret %tmp.21;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_26_51_26_67_stop:
+        goto @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_26_12_26_67_if_end;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_26_12_26_67_if_end:
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_25_40_27_8_stop:
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_25_8_27_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 25 ]
+        %tmp.24 = lgetv %i.2;
+        symbol [ i %tmp.24 25 35 36 ];
+        %tmp.25 = add %tmp.24 1;
+        lputv %i.2 %tmp.25;
+        symbol [ i %i.2 25 35 36 ];
+        goto @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_25_8_27_8_for_test;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_25_8_27_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 29 8 ]
+        for @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_29_8_36_8_for_test @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_29_8_36_8_for_incr @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_29_8_36_8_for_end;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_29_8_36_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_29_8_36_8_for_begin" "_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_29_8_36_8_for_end" ]
         %r.3 = local;
-        symbol [ r %r.3 34 17 18 ];
-        %tmp.17 = 0;
-        lputv %r.3 %tmp.17;
-        symbol [ r %r.3 34 17 18 ];
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_34_8_60_8_for_test:
-        %tmp.18 = lgetv %r.3;
-        symbol [ r %tmp.18 34 24 25 ];
-        %tmp.19 = lgetv %grid;
-        symbol [ grid %tmp.19 34 28 32 ];
-        symbol [ runs %tmp.20 34 33 37 ];
-        %tmp.20 = getv %tmp.19 :runs;
-        symbol [ size %tmp.21 34 38 42 ];
-        %tmp.21 = getv function %tmp.20 :size;
-        %tmp.22 = invoke %tmp.20 %tmp.21();
-        %tmp.23 = lt %tmp.18 %tmp.22;
-        bf %tmp.23 @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_34_8_60_8_for_end;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_34_8_60_8_for_begin:
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_34_51_60_8_start:
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 35 12 ]
-        [ "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_34_51_60_8_start" "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_34_51_60_8_stop" ]
-        %run.4 = local;
-        symbol [ run %run.4 35 16 19 ];
-        %tmp.24 = lgetv %grid;
-        symbol [ grid %tmp.24 35 26 30 ];
-        symbol [ runs %tmp.25 35 31 35 ];
-        %tmp.25 = getv %tmp.24 :runs;
-        %tmp.26 = lgetv %r.3;
-        symbol [ r %tmp.26 35 36 37 ];
-        %tmp.27 = agetv %tmp.25 %tmp.26;
-        lputv %run.4 %tmp.27;
-        symbol [ run %run.4 35 16 19 ];
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 36 12 ]
-        [ "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_34_51_60_8_start" "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_34_51_60_8_stop" ]
-        %members.5 = local;
-        symbol [ members %members.5 36 16 23 ];
-        %tmp.28 = lgetv %run.4;
-        symbol [ run %tmp.28 36 26 29 ];
-        %tmp.29 = 0;
-        %tmp.30 = agetv %tmp.28 %tmp.29;
-        lputv %members.5 %tmp.30;
-        symbol [ members %members.5 36 16 23 ];
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 37 12 ]
-        [ "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_34_51_60_8_start" "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_34_51_60_8_stop" ]
-        %clue.6 = local;
-        symbol [ clue %clue.6 37 16 20 ];
-        %tmp.31 = lgetv %run.4;
-        symbol [ run %tmp.31 37 26 29 ];
-        %tmp.32 = 1;
-        %tmp.33 = agetv %tmp.31 %tmp.32;
-        lputv %clue.6 %tmp.33;
-        symbol [ clue %clue.6 37 16 20 ];
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 40 12 ]
-        [ "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_34_51_60_8_start" "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_34_51_60_8_stop" ]
-        %seenAt.7 = local;
-        symbol [ seenAt %seenAt.7 40 16 22 ];
-        %tmp.34 = newa 10;
-        %tmp.35 = -1;
-        %tmp.36 = dup %tmp.34;
-        %tmp.37 = aputv %tmp.36 0 %tmp.35;
-        %tmp.38 = -1;
-        %tmp.39 = dup %tmp.37;
-        %tmp.40 = aputv %tmp.39 1 %tmp.38;
-        %tmp.41 = -1;
-        %tmp.42 = dup %tmp.40;
-        %tmp.43 = aputv %tmp.42 2 %tmp.41;
-        %tmp.44 = -1;
-        %tmp.45 = dup %tmp.43;
-        %tmp.46 = aputv %tmp.45 3 %tmp.44;
-        %tmp.47 = -1;
-        %tmp.48 = dup %tmp.46;
-        %tmp.49 = aputv %tmp.48 4 %tmp.47;
-        %tmp.50 = -1;
-        %tmp.51 = dup %tmp.49;
-        %tmp.52 = aputv %tmp.51 5 %tmp.50;
-        %tmp.53 = -1;
-        %tmp.54 = dup %tmp.52;
-        %tmp.55 = aputv %tmp.54 6 %tmp.53;
-        %tmp.56 = -1;
-        %tmp.57 = dup %tmp.55;
-        %tmp.58 = aputv %tmp.57 7 %tmp.56;
-        %tmp.59 = -1;
-        %tmp.60 = dup %tmp.58;
-        %tmp.61 = aputv %tmp.60 8 %tmp.59;
-        %tmp.62 = -1;
-        %tmp.63 = dup %tmp.61;
-        %tmp.64 = aputv %tmp.63 9 %tmp.62;
-        lputv %seenAt.7 %tmp.64;
-        symbol [ seenAt %seenAt.7 40 16 22 ];
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 41 12 ]
-        [ "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_34_51_60_8_start" "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_34_51_60_8_stop" ]
-        %sum.8 = local;
-        symbol [ sum %sum.8 41 16 19 ];
-        %tmp.65 = 0;
-        lputv %sum.8 %tmp.65;
-        symbol [ sum %sum.8 41 16 19 ];
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 42 12 ]
-        [ "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_34_51_60_8_start" "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_34_51_60_8_stop" ]
-        %full.9 = local;
-        symbol [ full %full.9 42 16 20 ];
-        %tmp.66 = true;
-        lputv %full.9 %tmp.66;
-        symbol [ full %full.9 42 16 20 ];
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 43 12 ]
-        for @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_43_12_54_12_for_test @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_43_12_54_12_for_incr @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_43_12_54_12_for_end;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_43_12_54_12_for_init:
-        [ "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_43_12_54_12_for_begin" "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_43_12_54_12_for_end" ]
-        %k.10 = local;
-        symbol [ k %k.10 43 21 22 ];
-        %tmp.67 = 0;
-        lputv %k.10 %tmp.67;
-        symbol [ k %k.10 43 21 22 ];
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_43_12_54_12_for_test:
-        %tmp.68 = lgetv %k.10;
-        symbol [ k %tmp.68 43 28 29 ];
-        %tmp.69 = lgetv %members.5;
-        symbol [ members %tmp.69 43 32 39 ];
-        symbol [ size %tmp.70 43 40 44 ];
-        %tmp.70 = getv function %tmp.69 :size;
-        %tmp.71 = invoke %tmp.69 %tmp.70();
-        %tmp.72 = lt %tmp.68 %tmp.71;
-        bf %tmp.72 @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_43_12_54_12_for_end;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_43_12_54_12_for_begin:
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_43_53_54_12_start:
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 44 16 ]
-        [ "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_43_53_54_12_start" "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_43_53_54_12_stop" ]
-        %ci.11 = local;
-        symbol [ ci %ci.11 44 20 22 ];
-        %tmp.73 = lgetv %members.5;
-        symbol [ members %tmp.73 44 25 32 ];
-        %tmp.74 = lgetv %k.10;
-        symbol [ k %tmp.74 44 33 34 ];
-        %tmp.75 = agetv %tmp.73 %tmp.74;
-        lputv %ci.11 %tmp.75;
-        symbol [ ci %ci.11 44 20 22 ];
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 45 16 ]
-        [ "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_43_53_54_12_start" "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_43_53_54_12_stop" ]
-        %v.12 = local;
-        symbol [ v %v.12 45 20 21 ];
-        %tmp.76 = lgetv %grid;
-        symbol [ grid %tmp.76 45 25 29 ];
-        symbol [ val %tmp.77 45 30 33 ];
-        %tmp.77 = getv %tmp.76 :val;
-        %tmp.78 = lgetv %ci.11;
-        symbol [ ci %tmp.78 45 34 36 ];
-        %tmp.79 = agetv %tmp.77 %tmp.78;
-        lputv %v.12 %tmp.79;
-        symbol [ v %v.12 45 20 21 ];
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 46 16 ]
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_46_16_46_54_if_stmt:
-        %tmp.80 = lgetv %v.12;
-        symbol [ v %tmp.80 46 20 21 ];
-        %tmp.81 = 0;
-        %tmp.82 = eq %tmp.80 %tmp.81;
-        bf %tmp.82 @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_46_16_46_54_if_end;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_46_16_46_54_if_true:
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_46_28_46_54_start:
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 46 30 ]
+        symbol [ r %r.3 29 17 18 ];
+        %tmp.26 = 0;
+        lputv %r.3 %tmp.26;
+        symbol [ r %r.3 29 17 18 ];
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_29_8_36_8_for_test:
+        %tmp.27 = lgetv %r.3;
+        symbol [ r %tmp.27 29 24 25 ];
+        %tmp.28 = lgetv %n.1;
+        symbol [ n %tmp.28 29 28 29 ];
+        %tmp.29 = lt %tmp.27 %tmp.28;
+        bf %tmp.29 @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_29_8_36_8_for_end;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_29_8_36_8_for_begin:
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_29_36_36_8_start:
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 30 12 ]
+        for @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_30_12_35_12_for_test @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_30_12_35_12_for_incr @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_30_12_35_12_for_end;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_30_12_35_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_30_12_35_12_for_begin" "_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_30_12_35_12_for_end" ]
+        %c.4 = local;
+        symbol [ c %c.4 30 21 22 ];
+        %tmp.30 = 0;
+        lputv %c.4 %tmp.30;
+        symbol [ c %c.4 30 21 22 ];
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_30_12_35_12_for_test:
+        %tmp.31 = lgetv %c.4;
+        symbol [ c %tmp.31 30 28 29 ];
+        %tmp.32 = lgetv %n.1;
+        symbol [ n %tmp.32 30 32 33 ];
+        %tmp.33 = lt %tmp.31 %tmp.32;
+        bf %tmp.33 @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_30_12_35_12_for_end;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_30_12_35_12_for_begin:
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_30_40_35_12_start:
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 31 16 ]
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_31_16_31_62_if_stmt:
+        %tmp.34 = lgetv %grid;
+        symbol [ grid %tmp.34 31 20 24 ];
+        symbol [ markAt %tmp.35 31 25 31 ];
+        %tmp.35 = getv function %tmp.34 :markAt;
+        %tmp.36 = lgetv %r.3;
+        symbol [ r %tmp.36 31 32 33 ];
+        %tmp.37 = lgetv %c.4;
+        symbol [ c %tmp.37 31 35 36 ];
+        %tmp.38 = invoke %tmp.34 %tmp.35(%tmp.36, %tmp.37);
+        symbol [ AK_BULB %tmp.40 31 41 48 ];
+        %tmp.40 = getv ? :AK_BULB;
+        %tmp.41 = ne %tmp.38 %tmp.40;
+        bf %tmp.41 @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_31_16_31_62_if_end;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_31_16_31_62_if_true:
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_31_50_31_62_start:
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 31 52 ]
+        goto break @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_30_12_35_12_for_incr;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_31_50_31_62_stop:
+        goto @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_31_16_31_62_if_end;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_31_16_31_62_if_end:
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 32 16 ]
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_32_16_34_16_if_stmt:
+        symbol [ IlluminationEngine %tmp.43 32 20 38 ];
+        %tmp.43 = getv ? :IlluminationEngine;
+        symbol [ bulbsSeeEachOther %tmp.44 32 39 56 ];
+        %tmp.44 = getv function %tmp.43 :bulbsSeeEachOther;
+        %tmp.45 = lgetv %grid;
+        symbol [ grid %tmp.45 32 57 61 ];
+        %tmp.46 = lgetv %r.3;
+        symbol [ r %tmp.46 32 63 64 ];
+        %tmp.47 = lgetv %c.4;
+        symbol [ c %tmp.47 32 66 67 ];
+        %tmp.48 = invoke %tmp.43 %tmp.44(%tmp.45, %tmp.46, %tmp.47);
+        bf %tmp.48 @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_32_16_34_16_if_end;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_32_16_34_16_if_true:
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_32_70_34_16_start:
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 33 20 ]
+        %tmp.49 = false;
+        ret %tmp.49;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_32_70_34_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_32_16_34_16_if_end;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_32_16_34_16_if_end:
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_30_40_35_12_stop:
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_30_12_35_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 30 ]
+        %tmp.52 = lgetv %c.4;
+        symbol [ c %tmp.52 30 35 36 ];
+        %tmp.53 = add %tmp.52 1;
+        lputv %c.4 %tmp.53;
+        symbol [ c %c.4 30 35 36 ];
+        goto @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_30_12_35_12_for_test;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_30_12_35_12_for_end:
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_29_36_36_8_stop:
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_29_8_36_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 29 ]
+        %tmp.56 = lgetv %r.3;
+        symbol [ r %tmp.56 29 31 32 ];
+        %tmp.57 = add %tmp.56 1;
+        lputv %r.3 %tmp.57;
+        symbol [ r %r.3 29 31 32 ];
+        goto @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_29_8_36_8_for_test;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_29_8_36_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 38 8 ]
+        for @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_38_8_46_8_for_test @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_38_8_46_8_for_incr @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_38_8_46_8_for_end;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_38_8_46_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_38_8_46_8_for_begin" "_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_38_8_46_8_for_end" ]
+        %r.5 = local;
+        symbol [ r %r.5 38 17 18 ];
+        %tmp.58 = 0;
+        lputv %r.5 %tmp.58;
+        symbol [ r %r.5 38 17 18 ];
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_38_8_46_8_for_test:
+        %tmp.59 = lgetv %r.5;
+        symbol [ r %tmp.59 38 24 25 ];
+        %tmp.60 = lgetv %n.1;
+        symbol [ n %tmp.60 38 28 29 ];
+        %tmp.61 = lt %tmp.59 %tmp.60;
+        bf %tmp.61 @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_38_8_46_8_for_end;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_38_8_46_8_for_begin:
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_38_36_46_8_start:
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 39 12 ]
+        for @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_39_12_45_12_for_test @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_39_12_45_12_for_incr @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_39_12_45_12_for_end;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_39_12_45_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_39_12_45_12_for_begin" "_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_39_12_45_12_for_end" ]
+        %c.6 = local;
+        symbol [ c %c.6 39 21 22 ];
+        %tmp.62 = 0;
+        lputv %c.6 %tmp.62;
+        symbol [ c %c.6 39 21 22 ];
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_39_12_45_12_for_test:
+        %tmp.63 = lgetv %c.6;
+        symbol [ c %tmp.63 39 28 29 ];
+        %tmp.64 = lgetv %n.1;
+        symbol [ n %tmp.64 39 32 33 ];
+        %tmp.65 = lt %tmp.63 %tmp.64;
+        bf %tmp.65 @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_39_12_45_12_for_end;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_39_12_45_12_for_begin:
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_39_40_45_12_start:
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 40 16 ]
+        [ "_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_39_40_45_12_start" "_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_39_40_45_12_stop" ]
+        %num.7 = local;
+        symbol [ num %num.7 40 20 23 ];
+        %tmp.66 = lgetv %grid;
+        symbol [ grid %tmp.66 40 26 30 ];
+        symbol [ wallNumber %tmp.67 40 31 41 ];
+        %tmp.67 = getv function %tmp.66 :wallNumber;
+        %tmp.68 = lgetv %r.5;
+        symbol [ r %tmp.68 40 42 43 ];
+        %tmp.69 = lgetv %c.6;
+        symbol [ c %tmp.69 40 45 46 ];
+        %tmp.70 = invoke %tmp.66 %tmp.67(%tmp.68, %tmp.69);
+        lputv %num.7 %tmp.70;
+        symbol [ num %num.7 40 20 23 ];
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 41 16 ]
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_41_16_41_41_if_stmt:
+        %tmp.71 = lgetv %num.7;
+        symbol [ num %tmp.71 41 20 23 ];
+        %tmp.72 = 0;
+        %tmp.73 = lt %tmp.71 %tmp.72;
+        bf %tmp.73 @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_41_16_41_41_if_end;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_41_16_41_41_if_true:
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_41_29_41_41_start:
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 41 31 ]
+        goto break @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_39_12_45_12_for_incr;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_41_29_41_41_stop:
+        goto @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_41_16_41_41_if_end;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_41_16_41_41_if_end:
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 42 16 ]
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_42_16_44_16_if_stmt:
+        symbol [ IlluminationEngine %tmp.75 42 20 38 ];
+        %tmp.75 = getv ? :IlluminationEngine;
+        symbol [ adjacentBulbCount %tmp.76 42 39 56 ];
+        %tmp.76 = getv function %tmp.75 :adjacentBulbCount;
+        %tmp.77 = lgetv %grid;
+        symbol [ grid %tmp.77 42 57 61 ];
+        %tmp.78 = lgetv %r.5;
+        symbol [ r %tmp.78 42 63 64 ];
+        %tmp.79 = lgetv %c.6;
+        symbol [ c %tmp.79 42 66 67 ];
+        %tmp.80 = invoke %tmp.75 %tmp.76(%tmp.77, %tmp.78, %tmp.79);
+        %tmp.81 = lgetv %num.7;
+        symbol [ num %tmp.81 42 72 75 ];
+        %tmp.82 = ne %tmp.80 %tmp.81;
+        bf %tmp.82 @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_42_16_44_16_if_end;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_42_16_44_16_if_true:
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_42_77_44_16_start:
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 43 20 ]
         %tmp.83 = false;
-        lputv %full.9 %tmp.83;
-        symbol [ full %full.9 46 30 34 ];
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 46 44 ]
-        goto break @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_43_12_54_12_for_incr;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_46_28_46_54_stop:
-        goto @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_46_16_46_54_if_end;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_46_16_46_54_if_end:
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 47 16 ]
-        %tmp.84 = lgetv %sum.8;
-        symbol [ sum %tmp.84 47 22 25 ];
-        %tmp.85 = lgetv %v.12;
-        symbol [ v %tmp.85 47 28 29 ];
-        %tmp.86 = add %tmp.84 %tmp.85;
-        lputv %sum.8 %tmp.86;
-        symbol [ sum %sum.8 47 16 19 ];
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 48 16 ]
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_48_16_53_16_if_stmt:
-        %tmp.87 = lgetv %seenAt.7;
-        symbol [ seenAt %tmp.87 48 20 26 ];
-        %tmp.88 = lgetv %v.12;
-        symbol [ v %tmp.88 48 27 28 ];
-        %tmp.89 = agetv %tmp.87 %tmp.88;
-        %tmp.90 = 0;
-        %tmp.91 = gte %tmp.89 %tmp.90;
-        bf %tmp.91 @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_48_16_53_16_if_else_false;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_48_16_53_16_if_true:
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_48_36_51_16_start:
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 49 20 ]
-        %tmp.92 = lgetv %errOut;
-        symbol [ errOut %tmp.92 49 20 26 ];
-        %tmp.93 = 1;
-        %tmp.94 = lgetv %seenAt.7;
-        symbol [ seenAt %tmp.94 49 27 33 ];
-        %tmp.95 = lgetv %v.12;
-        symbol [ v %tmp.95 49 34 35 ];
-        %tmp.96 = agetv %tmp.94 %tmp.95;
-        aputv %tmp.92 %tmp.96 %tmp.93;
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 50 20 ]
-        %tmp.97 = lgetv %errOut;
-        symbol [ errOut %tmp.97 50 20 26 ];
-        %tmp.98 = 1;
-        %tmp.99 = lgetv %ci.11;
-        symbol [ ci %tmp.99 50 27 29 ];
-        aputv %tmp.97 %tmp.99 %tmp.98;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_48_36_51_16_stop:
-        goto @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_48_16_53_16_if_end;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_48_16_53_16_if_else_false:
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_51_23_53_16_start:
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 52 20 ]
-        %tmp.100 = lgetv %seenAt.7;
-        symbol [ seenAt %tmp.100 52 20 26 ];
-        %tmp.101 = lgetv %ci.11;
-        symbol [ ci %tmp.101 52 32 34 ];
-        %tmp.102 = lgetv %v.12;
-        symbol [ v %tmp.102 52 27 28 ];
-        aputv %tmp.100 %tmp.102 %tmp.101;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_51_23_53_16_stop:
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_48_16_53_16_if_end:
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_43_53_54_12_stop:
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_43_12_54_12_for_incr:
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 43 ]
-        %tmp.105 = lgetv %k.10;
-        symbol [ k %tmp.105 43 48 49 ];
-        %tmp.106 = add %tmp.105 1;
-        lputv %k.10 %tmp.106;
-        symbol [ k %k.10 43 48 49 ];
-        goto @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_43_12_54_12_for_test;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_43_12_54_12_for_end:
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 55 12 ]
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_55_12_59_12_if_stmt:
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_55_16_55_31_begin:
-        %tmp.107 = lgetv %full.9;
-        symbol [ full %tmp.107 55 16 20 ];
-        bf %tmp.107 @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_55_12_59_12_if_end;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_55_24_55_31_true:
-        %tmp.108 = lgetv %sum.8;
-        symbol [ sum %tmp.108 55 24 27 ];
-        %tmp.109 = lgetv %clue.6;
-        symbol [ clue %tmp.109 55 31 35 ];
-        %tmp.110 = ne %tmp.108 %tmp.109;
-        push %tmp.110;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_55_24_55_31_end:
-        %tmp.111 = phi [%tmp.107 @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_55_16_55_31_begin] [%tmp.110 @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_55_24_55_31_true] [%tmp.111 @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_55_24_55_31_end];
-        bf %tmp.111 @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_55_12_59_12_if_end;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_55_12_59_12_if_true:
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_55_37_59_12_start:
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 56 16 ]
-        for @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_56_16_58_16_for_test @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_56_16_58_16_for_incr @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_56_16_58_16_for_end;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_56_16_58_16_for_init:
-        [ "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_56_16_58_16_for_begin" "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_56_16_58_16_for_end" ]
-        %k2.13 = local;
-        symbol [ k2 %k2.13 56 25 27 ];
-        %tmp.112 = 0;
-        lputv %k2.13 %tmp.112;
-        symbol [ k2 %k2.13 56 25 27 ];
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_56_16_58_16_for_test:
-        %tmp.113 = lgetv %k2.13;
-        symbol [ k2 %tmp.113 56 33 35 ];
-        %tmp.114 = lgetv %members.5;
-        symbol [ members %tmp.114 56 38 45 ];
-        symbol [ size %tmp.115 56 46 50 ];
-        %tmp.115 = getv function %tmp.114 :size;
-        %tmp.116 = invoke %tmp.114 %tmp.115();
-        %tmp.117 = lt %tmp.113 %tmp.116;
-        bf %tmp.117 @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_56_16_58_16_for_end;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_56_16_58_16_for_begin:
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_56_60_58_16_start:
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 57 20 ]
-        %tmp.118 = lgetv %errOut;
-        symbol [ errOut %tmp.118 57 20 26 ];
-        %tmp.119 = 1;
-        %tmp.120 = lgetv %members.5;
-        symbol [ members %tmp.120 57 27 34 ];
-        %tmp.121 = lgetv %k2.13;
-        symbol [ k2 %tmp.121 57 35 37 ];
-        %tmp.122 = agetv %tmp.120 %tmp.121;
-        aputv %tmp.118 %tmp.122 %tmp.119;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_56_60_58_16_stop:
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_56_16_58_16_for_incr:
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 56 ]
-        %tmp.125 = lgetv %k2.13;
-        symbol [ k2 %tmp.125 56 54 56 ];
-        %tmp.126 = add %tmp.125 1;
-        lputv %k2.13 %tmp.126;
-        symbol [ k2 %k2.13 56 54 56 ];
-        goto @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_56_16_58_16_for_test;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_56_16_58_16_for_end:
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_55_37_59_12_stop:
-        goto @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_55_12_59_12_if_end;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_55_12_59_12_if_end:
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_34_51_60_8_stop:
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_34_8_60_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 34 ]
-        %tmp.129 = lgetv %r.3;
-        symbol [ r %tmp.129 34 46 47 ];
-        %tmp.130 = add %tmp.129 1;
-        lputv %r.3 %tmp.130;
-        symbol [ r %r.3 34 46 47 ];
-        goto @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_34_8_60_8_for_test;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_34_8_60_8_for_end:
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_28_50_61_4_stop:
+        ret %tmp.83;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_42_77_44_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_42_16_44_16_if_end;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_42_16_44_16_if_end:
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_39_40_45_12_stop:
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_39_12_45_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 39 ]
+        %tmp.86 = lgetv %c.6;
+        symbol [ c %tmp.86 39 35 36 ];
+        %tmp.87 = add %tmp.86 1;
+        lputv %c.6 %tmp.87;
+        symbol [ c %c.6 39 35 36 ];
+        goto @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_39_12_45_12_for_test;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_39_12_45_12_for_end:
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_38_36_46_8_stop:
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_38_8_46_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 38 ]
+        %tmp.90 = lgetv %r.5;
+        symbol [ r %tmp.90 38 31 32 ];
+        %tmp.91 = add %tmp.90 1;
+        lputv %r.5 %tmp.91;
+        symbol [ r %r.5 38 31 32 ];
+        goto @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_38_8_46_8_for_test;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_38_8_46_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 47 8 ]
+        %tmp.92 = true;
+        ret %tmp.92;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_22_40_48_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc"; @line = 63; @symbol_functiondef = [isWin,63,20,25]; @symbol_param<0> = [grid,63,26,30]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc"; @line = 51; @symbol_functiondef = [bulbError,51,20,29]; @symbol_param<0> = [grid,51,30,34]; @symbol_param<1> = [r,51,36,37]; @symbol_param<2> = [c,51,39,40]; ]
     static
-    function isWin(grid) {
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_63_32_81_4_start:
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 64 8 ]
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_64_8_64_46_if_stmt:
+    function bulbError(grid, r, c) {
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_51_42_61_4_start:
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 52 8 ]
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_52_8_52_58_if_stmt:
+        %tmp.1 = lgetv %grid;
+        symbol [ grid %tmp.1 52 12 16 ];
+        symbol [ markAt %tmp.2 52 17 23 ];
+        %tmp.2 = getv function %tmp.1 :markAt;
+        %tmp.3 = lgetv %r;
+        symbol [ r %tmp.3 52 24 25 ];
+        %tmp.4 = lgetv %c;
+        symbol [ c %tmp.4 52 27 28 ];
+        %tmp.5 = invoke %tmp.1 %tmp.2(%tmp.3, %tmp.4);
+        symbol [ AK_BULB %tmp.7 52 33 40 ];
+        %tmp.7 = getv ? :AK_BULB;
+        %tmp.8 = ne %tmp.5 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_52_8_52_58_if_end;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_52_8_52_58_if_true:
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_52_42_52_58_start:
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 52 44 ]
+        %tmp.9 = false;
+        ret %tmp.9;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_52_42_52_58_stop:
+        goto @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_52_8_52_58_if_end;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_52_8_52_58_if_end:
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 53 8 ]
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_53_8_53_77_if_stmt:
+        symbol [ IlluminationEngine %tmp.11 53 12 30 ];
+        %tmp.11 = getv ? :IlluminationEngine;
+        symbol [ bulbsSeeEachOther %tmp.12 53 31 48 ];
+        %tmp.12 = getv function %tmp.11 :bulbsSeeEachOther;
+        %tmp.13 = lgetv %grid;
+        symbol [ grid %tmp.13 53 49 53 ];
+        %tmp.14 = lgetv %r;
+        symbol [ r %tmp.14 53 55 56 ];
+        %tmp.15 = lgetv %c;
+        symbol [ c %tmp.15 53 58 59 ];
+        %tmp.16 = invoke %tmp.11 %tmp.12(%tmp.13, %tmp.14, %tmp.15);
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_53_8_53_77_if_end;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_53_8_53_77_if_true:
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_53_62_53_77_start:
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 53 64 ]
+        %tmp.17 = true;
+        ret %tmp.17;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_53_62_53_77_stop:
+        goto @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_53_8_53_77_if_end;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_53_8_53_77_if_end:
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 57 8 ]
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_57_15_60_46_begin:
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_57_15_59_46_begin:
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_57_15_58_46_begin:
+        %tmp.18 = self;
+        symbol [ _adjWallExceeded %tmp.19 57 15 31 ];
+        %tmp.19 = getv function %tmp.18 :_adjWallExceeded;
+        %tmp.20 = lgetv %grid;
+        symbol [ grid %tmp.20 57 32 36 ];
+        %tmp.21 = lgetv %r;
+        symbol [ r %tmp.21 57 38 39 ];
+        %tmp.22 = 1;
+        %tmp.23 = sub %tmp.21 %tmp.22;
+        %tmp.24 = lgetv %c;
+        symbol [ c %tmp.24 57 45 46 ];
+        %tmp.25 = invoke %tmp.18 %tmp.19(%tmp.20, %tmp.23, %tmp.24);
+        %tmp.26 = dup %tmp.25;
+        bt %tmp.26 @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_58_15_58_46_end;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_58_15_58_46_false:
+        %tmp.27 = self;
+        symbol [ _adjWallExceeded %tmp.28 58 15 31 ];
+        %tmp.28 = getv function %tmp.27 :_adjWallExceeded;
+        %tmp.29 = lgetv %grid;
+        symbol [ grid %tmp.29 58 32 36 ];
+        %tmp.30 = lgetv %r;
+        symbol [ r %tmp.30 58 38 39 ];
+        %tmp.31 = 1;
+        %tmp.32 = add %tmp.30 %tmp.31;
+        %tmp.33 = lgetv %c;
+        symbol [ c %tmp.33 58 45 46 ];
+        %tmp.34 = invoke %tmp.27 %tmp.28(%tmp.29, %tmp.32, %tmp.33);
+        %tmp.35 = or %tmp.25 %tmp.34;
+        push %tmp.35;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_58_15_58_46_end:
+        %tmp.36 = phi [%tmp.26 @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_57_15_58_46_begin] [%tmp.35 @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_58_15_58_46_false] [%tmp.36 @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_58_15_58_46_end];
+        %tmp.37 = dup %tmp.36;
+        bt %tmp.37 @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_59_15_59_46_end;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_59_15_59_46_false:
+        %tmp.38 = self;
+        symbol [ _adjWallExceeded %tmp.39 59 15 31 ];
+        %tmp.39 = getv function %tmp.38 :_adjWallExceeded;
+        %tmp.40 = lgetv %grid;
+        symbol [ grid %tmp.40 59 32 36 ];
+        %tmp.41 = lgetv %r;
+        symbol [ r %tmp.41 59 38 39 ];
+        %tmp.42 = lgetv %c;
+        symbol [ c %tmp.42 59 41 42 ];
+        %tmp.43 = 1;
+        %tmp.44 = sub %tmp.42 %tmp.43;
+        %tmp.45 = invoke %tmp.38 %tmp.39(%tmp.40, %tmp.41, %tmp.44);
+        %tmp.46 = or %tmp.36 %tmp.45;
+        push %tmp.46;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_59_15_59_46_end:
+        %tmp.47 = phi [%tmp.37 @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_57_15_59_46_begin] [%tmp.46 @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_59_15_59_46_false] [%tmp.47 @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_59_15_59_46_end];
+        %tmp.48 = dup %tmp.47;
+        bt %tmp.48 @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_60_15_60_46_end;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_60_15_60_46_false:
+        %tmp.49 = self;
+        symbol [ _adjWallExceeded %tmp.50 60 15 31 ];
+        %tmp.50 = getv function %tmp.49 :_adjWallExceeded;
+        %tmp.51 = lgetv %grid;
+        symbol [ grid %tmp.51 60 32 36 ];
+        %tmp.52 = lgetv %r;
+        symbol [ r %tmp.52 60 38 39 ];
+        %tmp.53 = lgetv %c;
+        symbol [ c %tmp.53 60 41 42 ];
+        %tmp.54 = 1;
+        %tmp.55 = add %tmp.53 %tmp.54;
+        %tmp.56 = invoke %tmp.49 %tmp.50(%tmp.51, %tmp.52, %tmp.55);
+        %tmp.57 = or %tmp.47 %tmp.56;
+        push %tmp.57;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_60_15_60_46_end:
+        %tmp.58 = phi [%tmp.48 @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_57_15_60_46_begin] [%tmp.57 @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_60_15_60_46_false] [%tmp.58 @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_60_15_60_46_end];
+        ret %tmp.58;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_51_42_61_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc"; @line = 63; @symbol_functiondef = [_adjWallExceeded,63,27,43]; @symbol_param<0> = [grid,63,44,48]; @symbol_param<1> = [r,63,50,51]; @symbol_param<2> = [c,63,53,54]; ]
+    protected static
+    function _adjWallExceeded(grid, r, c) {
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_63_56_68_4_start:
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 64 8 ]
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_64_8_64_50_if_stmt:
         %tmp.1 = lgetv %grid;
         symbol [ grid %tmp.1 64 13 17 ];
-        symbol [ isFilled %tmp.2 64 18 26 ];
-        %tmp.2 = getv function %tmp.1 :isFilled;
-        %tmp.3 = invoke %tmp.1 %tmp.2();
-        %tmp.4 = not %tmp.3;
-        bf %tmp.4 @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_64_8_64_46_if_end;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_64_8_64_46_if_true:
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_64_30_64_46_start:
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 64 32 ]
-        %tmp.5 = false;
-        ret %tmp.5;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_64_30_64_46_stop:
-        goto @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_64_8_64_46_if_end;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_64_8_64_46_if_end:
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 65 8 ]
-        for @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_65_8_79_8_for_test @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_65_8_79_8_for_incr @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_65_8_79_8_for_end;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_65_8_79_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_65_8_79_8_for_begin" "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_65_8_79_8_for_end" ]
-        %r.1 = local;
-        symbol [ r %r.1 65 17 18 ];
-        %tmp.6 = 0;
-        lputv %r.1 %tmp.6;
-        symbol [ r %r.1 65 17 18 ];
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_65_8_79_8_for_test:
-        %tmp.7 = lgetv %r.1;
-        symbol [ r %tmp.7 65 24 25 ];
+        symbol [ inBounds %tmp.2 64 18 26 ];
+        %tmp.2 = getv function %tmp.1 :inBounds;
+        %tmp.3 = lgetv %r;
+        symbol [ r %tmp.3 64 27 28 ];
+        %tmp.4 = lgetv %c;
+        symbol [ c %tmp.4 64 30 31 ];
+        %tmp.5 = invoke %tmp.1 %tmp.2(%tmp.3, %tmp.4);
+        %tmp.6 = not %tmp.5;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_64_8_64_50_if_end;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_64_8_64_50_if_true:
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_64_34_64_50_start:
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 64 36 ]
+        %tmp.7 = false;
+        ret %tmp.7;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_64_34_64_50_stop:
+        goto @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_64_8_64_50_if_end;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_64_8_64_50_if_end:
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 65 8 ]
+        [ "_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_63_56_68_4_start" "_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_63_56_68_4_stop" ]
+        %num.1 = local;
+        symbol [ num %num.1 65 12 15 ];
         %tmp.8 = lgetv %grid;
-        symbol [ grid %tmp.8 65 28 32 ];
-        symbol [ runs %tmp.9 65 33 37 ];
-        %tmp.9 = getv %tmp.8 :runs;
-        symbol [ size %tmp.10 65 38 42 ];
-        %tmp.10 = getv function %tmp.9 :size;
-        %tmp.11 = invoke %tmp.9 %tmp.10();
-        %tmp.12 = lt %tmp.7 %tmp.11;
-        bf %tmp.12 @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_65_8_79_8_for_end;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_65_8_79_8_for_begin:
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_65_51_79_8_start:
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 66 12 ]
-        [ "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_65_51_79_8_start" "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_65_51_79_8_stop" ]
-        %run.2 = local;
-        symbol [ run %run.2 66 16 19 ];
-        %tmp.13 = lgetv %grid;
-        symbol [ grid %tmp.13 66 26 30 ];
-        symbol [ runs %tmp.14 66 31 35 ];
-        %tmp.14 = getv %tmp.13 :runs;
-        %tmp.15 = lgetv %r.1;
-        symbol [ r %tmp.15 66 36 37 ];
-        %tmp.16 = agetv %tmp.14 %tmp.15;
-        lputv %run.2 %tmp.16;
-        symbol [ run %run.2 66 16 19 ];
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 67 12 ]
-        [ "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_65_51_79_8_start" "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_65_51_79_8_stop" ]
-        %members.3 = local;
-        symbol [ members %members.3 67 16 23 ];
-        %tmp.17 = lgetv %run.2;
-        symbol [ run %tmp.17 67 26 29 ];
-        %tmp.18 = 0;
-        %tmp.19 = agetv %tmp.17 %tmp.18;
-        lputv %members.3 %tmp.19;
-        symbol [ members %members.3 67 16 23 ];
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 68 12 ]
-        [ "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_65_51_79_8_start" "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_65_51_79_8_stop" ]
-        %clue.4 = local;
-        symbol [ clue %clue.4 68 16 20 ];
-        %tmp.20 = lgetv %run.2;
-        symbol [ run %tmp.20 68 26 29 ];
-        %tmp.21 = 1;
-        %tmp.22 = agetv %tmp.20 %tmp.21;
-        lputv %clue.4 %tmp.22;
-        symbol [ clue %clue.4 68 16 20 ];
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 69 12 ]
-        [ "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_65_51_79_8_start" "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_65_51_79_8_stop" ]
-        %seen.5 = local;
-        symbol [ seen %seen.5 69 16 20 ];
-        %tmp.23 = newa 10;
-        %tmp.24 = 0;
-        %tmp.25 = dup %tmp.23;
-        %tmp.26 = aputv %tmp.25 0 %tmp.24;
-        %tmp.27 = 0;
-        %tmp.28 = dup %tmp.26;
-        %tmp.29 = aputv %tmp.28 1 %tmp.27;
-        %tmp.30 = 0;
-        %tmp.31 = dup %tmp.29;
-        %tmp.32 = aputv %tmp.31 2 %tmp.30;
-        %tmp.33 = 0;
-        %tmp.34 = dup %tmp.32;
-        %tmp.35 = aputv %tmp.34 3 %tmp.33;
-        %tmp.36 = 0;
-        %tmp.37 = dup %tmp.35;
-        %tmp.38 = aputv %tmp.37 4 %tmp.36;
-        %tmp.39 = 0;
-        %tmp.40 = dup %tmp.38;
-        %tmp.41 = aputv %tmp.40 5 %tmp.39;
-        %tmp.42 = 0;
-        %tmp.43 = dup %tmp.41;
-        %tmp.44 = aputv %tmp.43 6 %tmp.42;
-        %tmp.45 = 0;
-        %tmp.46 = dup %tmp.44;
-        %tmp.47 = aputv %tmp.46 7 %tmp.45;
-        %tmp.48 = 0;
-        %tmp.49 = dup %tmp.47;
-        %tmp.50 = aputv %tmp.49 8 %tmp.48;
-        %tmp.51 = 0;
-        %tmp.52 = dup %tmp.50;
-        %tmp.53 = aputv %tmp.52 9 %tmp.51;
-        lputv %seen.5 %tmp.53;
-        symbol [ seen %seen.5 69 16 20 ];
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 70 12 ]
-        [ "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_65_51_79_8_start" "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_65_51_79_8_stop" ]
-        %sum.6 = local;
-        symbol [ sum %sum.6 70 16 19 ];
-        %tmp.54 = 0;
-        lputv %sum.6 %tmp.54;
-        symbol [ sum %sum.6 70 16 19 ];
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 71 12 ]
-        for @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_71_12_77_12_for_test @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_71_12_77_12_for_incr @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_71_12_77_12_for_end;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_71_12_77_12_for_init:
-        [ "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_71_12_77_12_for_begin" "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_71_12_77_12_for_end" ]
-        %k.7 = local;
-        symbol [ k %k.7 71 21 22 ];
-        %tmp.55 = 0;
-        lputv %k.7 %tmp.55;
-        symbol [ k %k.7 71 21 22 ];
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_71_12_77_12_for_test:
-        %tmp.56 = lgetv %k.7;
-        symbol [ k %tmp.56 71 28 29 ];
-        %tmp.57 = lgetv %members.3;
-        symbol [ members %tmp.57 71 32 39 ];
-        symbol [ size %tmp.58 71 40 44 ];
-        %tmp.58 = getv function %tmp.57 :size;
-        %tmp.59 = invoke %tmp.57 %tmp.58();
-        %tmp.60 = lt %tmp.56 %tmp.59;
-        bf %tmp.60 @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_71_12_77_12_for_end;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_71_12_77_12_for_begin:
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_71_53_77_12_start:
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 72 16 ]
-        [ "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_71_53_77_12_start" "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_71_53_77_12_stop" ]
-        %v.8 = local;
-        symbol [ v %v.8 72 20 21 ];
-        %tmp.61 = lgetv %grid;
-        symbol [ grid %tmp.61 72 24 28 ];
-        symbol [ val %tmp.62 72 29 32 ];
-        %tmp.62 = getv %tmp.61 :val;
-        %tmp.63 = lgetv %members.3;
-        symbol [ members %tmp.63 72 33 40 ];
-        %tmp.64 = lgetv %k.7;
-        symbol [ k %tmp.64 72 41 42 ];
-        %tmp.65 = agetv %tmp.63 %tmp.64;
-        %tmp.66 = agetv %tmp.62 %tmp.65;
-        lputv %v.8 %tmp.66;
-        symbol [ v %v.8 72 20 21 ];
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 73 16 ]
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_73_16_73_52_if_stmt:
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_73_20_73_33_begin:
-        %tmp.67 = lgetv %v.8;
-        symbol [ v %tmp.67 73 20 21 ];
-        %tmp.68 = 1;
-        %tmp.69 = lt %tmp.67 %tmp.68;
-        bt %tmp.69 @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_73_16_73_52_if_true;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_73_29_73_33_false:
-        %tmp.70 = lgetv %v.8;
-        symbol [ v %tmp.70 73 29 30 ];
-        %tmp.71 = 9;
-        %tmp.72 = gt %tmp.70 %tmp.71;
-        push %tmp.72;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_73_29_73_33_end:
-        %tmp.73 = phi [%tmp.69 @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_73_20_73_33_begin] [%tmp.72 @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_73_29_73_33_false] [%tmp.73 @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_73_29_73_33_end];
-        bf %tmp.73 @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_73_16_73_52_if_end;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_73_16_73_52_if_true:
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_73_36_73_52_start:
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 73 38 ]
-        %tmp.74 = false;
-        ret %tmp.74;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_73_36_73_52_stop:
-        goto @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_73_16_73_52_if_end;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_73_16_73_52_if_end:
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 74 16 ]
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_74_16_74_52_if_stmt:
-        %tmp.75 = lgetv %seen.5;
-        symbol [ seen %tmp.75 74 20 24 ];
-        %tmp.76 = lgetv %v.8;
-        symbol [ v %tmp.76 74 25 26 ];
-        %tmp.77 = agetv %tmp.75 %tmp.76;
-        %tmp.78 = 0;
-        %tmp.79 = ne %tmp.77 %tmp.78;
-        bf %tmp.79 @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_74_16_74_52_if_end;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_74_16_74_52_if_true:
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_74_36_74_52_start:
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 74 38 ]
-        %tmp.80 = false;
-        ret %tmp.80;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_74_36_74_52_stop:
-        goto @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_74_16_74_52_if_end;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_74_16_74_52_if_end:
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 75 16 ]
-        %tmp.81 = lgetv %seen.5;
-        symbol [ seen %tmp.81 75 16 20 ];
-        %tmp.82 = 1;
-        %tmp.83 = lgetv %v.8;
-        symbol [ v %tmp.83 75 21 22 ];
-        aputv %tmp.81 %tmp.83 %tmp.82;
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 76 16 ]
-        %tmp.84 = lgetv %sum.6;
-        symbol [ sum %tmp.84 76 26 29 ];
-        %tmp.85 = lgetv %v.8;
-        symbol [ v %tmp.85 76 32 33 ];
-        %tmp.86 = add %tmp.84 %tmp.85;
-        lputv %sum.6 %tmp.86;
-        symbol [ sum %sum.6 76 16 19 ];
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_71_53_77_12_stop:
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_71_12_77_12_for_incr:
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 71 ]
-        %tmp.89 = lgetv %k.7;
-        symbol [ k %tmp.89 71 48 49 ];
-        %tmp.90 = add %tmp.89 1;
-        lputv %k.7 %tmp.90;
-        symbol [ k %k.7 71 48 49 ];
-        goto @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_71_12_77_12_for_test;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_71_12_77_12_for_end:
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 78 12 ]
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_78_12_78_45_if_stmt:
-        %tmp.91 = lgetv %sum.6;
-        symbol [ sum %tmp.91 78 16 19 ];
-        %tmp.92 = lgetv %clue.4;
-        symbol [ clue %tmp.92 78 23 27 ];
-        %tmp.93 = ne %tmp.91 %tmp.92;
-        bf %tmp.93 @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_78_12_78_45_if_end;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_78_12_78_45_if_true:
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_78_29_78_45_start:
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 78 31 ]
-        %tmp.94 = false;
-        ret %tmp.94;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_78_29_78_45_stop:
-        goto @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_78_12_78_45_if_end;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_78_12_78_45_if_end:
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_65_51_79_8_stop:
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_65_8_79_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 65 ]
-        %tmp.97 = lgetv %r.1;
-        symbol [ r %tmp.97 65 46 47 ];
-        %tmp.98 = add %tmp.97 1;
-        lputv %r.1 %tmp.98;
-        symbol [ r %r.1 65 46 47 ];
-        goto @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_65_8_79_8_for_test;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_65_8_79_8_for_end:
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 80 8 ]
-        %tmp.99 = true;
-        ret %tmp.99;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_63_32_81_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc"; @line = 85; @symbol_functiondef = [firstEmpty,85,20,30]; @symbol_param<0> = [grid,85,31,35]; ]
-    static
-    function firstEmpty(grid) {
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_85_37_93_4_start:
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 86 8 ]
-        [ "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_85_37_93_4_start" "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_85_37_93_4_stop" ]
-        %sz.1 = local;
-        symbol [ sz %sz.1 86 12 14 ];
-        %tmp.1 = lgetv %grid;
-        symbol [ grid %tmp.1 86 17 21 ];
-        symbol [ n %tmp.2 86 22 23 ];
-        %tmp.2 = getv %tmp.1 :n;
-        %tmp.3 = lgetv %grid;
-        symbol [ grid %tmp.3 86 26 30 ];
-        symbol [ n %tmp.4 86 31 32 ];
-        %tmp.4 = getv %tmp.3 :n;
-        %tmp.5 = mul %tmp.2 %tmp.4;
-        lputv %sz.1 %tmp.5;
-        symbol [ sz %sz.1 86 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 87 8 ]
-        for @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_87_8_91_8_for_test @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_87_8_91_8_for_incr @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_87_8_91_8_for_end;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_87_8_91_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_87_8_91_8_for_begin" "_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_87_8_91_8_for_end" ]
-        %i.2 = local;
-        symbol [ i %i.2 87 17 18 ];
-        %tmp.6 = 0;
-        lputv %i.2 %tmp.6;
-        symbol [ i %i.2 87 17 18 ];
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_87_8_91_8_for_test:
-        %tmp.7 = lgetv %i.2;
-        symbol [ i %tmp.7 87 24 25 ];
-        %tmp.8 = lgetv %sz.1;
-        symbol [ sz %tmp.8 87 28 30 ];
-        %tmp.9 = lt %tmp.7 %tmp.8;
-        bf %tmp.9 @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_87_8_91_8_for_end;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_87_8_91_8_for_begin:
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_87_37_91_8_start:
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 88 12 ]
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_88_12_90_12_if_stmt:
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_88_16_88_53_begin:
-        %tmp.10 = lgetv %grid;
-        symbol [ grid %tmp.10 88 16 20 ];
-        symbol [ white %tmp.11 88 21 26 ];
-        %tmp.11 = getv %tmp.10 :white;
-        %tmp.12 = lgetv %i.2;
-        symbol [ i %tmp.12 88 27 28 ];
-        %tmp.13 = agetv %tmp.11 %tmp.12;
+        symbol [ grid %tmp.8 65 18 22 ];
+        symbol [ wallNumber %tmp.9 65 23 33 ];
+        %tmp.9 = getv function %tmp.8 :wallNumber;
+        %tmp.10 = lgetv %r;
+        symbol [ r %tmp.10 65 34 35 ];
+        %tmp.11 = lgetv %c;
+        symbol [ c %tmp.11 65 37 38 ];
+        %tmp.12 = invoke %tmp.8 %tmp.9(%tmp.10, %tmp.11);
+        lputv %num.1 %tmp.12;
+        symbol [ num %num.1 65 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 66 8 ]
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_66_8_66_37_if_stmt:
+        %tmp.13 = lgetv %num.1;
+        symbol [ num %tmp.13 66 12 15 ];
         %tmp.14 = 0;
-        %tmp.15 = ne %tmp.13 %tmp.14;
-        bf %tmp.15 @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_88_12_90_12_if_end;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_88_38_88_53_true:
-        %tmp.16 = lgetv %grid;
-        symbol [ grid %tmp.16 88 38 42 ];
-        symbol [ val %tmp.17 88 43 46 ];
-        %tmp.17 = getv %tmp.16 :val;
-        %tmp.18 = lgetv %i.2;
-        symbol [ i %tmp.18 88 47 48 ];
-        %tmp.19 = agetv %tmp.17 %tmp.18;
-        %tmp.20 = 0;
-        %tmp.21 = eq %tmp.19 %tmp.20;
-        push %tmp.21;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_88_38_88_53_end:
-        %tmp.22 = phi [%tmp.15 @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_88_16_88_53_begin] [%tmp.21 @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_88_38_88_53_true] [%tmp.22 @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_88_38_88_53_end];
-        bf %tmp.22 @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_88_12_90_12_if_end;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_88_12_90_12_if_true:
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_88_56_90_12_start:
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 89 16 ]
-        %tmp.23 = newa 2;
-        %tmp.24 = lgetv %i.2;
-        symbol [ i %tmp.24 89 24 25 ];
-        %tmp.25 = lgetv %grid;
-        symbol [ grid %tmp.25 89 28 32 ];
-        symbol [ n %tmp.26 89 33 34 ];
-        %tmp.26 = getv %tmp.25 :n;
-        %tmp.27 = div %tmp.24 %tmp.26;
-        %tmp.28 = dup %tmp.23;
-        %tmp.29 = aputv %tmp.28 0 %tmp.27;
-        %tmp.30 = lgetv %i.2;
-        symbol [ i %tmp.30 89 36 37 ];
-        %tmp.31 = lgetv %grid;
-        symbol [ grid %tmp.31 89 40 44 ];
-        symbol [ n %tmp.32 89 45 46 ];
-        %tmp.32 = getv %tmp.31 :n;
-        %tmp.33 = mod %tmp.30 %tmp.32;
-        %tmp.34 = dup %tmp.29;
-        %tmp.35 = aputv %tmp.34 1 %tmp.33;
-        ret %tmp.35;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_88_56_90_12_stop:
-        goto @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_88_12_90_12_if_end;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_88_12_90_12_if_end:
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_87_37_91_8_stop:
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_87_8_91_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 87 ]
-        %tmp.38 = lgetv %i.2;
-        symbol [ i %tmp.38 87 32 33 ];
-        %tmp.39 = add %tmp.38 1;
-        lputv %i.2 %tmp.39;
-        symbol [ i %i.2 87 32 33 ];
-        goto @_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_87_8_91_8_for_test;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_87_8_91_8_for_end:
-[ "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc" 92 8 ]
-        %tmp.40 = newa 2;
-        %tmp.41 = -1;
-        %tmp.42 = dup %tmp.40;
-        %tmp.43 = aputv %tmp.42 0 %tmp.41;
-        %tmp.44 = -1;
-        %tmp.45 = dup %tmp.43;
-        %tmp.46 = aputv %tmp.45 1 %tmp.44;
-        ret %tmp.46;
-_Users_kkorolczuk_work_garmin_kakuro_source_ValidationEngine_mc_85_37_93_4_stop:
+        %tmp.15 = lt %tmp.13 %tmp.14;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_66_8_66_37_if_end;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_66_8_66_37_if_true:
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_66_21_66_37_start:
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 66 23 ]
+        %tmp.16 = false;
+        ret %tmp.16;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_66_21_66_37_stop:
+        goto @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_66_8_66_37_if_end;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_66_8_66_37_if_end:
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 67 8 ]
+        symbol [ IlluminationEngine %tmp.18 67 15 33 ];
+        %tmp.18 = getv ? :IlluminationEngine;
+        symbol [ adjacentBulbCount %tmp.19 67 34 51 ];
+        %tmp.19 = getv function %tmp.18 :adjacentBulbCount;
+        %tmp.20 = lgetv %grid;
+        symbol [ grid %tmp.20 67 52 56 ];
+        %tmp.21 = lgetv %r;
+        symbol [ r %tmp.21 67 58 59 ];
+        %tmp.22 = lgetv %c;
+        symbol [ c %tmp.22 67 61 62 ];
+        %tmp.23 = invoke %tmp.18 %tmp.19(%tmp.20, %tmp.21, %tmp.22);
+        %tmp.24 = lgetv %num.1;
+        symbol [ num %tmp.24 67 66 69 ];
+        %tmp.25 = gt %tmp.23 %tmp.24;
+        ret %tmp.25;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_63_56_68_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc"; @line = 71; @symbol_functiondef = [wallError,71,20,29]; @symbol_param<0> = [grid,71,30,34]; @symbol_param<1> = [r,71,36,37]; @symbol_param<2> = [c,71,39,40]; ]
+    static
+    function wallError(grid, r, c) {
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_71_42_75_4_start:
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 72 8 ]
+        [ "_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_71_42_75_4_start" "_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_71_42_75_4_stop" ]
+        %num.1 = local;
+        symbol [ num %num.1 72 12 15 ];
+        %tmp.1 = lgetv %grid;
+        symbol [ grid %tmp.1 72 18 22 ];
+        symbol [ wallNumber %tmp.2 72 23 33 ];
+        %tmp.2 = getv function %tmp.1 :wallNumber;
+        %tmp.3 = lgetv %r;
+        symbol [ r %tmp.3 72 34 35 ];
+        %tmp.4 = lgetv %c;
+        symbol [ c %tmp.4 72 37 38 ];
+        %tmp.5 = invoke %tmp.1 %tmp.2(%tmp.3, %tmp.4);
+        lputv %num.1 %tmp.5;
+        symbol [ num %num.1 72 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 73 8 ]
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_73_8_73_37_if_stmt:
+        %tmp.6 = lgetv %num.1;
+        symbol [ num %tmp.6 73 12 15 ];
+        %tmp.7 = 0;
+        %tmp.8 = lt %tmp.6 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_73_8_73_37_if_end;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_73_8_73_37_if_true:
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_73_21_73_37_start:
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 73 23 ]
+        %tmp.9 = false;
+        ret %tmp.9;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_73_21_73_37_stop:
+        goto @_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_73_8_73_37_if_end;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_73_8_73_37_if_end:
+[ "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc" 74 8 ]
+        symbol [ IlluminationEngine %tmp.11 74 15 33 ];
+        %tmp.11 = getv ? :IlluminationEngine;
+        symbol [ adjacentBulbCount %tmp.12 74 34 51 ];
+        %tmp.12 = getv function %tmp.11 :adjacentBulbCount;
+        %tmp.13 = lgetv %grid;
+        symbol [ grid %tmp.13 74 52 56 ];
+        %tmp.14 = lgetv %r;
+        symbol [ r %tmp.14 74 58 59 ];
+        %tmp.15 = lgetv %c;
+        symbol [ c %tmp.15 74 61 62 ];
+        %tmp.16 = invoke %tmp.11 %tmp.12(%tmp.13, %tmp.14, %tmp.15);
+        %tmp.17 = lgetv %num.1;
+        symbol [ num %tmp.17 74 66 69 ];
+        %tmp.18 = gt %tmp.16 %tmp.17;
+        ret %tmp.18;
+_Users_kkorolczuk_work_garmin_akari_source_ValidationEngine_mc_71_42_75_4_stop:
     }
 }
-[ @file = "/Users/kkorolczuk/work/garmin/kakuro/source/ValidationEngine.mc"; @line = 26; ]
+[ @file = "/Users/kkorolczuk/work/garmin/akari/source/ValidationEngine.mc"; @line = 20; ]
 <init> {
 }

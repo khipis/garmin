@@ -725,7 +725,7 @@ class GameView extends WatchUi.View {
         dc.fillRectangle(0, _sh - 28, _sw, 28);
         dc.setColor(0xCCCCCC, Graphics.COLOR_TRANSPARENT);
         var btxt = ((_mode == MODE_PVP) ? "P1(B)" : "You(B)") + "  cap:" + _captP.format("%d");
-        if (_state == TC_PLAY || (_state == TC_AIST && _mode == MODE_PVP)) { btxt = btxt + "  BACK=pass"; }
+        if (_state == TC_PLAY || (_state == TC_AIST && _mode == MODE_PVP)) { btxt = btxt + "  BACK=menu"; }
         dc.drawText(_sw / 2, _sh - 16, Graphics.FONT_XTINY, btxt,
                     Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFF3300, Graphics.COLOR_TRANSPARENT);
@@ -747,14 +747,14 @@ class GameView extends WatchUi.View {
         dc.setColor(0x0A180A, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(hw, hw, hw - 1);
         dc.setColor(0x44BB44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(hw, _sh * 8 / 100, Graphics.FONT_XTINY, "TERRITORY CLASH", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(hw, _sh * 12 / 100, Graphics.FONT_XTINY, "TERRITORY CLASH", Graphics.TEXT_JUSTIFY_CENTER);
         var modeStr = (_mode == MODE_PVAI) ? "P vs AI" : ((_mode == MODE_PVP) ? "P vs P" : "AI vs AI");
         var diffStr = (_diff == DIFF_EASY) ? "Easy" : ((_diff == DIFF_MED) ? "Med" : "Hard");
         var sideStr = _playerFirst ? "Side: Blk" : "Side: Wht";
         var rows = ["Mode: " + modeStr, "Diff: " + diffStr, sideStr, "START"];
         var nR = 4;
-        var rowH = _sh * 13 / 100; if (rowH < 23) { rowH = 23; } if (rowH > 36) { rowH = 36; }
-        var rowW = _sw * 70 / 100; var rowX = (_sw - rowW) / 2;
+        var rowH = _sh * 12 / 100; if (rowH < 21) { rowH = 21; } if (rowH > 32) { rowH = 32; }
+        var rowW = _sw * 63 / 100; var rowX = (_sw - rowW) / 2;
         var gap = 5; var tot = nR * rowH + (nR - 1) * gap; var rowY0 = (_sh - tot) / 2 + rowH;
         var i = 0;
         while (i < nR) {
@@ -837,8 +837,8 @@ class GameView extends WatchUi.View {
     function doTap(tx, ty) {
         if (_state == GS_MENU) {
             var nR = 4;
-            var rowH = _sh * 13 / 100; if (rowH < 23) { rowH = 23; } if (rowH > 36) { rowH = 36; }
-            var rowW = _sw * 70 / 100; var rowX = (_sw - rowW) / 2;
+            var rowH = _sh * 12 / 100; if (rowH < 21) { rowH = 21; } if (rowH > 32) { rowH = 32; }
+            var rowW = _sw * 63 / 100; var rowX = (_sw - rowW) / 2;
             var gap = 5; var tot = nR * rowH + (nR - 1) * gap; var rowY0 = (_sh - tot) / 2 + rowH;
             for (var i = 0; i < nR; i++) {
                 var ry = rowY0 + i * (rowH + gap);

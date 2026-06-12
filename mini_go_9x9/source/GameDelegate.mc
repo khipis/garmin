@@ -37,7 +37,7 @@ class GameDelegate extends WatchUi.BehaviorDelegate {
     }
 
     function onBack() {
-        if (!_v.doBack()) {
+        if (!_v.doPass()) {
             WatchUi.popView(WatchUi.SLIDE_RIGHT);
         } else {
             WatchUi.requestUpdate();

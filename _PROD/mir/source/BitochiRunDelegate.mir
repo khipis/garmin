@@ -389,9 +389,9 @@ _Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_59_24_63_4_start:
         ret %tmp.6;
 _Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_59_24_63_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc"; @line = 65; @symbol_functiondef = [onMenu,65,13,19]; ]
-    function onMenu() {
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_65_22_69_4_start:
+    [ @file = "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc"; @line = 65; @symbol_functiondef = [onTap,65,13,18]; @symbol_param<0> = [evt,65,19,22]; ]
+    function onTap(evt) {
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_65_24_69_4_start:
 [ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 66 8 ]
         symbol [ _view %tmp.2 66 8 13 ];
         %tmp.2 = getv ? :_view;
@@ -407,160 +407,180 @@ _Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_65_22_69_4_start:
 [ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 68 8 ]
         %tmp.6 = true;
         ret %tmp.6;
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_65_22_69_4_stop:
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_65_24_69_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc"; @line = 71; @symbol_functiondef = [onPreviousPage,71,13,27]; ]
-    function onPreviousPage() {
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_71_30_81_4_start:
+    [ @file = "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc"; @line = 71; @symbol_functiondef = [onMenu,71,13,19]; ]
+    function onMenu() {
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_71_22_75_4_start:
 [ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 72 8 ]
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_72_8_78_8_if_stmt:
-        symbol [ _view %tmp.2 72 12 17 ];
+        symbol [ _view %tmp.2 72 8 13 ];
         %tmp.2 = getv ? :_view;
-        symbol [ inRunPhase %tmp.3 72 18 28 ];
+        symbol [ doAction %tmp.3 72 14 22 ];
+        %tmp.3 = getv function %tmp.2 :doAction;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 73 8 ]
+        symbol [ WatchUi %tmp.4 73 8 15 ];
+        %tmp.4 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.5 73 16 29 ];
+        %tmp.5 = getv function %tmp.4 :requestUpdate;
+        invoke %tmp.4 %tmp.5();
+[ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 74 8 ]
+        %tmp.6 = true;
+        ret %tmp.6;
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_71_22_75_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc"; @line = 77; @symbol_functiondef = [onPreviousPage,77,13,27]; ]
+    function onPreviousPage() {
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_77_30_87_4_start:
+[ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 78 8 ]
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_78_8_84_8_if_stmt:
+        symbol [ _view %tmp.2 78 12 17 ];
+        %tmp.2 = getv ? :_view;
+        symbol [ inRunPhase %tmp.3 78 18 28 ];
         %tmp.3 = getv function %tmp.2 :inRunPhase;
         %tmp.4 = invoke %tmp.2 %tmp.3();
-        bf %tmp.4 @_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_72_8_78_8_if_false;
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_72_8_78_8_if_true:
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_72_32_74_8_start:
-[ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 73 12 ]
-        symbol [ _view %tmp.6 73 12 17 ];
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_78_8_84_8_if_false;
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_78_8_84_8_if_true:
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_78_32_80_8_start:
+[ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 79 12 ]
+        symbol [ _view %tmp.6 79 12 17 ];
         %tmp.6 = getv ? :_view;
-        symbol [ nudgeDodge %tmp.7 73 18 28 ];
+        symbol [ nudgeDodge %tmp.7 79 18 28 ];
         %tmp.7 = getv function %tmp.6 :nudgeDodge;
         %tmp.8 = -1;
         invoke %tmp.6 %tmp.7(%tmp.8);
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_72_32_74_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_72_8_78_8_if_end;
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_72_8_78_8_if_false:
-[ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 74 15 ]
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_74_15_78_8_if_stmt:
-        symbol [ _view %tmp.10 74 19 24 ];
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_78_32_80_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_78_8_84_8_if_end;
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_78_8_84_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 80 15 ]
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_80_15_84_8_if_stmt:
+        symbol [ _view %tmp.10 80 19 24 ];
         %tmp.10 = getv ? :_view;
-        symbol [ inMenu %tmp.11 74 25 31 ];
+        symbol [ inMenu %tmp.11 80 25 31 ];
         %tmp.11 = getv function %tmp.10 :inMenu;
         %tmp.12 = invoke %tmp.10 %tmp.11();
-        bf %tmp.12 @_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_74_15_78_8_if_else_false;
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_74_15_78_8_if_true:
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_74_35_76_8_start:
-[ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 75 12 ]
-        symbol [ _view %tmp.14 75 12 17 ];
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_80_15_84_8_if_else_false;
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_80_15_84_8_if_true:
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_80_35_82_8_start:
+[ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 81 12 ]
+        symbol [ _view %tmp.14 81 12 17 ];
         %tmp.14 = getv ? :_view;
-        symbol [ menuNav %tmp.15 75 18 25 ];
+        symbol [ menuNav %tmp.15 81 18 25 ];
         %tmp.15 = getv function %tmp.14 :menuNav;
         %tmp.16 = -1;
         invoke %tmp.14 %tmp.15(%tmp.16);
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_74_35_76_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_74_15_78_8_if_end;
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_74_15_78_8_if_else_false:
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_76_15_78_8_start:
-[ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 77 12 ]
-        symbol [ _view %tmp.18 77 12 17 ];
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_80_35_82_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_80_15_84_8_if_end;
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_80_15_84_8_if_else_false:
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_82_15_84_8_start:
+[ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 83 12 ]
+        symbol [ _view %tmp.18 83 12 17 ];
         %tmp.18 = getv ? :_view;
-        symbol [ doAction %tmp.19 77 18 26 ];
+        symbol [ doAction %tmp.19 83 18 26 ];
         %tmp.19 = getv function %tmp.18 :doAction;
         invoke %tmp.18 %tmp.19();
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_76_15_78_8_stop:
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_74_15_78_8_if_end:
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_72_8_78_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 79 8 ]
-        symbol [ WatchUi %tmp.20 79 8 15 ];
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_82_15_84_8_stop:
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_80_15_84_8_if_end:
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_78_8_84_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 85 8 ]
+        symbol [ WatchUi %tmp.20 85 8 15 ];
         %tmp.20 = getm $.Toybox.WatchUi;
-        symbol [ requestUpdate %tmp.21 79 16 29 ];
+        symbol [ requestUpdate %tmp.21 85 16 29 ];
         %tmp.21 = getv function %tmp.20 :requestUpdate;
         invoke %tmp.20 %tmp.21();
-[ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 80 8 ]
+[ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 86 8 ]
         %tmp.22 = true;
         ret %tmp.22;
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_71_30_81_4_stop:
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_77_30_87_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc"; @line = 83; @symbol_functiondef = [onNextPage,83,13,23]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc"; @line = 89; @symbol_functiondef = [onNextPage,89,13,23]; ]
     function onNextPage() {
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_83_26_93_4_start:
-[ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 84 8 ]
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_84_8_90_8_if_stmt:
-        symbol [ _view %tmp.2 84 12 17 ];
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_89_26_99_4_start:
+[ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 90 8 ]
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_90_8_96_8_if_stmt:
+        symbol [ _view %tmp.2 90 12 17 ];
         %tmp.2 = getv ? :_view;
-        symbol [ inRunPhase %tmp.3 84 18 28 ];
+        symbol [ inRunPhase %tmp.3 90 18 28 ];
         %tmp.3 = getv function %tmp.2 :inRunPhase;
         %tmp.4 = invoke %tmp.2 %tmp.3();
-        bf %tmp.4 @_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_84_8_90_8_if_false;
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_84_8_90_8_if_true:
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_84_32_86_8_start:
-[ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 85 12 ]
-        symbol [ _view %tmp.6 85 12 17 ];
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_90_8_96_8_if_false;
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_90_8_96_8_if_true:
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_90_32_92_8_start:
+[ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 91 12 ]
+        symbol [ _view %tmp.6 91 12 17 ];
         %tmp.6 = getv ? :_view;
-        symbol [ nudgeDodge %tmp.7 85 18 28 ];
+        symbol [ nudgeDodge %tmp.7 91 18 28 ];
         %tmp.7 = getv function %tmp.6 :nudgeDodge;
         %tmp.8 = 1;
         invoke %tmp.6 %tmp.7(%tmp.8);
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_84_32_86_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_84_8_90_8_if_end;
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_84_8_90_8_if_false:
-[ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 86 15 ]
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_86_15_90_8_if_stmt:
-        symbol [ _view %tmp.10 86 19 24 ];
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_90_32_92_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_90_8_96_8_if_end;
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_90_8_96_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 92 15 ]
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_92_15_96_8_if_stmt:
+        symbol [ _view %tmp.10 92 19 24 ];
         %tmp.10 = getv ? :_view;
-        symbol [ inMenu %tmp.11 86 25 31 ];
+        symbol [ inMenu %tmp.11 92 25 31 ];
         %tmp.11 = getv function %tmp.10 :inMenu;
         %tmp.12 = invoke %tmp.10 %tmp.11();
-        bf %tmp.12 @_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_86_15_90_8_if_else_false;
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_86_15_90_8_if_true:
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_86_35_88_8_start:
-[ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 87 12 ]
-        symbol [ _view %tmp.14 87 12 17 ];
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_92_15_96_8_if_else_false;
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_92_15_96_8_if_true:
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_92_35_94_8_start:
+[ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 93 12 ]
+        symbol [ _view %tmp.14 93 12 17 ];
         %tmp.14 = getv ? :_view;
-        symbol [ menuNav %tmp.15 87 18 25 ];
+        symbol [ menuNav %tmp.15 93 18 25 ];
         %tmp.15 = getv function %tmp.14 :menuNav;
         %tmp.16 = 1;
         invoke %tmp.14 %tmp.15(%tmp.16);
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_86_35_88_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_86_15_90_8_if_end;
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_86_15_90_8_if_else_false:
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_88_15_90_8_start:
-[ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 89 12 ]
-        symbol [ _view %tmp.18 89 12 17 ];
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_92_35_94_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_92_15_96_8_if_end;
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_92_15_96_8_if_else_false:
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_94_15_96_8_start:
+[ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 95 12 ]
+        symbol [ _view %tmp.18 95 12 17 ];
         %tmp.18 = getv ? :_view;
-        symbol [ doAction %tmp.19 89 18 26 ];
+        symbol [ doAction %tmp.19 95 18 26 ];
         %tmp.19 = getv function %tmp.18 :doAction;
         invoke %tmp.18 %tmp.19();
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_88_15_90_8_stop:
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_86_15_90_8_if_end:
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_84_8_90_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 91 8 ]
-        symbol [ WatchUi %tmp.20 91 8 15 ];
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_94_15_96_8_stop:
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_92_15_96_8_if_end:
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_90_8_96_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 97 8 ]
+        symbol [ WatchUi %tmp.20 97 8 15 ];
         %tmp.20 = getm $.Toybox.WatchUi;
-        symbol [ requestUpdate %tmp.21 91 16 29 ];
+        symbol [ requestUpdate %tmp.21 97 16 29 ];
         %tmp.21 = getv function %tmp.20 :requestUpdate;
         invoke %tmp.20 %tmp.21();
-[ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 92 8 ]
+[ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 98 8 ]
         %tmp.22 = true;
         ret %tmp.22;
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_83_26_93_4_stop:
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_89_26_99_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc"; @line = 95; @symbol_functiondef = [onBack,95,13,19]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc"; @line = 101; @symbol_functiondef = [onBack,101,13,19]; ]
     function onBack() {
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_95_22_100_4_start:
-[ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 96 8 ]
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_96_8_98_8_if_stmt:
-        symbol [ _sensorEnabled %tmp.2 96 12 26 ];
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_101_22_106_4_start:
+[ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 102 8 ]
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_102_8_104_8_if_stmt:
+        symbol [ _sensorEnabled %tmp.2 102 12 26 ];
         %tmp.2 = getv ? :_sensorEnabled;
-        bf %tmp.2 @_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_96_8_98_8_if_end;
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_96_8_98_8_if_true:
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_96_28_98_8_start:
-[ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 97 12 ]
-        symbol [ Sensor %tmp.3 97 12 18 ];
+        bf %tmp.2 @_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_102_8_104_8_if_end;
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_102_8_104_8_if_true:
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_102_28_104_8_start:
+[ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 103 12 ]
+        symbol [ Sensor %tmp.3 103 12 18 ];
         %tmp.3 = getm $.Toybox.Sensor;
-        symbol [ enableSensorEvents %tmp.4 97 19 37 ];
+        symbol [ enableSensorEvents %tmp.4 103 19 37 ];
         %tmp.4 = getv function %tmp.3 :enableSensorEvents;
         %tmp.5 = null;
         invoke %tmp.3 %tmp.4(%tmp.5);
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_96_28_98_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_96_8_98_8_if_end;
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_96_8_98_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 99 8 ]
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_102_28_104_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_102_8_104_8_if_end;
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_102_8_104_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc" 105 8 ]
         %tmp.6 = false;
         ret %tmp.6;
-_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_95_22_100_4_stop:
+_Users_kkorolczuk_work_garmin_run_source_BitochiRunDelegate_mc_101_22_106_4_stop:
     }
 }
 [ @file = "/Users/kkorolczuk/work/garmin/run/source/BitochiRunDelegate.mc"; @line = 1; ]

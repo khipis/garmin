@@ -14,14 +14,14 @@ class UIManager {
     // overlaps the footer or each other on small round watches.
     // Rows are ~15-18 % smaller than the old 3-row menu.
     static function rowGeom(sw, sh) {
-        var topZone      = (sh * 30) / 100;             // rows live below "by Bitochi"
+        var topZone      = (sh * 32) / 100;             // rows live below "by Bitochi"
         var bottomMargin = (sh * 9)  / 100; if (bottomMargin < 16) { bottomMargin = 16; }
         var gap          = (sh * 2)  / 100; if (gap < 3) { gap = 3; }
         var avail        = (sh - bottomMargin) - topZone;
         var rowH         = (avail - gap * (HG_MENU_ROWS - 1)) / HG_MENU_ROWS;
-        if (rowH > 25) { rowH = 25; }                   // was 30 → ~17 % smaller
-        if (rowH < 14) { rowH = 14; }
-        var rowW = (sw * 66) / 100; if (rowW < 120) { rowW = 120; }  // was 78 %
+        if (rowH > 22) { rowH = 22; }                   // ~10 % more compact
+        if (rowH < 13) { rowH = 13; }
+        var rowW = (sw * 59) / 100; if (rowW < 108) { rowW = 108; }  // ~10 % narrower
         var rowX = (sw - rowW) / 2;
         var used  = HG_MENU_ROWS * rowH + (HG_MENU_ROWS - 1) * gap;
         var rowY0 = topZone + (avail - used) / 2;
@@ -45,10 +45,10 @@ class UIManager {
             dc.drawLine(j, 0, j, sh);
         }
         dc.setColor(0x44CCFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, sh *  5 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, sh * 10 / 100, Graphics.FONT_SMALL,
                     "HOLOGRID", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, sh * 15 / 100, Graphics.FONT_XTINY,
+        dc.drawText(cx, sh * 19 / 100, Graphics.FONT_XTINY,
                     "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
 
         var rg   = rowGeom(sw, sh);

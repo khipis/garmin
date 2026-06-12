@@ -657,8 +657,10 @@ class BitochiJumpView extends WatchUi.View {
             _newHillRecord = true;
         }
         // Submit this jump's total to the global leaderboard, split by jumper.
+        // Post-game popup is NOT shown here — finishJump runs after every jump in
+        // the tournament, so showing it per-jump would slide the leaderboard up
+        // repeatedly (even mid next jump). It is shown once at tournament end.
         Leaderboard.submitScore(LB_GAME_ID, _lastScore.toNumber(), _jumperNames[_jumperIdx]);
-        Leaderboard.showPostGame(LB_GAME_ID, _jumperNames[_jumperIdx], "SKI JUMP");
         gameState = JS_RESULT;
     }
 
@@ -730,7 +732,12 @@ class BitochiJumpView extends WatchUi.View {
             if (_venue < 3) {
                 _venue++; buildHill(); _currentRound = 1; _jumpSlot = 0;
                 _jumperIdx = _startJumper; beginJump();
-            } else { gameState = JS_FINAL; }
+            } else {
+                // Tournament over — show the post-game leaderboard once, for the
+                // player's chosen jumper board.
+                Leaderboard.showPostGame(LB_GAME_ID, _jumperNames[_startJumper], "SKI JUMP");
+                gameState = JS_FINAL;
+            }
             return;
         }
         _jumperIdx = (_startJumper + _jumpSlot) % NUM_JUMPERS; beginJump();
@@ -1183,13 +1190,13 @@ class BitochiJumpView extends WatchUi.View {
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h * 60 / 100, _w, _h - _h * 60 / 100);
 
         // Title (shrunk: brand XTINY, title SMALL).
-        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(cx + 1, _h * 2 / 100 + 1, Graphics.FONT_XTINY, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor((_tick % 14 < 7) ? 0x2244BB : 0x1133AA, Graphics.COLOR_TRANSPARENT); dc.drawText(cx, _h * 2 / 100, Graphics.FONT_XTINY, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0x111122, Graphics.COLOR_TRANSPARENT); dc.drawText(cx, _h * 10 / 100, Graphics.FONT_SMALL, "SKI JUMP", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(cx + 1, _h * 7 / 100 + 1, Graphics.FONT_XTINY, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor((_tick % 14 < 7) ? 0x2244BB : 0x1133AA, Graphics.COLOR_TRANSPARENT); dc.drawText(cx, _h * 7 / 100, Graphics.FONT_XTINY, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x111122, Graphics.COLOR_TRANSPARENT); dc.drawText(cx, _h * 14 / 100, Graphics.FONT_SMALL, "SKI JUMP", Graphics.TEXT_JUSTIFY_CENTER);
 
         // ── Row 0: jumper selector (compact figure + name + nat) ──
         var col = _jumperColors[_jumperIdx]; var acc = _jumperAccents[_jumperIdx];
-        var jx = cx; var jy = _h * 31 / 100;
+        var jx = cx; var jy = _h * 33 / 100;
         if (_menuRow == SJ_ROW_JUMPER) {
             dc.setColor(0x2244BB, Graphics.COLOR_TRANSPARENT);
             dc.drawRectangle(jx - 34, jy - 18, 68, 40);
@@ -1206,8 +1213,8 @@ class BitochiJumpView extends WatchUi.View {
 
         // ── Row 1: difficulty selector (three boxes) ──
         var diffY = _h * 47 / 100;
-        var boxH = _h * 8 / 100; if (boxH < 14) { boxH = 14; } if (boxH > 20) { boxH = 20; }
-        var boxW = _w * 22 / 100; if (boxW < 40) { boxW = 40; }
+        var boxH = _h * 7 / 100; if (boxH < 13) { boxH = 13; } if (boxH > 18) { boxH = 18; }
+        var boxW = _w * 20 / 100; if (boxW < 36) { boxW = 36; }
         var totalBoxW = boxW * 3 + _w * 4 / 100;
         var boxStartX = (_w - totalBoxW) / 2;
         var diffColors = [0x33AA44, 0xFFAA00, 0xDD2222];
@@ -1234,12 +1241,12 @@ class BitochiJumpView extends WatchUi.View {
         var fhX = dc.getFontHeight(Graphics.FONT_XTINY);
         var hintY = _h - fhX - 2;
         var bottomMargin = fhX + 4;
-        var topZone = _h * 58 / 100;
+        var topZone = _h * 57 / 100;
         var gap = _h * 2 / 100; if (gap < 3) { gap = 3; }
         var avail = (_h - bottomMargin) - topZone;
         var rowH = (avail - gap) / 2;
-        if (rowH > 24) { rowH = 24; } if (rowH < 14) { rowH = 14; }
-        var rowW = _w * 62 / 100; if (rowW < 96) { rowW = 96; } if (rowW > _w - 8) { rowW = _w - 8; }
+        if (rowH > 22) { rowH = 22; } if (rowH < 13) { rowH = 13; }
+        var rowW = _w * 56 / 100; if (rowW < 86) { rowW = 86; } if (rowW > _w - 8) { rowW = _w - 8; }
         var rowX = (_w - rowW) / 2;
         var used = 2 * rowH + gap;
         var rowY0 = topZone + (avail - used) / 2;

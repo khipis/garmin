@@ -510,7 +510,7 @@ class CellWarsView extends WatchUi.View {
 
         // Title — compact, a bit inside the bezel
         dc.setColor(_colOf(0), Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _h * 8 / 100, Graphics.FONT_XTINY,
+        dc.drawText(cx, _h * 12 / 100, Graphics.FONT_XTINY,
             "BITOCHI CELL WARS", Graphics.TEXT_JUSTIFY_CENTER);
 
         var isM     = _isMulti();
@@ -525,11 +525,11 @@ class CellWarsView extends WatchUi.View {
         labels[5] = "RESET";
         labels[6] = "START";
 
-        // Pack 7 rows between 18% and 88% of screen height
-        var startY = _h * 18 / 100;
-        var endY   = _h * 87 / 100;
+        // Pack 7 rows between 21% and 83% of screen height
+        var startY = _h * 21 / 100;
+        var endY   = _h * 83 / 100;
         var rH     = (endY - startY) / MENU_N;
-        var hlW    = _w * 60 / 100;   // highlight width scales with screen
+        var hlW    = _w * 54 / 100;   // highlight width scales with screen
 
         for (var i = 0; i < MENU_N; i++) {
             var ly  = startY + i * rH + rH / 2;
@@ -544,7 +544,7 @@ class CellWarsView extends WatchUi.View {
         }
 
         dc.setColor(0x404040, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _h * 93 / 100, Graphics.FONT_XTINY,
+        dc.drawText(cx, _h * 89 / 100, Graphics.FONT_XTINY,
             "SEL=ok  UP/DN=nav", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
@@ -631,8 +631,8 @@ class CellWarsView extends WatchUi.View {
 
     function doTap(x, y) {
         if (_gs == GS_MENU) {
-            var startY = _h * 18 / 100;
-            var endY   = _h * 87 / 100;
+            var startY = _h * 21 / 100;
+            var endY   = _h * 83 / 100;
             var rH     = (endY - startY) / MENU_N;
             for (var i = 0; i < MENU_N; i++) {
                 var rowTop = startY + i * rH;

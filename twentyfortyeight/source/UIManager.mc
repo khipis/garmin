@@ -44,9 +44,9 @@ class UIManager {
 
         // Title "2048" as a single colored tile (kept compact so the
         // attribution, best line and the two rows all clear each other).
-        var tileSide = h * 17 / 100; if (tileSide < 44) { tileSide = 44; } if (tileSide > 66) { tileSide = 66; }
+        var tileSide = h * 15 / 100; if (tileSide < 40) { tileSide = 40; } if (tileSide > 59) { tileSide = 59; }
         var tx = cx - tileSide / 2;
-        var ty = h * 6 / 100;
+        var ty = h * 10 / 100;
         dc.setColor(COL_ACCENT, Graphics.COLOR_TRANSPARENT);
         dc.fillRoundedRectangle(tx, ty, tileSide, tileSide, 8);
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
@@ -81,15 +81,15 @@ class UIManager {
         // are plain rows. Mode row toggles Classic ↔ Time speedrun.
         var labels = ["START", "Mode: " + ctrl.modeName(), "", "Reset Best"];
         // Rows ~15% smaller so all three fit comfortably.
-        var rowW = (w * 61) / 100; if (rowW < 120) { rowW = 120; }
+        var rowW = (w * 55) / 100; if (rowW < 108) { rowW = 108; }
         var rowX = (w - rowW) / 2;
         var rowY0 = bestY + xtinyH + 8;
         var bottomMargin = (h * 4) / 100;
         var gap  = (h * 2) / 100; if (gap < 5) { gap = 5; }
         var avail = h - rowY0 - bottomMargin;
         var rowH = (avail - gap * (MI_ITEMS - 1)) / MI_ITEMS;
-        if (rowH > 29) { rowH = 29; }
-        if (rowH < 17) { rowH = 17; }
+        if (rowH > 26) { rowH = 26; }
+        if (rowH < 15) { rowH = 15; }
 
         for (var i = 0; i < MI_ITEMS; i++) {
             var ry  = rowY0 + i * (rowH + gap);

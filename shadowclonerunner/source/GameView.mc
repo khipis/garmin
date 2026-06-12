@@ -181,15 +181,15 @@ class GameView extends WatchUi.View {
     // small round watches. Sized ~18% smaller than a standard menu row.
     //   [ rowH, rowW, rowX, rowY0, gap ]
     function menuRowGeom() {
-        var topZone      = (_sh * 56) / 100;          // rows live below the title/info
+        var topZone      = (_sh * 55) / 100;          // rows live below the title/info
         var bottomMargin = (_sh * 7) / 100; if (bottomMargin < 12) { bottomMargin = 12; }
         var gap          = (_sh * 2) / 100; if (gap < 4) { gap = 4; }
         var avail        = (_sh - bottomMargin) - topZone;
         var rowH         = (avail - gap * (SCR_MENU_ROWS - 1)) / SCR_MENU_ROWS;
-        // ~18% smaller than the standard menu row (cap 26→21, min 17→14).
-        if (rowH > 21) { rowH = 21; }
-        if (rowH < 14) { rowH = 14; }
-        var rowW = (_sw * 54) / 100; if (rowW < 98) { rowW = 98; }
+        // ~18% smaller than the standard menu row, then ~10% more compact.
+        if (rowH > 19) { rowH = 19; }
+        if (rowH < 13) { rowH = 13; }
+        var rowW = (_sw * 49) / 100; if (rowW < 88) { rowW = 88; }
         var rowX = (_sw - rowW) / 2;
         var used = SCR_MENU_ROWS * rowH + (SCR_MENU_ROWS - 1) * gap;
         var rowY0 = topZone + (avail - used) / 2;
@@ -465,23 +465,23 @@ class GameView extends WatchUi.View {
 
         // Title (moved up to leave room for the two menu rows below).
         dc.setColor(0x2255CC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _sh * 7 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, _sh * 11 / 100, Graphics.FONT_SMALL,
             "SHADOW", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x882299, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _sh * 17 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, _sh * 20 / 100, Graphics.FONT_SMALL,
             "CLONE", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x229944, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _sh * 27 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, _sh * 29 / 100, Graphics.FONT_SMALL,
             "RUNNER", Graphics.TEXT_JUSTIFY_CENTER);
 
         // Info line(s) — clones waiting and best score, stacked compactly.
-        var infoY = _sh * 40 / 100;
+        var infoY = _sh * 41 / 100;
         if (_shadows.runCount() > 0) {
             dc.setColor(0x3a3a66, Graphics.COLOR_TRANSPARENT);
             dc.drawText(cx, infoY, Graphics.FONT_XTINY,
                 _shadows.runCount().format("%d") + " clone(s) waiting",
                 Graphics.TEXT_JUSTIFY_CENTER);
-            infoY = infoY + _sh * 7 / 100;
+            infoY = infoY + _sh * 6 / 100;
         }
         if (_hiScore > 0) {
             dc.setColor(0x303050, Graphics.COLOR_TRANSPARENT);

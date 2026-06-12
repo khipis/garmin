@@ -61,16 +61,13 @@ module Leaderboard {
     }
 
     function saveUser(name as Lang.String) as Void {
+        // Store locally only. We deliberately do NOT re-send a previously
+        // submitted "anon" score under the new name: the backend only INSERTs
+        // (never updates/deletes), so re-sending produced a DUPLICATE — an
+        // orphan "anon" row PLUS a named row with the same score. Scores played
+        // while anonymous stay under "anon"; from the next game on they post
+        // under the chosen name.
         try { Application.Storage.setValue(USER_KEY, name); } catch (e) {}
-        // If the player just finished a run before naming themselves, that
-        // score went out as "anon". Re-send it under the real name so the
-        // post-game "YOU #rank" highlight matches their submission.
-        if (_pendingGame != null) {
-            var g = _pendingGame; var s = _pendingScore; var v = _pendingVariant;
-            _pendingGame = null; _pendingScore = 0; _pendingVariant = null;
-            _sender = new LbSubmitter();
-            _sender.send(g, name, s, v);
-        }
     }
 
     function hasUser() as Lang.Boolean {
@@ -86,26 +83,11 @@ module Leaderboard {
     // survives until the async response arrives.
     var _sender = null;
 
-    // Remembers a score submitted before the player had a name, so naming
-    // themselves immediately after (e.g. on the post-game leaderboard) can
-    // re-attribute it. Only the most recent anon submission is kept.
-    var _pendingGame    = null;
-    var _pendingScore   = 0;
-    var _pendingVariant = null;
-
     function submitScore(game as Lang.String, score as Lang.Number,
                          variant as Lang.String or Null) as Void {
         if (!isSupported()) { return; }
         var user = loadUser();
-        if (user == null) {
-            user = "anon";
-            _pendingGame    = game;
-            _pendingScore   = score;
-            _pendingVariant = variant;
-        } else {
-            _pendingGame    = null;
-            _pendingVariant = null;
-        }
+        if (user == null) { user = "anon"; }
         _sender = new LbSubmitter();
         _sender.send(game, user, score, variant);
     }

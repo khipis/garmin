@@ -105,13 +105,24 @@ class BitochiJazzBallView extends WatchUi.View {
         _ballColors = [0xFF4422, 0xFF8800, 0xFFCC00, 0x44FF88, 0x44AAFF, 0xFF44AA];
         _floodQueue = new [_totalCells];
 
-        _timer = new Timer.Timer();
-        _timer.start(method(:onTick), 40, true);
+        _timer = null;
     }
 
     function onLayout(dc) {
         _w = dc.getWidth(); _h = dc.getHeight();
         setupGeo();
+    }
+
+    // Start the game-loop timer only while the view is on screen, and
+    // stop it whenever the view is hidden (e.g. the leaderboard is
+    // pushed on top, or the app is backgrounded) so we never leave a
+    // 40 ms callback firing requestUpdate() after teardown.
+    function onShow() {
+        if (_timer == null) { _timer = new Timer.Timer(); }
+        _timer.start(method(:onTick), 40, true);
+    }
+    function onHide() {
+        if (_timer != null) { _timer.stop(); }
     }
 
     hidden function setupGeo() {
@@ -626,8 +637,8 @@ class BitochiJazzBallView extends WatchUi.View {
 
         // Decorative bouncing dots — pulled up/compacted to clear the menu rows.
         var dotColors = [0xFF4422, 0xFF8800, 0x44FF88, 0x44AAFF, 0xFF44AA];
-        var dotX = [70, 100, 140, 170, 120];
-        var dotY = [44,  66,  44,  66,  78];
+        var dotX = [75, 102, 138, 165, 120];
+        var dotY = [52,  71,  52,  71,  82];
         for (var i = 0; i < 5; i++) {
             dc.setColor(dotColors[i], Graphics.COLOR_TRANSPARENT);
             dc.fillCircle(dotX[i] * _w / 240, dotY[i] * _h / 240, 5);
@@ -636,19 +647,19 @@ class BitochiJazzBallView extends WatchUi.View {
         // Title block (~18% more compact than before so the rows never overlap
         // the text on round watches).
         dc.setColor(0x44AAFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h * 22 / 100, Graphics.FONT_MEDIUM, "JAZZBALL", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, _h * 25 / 100, Graphics.FONT_MEDIUM, "JAZZBALL", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x224466, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h * 35 / 100, Graphics.FONT_XTINY, "BITOCHI GAMES", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, _h * 37 / 100, Graphics.FONT_XTINY, "BITOCHI GAMES", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xCCDDEE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h * 43 / 100, Graphics.FONT_XTINY, "Trap the balls!", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, _h * 44 / 100, Graphics.FONT_XTINY, "Trap the balls!", Graphics.TEXT_JUSTIFY_CENTER);
 
         // ── Menu rows (space-aware) ──────────────────────────────────────────
-        var rowW = _w * 60 / 100;
-        var rowH = _h * 13 / 100;
-        if (rowH < 22) { rowH = 22; }
+        var rowW = _w * 54 / 100;
+        var rowH = _h * 12 / 100;
+        if (rowH < 20) { rowH = 20; }
         var rowX = (_w - rowW) / 2;
         var gap  = _h * 3 / 100;
-        var playY = _h * 56 / 100;
+        var playY = _h * 55 / 100;
         var lbY   = playY + rowH + gap;
 
         _menuRowX = rowX; _menuRowW = rowW; _menuRowH = rowH;

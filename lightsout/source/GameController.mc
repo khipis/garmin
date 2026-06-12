@@ -327,11 +327,10 @@ class GameController {
         solvedTotal = solvedTotal + 1;
         _save("lo_solved_total", solvedTotal);
         if (mode == LO_MODE_LEVELS) {
+            // Record the best for the level just solved. Advancing to
+            // the next level is handled solely by nextLevel() from the
+            // WIN screen — incrementing here too would skip a level.
             _maybeUpdateBest(level, moves);
-            if (level < LO_TOTAL_LEVELS) {
-                level = level + 1;
-                saveMenuSettings();
-            }
         } else {
             var t = _doyInline();
             if (dailyDate == t - 1) { streak = streak + 1; }

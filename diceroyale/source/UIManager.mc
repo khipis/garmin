@@ -23,15 +23,15 @@ class UIManager {
     // are fitted into the band between the title block and the bottom
     // subtitle so nothing overlaps on small round watches.
     static function rowGeom(sw, sh) {
-        var topZone      = (sh * 34) / 100;                 // rows start below "by Bitochi"
+        var topZone      = (sh * 36) / 100;                 // rows start below "by Bitochi"
         var bottomMargin = (sh * 11) / 100; if (bottomMargin < 22) { bottomMargin = 22; } // leave room for subtitle
         var gap          = (sh *  2) / 100; if (gap < 3) { gap = 3; }
         var avail        = (sh - bottomMargin) - topZone;
         var rowH         = (avail - gap * (DR_MENU_ROWS - 1)) / DR_MENU_ROWS;
-        // Cap ~18% below the old sizing so all four rows stay compact.
-        if (rowH > 22) { rowH = 22; }
-        if (rowH < 14) { rowH = 14; }
-        var rowW = (sw * 56) / 100; if (rowW < 110) { rowW = 110; }
+        // Cap ~10% smaller again so all four rows stay compact.
+        if (rowH > 20) { rowH = 20; }
+        if (rowH < 13) { rowH = 13; }
+        var rowW = (sw * 50) / 100; if (rowW < 99) { rowW = 99; }
         var rowX = (sw - rowW) / 2;
         var used  = DR_MENU_ROWS * rowH + (DR_MENU_ROWS - 1) * gap;
         var rowY0 = topZone + (avail - used) / 2;
@@ -49,13 +49,13 @@ class UIManager {
 
         // Title — two-line stack + Bitochi subtitle.
         dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, sh *  4 / 100, Graphics.FONT_MEDIUM,
+        dc.drawText(cx, sh *  9 / 100, Graphics.FONT_MEDIUM,
                     "DICE", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFF6644, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, sh * 16 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, sh * 19 / 100, Graphics.FONT_SMALL,
                     "ROYALE", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFE699, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, sh * 28 / 100, Graphics.FONT_XTINY,
+        dc.drawText(cx, sh * 30 / 100, Graphics.FONT_XTINY,
                     "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
 
         var rg   = rowGeom(sw, sh);

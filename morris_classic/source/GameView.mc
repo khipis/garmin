@@ -1285,13 +1285,13 @@ class GameView extends WatchUi.View {
     // old 4-row menu so the extra LEADERBOARD row never overlaps.
     hidden function _menuGeom() {
         var nR   = 5;
-        var rowH = _sh * 9 / 100; if (rowH < 18) { rowH = 18; } if (rowH > 26) { rowH = 26; }
-        var rowW = _sw * 74 / 100;
+        var rowH = _sh * 8 / 100; if (rowH < 16) { rowH = 16; } if (rowH > 23) { rowH = 23; }
+        var rowW = _sw * 67 / 100;
         var rowX = (_sw - rowW) / 2;
         var gap  = 5;
         var tot  = nR * rowH + (nR - 1) * gap;
         var rowY0 = (_sh - tot) / 2 + rowH / 2;
-        if (rowY0 < _sh * 22 / 100) { rowY0 = _sh * 22 / 100; }
+        if (rowY0 < _sh * 25 / 100) { rowY0 = _sh * 25 / 100; }
         return [rowH, rowW, rowX, rowY0, gap, nR];
     }
 
@@ -1301,7 +1301,7 @@ class GameView extends WatchUi.View {
         dc.setColor(0x0A0A18, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(hw, hw, hw - 1);
         dc.setColor(0xFF6622, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(hw, _sh * 10 / 100, Graphics.FONT_SMALL, "MORRIS", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(hw, _sh * 14 / 100, Graphics.FONT_SMALL, "MORRIS", Graphics.TEXT_JUSTIFY_CENTER);
         var modeStr = (_mode == MODE_PVAI) ? "P vs AI" : ((_mode == MODE_PVP) ? "P vs P" : "AI vs AI");
         var diffStr = (_diff == DIFF_EASY) ? "Easy" : ((_diff == DIFF_MED) ? "Med" : "Hard");
         var sideStr = _playerFirst ? "Side: Dk" : "Side: Lt";

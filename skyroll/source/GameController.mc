@@ -72,11 +72,11 @@ class GameController {
     // ── Persistence ──────────────────────────────────────────
     hidden function _loadPersist() {
         var s = Application.Storage.getValue(SR_K_SENS);
-        if (s != null) { sensMode = s; }
+        if (s instanceof Number && s >= 0 && s <= 2) { sensMode = s; }
         var d = Application.Storage.getValue(SR_K_DIFF);
-        if (d != null) { diffMode = d; }
+        if (d instanceof Number && d >= 0 && d <= 2) { diffMode = d; }
         var b = Application.Storage.getValue(SR_K_BEST);
-        if (b != null) { bestScore = b; }
+        if (b instanceof Number && b >= 0) { bestScore = b; }
     }
     hidden function _savePersist() {
         Application.Storage.setValue(SR_K_SENS, sensMode);

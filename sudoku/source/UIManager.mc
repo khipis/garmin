@@ -63,10 +63,10 @@ class UIManager {
         var cx = w / 2;
 
         dc.setColor(0x44CCFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, h * 5 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, h * 10 / 100, Graphics.FONT_SMALL,
                     "SUDOKU", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x778899, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, h * 16 / 100, Graphics.FONT_XTINY,
+        dc.drawText(cx, h * 19 / 100, Graphics.FONT_XTINY,
                     "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
 
         var rows = [
@@ -77,11 +77,11 @@ class UIManager {
         ];
         // Layout kept ~18% more compact (and space-aware) so all five rows
         // — including the LEADERBOARD badge — never overlap on round watches.
-        var rowH = h * 9 / 100; if (rowH < 18) { rowH = 18; }
-        var rowW = w * 78 / 100;
+        var rowH = h * 8 / 100; if (rowH < 16) { rowH = 16; }
+        var rowW = w * 70 / 100;
         var rowX = (w - rowW) / 2;
         var gap  = h * 2 / 100;  if (gap < 3)  { gap  = 3;  }
-        var startY = h * 21 / 100;
+        var startY = h * 24 / 100;
 
         for (var i = 0; i < 4; i++) {
             var ry = startY + i * (rowH + gap);

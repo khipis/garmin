@@ -214,9 +214,11 @@ class MainView extends WatchUi.View {
         // We can ask the system for screen dims via System.getDeviceSettings.
         var ds = System.getDeviceSettings();
         var h  = ds.screenHeight;
-        var rowH = h * 9 / 100; if (rowH < 18) { rowH = 18; }
+        // Must mirror UIManager.drawMenu geometry exactly so taps line up
+        // with the rendered rows (kept in sync after the menu shrink).
+        var rowH = h * 8 / 100; if (rowH < 16) { rowH = 16; }
         var gap  = h * 2 / 100; if (gap  < 3)  { gap  = 3;  }
-        var startY = h * 21 / 100;
+        var startY = h * 24 / 100;
         for (var i = 0; i < 5; i++) {
             var ry = startY + i * (rowH + gap);
             if (y >= ry && y < ry + rowH) {

@@ -101,8 +101,10 @@ class GameView extends WatchUi.View {
 
         _sr = _cell * 44 / 100;
         if (_sr < 8) { _sr = 8; }
+    }
 
-        _timer = new Timer.Timer();
+    function onShow() {
+        if (_timer == null) { _timer = new Timer.Timer(); }
         _timer.start(method(:gameTick), 100, true);
     }
 
@@ -299,20 +301,20 @@ class GameView extends WatchUi.View {
         dc.setColor(0x0A0A0A, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(hw, hw, hw - 1);
         dc.setColor(0x1A7A1A, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(hw, _sh * 11 / 100, Graphics.FONT_SMALL, "OTHELLO", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(hw, _sh * 15 / 100, Graphics.FONT_SMALL, "OTHELLO", Graphics.TEXT_JUSTIFY_CENTER);
         var modeStr = (_mode == MODE_PVAI) ? "P vs AI" : ((_mode == MODE_PVP) ? "P vs P" : "AI vs AI");
         var diffStr = (_diff == DIFF_EASY) ? "Easy" : ((_diff == DIFF_MED) ? "Med" : "Hard");
         var sideStr = _playerFirst ? "Side: Blk" : "Side: Wht";
         var rows = ["Mode: " + modeStr, "Diff: " + diffStr, sideStr, "START"];
         var nR = NUM_MENU_ROWS;
         // ~18% smaller than the original sizing so 5 rows fit round watches.
-        var rowH = _sh * 10 / 100 * 82 / 100; if (rowH < 16) { rowH = 16; } if (rowH > 23) { rowH = 23; }
-        var rowW = _sw * 74 / 100;
+        var rowH = _sh * 10 / 100 * 74 / 100; if (rowH < 14) { rowH = 14; } if (rowH > 21) { rowH = 21; }
+        var rowW = _sw * 67 / 100;
         var rowX = (_sw - rowW) / 2;
         var gap  = 4;
         var tot  = nR * rowH + (nR - 1) * gap;
         // Keep the block below the title and above the bottom hint.
-        var topLimit = _sh * 11 / 100 + 24;
+        var topLimit = _sh * 15 / 100 + 22;
         var rowY0 = (_sh - tot) / 2 + rowH / 2;
         if (rowY0 < topLimit) { rowY0 = topLimit; }
         var i = 0;
@@ -535,12 +537,12 @@ class GameView extends WatchUi.View {
     function doTap(tx, ty) {
         if (_gameState == GS_MENU) {
             var nR = NUM_MENU_ROWS;
-            var rowH = _sh * 10 / 100 * 82 / 100; if (rowH < 16) { rowH = 16; } if (rowH > 23) { rowH = 23; }
-            var rowW = _sw * 74 / 100;
+            var rowH = _sh * 10 / 100 * 74 / 100; if (rowH < 14) { rowH = 14; } if (rowH > 21) { rowH = 21; }
+            var rowW = _sw * 67 / 100;
             var rowX = (_sw - rowW) / 2;
             var gap  = 4;
             var tot  = nR * rowH + (nR - 1) * gap;
-            var topLimit = _sh * 11 / 100 + 24;
+            var topLimit = _sh * 15 / 100 + 22;
             var rowY0 = (_sh - tot) / 2 + rowH / 2;
             if (rowY0 < topLimit) { rowY0 = topLimit; }
             for (var i = 0; i < nR; i++) {

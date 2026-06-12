@@ -74,14 +74,14 @@ class UIManager {
     // footer or each other on small round watches. Rows are ~15-18 %
     // smaller than the old 3-row menu to fit the fourth row.
     static function rowGeom(sw, sh) {
-        var topZone      = (sh * 37) / 100;            // rows live below "by Bitochi" (31 %)
-        var bottomMargin = (sh *  9) / 100; if (bottomMargin < 16) { bottomMargin = 16; }
+        var topZone      = (sh * 38) / 100;            // rows live below "by Bitochi" (33 %)
+        var bottomMargin = (sh * 13) / 100; if (bottomMargin < 14) { bottomMargin = 14; }
         var gap          = (sh *  2) / 100; if (gap < 3) { gap = 3; }
         var avail        = (sh - bottomMargin) - topZone;
         var rowH         = (avail - gap * (GM_MENU_ROWS - 1)) / GM_MENU_ROWS;
-        if (rowH > 24) { rowH = 24; }
-        if (rowH < 14) { rowH = 14; }
-        var rowW = (sw * 60) / 100; if (rowW < 115) { rowW = 115; }
+        if (rowH > 22) { rowH = 22; }
+        if (rowH < 13) { rowH = 13; }
+        var rowW = (sw * 54) / 100; if (rowW < 104) { rowW = 104; }
         var rowX = (sw - rowW) / 2;
         var used  = GM_MENU_ROWS * rowH + (GM_MENU_ROWS - 1) * gap;
         var rowY0 = topZone + (avail - used) / 2;
@@ -102,18 +102,18 @@ class UIManager {
 
         // Title.
         dc.setColor(0xFFB300, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, sh * 6 / 100, Graphics.FONT_MEDIUM,
+        dc.drawText(cx, sh * 10 / 100, Graphics.FONT_MEDIUM,
                     "GYRO MAZE", Graphics.TEXT_JUSTIFY_CENTER);
 
         // Tagline.
         dc.setColor(0x78D4C8, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, sh * 22 / 100, Graphics.FONT_XTINY,
+        dc.drawText(cx, sh * 25 / 100, Graphics.FONT_XTINY,
                     "tilt  ·  roll  ·  escape",
                     Graphics.TEXT_JUSTIFY_CENTER);
 
         // By Bitochi.
         dc.setColor(0x5A7D96, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, sh * 31 / 100, Graphics.FONT_XTINY,
+        dc.drawText(cx, sh * 33 / 100, Graphics.FONT_XTINY,
                     "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
 
         // Rows.

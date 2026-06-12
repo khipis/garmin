@@ -141,8 +141,10 @@ class GameView extends WatchUi.View {
         // Centre board, shifted slightly down for column-selector + score HUD above.
         _boardX = (_sw - COLS * _cell) / 2;
         _boardY = (_sh - ROWS * _cell) / 2 + _sh * 4 / 100;
+    }
 
-        _timer = new Timer.Timer();
+    function onShow() {
+        if (_timer == null) { _timer = new Timer.Timer(); }
         _timer.start(method(:gameTick), 350, true);
     }
 
@@ -802,13 +804,13 @@ class GameView extends WatchUi.View {
     hidden function _menuGeom() {
         var nR   = 5;
         var gap  = 4;
-        var topY = _sh * 20 / 100;   // below the title
+        var topY = _sh * 23 / 100;   // below the title
         var botY = _sh - 18;          // above the footer hint
         var avail = botY - topY;
         var rowH = (avail - (nR - 1) * gap) / nR;
-        if (rowH > 25) { rowH = 25; }  // ~18% smaller than the prior 30px cap
-        if (rowH < 14) { rowH = 14; }
-        var rowW = _sw * 74 / 100;
+        if (rowH > 22) { rowH = 22; }  // ~18% smaller, then ~10% more compact
+        if (rowH < 13) { rowH = 13; }
+        var rowW = _sw * 67 / 100;
         var rowX = (_sw - rowW) / 2;
         var tot  = nR * rowH + (nR - 1) * gap;
         var rowY0 = topY + (avail - tot) / 2;
@@ -823,7 +825,7 @@ class GameView extends WatchUi.View {
         dc.fillCircle(hw, _sh / 2, _sw / 2 - 1);
 
         dc.setColor(0xFF2200, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(hw, _sh * 11 / 100, Graphics.FONT_SMALL, "CONNECT FOUR", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(hw, _sh * 15 / 100, Graphics.FONT_SMALL, "CONNECT FOUR", Graphics.TEXT_JUSTIFY_CENTER);
 
         var modeStr = (_cfMode == CF_MODE_PVAI) ? "P vs AI"
                       : ((_cfMode == CF_MODE_PVP) ? "P vs P" : "AI vs AI");

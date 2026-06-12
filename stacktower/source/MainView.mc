@@ -211,14 +211,14 @@ class MainView extends WatchUi.View {
     //   [ rowH, rowW, rowX, rowY0, gap ]
     function menuRowGeom() {
         var topZone      = (_sh * 53) / 100;          // rows live below BEST
-        var bottomMargin = (_sh * 6) / 100; if (bottomMargin < 12) { bottomMargin = 12; }
+        var bottomMargin = (_sh * 10) / 100; if (bottomMargin < 11) { bottomMargin = 11; }
         var gap          = (_sh * 2) / 100; if (gap < 4) { gap = 4; }
         var avail        = (_sh - bottomMargin) - topZone;
         var rowH         = (avail - gap * (ST_MENU_ROWS - 1)) / ST_MENU_ROWS;
         // Rows ~15% smaller so all three fit comfortably.
-        if (rowH > 26) { rowH = 26; }
-        if (rowH < 17) { rowH = 17; }
-        var rowW = (_sw * 66) / 100; if (rowW < 120) { rowW = 120; }
+        if (rowH > 23) { rowH = 23; }
+        if (rowH < 15) { rowH = 15; }
+        var rowW = (_sw * 59) / 100; if (rowW < 108) { rowW = 108; }
         var rowX = (_sw - rowW) / 2;
         var used = ST_MENU_ROWS * rowH + (ST_MENU_ROWS - 1) * gap;
         var rowY0 = topZone + (avail - used) / 2;
@@ -244,13 +244,13 @@ class MainView extends WatchUi.View {
 
         // Title
         dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _sh * 7 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, _sh * 11 / 100, Graphics.FONT_SMALL,
                     "STACK", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x44CCFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _sh * 17 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, _sh * 20 / 100, Graphics.FONT_SMALL,
                     "TOWER", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x778899, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _sh * 28 / 100, Graphics.FONT_XTINY,
+        dc.drawText(cx, _sh * 30 / 100, Graphics.FONT_XTINY,
                     "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
 
         // Decorative mini-tower (moved up to leave room for three rows)
@@ -258,7 +258,7 @@ class MainView extends WatchUi.View {
         var palette = [0xFF3344, 0xFFCC22, 0x44FF55, 0x44CCFF, 0x8866FF];
         for (var i = 0; i < 5; i++) {
             var off = (i % 2 == 0) ? -3 : 3;
-            _drawBlock(dc, towerX + off, _sh * 42 / 100 - i * 6,
+            _drawBlock(dc, towerX + off, _sh * 43 / 100 - i * 6,
                        30, 5, palette[i], false);
         }
 

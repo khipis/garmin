@@ -123,13 +123,24 @@ class BitochiMinigolfView extends WatchUi.View {
         _walls = new [0]; _obstacles = new [0]; _water = new [0];
         _holeMsg = ""; _holeWait = 0; _animPhase = 0;
         _brownWalls = false;
-        _timer = new Timer.Timer();
-        _timer.start(method(:onTick), 50, true);
+        _timer = null;
     }
 
     function onLayout(dc) {
         _w = dc.getWidth(); _h = dc.getHeight();
         setupVP();
+    }
+
+    // Run the 50 ms game loop only while the view is on screen, and stop
+    // it when hidden (e.g. the leaderboard is pushed on top, or the app is
+    // backgrounded) so we never leave a timer firing requestUpdate() and
+    // stepping physics after teardown.
+    function onShow() {
+        if (_timer == null) { _timer = new Timer.Timer(); }
+        _timer.start(method(:onTick), 50, true);
+    }
+    function onHide() {
+        if (_timer != null) { _timer.stop(); }
     }
 
     hidden function setupVP() {
@@ -593,12 +604,12 @@ class BitochiMinigolfView extends WatchUi.View {
     // Buttons are ~18% smaller than the original single-button menu so the
     // extra LEADERBOARD row never overlaps neighbours on round watch faces.
     hidden function menuLayout() {
-        var diffW = _w * 50 / 100; var diffH = 24;
-        var diffX = (_w - diffW) / 2; var diffY = _h * 40 / 100;
-        var playW = _w * 46 / 100; var playH = 25;
-        var playX = (_w - playW) / 2; var playY = _h * 56 / 100;
-        var lbW = _w * 62 / 100; var lbH = 24;
-        var lbX = (_w - lbW) / 2; var lbY = _h * 73 / 100;
+        var diffW = _w * 45 / 100; var diffH = 22;
+        var diffX = (_w - diffW) / 2; var diffY = _h * 41 / 100;
+        var playW = _w * 41 / 100; var playH = 22;
+        var playX = (_w - playW) / 2; var playY = _h * 55 / 100;
+        var lbW = _w * 56 / 100; var lbH = 22;
+        var lbX = (_w - lbW) / 2; var lbY = _h * 71 / 100;
         return [
             [diffX, diffY, diffW, diffH],
             [playX, playY, playW, playH],
@@ -1034,9 +1045,9 @@ class BitochiMinigolfView extends WatchUi.View {
         dc.fillCircle(r, r, r - 14);
 
         dc.setColor(0x44FF88, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h * 11 / 100, Graphics.FONT_MEDIUM, "MINIGOLF", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, _h * 15 / 100, Graphics.FONT_MEDIUM, "MINIGOLF", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x226633, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h * 26 / 100, Graphics.FONT_XTINY, "BITOCHI GAMES", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, _h * 28 / 100, Graphics.FONT_XTINY, "BITOCHI GAMES", Graphics.TEXT_JUSTIFY_CENTER);
 
         var L = menuLayout();
 
@@ -1044,7 +1055,7 @@ class BitochiMinigolfView extends WatchUi.View {
         var diffSel = (_menuRow == MG_ROW_DIFF);
         var diffLabels = ["Easy (20 holes)", "Normal", "Hard"];
         dc.setColor(0xCCEEBB, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, L[MG_ROW_DIFF][1] - _h * 8 / 100, Graphics.FONT_XTINY,
+        dc.drawText(_w/2, L[MG_ROW_DIFF][1] - _h * 7 / 100, Graphics.FONT_XTINY,
             "Difficulty:", Graphics.TEXT_JUSTIFY_CENTER);
         var d = L[MG_ROW_DIFF];
         dc.setColor(diffSel ? 0x256838 : 0x1A5028, Graphics.COLOR_TRANSPARENT);

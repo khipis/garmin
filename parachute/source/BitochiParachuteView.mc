@@ -769,12 +769,12 @@ class BitochiParachuteView extends WatchUi.View {
         dc.setColor(0xAADDFF, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(_w * 15 / 100, _h * 6 / 100, 1); dc.fillCircle(_w * 50 / 100, _h * 4 / 100, 1); dc.fillCircle(_w * 78 / 100, _h * 8 / 100, 2);
 
-        dc.setColor(0x113355, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2 + 1, _h * 6 / 100 + 1, Graphics.FONT_SMALL, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x113355, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2 + 1, _h * 10 / 100 + 1, Graphics.FONT_SMALL, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor((_tick % 30 < 15) ? 0x44AAFF : 0x2288DD, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 6 / 100, Graphics.FONT_SMALL, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 16 / 100, Graphics.FONT_SMALL, "PARACHUTE", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 10 / 100, Graphics.FONT_SMALL, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 19 / 100, Graphics.FONT_SMALL, "PARACHUTE", Graphics.TEXT_JUSTIFY_CENTER);
 
-        drawPlayer(dc, _w / 2, _h * 38 / 100, true, 0, 0);
+        drawPlayer(dc, _w / 2, _h * 39 / 100, true, 0, 0);
 
         dc.setColor(0x7799BB, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w / 2, _h * 50 / 100, Graphics.FONT_XTINY, "Collect rings per level!", Graphics.TEXT_JUSTIFY_CENTER);
@@ -782,15 +782,15 @@ class BitochiParachuteView extends WatchUi.View {
             dc.setColor(0x888888, Graphics.COLOR_TRANSPARENT);
             var bTxt = "BEST " + _bestScore;
             if (_bestLevel > 0) { bTxt = bTxt + "  L" + _bestLevel; }
-            dc.drawText(_w / 2, _h * 56 / 100, Graphics.FONT_XTINY, bTxt, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_w / 2, _h * 55 / 100, Graphics.FONT_XTINY, bTxt, Graphics.TEXT_JUSTIFY_CENTER);
         }
 
         // ── Selectable PLAY row ──────────────────────────────────────────────
         var playSel = (_menuSel == 0);
-        var pw = _w * 60 / 100;
-        var ph = _h * 12 / 100; if (ph < 20) { ph = 20; }
+        var pw = _w * 54 / 100;
+        var ph = _h * 11 / 100; if (ph < 18) { ph = 18; }
         var px = (_w - pw) / 2;
-        var py = _h * 66 / 100;
+        var py = _h * 64 / 100;
         dc.setColor(playSel ? 0x103A4A : 0x0E2436, Graphics.COLOR_TRANSPARENT);
         dc.fillRoundedRectangle(px, py, pw, ph, 5);
         dc.setColor(playSel ? 0x44CCFF : 0x2A6A8A, Graphics.COLOR_TRANSPARENT);
@@ -803,10 +803,10 @@ class BitochiParachuteView extends WatchUi.View {
         dc.drawText(_w / 2 + 6, py + (ph - 14) / 2, Graphics.FONT_XTINY, "TAP TO JUMP", Graphics.TEXT_JUSTIFY_CENTER);
 
         // ── Selectable LEADERBOARD badge row ─────────────────────────────────
-        _lbW = _w * 70 / 100;
-        _lbH = _h * 12 / 100; if (_lbH < 22) { _lbH = 22; }
+        _lbW = _w * 63 / 100;
+        _lbH = _h * 11 / 100; if (_lbH < 20) { _lbH = 20; }
         _lbX = (_w - _lbW) / 2;
-        _lbY = _h * 80 / 100;
+        _lbY = _h * 77 / 100;
         LbBadge.drawRow(dc, _lbX, _lbY, _lbW, _lbH, _menuSel == 1);
     }
 

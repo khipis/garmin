@@ -263,16 +263,16 @@ class BitochiBoxingView extends WatchUi.View {
     // Menu row geometry: [rowX, rowW, rowH, rowY0, gap] for the two
     // selectable rows (FIGHT, then LEADERBOARD) at the bottom of the menu.
     hidden function menuRowGeom() {
-        var rowW = _w * 60 / 100;
-        if (rowW < 110) { rowW = 110; }
+        var rowW = _w * 54 / 100;
+        if (rowW < 99) { rowW = 99; }
         if (rowW > _w - 12) { rowW = _w - 12; }
         var rowX = (_w - rowW) / 2;
-        var rowH = _h * 11 / 100;
-        if (rowH > 24) { rowH = 24; }
-        if (rowH < 15) { rowH = 15; }
+        var rowH = _h * 10 / 100;
+        if (rowH > 22) { rowH = 22; }
+        if (rowH < 14) { rowH = 14; }
         var gap = _h * 3 / 100;
         if (gap < 4) { gap = 4; }
-        var rowY0 = _h * 64 / 100;
+        var rowY0 = _h * 63 / 100;
         return [rowX, rowW, rowH, rowY0, gap];
     }
 
@@ -1171,19 +1171,19 @@ class BitochiBoxingView extends WatchUi.View {
         // Title
         var pulse = (_tick % 16 < 8) ? 0xFF4444 : 0xDD2222;
         dc.setColor(0x110000, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx + 1, _h * 6 / 100 + 1, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx + 1, _h * 10 / 100 + 1, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(pulse, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _h * 6 / 100, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, _h * 10 / 100, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _h * 17 / 100, Graphics.FONT_MEDIUM, "BOXING", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, _h * 20 / 100, Graphics.FONT_MEDIUM, "BOXING", Graphics.TEXT_JUSTIFY_CENTER);
 
         // Boxers + VS (compact, moved up to leave room for menu rows)
-        drawMenuBoxer(dc, _w * 22 / 100, _h * 38 / 100, 0xDD4444, true);
-        drawMenuBoxer(dc, _w * 78 / 100, _h * 38 / 100, 0x4444DD, false);
+        drawMenuBoxer(dc, _w * 22 / 100, _h * 39 / 100, 0xDD4444, true);
+        drawMenuBoxer(dc, _w * 78 / 100, _h * 39 / 100, 0x4444DD, false);
         dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(_w * 36 / 100, _h * 32 / 100, _w * 28 / 100, 2);
+        dc.fillRectangle(_w * 36 / 100, _h * 34 / 100, _w * 28 / 100, 2);
         dc.setColor(0xFFAA22, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _h * 33 / 100, Graphics.FONT_XTINY, "VS", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, _h * 35 / 100, Graphics.FONT_XTINY, "VS", Graphics.TEXT_JUSTIFY_CENTER);
 
         // One-line control hint + compact best line
         dc.setColor(0x888888, Graphics.COLOR_TRANSPARENT);
@@ -1192,7 +1192,7 @@ class BitochiBoxingView extends WatchUi.View {
             dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
             var bl = "Best " + _bestScore;
             if (_bestRound > 0) { bl = bl + "  R" + _bestRound; }
-            dc.drawText(cx, _h * 56 / 100, Graphics.FONT_XTINY, bl, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(cx, _h * 55 / 100, Graphics.FONT_XTINY, bl, Graphics.TEXT_JUSTIFY_CENTER);
         }
 
         // Selectable rows: FIGHT then LEADERBOARD

@@ -284,7 +284,10 @@ class GameView extends WatchUi.View {
         _sw = dc.getWidth();
         _sh = dc.getHeight();
         _calcLayout();
-        _timer = new Timer.Timer();
+    }
+
+    function onShow() {
+        if (_timer == null) { _timer = new Timer.Timer(); }
         _timer.start(method(:gameTick), 300, true);
     }
 
@@ -1582,7 +1585,7 @@ class GameView extends WatchUi.View {
         }
 
         dc.setColor(0x00AAFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(hw, _sh * 11 / 100, Graphics.FONT_SMALL,
+        dc.drawText(hw, _sh * 15 / 100, Graphics.FONT_SMALL,
                     "TIC TAC PRO", Graphics.TEXT_JUSTIFY_CENTER);
 
         var modeStr = (_mode == MODE_PVAI) ? "P vs AI" : ((_mode == MODE_PVP) ? "P vs P" : "AI vs AI");
@@ -1593,10 +1596,10 @@ class GameView extends WatchUi.View {
         var rows = ["Mode: " + modeStr, "Diff: " + diffStr, "Grid: " + gridStr, sideStr, "START"];
         var nR   = 6;   // 5 settings/START rows + LEADERBOARD
         // ~18% smaller than the old 5-row sizing so all 6 rows fit (incl. round watches).
-        var rowH = _sh * 82 / 1000; if (rowH < 18) { rowH = 18; } if (rowH > 26) { rowH = 26; }
-        var rowW = _sw * 76 / 100;
+        var rowH = _sh * 74 / 1000; if (rowH < 16) { rowH = 16; } if (rowH > 23) { rowH = 23; }
+        var rowW = _sw * 68 / 100;
         var rowX = (_sw - rowW) / 2;
-        var gap  = _sh * 16 / 1000; if (gap < 3) { gap = 3; }
+        var gap  = _sh * 14 / 1000; if (gap < 3) { gap = 3; }
         var tot  = nR * rowH + (nR - 1) * gap;
         var rowY0 = (_sh - tot) / 2 + rowH / 2;
         var i = 0;
@@ -1635,9 +1638,9 @@ class GameView extends WatchUi.View {
 
     function doTap(tx, ty) {
         if (_state == GS_MENU) {
-            var gap  = _sh * 16 / 1000; if (gap < 3) { gap = 3; }
-            var rowH = _sh * 82 / 1000; if (rowH < 18) { rowH = 18; } if (rowH > 26) { rowH = 26; }
-            var rowW = _sw * 76 / 100;
+            var gap  = _sh * 14 / 1000; if (gap < 3) { gap = 3; }
+            var rowH = _sh * 74 / 1000; if (rowH < 16) { rowH = 16; } if (rowH > 23) { rowH = 23; }
+            var rowW = _sw * 68 / 100;
             var rowX = (_sw - rowW) / 2;
             var nR = 6;
             var tot  = nR * rowH + (nR - 1) * gap;

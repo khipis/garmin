@@ -17,12 +17,23 @@ class BilliardView extends WatchUi.View {
         View.initialize();
         _game = new BilliardGame();
         _tick = 0;
-        _timer = new Timer.Timer();
-        _timer.start(method(:onTick), 33, true);
+        _timer = null;
     }
 
     function onLayout(dc) {
         _game.setScreenSize(dc.getWidth(), dc.getHeight());
+    }
+
+    // Run the 33 ms game loop only while the view is on screen. Stop it
+    // when hidden (leaderboard pushed on top / app backgrounded) so the
+    // timer can't keep stepping the game and calling requestUpdate()
+    // after teardown.
+    function onShow() {
+        if (_timer == null) { _timer = new Timer.Timer(); }
+        _timer.start(method(:onTick), 33, true);
+    }
+    function onHide() {
+        if (_timer != null) { _timer.stop(); }
     }
 
     function onTick() as Void {
@@ -77,8 +88,8 @@ class BilliardView extends WatchUi.View {
         dc.setColor(0x0C3010, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, 0, w, h);
         // Mini table — compact so the five rows below have breathing room
-        var tx1 = w*20/100; var tx2 = w*80/100;
-        var ty1 = h*19/100; var ty2 = h*29/100;
+        var tx1 = w*23/100; var tx2 = w*77/100;
+        var ty1 = h*22/100; var ty2 = h*31/100;
         dc.setColor(0x5C3010, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(tx1-3, ty1-3, tx2-tx1+6, ty2-ty1+6);
         dc.setColor(0x0F5020, Graphics.COLOR_TRANSPARENT);
@@ -92,18 +103,18 @@ class BilliardView extends WatchUi.View {
         _drawMenuRack(dc, g, tx1, ty1, tx2, ty2);
         // Title + subtitle
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w/2, h*7/100, Graphics.FONT_SMALL, "BILLIARDS", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w/2, h*11/100, Graphics.FONT_SMALL, "BILLIARDS", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x44CC66, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w/2, h*14/100, Graphics.FONT_XTINY, "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w/2, h*18/100, Graphics.FONT_XTINY, "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
 
         // Row positions — evenly spaced so nothing overlaps (5 rows + rules hint).
         // Row 0 spans two lines (label + rules hint), so row 1 starts after both.
-        var r0y  = h*34/100;   // GAME MODE label
-        var r0s  = h*40/100;   // rules hint (smaller, dimmer)
+        var r0y  = h*36/100;   // GAME MODE label
+        var r0s  = h*41/100;   // rules hint (smaller, dimmer)
         var r1y  = h*48/100;   // VS MODE
-        var r2y  = h*56/100;   // DIFFICULTY
-        var rLBy = h*65/100;   // LEADERBOARD
-        var r3y  = h*75/100;   // START
+        var r2y  = h*55/100;   // DIFFICULTY
+        var rLBy = h*64/100;   // LEADERBOARD
+        var r3y  = h*73/100;   // START
         var dLabels = ["EASY", "MEDIUM", "HARD"];
         var dColors = [0x44CC44, 0xFFAA00, 0xEE3322];
 

@@ -1076,8 +1076,8 @@ class BitochiAxeArcadeView extends WatchUi.View {
         }
 
         var lcx = _cx;
-        var lcy = _h * 38 / 100;
-        var lr = _w * 16 / 100;
+        var lcy = _h * 39 / 100;
+        var lr = _w * 14 / 100;
         var menuAngle = _tick.toFloat() * 1.2;
         dc.setColor(0x6B4226, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(lcx, lcy, lr);
@@ -1134,12 +1134,12 @@ class BitochiAxeArcadeView extends WatchUi.View {
 
         var titleC = (_tick % 14 < 7) ? 0xFF8844 : 0xFFAA66;
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx + 1, _h * 4 / 100 + 1, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_cx + 1, _h * 9 / 100 + 1, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(titleC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _h * 4 / 100, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_cx, _h * 9 / 100, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _h * 15 / 100, Graphics.FONT_SMALL, "AXE ARCADE", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_cx, _h * 19 / 100, Graphics.FONT_SMALL, "AXE ARCADE", Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0x2A1A0A, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, _h - 20, _w, 20);
@@ -1149,15 +1149,15 @@ class BitochiAxeArcadeView extends WatchUi.View {
         drawTorch(dc, _w - 14, _h - 20);
 
         dc.setColor(0x6688AA, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _h * 62 / 100, Graphics.FONT_XTINY, "Stick axes. Dodge hazards.", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(_cx, _h * 68 / 100, Graphics.FONT_XTINY, "Hit apples for bonus!", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_cx, _h * 61 / 100, Graphics.FONT_XTINY, "Stick axes. Dodge hazards.", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_cx, _h * 66 / 100, Graphics.FONT_XTINY, "Hit apples for bonus!", Graphics.TEXT_JUSTIFY_CENTER);
 
         if (_bestScore > 0) {
             dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_cx, _h * 76 / 100, Graphics.FONT_XTINY, "BEST " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_cx, _h * 73 / 100, Graphics.FONT_XTINY, "BEST " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER);
         }
 
         dc.setColor((_tick % 10 < 5) ? 0xFF8844 : 0xFFAA66, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _h * 84 / 100, Graphics.FONT_XTINY, "Tap to play", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_cx, _h * 81 / 100, Graphics.FONT_XTINY, "Tap to play", Graphics.TEXT_JUSTIFY_CENTER);
     }
 }

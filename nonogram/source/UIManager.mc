@@ -39,12 +39,12 @@ class UIManager {
 
     // ── Menu ────────────────────────────────────────────────────
     static function rowGeom(sw, sh) {
-        var rowH = (sh *  9) / 100; if (rowH < 16) { rowH = 16; }
+        var rowH = (sh *  8) / 100; if (rowH < 14) { rowH = 14; }
         var gap  = (sh *  1) / 100; if (gap  <  2) { gap  =  2; }
-        var rowW = (sw * 70) / 100; if (rowW < 130) { rowW = 130; }
+        var rowW = (sw * 63) / 100; if (rowW < 117) { rowW = 117; }
         var rowX = (sw - rowW) / 2;
         // Start higher so all five rows (incl. the LEADERBOARD badge) fit.
-        var rowY0 = (sh * 30) / 100;
+        var rowY0 = (sh * 32) / 100;
         return [rowH, rowW, rowX, rowY0, gap];
     }
 
@@ -56,10 +56,10 @@ class UIManager {
             dc.fillCircle(cx, sh / 2, sw / 2 - 1);
         }
         dc.setColor(0x44CCFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, sh * 5 / 100, Graphics.FONT_MEDIUM,
+        dc.drawText(cx, sh * 10 / 100, Graphics.FONT_MEDIUM,
                     "NONOGRAM", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x88CCEE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, sh * 22 / 100, Graphics.FONT_XTINY,
+        dc.drawText(cx, sh * 25 / 100, Graphics.FONT_XTINY,
                     "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
 
         var rg   = rowGeom(sw, sh);

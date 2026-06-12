@@ -40,6 +40,13 @@ class BitochiSerpentDelegate extends WatchUi.BehaviorDelegate {
         return true;
     }
 
+    // Touch tap — same as SELECT (turn right / start / continue)
+    function onTap(evt) {
+        _view.doAction();
+        WatchUi.requestUpdate();
+        return true;
+    }
+
     // MENU button — turn left in-game
     function onMenu() {
         if (!_view.doBack()) { return false; }

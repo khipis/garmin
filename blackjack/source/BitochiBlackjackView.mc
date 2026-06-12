@@ -32,7 +32,10 @@ class BitochiBlackjackView extends WatchUi.View {
 
     // Leaderboard: peak bankroll reached this session + session-end bookkeeping
     hidden var _peakChips; hidden var _sessionActive;
-    hidden var _lbX; hidden var _lbY; hidden var _lbW; hidden var _lbH;
+    // Menu navigation (bricks-style): 0 = PLAY, 1 = LEADERBOARD.
+    hidden var _menuSel;
+    hidden var _mRowX; hidden var _mRowW; hidden var _mRowH;
+    hidden var _mPlayY; hidden var _mLbY;
 
     hidden var _rankStr; hidden var _suitStr;
 
@@ -45,7 +48,8 @@ class BitochiBlackjackView extends WatchUi.View {
         _tick = 0; _gs = BJ_MENU;
         _chips = BJ_START_CHIPS;
         _peakChips = BJ_START_CHIPS; _sessionActive = false;
-        _lbX = 0; _lbY = 0; _lbW = 0; _lbH = 0;
+        _menuSel = 0;
+        _mRowX = 0; _mRowW = 0; _mRowH = 0; _mPlayY = 0; _mLbY = 0;
         _resultMsg = "";
         _deck = new [52]; _deckTop = 0;
         _pCards = new [12]; _pCount = 0;
@@ -54,13 +58,23 @@ class BitochiBlackjackView extends WatchUi.View {
         _rankStr = ["2","3","4","5","6","7","8","9","10","J","Q","K","A"];
         _suitStr = ["\u2660", "\u2665", "\u2666", "\u2663"];  // ♠ ♥ ♦ ♣
         _w = 240; _h = 240;
-        _timer = new Timer.Timer();
-        _timer.start(method(:onTick), 300, true);
+        _timer = null;
     }
 
     function onLayout(dc) {
         _w = dc.getWidth(); _h = dc.getHeight();
         setupLayout();
+    }
+
+    function onShow() {
+        if (_timer == null) {
+            _timer = new Timer.Timer();
+            _timer.start(method(:onTick), 300, true);
+        }
+    }
+
+    function onHide() {
+        if (_timer != null) { _timer.stop(); _timer = null; }
     }
 
     hidden function setupLayout() {
@@ -88,7 +102,7 @@ class BitochiBlackjackView extends WatchUi.View {
     // ─── Input ─────────────────────────────────────────────────────────────────
 
     function doHit() {
-        if (_gs == BJ_MENU) { startGame(); return; }
+        if (_gs == BJ_MENU) { menuActivate(); return; }
         if (_gs == BJ_RESULT) { nextRound(); return; }
         if (_gs != BJ_PLAY) { return; }
         _pCards[_pCount] = dealCard(); _pCount++;
@@ -101,7 +115,7 @@ class BitochiBlackjackView extends WatchUi.View {
     }
 
     function doStand() {
-        if (_gs == BJ_MENU) { startGame(); return; }
+        if (_gs == BJ_MENU) { menuActivate(); return; }
         if (_gs == BJ_RESULT) { nextRound(); return; }
         if (_gs != BJ_PLAY) { return; }
         _gs = BJ_DEALER;
@@ -110,11 +124,11 @@ class BitochiBlackjackView extends WatchUi.View {
 
     function doTap(tx, ty) {
         if (_gs == BJ_MENU) {
-            if (_lbW > 0 && tx >= _lbX && tx <= _lbX + _lbW
-                         && ty >= _lbY && ty <= _lbY + _lbH) {
-                openLeaderboard(); return;
+            if (tx >= _mRowX && tx <= _mRowX + _mRowW) {
+                if (ty >= _mPlayY && ty <= _mPlayY + _mRowH) { _menuSel = 0; menuActivate(); return; }
+                if (ty >= _mLbY   && ty <= _mLbY   + _mRowH) { _menuSel = 1; menuActivate(); return; }
             }
-            startGame(); return;
+            _menuSel = 0; menuActivate(); return;
         }
         if (_gs == BJ_RESULT) { nextRound(); return; }
         if (_gs != BJ_PLAY) { return; }
@@ -261,33 +275,52 @@ class BitochiBlackjackView extends WatchUi.View {
     }
 
     hidden function drawMenu(dc) {
-        // Reserve the bottom strip for the LEADERBOARD badge row, then lay out
-        // the rest of the menu in the space above it so nothing overlaps on
-        // round watches.
-        var fh    = dc.getFontHeight(Graphics.FONT_XTINY);
-        var rowH  = (fh + 8) * 82 / 100;   // ~18% smaller badge row
-        if (rowH < 15) { rowH = 15; }
-        var rowW  = _w * 64 / 100;
-        var rowX  = (_w - rowW) / 2;
-        var rowY  = _h - rowH - _h * 8 / 100;
-        if (rowY + rowH > _h - 3) { rowY = _h - rowH - 3; }
-
         dc.setColor(0x22AA44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 8 / 100, Graphics.FONT_LARGE, "BLACKJACK", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 13 / 100, Graphics.FONT_LARGE, "BLACKJACK", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 27 / 100, Graphics.FONT_SMALL, "Beat the dealer!", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 41 / 100, Graphics.FONT_XTINY,
-            "HIT = Tap/Sel  STAND = Down", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 31 / 100, Graphics.FONT_SMALL, "Beat the dealer!", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x556677, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 51 / 100, Graphics.FONT_XTINY, "Chips: $" + _chips, Graphics.TEXT_JUSTIFY_CENTER);
-        var pc = (_tick % 12 < 6) ? 0xFFAA00 : 0xCC7700;
-        dc.setColor(pc, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 63 / 100, Graphics.FONT_MEDIUM, "TAP TO PLAY", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 42 / 100, Graphics.FONT_XTINY, "Chips: $" + _chips, Graphics.TEXT_JUSTIFY_CENTER);
 
-        var sel = (_tick % 12 < 6);
-        LbBadge.drawRow(dc, rowX, rowY, rowW, rowH, sel);
-        _lbX = rowX; _lbY = rowY; _lbW = rowW; _lbH = rowH;
+        // Space-aware menu rows: PLAY + LEADERBOARD, centred and ~18% smaller
+        // than a full-width control so nothing clips on round watches.
+        var rowW = _w * 58 / 100;
+        var rowH = _h * 10 / 100; if (rowH < 18) { rowH = 18; }
+        var gap  = _h * 3 / 100;  if (gap  < 4)  { gap  = 4;  }
+        var rowX = (_w - rowW) / 2;
+        var playY = _h * 51 / 100;
+        var lbY   = playY + rowH + gap;
+        _mRowX = rowX; _mRowW = rowW; _mRowH = rowH;
+        _mPlayY = playY; _mLbY = lbY;
+
+        var pSel = (_menuSel == 0);
+        dc.setColor(pSel ? 0x103820 : 0x0C1C12, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(rowX, playY, rowW, rowH, 5);
+        dc.setColor(pSel ? 0x44CC66 : 0x227A44, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(rowX, playY, rowW, rowH, 5);
+        if (pSel) {
+            var ay = playY + rowH / 2;
+            dc.fillPolygon([[rowX + 5, ay - 4], [rowX + 5, ay + 4], [rowX + 11, ay]]);
+        }
+        dc.setColor(pSel ? 0xFFFFFF : 0xAAD8BB, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2 + 6, playY + (rowH - 14) / 2, Graphics.FONT_XTINY, "PLAY", Graphics.TEXT_JUSTIFY_CENTER);
+
+        LbBadge.drawRow(dc, rowX, lbY, rowW, rowH, _menuSel == 1);
+
+        dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 88 / 100, Graphics.FONT_XTINY, "HIT=Sel  STAND=Down", Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    // Cycle the menu selection (PLAY <-> LEADERBOARD).
+    function menuNav(d) {
+        if (_gs != BJ_MENU) { return; }
+        _menuSel = (_menuSel + d + 2) % 2;
+    }
+
+    // Activate the currently selected menu row.
+    function menuActivate() {
+        if (_menuSel == 1) { openLeaderboard(); }
+        else               { startGame(); }
     }
 
     hidden function drawHUD(dc) {

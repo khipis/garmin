@@ -179,11 +179,11 @@ class MainView extends WatchUi.View {
     function menuRowGeom() {
         var W = _ctrl.screenW;
         var H = _ctrl.screenH;
-        var rowH = (H * 11) / 100; if (rowH < 22) { rowH = 22; }
-        var rowW = (W * 64) / 100; if (rowW < 116) { rowW = 116; }
+        var rowH = (H * 10) / 100; if (rowH < 20) { rowH = 20; }
+        var rowW = (W * 58) / 100; if (rowW < 104) { rowW = 104; }
         var rowX = (W - rowW) / 2;
-        var gap  = (H * 3) / 100;  if (gap < 6) { gap = 6; }
-        var startY = (H * 58) / 100;
+        var gap  = (H * 3) / 100;  if (gap < 5) { gap = 5; }
+        var startY = (H * 57) / 100;
         var lbY    = startY + rowH + gap;
         return [rowH, rowW, rowX, startY, lbY];
     }
@@ -209,19 +209,19 @@ class MainView extends WatchUi.View {
 
         // Title (~18% more compact than before to make room for the row)
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, H * 6 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, H * 10 / 100, Graphics.FONT_SMALL,
                     "FLAPPY", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, H * 16 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, H * 19 / 100, Graphics.FONT_SMALL,
                     "PIDGEON", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x778899, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, H * 26 / 100, Graphics.FONT_XTINY,
+        dc.drawText(cx, H * 28 / 100, Graphics.FONT_XTINY,
                     "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
 
         // Decorative bird
         var br = (H * 4) / 100; if (br < 7) { br = 7; }
         var b  = new Bird();
-        b.reset(cx, H * 39 / 100, br);
+        b.reset(cx, H * 40 / 100, br);
         b.vy = -1.0;
         b.draw(dc);
 

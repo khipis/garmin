@@ -74,13 +74,23 @@ class BitochiPokerView extends WatchUi.View {
                       "Straight","Flush","Full House","Four of a Kind",
                       "Straight Flush","Royal Flush"];
         _w = 240; _h = 240;
-        _timer = new Timer.Timer();
-        _timer.start(method(:onTick), 200, true);
+        _timer = null;
     }
 
     function onLayout(dc) {
         _w = dc.getWidth(); _h = dc.getHeight();
         setupLayout();
+    }
+
+    function onShow() {
+        if (_timer == null) {
+            _timer = new Timer.Timer();
+            _timer.start(method(:onTick), 200, true);
+        }
+    }
+
+    function onHide() {
+        if (_timer != null) { _timer.stop(); _timer = null; }
     }
 
     hidden function setupLayout() {
@@ -210,14 +220,14 @@ class BitochiPokerView extends WatchUi.View {
     // between the title block and the bottom margin so nothing overlaps on
     // small round watches.  Returns [rowH, rowW, rowX, rowY0, gap].
     function menuRowGeom() {
-        var topZone      = (_h * 56) / 100;            // rows live below the title block
-        var bottomMargin = (_h * 8) / 100; if (bottomMargin < 14) { bottomMargin = 14; }
-        var gap          = (_h * 3) / 100; if (gap < 5) { gap = 5; }
+        var topZone      = (_h * 55) / 100;            // rows live below the title block
+        var bottomMargin = (_h * 12) / 100; if (bottomMargin < 13) { bottomMargin = 13; }
+        var gap          = (_h * 3) / 100; if (gap < 4) { gap = 4; }
         var avail        = (_h - bottomMargin) - topZone;
         var rowH         = (avail - gap * (PK_MENU_ROWS - 1)) / PK_MENU_ROWS;
-        if (rowH > 28) { rowH = 28; }
-        if (rowH < 18) { rowH = 18; }
-        var rowW = (_w * 62) / 100; if (rowW < 110) { rowW = 110; }
+        if (rowH > 25) { rowH = 25; }
+        if (rowH < 16) { rowH = 16; }
+        var rowW = (_w * 56) / 100; if (rowW < 99) { rowW = 99; }
         var rowX = (_w - rowW) / 2;
         var used = PK_MENU_ROWS * rowH + (PK_MENU_ROWS - 1) * gap;
         var rowY0 = topZone + (avail - used) / 2;
@@ -410,12 +420,12 @@ class BitochiPokerView extends WatchUi.View {
         // Title block ~18% smaller (FONT_MEDIUM/XTINY) and lifted up so the two
         // interactive rows below never overlap on small round watches.
         dc.setColor(0xEE4400, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _h * 8 / 100, Graphics.FONT_MEDIUM, "POKER", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, _h * 12 / 100, Graphics.FONT_MEDIUM, "POKER", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x888888, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _h * 26 / 100, Graphics.FONT_XTINY, "5-Card Draw", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, _h * 28 / 100, Graphics.FONT_XTINY, "5-Card Draw", Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0x444444, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _h * 40 / 100, Graphics.FONT_XTINY, "Chips: " + _pChips + " vs " + _aChips, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, _h * 41 / 100, Graphics.FONT_XTINY, "Chips: " + _pChips + " vs " + _aChips, Graphics.TEXT_JUSTIFY_CENTER);
 
         // Two interactive rows: PLAY + LEADERBOARD.
         var rg   = menuRowGeom();

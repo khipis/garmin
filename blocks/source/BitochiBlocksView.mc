@@ -68,9 +68,10 @@ class BitochiBlocksView extends WatchUi.View {
     public var accelX;
     hidden var _useAccel;
     hidden var _tiltArm;
-    hidden var _menuToggleY0; hidden var _menuToggleY1;
-    hidden var _lbRowX0; hidden var _lbRowX1;
-    hidden var _lbRowY0; hidden var _lbRowY1;
+    // Menu navigation (bricks-style): 0 = PLAY, 1 = LEADERBOARD, 2 = TILT toggle.
+    hidden var _menuSel;
+    hidden var _mRowX; hidden var _mRowW; hidden var _mRowH;
+    hidden var _mPlayY; hidden var _mLbY; hidden var _mTiltY;
 
     hidden var _pieceColors;
     hidden var _shapes;
@@ -95,8 +96,9 @@ class BitochiBlocksView extends WatchUi.View {
         _useAccel = (ua instanceof Toybox.Lang.Boolean) ? ua : false;
         accelX = 0;
         _tiltArm = true;
-        _menuToggleY0 = 0; _menuToggleY1 = 0;
-        _lbRowX0 = 0; _lbRowX1 = 0; _lbRowY0 = 0; _lbRowY1 = 0;
+        _menuSel = 0;
+        _mRowX = 0; _mRowW = 0; _mRowH = 0;
+        _mPlayY = 0; _mLbY = 0; _mTiltY = 0;
 
         _board = new [TB_ROWS * TB_COLS];
         for (var i = 0; i < TB_ROWS * TB_COLS; i++) { _board[i] = 0; }
@@ -365,7 +367,7 @@ class BitochiBlocksView extends WatchUi.View {
     }
 
     function doAction() {
-        if (_gs == TBS_MENU) { startGame(); }
+        if (_gs == TBS_MENU) { menuActivate(); }
         else if (_gs == TBS_PLAY) { doRotate(); }
         else if (_gs == TBS_OVER) { _gs = TBS_MENU; }
     }
@@ -377,18 +379,12 @@ class BitochiBlocksView extends WatchUi.View {
 
     function doTap(tx, ty) {
         if (_gs == TBS_MENU) {
-            if (_lbRowX1 > _lbRowX0 && tx >= _lbRowX0 && tx <= _lbRowX1 &&
-                ty >= _lbRowY0 && ty <= _lbRowY1) {
-                openLeaderboard();
-                return;
+            if (tx >= _mRowX && tx <= _mRowX + _mRowW) {
+                if (ty >= _mPlayY && ty <= _mPlayY + _mRowH) { _menuSel = 0; menuActivate(); return; }
+                if (ty >= _mLbY   && ty <= _mLbY   + _mRowH) { _menuSel = 1; menuActivate(); return; }
+                if (ty >= _mTiltY && ty <= _mTiltY + _mRowH) { _menuSel = 2; menuActivate(); return; }
             }
-            if (_menuToggleY1 > _menuToggleY0 && ty >= _menuToggleY0 && ty <= _menuToggleY1) {
-                _useAccel = !_useAccel;
-                Application.Storage.setValue("blocks_accel", _useAccel);
-                _tiltArm = true;
-                return;
-            }
-            startGame();
+            _menuSel = 0; menuActivate();
             return;
         }
         if (_gs == TBS_OVER) { _gs = TBS_MENU; return; }
@@ -637,13 +633,14 @@ class BitochiBlocksView extends WatchUi.View {
     hidden function drawMenu(dc) {
         dc.setColor(0x07101C, 0x07101C); dc.clear();
 
+        // Decorative bobbing blocks near the top.
         var t = _wobble;
         var colors = [0x00EEFF, 0xFFDD00, 0xCC44FF, 0x44FF44, 0xFF3333, 0x4477FF, 0xFF8800];
         var ds = _decoSz;
         var dh = ds / 2;
         for (var i = 0; i < 7; i++) {
             var bx = _w * (10 + i * 12) / 100;
-            var by = (_h * 14 / 100 + (Math.sin(t + i.toFloat() * 0.9) * (_h * 30 / 1000).toFloat()).toNumber()).toNumber();
+            var by = (_h * 15 / 100 + (Math.sin(t + i.toFloat() * 0.9) * (_h * 30 / 1000).toFloat()).toNumber()).toNumber();
             dc.setColor(colors[i], Graphics.COLOR_TRANSPARENT);
             dc.fillRoundedRectangle(bx - dh, by - dh, ds, ds, 2);
             var hl = ds / 4;
@@ -653,48 +650,77 @@ class BitochiBlocksView extends WatchUi.View {
         }
 
         dc.setColor(0x44AAFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 28 / 100, Graphics.FONT_MEDIUM, "BLOCKS", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0x224466, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 40 / 100, Graphics.FONT_XTINY, "BITOCHI GAMES", Graphics.TEXT_JUSTIFY_CENTER);
-
-        // ── Shared leaderboard badge (tappable) ─────────────────────────────
-        var rowH = _h * 11 / 100;
-        if (rowH < 18) { rowH = 18; }
-        if (rowH > 26) { rowH = 26; }
-        var rowW = _w * 62 / 100;
-        if (rowW < 110) { rowW = 110; }
-        if (rowW > _w - 8) { rowW = _w - 8; }
-        var rowX = (_w - rowW) / 2;
-        var rowY = _h * 46 / 100;
-        LbBadge.drawRow(dc, rowX, rowY, rowW, rowH, false);
-        if (LbBadge.isActive()) {
-            _lbRowX0 = rowX; _lbRowX1 = rowX + rowW;
-            _lbRowY0 = rowY; _lbRowY1 = rowY + rowH;
-        } else {
-            _lbRowX0 = 0; _lbRowX1 = 0; _lbRowY0 = 0; _lbRowY1 = 0;
-        }
-
-        var insY = rowY + rowH + _h * 3 / 100;
-        dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, insY, Graphics.FONT_XTINY, "L/R move  Mid rotate", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(_w / 2, insY + _h * 7 / 100, Graphics.FONT_XTINY, "MENU hold / swipe: drop", Graphics.TEXT_JUSTIFY_CENTER);
-
+        dc.drawText(_w / 2, _h * 25 / 100, Graphics.FONT_MEDIUM, "BLOCKS", Graphics.TEXT_JUSTIFY_CENTER);
         if (_best > 0) {
-            dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, insY + _h * 15 / 100, Graphics.FONT_XTINY, "Best: " + _best, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w / 2, _h * 37 / 100, Graphics.FONT_XTINY, "BEST: " + _best, Graphics.TEXT_JUSTIFY_CENTER);
         }
 
-        var tY = insY + _h * 22 / 100;
-        var fH = dc.getFontHeight(Graphics.FONT_XTINY);
-        _menuToggleY0 = tY - fH / 2 - 2;
-        _menuToggleY1 = tY + fH / 2 + 2;
-        var tClr = _useAccel ? 0x44FF88 : 0x557788;
-        dc.setColor(tClr, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, tY, Graphics.FONT_XTINY,
+        // Space-aware menu rows: PLAY + LEADERBOARD + TILT, centred and ~10%
+        // more compact so nothing clips on round watches.
+        var rowW = _w * 56 / 100;
+        var rowH = _h * 10 / 100; if (rowH < 18) { rowH = 18; }
+        var gap  = _h * 3 / 100;  if (gap  < 4)  { gap  = 4;  }
+        var rowX = (_w - rowW) / 2;
+        var playY = _h * 44 / 100;
+        var lbY   = playY + rowH + gap;
+        var tiltY = lbY + rowH + gap;
+        _mRowX = rowX; _mRowW = rowW; _mRowH = rowH;
+        _mPlayY = playY; _mLbY = lbY; _mTiltY = tiltY;
+
+        // PLAY row
+        var pSel = (_menuSel == 0);
+        dc.setColor(pSel ? 0x103050 : 0x0C1828, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(rowX, playY, rowW, rowH, 5);
+        dc.setColor(pSel ? 0x44AAFF : 0x2277CC, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(rowX, playY, rowW, rowH, 5);
+        if (pSel) {
+            var ay = playY + rowH / 2;
+            dc.fillPolygon([[rowX + 5, ay - 4], [rowX + 5, ay + 4], [rowX + 11, ay]]);
+        }
+        dc.setColor(pSel ? 0xFFFFFF : 0xAACCEE, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2 + 6, playY + (rowH - 14) / 2, Graphics.FONT_XTINY, "PLAY", Graphics.TEXT_JUSTIFY_CENTER);
+
+        // LEADERBOARD row
+        LbBadge.drawRow(dc, rowX, lbY, rowW, rowH, _menuSel == 1);
+
+        // TILT toggle row (kept from blocks — accelerometer steering on/off)
+        var tSel = (_menuSel == 2);
+        dc.setColor(tSel ? 0x103828 : 0x0C1C14, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(rowX, tiltY, rowW, rowH, 5);
+        dc.setColor(tSel ? 0x44FF88 : 0x2C6F4C, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(rowX, tiltY, rowW, rowH, 5);
+        if (tSel) {
+            var ty2 = tiltY + rowH / 2;
+            dc.fillPolygon([[rowX + 5, ty2 - 4], [rowX + 5, ty2 + 4], [rowX + 11, ty2]]);
+        }
+        dc.setColor(_useAccel ? 0x66FFAA : 0x88AACC, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2 + 6, tiltY + (rowH - 14) / 2, Graphics.FONT_XTINY,
             "TILT: " + (_useAccel ? "ON" : "OFF"), Graphics.TEXT_JUSTIFY_CENTER);
 
-        dc.setColor((_tick % 12 < 6) ? 0x88CCFF : 0x4488BB, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 94 / 100, Graphics.FONT_XTINY, "Tap to play!", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x1E2D40, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w / 2, _h * 89 / 100, Graphics.FONT_XTINY, "L/R move  rotate  drop", Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    // Cycle the menu selection (PLAY / LEADERBOARD / TILT).
+    function menuNav(d) {
+        if (_gs != TBS_MENU) { return; }
+        _menuSel = (_menuSel + d + 3) % 3;
+    }
+
+    function isMenu() { return _gs == TBS_MENU; }
+
+    // Activate the currently selected menu row.
+    hidden function menuActivate() {
+        if (_menuSel == 1)      { openLeaderboard(); }
+        else if (_menuSel == 2) { _toggleTilt(); }
+        else                    { startGame(); }
+    }
+
+    hidden function _toggleTilt() {
+        _useAccel = !_useAccel;
+        Application.Storage.setValue("blocks_accel", _useAccel);
+        _tiltArm = true;
     }
 
     function openLeaderboard() {

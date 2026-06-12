@@ -253,15 +253,15 @@ class MainView extends WatchUi.View {
     function menuRowGeom() {
         var W = _ctrl.screenW;
         var H = _ctrl.screenH;
-        var topZone      = (H * 57) / 100;          // rows live below BEST
-        var bottomMargin = (H * 6) / 100; if (bottomMargin < 12) { bottomMargin = 12; }
+        var topZone      = (H * 56) / 100;          // rows live below BEST
+        var bottomMargin = (H * 10) / 100; if (bottomMargin < 11) { bottomMargin = 11; }
         var gap          = (H * 2) / 100; if (gap < 4) { gap = 4; }
         var avail        = (H - bottomMargin) - topZone;
         var rowH         = (avail - gap * (JT_MENU_ROWS - 1)) / JT_MENU_ROWS;
         // Clamp ~18% smaller than the old 26 px row.
-        if (rowH > 23) { rowH = 23; }
-        if (rowH < 16) { rowH = 16; }
-        var rowW = (W * 64) / 100; if (rowW < 115) { rowW = 115; }
+        if (rowH > 21) { rowH = 21; }
+        if (rowH < 14) { rowH = 14; }
+        var rowW = (W * 58) / 100; if (rowW < 104) { rowW = 104; }
         var rowX = (W - rowW) / 2;
         var used = JT_MENU_ROWS * rowH + (JT_MENU_ROWS - 1) * gap;
         var rowY0 = topZone + (avail - used) / 2;
@@ -291,21 +291,21 @@ class MainView extends WatchUi.View {
 
         // Title
         dc.setColor(0x44FFAA, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, H * 6 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, H * 10 / 100, Graphics.FONT_SMALL,
                     "JUMP", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x66CCFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, H * 16 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, H * 19 / 100, Graphics.FONT_SMALL,
                     "TOWER", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x778899, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, H * 26 / 100, Graphics.FONT_XTINY,
+        dc.drawText(cx, H * 28 / 100, Graphics.FONT_XTINY,
                     "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
 
         // Decorative frog (moved up to leave room for two rows)
         var fr = (H * 5) / 100; if (fr < 8) { fr = 8; }
         var pl = new Player();
-        pl.reset(cx, H * 40 / 100, fr, fr + 2);
+        pl.reset(cx, H * 41 / 100, fr, fr + 2);
         pl.vy = -2.0;
-        pl.draw(dc, cx, (H * 40) / 100);
+        pl.draw(dc, cx, (H * 41) / 100);
 
         if (_ctrl.hi > 0) {
             dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);

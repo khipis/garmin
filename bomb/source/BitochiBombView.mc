@@ -1563,36 +1563,36 @@ class BitochiBombView extends WatchUi.View {
         }
 
         dc.setColor(0x1A2A44, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(0, _h * 75 / 100, _w, _h * 25 / 100);
+        dc.fillRectangle(0, _h * 73 / 100, _w, _h * 27 / 100);
         dc.setColor(0x2A4A28, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(0, _h * 78 / 100, _w, _h * 22 / 100);
+        dc.fillRectangle(0, _h * 75 / 100, _w, _h * 25 / 100);
         for (var g = 0; g < _w; g += 4) {
             dc.setColor(0x3A6A30, Graphics.COLOR_TRANSPARENT);
-            dc.drawLine(g, _h * 78 / 100, g + ((g % 3 == 0) ? 1 : -1), _h * 78 / 100 - 2 - (g % 5));
+            dc.drawLine(g, _h * 75 / 100, g + ((g % 3 == 0) ? 1 : -1), _h * 75 / 100 - 2 - (g % 5));
         }
 
         dc.setColor(0x555544, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(_cx - 15, _h * 68 / 100, 12, 18);
-        dc.fillRectangle(_cx - 17, _h * 66 / 100, 16, 3);
+        dc.fillRectangle(_cx - 15, _h * 66 / 100, 12, 18);
+        dc.fillRectangle(_cx - 17, _h * 64 / 100, 16, 3);
         dc.setColor(0x665544, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(_cx + 8, _h * 60 / 100, 18, 28);
-        dc.fillPolygon([[_cx + 6, _h * 60 / 100], [_cx + 17, _h * 53 / 100], [_cx + 28, _h * 60 / 100]]);
+        dc.fillRectangle(_cx + 8, _h * 59 / 100, 18, 28);
+        dc.fillPolygon([[_cx + 6, _h * 59 / 100], [_cx + 17, _h * 53 / 100], [_cx + 28, _h * 59 / 100]]);
         dc.setColor(0x88AACC, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(_cx + 11, _h * 64 / 100, 3, 3);
-        dc.fillRectangle(_cx + 18, _h * 64 / 100, 3, 3);
+        dc.fillRectangle(_cx + 11, _h * 63 / 100, 3, 3);
+        dc.fillRectangle(_cx + 18, _h * 63 / 100, 3, 3);
 
         var pulse = (_tick % 16 < 8) ? 0xFF4422 : 0xDD3311;
         dc.setColor(0x331100, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx + 1, _h * 8 / 100 + 1, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_cx + 1, _h * 13 / 100 + 1, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(pulse, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _h * 8 / 100, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_cx, _h * 13 / 100, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _h * 22 / 100, Graphics.FONT_LARGE, "BOMB", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_cx, _h * 25 / 100, Graphics.FONT_LARGE, "BOMB", Graphics.TEXT_JUSTIFY_CENTER);
 
         var px = (_cx + Math.sin((_tick * 5).toFloat() * 3.14159 / 180.0) * 30).toNumber();
         var pdir = ((_tick * 5) % 360 > 180) ? -1 : 1;
-        drawPlane(dc, px, _h * 38 / 100, pdir);
+        drawPlane(dc, px, _h * 39 / 100, pdir);
 
         var exTick = _tick % 40;
         if (exTick < 20) {
@@ -1608,15 +1608,15 @@ class BitochiBombView extends WatchUi.View {
         }
 
         dc.setColor(0x8899AA, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _h * 58 / 100, Graphics.FONT_XTINY, "Destroy everything!", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_cx, _h * 57 / 100, Graphics.FONT_XTINY, "Destroy everything!", Graphics.TEXT_JUSTIFY_CENTER);
 
         if (_bestScore > 0) {
             dc.setColor(0x556677, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_cx, _h * 80 / 100, Graphics.FONT_XTINY, "BEST " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_cx, _h * 77 / 100, Graphics.FONT_XTINY, "BEST " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER);
         }
 
         dc.setColor((_tick % 10 < 5) ? 0xFF4422 : 0xCC2211, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _h * 89 / 100, Graphics.FONT_XTINY, "Tap to start", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_cx, _h * 85 / 100, Graphics.FONT_XTINY, "Tap to start", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawBetween(dc) {

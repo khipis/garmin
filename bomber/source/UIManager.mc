@@ -28,11 +28,11 @@ class UIManager {
 
     // ── Menu ────────────────────────────────────────────────────
     static function rowGeom(sw, sh) {
-        var rowH = (sh * 10) / 100; if (rowH < 18) { rowH = 18; }
+        var rowH = (sh *  9) / 100; if (rowH < 16) { rowH = 16; }
         var gap  = (sh *  2) / 100; if (gap  <  3) { gap  =  3; }
-        var rowW = (sw * 70) / 100; if (rowW < 130) { rowW = 130; }
+        var rowW = (sw * 63) / 100; if (rowW < 117) { rowW = 117; }
         var rowX = (sw - rowW) / 2;
-        var rowY0 = (sh * 36) / 100;
+        var rowY0 = (sh * 37) / 100;
         return [rowH, rowW, rowX, rowY0, gap];
     }
 
@@ -44,10 +44,10 @@ class UIManager {
             dc.fillCircle(cx, sh / 2, sw / 2 - 1);
         }
         dc.setColor(0xFF6633, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, sh * 4 / 100, Graphics.FONT_MEDIUM,
+        dc.drawText(cx, sh * 9 / 100, Graphics.FONT_MEDIUM,
                     "BOMBER", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFAA77, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, sh * 21 / 100, Graphics.FONT_XTINY,
+        dc.drawText(cx, sh * 24 / 100, Graphics.FONT_XTINY,
                     "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
 
         var rg   = rowGeom(sw, sh);

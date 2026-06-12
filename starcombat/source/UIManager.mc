@@ -27,14 +27,14 @@ class UIManager {
     // other on small round watches.  Sizing is ~15-18 % smaller than
     // the old 3-row menu (height capped at 23 px, width at 60 %).
     static function rowGeom(sw, sh) {
-        var topZone      = (sh * 38) / 100;
-        var bottomMargin = (sh * 11) / 100; if (bottomMargin < 30) { bottomMargin = 30; }
+        var topZone      = (sh * 39) / 100;
+        var bottomMargin = (sh * 15) / 100; if (bottomMargin < 27) { bottomMargin = 27; }
         var gap          = (sh * 2)  / 100; if (gap < 3) { gap = 3; }
         var avail        = (sh - bottomMargin) - topZone;
         var rowH         = (avail - gap * (SC_MENU_ROWS - 1)) / SC_MENU_ROWS;
-        if (rowH > 23) { rowH = 23; }
-        if (rowH < 13) { rowH = 13; }
-        var rowW = (sw * 60) / 100; if (rowW < 120) { rowW = 120; }
+        if (rowH > 21) { rowH = 21; }
+        if (rowH < 12) { rowH = 12; }
+        var rowW = (sw * 54) / 100; if (rowW < 108) { rowW = 108; }
         var rowX = (sw - rowW) / 2;
         var used  = SC_MENU_ROWS * rowH + (SC_MENU_ROWS - 1) * gap;
         var rowY0 = topZone + (avail - used) / 2;
@@ -474,13 +474,13 @@ class UIManager {
 
         // Title.
         dc.setColor(0xFFCC33, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, sh * 12 / 100, Graphics.FONT_MEDIUM,
+        dc.drawText(cx, sh * 16 / 100, Graphics.FONT_MEDIUM,
                     "STAR", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFF8833, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, sh * 22 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, sh * 25 / 100, Graphics.FONT_SMALL,
                     "COMBAT", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xAACCEE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, sh * 32 / 100, Graphics.FONT_XTINY,
+        dc.drawText(cx, sh * 34 / 100, Graphics.FONT_XTINY,
                     "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
 
         var rg   = rowGeom(sw, sh);

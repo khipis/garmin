@@ -186,19 +186,19 @@ class GameView extends WatchUi.View {
         dc.fillCircle(hw, _sh / 2, _sw / 2 - 1);
 
         dc.setColor(0xC8A040, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(hw, _sh * 11 / 100, Graphics.FONT_SMALL, "MINI GO 9x9", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(hw, _sh * 15 / 100, Graphics.FONT_SMALL, "MINI GO 9x9", Graphics.TEXT_JUSTIFY_CENTER);
 
         var modeStr = (_mode == MODE_PVAI) ? "P vs AI" : "P vs P";
         var diffStr = (_diff == DIFF_EASY) ? "Easy" : ((_diff == DIFF_MED) ? "Med" : "Hard");
         var sideStr = _playerFirst ? "Side: Blk" : "Side: Wht";
         var rows = ["Mode: " + modeStr, "Diff: " + diffStr, sideStr, "START"];
         var nR   = 4;
-        var rowH = _sh * 10 / 100;
-        if (rowH < 22) { rowH = 22; }
-        if (rowH > 30) { rowH = 30; }
-        var rowW = _sw * 74 / 100;
+        var rowH = _sh * 9 / 100;
+        if (rowH < 20) { rowH = 20; }
+        if (rowH > 27) { rowH = 27; }
+        var rowW = _sw * 67 / 100;
         var rowX = (_sw - rowW) / 2;
-        var gap  = 6;
+        var gap  = 5;
         var tot  = nR * rowH + (nR - 1) * gap;
         var rowY0 = (_sh - tot) / 2 + rowH;
         var i = 0;
@@ -384,10 +384,10 @@ class GameView extends WatchUi.View {
     function doTap(tx, ty) {
         if (_state == GS_MENU) {
             var nR   = 4;
-            var rowH = _sh * 10 / 100; if (rowH < 22) { rowH = 22; } if (rowH > 30) { rowH = 30; }
-            var rowW = _sw * 74 / 100;
+            var rowH = _sh * 9 / 100; if (rowH < 20) { rowH = 20; } if (rowH > 27) { rowH = 27; }
+            var rowW = _sw * 67 / 100;
             var rowX = (_sw - rowW) / 2;
-            var gap  = 6;
+            var gap  = 5;
             var tot  = nR * rowH + (nR - 1) * gap;
             var rowY0 = (_sh - tot) / 2 + rowH;
             for (var i = 0; i < nR; i++) {

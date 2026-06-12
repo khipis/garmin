@@ -36,8 +36,14 @@ class BitochiBlocksDelegate extends WatchUi.InputDelegate {
     function onKey(evt) {
         var key = evt.getKey();
         if (key == WatchUi.KEY_ENTER) { _view.doAction();    WatchUi.requestUpdate(); return true; }
-        if (key == WatchUi.KEY_UP)    { _view.doMoveRight(); WatchUi.requestUpdate(); return true; }
-        if (key == WatchUi.KEY_DOWN)  { _view.doMoveLeft();  WatchUi.requestUpdate(); return true; }
+        if (key == WatchUi.KEY_UP) {
+            if (_view.isMenu()) { _view.menuNav(-1); } else { _view.doMoveRight(); }
+            WatchUi.requestUpdate(); return true;
+        }
+        if (key == WatchUi.KEY_DOWN) {
+            if (_view.isMenu()) { _view.menuNav(1); } else { _view.doMoveLeft(); }
+            WatchUi.requestUpdate(); return true;
+        }
         if (key == WatchUi.KEY_MENU) {
             // Fallback: devices that don't fire onKeyPressed/Released use onKey (key-up)
             // for hard drop while playing; release clears soft-drop hold.

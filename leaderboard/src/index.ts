@@ -139,6 +139,13 @@ async function handlePostScore(req: Request, env: Env): Promise<Response> {
   const game    = sanitizeGame(gameRaw);
   if (!game)    return err("invalid game name");
 
+  // Sanity bounds — keep clearly invalid scores off the boards. Negative
+  // scores are never valid; lower-is-better games (fastest time / fewest
+  // moves) can never be 0 either, so a 0 would otherwise pin rank #1 forever.
+  // The upper cap guards against overflow / abuse.
+  if (score < 0 || score > 1_000_000_000) return err("score out of range");
+  if (ASC_GAMES.has(game) && score <= 0)  return err("invalid score for this game");
+
   const user    = sanitizeUser(userRaw || "anon");
   const variant = sanitizeVariant(variantRaw);
 

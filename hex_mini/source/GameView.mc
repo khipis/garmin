@@ -769,7 +769,7 @@ class GameView extends WatchUi.View {
         dc.setColor(0x0A0A18, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(hw, hw, hw - 1);
         dc.setColor(0xFF4422, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(hw, _sh * 11 / 100, Graphics.FONT_SMALL, "HEX MINI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(hw, _sh * 15 / 100, Graphics.FONT_SMALL, "HEX MINI", Graphics.TEXT_JUSTIFY_CENTER);
         var modeStr = (_mode == MODE_PVAI) ? "P vs AI" : ((_mode == MODE_PVP) ? "P vs P" : "AI vs AI");
         var diffStr = (_diff == DIFF_EASY) ? "Easy" : ((_diff == DIFF_MED) ? "Med" : "Hard");
         var sideStr = _playerFirst ? "Side: Red" : "Side: Blu";
@@ -777,8 +777,8 @@ class GameView extends WatchUi.View {
         var nR = MENU_ROWS;
         // ~15% smaller than the old 4-row menu so the extra LEADERBOARD row
         // fits without overlapping the footer on small round watches.
-        var rowH = _sh * 9 / 100; if (rowH < 19) { rowH = 19; } if (rowH > 26) { rowH = 26; }
-        var rowW = _sw * 74 / 100;
+        var rowH = _sh * 8 / 100; if (rowH < 17) { rowH = 17; } if (rowH > 23) { rowH = 23; }
+        var rowW = _sw * 67 / 100;
         var rowX = (_sw - rowW) / 2;
         var gap  = _sh * 2 / 100; if (gap < 3) { gap = 3; }
         var tot  = nR * rowH + (nR - 1) * gap;
@@ -844,8 +844,8 @@ class GameView extends WatchUi.View {
     function doTap(tx, ty) {
         if (_state == GS_MENU) {
             var nR = MENU_ROWS;
-            var rowH = _sh * 9 / 100; if (rowH < 19) { rowH = 19; } if (rowH > 26) { rowH = 26; }
-            var rowW = _sw * 74 / 100;
+            var rowH = _sh * 8 / 100; if (rowH < 17) { rowH = 17; } if (rowH > 23) { rowH = 23; }
+            var rowW = _sw * 67 / 100;
             var rowX = (_sw - rowW) / 2;
             var gap  = _sh * 2 / 100; if (gap < 3) { gap = 3; }
             var tot  = nR * rowH + (nR - 1) * gap;

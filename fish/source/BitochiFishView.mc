@@ -48,6 +48,7 @@ class BitochiFishView extends WatchUi.View {
     hidden var _lineTensionBonus;
 
     hidden var _shakeTimer; hidden var _shakeOx; hidden var _shakeOy; hidden var _emotion;
+    hidden var _sceneOx; hidden var _sceneOy;
     hidden const MAX_PARTS = 28;
     hidden var _partX; hidden var _partY; hidden var _partVx; hidden var _partVy;
     hidden var _partLife; hidden var _partColor;
@@ -98,6 +99,7 @@ class BitochiFishView extends WatchUi.View {
         _goalCount = 1; _goalMinType = 0;
         _resultTick = 0; _resultMsg = ""; _lastPts = 0;
         _shakeTimer = 0; _shakeOx = 0; _shakeOy = 0; _emotion = 0;
+        _sceneOx = 0; _sceneOy = 0;
         _lineTensionBonus = 0.0; _nearAmbIdx = -1; _envType = 0;
 
         _partX = new [MAX_PARTS]; _partY = new [MAX_PARTS];
@@ -452,14 +454,14 @@ class BitochiFishView extends WatchUi.View {
     // (~18% smaller than a full-size button) so nothing overlaps on small round
     // watches. Returns [rowH, rowW, rowX, rowY0, gap].
     hidden function menuRowGeom() {
-        var topZone      = (_h * 46) / 100;
-        var bottomMargin = (_h * 9) / 100; if (bottomMargin < 14) { bottomMargin = 14; }
+        var topZone      = (_h * 47) / 100;
+        var bottomMargin = (_h * 13) / 100; if (bottomMargin < 14) { bottomMargin = 14; }
         var gap          = (_h * 3) / 100; if (gap < 4) { gap = 4; }
         var avail        = (_h - bottomMargin) - topZone;
         var rowH         = (avail - gap * (FISH_MENU_ROWS - 1)) / FISH_MENU_ROWS;
-        if (rowH > 24) { rowH = 24; }
-        if (rowH < 15) { rowH = 15; }
-        var rowW = (_w * 58) / 100; if (rowW < 104) { rowW = 104; }
+        if (rowH > 22) { rowH = 22; }
+        if (rowH < 14) { rowH = 14; }
+        var rowW = (_w * 52) / 100; if (rowW < 94) { rowW = 94; }
         var rowX = (_w - rowW) / 2;
         var used = FISH_MENU_ROWS * rowH + (FISH_MENU_ROWS - 1) * gap;
         var rowY0 = topZone + (avail - used) / 2;
@@ -511,16 +513,33 @@ class BitochiFishView extends WatchUi.View {
     }
 
     function onUpdate(dc) {
-        _w = dc.getWidth(); _h = dc.getHeight(); _cx = _w / 2; _cy = _h / 2;
+        var rw = dc.getWidth(); var rh = dc.getHeight();
+        // Menu & game-over use the full real screen (no scaling).
+        if (gameState == GS_MENU || gameState == GS_GAMEOVER) {
+            _w = rw; _h = rh; _cx = _w / 2; _cy = _h / 2;
+            _waterY = _h * 51 / 100;
+            _rodTipX = _w * 70 / 100; _rodTipY = _waterY - 18;
+            _sceneOx = 0; _sceneOy = 0;
+            if (gameState == GS_MENU) { drawMenu(dc); } else { drawGameOver(dc); }
+            return;
+        }
+        // Gameplay: render the whole scene inside a centered box at 90% of the
+        // real screen, leaving a thin uniform border all around it.
+        _w = rw * 9 / 10; _h = rh * 9 / 10;
+        var bx = (rw - _w) / 2; var by = (rh - _h) / 2;
+        _cx = _w / 2; _cy = _h / 2;
         _waterY = _h * 51 / 100;
         _rodTipX = _w * 70 / 100; _rodTipY = _waterY - 18;
-        if (gameState == GS_MENU) { drawMenu(dc); return; }
-        if (gameState == GS_GAMEOVER) { drawGameOver(dc); return; }
+        _sceneOx = bx; _sceneOy = by;
+        // Dark backdrop fills the real screen behind the centered box.
+        dc.setColor(0x05080E, 0x05080E); dc.clear();
         drawScene(dc);
+        // Thin frame around the scene box.
+        dc.setColor(0x223040, Graphics.COLOR_TRANSPARENT); dc.drawRectangle(bx, by, _w, _h);
     }
 
     hidden function drawScene(dc) {
-        var ox = _shakeOx; var oy = _shakeOy;
+        var ox = _shakeOx + _sceneOx; var oy = _shakeOy + _sceneOy;
         drawSky(dc, ox, oy);
         drawWater(dc, ox, oy);
         drawAmbFish(dc, ox, oy);
@@ -531,13 +550,13 @@ class BitochiFishView extends WatchUi.View {
         drawFisherman(dc, ox, oy);
         drawLine(dc, ox, oy);
         drawParticles(dc, ox, oy);
-        if (gameState == GS_POWER) { drawPowerBar(dc); }
-        if (gameState == GS_WAIT) { drawWaitInd(dc); }
-        if (gameState == GS_BITE) { drawBiteAlert(dc); }
-        if (gameState == GS_FIGHT) { drawFightHUD(dc); }
-        if (gameState == GS_REEL) { drawReelAnim(dc); }
-        drawHUD(dc);
-        if ((gameState == GS_CAUGHT || gameState == GS_LOST || gameState == GS_SNAP) && _resultTick < 65) { drawResultMsg(dc); }
+        if (gameState == GS_POWER) { drawPowerBar(dc, ox, oy); }
+        if (gameState == GS_WAIT) { drawWaitInd(dc, ox, oy); }
+        if (gameState == GS_BITE) { drawBiteAlert(dc, ox, oy); }
+        if (gameState == GS_FIGHT) { drawFightHUD(dc, ox, oy); }
+        if (gameState == GS_REEL) { drawReelAnim(dc, ox, oy); }
+        drawHUD(dc, ox, oy);
+        if ((gameState == GS_CAUGHT || gameState == GS_LOST || gameState == GS_SNAP) && _resultTick < 65) { drawResultMsg(dc, ox, oy); }
         if (gameState == GS_CAUGHT && _resultTick < 58) { drawCaughtFish(dc, ox, oy); }
     }
 
@@ -549,15 +568,15 @@ class BitochiFishView extends WatchUi.View {
         else if (_envType == 3) { skyTop = 0x7A4418; skyMid = 0xAA6628; skyBot = 0xCC8840; }
         else if (_envType == 4) { skyTop = 0x1E6FAA; skyMid = 0x44AACC; skyBot = 0x66CCDD; }
         else                    { skyTop = 0x06101A; skyMid = 0x0A1826; skyBot = 0x0E2030; }
-        dc.setColor(skyTop, skyTop); dc.clear();
-        dc.setColor(skyMid, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _waterY * 32 / 100, _w, _waterY * 32 / 100);
-        dc.setColor(skyBot, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _waterY * 64 / 100, _w, _waterY - _waterY * 64 / 100 + 2);
+        dc.setColor(skyTop, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(ox, oy, _w, _waterY);
+        dc.setColor(skyMid, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(ox, _waterY * 32 / 100 + oy, _w, _waterY * 32 / 100);
+        dc.setColor(skyBot, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(ox, _waterY * 64 / 100 + oy, _w, _waterY - _waterY * 64 / 100 + 2);
 
         if (_envType == 5) {
             dc.setColor(0xCCDDEE, Graphics.COLOR_TRANSPARENT);
             for (var s = 0; s < 16; s += 2) {  // every other star — same visual, half the calls
                 var sx = (s * 41 + 9) % _w; var sy = (s * 27 + 5) % (_waterY * 70 / 100);
-                if ((s + _tick / 25) % 5 < 4) { dc.fillRectangle(sx, sy, 1, 1); }
+                if ((s + _tick / 25) % 5 < 4) { dc.fillRectangle(sx + ox, sy + oy, 1, 1); }
             }
             dc.setColor(0xDDEECC, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(18 + ox, 14 + oy, 20, 14);
         } else if (_envType == 3) {
@@ -601,8 +620,8 @@ class BitochiFishView extends WatchUi.View {
         var gy = _waterY + oy;
         var gC  = (_envType == 5) ? 0x1A2E1A : ((_envType == 3) ? 0x5A4818 : 0x327018);
         var gC2 = (_envType == 5) ? 0x243624 : ((_envType == 3) ? 0x6A5820 : 0x44992C);
-        dc.setColor(gC, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(_w * 60 / 100, gy - 26, _w * 40 / 100, 26);
-        dc.setColor(gC2, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(_w * 60 / 100, gy - 26, _w * 40 / 100, 3);
+        dc.setColor(gC, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(_w * 60 / 100 + ox, gy - 26, _w * 40 / 100, 26);
+        dc.setColor(gC2, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(_w * 60 / 100 + ox, gy - 26, _w * 40 / 100, 3);
         for (var g2 = _w * 60 / 100; g2 < _w; g2 += 5) { dc.setColor(gC2, Graphics.COLOR_TRANSPARENT); dc.drawLine(g2 + ox, gy - 26, g2 + 1 + ox, gy - 29 - (g2 % 4)); }
         dc.setColor(0x5A3A1A, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(_w * 77 / 100 + ox, gy - 50, 4, 24);
         var tC = (_envType == 3) ? 0x7A5018 : ((_envType == 5) ? 0x1A3018 : 0x289030);
@@ -615,12 +634,12 @@ class BitochiFishView extends WatchUi.View {
         var wC    = (_envType == 2) ? 0x184460 : ((_envType == 3) ? 0x5A3A18 : ((_envType == 5) ? 0x081A28 : 0x165688));
         var wavC  = (_envType == 2) ? 0x205570 : ((_envType == 3) ? 0x6A4A28 : ((_envType == 5) ? 0x0A2030 : 0x2475AA));
         var deepC = (_envType == 5) ? 0x040C16 : 0x0C3660;
-        dc.setColor(wC, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, wy, _w, _h - wy);
+        dc.setColor(wC, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(ox, wy, _w, _h - _waterY);
         for (var x = 0; x < _w; x += 12) {
             var wh = ((x / 12 + _tick / 3 + _waveOff.toNumber()) % 4 < 2) ? 1 : -1;
             dc.setColor(wavC, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(x + ox, wy + wh, 12, 3);
         }
-        dc.setColor(deepC, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, wy + 5, _w, _h - wy - 5);
+        dc.setColor(deepC, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(ox, wy + 5, _w, _h - _waterY - 5);
         for (var d = 0; d < 3; d++) {
             var dy = wy + 12 + d * 17;
             var shC = (_envType == 5) ? 0x08182A : (d % 2 == 0 ? 0x103A70 : 0x184880);
@@ -634,9 +653,9 @@ class BitochiFishView extends WatchUi.View {
             dc.setColor(0x28AA44, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(lpx - 2, wy - 4, 6, 4);
             dc.setColor(0x1A6030, Graphics.COLOR_TRANSPARENT);
         }
-        dc.setColor(0x7A6644, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h - 9, _w, 9);
-        dc.setColor(0x8A7755, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h - 6, _w, 4);
-        dc.setColor(0x6A5533, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(0, _h - 5, _w, 3);
+        dc.setColor(0x7A6644, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(ox, _h - 9 + oy, _w, 9);
+        dc.setColor(0x8A7755, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(ox, _h - 6 + oy, _w, 4);
+        dc.setColor(0x6A5533, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(ox, _h - 5 + oy, _w, 3);
     }
 
     hidden function getFishColorType(t) {
@@ -793,14 +812,14 @@ class BitochiFishView extends WatchUi.View {
         }
     }
 
-    hidden function drawPowerBar(dc) {
+    hidden function drawPowerBar(dc, ox, oy) {
         var bW = _w * 42 / 100; var bH = 10; var bX = (_w - bW) / 2; var bY = _h * 74 / 100;
-        dc.setColor(0x1A1A2A, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX - 1, bY - 1, bW + 2, bH + 2);
-        dc.setColor(0x2A2A3A, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX, bY, bW, bH);
+        dc.setColor(0x1A1A2A, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX - 1 + ox, bY - 1 + oy, bW + 2, bH + 2);
+        dc.setColor(0x2A2A3A, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX + ox, bY + oy, bW, bH);
         var fill = (_power / 100.0 * bW.toFloat()).toNumber();
         var fc = (_power > 76.0) ? 0xFF4444 : ((_power > 46.0) ? 0xFFAA44 : 0x44CC44);
-        dc.setColor(fc, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX, bY, fill, bH);
-        dc.setColor(0xDDEEFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, bY - 14, Graphics.FONT_XTINY, "CAST POWER", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(fc, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bX + ox, bY + oy, fill, bH);
+        dc.setColor(0xDDEEFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + ox, bY - 14 + oy, Graphics.FONT_XTINY, "CAST POWER", Graphics.TEXT_JUSTIFY_CENTER);
 
         // Landing preview dot on water line using arc physics (gravity=0.30)
         var vy0 = -3.8 - _power * 0.026;
@@ -808,9 +827,9 @@ class BitochiFishView extends WatchUi.View {
         var ft = (-vy0 + Math.sqrt(disc)) / (2.0 * 0.15);
         var prevX = _rodTipX.toFloat() - _power * 0.044 * ft;
         if (prevX < 8.0) { prevX = 8.0; }
-        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillCircle(prevX.toNumber(), _waterY - 3, 5);
-        dc.setColor(fc, Graphics.COLOR_TRANSPARENT); dc.fillCircle(prevX.toNumber(), _waterY - 3, 4);
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillCircle(prevX.toNumber() - 1, _waterY - 5, 1);
+        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillCircle(prevX.toNumber() + ox, _waterY - 3 + oy, 5);
+        dc.setColor(fc, Graphics.COLOR_TRANSPARENT); dc.fillCircle(prevX.toNumber() + ox, _waterY - 3 + oy, 4);
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillCircle(prevX.toNumber() - 1 + ox, _waterY - 5 + oy, 1);
 
         // Fish markers on power bar – show which power level reaches each fish
         var maxTravel = _rodTipX - 8;
@@ -822,57 +841,57 @@ class BitochiFishView extends WatchUi.View {
             var fp = (_rodTipX.toFloat() - fx2) / maxTravel.toFloat() * 100.0;
             if (fp < 2.0 || fp > 100.0) { continue; }
             var mrkX = bX + (fp / 100.0 * bW.toFloat()).toNumber();
-            dc.setColor(getFishColorType(_ambType[ai]), Graphics.COLOR_TRANSPARENT); dc.fillCircle(mrkX, bY + bH + 4, 3);
-            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillCircle(mrkX, bY + bH + 4, 1);
+            dc.setColor(getFishColorType(_ambType[ai]), Graphics.COLOR_TRANSPARENT); dc.fillCircle(mrkX + ox, bY + bH + 4 + oy, 3);
+            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillCircle(mrkX + ox, bY + bH + 4 + oy, 1);
             var fdx = prevX - fx2; if (fdx < 0.0) { fdx = -fdx; }
             if (fdx < nearDist2) { nearDist2 = fdx; nearName = _fishNames[_ambType[ai]]; }
         }
         if (nearDist2 < 28.0 && nearName.length() > 0) {
             dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_cx, bY - 28, Graphics.FONT_XTINY, nearName + "!", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_cx + ox, bY - 28 + oy, Graphics.FONT_XTINY, nearName + "!", Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 
-    hidden function drawWaitInd(dc) {
+    hidden function drawWaitInd(dc, ox, oy) {
         var dots = (_tick / 7) % 4; var txt = "Waiting";
         for (var d = 0; d < dots; d++) { txt += "."; }
-        dc.setColor(0x88CCFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 84 / 100, Graphics.FONT_XTINY, txt, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x88CCFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + ox, _h * 84 / 100 + oy, Graphics.FONT_XTINY, txt, Graphics.TEXT_JUSTIFY_CENTER);
         if (_nearAmbIdx >= 0 && _nearAmbIdx < MAX_AMB) {
             dc.setColor(0xFFCC66, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_cx, _h * 76 / 100, Graphics.FONT_XTINY, "Target: " + _fishNames[_ambType[_nearAmbIdx]], Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_cx + ox, _h * 76 / 100 + oy, Graphics.FONT_XTINY, "Target: " + _fishNames[_ambType[_nearAmbIdx]], Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 
-    hidden function drawBiteAlert(dc) {
+    hidden function drawBiteAlert(dc, ox, oy) {
         var fc = (_tick % 3 < 2) ? 0xFF4444 : 0xFFAA22;
         var biteY = _h * 18 / 100;
-        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + 1, biteY + 1, Graphics.FONT_SMALL, "BITE!", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(fc, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, biteY, Graphics.FONT_SMALL, "BITE!", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 82 / 100, Graphics.FONT_XTINY, "TAP NOW!", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + 1 + ox, biteY + 1 + oy, Graphics.FONT_SMALL, "BITE!", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(fc, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + ox, biteY + oy, Graphics.FONT_SMALL, "BITE!", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + ox, _h * 82 / 100 + oy, Graphics.FONT_XTINY, "TAP NOW!", Graphics.TEXT_JUSTIFY_CENTER);
         var tlW = _w * 42 / 100; var tlX = (_w - tlW) / 2; var tlY = _h * 88 / 100;
-        dc.setColor(0x333344, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(tlX, tlY, tlW, 5);
-        dc.setColor(fc, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(tlX, tlY, (90 - _biteTick) * tlW / 90, 5);
+        dc.setColor(0x333344, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(tlX + ox, tlY + oy, tlW, 5);
+        dc.setColor(fc, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(tlX + ox, tlY + oy, (90 - _biteTick) * tlW / 90, 5);
     }
 
-    hidden function drawFightHUD(dc) {
+    hidden function drawFightHUD(dc, ox, oy) {
         // ── Tension bar (top) ─────────────────────────────────────────────
         var tBarY = _h * 8 / 100; var tBW = _w * 65 / 100; var tBX = (_w - tBW) / 2;
-        dc.setColor(0x181828, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(tBX - 1, tBarY - 1, tBW + 2, 12);
-        dc.setColor(0x282838, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(tBX, tBarY, tBW, 10);
+        dc.setColor(0x181828, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(tBX - 1 + ox, tBarY - 1 + oy, tBW + 2, 12);
+        dc.setColor(0x282838, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(tBX + ox, tBarY + oy, tBW, 10);
         var tf = (_tension / _maxTension * tBW.toFloat()).toNumber();
         var tc = 0x33CC44;
         if (_tension > 80.0)      { tc = (_tick % 4 < 2) ? 0xFF2222 : 0xCC0000; }
         else if (_tension > 62.0) { tc = 0xFF8822; }
         else if (_tension > 42.0) { tc = 0xFFCC44; }
-        dc.setColor(tc, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(tBX, tBarY, tf, 10);
+        dc.setColor(tc, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(tBX + ox, tBarY + oy, tf, 10);
         if (_tension > 80.0) {
             dc.setColor((_tick % 3 < 2) ? 0xFF2222 : 0x000000, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(tBX + tBW + 4, tBarY - 2, Graphics.FONT_XTINY, "!", Graphics.TEXT_JUSTIFY_LEFT);
+            dc.drawText(tBX + tBW + 4 + ox, tBarY - 2 + oy, Graphics.FONT_XTINY, "!", Graphics.TEXT_JUSTIFY_LEFT);
         }
-        dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT); dc.drawText(4, tBarY + 12, Graphics.FONT_XTINY, _fishNames[_fishType], Graphics.TEXT_JUSTIFY_LEFT);
+        dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT); dc.drawText(4 + ox, tBarY + 12 + oy, Graphics.FONT_XTINY, _fishNames[_fishType], Graphics.TEXT_JUSTIFY_LEFT);
         var hpW = _w * 26 / 100; var hpFill = (_fishHP / _fishMaxHP * hpW.toFloat()).toNumber(); if (hpFill < 0) { hpFill = 0; }
-        dc.setColor(0x222233, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(_w - 4 - hpW, tBarY + 12, hpW, 4);
-        dc.setColor(0x44AAFF, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(_w - 4 - hpW, tBarY + 12, hpFill, 4);
+        dc.setColor(0x222233, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(_w - 4 - hpW + ox, tBarY + 12 + oy, hpW, 4);
+        dc.setColor(0x44AAFF, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(_w - 4 - hpW + ox, tBarY + 12 + oy, hpFill, 4);
 
         // ── Tug-of-war fight bar (center) ────────────────────────────────
         // _fightCursor: -100 (far left) to +100 (far right)
@@ -881,26 +900,26 @@ class BitochiFishView extends WatchUi.View {
         var fBarY = _h * 43 / 100;
 
         // Background shell
-        dc.setColor(0x050A14, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(fBX - 2, fBarY - 2, fBW + 4, fBH + 4);
+        dc.setColor(0x050A14, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(fBX - 2 + ox, fBarY - 2 + oy, fBW + 4, fBH + 4);
 
         // Red danger zones (outer 20% each side)
         dc.setColor(0x2A0808, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(fBX, fBarY, fBW * 20 / 100, fBH);
-        dc.fillRectangle(fBX + fBW * 80 / 100, fBarY, fBW * 20 / 100, fBH);
+        dc.fillRectangle(fBX + ox, fBarY + oy, fBW * 20 / 100, fBH);
+        dc.fillRectangle(fBX + fBW * 80 / 100 + ox, fBarY + oy, fBW * 20 / 100, fBH);
 
         // Yellow warning zones (next 15% each side)
         dc.setColor(0x201800, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(fBX + fBW * 20 / 100, fBarY, fBW * 15 / 100, fBH);
-        dc.fillRectangle(fBX + fBW * 65 / 100, fBarY, fBW * 15 / 100, fBH);
+        dc.fillRectangle(fBX + fBW * 20 / 100 + ox, fBarY + oy, fBW * 15 / 100, fBH);
+        dc.fillRectangle(fBX + fBW * 65 / 100 + ox, fBarY + oy, fBW * 15 / 100, fBH);
 
         // Green safe zone (center 30%)
         dc.setColor(0x081808, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(fBX + fBW * 35 / 100, fBarY, fBW * 30 / 100, fBH);
+        dc.fillRectangle(fBX + fBW * 35 / 100 + ox, fBarY + oy, fBW * 30 / 100, fBH);
 
         // Zone separators
         dc.setColor(0x224422, Graphics.COLOR_TRANSPARENT);
-        dc.drawLine(fBX + fBW * 35 / 100, fBarY, fBX + fBW * 35 / 100, fBarY + fBH);
-        dc.drawLine(fBX + fBW * 65 / 100, fBarY, fBX + fBW * 65 / 100, fBarY + fBH);
+        dc.drawLine(fBX + fBW * 35 / 100 + ox, fBarY + oy, fBX + fBW * 35 / 100 + ox, fBarY + fBH + oy);
+        dc.drawLine(fBX + fBW * 65 / 100 + ox, fBarY + oy, fBX + fBW * 65 / 100 + ox, fBarY + fBH + oy);
 
         // Fight cursor  (_fightCursor in -100..+100 → 0..fBW)
         var cursorX = fBX + ((_fightCursor + 100.0) / 200.0 * fBW.toFloat()).toNumber();
@@ -911,20 +930,20 @@ class BitochiFishView extends WatchUi.View {
         if (absCursor < 28.0)      { cc = 0x44FF66; }
         else if (absCursor < 62.0) { cc = 0xFFCC44; }
         else                       { cc = (_tick % 4 < 2) ? 0xFF3333 : 0xFF8844; }
-        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(cursorX - 4, fBarY - 2, 8, fBH + 4);
-        dc.setColor(cc, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(cursorX - 3, fBarY - 1, 6, fBH + 2);
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(cursorX - 1, fBarY + 2, 2, fBH - 4);
+        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(cursorX - 4 + ox, fBarY - 2 + oy, 8, fBH + 4);
+        dc.setColor(cc, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(cursorX - 3 + ox, fBarY - 1 + oy, 6, fBH + 2);
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(cursorX - 1 + ox, fBarY + 2 + oy, 2, fBH - 4);
 
         // ── Accelerometer indicator (below fight bar) ─────────────────────
         // Shows current tilt direction so player knows their input
         var aBarY = fBarY + fBH + 6; var aBarW = _w * 55 / 100; var aBarX = (_w - aBarW) / 2;
-        dc.setColor(0x0C1422, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(aBarX, aBarY, aBarW, 5);
+        dc.setColor(0x0C1422, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(aBarX + ox, aBarY + oy, aBarW, 5);
         // Centre tick
-        dc.setColor(0x1C2840, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(aBarX + aBarW / 2 - 1, aBarY - 1, 2, 7);
+        dc.setColor(0x1C2840, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(aBarX + aBarW / 2 - 1 + ox, aBarY - 1 + oy, 2, 7);
         var aPos = aBarX + aBarW / 2 + (accelX.toFloat() * aBarW.toFloat() / 2200.0).toNumber();
         if (aPos < aBarX + 2) { aPos = aBarX + 2; }
         if (aPos > aBarX + aBarW - 2) { aPos = aBarX + aBarW - 2; }
-        dc.setColor(0x4488FF, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(aPos - 3, aBarY - 1, 6, 7);
+        dc.setColor(0x4488FF, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(aPos - 3 + ox, aBarY - 1 + oy, 6, 7);
 
         // ── Fish direction + counter-tilt hint ────────────────────────────
         var fishGoesRight = (_fishPullDir < 100.0);
@@ -932,34 +951,34 @@ class BitochiFishView extends WatchUi.View {
         var counterTxt = fishGoesRight ? "<< TILT" : "TILT >>";
         var hintY = _h * 66 / 100;
         dc.setColor((_tick % 8 < 5) ? 0xFF8844 : 0xFF5500, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, hintY, Graphics.FONT_XTINY, dirTxt, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_cx + ox, hintY + oy, Graphics.FONT_XTINY, dirTxt, Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor((_tick % 6 < 3) ? 0x66FF88 : 0x44CC66, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, hintY + 14, Graphics.FONT_XTINY, counterTxt, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_cx + ox, hintY + 14 + oy, Graphics.FONT_XTINY, counterTxt, Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x4477AA, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _h * 84 / 100, Graphics.FONT_XTINY, "Tap = reel boost", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_cx + ox, _h * 84 / 100 + oy, Graphics.FONT_XTINY, "Tap = reel boost", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
-    hidden function drawReelAnim(dc) {
+    hidden function drawReelAnim(dc, ox, oy) {
         var ry = _h * 20 / 100;
-        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + 1, ry + 1, Graphics.FONT_SMALL, "REELING!", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor((_tick % 6 < 3) ? 0x44FF88 : 0x22CC66, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, ry, Graphics.FONT_SMALL, "REELING!", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + 1 + ox, ry + 1 + oy, Graphics.FONT_SMALL, "REELING!", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor((_tick % 6 < 3) ? 0x44FF88 : 0x22CC66, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + ox, ry + oy, Graphics.FONT_SMALL, "REELING!", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
-    hidden function drawResultMsg(dc) {
+    hidden function drawResultMsg(dc, ox, oy) {
         if (gameState == GS_CAUGHT) {
             var msgY = _h * 20 / 100;
-            dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + 1, msgY + 1, Graphics.FONT_SMALL, _resultMsg, Graphics.TEXT_JUSTIFY_CENTER);
-            dc.setColor(0x44FF88, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, msgY, Graphics.FONT_SMALL, _resultMsg, Graphics.TEXT_JUSTIFY_CENTER);
-            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 68 / 100, Graphics.FONT_XTINY, "+" + _lastPts + " pts", Graphics.TEXT_JUSTIFY_CENTER);
-            dc.setColor(0x88CCFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 78 / 100, Graphics.FONT_XTINY, _levelCatches + "/" + _goalCount + " this level", Graphics.TEXT_JUSTIFY_CENTER);
-            if (_combo > 1) { dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 87 / 100, Graphics.FONT_XTINY, "COMBO x" + _combo, Graphics.TEXT_JUSTIFY_CENTER); }
+            dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + 1 + ox, msgY + 1 + oy, Graphics.FONT_SMALL, _resultMsg, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(0x44FF88, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + ox, msgY + oy, Graphics.FONT_SMALL, _resultMsg, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + ox, _h * 68 / 100 + oy, Graphics.FONT_XTINY, "+" + _lastPts + " pts", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(0x88CCFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + ox, _h * 78 / 100 + oy, Graphics.FONT_XTINY, _levelCatches + "/" + _goalCount + " this level", Graphics.TEXT_JUSTIFY_CENTER);
+            if (_combo > 1) { dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + ox, _h * 87 / 100 + oy, Graphics.FONT_XTINY, "COMBO x" + _combo, Graphics.TEXT_JUSTIFY_CENTER); }
         } else {
             var mc = (gameState == GS_SNAP) ? 0xFF4444 : 0xFF8844;
             var msgY2 = _h * 26 / 100;
-            dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + 1, msgY2 + 1, Graphics.FONT_SMALL, _resultMsg, Graphics.TEXT_JUSTIFY_CENTER);
-            dc.setColor(mc, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, msgY2, Graphics.FONT_SMALL, _resultMsg, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + 1 + ox, msgY2 + 1 + oy, Graphics.FONT_SMALL, _resultMsg, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(mc, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + ox, msgY2 + oy, Graphics.FONT_SMALL, _resultMsg, Graphics.TEXT_JUSTIFY_CENTER);
             var heartStr = ""; for (var li = 0; li < _fishLives; li++) { heartStr = heartStr + "*"; }
-            dc.setColor(0xFF4466, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 46 / 100, Graphics.FONT_XTINY, _fishLives > 0 ? heartStr : "GAME OVER!", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(0xFF4466, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + ox, _h * 46 / 100 + oy, Graphics.FONT_XTINY, _fishLives > 0 ? heartStr : "GAME OVER!", Graphics.TEXT_JUSTIFY_CENTER);
         }
     }
 
@@ -1006,14 +1025,14 @@ class BitochiFishView extends WatchUi.View {
         }
     }
 
-    hidden function drawHUD(dc) {
-        dc.setColor(0xEEFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_w - 4, 2, Graphics.FONT_XTINY, "" + _score, Graphics.TEXT_JUSTIFY_RIGHT);
+    hidden function drawHUD(dc, ox, oy) {
+        dc.setColor(0xEEFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_w - 4 + ox, 2 + oy, Graphics.FONT_XTINY, "" + _score, Graphics.TEXT_JUSTIFY_RIGHT);
         var heartStr = ""; for (var li = 0; li < _fishLives; li++) { heartStr = heartStr + "*"; }
-        dc.setColor(0xFF4466, Graphics.COLOR_TRANSPARENT); dc.drawText(_w - 4, 14, Graphics.FONT_XTINY, heartStr, Graphics.TEXT_JUSTIFY_RIGHT);
-        dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT); dc.drawText(4, 2, Graphics.FONT_XTINY, "Lv" + _level, Graphics.TEXT_JUSTIFY_LEFT);
+        dc.setColor(0xFF4466, Graphics.COLOR_TRANSPARENT); dc.drawText(_w - 4 + ox, 14 + oy, Graphics.FONT_XTINY, heartStr, Graphics.TEXT_JUSTIFY_RIGHT);
+        dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT); dc.drawText(4 + ox, 2 + oy, Graphics.FONT_XTINY, "Lv" + _level, Graphics.TEXT_JUSTIFY_LEFT);
         var goalTxt = _levelCatches + "/" + _goalCount;
         if (_goalMinType > 0 && !_levelGotSpecial) { goalTxt = goalTxt + " +" + _fishNames[_goalMinType]; }
-        dc.setColor(0x88CCFF, Graphics.COLOR_TRANSPARENT); dc.drawText(4, 14, Graphics.FONT_XTINY, goalTxt, Graphics.TEXT_JUSTIFY_LEFT);
+        dc.setColor(0x88CCFF, Graphics.COLOR_TRANSPARENT); dc.drawText(4 + ox, 14 + oy, Graphics.FONT_XTINY, goalTxt, Graphics.TEXT_JUSTIFY_LEFT);
     }
 
     hidden function drawGameOver(dc) {
@@ -1055,11 +1074,11 @@ class BitochiFishView extends WatchUi.View {
             dc.fillCircle(fx - dir * (sz + 2), fy - sz / 3, sz / 3); dc.fillCircle(fx - dir * (sz + 2), fy + sz / 3, sz / 3);
             dc.setColor(0x111111, Graphics.COLOR_TRANSPARENT); dc.fillCircle(fx + dir * (sz - 1), fy - 1, 1);
         }
-        dc.setColor(0x0A1E30, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + 1, _h * 4 / 100 + 1, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor((_tick % 14 < 7) ? 0x55DDFF : 0x33BBDD, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 4 / 100, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 18 / 100, Graphics.FONT_LARGE, "FISH", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0x88CCEE, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 30 / 100, Graphics.FONT_XTINY, "Cast near the fish!", Graphics.TEXT_JUSTIFY_CENTER);
-        if (_bestScore > 0) { dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 38 / 100, Graphics.FONT_XTINY, "BEST " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER); }
+        dc.setColor(0x0A1E30, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx + 1, _h * 9 / 100 + 1, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor((_tick % 14 < 7) ? 0x55DDFF : 0x33BBDD, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 9 / 100, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 21 / 100, Graphics.FONT_LARGE, "FISH", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x88CCEE, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 32 / 100, Graphics.FONT_XTINY, "Cast near the fish!", Graphics.TEXT_JUSTIFY_CENTER);
+        if (_bestScore > 0) { dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 39 / 100, Graphics.FONT_XTINY, "BEST " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER); }
 
         // START / LEADERBOARD menu rows.
         var rg = menuRowGeom();

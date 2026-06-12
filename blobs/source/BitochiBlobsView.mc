@@ -1449,14 +1449,14 @@ class BitochiBlobsView extends WatchUi.View {
     //   [ rowH, rowW, rowX, rowY0, gap ]
     hidden function menuGeom(dc) {
         var fhx          = dc.getFontHeight(Graphics.FONT_XTINY);
-        var topZone      = (_h * 30) / 100;            // rows live below the title
+        var topZone      = (_h * 32) / 100;            // rows live below the title
         var bottomMargin = fhx * 2 + 8;                // BEST + tap-hint lines
         var gap          = (_h * 2) / 100; if (gap < 3) { gap = 3; }
         var avail        = (_h - bottomMargin) - topZone;
         var rowH         = (avail - gap * 2) / 3;
-        if (rowH > 20) { rowH = 20; }                  // ~18% smaller than old 24px
-        if (rowH < 14) { rowH = 14; }
-        var rowW = (_w * 66) / 100; if (rowW < 110) { rowW = 110; }
+        if (rowH > 18) { rowH = 18; }                  // ~10% more compact
+        if (rowH < 13) { rowH = 13; }
+        var rowW = (_w * 59) / 100; if (rowW < 99) { rowW = 99; }
         var rowX = (_w - rowW) / 2;
         var used = 3 * rowH + 2 * gap;
         var rowY0 = topZone + (avail - used) / 2;
@@ -1472,11 +1472,11 @@ class BitochiBlobsView extends WatchUi.View {
         // Title
         var tc = (_tick % 14 < 7) ? 0xFF6644 : 0xFF8866;
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx + 1, _h * 3 / 100 + 1, Graphics.FONT_SMALL, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx + 1, _h * 8 / 100 + 1, Graphics.FONT_SMALL, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(tc, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _h * 3 / 100, Graphics.FONT_SMALL, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, _h * 8 / 100, Graphics.FONT_SMALL, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _h * 14 / 100, Graphics.FONT_MEDIUM, "BLOBS", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, _h * 18 / 100, Graphics.FONT_MEDIUM, "BLOBS", Graphics.TEXT_JUSTIFY_CENTER);
 
         // ── Three space-aware rows: 1 PLAYER / 2 PLAYERS / LEADERBOARD ───
         var rg   = menuGeom(dc);

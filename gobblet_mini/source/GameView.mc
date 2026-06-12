@@ -993,14 +993,14 @@ class GameView extends WatchUi.View {
         dc.setColor(0x0C0C0C, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(hw, hw, hw - 1);
         dc.setColor(0xFFAA00, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(hw, _sh * 9 / 100, Graphics.FONT_XTINY, "GOBBLET MINI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(hw, _sh * 13 / 100, Graphics.FONT_XTINY, "GOBBLET MINI", Graphics.TEXT_JUSTIFY_CENTER);
         var modeStr = (_mode == MODE_PVAI) ? "P vs AI" : ((_mode == MODE_PVP) ? "P vs P" : "AI vs AI");
         var diffStr = (_diff == DIFF_EASY) ? "Easy" : ((_diff == DIFF_MED) ? "Med" : "Hard");
         var sideStr = _playerFirst ? "Side: Lt" : "Side: Dk";
         var rows = ["Mode: " + modeStr, "Diff: " + diffStr, sideStr, "START"];
         var nR = 4;
-        var rowH = _sh * 11 / 100; if (rowH < 22) { rowH = 22; } if (rowH > 32) { rowH = 32; }
-        var rowW = _sw * 66 / 100; var rowX = (_sw - rowW) / 2;
+        var rowH = _sh * 10 / 100; if (rowH < 20) { rowH = 20; } if (rowH > 29) { rowH = 29; }
+        var rowW = _sw * 59 / 100; var rowX = (_sw - rowW) / 2;
         var gap = 5; var tot = nR * rowH + (nR - 1) * gap; var rowY0 = (_sh - tot) / 2 + rowH;
         var i = 0;
         while (i < nR) {
@@ -1026,8 +1026,8 @@ class GameView extends WatchUi.View {
     function doTap(tx, ty) {
         if (_state == GS_MENU) {
             var nR = 4;
-            var rowH = _sh * 11 / 100; if (rowH < 22) { rowH = 22; } if (rowH > 32) { rowH = 32; }
-            var rowW = _sw * 66 / 100; var rowX = (_sw - rowW) / 2;
+            var rowH = _sh * 10 / 100; if (rowH < 20) { rowH = 20; } if (rowH > 29) { rowH = 29; }
+            var rowW = _sw * 59 / 100; var rowX = (_sw - rowW) / 2;
             var gap = 5; var tot = nR * rowH + (nR - 1) * gap; var rowY0 = (_sh - tot) / 2 + rowH;
             for (var i = 0; i < nR; i++) {
                 var ry = rowY0 + i * (rowH + gap);

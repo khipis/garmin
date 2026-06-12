@@ -14,14 +14,14 @@ class UIManager {
         // (height, width and gaps) and the rows are packed into the band
         // between the title block and the bottom hint, so nothing ever
         // overlaps even on small round watches.
-        var topZone      = (sh * 26) / 100;                  // rows start below "by Bitochi"
-        var bottomMargin = (sh * 8) / 100; if (bottomMargin < 16) { bottomMargin = 16; }
-        var gap          = (sh * 12) / 1000; if (gap < 3) { gap = 3; }   // ~18% < old 1.5%
+        var topZone      = (sh * 28) / 100;                  // rows start below "by Bitochi"
+        var bottomMargin = (sh * 12) / 100; if (bottomMargin < 14) { bottomMargin = 14; }
+        var gap          = (sh * 11) / 1000; if (gap < 3) { gap = 3; }   // ~10% < before
         var avail        = (sh - bottomMargin) - topZone;
         var rowH         = (avail - gap * (MENU_ROWS - 1)) / MENU_ROWS;
-        if (rowH > 21) { rowH = 21; }                        // old cap 26 → ~18% smaller
-        if (rowH < 14) { rowH = 14; }
-        var rowW = (sw * 64) / 100; if (rowW < 115) { rowW = 115; }      // old 78% → ~18% smaller
+        if (rowH > 19) { rowH = 19; }                        // ~10% smaller cap
+        if (rowH < 13) { rowH = 13; }
+        var rowW = (sw * 58) / 100; if (rowW < 104) { rowW = 104; }      // ~10% smaller width
         var rowX = (sw - rowW) / 2;
         var used  = MENU_ROWS * rowH + (MENU_ROWS - 1) * gap;
         var rowY0 = topZone + (avail - used) / 2;
@@ -39,10 +39,10 @@ class UIManager {
 
         // Title — bright yellow "MANPAC" + Bitochi attribution.
         dc.setColor(0xFFE100, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, sh * 6  / 100, Graphics.FONT_MEDIUM,
+        dc.drawText(cx, sh * 10 / 100, Graphics.FONT_MEDIUM,
                     "MANPAC", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFF55CC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, sh * 19 / 100, Graphics.FONT_XTINY,
+        dc.drawText(cx, sh * 22 / 100, Graphics.FONT_XTINY,
                     "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
 
         var rg   = rowGeom(sw, sh);

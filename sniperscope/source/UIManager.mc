@@ -25,14 +25,14 @@ class UIManager {
     // or each other on small round watches.  Sizing is ~15-18 % smaller
     // than the old 3-row menu (height/gap) to make room for row 4.
     static function rowGeom(sw, sh) {
-        var topZone      = (sh * 38) / 100;            // rows live below "by Bitochi"
-        var bottomMargin = (sh * 16) / 100; if (bottomMargin < 40) { bottomMargin = 40; }
+        var topZone      = (sh * 39) / 100;            // rows live below "by Bitochi"
+        var bottomMargin = (sh * 19) / 100; if (bottomMargin < 36) { bottomMargin = 36; }
         var gap          = (sh * 2)  / 100; if (gap < 3) { gap = 3; }
         var avail        = (sh - bottomMargin) - topZone;
         var rowH         = (avail - gap * (SS_MENU_ROWS - 1)) / SS_MENU_ROWS;
-        if (rowH > 24) { rowH = 24; }                  // was 28 → ~15 % smaller
-        if (rowH < 14) { rowH = 14; }
-        var rowW = (sw * 62) / 100; if (rowW < 128) { rowW = 128; }
+        if (rowH > 22) { rowH = 22; }                  // was 28 → ~15 % smaller
+        if (rowH < 13) { rowH = 13; }
+        var rowW = (sw * 56) / 100; if (rowW < 115) { rowW = 115; }
         var rowX = (sw - rowW) / 2;
         var used  = SS_MENU_ROWS * rowH + (SS_MENU_ROWS - 1) * gap;
         var rowY0 = topZone + (avail - used) / 2;
@@ -407,19 +407,19 @@ class UIManager {
         dc.setColor(0x000406, 0x000406); dc.clear();
         // Faint reticle shadow on the title block.
         dc.setColor(0x102014, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(ccx, sh * 20 / 100, sh * 13 / 100);
+        dc.fillCircle(ccx, sh * 23 / 100, sh * 12 / 100);
         dc.setColor(0x1A2A1F, Graphics.COLOR_TRANSPARENT);
-        dc.drawCircle(ccx, sh * 20 / 100, sh * 13 / 100);
+        dc.drawCircle(ccx, sh * 23 / 100, sh * 12 / 100);
 
         // Title.
         dc.setColor(0xCCFF99, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(ccx, sh * 12 / 100, Graphics.FONT_MEDIUM,
+        dc.drawText(ccx, sh * 16 / 100, Graphics.FONT_MEDIUM,
                     "SNIPER", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x88CC66, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(ccx, sh * 23 / 100, Graphics.FONT_SMALL,
+        dc.drawText(ccx, sh * 26 / 100, Graphics.FONT_SMALL,
                     "SCOPE", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xAACCEE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(ccx, sh * 33 / 100, Graphics.FONT_XTINY,
+        dc.drawText(ccx, sh * 35 / 100, Graphics.FONT_XTINY,
                     "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
 
         var rg = rowGeom(sw, sh);

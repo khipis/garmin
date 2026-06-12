@@ -857,32 +857,32 @@ class BitochiMoonView extends WatchUi.View {
 
         // Earth (upper-right)
         dc.setColor(0x1133AA, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(_w * 82 / 100, _h * 12 / 100, 20);
+        dc.fillCircle(_w * 82 / 100, _h * 16 / 100, 20);
         dc.setColor(0x2255CC, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(_w * 82 / 100, _h * 12 / 100, 18);
+        dc.fillCircle(_w * 82 / 100, _h * 16 / 100, 18);
         dc.setColor(0x44AA33, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(_w * 76 / 100, _h * 8 / 100, 9, 6);
-        dc.fillRectangle(_w * 84 / 100, _h * 15 / 100, 7, 5);
+        dc.fillRectangle(_w * 76 / 100, _h * 12 / 100, 9, 6);
+        dc.fillRectangle(_w * 84 / 100, _h * 19 / 100, 7, 5);
         dc.setColor(0xEEEEFF, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(_w * 78 / 100, _h * 6 / 100, 13, 3);
+        dc.fillRectangle(_w * 78 / 100, _h * 10 / 100, 13, 3);
 
         // Title
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2 + 1, _h * 3 / 100 + 1, Graphics.FONT_MEDIUM,
+        dc.drawText(_w / 2 + 1, _h * 8 / 100 + 1, Graphics.FONT_MEDIUM,
             "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xCCDDEE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 3 / 100, Graphics.FONT_MEDIUM,
+        dc.drawText(_w / 2, _h * 8 / 100, Graphics.FONT_MEDIUM,
             "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFDD22, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 14 / 100, Graphics.FONT_LARGE,
+        dc.drawText(_w / 2, _h * 18 / 100, Graphics.FONT_LARGE,
             "MOON", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x88CCEE, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 26 / 100, Graphics.FONT_SMALL,
+        dc.drawText(_w / 2, _h * 28 / 100, Graphics.FONT_SMALL,
             "LANDER", Graphics.TEXT_JUSTIFY_CENTER);
 
         // Lander hovering with tiny thruster flicker
         var lx = _w * 49 / 100;
-        var ly = _h * 41 / 100 + ((_tick / 5) % 3);
+        var ly = _h * 42 / 100 + ((_tick / 5) % 3);
         drawMenuLander(dc, lx, ly);
 
         // Controls hint (compact)
@@ -893,18 +893,18 @@ class BitochiMoonView extends WatchUi.View {
         // Best
         if (_best > 0) {
             dc.setColor(0x556677, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 62 / 100, Graphics.FONT_XTINY,
+            dc.drawText(_w / 2, _h * 61 / 100, Graphics.FONT_XTINY,
                 "BEST: Level " + _best, Graphics.TEXT_JUSTIFY_CENTER);
         }
 
-        // ── Selectable rows ── (~18% smaller, space-aware, no overlap)
-        var rowH = _h * 11 / 100;
-        if (rowH < 18) { rowH = 18; }
-        if (rowH > 24) { rowH = 24; }
+        // ── Selectable rows ── (~10% smaller, space-aware, no overlap)
+        var rowH = _h * 10 / 100;
+        if (rowH < 16) { rowH = 16; }
+        if (rowH > 22) { rowH = 22; }
         var gap   = 4;
-        var rowW  = _w * 64 / 100;
+        var rowW  = _w * 58 / 100;
         var rowX  = (_w - rowW) / 2;
-        var lbY   = _h * 88 / 100 - rowH;
+        var lbY   = _h * 84 / 100 - rowH;
         var playY = lbY - gap - rowH;
 
         // Cache the LEADERBOARD row hit-region for touch input

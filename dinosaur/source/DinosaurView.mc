@@ -200,29 +200,8 @@ class DinosaurView extends WatchUi.View {
     // ── timer callback ────────────────────────────────────────────────────────
 
     function gameTick() {
-        // Title screen: idle a moment, then let the AI demo take over so the
-        // user immediately sees gameplay in motion.
-        if (_state == GS_TITLE) {
-            _demoIdle = _demoIdle + 1;
-            // Only fall into the attract demo while the player is parked on
-            // START — never yank them off the LEADERBOARD row mid-browse.
-            if (_demoIdle > 36 && _menuSel == DINO_ROW_START) {
-                _resetGame();
-                _state = GS_DEMO;
-            }
-        }
-
-        if (_state == GS_DEMO) {
-            _aiAutoPlay();   // pick action BEFORE physics so it takes effect this tick
-            _step();
-            // If the AI demo died, return to title with a brief pause so the
-            // attract loop never looks stuck on a corpse sprite.
-            if (_state == GS_OVER) {
-                _resetGame();
-                _state    = GS_TITLE;
-                _demoIdle = -36;   // ~1.2s pause before the next demo run
-            }
-        } else if (_state == GS_RUN) {
+        // (AI attract-demo removed — the title screen now stays a static menu.)
+        if (_state == GS_RUN) {
             _step();
         }
 
@@ -368,9 +347,9 @@ class DinosaurView extends WatchUi.View {
         var gap          = (_sh * 3) / 100; if (gap < 4) { gap = 4; }
         var avail        = (_sh - bottomMargin) - topZone;
         var rowH         = (avail - gap * (DINO_MENU_ROWS - 1)) / DINO_MENU_ROWS;
-        if (rowH > 24) { rowH = 24; }                 // clamp max (~18% smaller)
-        if (rowH < 15) { rowH = 15; }
-        var rowW = (_sw * 58) / 100; if (rowW < 104) { rowW = 104; }
+        if (rowH > 22) { rowH = 22; }                 // clamp max (~18% smaller)
+        if (rowH < 14) { rowH = 14; }
+        var rowW = (_sw * 52) / 100; if (rowW < 94) { rowW = 94; }
         var rowX = (_sw - rowW) / 2;
         var used = DINO_MENU_ROWS * rowH + (DINO_MENU_ROWS - 1) * gap;
         var rowY0 = topZone + (avail - used) / 2;
@@ -988,7 +967,7 @@ class DinosaurView extends WatchUi.View {
     hidden function _drawTitle(dc) {
         var cx = _sw / 2;
         dc.setColor(0x30B348, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _sh * 15 / 100, Graphics.FONT_MEDIUM,
+        dc.drawText(cx, _sh * 19 / 100, Graphics.FONT_MEDIUM,
             "DINO RUN", Graphics.TEXT_JUSTIFY_CENTER);
 
         if (_state == GS_DEMO) {
@@ -1013,11 +992,11 @@ class DinosaurView extends WatchUi.View {
         // TITLE: best score, then the START / LEADERBOARD menu.
         if (_hiScore > 0) {
             dc.setColor(0x363636, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, _sh * 33 / 100, Graphics.FONT_XTINY,
+            dc.drawText(cx, _sh * 35 / 100, Graphics.FONT_XTINY,
                 "best " + _hiScore.format("%05d"), Graphics.TEXT_JUSTIFY_CENTER);
         }
         dc.setColor(0x4a4a4a, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _sh * 41 / 100, Graphics.FONT_XTINY,
+        dc.drawText(cx, _sh * 42 / 100, Graphics.FONT_XTINY,
             "UP/DN  tap = act", Graphics.TEXT_JUSTIFY_CENTER);
 
         var rg   = menuRowGeom();

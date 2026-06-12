@@ -32,14 +32,14 @@ class UIManager {
     // layout — keeps the rows compact on small watch faces while
     // leaving more breathing room around the chess-style stack.
     static function rowGeom(sw, sh) {
-        var rowH = (sh *  855) / 10000; if (rowH < 16) { rowH = 16; }  // 9% × 0.95
+        var rowH = (sh *  770) / 10000; if (rowH < 14) { rowH = 14; }  // 9% × 0.95 × 0.9
         var gap  = (sh *  1) / 100;     if (gap  <  2) { gap  =  2; }
-        var rowW = (sw * 665) / 1000;   if (rowW < 130) { rowW = 130; } // 70% × 0.95
+        var rowW = (sw * 599) / 1000;   if (rowW < 117) { rowW = 117; } // 70% × 0.95 × 0.9
         var rowX = (sw - rowW) / 2;
         // Raised from 38% → 33% so all five navigable rows (the four config
         // rows + the LEADERBOARD badge) stack without overlapping the bottom
         // subtitle on small round watches.
-        var rowY0 = (sh * 33) / 100;
+        var rowY0 = (sh * 35) / 100;
         return [rowH, rowW, rowX, rowY0, gap];
     }
 
@@ -51,13 +51,13 @@ class UIManager {
             dc.fillCircle(cx, sh / 2, sw / 2 - 1);
         }
         dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, sh * 5 / 100, Graphics.FONT_MEDIUM,
+        dc.drawText(cx, sh * 10 / 100, Graphics.FONT_MEDIUM,
                     "AKARI", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFEE88, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, sh * 18 / 100, Graphics.FONT_XTINY,
+        dc.drawText(cx, sh * 21 / 100, Graphics.FONT_XTINY,
                     "Light Up", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFE699, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, sh * 28 / 100, Graphics.FONT_XTINY,
+        dc.drawText(cx, sh * 30 / 100, Graphics.FONT_XTINY,
                     "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
 
         var rg   = rowGeom(sw, sh);

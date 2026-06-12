@@ -9,12 +9,12 @@ const GM_MENU_ROWS = 3;
 class UIManager {
 
     static function rowGeom(sw, sh) {
-        var rowH = (sh * 11) / 100; if (rowH < 22) { rowH = 22; } if (rowH > 30) { rowH = 30; }
-        var rowW = (sw * 78) / 100; if (rowW < 140) { rowW = 140; }
+        var rowH = (sh * 10) / 100; if (rowH < 20) { rowH = 20; } if (rowH > 27) { rowH = 27; }
+        var rowW = (sw * 70) / 100; if (rowW < 126) { rowW = 126; }
         var rowX = (sw - rowW) / 2;
         var gap  = (sh * 2)  / 100; if (gap  < 4)  { gap  = 4;  }
         var total = GM_MENU_ROWS * rowH + (GM_MENU_ROWS - 1) * gap;
-        var rowY0 = (sh - total) / 2 + (sh * 6) / 100;
+        var rowY0 = (sh - total) / 2 + (sh * 5) / 100;
         return [rowH, rowW, rowX, rowY0, gap];
     }
 
@@ -26,10 +26,10 @@ class UIManager {
             dc.fillCircle(cx, sh / 2, sw / 2 - 1);
         }
         dc.setColor(0x44CCFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, sh *  5 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, sh * 10 / 100, Graphics.FONT_SMALL,
                     "GRAVITY", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, sh * 15 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, sh * 19 / 100, Graphics.FONT_SMALL,
                     "MINER", Graphics.TEXT_JUSTIFY_CENTER);
 
         var rg   = rowGeom(sw, sh);

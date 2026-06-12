@@ -142,20 +142,20 @@ class MainView extends WatchUi.View {
 
         // Title + Bitochi attribution
         dc.setColor(0x00EEFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, H * 8 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, H * 12 / 100, Graphics.FONT_SMALL,
                     "PONG", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFF44AA, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, H * 19 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, H * 22 / 100, Graphics.FONT_SMALL,
                     "PRO", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x778899, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, H * 30 / 100, Graphics.FONT_XTINY,
+        dc.drawText(cx, H * 32 / 100, Graphics.FONT_XTINY,
                     "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
 
         // Mini animated demo
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(cx - 36, H * 42 / 100, 3, 12);
+        dc.fillRectangle(cx - 36, H * 43 / 100, 3, 12);
         dc.setColor(0xFF44AA, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(cx + 33, H * 45 / 100, 3, 12);
+        dc.fillRectangle(cx + 33, H * 46 / 100, 3, 12);
         dc.setColor(0x00EEFF, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(cx - 2, H * 47 / 100, 4, 4);
 
@@ -203,7 +203,7 @@ class MainView extends WatchUi.View {
         // Wins counter
         if (_ctrl.hiPlayerWins > 0) {
             dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, H * 94 / 100, Graphics.FONT_XTINY,
+            dc.drawText(cx, H * 90 / 100, Graphics.FONT_XTINY,
                         "WINS " + _ctrl.hiPlayerWins.format("%d"),
                         Graphics.TEXT_JUSTIFY_CENTER);
         }
@@ -219,14 +219,14 @@ class MainView extends WatchUi.View {
         var W = _ctrl.screenW;
         var H = _ctrl.screenH;
         var topZone      = (H * 52) / 100;            // rows live below the demo
-        var bottomMargin = (H * 14) / 100; if (bottomMargin < 18) { bottomMargin = 18; }
+        var bottomMargin = (H * 15) / 100; if (bottomMargin < 16) { bottomMargin = 16; }
         var gap          = (H * 2)  / 100; if (gap < 3) { gap = 3; }
         var avail        = (H - bottomMargin) - topZone;
         var rowH         = (avail - gap * (MI_ITEMS - 1)) / MI_ITEMS;
-        // ~18% smaller than the previous 24..34 row band.
-        if (rowH > 28) { rowH = 28; }
-        if (rowH < 16) { rowH = 16; }
-        var rowW = (W * 64) / 100; if (rowW < 116) { rowW = 116; }
+        // ~10% smaller than the previous band.
+        if (rowH > 25) { rowH = 25; }
+        if (rowH < 14) { rowH = 14; }
+        var rowW = (W * 58) / 100; if (rowW < 104) { rowW = 104; }
         var rowX = (W - rowW) / 2;
         var used  = MI_ITEMS * rowH + (MI_ITEMS - 1) * gap;
         var rowY0 = topZone + (avail - used) / 2;

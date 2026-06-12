@@ -116,19 +116,19 @@ class MainView extends WatchUi.View {
     hidden function _menuRowGeom() {
         // ~18% smaller rows than before so the extra LEADERBOARD row never
         // overlaps neighbours on round watches.
-        var rowH  = (_sh * 9) / 100;
-        if (rowH < 18) { rowH = 18; } if (rowH > 23) { rowH = 23; }
-        var rowW  = (_sw * 76) / 100; if (rowW < 140) { rowW = 140; }
+        var rowH  = (_sh * 8) / 100;
+        if (rowH < 16) { rowH = 16; } if (rowH > 21) { rowH = 21; }
+        var rowW  = (_sw * 68) / 100; if (rowW < 126) { rowW = 126; }
         var rowX  = (_sw - rowW) / 2;
         var gap   = (_sh * 2) / 100; if (gap < 3) { gap = 3; }
         // Space-aware: keep all rows between the title and the footer text.
-        var top   = (_sh * 26) / 100;
-        var bot   = _sh - (_sh * 12) / 100;
+        var top   = (_sh * 28) / 100;
+        var bot   = _sh - (_sh * 16) / 100;
         var avail = bot - top;
         var total = MENU_ROW_COUNT * rowH + (MENU_ROW_COUNT - 1) * gap;
         if (total > avail) {
             rowH = (avail - (MENU_ROW_COUNT - 1) * gap) / MENU_ROW_COUNT;
-            if (rowH < 14) { rowH = 14; }
+            if (rowH < 13) { rowH = 13; }
             total = MENU_ROW_COUNT * rowH + (MENU_ROW_COUNT - 1) * gap;
         }
         var rowY0 = top + (avail - total) / 2;
@@ -143,10 +143,10 @@ class MainView extends WatchUi.View {
             dc.fillCircle(cx, _sh / 2, _sw / 2 - 1);
         }
         dc.setColor(0xCC2222, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _sh * 5 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, _sh * 10 / 100, Graphics.FONT_SMALL,
                     "MINE", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _sh * 16 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, _sh * 19 / 100, Graphics.FONT_SMALL,
                     "SWEEPER", Graphics.TEXT_JUSTIFY_CENTER);
 
         var rg = _menuRowGeom();

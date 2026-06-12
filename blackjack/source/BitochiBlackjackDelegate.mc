@@ -8,15 +8,22 @@ class BitochiBlackjackDelegate extends WatchUi.BehaviorDelegate {
         _view = view;
     }
 
-    function onSelect()       { _view.doHit();      WatchUi.requestUpdate(); return true; }
-    function onMenu() {
-        if (_view.isMenu()) { _view.openLeaderboard(); }
-        else                { _view.doStand(); }
-        WatchUi.requestUpdate();
-        return true;
+    function onSelect() {
+        if (_view.isMenu()) { _view.menuActivate(); } else { _view.doHit(); }
+        WatchUi.requestUpdate(); return true;
     }
-    function onPreviousPage() { _view.doHit();      WatchUi.requestUpdate(); return true; }
-    function onNextPage()     { _view.doStand();    WatchUi.requestUpdate(); return true; }
+    function onMenu() {
+        if (_view.isMenu()) { _view.menuActivate(); } else { _view.doStand(); }
+        WatchUi.requestUpdate(); return true;
+    }
+    function onPreviousPage() {
+        if (_view.isMenu()) { _view.menuNav(-1); } else { _view.doHit(); }
+        WatchUi.requestUpdate(); return true;
+    }
+    function onNextPage() {
+        if (_view.isMenu()) { _view.menuNav(1); } else { _view.doStand(); }
+        WatchUi.requestUpdate(); return true;
+    }
 
     function onBack() {
         var h = _view.doBack();
@@ -33,8 +40,14 @@ class BitochiBlackjackDelegate extends WatchUi.BehaviorDelegate {
 
     function onKey(evt) {
         var key = evt.getKey();
-        if (key == WatchUi.KEY_UP)   { _view.doHit();   WatchUi.requestUpdate(); return true; }
-        if (key == WatchUi.KEY_DOWN) { _view.doStand(); WatchUi.requestUpdate(); return true; }
+        if (key == WatchUi.KEY_UP) {
+            if (_view.isMenu()) { _view.menuNav(-1); } else { _view.doHit(); }
+            WatchUi.requestUpdate(); return true;
+        }
+        if (key == WatchUi.KEY_DOWN) {
+            if (_view.isMenu()) { _view.menuNav(1); } else { _view.doStand(); }
+            WatchUi.requestUpdate(); return true;
+        }
         return false;
     }
 }

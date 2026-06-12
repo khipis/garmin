@@ -603,14 +603,14 @@ class BitochiSerpentView extends WatchUi.View {
     // between the BEST line and the bottom margin so nothing overlaps on
     // small round watches.  Returns [rowH, rowW, rowX, rowY0, gap].
     function menuRowGeom() {
-        var topZone      = (_h * 60) / 100;            // rows live below BEST
-        var bottomMargin = (_h * 8) / 100; if (bottomMargin < 14) { bottomMargin = 14; }
-        var gap          = (_h * 3) / 100; if (gap < 5) { gap = 5; }
+        var topZone      = (_h * 59) / 100;            // rows live below BEST
+        var bottomMargin = (_h * 12) / 100; if (bottomMargin < 13) { bottomMargin = 13; }
+        var gap          = (_h * 3) / 100; if (gap < 4) { gap = 4; }
         var avail        = (_h - bottomMargin) - topZone;
         var rowH         = (avail - gap * (SMENU_ROWS - 1)) / SMENU_ROWS;
-        if (rowH > 28) { rowH = 28; }
-        if (rowH < 18) { rowH = 18; }
-        var rowW = (_w * 62) / 100; if (rowW < 110) { rowW = 110; }
+        if (rowH > 25) { rowH = 25; }
+        if (rowH < 16) { rowH = 16; }
+        var rowW = (_w * 56) / 100; if (rowW < 99) { rowW = 99; }
         var rowX = (_w - rowW) / 2;
         var used = SMENU_ROWS * rowH + (SMENU_ROWS - 1) * gap;
         var rowY0 = topZone + (avail - used) / 2;
@@ -648,7 +648,7 @@ class BitochiSerpentView extends WatchUi.View {
         // Animated snake coil decoration — ~18% smaller and moved up to
         // leave room for the two interactive rows below.
         var t = _wobble;
-        var cy = _h * 22 / 100;
+        var cy = _h * 25 / 100;
         for (var i = 7; i >= 0; i--) {
             var ang = t - i.toFloat() * 0.75;
             var r = 24.0 - i.toFloat() * 2.3;
@@ -673,7 +673,7 @@ class BitochiSerpentView extends WatchUi.View {
 
         // Title (~18% smaller: FONT_SMALL instead of FONT_MEDIUM)
         dc.setColor(0x44FF88, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _h * 36 / 100, Graphics.FONT_SMALL, "SERPENT", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, _h * 37 / 100, Graphics.FONT_SMALL, "SERPENT", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x226644, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, _h * 47 / 100, Graphics.FONT_XTINY, "BITOCHI GAMES", Graphics.TEXT_JUSTIFY_CENTER);
 

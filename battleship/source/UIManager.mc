@@ -87,18 +87,18 @@ class UIManager {
 
         // Title + Bitochi attribution
         dc.setColor(COL_ACCENT, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, h * 9 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, h * 13 / 100, Graphics.FONT_SMALL,
                     "BATTLESHIP", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x778899, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, h * 21 / 100, Graphics.FONT_XTINY,
+        dc.drawText(cx, h * 24 / 100, Graphics.FONT_XTINY,
                     "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(COL_TEXT_DIM, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, h * 33 / 100, Graphics.FONT_XTINY,
+        dc.drawText(cx, h * 35 / 100, Graphics.FONT_XTINY,
                     "Hunt - Sink - Conquer",
                     Graphics.TEXT_JUSTIFY_CENTER);
         if (ctrl.winsTotal > 0) {
             dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, h * 43 / 100, Graphics.FONT_XTINY,
+            dc.drawText(cx, h * 44 / 100, Graphics.FONT_XTINY,
                         "Wins: " + ctrl.winsTotal.toString(),
                         Graphics.TEXT_JUSTIFY_CENTER);
         }
@@ -113,12 +113,12 @@ class UIManager {
             "Shots: " + ctrl.shotsName(),
             "START"
         ];
-        var rowH = (h * 9) / 100; if (rowH < 18) { rowH = 18; } if (rowH > 25) { rowH = 25; }
-        var rowW = (w * 78) / 100; if (rowW < 140) { rowW = 140; }
+        var rowH = (h * 8) / 100; if (rowH < 16) { rowH = 16; } if (rowH > 22) { rowH = 22; }
+        var rowW = (w * 70) / 100; if (rowW < 126) { rowW = 126; }
         var rowX = (w - rowW) / 2;
         var gap  = (h * 2) / 100;  if (gap < 3) { gap = 3; }
         var bandTop = h * 46 / 100;
-        var bandBot = h * 87 / 100;
+        var bandBot = h * 83 / 100;
         var blockH  = MI_ITEMS * rowH + (MI_ITEMS - 1) * gap;
         var rowY0   = bandTop + ((bandBot - bandTop) - blockH) / 2;
         if (rowY0 < bandTop) { rowY0 = bandTop; }
@@ -156,7 +156,7 @@ class UIManager {
         }
 
         dc.setColor(COL_TEXT_DIM, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, h * 91 / 100, Graphics.FONT_XTINY,
+        dc.drawText(cx, h * 87 / 100, Graphics.FONT_XTINY,
                     "UP/DN move  SEL act",
                     Graphics.TEXT_JUSTIFY_CENTER);
     }

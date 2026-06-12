@@ -62,6 +62,12 @@ class BitochiRunDelegate extends WatchUi.BehaviorDelegate {
         return true;
     }
 
+    function onTap(evt) {
+        _view.doAction();
+        WatchUi.requestUpdate();
+        return true;
+    }
+
     function onMenu() {
         _view.doAction();
         WatchUi.requestUpdate();

@@ -1265,17 +1265,17 @@ class BitochiCheckersView extends WatchUi.View {
     // shrink further to fit between the title and bottom hint on round watches.
     hidden function menuGeom() {
         var nRows = 5;
-        var rowH  = _h * 10 / 100; if (rowH < 16) { rowH = 16; } if (rowH > 28) { rowH = 28; }
-        var rowW  = _w * 78 / 100;
+        var rowH  = _h * 9 / 100; if (rowH < 14) { rowH = 14; } if (rowH > 25) { rowH = 25; }
+        var rowW  = _w * 70 / 100;
         var rowX  = (_w - rowW) / 2;
         var gap   = _h * 1 / 100; if (gap < 2) { gap = 2; }
-        var topLimit = _h * 20 / 100;
+        var topLimit = _h * 23 / 100;
         var botLimit = _h - 18;
         var avail = botLimit - topLimit;
         var total = nRows * rowH + (nRows - 1) * gap;
         if (total > avail) {
             rowH = (avail - (nRows - 1) * gap) / nRows;
-            if (rowH < 12) { rowH = 12; }
+            if (rowH < 11) { rowH = 11; }
             total = nRows * rowH + (nRows - 1) * gap;
         }
         var rowY0 = topLimit + (avail - total) / 2;
@@ -1291,7 +1291,7 @@ class BitochiCheckersView extends WatchUi.View {
 
         // Title
         dc.setColor(0xFF6633, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(hw, _h * 11 / 100, Graphics.FONT_SMALL, "CHECKERS", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(hw, _h * 15 / 100, Graphics.FONT_SMALL, "CHECKERS", Graphics.TEXT_JUSTIFY_CENTER);
 
         var rowLabels = [
             _playerIsWhite ? "Color: LIGHT" : "Color: DARK",

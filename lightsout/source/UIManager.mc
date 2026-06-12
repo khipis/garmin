@@ -32,17 +32,17 @@ class UIManager {
         // legacy 3-row height so the extra LEADERBOARD row never overlaps the
         // title/footer on round watches.
         var rows = LO_MENU_ROWS;
-        var top  = (sh * 33) / 100;          // just below the "by Bitochi" line
+        var top  = (sh * 35) / 100;          // just below the "by Bitochi" line
         var bot  = sh - (sh * 8) / 100;       // just above the footer
         var avail = bot - top;
         var gap   = (sh * 2) / 100; if (gap < 3) { gap = 3; }
 
-        var cap = ((sh * 11) / 100) * 82 / 100;   // ~18% smaller than before
+        var cap = ((sh * 11) / 100) * 74 / 100;   // ~10% smaller again
         var rowH = (avail - gap * (rows - 1)) / rows;
         if (rowH > cap) { rowH = cap; }
-        if (rowH < 16) { rowH = 16; }
+        if (rowH < 14) { rowH = 14; }
 
-        var rowW = (sw * 68) / 100; if (rowW < 130) { rowW = 130; }
+        var rowW = (sw * 61) / 100; if (rowW < 117) { rowW = 117; }
         var rowX = (sw - rowW) / 2;
 
         var totalH = rowH * rows + gap * (rows - 1);
@@ -61,13 +61,13 @@ class UIManager {
 
         // Title — two-line stack + Bitochi subtitle.
         dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, sh *  4 / 100, Graphics.FONT_MEDIUM,
+        dc.drawText(cx, sh *  9 / 100, Graphics.FONT_MEDIUM,
                     "LIGHTS", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFEE66, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, sh * 16 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, sh * 19 / 100, Graphics.FONT_SMALL,
                     "OUT", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFE699, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, sh * 28 / 100, Graphics.FONT_XTINY,
+        dc.drawText(cx, sh * 30 / 100, Graphics.FONT_XTINY,
                     "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
 
         var rg   = rowGeom(sw, sh);

@@ -82,26 +82,26 @@ class UIManager {
 
         // Title + Bitochi attribution
         dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, h * 8 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, h * 12 / 100, Graphics.FONT_SMALL,
                     "HANGMAN", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x778899, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, h * 20 / 100, Graphics.FONT_XTINY,
+        dc.drawText(cx, h * 23 / 100, Graphics.FONT_XTINY,
                     "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
 
         // Four rows centred between title and footer. Rows are ~18%
         // shorter than the original 3-row layout so the extra
         // LEADERBOARD row fits without overlapping on small round
         // watches, and the gap shrinks too when vertical space is tight.
-        var rowH = (h * 11) / 100; if (rowH < 20) { rowH = 20; } if (rowH > 30) { rowH = 30; }
-        var rowW = (w * 78) / 100; if (rowW < 140) { rowW = 140; }
+        var rowH = (h * 10) / 100; if (rowH < 18) { rowH = 18; } if (rowH > 27) { rowH = 27; }
+        var rowW = (w * 70) / 100; if (rowW < 126) { rowW = 126; }
         var rowX = (w - rowW) / 2;
-        var gap  = (h * 15) / 1000; if (gap < 3) { gap = 3; }
+        var gap  = (h * 13) / 1000; if (gap < 3) { gap = 3; }
         var nRows = MENU_ITEMS;
         var total = nRows * rowH + (nRows - 1) * gap;
         // Keep the stack inside the round-safe band: clamp the top so the
         // last row never spills past the footer hint.
         var rowY0 = (h - total) / 2 + (h * 3) / 100;
-        var topMin = h * 26 / 100;
+        var topMin = h * 28 / 100;
         if (rowY0 < topMin) { rowY0 = topMin; }
 
         var labels = [

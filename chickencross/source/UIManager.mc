@@ -11,13 +11,23 @@ using Toybox.Graphics;
 
 class UIManager {
 
+    // Space-aware geometry for the menu rows.  Rows live below the
+    // "by Bitochi" subtitle and shrink to fit between there and the
+    // bottom hint so all CC_MENU_ROWS fit without overlap on small
+    // round watches.  Returns [rowH, rowW, rowX, rowY0, gap].
     static function rowGeom(sw, sh) {
-        var rowH = (sh * 11) / 100; if (rowH < 22) { rowH = 22; } if (rowH > 30) { rowH = 30; }
-        var rowW = (sw * 78) / 100; if (rowW < 140) { rowW = 140; }
+        var topZone      = (sh * 36) / 100;            // rows start under the subtitle
+        var bottomMargin = (sh * 11) / 100; if (bottomMargin < 16) { bottomMargin = 16; }
+        var gap          = (sh * 2)  / 100; if (gap < 3) { gap = 3; }
+        var avail        = (sh - bottomMargin) - topZone;
+        var rowH         = (avail - gap * (CC_MENU_ROWS - 1)) / CC_MENU_ROWS;
+        if (rowH > 25) { rowH = 25; }
+        if (rowH < 14) { rowH = 14; }
+        var rowW = (sw * 70) / 100; if (rowW < 118) { rowW = 118; }
         var rowX = (sw - rowW) / 2;
-        var gap  = (sh * 2)  / 100; if (gap  < 4)  { gap  = 4;  }
-        var total = CC_MENU_ROWS * rowH + (CC_MENU_ROWS - 1) * gap;
-        var rowY0 = (sh - total) / 2 + (sh * 6) / 100;
+        var used  = CC_MENU_ROWS * rowH + (CC_MENU_ROWS - 1) * gap;
+        var rowY0 = topZone + (avail - used) / 2;
+        if (rowY0 < topZone) { rowY0 = topZone; }
         return [rowH, rowW, rowX, rowY0, gap];
     }
 
@@ -32,13 +42,13 @@ class UIManager {
         // Title + Bitochi attribution under it (subtitle position,
         // not the footer, so it stays visible inside the round face).
         dc.setColor(0xFFEE66, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, sh *  4 / 100, Graphics.FONT_MEDIUM,
+        dc.drawText(cx, sh *  9 / 100, Graphics.FONT_MEDIUM,
                     "CHICKEN", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFF7733, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, sh * 16 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, sh * 19 / 100, Graphics.FONT_SMALL,
                     "CROSS", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFDDAA, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, sh * 28 / 100, Graphics.FONT_XTINY,
+        dc.drawText(cx, sh * 30 / 100, Graphics.FONT_XTINY,
                     "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
 
         var rg   = rowGeom(sw, sh);
@@ -50,9 +60,16 @@ class UIManager {
             "START"
         ];
         for (var i = 0; i < CC_MENU_ROWS; i++) {
-            var ry      = rowY0 + i * (rowH + gap);
-            var sel     = (i == ctrl.menuRow);
-            var isStart = (i == CC_MENU_ROWS - 1);
+            var ry  = rowY0 + i * (rowH + gap);
+            var sel = (i == ctrl.menuRow);
+
+            if (i == CC_ROW_LB) {
+                // Gold leaderboard row from the shared library.
+                LbBadge.drawRow(dc, rowX, ry, rowW, rowH, sel);
+                continue;
+            }
+
+            var isStart = (i == CC_ROW_START);
             dc.setColor(sel ? (isStart ? 0x223300 : 0x101830) : 0x0A1020, Graphics.COLOR_TRANSPARENT);
             dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);
             dc.setColor(sel ? (isStart ? 0xFFEE66 : 0xFF9933) : 0x223344, Graphics.COLOR_TRANSPARENT);

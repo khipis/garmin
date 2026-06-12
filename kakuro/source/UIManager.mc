@@ -28,11 +28,11 @@ class UIManager {
 
     // ── Menu ────────────────────────────────────────────────────
     static function rowGeom(sw, sh) {
-        var rowH = (sh * 11) / 100; if (rowH < 18) { rowH = 18; }
+        var rowH = (sh * 10) / 100; if (rowH < 16) { rowH = 16; }
         var gap  = (sh *  2) / 100; if (gap  <  3) { gap  =  3; }
-        var rowW = (sw * 68) / 100; if (rowW < 130) { rowW = 130; }
+        var rowW = (sw * 61) / 100; if (rowW < 117) { rowW = 117; }
         var rowX = (sw - rowW) / 2;
-        var rowY0 = (sh * 34) / 100;
+        var rowY0 = (sh * 36) / 100;
         return [rowH, rowW, rowX, rowY0, gap];
     }
 
@@ -46,13 +46,13 @@ class UIManager {
 
         // Title — two-line stack + Bitochi subtitle.
         dc.setColor(0xFFCC55, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, sh *  4 / 100, Graphics.FONT_MEDIUM,
+        dc.drawText(cx, sh *  9 / 100, Graphics.FONT_MEDIUM,
                     "KAKURO", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x88DDFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, sh * 18 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, sh * 21 / 100, Graphics.FONT_SMALL,
                     "SUMS", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFE699, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, sh * 30 / 100, Graphics.FONT_XTINY,
+        dc.drawText(cx, sh * 32 / 100, Graphics.FONT_XTINY,
                     "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
 
         var rg   = rowGeom(sw, sh);

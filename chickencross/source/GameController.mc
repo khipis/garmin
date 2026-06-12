@@ -34,10 +34,18 @@ const CS_PLAY = 1;
 const CS_WIN  = 2;
 const CS_OVER = 3;
 
-const CC_MENU_ROWS = 3;
+const CC_MENU_ROWS = 4;
+const CC_ROW_DIFF  = 0;
+const CC_ROW_LIVES = 1;
+const CC_ROW_START = 2;
+const CC_ROW_LB    = 3;   // shared global leaderboard
+
 const CC_BEST_KEY  = "cc_best";
 const CC_DIFF_KEY  = "cc_diff";
 const CC_LIVES_KEY = "cc_lives";
+
+// Shared global-leaderboard game id (matches _LOGOS / web id).
+const LB_GAME_ID = "chickencross";
 
 const CC_DIFF_EASY   = 0;
 const CC_DIFF_NORMAL = 1;
@@ -59,6 +67,7 @@ class GameController {
 
     // Hidden tick counter used to scale obstacle motion smoothly.
     hidden var _highestRow;   // chicken's best row this *life*
+    hidden var _submitted;    // guards against a double leaderboard submit
 
     function initialize() {
         state = CS_MENU;
@@ -71,6 +80,7 @@ class GameController {
         player    = new PlayerChicken();
         level = 1; lives = 3; score = 0; bestScore = 0;
         _highestRow = 0;
+        _submitted  = false;
         _loadAll();
     }
 
@@ -78,7 +88,7 @@ class GameController {
     hidden function _loadAll() {
         try {
             var b = Application.Storage.getValue(CC_BEST_KEY);
-            if (b != null) { bestScore = b; }
+            if (b instanceof Number && b >= 0) { bestScore = b; }
         } catch (e) {}
         try {
             var d = Application.Storage.getValue(CC_DIFF_KEY);
@@ -102,15 +112,16 @@ class GameController {
     function menuPrev() { menuRow = (menuRow + CC_MENU_ROWS - 1) % CC_MENU_ROWS; }
     function setMenuRow(i) { if (i >= 0 && i < CC_MENU_ROWS) { menuRow = i; } }
     function menuActivate() {
-        if (menuRow == 0) {
+        if (menuRow == CC_ROW_DIFF) {
             menuDiff = (menuDiff + 1) % 3;
             _saveSettings();
-        } else if (menuRow == 1) {
+        } else if (menuRow == CC_ROW_LIVES) {
             menuLives = (menuLives % 5) + 1;
             _saveSettings();
-        } else {
+        } else if (menuRow == CC_ROW_START) {
             _startGame();
         }
+        // CC_ROW_LB is opened by the view (it pushes the leaderboard view).
     }
 
     function gotoMenu() { state = CS_MENU; }
@@ -138,8 +149,18 @@ class GameController {
         level = 1;
         lives = menuLives;
         score = 0;
+        _submitted = false;
         _spawnRound();
         state = CS_PLAY;
+    }
+
+    // Submit the final score to the shared global leaderboard exactly once
+    // per run (a game ends in either CS_OVER or CS_WIN, never both).
+    hidden function _submitToLeaderboard() {
+        if (_submitted) { return; }
+        _submitted = true;
+        Leaderboard.submitScore(LB_GAME_ID, score, "");
+        Leaderboard.showPostGame(LB_GAME_ID, "", "CHICKEN CROSS");
     }
 
     hidden function _spawnRound() {
@@ -199,6 +220,7 @@ class GameController {
         if (lives <= 0) {
             state = CS_OVER;
             if (score > bestScore) { bestScore = score; _saveBest(); }
+            _submitToLeaderboard();
             return;
         }
         _spawnRound();
@@ -210,6 +232,7 @@ class GameController {
         if (level >= 9) {
             state = CS_WIN;
             if (score > bestScore) { bestScore = score; _saveBest(); }
+            _submitToLeaderboard();
             return;
         }
         level = level + 1;

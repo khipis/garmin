@@ -2107,14 +2107,14 @@ class BitochiCatapultView extends WatchUi.View {
     // bottom margin so they never overlap on small round watches. Kept ~18%
     // more compact than a standard menu row (height / width / gaps).
     function readyRowGeom() {
-        var topZone      = (_h * 62) / 100;
-        var bottomMargin = (_h * 6) / 100; if (bottomMargin < 10) { bottomMargin = 10; }
+        var topZone      = (_h * 61) / 100;
+        var bottomMargin = (_h * 6) / 100; if (bottomMargin < 9) { bottomMargin = 9; }
         var gap          = (_h * 2) / 100; if (gap < 3) { gap = 3; }
         var avail        = (_h - bottomMargin) - topZone;
         var rowH         = (avail - gap) / 2;
-        if (rowH > 21) { rowH = 21; }
-        if (rowH < 14) { rowH = 14; }
-        var rowW = (_w * 58) / 100; if (rowW < 104) { rowW = 104; }
+        if (rowH > 19) { rowH = 19; }
+        if (rowH < 13) { rowH = 13; }
+        var rowW = (_w * 52) / 100; if (rowW < 94) { rowW = 94; }
         if (rowW > _w - 8) { rowW = _w - 8; }
         var rowX = (_w - rowW) / 2;
         var used = 2 * rowH + gap;
@@ -2128,11 +2128,11 @@ class BitochiCatapultView extends WatchUi.View {
         dc.clear();
 
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 4 / 100, Graphics.FONT_MEDIUM, "ROUND " + _round, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 9 / 100, Graphics.FONT_MEDIUM, "ROUND " + _round, Graphics.TEXT_JUSTIFY_CENTER);
 
-        var r = w * 11 / 100;
+        var r = w * 10 / 100;
         if (r < 10) { r = 10; }
-        var cy = h * 28 / 100;
+        var cy = h * 30 / 100;
 
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(w / 2 + 2, cy + r + 2, r * 80 / 100);
@@ -2155,12 +2155,12 @@ class BitochiCatapultView extends WatchUi.View {
         dc.fillCircle(w / 2 + eo + 1, headY - eo / 3, eo / 3 + 1);
 
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 44 / 100, Graphics.FONT_SMALL, "vs " + _enemyName, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 45 / 100, Graphics.FONT_SMALL, "vs " + _enemyName, Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFF6666, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w / 2, h * 52 / 100, Graphics.FONT_XTINY, "HP:" + _enemyMaxHp + " Dist:" + _castleWX.toNumber(), Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xAACCFF, Graphics.COLOR_TRANSPARENT);
         var wl = "Wind:" + ((_windDisplay >= 0) ? "+" : "") + _windDisplay;
-        dc.drawText(w / 2, h * 58 / 100, Graphics.FONT_XTINY, wl, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 57 / 100, Graphics.FONT_XTINY, wl, Graphics.TEXT_JUSTIFY_CENTER);
 
         // Two-row menu: SCOUT (start) + LEADERBOARD (shared badge).
         var rg   = readyRowGeom();

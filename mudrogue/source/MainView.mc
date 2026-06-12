@@ -57,9 +57,9 @@ class MainView extends WatchUi.View {
         var cx = _sw / 2;
         // Title
         dc.setColor(0x44FF66, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _sh * 16 / 100, Graphics.FONT_MEDIUM,
+        dc.drawText(cx, _sh * 19 / 100, Graphics.FONT_MEDIUM,
                     "MUD", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(cx, _sh * 30 / 100, Graphics.FONT_MEDIUM,
+        dc.drawText(cx, _sh * 32 / 100, Graphics.FONT_MEDIUM,
                     "ROGUE", Graphics.TEXT_JUSTIFY_CENTER);
 
         // Decorative @ glyph
@@ -70,16 +70,16 @@ class MainView extends WatchUi.View {
         // Best floor
         if (_ctrl.bestFloor > 0) {
             dc.setColor(0xCCCCDD, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, _sh * 62 / 100, Graphics.FONT_XTINY,
+            dc.drawText(cx, _sh * 61 / 100, Graphics.FONT_XTINY,
                         "BEST FLOOR " + _ctrl.bestFloor.format("%d"),
                         Graphics.TEXT_JUSTIFY_CENTER);
         }
 
         // Start button
-        var bw = _sw * 60 / 100; if (bw < 130) { bw = 130; }
-        var bh = _sh * 12 / 100; if (bh < 26)  { bh = 26;  }
+        var bw = _sw * 54 / 100; if (bw < 117) { bw = 117; }
+        var bh = _sh * 11 / 100; if (bh < 23)  { bh = 23;  }
         var bx = (_sw - bw) / 2;
-        var by = _sh * 76 / 100;
+        var by = _sh * 73 / 100;
         dc.setColor(0x111418, Graphics.COLOR_TRANSPARENT);
         dc.fillRoundedRectangle(bx, by, bw, bh, 6);
         dc.setColor(0x44FF66, Graphics.COLOR_TRANSPARENT);

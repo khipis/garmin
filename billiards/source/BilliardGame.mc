@@ -168,11 +168,11 @@ class BilliardGame {
         pY = [TT, TT,  TT, TB, TB,  TB];
 
         var sd = Application.Storage.getValue("billDiff");
-        if (sd != null) { diff = sd; }
+        if (sd instanceof Lang.Number && sd >= 0 && sd <= DIFF_HARD) { diff = sd; }
         var sgt = Application.Storage.getValue("billGT");
-        if (sgt != null && sgt >= 0 && sgt < GT_COUNT) { gameType = sgt; }
+        if (sgt instanceof Lang.Number && sgt >= 0 && sgt < GT_COUNT) { gameType = sgt; }
         var spvp = Application.Storage.getValue("billPvP");
-        if (spvp != null) { pvpMode = spvp; }
+        if (spvp instanceof Lang.Boolean) { pvpMode = spvp; }
 
         _applyGameType();
         _setupVP(260, 260);

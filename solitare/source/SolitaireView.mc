@@ -83,13 +83,23 @@ class SolitaireView extends WatchUi.View {
         _winTick = 0;
         _winParts = null;
         _startMs = 0; _elapsedSecs = 0;
-        _timer = new Timer.Timer();
-        _timer.start(method(:onTick), 150, true);
+        _timer = null;
     }
 
     function onLayout(dc) {
         _w = dc.getWidth(); _h = dc.getHeight();
         _layOut();
+    }
+
+    function onShow() {
+        if (_timer == null) {
+            _timer = new Timer.Timer();
+            _timer.start(method(:onTick), 150, true);
+        }
+    }
+
+    function onHide() {
+        if (_timer != null) { _timer.stop(); _timer = null; }
     }
 
     hidden function _layOut() {
@@ -712,11 +722,11 @@ class SolitaireView extends WatchUi.View {
     // Sized ~18% more compact (and space-aware) so all three rows — the two
     // draw modes plus the LEADERBOARD badge — never overlap on round watches.
     hidden function _menuGeo() {
-        var rowH = _h * 11 / 100; if (rowH < 18) { rowH = 18; } if (rowH > 28) { rowH = 28; }
-        var rowW = _w * 70 / 100; if (rowW < 110) { rowW = 110; }
+        var rowH = _h * 10 / 100; if (rowH < 16) { rowH = 16; } if (rowH > 25) { rowH = 25; }
+        var rowW = _w * 63 / 100; if (rowW < 99) { rowW = 99; }
         var rowX = (_w - rowW) / 2;
         var gap  = _h * 2 / 100;  if (gap < 3) { gap = 3; }
-        var rowY0 = _h * 44 / 100;
+        var rowY0 = _h * 45 / 100;
         return [rowX, rowY0, rowW, rowH, gap];
     }
 
@@ -730,16 +740,16 @@ class SolitaireView extends WatchUi.View {
 
         // Title
         dc.setColor(0x33CC66, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _h * 9 / 100, Graphics.FONT_MEDIUM,
+        dc.drawText(cx, _h * 13 / 100, Graphics.FONT_MEDIUM,
             "SOLITAIRE", Graphics.TEXT_JUSTIFY_CENTER);
 
         // by Bitochi
         dc.setColor(0x668877, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, _h * 25 / 100, Graphics.FONT_XTINY,
+        dc.drawText(cx, _h * 28 / 100, Graphics.FONT_XTINY,
             "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
 
         // Suit preview
-        var sy = _h * 34 / 100;
+        var sy = _h * 36 / 100;
         var ss = _w * 3 / 100; if (ss < 5) { ss = 5; }
         var sp = ss * 3;
         dc.setColor(0x2A5540, Graphics.COLOR_TRANSPARENT);

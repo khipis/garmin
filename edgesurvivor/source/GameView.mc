@@ -249,9 +249,9 @@ class GameView extends WatchUi.View {
         var gap          = (_sh * 2) / 100;  if (gap < 3) { gap = 3; }
         var avail        = (_sh - bottomMargin) - topZone;
         var rowH         = (avail - gap * (ES_MENU_ROWS - 1)) / ES_MENU_ROWS;
-        if (rowH > 21) { rowH = 21; }   // ~18% smaller than the 26 px reference
-        if (rowH < 14) { rowH = 14; }
-        var rowW = (_sw * 54) / 100; if (rowW < 98) { rowW = 98; }
+        if (rowH > 19) { rowH = 19; }   // ~18% smaller, then ~10% more compact
+        if (rowH < 13) { rowH = 13; }
+        var rowW = (_sw * 49) / 100; if (rowW < 88) { rowW = 88; }
         var rowX = (_sw - rowW) / 2;
         var used  = ES_MENU_ROWS * rowH + (ES_MENU_ROWS - 1) * gap;
         var rowY0 = topZone + (avail - used) / 2;
@@ -602,14 +602,14 @@ class GameView extends WatchUi.View {
     // ── title screen ──────────────────────────────────────────────────────
     hidden function _drawTitle(dc) {
         dc.setColor(0x2255CC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _sh * 13 / 100, Graphics.FONT_MEDIUM,
+        dc.drawText(_cx, _sh * 17 / 100, Graphics.FONT_MEDIUM,
             "EDGE", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xCC2222, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _sh * 26 / 100, Graphics.FONT_MEDIUM,
+        dc.drawText(_cx, _sh * 28 / 100, Graphics.FONT_MEDIUM,
             "SURVIVOR", Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0x2a2a44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _sh * 41 / 100, Graphics.FONT_XTINY,
+        dc.drawText(_cx, _sh * 42 / 100, Graphics.FONT_XTINY,
             "stay on the edge", Graphics.TEXT_JUSTIFY_CENTER);
 
         // Two chess-style rows: START + LEADERBOARD (space-aware geometry).
@@ -646,11 +646,11 @@ class GameView extends WatchUi.View {
         }
 
         dc.setColor(0x1a1a33, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _sh * 88 / 100, Graphics.FONT_XTINY,
+        dc.drawText(_cx, _sh * 84 / 100, Graphics.FONT_XTINY,
             "UP/DN  SEL", Graphics.TEXT_JUSTIFY_CENTER);
         if (_hiScore > 0) {
             dc.setColor(0x2a2a44, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_cx, _sh * 94 / 100, Graphics.FONT_XTINY,
+            dc.drawText(_cx, _sh * 90 / 100, Graphics.FONT_XTINY,
                 "best " + _hiScore.format("%05d"), Graphics.TEXT_JUSTIFY_CENTER);
         }
     }

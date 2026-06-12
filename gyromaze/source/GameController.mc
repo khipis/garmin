@@ -226,9 +226,13 @@ class GameController {
         if (state != GM_PLAY) { return; }
         elapsed = elapsed + 1;
 
-        // Combine gyro + button fallback.
+        // Combine gyro + button fallback.  The button impulse is a
+        // single-tick nudge (there's no key-release event to clear it),
+        // so we zero it after applying to avoid a stuck, runaway tilt.
         var accel = gyro.read();
         physics.applyAccel(accel[0] + btnAx * 80, accel[1] + btnAy * 80);
+        btnAx = 0;
+        btnAy = 0;
 
         physics.step(walls, n);
 

@@ -648,11 +648,11 @@ class BitochiBricksView extends WatchUi.View {
         dc.setColor(0x060C18, 0x060C18); dc.clear();
         var tc = (_tick % 14 < 7) ? 0x44AAFF : 0x2277CC;
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2 + 1, _h * 4 / 100 + 1, Graphics.FONT_SMALL, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2 + 1, _h * 9 / 100 + 1, Graphics.FONT_SMALL, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(tc, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 4 / 100, Graphics.FONT_SMALL, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 9 / 100, Graphics.FONT_SMALL, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 13 / 100, Graphics.FONT_MEDIUM, "BRICKS", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 17 / 100, Graphics.FONT_MEDIUM, "BRICKS", Graphics.TEXT_JUSTIFY_CENTER);
 
         // Decorative brick rows (trimmed to 2 to free room for the menu rows).
         var cols6 = [0x22DDFF, 0x44FF88, 0xFFFF44, 0xFF9944, 0xFF44AA, 0xBB44FF];
@@ -660,21 +660,21 @@ class BitochiBricksView extends WatchUi.View {
             for (var col3 = 0; col3 < COLS; col3++) {
                 var ci = (_tick / 5 + row * 3 + col3) % 6;
                 dc.setColor(cols6[ci], Graphics.COLOR_TRANSPARENT);
-                dc.fillRectangle(_bOffX + col3 * _bW + 1, _h * 27 / 100 + row * _bH, _bW - 2, _bH - 2);
+                dc.fillRectangle(_bOffX + col3 * _bW + 1, _h * 29 / 100 + row * _bH, _bW - 2, _bH - 2);
                 var hlH = _bH > 10 ? 2 : 1;
                 dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-                dc.fillRectangle(_bOffX + col3 * _bW + 2, _h * 27 / 100 + row * _bH + 1, _bW - 6, hlH);
+                dc.fillRectangle(_bOffX + col3 * _bW + 2, _h * 29 / 100 + row * _bH + 1, _bW - 6, hlH);
             }
         }
         if (_bestScore > 0) {
             dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 41 / 100, Graphics.FONT_XTINY, "BEST: " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_w / 2, _h * 42 / 100, Graphics.FONT_XTINY, "BEST: " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER);
         }
 
-        // Space-aware menu rows: PLAY + LEADERBOARD, centred and ~18% smaller
-        // than a full-width control so nothing clips on round watches.
-        var rowW = _w * 62 / 100;
-        var rowH = _h * 11 / 100; if (rowH < 20) { rowH = 20; }
+        // Space-aware menu rows: PLAY + LEADERBOARD, centred and ~10% more
+        // compact so nothing clips on round watches.
+        var rowW = _w * 56 / 100;
+        var rowH = _h * 10 / 100; if (rowH < 18) { rowH = 18; }
         var gap  = _h * 3 / 100;  if (gap  < 4)  { gap  = 4;  }
         var rowX = (_w - rowW) / 2;
         var playY = _h * 50 / 100;
@@ -697,7 +697,7 @@ class BitochiBricksView extends WatchUi.View {
         LbBadge.drawRow(dc, rowX, lbY, rowW, rowH, _menuSel == 1);
 
         dc.setColor(0x1E2D40, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 92 / 100, Graphics.FONT_XTINY, "M+ball W+wide S+slow +life L=laser", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 88 / 100, Graphics.FONT_XTINY, "M+ball W+wide S+slow +life L=laser", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawWin(dc) {

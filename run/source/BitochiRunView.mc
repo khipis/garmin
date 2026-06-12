@@ -1102,13 +1102,13 @@ class BitochiRunView extends WatchUi.View {
     function menuRowGeom() {
         var rowCount     = 2;
         var topZone      = (_h * 53) / 100;          // rows live below the HI line
-        var bottomMargin = (_h * 13) / 100; if (bottomMargin < 16) { bottomMargin = 16; }
-        var gap          = (_h * 3) / 100;  if (gap < 5) { gap = 5; }
+        var bottomMargin = (_h * 17) / 100; if (bottomMargin < 14) { bottomMargin = 14; }
+        var gap          = (_h * 3) / 100;  if (gap < 4) { gap = 4; }
         var avail        = (_h - bottomMargin) - topZone;
         var rowH         = (avail - gap * (rowCount - 1)) / rowCount;
-        if (rowH > 30) { rowH = 30; }
-        if (rowH < 16) { rowH = 16; }
-        var rowW = (_w * 56) / 100; if (rowW < 96) { rowW = 96; }
+        if (rowH > 27) { rowH = 27; }
+        if (rowH < 14) { rowH = 14; }
+        var rowW = (_w * 50) / 100; if (rowW < 86) { rowW = 86; }
         var rowX = (_w - rowW) / 2;
         var used = rowCount * rowH + (rowCount - 1) * gap;
         var rowY0 = topZone + (avail - used) / 2;
@@ -1130,18 +1130,18 @@ class BitochiRunView extends WatchUi.View {
 
         var pulse = (_tick % 40 < 20) ? 0xFF0000 : 0xAA0000;
         dc.setColor(0x550000, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2 + 1, h * 8 / 100 + 1, Graphics.FONT_SMALL, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2 + 1, h * 12 / 100 + 1, Graphics.FONT_SMALL, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(pulse, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 8 / 100, Graphics.FONT_SMALL, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 12 / 100, Graphics.FONT_SMALL, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x880000, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2 + 1, h * 18 / 100 + 1, Graphics.FONT_SMALL, "RUN", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2 + 1, h * 21 / 100 + 1, Graphics.FONT_SMALL, "RUN", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 18 / 100, Graphics.FONT_SMALL, "RUN", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 21 / 100, Graphics.FONT_SMALL, "RUN", Graphics.TEXT_JUSTIFY_CENTER);
 
-        drawMonsterEyes(dc, w / 2, h * 31 / 100, 0xFF0000, true);
+        drawMonsterEyes(dc, w / 2, h * 33 / 100, 0xFF0000, true);
 
         dc.setColor(0x886655, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 39 / 100, Graphics.FONT_XTINY, "They hunger.", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 40 / 100, Graphics.FONT_XTINY, "They hunger.", Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0x888888, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w / 2, h * 47 / 100, Graphics.FONT_XTINY, "HI " + _highScore, Graphics.TEXT_JUSTIFY_CENTER);

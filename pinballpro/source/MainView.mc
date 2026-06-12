@@ -342,22 +342,22 @@ class MainView extends WatchUi.View {
 
         // Title + Bitochi attribution
         dc.setColor(0xFF3344, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, H * 8 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, H * 12 / 100, Graphics.FONT_SMALL,
                     "PINBALL", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x44CCFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, H * 19 / 100, Graphics.FONT_SMALL,
+        dc.drawText(cx, H * 22 / 100, Graphics.FONT_SMALL,
                     "PRO", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x778899, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, H * 30 / 100, Graphics.FONT_XTINY,
+        dc.drawText(cx, H * 32 / 100, Graphics.FONT_XTINY,
                     "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
 
         // Mini demo bumpers
         dc.setColor(0xFF3344, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(cx - 28, H * 41 / 100, 6);
+        dc.fillCircle(cx - 28, H * 42 / 100, 6);
         dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(cx,      H * 41 / 100, 6);
+        dc.fillCircle(cx,      H * 42 / 100, 6);
         dc.setColor(0x44FF66, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(cx + 28, H * 41 / 100, 6);
+        dc.fillCircle(cx + 28, H * 42 / 100, 6);
 
         // Chess-style rows — now THREE: Table + START + LEADERBOARD.
         // Whole menu is ~18% more compact than the two-row layout and
@@ -407,7 +407,7 @@ class MainView extends WatchUi.View {
         // Best score
         if (_ctrl.hi > 0) {
             dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, H * 91 / 100, Graphics.FONT_XTINY,
+            dc.drawText(cx, H * 87 / 100, Graphics.FONT_XTINY,
                         "BEST " + _formatScore(_ctrl.hi),
                         Graphics.TEXT_JUSTIFY_CENTER);
         }
@@ -422,13 +422,13 @@ class MainView extends WatchUi.View {
         var W = _ctrl.screenW;
         var H = _ctrl.screenH;
         var topZone      = (H * 47) / 100;          // rows start below bumpers
-        var bottomMargin = (H * 16) / 100; if (bottomMargin < 16) { bottomMargin = 16; }
+        var bottomMargin = (H * 14) / 100; if (bottomMargin < 14) { bottomMargin = 14; }
         var gap          = (H * 2) / 100;  if (gap < 3) { gap = 3; }
         var avail        = (H - bottomMargin) - topZone;
         var rowH         = (avail - gap * (MI_ITEMS - 1)) / MI_ITEMS;
-        if (rowH > 28) { rowH = 28; }               // ~18% under the old 34 cap
-        if (rowH < 14) { rowH = 14; }
-        var rowW = (W * 64) / 100; if (rowW < 115) { rowW = 115; }
+        if (rowH > 25) { rowH = 25; }               // ~10% more compact
+        if (rowH < 13) { rowH = 13; }
+        var rowW = (W * 58) / 100; if (rowW < 104) { rowW = 104; }
         var rowX = (W - rowW) / 2;
         var used = MI_ITEMS * rowH + (MI_ITEMS - 1) * gap;
         var rowY0 = topZone + (avail - used) / 2;
