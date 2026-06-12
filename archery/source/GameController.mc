@@ -448,6 +448,8 @@ class GameController {
             if (score > bestScore) { bestScore = score; }
             if (roundIdx + 1 > bestRound) { bestRound = roundIdx + 1; }
             savePrefs();
+            Leaderboard.submitScore(LB_GAME_ID, score, diffName());
+            Leaderboard.showPostGame(LB_GAME_ID, diffName(), "ARCHERY");
             state = AR_WIN;
             return;
         }
@@ -461,6 +463,8 @@ class GameController {
     hidden function _gameOver() {
         if (score > bestScore) { bestScore = score; }
         savePrefs();
+        Leaderboard.submitScore(LB_GAME_ID, score, diffName());
+        Leaderboard.showPostGame(LB_GAME_ID, diffName(), "ARCHERY");
         state = AR_OVER;
     }
 

@@ -447,6 +447,7 @@ class BitochiChessView extends WatchUi.View {
             var newStreak = _loadStreak() + 1;
             _saveStreak(newStreak);
             Leaderboard.submitScore(LB_GAME_ID, newStreak, _variantStr());
+            Leaderboard.showPostGame(LB_GAME_ID, _variantStr(), "CHESS");
         } else {
             _saveStreak(0);
         }

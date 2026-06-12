@@ -152,5 +152,6 @@ class GameController {
         state = GS_OVER;
         // Submit to the shared global leaderboard (fire-and-forget).
         Leaderboard.submitScore("flappypidgeon", score, "");
+        Leaderboard.showPostGame("flappypidgeon", "", "FLAPPY");
     }
 }

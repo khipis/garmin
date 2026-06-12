@@ -71,7 +71,11 @@ class MainView extends WatchUi.View {
         ctrl.setCursor(i / n, i % n);
     }
     function navSelect() {
-        if (ctrl.state == NS_MENU) { ctrl.menuActivate(); return; }
+        if (ctrl.state == NS_MENU) {
+            if (ctrl.menuRow == NG_LB_ROW) { openLeaderboard(); }
+            else                           { ctrl.menuActivate(); }
+            return;
+        }
         if (ctrl.state == NS_WIN) {
             if (ctrl.mode == NG_MODE_LEVELS) { ctrl.nextLevel(); }
             else                              { ctrl.gotoMenu();  }
@@ -111,14 +115,22 @@ class MainView extends WatchUi.View {
         ctrl.moveCursor(dr, dc);
     }
 
+    function openLeaderboard() {
+        var v = new LbScoresView(LB_GAME_ID, ctrl.lbVariant(), "NONOGRAM");
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
+    }
+
     hidden function _menuTap(x, y) {
         var rg = UIManager.rowGeom(_sw, _sh);
         var rowH = rg[0]; var rowW = rg[1];
         var rowX = rg[2]; var rowY0 = rg[3]; var gap = rg[4];
-        for (var i = 0; i < NG_MENU_ROWS; i++) {
+        for (var i = 0; i < NG_MENU_TOTAL; i++) {
             var ry = rowY0 + i * (rowH + gap);
             if (x >= rowX && x < rowX + rowW && y >= ry && y < ry + rowH) {
-                ctrl.setMenuRow(i); ctrl.menuActivate(); return;
+                ctrl.setMenuRow(i);
+                if (i == NG_LB_ROW) { openLeaderboard(); }
+                else                { ctrl.menuActivate(); }
+                return;
             }
         }
     }

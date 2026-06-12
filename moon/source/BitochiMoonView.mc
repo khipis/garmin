@@ -313,6 +313,7 @@ class BitochiMoonView extends WatchUi.View {
                     // End of game → submit cumulative session score (DESC, no variant)
                     if (_lives <= 0) {
                         Leaderboard.submitScore(LB_GAME_ID, _score, null);
+                        Leaderboard.showPostGame(LB_GAME_ID, null, "MOON LANDER");
                     }
                     doVibe(2);
                 }

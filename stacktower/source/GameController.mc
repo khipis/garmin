@@ -225,8 +225,10 @@ class GameController {
             lastShake = 8;
             if (score > hi) { hi = score; _saveHi(); }
             state = GS_OVER;
-            // Submit to the global leaderboard, split by difficulty variant.
+            // Submit to the global leaderboard, split by difficulty variant,
+            // then pop the post-game rank/comparison.
             Leaderboard.submitScore(LB_GAME_ID, score, diffName());
+            Leaderboard.showPostGame(LB_GAME_ID, diffName(), "STACK TOWER");
             return;
         }
 

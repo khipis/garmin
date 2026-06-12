@@ -1,285 +1,438 @@
-[ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc"; @line = 14; @position = 6; @symbol_constdef = [PI_BOARD_COLS,14,6,19]; ]
-const PI_BOARD_COLS = 9;
-[ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc"; @line = 15; @position = 6; @symbol_constdef = [PI_BOARD_ROWS,15,6,19]; ]
-const PI_BOARD_ROWS = 12;
-[ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc"; @line = 16; @position = 6; @symbol_constdef = [PI_PLAYER_ROW,16,6,19]; ]
-const PI_PLAYER_ROW;
-[ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc"; @line = 18; @symbol_classdef = [Player,18,6,12]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc"; @line = 5; @symbol_classdef = [Player,5,6,12]; ]
 class Player {
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc"; @line = 18; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc"; @line = 5; ]
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc"; @line = 18; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc"; @line = 5; ]
     static
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc"; @line = 19; @position = 8; @symbol_vardef = [col,19,8,11]; ]
-    var col;
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc"; @line = 20; @position = 8; @symbol_vardef = [colFloat,20,8,16]; ]
-    var colFloat;
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc"; @line = 21; @position = 8; @symbol_vardef = [alive,21,8,13]; ]
-    var alive;
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc"; @line = 22; @position = 8; @symbol_vardef = [blinkTicks,22,8,18]; ]
-    var blinkTicks;
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc"; @line = 24; @symbol_functiondef = [initialize,24,13,23]; ]
-    function initialize() as Void {
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_24_26_29_4_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc" 25 8 ]
-        symbol [ PI_BOARD_COLS %tmp.2 25 20 33 ];
-        %tmp.2 = getv ? :PI_BOARD_COLS;
-        %tmp.3 = 2;
-        %tmp.4 = div %tmp.2 %tmp.3;
-        symbol [ col ? 25 8 11 ];
-        putv self :col %tmp.4;
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc" 26 8 ]
-        symbol [ col %tmp.6 26 20 23 ];
-        %tmp.6 = getv ? :col;
-        %tmp.7 = 0.0;
-        %tmp.8 = add %tmp.6 %tmp.7;
-        symbol [ colFloat ? 26 8 16 ];
-        putv self :colFloat %tmp.8;
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc" 27 8 ]
-        %tmp.9 = true;
-        symbol [ alive ? 27 8 13 ];
-        putv self :alive %tmp.9;
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc" 28 8 ]
-        %tmp.10 = 0;
-        symbol [ blinkTicks ? 28 8 18 ];
-        putv self :blinkTicks %tmp.10;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_24_26_29_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc"; @line = 31; @symbol_functiondef = [spawn,31,13,18]; ]
-    function spawn() {
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_31_21_36_4_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc" 32 8 ]
-        symbol [ PI_BOARD_COLS %tmp.2 32 20 33 ];
-        %tmp.2 = getv ? :PI_BOARD_COLS;
-        %tmp.3 = 2;
-        %tmp.4 = div %tmp.2 %tmp.3;
-        symbol [ col ? 32 8 11 ];
-        putv self :col %tmp.4;
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc" 33 8 ]
-        symbol [ col %tmp.6 33 20 23 ];
-        %tmp.6 = getv ? :col;
-        %tmp.7 = 0.0;
-        %tmp.8 = add %tmp.6 %tmp.7;
-        symbol [ colFloat ? 33 8 16 ];
-        putv self :colFloat %tmp.8;
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc" 34 8 ]
-        %tmp.9 = true;
-        symbol [ alive ? 34 8 13 ];
-        putv self :alive %tmp.9;
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc" 35 8 ]
-        %tmp.10 = 35;
-        symbol [ blinkTicks ? 35 8 18 ];
-        putv self :blinkTicks %tmp.10;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_31_21_36_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc"; @line = 42; @symbol_functiondef = [nudge,42,13,18]; @symbol_param<0> = [d,42,19,20]; ]
-    function nudge(d) {
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_42_22_49_4_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc" 43 8 ]
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_42_22_49_4_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_42_22_49_4_stop" ]
-        %nc.1 = local;
-        symbol [ nc %nc.1 43 12 14 ];
-        symbol [ col %tmp.2 43 22 25 ];
-        %tmp.2 = getv ? :col;
-        %tmp.3 = lgetv %d;
-        symbol [ d %tmp.3 43 28 29 ];
-        %tmp.4 = add %tmp.2 %tmp.3;
-        lputv %nc.1 %tmp.4;
-        symbol [ nc %nc.1 43 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc" 44 8 ]
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_42_22_49_4_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_42_22_49_4_stop" ]
-        %wrapped.2 = local;
-        symbol [ wrapped %wrapped.2 44 12 19 ];
-        %tmp.5 = false;
-        lputv %wrapped.2 %tmp.5;
-        symbol [ wrapped %wrapped.2 44 12 19 ];
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc" 45 8 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_45_8_45_78_if_stmt:
-        %tmp.6 = lgetv %nc.1;
-        symbol [ nc %tmp.6 45 12 14 ];
+    [ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc"; @line = 6; @position = 8; @symbol_vardef = [x,6,8,9]; ]
+    var x;
+    [ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc"; @line = 7; @position = 8; @symbol_vardef = [y,7,8,9]; ]
+    var y;
+    [ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc"; @line = 8; @position = 8; @symbol_vardef = [vy,8,8,10]; ]
+    var vy;
+    [ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc"; @line = 9; @position = 8; @symbol_vardef = [onGround,9,8,16]; ]
+    var onGround;
+    [ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc"; @line = 10; @position = 8; @symbol_vardef = [isDucking,10,8,17]; ]
+    var isDucking;
+    [ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc"; @line = 11; @position = 8; @symbol_vardef = [dw,11,8,10]; ]
+    var dw;
+    [ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc"; @line = 12; @position = 8; @symbol_vardef = [dh,12,8,10]; ]
+    var dh;
+    [ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc"; @line = 13; @position = 15; @symbol_vardef = [_duckTimer,13,15,25]; ]
+    protected
+    var _duckTimer;
+    [ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc"; @line = 15; @symbol_functiondef = [initialize,15,13,23]; @symbol_param<0> = [px,15,24,26]; @symbol_param<1> = [pDw,15,28,31]; @symbol_param<2> = [pDh,15,33,36]; ]
+    function initialize(px, pDw, pDh) as Void {
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_15_38_24_4_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 16 8 ]
+        %tmp.1 = lgetv %px;
+        symbol [ px %tmp.1 16 13 15 ];
+        symbol [ x ? 16 8 9 ];
+        putv self :x %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 17 8 ]
+        %tmp.2 = lgetv %pDw;
+        symbol [ pDw %tmp.2 17 13 16 ];
+        symbol [ dw ? 17 8 10 ];
+        putv self :dw %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 18 8 ]
+        %tmp.3 = lgetv %pDh;
+        symbol [ pDh %tmp.3 18 13 16 ];
+        symbol [ dh ? 18 8 10 ];
+        putv self :dh %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 19 8 ]
+        %tmp.4 = 0;
+        symbol [ y ? 19 8 9 ];
+        putv self :y %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 20 8 ]
+        %tmp.5 = 0;
+        symbol [ vy ? 20 8 10 ];
+        putv self :vy %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 21 8 ]
+        %tmp.6 = 1;
+        symbol [ onGround ? 21 8 16 ];
+        putv self :onGround %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 22 8 ]
         %tmp.7 = 0;
-        %tmp.8 = lt %tmp.6 %tmp.7;
-        bf %tmp.8 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_45_8_45_78_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_45_8_45_78_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_45_36_45_78_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc" 45 38 ]
-        symbol [ PI_BOARD_COLS %tmp.10 45 43 56 ];
-        %tmp.10 = getv ? :PI_BOARD_COLS;
-        %tmp.11 = 1;
-        %tmp.12 = sub %tmp.10 %tmp.11;
-        lputv %nc.1 %tmp.12;
-        symbol [ nc %nc.1 45 38 40 ];
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc" 45 62 ]
-        %tmp.13 = true;
-        lputv %wrapped.2 %tmp.13;
-        symbol [ wrapped %wrapped.2 45 62 69 ];
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_45_36_45_78_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_45_8_45_78_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_45_8_45_78_if_end:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc" 46 8 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_46_8_46_79_if_stmt:
-        %tmp.14 = lgetv %nc.1;
-        symbol [ nc %tmp.14 46 12 14 ];
-        symbol [ PI_BOARD_COLS %tmp.16 46 17 30 ];
-        %tmp.16 = getv ? :PI_BOARD_COLS;
-        %tmp.17 = 1;
-        %tmp.18 = sub %tmp.16 %tmp.17;
-        %tmp.19 = gt %tmp.14 %tmp.18;
-        bf %tmp.19 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_46_8_46_79_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_46_8_46_79_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_46_36_46_79_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc" 46 38 ]
-        %tmp.20 = 0;
-        lputv %nc.1 %tmp.20;
-        symbol [ nc %nc.1 46 38 40 ];
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc" 46 63 ]
-        %tmp.21 = true;
-        lputv %wrapped.2 %tmp.21;
-        symbol [ wrapped %wrapped.2 46 63 70 ];
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_46_36_46_79_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_46_8_46_79_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_46_8_46_79_if_end:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc" 47 8 ]
-        %tmp.22 = lgetv %nc.1;
-        symbol [ nc %tmp.22 47 14 16 ];
-        symbol [ col ? 47 8 11 ];
-        putv self :col %tmp.22;
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc" 48 8 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_48_8_48_45_if_stmt:
-        %tmp.23 = lgetv %wrapped.2;
-        symbol [ wrapped %tmp.23 48 12 19 ];
-        bf %tmp.23 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_48_8_48_45_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_48_8_48_45_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_48_21_48_45_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc" 48 23 ]
-        symbol [ col %tmp.25 48 34 37 ];
-        %tmp.25 = getv ? :col;
-        %tmp.26 = 0.0;
-        %tmp.27 = add %tmp.25 %tmp.26;
-        symbol [ colFloat ? 48 23 31 ];
-        putv self :colFloat %tmp.27;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_48_21_48_45_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_48_8_48_45_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_48_8_48_45_if_end:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_42_22_49_4_stop:
+        symbol [ isDucking ? 22 8 17 ];
+        putv self :isDucking %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 23 8 ]
+        %tmp.8 = 0;
+        symbol [ _duckTimer ? 23 8 18 ];
+        putv self :_duckTimer %tmp.8;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_15_38_24_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc"; @line = 52; @symbol_functiondef = [tickGlide,52,13,22]; ]
-    function tickGlide() {
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_52_25_59_4_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc" 53 8 ]
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_52_25_59_4_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_52_25_59_4_stop" ]
-        %SLIDE.1 = local;
-        symbol [ SLIDE %SLIDE.1 53 12 17 ];
-        %tmp.1 = 0.5;
-        lputv %SLIDE.1 %tmp.1;
-        symbol [ SLIDE %SLIDE.1 53 12 17 ];
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc" 54 8 ]
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_52_25_59_4_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_52_25_59_4_stop" ]
-        %d.2 = local;
-        symbol [ d %d.2 54 12 13 ];
-        symbol [ col %tmp.3 54 16 19 ];
-        %tmp.3 = getv ? :col;
-        symbol [ colFloat %tmp.5 54 22 30 ];
-        %tmp.5 = getv ? :colFloat;
-        %tmp.6 = sub %tmp.3 %tmp.5;
-        lputv %d.2 %tmp.6;
-        symbol [ d %d.2 54 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc" 55 8 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_55_8_57_54_if_stmt:
-        %tmp.7 = lgetv %d.2;
-        symbol [ d %tmp.7 55 12 13 ];
-        %tmp.8 = lgetv %SLIDE.1;
-        symbol [ SLIDE %tmp.8 55 16 21 ];
-        %tmp.9 = gt %tmp.7 %tmp.8;
-        bf %tmp.9 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_55_8_57_54_if_false;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_55_8_57_54_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_55_29_55_60_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc" 55 31 ]
-        symbol [ colFloat %tmp.11 55 42 50 ];
-        %tmp.11 = getv ? :colFloat;
-        %tmp.12 = lgetv %SLIDE.1;
-        symbol [ SLIDE %tmp.12 55 53 58 ];
-        %tmp.13 = add %tmp.11 %tmp.12;
-        symbol [ colFloat ? 55 31 39 ];
-        putv self :colFloat %tmp.13;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_55_29_55_60_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_55_8_57_54_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_55_8_57_54_if_false:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc" 56 13 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_56_13_57_54_if_stmt:
-        %tmp.14 = lgetv %d.2;
-        symbol [ d %tmp.14 56 17 18 ];
-        %tmp.15 = lgetv %SLIDE.1;
-        symbol [ SLIDE %tmp.15 56 22 27 ];
-        %tmp.16 = sub 0 %tmp.15;
-        %tmp.17 = lt %tmp.14 %tmp.16;
-        bf %tmp.17 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_56_13_57_54_if_else_false;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_56_13_57_54_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_56_29_56_60_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc" 56 31 ]
-        symbol [ colFloat %tmp.19 56 42 50 ];
-        %tmp.19 = getv ? :colFloat;
-        %tmp.20 = lgetv %SLIDE.1;
-        symbol [ SLIDE %tmp.20 56 53 58 ];
-        %tmp.21 = sub %tmp.19 %tmp.20;
-        symbol [ colFloat ? 56 31 39 ];
-        putv self :colFloat %tmp.21;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_56_29_56_60_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_56_13_57_54_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_56_13_57_54_if_else_false:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_57_30_57_54_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc" 57 32 ]
-        symbol [ col %tmp.23 57 43 46 ];
-        %tmp.23 = getv ? :col;
-        %tmp.24 = 0.0;
-        %tmp.25 = add %tmp.23 %tmp.24;
-        symbol [ colFloat ? 57 32 40 ];
-        putv self :colFloat %tmp.25;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_57_30_57_54_stop:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_56_13_57_54_if_end:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_55_8_57_54_if_end:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc" 58 8 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_58_8_58_59_if_stmt:
-        symbol [ blinkTicks %tmp.27 58 12 22 ];
-        %tmp.27 = getv ? :blinkTicks;
-        %tmp.28 = 0;
-        %tmp.29 = gt %tmp.27 %tmp.28;
-        bf %tmp.29 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_58_8_58_59_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_58_8_58_59_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_58_28_58_59_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc" 58 30 ]
-        symbol [ blinkTicks %tmp.31 58 43 53 ];
-        %tmp.31 = getv ? :blinkTicks;
-        %tmp.32 = 1;
-        %tmp.33 = sub %tmp.31 %tmp.32;
-        symbol [ blinkTicks ? 58 30 40 ];
-        putv self :blinkTicks %tmp.33;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_58_28_58_59_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_58_8_58_59_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_58_8_58_59_if_end:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_52_25_59_4_stop:
+    [ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc"; @line = 26; @symbol_functiondef = [reset,26,13,18]; @symbol_param<0> = [groundY,26,19,26]; ]
+    function reset(groundY) {
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_26_28_32_4_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 27 8 ]
+        %tmp.1 = lgetv %groundY;
+        symbol [ groundY %tmp.1 27 21 28 ];
+        symbol [ dh %tmp.3 27 31 33 ];
+        %tmp.3 = getv ? :dh;
+        %tmp.4 = sub %tmp.1 %tmp.3;
+        symbol [ y ? 27 8 9 ];
+        putv self :y %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 28 8 ]
+        %tmp.5 = 0;
+        symbol [ vy ? 28 8 10 ];
+        putv self :vy %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 29 8 ]
+        %tmp.6 = 1;
+        symbol [ onGround ? 29 8 16 ];
+        putv self :onGround %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 30 8 ]
+        %tmp.7 = 0;
+        symbol [ isDucking ? 30 8 17 ];
+        putv self :isDucking %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 31 8 ]
+        %tmp.8 = 0;
+        symbol [ _duckTimer ? 31 8 18 ];
+        putv self :_duckTimer %tmp.8;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_26_28_32_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc"; @line = 61; @symbol_functiondef = [isInvulnerable,61,13,27]; ]
-    function isInvulnerable() {
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_61_30_61_55_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc" 61 32 ]
-        symbol [ blinkTicks %tmp.2 61 39 49 ];
-        %tmp.2 = getv ? :blinkTicks;
+    [ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc"; @line = 34; @symbol_functiondef = [doJump,34,13,19]; ]
+    function doJump() {
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_34_22_40_4_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 35 8 ]
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_35_8_35_61_if_stmt:
+        symbol [ isDucking %tmp.2 35 12 21 ];
+        %tmp.2 = getv ? :isDucking;
+        %tmp.3 = 1;
+        %tmp.4 = eq %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_35_8_35_61_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_35_8_35_61_if_true:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_35_28_35_61_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 35 30 ]
+        %tmp.5 = 0;
+        symbol [ isDucking ? 35 30 39 ];
+        putv self :isDucking %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 35 45 ]
+        %tmp.6 = 0;
+        symbol [ _duckTimer ? 35 45 55 ];
+        putv self :_duckTimer %tmp.6;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_35_28_35_61_stop:
+        goto @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_35_8_35_61_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_35_8_35_61_if_end:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 36 8 ]
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_36_8_39_8_if_stmt:
+        symbol [ onGround %tmp.8 36 12 20 ];
+        %tmp.8 = getv ? :onGround;
+        %tmp.9 = 1;
+        %tmp.10 = eq %tmp.8 %tmp.9;
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_36_8_39_8_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_36_8_39_8_if_true:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_36_27_39_8_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 37 12 ]
+        %tmp.11 = -17;
+        symbol [ vy ? 37 12 14 ];
+        putv self :vy %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 38 12 ]
+        %tmp.12 = 0;
+        symbol [ onGround ? 38 12 20 ];
+        putv self :onGround %tmp.12;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_36_27_39_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_36_8_39_8_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_36_8_39_8_if_end:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_34_22_40_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc"; @line = 42; @symbol_functiondef = [doDuck,42,13,19]; @symbol_param<0> = [groundY,42,20,27]; ]
+    function doDuck(groundY) {
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_42_29_51_4_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 43 8 ]
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_43_8_50_8_if_stmt:
+        symbol [ onGround %tmp.2 43 12 20 ];
+        %tmp.2 = getv ? :onGround;
+        %tmp.3 = 1;
+        %tmp.4 = eq %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_43_8_50_8_if_else_false;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_43_8_50_8_if_true:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_43_27_47_8_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 44 12 ]
+        %tmp.5 = 1;
+        symbol [ isDucking ? 44 12 21 ];
+        putv self :isDucking %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 45 12 ]
+        %tmp.6 = 40;
+        symbol [ _duckTimer ? 45 12 22 ];
+        putv self :_duckTimer %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 46 12 ]
+        %tmp.7 = lgetv %groundY;
+        symbol [ groundY %tmp.7 46 16 23 ];
+        %tmp.8 = self;
+        symbol [ effHeight %tmp.9 46 26 35 ];
+        %tmp.9 = getv function %tmp.8 :effHeight;
+        %tmp.10 = invoke %tmp.8 %tmp.9();
+        %tmp.11 = sub %tmp.7 %tmp.10;
+        symbol [ y ? 46 12 13 ];
+        putv self :y %tmp.11;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_43_27_47_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_43_8_50_8_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_43_8_50_8_if_else_false:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_47_15_50_8_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 49 12 ]
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_49_12_49_36_if_stmt:
+        symbol [ vy %tmp.13 49 16 18 ];
+        %tmp.13 = getv ? :vy;
+        %tmp.14 = 12;
+        %tmp.15 = lt %tmp.13 %tmp.14;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_49_12_49_36_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_49_12_49_36_if_true:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_49_25_49_36_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 49 27 ]
+        %tmp.16 = 12;
+        symbol [ vy ? 49 27 29 ];
+        putv self :vy %tmp.16;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_49_25_49_36_stop:
+        goto @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_49_12_49_36_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_49_12_49_36_if_end:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_47_15_50_8_stop:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_43_8_50_8_if_end:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_42_29_51_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc"; @line = 53; @symbol_functiondef = [update,53,13,19]; @symbol_param<0> = [groundY,53,20,27]; ]
+    function update(groundY) {
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_53_29_72_4_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 55 8 ]
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_55_8_61_8_if_stmt:
+        symbol [ _duckTimer %tmp.2 55 12 22 ];
+        %tmp.2 = getv ? :_duckTimer;
         %tmp.3 = 0;
         %tmp.4 = gt %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_55_8_61_8_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_55_8_61_8_if_true:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_55_28_61_8_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 56 12 ]
+        symbol [ _duckTimer %tmp.6 56 25 35 ];
+        %tmp.6 = getv ? :_duckTimer;
+        %tmp.7 = 1;
+        %tmp.8 = sub %tmp.6 %tmp.7;
+        symbol [ _duckTimer ? 56 12 22 ];
+        putv self :_duckTimer %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 57 12 ]
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_57_12_60_12_if_stmt:
+        symbol [ _duckTimer %tmp.10 57 16 26 ];
+        %tmp.10 = getv ? :_duckTimer;
+        %tmp.11 = 0;
+        %tmp.12 = eq %tmp.10 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_57_12_60_12_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_57_12_60_12_if_true:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_57_33_60_12_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 58 16 ]
+        %tmp.13 = 0;
+        symbol [ isDucking ? 58 16 25 ];
+        putv self :isDucking %tmp.13;
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 59 16 ]
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_59_16_59_55_if_stmt:
+        symbol [ onGround %tmp.15 59 20 28 ];
+        %tmp.15 = getv ? :onGround;
+        %tmp.16 = 1;
+        %tmp.17 = eq %tmp.15 %tmp.16;
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_59_16_59_55_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_59_16_59_55_if_true:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_59_35_59_55_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 59 37 ]
+        %tmp.18 = lgetv %groundY;
+        symbol [ groundY %tmp.18 59 41 48 ];
+        symbol [ dh %tmp.20 59 51 53 ];
+        %tmp.20 = getv ? :dh;
+        %tmp.21 = sub %tmp.18 %tmp.20;
+        symbol [ y ? 59 37 38 ];
+        putv self :y %tmp.21;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_59_35_59_55_stop:
+        goto @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_59_16_59_55_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_59_16_59_55_if_end:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_57_33_60_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_57_12_60_12_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_57_12_60_12_if_end:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_55_28_61_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_55_8_61_8_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_55_8_61_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 63 8 ]
+        symbol [ vy %tmp.23 63 13 15 ];
+        %tmp.23 = getv ? :vy;
+        %tmp.24 = 2;
+        %tmp.25 = add %tmp.23 %tmp.24;
+        symbol [ vy ? 63 8 10 ];
+        putv self :vy %tmp.25;
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 64 8 ]
+        symbol [ y %tmp.27 64 13 14 ];
+        %tmp.27 = getv ? :y;
+        symbol [ vy %tmp.29 64 18 20 ];
+        %tmp.29 = getv ? :vy;
+        %tmp.30 = add %tmp.27 %tmp.29;
+        symbol [ y ? 64 8 9 ];
+        putv self :y %tmp.30;
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 66 8 ]
+        [ "_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_53_29_72_4_start" "_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_53_29_72_4_stop" ]
+        %floor.1 = local;
+        symbol [ floor %floor.1 66 12 17 ];
+        %tmp.31 = lgetv %groundY;
+        symbol [ groundY %tmp.31 66 20 27 ];
+        %tmp.32 = self;
+        symbol [ effHeight %tmp.33 66 30 39 ];
+        %tmp.33 = getv function %tmp.32 :effHeight;
+        %tmp.34 = invoke %tmp.32 %tmp.33();
+        %tmp.35 = sub %tmp.31 %tmp.34;
+        lputv %floor.1 %tmp.35;
+        symbol [ floor %floor.1 66 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 67 8 ]
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_67_8_71_8_if_stmt:
+        symbol [ y %tmp.37 67 12 13 ];
+        %tmp.37 = getv ? :y;
+        %tmp.38 = lgetv %floor.1;
+        symbol [ floor %tmp.38 67 17 22 ];
+        %tmp.39 = gte %tmp.37 %tmp.38;
+        bf %tmp.39 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_67_8_71_8_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_67_8_71_8_if_true:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_67_24_71_8_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 68 12 ]
+        %tmp.40 = lgetv %floor.1;
+        symbol [ floor %tmp.40 68 23 28 ];
+        symbol [ y ? 68 12 13 ];
+        putv self :y %tmp.40;
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 69 12 ]
+        %tmp.41 = 0;
+        symbol [ vy ? 69 12 14 ];
+        putv self :vy %tmp.41;
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 70 12 ]
+        %tmp.42 = 1;
+        symbol [ onGround ? 70 12 20 ];
+        putv self :onGround %tmp.42;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_67_24_71_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_67_8_71_8_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_67_8_71_8_if_end:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_53_29_72_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc"; @line = 74; @symbol_functiondef = [effHeight,74,13,22]; ]
+    function effHeight() {
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_74_25_76_4_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 75 8 ]
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_75_15_75_50_begin:
+        symbol [ isDucking %tmp.2 75 15 24 ];
+        %tmp.2 = getv ? :isDucking;
+        %tmp.3 = 1;
+        %tmp.4 = eq %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_75_15_75_50_else_false;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_75_15_75_50_true:
+        symbol [ dh %tmp.6 75 33 35 ];
+        %tmp.6 = getv ? :dh;
+        %tmp.7 = 55;
+        %tmp.8 = mul %tmp.6 %tmp.7;
+        %tmp.9 = 100;
+        %tmp.10 = div %tmp.8 %tmp.9;
+        push %tmp.10;
+        goto @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_75_15_75_50_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_75_15_75_50_else_false:
+        symbol [ dh %tmp.12 75 50 52 ];
+        %tmp.12 = getv ? :dh;
+        push %tmp.12;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_75_15_75_50_end:
+        %tmp.13 = phi [%tmp.4 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_75_15_75_50_begin] [%tmp.10 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_75_15_75_50_true] [%tmp.12 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_75_15_75_50_else_false] [%tmp.13 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_75_15_75_50_end];
+        ret %tmp.13;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_74_25_76_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc"; @line = 78; @symbol_functiondef = [stateCode,78,13,22]; ]
+    function stateCode() {
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_78_25_82_4_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 79 8 ]
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_79_8_79_49_if_stmt:
+        symbol [ isDucking %tmp.2 79 12 21 ];
+        %tmp.2 = getv ? :isDucking;
+        %tmp.3 = 1;
+        %tmp.4 = eq %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_79_8_79_49_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_79_8_79_49_if_true:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_79_28_79_49_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 79 30 ]
+        symbol [ STATE_DUCK %tmp.6 79 37 47 ];
+        %tmp.6 = getv ? :STATE_DUCK;
+        ret %tmp.6;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_79_28_79_49_stop:
+        goto @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_79_8_79_49_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_79_8_79_49_if_end:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 80 8 ]
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_80_8_80_49_if_stmt:
+        symbol [ onGround %tmp.8 80 12 20 ];
+        %tmp.8 = getv ? :onGround;
+        %tmp.9 = 0;
+        %tmp.10 = eq %tmp.8 %tmp.9;
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_80_8_80_49_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_80_8_80_49_if_true:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_80_28_80_49_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 80 30 ]
+        symbol [ STATE_JUMP %tmp.12 80 37 47 ];
+        %tmp.12 = getv ? :STATE_JUMP;
+        ret %tmp.12;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_80_28_80_49_stop:
+        goto @_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_80_8_80_49_if_end;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_80_8_80_49_if_end:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 81 8 ]
+        symbol [ STATE_RUN %tmp.14 81 15 24 ];
+        %tmp.14 = getv ? :STATE_RUN;
+        ret %tmp.14;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_78_25_82_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc"; @line = 85; @symbol_functiondef = [hitX1,85,13,18]; ]
+    function hitX1() {
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_85_21_85_37_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 85 23 ]
+        symbol [ x %tmp.2 85 30 31 ];
+        %tmp.2 = getv ? :x;
+        %tmp.3 = 2;
+        %tmp.4 = add %tmp.2 %tmp.3;
         ret %tmp.4;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_Player_mc_61_30_61_55_stop:
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_85_21_85_37_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc"; @line = 86; @symbol_functiondef = [hitX2,86,13,18]; ]
+    function hitX2() {
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_86_21_86_42_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 86 23 ]
+        symbol [ x %tmp.2 86 30 31 ];
+        %tmp.2 = getv ? :x;
+        symbol [ dw %tmp.4 86 34 36 ];
+        %tmp.4 = getv ? :dw;
+        %tmp.5 = add %tmp.2 %tmp.4;
+        %tmp.6 = 2;
+        %tmp.7 = sub %tmp.5 %tmp.6;
+        ret %tmp.7;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_86_21_86_42_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc"; @line = 87; @symbol_functiondef = [hitY1,87,13,18]; ]
+    function hitY1() {
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_87_21_87_51_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 87 23 ]
+        symbol [ y %tmp.2 87 30 31 ];
+        %tmp.2 = getv ? :y;
+        %tmp.3 = self;
+        symbol [ effHeight %tmp.4 87 34 43 ];
+        %tmp.4 = getv function %tmp.3 :effHeight;
+        %tmp.5 = invoke %tmp.3 %tmp.4();
+        %tmp.6 = 4;
+        %tmp.7 = div %tmp.5 %tmp.6;
+        %tmp.8 = add %tmp.2 %tmp.7;
+        ret %tmp.8;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_87_21_87_51_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc"; @line = 88; @symbol_functiondef = [hitY2,88,13,18]; ]
+    function hitY2() {
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_88_21_88_51_start:
+[ "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc" 88 23 ]
+        symbol [ y %tmp.2 88 30 31 ];
+        %tmp.2 = getv ? :y;
+        %tmp.3 = self;
+        symbol [ effHeight %tmp.4 88 34 43 ];
+        %tmp.4 = getv function %tmp.3 :effHeight;
+        %tmp.5 = invoke %tmp.3 %tmp.4();
+        %tmp.6 = add %tmp.2 %tmp.5;
+        %tmp.7 = 2;
+        %tmp.8 = sub %tmp.6 %tmp.7;
+        ret %tmp.8;
+_Users_kkorolczuk_work_garmin_shadowclonerunner_source_Player_mc_88_21_88_51_stop:
     }
 }
-[ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc"; @line = 14; ]
+[ @file = "/Users/kkorolczuk/work/garmin/shadowclonerunner/source/Player.mc"; @line = 5; ]
 <init> {
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/Player.mc" 16 6 ]
-    symbol [ PI_BOARD_ROWS %tmp.6 16 23 36 ];
-    %tmp.6 = getv ? :PI_BOARD_ROWS;
-    %tmp.7 = 1;
-    %tmp.8 = sub %tmp.6 %tmp.7;
-    putv self :PI_PLAYER_ROW %tmp.8;
 }

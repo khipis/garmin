@@ -20,6 +20,16 @@ const HG_S_OVER = 3;
 
 const HG_BEST_KEY = "hg_best";
 
+// Global leaderboard game id (matches _LOGOS / web id). No
+// difficulty setting exists (only Start Level / Lives), so the
+// leaderboard runs without a variant.
+const HG_LB_GAME_ID = "hologrid";
+
+// Menu row indices. The LEADERBOARD row is appended last and is
+// handled by MainView.openLeaderboard().
+const HG_ROW_START = 2;
+const HG_ROW_LB    = 3;
+
 // Levels selectable from the menu.  Cycling through every level
 // 1..30 would be tedious, so we hop in jumps that line up with the
 // difficulty bands of LevelGenerator.
@@ -111,9 +121,10 @@ class GameController {
         } else if (menuRow == 1) {
             menuLives = (menuLives % 5) + 1;
             _saveSettings();
-        } else {
+        } else if (menuRow == HG_ROW_START) {
             _startNewGame();
         }
+        // HG_ROW_LB is handled by MainView.openLeaderboard().
     }
     function gotoMenu() { state = HG_S_MENU; }
 
@@ -171,6 +182,8 @@ class GameController {
         if (lives <= 0) {
             state = HG_S_OVER;
             if (score > bestScore) { bestScore = score; _saveBest(); }
+            Leaderboard.submitScore(HG_LB_GAME_ID, score, "");
+            Leaderboard.showPostGame(HG_LB_GAME_ID, "", "HOLOGRID");
             return;
         }
         // Respawn at the *current level's* spawn corner.  AI keeps
@@ -184,6 +197,8 @@ class GameController {
         if (level > HG_MAX_LEVEL) {
             state = HG_S_WIN;
             if (score > bestScore) { bestScore = score; _saveBest(); }
+            Leaderboard.submitScore(HG_LB_GAME_ID, score, "");
+            Leaderboard.showPostGame(HG_LB_GAME_ID, "", "HOLOGRID");
             return;
         }
         _buildLevel();

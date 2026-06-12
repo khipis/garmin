@@ -1,1321 +1,1922 @@
-[ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 25; @symbol_usingdef<0> = [Toybox,25,6,12]; @symbol_usingdef<1> = [Math,25,13,17]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 26; @symbol_usingdef<0> = [Toybox,26,6,12]; @symbol_usingdef<1> = [Math,26,13,17]; ]
 using Toybox.Math;
-[ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 27; @position = 6; @symbol_constdef = [PI_FORM_ROWS,27,6,18]; ]
-const PI_FORM_ROWS = 4;
-[ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 28; @position = 6; @symbol_constdef = [PI_FORM_COLS,28,6,18]; ]
-const PI_FORM_COLS = 7;
-[ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 29; @position = 6; @symbol_constdef = [PI_FORM_TOTAL,29,6,19]; ]
-const PI_FORM_TOTAL = 28;
-[ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 30; @position = 6; @symbol_constdef = [PI_FORM_TOP,30,6,17]; ]
-const PI_FORM_TOP = 1;
-[ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 31; @position = 6; @symbol_constdef = [PI_FORM_LEFT,31,6,18]; ]
-const PI_FORM_LEFT = 1;
-[ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 33; @position = 6; @symbol_constdef = [EI_DRONE,33,6,14]; ]
-const EI_DRONE = 0;
-[ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 34; @position = 6; @symbol_constdef = [EI_GUARD,34,6,14]; ]
-const EI_GUARD = 1;
-[ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 35; @position = 6; @symbol_constdef = [EI_BOSS,35,6,13]; ]
-const EI_BOSS = 2;
-[ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 37; @symbol_classdef = [Enemy,37,6,11]; ]
-class Enemy {
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 37; ]
-    <init> {
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 37; ]
-    static
-    <init> {
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 38; @position = 8; @symbol_vardef = [col,38,8,11]; ]
-    var col;
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 39; @position = 8; @symbol_vardef = [row,39,8,11]; ]
-    var row;
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 40; @position = 8; @symbol_vardef = [type,40,8,12]; ]
-    var type;
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 41; @position = 8; @symbol_vardef = [alive,41,8,13]; ]
-    var alive;
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 43; @symbol_functiondef = [initialize,43,13,23]; @symbol_param<0> = [c,43,24,25]; @symbol_param<1> = [r,43,27,28]; @symbol_param<2> = [t,43,30,31]; ]
-    function initialize(c, r, t) as Void {
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_43_33_43_77_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 43 35 ]
-        %tmp.1 = lgetv %c;
-        symbol [ c %tmp.1 43 41 42 ];
-        symbol [ col ? 43 35 38 ];
-        putv self :col %tmp.1;
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 43 44 ]
-        %tmp.2 = lgetv %r;
-        symbol [ r %tmp.2 43 50 51 ];
-        symbol [ row ? 43 44 47 ];
-        putv self :row %tmp.2;
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 43 53 ]
-        %tmp.3 = lgetv %t;
-        symbol [ t %tmp.3 43 60 61 ];
-        symbol [ type ? 43 53 57 ];
-        putv self :type %tmp.3;
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 43 63 ]
-        %tmp.4 = true;
-        symbol [ alive ? 43 63 68 ];
-        putv self :alive %tmp.4;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_43_33_43_77_stop:
-    }
-}
-[ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 46; @symbol_classdef = [EnemyManager,46,6,18]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 28; @symbol_classdef = [EnemyManager,28,6,18]; ]
 class EnemyManager {
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 46; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 28; ]
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 46; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 28; ]
     static
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 47; @position = 8; @symbol_vardef = [enemies,47,8,15]; ]
-    var enemies;
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 48; @position = 8; @symbol_vardef = [direction,48,8,17]; ]
-    var direction;
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 49; @position = 8; @symbol_vardef = [stepInterval,49,8,20]; ]
-    var stepInterval;
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 50; @position = 8; @symbol_vardef = [stepTimer,50,8,17]; ]
-    var stepTimer;
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 51; @position = 8; @symbol_vardef = [walkPhase,51,8,17]; ]
-    var walkPhase;
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 52; @position = 8; @symbol_vardef = [baseInterval,52,8,20]; ]
-    var baseInterval;
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 53; @position = 8; @symbol_vardef = [startCount,53,8,18]; ]
-    var startCount;
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 55; @symbol_functiondef = [initialize,55,13,23]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 29; @position = 8; @symbol_vardef = [live,29,8,12]; ]
+    var live;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 30; @position = 8; @symbol_vardef = [type,30,8,12]; ]
+    var type;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 31; @position = 8; @symbol_vardef = [hp,31,8,10]; ]
+    var hp;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 32; @position = 8; @symbol_vardef = [yaw,32,8,11]; ]
+    var yaw;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 33; @position = 8; @symbol_vardef = [pitch,33,8,13]; ]
+    var pitch;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 34; @position = 8; @symbol_vardef = [dist,34,8,12]; ]
+    var dist;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 35; @position = 8; @symbol_vardef = [dyaw,35,8,12]; ]
+    var dyaw;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 36; @position = 8; @symbol_vardef = [pyaw,36,8,12]; ]
+    var pyaw;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 37; @position = 8; @symbol_vardef = [phase,37,8,13]; ]
+    var phase;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 38; @position = 8; @symbol_vardef = [shutT,38,8,13]; ]
+    var shutT;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 39; @position = 8; @symbol_vardef = [openT,39,8,13]; ]
+    var openT;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 40; @position = 8; @symbol_vardef = [fireT,40,8,13]; ]
+    var fireT;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 41; @position = 8; @symbol_vardef = [sx,41,8,10]; ]
+    var sx;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 42; @position = 8; @symbol_vardef = [sy,42,8,10]; ]
+    var sy;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 43; @position = 8; @symbol_vardef = [sz,43,8,10]; ]
+    var sz;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 45; @position = 15; @symbol_vardef = [_rng,45,15,19]; ]
+    protected
+    var _rng;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 46; @position = 15; @symbol_vardef = [_spawnT,46,15,22]; ]
+    protected
+    var _spawnT;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 47; @position = 15; @symbol_vardef = [_roundTypeMix,47,15,28]; ]
+    protected
+    var _roundTypeMix;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 49; @symbol_functiondef = [initialize,49,13,23]; ]
     function initialize() as Void {
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_55_26_63_4_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 56 8 ]
-        %tmp.1 = newa 0;
-        symbol [ enemies ? 56 8 15 ];
-        putv self :enemies %tmp.1;
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 57 8 ]
-        %tmp.2 = 1;
-        symbol [ direction ? 57 8 17 ];
-        putv self :direction %tmp.2;
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 58 8 ]
-        %tmp.3 = 12;
-        symbol [ stepInterval ? 58 8 20 ];
-        putv self :stepInterval %tmp.3;
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 59 8 ]
-        symbol [ stepInterval %tmp.5 59 20 32 ];
-        %tmp.5 = getv ? :stepInterval;
-        symbol [ stepTimer ? 59 8 17 ];
-        putv self :stepTimer %tmp.5;
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 60 8 ]
-        %tmp.6 = 0;
-        symbol [ walkPhase ? 60 8 17 ];
-        putv self :walkPhase %tmp.6;
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 61 8 ]
-        %tmp.7 = 12;
-        symbol [ baseInterval ? 61 8 20 ];
-        putv self :baseInterval %tmp.7;
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 62 8 ]
-        symbol [ PI_FORM_TOTAL %tmp.9 62 21 34 ];
-        %tmp.9 = getv ? :PI_FORM_TOTAL;
-        symbol [ startCount ? 62 8 18 ];
-        putv self :startCount %tmp.9;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_55_26_63_4_stop:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_49_26_69_4_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 50 8 ]
+        symbol [ AR_MAX_ENEMIES %tmp.3 50 22 36 ];
+        %tmp.3 = getv ? :AR_MAX_ENEMIES;
+        %tmp.1 = newa %tmp.3;
+        symbol [ live ? 50 8 12 ];
+        putv self :live %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 51 8 ]
+        symbol [ AR_MAX_ENEMIES %tmp.6 51 22 36 ];
+        %tmp.6 = getv ? :AR_MAX_ENEMIES;
+        %tmp.4 = newa %tmp.6;
+        symbol [ type ? 51 8 12 ];
+        putv self :type %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 52 8 ]
+        symbol [ AR_MAX_ENEMIES %tmp.9 52 22 36 ];
+        %tmp.9 = getv ? :AR_MAX_ENEMIES;
+        %tmp.7 = newa %tmp.9;
+        symbol [ hp ? 52 8 10 ];
+        putv self :hp %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 53 8 ]
+        symbol [ AR_MAX_ENEMIES %tmp.12 53 22 36 ];
+        %tmp.12 = getv ? :AR_MAX_ENEMIES;
+        %tmp.10 = newa %tmp.12;
+        symbol [ yaw ? 53 8 11 ];
+        putv self :yaw %tmp.10;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 54 8 ]
+        symbol [ AR_MAX_ENEMIES %tmp.15 54 22 36 ];
+        %tmp.15 = getv ? :AR_MAX_ENEMIES;
+        %tmp.13 = newa %tmp.15;
+        symbol [ pitch ? 54 8 13 ];
+        putv self :pitch %tmp.13;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 55 8 ]
+        symbol [ AR_MAX_ENEMIES %tmp.18 55 22 36 ];
+        %tmp.18 = getv ? :AR_MAX_ENEMIES;
+        %tmp.16 = newa %tmp.18;
+        symbol [ dist ? 55 8 12 ];
+        putv self :dist %tmp.16;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 56 8 ]
+        symbol [ AR_MAX_ENEMIES %tmp.21 56 22 36 ];
+        %tmp.21 = getv ? :AR_MAX_ENEMIES;
+        %tmp.19 = newa %tmp.21;
+        symbol [ dyaw ? 56 8 12 ];
+        putv self :dyaw %tmp.19;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 57 8 ]
+        symbol [ AR_MAX_ENEMIES %tmp.24 57 22 36 ];
+        %tmp.24 = getv ? :AR_MAX_ENEMIES;
+        %tmp.22 = newa %tmp.24;
+        symbol [ pyaw ? 57 8 12 ];
+        putv self :pyaw %tmp.22;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 58 8 ]
+        symbol [ AR_MAX_ENEMIES %tmp.27 58 22 36 ];
+        %tmp.27 = getv ? :AR_MAX_ENEMIES;
+        %tmp.25 = newa %tmp.27;
+        symbol [ phase ? 58 8 13 ];
+        putv self :phase %tmp.25;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 59 8 ]
+        symbol [ AR_MAX_ENEMIES %tmp.30 59 22 36 ];
+        %tmp.30 = getv ? :AR_MAX_ENEMIES;
+        %tmp.28 = newa %tmp.30;
+        symbol [ shutT ? 59 8 13 ];
+        putv self :shutT %tmp.28;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 60 8 ]
+        symbol [ AR_MAX_ENEMIES %tmp.33 60 22 36 ];
+        %tmp.33 = getv ? :AR_MAX_ENEMIES;
+        %tmp.31 = newa %tmp.33;
+        symbol [ openT ? 60 8 13 ];
+        putv self :openT %tmp.31;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 61 8 ]
+        symbol [ AR_MAX_ENEMIES %tmp.36 61 22 36 ];
+        %tmp.36 = getv ? :AR_MAX_ENEMIES;
+        %tmp.34 = newa %tmp.36;
+        symbol [ fireT ? 61 8 13 ];
+        putv self :fireT %tmp.34;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 62 8 ]
+        symbol [ AR_MAX_ENEMIES %tmp.39 62 22 36 ];
+        %tmp.39 = getv ? :AR_MAX_ENEMIES;
+        %tmp.37 = newa %tmp.39;
+        symbol [ sx ? 62 8 10 ];
+        putv self :sx %tmp.37;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 63 8 ]
+        symbol [ AR_MAX_ENEMIES %tmp.42 63 22 36 ];
+        %tmp.42 = getv ? :AR_MAX_ENEMIES;
+        %tmp.40 = newa %tmp.42;
+        symbol [ sy ? 63 8 10 ];
+        putv self :sy %tmp.40;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 64 8 ]
+        symbol [ AR_MAX_ENEMIES %tmp.45 64 22 36 ];
+        %tmp.45 = getv ? :AR_MAX_ENEMIES;
+        %tmp.43 = newa %tmp.45;
+        symbol [ sz ? 64 8 10 ];
+        putv self :sz %tmp.43;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 65 8 ]
+        %tmp.46 = 5743219;
+        symbol [ _rng ? 65 8 12 ];
+        putv self :_rng %tmp.46;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 66 8 ]
+        %tmp.47 = 0;
+        symbol [ _spawnT ? 66 8 15 ];
+        putv self :_spawnT %tmp.47;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 67 8 ]
+        symbol [ AR_ET_IDLE %tmp.49 67 24 34 ];
+        %tmp.49 = getv ? :AR_ET_IDLE;
+        symbol [ _roundTypeMix ? 67 8 21 ];
+        putv self :_roundTypeMix %tmp.49;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 68 8 ]
+        %tmp.50 = self;
+        symbol [ clearAll %tmp.51 68 8 16 ];
+        %tmp.51 = getv function %tmp.50 :clearAll;
+        invoke %tmp.50 %tmp.51();
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_49_26_69_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 65; @symbol_functiondef = [reset,65,13,18]; ]
-    function reset() {
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_65_21_67_4_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 66 8 ]
-        %tmp.1 = newa 0;
-        symbol [ enemies ? 66 8 15 ];
-        putv self :enemies %tmp.1;
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 66 22 ]
-        %tmp.2 = 1;
-        symbol [ direction ? 66 22 31 ];
-        putv self :direction %tmp.2;
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 66 37 ]
-        %tmp.3 = 0;
-        symbol [ walkPhase ? 66 37 46 ];
-        putv self :walkPhase %tmp.3;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_65_21_67_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 69; @symbol_functiondef = [populate,69,13,21]; @symbol_param<0> = [wave,69,22,26]; @symbol_param<1> = [base,69,28,32]; ]
-    function populate(wave, base) {
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_69_34_94_4_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 70 8 ]
-        %tmp.1 = self;
-        symbol [ reset %tmp.2 70 8 13 ];
-        %tmp.2 = getv function %tmp.1 :reset;
-        invoke %tmp.1 %tmp.2();
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 71 8 ]
-        %tmp.3 = lgetv %base;
-        symbol [ base %tmp.3 71 23 27 ];
-        symbol [ baseInterval ? 71 8 20 ];
-        putv self :baseInterval %tmp.3;
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 72 8 ]
-        %tmp.4 = lgetv %base;
-        symbol [ base %tmp.4 72 23 27 ];
-        symbol [ stepInterval ? 72 8 20 ];
-        putv self :stepInterval %tmp.4;
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 73 8 ]
-        %tmp.5 = lgetv %base;
-        symbol [ base %tmp.5 73 23 27 ];
-        symbol [ stepTimer ? 73 8 17 ];
-        putv self :stepTimer %tmp.5;
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 74 8 ]
-        symbol [ PI_FORM_TOTAL %tmp.7 74 23 36 ];
-        %tmp.7 = getv ? :PI_FORM_TOTAL;
-        symbol [ startCount ? 74 8 18 ];
-        putv self :startCount %tmp.7;
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 75 8 ]
-        %tmp.8 = 1;
-        symbol [ direction ? 75 8 17 ];
-        putv self :direction %tmp.8;
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 76 8 ]
-        %tmp.9 = 0;
-        symbol [ walkPhase ? 76 8 17 ];
-        putv self :walkPhase %tmp.9;
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 78 8 ]
-        for @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_78_8_87_8_for_test @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_78_8_87_8_for_incr @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_78_8_87_8_for_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_78_8_87_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_78_8_87_8_for_begin" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_78_8_87_8_for_end" ]
-        %r.1 = local;
-        symbol [ r %r.1 78 17 18 ];
-        %tmp.10 = 0;
-        lputv %r.1 %tmp.10;
-        symbol [ r %r.1 78 17 18 ];
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_78_8_87_8_for_test:
-        %tmp.11 = lgetv %r.1;
-        symbol [ r %tmp.11 78 24 25 ];
-        symbol [ PI_FORM_ROWS %tmp.13 78 28 40 ];
-        %tmp.13 = getv ? :PI_FORM_ROWS;
-        %tmp.14 = lt %tmp.11 %tmp.13;
-        bf %tmp.14 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_78_8_87_8_for_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_78_8_87_8_for_begin:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_78_47_87_8_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 79 12 ]
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_78_47_87_8_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_78_47_87_8_stop" ]
-        %t.2 = local;
-        symbol [ t %t.2 79 16 17 ];
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 80 12 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_80_12_82_46_if_stmt:
-        %tmp.15 = lgetv %r.1;
-        symbol [ r %tmp.15 80 21 22 ];
-        %tmp.16 = 0;
-        %tmp.17 = eq %tmp.15 %tmp.16;
-        bf %tmp.17 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_80_12_82_46_if_false;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_80_12_82_46_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_80_29_80_45_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 80 31 ]
-        symbol [ EI_BOSS %tmp.19 80 35 42 ];
-        %tmp.19 = getv ? :EI_BOSS;
-        lputv %t.2 %tmp.19;
-        symbol [ t %t.2 80 31 32 ];
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_80_29_80_45_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_80_12_82_46_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_80_12_82_46_if_false:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 81 17 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_81_17_82_46_if_stmt:
-        %tmp.20 = lgetv %r.1;
-        symbol [ r %tmp.20 81 21 22 ];
-        %tmp.21 = 1;
-        %tmp.22 = eq %tmp.20 %tmp.21;
-        bf %tmp.22 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_81_17_82_46_if_else_false;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_81_17_82_46_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_81_29_81_45_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 81 31 ]
-        symbol [ EI_GUARD %tmp.24 81 35 43 ];
-        %tmp.24 = getv ? :EI_GUARD;
-        lputv %t.2 %tmp.24;
-        symbol [ t %t.2 81 31 32 ];
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_81_29_81_45_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_81_17_82_46_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_81_17_82_46_if_else_false:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_82_30_82_46_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 82 32 ]
-        symbol [ EI_DRONE %tmp.26 82 36 44 ];
-        %tmp.26 = getv ? :EI_DRONE;
-        lputv %t.2 %tmp.26;
-        symbol [ t %t.2 82 32 33 ];
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_82_30_82_46_stop:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_81_17_82_46_if_end:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_80_12_82_46_if_end:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 83 12 ]
-        for @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_83_12_86_12_for_test @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_83_12_86_12_for_incr @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_83_12_86_12_for_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_83_12_86_12_for_init:
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_83_12_86_12_for_begin" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_83_12_86_12_for_end" ]
-        %c.3 = local;
-        symbol [ c %c.3 83 21 22 ];
-        %tmp.27 = 0;
-        lputv %c.3 %tmp.27;
-        symbol [ c %c.3 83 21 22 ];
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_83_12_86_12_for_test:
-        %tmp.28 = lgetv %c.3;
-        symbol [ c %tmp.28 83 28 29 ];
-        symbol [ PI_FORM_COLS %tmp.30 83 32 44 ];
-        %tmp.30 = getv ? :PI_FORM_COLS;
-        %tmp.31 = lt %tmp.28 %tmp.30;
-        bf %tmp.31 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_83_12_86_12_for_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_83_12_86_12_for_begin:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_83_51_86_12_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 84 16 ]
-        symbol [ enemies %tmp.33 84 16 23 ];
-        %tmp.33 = getv ? :enemies;
-        symbol [ add %tmp.34 84 24 27 ];
-        %tmp.34 = getv function %tmp.33 :add;
-        symbol [ Enemy %tmp.38 84 32 37 ];
-        %tmp.38 = getv ? :Enemy;
-        symbol [ PI_FORM_LEFT %tmp.40 84 38 50 ];
-        %tmp.40 = getv ? :PI_FORM_LEFT;
-        %tmp.41 = lgetv %c.3;
-        symbol [ c %tmp.41 84 53 54 ];
-        %tmp.42 = add %tmp.40 %tmp.41;
-        symbol [ PI_FORM_TOP %tmp.44 85 39 50 ];
-        %tmp.44 = getv ? :PI_FORM_TOP;
-        %tmp.45 = lgetv %r.1;
-        symbol [ r %tmp.45 85 54 55 ];
-        %tmp.46 = add %tmp.44 %tmp.45;
-        %tmp.47 = lgetv %t.2;
-        symbol [ t %tmp.47 85 57 58 ];
-        %tmp.35 = newc %tmp.38 (%tmp.42, %tmp.46, %tmp.47);
-        invoke %tmp.33 %tmp.34(%tmp.35);
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_83_51_86_12_stop:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_83_12_86_12_for_incr:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 83 ]
-        %tmp.50 = lgetv %c.3;
-        symbol [ c %tmp.50 83 46 47 ];
-        %tmp.51 = add %tmp.50 1;
-        lputv %c.3 %tmp.51;
-        symbol [ c %c.3 83 46 47 ];
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_83_12_86_12_for_test;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_83_12_86_12_for_end:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_78_47_87_8_stop:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_78_8_87_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 78 ]
-        %tmp.54 = lgetv %r.1;
-        symbol [ r %tmp.54 78 42 43 ];
-        %tmp.55 = add %tmp.54 1;
-        lputv %r.1 %tmp.55;
-        symbol [ r %r.1 78 42 43 ];
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_78_8_87_8_for_test;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_78_8_87_8_for_end:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 89 8 ]
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_69_34_94_4_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_69_34_94_4_stop" ]
-        %drop.4 = local;
-        symbol [ drop %drop.4 89 12 16 ];
-        %tmp.56 = lgetv %wave;
-        symbol [ wave %tmp.56 89 20 24 ];
-        %tmp.57 = 1;
-        %tmp.58 = sub %tmp.56 %tmp.57;
-        %tmp.59 = 2;
-        %tmp.60 = div %tmp.58 %tmp.59;
-        lputv %drop.4 %tmp.60;
-        symbol [ drop %drop.4 89 12 16 ];
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 90 8 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_90_8_90_34_if_stmt:
-        %tmp.61 = lgetv %drop.4;
-        symbol [ drop %tmp.61 90 12 16 ];
-        %tmp.62 = 3;
-        %tmp.63 = gt %tmp.61 %tmp.62;
-        bf %tmp.63 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_90_8_90_34_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_90_8_90_34_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_90_22_90_34_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 90 24 ]
-        %tmp.64 = 3;
-        lputv %drop.4 %tmp.64;
-        symbol [ drop %drop.4 90 24 28 ];
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_90_22_90_34_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_90_8_90_34_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_90_8_90_34_if_end:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 91 8 ]
-        for @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_91_8_93_8_for_test @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_91_8_93_8_for_incr @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_91_8_93_8_for_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_91_8_93_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_91_8_93_8_for_begin" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_91_8_93_8_for_end" ]
-        %i.5 = local;
-        symbol [ i %i.5 91 17 18 ];
-        %tmp.65 = 0;
-        lputv %i.5 %tmp.65;
-        symbol [ i %i.5 91 17 18 ];
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_91_8_93_8_for_test:
-        %tmp.66 = lgetv %i.5;
-        symbol [ i %tmp.66 91 24 25 ];
-        symbol [ enemies %tmp.68 91 28 35 ];
-        %tmp.68 = getv ? :enemies;
-        symbol [ size %tmp.69 91 36 40 ];
-        %tmp.69 = getv function %tmp.68 :size;
-        %tmp.70 = invoke %tmp.68 %tmp.69();
-        %tmp.71 = lt %tmp.66 %tmp.70;
-        bf %tmp.71 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_91_8_93_8_for_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_91_8_93_8_for_begin:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_91_49_93_8_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 92 12 ]
-        symbol [ enemies %tmp.72 92 12 19 ];
-        %tmp.72 = getv self :enemies;
-        %tmp.73 = lgetv %i.5;
-        symbol [ i %tmp.73 92 20 21 ];
-        %tmp.74 = agetv %tmp.72 %tmp.73;
-        symbol [ enemies %tmp.76 92 29 36 ];
-        %tmp.76 = getv ? :enemies;
-        %tmp.77 = lgetv %i.5;
-        symbol [ i %tmp.77 92 37 38 ];
-        %tmp.78 = agetv %tmp.76 %tmp.77;
-        symbol [ row %tmp.79 92 40 43 ];
-        %tmp.79 = getv %tmp.78 :row;
-        %tmp.80 = lgetv %drop.4;
-        symbol [ drop %tmp.80 92 46 50 ];
-        %tmp.81 = add %tmp.79 %tmp.80;
-        symbol [ row ? 92 23 26 ];
-        putv %tmp.74 :row %tmp.81;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_91_49_93_8_stop:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_91_8_93_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 91 ]
-        %tmp.84 = lgetv %i.5;
-        symbol [ i %tmp.84 91 44 45 ];
-        %tmp.85 = add %tmp.84 1;
-        lputv %i.5 %tmp.85;
-        symbol [ i %i.5 91 44 45 ];
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_91_8_93_8_for_test;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_91_8_93_8_for_end:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_69_34_94_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 97; @symbol_functiondef = [aliveCount,97,13,23]; ]
-    function aliveCount() {
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_97_26_103_4_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 98 8 ]
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_97_26_103_4_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_97_26_103_4_stop" ]
-        %n.1 = local;
-        symbol [ n %n.1 98 12 13 ];
-        %tmp.1 = 0;
-        lputv %n.1 %tmp.1;
-        symbol [ n %n.1 98 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 99 8 ]
-        for @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_99_8_101_8_for_test @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_99_8_101_8_for_incr @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_99_8_101_8_for_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_99_8_101_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_99_8_101_8_for_begin" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_99_8_101_8_for_end" ]
-        %i.2 = local;
-        symbol [ i %i.2 99 17 18 ];
-        %tmp.2 = 0;
-        lputv %i.2 %tmp.2;
-        symbol [ i %i.2 99 17 18 ];
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_99_8_101_8_for_test:
-        %tmp.3 = lgetv %i.2;
-        symbol [ i %tmp.3 99 24 25 ];
-        symbol [ enemies %tmp.5 99 28 35 ];
-        %tmp.5 = getv ? :enemies;
-        symbol [ size %tmp.6 99 36 40 ];
-        %tmp.6 = getv function %tmp.5 :size;
-        %tmp.7 = invoke %tmp.5 %tmp.6();
-        %tmp.8 = lt %tmp.3 %tmp.7;
-        bf %tmp.8 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_99_8_101_8_for_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_99_8_101_8_for_begin:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_99_49_101_8_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 100 12 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_100_12_100_47_if_stmt:
-        symbol [ enemies %tmp.10 100 16 23 ];
-        %tmp.10 = getv ? :enemies;
-        %tmp.11 = lgetv %i.2;
-        symbol [ i %tmp.11 100 24 25 ];
-        %tmp.12 = agetv %tmp.10 %tmp.11;
-        symbol [ alive %tmp.13 100 27 32 ];
-        %tmp.13 = getv %tmp.12 :alive;
-        bf %tmp.13 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_100_12_100_47_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_100_12_100_47_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_100_34_100_47_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 100 36 ]
-        %tmp.14 = lgetv %n.1;
-        symbol [ n %tmp.14 100 40 41 ];
-        %tmp.15 = 1;
-        %tmp.16 = add %tmp.14 %tmp.15;
-        lputv %n.1 %tmp.16;
-        symbol [ n %n.1 100 36 37 ];
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_100_34_100_47_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_100_12_100_47_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_100_12_100_47_if_end:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_99_49_101_8_stop:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_99_8_101_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 99 ]
-        %tmp.19 = lgetv %i.2;
-        symbol [ i %tmp.19 99 44 45 ];
-        %tmp.20 = add %tmp.19 1;
-        lputv %i.2 %tmp.20;
-        symbol [ i %i.2 99 44 45 ];
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_99_8_101_8_for_test;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_99_8_101_8_for_end:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 102 8 ]
-        %tmp.21 = lgetv %n.1;
-        symbol [ n %tmp.21 102 15 16 ];
-        ret %tmp.21;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_97_26_103_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 105; @symbol_functiondef = [allDead,105,13,20]; ]
-    function allDead() {
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_105_23_110_4_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 106 8 ]
-        for @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_106_8_108_8_for_test @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_106_8_108_8_for_incr @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_106_8_108_8_for_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_106_8_108_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_106_8_108_8_for_begin" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_106_8_108_8_for_end" ]
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 71; @symbol_functiondef = [clearAll,71,13,21]; ]
+    function clearAll() {
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_71_24_76_4_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 72 8 ]
+        for @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_72_8_74_8_for_test @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_72_8_74_8_for_incr @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_72_8_74_8_for_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_72_8_74_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_72_8_74_8_for_begin" "_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_72_8_74_8_for_end" ]
         %i.1 = local;
-        symbol [ i %i.1 106 17 18 ];
+        symbol [ i %i.1 72 17 18 ];
         %tmp.1 = 0;
         lputv %i.1 %tmp.1;
-        symbol [ i %i.1 106 17 18 ];
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_106_8_108_8_for_test:
+        symbol [ i %i.1 72 17 18 ];
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_72_8_74_8_for_test:
         %tmp.2 = lgetv %i.1;
-        symbol [ i %tmp.2 106 24 25 ];
-        symbol [ enemies %tmp.4 106 28 35 ];
-        %tmp.4 = getv ? :enemies;
-        symbol [ size %tmp.5 106 36 40 ];
-        %tmp.5 = getv function %tmp.4 :size;
-        %tmp.6 = invoke %tmp.4 %tmp.5();
-        %tmp.7 = lt %tmp.2 %tmp.6;
-        bf %tmp.7 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_106_8_108_8_for_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_106_8_108_8_for_begin:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_106_49_108_8_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 107 12 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_107_12_107_50_if_stmt:
-        symbol [ enemies %tmp.9 107 16 23 ];
-        %tmp.9 = getv ? :enemies;
-        %tmp.10 = lgetv %i.1;
-        symbol [ i %tmp.10 107 24 25 ];
-        %tmp.11 = agetv %tmp.9 %tmp.10;
-        symbol [ alive %tmp.12 107 27 32 ];
-        %tmp.12 = getv %tmp.11 :alive;
-        bf %tmp.12 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_107_12_107_50_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_107_12_107_50_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_107_34_107_50_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 107 36 ]
-        %tmp.13 = false;
-        ret %tmp.13;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_107_34_107_50_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_107_12_107_50_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_107_12_107_50_if_end:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_106_49_108_8_stop:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_106_8_108_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 106 ]
+        symbol [ i %tmp.2 72 24 25 ];
+        symbol [ AR_MAX_ENEMIES %tmp.4 72 28 42 ];
+        %tmp.4 = getv ? :AR_MAX_ENEMIES;
+        %tmp.5 = lt %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_72_8_74_8_for_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_72_8_74_8_for_begin:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_72_49_74_8_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 73 12 ]
+        symbol [ live %tmp.6 73 12 16 ];
+        %tmp.6 = getv self :live;
+        %tmp.7 = 0;
+        %tmp.8 = lgetv %i.1;
+        symbol [ i %tmp.8 73 17 18 ];
+        aputv %tmp.6 %tmp.8 %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 73 25 ]
+        symbol [ sx %tmp.9 73 25 27 ];
+        %tmp.9 = getv self :sx;
+        %tmp.10 = -9999;
+        %tmp.11 = lgetv %i.1;
+        symbol [ i %tmp.11 73 28 29 ];
+        aputv %tmp.9 %tmp.11 %tmp.10;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 73 40 ]
+        symbol [ sy %tmp.12 73 40 42 ];
+        %tmp.12 = getv self :sy;
+        %tmp.13 = -9999;
+        %tmp.14 = lgetv %i.1;
+        symbol [ i %tmp.14 73 43 44 ];
+        aputv %tmp.12 %tmp.14 %tmp.13;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 73 55 ]
+        symbol [ sz %tmp.15 73 55 57 ];
+        %tmp.15 = getv self :sz;
+        %tmp.16 = 8;
+        %tmp.17 = lgetv %i.1;
+        symbol [ i %tmp.17 73 58 59 ];
+        aputv %tmp.15 %tmp.17 %tmp.16;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_72_49_74_8_stop:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_72_8_74_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 72 ]
+        %tmp.20 = lgetv %i.1;
+        symbol [ i %tmp.20 72 44 45 ];
+        %tmp.21 = add %tmp.20 1;
+        lputv %i.1 %tmp.21;
+        symbol [ i %i.1 72 44 45 ];
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_72_8_74_8_for_test;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_72_8_74_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 75 8 ]
+        %tmp.22 = 0;
+        symbol [ _spawnT ? 75 8 15 ];
+        putv self :_spawnT %tmp.22;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_71_24_76_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 79; @symbol_functiondef = [beginRound,79,13,23]; @symbol_param<0> = [roundIdx,79,24,32]; @symbol_param<1> = [diff,79,34,38]; ]
+    function beginRound(roundIdx, diff) {
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_79_40_89_4_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 80 8 ]
+        %tmp.1 = self;
+        symbol [ clearAll %tmp.2 80 8 16 ];
+        %tmp.2 = getv function %tmp.1 :clearAll;
+        invoke %tmp.1 %tmp.2();
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 81 8 ]
+        %tmp.3 = lgetv %roundIdx;
+        symbol [ roundIdx %tmp.3 81 24 32 ];
+        symbol [ _roundTypeMix ? 81 8 21 ];
+        putv self :_roundTypeMix %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 83 8 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_79_40_89_4_start" "_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_79_40_89_4_stop" ]
+        %initial.1 = local;
+        symbol [ initial %initial.1 83 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 84 8 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_84_8_85_62_if_stmt:
+        %tmp.4 = lgetv %roundIdx;
+        symbol [ roundIdx %tmp.4 84 17 25 ];
+        symbol [ AR_RD_F %tmp.6 84 29 36 ];
+        %tmp.6 = getv ? :AR_RD_F;
+        %tmp.7 = eq %tmp.4 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_84_8_85_62_if_else_false;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_84_8_85_62_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_84_39_84_54_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 84 41 ]
+        %tmp.8 = 1;
+        lputv %initial.1 %tmp.8;
+        symbol [ initial %initial.1 84 41 48 ];
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_84_39_84_54_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_84_8_85_62_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_84_8_85_62_if_else_false:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_85_40_85_62_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 85 42 ]
+        %tmp.9 = 2;
+        %tmp.10 = lgetv %diff;
+        symbol [ diff %tmp.10 85 56 60 ];
+        %tmp.11 = add %tmp.9 %tmp.10;
+        lputv %initial.1 %tmp.11;
+        symbol [ initial %initial.1 85 42 49 ];
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_85_40_85_62_stop:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_84_8_85_62_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 86 8 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_86_8_86_68_if_stmt:
+        %tmp.12 = lgetv %initial.1;
+        symbol [ initial %tmp.12 86 12 19 ];
+        symbol [ AR_MAX_ENEMIES %tmp.14 86 22 36 ];
+        %tmp.14 = getv ? :AR_MAX_ENEMIES;
+        %tmp.15 = gt %tmp.12 %tmp.14;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_86_8_86_68_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_86_8_86_68_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_86_40_86_68_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 86 42 ]
+        symbol [ AR_MAX_ENEMIES %tmp.17 86 52 66 ];
+        %tmp.17 = getv ? :AR_MAX_ENEMIES;
+        lputv %initial.1 %tmp.17;
+        symbol [ initial %initial.1 86 42 49 ];
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_86_40_86_68_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_86_8_86_68_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_86_8_86_68_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 87 8 ]
+        for @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_87_8_87_54_for_test @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_87_8_87_54_for_incr @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_87_8_87_54_for_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_87_8_87_54_for_init:
+        [ "_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_87_8_87_54_for_begin" "_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_87_8_87_54_for_end" ]
+        %i.2 = local;
+        symbol [ i %i.2 87 17 18 ];
+        %tmp.18 = 0;
+        lputv %i.2 %tmp.18;
+        symbol [ i %i.2 87 17 18 ];
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_87_8_87_54_for_test:
+        %tmp.19 = lgetv %i.2;
+        symbol [ i %tmp.19 87 24 25 ];
+        %tmp.20 = lgetv %initial.1;
+        symbol [ initial %tmp.20 87 28 35 ];
+        %tmp.21 = lt %tmp.19 %tmp.20;
+        bf %tmp.21 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_87_8_87_54_for_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_87_8_87_54_for_begin:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_87_42_87_54_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 87 44 ]
+        %tmp.22 = self;
+        symbol [ _spawn %tmp.23 87 44 50 ];
+        %tmp.23 = getv function %tmp.22 :_spawn;
+        invoke %tmp.22 %tmp.23();
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_87_42_87_54_stop:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_87_8_87_54_for_incr:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 87 ]
+        %tmp.26 = lgetv %i.2;
+        symbol [ i %tmp.26 87 37 38 ];
+        %tmp.27 = add %tmp.26 1;
+        lputv %i.2 %tmp.27;
+        symbol [ i %i.2 87 37 38 ];
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_87_8_87_54_for_test;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_87_8_87_54_for_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 88 8 ]
+        %tmp.28 = 30;
+        symbol [ _spawnT ? 88 8 15 ];
+        putv self :_spawnT %tmp.28;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_79_40_89_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 92; @symbol_functiondef = [alive,92,13,18]; ]
+    function alive() {
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_92_21_96_4_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 93 8 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_92_21_96_4_start" "_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_92_21_96_4_stop" ]
+        %c.1 = local;
+        symbol [ c %c.1 93 12 13 ];
+        %tmp.1 = 0;
+        lputv %c.1 %tmp.1;
+        symbol [ c %c.1 93 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 94 8 ]
+        for @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_94_8_94_78_for_test @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_94_8_94_78_for_incr @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_94_8_94_78_for_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_94_8_94_78_for_init:
+        [ "_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_94_8_94_78_for_begin" "_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_94_8_94_78_for_end" ]
+        %i.2 = local;
+        symbol [ i %i.2 94 17 18 ];
+        %tmp.2 = 0;
+        lputv %i.2 %tmp.2;
+        symbol [ i %i.2 94 17 18 ];
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_94_8_94_78_for_test:
+        %tmp.3 = lgetv %i.2;
+        symbol [ i %tmp.3 94 24 25 ];
+        symbol [ AR_MAX_ENEMIES %tmp.5 94 28 42 ];
+        %tmp.5 = getv ? :AR_MAX_ENEMIES;
+        %tmp.6 = lt %tmp.3 %tmp.5;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_94_8_94_78_for_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_94_8_94_78_for_begin:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_94_49_94_78_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 94 51 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_94_51_94_76_if_stmt:
+        symbol [ live %tmp.8 94 55 59 ];
+        %tmp.8 = getv ? :live;
+        %tmp.9 = lgetv %i.2;
+        symbol [ i %tmp.9 94 60 61 ];
+        %tmp.10 = agetv %tmp.8 %tmp.9;
+        %tmp.11 = 0;
+        %tmp.12 = ne %tmp.10 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_94_51_94_76_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_94_51_94_76_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_94_69_94_76_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 94 71 ]
+        %tmp.15 = lgetv %c.1;
+        symbol [ c %tmp.15 94 71 72 ];
+        %tmp.16 = add %tmp.15 1;
+        lputv %c.1 %tmp.16;
+        symbol [ c %c.1 94 71 72 ];
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_94_69_94_76_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_94_51_94_76_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_94_51_94_76_if_end:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_94_49_94_78_stop:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_94_8_94_78_for_incr:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 94 ]
+        %tmp.19 = lgetv %i.2;
+        symbol [ i %tmp.19 94 44 45 ];
+        %tmp.20 = add %tmp.19 1;
+        lputv %i.2 %tmp.20;
+        symbol [ i %i.2 94 44 45 ];
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_94_8_94_78_for_test;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_94_8_94_78_for_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 95 8 ]
+        %tmp.21 = lgetv %c.1;
+        symbol [ c %tmp.21 95 15 16 ];
+        ret %tmp.21;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_92_21_96_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 100; @symbol_functiondef = [tick,100,13,17]; @symbol_param<0> = [roundIdx,100,18,26]; @symbol_param<1> = [diff,100,28,32]; @symbol_param<2> = [targetCount,100,34,45]; ]
+    function tick(roundIdx, diff, targetCount) {
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_100_47_142_4_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 101 8 ]
+        for @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_101_8_133_8_for_test @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_101_8_133_8_for_incr @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_101_8_133_8_for_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_101_8_133_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_101_8_133_8_for_begin" "_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_101_8_133_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 101 17 18 ];
+        %tmp.1 = 0;
+        lputv %i.1 %tmp.1;
+        symbol [ i %i.1 101 17 18 ];
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_101_8_133_8_for_test:
+        %tmp.2 = lgetv %i.1;
+        symbol [ i %tmp.2 101 24 25 ];
+        symbol [ AR_MAX_ENEMIES %tmp.4 101 28 42 ];
+        %tmp.4 = getv ? :AR_MAX_ENEMIES;
+        %tmp.5 = lt %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_101_8_133_8_for_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_101_8_133_8_for_begin:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_101_49_133_8_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 102 12 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_102_12_102_42_if_stmt:
+        symbol [ live %tmp.7 102 16 20 ];
+        %tmp.7 = getv ? :live;
+        %tmp.8 = lgetv %i.1;
+        symbol [ i %tmp.8 102 21 22 ];
+        %tmp.9 = agetv %tmp.7 %tmp.8;
+        %tmp.10 = 0;
+        %tmp.11 = eq %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_102_12_102_42_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_102_12_102_42_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_102_30_102_42_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 102 32 ]
+        goto break @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_101_8_133_8_for_incr;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_102_30_102_42_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_102_12_102_42_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_102_12_102_42_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 103 12 ]
+        symbol [ phase %tmp.12 103 12 17 ];
+        %tmp.12 = getv self :phase;
+        symbol [ phase %tmp.15 103 12 17 ];
+        %tmp.15 = getv ? :phase;
         %tmp.16 = lgetv %i.1;
-        symbol [ i %tmp.16 106 44 45 ];
-        %tmp.17 = add %tmp.16 1;
-        lputv %i.1 %tmp.17;
-        symbol [ i %i.1 106 44 45 ];
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_106_8_108_8_for_test;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_106_8_108_8_for_end:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 109 8 ]
+        symbol [ i %tmp.16 103 18 19 ];
+        %tmp.17 = agetv %tmp.15 %tmp.16;
+        %tmp.18 = add %tmp.17 1;
+        %tmp.19 = lgetv %i.1;
+        symbol [ i %tmp.19 103 18 19 ];
+        aputv %tmp.12 %tmp.19 dup %tmp.18;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 104 12 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_104_12_104_44_if_stmt:
+        symbol [ shutT %tmp.21 104 16 21 ];
+        %tmp.21 = getv ? :shutT;
+        %tmp.22 = lgetv %i.1;
+        symbol [ i %tmp.22 104 22 23 ];
+        %tmp.23 = agetv %tmp.21 %tmp.22;
+        %tmp.24 = 0;
+        %tmp.25 = gt %tmp.23 %tmp.24;
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_104_12_104_44_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_104_12_104_44_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_104_30_104_44_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 104 32 ]
+        symbol [ shutT %tmp.26 104 32 37 ];
+        %tmp.26 = getv self :shutT;
+        symbol [ shutT %tmp.29 104 32 37 ];
+        %tmp.29 = getv ? :shutT;
+        %tmp.30 = lgetv %i.1;
+        symbol [ i %tmp.30 104 38 39 ];
+        %tmp.31 = agetv %tmp.29 %tmp.30;
+        %tmp.32 = sub %tmp.31 1;
+        %tmp.33 = lgetv %i.1;
+        symbol [ i %tmp.33 104 38 39 ];
+        aputv %tmp.26 %tmp.33 dup %tmp.32;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_104_30_104_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_104_12_104_44_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_104_12_104_44_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 105 12 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_105_12_105_44_if_stmt:
+        symbol [ openT %tmp.35 105 16 21 ];
+        %tmp.35 = getv ? :openT;
+        %tmp.36 = lgetv %i.1;
+        symbol [ i %tmp.36 105 22 23 ];
+        %tmp.37 = agetv %tmp.35 %tmp.36;
+        %tmp.38 = 0;
+        %tmp.39 = gt %tmp.37 %tmp.38;
+        bf %tmp.39 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_105_12_105_44_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_105_12_105_44_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_105_30_105_44_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 105 32 ]
+        symbol [ openT %tmp.40 105 32 37 ];
+        %tmp.40 = getv self :openT;
+        symbol [ openT %tmp.43 105 32 37 ];
+        %tmp.43 = getv ? :openT;
+        %tmp.44 = lgetv %i.1;
+        symbol [ i %tmp.44 105 38 39 ];
+        %tmp.45 = agetv %tmp.43 %tmp.44;
+        %tmp.46 = sub %tmp.45 1;
+        %tmp.47 = lgetv %i.1;
+        symbol [ i %tmp.47 105 38 39 ];
+        aputv %tmp.40 %tmp.47 dup %tmp.46;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_105_30_105_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_105_12_105_44_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_105_12_105_44_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 106 12 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_106_12_106_44_if_stmt:
+        symbol [ fireT %tmp.49 106 16 21 ];
+        %tmp.49 = getv ? :fireT;
+        %tmp.50 = lgetv %i.1;
+        symbol [ i %tmp.50 106 22 23 ];
+        %tmp.51 = agetv %tmp.49 %tmp.50;
+        %tmp.52 = 0;
+        %tmp.53 = gt %tmp.51 %tmp.52;
+        bf %tmp.53 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_106_12_106_44_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_106_12_106_44_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_106_30_106_44_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 106 32 ]
+        symbol [ fireT %tmp.54 106 32 37 ];
+        %tmp.54 = getv self :fireT;
+        symbol [ fireT %tmp.57 106 32 37 ];
+        %tmp.57 = getv ? :fireT;
+        %tmp.58 = lgetv %i.1;
+        symbol [ i %tmp.58 106 38 39 ];
+        %tmp.59 = agetv %tmp.57 %tmp.58;
+        %tmp.60 = sub %tmp.59 1;
+        %tmp.61 = lgetv %i.1;
+        symbol [ i %tmp.61 106 38 39 ];
+        aputv %tmp.54 %tmp.61 dup %tmp.60;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_106_30_106_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_106_12_106_44_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_106_12_106_44_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 108 12 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_108_12_132_12_if_stmt:
+        symbol [ type %tmp.63 108 16 20 ];
+        %tmp.63 = getv ? :type;
+        %tmp.64 = lgetv %i.1;
+        symbol [ i %tmp.64 108 21 22 ];
+        %tmp.65 = agetv %tmp.63 %tmp.64;
+        symbol [ AR_ET_RIDER %tmp.67 108 27 38 ];
+        %tmp.67 = getv ? :AR_ET_RIDER;
+        %tmp.68 = eq %tmp.65 %tmp.67;
+        bf %tmp.68 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_108_12_132_12_if_false;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_108_12_132_12_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_108_40_118_12_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 114 16 ]
+        symbol [ yaw %tmp.69 114 16 19 ];
+        %tmp.69 = getv self :yaw;
+        symbol [ yaw %tmp.71 114 26 29 ];
+        %tmp.71 = getv ? :yaw;
+        %tmp.72 = lgetv %i.1;
+        symbol [ i %tmp.72 114 30 31 ];
+        %tmp.73 = agetv %tmp.71 %tmp.72;
+        symbol [ dyaw %tmp.75 114 35 39 ];
+        %tmp.75 = getv ? :dyaw;
+        %tmp.76 = lgetv %i.1;
+        symbol [ i %tmp.76 114 40 41 ];
+        %tmp.77 = agetv %tmp.75 %tmp.76;
+        %tmp.78 = add %tmp.73 %tmp.77;
+        %tmp.79 = lgetv %i.1;
+        symbol [ i %tmp.79 114 20 21 ];
+        aputv %tmp.69 %tmp.79 %tmp.78;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 115 16 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_108_40_118_12_start" "_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_108_40_118_12_stop" ]
+        %amp.2 = local;
+        symbol [ amp %amp.2 115 20 23 ];
+        %tmp.80 = 0.32;
+        lputv %amp.2 %tmp.80;
+        symbol [ amp %amp.2 115 20 23 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 116 16 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_116_16_116_73_if_stmt:
+        symbol [ yaw %tmp.82 116 20 23 ];
+        %tmp.82 = getv ? :yaw;
+        %tmp.83 = lgetv %i.1;
+        symbol [ i %tmp.83 116 24 25 ];
+        %tmp.84 = agetv %tmp.82 %tmp.83;
+        symbol [ pyaw %tmp.86 116 30 34 ];
+        %tmp.86 = getv ? :pyaw;
+        %tmp.87 = lgetv %i.1;
+        symbol [ i %tmp.87 116 35 36 ];
+        %tmp.88 = agetv %tmp.86 %tmp.87;
+        %tmp.89 = lgetv %amp.2;
+        symbol [ amp %tmp.89 116 40 43 ];
+        %tmp.90 = add %tmp.88 %tmp.89;
+        %tmp.91 = gt %tmp.84 %tmp.90;
+        bf %tmp.91 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_116_16_116_73_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_116_16_116_73_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_116_45_116_73_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 116 47 ]
+        symbol [ dyaw %tmp.92 116 47 51 ];
+        %tmp.92 = getv self :dyaw;
+        %tmp.93 = self;
+        symbol [ _abs %tmp.94 116 58 62 ];
+        %tmp.94 = getv function %tmp.93 :_abs;
+        symbol [ dyaw %tmp.96 116 63 67 ];
+        %tmp.96 = getv ? :dyaw;
+        %tmp.97 = lgetv %i.1;
+        symbol [ i %tmp.97 116 68 69 ];
+        %tmp.98 = agetv %tmp.96 %tmp.97;
+        %tmp.99 = invoke %tmp.93 %tmp.94(%tmp.98);
+        %tmp.100 = sub 0 %tmp.99;
+        %tmp.101 = lgetv %i.1;
+        symbol [ i %tmp.101 116 52 53 ];
+        aputv %tmp.92 %tmp.101 %tmp.100;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_116_45_116_73_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_116_16_116_73_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_116_16_116_73_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 117 16 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_117_16_117_73_if_stmt:
+        symbol [ yaw %tmp.103 117 20 23 ];
+        %tmp.103 = getv ? :yaw;
+        %tmp.104 = lgetv %i.1;
+        symbol [ i %tmp.104 117 24 25 ];
+        %tmp.105 = agetv %tmp.103 %tmp.104;
+        symbol [ pyaw %tmp.107 117 30 34 ];
+        %tmp.107 = getv ? :pyaw;
+        %tmp.108 = lgetv %i.1;
+        symbol [ i %tmp.108 117 35 36 ];
+        %tmp.109 = agetv %tmp.107 %tmp.108;
+        %tmp.110 = lgetv %amp.2;
+        symbol [ amp %tmp.110 117 40 43 ];
+        %tmp.111 = sub %tmp.109 %tmp.110;
+        %tmp.112 = lt %tmp.105 %tmp.111;
+        bf %tmp.112 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_117_16_117_73_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_117_16_117_73_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_117_45_117_73_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 117 47 ]
+        symbol [ dyaw %tmp.113 117 47 51 ];
+        %tmp.113 = getv self :dyaw;
+        %tmp.114 = self;
+        symbol [ _abs %tmp.115 117 58 62 ];
+        %tmp.115 = getv function %tmp.114 :_abs;
+        symbol [ dyaw %tmp.117 117 63 67 ];
+        %tmp.117 = getv ? :dyaw;
+        %tmp.118 = lgetv %i.1;
+        symbol [ i %tmp.118 117 68 69 ];
+        %tmp.119 = agetv %tmp.117 %tmp.118;
+        %tmp.120 = invoke %tmp.114 %tmp.115(%tmp.119);
+        %tmp.121 = lgetv %i.1;
+        symbol [ i %tmp.121 117 52 53 ];
+        aputv %tmp.113 %tmp.121 %tmp.120;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_117_45_117_73_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_117_16_117_73_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_117_16_117_73_if_end:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_108_40_118_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_108_12_132_12_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_108_12_132_12_if_false:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 118 19 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_118_19_132_12_if_stmt:
+        symbol [ type %tmp.123 118 23 27 ];
+        %tmp.123 = getv ? :type;
+        %tmp.124 = lgetv %i.1;
+        symbol [ i %tmp.124 118 28 29 ];
+        %tmp.125 = agetv %tmp.123 %tmp.124;
+        symbol [ AR_ET_SHIELD %tmp.127 118 34 46 ];
+        %tmp.127 = getv ? :AR_ET_SHIELD;
+        %tmp.128 = eq %tmp.125 %tmp.127;
+        bf %tmp.128 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_118_19_132_12_if_false;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_118_19_132_12_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_118_48_129_12_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 120 16 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_120_16_124_16_if_stmt:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_120_20_120_49_begin:
+        symbol [ shutT %tmp.130 120 20 25 ];
+        %tmp.130 = getv ? :shutT;
+        %tmp.131 = lgetv %i.1;
+        symbol [ i %tmp.131 120 26 27 ];
+        %tmp.132 = agetv %tmp.130 %tmp.131;
+        %tmp.133 = 0;
+        %tmp.134 = eq %tmp.132 %tmp.133;
+        bf %tmp.134 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_120_16_124_16_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_120_37_120_49_true:
+        symbol [ openT %tmp.136 120 37 42 ];
+        %tmp.136 = getv ? :openT;
+        %tmp.137 = lgetv %i.1;
+        symbol [ i %tmp.137 120 43 44 ];
+        %tmp.138 = agetv %tmp.136 %tmp.137;
+        %tmp.139 = 0;
+        %tmp.140 = eq %tmp.138 %tmp.139;
+        push %tmp.140;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_120_37_120_49_end:
+        %tmp.141 = phi [%tmp.134 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_120_20_120_49_begin] [%tmp.140 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_120_37_120_49_true] [%tmp.141 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_120_37_120_49_end];
+        bf %tmp.141 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_120_16_124_16_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_120_16_124_16_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_120_52_124_16_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 122 20 ]
+        symbol [ openT %tmp.142 122 20 25 ];
+        %tmp.142 = getv self :openT;
+        %tmp.143 = 14;
+        %tmp.144 = self;
+        symbol [ _rand %tmp.145 122 36 41 ];
+        %tmp.145 = getv function %tmp.144 :_rand;
+        %tmp.146 = 8;
+        %tmp.147 = invoke %tmp.144 %tmp.145(%tmp.146);
+        %tmp.148 = add %tmp.143 %tmp.147;
+        %tmp.149 = lgetv %diff;
+        symbol [ diff %tmp.149 122 47 51 ];
+        %tmp.150 = 2;
+        %tmp.151 = mul %tmp.149 %tmp.150;
+        %tmp.152 = sub %tmp.148 %tmp.151;
+        %tmp.153 = lgetv %i.1;
+        symbol [ i %tmp.153 122 26 27 ];
+        aputv %tmp.142 %tmp.153 %tmp.152;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 123 20 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_123_20_123_54_if_stmt:
+        symbol [ openT %tmp.155 123 24 29 ];
+        %tmp.155 = getv ? :openT;
+        %tmp.156 = lgetv %i.1;
+        symbol [ i %tmp.156 123 30 31 ];
+        %tmp.157 = agetv %tmp.155 %tmp.156;
+        %tmp.158 = 6;
+        %tmp.159 = lt %tmp.157 %tmp.158;
+        bf %tmp.159 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_123_20_123_54_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_123_20_123_54_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_123_38_123_54_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 123 40 ]
+        symbol [ openT %tmp.160 123 40 45 ];
+        %tmp.160 = getv self :openT;
+        %tmp.161 = 6;
+        %tmp.162 = lgetv %i.1;
+        symbol [ i %tmp.162 123 46 47 ];
+        aputv %tmp.160 %tmp.162 %tmp.161;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_123_38_123_54_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_123_20_123_54_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_123_20_123_54_if_end:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_120_52_124_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_120_16_124_16_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_120_16_124_16_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 125 16 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_125_16_128_16_if_stmt:
+        symbol [ openT %tmp.164 125 20 25 ];
+        %tmp.164 = getv ? :openT;
+        %tmp.165 = lgetv %i.1;
+        symbol [ i %tmp.165 125 26 27 ];
+        %tmp.166 = agetv %tmp.164 %tmp.165;
+        %tmp.167 = 1;
+        %tmp.168 = eq %tmp.166 %tmp.167;
+        bf %tmp.168 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_125_16_128_16_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_125_16_128_16_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_125_35_128_16_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 127 20 ]
+        symbol [ shutT %tmp.169 127 20 25 ];
+        %tmp.169 = getv self :shutT;
+        %tmp.170 = 22;
+        %tmp.171 = self;
+        symbol [ _rand %tmp.172 127 36 41 ];
+        %tmp.172 = getv function %tmp.171 :_rand;
+        %tmp.173 = 14;
+        %tmp.174 = invoke %tmp.171 %tmp.172(%tmp.173);
+        %tmp.175 = add %tmp.170 %tmp.174;
+        %tmp.176 = lgetv %diff;
+        symbol [ diff %tmp.176 127 48 52 ];
+        %tmp.177 = 4;
+        %tmp.178 = mul %tmp.176 %tmp.177;
+        %tmp.179 = add %tmp.175 %tmp.178;
+        %tmp.180 = lgetv %i.1;
+        symbol [ i %tmp.180 127 26 27 ];
+        aputv %tmp.169 %tmp.180 %tmp.179;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_125_35_128_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_125_16_128_16_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_125_16_128_16_if_end:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_118_48_129_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_118_19_132_12_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_118_19_132_12_if_false:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 129 19 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_129_19_132_12_if_stmt:
+        symbol [ type %tmp.182 129 23 27 ];
+        %tmp.182 = getv ? :type;
+        %tmp.183 = lgetv %i.1;
+        symbol [ i %tmp.183 129 28 29 ];
+        %tmp.184 = agetv %tmp.182 %tmp.183;
+        symbol [ AR_ET_ARCHER %tmp.186 129 34 46 ];
+        %tmp.186 = getv ? :AR_ET_ARCHER;
+        %tmp.187 = eq %tmp.184 %tmp.186;
+        bf %tmp.187 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_129_19_132_12_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_129_19_132_12_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_129_48_132_12_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 131 16 ]
+        symbol [ yaw %tmp.188 131 16 19 ];
+        %tmp.188 = getv self :yaw;
+        symbol [ yaw %tmp.190 131 25 28 ];
+        %tmp.190 = getv ? :yaw;
+        %tmp.191 = lgetv %i.1;
+        symbol [ i %tmp.191 131 29 30 ];
+        %tmp.192 = agetv %tmp.190 %tmp.191;
+        symbol [ Math %tmp.193 131 34 38 ];
+        %tmp.193 = getm $.Toybox.Math;
+        symbol [ sin %tmp.194 131 39 42 ];
+        %tmp.194 = getv function %tmp.193 :sin;
+        symbol [ phase %tmp.196 131 43 48 ];
+        %tmp.196 = getv ? :phase;
+        %tmp.197 = lgetv %i.1;
+        symbol [ i %tmp.197 131 49 50 ];
+        %tmp.198 = agetv %tmp.196 %tmp.197;
+        symbol [ toFloat %tmp.199 131 52 59 ];
+        %tmp.199 = getv function %tmp.198 :toFloat;
+        %tmp.200 = invoke %tmp.198 %tmp.199();
+        %tmp.201 = 0.06;
+        %tmp.202 = mul %tmp.200 %tmp.201;
+        %tmp.203 = invoke %tmp.193 %tmp.194(%tmp.202);
+        %tmp.204 = 0.004;
+        %tmp.205 = mul %tmp.203 %tmp.204;
+        %tmp.206 = add %tmp.192 %tmp.205;
+        %tmp.207 = lgetv %i.1;
+        symbol [ i %tmp.207 131 20 21 ];
+        aputv %tmp.188 %tmp.207 %tmp.206;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_129_48_132_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_129_19_132_12_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_129_19_132_12_if_end:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_118_19_132_12_if_end:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_108_12_132_12_if_end:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_101_49_133_8_stop:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_101_8_133_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 101 ]
+        %tmp.210 = lgetv %i.1;
+        symbol [ i %tmp.210 101 44 45 ];
+        %tmp.211 = add %tmp.210 1;
+        lputv %i.1 %tmp.211;
+        symbol [ i %i.1 101 44 45 ];
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_101_8_133_8_for_test;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_101_8_133_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 136 8 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_136_8_140_8_if_stmt:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_136_12_136_48_begin:
+        %tmp.212 = self;
+        symbol [ alive %tmp.213 136 12 17 ];
+        %tmp.213 = getv function %tmp.212 :alive;
+        %tmp.214 = invoke %tmp.212 %tmp.213();
+        %tmp.215 = lgetv %targetCount;
+        symbol [ targetCount %tmp.215 136 22 33 ];
+        %tmp.216 = lt %tmp.214 %tmp.215;
+        bf %tmp.216 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_136_8_140_8_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_136_37_136_48_true:
+        symbol [ _spawnT %tmp.218 136 37 44 ];
+        %tmp.218 = getv ? :_spawnT;
+        %tmp.219 = 0;
+        %tmp.220 = lte %tmp.218 %tmp.219;
+        push %tmp.220;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_136_37_136_48_end:
+        %tmp.221 = phi [%tmp.216 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_136_12_136_48_begin] [%tmp.220 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_136_37_136_48_true] [%tmp.221 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_136_37_136_48_end];
+        bf %tmp.221 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_136_8_140_8_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_136_8_140_8_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_136_51_140_8_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 137 12 ]
+        %tmp.222 = self;
+        symbol [ _spawn %tmp.223 137 12 18 ];
+        %tmp.223 = getv function %tmp.222 :_spawn;
+        invoke %tmp.222 %tmp.223();
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 138 12 ]
+        %tmp.224 = 30;
+        %tmp.225 = lgetv %diff;
+        symbol [ diff %tmp.225 138 27 31 ];
+        %tmp.226 = 5;
+        %tmp.227 = mul %tmp.225 %tmp.226;
+        %tmp.228 = sub %tmp.224 %tmp.227;
+        symbol [ _spawnT ? 138 12 19 ];
+        putv self :_spawnT %tmp.228;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 139 12 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_139_12_139_44_if_stmt:
+        symbol [ _spawnT %tmp.230 139 16 23 ];
+        %tmp.230 = getv ? :_spawnT;
+        %tmp.231 = 8;
+        %tmp.232 = lt %tmp.230 %tmp.231;
+        bf %tmp.232 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_139_12_139_44_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_139_12_139_44_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_139_29_139_44_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 139 31 ]
+        %tmp.233 = 8;
+        symbol [ _spawnT ? 139 31 38 ];
+        putv self :_spawnT %tmp.233;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_139_29_139_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_139_12_139_44_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_139_12_139_44_if_end:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_136_51_140_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_136_8_140_8_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_136_8_140_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 141 8 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_141_8_141_38_if_stmt:
+        symbol [ _spawnT %tmp.235 141 12 19 ];
+        %tmp.235 = getv ? :_spawnT;
+        %tmp.236 = 0;
+        %tmp.237 = gt %tmp.235 %tmp.236;
+        bf %tmp.237 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_141_8_141_38_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_141_8_141_38_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_141_25_141_38_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 141 27 ]
+        symbol [ _spawnT %tmp.240 141 27 34 ];
+        %tmp.240 = getv ? :_spawnT;
+        %tmp.241 = sub %tmp.240 1;
+        symbol [ _spawnT ? 141 27 34 ];
+        putv self :_spawnT dup %tmp.241;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_141_25_141_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_141_8_141_38_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_141_8_141_38_if_end:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_100_47_142_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 145; @symbol_functiondef = [project,145,13,20]; @symbol_param<0> = [gazeYaw,145,21,28]; @symbol_param<1> = [gazePitch,145,30,39]; @symbol_param<2> = [cx,145,41,43]; @symbol_param<3> = [cy,145,45,47]; ]
+    function project(gazeYaw, gazePitch, cx, cy) {
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_145_49_162_4_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 146 8 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_145_49_162_4_start" "_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_145_49_162_4_stop" ]
+        %TPI.1 = local;
+        symbol [ TPI %TPI.1 146 12 15 ];
+        symbol [ Math %tmp.1 146 18 22 ];
+        %tmp.1 = getm $.Toybox.Math;
+        symbol [ PI %tmp.2 146 23 25 ];
+        %tmp.2 = getv %tmp.1 :PI;
+        %tmp.3 = 2.0;
+        %tmp.4 = mul %tmp.2 %tmp.3;
+        lputv %TPI.1 %tmp.4;
+        symbol [ TPI %TPI.1 146 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 147 8 ]
+        for @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_147_8_161_8_for_test @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_147_8_161_8_for_incr @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_147_8_161_8_for_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_147_8_161_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_147_8_161_8_for_begin" "_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_147_8_161_8_for_end" ]
+        %i.2 = local;
+        symbol [ i %i.2 147 17 18 ];
+        %tmp.5 = 0;
+        lputv %i.2 %tmp.5;
+        symbol [ i %i.2 147 17 18 ];
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_147_8_161_8_for_test:
+        %tmp.6 = lgetv %i.2;
+        symbol [ i %tmp.6 147 24 25 ];
+        symbol [ AR_MAX_ENEMIES %tmp.8 147 28 42 ];
+        %tmp.8 = getv ? :AR_MAX_ENEMIES;
+        %tmp.9 = lt %tmp.6 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_147_8_161_8_for_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_147_8_161_8_for_begin:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_147_49_161_8_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 148 12 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_148_12_148_72_if_stmt:
+        symbol [ live %tmp.11 148 16 20 ];
+        %tmp.11 = getv ? :live;
+        %tmp.12 = lgetv %i.2;
+        symbol [ i %tmp.12 148 21 22 ];
+        %tmp.13 = agetv %tmp.11 %tmp.12;
+        %tmp.14 = 0;
+        %tmp.15 = eq %tmp.13 %tmp.14;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_148_12_148_72_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_148_12_148_72_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_148_30_148_72_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 148 32 ]
+        symbol [ sx %tmp.16 148 32 34 ];
+        %tmp.16 = getv self :sx;
+        %tmp.17 = -9999;
+        %tmp.18 = lgetv %i.2;
+        symbol [ i %tmp.18 148 35 36 ];
+        aputv %tmp.16 %tmp.18 %tmp.17;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 148 47 ]
+        symbol [ sy %tmp.19 148 47 49 ];
+        %tmp.19 = getv self :sy;
+        %tmp.20 = -9999;
+        %tmp.21 = lgetv %i.2;
+        symbol [ i %tmp.21 148 50 51 ];
+        aputv %tmp.19 %tmp.21 %tmp.20;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 148 62 ]
+        goto break @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_147_8_161_8_for_incr;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_148_30_148_72_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_148_12_148_72_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_148_12_148_72_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 149 12 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_147_49_161_8_start" "_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_147_49_161_8_stop" ]
+        %dy.3 = local;
+        symbol [ dy %dy.3 149 16 18 ];
+        symbol [ yaw %tmp.23 149 21 24 ];
+        %tmp.23 = getv ? :yaw;
+        %tmp.24 = lgetv %i.2;
+        symbol [ i %tmp.24 149 25 26 ];
+        %tmp.25 = agetv %tmp.23 %tmp.24;
+        %tmp.26 = lgetv %gazeYaw;
+        symbol [ gazeYaw %tmp.26 149 32 39 ];
+        %tmp.27 = sub %tmp.25 %tmp.26;
+        lputv %dy.3 %tmp.27;
+        symbol [ dy %dy.3 149 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 150 12 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_147_49_161_8_start" "_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_147_49_161_8_stop" ]
+        %dp.4 = local;
+        symbol [ dp %dp.4 150 16 18 ];
+        symbol [ pitch %tmp.29 150 21 26 ];
+        %tmp.29 = getv ? :pitch;
+        %tmp.30 = lgetv %i.2;
+        symbol [ i %tmp.30 150 27 28 ];
+        %tmp.31 = agetv %tmp.29 %tmp.30;
+        %tmp.32 = lgetv %gazePitch;
+        symbol [ gazePitch %tmp.32 150 32 41 ];
+        %tmp.33 = sub %tmp.31 %tmp.32;
+        lputv %dp.4 %tmp.33;
+        symbol [ dp %dp.4 150 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 151 12 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_151_12_151_48_if_stmt:
+        %tmp.34 = lgetv %dy.3;
+        symbol [ dy %tmp.34 151 16 18 ];
+        symbol [ Math %tmp.35 151 22 26 ];
+        %tmp.35 = getm $.Toybox.Math;
+        symbol [ PI %tmp.36 151 27 29 ];
+        %tmp.36 = getv %tmp.35 :PI;
+        %tmp.37 = gt %tmp.34 %tmp.36;
+        bf %tmp.37 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_151_12_151_48_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_151_12_151_48_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_151_31_151_48_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 151 33 ]
+        %tmp.38 = lgetv %dy.3;
+        symbol [ dy %tmp.38 151 38 40 ];
+        %tmp.39 = lgetv %TPI.1;
+        symbol [ TPI %tmp.39 151 43 46 ];
+        %tmp.40 = sub %tmp.38 %tmp.39;
+        lputv %dy.3 %tmp.40;
+        symbol [ dy %dy.3 151 33 35 ];
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_151_31_151_48_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_151_12_151_48_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_151_12_151_48_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 152 12 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_152_12_152_48_if_stmt:
+        %tmp.41 = lgetv %dy.3;
+        symbol [ dy %tmp.41 152 16 18 ];
+        symbol [ Math %tmp.42 152 22 26 ];
+        %tmp.42 = getm $.Toybox.Math;
+        symbol [ PI %tmp.43 152 27 29 ];
+        %tmp.43 = getv %tmp.42 :PI;
+        %tmp.44 = sub 0 %tmp.43;
+        %tmp.45 = lt %tmp.41 %tmp.44;
+        bf %tmp.45 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_152_12_152_48_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_152_12_152_48_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_152_31_152_48_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 152 33 ]
+        %tmp.46 = lgetv %dy.3;
+        symbol [ dy %tmp.46 152 38 40 ];
+        %tmp.47 = lgetv %TPI.1;
+        symbol [ TPI %tmp.47 152 43 46 ];
+        %tmp.48 = add %tmp.46 %tmp.47;
+        lputv %dy.3 %tmp.48;
+        symbol [ dy %dy.3 152 33 35 ];
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_152_31_152_48_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_152_12_152_48_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_152_12_152_48_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 153 12 ]
+        symbol [ sx %tmp.49 153 12 14 ];
+        %tmp.49 = getv self :sx;
+        %tmp.50 = lgetv %cx;
+        symbol [ cx %tmp.50 153 21 23 ];
+        %tmp.51 = lgetv %dy.3;
+        symbol [ dy %tmp.51 153 26 28 ];
+        symbol [ AR_FOV %tmp.53 153 31 37 ];
+        %tmp.53 = getv ? :AR_FOV;
+        %tmp.54 = mul %tmp.51 %tmp.53;
+        %tmp.55 = add %tmp.50 %tmp.54;
+        symbol [ toNumber %tmp.56 153 39 47 ];
+        %tmp.56 = getv function %tmp.55 :toNumber;
+        %tmp.57 = invoke %tmp.55 %tmp.56();
+        %tmp.58 = lgetv %i.2;
+        symbol [ i %tmp.58 153 15 16 ];
+        aputv %tmp.49 %tmp.58 %tmp.57;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 154 12 ]
+        symbol [ sy %tmp.59 154 12 14 ];
+        %tmp.59 = getv self :sy;
+        %tmp.60 = lgetv %cy;
+        symbol [ cy %tmp.60 154 21 23 ];
+        %tmp.61 = lgetv %dp.4;
+        symbol [ dp %tmp.61 154 26 28 ];
+        symbol [ AR_FOV %tmp.63 154 31 37 ];
+        %tmp.63 = getv ? :AR_FOV;
+        %tmp.64 = mul %tmp.61 %tmp.63;
+        %tmp.65 = add %tmp.60 %tmp.64;
+        symbol [ toNumber %tmp.66 154 39 47 ];
+        %tmp.66 = getv function %tmp.65 :toNumber;
+        %tmp.67 = invoke %tmp.65 %tmp.66();
+        %tmp.68 = lgetv %i.2;
+        symbol [ i %tmp.68 154 15 16 ];
+        aputv %tmp.59 %tmp.68 %tmp.67;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 157 12 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_147_49_161_8_start" "_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_147_49_161_8_stop" ]
+        %s.5 = local;
+        symbol [ s %s.5 157 16 17 ];
+        %tmp.69 = 24;
+        %tmp.70 = 120;
+        %tmp.71 = mul %tmp.69 %tmp.70;
+        symbol [ dist %tmp.73 157 31 35 ];
+        %tmp.73 = getv ? :dist;
+        %tmp.74 = lgetv %i.2;
+        symbol [ i %tmp.74 157 36 37 ];
+        %tmp.75 = agetv %tmp.73 %tmp.74;
+        symbol [ toNumber %tmp.76 157 39 47 ];
+        %tmp.76 = getv function %tmp.75 :toNumber;
+        %tmp.77 = invoke %tmp.75 %tmp.76();
+        %tmp.78 = div %tmp.71 %tmp.77;
+        lputv %s.5 %tmp.78;
+        symbol [ s %s.5 157 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 158 12 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_158_12_158_34_if_stmt:
+        %tmp.79 = lgetv %s.5;
+        symbol [ s %tmp.79 158 16 17 ];
+        %tmp.80 = 6;
+        %tmp.81 = lt %tmp.79 %tmp.80;
+        bf %tmp.81 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_158_12_158_34_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_158_12_158_34_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_158_24_158_34_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 158 26 ]
+        %tmp.82 = 6;
+        lputv %s.5 %tmp.82;
+        symbol [ s %s.5 158 26 27 ];
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_158_24_158_34_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_158_12_158_34_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_158_12_158_34_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 159 12 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_159_12_159_34_if_stmt:
+        %tmp.83 = lgetv %s.5;
+        symbol [ s %tmp.83 159 16 17 ];
+        %tmp.84 = 40;
+        %tmp.85 = gt %tmp.83 %tmp.84;
+        bf %tmp.85 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_159_12_159_34_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_159_12_159_34_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_159_24_159_34_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 159 26 ]
+        %tmp.86 = 40;
+        lputv %s.5 %tmp.86;
+        symbol [ s %s.5 159 26 27 ];
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_159_24_159_34_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_159_12_159_34_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_159_12_159_34_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 160 12 ]
+        symbol [ sz %tmp.87 160 12 14 ];
+        %tmp.87 = getv self :sz;
+        %tmp.88 = lgetv %s.5;
+        symbol [ s %tmp.88 160 20 21 ];
+        %tmp.89 = lgetv %i.2;
+        symbol [ i %tmp.89 160 15 16 ];
+        aputv %tmp.87 %tmp.89 %tmp.88;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_147_49_161_8_stop:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_147_8_161_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 147 ]
+        %tmp.92 = lgetv %i.2;
+        symbol [ i %tmp.92 147 44 45 ];
+        %tmp.93 = add %tmp.92 1;
+        lputv %i.2 %tmp.93;
+        symbol [ i %i.2 147 44 45 ];
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_147_8_161_8_for_test;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_147_8_161_8_for_end:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_145_49_162_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 166; @symbol_functiondef = [canHitZone,166,13,23]; @symbol_param<0> = [i,166,24,25]; @symbol_param<1> = [zone,166,27,31]; ]
+    function canHitZone(i, zone) {
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_166_33_178_4_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 167 8 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_166_33_178_4_start" "_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_166_33_178_4_stop" ]
+        %t.1 = local;
+        symbol [ t %t.1 167 12 13 ];
+        symbol [ type %tmp.2 167 16 20 ];
+        %tmp.2 = getv ? :type;
+        %tmp.3 = lgetv %i;
+        symbol [ i %tmp.3 167 21 22 ];
+        %tmp.4 = agetv %tmp.2 %tmp.3;
+        lputv %t.1 %tmp.4;
+        symbol [ t %t.1 167 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 168 8 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_168_8_170_8_if_stmt:
+        %tmp.5 = lgetv %t.1;
+        symbol [ t %tmp.5 168 12 13 ];
+        symbol [ AR_ET_HEAVY %tmp.7 168 17 28 ];
+        %tmp.7 = getv ? :AR_ET_HEAVY;
+        %tmp.8 = eq %tmp.5 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_168_8_170_8_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_168_8_170_8_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_168_30_170_8_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 169 12 ]
+        %tmp.9 = lgetv %zone;
+        symbol [ zone %tmp.9 169 20 24 ];
+        symbol [ AR_HZ_HEAD %tmp.11 169 28 38 ];
+        %tmp.11 = getv ? :AR_HZ_HEAD;
+        %tmp.12 = eq %tmp.9 %tmp.11;
+        ret %tmp.12;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_168_30_170_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_168_8_170_8_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_168_8_170_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 171 8 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_171_8_176_8_if_stmt:
+        %tmp.13 = lgetv %t.1;
+        symbol [ t %tmp.13 171 12 13 ];
+        symbol [ AR_ET_SHIELD %tmp.15 171 17 29 ];
+        %tmp.15 = getv ? :AR_ET_SHIELD;
+        %tmp.16 = eq %tmp.13 %tmp.15;
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_171_8_176_8_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_171_8_176_8_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_171_31_176_8_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 173 12 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_173_12_175_12_if_stmt:
+        symbol [ shutT %tmp.18 173 16 21 ];
+        %tmp.18 = getv ? :shutT;
+        %tmp.19 = lgetv %i;
+        symbol [ i %tmp.19 173 22 23 ];
+        %tmp.20 = agetv %tmp.18 %tmp.19;
+        %tmp.21 = 0;
+        %tmp.22 = gt %tmp.20 %tmp.21;
+        bf %tmp.22 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_173_12_175_12_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_173_12_175_12_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_173_30_175_12_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 174 16 ]
+        %tmp.23 = lgetv %zone;
+        symbol [ zone %tmp.23 174 24 28 ];
+        symbol [ AR_HZ_HEAD %tmp.25 174 32 42 ];
+        %tmp.25 = getv ? :AR_HZ_HEAD;
+        %tmp.26 = eq %tmp.23 %tmp.25;
+        ret %tmp.26;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_173_30_175_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_173_12_175_12_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_173_12_175_12_if_end:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_171_31_176_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_171_8_176_8_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_171_8_176_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 177 8 ]
+        %tmp.27 = true;
+        ret %tmp.27;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_166_33_178_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 181; @symbol_functiondef = [kill,181,13,17]; @symbol_param<0> = [i,181,18,19]; ]
+    function kill(i) {
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_181_21_185_4_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 182 8 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_181_21_185_4_start" "_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_181_21_185_4_stop" ]
+        %t.1 = local;
+        symbol [ t %t.1 182 12 13 ];
+        symbol [ type %tmp.2 182 16 20 ];
+        %tmp.2 = getv ? :type;
+        %tmp.3 = lgetv %i;
+        symbol [ i %tmp.3 182 21 22 ];
+        %tmp.4 = agetv %tmp.2 %tmp.3;
+        lputv %t.1 %tmp.4;
+        symbol [ t %t.1 182 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 183 8 ]
+        symbol [ live %tmp.5 183 8 12 ];
+        %tmp.5 = getv self :live;
+        %tmp.6 = 0;
+        %tmp.7 = lgetv %i;
+        symbol [ i %tmp.7 183 13 14 ];
+        aputv %tmp.5 %tmp.7 %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 184 8 ]
+        %tmp.8 = lgetv %t.1;
+        symbol [ t %tmp.8 184 15 16 ];
+        ret %tmp.8;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_181_21_185_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 188; @symbol_functiondef = [damage,188,13,19]; @symbol_param<0> = [i,188,20,21]; @symbol_param<1> = [amount,188,23,29]; ]
+    function damage(i, amount) {
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_188_31_195_4_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 189 8 ]
+        symbol [ hp %tmp.1 189 8 10 ];
+        %tmp.1 = getv self :hp;
+        symbol [ hp %tmp.3 189 16 18 ];
+        %tmp.3 = getv ? :hp;
+        %tmp.4 = lgetv %i;
+        symbol [ i %tmp.4 189 19 20 ];
+        %tmp.5 = agetv %tmp.3 %tmp.4;
+        %tmp.6 = lgetv %amount;
+        symbol [ amount %tmp.6 189 24 30 ];
+        %tmp.7 = sub %tmp.5 %tmp.6;
+        %tmp.8 = lgetv %i;
+        symbol [ i %tmp.8 189 11 12 ];
+        aputv %tmp.1 %tmp.8 %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 190 8 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_190_8_193_8_if_stmt:
+        symbol [ hp %tmp.10 190 12 14 ];
+        %tmp.10 = getv ? :hp;
+        %tmp.11 = lgetv %i;
+        symbol [ i %tmp.11 190 15 16 ];
+        %tmp.12 = agetv %tmp.10 %tmp.11;
+        %tmp.13 = 0;
+        %tmp.14 = lte %tmp.12 %tmp.13;
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_190_8_193_8_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_190_8_193_8_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_190_24_193_8_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 191 12 ]
+        symbol [ live %tmp.15 191 12 16 ];
+        %tmp.15 = getv self :live;
+        %tmp.16 = 0;
+        %tmp.17 = lgetv %i;
+        symbol [ i %tmp.17 191 17 18 ];
+        aputv %tmp.15 %tmp.17 %tmp.16;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 192 12 ]
         %tmp.18 = true;
         ret %tmp.18;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_105_23_110_4_stop:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_190_24_193_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_190_8_193_8_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_190_8_193_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 194 8 ]
+        %tmp.19 = false;
+        ret %tmp.19;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_188_31_195_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 113; @symbol_functiondef = [lowestRow,113,13,22]; ]
-    function lowestRow() {
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_113_25_121_4_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 114 8 ]
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_113_25_121_4_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_113_25_121_4_stop" ]
-        %lo.1 = local;
-        symbol [ lo %lo.1 114 12 14 ];
-        %tmp.1 = -1;
-        lputv %lo.1 %tmp.1;
-        symbol [ lo %lo.1 114 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 115 8 ]
-        for @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_115_8_119_8_for_test @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_115_8_119_8_for_incr @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_115_8_119_8_for_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_115_8_119_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_115_8_119_8_for_begin" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_115_8_119_8_for_end" ]
-        %i.2 = local;
-        symbol [ i %i.2 115 17 18 ];
-        %tmp.2 = 0;
-        lputv %i.2 %tmp.2;
-        symbol [ i %i.2 115 17 18 ];
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_115_8_119_8_for_test:
-        %tmp.3 = lgetv %i.2;
-        symbol [ i %tmp.3 115 24 25 ];
-        symbol [ enemies %tmp.5 115 28 35 ];
-        %tmp.5 = getv ? :enemies;
-        symbol [ size %tmp.6 115 36 40 ];
-        %tmp.6 = getv function %tmp.5 :size;
-        %tmp.7 = invoke %tmp.5 %tmp.6();
-        %tmp.8 = lt %tmp.3 %tmp.7;
-        bf %tmp.8 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_115_8_119_8_for_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_115_8_119_8_for_begin:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_115_49_119_8_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 116 12 ]
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_115_49_119_8_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_115_49_119_8_stop" ]
-        %e.3 = local;
-        symbol [ e %e.3 116 16 17 ];
-        symbol [ enemies %tmp.10 116 20 27 ];
-        %tmp.10 = getv ? :enemies;
-        %tmp.11 = lgetv %i.2;
-        symbol [ i %tmp.11 116 28 29 ];
-        %tmp.12 = agetv %tmp.10 %tmp.11;
-        lputv %e.3 %tmp.12;
-        symbol [ e %e.3 116 16 17 ];
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 117 12 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_117_12_117_38_if_stmt:
-        %tmp.13 = lgetv %e.3;
-        symbol [ e %tmp.13 117 17 18 ];
-        symbol [ alive %tmp.14 117 19 24 ];
-        %tmp.14 = getv %tmp.13 :alive;
-        %tmp.15 = not %tmp.14;
-        bf %tmp.15 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_117_12_117_38_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_117_12_117_38_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_117_26_117_38_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 117 28 ]
-        goto break @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_115_8_119_8_for_incr;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_117_26_117_38_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_117_12_117_38_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_117_12_117_38_if_end:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 118 12 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_118_12_118_42_if_stmt:
-        %tmp.16 = lgetv %e.3;
-        symbol [ e %tmp.16 118 16 17 ];
-        symbol [ row %tmp.17 118 18 21 ];
-        %tmp.17 = getv %tmp.16 :row;
-        %tmp.18 = lgetv %lo.1;
-        symbol [ lo %tmp.18 118 24 26 ];
-        %tmp.19 = gt %tmp.17 %tmp.18;
-        bf %tmp.19 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_118_12_118_42_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_118_12_118_42_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_118_28_118_42_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 118 30 ]
-        %tmp.20 = lgetv %e.3;
-        symbol [ e %tmp.20 118 35 36 ];
-        symbol [ row %tmp.21 118 37 40 ];
-        %tmp.21 = getv %tmp.20 :row;
-        lputv %lo.1 %tmp.21;
-        symbol [ lo %lo.1 118 30 32 ];
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_118_28_118_42_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_118_12_118_42_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_118_12_118_42_if_end:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_115_49_119_8_stop:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_115_8_119_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 115 ]
-        %tmp.24 = lgetv %i.2;
-        symbol [ i %tmp.24 115 44 45 ];
-        %tmp.25 = add %tmp.24 1;
-        lputv %i.2 %tmp.25;
-        symbol [ i %i.2 115 44 45 ];
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_115_8_119_8_for_test;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_115_8_119_8_for_end:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 120 8 ]
-        %tmp.26 = lgetv %lo.1;
-        symbol [ lo %tmp.26 120 15 17 ];
-        ret %tmp.26;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_113_25_121_4_stop:
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 200; @symbol_functiondef = [archerReadyToFire,200,13,30]; ]
+    function archerReadyToFire() {
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_200_33_208_4_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 201 8 ]
+        for @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_201_8_206_8_for_test @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_201_8_206_8_for_incr @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_201_8_206_8_for_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_201_8_206_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_201_8_206_8_for_begin" "_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_201_8_206_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 201 17 18 ];
+        %tmp.1 = 0;
+        lputv %i.1 %tmp.1;
+        symbol [ i %i.1 201 17 18 ];
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_201_8_206_8_for_test:
+        %tmp.2 = lgetv %i.1;
+        symbol [ i %tmp.2 201 24 25 ];
+        symbol [ AR_MAX_ENEMIES %tmp.4 201 28 42 ];
+        %tmp.4 = getv ? :AR_MAX_ENEMIES;
+        %tmp.5 = lt %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_201_8_206_8_for_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_201_8_206_8_for_begin:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_201_49_206_8_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 202 12 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_202_12_205_12_if_stmt:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_202_16_202_71_begin:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_202_16_202_43_begin:
+        symbol [ live %tmp.7 202 16 20 ];
+        %tmp.7 = getv ? :live;
+        %tmp.8 = lgetv %i.1;
+        symbol [ i %tmp.8 202 21 22 ];
+        %tmp.9 = agetv %tmp.7 %tmp.8;
+        %tmp.10 = 0;
+        %tmp.11 = ne %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_202_12_205_12_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_202_32_202_43_true:
+        symbol [ type %tmp.13 202 32 36 ];
+        %tmp.13 = getv ? :type;
+        %tmp.14 = lgetv %i.1;
+        symbol [ i %tmp.14 202 37 38 ];
+        %tmp.15 = agetv %tmp.13 %tmp.14;
+        symbol [ AR_ET_ARCHER %tmp.17 202 43 55 ];
+        %tmp.17 = getv ? :AR_ET_ARCHER;
+        %tmp.18 = eq %tmp.15 %tmp.17;
+        push %tmp.18;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_202_32_202_43_end:
+        %tmp.19 = phi [%tmp.11 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_202_16_202_43_begin] [%tmp.18 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_202_32_202_43_true] [%tmp.19 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_202_32_202_43_end];
+        bf %tmp.19 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_202_12_205_12_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_202_59_202_71_true:
+        symbol [ fireT %tmp.21 202 59 64 ];
+        %tmp.21 = getv ? :fireT;
+        %tmp.22 = lgetv %i.1;
+        symbol [ i %tmp.22 202 65 66 ];
+        %tmp.23 = agetv %tmp.21 %tmp.22;
+        %tmp.24 = 0;
+        %tmp.25 = lte %tmp.23 %tmp.24;
+        push %tmp.25;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_202_59_202_71_end:
+        %tmp.26 = phi [%tmp.19 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_202_16_202_71_begin] [%tmp.25 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_202_59_202_71_true] [%tmp.26 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_202_59_202_71_end];
+        bf %tmp.26 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_202_12_205_12_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_202_12_205_12_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_202_74_205_12_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 203 16 ]
+        symbol [ fireT %tmp.27 203 16 21 ];
+        %tmp.27 = getv self :fireT;
+        %tmp.28 = 36;
+        %tmp.29 = self;
+        symbol [ _rand %tmp.30 203 32 37 ];
+        %tmp.30 = getv function %tmp.29 :_rand;
+        %tmp.31 = 16;
+        %tmp.32 = invoke %tmp.29 %tmp.30(%tmp.31);
+        %tmp.33 = add %tmp.28 %tmp.32;
+        %tmp.34 = lgetv %i.1;
+        symbol [ i %tmp.34 203 22 23 ];
+        aputv %tmp.27 %tmp.34 %tmp.33;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 204 16 ]
+        %tmp.35 = lgetv %i.1;
+        symbol [ i %tmp.35 204 23 24 ];
+        ret %tmp.35;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_202_74_205_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_202_12_205_12_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_202_12_205_12_if_end:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_201_49_206_8_stop:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_201_8_206_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 201 ]
+        %tmp.38 = lgetv %i.1;
+        symbol [ i %tmp.38 201 44 45 ];
+        %tmp.39 = add %tmp.38 1;
+        lputv %i.1 %tmp.39;
+        symbol [ i %i.1 201 44 45 ];
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_201_8_206_8_for_test;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_201_8_206_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 207 8 ]
+        %tmp.40 = -1;
+        ret %tmp.40;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_200_33_208_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 125; @symbol_functiondef = [_recomputeInterval,125,20,38]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 211; @symbol_functiondef = [_spawn,211,20,26]; ]
     protected
-    function _recomputeInterval() {
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_125_41_131_4_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 126 8 ]
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_125_41_131_4_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_125_41_131_4_stop" ]
-        %alive.1 = local;
-        symbol [ alive %alive.1 126 12 17 ];
-        %tmp.1 = self;
-        symbol [ aliveCount %tmp.2 126 20 30 ];
-        %tmp.2 = getv function %tmp.1 :aliveCount;
-        %tmp.3 = invoke %tmp.1 %tmp.2();
-        lputv %alive.1 %tmp.3;
-        symbol [ alive %alive.1 126 12 17 ];
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 127 8 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_127_8_127_34_if_stmt:
-        %tmp.4 = lgetv %alive.1;
-        symbol [ alive %tmp.4 127 12 17 ];
-        %tmp.5 = 0;
-        %tmp.6 = lte %tmp.4 %tmp.5;
-        bf %tmp.6 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_127_8_127_34_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_127_8_127_34_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_127_24_127_34_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 127 26 ]
+    function _spawn() {
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_211_29_215_4_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 212 8 ]
+        for @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_212_8_214_8_for_test @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_212_8_214_8_for_incr @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_212_8_214_8_for_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_212_8_214_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_212_8_214_8_for_begin" "_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_212_8_214_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 212 17 18 ];
+        %tmp.1 = 0;
+        lputv %i.1 %tmp.1;
+        symbol [ i %i.1 212 17 18 ];
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_212_8_214_8_for_test:
+        %tmp.2 = lgetv %i.1;
+        symbol [ i %tmp.2 212 24 25 ];
+        symbol [ AR_MAX_ENEMIES %tmp.4 212 28 42 ];
+        %tmp.4 = getv ? :AR_MAX_ENEMIES;
+        %tmp.5 = lt %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_212_8_214_8_for_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_212_8_214_8_for_begin:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_212_49_214_8_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 213 12 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_213_12_213_54_if_stmt:
+        symbol [ live %tmp.7 213 16 20 ];
+        %tmp.7 = getv ? :live;
+        %tmp.8 = lgetv %i.1;
+        symbol [ i %tmp.8 213 21 22 ];
+        %tmp.9 = agetv %tmp.7 %tmp.8;
+        %tmp.10 = 0;
+        %tmp.11 = eq %tmp.9 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_213_12_213_54_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_213_12_213_54_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_213_30_213_54_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 213 32 ]
+        %tmp.12 = self;
+        symbol [ _fillSlot %tmp.13 213 32 41 ];
+        %tmp.13 = getv function %tmp.12 :_fillSlot;
+        %tmp.14 = lgetv %i.1;
+        symbol [ i %tmp.14 213 42 43 ];
+        invoke %tmp.12 %tmp.13(%tmp.14);
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 213 46 ]
         ret ?;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_127_24_127_34_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_127_8_127_34_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_127_8_127_34_if_end:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 128 8 ]
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_125_41_131_4_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_125_41_131_4_stop" ]
-        %iv.2 = local;
-        symbol [ iv %iv.2 128 12 14 ];
-        symbol [ baseInterval %tmp.8 128 17 29 ];
-        %tmp.8 = getv ? :baseInterval;
-        %tmp.9 = lgetv %alive.1;
-        symbol [ alive %tmp.9 128 32 37 ];
-        %tmp.10 = mul %tmp.8 %tmp.9;
-        symbol [ startCount %tmp.12 128 40 50 ];
-        %tmp.12 = getv ? :startCount;
-        %tmp.13 = div %tmp.10 %tmp.12;
-        lputv %iv.2 %tmp.13;
-        symbol [ iv %iv.2 128 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 129 8 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_129_8_129_30_if_stmt:
-        %tmp.14 = lgetv %iv.2;
-        symbol [ iv %tmp.14 129 12 14 ];
-        %tmp.15 = 2;
-        %tmp.16 = lt %tmp.14 %tmp.15;
-        bf %tmp.16 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_129_8_129_30_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_129_8_129_30_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_129_20_129_30_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 129 22 ]
-        %tmp.17 = 2;
-        lputv %iv.2 %tmp.17;
-        symbol [ iv %iv.2 129 22 24 ];
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_129_20_129_30_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_129_8_129_30_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_129_8_129_30_if_end:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 130 8 ]
-        %tmp.18 = lgetv %iv.2;
-        symbol [ iv %tmp.18 130 23 25 ];
-        symbol [ stepInterval ? 130 8 20 ];
-        putv self :stepInterval %tmp.18;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_125_41_131_4_stop:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_213_30_213_54_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_213_12_213_54_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_213_12_213_54_if_end:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_212_49_214_8_stop:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_212_8_214_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 212 ]
+        %tmp.17 = lgetv %i.1;
+        symbol [ i %tmp.17 212 44 45 ];
+        %tmp.18 = add %tmp.17 1;
+        lputv %i.1 %tmp.18;
+        symbol [ i %i.1 212 44 45 ];
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_212_8_214_8_for_test;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_212_8_214_8_for_end:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_211_29_215_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 136; @symbol_functiondef = [tick,136,13,17]; ]
-    function tick() {
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_136_20_143_4_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 137 8 ]
-        %tmp.1 = self;
-        symbol [ _recomputeInterval %tmp.2 137 8 26 ];
-        %tmp.2 = getv function %tmp.1 :_recomputeInterval;
-        invoke %tmp.1 %tmp.2();
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 138 8 ]
-        symbol [ stepTimer %tmp.4 138 20 29 ];
-        %tmp.4 = getv ? :stepTimer;
-        %tmp.5 = 1;
-        %tmp.6 = sub %tmp.4 %tmp.5;
-        symbol [ stepTimer ? 138 8 17 ];
-        putv self :stepTimer %tmp.6;
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 139 8 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_139_8_139_43_if_stmt:
-        symbol [ stepTimer %tmp.8 139 12 21 ];
-        %tmp.8 = getv ? :stepTimer;
-        %tmp.9 = 0;
-        %tmp.10 = gt %tmp.8 %tmp.9;
-        bf %tmp.10 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_139_8_139_43_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_139_8_139_43_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_139_27_139_43_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 139 29 ]
-        %tmp.11 = false;
-        ret %tmp.11;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_139_27_139_43_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_139_8_139_43_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_139_8_139_43_if_end:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 140 8 ]
-        symbol [ stepInterval %tmp.13 140 20 32 ];
-        %tmp.13 = getv ? :stepInterval;
-        symbol [ stepTimer ? 140 8 17 ];
-        putv self :stepTimer %tmp.13;
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 141 8 ]
-        %tmp.14 = self;
-        symbol [ _stepFormation %tmp.15 141 8 22 ];
-        %tmp.15 = getv function %tmp.14 :_stepFormation;
-        invoke %tmp.14 %tmp.15();
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 142 8 ]
-        %tmp.16 = true;
-        ret %tmp.16;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_136_20_143_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 145; @symbol_functiondef = [_stepFormation,145,20,34]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 217; @symbol_functiondef = [_fillSlot,217,20,29]; @symbol_param<0> = [i,217,30,31]; ]
     protected
-    function _stepFormation() {
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_145_37_166_4_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 147 8 ]
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_145_37_166_4_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_145_37_166_4_stop" ]
-        %hitEdge.1 = local;
-        symbol [ hitEdge %hitEdge.1 147 12 19 ];
-        %tmp.1 = false;
-        lputv %hitEdge.1 %tmp.1;
-        symbol [ hitEdge %hitEdge.1 147 12 19 ];
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 148 8 ]
-        for @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_148_8_153_8_for_test @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_148_8_153_8_for_incr @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_148_8_153_8_for_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_148_8_153_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_148_8_153_8_for_begin" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_148_8_153_8_for_end" ]
-        %i.2 = local;
-        symbol [ i %i.2 148 17 18 ];
-        %tmp.2 = 0;
-        lputv %i.2 %tmp.2;
-        symbol [ i %i.2 148 17 18 ];
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_148_8_153_8_for_test:
-        %tmp.3 = lgetv %i.2;
-        symbol [ i %tmp.3 148 24 25 ];
-        symbol [ enemies %tmp.5 148 28 35 ];
-        %tmp.5 = getv ? :enemies;
-        symbol [ size %tmp.6 148 36 40 ];
-        %tmp.6 = getv function %tmp.5 :size;
-        %tmp.7 = invoke %tmp.5 %tmp.6();
-        %tmp.8 = lt %tmp.3 %tmp.7;
-        bf %tmp.8 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_148_8_153_8_for_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_148_8_153_8_for_begin:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_148_49_153_8_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 149 12 ]
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_148_49_153_8_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_148_49_153_8_stop" ]
-        %e.3 = local;
-        symbol [ e %e.3 149 16 17 ];
-        symbol [ enemies %tmp.10 149 20 27 ];
-        %tmp.10 = getv ? :enemies;
-        %tmp.11 = lgetv %i.2;
-        symbol [ i %tmp.11 149 28 29 ];
-        %tmp.12 = agetv %tmp.10 %tmp.11;
-        lputv %e.3 %tmp.12;
-        symbol [ e %e.3 149 16 17 ];
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 150 12 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_150_12_150_38_if_stmt:
-        %tmp.13 = lgetv %e.3;
-        symbol [ e %tmp.13 150 17 18 ];
-        symbol [ alive %tmp.14 150 19 24 ];
-        %tmp.14 = getv %tmp.13 :alive;
-        %tmp.15 = not %tmp.14;
-        bf %tmp.15 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_150_12_150_38_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_150_12_150_38_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_150_26_150_38_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 150 28 ]
-        goto break @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_148_8_153_8_for_incr;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_150_26_150_38_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_150_12_150_38_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_150_12_150_38_if_end:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 151 12 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_151_12_151_86_if_stmt:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_151_16_151_58_begin:
-        symbol [ direction %tmp.17 151 16 25 ];
-        %tmp.17 = getv ? :direction;
-        %tmp.18 = 0;
-        %tmp.19 = gt %tmp.17 %tmp.18;
-        bf %tmp.19 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_151_12_151_86_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_151_33_151_58_true:
-        %tmp.20 = lgetv %e.3;
-        symbol [ e %tmp.20 151 33 34 ];
-        symbol [ col %tmp.21 151 35 38 ];
-        %tmp.21 = getv %tmp.20 :col;
-        symbol [ PI_BOARD_COLS %tmp.23 151 42 55 ];
-        %tmp.23 = getv ? :PI_BOARD_COLS;
-        %tmp.24 = 1;
-        %tmp.25 = sub %tmp.23 %tmp.24;
-        %tmp.26 = gte %tmp.21 %tmp.25;
-        push %tmp.26;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_151_33_151_58_end:
-        %tmp.27 = phi [%tmp.19 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_151_16_151_58_begin] [%tmp.26 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_151_33_151_58_true] [%tmp.27 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_151_33_151_58_end];
-        bf %tmp.27 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_151_12_151_86_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_151_12_151_86_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_151_61_151_86_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 151 63 ]
-        %tmp.28 = true;
-        lputv %hitEdge.1 %tmp.28;
-        symbol [ hitEdge %hitEdge.1 151 63 70 ];
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 151 79 ]
-        goto break @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_148_8_153_8_for_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_151_61_151_86_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_151_12_151_86_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_151_12_151_86_if_end:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 152 12 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_152_12_152_87_if_stmt:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_152_16_152_42_begin:
-        symbol [ direction %tmp.30 152 16 25 ];
-        %tmp.30 = getv ? :direction;
-        %tmp.31 = 0;
-        %tmp.32 = lt %tmp.30 %tmp.31;
-        bf %tmp.32 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_152_12_152_87_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_152_33_152_42_true:
-        %tmp.33 = lgetv %e.3;
-        symbol [ e %tmp.33 152 33 34 ];
-        symbol [ col %tmp.34 152 35 38 ];
-        %tmp.34 = getv %tmp.33 :col;
-        %tmp.35 = 0;
-        %tmp.36 = lte %tmp.34 %tmp.35;
-        push %tmp.36;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_152_33_152_42_end:
-        %tmp.37 = phi [%tmp.32 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_152_16_152_42_begin] [%tmp.36 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_152_33_152_42_true] [%tmp.37 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_152_33_152_42_end];
-        bf %tmp.37 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_152_12_152_87_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_152_12_152_87_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_152_62_152_87_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 152 64 ]
-        %tmp.38 = true;
-        lputv %hitEdge.1 %tmp.38;
-        symbol [ hitEdge %hitEdge.1 152 64 71 ];
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 152 80 ]
-        goto break @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_148_8_153_8_for_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_152_62_152_87_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_152_12_152_87_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_152_12_152_87_if_end:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_148_49_153_8_stop:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_148_8_153_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 148 ]
-        %tmp.41 = lgetv %i.2;
-        symbol [ i %tmp.41 148 44 45 ];
-        %tmp.42 = add %tmp.41 1;
-        lputv %i.2 %tmp.42;
-        symbol [ i %i.2 148 44 45 ];
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_148_8_153_8_for_test;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_148_8_153_8_for_end:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 154 8 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_154_8_164_8_if_stmt:
-        %tmp.43 = lgetv %hitEdge.1;
-        symbol [ hitEdge %tmp.43 154 12 19 ];
-        bf %tmp.43 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_154_8_164_8_if_else_false;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_154_8_164_8_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_154_21_160_8_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 156 12 ]
-        for @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_156_12_158_12_for_test @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_156_12_158_12_for_incr @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_156_12_158_12_for_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_156_12_158_12_for_init:
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_156_12_158_12_for_begin" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_156_12_158_12_for_end" ]
-        %k.4 = local;
-        symbol [ k %k.4 156 21 22 ];
-        %tmp.44 = 0;
-        lputv %k.4 %tmp.44;
-        symbol [ k %k.4 156 21 22 ];
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_156_12_158_12_for_test:
-        %tmp.45 = lgetv %k.4;
-        symbol [ k %tmp.45 156 28 29 ];
-        symbol [ enemies %tmp.47 156 32 39 ];
-        %tmp.47 = getv ? :enemies;
-        symbol [ size %tmp.48 156 40 44 ];
-        %tmp.48 = getv function %tmp.47 :size;
-        %tmp.49 = invoke %tmp.47 %tmp.48();
-        %tmp.50 = lt %tmp.45 %tmp.49;
-        bf %tmp.50 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_156_12_158_12_for_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_156_12_158_12_for_begin:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_156_53_158_12_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 157 16 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_157_16_157_77_if_stmt:
-        symbol [ enemies %tmp.52 157 20 27 ];
-        %tmp.52 = getv ? :enemies;
-        %tmp.53 = lgetv %k.4;
-        symbol [ k %tmp.53 157 28 29 ];
-        %tmp.54 = agetv %tmp.52 %tmp.53;
-        symbol [ alive %tmp.55 157 31 36 ];
-        %tmp.55 = getv %tmp.54 :alive;
-        bf %tmp.55 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_157_16_157_77_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_157_16_157_77_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_157_38_157_77_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 157 40 ]
-        symbol [ enemies %tmp.56 157 40 47 ];
-        %tmp.56 = getv self :enemies;
-        %tmp.57 = lgetv %k.4;
-        symbol [ k %tmp.57 157 48 49 ];
-        %tmp.58 = agetv %tmp.56 %tmp.57;
-        symbol [ enemies %tmp.60 157 57 64 ];
-        %tmp.60 = getv ? :enemies;
-        %tmp.61 = lgetv %k.4;
-        symbol [ k %tmp.61 157 65 66 ];
-        %tmp.62 = agetv %tmp.60 %tmp.61;
-        symbol [ row %tmp.63 157 68 71 ];
-        %tmp.63 = getv %tmp.62 :row;
-        %tmp.64 = 1;
-        %tmp.65 = add %tmp.63 %tmp.64;
-        symbol [ row ? 157 51 54 ];
-        putv %tmp.58 :row %tmp.65;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_157_38_157_77_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_157_16_157_77_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_157_16_157_77_if_end:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_156_53_158_12_stop:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_156_12_158_12_for_incr:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 156 ]
-        %tmp.68 = lgetv %k.4;
-        symbol [ k %tmp.68 156 48 49 ];
-        %tmp.69 = add %tmp.68 1;
-        lputv %k.4 %tmp.69;
-        symbol [ k %k.4 156 48 49 ];
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_156_12_158_12_for_test;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_156_12_158_12_for_end:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 159 12 ]
-        symbol [ direction %tmp.71 159 25 34 ];
-        %tmp.71 = getv ? :direction;
-        %tmp.72 = sub 0 %tmp.71;
-        symbol [ direction ? 159 12 21 ];
-        putv self :direction %tmp.72;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_154_21_160_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_154_8_164_8_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_154_8_164_8_if_else_false:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_160_15_164_8_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 161 12 ]
-        for @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_161_12_163_12_for_test @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_161_12_163_12_for_incr @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_161_12_163_12_for_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_161_12_163_12_for_init:
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_161_12_163_12_for_begin" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_161_12_163_12_for_end" ]
-        %m.5 = local;
-        symbol [ m %m.5 161 21 22 ];
-        %tmp.73 = 0;
-        lputv %m.5 %tmp.73;
-        symbol [ m %m.5 161 21 22 ];
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_161_12_163_12_for_test:
-        %tmp.74 = lgetv %m.5;
-        symbol [ m %tmp.74 161 28 29 ];
-        symbol [ enemies %tmp.76 161 32 39 ];
-        %tmp.76 = getv ? :enemies;
-        symbol [ size %tmp.77 161 40 44 ];
-        %tmp.77 = getv function %tmp.76 :size;
-        %tmp.78 = invoke %tmp.76 %tmp.77();
-        %tmp.79 = lt %tmp.74 %tmp.78;
-        bf %tmp.79 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_161_12_163_12_for_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_161_12_163_12_for_begin:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_161_53_163_12_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 162 16 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_162_16_162_85_if_stmt:
-        symbol [ enemies %tmp.81 162 20 27 ];
-        %tmp.81 = getv ? :enemies;
-        %tmp.82 = lgetv %m.5;
-        symbol [ m %tmp.82 162 28 29 ];
-        %tmp.83 = agetv %tmp.81 %tmp.82;
-        symbol [ alive %tmp.84 162 31 36 ];
-        %tmp.84 = getv %tmp.83 :alive;
-        bf %tmp.84 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_162_16_162_85_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_162_16_162_85_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_162_38_162_85_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 162 40 ]
-        symbol [ enemies %tmp.85 162 40 47 ];
-        %tmp.85 = getv self :enemies;
-        %tmp.86 = lgetv %m.5;
-        symbol [ m %tmp.86 162 48 49 ];
-        %tmp.87 = agetv %tmp.85 %tmp.86;
-        symbol [ enemies %tmp.89 162 57 64 ];
-        %tmp.89 = getv ? :enemies;
-        %tmp.90 = lgetv %m.5;
-        symbol [ m %tmp.90 162 65 66 ];
-        %tmp.91 = agetv %tmp.89 %tmp.90;
-        symbol [ col %tmp.92 162 68 71 ];
-        %tmp.92 = getv %tmp.91 :col;
-        symbol [ direction %tmp.94 162 74 83 ];
-        %tmp.94 = getv ? :direction;
-        %tmp.95 = add %tmp.92 %tmp.94;
-        symbol [ col ? 162 51 54 ];
-        putv %tmp.87 :col %tmp.95;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_162_38_162_85_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_162_16_162_85_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_162_16_162_85_if_end:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_161_53_163_12_stop:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_161_12_163_12_for_incr:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 161 ]
-        %tmp.98 = lgetv %m.5;
-        symbol [ m %tmp.98 161 48 49 ];
-        %tmp.99 = add %tmp.98 1;
-        lputv %m.5 %tmp.99;
-        symbol [ m %m.5 161 48 49 ];
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_161_12_163_12_for_test;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_161_12_163_12_for_end:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_160_15_164_8_stop:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_154_8_164_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 165 8 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_165_20_165_43_begin:
-        symbol [ walkPhase %tmp.101 165 21 30 ];
-        %tmp.101 = getv ? :walkPhase;
-        %tmp.102 = 0;
-        %tmp.103 = eq %tmp.101 %tmp.102;
-        bf %tmp.103 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_165_20_165_43_else_false;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_165_20_165_43_true:
-        %tmp.104 = 1;
-        push %tmp.104;
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_165_20_165_43_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_165_20_165_43_else_false:
-        %tmp.105 = 0;
-        push %tmp.105;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_165_20_165_43_end:
-        %tmp.106 = phi [%tmp.103 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_165_20_165_43_begin] [%tmp.104 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_165_20_165_43_true] [%tmp.105 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_165_20_165_43_else_false] [%tmp.106 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_165_20_165_43_end];
-        symbol [ walkPhase ? 165 8 17 ];
-        putv self :walkPhase %tmp.106;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_145_37_166_4_stop:
+    function _fillSlot(i) {
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_217_33_262_4_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 218 8 ]
+        symbol [ live %tmp.1 218 8 12 ];
+        %tmp.1 = getv self :live;
+        %tmp.2 = 1;
+        %tmp.3 = lgetv %i;
+        symbol [ i %tmp.3 218 13 14 ];
+        aputv %tmp.1 %tmp.3 %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 219 8 ]
+        symbol [ phase %tmp.4 219 8 13 ];
+        %tmp.4 = getv self :phase;
+        %tmp.5 = self;
+        symbol [ _rand %tmp.6 219 19 24 ];
+        %tmp.6 = getv function %tmp.5 :_rand;
+        %tmp.7 = 40;
+        %tmp.8 = invoke %tmp.5 %tmp.6(%tmp.7);
+        %tmp.9 = lgetv %i;
+        symbol [ i %tmp.9 219 14 15 ];
+        aputv %tmp.4 %tmp.9 %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 220 8 ]
+        symbol [ shutT %tmp.10 220 8 13 ];
+        %tmp.10 = getv self :shutT;
+        %tmp.11 = 0;
+        %tmp.12 = lgetv %i;
+        symbol [ i %tmp.12 220 14 15 ];
+        aputv %tmp.10 %tmp.12 %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 221 8 ]
+        symbol [ openT %tmp.13 221 8 13 ];
+        %tmp.13 = getv self :openT;
+        %tmp.14 = 0;
+        %tmp.15 = lgetv %i;
+        symbol [ i %tmp.15 221 14 15 ];
+        aputv %tmp.13 %tmp.15 %tmp.14;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 222 8 ]
+        symbol [ fireT %tmp.16 222 8 13 ];
+        %tmp.16 = getv self :fireT;
+        %tmp.17 = 0;
+        %tmp.18 = lgetv %i;
+        symbol [ i %tmp.18 222 14 15 ];
+        aputv %tmp.16 %tmp.18 %tmp.17;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 224 8 ]
+        [ "_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_217_33_262_4_start" "_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_217_33_262_4_stop" ]
+        %t.1 = local;
+        symbol [ t %t.1 224 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 225 8 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_225_8_231_8_if_stmt:
+        symbol [ _roundTypeMix %tmp.20 225 12 25 ];
+        %tmp.20 = getv ? :_roundTypeMix;
+        symbol [ AR_RD_QF %tmp.22 225 29 37 ];
+        %tmp.22 = getv ? :AR_RD_QF;
+        %tmp.23 = eq %tmp.20 %tmp.22;
+        bf %tmp.23 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_225_8_231_8_if_false;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_225_8_231_8_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_225_39_227_8_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 226 12 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_226_16_226_51_begin:
+        %tmp.24 = self;
+        symbol [ _rand %tmp.25 226 17 22 ];
+        %tmp.25 = getv function %tmp.24 :_rand;
+        %tmp.26 = 100;
+        %tmp.27 = invoke %tmp.24 %tmp.25(%tmp.26);
+        %tmp.28 = 65;
+        %tmp.29 = lt %tmp.27 %tmp.28;
+        bf %tmp.29 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_226_16_226_51_else_false;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_226_16_226_51_true:
+        symbol [ AR_ET_SHIELD %tmp.31 226 36 48 ];
+        %tmp.31 = getv ? :AR_ET_SHIELD;
+        push %tmp.31;
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_226_16_226_51_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_226_16_226_51_else_false:
+        symbol [ AR_ET_IDLE %tmp.33 226 51 61 ];
+        %tmp.33 = getv ? :AR_ET_IDLE;
+        push %tmp.33;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_226_16_226_51_end:
+        %tmp.34 = phi [%tmp.29 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_226_16_226_51_begin] [%tmp.31 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_226_16_226_51_true] [%tmp.33 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_226_16_226_51_else_false] [%tmp.34 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_226_16_226_51_end];
+        lputv %t.1 %tmp.34;
+        symbol [ t %t.1 226 12 13 ];
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_225_39_227_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_225_8_231_8_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_225_8_231_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 227 15 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_227_15_231_8_if_stmt:
+        symbol [ _roundTypeMix %tmp.36 227 19 32 ];
+        %tmp.36 = getv ? :_roundTypeMix;
+        symbol [ AR_RD_SF %tmp.38 227 36 44 ];
+        %tmp.38 = getv ? :AR_RD_SF;
+        %tmp.39 = eq %tmp.36 %tmp.38;
+        bf %tmp.39 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_227_15_231_8_if_else_false;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_227_15_231_8_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_227_46_229_8_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 228 12 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_228_16_228_51_begin:
+        %tmp.40 = self;
+        symbol [ _rand %tmp.41 228 17 22 ];
+        %tmp.41 = getv function %tmp.40 :_rand;
+        %tmp.42 = 100;
+        %tmp.43 = invoke %tmp.40 %tmp.41(%tmp.42);
+        %tmp.44 = 70;
+        %tmp.45 = lt %tmp.43 %tmp.44;
+        bf %tmp.45 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_228_16_228_51_else_false;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_228_16_228_51_true:
+        symbol [ AR_ET_RIDER %tmp.47 228 36 47 ];
+        %tmp.47 = getv ? :AR_ET_RIDER;
+        push %tmp.47;
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_228_16_228_51_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_228_16_228_51_else_false:
+        symbol [ AR_ET_HEAVY %tmp.49 228 51 62 ];
+        %tmp.49 = getv ? :AR_ET_HEAVY;
+        push %tmp.49;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_228_16_228_51_end:
+        %tmp.50 = phi [%tmp.45 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_228_16_228_51_begin] [%tmp.47 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_228_16_228_51_true] [%tmp.49 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_228_16_228_51_else_false] [%tmp.50 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_228_16_228_51_end];
+        lputv %t.1 %tmp.50;
+        symbol [ t %t.1 228 12 13 ];
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_227_46_229_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_227_15_231_8_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_227_15_231_8_if_else_false:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_229_15_231_8_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 230 12 ]
+        symbol [ AR_ET_ARCHER %tmp.52 230 16 28 ];
+        %tmp.52 = getv ? :AR_ET_ARCHER;
+        lputv %t.1 %tmp.52;
+        symbol [ t %t.1 230 12 13 ];
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_229_15_231_8_stop:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_227_15_231_8_if_end:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_225_8_231_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 232 8 ]
+        symbol [ type %tmp.53 232 8 12 ];
+        %tmp.53 = getv self :type;
+        %tmp.54 = lgetv %t.1;
+        symbol [ t %tmp.54 232 18 19 ];
+        %tmp.55 = lgetv %i;
+        symbol [ i %tmp.55 232 13 14 ];
+        aputv %tmp.53 %tmp.55 %tmp.54;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 236 8 ]
+        symbol [ yaw %tmp.56 236 8 11 ];
+        %tmp.56 = getv self :yaw;
+        %tmp.57 = self;
+        symbol [ _randf %tmp.58 236 20 26 ];
+        %tmp.58 = getv function %tmp.57 :_randf;
+        %tmp.59 = invoke %tmp.57 %tmp.58();
+        %tmp.60 = 0.5;
+        %tmp.61 = sub %tmp.59 %tmp.60;
+        %tmp.62 = 1.6;
+        %tmp.63 = mul %tmp.61 %tmp.62;
+        %tmp.64 = lgetv %i;
+        symbol [ i %tmp.64 236 12 13 ];
+        aputv %tmp.56 %tmp.64 %tmp.63;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 237 8 ]
+        symbol [ pyaw %tmp.65 237 8 12 ];
+        %tmp.65 = getv self :pyaw;
+        symbol [ yaw %tmp.67 237 19 22 ];
+        %tmp.67 = getv ? :yaw;
+        %tmp.68 = lgetv %i;
+        symbol [ i %tmp.68 237 23 24 ];
+        %tmp.69 = agetv %tmp.67 %tmp.68;
+        %tmp.70 = lgetv %i;
+        symbol [ i %tmp.70 237 13 14 ];
+        aputv %tmp.65 %tmp.70 %tmp.69;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 238 8 ]
+        symbol [ pitch %tmp.71 238 8 13 ];
+        %tmp.71 = getv self :pitch;
+        %tmp.72 = self;
+        symbol [ _randf %tmp.73 238 20 26 ];
+        %tmp.73 = getv function %tmp.72 :_randf;
+        %tmp.74 = invoke %tmp.72 %tmp.73();
+        %tmp.75 = 0.5;
+        %tmp.76 = sub %tmp.74 %tmp.75;
+        %tmp.77 = 0.30;
+        %tmp.78 = mul %tmp.76 %tmp.77;
+        %tmp.79 = 0.05;
+        %tmp.80 = sub %tmp.78 %tmp.79;
+        %tmp.81 = lgetv %i;
+        symbol [ i %tmp.81 238 14 15 ];
+        aputv %tmp.71 %tmp.81 %tmp.80;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 240 8 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_240_8_258_8_if_stmt:
+        %tmp.82 = lgetv %t.1;
+        symbol [ t %tmp.82 240 12 13 ];
+        symbol [ AR_ET_RIDER %tmp.84 240 17 28 ];
+        %tmp.84 = getv ? :AR_ET_RIDER;
+        %tmp.85 = eq %tmp.82 %tmp.84;
+        bf %tmp.85 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_240_8_258_8_if_false;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_240_8_258_8_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_240_30_246_8_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 244 12 ]
+        symbol [ dyaw %tmp.86 244 12 16 ];
+        %tmp.86 = getv self :dyaw;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_244_22_244_50_begin:
+        %tmp.87 = self;
+        symbol [ _randf %tmp.88 244 23 29 ];
+        %tmp.88 = getv function %tmp.87 :_randf;
+        %tmp.89 = invoke %tmp.87 %tmp.88();
+        %tmp.90 = 0.5;
+        %tmp.91 = lt %tmp.89 %tmp.90;
+        bf %tmp.91 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_244_22_244_50_else_false;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_244_22_244_50_true:
+        %tmp.92 = -0.014;
+        push %tmp.92;
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_244_22_244_50_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_244_22_244_50_else_false:
+        %tmp.93 = 0.014;
+        push %tmp.93;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_244_22_244_50_end:
+        %tmp.94 = phi [%tmp.91 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_244_22_244_50_begin] [%tmp.92 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_244_22_244_50_true] [%tmp.93 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_244_22_244_50_else_false] [%tmp.94 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_244_22_244_50_end];
+        %tmp.95 = lgetv %i;
+        symbol [ i %tmp.95 244 17 18 ];
+        aputv %tmp.86 %tmp.95 %tmp.94;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 245 12 ]
+        symbol [ dist %tmp.96 245 12 16 ];
+        %tmp.96 = getv self :dist;
+        %tmp.97 = 120;
+        %tmp.98 = self;
+        symbol [ _rand %tmp.99 245 28 33 ];
+        %tmp.99 = getv function %tmp.98 :_rand;
+        %tmp.100 = 50;
+        %tmp.101 = invoke %tmp.98 %tmp.99(%tmp.100);
+        %tmp.102 = add %tmp.97 %tmp.101;
+        %tmp.103 = lgetv %i;
+        symbol [ i %tmp.103 245 17 18 ];
+        aputv %tmp.96 %tmp.103 %tmp.102;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_240_30_246_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_240_8_258_8_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_240_8_258_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 246 15 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_246_15_258_8_if_stmt:
+        %tmp.104 = lgetv %t.1;
+        symbol [ t %tmp.104 246 19 20 ];
+        symbol [ AR_ET_HEAVY %tmp.106 246 24 35 ];
+        %tmp.106 = getv ? :AR_ET_HEAVY;
+        %tmp.107 = eq %tmp.104 %tmp.106;
+        bf %tmp.107 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_246_15_258_8_if_false;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_246_15_258_8_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_246_37_248_8_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 247 12 ]
+        symbol [ dist %tmp.108 247 12 16 ];
+        %tmp.108 = getv self :dist;
+        %tmp.109 = 110;
+        %tmp.110 = self;
+        symbol [ _rand %tmp.111 247 28 33 ];
+        %tmp.111 = getv function %tmp.110 :_rand;
+        %tmp.112 = 40;
+        %tmp.113 = invoke %tmp.110 %tmp.111(%tmp.112);
+        %tmp.114 = add %tmp.109 %tmp.113;
+        %tmp.115 = lgetv %i;
+        symbol [ i %tmp.115 247 17 18 ];
+        aputv %tmp.108 %tmp.115 %tmp.114;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_246_37_248_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_246_15_258_8_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_246_15_258_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 248 15 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_248_15_258_8_if_stmt:
+        %tmp.116 = lgetv %t.1;
+        symbol [ t %tmp.116 248 19 20 ];
+        symbol [ AR_ET_ARCHER %tmp.118 248 24 36 ];
+        %tmp.118 = getv ? :AR_ET_ARCHER;
+        %tmp.119 = eq %tmp.116 %tmp.118;
+        bf %tmp.119 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_248_15_258_8_if_false;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_248_15_258_8_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_248_38_253_8_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 249 12 ]
+        symbol [ dist %tmp.120 249 12 16 ];
+        %tmp.120 = getv self :dist;
+        %tmp.121 = 140;
+        %tmp.122 = lgetv %i;
+        symbol [ i %tmp.122 249 17 18 ];
+        aputv %tmp.120 %tmp.122 %tmp.121;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 250 12 ]
+        symbol [ yaw %tmp.123 250 12 15 ];
+        %tmp.123 = getv self :yaw;
+        %tmp.124 = 0.0;
+        %tmp.125 = lgetv %i;
+        symbol [ i %tmp.125 250 16 17 ];
+        aputv %tmp.123 %tmp.125 %tmp.124;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 250 27 ]
+        symbol [ pyaw %tmp.126 250 27 31 ];
+        %tmp.126 = getv self :pyaw;
+        %tmp.127 = 0.0;
+        %tmp.128 = lgetv %i;
+        symbol [ i %tmp.128 250 32 33 ];
+        aputv %tmp.126 %tmp.128 %tmp.127;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 251 12 ]
+        symbol [ pitch %tmp.129 251 12 17 ];
+        %tmp.129 = getv self :pitch;
+        %tmp.130 = -0.08;
+        %tmp.131 = lgetv %i;
+        symbol [ i %tmp.131 251 18 19 ];
+        aputv %tmp.129 %tmp.131 %tmp.130;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 252 12 ]
+        symbol [ fireT %tmp.132 252 12 17 ];
+        %tmp.132 = getv self :fireT;
+        %tmp.133 = 40;
+        %tmp.134 = lgetv %i;
+        symbol [ i %tmp.134 252 18 19 ];
+        aputv %tmp.132 %tmp.134 %tmp.133;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_248_38_253_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_248_15_258_8_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_248_15_258_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 253 15 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_253_15_258_8_if_stmt:
+        %tmp.135 = lgetv %t.1;
+        symbol [ t %tmp.135 253 19 20 ];
+        symbol [ AR_ET_SHIELD %tmp.137 253 24 36 ];
+        %tmp.137 = getv ? :AR_ET_SHIELD;
+        %tmp.138 = eq %tmp.135 %tmp.137;
+        bf %tmp.138 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_253_15_258_8_if_else_false;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_253_15_258_8_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_253_38_256_8_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 254 12 ]
+        symbol [ dist %tmp.139 254 12 16 ];
+        %tmp.139 = getv self :dist;
+        %tmp.140 = 130;
+        %tmp.141 = self;
+        symbol [ _rand %tmp.142 254 28 33 ];
+        %tmp.142 = getv function %tmp.141 :_rand;
+        %tmp.143 = 50;
+        %tmp.144 = invoke %tmp.141 %tmp.142(%tmp.143);
+        %tmp.145 = add %tmp.140 %tmp.144;
+        %tmp.146 = lgetv %i;
+        symbol [ i %tmp.146 254 17 18 ];
+        aputv %tmp.139 %tmp.146 %tmp.145;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 255 12 ]
+        symbol [ shutT %tmp.147 255 12 17 ];
+        %tmp.147 = getv self :shutT;
+        %tmp.148 = 18;
+        %tmp.149 = self;
+        symbol [ _rand %tmp.150 255 28 33 ];
+        %tmp.150 = getv function %tmp.149 :_rand;
+        %tmp.151 = 10;
+        %tmp.152 = invoke %tmp.149 %tmp.150(%tmp.151);
+        %tmp.153 = add %tmp.148 %tmp.152;
+        %tmp.154 = lgetv %i;
+        symbol [ i %tmp.154 255 18 19 ];
+        aputv %tmp.147 %tmp.154 %tmp.153;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_253_38_256_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_253_15_258_8_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_253_15_258_8_if_else_false:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_256_15_258_8_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 257 12 ]
+        symbol [ dist %tmp.155 257 12 16 ];
+        %tmp.155 = getv self :dist;
+        %tmp.156 = 150;
+        %tmp.157 = self;
+        symbol [ _rand %tmp.158 257 28 33 ];
+        %tmp.158 = getv function %tmp.157 :_rand;
+        %tmp.159 = 60;
+        %tmp.160 = invoke %tmp.157 %tmp.158(%tmp.159);
+        %tmp.161 = add %tmp.156 %tmp.160;
+        %tmp.162 = lgetv %i;
+        symbol [ i %tmp.162 257 17 18 ];
+        aputv %tmp.155 %tmp.162 %tmp.161;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_256_15_258_8_stop:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_253_15_258_8_if_end:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_248_15_258_8_if_end:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_246_15_258_8_if_end:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_240_8_258_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 260 8 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_260_8_261_45_if_stmt:
+        %tmp.163 = lgetv %t.1;
+        symbol [ t %tmp.163 260 12 13 ];
+        symbol [ AR_ET_ARCHER %tmp.165 260 17 29 ];
+        %tmp.165 = getv ? :AR_ET_ARCHER;
+        %tmp.166 = eq %tmp.163 %tmp.165;
+        bf %tmp.166 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_260_8_261_45_if_else_false;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_260_8_261_45_if_true:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_260_31_260_44_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 260 33 ]
+        symbol [ hp %tmp.167 260 33 35 ];
+        %tmp.167 = getv self :hp;
+        %tmp.168 = 3;
+        %tmp.169 = lgetv %i;
+        symbol [ i %tmp.169 260 36 37 ];
+        aputv %tmp.167 %tmp.169 %tmp.168;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_260_31_260_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_260_8_261_45_if_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_260_8_261_45_if_else_false:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_261_32_261_45_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 261 34 ]
+        symbol [ hp %tmp.170 261 34 36 ];
+        %tmp.170 = getv self :hp;
+        %tmp.171 = 1;
+        %tmp.172 = lgetv %i;
+        symbol [ i %tmp.172 261 37 38 ];
+        aputv %tmp.170 %tmp.172 %tmp.171;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_261_32_261_45_stop:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_260_8_261_45_if_end:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_217_33_262_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 170; @symbol_functiondef = [lowestInRandomColumn,170,13,33]; ]
-    function lowestInRandomColumn() {
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_170_36_190_4_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 172 8 ]
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_170_36_190_4_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_170_36_190_4_stop" ]
-        %cols.1 = local;
-        symbol [ cols %cols.1 172 12 16 ];
-        %tmp.1 = newd 0;
-        lputv %cols.1 %tmp.1;
-        symbol [ cols %cols.1 172 12 16 ];
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 173 8 ]
-        for @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_173_8_177_8_for_test @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_173_8_177_8_for_incr @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_173_8_177_8_for_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_173_8_177_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_173_8_177_8_for_begin" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_173_8_177_8_for_end" ]
-        %i.2 = local;
-        symbol [ i %i.2 173 17 18 ];
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 265; @symbol_functiondef = [_abs,265,20,24]; @symbol_param<0> = [v,265,25,26]; ]
+    protected
+    function _abs(v) {
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_265_28_265_55_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 265 30 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_265_37_265_52_begin:
+        %tmp.1 = lgetv %v;
+        symbol [ v %tmp.1 265 38 39 ];
         %tmp.2 = 0;
-        lputv %i.2 %tmp.2;
-        symbol [ i %i.2 173 17 18 ];
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_173_8_177_8_for_test:
-        %tmp.3 = lgetv %i.2;
-        symbol [ i %tmp.3 173 24 25 ];
-        symbol [ enemies %tmp.5 173 28 35 ];
-        %tmp.5 = getv ? :enemies;
-        symbol [ size %tmp.6 173 36 40 ];
-        %tmp.6 = getv function %tmp.5 :size;
-        %tmp.7 = invoke %tmp.5 %tmp.6();
-        %tmp.8 = lt %tmp.3 %tmp.7;
-        bf %tmp.8 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_173_8_177_8_for_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_173_8_177_8_for_begin:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_173_49_177_8_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 174 12 ]
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_173_49_177_8_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_173_49_177_8_stop" ]
-        %e.3 = local;
-        symbol [ e %e.3 174 16 17 ];
-        symbol [ enemies %tmp.10 174 20 27 ];
-        %tmp.10 = getv ? :enemies;
-        %tmp.11 = lgetv %i.2;
-        symbol [ i %tmp.11 174 28 29 ];
-        %tmp.12 = agetv %tmp.10 %tmp.11;
-        lputv %e.3 %tmp.12;
-        symbol [ e %e.3 174 16 17 ];
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 175 12 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_175_12_175_38_if_stmt:
-        %tmp.13 = lgetv %e.3;
-        symbol [ e %tmp.13 175 17 18 ];
-        symbol [ alive %tmp.14 175 19 24 ];
-        %tmp.14 = getv %tmp.13 :alive;
-        %tmp.15 = not %tmp.14;
-        bf %tmp.15 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_175_12_175_38_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_175_12_175_38_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_175_26_175_38_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 175 28 ]
-        goto break @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_173_8_177_8_for_incr;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_175_26_175_38_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_175_12_175_38_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_175_12_175_38_if_end:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 176 12 ]
-        %tmp.16 = lgetv %cols.1;
-        symbol [ cols %tmp.16 176 12 16 ];
-        symbol [ put %tmp.17 176 17 20 ];
-        %tmp.17 = getv function %tmp.16 :put;
-        %tmp.18 = lgetv %e.3;
-        symbol [ e %tmp.18 176 21 22 ];
-        symbol [ col %tmp.19 176 23 26 ];
-        %tmp.19 = getv %tmp.18 :col;
-        %tmp.20 = true;
-        invoke %tmp.16 %tmp.17(%tmp.19, %tmp.20);
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_173_49_177_8_stop:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_173_8_177_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 173 ]
-        %tmp.23 = lgetv %i.2;
-        symbol [ i %tmp.23 173 44 45 ];
-        %tmp.24 = add %tmp.23 1;
-        lputv %i.2 %tmp.24;
-        symbol [ i %i.2 173 44 45 ];
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_173_8_177_8_for_test;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_173_8_177_8_for_end:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 178 8 ]
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_170_36_190_4_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_170_36_190_4_stop" ]
-        %ckeys.4 = local;
-        symbol [ ckeys %ckeys.4 178 12 17 ];
-        %tmp.25 = lgetv %cols.1;
-        symbol [ cols %tmp.25 178 20 24 ];
-        symbol [ keys %tmp.26 178 25 29 ];
-        %tmp.26 = getv function %tmp.25 :keys;
-        %tmp.27 = invoke %tmp.25 %tmp.26();
-        lputv %ckeys.4 %tmp.27;
-        symbol [ ckeys %ckeys.4 178 12 17 ];
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 179 8 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_179_8_179_46_if_stmt:
-        %tmp.28 = lgetv %ckeys.4;
-        symbol [ ckeys %tmp.28 179 12 17 ];
-        symbol [ size %tmp.29 179 18 22 ];
-        %tmp.29 = getv function %tmp.28 :size;
-        %tmp.30 = invoke %tmp.28 %tmp.29();
-        %tmp.31 = 0;
-        %tmp.32 = eq %tmp.30 %tmp.31;
-        bf %tmp.32 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_179_8_179_46_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_179_8_179_46_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_179_31_179_46_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 179 33 ]
-        %tmp.33 = null;
-        ret %tmp.33;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_179_31_179_46_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_179_8_179_46_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_179_8_179_46_if_end:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 180 8 ]
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_170_36_190_4_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_170_36_190_4_stop" ]
-        %c.5 = local;
-        symbol [ c %c.5 180 12 13 ];
-        %tmp.34 = lgetv %ckeys.4;
-        symbol [ ckeys %tmp.34 180 16 21 ];
-        symbol [ Math %tmp.35 180 22 26 ];
-        %tmp.35 = getm $.Toybox.Math;
-        symbol [ rand %tmp.36 180 27 31 ];
-        %tmp.36 = getv function %tmp.35 :rand;
-        %tmp.37 = invoke %tmp.35 %tmp.36();
-        %tmp.38 = lgetv %ckeys.4;
-        symbol [ ckeys %tmp.38 180 36 41 ];
-        symbol [ size %tmp.39 180 42 46 ];
-        %tmp.39 = getv function %tmp.38 :size;
-        %tmp.40 = invoke %tmp.38 %tmp.39();
-        %tmp.41 = mod %tmp.37 %tmp.40;
-        %tmp.42 = agetv %tmp.34 %tmp.41;
-        lputv %c.5 %tmp.42;
-        symbol [ c %c.5 180 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 181 8 ]
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_170_36_190_4_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_170_36_190_4_stop" ]
-        %loR.6 = local;
-        symbol [ loR %loR.6 181 12 15 ];
-        %tmp.43 = -1;
-        lputv %loR.6 %tmp.43;
-        symbol [ loR %loR.6 181 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 181 22 ]
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_170_36_190_4_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_170_36_190_4_stop" ]
-        %loE.7 = local;
-        symbol [ loE %loE.7 181 26 29 ];
-        %tmp.44 = null;
-        lputv %loE.7 %tmp.44;
-        symbol [ loE %loE.7 181 26 29 ];
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 182 8 ]
-        for @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_182_8_187_8_for_test @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_182_8_187_8_for_incr @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_182_8_187_8_for_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_182_8_187_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_182_8_187_8_for_begin" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_182_8_187_8_for_end" ]
-        %j.8 = local;
-        symbol [ j %j.8 182 17 18 ];
-        %tmp.45 = 0;
-        lputv %j.8 %tmp.45;
-        symbol [ j %j.8 182 17 18 ];
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_182_8_187_8_for_test:
-        %tmp.46 = lgetv %j.8;
-        symbol [ j %tmp.46 182 24 25 ];
-        symbol [ enemies %tmp.48 182 28 35 ];
-        %tmp.48 = getv ? :enemies;
-        symbol [ size %tmp.49 182 36 40 ];
-        %tmp.49 = getv function %tmp.48 :size;
-        %tmp.50 = invoke %tmp.48 %tmp.49();
-        %tmp.51 = lt %tmp.46 %tmp.50;
-        bf %tmp.51 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_182_8_187_8_for_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_182_8_187_8_for_begin:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_182_49_187_8_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 183 12 ]
-        [ "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_182_49_187_8_start" "_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_182_49_187_8_stop" ]
-        %en.9 = local;
-        symbol [ en %en.9 183 16 18 ];
-        symbol [ enemies %tmp.53 183 21 28 ];
-        %tmp.53 = getv ? :enemies;
-        %tmp.54 = lgetv %j.8;
-        symbol [ j %tmp.54 183 29 30 ];
-        %tmp.55 = agetv %tmp.53 %tmp.54;
-        lputv %en.9 %tmp.55;
-        symbol [ en %en.9 183 16 18 ];
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 184 12 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_184_12_184_46_if_stmt:
-        %tmp.56 = lgetv %en.9;
-        symbol [ en %tmp.56 184 17 19 ];
-        symbol [ alive %tmp.57 184 20 25 ];
-        %tmp.57 = getv %tmp.56 :alive;
-        %tmp.58 = not %tmp.57;
-        bf %tmp.58 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_184_12_184_46_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_184_12_184_46_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_184_34_184_46_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 184 36 ]
-        goto break @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_182_8_187_8_for_incr;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_184_34_184_46_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_184_12_184_46_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_184_12_184_46_if_end:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 185 12 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_185_12_185_46_if_stmt:
-        %tmp.59 = lgetv %en.9;
-        symbol [ en %tmp.59 185 16 18 ];
-        symbol [ col %tmp.60 185 19 22 ];
-        %tmp.60 = getv %tmp.59 :col;
-        %tmp.61 = lgetv %c.5;
-        symbol [ c %tmp.61 185 26 27 ];
-        %tmp.62 = ne %tmp.60 %tmp.61;
-        bf %tmp.62 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_185_12_185_46_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_185_12_185_46_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_185_34_185_46_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 185 36 ]
-        goto break @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_182_8_187_8_for_incr;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_185_34_185_46_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_185_12_185_46_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_185_12_185_46_if_end:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 186 12 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_186_12_186_60_if_stmt:
-        %tmp.63 = lgetv %en.9;
-        symbol [ en %tmp.63 186 16 18 ];
-        symbol [ row %tmp.64 186 19 22 ];
-        %tmp.64 = getv %tmp.63 :row;
-        %tmp.65 = lgetv %loR.6;
-        symbol [ loR %tmp.65 186 25 28 ];
-        %tmp.66 = gt %tmp.64 %tmp.65;
-        bf %tmp.66 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_186_12_186_60_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_186_12_186_60_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_186_34_186_60_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 186 36 ]
-        %tmp.67 = lgetv %en.9;
-        symbol [ en %tmp.67 186 42 44 ];
-        symbol [ row %tmp.68 186 45 48 ];
-        %tmp.68 = getv %tmp.67 :row;
-        lputv %loR.6 %tmp.68;
-        symbol [ loR %loR.6 186 36 39 ];
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 186 50 ]
-        %tmp.69 = lgetv %en.9;
-        symbol [ en %tmp.69 186 56 58 ];
-        lputv %loE.7 %tmp.69;
-        symbol [ loE %loE.7 186 50 53 ];
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_186_34_186_60_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_186_12_186_60_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_186_12_186_60_if_end:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_182_49_187_8_stop:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_182_8_187_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 182 ]
-        %tmp.72 = lgetv %j.8;
-        symbol [ j %tmp.72 182 44 45 ];
-        %tmp.73 = add %tmp.72 1;
-        lputv %j.8 %tmp.73;
-        symbol [ j %j.8 182 44 45 ];
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_182_8_187_8_for_test;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_182_8_187_8_for_end:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 188 8 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_188_8_188_40_if_stmt:
-        %tmp.74 = lgetv %loE.7;
-        symbol [ loE %tmp.74 188 12 15 ];
-        %tmp.75 = null;
-        %tmp.76 = eq %tmp.74 %tmp.75;
-        bf %tmp.76 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_188_8_188_40_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_188_8_188_40_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_188_25_188_40_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 188 27 ]
-        %tmp.77 = null;
-        ret %tmp.77;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_188_25_188_40_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_188_8_188_40_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_188_8_188_40_if_end:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 189 8 ]
-        %tmp.78 = newa 2;
-        %tmp.79 = lgetv %loE.7;
-        symbol [ loE %tmp.79 189 16 19 ];
-        symbol [ col %tmp.80 189 20 23 ];
-        %tmp.80 = getv %tmp.79 :col;
-        %tmp.81 = dup %tmp.78;
-        %tmp.82 = aputv %tmp.81 0 %tmp.80;
-        %tmp.83 = lgetv %loE.7;
-        symbol [ loE %tmp.83 189 25 28 ];
-        symbol [ row %tmp.84 189 29 32 ];
-        %tmp.84 = getv %tmp.83 :row;
-        %tmp.85 = dup %tmp.82;
-        %tmp.86 = aputv %tmp.85 1 %tmp.84;
-        ret %tmp.86;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_170_36_190_4_stop:
+        %tmp.3 = lt %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_265_37_265_52_else_false;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_265_37_265_52_true:
+        %tmp.4 = lgetv %v;
+        symbol [ v %tmp.4 265 48 49 ];
+        %tmp.5 = sub 0 %tmp.4;
+        push %tmp.5;
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_265_37_265_52_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_265_37_265_52_else_false:
+        %tmp.6 = lgetv %v;
+        symbol [ v %tmp.6 265 52 53 ];
+        push %tmp.6;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_265_37_265_52_end:
+        %tmp.7 = phi [%tmp.3 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_265_37_265_52_begin] [%tmp.5 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_265_37_265_52_true] [%tmp.6 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_265_37_265_52_else_false] [%tmp.7 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_265_37_265_52_end];
+        ret %tmp.7;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_265_28_265_55_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 192; @symbol_functiondef = [scoreFor,192,20,28]; @symbol_param<0> = [t,192,29,30]; ]
-    static
-    function scoreFor(t) {
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_192_32_196_4_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 193 8 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_193_8_193_40_if_stmt:
-        %tmp.1 = lgetv %t;
-        symbol [ t %tmp.1 193 12 13 ];
-        symbol [ EI_BOSS %tmp.3 193 17 24 ];
-        %tmp.3 = getv ? :EI_BOSS;
-        %tmp.4 = eq %tmp.1 %tmp.3;
-        bf %tmp.4 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_193_8_193_40_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_193_8_193_40_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_193_27_193_40_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 193 29 ]
-        %tmp.5 = 30;
-        ret %tmp.5;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_193_27_193_40_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_193_8_193_40_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_193_8_193_40_if_end:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 194 8 ]
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_194_8_194_40_if_stmt:
-        %tmp.6 = lgetv %t;
-        symbol [ t %tmp.6 194 12 13 ];
-        symbol [ EI_GUARD %tmp.8 194 17 25 ];
-        %tmp.8 = getv ? :EI_GUARD;
-        %tmp.9 = eq %tmp.6 %tmp.8;
-        bf %tmp.9 @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_194_8_194_40_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_194_8_194_40_if_true:
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_194_27_194_40_start:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 194 29 ]
-        %tmp.10 = 20;
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 266; @symbol_functiondef = [_lcg,266,20,24]; ]
+    protected
+    function _lcg() {
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_266_27_269_4_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 267 8 ]
+        symbol [ _rng %tmp.2 267 16 20 ];
+        %tmp.2 = getv ? :_rng;
+        %tmp.3 = 1103515245;
+        %tmp.4 = mul %tmp.2 %tmp.3;
+        %tmp.5 = 12345;
+        %tmp.6 = add %tmp.4 %tmp.5;
+        %tmp.7 = 0x7FFFFFFF;
+        %tmp.8 = bitand %tmp.6 %tmp.7;
+        symbol [ _rng ? 267 8 12 ];
+        putv self :_rng %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 268 8 ]
+        symbol [ _rng %tmp.10 268 15 19 ];
+        %tmp.10 = getv ? :_rng;
         ret %tmp.10;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_194_27_194_40_stop:
-        goto @_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_194_8_194_40_if_end;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_194_8_194_40_if_end:
-[ "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc" 195 8 ]
-        %tmp.11 = 10;
-        ret %tmp.11;
-_Users_kkorolczuk_work_garmin_pixelinvaders_source_EnemyManager_mc_192_32_196_4_stop:
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_266_27_269_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 270; @symbol_functiondef = [_rand,270,20,25]; @symbol_param<0> = [n,270,26,27]; ]
+    protected
+    function _rand(n) {
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_270_30_270_66_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 270 32 ]
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_270_39_270_63_begin:
+        %tmp.1 = lgetv %n;
+        symbol [ n %tmp.1 270 40 41 ];
+        %tmp.2 = 1;
+        %tmp.3 = lte %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_270_39_270_63_else_false;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_270_39_270_63_true:
+        %tmp.4 = 0;
+        push %tmp.4;
+        goto @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_270_39_270_63_end;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_270_39_270_63_else_false:
+        %tmp.5 = self;
+        symbol [ _lcg %tmp.6 270 54 58 ];
+        %tmp.6 = getv function %tmp.5 :_lcg;
+        %tmp.7 = invoke %tmp.5 %tmp.6();
+        %tmp.8 = lgetv %n;
+        symbol [ n %tmp.8 270 63 64 ];
+        %tmp.9 = mod %tmp.7 %tmp.8;
+        push %tmp.9;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_270_39_270_63_end:
+        %tmp.10 = phi [%tmp.3 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_270_39_270_63_begin] [%tmp.4 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_270_39_270_63_true] [%tmp.9 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_270_39_270_63_else_false] [%tmp.10 @_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_270_39_270_63_end];
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_270_30_270_66_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 271; @symbol_functiondef = [_randf,271,20,26]; ]
+    protected
+    function _randf() {
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_271_30_271_76_start:
+[ "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc" 271 32 ]
+        %tmp.1 = self;
+        symbol [ _lcg %tmp.2 271 40 44 ];
+        %tmp.2 = getv function %tmp.1 :_lcg;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        %tmp.4 = 10000;
+        %tmp.5 = mod %tmp.3 %tmp.4;
+        symbol [ toFloat %tmp.6 271 56 63 ];
+        %tmp.6 = getv function %tmp.5 :toFloat;
+        %tmp.7 = invoke %tmp.5 %tmp.6();
+        %tmp.8 = 0.0001;
+        %tmp.9 = mul %tmp.7 %tmp.8;
+        ret %tmp.9;
+_Users_kkorolczuk_work_garmin_archery_source_EnemyManager_mc_271_30_271_76_stop:
     }
 }
-[ @file = "/Users/kkorolczuk/work/garmin/pixelinvaders/source/EnemyManager.mc"; @line = 25; ]
+[ @file = "/Users/kkorolczuk/work/garmin/archery/source/EnemyManager.mc"; @line = 26; ]
 <init> {
 }

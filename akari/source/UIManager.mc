@@ -36,7 +36,10 @@ class UIManager {
         var gap  = (sh *  1) / 100;     if (gap  <  2) { gap  =  2; }
         var rowW = (sw * 665) / 1000;   if (rowW < 130) { rowW = 130; } // 70% × 0.95
         var rowX = (sw - rowW) / 2;
-        var rowY0 = (sh * 38) / 100;
+        // Raised from 38% → 33% so all five navigable rows (the four config
+        // rows + the LEADERBOARD badge) stack without overlapping the bottom
+        // subtitle on small round watches.
+        var rowY0 = (sh * 33) / 100;
         return [rowH, rowW, rowX, rowY0, gap];
     }
 
@@ -95,6 +98,10 @@ class UIManager {
             dc.drawText(cx, ry + (rowH - 14) / 2, Graphics.FONT_XTINY,
                         labels[i], Graphics.TEXT_JUSTIFY_CENTER);
         }
+
+        // LEADERBOARD badge row (index AK_LB_ROW) — drawn by the shared library.
+        var lbY = rowY0 + AK_LB_ROW * (rowH + gap);
+        LbBadge.drawRow(dc, rowX, lbY, rowW, rowH, (ctrl.menuRow == AK_LB_ROW));
 
         var sub;
         if (ctrl.mode == AK_MODE_DAILY) {

@@ -1,811 +1,365 @@
-[ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc"; @line = 14; @symbol_usingdef<0> = [Toybox,14,6,12]; @symbol_usingdef<1> = [Graphics,14,13,21]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc"; @line = 14; @symbol_usingdef<0> = [Toybox,14,6,12]; @symbol_usingdef<1> = [Graphics,14,13,21]; ]
 using Toybox.Graphics;
-[ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc"; @line = 15; @symbol_usingdef<0> = [Toybox,15,6,12]; @symbol_usingdef<1> = [Math,15,13,17]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc"; @line = 15; @symbol_usingdef<0> = [Toybox,15,6,12]; @symbol_usingdef<1> = [Math,15,13,17]; ]
 using Toybox.Math;
-[ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc"; @line = 17; @symbol_classdef = [Ball,17,6,10]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc"; @line = 17; @symbol_classdef = [Ball,17,6,10]; ]
 class Ball {
-    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc"; @line = 17; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc"; @line = 17; ]
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc"; @line = 17; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc"; @line = 17; ]
     static
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc"; @line = 18; @position = 8; @symbol_vardef = [x,18,8,9]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc"; @line = 18; @position = 8; @symbol_vardef = [x,18,8,9]; ]
     var x;
-    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc"; @line = 19; @position = 8; @symbol_vardef = [y,19,8,9]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc"; @line = 19; @position = 8; @symbol_vardef = [y,19,8,9]; ]
     var y;
-    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc"; @line = 20; @position = 8; @symbol_vardef = [vx,20,8,10]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc"; @line = 20; @position = 8; @symbol_vardef = [vx,20,8,10]; ]
     var vx;
-    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc"; @line = 21; @position = 8; @symbol_vardef = [vy,21,8,10]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc"; @line = 21; @position = 8; @symbol_vardef = [vy,21,8,10]; ]
     var vy;
-    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc"; @line = 22; @position = 8; @symbol_vardef = [size,22,8,12]; ]
-    var size;
-    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc"; @line = 23; @position = 8; @symbol_vardef = [maxSpeed,23,8,16]; ]
-    var maxSpeed;
-    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc"; @line = 25; @symbol_functiondef = [initialize,25,13,23]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc"; @line = 22; @position = 8; @symbol_vardef = [radius,22,8,14]; ]
+    var radius;
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc"; @line = 23; @position = 8; @symbol_vardef = [alive,23,8,13]; ]
+    var alive;
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc"; @line = 26; @position = 8; @symbol_vardef = [t1x,26,8,11]; ]
+    var t1x;
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc"; @line = 26; @position = 17; @symbol_vardef = [t1y,26,17,20]; ]
+    var t1y;
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc"; @line = 27; @position = 8; @symbol_vardef = [t2x,27,8,11]; ]
+    var t2x;
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc"; @line = 27; @position = 17; @symbol_vardef = [t2y,27,17,20]; ]
+    var t2y;
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc"; @line = 28; @position = 8; @symbol_vardef = [t3x,28,8,11]; ]
+    var t3x;
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc"; @line = 28; @position = 17; @symbol_vardef = [t3y,28,17,20]; ]
+    var t3y;
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc"; @line = 30; @symbol_functiondef = [initialize,30,13,23]; ]
     function initialize() as Void {
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_25_26_27_4_start:
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 26 8 ]
-        %tmp.1 = 0;
-        symbol [ x ? 26 8 9 ];
+_Users_kkorolczuk_work_garmin_pinballpro_source_Ball_mc_30_26_34_4_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 31 8 ]
+        %tmp.1 = 0.0;
+        symbol [ x ? 31 8 9 ];
         putv self :x %tmp.1;
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 26 15 ]
-        %tmp.2 = 0;
-        symbol [ y ? 26 15 16 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 31 17 ]
+        %tmp.2 = 0.0;
+        symbol [ y ? 31 17 18 ];
         putv self :y %tmp.2;
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 26 22 ]
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 31 26 ]
         %tmp.3 = 0.0;
-        symbol [ vx ? 26 22 24 ];
+        symbol [ vx ? 31 26 28 ];
         putv self :vx %tmp.3;
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 26 32 ]
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 31 36 ]
         %tmp.4 = 0.0;
-        symbol [ vy ? 26 32 34 ];
+        symbol [ vy ? 31 36 38 ];
         putv self :vy %tmp.4;
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 26 42 ]
-        %tmp.5 = 6;
-        symbol [ size ? 26 42 46 ];
-        putv self :size %tmp.5;
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 26 52 ]
-        %tmp.6 = 6.0;
-        symbol [ maxSpeed ? 26 52 60 ];
-        putv self :maxSpeed %tmp.6;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_25_26_27_4_stop:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 31 46 ]
+        %tmp.5 = 5;
+        symbol [ radius ? 31 46 52 ];
+        putv self :radius %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 32 8 ]
+        %tmp.6 = false;
+        symbol [ alive ? 32 8 13 ];
+        putv self :alive %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 33 8 ]
+        %tmp.7 = 0;
+        symbol [ t1x ? 33 8 11 ];
+        putv self :t1x %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 33 17 ]
+        %tmp.8 = 0;
+        symbol [ t1y ? 33 17 20 ];
+        putv self :t1y %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 33 26 ]
+        %tmp.9 = 0;
+        symbol [ t2x ? 33 26 29 ];
+        putv self :t2x %tmp.9;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 33 35 ]
+        %tmp.10 = 0;
+        symbol [ t2y ? 33 35 38 ];
+        putv self :t2y %tmp.10;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 33 44 ]
+        %tmp.11 = 0;
+        symbol [ t3x ? 33 44 47 ];
+        putv self :t3x %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 33 53 ]
+        %tmp.12 = 0;
+        symbol [ t3y ? 33 53 56 ];
+        putv self :t3y %tmp.12;
+_Users_kkorolczuk_work_garmin_pinballpro_source_Ball_mc_30_26_34_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc"; @line = 29; @symbol_functiondef = [reset,29,13,18]; @symbol_param<0> = [cx,29,19,21]; @symbol_param<1> = [cy,29,23,25]; @symbol_param<2> = [baseSpd,29,27,34]; @symbol_param<3> = [toLeft,29,36,42]; ]
-    function reset(cx, cy, baseSpd, toLeft) {
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_29_44_40_4_start:
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 30 8 ]
-        %tmp.1 = lgetv %cx;
-        symbol [ cx %tmp.1 30 13 15 ];
-        symbol [ x ? 30 8 9 ];
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc"; @line = 36; @symbol_functiondef = [reset,36,13,18]; @symbol_param<0> = [rx,36,19,21]; @symbol_param<1> = [ry,36,23,25]; @symbol_param<2> = [r,36,27,28]; ]
+    function reset(rx, ry, r) {
+_Users_kkorolczuk_work_garmin_pinballpro_source_Ball_mc_36_30_44_4_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 37 8 ]
+        %tmp.1 = lgetv %rx;
+        symbol [ rx %tmp.1 37 13 15 ];
+        symbol [ x ? 37 8 9 ];
         putv self :x %tmp.1;
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 30 17 ]
-        %tmp.2 = lgetv %cy;
-        symbol [ cy %tmp.2 30 22 24 ];
-        symbol [ y ? 30 17 18 ];
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 37 17 ]
+        %tmp.2 = lgetv %ry;
+        symbol [ ry %tmp.2 37 22 24 ];
+        symbol [ y ? 37 17 18 ];
         putv self :y %tmp.2;
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 32 8 ]
-        [ "_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_29_44_40_4_start" "_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_29_44_40_4_stop" ]
-        %ang.1 = local;
-        symbol [ ang %ang.1 32 12 15 ];
-        symbol [ Math %tmp.3 32 19 23 ];
-        %tmp.3 = getm $.Toybox.Math;
-        symbol [ rand %tmp.4 32 24 28 ];
-        %tmp.4 = getv function %tmp.3 :rand;
-        %tmp.5 = invoke %tmp.3 %tmp.4();
-        %tmp.6 = 70;
-        %tmp.7 = mod %tmp.5 %tmp.6;
-        %tmp.8 = 35;
-        %tmp.9 = sub %tmp.7 %tmp.8;
-        lputv %ang.1 %tmp.9;
-        symbol [ ang %ang.1 32 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 34 8 ]
-        [ "_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_29_44_40_4_start" "_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_29_44_40_4_stop" ]
-        %rad.2 = local;
-        symbol [ rad %rad.2 34 12 15 ];
-        %tmp.10 = lgetv %ang.1;
-        symbol [ ang %tmp.10 34 18 21 ];
-        %tmp.11 = 3.14159;
-        %tmp.12 = mul %tmp.10 %tmp.11;
-        %tmp.13 = 180.0;
-        %tmp.14 = div %tmp.12 %tmp.13;
-        lputv %rad.2 %tmp.14;
-        symbol [ rad %rad.2 34 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 35 8 ]
-        [ "_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_29_44_40_4_start" "_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_29_44_40_4_stop" ]
-        %c.3 = local;
-        symbol [ c %c.3 35 12 13 ];
-        symbol [ Math %tmp.15 35 18 22 ];
-        %tmp.15 = getm $.Toybox.Math;
-        symbol [ cos %tmp.16 35 23 26 ];
-        %tmp.16 = getv function %tmp.15 :cos;
-        %tmp.17 = lgetv %rad.2;
-        symbol [ rad %tmp.17 35 27 30 ];
-        %tmp.18 = invoke %tmp.15 %tmp.16(%tmp.17);
-        lputv %c.3 %tmp.18;
-        symbol [ c %c.3 35 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 36 8 ]
-        [ "_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_29_44_40_4_start" "_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_29_44_40_4_stop" ]
-        %s.4 = local;
-        symbol [ s %s.4 36 12 13 ];
-        symbol [ Math %tmp.19 36 18 22 ];
-        %tmp.19 = getm $.Toybox.Math;
-        symbol [ sin %tmp.20 36 23 26 ];
-        %tmp.20 = getv function %tmp.19 :sin;
-        %tmp.21 = lgetv %rad.2;
-        symbol [ rad %tmp.21 36 27 30 ];
-        %tmp.22 = invoke %tmp.19 %tmp.20(%tmp.21);
-        lputv %s.4 %tmp.22;
-        symbol [ s %s.4 36 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 37 8 ]
-        [ "_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_29_44_40_4_start" "_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_29_44_40_4_stop" ]
-        %dir.5 = local;
-        symbol [ dir %dir.5 37 12 15 ];
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_37_18_37_32_begin:
-        %tmp.23 = lgetv %toLeft;
-        symbol [ toLeft %tmp.23 37 18 24 ];
-        bf %tmp.23 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_37_18_37_32_else_false;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_37_18_37_32_true:
-        %tmp.24 = -1;
-        push %tmp.24;
-        goto @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_37_18_37_32_end;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_37_18_37_32_else_false:
-        %tmp.25 = 1;
-        push %tmp.25;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_37_18_37_32_end:
-        %tmp.26 = phi [%tmp.23 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_37_18_37_32_begin] [%tmp.24 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_37_18_37_32_true] [%tmp.25 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_37_18_37_32_else_false] [%tmp.26 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_37_18_37_32_end];
-        lputv %dir.5 %tmp.26;
-        symbol [ dir %dir.5 37 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 38 8 ]
-        %tmp.27 = lgetv %baseSpd;
-        symbol [ baseSpd %tmp.27 38 13 20 ];
-        %tmp.28 = lgetv %c.3;
-        symbol [ c %tmp.28 38 23 24 ];
-        %tmp.29 = mul %tmp.27 %tmp.28;
-        %tmp.30 = lgetv %dir.5;
-        symbol [ dir %tmp.30 38 27 30 ];
-        %tmp.31 = mul %tmp.29 %tmp.30;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 38 8 ]
+        %tmp.3 = 0.0;
         symbol [ vx ? 38 8 10 ];
-        putv self :vx %tmp.31;
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 39 8 ]
-        %tmp.32 = lgetv %baseSpd;
-        symbol [ baseSpd %tmp.32 39 13 20 ];
-        %tmp.33 = lgetv %s.4;
-        symbol [ s %tmp.33 39 23 24 ];
-        %tmp.34 = mul %tmp.32 %tmp.33;
-        symbol [ vy ? 39 8 10 ];
-        putv self :vy %tmp.34;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_29_44_40_4_stop:
+        putv self :vx %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 38 18 ]
+        %tmp.4 = 0.0;
+        symbol [ vy ? 38 18 20 ];
+        putv self :vy %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 39 8 ]
+        %tmp.5 = lgetv %r;
+        symbol [ r %tmp.5 39 17 18 ];
+        symbol [ radius ? 39 8 14 ];
+        putv self :radius %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 40 8 ]
+        %tmp.6 = true;
+        symbol [ alive ? 40 8 13 ];
+        putv self :alive %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 41 8 ]
+        %tmp.7 = lgetv %rx;
+        symbol [ rx %tmp.7 41 14 16 ];
+        symbol [ t1x ? 41 8 11 ];
+        putv self :t1x %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 41 18 ]
+        %tmp.8 = lgetv %ry;
+        symbol [ ry %tmp.8 41 24 26 ];
+        symbol [ t1y ? 41 18 21 ];
+        putv self :t1y %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 42 8 ]
+        %tmp.9 = lgetv %rx;
+        symbol [ rx %tmp.9 42 14 16 ];
+        symbol [ t2x ? 42 8 11 ];
+        putv self :t2x %tmp.9;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 42 18 ]
+        %tmp.10 = lgetv %ry;
+        symbol [ ry %tmp.10 42 24 26 ];
+        symbol [ t2y ? 42 18 21 ];
+        putv self :t2y %tmp.10;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 43 8 ]
+        %tmp.11 = lgetv %rx;
+        symbol [ rx %tmp.11 43 14 16 ];
+        symbol [ t3x ? 43 8 11 ];
+        putv self :t3x %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 43 18 ]
+        %tmp.12 = lgetv %ry;
+        symbol [ ry %tmp.12 43 24 26 ];
+        symbol [ t3y ? 43 18 21 ];
+        putv self :t3y %tmp.12;
+_Users_kkorolczuk_work_garmin_pinballpro_source_Ball_mc_36_30_44_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc"; @line = 42; @symbol_functiondef = [bbox,42,13,17]; ]
-    function bbox() {
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_42_20_45_4_start:
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 43 8 ]
-        [ "_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_42_20_45_4_start" "_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_42_20_45_4_stop" ]
-        %h.1 = local;
-        symbol [ h %h.1 43 12 13 ];
-        symbol [ size %tmp.2 43 16 20 ];
-        %tmp.2 = getv ? :size;
-        %tmp.3 = 2;
-        %tmp.4 = div %tmp.2 %tmp.3;
-        lputv %h.1 %tmp.4;
-        symbol [ h %h.1 43 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 44 8 ]
-        %tmp.5 = newa 4;
-        symbol [ x %tmp.7 44 16 17 ];
-        %tmp.7 = getv ? :x;
-        %tmp.8 = lgetv %h.1;
-        symbol [ h %tmp.8 44 20 21 ];
-        %tmp.9 = sub %tmp.7 %tmp.8;
-        %tmp.10 = dup %tmp.5;
-        %tmp.11 = aputv %tmp.10 0 %tmp.9;
-        symbol [ y %tmp.13 44 23 24 ];
-        %tmp.13 = getv ? :y;
-        %tmp.14 = lgetv %h.1;
-        symbol [ h %tmp.14 44 27 28 ];
-        %tmp.15 = sub %tmp.13 %tmp.14;
-        %tmp.16 = dup %tmp.11;
-        %tmp.17 = aputv %tmp.16 1 %tmp.15;
-        symbol [ x %tmp.19 44 30 31 ];
-        %tmp.19 = getv ? :x;
-        %tmp.20 = lgetv %h.1;
-        symbol [ h %tmp.20 44 34 35 ];
-        %tmp.21 = add %tmp.19 %tmp.20;
-        %tmp.22 = dup %tmp.17;
-        %tmp.23 = aputv %tmp.22 2 %tmp.21;
-        symbol [ y %tmp.25 44 37 38 ];
-        %tmp.25 = getv ? :y;
-        %tmp.26 = lgetv %h.1;
-        symbol [ h %tmp.26 44 41 42 ];
-        %tmp.27 = add %tmp.25 %tmp.26;
-        %tmp.28 = dup %tmp.23;
-        %tmp.29 = aputv %tmp.28 3 %tmp.27;
-        ret %tmp.29;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_42_20_45_4_stop:
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc"; @line = 46; @symbol_functiondef = [kill,46,13,17]; ]
+    function kill() {
+_Users_kkorolczuk_work_garmin_pinballpro_source_Ball_mc_46_20_46_37_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 46 22 ]
+        %tmp.1 = false;
+        symbol [ alive ? 46 22 27 ];
+        putv self :alive %tmp.1;
+_Users_kkorolczuk_work_garmin_pinballpro_source_Ball_mc_46_20_46_37_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc"; @line = 51; @symbol_functiondef = [step,51,13,17]; @symbol_param<0> = [playX0,51,18,24]; @symbol_param<1> = [playY0,51,26,32]; @symbol_param<2> = [playX1,51,34,40]; @symbol_param<3> = [playY1,51,42,48]; ]
-    function step(playX0, playY0, playX1, playY1) {
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_51_50_67_4_start:
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 52 8 ]
-        symbol [ x %tmp.2 52 12 13 ];
-        %tmp.2 = getv ? :x;
-        symbol [ vx %tmp.4 52 16 18 ];
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc"; @line = 48; @symbol_functiondef = [speed,48,13,18]; ]
+    function speed() {
+_Users_kkorolczuk_work_garmin_pinballpro_source_Ball_mc_48_21_48_60_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 48 23 ]
+        symbol [ Math %tmp.1 48 30 34 ];
+        %tmp.1 = getm $.Toybox.Math;
+        symbol [ sqrt %tmp.2 48 35 39 ];
+        %tmp.2 = getv function %tmp.1 :sqrt;
+        symbol [ vx %tmp.4 48 40 42 ];
         %tmp.4 = getv ? :vx;
-        %tmp.5 = add %tmp.2 %tmp.4;
-        symbol [ x ? 52 8 9 ];
-        putv self :x %tmp.5;
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 53 8 ]
-        symbol [ y %tmp.7 53 12 13 ];
-        %tmp.7 = getv ? :y;
-        symbol [ vy %tmp.9 53 16 18 ];
+        symbol [ vx %tmp.6 48 45 47 ];
+        %tmp.6 = getv ? :vx;
+        %tmp.7 = mul %tmp.4 %tmp.6;
+        symbol [ vy %tmp.9 48 50 52 ];
         %tmp.9 = getv ? :vy;
-        %tmp.10 = add %tmp.7 %tmp.9;
-        symbol [ y ? 53 8 9 ];
-        putv self :y %tmp.10;
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 55 8 ]
-        [ "_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_51_50_67_4_start" "_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_51_50_67_4_stop" ]
-        %half.1 = local;
-        symbol [ half %half.1 55 12 16 ];
-        symbol [ size %tmp.12 55 19 23 ];
-        %tmp.12 = getv ? :size;
-        %tmp.13 = 2;
-        %tmp.14 = div %tmp.12 %tmp.13;
-        lputv %half.1 %tmp.14;
-        symbol [ half %half.1 55 12 16 ];
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 56 8 ]
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_56_8_62_8_if_stmt:
-        symbol [ y %tmp.16 56 12 13 ];
-        %tmp.16 = getv ? :y;
-        %tmp.17 = lgetv %half.1;
-        symbol [ half %tmp.17 56 16 20 ];
-        %tmp.18 = sub %tmp.16 %tmp.17;
-        %tmp.19 = lgetv %playY0;
-        symbol [ playY0 %tmp.19 56 23 29 ];
-        %tmp.20 = lt %tmp.18 %tmp.19;
-        bf %tmp.20 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_56_8_62_8_if_false;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_56_8_62_8_if_true:
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_56_31_59_8_start:
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 57 12 ]
-        %tmp.21 = lgetv %playY0;
-        symbol [ playY0 %tmp.21 57 17 23 ];
-        %tmp.22 = lgetv %half.1;
-        symbol [ half %tmp.22 57 26 30 ];
-        %tmp.23 = add %tmp.21 %tmp.22;
-        symbol [ y ? 57 12 13 ];
-        putv self :y %tmp.23;
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 58 12 ]
-        symbol [ vy %tmp.25 58 18 20 ];
-        %tmp.25 = getv ? :vy;
-        %tmp.26 = sub 0 %tmp.25;
-        symbol [ vy ? 58 12 14 ];
-        putv self :vy %tmp.26;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_56_31_59_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_56_8_62_8_if_end;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_56_8_62_8_if_false:
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 59 15 ]
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_59_15_62_8_if_stmt:
-        symbol [ y %tmp.28 59 19 20 ];
-        %tmp.28 = getv ? :y;
-        %tmp.29 = lgetv %half.1;
-        symbol [ half %tmp.29 59 23 27 ];
-        %tmp.30 = add %tmp.28 %tmp.29;
-        %tmp.31 = lgetv %playY1;
-        symbol [ playY1 %tmp.31 59 30 36 ];
-        %tmp.32 = gt %tmp.30 %tmp.31;
-        bf %tmp.32 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_59_15_62_8_if_end;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_59_15_62_8_if_true:
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_59_38_62_8_start:
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 60 12 ]
-        %tmp.33 = lgetv %playY1;
-        symbol [ playY1 %tmp.33 60 17 23 ];
-        %tmp.34 = lgetv %half.1;
-        symbol [ half %tmp.34 60 26 30 ];
-        %tmp.35 = sub %tmp.33 %tmp.34;
-        symbol [ y ? 60 12 13 ];
-        putv self :y %tmp.35;
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 61 12 ]
-        symbol [ vy %tmp.37 61 18 20 ];
-        %tmp.37 = getv ? :vy;
-        %tmp.38 = sub 0 %tmp.37;
-        symbol [ vy ? 61 12 14 ];
-        putv self :vy %tmp.38;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_59_38_62_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_59_15_62_8_if_end;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_59_15_62_8_if_end:
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_56_8_62_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 64 8 ]
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_64_8_64_44_if_stmt:
-        symbol [ x %tmp.40 64 12 13 ];
-        %tmp.40 = getv ? :x;
-        %tmp.41 = lgetv %half.1;
-        symbol [ half %tmp.41 64 16 20 ];
-        %tmp.42 = add %tmp.40 %tmp.41;
-        %tmp.43 = lgetv %playX0;
-        symbol [ playX0 %tmp.43 64 23 29 ];
-        %tmp.44 = lt %tmp.42 %tmp.43;
-        bf %tmp.44 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_64_8_64_44_if_end;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_64_8_64_44_if_true:
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_64_31_64_44_start:
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 64 33 ]
-        %tmp.45 = -1;
-        ret %tmp.45;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_64_31_64_44_stop:
-        goto @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_64_8_64_44_if_end;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_64_8_64_44_if_end:
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 65 8 ]
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_65_8_65_44_if_stmt:
-        symbol [ x %tmp.47 65 12 13 ];
-        %tmp.47 = getv ? :x;
-        %tmp.48 = lgetv %half.1;
-        symbol [ half %tmp.48 65 16 20 ];
-        %tmp.49 = sub %tmp.47 %tmp.48;
-        %tmp.50 = lgetv %playX1;
-        symbol [ playX1 %tmp.50 65 23 29 ];
-        %tmp.51 = gt %tmp.49 %tmp.50;
-        bf %tmp.51 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_65_8_65_44_if_end;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_65_8_65_44_if_true:
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_65_31_65_44_start:
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 65 33 ]
-        %tmp.52 = 1;
-        ret %tmp.52;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_65_31_65_44_stop:
-        goto @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_65_8_65_44_if_end;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_65_8_65_44_if_end:
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 66 8 ]
-        %tmp.53 = 0;
-        ret %tmp.53;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_51_50_67_4_stop:
+        symbol [ vy %tmp.11 48 55 57 ];
+        %tmp.11 = getv ? :vy;
+        %tmp.12 = mul %tmp.9 %tmp.11;
+        %tmp.13 = add %tmp.7 %tmp.12;
+        %tmp.14 = invoke %tmp.1 %tmp.2(%tmp.13);
+        ret %tmp.14;
+_Users_kkorolczuk_work_garmin_pinballpro_source_Ball_mc_48_21_48_60_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc"; @line = 71; @symbol_functiondef = [tryPaddleBounce,71,13,28]; @symbol_param<0> = [px,71,29,31]; @symbol_param<1> = [py,71,33,35]; @symbol_param<2> = [pw,71,37,39]; @symbol_param<3> = [ph,71,41,43]; @symbol_param<4> = [paddleSide,71,45,55]; ]
-    function tryPaddleBounce(px, py, pw, ph, paddleSide) {
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_71_57_106_4_start:
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 72 8 ]
-        [ "_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_71_57_106_4_start" "_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_71_57_106_4_stop" ]
-        %bx0.1 = local;
-        symbol [ bx0 %bx0.1 72 12 15 ];
-        symbol [ x %tmp.2 72 18 19 ];
-        %tmp.2 = getv ? :x;
-        symbol [ size %tmp.4 72 22 26 ];
-        %tmp.4 = getv ? :size;
-        %tmp.5 = 2;
-        %tmp.6 = div %tmp.4 %tmp.5;
-        %tmp.7 = sub %tmp.2 %tmp.6;
-        lputv %bx0.1 %tmp.7;
-        symbol [ bx0 %bx0.1 72 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 73 8 ]
-        [ "_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_71_57_106_4_start" "_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_71_57_106_4_stop" ]
-        %by0.2 = local;
-        symbol [ by0 %by0.2 73 12 15 ];
-        symbol [ y %tmp.9 73 18 19 ];
-        %tmp.9 = getv ? :y;
-        symbol [ size %tmp.11 73 22 26 ];
-        %tmp.11 = getv ? :size;
-        %tmp.12 = 2;
-        %tmp.13 = div %tmp.11 %tmp.12;
-        %tmp.14 = sub %tmp.9 %tmp.13;
-        lputv %by0.2 %tmp.14;
-        symbol [ by0 %by0.2 73 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 74 8 ]
-        [ "_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_71_57_106_4_start" "_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_71_57_106_4_stop" ]
-        %bx1.3 = local;
-        symbol [ bx1 %bx1.3 74 12 15 ];
-        symbol [ x %tmp.16 74 18 19 ];
-        %tmp.16 = getv ? :x;
-        symbol [ size %tmp.18 74 22 26 ];
-        %tmp.18 = getv ? :size;
-        %tmp.19 = 2;
-        %tmp.20 = div %tmp.18 %tmp.19;
-        %tmp.21 = add %tmp.16 %tmp.20;
-        lputv %bx1.3 %tmp.21;
-        symbol [ bx1 %bx1.3 74 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 75 8 ]
-        [ "_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_71_57_106_4_start" "_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_71_57_106_4_stop" ]
-        %by1.4 = local;
-        symbol [ by1 %by1.4 75 12 15 ];
-        symbol [ y %tmp.23 75 18 19 ];
-        %tmp.23 = getv ? :y;
-        symbol [ size %tmp.25 75 22 26 ];
-        %tmp.25 = getv ? :size;
-        %tmp.26 = 2;
-        %tmp.27 = div %tmp.25 %tmp.26;
-        %tmp.28 = add %tmp.23 %tmp.27;
-        lputv %by1.4 %tmp.28;
-        symbol [ by1 %by1.4 75 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 78 8 ]
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_78_8_78_55_if_stmt:
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_78_12_78_35_begin:
-        %tmp.29 = lgetv %bx1.3;
-        symbol [ bx1 %tmp.29 78 12 15 ];
-        %tmp.30 = lgetv %px;
-        symbol [ px %tmp.30 78 18 20 ];
-        %tmp.31 = lt %tmp.29 %tmp.30;
-        bt %tmp.31 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_78_8_78_55_if_true;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_78_24_78_35_false:
-        %tmp.32 = lgetv %bx0.1;
-        symbol [ bx0 %tmp.32 78 24 27 ];
-        %tmp.33 = lgetv %px;
-        symbol [ px %tmp.33 78 30 32 ];
-        %tmp.34 = lgetv %pw;
-        symbol [ pw %tmp.34 78 35 37 ];
-        %tmp.35 = add %tmp.33 %tmp.34;
-        %tmp.36 = gt %tmp.32 %tmp.35;
-        push %tmp.36;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_78_24_78_35_end:
-        %tmp.37 = phi [%tmp.31 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_78_12_78_35_begin] [%tmp.36 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_78_24_78_35_false] [%tmp.37 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_78_24_78_35_end];
-        bf %tmp.37 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_78_8_78_55_if_end;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_78_8_78_55_if_true:
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_78_39_78_55_start:
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 78 41 ]
-        %tmp.38 = false;
-        ret %tmp.38;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_78_39_78_55_stop:
-        goto @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_78_8_78_55_if_end;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_78_8_78_55_if_end:
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 79 8 ]
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_79_8_79_55_if_stmt:
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_79_12_79_35_begin:
-        %tmp.39 = lgetv %by1.4;
-        symbol [ by1 %tmp.39 79 12 15 ];
-        %tmp.40 = lgetv %py;
-        symbol [ py %tmp.40 79 18 20 ];
-        %tmp.41 = lt %tmp.39 %tmp.40;
-        bt %tmp.41 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_79_8_79_55_if_true;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_79_24_79_35_false:
-        %tmp.42 = lgetv %by0.2;
-        symbol [ by0 %tmp.42 79 24 27 ];
-        %tmp.43 = lgetv %py;
-        symbol [ py %tmp.43 79 30 32 ];
-        %tmp.44 = lgetv %ph;
-        symbol [ ph %tmp.44 79 35 37 ];
-        %tmp.45 = add %tmp.43 %tmp.44;
-        %tmp.46 = gt %tmp.42 %tmp.45;
-        push %tmp.46;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_79_24_79_35_end:
-        %tmp.47 = phi [%tmp.41 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_79_12_79_35_begin] [%tmp.46 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_79_24_79_35_false] [%tmp.47 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_79_24_79_35_end];
-        bf %tmp.47 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_79_8_79_55_if_end;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_79_8_79_55_if_true:
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_79_39_79_55_start:
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 79 41 ]
-        %tmp.48 = false;
-        ret %tmp.48;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_79_39_79_55_stop:
-        goto @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_79_8_79_55_if_end;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_79_8_79_55_if_end:
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 83 8 ]
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_83_8_83_55_if_stmt:
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_83_12_83_36_begin:
-        %tmp.49 = lgetv %paddleSide;
-        symbol [ paddleSide %tmp.49 83 12 22 ];
-        %tmp.50 = 0;
-        %tmp.51 = lt %tmp.49 %tmp.50;
-        bf %tmp.51 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_83_8_83_55_if_end;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_83_30_83_36_true:
-        symbol [ vx %tmp.53 83 30 32 ];
-        %tmp.53 = getv ? :vx;
-        %tmp.54 = 0;
-        %tmp.55 = gte %tmp.53 %tmp.54;
-        push %tmp.55;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_83_30_83_36_end:
-        %tmp.56 = phi [%tmp.51 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_83_12_83_36_begin] [%tmp.55 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_83_30_83_36_true] [%tmp.56 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_83_30_83_36_end];
-        bf %tmp.56 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_83_8_83_55_if_end;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_83_8_83_55_if_true:
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_83_39_83_55_start:
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 83 41 ]
-        %tmp.57 = false;
-        ret %tmp.57;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_83_39_83_55_stop:
-        goto @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_83_8_83_55_if_end;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_83_8_83_55_if_end:
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 84 8 ]
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_84_8_84_55_if_stmt:
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_84_12_84_36_begin:
-        %tmp.58 = lgetv %paddleSide;
-        symbol [ paddleSide %tmp.58 84 12 22 ];
-        %tmp.59 = 0;
-        %tmp.60 = gt %tmp.58 %tmp.59;
-        bf %tmp.60 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_84_8_84_55_if_end;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_84_30_84_36_true:
-        symbol [ vx %tmp.62 84 30 32 ];
-        %tmp.62 = getv ? :vx;
-        %tmp.63 = 0;
-        %tmp.64 = lte %tmp.62 %tmp.63;
-        push %tmp.64;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_84_30_84_36_end:
-        %tmp.65 = phi [%tmp.60 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_84_12_84_36_begin] [%tmp.64 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_84_30_84_36_true] [%tmp.65 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_84_30_84_36_end];
-        bf %tmp.65 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_84_8_84_55_if_end;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_84_8_84_55_if_true:
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_84_39_84_55_start:
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 84 41 ]
-        %tmp.66 = false;
-        ret %tmp.66;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_84_39_84_55_stop:
-        goto @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_84_8_84_55_if_end;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_84_8_84_55_if_end:
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 87 8 ]
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_87_8_88_54_if_stmt:
-        %tmp.67 = lgetv %paddleSide;
-        symbol [ paddleSide %tmp.67 87 12 22 ];
-        %tmp.68 = 0;
-        %tmp.69 = lt %tmp.67 %tmp.68;
-        bf %tmp.69 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_87_8_88_54_if_else_false;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_87_8_88_54_if_true:
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_87_28_87_54_start:
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 87 30 ]
-        %tmp.70 = lgetv %px;
-        symbol [ px %tmp.70 87 34 36 ];
-        %tmp.71 = lgetv %pw;
-        symbol [ pw %tmp.71 87 39 41 ];
-        %tmp.72 = add %tmp.70 %tmp.71;
-        symbol [ size %tmp.74 87 44 48 ];
-        %tmp.74 = getv ? :size;
-        %tmp.75 = 2;
-        %tmp.76 = div %tmp.74 %tmp.75;
-        %tmp.77 = add %tmp.72 %tmp.76;
-        symbol [ x ? 87 30 31 ];
-        putv self :x %tmp.77;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_87_28_87_54_stop:
-        goto @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_87_8_88_54_if_end;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_87_8_88_54_if_else_false:
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_88_28_88_54_start:
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 88 30 ]
-        %tmp.78 = lgetv %px;
-        symbol [ px %tmp.78 88 34 36 ];
-        symbol [ size %tmp.80 88 39 43 ];
-        %tmp.80 = getv ? :size;
-        %tmp.81 = 2;
-        %tmp.82 = div %tmp.80 %tmp.81;
-        %tmp.83 = sub %tmp.78 %tmp.82;
-        symbol [ x ? 88 30 31 ];
-        putv self :x %tmp.83;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_88_28_88_54_stop:
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_87_8_88_54_if_end:
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 91 8 ]
-        [ "_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_71_57_106_4_start" "_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_71_57_106_4_stop" ]
-        %rel.5 = local;
-        symbol [ rel %rel.5 91 12 15 ];
-        symbol [ y %tmp.85 91 19 20 ];
-        %tmp.85 = getv ? :y;
-        %tmp.86 = lgetv %py;
-        symbol [ py %tmp.86 91 24 26 ];
-        %tmp.87 = lgetv %ph;
-        symbol [ ph %tmp.87 91 29 31 ];
-        %tmp.88 = 2;
-        %tmp.89 = div %tmp.87 %tmp.88;
-        %tmp.90 = add %tmp.86 %tmp.89;
-        %tmp.91 = sub %tmp.85 %tmp.90;
-        %tmp.92 = 2.0;
-        %tmp.93 = mul %tmp.91 %tmp.92;
-        %tmp.94 = lgetv %ph;
-        symbol [ ph %tmp.94 91 46 48 ];
-        %tmp.95 = div %tmp.93 %tmp.94;
-        lputv %rel.5 %tmp.95;
-        symbol [ rel %rel.5 91 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 92 8 ]
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_92_8_92_38_if_stmt:
-        %tmp.96 = lgetv %rel.5;
-        symbol [ rel %tmp.96 92 12 15 ];
-        %tmp.97 = 1.0;
-        %tmp.98 = gt %tmp.96 %tmp.97;
-        bf %tmp.98 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_92_8_92_38_if_end;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_92_8_92_38_if_true:
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_92_24_92_38_start:
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 92 26 ]
-        %tmp.99 = 1.0;
-        lputv %rel.5 %tmp.99;
-        symbol [ rel %rel.5 92 26 29 ];
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_92_24_92_38_stop:
-        goto @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_92_8_92_38_if_end;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_92_8_92_38_if_end:
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 93 8 ]
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_93_8_93_38_if_stmt:
-        %tmp.100 = lgetv %rel.5;
-        symbol [ rel %tmp.100 93 12 15 ];
-        %tmp.101 = -1.0;
-        %tmp.102 = lt %tmp.100 %tmp.101;
-        bf %tmp.102 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_93_8_93_38_if_end;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_93_8_93_38_if_true:
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_93_24_93_38_start:
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 93 26 ]
-        %tmp.103 = -1.0;
-        lputv %rel.5 %tmp.103;
-        symbol [ rel %rel.5 93 26 29 ];
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_93_24_93_38_stop:
-        goto @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_93_8_93_38_if_end;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_93_8_93_38_if_end:
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 97 8 ]
-        [ "_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_71_57_106_4_start" "_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_71_57_106_4_stop" ]
-        %ang.6 = local;
-        symbol [ ang %ang.6 97 12 15 ];
-        %tmp.104 = lgetv %rel.5;
-        symbol [ rel %tmp.104 97 20 23 ];
-        %tmp.105 = 60.0;
-        %tmp.106 = mul %tmp.104 %tmp.105;
-        %tmp.107 = 3.14159;
-        %tmp.108 = mul %tmp.106 %tmp.107;
-        %tmp.109 = 180.0;
-        %tmp.110 = div %tmp.108 %tmp.109;
-        lputv %ang.6 %tmp.110;
-        symbol [ ang %ang.6 97 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 98 8 ]
-        [ "_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_71_57_106_4_start" "_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_71_57_106_4_stop" ]
-        %spd.7 = local;
-        symbol [ spd %spd.7 98 12 15 ];
-        symbol [ Math %tmp.111 98 20 24 ];
-        %tmp.111 = getm $.Toybox.Math;
-        symbol [ sqrt %tmp.112 98 25 29 ];
-        %tmp.112 = getv function %tmp.111 :sqrt;
-        symbol [ vx %tmp.114 98 30 32 ];
-        %tmp.114 = getv ? :vx;
-        symbol [ vx %tmp.116 98 35 37 ];
-        %tmp.116 = getv ? :vx;
-        %tmp.117 = mul %tmp.114 %tmp.116;
-        symbol [ vy %tmp.119 98 40 42 ];
-        %tmp.119 = getv ? :vy;
-        symbol [ vy %tmp.121 98 45 47 ];
-        %tmp.121 = getv ? :vy;
-        %tmp.122 = mul %tmp.119 %tmp.121;
-        %tmp.123 = add %tmp.117 %tmp.122;
-        %tmp.124 = invoke %tmp.111 %tmp.112(%tmp.123);
-        %tmp.125 = 0.25;
-        %tmp.126 = add %tmp.124 %tmp.125;
-        lputv %spd.7 %tmp.126;
-        symbol [ spd %spd.7 98 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 99 8 ]
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_99_8_99_46_if_stmt:
-        %tmp.127 = lgetv %spd.7;
-        symbol [ spd %tmp.127 99 12 15 ];
-        symbol [ maxSpeed %tmp.129 99 18 26 ];
-        %tmp.129 = getv ? :maxSpeed;
-        %tmp.130 = gt %tmp.127 %tmp.129;
-        bf %tmp.130 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_99_8_99_46_if_end;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_99_8_99_46_if_true:
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_99_28_99_46_start:
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 99 30 ]
-        symbol [ maxSpeed %tmp.132 99 36 44 ];
-        %tmp.132 = getv ? :maxSpeed;
-        lputv %spd.7 %tmp.132;
-        symbol [ spd %spd.7 99 30 33 ];
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_99_28_99_46_stop:
-        goto @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_99_8_99_46_if_end;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_99_8_99_46_if_end:
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 100 8 ]
-        [ "_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_71_57_106_4_start" "_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_71_57_106_4_stop" ]
-        %c.8 = local;
-        symbol [ c %c.8 100 12 13 ];
-        symbol [ Math %tmp.133 100 20 24 ];
-        %tmp.133 = getm $.Toybox.Math;
-        symbol [ cos %tmp.134 100 25 28 ];
-        %tmp.134 = getv function %tmp.133 :cos;
-        %tmp.135 = lgetv %ang.6;
-        symbol [ ang %tmp.135 100 29 32 ];
-        %tmp.136 = invoke %tmp.133 %tmp.134(%tmp.135);
-        lputv %c.8 %tmp.136;
-        symbol [ c %c.8 100 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 101 8 ]
-        [ "_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_71_57_106_4_start" "_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_71_57_106_4_stop" ]
-        %s.9 = local;
-        symbol [ s %s.9 101 12 13 ];
-        symbol [ Math %tmp.137 101 20 24 ];
-        %tmp.137 = getm $.Toybox.Math;
-        symbol [ sin %tmp.138 101 25 28 ];
-        %tmp.138 = getv function %tmp.137 :sin;
-        %tmp.139 = lgetv %ang.6;
-        symbol [ ang %tmp.139 101 29 32 ];
-        %tmp.140 = invoke %tmp.137 %tmp.138(%tmp.139);
-        lputv %s.9 %tmp.140;
-        symbol [ s %s.9 101 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 102 8 ]
-        [ "_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_71_57_106_4_start" "_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_71_57_106_4_stop" ]
-        %dir.10 = local;
-        symbol [ dir %dir.10 102 12 15 ];
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_102_20_102_44_begin:
-        %tmp.141 = lgetv %paddleSide;
-        symbol [ paddleSide %tmp.141 102 21 31 ];
-        %tmp.142 = 0;
-        %tmp.143 = lt %tmp.141 %tmp.142;
-        bf %tmp.143 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_102_20_102_44_else_false;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_102_20_102_44_true:
-        %tmp.144 = 1;
-        push %tmp.144;
-        goto @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_102_20_102_44_end;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_102_20_102_44_else_false:
-        %tmp.145 = -1;
-        push %tmp.145;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_102_20_102_44_end:
-        %tmp.146 = phi [%tmp.143 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_102_20_102_44_begin] [%tmp.144 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_102_20_102_44_true] [%tmp.145 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_102_20_102_44_else_false] [%tmp.146 @_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_102_20_102_44_end];
-        lputv %dir.10 %tmp.146;
-        symbol [ dir %dir.10 102 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 103 8 ]
-        %tmp.147 = lgetv %spd.7;
-        symbol [ spd %tmp.147 103 13 16 ];
-        %tmp.148 = lgetv %c.8;
-        symbol [ c %tmp.148 103 19 20 ];
-        %tmp.149 = mul %tmp.147 %tmp.148;
-        %tmp.150 = lgetv %dir.10;
-        symbol [ dir %tmp.150 103 23 26 ];
-        %tmp.151 = mul %tmp.149 %tmp.150;
-        symbol [ vx ? 103 8 10 ];
-        putv self :vx %tmp.151;
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 104 8 ]
-        %tmp.152 = lgetv %spd.7;
-        symbol [ spd %tmp.152 104 13 16 ];
-        %tmp.153 = lgetv %s.9;
-        symbol [ s %tmp.153 104 19 20 ];
-        %tmp.154 = mul %tmp.152 %tmp.153;
-        symbol [ vy ? 104 8 10 ];
-        putv self :vy %tmp.154;
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 105 8 ]
-        %tmp.155 = true;
-        ret %tmp.155;
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_71_57_106_4_stop:
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc"; @line = 50; @symbol_functiondef = [rollTrail,50,13,22]; ]
+    function rollTrail() {
+_Users_kkorolczuk_work_garmin_pinballpro_source_Ball_mc_50_25_54_4_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 51 8 ]
+        symbol [ t2x %tmp.2 51 14 17 ];
+        %tmp.2 = getv ? :t2x;
+        symbol [ t3x ? 51 8 11 ];
+        putv self :t3x %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 51 19 ]
+        symbol [ t2y %tmp.4 51 25 28 ];
+        %tmp.4 = getv ? :t2y;
+        symbol [ t3y ? 51 19 22 ];
+        putv self :t3y %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 52 8 ]
+        symbol [ t1x %tmp.6 52 14 17 ];
+        %tmp.6 = getv ? :t1x;
+        symbol [ t2x ? 52 8 11 ];
+        putv self :t2x %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 52 19 ]
+        symbol [ t1y %tmp.8 52 25 28 ];
+        %tmp.8 = getv ? :t1y;
+        symbol [ t2y ? 52 19 22 ];
+        putv self :t2y %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 53 8 ]
+        symbol [ x %tmp.10 53 14 15 ];
+        %tmp.10 = getv ? :x;
+        symbol [ t1x ? 53 8 11 ];
+        putv self :t1x %tmp.10;
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 53 19 ]
+        symbol [ y %tmp.12 53 25 26 ];
+        %tmp.12 = getv ? :y;
+        symbol [ t1y ? 53 19 22 ];
+        putv self :t1y %tmp.12;
+_Users_kkorolczuk_work_garmin_pinballpro_source_Ball_mc_50_25_54_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc"; @line = 108; @symbol_functiondef = [draw,108,13,17]; @symbol_param<0> = [dc,108,18,20]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc"; @line = 56; @symbol_functiondef = [draw,56,13,17]; @symbol_param<0> = [dc,56,18,20]; ]
     function draw(dc) {
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_108_22_116_4_start:
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 109 8 ]
-        [ "_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_108_22_116_4_start" "_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_108_22_116_4_stop" ]
-        %h.1 = local;
-        symbol [ h %h.1 109 12 13 ];
-        symbol [ size %tmp.2 109 16 20 ];
-        %tmp.2 = getv ? :size;
-        %tmp.3 = 2;
-        %tmp.4 = div %tmp.2 %tmp.3;
-        lputv %h.1 %tmp.4;
-        symbol [ h %h.1 109 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 111 8 ]
-        %tmp.5 = lgetv %dc;
-        symbol [ dc %tmp.5 111 8 10 ];
-        symbol [ setColor %tmp.6 111 11 19 ];
-        %tmp.6 = getv function %tmp.5 :setColor;
-        %tmp.7 = 0x115566;
-        symbol [ Graphics %tmp.8 111 30 38 ];
-        %tmp.8 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.9 111 39 56 ];
-        %tmp.9 = getv %tmp.8 :COLOR_TRANSPARENT;
-        invoke %tmp.5 %tmp.6(%tmp.7, %tmp.9);
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 112 8 ]
-        %tmp.10 = lgetv %dc;
-        symbol [ dc %tmp.10 112 8 10 ];
-        symbol [ fillRectangle %tmp.11 112 11 24 ];
-        %tmp.11 = getv function %tmp.10 :fillRectangle;
-        symbol [ x %tmp.13 112 25 26 ];
-        %tmp.13 = getv ? :x;
-        %tmp.14 = lgetv %h.1;
-        symbol [ h %tmp.14 112 29 30 ];
-        %tmp.15 = sub %tmp.13 %tmp.14;
-        %tmp.16 = 1;
-        %tmp.17 = sub %tmp.15 %tmp.16;
-        symbol [ y %tmp.19 112 36 37 ];
-        %tmp.19 = getv ? :y;
-        %tmp.20 = lgetv %h.1;
-        symbol [ h %tmp.20 112 40 41 ];
-        %tmp.21 = sub %tmp.19 %tmp.20;
-        %tmp.22 = 1;
-        %tmp.23 = sub %tmp.21 %tmp.22;
-        symbol [ size %tmp.25 112 47 51 ];
-        %tmp.25 = getv ? :size;
-        %tmp.26 = 2;
-        %tmp.27 = add %tmp.25 %tmp.26;
-        symbol [ size %tmp.29 112 57 61 ];
-        %tmp.29 = getv ? :size;
-        %tmp.30 = 2;
-        %tmp.31 = add %tmp.29 %tmp.30;
-        invoke %tmp.10 %tmp.11(%tmp.17, %tmp.23, %tmp.27, %tmp.31);
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 114 8 ]
-        %tmp.32 = lgetv %dc;
-        symbol [ dc %tmp.32 114 8 10 ];
-        symbol [ setColor %tmp.33 114 11 19 ];
-        %tmp.33 = getv function %tmp.32 :setColor;
-        %tmp.34 = 0x00EEFF;
-        symbol [ Graphics %tmp.35 114 30 38 ];
-        %tmp.35 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.36 114 39 56 ];
-        %tmp.36 = getv %tmp.35 :COLOR_TRANSPARENT;
-        invoke %tmp.32 %tmp.33(%tmp.34, %tmp.36);
-[ "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc" 115 8 ]
-        %tmp.37 = lgetv %dc;
-        symbol [ dc %tmp.37 115 8 10 ];
-        symbol [ fillRectangle %tmp.38 115 11 24 ];
-        %tmp.38 = getv function %tmp.37 :fillRectangle;
-        symbol [ x %tmp.40 115 25 26 ];
-        %tmp.40 = getv ? :x;
-        %tmp.41 = lgetv %h.1;
-        symbol [ h %tmp.41 115 29 30 ];
-        %tmp.42 = sub %tmp.40 %tmp.41;
-        symbol [ y %tmp.44 115 32 33 ];
+_Users_kkorolczuk_work_garmin_pinballpro_source_Ball_mc_56_22_70_4_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 57 8 ]
+_Users_kkorolczuk_work_garmin_pinballpro_source_Ball_mc_57_8_57_30_if_stmt:
+        symbol [ alive %tmp.2 57 13 18 ];
+        %tmp.2 = getv ? :alive;
+        %tmp.3 = not %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_pinballpro_source_Ball_mc_57_8_57_30_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_Ball_mc_57_8_57_30_if_true:
+_Users_kkorolczuk_work_garmin_pinballpro_source_Ball_mc_57_20_57_30_start:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 57 22 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_pinballpro_source_Ball_mc_57_20_57_30_stop:
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_Ball_mc_57_8_57_30_if_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_Ball_mc_57_8_57_30_if_end:
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 59 8 ]
+        %tmp.4 = lgetv %dc;
+        symbol [ dc %tmp.4 59 8 10 ];
+        symbol [ setColor %tmp.5 59 11 19 ];
+        %tmp.5 = getv function %tmp.4 :setColor;
+        %tmp.6 = 0x224466;
+        symbol [ Graphics %tmp.7 59 30 38 ];
+        %tmp.7 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.8 59 39 56 ];
+        %tmp.8 = getv %tmp.7 :COLOR_TRANSPARENT;
+        invoke %tmp.4 %tmp.5(%tmp.6, %tmp.8);
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 60 8 ]
+        %tmp.9 = lgetv %dc;
+        symbol [ dc %tmp.9 60 8 10 ];
+        symbol [ fillCircle %tmp.10 60 11 21 ];
+        %tmp.10 = getv function %tmp.9 :fillCircle;
+        symbol [ t3x %tmp.12 60 22 25 ];
+        %tmp.12 = getv ? :t3x;
+        symbol [ t3y %tmp.14 60 27 30 ];
+        %tmp.14 = getv ? :t3y;
+        symbol [ radius %tmp.16 60 32 38 ];
+        %tmp.16 = getv ? :radius;
+        %tmp.17 = 2;
+        %tmp.18 = sub %tmp.16 %tmp.17;
+        invoke %tmp.9 %tmp.10(%tmp.12, %tmp.14, %tmp.18);
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 61 8 ]
+        %tmp.19 = lgetv %dc;
+        symbol [ dc %tmp.19 61 8 10 ];
+        symbol [ setColor %tmp.20 61 11 19 ];
+        %tmp.20 = getv function %tmp.19 :setColor;
+        %tmp.21 = 0x4488BB;
+        symbol [ Graphics %tmp.22 61 30 38 ];
+        %tmp.22 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.23 61 39 56 ];
+        %tmp.23 = getv %tmp.22 :COLOR_TRANSPARENT;
+        invoke %tmp.19 %tmp.20(%tmp.21, %tmp.23);
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 62 8 ]
+        %tmp.24 = lgetv %dc;
+        symbol [ dc %tmp.24 62 8 10 ];
+        symbol [ fillCircle %tmp.25 62 11 21 ];
+        %tmp.25 = getv function %tmp.24 :fillCircle;
+        symbol [ t2x %tmp.27 62 22 25 ];
+        %tmp.27 = getv ? :t2x;
+        symbol [ t2y %tmp.29 62 27 30 ];
+        %tmp.29 = getv ? :t2y;
+        symbol [ radius %tmp.31 62 32 38 ];
+        %tmp.31 = getv ? :radius;
+        %tmp.32 = 1;
+        %tmp.33 = sub %tmp.31 %tmp.32;
+        invoke %tmp.24 %tmp.25(%tmp.27, %tmp.29, %tmp.33);
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 64 8 ]
+        %tmp.34 = lgetv %dc;
+        symbol [ dc %tmp.34 64 8 10 ];
+        symbol [ setColor %tmp.35 64 11 19 ];
+        %tmp.35 = getv function %tmp.34 :setColor;
+        %tmp.36 = 0xCCCCDD;
+        symbol [ Graphics %tmp.37 64 30 38 ];
+        %tmp.37 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.38 64 39 56 ];
+        %tmp.38 = getv %tmp.37 :COLOR_TRANSPARENT;
+        invoke %tmp.34 %tmp.35(%tmp.36, %tmp.38);
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 65 8 ]
+        %tmp.39 = lgetv %dc;
+        symbol [ dc %tmp.39 65 8 10 ];
+        symbol [ fillCircle %tmp.40 65 11 21 ];
+        %tmp.40 = getv function %tmp.39 :fillCircle;
+        symbol [ x %tmp.42 65 22 23 ];
+        %tmp.42 = getv ? :x;
+        symbol [ y %tmp.44 65 25 26 ];
         %tmp.44 = getv ? :y;
-        %tmp.45 = lgetv %h.1;
-        symbol [ h %tmp.45 115 36 37 ];
-        %tmp.46 = sub %tmp.44 %tmp.45;
-        symbol [ size %tmp.48 115 39 43 ];
-        %tmp.48 = getv ? :size;
-        symbol [ size %tmp.50 115 45 49 ];
-        %tmp.50 = getv ? :size;
-        invoke %tmp.37 %tmp.38(%tmp.42, %tmp.46, %tmp.48, %tmp.50);
-_Users_kkorolczuk_work_garmin_pongpro_source_Ball_mc_108_22_116_4_stop:
+        symbol [ radius %tmp.46 65 28 34 ];
+        %tmp.46 = getv ? :radius;
+        invoke %tmp.39 %tmp.40(%tmp.42, %tmp.44, %tmp.46);
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 67 8 ]
+        %tmp.47 = lgetv %dc;
+        symbol [ dc %tmp.47 67 8 10 ];
+        symbol [ setColor %tmp.48 67 11 19 ];
+        %tmp.48 = getv function %tmp.47 :setColor;
+        %tmp.49 = 0xFFFFFF;
+        symbol [ Graphics %tmp.50 67 30 38 ];
+        %tmp.50 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.51 67 39 56 ];
+        %tmp.51 = getv %tmp.50 :COLOR_TRANSPARENT;
+        invoke %tmp.47 %tmp.48(%tmp.49, %tmp.51);
+[ "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc" 68 8 ]
+        %tmp.52 = lgetv %dc;
+        symbol [ dc %tmp.52 68 8 10 ];
+        symbol [ fillCircle %tmp.53 68 11 21 ];
+        %tmp.53 = getv function %tmp.52 :fillCircle;
+        symbol [ x %tmp.55 68 22 23 ];
+        %tmp.55 = getv ? :x;
+        symbol [ radius %tmp.57 68 26 32 ];
+        %tmp.57 = getv ? :radius;
+        %tmp.58 = 3;
+        %tmp.59 = div %tmp.57 %tmp.58;
+        %tmp.60 = sub %tmp.55 %tmp.59;
+        symbol [ y %tmp.62 68 38 39 ];
+        %tmp.62 = getv ? :y;
+        symbol [ radius %tmp.64 68 42 48 ];
+        %tmp.64 = getv ? :radius;
+        %tmp.65 = 3;
+        %tmp.66 = div %tmp.64 %tmp.65;
+        %tmp.67 = sub %tmp.62 %tmp.66;
+_Users_kkorolczuk_work_garmin_pinballpro_source_Ball_mc_69_22_69_54_begin:
+        symbol [ radius %tmp.69 69 23 29 ];
+        %tmp.69 = getv ? :radius;
+        %tmp.70 = 3;
+        %tmp.71 = div %tmp.69 %tmp.70;
+        %tmp.72 = 1;
+        %tmp.73 = lt %tmp.71 %tmp.72;
+        bf %tmp.73 @_Users_kkorolczuk_work_garmin_pinballpro_source_Ball_mc_69_22_69_54_else_false;
+_Users_kkorolczuk_work_garmin_pinballpro_source_Ball_mc_69_22_69_54_true:
+        %tmp.74 = 1;
+        push %tmp.74;
+        goto @_Users_kkorolczuk_work_garmin_pinballpro_source_Ball_mc_69_22_69_54_end;
+_Users_kkorolczuk_work_garmin_pinballpro_source_Ball_mc_69_22_69_54_else_false:
+        symbol [ radius %tmp.76 69 45 51 ];
+        %tmp.76 = getv ? :radius;
+        %tmp.77 = 3;
+        %tmp.78 = div %tmp.76 %tmp.77;
+        push %tmp.78;
+_Users_kkorolczuk_work_garmin_pinballpro_source_Ball_mc_69_22_69_54_end:
+        %tmp.79 = phi [%tmp.73 @_Users_kkorolczuk_work_garmin_pinballpro_source_Ball_mc_69_22_69_54_begin] [%tmp.74 @_Users_kkorolczuk_work_garmin_pinballpro_source_Ball_mc_69_22_69_54_true] [%tmp.78 @_Users_kkorolczuk_work_garmin_pinballpro_source_Ball_mc_69_22_69_54_else_false] [%tmp.79 @_Users_kkorolczuk_work_garmin_pinballpro_source_Ball_mc_69_22_69_54_end];
+        invoke %tmp.52 %tmp.53(%tmp.60, %tmp.67, %tmp.79);
+_Users_kkorolczuk_work_garmin_pinballpro_source_Ball_mc_56_22_70_4_stop:
     }
 }
-[ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/Ball.mc"; @line = 14; ]
+[ @file = "/Users/kkorolczuk/work/garmin/pinballpro/source/Ball.mc"; @line = 14; ]
 <init> {
 }

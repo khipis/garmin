@@ -1804,6 +1804,19 @@ class Pet {
         return (food + happiness + energy + health) / 4;
     }
 
+    // Creature-quality score for the global leaderboard ("ocenic jego jakosc").
+    // Rewards a well-raised, long-lived pet: longevity dominates (each day
+    // alive = 100 pts), daily-care consistency adds a streak bonus, and the
+    // pet's current wellbeing (0-100) acts as a fine tiebreaker. Higher = better.
+    // Returns 0 for a not-yet-created or dead pet so we never submit a meaningless
+    // score (and a neglected/dead pet can't inflate its rank just by time passing).
+    function getQualityScore() {
+        if (!isCreated || !isAlive) { return 0; }
+        var score = getAgeDays() * 100 + careStreak * 25 + getWellbeing();
+        if (score < 0) { score = 0; }
+        return score;
+    }
+
     function getNeglectLevel() {
         var since = Time.now().value() - lastInteraction;
         if (since > 14400) { return 4; }

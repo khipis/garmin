@@ -26,10 +26,32 @@ class BitochiBoxingDelegate extends WatchUi.BehaviorDelegate {
         _view.accelZ = a[2];
     }
 
-    function onSelect() { _view.doAction(); WatchUi.requestUpdate(); return true; }
-    function onMenu() { _view.doAction(); WatchUi.requestUpdate(); return true; }
-    function onPreviousPage() { _view.doAction(); WatchUi.requestUpdate(); return true; }
-    function onNextPage() { _view.doAction(); WatchUi.requestUpdate(); return true; }
+    function onSelect() {
+        if (_view.gameState == GS_MENU) { _view.menuActivate(); WatchUi.requestUpdate(); return true; }
+        _view.doAction(); WatchUi.requestUpdate(); return true;
+    }
+    function onMenu() {
+        if (_view.gameState == GS_MENU) { _view.menuActivate(); WatchUi.requestUpdate(); return true; }
+        _view.doAction(); WatchUi.requestUpdate(); return true;
+    }
+    function onPreviousPage() {
+        if (_view.gameState == GS_MENU) { _view.menuNav(-1); WatchUi.requestUpdate(); return true; }
+        _view.doAction(); WatchUi.requestUpdate(); return true;
+    }
+    function onNextPage() {
+        if (_view.gameState == GS_MENU) { _view.menuNav(1); WatchUi.requestUpdate(); return true; }
+        _view.doAction(); WatchUi.requestUpdate(); return true;
+    }
+
+    function onTap(evt) {
+        if (_view.gameState == GS_MENU) {
+            var c = evt.getCoordinates();
+            _view.handleMenuTap(c[0], c[1]);
+            WatchUi.requestUpdate();
+            return true;
+        }
+        _view.doAction(); WatchUi.requestUpdate(); return true;
+    }
 
     function onBack() {
         if (_sensorOn) { Sensor.enableSensorEvents(null); }

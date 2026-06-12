@@ -260,6 +260,7 @@ class GameController {
         var secs = lastTimeMs / 1000;
         if (secs < 1) { secs = 1; }
         Leaderboard.submitScore(LB_GAME_ID, secs, lbVariant());
+        Leaderboard.showPostGame(LB_GAME_ID, lbVariant(), "SUDOKU");
 
         state = GS_COMPLETE;
         dirty = true;

@@ -244,6 +244,7 @@ class GameController {
                 // by AI difficulty. A 7-0 sweep scores higher than a 7-6
                 // nail-biter. Only single-player vs-AI wins are recorded.
                 Leaderboard.submitScore(LB_GAME_ID, scoreP - scoreCpu, diffName());
+                Leaderboard.showPostGame(LB_GAME_ID, diffName(), "PONG PRO");
             }
             state = GS_OVER;
             return;

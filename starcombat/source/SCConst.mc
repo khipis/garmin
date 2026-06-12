@@ -30,10 +30,16 @@ const SC_PLAY = 1;
 const SC_OVER = 2;
 
 // ── Menu rows ─────────────────────────────────────────────────
-const SC_MENU_ROWS = 3;
+// Row 3 is the shared global LEADERBOARD (split by difficulty
+// variant); it pushes a view from the shared library.
+const SC_MENU_ROWS = 4;
 const SC_ROW_SENS  = 0;
 const SC_ROW_DIFF  = 1;
 const SC_ROW_START = 2;
+const SC_ROW_LB    = 3;
+
+// Global leaderboard game id (matches _LOGOS / web id).
+const LB_GAME_ID = "starcombat";
 
 // ── Sensitivity preset index ──────────────────────────────────
 const SC_SENS_LOW    = 0;

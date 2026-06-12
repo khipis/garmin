@@ -234,6 +234,7 @@ class BitochiPokerView extends WatchUi.View {
         if (_scoreSubmitted) { return; }
         _scoreSubmitted = true;
         Leaderboard.submitScore(LB_GAME_ID, _peakChips, null);
+        Leaderboard.showPostGame(LB_GAME_ID, null, "POKER");
     }
 
     // ─── Game logic ────────────────────────────────────────────────────────────

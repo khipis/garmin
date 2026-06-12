@@ -31,11 +31,17 @@ const SR_PLAY = 1;
 const SR_FALL = 2;     // ball has left the path, animating descent
 const SR_OVER = 3;
 
-// ── Menu rows (chess-style 3-row layout) ────────────────────────
-const SR_MENU_ROWS = 3;
+// ── Menu rows (chess-style layout) ──────────────────────────────
+// Row 3 is the shared global LEADERBOARD (split by difficulty
+// variant); it pushes a view from the shared library.
+const SR_MENU_ROWS = 4;
 const SR_ROW_SENS  = 0;
 const SR_ROW_DIFF  = 1;
 const SR_ROW_START = 2;
+const SR_ROW_LB    = 3;
+
+// Global leaderboard game id (matches _LOGOS / web id).
+const LB_GAME_ID = "skyroll";
 
 // ── Sensitivity presets ─────────────────────────────────────────
 const SR_SENS_LOW    = 0;

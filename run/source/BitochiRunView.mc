@@ -236,6 +236,7 @@ class BitochiRunView extends WatchUi.View {
     // Submit the final session score to the global board on game over.
     hidden function submitToLeaderboard() {
         Leaderboard.submitScore("run", _sessionScore, "");
+        Leaderboard.showPostGame("run", "", "MONSTER ESC");
     }
 
     function nudgeDodge(dir) {

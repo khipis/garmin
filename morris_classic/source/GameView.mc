@@ -2,6 +2,14 @@ using Toybox.WatchUi;
 using Toybox.Graphics;
 using Toybox.Timer;
 using Toybox.Math;
+using Toybox.Application;
+using Toybox.Lang;
+
+// ── Shared global leaderboard ────────────────────────────────────────────
+// Metric = consecutive wins vs AI (win streak). Submitted only for the
+// human-vs-AI mode; P-vs-P and AI-vs-AI matches are never submitted.
+const LB_GAME_ID    = "morris_classic";
+const LB_STREAK_KEY = "morris_streak";
 
 // ── Nine Men's Morris — board constants ──────────────────────────────────
 // 24 nodes arranged as 3 concentric squares with midpoint cross-lines.
@@ -88,6 +96,9 @@ class GameView extends WatchUi.View {
     // ── Timer ─────────────────────────────────────────────────────────────
     hidden var _timer;
 
+    // ── Leaderboard (win-streak vs AI) ───────────────────────────────────
+    hidden var _lbHandled;   // guard so each finished game submits at most once
+
     // ── Tick-spread 2-ply placement search (Hard only) ──────────────────
     // The 2-ply search runs incrementally across timer ticks so that each
     // single callback executes only ~4-5 K ops — well under the Fenix 8 Solar
@@ -129,6 +140,7 @@ class GameView extends WatchUi.View {
         _ai2pBestN     = -1;
         _ai2pCol       = MC_AI;
         _ai2pOpp       = MC_PLAYER;
+        _lbHandled     = true;   // menu state — nothing to report yet
         _initTables();
         _startGame();
         _state   = GS_MENU;
@@ -225,8 +237,8 @@ class GameView extends WatchUi.View {
     // Menu: 0 → prev item, 1 → next item
     function navigate(dir) {
         if (_state == GS_MENU) {
-            if (dir == 0 || dir == 2) { _menuSel = (_menuSel + 3) % 4; }
-            else if (dir == 1 || dir == 3) { _menuSel = (_menuSel + 1) % 4; }
+            if (dir == 0 || dir == 2) { _menuSel = (_menuSel + 4) % 5; }
+            else if (dir == 1 || dir == 3) { _menuSel = (_menuSel + 1) % 5; }
             WatchUi.requestUpdate();
             return;
         }
@@ -254,7 +266,8 @@ class GameView extends WatchUi.View {
             if (_menuSel == 0) { _mode = (_mode + 1) % 3; }
             else if (_menuSel == 1 && _mode != MODE_PVP) { _diff = (_diff + 1) % 3; }
             else if (_menuSel == 2) { if (_mode == MODE_PVAI) { _playerFirst = !_playerFirst; } }
-            else if (_menuSel == 3) { _startGame(); }
+            else if (_menuSel == 3) { _openLeaderboard(); return; }
+            else if (_menuSel == 4) { _startGame(); }
             WatchUi.requestUpdate();
             return;
         }
@@ -298,6 +311,7 @@ class GameView extends WatchUi.View {
         _p2Sel    = -1;
         _millN    = -1;
         _overType = 0;
+        _lbHandled = false;   // a new game's result is reportable once
         // Cancel any in-progress AI search from a previous game.
         _ai2pActive = false;
         if (_mode == MODE_AIAI) {
@@ -444,6 +458,45 @@ class GameView extends WatchUi.View {
         } else if (_pPhase() == MF_MOVE && !_hasMove(MC_PLAYER)) {
             _overType = MOV_AIWIN; _sAI = _sAI + 1; _state = MGS_OVER;
         }
+    }
+
+    // ── Leaderboard: win-streak vs AI ─────────────────────────────────────
+    // Variant = AI difficulty so each difficulty has its own streak ranking.
+    hidden function _lbVariant() {
+        if (_diff == DIFF_EASY) { return "easy"; }
+        if (_diff == DIFF_HARD) { return "hard"; }
+        return "med";
+    }
+
+    hidden function _lbLoadStreak() {
+        var v = Application.Storage.getValue(LB_STREAK_KEY);
+        if (v instanceof Lang.Number) { return v; }
+        return 0;
+    }
+
+    hidden function _lbSaveStreak(n) {
+        try { Application.Storage.setValue(LB_STREAK_KEY, n); } catch (e) {}
+    }
+
+    // Called once when the game reaches MGS_OVER. Win streak counts consecutive
+    // human wins vs the AI; P-vs-P and AI-vs-AI matches are never submitted.
+    hidden function _reportResult() {
+        if (_lbHandled) { return; }
+        _lbHandled = true;
+        if (_mode != MODE_PVAI) { return; }   // only human-vs-AI counts
+        if (_overType == MOV_PWIN) {
+            var s = _lbLoadStreak() + 1;
+            _lbSaveStreak(s);
+            Leaderboard.submitScore(LB_GAME_ID, s, _lbVariant());
+            Leaderboard.showPostGame(LB_GAME_ID, _lbVariant(), "MORRIS");
+        } else {
+            _lbSaveStreak(0);
+        }
+    }
+
+    hidden function _openLeaderboard() {
+        var v = new LbScoresView(LB_GAME_ID, _lbVariant(), "MORRIS");
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
     // ── Player: placing / selecting ───────────────────────────────────────
@@ -1013,6 +1066,7 @@ class GameView extends WatchUi.View {
     // ── Rendering ─────────────────────────────────────────────────────────
     function onUpdate(dc) {
         if (_state == GS_MENU) { _drawMenu(dc); return; }
+        if (_state == MGS_OVER && !_lbHandled) { _reportResult(); }
         dc.setColor(0x06060E, 0x06060E);
         dc.clear();
         _drawBoard(dc);
@@ -1225,28 +1279,45 @@ class GameView extends WatchUi.View {
     }
 
     // ── Pre-game menu ─────────────────────────────────────────────────────
+    // 5 rows: Mode, Diff, Side, LEADERBOARD, START. Geometry shared with
+    // doTap via _menuGeom() so the hit-test always matches what's drawn.
+    // Returns [rowH, rowW, rowX, rowY0, gap, nR]. Rows shrunk ~15 % vs the
+    // old 4-row menu so the extra LEADERBOARD row never overlaps.
+    hidden function _menuGeom() {
+        var nR   = 5;
+        var rowH = _sh * 9 / 100; if (rowH < 18) { rowH = 18; } if (rowH > 26) { rowH = 26; }
+        var rowW = _sw * 74 / 100;
+        var rowX = (_sw - rowW) / 2;
+        var gap  = 5;
+        var tot  = nR * rowH + (nR - 1) * gap;
+        var rowY0 = (_sh - tot) / 2 + rowH / 2;
+        if (rowY0 < _sh * 22 / 100) { rowY0 = _sh * 22 / 100; }
+        return [rowH, rowW, rowX, rowY0, gap, nR];
+    }
+
     hidden function _drawMenu(dc) {
         dc.setColor(0x080810, 0x080810); dc.clear();
         var hw = _sw / 2;
         dc.setColor(0x0A0A18, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(hw, hw, hw - 1);
         dc.setColor(0xFF6622, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(hw, _sh * 11 / 100, Graphics.FONT_SMALL, "MORRIS", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(hw, _sh * 10 / 100, Graphics.FONT_SMALL, "MORRIS", Graphics.TEXT_JUSTIFY_CENTER);
         var modeStr = (_mode == MODE_PVAI) ? "P vs AI" : ((_mode == MODE_PVP) ? "P vs P" : "AI vs AI");
         var diffStr = (_diff == DIFF_EASY) ? "Easy" : ((_diff == DIFF_MED) ? "Med" : "Hard");
         var sideStr = _playerFirst ? "Side: Dk" : "Side: Lt";
-        var rows = ["Mode: " + modeStr, "Diff: " + diffStr, sideStr, "START"];
-        var nR = 4;
-        var rowH = _sh * 10 / 100; if (rowH < 22) { rowH = 22; } if (rowH > 30) { rowH = 30; }
-        var rowW = _sw * 74 / 100;
-        var rowX = (_sw - rowW) / 2;
-        var gap  = 6;
-        var tot  = nR * rowH + (nR - 1) * gap;
-        var rowY0 = (_sh - tot) / 2 + rowH;
+        var rows = ["Mode: " + modeStr, "Diff: " + diffStr, sideStr, "", "START"];
+        var g = _menuGeom();
+        var rowH = g[0]; var rowW = g[1]; var rowX = g[2];
+        var rowY0 = g[3]; var gap = g[4]; var nR = g[5];
         var i = 0;
         while (i < nR) {
             var ry  = rowY0 + i * (rowH + gap);
             var sel = (i == _menuSel);
+            if (i == 3) {   // shared gold LEADERBOARD badge row
+                LbBadge.drawRow(dc, rowX, ry, rowW, rowH, sel);
+                i++;
+                continue;
+            }
             var isStart = (i == nR - 1);
             dc.setColor(sel ? (isStart ? 0x3A1800 : 0x0A2040) : 0x0A0A18, Graphics.COLOR_TRANSPARENT);
             dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);
@@ -1296,13 +1367,9 @@ class GameView extends WatchUi.View {
 
     function doTap(tx, ty) {
         if (_state == GS_MENU) {
-            var nR = 4;
-            var rowH = _sh * 10 / 100; if (rowH < 22) { rowH = 22; } if (rowH > 30) { rowH = 30; }
-            var rowW = _sw * 74 / 100;
-            var rowX = (_sw - rowW) / 2;
-            var gap  = 6;
-            var tot  = nR * rowH + (nR - 1) * gap;
-            var rowY0 = (_sh - tot) / 2 + rowH;
+            var g = _menuGeom();
+            var rowH = g[0]; var rowW = g[1]; var rowX = g[2];
+            var rowY0 = g[3]; var gap = g[4]; var nR = g[5];
             for (var i = 0; i < nR; i++) {
                 var ry = rowY0 + i * (rowH + gap);
                 if (tx >= rowX && tx < rowX + rowW && ty >= ry && ty < ry + rowH) {

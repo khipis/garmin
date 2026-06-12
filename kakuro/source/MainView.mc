@@ -58,9 +58,18 @@ class MainView extends WatchUi.View {
         ctrl.cycleCell(false);
     }
     function navSelect() {
-        if (ctrl.state == KS_MENU) { ctrl.menuActivate(); return; }
+        if (ctrl.state == KS_MENU) {
+            if (ctrl.isLeaderboardRow()) { openLeaderboard(); return; }
+            ctrl.menuActivate();
+            return;
+        }
         if (ctrl.state == KS_WIN)  { ctrl.gotoMenu(); return; }
         ctrl.advanceCursor();
+    }
+
+    function openLeaderboard() {
+        var v = new LbScoresView(LB_GAME_ID, ctrl.lbVariant(), "KAKURO");
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
     function navBack() {
         if (ctrl.state == KS_MENU) { return false; }
@@ -103,10 +112,13 @@ class MainView extends WatchUi.View {
         var rg = UIManager.rowGeom(_sw, _sh);
         var rowH = rg[0]; var rowW = rg[1];
         var rowX = rg[2]; var rowY0 = rg[3]; var gap = rg[4];
-        for (var i = 0; i < KK_MENU_ROWS; i++) {
+        for (var i = 0; i < KK_MENU_NAV; i++) {
             var ry = rowY0 + i * (rowH + gap);
             if (x >= rowX && x < rowX + rowW && y >= ry && y < ry + rowH) {
-                ctrl.setMenuRow(i); ctrl.menuActivate(); return;
+                ctrl.setMenuRow(i);
+                if (ctrl.isLeaderboardRow()) { openLeaderboard(); }
+                else                          { ctrl.menuActivate(); }
+                return;
             }
         }
     }

@@ -224,6 +224,7 @@ class GameView extends WatchUi.View {
             var newStreak = _loadStreak() + 1;
             Application.Storage.setValue(LB_STREAK_KEY, newStreak);
             Leaderboard.submitScore(LB_GAME_ID, newStreak, _variant());
+            Leaderboard.showPostGame(LB_GAME_ID, _variant(), "CONNECT FOUR");
         } else {
             // Loss or draw breaks the streak.
             Application.Storage.setValue(LB_STREAK_KEY, 0);

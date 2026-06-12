@@ -87,6 +87,10 @@ class MainDelegate extends WatchUi.BehaviorDelegate {
         else if (idx == 8) {
             _pet.toggleVibe();
         }
+        else if (idx == 9) {
+            _view.openLeaderboard();
+            return true;
+        }
         // DEBUG ONLY — do not enable in production:
         // else if (idx == X) { _pet.toggleDebug(); }
         // else if (idx == X) { _pet.debugAddHours(); }

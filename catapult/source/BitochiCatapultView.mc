@@ -960,6 +960,7 @@ class BitochiCatapultView extends WatchUi.View {
     hidden function toGameOver() {
         if (!_scoreSubmitted) {
             Leaderboard.submitScore("catapult", _score, "");
+            Leaderboard.showPostGame("catapult", "", "CATAPULT");
             _scoreSubmitted = true;
         }
         gameState = GS_GAMEOVER;

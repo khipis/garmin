@@ -338,11 +338,13 @@ class GameController {
         if (score > bestScore) { bestScore = score; _saveBest(); }
         // Submit the run to the shared global leaderboard.
         Leaderboard.submitScore(LB_GAME_ID, score, "");
+        Leaderboard.showPostGame(LB_GAME_ID, "", "MANPAC");
     }
     hidden function _onGameOver() {
         state = GS_OVER;
         if (score > bestScore) { bestScore = score; _saveBest(); }
         // Submit the run to the shared global leaderboard.
         Leaderboard.submitScore(LB_GAME_ID, score, "");
+        Leaderboard.showPostGame(LB_GAME_ID, "", "MANPAC");
     }
 }

@@ -289,6 +289,7 @@ class GameView extends WatchUi.View {
         _state = GS_OVER;
         // Submit this run's score to the global leaderboard (fire-and-forget).
         Leaderboard.submitScore(LB_GAME_ID, _score, "");
+        Leaderboard.showPostGame(LB_GAME_ID, "", "EDGE SURVIVOR");
         // haptic feedback
         if (Attention has :vibrate) {
             Attention.vibrate([new Attention.VibeProfile(100, 180)]);

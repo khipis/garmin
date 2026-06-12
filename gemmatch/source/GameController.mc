@@ -388,6 +388,7 @@ class GameController {
         _updateBest();
         // Submit the finished round's score to the global leaderboard.
         Leaderboard.submitScore(LB_GAME_ID, score, "");
+        Leaderboard.showPostGame(LB_GAME_ID, "", "GEM MATCH");
     }
 
     function gotoMenu() {

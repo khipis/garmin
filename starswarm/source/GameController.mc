@@ -29,7 +29,17 @@ const SS_PLAY = 1;
 const SS_WIN  = 2;
 const SS_OVER = 3;
 
-const SS_MENU_ROWS = 3;
+// Menu rows. Row 3 is the global LEADERBOARD (split by difficulty
+// variant); it pushes a view from the View layer.
+const SS_MENU_ROWS = 4;
+const SS_ROW_DIFF  = 0;
+const SS_ROW_LIVES = 1;
+const SS_ROW_START = 2;
+const SS_ROW_LB    = 3;
+
+// Global leaderboard game id (matches _LOGOS / web id).
+const SS_LB_GAME_ID = "starswarm";
+
 const SS_BEST_KEY  = "ss_best";
 const SS_DIFF_KEY  = "ss_diff";
 const SS_LIVES_KEY = "ss_lives";
@@ -97,15 +107,16 @@ class GameController {
     function menuPrev() { menuRow = (menuRow + SS_MENU_ROWS - 1) % SS_MENU_ROWS; }
     function setMenuRow(i) { if (i >= 0 && i < SS_MENU_ROWS) { menuRow = i; } }
     function menuActivate() {
-        if (menuRow == 0) {
+        if (menuRow == SS_ROW_DIFF) {
             menuDiff = (menuDiff + 1) % 3;
             _saveSettings();
-        } else if (menuRow == 1) {
+        } else if (menuRow == SS_ROW_LIVES) {
             menuLives = (menuLives % 5) + 1;
             _saveSettings();
-        } else {
+        } else if (menuRow == SS_ROW_START) {
             _startGame();
         }
+        // SS_ROW_LB is handled by MainView.openLeaderboard().
     }
 
     function gotoMenu() { state = SS_MENU; }
@@ -186,6 +197,9 @@ class GameController {
             if (wave >= SS_MAX_WAVE) {
                 state = SS_WIN;
                 if (score > bestScore) { bestScore = score; _saveBest(); }
+                // Submit to the global leaderboard, split by difficulty variant.
+                Leaderboard.submitScore(SS_LB_GAME_ID, score, difficultyName());
+                Leaderboard.showPostGame(SS_LB_GAME_ID, difficultyName(), "STAR SWARM");
                 return;
             }
             wave = wave + 1;
@@ -198,6 +212,9 @@ class GameController {
         if (lives <= 0) {
             state = SS_OVER;
             if (score > bestScore) { bestScore = score; _saveBest(); }
+            // Submit to the global leaderboard, split by difficulty variant.
+            Leaderboard.submitScore(SS_LB_GAME_ID, score, difficultyName());
+            Leaderboard.showPostGame(SS_LB_GAME_ID, difficultyName(), "STAR SWARM");
             return;
         }
         // Soft restart: keep the swarm but freeze divers, respawn ship.

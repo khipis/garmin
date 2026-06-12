@@ -27,11 +27,15 @@ const AR_INTERMISSION = 4;   // brief banner between rounds
 const AR_DEMO = 5;            // highlights reel (auto-plays cinematics)
 
 // ── Menu rows (chess-style) ───────────────────────────────────
-const AR_MENU_ROWS = 4;
+const AR_MENU_ROWS = 5;
 const AR_ROW_SENS  = 0;
 const AR_ROW_DIFF  = 1;
 const AR_ROW_DEMO  = 2;
 const AR_ROW_START = 3;
+const AR_ROW_LB    = 4;   // global leaderboard (pushes a view)
+
+// Global leaderboard game id (matches _LOGOS / web id).
+const LB_GAME_ID = "archery";
 
 // ── Sensitivity ───────────────────────────────────────────────
 const AR_SENS_LOW    = 0;

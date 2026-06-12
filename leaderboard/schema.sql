@@ -11,6 +11,8 @@
 --   CREATE INDEX IF NOT EXISTS idx_scores_game_variant_score ON scores (game, variant, score DESC);
 --   -- player-stats: anonymised per-device uniqueness estimate
 --   ALTER TABLE scores ADD COLUMN ip_hash TEXT;
+--   -- country flag (ISO-3166 alpha-2 from Cloudflare edge)
+--   ALTER TABLE scores ADD COLUMN country TEXT;
 
 CREATE TABLE IF NOT EXISTS scores (
   id        INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -20,9 +22,14 @@ CREATE TABLE IF NOT EXISTS scores (
   timestamp INTEGER NOT NULL,
   variant   TEXT    NOT NULL DEFAULT '',  -- optional sub-category (hill, difficulty, …)
   meta      TEXT,                         -- JSON blob, nullable
-  ip_hash   TEXT                          -- salted SHA-256 of client IP (anonymised), for unique-player stats
+  ip_hash   TEXT,                         -- salted SHA-256 of client IP (anonymised), for unique-player stats
+  country   TEXT                          -- ISO-3166 alpha-2 from the Cloudflare edge (flags), nullable
 );
 
 -- Covers WHERE game=? AND variant=? ORDER BY score DESC
 CREATE INDEX IF NOT EXISTS idx_scores_game_variant_score
   ON scores (game, variant, score DESC);
+
+-- Covers period filters + recent-players ordering
+CREATE INDEX IF NOT EXISTS idx_scores_game_variant_ts
+  ON scores (game, variant, timestamp DESC);

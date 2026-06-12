@@ -7,6 +7,10 @@ using Toybox.Attention;
 
 enum { TBS_MENU, TBS_PLAY, TBS_OVER }
 
+// Shared global leaderboard. No difficulty/mode setting in this game,
+// so the variant is empty. Metric = the game's score (higher is better).
+const LB_GAME_ID = "blocks";
+
 const TB_PU_BOMB    = 1;
 const TB_PU_LASER   = 2;
 const TB_PU_FREEZE  = 3;
@@ -65,6 +69,8 @@ class BitochiBlocksView extends WatchUi.View {
     hidden var _useAccel;
     hidden var _tiltArm;
     hidden var _menuToggleY0; hidden var _menuToggleY1;
+    hidden var _lbRowX0; hidden var _lbRowX1;
+    hidden var _lbRowY0; hidden var _lbRowY1;
 
     hidden var _pieceColors;
     hidden var _shapes;
@@ -90,6 +96,7 @@ class BitochiBlocksView extends WatchUi.View {
         accelX = 0;
         _tiltArm = true;
         _menuToggleY0 = 0; _menuToggleY1 = 0;
+        _lbRowX0 = 0; _lbRowX1 = 0; _lbRowY0 = 0; _lbRowY1 = 0;
 
         _board = new [TB_ROWS * TB_COLS];
         for (var i = 0; i < TB_ROWS * TB_COLS; i++) { _board[i] = 0; }
@@ -370,6 +377,11 @@ class BitochiBlocksView extends WatchUi.View {
 
     function doTap(tx, ty) {
         if (_gs == TBS_MENU) {
+            if (_lbRowX1 > _lbRowX0 && tx >= _lbRowX0 && tx <= _lbRowX1 &&
+                ty >= _lbRowY0 && ty <= _lbRowY1) {
+                openLeaderboard();
+                return;
+            }
             if (_menuToggleY1 > _menuToggleY0 && ty >= _menuToggleY0 && ty <= _menuToggleY1) {
                 _useAccel = !_useAccel;
                 Application.Storage.setValue("blocks_accel", _useAccel);
@@ -553,6 +565,8 @@ class BitochiBlocksView extends WatchUi.View {
             _best = _score;
             Application.Storage.setValue("blocks_best", _best);
         }
+        Leaderboard.submitScore(LB_GAME_ID, _score, "");
+        Leaderboard.showPostGame(LB_GAME_ID, "", "BLOCKS");
         doVibe(2);
     }
 
@@ -629,7 +643,7 @@ class BitochiBlocksView extends WatchUi.View {
         var dh = ds / 2;
         for (var i = 0; i < 7; i++) {
             var bx = _w * (10 + i * 12) / 100;
-            var by = (_h * 18 / 100 + (Math.sin(t + i.toFloat() * 0.9) * (_h * 35 / 1000).toFloat()).toNumber()).toNumber();
+            var by = (_h * 14 / 100 + (Math.sin(t + i.toFloat() * 0.9) * (_h * 30 / 1000).toFloat()).toNumber()).toNumber();
             dc.setColor(colors[i], Graphics.COLOR_TRANSPARENT);
             dc.fillRoundedRectangle(bx - dh, by - dh, ds, ds, 2);
             var hl = ds / 4;
@@ -639,21 +653,38 @@ class BitochiBlocksView extends WatchUi.View {
         }
 
         dc.setColor(0x44AAFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 38 / 100, Graphics.FONT_MEDIUM, "BLOCKS", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 28 / 100, Graphics.FONT_MEDIUM, "BLOCKS", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x224466, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 52 / 100, Graphics.FONT_XTINY, "BITOCHI GAMES", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 40 / 100, Graphics.FONT_XTINY, "BITOCHI GAMES", Graphics.TEXT_JUSTIFY_CENTER);
 
+        // ── Shared leaderboard badge (tappable) ─────────────────────────────
+        var rowH = _h * 11 / 100;
+        if (rowH < 18) { rowH = 18; }
+        if (rowH > 26) { rowH = 26; }
+        var rowW = _w * 62 / 100;
+        if (rowW < 110) { rowW = 110; }
+        if (rowW > _w - 8) { rowW = _w - 8; }
+        var rowX = (_w - rowW) / 2;
+        var rowY = _h * 46 / 100;
+        LbBadge.drawRow(dc, rowX, rowY, rowW, rowH, false);
+        if (LbBadge.isActive()) {
+            _lbRowX0 = rowX; _lbRowX1 = rowX + rowW;
+            _lbRowY0 = rowY; _lbRowY1 = rowY + rowH;
+        } else {
+            _lbRowX0 = 0; _lbRowX1 = 0; _lbRowY0 = 0; _lbRowY1 = 0;
+        }
+
+        var insY = rowY + rowH + _h * 3 / 100;
         dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 60 / 100, Graphics.FONT_XTINY, "L/R: move  Mid: rotate", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(_w / 2, _h * 68 / 100, Graphics.FONT_XTINY, "MENU hold: fast drop", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(_w / 2, _h * 76 / 100, Graphics.FONT_XTINY, "Swipe down: hard drop", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, insY, Graphics.FONT_XTINY, "L/R move  Mid rotate", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, insY + _h * 7 / 100, Graphics.FONT_XTINY, "MENU hold / swipe: drop", Graphics.TEXT_JUSTIFY_CENTER);
 
         if (_best > 0) {
             dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_w / 2, _h * 84 / 100, Graphics.FONT_XTINY, "Best: " + _best, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_w / 2, insY + _h * 15 / 100, Graphics.FONT_XTINY, "Best: " + _best, Graphics.TEXT_JUSTIFY_CENTER);
         }
 
-        var tY = _h * 91 / 100;
+        var tY = insY + _h * 22 / 100;
         var fH = dc.getFontHeight(Graphics.FONT_XTINY);
         _menuToggleY0 = tY - fH / 2 - 2;
         _menuToggleY1 = tY + fH / 2 + 2;
@@ -663,7 +694,12 @@ class BitochiBlocksView extends WatchUi.View {
             "TILT: " + (_useAccel ? "ON" : "OFF"), Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor((_tick % 12 < 6) ? 0x88CCFF : 0x4488BB, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 93 / 100, Graphics.FONT_XTINY, "Tap to play!", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w / 2, _h * 94 / 100, Graphics.FONT_XTINY, "Tap to play!", Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    function openLeaderboard() {
+        var v = new LbScoresView(LB_GAME_ID, "", "BLOCKS");
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
     hidden function drawGame(dc) {

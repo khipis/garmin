@@ -201,6 +201,7 @@ class GameController {
                 streak = streak + 1;
                 _saveStreak();
                 Leaderboard.submitScore(LB_GAME_ID, streak, variant());
+                Leaderboard.showPostGame(LB_GAME_ID, variant(), "HANGMAN");
             }
         } else {
             misses = misses + 1;

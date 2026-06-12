@@ -32,6 +32,10 @@ const ASC_GAMES = new Set<string>([
   "lightsout",
   "minigolf",
   "battleship",
+  "twentyfortyeight_time",   // 2048 speedrun: fastest time to the 2048 tile
+  "akari",                   // light-up puzzle: fastest solve time
+  "nonogram",                // picross: fastest solve time
+  "kakuro",                  // kakuro: fastest solve time
 ]);
 
 const ipHits = new Map<string, { count: number; windowStart: number }>();
@@ -76,6 +80,28 @@ async function hashIp(ip: string, salt: string): Promise<string> {
   let hex = "";
   for (let i = 0; i < 8; i++) hex += bytes[i].toString(16).padStart(2, "0");
   return hex;
+}
+
+// Period → unix-seconds cutoff (inclusive lower bound), or null for all-time.
+// "day"  = since 00:00 UTC today, "week" = since Monday 00:00 UTC this week.
+// These are rolling windows that auto-reset, giving daily/weekly seasons with
+// no destructive wipes (all-time is always preserved).
+function periodCutoff(period: string): number | null {
+  const now = new Date();
+  if (period === "day") {
+    const d = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+    return Math.floor(d / 1000);
+  }
+  if (period === "week") {
+    const dow = (now.getUTCDay() + 6) % 7; // 0 = Monday
+    const d = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - dow);
+    return Math.floor(d / 1000);
+  }
+  return null; // all-time
+}
+
+function normPeriod(raw: string): string {
+  return (raw === "day" || raw === "week") ? raw : "all";
 }
 
 function checkRateLimit(ip: string): boolean {
@@ -127,13 +153,16 @@ async function handlePostScore(req: Request, env: Env): Promise<Response> {
 
   const ip      = req.headers.get("CF-Connecting-IP") ?? "0.0.0.0";
   const ipHash  = await hashIp(ip, env.IP_SALT ?? env.LB_KEY ?? "bito-lb");
+  const cf      = (req as unknown as { cf?: { country?: string } }).cf;
+  const country = (cf && typeof cf.country === "string" && cf.country.length === 2)
+    ? cf.country : null;
 
   try {
     await env.DB
       .prepare(
-        "INSERT INTO scores (game, user, score, timestamp, variant, meta, ip_hash) VALUES (?, ?, ?, ?, ?, ?, ?)"
+        "INSERT INTO scores (game, user, score, timestamp, variant, meta, ip_hash, country) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
       )
-      .bind(game, user, Math.round(score), ts, variant, metaStr, ipHash)
+      .bind(game, user, Math.round(score), ts, variant, metaStr, ipHash, country)
       .run();
   } catch (e) {
     console.error("DB insert error:", e);
@@ -143,39 +172,146 @@ async function handlePostScore(req: Request, env: Env): Promise<Response> {
   return json({ ok: true });
 }
 
+// Enriched leaderboard. Returns the best-score-per-user top list plus, when a
+// `user` is supplied, that player's global rank, a ±5 "near you" window, and a
+// "target" (median of the top scores) for the "beat this" mechanic.
+//
+// Query: game, variant?, period(all|day|week)?, user?
 async function handleGetLeaderboard(url: URL, env: Env): Promise<Response> {
   const gameRaw    = (url.searchParams.get("game")    ?? "").trim();
   const variantRaw = (url.searchParams.get("variant") ?? "").trim();
+  const period     = normPeriod((url.searchParams.get("period") ?? "").trim());
+  const userRaw    = (url.searchParams.get("user")    ?? "").trim();
 
   if (!gameRaw) return err("missing: game");
-
-  const game    = sanitizeGame(gameRaw);
-  if (!game)    return err("invalid game name");
+  const game = sanitizeGame(gameRaw);
+  if (!game)   return err("invalid game name");
 
   const variant = sanitizeVariant(variantRaw);
+  const user    = userRaw ? sanitizeUser(userRaw) : "";
 
-  const order = ASC_GAMES.has(game) ? "ASC" : "DESC";
+  const asc    = ASC_GAMES.has(game);
+  const order  = asc ? "ASC" : "DESC";
+  const better = asc ? "<" : ">";              // "is a better score than"
+  const bestFn = asc ? "MIN(score)" : "MAX(score)";
 
-  let rows: { user: string; score: number }[] = [];
+  // Shared WHERE: game + variant (+ optional period). Bare `country` after a
+  // MIN/MAX picks the value from that best row in SQLite.
+  const cutoff = periodCutoff(period);
+  const where  = cutoff != null
+    ? "game = ? AND variant = ? AND timestamp >= ?"
+    : "game = ? AND variant = ?";
+  const wbind  = cutoff != null ? [game, variant, cutoff] : [game, variant];
+
+  type Row = { user: string; s: number; c: string | null };
+  let top: { r: number; u: string; s: number; c: string | null }[] = [];
+  let count = 0;
+  let me: { r: number; s: number } | null = null;
+  let near: { r: number; u: string; s: number; c: string | null }[] = [];
+
   try {
-    const result = await env.DB
+    const topRes = await env.DB
       .prepare(
-        `SELECT user, score FROM scores WHERE game = ? AND variant = ? ORDER BY score ${order} LIMIT ?`
+        `SELECT user, ${bestFn} AS s, country AS c
+         FROM scores WHERE ${where}
+         GROUP BY user ORDER BY s ${order} LIMIT 10`
       )
-      .bind(game, variant, TOP_N)
-      .all<{ user: string; score: number }>();
-    rows = result.results ?? [];
+      .bind(...wbind)
+      .all<Row>();
+    top = (topRes.results ?? []).map((r, i) => ({ r: i + 1, u: r.user, s: r.s, c: r.c }));
+
+    const cntRes = await env.DB
+      .prepare(`SELECT COUNT(DISTINCT user) AS c FROM scores WHERE ${where}`)
+      .bind(...wbind)
+      .first<{ c: number }>();
+    count = cntRes?.c ?? 0;
+
+    if (user) {
+      const meBest = await env.DB
+        .prepare(`SELECT ${bestFn} AS s FROM scores WHERE ${where} AND user = ?`)
+        .bind(...wbind, user)
+        .first<{ s: number | null }>();
+
+      if (meBest && meBest.s != null) {
+        const myScore = meBest.s;
+        const betterCnt = await env.DB
+          .prepare(
+            `SELECT COUNT(*) AS c FROM (
+               SELECT user, ${bestFn} AS b FROM scores WHERE ${where} GROUP BY user
+             ) WHERE b ${better} ?`
+          )
+          .bind(...wbind, myScore)
+          .first<{ c: number }>();
+        const myRank = (betterCnt?.c ?? 0) + 1;
+        me = { r: myRank, s: myScore };
+
+        const off = Math.max(0, myRank - 6);
+        const nearRes = await env.DB
+          .prepare(
+            `SELECT user, ${bestFn} AS s, country AS c
+             FROM scores WHERE ${where}
+             GROUP BY user ORDER BY s ${order} LIMIT 11 OFFSET ?`
+          )
+          .bind(...wbind, off)
+          .all<Row>();
+        near = (nearRes.results ?? []).map((r, i) => ({ r: off + i + 1, u: r.user, s: r.s, c: r.c }));
+      }
+    }
   } catch (e) {
     console.error("DB query error:", e);
     return err("db error", 500);
   }
 
-  const top = rows.map((r, i) => ({ r: i + 1, u: r.user, s: r.score }));
+  // "Target" = median of the visible top scores (the score to beat).
+  let target: number | null = null;
+  if (top.length > 0) {
+    const vals = top.map(t => t.s);
+    target = vals[Math.floor((vals.length - 1) / 2)];
+  }
 
   return json(
-    { game, variant, updated: Math.floor(Date.now() / 1000), top },
+    { game, variant, period, asc, updated: Math.floor(Date.now() / 1000), count, target, top, me, near },
     200,
     { "Cache-Control": `public, max-age=${LEADERBOARD_CACHE_S}, stale-while-revalidate=60` }
+  );
+}
+
+// Recent submissions (raw, newest first) — makes the board feel alive.
+async function handleGetRecent(url: URL, env: Env): Promise<Response> {
+  const gameRaw    = (url.searchParams.get("game")    ?? "").trim();
+  const variantRaw = (url.searchParams.get("variant") ?? "").trim();
+  const period     = normPeriod((url.searchParams.get("period") ?? "").trim());
+
+  if (!gameRaw) return err("missing: game");
+  const game = sanitizeGame(gameRaw);
+  if (!game)   return err("invalid game name");
+  const variant = sanitizeVariant(variantRaw);
+
+  const cutoff = periodCutoff(period);
+  const where  = cutoff != null
+    ? "game = ? AND variant = ? AND timestamp >= ?"
+    : "game = ? AND variant = ?";
+  const wbind  = cutoff != null ? [game, variant, cutoff] : [game, variant];
+
+  let recent: { u: string; s: number; c: string | null; t: number }[] = [];
+  try {
+    const res = await env.DB
+      .prepare(
+        `SELECT user AS u, score AS s, country AS c, timestamp AS t
+         FROM scores WHERE ${where} ORDER BY timestamp DESC LIMIT 8`
+      )
+      .bind(...wbind)
+      .all<{ u: string; s: number; c: string | null; t: number }>();
+    recent = res.results ?? [];
+  } catch (e) {
+    console.error("DB query error:", e);
+    return err("db error", 500);
+  }
+
+  return json(
+    { game, variant, period, updated: Math.floor(Date.now() / 1000), recent },
+    200,
+    { "Cache-Control": `public, max-age=30, stale-while-revalidate=60` }
   );
 }
 
@@ -291,6 +427,7 @@ export default {
 
     if (method === "POST" && path === "/score")       return handlePostScore(req, env);
     if (method === "GET"  && path === "/leaderboard") return handleGetLeaderboard(url, env);
+    if (method === "GET"  && path === "/recent")      return handleGetRecent(url, env);
     if (method === "GET"  && path === "/games")       return handleGetGames(env);
     if (method === "GET"  && path === "/stats")       return handleGetStats(env);
     if (method === "GET"  && path === "/variants")    return handleGetVariants(url, env);

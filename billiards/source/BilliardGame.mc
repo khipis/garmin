@@ -361,6 +361,7 @@ class BilliardGame {
             var s = _loadStreak() + 1;
             _saveStreak(s);
             Leaderboard.submitScore(LB_GAME_ID, s, lbVariant());
+            Leaderboard.showPostGame(LB_GAME_ID, lbVariant(), "BILLIARDS");
         } else {
             _saveStreak(0);
         }

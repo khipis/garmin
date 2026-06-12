@@ -19,12 +19,24 @@ using Toybox.Math;
 class UIManager {
 
     // ── Menu row geometry (for tap hit-testing). ────────────
+    // Space-aware: the four rows are packed into the strip between the
+    // title block and a reserved bottom margin (footer + best/long
+    // ribbon), so the extra LEADERBOARD row never overlaps the footer
+    // or each other on small round watches.  Sizing is ~15-18 % smaller
+    // than the old 3-row menu (height/gap) to make room for row 4.
     static function rowGeom(sw, sh) {
-        var rowH = (sh * 10) / 100; if (rowH < 22) { rowH = 22; } if (rowH > 28) { rowH = 28; }
-        var rowW = (sw * 64) / 100; if (rowW < 130) { rowW = 130; }
+        var topZone      = (sh * 38) / 100;            // rows live below "by Bitochi"
+        var bottomMargin = (sh * 16) / 100; if (bottomMargin < 40) { bottomMargin = 40; }
+        var gap          = (sh * 2)  / 100; if (gap < 3) { gap = 3; }
+        var avail        = (sh - bottomMargin) - topZone;
+        var rowH         = (avail - gap * (SS_MENU_ROWS - 1)) / SS_MENU_ROWS;
+        if (rowH > 24) { rowH = 24; }                  // was 28 → ~15 % smaller
+        if (rowH < 14) { rowH = 14; }
+        var rowW = (sw * 62) / 100; if (rowW < 128) { rowW = 128; }
         var rowX = (sw - rowW) / 2;
-        var gap  = (sh * 2) / 100;  if (gap < 4) { gap = 4; }
-        var rowY0 = (sh * 40) / 100;
+        var used  = SS_MENU_ROWS * rowH + (SS_MENU_ROWS - 1) * gap;
+        var rowY0 = topZone + (avail - used) / 2;
+        if (rowY0 < topZone) { rowY0 = topZone; }
         return [rowH, rowW, rowX, rowY0, gap];
     }
 
@@ -421,6 +433,13 @@ class UIManager {
         for (var i = 0; i < SS_MENU_ROWS; i++) {
             var ry = rowY0 + i * (rowH + gap);
             var sel     = (i == ctrl.menuRow);
+
+            if (i == SS_ROW_LB) {
+                // Hype-y gold leaderboard row from the shared library.
+                LbBadge.drawRow(dc, rowX, ry, rowW, rowH, sel);
+                continue;
+            }
+
             var isStart = (i == SS_ROW_START);
             var bg; var bd; var fg;
             if (sel && isStart)  { bg = 0x223300; bd = 0xFFEE66; fg = 0xFFEE66; }

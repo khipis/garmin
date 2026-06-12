@@ -27,6 +27,9 @@ using Toybox.Application;
 using Toybox.Time;
 using Toybox.Time.Gregorian;
 
+// Global leaderboard game identifier (must match the backend key).
+const LB_GAME_ID = "akari";
+
 const AS_MENU = 0;
 const AS_PLAY = 1;
 const AS_WIN  = 2;
@@ -34,7 +37,12 @@ const AS_WIN  = 2;
 const AK_MODE_LEVELS = 0;
 const AK_MODE_DAILY  = 1;
 
+// Labeled config rows (Diff / Mode / Errs / START).
 const AK_MENU_ROWS = 4;
+// The LEADERBOARD badge sits just below them; it's a navigable row but
+// is not part of AK_MENU_ROWS so the label/activation logic stays clean.
+const AK_LB_ROW    = AK_MENU_ROWS;
+const AK_NAV_ROWS  = AK_MENU_ROWS + 1;
 
 class GameController {
     var state;
@@ -149,9 +157,9 @@ class GameController {
     }
 
     // ── Menu ───────────────────────────────────────────────────
-    function menuNext() { menuRow = (menuRow + 1) % AK_MENU_ROWS; dirty = true; }
-    function menuPrev() { menuRow = (menuRow + AK_MENU_ROWS - 1) % AK_MENU_ROWS; dirty = true; }
-    function setMenuRow(i) { if (i >= 0 && i < AK_MENU_ROWS) { menuRow = i; dirty = true; } }
+    function menuNext() { menuRow = (menuRow + 1) % AK_NAV_ROWS; dirty = true; }
+    function menuPrev() { menuRow = (menuRow + AK_NAV_ROWS - 1) % AK_NAV_ROWS; dirty = true; }
+    function setMenuRow(i) { if (i >= 0 && i < AK_NAV_ROWS) { menuRow = i; dirty = true; } }
 
     function menuActivate() {
         if (menuRow == 0) {
@@ -181,6 +189,12 @@ class GameController {
     }
     function errsName() {
         return showErrs ? "Errs ON" : "Errs off";
+    }
+
+    // Leaderboard variant = board size, which dominates solve time, so each
+    // size gets its own fastest-time board (e.g. "6x6", "7x7").
+    function lbVariant() {
+        return (diff == 0) ? "6x6" : "7x7";
     }
     function totalSlots() { return PuzzleLoader.bucketSize(diff); }
 
@@ -302,6 +316,14 @@ class GameController {
                 _save("ak_daily_best", dailyBestSec);
             }
         }
+
+        // Submit solve time (whole seconds, LOWER is better — the backend
+        // sorts this game ASCENDING, so submit the raw positive value).
+        var secs = elapsed;
+        if (secs < 1) { secs = 1; }
+        Leaderboard.submitScore(LB_GAME_ID, secs, lbVariant());
+        Leaderboard.showPostGame(LB_GAME_ID, lbVariant(), "AKARI");
+
         state = AS_WIN;
         dirty = true;
     }

@@ -263,6 +263,7 @@ class GameView extends WatchUi.View {
         if (playerDiscCount > aiDiscCount) {
             _scoreSubmitted = true;
             Leaderboard.submitScore(LB_GAME_ID, playerDiscCount, null);
+            Leaderboard.showPostGame(LB_GAME_ID, null, "OTHELLO");
         }
     }
 

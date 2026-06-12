@@ -117,15 +117,16 @@ class GameController {
         if (i >= 0 && i < GM_MENU_ROWS) { menuRow = i; dirty = true; }
     }
     function menuActivate() {
-        if (menuRow == 0) {
+        if (menuRow == GM_ROW_DIFF) {
             diff  = (diff + 1) % 3;
             level = 0;
-        } else if (menuRow == 1) {
+        } else if (menuRow == GM_ROW_BIOME) {
             biomeMode = biomeMode + 1;
             if (biomeMode > GM_BIOME_CHAOS) { biomeMode = -1; }
-        } else {
+        } else if (menuRow == GM_ROW_START) {
             _startGame();
         }
+        // GM_ROW_LB is handled by MainView.openLeaderboard().
         saveSettings();
         dirty = true;
     }
@@ -150,6 +151,12 @@ class GameController {
         if (biome == GM_BIOME_SPEED) { return "SPEED"; }
         if (biome == GM_BIOME_CHAOS) { return "CHAOS"; }
         return "NORMAL";
+    }
+    // Leaderboard variant = difficulty (board size).
+    function lbVariant() {
+        if (diff == GM_DIFF_EASY) { return "Easy"; }
+        if (diff == GM_DIFF_MED)  { return "Med";  }
+        return "Hard";
     }
     function bestForDiff() { return bestMs[diff]; }
     function bestSec() {
@@ -247,6 +254,16 @@ class GameController {
         }
         level = level + 1;
         saveSettings();
+
+        // Global leaderboard: higher-is-better progress metric =
+        // number of mazes cleared (deepest level reached) at this
+        // difficulty. `level` was just incremented, so it equals the
+        // count of mazes solved. The backend keeps the max, so it is
+        // safe to submit at every clear (captures best even if the
+        // player later quits or dies).
+        Leaderboard.submitScore(GM_LB_GAME_ID, level, lbVariant());
+        Leaderboard.showPostGame(GM_LB_GAME_ID, lbVariant(), "GYRO MAZE");
+
         state  = GM_WIN;
         dirty  = true;
     }

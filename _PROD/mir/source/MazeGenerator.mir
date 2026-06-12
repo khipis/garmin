@@ -1,576 +1,1785 @@
-[ @file = "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc"; @line = 16; @position = 6; @symbol_constdef = [TILE_FLOOR,16,6,16]; ]
-const TILE_FLOOR = 0;
-[ @file = "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc"; @line = 17; @position = 6; @symbol_constdef = [TILE_WALL,17,6,15]; ]
-const TILE_WALL = 1;
-[ @file = "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc"; @line = 18; @position = 6; @symbol_constdef = [TILE_PELLET,18,6,17]; ]
-const TILE_PELLET = 2;
-[ @file = "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc"; @line = 19; @position = 6; @symbol_constdef = [TILE_POWER,19,6,16]; ]
-const TILE_POWER = 3;
-[ @file = "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc"; @line = 21; @position = 6; @symbol_constdef = [MAZE_SIZE,21,6,15]; ]
-const MAZE_SIZE = 13;
-[ @file = "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc"; @line = 22; @position = 6; @symbol_constdef = [MAZE_COUNT,22,6,16]; ]
-const MAZE_COUNT = 3;
-[ @file = "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc"; @line = 24; @symbol_classdef = [MazeGenerator,24,6,19]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc"; @line = 21; @symbol_classdef = [MazeGenerator,21,6,19]; ]
 class MazeGenerator {
-    [ @file = "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc"; @line = 24; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc"; @line = 21; ]
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc"; @line = 24; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc"; @line = 21; ]
     static
     <init> {
-[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 28 15 ]
-        %tmp.1 = newa 3;
-        %tmp.2 = newa 13;
-        %tmp.3 = "#############";
-        %tmp.4 = dup %tmp.2;
-        %tmp.5 = aputv %tmp.4 0 %tmp.3;
-        %tmp.6 = "#o.........o#";
-        %tmp.7 = dup %tmp.5;
-        %tmp.8 = aputv %tmp.7 1 %tmp.6;
-        %tmp.9 = "#.##.###.##.#";
-        %tmp.10 = dup %tmp.8;
-        %tmp.11 = aputv %tmp.10 2 %tmp.9;
-        %tmp.12 = "#...........#";
-        %tmp.13 = dup %tmp.11;
-        %tmp.14 = aputv %tmp.13 3 %tmp.12;
-        %tmp.15 = "#.##.#.#.##.#";
-        %tmp.16 = dup %tmp.14;
-        %tmp.17 = aputv %tmp.16 4 %tmp.15;
-        %tmp.18 = "#....#.#....#";
-        %tmp.19 = dup %tmp.17;
-        %tmp.20 = aputv %tmp.19 5 %tmp.18;
-        %tmp.21 = "##.#.#.#.#.##";
-        %tmp.22 = dup %tmp.20;
-        %tmp.23 = aputv %tmp.22 6 %tmp.21;
-        %tmp.24 = "#....#.#....#";
-        %tmp.25 = dup %tmp.23;
-        %tmp.26 = aputv %tmp.25 7 %tmp.24;
-        %tmp.27 = "#.##.#.#.##.#";
-        %tmp.28 = dup %tmp.26;
-        %tmp.29 = aputv %tmp.28 8 %tmp.27;
-        %tmp.30 = "#...........#";
-        %tmp.31 = dup %tmp.29;
-        %tmp.32 = aputv %tmp.31 9 %tmp.30;
-        %tmp.33 = "#.##.###.##.#";
-        %tmp.34 = dup %tmp.32;
-        %tmp.35 = aputv %tmp.34 10 %tmp.33;
-        %tmp.36 = "#o.........o#";
-        %tmp.37 = dup %tmp.35;
-        %tmp.38 = aputv %tmp.37 11 %tmp.36;
-        %tmp.39 = "#############";
-        %tmp.40 = dup %tmp.38;
-        %tmp.41 = aputv %tmp.40 12 %tmp.39;
-        %tmp.42 = dup %tmp.1;
-        %tmp.43 = aputv %tmp.42 0 %tmp.41;
-        %tmp.44 = newa 13;
-        %tmp.45 = "#############";
-        %tmp.46 = dup %tmp.44;
-        %tmp.47 = aputv %tmp.46 0 %tmp.45;
-        %tmp.48 = "#.....#.....#";
-        %tmp.49 = dup %tmp.47;
-        %tmp.50 = aputv %tmp.49 1 %tmp.48;
-        %tmp.51 = "#o###.#.###o#";
-        %tmp.52 = dup %tmp.50;
-        %tmp.53 = aputv %tmp.52 2 %tmp.51;
-        %tmp.54 = "#...........#";
-        %tmp.55 = dup %tmp.53;
-        %tmp.56 = aputv %tmp.55 3 %tmp.54;
-        %tmp.57 = "###.#####.###";
-        %tmp.58 = dup %tmp.56;
-        %tmp.59 = aputv %tmp.58 4 %tmp.57;
-        %tmp.60 = "#...#...#...#";
-        %tmp.61 = dup %tmp.59;
-        %tmp.62 = aputv %tmp.61 5 %tmp.60;
-        %tmp.63 = "#.#.#.#.#.#.#";
-        %tmp.64 = dup %tmp.62;
-        %tmp.65 = aputv %tmp.64 6 %tmp.63;
-        %tmp.66 = "#...#...#...#";
-        %tmp.67 = dup %tmp.65;
-        %tmp.68 = aputv %tmp.67 7 %tmp.66;
-        %tmp.69 = "###.#####.###";
-        %tmp.70 = dup %tmp.68;
-        %tmp.71 = aputv %tmp.70 8 %tmp.69;
-        %tmp.72 = "#...........#";
-        %tmp.73 = dup %tmp.71;
-        %tmp.74 = aputv %tmp.73 9 %tmp.72;
-        %tmp.75 = "#o###.#.###o#";
-        %tmp.76 = dup %tmp.74;
-        %tmp.77 = aputv %tmp.76 10 %tmp.75;
-        %tmp.78 = "#.....#.....#";
-        %tmp.79 = dup %tmp.77;
-        %tmp.80 = aputv %tmp.79 11 %tmp.78;
-        %tmp.81 = "#############";
-        %tmp.82 = dup %tmp.80;
-        %tmp.83 = aputv %tmp.82 12 %tmp.81;
-        %tmp.84 = dup %tmp.43;
-        %tmp.85 = aputv %tmp.84 1 %tmp.83;
-        %tmp.86 = newa 13;
-        %tmp.87 = "#############";
-        %tmp.88 = dup %tmp.86;
-        %tmp.89 = aputv %tmp.88 0 %tmp.87;
-        %tmp.90 = "#o.#.....#.o#";
-        %tmp.91 = dup %tmp.89;
-        %tmp.92 = aputv %tmp.91 1 %tmp.90;
-        %tmp.93 = "#.###.#.###.#";
-        %tmp.94 = dup %tmp.92;
-        %tmp.95 = aputv %tmp.94 2 %tmp.93;
-        %tmp.96 = "#...........#";
-        %tmp.97 = dup %tmp.95;
-        %tmp.98 = aputv %tmp.97 3 %tmp.96;
-        %tmp.99 = "#.#.#####.#.#";
-        %tmp.100 = dup %tmp.98;
-        %tmp.101 = aputv %tmp.100 4 %tmp.99;
-        %tmp.102 = "#.#.......#.#";
-        %tmp.103 = dup %tmp.101;
-        %tmp.104 = aputv %tmp.103 5 %tmp.102;
-        %tmp.105 = "#...#.#.#...#";
-        %tmp.106 = dup %tmp.104;
-        %tmp.107 = aputv %tmp.106 6 %tmp.105;
-        %tmp.108 = "#.#.......#.#";
-        %tmp.109 = dup %tmp.107;
-        %tmp.110 = aputv %tmp.109 7 %tmp.108;
-        %tmp.111 = "#.#.#####.#.#";
-        %tmp.112 = dup %tmp.110;
-        %tmp.113 = aputv %tmp.112 8 %tmp.111;
-        %tmp.114 = "#...........#";
-        %tmp.115 = dup %tmp.113;
-        %tmp.116 = aputv %tmp.115 9 %tmp.114;
-        %tmp.117 = "#.###.#.###.#";
-        %tmp.118 = dup %tmp.116;
-        %tmp.119 = aputv %tmp.118 10 %tmp.117;
-        %tmp.120 = "#o.#.....#.o#";
-        %tmp.121 = dup %tmp.119;
-        %tmp.122 = aputv %tmp.121 11 %tmp.120;
-        %tmp.123 = "#############";
-        %tmp.124 = dup %tmp.122;
-        %tmp.125 = aputv %tmp.124 12 %tmp.123;
-        %tmp.126 = dup %tmp.85;
-        %tmp.127 = aputv %tmp.126 2 %tmp.125;
-        putv self :LAYOUTS %tmp.127;
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc"; @line = 28; @position = 15; @symbol_vardef = [LAYOUTS,28,15,22]; ]
-    static
-    var LAYOUTS;
-    [ @file = "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc"; @line = 75; @symbol_functiondef = [build,75,20,25]; @symbol_param<0> = [idx,75,26,29]; ]
-    static
-    function build(idx) {
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_75_31_91_4_start:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 76 8 ]
-        [ "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_75_31_91_4_start" "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_75_31_91_4_stop" ]
-        %lay.1 = local;
-        symbol [ lay %lay.1 76 12 15 ];
-        symbol [ LAYOUTS %tmp.2 76 18 25 ];
-        %tmp.2 = getv ? :LAYOUTS;
-        %tmp.3 = lgetv %idx;
-        symbol [ idx %tmp.3 76 28 31 ];
-        symbol [ MAZE_COUNT %tmp.5 76 34 44 ];
-        %tmp.5 = getv ? :MAZE_COUNT;
-        %tmp.6 = mod %tmp.3 %tmp.5;
-        symbol [ MAZE_COUNT %tmp.8 76 48 58 ];
-        %tmp.8 = getv ? :MAZE_COUNT;
-        %tmp.9 = add %tmp.6 %tmp.8;
-        symbol [ MAZE_COUNT %tmp.11 76 62 72 ];
-        %tmp.11 = getv ? :MAZE_COUNT;
-        %tmp.12 = mod %tmp.9 %tmp.11;
-        %tmp.13 = agetv %tmp.2 %tmp.12;
-        lputv %lay.1 %tmp.13;
-        symbol [ lay %lay.1 76 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 77 8 ]
-        [ "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_75_31_91_4_start" "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_75_31_91_4_stop" ]
-        %n.2 = local;
-        symbol [ n %n.2 77 12 13 ];
-        symbol [ MAZE_SIZE %tmp.15 77 18 27 ];
-        %tmp.15 = getv ? :MAZE_SIZE;
-        lputv %n.2 %tmp.15;
-        symbol [ n %n.2 77 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 78 8 ]
-        [ "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_75_31_91_4_start" "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_75_31_91_4_stop" ]
-        %g.3 = local;
-        symbol [ g %g.3 78 12 13 ];
-        %tmp.17 = lgetv %n.2;
-        symbol [ n %tmp.17 78 23 24 ];
-        %tmp.18 = lgetv %n.2;
-        symbol [ n %tmp.18 78 27 28 ];
-        %tmp.19 = mul %tmp.17 %tmp.18;
-        %tmp.16 = newba %tmp.19;
-        lputv %g.3 %tmp.16;
-        symbol [ g %g.3 78 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 79 8 ]
-        for @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_79_8_89_8_for_test @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_79_8_89_8_for_incr @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_79_8_89_8_for_end;
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_79_8_89_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_79_8_89_8_for_begin" "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_79_8_89_8_for_end" ]
-        %r.4 = local;
-        symbol [ r %r.4 79 17 18 ];
-        %tmp.20 = 0;
-        lputv %r.4 %tmp.20;
-        symbol [ r %r.4 79 17 18 ];
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_79_8_89_8_for_test:
-        %tmp.21 = lgetv %r.4;
-        symbol [ r %tmp.21 79 24 25 ];
-        %tmp.22 = lgetv %n.2;
-        symbol [ n %tmp.22 79 28 29 ];
-        %tmp.23 = lt %tmp.21 %tmp.22;
-        bf %tmp.23 @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_79_8_89_8_for_end;
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_79_8_89_8_for_begin:
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_79_36_89_8_start:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 80 12 ]
-        [ "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_79_36_89_8_start" "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_79_36_89_8_stop" ]
-        %row.5 = local;
-        symbol [ row %row.5 80 16 19 ];
-        %tmp.24 = lgetv %lay.1;
-        symbol [ lay %tmp.24 80 22 25 ];
-        %tmp.25 = lgetv %r.4;
-        symbol [ r %tmp.25 80 26 27 ];
-        %tmp.26 = agetv %tmp.24 %tmp.25;
-        lputv %row.5 %tmp.26;
-        symbol [ row %row.5 80 16 19 ];
-[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 81 12 ]
-        for @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_81_12_88_12_for_test @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_81_12_88_12_for_incr @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_81_12_88_12_for_end;
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_81_12_88_12_for_init:
-        [ "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_81_12_88_12_for_begin" "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_81_12_88_12_for_end" ]
-        %c.6 = local;
-        symbol [ c %c.6 81 21 22 ];
-        %tmp.27 = 0;
-        lputv %c.6 %tmp.27;
-        symbol [ c %c.6 81 21 22 ];
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_81_12_88_12_for_test:
-        %tmp.28 = lgetv %c.6;
-        symbol [ c %tmp.28 81 28 29 ];
-        %tmp.29 = lgetv %n.2;
-        symbol [ n %tmp.29 81 32 33 ];
-        %tmp.30 = lt %tmp.28 %tmp.29;
-        bf %tmp.30 @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_81_12_88_12_for_end;
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_81_12_88_12_for_begin:
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_81_40_88_12_start:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 82 16 ]
-        [ "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_81_40_88_12_start" "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_81_40_88_12_stop" ]
-        %ch.7 = local;
-        symbol [ ch %ch.7 82 20 22 ];
-        %tmp.31 = lgetv %row.5;
-        symbol [ row %tmp.31 82 25 28 ];
-        symbol [ substring %tmp.32 82 29 38 ];
-        %tmp.32 = getv function %tmp.31 :substring;
-        %tmp.33 = lgetv %c.6;
-        symbol [ c %tmp.33 82 39 40 ];
-        %tmp.34 = lgetv %c.6;
-        symbol [ c %tmp.34 82 42 43 ];
-        %tmp.35 = 1;
-        %tmp.36 = add %tmp.34 %tmp.35;
-        %tmp.37 = invoke %tmp.31 %tmp.32(%tmp.33, %tmp.36);
-        lputv %ch.7 %tmp.37;
-        symbol [ ch %ch.7 82 20 22 ];
-[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 83 16 ]
-        [ "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_81_40_88_12_start" "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_81_40_88_12_stop" ]
-        %t.8 = local;
-        symbol [ t %t.8 83 20 21 ];
-        symbol [ TILE_FLOOR %tmp.39 83 25 35 ];
-        %tmp.39 = getv ? :TILE_FLOOR;
-        lputv %t.8 %tmp.39;
-        symbol [ t %t.8 83 20 21 ];
-[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 84 16 ]
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_84_16_86_60_if_stmt:
-        %tmp.40 = lgetv %ch.7;
-        symbol [ ch %tmp.40 84 20 22 ];
-        symbol [ equals %tmp.41 84 23 29 ];
-        %tmp.41 = getv function %tmp.40 :equals;
-        %tmp.42 = "#";
-        %tmp.43 = invoke %tmp.40 %tmp.41(%tmp.42);
-        bf %tmp.43 @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_84_16_86_60_if_false;
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_84_16_86_60_if_true:
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_84_41_84_60_start:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 84 43 ]
-        symbol [ TILE_WALL %tmp.45 84 47 56 ];
-        %tmp.45 = getv ? :TILE_WALL;
-        lputv %t.8 %tmp.45;
-        symbol [ t %t.8 84 43 44 ];
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_84_41_84_60_stop:
-        goto @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_84_16_86_60_if_end;
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_84_16_86_60_if_false:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 85 21 ]
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_85_21_86_60_if_stmt:
-        %tmp.46 = lgetv %ch.7;
-        symbol [ ch %tmp.46 85 25 27 ];
-        symbol [ equals %tmp.47 85 28 34 ];
-        %tmp.47 = getv function %tmp.46 :equals;
-        %tmp.48 = ".";
-        %tmp.49 = invoke %tmp.46 %tmp.47(%tmp.48);
-        bf %tmp.49 @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_85_21_86_60_if_false;
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_85_21_86_60_if_true:
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_85_41_85_60_start:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 85 43 ]
-        symbol [ TILE_PELLET %tmp.51 85 47 58 ];
-        %tmp.51 = getv ? :TILE_PELLET;
-        lputv %t.8 %tmp.51;
-        symbol [ t %t.8 85 43 44 ];
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_85_41_85_60_stop:
-        goto @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_85_21_86_60_if_end;
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_85_21_86_60_if_false:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 86 21 ]
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_86_21_86_60_if_stmt:
-        %tmp.52 = lgetv %ch.7;
-        symbol [ ch %tmp.52 86 25 27 ];
-        symbol [ equals %tmp.53 86 28 34 ];
-        %tmp.53 = getv function %tmp.52 :equals;
-        %tmp.54 = "o";
-        %tmp.55 = invoke %tmp.52 %tmp.53(%tmp.54);
-        bf %tmp.55 @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_86_21_86_60_if_end;
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_86_21_86_60_if_true:
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_86_41_86_60_start:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 86 43 ]
-        symbol [ TILE_POWER %tmp.57 86 47 57 ];
-        %tmp.57 = getv ? :TILE_POWER;
-        lputv %t.8 %tmp.57;
-        symbol [ t %t.8 86 43 44 ];
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_86_41_86_60_stop:
-        goto @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_86_21_86_60_if_end;
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_86_21_86_60_if_end:
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_85_21_86_60_if_end:
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_84_16_86_60_if_end:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 87 16 ]
-        %tmp.58 = lgetv %g.3;
-        symbol [ g %tmp.58 87 16 17 ];
-        %tmp.59 = lgetv %t.8;
-        symbol [ t %tmp.59 87 31 32 ];
-        %tmp.60 = lgetv %r.4;
-        symbol [ r %tmp.60 87 18 19 ];
-        %tmp.61 = lgetv %n.2;
-        symbol [ n %tmp.61 87 22 23 ];
-        %tmp.62 = mul %tmp.60 %tmp.61;
-        %tmp.63 = lgetv %c.6;
-        symbol [ c %tmp.63 87 26 27 ];
-        %tmp.64 = add %tmp.62 %tmp.63;
-        aputv %tmp.58 %tmp.64 %tmp.59;
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_81_40_88_12_stop:
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_81_12_88_12_for_incr:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 81 ]
-        %tmp.67 = lgetv %c.6;
-        symbol [ c %tmp.67 81 35 36 ];
-        %tmp.68 = add %tmp.67 1;
-        lputv %c.6 %tmp.68;
-        symbol [ c %c.6 81 35 36 ];
-        goto @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_81_12_88_12_for_test;
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_81_12_88_12_for_end:
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_79_36_89_8_stop:
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_79_8_89_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 79 ]
-        %tmp.71 = lgetv %r.4;
-        symbol [ r %tmp.71 79 31 32 ];
-        %tmp.72 = add %tmp.71 1;
-        lputv %r.4 %tmp.72;
-        symbol [ r %r.4 79 31 32 ];
-        goto @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_79_8_89_8_for_test;
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_79_8_89_8_for_end:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 90 8 ]
-        %tmp.73 = lgetv %g.3;
-        symbol [ g %tmp.73 90 15 16 ];
-        ret %tmp.73;
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_75_31_91_4_stop:
+    [ @file = "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc"; @line = 22; @position = 15; @symbol_vardef = [_rng,22,15,19]; ]
+    protected
+    var _rng;
+    [ @file = "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc"; @line = 24; @symbol_functiondef = [initialize,24,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_24_26_24_38_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 24 28 ]
+        %tmp.1 = 1;
+        symbol [ _rng ? 24 28 32 ];
+        putv self :_rng %tmp.1;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_24_26_24_38_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc"; @line = 94; @symbol_functiondef = [countPellets,94,20,32]; @symbol_param<0> = [grid,94,33,37]; ]
-    static
-    function countPellets(grid) {
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_94_39_101_4_start:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 95 8 ]
-        [ "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_94_39_101_4_start" "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_94_39_101_4_stop" ]
-        %c.1 = local;
-        symbol [ c %c.1 95 12 13 ];
-        %tmp.1 = 0;
-        lputv %c.1 %tmp.1;
-        symbol [ c %c.1 95 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 96 8 ]
-        for @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_96_8_99_8_for_test @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_96_8_99_8_for_incr @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_96_8_99_8_for_end;
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_96_8_99_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_96_8_99_8_for_begin" "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_96_8_99_8_for_end" ]
-        %i.2 = local;
-        symbol [ i %i.2 96 17 18 ];
-        %tmp.2 = 0;
-        lputv %i.2 %tmp.2;
-        symbol [ i %i.2 96 17 18 ];
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_96_8_99_8_for_test:
-        %tmp.3 = lgetv %i.2;
-        symbol [ i %tmp.3 96 24 25 ];
-        %tmp.4 = lgetv %grid;
-        symbol [ grid %tmp.4 96 28 32 ];
-        symbol [ size %tmp.5 96 33 37 ];
-        %tmp.5 = getv function %tmp.4 :size;
-        %tmp.6 = invoke %tmp.4 %tmp.5();
-        %tmp.7 = lt %tmp.3 %tmp.6;
-        bf %tmp.7 @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_96_8_99_8_for_end;
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_96_8_99_8_for_begin:
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_96_46_99_8_start:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 97 12 ]
-        [ "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_96_46_99_8_start" "_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_96_46_99_8_stop" ]
-        %t.3 = local;
-        symbol [ t %t.3 97 16 17 ];
-        %tmp.8 = lgetv %grid;
-        symbol [ grid %tmp.8 97 20 24 ];
-        %tmp.9 = lgetv %i.2;
-        symbol [ i %tmp.9 97 25 26 ];
-        %tmp.10 = agetv %tmp.8 %tmp.9;
-        lputv %t.3 %tmp.10;
-        symbol [ t %t.3 97 16 17 ];
-[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 98 12 ]
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_98_12_98_66_if_stmt:
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_98_16_98_41_begin:
-        %tmp.11 = lgetv %t.3;
-        symbol [ t %tmp.11 98 16 17 ];
-        symbol [ TILE_PELLET %tmp.13 98 21 32 ];
-        %tmp.13 = getv ? :TILE_PELLET;
-        %tmp.14 = eq %tmp.11 %tmp.13;
-        bt %tmp.14 @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_98_12_98_66_if_true;
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_98_36_98_41_false:
-        %tmp.15 = lgetv %t.3;
-        symbol [ t %tmp.15 98 36 37 ];
-        symbol [ TILE_POWER %tmp.17 98 41 51 ];
-        %tmp.17 = getv ? :TILE_POWER;
-        %tmp.18 = eq %tmp.15 %tmp.17;
-        push %tmp.18;
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_98_36_98_41_end:
-        %tmp.19 = phi [%tmp.14 @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_98_16_98_41_begin] [%tmp.18 @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_98_36_98_41_false] [%tmp.19 @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_98_36_98_41_end];
-        bf %tmp.19 @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_98_12_98_66_if_end;
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_98_12_98_66_if_true:
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_98_53_98_66_start:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 98 55 ]
-        %tmp.20 = lgetv %c.1;
-        symbol [ c %tmp.20 98 59 60 ];
-        %tmp.21 = 1;
-        %tmp.22 = add %tmp.20 %tmp.21;
-        lputv %c.1 %tmp.22;
-        symbol [ c %c.1 98 55 56 ];
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_98_53_98_66_stop:
-        goto @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_98_12_98_66_if_end;
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_98_12_98_66_if_end:
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_96_46_99_8_stop:
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_96_8_99_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 96 ]
-        %tmp.25 = lgetv %i.2;
-        symbol [ i %tmp.25 96 41 42 ];
-        %tmp.26 = add %tmp.25 1;
-        lputv %i.2 %tmp.26;
-        symbol [ i %i.2 96 41 42 ];
-        goto @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_96_8_99_8_for_test;
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_96_8_99_8_for_end:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 100 8 ]
-        %tmp.27 = lgetv %c.1;
-        symbol [ c %tmp.27 100 15 16 ];
-        ret %tmp.27;
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_94_39_101_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc"; @line = 104; @symbol_functiondef = [spawnPlayer,104,20,31]; ]
-    static
-    function spawnPlayer() {
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_104_34_104_51_start:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 104 36 ]
-        %tmp.1 = newa 2;
-        %tmp.2 = 9;
-        %tmp.3 = dup %tmp.1;
-        %tmp.4 = aputv %tmp.3 0 %tmp.2;
-        %tmp.5 = 6;
-        %tmp.6 = dup %tmp.4;
-        %tmp.7 = aputv %tmp.6 1 %tmp.5;
-        ret %tmp.7;
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_104_34_104_51_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc"; @line = 107; @symbol_functiondef = [spawnGhost,107,20,30]; @symbol_param<0> = [idx,107,31,34]; ]
-    static
-    function spawnGhost(idx) {
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_107_36_114_4_start:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 108 8 ]
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_108_8_108_41_if_stmt:
-        %tmp.1 = lgetv %idx;
-        symbol [ idx %tmp.1 108 12 15 ];
-        %tmp.2 = 0;
-        %tmp.3 = eq %tmp.1 %tmp.2;
-        bf %tmp.3 @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_108_8_108_41_if_end;
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_108_8_108_41_if_true:
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_108_22_108_41_start:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 108 24 ]
-        %tmp.4 = newa 2;
-        %tmp.5 = 1;
-        %tmp.6 = dup %tmp.4;
-        %tmp.7 = aputv %tmp.6 0 %tmp.5;
-        %tmp.8 = 1;
-        %tmp.9 = dup %tmp.7;
-        %tmp.10 = aputv %tmp.9 1 %tmp.8;
+    [ @file = "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc"; @line = 26; @symbol_functiondef = [_lcg,26,20,24]; ]
+    protected
+    function _lcg() {
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_26_27_29_4_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 27 8 ]
+        symbol [ _rng %tmp.2 27 16 20 ];
+        %tmp.2 = getv ? :_rng;
+        %tmp.3 = 1103515245;
+        %tmp.4 = mul %tmp.2 %tmp.3;
+        %tmp.5 = 12345;
+        %tmp.6 = add %tmp.4 %tmp.5;
+        %tmp.7 = 0x7FFFFFFF;
+        %tmp.8 = bitand %tmp.6 %tmp.7;
+        symbol [ _rng ? 27 8 12 ];
+        putv self :_rng %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 28 8 ]
+        symbol [ _rng %tmp.10 28 15 19 ];
+        %tmp.10 = getv ? :_rng;
         ret %tmp.10;
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_108_22_108_41_stop:
-        goto @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_108_8_108_41_if_end;
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_108_8_108_41_if_end:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 109 8 ]
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_109_8_109_41_if_stmt:
-        %tmp.11 = lgetv %idx;
-        symbol [ idx %tmp.11 109 12 15 ];
-        %tmp.12 = 1;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_26_27_29_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc"; @line = 30; @symbol_functiondef = [_rand,30,20,25]; @symbol_param<0> = [n_,30,26,28]; ]
+    protected
+    function _rand(n_) {
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_30_30_33_4_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 31 8 ]
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_31_8_31_33_if_stmt:
+        %tmp.1 = lgetv %n_;
+        symbol [ n_ %tmp.1 31 12 14 ];
+        %tmp.2 = 1;
+        %tmp.3 = lte %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_31_8_31_33_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_31_8_31_33_if_true:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_31_21_31_33_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 31 23 ]
+        %tmp.4 = 0;
+        ret %tmp.4;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_31_21_31_33_stop:
+        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_31_8_31_33_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_31_8_31_33_if_end:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 32 8 ]
+        %tmp.5 = self;
+        symbol [ _lcg %tmp.6 32 15 19 ];
+        %tmp.6 = getv function %tmp.5 :_lcg;
+        %tmp.7 = invoke %tmp.5 %tmp.6();
+        %tmp.8 = lgetv %n_;
+        symbol [ n_ %tmp.8 32 24 26 ];
+        %tmp.9 = mod %tmp.7 %tmp.8;
+        ret %tmp.9;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_30_30_33_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc"; @line = 36; @symbol_functiondef = [generate,36,13,21]; @symbol_param<0> = [n,36,22,23]; @symbol_param<1> = [biome,36,25,30]; @symbol_param<2> = [seed,36,32,36]; ]
+    function generate(n, biome, seed) {
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_36_38_95_4_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 37 8 ]
+        %tmp.1 = lgetv %seed;
+        symbol [ seed %tmp.1 37 15 19 ];
+        symbol [ _rng ? 37 8 12 ];
+        putv self :_rng %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 38 8 ]
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_38_8_38_35_if_stmt:
+        symbol [ _rng %tmp.3 38 12 16 ];
+        %tmp.3 = getv ? :_rng;
+        %tmp.4 = 0;
+        %tmp.5 = eq %tmp.3 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_38_8_38_35_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_38_8_38_35_if_true:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_38_23_38_35_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 38 25 ]
+        %tmp.6 = 1;
+        symbol [ _rng ? 38 25 29 ];
+        putv self :_rng %tmp.6;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_38_23_38_35_stop:
+        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_38_8_38_35_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_38_8_38_35_if_end:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 40 8 ]
+        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_36_38_95_4_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_36_38_95_4_stop" ]
+        %sz.1 = local;
+        symbol [ sz %sz.1 40 12 14 ];
+        %tmp.7 = lgetv %n;
+        symbol [ n %tmp.7 40 18 19 ];
+        %tmp.8 = lgetv %n;
+        symbol [ n %tmp.8 40 22 23 ];
+        %tmp.9 = mul %tmp.7 %tmp.8;
+        lputv %sz.1 %tmp.9;
+        symbol [ sz %sz.1 40 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 41 8 ]
+        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_36_38_95_4_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_36_38_95_4_stop" ]
+        %walls.2 = local;
+        symbol [ walls %walls.2 41 12 17 ];
+        %tmp.11 = lgetv %sz.1;
+        symbol [ sz %tmp.11 41 27 29 ];
+        %tmp.10 = newa %tmp.11;
+        lputv %walls.2 %tmp.10;
+        symbol [ walls %walls.2 41 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 42 8 ]
+        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_36_38_95_4_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_36_38_95_4_stop" ]
+        %extras.3 = local;
+        symbol [ extras %extras.3 42 12 18 ];
+        %tmp.13 = lgetv %sz.1;
+        symbol [ sz %tmp.13 42 27 29 ];
+        %tmp.12 = newa %tmp.13;
+        lputv %extras.3 %tmp.12;
+        symbol [ extras %extras.3 42 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 43 8 ]
+        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_36_38_95_4_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_36_38_95_4_stop" ]
+        %visited.4 = local;
+        symbol [ visited %visited.4 43 12 19 ];
+        %tmp.15 = lgetv %sz.1;
+        symbol [ sz %tmp.15 43 27 29 ];
+        %tmp.14 = newa %tmp.15;
+        lputv %visited.4 %tmp.14;
+        symbol [ visited %visited.4 43 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 44 8 ]
+        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_36_38_95_4_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_36_38_95_4_stop" ]
+        %stack.5 = local;
+        symbol [ stack %stack.5 44 12 17 ];
+        %tmp.17 = lgetv %sz.1;
+        symbol [ sz %tmp.17 44 27 29 ];
+        %tmp.16 = newa %tmp.17;
+        lputv %stack.5 %tmp.16;
+        symbol [ stack %stack.5 44 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 45 8 ]
+        for @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_45_8_49_8_for_test @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_45_8_49_8_for_incr @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_45_8_49_8_for_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_45_8_49_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_45_8_49_8_for_begin" "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_45_8_49_8_for_end" ]
+        %i.6 = local;
+        symbol [ i %i.6 45 17 18 ];
+        %tmp.18 = 0;
+        lputv %i.6 %tmp.18;
+        symbol [ i %i.6 45 17 18 ];
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_45_8_49_8_for_test:
+        %tmp.19 = lgetv %i.6;
+        symbol [ i %tmp.19 45 24 25 ];
+        %tmp.20 = lgetv %sz.1;
+        symbol [ sz %tmp.20 45 28 30 ];
+        %tmp.21 = lt %tmp.19 %tmp.20;
+        bf %tmp.21 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_45_8_49_8_for_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_45_8_49_8_for_begin:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_45_37_49_8_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 46 12 ]
+        %tmp.22 = lgetv %walls.2;
+        symbol [ walls %tmp.22 46 12 17 ];
+        symbol [ GM_WALL_N %tmp.24 46 25 34 ];
+        %tmp.24 = getv ? :GM_WALL_N;
+        symbol [ GM_WALL_S %tmp.26 46 37 46 ];
+        %tmp.26 = getv ? :GM_WALL_S;
+        %tmp.27 = bitor %tmp.24 %tmp.26;
+        symbol [ GM_WALL_E %tmp.29 46 49 58 ];
+        %tmp.29 = getv ? :GM_WALL_E;
+        %tmp.30 = bitor %tmp.27 %tmp.29;
+        symbol [ GM_WALL_W %tmp.32 46 61 70 ];
+        %tmp.32 = getv ? :GM_WALL_W;
+        %tmp.33 = bitor %tmp.30 %tmp.32;
+        %tmp.34 = lgetv %i.6;
+        symbol [ i %tmp.34 46 18 19 ];
+        aputv %tmp.22 %tmp.34 %tmp.33;
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 47 12 ]
+        %tmp.35 = lgetv %extras.3;
+        symbol [ extras %tmp.35 47 12 18 ];
+        symbol [ GM_TILE_FLOOR %tmp.37 47 25 38 ];
+        %tmp.37 = getv ? :GM_TILE_FLOOR;
+        %tmp.38 = lgetv %i.6;
+        symbol [ i %tmp.38 47 19 20 ];
+        aputv %tmp.35 %tmp.38 %tmp.37;
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 48 12 ]
+        %tmp.39 = lgetv %visited.4;
+        symbol [ visited %tmp.39 48 12 19 ];
+        %tmp.40 = 0;
+        %tmp.41 = lgetv %i.6;
+        symbol [ i %tmp.41 48 20 21 ];
+        aputv %tmp.39 %tmp.41 %tmp.40;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_45_37_49_8_stop:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_45_8_49_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 45 ]
+        %tmp.44 = lgetv %i.6;
+        symbol [ i %tmp.44 45 32 33 ];
+        %tmp.45 = add %tmp.44 1;
+        lputv %i.6 %tmp.45;
+        symbol [ i %i.6 45 32 33 ];
+        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_45_8_49_8_for_test;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_45_8_49_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 52 8 ]
+        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_36_38_95_4_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_36_38_95_4_stop" ]
+        %stackTop.7 = local;
+        symbol [ stackTop %stackTop.7 52 12 20 ];
+        %tmp.46 = 1;
+        lputv %stackTop.7 %tmp.46;
+        symbol [ stackTop %stackTop.7 52 12 20 ];
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 53 8 ]
+        %tmp.47 = lgetv %stack.5;
+        symbol [ stack %tmp.47 53 8 13 ];
+        %tmp.48 = 0;
+        %tmp.49 = 0;
+        aputv %tmp.47 %tmp.49 %tmp.48;
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 54 8 ]
+        %tmp.50 = lgetv %visited.4;
+        symbol [ visited %tmp.50 54 8 15 ];
+        %tmp.51 = 1;
+        %tmp.52 = 0;
+        aputv %tmp.50 %tmp.52 %tmp.51;
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 55 8 ]
+        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_36_38_95_4_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_36_38_95_4_stop" ]
+        %ndirs.8 = local;
+        symbol [ ndirs %ndirs.8 55 12 17 ];
+        %tmp.54 = 4;
+        %tmp.53 = newa %tmp.54;
+        lputv %ndirs.8 %tmp.53;
+        symbol [ ndirs %ndirs.8 55 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 57 8 ]
+        while @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_57_8_86_8_while_test @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_57_8_86_8_while_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_57_8_86_8_while_test:
+        %tmp.55 = lgetv %stackTop.7;
+        symbol [ stackTop %tmp.55 57 15 23 ];
+        %tmp.56 = 0;
+        %tmp.57 = gt %tmp.55 %tmp.56;
+        bf %tmp.57 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_57_8_86_8_while_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_57_8_86_8_while_begin:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_57_29_86_8_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 58 12 ]
+        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_57_29_86_8_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_57_29_86_8_stop" ]
+        %cur.9 = local;
+        symbol [ cur %cur.9 58 16 19 ];
+        %tmp.58 = lgetv %stack.5;
+        symbol [ stack %tmp.58 58 22 27 ];
+        %tmp.59 = lgetv %stackTop.7;
+        symbol [ stackTop %tmp.59 58 28 36 ];
+        %tmp.60 = 1;
+        %tmp.61 = sub %tmp.59 %tmp.60;
+        %tmp.62 = agetv %tmp.58 %tmp.61;
+        lputv %cur.9 %tmp.62;
+        symbol [ cur %cur.9 58 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 59 12 ]
+        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_57_29_86_8_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_57_29_86_8_stop" ]
+        %r.10 = local;
+        symbol [ r %r.10 59 16 17 ];
+        %tmp.63 = lgetv %cur.9;
+        symbol [ cur %tmp.63 59 22 25 ];
+        %tmp.64 = lgetv %n;
+        symbol [ n %tmp.64 59 28 29 ];
+        %tmp.65 = div %tmp.63 %tmp.64;
+        lputv %r.10 %tmp.65;
+        symbol [ r %r.10 59 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 60 12 ]
+        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_57_29_86_8_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_57_29_86_8_stop" ]
+        %c.11 = local;
+        symbol [ c %c.11 60 16 17 ];
+        %tmp.66 = lgetv %cur.9;
+        symbol [ cur %tmp.66 60 22 25 ];
+        %tmp.67 = lgetv %n;
+        symbol [ n %tmp.67 60 28 29 ];
+        %tmp.68 = mod %tmp.66 %tmp.67;
+        lputv %c.11 %tmp.68;
+        symbol [ c %c.11 60 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 61 12 ]
+        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_57_29_86_8_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_57_29_86_8_stop" ]
+        %nd.12 = local;
+        symbol [ nd %nd.12 61 16 18 ];
+        %tmp.69 = 0;
+        lputv %nd.12 %tmp.69;
+        symbol [ nd %nd.12 61 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 63 12 ]
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_63_12_63_79_if_stmt:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_63_16_63_53_begin:
+        %tmp.70 = lgetv %r.10;
+        symbol [ r %tmp.70 63 16 17 ];
+        %tmp.71 = 0;
+        %tmp.72 = gt %tmp.70 %tmp.71;
+        bf %tmp.72 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_63_12_63_79_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_63_29_63_53_true:
+        %tmp.73 = lgetv %visited.4;
+        symbol [ visited %tmp.73 63 29 36 ];
+        %tmp.74 = lgetv %r.10;
+        symbol [ r %tmp.74 63 38 39 ];
+        %tmp.75 = 1;
+        %tmp.76 = sub %tmp.74 %tmp.75;
+        %tmp.77 = lgetv %n;
+        symbol [ n %tmp.77 63 43 44 ];
+        %tmp.78 = mul %tmp.76 %tmp.77;
+        %tmp.79 = lgetv %c.11;
+        symbol [ c %tmp.79 63 45 46 ];
+        %tmp.80 = add %tmp.78 %tmp.79;
+        %tmp.81 = agetv %tmp.73 %tmp.80;
+        %tmp.82 = 0;
+        %tmp.83 = eq %tmp.81 %tmp.82;
+        push %tmp.83;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_63_29_63_53_end:
+        %tmp.84 = phi [%tmp.72 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_63_16_63_53_begin] [%tmp.83 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_63_29_63_53_true] [%tmp.84 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_63_29_63_53_end];
+        bf %tmp.84 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_63_12_63_79_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_63_12_63_79_if_true:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_63_56_63_79_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 63 58 ]
+        %tmp.85 = lgetv %ndirs.8;
+        symbol [ ndirs %tmp.85 63 58 63 ];
+        %tmp.86 = 0;
+        %tmp.87 = lgetv %nd.12;
+        symbol [ nd %tmp.87 63 64 66 ];
+        aputv %tmp.85 %tmp.87 %tmp.86;
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 63 73 ]
+        %tmp.90 = lgetv %nd.12;
+        symbol [ nd %tmp.90 63 73 75 ];
+        %tmp.91 = add %tmp.90 1;
+        lputv %nd.12 %tmp.91;
+        symbol [ nd %nd.12 63 73 75 ];
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_63_56_63_79_stop:
+        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_63_12_63_79_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_63_12_63_79_if_end:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 64 12 ]
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_64_12_64_79_if_stmt:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_64_16_64_53_begin:
+        %tmp.92 = lgetv %r.10;
+        symbol [ r %tmp.92 64 16 17 ];
+        %tmp.93 = lgetv %n;
+        symbol [ n %tmp.93 64 20 21 ];
+        %tmp.94 = 1;
+        %tmp.95 = sub %tmp.93 %tmp.94;
+        %tmp.96 = lt %tmp.92 %tmp.95;
+        bf %tmp.96 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_64_12_64_79_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_64_29_64_53_true:
+        %tmp.97 = lgetv %visited.4;
+        symbol [ visited %tmp.97 64 29 36 ];
+        %tmp.98 = lgetv %r.10;
+        symbol [ r %tmp.98 64 38 39 ];
+        %tmp.99 = 1;
+        %tmp.100 = add %tmp.98 %tmp.99;
+        %tmp.101 = lgetv %n;
+        symbol [ n %tmp.101 64 43 44 ];
+        %tmp.102 = mul %tmp.100 %tmp.101;
+        %tmp.103 = lgetv %c.11;
+        symbol [ c %tmp.103 64 45 46 ];
+        %tmp.104 = add %tmp.102 %tmp.103;
+        %tmp.105 = agetv %tmp.97 %tmp.104;
+        %tmp.106 = 0;
+        %tmp.107 = eq %tmp.105 %tmp.106;
+        push %tmp.107;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_64_29_64_53_end:
+        %tmp.108 = phi [%tmp.96 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_64_16_64_53_begin] [%tmp.107 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_64_29_64_53_true] [%tmp.108 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_64_29_64_53_end];
+        bf %tmp.108 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_64_12_64_79_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_64_12_64_79_if_true:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_64_56_64_79_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 64 58 ]
+        %tmp.109 = lgetv %ndirs.8;
+        symbol [ ndirs %tmp.109 64 58 63 ];
+        %tmp.110 = 1;
+        %tmp.111 = lgetv %nd.12;
+        symbol [ nd %tmp.111 64 64 66 ];
+        aputv %tmp.109 %tmp.111 %tmp.110;
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 64 73 ]
+        %tmp.114 = lgetv %nd.12;
+        symbol [ nd %tmp.114 64 73 75 ];
+        %tmp.115 = add %tmp.114 1;
+        lputv %nd.12 %tmp.115;
+        symbol [ nd %nd.12 64 73 75 ];
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_64_56_64_79_stop:
+        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_64_12_64_79_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_64_12_64_79_if_end:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 65 12 ]
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_65_12_65_79_if_stmt:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_65_16_65_53_begin:
+        %tmp.116 = lgetv %c.11;
+        symbol [ c %tmp.116 65 16 17 ];
+        %tmp.117 = lgetv %n;
+        symbol [ n %tmp.117 65 20 21 ];
+        %tmp.118 = 1;
+        %tmp.119 = sub %tmp.117 %tmp.118;
+        %tmp.120 = lt %tmp.116 %tmp.119;
+        bf %tmp.120 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_65_12_65_79_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_65_29_65_53_true:
+        %tmp.121 = lgetv %visited.4;
+        symbol [ visited %tmp.121 65 29 36 ];
+        %tmp.122 = lgetv %r.10;
+        symbol [ r %tmp.122 65 37 38 ];
+        %tmp.123 = lgetv %n;
+        symbol [ n %tmp.123 65 39 40 ];
+        %tmp.124 = mul %tmp.122 %tmp.123;
+        %tmp.125 = lgetv %c.11;
+        symbol [ c %tmp.125 65 42 43 ];
+        %tmp.126 = 1;
+        %tmp.127 = add %tmp.125 %tmp.126;
+        %tmp.128 = add %tmp.124 %tmp.127;
+        %tmp.129 = agetv %tmp.121 %tmp.128;
+        %tmp.130 = 0;
+        %tmp.131 = eq %tmp.129 %tmp.130;
+        push %tmp.131;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_65_29_65_53_end:
+        %tmp.132 = phi [%tmp.120 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_65_16_65_53_begin] [%tmp.131 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_65_29_65_53_true] [%tmp.132 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_65_29_65_53_end];
+        bf %tmp.132 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_65_12_65_79_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_65_12_65_79_if_true:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_65_56_65_79_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 65 58 ]
+        %tmp.133 = lgetv %ndirs.8;
+        symbol [ ndirs %tmp.133 65 58 63 ];
+        %tmp.134 = 2;
+        %tmp.135 = lgetv %nd.12;
+        symbol [ nd %tmp.135 65 64 66 ];
+        aputv %tmp.133 %tmp.135 %tmp.134;
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 65 73 ]
+        %tmp.138 = lgetv %nd.12;
+        symbol [ nd %tmp.138 65 73 75 ];
+        %tmp.139 = add %tmp.138 1;
+        lputv %nd.12 %tmp.139;
+        symbol [ nd %nd.12 65 73 75 ];
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_65_56_65_79_stop:
+        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_65_12_65_79_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_65_12_65_79_if_end:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 66 12 ]
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_66_12_66_79_if_stmt:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_66_16_66_53_begin:
+        %tmp.140 = lgetv %c.11;
+        symbol [ c %tmp.140 66 16 17 ];
+        %tmp.141 = 0;
+        %tmp.142 = gt %tmp.140 %tmp.141;
+        bf %tmp.142 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_66_12_66_79_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_66_29_66_53_true:
+        %tmp.143 = lgetv %visited.4;
+        symbol [ visited %tmp.143 66 29 36 ];
+        %tmp.144 = lgetv %r.10;
+        symbol [ r %tmp.144 66 37 38 ];
+        %tmp.145 = lgetv %n;
+        symbol [ n %tmp.145 66 39 40 ];
+        %tmp.146 = mul %tmp.144 %tmp.145;
+        %tmp.147 = lgetv %c.11;
+        symbol [ c %tmp.147 66 42 43 ];
+        %tmp.148 = 1;
+        %tmp.149 = sub %tmp.147 %tmp.148;
+        %tmp.150 = add %tmp.146 %tmp.149;
+        %tmp.151 = agetv %tmp.143 %tmp.150;
+        %tmp.152 = 0;
+        %tmp.153 = eq %tmp.151 %tmp.152;
+        push %tmp.153;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_66_29_66_53_end:
+        %tmp.154 = phi [%tmp.142 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_66_16_66_53_begin] [%tmp.153 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_66_29_66_53_true] [%tmp.154 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_66_29_66_53_end];
+        bf %tmp.154 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_66_12_66_79_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_66_12_66_79_if_true:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_66_56_66_79_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 66 58 ]
+        %tmp.155 = lgetv %ndirs.8;
+        symbol [ ndirs %tmp.155 66 58 63 ];
+        %tmp.156 = 3;
+        %tmp.157 = lgetv %nd.12;
+        symbol [ nd %tmp.157 66 64 66 ];
+        aputv %tmp.155 %tmp.157 %tmp.156;
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 66 73 ]
+        %tmp.160 = lgetv %nd.12;
+        symbol [ nd %tmp.160 66 73 75 ];
+        %tmp.161 = add %tmp.160 1;
+        lputv %nd.12 %tmp.161;
+        symbol [ nd %nd.12 66 73 75 ];
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_66_56_66_79_stop:
+        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_66_12_66_79_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_66_12_66_79_if_end:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 68 12 ]
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_68_12_68_49_if_stmt:
+        %tmp.162 = lgetv %nd.12;
+        symbol [ nd %tmp.162 68 16 18 ];
+        %tmp.163 = 0;
+        %tmp.164 = eq %tmp.162 %tmp.163;
+        bf %tmp.164 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_68_12_68_49_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_68_12_68_49_if_true:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_68_25_68_49_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 68 27 ]
+        %tmp.167 = lgetv %stackTop.7;
+        symbol [ stackTop %tmp.167 68 27 35 ];
+        %tmp.168 = sub %tmp.167 1;
+        lputv %stackTop.7 %tmp.168;
+        symbol [ stackTop %stackTop.7 68 27 35 ];
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 68 39 ]
+        goto break @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_57_8_86_8_while_test;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_68_25_68_49_stop:
+        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_68_12_68_49_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_68_12_68_49_if_end:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 70 12 ]
+        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_57_29_86_8_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_57_29_86_8_stop" ]
+        %dir.13 = local;
+        symbol [ dir %dir.13 70 16 19 ];
+        %tmp.169 = lgetv %ndirs.8;
+        symbol [ ndirs %tmp.169 70 22 27 ];
+        %tmp.170 = self;
+        symbol [ _rand %tmp.171 70 28 33 ];
+        %tmp.171 = getv function %tmp.170 :_rand;
+        %tmp.172 = lgetv %nd.12;
+        symbol [ nd %tmp.172 70 34 36 ];
+        %tmp.173 = invoke %tmp.170 %tmp.171(%tmp.172);
+        %tmp.174 = agetv %tmp.169 %tmp.173;
+        lputv %dir.13 %tmp.174;
+        symbol [ dir %dir.13 70 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 71 12 ]
+        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_57_29_86_8_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_57_29_86_8_stop" ]
+        %nr.14 = local;
+        symbol [ nr %nr.14 71 16 18 ];
+        %tmp.175 = lgetv %r.10;
+        symbol [ r %tmp.175 71 22 23 ];
+        lputv %nr.14 %tmp.175;
+        symbol [ nr %nr.14 71 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 71 25 ]
+        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_57_29_86_8_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_57_29_86_8_stop" ]
+        %nc.15 = local;
+        symbol [ nc %nc.15 71 29 31 ];
+        %tmp.176 = lgetv %c.11;
+        symbol [ c %tmp.176 71 34 35 ];
+        lputv %nc.15 %tmp.176;
+        symbol [ nc %nc.15 71 29 31 ];
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 72 12 ]
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_72_12_75_45_if_stmt:
+        %tmp.177 = lgetv %dir.13;
+        symbol [ dir %tmp.177 72 21 24 ];
+        %tmp.178 = 0;
+        %tmp.179 = eq %tmp.177 %tmp.178;
+        bf %tmp.179 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_72_12_75_45_if_false;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_72_12_75_45_if_true:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_72_31_72_45_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 72 33 ]
+        %tmp.180 = lgetv %r.10;
+        symbol [ r %tmp.180 72 38 39 ];
+        %tmp.181 = 1;
+        %tmp.182 = sub %tmp.180 %tmp.181;
+        lputv %nr.14 %tmp.182;
+        symbol [ nr %nr.14 72 33 35 ];
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_72_31_72_45_stop:
+        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_72_12_75_45_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_72_12_75_45_if_false:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 73 17 ]
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_73_17_75_45_if_stmt:
+        %tmp.183 = lgetv %dir.13;
+        symbol [ dir %tmp.183 73 21 24 ];
+        %tmp.184 = 1;
+        %tmp.185 = eq %tmp.183 %tmp.184;
+        bf %tmp.185 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_73_17_75_45_if_false;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_73_17_75_45_if_true:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_73_31_73_45_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 73 33 ]
+        %tmp.186 = lgetv %r.10;
+        symbol [ r %tmp.186 73 38 39 ];
+        %tmp.187 = 1;
+        %tmp.188 = add %tmp.186 %tmp.187;
+        lputv %nr.14 %tmp.188;
+        symbol [ nr %nr.14 73 33 35 ];
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_73_31_73_45_stop:
+        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_73_17_75_45_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_73_17_75_45_if_false:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 74 17 ]
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_74_17_75_45_if_stmt:
+        %tmp.189 = lgetv %dir.13;
+        symbol [ dir %tmp.189 74 21 24 ];
+        %tmp.190 = 2;
+        %tmp.191 = eq %tmp.189 %tmp.190;
+        bf %tmp.191 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_74_17_75_45_if_else_false;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_74_17_75_45_if_true:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_74_31_74_45_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 74 33 ]
+        %tmp.192 = lgetv %c.11;
+        symbol [ c %tmp.192 74 38 39 ];
+        %tmp.193 = 1;
+        %tmp.194 = add %tmp.192 %tmp.193;
+        lputv %nc.15 %tmp.194;
+        symbol [ nc %nc.15 74 33 35 ];
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_74_31_74_45_stop:
+        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_74_17_75_45_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_74_17_75_45_if_else_false:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_75_31_75_45_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 75 33 ]
+        %tmp.195 = lgetv %c.11;
+        symbol [ c %tmp.195 75 38 39 ];
+        %tmp.196 = 1;
+        %tmp.197 = sub %tmp.195 %tmp.196;
+        lputv %nc.15 %tmp.197;
+        symbol [ nc %nc.15 75 33 35 ];
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_75_31_75_45_stop:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_74_17_75_45_if_end:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_73_17_75_45_if_end:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_72_12_75_45_if_end:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 78 12 ]
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_78_12_81_89_if_stmt:
+        %tmp.198 = lgetv %dir.13;
+        symbol [ dir %tmp.198 78 16 19 ];
+        %tmp.199 = 0;
+        %tmp.200 = eq %tmp.198 %tmp.199;
+        bf %tmp.200 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_78_12_81_89_if_false;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_78_12_81_89_if_true:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_78_26_78_84_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 78 28 ]
+        %tmp.201 = lgetv %walls.2;
+        symbol [ walls %tmp.201 78 28 33 ];
+        %tmp.202 = lgetv %walls.2;
+        symbol [ walls %tmp.202 78 28 33 ];
+        %tmp.203 = lgetv %cur.9;
+        symbol [ cur %tmp.203 78 34 37 ];
+        %tmp.204 = agetv %tmp.202 %tmp.203;
+        symbol [ GM_WALL_N %tmp.206 78 43 52 ];
+        %tmp.206 = getv ? :GM_WALL_N;
+        %tmp.207 = compl %tmp.206;
+        %tmp.208 = bitand %tmp.204 %tmp.207;
+        %tmp.209 = lgetv %cur.9;
+        symbol [ cur %tmp.209 78 34 37 ];
+        aputv %tmp.201 %tmp.209 dup %tmp.208;
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 78 54 ]
+        %tmp.210 = lgetv %walls.2;
+        symbol [ walls %tmp.210 78 54 59 ];
+        %tmp.211 = lgetv %walls.2;
+        symbol [ walls %tmp.211 78 54 59 ];
+        %tmp.212 = lgetv %nr.14;
+        symbol [ nr %tmp.212 78 60 62 ];
+        %tmp.213 = lgetv %n;
+        symbol [ n %tmp.213 78 63 64 ];
+        %tmp.214 = mul %tmp.212 %tmp.213;
+        %tmp.215 = lgetv %nc.15;
+        symbol [ nc %tmp.215 78 65 67 ];
+        %tmp.216 = add %tmp.214 %tmp.215;
+        %tmp.217 = agetv %tmp.211 %tmp.216;
+        symbol [ GM_WALL_S %tmp.219 78 73 82 ];
+        %tmp.219 = getv ? :GM_WALL_S;
+        %tmp.220 = compl %tmp.219;
+        %tmp.221 = bitand %tmp.217 %tmp.220;
+        %tmp.222 = lgetv %nr.14;
+        symbol [ nr %tmp.222 78 60 62 ];
+        %tmp.223 = lgetv %n;
+        symbol [ n %tmp.223 78 63 64 ];
+        %tmp.224 = mul %tmp.222 %tmp.223;
+        %tmp.225 = lgetv %nc.15;
+        symbol [ nc %tmp.225 78 65 67 ];
+        %tmp.226 = add %tmp.224 %tmp.225;
+        aputv %tmp.210 %tmp.226 dup %tmp.221;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_78_26_78_84_stop:
+        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_78_12_81_89_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_78_12_81_89_if_false:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 79 17 ]
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_79_17_81_89_if_stmt:
+        %tmp.227 = lgetv %dir.13;
+        symbol [ dir %tmp.227 79 21 24 ];
+        %tmp.228 = 1;
+        %tmp.229 = eq %tmp.227 %tmp.228;
+        bf %tmp.229 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_79_17_81_89_if_false;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_79_17_81_89_if_true:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_79_31_79_89_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 79 33 ]
+        %tmp.230 = lgetv %walls.2;
+        symbol [ walls %tmp.230 79 33 38 ];
+        %tmp.231 = lgetv %walls.2;
+        symbol [ walls %tmp.231 79 33 38 ];
+        %tmp.232 = lgetv %cur.9;
+        symbol [ cur %tmp.232 79 39 42 ];
+        %tmp.233 = agetv %tmp.231 %tmp.232;
+        symbol [ GM_WALL_S %tmp.235 79 48 57 ];
+        %tmp.235 = getv ? :GM_WALL_S;
+        %tmp.236 = compl %tmp.235;
+        %tmp.237 = bitand %tmp.233 %tmp.236;
+        %tmp.238 = lgetv %cur.9;
+        symbol [ cur %tmp.238 79 39 42 ];
+        aputv %tmp.230 %tmp.238 dup %tmp.237;
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 79 59 ]
+        %tmp.239 = lgetv %walls.2;
+        symbol [ walls %tmp.239 79 59 64 ];
+        %tmp.240 = lgetv %walls.2;
+        symbol [ walls %tmp.240 79 59 64 ];
+        %tmp.241 = lgetv %nr.14;
+        symbol [ nr %tmp.241 79 65 67 ];
+        %tmp.242 = lgetv %n;
+        symbol [ n %tmp.242 79 68 69 ];
+        %tmp.243 = mul %tmp.241 %tmp.242;
+        %tmp.244 = lgetv %nc.15;
+        symbol [ nc %tmp.244 79 70 72 ];
+        %tmp.245 = add %tmp.243 %tmp.244;
+        %tmp.246 = agetv %tmp.240 %tmp.245;
+        symbol [ GM_WALL_N %tmp.248 79 78 87 ];
+        %tmp.248 = getv ? :GM_WALL_N;
+        %tmp.249 = compl %tmp.248;
+        %tmp.250 = bitand %tmp.246 %tmp.249;
+        %tmp.251 = lgetv %nr.14;
+        symbol [ nr %tmp.251 79 65 67 ];
+        %tmp.252 = lgetv %n;
+        symbol [ n %tmp.252 79 68 69 ];
+        %tmp.253 = mul %tmp.251 %tmp.252;
+        %tmp.254 = lgetv %nc.15;
+        symbol [ nc %tmp.254 79 70 72 ];
+        %tmp.255 = add %tmp.253 %tmp.254;
+        aputv %tmp.239 %tmp.255 dup %tmp.250;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_79_31_79_89_stop:
+        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_79_17_81_89_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_79_17_81_89_if_false:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 80 17 ]
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_80_17_81_89_if_stmt:
+        %tmp.256 = lgetv %dir.13;
+        symbol [ dir %tmp.256 80 21 24 ];
+        %tmp.257 = 2;
+        %tmp.258 = eq %tmp.256 %tmp.257;
+        bf %tmp.258 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_80_17_81_89_if_else_false;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_80_17_81_89_if_true:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_80_31_80_89_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 80 33 ]
+        %tmp.259 = lgetv %walls.2;
+        symbol [ walls %tmp.259 80 33 38 ];
+        %tmp.260 = lgetv %walls.2;
+        symbol [ walls %tmp.260 80 33 38 ];
+        %tmp.261 = lgetv %cur.9;
+        symbol [ cur %tmp.261 80 39 42 ];
+        %tmp.262 = agetv %tmp.260 %tmp.261;
+        symbol [ GM_WALL_E %tmp.264 80 48 57 ];
+        %tmp.264 = getv ? :GM_WALL_E;
+        %tmp.265 = compl %tmp.264;
+        %tmp.266 = bitand %tmp.262 %tmp.265;
+        %tmp.267 = lgetv %cur.9;
+        symbol [ cur %tmp.267 80 39 42 ];
+        aputv %tmp.259 %tmp.267 dup %tmp.266;
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 80 59 ]
+        %tmp.268 = lgetv %walls.2;
+        symbol [ walls %tmp.268 80 59 64 ];
+        %tmp.269 = lgetv %walls.2;
+        symbol [ walls %tmp.269 80 59 64 ];
+        %tmp.270 = lgetv %nr.14;
+        symbol [ nr %tmp.270 80 65 67 ];
+        %tmp.271 = lgetv %n;
+        symbol [ n %tmp.271 80 68 69 ];
+        %tmp.272 = mul %tmp.270 %tmp.271;
+        %tmp.273 = lgetv %nc.15;
+        symbol [ nc %tmp.273 80 70 72 ];
+        %tmp.274 = add %tmp.272 %tmp.273;
+        %tmp.275 = agetv %tmp.269 %tmp.274;
+        symbol [ GM_WALL_W %tmp.277 80 78 87 ];
+        %tmp.277 = getv ? :GM_WALL_W;
+        %tmp.278 = compl %tmp.277;
+        %tmp.279 = bitand %tmp.275 %tmp.278;
+        %tmp.280 = lgetv %nr.14;
+        symbol [ nr %tmp.280 80 65 67 ];
+        %tmp.281 = lgetv %n;
+        symbol [ n %tmp.281 80 68 69 ];
+        %tmp.282 = mul %tmp.280 %tmp.281;
+        %tmp.283 = lgetv %nc.15;
+        symbol [ nc %tmp.283 80 70 72 ];
+        %tmp.284 = add %tmp.282 %tmp.283;
+        aputv %tmp.268 %tmp.284 dup %tmp.279;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_80_31_80_89_stop:
+        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_80_17_81_89_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_80_17_81_89_if_else_false:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_81_31_81_89_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 81 33 ]
+        %tmp.285 = lgetv %walls.2;
+        symbol [ walls %tmp.285 81 33 38 ];
+        %tmp.286 = lgetv %walls.2;
+        symbol [ walls %tmp.286 81 33 38 ];
+        %tmp.287 = lgetv %cur.9;
+        symbol [ cur %tmp.287 81 39 42 ];
+        %tmp.288 = agetv %tmp.286 %tmp.287;
+        symbol [ GM_WALL_W %tmp.290 81 48 57 ];
+        %tmp.290 = getv ? :GM_WALL_W;
+        %tmp.291 = compl %tmp.290;
+        %tmp.292 = bitand %tmp.288 %tmp.291;
+        %tmp.293 = lgetv %cur.9;
+        symbol [ cur %tmp.293 81 39 42 ];
+        aputv %tmp.285 %tmp.293 dup %tmp.292;
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 81 59 ]
+        %tmp.294 = lgetv %walls.2;
+        symbol [ walls %tmp.294 81 59 64 ];
+        %tmp.295 = lgetv %walls.2;
+        symbol [ walls %tmp.295 81 59 64 ];
+        %tmp.296 = lgetv %nr.14;
+        symbol [ nr %tmp.296 81 65 67 ];
+        %tmp.297 = lgetv %n;
+        symbol [ n %tmp.297 81 68 69 ];
+        %tmp.298 = mul %tmp.296 %tmp.297;
+        %tmp.299 = lgetv %nc.15;
+        symbol [ nc %tmp.299 81 70 72 ];
+        %tmp.300 = add %tmp.298 %tmp.299;
+        %tmp.301 = agetv %tmp.295 %tmp.300;
+        symbol [ GM_WALL_E %tmp.303 81 78 87 ];
+        %tmp.303 = getv ? :GM_WALL_E;
+        %tmp.304 = compl %tmp.303;
+        %tmp.305 = bitand %tmp.301 %tmp.304;
+        %tmp.306 = lgetv %nr.14;
+        symbol [ nr %tmp.306 81 65 67 ];
+        %tmp.307 = lgetv %n;
+        symbol [ n %tmp.307 81 68 69 ];
+        %tmp.308 = mul %tmp.306 %tmp.307;
+        %tmp.309 = lgetv %nc.15;
+        symbol [ nc %tmp.309 81 70 72 ];
+        %tmp.310 = add %tmp.308 %tmp.309;
+        aputv %tmp.294 %tmp.310 dup %tmp.305;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_81_31_81_89_stop:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_80_17_81_89_if_end:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_79_17_81_89_if_end:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_78_12_81_89_if_end:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 83 12 ]
+        %tmp.311 = lgetv %visited.4;
+        symbol [ visited %tmp.311 83 12 19 ];
+        %tmp.312 = 1;
+        %tmp.313 = lgetv %nr.14;
+        symbol [ nr %tmp.313 83 20 22 ];
+        %tmp.314 = lgetv %n;
+        symbol [ n %tmp.314 83 23 24 ];
+        %tmp.315 = mul %tmp.313 %tmp.314;
+        %tmp.316 = lgetv %nc.15;
+        symbol [ nc %tmp.316 83 25 27 ];
+        %tmp.317 = add %tmp.315 %tmp.316;
+        aputv %tmp.311 %tmp.317 %tmp.312;
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 84 12 ]
+        %tmp.318 = lgetv %stack.5;
+        symbol [ stack %tmp.318 84 12 17 ];
+        %tmp.319 = lgetv %nr.14;
+        symbol [ nr %tmp.319 84 33 35 ];
+        %tmp.320 = lgetv %n;
+        symbol [ n %tmp.320 84 36 37 ];
+        %tmp.321 = mul %tmp.319 %tmp.320;
+        %tmp.322 = lgetv %nc.15;
+        symbol [ nc %tmp.322 84 38 40 ];
+        %tmp.323 = add %tmp.321 %tmp.322;
+        %tmp.324 = lgetv %stackTop.7;
+        symbol [ stackTop %tmp.324 84 18 26 ];
+        aputv %tmp.318 %tmp.324 %tmp.323;
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 85 12 ]
+        %tmp.327 = lgetv %stackTop.7;
+        symbol [ stackTop %tmp.327 85 12 20 ];
+        %tmp.328 = add %tmp.327 1;
+        lputv %stackTop.7 %tmp.328;
+        symbol [ stackTop %stackTop.7 85 12 20 ];
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_57_29_86_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_57_8_86_8_while_test;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_57_8_86_8_while_end:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 89 8 ]
+        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_36_38_95_4_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_36_38_95_4_stop" ]
+        %exitCell.16 = local;
+        symbol [ exitCell %exitCell.16 89 12 20 ];
+        %tmp.329 = self;
+        symbol [ _findExit %tmp.330 89 23 32 ];
+        %tmp.330 = getv function %tmp.329 :_findExit;
+        %tmp.331 = lgetv %walls.2;
+        symbol [ walls %tmp.331 89 33 38 ];
+        %tmp.332 = lgetv %n;
+        symbol [ n %tmp.332 89 40 41 ];
+        %tmp.333 = lgetv %sz.1;
+        symbol [ sz %tmp.333 89 43 45 ];
+        %tmp.334 = invoke %tmp.329 %tmp.330(%tmp.331, %tmp.332, %tmp.333);
+        lputv %exitCell.16 %tmp.334;
+        symbol [ exitCell %exitCell.16 89 12 20 ];
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 92 8 ]
+        %tmp.335 = self;
+        symbol [ _applyBiome %tmp.336 92 8 19 ];
+        %tmp.336 = getv function %tmp.335 :_applyBiome;
+        %tmp.337 = lgetv %walls.2;
+        symbol [ walls %tmp.337 92 20 25 ];
+        %tmp.338 = lgetv %extras.3;
+        symbol [ extras %tmp.338 92 27 33 ];
+        %tmp.339 = lgetv %n;
+        symbol [ n %tmp.339 92 35 36 ];
+        %tmp.340 = lgetv %biome;
+        symbol [ biome %tmp.340 92 38 43 ];
+        %tmp.341 = lgetv %exitCell.16;
+        symbol [ exitCell %tmp.341 92 45 53 ];
+        %tmp.342 = lgetv %sz.1;
+        symbol [ sz %tmp.342 92 55 57 ];
+        invoke %tmp.335 %tmp.336(%tmp.337, %tmp.338, %tmp.339, %tmp.340, %tmp.341, %tmp.342);
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 94 8 ]
+        %tmp.343 = newa 3;
+        %tmp.344 = lgetv %walls.2;
+        symbol [ walls %tmp.344 94 16 21 ];
+        %tmp.345 = dup %tmp.343;
+        %tmp.346 = aputv %tmp.345 0 %tmp.344;
+        %tmp.347 = lgetv %extras.3;
+        symbol [ extras %tmp.347 94 23 29 ];
+        %tmp.348 = dup %tmp.346;
+        %tmp.349 = aputv %tmp.348 1 %tmp.347;
+        %tmp.350 = lgetv %exitCell.16;
+        symbol [ exitCell %tmp.350 94 31 39 ];
+        %tmp.351 = dup %tmp.349;
+        %tmp.352 = aputv %tmp.351 2 %tmp.350;
+        ret %tmp.352;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_36_38_95_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc"; @line = 97; @symbol_functiondef = [_findExit,97,20,29]; @symbol_param<0> = [walls,97,30,35]; @symbol_param<1> = [n,97,37,38]; @symbol_param<2> = [sz,97,40,42]; ]
+    protected
+    function _findExit(walls, n, sz) {
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_97_44_127_4_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 98 8 ]
+        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_97_44_127_4_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_97_44_127_4_stop" ]
+        %dist.1 = local;
+        symbol [ dist %dist.1 98 12 16 ];
+        %tmp.2 = lgetv %sz;
+        symbol [ sz %tmp.2 98 25 27 ];
+        %tmp.1 = newa %tmp.2;
+        lputv %dist.1 %tmp.1;
+        symbol [ dist %dist.1 98 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 99 8 ]
+        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_97_44_127_4_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_97_44_127_4_stop" ]
+        %queue.2 = local;
+        symbol [ queue %queue.2 99 12 17 ];
+        %tmp.4 = lgetv %sz;
+        symbol [ sz %tmp.4 99 25 27 ];
+        %tmp.3 = newa %tmp.4;
+        lputv %queue.2 %tmp.3;
+        symbol [ queue %queue.2 99 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 100 8 ]
+        for @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_100_8_100_53_for_test @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_100_8_100_53_for_incr @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_100_8_100_53_for_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_100_8_100_53_for_init:
+        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_100_8_100_53_for_begin" "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_100_8_100_53_for_end" ]
+        %i.3 = local;
+        symbol [ i %i.3 100 17 18 ];
+        %tmp.5 = 0;
+        lputv %i.3 %tmp.5;
+        symbol [ i %i.3 100 17 18 ];
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_100_8_100_53_for_test:
+        %tmp.6 = lgetv %i.3;
+        symbol [ i %tmp.6 100 24 25 ];
+        %tmp.7 = lgetv %sz;
+        symbol [ sz %tmp.7 100 28 30 ];
+        %tmp.8 = lt %tmp.6 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_100_8_100_53_for_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_100_8_100_53_for_begin:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_100_37_100_53_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 100 39 ]
+        %tmp.9 = lgetv %dist.1;
+        symbol [ dist %tmp.9 100 39 43 ];
+        %tmp.10 = -1;
+        %tmp.11 = lgetv %i.3;
+        symbol [ i %tmp.11 100 44 45 ];
+        aputv %tmp.9 %tmp.11 %tmp.10;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_100_37_100_53_stop:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_100_8_100_53_for_incr:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 100 ]
+        %tmp.14 = lgetv %i.3;
+        symbol [ i %tmp.14 100 32 33 ];
+        %tmp.15 = add %tmp.14 1;
+        lputv %i.3 %tmp.15;
+        symbol [ i %i.3 100 32 33 ];
+        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_100_8_100_53_for_test;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_100_8_100_53_for_end:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 101 8 ]
+        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_97_44_127_4_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_97_44_127_4_stop" ]
+        %qH.4 = local;
+        symbol [ qH %qH.4 101 12 14 ];
+        %tmp.16 = 0;
+        lputv %qH.4 %tmp.16;
+        symbol [ qH %qH.4 101 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 101 20 ]
+        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_97_44_127_4_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_97_44_127_4_stop" ]
+        %qT.5 = local;
+        symbol [ qT %qT.5 101 24 26 ];
+        %tmp.17 = 0;
+        lputv %qT.5 %tmp.17;
+        symbol [ qT %qT.5 101 24 26 ];
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 102 8 ]
+        %tmp.18 = lgetv %queue.2;
+        symbol [ queue %tmp.18 102 8 13 ];
+        %tmp.19 = 0;
+        %tmp.20 = lgetv %qT.5;
+        symbol [ qT %tmp.20 102 14 16 ];
+        aputv %tmp.18 %tmp.20 %tmp.19;
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 102 23 ]
+        %tmp.23 = lgetv %qT.5;
+        symbol [ qT %tmp.23 102 23 25 ];
+        %tmp.24 = add %tmp.23 1;
+        lputv %qT.5 %tmp.24;
+        symbol [ qT %qT.5 102 23 25 ];
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 103 8 ]
+        %tmp.25 = lgetv %dist.1;
+        symbol [ dist %tmp.25 103 8 12 ];
+        %tmp.26 = 0;
+        %tmp.27 = 0;
+        aputv %tmp.25 %tmp.27 %tmp.26;
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 104 8 ]
+        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_97_44_127_4_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_97_44_127_4_stop" ]
+        %best.6 = local;
+        symbol [ best %best.6 104 12 16 ];
+        %tmp.28 = 0;
+        lputv %best.6 %tmp.28;
+        symbol [ best %best.6 104 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 104 23 ]
+        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_97_44_127_4_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_97_44_127_4_stop" ]
+        %exitCell.7 = local;
+        symbol [ exitCell %exitCell.7 104 27 35 ];
+        %tmp.29 = lgetv %sz;
+        symbol [ sz %tmp.29 104 38 40 ];
+        %tmp.30 = 1;
+        %tmp.31 = sub %tmp.29 %tmp.30;
+        lputv %exitCell.7 %tmp.31;
+        symbol [ exitCell %exitCell.7 104 27 35 ];
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 106 8 ]
+        while @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_106_8_125_8_while_test @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_106_8_125_8_while_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_106_8_125_8_while_test:
+        %tmp.32 = lgetv %qH.4;
+        symbol [ qH %tmp.32 106 15 17 ];
+        %tmp.33 = lgetv %qT.5;
+        symbol [ qT %tmp.33 106 20 22 ];
+        %tmp.34 = lt %tmp.32 %tmp.33;
+        bf %tmp.34 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_106_8_125_8_while_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_106_8_125_8_while_begin:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_106_24_125_8_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 107 12 ]
+        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_106_24_125_8_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_106_24_125_8_stop" ]
+        %cur.8 = local;
+        symbol [ cur %cur.8 107 16 19 ];
+        %tmp.35 = lgetv %queue.2;
+        symbol [ queue %tmp.35 107 22 27 ];
+        %tmp.36 = lgetv %qH.4;
+        symbol [ qH %tmp.36 107 28 30 ];
+        %tmp.37 = agetv %tmp.35 %tmp.36;
+        lputv %cur.8 %tmp.37;
+        symbol [ cur %cur.8 107 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 107 33 ]
+        %tmp.40 = lgetv %qH.4;
+        symbol [ qH %tmp.40 107 33 35 ];
+        %tmp.41 = add %tmp.40 1;
+        lputv %qH.4 %tmp.41;
+        symbol [ qH %qH.4 107 33 35 ];
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 108 12 ]
+        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_106_24_125_8_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_106_24_125_8_stop" ]
+        %r.9 = local;
+        symbol [ r %r.9 108 16 17 ];
+        %tmp.42 = lgetv %cur.8;
+        symbol [ cur %tmp.42 108 22 25 ];
+        %tmp.43 = lgetv %n;
+        symbol [ n %tmp.43 108 28 29 ];
+        %tmp.44 = div %tmp.42 %tmp.43;
+        lputv %r.9 %tmp.44;
+        symbol [ r %r.9 108 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 109 12 ]
+        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_106_24_125_8_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_106_24_125_8_stop" ]
+        %c.10 = local;
+        symbol [ c %c.10 109 16 17 ];
+        %tmp.45 = lgetv %cur.8;
+        symbol [ cur %tmp.45 109 22 25 ];
+        %tmp.46 = lgetv %n;
+        symbol [ n %tmp.46 109 28 29 ];
+        %tmp.47 = mod %tmp.45 %tmp.46;
+        lputv %c.10 %tmp.47;
+        symbol [ c %c.10 109 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 110 12 ]
+        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_106_24_125_8_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_106_24_125_8_stop" ]
+        %d.11 = local;
+        symbol [ d %d.11 110 16 17 ];
+        %tmp.48 = lgetv %dist.1;
+        symbol [ dist %tmp.48 110 22 26 ];
+        %tmp.49 = lgetv %cur.8;
+        symbol [ cur %tmp.49 110 27 30 ];
+        %tmp.50 = agetv %tmp.48 %tmp.49;
+        lputv %d.11 %tmp.50;
+        symbol [ d %d.11 110 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 111 12 ]
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_111_12_111_54_if_stmt:
+        %tmp.51 = lgetv %d.11;
+        symbol [ d %tmp.51 111 16 17 ];
+        %tmp.52 = lgetv %best.6;
+        symbol [ best %tmp.52 111 20 24 ];
+        %tmp.53 = gt %tmp.51 %tmp.52;
+        bf %tmp.53 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_111_12_111_54_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_111_12_111_54_if_true:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_111_26_111_54_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 111 28 ]
+        %tmp.54 = lgetv %d.11;
+        symbol [ d %tmp.54 111 35 36 ];
+        lputv %best.6 %tmp.54;
+        symbol [ best %best.6 111 28 32 ];
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 111 38 ]
+        %tmp.55 = lgetv %cur.8;
+        symbol [ cur %tmp.55 111 49 52 ];
+        lputv %exitCell.7 %tmp.55;
+        symbol [ exitCell %exitCell.7 111 38 46 ];
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_111_26_111_54_stop:
+        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_111_12_111_54_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_111_12_111_54_if_end:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 113 12 ]
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_113_12_115_12_if_stmt:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_113_16_113_80_begin:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_113_16_113_57_begin:
+        %tmp.56 = lgetv %r.9;
+        symbol [ r %tmp.56 113 16 17 ];
+        %tmp.57 = 0;
+        %tmp.58 = gt %tmp.56 %tmp.57;
+        bf %tmp.58 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_113_12_115_12_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_113_29_113_57_true:
+        %tmp.59 = lgetv %walls;
+        symbol [ walls %tmp.59 113 30 35 ];
+        %tmp.60 = lgetv %cur.8;
+        symbol [ cur %tmp.60 113 36 39 ];
+        %tmp.61 = agetv %tmp.59 %tmp.60;
+        symbol [ GM_WALL_N %tmp.63 113 43 52 ];
+        %tmp.63 = getv ? :GM_WALL_N;
+        %tmp.64 = bitand %tmp.61 %tmp.63;
+        %tmp.65 = 0;
+        %tmp.66 = eq %tmp.64 %tmp.65;
+        push %tmp.66;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_113_29_113_57_end:
+        %tmp.67 = phi [%tmp.58 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_113_16_113_57_begin] [%tmp.66 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_113_29_113_57_true] [%tmp.67 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_113_29_113_57_end];
+        bf %tmp.67 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_113_12_115_12_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_113_62_113_80_true:
+        %tmp.68 = lgetv %dist.1;
+        symbol [ dist %tmp.68 113 62 66 ];
+        %tmp.69 = lgetv %r.9;
+        symbol [ r %tmp.69 113 68 69 ];
+        %tmp.70 = 1;
+        %tmp.71 = sub %tmp.69 %tmp.70;
+        %tmp.72 = lgetv %n;
+        symbol [ n %tmp.72 113 73 74 ];
+        %tmp.73 = mul %tmp.71 %tmp.72;
+        %tmp.74 = lgetv %c.10;
+        symbol [ c %tmp.74 113 75 76 ];
+        %tmp.75 = add %tmp.73 %tmp.74;
+        %tmp.76 = agetv %tmp.68 %tmp.75;
+        %tmp.77 = 0;
+        %tmp.78 = lt %tmp.76 %tmp.77;
+        push %tmp.78;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_113_62_113_80_end:
+        %tmp.79 = phi [%tmp.67 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_113_16_113_80_begin] [%tmp.78 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_113_62_113_80_true] [%tmp.79 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_113_62_113_80_end];
+        bf %tmp.79 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_113_12_115_12_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_113_12_115_12_if_true:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_113_83_115_12_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 114 16 ]
+        %tmp.80 = lgetv %dist.1;
+        symbol [ dist %tmp.80 114 16 20 ];
+        %tmp.81 = lgetv %d.11;
+        symbol [ d %tmp.81 114 34 35 ];
+        %tmp.82 = 1;
+        %tmp.83 = add %tmp.81 %tmp.82;
+        %tmp.84 = lgetv %r.9;
+        symbol [ r %tmp.84 114 22 23 ];
+        %tmp.85 = 1;
+        %tmp.86 = sub %tmp.84 %tmp.85;
+        %tmp.87 = lgetv %n;
+        symbol [ n %tmp.87 114 27 28 ];
+        %tmp.88 = mul %tmp.86 %tmp.87;
+        %tmp.89 = lgetv %c.10;
+        symbol [ c %tmp.89 114 29 30 ];
+        %tmp.90 = add %tmp.88 %tmp.89;
+        aputv %tmp.80 %tmp.90 %tmp.83;
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 114 39 ]
+        %tmp.91 = lgetv %queue.2;
+        symbol [ queue %tmp.91 114 39 44 ];
+        %tmp.92 = lgetv %r.9;
+        symbol [ r %tmp.92 114 52 53 ];
+        %tmp.93 = 1;
+        %tmp.94 = sub %tmp.92 %tmp.93;
+        %tmp.95 = lgetv %n;
+        symbol [ n %tmp.95 114 57 58 ];
+        %tmp.96 = mul %tmp.94 %tmp.95;
+        %tmp.97 = lgetv %c.10;
+        symbol [ c %tmp.97 114 59 60 ];
+        %tmp.98 = add %tmp.96 %tmp.97;
+        %tmp.99 = lgetv %qT.5;
+        symbol [ qT %tmp.99 114 45 47 ];
+        aputv %tmp.91 %tmp.99 %tmp.98;
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 114 62 ]
+        %tmp.102 = lgetv %qT.5;
+        symbol [ qT %tmp.102 114 62 64 ];
+        %tmp.103 = add %tmp.102 1;
+        lputv %qT.5 %tmp.103;
+        symbol [ qT %qT.5 114 62 64 ];
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_113_83_115_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_113_12_115_12_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_113_12_115_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 116 12 ]
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_116_12_118_12_if_stmt:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_116_16_116_80_begin:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_116_16_116_57_begin:
+        %tmp.104 = lgetv %r.9;
+        symbol [ r %tmp.104 116 16 17 ];
+        %tmp.105 = lgetv %n;
+        symbol [ n %tmp.105 116 20 21 ];
+        %tmp.106 = 1;
+        %tmp.107 = sub %tmp.105 %tmp.106;
+        %tmp.108 = lt %tmp.104 %tmp.107;
+        bf %tmp.108 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_116_12_118_12_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_116_29_116_57_true:
+        %tmp.109 = lgetv %walls;
+        symbol [ walls %tmp.109 116 30 35 ];
+        %tmp.110 = lgetv %cur.8;
+        symbol [ cur %tmp.110 116 36 39 ];
+        %tmp.111 = agetv %tmp.109 %tmp.110;
+        symbol [ GM_WALL_S %tmp.113 116 43 52 ];
+        %tmp.113 = getv ? :GM_WALL_S;
+        %tmp.114 = bitand %tmp.111 %tmp.113;
+        %tmp.115 = 0;
+        %tmp.116 = eq %tmp.114 %tmp.115;
+        push %tmp.116;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_116_29_116_57_end:
+        %tmp.117 = phi [%tmp.108 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_116_16_116_57_begin] [%tmp.116 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_116_29_116_57_true] [%tmp.117 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_116_29_116_57_end];
+        bf %tmp.117 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_116_12_118_12_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_116_62_116_80_true:
+        %tmp.118 = lgetv %dist.1;
+        symbol [ dist %tmp.118 116 62 66 ];
+        %tmp.119 = lgetv %r.9;
+        symbol [ r %tmp.119 116 68 69 ];
+        %tmp.120 = 1;
+        %tmp.121 = add %tmp.119 %tmp.120;
+        %tmp.122 = lgetv %n;
+        symbol [ n %tmp.122 116 73 74 ];
+        %tmp.123 = mul %tmp.121 %tmp.122;
+        %tmp.124 = lgetv %c.10;
+        symbol [ c %tmp.124 116 75 76 ];
+        %tmp.125 = add %tmp.123 %tmp.124;
+        %tmp.126 = agetv %tmp.118 %tmp.125;
+        %tmp.127 = 0;
+        %tmp.128 = lt %tmp.126 %tmp.127;
+        push %tmp.128;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_116_62_116_80_end:
+        %tmp.129 = phi [%tmp.117 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_116_16_116_80_begin] [%tmp.128 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_116_62_116_80_true] [%tmp.129 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_116_62_116_80_end];
+        bf %tmp.129 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_116_12_118_12_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_116_12_118_12_if_true:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_116_83_118_12_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 117 16 ]
+        %tmp.130 = lgetv %dist.1;
+        symbol [ dist %tmp.130 117 16 20 ];
+        %tmp.131 = lgetv %d.11;
+        symbol [ d %tmp.131 117 34 35 ];
+        %tmp.132 = 1;
+        %tmp.133 = add %tmp.131 %tmp.132;
+        %tmp.134 = lgetv %r.9;
+        symbol [ r %tmp.134 117 22 23 ];
+        %tmp.135 = 1;
+        %tmp.136 = add %tmp.134 %tmp.135;
+        %tmp.137 = lgetv %n;
+        symbol [ n %tmp.137 117 27 28 ];
+        %tmp.138 = mul %tmp.136 %tmp.137;
+        %tmp.139 = lgetv %c.10;
+        symbol [ c %tmp.139 117 29 30 ];
+        %tmp.140 = add %tmp.138 %tmp.139;
+        aputv %tmp.130 %tmp.140 %tmp.133;
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 117 39 ]
+        %tmp.141 = lgetv %queue.2;
+        symbol [ queue %tmp.141 117 39 44 ];
+        %tmp.142 = lgetv %r.9;
+        symbol [ r %tmp.142 117 52 53 ];
+        %tmp.143 = 1;
+        %tmp.144 = add %tmp.142 %tmp.143;
+        %tmp.145 = lgetv %n;
+        symbol [ n %tmp.145 117 57 58 ];
+        %tmp.146 = mul %tmp.144 %tmp.145;
+        %tmp.147 = lgetv %c.10;
+        symbol [ c %tmp.147 117 59 60 ];
+        %tmp.148 = add %tmp.146 %tmp.147;
+        %tmp.149 = lgetv %qT.5;
+        symbol [ qT %tmp.149 117 45 47 ];
+        aputv %tmp.141 %tmp.149 %tmp.148;
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 117 62 ]
+        %tmp.152 = lgetv %qT.5;
+        symbol [ qT %tmp.152 117 62 64 ];
+        %tmp.153 = add %tmp.152 1;
+        lputv %qT.5 %tmp.153;
+        symbol [ qT %qT.5 117 62 64 ];
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_116_83_118_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_116_12_118_12_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_116_12_118_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 119 12 ]
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_119_12_121_12_if_stmt:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_119_16_119_80_begin:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_119_16_119_57_begin:
+        %tmp.154 = lgetv %c.10;
+        symbol [ c %tmp.154 119 16 17 ];
+        %tmp.155 = lgetv %n;
+        symbol [ n %tmp.155 119 20 21 ];
+        %tmp.156 = 1;
+        %tmp.157 = sub %tmp.155 %tmp.156;
+        %tmp.158 = lt %tmp.154 %tmp.157;
+        bf %tmp.158 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_119_12_121_12_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_119_29_119_57_true:
+        %tmp.159 = lgetv %walls;
+        symbol [ walls %tmp.159 119 30 35 ];
+        %tmp.160 = lgetv %cur.8;
+        symbol [ cur %tmp.160 119 36 39 ];
+        %tmp.161 = agetv %tmp.159 %tmp.160;
+        symbol [ GM_WALL_E %tmp.163 119 43 52 ];
+        %tmp.163 = getv ? :GM_WALL_E;
+        %tmp.164 = bitand %tmp.161 %tmp.163;
+        %tmp.165 = 0;
+        %tmp.166 = eq %tmp.164 %tmp.165;
+        push %tmp.166;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_119_29_119_57_end:
+        %tmp.167 = phi [%tmp.158 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_119_16_119_57_begin] [%tmp.166 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_119_29_119_57_true] [%tmp.167 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_119_29_119_57_end];
+        bf %tmp.167 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_119_12_121_12_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_119_62_119_80_true:
+        %tmp.168 = lgetv %dist.1;
+        symbol [ dist %tmp.168 119 62 66 ];
+        %tmp.169 = lgetv %r.9;
+        symbol [ r %tmp.169 119 67 68 ];
+        %tmp.170 = lgetv %n;
+        symbol [ n %tmp.170 119 69 70 ];
+        %tmp.171 = mul %tmp.169 %tmp.170;
+        %tmp.172 = lgetv %c.10;
+        symbol [ c %tmp.172 119 72 73 ];
+        %tmp.173 = 1;
+        %tmp.174 = add %tmp.172 %tmp.173;
+        %tmp.175 = add %tmp.171 %tmp.174;
+        %tmp.176 = agetv %tmp.168 %tmp.175;
+        %tmp.177 = 0;
+        %tmp.178 = lt %tmp.176 %tmp.177;
+        push %tmp.178;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_119_62_119_80_end:
+        %tmp.179 = phi [%tmp.167 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_119_16_119_80_begin] [%tmp.178 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_119_62_119_80_true] [%tmp.179 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_119_62_119_80_end];
+        bf %tmp.179 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_119_12_121_12_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_119_12_121_12_if_true:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_119_83_121_12_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 120 16 ]
+        %tmp.180 = lgetv %dist.1;
+        symbol [ dist %tmp.180 120 16 20 ];
+        %tmp.181 = lgetv %d.11;
+        symbol [ d %tmp.181 120 34 35 ];
+        %tmp.182 = 1;
+        %tmp.183 = add %tmp.181 %tmp.182;
+        %tmp.184 = lgetv %r.9;
+        symbol [ r %tmp.184 120 21 22 ];
+        %tmp.185 = lgetv %n;
+        symbol [ n %tmp.185 120 23 24 ];
+        %tmp.186 = mul %tmp.184 %tmp.185;
+        %tmp.187 = lgetv %c.10;
+        symbol [ c %tmp.187 120 26 27 ];
+        %tmp.188 = 1;
+        %tmp.189 = add %tmp.187 %tmp.188;
+        %tmp.190 = add %tmp.186 %tmp.189;
+        aputv %tmp.180 %tmp.190 %tmp.183;
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 120 39 ]
+        %tmp.191 = lgetv %queue.2;
+        symbol [ queue %tmp.191 120 39 44 ];
+        %tmp.192 = lgetv %r.9;
+        symbol [ r %tmp.192 120 51 52 ];
+        %tmp.193 = lgetv %n;
+        symbol [ n %tmp.193 120 53 54 ];
+        %tmp.194 = mul %tmp.192 %tmp.193;
+        %tmp.195 = lgetv %c.10;
+        symbol [ c %tmp.195 120 56 57 ];
+        %tmp.196 = 1;
+        %tmp.197 = add %tmp.195 %tmp.196;
+        %tmp.198 = add %tmp.194 %tmp.197;
+        %tmp.199 = lgetv %qT.5;
+        symbol [ qT %tmp.199 120 45 47 ];
+        aputv %tmp.191 %tmp.199 %tmp.198;
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 120 62 ]
+        %tmp.202 = lgetv %qT.5;
+        symbol [ qT %tmp.202 120 62 64 ];
+        %tmp.203 = add %tmp.202 1;
+        lputv %qT.5 %tmp.203;
+        symbol [ qT %qT.5 120 62 64 ];
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_119_83_121_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_119_12_121_12_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_119_12_121_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 122 12 ]
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_122_12_124_12_if_stmt:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_122_16_122_80_begin:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_122_16_122_57_begin:
+        %tmp.204 = lgetv %c.10;
+        symbol [ c %tmp.204 122 16 17 ];
+        %tmp.205 = 0;
+        %tmp.206 = gt %tmp.204 %tmp.205;
+        bf %tmp.206 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_122_12_124_12_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_122_29_122_57_true:
+        %tmp.207 = lgetv %walls;
+        symbol [ walls %tmp.207 122 30 35 ];
+        %tmp.208 = lgetv %cur.8;
+        symbol [ cur %tmp.208 122 36 39 ];
+        %tmp.209 = agetv %tmp.207 %tmp.208;
+        symbol [ GM_WALL_W %tmp.211 122 43 52 ];
+        %tmp.211 = getv ? :GM_WALL_W;
+        %tmp.212 = bitand %tmp.209 %tmp.211;
+        %tmp.213 = 0;
+        %tmp.214 = eq %tmp.212 %tmp.213;
+        push %tmp.214;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_122_29_122_57_end:
+        %tmp.215 = phi [%tmp.206 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_122_16_122_57_begin] [%tmp.214 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_122_29_122_57_true] [%tmp.215 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_122_29_122_57_end];
+        bf %tmp.215 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_122_12_124_12_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_122_62_122_80_true:
+        %tmp.216 = lgetv %dist.1;
+        symbol [ dist %tmp.216 122 62 66 ];
+        %tmp.217 = lgetv %r.9;
+        symbol [ r %tmp.217 122 67 68 ];
+        %tmp.218 = lgetv %n;
+        symbol [ n %tmp.218 122 69 70 ];
+        %tmp.219 = mul %tmp.217 %tmp.218;
+        %tmp.220 = lgetv %c.10;
+        symbol [ c %tmp.220 122 72 73 ];
+        %tmp.221 = 1;
+        %tmp.222 = sub %tmp.220 %tmp.221;
+        %tmp.223 = add %tmp.219 %tmp.222;
+        %tmp.224 = agetv %tmp.216 %tmp.223;
+        %tmp.225 = 0;
+        %tmp.226 = lt %tmp.224 %tmp.225;
+        push %tmp.226;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_122_62_122_80_end:
+        %tmp.227 = phi [%tmp.215 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_122_16_122_80_begin] [%tmp.226 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_122_62_122_80_true] [%tmp.227 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_122_62_122_80_end];
+        bf %tmp.227 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_122_12_124_12_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_122_12_124_12_if_true:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_122_83_124_12_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 123 16 ]
+        %tmp.228 = lgetv %dist.1;
+        symbol [ dist %tmp.228 123 16 20 ];
+        %tmp.229 = lgetv %d.11;
+        symbol [ d %tmp.229 123 34 35 ];
+        %tmp.230 = 1;
+        %tmp.231 = add %tmp.229 %tmp.230;
+        %tmp.232 = lgetv %r.9;
+        symbol [ r %tmp.232 123 21 22 ];
+        %tmp.233 = lgetv %n;
+        symbol [ n %tmp.233 123 23 24 ];
+        %tmp.234 = mul %tmp.232 %tmp.233;
+        %tmp.235 = lgetv %c.10;
+        symbol [ c %tmp.235 123 26 27 ];
+        %tmp.236 = 1;
+        %tmp.237 = sub %tmp.235 %tmp.236;
+        %tmp.238 = add %tmp.234 %tmp.237;
+        aputv %tmp.228 %tmp.238 %tmp.231;
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 123 39 ]
+        %tmp.239 = lgetv %queue.2;
+        symbol [ queue %tmp.239 123 39 44 ];
+        %tmp.240 = lgetv %r.9;
+        symbol [ r %tmp.240 123 51 52 ];
+        %tmp.241 = lgetv %n;
+        symbol [ n %tmp.241 123 53 54 ];
+        %tmp.242 = mul %tmp.240 %tmp.241;
+        %tmp.243 = lgetv %c.10;
+        symbol [ c %tmp.243 123 56 57 ];
+        %tmp.244 = 1;
+        %tmp.245 = sub %tmp.243 %tmp.244;
+        %tmp.246 = add %tmp.242 %tmp.245;
+        %tmp.247 = lgetv %qT.5;
+        symbol [ qT %tmp.247 123 45 47 ];
+        aputv %tmp.239 %tmp.247 %tmp.246;
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 123 62 ]
+        %tmp.250 = lgetv %qT.5;
+        symbol [ qT %tmp.250 123 62 64 ];
+        %tmp.251 = add %tmp.250 1;
+        lputv %qT.5 %tmp.251;
+        symbol [ qT %qT.5 123 62 64 ];
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_122_83_124_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_122_12_124_12_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_122_12_124_12_if_end:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_106_24_125_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_106_8_125_8_while_test;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_106_8_125_8_while_end:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 126 8 ]
+        %tmp.252 = lgetv %exitCell.7;
+        symbol [ exitCell %tmp.252 126 15 23 ];
+        ret %tmp.252;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_97_44_127_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc"; @line = 129; @symbol_functiondef = [_applyBiome,129,20,31]; @symbol_param<0> = [walls,129,32,37]; @symbol_param<1> = [extras,129,39,45]; @symbol_param<2> = [n,129,47,48]; @symbol_param<3> = [biome,129,50,55]; @symbol_param<4> = [exitCell,129,57,65]; @symbol_param<5> = [sz,129,67,69]; ]
+    protected
+    function _applyBiome(walls, extras, n, biome, exitCell, sz) {
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_129_71_152_4_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 131 8 ]
+        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_129_71_152_4_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_129_71_152_4_stop" ]
+        %b.1 = local;
+        symbol [ b %b.1 131 12 13 ];
+        %tmp.1 = lgetv %biome;
+        symbol [ biome %tmp.1 131 16 21 ];
+        lputv %b.1 %tmp.1;
+        symbol [ b %b.1 131 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 132 8 ]
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_132_8_132_43_if_stmt:
+        %tmp.2 = lgetv %b.1;
+        symbol [ b %tmp.2 132 12 13 ];
+        symbol [ GM_BIOME_CHAOS %tmp.4 132 17 31 ];
+        %tmp.4 = getv ? :GM_BIOME_CHAOS;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_132_8_132_43_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_132_8_132_43_if_true:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_132_33_132_43_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 132 35 ]
+        %tmp.6 = -1;
+        lputv %b.1 %tmp.6;
+        symbol [ b %b.1 132 35 36 ];
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_132_33_132_43_stop:
+        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_132_8_132_43_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_132_8_132_43_if_end:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 134 8 ]
+        for @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_134_8_151_8_for_test @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_134_8_151_8_for_incr @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_134_8_151_8_for_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_134_8_151_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_134_8_151_8_for_begin" "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_134_8_151_8_for_end" ]
+        %i.2 = local;
+        symbol [ i %i.2 134 17 18 ];
+        %tmp.7 = 1;
+        lputv %i.2 %tmp.7;
+        symbol [ i %i.2 134 17 18 ];
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_134_8_151_8_for_test:
+        %tmp.8 = lgetv %i.2;
+        symbol [ i %tmp.8 134 24 25 ];
+        %tmp.9 = lgetv %sz;
+        symbol [ sz %tmp.9 134 28 30 ];
+        %tmp.10 = lt %tmp.8 %tmp.9;
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_134_8_151_8_for_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_134_8_151_8_for_begin:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_134_37_151_8_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 135 12 ]
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_135_12_135_43_if_stmt:
+        %tmp.11 = lgetv %i.2;
+        symbol [ i %tmp.11 135 16 17 ];
+        %tmp.12 = lgetv %exitCell;
+        symbol [ exitCell %tmp.12 135 21 29 ];
         %tmp.13 = eq %tmp.11 %tmp.12;
-        bf %tmp.13 @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_109_8_109_41_if_end;
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_109_8_109_41_if_true:
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_109_22_109_41_start:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 109 24 ]
-        %tmp.14 = newa 2;
-        %tmp.15 = 1;
-        %tmp.16 = dup %tmp.14;
-        %tmp.17 = aputv %tmp.16 0 %tmp.15;
-        %tmp.18 = 11;
-        %tmp.19 = dup %tmp.17;
-        %tmp.20 = aputv %tmp.19 1 %tmp.18;
-        ret %tmp.20;
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_109_22_109_41_stop:
-        goto @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_109_8_109_41_if_end;
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_109_8_109_41_if_end:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 110 8 ]
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_110_8_110_41_if_stmt:
-        %tmp.21 = lgetv %idx;
-        symbol [ idx %tmp.21 110 12 15 ];
-        %tmp.22 = 2;
-        %tmp.23 = eq %tmp.21 %tmp.22;
-        bf %tmp.23 @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_110_8_110_41_if_end;
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_110_8_110_41_if_true:
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_110_22_110_41_start:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 110 24 ]
-        %tmp.24 = newa 2;
-        %tmp.25 = 11;
-        %tmp.26 = dup %tmp.24;
-        %tmp.27 = aputv %tmp.26 0 %tmp.25;
-        %tmp.28 = 1;
-        %tmp.29 = dup %tmp.27;
-        %tmp.30 = aputv %tmp.29 1 %tmp.28;
-        ret %tmp.30;
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_110_22_110_41_stop:
-        goto @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_110_8_110_41_if_end;
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_110_8_110_41_if_end:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 111 8 ]
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_111_8_111_41_if_stmt:
-        %tmp.31 = lgetv %idx;
-        symbol [ idx %tmp.31 111 12 15 ];
-        %tmp.32 = 3;
-        %tmp.33 = eq %tmp.31 %tmp.32;
-        bf %tmp.33 @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_111_8_111_41_if_end;
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_111_8_111_41_if_true:
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_111_22_111_41_start:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 111 24 ]
-        %tmp.34 = newa 2;
-        %tmp.35 = 11;
-        %tmp.36 = dup %tmp.34;
-        %tmp.37 = aputv %tmp.36 0 %tmp.35;
-        %tmp.38 = 11;
-        %tmp.39 = dup %tmp.37;
-        %tmp.40 = aputv %tmp.39 1 %tmp.38;
-        ret %tmp.40;
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_111_22_111_41_stop:
-        goto @_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_111_8_111_41_if_end;
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_111_8_111_41_if_end:
-[ "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc" 113 8 ]
-        %tmp.41 = newa 2;
-        %tmp.42 = 6;
-        %tmp.43 = dup %tmp.41;
-        %tmp.44 = aputv %tmp.43 0 %tmp.42;
-        %tmp.45 = 6;
-        %tmp.46 = dup %tmp.44;
-        %tmp.47 = aputv %tmp.46 1 %tmp.45;
-        ret %tmp.47;
-_Users_kkorolczuk_work_garmin_manpac_source_MazeGenerator_mc_107_36_114_4_stop:
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_135_12_135_43_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_135_12_135_43_if_true:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_135_31_135_43_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 135 33 ]
+        goto break @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_134_8_151_8_for_incr;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_135_31_135_43_stop:
+        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_135_12_135_43_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_135_12_135_43_if_end:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 136 12 ]
+        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_134_37_151_8_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_134_37_151_8_stop" ]
+        %wallCnt.3 = local;
+        symbol [ wallCnt %wallCnt.3 136 16 23 ];
+        %tmp.14 = self;
+        symbol [ _wallBits %tmp.15 136 26 35 ];
+        %tmp.15 = getv function %tmp.14 :_wallBits;
+        %tmp.16 = lgetv %walls;
+        symbol [ walls %tmp.16 136 36 41 ];
+        %tmp.17 = lgetv %i.2;
+        symbol [ i %tmp.17 136 42 43 ];
+        %tmp.18 = agetv %tmp.16 %tmp.17;
+        %tmp.19 = invoke %tmp.14 %tmp.15(%tmp.18);
+        lputv %wallCnt.3 %tmp.19;
+        symbol [ wallCnt %wallCnt.3 136 16 23 ];
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 138 12 ]
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_138_12_144_12_if_stmt:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_138_16_138_44_begin:
+        %tmp.20 = lgetv %b.1;
+        symbol [ b %tmp.20 138 16 17 ];
+        symbol [ GM_BIOME_TRAP %tmp.22 138 21 34 ];
+        %tmp.22 = getv ? :GM_BIOME_TRAP;
+        %tmp.23 = eq %tmp.20 %tmp.22;
+        bt %tmp.23 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_138_12_144_12_if_true;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_138_38_138_44_false:
+        %tmp.24 = lgetv %b.1;
+        symbol [ b %tmp.24 138 38 39 ];
+        %tmp.25 = -1;
+        %tmp.26 = eq %tmp.24 %tmp.25;
+        push %tmp.26;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_138_38_138_44_end:
+        %tmp.27 = phi [%tmp.23 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_138_16_138_44_begin] [%tmp.26 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_138_38_138_44_false] [%tmp.27 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_138_38_138_44_end];
+        bf %tmp.27 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_138_12_144_12_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_138_12_144_12_if_true:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_138_47_144_12_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 140 16 ]
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_140_16_143_16_if_stmt:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_140_20_140_48_begin:
+        %tmp.28 = lgetv %wallCnt.3;
+        symbol [ wallCnt %tmp.28 140 20 27 ];
+        %tmp.29 = 3;
+        %tmp.30 = eq %tmp.28 %tmp.29;
+        bf %tmp.30 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_140_16_143_16_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_140_36_140_48_true:
+        %tmp.31 = self;
+        symbol [ _rand %tmp.32 140 36 41 ];
+        %tmp.32 = getv function %tmp.31 :_rand;
+        %tmp.33 = 5;
+        %tmp.34 = invoke %tmp.31 %tmp.32(%tmp.33);
+        %tmp.35 = 0;
+        %tmp.36 = eq %tmp.34 %tmp.35;
+        push %tmp.36;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_140_36_140_48_end:
+        %tmp.37 = phi [%tmp.30 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_140_20_140_48_begin] [%tmp.36 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_140_36_140_48_true] [%tmp.37 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_140_36_140_48_end];
+        bf %tmp.37 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_140_16_143_16_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_140_16_143_16_if_true:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_140_51_143_16_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 141 20 ]
+        %tmp.38 = lgetv %extras;
+        symbol [ extras %tmp.38 141 20 26 ];
+        symbol [ GM_TILE_SPIKE %tmp.40 141 32 45 ];
+        %tmp.40 = getv ? :GM_TILE_SPIKE;
+        %tmp.41 = lgetv %i.2;
+        symbol [ i %tmp.41 141 27 28 ];
+        aputv %tmp.38 %tmp.41 %tmp.40;
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 142 20 ]
+        goto break @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_134_8_151_8_for_incr;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_140_51_143_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_140_16_143_16_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_140_16_143_16_if_end:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_138_47_144_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_138_12_144_12_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_138_12_144_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 145 12 ]
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_145_12_147_12_if_stmt:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_145_16_145_45_begin:
+        %tmp.42 = lgetv %b.1;
+        symbol [ b %tmp.42 145 16 17 ];
+        symbol [ GM_BIOME_SPEED %tmp.44 145 21 35 ];
+        %tmp.44 = getv ? :GM_BIOME_SPEED;
+        %tmp.45 = eq %tmp.42 %tmp.44;
+        bt %tmp.45 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_145_12_147_12_if_true;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_145_39_145_45_false:
+        %tmp.46 = lgetv %b.1;
+        symbol [ b %tmp.46 145 39 40 ];
+        %tmp.47 = -1;
+        %tmp.48 = eq %tmp.46 %tmp.47;
+        push %tmp.48;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_145_39_145_45_end:
+        %tmp.49 = phi [%tmp.45 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_145_16_145_45_begin] [%tmp.48 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_145_39_145_45_false] [%tmp.49 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_145_39_145_45_end];
+        bf %tmp.49 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_145_12_147_12_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_145_12_147_12_if_true:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_145_48_147_12_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 146 16 ]
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_146_16_146_75_if_stmt:
+        %tmp.50 = self;
+        symbol [ _rand %tmp.51 146 20 25 ];
+        %tmp.51 = getv function %tmp.50 :_rand;
+        %tmp.52 = 10;
+        %tmp.53 = invoke %tmp.50 %tmp.51(%tmp.52);
+        %tmp.54 = 0;
+        %tmp.55 = eq %tmp.53 %tmp.54;
+        bf %tmp.55 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_146_16_146_75_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_146_16_146_75_if_true:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_146_36_146_75_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 146 38 ]
+        %tmp.56 = lgetv %extras;
+        symbol [ extras %tmp.56 146 38 44 ];
+        symbol [ GM_TILE_BOOST %tmp.58 146 50 63 ];
+        %tmp.58 = getv ? :GM_TILE_BOOST;
+        %tmp.59 = lgetv %i.2;
+        symbol [ i %tmp.59 146 45 46 ];
+        aputv %tmp.56 %tmp.59 %tmp.58;
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 146 65 ]
+        goto break @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_134_8_151_8_for_incr;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_146_36_146_75_stop:
+        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_146_16_146_75_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_146_16_146_75_if_end:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_145_48_147_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_145_12_147_12_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_145_12_147_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 148 12 ]
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_148_12_150_12_if_stmt:
+        %tmp.60 = lgetv %b.1;
+        symbol [ b %tmp.60 148 16 17 ];
+        symbol [ GM_BIOME_NORMAL %tmp.62 148 21 36 ];
+        %tmp.62 = getv ? :GM_BIOME_NORMAL;
+        %tmp.63 = eq %tmp.60 %tmp.62;
+        bf %tmp.63 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_148_12_150_12_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_148_12_150_12_if_true:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_148_38_150_12_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 149 16 ]
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_149_16_149_63_if_stmt:
+        %tmp.64 = self;
+        symbol [ _rand %tmp.65 149 20 25 ];
+        %tmp.65 = getv function %tmp.64 :_rand;
+        %tmp.66 = 8;
+        %tmp.67 = invoke %tmp.64 %tmp.65(%tmp.66);
+        %tmp.68 = 0;
+        %tmp.69 = eq %tmp.67 %tmp.68;
+        bf %tmp.69 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_149_16_149_63_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_149_16_149_63_if_true:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_149_35_149_63_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 149 37 ]
+        %tmp.70 = lgetv %extras;
+        symbol [ extras %tmp.70 149 37 43 ];
+        symbol [ GM_TILE_SLOW %tmp.72 149 49 61 ];
+        %tmp.72 = getv ? :GM_TILE_SLOW;
+        %tmp.73 = lgetv %i.2;
+        symbol [ i %tmp.73 149 44 45 ];
+        aputv %tmp.70 %tmp.73 %tmp.72;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_149_35_149_63_stop:
+        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_149_16_149_63_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_149_16_149_63_if_end:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_148_38_150_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_148_12_150_12_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_148_12_150_12_if_end:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_134_37_151_8_stop:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_134_8_151_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 134 ]
+        %tmp.76 = lgetv %i.2;
+        symbol [ i %tmp.76 134 32 33 ];
+        %tmp.77 = add %tmp.76 1;
+        lputv %i.2 %tmp.77;
+        symbol [ i %i.2 134 32 33 ];
+        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_134_8_151_8_for_test;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_134_8_151_8_for_end:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_129_71_152_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc"; @line = 154; @symbol_functiondef = [_wallBits,154,20,29]; @symbol_param<0> = [v,154,30,31]; ]
+    protected
+    function _wallBits(v) {
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_154_33_161_4_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 155 8 ]
+        [ "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_154_33_161_4_start" "_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_154_33_161_4_stop" ]
+        %k.1 = local;
+        symbol [ k %k.1 155 12 13 ];
+        %tmp.1 = 0;
+        lputv %k.1 %tmp.1;
+        symbol [ k %k.1 155 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 156 8 ]
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_156_8_156_41_if_stmt:
+        %tmp.2 = lgetv %v;
+        symbol [ v %tmp.2 156 13 14 ];
+        symbol [ GM_WALL_N %tmp.4 156 17 26 ];
+        %tmp.4 = getv ? :GM_WALL_N;
+        %tmp.5 = bitand %tmp.2 %tmp.4;
+        %tmp.6 = 0;
+        %tmp.7 = ne %tmp.5 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_156_8_156_41_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_156_8_156_41_if_true:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_156_34_156_41_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 156 36 ]
+        %tmp.10 = lgetv %k.1;
+        symbol [ k %tmp.10 156 36 37 ];
+        %tmp.11 = add %tmp.10 1;
+        lputv %k.1 %tmp.11;
+        symbol [ k %k.1 156 36 37 ];
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_156_34_156_41_stop:
+        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_156_8_156_41_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_156_8_156_41_if_end:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 157 8 ]
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_157_8_157_41_if_stmt:
+        %tmp.12 = lgetv %v;
+        symbol [ v %tmp.12 157 13 14 ];
+        symbol [ GM_WALL_S %tmp.14 157 17 26 ];
+        %tmp.14 = getv ? :GM_WALL_S;
+        %tmp.15 = bitand %tmp.12 %tmp.14;
+        %tmp.16 = 0;
+        %tmp.17 = ne %tmp.15 %tmp.16;
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_157_8_157_41_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_157_8_157_41_if_true:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_157_34_157_41_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 157 36 ]
+        %tmp.20 = lgetv %k.1;
+        symbol [ k %tmp.20 157 36 37 ];
+        %tmp.21 = add %tmp.20 1;
+        lputv %k.1 %tmp.21;
+        symbol [ k %k.1 157 36 37 ];
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_157_34_157_41_stop:
+        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_157_8_157_41_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_157_8_157_41_if_end:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 158 8 ]
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_158_8_158_41_if_stmt:
+        %tmp.22 = lgetv %v;
+        symbol [ v %tmp.22 158 13 14 ];
+        symbol [ GM_WALL_E %tmp.24 158 17 26 ];
+        %tmp.24 = getv ? :GM_WALL_E;
+        %tmp.25 = bitand %tmp.22 %tmp.24;
+        %tmp.26 = 0;
+        %tmp.27 = ne %tmp.25 %tmp.26;
+        bf %tmp.27 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_158_8_158_41_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_158_8_158_41_if_true:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_158_34_158_41_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 158 36 ]
+        %tmp.30 = lgetv %k.1;
+        symbol [ k %tmp.30 158 36 37 ];
+        %tmp.31 = add %tmp.30 1;
+        lputv %k.1 %tmp.31;
+        symbol [ k %k.1 158 36 37 ];
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_158_34_158_41_stop:
+        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_158_8_158_41_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_158_8_158_41_if_end:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 159 8 ]
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_159_8_159_41_if_stmt:
+        %tmp.32 = lgetv %v;
+        symbol [ v %tmp.32 159 13 14 ];
+        symbol [ GM_WALL_W %tmp.34 159 17 26 ];
+        %tmp.34 = getv ? :GM_WALL_W;
+        %tmp.35 = bitand %tmp.32 %tmp.34;
+        %tmp.36 = 0;
+        %tmp.37 = ne %tmp.35 %tmp.36;
+        bf %tmp.37 @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_159_8_159_41_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_159_8_159_41_if_true:
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_159_34_159_41_start:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 159 36 ]
+        %tmp.40 = lgetv %k.1;
+        symbol [ k %tmp.40 159 36 37 ];
+        %tmp.41 = add %tmp.40 1;
+        lputv %k.1 %tmp.41;
+        symbol [ k %k.1 159 36 37 ];
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_159_34_159_41_stop:
+        goto @_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_159_8_159_41_if_end;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_159_8_159_41_if_end:
+[ "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc" 160 8 ]
+        %tmp.42 = lgetv %k.1;
+        symbol [ k %tmp.42 160 15 16 ];
+        ret %tmp.42;
+_Users_kkorolczuk_work_garmin_gyromaze_source_MazeGenerator_mc_154_33_161_4_stop:
     }
 }
-[ @file = "/Users/kkorolczuk/work/garmin/manpac/source/MazeGenerator.mc"; @line = 16; ]
+[ @file = "/Users/kkorolczuk/work/garmin/gyromaze/source/MazeGenerator.mc"; @line = 21; ]
 <init> {
 }

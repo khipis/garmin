@@ -324,6 +324,7 @@ class BitochiBricksView extends WatchUi.View {
                     Application.Storage.setValue("bricksBest", _bestScore);
                 }
                 Leaderboard.submitScore(LB_GAME_ID, _score, null);
+                Leaderboard.showPostGame(LB_GAME_ID, null, "BRICKS");
                 _gameState = BS_OVER;
             } else {
                 spawnBall(-1);

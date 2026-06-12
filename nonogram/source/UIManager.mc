@@ -43,7 +43,8 @@ class UIManager {
         var gap  = (sh *  1) / 100; if (gap  <  2) { gap  =  2; }
         var rowW = (sw * 70) / 100; if (rowW < 130) { rowW = 130; }
         var rowX = (sw - rowW) / 2;
-        var rowY0 = (sh * 38) / 100;
+        // Start higher so all five rows (incl. the LEADERBOARD badge) fit.
+        var rowY0 = (sh * 30) / 100;
         return [rowH, rowW, rowX, rowY0, gap];
     }
 
@@ -99,6 +100,10 @@ class UIManager {
             dc.drawText(cx, ry + (rowH - 14) / 2, Graphics.FONT_XTINY,
                         labels[i], Graphics.TEXT_JUSTIFY_CENTER);
         }
+
+        // LEADERBOARD badge row (index NG_LB_ROW) — drawn by the shared lib.
+        var lbY = rowY0 + NG_LB_ROW * (rowH + gap);
+        LbBadge.drawRow(dc, rowX, lbY, rowW, rowH, (ctrl.menuRow == NG_LB_ROW));
 
         // Footer.
         var sub;

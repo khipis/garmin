@@ -2,6 +2,8 @@ using Toybox.WatchUi;
 using Toybox.Graphics;
 using Toybox.Timer;
 using Toybox.Math;
+using Toybox.Application;
+using Toybox.Lang;
 
 // ── Dots & Boxes — grid layout ────────────────────────────────────────────
 //
@@ -40,6 +42,10 @@ const DBS_OVER   = 2;
 const DOV_PWIN  = 1;
 const DOV_AIWIN = 2;
 const DOV_TIE   = 3;
+
+// ── Leaderboard (win-streak vs AI; variant = difficulty) ──────────────────
+const LB_GAME_ID    = "dots_boxes";
+const LB_STREAK_KEY = "dots_boxes_streak";
 
 const GS_MENU   = 10;
 const MODE_PVAI = 0;
@@ -127,8 +133,8 @@ class GameView extends WatchUi.View {
     // Menu: 0|2 → prev item, 1|3 → next item
     function navigate(dir) {
         if (_state == GS_MENU) {
-            if (dir == 0 || dir == 2) { _menuSel = (_menuSel + 3) % 4; }
-            else if (dir == 1 || dir == 3) { _menuSel = (_menuSel + 1) % 4; }
+            if (dir == 0 || dir == 2) { _menuSel = (_menuSel + 4) % 5; }
+            else if (dir == 1 || dir == 3) { _menuSel = (_menuSel + 1) % 5; }
             WatchUi.requestUpdate();
             return;
         }
@@ -187,7 +193,8 @@ class GameView extends WatchUi.View {
             if (_menuSel == 0) { _mode = (_mode + 1) % 3; }
             else if (_menuSel == 1 && _mode != MODE_PVP) { _diff = (_diff + 1) % 3; }
             else if (_menuSel == 2) { if (_mode == MODE_PVAI) { _playerFirst = !_playerFirst; } }
-            else if (_menuSel == 3) { _startGame(); }
+            else if (_menuSel == 3) { openLeaderboard(); return; }
+            else if (_menuSel == 4) { _startGame(); }
             WatchUi.requestUpdate();
             return;
         }
@@ -255,6 +262,45 @@ class GameView extends WatchUi.View {
         else if (_aiScore > _pScore)  { _overType = DOV_AIWIN; _sAI = _sAI + 1; }
         else                          { _overType = DOV_TIE; }
         _state = DBS_OVER;
+        _reportResult();
+    }
+
+    // ── Leaderboard: consecutive wins vs AI (win streak) ──────────────────
+    // Only Player-vs-AI games are ranked. PvP and AI-vs-AI never submit.
+    // VARIANT = difficulty, so each difficulty has its own streak ranking.
+    hidden function lbVariant() {
+        if (_diff == DIFF_EASY) { return "easy"; }
+        if (_diff == DIFF_HARD) { return "hard"; }
+        return "med";
+    }
+
+    hidden function _loadStreak() {
+        var v = Application.Storage.getValue(LB_STREAK_KEY);
+        if (v instanceof Lang.Number) { return v; }
+        return 0;
+    }
+
+    hidden function _saveStreak(n) {
+        try { Application.Storage.setValue(LB_STREAK_KEY, n); } catch (e) {}
+    }
+
+    // Win → streak++ and submit; loss/tie → reset to 0 (never submitted).
+    hidden function _reportResult() {
+        if (_mode != MODE_PVAI) { return; }
+        if (_overType == DOV_PWIN) {
+            var s = _loadStreak() + 1;
+            _saveStreak(s);
+            Leaderboard.submitScore(LB_GAME_ID, s, lbVariant());
+            Leaderboard.showPostGame(LB_GAME_ID, lbVariant(), "DOTS & BOXES");
+        } else {
+            _saveStreak(0);
+        }
+    }
+
+    // Open the shared global leaderboard panel for the current difficulty.
+    hidden function openLeaderboard() {
+        var v = new LbScoresView(LB_GAME_ID, lbVariant(), "DOTS & BOXES");
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
     // ── Board logic ───────────────────────────────────────────────────────
@@ -771,14 +817,21 @@ class GameView extends WatchUi.View {
         var modeStr = (_mode == MODE_PVAI) ? "P vs AI" : ((_mode == MODE_PVP) ? "P vs P" : "AI vs AI");
         var diffStr = (_diff == DIFF_EASY) ? "Easy" : ((_diff == DIFF_MED) ? "Med" : "Hard");
         var sideStr = _playerFirst ? "Side: Blu" : "Side: Red";
-        var rows = ["Mode: " + modeStr, "Diff: " + diffStr, sideStr, "START"];
-        var nR = 4;
-        var rowH = _sh * 10 / 100; if (rowH < 22) { rowH = 22; } if (rowH > 30) { rowH = 30; }
+        // Row order: 0 Mode, 1 Diff, 2 Side, 3 LEADERBOARD, 4 START.
+        var rows = ["Mode: " + modeStr, "Diff: " + diffStr, sideStr, "", "START"];
+        var nR = 5;
+        var rowH = _sh * 9 / 100; if (rowH < 20) { rowH = 20; } if (rowH > 26) { rowH = 26; }
         var rowW = _sw * 74 / 100; var rowX = (_sw - rowW) / 2;
-        var gap = 6; var tot = nR * rowH + (nR - 1) * gap; var rowY0 = (_sh - tot) / 2 + rowH;
+        var gap = 5; var tot = nR * rowH + (nR - 1) * gap; var rowY0 = (_sh - tot) / 2 + rowH;
         var i = 0;
         while (i < nR) {
-            var ry = rowY0 + i * (rowH + gap); var sel = (i == _menuSel); var isStart = (i == nR - 1);
+            var ry = rowY0 + i * (rowH + gap); var sel = (i == _menuSel);
+            if (i == 3) {
+                LbBadge.drawRow(dc, rowX, ry, rowW, rowH, sel);
+                i++;
+                continue;
+            }
+            var isStart = (i == 4);
             dc.setColor(sel ? (isStart ? 0x3A0010 : 0x0A2040) : 0x0A0A0A, Graphics.COLOR_TRANSPARENT);
             dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);
             dc.setColor(sel ? (isStart ? 0xFF3355 : 0x4499FF) : 0x1A1A2A, Graphics.COLOR_TRANSPARENT);
@@ -799,10 +852,10 @@ class GameView extends WatchUi.View {
 
     function doTap(tx, ty) {
         if (_state == GS_MENU) {
-            var nR = 4;
-            var rowH = _sh * 10 / 100; if (rowH < 22) { rowH = 22; } if (rowH > 30) { rowH = 30; }
+            var nR = 5;
+            var rowH = _sh * 9 / 100; if (rowH < 20) { rowH = 20; } if (rowH > 26) { rowH = 26; }
             var rowW = _sw * 74 / 100; var rowX = (_sw - rowW) / 2;
-            var gap = 6; var tot = nR * rowH + (nR - 1) * gap; var rowY0 = (_sh - tot) / 2 + rowH;
+            var gap = 5; var tot = nR * rowH + (nR - 1) * gap; var rowY0 = (_sh - tot) / 2 + rowH;
             for (var i = 0; i < nR; i++) {
                 var ry = rowY0 + i * (rowH + gap);
                 if (tx >= rowX && tx < rowX + rowW && ty >= ry && ty < ry + rowH) {

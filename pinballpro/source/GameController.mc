@@ -471,6 +471,7 @@ class GameController {
             state = GS_OVER;
             // Submit to the global leaderboard, split by table variant.
             Leaderboard.submitScore(LB_GAME_ID, score, TableLibrary.NAMES[tableIdx]);
+            Leaderboard.showPostGame(LB_GAME_ID, TableLibrary.NAMES[tableIdx], "PINBALL PRO");
             return;
         }
         _parkBallForLaunch();

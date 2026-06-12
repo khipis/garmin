@@ -82,6 +82,7 @@ class MainView extends WatchUi.View {
     }
     function navSelect() {
         if (ctrl.state == GM_MENU) {
+            if (ctrl.menuRow == GM_ROW_LB) { openLeaderboard(); return; }
             ctrl.menuActivate(); return;
         }
         if (ctrl.state == GM_WIN)  { ctrl.nextLevel(); return; }
@@ -124,8 +125,17 @@ class MainView extends WatchUi.View {
         for (var i = 0; i < GM_MENU_ROWS; i++) {
             var ry = rowY0 + i * (rowH + gap);
             if (x >= rowX && x < rowX + rowW && y >= ry && y < ry + rowH) {
-                ctrl.setMenuRow(i); ctrl.menuActivate(); return;
+                ctrl.setMenuRow(i);
+                if (i == GM_ROW_LB) { openLeaderboard(); }
+                else { ctrl.menuActivate(); }
+                return;
             }
         }
+    }
+
+    // Open the shared global leaderboard for the current difficulty.
+    function openLeaderboard() {
+        var v = new LbScoresView(GM_LB_GAME_ID, ctrl.lbVariant(), "GYRO MAZE");
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 }

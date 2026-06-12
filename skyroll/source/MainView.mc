@@ -38,7 +38,7 @@ class MainView extends WatchUi.View {
 
     hidden var _lastAx;
     hidden var _lastAy;
-    function _onSensor(info) {
+    function _onSensor(info as Toybox.Sensor.Info) as Void {
         if (info != null && info.accel != null && info.accel.size() >= 2) {
             _lastAx = info.accel[0];
             _lastAy = info.accel[1];

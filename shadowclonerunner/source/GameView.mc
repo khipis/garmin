@@ -140,6 +140,7 @@ class GameView extends WatchUi.View {
         if (_score > _hiScore) { _hiScore = _score; }
         // Submit the run score to the global leaderboard (no variant).
         Leaderboard.submitScore(LB_GAME_ID, _score, "");
+        Leaderboard.showPostGame(LB_GAME_ID, "", "SHADOW RUN");
         _state = GS_OVER;
     }
 

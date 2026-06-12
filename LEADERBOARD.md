@@ -25,6 +25,81 @@ scores panel scrolls (UP/DOWN), shows a fixed `bitochi.com` footer, and supports
 **hold-to-rename**.
 > ⚠️ Garmin has no cross-app shared storage, so each game keeps its own copy.
 
+---
+
+## 🚀 v2 — Engagement layer (live)
+
+The leaderboard is no longer "just a top-10". One enriched endpoint powers the
+watch and bitochi.com:
+
+**`GET /leaderboard?game=&variant=&period=&user=`** returns:
+```jsonc
+{
+  "top":   [{ "r":1, "u":"BOB", "s":200, "c":"PL" }],  // best-per-user top 10
+  "me":    { "r": 128, "s": 1390 },                     // your rank + best (if user=)
+  "near":  [ ...±5 around you... ],                     // closest scores to beat
+  "count": 2304,                                        // total players
+  "target": 1200,                                       // median of top (beat-this)
+  "asc": false, "period": "day"
+}
+```
+Plus **`GET /recent?game=&variant=&period=`** → last 8 submissions (live feed).
+
+| Feature | Watch | Web |
+|---------|:----:|:---:|
+| **Your rank** — "YOU #3421 / N", own row highlighted | ✅ | ✅ |
+| **Near You** — ±5 window, closest scores to beat (toggle) | ✅ (SELECT) | ✅ |
+| **Periods** — All-time / Weekly / Daily (rolling, auto-reset) | ✅ (MENU) | ✅ tabs |
+| **Next target** — "+30 to pass <user>" | ✅ | ✅ |
+| **Rank tiers** — Elite (top 100) / Pro (top 10%) / Solid (top 50%) | ✅ | ✅ |
+| **Beat-this** — median of top as a daily target | ✅ | ✅ |
+| **Recent players** feed | — | ✅ |
+| **Country flags** (Cloudflare edge `cf.country`) | — | ✅ |
+| **Share / copy link** (deep-links to your position) | — | ✅ |
+| **updated X ago / loading skeletons / top-3 emoji** | — | ✅ |
+
+**Data model:** `scores.country` (ISO-3166 alpha-2) added; `idx_scores_game_variant_ts`
+index added for period/recent queries. Daily/weekly are **rolling UTC windows**
+(midnight / Monday) — they reset automatically with **no destructive wipe**, so
+all-time history is always preserved. Monthly "seasons" are noted as upcoming on
+the site.
+
+**Watch controls (`LbScoresView`):** UP/DOWN = scroll · SELECT/tap = Global↔Near ·
+MENU = cycle period · HOLD = rename · BACK = exit.
+
+> Note: a few games submit a different `game_id` than their folder name
+> (`tic_tac_pro`→`tictacpro`, `connect_four_lite`→`connectfour`, `othello_blitz`→`othello`).
+> The web `GAMES` table maps these via an `lb:` key so rankings & stats resolve correctly.
+
+---
+
+## 🆕 Arcade / board expansion (15 more games integrated)
+
+Same shared library + recipe, metric chosen per game. All build clean (`-l 2` PROD + STORE):
+
+| Game | game_id | Metric | Variant | Sort |
+|------|---------|--------|---------|------|
+| archery | `archery` | run score | difficulty | DESC |
+| skyroll | `skyroll` | distance | difficulty | DESC |
+| gyromaze | `gyromaze` | mazes cleared / level | board size | DESC |
+| starcombat | `starcombat` | score | difficulty | DESC |
+| voidrocks | `voidrocks` | score | difficulty | DESC |
+| starswarm | `starswarm` | score | difficulty | DESC |
+| sniperscope | `sniperscope` | score (distance bonus folds in) | difficulty | DESC |
+| boxing | `boxing` | career score | — | DESC |
+| blocks | `blocks` | score | — | DESC |
+| hologrid | `hologrid` | score | — | DESC |
+| pixelinvaders | `pixelinvaders` | score | difficulty | DESC |
+| pets (Pixel Pets) | `pets` | creature quality = age·100 + careStreak·25 + wellbeing | — | DESC |
+| hex_mini | `hex_mini` | win streak vs AI | difficulty | DESC |
+| makao_lite | `makao_lite` | win streak vs AI | difficulty | DESC |
+| dots_boxes | `dots_boxes` | win streak vs AI | difficulty | DESC |
+| morris_classic | `morris_classic` | win streak vs AI | difficulty | DESC |
+
+Win-streak games (hex_mini, makao_lite, dots_boxes, morris_classic) only submit on a **P-vs-AI win** (streak persisted in `Application.Storage`, reset on loss); PvP / AI-vs-AI never submit. Pixel Pets submits its quality score on app save/exit and when opening the board.
+
+---
+
 ### Rollout recipe (applied to every game below)
 1. `monkey.jungle` → append `;../_shared/leaderboard` to `base.sourcePath`
 2. `manifest.xml` → add `<iq:uses-permission id="Communications"/>`

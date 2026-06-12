@@ -106,9 +106,18 @@ class MainView extends WatchUi.View {
         ctrl.fire();
     }
     function navSelect() {
-        if (ctrl.state == SS_MENU) { ctrl.menuActivate(); return; }
+        if (ctrl.state == SS_MENU) {
+            if (ctrl.menuRow == SS_ROW_LB) { openLeaderboard(); return; }
+            ctrl.menuActivate(); return;
+        }
         if (ctrl.state == SS_WIN || ctrl.state == SS_OVER) { ctrl.gotoMenu(); return; }
         ctrl.fire();
+    }
+
+    // Open the shared global leaderboard for the current difficulty.
+    function openLeaderboard() {
+        var v = new LbScoresView(SS_LB_GAME_ID, ctrl.difficultyName(), "STAR SWARM");
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
     function navBack() {
         if (ctrl.state != SS_MENU) { ctrl.gotoMenu(); return true; }
@@ -134,7 +143,10 @@ class MainView extends WatchUi.View {
             for (var i = 0; i < SS_MENU_ROWS; i++) {
                 var ry = rowY0 + i * (rowH + gap);
                 if (x >= rowX && x < rowX + rowW && y >= ry && y < ry + rowH) {
-                    ctrl.setMenuRow(i); ctrl.menuActivate(); return;
+                    ctrl.setMenuRow(i);
+                    if (i == SS_ROW_LB) { openLeaderboard(); }
+                    else { ctrl.menuActivate(); }
+                    return;
                 }
             }
             return;

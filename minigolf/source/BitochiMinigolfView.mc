@@ -640,6 +640,7 @@ class BitochiMinigolfView extends WatchUi.View {
             // Course complete — submit total strokes (lower is better; backend
             // sorts ascending, so submit the raw positive count, never negated).
             Leaderboard.submitScore(LB_GAME_ID, _totalStrokes, LB_VARIANT);
+            Leaderboard.showPostGame(LB_GAME_ID, LB_VARIANT, "MINIGOLF");
             _gs = MG_GAMEOVER;
             return;
         }

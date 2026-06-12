@@ -530,6 +530,7 @@ class BitochiSerpentView extends WatchUi.View {
         }
         // Submit the run score to the global leaderboard (fire-and-forget).
         Leaderboard.submitScore(SLB_GAME_ID, _score, "");
+        Leaderboard.showPostGame(SLB_GAME_ID, "", "SERPENT");
         doVibe(2);
     }
 

@@ -30,6 +30,9 @@ using Toybox.Application;
 using Toybox.Time;
 using Toybox.Time.Gregorian;
 
+// Global leaderboard game identifier (must match the backend key).
+const LB_GAME_ID = "nonogram";
+
 const NS_MENU = 0;
 const NS_PLAY = 1;
 const NS_WIN  = 2;
@@ -37,7 +40,11 @@ const NS_WIN  = 2;
 const NG_MODE_LEVELS = 0;
 const NG_MODE_DAILY  = 1;
 
+// Functional menu rows (Diff / Mode / Errs / START).
 const NG_MENU_ROWS = 4;
+// Index of the shared LEADERBOARD badge row and the total navigable count.
+const NG_LB_ROW     = 4;
+const NG_MENU_TOTAL = 5;
 
 class GameController {
     var state;
@@ -151,9 +158,9 @@ class GameController {
     }
 
     // ── Menu ────────────────────────────────────────────────────
-    function menuNext() { menuRow = (menuRow + 1) % NG_MENU_ROWS; dirty = true; }
-    function menuPrev() { menuRow = (menuRow + NG_MENU_ROWS - 1) % NG_MENU_ROWS; dirty = true; }
-    function setMenuRow(i) { if (i >= 0 && i < NG_MENU_ROWS) { menuRow = i; dirty = true; } }
+    function menuNext() { menuRow = (menuRow + 1) % NG_MENU_TOTAL; dirty = true; }
+    function menuPrev() { menuRow = (menuRow + NG_MENU_TOTAL - 1) % NG_MENU_TOTAL; dirty = true; }
+    function setMenuRow(i) { if (i >= 0 && i < NG_MENU_TOTAL) { menuRow = i; dirty = true; } }
 
     function menuActivate() {
         if (menuRow == 0) {
@@ -183,6 +190,12 @@ class GameController {
     }
     function errsName() {
         return showErrs ? "Errs ON" : "Errs off";
+    }
+
+    // Variant string for the leaderboard = board size, e.g. "5x5" / "6x6".
+    // Shared by submitScore and the scores viewer.
+    function lbVariant() {
+        return (diff == 0) ? "5x5" : "6x6";
     }
 
     function totalSlots() { return PuzzleLoader.bucketSize(diff); }
@@ -289,6 +302,14 @@ class GameController {
                 _save("ng_daily_best", dailyBestSec);
             }
         }
+
+        // Submit solve time (whole seconds, LOWER is better — the backend
+        // sorts this game ASCENDING, so submit the raw positive value).
+        var secs = elapsed;
+        if (secs < 1) { secs = 1; }
+        Leaderboard.submitScore(LB_GAME_ID, secs, lbVariant());
+        Leaderboard.showPostGame(LB_GAME_ID, lbVariant(), "NONOGRAM");
+
         state = NS_WIN;
         dirty = true;
     }

@@ -381,6 +381,7 @@ class GameController {
         // Submit the final scorecard total to the global leaderboard,
         // split by mode variant.
         Leaderboard.submitScore(LB_GAME_ID, final, variantName());
+        Leaderboard.showPostGame(LB_GAME_ID, variantName(), "DICE ROYALE");
 
         state = DR_OVER;
     }

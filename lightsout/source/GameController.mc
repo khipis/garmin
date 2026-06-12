@@ -322,6 +322,7 @@ class GameController {
         // Lower is better; the backend sorts this game ascending, so we send
         // the raw positive move count (do NOT negate).
         Leaderboard.submitScore(LB_GAME_ID, moves, boardVariant());
+        Leaderboard.showPostGame(LB_GAME_ID, boardVariant(), "LIGHTS OUT");
 
         solvedTotal = solvedTotal + 1;
         _save("lo_solved_total", solvedTotal);

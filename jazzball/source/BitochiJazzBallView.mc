@@ -454,6 +454,7 @@ class BitochiJazzBallView extends WatchUi.View {
         _finalScore = _score + filledPct;
         _gs = JB_GAMEOVER;
         Leaderboard.submitScore(LB_GAME_ID, _finalScore, null);
+        Leaderboard.showPostGame(LB_GAME_ID, null, "JAZZBALL");
     }
 
     // ── Input ─────────────────────────────────────────────────────────────────

@@ -506,6 +506,10 @@ class GameController {
             if (score > bestScore) { bestScore = score; }
             savePrefs();
             state = SC_OVER;
+            // Submit final score to the global leaderboard, split by
+            // difficulty variant.  Called once per run end.
+            Leaderboard.submitScore(LB_GAME_ID, score, diffName());
+            Leaderboard.showPostGame(LB_GAME_ID, diffName(), "STAR COMBAT");
         }
     }
 

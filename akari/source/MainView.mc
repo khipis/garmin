@@ -66,7 +66,11 @@ class MainView extends WatchUi.View {
         _scanCursor(1);
     }
     function navSelect() {
-        if (ctrl.state == AS_MENU) { ctrl.menuActivate(); return; }
+        if (ctrl.state == AS_MENU) {
+            if (ctrl.menuRow == AK_LB_ROW) { openLeaderboard(); }
+            else                           { ctrl.menuActivate(); }
+            return;
+        }
         if (ctrl.state == AS_WIN) {
             if (ctrl.mode == AK_MODE_LEVELS) { ctrl.nextLevel(); }
             else                              { ctrl.gotoMenu();  }
@@ -134,14 +138,21 @@ class MainView extends WatchUi.View {
         }
     }
 
+    function openLeaderboard() {
+        var v = new LbScoresView(LB_GAME_ID, ctrl.lbVariant(), "AKARI");
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
+    }
+
     hidden function _menuTap(x, y) {
         var rg = UIManager.rowGeom(_sw, _sh);
         var rowH = rg[0]; var rowW = rg[1];
         var rowX = rg[2]; var rowY0 = rg[3]; var gap = rg[4];
-        for (var i = 0; i < AK_MENU_ROWS; i++) {
+        for (var i = 0; i < AK_NAV_ROWS; i++) {
             var ry = rowY0 + i * (rowH + gap);
             if (x >= rowX && x < rowX + rowW && y >= ry && y < ry + rowH) {
-                ctrl.setMenuRow(i); ctrl.menuActivate(); return;
+                if (i == AK_LB_ROW) { ctrl.setMenuRow(i); openLeaderboard(); }
+                else                { ctrl.setMenuRow(i); ctrl.menuActivate(); }
+                return;
             }
         }
     }

@@ -2,6 +2,8 @@ using Toybox.WatchUi;
 using Toybox.Graphics;
 using Toybox.Timer;
 using Toybox.Math;
+using Toybox.Application;
+using Toybox.Lang;
 
 // ── Makao Lite ────────────────────────────────────────────────────────────
 //
@@ -38,6 +40,20 @@ const MODE_AIAI = 2;
 const DIFF_EASY = 0;
 const DIFF_MED  = 1;
 const DIFF_HARD = 2;
+
+// ── Menu layout (now includes a shared-leaderboard row) ──────────
+const MK_MENU_ROWS = 4;
+const MK_ROW_MODE  = 0;
+const MK_ROW_DIFF  = 1;
+const MK_ROW_LB    = 2;   // gold "LEADERBOARD" row (shared library)
+const MK_ROW_START = 3;
+
+// ── Global leaderboard ───────────────────────────────────────────
+// Metric = consecutive wins vs the AI (a win streak), persisted in
+// Application.Storage and submitted on each player win in P-vs-AI mode.
+// Variant = current difficulty so each level has its own ranking.
+const LB_GAME_ID    = "makao_lite";
+const LB_STREAK_KEY = "makao_lite_streak";
 
 const MKO_PWIN  = 1;
 const MKO_AIWIN = 2;
@@ -85,6 +101,7 @@ class GameView extends WatchUi.View {
     hidden var _overWho;
     hidden var _sP, _sAI;
     hidden var _timer;
+    hidden var _lbHandled;   // guard so each finished game submits at most once
 
     // ─────────────────────────────────────────────────────────────────────
     function initialize() {
@@ -137,8 +154,8 @@ class GameView extends WatchUi.View {
     // dir: 0=UP  1=DOWN  2=LEFT  3=RIGHT
     function navigate(dir) {
         if (_state == GS_MENU) {
-            if (dir == 0 || dir == 2) { _menuSel = (_menuSel + 2) % 3; }
-            else if (dir == 1 || dir == 3) { _menuSel = (_menuSel + 1) % 3; }
+            if (dir == 0 || dir == 2) { _menuSel = (_menuSel + MK_MENU_ROWS - 1) % MK_MENU_ROWS; }
+            else if (dir == 1 || dir == 3) { _menuSel = (_menuSel + 1) % MK_MENU_ROWS; }
             WatchUi.requestUpdate();
             return;
         }
@@ -166,9 +183,10 @@ class GameView extends WatchUi.View {
 
     function doAction() {
         if (_state == GS_MENU) {
-            if (_menuSel == 0) { _mode = (_mode + 1) % 3; }
-            else if (_menuSel == 1 && _mode != MODE_PVP) { _diff = (_diff + 1) % 3; }
-            else if (_menuSel == 2) {
+            if (_menuSel == MK_ROW_MODE) { _mode = (_mode + 1) % 3; }
+            else if (_menuSel == MK_ROW_DIFF && _mode != MODE_PVP) { _diff = (_diff + 1) % 3; }
+            else if (_menuSel == MK_ROW_LB) { openLeaderboard(); return; }
+            else if (_menuSel == MK_ROW_START) {
                 _startGame();
                 if (_mode == MODE_AIAI) { _state = MKS_AI; }
             }
@@ -243,6 +261,7 @@ class GameView extends WatchUi.View {
         _scrollOff = 0;
         _suitPick  = 0;
         _overWho   = 0;
+        _lbHandled = false;
     }
 
     // Fisher-Yates shuffle in-place on _deck.
@@ -305,7 +324,7 @@ class GameView extends WatchUi.View {
         var rank = _doPlay(_pHand, _pCount, idx);
         _pCount--;
         // Win check first
-        if (_pCount == 0) { _overWho = MKO_PWIN; _sP = _sP + 1; _state = MKS_OVER; return; }
+        if (_pCount == 0) { _endGame(MKO_PWIN); return; }
         // Cursor / scroll bounds
         if (_cursorPos > _pCount) { _cursorPos = _pCount; }
         if (_scrollOff > 0 && _scrollOff >= _pCount) { _scrollOff = _pCount - 1; }
@@ -326,6 +345,57 @@ class GameView extends WatchUi.View {
         _state = MKS_AI;
     }
 
+    // ── Leaderboard (win streak vs AI) ────────────────────────────────────
+    // Centralised game-over: bumps the session score, flips to MKS_OVER, and
+    // reports the result to the shared global leaderboard exactly once.
+    hidden function _endGame(who) {
+        _overWho = who;
+        if (who == MKO_PWIN) { _sP = _sP + 1; }
+        else                 { _sAI = _sAI + 1; }
+        _state = MKS_OVER;
+        _reportLeaderboard(who);
+    }
+
+    // Streak = consecutive player wins vs AI. Only P-vs-AI games count
+    // (P-vs-P and AI-vs-AI are never submitted). A win increments + submits;
+    // a loss resets the streak to 0 (no submit on loss).
+    hidden function _reportLeaderboard(who) {
+        if (_lbHandled) { return; }
+        _lbHandled = true;
+        if (_mode != MODE_PVAI) { return; }
+        if (who == MKO_PWIN) {
+            var s = _loadStreak() + 1;
+            _saveStreak(s);
+            Leaderboard.submitScore(LB_GAME_ID, s, _lbVariant());
+            Leaderboard.showPostGame(LB_GAME_ID, _lbVariant(), "MAKAO");
+        } else {
+            _saveStreak(0);
+        }
+    }
+
+    hidden function _loadStreak() {
+        var v = Application.Storage.getValue(LB_STREAK_KEY);
+        if (v instanceof Lang.Number) { return v; }
+        return 0;
+    }
+
+    hidden function _saveStreak(n) {
+        try { Application.Storage.setValue(LB_STREAK_KEY, n); } catch (e) {}
+    }
+
+    // Variant = difficulty, so each level keeps its own ranking.
+    hidden function _lbVariant() {
+        if (_diff == DIFF_EASY) { return "Easy"; }
+        if (_diff == DIFF_MED)  { return "Med"; }
+        return "Hard";
+    }
+
+    // Push the shared global-leaderboard panel for the current difficulty.
+    function openLeaderboard() {
+        var v = new LbScoresView(LB_GAME_ID, _lbVariant(), "MAKAO");
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
+    }
+
     // ── AI logic ──────────────────────────────────────────────────────────
     //
     // Priority order: Jack (skip) > 2 (draw 2) > 3 (draw 3) > Ace > regular.
@@ -339,7 +409,7 @@ class GameView extends WatchUi.View {
             if (ci >= 0) {
                 var rank = _doPlay(_aiHand, _aiCount, ci);
                 _aiCount--;
-                if (_aiCount == 0) { _overWho = MKO_AIWIN; _sAI = _sAI + 1; _state = MKS_OVER; return; }
+                if (_aiCount == 0) { _endGame(MKO_AIWIN); return; }
                 // _pendingDraw now higher; player's turn (may be skipped if J somehow)
                 _state = MKS_PLAY;
             } else {
@@ -355,7 +425,7 @@ class GameView extends WatchUi.View {
         if (ci >= 0) {
             var rank = _doPlay(_aiHand, _aiCount, ci);
             _aiCount--;
-            if (_aiCount == 0) { _overWho = MKO_AIWIN; _sAI = _sAI + 1; _state = MKS_OVER; return; }
+            if (_aiCount == 0) { _endGame(MKO_AIWIN); return; }
             if (rank == MK_RA) { _activeSuit = _aiBestSuit(); }
             // _skipNext set by _doPlay for Jack; timer handles player skip
             _state = MKS_PLAY;
@@ -367,7 +437,7 @@ class GameView extends WatchUi.View {
                 if (_isValid(drawn)) {
                     var rank = _doPlay(_aiHand, _aiCount, _aiCount - 1);
                     _aiCount--;
-                    if (_aiCount == 0) { _overWho = MKO_AIWIN; _sAI = _sAI + 1; _state = MKS_OVER; return; }
+                    if (_aiCount == 0) { _endGame(MKO_AIWIN); return; }
                     if (rank == MK_RA) { _activeSuit = _aiBestSuit(); }
                 }
             }
@@ -871,14 +941,21 @@ class GameView extends WatchUi.View {
         dc.drawText(hw, _sh * 11 / 100, Graphics.FONT_SMALL, "MAKAO LITE", Graphics.TEXT_JUSTIFY_CENTER);
         var modeStr = (_mode == MODE_PVAI) ? "P vs AI" : ((_mode == MODE_PVP) ? "P vs P" : "AI vs AI");
         var diffStr = (_diff == DIFF_EASY) ? "Easy" : ((_diff == DIFF_MED) ? "Med" : "Hard");
-        var rows = ["Mode: " + modeStr, "Diff: " + diffStr, "START"];
-        var nR = 3;
-        var rowH = _sh * 10 / 100; if (rowH < 22) { rowH = 22; } if (rowH > 30) { rowH = 30; }
+        var rows = ["Mode: " + modeStr, "Diff: " + diffStr, "", "START"];
+        var nR = MK_MENU_ROWS;
+        var rowH = _sh * 9 / 100; if (rowH < 20) { rowH = 20; } if (rowH > 26) { rowH = 26; }
         var rowW = _sw * 74 / 100; var rowX = (_sw - rowW) / 2;
-        var gap = 6; var tot = nR * rowH + (nR - 1) * gap; var rowY0 = (_sh - tot) / 2 + rowH;
+        var gap = 5; var tot = nR * rowH + (nR - 1) * gap; var rowY0 = (_sh - tot) / 2 + rowH;
         var i = 0;
         while (i < nR) {
-            var ry = rowY0 + i * (rowH + gap); var sel = (i == _menuSel); var isStart = (i == nR - 1);
+            var ry = rowY0 + i * (rowH + gap); var sel = (i == _menuSel);
+            // Shared gold leaderboard row.
+            if (i == MK_ROW_LB) {
+                LbBadge.drawRow(dc, rowX, ry, rowW, rowH, sel);
+                i++;
+                continue;
+            }
+            var isStart = (i == MK_ROW_START);
             dc.setColor(sel ? (isStart ? 0x0A2A0A : 0x0A2040) : 0x050D05, Graphics.COLOR_TRANSPARENT);
             dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);
             dc.setColor(sel ? (isStart ? 0x33AA33 : 0x4499FF) : 0x1A2A1A, Graphics.COLOR_TRANSPARENT);
@@ -888,7 +965,7 @@ class GameView extends WatchUi.View {
                 var ay = ry + rowH / 2;
                 dc.fillPolygon([[rowX + 5, ay - 4], [rowX + 5, ay + 4], [rowX + 11, ay]]);
             }
-            var dimmed = (i == 1 && _mode == MODE_PVP);
+            var dimmed = (i == MK_ROW_DIFF && _mode == MODE_PVP);
             dc.setColor(dimmed ? 0x445566 : (sel ? (isStart ? 0xAAFFAA : 0xAADDFF) : 0x556677), Graphics.COLOR_TRANSPARENT);
             dc.drawText(hw, ry + (rowH - 14) / 2, Graphics.FONT_XTINY, rows[i], Graphics.TEXT_JUSTIFY_CENTER);
             i++;
@@ -945,10 +1022,10 @@ class GameView extends WatchUi.View {
 
     function doTap(tx, ty) {
         if (_state == GS_MENU) {
-            var nR = 3;
-            var rowH = _sh * 10 / 100; if (rowH < 22) { rowH = 22; } if (rowH > 30) { rowH = 30; }
+            var nR = MK_MENU_ROWS;
+            var rowH = _sh * 9 / 100; if (rowH < 20) { rowH = 20; } if (rowH > 26) { rowH = 26; }
             var rowW = _sw * 74 / 100; var rowX = (_sw - rowW) / 2;
-            var gap = 6; var tot = nR * rowH + (nR - 1) * gap; var rowY0 = (_sh - tot) / 2 + rowH;
+            var gap = 5; var tot = nR * rowH + (nR - 1) * gap; var rowY0 = (_sh - tot) / 2 + rowH;
             for (var i = 0; i < nR; i++) {
                 var ry = rowY0 + i * (rowH + gap);
                 if (tx >= rowX && tx < rowX + rowW && ty >= ry && ty < ry + rowH) {

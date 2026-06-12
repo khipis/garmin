@@ -222,6 +222,7 @@ class BitochiFishView extends WatchUi.View {
                     gameState = GS_GAMEOVER; _resultTick = 0;
                     // Session over — submit total catch value to the global leaderboard.
                     Leaderboard.submitScore(LB_GAME_ID, _score, null);
+                    Leaderboard.showPostGame(LB_GAME_ID, null, "FISHING");
                 }
                 else { gameState = GS_IDLE; _emotion = 0; }
             }

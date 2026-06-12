@@ -658,6 +658,7 @@ class BitochiJumpView extends WatchUi.View {
         }
         // Submit this jump's total to the global leaderboard, split by jumper.
         Leaderboard.submitScore(LB_GAME_ID, _lastScore.toNumber(), _jumperNames[_jumperIdx]);
+        Leaderboard.showPostGame(LB_GAME_ID, _jumperNames[_jumperIdx], "SKI JUMP");
         gameState = JS_RESULT;
     }
 

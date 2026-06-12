@@ -150,6 +150,7 @@ class BitochiBlackjackView extends WatchUi.View {
     hidden function endSession() {
         if (_sessionActive) {
             Leaderboard.submitScore(LB_GAME_ID, _peakChips, null);
+            Leaderboard.showPostGame(LB_GAME_ID, null, "BLACKJACK");
             _sessionActive = false;
         }
     }

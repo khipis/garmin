@@ -2,6 +2,10 @@ using Toybox.WatchUi;
 using Toybox.Graphics;
 using Toybox.Timer;
 using Toybox.Math;
+using Toybox.Application;
+
+// ── Global leaderboard ─────────────────────────────────────────────────────
+const LB_GAME_ID = "hex_mini";
 
 // ── Board ─────────────────────────────────────────────────────────────────
 const HEX_N     = 7;    // 7×7 board
@@ -27,6 +31,11 @@ const MODE_AIAI = 2;
 const DIFF_EASY = 0;
 const DIFF_MED  = 1;
 const DIFF_HARD = 2;
+
+// ── Menu rows ──────────────────────────────────────────────────────────────
+const MENU_ROWS  = 5;
+const MROW_START = 3;
+const MROW_LB    = 4;
 
 // ── GameView ───────────────────────────────────────────────────────────────
 class GameView extends WatchUi.View {
@@ -132,8 +141,8 @@ class GameView extends WatchUi.View {
 
     function moveCursor(dr, dc2) {
         if (_state == GS_MENU) {
-            if (dr < 0 || dc2 < 0) { _menuSel = (_menuSel + 3) % 4; }
-            else if (dr > 0 || dc2 > 0) { _menuSel = (_menuSel + 1) % 4; }
+            if (dr < 0 || dc2 < 0) { _menuSel = (_menuSel + MENU_ROWS - 1) % MENU_ROWS; }
+            else if (dr > 0 || dc2 > 0) { _menuSel = (_menuSel + 1) % MENU_ROWS; }
             WatchUi.requestUpdate(); return;
         }
         if (_mode == MODE_AIAI) { return; }
@@ -150,7 +159,7 @@ class GameView extends WatchUi.View {
     // onNextPage: move RIGHT in current row, wrap to col=0
     function advanceCursor() {
         if (_state == GS_MENU) {
-            _menuSel = (_menuSel + 1) % 4;
+            _menuSel = (_menuSel + 1) % MENU_ROWS;
             WatchUi.requestUpdate(); return;
         }
         if (_mode == MODE_AIAI) { return; }
@@ -162,7 +171,7 @@ class GameView extends WatchUi.View {
     // onPreviousPage: move DOWN in current column, wrap to row=0
     function retreatCursor() {
         if (_state == GS_MENU) {
-            _menuSel = (_menuSel + 3) % 4;
+            _menuSel = (_menuSel + MENU_ROWS - 1) % MENU_ROWS;
             WatchUi.requestUpdate(); return;
         }
         if (_mode == MODE_AIAI) { return; }
@@ -183,7 +192,8 @@ class GameView extends WatchUi.View {
             if (_menuSel == 0) { _mode = (_mode + 1) % 3; }
             else if (_menuSel == 1 && _mode != MODE_PVP) { _diff = (_diff + 1) % 3; }
             else if (_menuSel == 2) { if (_mode == MODE_PVAI) { _playerFirst = !_playerFirst; } }
-            else if (_menuSel == 3) { _startGame(); }
+            else if (_menuSel == MROW_START) { _startGame(); }
+            else if (_menuSel == MROW_LB) { openLeaderboard(); return; }
             WatchUi.requestUpdate();
             return;
         }
@@ -203,7 +213,9 @@ class GameView extends WatchUi.View {
         if (_cells[_curR * HEX_N + _curC] != HM_NONE) { return; }
         _placeMark(_curR, _curC, HM_P);
         if (_checkWin(HM_P)) {
-            _overType = HOV_PWIN; _scoreP = _scoreP + 1; _state = HGS_OVER; return;
+            _overType = HOV_PWIN; _scoreP = _scoreP + 1; _state = HGS_OVER;
+            _recordResult(true);
+            return;
         }
         _state = HGS_AI;
     }
@@ -215,6 +227,7 @@ class GameView extends WatchUi.View {
             _aiMove(HM_AI);
             if (_checkWin(HM_AI)) {
                 _overType = HOV_AIWIN; _scoreAI = _scoreAI + 1; _state = HGS_OVER;
+                _recordResult(false);
             } else {
                 _state = HGS_PLAY;
             }
@@ -255,6 +268,40 @@ class GameView extends WatchUi.View {
         _moveCount = _moveCount + 1;
         _lastR = r;
         _lastC = c;
+    }
+
+    // ── Global leaderboard — best consecutive-win streak vs the AI ─────────
+    // Metric  : number of wins in a row against the AI (per difficulty).
+    // Variant : difficulty ("EASY" / "MED" / "HARD") — separate boards.
+    // Submit  : only on a vs-AI player WIN (with the new streak value).
+    //           On a loss the streak resets to 0 and nothing is submitted.
+    //           Player-vs-player and AI-vs-AI matches never count.
+    hidden function _variantName() {
+        return (_diff == DIFF_EASY) ? "EASY" : ((_diff == DIFF_MED) ? "MED" : "HARD");
+    }
+
+    hidden function _streakKey() {
+        return "hex_streak_" + _diff;
+    }
+
+    hidden function _recordResult(playerWon) {
+        if (_mode != MODE_PVAI) { return; }   // only vs-AI matches count
+        var key = _streakKey();
+        if (playerWon) {
+            var st = Application.Storage.getValue(key);
+            if (st == null) { st = 0; }
+            st = st + 1;
+            Application.Storage.setValue(key, st);
+            Leaderboard.submitScore(LB_GAME_ID, st, _variantName());
+            Leaderboard.showPostGame(LB_GAME_ID, _variantName(), "HEX MINI");
+        } else {
+            Application.Storage.setValue(key, 0);
+        }
+    }
+
+    function openLeaderboard() {
+        var v = new LbScoresView(LB_GAME_ID, _variantName(), "HEX MINI");
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
     // ── BFS win check ─────────────────────────────────────────────────────
@@ -727,18 +774,25 @@ class GameView extends WatchUi.View {
         var diffStr = (_diff == DIFF_EASY) ? "Easy" : ((_diff == DIFF_MED) ? "Med" : "Hard");
         var sideStr = _playerFirst ? "Side: Red" : "Side: Blu";
         var rows = ["Mode: " + modeStr, "Diff: " + diffStr, sideStr, "START"];
-        var nR = 4;
-        var rowH = _sh * 10 / 100; if (rowH < 22) { rowH = 22; } if (rowH > 30) { rowH = 30; }
+        var nR = MENU_ROWS;
+        // ~15% smaller than the old 4-row menu so the extra LEADERBOARD row
+        // fits without overlapping the footer on small round watches.
+        var rowH = _sh * 9 / 100; if (rowH < 19) { rowH = 19; } if (rowH > 26) { rowH = 26; }
         var rowW = _sw * 74 / 100;
         var rowX = (_sw - rowW) / 2;
         var gap  = _sh * 2 / 100; if (gap < 3) { gap = 3; }
         var tot  = nR * rowH + (nR - 1) * gap;
-        var rowY0 = (_sh - tot) / 2 + rowH;
+        var rowY0 = (_sh - tot) / 2 + rowH / 2;
         var i = 0;
         while (i < nR) {
             var ry  = rowY0 + i * (rowH + gap);
             var sel = (i == _menuSel);
-            var isStart = (i == nR - 1);
+            if (i == MROW_LB) {
+                LbBadge.drawRow(dc, rowX, ry, rowW, rowH, sel);
+                i++;
+                continue;
+            }
+            var isStart = (i == MROW_START);
             dc.setColor(sel ? (isStart ? 0x3A1800 : 0x0A2040) : 0x0A0A18, Graphics.COLOR_TRANSPARENT);
             dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);
             dc.setColor(sel ? (isStart ? 0xFF8833 : 0x4499FF) : 0x1A2A3A, Graphics.COLOR_TRANSPARENT);
@@ -789,13 +843,13 @@ class GameView extends WatchUi.View {
 
     function doTap(tx, ty) {
         if (_state == GS_MENU) {
-            var nR = 4;
-            var rowH = _sh * 10 / 100; if (rowH < 22) { rowH = 22; } if (rowH > 30) { rowH = 30; }
+            var nR = MENU_ROWS;
+            var rowH = _sh * 9 / 100; if (rowH < 19) { rowH = 19; } if (rowH > 26) { rowH = 26; }
             var rowW = _sw * 74 / 100;
             var rowX = (_sw - rowW) / 2;
             var gap  = _sh * 2 / 100; if (gap < 3) { gap = 3; }
             var tot  = nR * rowH + (nR - 1) * gap;
-            var rowY0 = (_sh - tot) / 2 + rowH;
+            var rowY0 = (_sh - tot) / 2 + rowH / 2;
             for (var i = 0; i < nR; i++) {
                 var ry = rowY0 + i * (rowH + gap);
                 if (tx >= rowX && tx < rowX + rowW && ty >= ry && ty < ry + rowH) {

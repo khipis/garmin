@@ -547,6 +547,7 @@ class GameView extends WatchUi.View {
             streak = streak + 1;
             Application.Storage.setValue(LB_STREAK_KEY, streak);
             Leaderboard.submitScore(LB_GAME_ID, streak, variant());
+            Leaderboard.showPostGame(LB_GAME_ID, variant(), "TIC-TAC PRO");
         } else {
             Application.Storage.setValue(LB_STREAK_KEY, 0);
         }

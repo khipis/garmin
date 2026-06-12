@@ -236,5 +236,6 @@ class GameController {
         if (score > bestScore) { bestScore = score; _saveBest(); }
         // Submit to the global leaderboard, split by difficulty variant.
         Leaderboard.submitScore(PI_LB_GAME_ID, score, difficultyName());
+        Leaderboard.showPostGame(PI_LB_GAME_ID, difficultyName(), "PIXEL INVADERS");
     }
 }

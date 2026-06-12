@@ -198,5 +198,6 @@ class GameController {
         var secs = elapsedMs / 1000;
         if (secs < 1) { secs = 1; }
         Leaderboard.submitScore(LB_GAME_ID, secs, variantStr());
+        Leaderboard.showPostGame(LB_GAME_ID, variantStr(), "MINESWEEPER");
     }
 }

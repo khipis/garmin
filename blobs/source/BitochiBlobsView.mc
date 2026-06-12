@@ -798,6 +798,7 @@ class BitochiBlobsView extends WatchUi.View {
                     var s = _round - 1; if (s < 0) { s = 0; }
                     if (s > _bestStreak) { _bestStreak = s; _newBest = true; Application.Storage.setValue("blobBest", _bestStreak); }
                     Leaderboard.submitScore("blobs", s, "");
+                    Leaderboard.showPostGame("blobs", "", "BLOBS");
                     doVibe(100, 300);
                 }
                 return;
@@ -808,6 +809,7 @@ class BitochiBlobsView extends WatchUi.View {
                 var s2 = _round - 1; if (s2 < 0) { s2 = 0; }
                 if (s2 > _bestStreak) { _bestStreak = s2; _newBest = true; Application.Storage.setValue("blobBest", _bestStreak); }
                 Leaderboard.submitScore("blobs", s2, "");
+                Leaderboard.showPostGame("blobs", "", "BLOBS");
                 doVibe(100, 300); return;
             }
             nextTurn();
@@ -826,6 +828,7 @@ class BitochiBlobsView extends WatchUi.View {
                 var streak = _round - 1; if (streak < 0) { streak = 0; }
                 if (streak > _bestStreak) { _bestStreak = streak; _newBest = true; Application.Storage.setValue("blobBest", _bestStreak); }
                 Leaderboard.submitScore("blobs", streak, "");
+                Leaderboard.showPostGame("blobs", "", "BLOBS");
                 doVibe(100, 300); return;
             }
             nextTurn();

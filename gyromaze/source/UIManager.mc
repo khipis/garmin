@@ -67,12 +67,25 @@ class UIManager {
 
     // ── Menu geometry (used by view for tap-detection too) ─────
     // Returns [rowH, rowW, rowX, rowY0, gap].
+    //
+    // Space-aware: the four rows (Diff / Biome / START / LEADERBOARD)
+    // are packed into the strip between the title block and a reserved
+    // bottom margin, so the extra LEADERBOARD row never overlaps the
+    // footer or each other on small round watches. Rows are ~15-18 %
+    // smaller than the old 3-row menu to fit the fourth row.
     static function rowGeom(sw, sh) {
-        var rowH = (sh *  8) / 100; if (rowH < 16) { rowH = 16; }
-        var gap  = (sh *  2) / 100; if (gap  <  3) { gap  =  3; }
-        var rowW = (sw * 62) / 100; if (rowW < 120) { rowW = 120; }
-        var rowX  = (sw - rowW) / 2;
-        var rowY0 = (sh * 42) / 100;
+        var topZone      = (sh * 37) / 100;            // rows live below "by Bitochi" (31 %)
+        var bottomMargin = (sh *  9) / 100; if (bottomMargin < 16) { bottomMargin = 16; }
+        var gap          = (sh *  2) / 100; if (gap < 3) { gap = 3; }
+        var avail        = (sh - bottomMargin) - topZone;
+        var rowH         = (avail - gap * (GM_MENU_ROWS - 1)) / GM_MENU_ROWS;
+        if (rowH > 24) { rowH = 24; }
+        if (rowH < 14) { rowH = 14; }
+        var rowW = (sw * 60) / 100; if (rowW < 115) { rowW = 115; }
+        var rowX = (sw - rowW) / 2;
+        var used  = GM_MENU_ROWS * rowH + (GM_MENU_ROWS - 1) * gap;
+        var rowY0 = topZone + (avail - used) / 2;
+        if (rowY0 < topZone) { rowY0 = topZone; }
         return [rowH, rowW, rowX, rowY0, gap];
     }
 
@@ -115,7 +128,14 @@ class UIManager {
         for (var i = 0; i < GM_MENU_ROWS; i++) {
             var ry  = rowY0 + i * (rowH + gap);
             var sel = (i == ctrl.menuRow);
-            var ist = (i == GM_MENU_ROWS - 1);
+
+            if (i == GM_ROW_LB) {
+                // Hype-y gold leaderboard row from the shared library.
+                LbBadge.drawRow(dc, rowX, ry, rowW, rowH, sel);
+                continue;
+            }
+
+            var ist = (i == GM_ROW_START);
 
             // Fill.
             if (sel) {

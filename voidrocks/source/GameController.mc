@@ -34,7 +34,17 @@ const VR_MENU = 0;
 const VR_PLAY = 1;
 const VR_OVER = 2;
 
-const VR_MENU_ROWS = 3;
+// Chess-style menu rows. Row 3 is the global LEADERBOARD (split by
+// difficulty variant); it pushes a view from the View layer.
+const VR_MENU_ROWS = 4;
+const VR_ROW_DIFF  = 0;
+const VR_ROW_LIVES = 1;
+const VR_ROW_START = 2;
+const VR_ROW_LB    = 3;
+
+// Global leaderboard game id (matches _LOGOS / web id).
+const VR_LB_GAME_ID = "voidrocks";
+
 const VR_BEST_KEY  = "vr_best";
 const VR_DIFF_KEY  = "vr_diff";
 const VR_LIVES_KEY = "vr_lives";
@@ -120,15 +130,16 @@ class GameController {
     function menuPrev() { menuRow = (menuRow + VR_MENU_ROWS - 1) % VR_MENU_ROWS; }
     function setMenuRow(i) { if (i >= 0 && i < VR_MENU_ROWS) { menuRow = i; } }
     function menuActivate() {
-        if (menuRow == 0) {
+        if (menuRow == VR_ROW_DIFF) {
             menuDiff = (menuDiff + 1) % 3;
             _saveSettings();
-        } else if (menuRow == 1) {
+        } else if (menuRow == VR_ROW_LIVES) {
             menuLives = (menuLives % 5) + 1;
             _saveSettings();
-        } else {
+        } else if (menuRow == VR_ROW_START) {
             _startGame();
         }
+        // VR_ROW_LB is handled by MainView.openLeaderboard().
     }
 
     function gotoMenu() { state = VR_MENU; }
@@ -268,6 +279,9 @@ class GameController {
         if (lives <= 0) {
             state = VR_OVER;
             if (score > bestScore) { bestScore = score; _saveBest(); }
+            // Submit to the global leaderboard, split by difficulty variant.
+            Leaderboard.submitScore(VR_LB_GAME_ID, score, difficultyName());
+            Leaderboard.showPostGame(VR_LB_GAME_ID, difficultyName(), "VOID ROCKS");
             return;
         }
         // Respawn at center with grace period.

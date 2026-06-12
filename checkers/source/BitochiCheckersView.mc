@@ -172,6 +172,7 @@ class BitochiCheckersView extends WatchUi.View {
             var newStreak = _loadStreak() + 1;
             _saveStreak(newStreak);
             Leaderboard.submitScore(LB_GAME_ID, newStreak, diffName());
+            Leaderboard.showPostGame(LB_GAME_ID, diffName(), "CHECKERS");
         } else {
             _saveStreak(0);
         }

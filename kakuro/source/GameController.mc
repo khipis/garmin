@@ -31,6 +31,9 @@
 using Toybox.System;
 using Toybox.Application;
 
+// Global leaderboard game identifier (must match the backend key).
+const LB_GAME_ID = "kakuro";
+
 const KS_MENU = 0;
 const KS_PLAY = 1;
 const KS_WIN  = 2;
@@ -38,7 +41,12 @@ const KS_WIN  = 2;
 const KK_MODE_PRACTICE = 0;
 const KK_MODE_DAILY    = 1;
 
+// Standard interactive rows (Diff, Mode, START).
 const KK_MENU_ROWS = 3;
+// LEADERBOARD badge row index (drawn after the standard rows).
+const KK_MENU_LB   = 3;
+// Total navigable rows = standard rows + the leaderboard badge.
+const KK_MENU_NAV  = 4;
 
 class GameController {
     var state;
@@ -139,9 +147,13 @@ class GameController {
     }
 
     // ── Menu ───────────────────────────────────────────────────
-    function menuNext() { menuRow = (menuRow + 1) % KK_MENU_ROWS; }
-    function menuPrev() { menuRow = (menuRow + KK_MENU_ROWS - 1) % KK_MENU_ROWS; }
-    function setMenuRow(i) { if (i >= 0 && i < KK_MENU_ROWS) { menuRow = i; } }
+    function menuNext() { menuRow = (menuRow + 1) % KK_MENU_NAV; }
+    function menuPrev() { menuRow = (menuRow + KK_MENU_NAV - 1) % KK_MENU_NAV; }
+    function setMenuRow(i) { if (i >= 0 && i < KK_MENU_NAV) { menuRow = i; } }
+
+    // True when the LEADERBOARD badge row is selected (handled by MainView,
+    // which owns view navigation).
+    function isLeaderboardRow() { return menuRow == KK_MENU_LB; }
 
     function menuActivate() {
         if (menuRow == 0) {
@@ -150,10 +162,20 @@ class GameController {
         } else if (menuRow == 1) {
             mode = (mode + 1) % 2;
             saveMenuSettings();
-        } else {
+        } else if (menuRow == 2) {
             _startGame();
         }
         dirty = true;
+    }
+
+    // Variant string for the leaderboard. Daily runs share one board across
+    // difficulties, so they form their own variant; practice runs are keyed
+    // by difficulty. Shared by submitScore and the viewer.
+    function lbVariant() {
+        if (mode == KK_MODE_DAILY) { return "daily"; }
+        if (diff == KK_DIFF_EASY)  { return "easy"; }
+        if (diff == KK_DIFF_MED)   { return "med";  }
+        return "hard";
     }
 
     function gotoMenu() {
@@ -328,6 +350,14 @@ class GameController {
                 }
             }
         }
+
+        // Submit solve time (whole seconds, LOWER is better — the backend
+        // sorts this game ASCENDING, so submit the raw positive value).
+        var secs = lastTimeMs / 1000;
+        if (secs < 1) { secs = 1; }
+        Leaderboard.submitScore(LB_GAME_ID, secs, lbVariant());
+        Leaderboard.showPostGame(LB_GAME_ID, lbVariant(), "KAKURO");
+
         state = KS_WIN;
         dirty = true;
     }

@@ -6,6 +6,8 @@ using Toybox.Time;
 using Toybox.System;
 using Toybox.Application;
 
+const LB_GAME_ID = "boxing";
+
 enum { GS_MENU, GS_INTRO, GS_FIGHT, GS_KO, GS_WIN, GS_LOSE, GS_CHAMPION }
 enum { PS_IDLE, PS_JAB, PS_CROSS, PS_HOOK, PS_UPPER, PS_BODY, PS_DODGE_L, PS_DODGE_R, PS_BLOCK, PS_HIT_STUN, PS_SUPER, PS_EXHAUSTED }
 
@@ -114,6 +116,8 @@ class BitochiBoxingView extends WatchUi.View {
     hidden var _enemyHairStyle;
     hidden var _lastPunchSide;
 
+    hidden var _menuSel;
+
     function initialize() {
         View.initialize();
         Math.srand(Time.now().value());
@@ -161,6 +165,7 @@ class BitochiBoxingView extends WatchUi.View {
 
         _shakeX = 0; _shakeY = 0; _shakeLeft = 0;
         _flashTick = 0; _hitFlash = 0; _superFlash = 0; _introTick = 0; _koTick = 0;
+        _menuSel = 0;
         gameState = GS_MENU;
     }
 
@@ -232,6 +237,8 @@ class BitochiBoxingView extends WatchUi.View {
         } else if (gameState == GS_WIN) {
             _rematchUsed = false;
             if (_wins >= 20) {
+                Leaderboard.submitScore(LB_GAME_ID, _score, "");
+                Leaderboard.showPostGame(LB_GAME_ID, "", "BOXING");
                 gameState = GS_CHAMPION;
             } else {
                 _round++; initFight();
@@ -251,6 +258,51 @@ class BitochiBoxingView extends WatchUi.View {
             _round = 1; _wins = 0; _score = 0; _playerMaxHp = 100; _rematchUsed = false; initFight();
             gameState = GS_INTRO; _introTick = 0;
         }
+    }
+
+    // Menu row geometry: [rowX, rowW, rowH, rowY0, gap] for the two
+    // selectable rows (FIGHT, then LEADERBOARD) at the bottom of the menu.
+    hidden function menuRowGeom() {
+        var rowW = _w * 60 / 100;
+        if (rowW < 110) { rowW = 110; }
+        if (rowW > _w - 12) { rowW = _w - 12; }
+        var rowX = (_w - rowW) / 2;
+        var rowH = _h * 11 / 100;
+        if (rowH > 24) { rowH = 24; }
+        if (rowH < 15) { rowH = 15; }
+        var gap = _h * 3 / 100;
+        if (gap < 4) { gap = 4; }
+        var rowY0 = _h * 64 / 100;
+        return [rowX, rowW, rowH, rowY0, gap];
+    }
+
+    function menuNav(d) {
+        if (gameState != GS_MENU) { return; }
+        _menuSel = (_menuSel + d + 2) % 2;
+    }
+
+    function menuActivate() {
+        if (gameState != GS_MENU) { return; }
+        if (_menuSel == 1) { openLeaderboard(); }
+        else { doAction(); }
+    }
+
+    function openLeaderboard() {
+        var v = new LbScoresView(LB_GAME_ID, "", "BOXING");
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
+    }
+
+    // Touch handling for the menu: tapping the LEADERBOARD row opens it,
+    // a tap anywhere else starts the fight. Returns true if consumed.
+    function handleMenuTap(x, y) {
+        if (gameState != GS_MENU) { return false; }
+        var g = menuRowGeom();
+        var rowX = g[0]; var rowW = g[1]; var rowH = g[2]; var rowY0 = g[3]; var gap = g[4];
+        var lbY = rowY0 + rowH + gap;
+        if (x >= rowX && x < rowX + rowW && y >= lbY && y < lbY + rowH) {
+            _menuSel = 1; openLeaderboard(); return true;
+        }
+        _menuSel = 0; doAction(); return true;
     }
 
     hidden function doSuperPunch() {
@@ -338,7 +390,11 @@ class BitochiBoxingView extends WatchUi.View {
                     _score += 100 + _round * 50 + _perfectHits * 20 + _maxCombo * 10;
                     if (_score > _bestScore) { _bestScore = _score; Application.Storage.setValue("boxBest", _bestScore); }
                     gameState = GS_WIN;
-                } else { gameState = GS_LOSE; }
+                } else {
+                    Leaderboard.submitScore(LB_GAME_ID, _score, "");
+                    Leaderboard.showPostGame(LB_GAME_ID, "", "BOXING");
+                    gameState = GS_LOSE;
+                }
             }
         } else if (gameState == GS_CHAMPION) {
             // idle – just re-render at tick rate
@@ -1109,38 +1165,52 @@ class BitochiBoxingView extends WatchUi.View {
     }
 
     hidden function drawMenu(dc) {
+        var cx = _w / 2;
         dc.setColor(0x0A0A14, 0x0A0A14); dc.clear();
-        dc.setColor(0x1A1A2A, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(0, _h * 72 / 100, _w, _h * 28 / 100);
-        dc.setColor(0x330808, Graphics.COLOR_TRANSPARENT);
-        for (var i = 0; i < _w; i += 4) { dc.fillRectangle(i, _h * 72 / 100 - (3 + (i * 7 + 13) % 5), 3, 3 + (i * 7 + 13) % 5); }
 
-        drawMenuBoxer(dc, _w * 22 / 100, _h * 48 / 100, 0xDD4444, true);
-        drawMenuBoxer(dc, _w * 78 / 100, _h * 48 / 100, 0x4444DD, false);
-
-        dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(_w * 36 / 100, _h * 40 / 100, _w * 28 / 100, 2);
-        dc.setColor(0xFFAA22, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 42 / 100, Graphics.FONT_XTINY, "VS", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
-        dc.fillRectangle(_w * 36 / 100, _h * 50 / 100, _w * 28 / 100, 2);
-
+        // Title
         var pulse = (_tick % 16 < 8) ? 0xFF4444 : 0xDD2222;
         dc.setColor(0x110000, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2 + 1, _h * 8 / 100 + 1, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx + 1, _h * 6 / 100 + 1, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(pulse, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 8 / 100, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, _h * 6 / 100, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 22 / 100, Graphics.FONT_MEDIUM, "BOXING", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, _h * 17 / 100, Graphics.FONT_MEDIUM, "BOXING", Graphics.TEXT_JUSTIFY_CENTER);
 
+        // Boxers + VS (compact, moved up to leave room for menu rows)
+        drawMenuBoxer(dc, _w * 22 / 100, _h * 38 / 100, 0xDD4444, true);
+        drawMenuBoxer(dc, _w * 78 / 100, _h * 38 / 100, 0x4444DD, false);
+        dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(_w * 36 / 100, _h * 32 / 100, _w * 28 / 100, 2);
+        dc.setColor(0xFFAA22, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, _h * 33 / 100, Graphics.FONT_XTINY, "VS", Graphics.TEXT_JUSTIFY_CENTER);
+
+        // One-line control hint + compact best line
         dc.setColor(0x888888, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 58 / 100, Graphics.FONT_XTINY, "Shake = punch", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(_w / 2, _h * 64 / 100, Graphics.FONT_XTINY, "Tilt = dodge", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(cx, _h * 50 / 100, Graphics.FONT_XTINY, "Shake hit  Tilt dodge", Graphics.TEXT_JUSTIFY_CENTER);
+        if (_bestScore > 0) {
+            dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
+            var bl = "Best " + _bestScore;
+            if (_bestRound > 0) { bl = bl + "  R" + _bestRound; }
+            dc.drawText(cx, _h * 56 / 100, Graphics.FONT_XTINY, bl, Graphics.TEXT_JUSTIFY_CENTER);
+        }
 
-        if (_bestScore > 0) { dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 74 / 100, Graphics.FONT_XTINY, "Best: " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER); }
-        if (_bestRound > 0) { dc.setColor(0x8899AA, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, _h * 80 / 100, Graphics.FONT_XTINY, "Round " + _bestRound, Graphics.TEXT_JUSTIFY_CENTER); }
-        dc.setColor((_tick % 24 < 12) ? 0x44FF44 : 0x22AA22, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w / 2, _h * 88 / 100, Graphics.FONT_XTINY, "Tap to fight", Graphics.TEXT_JUSTIFY_CENTER);
+        // Selectable rows: FIGHT then LEADERBOARD
+        var g = menuRowGeom();
+        var rowX = g[0]; var rowW = g[1]; var rowH = g[2]; var rowY0 = g[3]; var gap = g[4];
+        var fightSel = (_menuSel == 0);
+        dc.setColor(fightSel ? 0x223300 : 0x0A1410, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(rowX, rowY0, rowW, rowH, 5);
+        dc.setColor(fightSel ? 0x44FF44 : 0x2A5533, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(rowX, rowY0, rowW, rowH, 5);
+        if (fightSel) {
+            var ay = rowY0 + rowH / 2;
+            dc.fillPolygon([[rowX + 5, ay - 4], [rowX + 5, ay + 4], [rowX + 11, ay]]);
+        }
+        dc.setColor(fightSel ? 0xCCFFCC : 0x88AA99, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, rowY0 + (rowH - 14) / 2, Graphics.FONT_XTINY, "FIGHT", Graphics.TEXT_JUSTIFY_CENTER);
+
+        LbBadge.drawRow(dc, rowX, rowY0 + rowH + gap, rowW, rowH, (_menuSel == 1));
     }
 
     hidden function drawMenuBoxer(dc, cx, cy, col, left) {

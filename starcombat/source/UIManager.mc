@@ -20,15 +20,25 @@ using Toybox.Math;
 class UIManager {
 
     // ── Menu geometry (helper for tap hit-testing) ───────────
-    // The title block (STAR / COMBAT / "by Bitochi") spans the
-    // top ~36 % of the screen.  We anchor the first menu row at
-    // 40 % so the tagline is never overlapped.
+    // Space-aware: the four rows (Sens / Diff / START / LEADERBOARD)
+    // are packed into the strip between the title block (top ~38 %)
+    // and a reserved bottom margin for the footer, so the extra
+    // LEADERBOARD row never overlaps the tagline, footer, or each
+    // other on small round watches.  Sizing is ~15-18 % smaller than
+    // the old 3-row menu (height capped at 23 px, width at 60 %).
     static function rowGeom(sw, sh) {
-        var rowH = (sh * 10) / 100; if (rowH < 22) { rowH = 22; } if (rowH > 28) { rowH = 28; }
-        var rowW = (sw * 64) / 100; if (rowW < 130) { rowW = 130; }
+        var topZone      = (sh * 38) / 100;
+        var bottomMargin = (sh * 11) / 100; if (bottomMargin < 30) { bottomMargin = 30; }
+        var gap          = (sh * 2)  / 100; if (gap < 3) { gap = 3; }
+        var avail        = (sh - bottomMargin) - topZone;
+        var rowH         = (avail - gap * (SC_MENU_ROWS - 1)) / SC_MENU_ROWS;
+        if (rowH > 23) { rowH = 23; }
+        if (rowH < 13) { rowH = 13; }
+        var rowW = (sw * 60) / 100; if (rowW < 120) { rowW = 120; }
         var rowX = (sw - rowW) / 2;
-        var gap  = (sh * 2) / 100;  if (gap < 4) { gap = 4; }
-        var rowY0 = (sh * 40) / 100;
+        var used  = SC_MENU_ROWS * rowH + (SC_MENU_ROWS - 1) * gap;
+        var rowY0 = topZone + (avail - used) / 2;
+        if (rowY0 < topZone) { rowY0 = topZone; }
         return [rowH, rowW, rowX, rowY0, gap];
     }
 
@@ -484,6 +494,13 @@ class UIManager {
         for (var i = 0; i < SC_MENU_ROWS; i++) {
             var ry      = rowY0 + i * (rowH + gap);
             var sel     = (i == ctrl.menuRow);
+
+            if (i == SC_ROW_LB) {
+                // Hype-y gold leaderboard row from the shared library.
+                LbBadge.drawRow(dc, rowX, ry, rowW, rowH, sel);
+                continue;
+            }
+
             var isStart = (i == SC_ROW_START);
             var bg, bd, fg;
             if (sel && isStart)       { bg = 0x223300; bd = 0xFFEE66; fg = 0xFFEE66; }

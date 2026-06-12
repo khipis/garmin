@@ -633,6 +633,7 @@ class SolitaireView extends WatchUi.View {
             if (secs < 1) { secs = 1; }
             _elapsedSecs = secs;
             Leaderboard.submitScore(LB_GAME_ID, _elapsedSecs, null);
+            Leaderboard.showPostGame(LB_GAME_ID, null, "SOLITAIRE");
         }
     }
 

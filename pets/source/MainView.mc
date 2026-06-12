@@ -21,13 +21,15 @@ class MainView extends WatchUi.View {
     hidden var _idleAnim;
     hidden var _flashType;
     hidden var _flashTimer;
+    hidden var _lbIdx;
 
     function initialize(pet) {
         View.initialize();
         _pet = pet;
         actionIdx = 0;
         confirmReset = false;
-        _actions = ["Feed", "Play", "Clean", "Heal", "Nap", "Hug", "Punish", "Reset", "Vibe"];
+        _actions = ["Feed", "Play", "Clean", "Heal", "Nap", "Hug", "Punish", "Reset", "Vibe", "LB"];
+        _lbIdx = _actions.size() - 1;
         _bounceTable = [0, -1, -2, -2, -1, 0, 0, 0];
         _celebType = 0;
         _celebTimer = 0;
@@ -781,7 +783,31 @@ class MainView extends WatchUi.View {
 
     // --- Action bar ---
 
+    function openLeaderboard() {
+        // Refresh the player's standing right before they look at it.
+        if (_pet != null) {
+            var q = _pet.getQualityScore();
+            if (q > 0) { Leaderboard.submitScore(LB_GAME_ID, q, ""); }
+        }
+        var v = new LbScoresView(LB_GAME_ID, "", "PIXEL PETS");
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
+    }
+
     hidden function drawActionBar(dc, w, h) {
+        // Gold "LEADERBOARD" badge from the shared library when that action is
+        // the active one. Centered, sized to clear the steps line below.
+        if (actionIdx == _lbIdx) {
+            var rowH = h * 9 / 100;
+            if (rowH < 18) { rowH = 18; }
+            var rowW = w * 56 / 100;
+            if (rowW < 110) { rowW = 110; }
+            if (rowW > w - 8) { rowW = w - 8; }
+            var rx = (w - rowW) / 2;
+            var ry = h * 84 / 100 - rowH / 2;
+            LbBadge.drawRow(dc, rx, ry, rowW, rowH, true);
+            return;
+        }
+
         var y = h * 85 / 100;
         var name = getActionName();
         var arrowX = w * 20 / 100;

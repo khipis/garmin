@@ -299,6 +299,7 @@ class DinosaurView extends WatchUi.View {
             }
             // Bailing still ends the run — submit the score to the leaderboard.
             Leaderboard.submitScore(LB_GAME_ID, _score, "");
+            Leaderboard.showPostGame(LB_GAME_ID, "", "DINOSAUR");
             _state = GS_OVER;
             return true;
         }
@@ -509,6 +510,7 @@ class DinosaurView extends WatchUi.View {
                 }
                 // Submit the finished run to the global leaderboard (once).
                 Leaderboard.submitScore(LB_GAME_ID, _score, "");
+                Leaderboard.showPostGame(LB_GAME_ID, "", "DINOSAUR");
             }
             return;
         }

@@ -30,10 +30,16 @@ const SS_RESULT = 3;         // hit / miss reveal
 const SS_OVER = 4;           // out of rounds — show recap
 
 // ── Menu rows ─────────────────────────────────────────────────
-const SS_MENU_ROWS = 3;
+// Row 3 is the global LEADERBOARD (split by difficulty variant);
+// it pushes a view from the View layer.
+const SS_MENU_ROWS = 4;
 const SS_ROW_SENS  = 0;
 const SS_ROW_DIFF  = 1;
 const SS_ROW_START = 2;
+const SS_ROW_LB    = 3;
+
+// Global leaderboard game id (matches _LOGOS / web id).
+const SS_LB_GAME_ID = "sniperscope";
 
 // ── Sensitivity preset ────────────────────────────────────────
 const SS_SENS_LOW    = 0;

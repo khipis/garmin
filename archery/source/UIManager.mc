@@ -24,13 +24,25 @@ using Toybox.Math;
 class UIManager {
 
     // ── Menu geometry (for tap hit-testing) ───────────────────
-    // Sized for 4 rows (Sens / Diff / Demo / Start).
+    // Sized for 5 rows (Sens / Diff / Demo / Start / Leaderboard).
+    // Space-aware: rows are packed into the strip between the title
+    // block and a reserved bottom margin (for the BEST/hint footer)
+    // so the extra LEADERBOARD row never overlaps anything on small
+    // round watches.  Heights/widths are ~15-18 % tighter than the
+    // old 4-row menu.
     static function rowGeom(sw, sh) {
-        var rowH = (sh * 8) / 100;  if (rowH < 20) { rowH = 20; } if (rowH > 24) { rowH = 24; }
-        var rowW = (sw * 62) / 100; if (rowW < 130) { rowW = 130; }
+        var topZone      = (sh * 35) / 100;            // rows live below "by Bitochi"
+        var bottomMargin = (sh * 13) / 100; if (bottomMargin < 30) { bottomMargin = 30; }
+        var gap          = (sh * 15) / 1000; if (gap < 3) { gap = 3; }
+        var avail        = (sh - bottomMargin) - topZone;
+        var rowH         = (avail - gap * (AR_MENU_ROWS - 1)) / AR_MENU_ROWS;
+        if (rowH > 22) { rowH = 22; }
+        if (rowH < 13) { rowH = 13; }
+        var rowW = (sw * 62) / 100; if (rowW < 120) { rowW = 120; }
         var rowX = (sw - rowW) / 2;
-        var gap  = (sh * 15) / 1000; if (gap < 3) { gap = 3; }
-        var rowY0 = (sh * 38) / 100;
+        var used  = AR_MENU_ROWS * rowH + (AR_MENU_ROWS - 1) * gap;
+        var rowY0 = topZone + (avail - used) / 2;
+        if (rowY0 < topZone) { rowY0 = topZone; }
         return [rowH, rowW, rowX, rowY0, gap];
     }
 
@@ -1262,11 +1274,19 @@ class UIManager {
             "Sens:  " + ctrl.sensName(),
             "Diff:  " + ctrl.diffName(),
             "DEMO",
-            "ENTER"
+            "ENTER",
+            ""
         ];
         for (var i = 0; i < AR_MENU_ROWS; i++) {
             var ry = rowY0 + i * (rowH + gap);
             var sel = (i == ctrl.menuRow);
+
+            if (i == AR_ROW_LB) {
+                // Gold global-leaderboard row from the shared library.
+                LbBadge.drawRow(dc, rowX, ry, rowW, rowH, sel);
+                continue;
+            }
+
             var isStart = (i == AR_ROW_START);
             var isDemo  = (i == AR_ROW_DEMO);
             var bg, bd, fg;

@@ -31,8 +31,16 @@ const GM_WALL_S = 2;   // south wall present
 const GM_WALL_E = 4;   // east  wall present
 const GM_WALL_W = 8;   // west  wall present
 
-// Chess-style menu row count.
-const GM_MENU_ROWS = 3;
+// Chess-style menu rows. Row 3 is the global LEADERBOARD (split by
+// difficulty variant); it pushes a view from the View layer.
+const GM_MENU_ROWS = 4;
+const GM_ROW_DIFF  = 0;
+const GM_ROW_BIOME = 1;
+const GM_ROW_START = 2;
+const GM_ROW_LB    = 3;
+
+// Global leaderboard game id (matches _LOGOS / web id).
+const GM_LB_GAME_ID = "gyromaze";
 
 // Difficulty levels.
 const GM_DIFF_EASY = 0;   // 7×7 maze

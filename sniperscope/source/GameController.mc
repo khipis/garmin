@@ -226,6 +226,11 @@ class GameController {
         if (score > bestScore)         { bestScore = score; }
         if (headshots > bestHeadshots) { bestHeadshots = headshots; }
         savePrefs();
+        // Submit the session's final score to the global leaderboard,
+        // split by difficulty variant.  Long-range headshots already
+        // feed `score` via the per-shot distance bonus.
+        Leaderboard.submitScore(SS_LB_GAME_ID, score, diffName());
+        Leaderboard.showPostGame(SS_LB_GAME_ID, diffName(), "SNIPER");
         state = SS_OVER;
     }
     function restart() { _startMission(); }

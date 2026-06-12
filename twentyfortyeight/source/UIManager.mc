@@ -77,7 +77,9 @@ class UIManager {
         // Three chess-style rows below everything. Layout is space-aware:
         // the row height shrinks to whatever fits between the best line and
         // the bottom margin, so adding the LEADERBOARD row never overlaps.
-        var labels = ["START", "", "Reset Best"];   // [1] = LEADERBOARD (special)
+        // [MI_LEADERBOARD] is drawn by the shared library (special), the rest
+        // are plain rows. Mode row toggles Classic ↔ Time speedrun.
+        var labels = ["START", "Mode: " + ctrl.modeName(), "", "Reset Best"];
         // Rows ~15% smaller so all three fit comfortably.
         var rowW = (w * 61) / 100; if (rowW < 120) { rowW = 120; }
         var rowX = (w - rowW) / 2;
@@ -165,6 +167,29 @@ class UIManager {
         var cx = w / 2;
         var topY = h * 8 / 100;
 
+        if (ctrl.timeMode) {
+            // Three-column band: SCORE · live TIME · BEST time.
+            dc.setColor(COL_INK_LIGHT, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w * 16 / 100, topY, Graphics.FONT_XTINY,
+                        "SCORE", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(cx, topY, Graphics.FONT_XTINY,
+                        "TIME", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(w * 84 / 100, topY, Graphics.FONT_XTINY,
+                        "BEST", Graphics.TEXT_JUSTIFY_CENTER);
+
+            dc.setColor(COL_INK, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w * 16 / 100, topY + 12, Graphics.FONT_TINY,
+                        ctrl.score.toString(), Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(COL_ACCENT, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, topY + 12, Graphics.FONT_TINY,
+                        ctrl.fmtMs(ctrl.elapsedMs), Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(COL_INK, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w * 84 / 100, topY + 12, Graphics.FONT_TINY,
+                        (ctrl.bestTimeMs < 0) ? "--:--" : ctrl.fmtMs(ctrl.bestTimeMs),
+                        Graphics.TEXT_JUSTIFY_CENTER);
+            return;
+        }
+
         dc.setColor(COL_INK_LIGHT, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w * 18 / 100, topY, Graphics.FONT_XTINY,
                     "SCORE", Graphics.TEXT_JUSTIFY_CENTER);
@@ -189,13 +214,65 @@ class UIManager {
         dc.clear();
 
         var cx = w / 2;
+        var thT = dc.getFontHeight(Graphics.FONT_MEDIUM);
         dc.setColor(win ? COL_OK : COL_DANGER, Graphics.COLOR_TRANSPARENT);
-        var titleFont = Graphics.FONT_MEDIUM;
-        var thT = dc.getFontHeight(titleFont);
-        dc.drawText(cx, h * 18 / 100 - thT / 2, titleFont,
-                    win ? "YOU MADE 2048!" : "GAME OVER",
-                    Graphics.TEXT_JUSTIFY_CENTER);
+        var title = win
+            ? (ctrl.timeMode ? "REACHED 2048!" : "YOU MADE 2048!")
+            : "GAME OVER";
+        dc.drawText(cx, h * 16 / 100 - thT / 2, Graphics.FONT_MEDIUM,
+                    title, Graphics.TEXT_JUSTIFY_CENTER);
 
+        if (ctrl.timeMode) {
+            _drawOverlayTime(dc, ctrl, w, h, win);
+        } else {
+            _drawOverlayClassic(dc, ctrl, w, h);
+        }
+
+        dc.setColor(COL_INK_LIGHT, Graphics.COLOR_TRANSPARENT);
+        var hint = win ? "SEL: keep going" : "Any key: menu";
+        dc.drawText(cx, h - 22, Graphics.FONT_XTINY,
+                    hint, Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    // Time-mode result: the headline metric is the solve time.
+    hidden static function _drawOverlayTime(dc, ctrl, w, h, win) {
+        var cx = w / 2;
+        if (win) {
+            dc.setColor(COL_INK_LIGHT, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, h * 36 / 100, Graphics.FONT_XTINY,
+                        "TIME", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(COL_INK, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, h * 43 / 100, Graphics.FONT_MEDIUM,
+                        ctrl.fmtMs(ctrl.lastTimeMs), Graphics.TEXT_JUSTIFY_CENTER);
+            if (ctrl.bestTimeMs > 0 && ctrl.lastTimeMs == ctrl.bestTimeMs) {
+                dc.setColor(COL_OK, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(cx, h * 62 / 100, Graphics.FONT_XTINY,
+                            "NEW BEST!", Graphics.TEXT_JUSTIFY_CENTER);
+            } else if (ctrl.bestTimeMs > 0) {
+                dc.setColor(COL_INK_LIGHT, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(cx, h * 62 / 100, Graphics.FONT_XTINY,
+                            "Best " + ctrl.fmtMs(ctrl.bestTimeMs),
+                            Graphics.TEXT_JUSTIFY_CENTER);
+            }
+        } else {
+            dc.setColor(COL_INK_LIGHT, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, h * 40 / 100, Graphics.FONT_XTINY,
+                        "No 2048 this run", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(COL_INK, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, h * 48 / 100, Graphics.FONT_SMALL,
+                        "Score " + ctrl.score.toString(),
+                        Graphics.TEXT_JUSTIFY_CENTER);
+            if (ctrl.bestTimeMs > 0) {
+                dc.setColor(COL_INK_LIGHT, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(cx, h * 62 / 100, Graphics.FONT_XTINY,
+                            "Best " + ctrl.fmtMs(ctrl.bestTimeMs),
+                            Graphics.TEXT_JUSTIFY_CENTER);
+            }
+        }
+    }
+
+    hidden static function _drawOverlayClassic(dc, ctrl, w, h) {
+        var cx = w / 2;
         dc.setColor(COL_INK_LIGHT, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, h * 38 / 100, Graphics.FONT_XTINY,
                     "SCORE", Graphics.TEXT_JUSTIFY_CENTER);
@@ -211,10 +288,5 @@ class UIManager {
         dc.drawText(cx, h * 66 / 100, Graphics.FONT_SMALL,
                     ctrl.best.toString(),
                     Graphics.TEXT_JUSTIFY_CENTER);
-
-        dc.setColor(COL_INK_LIGHT, Graphics.COLOR_TRANSPARENT);
-        var hint = win ? "SEL: keep going" : "Any key: menu";
-        dc.drawText(cx, h - 22, Graphics.FONT_XTINY,
-                    hint, Graphics.TEXT_JUSTIFY_CENTER);
     }
 }

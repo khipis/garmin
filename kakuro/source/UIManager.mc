@@ -32,7 +32,7 @@ class UIManager {
         var gap  = (sh *  2) / 100; if (gap  <  3) { gap  =  3; }
         var rowW = (sw * 68) / 100; if (rowW < 130) { rowW = 130; }
         var rowX = (sw - rowW) / 2;
-        var rowY0 = (sh * 40) / 100;
+        var rowY0 = (sh * 34) / 100;
         return [rowH, rowW, rowX, rowY0, gap];
     }
 
@@ -85,6 +85,10 @@ class UIManager {
             dc.drawText(cx, ry + (rowH - 14) / 2, Graphics.FONT_XTINY,
                         labels[i], Graphics.TEXT_JUSTIFY_CENTER);
         }
+
+        // LEADERBOARD badge row (index KK_MENU_LB) — drawn by the shared lib.
+        var lbY = rowY0 + KK_MENU_ROWS * (rowH + gap);
+        LbBadge.drawRow(dc, rowX, lbY, rowW, rowH, (ctrl.menuRow == KK_MENU_LB));
 
         // Footer: best time, streak, lock for daily.
         var sub;

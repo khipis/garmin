@@ -253,7 +253,10 @@
   .lb-rank {
     font-size: 1.4rem; text-align: center;
     font-weight: 800;
+    display: flex; flex-direction: column; align-items: center; gap: 1px;
+    line-height: 1;
   }
+  .lb-rank .flag { margin-right: 0; font-size: .85rem; line-height: 1; }
   .rank-1 .lb-rank { color: var(--gold); text-shadow: 0 0 12px rgba(251,191,36,.5); }
   .rank-2 .lb-rank { color: var(--silver); }
   .rank-3 .lb-rank { color: var(--bronze); }
@@ -373,20 +376,126 @@
   footer a { color: var(--accent); text-decoration: none; }
   footer a:hover { text-decoration: underline; }
 
+  /* ── Controls: period + scope segments ────────────────────────────── */
+  #lb-controls {
+    max-width: 760px; margin: 14px auto 0; padding: 0 16px;
+    display: flex; gap: 10px; flex-wrap: wrap; justify-content: center;
+  }
+  .seg {
+    display: inline-flex; background: var(--card);
+    border: 1px solid var(--border); border-radius: 999px; padding: 3px;
+  }
+  .seg-btn {
+    background: transparent; color: var(--muted);
+    border: none; border-radius: 999px;
+    padding: 7px 15px; font-size: .82rem; font-weight: 600; cursor: pointer;
+    transition: all .15s ease; white-space: nowrap;
+  }
+  .seg-btn:hover { color: var(--text); }
+  .seg-btn.active {
+    color: #04121a;
+    background: linear-gradient(135deg, var(--accent), #7c3aed);
+  }
+
+  /* ── Find-me + your-rank card ─────────────────────────────────────── */
+  #me-bar { max-width: 760px; margin: 12px auto 0; padding: 0 16px; }
+  #me-find { display: flex; gap: 8px; justify-content: center; }
+  #me-input {
+    flex: 0 1 220px; background: var(--card); color: var(--text);
+    border: 1px solid var(--border); border-radius: 10px;
+    padding: 10px 14px; font-size: .9rem; outline: none;
+  }
+  #me-input:focus { border-color: var(--accent); }
+  #me-go {
+    background: var(--card); color: var(--text);
+    border: 1px solid var(--border); border-radius: 10px;
+    padding: 10px 16px; font-size: .85rem; font-weight: 600; cursor: pointer;
+    transition: all .15s ease;
+  }
+  #me-go:hover { border-color: var(--accent); color: var(--accent); }
+  #me-card {
+    margin-top: 10px; padding: 14px 16px; border-radius: 14px;
+    background: linear-gradient(135deg, rgba(0,212,255,.10), rgba(124,58,237,.10));
+    border: 1px solid rgba(0,212,255,.32);
+  }
+  .me-top { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .me-rank-num { font-size: 1.5rem; font-weight: 800; color: var(--accent); }
+  .me-of { color: var(--muted); font-size: .85rem; }
+  .me-tier {
+    margin-left: auto; font-size: .8rem; font-weight: 700;
+    padding: 4px 12px; border-radius: 999px;
+    background: rgba(251,191,36,.16); color: var(--gold);
+    border: 1px solid rgba(251,191,36,.35);
+  }
+  .me-next { margin-top: 8px; font-size: .84rem; color: var(--text); }
+  .me-next b { color: var(--gold); }
+  .me-next .gap { color: #4ade80; font-weight: 700; }
+  .me-actions { margin-top: 11px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .me-btn {
+    background: rgba(255,255,255,.05); color: var(--text);
+    border: 1px solid var(--border); border-radius: 9px;
+    padding: 7px 13px; font-size: .78rem; font-weight: 600; cursor: pointer;
+    transition: all .15s ease;
+  }
+  .me-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  /* ── Target / "beat this" badge ───────────────────────────────────── */
+  #target-badge {
+    text-align: center; margin: 0 0 14px;
+    font-size: .9rem; font-weight: 700; color: var(--text);
+    padding: 10px 14px; border-radius: 12px;
+    background: linear-gradient(135deg, rgba(124,58,237,.14), rgba(0,212,255,.10));
+    border: 1px solid var(--border);
+  }
+  #target-badge b { color: var(--gold); font-size: 1.05rem; }
+
+  /* ── Own-row highlight + flags ────────────────────────────────────── */
+  .lb-row.me {
+    border: 1px solid var(--accent);
+    box-shadow: 0 0 14px rgba(0,212,255,.25);
+    background: linear-gradient(135deg, rgba(0,212,255,.12), rgba(124,58,237,.10));
+  }
+  .flag { margin-right: 5px; }
+  .lb-gap {
+    text-align: center; color: var(--muted); font-size: .9rem;
+    padding: 2px 0 6px; letter-spacing: .3em;
+  }
+
+  /* ── Recently played ──────────────────────────────────────────────── */
+  #recent-wrap { margin-top: 24px; }
+  .recent-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 14px; border-bottom: 1px solid var(--border);
+    font-size: .85rem;
+  }
+  .recent-row .ru { color: var(--text); font-weight: 600; }
+  .recent-row .rs { color: var(--accent); margin-left: auto; font-variant-numeric: tabular-nums; }
+  .recent-row .rt { color: var(--muted); font-size: .7rem; min-width: 64px; text-align: right; }
+
+  /* ── Loading skeleton ─────────────────────────────────────────────── */
+  .skel-row {
+    height: 44px; border-radius: 10px; margin-bottom: 8px;
+    background: linear-gradient(90deg, rgba(255,255,255,.04) 25%, rgba(255,255,255,.09) 37%, rgba(255,255,255,.04) 63%);
+    background-size: 400% 100%; animation: shimmer 1.3s ease infinite;
+  }
+  @keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: 0 0; } }
+
   /* ── Tab nav ──────────────────────────────────────────────────────── */
   #tab-nav {
     position: relative; z-index: 1;
-    display: flex; gap: 8px; justify-content: center;
-    padding: 14px 16px 0;
+    display: flex; gap: 10px; justify-content: center;
+    padding: 18px 16px 20px;
     max-width: 760px; margin: 0 auto;
   }
   .tab-btn {
     flex: 0 0 auto;
+    display: inline-flex; align-items: center; gap: 7px;
     background: var(--card); color: var(--muted);
     border: 1px solid var(--border); border-radius: 999px;
     padding: 9px 20px; font-size: .9rem; font-weight: 600;
     cursor: pointer; transition: all .15s ease; letter-spacing: .02em;
   }
+  .tab-btn svg { width: 16px; height: 16px; display: block; }
   .tab-btn:hover { color: var(--text); border-color: var(--accent); }
   .tab-btn.active {
     color: #04121a; border-color: transparent;
@@ -451,8 +560,20 @@
 
 <!-- ── Tab nav ─────────────────────────────────────────────────────────────── -->
 <nav id="tab-nav">
-  <button class="tab-btn active" data-tab="rankings">🏆 Rankings</button>
-  <button class="tab-btn" data-tab="stats">📊 Stats</button>
+  <button class="tab-btn active" data-tab="rankings">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M6 4h12v3a6 6 0 01-12 0V4z"/><path d="M6 6H3.5a2.5 2.5 0 005 0M18 6h2.5a2.5 2.5 0 01-5 0"/>
+      <path d="M9 16.5V19h6v-2.5"/><path d="M8 21h8"/>
+    </svg>
+    Rankings
+  </button>
+  <button class="tab-btn" data-tab="stats">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="5" y1="21" x2="5" y2="11"/><line x1="12" y1="21" x2="12" y2="4"/><line x1="19" y1="21" x2="19" y2="14"/>
+      <line x1="3" y1="21" x2="21" y2="21"/>
+    </svg>
+    Stats
+  </button>
 </nav>
 
 <!-- ── Rankings view ───────────────────────────────────────────────────────── -->
@@ -486,8 +607,31 @@
   <div id="variant-scroll"></div>
 </div>
 
+<!-- ── Controls: period + scope ─────────────────────────────────────────────── -->
+<div id="lb-controls">
+  <div class="seg" id="period-seg">
+    <button class="seg-btn active" data-p="all">All-time</button>
+    <button class="seg-btn" data-p="week">Week</button>
+    <button class="seg-btn" data-p="day">Today</button>
+  </div>
+  <div class="seg" id="scope-seg">
+    <button class="seg-btn active" data-s="global">🌍 Global</button>
+    <button class="seg-btn" data-s="near">📍 Near You</button>
+  </div>
+</div>
+
+<!-- ── Your rank / find-me ──────────────────────────────────────────────────── -->
+<div id="me-bar">
+  <div id="me-find">
+    <input id="me-input" placeholder="Your watch name…" maxlength="8" autocomplete="off" spellcheck="false">
+    <button id="me-go">Find me</button>
+  </div>
+  <div id="me-card" style="display:none"></div>
+</div>
+
 <!-- ── Leaderboard ─────────────────────────────────────────────────────────── -->
 <main>
+  <div id="target-badge" style="display:none"></div>
   <div class="section-header" id="lb-header">
     <span class="section-title" id="lb-title">Top 10</span>
     <span class="section-line"></span>
@@ -498,6 +642,15 @@
   </div>
   <!-- Game info card (shown below leaderboard) -->
   <div id="game-info" style="display:none"></div>
+
+  <!-- Recently played -->
+  <div id="recent-wrap" style="display:none">
+    <div class="section-header">
+      <span class="section-title">⚡ Recently played</span>
+      <span class="section-line"></span>
+    </div>
+    <div id="recent-list"></div>
+  </div>
 </main>
 
 </div><!-- /#view-rankings -->
@@ -514,6 +667,7 @@
 </section>
 
 <footer>
+  <div style="margin-bottom:8px">🗓 Daily &amp; weekly boards reset automatically · 🏆 monthly seasons coming soon</div>
   Powered by <a href="https://github.com/khipis/garmin" target="_blank">Bitochi Games</a>
   &nbsp;·&nbsp; Garmin Connect IQ
 </footer>
@@ -527,6 +681,7 @@ const CIQ_STORE   = 'https://apps.garmin.com/apps/';
 // ── Game descriptions (from README files) ───────────────────────────────────
 const GAME_DESCS = {
   '8ball':             'Shake your wrist to consult the Magic 8-Ball and receive a mystical answer to any yes/no question. Perfect for quick decisions on the go.',
+  'akari':             'Akari (Light Up) logic puzzle — place bulbs so every white cell is lit, with no two bulbs shining on each other and every numbered wall satisfied. Global leaderboard ranks the fastest solve times — lower is better.',
   'arcade':            'Knife-hit style arcade game — throw axes at a spinning log and try not to hit the ones already lodged in it. Pure reflex challenge.',
   'battleship':        'Classic Sea Battle on a 10×10 grid. Place your fleet, hunt the enemy ships, and sink everything before the AI sinks you.',
   'billiards':         'Pool on your wrist — aim, power up, and shoot to pocket balls. Supports P vs AI and P vs P modes with adjustable difficulty.',
@@ -568,18 +723,18 @@ const GAME_DESCS = {
   'intervalbeeper':    'Customisable interval timer with audio and vibration alerts. Perfect for HIIT, Tabata, or any timed workout routine.',
   'jazzball':          'Classic JezzBall arcade game. Draw walls to partition the playfield and reduce it to under 25% while avoiding the bouncing balls.',
   'jumptower':         'Doodle Jump-style endless climber. Bounce up procedurally generated platforms, ride moving ones, launch off springs, and chase maximum height.',
-  'kakuro':            'Cross-sums puzzle (numerical crossword). Fill the grid so that each run of cells adds up to the clue number, with no digit repeated.',
+  'kakuro':            'Cross-sums puzzle (numerical crossword). Fill the grid so that each run of cells adds up to the clue number, with no digit repeated. Global leaderboard ranks the fastest solve times — lower is better.',
   'lightsout':         'Toggle lights in a grid to turn them all off. Every switch flips its neighbours too — solve the puzzle in the fewest moves.',
   'makao_lite':        'Makao (Polish Crazy Eights / Macao) card game. Match suits or values, play special cards, and empty your hand before anyone else.',
   'manpac':            'Pac-Man on your wrist. Navigate the maze, eat all the pellets, grab power-ups to turn the tables on ghosts — swipe or buttons to steer.',
   'memo':              'Classic memory card-flip game. Match all pairs in the fewest turns to win.',
-  'minesweeper':       'Classic Minesweeper in six board sizes up to 100×100. Safe first click, scrolling viewport for large boards, best-time tracking per size.',
+  'minesweeper':       'Classic Minesweeper in six board sizes up to 100×100. Safe first click, scrolling viewport for large boards, best-time tracking per size. Global leaderboard ranks the fastest solve times — lower is better.',
   'mini_go_9x9':       '9×9 Go — the ancient strategy game of territory and capture, condensed for a watch screen. Place stones and outmanoeuvre your AI opponent.',
   'minigolf':          'Mini-golf on your wrist. Aim, choose your power, and sink the ball in as few strokes as possible across hand-crafted holes.',
   'moon':              'Lunar-lander style game. Control your descent, manage fuel, and touch down on the moon\'s surface without crashing.',
   'morris_classic':    'Nine Men\'s Morris (Mill) — the ancient alignment board game. Place, move, and remove pieces to reduce your opponent to two or trap them.',
   'mudrogue':          'Roguelike dungeon crawler. Explore procedurally generated levels, battle monsters, and collect loot on your wrist.',
-  'nonogram':          'Picross / Nonogram logic puzzles. Use the row and column clue numbers to reveal a hidden pixel image cell by cell.',
+  'nonogram':          'Picross / Nonogram logic puzzles. Use the row and column clue numbers to reveal a hidden pixel image cell by cell. Global leaderboard ranks the fastest solve times — lower is better.',
   'othello_blitz':     'Othello/Reversi blitz mode — flip your opponent\'s discs and control the board. Fast-paced timed rounds against an AI opponent.',
   'parachute':         'Classic parachute drop game. Guide your parachutist to safety, avoiding obstacles, and land as accurately as possible.',
   'pets':              'Virtual pet simulator for your Garmin watch. Feed, play with, and care for your tiny wrist companion.',
@@ -598,7 +753,7 @@ const GAME_DESCS = {
   'stacktower':        'Tap to drop sliding blocks and build the tallest tower you can. Overhang is trimmed — precision drops keep the block full width.',
   'starcombat':        'Space shoot-\'em-up. Pilot your ship through asteroid fields and enemy waves, collect power-ups, and survive as long as possible.',
   'starswarm':         'Wave-based space survival. Hold off swarms of enemy ships with your small craft — upgrades between waves keep things fresh.',
-  'sudoku':            'Classic Sudoku — a quick 4×4 game for a coffee break or a full 9×9 puzzle in Easy, Medium, or Hard. Best times saved per mode.',
+  'sudoku':            'Classic Sudoku — a quick 4×4 game for a coffee break or a full 9×9 puzzle in Easy, Medium, or Hard. Best times saved per mode. Global leaderboard ranks the fastest solve times — lower is better.',
   'territory_clash':   'Turn-based territory conquest. Expand your domain by capturing adjacent cells — outsmart the AI to control the whole board.',
   'tic_tac_pro':       'Tic-Tac-Toe with a competitive twist: play on larger boards, trigger power cells, and outthink the AI in this enhanced classic.',
   'twentyfortyeight':  'Slide tiles in four directions, merge equal values, and reach the 2048 tile. Clean 4×4 board with swipe and button controls.',
@@ -623,7 +778,7 @@ const GAMES = [
   { id: 'checkers', label: 'Checkers', ciq: 'f68bd196-646e-409e-8fca-8dddc8e7633e' },
   { id: 'chess', label: 'Chess', ciq: '4a984ca9-701c-42e2-8609-7348ba9e24e0' },
   { id: 'chickencross', label: 'Chicken Cross', ciq: '66d457b0-0e2b-44fe-8fb1-baac7d47192f' },
-  { id: 'connect_four_lite', label: 'Connect Four', ciq: 'e307c09e-d40c-447e-9cd9-fa19c0d9fd55' },
+  { id: 'connect_four_lite', label: 'Connect Four', ciq: 'e307c09e-d40c-447e-9cd9-fa19c0d9fd55', lb: 'connectfour' },
   { id: 'diceroyale', label: 'Dice Royale', ciq: '43bcb0c8-6e64-4ca1-9072-3a2e503169ae' },
   { id: 'digcore',           label: 'Dig Core',            ciq: 'b2d3f6a8c0e2f4b6d8a0c2e4f6b8d0a2' },
   { id: 'dinosaur', label: 'Dinosaur', ciq: '092bf037-6dc0-4d29-be30-91217dd2eac5' },
@@ -652,7 +807,7 @@ const GAMES = [
   { id: 'morris_classic', label: 'Morris', ciq: '25f0395d-a70d-40e8-9050-db3345b914c6' },
   { id: 'mudrogue',          label: 'Mud Rogue',           ciq: '1c3e5b7d9f1a3c5e7b9d1f3a5c7e9b1d' },
   { id: 'nonogram',          label: 'Nonogram',            ciq: '815d9c2b3e4f5a6b7c8d9e0f1a2b3c4d' },
-  { id: 'othello_blitz', label: 'Othello Blitz', ciq: '0b8c8d18-7984-4fae-be2b-4c3b6a525964' },
+  { id: 'othello_blitz', label: 'Othello Blitz', ciq: '0b8c8d18-7984-4fae-be2b-4c3b6a525964', lb: 'othello' },
   { id: 'parachute', label: 'Parachute', ciq: '6f9c3557-e18f-4f8a-a700-a8e4aec7ae0a' },
   { id: 'pinballpro', label: 'Pinball Pro', ciq: '074acaed-154b-4ab2-a1bd-a28232bdd5f7' },
   { id: 'pixelinvaders', label: 'Pixel Invaders', ciq: '09f09633-87c1-405d-bdd0-4632aa3dff0b' },
@@ -669,7 +824,7 @@ const GAMES = [
   { id: 'starswarm', label: 'Star Swarm', ciq: '4d350185-097c-43e6-9427-2dc4c2b054b0' },
   { id: 'sudoku', label: 'Sudoku', ciq: 'e6fb05e8-98ef-4875-9f67-6d5f54365e89' },
   { id: 'territory_clash', label: 'Territory Clash', ciq: '3fd1f97f-5c7f-4b50-ae09-8ca92036f76f' },
-  { id: 'tic_tac_pro', label: 'Tic Tac Pro', ciq: 'e79ccf39-925d-4f11-abcf-41eefa7d9ba5' },
+  { id: 'tic_tac_pro', label: 'Tic Tac Pro', ciq: 'e79ccf39-925d-4f11-abcf-41eefa7d9ba5', lb: 'tictacpro' },
   { id: 'twentyfortyeight', label: '2048', ciq: 'd71b0583-9bc1-4e9a-ae91-2459c89d150b' },
   { id: 'voidrocks', label: 'Void Rocks', ciq: '503c27e5-7cf0-442a-9f6b-2801b50c7186' },
   { id: 'intervalbeeper',        label: 'Interval Beeper', ciq: 'aee4073a-dbe0-47e7-8cc1-8f38c3f9d614' },
@@ -680,10 +835,17 @@ const GAMES = [
 
 const RANK_ICONS = ['🥇','🥈','🥉'];
 const GAME_MAP   = Object.fromEntries(GAMES.map(g => [g.id, g]));
+// Map by the leaderboard key too (some games submit a different id).
+const LB_MAP     = Object.fromEntries(GAMES.map(g => [(g.lb || g.id), g]));
 
 // ── State ───────────────────────────────────────────────────────────────────
-let currentGame    = null;
+let currentGame    = null;   // page/asset id (e.g. tic_tac_pro)
+let currentLbKey   = null;   // leaderboard key the watch submits (e.g. tictacpro)
 let currentVariant = '';
+let currentPeriod  = 'all';  // all | week | day
+let currentScope   = 'global'; // global | near
+let meName         = (localStorage.getItem('bito_me') || '').slice(0, 8);
+let lastData       = null;   // last /leaderboard response
 let fetchController = null;
 
 // ── DOM refs ────────────────────────────────────────────────────────────────
@@ -698,6 +860,41 @@ const lbHeaderEl    = document.getElementById('lb-header');
 const variantWrap   = document.getElementById('variant-selector-wrap');
 const variantScroll = document.getElementById('variant-scroll');
 const gameInfoEl    = document.getElementById('game-info');
+const meInput       = document.getElementById('me-input');
+const meCard        = document.getElementById('me-card');
+const targetBadge   = document.getElementById('target-badge');
+const recentWrap    = document.getElementById('recent-wrap');
+const recentList    = document.getElementById('recent-list');
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+const lbKeyOf = g => g.lb || g.id;
+
+// ISO-3166 alpha-2 → flag emoji (regional indicator letters).
+function codeToFlag(cc) {
+  if (!cc || cc.length !== 2) return '';
+  const A = 0x1F1E6, base = 'A'.charCodeAt(0);
+  cc = cc.toUpperCase();
+  return String.fromCodePoint(A + cc.charCodeAt(0) - base, A + cc.charCodeAt(1) - base);
+}
+
+// Rank tier derived purely from rank + total players (no backend needed).
+function tierFor(rank, count) {
+  if (!rank || !count) return null;
+  if (rank <= 100)          return { label: 'Elite', icon: '🥇' };
+  if (rank <= count * 0.10) return { label: 'Pro',   icon: '🔥' };
+  if (rank <= count * 0.50) return { label: 'Solid', icon: '👍' };
+  return { label: 'Ranked', icon: '🎮' };
+}
+
+function fmtAgo(unixSec) {
+  const s = Math.max(0, Math.floor(Date.now() / 1000 - unixSec));
+  if (s < 60)    return s + 's ago';
+  if (s < 3600)  return Math.floor(s / 60) + 'm ago';
+  if (s < 86400) return Math.floor(s / 3600) + 'h ago';
+  return Math.floor(s / 86400) + 'd ago';
+}
+
+const PERIOD_WORD = { all: 'all-time', week: 'this week', day: 'today' };
 
 // ── Build game chips ─────────────────────────────────────────────────────────
 function buildGameChips(list) {
@@ -716,12 +913,14 @@ function buildGameChips(list) {
 function selectGame(g, pushState = true) {
   if (currentGame === g.id) return;
   currentGame    = g.id;
+  currentLbKey   = lbKeyOf(g);
   currentVariant = '';
 
   if (pushState) {
     const u = new URL(location.href);
     u.searchParams.set('game', g.id);
     u.searchParams.delete('variant');
+    syncShareParams(u);
     history.pushState({ game: g.id, variant: '' }, '', u);
   }
 
@@ -747,22 +946,31 @@ function selectGame(g, pushState = true) {
   // Clear variant bar while we fetch
   variantWrap.style.display = 'none';
   variantScroll.innerHTML   = '';
+  meCard.style.display = 'none';
+  targetBadge.style.display = 'none';
+  recentWrap.style.display = 'none';
 
-  // Show placeholder leaderboard immediately
+  // Show skeleton immediately
   lbHeaderEl.style.display = '';
   lbWrap.style.display = '';
-  lbWrap.innerHTML = `<div class="state-msg"><div class="spinner"></div><br>Loading…</div>`;
+  lbWrap.innerHTML = skeleton(8);
   updateTag.textContent = '';
   gameInfoEl.style.display = 'none';
 
   fetchVariantsThenLoad(g);
 }
 
+function skeleton(n) {
+  let s = '';
+  for (let i = 0; i < n; i++) s += '<div class="skel-row"></div>';
+  return s;
+}
+
 // ── Fetch variants, then load leaderboard ────────────────────────────────────
 async function fetchVariantsThenLoad(g) {
   let variants = [];
   try {
-    const r = await fetch(`${API_BASE}/variants?game=${encodeURIComponent(g.id)}`);
+    const r = await fetch(`${API_BASE}/variants?game=${encodeURIComponent(lbKeyOf(g))}`);
     if (r.ok) {
       const d = await r.json();
       variants = d.variants || [];
@@ -774,11 +982,13 @@ async function fetchVariantsThenLoad(g) {
   if (variants.length > 0) {
     buildVariantChips(variants);
     variantWrap.style.display = '';
-    currentVariant = variants[0];
+    // honour ?variant= from the URL if it matches
+    const wanted = new URL(location.href).searchParams.get('variant');
+    currentVariant = (wanted && variants.indexOf(wanted) >= 0) ? wanted : variants[0];
     updateVariantChips();
   }
 
-  loadLeaderboard(g.id, currentVariant);
+  loadLeaderboard();
 }
 
 // ── Build variant chips ──────────────────────────────────────────────────────
@@ -808,10 +1018,24 @@ function selectVariant(v) {
   const u = new URL(location.href);
   if (v) u.searchParams.set('variant', v);
   else   u.searchParams.delete('variant');
+  syncShareParams(u);
   history.pushState({ game: currentGame, variant: v }, '', u);
 
   updateVariantChips();
-  loadLeaderboard(currentGame, v);
+  loadLeaderboard();
+}
+
+// Keep period / me in the URL so links are shareable & deep-linkable.
+function syncShareParams(u) {
+  if (currentPeriod && currentPeriod !== 'all') u.searchParams.set('period', currentPeriod);
+  else u.searchParams.delete('period');
+  if (meName) u.searchParams.set('me', meName);
+  else u.searchParams.delete('me');
+}
+function pushShareState() {
+  const u = new URL(location.href);
+  syncShareParams(u);
+  history.replaceState({ game: currentGame, variant: currentVariant }, '', u);
 }
 
 // ── Browser back/forward ─────────────────────────────────────────────────────
@@ -826,35 +1050,35 @@ window.addEventListener('popstate', (e) => {
   } else if (v !== currentVariant) {
     currentVariant = v;
     updateVariantChips();
-    loadLeaderboard(currentGame, v);
+    loadLeaderboard();
   }
 });
 
 // ── Load leaderboard ─────────────────────────────────────────────────────────
-async function loadLeaderboard(game, variant) {
+async function loadLeaderboard() {
+  const game = currentGame, lbKey = currentLbKey, variant = currentVariant;
   if (fetchController) fetchController.abort();
   fetchController = new AbortController();
 
   updateTag.textContent = '';
-  lbWrap.innerHTML = `<div class="state-msg"><div class="spinner"></div><br>Loading rankings…</div>`;
+  lbWrap.innerHTML = skeleton(8);
 
-  let url = `${API_BASE}/leaderboard?game=${encodeURIComponent(game)}`;
+  let url = `${API_BASE}/leaderboard?game=${encodeURIComponent(lbKey)}&period=${currentPeriod}`;
   if (variant) url += `&variant=${encodeURIComponent(variant)}`;
+  if (meName)  url += `&user=${encodeURIComponent(meName)}`;
 
   try {
     const resp = await fetch(url, { signal: fetchController.signal, cache: 'no-store' });
     if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const data = await resp.json();
     if (game !== currentGame) return;
+    lastData = data;
     renderLeaderboard(data, game);
+    loadRecent();
   } catch (e) {
     if (e.name === 'AbortError') return;
     if (game !== currentGame) return;
-    lbWrap.innerHTML = `
-      <div class="state-msg">
-        ⚠️ Could not load rankings.<br>
-        <small style="opacity:.6;font-size:.78rem">Check API_BASE in index.html</small>
-      </div>`;
+    lbWrap.innerHTML = `<div class="state-msg">⚠️ Could not load rankings.</div>`;
     updateTag.textContent = '';
     renderGameInfo(game, true);
   }
@@ -862,43 +1086,179 @@ async function loadLeaderboard(game, variant) {
 
 // ── Render leaderboard ───────────────────────────────────────────────────────
 function renderLeaderboard(data, game) {
-  const rows = (data.top || []).slice(0, 10);
+  const isNear = (currentScope === 'near' && data.me && data.near && data.near.length);
+  const rows = (isNear ? data.near : (data.top || [])).slice(0, isNear ? 99 : 10);
+
+  // Your-rank card (independent of scope)
+  renderMeCard(data);
+  renderTargetBadge(data);
 
   if (!rows.length) {
-    // No leaderboard for this game/variant → show ONLY the game description + store link
     lbHeaderEl.style.display = 'none';
     lbWrap.style.display = 'none';
     updateTag.textContent = '';
+    targetBadge.style.display = 'none';
+    recentWrap.style.display = 'none';
     renderGameInfo(game, true);   // prominent, stands alone
     return;
   }
 
   lbHeaderEl.style.display = '';
   lbWrap.style.display = '';
+  lbTitle.textContent = isNear ? 'Near you'
+                      : (currentVariant ? currentVariant : 'Top 10');
 
-  const maxScore = rows[0].s || 1;
-  const ts = data.updated ? new Date(data.updated * 1000) : null;
-  if (ts) {
-    updateTag.textContent = 'Updated ' + ts.toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' });
-  }
+  if (data.updated) updateTag.textContent = 'updated ' + fmtAgo(data.updated);
 
-  lbWrap.innerHTML = rows.map((row, i) => {
-    const rank = i + 1;
-    const cls  = rank <= 3 ? `rank-${rank}` : '';
-    const icon = rank <= 3 ? RANK_ICONS[i] : rank;
-    const pct  = Math.round((row.s / maxScore) * 100);
-    return `
+  const maxScore = Math.max.apply(null, rows.map(r => Math.abs(r.s))) || 1;
+  let prevRank = null;
+  let html = '';
+  rows.forEach((row, i) => {
+    // gap marker when ranks aren't contiguous (near-you window edges)
+    if (prevRank != null && row.r > prevRank + 1) {
+      html += `<div class="lb-gap">···</div>`;
+    }
+    prevRank = row.r;
+    const rank = row.r;
+    const top3 = rank <= 3;
+    const cls  = (top3 ? `rank-${rank}` : '') + (row.u === meName ? ' me' : '');
+    const icon = top3 ? RANK_ICONS[rank - 1] : rank;
+    const pct  = Math.round((Math.abs(row.s) / maxScore) * 100);
+    const flag = row.c ? `<span class="flag">${codeToFlag(row.c)}</span>` : '';
+    html += `
       <div class="lb-row ${cls}" style="animation-delay:${.02 + i * .03}s">
-        <div class="lb-rank">${icon}</div>
+        <div class="lb-rank"><span class="lb-rank-ic">${icon}</span>${flag}</div>
         <div class="lb-user">${escHtml(row.u || 'anon')}</div>
         <div class="lb-score">${Number(row.s).toLocaleString()}</div>
         <div class="lb-bar-wrap" style="grid-column:2/4">
           <div class="lb-bar" style="width:${pct}%"></div>
         </div>
       </div>`;
-  }).join('');
+  });
+  lbWrap.innerHTML = html;
 
   renderGameInfo(game, false);  // below leaderboard
+}
+
+// ── Your-rank card ────────────────────────────────────────────────────────────
+function renderMeCard(data) {
+  if (!meName) { meCard.style.display = 'none'; return; }
+  if (!data.me) {
+    meCard.style.display = '';
+    meCard.innerHTML = `
+      <div class="me-top"><span class="me-of">No ${PERIOD_WORD[currentPeriod]} score yet for
+        <b style="color:var(--text)">${escHtml(meName)}</b> — go set one! 🎮</span></div>
+      <div class="me-actions">${shareButtons()}</div>`;
+    return;
+  }
+  const rank = data.me.r, count = data.count || 0;
+  const tier = tierFor(rank, count);
+
+  // next target = the player ranked just above me
+  let nextHtml = '';
+  if (data.near && data.near.length) {
+    const idx = data.near.findIndex(r => r.r === rank);
+    if (idx > 0) {
+      const above = data.near[idx - 1];
+      const diff = Math.abs(above.s - data.me.s);
+      nextHtml = `<div class="me-next">Next: <b>${escHtml(above.u)}</b> ${Number(above.s).toLocaleString()}
+        <span class="gap">(${data.asc ? '−' : '+'}${diff.toLocaleString()} to pass)</span></div>`;
+    } else if (idx === 0) {
+      nextHtml = `<div class="me-next">👑 You're <b>#1</b> ${PERIOD_WORD[currentPeriod]} — defend your throne!</div>`;
+    }
+  }
+
+  meCard.style.display = '';
+  meCard.innerHTML = `
+    <div class="me-top">
+      <span class="me-rank-num">#${rank.toLocaleString()}</span>
+      <span class="me-of">of ${count.toLocaleString()} · ${escHtml(meName)} · ${PERIOD_WORD[currentPeriod]}</span>
+      ${tier ? `<span class="me-tier">${tier.icon} ${tier.label}</span>` : ''}
+    </div>
+    ${nextHtml}
+    <div class="me-actions">${shareButtons()}</div>`;
+}
+
+function shareButtons() {
+  return `<button class="me-btn" onclick="copyShare()">🔗 Copy link</button>
+          <button class="me-btn" onclick="shareRank()">📣 Share my rank</button>`;
+}
+
+// ── Target badge ("beat this") ────────────────────────────────────────────────
+function renderTargetBadge(data) {
+  if (data.target == null || !(data.top || []).length) { targetBadge.style.display = 'none'; return; }
+  const word = currentPeriod === 'day' ? "today's" : currentPeriod === 'week' ? "this week's" : 'the';
+  targetBadge.style.display = '';
+  targetBadge.innerHTML = `🎯 Beat ${word} target: <b>${Number(data.target).toLocaleString()}</b>`;
+}
+
+// ── Recently played ───────────────────────────────────────────────────────────
+async function loadRecent() {
+  const lbKey = currentLbKey, game = currentGame;
+  let url = `${API_BASE}/recent?game=${encodeURIComponent(lbKey)}&period=${currentPeriod}`;
+  if (currentVariant) url += `&variant=${encodeURIComponent(currentVariant)}`;
+  try {
+    const r = await fetch(url, { cache: 'no-store' });
+    if (!r.ok) throw new Error();
+    const d = await r.json();
+    if (game !== currentGame) return;
+    const rows = d.recent || [];
+    if (!rows.length) { recentWrap.style.display = 'none'; return; }
+    recentWrap.style.display = '';
+    recentList.innerHTML = rows.map(r => {
+      const flag = r.c ? `<span class="flag">${codeToFlag(r.c)}</span>` : '';
+      const mine = r.u === meName ? ' style="color:var(--accent)"' : '';
+      return `<div class="recent-row">
+        <span class="ru"${mine}>${flag}${escHtml(r.u || 'anon')}</span>
+        <span class="rs">${Number(r.s).toLocaleString()}</span>
+        <span class="rt">${fmtAgo(r.t)}</span>
+      </div>`;
+    }).join('');
+  } catch { recentWrap.style.display = 'none'; }
+}
+
+// ── Share / copy ──────────────────────────────────────────────────────────────
+function shareUrl() {
+  const u = new URL(location.href);
+  u.searchParams.set('game', currentGame);
+  if (currentVariant) u.searchParams.set('variant', currentVariant); else u.searchParams.delete('variant');
+  if (currentPeriod !== 'all') u.searchParams.set('period', currentPeriod); else u.searchParams.delete('period');
+  if (meName) u.searchParams.set('me', meName); else u.searchParams.delete('me');
+  return u.toString();
+}
+function copyShare() {
+  const url = shareUrl();
+  navigator.clipboard?.writeText(url).then(
+    () => toast('Link copied!'),
+    () => toast(url)
+  );
+}
+function shareRank() {
+  const url = shareUrl();
+  const g = GAME_MAP[currentGame];
+  const rank = lastData && lastData.me ? `#${lastData.me.r}` : '';
+  const text = `I'm ${rank} on ${g ? g.label : currentGame} 🏆 Bitochi Games leaderboard!`;
+  if (navigator.share) {
+    navigator.share({ title: 'Bitochi Games', text, url }).catch(() => {});
+  } else {
+    copyShare();
+  }
+}
+function toast(msg) {
+  let t = document.getElementById('toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'toast';
+    t.style.cssText = 'position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:99;'
+      + 'background:#0b1622;border:1px solid var(--accent);color:var(--text);padding:11px 18px;'
+      + 'border-radius:10px;font-size:.85rem;box-shadow:0 6px 24px rgba(0,0,0,.4);max-width:90vw;'
+      + 'overflow:hidden;text-overflow:ellipsis;white-space:nowrap;';
+    document.body.appendChild(t);
+  }
+  t.textContent = msg;
+  t.style.opacity = '1';
+  clearTimeout(t._h);
+  t._h = setTimeout(() => { t.style.opacity = '0'; t.style.transition = 'opacity .4s'; }, 2200);
 }
 
 // ── Render game info card ────────────────────────────────────────────────────
@@ -970,7 +1330,7 @@ async function loadStats() {
     tableEl.innerHTML =
       `<div class="stat-head"><span>Game</span><span>Players</span><span>Devices</span><span>Scores</span></div>` +
       rows.map(g => {
-        const label = (GAME_MAP[g.game] && GAME_MAP[g.game].label) || g.game;
+        const label = (LB_MAP[g.game] && LB_MAP[g.game].label) || g.game;
         return `
           <div class="stat-row">
             <div class="sg-name">${escHtml(label)}</div>
@@ -984,11 +1344,57 @@ async function loadStats() {
   }
 }
 
+// ── Controls wiring ───────────────────────────────────────────────────────────
+document.querySelectorAll('#period-seg .seg-btn').forEach(b =>
+  b.addEventListener('click', () => {
+    if (currentPeriod === b.dataset.p) return;
+    currentPeriod = b.dataset.p;
+    document.querySelectorAll('#period-seg .seg-btn').forEach(x =>
+      x.classList.toggle('active', x.dataset.p === currentPeriod));
+    pushShareState();
+    if (currentGame) loadLeaderboard();
+  }));
+
+document.querySelectorAll('#scope-seg .seg-btn').forEach(b =>
+  b.addEventListener('click', () => {
+    if (currentScope === b.dataset.s) return;
+    currentScope = b.dataset.s;
+    document.querySelectorAll('#scope-seg .seg-btn').forEach(x =>
+      x.classList.toggle('active', x.dataset.s === currentScope));
+    if (currentScope === 'near' && !meName) {
+      meInput.focus();
+      toast('Enter your watch name to see players near you');
+    }
+    if (lastData) renderLeaderboard(lastData, currentGame);
+  }));
+
+function applyMeName(name) {
+  name = (name || '').trim().slice(0, 8);
+  meName = name;
+  if (name) localStorage.setItem('bito_me', name);
+  else localStorage.removeItem('bito_me');
+  pushShareState();
+  if (currentGame) loadLeaderboard();
+}
+document.getElementById('me-go').addEventListener('click', () => applyMeName(meInput.value));
+meInput.addEventListener('keydown', e => { if (e.key === 'Enter') applyMeName(meInput.value); });
+
+function setPeriodUI() {
+  document.querySelectorAll('#period-seg .seg-btn').forEach(x =>
+    x.classList.toggle('active', x.dataset.p === currentPeriod));
+}
+
 // ── Init: list every game; games without rankings just show their description ─
 function init() {
   buildGameChips(GAMES);
 
   const params  = new URL(location.href).searchParams;
+  const p = params.get('period');
+  if (p === 'day' || p === 'week') { currentPeriod = p; setPeriodUI(); }
+  const m = params.get('me');
+  if (m) { meName = m.slice(0, 8); }
+  if (meName) meInput.value = meName;
+
   const initId  = params.get('game');
   const wanted  = initId && GAMES.find(g => g.id === initId);
   // variant is set after fetchVariantsThenLoad resolves

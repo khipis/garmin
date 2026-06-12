@@ -4,17 +4,28 @@
 
 using Toybox.Graphics;
 
-const HG_MENU_ROWS = 3;
+const HG_MENU_ROWS = 4;
 
 class UIManager {
 
+    // Space-aware geometry: the four rows (Start L / Lives / START /
+    // LEADERBOARD) are packed into the strip between the title block
+    // and a reserved bottom margin, so the extra LEADERBOARD row never
+    // overlaps the footer or each other on small round watches.
+    // Rows are ~15-18 % smaller than the old 3-row menu.
     static function rowGeom(sw, sh) {
-        var rowH = (sh * 11) / 100; if (rowH < 22) { rowH = 22; } if (rowH > 30) { rowH = 30; }
-        var rowW = (sw * 78) / 100; if (rowW < 140) { rowW = 140; }
+        var topZone      = (sh * 30) / 100;             // rows live below "by Bitochi"
+        var bottomMargin = (sh * 9)  / 100; if (bottomMargin < 16) { bottomMargin = 16; }
+        var gap          = (sh * 2)  / 100; if (gap < 3) { gap = 3; }
+        var avail        = (sh - bottomMargin) - topZone;
+        var rowH         = (avail - gap * (HG_MENU_ROWS - 1)) / HG_MENU_ROWS;
+        if (rowH > 25) { rowH = 25; }                   // was 30 → ~17 % smaller
+        if (rowH < 14) { rowH = 14; }
+        var rowW = (sw * 66) / 100; if (rowW < 120) { rowW = 120; }  // was 78 %
         var rowX = (sw - rowW) / 2;
-        var gap  = (sh * 2)  / 100; if (gap  < 4)  { gap  = 4;  }
-        var total = HG_MENU_ROWS * rowH + (HG_MENU_ROWS - 1) * gap;
-        var rowY0 = (sh - total) / 2 + (sh * 6) / 100;
+        var used  = HG_MENU_ROWS * rowH + (HG_MENU_ROWS - 1) * gap;
+        var rowY0 = topZone + (avail - used) / 2;
+        if (rowY0 < topZone) { rowY0 = topZone; }
         return [rowH, rowW, rowX, rowY0, gap];
     }
 
@@ -51,7 +62,14 @@ class UIManager {
         for (var i2 = 0; i2 < HG_MENU_ROWS; i2++) {
             var ry      = rowY0 + i2 * (rowH + gap);
             var sel     = (i2 == ctrl.menuRow);
-            var isStart = (i2 == HG_MENU_ROWS - 1);
+
+            if (i2 == HG_ROW_LB) {
+                // Gold leaderboard row from the shared library.
+                LbBadge.drawRow(dc, rowX, ry, rowW, rowH, sel);
+                continue;
+            }
+
+            var isStart = (i2 == HG_ROW_START);
             dc.setColor(sel ? (isStart ? 0x103030 : 0x102240) : 0x081428, Graphics.COLOR_TRANSPARENT);
             dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);
             dc.setColor(sel ? (isStart ? 0x33FFEE : 0x44CCFF) : 0x224466, Graphics.COLOR_TRANSPARENT);

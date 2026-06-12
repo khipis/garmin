@@ -427,6 +427,7 @@ class GameController {
                 // sorts this game ASCENDING (fewer shots = better), so we
                 // do NOT negate. Variant = AI difficulty.
                 Leaderboard.submitScore(LB_GAME_ID, shotCount, lbVariant());
+                Leaderboard.showPostGame(LB_GAME_ID, lbVariant(), "BATTLESHIP");
                 playerShotsLeft = shotsPerTurn;   // for next game
                 state = GS_WIN;
                 return;

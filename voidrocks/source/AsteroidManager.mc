@@ -110,7 +110,7 @@ class AsteroidManager {
 
         // Pick spawn cells along the screen edges, avoiding ship.
         for (var i = 0; i < n; i++) {
-            var x; var y;
+            var x = 0; var y = 0;
             var tries = 0;
             while (true) {
                 // Pick an edge bucket: 0=top 1=right 2=bottom 3=left

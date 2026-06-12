@@ -247,6 +247,7 @@ class BitochiParachuteView extends WatchUi.View {
             if (_lives <= 0) {
                 gameState = PS_GAMEOVER; _resultTick = 0;
                 Leaderboard.submitScore(LB_GAME_ID, _totalScore, null);
+                Leaderboard.showPostGame(LB_GAME_ID, null, "PARACHUTE");
             }
             else { gameState = PS_CRASH; _resultTick = 0; }
         }
@@ -307,6 +308,7 @@ class BitochiParachuteView extends WatchUi.View {
             if (_lives <= 0) {
                 gameState = PS_GAMEOVER; _resultTick = 0;
                 Leaderboard.submitScore(LB_GAME_ID, _totalScore, null);
+                Leaderboard.showPostGame(LB_GAME_ID, null, "PARACHUTE");
             }
             else { gameState = PS_LAND; _resultTick = 0; }
         }

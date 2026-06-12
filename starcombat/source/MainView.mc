@@ -64,13 +64,22 @@ class MainView extends WatchUi.View {
         ctrl.shoot();
     }
     function navSelect() {
-        if (ctrl.state == SC_MENU) { ctrl.menuActivate(); return; }
+        if (ctrl.state == SC_MENU) {
+            if (ctrl.menuRow == SC_ROW_LB) { openLeaderboard(); return; }
+            ctrl.menuActivate(); return;
+        }
         if (ctrl.state == SC_OVER) { ctrl.restart();      return; }
         ctrl.shoot();
     }
     function navBack() {
         if (ctrl.state != SC_MENU) { ctrl.gotoMenu(); return true; }
         return false;
+    }
+
+    // Open the shared global leaderboard for the current difficulty.
+    function openLeaderboard() {
+        var v = new LbScoresView(LB_GAME_ID, ctrl.diffName(), "STAR COMBAT");
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
     function handleTap(x, y) {
@@ -81,7 +90,10 @@ class MainView extends WatchUi.View {
             for (var i = 0; i < SC_MENU_ROWS; i++) {
                 var ry = rowY0 + i * (rowH + gap);
                 if (x >= rowX && x < rowX + rowW && y >= ry && y < ry + rowH) {
-                    ctrl.setMenuRow(i); ctrl.menuActivate(); return;
+                    ctrl.setMenuRow(i);
+                    if (i == SC_ROW_LB) { openLeaderboard(); }
+                    else { ctrl.menuActivate(); }
+                    return;
                 }
             }
             return;

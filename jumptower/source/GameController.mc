@@ -247,6 +247,7 @@ class GameController {
         // Submit the run's height (the metres value shown to the player)
         // to the global leaderboard. No variant for Jump Tower.
         Leaderboard.submitScore(LB_GAME_ID, heightMetres().toNumber(), "");
+        Leaderboard.showPostGame(LB_GAME_ID, "", "JUMP TOWER");
     }
 
     hidden function _updateDifficulty() {

@@ -20,6 +20,7 @@
 // ═══════════════════════════════════════════════════════════════
 
 using Toybox.Application;
+using Toybox.System;
 
 const GS_MENU = 0;
 const GS_PLAY = 1;
@@ -28,12 +29,17 @@ const GS_OVER = 3;
 
 // Menu items
 const MI_START       = 0;
-const MI_LEADERBOARD = 1;
-const MI_RESET_BEST  = 2;
-const MI_ITEMS       = 3;
+const MI_MODE        = 1;   // Classic (endless score) / Time (fastest to 2048)
+const MI_LEADERBOARD = 2;
+const MI_RESET_BEST  = 3;
+const MI_ITEMS       = 4;
 
-// Leaderboard game id (matches _LOGOS / web id)
-const LB_GAME_ID = "twentyfortyeight";
+// Leaderboard game ids (match _LOGOS / web ids).
+//   classic → highest score (DESC)
+//   time    → fastest time to reach the 2048 tile, in seconds (ASC). It needs
+//             its own id because the backend sort direction is per-game.
+const LB_GAME_ID      = "twentyfortyeight";
+const LB_GAME_ID_TIME = "twentyfortyeight_time";
 
 class GameController {
     var state;
@@ -44,6 +50,13 @@ class GameController {
     var hasWonThisRun;     // true once player has hit 2048 in current run
     var menuCursor;
 
+    // ── Time mode (speedrun: fastest to the 2048 tile) ──────────────
+    var timeMode;          // false = Classic endless score, true = Time
+    var elapsedMs;         // running time this run (Time mode only)
+    var lastTimeMs;        // time of the run that just reached 2048
+    var bestTimeMs;        // fastest 2048 time ever (persisted), -1 = none
+    hidden var _startMs;   // System.getTimer() at run start
+
     function initialize() {
         state          = GS_MENU;
         grid           = new GridManager();
@@ -52,6 +65,19 @@ class GameController {
         bestExp        = _loadInt("bestExp", 0);
         hasWonThisRun  = false;
         menuCursor     = MI_START;
+        timeMode       = _loadBool("tf_timemode", false);
+        elapsedMs      = 0;
+        lastTimeMs     = 0;
+        bestTimeMs     = _loadInt("tf_besttime", -1);
+        _startMs       = 0;
+    }
+
+    hidden function _loadBool(key, dflt) {
+        try {
+            var v = Application.Storage.getValue(key);
+            if (v instanceof Boolean) { return v; }
+        } catch (e) {}
+        return dflt;
     }
 
     hidden function _loadInt(key, dflt) {
@@ -75,12 +101,27 @@ class GameController {
     function menuActivate() {
         if (menuCursor == MI_START) {
             newGame();
+        } else if (menuCursor == MI_MODE) {
+            timeMode = !timeMode;
+            try { Application.Storage.setValue("tf_timemode", timeMode); } catch (e) {}
         } else if (menuCursor == MI_RESET_BEST) {
             best = 0;
             bestExp = 0;
             _saveInt("best",    0);
             _saveInt("bestExp", 0);
         }
+    }
+
+    function modeName() { return timeMode ? "Time" : "Classic"; }
+
+    // Format milliseconds as "mm:ss" (caps at 99:59).
+    function fmtMs(ms) {
+        if (ms < 0) { return "--:--"; }
+        var s = ms / 1000;
+        var m = s / 60;
+        s = s % 60;
+        if (m > 99) { m = 99; s = 59; }
+        return m.format("%02d") + ":" + s.format("%02d");
     }
 
     // ── Game flow ───────────────────────────────────────────────────
@@ -90,7 +131,19 @@ class GameController {
         grid.spawnRandom();
         score = 0;
         hasWonThisRun = false;
+        elapsedMs  = 0;
+        lastTimeMs = 0;
+        _startMs   = System.getTimer();
         state = GS_PLAY;
+    }
+
+    // Called from the view's timer (Time mode only) to keep the on-screen
+    // stopwatch current while playing.
+    function tickTimer() {
+        if (state != GS_PLAY || !timeMode) { return; }
+        var dt = System.getTimer() - _startMs;
+        if (dt < 0) { dt = 0; }
+        elapsedMs = dt;
     }
 
     function gotoMenu() { state = GS_MENU; }
@@ -129,14 +182,34 @@ class GameController {
 
         if (r.reached2048 && !hasWonThisRun) {
             hasWonThisRun = true;
+            // Time mode: reaching 2048 IS the goal — lock the time, save the
+            // best, and submit it to the speedrun leaderboard (lower is better).
+            if (timeMode) {
+                var dt = System.getTimer() - _startMs;
+                if (dt < 0) { dt = 0; }
+                elapsedMs  = dt;
+                lastTimeMs = dt;
+                if (bestTimeMs < 0 || dt < bestTimeMs) {
+                    bestTimeMs = dt;
+                    _saveInt("tf_besttime", dt);
+                }
+                var secs = dt / 1000;
+                if (secs < 1) { secs = 1; }
+                Leaderboard.submitScore(LB_GAME_ID_TIME, secs, "");
+                Leaderboard.showPostGame(LB_GAME_ID_TIME, "", "2048 TIME");
+            }
             state = GS_WIN;
             return;
         }
 
         if (!grid.hasAnyMove()) {
             state = GS_OVER;
-            // Submit final score to the global leaderboard (fire-and-forget).
-            Leaderboard.submitScore(LB_GAME_ID, score, "");
+            // Classic only: submit final score (higher is better). Time-mode
+            // runs that never reached 2048 simply don't post.
+            if (!timeMode) {
+                Leaderboard.submitScore(LB_GAME_ID, score, "");
+                Leaderboard.showPostGame(LB_GAME_ID, "", "2048");
+            }
         }
     }
 }

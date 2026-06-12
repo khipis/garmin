@@ -15,6 +15,7 @@
 using Toybox.Application;
 using Toybox.System;
 using Toybox.Math;
+using Toybox.WatchUi;
 
 class GameController {
 
@@ -113,7 +114,15 @@ class GameController {
             _savePersist();
         } else if (menuRow == SR_ROW_START) {
             startRun();
+        } else if (menuRow == SR_ROW_LB) {
+            openLeaderboard();
         }
+    }
+
+    // Open the shared global leaderboard for the current difficulty.
+    function openLeaderboard() {
+        var v = new LbScoresView(LB_GAME_ID, diffName(), "SKY ROLL");
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
     // Tap dispatch — coords are pre-translated screen pixels.
@@ -196,6 +205,10 @@ class GameController {
                     bestScore = distance;
                     _savePersist();
                 }
+                // Run ended — submit distance to the global leaderboard
+                // once, split by difficulty variant. Higher is better.
+                Leaderboard.submitScore(LB_GAME_ID, distance, diffName());
+                Leaderboard.showPostGame(LB_GAME_ID, diffName(), "SKY ROLL");
             }
         } else if (state == SR_FALL) {
             fallT = fallT + 1;
