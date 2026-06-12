@@ -14,6 +14,11 @@ enum {
     GS_OVER
 }
 
+const ARC_LB_GAME_ID = "arcade";
+const ARC_MENU_ROWS = 2;
+const ARC_ROW_PLAY = 0;
+const ARC_ROW_LB = 1;
+
 class BitochiAxeArcadeView extends WatchUi.View {
 
     var gameState;
@@ -102,6 +107,9 @@ class BitochiAxeArcadeView extends WatchUi.View {
     hidden var _crowdJump;
     hidden var _crowdCol;
     hidden var _crowdHype;
+
+    hidden var _menuRow;
+    hidden var _submitted;
 
     function initialize() {
         View.initialize();
@@ -193,6 +201,9 @@ class BitochiAxeArcadeView extends WatchUi.View {
             _crowdCol[i] = ccols[i % 7];
         }
         _crowdHype = 0;
+
+        _menuRow = ARC_ROW_PLAY;
+        _submitted = false;
     }
 
     function onShow() {
@@ -282,6 +293,11 @@ class BitochiAxeArcadeView extends WatchUi.View {
                 if (_score > _bestScore) {
                     _bestScore = _score;
                     Application.Storage.setValue("arcBest", _bestScore);
+                }
+                if (!_submitted) {
+                    _submitted = true;
+                    Leaderboard.submitScore(ARC_LB_GAME_ID, _score, "");
+                    Leaderboard.showPostGame(ARC_LB_GAME_ID, "", "AXE ARCADE");
                 }
             }
         }
@@ -556,7 +572,8 @@ class BitochiAxeArcadeView extends WatchUi.View {
 
     function doAction() {
         if (gameState == GS_MENU) {
-            startGame();
+            if (_menuRow == ARC_ROW_LB) { openLeaderboard(); }
+            else { startGame(); }
             return;
         }
         if (gameState == GS_READY) {
@@ -570,7 +587,61 @@ class BitochiAxeArcadeView extends WatchUi.View {
         }
     }
 
+    function inMenu() { return gameState == GS_MENU; }
+
+    function menuNav(d) {
+        _menuRow = (_menuRow + d + ARC_MENU_ROWS) % ARC_MENU_ROWS;
+    }
+
+    // UP/DOWN: navigate menu rows when on the menu, otherwise act in-game.
+    function menuOrAction(d) {
+        if (gameState == GS_MENU) { menuNav(d); }
+        else { doAction(); }
+    }
+
+    // Touch: hit-test the two menu rows; tap elsewhere on the menu plays.
+    function handleTap(x, y) {
+        var rg = menuRowGeom();
+        var rowH = rg[0]; var rowW = rg[1]; var rowX = rg[2]; var rowY0 = rg[3]; var gap = rg[4];
+        for (var i = 0; i < ARC_MENU_ROWS; i++) {
+            var ry = rowY0 + i * (rowH + gap);
+            if (x >= rowX && x <= rowX + rowW && y >= ry && y <= ry + rowH) {
+                _menuRow = i;
+                doAction();
+                return;
+            }
+        }
+        _menuRow = ARC_ROW_PLAY;
+        startGame();
+    }
+
+    // Open the shared global leaderboard for Axe Arcade.
+    function openLeaderboard() {
+        var v = new LbScoresView(ARC_LB_GAME_ID, "", "AXE ARCADE");
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
+    }
+
+    // Geometry for the two-row main menu (PLAY + LEADERBOARD). Space-aware so
+    // rows shrink to fit between the BEST line and the bottom torch strip.
+    // Returns [rowH, rowW, rowX, rowY0, gap].
+    function menuRowGeom() {
+        var topZone      = (_h * 58) / 100;
+        var bottomMargin = (_h * 12) / 100; if (bottomMargin < 13) { bottomMargin = 13; }
+        var gap          = (_h * 3) / 100; if (gap < 4) { gap = 4; }
+        var avail        = (_h - bottomMargin) - topZone;
+        var rowH         = (avail - gap * (ARC_MENU_ROWS - 1)) / ARC_MENU_ROWS;
+        if (rowH > 25) { rowH = 25; }
+        if (rowH < 16) { rowH = 16; }
+        var rowW = (_w * 56) / 100; if (rowW < 99) { rowW = 99; }
+        var rowX = (_w - rowW) / 2;
+        var used = ARC_MENU_ROWS * rowH + (ARC_MENU_ROWS - 1) * gap;
+        var rowY0 = topZone + (avail - used) / 2;
+        if (rowY0 < topZone) { rowY0 = topZone; }
+        return [rowH, rowW, rowX, rowY0, gap];
+    }
+
     hidden function startGame() {
+        _submitted = false;
         _score = 0; _level = 1;
         _lives = 3;
         _combo = 0; _comboMult = 1;
@@ -1076,8 +1147,8 @@ class BitochiAxeArcadeView extends WatchUi.View {
         }
 
         var lcx = _cx;
-        var lcy = _h * 39 / 100;
-        var lr = _w * 14 / 100;
+        var lcy = _h * 30 / 100;
+        var lr = _w * 12 / 100;
         var menuAngle = _tick.toFloat() * 1.2;
         dc.setColor(0x6B4226, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(lcx, lcy, lr);
@@ -1134,12 +1205,12 @@ class BitochiAxeArcadeView extends WatchUi.View {
 
         var titleC = (_tick % 14 < 7) ? 0xFF8844 : 0xFFAA66;
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx + 1, _h * 9 / 100 + 1, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_cx + 1, _h * 8 / 100 + 1, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(titleC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _h * 9 / 100, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_cx, _h * 8 / 100, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _h * 19 / 100, Graphics.FONT_SMALL, "AXE ARCADE", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_cx, _h * 17 / 100, Graphics.FONT_SMALL, "AXE ARCADE", Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0x2A1A0A, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, _h - 20, _w, 20);
@@ -1148,16 +1219,39 @@ class BitochiAxeArcadeView extends WatchUi.View {
         drawTorch(dc, 8, _h - 20);
         drawTorch(dc, _w - 14, _h - 20);
 
-        dc.setColor(0x6688AA, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _h * 61 / 100, Graphics.FONT_XTINY, "Stick axes. Dodge hazards.", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.drawText(_cx, _h * 66 / 100, Graphics.FONT_XTINY, "Hit apples for bonus!", Graphics.TEXT_JUSTIFY_CENTER);
-
         if (_bestScore > 0) {
             dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_cx, _h * 73 / 100, Graphics.FONT_XTINY, "BEST " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_cx, _h * 50 / 100, Graphics.FONT_XTINY, "BEST " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER);
         }
 
-        dc.setColor((_tick % 10 < 5) ? 0xFF8844 : 0xFFAA66, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _h * 81 / 100, Graphics.FONT_XTINY, "Tap to play", Graphics.TEXT_JUSTIFY_CENTER);
+        var rg   = menuRowGeom();
+        var rowH = rg[0]; var rowW = rg[1];
+        var rowX = rg[2]; var rowY0 = rg[3]; var gap = rg[4];
+        for (var i = 0; i < ARC_MENU_ROWS; i++) {
+            var ry  = rowY0 + i * (rowH + gap);
+            var sel = (i == _menuRow);
+
+            if (i == ARC_ROW_LB) {
+                LbBadge.drawRow(dc, rowX, ry, rowW, rowH, sel);
+                continue;
+            }
+
+            var bg; var bd; var fg;
+            if (sel) { bg = 0x3A1A00; bd = 0xFF8844; fg = 0xFFCC99; }
+            else     { bg = 0x1A1208; bd = 0x4A2A11; fg = 0xAA8866; }
+            dc.setColor(bg, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);
+            dc.setColor(bd, Graphics.COLOR_TRANSPARENT);
+            dc.drawRoundedRectangle(rowX, ry, rowW, rowH, 5);
+            if (sel) {
+                var ay = ry + rowH / 2;
+                dc.fillPolygon([[rowX + 5, ay - 4],
+                                [rowX + 5, ay + 4],
+                                [rowX + 11, ay]]);
+            }
+            dc.setColor(fg, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_cx, ry + (rowH - 14) / 2, Graphics.FONT_XTINY,
+                        "PLAY", Graphics.TEXT_JUSTIFY_CENTER);
+        }
     }
 }

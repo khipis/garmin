@@ -91,6 +91,8 @@ class BitochiJumpView extends WatchUi.View {
     hidden var _lastDist; hidden var _lastScore; hidden var _bestDist;
     hidden var _bestPerVenue;   // per-venue personal bests [4]
     hidden var _newHillRecord;  // set in finishJump, shown in drawResult
+    hidden var _tourBestDist;   // longest clean jump this tournament (m)
+    hidden var _tourBestVenue;  // venue index of that jump → post-game board
     hidden var _judgeScores;
     hidden var _showStandings;
 
@@ -186,6 +188,7 @@ class BitochiJumpView extends WatchUi.View {
             var v = Application.Storage.getValue("jumpBest" + i);
             _bestPerVenue[i] = (v != null) ? v : 0.0;
         }
+        _tourBestDist = 0.0; _tourBestVenue = 3;
         _showStandings = false; _jumperIdx = 0;
         _shakeX = 0; _shakeY = 0; _shakeTick = 0; _crowdCheer = 0;
         _menuRow = 0;
@@ -655,12 +658,17 @@ class BitochiJumpView extends WatchUi.View {
             _bestPerVenue[_venue] = dist;
             Application.Storage.setValue("jumpBest" + _venue, dist);
             _newHillRecord = true;
+            // New personal hill record → publish the distance to this hill's
+            // global leaderboard. Fire-and-forget: never interrupts the game
+            // (the post-game board is shown once, at tournament end). The board
+            // ranks longest jumps (higher = better), split per hill.
+            Leaderboard.submitScore(LB_GAME_ID, dist.toNumber(), _venueNames[_venue]);
         }
-        // Submit this jump's total to the global leaderboard, split by jumper.
-        // Post-game popup is NOT shown here — finishJump runs after every jump in
-        // the tournament, so showing it per-jump would slide the leaderboard up
-        // repeatedly (even mid next jump). It is shown once at tournament end.
-        Leaderboard.submitScore(LB_GAME_ID, _lastScore.toNumber(), _jumperNames[_jumperIdx]);
+        // Remember the longest clean jump of this tournament so the end-of-meet
+        // post-game popup shows the matching hill's record board.
+        if (!_landCrash && dist > _tourBestDist) {
+            _tourBestDist = dist; _tourBestVenue = _venue;
+        }
         gameState = JS_RESULT;
     }
 
@@ -711,15 +719,23 @@ class BitochiJumpView extends WatchUi.View {
         }
     }
 
-    // Open the shared global leaderboard, split by the current jumper's name.
+    // Open the shared global hill-records leaderboard. Boards are split per
+    // hill (variant = venue) and rank the longest jumps. From the menu we open
+    // the player's strongest hill (highest personal best), defaulting to the
+    // flagship Vikersund. The web front-end exposes every hill as a chip.
     function openLeaderboard() {
-        var v = new LbScoresView(LB_GAME_ID, _jumperNames[_jumperIdx], "SKI JUMP");
+        var bv = 3; var bvD = 0.0;
+        for (var i = 0; i < 4; i++) {
+            if (_bestPerVenue[i] > bvD) { bvD = _bestPerVenue[i]; bv = i; }
+        }
+        var v = new LbScoresView(LB_GAME_ID, _venueNames[bv], _venueNames[bv] + " HILL");
         WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
     hidden function startCompetition() {
         _venue = 0; buildHill();
         _startJumper = _jumperIdx; _jumpSlot = 0; _currentRound = 1; _jumpNum = 0;
+        _tourBestDist = 0.0; _tourBestVenue = 0;
         for (var i = 0; i < NUM_JUMPERS; i++) { _scores[i] = 0.0; _dists[i] = 0.0; _cumScores[i] = 0.0; _cumDists[i] = 0.0; }
         _jumperIdx = _startJumper; beginJump();
     }
@@ -734,8 +750,10 @@ class BitochiJumpView extends WatchUi.View {
                 _jumperIdx = _startJumper; beginJump();
             } else {
                 // Tournament over — show the post-game leaderboard once, for the
-                // player's chosen jumper board.
-                Leaderboard.showPostGame(LB_GAME_ID, _jumperNames[_startJumper], "SKI JUMP");
+                // hill where the player jumped farthest this meet (their best
+                // shot at a record). Falls back to the flagship Vikersund hill.
+                var pgVenue = (_tourBestDist > 0.0) ? _tourBestVenue : 3;
+                Leaderboard.showPostGame(LB_GAME_ID, _venueNames[pgVenue], _venueNames[pgVenue] + " HILL");
                 gameState = JS_FINAL;
             }
             return;

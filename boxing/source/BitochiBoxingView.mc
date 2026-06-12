@@ -391,9 +391,14 @@ class BitochiBoxingView extends WatchUi.View {
                     if (_score > _bestScore) { _bestScore = _score; Application.Storage.setValue("boxBest", _bestScore); }
                     gameState = GS_WIN;
                 } else {
-                    Leaderboard.submitScore(LB_GAME_ID, _score, "");
-                    Leaderboard.showPostGame(LB_GAME_ID, "", "BOXING");
                     gameState = GS_LOSE;
+                    // Only finalize the run (submit + post-game leaderboard)
+                    // once the free rematch has been used — a first loss still
+                    // offers a rematch, so the run isn't over yet.
+                    if (_rematchUsed) {
+                        Leaderboard.submitScore(LB_GAME_ID, _score, "");
+                        Leaderboard.showPostGame(LB_GAME_ID, "", "BOXING");
+                    }
                 }
             }
         } else if (gameState == GS_CHAMPION) {
