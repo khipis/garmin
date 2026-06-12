@@ -200,20 +200,21 @@ async function handleGetLeaderboard(url: URL, env: Env): Promise<Response> {
   const game = sanitizeGame(gameRaw);
   if (!game)   return err("invalid game name");
 
-  const variant = sanitizeVariant(variantRaw);
-  const user    = userRaw ? sanitizeUser(userRaw) : "";
+  const variant  = sanitizeVariant(variantRaw);
+  const user     = userRaw ? sanitizeUser(userRaw) : "";
+  const realOnly = url.searchParams.get("real") === "1";
 
   const asc    = ASC_GAMES.has(game);
   const order  = asc ? "ASC" : "DESC";
   const better = asc ? "<" : ">";              // "is a better score than"
   const bestFn = asc ? "MIN(score)" : "MAX(score)";
 
-  // Shared WHERE: game + variant (+ optional period). Bare `country` after a
-  // MIN/MAX picks the value from that best row in SQLite.
+  // Shared WHERE: game + variant (+ optional period + optional bot filter).
   const cutoff = periodCutoff(period);
+  const botClause = realOnly ? " AND is_bot = 0" : "";
   const where  = cutoff != null
-    ? "game = ? AND variant = ? AND timestamp >= ?"
-    : "game = ? AND variant = ?";
+    ? `game = ? AND variant = ? AND timestamp >= ?${botClause}`
+    : `game = ? AND variant = ?${botClause}`;
   const wbind  = cutoff != null ? [game, variant, cutoff] : [game, variant];
 
   type Row = { user: string; s: number; c: string | null };
@@ -412,17 +413,20 @@ async function handleGetStats(url: URL, env: Env): Promise<Response> {
 }
 
 async function handleGetVariants(url: URL, env: Env): Promise<Response> {
-  const gameRaw = (url.searchParams.get("game") ?? "").trim();
+  const gameRaw  = (url.searchParams.get("game") ?? "").trim();
   if (!gameRaw) return err("missing: game");
 
   const game = sanitizeGame(gameRaw);
   if (!game)   return err("invalid game name");
 
+  const realOnly  = url.searchParams.get("real") === "1";
+  const botClause = realOnly ? " AND is_bot = 0" : "";
+
   let variants: string[] = [];
   try {
     const result = await env.DB
       .prepare(
-        "SELECT DISTINCT variant FROM scores WHERE game = ? AND variant != '' ORDER BY variant ASC"
+        `SELECT DISTINCT variant FROM scores WHERE game = ? AND variant != ''${botClause} ORDER BY variant ASC`
       )
       .bind(game)
       .all<{ variant: string }>();
