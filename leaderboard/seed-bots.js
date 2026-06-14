@@ -65,11 +65,11 @@ const GAMES = [
   { game: 'edgesurvivor',      variants: [''],          scores: [40, 130]  },
   { game: 'serpent',           variants: [''],          scores: [30, 120]  },
   { game: 'run',               variants: [''],          scores: [40, 150]  },
-  { game: 'skyroll',           variants: ['Easy','Normal','Hard'], scores: [80, 280] },
+  { game: 'skyroll',           variants: ['Easy','Norm','Hard'],   scores: [80, 280] },
   { game: 'jumptower',         variants: [''],          scores: [80, 200]  },
 
   // ── Tower / builder ──────────────────────────────────────────────────────
-  { game: 'stacktower',        variants: ['Easy','Normal','Hard'], scores: [6, 14] },
+  { game: 'stacktower',        variants: ['Slow','Norm','Fast'],   scores: [6, 14] },
 
   // ── Puzzle / casual ──────────────────────────────────────────────────────
   { game: 'gemmatch',          variants: [''],          scores: [180, 450] },
@@ -82,10 +82,10 @@ const GAMES = [
 
   // ── Time-based (ASC — high bot score = easy to beat) ────────────────────
   { game: 'sudoku',  asc: true,
-    variants: ['4x4-easy','4x4-normal','4x4-hard','9x9-easy','9x9-normal','9x9-hard'],
+    variants: ['4x4-easy','4x4-medium','4x4-hard','9x9-easy','9x9-medium','9x9-hard'],
     scores: [280, 600] },
   { game: 'minesweeper', asc: true,
-    variants: ['8x8','10x10','12x12','15x10','15x15'],
+    variants: ['8x8','10x10','12x12','16x16','24x24','32x32'],
     scores: [180, 420] },
   { game: 'solitare', asc: true,  variants: [''],  scores: [420, 900]  },
   { game: 'lightsout', asc: true,
@@ -100,7 +100,7 @@ const GAMES = [
 
   // ── Minigolf / stroke games (ASC) ────────────────────────────────────────
   { game: 'minigolf', asc: true,
-    variants: ['Course1','Course2','Course3'],
+    variants: ['20-holes'],
     scores: [28, 50] },
 
   // ── Arcade / action ──────────────────────────────────────────────────────
@@ -115,13 +115,13 @@ const GAMES = [
     variants: ['Table1','Table2','Table3','Table4','Table5'],
     scores: [800, 4000] },
   { game: 'pongpro',
-    variants: ['Easy','Normal','Hard'],
+    variants: ['Easy','Medium','Hard'],
     scores: [1, 3] },
   { game: 'pixelinvaders',
-    variants: ['easy','normal','hard'],
+    variants: ['Easy','Normal','Hard'],
     scores: [100, 450] },
   { game: 'starcombat',
-    variants: ['Easy','Normal','Hard'],
+    variants: ['Easy','Norm','Hard'],
     scores: [80, 280] },
   { game: 'voidrocks',
     variants: ['Easy','Normal','Hard'],
@@ -130,7 +130,7 @@ const GAMES = [
     variants: ['Easy','Normal','Hard'],
     scores: [150, 480] },
   { game: 'sniperscope',
-    variants: ['Easy','Normal','Hard'],
+    variants: ['Easy','Norm','Hard'],
     scores: [40, 180] },
   { game: 'fish',        variants: [''],          scores: [40, 160]  },
 
@@ -138,42 +138,49 @@ const GAMES = [
   { game: 'blackjack',   variants: [''],          scores: [120, 280] },
   { game: 'poker',       variants: [''],          scores: [250, 700] },
   { game: 'diceroyale',
-    variants: ['Normal','Challenge'],
+    variants: ['classic','quick','daily'],
     scores: [100, 220] },
   { game: 'makao_lite',
-    variants: ['Easy','Normal','Hard'],
+    variants: ['Easy','Med','Hard'],
     scores: [1, 3] },
 
   // ── Strategy / board ─────────────────────────────────────────────────────
   { game: 'checkers',
-    variants: ['Easy','Normal','Hard'],
+    variants: ['easy','medium','hard'],
     scores: [1, 3] },
   { game: 'chess',
-    variants: ['Easy','Normal'],
+    variants: ['easy','medium','hard'],
     scores: [1, 2] },
   { game: 'othello',
     variants: [''],
     scores: [8, 20] },
   { game: 'tictacpro',
-    variants: ['Easy','Normal','Hard'],
+    variants: ['Easy','Med','Hard'],
     scores: [1, 3] },
   { game: 'connectfour',
-    variants: ['Easy','Normal','Hard'],
+    variants: ['Easy','Med','Hard'],
     scores: [1, 3] },
   { game: 'hex_mini',
-    variants: ['Easy','Normal','Hard'],
+    variants: ['EASY','MED','HARD'],
     scores: [1, 3] },
   { game: 'dots_boxes',
-    variants: ['Easy','Normal','Hard'],
+    variants: ['easy','med','hard'],
     scores: [1, 3] },
   { game: 'morris_classic',
-    variants: ['Easy','Normal'],
+    variants: ['easy','med','hard'],
     scores: [1, 3] },
 
   // ── Hangman / word ───────────────────────────────────────────────────────
+  // variant = category.toLower() + "-" + difficulty.toLower()
+  // categories: animals, food, technology, sports
+  // difficulties: easy, medium, hard
   { game: 'hangman',
-    variants: ['Animals-Easy','Animals-Normal','Animals-Hard',
-               'Sports-Easy','Sports-Normal'],
+    variants: [
+      'animals-easy','animals-medium','animals-hard',
+      'food-easy','food-medium','food-hard',
+      'technology-easy','technology-medium','technology-hard',
+      'sports-easy','sports-medium','sports-hard',
+    ],
     scores: [1, 3] },
 
   // ── Boxing ───────────────────────────────────────────────────────────────
@@ -181,7 +188,7 @@ const GAMES = [
 
   // ── Archery ──────────────────────────────────────────────────────────────
   { game: 'archery',
-    variants: ['Easy','Normal','Hard'],
+    variants: ['Easy','Norm','Hard'],
     scores: [40, 140] },
 
   // ── Ski jump (per-hill leaderboard) ──────────────────────────────────────
