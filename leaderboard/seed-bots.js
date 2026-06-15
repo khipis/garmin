@@ -78,7 +78,8 @@ const GAMES = [
   { game: 'blocks',            variants: [''],          scores: [100, 500] },
   { game: 'bricks',            variants: [''],          scores: [100, 500] },
   { game: 'jazzball',          variants: [''],          scores: [8, 25]    },
-  { game: 'gyromaze',          variants: ['5x5','7x7','9x9'], scores: [1, 4] },
+  { game: 'gyromaze',          variants: ['Easy','Med','Hard'], scores: [1, 4] },
+  { game: 'billiards',         variants: ['3-ball','8-ball','9-ball','snooker'], scores: [2, 6] },
 
   // ── Time-based (ASC — high bot score = easy to beat) ────────────────────
   { game: 'sudoku',  asc: true,
@@ -91,7 +92,7 @@ const GAMES = [
   { game: 'lightsout', asc: true,
     variants: ['3x3','4x4','5x5'],
     scores: [40, 90] },
-  { game: 'akari',    asc: true,  variants: [''],  scores: [250, 540]  },
+  { game: 'akari',    asc: true,  variants: ['6x6','7x7'],  scores: [250, 540]  },
   { game: 'nonogram', asc: true,  variants: [''],  scores: [300, 600]  },
   { game: 'kakuro',   asc: true,  variants: [''],  scores: [280, 560]  },
   { game: 'memo',     asc: true,
@@ -112,7 +113,7 @@ const GAMES = [
   { game: 'parachute',   variants: [''],          scores: [40, 140]  },
   { game: 'moon',        variants: [''],          scores: [80, 250]  },
   { game: 'pinballpro',
-    variants: ['Table1','Table2','Table3','Table4','Table5'],
+    variants: ['CLASSIC','NOVA','DERBY','STINGER','ECLIPSE'],
     scores: [800, 4000] },
   { game: 'pongpro',
     variants: ['Easy','Medium','Hard'],
@@ -193,12 +194,12 @@ const GAMES = [
 
   // ── Ski jump (per-hill leaderboard) ──────────────────────────────────────
   { game: 'skijump',
-    variants: ['Vikersund','Planica','Oberstdorf','Lillehammer'],
+    variants: ['Zakopane','Innsbruck','Oberstdorf','Vikersund'],
     scores: [45, 85] },
 
   // ── Battleship (ASC — fewer shots = better) ──────────────────────────────
   { game: 'battleship', asc: true,
-    variants: ['Easy','Normal','Hard'],
+    variants: ['easy','medium','hard'],
     scores: [55, 80] },
 ];
 

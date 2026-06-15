@@ -96,6 +96,24 @@ const FIXES = [
 
   // diceroyale: "classic", "quick", "daily" (not "Normal"/"Challenge")
   { game: 'diceroyale', variants: ['classic','quick','daily'], scores: [100, 220] },
+
+  // gyromaze: was "5x5/7x7/9x9", should be "Easy/Med/Hard"
+  { game: 'gyromaze',    variants: ['Easy','Med','Hard'],       scores: [1,   4]   },
+
+  // akari: was empty variant, should be "6x6"/"7x7"
+  { game: 'akari', asc: true, variants: ['6x6','7x7'],          scores: [250, 540] },
+
+  // pinballpro: was "Table1..5", should be actual table names
+  { game: 'pinballpro',
+    variants: ['CLASSIC','NOVA','DERBY','STINGER','ECLIPSE'],   scores: [800, 4000] },
+
+  // skijump: wrong venue names (Planica/Lillehammer don't exist in game)
+  { game: 'skijump',
+    variants: ['Zakopane','Innsbruck','Oberstdorf','Vikersund'], scores: [45,  85]  },
+
+  // billiards: was missing from seed entirely
+  { game: 'billiards',
+    variants: ['3-ball','8-ball','9-ball','snooker'],            scores: [2,   6]   },
 ];
 
 const delay = ms => new Promise(r => setTimeout(r, ms));
