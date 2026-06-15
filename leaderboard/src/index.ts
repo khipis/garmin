@@ -445,24 +445,31 @@ async function handleGetVariants(url: URL, env: Env): Promise<Response> {
 // GET /visit  — fire-and-forget from the web frontend on page load.
 // Records an anonymised visit and returns { total, online } where
 // online = unique IP hashes seen in the last 5 minutes.
+// Deduplication: same IP counted at most once per 30-minute window.
 async function handleVisit(req: Request, env: Env): Promise<Response> {
   const ip      = req.headers.get("CF-Connecting-IP") ?? "unknown";
   const salt    = env.IP_SALT ?? env.LB_KEY ?? "bito-visit";
   const ipHash  = await hashIp(ip, salt);
   const now     = Date.now();
-  const window5 = now - 5 * 60 * 1000;   // 5 min online window
-  const cutoff7 = now - 7 * 24 * 3600 * 1000; // keep 7 days max
+  const window5  = now - 5  * 60 * 1000;   // 5 min  → online window
+  const window30 = now - 30 * 60 * 1000;   // 30 min → dedup window
+  const cutoff7  = now - 7  * 24 * 3600 * 1000; // 7 days → prune
 
-  // Insert this visit (non-blocking — ctx.waitUntil not available in basic
-  // Workers, so we just fire the writes and let them resolve naturally).
-  await env.DB.prepare(
-    "INSERT INTO visits (ip_hash, timestamp) VALUES (?, ?)"
-  ).bind(ipHash, now).run();
+  // Only insert if this IP hasn't been seen in the last 30 minutes.
+  const recent = await env.DB.prepare(
+    "SELECT 1 FROM visits WHERE ip_hash = ? AND timestamp > ? LIMIT 1"
+  ).bind(ipHash, window30).first();
 
-  // Prune rows older than 7 days to keep the table small.
-  await env.DB.prepare(
-    "DELETE FROM visits WHERE timestamp < ?"
-  ).bind(cutoff7).run();
+  if (!recent) {
+    await env.DB.prepare(
+      "INSERT INTO visits (ip_hash, timestamp) VALUES (?, ?)"
+    ).bind(ipHash, now).run();
+
+    // Prune old rows (only bother when we actually insert, not every request).
+    await env.DB.prepare(
+      "DELETE FROM visits WHERE timestamp < ?"
+    ).bind(cutoff7).run();
+  }
 
   const [totalRow, onlineRow] = await Promise.all([
     env.DB.prepare("SELECT COUNT(*) AS n FROM visits").first<{ n: number }>(),
