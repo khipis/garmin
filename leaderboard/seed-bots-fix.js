@@ -114,6 +114,9 @@ const FIXES = [
   // billiards: was missing from seed entirely
   { game: 'billiards',
     variants: ['3-ball','8-ball','9-ball','snooker'],            scores: [2,   6]   },
+
+  // solitaire: was seeded under wrong ID "solitare" (typo)
+  { game: 'solitaire', asc: true, variants: [''],               scores: [420, 900] },
 ];
 
 const delay = ms => new Promise(r => setTimeout(r, ms));

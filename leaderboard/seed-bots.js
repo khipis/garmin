@@ -88,7 +88,7 @@ const GAMES = [
   { game: 'minesweeper', asc: true,
     variants: ['8x8','10x10','12x12','16x16','24x24','32x32'],
     scores: [180, 420] },
-  { game: 'solitare', asc: true,  variants: [''],  scores: [420, 900]  },
+  { game: 'solitaire', asc: true,  variants: [''],  scores: [420, 900]  },
   { game: 'lightsout', asc: true,
     variants: ['3x3','4x4','5x5'],
     scores: [40, 90] },
