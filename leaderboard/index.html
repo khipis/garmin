@@ -80,6 +80,26 @@
     box-shadow: 0 0 6px var(--green);
     animation: blink 2s ease-in-out infinite;
   }
+
+  .visitor-counters {
+    display: flex; align-items: center; gap: 14px;
+    font-size: .72rem; color: var(--muted); letter-spacing: .04em;
+  }
+  .visitor-counters .vc-item {
+    display: flex; align-items: center; gap: 5px;
+  }
+  .visitor-counters .vc-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--green); box-shadow: 0 0 5px var(--green);
+    animation: blink 2s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+  .visitor-counters .vc-num {
+    color: var(--text); font-weight: 700;
+  }
+  @media (max-width: 480px) {
+    .visitor-counters .vc-total { display: none; }
+  }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
 
   /* ── Hero banner ──────────────────────────────────────────────────── */
@@ -575,6 +595,17 @@
 <header>
   <div class="logo">⌚ Bitochi Games</div>
   <div class="sep"></div>
+  <div class="visitor-counters">
+    <div class="vc-item vc-online">
+      <div class="vc-dot"></div>
+      <span id="vc-online-num" class="vc-num">—</span>
+      <span>online</span>
+    </div>
+    <div class="vc-item vc-total">
+      <span id="vc-total-num" class="vc-num">—</span>
+      <span>visits</span>
+    </div>
+  </div>
   <div class="live-dot">Live Rankings</div>
 </header>
 
@@ -1472,6 +1503,19 @@ function setPeriodUI() {
   document.querySelectorAll('#period-seg .seg-btn').forEach(x =>
     x.classList.toggle('active', x.dataset.p === currentPeriod));
 }
+
+// ── Visitor counter ──────────────────────────────────────────────────────────
+(async function trackVisit() {
+  try {
+    const r = await fetch(`${API_BASE}/visit`, { cache: 'no-store' });
+    if (!r.ok) return;
+    const d = await r.json();
+    const onlineEl = document.getElementById('vc-online-num');
+    const totalEl  = document.getElementById('vc-total-num');
+    if (onlineEl) onlineEl.textContent = d.online ?? '—';
+    if (totalEl)  totalEl.textContent  = (d.total ?? 0).toLocaleString();
+  } catch (_) {}
+})();
 
 // ── Init: list every game; games without rankings just show their description ─
 function init() {

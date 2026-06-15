@@ -36,3 +36,15 @@ CREATE INDEX IF NOT EXISTS idx_scores_game_variant_score
 -- Covers period filters + recent-players ordering
 CREATE INDEX IF NOT EXISTS idx_scores_game_variant_ts
   ON scores (game, variant, timestamp DESC);
+
+-- ── Visitor tracking ──────────────────────────────────────────────────────────
+-- Migration (run once on existing DB):
+--   CREATE TABLE IF NOT EXISTS visits (ip_hash TEXT NOT NULL, timestamp INTEGER NOT NULL);
+--   CREATE INDEX IF NOT EXISTS idx_visits_ts ON visits (timestamp DESC);
+
+CREATE TABLE IF NOT EXISTS visits (
+  ip_hash   TEXT    NOT NULL,   -- salted SHA-256 of client IP (anonymised)
+  timestamp INTEGER NOT NULL    -- unix ms
+);
+
+CREATE INDEX IF NOT EXISTS idx_visits_ts ON visits (timestamp DESC);

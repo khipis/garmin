@@ -441,6 +441,39 @@ async function handleGetVariants(url: URL, env: Env): Promise<Response> {
 
 // ── Main entry ────────────────────────────────────────────────────────────────
 
+// ── Visitor tracking ─────────────────────────────────────────────────────────
+// GET /visit  — fire-and-forget from the web frontend on page load.
+// Records an anonymised visit and returns { total, online } where
+// online = unique IP hashes seen in the last 5 minutes.
+async function handleVisit(req: Request, env: Env): Promise<Response> {
+  const ip      = req.headers.get("CF-Connecting-IP") ?? "unknown";
+  const salt    = env.IP_SALT ?? env.LB_KEY ?? "bito-visit";
+  const ipHash  = await hashIp(ip, salt);
+  const now     = Date.now();
+  const window5 = now - 5 * 60 * 1000;   // 5 min online window
+  const cutoff7 = now - 7 * 24 * 3600 * 1000; // keep 7 days max
+
+  // Insert this visit (non-blocking — ctx.waitUntil not available in basic
+  // Workers, so we just fire the writes and let them resolve naturally).
+  await env.DB.prepare(
+    "INSERT INTO visits (ip_hash, timestamp) VALUES (?, ?)"
+  ).bind(ipHash, now).run();
+
+  // Prune rows older than 7 days to keep the table small.
+  await env.DB.prepare(
+    "DELETE FROM visits WHERE timestamp < ?"
+  ).bind(cutoff7).run();
+
+  const [totalRow, onlineRow] = await Promise.all([
+    env.DB.prepare("SELECT COUNT(*) AS n FROM visits").first<{ n: number }>(),
+    env.DB.prepare(
+      "SELECT COUNT(DISTINCT ip_hash) AS n FROM visits WHERE timestamp > ?"
+    ).bind(window5).first<{ n: number }>(),
+  ]);
+
+  return json({ total: totalRow?.n ?? 0, online: onlineRow?.n ?? 0 });
+}
+
 export default {
   async fetch(req: Request, env: Env): Promise<Response> {
     const url    = new URL(req.url);
@@ -469,6 +502,7 @@ export default {
     if (method === "GET"  && path === "/games")       return handleGetGames(env);
     if (method === "GET"  && path === "/stats")       return handleGetStats(url, env);
     if (method === "GET"  && path === "/variants")    return handleGetVariants(url, env);
+    if (method === "GET"  && path === "/visit")       return handleVisit(req, env);
     if (method === "GET"  && path === "/health")      return json({ ok: true, ts: Date.now() });
 
     return err("not found", 404);
