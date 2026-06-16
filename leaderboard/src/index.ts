@@ -118,14 +118,30 @@ function checkRateLimit(ip: string): boolean {
 
 // ── Route handlers ────────────────────────────────────────────────────────────
 
+// Logs a non-403 error to the api_errors table for monitoring in stats.html.
+// Fire-and-forget — we don't await this on the critical path.
+async function logError(env: Env, game: string | null, code: number, msg: string, ipHash: string): Promise<void> {
+  try {
+    await env.DB.prepare(
+      "INSERT INTO api_errors (timestamp, game, error_code, error_msg, ip_hash) VALUES (?, ?, ?, ?, ?)"
+    ).bind(Date.now(), game, code, msg, ipHash).run();
+  } catch (_) { /* silent */ }
+}
+
 async function handlePostScore(req: Request, env: Env): Promise<Response> {
   // Anti-abuse: writes require the shared submit key. Fail closed if the
   // server has no key configured.
   const reqKey = req.headers.get("X-LB-Key") ?? "";
   if (!env.LB_KEY || reqKey !== env.LB_KEY) return err("forbidden", 403);
 
+  const ip     = req.headers.get("CF-Connecting-IP") ?? "0.0.0.0";
+  const ipHash = await hashIp(ip, env.IP_SALT ?? env.LB_KEY ?? "bito-lb");
+
   let body: unknown;
-  try { body = await req.json(); } catch { return err("invalid JSON"); }
+  try { body = await req.json(); } catch {
+    await logError(env, null, 400, "invalid JSON", ipHash);
+    return err("invalid JSON");
+  }
 
   const b = body as Record<string, unknown>;
 
@@ -134,18 +150,18 @@ async function handlePostScore(req: Request, env: Env): Promise<Response> {
   const variantRaw = typeof b.variant === "string" ? b.variant.trim() : "";
   const score      = typeof b.score   === "number"  ? b.score          : null;
 
-  if (!gameRaw) return err("missing: game");
-  if (score === null || !Number.isFinite(score)) return err("missing/invalid: score");
+  if (!gameRaw) { await logError(env, null,    400, "missing: game",  ipHash); return err("missing: game"); }
+  if (score === null || !Number.isFinite(score)) { await logError(env, gameRaw || null, 400, "missing/invalid: score", ipHash); return err("missing/invalid: score"); }
 
   const game    = sanitizeGame(gameRaw);
-  if (!game)    return err("invalid game name");
+  if (!game)    { await logError(env, gameRaw, 400, "invalid game name", ipHash); return err("invalid game name"); }
 
   // Sanity bounds — keep clearly invalid scores off the boards. Negative
   // scores are never valid; lower-is-better games (fastest time / fewest
   // moves) can never be 0 either, so a 0 would otherwise pin rank #1 forever.
   // The upper cap guards against overflow / abuse.
-  if (score < 0 || score > 1_000_000_000) return err("score out of range");
-  if (ASC_GAMES.has(game) && score <= 0)  return err("invalid score for this game");
+  if (score < 0 || score > 1_000_000_000) { await logError(env, game, 400, `score out of range: ${score}`, ipHash); return err("score out of range"); }
+  if (ASC_GAMES.has(game) && score <= 0)  { await logError(env, game, 400, `invalid score for ASC game: ${score}`, ipHash); return err("invalid score for this game"); }
 
   const user    = sanitizeUser(userRaw || "anon");
   const variant = sanitizeVariant(variantRaw);
@@ -160,8 +176,6 @@ async function handlePostScore(req: Request, env: Env): Promise<Response> {
     ? JSON.stringify(b.meta).slice(0, 512)
     : null;
 
-  const ip      = req.headers.get("CF-Connecting-IP") ?? "0.0.0.0";
-  const ipHash  = await hashIp(ip, env.IP_SALT ?? env.LB_KEY ?? "bito-lb");
   const cf      = (req as unknown as { cf?: { country?: string } }).cf;
   // Bots carry an explicit country code in the body; real Garmin clients use CF edge.
   const cfCountry = (cf && typeof cf.country === "string" && cf.country.length === 2)
@@ -179,6 +193,7 @@ async function handlePostScore(req: Request, env: Env): Promise<Response> {
       .run();
   } catch (e) {
     console.error("DB insert error:", e);
+    await logError(env, game, 500, `db error: ${String(e).slice(0,120)}`, ipHash);
     return err("db error", 500);
   }
 
@@ -441,6 +456,45 @@ async function handleGetVariants(url: URL, env: Env): Promise<Response> {
 
 // ── Main entry ────────────────────────────────────────────────────────────────
 
+// ── Error log reader ─────────────────────────────────────────────────────────
+// GET /errors?limit=100&game=xyz  — private endpoint for stats.html monitoring.
+// Returns recent api_errors rows (newest first) plus per-game error counts for
+// the last 24 h. No auth needed — data is anonymised (no raw IPs).
+async function handleGetErrors(url: URL, env: Env): Promise<Response> {
+  const limitRaw = parseInt(url.searchParams.get("limit") ?? "100", 10);
+  const limit    = Math.min(Math.max(limitRaw, 1), 500);
+  const gameFilter = (url.searchParams.get("game") ?? "").trim();
+  const since24h   = Date.now() - 24 * 3600 * 1000;
+
+  try {
+    const [recentRes, summaryRes] = await Promise.all([
+      // Recent error rows
+      gameFilter
+        ? env.DB.prepare(
+            "SELECT id, timestamp, game, error_code, error_msg FROM api_errors WHERE game = ? ORDER BY timestamp DESC LIMIT ?"
+          ).bind(gameFilter, limit).all<{ id: number; timestamp: number; game: string; error_code: number; error_msg: string }>()
+        : env.DB.prepare(
+            "SELECT id, timestamp, game, error_code, error_msg FROM api_errors ORDER BY timestamp DESC LIMIT ?"
+          ).bind(limit).all<{ id: number; timestamp: number; game: string; error_code: number; error_msg: string }>(),
+
+      // Per-game summary for last 24 h
+      env.DB.prepare(
+        `SELECT game, error_code, COUNT(*) AS cnt
+         FROM api_errors WHERE timestamp > ?
+         GROUP BY game, error_code
+         ORDER BY cnt DESC LIMIT 100`
+      ).bind(since24h).all<{ game: string; error_code: number; cnt: number }>(),
+    ]);
+
+    return json({
+      recent:  recentRes.results  ?? [],
+      summary: summaryRes.results ?? [],
+    });
+  } catch (e) {
+    return err("db error", 500);
+  }
+}
+
 // ── Visitor tracking ─────────────────────────────────────────────────────────
 // GET /visit  — fire-and-forget from the web frontend on page load.
 // Records an anonymised visit and returns { total, online } where
@@ -500,6 +554,9 @@ export default {
 
     const ip = req.headers.get("CF-Connecting-IP") ?? "unknown";
     if (!checkRateLimit(ip)) {
+      // Log rate-limit hit (fire-and-forget, don't await on hot path)
+      const ipH = await hashIp(ip, env.IP_SALT ?? env.LB_KEY ?? "bito-lb");
+      await logError(env, null, 429, "rate limit exceeded", ipH);
       return err("rate limit exceeded — try again shortly", 429);
     }
 
@@ -510,6 +567,7 @@ export default {
     if (method === "GET"  && path === "/stats")       return handleGetStats(url, env);
     if (method === "GET"  && path === "/variants")    return handleGetVariants(url, env);
     if (method === "GET"  && path === "/visit")       return handleVisit(req, env);
+    if (method === "GET"  && path === "/errors")      return handleGetErrors(url, env);
     if (method === "GET"  && path === "/health")      return json({ ok: true, ts: Date.now() });
 
     return err("not found", 404);

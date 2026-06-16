@@ -161,6 +161,29 @@
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
+  /* ── Error monitoring ────────────────────────────────────────────────────── */
+  .err-summary {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;
+  }
+  .err-badge {
+    background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.3);
+    border-radius: 8px; padding: 8px 14px; font-size: .78rem;
+  }
+  .err-badge .eb-game { font-weight: 700; color: #f87171; }
+  .err-badge .eb-code { color: var(--muted); font-size: .7rem; margin-left: 4px; }
+  .err-badge .eb-cnt  { font-weight: 800; font-size: 1rem; color: #fca5a5; }
+  .err-none { color: var(--muted); font-size: .82rem; padding: 8px 0; }
+  .err-table { width: 100%; border-collapse: collapse; font-size: .78rem; }
+  .err-table th { text-align: left; padding: 6px 10px; color: var(--muted); font-weight: 600; border-bottom: 1px solid var(--border); }
+  .err-table td { padding: 5px 10px; border-bottom: 1px solid rgba(255,255,255,.04); vertical-align: top; }
+  .err-table tr:hover td { background: rgba(255,255,255,.02); }
+  .err-code-400 { color: #fbbf24; font-weight: 700; }
+  .err-code-429 { color: #a78bfa; font-weight: 700; }
+  .err-code-500 { color: #f87171; font-weight: 700; }
+  .err-time { color: var(--muted); white-space: nowrap; }
+  .err-game { color: var(--accent); font-weight: 600; }
+  .err-msg  { color: #8fa8bc; }
+
   /* ── Responsive ─────────────────────────────────────────────────────────── */
   @media (max-width: 640px) {
     .layout { flex-direction: column; height: auto; }
@@ -209,6 +232,11 @@
 
       <div class="sh"><span class="sh-title">Per country</span><span class="sh-line"></span></div>
       <div id="per-country"></div>
+
+      <div class="sh"><span class="sh-title">🚨 Error monitoring — last 24 h</span><span class="sh-line"></span><button class="hbtn" onclick="loadErrors()" style="margin-left:8px;font-size:.7rem;padding:3px 8px">↺</button></div>
+      <div id="error-summary"></div>
+      <div class="sh"><span class="sh-title">Recent errors (last 100)</span><span class="sh-line"></span></div>
+      <div id="error-log"><div class="state"><div class="spinner"></div>Loading…</div></div>
     </div>
 
     <!-- Leaderboard panel (per game) -->
@@ -458,6 +486,59 @@ async function loadLb(game, variant) {
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 loadStats();
+loadErrors();
+
+async function loadErrors() {
+  const summaryEl = document.getElementById('error-summary');
+  const logEl     = document.getElementById('error-log');
+  summaryEl.innerHTML = '<div class="state"><div class="spinner"></div></div>';
+  logEl.innerHTML     = '<div class="state"><div class="spinner"></div>Loading…</div>';
+  try {
+    const r = await fetch(`${API}/errors?limit=100`, { cache: 'no-store' });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const d = await r.json();
+
+    // ── Summary badges ────────────────────────────────────────────────────────
+    const summary = d.summary || [];
+    if (summary.length === 0) {
+      summaryEl.innerHTML = '<div class="err-none">✅ No errors in the last 24 h</div>';
+    } else {
+      summaryEl.innerHTML = `<div class="err-summary">${
+        summary.map(s => `
+          <div class="err-badge">
+            <span class="eb-game">${esc(s.game || '—')}</span>
+            <span class="eb-code">[${s.error_code}]</span>
+            <span class="eb-cnt"> ×${s.cnt}</span>
+          </div>`).join('')
+      }</div>`;
+    }
+
+    // ── Recent log table ──────────────────────────────────────────────────────
+    const rows = d.recent || [];
+    if (rows.length === 0) {
+      logEl.innerHTML = '<div class="state">No errors recorded yet.</div>';
+      return;
+    }
+    const codeClass = c => c >= 500 ? 'err-code-500' : c === 429 ? 'err-code-429' : 'err-code-400';
+    logEl.innerHTML = `<div style="overflow-x:auto"><table class="err-table">
+      <thead><tr>
+        <th>Time</th><th>Code</th><th>Game</th><th>Message</th>
+      </tr></thead>
+      <tbody>${rows.map(r => {
+        const dt = new Date(r.timestamp).toISOString().replace('T',' ').slice(0,19);
+        return `<tr>
+          <td class="err-time">${esc(dt)}</td>
+          <td class="${codeClass(r.error_code)}">${r.error_code}</td>
+          <td class="err-game">${esc(r.game || '—')}</td>
+          <td class="err-msg">${esc(r.error_msg || '')}</td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table></div>`;
+  } catch(e) {
+    summaryEl.innerHTML = '';
+    logEl.innerHTML = `<div class="state">⚠️ ${esc(String(e))}</div>`;
+  }
+}
 </script>
 </body>
 </html>

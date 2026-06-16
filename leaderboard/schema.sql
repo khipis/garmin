@@ -48,3 +48,21 @@ CREATE TABLE IF NOT EXISTS visits (
 );
 
 CREATE INDEX IF NOT EXISTS idx_visits_ts ON visits (timestamp DESC);
+
+-- ── API error log ─────────────────────────────────────────────────────────────
+-- Migration (run once on existing DB):
+--   CREATE TABLE IF NOT EXISTS api_errors (id INTEGER PRIMARY KEY AUTOINCREMENT, timestamp INTEGER NOT NULL, game TEXT, error_code INTEGER NOT NULL, error_msg TEXT, ip_hash TEXT);
+--   CREATE INDEX IF NOT EXISTS idx_errors_ts ON api_errors (timestamp DESC);
+--   CREATE INDEX IF NOT EXISTS idx_errors_game ON api_errors (game, timestamp DESC);
+
+CREATE TABLE IF NOT EXISTS api_errors (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  timestamp  INTEGER NOT NULL,
+  game       TEXT,                  -- game ID if parseable from the request
+  error_code INTEGER NOT NULL,      -- HTTP status: 400, 429, 500
+  error_msg  TEXT,                  -- short human-readable reason
+  ip_hash    TEXT                   -- anonymised IP
+);
+
+CREATE INDEX IF NOT EXISTS idx_errors_ts   ON api_errors (timestamp DESC);
+CREATE INDEX IF NOT EXISTS idx_errors_game ON api_errors (game, timestamp DESC);
