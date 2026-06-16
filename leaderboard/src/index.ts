@@ -377,10 +377,13 @@ async function handleGetStats(url: URL, env: Env): Promise<Response> {
   type PerCountry = { country: string | null; players: number; scores: number };
   let perGame:    PerGame[]    = [];
   let perCountry: PerCountry[] = [];
-  let totals = { games: 0, scores: 0, players: 0, devices: 0 };
+  let totals = { games: 0, scores: 0, players: 0, devices: 0, returning: 0, loyal: 0 };
 
   const realOnly = url.searchParams.get("real") === "1";
-  const botFilter = realOnly ? "WHERE is_bot = 0" : "";
+  const w  = realOnly ? "WHERE is_bot = 0" : "";
+  const wa = realOnly ? "AND is_bot = 0"   : "";
+  // Backwards-compat alias for the old name used below
+  const botFilter = w;
 
   try {
     const byGame = await env.DB
@@ -419,8 +422,37 @@ async function handleGetStats(url: URL, env: Env): Promise<Response> {
          FROM scores
          ${botFilter}`
       )
-      .first<typeof totals>();
-    if (agg) totals = agg;
+      .first<{ games: number; scores: number; players: number; devices: number }>();
+    if (agg) Object.assign(totals, agg);
+
+    // Returning players: ip_hash seen on ≥2 distinct calendar days
+    const ret = await env.DB
+      .prepare(
+        `SELECT COUNT(*) AS cnt FROM (
+           SELECT ip_hash
+           FROM scores
+           ${w}
+           GROUP BY ip_hash
+           HAVING COUNT(DISTINCT DATE(timestamp, 'unixepoch')) >= 2
+         )`
+      )
+      .first<{ cnt: number }>();
+    if (ret) totals.returning = ret.cnt;
+
+    // Loyal players: ip_hash seen on ≥7 distinct calendar days
+    const loy = await env.DB
+      .prepare(
+        `SELECT COUNT(*) AS cnt FROM (
+           SELECT ip_hash
+           FROM scores
+           ${w}
+           GROUP BY ip_hash
+           HAVING COUNT(DISTINCT DATE(timestamp, 'unixepoch')) >= 7
+         )`
+      )
+      .first<{ cnt: number }>();
+    if (loy) totals.loyal = loy.cnt;
+
   } catch (e) {
     console.error("DB stats error:", e);
     return err("db error", 500);
