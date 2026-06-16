@@ -166,11 +166,17 @@ async function handlePostScore(req: Request, env: Env): Promise<Response> {
   const user    = sanitizeUser(userRaw || "anon");
   const variant = sanitizeVariant(variantRaw);
 
+  // Anon uniquification: give every "anon" player a stable short tag derived
+  // from their IP hash so they appear as separate leaderboard entries.
+  // Same network → same tag (e.g. "anon-a3f2"); bots keep their own names.
+  const isBot   = b.is_bot === true ? 1 : 0;
+  const uniqueUser = (user === "anon" && !isBot)
+    ? `anon-${ipHash.slice(0, 4)}`
+    : user;
   if (GAME_KEYS[game] !== undefined) {
     if (b.key !== GAME_KEYS[game]) return err("invalid game key", 403);
   }
 
-  const isBot   = b.is_bot === true ? 1 : 0;
   const ts      = Math.floor(Date.now() / 1000);
   const metaStr = b.meta && typeof b.meta === "object"
     ? JSON.stringify(b.meta).slice(0, 512)
@@ -189,7 +195,7 @@ async function handlePostScore(req: Request, env: Env): Promise<Response> {
       .prepare(
         "INSERT INTO scores (game, user, score, timestamp, variant, meta, ip_hash, country, is_bot) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"
       )
-      .bind(game, user, Math.round(score), ts, variant, metaStr, ipHash, country, isBot)
+      .bind(game, uniqueUser, Math.round(score), ts, variant, metaStr, ipHash, country, isBot)
       .run();
   } catch (e) {
     console.error("DB insert error:", e);

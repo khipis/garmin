@@ -329,8 +329,8 @@ function renderStats() {
 
   const t = d.totals || {};
   document.getElementById('cards').innerHTML = `
-    <div class="card"><div class="num">${(t.players||0).toLocaleString()}</div><div class="lbl">Real Players</div></div>
-    <div class="card"><div class="num">${(t.devices||0).toLocaleString()}</div><div class="lbl">Devices</div></div>
+    <div class="card"><div class="num">${(t.players||0).toLocaleString()}</div><div class="lbl">Unique Players</div><div class="lbl" style="font-size:.6rem;margin-top:2px;color:var(--muted)">named + anon-XXXX</div></div>
+    <div class="card"><div class="num">${(t.devices||0).toLocaleString()}</div><div class="lbl">Unique IPs</div><div class="lbl" style="font-size:.6rem;margin-top:2px;color:var(--muted)">cross-check</div></div>
     <div class="card"><div class="num">${(t.scores||0).toLocaleString()}</div><div class="lbl">Real Scores</div></div>
     <div class="card"><div class="num">${(t.games||0).toLocaleString()}</div><div class="lbl">Games Active</div></div>`;
 
@@ -353,7 +353,7 @@ function renderStats() {
   } else {
     document.getElementById('per-game').innerHTML = `
       <table>
-        <thead><tr><th>Game</th><th>Players</th><th>Devices</th><th>Scores</th><th class="bar-cell"></th></tr></thead>
+        <thead><tr><th>Game</th><th>Players</th><th>IPs</th><th>Scores</th><th class="bar-cell"></th></tr></thead>
         <tbody>${rows.map(g => {
           const pct = Math.round(((g.players||0)/maxP)*100);
           return `<tr style="cursor:pointer" onclick="openGame('${esc(g.game)}')">
