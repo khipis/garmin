@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Breath Training System — Garmin App by Bitochi</title>
+<meta name="description" content="Advanced breath training for Garmin watches. CO2 & O2 tables, apnea holds, Wim Hof, Box Breathing, Pranayama — with sensor tracking and 8 structured training programs."/>
+<meta property="og:title" content="Breath Training System — Garmin App"/>
+<meta property="og:description" content="Advanced breath training for Garmin. CO2 tables, apnea, Wim Hof, Box, Pranayama — 8 programs, HR & body battery tracking."/>
+<meta property="og:image" content="https://bitochi.com/breath_hero.png"/>
+<style>
+  :root {
+    --bg:      #080c10;
+    --bg2:     #0d1520;
+    --accent:  #00d4ff;
+    --accent2: #7c3aed;
+    --green:   #22c55e;
+    --text:    #d6e4f0;
+    --muted:   #4a6278;
+    --border:  rgba(0,212,255,.12);
+    --card:    rgba(13,21,32,.8);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ─────────────────────────────────────────────────────────── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: rgba(8,12,16,.88);
+    backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    height: 56px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .nav-logo {
+    font-size: .85rem; font-weight: 800; letter-spacing: .1em;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .nav-link {
+    font-size: .8rem; color: var(--muted); text-decoration: none;
+    letter-spacing: .05em; text-transform: uppercase;
+    transition: color .2s;
+  }
+  .nav-link:hover { color: var(--accent); }
+
+  /* ── HERO ────────────────────────────────────────────────────────── */
+  .hero {
+    position: relative; overflow: hidden;
+    min-height: 70vh;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .hero-img {
+    width: 100%; max-height: 640px;
+    object-fit: cover; object-position: center;
+    display: block;
+    filter: brightness(.9);
+  }
+  .hero-overlay {
+    position: absolute; inset: 0;
+    background: linear-gradient(to bottom,
+      rgba(8,12,16,0) 0%,
+      rgba(8,12,16,.15) 50%,
+      rgba(8,12,16,.9) 85%,
+      rgba(8,12,16,1) 100%);
+  }
+  .hero-cta {
+    position: absolute; bottom: 48px; left: 50%; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 20px;
+    text-align: center;
+  }
+  .btn-ciq {
+    display: inline-flex; align-items: center; gap: 10px;
+    background: linear-gradient(135deg, var(--accent), #0099cc);
+    color: #080c10; font-weight: 800; font-size: 1rem;
+    letter-spacing: .06em; text-transform: uppercase;
+    text-decoration: none;
+    padding: 14px 36px; border-radius: 40px;
+    box-shadow: 0 0 32px rgba(0,212,255,.4);
+    transition: transform .2s, box-shadow .2s;
+    white-space: nowrap;
+  }
+  .btn-ciq:hover { transform: translateY(-2px); box-shadow: 0 0 48px rgba(0,212,255,.6); }
+  .btn-ciq svg { width: 20px; height: 20px; }
+  .hero-sub {
+    font-size: .8rem; color: var(--muted); letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  /* ── SECTIONS ────────────────────────────────────────────────────── */
+  section { max-width: 960px; margin: 0 auto; padding: 72px 24px; }
+
+  .section-label {
+    font-size: .72rem; font-weight: 700; letter-spacing: .18em;
+    text-transform: uppercase; color: var(--accent);
+    margin-bottom: 12px;
+  }
+  h2 {
+    font-size: clamp(1.6rem, 4vw, 2.4rem);
+    font-weight: 800; line-height: 1.15;
+    margin-bottom: 16px;
+  }
+  h2 span {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  }
+  .lead {
+    font-size: 1.05rem; color: #8fa8bc; max-width: 640px;
+    margin-bottom: 40px;
+  }
+
+  /* ── TECHNIQUES GRID ─────────────────────────────────────────────── */
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin-top: 32px;
+  }
+  .tech-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 18px;
+    transition: border-color .2s, transform .2s;
+  }
+  .tech-card:hover { border-color: var(--accent); transform: translateY(-3px); }
+  .tech-icon {
+    font-size: 1.8rem; margin-bottom: 10px;
+  }
+  .tech-name {
+    font-size: .88rem; font-weight: 700; color: var(--text);
+    margin-bottom: 4px;
+  }
+  .tech-rhythm {
+    font-size: .75rem; color: var(--accent); font-weight: 600;
+    letter-spacing: .05em; margin-bottom: 6px;
+  }
+  .tech-desc {
+    font-size: .78rem; color: var(--muted); line-height: 1.5;
+  }
+
+  /* ── PROGRAMS ────────────────────────────────────────────────────── */
+  .prog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin-top: 32px;
+  }
+  .prog-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 18px 16px;
+    display: flex; align-items: flex-start; gap: 12px;
+    transition: border-color .2s;
+  }
+  .prog-card:hover { border-color: rgba(124,58,237,.5); }
+  .prog-num {
+    min-width: 28px; height: 28px;
+    border-radius: 8px;
+    background: rgba(124,58,237,.18);
+    border: 1px solid rgba(124,58,237,.35);
+    display: flex; align-items: center; justify-content: center;
+    font-size: .75rem; font-weight: 800; color: #a78bfa;
+    flex-shrink: 0;
+  }
+  .prog-name { font-size: .88rem; font-weight: 700; margin-bottom: 3px; }
+  .prog-desc { font-size: .75rem; color: var(--muted); line-height: 1.4; }
+
+  /* ── SENSORS / FEATURES ──────────────────────────────────────────── */
+  .feat-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px;
+    margin-top: 32px;
+  }
+  .feat-item {
+    display: flex; gap: 14px; align-items: flex-start;
+  }
+  .feat-dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--green);
+    box-shadow: 0 0 8px var(--green);
+    margin-top: 7px; flex-shrink: 0;
+  }
+  .feat-title { font-size: .9rem; font-weight: 700; margin-bottom: 3px; }
+  .feat-body  { font-size: .8rem; color: var(--muted); line-height: 1.5; }
+
+  /* ── MODES STRIP ─────────────────────────────────────────────────── */
+  .modes-strip {
+    display: flex; flex-wrap: wrap; gap: 10px; margin-top: 28px;
+  }
+  .mode-badge {
+    background: rgba(0,212,255,.08);
+    border: 1px solid rgba(0,212,255,.22);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: .78rem; font-weight: 700;
+    color: var(--accent); letter-spacing: .05em;
+  }
+
+  /* ── CTA SECTION ─────────────────────────────────────────────────── */
+  .cta-section {
+    text-align: center;
+    padding: 80px 24px;
+    background: linear-gradient(180deg, transparent, rgba(0,212,255,.04), transparent);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .cta-section h2 { margin-bottom: 12px; }
+  .cta-section p  { color: var(--muted); margin-bottom: 32px; }
+
+  /* ── FOOTER ──────────────────────────────────────────────────────── */
+  footer {
+    text-align: center; padding: 32px 24px;
+    font-size: .78rem; color: var(--muted);
+    border-top: 1px solid var(--border);
+  }
+  footer a { color: var(--accent); text-decoration: none; }
+  footer a:hover { text-decoration: underline; }
+
+  /* ── DIVIDER ─────────────────────────────────────────────────────── */
+  .divider {
+    width: 48px; height: 3px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 2px;
+    margin-bottom: 32px;
+  }
+
+  @media (max-width: 600px) {
+    .hero-cta { bottom: 32px; width: 90%; }
+    .btn-ciq  { font-size: .88rem; padding: 12px 28px; }
+    section   { padding: 48px 16px; }
+  }
+  @keyframes blink {
+    0%,100% { opacity: 1; } 50% { opacity: .4; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">⌚ Bitochi</div>
+  <a class="nav-link" href="/">← All Games</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <img class="hero-img" src="breath_hero.png" alt="Breath Training System on Garmin watch"/>
+  <div class="hero-overlay"></div>
+  <div class="hero-cta">
+    <a class="btn-ciq"
+       href="https://apps.garmin.com/apps/44886d01-5977-4c0d-9871-2f2e8e80f7ae"
+       target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" fill="currentColor">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/>
+      </svg>
+      Get on Garmin Connect IQ
+    </a>
+    <div class="hero-sub">Free · Works on 100+ Garmin devices</div>
+  </div>
+</div>
+
+<!-- INTRO -->
+<section id="about">
+  <div class="section-label">What is it</div>
+  <h2>The most <span>complete breath training</span><br/>app on your wrist</h2>
+  <div class="divider"></div>
+  <p class="lead">
+    Breath Training System brings serious breathwork to your Garmin watch — CO₂ and O₂ tolerance tables,
+    guided apnea holds, Wim Hof power breathing, Box Breathing, and Pranayama, all combined with
+    real-time sensor data from your watch's heart rate, body battery, and stress monitors.
+    Eight structured multi-week programs take you from beginner to peak breath-hold performance.
+  </p>
+  <div class="modes-strip">
+    <span class="mode-badge">BR — Breathwork</span>
+    <span class="mode-badge">CO₂ Table</span>
+    <span class="mode-badge">O₂ Table</span>
+    <span class="mode-badge">Apnea Hold</span>
+    <span class="mode-badge">HR Tracking</span>
+    <span class="mode-badge">Body Battery</span>
+    <span class="mode-badge">Calm Score</span>
+    <span class="mode-badge">Activity Recording</span>
+  </div>
+</section>
+
+<!-- TECHNIQUES -->
+<section id="techniques">
+  <div class="section-label">Breathing techniques</div>
+  <h2>5 proven <span>breathing methods</span></h2>
+  <div class="divider"></div>
+  <div class="tech-grid">
+    <div class="tech-card">
+      <div class="tech-icon">🔄</div>
+      <div class="tech-name">Recovery</div>
+      <div class="tech-rhythm">Rhythm 2-4</div>
+      <div class="tech-desc">Gentle parasympathetic reset. Slows heart rate and activates recovery after exertion.</div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon">🌊</div>
+      <div class="tech-name">Breathe-Up</div>
+      <div class="tech-rhythm">Rhythm 3-6</div>
+      <div class="tech-desc">Classic freediving prep. Flushes CO₂, calms the nervous system before a breath hold.</div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon">🟦</div>
+      <div class="tech-name">Box Breathing</div>
+      <div class="tech-rhythm">4-4-4-4</div>
+      <div class="tech-desc">Navy SEAL stress control technique. Equal inhale, hold, exhale, hold for sharp focus.</div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon">⚡</div>
+      <div class="tech-name">Wim Hof Power</div>
+      <div class="tech-rhythm">2-0-1-0</div>
+      <div class="tech-desc">High-power oxygenation cycles that supercharge energy, boost alkalinity, and prime for max holds.</div>
+    </div>
+    <div class="tech-card">
+      <div class="tech-icon">🧘</div>
+      <div class="tech-name">Pranayama 4-7-8</div>
+      <div class="tech-rhythm">4-7-8</div>
+      <div class="tech-desc">Ancient yogic technique for deep relaxation, sleep regulation, and down-regulation of the nervous system.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROGRAMS -->
+<section id="programs">
+  <div class="section-label">Training programs</div>
+  <h2>8 structured <span>multi-week paths</span></h2>
+  <div class="divider"></div>
+  <p class="lead">
+    Pick a program and follow a daily session plan. The app tracks your progress, consistency, and personal
+    bests across each week — so you can see yourself improve over time.
+  </p>
+  <div class="prog-grid">
+    <div class="prog-card">
+      <div class="prog-num">1</div>
+      <div>
+        <div class="prog-name">Beginner</div>
+        <div class="prog-desc">4-week intro. Learn the fundamentals of controlled breathing and comfortable breath holds.</div>
+      </div>
+    </div>
+    <div class="prog-card">
+      <div class="prog-num">2</div>
+      <div>
+        <div class="prog-name">CO₂ Tolerance</div>
+        <div class="prog-desc">Build tolerance to rising CO₂ through progressively demanding CO₂ tables.</div>
+      </div>
+    </div>
+    <div class="prog-card">
+      <div class="prog-num">3</div>
+      <div>
+        <div class="prog-name">Apnea Progression</div>
+        <div class="prog-desc">Systematically grow your static breath-hold time week after week.</div>
+      </div>
+    </div>
+    <div class="prog-card">
+      <div class="prog-num">4</div>
+      <div>
+        <div class="prog-name">O₂ Adaptation</div>
+        <div class="prog-desc">Hypoxic conditioning via O₂ tables. Train your body to work with less oxygen.</div>
+      </div>
+    </div>
+    <div class="prog-card">
+      <div class="prog-num">5</div>
+      <div>
+        <div class="prog-name">Breathwork Mastery</div>
+        <div class="prog-desc">Full Wim Hof + Pranayama cycles. Master all five techniques in one progressive path.</div>
+      </div>
+    </div>
+    <div class="prog-card">
+      <div class="prog-num">6</div>
+      <div>
+        <div class="prog-name">Endurance Mix</div>
+        <div class="prog-desc">Full-spectrum program: CO₂, O₂ and breathwork combined for complete endurance base.</div>
+      </div>
+    </div>
+    <div class="prog-card">
+      <div class="prog-num">7</div>
+      <div>
+        <div class="prog-name">Static PB</div>
+        <div class="prog-desc">Heavy max-effort holds with minimal CO₂ noise. Designed for personal best attempts.</div>
+      </div>
+    </div>
+    <div class="prog-card">
+      <div class="prog-num">8</div>
+      <div>
+        <div class="prog-name">Active Recovery</div>
+        <div class="prog-desc">Gentle week of light breathwork and sub-max holds. No high CO₂ stress — pure regeneration.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SENSOR FEATURES -->
+<section id="sensors">
+  <div class="section-label">Sensor integration</div>
+  <h2>Your body, <span>measured in real time</span></h2>
+  <div class="divider"></div>
+  <div class="feat-list">
+    <div class="feat-item">
+      <div class="feat-dot"></div>
+      <div>
+        <div class="feat-title">Heart Rate Tracking</div>
+        <div class="feat-body">Monitors HR baseline, peak and drop throughout every session. Tracks the physiological response to breathwork over time.</div>
+      </div>
+    </div>
+    <div class="feat-item">
+      <div class="feat-dot"></div>
+      <div>
+        <div class="feat-title">Body Battery Monitoring</div>
+        <div class="feat-body">Snapshots body battery at session start and end so you can see the real recovery effect of each breathing block.</div>
+      </div>
+    </div>
+    <div class="feat-item">
+      <div class="feat-dot"></div>
+      <div>
+        <div class="feat-title">Calm Score</div>
+        <div class="feat-body">Rates the quality of each breathwork session 0–100. Builds an exponential moving average across all sessions for trend tracking.</div>
+      </div>
+    </div>
+    <div class="feat-item">
+      <div class="feat-dot"></div>
+      <div>
+        <div class="feat-title">Activity Recording</div>
+        <div class="feat-body">Every session logs a Garmin activity — visible in Garmin Connect with full sensor timeline.</div>
+      </div>
+    </div>
+    <div class="feat-item">
+      <div class="feat-dot"></div>
+      <div>
+        <div class="feat-title">Apnea PB Tracking</div>
+        <div class="feat-body">Personal best breath-hold time recorded per session with a delta shown at every attempt — always know if you beat your record.</div>
+      </div>
+    </div>
+    <div class="feat-item">
+      <div class="feat-dot"></div>
+      <div>
+        <div class="feat-title">Weekly Consistency</div>
+        <div class="feat-body">7-day and 14-day session streaks visualised on screen. Build the habit and track it.</div>
+      </div>
+    </div>
+    <div class="feat-item">
+      <div class="feat-dot"></div>
+      <div>
+        <div class="feat-title">Haptic Cues</div>
+        <div class="feat-body">Vibration alerts guide you through each breath phase — no need to look at the screen during holds.</div>
+      </div>
+    </div>
+    <div class="feat-item">
+      <div class="feat-dot"></div>
+      <div>
+        <div class="feat-title">Pre-start Alert</div>
+        <div class="feat-body">Configurable vibration warning (3s / 5s / 10s / 15s) before each breath hold begins.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOTTOM CTA -->
+<div class="cta-section">
+  <div class="section-label" style="text-align:center">Free download</div>
+  <h2>Ready to <span>breathe better?</span></h2>
+  <p>Available on Garmin Connect IQ · Works on 100+ Garmin watch models</p>
+  <a class="btn-ciq"
+     href="https://apps.garmin.com/apps/44886d01-5977-4c0d-9871-2f2e8e80f7ae"
+     target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24" fill="currentColor" style="width:20px;height:20px">
+      <path d="M5 20h14v-2H5v2zm7-18L5.33 9h3.84v4h5.66V9h3.84L12 2z"/>
+    </svg>
+    Download Free on Connect IQ
+  </a>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <p>Made with ❤️ by <a href="/">Bitochi Games</a> · <a href="https://apps.garmin.com/developer/31e5ef55-8e24-47bb-ab64-f944dd7bdc0e/apps" target="_blank" rel="noopener">All Garmin Apps</a></p>
+</footer>
+
+</body>
+</html>
