@@ -410,9 +410,11 @@ async function openGame(game) {
   document.getElementById('lb-content').innerHTML = '<div class="state"><div class="spinner"></div>Loading…</div>';
   document.getElementById('variant-tabs').innerHTML = '';
 
-  // Fetch variants
+  // Fetch variants — no real=1 here: we want to know what variants exist in the
+  // game (including bot-seeded ones), so tabs are always populated.
+  // The actual leaderboard data is filtered to real players only.
   try {
-    const rv = await fetch(`${API}/variants?game=${encodeURIComponent(game)}&real=1`);
+    const rv = await fetch(`${API}/variants?game=${encodeURIComponent(game)}`);
     if (rv.ok) {
       const vd = await rv.json();
       currentVariants = (vd.variants || []).filter(v => v !== '');
@@ -422,14 +424,16 @@ async function openGame(game) {
   // Render variant tabs
   const tabsEl = document.getElementById('variant-tabs');
   if (currentVariants.length > 0) {
-    tabsEl.innerHTML = ['', ...currentVariants].map(v => `
-      <button class="vtab${v===''?' active':''}" onclick="selectVariant('${esc(v)}')">${v==='' ? 'All / Default' : esc(v)}</button>
+    // Games with named variants: don't add a pointless empty "All" tab
+    tabsEl.innerHTML = currentVariants.map((v, i) => `
+      <button class="vtab${i===0?' active':''}" onclick="selectVariant('${esc(v)}')">${esc(v)}</button>
     `).join('');
+    loadLb(game, currentVariants[0]);
   } else {
+    // Single-variant game (no named variants): load the default empty variant
     tabsEl.innerHTML = '';
+    loadLb(game, '');
   }
-
-  loadLb(game, '');
 }
 
 function selectVariant(v) {
