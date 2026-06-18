@@ -81,102 +81,120 @@ class BilliardView extends WatchUi.View {
     }
 
     // ── MENU ──────────────────────────────────────────────────
+    // Five selectable rows, each drawn as a full-width highlight bar so the
+    // focused option is unmistakable. Header (title + compact ball rack) sits
+    // up top; a single dim line under the rack explains the selected mode.
     hidden function _drawMenu(dc, g) {
         var w = g.sw; var h = g.sh;
         dc.setColor(0x0A1A0A, 0x0A1A0A); dc.clear();
-        // Felt background
         dc.setColor(0x0C3010, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, 0, w, h);
-        // Mini table — compact so the five rows below have breathing room
-        var tx1 = w*23/100; var tx2 = w*77/100;
-        var ty1 = h*22/100; var ty2 = h*31/100;
+
+        // ── Header: title + compact decorative rack ──
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w/2, h*6/100, Graphics.FONT_SMALL, "BILLIARDS", Graphics.TEXT_JUSTIFY_CENTER);
+
+        var tx1 = w*30/100; var tx2 = w*70/100;
+        var ty1 = h*18/100; var ty2 = h*25/100;
         dc.setColor(0x5C3010, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(tx1-3, ty1-3, tx2-tx1+6, ty2-ty1+6);
         dc.setColor(0x0F5020, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(tx1, ty1, tx2-tx1, ty2-ty1);
-        // Pocket dots
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
-        dc.fillCircle(tx1, ty1, 3); dc.fillCircle(tx2, ty1, 3);
-        dc.fillCircle(tx1, ty2, 3); dc.fillCircle(tx2, ty2, 3);
-        dc.fillCircle((tx1+tx2)/2, ty1, 3); dc.fillCircle((tx1+tx2)/2, ty2, 3);
-        // Decorative balls
+        dc.fillCircle(tx1, ty1, 2); dc.fillCircle(tx2, ty1, 2);
+        dc.fillCircle(tx1, ty2, 2); dc.fillCircle(tx2, ty2, 2);
+        dc.fillCircle((tx1+tx2)/2, ty1, 2); dc.fillCircle((tx1+tx2)/2, ty2, 2);
         _drawMenuRack(dc, g, tx1, ty1, tx2, ty2);
-        // Title + subtitle
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w/2, h*11/100, Graphics.FONT_SMALL, "BILLIARDS", Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0x44CC66, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w/2, h*18/100, Graphics.FONT_XTINY, "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Row positions — evenly spaced so nothing overlaps (5 rows + rules hint).
-        // Row 0 spans two lines (label + rules hint), so row 1 starts after both.
-        var r0y  = h*36/100;   // GAME MODE label
-        var r0s  = h*41/100;   // rules hint (smaller, dimmer)
-        var r1y  = h*48/100;   // VS MODE
-        var r2y  = h*55/100;   // DIFFICULTY
-        var rLBy = h*64/100;   // LEADERBOARD
-        var r3y  = h*73/100;   // START
-        var dLabels = ["EASY", "MEDIUM", "HARD"];
-        var dColors = [0x44CC44, 0xFFAA00, 0xEE3322];
-
-        // Row 0 — GAME MODE
-        var sel0 = (g.menuSel == 0);
-        dc.setColor(sel0 ? 0xFFFFFF : 0x88AABB, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w/2, r0y, Graphics.FONT_XTINY,
-                    (sel0 ? "> " : "  ") + g.gameTypeLabel() + (sel0 ? " <" : "  "),
-                    Graphics.TEXT_JUSTIFY_CENTER);
+        // Mode rules hint — always visible, tied to the current game type.
         var rules = (g.gameType == GT_3BALL)   ? "race - 3 balls"
                   : (g.gameType == GT_8BALL)   ? "groups - pot 8 to win"
                   : (g.gameType == GT_SNOOKER) ? "reds 1pt - black 7pt"
                                                : "lowest first - pot 9 wins";
-        dc.setColor(0x567856, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w/2, r0s, Graphics.FONT_XTINY, rules, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x6E9A6E, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w/2, h*30/100, Graphics.FONT_XTINY, rules, Graphics.TEXT_JUSTIFY_CENTER);
+
+        // ── Selectable rows ──
+        var dLabels = ["EASY", "MEDIUM", "HARD"];
+        var dColors = [0x44CC44, 0xFFAA00, 0xEE3322];
+
+        var top    = h*38/100;
+        var bottom = h*94/100;
+        var pitch  = (bottom - top) / 5;
+        var rowH   = pitch - (pitch / 6);          // small gap between bars
+        if (rowH < 16) { rowH = 16; }
+        var barX   = w*9/100;
+        var barW   = w - barX*2;
+
+        // Row 0 — GAME MODE
+        _menuRow(dc, g, 0, top + 0*pitch, rowH, barX, barW,
+                 g.gameTypeLabel(), 0xFFFFFF);
 
         // Row 1 — VS MODE
-        var sel1 = (g.menuSel == 1);
-        var vsLabel = g.pvpMode ? "P vs P" : "P vs AI";
-        dc.setColor(sel1 ? 0xFFFFFF : 0x88AABB, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w/2, r1y, Graphics.FONT_XTINY,
-                    (sel1 ? "> " : "  ") + vsLabel + (sel1 ? " <" : "  "),
-                    Graphics.TEXT_JUSTIFY_CENTER);
+        _menuRow(dc, g, 1, top + 1*pitch, rowH, barX, barW,
+                 (g.pvpMode ? "P vs P" : "P vs AI"), 0xFFFFFF);
 
-        // Row 2 — DIFFICULTY (dimmed/dashed when P vs P — AI is unused)
+        // Row 2 — DIFFICULTY (greyed when P vs P — the AI is unused)
         var sel2 = (g.menuSel == 2);
+        var r2y  = top + 2*pitch;
+        _menuBar(dc, sel2, r2y, rowH, barX, barW);
+        var r2mid = r2y + rowH/2;
         if (g.pvpMode) {
-            dc.setColor(0x384838, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w/2, r2y, Graphics.FONT_XTINY, "  Diff: —  ",
-                        Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(sel2 ? 0x9FB39F : 0x4E664E, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w/2, r2mid, Graphics.FONT_XTINY, "Diff: —",
+                        Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
         } else {
-            dc.setColor(sel2 ? 0xFFFFFF : 0x88AABB, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w/2 - 2, r2y, Graphics.FONT_XTINY,
-                        (sel2 ? "> " : "  ") + "Diff: ", Graphics.TEXT_JUSTIFY_RIGHT);
+            dc.setColor(sel2 ? 0xFFFFFF : 0xAFC6D6, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w/2 - 4, r2mid, Graphics.FONT_XTINY, "Diff: ",
+                        Graphics.TEXT_JUSTIFY_RIGHT | Graphics.TEXT_JUSTIFY_VCENTER);
             dc.setColor(dColors[g.diff], Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w/2 - 2, r2y, Graphics.FONT_XTINY,
-                        dLabels[g.diff] + (sel2 ? " <" : "  "), Graphics.TEXT_JUSTIFY_LEFT);
+            dc.drawText(w/2 - 4, r2mid, Graphics.FONT_XTINY, dLabels[g.diff],
+                        Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER);
         }
 
-        // Row 3 — LEADERBOARD (gold, slightly standout to drive hype).
-        // Greyed + "N/A" on watches that can't make web requests.
+        // Row 3 — LEADERBOARD (gold). "N/A" when web isn't available.
         var sel3 = (g.menuSel == 3);
-        if (Leaderboard.isSupported()) {
-            dc.setColor(sel3 ? 0xFFD24A : 0xBB8A1A, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w/2, rLBy, Graphics.FONT_XTINY,
-                        (sel3 ? "> LEADERBOARD <" : "  LEADERBOARD  "),
-                        Graphics.TEXT_JUSTIFY_CENTER);
-        } else {
-            dc.setColor(0x555555, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w/2, rLBy, Graphics.FONT_XTINY,
-                        (sel3 ? "> LEADERBOARD N/A <" : "  LEADERBOARD N/A  "),
-                        Graphics.TEXT_JUSTIFY_CENTER);
-        }
+        var ok   = Leaderboard.isSupported();
+        _menuRow(dc, g, 3, top + 3*pitch, rowH, barX, barW,
+                 ok ? "LEADERBOARD" : "LEADERBOARD N/A",
+                 ok ? (sel3 ? 0xFFD24A : 0xD8A82A) : 0x7A7A7A);
 
-        // Row 4 — START (blinking when focused)
-        var sel4  = (g.menuSel == 4);
+        // Row 4 — START (blinks when focused)
+        var sel4   = (g.menuSel == 4);
         var bright = (_tick % 14 < 7);
-        var startClr = sel4 ? (bright ? 0x44FF88 : 0xFFFFFF) : 0x228855;
-        dc.setColor(startClr, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w/2, r3y, Graphics.FONT_XTINY,
-                    (sel4 ? "> START <" : "  START  "),
-                    Graphics.TEXT_JUSTIFY_CENTER);
+        var startClr = sel4 ? (bright ? 0x66FFAA : 0xFFFFFF) : 0x6EC07E;
+        _menuRow(dc, g, 4, top + 4*pitch, rowH, barX, barW, "START", startClr);
+    }
+
+    // Draws the highlight bar behind a focused menu row (no-op when not
+    // selected). Bar = darker felt fill with a gold edge and a left chevron.
+    hidden function _menuBar(dc, sel, y, rowH, barX, barW) {
+        if (!sel) { return; }
+        dc.setColor(0x14431F, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(barX, y, barW, rowH, 6);
+        dc.setColor(0xFFD24A, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(barX, y, barW, rowH, 6);
+        // Left chevron marker
+        dc.drawText(barX + 8, y + rowH/2, Graphics.FONT_XTINY, ">",
+                    Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER);
+    }
+
+    // Convenience: highlight bar + a single centered label for a menu row.
+    hidden function _menuRow(dc, g, idx, y, rowH, barX, barW, label, color) {
+        var sel = (g.menuSel == idx);
+        _menuBar(dc, sel, y, rowH, barX, barW);
+        dc.setColor(sel ? color : _dim(color), Graphics.COLOR_TRANSPARENT);
+        dc.drawText(g.sw/2, y + rowH/2, Graphics.FONT_XTINY, label,
+                    Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+    }
+
+    // Roughly halve a colour's brightness for the unfocused state.
+    hidden function _dim(color) {
+        var r = (color >> 16) & 0xFF;
+        var gg = (color >> 8) & 0xFF;
+        var b = color & 0xFF;
+        r = r * 55 / 100; gg = gg * 55 / 100; b = b * 55 / 100;
+        return (r << 16) | (gg << 8) | b;
     }
 
     // Draws a small decorative rack of balls reflecting the current game type.
