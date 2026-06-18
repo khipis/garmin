@@ -85,9 +85,7 @@ APPS=(
   voidrocks
   pixelinvaders
   diceroyale
-  kakuro
   lightsout
-  nonogram
   bomber
   akari
   gyromaze

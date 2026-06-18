@@ -93,8 +93,6 @@ const GAMES = [
     variants: ['3x3','4x4','5x5'],
     scores: [40, 90] },
   { game: 'akari',    asc: true,  variants: ['6x6','7x7'],  scores: [250, 540]  },
-  { game: 'nonogram', asc: true,  variants: [''],  scores: [300, 600]  },
-  { game: 'kakuro',   asc: true,  variants: [''],  scores: [280, 560]  },
   { game: 'memo',     asc: true,
     variants: ['Easy','Normal','Hard'],
     scores: [40, 90] },

@@ -33,8 +33,6 @@ const ASC_GAMES = new Set<string>([
   "battleship",
   "twentyfortyeight_time",   // 2048 speedrun: fastest time to the 2048 tile
   "akari",                   // light-up puzzle: fastest solve time
-  "nonogram",                // picross: fastest solve time
-  "kakuro",                  // kakuro: fastest solve time
   "memo",                    // memo: fewest moves to match all pairs
 ]);
 
