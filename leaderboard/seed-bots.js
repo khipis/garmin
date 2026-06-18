@@ -100,9 +100,9 @@ const GAMES = [
     scores: [40, 90] },
 
   // ── Minigolf / stroke games (ASC) ────────────────────────────────────────
-  { game: 'minigolf', asc: true,
-    variants: ['20-holes'],
-    scores: [28, 50] },
+  { game: 'minigolf',
+    variants: ['easy', 'normal', 'hard'],
+    scores: [1500, 4500] },
 
   // ── Arcade / action ──────────────────────────────────────────────────────
   { game: 'arcade',      variants: [''],          scores: [3, 10]    },

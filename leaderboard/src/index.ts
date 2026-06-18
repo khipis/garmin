@@ -30,7 +30,6 @@ const ASC_GAMES = new Set<string>([
   "minesweeper",
   "solitaire",
   "lightsout",
-  "minigolf",
   "battleship",
   "twentyfortyeight_time",   // 2048 speedrun: fastest time to the 2048 tile
   "akari",                   // light-up puzzle: fastest solve time

@@ -1,183 +1,563 @@
 [ @file = "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc"; @line = 1; @symbol_usingdef<0> = [Toybox,1,6,12]; @symbol_usingdef<1> = [WatchUi,1,13,20]; ]
 using Toybox.WatchUi;
-[ @file = "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc"; @line = 3; @symbol_classdef = [BitochiChessDelegate,3,6,26]; @symbol_extends<0> = [WatchUi,3,35,42]; @symbol_extends<1> = [BehaviorDelegate,3,43,59]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc"; @line = 2; @symbol_usingdef<0> = [Toybox,2,6,12]; @symbol_usingdef<1> = [System,2,13,19]; ]
+using Toybox.System;
+[ @file = "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc"; @line = 19; @symbol_classdef = [BitochiChessDelegate,19,6,26]; @symbol_extends<0> = [WatchUi,19,35,42]; @symbol_extends<1> = [BehaviorDelegate,19,43,59]; ]
 class BitochiChessDelegate extends WatchUi.BehaviorDelegate {
-    [ @file = "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc"; @line = 3; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc"; @line = 19; ]
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc"; @line = 3; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc"; @line = 19; ]
     static
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc"; @line = 4; @position = 15; @symbol_vardef = [_view,4,15,20]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc"; @line = 20; @position = 15; @symbol_vardef = [_view,20,15,20]; ]
     protected
     var _view;
-    [ @file = "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc"; @line = 6; @symbol_functiondef = [initialize,6,13,23]; @symbol_param<0> = [view,6,24,28]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc"; @line = 23; @position = 15; @symbol_vardef = [_dragStartX,23,15,26]; ]
+    protected
+    var _dragStartX;
+    [ @file = "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc"; @line = 24; @position = 15; @symbol_vardef = [_dragStartY,24,15,26]; ]
+    protected
+    var _dragStartY;
+    [ @file = "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc"; @line = 25; @position = 15; @symbol_vardef = [_lastTapMs,25,15,25]; ]
+    protected
+    var _lastTapMs;
+    [ @file = "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc"; @line = 28; @position = 17; @symbol_constdef = [_TAP_SLOP,28,17,26]; ]
+    protected
+    const _TAP_SLOP = 14;
+    [ @file = "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc"; @line = 30; @position = 17; @symbol_constdef = [_TAP_DEDUPE_MS,30,17,31]; ]
+    protected
+    const _TAP_DEDUPE_MS = 160;
+    [ @file = "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc"; @line = 32; @symbol_functiondef = [initialize,32,13,23]; @symbol_param<0> = [view,32,24,28]; ]
     function initialize(view) as Void {
-_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_6_30_9_4_start:
-[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 7 8 ]
-        symbol [ BehaviorDelegate %tmp.2 7 8 24 ];
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_32_30_38_4_start:
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 33 8 ]
+        symbol [ BehaviorDelegate %tmp.2 33 8 24 ];
         %tmp.2 = getv ? :BehaviorDelegate;
-        symbol [ initialize %tmp.3 7 25 35 ];
+        symbol [ initialize %tmp.3 33 25 35 ];
         %tmp.3 = getv function %tmp.2 :initialize;
         invoke %tmp.2 %tmp.3();
-[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 8 8 ]
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 34 8 ]
         %tmp.4 = lgetv %view;
-        symbol [ view %tmp.4 8 16 20 ];
-        symbol [ _view ? 8 8 13 ];
+        symbol [ view %tmp.4 34 22 26 ];
+        symbol [ _view ? 34 8 13 ];
         putv self :_view %tmp.4;
-_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_6_30_9_4_stop:
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 35 8 ]
+        %tmp.5 = -1;
+        symbol [ _dragStartX ? 35 8 19 ];
+        putv self :_dragStartX %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 36 8 ]
+        %tmp.6 = -1;
+        symbol [ _dragStartY ? 36 8 19 ];
+        putv self :_dragStartY %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 37 8 ]
+        %tmp.7 = 0;
+        symbol [ _lastTapMs ? 37 8 18 ];
+        putv self :_lastTapMs %tmp.7;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_32_30_38_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc"; @line = 11; @symbol_functiondef = [onSelect,11,13,21]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc"; @line = 40; @symbol_functiondef = [onSelect,40,13,21]; ]
     function onSelect() {
-_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_11_24_15_4_start:
-[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 12 8 ]
-        symbol [ _view %tmp.2 12 8 13 ];
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_40_24_44_4_start:
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 41 8 ]
+        symbol [ _view %tmp.2 41 8 13 ];
         %tmp.2 = getv ? :_view;
-        symbol [ doSelect %tmp.3 12 14 22 ];
+        symbol [ doSelect %tmp.3 41 14 22 ];
         %tmp.3 = getv function %tmp.2 :doSelect;
         invoke %tmp.2 %tmp.3();
-[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 13 8 ]
-        symbol [ WatchUi %tmp.4 13 8 15 ];
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 42 8 ]
+        symbol [ WatchUi %tmp.4 42 8 15 ];
         %tmp.4 = getm $.Toybox.WatchUi;
-        symbol [ requestUpdate %tmp.5 13 16 29 ];
+        symbol [ requestUpdate %tmp.5 42 16 29 ];
         %tmp.5 = getv function %tmp.4 :requestUpdate;
         invoke %tmp.4 %tmp.5();
-[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 14 8 ]
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 43 8 ]
         %tmp.6 = true;
         ret %tmp.6;
-_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_11_24_15_4_stop:
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_40_24_44_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc"; @line = 17; @symbol_functiondef = [onBack,17,13,19]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc"; @line = 46; @symbol_functiondef = [onBack,46,13,19]; ]
     function onBack() {
-_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_17_22_21_4_start:
-[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 18 8 ]
-        [ "_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_17_22_21_4_start" "_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_17_22_21_4_stop" ]
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_46_22_50_4_start:
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 47 8 ]
+        [ "_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_46_22_50_4_start" "_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_46_22_50_4_stop" ]
         %h.1 = local;
-        symbol [ h %h.1 18 12 13 ];
-        symbol [ _view %tmp.2 18 16 21 ];
+        symbol [ h %h.1 47 12 13 ];
+        symbol [ _view %tmp.2 47 16 21 ];
         %tmp.2 = getv ? :_view;
-        symbol [ doBack %tmp.3 18 22 28 ];
+        symbol [ doBack %tmp.3 47 22 28 ];
         %tmp.3 = getv function %tmp.2 :doBack;
         %tmp.4 = invoke %tmp.2 %tmp.3();
         lputv %h.1 %tmp.4;
-        symbol [ h %h.1 18 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 19 8 ]
-        symbol [ WatchUi %tmp.5 19 8 15 ];
+        symbol [ h %h.1 47 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 48 8 ]
+        symbol [ WatchUi %tmp.5 48 8 15 ];
         %tmp.5 = getm $.Toybox.WatchUi;
-        symbol [ requestUpdate %tmp.6 19 16 29 ];
+        symbol [ requestUpdate %tmp.6 48 16 29 ];
         %tmp.6 = getv function %tmp.5 :requestUpdate;
         invoke %tmp.5 %tmp.6();
-[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 20 8 ]
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 49 8 ]
         %tmp.7 = lgetv %h.1;
-        symbol [ h %tmp.7 20 15 16 ];
+        symbol [ h %tmp.7 49 15 16 ];
         ret %tmp.7;
-_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_17_22_21_4_stop:
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_46_22_50_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc"; @line = 23; @symbol_functiondef = [onMenu,23,13,19]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc"; @line = 52; @symbol_functiondef = [onMenu,52,13,19]; ]
     function onMenu() {
-_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_23_22_27_4_start:
-[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 24 8 ]
-        [ "_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_23_22_27_4_start" "_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_23_22_27_4_stop" ]
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_52_22_56_4_start:
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 53 8 ]
+        [ "_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_52_22_56_4_start" "_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_52_22_56_4_stop" ]
         %h.1 = local;
-        symbol [ h %h.1 24 12 13 ];
-        symbol [ _view %tmp.2 24 16 21 ];
+        symbol [ h %h.1 53 12 13 ];
+        symbol [ _view %tmp.2 53 16 21 ];
         %tmp.2 = getv ? :_view;
-        symbol [ doBack %tmp.3 24 22 28 ];
+        symbol [ doBack %tmp.3 53 22 28 ];
         %tmp.3 = getv function %tmp.2 :doBack;
         %tmp.4 = invoke %tmp.2 %tmp.3();
         lputv %h.1 %tmp.4;
-        symbol [ h %h.1 24 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 25 8 ]
-        symbol [ WatchUi %tmp.5 25 8 15 ];
+        symbol [ h %h.1 53 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 54 8 ]
+        symbol [ WatchUi %tmp.5 54 8 15 ];
         %tmp.5 = getm $.Toybox.WatchUi;
-        symbol [ requestUpdate %tmp.6 25 16 29 ];
+        symbol [ requestUpdate %tmp.6 54 16 29 ];
         %tmp.6 = getv function %tmp.5 :requestUpdate;
         invoke %tmp.5 %tmp.6();
-[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 26 8 ]
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 55 8 ]
         %tmp.7 = lgetv %h.1;
-        symbol [ h %tmp.7 26 15 16 ];
+        symbol [ h %tmp.7 55 15 16 ];
         ret %tmp.7;
-_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_23_22_27_4_stop:
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_52_22_56_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc"; @line = 29; @symbol_functiondef = [onPreviousPage,29,13,27]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc"; @line = 58; @symbol_functiondef = [onPreviousPage,58,13,27]; ]
     function onPreviousPage() {
-_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_29_30_33_4_start:
-[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 30 8 ]
-        symbol [ _view %tmp.2 30 8 13 ];
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_58_30_62_4_start:
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 59 8 ]
+        symbol [ _view %tmp.2 59 8 13 ];
         %tmp.2 = getv ? :_view;
-        symbol [ doPrev %tmp.3 30 14 20 ];
+        symbol [ doPrev %tmp.3 59 14 20 ];
         %tmp.3 = getv function %tmp.2 :doPrev;
         invoke %tmp.2 %tmp.3();
-[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 31 8 ]
-        symbol [ WatchUi %tmp.4 31 8 15 ];
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 60 8 ]
+        symbol [ WatchUi %tmp.4 60 8 15 ];
         %tmp.4 = getm $.Toybox.WatchUi;
-        symbol [ requestUpdate %tmp.5 31 16 29 ];
+        symbol [ requestUpdate %tmp.5 60 16 29 ];
         %tmp.5 = getv function %tmp.4 :requestUpdate;
         invoke %tmp.4 %tmp.5();
-[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 32 8 ]
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 61 8 ]
         %tmp.6 = true;
         ret %tmp.6;
-_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_29_30_33_4_stop:
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_58_30_62_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc"; @line = 35; @symbol_functiondef = [onNextPage,35,13,23]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc"; @line = 64; @symbol_functiondef = [onNextPage,64,13,23]; ]
     function onNextPage() {
-_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_35_26_39_4_start:
-[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 36 8 ]
-        symbol [ _view %tmp.2 36 8 13 ];
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_64_26_68_4_start:
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 65 8 ]
+        symbol [ _view %tmp.2 65 8 13 ];
         %tmp.2 = getv ? :_view;
-        symbol [ doNext %tmp.3 36 14 20 ];
+        symbol [ doNext %tmp.3 65 14 20 ];
         %tmp.3 = getv function %tmp.2 :doNext;
         invoke %tmp.2 %tmp.3();
-[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 37 8 ]
-        symbol [ WatchUi %tmp.4 37 8 15 ];
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 66 8 ]
+        symbol [ WatchUi %tmp.4 66 8 15 ];
         %tmp.4 = getm $.Toybox.WatchUi;
-        symbol [ requestUpdate %tmp.5 37 16 29 ];
+        symbol [ requestUpdate %tmp.5 66 16 29 ];
         %tmp.5 = getv function %tmp.4 :requestUpdate;
         invoke %tmp.4 %tmp.5();
-[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 38 8 ]
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 67 8 ]
         %tmp.6 = true;
         ret %tmp.6;
-_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_35_26_39_4_stop:
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_64_26_68_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc"; @line = 41; @symbol_functiondef = [onTap,41,13,18]; @symbol_param<0> = [evt,41,19,22]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc"; @line = 71; @symbol_functiondef = [_tap,71,20,24]; @symbol_param<0> = [px,71,25,27]; @symbol_param<1> = [py,71,29,31]; ]
+    protected
+    function _tap(px, py) {
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_71_33_75_4_start:
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 72 8 ]
+        symbol [ System %tmp.1 72 21 27 ];
+        %tmp.1 = getm $.Toybox.System;
+        symbol [ getTimer %tmp.2 72 28 36 ];
+        %tmp.2 = getv function %tmp.1 :getTimer;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        symbol [ _lastTapMs ? 72 8 18 ];
+        putv self :_lastTapMs %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 73 8 ]
+        symbol [ _view %tmp.5 73 8 13 ];
+        %tmp.5 = getv ? :_view;
+        symbol [ doTap %tmp.6 73 14 19 ];
+        %tmp.6 = getv function %tmp.5 :doTap;
+        %tmp.7 = lgetv %px;
+        symbol [ px %tmp.7 73 20 22 ];
+        %tmp.8 = lgetv %py;
+        symbol [ py %tmp.8 73 24 26 ];
+        invoke %tmp.5 %tmp.6(%tmp.7, %tmp.8);
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 74 8 ]
+        symbol [ WatchUi %tmp.9 74 8 15 ];
+        %tmp.9 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.10 74 16 29 ];
+        %tmp.10 = getv function %tmp.9 :requestUpdate;
+        invoke %tmp.9 %tmp.10();
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_71_33_75_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc"; @line = 77; @symbol_functiondef = [_recentlyTapped,77,20,35]; ]
+    protected
+    function _recentlyTapped() {
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_77_38_81_4_start:
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 78 8 ]
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_78_8_78_45_if_stmt:
+        symbol [ _lastTapMs %tmp.2 78 12 22 ];
+        %tmp.2 = getv ? :_lastTapMs;
+        %tmp.3 = 0;
+        %tmp.4 = eq %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_78_8_78_45_if_end;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_78_8_78_45_if_true:
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_78_29_78_45_start:
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 78 31 ]
+        %tmp.5 = false;
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_78_29_78_45_stop:
+        goto @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_78_8_78_45_if_end;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_78_8_78_45_if_end:
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 79 8 ]
+        [ "_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_77_38_81_4_start" "_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_77_38_81_4_stop" ]
+        %dt.1 = local;
+        symbol [ dt %dt.1 79 12 14 ];
+        symbol [ System %tmp.6 79 17 23 ];
+        %tmp.6 = getm $.Toybox.System;
+        symbol [ getTimer %tmp.7 79 24 32 ];
+        %tmp.7 = getv function %tmp.6 :getTimer;
+        %tmp.8 = invoke %tmp.6 %tmp.7();
+        symbol [ _lastTapMs %tmp.10 79 37 47 ];
+        %tmp.10 = getv ? :_lastTapMs;
+        %tmp.11 = sub %tmp.8 %tmp.10;
+        lputv %dt.1 %tmp.11;
+        symbol [ dt %dt.1 79 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 80 8 ]
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_80_16_80_32_begin:
+        %tmp.12 = lgetv %dt.1;
+        symbol [ dt %tmp.12 80 16 18 ];
+        %tmp.13 = 0;
+        %tmp.14 = gte %tmp.12 %tmp.13;
+        %tmp.15 = dup %tmp.14;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_80_27_80_32_end;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_80_27_80_32_true:
+        %tmp.16 = lgetv %dt.1;
+        symbol [ dt %tmp.16 80 27 29 ];
+        symbol [ _TAP_DEDUPE_MS %tmp.18 80 32 46 ];
+        %tmp.18 = getv ? :_TAP_DEDUPE_MS;
+        %tmp.19 = lt %tmp.16 %tmp.18;
+        %tmp.20 = and %tmp.14 %tmp.19;
+        push %tmp.20;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_80_27_80_32_end:
+        %tmp.21 = phi [%tmp.15 @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_80_16_80_32_begin] [%tmp.20 @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_80_27_80_32_true] [%tmp.21 @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_80_27_80_32_end];
+        ret %tmp.21;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_77_38_81_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc"; @line = 83; @symbol_functiondef = [onTap,83,13,18]; @symbol_param<0> = [evt,83,19,22]; ]
     function onTap(evt) {
-_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_41_24_46_4_start:
-[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 42 8 ]
-        [ "_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_41_24_46_4_start" "_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_41_24_46_4_stop" ]
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_83_24_89_4_start:
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 84 8 ]
+        [ "_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_83_24_89_4_start" "_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_83_24_89_4_stop" ]
         %xy.1 = local;
-        symbol [ xy %xy.1 42 12 14 ];
+        symbol [ xy %xy.1 84 12 14 ];
         %tmp.1 = lgetv %evt;
-        symbol [ evt %tmp.1 42 17 20 ];
-        symbol [ getCoordinates %tmp.2 42 21 35 ];
+        symbol [ evt %tmp.1 84 17 20 ];
+        symbol [ getCoordinates %tmp.2 84 21 35 ];
         %tmp.2 = getv function %tmp.1 :getCoordinates;
         %tmp.3 = invoke %tmp.1 %tmp.2();
         lputv %xy.1 %tmp.3;
-        symbol [ xy %xy.1 42 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 43 8 ]
-        symbol [ _view %tmp.5 43 8 13 ];
-        %tmp.5 = getv ? :_view;
-        symbol [ doTap %tmp.6 43 14 19 ];
-        %tmp.6 = getv function %tmp.5 :doTap;
-        %tmp.7 = lgetv %xy.1;
-        symbol [ xy %tmp.7 43 20 22 ];
-        %tmp.8 = 0;
-        %tmp.9 = agetv %tmp.7 %tmp.8;
-        %tmp.10 = lgetv %xy.1;
-        symbol [ xy %tmp.10 43 27 29 ];
-        %tmp.11 = 1;
-        %tmp.12 = agetv %tmp.10 %tmp.11;
-        invoke %tmp.5 %tmp.6(%tmp.9, %tmp.12);
-[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 44 8 ]
-        symbol [ WatchUi %tmp.13 44 8 15 ];
-        %tmp.13 = getm $.Toybox.WatchUi;
-        symbol [ requestUpdate %tmp.14 44 16 29 ];
-        %tmp.14 = getv function %tmp.13 :requestUpdate;
-        invoke %tmp.13 %tmp.14();
-[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 45 8 ]
-        %tmp.15 = true;
-        ret %tmp.15;
-_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_41_24_46_4_stop:
+        symbol [ xy %xy.1 84 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 85 8 ]
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_85_8_85_39_if_stmt:
+        %tmp.4 = lgetv %xy.1;
+        symbol [ xy %tmp.4 85 12 14 ];
+        %tmp.5 = null;
+        %tmp.6 = eq %tmp.4 %tmp.5;
+        bf %tmp.6 @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_85_8_85_39_if_end;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_85_8_85_39_if_true:
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_85_24_85_39_start:
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 85 26 ]
+        %tmp.7 = true;
+        ret %tmp.7;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_85_24_85_39_stop:
+        goto @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_85_8_85_39_if_end;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_85_8_85_39_if_end:
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 86 8 ]
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_86_8_86_46_if_stmt:
+        %tmp.8 = self;
+        symbol [ _recentlyTapped %tmp.9 86 12 27 ];
+        %tmp.9 = getv function %tmp.8 :_recentlyTapped;
+        %tmp.10 = invoke %tmp.8 %tmp.9();
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_86_8_86_46_if_end;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_86_8_86_46_if_true:
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_86_31_86_46_start:
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 86 33 ]
+        %tmp.11 = true;
+        ret %tmp.11;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_86_31_86_46_stop:
+        goto @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_86_8_86_46_if_end;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_86_8_86_46_if_end:
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 87 8 ]
+        %tmp.12 = self;
+        symbol [ _tap %tmp.13 87 8 12 ];
+        %tmp.13 = getv function %tmp.12 :_tap;
+        %tmp.14 = lgetv %xy.1;
+        symbol [ xy %tmp.14 87 13 15 ];
+        %tmp.15 = 0;
+        %tmp.16 = agetv %tmp.14 %tmp.15;
+        %tmp.17 = lgetv %xy.1;
+        symbol [ xy %tmp.17 87 20 22 ];
+        %tmp.18 = 1;
+        %tmp.19 = agetv %tmp.17 %tmp.18;
+        invoke %tmp.12 %tmp.13(%tmp.16, %tmp.19);
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 88 8 ]
+        %tmp.20 = true;
+        ret %tmp.20;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_83_24_89_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc"; @line = 91; @symbol_functiondef = [onDrag,91,13,19]; @symbol_param<0> = [evt,91,20,23]; ]
+    function onDrag(evt) {
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_91_25_118_4_start:
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 92 8 ]
+        [ "_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_91_25_118_4_start" "_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_91_25_118_4_stop" ]
+        %t.1 = local;
+        symbol [ t %t.1 92 12 13 ];
+        %tmp.1 = lgetv %evt;
+        symbol [ evt %tmp.1 92 16 19 ];
+        symbol [ getType %tmp.2 92 20 27 ];
+        %tmp.2 = getv function %tmp.1 :getType;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        lputv %t.1 %tmp.3;
+        symbol [ t %t.1 92 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 93 8 ]
+        [ "_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_91_25_118_4_start" "_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_91_25_118_4_stop" ]
+        %coords.2 = local;
+        symbol [ coords %coords.2 93 12 18 ];
+        %tmp.4 = lgetv %evt;
+        symbol [ evt %tmp.4 93 21 24 ];
+        symbol [ getCoordinates %tmp.5 93 25 39 ];
+        %tmp.5 = getv function %tmp.4 :getCoordinates;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        lputv %coords.2 %tmp.6;
+        symbol [ coords %coords.2 93 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 94 8 ]
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_94_8_94_44_if_stmt:
+        %tmp.7 = lgetv %coords.2;
+        symbol [ coords %tmp.7 94 12 18 ];
+        %tmp.8 = null;
+        %tmp.9 = eq %tmp.7 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_94_8_94_44_if_end;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_94_8_94_44_if_true:
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_94_28_94_44_start:
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 94 30 ]
+        %tmp.10 = false;
+        ret %tmp.10;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_94_28_94_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_94_8_94_44_if_end;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_94_8_94_44_if_end:
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 96 8 ]
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_96_8_100_8_if_stmt:
+        %tmp.11 = lgetv %t.1;
+        symbol [ t %tmp.11 96 12 13 ];
+        symbol [ WatchUi %tmp.12 96 17 24 ];
+        %tmp.12 = getm $.Toybox.WatchUi;
+        symbol [ DRAG_TYPE_START %tmp.13 96 25 40 ];
+        %tmp.13 = getv %tmp.12 :DRAG_TYPE_START;
+        %tmp.14 = eq %tmp.11 %tmp.13;
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_96_8_100_8_if_end;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_96_8_100_8_if_true:
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_96_42_100_8_start:
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 97 12 ]
+        %tmp.15 = lgetv %coords.2;
+        symbol [ coords %tmp.15 97 26 32 ];
+        %tmp.16 = 0;
+        %tmp.17 = agetv %tmp.15 %tmp.16;
+        symbol [ _dragStartX ? 97 12 23 ];
+        putv self :_dragStartX %tmp.17;
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 98 12 ]
+        %tmp.18 = lgetv %coords.2;
+        symbol [ coords %tmp.18 98 26 32 ];
+        %tmp.19 = 1;
+        %tmp.20 = agetv %tmp.18 %tmp.19;
+        symbol [ _dragStartY ? 98 12 23 ];
+        putv self :_dragStartY %tmp.20;
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 99 12 ]
+        %tmp.21 = false;
+        ret %tmp.21;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_96_42_100_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_96_8_100_8_if_end;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_96_8_100_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 102 8 ]
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_102_8_116_8_if_stmt:
+        %tmp.22 = lgetv %t.1;
+        symbol [ t %tmp.22 102 12 13 ];
+        symbol [ WatchUi %tmp.23 102 17 24 ];
+        %tmp.23 = getm $.Toybox.WatchUi;
+        symbol [ DRAG_TYPE_STOP %tmp.24 102 25 39 ];
+        %tmp.24 = getv %tmp.23 :DRAG_TYPE_STOP;
+        %tmp.25 = eq %tmp.22 %tmp.24;
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_102_8_116_8_if_end;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_102_8_116_8_if_true:
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_102_41_116_8_start:
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 103 12 ]
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_103_12_103_49_if_stmt:
+        symbol [ _dragStartX %tmp.27 103 16 27 ];
+        %tmp.27 = getv ? :_dragStartX;
+        %tmp.28 = 0;
+        %tmp.29 = lt %tmp.27 %tmp.28;
+        bf %tmp.29 @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_103_12_103_49_if_end;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_103_12_103_49_if_true:
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_103_33_103_49_start:
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 103 35 ]
+        %tmp.30 = false;
+        ret %tmp.30;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_103_33_103_49_stop:
+        goto @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_103_12_103_49_if_end;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_103_12_103_49_if_end:
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 104 12 ]
+        [ "_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_102_41_116_8_start" "_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_102_41_116_8_stop" ]
+        %dx.3 = local;
+        symbol [ dx %dx.3 104 16 18 ];
+        %tmp.31 = lgetv %coords.2;
+        symbol [ coords %tmp.31 104 21 27 ];
+        %tmp.32 = 0;
+        %tmp.33 = agetv %tmp.31 %tmp.32;
+        symbol [ _dragStartX %tmp.35 104 33 44 ];
+        %tmp.35 = getv ? :_dragStartX;
+        %tmp.36 = sub %tmp.33 %tmp.35;
+        lputv %dx.3 %tmp.36;
+        symbol [ dx %dx.3 104 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 105 12 ]
+        [ "_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_102_41_116_8_start" "_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_102_41_116_8_stop" ]
+        %dy.4 = local;
+        symbol [ dy %dy.4 105 16 18 ];
+        %tmp.37 = lgetv %coords.2;
+        symbol [ coords %tmp.37 105 21 27 ];
+        %tmp.38 = 1;
+        %tmp.39 = agetv %tmp.37 %tmp.38;
+        symbol [ _dragStartY %tmp.41 105 33 44 ];
+        %tmp.41 = getv ? :_dragStartY;
+        %tmp.42 = sub %tmp.39 %tmp.41;
+        lputv %dy.4 %tmp.42;
+        symbol [ dy %dy.4 105 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 106 12 ]
+        %tmp.43 = -1;
+        symbol [ _dragStartX ? 106 12 23 ];
+        putv self :_dragStartX %tmp.43;
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 107 12 ]
+        %tmp.44 = -1;
+        symbol [ _dragStartY ? 107 12 23 ];
+        putv self :_dragStartY %tmp.44;
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 108 12 ]
+        [ "_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_102_41_116_8_start" "_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_102_41_116_8_stop" ]
+        %adx.5 = local;
+        symbol [ adx %adx.5 108 16 19 ];
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_108_22_108_39_begin:
+        %tmp.45 = lgetv %dx.3;
+        symbol [ dx %tmp.45 108 23 25 ];
+        %tmp.46 = 0;
+        %tmp.47 = lt %tmp.45 %tmp.46;
+        bf %tmp.47 @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_108_22_108_39_else_false;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_108_22_108_39_true:
+        %tmp.48 = lgetv %dx.3;
+        symbol [ dx %tmp.48 108 34 36 ];
+        %tmp.49 = sub 0 %tmp.48;
+        push %tmp.49;
+        goto @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_108_22_108_39_end;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_108_22_108_39_else_false:
+        %tmp.50 = lgetv %dx.3;
+        symbol [ dx %tmp.50 108 39 41 ];
+        push %tmp.50;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_108_22_108_39_end:
+        %tmp.51 = phi [%tmp.47 @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_108_22_108_39_begin] [%tmp.49 @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_108_22_108_39_true] [%tmp.50 @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_108_22_108_39_else_false] [%tmp.51 @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_108_22_108_39_end];
+        lputv %adx.5 %tmp.51;
+        symbol [ adx %adx.5 108 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 109 12 ]
+        [ "_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_102_41_116_8_start" "_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_102_41_116_8_stop" ]
+        %ady.6 = local;
+        symbol [ ady %ady.6 109 16 19 ];
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_109_22_109_39_begin:
+        %tmp.52 = lgetv %dy.4;
+        symbol [ dy %tmp.52 109 23 25 ];
+        %tmp.53 = 0;
+        %tmp.54 = lt %tmp.52 %tmp.53;
+        bf %tmp.54 @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_109_22_109_39_else_false;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_109_22_109_39_true:
+        %tmp.55 = lgetv %dy.4;
+        symbol [ dy %tmp.55 109 34 36 ];
+        %tmp.56 = sub 0 %tmp.55;
+        push %tmp.56;
+        goto @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_109_22_109_39_end;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_109_22_109_39_else_false:
+        %tmp.57 = lgetv %dy.4;
+        symbol [ dy %tmp.57 109 39 41 ];
+        push %tmp.57;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_109_22_109_39_end:
+        %tmp.58 = phi [%tmp.54 @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_109_22_109_39_begin] [%tmp.56 @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_109_22_109_39_true] [%tmp.57 @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_109_22_109_39_else_false] [%tmp.58 @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_109_22_109_39_end];
+        lputv %ady.6 %tmp.58;
+        symbol [ ady %ady.6 109 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 111 12 ]
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_111_12_115_12_if_stmt:
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_111_16_111_43_begin:
+        %tmp.59 = lgetv %adx.5;
+        symbol [ adx %tmp.59 111 16 19 ];
+        symbol [ _TAP_SLOP %tmp.61 111 23 32 ];
+        %tmp.61 = getv ? :_TAP_SLOP;
+        %tmp.62 = lte %tmp.59 %tmp.61;
+        bf %tmp.62 @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_111_12_115_12_if_end;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_111_36_111_43_true:
+        %tmp.63 = lgetv %ady.6;
+        symbol [ ady %tmp.63 111 36 39 ];
+        symbol [ _TAP_SLOP %tmp.65 111 43 52 ];
+        %tmp.65 = getv ? :_TAP_SLOP;
+        %tmp.66 = lte %tmp.63 %tmp.65;
+        push %tmp.66;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_111_36_111_43_end:
+        %tmp.67 = phi [%tmp.62 @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_111_16_111_43_begin] [%tmp.66 @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_111_36_111_43_true] [%tmp.67 @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_111_36_111_43_end];
+        bf %tmp.67 @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_111_12_115_12_if_end;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_111_12_115_12_if_true:
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_111_54_115_12_start:
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 112 16 ]
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_112_16_112_54_if_stmt:
+        %tmp.68 = self;
+        symbol [ _recentlyTapped %tmp.69 112 20 35 ];
+        %tmp.69 = getv function %tmp.68 :_recentlyTapped;
+        %tmp.70 = invoke %tmp.68 %tmp.69();
+        bf %tmp.70 @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_112_16_112_54_if_end;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_112_16_112_54_if_true:
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_112_39_112_54_start:
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 112 41 ]
+        %tmp.71 = true;
+        ret %tmp.71;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_112_39_112_54_stop:
+        goto @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_112_16_112_54_if_end;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_112_16_112_54_if_end:
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 113 16 ]
+        %tmp.72 = self;
+        symbol [ _tap %tmp.73 113 16 20 ];
+        %tmp.73 = getv function %tmp.72 :_tap;
+        %tmp.74 = lgetv %coords.2;
+        symbol [ coords %tmp.74 113 21 27 ];
+        %tmp.75 = 0;
+        %tmp.76 = agetv %tmp.74 %tmp.75;
+        %tmp.77 = lgetv %coords.2;
+        symbol [ coords %tmp.77 113 32 38 ];
+        %tmp.78 = 1;
+        %tmp.79 = agetv %tmp.77 %tmp.78;
+        invoke %tmp.72 %tmp.73(%tmp.76, %tmp.79);
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 114 16 ]
+        %tmp.80 = true;
+        ret %tmp.80;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_111_54_115_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_111_12_115_12_if_end;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_111_12_115_12_if_end:
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_102_41_116_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_102_8_116_8_if_end;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_102_8_116_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc" 117 8 ]
+        %tmp.81 = false;
+        ret %tmp.81;
+_Users_kkorolczuk_work_garmin_chess_source_BitochiChessDelegate_mc_91_25_118_4_stop:
     }
 }
 [ @file = "/Users/kkorolczuk/work/garmin/chess/source/BitochiChessDelegate.mc"; @line = 1; ]

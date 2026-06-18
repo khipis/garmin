@@ -15,12 +15,21 @@ const MG_GAMEOVER  = 5;   // all holes done
 const MG_HOLES = 20;
 
 // ── Global leaderboard ─────────────────────────────────────────────────────
-// Metric submitted = total strokes to complete the whole course (positive).
-// LOWER is better; the backend sorts this game ASCENDING, so we submit the
-// raw positive stroke count (never negated). Variant = course length so the
-// board only compares like courses.
+// Metric submitted = a POSITIVE points total (HIGHER is better). The old
+// "total strokes for 20 holes" board had no fail state — every player could
+// grind every hole, so the board never really meant anything. Now you have a
+// limited number of balls per hole (shrinking with hole number AND difficulty)
+// and 3 lives: run out of balls on a hole → lose a life; lose all lives → the
+// run ends. You bank points for every hole you sink (plus a leftover-ball
+// efficiency bonus), so the board ranks how FAR you got and how CLEANLY you
+// played. Variant = difficulty so Easy/Normal/Hard rank separately.
 const LB_GAME_ID = "minigolf";
-const LB_VARIANT = "20-holes";
+
+// Lives the player starts a run with.
+const MG_START_LIVES = 3;
+
+// Points banked for sinking a hole, before the leftover-ball bonus.
+const MG_HOLE_POINTS = 500;
 
 // Menu focus rows. UP/DOWN edits the focused selector (difficulty) or moves
 // focus between the action rows; SELECT activates the focused row.
@@ -47,6 +56,13 @@ class BitochiMinigolfView extends WatchUi.View {
     hidden var _strokes;     // strokes this hole
     hidden var _totalStrokes;
     hidden var _par;         // [MG_HOLES] par per hole
+
+    // ── Lives / balls / score ──────────────────────────────────────────────
+    hidden var _lives;        // remaining lives (0 → game over)
+    hidden var _ballsThisHole;// max strokes allowed to sink the current hole
+    hidden var _score;        // running points total (submitted to leaderboard)
+    hidden var _holesSunk;    // count of holes successfully completed
+    hidden var _outOfLives;   // true if the run ended by losing all lives
 
     // Animated obstacle helper (windmill, moving bumpers).
     // Stored as separate state so the obstacle list can be regenerated each frame.
@@ -109,6 +125,8 @@ class BitochiMinigolfView extends WatchUi.View {
         _w = 0; _h = 0; _tick = 0;
         _gs = MG_MENU; _difficulty = 1; _menuRow = MG_ROW_PLAY;
         _holeIdx = 0; _strokes = 0; _totalStrokes = 0;
+        _lives = MG_START_LIVES; _ballsThisHole = 0; _score = 0;
+        _holesSunk = 0; _outOfLives = false;
         _aimAngle = 0; _power = 0; _powerDir = 1;
         _ballR = 14; _holeR = 20;
         // Par tuned per layout difficulty (warm-up → finale).
@@ -237,7 +255,7 @@ class BitochiMinigolfView extends WatchUi.View {
                     _bx = _lastBx; _by = _lastBy;
                     _vx = 0; _vy = 0;
                     _strokes++; // splash penalty
-                    _gs = MG_AIM; return;
+                    settleAfterShot(); return;
                 }
             }
 
@@ -284,7 +302,7 @@ class BitochiMinigolfView extends WatchUi.View {
         var spdEnd = _vx * _vx + _vy * _vy;
         if (spdEnd < 36) {
             _vx = 0; _vy = 0;
-            _gs = MG_AIM;
+            settleAfterShot();
         }
     }
 
@@ -502,6 +520,15 @@ class BitochiMinigolfView extends WatchUi.View {
     hidden function sinkBall() {
         _scoreCard[_holeIdx] = _strokes;
         _totalStrokes += _strokes;
+        _holesSunk++;
+
+        // Points: flat reward for sinking + a bonus for every ball you had
+        // left in the tank. Sinking quickly (birdie/eagle) leaves more balls
+        // unused → more points, so cleaner play scores higher.
+        var leftover = _ballsThisHole - _strokes;
+        if (leftover < 0) { leftover = 0; }
+        _score += MG_HOLE_POINTS + leftover * 100;
+
         var diff = _strokes - _par[_holeIdx];
         if (diff <= -2)     { _holeMsg = "Eagle! **"; }
         else if (diff == -1){ _holeMsg = "Birdie! *"; }
@@ -510,6 +537,44 @@ class BitochiMinigolfView extends WatchUi.View {
         else                { _holeMsg = "+" + diff; }
         _holeWait = 12;
         _gs = MG_HOLED;
+    }
+
+    // Called whenever the ball comes to rest in play without sinking. If the
+    // player has used up their ball allowance for this hole, they lose a life
+    // and the hole is abandoned (DNF); otherwise play continues.
+    hidden function settleAfterShot() {
+        if (_strokes >= _ballsThisHole) {
+            failHole();
+        } else {
+            _gs = MG_AIM;
+        }
+    }
+
+    // Out of balls on this hole → lose a life, mark the hole DNF, and show the
+    // result overlay. Tapping advances (or ends the run) via nextHole().
+    hidden function failHole() {
+        _lives--;
+        _scoreCard[_holeIdx] = -2;   // DNF marker
+        _vx = 0; _vy = 0;
+        _holeMsg = "Out of balls!";
+        _holeWait = 12;
+        _gs = MG_HOLED;
+    }
+
+    // Ball allowance for a hole: par plus a difficulty margin that tightens as
+    // the course progresses. Floored at par so flawless play always survives.
+    //   Easy +3 / Normal +2 / Hard +1, minus 1 ball per ~7 holes reached.
+    hidden function ballsForHole(idx) {
+        var margin = [3, 2, 1][_difficulty];
+        var shrink = idx / 7;             // 0 (holes 1-7), 1 (8-14), 2 (15-20)
+        var balls = _par[idx] + margin - shrink;
+        if (balls < _par[idx]) { balls = _par[idx]; }
+        return balls;
+    }
+
+    // Leaderboard variant = difficulty, so Easy/Normal/Hard rank separately.
+    hidden function _diffVariant() {
+        return ["easy", "normal", "hard"][_difficulty];
     }
 
     // ── Input ─────────────────────────────────────────────────────────────────
@@ -551,9 +616,9 @@ class BitochiMinigolfView extends WatchUi.View {
         else if (_menuRow == MG_ROW_LB)   { openLeaderboard(); }
     }
 
-    // Open the shared global leaderboard for this course length.
+    // Open the shared global leaderboard for the selected difficulty.
     function openLeaderboard() {
-        var v = new LbScoresView(LB_GAME_ID, LB_VARIANT, "MINIGOLF");
+        var v = new LbScoresView(LB_GAME_ID, _diffVariant(), "MINIGOLF");
         WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
@@ -640,24 +705,37 @@ class BitochiMinigolfView extends WatchUi.View {
 
     hidden function startGame() {
         _holeIdx = 0; _totalStrokes = 0; _strokes = 0;
+        _lives = MG_START_LIVES; _score = 0; _holesSunk = 0; _outOfLives = false;
         for (var i = 0; i < MG_HOLES; i++) { _scoreCard[i] = -1; }
         loadHole(_holeIdx);
         _gs = MG_AIM;
     }
 
     hidden function nextHole() {
+        // Run ends the moment the player is out of lives…
+        if (_lives <= 0) {
+            _outOfLives = true;
+            endRun();
+            return;
+        }
         _holeIdx++;
+        // …or when all holes have been played.
         if (_holeIdx >= MG_HOLES) {
-            // Course complete — submit total strokes (lower is better; backend
-            // sorts ascending, so submit the raw positive count, never negated).
-            Leaderboard.submitScore(LB_GAME_ID, _totalStrokes, LB_VARIANT);
-            Leaderboard.showPostGame(LB_GAME_ID, LB_VARIANT, "MINIGOLF");
-            _gs = MG_GAMEOVER;
+            endRun();
             return;
         }
         _strokes = 0;
         loadHole(_holeIdx);
         _gs = MG_AIM;
+    }
+
+    // Submit the points total (HIGHER is better) for this difficulty and show
+    // the post-game leaderboard.
+    hidden function endRun() {
+        var variant = _diffVariant();
+        Leaderboard.submitScore(LB_GAME_ID, _score, variant);
+        Leaderboard.showPostGame(LB_GAME_ID, variant, "MINIGOLF");
+        _gs = MG_GAMEOVER;
     }
 
     // ── Hole definitions ──────────────────────────────────────────────────────
@@ -1003,6 +1081,7 @@ class BitochiMinigolfView extends WatchUi.View {
 
         _bx = _tx * 10; _by = _ty * 10;
         _lastBx = _bx; _lastBy = _by;
+        _ballsThisHole = ballsForHole(idx);
         _aimAngle = computeAimTowardHole();
         // Rebuild animated obstacles immediately so first frame looks correct
         updateAnimated();
@@ -1053,7 +1132,7 @@ class BitochiMinigolfView extends WatchUi.View {
 
         // Difficulty selector row
         var diffSel = (_menuRow == MG_ROW_DIFF);
-        var diffLabels = ["Easy (20 holes)", "Normal", "Hard"];
+        var diffLabels = ["Easy +3 balls", "Normal +2 balls", "Hard +1 ball"];
         dc.setColor(0xCCEEBB, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w/2, L[MG_ROW_DIFF][1] - _h * 7 / 100, Graphics.FONT_XTINY,
             "Difficulty:", Graphics.TEXT_JUSTIFY_CENTER);
@@ -1275,21 +1354,57 @@ class BitochiMinigolfView extends WatchUi.View {
     }
 
     // ── HUD ───────────────────────────────────────────────────────────────────
+    // Top band, two rows:
+    //   row 1: Hole x/20 (left) · lives ♥ (centre) · balls used/allowed (right)
+    //   row 2: Par n (left) · Score (right)
     hidden function drawHUD(dc) {
         var hole = _holeIdx + 1;
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, 0, _w, _vpY);
+
+        // Row 1 — hole / lives / balls
         dc.setColor(0x88CCAA, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(4, 4, Graphics.FONT_XTINY, "Hole " + hole + "/" + MG_HOLES, Graphics.TEXT_JUSTIFY_LEFT);
+        dc.drawText(4, 2, Graphics.FONT_XTINY, "H" + hole + "/" + MG_HOLES, Graphics.TEXT_JUSTIFY_LEFT);
+
+        drawLives(dc, _w / 2, 9);
+
+        // Balls left this hole; turns amber then red as the player nears the cap.
+        var left = _ballsThisHole - _strokes;
+        if (left < 0) { left = 0; }
+        var ballClr = 0x66DD66;
+        if (left <= 0)      { ballClr = 0xFF4444; }
+        else if (left == 1) { ballClr = 0xFFAA33; }
+        dc.setColor(ballClr, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w - 4, 2, Graphics.FONT_XTINY,
+            "B " + _strokes + "/" + _ballsThisHole, Graphics.TEXT_JUSTIFY_RIGHT);
+
+        // Row 2 — par / score
+        var row2 = 2 + _vpY * 42 / 100;
+        if (row2 < 18) { row2 = 18; }
         dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, 4, Graphics.FONT_XTINY, "Par " + _par[_holeIdx], Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xCCEEFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w - 4, 4, Graphics.FONT_XTINY, "H " + _strokes, Graphics.TEXT_JUSTIFY_RIGHT);
+        dc.drawText(4, row2, Graphics.FONT_XTINY, "Par " + _par[_holeIdx], Graphics.TEXT_JUSTIFY_LEFT);
+        dc.setColor(0x99DDFF, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w - 4, row2, Graphics.FONT_XTINY, "" + _score + " pts", Graphics.TEXT_JUSTIFY_RIGHT);
 
         // Aim hint bottom
         if (_gs == MG_AIM) {
             dc.setColor(0x44AA66, Graphics.COLOR_TRANSPARENT);
             dc.drawText(_w/2, _h - _h * 10 / 100, Graphics.FONT_XTINY, "Tap=aim  O/ball=shoot", Graphics.TEXT_JUSTIFY_CENTER);
+        }
+    }
+
+    // Draw the remaining lives as small filled hearts (●), centred on cx.
+    hidden function drawLives(dc, cx, cy) {
+        var n = MG_START_LIVES;
+        var r = 4;
+        var gap = 4;
+        var totalW = n * (r * 2) + (n - 1) * gap;
+        var x = cx - totalW / 2 + r;
+        for (var i = 0; i < n; i++) {
+            if (i < _lives) { dc.setColor(0xFF4466, Graphics.COLOR_TRANSPARENT); }
+            else            { dc.setColor(0x553333, Graphics.COLOR_TRANSPARENT); }
+            dc.fillCircle(x, cy, r);
+            x += r * 2 + gap;
         }
     }
 
@@ -1302,10 +1417,18 @@ class BitochiMinigolfView extends WatchUi.View {
         dc.setColor(0x226633, Graphics.COLOR_TRANSPARENT);
         dc.drawRoundedRectangle(ox, oy, ow, oh, 8);
 
-        dc.setColor(0x44FF88, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, oy + oh * 4 / 100, Graphics.FONT_MEDIUM, "HOLED!", Graphics.TEXT_JUSTIFY_CENTER);
+        // Failed hole (out of balls) vs successful sink get different headers.
+        var failed = (_scoreCard[_holeIdx] == -2);
+        if (failed) {
+            dc.setColor(0xFF5544, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w/2, oy + oh * 4 / 100, Graphics.FONT_MEDIUM, "MISSED!", Graphics.TEXT_JUSTIFY_CENTER);
+        } else {
+            dc.setColor(0x44FF88, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w/2, oy + oh * 4 / 100, Graphics.FONT_MEDIUM, "HOLED!", Graphics.TEXT_JUSTIFY_CENTER);
+        }
         dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, oy + oh * 36 / 100, Graphics.FONT_XTINY, _holeMsg, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_w/2, oy + oh * 36 / 100, Graphics.FONT_XTINY,
+            failed ? ("Out of balls  -1 life") : _holeMsg, Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xCCCCCC, Graphics.COLOR_TRANSPARENT);
         dc.drawText(_w/2, oy + oh * 56 / 100, Graphics.FONT_XTINY,
             "Strokes: " + _strokes + " / Par: " + _par[_holeIdx], Graphics.TEXT_JUSTIFY_CENTER);
@@ -1323,20 +1446,26 @@ class BitochiMinigolfView extends WatchUi.View {
         dc.setColor(0x0A2010, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(r, r, r - 2);
 
-        dc.setColor(0x44FF88, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h * 6 / 100, Graphics.FONT_MEDIUM, "GAME OVER", Graphics.TEXT_JUSTIFY_CENTER);
+        if (_outOfLives) {
+            dc.setColor(0xFF5544, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w/2, _h * 6 / 100, Graphics.FONT_MEDIUM, "OUT OF LIVES", Graphics.TEXT_JUSTIFY_CENTER);
+        } else {
+            dc.setColor(0x44FF88, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w/2, _h * 6 / 100, Graphics.FONT_MEDIUM, "COURSE DONE!", Graphics.TEXT_JUSTIFY_CENTER);
+        }
 
-        var totalPar = 0; for (var i = 0; i < MG_HOLES; i++) { totalPar += _par[i]; }
-        var diff = _totalStrokes - totalPar;
-        var diffStr = diff == 0 ? "E" : (diff > 0 ? "+" + diff : "" + diff);
-        dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_w/2, _h * 18 / 100, Graphics.FONT_XTINY,
-            "Total " + _totalStrokes + " / par " + totalPar + " (" + diffStr + ")",
+        // Headline = the leaderboard score.
+        dc.setColor(0x99DDFF, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w/2, _h * 17 / 100, Graphics.FONT_SMALL,
+            _score + " pts", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0xCCEEBB, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_w/2, _h * 25 / 100, Graphics.FONT_XTINY,
+            _holesSunk + "/" + MG_HOLES + " holed · " + _diffVariant(),
             Graphics.TEXT_JUSTIFY_CENTER);
 
         // Two columns × 10 rows
-        var topY  = _h * 26 / 100;
-        var botY  = _h * 80 / 100;
+        var topY  = _h * 31 / 100;
+        var botY  = _h * 82 / 100;
         var rowsH = botY - topY;
         var rowH  = rowsH / 10;
         if (rowH < 10) { rowH = 10; }
@@ -1353,14 +1482,18 @@ class BitochiMinigolfView extends WatchUi.View {
             var sc = _scoreCard[i];
             var pd = (sc >= 0) ? sc - _par[i] : 0;
             var clr = 0x888888;
+            var label = "-";
             if (sc >= 0) {
                 if (pd < 0)        { clr = 0x44FF88; }
                 else if (pd == 0)  { clr = 0xFFFFFF; }
                 else if (pd == 1)  { clr = 0xFFAA44; }
                 else               { clr = 0xFF5544; }
+                label = sc.toString();
+            } else if (sc == -2) {
+                clr = 0xFF5544;   // DNF — out of balls
+                label = "X";
             }
             dc.setColor(clr, Graphics.COLOR_TRANSPARENT);
-            var label = (sc >= 0) ? sc.toString() : "-";
             dc.drawText(rx, ry, Graphics.FONT_XTINY,
                 "H" + (i + 1) + " " + label, Graphics.TEXT_JUSTIFY_CENTER);
         }
