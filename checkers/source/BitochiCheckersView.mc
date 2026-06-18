@@ -351,6 +351,28 @@ class BitochiCheckersView extends WatchUi.View {
         handleCell(row, realCol);
     }
 
+    // True while the board is live — only then does the delegate hijack drags
+    // for cursor tracking (so menu taps and edge-swipes elsewhere still work).
+    function inPlay() { return _gs == GS_PLAY; }
+
+    // Live cursor tracking for touch drags: move the highlight to the square
+    // under the finger WITHOUT activating it, so the player sees exactly where
+    // a lift-off will land. Returns true if the cursor moved to a board square.
+    function hoverAt(tx, ty) {
+        if (_gs != GS_PLAY) { return false; }
+        if (_sq <= 0) { return false; }
+        if (tx < _ox || tx >= _ox + _sq * 8) { return false; }
+        if (ty < _oy || ty >= _oy + _sq * 8) { return false; }
+        var col = (tx - _ox) / _sq;
+        var rowInv = (ty - _oy) / _sq;
+        if (col < 0 || col >= 8 || rowInv < 0 || rowInv >= 8) { return false; }
+        var row; var realCol;
+        if (_playerIsWhite) { row = 7 - rowInv; realCol = col; }
+        else { row = rowInv; realCol = 7 - col; }
+        _curRow = row; _curCol = realCol;
+        return true;
+    }
+
     // ═══════════════════════════════════════════════════════════════════════════
     //  GAME FLOW
     // ═══════════════════════════════════════════════════════════════════════════
@@ -1265,19 +1287,19 @@ class BitochiCheckersView extends WatchUi.View {
     // shrink further to fit between the title and bottom hint on round watches.
     hidden function menuGeom() {
         var nRows = 5;
-        var rowH  = _h * 9 / 100; if (rowH < 14) { rowH = 14; } if (rowH > 25) { rowH = 25; }
         var rowW  = _w * 70 / 100;
         var rowX  = (_w - rowW) / 2;
-        var gap   = _h * 1 / 100; if (gap < 2) { gap = 2; }
-        var topLimit = _h * 23 / 100;
+        // Generous gap so rows are clearly separated (was 1% → rows touched).
+        var gap   = _h * 3 / 100; if (gap < 5) { gap = 5; }
+        // Lay the rows out in the band between the title and the hint line,
+        // fitting the row height to whatever space remains.
+        var topLimit = _h * 24 / 100;
         var botLimit = _h - 18;
         var avail = botLimit - topLimit;
+        var rowH  = (avail - (nRows - 1) * gap) / nRows;
+        if (rowH < 14) { rowH = 14; }
+        if (rowH > 24) { rowH = 24; }
         var total = nRows * rowH + (nRows - 1) * gap;
-        if (total > avail) {
-            rowH = (avail - (nRows - 1) * gap) / nRows;
-            if (rowH < 11) { rowH = 11; }
-            total = nRows * rowH + (nRows - 1) * gap;
-        }
         var rowY0 = topLimit + (avail - total) / 2;
         if (rowY0 < topLimit) { rowY0 = topLimit; }
         return [rowX, rowW, rowY0, rowH, gap, nRows];
