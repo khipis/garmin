@@ -3,7 +3,7 @@ using Toybox.WatchUi;
 
 class BitochiChessApp extends Application.AppBase {
     function initialize() { AppBase.initialize(); }
-    function onStart(state) {}
+    function onStart(state) { Leaderboard.logLaunch("chess"); }
     function onStop(state) {}
     function getInitialView() {
         var view = new BitochiChessView();

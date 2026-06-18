@@ -7,7 +7,7 @@ using Toybox.WatchUi;
 
 class BitochiMoonApp extends Application.AppBase {
     function initialize() { AppBase.initialize(); }
-    function onStart(state) {}
+    function onStart(state) { Leaderboard.logLaunch("moon"); }
     function onStop(state) {}
     function getInitialView() {
         var view = new BitochiMoonView();

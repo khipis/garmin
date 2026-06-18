@@ -6,7 +6,7 @@ using Toybox.WatchUi;
 
 class SudokuApp extends Application.AppBase {
     function initialize() { AppBase.initialize(); }
-    function onStart(state)    {}
+    function onStart(state)    { Leaderboard.logLaunch("sudoku"); }
     function onStop(state)     {}
 
     function getInitialView() {

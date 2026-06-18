@@ -3,7 +3,7 @@ using Toybox.WatchUi;
 
 class MorrisClassicApp extends Application.AppBase {
     function initialize() { AppBase.initialize(); }
-    function onStart(state) {}
+    function onStart(state) { Leaderboard.logLaunch("morris_classic"); }
     function onStop(state) {}
     function getInitialView() {
         var v = new GameView();

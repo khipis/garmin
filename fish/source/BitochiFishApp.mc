@@ -3,7 +3,7 @@ using Toybox.WatchUi;
 
 class BitochiFishApp extends Application.AppBase {
     function initialize() { AppBase.initialize(); }
-    function onStart(state) {}
+    function onStart(state) { Leaderboard.logLaunch("fish"); }
     function onStop(state) {}
     function getInitialView() {
         var view = new BitochiFishView();

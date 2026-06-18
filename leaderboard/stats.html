@@ -233,6 +233,13 @@
       <div class="sh"><span class="sh-title">Per country</span><span class="sh-line"></span></div>
       <div id="per-country"></div>
 
+      <div class="sh"><span class="sh-title">🎮 Game launches — all plays (incl. no-leaderboard)</span><span class="sh-line"></span><button class="hbtn" onclick="loadLaunches()" style="margin-left:8px;font-size:.7rem;padding:3px 8px">↺</button></div>
+      <div class="cards" id="launch-cards"></div>
+      <div class="sh"><span class="sh-title">Launches by game</span><span class="sh-line"></span></div>
+      <div id="launch-by-game"><div class="state"><div class="spinner"></div>Loading…</div></div>
+      <div class="sh"><span class="sh-title">Launches by country</span><span class="sh-line"></span></div>
+      <div id="launch-by-country"></div>
+
       <div class="sh"><span class="sh-title">🚨 Error monitoring — last 24 h</span><span class="sh-line"></span><button class="hbtn" onclick="loadErrors()" style="margin-left:8px;font-size:.7rem;padding:3px 8px">↺</button></div>
       <div id="error-summary"></div>
       <div class="sh"><span class="sh-title">Recent errors (last 100)</span><span class="sh-line"></span></div>
@@ -492,7 +499,73 @@ async function loadLb(game, variant) {
 
 // ── Init ──────────────────────────────────────────────────────────────────────
 loadStats();
+loadLaunches();
 loadErrors();
+
+// ── Game launches (independent of the scores table) ────────────────────────────
+async function loadLaunches() {
+  const cardsEl = document.getElementById('launch-cards');
+  const gameEl  = document.getElementById('launch-by-game');
+  const ctryEl  = document.getElementById('launch-by-country');
+  gameEl.innerHTML = '<div class="state"><div class="spinner"></div>Loading…</div>';
+  try {
+    const r = await fetch(`${API}/launches`, { cache: 'no-store' });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const d = await r.json();
+
+    const t = d.totals || {};
+    cardsEl.innerHTML = `
+      <div class="card"><div class="num">${(t.launches||0).toLocaleString()}</div><div class="lbl">Total Launches</div></div>
+      <div class="card"><div class="num">${(t.players||0).toLocaleString()}</div><div class="lbl">Unique Devices</div></div>
+      <div class="card"><div class="num">${(t.games||0).toLocaleString()}</div><div class="lbl">Games Opened</div></div>`;
+
+    // By game — flags games that are played but produce no scores would need
+    // cross-referencing; here we just show raw play activity per game.
+    const games = d.byGame || [];
+    if (!games.length) {
+      gameEl.innerHTML = '<div class="state">No launches recorded yet.</div>';
+    } else {
+      const maxL = Math.max(...games.map(g => g.launches||0), 1);
+      gameEl.innerHTML = `<table>
+        <thead><tr><th>Game</th><th>Launches</th><th>Devices</th><th class="bar-cell"></th></tr></thead>
+        <tbody>${games.map(g => {
+          const pct = Math.round(((g.launches||0)/maxL)*100);
+          return `<tr>
+            <td><b>${esc(g.game)}</b></td>
+            <td><b>${(g.launches||0).toLocaleString()}</b></td>
+            <td class="muted">${(g.players||0).toLocaleString()}</td>
+            <td class="bar-cell"><div class="bar-wrap"><div class="bar" style="width:${pct}%"></div></div></td>
+          </tr>`;
+        }).join('')}</tbody>
+      </table>`;
+    }
+
+    // By country
+    const ctrs = d.byCountry || [];
+    if (!ctrs.length) {
+      ctryEl.innerHTML = '';
+    } else {
+      const maxC = Math.max(...ctrs.map(c => c.launches||0), 1);
+      ctryEl.innerHTML = `<table>
+        <thead><tr><th>Country</th><th>Launches</th><th>Devices</th><th class="bar-cell"></th></tr></thead>
+        <tbody>${ctrs.map(c => {
+          const code = c.country || '??';
+          const flag = c.country ? codeToFlag(c.country) : '🌐';
+          const name = COUNTRY_NAMES[code] || code;
+          const pct  = Math.round(((c.launches||0)/maxC)*100);
+          return `<tr>
+            <td><span class="flag-name">${flag} ${esc(name)}</span></td>
+            <td><b>${(c.launches||0).toLocaleString()}</b></td>
+            <td class="muted">${(c.players||0).toLocaleString()}</td>
+            <td class="bar-cell"><div class="bar-wrap"><div class="bar" style="width:${pct}%"></div></div></td>
+          </tr>`;
+        }).join('')}</tbody>
+      </table>`;
+    }
+  } catch(e) {
+    gameEl.innerHTML = `<div class="state">⚠️ ${esc(String(e))}</div>`;
+  }
+}
 
 async function loadErrors() {
   const summaryEl = document.getElementById('error-summary');

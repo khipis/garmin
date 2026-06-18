@@ -6,7 +6,7 @@ using Toybox.Application;
 
 class SkyRollApp extends Application.AppBase {
     function initialize()   { AppBase.initialize(); }
-    function onStart(state) {}
+    function onStart(state) { Leaderboard.logLaunch("skyroll"); }
     function onStop(state)  {}
 
     function getInitialView() {

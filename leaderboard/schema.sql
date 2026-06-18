@@ -66,3 +66,23 @@ CREATE TABLE IF NOT EXISTS api_errors (
 
 CREATE INDEX IF NOT EXISTS idx_errors_ts   ON api_errors (timestamp DESC);
 CREATE INDEX IF NOT EXISTS idx_errors_game ON api_errors (game, timestamp DESC);
+
+-- ── Game launches ─────────────────────────────────────────────────────────────
+-- A row per app open (fire-and-forget POST /launch from the shared lib's
+-- App.onStart). Lets us see which games are actually being played, even when a
+-- session never submits a score.
+-- Migration (run once on existing DB):
+--   CREATE TABLE IF NOT EXISTS launches (id INTEGER PRIMARY KEY AUTOINCREMENT, game TEXT NOT NULL, timestamp INTEGER NOT NULL, ip_hash TEXT, country TEXT);
+--   CREATE INDEX IF NOT EXISTS idx_launches_game ON launches (game, timestamp DESC);
+--   CREATE INDEX IF NOT EXISTS idx_launches_ts ON launches (timestamp DESC);
+
+CREATE TABLE IF NOT EXISTS launches (
+  id        INTEGER PRIMARY KEY AUTOINCREMENT,
+  game      TEXT    NOT NULL,
+  timestamp INTEGER NOT NULL,   -- unix ms
+  ip_hash   TEXT,               -- anonymised device id (unique-player estimate)
+  country   TEXT                -- ISO-3166 alpha-2 from the Cloudflare edge
+);
+
+CREATE INDEX IF NOT EXISTS idx_launches_game ON launches (game, timestamp DESC);
+CREATE INDEX IF NOT EXISTS idx_launches_ts   ON launches (timestamp DESC);

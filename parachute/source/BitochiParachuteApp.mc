@@ -8,6 +8,7 @@ class BitochiParachuteApp extends Application.AppBase {
     }
 
     function onStart(state) {
+        Leaderboard.logLaunch("parachute");
     }
 
     function onStop(state) {

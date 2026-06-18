@@ -6,7 +6,7 @@ using Toybox.Application;
 
 class NonogramApp extends Application.AppBase {
     function initialize()   { AppBase.initialize(); }
-    function onStart(state) {}
+    function onStart(state) { Leaderboard.logLaunch("nonogram"); }
     function onStop(state)  {}
 
     function getInitialView() {

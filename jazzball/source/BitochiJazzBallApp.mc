@@ -3,7 +3,7 @@ using Toybox.WatchUi;
 
 class BitochiJazzBallApp extends Application.AppBase {
     function initialize() { AppBase.initialize(); }
-    function onStart(state) {}
+    function onStart(state) { Leaderboard.logLaunch("jazzball"); }
     function onStop(state) {}
     function getInitialView() {
         var view = new BitochiJazzBallView();

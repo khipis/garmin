@@ -6,7 +6,7 @@ using Toybox.WatchUi;
 
 class PinballProApp extends Application.AppBase {
     function initialize()    { AppBase.initialize(); }
-    function onStart(state)  {}
+    function onStart(state)  { Leaderboard.logLaunch("pinballpro"); }
     function onStop(state)   {}
 
     function getInitialView() {

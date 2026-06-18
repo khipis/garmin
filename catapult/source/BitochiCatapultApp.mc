@@ -8,6 +8,7 @@ class BitochiCatapultApp extends Application.AppBase {
     }
 
     function onStart(state) {
+        Leaderboard.logLaunch("catapult");
     }
 
     function onStop(state) {

@@ -6,7 +6,7 @@ using Toybox.Application;
 
 class VoidRocksApp extends Application.AppBase {
     function initialize()   { AppBase.initialize(); }
-    function onStart(state) {}
+    function onStart(state) { Leaderboard.logLaunch("voidrocks"); }
     function onStop(state)  {}
 
     function getInitialView() {

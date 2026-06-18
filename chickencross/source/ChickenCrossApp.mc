@@ -3,7 +3,7 @@ using Toybox.WatchUi;
 
 class ChickenCrossApp extends Application.AppBase {
     function initialize()   { AppBase.initialize(); }
-    function onStart(state) {}
+    function onStart(state) { Leaderboard.logLaunch("chickencross"); }
     function onStop(state)  {}
 
     function getInitialView() {

@@ -6,7 +6,7 @@ using Toybox.WatchUi;
 
 class BilliardApp extends Application.AppBase {
     function initialize() { AppBase.initialize(); }
-    function onStart(state)  {}
+    function onStart(state)  { Leaderboard.logLaunch("billiards"); }
     function onStop(state)   {}
     function getInitialView() {
         var v = new BilliardView();

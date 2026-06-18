@@ -6,7 +6,7 @@ using Toybox.Application;
 
 class SniperScopeApp extends Application.AppBase {
     function initialize()   { AppBase.initialize(); }
-    function onStart(state) {}
+    function onStart(state) { Leaderboard.logLaunch("sniperscope"); }
     function onStop(state)  {}
 
     function getInitialView() {

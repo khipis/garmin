@@ -464,6 +464,93 @@ async function handleGetStats(url: URL, env: Env): Promise<Response> {
   );
 }
 
+// ── Launch logging ─────────────────────────────────────────────────────────
+// POST /launch { game } — fire-and-forget ping the shared lib sends on app
+// start. Records that a game was opened so we can see play activity even for
+// games/sessions that never submit a score. Auth: same shared submit key.
+async function handleLaunch(req: Request, env: Env): Promise<Response> {
+  const reqKey = req.headers.get("X-LB-Key") ?? "";
+  if (!env.LB_KEY || reqKey !== env.LB_KEY) return err("forbidden", 403);
+
+  let body: unknown;
+  try { body = await req.json(); } catch { return err("invalid JSON"); }
+  const b = body as Record<string, unknown>;
+
+  const gameRaw = typeof b.game === "string" ? b.game.trim() : "";
+  const game = sanitizeGame(gameRaw);
+  if (!game) return err("missing/invalid: game");
+
+  const ip      = req.headers.get("CF-Connecting-IP") ?? "0.0.0.0";
+  const ipHash  = await hashIp(ip, env.IP_SALT ?? env.LB_KEY ?? "bito-lb");
+  const cf      = (req as unknown as { cf?: { country?: string } }).cf;
+  const country = (cf && typeof cf.country === "string" && cf.country.length === 2)
+    ? cf.country : null;
+
+  try {
+    await env.DB
+      .prepare("INSERT INTO launches (game, timestamp, ip_hash, country) VALUES (?, ?, ?, ?)")
+      .bind(game, Date.now(), ipHash, country)
+      .run();
+  } catch (e) {
+    console.error("launch insert error:", e);
+    return err("db error", 500);
+  }
+  return json({ ok: true });
+}
+
+// GET /launches — aggregate launch activity for the admin page. Returns play
+// counts (and unique-device counts) split by game and by country, plus totals.
+// This is independent of the scores table, so it surfaces games that are being
+// played even when the leaderboard never receives a submission.
+async function handleGetLaunchStats(url: URL, env: Env): Promise<Response> {
+  type ByGame    = { game: string; launches: number; players: number };
+  type ByCountry = { country: string | null; launches: number; players: number };
+  let byGame: ByGame[] = [];
+  let byCountry: ByCountry[] = [];
+  let totals = { launches: 0, games: 0, players: 0 };
+
+  try {
+    const g = await env.DB
+      .prepare(
+        `SELECT game,
+                COUNT(*)                AS launches,
+                COUNT(DISTINCT ip_hash) AS players
+         FROM launches
+         GROUP BY game
+         ORDER BY launches DESC`
+      )
+      .all<ByGame>();
+    byGame = g.results ?? [];
+
+    const c = await env.DB
+      .prepare(
+        `SELECT country,
+                COUNT(*)                AS launches,
+                COUNT(DISTINCT ip_hash) AS players
+         FROM launches
+         GROUP BY country
+         ORDER BY launches DESC`
+      )
+      .all<ByCountry>();
+    byCountry = c.results ?? [];
+
+    const agg = await env.DB
+      .prepare(
+        `SELECT COUNT(*)                AS launches,
+                COUNT(DISTINCT game)    AS games,
+                COUNT(DISTINCT ip_hash) AS players
+         FROM launches`
+      )
+      .first<typeof totals>();
+    if (agg) totals = agg;
+  } catch (e) {
+    console.error("launch stats error:", e);
+    return err("db error", 500);
+  }
+
+  return json({ updated: Math.floor(Date.now() / 1000), totals, byGame, byCountry });
+}
+
 async function handleGetVariants(url: URL, env: Env): Promise<Response> {
   const gameRaw  = (url.searchParams.get("game") ?? "").trim();
   if (!gameRaw) return err("missing: game");
@@ -598,10 +685,12 @@ export default {
     }
 
     if (method === "POST" && path === "/score")       return handlePostScore(req, env);
+    if (method === "POST" && path === "/launch")      return handleLaunch(req, env);
     if (method === "GET"  && path === "/leaderboard") return handleGetLeaderboard(url, env);
     if (method === "GET"  && path === "/recent")      return handleGetRecent(url, env);
     if (method === "GET"  && path === "/games")       return handleGetGames(env);
     if (method === "GET"  && path === "/stats")       return handleGetStats(url, env);
+    if (method === "GET"  && path === "/launches")    return handleGetLaunchStats(url, env);
     if (method === "GET"  && path === "/variants")    return handleGetVariants(url, env);
     if (method === "GET"  && path === "/visit")       return handleVisit(req, env);
     if (method === "GET"  && path === "/errors")      return handleGetErrors(url, env);

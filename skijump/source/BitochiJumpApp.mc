@@ -8,6 +8,7 @@ class BitochiJumpApp extends Application.AppBase {
     }
 
     function onStart(state) {
+        Leaderboard.logLaunch("skijump");
     }
 
     function onStop(state) {

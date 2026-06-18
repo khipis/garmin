@@ -6,7 +6,7 @@ using Toybox.WatchUi;
 
 class JumpTowerApp extends Application.AppBase {
     function initialize()    { AppBase.initialize(); }
-    function onStart(state)  {}
+    function onStart(state)  { Leaderboard.logLaunch("jumptower"); }
     function onStop(state)   {}
 
     function getInitialView() {

@@ -6,7 +6,7 @@ using Toybox.WatchUi;
 
 class TwentyFortyEightApp extends Application.AppBase {
     function initialize()    { AppBase.initialize(); }
-    function onStart(state)  {}
+    function onStart(state)  { Leaderboard.logLaunch("twentyfortyeight"); }
     function onStop(state)   {}
 
     function getInitialView() {

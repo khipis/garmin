@@ -6,7 +6,7 @@ using Toybox.WatchUi;
 
 class GemMatchApp extends Application.AppBase {
     function initialize()    { AppBase.initialize(); }
-    function onStart(state)  {}
+    function onStart(state)  { Leaderboard.logLaunch("gemmatch"); }
     function onStop(state)   {}
 
     function getInitialView() {

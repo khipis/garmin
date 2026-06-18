@@ -8,6 +8,7 @@ class BitochiRunApp extends Application.AppBase {
     }
 
     function onStart(state) {
+        Leaderboard.logLaunch("run");
     }
 
     function onStop(state) {

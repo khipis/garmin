@@ -92,6 +92,21 @@ module Leaderboard {
         _sender.send(game, user, score, variant);
     }
 
+    // ── Launch ping (fire-and-forget) ─────────────────────────────────────────
+    // Call once from a game's App.onStart so the backend can record that the
+    // game was opened — even for games/sessions that never submit a score. This
+    // powers the "games are being played" view on the admin stats page. Guarded
+    // so it only fires once per process, and silent on unsupported watches.
+    var _pinger      = null;
+    var _launchLogged = false;
+    function logLaunch(game as Lang.String) as Void {
+        if (!isSupported()) { return; }
+        if (_launchLogged) { return; }
+        _launchLogged = true;
+        _pinger = new LbPinger();
+        _pinger.send(game);
+    }
+
     // ── Post-game leaderboard pop-up ──────────────────────────────────────────
     // Call right after submitScore() at a game-over / completion point. After a
     // short delay (so the game's own result screen shows first and the POST

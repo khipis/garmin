@@ -7,7 +7,7 @@ using Toybox.Application;
 
 class StarSwarmApp extends Application.AppBase {
     function initialize()   { AppBase.initialize(); }
-    function onStart(state) {}
+    function onStart(state) { Leaderboard.logLaunch("starswarm"); }
     function onStop(state)  {}
 
     function getInitialView() {

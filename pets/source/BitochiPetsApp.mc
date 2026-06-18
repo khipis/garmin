@@ -13,6 +13,7 @@ class BitochiPetsApp extends Application.AppBase {
     }
 
     function onStart(state) {
+        Leaderboard.logLaunch(LB_GAME_ID);
         _pet = new Pet();
         _pet.load();
     }

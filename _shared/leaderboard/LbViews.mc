@@ -65,6 +65,36 @@ class LbSubmitter {
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
+// Launch pinger — POST /launch (fire-and-forget). Records that a game was
+// opened, so we can see play activity even when no score is ever submitted.
+// Instance lives in Leaderboard._pinger until the response arrives.
+// ═══════════════════════════════════════════════════════════════════════════
+class LbPinger {
+    function initialize() {}
+
+    function send(game) {
+        var body = { "game" => game };
+        var opts = {
+            :method       => Communications.HTTP_REQUEST_METHOD_POST,
+            :headers      => {
+                "Content-Type" => Communications.REQUEST_CONTENT_TYPE_JSON,
+                "X-LB-Key"     => Leaderboard.SUBMIT_KEY
+            },
+            :responseType => Communications.HTTP_RESPONSE_CONTENT_TYPE_JSON
+        };
+        try {
+            Communications.makeWebRequest(Leaderboard.API_BASE + "/launch",
+                                          body, opts, method(:_onDone));
+        } catch (e) {}
+    }
+
+    function _onDone(responseCode as Lang.Number,
+                     data as Null or Lang.Dictionary or Lang.String or PersistedContent.Iterator) as Void {
+        // Silent — launch logging must never affect gameplay.
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
 // Network fetch helper — notifies a listener implementing onLeaderboard(ok,data)
 // where `data` is the full enriched /leaderboard dictionary:
 //   { top:[{r,u,s,c}], me:{r,s}|null, near:[...], count, target, asc, period }

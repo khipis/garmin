@@ -6,7 +6,7 @@ using Toybox.Application;
 
 class StarCombatApp extends Application.AppBase {
     function initialize()   { AppBase.initialize(); }
-    function onStart(state) {}
+    function onStart(state) { Leaderboard.logLaunch("starcombat"); }
     function onStop(state)  {}
 
     function getInitialView() {
