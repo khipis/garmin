@@ -70,7 +70,6 @@ APPS=(
   parachute
   pets
   poker
-  recoverytimer
   run
   serpent
   skijump
