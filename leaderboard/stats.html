@@ -113,6 +113,35 @@
          background: linear-gradient(90deg, var(--accent), var(--purple)); }
   .flag-name { display: flex; align-items: center; gap: 7px; }
 
+  /* ── Retention funnel ─────────────────────────────────────────────────────── */
+  .funnel-row {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 7px;
+  }
+  .funnel-label {
+    width: 60px; font-size: .72rem; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .06em; flex-shrink: 0;
+  }
+  .funnel-bar-wrap {
+    flex: 1; background: var(--border); border-radius: 4px; height: 18px;
+    overflow: hidden; position: relative;
+  }
+  .funnel-bar {
+    height: 100%; border-radius: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--purple));
+    transition: width .5s cubic-bezier(.4,0,.2,1);
+    display: flex; align-items: center; padding-left: 8px;
+    min-width: 32px;
+  }
+  .funnel-bar-val {
+    font-size: .68rem; font-weight: 700; color: #04121a;
+    white-space: nowrap;
+  }
+  .funnel-pct {
+    width: 38px; text-align: right; font-size: .72rem;
+    color: var(--muted); flex-shrink: 0;
+  }
+
   /* ── Game leaderboard panel ──────────────────────────────────────────────── */
   #lb-panel { display: none; }
   #lb-panel.visible { display: block; }
@@ -226,6 +255,12 @@
     <div id="overview-panel">
       <div class="sh"><span class="sh-title">Totals — bots excluded</span><span class="sh-line"></span><span class="sh-tag" id="updated-inline"></span></div>
       <div class="cards" id="cards"><div class="card"><div class="spinner"></div></div></div>
+
+      <div class="sh"><span class="sh-title">📈 Retention funnel</span><span class="sh-line"></span></div>
+      <div id="retention-funnel"></div>
+
+      <div class="sh"><span class="sh-title">📊 Engagement</span><span class="sh-line"></span></div>
+      <div class="cards" id="engagement-cards"></div>
 
       <div class="sh"><span class="sh-title">Per game</span><span class="sh-line"></span></div>
       <div id="per-game"><div class="state"><div class="spinner"></div>Loading…</div></div>
@@ -342,6 +377,35 @@ function renderStats() {
     <div class="card"><div class="num">${(t.loyal||0).toLocaleString()}</div><div class="lbl">Loyal</div><div class="lbl" style="font-size:.6rem;margin-top:2px;color:var(--muted)">played 7+ days</div></div>
     <div class="card"><div class="num">${(t.scores||0).toLocaleString()}</div><div class="lbl">Real Scores</div></div>
     <div class="card"><div class="num">${(t.games||0).toLocaleString()}</div><div class="lbl">Games Active</div></div>`;
+
+  // Retention funnel: 2→3→4→5→6→7 days
+  const base = t.players || 1;
+  const steps = [
+    { label: '2+ days', val: t.returning  || 0 },
+    { label: '3+ days', val: t.ret3       || 0 },
+    { label: '4+ days', val: t.ret4       || 0 },
+    { label: '5+ days', val: t.ret5       || 0 },
+    { label: '6+ days', val: t.ret6       || 0 },
+    { label: '7+ days', val: t.loyal      || 0 },
+  ];
+  document.getElementById('retention-funnel').innerHTML = steps.map(s => {
+    const pct = base > 0 ? Math.round(s.val / base * 100) : 0;
+    return `<div class="funnel-row">
+      <div class="funnel-label">${s.label}</div>
+      <div class="funnel-bar-wrap">
+        <div class="funnel-bar" style="width:${Math.max(pct,3)}%">
+          <span class="funnel-bar-val">${s.val.toLocaleString()}</span>
+        </div>
+      </div>
+      <div class="funnel-pct">${pct}%</div>
+    </div>`;
+  }).join('');
+
+  // Engagement cards
+  document.getElementById('engagement-cards').innerHTML = `
+    <div class="card"><div class="num">${(t.newPlayers7d||0).toLocaleString()}</div><div class="lbl">New (7d)</div><div class="lbl" style="font-size:.6rem;margin-top:2px;color:var(--muted)">first play ≤7 days ago</div></div>
+    <div class="card"><div class="num">${(t.dau30d||0).toLocaleString()}</div><div class="lbl">DAU avg (30d)</div><div class="lbl" style="font-size:.6rem;margin-top:2px;color:var(--muted)">distinct IPs / day</div></div>
+    <div class="card"><div class="num">${(t.avgScoresPerPlayer||0).toLocaleString()}</div><div class="lbl">Scores / player</div><div class="lbl" style="font-size:.6rem;margin-top:2px;color:var(--muted)">avg engagement depth</div></div>`;
 
   // Per-game table + sidebar
   const rows = d.perGame || [];

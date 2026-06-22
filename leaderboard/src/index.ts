@@ -375,7 +375,9 @@ async function handleGetStats(url: URL, env: Env): Promise<Response> {
   let perGame:    PerGame[]    = [];
   let perCountry: PerCountry[] = [];
   let totals = {
-    games: 0, scores: 0, players: 0, devices: 0, returning: 0, loyal: 0,
+    games: 0, scores: 0, players: 0, devices: 0,
+    returning: 0, ret3: 0, ret4: 0, ret5: 0, ret6: 0, loyal: 0,
+    newPlayers7d: 0, dau30d: 0, avgScoresPerPlayer: 0,
     lifetimeGames: 0, lifetimePlayers: 0, lifetimeLaunches: 0
   };
 
@@ -425,33 +427,70 @@ async function handleGetStats(url: URL, env: Env): Promise<Response> {
       .first<{ games: number; scores: number; players: number; devices: number }>();
     if (agg) Object.assign(totals, agg);
 
-    // Returning players: ip_hash seen on ≥2 distinct calendar days
-    const ret = await env.DB
+    // Full retention funnel: 2–7 distinct play-days, single query.
+    // `returning` (2+) and `loyal` (7+) kept for backwards-compat.
+    const funnel = await env.DB
       .prepare(
-        `SELECT COUNT(*) AS cnt FROM (
-           SELECT ip_hash
-           FROM scores
-           ${w}
-           GROUP BY ip_hash
-           HAVING COUNT(DISTINCT DATE(timestamp, 'unixepoch')) >= 2
+        `SELECT
+           COUNT(CASE WHEN d >= 2 THEN 1 END) AS r2,
+           COUNT(CASE WHEN d >= 3 THEN 1 END) AS r3,
+           COUNT(CASE WHEN d >= 4 THEN 1 END) AS r4,
+           COUNT(CASE WHEN d >= 5 THEN 1 END) AS r5,
+           COUNT(CASE WHEN d >= 6 THEN 1 END) AS r6,
+           COUNT(CASE WHEN d >= 7 THEN 1 END) AS r7
+         FROM (
+           SELECT ip_hash, COUNT(DISTINCT DATE(timestamp, 'unixepoch')) AS d
+           FROM scores ${w} GROUP BY ip_hash
          )`
       )
-      .first<{ cnt: number }>();
-    if (ret) totals.returning = ret.cnt;
+      .first<{ r2:number; r3:number; r4:number; r5:number; r6:number; r7:number }>();
+    if (funnel) {
+      totals.returning = funnel.r2;
+      totals.ret3      = funnel.r3;
+      totals.ret4      = funnel.r4;
+      totals.ret5      = funnel.r5;
+      totals.ret6      = funnel.r6;
+      totals.loyal     = funnel.r7;
+    }
 
-    // Loyal players: ip_hash seen on ≥7 distinct calendar days
-    const loy = await env.DB
+    // New players in the last 7 days (ip_hash whose first score arrived ≤7d ago).
+    const now7d = Date.now() - 7 * 86400 * 1000;
+    const newP = await env.DB
       .prepare(
         `SELECT COUNT(*) AS cnt FROM (
-           SELECT ip_hash
-           FROM scores
-           ${w}
+           SELECT ip_hash FROM scores ${w}
            GROUP BY ip_hash
-           HAVING COUNT(DISTINCT DATE(timestamp, 'unixepoch')) >= 7
+           HAVING MIN(timestamp) > ?
          )`
       )
+      .bind(now7d)
       .first<{ cnt: number }>();
-    if (loy) totals.loyal = loy.cnt;
+    if (newP) totals.newPlayers7d = newP.cnt;
+
+    // Average daily actives (distinct ip_hash per calendar day) over last 30 days.
+    const now30d = Date.now() - 30 * 86400 * 1000;
+    const dauRow = await env.DB
+      .prepare(
+        `SELECT ROUND(AVG(n), 1) AS dau FROM (
+           SELECT DATE(timestamp, 'unixepoch') AS day,
+                  COUNT(DISTINCT ip_hash)      AS n
+           FROM scores ${w}
+           AND timestamp > ?
+           GROUP BY day
+         )`
+      )
+      .bind(now30d)
+      .first<{ dau: number }>();
+    if (dauRow?.dau) totals.dau30d = dauRow.dau;
+
+    // Average scores per player (engagement depth).
+    const avgRow = await env.DB
+      .prepare(
+        `SELECT ROUND(CAST(COUNT(*) AS REAL) / MAX(1, COUNT(DISTINCT ip_hash)), 1) AS avg
+         FROM scores ${w}`
+      )
+      .first<{ avg: number }>();
+    if (avgRow?.avg) totals.avgScoresPerPlayer = avgRow.avg;
 
     // Lifetime activity from launches (not reset by score season wipes).
     // Keep this independent from `scores`, so owner can still see active users
