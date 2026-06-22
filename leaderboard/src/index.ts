@@ -526,7 +526,103 @@ async function handleGetStats(url: URL, env: Env): Promise<Response> {
   );
 }
 
-// ── Launch logging ─────────────────────────────────────────────────────────
+// ── Season snapshot ────────────────────────────────────────────────────────
+// POST /snapshot { label? } — captures the current real-only stats as a
+// permanent record. Called automatically by reset-stats.sh before a wipe so
+// retention / engagement metrics survive season resets.
+async function handleSnapshot(req: Request, env: Env): Promise<Response> {
+  const reqKey = req.headers.get("X-LB-Key") ?? "";
+  if (!env.LB_KEY || reqKey !== env.LB_KEY) return err("forbidden", 403);
+
+  let label: string | null = null;
+  try {
+    const body = await req.json() as Record<string, unknown>;
+    if (typeof body.label === "string") label = body.label.trim().slice(0, 100) || null;
+  } catch { /* label is optional */ }
+
+  const w = "WHERE is_bot = 0";
+  try {
+    const [aggRow, funnelRow, topGames, topCountries] = await Promise.all([
+      env.DB.prepare(
+        `SELECT COUNT(DISTINCT game) AS games, COUNT(*) AS scores,
+                COUNT(DISTINCT user) AS players, COUNT(DISTINCT ip_hash) AS devices
+         FROM scores ${w}`
+      ).first<{ games:number; scores:number; players:number; devices:number }>(),
+
+      env.DB.prepare(
+        `SELECT COUNT(CASE WHEN d >= 2 THEN 1 END) AS r2,
+                COUNT(CASE WHEN d >= 3 THEN 1 END) AS r3,
+                COUNT(CASE WHEN d >= 4 THEN 1 END) AS r4,
+                COUNT(CASE WHEN d >= 5 THEN 1 END) AS r5,
+                COUNT(CASE WHEN d >= 6 THEN 1 END) AS r6,
+                COUNT(CASE WHEN d >= 7 THEN 1 END) AS r7
+         FROM (SELECT ip_hash, COUNT(DISTINCT DATE(timestamp,'unixepoch')) AS d
+               FROM scores ${w} GROUP BY ip_hash)`
+      ).first<{ r2:number; r3:number; r4:number; r5:number; r6:number; r7:number }>(),
+
+      env.DB.prepare(
+        `SELECT game, COUNT(DISTINCT ip_hash) AS players, COUNT(*) AS scores
+         FROM scores ${w} GROUP BY game ORDER BY players DESC LIMIT 20`
+      ).all<{ game:string; players:number; scores:number }>(),
+
+      env.DB.prepare(
+        `SELECT country, COUNT(DISTINCT ip_hash) AS players, COUNT(*) AS scores
+         FROM scores ${w} GROUP BY country ORDER BY players DESC LIMIT 15`
+      ).all<{ country:string; players:number; scores:number }>(),
+    ]);
+
+    const totals = {
+      games:    aggRow?.games    ?? 0,
+      scores:   aggRow?.scores   ?? 0,
+      players:  aggRow?.players  ?? 0,
+      devices:  aggRow?.devices  ?? 0,
+      returning: funnelRow?.r2   ?? 0,
+      ret3:      funnelRow?.r3   ?? 0,
+      ret4:      funnelRow?.r4   ?? 0,
+      ret5:      funnelRow?.r5   ?? 0,
+      ret6:      funnelRow?.r6   ?? 0,
+      loyal:     funnelRow?.r7   ?? 0,
+    };
+
+    const data = JSON.stringify({
+      totals,
+      topGames:     topGames.results     ?? [],
+      topCountries: topCountries.results ?? [],
+    });
+
+    const run = await env.DB
+      .prepare("INSERT INTO snapshots (taken_at, label, data) VALUES (?, ?, ?)")
+      .bind(Date.now(), label, data)
+      .run();
+
+    return json({ ok: true, id: run.meta?.last_row_id ?? null, label });
+  } catch (e) {
+    console.error("snapshot error:", e);
+    return err("db error", 500);
+  }
+}
+
+// GET /snapshots — returns all historical season snapshots, newest first.
+// No auth required — data is just aggregated stats, nothing sensitive.
+async function handleGetSnapshots(env: Env): Promise<Response> {
+  try {
+    const rows = await env.DB
+      .prepare("SELECT id, taken_at, label, data FROM snapshots ORDER BY taken_at DESC LIMIT 50")
+      .all<{ id:number; taken_at:number; label:string|null; data:string }>();
+
+    const snapshots = (rows.results ?? []).map(r => ({
+      id:       r.id,
+      taken_at: r.taken_at,
+      label:    r.label,
+      data:     (() => { try { return JSON.parse(r.data); } catch { return {}; } })(),
+    }));
+
+    return json({ snapshots });
+  } catch (e) {
+    console.error("snapshots read error:", e);
+    return err("db error", 500);
+  }
+}
 // POST /launch { game } — fire-and-forget ping the shared lib sends on app
 // start. Records that a game was opened so we can see play activity even for
 // games/sessions that never submit a score. Auth: same shared submit key.
@@ -733,7 +829,7 @@ export default {
         headers: {
           "Access-Control-Allow-Origin":  "*",
           "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type",
+          "Access-Control-Allow-Headers": "Content-Type, X-LB-Key",
         },
       });
     }
@@ -748,11 +844,13 @@ export default {
 
     if (method === "POST" && path === "/score")       return handlePostScore(req, env);
     if (method === "POST" && path === "/launch")      return handleLaunch(req, env);
+    if (method === "POST" && path === "/snapshot")    return handleSnapshot(req, env);
     if (method === "GET"  && path === "/leaderboard") return handleGetLeaderboard(url, env);
     if (method === "GET"  && path === "/recent")      return handleGetRecent(url, env);
     if (method === "GET"  && path === "/games")       return handleGetGames(env);
     if (method === "GET"  && path === "/stats")       return handleGetStats(url, env);
     if (method === "GET"  && path === "/launches")    return handleGetLaunchStats(url, env);
+    if (method === "GET"  && path === "/snapshots")   return handleGetSnapshots(env);
     if (method === "GET"  && path === "/variants")    return handleGetVariants(url, env);
     if (method === "GET"  && path === "/visit")       return handleVisit(req, env);
     if (method === "GET"  && path === "/errors")      return handleGetErrors(url, env);

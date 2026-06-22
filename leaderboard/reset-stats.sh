@@ -6,12 +6,18 @@
 # `scores` table, so deleting all rows resets the entire system to zero. Use it
 # for a full reset, or as a periodic (e.g. monthly) season wipe.
 #
+# Before the wipe, a snapshot is automatically saved to the `snapshots` D1
+# table so all retention / engagement metrics survive the reset and remain
+# visible in the admin stats.html under "Season history".
+# Requires LB_KEY env var for the snapshot (exported as env var, or set inline).
+#
 # Usage:
 #   ./reset-stats.sh                  # PRODUCTION (remote) wipe — asks to confirm
 #   ./reset-stats.sh --local          # target the local dev DB instead
 #   ./reset-stats.sh --backup         # export a timestamped backup first
 #   ./reset-stats.sh --yes            # skip the interactive confirmation
 #   ./reset-stats.sh --game serpent   # wipe ONE game only (keeps the rest)
+#   ./reset-stats.sh --no-snapshot    # skip the automatic pre-wipe snapshot
 #   ./reset-stats.sh --backup --yes   # typical monthly-cron invocation
 #
 # Flags combine freely. Requires `wrangler` (run via npx) and Cloudflare auth
@@ -20,6 +26,7 @@
 set -euo pipefail
 
 DB="bitochi-leaderboard"
+API="https://api.bitochi.com"
 cd "$(dirname "$0")"          # run from leaderboard/ so wrangler.toml is found
 
 REMOTE="--remote"
@@ -27,14 +34,16 @@ ENVLABEL="PRODUCTION (remote)"
 DO_BACKUP=0
 ASSUME_YES=0
 GAME=""
+DO_SNAPSHOT=1
 
 while [ $# -gt 0 ]; do
   case "$1" in
-    --local)   REMOTE="--local"; ENVLABEL="LOCAL dev" ;;
-    --backup)  DO_BACKUP=1 ;;
-    --yes|-y)  ASSUME_YES=1 ;;
-    --game)    shift; GAME="${1:-}"; [ -n "$GAME" ] || { echo "--game needs a value"; exit 2; } ;;
-    -h|--help) sed -n '2,20p' "$0"; exit 0 ;;
+    --local)        REMOTE="--local"; ENVLABEL="LOCAL dev" ;;
+    --backup)       DO_BACKUP=1 ;;
+    --yes|-y)       ASSUME_YES=1 ;;
+    --no-snapshot)  DO_SNAPSHOT=0 ;;
+    --game)         shift; GAME="${1:-}"; [ -n "$GAME" ] || { echo "--game needs a value"; exit 2; } ;;
+    -h|--help)      sed -n '2,29p' "$0"; exit 0 ;;
     *) echo "Unknown option: $1" >&2; exit 2 ;;
   esac
   shift
@@ -44,9 +53,11 @@ done
 if [ -n "$GAME" ]; then
   WHERE="WHERE game = '$(printf '%s' "$GAME" | sed "s/'/''/g")'"
   SCOPE="game '$GAME'"
+  SNAP_LABEL="${GAME}-$(date -u +%Y-%m)"
 else
   WHERE=""
   SCOPE="ALL games"
+  SNAP_LABEL="season-$(date -u +%Y-%m)"
 fi
 
 echo "Target DB  : $DB"
@@ -60,6 +71,24 @@ if [ "$DO_BACKUP" = "1" ]; then
   echo "Backing up full database to $OUT ..."
   npx wrangler d1 export "$DB" $REMOTE --output "$OUT"
   echo "Backup saved: $OUT"
+fi
+
+# ── Pre-wipe snapshot ────────────────────────────────────────────────────────
+# Saves current season stats permanently so they survive the scores deletion.
+# Requires LB_KEY env var (same key used by watch apps to submit scores).
+if [ "$DO_SNAPSHOT" = "1" ] && [ "$REMOTE" = "--remote" ]; then
+  if [ -n "${LB_KEY:-}" ]; then
+    echo "Saving season snapshot (label: $SNAP_LABEL) ..."
+    SNAP_RESP=$(curl -s -X POST "$API/snapshot" \
+      -H "Content-Type: application/json" \
+      -H "X-LB-Key: $LB_KEY" \
+      -d "{\"label\": \"$SNAP_LABEL\"}" 2>/dev/null || echo '{"ok":false}')
+    echo "  Snapshot response: $SNAP_RESP"
+  else
+    echo "⚠️  Warning: LB_KEY not set — skipping pre-reset snapshot."
+    echo "   Set LB_KEY env var to preserve season stats: export LB_KEY=yourkey"
+    echo "   Or use --no-snapshot to silence this warning."
+  fi
 fi
 
 # ── Confirmation guard ──────────────────────────────────────────────────────

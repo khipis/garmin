@@ -86,3 +86,19 @@ CREATE TABLE IF NOT EXISTS launches (
 
 CREATE INDEX IF NOT EXISTS idx_launches_game ON launches (game, timestamp DESC);
 CREATE INDEX IF NOT EXISTS idx_launches_ts   ON launches (timestamp DESC);
+
+-- ── Season snapshots ──────────────────────────────────────────────────────────
+-- One row per season/reset. Saved automatically by reset-stats.sh before wiping
+-- the `scores` table. Ensures all retention/engagement metrics survive resets.
+-- Migration (run once on existing DB):
+--   CREATE TABLE IF NOT EXISTS snapshots (id INTEGER PRIMARY KEY AUTOINCREMENT, taken_at INTEGER NOT NULL, label TEXT, data TEXT NOT NULL);
+--   CREATE INDEX IF NOT EXISTS idx_snapshots_ts ON snapshots (taken_at DESC);
+
+CREATE TABLE IF NOT EXISTS snapshots (
+  id       INTEGER PRIMARY KEY AUTOINCREMENT,
+  taken_at INTEGER NOT NULL,  -- unix ms
+  label    TEXT,              -- e.g. "Season 2026-06", optional
+  data     TEXT NOT NULL      -- JSON: { totals, topGames, topCountries }
+);
+
+CREATE INDEX IF NOT EXISTS idx_snapshots_ts ON snapshots (taken_at DESC);

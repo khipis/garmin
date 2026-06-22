@@ -142,6 +142,40 @@
     color: var(--muted); flex-shrink: 0;
   }
 
+  /* ── Snapshot history ─────────────────────────────────────────────────────── */
+  .snap-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px 16px; margin-bottom: 14px;
+  }
+  .snap-header {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+  }
+  .snap-label {
+    font-weight: 700; font-size: .9rem; color: var(--accent);
+  }
+  .snap-date {
+    font-size: .68rem; color: var(--muted);
+  }
+  .snap-totals {
+    display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;
+  }
+  .snap-pill {
+    background: var(--bg); border: 1px solid var(--border);
+    border-radius: 6px; padding: 4px 10px; font-size: .75rem;
+    display: flex; flex-direction: column; align-items: center; min-width: 64px;
+  }
+  .snap-pill .snum { font-weight: 800; color: var(--accent); font-size: .95rem; }
+  .snap-pill .slbl { font-size: .57rem; color: var(--muted); text-transform: uppercase;
+                     letter-spacing: .06em; margin-top: 2px; }
+  .snap-games {
+    display: flex; flex-wrap: wrap; gap: 5px;
+  }
+  .snap-game-tag {
+    background: #0d2030; border: 1px solid var(--border);
+    border-radius: 5px; padding: 2px 7px; font-size: .67rem; color: var(--muted);
+  }
+  .snap-game-tag b { color: var(--fg); }
+
   /* ── Game leaderboard panel ──────────────────────────────────────────────── */
   #lb-panel { display: none; }
   #lb-panel.visible { display: block; }
@@ -279,6 +313,12 @@
       <div id="error-summary"></div>
       <div class="sh"><span class="sh-title">Recent errors (last 100)</span><span class="sh-line"></span></div>
       <div id="error-log"><div class="state"><div class="spinner"></div>Loading…</div></div>
+
+      <div class="sh"><span class="sh-title">📅 Season history</span><span class="sh-line"></span>
+        <button class="hbtn" onclick="loadSnapshots()" style="margin-left:8px;font-size:.7rem;padding:3px 8px">↺</button>
+        <button class="hbtn" onclick="takeSnapshot()" id="snap-btn" style="margin-left:6px;font-size:.7rem;padding:3px 8px;background:#0d2a1a;border-color:var(--green);color:var(--green)">📸 Snapshot now</button>
+      </div>
+      <div id="snapshot-list"><div class="state"><div class="spinner"></div>Loading…</div></div>
     </div>
 
     <!-- Leaderboard panel (per game) -->
@@ -565,6 +605,7 @@ async function loadLb(game, variant) {
 loadStats();
 loadLaunches();
 loadErrors();
+loadSnapshots();
 
 // ── Game launches (independent of the scores table) ────────────────────────────
 async function loadLaunches() {
@@ -681,6 +722,73 @@ async function loadErrors() {
     summaryEl.innerHTML = '';
     logEl.innerHTML = `<div class="state">⚠️ ${esc(String(e))}</div>`;
   }
+}
+
+// ── Season snapshots ──────────────────────────────────────────────────────────
+async function loadSnapshots() {
+  const el = document.getElementById('snapshot-list');
+  el.innerHTML = '<div class="state"><div class="spinner"></div>Loading…</div>';
+  try {
+    const d = await fetch(API + '/snapshots').then(r => r.json());
+    const snaps = d.snapshots || [];
+    if (!snaps.length) {
+      el.innerHTML = '<div class="state">No snapshots yet. The next leaderboard reset will create the first one automatically.</div>';
+      return;
+    }
+    el.innerHTML = snaps.map(s => {
+      const dt  = new Date(s.taken_at);
+      const dtStr = dt.toLocaleDateString([], {year:'numeric',month:'short',day:'numeric'})
+                  + ' ' + dt.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+      const t   = s.data?.totals || {};
+      const top = (s.data?.topGames || []).slice(0, 8);
+      const lbl = s.label || `Snapshot #${s.id}`;
+      const pct2 = t.players > 0 ? Math.round((t.returning||0)/t.players*100) : 0;
+      const pct7 = t.players > 0 ? Math.round((t.loyal||0)/t.players*100)     : 0;
+      return `<div class="snap-card">
+        <div class="snap-header">
+          <span class="snap-label">📅 ${esc(lbl)}</span>
+          <span class="snap-date">${dtStr}</span>
+        </div>
+        <div class="snap-totals">
+          <div class="snap-pill"><span class="snum">${(t.players||0).toLocaleString()}</span><span class="slbl">Players</span></div>
+          <div class="snap-pill"><span class="snum">${(t.devices||0).toLocaleString()}</span><span class="slbl">IPs</span></div>
+          <div class="snap-pill"><span class="snum">${(t.scores||0).toLocaleString()}</span><span class="slbl">Scores</span></div>
+          <div class="snap-pill"><span class="snum">${(t.games||0).toLocaleString()}</span><span class="slbl">Games</span></div>
+          <div class="snap-pill"><span class="snum">${(t.returning||0).toLocaleString()}<span style="font-size:.65rem;font-weight:400;color:var(--muted)"> ${pct2}%</span></span><span class="slbl">2+ days</span></div>
+          <div class="snap-pill"><span class="snum">${(t.ret3||0).toLocaleString()}</span><span class="slbl">3+ days</span></div>
+          <div class="snap-pill"><span class="snum">${(t.ret4||0).toLocaleString()}</span><span class="slbl">4+ days</span></div>
+          <div class="snap-pill"><span class="snum">${(t.ret5||0).toLocaleString()}</span><span class="slbl">5+ days</span></div>
+          <div class="snap-pill"><span class="snum">${(t.ret6||0).toLocaleString()}</span><span class="slbl">6+ days</span></div>
+          <div class="snap-pill"><span class="snum">${(t.loyal||0).toLocaleString()}<span style="font-size:.65rem;font-weight:400;color:var(--muted)"> ${pct7}%</span></span><span class="slbl">7+ days</span></div>
+        </div>
+        ${top.length ? `<div class="snap-games">${top.map(g => `<span class="snap-game-tag"><b>${esc(g.game)}</b> ${g.players}p</span>`).join('')}</div>` : ''}
+      </div>`;
+    }).join('');
+  } catch(e) {
+    el.innerHTML = `<div class="state">⚠️ ${esc(String(e))}</div>`;
+  }
+}
+
+async function takeSnapshot() {
+  const key = prompt('Enter LB_KEY to create a manual snapshot:');
+  if (!key) return;
+  const label = prompt('Label for this snapshot (e.g. "pre-reset June 2026"):') || null;
+  const btn = document.getElementById('snap-btn');
+  btn.textContent = '⏳ Saving…';
+  btn.disabled = true;
+  try {
+    const r = await fetch(API + '/snapshot', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-LB-Key': key },
+      body: JSON.stringify({ label }),
+    });
+    const d = await r.json();
+    if (d.ok) { btn.textContent = '✅ Saved'; loadSnapshots(); }
+    else       { btn.textContent = '❌ ' + (d.error || 'Error'); }
+  } catch(e) {
+    btn.textContent = '❌ Network error';
+  }
+  setTimeout(() => { btn.textContent = '📸 Snapshot now'; btn.disabled = false; }, 3000);
 }
 </script>
 </body>
