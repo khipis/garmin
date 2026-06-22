@@ -404,6 +404,25 @@
     background: linear-gradient(135deg, rgba(0,212,255,.22), rgba(124,58,237,.22));
     box-shadow: 0 0 18px rgba(0,212,255,.3);
   }
+  .game-info-actions {
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  }
+  .game-info-support {
+    display: inline-flex; align-items: center; gap: 7px;
+    padding: 8px 16px; border-radius: 999px;
+    background: linear-gradient(135deg, rgba(251,191,36,.14), rgba(249,115,22,.12));
+    border: 1px solid rgba(251,191,36,.46);
+    color: #f7cf63; font-size: .78rem; font-weight: 700;
+    letter-spacing: .05em; text-transform: uppercase;
+    text-decoration: none;
+    transition: transform .12s, box-shadow .2s, background .2s, border-color .2s;
+  }
+  .game-info-support:hover {
+    background: linear-gradient(135deg, rgba(251,191,36,.24), rgba(249,115,22,.2));
+    border-color: rgba(251,191,36,.72);
+    box-shadow: 0 0 16px rgba(251,191,36,.33);
+  }
+  .game-info-support:active { transform: translateY(1px); }
 
   /* ── Footer ───────────────────────────────────────────────────────── */
   footer {
@@ -1389,7 +1408,10 @@ function renderGameInfo(gameId, prominent) {
 
   gameInfoEl.innerHTML = `
     ${desc ? `<p class="game-info-desc">${escHtml(desc)}</p>` : ''}
-    ${ciqBtn}`;
+    <div class="game-info-actions">
+      ${ciqBtn}
+      <a href="https://buymeacoffee.com/bitochi" target="_blank" rel="noopener" class="game-info-support">☕ Support Bitochi</a>
+    </div>`;
 }
 
 // ── Utils ────────────────────────────────────────────────────────────────────
