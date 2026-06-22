@@ -312,13 +312,6 @@ class LbScoresView extends WatchUi.View {
     hidden var _retryTimer;
     hidden var _w;
     hidden var _h;
-    hidden var _ctaX;
-    hidden var _ctaY;
-    hidden var _ctaW;
-    hidden var _ctaH;
-
-    hidden const _SUPPORT_TITLE = "☕ Enjoying Bitochi?";
-    hidden const _SUPPORT_URL   = "https://www.buymeacoffee.com/bitoshi";
 
     function initialize(game, variant, title) {
         View.initialize();
@@ -342,7 +335,6 @@ class LbScoresView extends WatchUi.View {
         _retries     = 0;
         _retryTimer  = null;
         _w = 0; _h = 0;
-        _ctaX = 0; _ctaY = 0; _ctaW = 0; _ctaH = 0;
     }
 
     function onShow() {
@@ -511,14 +503,7 @@ class LbScoresView extends WatchUi.View {
 
         var footerCY = _h - pad - fh / 2;
         dc.setColor(LB_MUTED, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, footerCY, Graphics.FONT_XTINY, _SUPPORT_TITLE, VC);
-
-        // Footer CTA hitbox: one subtle line at the very bottom, so it doesn't
-        // alter the leaderboard layout while still being tappable.
-        _ctaW = (_w * 72) / 100;
-        _ctaH = fh + 6;
-        _ctaX = cx - _ctaW / 2;
-        _ctaY = footerCY - _ctaH / 2;
+        dc.drawText(cx, footerCY, Graphics.FONT_XTINY, "bitochi.com", VC);
 
         // Title + period/scope status line.
         var titleCY = pad + fh / 2;
@@ -672,23 +657,6 @@ class LbScoresView extends WatchUi.View {
         }
         return null;
     }
-
-    hidden function _canOpenSupport() {
-        if (!(Toybox has :Communications)) { return false; }
-        return Communications has :openWebPage;
-    }
-
-    function tap(tx, ty) as Void {
-        if (tx < _ctaX || tx >= _ctaX + _ctaW || ty < _ctaY || ty >= _ctaY + _ctaH) {
-            toggleScope();
-            return;
-        }
-        // Open external browser only when supported; otherwise ignore safely.
-        if (!_canOpenSupport()) { return; }
-        try {
-            Communications.openWebPage({ :url => _SUPPORT_URL });
-        } catch (e) {}
-    }
 }
 
 class LbScoresDelegate extends WatchUi.BehaviorDelegate {
@@ -709,12 +677,6 @@ class LbScoresDelegate extends WatchUi.BehaviorDelegate {
     // button-only-watch path to renaming, since onHold is touch-only.
     function onMenu()         { _openOptions(); return true; }
     function onSelect()       { _view.toggleScope(); return true; }
-    function onTap(evt) {
-        var xy = evt.getCoordinates();
-        if (xy == null) { return true; }
-        _view.tap(xy[0], xy[1]);
-        return true;
-    }
     function onHold(evt)      { _view.resetName(); return true; }   // touch shortcut
     function onBack()         { WatchUi.popView(WatchUi.SLIDE_RIGHT); return true; }
 
