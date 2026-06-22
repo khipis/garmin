@@ -102,6 +102,25 @@
   }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
 
+  .support-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 12px; border-radius: 999px;
+    border: 1px solid rgba(251,191,36,.55);
+    background: rgba(251,191,36,.12);
+    color: var(--gold);
+    font-size: .72rem; font-weight: 800;
+    letter-spacing: .05em; text-transform: uppercase;
+    text-decoration: none;
+    transition: background .2s, border-color .2s, box-shadow .2s, transform .12s;
+    white-space: nowrap;
+  }
+  .support-link:hover {
+    background: rgba(251,191,36,.2);
+    border-color: var(--gold);
+    box-shadow: 0 0 16px rgba(251,191,36,.35);
+  }
+  .support-link:active { transform: translateY(1px); }
+
   /* ── Hero banner ──────────────────────────────────────────────────── */
   #hero {
     position: relative; width: 100%; height: clamp(180px, 36vw, 380px);
@@ -583,6 +602,7 @@
   /* ── Responsive ───────────────────────────────────────────────────── */
   @media (max-width: 480px) {
     header { padding: 0 14px; }
+    .support-link { padding: 5px 9px; font-size: .64rem; }
     .lb-row { padding: 12px 14px; }
     .stats-cards { grid-template-columns: repeat(2, 1fr); }
     .stat-card .num { font-size: 1.4rem; }
@@ -607,6 +627,9 @@
     </div>
   </div>
   <div class="live-dot">Live Rankings</div>
+  <a class="support-link" href="https://buymeacoffee.com/bitochi" target="_blank" rel="noopener">
+    ☕ Support
+  </a>
 </header>
 
 <!-- ── Tab nav ─────────────────────────────────────────────────────────────── -->
@@ -727,6 +750,7 @@
   <div style="margin-bottom:8px">🗓 Daily &amp; weekly boards reset automatically · 🏆 monthly seasons coming soon</div>
   Powered by <a href="https://github.com/khipis/garmin" target="_blank">Bitochi Games</a>
   &nbsp;·&nbsp; Garmin Connect IQ
+  &nbsp;·&nbsp; <a href="https://buymeacoffee.com/bitochi" target="_blank" rel="noopener">☕ Buy me a coffee</a>
 </footer>
 
 <script>
