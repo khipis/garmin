@@ -374,7 +374,10 @@ async function handleGetStats(url: URL, env: Env): Promise<Response> {
   type PerCountry = { country: string | null; players: number; scores: number };
   let perGame:    PerGame[]    = [];
   let perCountry: PerCountry[] = [];
-  let totals = { games: 0, scores: 0, players: 0, devices: 0, returning: 0, loyal: 0 };
+  let totals = {
+    games: 0, scores: 0, players: 0, devices: 0, returning: 0, loyal: 0,
+    lifetimeGames: 0, lifetimePlayers: 0, lifetimeLaunches: 0
+  };
 
   const realOnly = url.searchParams.get("real") === "1";
   const w  = realOnly ? "WHERE is_bot = 0" : "";
@@ -449,6 +452,28 @@ async function handleGetStats(url: URL, env: Env): Promise<Response> {
       )
       .first<{ cnt: number }>();
     if (loy) totals.loyal = loy.cnt;
+
+    // Lifetime activity from launches (not reset by score season wipes).
+    // Keep this independent from `scores`, so owner can still see active users
+    // and game opens even when the leaderboard is intentionally reset.
+    try {
+      const life = await env.DB
+        .prepare(
+          `SELECT COUNT(DISTINCT game)    AS lifetimeGames,
+                  COUNT(DISTINCT ip_hash) AS lifetimePlayers,
+                  COUNT(*)                AS lifetimeLaunches
+           FROM launches`
+        )
+        .first<{
+          lifetimeGames: number;
+          lifetimePlayers: number;
+          lifetimeLaunches: number;
+        }>();
+      if (life) Object.assign(totals, life);
+    } catch (e) {
+      // Don't fail /stats if launches table is unavailable in a local/older DB.
+      console.warn("lifetime launches stats unavailable:", e);
+    }
 
   } catch (e) {
     console.error("DB stats error:", e);

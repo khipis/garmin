@@ -1421,12 +1421,18 @@ async function loadStats() {
     const d = await r.json();
     statsLoaded = true;
 
-    const t = d.totals || { games: 0, scores: 0, players: 0, devices: 0 };
+    const t = d.totals || {
+      games: 0, scores: 0, players: 0, devices: 0,
+      lifetimeGames: 0, lifetimePlayers: 0, lifetimeLaunches: 0
+    };
     totalsEl.innerHTML = `
-      <div class="stat-card"><div class="num">${(t.players||0).toLocaleString()}</div><div class="lbl">Players</div></div>
-      <div class="stat-card"><div class="num">${(t.devices||0).toLocaleString()}</div><div class="lbl">Devices</div></div>
-      <div class="stat-card"><div class="num">${(t.scores||0).toLocaleString()}</div><div class="lbl">Scores</div></div>
-      <div class="stat-card"><div class="num">${(t.games||0).toLocaleString()}</div><div class="lbl">Games</div></div>`;
+      <div class="stat-card"><div class="num">${(t.players||0).toLocaleString()}</div><div class="lbl">Season Players</div></div>
+      <div class="stat-card"><div class="num">${(t.devices||0).toLocaleString()}</div><div class="lbl">Season Devices</div></div>
+      <div class="stat-card"><div class="num">${(t.scores||0).toLocaleString()}</div><div class="lbl">Season Scores</div></div>
+      <div class="stat-card"><div class="num">${(t.games||0).toLocaleString()}</div><div class="lbl">Season Games</div></div>
+      <div class="stat-card"><div class="num">${(t.lifetimePlayers||0).toLocaleString()}</div><div class="lbl">Lifetime Players</div></div>
+      <div class="stat-card"><div class="num">${(t.lifetimeGames||0).toLocaleString()}</div><div class="lbl">Lifetime Games</div></div>
+      <div class="stat-card"><div class="num">${(t.lifetimeLaunches||0).toLocaleString()}</div><div class="lbl">Lifetime Launches</div></div>`;
 
     const ts = d.updated ? new Date(d.updated * 1000) : null;
     document.getElementById('stats-updated').textContent = ts
