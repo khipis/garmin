@@ -563,6 +563,86 @@
 
   /* ── Stats view ───────────────────────────────────────────────────── */
   #view-stats { max-width: 760px; margin: 0 auto; padding: 6px 16px 0; }
+
+  /* ── Hall of Fame view ────────────────────────────────────────────── */
+  #view-hof { max-width: 760px; margin: 0 auto; padding: 0 16px 32px; }
+  .hof-intro {
+    text-align: center; padding: 28px 0 22px;
+  }
+  .hof-intro-title {
+    font-size: 1.5rem; font-weight: 900; letter-spacing: .04em;
+    background: linear-gradient(135deg, #fbbf24, #f59e0b, #d97706);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hof-intro-sub {
+    font-size: .75rem; color: var(--muted); margin-top: 5px;
+    text-transform: uppercase; letter-spacing: .08em;
+  }
+  #hof-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 12px;
+  }
+  .hof-card {
+    background: var(--card); border: 1px solid #1a3040;
+    border-radius: 14px; padding: 16px 14px 14px;
+    position: relative; overflow: hidden;
+    transition: transform .15s, box-shadow .15s;
+  }
+  .hof-card::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(251,191,36,.06) 0%, transparent 60%);
+    pointer-events: none;
+  }
+  .hof-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(251,191,36,.12);
+    border-color: rgba(251,191,36,.35);
+  }
+  .hof-game-name {
+    font-size: .65rem; font-weight: 700; letter-spacing: .10em;
+    text-transform: uppercase; color: #f59e0b; margin-bottom: 10px;
+    display: flex; align-items: center; gap: 5px;
+  }
+  .hof-game-name .hof-trophy { font-size: .9rem; }
+  .hof-variant-badge {
+    font-size: .56rem; background: #1a2e10; border: 1px solid #2a4a20;
+    color: #86efac; padding: 1px 6px; border-radius: 4px; font-weight: 600;
+    text-transform: uppercase;
+  }
+  .hof-player {
+    display: flex; align-items: center; gap: 7px; margin-bottom: 8px;
+  }
+  .hof-flag { font-size: 1.1rem; line-height: 1; flex-shrink: 0; }
+  .hof-username {
+    font-weight: 800; font-size: 1rem; color: var(--text);
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  }
+  .hof-score {
+    font-size: 1.4rem; font-weight: 900; line-height: 1;
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 4px;
+  }
+  .hof-score-lbl {
+    font-size: .6rem; color: var(--muted); text-transform: uppercase;
+    letter-spacing: .07em;
+  }
+  .hof-note {
+    margin-top: 9px; padding-top: 9px; border-top: 1px solid var(--border);
+    font-size: .65rem; color: var(--muted); font-style: italic;
+  }
+  .hof-empty {
+    grid-column: 1/-1; text-align: center; padding: 48px 24px;
+    color: var(--muted); font-size: .9rem;
+  }
+  .hof-empty .hof-big-trophy { font-size: 3rem; margin-bottom: 12px; }
+  @media (max-width: 500px) {
+    #hof-grid { grid-template-columns: 1fr 1fr; gap: 9px; }
+    .hof-card { padding: 12px 10px 11px; }
+  }
   .stats-cards {
     display: grid; grid-template-columns: repeat(4, 1fr);
     gap: 10px; margin: 18px 0 6px;
@@ -659,6 +739,12 @@
       <path d="M9 16.5V19h6v-2.5"/><path d="M8 21h8"/>
     </svg>
     Rankings
+  </button>
+  <button class="tab-btn" data-tab="hof">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="8" r="6"/><path d="M15.477 12.89L17 22l-5-3-5 3 1.523-9.11"/>
+    </svg>
+    Hall of Fame
   </button>
   <button class="tab-btn" data-tab="stats">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -763,6 +849,15 @@
     <span class="section-line"></span>
   </div>
   <div id="stats-countries"></div>
+</section>
+
+<!-- ── Hall of Fame view ────────────────────────────────────────────────────── -->
+<section id="view-hof" style="display:none">
+  <div class="hof-intro">
+    <div class="hof-intro-title">🏆 Hall of Fame</div>
+    <div class="hof-intro-sub">All-time champions · persists across season resets</div>
+  </div>
+  <div id="hof-grid"><div class="state-msg"><div class="spinner"></div><br>Loading champions…</div></div>
 </section>
 
 <footer>
@@ -1423,12 +1518,15 @@ function escHtml(s) {
 
 // ── Tabs ──────────────────────────────────────────────────────────────────────
 let statsLoaded = false;
+let hofLoaded   = false;
 function showTab(tab) {
   document.querySelectorAll('.tab-btn').forEach(b =>
     b.classList.toggle('active', b.dataset.tab === tab));
   document.getElementById('view-rankings').style.display = (tab === 'rankings') ? '' : 'none';
   document.getElementById('view-stats').style.display    = (tab === 'stats')    ? '' : 'none';
+  document.getElementById('view-hof').style.display      = (tab === 'hof')      ? '' : 'none';
   if (tab === 'stats' && !statsLoaded) { loadStats(); }
+  if (tab === 'hof'   && !hofLoaded)   { loadHoF();  }
 }
 document.querySelectorAll('.tab-btn').forEach(b =>
   b.addEventListener('click', () => showTab(b.dataset.tab)));
@@ -1581,6 +1679,66 @@ function init() {
   selectGame(wanted || GAMES[0], !wanted);
 }
 init();
+
+// ── Hall of Fame ───────────────────────────────────────────────────────────────
+const ASC_GAMES_HOF = new Set(['sudoku','minesweeper','solitaire','solitare','lightsout',
+  'battleship','twentyfortyeight_time','akari','memo']);
+
+async function loadHoF() {
+  const grid = document.getElementById('hof-grid');
+  try {
+    const d = await fetch(`${API_BASE}/hof`).then(r => r.json());
+    const entries = d.entries || [];
+    hofLoaded = true;
+
+    if (!entries.length) {
+      grid.innerHTML = `<div class="hof-empty">
+        <div class="hof-big-trophy">🏆</div>
+        <div>No champions yet.</div>
+        <div style="margin-top:6px;font-size:.78rem">Hall of Fame is populated at the end of each season.</div>
+      </div>`;
+      return;
+    }
+
+    // Group by game+variant
+    const byGame = new Map();
+    for (const e of entries) {
+      const key = e.game + (e.variant ? `__${e.variant}` : '');
+      if (!byGame.has(key)) byGame.set(key, []);
+      byGame.get(key).push(e);
+    }
+
+    grid.innerHTML = [...byGame.entries()].map(([key, recs]) => {
+      // Show the most recent entry first (entries are ordered added_at DESC already)
+      const e = recs[0];
+      const isAsc = ASC_GAMES_HOF.has(e.game) || ASC_GAMES_HOF.has(key);
+      const flag  = codeToFlag(e.country);
+      const note  = e.note ? `<div class="hof-note">📅 ${escHtml(e.note)}</div>` : '';
+      const varBadge = e.variant
+        ? `<span class="hof-variant-badge">${escHtml(e.variant)}</span>` : '';
+      const scoreLbl = isAsc ? 'best time / fewest' : 'high score';
+      const allTime  = recs.length > 1
+        ? `<div style="font-size:.6rem;color:var(--muted);margin-top:6px">${recs.length} records in history</div>` : '';
+      return `<div class="hof-card">
+        <div class="hof-game-name">
+          <span class="hof-trophy">🏆</span>
+          ${escHtml(e.game)}${varBadge}
+        </div>
+        <div class="hof-player">
+          <span class="hof-flag">${flag || '🌍'}</span>
+          <span class="hof-username">${escHtml(e.user)}</span>
+        </div>
+        <div class="hof-score">${e.score.toLocaleString()}</div>
+        <div class="hof-score-lbl">${scoreLbl}</div>
+        ${note}${allTime}
+      </div>`;
+    }).join('');
+  } catch(e) {
+    grid.innerHTML = `<div class="hof-empty">⚠️ Could not load Hall of Fame.</div>`;
+  }
+}
+
+
 </script>
 </body>
 </html>

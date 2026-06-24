@@ -526,6 +526,113 @@ async function handleGetStats(url: URL, env: Env): Promise<Response> {
   );
 }
 
+// ── Hall of Fame ────────────────────────────────────────────────────────────
+// GET /hof — public, returns all entries ordered by game then added_at DESC.
+async function handleGetHoF(env: Env): Promise<Response> {
+  try {
+    const rows = await env.DB
+      .prepare(`SELECT id, game, variant, user, score, country, added_at, note
+                FROM hall_of_fame ORDER BY game ASC, variant ASC, added_at DESC`)
+      .all<{ id:number; game:string; variant:string; user:string; score:number;
+             country:string|null; added_at:number; note:string|null }>();
+    return json({ entries: rows.results ?? [] });
+  } catch (e) {
+    console.error("hof get error:", e);
+    return err("db error", 500);
+  }
+}
+
+// POST /hof — authenticated.
+// Mode A (add single): { game, variant?, user, score, country?, note? }
+// Mode B (promote):    { promote: true, note? }
+//   → finds the best real score per game+variant from `scores` and inserts them.
+async function handlePostHoF(req: Request, env: Env): Promise<Response> {
+  const reqKey = req.headers.get("X-LB-Key") ?? "";
+  if (!env.LB_KEY || reqKey !== env.LB_KEY) return err("forbidden", 403);
+
+  let body: Record<string, unknown>;
+  try { body = await req.json() as Record<string, unknown>; } catch { return err("invalid JSON"); }
+
+  const note = typeof body.note === "string" ? body.note.trim().slice(0, 120) || null : null;
+
+  // ── Mode B: promote current best per game/variant ──────────────────────────
+  if (body.promote === true) {
+    try {
+      const leaders = await env.DB
+        .prepare(
+          `SELECT game, variant,
+                  user, MAX(score) AS score, country
+           FROM scores
+           WHERE is_bot = 0
+           GROUP BY game, variant
+           ORDER BY game ASC, variant ASC`
+        )
+        .all<{ game:string; variant:string; user:string; score:number; country:string|null }>();
+
+      const rows = leaders.results ?? [];
+      if (!rows.length) return json({ ok: true, promoted: 0 });
+
+      const now = Date.now();
+      const stmt = env.DB.prepare(
+        "INSERT INTO hall_of_fame (game, variant, user, score, country, added_at, note) VALUES (?, ?, ?, ?, ?, ?, ?)"
+      );
+      // D1 batch insert
+      await env.DB.batch(
+        rows.map(r => stmt.bind(r.game, r.variant ?? "", r.user, r.score, r.country ?? null, now, note))
+      );
+      return json({ ok: true, promoted: rows.length });
+    } catch (e) {
+      console.error("hof promote error:", e);
+      return err("db error", 500);
+    }
+  }
+
+  // ── Mode A: add single entry ───────────────────────────────────────────────
+  const gameRaw = typeof body.game === "string" ? body.game.trim() : "";
+  const game    = sanitizeGame(gameRaw);
+  if (!game) return err("missing/invalid: game");
+
+  const user  = typeof body.user  === "string" ? body.user.trim().slice(0, 40)  : "";
+  const score = typeof body.score === "number" ? Math.round(body.score) : NaN;
+  if (!user)        return err("missing: user");
+  if (isNaN(score)) return err("missing/invalid: score");
+
+  const variant = typeof body.variant === "string" ? body.variant.trim().slice(0, 40) : "";
+  const country = typeof body.country === "string" && body.country.length === 2
+    ? body.country.toUpperCase() : null;
+
+  try {
+    const run = await env.DB
+      .prepare("INSERT INTO hall_of_fame (game, variant, user, score, country, added_at, note) VALUES (?, ?, ?, ?, ?, ?, ?)")
+      .bind(game, variant, user, score, country, Date.now(), note)
+      .run();
+    return json({ ok: true, id: run.meta?.last_row_id ?? null });
+  } catch (e) {
+    console.error("hof insert error:", e);
+    return err("db error", 500);
+  }
+}
+
+// DELETE /hof — authenticated. Body: { id }
+async function handleDeleteHoF(req: Request, env: Env): Promise<Response> {
+  const reqKey = req.headers.get("X-LB-Key") ?? "";
+  if (!env.LB_KEY || reqKey !== env.LB_KEY) return err("forbidden", 403);
+
+  let body: Record<string, unknown>;
+  try { body = await req.json() as Record<string, unknown>; } catch { return err("invalid JSON"); }
+
+  const id = typeof body.id === "number" ? body.id : parseInt(String(body.id), 10);
+  if (!id || isNaN(id)) return err("missing/invalid: id");
+
+  try {
+    await env.DB.prepare("DELETE FROM hall_of_fame WHERE id = ?").bind(id).run();
+    return json({ ok: true });
+  } catch (e) {
+    console.error("hof delete error:", e);
+    return err("db error", 500);
+  }
+}
+
 // ── Season snapshot ────────────────────────────────────────────────────────
 // POST /snapshot { label? } — captures the current real-only stats as a
 // permanent record. Called automatically by reset-stats.sh before a wipe so
@@ -828,7 +935,7 @@ export default {
         status: 204,
         headers: {
           "Access-Control-Allow-Origin":  "*",
-          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+          "Access-Control-Allow-Methods": "GET, POST, DELETE, OPTIONS",
           "Access-Control-Allow-Headers": "Content-Type, X-LB-Key",
         },
       });
@@ -842,19 +949,22 @@ export default {
       return err("rate limit exceeded — try again shortly", 429);
     }
 
-    if (method === "POST" && path === "/score")       return handlePostScore(req, env);
-    if (method === "POST" && path === "/launch")      return handleLaunch(req, env);
-    if (method === "POST" && path === "/snapshot")    return handleSnapshot(req, env);
-    if (method === "GET"  && path === "/leaderboard") return handleGetLeaderboard(url, env);
-    if (method === "GET"  && path === "/recent")      return handleGetRecent(url, env);
-    if (method === "GET"  && path === "/games")       return handleGetGames(env);
-    if (method === "GET"  && path === "/stats")       return handleGetStats(url, env);
-    if (method === "GET"  && path === "/launches")    return handleGetLaunchStats(url, env);
-    if (method === "GET"  && path === "/snapshots")   return handleGetSnapshots(env);
-    if (method === "GET"  && path === "/variants")    return handleGetVariants(url, env);
-    if (method === "GET"  && path === "/visit")       return handleVisit(req, env);
-    if (method === "GET"  && path === "/errors")      return handleGetErrors(url, env);
-    if (method === "GET"  && path === "/health")      return json({ ok: true, ts: Date.now() });
+    if (method === "POST"   && path === "/score")       return handlePostScore(req, env);
+    if (method === "POST"   && path === "/launch")      return handleLaunch(req, env);
+    if (method === "POST"   && path === "/snapshot")    return handleSnapshot(req, env);
+    if (method === "POST"   && path === "/hof")         return handlePostHoF(req, env);
+    if (method === "DELETE" && path === "/hof")         return handleDeleteHoF(req, env);
+    if (method === "GET"    && path === "/leaderboard") return handleGetLeaderboard(url, env);
+    if (method === "GET"    && path === "/recent")      return handleGetRecent(url, env);
+    if (method === "GET"    && path === "/games")       return handleGetGames(env);
+    if (method === "GET"    && path === "/stats")       return handleGetStats(url, env);
+    if (method === "GET"    && path === "/launches")    return handleGetLaunchStats(url, env);
+    if (method === "GET"    && path === "/snapshots")   return handleGetSnapshots(env);
+    if (method === "GET"    && path === "/hof")         return handleGetHoF(env);
+    if (method === "GET"    && path === "/variants")    return handleGetVariants(url, env);
+    if (method === "GET"    && path === "/visit")       return handleVisit(req, env);
+    if (method === "GET"    && path === "/errors")      return handleGetErrors(url, env);
+    if (method === "GET"    && path === "/health")      return json({ ok: true, ts: Date.now() });
 
     return err("not found", 404);
   },

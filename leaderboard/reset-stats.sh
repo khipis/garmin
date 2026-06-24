@@ -18,7 +18,8 @@
 #   ./reset-stats.sh --yes            # skip the interactive confirmation
 #   ./reset-stats.sh --game serpent   # wipe ONE game only (keeps the rest)
 #   ./reset-stats.sh --no-snapshot    # skip the automatic pre-wipe snapshot
-#   ./reset-stats.sh --backup --yes   # typical monthly-cron invocation
+#   ./reset-stats.sh --hof            # promote current #1s to Hall of Fame before wipe
+#   ./reset-stats.sh --backup --hof --yes  # typical monthly-cron invocation
 #
 # Flags combine freely. Requires `wrangler` (run via npx) and Cloudflare auth
 # (CLOUDFLARE_API_TOKEN env var, or run `npx wrangler login` once).
@@ -35,6 +36,7 @@ DO_BACKUP=0
 ASSUME_YES=0
 GAME=""
 DO_SNAPSHOT=1
+DO_HOF=0
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -42,6 +44,7 @@ while [ $# -gt 0 ]; do
     --backup)       DO_BACKUP=1 ;;
     --yes|-y)       ASSUME_YES=1 ;;
     --no-snapshot)  DO_SNAPSHOT=0 ;;
+    --hof)          DO_HOF=1 ;;
     --game)         shift; GAME="${1:-}"; [ -n "$GAME" ] || { echo "--game needs a value"; exit 2; } ;;
     -h|--help)      sed -n '2,29p' "$0"; exit 0 ;;
     *) echo "Unknown option: $1" >&2; exit 2 ;;
@@ -88,6 +91,24 @@ if [ "$DO_SNAPSHOT" = "1" ] && [ "$REMOTE" = "--remote" ]; then
     echo "⚠️  Warning: LB_KEY not set — skipping pre-reset snapshot."
     echo "   Set LB_KEY env var to preserve season stats: export LB_KEY=yourkey"
     echo "   Or use --no-snapshot to silence this warning."
+  fi
+fi
+
+# ── Pre-wipe Hall of Fame promotion ─────────────────────────────────────────
+# Promotes current #1 per game/variant to the Hall of Fame before the wipe.
+# Requires LB_KEY env var. Only runs if --hof flag was passed.
+if [ "$DO_HOF" = "1" ] && [ "$REMOTE" = "--remote" ]; then
+  if [ -n "${LB_KEY:-}" ]; then
+    HOF_NOTE="${SNAP_LABEL}"
+    echo "Promoting current leaders to Hall of Fame (note: $HOF_NOTE) ..."
+    HOF_RESP=$(curl -s -X POST "$API/hof" \
+      -H "Content-Type: application/json" \
+      -H "X-LB-Key: $LB_KEY" \
+      -d "{\"promote\": true, \"note\": \"$HOF_NOTE\"}" 2>/dev/null || echo '{"ok":false}')
+    echo "  HoF response: $HOF_RESP"
+  else
+    echo "⚠️  Warning: LB_KEY not set — skipping Hall of Fame promotion."
+    echo "   Set LB_KEY env var: export LB_KEY=yourkey"
   fi
 fi
 

@@ -319,6 +319,15 @@
         <button class="hbtn" onclick="takeSnapshot()" id="snap-btn" style="margin-left:6px;font-size:.7rem;padding:3px 8px;background:#0d2a1a;border-color:var(--green);color:var(--green)">📸 Snapshot now</button>
       </div>
       <div id="snapshot-list"><div class="state"><div class="spinner"></div>Loading…</div></div>
+
+      <div class="sh"><span class="sh-title">🏆 Hall of Fame — management</span><span class="sh-line"></span>
+        <button class="hbtn" onclick="loadHofAdmin()" style="margin-left:8px;font-size:.7rem;padding:3px 8px">↺</button>
+        <button class="hbtn" onclick="promoteAllToHoF()" id="hof-promote-btn"
+          style="margin-left:6px;font-size:.7rem;padding:3px 8px;background:#1a2a0a;border-color:#f59e0b;color:#f59e0b">
+          👑 Promote all leaders
+        </button>
+      </div>
+      <div id="hof-admin-list"><div class="state"><div class="spinner"></div>Loading…</div></div>
     </div>
 
     <!-- Leaderboard panel (per game) -->
@@ -606,6 +615,7 @@ loadStats();
 loadLaunches();
 loadErrors();
 loadSnapshots();
+loadHofAdmin();
 
 // ── Game launches (independent of the scores table) ────────────────────────────
 async function loadLaunches() {
@@ -789,6 +799,81 @@ async function takeSnapshot() {
     btn.textContent = '❌ Network error';
   }
   setTimeout(() => { btn.textContent = '📸 Snapshot now'; btn.disabled = false; }, 3000);
+}
+
+// ── Hall of Fame admin ────────────────────────────────────────────────────────
+async function loadHofAdmin() {
+  const el = document.getElementById('hof-admin-list');
+  el.innerHTML = '<div class="state"><div class="spinner"></div>Loading…</div>';
+  try {
+    const d = await fetch(API + '/hof').then(r => r.json());
+    const entries = d.entries || [];
+    if (!entries.length) {
+      el.innerHTML = '<div class="state">Hall of Fame is empty. Use "👑 Promote all leaders" to populate it.</div>';
+      return;
+    }
+    el.innerHTML = `<div style="overflow-x:auto"><table>
+      <thead><tr>
+        <th>Game</th><th>Variant</th><th>Player</th><th>Score</th><th>Country</th><th>Note</th><th>Added</th><th></th>
+      </tr></thead>
+      <tbody>${entries.map(e => {
+        const dt = new Date(e.added_at).toLocaleDateString([], {year:'numeric',month:'short',day:'numeric'});
+        return `<tr>
+          <td><b>${esc(e.game)}</b></td>
+          <td class="muted">${esc(e.variant || '—')}</td>
+          <td>${esc(e.user)}</td>
+          <td class="muted">${e.score.toLocaleString()}</td>
+          <td class="muted">${e.country || '—'}</td>
+          <td class="muted" style="font-style:italic">${esc(e.note || '')}</td>
+          <td class="muted">${dt}</td>
+          <td><button class="hbtn" style="color:#f87171;border-color:#f87171;padding:2px 8px;font-size:.68rem"
+              onclick="deleteHoF(${e.id})">✕</button></td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table></div>`;
+  } catch(e) {
+    el.innerHTML = `<div class="state">⚠️ ${esc(String(e))}</div>`;
+  }
+}
+
+async function deleteHoF(id) {
+  if (!confirm(`Remove Hall of Fame entry #${id}?`)) return;
+  const key = prompt('Enter LB_KEY:');
+  if (!key) return;
+  try {
+    const r = await fetch(API + '/hof', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json', 'X-LB-Key': key },
+      body: JSON.stringify({ id }),
+    });
+    const d = await r.json();
+    if (d.ok) loadHofAdmin();
+    else alert('Error: ' + (d.error || 'unknown'));
+  } catch(e) { alert('Network error: ' + e); }
+}
+
+async function promoteAllToHoF() {
+  const key = prompt('Enter LB_KEY to promote all current game leaders to Hall of Fame:');
+  if (!key) return;
+  const note = prompt('Season label (e.g. "Season 2026-06"):') || null;
+  const btn  = document.getElementById('hof-promote-btn');
+  btn.textContent = '⏳ Promoting…';
+  btn.disabled = true;
+  try {
+    const r = await fetch(API + '/hof', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-LB-Key': key },
+      body: JSON.stringify({ promote: true, note }),
+    });
+    const d = await r.json();
+    if (d.ok) {
+      btn.textContent = `✅ Promoted ${d.promoted}`;
+      loadHofAdmin();
+    } else {
+      btn.textContent = '❌ ' + (d.error || 'Error');
+    }
+  } catch(e) { btn.textContent = '❌ Network error'; }
+  setTimeout(() => { btn.textContent = '👑 Promote all leaders'; btn.disabled = false; }, 4000);
 }
 </script>
 </body>

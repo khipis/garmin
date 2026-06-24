@@ -102,3 +102,24 @@ CREATE TABLE IF NOT EXISTS snapshots (
 );
 
 CREATE INDEX IF NOT EXISTS idx_snapshots_ts ON snapshots (taken_at DESC);
+
+-- ── Hall of Fame ──────────────────────────────────────────────────────────────
+-- Permanent all-time records per game. NOT wiped by season resets.
+-- Admin adds entries manually or via --hof in reset-stats.sh and removes
+-- them at will via the stats.html management panel.
+-- Migration (run once on existing DB):
+--   CREATE TABLE IF NOT EXISTS hall_of_fame (id INTEGER PRIMARY KEY AUTOINCREMENT, game TEXT NOT NULL, variant TEXT NOT NULL DEFAULT '', user TEXT NOT NULL, score INTEGER NOT NULL, country TEXT, added_at INTEGER NOT NULL, note TEXT);
+--   CREATE INDEX IF NOT EXISTS idx_hof_game ON hall_of_fame (game, variant, added_at DESC);
+
+CREATE TABLE IF NOT EXISTS hall_of_fame (
+  id       INTEGER PRIMARY KEY AUTOINCREMENT,
+  game     TEXT    NOT NULL,
+  variant  TEXT    NOT NULL DEFAULT '',
+  user     TEXT    NOT NULL,
+  score    INTEGER NOT NULL,
+  country  TEXT,               -- ISO-3166 alpha-2, optional
+  added_at INTEGER NOT NULL,   -- unix ms
+  note     TEXT                -- e.g. "Season 2026-05 Champion"
+);
+
+CREATE INDEX IF NOT EXISTS idx_hof_game ON hall_of_fame (game, variant, added_at DESC);
