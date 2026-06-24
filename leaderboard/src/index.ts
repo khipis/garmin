@@ -474,8 +474,8 @@ async function handleGetStats(url: URL, env: Env): Promise<Response> {
         `SELECT ROUND(AVG(n), 1) AS dau FROM (
            SELECT DATE(timestamp, 'unixepoch') AS day,
                   COUNT(DISTINCT ip_hash)      AS n
-           FROM scores ${w}
-           AND timestamp > ?
+           FROM scores
+           WHERE timestamp > ? ${wa}
            GROUP BY day
          )`
       )
