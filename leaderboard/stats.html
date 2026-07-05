@@ -330,6 +330,7 @@
       <div class="sh"><span class="sh-title">📅 Season history</span><span class="sh-line"></span>
         <button class="hbtn" onclick="loadSnapshots()" style="margin-left:8px;font-size:.7rem;padding:3px 8px">↺</button>
         <button class="hbtn" onclick="takeSnapshot()" id="snap-btn" style="margin-left:6px;font-size:.7rem;padding:3px 8px;background:#0d2a1a;border-color:var(--green);color:var(--green)">📸 Snapshot now</button>
+        <button class="hbtn" onclick="resetStats()" id="reset-btn" style="margin-left:6px;font-size:.7rem;padding:3px 8px;background:#2a0808;border-color:#f87171;color:#f87171">🗑️ Reset scores</button>
       </div>
       <div id="snapshot-list"><div class="state"><div class="spinner"></div>Loading…</div></div>
 
@@ -907,6 +908,51 @@ async function deleteHoF(id) {
     if (d.ok) loadHofAdmin();
     else alert('Error: ' + (d.error || 'unknown'));
   } catch(e) { alert('Network error: ' + e); }
+}
+
+// ── Reset scores ──────────────────────────────────────────────────────────────
+async function resetStats() {
+  const key = prompt('Enter LB_KEY to reset leaderboard scores:');
+  if (!key) return;
+
+  const gameInput = prompt('Reset which game? (leave empty to reset ALL games)') || '';
+  const game = gameInput.trim() || null;
+  const scopeLabel = game ? `game "${game}"` : 'ALL games';
+
+  const note = prompt(`Label for pre-reset snapshot (e.g. "Season June 2026"):`) || null;
+
+  const confirmed = confirm(
+    `⚠️ This will DELETE all scores for ${scopeLabel}.\n\n` +
+    `A snapshot will be saved first so historical data is preserved.\n\n` +
+    `Are you sure?`
+  );
+  if (!confirmed) return;
+
+  const btn = document.getElementById('reset-btn');
+  btn.textContent = '⏳ Resetting…';
+  btn.disabled = true;
+
+  try {
+    const body = { snapshot: true, note };
+    if (game) body.game = game;
+
+    const r = await fetch(API + '/reset', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-LB-Key': key },
+      body: JSON.stringify(body),
+    });
+    const d = await r.json();
+    if (d.ok) {
+      btn.textContent = `✅ Reset (scope: ${d.scope})`;
+      loadStats();
+      loadSnapshots();
+    } else {
+      btn.textContent = '❌ ' + (d.error || 'Error');
+    }
+  } catch(e) {
+    btn.textContent = '❌ Network error';
+  }
+  setTimeout(() => { btn.textContent = '🗑️ Reset scores'; btn.disabled = false; }, 5000);
 }
 
 async function promoteAllToHoF() {
