@@ -787,7 +787,8 @@ class LbPostGame {
         // If a post-game message is due (throttled), pop it up ON TOP of the
         // board; dismissing it reveals the leaderboard underneath. Most runs
         // show only the board — the support/marketing card appears occasionally.
-        Leaderboard.showMessage(_game, Leaderboard.MSG_POSTGAME, null);
+        // A built-in fallback guarantees the invite even on a cold cache/offline.
+        Leaderboard.showMessage(_game, Leaderboard.MSG_POSTGAME, Leaderboard.defaultPostGameMsg());
     }
 }
 

@@ -240,6 +240,20 @@ module Leaderboard {
         } catch (e) {}
     }
 
+    // Built-in default post-game card. Used as the `fallback` for showMessage so
+    // the support/tip invite still appears on a cold cache (first run after
+    // install) or fully offline. When the server bundle IS cached it wins over
+    // this — so the owner can freely re-word the live message from stats.html.
+    function defaultPostGameMsg() as Lang.Dictionary {
+        return {
+            "title"     => "Enjoying Bitochi?",
+            "body"      => "Every game here is free and ad-free. If they made you smile, a small tip keeps new ones coming. Thank you!",
+            "url"       => "https://bitochi.com/coffee",
+            "url_label" => "bitochi.com/coffee",
+            "min_gap_s" => 43200
+        };
+    }
+
     // ── Post-game leaderboard pop-up ──────────────────────────────────────────
     // Call right after submitScore() at a game-over / completion point. After a
     // short delay (so the game's own result screen shows first and the POST
