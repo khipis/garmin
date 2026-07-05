@@ -57,16 +57,17 @@ class GyroAim {
         }
         var dx = ax - _calX;
         var dy = ay - _calY;
-        if (dx > -22 && dx < 22) { dx = 0; }
-        if (dy > -22 && dy < 22) { dy = 0; }
+        if (dx > -30 && dx < 30) { dx = 0; }
+        if (dy > -30 && dy < 30) { dy = 0; }
 
-        // Scale (rad / milli-g).  Bumped up vs. the original
-        // because the previous values felt too sluggish even
-        // at the maximum tilt of a typical wrist motion.
+        // Scale (rad / milli-g).
+        // Reduced from earlier values — the original felt too twitchy on
+        // a typical wrist motion. HIGH now matches the old NORMAL so users
+        // who prefer the snappier feel can still select it.
         var sc;
-        if      (_sens == AR_SENS_LOW)  { sc = 0.0046; }
-        else if (_sens == AR_SENS_HIGH) { sc = 0.0082; }
-        else                             { sc = 0.0062; }
+        if      (_sens == AR_SENS_LOW)  { sc = 0.0032; }
+        else if (_sens == AR_SENS_HIGH) { sc = 0.0062; }
+        else                             { sc = 0.0045; }
         var ty =  dx.toFloat() * sc;
         var tp = -dy.toFloat() * sc;
 
@@ -94,11 +95,11 @@ class GyroAim {
         _tYaw   = ty;
         _tPitch = tp;
 
-        // Smoothing.
+        // Smoothing — slightly tighter than before for more deliberate feel.
         var a;
-        if      (_sens == AR_SENS_LOW)  { a = 0.16; }
-        else if (_sens == AR_SENS_HIGH) { a = 0.30; }
-        else                             { a = 0.22; }
+        if      (_sens == AR_SENS_LOW)  { a = 0.14; }
+        else if (_sens == AR_SENS_HIGH) { a = 0.26; }
+        else                             { a = 0.20; }
         aimYaw   = aimYaw   + (_tYaw   - aimYaw)   * a;
         aimPitch = aimPitch + (_tPitch - aimPitch) * a;
     }
