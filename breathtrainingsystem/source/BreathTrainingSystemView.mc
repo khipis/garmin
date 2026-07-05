@@ -2016,8 +2016,16 @@ class BreathTrainingSystemView extends WatchUi.View {
             }
             _cF = r;
             _actCustRow();
-        } else if (_gs == FT_BCFG || _gs == FT_TCFG || _gs == FT_NAME) {
+        } else if (_gs == FT_BCFG || _gs == FT_TCFG) {
             if (y < _h / 2) { doUp(); } else { doDown(); }
+        } else if (_gs == FT_NAME) {
+            // Three tap zones mirror the character-wheel layout:
+            //   top third    → UP   (prev character)
+            //   middle third → SELECT (advance to next position / confirm)
+            //   bottom third → DOWN  (next character)
+            if      (y < _h / 3)      { doUp(); }
+            else if (y >= 2 * _h / 3) { doDown(); }
+            else                       { doSelect(); }
         } else if (_gs == FT_STAT) {
             _stPg = (_stPg + 1) % 5;
         } else { doSelect(); }
@@ -4635,6 +4643,14 @@ class BreathTrainingSystemView extends WatchUi.View {
         dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT);
         var cn2 = NM_CH.substring(n2i, n2i + 1); if (n2i == 36) { cn2 = "_"; }
         dc.drawText(cx, midY + step * 2 + 6, Graphics.FONT_XTINY, cn2, Graphics.TEXT_JUSTIFY_CENTER);
+
+        // Touch hint — visible only when the device has a touch panel.
+        var ds2 = System.getDeviceSettings();
+        if (ds2 has :isTouchScreen && ds2.isTouchScreen) {
+            dc.setColor(0x444444, Graphics.COLOR_TRANSPARENT);
+            var hint = _nmPos < 7 ? "TAP MIDDLE: NEXT" : "TAP MIDDLE: DONE";
+            dc.drawText(cx, _h * 88 / 100, Graphics.FONT_XTINY, hint, Graphics.TEXT_JUSTIFY_CENTER);
+        }
 
     }
 }
