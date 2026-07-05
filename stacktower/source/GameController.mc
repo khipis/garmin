@@ -1,23 +1,5 @@
 // ═══════════════════════════════════════════════════════════════
 // GameController.mc — State machine, scoring, difficulty curve.
-//
-// States:
-//   GS_MENU    main menu
-//   GS_PLAY    block sliding, awaiting drop
-//   GS_OVER    miss → tower frozen, score saved
-//
-// Scoring:
-//   - Every successful drop awards (10 + height) base points.
-//   - "Perfect" drops (no overhang) award a bonus of 50 and grow a
-//     perfect-streak counter. After 5 perfects in a row the block
-//     widens slightly (rewarding precision).
-//   - Best score persists via Application.Storage.
-//
-// Difficulty:
-//   Block move speed scales with height following a gentle log curve
-//   so the early game stays approachable but tops out fast enough to
-//   challenge experienced players. Speed is also capped to keep
-//   collision detection deterministic.
 // ═══════════════════════════════════════════════════════════════
 
 using Toybox.System;
@@ -28,37 +10,31 @@ const GS_MENU = 0;
 const GS_PLAY = 1;
 const GS_OVER = 2;
 
-// Chess-style menu with three rows:
-//   row 0 = Diff selector (cycles through Slow / Norm / Fast)
-//   row 1 = START
-//   row 2 = LEADERBOARD (global; difficulty is used as the variant)
-const ST_MENU_ROWS = 3;
+// Menu rows:  Diff | View | START | LEADERBOARD
+const ST_MENU_ROWS = 4;
 const ST_ROW_DIFF  = 0;
-const ST_ROW_START = 1;
-const ST_ROW_LB    = 2;
+const ST_ROW_VIEW  = 1;
+const ST_ROW_START = 2;
+const ST_ROW_LB    = 3;
 
-// Global leaderboard game id (matches _LOGOS / web id).
 const LB_GAME_ID = "stacktower";
 
-// Speed-difficulty presets — each one defines (base, coef, max)
-// used by `_computeSpeed(height)`:
-//
-//   speed = clamp(base + height * coef, _, max)
-//
-// Slow keeps even the late game playable for casual sessions; Fast
-// matches the original numbers from before this option existed.
 const ST_DIFF_SLOW = 0;
 const ST_DIFF_NORM = 1;
 const ST_DIFF_FAST = 2;
 
-// Block colour palette — colour rotates through the list as the
-// tower grows to give a rainbow effect.
+// View modes
+const ST_VIEW_2D = 0;
+const ST_VIEW_3D = 1;
+
+// Block colour palette — rotates as tower grows.
 const PALETTE = [
-    0xFF3344, 0xFF8822, 0xFFCC22, 0x44FF55, 0x22CCCC,
-    0x3388FF, 0x8866FF, 0xFF44AA
+    0xFF2244, 0xFF8822, 0xFFCC00, 0x22FF88, 0x00CCFF,
+    0x4488FF, 0xAA44FF, 0xFF44BB
 ];
 
 const ST_DIFF_KEY = "st_diff";
+const ST_VIEW_KEY = "st_view";
 
 class GameController {
     var state;
@@ -67,20 +43,15 @@ class GameController {
     var score;
     var hi;
     var perfectStreak;
-    var lastPerfect;       // ticks remaining for "PERFECT!" flash
-    var lastShake;         // ticks remaining for game-over screen shake
+    var lastPerfect;
+    var lastShake;
 
-    // Menu state.
     var menuRow;
-    var menuDiff;          // ST_DIFF_*
+    var menuDiff;
+    var menuView;          // ST_VIEW_2D or ST_VIEW_3D
 
-    // Visual world: defined in world-x pixels matching the screen pixels
-    // 1:1 so we don't need a scaler. Bounds are set by the view.
     var worldMinX;
     var worldMaxX;
-
-    // Starting width (in world-x). 56 is a good fit on 240 px screens
-    // and scales down on smaller round watches via setBounds().
     var foundationW;
 
     function initialize() {
@@ -91,8 +62,9 @@ class GameController {
         perfectStreak   = 0;
         lastPerfect     = 0;
         lastShake       = 0;
-        menuRow         = ST_ROW_START;     // land on START by default
+        menuRow         = ST_ROW_START;
         menuDiff        = _loadDiff();
+        menuView        = _loadView();
         worldMinX       = 0;
         worldMaxX       = 200;
         foundationW     = 56;
@@ -118,35 +90,47 @@ class GameController {
     hidden function _saveDiff() {
         try { Application.Storage.setValue(ST_DIFF_KEY, menuDiff); } catch (e) {}
     }
+    hidden function _loadView() {
+        try {
+            var v = Application.Storage.getValue(ST_VIEW_KEY);
+            if (v != null && v instanceof Number && (v == ST_VIEW_2D || v == ST_VIEW_3D)) { return v; }
+        } catch (e) {}
+        return ST_VIEW_2D;
+    }
+    hidden function _saveView() {
+        try { Application.Storage.setValue(ST_VIEW_KEY, menuView); } catch (e) {}
+    }
 
     // ── Menu nav ────────────────────────────────────────────
     function menuPrev()    { menuRow = (menuRow + ST_MENU_ROWS - 1) % ST_MENU_ROWS; }
     function menuNext()    { menuRow = (menuRow + 1) % ST_MENU_ROWS; }
     function setMenuRow(i) { if (i >= 0 && i < ST_MENU_ROWS) { menuRow = i; } }
-    // Returns true when the activated row needs the view layer to act
-    // (the LEADERBOARD row pushes a view, which the controller can't do).
+
     function menuActivate() {
         if (menuRow == ST_ROW_DIFF) {
             menuDiff = (menuDiff + 1) % 3;
             _saveDiff();
+        } else if (menuRow == ST_ROW_VIEW) {
+            menuView = (menuView == ST_VIEW_2D) ? ST_VIEW_3D : ST_VIEW_2D;
+            _saveView();
         } else if (menuRow == ST_ROW_START) {
             startGame();
         }
-        // ST_ROW_LB is handled by MainView.openLeaderboard().
+        // ST_ROW_LB handled by MainView.openLeaderboard().
     }
+
     function diffName() {
         if (menuDiff == ST_DIFF_SLOW) { return "Slow"; }
         if (menuDiff == ST_DIFF_FAST) { return "Fast"; }
         return "Norm";
     }
+    function viewName() {
+        return (menuView == ST_VIEW_3D) ? "3D" : "2D";
+    }
 
-    // Called by the view once it knows screen size.
     function setWorldBounds(minX, maxX) {
         worldMinX = minX;
         worldMaxX = maxX;
-        // Choose a sensible foundation width: ~40% of the playable
-        // strip, clamped so very small watches still get a usable
-        // tower.
         var w = ((maxX - minX) * 40) / 100;
         if (w < 26) { w = 26; }
         if (w > 80) { w = 80; }
@@ -166,16 +150,8 @@ class GameController {
         _spawnNextMoving();
     }
 
-    function gotoMenu() {
-        state = GS_MENU;
-    }
+    function gotoMenu() { state = GS_MENU; }
 
-    // Compute speed for the upcoming block given current height +
-    // the player-chosen difficulty.
-    //
-    //   Slow : 1.2 → ~4.5 at h=40 (relaxed even late-game)
-    //   Norm : 1.7 → ~6.5 at h=40 (≈ 25 % easier than the old curve)
-    //   Fast : 2.2 → ~7.8 at h=40 (≈ original tuning)
     hidden function _computeSpeed() {
         var h = tower.height();
         var base; var coef; var cap;
@@ -192,17 +168,14 @@ class GameController {
     }
 
     hidden function _spawnNextMoving() {
-        var h = tower.height();
+        var h   = tower.height();
         var col = PALETTE[(h + 1) % PALETTE.size()];
         tower.spawnMoving(col, _computeSpeed());
     }
 
-    // Called every tick from the view.
     function step() {
         if (state != GS_PLAY) {
             if (lastShake > 0) { lastShake = lastShake - 1; }
-            // Even when not playing, advance any in-flight falling
-            // pieces so the death animation completes.
             if (state == GS_OVER) { tower.step(); }
             return;
         }
@@ -211,7 +184,6 @@ class GameController {
         if (lastShake   > 0) { lastShake   = lastShake   - 1; }
     }
 
-    // Player taps / SELECT → drop.
     function dropAction() {
         if (state == GS_MENU) { startGame(); return; }
         if (state == GS_OVER) { gotoMenu();  return; }
@@ -221,25 +193,20 @@ class GameController {
         if (res == null) { return; }
 
         if (res.status == 2) {
-            // Miss → game over.
             lastShake = 8;
             if (score > hi) { hi = score; _saveHi(); }
             state = GS_OVER;
-            // Submit to the global leaderboard, split by difficulty variant,
-            // then pop the post-game rank/comparison.
             Leaderboard.submitScore(LB_GAME_ID, score, diffName());
             Leaderboard.showPostGame(LB_GAME_ID, diffName(), "STACK TOWER");
             return;
         }
 
-        // Award score (height-scaled + perfect bonus).
         var h = tower.height();
         score = score + 10 + h;
         if (res.status == 0) {
             score = score + 50;
             perfectStreak = perfectStreak + 1;
             lastPerfect   = 8;
-            // Reward 5 perfects in a row: widen the next block by 2 px.
             if (perfectStreak >= 5) {
                 var top = tower.topBlock();
                 if (top != null) {
