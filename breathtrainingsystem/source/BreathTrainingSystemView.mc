@@ -368,7 +368,7 @@ class BreathTrainingSystemView extends WatchUi.View {
     hidden var _snBodyBatt; hidden var _snStress;
     hidden var _snSpo2; hidden var _snRestHr;
     hidden var _snBradLast; hidden var _snBradBest;
-    hidden var _snHrEnabled; hidden var _snLastReadT;
+    hidden var _snHrEnabled; hidden var _snLastReadT; hidden var _snLastHrSub;
     hidden var _snBradHist; hidden var _snCalmLast;
     hidden var _snCalmAvg;  hidden var _snBbAtStart;
     hidden var _snHrDropAvg;
@@ -660,7 +660,7 @@ class BreathTrainingSystemView extends WatchUi.View {
 
         _snHrCur = 0; _snHrStart = 0; _snHrMin = 0; _snHrPeak = 0;
         _snBodyBatt = -1; _snStress = -1; _snSpo2 = -1; _snRestHr = 0;
-        _snAvail = 0; _snHrEnabled = false; _snLastReadT = -100;
+        _snAvail = 0; _snHrEnabled = false; _snLastReadT = -100; _snLastHrSub = -500;
 
         if (!_snOn) { return; }
 
@@ -789,15 +789,14 @@ class BreathTrainingSystemView extends WatchUi.View {
         return 0;
     }
 
-    // Called every tick during active sessions — rate-limited to ~1Hz so
-    // we don't beat the API or the battery. Tracks min HR (bradycardia)
-    // and peak HR throughout the session. Polls regardless of whether
-    // setEnabledSensors succeeded — Activity.getActivityInfo() may still
-    // return a usable currentHeartRate on watches with native HR.
+    // Called every tick during active sessions — rate-limited to ~5s so
+    // we don't beat the API or the battery. Uses `_sub` (increments every
+    // 100 ms timer tick regardless of state) so HR updates correctly during
+    // FT_ACT where `_tick` is not advanced.
     hidden function _snTick() {
         if (!_snOn) { return; }
-        if (_tick - _snLastReadT < 5) { return; }   // ≤ 1Hz reads
-        _snLastReadT = _tick;
+        if (_sub - _snLastHrSub < 50) { return; }   // ~5 s between reads
+        _snLastHrSub = _sub;
 
         var hr = _snReadHrRaw();
         if (hr <= 0) { return; }
@@ -824,6 +823,7 @@ class BreathTrainingSystemView extends WatchUi.View {
             _snHrStart = 0; _snHrMin = 0; _snHrPeak = 0;
         }
         _snLastReadT = _tick;
+        _snLastHrSub = _sub - 500;   // force an immediate read on first _snTick() call
     }
 
     // Called at end of an apnea — computes bradycardia delta (start − min)
@@ -3215,9 +3215,8 @@ class BreathTrainingSystemView extends WatchUi.View {
         _snOn = true; _snBradLast = 0; _snBradBest = 0;
         _snHrCur = 0; _snHrStart = 0; _snHrMin = 0; _snHrPeak = 0;
         _snBodyBatt = -1; _snStress = -1; _snSpo2 = -1; _snRestHr = 0;
-        _snAvail = 0; _snLastReadT = -100;
-        _snBradHist = [0, 0, 0, 0, 0];
-        _snCalmLast = 0; _snCalmAvg = 0; _snHrDropAvg = 0;
+        _snAvail = 0; _snLastReadT = -100; _snLastHrSub = -500;
+        _snBradHist = [0, 0, 0, 0, 0]; _snCalmAvg = 0; _snHrDropAvg = 0;
         _snBbAtStart = [-1, -1, -1, -1, -1];
         try { Sensor.setEnabledSensors([Sensor.SENSOR_HEARTRATE]); _snHrEnabled = true; }
         catch (e) { _snHrEnabled = false; }
