@@ -194,7 +194,10 @@ class LbMessageView extends WatchUi.View {
         dc.setColor(LB_MUTED, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, footerCY, Graphics.FONT_XTINY, "press any key", VC);
 
-        var contentBottom = footerCY - fh;
+        // Bottom of the area the body may use. Reserve space for the footer plus,
+        // when present, the link block — each separated by a clear blank-line gap
+        // so nothing ever collides.
+        var contentBottom = footerCY - lineH;
 
         // Full URL as plain, link-styled text (colour + underline). Not tappable.
         if (hasUrl()) {
@@ -208,19 +211,31 @@ class LbMessageView extends WatchUi.View {
                 dc.setColor(LB_LINK, Graphics.COLOR_TRANSPARENT);
                 dc.drawText(cx, ly, linkFont, seg, VC);
                 var tw = dc.getTextWidthInPixels(seg, linkFont);
-                var uy = ly + fh / 2 - 1;
+                var uy = ly + fh / 2;
                 dc.drawLine(cx - tw / 2, uy, cx + tw / 2, uy);
+                dc.drawLine(cx - tw / 2, uy + 1, cx + tw / 2, uy + 1);
                 ly = ly + lineH;
             }
-            contentBottom = linkTop - lineH / 2;
+            // Full blank line of separation between body and the link.
+            contentBottom = linkTop - lineH;
         }
 
-        // Word-wrapped body, vertically centred in the remaining space.
+        // Word-wrapped body, vertically centred in the remaining space. Lines that
+        // would spill past contentBottom are dropped rather than drawn over the
+        // link/footer — a hard guarantee against overlap.
         var lines = _wrap(dc, _body, Graphics.FONT_XTINY, maxW);
-        var areaTop = titleCY + titleH / 2 + 2;
+        var areaTop = titleCY + titleH / 2 + lineH / 2;
         var areaBot = contentBottom;
+        var avail = areaBot - areaTop;
+        var maxLines = avail / lineH;
+        if (maxLines < 1) { maxLines = 1; }
+        if (lines.size() > maxLines) {
+            var trimmed = [];
+            for (var k = 0; k < maxLines; k++) { trimmed.add(lines[k]); }
+            lines = trimmed;
+        }
         var blockH = lines.size() * lineH;
-        var y = areaTop + ((areaBot - areaTop) - blockH) / 2 + lineH / 2;
+        var y = areaTop + (avail - blockH) / 2 + lineH / 2;
         if (y < areaTop + lineH / 2) { y = areaTop + lineH / 2; }
         dc.setColor(LB_TEXT, Graphics.COLOR_TRANSPARENT);
         for (var j = 0; j < lines.size(); j++) {

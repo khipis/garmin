@@ -283,7 +283,7 @@ module Leaderboard {
     function defaultPostGameMsg() as Lang.Dictionary {
         return {
             "title"     => "Enjoying Bitochi?",
-            "body"      => "Every game here is free and ad-free. If they made you smile, a small tip keeps new ones coming. Thank you!",
+            "body"      => "All games are free & ad-free. A small tip keeps new ones coming!",
             "url"       => "https://bitochi.com/coffee",
             "url_label" => "bitochi.com/coffee",
             "min_gap_s" => 43200
