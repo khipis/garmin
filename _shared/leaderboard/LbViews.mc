@@ -781,15 +781,61 @@ class LbPostGame {
     }
     function _fire() as Void {
         if (_t != null) { _t.stop(); _t = null; }
-        var v = new LbScoresView(_game, _variant, _title);
-        v.markPostGame();
-        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_UP);
-        // If a post-game message is due (throttled), pop it up ON TOP of the
-        // board; dismissing it reveals the leaderboard underneath. Most runs
-        // show only the board — the support/marketing card appears occasionally.
-        // A built-in fallback guarantees the invite even on a cold cache/offline.
-        Leaderboard.showMessage(_game, Leaderboard.MSG_POSTGAME, Leaderboard.defaultPostGameMsg());
+        // Message BEFORE the board: if a post-game message is due (throttled),
+        // show it as the single active view first; dismissing it opens the
+        // leaderboard. Otherwise open the board directly. Stacking two pushView
+        // calls at once proved unreliable (only the board would appear), so we
+        // never have more than one message/board push in flight at a time.
+        var msg = Leaderboard.duePostGameMessage();
+        if (msg != null) {
+            try {
+                var mv = new LbMessageView(msg);
+                WatchUi.pushView(mv, new LbMsgThenBoardDelegate(mv, _game, _variant, _title),
+                                 WatchUi.SLIDE_UP);
+                return;
+            } catch (e) {}
+        }
+        _openBoard();
     }
+
+    function _openBoard() as Void {
+        try {
+            var v = new LbScoresView(_game, _variant, _title);
+            v.markPostGame();
+            WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_UP);
+        } catch (e) {}
+    }
+}
+
+// Shown for a post-game message: any key/tap closes the card and then opens the
+// leaderboard underneath (message → board).
+class LbMsgThenBoardDelegate extends WatchUi.BehaviorDelegate {
+    hidden var _v;
+    hidden var _game;
+    hidden var _variant;
+    hidden var _title;
+
+    function initialize(v, game, variant, title) {
+        BehaviorDelegate.initialize();
+        _v = v; _game = game; _variant = variant; _title = title;
+    }
+
+    hidden function _close() {
+        WatchUi.popView(WatchUi.SLIDE_DOWN);
+        try {
+            var b = new LbScoresView(_game, _variant, _title);
+            b.markPostGame();
+            WatchUi.pushView(b, new LbScoresDelegate(b), WatchUi.SLIDE_UP);
+        } catch (e) {}
+        return true;
+    }
+
+    function onSelect()       { return _close(); }
+    function onBack()         { return _close(); }
+    function onKey(evt)       { return _close(); }
+    function onTap(evt)       { return _close(); }
+    function onNextPage()     { return _close(); }
+    function onPreviousPage() { return _close(); }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════

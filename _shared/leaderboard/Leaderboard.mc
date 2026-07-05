@@ -185,11 +185,44 @@ module Leaderboard {
             if (v instanceof Lang.Number) { last = v; }
             var now = _nowSec();
             if (last > 0 && (now - last) < gap) { return false; }
-            Application.Storage.setValue(key, now);
-            _pushMessage(msg);
-            return true;
+            // Only record "shown" once the view was actually pushed — a failed
+            // push must not silently burn the 12h throttle window.
+            if (_pushMessage(msg)) {
+                Application.Storage.setValue(key, now);
+                return true;
+            }
+            return false;
         } catch (e) {
             return false;
+        }
+    }
+
+    // Post-game helper: returns the message dict to show (server bundle first,
+    // else the built-in fallback) when the throttle allows, marking it shown; or
+    // null when nothing is due. The caller pushes the view (see LbPostGame), so
+    // we DON'T push here — this keeps the "message → then board" flow to a single
+    // active view at a time (two stacked pushView calls proved unreliable).
+    function duePostGameMessage() as Lang.Dictionary or Null {
+        if (!isSupported()) { return null; }
+        try {
+            var bundle = _cachedBundle();
+            var msg = null;
+            if (bundle != null) { msg = bundle[MSG_POSTGAME]; }
+            if (!(msg instanceof Lang.Dictionary)) { msg = defaultPostGameMsg(); }
+            if (!(msg instanceof Lang.Dictionary)) { return null; }
+
+            var gap = 21600;
+            if (msg["min_gap_s"] instanceof Lang.Number) { gap = msg["min_gap_s"]; }
+            var key = MSG_SHOWN_PRE + MSG_POSTGAME;
+            var last = 0;
+            var v = Application.Storage.getValue(key);
+            if (v instanceof Lang.Number) { last = v; }
+            var now = _nowSec();
+            if (last > 0 && (now - last) < gap) { return null; }
+            Application.Storage.setValue(key, now);
+            return msg;
+        } catch (e) {
+            return null;
         }
     }
 
@@ -237,7 +270,10 @@ module Leaderboard {
         try {
             var v = new LbMessageView(msg);
             WatchUi.pushView(v, new LbMessageDelegate(v), WatchUi.SLIDE_UP);
-        } catch (e) {}
+            return true;
+        } catch (e) {
+            return false;
+        }
     }
 
     // Built-in default post-game card. Used as the `fallback` for showMessage so
