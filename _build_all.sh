@@ -94,6 +94,7 @@ APPS=(
   sniperscope
   skyroll
   memo
+  drwal
 )
 
 FILTER=""

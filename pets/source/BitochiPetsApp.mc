@@ -28,6 +28,9 @@ class BitochiPetsApp extends Application.AppBase {
             if (q > 0) {
                 Leaderboard.submitScore(LB_GAME_ID, q, "");
             }
+            // Good/Evil alignment board — lifetime karma across every pet
+            // this player has ever raised (see Pet.reportKarma()).
+            _pet.reportKarma();
         }
     }
 

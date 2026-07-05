@@ -89,7 +89,22 @@ module Leaderboard {
         var user = loadUser();
         if (user == null) { user = "anon"; }
         _sender = new LbSubmitter();
-        _sender.send(game, user, score, variant);
+        _sender.send(game, user, score, variant, null);
+    }
+
+    // Same as submitScore(), but attaches a small JSON-serialisable dictionary
+    // of extra fields (species, rarity, ...) that the web leaderboard can use
+    // to render a richer "trophy" entry (e.g. fish/biggest-fish variant with a
+    // graphical fish icon). Keep the dictionary small — the backend caps the
+    // serialised meta blob at 512 chars.
+    function submitScoreWithMeta(game as Lang.String, score as Lang.Number,
+                                 variant as Lang.String or Null,
+                                 meta as Lang.Dictionary or Null) as Void {
+        if (!isSupported()) { return; }
+        var user = loadUser();
+        if (user == null) { user = "anon"; }
+        _sender = new LbSubmitter();
+        _sender.send(game, user, score, variant, meta);
     }
 
     // ── Launch ping (fire-and-forget) ─────────────────────────────────────────

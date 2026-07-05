@@ -29,6 +29,10 @@ class Player {
     // Animation
     var legPhase;   // 0..7 used to bob the legs
 
+    // Cosmetic skin tier, unlocked by lifetime coins collected — see
+    // GameController.skinTier(). 0 = default green frog.
+    var skin;
+
     // Continuous input flags (mutated by InputHandler/MainView via
     // GameController.setHold). Tap pulses live in vx directly.
     var holdLeft;
@@ -36,7 +40,7 @@ class Player {
 
     function initialize() {
         x = 0; y = 0; vx = 0.0; vy = 0.0; w = 8; h = 10;
-        alive = true; legPhase = 0;
+        alive = true; legPhase = 0; skin = 0;
         holdLeft = false; holdRight = false;
     }
 
@@ -91,12 +95,24 @@ class Player {
     // Render at (sx, sy) — caller supplies the screen-space top centre
     // because the world→screen projection lives in MainView.
     function draw(dc, sx, sy) {
-        // Body — green oval (drawn as two circles + rectangle for round-rect feel)
-        dc.setColor(0x44CC44, Graphics.COLOR_TRANSPARENT);
+        // Skin palette — unlocked by lifetime coins (see
+        // GameController.skinTier()). Purely cosmetic; hitbox/physics
+        // are identical across tiers.
+        var bodyC = 0x44CC44; var bellyC = 0xCCFFCC; var legC = 0x33AA33;
+        if (skin == 1) {       // Ice Frog
+            bodyC = 0x55CCEE; bellyC = 0xEAFBFF; legC = 0x2E9BC0;
+        } else if (skin == 2) { // Gold Frog
+            bodyC = 0xE8B923; bellyC = 0xFFF3C4; legC = 0xB4880F;
+        } else if (skin >= 3) { // Diamond Frog
+            bodyC = 0xB06CFF; bellyC = 0xE9D6FF; legC = 0x7A3FCC;
+        }
+
+        // Body — coloured oval (drawn as two circles + rectangle for round-rect feel)
+        dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(sx, sy, w);
         dc.fillRectangle(sx - w, sy - 2, w * 2, 4);
         // Belly
-        dc.setColor(0xCCFFCC, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(bellyC, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(sx, sy + 2, (w * 2) / 3);
         // Eyes — two white circles on the head
         var eyeR = (w / 3 < 2) ? 2 : w / 3;
@@ -110,7 +126,7 @@ class Player {
         dc.fillCircle(sx + w / 2 + pupOff, sy - h / 2, eyeR / 2);
         // Legs — small triangles below when falling, tucked when rising
         var legY = sy + h - 1;
-        dc.setColor(0x33AA33, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(legC, Graphics.COLOR_TRANSPARENT);
         var spread = (vy > 0) ? (w - 2) : (w / 2);
         dc.fillPolygon([[sx - spread, legY],
                         [sx - 1,      legY - 3],
@@ -118,5 +134,10 @@ class Player {
         dc.fillPolygon([[sx + spread, legY],
                         [sx + 1,      legY - 3],
                         [sx + 1,      legY]]);
+        // Diamond tier sparkle — a tiny glint on the head.
+        if (skin >= 3) {
+            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(sx - w / 4, sy - h / 2 - 2, 1);
+        }
     }
 }

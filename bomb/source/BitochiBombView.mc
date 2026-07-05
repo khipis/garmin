@@ -13,6 +13,8 @@ enum {
     GS_GAMEOVER
 }
 
+const BOMB_LB_GAME_ID = "bomb";
+
 class BitochiBombView extends WatchUi.View {
 
     var accelX;
@@ -91,6 +93,9 @@ class BitochiBombView extends WatchUi.View {
     hidden var _bombsLeft;
     hidden var _killCount;
     hidden var _totalKills;
+    // Lifetime (whole-run) structural damage dealt to buildings, mirrored to
+    // a secondary "damage" leaderboard variant for extra bragging rights.
+    hidden var _totalDamage;
     hidden var _totalSpawns;
     hidden var _spawnCount;
     hidden var _spawnTimer;
@@ -115,6 +120,8 @@ class BitochiBombView extends WatchUi.View {
     hidden var _nightMode;
     hidden var _hasAirstrike;
     hidden var _airstrikeTimer;
+    hidden var _menuSel;
+    hidden var _lbHandled;
 
     function initialize() {
         View.initialize();
@@ -131,6 +138,7 @@ class BitochiBombView extends WatchUi.View {
         var bs = Application.Storage.getValue("bombBest");
         _bestScore = (bs != null) ? bs : 0;
         _totalKills = 0;
+        _totalDamage = 0;
         _groundY = _h * 82 / 100;
         _planeY = _h * 12 / 100;
         _planeX = (_w / 2).toFloat();
@@ -216,6 +224,8 @@ class BitochiBombView extends WatchUi.View {
         _nightMode = false;
         _hasAirstrike = false;
         _airstrikeTimer = 0;
+        _menuSel = 0;
+        _lbHandled = false;
         gameState = GS_MENU;
     }
 
@@ -369,6 +379,7 @@ class BitochiBombView extends WatchUi.View {
                     var bTop = _groundY - _bldgH[b];
                     if (_explY[i] > bTop - _explR[i].toNumber()) {
                         _bldgHp[b] -= 2;
+                        _totalDamage += 2;
                         if (_bldgHp[b] <= 0) {
                             destroyBuilding(b);
                         }
@@ -480,6 +491,12 @@ class BitochiBombView extends WatchUi.View {
                 if (_score > _bestScore) { _bestScore = _score; Application.Storage.setValue("bombBest", _bestScore); }
                 gameState = GS_GAMEOVER;
                 _resultTick = 0;
+                if (!_lbHandled) {
+                    _lbHandled = true;
+                    Leaderboard.submitScore(BOMB_LB_GAME_ID, _score, "");
+                    if (_totalDamage > 0) { Leaderboard.submitScore(BOMB_LB_GAME_ID, _totalDamage, "damage"); }
+                    Leaderboard.showPostGame(BOMB_LB_GAME_ID, "", "BOMB");
+                }
             }
         }
     }
@@ -509,9 +526,15 @@ class BitochiBombView extends WatchUi.View {
         for (var i = 0; i < MAX_DEBRIS; i++) { _debLife[i] = 0; }
         _planeX = (_w / 2).toFloat();
         _planeDir = 1;
+        _lbHandled = false;
 
         spawnBuildings();
         gameState = GS_PLAY;
+    }
+
+    function openLeaderboard() {
+        var v = new LbScoresView(BOMB_LB_GAME_ID, "", "BOMB");
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
     hidden function spawnBuildings() {
@@ -553,14 +576,24 @@ class BitochiBombView extends WatchUi.View {
         }
     }
 
+    // Cycle the menu selection (START / LEADERBOARD). Only meaningful while
+    // gameState == GS_MENU; other states just drop a bomb like every other
+    // button, preserving the original one-button-does-it-all gameplay.
+    function navigate(dir) {
+        if (gameState != GS_MENU) { doAction(); return; }
+        _menuSel = (_menuSel + dir + 2) % 2;
+        doVibe(15, 30);
+    }
+
     function doAction() {
         if (gameState == GS_MENU) {
-            _wave = 1; _score = 0; _totalKills = 0;
+            if (_menuSel == 1) { openLeaderboard(); return; }
+            _wave = 1; _score = 0; _totalKills = 0; _totalDamage = 0;
             startWave();
             return;
         }
         if (gameState == GS_GAMEOVER) {
-            _wave = 1; _score = 0; _totalKills = 0;
+            _wave = 1; _score = 0; _totalKills = 0; _totalDamage = 0;
             startWave();
             return;
         }
@@ -601,6 +634,7 @@ class BitochiBombView extends WatchUi.View {
         spawnDirtEruption(bx, by);
         spawnGroundDebris(bx);
         _score += 60;
+        _totalDamage += 2;
 
         if (_bldgHp[bIdx] <= 0) {
             destroyBuilding(bIdx);
@@ -623,6 +657,7 @@ class BitochiBombView extends WatchUi.View {
             var ndx = (_bldgX[bIdx] - _bldgX[nb]).abs();
             if (ndx < _bldgW[bIdx] / 2 + _bldgW[nb] / 2 + 10) {
                 _bldgHp[nb] -= 1;
+                _totalDamage += 1;
                 if (_bldgHp[nb] <= 0) { destroyBuilding(nb); }
             }
         }
@@ -745,6 +780,7 @@ class BitochiBombView extends WatchUi.View {
                 var bTop = _groundY - _bldgH[b];
                 if (ey > bTop - 12) {
                     _bldgHp[b] -= 1 + chainLevel;
+                    _totalDamage += 1 + chainLevel;
                     if (_bldgHp[b] <= 0) { destroyBuilding(b); }
                     else { spawnBuildingDebris(_bldgX[b], bTop, _bldgColor[b]); }
                 }
@@ -1612,11 +1648,37 @@ class BitochiBombView extends WatchUi.View {
 
         if (_bestScore > 0) {
             dc.setColor(0x556677, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_cx, _h * 77 / 100, Graphics.FONT_XTINY, "BEST " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_cx, _h * 68 / 100, Graphics.FONT_XTINY, "BEST " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER);
+        }
+
+        // ── Two space-aware rows: START / LEADERBOARD ─────────────────────
+        var rowH = _h * 9 / 100; if (rowH < 16) { rowH = 16; } if (rowH > 22) { rowH = 22; }
+        var rowW = _w * 58 / 100; if (rowW < 96) { rowW = 96; }
+        var rowX = (_w - rowW) / 2;
+        var gap  = 4;
+        var rowY0 = _h * 76 / 100;
+        var labels = ["START"];
+        for (var i = 0; i < 2; i++) {
+            var ry  = rowY0 + i * (rowH + gap);
+            var sel = (i == _menuSel);
+            if (i == 1) {
+                LbBadge.drawRow(dc, rowX, ry, rowW, rowH, sel);
+                continue;
+            }
+            dc.setColor(sel ? 0x3A1800 : 0x101820, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);
+            dc.setColor(sel ? 0xFF8833 : 0x223344, Graphics.COLOR_TRANSPARENT);
+            dc.drawRoundedRectangle(rowX, ry, rowW, rowH, 5);
+            if (sel) {
+                var ay = ry + rowH / 2;
+                dc.fillPolygon([[rowX + 5, ay - 4], [rowX + 5, ay + 4], [rowX + 11, ay]]);
+            }
+            dc.setColor(sel ? 0xFFCC88 : 0x8899AA, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_cx, ry + (rowH - 14) / 2, Graphics.FONT_XTINY, labels[i], Graphics.TEXT_JUSTIFY_CENTER);
         }
 
         dc.setColor((_tick % 10 < 5) ? 0xFF4422 : 0xCC2211, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _h * 85 / 100, Graphics.FONT_XTINY, "Tap to start", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_cx, _h * 96 / 100, Graphics.FONT_XTINY, "nxt/prv sel · tap go", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawBetween(dc) {
@@ -1691,19 +1753,22 @@ class BitochiBombView extends WatchUi.View {
         dc.drawText(_cx, _h * 26 / 100, Graphics.FONT_LARGE, "" + _score, Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0xFF5555, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _h * 42 / 100, Graphics.FONT_XTINY, "TOTAL KILLS " + _totalKills, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_cx, _h * 40 / 100, Graphics.FONT_XTINY, "TOTAL KILLS " + _totalKills, Graphics.TEXT_JUSTIFY_CENTER);
+
+        dc.setColor(0xFFAA66, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_cx, _h * 47 / 100, Graphics.FONT_XTINY, "DAMAGE " + _totalDamage, Graphics.TEXT_JUSTIFY_CENTER);
 
         dc.setColor(0x88AACC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(_cx, _h * 50 / 100, Graphics.FONT_XTINY, "WAVE " + _wave, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(_cx, _h * 54 / 100, Graphics.FONT_XTINY, "WAVE " + _wave, Graphics.TEXT_JUSTIFY_CENTER);
 
         if (_chainMax > 0) {
             dc.setColor(0xFF8822, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_cx, _h * 58 / 100, Graphics.FONT_XTINY, "CHAIN x" + _chainMax, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_cx, _h * 61 / 100, Graphics.FONT_XTINY, "CHAIN x" + _chainMax, Graphics.TEXT_JUSTIFY_CENTER);
         }
 
         if (_maxCombo > 2) {
             dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(_cx, _h * 66 / 100, Graphics.FONT_XTINY, "STREAK x" + _maxCombo, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(_cx, _h * 68 / 100, Graphics.FONT_XTINY, "STREAK x" + _maxCombo, Graphics.TEXT_JUSTIFY_CENTER);
         }
 
         dc.setColor(0x556677, Graphics.COLOR_TRANSPARENT);

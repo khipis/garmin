@@ -8,6 +8,7 @@ class BitochiBombApp extends Application.AppBase {
     }
 
     function onStart(state) {
+        Leaderboard.logLaunch("bomb");
     }
 
     function onStop(state) {

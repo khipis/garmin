@@ -26,11 +26,18 @@ const DIFF_HARD = 2;
 
 // ── Game types ───────────────────────────────────────────────
 // Different popular pool games — each uses a different ball count and rack.
-const GT_3BALL   = 0;  // 1 cue + 3 colored balls, mini-triangle (quickest)
-const GT_9BALL   = 1;  // 1 cue + 9 numbered (diamond rack; 9-ball = black key)
-const GT_8BALL   = 2;  // 1 cue + 15 numbered (triangle rack; 8-ball = black key)
-const GT_SNOOKER = 3;  // 1 cue + 6 reds + 1 black — must-hit-red + point scoring
-const GT_COUNT   = 4;
+const GT_3BALL     = 0;  // 1 cue + 3 colored balls, mini-triangle (quickest)
+const GT_9BALL     = 1;  // 1 cue + 9 numbered (diamond rack; 9-ball = black key)
+const GT_8BALL     = 2;  // 1 cue + 15 numbered (triangle rack; 8-ball = black key)
+const GT_SNOOKER   = 3;  // 1 cue + 6 reds + 1 black — must-hit-red + point scoring
+// TIME ATTACK — solo arcade mode: full 15-ball rack, no opponent/turns,
+// pot as many balls as possible before the clock runs out. The DIFF
+// selector doubles as the time-limit selector in this mode (see
+// _timeAttackLimit()). Its own leaderboard variant ("timeattack") is a
+// pure high-score board, not a win-streak, so it fits the existing
+// per-game-type leaderboard split perfectly.
+const GT_TIMEATTACK = 4;
+const GT_COUNT     = 5;
 
 // ── Physics constants ────────────────────────────────────────
 const MAX_BALLS = 16;    // upper bound — 8-ball uses all 16 (cue + 15)
@@ -47,6 +54,11 @@ const BALL_D    = 52;    // 2*BALL_R — collision diameter
 const POCKET_R       = 37;
 const POCKET_OPEN_R  = 49;
 const NUM_POCKETS = 6;
+
+// Cushion-impact flash — small ring-fx queue the View draws at rail
+// bounce points, purely cosmetic (juice) but capped tiny so it's cheap.
+const BOUNCE_FX_MAX = 6;
+const BOUNCE_FX_LIFE = 10;
 
 // ── Table geometry (course space 0-1000 × 0-700) ────────────
 // Visual table boundary:
@@ -133,6 +145,13 @@ class BilliardGame {
     var aimHitT;    // float distance along ray to contact (-1 = none)
     var aimHitBall; // index of ball hit (-1 = none)
 
+    // ── Cushion-impact flash queue (cosmetic; View renders these) ────
+    var bounceFxX; var bounceFxY; var bounceFxLife;   // parallel arrays
+    hidden var _bounceFxNext;
+
+    // ── TIME ATTACK arcade mode ───────────────────────────────
+    var arcadeTicks;  // countdown, in ~33 ms ticks, while gameType == GT_TIMEATTACK
+
     // ─────────────────────────────────────────────────────────
     function initialize() {
         gs = BS_MENU; diff = DIFF_MED; turn = TURN_PLAYER;
@@ -166,6 +185,14 @@ class BilliardGame {
         // Pockets: top-left, top-mid, top-right, bot-left, bot-mid, bot-right
         pX = [TL, 500, TR, TL, 500, TR];
         pY = [TT, TT,  TT, TB, TB,  TB];
+
+        bounceFxX = new [BOUNCE_FX_MAX]; bounceFxY = new [BOUNCE_FX_MAX];
+        bounceFxLife = new [BOUNCE_FX_MAX];
+        for (var bf = 0; bf < BOUNCE_FX_MAX; bf++) {
+            bounceFxX[bf] = 0.0; bounceFxY[bf] = 0.0; bounceFxLife[bf] = 0;
+        }
+        _bounceFxNext = 0;
+        arcadeTicks = 0;
 
         var sd = Application.Storage.getValue("billDiff");
         if (sd instanceof Lang.Number && sd >= 0 && sd <= DIFF_HARD) { diff = sd; }
@@ -208,6 +235,16 @@ class BilliardGame {
             bCol[13] = 0xFFAA55;  // 13 striped orange
             bCol[14] = 0x66BB66;  // 14 striped green
             bCol[15] = 0xCC6644;  // 15 striped maroon
+        } else if (gameType == GT_TIMEATTACK) {
+            // Full 15-ball rack, chaos-rainbow palette (no solids/stripes
+            // meaning — every ball is just a target against the clock).
+            numBalls = 16;
+            bCol[0]  = 0xFFFFFF;
+            bCol[1]  = 0xFFDD00; bCol[2]  = 0xFF9900; bCol[3]  = 0xFF4444;
+            bCol[4]  = 0xFF44AA; bCol[5]  = 0xCC44FF; bCol[6]  = 0x7755FF;
+            bCol[7]  = 0x4488FF; bCol[8]  = 0x44CCFF; bCol[9]  = 0x44FFCC;
+            bCol[10] = 0x55FF66; bCol[11] = 0xAAFF33; bCol[12] = 0xEEEE33;
+            bCol[13] = 0xFFAA66; bCol[14] = 0xDD8888; bCol[15] = 0xBB88FF;
         } else if (gameType == GT_SNOOKER) {
             // 1 cue + 6 reds (1pt each) + 1 black (7pt key ball) = 8 balls.
             numBalls = 8;
@@ -258,10 +295,19 @@ class BilliardGame {
 
     // Display label for current game mode.
     function gameTypeLabel() {
-        if (gameType == GT_3BALL)   { return "3-BALL"; }
-        if (gameType == GT_8BALL)   { return "8-BALL"; }
-        if (gameType == GT_SNOOKER) { return "SNOOKER"; }
+        if (gameType == GT_3BALL)     { return "3-BALL"; }
+        if (gameType == GT_8BALL)     { return "8-BALL"; }
+        if (gameType == GT_SNOOKER)   { return "SNOOKER"; }
+        if (gameType == GT_TIMEATTACK){ return "TIME ATK"; }
         return "9-BALL";
+    }
+
+    // Time-limit table for TIME ATTACK, indexed by the (repurposed) diff
+    // selector: EASY = most forgiving = most time.
+    function timeAttackLimitSecs() {
+        if (diff == DIFF_EASY) { return 90; }
+        if (diff == DIFF_HARD) { return 40; }
+        return 60;
     }
 
     // ── Viewport setup ────────────────────────────────────────
@@ -309,10 +355,11 @@ class BilliardGame {
             bAlive[i] = false;
         }
 
-        if      (gameType == GT_3BALL)   { _setupRack3Ball(); }
-        else if (gameType == GT_8BALL)   { _setupRack8Ball(); }
-        else if (gameType == GT_SNOOKER) { _setupRackSnooker(); }
-        else                              { _setupRack9Ball(); }
+        if      (gameType == GT_3BALL)     { _setupRack3Ball(); }
+        else if (gameType == GT_8BALL)     { _setupRack8Ball(); }
+        else if (gameType == GT_TIMEATTACK){ _setupRack8Ball(); }  // reuse the 15-ball triangle geometry
+        else if (gameType == GT_SNOOKER)   { _setupRackSnooker(); }
+        else                                { _setupRack9Ball(); }
 
         // Mark all rack balls alive.
         for (var i = 1; i < numBalls; i++) { bAlive[i] = true; }
@@ -325,6 +372,7 @@ class BilliardGame {
         playerGroup[0] = 0; playerGroup[1] = 0;
         winReason = 0;
         _lbHandled = false;
+        arcadeTicks = timeAttackLimitSecs() * 30;  // ~30 ticks/sec (33 ms loop)
         gs = BS_AIM;
         _computeAimIntersect();
     }
@@ -333,9 +381,10 @@ class BilliardGame {
     // Variant = current game type (e.g. "9-ball"), so each pool game has its
     // own win-streak ranking.
     function lbVariant() {
-        if (gameType == GT_3BALL)   { return "3-ball"; }
-        if (gameType == GT_8BALL)   { return "8-ball"; }
-        if (gameType == GT_SNOOKER) { return "snooker"; }
+        if (gameType == GT_3BALL)      { return "3-ball"; }
+        if (gameType == GT_8BALL)      { return "8-ball"; }
+        if (gameType == GT_SNOOKER)    { return "snooker"; }
+        if (gameType == GT_TIMEATTACK) { return "timeattack"; }
         return "9-ball";
     }
 
@@ -355,6 +404,15 @@ class BilliardGame {
     function reportResult() {
         if (_lbHandled) { return; }
         _lbHandled = true;
+        if (gameType == GT_TIMEATTACK) {
+            // Arcade high-score board — every run with a non-zero score
+            // is worth submitting (no win/lose framing here).
+            if (playerScore > 0) {
+                Leaderboard.submitScore(LB_GAME_ID, playerScore, "timeattack");
+                Leaderboard.showPostGame(LB_GAME_ID, "timeattack", "BILLIARDS");
+            }
+            return;
+        }
         if (pvpMode) { return; }
         var playerWon = (winReason == 1 || winReason == 3);
         if (playerWon) {
@@ -574,6 +632,19 @@ class BilliardGame {
         if (msgT > 0) { msgT--; }
         // Tick the aim auto-reset (back to 1° step after a brief idle).
         if (_aimRptIdle < 1000) { _aimRptIdle = _aimRptIdle + 1; }
+        for (var bf = 0; bf < BOUNCE_FX_MAX; bf++) {
+            if (bounceFxLife[bf] > 0) { bounceFxLife[bf]--; }
+        }
+        // TIME ATTACK countdown — ticks whenever a round is actually in
+        // progress (aiming / charging / rolling). If time runs out while
+        // the player is mid-aim or mid-charge (no ball moving), end the
+        // run immediately; if a shot is already rolling, let it finish
+        // and _onRollingComplete() ends the run right after — a fair
+        // "the last shot always counts" rule.
+        if (gameType == GT_TIMEATTACK && (gs == BS_AIM || gs == BS_POWER || gs == BS_ROLLING)) {
+            if (arcadeTicks > 0) { arcadeTicks--; }
+            if (arcadeTicks <= 0 && (gs == BS_AIM || gs == BS_POWER)) { _finishTimeAttack(); }
+        }
         if (gs == BS_ROLLING) { _stepPhysics(); }
         if (gs == BS_AI_WAIT) {
             aiDelay--;
@@ -585,11 +656,12 @@ class BilliardGame {
     // Loops iterate over numBalls (active balls only) so 8-ball mode with 16
     // balls runs as smoothly as 9-ball (per-tick cost ∝ numBalls²).
     //
-    // Substeps were 2× per tick (dt=0.5). With the stronger shot speeds
-    // pushed by the new _commitShot formula (max ≈137 course units/tick),
-    // that gave a substep move of 68 — bigger than BALL_D=52 → tunneling
-    // possible. We use 3 substeps (dt≈0.333), which caps the per-substep
-    // move at ≈46 < BALL_D and keeps ball-ball collisions reliable.
+    // Substeps: 4 per tick (dt=0.25). With the shot speeds pushed by the
+    // _commitShot formula (max ≈137 course units/tick), that caps the
+    // per-substep move at ≈34 — well under BALL_D=52 (35% margin, up from
+    // the previous 3-substep ≈46/12% margin) — extra tunneling headroom
+    // for the hardest break shots without any change to how a shot feels,
+    // since the physics still resolves to the same speeds/restitution.
     //
     // Pocket-aware walls: near each pocket the rail is "open" so a ball
     // approaching the cushion right next to a pocket isn't deflected — it
@@ -601,8 +673,8 @@ class BilliardGame {
     // a fast-moving ball passing through the capture zone in mid-substep
     // is still caught instead of escaping past the pocket.
     hidden function _stepPhysics() {
-        var subDt = 1.0 / 3.0;
-        for (var s = 0; s < 3; s++) {
+        var subDt = 1.0 / 4.0;
+        for (var s = 0; s < 4; s++) {
             for (var i = 0; i < numBalls; i++) {
                 if (!bAlive[i]) { continue; }
                 bx[i] += bvx[i] * subDt;
@@ -611,23 +683,37 @@ class BilliardGame {
                 // inside the open-rail zone of any pocket.  Bounce
                 // restitution bumped from 0.85 → 0.90 so the table
                 // plays livelier (per user request: "mocniejsze
-                // odbijanie się od bandy").
+                // odbijanie się od bandy"). Hard impacts (>8 c.u./tick
+                // into the rail) also queue a cushion-flash fx point for
+                // the View to render — purely cosmetic feedback.
                 if (!_nearPocketOpen(i)) {
                     if (bx[i] < WL.toFloat()) {
                         bx[i] = WL.toFloat();
-                        if (bvx[i] < 0.0) { bvx[i] = -bvx[i] * 0.90; }
+                        if (bvx[i] < 0.0) {
+                            if (-bvx[i] > 8.0) { _addBounceFx(bx[i], by[i]); }
+                            bvx[i] = -bvx[i] * 0.90;
+                        }
                     }
                     if (bx[i] > WR.toFloat()) {
                         bx[i] = WR.toFloat();
-                        if (bvx[i] > 0.0) { bvx[i] = -bvx[i] * 0.90; }
+                        if (bvx[i] > 0.0) {
+                            if (bvx[i] > 8.0) { _addBounceFx(bx[i], by[i]); }
+                            bvx[i] = -bvx[i] * 0.90;
+                        }
                     }
                     if (by[i] < WT.toFloat()) {
                         by[i] = WT.toFloat();
-                        if (bvy[i] < 0.0) { bvy[i] = -bvy[i] * 0.90; }
+                        if (bvy[i] < 0.0) {
+                            if (-bvy[i] > 8.0) { _addBounceFx(bx[i], by[i]); }
+                            bvy[i] = -bvy[i] * 0.90;
+                        }
                     }
                     if (by[i] > WB.toFloat()) {
                         by[i] = WB.toFloat();
-                        if (bvy[i] > 0.0) { bvy[i] = -bvy[i] * 0.90; }
+                        if (bvy[i] > 0.0) {
+                            if (bvy[i] > 8.0) { _addBounceFx(bx[i], by[i]); }
+                            bvy[i] = -bvy[i] * 0.90;
+                        }
                     }
                 }
             }
@@ -665,6 +751,14 @@ class BilliardGame {
             for (var i = 0; i < numBalls; i++) { bvx[i] = 0.0; bvy[i] = 0.0; }
             _onRollingComplete();
         }
+    }
+
+    // Queue a cushion-impact flash at (x,y) in a small ring buffer — no
+    // allocation per call, just overwrites the oldest slot.
+    hidden function _addBounceFx(x, y) {
+        bounceFxX[_bounceFxNext] = x; bounceFxY[_bounceFxNext] = y;
+        bounceFxLife[_bounceFxNext] = BOUNCE_FX_LIFE;
+        _bounceFxNext = (_bounceFxNext + 1) % BOUNCE_FX_MAX;
     }
 
     // True iff ball `i`'s centre is inside the open-rail zone of any
@@ -810,12 +904,21 @@ class BilliardGame {
         if (cueScratched) { _respawnCue(); }
         _evaluateShot();
         if (gs == BS_GAMEOVER) { return; }
-        if (!pocketedThisTurn) {
+        // TIME ATTACK is solo — the player always shoots again, turn
+        // never switches to an "opponent" that doesn't exist here.
+        if (!pocketedThisTurn && gameType != GT_TIMEATTACK) {
             turn = (turn == TURN_PLAYER) ? TURN_AI : TURN_PLAYER;
         }
         pocketedThisTurn = false;
         // Reset per-shot trackers for the next shot
         firstHit = -1; cueScratched = false; pottedCnt = 0;
+
+        if (gameType == GT_TIMEATTACK) {
+            if (arcadeTicks <= 0) { _finishTimeAttack(); return; }
+            gs = BS_AIM;
+            _computeAimIntersect();
+            return;
+        }
 
         if (turn == TURN_PLAYER) {
             gs = BS_AIM;
@@ -838,10 +941,51 @@ class BilliardGame {
     // win/loss. Sets: playerScore, aiScore, pocketedThisTurn, gs, winReason,
     // msg, msgT, playerGroup (8-ball).
     hidden function _evaluateShot() {
-        if      (gameType == GT_3BALL)   { _eval3Ball(); }
-        else if (gameType == GT_9BALL)   { _eval9Ball(); }
-        else if (gameType == GT_SNOOKER) { _evalSnooker(); }
-        else                              { _eval8Ball(); }
+        if      (gameType == GT_3BALL)      { _eval3Ball(); }
+        else if (gameType == GT_9BALL)      { _eval9Ball(); }
+        else if (gameType == GT_SNOOKER)    { _evalSnooker(); }
+        else if (gameType == GT_TIMEATTACK) { _evalTimeAttack(); }
+        else                                 { _eval8Ball(); }
+    }
+
+    // TIME ATTACK: every ball potted (any ball, any order) is +1 point,
+    // no fouls, no legality checks — pure fast-paced arcade potting. A
+    // scratch just costs a small time penalty (risk/reward for going for
+    // a risky shot) instead of losing a turn (there's no one to lose it
+    // to). Clearing the whole rack early pays out a time-remaining bonus
+    // and ends the run right there.
+    hidden function _evalTimeAttack() {
+        if (cueScratched) {
+            msg = "Scratch! -2s"; msgT = 40;
+            pocketedThisTurn = false;
+            arcadeTicks -= 60;
+            if (arcadeTicks < 0) { arcadeTicks = 0; }
+            return;
+        }
+        if (pottedCnt > 0) {
+            playerScore += pottedCnt;
+            msg = "+" + pottedCnt + "!"; msgT = 30;
+            pocketedThisTurn = true;
+        } else {
+            pocketedThisTurn = false;
+        }
+        var allGone = true;
+        for (var b = 1; b < numBalls; b++) {
+            if (bAlive[b]) { allGone = false; break; }
+        }
+        if (allGone) {
+            var bonus = arcadeTicks / 15;  // ~2 pts per second remaining
+            playerScore += bonus;
+            msg = "CLEARED! +" + bonus; msgT = 70;
+            winReason = 6;
+            gs = BS_GAMEOVER;
+        }
+    }
+
+    hidden function _finishTimeAttack() {
+        winReason = 5;
+        msg = "Time's up!"; msgT = 60;
+        gs = BS_GAMEOVER;
     }
 
     // 3-BALL: simple race. Any pot scores. Cue scratch = lose turn, no score

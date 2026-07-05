@@ -1,1317 +1,320 @@
-[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc"; @line = 24; @position = 6; @symbol_constdef = [DR_CAT_ONES,24,6,17]; ]
-const DR_CAT_ONES = 0;
-[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc"; @line = 25; @position = 6; @symbol_constdef = [DR_CAT_TWOS,25,6,17]; ]
-const DR_CAT_TWOS = 1;
-[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc"; @line = 26; @position = 6; @symbol_constdef = [DR_CAT_THREES,26,6,19]; ]
-const DR_CAT_THREES = 2;
-[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc"; @line = 27; @position = 6; @symbol_constdef = [DR_CAT_FOURS,27,6,18]; ]
-const DR_CAT_FOURS = 3;
-[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc"; @line = 28; @position = 6; @symbol_constdef = [DR_CAT_FIVES,28,6,18]; ]
-const DR_CAT_FIVES = 4;
-[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc"; @line = 29; @position = 6; @symbol_constdef = [DR_CAT_SIXES,29,6,18]; ]
-const DR_CAT_SIXES = 5;
-[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc"; @line = 30; @position = 6; @symbol_constdef = [DR_CAT_3K,30,6,15]; ]
-const DR_CAT_3K = 6;
-[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc"; @line = 31; @position = 6; @symbol_constdef = [DR_CAT_4K,31,6,15]; ]
-const DR_CAT_4K = 7;
-[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc"; @line = 32; @position = 6; @symbol_constdef = [DR_CAT_FH,32,6,15]; ]
-const DR_CAT_FH = 8;
-[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc"; @line = 33; @position = 6; @symbol_constdef = [DR_CAT_SS,33,6,15]; ]
-const DR_CAT_SS = 9;
-[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc"; @line = 34; @position = 6; @symbol_constdef = [DR_CAT_LS,34,6,15]; ]
-const DR_CAT_LS = 10;
-[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc"; @line = 35; @position = 6; @symbol_constdef = [DR_CAT_CHANCE,35,6,19]; ]
-const DR_CAT_CHANCE = 11;
-[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc"; @line = 36; @position = 6; @symbol_constdef = [DR_CAT_YAHTZ,36,6,18]; ]
-const DR_CAT_YAHTZ = 12;
-[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc"; @line = 37; @position = 6; @symbol_constdef = [DR_CAT_COUNT,37,6,18]; ]
-const DR_CAT_COUNT = 13;
-[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc"; @line = 40; @position = 6; @symbol_constdef = [DR_MODE_CLASSIC_MASK,40,6,26]; ]
-const DR_MODE_CLASSIC_MASK = 0x1FFF;
-[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc"; @line = 41; @position = 6; @symbol_constdef = [DR_MODE_QUICK_MASK,41,6,24]; ]
-const DR_MODE_QUICK_MASK = 0x003F;
-[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc"; @line = 42; @position = 6; @symbol_constdef = [DR_MODE_DAILY_MASK,42,6,24]; ]
-const DR_MODE_DAILY_MASK = 0x1FFF;
-[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc"; @line = 44; @symbol_classdef = [ScoreSystem,44,6,17]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc"; @line = 4; @symbol_usingdef<0> = [Toybox,4,6,12]; @symbol_usingdef<1> = [Application,4,13,24]; ]
+using Toybox.Application;
+[ @file = "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc"; @line = 6; @symbol_classdef = [ScoreSystem,6,6,17]; ]
 class ScoreSystem {
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc"; @line = 44; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc"; @line = 6; ]
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc"; @line = 44; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc"; @line = 6; ]
     static
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc"; @line = 45; @position = 8; @symbol_vardef = [used,45,8,12]; ]
-    var used;
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc"; @line = 46; @position = 8; @symbol_vardef = [values,46,8,14]; ]
-    var values;
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc"; @line = 47; @position = 8; @symbol_vardef = [availableSet,47,8,20]; ]
-    var availableSet;
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc"; @line = 48; @position = 8; @symbol_vardef = [total,48,8,13]; ]
-    var total;
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc"; @line = 50; @symbol_functiondef = [initialize,50,13,23]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc"; @line = 7; @position = 8; @symbol_vardef = [score,7,8,13]; ]
+    var score;
+    [ @file = "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc"; @line = 8; @position = 8; @symbol_vardef = [hi,8,8,10]; ]
+    var hi;
+    [ @file = "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc"; @line = 9; @position = 8; @symbol_vardef = [combo,9,8,13]; ]
+    var combo;
+    [ @file = "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc"; @line = 10; @position = 15; @symbol_vardef = [_lastChopMs,10,15,26]; ]
+    protected
+    var _lastChopMs;
+    [ @file = "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc"; @line = 12; @symbol_functiondef = [initialize,12,13,23]; ]
     function initialize() as Void {
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_50_26_56_4_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 51 8 ]
-        symbol [ DR_CAT_COUNT %tmp.3 51 28 40 ];
-        %tmp.3 = getv ? :DR_CAT_COUNT;
-        %tmp.1 = newa %tmp.3;
-        symbol [ used ? 51 8 12 ];
-        putv self :used %tmp.1;
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 52 8 ]
-        symbol [ DR_CAT_COUNT %tmp.6 52 28 40 ];
-        %tmp.6 = getv ? :DR_CAT_COUNT;
-        %tmp.4 = newa %tmp.6;
-        symbol [ values ? 52 8 14 ];
-        putv self :values %tmp.4;
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 53 8 ]
-        symbol [ DR_MODE_CLASSIC_MASK %tmp.8 53 23 43 ];
-        %tmp.8 = getv ? :DR_MODE_CLASSIC_MASK;
-        symbol [ availableSet ? 53 8 20 ];
-        putv self :availableSet %tmp.8;
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 54 8 ]
-        %tmp.9 = 0;
-        symbol [ total ? 54 8 13 ];
-        putv self :total %tmp.9;
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 55 8 ]
-        %tmp.10 = self;
-        symbol [ reset %tmp.11 55 8 13 ];
-        %tmp.11 = getv function %tmp.10 :reset;
-        symbol [ DR_MODE_CLASSIC_MASK %tmp.13 55 14 34 ];
-        %tmp.13 = getv ? :DR_MODE_CLASSIC_MASK;
-        invoke %tmp.10 %tmp.11(%tmp.13);
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_50_26_56_4_stop:
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_12_26_15_4_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 13 8 ]
+        %tmp.1 = self;
+        symbol [ _load %tmp.2 13 13 18 ];
+        %tmp.2 = getv function %tmp.1 :_load;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        symbol [ hi ? 13 8 10 ];
+        putv self :hi %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 14 8 ]
+        %tmp.4 = self;
+        symbol [ reset %tmp.5 14 8 13 ];
+        %tmp.5 = getv function %tmp.4 :reset;
+        invoke %tmp.4 %tmp.5();
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_12_26_15_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc"; @line = 58; @symbol_functiondef = [reset,58,13,18]; @symbol_param<0> = [mask,58,19,23]; ]
-    function reset(mask) {
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_58_25_65_4_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 59 8 ]
-        %tmp.1 = lgetv %mask;
-        symbol [ mask %tmp.1 59 23 27 ];
-        symbol [ availableSet ? 59 8 20 ];
-        putv self :availableSet %tmp.1;
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 60 8 ]
-        for @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_60_8_63_8_for_test @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_60_8_63_8_for_incr @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_60_8_63_8_for_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_60_8_63_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_60_8_63_8_for_begin" "_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_60_8_63_8_for_end" ]
-        %i.1 = local;
-        symbol [ i %i.1 60 17 18 ];
-        %tmp.2 = 0;
-        lputv %i.1 %tmp.2;
-        symbol [ i %i.1 60 17 18 ];
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_60_8_63_8_for_test:
-        %tmp.3 = lgetv %i.1;
-        symbol [ i %tmp.3 60 24 25 ];
-        symbol [ DR_CAT_COUNT %tmp.5 60 28 40 ];
-        %tmp.5 = getv ? :DR_CAT_COUNT;
-        %tmp.6 = lt %tmp.3 %tmp.5;
-        bf %tmp.6 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_60_8_63_8_for_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_60_8_63_8_for_begin:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_60_47_63_8_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 61 12 ]
-        symbol [ used %tmp.7 61 12 16 ];
-        %tmp.7 = getv self :used;
-        %tmp.8 = false;
-        %tmp.9 = lgetv %i.1;
-        symbol [ i %tmp.9 61 17 18 ];
-        aputv %tmp.7 %tmp.9 %tmp.8;
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 62 12 ]
-        symbol [ values %tmp.10 62 12 18 ];
-        %tmp.10 = getv self :values;
-        %tmp.11 = 0;
-        %tmp.12 = lgetv %i.1;
-        symbol [ i %tmp.12 62 19 20 ];
-        aputv %tmp.10 %tmp.12 %tmp.11;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_60_47_63_8_stop:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_60_8_63_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 60 ]
-        %tmp.15 = lgetv %i.1;
-        symbol [ i %tmp.15 60 42 43 ];
-        %tmp.16 = add %tmp.15 1;
-        lputv %i.1 %tmp.16;
-        symbol [ i %i.1 60 42 43 ];
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_60_8_63_8_for_test;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_60_8_63_8_for_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 64 8 ]
-        %tmp.17 = 0;
-        symbol [ total ? 64 8 13 ];
-        putv self :total %tmp.17;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_58_25_65_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc"; @line = 67; @symbol_functiondef = [isAvailable,67,13,24]; @symbol_param<0> = [cat,67,25,28]; ]
-    function isAvailable(cat) {
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_67_30_69_4_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 68 8 ]
-        symbol [ availableSet %tmp.2 68 16 28 ];
-        %tmp.2 = getv ? :availableSet;
-        %tmp.3 = 1;
-        %tmp.4 = lgetv %cat;
-        symbol [ cat %tmp.4 68 37 40 ];
-        %tmp.5 = shl %tmp.3 %tmp.4;
-        %tmp.6 = bitand %tmp.2 %tmp.5;
-        %tmp.7 = 0;
-        %tmp.8 = ne %tmp.6 %tmp.7;
-        ret %tmp.8;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_67_30_69_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc"; @line = 70; @symbol_functiondef = [isUsed,70,13,19]; @symbol_param<0> = [cat,70,20,23]; ]
-    function isUsed(cat) {
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_70_25_70_45_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 70 27 ]
-        symbol [ used %tmp.2 70 34 38 ];
-        %tmp.2 = getv ? :used;
-        %tmp.3 = lgetv %cat;
-        symbol [ cat %tmp.3 70 39 42 ];
-        %tmp.4 = agetv %tmp.2 %tmp.3;
-        ret %tmp.4;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_70_25_70_45_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc"; @line = 73; @symbol_functiondef = [allDone,73,13,20]; ]
-    function allDone() {
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_73_23_78_4_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 74 8 ]
-        for @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_74_8_76_8_for_test @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_74_8_76_8_for_incr @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_74_8_76_8_for_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_74_8_76_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_74_8_76_8_for_begin" "_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_74_8_76_8_for_end" ]
-        %i.1 = local;
-        symbol [ i %i.1 74 17 18 ];
+    [ @file = "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc"; @line = 17; @symbol_functiondef = [reset,17,13,18]; ]
+    function reset() {
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_17_21_21_4_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 18 8 ]
         %tmp.1 = 0;
-        lputv %i.1 %tmp.1;
-        symbol [ i %i.1 74 17 18 ];
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_74_8_76_8_for_test:
-        %tmp.2 = lgetv %i.1;
-        symbol [ i %tmp.2 74 24 25 ];
-        symbol [ DR_CAT_COUNT %tmp.4 74 28 40 ];
-        %tmp.4 = getv ? :DR_CAT_COUNT;
-        %tmp.5 = lt %tmp.2 %tmp.4;
-        bf %tmp.5 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_74_8_76_8_for_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_74_8_76_8_for_begin:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_74_47_76_8_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 75 12 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_75_12_75_60_if_stmt:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_75_16_75_41_begin:
-        %tmp.6 = self;
-        symbol [ isAvailable %tmp.7 75 16 27 ];
-        %tmp.7 = getv function %tmp.6 :isAvailable;
-        %tmp.8 = lgetv %i.1;
-        symbol [ i %tmp.8 75 28 29 ];
-        %tmp.9 = invoke %tmp.6 %tmp.7(%tmp.8);
-        bf %tmp.9 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_75_12_75_60_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_75_34_75_41_true:
-        symbol [ used %tmp.11 75 35 39 ];
-        %tmp.11 = getv ? :used;
-        %tmp.12 = lgetv %i.1;
-        symbol [ i %tmp.12 75 40 41 ];
-        %tmp.13 = agetv %tmp.11 %tmp.12;
-        %tmp.14 = not %tmp.13;
+        symbol [ score ? 18 8 13 ];
+        putv self :score %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 19 8 ]
+        %tmp.2 = 0;
+        symbol [ combo ? 19 8 13 ];
+        putv self :combo %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 20 8 ]
+        %tmp.3 = -1000000;
+        symbol [ _lastChopMs ? 20 8 19 ];
+        putv self :_lastChopMs %tmp.3;
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_17_21_21_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc"; @line = 23; @symbol_functiondef = [_load,23,20,25]; ]
+    protected
+    function _load() {
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_23_28_29_4_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 24 8 ]
+        try @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_8_27_22_beginTry @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_8_27_22_endTry @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_8_27_22_catch @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_8_27_22_finally;
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_8_27_22_beginTry:
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_12_27_8_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 25 12 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_12_27_8_start" "_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_12_27_8_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 25 16 17 ];
+        symbol [ Application %tmp.1 25 20 31 ];
+        %tmp.1 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.2 25 32 39 ];
+        %tmp.2 = getv %tmp.1 :Storage;
+        symbol [ getValue %tmp.3 25 40 48 ];
+        %tmp.3 = getv function %tmp.2 :getValue;
+        symbol [ DR_HI_KEY %tmp.5 25 49 58 ];
+        %tmp.5 = getv ? :DR_HI_KEY;
+        %tmp.6 = invoke %tmp.2 %tmp.3(%tmp.5);
+        lputv %v.1 %tmp.6;
+        symbol [ v %v.1 25 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 26 12 ]
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_12_26_71_if_stmt:
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_16_26_56_begin:
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_16_26_42_begin:
+        %tmp.7 = lgetv %v.1;
+        symbol [ v %tmp.7 26 16 17 ];
+        %tmp.8 = null;
+        %tmp.9 = ne %tmp.7 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_12_26_71_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_29_26_42_true:
+        %tmp.10 = lgetv %v.1;
+        symbol [ v %tmp.10 26 29 30 ];
+        %tmp.11 = as %tmp.10 { (!Null) };
+        symbol [ Number %tmp.13 26 42 48 ];
+        %tmp.13 = getv ? :Number;
+        %tmp.14 = isa %tmp.11 %tmp.13;
         push %tmp.14;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_75_34_75_41_end:
-        %tmp.15 = phi [%tmp.9 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_75_16_75_41_begin] [%tmp.14 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_75_34_75_41_true] [%tmp.15 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_75_34_75_41_end];
-        bf %tmp.15 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_75_12_75_60_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_75_12_75_60_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_75_44_75_60_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 75 46 ]
-        %tmp.16 = false;
-        ret %tmp.16;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_75_44_75_60_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_75_12_75_60_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_75_12_75_60_if_end:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_74_47_76_8_stop:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_74_8_76_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 74 ]
-        %tmp.19 = lgetv %i.1;
-        symbol [ i %tmp.19 74 42 43 ];
-        %tmp.20 = add %tmp.19 1;
-        lputv %i.1 %tmp.20;
-        symbol [ i %i.1 74 42 43 ];
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_74_8_76_8_for_test;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_74_8_76_8_for_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 77 8 ]
-        %tmp.21 = true;
-        ret %tmp.21;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_73_23_78_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc"; @line = 80; @symbol_functiondef = [categoryName,80,13,25]; @symbol_param<0> = [cat,80,26,29]; ]
-    function categoryName(cat) {
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_80_31_95_4_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 81 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_81_8_81_53_if_stmt:
-        %tmp.1 = lgetv %cat;
-        symbol [ cat %tmp.1 81 12 15 ];
-        symbol [ DR_CAT_ONES %tmp.3 81 19 30 ];
-        %tmp.3 = getv ? :DR_CAT_ONES;
-        %tmp.4 = eq %tmp.1 %tmp.3;
-        bf %tmp.4 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_81_8_81_53_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_81_8_81_53_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_81_34_81_53_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 81 36 ]
-        %tmp.5 = "Ones";
-        ret %tmp.5;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_81_34_81_53_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_81_8_81_53_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_81_8_81_53_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 82 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_82_8_82_53_if_stmt:
-        %tmp.6 = lgetv %cat;
-        symbol [ cat %tmp.6 82 12 15 ];
-        symbol [ DR_CAT_TWOS %tmp.8 82 19 30 ];
-        %tmp.8 = getv ? :DR_CAT_TWOS;
-        %tmp.9 = eq %tmp.6 %tmp.8;
-        bf %tmp.9 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_82_8_82_53_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_82_8_82_53_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_82_34_82_53_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 82 36 ]
-        %tmp.10 = "Twos";
-        ret %tmp.10;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_82_34_82_53_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_82_8_82_53_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_82_8_82_53_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 83 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_83_8_83_53_if_stmt:
-        %tmp.11 = lgetv %cat;
-        symbol [ cat %tmp.11 83 12 15 ];
-        symbol [ DR_CAT_THREES %tmp.13 83 19 32 ];
-        %tmp.13 = getv ? :DR_CAT_THREES;
-        %tmp.14 = eq %tmp.11 %tmp.13;
-        bf %tmp.14 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_83_8_83_53_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_83_8_83_53_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_83_34_83_53_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 83 36 ]
-        %tmp.15 = "Threes";
-        ret %tmp.15;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_83_34_83_53_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_83_8_83_53_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_83_8_83_53_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 84 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_84_8_84_53_if_stmt:
-        %tmp.16 = lgetv %cat;
-        symbol [ cat %tmp.16 84 12 15 ];
-        symbol [ DR_CAT_FOURS %tmp.18 84 19 31 ];
-        %tmp.18 = getv ? :DR_CAT_FOURS;
-        %tmp.19 = eq %tmp.16 %tmp.18;
-        bf %tmp.19 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_84_8_84_53_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_84_8_84_53_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_84_34_84_53_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 84 36 ]
-        %tmp.20 = "Fours";
-        ret %tmp.20;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_84_34_84_53_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_84_8_84_53_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_84_8_84_53_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 85 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_85_8_85_53_if_stmt:
-        %tmp.21 = lgetv %cat;
-        symbol [ cat %tmp.21 85 12 15 ];
-        symbol [ DR_CAT_FIVES %tmp.23 85 19 31 ];
-        %tmp.23 = getv ? :DR_CAT_FIVES;
-        %tmp.24 = eq %tmp.21 %tmp.23;
-        bf %tmp.24 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_85_8_85_53_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_85_8_85_53_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_85_34_85_53_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 85 36 ]
-        %tmp.25 = "Fives";
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_29_26_42_end:
+        %tmp.15 = phi [%tmp.9 @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_16_26_42_begin] [%tmp.14 @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_29_26_42_true] [%tmp.15 @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_29_26_42_end];
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_12_26_71_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_52_26_56_true:
+        %tmp.16 = lgetv %v.1;
+        symbol [ v %tmp.16 26 52 53 ];
+        %tmp.17 = as %tmp.16 { (Number) && (!Null) };
+        %tmp.18 = 0;
+        %tmp.19 = gt %tmp.17 %tmp.18;
+        push %tmp.19;
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_52_26_56_end:
+        %tmp.20 = phi [%tmp.15 @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_16_26_56_begin] [%tmp.19 @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_52_26_56_true] [%tmp.20 @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_52_26_56_end];
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_12_26_71_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_12_26_71_if_true:
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_59_26_71_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 26 61 ]
+        %tmp.21 = lgetv %v.1;
+        symbol [ v %tmp.21 26 68 69 ];
+        %tmp.22 = as %tmp.21 { (Number) && (!Null) };
+        jsr @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_8_27_22_finally;
+        ret %tmp.22;
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_59_26_71_stop:
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_12_26_71_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_12_26_71_if_end:
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_12_27_8_stop:
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_8_27_22_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_8_27_22_finally;
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_8_27_22_end;
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_8_27_22_catch:
+        %tmp.23 = exception;
+        push %tmp.23;
+[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 27 10 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_8_27_22_catch" "_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_27_10_27_22_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 27 17 18 ];
+        %tmp.24 = dup %tmp.23;
+        lputv %e.2 %tmp.24;
+        symbol [ e %e.2 27 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_8_27_22_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_8_27_22_end;
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_27_10_27_22_end:
+        try @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_8_27_22_catch @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_27_10_27_22_end @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_27_10_27_22_end @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_8_27_22_finally;
+        jsr @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_8_27_22_finally;
+        throw %tmp.23;
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_8_27_22_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_8_27_22_end:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 28 8 ]
+        %tmp.25 = 0;
         ret %tmp.25;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_85_34_85_53_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_85_8_85_53_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_85_8_85_53_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 86 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_86_8_86_53_if_stmt:
-        %tmp.26 = lgetv %cat;
-        symbol [ cat %tmp.26 86 12 15 ];
-        symbol [ DR_CAT_SIXES %tmp.28 86 19 31 ];
-        %tmp.28 = getv ? :DR_CAT_SIXES;
-        %tmp.29 = eq %tmp.26 %tmp.28;
-        bf %tmp.29 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_86_8_86_53_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_86_8_86_53_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_86_34_86_53_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 86 36 ]
-        %tmp.30 = "Sixes";
-        ret %tmp.30;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_86_34_86_53_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_86_8_86_53_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_86_8_86_53_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 87 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_87_8_87_53_if_stmt:
-        %tmp.31 = lgetv %cat;
-        symbol [ cat %tmp.31 87 12 15 ];
-        symbol [ DR_CAT_3K %tmp.33 87 19 28 ];
-        %tmp.33 = getv ? :DR_CAT_3K;
-        %tmp.34 = eq %tmp.31 %tmp.33;
-        bf %tmp.34 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_87_8_87_53_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_87_8_87_53_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_87_34_87_53_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 87 36 ]
-        %tmp.35 = "3-Kind";
-        ret %tmp.35;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_87_34_87_53_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_87_8_87_53_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_87_8_87_53_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 88 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_88_8_88_53_if_stmt:
-        %tmp.36 = lgetv %cat;
-        symbol [ cat %tmp.36 88 12 15 ];
-        symbol [ DR_CAT_4K %tmp.38 88 19 28 ];
-        %tmp.38 = getv ? :DR_CAT_4K;
-        %tmp.39 = eq %tmp.36 %tmp.38;
-        bf %tmp.39 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_88_8_88_53_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_88_8_88_53_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_88_34_88_53_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 88 36 ]
-        %tmp.40 = "4-Kind";
-        ret %tmp.40;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_88_34_88_53_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_88_8_88_53_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_88_8_88_53_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 89 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_89_8_89_53_if_stmt:
-        %tmp.41 = lgetv %cat;
-        symbol [ cat %tmp.41 89 12 15 ];
-        symbol [ DR_CAT_FH %tmp.43 89 19 28 ];
-        %tmp.43 = getv ? :DR_CAT_FH;
-        %tmp.44 = eq %tmp.41 %tmp.43;
-        bf %tmp.44 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_89_8_89_53_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_89_8_89_53_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_89_34_89_53_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 89 36 ]
-        %tmp.45 = "Full H";
-        ret %tmp.45;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_89_34_89_53_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_89_8_89_53_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_89_8_89_53_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 90 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_90_8_90_53_if_stmt:
-        %tmp.46 = lgetv %cat;
-        symbol [ cat %tmp.46 90 12 15 ];
-        symbol [ DR_CAT_SS %tmp.48 90 19 28 ];
-        %tmp.48 = getv ? :DR_CAT_SS;
-        %tmp.49 = eq %tmp.46 %tmp.48;
-        bf %tmp.49 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_90_8_90_53_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_90_8_90_53_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_90_34_90_53_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 90 36 ]
-        %tmp.50 = "Sm Str";
-        ret %tmp.50;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_90_34_90_53_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_90_8_90_53_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_90_8_90_53_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 91 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_91_8_91_53_if_stmt:
-        %tmp.51 = lgetv %cat;
-        symbol [ cat %tmp.51 91 12 15 ];
-        symbol [ DR_CAT_LS %tmp.53 91 19 28 ];
-        %tmp.53 = getv ? :DR_CAT_LS;
-        %tmp.54 = eq %tmp.51 %tmp.53;
-        bf %tmp.54 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_91_8_91_53_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_91_8_91_53_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_91_34_91_53_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 91 36 ]
-        %tmp.55 = "Lg Str";
-        ret %tmp.55;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_91_34_91_53_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_91_8_91_53_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_91_8_91_53_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 92 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_92_8_92_53_if_stmt:
-        %tmp.56 = lgetv %cat;
-        symbol [ cat %tmp.56 92 12 15 ];
-        symbol [ DR_CAT_CHANCE %tmp.58 92 19 32 ];
-        %tmp.58 = getv ? :DR_CAT_CHANCE;
-        %tmp.59 = eq %tmp.56 %tmp.58;
-        bf %tmp.59 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_92_8_92_53_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_92_8_92_53_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_92_34_92_53_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 92 36 ]
-        %tmp.60 = "Chance";
-        ret %tmp.60;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_92_34_92_53_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_92_8_92_53_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_92_8_92_53_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 93 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_93_8_93_53_if_stmt:
-        %tmp.61 = lgetv %cat;
-        symbol [ cat %tmp.61 93 12 15 ];
-        symbol [ DR_CAT_YAHTZ %tmp.63 93 19 31 ];
-        %tmp.63 = getv ? :DR_CAT_YAHTZ;
-        %tmp.64 = eq %tmp.61 %tmp.63;
-        bf %tmp.64 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_93_8_93_53_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_93_8_93_53_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_93_34_93_53_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 93 36 ]
-        %tmp.65 = "5-Kind";
-        ret %tmp.65;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_93_34_93_53_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_93_8_93_53_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_93_8_93_53_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 94 8 ]
-        %tmp.66 = "?";
-        ret %tmp.66;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_80_31_95_4_stop:
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_23_28_29_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc"; @line = 98; @symbol_functiondef = [score,98,13,18]; @symbol_param<0> = [cat,98,19,22]; @symbol_param<1> = [dice,98,24,28]; ]
-    function score(cat, dice) {
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_98_30_135_4_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 99 8 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_98_30_135_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_98_30_135_4_stop" ]
-        %counts.1 = local;
-        symbol [ counts %counts.1 99 12 18 ];
-        %tmp.1 = self;
-        symbol [ _counts %tmp.2 99 21 28 ];
-        %tmp.2 = getv function %tmp.1 :_counts;
-        %tmp.3 = lgetv %dice;
-        symbol [ dice %tmp.3 99 29 33 ];
-        %tmp.4 = invoke %tmp.1 %tmp.2(%tmp.3);
-        lputv %counts.1 %tmp.4;
-        symbol [ counts %counts.1 99 12 18 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 100 8 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_98_30_135_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_98_30_135_4_stop" ]
-        %sum.2 = local;
-        symbol [ sum %sum.2 100 12 15 ];
-        %tmp.5 = self;
-        symbol [ _sum %tmp.6 100 21 25 ];
-        %tmp.6 = getv function %tmp.5 :_sum;
-        %tmp.7 = lgetv %dice;
-        symbol [ dice %tmp.7 100 26 30 ];
-        %tmp.8 = invoke %tmp.5 %tmp.6(%tmp.7);
-        lputv %sum.2 %tmp.8;
-        symbol [ sum %sum.2 100 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 102 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_102_8_102_58_if_stmt:
-        %tmp.9 = lgetv %cat;
-        symbol [ cat %tmp.9 102 12 15 ];
-        symbol [ DR_CAT_ONES %tmp.11 102 19 30 ];
-        %tmp.11 = getv ? :DR_CAT_ONES;
-        %tmp.12 = eq %tmp.9 %tmp.11;
-        bf %tmp.12 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_102_8_102_58_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_102_8_102_58_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_102_34_102_58_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 102 36 ]
-        %tmp.13 = lgetv %counts.1;
-        symbol [ counts %tmp.13 102 43 49 ];
-        %tmp.14 = 0;
-        %tmp.15 = agetv %tmp.13 %tmp.14;
-        %tmp.16 = 1;
-        %tmp.17 = mul %tmp.15 %tmp.16;
-        ret %tmp.17;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_102_34_102_58_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_102_8_102_58_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_102_8_102_58_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 103 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_103_8_103_58_if_stmt:
-        %tmp.18 = lgetv %cat;
-        symbol [ cat %tmp.18 103 12 15 ];
-        symbol [ DR_CAT_TWOS %tmp.20 103 19 30 ];
-        %tmp.20 = getv ? :DR_CAT_TWOS;
-        %tmp.21 = eq %tmp.18 %tmp.20;
-        bf %tmp.21 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_103_8_103_58_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_103_8_103_58_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_103_34_103_58_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 103 36 ]
-        %tmp.22 = lgetv %counts.1;
-        symbol [ counts %tmp.22 103 43 49 ];
-        %tmp.23 = 1;
-        %tmp.24 = agetv %tmp.22 %tmp.23;
-        %tmp.25 = 2;
-        %tmp.26 = mul %tmp.24 %tmp.25;
-        ret %tmp.26;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_103_34_103_58_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_103_8_103_58_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_103_8_103_58_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 104 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_104_8_104_58_if_stmt:
-        %tmp.27 = lgetv %cat;
-        symbol [ cat %tmp.27 104 12 15 ];
-        symbol [ DR_CAT_THREES %tmp.29 104 19 32 ];
-        %tmp.29 = getv ? :DR_CAT_THREES;
-        %tmp.30 = eq %tmp.27 %tmp.29;
-        bf %tmp.30 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_104_8_104_58_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_104_8_104_58_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_104_34_104_58_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 104 36 ]
-        %tmp.31 = lgetv %counts.1;
-        symbol [ counts %tmp.31 104 43 49 ];
-        %tmp.32 = 2;
-        %tmp.33 = agetv %tmp.31 %tmp.32;
-        %tmp.34 = 3;
-        %tmp.35 = mul %tmp.33 %tmp.34;
-        ret %tmp.35;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_104_34_104_58_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_104_8_104_58_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_104_8_104_58_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 105 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_105_8_105_58_if_stmt:
-        %tmp.36 = lgetv %cat;
-        symbol [ cat %tmp.36 105 12 15 ];
-        symbol [ DR_CAT_FOURS %tmp.38 105 19 31 ];
-        %tmp.38 = getv ? :DR_CAT_FOURS;
-        %tmp.39 = eq %tmp.36 %tmp.38;
-        bf %tmp.39 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_105_8_105_58_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_105_8_105_58_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_105_34_105_58_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 105 36 ]
-        %tmp.40 = lgetv %counts.1;
-        symbol [ counts %tmp.40 105 43 49 ];
-        %tmp.41 = 3;
-        %tmp.42 = agetv %tmp.40 %tmp.41;
-        %tmp.43 = 4;
-        %tmp.44 = mul %tmp.42 %tmp.43;
-        ret %tmp.44;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_105_34_105_58_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_105_8_105_58_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_105_8_105_58_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 106 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_106_8_106_58_if_stmt:
-        %tmp.45 = lgetv %cat;
-        symbol [ cat %tmp.45 106 12 15 ];
-        symbol [ DR_CAT_FIVES %tmp.47 106 19 31 ];
-        %tmp.47 = getv ? :DR_CAT_FIVES;
-        %tmp.48 = eq %tmp.45 %tmp.47;
-        bf %tmp.48 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_106_8_106_58_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_106_8_106_58_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_106_34_106_58_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 106 36 ]
-        %tmp.49 = lgetv %counts.1;
-        symbol [ counts %tmp.49 106 43 49 ];
-        %tmp.50 = 4;
-        %tmp.51 = agetv %tmp.49 %tmp.50;
-        %tmp.52 = 5;
-        %tmp.53 = mul %tmp.51 %tmp.52;
-        ret %tmp.53;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_106_34_106_58_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_106_8_106_58_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_106_8_106_58_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 107 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_107_8_107_58_if_stmt:
-        %tmp.54 = lgetv %cat;
-        symbol [ cat %tmp.54 107 12 15 ];
-        symbol [ DR_CAT_SIXES %tmp.56 107 19 31 ];
-        %tmp.56 = getv ? :DR_CAT_SIXES;
-        %tmp.57 = eq %tmp.54 %tmp.56;
-        bf %tmp.57 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_107_8_107_58_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_107_8_107_58_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_107_34_107_58_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 107 36 ]
-        %tmp.58 = lgetv %counts.1;
-        symbol [ counts %tmp.58 107 43 49 ];
-        %tmp.59 = 5;
-        %tmp.60 = agetv %tmp.58 %tmp.59;
-        %tmp.61 = 6;
-        %tmp.62 = mul %tmp.60 %tmp.61;
-        ret %tmp.62;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_107_34_107_58_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_107_8_107_58_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_107_8_107_58_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 109 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_109_8_111_8_if_stmt:
-        %tmp.63 = lgetv %cat;
-        symbol [ cat %tmp.63 109 12 15 ];
-        symbol [ DR_CAT_3K %tmp.65 109 19 28 ];
-        %tmp.65 = getv ? :DR_CAT_3K;
-        %tmp.66 = eq %tmp.63 %tmp.65;
-        bf %tmp.66 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_109_8_111_8_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_109_8_111_8_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_109_30_111_8_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 110 12 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_110_19_110_44_begin:
-        %tmp.67 = self;
-        symbol [ _hasN %tmp.68 110 19 24 ];
-        %tmp.68 = getv function %tmp.67 :_hasN;
-        %tmp.69 = lgetv %counts.1;
-        symbol [ counts %tmp.69 110 25 31 ];
-        %tmp.70 = 3;
-        %tmp.71 = invoke %tmp.67 %tmp.68(%tmp.69, %tmp.70);
-        bf %tmp.71 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_110_19_110_44_else_false;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_110_19_110_44_true:
-        %tmp.72 = lgetv %sum.2;
-        symbol [ sum %tmp.72 110 38 41 ];
-        push %tmp.72;
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_110_19_110_44_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_110_19_110_44_else_false:
-        %tmp.73 = 0;
-        push %tmp.73;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_110_19_110_44_end:
-        %tmp.74 = phi [%tmp.71 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_110_19_110_44_begin] [%tmp.72 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_110_19_110_44_true] [%tmp.73 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_110_19_110_44_else_false] [%tmp.74 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_110_19_110_44_end];
-        ret %tmp.74;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_109_30_111_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_109_8_111_8_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_109_8_111_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 112 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_112_8_114_8_if_stmt:
-        %tmp.75 = lgetv %cat;
-        symbol [ cat %tmp.75 112 12 15 ];
-        symbol [ DR_CAT_4K %tmp.77 112 19 28 ];
-        %tmp.77 = getv ? :DR_CAT_4K;
-        %tmp.78 = eq %tmp.75 %tmp.77;
-        bf %tmp.78 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_112_8_114_8_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_112_8_114_8_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_112_30_114_8_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 113 12 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_113_19_113_44_begin:
-        %tmp.79 = self;
-        symbol [ _hasN %tmp.80 113 19 24 ];
-        %tmp.80 = getv function %tmp.79 :_hasN;
-        %tmp.81 = lgetv %counts.1;
-        symbol [ counts %tmp.81 113 25 31 ];
-        %tmp.82 = 4;
-        %tmp.83 = invoke %tmp.79 %tmp.80(%tmp.81, %tmp.82);
-        bf %tmp.83 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_113_19_113_44_else_false;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_113_19_113_44_true:
-        %tmp.84 = lgetv %sum.2;
-        symbol [ sum %tmp.84 113 38 41 ];
-        push %tmp.84;
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_113_19_113_44_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_113_19_113_44_else_false:
-        %tmp.85 = 0;
-        push %tmp.85;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_113_19_113_44_end:
-        %tmp.86 = phi [%tmp.83 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_113_19_113_44_begin] [%tmp.84 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_113_19_113_44_true] [%tmp.85 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_113_19_113_44_else_false] [%tmp.86 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_113_19_113_44_end];
-        ret %tmp.86;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_112_30_114_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_112_8_114_8_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_112_8_114_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 115 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_115_8_124_8_if_stmt:
-        %tmp.87 = lgetv %cat;
-        symbol [ cat %tmp.87 115 12 15 ];
-        symbol [ DR_CAT_FH %tmp.89 115 19 28 ];
-        %tmp.89 = getv ? :DR_CAT_FH;
-        %tmp.90 = eq %tmp.87 %tmp.89;
-        bf %tmp.90 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_115_8_124_8_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_115_8_124_8_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_115_30_124_8_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 118 12 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_115_30_124_8_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_115_30_124_8_stop" ]
-        %has3.3 = local;
-        symbol [ has3 %has3.3 118 16 20 ];
-        %tmp.91 = false;
-        lputv %has3.3 %tmp.91;
-        symbol [ has3 %has3.3 118 16 20 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 118 30 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_115_30_124_8_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_115_30_124_8_stop" ]
-        %has2.4 = local;
-        symbol [ has2 %has2.4 118 34 38 ];
-        %tmp.92 = false;
-        lputv %has2.4 %tmp.92;
-        symbol [ has2 %has2.4 118 34 38 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 119 12 ]
-        for @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_119_12_122_12_for_test @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_119_12_122_12_for_incr @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_119_12_122_12_for_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_119_12_122_12_for_init:
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_119_12_122_12_for_begin" "_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_119_12_122_12_for_end" ]
-        %f.5 = local;
-        symbol [ f %f.5 119 21 22 ];
-        %tmp.93 = 0;
-        lputv %f.5 %tmp.93;
-        symbol [ f %f.5 119 21 22 ];
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_119_12_122_12_for_test:
-        %tmp.94 = lgetv %f.5;
-        symbol [ f %tmp.94 119 28 29 ];
-        %tmp.95 = 6;
-        %tmp.96 = lt %tmp.94 %tmp.95;
-        bf %tmp.96 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_119_12_122_12_for_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_119_12_122_12_for_begin:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_119_40_122_12_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 120 16 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_120_16_121_56_if_stmt:
-        %tmp.97 = lgetv %counts.1;
-        symbol [ counts %tmp.97 120 20 26 ];
-        %tmp.98 = lgetv %f.5;
-        symbol [ f %tmp.98 120 27 28 ];
-        %tmp.99 = agetv %tmp.97 %tmp.98;
-        %tmp.100 = 3;
-        %tmp.101 = eq %tmp.99 %tmp.100;
-        bf %tmp.101 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_120_16_121_56_if_false;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_120_16_121_56_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_120_36_120_51_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 120 38 ]
-        %tmp.102 = true;
-        lputv %has3.3 %tmp.102;
-        symbol [ has3 %has3.3 120 38 42 ];
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_120_36_120_51_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_120_16_121_56_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_120_16_121_56_if_false:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 121 21 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_121_21_121_56_if_stmt:
-        %tmp.103 = lgetv %counts.1;
-        symbol [ counts %tmp.103 121 25 31 ];
-        %tmp.104 = lgetv %f.5;
-        symbol [ f %tmp.104 121 32 33 ];
-        %tmp.105 = agetv %tmp.103 %tmp.104;
-        %tmp.106 = 2;
-        %tmp.107 = eq %tmp.105 %tmp.106;
-        bf %tmp.107 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_121_21_121_56_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_121_21_121_56_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_121_41_121_56_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 121 43 ]
-        %tmp.108 = true;
-        lputv %has2.4 %tmp.108;
-        symbol [ has2 %has2.4 121 43 47 ];
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_121_41_121_56_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_121_21_121_56_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_121_21_121_56_if_end:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_120_16_121_56_if_end:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_119_40_122_12_stop:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_119_12_122_12_for_incr:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 119 ]
-        %tmp.111 = lgetv %f.5;
-        symbol [ f %tmp.111 119 35 36 ];
-        %tmp.112 = add %tmp.111 1;
-        lputv %f.5 %tmp.112;
-        symbol [ f %f.5 119 35 36 ];
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_119_12_122_12_for_test;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_119_12_122_12_for_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 123 12 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_123_19_123_41_begin:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_123_20_123_28_begin:
-        %tmp.113 = lgetv %has3.3;
-        symbol [ has3 %tmp.113 123 20 24 ];
-        bf %tmp.113 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_123_19_123_41_else_false;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_123_28_123_28_true:
-        %tmp.114 = lgetv %has2.4;
-        symbol [ has2 %tmp.114 123 28 32 ];
-        push %tmp.114;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_123_28_123_28_end:
-        %tmp.115 = phi [%tmp.113 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_123_20_123_28_begin] [%tmp.114 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_123_28_123_28_true] [%tmp.115 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_123_28_123_28_end];
-        bf %tmp.115 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_123_19_123_41_else_false;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_123_19_123_41_true:
-        %tmp.116 = 25;
-        push %tmp.116;
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_123_19_123_41_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_123_19_123_41_else_false:
-        %tmp.117 = 0;
-        push %tmp.117;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_123_19_123_41_end:
-        %tmp.118 = phi [%tmp.115 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_123_19_123_41_begin] [%tmp.116 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_123_19_123_41_true] [%tmp.117 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_123_19_123_41_else_false] [%tmp.118 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_123_19_123_41_end];
-        ret %tmp.118;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_115_30_124_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_115_8_124_8_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_115_8_124_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 125 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_125_8_127_8_if_stmt:
-        %tmp.119 = lgetv %cat;
-        symbol [ cat %tmp.119 125 12 15 ];
-        symbol [ DR_CAT_SS %tmp.121 125 19 28 ];
-        %tmp.121 = getv ? :DR_CAT_SS;
-        %tmp.122 = eq %tmp.119 %tmp.121;
-        bf %tmp.122 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_125_8_127_8_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_125_8_127_8_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_125_30_127_8_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 126 12 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_126_19_126_50_begin:
-        %tmp.123 = self;
-        symbol [ _hasStraight %tmp.124 126 19 31 ];
-        %tmp.124 = getv function %tmp.123 :_hasStraight;
-        %tmp.125 = lgetv %counts.1;
-        symbol [ counts %tmp.125 126 32 38 ];
-        %tmp.126 = 4;
-        %tmp.127 = invoke %tmp.123 %tmp.124(%tmp.125, %tmp.126);
-        bf %tmp.127 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_126_19_126_50_else_false;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_126_19_126_50_true:
-        %tmp.128 = 30;
-        push %tmp.128;
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_126_19_126_50_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_126_19_126_50_else_false:
-        %tmp.129 = 0;
-        push %tmp.129;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_126_19_126_50_end:
-        %tmp.130 = phi [%tmp.127 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_126_19_126_50_begin] [%tmp.128 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_126_19_126_50_true] [%tmp.129 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_126_19_126_50_else_false] [%tmp.130 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_126_19_126_50_end];
-        ret %tmp.130;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_125_30_127_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_125_8_127_8_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_125_8_127_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 128 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_128_8_130_8_if_stmt:
-        %tmp.131 = lgetv %cat;
-        symbol [ cat %tmp.131 128 12 15 ];
-        symbol [ DR_CAT_LS %tmp.133 128 19 28 ];
-        %tmp.133 = getv ? :DR_CAT_LS;
-        %tmp.134 = eq %tmp.131 %tmp.133;
-        bf %tmp.134 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_128_8_130_8_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_128_8_130_8_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_128_30_130_8_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 129 12 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_129_19_129_50_begin:
-        %tmp.135 = self;
-        symbol [ _hasStraight %tmp.136 129 19 31 ];
-        %tmp.136 = getv function %tmp.135 :_hasStraight;
-        %tmp.137 = lgetv %counts.1;
-        symbol [ counts %tmp.137 129 32 38 ];
-        %tmp.138 = 5;
-        %tmp.139 = invoke %tmp.135 %tmp.136(%tmp.137, %tmp.138);
-        bf %tmp.139 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_129_19_129_50_else_false;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_129_19_129_50_true:
-        %tmp.140 = 40;
-        push %tmp.140;
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_129_19_129_50_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_129_19_129_50_else_false:
-        %tmp.141 = 0;
-        push %tmp.141;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_129_19_129_50_end:
-        %tmp.142 = phi [%tmp.139 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_129_19_129_50_begin] [%tmp.140 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_129_19_129_50_true] [%tmp.141 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_129_19_129_50_else_false] [%tmp.142 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_129_19_129_50_end];
-        ret %tmp.142;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_128_30_130_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_128_8_130_8_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_128_8_130_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 131 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_131_8_131_48_if_stmt:
-        %tmp.143 = lgetv %cat;
-        symbol [ cat %tmp.143 131 12 15 ];
-        symbol [ DR_CAT_CHANCE %tmp.145 131 19 32 ];
-        %tmp.145 = getv ? :DR_CAT_CHANCE;
-        %tmp.146 = eq %tmp.143 %tmp.145;
-        bf %tmp.146 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_131_8_131_48_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_131_8_131_48_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_131_34_131_48_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 131 36 ]
-        %tmp.147 = lgetv %sum.2;
-        symbol [ sum %tmp.147 131 43 46 ];
-        ret %tmp.147;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_131_34_131_48_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_131_8_131_48_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_131_8_131_48_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 132 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_132_8_132_70_if_stmt:
-        %tmp.148 = lgetv %cat;
-        symbol [ cat %tmp.148 132 12 15 ];
-        symbol [ DR_CAT_YAHTZ %tmp.150 132 19 31 ];
-        %tmp.150 = getv ? :DR_CAT_YAHTZ;
-        %tmp.151 = eq %tmp.148 %tmp.150;
-        bf %tmp.151 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_132_8_132_70_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_132_8_132_70_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_132_34_132_70_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 132 36 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_132_43_132_67_begin:
-        %tmp.152 = self;
-        symbol [ _hasN %tmp.153 132 43 48 ];
-        %tmp.153 = getv function %tmp.152 :_hasN;
-        %tmp.154 = lgetv %counts.1;
-        symbol [ counts %tmp.154 132 49 55 ];
-        %tmp.155 = 5;
-        %tmp.156 = invoke %tmp.152 %tmp.153(%tmp.154, %tmp.155);
-        bf %tmp.156 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_132_43_132_67_else_false;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_132_43_132_67_true:
-        %tmp.157 = 50;
-        push %tmp.157;
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_132_43_132_67_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_132_43_132_67_else_false:
-        %tmp.158 = 0;
-        push %tmp.158;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_132_43_132_67_end:
-        %tmp.159 = phi [%tmp.156 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_132_43_132_67_begin] [%tmp.157 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_132_43_132_67_true] [%tmp.158 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_132_43_132_67_else_false] [%tmp.159 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_132_43_132_67_end];
-        ret %tmp.159;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_132_34_132_70_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_132_8_132_70_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_132_8_132_70_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 134 8 ]
-        %tmp.160 = 0;
-        ret %tmp.160;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_98_30_135_4_stop:
+    [ @file = "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc"; @line = 30; @symbol_functiondef = [saveHi,30,13,19]; ]
+    function saveHi() {
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_30_22_32_4_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 31 8 ]
+        try @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_8_31_73_beginTry @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_8_31_73_endTry @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_8_31_73_catch @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_8_31_73_finally;
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_8_31_73_beginTry:
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_12_31_59_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 31 14 ]
+        symbol [ Application %tmp.1 31 14 25 ];
+        %tmp.1 = getm $.Toybox.Application;
+        symbol [ Storage %tmp.2 31 26 33 ];
+        %tmp.2 = getv %tmp.1 :Storage;
+        symbol [ setValue %tmp.3 31 34 42 ];
+        %tmp.3 = getv function %tmp.2 :setValue;
+        symbol [ DR_HI_KEY %tmp.5 31 43 52 ];
+        %tmp.5 = getv ? :DR_HI_KEY;
+        symbol [ hi %tmp.7 31 54 56 ];
+        %tmp.7 = getv ? :hi;
+        invoke %tmp.2 %tmp.3(%tmp.5, %tmp.7);
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_12_31_59_stop:
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_8_31_73_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_8_31_73_finally;
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_8_31_73_end;
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_8_31_73_catch:
+        %tmp.8 = exception;
+        push %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 31 61 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_8_31_73_catch" "_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_61_31_73_end" ]
+        %e.1 = local;
+        symbol [ e %e.1 31 68 69 ];
+        %tmp.9 = dup %tmp.8;
+        lputv %e.1 %tmp.9;
+        symbol [ e %e.1 31 68 69 ];
+        jsr @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_8_31_73_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_8_31_73_end;
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_61_31_73_end:
+        try @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_8_31_73_catch @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_61_31_73_end @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_61_31_73_end @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_8_31_73_finally;
+        jsr @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_8_31_73_finally;
+        throw %tmp.8;
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_8_31_73_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_8_31_73_end:
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_30_22_32_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc"; @line = 137; @symbol_functiondef = [commit,137,13,19]; @symbol_param<0> = [cat,137,20,23]; @symbol_param<1> = [dice,137,25,29]; ]
-    function commit(cat, dice) {
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_137_31_144_4_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 138 8 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_138_8_138_56_if_stmt:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_138_12_138_41_begin:
-        %tmp.1 = self;
-        symbol [ isAvailable %tmp.2 138 13 24 ];
-        %tmp.2 = getv function %tmp.1 :isAvailable;
-        %tmp.3 = lgetv %cat;
-        symbol [ cat %tmp.3 138 25 28 ];
-        %tmp.4 = invoke %tmp.1 %tmp.2(%tmp.3);
-        %tmp.5 = not %tmp.4;
-        bt %tmp.5 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_138_8_138_56_if_true;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_138_33_138_41_false:
-        symbol [ used %tmp.7 138 33 37 ];
-        %tmp.7 = getv ? :used;
-        %tmp.8 = lgetv %cat;
-        symbol [ cat %tmp.8 138 38 41 ];
-        %tmp.9 = agetv %tmp.7 %tmp.8;
-        push %tmp.9;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_138_33_138_41_end:
-        %tmp.10 = phi [%tmp.5 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_138_12_138_41_begin] [%tmp.9 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_138_33_138_41_false] [%tmp.10 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_138_33_138_41_end];
-        bf %tmp.10 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_138_8_138_56_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_138_8_138_56_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_138_44_138_56_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 138 46 ]
-        %tmp.11 = 0;
-        ret %tmp.11;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_138_44_138_56_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_138_8_138_56_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_138_8_138_56_if_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 139 8 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_137_31_144_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_137_31_144_4_stop" ]
-        %s.1 = local;
-        symbol [ s %s.1 139 12 13 ];
-        %tmp.12 = self;
-        symbol [ score %tmp.13 139 20 25 ];
-        %tmp.13 = getv function %tmp.12 :score;
-        %tmp.14 = lgetv %cat;
-        symbol [ cat %tmp.14 139 26 29 ];
-        %tmp.15 = lgetv %dice;
-        symbol [ dice %tmp.15 139 31 35 ];
-        %tmp.16 = invoke %tmp.12 %tmp.13(%tmp.14, %tmp.15);
-        lputv %s.1 %tmp.16;
-        symbol [ s %s.1 139 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 140 8 ]
-        symbol [ values %tmp.17 140 8 14 ];
-        %tmp.17 = getv self :values;
-        %tmp.18 = lgetv %s.1;
-        symbol [ s %tmp.18 140 22 23 ];
-        %tmp.19 = lgetv %cat;
-        symbol [ cat %tmp.19 140 15 18 ];
-        aputv %tmp.17 %tmp.19 %tmp.18;
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 141 8 ]
-        symbol [ used %tmp.20 141 8 12 ];
-        %tmp.20 = getv self :used;
-        %tmp.21 = true;
-        %tmp.22 = lgetv %cat;
-        symbol [ cat %tmp.22 141 13 16 ];
-        aputv %tmp.20 %tmp.22 %tmp.21;
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 142 8 ]
-        symbol [ total %tmp.24 142 22 27 ];
-        %tmp.24 = getv ? :total;
-        %tmp.25 = lgetv %s.1;
-        symbol [ s %tmp.25 142 30 31 ];
-        %tmp.26 = add %tmp.24 %tmp.25;
-        symbol [ total ? 142 8 13 ];
-        putv self :total %tmp.26;
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 143 8 ]
-        %tmp.27 = lgetv %s.1;
-        symbol [ s %tmp.27 143 15 16 ];
-        ret %tmp.27;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_137_31_144_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc"; @line = 148; @symbol_functiondef = [_counts,148,20,27]; @symbol_param<0> = [dice,148,28,32]; ]
-    protected
-    function _counts(dice) {
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_148_34_155_4_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 149 8 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_148_34_155_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_148_34_155_4_stop" ]
-        %c.1 = local;
-        symbol [ c %c.1 149 12 13 ];
-        %tmp.1 = newa 6;
-        %tmp.2 = 0;
-        %tmp.3 = dup %tmp.1;
-        %tmp.4 = aputv %tmp.3 0 %tmp.2;
-        %tmp.5 = 0;
-        %tmp.6 = dup %tmp.4;
-        %tmp.7 = aputv %tmp.6 1 %tmp.5;
-        %tmp.8 = 0;
-        %tmp.9 = dup %tmp.7;
-        %tmp.10 = aputv %tmp.9 2 %tmp.8;
-        %tmp.11 = 0;
-        %tmp.12 = dup %tmp.10;
-        %tmp.13 = aputv %tmp.12 3 %tmp.11;
-        %tmp.14 = 0;
-        %tmp.15 = dup %tmp.13;
-        %tmp.16 = aputv %tmp.15 4 %tmp.14;
+    [ @file = "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc"; @line = 38; @symbol_functiondef = [registerChop,38,13,25]; @symbol_param<0> = [nowMs,38,26,31]; ]
+    function registerChop(nowMs) {
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_38_33_53_4_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 39 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_38_33_53_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_38_33_53_4_stop" ]
+        %dt.1 = local;
+        symbol [ dt %dt.1 39 12 14 ];
+        %tmp.1 = lgetv %nowMs;
+        symbol [ nowMs %tmp.1 39 17 22 ];
+        symbol [ _lastChopMs %tmp.3 39 25 36 ];
+        %tmp.3 = getv ? :_lastChopMs;
+        %tmp.4 = sub %tmp.1 %tmp.3;
+        lputv %dt.1 %tmp.4;
+        symbol [ dt %dt.1 39 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 40 8 ]
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_40_8_44_8_if_stmt:
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_40_12_40_28_begin:
+        %tmp.5 = lgetv %dt.1;
+        symbol [ dt %tmp.5 40 12 14 ];
+        %tmp.6 = 0;
+        %tmp.7 = gte %tmp.5 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_40_8_44_8_if_else_false;
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_40_23_40_28_true:
+        %tmp.8 = lgetv %dt.1;
+        symbol [ dt %tmp.8 40 23 25 ];
+        symbol [ COMBO_WINDOW_MS %tmp.10 40 28 43 ];
+        %tmp.10 = getv ? :COMBO_WINDOW_MS;
+        %tmp.11 = lt %tmp.8 %tmp.10;
+        push %tmp.11;
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_40_23_40_28_end:
+        %tmp.12 = phi [%tmp.7 @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_40_12_40_28_begin] [%tmp.11 @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_40_23_40_28_true] [%tmp.12 @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_40_23_40_28_end];
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_40_8_44_8_if_else_false;
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_40_8_44_8_if_true:
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_40_45_42_8_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 41 12 ]
+        symbol [ combo %tmp.14 41 20 25 ];
+        %tmp.14 = getv ? :combo;
+        %tmp.15 = 1;
+        %tmp.16 = add %tmp.14 %tmp.15;
+        symbol [ combo ? 41 12 17 ];
+        putv self :combo %tmp.16;
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_40_45_42_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_40_8_44_8_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_40_8_44_8_if_else_false:
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_42_15_44_8_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 43 12 ]
         %tmp.17 = 0;
-        %tmp.18 = dup %tmp.16;
-        %tmp.19 = aputv %tmp.18 5 %tmp.17;
-        lputv %c.1 %tmp.19;
-        symbol [ c %c.1 149 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 150 8 ]
-        for @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_150_8_153_8_for_test @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_150_8_153_8_for_incr @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_150_8_153_8_for_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_150_8_153_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_150_8_153_8_for_begin" "_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_150_8_153_8_for_end" ]
-        %i.2 = local;
-        symbol [ i %i.2 150 17 18 ];
-        %tmp.20 = 0;
-        lputv %i.2 %tmp.20;
-        symbol [ i %i.2 150 17 18 ];
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_150_8_153_8_for_test:
-        %tmp.21 = lgetv %i.2;
-        symbol [ i %tmp.21 150 24 25 ];
-        %tmp.22 = lgetv %dice;
-        symbol [ dice %tmp.22 150 28 32 ];
-        symbol [ size %tmp.23 150 33 37 ];
-        %tmp.23 = getv function %tmp.22 :size;
-        %tmp.24 = invoke %tmp.22 %tmp.23();
-        %tmp.25 = lt %tmp.21 %tmp.24;
-        bf %tmp.25 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_150_8_153_8_for_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_150_8_153_8_for_begin:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_150_46_153_8_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 151 12 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_150_46_153_8_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_150_46_153_8_stop" ]
-        %v.3 = local;
-        symbol [ v %v.3 151 16 17 ];
-        %tmp.26 = lgetv %dice;
-        symbol [ dice %tmp.26 151 20 24 ];
-        %tmp.27 = lgetv %i.2;
-        symbol [ i %tmp.27 151 25 26 ];
-        %tmp.28 = agetv %tmp.26 %tmp.27;
-        lputv %v.3 %tmp.28;
-        symbol [ v %v.3 151 16 17 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 152 12 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_152_12_152_61_if_stmt:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_152_16_152_31_begin:
-        %tmp.29 = lgetv %v.3;
-        symbol [ v %tmp.29 152 16 17 ];
-        %tmp.30 = 1;
-        %tmp.31 = gte %tmp.29 %tmp.30;
-        bf %tmp.31 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_152_12_152_61_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_152_26_152_31_true:
-        %tmp.32 = lgetv %v.3;
-        symbol [ v %tmp.32 152 26 27 ];
-        %tmp.33 = 6;
-        %tmp.34 = lte %tmp.32 %tmp.33;
-        push %tmp.34;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_152_26_152_31_end:
-        %tmp.35 = phi [%tmp.31 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_152_16_152_31_begin] [%tmp.34 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_152_26_152_31_true] [%tmp.35 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_152_26_152_31_end];
-        bf %tmp.35 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_152_12_152_61_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_152_12_152_61_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_152_34_152_61_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 152 36 ]
-        %tmp.36 = lgetv %c.1;
-        symbol [ c %tmp.36 152 36 37 ];
-        %tmp.37 = lgetv %c.1;
-        symbol [ c %tmp.37 152 47 48 ];
-        %tmp.38 = lgetv %v.3;
-        symbol [ v %tmp.38 152 49 50 ];
-        %tmp.39 = 1;
-        %tmp.40 = sub %tmp.38 %tmp.39;
-        %tmp.41 = agetv %tmp.37 %tmp.40;
-        %tmp.42 = 1;
-        %tmp.43 = add %tmp.41 %tmp.42;
-        %tmp.44 = lgetv %v.3;
-        symbol [ v %tmp.44 152 38 39 ];
-        %tmp.45 = 1;
-        %tmp.46 = sub %tmp.44 %tmp.45;
-        aputv %tmp.36 %tmp.46 %tmp.43;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_152_34_152_61_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_152_12_152_61_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_152_12_152_61_if_end:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_150_46_153_8_stop:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_150_8_153_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 150 ]
-        %tmp.49 = lgetv %i.2;
-        symbol [ i %tmp.49 150 41 42 ];
-        %tmp.50 = add %tmp.49 1;
-        lputv %i.2 %tmp.50;
-        symbol [ i %i.2 150 41 42 ];
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_150_8_153_8_for_test;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_150_8_153_8_for_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 154 8 ]
-        %tmp.51 = lgetv %c.1;
-        symbol [ c %tmp.51 154 15 16 ];
-        ret %tmp.51;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_148_34_155_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc"; @line = 156; @symbol_functiondef = [_sum,156,20,24]; @symbol_param<0> = [dice,156,25,29]; ]
-    protected
-    function _sum(dice) {
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_156_31_160_4_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 157 8 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_156_31_160_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_156_31_160_4_stop" ]
-        %s.1 = local;
-        symbol [ s %s.1 157 12 13 ];
-        %tmp.1 = 0;
-        lputv %s.1 %tmp.1;
-        symbol [ s %s.1 157 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 158 8 ]
-        for @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_158_8_158_65_for_test @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_158_8_158_65_for_incr @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_158_8_158_65_for_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_158_8_158_65_for_init:
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_158_8_158_65_for_begin" "_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_158_8_158_65_for_end" ]
-        %i.2 = local;
-        symbol [ i %i.2 158 17 18 ];
-        %tmp.2 = 0;
-        lputv %i.2 %tmp.2;
-        symbol [ i %i.2 158 17 18 ];
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_158_8_158_65_for_test:
-        %tmp.3 = lgetv %i.2;
-        symbol [ i %tmp.3 158 24 25 ];
-        %tmp.4 = lgetv %dice;
-        symbol [ dice %tmp.4 158 28 32 ];
-        symbol [ size %tmp.5 158 33 37 ];
-        %tmp.5 = getv function %tmp.4 :size;
-        %tmp.6 = invoke %tmp.4 %tmp.5();
-        %tmp.7 = lt %tmp.3 %tmp.6;
-        bf %tmp.7 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_158_8_158_65_for_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_158_8_158_65_for_begin:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_158_46_158_65_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 158 48 ]
-        %tmp.8 = lgetv %s.1;
-        symbol [ s %tmp.8 158 52 53 ];
-        %tmp.9 = lgetv %dice;
-        symbol [ dice %tmp.9 158 56 60 ];
-        %tmp.10 = lgetv %i.2;
-        symbol [ i %tmp.10 158 61 62 ];
-        %tmp.11 = agetv %tmp.9 %tmp.10;
-        %tmp.12 = add %tmp.8 %tmp.11;
-        lputv %s.1 %tmp.12;
-        symbol [ s %s.1 158 48 49 ];
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_158_46_158_65_stop:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_158_8_158_65_for_incr:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 158 ]
-        %tmp.15 = lgetv %i.2;
-        symbol [ i %tmp.15 158 41 42 ];
-        %tmp.16 = add %tmp.15 1;
-        lputv %i.2 %tmp.16;
-        symbol [ i %i.2 158 41 42 ];
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_158_8_158_65_for_test;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_158_8_158_65_for_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 159 8 ]
-        %tmp.17 = lgetv %s.1;
-        symbol [ s %tmp.17 159 15 16 ];
-        ret %tmp.17;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_156_31_160_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc"; @line = 161; @symbol_functiondef = [_hasN,161,20,25]; @symbol_param<0> = [counts,161,26,32]; @symbol_param<1> = [n,161,34,35]; ]
-    protected
-    function _hasN(counts, n) {
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_161_37_164_4_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 162 8 ]
-        for @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_162_8_162_75_for_test @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_162_8_162_75_for_incr @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_162_8_162_75_for_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_162_8_162_75_for_init:
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_162_8_162_75_for_begin" "_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_162_8_162_75_for_end" ]
-        %i.1 = local;
-        symbol [ i %i.1 162 17 18 ];
-        %tmp.1 = 0;
-        lputv %i.1 %tmp.1;
-        symbol [ i %i.1 162 17 18 ];
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_162_8_162_75_for_test:
-        %tmp.2 = lgetv %i.1;
-        symbol [ i %tmp.2 162 24 25 ];
-        %tmp.3 = 6;
-        %tmp.4 = lt %tmp.2 %tmp.3;
-        bf %tmp.4 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_162_8_162_75_for_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_162_8_162_75_for_begin:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_162_36_162_75_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 162 38 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_162_38_162_73_if_stmt:
-        %tmp.5 = lgetv %counts;
-        symbol [ counts %tmp.5 162 42 48 ];
-        %tmp.6 = lgetv %i.1;
-        symbol [ i %tmp.6 162 49 50 ];
-        %tmp.7 = agetv %tmp.5 %tmp.6;
-        %tmp.8 = lgetv %n;
-        symbol [ n %tmp.8 162 55 56 ];
-        %tmp.9 = gte %tmp.7 %tmp.8;
-        bf %tmp.9 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_162_38_162_73_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_162_38_162_73_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_162_58_162_73_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 162 60 ]
-        %tmp.10 = true;
-        ret %tmp.10;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_162_58_162_73_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_162_38_162_73_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_162_38_162_73_if_end:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_162_36_162_75_stop:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_162_8_162_75_for_incr:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 162 ]
-        %tmp.13 = lgetv %i.1;
-        symbol [ i %tmp.13 162 31 32 ];
-        %tmp.14 = add %tmp.13 1;
-        lputv %i.1 %tmp.14;
-        symbol [ i %i.1 162 31 32 ];
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_162_8_162_75_for_test;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_162_8_162_75_for_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 163 8 ]
-        %tmp.15 = false;
-        ret %tmp.15;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_161_37_164_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc"; @line = 166; @symbol_functiondef = [_hasStraight,166,20,32]; @symbol_param<0> = [counts,166,33,39]; @symbol_param<1> = [len,166,41,44]; ]
-    protected
-    function _hasStraight(counts, len) {
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_166_46_178_4_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 167 8 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_166_46_178_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_166_46_178_4_stop" ]
-        %run.1 = local;
-        symbol [ run %run.1 167 12 15 ];
-        %tmp.1 = 0;
-        lputv %run.1 %tmp.1;
-        symbol [ run %run.1 167 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 168 8 ]
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_166_46_178_4_start" "_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_166_46_178_4_stop" ]
-        %best.2 = local;
-        symbol [ best %best.2 168 12 16 ];
-        %tmp.2 = 0;
-        lputv %best.2 %tmp.2;
-        symbol [ best %best.2 168 12 16 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 169 8 ]
-        for @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_169_8_176_8_for_test @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_169_8_176_8_for_incr @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_169_8_176_8_for_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_169_8_176_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_169_8_176_8_for_begin" "_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_169_8_176_8_for_end" ]
-        %i.3 = local;
-        symbol [ i %i.3 169 17 18 ];
-        %tmp.3 = 0;
-        lputv %i.3 %tmp.3;
-        symbol [ i %i.3 169 17 18 ];
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_169_8_176_8_for_test:
-        %tmp.4 = lgetv %i.3;
-        symbol [ i %tmp.4 169 24 25 ];
-        %tmp.5 = 6;
-        %tmp.6 = lt %tmp.4 %tmp.5;
-        bf %tmp.6 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_169_8_176_8_for_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_169_8_176_8_for_begin:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_169_36_176_8_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 170 12 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_170_12_175_12_if_stmt:
-        %tmp.7 = lgetv %counts;
-        symbol [ counts %tmp.7 170 16 22 ];
-        %tmp.8 = lgetv %i.3;
-        symbol [ i %tmp.8 170 23 24 ];
-        %tmp.9 = agetv %tmp.7 %tmp.8;
-        %tmp.10 = 0;
-        %tmp.11 = gt %tmp.9 %tmp.10;
-        bf %tmp.11 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_170_12_175_12_if_else_false;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_170_12_175_12_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_170_31_173_12_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 171 16 ]
-        %tmp.12 = lgetv %run.1;
-        symbol [ run %tmp.12 171 22 25 ];
-        %tmp.13 = 1;
-        %tmp.14 = add %tmp.12 %tmp.13;
-        lputv %run.1 %tmp.14;
-        symbol [ run %run.1 171 16 19 ];
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 172 16 ]
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_172_16_172_46_if_stmt:
-        %tmp.15 = lgetv %run.1;
-        symbol [ run %tmp.15 172 20 23 ];
-        %tmp.16 = lgetv %best.2;
-        symbol [ best %tmp.16 172 26 30 ];
-        %tmp.17 = gt %tmp.15 %tmp.16;
-        bf %tmp.17 @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_172_16_172_46_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_172_16_172_46_if_true:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_172_32_172_46_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 172 34 ]
-        %tmp.18 = lgetv %run.1;
-        symbol [ run %tmp.18 172 41 44 ];
-        lputv %best.2 %tmp.18;
-        symbol [ best %best.2 172 34 38 ];
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_172_32_172_46_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_172_16_172_46_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_172_16_172_46_if_end:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_170_31_173_12_stop:
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_170_12_175_12_if_end;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_170_12_175_12_if_else_false:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_173_19_175_12_start:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 174 16 ]
-        %tmp.19 = 0;
-        lputv %run.1 %tmp.19;
-        symbol [ run %run.1 174 16 19 ];
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_173_19_175_12_stop:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_170_12_175_12_if_end:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_169_36_176_8_stop:
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_169_8_176_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 169 ]
-        %tmp.22 = lgetv %i.3;
-        symbol [ i %tmp.22 169 31 32 ];
-        %tmp.23 = add %tmp.22 1;
-        lputv %i.3 %tmp.23;
-        symbol [ i %i.3 169 31 32 ];
-        goto @_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_169_8_176_8_for_test;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_169_8_176_8_for_end:
-[ "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc" 177 8 ]
-        %tmp.24 = lgetv %best.2;
-        symbol [ best %tmp.24 177 15 19 ];
-        %tmp.25 = lgetv %len;
-        symbol [ len %tmp.25 177 23 26 ];
-        %tmp.26 = gte %tmp.24 %tmp.25;
-        ret %tmp.26;
-_Users_kkorolczuk_work_garmin_diceroyale_source_ScoreSystem_mc_166_46_178_4_stop:
+        symbol [ combo ? 43 12 17 ];
+        putv self :combo %tmp.17;
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_42_15_44_8_stop:
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_40_8_44_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 45 8 ]
+        %tmp.18 = lgetv %nowMs;
+        symbol [ nowMs %tmp.18 45 22 27 ];
+        symbol [ _lastChopMs ? 45 8 19 ];
+        putv self :_lastChopMs %tmp.18;
+[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 47 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_38_33_53_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_38_33_53_4_stop" ]
+        %bonus.2 = local;
+        symbol [ bonus %bonus.2 47 12 17 ];
+        symbol [ combo %tmp.20 47 20 25 ];
+        %tmp.20 = getv ? :combo;
+        lputv %bonus.2 %tmp.20;
+        symbol [ bonus %bonus.2 47 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 48 8 ]
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_48_8_48_52_if_stmt:
+        %tmp.21 = lgetv %bonus.2;
+        symbol [ bonus %tmp.21 48 12 17 ];
+        symbol [ COMBO_CAP %tmp.23 48 20 29 ];
+        %tmp.23 = getv ? :COMBO_CAP;
+        %tmp.24 = gt %tmp.21 %tmp.23;
+        bf %tmp.24 @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_48_8_48_52_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_48_8_48_52_if_true:
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_48_31_48_52_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 48 33 ]
+        symbol [ COMBO_CAP %tmp.26 48 41 50 ];
+        %tmp.26 = getv ? :COMBO_CAP;
+        lputv %bonus.2 %tmp.26;
+        symbol [ bonus %bonus.2 48 33 38 ];
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_48_31_48_52_stop:
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_48_8_48_52_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_48_8_48_52_if_end:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 49 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_38_33_53_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_38_33_53_4_stop" ]
+        %pts.3 = local;
+        symbol [ pts %pts.3 49 12 15 ];
+        %tmp.27 = 1;
+        %tmp.28 = lgetv %bonus.2;
+        symbol [ bonus %tmp.28 49 22 27 ];
+        %tmp.29 = add %tmp.27 %tmp.28;
+        lputv %pts.3 %tmp.29;
+        symbol [ pts %pts.3 49 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 50 8 ]
+        symbol [ score %tmp.31 50 16 21 ];
+        %tmp.31 = getv ? :score;
+        %tmp.32 = lgetv %pts.3;
+        symbol [ pts %tmp.32 50 24 27 ];
+        %tmp.33 = add %tmp.31 %tmp.32;
+        symbol [ score ? 50 8 13 ];
+        putv self :score %tmp.33;
+[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 51 8 ]
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_51_8_51_38_if_stmt:
+        symbol [ score %tmp.35 51 12 17 ];
+        %tmp.35 = getv ? :score;
+        symbol [ hi %tmp.37 51 20 22 ];
+        %tmp.37 = getv ? :hi;
+        %tmp.38 = gt %tmp.35 %tmp.37;
+        bf %tmp.38 @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_51_8_51_38_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_51_8_51_38_if_true:
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_51_24_51_38_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 51 26 ]
+        symbol [ score %tmp.40 51 31 36 ];
+        %tmp.40 = getv ? :score;
+        symbol [ hi ? 51 26 28 ];
+        putv self :hi %tmp.40;
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_51_24_51_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_51_8_51_38_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_51_8_51_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 52 8 ]
+        %tmp.41 = lgetv %pts.3;
+        symbol [ pts %tmp.41 52 15 18 ];
+        ret %tmp.41;
+_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_38_33_53_4_stop:
     }
 }
-[ @file = "/Users/kkorolczuk/work/garmin/diceroyale/source/ScoreSystem.mc"; @line = 24; ]
+[ @file = "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc"; @line = 4; ]
 <init> {
 }

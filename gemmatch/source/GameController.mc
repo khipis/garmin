@@ -28,7 +28,18 @@
 //   ANIM_SWAP   gems sliding (ANIM_SWAP_FRAMES × 50 ms).
 //               animReverse=false = forward; true = bounce-back.
 //   ANIM_FLASH  matched gems glowing (ANIM_FLASH_FRAMES × 50 ms)
-//               before the cascade executes.
+//               before they clear.
+//   ANIM_FALL   gravity-fallen + freshly-spawned gems tumbling into
+//               place (ANIM_FALL_FRAMES × 50 ms). Once settled, the
+//               board is rescanned — a new match flips back to
+//               ANIM_FLASH, so FLASH→FALL→FLASH→… is the visible
+//               chain-reaction loop the player watches play out.
+//
+// Power gems: any match of 4+ leaves one BOMB gem behind (see
+// Tile.TILE_BOMB). Clearing a bomb (via a later match, a chain blast,
+// or swapping directly into it) detonates a 3×3 area — which can
+// catch further bombs and keep the chain going (MatchEngine handles
+// the propagation via expandBombChains()).
 // ═══════════════════════════════════════════════════════════════
 
 using Toybox.System;
@@ -54,9 +65,11 @@ const LB_GAME_ID = "gemmatch";
 const ANIM_NONE  = 0;
 const ANIM_SWAP  = 1;
 const ANIM_FLASH = 2;
+const ANIM_FALL  = 3;
 
 const ANIM_SWAP_FRAMES  = 4;   // 4 × 50 ms = 200 ms
 const ANIM_FLASH_FRAMES = 5;   // 5 × 50 ms = 250 ms
+const ANIM_FALL_FRAMES  = 6;   // 6 × 50 ms = 300 ms
 
 class GameController {
 
@@ -108,6 +121,14 @@ class GameController {
     var msg;
     var invalidFlash;  // frames for red cursor on bad swap
 
+    // Chain-reaction feedback
+    var cascadeDepth;    // current chain depth within the active cascade
+    var bestChainRun;    // longest chain reached so far this run
+    var bombsPopped;     // bombs detonated so far this run
+    var chainPopT;       // ms remaining for the floating "+score" popup
+    var boomT;           // ms remaining for the big "BOOM!" banner
+    var shakeT;          // frames of screen shake remaining
+
     // Animation state
     var animState;
     var animFrame;
@@ -116,6 +137,7 @@ class GameController {
     var animR2; var animC2;
     var animGem1; var animGem2;
     var animMarks;
+    var fallFrom;      // Int[rows*cols] — per-cell source row during ANIM_FALL
 
     function initialize() {
         state    = GS_MENU;
@@ -147,6 +169,13 @@ class GameController {
         msg            = "";
         invalidFlash   = 0;
 
+        cascadeDepth = 0;
+        bestChainRun = 0;
+        bombsPopped  = 0;
+        chainPopT    = 0;
+        boomT        = 0;
+        shakeT       = 0;
+
         animState   = ANIM_NONE;
         animFrame   = 0;
         animReverse = false;
@@ -154,6 +183,7 @@ class GameController {
         animR2 = 0; animC2 = 0;
         animGem1 = 0; animGem2 = 0;
         animMarks = null;
+        fallFrom  = new [grid.rows * grid.cols];
 
         // Restore last-used settings
         var gm = _load("gm_mode"); if (gm >= 0 && gm < 3)            { gameMode = gm; }
@@ -260,6 +290,12 @@ class GameController {
         msgT           = 0;
         msg            = "";
         invalidFlash   = 0;
+        cascadeDepth   = 0;
+        bestChainRun   = 0;
+        bombsPopped    = 0;
+        chainPopT      = 0;
+        boomT          = 0;
+        shakeT         = 0;
         animState      = ANIM_NONE;
         animFrame      = 0;
         animReverse    = false;
@@ -303,12 +339,17 @@ class GameController {
         } else if (animState == ANIM_FLASH) {
             animFrame = animFrame + 1;
             if (animFrame >= ANIM_FLASH_FRAMES) {
-                _resolveMatchesAndCascade();
-                animState = ANIM_NONE;
-                animFrame = 0;
-                animMarks = null;
+                _clearAndDrop();
+            }
+        } else if (animState == ANIM_FALL) {
+            animFrame = animFrame + 1;
+            if (animFrame >= ANIM_FALL_FRAMES) {
+                _afterFall();
             }
         }
+        if (shakeT > 0)   { shakeT = shakeT - 1; }
+        if (boomT > 0)    { boomT = boomT - 50; if (boomT < 0) { boomT = 0; } }
+        if (chainPopT > 0){ chainPopT = chainPopT - 50; if (chainPopT < 0) { chainPopT = 0; } }
 
         // ── Game clock ────────────────────────────────────────────────
         if (state != GS_PLAY) { return; }
@@ -327,7 +368,13 @@ class GameController {
 
     hidden function _finishSwapIn() {
         grid.swap(animR1, animC1, animR2, animC2);
-        if (!engine.anyMatch(grid)) {
+        var t1 = grid.get(animR1, animC1);
+        var t2 = grid.get(animR2, animC2);
+        // Swapping directly into a bomb always detonates it, even if the
+        // swap alone wouldn't otherwise form a match — a deliberate,
+        // rewarding "power move" for the player.
+        var bombSwap = (t1 == TILE_BOMB || t2 == TILE_BOMB);
+        if (!bombSwap && !engine.anyMatch(grid)) {
             grid.swap(animR1, animC1, animR2, animC2);
             animReverse  = true;
             animFrame    = 0;
@@ -339,29 +386,83 @@ class GameController {
             movesLeft = movesLeft - 1;
             if (movesLeft < 0) { movesLeft = 0; }
         }
-        engine.markOnly(grid);
+        cascadeDepth = 0;
+        if (bombSwap) {
+            _prepMarks(animR1, animC1, animR2, animC2);
+        } else {
+            _prepMarks(-1, -1, -1, -1);
+        }
         animMarks = engine.getMarks();
         animState = ANIM_FLASH;
         animFrame = 0;
     }
 
-    hidden function _resolveMatchesAndCascade() {
-        var depth      = 0;
-        var totalAdded = 0;
-        while (true) {
-            var cleared = engine.findAndClear(grid);
-            if (cleared <= 0) { break; }
-            depth      = depth + 1;
-            totalAdded = totalAdded + cleared * 10 * depth;
-            grid.applyGravity();
-            grid.refill();
-            if (depth >= 8) { break; }
+    // Rescans for matches, optionally detonating a directly-swapped bomb
+    // first, then lets any bomb adjacent to the resulting marks chain-blast
+    // too. Leaves the final marks in engine.getMarks().
+    hidden function _prepMarks(bR1, bC1, bR2, bC2) {
+        engine.markOnly(grid);
+        if (bR1 >= 0) { engine.markBombBlast(grid, bR1, bC1); }
+        if (bR2 >= 0) { engine.markBombBlast(grid, bR2, bC2); }
+        engine.expandBombChains(grid);
+    }
+
+    // Flash phase finished — clear the marked cells (bomb-spawns survive
+    // as new bombs), score the step, then animate gravity/refill.
+    hidden function _clearAndDrop() {
+        var total   = grid.rows * grid.cols;
+        var marks   = engine.getMarks();
+        var boomed  = false;
+        for (var i = 0; i < total; i++) {
+            if (marks[i] && grid.cells[i] == TILE_BOMB) { boomed = true; break; }
         }
-        score          = score + totalAdded;
-        lastCascade    = depth;
-        lastClearScore = totalAdded;
-        msgT           = 2500;
-        msg            = (depth >= 2) ? ("CASCADE x" + depth.format("%d")) : "";
+
+        var cleared = engine.clearMarked(grid);
+        cascadeDepth   = cascadeDepth + 1;
+        var added      = cleared * 10 * cascadeDepth;
+        score          = score + added;
+        lastClearScore = added;
+        chainPopT      = 700;
+
+        if (boomed) {
+            bombsPopped = bombsPopped + 1;
+            boomT  = 650;
+            shakeT = 14;
+        } else if (cascadeDepth >= 3) {
+            shakeT = 4 + cascadeDepth; if (shakeT > 12) { shakeT = 12; }
+        }
+
+        if (fallFrom == null || fallFrom.size() != total) { fallFrom = new [total]; }
+        for (var i2 = 0; i2 < total; i2++) { fallFrom[i2] = i2 / grid.cols; }
+        grid.applyGravityAnimated(fallFrom);
+        grid.refillAnimated(fallFrom);
+
+        animMarks = null;
+        animState = ANIM_FALL;
+        animFrame = 0;
+    }
+
+    // Gems have settled — rescan. A new match (or a bomb chaining off the
+    // settled board) loops back to ANIM_FLASH; otherwise the cascade ends.
+    hidden function _afterFall() {
+        _prepMarks(-1, -1, -1, -1);
+        var marks = engine.getMarks();
+        var total = grid.rows * grid.cols;
+        var any   = false;
+        for (var i = 0; i < total; i++) { if (marks[i]) { any = true; break; } }
+
+        if (any) {
+            animMarks = marks;
+            animState = ANIM_FLASH;
+            animFrame = 0;
+            return;
+        }
+
+        // Cascade sequence finished.
+        if (cascadeDepth > bestChainRun) { bestChainRun = cascadeDepth; }
+        lastCascade = cascadeDepth;
+        msgT = 2500;
+        msg  = (cascadeDepth >= 2) ? ("CHAIN x" + cascadeDepth.format("%d")) : "";
 
         var safety = 0;
         while (!grid.hasAnyValidMove() && safety < 4) {
@@ -369,6 +470,9 @@ class GameController {
             while (engine.findAndClear(grid) > 0) { grid.applyGravity(); grid.refill(); }
             safety = safety + 1;
         }
+
+        animState = ANIM_NONE;
+        animFrame = 0;
 
         // Moves mode: end game when all moves are spent
         if (gameMode == GM_MOVES && movesLeft <= 0) { _endGame(); }
@@ -386,8 +490,11 @@ class GameController {
     hidden function _endGame() {
         state = GS_OVER;
         _updateBest();
-        // Submit the finished round's score to the global leaderboard.
+        // Submit the finished round's score to the global leaderboard,
+        // plus the fun secondary chain-reaction stats for this run.
         Leaderboard.submitScore(LB_GAME_ID, score, "");
+        if (bestChainRun > 0) { Leaderboard.submitScore(LB_GAME_ID, bestChainRun, "chain"); }
+        if (bombsPopped  > 0) { Leaderboard.submitScore(LB_GAME_ID, bombsPopped,  "bombs"); }
         Leaderboard.showPostGame(LB_GAME_ID, "", "GEM MATCH");
     }
 

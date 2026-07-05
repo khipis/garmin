@@ -13,6 +13,9 @@
 //   1 MOVING    — slides horizontally with bounce off bounds
 //   2 BREAKABLE — vanishes after first bounce
 //   3 SPRING    — launches the player with a stronger jump (1.5×)
+//   4 JETPACK   — grants a few seconds of flight straight through
+//                 everything above (rare; only past the early
+//                 tutorial difficulty bucket)
 //
 // Collision rule
 //   Bounce only when the player is FALLING (vy >= 0) and the player's
@@ -20,6 +23,15 @@
 //   tick that crosses the boundary. This matches Doodle Jump's feel
 //   — the frog passes UP through platforms but lands on them when
 //   coming back down.
+//
+// Coins
+//   Each platform slot optionally carries ONE floating coin, parked
+//   roughly at the apex of the jump arc leading up to it so it's
+//   naturally in the player's path without any extra steering.
+//   Collection uses the same swept-crossing idea as the platform
+//   bounce test, checked independently of the falling/rising gate so
+//   coins can be grabbed on the way up (the common case) as well as
+//   the way down.
 // ═══════════════════════════════════════════════════════════════
 
 using Toybox.Math;
@@ -30,6 +42,7 @@ const PT_NORMAL    = 0;
 const PT_MOVING    = 1;
 const PT_BREAKABLE = 2;
 const PT_SPRING    = 3;
+const PT_JETPACK   = 4;
 
 class Platform {
     var x;         // left edge
@@ -38,8 +51,16 @@ class Platform {
     var type;
     var alive;
     var vx;        // for moving platforms
+
+    // Coin — floats above this platform; independent alive flag so it
+    // can be collected without touching the platform itself.
+    var coinAlive;
+    var coinX;
+    var coinY;
+
     function initialize() {
         x = 0; y = 0; w = 50; type = PT_NORMAL; alive = false; vx = 0.0;
+        coinAlive = false; coinX = 0; coinY = 0;
     }
 }
 
@@ -51,6 +72,7 @@ class PlatformManager {
     var platW;
     var platH;
     var verticalGap;   // average vertical spacing between platforms
+    var coinR;         // coin collision/render radius
 
     function initialize() {
         plats = new [MAX_PLATFORMS];
@@ -60,6 +82,7 @@ class PlatformManager {
         platW     = 50;
         platH     = 6;
         verticalGap = 42;
+        coinR     = 5;
     }
 
     function setBounds(w, pW, pH, gap) {
@@ -69,10 +92,14 @@ class PlatformManager {
         platW     = pW;
         platH     = pH;
         verticalGap = gap;
+        coinR     = pH; if (coinR < 4) { coinR = 4; }
     }
 
     function reset() {
-        for (var i = 0; i < MAX_PLATFORMS; i++) { plats[i].alive = false; }
+        for (var i = 0; i < MAX_PLATFORMS; i++) {
+            plats[i].alive     = false;
+            plats[i].coinAlive = false;
+        }
     }
 
     // Spawn the initial ladder of platforms starting from a known
@@ -91,6 +118,7 @@ class PlatformManager {
                 p.type = PT_NORMAL;
                 p.alive = true;
                 p.vx = 0.0;
+                p.coinAlive = false;
             } else {
                 _spawnAt(p, y, difficulty);
                 // First few rungs are always NORMAL so the player has
@@ -117,7 +145,7 @@ class PlatformManager {
     }
 
     // Collision: returns [hitType, platformTopY].
-    //   hitType: 0 = no bounce, 1 = normal bounce, 2 = spring.
+    //   hitType: 0 = no bounce, 1 = normal bounce, 2 = spring, 3 = jetpack.
     //   platformTopY: the y of the platform that was hit (used by
     //                 GameController to snap the player's feet so
     //                 the next tick starts cleanly above the rail).
@@ -169,7 +197,33 @@ class PlatformManager {
         if (bestType == PT_SPRING) {
             return [2, bestY];
         }
+        if (bestType == PT_JETPACK) {
+            return [3, bestY];
+        }
         return [1, bestY];
+    }
+
+    // Coin collection — independent of the falling/rising gate so
+    // coins are grabbable on the way up (the usual case, right at the
+    // peak of a jump) as well as the way down. Swept against the
+    // player's previous/current feet-y so fast ticks don't skip a
+    // coin sitting between two frames. Returns the number collected
+    // this tick (0 or 1 in virtually every real case).
+    function collectCoins(playerLeft, playerRight, playerYPrev, playerYNow) {
+        var lo = playerYPrev; var hi = playerYNow;
+        if (lo > hi) { var t = lo; lo = hi; hi = t; }
+        lo = lo - coinR; hi = hi + coinR;
+        var got = 0;
+        for (var i = 0; i < MAX_PLATFORMS; i++) {
+            var p = plats[i];
+            if (!p.alive || !p.coinAlive) { continue; }
+            if (p.coinX + coinR < playerLeft || p.coinX - coinR > playerRight) { continue; }
+            if (p.coinY >= lo && p.coinY <= hi) {
+                p.coinAlive = false;
+                got = got + 1;
+            }
+        }
+        return got;
     }
 
     // Called by GameController when the camera scrolls upward — apply the
@@ -220,11 +274,16 @@ class PlatformManager {
             var brk = 3 + d * 3;   if (brk > 30) { brk = 30; }
             var mov = 5 + d * 4;   if (mov > 35) { mov = 35; }
             var spr = 5;
-            if (r < spr) {
+            // Jetpack — rare treat, gated off the easy bucket so new
+            // players see the core bounce loop before flight shows up.
+            var jet = (d >= 3) ? 3 : 0;
+            if (r < jet) {
+                p.type = PT_JETPACK;
+            } else if (r < jet + spr) {
                 p.type = PT_SPRING;
-            } else if (r < spr + brk) {
+            } else if (r < jet + spr + brk) {
                 p.type = PT_BREAKABLE;
-            } else if (r < spr + brk + mov) {
+            } else if (r < jet + spr + brk + mov) {
                 p.type = PT_MOVING;
                 p.vx   = ((Math.rand() % 2 == 0) ? -1 : 1) * (1.0 + d * 0.1);
                 if (p.vx >  2.4) { p.vx =  2.4; }
@@ -232,6 +291,19 @@ class PlatformManager {
             } else {
                 p.type = PT_NORMAL;
             }
+        }
+
+        // Coin — floats near the apex of the jump arc leading up to
+        // this platform (roughly half the vertical gap above it), so
+        // grabbing it is a natural side-effect of the climb rather
+        // than a detour. ~38% of rungs carry one.
+        if ((Math.rand() % 100) < 38) {
+            p.coinAlive = true;
+            var cSpan = p.w - coinR * 2; if (cSpan < 2) { cSpan = 2; }
+            p.coinX = p.x + coinR + (Math.rand() % cSpan);
+            p.coinY = p.y - (verticalGap / 2);
+        } else {
+            p.coinAlive = false;
         }
     }
 }

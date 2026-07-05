@@ -40,13 +40,17 @@ class LbSubmitter {
     hidden var _user;
     hidden var _score;
     hidden var _variant;
+    hidden var _meta;
     hidden var _attempt;
     hidden var _timer;
 
     function initialize() { _attempt = 0; _timer = null; }
 
-    function send(game, user, score, variant) {
-        _game = game; _user = user; _score = score; _variant = variant;
+    // meta is an optional Lang.Dictionary of small extra fields (e.g. species,
+    // rarity) stored alongside the score as a JSON blob — used by games that
+    // want a richer "trophy" leaderboard entry. Pass null when not needed.
+    function send(game, user, score, variant, meta) {
+        _game = game; _user = user; _score = score; _variant = variant; _meta = meta;
         _attempt = 0;
         _doSend();
     }
@@ -60,6 +64,9 @@ class LbSubmitter {
         };
         if (_variant != null && _variant.length() > 0) {
             body["variant"] = _variant;
+        }
+        if (_meta != null) {
+            body["meta"] = _meta;
         }
         var opts = {
             :method       => Communications.HTTP_REQUEST_METHOD_POST,

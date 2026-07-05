@@ -36,6 +36,17 @@ class BitochiFishView extends WatchUi.View {
     hidden var _fishPullDir; hidden var _fishPullTimer;
     hidden var _fishHP; hidden var _fishMaxHP;
 
+    // Rarity roll (0 Runt, 1 Normal, 2 Big, 3 GIANT) — assigned per hooked fish
+    // at spawnFish() time. Feeds weight/size/strength variance and the shiny
+    // golden-tint visual for the rare GIANT tier.
+    hidden var _fishRarity;
+
+    // Lifetime "biggest fish ever caught" record — persisted locally and
+    // mirrored to the global "biggest-fish" leaderboard variant (with a small
+    // meta blob so the web board can render a graphical fish avatar).
+    hidden var _bestFishWeight; hidden var _bestFishType; hidden var _bestFishRarity;
+    hidden var _newBigFish;   // true this catch beat the lifetime record
+
     hidden var _fightCursor;    // -100..+100 tug-of-war position
 
     hidden var _tension; hidden var _maxTension;
@@ -88,12 +99,20 @@ class BitochiFishView extends WatchUi.View {
         _fishType = 0; _fishSize = 8; _fishStr = 1.0; _fishWeight = 0;
         _fishPullDir = 30.0; _fishPullTimer = 0;
         _fishHP = 100.0; _fishMaxHP = 100.0;
+        _fishRarity = 1;
         _fightCursor = 0.0;
         _tension = 0.0; _maxTension = 100.0;
         _reelProg = 0.0; _reelTarget = 100.0; _lineLen = 0.0;
         _score = 0;
         var bs = Application.Storage.getValue("fishBest");
         _bestScore = (bs != null) ? bs : 0;
+        var bfw = Application.Storage.getValue("fishBigW");
+        _bestFishWeight = (bfw != null) ? bfw : 0;
+        var bft = Application.Storage.getValue("fishBigT");
+        _bestFishType = (bft != null) ? bft : 0;
+        var bfr = Application.Storage.getValue("fishBigR");
+        _bestFishRarity = (bfr != null) ? bfr : 0;
+        _newBigFish = false;
         _fishCaught = 0; _combo = 0; _level = 1;
         _fishLives = 3; _levelCatches = 0; _levelGotSpecial = false;
         _goalCount = 1; _goalMinType = 0;
@@ -204,18 +223,49 @@ class BitochiFishView extends WatchUi.View {
                 if (_fishType >= _goalMinType && _goalMinType > 0) { _levelGotSpecial = true; }
                 if (_goalMinType == 0) { _levelGotSpecial = true; }
                 if (_fishCaught % 5 == 0 && _lineTensionBonus < 28.0) { _lineTensionBonus += 7.0; pts += 80; }
-                _score += pts; _lastPts = pts; _combo++;
-                if (_score > _bestScore) { _bestScore = _score; Application.Storage.setValue("fishBest", _bestScore); }
-                _resultMsg = _fishNames[_fishType] + "!";
+
+                // Weight = per-type base range × rarity multiplier × a small
+                // extra jitter, so every catch (even same type/rarity) lands
+                // on a slightly different number — no two fish are identical.
                 var wBase = [50, 12, 180, 100, 700, 1800, 550, 2200, 1100, 7500];
                 var wRng  = [60, 14, 350, 180, 1800, 4500, 1400, 5500, 2800, 18000];
-                _fishWeight = wBase[_fishType] + Math.rand().abs() % wRng[_fishType];
+                var rarityWMul = [0.55, 1.0, 1.5, 2.6];
+                var jitter = 0.88 + (Math.rand().abs() % 25).toFloat() * 0.01; // 0.88..1.12
+                var baseW = (wBase[_fishType] + Math.rand().abs() % wRng[_fishType]).toFloat();
+                _fishWeight = (baseW * rarityWMul[_fishRarity] * jitter).toNumber();
+                if (_fishWeight < 5) { _fishWeight = 5; }
+
+                var rarityPtsBonus = [0, 0, 40, 140];
+                pts += rarityPtsBonus[_fishRarity];
+                _score += pts; _lastPts = pts; _combo++;
+                if (_score > _bestScore) { _bestScore = _score; Application.Storage.setValue("fishBest", _bestScore); }
+
+                var rarityPrefix = ["Runt ", "", "Big ", "GIANT "];
+                _resultMsg = rarityPrefix[_fishRarity] + _fishNames[_fishType] + "!";
+
+                // Lifetime "biggest fish" record — mirrored to the global
+                // "biggest-fish" leaderboard variant with a graphical meta blob.
+                _newBigFish = false;
+                if (_fishWeight > _bestFishWeight) {
+                    _bestFishWeight = _fishWeight;
+                    _bestFishType   = _fishType;
+                    _bestFishRarity = _fishRarity;
+                    Application.Storage.setValue("fishBigW", _bestFishWeight);
+                    Application.Storage.setValue("fishBigT", _bestFishType);
+                    Application.Storage.setValue("fishBigR", _bestFishRarity);
+                    _newBigFish = true;
+                    Leaderboard.submitScoreWithMeta(LB_GAME_ID, _bestFishWeight, "biggest-fish",
+                        { "t" => _bestFishType, "n" => _fishNames[_bestFishType], "r" => _bestFishRarity });
+                }
+
                 if (_levelCatches >= _goalCount && _levelGotSpecial) {
                     _level++; if (_level > 15) { _level = 15; }
                     setLevelGoal(); _envType = getEnvType(); spawnAmbPool();
                 }
                 spawnCatchParts(_fishX.toNumber(), _fishY.toNumber());
-                doVibe(80, 120); _shakeTimer = 5; _emotion = 2;
+                if (_fishRarity >= 3) { spawnCatchParts(_fishX.toNumber(), _fishY.toNumber()); }
+                doVibe(_fishRarity >= 3 ? 140 : 80, _fishRarity >= 3 ? 180 : 120);
+                _shakeTimer = (_fishRarity >= 3) ? 10 : 5; _emotion = 2;
             }
         } else if (gameState == GS_CAUGHT || gameState == GS_LOST || gameState == GS_SNAP) {
             _resultTick++;
@@ -302,12 +352,27 @@ class BitochiFishView extends WatchUi.View {
         if (_goalMinType > 0 && !_levelGotSpecial && _levelCatches >= _goalCount - 1 && _fishType < _goalMinType) {
             _fishType = _goalMinType;
         }
+        // Rarity roll — every hooked fish is "a bit random", not just its type.
+        // Runt/Big/GIANT shift size, fight difficulty and (at catch time)
+        // final weight, so no two Pikes ever weigh quite the same.
+        var rr = Math.rand().abs() % 100;
+        if (rr < 10)      { _fishRarity = 0; }       // Runt   10%
+        else if (rr < 78) { _fishRarity = 1; }       // Normal 68%
+        else if (rr < 95) { _fishRarity = 2; }       // Big    17%
+        else              { _fishRarity = 3; }       // GIANT   5%
+
         var fishSizes = [5, 6, 7, 8, 9, 11, 12, 14, 16, 18];
-        _fishSize = fishSizes[_fishType];
+        var sizeAdj = [-2, 0, 2, 5];
+        _fishSize = fishSizes[_fishType] + sizeAdj[_fishRarity];
+        if (_fishSize < 3) { _fishSize = 3; }
         var lvlF = _level.toFloat();
         _fishStr = 0.42 + _fishType.toFloat() * 0.14 + lvlF * 0.035;
         if (_fishStr > 1.9) { _fishStr = 1.9; }
         _fishHP = 38.0 + _fishType.toFloat() * 11.0 + lvlF * 2.8;
+        var rarityStrMul = [0.82, 1.0, 1.18, 1.42];
+        var rarityHpMul  = [0.75, 1.0, 1.35, 1.85];
+        _fishStr *= rarityStrMul[_fishRarity]; if (_fishStr > 2.2) { _fishStr = 2.2; }
+        _fishHP  *= rarityHpMul[_fishRarity];
         _fishMaxHP = _fishHP;
         _fishX = _bobX + ((Math.rand().abs() % 2 == 0) ? -28.0 : 28.0);
         _fishY = _bobY + 48.0 + (Math.rand().abs() % 22).toFloat();
@@ -679,6 +744,19 @@ class BitochiFishView extends WatchUi.View {
     }
     hidden function getFishColor() { return getFishColorType(_fishType); }
 
+    hidden function weightText(w) {
+        if (w >= 1000) {
+            var kg = w / 1000; var dg = (w % 1000) / 100;
+            return "" + kg + "." + dg + " kg";
+        }
+        return "" + w + " g";
+    }
+
+    // GIANT-rarity hooked fish get a shiny golden tint instead of their normal
+    // species colour — an instant "whoa, that's a big one" visual tell.
+    hidden function hookedFishBody()  { return (_fishRarity >= 3) ? 0xFFD700 : getFishColorType(_fishType); }
+    hidden function hookedFishBelly() { return (_fishRarity >= 3) ? 0xFFF3B0 : getFishBellyType(_fishType); }
+
     hidden function drawAmbFish(dc, ox, oy) {
         for (var i = 0; i < MAX_AMB; i++) {
             if (!_ambActive[i]) { continue; }
@@ -790,7 +868,7 @@ class BitochiFishView extends WatchUi.View {
         var fx = _fishX.toNumber() + ox; var fy = _fishY.toNumber() + oy;
         var sz = _fishSize; var dir = (_fishVx >= 0) ? 1 : -1;
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillCircle(fx + 2, fy + 2, sz + 1);
-        var bodyC = getFishColor(); var bellyC = getFishBellyType(_fishType);
+        var bodyC = hookedFishBody(); var bellyC = hookedFishBelly();
         dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(fx, fy, sz); dc.fillCircle(fx + dir * sz / 2, fy, sz * 80 / 100);
         dc.fillCircle(fx - dir * sz / 2, fy, sz * 70 / 100);
@@ -809,6 +887,12 @@ class BitochiFishView extends WatchUi.View {
             var hpW = sz * 2; var hpFill = (_fishHP / _fishMaxHP * hpW.toFloat()).toNumber(); if (hpFill < 0) { hpFill = 0; }
             dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(fx - sz, fy - sz - 6, hpW, 3);
             dc.setColor(0x44AAFF, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(fx - sz, fy - sz - 6, hpFill, 3);
+        }
+        // GIANT-rarity twinkle — cheap "this one's special" flourish.
+        if (_fishRarity >= 3 && _tick % 10 < 4) {
+            dc.setColor(0xFFFFCC, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(fx - dir * (sz - 4), fy - sz / 2, 1);
+            dc.fillCircle(fx + dir * 2, fy - sz - 2, 1);
         }
     }
 
@@ -989,7 +1073,7 @@ class BitochiFishView extends WatchUi.View {
         var fx2 = _cx + ox; var fy2 = animY;
         var sz = _fishSize + 8;
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillCircle(fx2 + 4, fy2 + 4, sz + 1);
-        var bodyC = getFishColor(); var bellyC = getFishBellyType(_fishType);
+        var bodyC = hookedFishBody(); var bellyC = hookedFishBelly();
         dc.setColor(bodyC, Graphics.COLOR_TRANSPARENT);
         dc.fillCircle(fx2, fy2, sz); dc.fillCircle(fx2 + sz * 6 / 10, fy2, sz * 8 / 10);
         dc.fillCircle(fx2 - sz * 4 / 10, fy2, sz * 7 / 10);
@@ -1000,20 +1084,23 @@ class BitochiFishView extends WatchUi.View {
         dc.setColor(0x111111, Graphics.COLOR_TRANSPARENT); dc.fillCircle(fx2 + sz - 3, fy2 - 3, 3);
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillCircle(fx2 + sz - 1, fy2 - 5, 1);
         if (_resultTick < 22) {
-            dc.setColor(0xFFFF88, Graphics.COLOR_TRANSPARENT);
-            for (var sp = 0; sp < 4; sp++) {
-                var sa = sp * 90 + _resultTick * 9;
+            dc.setColor((_fishRarity >= 3) ? 0xFFEE44 : 0xFFFF88, Graphics.COLOR_TRANSPARENT);
+            var sparkN = (_fishRarity >= 3) ? 6 : 4;
+            for (var sp = 0; sp < sparkN; sp++) {
+                var sa = sp * (360 / sparkN) + _resultTick * 9;
                 var srad = sa.toFloat() * 3.14159 / 180.0;
                 dc.fillCircle(fx2 + ((sz + 7).toFloat() * Math.cos(srad)).toNumber(), fy2 + ((sz + 7).toFloat() * Math.sin(srad)).toNumber(), 2);
             }
         }
-        var wTxt;
-        if (_fishWeight >= 1000) {
-            var kg = _fishWeight / 1000; var dg = (_fishWeight % 1000) / 100;
-            wTxt = "" + kg + "." + dg + " kg";
-        } else { wTxt = "" + _fishWeight + " g"; }
+        var wTxt = weightText(_fishWeight);
         dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(fx2 + 1, fy2 + sz + 5, Graphics.FONT_SMALL, wTxt, Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFEE44, Graphics.COLOR_TRANSPARENT); dc.drawText(fx2, fy2 + sz + 4, Graphics.FONT_SMALL, wTxt, Graphics.TEXT_JUSTIFY_CENTER);
+        if (_newBigFish) {
+            var bnrY = fy2 + sz + 20;
+            var bnrC = (_tick % 8 < 4) ? 0xFFD700 : 0xFFF3B0;
+            dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.drawText(fx2 + 1, bnrY + 1, Graphics.FONT_XTINY, "*** BIGGEST EVER! ***", Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(bnrC, Graphics.COLOR_TRANSPARENT); dc.drawText(fx2, bnrY, Graphics.FONT_XTINY, "*** BIGGEST EVER! ***", Graphics.TEXT_JUSTIFY_CENTER);
+        }
     }
 
     hidden function drawParticles(dc, ox, oy) {
@@ -1044,6 +1131,11 @@ class BitochiFishView extends WatchUi.View {
         dc.setColor(0x88CCFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 50 / 100, Graphics.FONT_XTINY, "Fish: " + _fishCaught + "  Lv: " + _level, Graphics.TEXT_JUSTIFY_CENTER);
         if (_score >= _bestScore && _score > 0) { dc.setColor(0xFFAA22, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 62 / 100, Graphics.FONT_XTINY, "NEW BEST!", Graphics.TEXT_JUSTIFY_CENTER); }
         else if (_bestScore > 0) { dc.setColor(0x556677, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 62 / 100, Graphics.FONT_XTINY, "Best: " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER); }
+        if (_bestFishWeight > 0) {
+            var bfTxt = "Biggest: " + weightText(_bestFishWeight) + " " + _fishNames[_bestFishType];
+            dc.setColor(0xFFD700, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_cx, _h * 72 / 100, Graphics.FONT_XTINY, bfTxt, Graphics.TEXT_JUSTIFY_CENTER);
+        }
         dc.setColor((_tick % 10 < 5) ? 0x44CCFF : 0x33AADD, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 82 / 100, Graphics.FONT_XTINY, "Tap to restart", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
@@ -1078,7 +1170,11 @@ class BitochiFishView extends WatchUi.View {
         dc.setColor((_tick % 14 < 7) ? 0x55DDFF : 0x33BBDD, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 9 / 100, Graphics.FONT_MEDIUM, "BITOCHI", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 21 / 100, Graphics.FONT_LARGE, "FISH", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x88CCEE, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 32 / 100, Graphics.FONT_XTINY, "Cast near the fish!", Graphics.TEXT_JUSTIFY_CENTER);
-        if (_bestScore > 0) { dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 39 / 100, Graphics.FONT_XTINY, "BEST " + _bestScore, Graphics.TEXT_JUSTIFY_CENTER); }
+        if (_bestScore > 0) {
+            var menuStat = "BEST " + _bestScore;
+            if (_bestFishWeight > 0) { menuStat = menuStat + "  |  " + weightText(_bestFishWeight); }
+            dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT); dc.drawText(_cx, _h * 39 / 100, Graphics.FONT_XTINY, menuStat, Graphics.TEXT_JUSTIFY_CENTER);
+        }
 
         // START / LEADERBOARD menu rows.
         var rg = menuRowGeom();

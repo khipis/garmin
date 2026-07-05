@@ -17,10 +17,12 @@ class Paddle {
     var minY;
     var maxY;
     var color;
+    var buffState;   // 0 = normal, 1 = grown (power-up), -1 = shrunk (power-up)
 
     function initialize(_color) {
         x = 0; y = 0; w = 4; h = 28; vy = 0.0; minY = 0; maxY = 100;
         color = _color;
+        buffState = 0;
     }
 
     function setBounds(px, pw, ph, ymin, ymax) {
@@ -39,6 +41,15 @@ class Paddle {
 
     function centerY() { return y + h / 2; }
 
+    // Resize (grow/shrink power-ups) while keeping the paddle centred on
+    // its current midpoint, then re-clamp within the existing bounds.
+    function setHeightPreserveCenter(newH) {
+        if (newH < 10) { newH = 10; }
+        var cy = centerY();
+        h = newH;
+        setCenterY(cy);
+    }
+
     function step() {
         y = y + vy;
         if (y < minY)         { y = minY;        vy = 0.0; }
@@ -46,6 +57,11 @@ class Paddle {
     }
 
     function draw(dc) {
+        // Power-up halo — green ring while grown, red ring while shrunk.
+        if (buffState != 0) {
+            dc.setColor(buffState > 0 ? 0x44FF66 : 0xFF4444, Graphics.COLOR_TRANSPARENT);
+            dc.drawRoundedRectangle(x - 3, y - 3, w + 6, h + 6, 3);
+        }
         // Subtle glow under-rect
         dc.setColor((color & 0xFCFCFC) >> 2, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(x - 1, y - 1, w + 2, h + 2);

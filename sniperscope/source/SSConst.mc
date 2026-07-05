@@ -128,3 +128,15 @@ const SS_K_BEST = "ss_best";
 const SS_K_HS   = "ss_hs";    // best headshots in a single mission
 const SS_K_DIST = "ss_dist";  // longest one-shot kill (metres)
 const SS_K_KILL = "ss_kill";  // lifetime hostiles eliminated
+const SS_K_SHOT = "ss_shot";  // best single-shot point value ever
+
+// ── Headshot streak (combo) system ────────────────────────────
+// Consecutive headshots (no misses/body-hits/decoys in between)
+// build a streak. Each level beyond the first adds a flat bonus
+// to that shot's score AND is announced on the RESULT screen —
+// classic multi-kill callouts translate very well to "one shot
+// per target" sniper play and give a reason to chain clean hits.
+const SS_STREAK_BONUS = 30;   // extra points per streak level beyond 1
+
+// ── Scenery (rotates per mission — see GameController._startMission) ──
+const SS_SCENE_COUNT = 3;

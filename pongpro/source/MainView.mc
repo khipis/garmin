@@ -50,16 +50,40 @@ class MainView extends WatchUi.View {
         if (_ctrl.state == GS_MENU) { _drawMenu(dc); return; }
 
         _drawCourt(dc);
+        if (_ctrl.state == GS_PLAY) { _ctrl.powerUp.draw(dc); }
         _ctrl.pPlayer.draw(dc);
         _ctrl.pCpu.draw(dc);
         if (_ctrl.state != GS_SERVE) {
             _ctrl.ball.draw(dc);
+            if (_ctrl.ball2Active) { _ctrl.ball2.draw(dc); }
         } else {
             _drawServeCountdown(dc);
         }
         _drawHUD(dc);
+        _drawPowerUpFlash(dc);
 
         if (_ctrl.state == GS_OVER) { _drawOver(dc); }
+    }
+
+    // Big banner + colour flash across the whole court when a power-up
+    // fires, so it's unmissable no matter which paddle triggered it.
+    hidden function _drawPowerUpFlash(dc) {
+        if (_ctrl.puFlashT <= 0) { return; }
+        var col;
+        if      (_ctrl.puFlashKind == PU_MULTIBALL) { col = 0x33CCFF; }
+        else if (_ctrl.puFlashKind == PU_GROW)      { col = 0x44FF66; }
+        else                                          { col = 0xFF4444; }
+        // Fades out over the last third of the flash window.
+        if (_ctrl.puFlashT < 18 && (_ctrl.puFlashT % 6) < 3) { return; }
+        dc.setPenWidth(2);
+        dc.setColor(col, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(_ctrl.playX0 - 3, _ctrl.playY0 - 3,
+                                (_ctrl.playX1 - _ctrl.playX0) + 6,
+                                (_ctrl.playY1 - _ctrl.playY0) + 6, 6);
+        dc.setPenWidth(1);
+        var cx = (_ctrl.playX0 + _ctrl.playX1) / 2;
+        dc.drawText(cx, _ctrl.playY0 + 6, Graphics.FONT_XTINY,
+                    _ctrl.powerUpLabel(_ctrl.puFlashKind), Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     // ── Court / centre line ─────────────────────────────────────────

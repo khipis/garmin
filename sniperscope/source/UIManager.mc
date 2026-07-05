@@ -54,6 +54,7 @@ class UIManager {
         ScopeRenderer.drawImpact(dc, ctrl);
         ScopeRenderer.drawScopeMask(dc, ctrl);
         ScopeRenderer.drawReticle(dc, ctrl);
+        ScopeRenderer.drawMuzzleFlash(dc, ctrl);
 
         _drawHUD(dc, ctrl);
         if (ctrl.state == SS_RESULT) { _drawResult(dc, ctrl); }
@@ -231,6 +232,23 @@ class UIManager {
                     ctrl.score.format("%d"),
                     Graphics.TEXT_JUSTIFY_CENTER);
 
+        // Map/scene name — tiny, dim, top-left corner. Purely flavour
+        // (tells the player which of the 3 rotating maps they landed
+        // on this mission) so it stays out of the way of the score.
+        dc.setColor(0x5A7A66, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(6, topY, Graphics.FONT_XTINY, ctrl.sceneName(),
+                    Graphics.TEXT_JUSTIFY_LEFT);
+
+        // Headshot streak indicator — stays up while the streak is
+        // alive so the player feels the tension of "don't miss now".
+        if (ctrl.headStreak >= 2) {
+            var pulse = ((ctrl.tick & 7) < 4);
+            dc.setColor(pulse ? 0xFF8833 : 0xFFCC66, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(ccx, topY + 30, Graphics.FONT_XTINY,
+                        "STREAK x" + ctrl.headStreak.format("%d"),
+                        Graphics.TEXT_JUSTIFY_CENTER);
+        }
+
         // ── RIGHT-COLUMN ASSISTS (Easy / Normal only) ─────────
         if (ctrl.diff != SS_DIFF_HARD) {
             var rightX = sw - 6;
@@ -340,6 +358,24 @@ class UIManager {
         var fontY = sh * 36 / 100;
         dc.drawText(ccx, fontY, pulse ? Graphics.FONT_MEDIUM : Graphics.FONT_SMALL,
                     label, Graphics.TEXT_JUSTIFY_CENTER);
+
+        // Streak callout — multi-headshot combo, classic FPS-style
+        // announcement + the flat bonus it earned.
+        if (ctrl.streakMsg != null && !ctrl.streakMsg.equals("")) {
+            var spulse = ((ctrl.resultT & 5) < 3);
+            dc.setColor(spulse ? 0xFFDD33 : 0xFF9922, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(ccx, sh * 48 / 100, Graphics.FONT_SMALL,
+                        ctrl.streakMsg, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(0xFFEE99, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(ccx, sh * 58 / 100, Graphics.FONT_XTINY,
+                        "+" + ctrl.streakBonus.format("%d") + " streak bonus",
+                        Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(0xBBCCDD, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(ccx, sh * 68 / 100, Graphics.FONT_XTINY,
+                        "tap = next", Graphics.TEXT_JUSTIFY_CENTER);
+            return;
+        }
+
         // Hint.
         dc.setColor(0xBBCCDD, Graphics.COLOR_TRANSPARENT);
         dc.drawText(ccx, sh * 58 / 100, Graphics.FONT_XTINY,
@@ -353,12 +389,13 @@ class UIManager {
     hidden static function _drawOver(dc, ctrl) {
         var sw = ctrl.sw; var sh = ctrl.sh; var ccx = ctrl.cx;
         var bw = sw * 82 / 100; if (bw < 180) { bw = 180; }
-        var bh = sh * 64 / 100; if (bh < 170) { bh = 170; }
+        var bh = sh * 70 / 100; if (bh < 186) { bh = 186; }
         var bx = (sw - bw) / 2; var by = (sh - bh) / 2;
 
+        var newRecord = ctrl.hasNewRecord();
         dc.setColor(0x00080A, Graphics.COLOR_TRANSPARENT);
         dc.fillRoundedRectangle(bx, by, bw, bh, 10);
-        dc.setColor(0xCCFF99, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(newRecord ? 0xFFDD33 : 0xCCFF99, Graphics.COLOR_TRANSPARENT);
         dc.drawRoundedRectangle(bx, by, bw, bh, 10);
 
         dc.drawText(ccx, by + 6, Graphics.FONT_SMALL,
@@ -389,10 +426,23 @@ class UIManager {
         dc.drawText(ccx, by + 108, Graphics.FONT_XTINY,
                     "Long   " + ctrl.bestDistance.format("%d") + "m",
                     Graphics.TEXT_JUSTIFY_CENTER);
-        dc.setColor(0xCCDDEE, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(0xFF99CC, Graphics.COLOR_TRANSPARENT);
         dc.drawText(ccx, by + 124, Graphics.FONT_XTINY,
+                    "Shot   " + ctrl.bestShotPts.format("%d") + "pt",
+                    Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0xCCDDEE, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(ccx, by + 140, Graphics.FONT_XTINY,
                     "Kills  " + ctrl.lifetimeKills.format("%d"),
                     Graphics.TEXT_JUSTIFY_CENTER);
+
+        // Banner — only shown when this mission actually broke a
+        // personal best (also drives the gold border above).
+        if (newRecord) {
+            var pulse = ((ctrl.tick & 7) < 4);
+            dc.setColor(pulse ? 0xFFDD33 : 0xFF9922, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(ccx, by + 158, Graphics.FONT_XTINY,
+                        "*** NEW RECORD! ***", Graphics.TEXT_JUSTIFY_CENTER);
+        }
 
         dc.setColor(0xAACCEE, Graphics.COLOR_TRANSPARENT);
         dc.drawText(ccx, by + bh - 14, Graphics.FONT_XTINY,

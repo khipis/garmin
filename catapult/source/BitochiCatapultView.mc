@@ -26,7 +26,9 @@ enum {
     PW_PIERCE,
     PW_POISON,
     PW_CLUSTER,
-    PW_AMMO
+    PW_AMMO,
+    PW_HOMING,
+    PW_ICE
 }
 
 const MAX_BLOCKS = 50;
@@ -153,6 +155,26 @@ class BitochiCatapultView extends WatchUi.View {
     hidden var _boomSubN;
     hidden var _chainLimit;
 
+    // Match-wide dynamic stats — mirrored to secondary leaderboard variants
+    // at game-over so ranking isn't just "how far did you get".
+    hidden var _matchDamage;
+    hidden var _matchShotsFired;
+
+    // Frost Shot status effect: while > 0 the boss holds its current
+    // position (no evasive sway), making follow-up shots easier to land.
+    hidden var _enemyFrozenTicks;
+
+    // Themed background is cached into an off-screen bitmap and only
+    // repainted every few ticks (its content is idle-camera ambient motion,
+    // not gameplay-critical), cutting the dominant per-frame draw-call cost
+    // during the long ANGLE/POWER aiming phases. Screen shake is applied by
+    // shifting the *blit* position instead of baking it into the cache, so
+    // it stays perfectly smooth even on cached frames.
+    hidden var _bgBmp;
+    hidden var _bgBmpW;
+    hidden var _bgBmpGsy;
+    hidden var _bgAnimTick;
+
     // Leaderboard: row selection on the READY menu (0 = START, 1 = LEADERBOARD)
     // and a one-shot guard so a finished match submits its score only once.
     hidden var _readySel;
@@ -219,14 +241,23 @@ class BitochiCatapultView extends WatchUi.View {
         _enemyBaseX = 0.0;
         _accBonusShots = 0;
 
-        _shopNames = ["MEGA BOMB", "FIRE SHOT", "PIERCER", "TRIPLE", "POISON", "CLUSTER", "AMMO +3"];
-        _shopCosts = [120, 180, 220, 250, 160, 200, 80];
-        _shopPows = [PW_MEGA, PW_FIRE, PW_PIERCE, PW_TRIPLE, PW_POISON, PW_CLUSTER, PW_AMMO];
-        _shopDesc = ["Giant blast radius", "Burns+chains blocks", "3x enemy damage", "3-point detonation", "DoT + 50% vuln to blasts", "Scatter bomb x3", "+3 shots"];
-        _poisonTicks = 0; _hitType = 0;
+        _shopNames = ["MEGA BOMB", "FIRE SHOT", "PIERCER", "TRIPLE", "POISON", "CLUSTER", "HOMING", "FROST SHOT", "AMMO +3"];
+        _shopCosts = [120, 180, 220, 250, 160, 200, 210, 190, 80];
+        _shopPows = [PW_MEGA, PW_FIRE, PW_PIERCE, PW_TRIPLE, PW_POISON, PW_CLUSTER, PW_HOMING, PW_ICE, PW_AMMO];
+        _shopDesc = ["Giant blast radius", "Burns+chains blocks", "3x enemy damage", "3-point detonation", "DoT + 50% vuln to blasts", "Scatter bomb x3", "Curves toward the target", "Shatters blocks, freezes boss", "+3 shots"];
+        _poisonTicks = 0; _hitType = 0; _enemyFrozenTicks = 0;
         _boomWx = 0.0; _boomWy = 0.0; _boomSubN = 0; _chainLimit = 15;
         _boomSubWx = new [2]; _boomSubWy = new [2];
         _boomSubWx[0] = 0.0; _boomSubWx[1] = 0.0; _boomSubWy[0] = 0.0; _boomSubWy[1] = 0.0;
+
+        _matchDamage = 0;
+        _matchShotsFired = 0;
+        _enemyFrozenTicks = 0;
+
+        _bgBmp = null;
+        _bgBmpW = 0;
+        _bgBmpGsy = -999;
+        _bgAnimTick = -999;
 
         _readySel = 0;
         _scoreSubmitted = false;
@@ -272,7 +303,7 @@ class BitochiCatapultView extends WatchUi.View {
         _enemyVy = 0.0;
         _enemyOnGround = true;
         _enemyBaseX = _castleWX;
-        _poisonTicks = 0; _hitType = 0;
+        _poisonTicks = 0; _hitType = 0; _enemyFrozenTicks = 0;
         _boomWx = 0.0; _boomWy = 0.0; _boomSubN = 0; _chainLimit = 15;
 
         applyTheme();
@@ -448,10 +479,13 @@ class BitochiCatapultView extends WatchUi.View {
                 var dotDmg = 6 + _round * 2;
                 _enemyHp -= dotDmg;
                 _score += dotDmg;
+                _matchDamage += dotDmg;
             }
         }
 
-        if (_round >= 6 && _enemyHp > 0) {
+        if (_enemyFrozenTicks > 0) {
+            _enemyFrozenTicks--;
+        } else if (_round >= 6 && _enemyHp > 0) {
             // Only recompute sin every 2 ticks — imperceptible at 45ms interval
             if (_tick % 2 == 0) {
                 var amp = (_round >= 11) ? 22.0 : ((_round >= 8) ? 16.0 : 11.0);
@@ -529,7 +563,7 @@ class BitochiCatapultView extends WatchUi.View {
                     toGameOver();
                 } else {
                     gameState = GS_SHOP;
-                    _shopSel = 7;
+                    _shopSel = _shopNames.size();
                     _resultTick = 0;
                 }
             }
@@ -602,6 +636,7 @@ class BitochiCatapultView extends WatchUi.View {
                 var fallDmg = 15 + _round * 5;
                 _enemyHp -= fallDmg;
                 _score += fallDmg;
+                _matchDamage += fallDmg;
                 _shakeLeft += 6;
                 doVibe(60, 100);
                 spawnImpactParticles(_enemyWX, _groundWY, 8);
@@ -624,6 +659,16 @@ class BitochiCatapultView extends WatchUi.View {
 
         _vx += _wind + _windGust + dragX;
         _vy += 0.28 + dragY;
+
+        // Homing Shot — gentle in-flight course correction toward the boss.
+        // Not a full auto-aim: still needs a roughly-right angle/power, but
+        // forgives small misses, rewarding the gold spent on it.
+        if (_activePow == PW_HOMING && _enemyHp > 0 && _py < _groundWY - _bw.toFloat()) {
+            var toEnemy = _enemyWX - _px;
+            if (toEnemy > 2.0) { _vx += 0.09; }
+            else if (toEnemy < -2.0) { _vx -= 0.09; }
+        }
+
         _px += _vx;
         _py += _vy;
 
@@ -665,6 +710,7 @@ class BitochiCatapultView extends WatchUi.View {
                 _hitEnemyDirect = true;
                 _critHit = true;
                 _score += dmg * 2;
+                _matchDamage += dmg;
                 doHit(_px, _py);
                 return;
             }
@@ -692,7 +738,7 @@ class BitochiCatapultView extends WatchUi.View {
             if (edx * edx + edy * edy < r * r * 4.0) {
             var dmg = 14 + _round * 2;
             if (_poisonTicks > 20) { dmg = dmg * 3 / 2; }
-            _enemyHp -= dmg; _score += dmg;
+            _enemyHp -= dmg; _score += dmg; _matchDamage += dmg;
             }
         }
     }
@@ -713,11 +759,14 @@ class BitochiCatapultView extends WatchUi.View {
         else if (_activePow == PW_POISON) { _hitType = 5; }
         else if (_activePow == PW_CLUSTER) { _hitType = 6; }
         else if (_activePow == PW_TRIPLE) { _hitType = 7; }
+        else if (_activePow == PW_ICE) { _hitType = 8; }
+        else if (_activePow == PW_HOMING) { _hitType = 9; }
         _boomWx = hx; _boomWy = hy; _boomSubN = 0;
 
         var splMul = 1.0;
         if (_activePow == PW_MEGA) { splMul = 2.4; }
         else if (_activePow == PW_FIRE) { splMul = 1.6; }
+        else if (_activePow == PW_ICE) { splMul = 1.3; }
         else if (_activePow == PW_CLUSTER) { splMul = 1.2; }
         else if (_activePow == PW_TRIPLE) { splMul = 0.75; }
         var splR = _bw.toFloat() * 3.5 * splMul;
@@ -735,6 +784,7 @@ class BitochiCatapultView extends WatchUi.View {
                 if (_activePow == PW_MEGA) { dmgToBlock = 3; }
                 else if (_activePow == PW_FIRE) { dmgToBlock = 2; }
                 else if (_activePow == PW_CLUSTER) { dmgToBlock = 2; }
+                else if (_activePow == PW_ICE) { dmgToBlock = 5; } // shatters instantly
                 _bhp[i] -= dmgToBlock;
                 if (_bhp[i] < 0) { _bhp[i] = 0; }
                 hitSomething = true;
@@ -778,8 +828,9 @@ class BitochiCatapultView extends WatchUi.View {
                 var dmg = 25 + _round * 4;
                 if (_activePow == PW_PIERCE) { dmg = dmg * 3; }
                 else if (_activePow == PW_MEGA) { dmg = dmg * 2; }
+                else if (_activePow == PW_ICE) { dmg = dmg * 3 / 2; _enemyFrozenTicks = 45 + _round; }
                 if (_poisonTicks > 20) { dmg = dmg * 3 / 2; }
-                _enemyHp -= dmg; _score += dmg;
+                _enemyHp -= dmg; _score += dmg; _matchDamage += dmg;
                 hitSomething = true;
             }
         }
@@ -858,7 +909,7 @@ class BitochiCatapultView extends WatchUi.View {
             if (_enemyHp > 0) {
                 var edx = cx - _enemyWX; var edy = cy - _enemyWY;
                 if (edx * edx + edy * edy < chainR2 * 1.5) {
-                    _enemyHp -= 30; _score += 30;
+                    _enemyHp -= 30; _score += 30; _matchDamage += 30;
                 }
             }
             _shakeLeft += 4;
@@ -910,7 +961,9 @@ class BitochiCatapultView extends WatchUi.View {
         } else if (ht == 7) {
             palette = [0xEE44FF, 0xFF88FF, 0xAA22DD, 0xFF44FF, 0xCC66FF, 0x8822CC];
         } else if (ht == 8) {
-            palette = [0x886644, 0xAA8855, 0x664433, 0x997755, 0x775544, 0x553322];
+            palette = [0xAAEEFF, 0xFFFFFF, 0xCCF5FF, 0x88DDFF, 0xE8FBFF, 0x66CCEE];
+        } else if (ht == 9) {
+            palette = [0x44FFCC, 0x22CCAA, 0x88FFDD, 0x33DDBB, 0xAAFFEE, 0x11AA88];
         } else {
             palette = [0xFF4422, 0xFF8833, 0xFFCC22, 0xFFFF66, 0xFF6622, 0xDD3311];
         }
@@ -956,10 +1009,15 @@ class BitochiCatapultView extends WatchUi.View {
     }
 
     // Enter the final GAME OVER screen, submitting the match's total score to
-    // the global leaderboard exactly once.
+    // the global leaderboard exactly once. Total damage dealt and shots
+    // fired are mirrored to their own variants so the leaderboard rewards
+    // more than just "how far did you get" — a marathon of shots or a
+    // brutal damage haul both earn their own bragging rights.
     hidden function toGameOver() {
         if (!_scoreSubmitted) {
             Leaderboard.submitScore("catapult", _score, "");
+            if (_matchDamage > 0) { Leaderboard.submitScore("catapult", _matchDamage, "damage"); }
+            if (_matchShotsFired > 0) { Leaderboard.submitScore("catapult", _matchShotsFired, "shots"); }
             Leaderboard.showPostGame("catapult", "", "CATAPULT");
             _scoreSubmitted = true;
         }
@@ -990,7 +1048,7 @@ class BitochiCatapultView extends WatchUi.View {
                     toGameOver();
                 } else {
                     gameState = GS_SHOP;
-                    _shopSel = 7;
+                    _shopSel = _shopNames.size();
                     _resultTick = 0;
                 }
             } else {
@@ -1006,6 +1064,8 @@ class BitochiCatapultView extends WatchUi.View {
             _gold = 0;
             _activePow = PW_NONE;
             _scoreSubmitted = false;
+            _matchDamage = 0;
+            _matchShotsFired = 0;
             initRound();
         }
     }
@@ -1013,7 +1073,7 @@ class BitochiCatapultView extends WatchUi.View {
     function doUp() {
         if (gameState == GS_SHOP) {
             _shopSel--;
-            if (_shopSel < 0) { _shopSel = 7; }
+            if (_shopSel < 0) { _shopSel = _shopNames.size(); }
         } else if (gameState == GS_READY) {
             _readySel = (_readySel + 1) % 2;
         } else {
@@ -1024,7 +1084,7 @@ class BitochiCatapultView extends WatchUi.View {
     function doDown() {
         if (gameState == GS_SHOP) {
             _shopSel++;
-            if (_shopSel > 7) { _shopSel = 0; }
+            if (_shopSel > _shopNames.size()) { _shopSel = 0; }
         } else if (gameState == GS_READY) {
             _readySel = (_readySel + 1) % 2;
         } else {
@@ -1033,7 +1093,7 @@ class BitochiCatapultView extends WatchUi.View {
     }
 
     hidden function shopBuy() {
-        if (_shopSel >= 7) {
+        if (_shopSel >= _shopNames.size()) {
             initRound();
             return;
         }
@@ -1064,6 +1124,7 @@ class BitochiCatapultView extends WatchUi.View {
         _critHit = false;
         _trailIdx = 0;
         _maxAlt = _groundWY;
+        _matchShotsFired++;
 
         var rad = _lockedAngle.toFloat() * 3.14159 / 180.0;
         var lvlBonus = (_round - 1).toFloat() * 0.22;
@@ -1088,6 +1149,10 @@ class BitochiCatapultView extends WatchUi.View {
             _projColor = 0x88FF44;
         } else if (curPow == PW_CLUSTER) {
             _projColor = 0xFF9922;
+        } else if (curPow == PW_HOMING) {
+            _projColor = 0x44FFCC;
+        } else if (curPow == PW_ICE) {
+            _projColor = 0xAAEEFF;
         }
     }
 
@@ -1109,6 +1174,48 @@ class BitochiCatapultView extends WatchUi.View {
             dc.setColor(0xFFFFCC, Graphics.COLOR_TRANSPARENT);
             dc.drawRectangle(0, 0, _w, _h);
             dc.drawRectangle(1, 1, _w - 2, _h - 2);
+        }
+    }
+
+    // Screen shake (ox, oy) is added uniformly to every coordinate inside
+    // drawThemedBg, so instead of re-painting the whole (expensive,
+    // ~15-30 draw calls) themed skyline every single 45ms tick, render it
+    // into an off-screen bitmap WITHOUT shake and just shift where that
+    // bitmap gets blitted — visually identical, but the actual repaint only
+    // has to happen when the ground line moves (camera zoom) or every few
+    // ticks to service the small tick-driven ambient motion (clouds,
+    // twinkles, embers). This is where the bulk of per-frame drawing time
+    // goes during the long ANGLE/POWER aiming phases, so caching it is the
+    // single biggest render-speed win available here.
+    hidden function _drawBgCached(dc, w, gsyFull, ox, oy) {
+        var gsyBase = gsyFull - oy;
+        var sizeChanged = (_bgBmp == null || _bgBmpW != w);
+        var needRepaint = sizeChanged || (_bgBmpGsy != gsyBase) || (_tick - _bgAnimTick >= 3);
+
+        if (needRepaint) {
+            if (sizeChanged) {
+                _bgBmp = null;
+                try {
+                    var ref = Graphics.createBufferedBitmap({ :width => w, :height => _h });
+                    _bgBmp = (ref has :get) ? ref.get() : ref;
+                } catch (e) {
+                    _bgBmp = null;
+                }
+                _bgBmpW = w;
+            }
+            if (_bgBmp != null) {
+                drawThemedBg(_bgBmp.getDc(), w, gsyBase, 0, 0);
+                _bgBmpGsy = gsyBase;
+                _bgAnimTick = _tick;
+            }
+        }
+
+        if (_bgBmp != null) {
+            dc.drawBitmap(ox, oy, _bgBmp);
+        } else {
+            // BufferedBitmap unavailable on this CIQ version/device — fall
+            // back to drawing straight to the screen every frame.
+            drawThemedBg(dc, w, gsyFull, ox, oy);
         }
     }
 
@@ -1504,7 +1611,7 @@ class BitochiCatapultView extends WatchUi.View {
         var oy = _shakeOy;
         var gsy = w2sy(_groundWY) + oy;
 
-        drawThemedBg(dc, w, gsy, ox, oy);
+        _drawBgCached(dc, w, gsy, ox, oy);
 
         dc.setColor(0x556655, Graphics.COLOR_TRANSPARENT);
         for (var m = 100; m < _castleWX.toNumber() + 100; m += 100) {
@@ -1679,6 +1786,22 @@ class BitochiCatapultView extends WatchUi.View {
             dc.setColor(0xFFFF00, Graphics.COLOR_TRANSPARENT);
             dc.drawCircle(bsx, bsy, r * 2);
             dc.setColor(0xFFEE44, Graphics.COLOR_TRANSPARENT);
+            dc.drawCircle(bsx, bsy, r);
+        } else if (_hitType == 8) { // FROST - icy rings + shatter spikes
+            dc.setColor(0xAAEEFF, Graphics.COLOR_TRANSPARENT);
+            dc.drawCircle(bsx, bsy, r + 4);
+            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+            dc.drawCircle(bsx, bsy, r);
+            if (t < 14) {
+                var sr = r + 6;
+                dc.setColor(0xCCF5FF, Graphics.COLOR_TRANSPARENT);
+                dc.drawLine(bsx - sr, bsy, bsx + sr, bsy);
+                dc.drawLine(bsx, bsy - sr, bsx, bsy + sr);
+            }
+        } else if (_hitType == 9) { // HOMING - locked-on teal rings
+            dc.setColor(0x44FFCC, Graphics.COLOR_TRANSPARENT);
+            dc.drawCircle(bsx, bsy, r + 3);
+            dc.setColor(0x22CCAA, Graphics.COLOR_TRANSPARENT);
             dc.drawCircle(bsx, bsy, r);
         } else { // normal
             dc.setColor(0xFF8822, Graphics.COLOR_TRANSPARENT);
@@ -1907,6 +2030,18 @@ class BitochiCatapultView extends WatchUi.View {
             dc.fillCircle(esx + er / 4, esy - er * 3 / 5, er / 7);
         }
 
+        if (_enemyFrozenTicks > 0) {
+            var frC = (_enemyFrozenTicks % 6 < 3) ? 0xCCF5FF : 0xAADDFF;
+            dc.setColor(frC, Graphics.COLOR_TRANSPARENT);
+            dc.drawCircle(esx, esy, er + 4);
+            for (var fz = 0; fz < 4; fz++) {
+                var fzAng = (fz * 90 + _tick * 2).toFloat() * 3.14159 / 180.0;
+                var fzx = esx + ((er + 6) * Math.cos(fzAng)).toNumber();
+                var fzy = esy + ((er + 6) * Math.sin(fzAng)).toNumber();
+                dc.fillCircle(fzx, fzy, 1);
+            }
+        }
+
         var barW = er * 3;
         dc.setColor(0x440000, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(esx - barW / 2, headY - er * 70 / 100 - 10, barW, 4);
@@ -2030,6 +2165,8 @@ class BitochiCatapultView extends WatchUi.View {
             else if (fp == PW_TRIPLE) { pwC = 0xFFFF44; pwN = "3x"; }
             else if (fp == PW_POISON) { pwC = 0x88FF44; pwN = "V"; }
             else if (fp == PW_CLUSTER) { pwC = 0xFF9922; pwN = "C"; }
+            else if (fp == PW_HOMING) { pwC = 0x44FFCC; pwN = "H"; }
+            else if (fp == PW_ICE) { pwC = 0xAAEEFF; pwN = "Fr"; }
             dc.setColor(pwC, Graphics.COLOR_TRANSPARENT);
             var qlbl = "[" + pwN + "]";
             if (_powQueueLen > 1) { qlbl = "[" + pwN + "x" + _powQueueLen + "]"; }
@@ -2055,6 +2192,11 @@ class BitochiCatapultView extends WatchUi.View {
             var fc2 = (_poisonTicks % 6 < 3) ? 0x88FF44 : 0x44CC22;
             dc.setColor(fc2, Graphics.COLOR_TRANSPARENT);
             dc.drawText(4, h - 30, Graphics.FONT_XTINY, "POISON!", Graphics.TEXT_JUSTIFY_LEFT);
+        }
+        if (_enemyFrozenTicks > 0) {
+            var fc4 = (_enemyFrozenTicks % 6 < 3) ? 0xCCF5FF : 0x88CCFF;
+            dc.setColor(fc4, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(4, h - 42, Graphics.FONT_XTINY, "FROZEN!", Graphics.TEXT_JUSTIFY_LEFT);
         }
 
         for (var i = 0; i < _shots; i++) {
@@ -2222,6 +2364,9 @@ class BitochiCatapultView extends WatchUi.View {
         dc.drawText(w / 2, h * 82 / 100, Graphics.FONT_XTINY, "Press to continue", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
+    // Scrollable — 9 purchasable items + a "NEXT ROUND" row no longer all fit
+    // on screen at once, so only a window around the current selection is
+    // drawn, with tiny ^/v hints when there's more above/below.
     hidden function drawShop(dc, w, h) {
         dc.setColor(0x0A0A18, 0x0A0A18);
         dc.clear();
@@ -2231,14 +2376,37 @@ class BitochiCatapultView extends WatchUi.View {
         dc.setColor(0xFFAA22, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w / 2, h * 12 / 100, Graphics.FONT_XTINY, "Gold: " + _gold, Graphics.TEXT_JUSTIFY_CENTER);
 
+        var numItems = _shopNames.size();
+        var totalRows = numItems + 1; // +1 "NEXT ROUND" row, part of the scroll
+        var visibleRows = 6;
         var startY = h * 20 / 100;
         var rowH = h * 9 / 100;
 
-        for (var i = 0; i < 7; i++) {
-            var iy = startY + i * rowH;
-            var sel = (i == _shopSel);
-            var afford = (_gold >= _shopCosts[i]);
+        var maxScroll = totalRows - visibleRows;
+        if (maxScroll < 0) { maxScroll = 0; }
+        var scroll = _shopSel - visibleRows / 2;
+        if (scroll < 0) { scroll = 0; }
+        if (scroll > maxScroll) { scroll = maxScroll; }
 
+        for (var vi = 0; vi < visibleRows; vi++) {
+            var idx = scroll + vi;
+            if (idx >= totalRows) { break; }
+            var iy = startY + vi * rowH;
+            var sel = (idx == _shopSel);
+
+            if (idx >= numItems) {
+                if (sel) {
+                    dc.setColor(0x1A3A1A, Graphics.COLOR_TRANSPARENT);
+                    dc.fillRectangle(w * 6 / 100, iy - 1, w * 88 / 100, rowH - 2);
+                    dc.setColor(0x44FF44, Graphics.COLOR_TRANSPARENT);
+                    dc.drawRectangle(w * 6 / 100, iy - 1, w * 88 / 100, rowH - 2);
+                }
+                dc.setColor(sel ? 0x44FF88 : 0x88AACC, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(w / 2, iy + 1, Graphics.FONT_XTINY, "NEXT ROUND >>", Graphics.TEXT_JUSTIFY_CENTER);
+                continue;
+            }
+
+            var afford = (_gold >= _shopCosts[idx]);
             if (sel) {
                 var selC = afford ? 0x1A2A3A : 0x2A1A1A;
                 dc.setColor(selC, Graphics.COLOR_TRANSPARENT);
@@ -2250,27 +2418,21 @@ class BitochiCatapultView extends WatchUi.View {
             var nameC = afford ? 0xDDEEFF : 0x555555;
             if (sel && afford) { nameC = 0xFFFFFF; }
             dc.setColor(nameC, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w * 10 / 100, iy + 1, Graphics.FONT_XTINY, _shopNames[i], Graphics.TEXT_JUSTIFY_LEFT);
+            dc.drawText(w * 10 / 100, iy + 1, Graphics.FONT_XTINY, _shopNames[idx], Graphics.TEXT_JUSTIFY_LEFT);
 
             var costC = afford ? 0xFFDD44 : 0x554422;
             dc.setColor(costC, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w * 90 / 100, iy + 1, Graphics.FONT_XTINY, "" + _shopCosts[i], Graphics.TEXT_JUSTIFY_RIGHT);
+            dc.drawText(w * 90 / 100, iy + 1, Graphics.FONT_XTINY, "" + _shopCosts[idx], Graphics.TEXT_JUSTIFY_RIGHT);
         }
 
-        var exitY = startY + 7 * rowH;
-        var exitSel = (_shopSel == 7);
-        if (exitSel) {
-            dc.setColor(0x1A3A1A, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(w * 6 / 100, exitY - 1, w * 88 / 100, rowH - 2);
-            dc.setColor(0x44FF44, Graphics.COLOR_TRANSPARENT);
-            dc.drawRectangle(w * 6 / 100, exitY - 1, w * 88 / 100, rowH - 2);
-        }
-        dc.setColor(exitSel ? 0x44FF88 : 0x88AACC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, exitY + 1, Graphics.FONT_XTINY, "NEXT ROUND >>", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x6688AA, Graphics.COLOR_TRANSPARENT);
+        if (scroll > 0) { dc.drawText(w * 97 / 100, startY - 9, Graphics.FONT_XTINY, "^", Graphics.TEXT_JUSTIFY_CENTER); }
+        if (scroll < maxScroll) { dc.drawText(w * 97 / 100, startY + visibleRows * rowH + 1, Graphics.FONT_XTINY, "v", Graphics.TEXT_JUSTIFY_CENTER); }
 
-        if (_shopSel < 7) {
+        var belowY = startY + visibleRows * rowH + 6;
+        if (_shopSel < numItems) {
             dc.setColor(0x778899, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(w / 2, exitY + rowH + 1, Graphics.FONT_XTINY, _shopDesc[_shopSel], Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(w / 2, belowY, Graphics.FONT_XTINY, _shopDesc[_shopSel], Graphics.TEXT_JUSTIFY_CENTER);
         }
 
         if (_powQueueLen > 0) {
@@ -2284,9 +2446,11 @@ class BitochiCatapultView extends WatchUi.View {
                 else if (_powQueue[qi] == PW_TRIPLE) { pn = "3"; }
                 else if (_powQueue[qi] == PW_POISON) { pn = "V"; }
                 else if (_powQueue[qi] == PW_CLUSTER) { pn = "C"; }
+                else if (_powQueue[qi] == PW_HOMING) { pn = "H"; }
+                else if (_powQueue[qi] == PW_ICE) { pn = "Fr"; }
                 qstr += pn;
             }
-            dc.drawText(w / 2, exitY + rowH * 2, Graphics.FONT_XTINY, qstr, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.drawText(w / 2, belowY + rowH, Graphics.FONT_XTINY, qstr, Graphics.TEXT_JUSTIFY_CENTER);
         }
 
         dc.setColor(0x556677, Graphics.COLOR_TRANSPARENT);
@@ -2312,7 +2476,11 @@ class BitochiCatapultView extends WatchUi.View {
         dc.drawText(w / 2, h * 48 / 100, Graphics.FONT_SMALL, grade, Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w / 2, h * 62 / 100, Graphics.FONT_XTINY, "Rounds: " + _round, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0xFF8866, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w / 2, h * 71 / 100, Graphics.FONT_XTINY, "Damage: " + _matchDamage, Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor(0x88CCFF, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(w / 2, h * 78 / 100, Graphics.FONT_XTINY, "Shots fired: " + _matchShotsFired, Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0x88AACC, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(w / 2, h * 82 / 100, Graphics.FONT_XTINY, "Press to restart", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 88 / 100, Graphics.FONT_XTINY, "Press to restart", Graphics.TEXT_JUSTIFY_CENTER);
     }
 }

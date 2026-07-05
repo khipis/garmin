@@ -1,2095 +1,1840 @@
-[ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc"; @line = 12; @symbol_usingdef<0> = [Toybox,12,6,12]; @symbol_usingdef<1> = [Graphics,12,13,21]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc"; @line = 4; @symbol_usingdef<0> = [Toybox,4,6,12]; @symbol_usingdef<1> = [Graphics,4,13,21]; ]
 using Toybox.Graphics;
-[ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc"; @line = 13; @symbol_usingdef<0> = [Toybox,13,6,12]; @symbol_usingdef<1> = [Math,13,13,17]; ]
-using Toybox.Math;
-[ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc"; @line = 15; @symbol_classdef = [UIManager,15,6,15]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc"; @line = 6; @symbol_classdef = [UIManager,6,6,15]; ]
 class UIManager {
-    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc"; @line = 15; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc"; @line = 6; ]
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc"; @line = 15; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc"; @line = 6; ]
     static
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc"; @line = 23; @symbol_functiondef = [rowGeom,23,20,27]; @symbol_param<0> = [sw,23,28,30]; @symbol_param<1> = [sh,23,32,34]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc"; @line = 8; @symbol_functiondef = [drawHUD,8,20,27]; @symbol_param<0> = [dc,8,28,30]; @symbol_param<1> = [ctrl,8,32,36]; @symbol_param<2> = [sw,8,38,40]; @symbol_param<3> = [hudTop,8,42,48]; @symbol_param<4> = [energyBarY,8,50,60]; ]
     static
-    function rowGeom(sw, sh) {
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_23_36_37_4_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 24 8 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_23_36_37_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_23_36_37_4_stop" ]
+    function drawHUD(dc, ctrl, sw, hudTop, energyBarY) {
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_8_62_44_4_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 9 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_8_62_44_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_8_62_44_4_stop" ]
+        %cx.1 = local;
+        symbol [ cx %cx.1 9 12 14 ];
+        %tmp.1 = lgetv %sw;
+        symbol [ sw %tmp.1 9 17 19 ];
+        %tmp.2 = 2;
+        %tmp.3 = div %tmp.1 %tmp.2;
+        lputv %cx.1 %tmp.3;
+        symbol [ cx %cx.1 9 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 11 8 ]
+        %tmp.4 = lgetv %dc;
+        symbol [ dc %tmp.4 11 8 10 ];
+        symbol [ setColor %tmp.5 11 11 19 ];
+        %tmp.5 = getv function %tmp.4 :setColor;
+        %tmp.6 = 0xFFFFFF;
+        symbol [ Graphics %tmp.7 11 30 38 ];
+        %tmp.7 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.8 11 39 56 ];
+        %tmp.8 = getv %tmp.7 :COLOR_TRANSPARENT;
+        invoke %tmp.4 %tmp.5(%tmp.6, %tmp.8);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 12 8 ]
+        %tmp.9 = lgetv %dc;
+        symbol [ dc %tmp.9 12 8 10 ];
+        symbol [ drawText %tmp.10 12 11 19 ];
+        %tmp.10 = getv function %tmp.9 :drawText;
+        %tmp.11 = lgetv %cx.1;
+        symbol [ cx %tmp.11 12 20 22 ];
+        %tmp.12 = lgetv %hudTop;
+        symbol [ hudTop %tmp.12 12 24 30 ];
+        symbol [ Graphics %tmp.13 12 32 40 ];
+        %tmp.13 = getm $.Toybox.Graphics;
+        symbol [ FONT_NUMBER_MILD %tmp.14 12 41 57 ];
+        %tmp.14 = getv %tmp.13 :FONT_NUMBER_MILD;
+        %tmp.15 = lgetv %ctrl;
+        symbol [ ctrl %tmp.15 13 20 24 ];
+        symbol [ scoreSys %tmp.16 13 25 33 ];
+        %tmp.16 = getv %tmp.15 :scoreSys;
+        symbol [ score %tmp.17 13 34 39 ];
+        %tmp.17 = getv %tmp.16 :score;
+        symbol [ format %tmp.18 13 40 46 ];
+        %tmp.18 = getv function %tmp.17 :format;
+        %tmp.19 = "%d";
+        %tmp.20 = invoke %tmp.17 %tmp.18(%tmp.19);
+        symbol [ Graphics %tmp.21 13 54 62 ];
+        %tmp.21 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.22 13 63 82 ];
+        %tmp.22 = getv %tmp.21 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.9 %tmp.10(%tmp.11, %tmp.12, %tmp.14, %tmp.20, %tmp.22);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 15 8 ]
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_15_8_19_8_if_stmt:
+        %tmp.23 = lgetv %ctrl;
+        symbol [ ctrl %tmp.23 15 12 16 ];
+        symbol [ scoreSys %tmp.24 15 17 25 ];
+        %tmp.24 = getv %tmp.23 :scoreSys;
+        symbol [ hi %tmp.25 15 26 28 ];
+        %tmp.25 = getv %tmp.24 :hi;
+        %tmp.26 = 0;
+        %tmp.27 = gt %tmp.25 %tmp.26;
+        bf %tmp.27 @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_15_8_19_8_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_15_8_19_8_if_true:
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_15_34_19_8_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 16 12 ]
+        %tmp.28 = lgetv %dc;
+        symbol [ dc %tmp.28 16 12 14 ];
+        symbol [ setColor %tmp.29 16 15 23 ];
+        %tmp.29 = getv function %tmp.28 :setColor;
+        %tmp.30 = 0xFFCC22;
+        symbol [ Graphics %tmp.31 16 34 42 ];
+        %tmp.31 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.32 16 43 60 ];
+        %tmp.32 = getv %tmp.31 :COLOR_TRANSPARENT;
+        invoke %tmp.28 %tmp.29(%tmp.30, %tmp.32);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 17 12 ]
+        %tmp.33 = lgetv %dc;
+        symbol [ dc %tmp.33 17 12 14 ];
+        symbol [ drawText %tmp.34 17 15 23 ];
+        %tmp.34 = getv function %tmp.33 :drawText;
+        %tmp.35 = lgetv %sw;
+        symbol [ sw %tmp.35 17 24 26 ];
+        %tmp.36 = 6;
+        %tmp.37 = sub %tmp.35 %tmp.36;
+        %tmp.38 = lgetv %hudTop;
+        symbol [ hudTop %tmp.38 17 32 38 ];
+        %tmp.39 = 2;
+        %tmp.40 = add %tmp.38 %tmp.39;
+        symbol [ Graphics %tmp.41 17 44 52 ];
+        %tmp.41 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.42 17 53 63 ];
+        %tmp.42 = getv %tmp.41 :FONT_XTINY;
+        %tmp.43 = "B ";
+        %tmp.44 = lgetv %ctrl;
+        symbol [ ctrl %tmp.44 18 31 35 ];
+        symbol [ scoreSys %tmp.45 18 36 44 ];
+        %tmp.45 = getv %tmp.44 :scoreSys;
+        symbol [ hi %tmp.46 18 45 47 ];
+        %tmp.46 = getv %tmp.45 :hi;
+        symbol [ format %tmp.47 18 48 54 ];
+        %tmp.47 = getv function %tmp.46 :format;
+        %tmp.48 = "%d";
+        %tmp.49 = invoke %tmp.46 %tmp.47(%tmp.48);
+        %tmp.50 = add %tmp.43 %tmp.49;
+        symbol [ Graphics %tmp.51 18 62 70 ];
+        %tmp.51 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_RIGHT %tmp.52 18 71 89 ];
+        %tmp.52 = getv %tmp.51 :TEXT_JUSTIFY_RIGHT;
+        invoke %tmp.33 %tmp.34(%tmp.37, %tmp.40, %tmp.42, %tmp.50, %tmp.52);
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_15_34_19_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_15_8_19_8_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_15_8_19_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 20 8 ]
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_20_8_24_8_if_stmt:
+        %tmp.53 = lgetv %ctrl;
+        symbol [ ctrl %tmp.53 20 12 16 ];
+        symbol [ scoreSys %tmp.54 20 17 25 ];
+        %tmp.54 = getv %tmp.53 :scoreSys;
+        symbol [ combo %tmp.55 20 26 31 ];
+        %tmp.55 = getv %tmp.54 :combo;
+        %tmp.56 = 2;
+        %tmp.57 = gte %tmp.55 %tmp.56;
+        bf %tmp.57 @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_20_8_24_8_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_20_8_24_8_if_true:
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_20_38_24_8_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 21 12 ]
+        %tmp.58 = lgetv %dc;
+        symbol [ dc %tmp.58 21 12 14 ];
+        symbol [ setColor %tmp.59 21 15 23 ];
+        %tmp.59 = getv function %tmp.58 :setColor;
+        %tmp.60 = 0x66DDFF;
+        symbol [ Graphics %tmp.61 21 34 42 ];
+        %tmp.61 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.62 21 43 60 ];
+        %tmp.62 = getv %tmp.61 :COLOR_TRANSPARENT;
+        invoke %tmp.58 %tmp.59(%tmp.60, %tmp.62);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 22 12 ]
+        %tmp.63 = lgetv %dc;
+        symbol [ dc %tmp.63 22 12 14 ];
+        symbol [ drawText %tmp.64 22 15 23 ];
+        %tmp.64 = getv function %tmp.63 :drawText;
+        %tmp.65 = 6;
+        %tmp.66 = lgetv %hudTop;
+        symbol [ hudTop %tmp.66 22 27 33 ];
+        %tmp.67 = 2;
+        %tmp.68 = add %tmp.66 %tmp.67;
+        symbol [ Graphics %tmp.69 22 39 47 ];
+        %tmp.69 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.70 22 48 58 ];
+        %tmp.70 = getv %tmp.69 :FONT_XTINY;
+        %tmp.71 = "x";
+        %tmp.72 = lgetv %ctrl;
+        symbol [ ctrl %tmp.72 23 31 35 ];
+        symbol [ scoreSys %tmp.73 23 36 44 ];
+        %tmp.73 = getv %tmp.72 :scoreSys;
+        symbol [ combo %tmp.74 23 45 50 ];
+        %tmp.74 = getv %tmp.73 :combo;
+        %tmp.75 = 1;
+        %tmp.76 = add %tmp.74 %tmp.75;
+        symbol [ format %tmp.77 23 56 62 ];
+        %tmp.77 = getv function %tmp.76 :format;
+        %tmp.78 = "%d";
+        %tmp.79 = invoke %tmp.76 %tmp.77(%tmp.78);
+        %tmp.80 = add %tmp.71 %tmp.79;
+        symbol [ Graphics %tmp.81 23 70 78 ];
+        %tmp.81 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_LEFT %tmp.82 23 79 96 ];
+        %tmp.82 = getv %tmp.81 :TEXT_JUSTIFY_LEFT;
+        invoke %tmp.63 %tmp.64(%tmp.65, %tmp.68, %tmp.70, %tmp.80, %tmp.82);
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_20_38_24_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_20_8_24_8_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_20_8_24_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 28 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_8_62_44_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_8_62_44_4_stop" ]
+        %barW.2 = local;
+        symbol [ barW %barW.2 28 12 16 ];
+        %tmp.83 = lgetv %sw;
+        symbol [ sw %tmp.83 28 19 21 ];
+        %tmp.84 = 60;
+        %tmp.85 = mul %tmp.83 %tmp.84;
+        %tmp.86 = 100;
+        %tmp.87 = div %tmp.85 %tmp.86;
+        lputv %barW.2 %tmp.87;
+        symbol [ barW %barW.2 28 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 28 34 ]
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_28_34_28_62_if_stmt:
+        %tmp.88 = lgetv %barW.2;
+        symbol [ barW %tmp.88 28 38 42 ];
+        %tmp.89 = 90;
+        %tmp.90 = lt %tmp.88 %tmp.89;
+        bf %tmp.90 @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_28_34_28_62_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_28_34_28_62_if_true:
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_28_49_28_62_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 28 51 ]
+        %tmp.91 = 90;
+        lputv %barW.2 %tmp.91;
+        symbol [ barW %barW.2 28 51 55 ];
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_28_49_28_62_stop:
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_28_34_28_62_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_28_34_28_62_if_end:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 29 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_8_62_44_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_8_62_44_4_stop" ]
+        %barX.3 = local;
+        symbol [ barX %barX.3 29 12 16 ];
+        %tmp.92 = lgetv %cx.1;
+        symbol [ cx %tmp.92 29 19 21 ];
+        %tmp.93 = lgetv %barW.2;
+        symbol [ barW %tmp.93 29 24 28 ];
+        %tmp.94 = 2;
+        %tmp.95 = div %tmp.93 %tmp.94;
+        %tmp.96 = sub %tmp.92 %tmp.95;
+        lputv %barX.3 %tmp.96;
+        symbol [ barX %barX.3 29 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 30 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_8_62_44_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_8_62_44_4_stop" ]
+        %barH.4 = local;
+        symbol [ barH %barH.4 30 12 16 ];
+        %tmp.97 = 8;
+        lputv %barH.4 %tmp.97;
+        symbol [ barH %barH.4 30 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 31 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_8_62_44_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_8_62_44_4_stop" ]
+        %pct.5 = local;
+        symbol [ pct %pct.5 31 12 15 ];
+        %tmp.98 = lgetv %ctrl;
+        symbol [ ctrl %tmp.98 31 19 23 ];
+        symbol [ energy %tmp.99 31 24 30 ];
+        %tmp.99 = getv %tmp.98 :energy;
+        %tmp.100 = 100;
+        %tmp.101 = mul %tmp.99 %tmp.100;
+        symbol [ ENERGY_MAX %tmp.103 31 39 49 ];
+        %tmp.103 = getv ? :ENERGY_MAX;
+        %tmp.104 = div %tmp.101 %tmp.103;
+        lputv %pct.5 %tmp.104;
+        symbol [ pct %pct.5 31 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 32 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_8_62_44_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_8_62_44_4_stop" ]
+        %fillW.6 = local;
+        symbol [ fillW %fillW.6 32 12 17 ];
+        %tmp.105 = lgetv %barW.2;
+        symbol [ barW %tmp.105 32 20 24 ];
+        %tmp.106 = lgetv %pct.5;
+        symbol [ pct %tmp.106 32 27 30 ];
+        %tmp.107 = mul %tmp.105 %tmp.106;
+        %tmp.108 = 100;
+        %tmp.109 = div %tmp.107 %tmp.108;
+        lputv %fillW.6 %tmp.109;
+        symbol [ fillW %fillW.6 32 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 33 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_8_62_44_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_8_62_44_4_stop" ]
+        %col.7 = local;
+        symbol [ col %col.7 33 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 34 8 ]
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_34_8_36_45_if_stmt:
+        %tmp.110 = lgetv %pct.5;
+        symbol [ pct %tmp.110 34 12 15 ];
+        %tmp.111 = 55;
+        %tmp.112 = gt %tmp.110 %tmp.111;
+        bf %tmp.112 @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_34_8_36_45_if_false;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_34_8_36_45_if_true:
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_34_27_34_45_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 34 29 ]
+        %tmp.113 = 0x33CC44;
+        lputv %col.7 %tmp.113;
+        symbol [ col %col.7 34 29 32 ];
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_34_27_34_45_stop:
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_34_8_36_45_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_34_8_36_45_if_false:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 35 13 ]
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_35_13_36_45_if_stmt:
+        %tmp.114 = lgetv %pct.5;
+        symbol [ pct %tmp.114 35 17 20 ];
+        %tmp.115 = 25;
+        %tmp.116 = gt %tmp.114 %tmp.115;
+        bf %tmp.116 @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_35_13_36_45_if_else_false;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_35_13_36_45_if_true:
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_35_27_35_45_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 35 29 ]
+        %tmp.117 = 0xFFCC22;
+        lputv %col.7 %tmp.117;
+        symbol [ col %col.7 35 29 32 ];
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_35_27_35_45_stop:
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_35_13_36_45_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_35_13_36_45_if_else_false:
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_36_27_36_45_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 36 29 ]
+        %tmp.118 = 0xFF3333;
+        lputv %col.7 %tmp.118;
+        symbol [ col %col.7 36 29 32 ];
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_36_27_36_45_stop:
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_35_13_36_45_if_end:
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_34_8_36_45_if_end:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 38 8 ]
+        %tmp.119 = lgetv %dc;
+        symbol [ dc %tmp.119 38 8 10 ];
+        symbol [ setColor %tmp.120 38 11 19 ];
+        %tmp.120 = getv function %tmp.119 :setColor;
+        %tmp.121 = 0x1A1A1A;
+        symbol [ Graphics %tmp.122 38 30 38 ];
+        %tmp.122 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.123 38 39 56 ];
+        %tmp.123 = getv %tmp.122 :COLOR_TRANSPARENT;
+        invoke %tmp.119 %tmp.120(%tmp.121, %tmp.123);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 39 8 ]
+        %tmp.124 = lgetv %dc;
+        symbol [ dc %tmp.124 39 8 10 ];
+        symbol [ fillRoundedRectangle %tmp.125 39 11 31 ];
+        %tmp.125 = getv function %tmp.124 :fillRoundedRectangle;
+        %tmp.126 = lgetv %barX.3;
+        symbol [ barX %tmp.126 39 32 36 ];
+        %tmp.127 = lgetv %energyBarY;
+        symbol [ energyBarY %tmp.127 39 38 48 ];
+        %tmp.128 = lgetv %barW.2;
+        symbol [ barW %tmp.128 39 50 54 ];
+        %tmp.129 = lgetv %barH.4;
+        symbol [ barH %tmp.129 39 56 60 ];
+        %tmp.130 = 4;
+        invoke %tmp.124 %tmp.125(%tmp.126, %tmp.127, %tmp.128, %tmp.129, %tmp.130);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 40 8 ]
+        %tmp.131 = lgetv %dc;
+        symbol [ dc %tmp.131 40 8 10 ];
+        symbol [ setColor %tmp.132 40 11 19 ];
+        %tmp.132 = getv function %tmp.131 :setColor;
+        %tmp.133 = lgetv %col.7;
+        symbol [ col %tmp.133 40 20 23 ];
+        symbol [ Graphics %tmp.134 40 25 33 ];
+        %tmp.134 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.135 40 34 51 ];
+        %tmp.135 = getv %tmp.134 :COLOR_TRANSPARENT;
+        invoke %tmp.131 %tmp.132(%tmp.133, %tmp.135);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 41 8 ]
+        %tmp.136 = lgetv %dc;
+        symbol [ dc %tmp.136 41 8 10 ];
+        symbol [ fillRoundedRectangle %tmp.137 41 11 31 ];
+        %tmp.137 = getv function %tmp.136 :fillRoundedRectangle;
+        %tmp.138 = lgetv %barX.3;
+        symbol [ barX %tmp.138 41 32 36 ];
+        %tmp.139 = lgetv %energyBarY;
+        symbol [ energyBarY %tmp.139 41 38 48 ];
+        %tmp.140 = lgetv %fillW.6;
+        symbol [ fillW %tmp.140 41 50 55 ];
+        %tmp.141 = lgetv %barH.4;
+        symbol [ barH %tmp.141 41 57 61 ];
+        %tmp.142 = 4;
+        invoke %tmp.136 %tmp.137(%tmp.138, %tmp.139, %tmp.140, %tmp.141, %tmp.142);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 42 8 ]
+        %tmp.143 = lgetv %dc;
+        symbol [ dc %tmp.143 42 8 10 ];
+        symbol [ setColor %tmp.144 42 11 19 ];
+        %tmp.144 = getv function %tmp.143 :setColor;
+        %tmp.145 = 0x445566;
+        symbol [ Graphics %tmp.146 42 30 38 ];
+        %tmp.146 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.147 42 39 56 ];
+        %tmp.147 = getv %tmp.146 :COLOR_TRANSPARENT;
+        invoke %tmp.143 %tmp.144(%tmp.145, %tmp.147);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 43 8 ]
+        %tmp.148 = lgetv %dc;
+        symbol [ dc %tmp.148 43 8 10 ];
+        symbol [ drawRoundedRectangle %tmp.149 43 11 31 ];
+        %tmp.149 = getv function %tmp.148 :drawRoundedRectangle;
+        %tmp.150 = lgetv %barX.3;
+        symbol [ barX %tmp.150 43 32 36 ];
+        %tmp.151 = lgetv %energyBarY;
+        symbol [ energyBarY %tmp.151 43 38 48 ];
+        %tmp.152 = lgetv %barW.2;
+        symbol [ barW %tmp.152 43 50 54 ];
+        %tmp.153 = lgetv %barH.4;
+        symbol [ barH %tmp.153 43 56 60 ];
+        %tmp.154 = 4;
+        invoke %tmp.148 %tmp.149(%tmp.150, %tmp.151, %tmp.152, %tmp.153, %tmp.154);
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_8_62_44_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc"; @line = 48; @symbol_functiondef = [drawMenu,48,20,28]; @symbol_param<0> = [dc,48,29,31]; @symbol_param<1> = [ctrl,48,33,37]; @symbol_param<2> = [sw,48,39,41]; @symbol_param<3> = [sh,48,43,45]; ]
+    static
+    function drawMenu(dc, ctrl, sw, sh) {
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_48_47_116_4_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 49 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_48_47_116_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_48_47_116_4_stop" ]
+        %cx.1 = local;
+        symbol [ cx %cx.1 49 12 14 ];
+        %tmp.1 = lgetv %sw;
+        symbol [ sw %tmp.1 49 17 19 ];
+        %tmp.2 = 2;
+        %tmp.3 = div %tmp.1 %tmp.2;
+        lputv %cx.1 %tmp.3;
+        symbol [ cx %cx.1 49 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 50 8 ]
+        %tmp.4 = lgetv %dc;
+        symbol [ dc %tmp.4 50 8 10 ];
+        symbol [ setColor %tmp.5 50 11 19 ];
+        %tmp.5 = getv function %tmp.4 :setColor;
+        %tmp.6 = 0x0B1418;
+        %tmp.7 = 0x0B1418;
+        invoke %tmp.4 %tmp.5(%tmp.6, %tmp.7);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 50 41 ]
+        %tmp.8 = lgetv %dc;
+        symbol [ dc %tmp.8 50 41 43 ];
+        symbol [ clear %tmp.9 50 44 49 ];
+        %tmp.9 = getv function %tmp.8 :clear;
+        invoke %tmp.8 %tmp.9();
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 51 8 ]
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_51_8_54_8_if_stmt:
+        %tmp.10 = lgetv %sw;
+        symbol [ sw %tmp.10 51 12 14 ];
+        %tmp.11 = lgetv %sh;
+        symbol [ sh %tmp.11 51 18 20 ];
+        %tmp.12 = eq %tmp.10 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_51_8_54_8_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_51_8_54_8_if_true:
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_51_22_54_8_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 52 12 ]
+        %tmp.13 = lgetv %dc;
+        symbol [ dc %tmp.13 52 12 14 ];
+        symbol [ setColor %tmp.14 52 15 23 ];
+        %tmp.14 = getv function %tmp.13 :setColor;
+        %tmp.15 = 0x101A14;
+        symbol [ Graphics %tmp.16 52 34 42 ];
+        %tmp.16 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.17 52 43 60 ];
+        %tmp.17 = getv %tmp.16 :COLOR_TRANSPARENT;
+        invoke %tmp.13 %tmp.14(%tmp.15, %tmp.17);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 53 12 ]
+        %tmp.18 = lgetv %dc;
+        symbol [ dc %tmp.18 53 12 14 ];
+        symbol [ fillCircle %tmp.19 53 15 25 ];
+        %tmp.19 = getv function %tmp.18 :fillCircle;
+        %tmp.20 = lgetv %cx.1;
+        symbol [ cx %tmp.20 53 26 28 ];
+        %tmp.21 = lgetv %sh;
+        symbol [ sh %tmp.21 53 30 32 ];
+        %tmp.22 = 2;
+        %tmp.23 = div %tmp.21 %tmp.22;
+        %tmp.24 = lgetv %sw;
+        symbol [ sw %tmp.24 53 38 40 ];
+        %tmp.25 = 2;
+        %tmp.26 = div %tmp.24 %tmp.25;
+        %tmp.27 = 1;
+        %tmp.28 = sub %tmp.26 %tmp.27;
+        invoke %tmp.18 %tmp.19(%tmp.20, %tmp.23, %tmp.28);
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_51_22_54_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_51_8_54_8_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_51_8_54_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 56 8 ]
+        %tmp.29 = lgetv %dc;
+        symbol [ dc %tmp.29 56 8 10 ];
+        symbol [ setColor %tmp.30 56 11 19 ];
+        %tmp.30 = getv function %tmp.29 :setColor;
+        %tmp.31 = 0xFFCC22;
+        symbol [ Graphics %tmp.32 56 30 38 ];
+        %tmp.32 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.33 56 39 56 ];
+        %tmp.33 = getv %tmp.32 :COLOR_TRANSPARENT;
+        invoke %tmp.29 %tmp.30(%tmp.31, %tmp.33);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 57 8 ]
+        %tmp.34 = lgetv %dc;
+        symbol [ dc %tmp.34 57 8 10 ];
+        symbol [ drawText %tmp.35 57 11 19 ];
+        %tmp.35 = getv function %tmp.34 :drawText;
+        %tmp.36 = lgetv %cx.1;
+        symbol [ cx %tmp.36 57 20 22 ];
+        %tmp.37 = lgetv %sh;
+        symbol [ sh %tmp.37 57 24 26 ];
+        %tmp.38 = 8;
+        %tmp.39 = mul %tmp.37 %tmp.38;
+        %tmp.40 = 100;
+        %tmp.41 = div %tmp.39 %tmp.40;
+        symbol [ Graphics %tmp.42 57 38 46 ];
+        %tmp.42 = getm $.Toybox.Graphics;
+        symbol [ FONT_LARGE %tmp.43 57 47 57 ];
+        %tmp.43 = getv %tmp.42 :FONT_LARGE;
+        %tmp.44 = "DRWAL";
+        symbol [ Graphics %tmp.45 58 29 37 ];
+        %tmp.45 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.46 58 38 57 ];
+        %tmp.46 = getv %tmp.45 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.34 %tmp.35(%tmp.36, %tmp.41, %tmp.43, %tmp.44, %tmp.46);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 59 8 ]
+        %tmp.47 = lgetv %dc;
+        symbol [ dc %tmp.47 59 8 10 ];
+        symbol [ setColor %tmp.48 59 11 19 ];
+        %tmp.48 = getv function %tmp.47 :setColor;
+        %tmp.49 = 0x88AA88;
+        symbol [ Graphics %tmp.50 59 30 38 ];
+        %tmp.50 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.51 59 39 56 ];
+        %tmp.51 = getv %tmp.50 :COLOR_TRANSPARENT;
+        invoke %tmp.47 %tmp.48(%tmp.49, %tmp.51);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 60 8 ]
+        %tmp.52 = lgetv %dc;
+        symbol [ dc %tmp.52 60 8 10 ];
+        symbol [ drawText %tmp.53 60 11 19 ];
+        %tmp.53 = getv function %tmp.52 :drawText;
+        %tmp.54 = lgetv %cx.1;
+        symbol [ cx %tmp.54 60 20 22 ];
+        %tmp.55 = lgetv %sh;
+        symbol [ sh %tmp.55 60 24 26 ];
+        %tmp.56 = 20;
+        %tmp.57 = mul %tmp.55 %tmp.56;
+        %tmp.58 = 100;
+        %tmp.59 = div %tmp.57 %tmp.58;
+        symbol [ Graphics %tmp.60 60 39 47 ];
+        %tmp.60 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.61 60 48 58 ];
+        %tmp.61 = getv %tmp.60 :FONT_XTINY;
+        %tmp.62 = "by Bitochi";
+        symbol [ Graphics %tmp.63 61 34 42 ];
+        %tmp.63 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.64 61 43 62 ];
+        %tmp.64 = getv %tmp.63 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.52 %tmp.53(%tmp.54, %tmp.59, %tmp.61, %tmp.62, %tmp.64);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 63 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_48_47_116_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_48_47_116_4_stop" ]
+        %iy.2 = local;
+        symbol [ iy %iy.2 63 12 14 ];
+        %tmp.65 = lgetv %sh;
+        symbol [ sh %tmp.65 63 17 19 ];
+        %tmp.66 = 32;
+        %tmp.67 = mul %tmp.65 %tmp.66;
+        %tmp.68 = 100;
+        %tmp.69 = div %tmp.67 %tmp.68;
+        lputv %iy.2 %tmp.69;
+        symbol [ iy %iy.2 63 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 64 8 ]
+        %tmp.70 = lgetv %dc;
+        symbol [ dc %tmp.70 64 8 10 ];
+        symbol [ setColor %tmp.71 64 11 19 ];
+        %tmp.71 = getv function %tmp.70 :setColor;
+        %tmp.72 = 0x8A5A2E;
+        symbol [ Graphics %tmp.73 64 30 38 ];
+        %tmp.73 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.74 64 39 56 ];
+        %tmp.74 = getv %tmp.73 :COLOR_TRANSPARENT;
+        invoke %tmp.70 %tmp.71(%tmp.72, %tmp.74);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 65 8 ]
+        %tmp.75 = lgetv %dc;
+        symbol [ dc %tmp.75 65 8 10 ];
+        symbol [ fillRoundedRectangle %tmp.76 65 11 31 ];
+        %tmp.76 = getv function %tmp.75 :fillRoundedRectangle;
+        %tmp.77 = lgetv %cx.1;
+        symbol [ cx %tmp.77 65 32 34 ];
+        %tmp.78 = 16;
+        %tmp.79 = sub %tmp.77 %tmp.78;
+        %tmp.80 = lgetv %iy.2;
+        symbol [ iy %tmp.80 65 41 43 ];
+        %tmp.81 = 32;
+        %tmp.82 = 14;
+        %tmp.83 = 3;
+        invoke %tmp.75 %tmp.76(%tmp.79, %tmp.80, %tmp.81, %tmp.82, %tmp.83);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 66 8 ]
+        %tmp.84 = lgetv %dc;
+        symbol [ dc %tmp.84 66 8 10 ];
+        symbol [ setColor %tmp.85 66 11 19 ];
+        %tmp.85 = getv function %tmp.84 :setColor;
+        %tmp.86 = 0xE8D8B8;
+        symbol [ Graphics %tmp.87 66 30 38 ];
+        %tmp.87 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.88 66 39 56 ];
+        %tmp.88 = getv %tmp.87 :COLOR_TRANSPARENT;
+        invoke %tmp.84 %tmp.85(%tmp.86, %tmp.88);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 67 8 ]
+        %tmp.89 = lgetv %dc;
+        symbol [ dc %tmp.89 67 8 10 ];
+        symbol [ fillCircle %tmp.90 67 11 21 ];
+        %tmp.90 = getv function %tmp.89 :fillCircle;
+        %tmp.91 = lgetv %cx.1;
+        symbol [ cx %tmp.91 67 22 24 ];
+        %tmp.92 = lgetv %iy.2;
+        symbol [ iy %tmp.92 67 26 28 ];
+        %tmp.93 = 7;
+        %tmp.94 = add %tmp.92 %tmp.93;
+        %tmp.95 = 5;
+        invoke %tmp.89 %tmp.90(%tmp.91, %tmp.94, %tmp.95);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 68 8 ]
+        %tmp.96 = lgetv %dc;
+        symbol [ dc %tmp.96 68 8 10 ];
+        symbol [ setColor %tmp.97 68 11 19 ];
+        %tmp.97 = getv function %tmp.96 :setColor;
+        %tmp.98 = 0x999999;
+        symbol [ Graphics %tmp.99 68 30 38 ];
+        %tmp.99 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.100 68 39 56 ];
+        %tmp.100 = getv %tmp.99 :COLOR_TRANSPARENT;
+        invoke %tmp.96 %tmp.97(%tmp.98, %tmp.100);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 69 8 ]
+        %tmp.101 = lgetv %dc;
+        symbol [ dc %tmp.101 69 8 10 ];
+        symbol [ fillRectangle %tmp.102 69 11 24 ];
+        %tmp.102 = getv function %tmp.101 :fillRectangle;
+        %tmp.103 = lgetv %cx.1;
+        symbol [ cx %tmp.103 69 25 27 ];
+        %tmp.104 = 2;
+        %tmp.105 = sub %tmp.103 %tmp.104;
+        %tmp.106 = lgetv %iy.2;
+        symbol [ iy %tmp.106 69 33 35 ];
+        %tmp.107 = 10;
+        %tmp.108 = sub %tmp.106 %tmp.107;
+        %tmp.109 = 4;
+        %tmp.110 = 12;
+        invoke %tmp.101 %tmp.102(%tmp.105, %tmp.108, %tmp.109, %tmp.110);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 70 8 ]
+        %tmp.111 = lgetv %dc;
+        symbol [ dc %tmp.111 70 8 10 ];
+        symbol [ fillRectangle %tmp.112 70 11 24 ];
+        %tmp.112 = getv function %tmp.111 :fillRectangle;
+        %tmp.113 = lgetv %cx.1;
+        symbol [ cx %tmp.113 70 25 27 ];
+        %tmp.114 = 8;
+        %tmp.115 = sub %tmp.113 %tmp.114;
+        %tmp.116 = lgetv %iy.2;
+        symbol [ iy %tmp.116 70 33 35 ];
+        %tmp.117 = 14;
+        %tmp.118 = sub %tmp.116 %tmp.117;
+        %tmp.119 = 8;
+        %tmp.120 = 8;
+        invoke %tmp.111 %tmp.112(%tmp.115, %tmp.118, %tmp.119, %tmp.120);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 72 8 ]
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_72_8_77_8_if_stmt:
+        %tmp.121 = lgetv %ctrl;
+        symbol [ ctrl %tmp.121 72 12 16 ];
+        symbol [ scoreSys %tmp.122 72 17 25 ];
+        %tmp.122 = getv %tmp.121 :scoreSys;
+        symbol [ hi %tmp.123 72 26 28 ];
+        %tmp.123 = getv %tmp.122 :hi;
+        %tmp.124 = 0;
+        %tmp.125 = gt %tmp.123 %tmp.124;
+        bf %tmp.125 @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_72_8_77_8_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_72_8_77_8_if_true:
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_72_34_77_8_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 73 12 ]
+        %tmp.126 = lgetv %dc;
+        symbol [ dc %tmp.126 73 12 14 ];
+        symbol [ setColor %tmp.127 73 15 23 ];
+        %tmp.127 = getv function %tmp.126 :setColor;
+        %tmp.128 = 0xFFCC22;
+        symbol [ Graphics %tmp.129 73 34 42 ];
+        %tmp.129 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.130 73 43 60 ];
+        %tmp.130 = getv %tmp.129 :COLOR_TRANSPARENT;
+        invoke %tmp.126 %tmp.127(%tmp.128, %tmp.130);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 74 12 ]
+        %tmp.131 = lgetv %dc;
+        symbol [ dc %tmp.131 74 12 14 ];
+        symbol [ drawText %tmp.132 74 15 23 ];
+        %tmp.132 = getv function %tmp.131 :drawText;
+        %tmp.133 = lgetv %cx.1;
+        symbol [ cx %tmp.133 74 24 26 ];
+        %tmp.134 = lgetv %sh;
+        symbol [ sh %tmp.134 74 28 30 ];
+        %tmp.135 = 42;
+        %tmp.136 = mul %tmp.134 %tmp.135;
+        %tmp.137 = 100;
+        %tmp.138 = div %tmp.136 %tmp.137;
+        symbol [ Graphics %tmp.139 74 43 51 ];
+        %tmp.139 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.140 74 52 62 ];
+        %tmp.140 = getv %tmp.139 :FONT_XTINY;
+        %tmp.141 = "BEST ";
+        %tmp.142 = lgetv %ctrl;
+        symbol [ ctrl %tmp.142 75 34 38 ];
+        symbol [ scoreSys %tmp.143 75 39 47 ];
+        %tmp.143 = getv %tmp.142 :scoreSys;
+        symbol [ hi %tmp.144 75 48 50 ];
+        %tmp.144 = getv %tmp.143 :hi;
+        symbol [ format %tmp.145 75 51 57 ];
+        %tmp.145 = getv function %tmp.144 :format;
+        %tmp.146 = "%d";
+        %tmp.147 = invoke %tmp.144 %tmp.145(%tmp.146);
+        %tmp.148 = add %tmp.141 %tmp.147;
+        symbol [ Graphics %tmp.149 76 24 32 ];
+        %tmp.149 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.150 76 33 52 ];
+        %tmp.150 = getv %tmp.149 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.131 %tmp.132(%tmp.133, %tmp.138, %tmp.140, %tmp.148, %tmp.150);
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_72_34_77_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_72_8_77_8_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_72_8_77_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 79 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_48_47_116_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_48_47_116_4_stop" ]
+        %g.3 = local;
+        symbol [ g %g.3 79 12 13 ];
+        %tmp.151 = self;
+        symbol [ _menuRowGeom %tmp.152 79 16 28 ];
+        %tmp.152 = getv function %tmp.151 :_menuRowGeom;
+        %tmp.153 = lgetv %sw;
+        symbol [ sw %tmp.153 79 29 31 ];
+        %tmp.154 = lgetv %sh;
+        symbol [ sh %tmp.154 79 33 35 ];
+        %tmp.155 = invoke %tmp.151 %tmp.152(%tmp.153, %tmp.154);
+        lputv %g.3 %tmp.155;
+        symbol [ g %g.3 79 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 80 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_48_47_116_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_48_47_116_4_stop" ]
+        %rowH.4 = local;
+        symbol [ rowH %rowH.4 80 12 16 ];
+        %tmp.156 = lgetv %g.3;
+        symbol [ g %tmp.156 80 19 20 ];
+        %tmp.157 = 0;
+        %tmp.158 = agetv %tmp.156 %tmp.157;
+        lputv %rowH.4 %tmp.158;
+        symbol [ rowH %rowH.4 80 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 80 25 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_48_47_116_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_48_47_116_4_stop" ]
+        %rowW.5 = local;
+        symbol [ rowW %rowW.5 80 29 33 ];
+        %tmp.159 = lgetv %g.3;
+        symbol [ g %tmp.159 80 36 37 ];
+        %tmp.160 = 1;
+        %tmp.161 = agetv %tmp.159 %tmp.160;
+        lputv %rowW.5 %tmp.161;
+        symbol [ rowW %rowW.5 80 29 33 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 80 42 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_48_47_116_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_48_47_116_4_stop" ]
+        %rowX.6 = local;
+        symbol [ rowX %rowX.6 80 46 50 ];
+        %tmp.162 = lgetv %g.3;
+        symbol [ g %tmp.162 80 53 54 ];
+        %tmp.163 = 2;
+        %tmp.164 = agetv %tmp.162 %tmp.163;
+        lputv %rowX.6 %tmp.164;
+        symbol [ rowX %rowX.6 80 46 50 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 80 59 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_48_47_116_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_48_47_116_4_stop" ]
+        %rowY0.7 = local;
+        symbol [ rowY0 %rowY0.7 80 63 68 ];
+        %tmp.165 = lgetv %g.3;
+        symbol [ g %tmp.165 80 71 72 ];
+        %tmp.166 = 3;
+        %tmp.167 = agetv %tmp.165 %tmp.166;
+        lputv %rowY0.7 %tmp.167;
+        symbol [ rowY0 %rowY0.7 80 63 68 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 80 77 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_48_47_116_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_48_47_116_4_stop" ]
+        %gap.8 = local;
+        symbol [ gap %gap.8 80 81 84 ];
+        %tmp.168 = lgetv %g.3;
+        symbol [ g %tmp.168 80 87 88 ];
+        %tmp.169 = 4;
+        %tmp.170 = agetv %tmp.168 %tmp.169;
+        lputv %gap.8 %tmp.170;
+        symbol [ gap %gap.8 80 81 84 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 81 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_48_47_116_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_48_47_116_4_stop" ]
+        %labels.9 = local;
+        symbol [ labels %labels.9 81 12 18 ];
+        symbol [ DR_MENU_ROWS %tmp.173 81 26 38 ];
+        %tmp.173 = getv ? :DR_MENU_ROWS;
+        %tmp.171 = newa %tmp.173;
+        lputv %labels.9 %tmp.171;
+        symbol [ labels %labels.9 81 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 82 8 ]
+        %tmp.174 = lgetv %labels.9;
+        symbol [ labels %tmp.174 82 8 14 ];
+        %tmp.175 = "Diff: ";
+        %tmp.176 = lgetv %ctrl;
+        symbol [ ctrl %tmp.176 82 42 46 ];
+        symbol [ diffName %tmp.177 82 47 55 ];
+        %tmp.177 = getv function %tmp.176 :diffName;
+        %tmp.178 = invoke %tmp.176 %tmp.177();
+        %tmp.179 = add %tmp.175 %tmp.178;
+        symbol [ DR_ROW_DIFF %tmp.181 82 15 26 ];
+        %tmp.181 = getv ? :DR_ROW_DIFF;
+        aputv %tmp.174 %tmp.181 %tmp.179;
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 83 8 ]
+        %tmp.182 = lgetv %labels.9;
+        symbol [ labels %tmp.182 83 8 14 ];
+        %tmp.183 = "START";
+        symbol [ DR_ROW_START %tmp.185 83 15 27 ];
+        %tmp.185 = getv ? :DR_ROW_START;
+        aputv %tmp.182 %tmp.185 %tmp.183;
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 85 8 ]
+        for @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_85_8_111_8_for_test @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_85_8_111_8_for_incr @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_85_8_111_8_for_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_85_8_111_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_85_8_111_8_for_begin" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_85_8_111_8_for_end" ]
+        %i.10 = local;
+        symbol [ i %i.10 85 17 18 ];
+        %tmp.186 = 0;
+        lputv %i.10 %tmp.186;
+        symbol [ i %i.10 85 17 18 ];
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_85_8_111_8_for_test:
+        %tmp.187 = lgetv %i.10;
+        symbol [ i %tmp.187 85 24 25 ];
+        symbol [ DR_MENU_ROWS %tmp.189 85 28 40 ];
+        %tmp.189 = getv ? :DR_MENU_ROWS;
+        %tmp.190 = lt %tmp.187 %tmp.189;
+        bf %tmp.190 @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_85_8_111_8_for_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_85_8_111_8_for_begin:
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_85_47_111_8_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 86 12 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_85_47_111_8_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_85_47_111_8_stop" ]
+        %ry.11 = local;
+        symbol [ ry %ry.11 86 16 18 ];
+        %tmp.191 = lgetv %rowY0.7;
+        symbol [ rowY0 %tmp.191 86 22 27 ];
+        %tmp.192 = lgetv %i.10;
+        symbol [ i %tmp.192 86 30 31 ];
+        %tmp.193 = lgetv %rowH.4;
+        symbol [ rowH %tmp.193 86 35 39 ];
+        %tmp.194 = lgetv %gap.8;
+        symbol [ gap %tmp.194 86 42 45 ];
+        %tmp.195 = add %tmp.193 %tmp.194;
+        %tmp.196 = mul %tmp.192 %tmp.195;
+        %tmp.197 = add %tmp.191 %tmp.196;
+        lputv %ry.11 %tmp.197;
+        symbol [ ry %ry.11 86 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 87 12 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_85_47_111_8_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_85_47_111_8_stop" ]
+        %sel.12 = local;
+        symbol [ sel %sel.12 87 16 19 ];
+        %tmp.198 = lgetv %i.10;
+        symbol [ i %tmp.198 87 23 24 ];
+        %tmp.199 = lgetv %ctrl;
+        symbol [ ctrl %tmp.199 87 28 32 ];
+        symbol [ menuRow %tmp.200 87 33 40 ];
+        %tmp.200 = getv %tmp.199 :menuRow;
+        %tmp.201 = eq %tmp.198 %tmp.200;
+        lputv %sel.12 %tmp.201;
+        symbol [ sel %sel.12 87 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 89 12 ]
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_89_12_92_12_if_stmt:
+        %tmp.202 = lgetv %i.10;
+        symbol [ i %tmp.202 89 16 17 ];
+        symbol [ DR_ROW_LB %tmp.204 89 21 30 ];
+        %tmp.204 = getv ? :DR_ROW_LB;
+        %tmp.205 = eq %tmp.202 %tmp.204;
+        bf %tmp.205 @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_89_12_92_12_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_89_12_92_12_if_true:
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_89_32_92_12_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 90 16 ]
+        symbol [ LbBadge %tmp.207 90 16 23 ];
+        %tmp.207 = getv ? :LbBadge;
+        symbol [ drawRow %tmp.208 90 24 31 ];
+        %tmp.208 = getv function %tmp.207 :drawRow;
+        %tmp.209 = lgetv %dc;
+        symbol [ dc %tmp.209 90 32 34 ];
+        %tmp.210 = lgetv %rowX.6;
+        symbol [ rowX %tmp.210 90 36 40 ];
+        %tmp.211 = lgetv %ry.11;
+        symbol [ ry %tmp.211 90 42 44 ];
+        %tmp.212 = lgetv %rowW.5;
+        symbol [ rowW %tmp.212 90 46 50 ];
+        %tmp.213 = lgetv %rowH.4;
+        symbol [ rowH %tmp.213 90 52 56 ];
+        %tmp.214 = lgetv %sel.12;
+        symbol [ sel %tmp.214 90 58 61 ];
+        invoke %tmp.207 %tmp.208(%tmp.209, %tmp.210, %tmp.211, %tmp.212, %tmp.213, %tmp.214);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 91 16 ]
+        goto break @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_85_8_111_8_for_incr;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_89_32_92_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_89_12_92_12_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_89_12_92_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 94 12 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_85_47_111_8_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_85_47_111_8_stop" ]
+        %isStart.13 = local;
+        symbol [ isStart %isStart.13 94 16 23 ];
+        %tmp.215 = lgetv %i.10;
+        symbol [ i %tmp.215 94 27 28 ];
+        symbol [ DR_ROW_START %tmp.217 94 32 44 ];
+        %tmp.217 = getv ? :DR_ROW_START;
+        %tmp.218 = eq %tmp.215 %tmp.217;
+        lputv %isStart.13 %tmp.218;
+        symbol [ isStart %isStart.13 94 16 23 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 95 12 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_85_47_111_8_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_85_47_111_8_stop" ]
+        %bg.14 = local;
+        symbol [ bg %bg.14 95 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 95 20 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_85_47_111_8_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_85_47_111_8_stop" ]
+        %bd.15 = local;
+        symbol [ bd %bd.15 95 24 26 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 95 28 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_85_47_111_8_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_85_47_111_8_stop" ]
+        %fg.16 = local;
+        symbol [ fg %fg.16 95 32 34 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 96 12 ]
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_96_12_99_86_if_stmt:
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_96_21_96_28_begin:
+        %tmp.219 = lgetv %sel.12;
+        symbol [ sel %tmp.219 96 21 24 ];
+        bf %tmp.219 @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_96_12_99_86_if_false;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_96_28_96_28_true:
+        %tmp.220 = lgetv %isStart.13;
+        symbol [ isStart %tmp.220 96 28 35 ];
+        push %tmp.220;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_96_28_96_28_end:
+        %tmp.221 = phi [%tmp.219 @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_96_21_96_28_begin] [%tmp.220 @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_96_28_96_28_true] [%tmp.221 @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_96_28_96_28_end];
+        bf %tmp.221 @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_96_12_99_86_if_false;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_96_12_99_86_if_true:
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_96_37_96_84_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 96 39 ]
+        %tmp.222 = 0x1A4400;
+        lputv %bg.14 %tmp.222;
+        symbol [ bg %bg.14 96 39 41 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 96 54 ]
+        %tmp.223 = 0x44BB22;
+        lputv %bd.15 %tmp.223;
+        symbol [ bd %bd.15 96 54 56 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 96 69 ]
+        %tmp.224 = 0xAAFF66;
+        lputv %fg.16 %tmp.224;
+        symbol [ fg %fg.16 96 69 71 ];
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_96_37_96_84_stop:
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_96_12_99_86_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_96_12_99_86_if_false:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 97 17 ]
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_97_17_99_86_if_stmt:
+        %tmp.225 = lgetv %sel.12;
+        symbol [ sel %tmp.225 97 21 24 ];
+        bf %tmp.225 @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_97_17_99_86_if_false;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_97_17_99_86_if_true:
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_97_38_97_85_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 97 40 ]
+        %tmp.226 = 0x1A2E00;
+        lputv %bg.14 %tmp.226;
+        symbol [ bg %bg.14 97 40 42 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 97 55 ]
+        %tmp.227 = 0x88CC22;
+        lputv %bd.15 %tmp.227;
+        symbol [ bd %bd.15 97 55 57 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 97 70 ]
+        %tmp.228 = 0xEEFFCC;
+        lputv %fg.16 %tmp.228;
+        symbol [ fg %fg.16 97 70 72 ];
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_97_38_97_85_stop:
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_97_17_99_86_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_97_17_99_86_if_false:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 98 17 ]
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_98_17_99_86_if_stmt:
+        %tmp.229 = lgetv %isStart.13;
+        symbol [ isStart %tmp.229 98 21 28 ];
+        bf %tmp.229 @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_98_17_99_86_if_else_false;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_98_17_99_86_if_true:
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_98_38_98_85_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 98 40 ]
+        %tmp.230 = 0x102010;
+        lputv %bg.14 %tmp.230;
+        symbol [ bg %bg.14 98 40 42 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 98 55 ]
+        %tmp.231 = 0x224422;
+        lputv %bd.15 %tmp.231;
+        symbol [ bd %bd.15 98 55 57 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 98 70 ]
+        %tmp.232 = 0x88AA88;
+        lputv %fg.16 %tmp.232;
+        symbol [ fg %fg.16 98 70 72 ];
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_98_38_98_85_stop:
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_98_17_99_86_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_98_17_99_86_if_else_false:
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_99_39_99_86_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 99 41 ]
+        %tmp.233 = 0x1A1610;
+        lputv %bg.14 %tmp.233;
+        symbol [ bg %bg.14 99 41 43 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 99 56 ]
+        %tmp.234 = 0x33291A;
+        lputv %bd.15 %tmp.234;
+        symbol [ bd %bd.15 99 56 58 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 99 71 ]
+        %tmp.235 = 0xAA9977;
+        lputv %fg.16 %tmp.235;
+        symbol [ fg %fg.16 99 71 73 ];
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_99_39_99_86_stop:
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_98_17_99_86_if_end:
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_97_17_99_86_if_end:
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_96_12_99_86_if_end:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 100 12 ]
+        %tmp.236 = lgetv %dc;
+        symbol [ dc %tmp.236 100 12 14 ];
+        symbol [ setColor %tmp.237 100 15 23 ];
+        %tmp.237 = getv function %tmp.236 :setColor;
+        %tmp.238 = lgetv %bg.14;
+        symbol [ bg %tmp.238 100 24 26 ];
+        symbol [ Graphics %tmp.239 100 28 36 ];
+        %tmp.239 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.240 100 37 54 ];
+        %tmp.240 = getv %tmp.239 :COLOR_TRANSPARENT;
+        invoke %tmp.236 %tmp.237(%tmp.238, %tmp.240);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 101 12 ]
+        %tmp.241 = lgetv %dc;
+        symbol [ dc %tmp.241 101 12 14 ];
+        symbol [ fillRoundedRectangle %tmp.242 101 15 35 ];
+        %tmp.242 = getv function %tmp.241 :fillRoundedRectangle;
+        %tmp.243 = lgetv %rowX.6;
+        symbol [ rowX %tmp.243 101 36 40 ];
+        %tmp.244 = lgetv %ry.11;
+        symbol [ ry %tmp.244 101 42 44 ];
+        %tmp.245 = lgetv %rowW.5;
+        symbol [ rowW %tmp.245 101 46 50 ];
+        %tmp.246 = lgetv %rowH.4;
+        symbol [ rowH %tmp.246 101 52 56 ];
+        %tmp.247 = 5;
+        invoke %tmp.241 %tmp.242(%tmp.243, %tmp.244, %tmp.245, %tmp.246, %tmp.247);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 102 12 ]
+        %tmp.248 = lgetv %dc;
+        symbol [ dc %tmp.248 102 12 14 ];
+        symbol [ setColor %tmp.249 102 15 23 ];
+        %tmp.249 = getv function %tmp.248 :setColor;
+        %tmp.250 = lgetv %bd.15;
+        symbol [ bd %tmp.250 102 24 26 ];
+        symbol [ Graphics %tmp.251 102 28 36 ];
+        %tmp.251 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.252 102 37 54 ];
+        %tmp.252 = getv %tmp.251 :COLOR_TRANSPARENT;
+        invoke %tmp.248 %tmp.249(%tmp.250, %tmp.252);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 103 12 ]
+        %tmp.253 = lgetv %dc;
+        symbol [ dc %tmp.253 103 12 14 ];
+        symbol [ drawRoundedRectangle %tmp.254 103 15 35 ];
+        %tmp.254 = getv function %tmp.253 :drawRoundedRectangle;
+        %tmp.255 = lgetv %rowX.6;
+        symbol [ rowX %tmp.255 103 36 40 ];
+        %tmp.256 = lgetv %ry.11;
+        symbol [ ry %tmp.256 103 42 44 ];
+        %tmp.257 = lgetv %rowW.5;
+        symbol [ rowW %tmp.257 103 46 50 ];
+        %tmp.258 = lgetv %rowH.4;
+        symbol [ rowH %tmp.258 103 52 56 ];
+        %tmp.259 = 5;
+        invoke %tmp.253 %tmp.254(%tmp.255, %tmp.256, %tmp.257, %tmp.258, %tmp.259);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 104 12 ]
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_104_12_107_12_if_stmt:
+        %tmp.260 = lgetv %sel.12;
+        symbol [ sel %tmp.260 104 16 19 ];
+        bf %tmp.260 @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_104_12_107_12_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_104_12_107_12_if_true:
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_104_21_107_12_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 105 16 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_104_21_107_12_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_104_21_107_12_stop" ]
+        %ay.17 = local;
+        symbol [ ay %ay.17 105 20 22 ];
+        %tmp.261 = lgetv %ry.11;
+        symbol [ ry %tmp.261 105 25 27 ];
+        %tmp.262 = lgetv %rowH.4;
+        symbol [ rowH %tmp.262 105 30 34 ];
+        %tmp.263 = 2;
+        %tmp.264 = div %tmp.262 %tmp.263;
+        %tmp.265 = add %tmp.261 %tmp.264;
+        lputv %ay.17 %tmp.265;
+        symbol [ ay %ay.17 105 20 22 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 106 16 ]
+        %tmp.266 = lgetv %dc;
+        symbol [ dc %tmp.266 106 16 18 ];
+        symbol [ fillPolygon %tmp.267 106 19 30 ];
+        %tmp.267 = getv function %tmp.266 :fillPolygon;
+        %tmp.268 = newa 3;
+        %tmp.269 = newa 2;
+        %tmp.270 = lgetv %rowX.6;
+        symbol [ rowX %tmp.270 106 33 37 ];
+        %tmp.271 = 5;
+        %tmp.272 = add %tmp.270 %tmp.271;
+        %tmp.273 = dup %tmp.269;
+        %tmp.274 = aputv %tmp.273 0 %tmp.272;
+        %tmp.275 = lgetv %ay.17;
+        symbol [ ay %tmp.275 106 43 45 ];
+        %tmp.276 = 4;
+        %tmp.277 = sub %tmp.275 %tmp.276;
+        %tmp.278 = dup %tmp.274;
+        %tmp.279 = aputv %tmp.278 1 %tmp.277;
+        %tmp.280 = dup %tmp.268;
+        %tmp.281 = aputv %tmp.280 0 %tmp.279;
+        %tmp.282 = newa 2;
+        %tmp.283 = lgetv %rowX.6;
+        symbol [ rowX %tmp.283 106 53 57 ];
+        %tmp.284 = 5;
+        %tmp.285 = add %tmp.283 %tmp.284;
+        %tmp.286 = dup %tmp.282;
+        %tmp.287 = aputv %tmp.286 0 %tmp.285;
+        %tmp.288 = lgetv %ay.17;
+        symbol [ ay %tmp.288 106 63 65 ];
+        %tmp.289 = 4;
+        %tmp.290 = add %tmp.288 %tmp.289;
+        %tmp.291 = dup %tmp.287;
+        %tmp.292 = aputv %tmp.291 1 %tmp.290;
+        %tmp.293 = dup %tmp.281;
+        %tmp.294 = aputv %tmp.293 1 %tmp.292;
+        %tmp.295 = newa 2;
+        %tmp.296 = lgetv %rowX.6;
+        symbol [ rowX %tmp.296 106 73 77 ];
+        %tmp.297 = 11;
+        %tmp.298 = add %tmp.296 %tmp.297;
+        %tmp.299 = dup %tmp.295;
+        %tmp.300 = aputv %tmp.299 0 %tmp.298;
+        %tmp.301 = lgetv %ay.17;
+        symbol [ ay %tmp.301 106 84 86 ];
+        %tmp.302 = dup %tmp.300;
+        %tmp.303 = aputv %tmp.302 1 %tmp.301;
+        %tmp.304 = dup %tmp.294;
+        %tmp.305 = aputv %tmp.304 2 %tmp.303;
+        invoke %tmp.266 %tmp.267(%tmp.305);
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_104_21_107_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_104_12_107_12_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_104_12_107_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 108 12 ]
+        %tmp.306 = lgetv %dc;
+        symbol [ dc %tmp.306 108 12 14 ];
+        symbol [ setColor %tmp.307 108 15 23 ];
+        %tmp.307 = getv function %tmp.306 :setColor;
+        %tmp.308 = lgetv %fg.16;
+        symbol [ fg %tmp.308 108 24 26 ];
+        symbol [ Graphics %tmp.309 108 28 36 ];
+        %tmp.309 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.310 108 37 54 ];
+        %tmp.310 = getv %tmp.309 :COLOR_TRANSPARENT;
+        invoke %tmp.306 %tmp.307(%tmp.308, %tmp.310);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 109 12 ]
+        %tmp.311 = lgetv %dc;
+        symbol [ dc %tmp.311 109 12 14 ];
+        symbol [ drawText %tmp.312 109 15 23 ];
+        %tmp.312 = getv function %tmp.311 :drawText;
+        %tmp.313 = lgetv %cx.1;
+        symbol [ cx %tmp.313 109 24 26 ];
+        %tmp.314 = lgetv %ry.11;
+        symbol [ ry %tmp.314 109 28 30 ];
+        %tmp.315 = lgetv %rowH.4;
+        symbol [ rowH %tmp.315 109 34 38 ];
+        %tmp.316 = 14;
+        %tmp.317 = sub %tmp.315 %tmp.316;
+        %tmp.318 = 2;
+        %tmp.319 = div %tmp.317 %tmp.318;
+        %tmp.320 = add %tmp.314 %tmp.319;
+        symbol [ Graphics %tmp.321 109 50 58 ];
+        %tmp.321 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.322 109 59 69 ];
+        %tmp.322 = getv %tmp.321 :FONT_XTINY;
+        %tmp.323 = lgetv %labels.9;
+        symbol [ labels %tmp.323 110 24 30 ];
+        %tmp.324 = lgetv %i.10;
+        symbol [ i %tmp.324 110 31 32 ];
+        %tmp.325 = agetv %tmp.323 %tmp.324;
+        symbol [ Graphics %tmp.326 110 35 43 ];
+        %tmp.326 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.327 110 44 63 ];
+        %tmp.327 = getv %tmp.326 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.311 %tmp.312(%tmp.313, %tmp.320, %tmp.322, %tmp.325, %tmp.327);
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_85_47_111_8_stop:
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_85_8_111_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 85 ]
+        %tmp.330 = lgetv %i.10;
+        symbol [ i %tmp.330 85 42 43 ];
+        %tmp.331 = add %tmp.330 1;
+        lputv %i.10 %tmp.331;
+        symbol [ i %i.10 85 42 43 ];
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_85_8_111_8_for_test;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_85_8_111_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 113 8 ]
+        %tmp.332 = lgetv %dc;
+        symbol [ dc %tmp.332 113 8 10 ];
+        symbol [ setColor %tmp.333 113 11 19 ];
+        %tmp.333 = getv function %tmp.332 :setColor;
+        %tmp.334 = 0x557755;
+        symbol [ Graphics %tmp.335 113 30 38 ];
+        %tmp.335 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.336 113 39 56 ];
+        %tmp.336 = getv %tmp.335 :COLOR_TRANSPARENT;
+        invoke %tmp.332 %tmp.333(%tmp.334, %tmp.336);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 114 8 ]
+        %tmp.337 = lgetv %dc;
+        symbol [ dc %tmp.337 114 8 10 ];
+        symbol [ drawText %tmp.338 114 11 19 ];
+        %tmp.338 = getv function %tmp.337 :drawText;
+        %tmp.339 = lgetv %cx.1;
+        symbol [ cx %tmp.339 114 20 22 ];
+        %tmp.340 = lgetv %sh;
+        symbol [ sh %tmp.340 114 24 26 ];
+        %tmp.341 = 14;
+        %tmp.342 = sub %tmp.340 %tmp.341;
+        symbol [ Graphics %tmp.343 114 33 41 ];
+        %tmp.343 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.344 114 42 52 ];
+        %tmp.344 = getv %tmp.343 :FONT_XTINY;
+        %tmp.345 = "UP/DN move  SEL act";
+        symbol [ Graphics %tmp.346 115 43 51 ];
+        %tmp.346 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.347 115 52 71 ];
+        %tmp.347 = getv %tmp.346 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.337 %tmp.338(%tmp.339, %tmp.342, %tmp.344, %tmp.345, %tmp.347);
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_48_47_116_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc"; @line = 118; @symbol_functiondef = [_menuRowGeom,118,27,39]; @symbol_param<0> = [sw,118,40,42]; @symbol_param<1> = [sh,118,44,46]; ]
+    protected static
+    function _menuRowGeom(sw, sh) {
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_118_48_132_4_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 119 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_118_48_132_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_118_48_132_4_stop" ]
         %topZone.1 = local;
-        symbol [ topZone %topZone.1 24 12 19 ];
+        symbol [ topZone %topZone.1 119 12 19 ];
         %tmp.1 = lgetv %sh;
-        symbol [ sh %tmp.1 24 28 30 ];
-        %tmp.2 = 39;
+        symbol [ sh %tmp.1 119 28 30 ];
+        %tmp.2 = 48;
         %tmp.3 = mul %tmp.1 %tmp.2;
         %tmp.4 = 100;
         %tmp.5 = div %tmp.3 %tmp.4;
         lputv %topZone.1 %tmp.5;
-        symbol [ topZone %topZone.1 24 12 19 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 25 8 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_23_36_37_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_23_36_37_4_stop" ]
+        symbol [ topZone %topZone.1 119 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 120 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_118_48_132_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_118_48_132_4_stop" ]
         %bottomMargin.2 = local;
-        symbol [ bottomMargin %bottomMargin.2 25 12 24 ];
+        symbol [ bottomMargin %bottomMargin.2 120 12 24 ];
         %tmp.6 = lgetv %sh;
-        symbol [ sh %tmp.6 25 28 30 ];
-        %tmp.7 = 15;
+        symbol [ sh %tmp.6 120 28 30 ];
+        %tmp.7 = 12;
         %tmp.8 = mul %tmp.6 %tmp.7;
         %tmp.9 = 100;
         %tmp.10 = div %tmp.8 %tmp.9;
         lputv %bottomMargin.2 %tmp.10;
-        symbol [ bottomMargin %bottomMargin.2 25 12 24 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 25 44 ]
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_25_44_25_88_if_stmt:
+        symbol [ bottomMargin %bottomMargin.2 120 12 24 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 120 44 ]
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_120_44_120_88_if_stmt:
         %tmp.11 = lgetv %bottomMargin.2;
-        symbol [ bottomMargin %tmp.11 25 48 60 ];
-        %tmp.12 = 27;
+        symbol [ bottomMargin %tmp.11 120 48 60 ];
+        %tmp.12 = 12;
         %tmp.13 = lt %tmp.11 %tmp.12;
-        bf %tmp.13 @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_25_44_25_88_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_25_44_25_88_if_true:
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_25_67_25_88_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 25 69 ]
-        %tmp.14 = 27;
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_120_44_120_88_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_120_44_120_88_if_true:
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_120_67_120_88_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 120 69 ]
+        %tmp.14 = 12;
         lputv %bottomMargin.2 %tmp.14;
-        symbol [ bottomMargin %bottomMargin.2 25 69 81 ];
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_25_67_25_88_stop:
-        goto @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_25_44_25_88_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_25_44_25_88_if_end:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 26 8 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_23_36_37_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_23_36_37_4_stop" ]
+        symbol [ bottomMargin %bottomMargin.2 120 69 81 ];
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_120_67_120_88_stop:
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_120_44_120_88_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_120_44_120_88_if_end:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 121 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_118_48_132_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_118_48_132_4_stop" ]
         %gap.3 = local;
-        symbol [ gap %gap.3 26 12 15 ];
+        symbol [ gap %gap.3 121 12 15 ];
         %tmp.15 = lgetv %sh;
-        symbol [ sh %tmp.15 26 28 30 ];
-        %tmp.16 = 2;
+        symbol [ sh %tmp.15 121 28 30 ];
+        %tmp.16 = 3;
         %tmp.17 = mul %tmp.15 %tmp.16;
         %tmp.18 = 100;
         %tmp.19 = div %tmp.17 %tmp.18;
         lputv %gap.3 %tmp.19;
-        symbol [ gap %gap.3 26 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 26 44 ]
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_26_44_26_68_if_stmt:
+        symbol [ gap %gap.3 121 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 121 44 ]
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_121_44_121_68_if_stmt:
         %tmp.20 = lgetv %gap.3;
-        symbol [ gap %tmp.20 26 48 51 ];
-        %tmp.21 = 3;
+        symbol [ gap %tmp.20 121 48 51 ];
+        %tmp.21 = 4;
         %tmp.22 = lt %tmp.20 %tmp.21;
-        bf %tmp.22 @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_26_44_26_68_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_26_44_26_68_if_true:
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_26_57_26_68_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 26 59 ]
-        %tmp.23 = 3;
+        bf %tmp.22 @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_121_44_121_68_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_121_44_121_68_if_true:
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_121_57_121_68_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 121 59 ]
+        %tmp.23 = 4;
         lputv %gap.3 %tmp.23;
-        symbol [ gap %gap.3 26 59 62 ];
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_26_57_26_68_stop:
-        goto @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_26_44_26_68_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_26_44_26_68_if_end:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 27 8 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_23_36_37_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_23_36_37_4_stop" ]
+        symbol [ gap %gap.3 121 59 62 ];
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_121_57_121_68_stop:
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_121_44_121_68_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_121_44_121_68_if_end:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 122 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_118_48_132_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_118_48_132_4_stop" ]
         %avail.4 = local;
-        symbol [ avail %avail.4 27 12 17 ];
+        symbol [ avail %avail.4 122 12 17 ];
         %tmp.24 = lgetv %sh;
-        symbol [ sh %tmp.24 27 28 30 ];
+        symbol [ sh %tmp.24 122 21 23 ];
         %tmp.25 = lgetv %bottomMargin.2;
-        symbol [ bottomMargin %tmp.25 27 33 45 ];
+        symbol [ bottomMargin %tmp.25 122 26 38 ];
         %tmp.26 = sub %tmp.24 %tmp.25;
         %tmp.27 = lgetv %topZone.1;
-        symbol [ topZone %tmp.27 27 49 56 ];
+        symbol [ topZone %tmp.27 122 42 49 ];
         %tmp.28 = sub %tmp.26 %tmp.27;
         lputv %avail.4 %tmp.28;
-        symbol [ avail %avail.4 27 12 17 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 28 8 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_23_36_37_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_23_36_37_4_stop" ]
+        symbol [ avail %avail.4 122 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 123 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_118_48_132_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_118_48_132_4_stop" ]
         %rowH.5 = local;
-        symbol [ rowH %rowH.5 28 12 16 ];
+        symbol [ rowH %rowH.5 123 12 16 ];
         %tmp.29 = lgetv %avail.4;
-        symbol [ avail %tmp.29 28 28 33 ];
+        symbol [ avail %tmp.29 123 21 26 ];
         %tmp.30 = lgetv %gap.3;
-        symbol [ gap %tmp.30 28 36 39 ];
-        symbol [ SR_MENU_ROWS %tmp.32 28 43 55 ];
-        %tmp.32 = getv ? :SR_MENU_ROWS;
+        symbol [ gap %tmp.30 123 29 32 ];
+        symbol [ DR_MENU_ROWS %tmp.32 123 36 48 ];
+        %tmp.32 = getv ? :DR_MENU_ROWS;
         %tmp.33 = 1;
         %tmp.34 = sub %tmp.32 %tmp.33;
         %tmp.35 = mul %tmp.30 %tmp.34;
         %tmp.36 = sub %tmp.29 %tmp.35;
-        symbol [ SR_MENU_ROWS %tmp.38 28 64 76 ];
-        %tmp.38 = getv ? :SR_MENU_ROWS;
+        symbol [ DR_MENU_ROWS %tmp.38 123 57 69 ];
+        %tmp.38 = getv ? :DR_MENU_ROWS;
         %tmp.39 = div %tmp.36 %tmp.38;
         lputv %rowH.5 %tmp.39;
-        symbol [ rowH %rowH.5 28 12 16 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 29 8 ]
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_29_8_29_36_if_stmt:
+        symbol [ rowH %rowH.5 123 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 124 8 ]
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_124_8_124_36_if_stmt:
         %tmp.40 = lgetv %rowH.5;
-        symbol [ rowH %tmp.40 29 12 16 ];
-        %tmp.41 = 22;
+        symbol [ rowH %tmp.40 124 12 16 ];
+        %tmp.41 = 26;
         %tmp.42 = gt %tmp.40 %tmp.41;
-        bf %tmp.42 @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_29_8_29_36_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_29_8_29_36_if_true:
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_29_23_29_36_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 29 25 ]
-        %tmp.43 = 22;
+        bf %tmp.42 @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_124_8_124_36_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_124_8_124_36_if_true:
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_124_23_124_36_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 124 25 ]
+        %tmp.43 = 26;
         lputv %rowH.5 %tmp.43;
-        symbol [ rowH %rowH.5 29 25 29 ];
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_29_23_29_36_stop:
-        goto @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_29_8_29_36_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_29_8_29_36_if_end:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 30 8 ]
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_30_8_30_36_if_stmt:
+        symbol [ rowH %rowH.5 124 25 29 ];
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_124_23_124_36_stop:
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_124_8_124_36_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_124_8_124_36_if_end:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 125 8 ]
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_125_8_125_36_if_stmt:
         %tmp.44 = lgetv %rowH.5;
-        symbol [ rowH %tmp.44 30 12 16 ];
-        %tmp.45 = 12;
+        symbol [ rowH %tmp.44 125 12 16 ];
+        %tmp.45 = 15;
         %tmp.46 = lt %tmp.44 %tmp.45;
-        bf %tmp.46 @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_30_8_30_36_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_30_8_30_36_if_true:
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_30_23_30_36_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 30 25 ]
-        %tmp.47 = 12;
+        bf %tmp.46 @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_125_8_125_36_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_125_8_125_36_if_true:
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_125_23_125_36_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 125 25 ]
+        %tmp.47 = 15;
         lputv %rowH.5 %tmp.47;
-        symbol [ rowH %rowH.5 30 25 29 ];
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_30_23_30_36_stop:
-        goto @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_30_8_30_36_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_30_8_30_36_if_end:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 31 8 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_23_36_37_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_23_36_37_4_stop" ]
+        symbol [ rowH %rowH.5 125 25 29 ];
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_125_23_125_36_stop:
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_125_8_125_36_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_125_8_125_36_if_end:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 126 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_118_48_132_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_118_48_132_4_stop" ]
         %rowW.6 = local;
-        symbol [ rowW %rowW.6 31 12 16 ];
+        symbol [ rowW %rowW.6 126 12 16 ];
         %tmp.48 = lgetv %sw;
-        symbol [ sw %tmp.48 31 20 22 ];
-        %tmp.49 = 54;
+        symbol [ sw %tmp.48 126 20 22 ];
+        %tmp.49 = 62;
         %tmp.50 = mul %tmp.48 %tmp.49;
         %tmp.51 = 100;
         %tmp.52 = div %tmp.50 %tmp.51;
         lputv %rowW.6 %tmp.52;
-        symbol [ rowW %rowW.6 31 12 16 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 31 36 ]
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_31_36_31_66_if_stmt:
+        symbol [ rowW %rowW.6 126 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 126 36 ]
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_126_36_126_66_if_stmt:
         %tmp.53 = lgetv %rowW.6;
-        symbol [ rowW %tmp.53 31 40 44 ];
+        symbol [ rowW %tmp.53 126 40 44 ];
         %tmp.54 = 110;
         %tmp.55 = lt %tmp.53 %tmp.54;
-        bf %tmp.55 @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_31_36_31_66_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_31_36_31_66_if_true:
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_31_52_31_66_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 31 54 ]
+        bf %tmp.55 @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_126_36_126_66_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_126_36_126_66_if_true:
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_126_52_126_66_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 126 54 ]
         %tmp.56 = 110;
         lputv %rowW.6 %tmp.56;
-        symbol [ rowW %rowW.6 31 54 58 ];
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_31_52_31_66_stop:
-        goto @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_31_36_31_66_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_31_36_31_66_if_end:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 32 8 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_23_36_37_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_23_36_37_4_stop" ]
+        symbol [ rowW %rowW.6 126 54 58 ];
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_126_52_126_66_stop:
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_126_36_126_66_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_126_36_126_66_if_end:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 127 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_118_48_132_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_118_48_132_4_stop" ]
         %rowX.7 = local;
-        symbol [ rowX %rowX.7 32 12 16 ];
+        symbol [ rowX %rowX.7 127 12 16 ];
         %tmp.57 = lgetv %sw;
-        symbol [ sw %tmp.57 32 20 22 ];
+        symbol [ sw %tmp.57 127 20 22 ];
         %tmp.58 = lgetv %rowW.6;
-        symbol [ rowW %tmp.58 32 25 29 ];
+        symbol [ rowW %tmp.58 127 25 29 ];
         %tmp.59 = sub %tmp.57 %tmp.58;
         %tmp.60 = 2;
         %tmp.61 = div %tmp.59 %tmp.60;
         lputv %rowX.7 %tmp.61;
-        symbol [ rowX %rowX.7 32 12 16 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 33 8 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_23_36_37_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_23_36_37_4_stop" ]
+        symbol [ rowX %rowX.7 127 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 128 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_118_48_132_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_118_48_132_4_stop" ]
         %used.8 = local;
-        symbol [ used %used.8 33 12 16 ];
-        symbol [ SR_MENU_ROWS %tmp.63 33 20 32 ];
-        %tmp.63 = getv ? :SR_MENU_ROWS;
+        symbol [ used %used.8 128 12 16 ];
+        symbol [ DR_MENU_ROWS %tmp.63 128 19 31 ];
+        %tmp.63 = getv ? :DR_MENU_ROWS;
         %tmp.64 = lgetv %rowH.5;
-        symbol [ rowH %tmp.64 33 35 39 ];
+        symbol [ rowH %tmp.64 128 34 38 ];
         %tmp.65 = mul %tmp.63 %tmp.64;
-        symbol [ SR_MENU_ROWS %tmp.67 33 43 55 ];
-        %tmp.67 = getv ? :SR_MENU_ROWS;
+        symbol [ DR_MENU_ROWS %tmp.67 128 42 54 ];
+        %tmp.67 = getv ? :DR_MENU_ROWS;
         %tmp.68 = 1;
         %tmp.69 = sub %tmp.67 %tmp.68;
         %tmp.70 = lgetv %gap.3;
-        symbol [ gap %tmp.70 33 63 66 ];
+        symbol [ gap %tmp.70 128 62 65 ];
         %tmp.71 = mul %tmp.69 %tmp.70;
         %tmp.72 = add %tmp.65 %tmp.71;
         lputv %used.8 %tmp.72;
-        symbol [ used %used.8 33 12 16 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 34 8 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_23_36_37_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_23_36_37_4_stop" ]
+        symbol [ used %used.8 128 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 129 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_118_48_132_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_118_48_132_4_stop" ]
         %rowY0.9 = local;
-        symbol [ rowY0 %rowY0.9 34 12 17 ];
+        symbol [ rowY0 %rowY0.9 129 12 17 ];
         %tmp.73 = lgetv %topZone.1;
-        symbol [ topZone %tmp.73 34 20 27 ];
+        symbol [ topZone %tmp.73 129 20 27 ];
         %tmp.74 = lgetv %avail.4;
-        symbol [ avail %tmp.74 34 31 36 ];
+        symbol [ avail %tmp.74 129 31 36 ];
         %tmp.75 = lgetv %used.8;
-        symbol [ used %tmp.75 34 39 43 ];
+        symbol [ used %tmp.75 129 39 43 ];
         %tmp.76 = sub %tmp.74 %tmp.75;
         %tmp.77 = 2;
         %tmp.78 = div %tmp.76 %tmp.77;
         %tmp.79 = add %tmp.73 %tmp.78;
         lputv %rowY0.9 %tmp.79;
-        symbol [ rowY0 %rowY0.9 34 12 17 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 35 8 ]
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_35_8_35_48_if_stmt:
+        symbol [ rowY0 %rowY0.9 129 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 130 8 ]
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_130_8_130_48_if_stmt:
         %tmp.80 = lgetv %rowY0.9;
-        symbol [ rowY0 %tmp.80 35 12 17 ];
+        symbol [ rowY0 %tmp.80 130 12 17 ];
         %tmp.81 = lgetv %topZone.1;
-        symbol [ topZone %tmp.81 35 20 27 ];
+        symbol [ topZone %tmp.81 130 20 27 ];
         %tmp.82 = lt %tmp.80 %tmp.81;
-        bf %tmp.82 @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_35_8_35_48_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_35_8_35_48_if_true:
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_35_29_35_48_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 35 31 ]
+        bf %tmp.82 @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_130_8_130_48_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_130_8_130_48_if_true:
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_130_29_130_48_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 130 31 ]
         %tmp.83 = lgetv %topZone.1;
-        symbol [ topZone %tmp.83 35 39 46 ];
+        symbol [ topZone %tmp.83 130 39 46 ];
         lputv %rowY0.9 %tmp.83;
-        symbol [ rowY0 %rowY0.9 35 31 36 ];
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_35_29_35_48_stop:
-        goto @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_35_8_35_48_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_35_8_35_48_if_end:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 36 8 ]
+        symbol [ rowY0 %rowY0.9 130 31 36 ];
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_130_29_130_48_stop:
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_130_8_130_48_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_130_8_130_48_if_end:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 131 8 ]
         %tmp.84 = newa 5;
         %tmp.85 = lgetv %rowH.5;
-        symbol [ rowH %tmp.85 36 16 20 ];
+        symbol [ rowH %tmp.85 131 16 20 ];
         %tmp.86 = dup %tmp.84;
         %tmp.87 = aputv %tmp.86 0 %tmp.85;
         %tmp.88 = lgetv %rowW.6;
-        symbol [ rowW %tmp.88 36 22 26 ];
+        symbol [ rowW %tmp.88 131 22 26 ];
         %tmp.89 = dup %tmp.87;
         %tmp.90 = aputv %tmp.89 1 %tmp.88;
         %tmp.91 = lgetv %rowX.7;
-        symbol [ rowX %tmp.91 36 28 32 ];
+        symbol [ rowX %tmp.91 131 28 32 ];
         %tmp.92 = dup %tmp.90;
         %tmp.93 = aputv %tmp.92 2 %tmp.91;
         %tmp.94 = lgetv %rowY0.9;
-        symbol [ rowY0 %tmp.94 36 34 39 ];
+        symbol [ rowY0 %tmp.94 131 34 39 ];
         %tmp.95 = dup %tmp.93;
         %tmp.96 = aputv %tmp.95 3 %tmp.94;
         %tmp.97 = lgetv %gap.3;
-        symbol [ gap %tmp.97 36 41 44 ];
+        symbol [ gap %tmp.97 131 41 44 ];
         %tmp.98 = dup %tmp.96;
         %tmp.99 = aputv %tmp.98 4 %tmp.97;
         ret %tmp.99;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_23_36_37_4_stop:
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_118_48_132_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc"; @line = 39; @symbol_functiondef = [draw,39,20,24]; @symbol_param<0> = [dc,39,25,27]; @symbol_param<1> = [ctrl,39,29,33]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc"; @line = 135; @symbol_functiondef = [drawOver,135,20,28]; @symbol_param<0> = [dc,135,29,31]; @symbol_param<1> = [ctrl,135,33,37]; @symbol_param<2> = [sw,135,39,41]; @symbol_param<3> = [sh,135,43,45]; ]
     static
-    function draw(dc, ctrl) {
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_39_35_48_4_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 40 8 ]
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_40_8_40_66_if_stmt:
-        %tmp.1 = lgetv %ctrl;
-        symbol [ ctrl %tmp.1 40 12 16 ];
-        symbol [ state %tmp.2 40 17 22 ];
-        %tmp.2 = getv %tmp.1 :state;
-        symbol [ SR_MENU %tmp.4 40 26 33 ];
-        %tmp.4 = getv ? :SR_MENU;
-        %tmp.5 = eq %tmp.2 %tmp.4;
-        bf %tmp.5 @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_40_8_40_66_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_40_8_40_66_if_true:
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_40_35_40_66_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 40 37 ]
-        %tmp.6 = self;
-        symbol [ _drawMenu %tmp.7 40 37 46 ];
-        %tmp.7 = getv function %tmp.6 :_drawMenu;
-        %tmp.8 = lgetv %dc;
-        symbol [ dc %tmp.8 40 47 49 ];
-        %tmp.9 = lgetv %ctrl;
-        symbol [ ctrl %tmp.9 40 51 55 ];
-        invoke %tmp.6 %tmp.7(%tmp.8, %tmp.9);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 40 58 ]
-        ret ?;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_40_35_40_66_stop:
-        goto @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_40_8_40_66_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_40_8_40_66_if_end:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 42 8 ]
-        symbol [ RenderSystem %tmp.11 42 8 20 ];
-        %tmp.11 = getv ? :RenderSystem;
-        symbol [ drawSky %tmp.12 42 21 28 ];
-        %tmp.12 = getv function %tmp.11 :drawSky;
-        %tmp.13 = lgetv %dc;
-        symbol [ dc %tmp.13 42 29 31 ];
-        %tmp.14 = lgetv %ctrl;
-        symbol [ ctrl %tmp.14 42 33 37 ];
-        invoke %tmp.11 %tmp.12(%tmp.13, %tmp.14);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 43 8 ]
-        symbol [ RenderSystem %tmp.16 43 8 20 ];
-        %tmp.16 = getv ? :RenderSystem;
-        symbol [ drawPath %tmp.17 43 21 29 ];
-        %tmp.17 = getv function %tmp.16 :drawPath;
-        %tmp.18 = lgetv %dc;
-        symbol [ dc %tmp.18 43 30 32 ];
-        %tmp.19 = lgetv %ctrl;
-        symbol [ ctrl %tmp.19 43 34 38 ];
-        invoke %tmp.16 %tmp.17(%tmp.18, %tmp.19);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 44 8 ]
-        symbol [ RenderSystem %tmp.21 44 8 20 ];
-        %tmp.21 = getv ? :RenderSystem;
-        symbol [ drawBall %tmp.22 44 21 29 ];
-        %tmp.22 = getv function %tmp.21 :drawBall;
-        %tmp.23 = lgetv %dc;
-        symbol [ dc %tmp.23 44 30 32 ];
-        %tmp.24 = lgetv %ctrl;
-        symbol [ ctrl %tmp.24 44 34 38 ];
-        invoke %tmp.21 %tmp.22(%tmp.23, %tmp.24);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 46 8 ]
-        %tmp.25 = self;
-        symbol [ _drawHUD %tmp.26 46 8 16 ];
-        %tmp.26 = getv function %tmp.25 :_drawHUD;
-        %tmp.27 = lgetv %dc;
-        symbol [ dc %tmp.27 46 17 19 ];
-        %tmp.28 = lgetv %ctrl;
-        symbol [ ctrl %tmp.28 46 21 25 ];
-        invoke %tmp.25 %tmp.26(%tmp.27, %tmp.28);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 47 8 ]
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_47_8_47_58_if_stmt:
-        %tmp.29 = lgetv %ctrl;
-        symbol [ ctrl %tmp.29 47 12 16 ];
-        symbol [ state %tmp.30 47 17 22 ];
-        %tmp.30 = getv %tmp.29 :state;
-        symbol [ SR_OVER %tmp.32 47 26 33 ];
-        %tmp.32 = getv ? :SR_OVER;
-        %tmp.33 = eq %tmp.30 %tmp.32;
-        bf %tmp.33 @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_47_8_47_58_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_47_8_47_58_if_true:
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_47_35_47_58_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 47 37 ]
-        %tmp.34 = self;
-        symbol [ _drawOver %tmp.35 47 37 46 ];
-        %tmp.35 = getv function %tmp.34 :_drawOver;
-        %tmp.36 = lgetv %dc;
-        symbol [ dc %tmp.36 47 47 49 ];
-        %tmp.37 = lgetv %ctrl;
-        symbol [ ctrl %tmp.37 47 51 55 ];
-        invoke %tmp.34 %tmp.35(%tmp.36, %tmp.37);
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_47_35_47_58_stop:
-        goto @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_47_8_47_58_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_47_8_47_58_if_end:
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_39_35_48_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc"; @line = 51; @symbol_functiondef = [_drawHUD,51,27,35]; @symbol_param<0> = [dc,51,36,38]; @symbol_param<1> = [ctrl,51,40,44]; ]
-    protected static
-    function _drawHUD(dc, ctrl) {
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_51_46_81_4_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 52 8 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_51_46_81_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_51_46_81_4_stop" ]
-        %sh.1 = local;
-        symbol [ sh %sh.1 52 12 14 ];
-        %tmp.1 = lgetv %ctrl;
-        symbol [ ctrl %tmp.1 52 17 21 ];
-        symbol [ sh %tmp.2 52 22 24 ];
-        %tmp.2 = getv %tmp.1 :sh;
-        lputv %sh.1 %tmp.2;
-        symbol [ sh %sh.1 52 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 52 26 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_51_46_81_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_51_46_81_4_stop" ]
-        %ccx.2 = local;
-        symbol [ ccx %ccx.2 52 30 33 ];
-        %tmp.3 = lgetv %ctrl;
-        symbol [ ctrl %tmp.3 52 36 40 ];
-        symbol [ cx %tmp.4 52 41 43 ];
-        %tmp.4 = getv %tmp.3 :cx;
-        lputv %ccx.2 %tmp.4;
-        symbol [ ccx %ccx.2 52 30 33 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 54 8 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_51_46_81_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_51_46_81_4_stop" ]
-        %topY.3 = local;
-        symbol [ topY %topY.3 54 12 16 ];
-        %tmp.5 = lgetv %sh.1;
-        symbol [ sh %tmp.5 54 19 21 ];
-        %tmp.6 = 6;
-        %tmp.7 = mul %tmp.5 %tmp.6;
-        %tmp.8 = 100;
-        %tmp.9 = div %tmp.7 %tmp.8;
-        lputv %topY.3 %tmp.9;
-        symbol [ topY %topY.3 54 12 16 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 55 8 ]
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_55_8_55_34_if_stmt:
-        %tmp.10 = lgetv %topY.3;
-        symbol [ topY %tmp.10 55 12 16 ];
-        %tmp.11 = 4;
-        %tmp.12 = lt %tmp.10 %tmp.11;
-        bf %tmp.12 @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_55_8_55_34_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_55_8_55_34_if_true:
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_55_22_55_34_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 55 24 ]
-        %tmp.13 = 4;
-        lputv %topY.3 %tmp.13;
-        symbol [ topY %topY.3 55 24 28 ];
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_55_22_55_34_stop:
-        goto @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_55_8_55_34_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_55_8_55_34_if_end:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 56 8 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_51_46_81_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_51_46_81_4_stop" ]
-        %d.4 = local;
-        symbol [ d %d.4 56 12 13 ];
-        %tmp.14 = lgetv %ctrl;
-        symbol [ ctrl %tmp.14 56 16 20 ];
-        symbol [ distance %tmp.15 56 21 29 ];
-        %tmp.15 = getv %tmp.14 :distance;
-        symbol [ format %tmp.16 56 30 36 ];
-        %tmp.16 = getv function %tmp.15 :format;
-        %tmp.17 = "%d";
-        %tmp.18 = invoke %tmp.15 %tmp.16(%tmp.17);
-        lputv %d.4 %tmp.18;
-        symbol [ d %d.4 56 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 57 8 ]
-        %tmp.19 = lgetv %dc;
-        symbol [ dc %tmp.19 57 8 10 ];
-        symbol [ setColor %tmp.20 57 11 19 ];
-        %tmp.20 = getv function %tmp.19 :setColor;
-        %tmp.21 = 0xFFEE66;
-        symbol [ Graphics %tmp.22 57 30 38 ];
-        %tmp.22 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.23 57 39 56 ];
-        %tmp.23 = getv %tmp.22 :COLOR_TRANSPARENT;
-        invoke %tmp.19 %tmp.20(%tmp.21, %tmp.23);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 58 8 ]
-        %tmp.24 = lgetv %dc;
-        symbol [ dc %tmp.24 58 8 10 ];
-        symbol [ drawText %tmp.25 58 11 19 ];
-        %tmp.25 = getv function %tmp.24 :drawText;
-        %tmp.26 = lgetv %ccx.2;
-        symbol [ ccx %tmp.26 58 20 23 ];
-        %tmp.27 = lgetv %topY.3;
-        symbol [ topY %tmp.27 58 25 29 ];
-        symbol [ Graphics %tmp.28 58 31 39 ];
-        %tmp.28 = getm $.Toybox.Graphics;
-        symbol [ FONT_XTINY %tmp.29 58 40 50 ];
-        %tmp.29 = getv %tmp.28 :FONT_XTINY;
-        %tmp.30 = lgetv %d.4;
-        symbol [ d %tmp.30 58 52 53 ];
-        symbol [ Graphics %tmp.31 59 20 28 ];
-        %tmp.31 = getm $.Toybox.Graphics;
-        symbol [ TEXT_JUSTIFY_CENTER %tmp.32 59 29 48 ];
-        %tmp.32 = getv %tmp.31 :TEXT_JUSTIFY_CENTER;
-        invoke %tmp.24 %tmp.25(%tmp.26, %tmp.27, %tmp.29, %tmp.30, %tmp.32);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 61 8 ]
-        %tmp.33 = lgetv %dc;
-        symbol [ dc %tmp.33 61 8 10 ];
-        symbol [ setColor %tmp.34 61 11 19 ];
-        %tmp.34 = getv function %tmp.33 :setColor;
-        %tmp.35 = 0xAACCDD;
-        symbol [ Graphics %tmp.36 61 30 38 ];
-        %tmp.36 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.37 61 39 56 ];
-        %tmp.37 = getv %tmp.36 :COLOR_TRANSPARENT;
-        invoke %tmp.33 %tmp.34(%tmp.35, %tmp.37);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 62 8 ]
-        %tmp.38 = lgetv %dc;
-        symbol [ dc %tmp.38 62 8 10 ];
-        symbol [ drawText %tmp.39 62 11 19 ];
-        %tmp.39 = getv function %tmp.38 :drawText;
-        %tmp.40 = lgetv %ccx.2;
-        symbol [ ccx %tmp.40 62 20 23 ];
-        %tmp.41 = lgetv %topY.3;
-        symbol [ topY %tmp.41 62 25 29 ];
-        %tmp.42 = 14;
-        %tmp.43 = add %tmp.41 %tmp.42;
-        symbol [ Graphics %tmp.44 62 36 44 ];
-        %tmp.44 = getm $.Toybox.Graphics;
-        symbol [ FONT_XTINY %tmp.45 62 45 55 ];
-        %tmp.45 = getv %tmp.44 :FONT_XTINY;
-        %tmp.46 = "m  D ";
-        %tmp.47 = lgetv %ctrl;
-        symbol [ ctrl %tmp.47 63 31 35 ];
-        symbol [ path %tmp.48 63 36 40 ];
-        %tmp.48 = getv %tmp.47 :path;
-        symbol [ difficulty %tmp.49 63 41 51 ];
-        %tmp.49 = getv function %tmp.48 :difficulty;
-        %tmp.50 = invoke %tmp.48 %tmp.49();
-        %tmp.51 = 100.0;
-        %tmp.52 = mul %tmp.50 %tmp.51;
-        symbol [ toNumber %tmp.53 63 63 71 ];
-        %tmp.53 = getv function %tmp.52 :toNumber;
-        %tmp.54 = invoke %tmp.52 %tmp.53();
-        symbol [ format %tmp.55 63 74 80 ];
-        %tmp.55 = getv function %tmp.54 :format;
-        %tmp.56 = "%d";
-        %tmp.57 = invoke %tmp.54 %tmp.55(%tmp.56);
-        %tmp.58 = add %tmp.46 %tmp.57;
-        symbol [ Graphics %tmp.59 64 20 28 ];
-        %tmp.59 = getm $.Toybox.Graphics;
-        symbol [ TEXT_JUSTIFY_CENTER %tmp.60 64 29 48 ];
-        %tmp.60 = getv %tmp.59 :TEXT_JUSTIFY_CENTER;
-        invoke %tmp.38 %tmp.39(%tmp.40, %tmp.43, %tmp.45, %tmp.58, %tmp.60);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 67 8 ]
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_67_8_73_8_if_stmt:
-        %tmp.61 = lgetv %ctrl;
-        symbol [ ctrl %tmp.61 67 12 16 ];
-        symbol [ bestScore %tmp.62 67 17 26 ];
-        %tmp.62 = getv %tmp.61 :bestScore;
-        %tmp.63 = 0;
-        %tmp.64 = gt %tmp.62 %tmp.63;
-        bf %tmp.64 @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_67_8_73_8_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_67_8_73_8_if_true:
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_67_32_73_8_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 68 12 ]
-        %tmp.65 = lgetv %dc;
-        symbol [ dc %tmp.65 68 12 14 ];
-        symbol [ setColor %tmp.66 68 15 23 ];
-        %tmp.66 = getv function %tmp.65 :setColor;
-        %tmp.67 = 0x88AABB;
-        symbol [ Graphics %tmp.68 68 34 42 ];
-        %tmp.68 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.69 68 43 60 ];
-        %tmp.69 = getv %tmp.68 :COLOR_TRANSPARENT;
-        invoke %tmp.65 %tmp.66(%tmp.67, %tmp.69);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 69 12 ]
-        %tmp.70 = lgetv %dc;
-        symbol [ dc %tmp.70 69 12 14 ];
-        symbol [ drawText %tmp.71 69 15 23 ];
-        %tmp.71 = getv function %tmp.70 :drawText;
-        %tmp.72 = lgetv %ctrl;
-        symbol [ ctrl %tmp.72 69 24 28 ];
-        symbol [ sw %tmp.73 69 29 31 ];
-        %tmp.73 = getv %tmp.72 :sw;
-        %tmp.74 = 6;
-        %tmp.75 = sub %tmp.73 %tmp.74;
-        %tmp.76 = lgetv %sh.1;
-        symbol [ sh %tmp.76 69 37 39 ];
-        %tmp.77 = 84;
-        %tmp.78 = mul %tmp.76 %tmp.77;
-        %tmp.79 = 100;
-        %tmp.80 = div %tmp.78 %tmp.79;
-        symbol [ Graphics %tmp.81 70 24 32 ];
-        %tmp.81 = getm $.Toybox.Graphics;
-        symbol [ FONT_XTINY %tmp.82 70 33 43 ];
-        %tmp.82 = getv %tmp.81 :FONT_XTINY;
-        %tmp.83 = "B ";
-        %tmp.84 = lgetv %ctrl;
-        symbol [ ctrl %tmp.84 71 31 35 ];
-        symbol [ bestScore %tmp.85 71 36 45 ];
-        %tmp.85 = getv %tmp.84 :bestScore;
-        symbol [ format %tmp.86 71 46 52 ];
-        %tmp.86 = getv function %tmp.85 :format;
-        %tmp.87 = "%d";
-        %tmp.88 = invoke %tmp.85 %tmp.86(%tmp.87);
-        %tmp.89 = add %tmp.83 %tmp.88;
-        symbol [ Graphics %tmp.90 72 24 32 ];
-        %tmp.90 = getm $.Toybox.Graphics;
-        symbol [ TEXT_JUSTIFY_RIGHT %tmp.91 72 33 51 ];
-        %tmp.91 = getv %tmp.90 :TEXT_JUSTIFY_RIGHT;
-        invoke %tmp.70 %tmp.71(%tmp.75, %tmp.80, %tmp.82, %tmp.89, %tmp.91);
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_67_32_73_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_67_8_73_8_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_67_8_73_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 76 8 ]
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_76_8_80_8_if_stmt:
-        %tmp.92 = lgetv %ctrl;
-        symbol [ ctrl %tmp.92 76 12 16 ];
-        symbol [ boostFlash %tmp.93 76 17 27 ];
-        %tmp.93 = getv %tmp.92 :boostFlash;
-        %tmp.94 = 0;
-        %tmp.95 = gt %tmp.93 %tmp.94;
-        bf %tmp.95 @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_76_8_80_8_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_76_8_80_8_if_true:
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_76_33_80_8_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 77 12 ]
-        %tmp.96 = lgetv %dc;
-        symbol [ dc %tmp.96 77 12 14 ];
-        symbol [ setColor %tmp.97 77 15 23 ];
-        %tmp.97 = getv function %tmp.96 :setColor;
-        %tmp.98 = 0xFF8833;
-        symbol [ Graphics %tmp.99 77 34 42 ];
-        %tmp.99 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.100 77 43 60 ];
-        %tmp.100 = getv %tmp.99 :COLOR_TRANSPARENT;
-        invoke %tmp.96 %tmp.97(%tmp.98, %tmp.100);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 78 12 ]
-        %tmp.101 = lgetv %dc;
-        symbol [ dc %tmp.101 78 12 14 ];
-        symbol [ drawText %tmp.102 78 15 23 ];
-        %tmp.102 = getv function %tmp.101 :drawText;
-        %tmp.103 = 6;
-        %tmp.104 = lgetv %sh.1;
-        symbol [ sh %tmp.104 78 27 29 ];
-        %tmp.105 = 84;
-        %tmp.106 = mul %tmp.104 %tmp.105;
-        %tmp.107 = 100;
-        %tmp.108 = div %tmp.106 %tmp.107;
-        symbol [ Graphics %tmp.109 78 42 50 ];
-        %tmp.109 = getm $.Toybox.Graphics;
-        symbol [ FONT_XTINY %tmp.110 78 51 61 ];
-        %tmp.110 = getv %tmp.109 :FONT_XTINY;
-        %tmp.111 = "BOOST";
-        symbol [ Graphics %tmp.112 79 33 41 ];
-        %tmp.112 = getm $.Toybox.Graphics;
-        symbol [ TEXT_JUSTIFY_LEFT %tmp.113 79 42 59 ];
-        %tmp.113 = getv %tmp.112 :TEXT_JUSTIFY_LEFT;
-        invoke %tmp.101 %tmp.102(%tmp.103, %tmp.108, %tmp.110, %tmp.111, %tmp.113);
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_76_33_80_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_76_8_80_8_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_76_8_80_8_if_end:
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_51_46_81_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc"; @line = 84; @symbol_functiondef = [_drawOver,84,27,36]; @symbol_param<0> = [dc,84,37,39]; @symbol_param<1> = [ctrl,84,41,45]; ]
-    protected static
-    function _drawOver(dc, ctrl) {
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_84_47_105_4_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 85 8 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_84_47_105_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_84_47_105_4_stop" ]
-        %sw.1 = local;
-        symbol [ sw %sw.1 85 12 14 ];
-        %tmp.1 = lgetv %ctrl;
-        symbol [ ctrl %tmp.1 85 17 21 ];
-        symbol [ sw %tmp.2 85 22 24 ];
-        %tmp.2 = getv %tmp.1 :sw;
-        lputv %sw.1 %tmp.2;
-        symbol [ sw %sw.1 85 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 85 26 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_84_47_105_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_84_47_105_4_stop" ]
-        %sh.2 = local;
-        symbol [ sh %sh.2 85 30 32 ];
-        %tmp.3 = lgetv %ctrl;
-        symbol [ ctrl %tmp.3 85 35 39 ];
-        symbol [ sh %tmp.4 85 40 42 ];
-        %tmp.4 = getv %tmp.3 :sh;
-        lputv %sh.2 %tmp.4;
-        symbol [ sh %sh.2 85 30 32 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 85 44 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_84_47_105_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_84_47_105_4_stop" ]
-        %ccx.3 = local;
-        symbol [ ccx %ccx.3 85 48 51 ];
-        %tmp.5 = lgetv %ctrl;
-        symbol [ ctrl %tmp.5 85 54 58 ];
-        symbol [ cx %tmp.6 85 59 61 ];
-        %tmp.6 = getv %tmp.5 :cx;
-        lputv %ccx.3 %tmp.6;
-        symbol [ ccx %ccx.3 85 48 51 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 86 8 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_84_47_105_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_84_47_105_4_stop" ]
-        %bw.4 = local;
-        symbol [ bw %bw.4 86 12 14 ];
-        %tmp.7 = lgetv %sw.1;
-        symbol [ sw %tmp.7 86 17 19 ];
-        %tmp.8 = 78;
-        %tmp.9 = mul %tmp.7 %tmp.8;
-        %tmp.10 = 100;
-        %tmp.11 = div %tmp.9 %tmp.10;
-        lputv %bw.4 %tmp.11;
-        symbol [ bw %bw.4 86 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 86 32 ]
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_86_32_86_58_if_stmt:
-        %tmp.12 = lgetv %bw.4;
-        symbol [ bw %tmp.12 86 36 38 ];
-        %tmp.13 = 170;
-        %tmp.14 = lt %tmp.12 %tmp.13;
-        bf %tmp.14 @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_86_32_86_58_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_86_32_86_58_if_true:
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_86_46_86_58_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 86 48 ]
-        %tmp.15 = 170;
-        lputv %bw.4 %tmp.15;
-        symbol [ bw %bw.4 86 48 50 ];
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_86_46_86_58_stop:
-        goto @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_86_32_86_58_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_86_32_86_58_if_end:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 87 8 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_84_47_105_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_84_47_105_4_stop" ]
-        %bh.5 = local;
-        symbol [ bh %bh.5 87 12 14 ];
-        %tmp.16 = lgetv %sh.2;
-        symbol [ sh %tmp.16 87 17 19 ];
-        %tmp.17 = 50;
-        %tmp.18 = mul %tmp.16 %tmp.17;
-        %tmp.19 = 100;
-        %tmp.20 = div %tmp.18 %tmp.19;
-        lputv %bh.5 %tmp.20;
-        symbol [ bh %bh.5 87 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 87 32 ]
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_87_32_87_58_if_stmt:
-        %tmp.21 = lgetv %bh.5;
-        symbol [ bh %tmp.21 87 36 38 ];
-        %tmp.22 = 140;
-        %tmp.23 = lt %tmp.21 %tmp.22;
-        bf %tmp.23 @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_87_32_87_58_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_87_32_87_58_if_true:
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_87_46_87_58_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 87 48 ]
-        %tmp.24 = 140;
-        lputv %bh.5 %tmp.24;
-        symbol [ bh %bh.5 87 48 50 ];
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_87_46_87_58_stop:
-        goto @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_87_32_87_58_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_87_32_87_58_if_end:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 88 8 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_84_47_105_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_84_47_105_4_stop" ]
-        %bx.6 = local;
-        symbol [ bx %bx.6 88 12 14 ];
-        %tmp.25 = lgetv %sw.1;
-        symbol [ sw %tmp.25 88 18 20 ];
-        %tmp.26 = lgetv %bw.4;
-        symbol [ bw %tmp.26 88 23 25 ];
-        %tmp.27 = sub %tmp.25 %tmp.26;
-        %tmp.28 = 2;
-        %tmp.29 = div %tmp.27 %tmp.28;
-        lputv %bx.6 %tmp.29;
-        symbol [ bx %bx.6 88 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 88 32 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_84_47_105_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_84_47_105_4_stop" ]
-        %by.7 = local;
-        symbol [ by %by.7 88 36 38 ];
-        %tmp.30 = lgetv %sh.2;
-        symbol [ sh %tmp.30 88 42 44 ];
-        %tmp.31 = lgetv %bh.5;
-        symbol [ bh %tmp.31 88 47 49 ];
-        %tmp.32 = sub %tmp.30 %tmp.31;
-        %tmp.33 = 2;
-        %tmp.34 = div %tmp.32 %tmp.33;
-        lputv %by.7 %tmp.34;
-        symbol [ by %by.7 88 36 38 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 89 8 ]
-        %tmp.35 = lgetv %dc;
-        symbol [ dc %tmp.35 89 8 10 ];
-        symbol [ setColor %tmp.36 89 11 19 ];
-        %tmp.36 = getv function %tmp.35 :setColor;
-        %tmp.37 = 0x000814;
-        symbol [ Graphics %tmp.38 89 30 38 ];
-        %tmp.38 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.39 89 39 56 ];
-        %tmp.39 = getv %tmp.38 :COLOR_TRANSPARENT;
-        invoke %tmp.35 %tmp.36(%tmp.37, %tmp.39);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 90 8 ]
-        %tmp.40 = lgetv %dc;
-        symbol [ dc %tmp.40 90 8 10 ];
-        symbol [ fillRoundedRectangle %tmp.41 90 11 31 ];
-        %tmp.41 = getv function %tmp.40 :fillRoundedRectangle;
-        %tmp.42 = lgetv %bx.6;
-        symbol [ bx %tmp.42 90 32 34 ];
-        %tmp.43 = lgetv %by.7;
-        symbol [ by %tmp.43 90 36 38 ];
-        %tmp.44 = lgetv %bw.4;
-        symbol [ bw %tmp.44 90 40 42 ];
-        %tmp.45 = lgetv %bh.5;
-        symbol [ bh %tmp.45 90 44 46 ];
-        %tmp.46 = 9;
-        invoke %tmp.40 %tmp.41(%tmp.42, %tmp.43, %tmp.44, %tmp.45, %tmp.46);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 91 8 ]
-        %tmp.47 = lgetv %dc;
-        symbol [ dc %tmp.47 91 8 10 ];
-        symbol [ setColor %tmp.48 91 11 19 ];
-        %tmp.48 = getv function %tmp.47 :setColor;
-        %tmp.49 = 0xFFCC55;
-        symbol [ Graphics %tmp.50 91 30 38 ];
-        %tmp.50 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.51 91 39 56 ];
-        %tmp.51 = getv %tmp.50 :COLOR_TRANSPARENT;
-        invoke %tmp.47 %tmp.48(%tmp.49, %tmp.51);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 92 8 ]
-        %tmp.52 = lgetv %dc;
-        symbol [ dc %tmp.52 92 8 10 ];
-        symbol [ drawRoundedRectangle %tmp.53 92 11 31 ];
-        %tmp.53 = getv function %tmp.52 :drawRoundedRectangle;
-        %tmp.54 = lgetv %bx.6;
-        symbol [ bx %tmp.54 92 32 34 ];
-        %tmp.55 = lgetv %by.7;
-        symbol [ by %tmp.55 92 36 38 ];
-        %tmp.56 = lgetv %bw.4;
-        symbol [ bw %tmp.56 92 40 42 ];
-        %tmp.57 = lgetv %bh.5;
-        symbol [ bh %tmp.57 92 44 46 ];
-        %tmp.58 = 9;
-        invoke %tmp.52 %tmp.53(%tmp.54, %tmp.55, %tmp.56, %tmp.57, %tmp.58);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 93 8 ]
-        %tmp.59 = lgetv %dc;
-        symbol [ dc %tmp.59 93 8 10 ];
-        symbol [ drawText %tmp.60 93 11 19 ];
-        %tmp.60 = getv function %tmp.59 :drawText;
-        %tmp.61 = lgetv %ccx.3;
-        symbol [ ccx %tmp.61 93 20 23 ];
-        %tmp.62 = lgetv %by.7;
-        symbol [ by %tmp.62 93 25 27 ];
-        %tmp.63 = 6;
-        %tmp.64 = add %tmp.62 %tmp.63;
-        symbol [ Graphics %tmp.65 93 33 41 ];
-        %tmp.65 = getm $.Toybox.Graphics;
-        symbol [ FONT_SMALL %tmp.66 93 42 52 ];
-        %tmp.66 = getv %tmp.65 :FONT_SMALL;
-        %tmp.67 = "FELL";
-        symbol [ Graphics %tmp.68 94 28 36 ];
-        %tmp.68 = getm $.Toybox.Graphics;
-        symbol [ TEXT_JUSTIFY_CENTER %tmp.69 94 37 56 ];
-        %tmp.69 = getv %tmp.68 :TEXT_JUSTIFY_CENTER;
-        invoke %tmp.59 %tmp.60(%tmp.61, %tmp.64, %tmp.66, %tmp.67, %tmp.69);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 95 8 ]
-        %tmp.70 = lgetv %dc;
-        symbol [ dc %tmp.70 95 8 10 ];
-        symbol [ setColor %tmp.71 95 11 19 ];
-        %tmp.71 = getv function %tmp.70 :setColor;
-        %tmp.72 = 0xFFFFFF;
-        symbol [ Graphics %tmp.73 95 30 38 ];
-        %tmp.73 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.74 95 39 56 ];
-        %tmp.74 = getv %tmp.73 :COLOR_TRANSPARENT;
-        invoke %tmp.70 %tmp.71(%tmp.72, %tmp.74);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 96 8 ]
-        %tmp.75 = lgetv %dc;
-        symbol [ dc %tmp.75 96 8 10 ];
-        symbol [ drawText %tmp.76 96 11 19 ];
-        %tmp.76 = getv function %tmp.75 :drawText;
-        %tmp.77 = lgetv %ccx.3;
-        symbol [ ccx %tmp.77 96 20 23 ];
-        %tmp.78 = lgetv %by.7;
-        symbol [ by %tmp.78 96 25 27 ];
-        %tmp.79 = 38;
-        %tmp.80 = add %tmp.78 %tmp.79;
-        symbol [ Graphics %tmp.81 96 34 42 ];
-        %tmp.81 = getm $.Toybox.Graphics;
-        symbol [ FONT_XTINY %tmp.82 96 43 53 ];
-        %tmp.82 = getv %tmp.81 :FONT_XTINY;
-        %tmp.83 = "Dist  ";
-        %tmp.84 = lgetv %ctrl;
-        symbol [ ctrl %tmp.84 97 31 35 ];
-        symbol [ distance %tmp.85 97 36 44 ];
-        %tmp.85 = getv %tmp.84 :distance;
-        symbol [ format %tmp.86 97 45 51 ];
-        %tmp.86 = getv function %tmp.85 :format;
-        %tmp.87 = "%d";
-        %tmp.88 = invoke %tmp.85 %tmp.86(%tmp.87);
-        %tmp.89 = add %tmp.83 %tmp.88;
-        %tmp.90 = " m";
-        %tmp.91 = add %tmp.89 %tmp.90;
-        symbol [ Graphics %tmp.92 98 20 28 ];
-        %tmp.92 = getm $.Toybox.Graphics;
-        symbol [ TEXT_JUSTIFY_CENTER %tmp.93 98 29 48 ];
-        %tmp.93 = getv %tmp.92 :TEXT_JUSTIFY_CENTER;
-        invoke %tmp.75 %tmp.76(%tmp.77, %tmp.80, %tmp.82, %tmp.91, %tmp.93);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 99 8 ]
-        %tmp.94 = lgetv %dc;
-        symbol [ dc %tmp.94 99 8 10 ];
-        symbol [ drawText %tmp.95 99 11 19 ];
-        %tmp.95 = getv function %tmp.94 :drawText;
-        %tmp.96 = lgetv %ccx.3;
-        symbol [ ccx %tmp.96 99 20 23 ];
-        %tmp.97 = lgetv %by.7;
-        symbol [ by %tmp.97 99 25 27 ];
-        %tmp.98 = 56;
-        %tmp.99 = add %tmp.97 %tmp.98;
-        symbol [ Graphics %tmp.100 99 34 42 ];
-        %tmp.100 = getm $.Toybox.Graphics;
-        symbol [ FONT_XTINY %tmp.101 99 43 53 ];
-        %tmp.101 = getv %tmp.100 :FONT_XTINY;
-        %tmp.102 = "Best  ";
-        %tmp.103 = lgetv %ctrl;
-        symbol [ ctrl %tmp.103 100 31 35 ];
-        symbol [ bestScore %tmp.104 100 36 45 ];
-        %tmp.104 = getv %tmp.103 :bestScore;
-        symbol [ format %tmp.105 100 46 52 ];
-        %tmp.105 = getv function %tmp.104 :format;
-        %tmp.106 = "%d";
-        %tmp.107 = invoke %tmp.104 %tmp.105(%tmp.106);
-        %tmp.108 = add %tmp.102 %tmp.107;
-        %tmp.109 = " m";
-        %tmp.110 = add %tmp.108 %tmp.109;
-        symbol [ Graphics %tmp.111 101 20 28 ];
-        %tmp.111 = getm $.Toybox.Graphics;
-        symbol [ TEXT_JUSTIFY_CENTER %tmp.112 101 29 48 ];
-        %tmp.112 = getv %tmp.111 :TEXT_JUSTIFY_CENTER;
-        invoke %tmp.94 %tmp.95(%tmp.96, %tmp.99, %tmp.101, %tmp.110, %tmp.112);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 102 8 ]
-        %tmp.113 = lgetv %dc;
-        symbol [ dc %tmp.113 102 8 10 ];
-        symbol [ setColor %tmp.114 102 11 19 ];
-        %tmp.114 = getv function %tmp.113 :setColor;
-        %tmp.115 = 0xAACCEE;
-        symbol [ Graphics %tmp.116 102 30 38 ];
-        %tmp.116 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.117 102 39 56 ];
-        %tmp.117 = getv %tmp.116 :COLOR_TRANSPARENT;
-        invoke %tmp.113 %tmp.114(%tmp.115, %tmp.117);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 103 8 ]
-        %tmp.118 = lgetv %dc;
-        symbol [ dc %tmp.118 103 8 10 ];
-        symbol [ drawText %tmp.119 103 11 19 ];
-        %tmp.119 = getv function %tmp.118 :drawText;
-        %tmp.120 = lgetv %ccx.3;
-        symbol [ ccx %tmp.120 103 20 23 ];
-        %tmp.121 = lgetv %by.7;
-        symbol [ by %tmp.121 103 25 27 ];
-        %tmp.122 = lgetv %bh.5;
-        symbol [ bh %tmp.122 103 30 32 ];
-        %tmp.123 = add %tmp.121 %tmp.122;
-        %tmp.124 = 16;
-        %tmp.125 = sub %tmp.123 %tmp.124;
-        symbol [ Graphics %tmp.126 103 39 47 ];
-        %tmp.126 = getm $.Toybox.Graphics;
-        symbol [ FONT_XTINY %tmp.127 103 48 58 ];
-        %tmp.127 = getv %tmp.126 :FONT_XTINY;
-        %tmp.128 = "tap = retry";
-        symbol [ Graphics %tmp.129 104 35 43 ];
-        %tmp.129 = getm $.Toybox.Graphics;
-        symbol [ TEXT_JUSTIFY_CENTER %tmp.130 104 44 63 ];
-        %tmp.130 = getv %tmp.129 :TEXT_JUSTIFY_CENTER;
-        invoke %tmp.118 %tmp.119(%tmp.120, %tmp.125, %tmp.127, %tmp.128, %tmp.130);
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_84_47_105_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc"; @line = 108; @symbol_functiondef = [_drawMenu,108,27,36]; @symbol_param<0> = [dc,108,37,39]; @symbol_param<1> = [ctrl,108,41,45]; ]
-    protected static
-    function _drawMenu(dc, ctrl) {
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_108_47_175_4_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 109 8 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_108_47_175_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_108_47_175_4_stop" ]
-        %sw.1 = local;
-        symbol [ sw %sw.1 109 12 14 ];
-        %tmp.1 = lgetv %ctrl;
-        symbol [ ctrl %tmp.1 109 17 21 ];
-        symbol [ sw %tmp.2 109 22 24 ];
-        %tmp.2 = getv %tmp.1 :sw;
-        lputv %sw.1 %tmp.2;
-        symbol [ sw %sw.1 109 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 109 26 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_108_47_175_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_108_47_175_4_stop" ]
-        %sh.2 = local;
-        symbol [ sh %sh.2 109 30 32 ];
-        %tmp.3 = lgetv %ctrl;
-        symbol [ ctrl %tmp.3 109 35 39 ];
-        symbol [ sh %tmp.4 109 40 42 ];
-        %tmp.4 = getv %tmp.3 :sh;
-        lputv %sh.2 %tmp.4;
-        symbol [ sh %sh.2 109 30 32 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 109 44 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_108_47_175_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_108_47_175_4_stop" ]
-        %ccx.3 = local;
-        symbol [ ccx %ccx.3 109 48 51 ];
-        %tmp.5 = lgetv %ctrl;
-        symbol [ ctrl %tmp.5 109 54 58 ];
-        symbol [ cx %tmp.6 109 59 61 ];
-        %tmp.6 = getv %tmp.5 :cx;
-        lputv %ccx.3 %tmp.6;
-        symbol [ ccx %ccx.3 109 48 51 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 111 8 ]
-        symbol [ RenderSystem %tmp.8 111 8 20 ];
-        %tmp.8 = getv ? :RenderSystem;
-        symbol [ drawSky %tmp.9 111 21 28 ];
-        %tmp.9 = getv function %tmp.8 :drawSky;
-        %tmp.10 = lgetv %dc;
-        symbol [ dc %tmp.10 111 29 31 ];
-        %tmp.11 = lgetv %ctrl;
-        symbol [ ctrl %tmp.11 111 33 37 ];
-        invoke %tmp.8 %tmp.9(%tmp.10, %tmp.11);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 114 8 ]
-        %tmp.12 = self;
-        symbol [ _drawTitleTile %tmp.13 114 8 22 ];
-        %tmp.13 = getv function %tmp.12 :_drawTitleTile;
-        %tmp.14 = lgetv %dc;
-        symbol [ dc %tmp.14 114 23 25 ];
-        %tmp.15 = lgetv %ctrl;
-        symbol [ ctrl %tmp.15 114 27 31 ];
-        invoke %tmp.12 %tmp.13(%tmp.14, %tmp.15);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 117 8 ]
-        %tmp.16 = lgetv %dc;
-        symbol [ dc %tmp.16 117 8 10 ];
-        symbol [ setColor %tmp.17 117 11 19 ];
-        %tmp.17 = getv function %tmp.16 :setColor;
-        %tmp.18 = 0xFFE066;
-        symbol [ Graphics %tmp.19 117 30 38 ];
-        %tmp.19 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.20 117 39 56 ];
-        %tmp.20 = getv %tmp.19 :COLOR_TRANSPARENT;
-        invoke %tmp.16 %tmp.17(%tmp.18, %tmp.20);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 118 8 ]
-        %tmp.21 = lgetv %dc;
-        symbol [ dc %tmp.21 118 8 10 ];
-        symbol [ drawText %tmp.22 118 11 19 ];
-        %tmp.22 = getv function %tmp.21 :drawText;
-        %tmp.23 = lgetv %ccx.3;
-        symbol [ ccx %tmp.23 118 20 23 ];
-        %tmp.24 = lgetv %sh.2;
-        symbol [ sh %tmp.24 118 25 27 ];
-        %tmp.25 = 15;
-        %tmp.26 = mul %tmp.24 %tmp.25;
-        %tmp.27 = 100;
+    function drawOver(dc, ctrl, sw, sh) {
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_135_47_166_4_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 136 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_135_47_166_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_135_47_166_4_stop" ]
+        %bw.1 = local;
+        symbol [ bw %bw.1 136 12 14 ];
+        %tmp.1 = lgetv %sw;
+        symbol [ sw %tmp.1 136 17 19 ];
+        %tmp.2 = 64;
+        %tmp.3 = mul %tmp.1 %tmp.2;
+        %tmp.4 = 100;
+        %tmp.5 = div %tmp.3 %tmp.4;
+        lputv %bw.1 %tmp.5;
+        symbol [ bw %bw.1 136 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 136 32 ]
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_136_32_136_58_if_stmt:
+        %tmp.6 = lgetv %bw.1;
+        symbol [ bw %tmp.6 136 36 38 ];
+        %tmp.7 = 150;
+        %tmp.8 = lt %tmp.6 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_136_32_136_58_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_136_32_136_58_if_true:
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_136_46_136_58_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 136 48 ]
+        %tmp.9 = 150;
+        lputv %bw.1 %tmp.9;
+        symbol [ bw %bw.1 136 48 50 ];
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_136_46_136_58_stop:
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_136_32_136_58_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_136_32_136_58_if_end:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 137 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_135_47_166_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_135_47_166_4_stop" ]
+        %bh.2 = local;
+        symbol [ bh %bh.2 137 12 14 ];
+        %tmp.10 = lgetv %sh;
+        symbol [ sh %tmp.10 137 17 19 ];
+        %tmp.11 = 34;
+        %tmp.12 = mul %tmp.10 %tmp.11;
+        %tmp.13 = 100;
+        %tmp.14 = div %tmp.12 %tmp.13;
+        lputv %bh.2 %tmp.14;
+        symbol [ bh %bh.2 137 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 137 32 ]
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_137_32_137_58_if_stmt:
+        %tmp.15 = lgetv %bh.2;
+        symbol [ bh %tmp.15 137 36 38 ];
+        %tmp.16 = 104;
+        %tmp.17 = lt %tmp.15 %tmp.16;
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_137_32_137_58_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_137_32_137_58_if_true:
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_137_46_137_58_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 137 48 ]
+        %tmp.18 = 104;
+        lputv %bh.2 %tmp.18;
+        symbol [ bh %bh.2 137 48 50 ];
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_137_46_137_58_stop:
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_137_32_137_58_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_137_32_137_58_if_end:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 138 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_135_47_166_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_135_47_166_4_stop" ]
+        %bx.3 = local;
+        symbol [ bx %bx.3 138 12 14 ];
+        %tmp.19 = lgetv %sw;
+        symbol [ sw %tmp.19 138 18 20 ];
+        %tmp.20 = lgetv %bw.1;
+        symbol [ bw %tmp.20 138 23 25 ];
+        %tmp.21 = sub %tmp.19 %tmp.20;
+        %tmp.22 = 2;
+        %tmp.23 = div %tmp.21 %tmp.22;
+        lputv %bx.3 %tmp.23;
+        symbol [ bx %bx.3 138 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 139 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_135_47_166_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_135_47_166_4_stop" ]
+        %by.4 = local;
+        symbol [ by %by.4 139 12 14 ];
+        %tmp.24 = lgetv %sh;
+        symbol [ sh %tmp.24 139 18 20 ];
+        %tmp.25 = lgetv %bh.2;
+        symbol [ bh %tmp.25 139 23 25 ];
+        %tmp.26 = sub %tmp.24 %tmp.25;
+        %tmp.27 = 2;
         %tmp.28 = div %tmp.26 %tmp.27;
-        symbol [ Graphics %tmp.29 118 40 48 ];
-        %tmp.29 = getm $.Toybox.Graphics;
-        symbol [ FONT_MEDIUM %tmp.30 118 49 60 ];
-        %tmp.30 = getv %tmp.29 :FONT_MEDIUM;
-        %tmp.31 = "SKY";
-        symbol [ Graphics %tmp.32 119 27 35 ];
+        lputv %by.4 %tmp.28;
+        symbol [ by %by.4 139 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 140 8 ]
+        %tmp.29 = lgetv %dc;
+        symbol [ dc %tmp.29 140 8 10 ];
+        symbol [ setColor %tmp.30 140 11 19 ];
+        %tmp.30 = getv function %tmp.29 :setColor;
+        %tmp.31 = 0x140A0A;
+        symbol [ Graphics %tmp.32 140 30 38 ];
         %tmp.32 = getm $.Toybox.Graphics;
-        symbol [ TEXT_JUSTIFY_CENTER %tmp.33 119 36 55 ];
-        %tmp.33 = getv %tmp.32 :TEXT_JUSTIFY_CENTER;
-        invoke %tmp.21 %tmp.22(%tmp.23, %tmp.28, %tmp.30, %tmp.31, %tmp.33);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 120 8 ]
+        symbol [ COLOR_TRANSPARENT %tmp.33 140 39 56 ];
+        %tmp.33 = getv %tmp.32 :COLOR_TRANSPARENT;
+        invoke %tmp.29 %tmp.30(%tmp.31, %tmp.33);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 141 8 ]
         %tmp.34 = lgetv %dc;
-        symbol [ dc %tmp.34 120 8 10 ];
-        symbol [ setColor %tmp.35 120 11 19 ];
-        %tmp.35 = getv function %tmp.34 :setColor;
-        %tmp.36 = 0xCCEEFF;
-        symbol [ Graphics %tmp.37 120 30 38 ];
-        %tmp.37 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.38 120 39 56 ];
-        %tmp.38 = getv %tmp.37 :COLOR_TRANSPARENT;
-        invoke %tmp.34 %tmp.35(%tmp.36, %tmp.38);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 121 8 ]
-        %tmp.39 = lgetv %dc;
-        symbol [ dc %tmp.39 121 8 10 ];
-        symbol [ drawText %tmp.40 121 11 19 ];
-        %tmp.40 = getv function %tmp.39 :drawText;
-        %tmp.41 = lgetv %ccx.3;
-        symbol [ ccx %tmp.41 121 20 23 ];
-        %tmp.42 = lgetv %sh.2;
-        symbol [ sh %tmp.42 121 25 27 ];
-        %tmp.43 = 25;
-        %tmp.44 = mul %tmp.42 %tmp.43;
-        %tmp.45 = 100;
-        %tmp.46 = div %tmp.44 %tmp.45;
-        symbol [ Graphics %tmp.47 121 40 48 ];
-        %tmp.47 = getm $.Toybox.Graphics;
-        symbol [ FONT_SMALL %tmp.48 121 49 59 ];
-        %tmp.48 = getv %tmp.47 :FONT_SMALL;
-        %tmp.49 = "ROLL";
-        symbol [ Graphics %tmp.50 122 28 36 ];
-        %tmp.50 = getm $.Toybox.Graphics;
-        symbol [ TEXT_JUSTIFY_CENTER %tmp.51 122 37 56 ];
-        %tmp.51 = getv %tmp.50 :TEXT_JUSTIFY_CENTER;
-        invoke %tmp.39 %tmp.40(%tmp.41, %tmp.46, %tmp.48, %tmp.49, %tmp.51);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 123 8 ]
-        %tmp.52 = lgetv %dc;
-        symbol [ dc %tmp.52 123 8 10 ];
-        symbol [ setColor %tmp.53 123 11 19 ];
-        %tmp.53 = getv function %tmp.52 :setColor;
-        %tmp.54 = 0xAACCEE;
-        symbol [ Graphics %tmp.55 123 30 38 ];
-        %tmp.55 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.56 123 39 56 ];
-        %tmp.56 = getv %tmp.55 :COLOR_TRANSPARENT;
-        invoke %tmp.52 %tmp.53(%tmp.54, %tmp.56);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 124 8 ]
-        %tmp.57 = lgetv %dc;
-        symbol [ dc %tmp.57 124 8 10 ];
-        symbol [ drawText %tmp.58 124 11 19 ];
-        %tmp.58 = getv function %tmp.57 :drawText;
-        %tmp.59 = lgetv %ccx.3;
-        symbol [ ccx %tmp.59 124 20 23 ];
-        %tmp.60 = lgetv %sh.2;
-        symbol [ sh %tmp.60 124 25 27 ];
-        %tmp.61 = 35;
-        %tmp.62 = mul %tmp.60 %tmp.61;
-        %tmp.63 = 100;
-        %tmp.64 = div %tmp.62 %tmp.63;
-        symbol [ Graphics %tmp.65 124 40 48 ];
-        %tmp.65 = getm $.Toybox.Graphics;
-        symbol [ FONT_XTINY %tmp.66 124 49 59 ];
-        %tmp.66 = getv %tmp.65 :FONT_XTINY;
-        %tmp.67 = "by Bitochi";
-        symbol [ Graphics %tmp.68 125 34 42 ];
-        %tmp.68 = getm $.Toybox.Graphics;
-        symbol [ TEXT_JUSTIFY_CENTER %tmp.69 125 43 62 ];
-        %tmp.69 = getv %tmp.68 :TEXT_JUSTIFY_CENTER;
-        invoke %tmp.57 %tmp.58(%tmp.59, %tmp.64, %tmp.66, %tmp.67, %tmp.69);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 127 8 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_108_47_175_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_108_47_175_4_stop" ]
-        %rg.4 = local;
-        symbol [ rg %rg.4 127 12 14 ];
-        %tmp.70 = self;
-        symbol [ rowGeom %tmp.71 127 17 24 ];
-        %tmp.71 = getv function %tmp.70 :rowGeom;
-        %tmp.72 = lgetv %sw.1;
-        symbol [ sw %tmp.72 127 25 27 ];
-        %tmp.73 = lgetv %sh.2;
-        symbol [ sh %tmp.73 127 29 31 ];
-        %tmp.74 = invoke %tmp.70 %tmp.71(%tmp.72, %tmp.73);
-        lputv %rg.4 %tmp.74;
-        symbol [ rg %rg.4 127 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 128 8 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_108_47_175_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_108_47_175_4_stop" ]
-        %rowH.5 = local;
-        symbol [ rowH %rowH.5 128 12 16 ];
-        %tmp.75 = lgetv %rg.4;
-        symbol [ rg %tmp.75 128 19 21 ];
-        %tmp.76 = 0;
-        %tmp.77 = agetv %tmp.75 %tmp.76;
-        lputv %rowH.5 %tmp.77;
-        symbol [ rowH %rowH.5 128 12 16 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 128 26 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_108_47_175_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_108_47_175_4_stop" ]
-        %rowW.6 = local;
-        symbol [ rowW %rowW.6 128 30 34 ];
-        %tmp.78 = lgetv %rg.4;
-        symbol [ rg %tmp.78 128 37 39 ];
-        %tmp.79 = 1;
-        %tmp.80 = agetv %tmp.78 %tmp.79;
-        lputv %rowW.6 %tmp.80;
-        symbol [ rowW %rowW.6 128 30 34 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 129 8 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_108_47_175_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_108_47_175_4_stop" ]
-        %rowX.7 = local;
-        symbol [ rowX %rowX.7 129 12 16 ];
-        %tmp.81 = lgetv %rg.4;
-        symbol [ rg %tmp.81 129 19 21 ];
-        %tmp.82 = 2;
-        %tmp.83 = agetv %tmp.81 %tmp.82;
-        lputv %rowX.7 %tmp.83;
-        symbol [ rowX %rowX.7 129 12 16 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 129 26 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_108_47_175_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_108_47_175_4_stop" ]
-        %rowY0.8 = local;
-        symbol [ rowY0 %rowY0.8 129 30 35 ];
-        %tmp.84 = lgetv %rg.4;
-        symbol [ rg %tmp.84 129 38 40 ];
-        %tmp.85 = 3;
-        %tmp.86 = agetv %tmp.84 %tmp.85;
-        lputv %rowY0.8 %tmp.86;
-        symbol [ rowY0 %rowY0.8 129 30 35 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 129 45 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_108_47_175_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_108_47_175_4_stop" ]
-        %gap.9 = local;
-        symbol [ gap %gap.9 129 49 52 ];
-        %tmp.87 = lgetv %rg.4;
-        symbol [ rg %tmp.87 129 55 57 ];
-        %tmp.88 = 4;
-        %tmp.89 = agetv %tmp.87 %tmp.88;
-        lputv %gap.9 %tmp.89;
-        symbol [ gap %gap.9 129 49 52 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 130 8 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_108_47_175_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_108_47_175_4_stop" ]
-        %labels.10 = local;
-        symbol [ labels %labels.10 130 12 18 ];
-        %tmp.90 = newa 3;
-        %tmp.91 = "Sens:  ";
-        %tmp.92 = lgetv %ctrl;
-        symbol [ ctrl %tmp.92 131 24 28 ];
-        symbol [ sensName %tmp.93 131 29 37 ];
-        %tmp.93 = getv function %tmp.92 :sensName;
-        %tmp.94 = invoke %tmp.92 %tmp.93();
-        %tmp.95 = add %tmp.91 %tmp.94;
-        %tmp.96 = dup %tmp.90;
-        %tmp.97 = aputv %tmp.96 0 %tmp.95;
-        %tmp.98 = "Diff:  ";
-        %tmp.99 = lgetv %ctrl;
-        symbol [ ctrl %tmp.99 132 24 28 ];
-        symbol [ diffName %tmp.100 132 29 37 ];
-        %tmp.100 = getv function %tmp.99 :diffName;
-        %tmp.101 = invoke %tmp.99 %tmp.100();
-        %tmp.102 = add %tmp.98 %tmp.101;
-        %tmp.103 = dup %tmp.97;
-        %tmp.104 = aputv %tmp.103 1 %tmp.102;
-        %tmp.105 = "START";
-        %tmp.106 = dup %tmp.104;
-        %tmp.107 = aputv %tmp.106 2 %tmp.105;
-        lputv %labels.10 %tmp.107;
-        symbol [ labels %labels.10 130 12 18 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 135 8 ]
-        for @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_135_8_164_8_for_test @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_135_8_164_8_for_incr @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_135_8_164_8_for_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_135_8_164_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_135_8_164_8_for_begin" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_135_8_164_8_for_end" ]
-        %i.11 = local;
-        symbol [ i %i.11 135 17 18 ];
-        %tmp.108 = 0;
-        lputv %i.11 %tmp.108;
-        symbol [ i %i.11 135 17 18 ];
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_135_8_164_8_for_test:
-        %tmp.109 = lgetv %i.11;
-        symbol [ i %tmp.109 135 24 25 ];
-        symbol [ SR_MENU_ROWS %tmp.111 135 28 40 ];
-        %tmp.111 = getv ? :SR_MENU_ROWS;
-        %tmp.112 = lt %tmp.109 %tmp.111;
-        bf %tmp.112 @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_135_8_164_8_for_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_135_8_164_8_for_begin:
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_135_47_164_8_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 136 12 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_135_47_164_8_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_135_47_164_8_stop" ]
-        %ry.12 = local;
-        symbol [ ry %ry.12 136 16 18 ];
-        %tmp.113 = lgetv %rowY0.8;
-        symbol [ rowY0 %tmp.113 136 21 26 ];
-        %tmp.114 = lgetv %i.11;
-        symbol [ i %tmp.114 136 29 30 ];
-        %tmp.115 = lgetv %rowH.5;
-        symbol [ rowH %tmp.115 136 34 38 ];
-        %tmp.116 = lgetv %gap.9;
-        symbol [ gap %tmp.116 136 41 44 ];
-        %tmp.117 = add %tmp.115 %tmp.116;
-        %tmp.118 = mul %tmp.114 %tmp.117;
-        %tmp.119 = add %tmp.113 %tmp.118;
-        lputv %ry.12 %tmp.119;
-        symbol [ ry %ry.12 136 16 18 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 137 12 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_135_47_164_8_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_135_47_164_8_stop" ]
-        %sel.13 = local;
-        symbol [ sel %sel.13 137 16 19 ];
-        %tmp.120 = lgetv %i.11;
-        symbol [ i %tmp.120 137 27 28 ];
+        symbol [ dc %tmp.34 141 8 10 ];
+        symbol [ fillRoundedRectangle %tmp.35 141 11 31 ];
+        %tmp.35 = getv function %tmp.34 :fillRoundedRectangle;
+        %tmp.36 = lgetv %bx.3;
+        symbol [ bx %tmp.36 141 32 34 ];
+        %tmp.37 = lgetv %by.4;
+        symbol [ by %tmp.37 141 36 38 ];
+        %tmp.38 = lgetv %bw.1;
+        symbol [ bw %tmp.38 141 40 42 ];
+        %tmp.39 = lgetv %bh.2;
+        symbol [ bh %tmp.39 141 44 46 ];
+        %tmp.40 = 9;
+        invoke %tmp.34 %tmp.35(%tmp.36, %tmp.37, %tmp.38, %tmp.39, %tmp.40);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 142 8 ]
+        %tmp.41 = lgetv %dc;
+        symbol [ dc %tmp.41 142 8 10 ];
+        symbol [ setColor %tmp.42 142 11 19 ];
+        %tmp.42 = getv function %tmp.41 :setColor;
+        %tmp.43 = 0xFF6633;
+        symbol [ Graphics %tmp.44 142 30 38 ];
+        %tmp.44 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.45 142 39 56 ];
+        %tmp.45 = getv %tmp.44 :COLOR_TRANSPARENT;
+        invoke %tmp.41 %tmp.42(%tmp.43, %tmp.45);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 143 8 ]
+        %tmp.46 = lgetv %dc;
+        symbol [ dc %tmp.46 143 8 10 ];
+        symbol [ drawRoundedRectangle %tmp.47 143 11 31 ];
+        %tmp.47 = getv function %tmp.46 :drawRoundedRectangle;
+        %tmp.48 = lgetv %bx.3;
+        symbol [ bx %tmp.48 143 32 34 ];
+        %tmp.49 = lgetv %by.4;
+        symbol [ by %tmp.49 143 36 38 ];
+        %tmp.50 = lgetv %bw.1;
+        symbol [ bw %tmp.50 143 40 42 ];
+        %tmp.51 = lgetv %bh.2;
+        symbol [ bh %tmp.51 143 44 46 ];
+        %tmp.52 = 9;
+        invoke %tmp.46 %tmp.47(%tmp.48, %tmp.49, %tmp.50, %tmp.51, %tmp.52);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 145 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_135_47_166_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_135_47_166_4_stop" ]
+        %cx.5 = local;
+        symbol [ cx %cx.5 145 12 14 ];
+        %tmp.53 = lgetv %sw;
+        symbol [ sw %tmp.53 145 17 19 ];
+        %tmp.54 = 2;
+        %tmp.55 = div %tmp.53 %tmp.54;
+        lputv %cx.5 %tmp.55;
+        symbol [ cx %cx.5 145 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 146 8 ]
+        [ "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_135_47_166_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_135_47_166_4_stop" ]
+        %title.6 = local;
+        symbol [ title %title.6 146 12 17 ];
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_146_20_146_68_begin:
+        %tmp.56 = lgetv %ctrl;
+        symbol [ ctrl %tmp.56 146 21 25 ];
+        symbol [ deathReason %tmp.57 146 26 37 ];
+        %tmp.57 = getv %tmp.56 :deathReason;
+        %tmp.58 = "TIMEOUT";
+        %tmp.59 = eq %tmp.57 %tmp.58;
+        bf %tmp.59 @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_146_20_146_68_else_false;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_146_20_146_68_true:
+        %tmp.60 = "TOO SLOW!";
+        push %tmp.60;
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_146_20_146_68_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_146_20_146_68_else_false:
+        %tmp.61 = "TIMBERRR!";
+        push %tmp.61;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_146_20_146_68_end:
+        %tmp.62 = phi [%tmp.59 @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_146_20_146_68_begin] [%tmp.60 @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_146_20_146_68_true] [%tmp.61 @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_146_20_146_68_else_false] [%tmp.62 @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_146_20_146_68_end];
+        lputv %title.6 %tmp.62;
+        symbol [ title %title.6 146 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 147 8 ]
+        %tmp.63 = lgetv %dc;
+        symbol [ dc %tmp.63 147 8 10 ];
+        symbol [ setColor %tmp.64 147 11 19 ];
+        %tmp.64 = getv function %tmp.63 :setColor;
+        %tmp.65 = 0xFF6633;
+        symbol [ Graphics %tmp.66 147 30 38 ];
+        %tmp.66 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.67 147 39 56 ];
+        %tmp.67 = getv %tmp.66 :COLOR_TRANSPARENT;
+        invoke %tmp.63 %tmp.64(%tmp.65, %tmp.67);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 148 8 ]
+        %tmp.68 = lgetv %dc;
+        symbol [ dc %tmp.68 148 8 10 ];
+        symbol [ drawText %tmp.69 148 11 19 ];
+        %tmp.69 = getv function %tmp.68 :drawText;
+        %tmp.70 = lgetv %cx.5;
+        symbol [ cx %tmp.70 148 20 22 ];
+        %tmp.71 = lgetv %by.4;
+        symbol [ by %tmp.71 148 24 26 ];
+        %tmp.72 = 6;
+        %tmp.73 = add %tmp.71 %tmp.72;
+        symbol [ Graphics %tmp.74 148 32 40 ];
+        %tmp.74 = getm $.Toybox.Graphics;
+        symbol [ FONT_SMALL %tmp.75 148 41 51 ];
+        %tmp.75 = getv %tmp.74 :FONT_SMALL;
+        %tmp.76 = lgetv %title.6;
+        symbol [ title %tmp.76 148 53 58 ];
+        symbol [ Graphics %tmp.77 148 60 68 ];
+        %tmp.77 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.78 148 69 88 ];
+        %tmp.78 = getv %tmp.77 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.68 %tmp.69(%tmp.70, %tmp.73, %tmp.75, %tmp.76, %tmp.78);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 150 8 ]
+        %tmp.79 = lgetv %dc;
+        symbol [ dc %tmp.79 150 8 10 ];
+        symbol [ setColor %tmp.80 150 11 19 ];
+        %tmp.80 = getv function %tmp.79 :setColor;
+        %tmp.81 = 0xFFFFFF;
+        symbol [ Graphics %tmp.82 150 30 38 ];
+        %tmp.82 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.83 150 39 56 ];
+        %tmp.83 = getv %tmp.82 :COLOR_TRANSPARENT;
+        invoke %tmp.79 %tmp.80(%tmp.81, %tmp.83);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 151 8 ]
+        %tmp.84 = lgetv %dc;
+        symbol [ dc %tmp.84 151 8 10 ];
+        symbol [ drawText %tmp.85 151 11 19 ];
+        %tmp.85 = getv function %tmp.84 :drawText;
+        %tmp.86 = lgetv %cx.5;
+        symbol [ cx %tmp.86 151 20 22 ];
+        %tmp.87 = lgetv %by.4;
+        symbol [ by %tmp.87 151 24 26 ];
+        %tmp.88 = 30;
+        %tmp.89 = add %tmp.87 %tmp.88;
+        symbol [ Graphics %tmp.90 151 33 41 ];
+        %tmp.90 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.91 151 42 52 ];
+        %tmp.91 = getv %tmp.90 :FONT_XTINY;
+        %tmp.92 = "Score ";
+        %tmp.93 = lgetv %ctrl;
+        symbol [ ctrl %tmp.93 152 31 35 ];
+        symbol [ scoreSys %tmp.94 152 36 44 ];
+        %tmp.94 = getv %tmp.93 :scoreSys;
+        symbol [ score %tmp.95 152 45 50 ];
+        %tmp.95 = getv %tmp.94 :score;
+        symbol [ format %tmp.96 152 51 57 ];
+        %tmp.96 = getv function %tmp.95 :format;
+        %tmp.97 = "%d";
+        %tmp.98 = invoke %tmp.95 %tmp.96(%tmp.97);
+        %tmp.99 = add %tmp.92 %tmp.98;
+        symbol [ Graphics %tmp.100 152 65 73 ];
+        %tmp.100 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.101 152 74 93 ];
+        %tmp.101 = getv %tmp.100 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.84 %tmp.85(%tmp.86, %tmp.89, %tmp.91, %tmp.99, %tmp.101);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 154 8 ]
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_154_8_161_8_if_stmt:
+        %tmp.102 = lgetv %ctrl;
+        symbol [ ctrl %tmp.102 154 12 16 ];
+        symbol [ hasNewBest %tmp.103 154 17 27 ];
+        %tmp.103 = getv function %tmp.102 :hasNewBest;
+        %tmp.104 = invoke %tmp.102 %tmp.103();
+        bf %tmp.104 @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_154_8_161_8_if_false;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_154_8_161_8_if_true:
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_154_31_157_8_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 155 12 ]
+        %tmp.105 = lgetv %dc;
+        symbol [ dc %tmp.105 155 12 14 ];
+        symbol [ setColor %tmp.106 155 15 23 ];
+        %tmp.106 = getv function %tmp.105 :setColor;
+        %tmp.107 = 0x44FF66;
+        symbol [ Graphics %tmp.108 155 34 42 ];
+        %tmp.108 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.109 155 43 60 ];
+        %tmp.109 = getv %tmp.108 :COLOR_TRANSPARENT;
+        invoke %tmp.105 %tmp.106(%tmp.107, %tmp.109);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 156 12 ]
+        %tmp.110 = lgetv %dc;
+        symbol [ dc %tmp.110 156 12 14 ];
+        symbol [ drawText %tmp.111 156 15 23 ];
+        %tmp.111 = getv function %tmp.110 :drawText;
+        %tmp.112 = lgetv %cx.5;
+        symbol [ cx %tmp.112 156 24 26 ];
+        %tmp.113 = lgetv %by.4;
+        symbol [ by %tmp.113 156 28 30 ];
+        %tmp.114 = 46;
+        %tmp.115 = add %tmp.113 %tmp.114;
+        symbol [ Graphics %tmp.116 156 37 45 ];
+        %tmp.116 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.117 156 46 56 ];
+        %tmp.117 = getv %tmp.116 :FONT_XTINY;
+        %tmp.118 = "NEW BEST!";
+        symbol [ Graphics %tmp.119 156 71 79 ];
+        %tmp.119 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.120 156 80 99 ];
+        %tmp.120 = getv %tmp.119 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.110 %tmp.111(%tmp.112, %tmp.115, %tmp.117, %tmp.118, %tmp.120);
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_154_31_157_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_154_8_161_8_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_154_8_161_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 157 15 ]
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_157_15_161_8_if_stmt:
         %tmp.121 = lgetv %ctrl;
-        symbol [ ctrl %tmp.121 137 32 36 ];
-        symbol [ menuRow %tmp.122 137 37 44 ];
-        %tmp.122 = getv %tmp.121 :menuRow;
-        %tmp.123 = eq %tmp.120 %tmp.122;
-        lputv %sel.13 %tmp.123;
-        symbol [ sel %sel.13 137 16 19 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 139 12 ]
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_139_12_143_12_if_stmt:
-        %tmp.124 = lgetv %i.11;
-        symbol [ i %tmp.124 139 16 17 ];
-        symbol [ SR_ROW_LB %tmp.126 139 21 30 ];
-        %tmp.126 = getv ? :SR_ROW_LB;
-        %tmp.127 = eq %tmp.124 %tmp.126;
-        bf %tmp.127 @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_139_12_143_12_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_139_12_143_12_if_true:
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_139_32_143_12_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 141 16 ]
-        symbol [ LbBadge %tmp.129 141 16 23 ];
-        %tmp.129 = getv ? :LbBadge;
-        symbol [ drawRow %tmp.130 141 24 31 ];
-        %tmp.130 = getv function %tmp.129 :drawRow;
+        symbol [ ctrl %tmp.121 157 19 23 ];
+        symbol [ scoreSys %tmp.122 157 24 32 ];
+        %tmp.122 = getv %tmp.121 :scoreSys;
+        symbol [ hi %tmp.123 157 33 35 ];
+        %tmp.123 = getv %tmp.122 :hi;
+        %tmp.124 = 0;
+        %tmp.125 = gt %tmp.123 %tmp.124;
+        bf %tmp.125 @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_157_15_161_8_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_157_15_161_8_if_true:
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_157_41_161_8_start:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 158 12 ]
+        %tmp.126 = lgetv %dc;
+        symbol [ dc %tmp.126 158 12 14 ];
+        symbol [ setColor %tmp.127 158 15 23 ];
+        %tmp.127 = getv function %tmp.126 :setColor;
+        %tmp.128 = 0x88AABB;
+        symbol [ Graphics %tmp.129 158 34 42 ];
+        %tmp.129 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.130 158 43 60 ];
+        %tmp.130 = getv %tmp.129 :COLOR_TRANSPARENT;
+        invoke %tmp.126 %tmp.127(%tmp.128, %tmp.130);
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 159 12 ]
         %tmp.131 = lgetv %dc;
-        symbol [ dc %tmp.131 141 32 34 ];
-        %tmp.132 = lgetv %rowX.7;
-        symbol [ rowX %tmp.132 141 36 40 ];
-        %tmp.133 = lgetv %ry.12;
-        symbol [ ry %tmp.133 141 42 44 ];
-        %tmp.134 = lgetv %rowW.6;
-        symbol [ rowW %tmp.134 141 46 50 ];
-        %tmp.135 = lgetv %rowH.5;
-        symbol [ rowH %tmp.135 141 52 56 ];
-        %tmp.136 = lgetv %sel.13;
-        symbol [ sel %tmp.136 141 58 61 ];
-        invoke %tmp.129 %tmp.130(%tmp.131, %tmp.132, %tmp.133, %tmp.134, %tmp.135, %tmp.136);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 142 16 ]
-        goto break @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_135_8_164_8_for_incr;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_139_32_143_12_stop:
-        goto @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_139_12_143_12_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_139_12_143_12_if_end:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 145 12 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_135_47_164_8_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_135_47_164_8_stop" ]
-        %isStart.14 = local;
-        symbol [ isStart %isStart.14 145 16 23 ];
-        %tmp.137 = lgetv %i.11;
-        symbol [ i %tmp.137 145 27 28 ];
-        symbol [ SR_ROW_START %tmp.139 145 32 44 ];
-        %tmp.139 = getv ? :SR_ROW_START;
-        %tmp.140 = eq %tmp.137 %tmp.139;
-        lputv %isStart.14 %tmp.140;
-        symbol [ isStart %isStart.14 145 16 23 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 146 12 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_135_47_164_8_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_135_47_164_8_stop" ]
-        %bg.15 = local;
-        symbol [ bg %bg.15 146 16 18 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 146 20 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_135_47_164_8_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_135_47_164_8_stop" ]
-        %bd.16 = local;
-        symbol [ bd %bd.16 146 24 26 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 146 28 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_135_47_164_8_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_135_47_164_8_stop" ]
-        %fg.17 = local;
-        symbol [ fg %fg.17 146 32 34 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 147 12 ]
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_147_12_150_82_if_stmt:
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_147_16_147_23_begin:
-        %tmp.141 = lgetv %sel.13;
-        symbol [ sel %tmp.141 147 16 19 ];
-        bf %tmp.141 @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_147_12_150_82_if_false;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_147_23_147_23_true:
-        %tmp.142 = lgetv %isStart.14;
-        symbol [ isStart %tmp.142 147 23 30 ];
-        push %tmp.142;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_147_23_147_23_end:
-        %tmp.143 = phi [%tmp.141 @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_147_16_147_23_begin] [%tmp.142 @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_147_23_147_23_true] [%tmp.143 @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_147_23_147_23_end];
-        bf %tmp.143 @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_147_12_150_82_if_false;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_147_12_150_82_if_true:
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_147_33_147_80_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 147 35 ]
-        %tmp.144 = 0x223300;
-        lputv %bg.15 %tmp.144;
-        symbol [ bg %bg.15 147 35 37 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 147 50 ]
-        %tmp.145 = 0xFFEE66;
-        lputv %bd.16 %tmp.145;
-        symbol [ bd %bd.16 147 50 52 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 147 65 ]
-        %tmp.146 = 0xFFEE66;
-        lputv %fg.17 %tmp.146;
-        symbol [ fg %fg.17 147 65 67 ];
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_147_33_147_80_stop:
-        goto @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_147_12_150_82_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_147_12_150_82_if_false:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 148 17 ]
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_148_17_150_82_if_stmt:
-        %tmp.147 = lgetv %sel.13;
-        symbol [ sel %tmp.147 148 21 24 ];
-        bf %tmp.147 @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_148_17_150_82_if_false;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_148_17_150_82_if_true:
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_148_34_148_81_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 148 36 ]
-        %tmp.148 = 0x102444;
-        lputv %bg.15 %tmp.148;
-        symbol [ bg %bg.15 148 36 38 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 148 51 ]
-        %tmp.149 = 0x66B6FF;
-        lputv %bd.16 %tmp.149;
-        symbol [ bd %bd.16 148 51 53 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 148 66 ]
-        %tmp.150 = 0xDCEEFF;
-        lputv %fg.17 %tmp.150;
-        symbol [ fg %fg.17 148 66 68 ];
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_148_34_148_81_stop:
-        goto @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_148_17_150_82_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_148_17_150_82_if_false:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 149 17 ]
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_149_17_150_82_if_stmt:
-        %tmp.151 = lgetv %isStart.14;
-        symbol [ isStart %tmp.151 149 21 28 ];
-        bf %tmp.151 @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_149_17_150_82_if_else_false;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_149_17_150_82_if_true:
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_149_34_149_81_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 149 36 ]
-        %tmp.152 = 0x081020;
-        lputv %bg.15 %tmp.152;
-        symbol [ bg %bg.15 149 36 38 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 149 51 ]
-        %tmp.153 = 0x335544;
-        lputv %bd.16 %tmp.153;
-        symbol [ bd %bd.16 149 51 53 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 149 66 ]
-        %tmp.154 = 0xAACCBB;
-        lputv %fg.17 %tmp.154;
-        symbol [ fg %fg.17 149 66 68 ];
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_149_34_149_81_stop:
-        goto @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_149_17_150_82_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_149_17_150_82_if_else_false:
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_150_35_150_82_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 150 37 ]
-        %tmp.155 = 0x081020;
-        lputv %bg.15 %tmp.155;
-        symbol [ bg %bg.15 150 37 39 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 150 52 ]
-        %tmp.156 = 0x223344;
-        lputv %bd.16 %tmp.156;
-        symbol [ bd %bd.16 150 52 54 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 150 67 ]
-        %tmp.157 = 0x99AABB;
-        lputv %fg.17 %tmp.157;
-        symbol [ fg %fg.17 150 67 69 ];
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_150_35_150_82_stop:
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_149_17_150_82_if_end:
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_148_17_150_82_if_end:
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_147_12_150_82_if_end:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 151 12 ]
-        %tmp.158 = lgetv %dc;
-        symbol [ dc %tmp.158 151 12 14 ];
-        symbol [ setColor %tmp.159 151 15 23 ];
-        %tmp.159 = getv function %tmp.158 :setColor;
-        %tmp.160 = lgetv %bg.15;
-        symbol [ bg %tmp.160 151 24 26 ];
-        symbol [ Graphics %tmp.161 151 28 36 ];
-        %tmp.161 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.162 151 37 54 ];
-        %tmp.162 = getv %tmp.161 :COLOR_TRANSPARENT;
-        invoke %tmp.158 %tmp.159(%tmp.160, %tmp.162);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 152 12 ]
-        %tmp.163 = lgetv %dc;
-        symbol [ dc %tmp.163 152 12 14 ];
-        symbol [ fillRoundedRectangle %tmp.164 152 15 35 ];
-        %tmp.164 = getv function %tmp.163 :fillRoundedRectangle;
-        %tmp.165 = lgetv %rowX.7;
-        symbol [ rowX %tmp.165 152 36 40 ];
-        %tmp.166 = lgetv %ry.12;
-        symbol [ ry %tmp.166 152 42 44 ];
-        %tmp.167 = lgetv %rowW.6;
-        symbol [ rowW %tmp.167 152 46 50 ];
-        %tmp.168 = lgetv %rowH.5;
-        symbol [ rowH %tmp.168 152 52 56 ];
-        %tmp.169 = 5;
-        invoke %tmp.163 %tmp.164(%tmp.165, %tmp.166, %tmp.167, %tmp.168, %tmp.169);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 153 12 ]
-        %tmp.170 = lgetv %dc;
-        symbol [ dc %tmp.170 153 12 14 ];
-        symbol [ setColor %tmp.171 153 15 23 ];
-        %tmp.171 = getv function %tmp.170 :setColor;
-        %tmp.172 = lgetv %bd.16;
-        symbol [ bd %tmp.172 153 24 26 ];
-        symbol [ Graphics %tmp.173 153 28 36 ];
-        %tmp.173 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.174 153 37 54 ];
-        %tmp.174 = getv %tmp.173 :COLOR_TRANSPARENT;
-        invoke %tmp.170 %tmp.171(%tmp.172, %tmp.174);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 154 12 ]
-        %tmp.175 = lgetv %dc;
-        symbol [ dc %tmp.175 154 12 14 ];
-        symbol [ drawRoundedRectangle %tmp.176 154 15 35 ];
-        %tmp.176 = getv function %tmp.175 :drawRoundedRectangle;
-        %tmp.177 = lgetv %rowX.7;
-        symbol [ rowX %tmp.177 154 36 40 ];
-        %tmp.178 = lgetv %ry.12;
-        symbol [ ry %tmp.178 154 42 44 ];
-        %tmp.179 = lgetv %rowW.6;
-        symbol [ rowW %tmp.179 154 46 50 ];
-        %tmp.180 = lgetv %rowH.5;
-        symbol [ rowH %tmp.180 154 52 56 ];
-        %tmp.181 = 5;
-        invoke %tmp.175 %tmp.176(%tmp.177, %tmp.178, %tmp.179, %tmp.180, %tmp.181);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 155 12 ]
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_155_12_160_12_if_stmt:
-        %tmp.182 = lgetv %sel.13;
-        symbol [ sel %tmp.182 155 16 19 ];
-        bf %tmp.182 @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_155_12_160_12_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_155_12_160_12_if_true:
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_155_21_160_12_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 156 16 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_155_21_160_12_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_155_21_160_12_stop" ]
-        %ay.18 = local;
-        symbol [ ay %ay.18 156 20 22 ];
-        %tmp.183 = lgetv %ry.12;
-        symbol [ ry %tmp.183 156 25 27 ];
-        %tmp.184 = lgetv %rowH.5;
-        symbol [ rowH %tmp.184 156 30 34 ];
-        %tmp.185 = 2;
-        %tmp.186 = div %tmp.184 %tmp.185;
-        %tmp.187 = add %tmp.183 %tmp.186;
-        lputv %ay.18 %tmp.187;
-        symbol [ ay %ay.18 156 20 22 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 157 16 ]
-        %tmp.188 = lgetv %dc;
-        symbol [ dc %tmp.188 157 16 18 ];
-        symbol [ fillPolygon %tmp.189 157 19 30 ];
-        %tmp.189 = getv function %tmp.188 :fillPolygon;
-        %tmp.190 = newa 3;
-        %tmp.191 = newa 2;
-        %tmp.192 = lgetv %rowX.7;
-        symbol [ rowX %tmp.192 157 33 37 ];
-        %tmp.193 = 5;
-        %tmp.194 = add %tmp.192 %tmp.193;
-        %tmp.195 = dup %tmp.191;
-        %tmp.196 = aputv %tmp.195 0 %tmp.194;
-        %tmp.197 = lgetv %ay.18;
-        symbol [ ay %tmp.197 157 43 45 ];
-        %tmp.198 = 4;
-        %tmp.199 = sub %tmp.197 %tmp.198;
-        %tmp.200 = dup %tmp.196;
-        %tmp.201 = aputv %tmp.200 1 %tmp.199;
-        %tmp.202 = dup %tmp.190;
-        %tmp.203 = aputv %tmp.202 0 %tmp.201;
-        %tmp.204 = newa 2;
-        %tmp.205 = lgetv %rowX.7;
-        symbol [ rowX %tmp.205 158 33 37 ];
-        %tmp.206 = 5;
-        %tmp.207 = add %tmp.205 %tmp.206;
-        %tmp.208 = dup %tmp.204;
-        %tmp.209 = aputv %tmp.208 0 %tmp.207;
-        %tmp.210 = lgetv %ay.18;
-        symbol [ ay %tmp.210 158 43 45 ];
-        %tmp.211 = 4;
-        %tmp.212 = add %tmp.210 %tmp.211;
-        %tmp.213 = dup %tmp.209;
-        %tmp.214 = aputv %tmp.213 1 %tmp.212;
-        %tmp.215 = dup %tmp.203;
-        %tmp.216 = aputv %tmp.215 1 %tmp.214;
-        %tmp.217 = newa 2;
-        %tmp.218 = lgetv %rowX.7;
-        symbol [ rowX %tmp.218 159 33 37 ];
-        %tmp.219 = 11;
-        %tmp.220 = add %tmp.218 %tmp.219;
-        %tmp.221 = dup %tmp.217;
-        %tmp.222 = aputv %tmp.221 0 %tmp.220;
-        %tmp.223 = lgetv %ay.18;
-        symbol [ ay %tmp.223 159 44 46 ];
-        %tmp.224 = dup %tmp.222;
-        %tmp.225 = aputv %tmp.224 1 %tmp.223;
-        %tmp.226 = dup %tmp.216;
-        %tmp.227 = aputv %tmp.226 2 %tmp.225;
-        invoke %tmp.188 %tmp.189(%tmp.227);
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_155_21_160_12_stop:
-        goto @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_155_12_160_12_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_155_12_160_12_if_end:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 161 12 ]
-        %tmp.228 = lgetv %dc;
-        symbol [ dc %tmp.228 161 12 14 ];
-        symbol [ setColor %tmp.229 161 15 23 ];
-        %tmp.229 = getv function %tmp.228 :setColor;
-        %tmp.230 = lgetv %fg.17;
-        symbol [ fg %tmp.230 161 24 26 ];
-        symbol [ Graphics %tmp.231 161 28 36 ];
-        %tmp.231 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.232 161 37 54 ];
-        %tmp.232 = getv %tmp.231 :COLOR_TRANSPARENT;
-        invoke %tmp.228 %tmp.229(%tmp.230, %tmp.232);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 162 12 ]
-        %tmp.233 = lgetv %dc;
-        symbol [ dc %tmp.233 162 12 14 ];
-        symbol [ drawText %tmp.234 162 15 23 ];
-        %tmp.234 = getv function %tmp.233 :drawText;
-        %tmp.235 = lgetv %ccx.3;
-        symbol [ ccx %tmp.235 162 24 27 ];
-        %tmp.236 = lgetv %ry.12;
-        symbol [ ry %tmp.236 162 29 31 ];
-        %tmp.237 = lgetv %rowH.5;
-        symbol [ rowH %tmp.237 162 35 39 ];
-        %tmp.238 = 14;
-        %tmp.239 = sub %tmp.237 %tmp.238;
-        %tmp.240 = 2;
-        %tmp.241 = div %tmp.239 %tmp.240;
-        %tmp.242 = add %tmp.236 %tmp.241;
-        symbol [ Graphics %tmp.243 162 51 59 ];
-        %tmp.243 = getm $.Toybox.Graphics;
-        symbol [ FONT_XTINY %tmp.244 162 60 70 ];
-        %tmp.244 = getv %tmp.243 :FONT_XTINY;
-        %tmp.245 = lgetv %labels.10;
-        symbol [ labels %tmp.245 163 24 30 ];
-        %tmp.246 = lgetv %i.11;
-        symbol [ i %tmp.246 163 31 32 ];
-        %tmp.247 = agetv %tmp.245 %tmp.246;
-        symbol [ Graphics %tmp.248 163 35 43 ];
-        %tmp.248 = getm $.Toybox.Graphics;
-        symbol [ TEXT_JUSTIFY_CENTER %tmp.249 163 44 63 ];
-        %tmp.249 = getv %tmp.248 :TEXT_JUSTIFY_CENTER;
-        invoke %tmp.233 %tmp.234(%tmp.235, %tmp.242, %tmp.244, %tmp.247, %tmp.249);
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_135_47_164_8_stop:
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_135_8_164_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 135 ]
-        %tmp.252 = lgetv %i.11;
-        symbol [ i %tmp.252 135 42 43 ];
-        %tmp.253 = add %tmp.252 1;
-        lputv %i.11 %tmp.253;
-        symbol [ i %i.11 135 42 43 ];
-        goto @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_135_8_164_8_for_test;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_135_8_164_8_for_end:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 167 8 ]
-        %tmp.254 = lgetv %dc;
-        symbol [ dc %tmp.254 167 8 10 ];
-        symbol [ setColor %tmp.255 167 11 19 ];
-        %tmp.255 = getv function %tmp.254 :setColor;
-        %tmp.256 = 0x668090;
-        symbol [ Graphics %tmp.257 167 30 38 ];
-        %tmp.257 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.258 167 39 56 ];
-        %tmp.258 = getv %tmp.257 :COLOR_TRANSPARENT;
-        invoke %tmp.254 %tmp.255(%tmp.256, %tmp.258);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 168 8 ]
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_168_8_172_8_if_stmt:
-        %tmp.259 = lgetv %ctrl;
-        symbol [ ctrl %tmp.259 168 12 16 ];
-        symbol [ bestScore %tmp.260 168 17 26 ];
-        %tmp.260 = getv %tmp.259 :bestScore;
-        %tmp.261 = 0;
-        %tmp.262 = gt %tmp.260 %tmp.261;
-        bf %tmp.262 @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_168_8_172_8_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_168_8_172_8_if_true:
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_168_32_172_8_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 169 12 ]
-        %tmp.263 = lgetv %dc;
-        symbol [ dc %tmp.263 169 12 14 ];
-        symbol [ drawText %tmp.264 169 15 23 ];
-        %tmp.264 = getv function %tmp.263 :drawText;
-        %tmp.265 = lgetv %ccx.3;
-        symbol [ ccx %tmp.265 169 24 27 ];
-        %tmp.266 = lgetv %sh.2;
-        symbol [ sh %tmp.266 169 29 31 ];
-        %tmp.267 = 28;
-        %tmp.268 = sub %tmp.266 %tmp.267;
-        symbol [ Graphics %tmp.269 169 38 46 ];
-        %tmp.269 = getm $.Toybox.Graphics;
-        symbol [ FONT_XTINY %tmp.270 169 47 57 ];
-        %tmp.270 = getv %tmp.269 :FONT_XTINY;
-        %tmp.271 = "BEST ";
-        %tmp.272 = lgetv %ctrl;
-        symbol [ ctrl %tmp.272 170 34 38 ];
-        symbol [ bestScore %tmp.273 170 39 48 ];
-        %tmp.273 = getv %tmp.272 :bestScore;
-        symbol [ format %tmp.274 170 49 55 ];
-        %tmp.274 = getv function %tmp.273 :format;
-        %tmp.275 = "%d";
-        %tmp.276 = invoke %tmp.273 %tmp.274(%tmp.275);
-        %tmp.277 = add %tmp.271 %tmp.276;
-        %tmp.278 = " m";
-        %tmp.279 = add %tmp.277 %tmp.278;
-        symbol [ Graphics %tmp.280 171 24 32 ];
-        %tmp.280 = getm $.Toybox.Graphics;
-        symbol [ TEXT_JUSTIFY_CENTER %tmp.281 171 33 52 ];
-        %tmp.281 = getv %tmp.280 :TEXT_JUSTIFY_CENTER;
-        invoke %tmp.263 %tmp.264(%tmp.265, %tmp.268, %tmp.270, %tmp.279, %tmp.281);
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_168_32_172_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_168_8_172_8_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_168_8_172_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 173 8 ]
-        %tmp.282 = lgetv %dc;
-        symbol [ dc %tmp.282 173 8 10 ];
-        symbol [ drawText %tmp.283 173 11 19 ];
-        %tmp.283 = getv function %tmp.282 :drawText;
-        %tmp.284 = lgetv %ccx.3;
-        symbol [ ccx %tmp.284 173 20 23 ];
-        %tmp.285 = lgetv %sh.2;
-        symbol [ sh %tmp.285 173 25 27 ];
-        %tmp.286 = 14;
-        %tmp.287 = sub %tmp.285 %tmp.286;
-        symbol [ Graphics %tmp.288 173 34 42 ];
-        %tmp.288 = getm $.Toybox.Graphics;
-        symbol [ FONT_XTINY %tmp.289 173 43 53 ];
-        %tmp.289 = getv %tmp.288 :FONT_XTINY;
-        %tmp.290 = "UP/DN  TAP = act";
-        symbol [ Graphics %tmp.291 174 40 48 ];
-        %tmp.291 = getm $.Toybox.Graphics;
-        symbol [ TEXT_JUSTIFY_CENTER %tmp.292 174 49 68 ];
-        %tmp.292 = getv %tmp.291 :TEXT_JUSTIFY_CENTER;
-        invoke %tmp.282 %tmp.283(%tmp.284, %tmp.287, %tmp.289, %tmp.290, %tmp.292);
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_108_47_175_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc"; @line = 177; @symbol_functiondef = [_drawTitleTile,177,27,41]; @symbol_param<0> = [dc,177,42,44]; @symbol_param<1> = [ctrl,177,46,50]; ]
-    protected static
-    function _drawTitleTile(dc, ctrl) {
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_177_52_208_4_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 179 8 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_177_52_208_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_177_52_208_4_stop" ]
-        %ccx.1 = local;
-        symbol [ ccx %ccx.1 179 12 15 ];
-        %tmp.1 = lgetv %ctrl;
-        symbol [ ctrl %tmp.1 179 18 22 ];
-        symbol [ cx %tmp.2 179 23 25 ];
-        %tmp.2 = getv %tmp.1 :cx;
-        lputv %ccx.1 %tmp.2;
-        symbol [ ccx %ccx.1 179 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 180 8 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_177_52_208_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_177_52_208_4_stop" ]
-        %cy0.2 = local;
-        symbol [ cy0 %cy0.2 180 12 15 ];
-        %tmp.3 = lgetv %ctrl;
-        symbol [ ctrl %tmp.3 180 18 22 ];
-        symbol [ sh %tmp.4 180 23 25 ];
-        %tmp.4 = getv %tmp.3 :sh;
-        %tmp.5 = 20;
-        %tmp.6 = mul %tmp.4 %tmp.5;
-        %tmp.7 = 100;
-        %tmp.8 = div %tmp.6 %tmp.7;
-        lputv %cy0.2 %tmp.8;
-        symbol [ cy0 %cy0.2 180 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 181 8 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_177_52_208_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_177_52_208_4_stop" ]
-        %hw.3 = local;
-        symbol [ hw %hw.3 181 12 14 ];
-        symbol [ SR_TILE_HW %tmp.10 181 18 28 ];
-        %tmp.10 = getv ? :SR_TILE_HW;
-        lputv %hw.3 %tmp.10;
-        symbol [ hw %hw.3 181 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 181 30 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_177_52_208_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_177_52_208_4_stop" ]
-        %hh.4 = local;
-        symbol [ hh %hh.4 181 34 36 ];
-        symbol [ SR_TILE_HH %tmp.12 181 39 49 ];
-        %tmp.12 = getv ? :SR_TILE_HH;
-        lputv %hh.4 %tmp.12;
-        symbol [ hh %hh.4 181 34 36 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 182 8 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_177_52_208_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_177_52_208_4_stop" ]
-        %top.5 = local;
-        symbol [ top %top.5 182 12 15 ];
-        %tmp.13 = newa 2;
-        %tmp.14 = lgetv %ccx.1;
-        symbol [ ccx %tmp.14 182 22 25 ];
-        %tmp.15 = dup %tmp.13;
-        %tmp.16 = aputv %tmp.15 0 %tmp.14;
-        %tmp.17 = lgetv %cy0.2;
-        symbol [ cy0 %tmp.17 182 34 37 ];
-        %tmp.18 = lgetv %hh.4;
-        symbol [ hh %tmp.18 182 40 42 ];
-        %tmp.19 = sub %tmp.17 %tmp.18;
-        %tmp.20 = dup %tmp.16;
-        %tmp.21 = aputv %tmp.20 1 %tmp.19;
-        lputv %top.5 %tmp.21;
-        symbol [ top %top.5 182 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 183 8 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_177_52_208_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_177_52_208_4_stop" ]
-        %right.6 = local;
-        symbol [ right %right.6 183 12 17 ];
-        %tmp.22 = newa 2;
-        %tmp.23 = lgetv %ccx.1;
-        symbol [ ccx %tmp.23 183 22 25 ];
-        %tmp.24 = lgetv %hw.3;
-        symbol [ hw %tmp.24 183 28 30 ];
-        %tmp.25 = add %tmp.23 %tmp.24;
-        %tmp.26 = dup %tmp.22;
-        %tmp.27 = aputv %tmp.26 0 %tmp.25;
-        %tmp.28 = lgetv %cy0.2;
-        symbol [ cy0 %tmp.28 183 34 37 ];
-        %tmp.29 = dup %tmp.27;
-        %tmp.30 = aputv %tmp.29 1 %tmp.28;
-        lputv %right.6 %tmp.30;
-        symbol [ right %right.6 183 12 17 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 184 8 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_177_52_208_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_177_52_208_4_stop" ]
-        %bottom.7 = local;
-        symbol [ bottom %bottom.7 184 12 18 ];
-        %tmp.31 = newa 2;
-        %tmp.32 = lgetv %ccx.1;
-        symbol [ ccx %tmp.32 184 22 25 ];
-        %tmp.33 = dup %tmp.31;
-        %tmp.34 = aputv %tmp.33 0 %tmp.32;
-        %tmp.35 = lgetv %cy0.2;
-        symbol [ cy0 %tmp.35 184 34 37 ];
-        %tmp.36 = lgetv %hh.4;
-        symbol [ hh %tmp.36 184 40 42 ];
-        %tmp.37 = add %tmp.35 %tmp.36;
-        %tmp.38 = dup %tmp.34;
-        %tmp.39 = aputv %tmp.38 1 %tmp.37;
-        lputv %bottom.7 %tmp.39;
-        symbol [ bottom %bottom.7 184 12 18 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 185 8 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_177_52_208_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_177_52_208_4_stop" ]
-        %left.8 = local;
-        symbol [ left %left.8 185 12 16 ];
-        %tmp.40 = newa 2;
-        %tmp.41 = lgetv %ccx.1;
-        symbol [ ccx %tmp.41 185 22 25 ];
-        %tmp.42 = lgetv %hw.3;
-        symbol [ hw %tmp.42 185 28 30 ];
-        %tmp.43 = sub %tmp.41 %tmp.42;
-        %tmp.44 = dup %tmp.40;
-        %tmp.45 = aputv %tmp.44 0 %tmp.43;
-        %tmp.46 = lgetv %cy0.2;
-        symbol [ cy0 %tmp.46 185 34 37 ];
-        %tmp.47 = dup %tmp.45;
-        %tmp.48 = aputv %tmp.47 1 %tmp.46;
-        lputv %left.8 %tmp.48;
-        symbol [ left %left.8 185 12 16 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 187 8 ]
-        %tmp.49 = lgetv %dc;
-        symbol [ dc %tmp.49 187 8 10 ];
-        symbol [ setColor %tmp.50 187 11 19 ];
-        %tmp.50 = getv function %tmp.49 :setColor;
-        %tmp.51 = 0x0F1830;
-        symbol [ Graphics %tmp.52 187 30 38 ];
-        %tmp.52 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.53 187 39 56 ];
-        %tmp.53 = getv %tmp.52 :COLOR_TRANSPARENT;
-        invoke %tmp.49 %tmp.50(%tmp.51, %tmp.53);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 188 8 ]
-        %tmp.54 = lgetv %dc;
-        symbol [ dc %tmp.54 188 8 10 ];
-        symbol [ fillPolygon %tmp.55 188 11 22 ];
-        %tmp.55 = getv function %tmp.54 :fillPolygon;
-        %tmp.56 = newa 4;
-        %tmp.57 = lgetv %bottom.7;
-        symbol [ bottom %tmp.57 188 24 30 ];
-        %tmp.58 = dup %tmp.56;
-        %tmp.59 = aputv %tmp.58 0 %tmp.57;
-        %tmp.60 = lgetv %left.8;
-        symbol [ left %tmp.60 188 32 36 ];
-        %tmp.61 = dup %tmp.59;
-        %tmp.62 = aputv %tmp.61 1 %tmp.60;
-        %tmp.63 = newa 2;
-        %tmp.64 = lgetv %ccx.1;
-        symbol [ ccx %tmp.64 188 40 43 ];
-        %tmp.65 = lgetv %hw.3;
-        symbol [ hw %tmp.65 188 46 48 ];
-        %tmp.66 = sub %tmp.64 %tmp.65;
-        %tmp.67 = dup %tmp.63;
-        %tmp.68 = aputv %tmp.67 0 %tmp.66;
-        %tmp.69 = lgetv %cy0.2;
-        symbol [ cy0 %tmp.69 188 50 53 ];
-        %tmp.70 = 4;
-        %tmp.71 = add %tmp.69 %tmp.70;
-        %tmp.72 = dup %tmp.68;
-        %tmp.73 = aputv %tmp.72 1 %tmp.71;
-        %tmp.74 = dup %tmp.62;
-        %tmp.75 = aputv %tmp.74 2 %tmp.73;
-        %tmp.76 = newa 2;
-        %tmp.77 = lgetv %ccx.1;
-        symbol [ ccx %tmp.77 188 61 64 ];
-        %tmp.78 = dup %tmp.76;
-        %tmp.79 = aputv %tmp.78 0 %tmp.77;
-        %tmp.80 = lgetv %cy0.2;
-        symbol [ cy0 %tmp.80 188 66 69 ];
-        %tmp.81 = lgetv %hh.4;
-        symbol [ hh %tmp.81 188 72 74 ];
-        %tmp.82 = add %tmp.80 %tmp.81;
-        %tmp.83 = 4;
-        %tmp.84 = add %tmp.82 %tmp.83;
-        %tmp.85 = dup %tmp.79;
-        %tmp.86 = aputv %tmp.85 1 %tmp.84;
-        %tmp.87 = dup %tmp.75;
-        %tmp.88 = aputv %tmp.87 3 %tmp.86;
-        invoke %tmp.54 %tmp.55(%tmp.88);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 189 8 ]
-        %tmp.89 = lgetv %dc;
-        symbol [ dc %tmp.89 189 8 10 ];
-        symbol [ setColor %tmp.90 189 11 19 ];
-        %tmp.90 = getv function %tmp.89 :setColor;
-        %tmp.91 = 0x182338;
-        symbol [ Graphics %tmp.92 189 30 38 ];
-        %tmp.92 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.93 189 39 56 ];
-        %tmp.93 = getv %tmp.92 :COLOR_TRANSPARENT;
-        invoke %tmp.89 %tmp.90(%tmp.91, %tmp.93);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 190 8 ]
-        %tmp.94 = lgetv %dc;
-        symbol [ dc %tmp.94 190 8 10 ];
-        symbol [ fillPolygon %tmp.95 190 11 22 ];
-        %tmp.95 = getv function %tmp.94 :fillPolygon;
-        %tmp.96 = newa 4;
-        %tmp.97 = lgetv %bottom.7;
-        symbol [ bottom %tmp.97 190 24 30 ];
-        %tmp.98 = dup %tmp.96;
-        %tmp.99 = aputv %tmp.98 0 %tmp.97;
-        %tmp.100 = lgetv %right.6;
-        symbol [ right %tmp.100 190 32 37 ];
-        %tmp.101 = dup %tmp.99;
-        %tmp.102 = aputv %tmp.101 1 %tmp.100;
-        %tmp.103 = newa 2;
-        %tmp.104 = lgetv %ccx.1;
-        symbol [ ccx %tmp.104 190 40 43 ];
-        %tmp.105 = lgetv %hw.3;
-        symbol [ hw %tmp.105 190 46 48 ];
-        %tmp.106 = add %tmp.104 %tmp.105;
-        %tmp.107 = dup %tmp.103;
-        %tmp.108 = aputv %tmp.107 0 %tmp.106;
-        %tmp.109 = lgetv %cy0.2;
-        symbol [ cy0 %tmp.109 190 50 53 ];
-        %tmp.110 = 4;
-        %tmp.111 = add %tmp.109 %tmp.110;
-        %tmp.112 = dup %tmp.108;
-        %tmp.113 = aputv %tmp.112 1 %tmp.111;
-        %tmp.114 = dup %tmp.102;
-        %tmp.115 = aputv %tmp.114 2 %tmp.113;
-        %tmp.116 = newa 2;
-        %tmp.117 = lgetv %ccx.1;
-        symbol [ ccx %tmp.117 190 61 64 ];
-        %tmp.118 = dup %tmp.116;
-        %tmp.119 = aputv %tmp.118 0 %tmp.117;
-        %tmp.120 = lgetv %cy0.2;
-        symbol [ cy0 %tmp.120 190 66 69 ];
-        %tmp.121 = lgetv %hh.4;
-        symbol [ hh %tmp.121 190 72 74 ];
-        %tmp.122 = add %tmp.120 %tmp.121;
-        %tmp.123 = 4;
-        %tmp.124 = add %tmp.122 %tmp.123;
-        %tmp.125 = dup %tmp.119;
-        %tmp.126 = aputv %tmp.125 1 %tmp.124;
-        %tmp.127 = dup %tmp.115;
-        %tmp.128 = aputv %tmp.127 3 %tmp.126;
-        invoke %tmp.94 %tmp.95(%tmp.128);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 192 8 ]
-        %tmp.129 = lgetv %dc;
-        symbol [ dc %tmp.129 192 8 10 ];
-        symbol [ setColor %tmp.130 192 11 19 ];
-        %tmp.130 = getv function %tmp.129 :setColor;
-        %tmp.131 = 0xC8D4DC;
-        symbol [ Graphics %tmp.132 192 30 38 ];
-        %tmp.132 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.133 192 39 56 ];
-        %tmp.133 = getv %tmp.132 :COLOR_TRANSPARENT;
-        invoke %tmp.129 %tmp.130(%tmp.131, %tmp.133);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 193 8 ]
-        %tmp.134 = lgetv %dc;
-        symbol [ dc %tmp.134 193 8 10 ];
-        symbol [ fillPolygon %tmp.135 193 11 22 ];
-        %tmp.135 = getv function %tmp.134 :fillPolygon;
-        %tmp.136 = newa 4;
-        %tmp.137 = lgetv %top.5;
-        symbol [ top %tmp.137 193 24 27 ];
-        %tmp.138 = dup %tmp.136;
-        %tmp.139 = aputv %tmp.138 0 %tmp.137;
-        %tmp.140 = lgetv %right.6;
-        symbol [ right %tmp.140 193 29 34 ];
-        %tmp.141 = dup %tmp.139;
-        %tmp.142 = aputv %tmp.141 1 %tmp.140;
-        %tmp.143 = lgetv %bottom.7;
-        symbol [ bottom %tmp.143 193 36 42 ];
-        %tmp.144 = dup %tmp.142;
-        %tmp.145 = aputv %tmp.144 2 %tmp.143;
-        %tmp.146 = lgetv %left.8;
-        symbol [ left %tmp.146 193 44 48 ];
-        %tmp.147 = dup %tmp.145;
-        %tmp.148 = aputv %tmp.147 3 %tmp.146;
-        invoke %tmp.134 %tmp.135(%tmp.148);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 194 8 ]
+        symbol [ dc %tmp.131 159 12 14 ];
+        symbol [ drawText %tmp.132 159 15 23 ];
+        %tmp.132 = getv function %tmp.131 :drawText;
+        %tmp.133 = lgetv %cx.5;
+        symbol [ cx %tmp.133 159 24 26 ];
+        %tmp.134 = lgetv %by.4;
+        symbol [ by %tmp.134 159 28 30 ];
+        %tmp.135 = 46;
+        %tmp.136 = add %tmp.134 %tmp.135;
+        symbol [ Graphics %tmp.137 159 37 45 ];
+        %tmp.137 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.138 159 46 56 ];
+        %tmp.138 = getv %tmp.137 :FONT_XTINY;
+        %tmp.139 = "Best ";
+        %tmp.140 = lgetv %ctrl;
+        symbol [ ctrl %tmp.140 160 34 38 ];
+        symbol [ scoreSys %tmp.141 160 39 47 ];
+        %tmp.141 = getv %tmp.140 :scoreSys;
+        symbol [ hi %tmp.142 160 48 50 ];
+        %tmp.142 = getv %tmp.141 :hi;
+        symbol [ format %tmp.143 160 51 57 ];
+        %tmp.143 = getv function %tmp.142 :format;
+        %tmp.144 = "%d";
+        %tmp.145 = invoke %tmp.142 %tmp.143(%tmp.144);
+        %tmp.146 = add %tmp.139 %tmp.145;
+        symbol [ Graphics %tmp.147 160 65 73 ];
+        %tmp.147 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.148 160 74 93 ];
+        %tmp.148 = getv %tmp.147 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.131 %tmp.132(%tmp.133, %tmp.136, %tmp.138, %tmp.146, %tmp.148);
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_157_41_161_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_157_15_161_8_if_end;
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_157_15_161_8_if_end:
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_154_8_161_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 163 8 ]
         %tmp.149 = lgetv %dc;
-        symbol [ dc %tmp.149 194 8 10 ];
-        symbol [ setColor %tmp.150 194 11 19 ];
+        symbol [ dc %tmp.149 163 8 10 ];
+        symbol [ setColor %tmp.150 163 11 19 ];
         %tmp.150 = getv function %tmp.149 :setColor;
-        %tmp.151 = 0x7A8898;
-        symbol [ Graphics %tmp.152 194 30 38 ];
+        %tmp.151 = 0xEECCAA;
+        symbol [ Graphics %tmp.152 163 30 38 ];
         %tmp.152 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.153 194 39 56 ];
+        symbol [ COLOR_TRANSPARENT %tmp.153 163 39 56 ];
         %tmp.153 = getv %tmp.152 :COLOR_TRANSPARENT;
         invoke %tmp.149 %tmp.150(%tmp.151, %tmp.153);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 195 8 ]
+[ "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc" 164 8 ]
         %tmp.154 = lgetv %dc;
-        symbol [ dc %tmp.154 195 8 10 ];
-        symbol [ drawLine %tmp.155 195 11 19 ];
-        %tmp.155 = getv function %tmp.154 :drawLine;
-        %tmp.156 = lgetv %top.5;
-        symbol [ top %tmp.156 195 20 23 ];
-        %tmp.157 = 0;
-        %tmp.158 = agetv %tmp.156 %tmp.157;
-        %tmp.159 = lgetv %top.5;
-        symbol [ top %tmp.159 195 30 33 ];
-        %tmp.160 = 1;
-        %tmp.161 = agetv %tmp.159 %tmp.160;
-        %tmp.162 = lgetv %right.6;
-        symbol [ right %tmp.162 195 40 45 ];
-        %tmp.163 = 0;
-        %tmp.164 = agetv %tmp.162 %tmp.163;
-        %tmp.165 = lgetv %right.6;
-        symbol [ right %tmp.165 195 51 56 ];
-        %tmp.166 = 1;
-        %tmp.167 = agetv %tmp.165 %tmp.166;
-        invoke %tmp.154 %tmp.155(%tmp.158, %tmp.161, %tmp.164, %tmp.167);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 196 8 ]
-        %tmp.168 = lgetv %dc;
-        symbol [ dc %tmp.168 196 8 10 ];
-        symbol [ drawLine %tmp.169 196 11 19 ];
-        %tmp.169 = getv function %tmp.168 :drawLine;
-        %tmp.170 = lgetv %right.6;
-        symbol [ right %tmp.170 196 20 25 ];
-        %tmp.171 = 0;
-        %tmp.172 = agetv %tmp.170 %tmp.171;
-        %tmp.173 = lgetv %right.6;
-        symbol [ right %tmp.173 196 30 35 ];
-        %tmp.174 = 1;
-        %tmp.175 = agetv %tmp.173 %tmp.174;
-        %tmp.176 = lgetv %bottom.7;
-        symbol [ bottom %tmp.176 196 40 46 ];
-        %tmp.177 = 0;
-        %tmp.178 = agetv %tmp.176 %tmp.177;
-        %tmp.179 = lgetv %bottom.7;
-        symbol [ bottom %tmp.179 196 51 57 ];
-        %tmp.180 = 1;
-        %tmp.181 = agetv %tmp.179 %tmp.180;
-        invoke %tmp.168 %tmp.169(%tmp.172, %tmp.175, %tmp.178, %tmp.181);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 197 8 ]
-        %tmp.182 = lgetv %dc;
-        symbol [ dc %tmp.182 197 8 10 ];
-        symbol [ drawLine %tmp.183 197 11 19 ];
-        %tmp.183 = getv function %tmp.182 :drawLine;
-        %tmp.184 = lgetv %bottom.7;
-        symbol [ bottom %tmp.184 197 20 26 ];
-        %tmp.185 = 0;
-        %tmp.186 = agetv %tmp.184 %tmp.185;
-        %tmp.187 = lgetv %bottom.7;
-        symbol [ bottom %tmp.187 197 30 36 ];
-        %tmp.188 = 1;
-        %tmp.189 = agetv %tmp.187 %tmp.188;
-        %tmp.190 = lgetv %left.8;
-        symbol [ left %tmp.190 197 40 44 ];
-        %tmp.191 = 0;
-        %tmp.192 = agetv %tmp.190 %tmp.191;
-        %tmp.193 = lgetv %left.8;
-        symbol [ left %tmp.193 197 51 55 ];
-        %tmp.194 = 1;
-        %tmp.195 = agetv %tmp.193 %tmp.194;
-        invoke %tmp.182 %tmp.183(%tmp.186, %tmp.189, %tmp.192, %tmp.195);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 198 8 ]
-        %tmp.196 = lgetv %dc;
-        symbol [ dc %tmp.196 198 8 10 ];
-        symbol [ drawLine %tmp.197 198 11 19 ];
-        %tmp.197 = getv function %tmp.196 :drawLine;
-        %tmp.198 = lgetv %left.8;
-        symbol [ left %tmp.198 198 20 24 ];
-        %tmp.199 = 0;
-        %tmp.200 = agetv %tmp.198 %tmp.199;
-        %tmp.201 = lgetv %left.8;
-        symbol [ left %tmp.201 198 30 34 ];
-        %tmp.202 = 1;
-        %tmp.203 = agetv %tmp.201 %tmp.202;
-        %tmp.204 = lgetv %top.5;
-        symbol [ top %tmp.204 198 40 43 ];
-        %tmp.205 = 0;
-        %tmp.206 = agetv %tmp.204 %tmp.205;
-        %tmp.207 = lgetv %top.5;
-        symbol [ top %tmp.207 198 51 54 ];
-        %tmp.208 = 1;
-        %tmp.209 = agetv %tmp.207 %tmp.208;
-        invoke %tmp.196 %tmp.197(%tmp.200, %tmp.203, %tmp.206, %tmp.209);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 200 8 ]
-        %tmp.210 = lgetv %dc;
-        symbol [ dc %tmp.210 200 8 10 ];
-        symbol [ setColor %tmp.211 200 11 19 ];
-        %tmp.211 = getv function %tmp.210 :setColor;
-        %tmp.212 = 0x0A0F18;
-        symbol [ Graphics %tmp.213 200 30 38 ];
-        %tmp.213 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.214 200 39 56 ];
-        %tmp.214 = getv %tmp.213 :COLOR_TRANSPARENT;
-        invoke %tmp.210 %tmp.211(%tmp.212, %tmp.214);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 201 8 ]
-        %tmp.215 = lgetv %dc;
-        symbol [ dc %tmp.215 201 8 10 ];
-        symbol [ fillRectangle %tmp.216 201 11 24 ];
-        %tmp.216 = getv function %tmp.215 :fillRectangle;
-        %tmp.217 = lgetv %ccx.1;
-        symbol [ ccx %tmp.217 201 25 28 ];
-        %tmp.218 = 5;
-        %tmp.219 = sub %tmp.217 %tmp.218;
-        %tmp.220 = lgetv %cy0.2;
-        symbol [ cy0 %tmp.220 201 34 37 ];
-        %tmp.221 = 1;
-        %tmp.222 = sub %tmp.220 %tmp.221;
-        %tmp.223 = 11;
-        %tmp.224 = 3;
-        invoke %tmp.215 %tmp.216(%tmp.219, %tmp.222, %tmp.223, %tmp.224);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 202 8 ]
-        %tmp.225 = lgetv %dc;
-        symbol [ dc %tmp.225 202 8 10 ];
-        symbol [ setColor %tmp.226 202 11 19 ];
-        %tmp.226 = getv function %tmp.225 :setColor;
-        %tmp.227 = 0x223044;
-        symbol [ Graphics %tmp.228 202 30 38 ];
-        %tmp.228 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.229 202 39 56 ];
-        %tmp.229 = getv %tmp.228 :COLOR_TRANSPARENT;
-        invoke %tmp.225 %tmp.226(%tmp.227, %tmp.229);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 203 8 ]
-        %tmp.230 = lgetv %dc;
-        symbol [ dc %tmp.230 203 8 10 ];
-        symbol [ fillCircle %tmp.231 203 11 21 ];
-        %tmp.231 = getv function %tmp.230 :fillCircle;
-        %tmp.232 = lgetv %ccx.1;
-        symbol [ ccx %tmp.232 203 22 25 ];
-        %tmp.233 = lgetv %cy0.2;
-        symbol [ cy0 %tmp.233 203 27 30 ];
-        %tmp.234 = 6;
-        %tmp.235 = sub %tmp.233 %tmp.234;
-        %tmp.236 = 7;
-        invoke %tmp.230 %tmp.231(%tmp.232, %tmp.235, %tmp.236);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 204 8 ]
-        %tmp.237 = lgetv %dc;
-        symbol [ dc %tmp.237 204 8 10 ];
-        symbol [ setColor %tmp.238 204 11 19 ];
-        %tmp.238 = getv function %tmp.237 :setColor;
-        %tmp.239 = 0xDCE6F8;
-        symbol [ Graphics %tmp.240 204 30 38 ];
-        %tmp.240 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.241 204 39 56 ];
-        %tmp.241 = getv %tmp.240 :COLOR_TRANSPARENT;
-        invoke %tmp.237 %tmp.238(%tmp.239, %tmp.241);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 205 8 ]
-        %tmp.242 = lgetv %dc;
-        symbol [ dc %tmp.242 205 8 10 ];
-        symbol [ fillCircle %tmp.243 205 11 21 ];
-        %tmp.243 = getv function %tmp.242 :fillCircle;
-        %tmp.244 = lgetv %ccx.1;
-        symbol [ ccx %tmp.244 205 22 25 ];
-        %tmp.245 = lgetv %cy0.2;
-        symbol [ cy0 %tmp.245 205 27 30 ];
-        %tmp.246 = 6;
-        %tmp.247 = sub %tmp.245 %tmp.246;
-        %tmp.248 = 6;
-        invoke %tmp.242 %tmp.243(%tmp.244, %tmp.247, %tmp.248);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 206 8 ]
-        %tmp.249 = lgetv %dc;
-        symbol [ dc %tmp.249 206 8 10 ];
-        symbol [ setColor %tmp.250 206 11 19 ];
-        %tmp.250 = getv function %tmp.249 :setColor;
-        %tmp.251 = 0xFFFFFF;
-        symbol [ Graphics %tmp.252 206 30 38 ];
-        %tmp.252 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.253 206 39 56 ];
-        %tmp.253 = getv %tmp.252 :COLOR_TRANSPARENT;
-        invoke %tmp.249 %tmp.250(%tmp.251, %tmp.253);
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc" 207 8 ]
-        %tmp.254 = lgetv %dc;
-        symbol [ dc %tmp.254 207 8 10 ];
-        symbol [ fillRectangle %tmp.255 207 11 24 ];
-        %tmp.255 = getv function %tmp.254 :fillRectangle;
-        %tmp.256 = lgetv %ccx.1;
-        symbol [ ccx %tmp.256 207 25 28 ];
-        %tmp.257 = 2;
-        %tmp.258 = sub %tmp.256 %tmp.257;
-        %tmp.259 = lgetv %cy0.2;
-        symbol [ cy0 %tmp.259 207 34 37 ];
-        %tmp.260 = 9;
-        %tmp.261 = sub %tmp.259 %tmp.260;
-        %tmp.262 = 2;
-        %tmp.263 = 2;
-        invoke %tmp.254 %tmp.255(%tmp.258, %tmp.261, %tmp.262, %tmp.263);
-_Users_kkorolczuk_work_garmin_skyroll_source_UIManager_mc_177_52_208_4_stop:
+        symbol [ dc %tmp.154 164 8 10 ];
+        symbol [ drawText %tmp.155 164 11 19 ];
+        %tmp.155 = getv function %tmp.154 :drawText;
+        %tmp.156 = lgetv %cx.5;
+        symbol [ cx %tmp.156 164 20 22 ];
+        %tmp.157 = lgetv %by.4;
+        symbol [ by %tmp.157 164 24 26 ];
+        %tmp.158 = lgetv %bh.2;
+        symbol [ bh %tmp.158 164 29 31 ];
+        %tmp.159 = add %tmp.157 %tmp.158;
+        %tmp.160 = 14;
+        %tmp.161 = sub %tmp.159 %tmp.160;
+        symbol [ Graphics %tmp.162 164 38 46 ];
+        %tmp.162 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.163 164 47 57 ];
+        %tmp.163 = getv %tmp.162 :FONT_XTINY;
+        %tmp.164 = "tap = again  BACK = menu";
+        symbol [ Graphics %tmp.165 165 48 56 ];
+        %tmp.165 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.166 165 57 76 ];
+        %tmp.166 = getv %tmp.165 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.154 %tmp.155(%tmp.156, %tmp.161, %tmp.163, %tmp.164, %tmp.166);
+_Users_kkorolczuk_work_garmin_drwal_source_UIManager_mc_135_47_166_4_stop:
     }
 }
-[ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/UIManager.mc"; @line = 12; ]
+[ @file = "/Users/kkorolczuk/work/garmin/drwal/source/UIManager.mc"; @line = 4; ]
 <init> {
 }

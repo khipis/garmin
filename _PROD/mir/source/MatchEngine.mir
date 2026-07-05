@@ -1,1041 +1,1835 @@
-[ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc"; @line = 15; @symbol_classdef = [MatchEngine,15,6,17]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc"; @line = 23; @symbol_classdef = [MatchEngine,23,6,17]; ]
 class MatchEngine {
-    [ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc"; @line = 15; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc"; @line = 23; ]
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc"; @line = 15; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc"; @line = 23; ]
     static
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc"; @line = 16; @position = 15; @symbol_vardef = [_marks,16,15,21]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc"; @line = 24; @position = 15; @symbol_vardef = [_marks,24,15,21]; ]
     protected
     var _marks;
-    [ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc"; @line = 17; @position = 15; @symbol_vardef = [_capacity,17,15,24]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc"; @line = 25; @position = 15; @symbol_vardef = [_capacity,25,15,24]; ]
     protected
     var _capacity;
-    [ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc"; @line = 19; @symbol_functiondef = [initialize,19,13,23]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc"; @line = 26; @position = 15; @symbol_vardef = [_bombSpawns,26,15,26]; ]
+    protected
+    var _bombSpawns;
+    [ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc"; @line = 28; @symbol_functiondef = [initialize,28,13,23]; ]
     function initialize() as Void {
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_19_26_22_4_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 20 8 ]
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_28_26_32_4_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 29 8 ]
         %tmp.1 = 0;
-        symbol [ _capacity ? 20 8 17 ];
+        symbol [ _capacity ? 29 8 17 ];
         putv self :_capacity %tmp.1;
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 21 8 ]
-        %tmp.2 = null;
-        symbol [ _marks ? 21 8 14 ];
-        putv self :_marks %tmp.2;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_19_26_22_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc"; @line = 29; @symbol_functiondef = [markOnly,29,13,21]; @symbol_param<0> = [grid,29,22,26]; ]
-    function markOnly(grid) {
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_29_28_41_4_start:
 [ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 30 8 ]
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_29_28_41_4_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_29_28_41_4_stop" ]
+        %tmp.2 = null;
+        symbol [ _marks ? 30 8 14 ];
+        putv self :_marks %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 31 8 ]
+        %tmp.4 = 0;
+        %tmp.3 = newa %tmp.4;
+        symbol [ _bombSpawns ? 31 8 19 ];
+        putv self :_bombSpawns %tmp.3;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_28_26_32_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc"; @line = 37; @symbol_functiondef = [markOnly,37,13,21]; @symbol_param<0> = [grid,37,22,26]; ]
+    function markOnly(grid) {
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_37_28_50_4_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 38 8 ]
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_37_28_50_4_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_37_28_50_4_stop" ]
         %total.1 = local;
-        symbol [ total %total.1 30 12 17 ];
+        symbol [ total %total.1 38 12 17 ];
         %tmp.1 = lgetv %grid;
-        symbol [ grid %tmp.1 30 20 24 ];
-        symbol [ rows %tmp.2 30 25 29 ];
+        symbol [ grid %tmp.1 38 20 24 ];
+        symbol [ rows %tmp.2 38 25 29 ];
         %tmp.2 = getv %tmp.1 :rows;
         %tmp.3 = lgetv %grid;
-        symbol [ grid %tmp.3 30 32 36 ];
-        symbol [ cols %tmp.4 30 37 41 ];
+        symbol [ grid %tmp.3 38 32 36 ];
+        symbol [ cols %tmp.4 38 37 41 ];
         %tmp.4 = getv %tmp.3 :cols;
         %tmp.5 = mul %tmp.2 %tmp.4;
         lputv %total.1 %tmp.5;
-        symbol [ total %total.1 30 12 17 ];
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 31 8 ]
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_31_8_34_8_if_stmt:
-        symbol [ _capacity %tmp.7 31 12 21 ];
+        symbol [ total %total.1 38 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 39 8 ]
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_39_8_42_8_if_stmt:
+        symbol [ _capacity %tmp.7 39 12 21 ];
         %tmp.7 = getv ? :_capacity;
         %tmp.8 = lgetv %total.1;
-        symbol [ total %tmp.8 31 25 30 ];
+        symbol [ total %tmp.8 39 25 30 ];
         %tmp.9 = ne %tmp.7 %tmp.8;
-        bf %tmp.9 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_31_8_34_8_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_31_8_34_8_if_true:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_31_32_34_8_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 32 12 ]
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_39_8_42_8_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_39_8_42_8_if_true:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_39_32_42_8_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 40 12 ]
         %tmp.11 = lgetv %total.1;
-        symbol [ total %tmp.11 32 29 34 ];
+        symbol [ total %tmp.11 40 29 34 ];
         %tmp.10 = newa %tmp.11;
-        symbol [ _marks ? 32 12 18 ];
+        symbol [ _marks ? 40 12 18 ];
         putv self :_marks %tmp.10;
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 33 12 ]
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 41 12 ]
         %tmp.12 = lgetv %total.1;
-        symbol [ total %tmp.12 33 24 29 ];
-        symbol [ _capacity ? 33 12 21 ];
+        symbol [ total %tmp.12 41 24 29 ];
+        symbol [ _capacity ? 41 12 21 ];
         putv self :_capacity %tmp.12;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_31_32_34_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_31_8_34_8_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_31_8_34_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 35 8 ]
-        for @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_35_8_35_61_for_test @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_35_8_35_61_for_incr @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_35_8_35_61_for_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_35_8_35_61_for_init:
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_35_8_35_61_for_begin" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_35_8_35_61_for_end" ]
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_39_32_42_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_39_8_42_8_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_39_8_42_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 43 8 ]
+        for @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_43_8_43_61_for_test @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_43_8_43_61_for_incr @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_43_8_43_61_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_43_8_43_61_for_init:
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_43_8_43_61_for_begin" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_43_8_43_61_for_end" ]
         %i.2 = local;
-        symbol [ i %i.2 35 17 18 ];
+        symbol [ i %i.2 43 17 18 ];
         %tmp.13 = 0;
         lputv %i.2 %tmp.13;
-        symbol [ i %i.2 35 17 18 ];
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_35_8_35_61_for_test:
+        symbol [ i %i.2 43 17 18 ];
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_43_8_43_61_for_test:
         %tmp.14 = lgetv %i.2;
-        symbol [ i %tmp.14 35 24 25 ];
+        symbol [ i %tmp.14 43 24 25 ];
         %tmp.15 = lgetv %total.1;
-        symbol [ total %tmp.15 35 28 33 ];
+        symbol [ total %tmp.15 43 28 33 ];
         %tmp.16 = lt %tmp.14 %tmp.15;
-        bf %tmp.16 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_35_8_35_61_for_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_35_8_35_61_for_begin:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_35_40_35_61_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 35 42 ]
-        symbol [ _marks %tmp.17 35 42 48 ];
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_43_8_43_61_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_43_8_43_61_for_begin:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_43_40_43_61_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 43 42 ]
+        symbol [ _marks %tmp.17 43 42 48 ];
         %tmp.17 = getv self :_marks;
         %tmp.18 = false;
         %tmp.19 = lgetv %i.2;
-        symbol [ i %tmp.19 35 49 50 ];
+        symbol [ i %tmp.19 43 49 50 ];
         aputv %tmp.17 %tmp.19 %tmp.18;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_35_40_35_61_stop:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_35_8_35_61_for_incr:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 35 ]
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_43_40_43_61_stop:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_43_8_43_61_for_incr:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 43 ]
         %tmp.22 = lgetv %i.2;
-        symbol [ i %tmp.22 35 35 36 ];
+        symbol [ i %tmp.22 43 35 36 ];
         %tmp.23 = add %tmp.22 1;
         lputv %i.2 %tmp.23;
-        symbol [ i %i.2 35 35 36 ];
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_35_8_35_61_for_test;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_35_8_35_61_for_end:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 36 8 ]
-        %tmp.24 = self;
-        symbol [ _scanRows %tmp.25 36 8 17 ];
-        %tmp.25 = getv function %tmp.24 :_scanRows;
-        %tmp.26 = lgetv %grid;
-        symbol [ grid %tmp.26 36 18 22 ];
-        invoke %tmp.24 %tmp.25(%tmp.26);
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 37 8 ]
-        %tmp.27 = self;
-        symbol [ _scanCols %tmp.28 37 8 17 ];
-        %tmp.28 = getv function %tmp.27 :_scanCols;
-        %tmp.29 = lgetv %grid;
-        symbol [ grid %tmp.29 37 18 22 ];
-        invoke %tmp.27 %tmp.28(%tmp.29);
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 38 8 ]
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_29_28_41_4_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_29_28_41_4_stop" ]
+        symbol [ i %i.2 43 35 36 ];
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_43_8_43_61_for_test;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_43_8_43_61_for_end:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 44 8 ]
+        %tmp.25 = 0;
+        %tmp.24 = newa %tmp.25;
+        symbol [ _bombSpawns ? 44 8 19 ];
+        putv self :_bombSpawns %tmp.24;
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 45 8 ]
+        %tmp.26 = self;
+        symbol [ _scanRows %tmp.27 45 8 17 ];
+        %tmp.27 = getv function %tmp.26 :_scanRows;
+        %tmp.28 = lgetv %grid;
+        symbol [ grid %tmp.28 45 18 22 ];
+        invoke %tmp.26 %tmp.27(%tmp.28);
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 46 8 ]
+        %tmp.29 = self;
+        symbol [ _scanCols %tmp.30 46 8 17 ];
+        %tmp.30 = getv function %tmp.29 :_scanCols;
+        %tmp.31 = lgetv %grid;
+        symbol [ grid %tmp.31 46 18 22 ];
+        invoke %tmp.29 %tmp.30(%tmp.31);
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 47 8 ]
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_37_28_50_4_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_37_28_50_4_stop" ]
         %count.3 = local;
-        symbol [ count %count.3 38 12 17 ];
-        %tmp.30 = 0;
-        lputv %count.3 %tmp.30;
-        symbol [ count %count.3 38 12 17 ];
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 39 8 ]
-        for @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_39_8_39_70_for_test @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_39_8_39_70_for_incr @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_39_8_39_70_for_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_39_8_39_70_for_init:
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_39_8_39_70_for_begin" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_39_8_39_70_for_end" ]
+        symbol [ count %count.3 47 12 17 ];
+        %tmp.32 = 0;
+        lputv %count.3 %tmp.32;
+        symbol [ count %count.3 47 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 48 8 ]
+        for @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_48_8_48_70_for_test @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_48_8_48_70_for_incr @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_48_8_48_70_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_48_8_48_70_for_init:
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_48_8_48_70_for_begin" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_48_8_48_70_for_end" ]
         %i.4 = local;
-        symbol [ i %i.4 39 17 18 ];
-        %tmp.31 = 0;
-        lputv %i.4 %tmp.31;
-        symbol [ i %i.4 39 17 18 ];
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_39_8_39_70_for_test:
-        %tmp.32 = lgetv %i.4;
-        symbol [ i %tmp.32 39 24 25 ];
-        %tmp.33 = lgetv %total.1;
-        symbol [ total %tmp.33 39 28 33 ];
-        %tmp.34 = lt %tmp.32 %tmp.33;
-        bf %tmp.34 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_39_8_39_70_for_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_39_8_39_70_for_begin:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_39_40_39_70_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 39 42 ]
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_39_42_39_68_if_stmt:
-        symbol [ _marks %tmp.36 39 46 52 ];
-        %tmp.36 = getv ? :_marks;
-        %tmp.37 = lgetv %i.4;
-        symbol [ i %tmp.37 39 53 54 ];
-        %tmp.38 = agetv %tmp.36 %tmp.37;
-        bf %tmp.38 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_39_42_39_68_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_39_42_39_68_if_true:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_39_57_39_68_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 39 59 ]
-        %tmp.41 = lgetv %count.3;
-        symbol [ count %tmp.41 39 59 64 ];
-        %tmp.42 = add %tmp.41 1;
-        lputv %count.3 %tmp.42;
-        symbol [ count %count.3 39 59 64 ];
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_39_57_39_68_stop:
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_39_42_39_68_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_39_42_39_68_if_end:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_39_40_39_70_stop:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_39_8_39_70_for_incr:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 39 ]
-        %tmp.45 = lgetv %i.4;
-        symbol [ i %tmp.45 39 35 36 ];
-        %tmp.46 = add %tmp.45 1;
-        lputv %i.4 %tmp.46;
-        symbol [ i %i.4 39 35 36 ];
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_39_8_39_70_for_test;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_39_8_39_70_for_end:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 40 8 ]
-        %tmp.47 = lgetv %count.3;
-        symbol [ count %tmp.47 40 15 20 ];
-        ret %tmp.47;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_29_28_41_4_stop:
+        symbol [ i %i.4 48 17 18 ];
+        %tmp.33 = 0;
+        lputv %i.4 %tmp.33;
+        symbol [ i %i.4 48 17 18 ];
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_48_8_48_70_for_test:
+        %tmp.34 = lgetv %i.4;
+        symbol [ i %tmp.34 48 24 25 ];
+        %tmp.35 = lgetv %total.1;
+        symbol [ total %tmp.35 48 28 33 ];
+        %tmp.36 = lt %tmp.34 %tmp.35;
+        bf %tmp.36 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_48_8_48_70_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_48_8_48_70_for_begin:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_48_40_48_70_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 48 42 ]
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_48_42_48_68_if_stmt:
+        symbol [ _marks %tmp.38 48 46 52 ];
+        %tmp.38 = getv ? :_marks;
+        %tmp.39 = lgetv %i.4;
+        symbol [ i %tmp.39 48 53 54 ];
+        %tmp.40 = agetv %tmp.38 %tmp.39;
+        bf %tmp.40 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_48_42_48_68_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_48_42_48_68_if_true:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_48_57_48_68_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 48 59 ]
+        %tmp.43 = lgetv %count.3;
+        symbol [ count %tmp.43 48 59 64 ];
+        %tmp.44 = add %tmp.43 1;
+        lputv %count.3 %tmp.44;
+        symbol [ count %count.3 48 59 64 ];
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_48_57_48_68_stop:
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_48_42_48_68_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_48_42_48_68_if_end:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_48_40_48_70_stop:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_48_8_48_70_for_incr:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 48 ]
+        %tmp.47 = lgetv %i.4;
+        symbol [ i %tmp.47 48 35 36 ];
+        %tmp.48 = add %tmp.47 1;
+        lputv %i.4 %tmp.48;
+        symbol [ i %i.4 48 35 36 ];
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_48_8_48_70_for_test;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_48_8_48_70_for_end:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 49 8 ]
+        %tmp.49 = lgetv %count.3;
+        symbol [ count %tmp.49 49 15 20 ];
+        ret %tmp.49;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_37_28_50_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc"; @line = 47; @symbol_functiondef = [getMarks,47,13,21]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc"; @line = 54; @symbol_functiondef = [getMarks,54,13,21]; ]
     function getMarks() {
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_47_24_47_41_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 47 26 ]
-        symbol [ _marks %tmp.2 47 33 39 ];
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_54_24_54_41_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 54 26 ]
+        symbol [ _marks %tmp.2 54 33 39 ];
         %tmp.2 = getv ? :_marks;
         ret %tmp.2;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_47_24_47_41_stop:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_54_24_54_41_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc"; @line = 51; @symbol_functiondef = [findAndClear,51,13,25]; @symbol_param<0> = [grid,51,26,30]; ]
-    function findAndClear(grid) {
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_51_32_62_4_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 52 8 ]
+    [ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc"; @line = 59; @symbol_functiondef = [markBombBlast,59,13,26]; @symbol_param<0> = [grid,59,27,31]; @symbol_param<1> = [r,59,33,34]; @symbol_param<2> = [c,59,36,37]; ]
+    function markBombBlast(grid, r, c) {
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_59_39_68_4_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 60 8 ]
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_60_8_60_51_if_stmt:
+        %tmp.1 = lgetv %grid;
+        symbol [ grid %tmp.1 60 12 16 ];
+        symbol [ get %tmp.2 60 17 20 ];
+        %tmp.2 = getv function %tmp.1 :get;
+        %tmp.3 = lgetv %r;
+        symbol [ r %tmp.3 60 21 22 ];
+        %tmp.4 = lgetv %c;
+        symbol [ c %tmp.4 60 24 25 ];
+        %tmp.5 = invoke %tmp.1 %tmp.2(%tmp.3, %tmp.4);
+        symbol [ TILE_BOMB %tmp.7 60 30 39 ];
+        %tmp.7 = getv ? :TILE_BOMB;
+        %tmp.8 = ne %tmp.5 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_60_8_60_51_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_60_8_60_51_if_true:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_60_41_60_51_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 60 43 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_60_41_60_51_stop:
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_60_8_60_51_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_60_8_60_51_if_end:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 61 8 ]
+        for @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_61_8_67_8_for_test @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_61_8_67_8_for_incr @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_61_8_67_8_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_61_8_67_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_61_8_67_8_for_begin" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_61_8_67_8_for_end" ]
+        %dr.1 = local;
+        symbol [ dr %dr.1 61 17 19 ];
+        %tmp.9 = -1;
+        lputv %dr.1 %tmp.9;
+        symbol [ dr %dr.1 61 17 19 ];
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_61_8_67_8_for_test:
+        %tmp.10 = lgetv %dr.1;
+        symbol [ dr %tmp.10 61 26 28 ];
+        %tmp.11 = 1;
+        %tmp.12 = lte %tmp.10 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_61_8_67_8_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_61_8_67_8_for_begin:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_61_41_67_8_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 62 12 ]
+        for @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_62_12_66_12_for_test @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_62_12_66_12_for_incr @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_62_12_66_12_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_62_12_66_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_62_12_66_12_for_begin" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_62_12_66_12_for_end" ]
+        %dc.2 = local;
+        symbol [ dc %dc.2 62 21 23 ];
+        %tmp.13 = -1;
+        lputv %dc.2 %tmp.13;
+        symbol [ dc %dc.2 62 21 23 ];
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_62_12_66_12_for_test:
+        %tmp.14 = lgetv %dc.2;
+        symbol [ dc %tmp.14 62 30 32 ];
+        %tmp.15 = 1;
+        %tmp.16 = lte %tmp.14 %tmp.15;
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_62_12_66_12_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_62_12_66_12_for_begin:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_62_45_66_12_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 63 16 ]
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_62_45_66_12_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_62_45_66_12_stop" ]
+        %rr.3 = local;
+        symbol [ rr %rr.3 63 20 22 ];
+        %tmp.17 = lgetv %r;
+        symbol [ r %tmp.17 63 25 26 ];
+        %tmp.18 = lgetv %dr.1;
+        symbol [ dr %tmp.18 63 29 31 ];
+        %tmp.19 = add %tmp.17 %tmp.18;
+        lputv %rr.3 %tmp.19;
+        symbol [ rr %rr.3 63 20 22 ];
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 63 33 ]
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_62_45_66_12_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_62_45_66_12_stop" ]
+        %cc.4 = local;
+        symbol [ cc %cc.4 63 37 39 ];
+        %tmp.20 = lgetv %c;
+        symbol [ c %tmp.20 63 42 43 ];
+        %tmp.21 = lgetv %dc.2;
+        symbol [ dc %tmp.21 63 46 48 ];
+        %tmp.22 = add %tmp.20 %tmp.21;
+        lputv %cc.4 %tmp.22;
+        symbol [ cc %cc.4 63 37 39 ];
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 64 16 ]
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_64_16_64_88_if_stmt:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_64_20_64_70_begin:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_64_20_64_54_begin:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_64_20_64_41_begin:
+        %tmp.23 = lgetv %rr.3;
+        symbol [ rr %tmp.23 64 20 22 ];
+        %tmp.24 = 0;
+        %tmp.25 = lt %tmp.23 %tmp.24;
+        bt %tmp.25 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_64_16_64_88_if_true;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_64_30_64_41_false:
+        %tmp.26 = lgetv %rr.3;
+        symbol [ rr %tmp.26 64 30 32 ];
+        %tmp.27 = lgetv %grid;
+        symbol [ grid %tmp.27 64 36 40 ];
+        symbol [ rows %tmp.28 64 41 45 ];
+        %tmp.28 = getv %tmp.27 :rows;
+        %tmp.29 = gte %tmp.26 %tmp.28;
+        push %tmp.29;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_64_30_64_41_end:
+        %tmp.30 = phi [%tmp.25 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_64_20_64_41_begin] [%tmp.29 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_64_30_64_41_false] [%tmp.30 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_64_30_64_41_end];
+        bt %tmp.30 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_64_16_64_88_if_true;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_64_49_64_54_false:
+        %tmp.31 = lgetv %cc.4;
+        symbol [ cc %tmp.31 64 49 51 ];
+        %tmp.32 = 0;
+        %tmp.33 = lt %tmp.31 %tmp.32;
+        push %tmp.33;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_64_49_64_54_end:
+        %tmp.34 = phi [%tmp.30 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_64_20_64_54_begin] [%tmp.33 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_64_49_64_54_false] [%tmp.34 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_64_49_64_54_end];
+        bt %tmp.34 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_64_16_64_88_if_true;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_64_59_64_70_false:
+        %tmp.35 = lgetv %cc.4;
+        symbol [ cc %tmp.35 64 59 61 ];
+        %tmp.36 = lgetv %grid;
+        symbol [ grid %tmp.36 64 65 69 ];
+        symbol [ cols %tmp.37 64 70 74 ];
+        %tmp.37 = getv %tmp.36 :cols;
+        %tmp.38 = gte %tmp.35 %tmp.37;
+        push %tmp.38;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_64_59_64_70_end:
+        %tmp.39 = phi [%tmp.34 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_64_20_64_70_begin] [%tmp.38 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_64_59_64_70_false] [%tmp.39 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_64_59_64_70_end];
+        bf %tmp.39 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_64_16_64_88_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_64_16_64_88_if_true:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_64_76_64_88_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 64 78 ]
+        goto break @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_62_12_66_12_for_incr;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_64_76_64_88_stop:
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_64_16_64_88_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_64_16_64_88_if_end:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 65 16 ]
+        symbol [ _marks %tmp.40 65 16 22 ];
+        %tmp.40 = getv self :_marks;
+        %tmp.41 = true;
+        %tmp.42 = lgetv %rr.3;
+        symbol [ rr %tmp.42 65 23 25 ];
+        %tmp.43 = lgetv %grid;
+        symbol [ grid %tmp.43 65 28 32 ];
+        symbol [ cols %tmp.44 65 33 37 ];
+        %tmp.44 = getv %tmp.43 :cols;
+        %tmp.45 = mul %tmp.42 %tmp.44;
+        %tmp.46 = lgetv %cc.4;
+        symbol [ cc %tmp.46 65 40 42 ];
+        %tmp.47 = add %tmp.45 %tmp.46;
+        aputv %tmp.40 %tmp.47 %tmp.41;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_62_45_66_12_stop:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_62_12_66_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 62 ]
+        %tmp.50 = lgetv %dc.2;
+        symbol [ dc %tmp.50 62 39 41 ];
+        %tmp.51 = add %tmp.50 1;
+        lputv %dc.2 %tmp.51;
+        symbol [ dc %dc.2 62 39 41 ];
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_62_12_66_12_for_test;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_62_12_66_12_for_end:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_61_41_67_8_stop:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_61_8_67_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 61 ]
+        %tmp.54 = lgetv %dr.1;
+        symbol [ dr %tmp.54 61 35 37 ];
+        %tmp.55 = add %tmp.54 1;
+        lputv %dr.1 %tmp.55;
+        symbol [ dr %dr.1 61 35 37 ];
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_61_8_67_8_for_test;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_61_8_67_8_for_end:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_59_39_68_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc"; @line = 74; @symbol_functiondef = [expandBombChains,74,13,29]; @symbol_param<0> = [grid,74,30,34]; ]
+    function expandBombChains(grid) {
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_74_36_92_4_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 75 8 ]
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_74_36_92_4_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_74_36_92_4_stop" ]
+        %changed.1 = local;
+        symbol [ changed %changed.1 75 12 19 ];
+        %tmp.1 = true;
+        lputv %changed.1 %tmp.1;
+        symbol [ changed %changed.1 75 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 76 8 ]
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_74_36_92_4_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_74_36_92_4_stop" ]
+        %iter.2 = local;
+        symbol [ iter %iter.2 76 12 16 ];
+        %tmp.2 = 0;
+        lputv %iter.2 %tmp.2;
+        symbol [ iter %iter.2 76 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 77 8 ]
+        while @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_77_8_91_8_while_test @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_77_8_91_8_while_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_77_8_91_8_while_test:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_77_15_77_33_begin:
+        %tmp.3 = lgetv %changed.1;
+        symbol [ changed %tmp.3 77 15 22 ];
+        %tmp.4 = dup %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_77_26_77_33_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_77_26_77_33_true:
+        %tmp.5 = lgetv %iter.2;
+        symbol [ iter %tmp.5 77 26 30 ];
+        %tmp.6 = 6;
+        %tmp.7 = lt %tmp.5 %tmp.6;
+        %tmp.8 = and %tmp.3 %tmp.7;
+        push %tmp.8;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_77_26_77_33_end:
+        %tmp.9 = phi [%tmp.4 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_77_15_77_33_begin] [%tmp.8 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_77_26_77_33_true] [%tmp.9 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_77_26_77_33_end];
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_77_8_91_8_while_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_77_8_91_8_while_begin:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_77_36_91_8_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 78 12 ]
+        %tmp.10 = false;
+        lputv %changed.1 %tmp.10;
+        symbol [ changed %changed.1 78 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 79 12 ]
+        for @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_79_12_89_12_for_test @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_79_12_89_12_for_incr @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_79_12_89_12_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_79_12_89_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_79_12_89_12_for_begin" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_79_12_89_12_for_end" ]
+        %r.3 = local;
+        symbol [ r %r.3 79 21 22 ];
+        %tmp.11 = 0;
+        lputv %r.3 %tmp.11;
+        symbol [ r %r.3 79 21 22 ];
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_79_12_89_12_for_test:
+        %tmp.12 = lgetv %r.3;
+        symbol [ r %tmp.12 79 28 29 ];
+        %tmp.13 = lgetv %grid;
+        symbol [ grid %tmp.13 79 32 36 ];
+        symbol [ rows %tmp.14 79 37 41 ];
+        %tmp.14 = getv %tmp.13 :rows;
+        %tmp.15 = lt %tmp.12 %tmp.14;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_79_12_89_12_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_79_12_89_12_for_begin:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_79_48_89_12_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 80 16 ]
+        for @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_80_16_88_16_for_test @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_80_16_88_16_for_incr @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_80_16_88_16_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_80_16_88_16_for_init:
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_80_16_88_16_for_begin" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_80_16_88_16_for_end" ]
+        %c.4 = local;
+        symbol [ c %c.4 80 25 26 ];
+        %tmp.16 = 0;
+        lputv %c.4 %tmp.16;
+        symbol [ c %c.4 80 25 26 ];
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_80_16_88_16_for_test:
+        %tmp.17 = lgetv %c.4;
+        symbol [ c %tmp.17 80 32 33 ];
+        %tmp.18 = lgetv %grid;
+        symbol [ grid %tmp.18 80 36 40 ];
+        symbol [ cols %tmp.19 80 41 45 ];
+        %tmp.19 = getv %tmp.18 :cols;
+        %tmp.20 = lt %tmp.17 %tmp.19;
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_80_16_88_16_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_80_16_88_16_for_begin:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_80_52_88_16_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 81 20 ]
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_81_20_81_65_if_stmt:
+        %tmp.21 = lgetv %grid;
+        symbol [ grid %tmp.21 81 24 28 ];
+        symbol [ get %tmp.22 81 29 32 ];
+        %tmp.22 = getv function %tmp.21 :get;
+        %tmp.23 = lgetv %r.3;
+        symbol [ r %tmp.23 81 33 34 ];
+        %tmp.24 = lgetv %c.4;
+        symbol [ c %tmp.24 81 36 37 ];
+        %tmp.25 = invoke %tmp.21 %tmp.22(%tmp.23, %tmp.24);
+        symbol [ TILE_BOMB %tmp.27 81 42 51 ];
+        %tmp.27 = getv ? :TILE_BOMB;
+        %tmp.28 = ne %tmp.25 %tmp.27;
+        bf %tmp.28 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_81_20_81_65_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_81_20_81_65_if_true:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_81_53_81_65_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 81 55 ]
+        goto break @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_80_16_88_16_for_incr;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_81_53_81_65_stop:
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_81_20_81_65_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_81_20_81_65_if_end:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 82 20 ]
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_80_52_88_16_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_80_52_88_16_stop" ]
+        %idx.5 = local;
+        symbol [ idx %idx.5 82 24 27 ];
+        %tmp.29 = lgetv %r.3;
+        symbol [ r %tmp.29 82 30 31 ];
+        %tmp.30 = lgetv %grid;
+        symbol [ grid %tmp.30 82 34 38 ];
+        symbol [ cols %tmp.31 82 39 43 ];
+        %tmp.31 = getv %tmp.30 :cols;
+        %tmp.32 = mul %tmp.29 %tmp.31;
+        %tmp.33 = lgetv %c.4;
+        symbol [ c %tmp.33 82 46 47 ];
+        %tmp.34 = add %tmp.32 %tmp.33;
+        lputv %idx.5 %tmp.34;
+        symbol [ idx %idx.5 82 24 27 ];
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 83 20 ]
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_83_20_83_49_if_stmt:
+        symbol [ _marks %tmp.36 83 24 30 ];
+        %tmp.36 = getv ? :_marks;
+        %tmp.37 = lgetv %idx.5;
+        symbol [ idx %tmp.37 83 31 34 ];
+        %tmp.38 = agetv %tmp.36 %tmp.37;
+        bf %tmp.38 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_83_20_83_49_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_83_20_83_49_if_true:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_83_37_83_49_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 83 39 ]
+        goto break @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_80_16_88_16_for_incr;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_83_37_83_49_stop:
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_83_20_83_49_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_83_20_83_49_if_end:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 84 20 ]
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_84_20_87_20_if_stmt:
+        %tmp.39 = self;
+        symbol [ _hasMarkedNeighbor %tmp.40 84 24 42 ];
+        %tmp.40 = getv function %tmp.39 :_hasMarkedNeighbor;
+        %tmp.41 = lgetv %grid;
+        symbol [ grid %tmp.41 84 43 47 ];
+        %tmp.42 = lgetv %r.3;
+        symbol [ r %tmp.42 84 49 50 ];
+        %tmp.43 = lgetv %c.4;
+        symbol [ c %tmp.43 84 52 53 ];
+        %tmp.44 = invoke %tmp.39 %tmp.40(%tmp.41, %tmp.42, %tmp.43);
+        bf %tmp.44 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_84_20_87_20_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_84_20_87_20_if_true:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_84_56_87_20_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 85 24 ]
+        %tmp.45 = self;
+        symbol [ markBombBlast %tmp.46 85 24 37 ];
+        %tmp.46 = getv function %tmp.45 :markBombBlast;
+        %tmp.47 = lgetv %grid;
+        symbol [ grid %tmp.47 85 38 42 ];
+        %tmp.48 = lgetv %r.3;
+        symbol [ r %tmp.48 85 44 45 ];
+        %tmp.49 = lgetv %c.4;
+        symbol [ c %tmp.49 85 47 48 ];
+        invoke %tmp.45 %tmp.46(%tmp.47, %tmp.48, %tmp.49);
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 86 24 ]
+        %tmp.50 = true;
+        lputv %changed.1 %tmp.50;
+        symbol [ changed %changed.1 86 24 31 ];
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_84_56_87_20_stop:
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_84_20_87_20_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_84_20_87_20_if_end:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_80_52_88_16_stop:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_80_16_88_16_for_incr:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 80 ]
+        %tmp.53 = lgetv %c.4;
+        symbol [ c %tmp.53 80 47 48 ];
+        %tmp.54 = add %tmp.53 1;
+        lputv %c.4 %tmp.54;
+        symbol [ c %c.4 80 47 48 ];
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_80_16_88_16_for_test;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_80_16_88_16_for_end:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_79_48_89_12_stop:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_79_12_89_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 79 ]
+        %tmp.57 = lgetv %r.3;
+        symbol [ r %tmp.57 79 43 44 ];
+        %tmp.58 = add %tmp.57 1;
+        lputv %r.3 %tmp.58;
+        symbol [ r %r.3 79 43 44 ];
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_79_12_89_12_for_test;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_79_12_89_12_for_end:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 90 12 ]
+        %tmp.59 = lgetv %iter.2;
+        symbol [ iter %tmp.59 90 19 23 ];
+        %tmp.60 = 1;
+        %tmp.61 = add %tmp.59 %tmp.60;
+        lputv %iter.2 %tmp.61;
+        symbol [ iter %iter.2 90 12 16 ];
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_77_36_91_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_77_8_91_8_while_test;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_77_8_91_8_while_end:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_74_36_92_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc"; @line = 94; @symbol_functiondef = [_hasMarkedNeighbor,94,20,38]; @symbol_param<0> = [grid,94,39,43]; @symbol_param<1> = [r,94,45,46]; @symbol_param<2> = [c,94,48,49]; ]
+    protected
+    function _hasMarkedNeighbor(grid, r, c) {
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_94_51_97_4_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 95 8 ]
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_95_16_96_69_begin:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_95_16_96_40_begin:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_95_16_95_69_begin:
         %tmp.1 = self;
-        symbol [ markOnly %tmp.2 52 8 16 ];
+        symbol [ _isMarked %tmp.2 95 16 25 ];
+        %tmp.2 = getv function %tmp.1 :_isMarked;
+        %tmp.3 = lgetv %grid;
+        symbol [ grid %tmp.3 95 26 30 ];
+        %tmp.4 = lgetv %r;
+        symbol [ r %tmp.4 95 32 33 ];
+        %tmp.5 = 1;
+        %tmp.6 = sub %tmp.4 %tmp.5;
+        %tmp.7 = lgetv %c;
+        symbol [ c %tmp.7 95 39 40 ];
+        %tmp.8 = invoke %tmp.1 %tmp.2(%tmp.3, %tmp.6, %tmp.7);
+        %tmp.9 = dup %tmp.8;
+        bt %tmp.9 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_95_45_95_69_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_95_45_95_69_false:
+        %tmp.10 = self;
+        symbol [ _isMarked %tmp.11 95 45 54 ];
+        %tmp.11 = getv function %tmp.10 :_isMarked;
+        %tmp.12 = lgetv %grid;
+        symbol [ grid %tmp.12 95 55 59 ];
+        %tmp.13 = lgetv %r;
+        symbol [ r %tmp.13 95 61 62 ];
+        %tmp.14 = 1;
+        %tmp.15 = add %tmp.13 %tmp.14;
+        %tmp.16 = lgetv %c;
+        symbol [ c %tmp.16 95 68 69 ];
+        %tmp.17 = invoke %tmp.10 %tmp.11(%tmp.12, %tmp.15, %tmp.16);
+        %tmp.18 = or %tmp.8 %tmp.17;
+        push %tmp.18;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_95_45_95_69_end:
+        %tmp.19 = phi [%tmp.9 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_95_16_95_69_begin] [%tmp.18 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_95_45_95_69_false] [%tmp.19 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_95_45_95_69_end];
+        %tmp.20 = dup %tmp.19;
+        bt %tmp.20 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_96_16_96_40_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_96_16_96_40_false:
+        %tmp.21 = self;
+        symbol [ _isMarked %tmp.22 96 16 25 ];
+        %tmp.22 = getv function %tmp.21 :_isMarked;
+        %tmp.23 = lgetv %grid;
+        symbol [ grid %tmp.23 96 26 30 ];
+        %tmp.24 = lgetv %r;
+        symbol [ r %tmp.24 96 32 33 ];
+        %tmp.25 = lgetv %c;
+        symbol [ c %tmp.25 96 35 36 ];
+        %tmp.26 = 1;
+        %tmp.27 = sub %tmp.25 %tmp.26;
+        %tmp.28 = invoke %tmp.21 %tmp.22(%tmp.23, %tmp.24, %tmp.27);
+        %tmp.29 = or %tmp.19 %tmp.28;
+        push %tmp.29;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_96_16_96_40_end:
+        %tmp.30 = phi [%tmp.20 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_95_16_96_40_begin] [%tmp.29 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_96_16_96_40_false] [%tmp.30 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_96_16_96_40_end];
+        %tmp.31 = dup %tmp.30;
+        bt %tmp.31 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_96_45_96_69_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_96_45_96_69_false:
+        %tmp.32 = self;
+        symbol [ _isMarked %tmp.33 96 45 54 ];
+        %tmp.33 = getv function %tmp.32 :_isMarked;
+        %tmp.34 = lgetv %grid;
+        symbol [ grid %tmp.34 96 55 59 ];
+        %tmp.35 = lgetv %r;
+        symbol [ r %tmp.35 96 61 62 ];
+        %tmp.36 = lgetv %c;
+        symbol [ c %tmp.36 96 64 65 ];
+        %tmp.37 = 1;
+        %tmp.38 = add %tmp.36 %tmp.37;
+        %tmp.39 = invoke %tmp.32 %tmp.33(%tmp.34, %tmp.35, %tmp.38);
+        %tmp.40 = or %tmp.30 %tmp.39;
+        push %tmp.40;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_96_45_96_69_end:
+        %tmp.41 = phi [%tmp.31 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_95_16_96_69_begin] [%tmp.40 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_96_45_96_69_false] [%tmp.41 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_96_45_96_69_end];
+        ret %tmp.41;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_94_51_97_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc"; @line = 98; @symbol_functiondef = [_isMarked,98,20,29]; @symbol_param<0> = [grid,98,30,34]; @symbol_param<1> = [r,98,36,37]; @symbol_param<2> = [c,98,39,40]; ]
+    protected
+    function _isMarked(grid, r, c) {
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_98_42_101_4_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 99 8 ]
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_99_8_99_80_if_stmt:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_99_12_99_58_begin:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_99_12_99_43_begin:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_99_12_99_31_begin:
+        %tmp.1 = lgetv %r;
+        symbol [ r %tmp.1 99 12 13 ];
+        %tmp.2 = 0;
+        %tmp.3 = lt %tmp.1 %tmp.2;
+        bt %tmp.3 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_99_8_99_80_if_true;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_99_21_99_31_false:
+        %tmp.4 = lgetv %r;
+        symbol [ r %tmp.4 99 21 22 ];
+        %tmp.5 = lgetv %grid;
+        symbol [ grid %tmp.5 99 26 30 ];
+        symbol [ rows %tmp.6 99 31 35 ];
+        %tmp.6 = getv %tmp.5 :rows;
+        %tmp.7 = gte %tmp.4 %tmp.6;
+        push %tmp.7;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_99_21_99_31_end:
+        %tmp.8 = phi [%tmp.3 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_99_12_99_31_begin] [%tmp.7 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_99_21_99_31_false] [%tmp.8 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_99_21_99_31_end];
+        bt %tmp.8 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_99_8_99_80_if_true;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_99_39_99_43_false:
+        %tmp.9 = lgetv %c;
+        symbol [ c %tmp.9 99 39 40 ];
+        %tmp.10 = 0;
+        %tmp.11 = lt %tmp.9 %tmp.10;
+        push %tmp.11;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_99_39_99_43_end:
+        %tmp.12 = phi [%tmp.8 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_99_12_99_43_begin] [%tmp.11 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_99_39_99_43_false] [%tmp.12 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_99_39_99_43_end];
+        bt %tmp.12 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_99_8_99_80_if_true;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_99_48_99_58_false:
+        %tmp.13 = lgetv %c;
+        symbol [ c %tmp.13 99 48 49 ];
+        %tmp.14 = lgetv %grid;
+        symbol [ grid %tmp.14 99 53 57 ];
+        symbol [ cols %tmp.15 99 58 62 ];
+        %tmp.15 = getv %tmp.14 :cols;
+        %tmp.16 = gte %tmp.13 %tmp.15;
+        push %tmp.16;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_99_48_99_58_end:
+        %tmp.17 = phi [%tmp.12 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_99_12_99_58_begin] [%tmp.16 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_99_48_99_58_false] [%tmp.17 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_99_48_99_58_end];
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_99_8_99_80_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_99_8_99_80_if_true:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_99_64_99_80_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 99 66 ]
+        %tmp.18 = false;
+        ret %tmp.18;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_99_64_99_80_stop:
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_99_8_99_80_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_99_8_99_80_if_end:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 100 8 ]
+        symbol [ _marks %tmp.20 100 15 21 ];
+        %tmp.20 = getv ? :_marks;
+        %tmp.21 = lgetv %r;
+        symbol [ r %tmp.21 100 22 23 ];
+        %tmp.22 = lgetv %grid;
+        symbol [ grid %tmp.22 100 26 30 ];
+        symbol [ cols %tmp.23 100 31 35 ];
+        %tmp.23 = getv %tmp.22 :cols;
+        %tmp.24 = mul %tmp.21 %tmp.23;
+        %tmp.25 = lgetv %c;
+        symbol [ c %tmp.25 100 38 39 ];
+        %tmp.26 = add %tmp.24 %tmp.25;
+        %tmp.27 = agetv %tmp.20 %tmp.26;
+        ret %tmp.27;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_98_42_101_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc"; @line = 105; @symbol_functiondef = [findAndClear,105,13,25]; @symbol_param<0> = [grid,105,26,30]; ]
+    function findAndClear(grid) {
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_105_32_116_4_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 106 8 ]
+        %tmp.1 = self;
+        symbol [ markOnly %tmp.2 106 8 16 ];
         %tmp.2 = getv function %tmp.1 :markOnly;
         %tmp.3 = lgetv %grid;
-        symbol [ grid %tmp.3 52 17 21 ];
+        symbol [ grid %tmp.3 106 17 21 ];
         invoke %tmp.1 %tmp.2(%tmp.3);
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 53 8 ]
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_51_32_62_4_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_51_32_62_4_stop" ]
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 107 8 ]
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_105_32_116_4_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_105_32_116_4_stop" ]
         %cleared.1 = local;
-        symbol [ cleared %cleared.1 53 12 19 ];
+        symbol [ cleared %cleared.1 107 12 19 ];
         %tmp.4 = 0;
         lputv %cleared.1 %tmp.4;
-        symbol [ cleared %cleared.1 53 12 19 ];
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 54 8 ]
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_51_32_62_4_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_51_32_62_4_stop" ]
+        symbol [ cleared %cleared.1 107 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 108 8 ]
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_105_32_116_4_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_105_32_116_4_stop" ]
         %total.2 = local;
-        symbol [ total %total.2 54 12 17 ];
+        symbol [ total %total.2 108 12 17 ];
         %tmp.5 = lgetv %grid;
-        symbol [ grid %tmp.5 54 22 26 ];
-        symbol [ rows %tmp.6 54 27 31 ];
+        symbol [ grid %tmp.5 108 22 26 ];
+        symbol [ rows %tmp.6 108 27 31 ];
         %tmp.6 = getv %tmp.5 :rows;
         %tmp.7 = lgetv %grid;
-        symbol [ grid %tmp.7 54 34 38 ];
-        symbol [ cols %tmp.8 54 39 43 ];
+        symbol [ grid %tmp.7 108 34 38 ];
+        symbol [ cols %tmp.8 108 39 43 ];
         %tmp.8 = getv %tmp.7 :cols;
         %tmp.9 = mul %tmp.6 %tmp.8;
         lputv %total.2 %tmp.9;
-        symbol [ total %total.2 54 12 17 ];
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 55 8 ]
-        for @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_55_8_60_8_for_test @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_55_8_60_8_for_incr @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_55_8_60_8_for_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_55_8_60_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_55_8_60_8_for_begin" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_55_8_60_8_for_end" ]
+        symbol [ total %total.2 108 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 109 8 ]
+        for @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_109_8_114_8_for_test @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_109_8_114_8_for_incr @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_109_8_114_8_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_109_8_114_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_109_8_114_8_for_begin" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_109_8_114_8_for_end" ]
         %i.3 = local;
-        symbol [ i %i.3 55 17 18 ];
+        symbol [ i %i.3 109 17 18 ];
         %tmp.10 = 0;
         lputv %i.3 %tmp.10;
-        symbol [ i %i.3 55 17 18 ];
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_55_8_60_8_for_test:
+        symbol [ i %i.3 109 17 18 ];
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_109_8_114_8_for_test:
         %tmp.11 = lgetv %i.3;
-        symbol [ i %tmp.11 55 24 25 ];
+        symbol [ i %tmp.11 109 24 25 ];
         %tmp.12 = lgetv %total.2;
-        symbol [ total %tmp.12 55 28 33 ];
+        symbol [ total %tmp.12 109 28 33 ];
         %tmp.13 = lt %tmp.11 %tmp.12;
-        bf %tmp.13 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_55_8_60_8_for_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_55_8_60_8_for_begin:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_55_40_60_8_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 56 12 ]
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_56_12_59_12_if_stmt:
-        symbol [ _marks %tmp.15 56 16 22 ];
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_109_8_114_8_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_109_8_114_8_for_begin:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_109_40_114_8_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 110 12 ]
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_110_12_113_12_if_stmt:
+        symbol [ _marks %tmp.15 110 16 22 ];
         %tmp.15 = getv ? :_marks;
         %tmp.16 = lgetv %i.3;
-        symbol [ i %tmp.16 56 23 24 ];
+        symbol [ i %tmp.16 110 23 24 ];
         %tmp.17 = agetv %tmp.15 %tmp.16;
-        bf %tmp.17 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_56_12_59_12_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_56_12_59_12_if_true:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_56_27_59_12_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 57 16 ]
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_110_12_113_12_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_110_12_113_12_if_true:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_110_27_113_12_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 111 16 ]
         %tmp.18 = lgetv %grid;
-        symbol [ grid %tmp.18 57 16 20 ];
-        symbol [ cells %tmp.19 57 21 26 ];
+        symbol [ grid %tmp.18 111 16 20 ];
+        symbol [ cells %tmp.19 111 21 26 ];
         %tmp.19 = getv %tmp.18 :cells;
-        symbol [ TILE_EMPTY %tmp.21 57 32 42 ];
+        symbol [ TILE_EMPTY %tmp.21 111 32 42 ];
         %tmp.21 = getv ? :TILE_EMPTY;
         %tmp.22 = lgetv %i.3;
-        symbol [ i %tmp.22 57 27 28 ];
+        symbol [ i %tmp.22 111 27 28 ];
         aputv %tmp.19 %tmp.22 %tmp.21;
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 58 16 ]
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 112 16 ]
         %tmp.23 = lgetv %cleared.1;
-        symbol [ cleared %tmp.23 58 26 33 ];
+        symbol [ cleared %tmp.23 112 26 33 ];
         %tmp.24 = 1;
         %tmp.25 = add %tmp.23 %tmp.24;
         lputv %cleared.1 %tmp.25;
-        symbol [ cleared %cleared.1 58 16 23 ];
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_56_27_59_12_stop:
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_56_12_59_12_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_56_12_59_12_if_end:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_55_40_60_8_stop:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_55_8_60_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 55 ]
+        symbol [ cleared %cleared.1 112 16 23 ];
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_110_27_113_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_110_12_113_12_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_110_12_113_12_if_end:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_109_40_114_8_stop:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_109_8_114_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 109 ]
         %tmp.28 = lgetv %i.3;
-        symbol [ i %tmp.28 55 35 36 ];
+        symbol [ i %tmp.28 109 35 36 ];
         %tmp.29 = add %tmp.28 1;
         lputv %i.3 %tmp.29;
-        symbol [ i %i.3 55 35 36 ];
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_55_8_60_8_for_test;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_55_8_60_8_for_end:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 61 8 ]
+        symbol [ i %i.3 109 35 36 ];
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_109_8_114_8_for_test;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_109_8_114_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 115 8 ]
         %tmp.30 = lgetv %cleared.1;
-        symbol [ cleared %tmp.30 61 15 22 ];
+        symbol [ cleared %tmp.30 115 15 22 ];
         ret %tmp.30;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_51_32_62_4_stop:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_105_32_116_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc"; @line = 64; @symbol_functiondef = [_scanRows,64,20,29]; @symbol_param<0> = [grid,64,30,34]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc"; @line = 122; @symbol_functiondef = [clearMarked,122,13,24]; @symbol_param<0> = [grid,122,25,29]; ]
+    function clearMarked(grid) {
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_122_31_131_4_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 123 8 ]
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_122_31_131_4_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_122_31_131_4_stop" ]
+        %total.1 = local;
+        symbol [ total %total.1 123 12 17 ];
+        %tmp.1 = lgetv %grid;
+        symbol [ grid %tmp.1 123 20 24 ];
+        symbol [ rows %tmp.2 123 25 29 ];
+        %tmp.2 = getv %tmp.1 :rows;
+        %tmp.3 = lgetv %grid;
+        symbol [ grid %tmp.3 123 32 36 ];
+        symbol [ cols %tmp.4 123 37 41 ];
+        %tmp.4 = getv %tmp.3 :cols;
+        %tmp.5 = mul %tmp.2 %tmp.4;
+        lputv %total.1 %tmp.5;
+        symbol [ total %total.1 123 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 124 8 ]
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_122_31_131_4_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_122_31_131_4_stop" ]
+        %count.2 = local;
+        symbol [ count %count.2 124 12 17 ];
+        %tmp.6 = 0;
+        lputv %count.2 %tmp.6;
+        symbol [ count %count.2 124 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 125 8 ]
+        for @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_125_8_129_8_for_test @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_125_8_129_8_for_incr @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_125_8_129_8_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_125_8_129_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_125_8_129_8_for_begin" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_125_8_129_8_for_end" ]
+        %i.3 = local;
+        symbol [ i %i.3 125 17 18 ];
+        %tmp.7 = 0;
+        lputv %i.3 %tmp.7;
+        symbol [ i %i.3 125 17 18 ];
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_125_8_129_8_for_test:
+        %tmp.8 = lgetv %i.3;
+        symbol [ i %tmp.8 125 24 25 ];
+        %tmp.9 = lgetv %total.1;
+        symbol [ total %tmp.9 125 28 33 ];
+        %tmp.10 = lt %tmp.8 %tmp.9;
+        bf %tmp.10 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_125_8_129_8_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_125_8_129_8_for_begin:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_125_40_129_8_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 126 12 ]
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_126_12_126_40_if_stmt:
+        symbol [ _marks %tmp.12 126 17 23 ];
+        %tmp.12 = getv ? :_marks;
+        %tmp.13 = lgetv %i.3;
+        symbol [ i %tmp.13 126 24 25 ];
+        %tmp.14 = agetv %tmp.12 %tmp.13;
+        %tmp.15 = not %tmp.14;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_126_12_126_40_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_126_12_126_40_if_true:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_126_28_126_40_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 126 30 ]
+        goto break @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_125_8_129_8_for_incr;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_126_28_126_40_stop:
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_126_12_126_40_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_126_12_126_40_if_end:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 127 12 ]
+        %tmp.16 = lgetv %grid;
+        symbol [ grid %tmp.16 127 12 16 ];
+        symbol [ cells %tmp.17 127 17 22 ];
+        %tmp.17 = getv %tmp.16 :cells;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_127_28_127_58_begin:
+        %tmp.18 = self;
+        symbol [ _isBombSpawn %tmp.19 127 28 40 ];
+        %tmp.19 = getv function %tmp.18 :_isBombSpawn;
+        %tmp.20 = lgetv %i.3;
+        symbol [ i %tmp.20 127 41 42 ];
+        %tmp.21 = invoke %tmp.18 %tmp.19(%tmp.20);
+        bf %tmp.21 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_127_28_127_58_else_false;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_127_28_127_58_true:
+        symbol [ TILE_BOMB %tmp.23 127 46 55 ];
+        %tmp.23 = getv ? :TILE_BOMB;
+        push %tmp.23;
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_127_28_127_58_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_127_28_127_58_else_false:
+        symbol [ TILE_EMPTY %tmp.25 127 58 68 ];
+        %tmp.25 = getv ? :TILE_EMPTY;
+        push %tmp.25;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_127_28_127_58_end:
+        %tmp.26 = phi [%tmp.21 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_127_28_127_58_begin] [%tmp.23 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_127_28_127_58_true] [%tmp.25 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_127_28_127_58_else_false] [%tmp.26 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_127_28_127_58_end];
+        %tmp.27 = lgetv %i.3;
+        symbol [ i %tmp.27 127 23 24 ];
+        aputv %tmp.17 %tmp.27 %tmp.26;
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 128 12 ]
+        %tmp.28 = lgetv %count.2;
+        symbol [ count %tmp.28 128 20 25 ];
+        %tmp.29 = 1;
+        %tmp.30 = add %tmp.28 %tmp.29;
+        lputv %count.2 %tmp.30;
+        symbol [ count %count.2 128 12 17 ];
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_125_40_129_8_stop:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_125_8_129_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 125 ]
+        %tmp.33 = lgetv %i.3;
+        symbol [ i %tmp.33 125 35 36 ];
+        %tmp.34 = add %tmp.33 1;
+        lputv %i.3 %tmp.34;
+        symbol [ i %i.3 125 35 36 ];
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_125_8_129_8_for_test;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_125_8_129_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 130 8 ]
+        %tmp.35 = lgetv %count.2;
+        symbol [ count %tmp.35 130 15 20 ];
+        ret %tmp.35;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_122_31_131_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc"; @line = 133; @symbol_functiondef = [_isBombSpawn,133,20,32]; @symbol_param<0> = [idx,133,33,36]; ]
+    protected
+    function _isBombSpawn(idx) {
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_133_38_138_4_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 134 8 ]
+        for @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_134_8_136_8_for_test @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_134_8_136_8_for_incr @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_134_8_136_8_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_134_8_136_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_134_8_136_8_for_begin" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_134_8_136_8_for_end" ]
+        %k.1 = local;
+        symbol [ k %k.1 134 17 18 ];
+        %tmp.1 = 0;
+        lputv %k.1 %tmp.1;
+        symbol [ k %k.1 134 17 18 ];
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_134_8_136_8_for_test:
+        %tmp.2 = lgetv %k.1;
+        symbol [ k %tmp.2 134 24 25 ];
+        symbol [ _bombSpawns %tmp.4 134 28 39 ];
+        %tmp.4 = getv ? :_bombSpawns;
+        symbol [ size %tmp.5 134 40 44 ];
+        %tmp.5 = getv function %tmp.4 :size;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        %tmp.7 = lt %tmp.2 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_134_8_136_8_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_134_8_136_8_for_begin:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_134_53_136_8_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 135 12 ]
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_135_12_135_54_if_stmt:
+        symbol [ _bombSpawns %tmp.9 135 16 27 ];
+        %tmp.9 = getv ? :_bombSpawns;
+        %tmp.10 = lgetv %k.1;
+        symbol [ k %tmp.10 135 28 29 ];
+        %tmp.11 = agetv %tmp.9 %tmp.10;
+        %tmp.12 = lgetv %idx;
+        symbol [ idx %tmp.12 135 34 37 ];
+        %tmp.13 = eq %tmp.11 %tmp.12;
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_135_12_135_54_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_135_12_135_54_if_true:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_135_39_135_54_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 135 41 ]
+        %tmp.14 = true;
+        ret %tmp.14;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_135_39_135_54_stop:
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_135_12_135_54_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_135_12_135_54_if_end:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_134_53_136_8_stop:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_134_8_136_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 134 ]
+        %tmp.17 = lgetv %k.1;
+        symbol [ k %tmp.17 134 48 49 ];
+        %tmp.18 = add %tmp.17 1;
+        lputv %k.1 %tmp.18;
+        symbol [ k %k.1 134 48 49 ];
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_134_8_136_8_for_test;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_134_8_136_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 137 8 ]
+        %tmp.19 = false;
+        ret %tmp.19;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_133_38_138_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc"; @line = 140; @symbol_functiondef = [_scanRows,140,20,29]; @symbol_param<0> = [grid,140,30,34]; ]
     protected
     function _scanRows(grid) {
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_64_36_79_4_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 65 8 ]
-        for @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_65_8_78_8_for_test @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_65_8_78_8_for_incr @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_65_8_78_8_for_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_65_8_78_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_65_8_78_8_for_begin" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_65_8_78_8_for_end" ]
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_140_36_159_4_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 141 8 ]
+        for @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_141_8_158_8_for_test @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_141_8_158_8_for_incr @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_141_8_158_8_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_141_8_158_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_141_8_158_8_for_begin" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_141_8_158_8_for_end" ]
         %r.1 = local;
-        symbol [ r %r.1 65 17 18 ];
+        symbol [ r %r.1 141 17 18 ];
         %tmp.1 = 0;
         lputv %r.1 %tmp.1;
-        symbol [ r %r.1 65 17 18 ];
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_65_8_78_8_for_test:
+        symbol [ r %r.1 141 17 18 ];
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_141_8_158_8_for_test:
         %tmp.2 = lgetv %r.1;
-        symbol [ r %tmp.2 65 24 25 ];
+        symbol [ r %tmp.2 141 24 25 ];
         %tmp.3 = lgetv %grid;
-        symbol [ grid %tmp.3 65 28 32 ];
-        symbol [ rows %tmp.4 65 33 37 ];
+        symbol [ grid %tmp.3 141 28 32 ];
+        symbol [ rows %tmp.4 141 33 37 ];
         %tmp.4 = getv %tmp.3 :rows;
         %tmp.5 = lt %tmp.2 %tmp.4;
-        bf %tmp.5 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_65_8_78_8_for_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_65_8_78_8_for_begin:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_65_44_78_8_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 66 12 ]
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_65_44_78_8_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_65_44_78_8_stop" ]
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_141_8_158_8_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_141_8_158_8_for_begin:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_141_44_158_8_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 142 12 ]
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_141_44_158_8_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_141_44_158_8_stop" ]
         %runVal.2 = local;
-        symbol [ runVal %runVal.2 66 16 22 ];
+        symbol [ runVal %runVal.2 142 16 22 ];
         %tmp.6 = -1;
         lputv %runVal.2 %tmp.6;
-        symbol [ runVal %runVal.2 66 16 22 ];
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 66 29 ]
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_65_44_78_8_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_65_44_78_8_stop" ]
+        symbol [ runVal %runVal.2 142 16 22 ];
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 142 29 ]
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_141_44_158_8_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_141_44_158_8_stop" ]
         %runStart.3 = local;
-        symbol [ runStart %runStart.3 66 33 41 ];
+        symbol [ runStart %runStart.3 142 33 41 ];
         %tmp.7 = 0;
         lputv %runStart.3 %tmp.7;
-        symbol [ runStart %runStart.3 66 33 41 ];
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 67 12 ]
-        for @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_67_12_77_12_for_test @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_67_12_77_12_for_incr @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_67_12_77_12_for_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_67_12_77_12_for_init:
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_67_12_77_12_for_begin" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_67_12_77_12_for_end" ]
+        symbol [ runStart %runStart.3 142 33 41 ];
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 143 12 ]
+        for @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_143_12_157_12_for_test @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_143_12_157_12_for_incr @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_143_12_157_12_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_143_12_157_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_143_12_157_12_for_begin" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_143_12_157_12_for_end" ]
         %c.4 = local;
-        symbol [ c %c.4 67 21 22 ];
+        symbol [ c %c.4 143 21 22 ];
         %tmp.8 = 0;
         lputv %c.4 %tmp.8;
-        symbol [ c %c.4 67 21 22 ];
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_67_12_77_12_for_test:
+        symbol [ c %c.4 143 21 22 ];
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_143_12_157_12_for_test:
         %tmp.9 = lgetv %c.4;
-        symbol [ c %tmp.9 67 28 29 ];
+        symbol [ c %tmp.9 143 28 29 ];
         %tmp.10 = lgetv %grid;
-        symbol [ grid %tmp.10 67 33 37 ];
-        symbol [ cols %tmp.11 67 38 42 ];
+        symbol [ grid %tmp.10 143 33 37 ];
+        symbol [ cols %tmp.11 143 38 42 ];
         %tmp.11 = getv %tmp.10 :cols;
         %tmp.12 = lte %tmp.9 %tmp.11;
-        bf %tmp.12 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_67_12_77_12_for_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_67_12_77_12_for_begin:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_67_49_77_12_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 68 16 ]
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_67_49_77_12_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_67_49_77_12_stop" ]
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_143_12_157_12_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_143_12_157_12_for_begin:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_143_49_157_12_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 144 16 ]
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_143_49_157_12_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_143_49_157_12_stop" ]
         %v.5 = local;
-        symbol [ v %v.5 68 20 21 ];
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_68_24_68_75_begin:
+        symbol [ v %v.5 144 20 21 ];
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_144_24_144_75_begin:
         %tmp.13 = lgetv %c.4;
-        symbol [ c %tmp.13 68 25 26 ];
+        symbol [ c %tmp.13 144 25 26 ];
         %tmp.14 = lgetv %grid;
-        symbol [ grid %tmp.14 68 29 33 ];
-        symbol [ cols %tmp.15 68 34 38 ];
+        symbol [ grid %tmp.14 144 29 33 ];
+        symbol [ cols %tmp.15 144 34 38 ];
         %tmp.15 = getv %tmp.14 :cols;
         %tmp.16 = lt %tmp.13 %tmp.15;
-        bf %tmp.16 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_68_24_68_75_else_false;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_68_24_68_75_true:
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_144_24_144_75_else_false;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_144_24_144_75_true:
         %tmp.17 = lgetv %grid;
-        symbol [ grid %tmp.17 68 42 46 ];
-        symbol [ cells %tmp.18 68 47 52 ];
+        symbol [ grid %tmp.17 144 42 46 ];
+        symbol [ cells %tmp.18 144 47 52 ];
         %tmp.18 = getv %tmp.17 :cells;
         %tmp.19 = lgetv %r.1;
-        symbol [ r %tmp.19 68 53 54 ];
+        symbol [ r %tmp.19 144 53 54 ];
         %tmp.20 = lgetv %grid;
-        symbol [ grid %tmp.20 68 57 61 ];
-        symbol [ cols %tmp.21 68 62 66 ];
+        symbol [ grid %tmp.20 144 57 61 ];
+        symbol [ cols %tmp.21 144 62 66 ];
         %tmp.21 = getv %tmp.20 :cols;
         %tmp.22 = mul %tmp.19 %tmp.21;
         %tmp.23 = lgetv %c.4;
-        symbol [ c %tmp.23 68 69 70 ];
+        symbol [ c %tmp.23 144 69 70 ];
         %tmp.24 = add %tmp.22 %tmp.23;
         %tmp.25 = agetv %tmp.18 %tmp.24;
         push %tmp.25;
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_68_24_68_75_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_68_24_68_75_else_false:
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_144_24_144_75_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_144_24_144_75_else_false:
         %tmp.26 = -1;
         push %tmp.26;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_68_24_68_75_end:
-        %tmp.27 = phi [%tmp.16 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_68_24_68_75_begin] [%tmp.25 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_68_24_68_75_true] [%tmp.26 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_68_24_68_75_else_false] [%tmp.27 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_68_24_68_75_end];
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_144_24_144_75_end:
+        %tmp.27 = phi [%tmp.16 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_144_24_144_75_begin] [%tmp.25 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_144_24_144_75_true] [%tmp.26 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_144_24_144_75_else_false] [%tmp.27 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_144_24_144_75_end];
         lputv %v.5 %tmp.27;
-        symbol [ v %v.5 68 20 21 ];
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 69 16 ]
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_69_16_76_16_if_stmt:
+        symbol [ v %v.5 144 20 21 ];
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 145 16 ]
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_145_16_156_16_if_stmt:
         %tmp.28 = lgetv %v.5;
-        symbol [ v %tmp.28 69 20 21 ];
+        symbol [ v %tmp.28 145 20 21 ];
         %tmp.29 = lgetv %runVal.2;
-        symbol [ runVal %tmp.29 69 25 31 ];
+        symbol [ runVal %tmp.29 145 25 31 ];
         %tmp.30 = ne %tmp.28 %tmp.29;
-        bf %tmp.30 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_69_16_76_16_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_69_16_76_16_if_true:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_69_33_76_16_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 70 20 ]
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_70_20_74_20_if_stmt:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_70_24_70_65_begin:
+        bf %tmp.30 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_145_16_156_16_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_145_16_156_16_if_true:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_145_33_156_16_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 146 20 ]
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_146_20_154_20_if_stmt:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_146_24_146_65_begin:
         %tmp.31 = lgetv %runVal.2;
-        symbol [ runVal %tmp.31 70 24 30 ];
-        symbol [ TILE_EMPTY %tmp.33 70 33 43 ];
+        symbol [ runVal %tmp.31 146 24 30 ];
+        symbol [ TILE_EMPTY %tmp.33 146 33 43 ];
         %tmp.33 = getv ? :TILE_EMPTY;
         %tmp.34 = gt %tmp.31 %tmp.33;
-        bf %tmp.34 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_70_20_74_20_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_70_47_70_65_true:
+        bf %tmp.34 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_146_20_154_20_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_146_47_146_65_true:
         %tmp.35 = lgetv %c.4;
-        symbol [ c %tmp.35 70 48 49 ];
+        symbol [ c %tmp.35 146 48 49 ];
         %tmp.36 = lgetv %runStart.3;
-        symbol [ runStart %tmp.36 70 52 60 ];
+        symbol [ runStart %tmp.36 146 52 60 ];
         %tmp.37 = sub %tmp.35 %tmp.36;
         %tmp.38 = 3;
         %tmp.39 = gte %tmp.37 %tmp.38;
         push %tmp.39;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_70_47_70_65_end:
-        %tmp.40 = phi [%tmp.34 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_70_24_70_65_begin] [%tmp.39 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_70_47_70_65_true] [%tmp.40 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_70_47_70_65_end];
-        bf %tmp.40 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_70_20_74_20_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_70_20_74_20_if_true:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_70_68_74_20_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 71 24 ]
-        for @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_71_24_73_24_for_test @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_71_24_73_24_for_incr @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_71_24_73_24_for_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_71_24_73_24_for_init:
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_71_24_73_24_for_begin" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_71_24_73_24_for_end" ]
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_146_47_146_65_end:
+        %tmp.40 = phi [%tmp.34 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_146_24_146_65_begin] [%tmp.39 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_146_47_146_65_true] [%tmp.40 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_146_47_146_65_end];
+        bf %tmp.40 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_146_20_154_20_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_146_20_154_20_if_true:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_146_68_154_20_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 147 24 ]
+        for @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_147_24_149_24_for_test @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_147_24_149_24_for_incr @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_147_24_149_24_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_147_24_149_24_for_init:
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_147_24_149_24_for_begin" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_147_24_149_24_for_end" ]
         %k.6 = local;
-        symbol [ k %k.6 71 33 34 ];
+        symbol [ k %k.6 147 33 34 ];
         %tmp.41 = lgetv %runStart.3;
-        symbol [ runStart %tmp.41 71 37 45 ];
+        symbol [ runStart %tmp.41 147 37 45 ];
         lputv %k.6 %tmp.41;
-        symbol [ k %k.6 71 33 34 ];
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_71_24_73_24_for_test:
+        symbol [ k %k.6 147 33 34 ];
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_147_24_149_24_for_test:
         %tmp.42 = lgetv %k.6;
-        symbol [ k %tmp.42 71 47 48 ];
+        symbol [ k %tmp.42 147 47 48 ];
         %tmp.43 = lgetv %c.4;
-        symbol [ c %tmp.43 71 51 52 ];
+        symbol [ c %tmp.43 147 51 52 ];
         %tmp.44 = lt %tmp.42 %tmp.43;
-        bf %tmp.44 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_71_24_73_24_for_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_71_24_73_24_for_begin:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_71_59_73_24_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 72 28 ]
-        symbol [ _marks %tmp.45 72 28 34 ];
+        bf %tmp.44 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_147_24_149_24_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_147_24_149_24_for_begin:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_147_59_149_24_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 148 28 ]
+        symbol [ _marks %tmp.45 148 28 34 ];
         %tmp.45 = getv self :_marks;
         %tmp.46 = true;
         %tmp.47 = lgetv %r.1;
-        symbol [ r %tmp.47 72 35 36 ];
+        symbol [ r %tmp.47 148 35 36 ];
         %tmp.48 = lgetv %grid;
-        symbol [ grid %tmp.48 72 39 43 ];
-        symbol [ cols %tmp.49 72 44 48 ];
+        symbol [ grid %tmp.48 148 39 43 ];
+        symbol [ cols %tmp.49 148 44 48 ];
         %tmp.49 = getv %tmp.48 :cols;
         %tmp.50 = mul %tmp.47 %tmp.49;
         %tmp.51 = lgetv %k.6;
-        symbol [ k %tmp.51 72 51 52 ];
+        symbol [ k %tmp.51 148 51 52 ];
         %tmp.52 = add %tmp.50 %tmp.51;
         aputv %tmp.45 %tmp.52 %tmp.46;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_71_59_73_24_stop:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_71_24_73_24_for_incr:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 71 ]
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_147_59_149_24_stop:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_147_24_149_24_for_incr:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 147 ]
         %tmp.55 = lgetv %k.6;
-        symbol [ k %tmp.55 71 54 55 ];
+        symbol [ k %tmp.55 147 54 55 ];
         %tmp.56 = add %tmp.55 1;
         lputv %k.6 %tmp.56;
-        symbol [ k %k.6 71 54 55 ];
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_71_24_73_24_for_test;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_71_24_73_24_for_end:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_70_68_74_20_stop:
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_70_20_74_20_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_70_20_74_20_if_end:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 75 20 ]
-        %tmp.57 = lgetv %v.5;
-        symbol [ v %tmp.57 75 29 30 ];
-        lputv %runVal.2 %tmp.57;
-        symbol [ runVal %runVal.2 75 20 26 ];
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 75 32 ]
-        %tmp.58 = lgetv %c.4;
-        symbol [ c %tmp.58 75 43 44 ];
-        lputv %runStart.3 %tmp.58;
-        symbol [ runStart %runStart.3 75 32 40 ];
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_69_33_76_16_stop:
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_69_16_76_16_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_69_16_76_16_if_end:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_67_49_77_12_stop:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_67_12_77_12_for_incr:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 67 ]
-        %tmp.61 = lgetv %c.4;
-        symbol [ c %tmp.61 67 44 45 ];
-        %tmp.62 = add %tmp.61 1;
-        lputv %c.4 %tmp.62;
-        symbol [ c %c.4 67 44 45 ];
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_67_12_77_12_for_test;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_67_12_77_12_for_end:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_65_44_78_8_stop:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_65_8_78_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 65 ]
-        %tmp.65 = lgetv %r.1;
-        symbol [ r %tmp.65 65 39 40 ];
-        %tmp.66 = add %tmp.65 1;
-        lputv %r.1 %tmp.66;
-        symbol [ r %r.1 65 39 40 ];
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_65_8_78_8_for_test;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_65_8_78_8_for_end:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_64_36_79_4_stop:
+        symbol [ k %k.6 147 54 55 ];
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_147_24_149_24_for_test;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_147_24_149_24_for_end:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 150 24 ]
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_150_24_153_24_if_stmt:
+        %tmp.57 = lgetv %c.4;
+        symbol [ c %tmp.57 150 29 30 ];
+        %tmp.58 = lgetv %runStart.3;
+        symbol [ runStart %tmp.58 150 33 41 ];
+        %tmp.59 = sub %tmp.57 %tmp.58;
+        %tmp.60 = 4;
+        %tmp.61 = gte %tmp.59 %tmp.60;
+        bf %tmp.61 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_150_24_153_24_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_150_24_153_24_if_true:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_150_49_153_24_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 151 28 ]
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_150_49_153_24_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_150_49_153_24_stop" ]
+        %mid.7 = local;
+        symbol [ mid %mid.7 151 32 35 ];
+        %tmp.62 = lgetv %runStart.3;
+        symbol [ runStart %tmp.62 151 38 46 ];
+        %tmp.63 = lgetv %c.4;
+        symbol [ c %tmp.63 151 50 51 ];
+        %tmp.64 = lgetv %runStart.3;
+        symbol [ runStart %tmp.64 151 54 62 ];
+        %tmp.65 = sub %tmp.63 %tmp.64;
+        %tmp.66 = 2;
+        %tmp.67 = div %tmp.65 %tmp.66;
+        %tmp.68 = add %tmp.62 %tmp.67;
+        lputv %mid.7 %tmp.68;
+        symbol [ mid %mid.7 151 32 35 ];
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 152 28 ]
+        symbol [ _bombSpawns %tmp.70 152 28 39 ];
+        %tmp.70 = getv ? :_bombSpawns;
+        symbol [ add %tmp.71 152 40 43 ];
+        %tmp.71 = getv function %tmp.70 :add;
+        %tmp.72 = lgetv %r.1;
+        symbol [ r %tmp.72 152 44 45 ];
+        %tmp.73 = lgetv %grid;
+        symbol [ grid %tmp.73 152 48 52 ];
+        symbol [ cols %tmp.74 152 53 57 ];
+        %tmp.74 = getv %tmp.73 :cols;
+        %tmp.75 = mul %tmp.72 %tmp.74;
+        %tmp.76 = lgetv %mid.7;
+        symbol [ mid %tmp.76 152 60 63 ];
+        %tmp.77 = add %tmp.75 %tmp.76;
+        invoke %tmp.70 %tmp.71(%tmp.77);
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_150_49_153_24_stop:
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_150_24_153_24_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_150_24_153_24_if_end:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_146_68_154_20_stop:
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_146_20_154_20_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_146_20_154_20_if_end:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 155 20 ]
+        %tmp.78 = lgetv %v.5;
+        symbol [ v %tmp.78 155 29 30 ];
+        lputv %runVal.2 %tmp.78;
+        symbol [ runVal %runVal.2 155 20 26 ];
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 155 32 ]
+        %tmp.79 = lgetv %c.4;
+        symbol [ c %tmp.79 155 43 44 ];
+        lputv %runStart.3 %tmp.79;
+        symbol [ runStart %runStart.3 155 32 40 ];
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_145_33_156_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_145_16_156_16_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_145_16_156_16_if_end:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_143_49_157_12_stop:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_143_12_157_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 143 ]
+        %tmp.82 = lgetv %c.4;
+        symbol [ c %tmp.82 143 44 45 ];
+        %tmp.83 = add %tmp.82 1;
+        lputv %c.4 %tmp.83;
+        symbol [ c %c.4 143 44 45 ];
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_143_12_157_12_for_test;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_143_12_157_12_for_end:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_141_44_158_8_stop:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_141_8_158_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 141 ]
+        %tmp.86 = lgetv %r.1;
+        symbol [ r %tmp.86 141 39 40 ];
+        %tmp.87 = add %tmp.86 1;
+        lputv %r.1 %tmp.87;
+        symbol [ r %r.1 141 39 40 ];
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_141_8_158_8_for_test;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_141_8_158_8_for_end:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_140_36_159_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc"; @line = 81; @symbol_functiondef = [_scanCols,81,20,29]; @symbol_param<0> = [grid,81,30,34]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc"; @line = 161; @symbol_functiondef = [_scanCols,161,20,29]; @symbol_param<0> = [grid,161,30,34]; ]
     protected
     function _scanCols(grid) {
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_81_36_96_4_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 82 8 ]
-        for @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_82_8_95_8_for_test @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_82_8_95_8_for_incr @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_82_8_95_8_for_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_82_8_95_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_82_8_95_8_for_begin" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_82_8_95_8_for_end" ]
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_161_36_180_4_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 162 8 ]
+        for @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_162_8_179_8_for_test @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_162_8_179_8_for_incr @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_162_8_179_8_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_162_8_179_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_162_8_179_8_for_begin" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_162_8_179_8_for_end" ]
         %c.1 = local;
-        symbol [ c %c.1 82 17 18 ];
+        symbol [ c %c.1 162 17 18 ];
         %tmp.1 = 0;
         lputv %c.1 %tmp.1;
-        symbol [ c %c.1 82 17 18 ];
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_82_8_95_8_for_test:
+        symbol [ c %c.1 162 17 18 ];
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_162_8_179_8_for_test:
         %tmp.2 = lgetv %c.1;
-        symbol [ c %tmp.2 82 24 25 ];
+        symbol [ c %tmp.2 162 24 25 ];
         %tmp.3 = lgetv %grid;
-        symbol [ grid %tmp.3 82 28 32 ];
-        symbol [ cols %tmp.4 82 33 37 ];
+        symbol [ grid %tmp.3 162 28 32 ];
+        symbol [ cols %tmp.4 162 33 37 ];
         %tmp.4 = getv %tmp.3 :cols;
         %tmp.5 = lt %tmp.2 %tmp.4;
-        bf %tmp.5 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_82_8_95_8_for_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_82_8_95_8_for_begin:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_82_44_95_8_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 83 12 ]
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_82_44_95_8_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_82_44_95_8_stop" ]
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_162_8_179_8_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_162_8_179_8_for_begin:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_162_44_179_8_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 163 12 ]
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_162_44_179_8_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_162_44_179_8_stop" ]
         %runVal.2 = local;
-        symbol [ runVal %runVal.2 83 16 22 ];
+        symbol [ runVal %runVal.2 163 16 22 ];
         %tmp.6 = -1;
         lputv %runVal.2 %tmp.6;
-        symbol [ runVal %runVal.2 83 16 22 ];
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 83 29 ]
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_82_44_95_8_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_82_44_95_8_stop" ]
+        symbol [ runVal %runVal.2 163 16 22 ];
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 163 29 ]
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_162_44_179_8_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_162_44_179_8_stop" ]
         %runStart.3 = local;
-        symbol [ runStart %runStart.3 83 33 41 ];
+        symbol [ runStart %runStart.3 163 33 41 ];
         %tmp.7 = 0;
         lputv %runStart.3 %tmp.7;
-        symbol [ runStart %runStart.3 83 33 41 ];
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 84 12 ]
-        for @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_84_12_94_12_for_test @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_84_12_94_12_for_incr @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_84_12_94_12_for_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_84_12_94_12_for_init:
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_84_12_94_12_for_begin" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_84_12_94_12_for_end" ]
+        symbol [ runStart %runStart.3 163 33 41 ];
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 164 12 ]
+        for @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_164_12_178_12_for_test @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_164_12_178_12_for_incr @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_164_12_178_12_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_164_12_178_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_164_12_178_12_for_begin" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_164_12_178_12_for_end" ]
         %r.4 = local;
-        symbol [ r %r.4 84 21 22 ];
+        symbol [ r %r.4 164 21 22 ];
         %tmp.8 = 0;
         lputv %r.4 %tmp.8;
-        symbol [ r %r.4 84 21 22 ];
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_84_12_94_12_for_test:
+        symbol [ r %r.4 164 21 22 ];
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_164_12_178_12_for_test:
         %tmp.9 = lgetv %r.4;
-        symbol [ r %tmp.9 84 28 29 ];
+        symbol [ r %tmp.9 164 28 29 ];
         %tmp.10 = lgetv %grid;
-        symbol [ grid %tmp.10 84 33 37 ];
-        symbol [ rows %tmp.11 84 38 42 ];
+        symbol [ grid %tmp.10 164 33 37 ];
+        symbol [ rows %tmp.11 164 38 42 ];
         %tmp.11 = getv %tmp.10 :rows;
         %tmp.12 = lte %tmp.9 %tmp.11;
-        bf %tmp.12 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_84_12_94_12_for_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_84_12_94_12_for_begin:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_84_49_94_12_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 85 16 ]
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_84_49_94_12_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_84_49_94_12_stop" ]
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_164_12_178_12_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_164_12_178_12_for_begin:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_164_49_178_12_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 165 16 ]
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_164_49_178_12_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_164_49_178_12_stop" ]
         %v.5 = local;
-        symbol [ v %v.5 85 20 21 ];
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_85_24_85_75_begin:
+        symbol [ v %v.5 165 20 21 ];
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_165_24_165_75_begin:
         %tmp.13 = lgetv %r.4;
-        symbol [ r %tmp.13 85 25 26 ];
+        symbol [ r %tmp.13 165 25 26 ];
         %tmp.14 = lgetv %grid;
-        symbol [ grid %tmp.14 85 29 33 ];
-        symbol [ rows %tmp.15 85 34 38 ];
+        symbol [ grid %tmp.14 165 29 33 ];
+        symbol [ rows %tmp.15 165 34 38 ];
         %tmp.15 = getv %tmp.14 :rows;
         %tmp.16 = lt %tmp.13 %tmp.15;
-        bf %tmp.16 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_85_24_85_75_else_false;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_85_24_85_75_true:
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_165_24_165_75_else_false;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_165_24_165_75_true:
         %tmp.17 = lgetv %grid;
-        symbol [ grid %tmp.17 85 42 46 ];
-        symbol [ cells %tmp.18 85 47 52 ];
+        symbol [ grid %tmp.17 165 42 46 ];
+        symbol [ cells %tmp.18 165 47 52 ];
         %tmp.18 = getv %tmp.17 :cells;
         %tmp.19 = lgetv %r.4;
-        symbol [ r %tmp.19 85 53 54 ];
+        symbol [ r %tmp.19 165 53 54 ];
         %tmp.20 = lgetv %grid;
-        symbol [ grid %tmp.20 85 57 61 ];
-        symbol [ cols %tmp.21 85 62 66 ];
+        symbol [ grid %tmp.20 165 57 61 ];
+        symbol [ cols %tmp.21 165 62 66 ];
         %tmp.21 = getv %tmp.20 :cols;
         %tmp.22 = mul %tmp.19 %tmp.21;
         %tmp.23 = lgetv %c.1;
-        symbol [ c %tmp.23 85 69 70 ];
+        symbol [ c %tmp.23 165 69 70 ];
         %tmp.24 = add %tmp.22 %tmp.23;
         %tmp.25 = agetv %tmp.18 %tmp.24;
         push %tmp.25;
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_85_24_85_75_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_85_24_85_75_else_false:
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_165_24_165_75_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_165_24_165_75_else_false:
         %tmp.26 = -1;
         push %tmp.26;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_85_24_85_75_end:
-        %tmp.27 = phi [%tmp.16 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_85_24_85_75_begin] [%tmp.25 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_85_24_85_75_true] [%tmp.26 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_85_24_85_75_else_false] [%tmp.27 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_85_24_85_75_end];
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_165_24_165_75_end:
+        %tmp.27 = phi [%tmp.16 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_165_24_165_75_begin] [%tmp.25 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_165_24_165_75_true] [%tmp.26 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_165_24_165_75_else_false] [%tmp.27 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_165_24_165_75_end];
         lputv %v.5 %tmp.27;
-        symbol [ v %v.5 85 20 21 ];
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 86 16 ]
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_86_16_93_16_if_stmt:
+        symbol [ v %v.5 165 20 21 ];
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 166 16 ]
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_166_16_177_16_if_stmt:
         %tmp.28 = lgetv %v.5;
-        symbol [ v %tmp.28 86 20 21 ];
+        symbol [ v %tmp.28 166 20 21 ];
         %tmp.29 = lgetv %runVal.2;
-        symbol [ runVal %tmp.29 86 25 31 ];
+        symbol [ runVal %tmp.29 166 25 31 ];
         %tmp.30 = ne %tmp.28 %tmp.29;
-        bf %tmp.30 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_86_16_93_16_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_86_16_93_16_if_true:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_86_33_93_16_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 87 20 ]
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_87_20_91_20_if_stmt:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_87_24_87_65_begin:
+        bf %tmp.30 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_166_16_177_16_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_166_16_177_16_if_true:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_166_33_177_16_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 167 20 ]
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_167_20_175_20_if_stmt:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_167_24_167_65_begin:
         %tmp.31 = lgetv %runVal.2;
-        symbol [ runVal %tmp.31 87 24 30 ];
-        symbol [ TILE_EMPTY %tmp.33 87 33 43 ];
+        symbol [ runVal %tmp.31 167 24 30 ];
+        symbol [ TILE_EMPTY %tmp.33 167 33 43 ];
         %tmp.33 = getv ? :TILE_EMPTY;
         %tmp.34 = gt %tmp.31 %tmp.33;
-        bf %tmp.34 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_87_20_91_20_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_87_47_87_65_true:
+        bf %tmp.34 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_167_20_175_20_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_167_47_167_65_true:
         %tmp.35 = lgetv %r.4;
-        symbol [ r %tmp.35 87 48 49 ];
+        symbol [ r %tmp.35 167 48 49 ];
         %tmp.36 = lgetv %runStart.3;
-        symbol [ runStart %tmp.36 87 52 60 ];
+        symbol [ runStart %tmp.36 167 52 60 ];
         %tmp.37 = sub %tmp.35 %tmp.36;
         %tmp.38 = 3;
         %tmp.39 = gte %tmp.37 %tmp.38;
         push %tmp.39;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_87_47_87_65_end:
-        %tmp.40 = phi [%tmp.34 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_87_24_87_65_begin] [%tmp.39 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_87_47_87_65_true] [%tmp.40 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_87_47_87_65_end];
-        bf %tmp.40 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_87_20_91_20_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_87_20_91_20_if_true:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_87_68_91_20_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 88 24 ]
-        for @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_88_24_90_24_for_test @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_88_24_90_24_for_incr @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_88_24_90_24_for_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_88_24_90_24_for_init:
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_88_24_90_24_for_begin" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_88_24_90_24_for_end" ]
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_167_47_167_65_end:
+        %tmp.40 = phi [%tmp.34 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_167_24_167_65_begin] [%tmp.39 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_167_47_167_65_true] [%tmp.40 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_167_47_167_65_end];
+        bf %tmp.40 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_167_20_175_20_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_167_20_175_20_if_true:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_167_68_175_20_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 168 24 ]
+        for @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_168_24_170_24_for_test @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_168_24_170_24_for_incr @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_168_24_170_24_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_168_24_170_24_for_init:
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_168_24_170_24_for_begin" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_168_24_170_24_for_end" ]
         %k.6 = local;
-        symbol [ k %k.6 88 33 34 ];
+        symbol [ k %k.6 168 33 34 ];
         %tmp.41 = lgetv %runStart.3;
-        symbol [ runStart %tmp.41 88 37 45 ];
+        symbol [ runStart %tmp.41 168 37 45 ];
         lputv %k.6 %tmp.41;
-        symbol [ k %k.6 88 33 34 ];
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_88_24_90_24_for_test:
+        symbol [ k %k.6 168 33 34 ];
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_168_24_170_24_for_test:
         %tmp.42 = lgetv %k.6;
-        symbol [ k %tmp.42 88 47 48 ];
+        symbol [ k %tmp.42 168 47 48 ];
         %tmp.43 = lgetv %r.4;
-        symbol [ r %tmp.43 88 51 52 ];
+        symbol [ r %tmp.43 168 51 52 ];
         %tmp.44 = lt %tmp.42 %tmp.43;
-        bf %tmp.44 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_88_24_90_24_for_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_88_24_90_24_for_begin:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_88_59_90_24_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 89 28 ]
-        symbol [ _marks %tmp.45 89 28 34 ];
+        bf %tmp.44 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_168_24_170_24_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_168_24_170_24_for_begin:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_168_59_170_24_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 169 28 ]
+        symbol [ _marks %tmp.45 169 28 34 ];
         %tmp.45 = getv self :_marks;
         %tmp.46 = true;
         %tmp.47 = lgetv %k.6;
-        symbol [ k %tmp.47 89 35 36 ];
+        symbol [ k %tmp.47 169 35 36 ];
         %tmp.48 = lgetv %grid;
-        symbol [ grid %tmp.48 89 39 43 ];
-        symbol [ cols %tmp.49 89 44 48 ];
+        symbol [ grid %tmp.48 169 39 43 ];
+        symbol [ cols %tmp.49 169 44 48 ];
         %tmp.49 = getv %tmp.48 :cols;
         %tmp.50 = mul %tmp.47 %tmp.49;
         %tmp.51 = lgetv %c.1;
-        symbol [ c %tmp.51 89 51 52 ];
+        symbol [ c %tmp.51 169 51 52 ];
         %tmp.52 = add %tmp.50 %tmp.51;
         aputv %tmp.45 %tmp.52 %tmp.46;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_88_59_90_24_stop:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_88_24_90_24_for_incr:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 88 ]
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_168_59_170_24_stop:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_168_24_170_24_for_incr:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 168 ]
         %tmp.55 = lgetv %k.6;
-        symbol [ k %tmp.55 88 54 55 ];
+        symbol [ k %tmp.55 168 54 55 ];
         %tmp.56 = add %tmp.55 1;
         lputv %k.6 %tmp.56;
-        symbol [ k %k.6 88 54 55 ];
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_88_24_90_24_for_test;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_88_24_90_24_for_end:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_87_68_91_20_stop:
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_87_20_91_20_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_87_20_91_20_if_end:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 92 20 ]
-        %tmp.57 = lgetv %v.5;
-        symbol [ v %tmp.57 92 29 30 ];
-        lputv %runVal.2 %tmp.57;
-        symbol [ runVal %runVal.2 92 20 26 ];
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 92 32 ]
-        %tmp.58 = lgetv %r.4;
-        symbol [ r %tmp.58 92 43 44 ];
-        lputv %runStart.3 %tmp.58;
-        symbol [ runStart %runStart.3 92 32 40 ];
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_86_33_93_16_stop:
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_86_16_93_16_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_86_16_93_16_if_end:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_84_49_94_12_stop:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_84_12_94_12_for_incr:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 84 ]
-        %tmp.61 = lgetv %r.4;
-        symbol [ r %tmp.61 84 44 45 ];
-        %tmp.62 = add %tmp.61 1;
-        lputv %r.4 %tmp.62;
-        symbol [ r %r.4 84 44 45 ];
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_84_12_94_12_for_test;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_84_12_94_12_for_end:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_82_44_95_8_stop:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_82_8_95_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 82 ]
-        %tmp.65 = lgetv %c.1;
-        symbol [ c %tmp.65 82 39 40 ];
-        %tmp.66 = add %tmp.65 1;
-        lputv %c.1 %tmp.66;
-        symbol [ c %c.1 82 39 40 ];
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_82_8_95_8_for_test;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_82_8_95_8_for_end:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_81_36_96_4_stop:
+        symbol [ k %k.6 168 54 55 ];
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_168_24_170_24_for_test;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_168_24_170_24_for_end:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 171 24 ]
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_171_24_174_24_if_stmt:
+        %tmp.57 = lgetv %r.4;
+        symbol [ r %tmp.57 171 29 30 ];
+        %tmp.58 = lgetv %runStart.3;
+        symbol [ runStart %tmp.58 171 33 41 ];
+        %tmp.59 = sub %tmp.57 %tmp.58;
+        %tmp.60 = 4;
+        %tmp.61 = gte %tmp.59 %tmp.60;
+        bf %tmp.61 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_171_24_174_24_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_171_24_174_24_if_true:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_171_49_174_24_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 172 28 ]
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_171_49_174_24_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_171_49_174_24_stop" ]
+        %mid.7 = local;
+        symbol [ mid %mid.7 172 32 35 ];
+        %tmp.62 = lgetv %runStart.3;
+        symbol [ runStart %tmp.62 172 38 46 ];
+        %tmp.63 = lgetv %r.4;
+        symbol [ r %tmp.63 172 50 51 ];
+        %tmp.64 = lgetv %runStart.3;
+        symbol [ runStart %tmp.64 172 54 62 ];
+        %tmp.65 = sub %tmp.63 %tmp.64;
+        %tmp.66 = 2;
+        %tmp.67 = div %tmp.65 %tmp.66;
+        %tmp.68 = add %tmp.62 %tmp.67;
+        lputv %mid.7 %tmp.68;
+        symbol [ mid %mid.7 172 32 35 ];
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 173 28 ]
+        symbol [ _bombSpawns %tmp.70 173 28 39 ];
+        %tmp.70 = getv ? :_bombSpawns;
+        symbol [ add %tmp.71 173 40 43 ];
+        %tmp.71 = getv function %tmp.70 :add;
+        %tmp.72 = lgetv %mid.7;
+        symbol [ mid %tmp.72 173 44 47 ];
+        %tmp.73 = lgetv %grid;
+        symbol [ grid %tmp.73 173 50 54 ];
+        symbol [ cols %tmp.74 173 55 59 ];
+        %tmp.74 = getv %tmp.73 :cols;
+        %tmp.75 = mul %tmp.72 %tmp.74;
+        %tmp.76 = lgetv %c.1;
+        symbol [ c %tmp.76 173 62 63 ];
+        %tmp.77 = add %tmp.75 %tmp.76;
+        invoke %tmp.70 %tmp.71(%tmp.77);
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_171_49_174_24_stop:
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_171_24_174_24_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_171_24_174_24_if_end:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_167_68_175_20_stop:
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_167_20_175_20_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_167_20_175_20_if_end:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 176 20 ]
+        %tmp.78 = lgetv %v.5;
+        symbol [ v %tmp.78 176 29 30 ];
+        lputv %runVal.2 %tmp.78;
+        symbol [ runVal %runVal.2 176 20 26 ];
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 176 32 ]
+        %tmp.79 = lgetv %r.4;
+        symbol [ r %tmp.79 176 43 44 ];
+        lputv %runStart.3 %tmp.79;
+        symbol [ runStart %runStart.3 176 32 40 ];
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_166_33_177_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_166_16_177_16_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_166_16_177_16_if_end:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_164_49_178_12_stop:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_164_12_178_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 164 ]
+        %tmp.82 = lgetv %r.4;
+        symbol [ r %tmp.82 164 44 45 ];
+        %tmp.83 = add %tmp.82 1;
+        lputv %r.4 %tmp.83;
+        symbol [ r %r.4 164 44 45 ];
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_164_12_178_12_for_test;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_164_12_178_12_for_end:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_162_44_179_8_stop:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_162_8_179_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 162 ]
+        %tmp.86 = lgetv %c.1;
+        symbol [ c %tmp.86 162 39 40 ];
+        %tmp.87 = add %tmp.86 1;
+        lputv %c.1 %tmp.87;
+        symbol [ c %c.1 162 39 40 ];
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_162_8_179_8_for_test;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_162_8_179_8_for_end:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_161_36_180_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc"; @line = 100; @symbol_functiondef = [anyMatch,100,13,21]; @symbol_param<0> = [grid,100,22,26]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc"; @line = 184; @symbol_functiondef = [anyMatch,184,13,21]; @symbol_param<0> = [grid,184,22,26]; ]
     function anyMatch(grid) {
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_100_28_124_4_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 101 8 ]
-        for @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_101_8_111_8_for_test @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_101_8_111_8_for_incr @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_101_8_111_8_for_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_101_8_111_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_101_8_111_8_for_begin" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_101_8_111_8_for_end" ]
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_184_28_208_4_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 185 8 ]
+        for @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_185_8_195_8_for_test @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_185_8_195_8_for_incr @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_185_8_195_8_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_185_8_195_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_185_8_195_8_for_begin" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_185_8_195_8_for_end" ]
         %r.1 = local;
-        symbol [ r %r.1 101 17 18 ];
+        symbol [ r %r.1 185 17 18 ];
         %tmp.1 = 0;
         lputv %r.1 %tmp.1;
-        symbol [ r %r.1 101 17 18 ];
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_101_8_111_8_for_test:
+        symbol [ r %r.1 185 17 18 ];
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_185_8_195_8_for_test:
         %tmp.2 = lgetv %r.1;
-        symbol [ r %tmp.2 101 24 25 ];
+        symbol [ r %tmp.2 185 24 25 ];
         %tmp.3 = lgetv %grid;
-        symbol [ grid %tmp.3 101 28 32 ];
-        symbol [ rows %tmp.4 101 33 37 ];
+        symbol [ grid %tmp.3 185 28 32 ];
+        symbol [ rows %tmp.4 185 33 37 ];
         %tmp.4 = getv %tmp.3 :rows;
         %tmp.5 = lt %tmp.2 %tmp.4;
-        bf %tmp.5 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_101_8_111_8_for_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_101_8_111_8_for_begin:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_101_44_111_8_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 102 12 ]
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_101_44_111_8_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_101_44_111_8_stop" ]
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_185_8_195_8_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_185_8_195_8_for_begin:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_185_44_195_8_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 186 12 ]
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_185_44_195_8_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_185_44_195_8_stop" ]
         %runVal.2 = local;
-        symbol [ runVal %runVal.2 102 16 22 ];
+        symbol [ runVal %runVal.2 186 16 22 ];
         %tmp.6 = lgetv %grid;
-        symbol [ grid %tmp.6 102 25 29 ];
-        symbol [ cells %tmp.7 102 30 35 ];
+        symbol [ grid %tmp.6 186 25 29 ];
+        symbol [ cells %tmp.7 186 30 35 ];
         %tmp.7 = getv %tmp.6 :cells;
         %tmp.8 = lgetv %r.1;
-        symbol [ r %tmp.8 102 36 37 ];
+        symbol [ r %tmp.8 186 36 37 ];
         %tmp.9 = lgetv %grid;
-        symbol [ grid %tmp.9 102 40 44 ];
-        symbol [ cols %tmp.10 102 45 49 ];
+        symbol [ grid %tmp.9 186 40 44 ];
+        symbol [ cols %tmp.10 186 45 49 ];
         %tmp.10 = getv %tmp.9 :cols;
         %tmp.11 = mul %tmp.8 %tmp.10;
         %tmp.12 = agetv %tmp.7 %tmp.11;
         lputv %runVal.2 %tmp.12;
-        symbol [ runVal %runVal.2 102 16 22 ];
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 103 12 ]
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_101_44_111_8_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_101_44_111_8_stop" ]
+        symbol [ runVal %runVal.2 186 16 22 ];
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 187 12 ]
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_185_44_195_8_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_185_44_195_8_stop" ]
         %runLen.3 = local;
-        symbol [ runLen %runLen.3 103 16 22 ];
+        symbol [ runLen %runLen.3 187 16 22 ];
         %tmp.13 = 1;
         lputv %runLen.3 %tmp.13;
-        symbol [ runLen %runLen.3 103 16 22 ];
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 104 12 ]
-        for @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_104_12_110_12_for_test @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_104_12_110_12_for_incr @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_104_12_110_12_for_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_104_12_110_12_for_init:
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_104_12_110_12_for_begin" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_104_12_110_12_for_end" ]
+        symbol [ runLen %runLen.3 187 16 22 ];
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 188 12 ]
+        for @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_188_12_194_12_for_test @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_188_12_194_12_for_incr @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_188_12_194_12_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_188_12_194_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_188_12_194_12_for_begin" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_188_12_194_12_for_end" ]
         %c.4 = local;
-        symbol [ c %c.4 104 21 22 ];
+        symbol [ c %c.4 188 21 22 ];
         %tmp.14 = 1;
         lputv %c.4 %tmp.14;
-        symbol [ c %c.4 104 21 22 ];
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_104_12_110_12_for_test:
+        symbol [ c %c.4 188 21 22 ];
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_188_12_194_12_for_test:
         %tmp.15 = lgetv %c.4;
-        symbol [ c %tmp.15 104 28 29 ];
+        symbol [ c %tmp.15 188 28 29 ];
         %tmp.16 = lgetv %grid;
-        symbol [ grid %tmp.16 104 32 36 ];
-        symbol [ cols %tmp.17 104 37 41 ];
+        symbol [ grid %tmp.16 188 32 36 ];
+        symbol [ cols %tmp.17 188 37 41 ];
         %tmp.17 = getv %tmp.16 :cols;
         %tmp.18 = lt %tmp.15 %tmp.17;
-        bf %tmp.18 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_104_12_110_12_for_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_104_12_110_12_for_begin:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_104_48_110_12_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 105 16 ]
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_104_48_110_12_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_104_48_110_12_stop" ]
+        bf %tmp.18 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_188_12_194_12_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_188_12_194_12_for_begin:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_188_48_194_12_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 189 16 ]
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_188_48_194_12_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_188_48_194_12_stop" ]
         %v.5 = local;
-        symbol [ v %v.5 105 20 21 ];
+        symbol [ v %v.5 189 20 21 ];
         %tmp.19 = lgetv %grid;
-        symbol [ grid %tmp.19 105 24 28 ];
-        symbol [ cells %tmp.20 105 29 34 ];
+        symbol [ grid %tmp.19 189 24 28 ];
+        symbol [ cells %tmp.20 189 29 34 ];
         %tmp.20 = getv %tmp.19 :cells;
         %tmp.21 = lgetv %r.1;
-        symbol [ r %tmp.21 105 35 36 ];
+        symbol [ r %tmp.21 189 35 36 ];
         %tmp.22 = lgetv %grid;
-        symbol [ grid %tmp.22 105 39 43 ];
-        symbol [ cols %tmp.23 105 44 48 ];
+        symbol [ grid %tmp.22 189 39 43 ];
+        symbol [ cols %tmp.23 189 44 48 ];
         %tmp.23 = getv %tmp.22 :cols;
         %tmp.24 = mul %tmp.21 %tmp.23;
         %tmp.25 = lgetv %c.4;
-        symbol [ c %tmp.25 105 51 52 ];
+        symbol [ c %tmp.25 189 51 52 ];
         %tmp.26 = add %tmp.24 %tmp.25;
         %tmp.27 = agetv %tmp.20 %tmp.26;
         lputv %v.5 %tmp.27;
-        symbol [ v %v.5 105 20 21 ];
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 106 16 ]
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_106_16_109_49_if_stmt:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_106_20_106_39_begin:
+        symbol [ v %v.5 189 20 21 ];
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 190 16 ]
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_190_16_193_49_if_stmt:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_190_20_190_39_begin:
         %tmp.28 = lgetv %v.5;
-        symbol [ v %tmp.28 106 20 21 ];
+        symbol [ v %tmp.28 190 20 21 ];
         %tmp.29 = lgetv %runVal.2;
-        symbol [ runVal %tmp.29 106 25 31 ];
+        symbol [ runVal %tmp.29 190 25 31 ];
         %tmp.30 = eq %tmp.28 %tmp.29;
-        bf %tmp.30 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_106_16_109_49_if_else_false;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_106_35_106_39_true:
+        bf %tmp.30 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_190_16_193_49_if_else_false;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_190_35_190_39_true:
         %tmp.31 = lgetv %v.5;
-        symbol [ v %tmp.31 106 35 36 ];
-        symbol [ TILE_EMPTY %tmp.33 106 39 49 ];
+        symbol [ v %tmp.31 190 35 36 ];
+        symbol [ TILE_EMPTY %tmp.33 190 39 49 ];
         %tmp.33 = getv ? :TILE_EMPTY;
         %tmp.34 = gt %tmp.31 %tmp.33;
         push %tmp.34;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_106_35_106_39_end:
-        %tmp.35 = phi [%tmp.30 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_106_20_106_39_begin] [%tmp.34 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_106_35_106_39_true] [%tmp.35 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_106_35_106_39_end];
-        bf %tmp.35 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_106_16_109_49_if_else_false;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_106_16_109_49_if_true:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_106_51_109_16_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 107 20 ]
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_190_35_190_39_end:
+        %tmp.35 = phi [%tmp.30 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_190_20_190_39_begin] [%tmp.34 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_190_35_190_39_true] [%tmp.35 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_190_35_190_39_end];
+        bf %tmp.35 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_190_16_193_49_if_else_false;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_190_16_193_49_if_true:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_190_51_193_16_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 191 20 ]
         %tmp.36 = lgetv %runLen.3;
-        symbol [ runLen %tmp.36 107 29 35 ];
+        symbol [ runLen %tmp.36 191 29 35 ];
         %tmp.37 = 1;
         %tmp.38 = add %tmp.36 %tmp.37;
         lputv %runLen.3 %tmp.38;
-        symbol [ runLen %runLen.3 107 20 26 ];
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 108 20 ]
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_108_20_108_52_if_stmt:
+        symbol [ runLen %runLen.3 191 20 26 ];
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 192 20 ]
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_192_20_192_52_if_stmt:
         %tmp.39 = lgetv %runLen.3;
-        symbol [ runLen %tmp.39 108 24 30 ];
+        symbol [ runLen %tmp.39 192 24 30 ];
         %tmp.40 = 3;
         %tmp.41 = gte %tmp.39 %tmp.40;
-        bf %tmp.41 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_108_20_108_52_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_108_20_108_52_if_true:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_108_37_108_52_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 108 39 ]
+        bf %tmp.41 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_192_20_192_52_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_192_20_192_52_if_true:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_192_37_192_52_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 192 39 ]
         %tmp.42 = true;
         ret %tmp.42;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_108_37_108_52_stop:
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_108_20_108_52_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_108_20_108_52_if_end:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_106_51_109_16_stop:
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_106_16_109_49_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_106_16_109_49_if_else_false:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_109_23_109_49_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 109 25 ]
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_192_37_192_52_stop:
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_192_20_192_52_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_192_20_192_52_if_end:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_190_51_193_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_190_16_193_49_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_190_16_193_49_if_else_false:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_193_23_193_49_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 193 25 ]
         %tmp.43 = lgetv %v.5;
-        symbol [ v %tmp.43 109 34 35 ];
+        symbol [ v %tmp.43 193 34 35 ];
         lputv %runVal.2 %tmp.43;
-        symbol [ runVal %runVal.2 109 25 31 ];
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 109 37 ]
+        symbol [ runVal %runVal.2 193 25 31 ];
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 193 37 ]
         %tmp.44 = 1;
         lputv %runLen.3 %tmp.44;
-        symbol [ runLen %runLen.3 109 37 43 ];
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_109_23_109_49_stop:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_106_16_109_49_if_end:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_104_48_110_12_stop:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_104_12_110_12_for_incr:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 104 ]
+        symbol [ runLen %runLen.3 193 37 43 ];
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_193_23_193_49_stop:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_190_16_193_49_if_end:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_188_48_194_12_stop:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_188_12_194_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 188 ]
         %tmp.47 = lgetv %c.4;
-        symbol [ c %tmp.47 104 43 44 ];
+        symbol [ c %tmp.47 188 43 44 ];
         %tmp.48 = add %tmp.47 1;
         lputv %c.4 %tmp.48;
-        symbol [ c %c.4 104 43 44 ];
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_104_12_110_12_for_test;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_104_12_110_12_for_end:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_101_44_111_8_stop:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_101_8_111_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 101 ]
+        symbol [ c %c.4 188 43 44 ];
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_188_12_194_12_for_test;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_188_12_194_12_for_end:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_185_44_195_8_stop:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_185_8_195_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 185 ]
         %tmp.51 = lgetv %r.1;
-        symbol [ r %tmp.51 101 39 40 ];
+        symbol [ r %tmp.51 185 39 40 ];
         %tmp.52 = add %tmp.51 1;
         lputv %r.1 %tmp.52;
-        symbol [ r %r.1 101 39 40 ];
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_101_8_111_8_for_test;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_101_8_111_8_for_end:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 112 8 ]
-        for @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_112_8_122_8_for_test @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_112_8_122_8_for_incr @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_112_8_122_8_for_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_112_8_122_8_for_init:
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_112_8_122_8_for_begin" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_112_8_122_8_for_end" ]
+        symbol [ r %r.1 185 39 40 ];
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_185_8_195_8_for_test;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_185_8_195_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 196 8 ]
+        for @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_196_8_206_8_for_test @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_196_8_206_8_for_incr @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_196_8_206_8_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_196_8_206_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_196_8_206_8_for_begin" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_196_8_206_8_for_end" ]
         %c.6 = local;
-        symbol [ c %c.6 112 17 18 ];
+        symbol [ c %c.6 196 17 18 ];
         %tmp.53 = 0;
         lputv %c.6 %tmp.53;
-        symbol [ c %c.6 112 17 18 ];
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_112_8_122_8_for_test:
+        symbol [ c %c.6 196 17 18 ];
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_196_8_206_8_for_test:
         %tmp.54 = lgetv %c.6;
-        symbol [ c %tmp.54 112 24 25 ];
+        symbol [ c %tmp.54 196 24 25 ];
         %tmp.55 = lgetv %grid;
-        symbol [ grid %tmp.55 112 28 32 ];
-        symbol [ cols %tmp.56 112 33 37 ];
+        symbol [ grid %tmp.55 196 28 32 ];
+        symbol [ cols %tmp.56 196 33 37 ];
         %tmp.56 = getv %tmp.55 :cols;
         %tmp.57 = lt %tmp.54 %tmp.56;
-        bf %tmp.57 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_112_8_122_8_for_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_112_8_122_8_for_begin:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_112_44_122_8_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 113 12 ]
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_112_44_122_8_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_112_44_122_8_stop" ]
+        bf %tmp.57 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_196_8_206_8_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_196_8_206_8_for_begin:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_196_44_206_8_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 197 12 ]
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_196_44_206_8_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_196_44_206_8_stop" ]
         %runVal.7 = local;
-        symbol [ runVal %runVal.7 113 16 22 ];
+        symbol [ runVal %runVal.7 197 16 22 ];
         %tmp.58 = lgetv %grid;
-        symbol [ grid %tmp.58 113 25 29 ];
-        symbol [ cells %tmp.59 113 30 35 ];
+        symbol [ grid %tmp.58 197 25 29 ];
+        symbol [ cells %tmp.59 197 30 35 ];
         %tmp.59 = getv %tmp.58 :cells;
         %tmp.60 = lgetv %c.6;
-        symbol [ c %tmp.60 113 36 37 ];
+        symbol [ c %tmp.60 197 36 37 ];
         %tmp.61 = agetv %tmp.59 %tmp.60;
         lputv %runVal.7 %tmp.61;
-        symbol [ runVal %runVal.7 113 16 22 ];
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 114 12 ]
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_112_44_122_8_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_112_44_122_8_stop" ]
+        symbol [ runVal %runVal.7 197 16 22 ];
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 198 12 ]
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_196_44_206_8_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_196_44_206_8_stop" ]
         %runLen.8 = local;
-        symbol [ runLen %runLen.8 114 16 22 ];
+        symbol [ runLen %runLen.8 198 16 22 ];
         %tmp.62 = 1;
         lputv %runLen.8 %tmp.62;
-        symbol [ runLen %runLen.8 114 16 22 ];
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 115 12 ]
-        for @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_115_12_121_12_for_test @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_115_12_121_12_for_incr @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_115_12_121_12_for_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_115_12_121_12_for_init:
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_115_12_121_12_for_begin" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_115_12_121_12_for_end" ]
+        symbol [ runLen %runLen.8 198 16 22 ];
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 199 12 ]
+        for @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_199_12_205_12_for_test @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_199_12_205_12_for_incr @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_199_12_205_12_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_199_12_205_12_for_init:
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_199_12_205_12_for_begin" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_199_12_205_12_for_end" ]
         %r.9 = local;
-        symbol [ r %r.9 115 21 22 ];
+        symbol [ r %r.9 199 21 22 ];
         %tmp.63 = 1;
         lputv %r.9 %tmp.63;
-        symbol [ r %r.9 115 21 22 ];
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_115_12_121_12_for_test:
+        symbol [ r %r.9 199 21 22 ];
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_199_12_205_12_for_test:
         %tmp.64 = lgetv %r.9;
-        symbol [ r %tmp.64 115 28 29 ];
+        symbol [ r %tmp.64 199 28 29 ];
         %tmp.65 = lgetv %grid;
-        symbol [ grid %tmp.65 115 32 36 ];
-        symbol [ rows %tmp.66 115 37 41 ];
+        symbol [ grid %tmp.65 199 32 36 ];
+        symbol [ rows %tmp.66 199 37 41 ];
         %tmp.66 = getv %tmp.65 :rows;
         %tmp.67 = lt %tmp.64 %tmp.66;
-        bf %tmp.67 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_115_12_121_12_for_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_115_12_121_12_for_begin:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_115_48_121_12_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 116 16 ]
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_115_48_121_12_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_115_48_121_12_stop" ]
+        bf %tmp.67 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_199_12_205_12_for_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_199_12_205_12_for_begin:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_199_48_205_12_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 200 16 ]
+        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_199_48_205_12_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_199_48_205_12_stop" ]
         %v.10 = local;
-        symbol [ v %v.10 116 20 21 ];
+        symbol [ v %v.10 200 20 21 ];
         %tmp.68 = lgetv %grid;
-        symbol [ grid %tmp.68 116 24 28 ];
-        symbol [ cells %tmp.69 116 29 34 ];
+        symbol [ grid %tmp.68 200 24 28 ];
+        symbol [ cells %tmp.69 200 29 34 ];
         %tmp.69 = getv %tmp.68 :cells;
         %tmp.70 = lgetv %r.9;
-        symbol [ r %tmp.70 116 35 36 ];
+        symbol [ r %tmp.70 200 35 36 ];
         %tmp.71 = lgetv %grid;
-        symbol [ grid %tmp.71 116 39 43 ];
-        symbol [ cols %tmp.72 116 44 48 ];
+        symbol [ grid %tmp.71 200 39 43 ];
+        symbol [ cols %tmp.72 200 44 48 ];
         %tmp.72 = getv %tmp.71 :cols;
         %tmp.73 = mul %tmp.70 %tmp.72;
         %tmp.74 = lgetv %c.6;
-        symbol [ c %tmp.74 116 51 52 ];
+        symbol [ c %tmp.74 200 51 52 ];
         %tmp.75 = add %tmp.73 %tmp.74;
         %tmp.76 = agetv %tmp.69 %tmp.75;
         lputv %v.10 %tmp.76;
-        symbol [ v %v.10 116 20 21 ];
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 117 16 ]
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_117_16_120_49_if_stmt:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_117_20_117_39_begin:
+        symbol [ v %v.10 200 20 21 ];
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 201 16 ]
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_201_16_204_49_if_stmt:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_201_20_201_39_begin:
         %tmp.77 = lgetv %v.10;
-        symbol [ v %tmp.77 117 20 21 ];
+        symbol [ v %tmp.77 201 20 21 ];
         %tmp.78 = lgetv %runVal.7;
-        symbol [ runVal %tmp.78 117 25 31 ];
+        symbol [ runVal %tmp.78 201 25 31 ];
         %tmp.79 = eq %tmp.77 %tmp.78;
-        bf %tmp.79 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_117_16_120_49_if_else_false;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_117_35_117_39_true:
+        bf %tmp.79 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_201_16_204_49_if_else_false;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_201_35_201_39_true:
         %tmp.80 = lgetv %v.10;
-        symbol [ v %tmp.80 117 35 36 ];
-        symbol [ TILE_EMPTY %tmp.82 117 39 49 ];
+        symbol [ v %tmp.80 201 35 36 ];
+        symbol [ TILE_EMPTY %tmp.82 201 39 49 ];
         %tmp.82 = getv ? :TILE_EMPTY;
         %tmp.83 = gt %tmp.80 %tmp.82;
         push %tmp.83;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_117_35_117_39_end:
-        %tmp.84 = phi [%tmp.79 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_117_20_117_39_begin] [%tmp.83 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_117_35_117_39_true] [%tmp.84 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_117_35_117_39_end];
-        bf %tmp.84 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_117_16_120_49_if_else_false;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_117_16_120_49_if_true:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_117_51_120_16_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 118 20 ]
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_201_35_201_39_end:
+        %tmp.84 = phi [%tmp.79 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_201_20_201_39_begin] [%tmp.83 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_201_35_201_39_true] [%tmp.84 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_201_35_201_39_end];
+        bf %tmp.84 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_201_16_204_49_if_else_false;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_201_16_204_49_if_true:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_201_51_204_16_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 202 20 ]
         %tmp.85 = lgetv %runLen.8;
-        symbol [ runLen %tmp.85 118 29 35 ];
+        symbol [ runLen %tmp.85 202 29 35 ];
         %tmp.86 = 1;
         %tmp.87 = add %tmp.85 %tmp.86;
         lputv %runLen.8 %tmp.87;
-        symbol [ runLen %runLen.8 118 20 26 ];
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 119 20 ]
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_119_20_119_52_if_stmt:
+        symbol [ runLen %runLen.8 202 20 26 ];
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 203 20 ]
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_203_20_203_52_if_stmt:
         %tmp.88 = lgetv %runLen.8;
-        symbol [ runLen %tmp.88 119 24 30 ];
+        symbol [ runLen %tmp.88 203 24 30 ];
         %tmp.89 = 3;
         %tmp.90 = gte %tmp.88 %tmp.89;
-        bf %tmp.90 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_119_20_119_52_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_119_20_119_52_if_true:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_119_37_119_52_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 119 39 ]
+        bf %tmp.90 @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_203_20_203_52_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_203_20_203_52_if_true:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_203_37_203_52_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 203 39 ]
         %tmp.91 = true;
         ret %tmp.91;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_119_37_119_52_stop:
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_119_20_119_52_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_119_20_119_52_if_end:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_117_51_120_16_stop:
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_117_16_120_49_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_117_16_120_49_if_else_false:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_120_23_120_49_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 120 25 ]
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_203_37_203_52_stop:
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_203_20_203_52_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_203_20_203_52_if_end:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_201_51_204_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_201_16_204_49_if_end;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_201_16_204_49_if_else_false:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_204_23_204_49_start:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 204 25 ]
         %tmp.92 = lgetv %v.10;
-        symbol [ v %tmp.92 120 34 35 ];
+        symbol [ v %tmp.92 204 34 35 ];
         lputv %runVal.7 %tmp.92;
-        symbol [ runVal %runVal.7 120 25 31 ];
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 120 37 ]
+        symbol [ runVal %runVal.7 204 25 31 ];
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 204 37 ]
         %tmp.93 = 1;
         lputv %runLen.8 %tmp.93;
-        symbol [ runLen %runLen.8 120 37 43 ];
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_120_23_120_49_stop:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_117_16_120_49_if_end:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_115_48_121_12_stop:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_115_12_121_12_for_incr:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 115 ]
+        symbol [ runLen %runLen.8 204 37 43 ];
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_204_23_204_49_stop:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_201_16_204_49_if_end:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_199_48_205_12_stop:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_199_12_205_12_for_incr:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 199 ]
         %tmp.96 = lgetv %r.9;
-        symbol [ r %tmp.96 115 43 44 ];
+        symbol [ r %tmp.96 199 43 44 ];
         %tmp.97 = add %tmp.96 1;
         lputv %r.9 %tmp.97;
-        symbol [ r %r.9 115 43 44 ];
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_115_12_121_12_for_test;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_115_12_121_12_for_end:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_112_44_122_8_stop:
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_112_8_122_8_for_incr:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 112 ]
+        symbol [ r %r.9 199 43 44 ];
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_199_12_205_12_for_test;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_199_12_205_12_for_end:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_196_44_206_8_stop:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_196_8_206_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 196 ]
         %tmp.100 = lgetv %c.6;
-        symbol [ c %tmp.100 112 39 40 ];
+        symbol [ c %tmp.100 196 39 40 ];
         %tmp.101 = add %tmp.100 1;
         lputv %c.6 %tmp.101;
-        symbol [ c %c.6 112 39 40 ];
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_112_8_122_8_for_test;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_112_8_122_8_for_end:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 123 8 ]
+        symbol [ c %c.6 196 39 40 ];
+        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_196_8_206_8_for_test;
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_196_8_206_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc" 207 8 ]
         %tmp.102 = false;
         ret %tmp.102;
-_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_100_28_124_4_stop:
+_Users_kkorolczuk_work_garmin_gemmatch_source_MatchEngine_mc_184_28_208_4_stop:
     }
 }
-[ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc"; @line = 15; ]
+[ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/MatchEngine.mc"; @line = 23; ]
 <init> {
 }

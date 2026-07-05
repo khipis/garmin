@@ -44,6 +44,30 @@ class Ball {
         return [x - h, y - h, x + h, y + h];
     }
 
+    // Clone position/direction from another ball for the MULTIBALL power-up
+    // — mirrors the vertical component so the two balls diverge instead of
+    // travelling in lockstep, and guarantees at least a little vertical
+    // separation even if the source ball was moving perfectly flat.
+    function cloneFrom(src) {
+        x = src.x; y = src.y;
+        vx = src.vx;
+        vy = -src.vy;
+        if (vy > -0.6 && vy < 0.6) { vy = (src.vx >= 0) ? 1.4 : -1.4; }
+        size = src.size;
+        maxSpeed = src.maxSpeed;
+    }
+
+    // 0..1 — how close the ball is to its speed cap. Drives the colour
+    // shift from cool cyan (slow) to hot pink/red (near max) so escalating
+    // rallies are visually obvious, not just numerically faster.
+    function speedRatio() {
+        var s = Math.sqrt(vx * vx + vy * vy);
+        var r = s / maxSpeed;
+        if (r > 1.0) { r = 1.0; }
+        if (r < 0.0) { r = 0.0; }
+        return r;
+    }
+
     // Advance one tick. Returns:
     //    0 nothing special
     //   -1 ball passed the LEFT wall (right player scored)
@@ -107,11 +131,20 @@ class Ball {
 
     function draw(dc) {
         var h = size / 2;
+        // Colour ramps from neon cyan (slow) to hot pink (near max speed) —
+        // makes escalating rallies read as visibly more intense, not just
+        // faster on the clock.
+        var r = speedRatio();
+        var cR = (0x00 + (0xFF - 0x00) * r).toNumber();
+        var cG = (0xEE + (0x22 - 0xEE) * r).toNumber();
+        var cB = (0xFF + (0xAA - 0xFF) * r).toNumber();
+        var body  = (cR << 16) | (cG << 8) | cB;
+        var glow  = ((cR / 4).toNumber() << 16) | ((cG / 4).toNumber() << 8) | ((cB / 3).toNumber());
         // Glow halo
-        dc.setColor(0x115566, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(glow, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(x - h - 1, y - h - 1, size + 2, size + 2);
-        // Body — neon cyan
-        dc.setColor(0x00EEFF, Graphics.COLOR_TRANSPARENT);
+        // Body
+        dc.setColor(body, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(x - h, y - h, size, size);
     }
 }

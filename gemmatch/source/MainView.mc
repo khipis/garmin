@@ -68,9 +68,39 @@ class MainView extends WatchUi.View {
         if (_ctrl.state == GS_MENU) { _drawMenu(dc); return; }
 
         _layoutBoard();
+        if (_ctrl.shakeT > 0) {
+            var amt = 2 + (_ctrl.shakeT / 5);
+            if (amt > 5) { amt = 5; }
+            _bx = _bx + (((_ctrl.shakeT & 1) == 0) ? amt : -amt);
+            _by = _by + (((_ctrl.shakeT % 3) == 0) ? amt : -amt);
+        }
         _drawBoard(dc);
         _drawHUD(dc);
+        _drawChainFx(dc);
         if (_ctrl.state == GS_OVER) { _drawOver(dc); }
+    }
+
+    // ── Chain-reaction feedback overlays ────────────────────────────────
+    hidden function _drawChainFx(dc) {
+        var cx = _sw / 2;
+        var cy = _by + (_cellPx * _ctrl.grid.rows) / 2;
+
+        // Floating "+score" popup for the current cascade step.
+        if (_ctrl.chainPopT > 0 && _ctrl.lastClearScore > 0) {
+            var rise = (700 - _ctrl.chainPopT) / 12;
+            var col  = (_ctrl.cascadeDepth >= 3) ? 0xFFCC22 : 0x66DDFF;
+            dc.setColor(col, Graphics.COLOR_TRANSPARENT);
+            var label = "+" + _ctrl.lastClearScore.format("%d");
+            if (_ctrl.cascadeDepth >= 2) { label = label + "  x" + _ctrl.cascadeDepth.format("%d"); }
+            dc.drawText(cx, cy - rise, Graphics.FONT_TINY, label, Graphics.TEXT_JUSTIFY_CENTER);
+        }
+
+        // Big "BOOM!" banner when a bomb detonates.
+        if (_ctrl.boomT > 0) {
+            var flick = ((_ctrl.boomT / 90) % 2 == 0) ? 0xFF6600 : 0xFFEE44;
+            dc.setColor(flick, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, _by - 16, Graphics.FONT_SMALL, "BOOM!", Graphics.TEXT_JUSTIFY_CENTER);
+        }
     }
 
     // ── Layout helper ────────────────────────────────────────────────
@@ -223,14 +253,15 @@ class MainView extends WatchUi.View {
         var aState  = _ctrl.animState;
         var isSwap  = (aState == ANIM_SWAP);
         var isFlash = (aState == ANIM_FLASH);
+        var isFall  = (aState == ANIM_FALL);
         var flashOn = isFlash && (_ctrl.animFrame % 2 == 0);
 
-        // Cell backgrounds
+        // Cell backgrounds — subtle checkerboard for a touch of depth.
         for (var r = 0; r < g.rows; r++) {
             for (var c = 0; c < g.cols; c++) {
                 var px = _bx + c * _cellPx;
                 var py = _by + r * _cellPx;
-                dc.setColor(0x0A0A18, Graphics.COLOR_TRANSPARENT);
+                dc.setColor(((r + c) % 2 == 0) ? 0x0A0A18 : 0x0D0D22, Graphics.COLOR_TRANSPARENT);
                 dc.fillRectangle(px + 1, py + 1, _cellPx - 2, _cellPx - 2);
             }
         }
@@ -264,7 +295,7 @@ class MainView extends WatchUi.View {
                 }
                 var t  = g.get(r2, c2);
                 var gx = _bx + c2 * _cellPx + _cellPx / 2;
-                var gy = _by + r2 * _cellPx + _cellPx / 2;
+                var gy = isFall ? _fallGy(r2, c2) : (_by + r2 * _cellPx + _cellPx / 2);
                 var picked = (_ctrl.selR == r2 && _ctrl.selC == c2);
                 if (flashOn && marks != null && marks[r2 * g.cols + c2]) {
                     Tile.drawFlash(dc, t, gx, gy, _cellPx);
@@ -280,6 +311,22 @@ class MainView extends WatchUi.View {
         dc.setColor(0x334455, Graphics.COLOR_TRANSPARENT);
         dc.drawRectangle(_bx - 1, _by - 1,
                          _cellPx * g.cols + 2, _cellPx * g.rows + 2);
+    }
+
+    // Interpolated Y for a gem currently tumbling into place during
+    // ANIM_FALL — eased-in (accelerating) to read like real gravity.
+    // Freshly-spawned gems have a negative fallFrom row so they drop in
+    // from above the visible board top.
+    hidden function _fallGy(r, c) {
+        var g = _ctrl.grid;
+        var fromRow = _ctrl.fallFrom[r * g.cols + c];
+        var f = _ctrl.animFrame;
+        if (f > ANIM_FALL_FRAMES) { f = ANIM_FALL_FRAMES; }
+        var t256 = f * 256 / ANIM_FALL_FRAMES;
+        var p256 = (t256 * t256) / 256;
+        var fromY = _by + fromRow * _cellPx + _cellPx / 2;
+        var toY   = _by + r * _cellPx + _cellPx / 2;
+        return fromY + (toY - fromY) * p256 / 256;
     }
 
     hidden function _drawSwapGems(dc) {
@@ -353,7 +400,11 @@ class MainView extends WatchUi.View {
 
         // Bottom — transient message or hint
         if (_ctrl.msgT > 0 && _ctrl.msg.length() > 0) {
-            dc.setColor(0xFF66AA, Graphics.COLOR_TRANSPARENT);
+            var mc = 0xFF66AA;
+            if (_ctrl.lastCascade >= 6)      { mc = 0xFF3333; }
+            else if (_ctrl.lastCascade >= 4) { mc = 0xFF9922; }
+            else if (_ctrl.lastCascade >= 2) { mc = 0x66DDFF; }
+            dc.setColor(mc, Graphics.COLOR_TRANSPARENT);
             dc.drawText(cx, _sh - 16, Graphics.FONT_XTINY,
                         _ctrl.msg, Graphics.TEXT_JUSTIFY_CENTER);
         } else {
@@ -371,8 +422,9 @@ class MainView extends WatchUi.View {
 
     // ── Game-over overlay ────────────────────────────────────────────
     hidden function _drawOver(dc) {
+        var hasStats = (_ctrl.bestChainRun >= 2 || _ctrl.bombsPopped > 0);
         var bw = _sw * 64 / 100; if (bw < 150) { bw = 150; }
-        var bh = _sh * 34 / 100; if (bh < 100) { bh = 100; }
+        var bh = _sh * (hasStats ? 48 : 34) / 100; if (bh < (hasStats ? 118 : 100)) { bh = hasStats ? 118 : 100; }
         var bx = (_sw - bw) / 2;
         var by = (_sh - bh) / 2;
         dc.setColor(0x0A0A14, Graphics.COLOR_TRANSPARENT);
@@ -411,6 +463,24 @@ class MainView extends WatchUi.View {
                         "Best " + best.format("%d"),
                         Graphics.TEXT_JUSTIFY_CENTER);
         }
+
+        if (hasStats) {
+            var statsY = by + 64;
+            if (_ctrl.bestChainRun >= 2) {
+                dc.setColor(0x66DDFF, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(cx, statsY, Graphics.FONT_XTINY,
+                            "Best chain x" + _ctrl.bestChainRun.format("%d"),
+                            Graphics.TEXT_JUSTIFY_CENTER);
+                statsY = statsY + 15;
+            }
+            if (_ctrl.bombsPopped > 0) {
+                dc.setColor(0xFF9922, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(cx, statsY, Graphics.FONT_XTINY,
+                            "Bombs popped " + _ctrl.bombsPopped.format("%d"),
+                            Graphics.TEXT_JUSTIFY_CENTER);
+            }
+        }
+
         dc.setColor(0x88AABB, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, by + bh - 14, Graphics.FONT_XTINY,
                     "Any key for menu", Graphics.TEXT_JUSTIFY_CENTER);

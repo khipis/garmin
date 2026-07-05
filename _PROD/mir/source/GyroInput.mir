@@ -1,340 +1,407 @@
-[ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc"; @line = 22; @symbol_classdef = [GyroInput,22,6,15]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc"; @line = 18; @symbol_usingdef<0> = [Toybox,18,6,12]; @symbol_usingdef<1> = [Math,18,13,17]; ]
+using Toybox.Math;
+[ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc"; @line = 20; @symbol_classdef = [GyroInput,20,6,15]; ]
 class GyroInput {
-    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc"; @line = 22; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc"; @line = 20; ]
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc"; @line = 22; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc"; @line = 20; ]
     static
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc"; @line = 24; @position = 8; @symbol_vardef = [tiltX,24,8,13]; ]
-    var tiltX;
-    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc"; @line = 25; @position = 8; @symbol_vardef = [tiltY,25,8,13]; ]
-    var tiltY;
-    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc"; @line = 27; @position = 15; @symbol_vardef = [_calX,27,15,20]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc"; @line = 23; @position = 8; @symbol_vardef = [tYaw,23,8,12]; ]
+    var tYaw;
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc"; @line = 24; @position = 8; @symbol_vardef = [tPitch,24,8,14]; ]
+    var tPitch;
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc"; @line = 26; @position = 15; @symbol_vardef = [_calX,26,15,20]; ]
     protected
     var _calX;
-    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc"; @line = 28; @position = 15; @symbol_vardef = [_calY,28,15,20]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc"; @line = 27; @position = 15; @symbol_vardef = [_calY,27,15,20]; ]
     protected
     var _calY;
-    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc"; @line = 29; @position = 15; @symbol_vardef = [_cal,29,15,19]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc"; @line = 28; @position = 15; @symbol_vardef = [_cal,28,15,19]; ]
     protected
     var _cal;
-    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc"; @line = 30; @position = 15; @symbol_vardef = [_sens,30,15,20]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc"; @line = 29; @position = 15; @symbol_vardef = [_sens,29,15,20]; ]
     protected
     var _sens;
-    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc"; @line = 32; @symbol_functiondef = [initialize,32,13,23]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc"; @line = 31; @symbol_functiondef = [initialize,31,13,23]; ]
     function initialize() as Void {
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_32_26_39_4_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc" 33 8 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_31_26_38_4_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 32 8 ]
         %tmp.1 = 0.0;
-        symbol [ tiltX ? 33 8 13 ];
-        putv self :tiltX %tmp.1;
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc" 34 8 ]
+        symbol [ tYaw ? 32 8 12 ];
+        putv self :tYaw %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 33 8 ]
         %tmp.2 = 0.0;
-        symbol [ tiltY ? 34 8 13 ];
-        putv self :tiltY %tmp.2;
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc" 35 8 ]
+        symbol [ tPitch ? 33 8 14 ];
+        putv self :tPitch %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 34 8 ]
         %tmp.3 = 0;
-        symbol [ _calX ? 35 8 13 ];
+        symbol [ _calX ? 34 8 13 ];
         putv self :_calX %tmp.3;
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc" 36 8 ]
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 35 8 ]
         %tmp.4 = 0;
-        symbol [ _calY ? 36 8 13 ];
+        symbol [ _calY ? 35 8 13 ];
         putv self :_calY %tmp.4;
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc" 37 8 ]
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 36 8 ]
         %tmp.5 = false;
-        symbol [ _cal ? 37 8 12 ];
+        symbol [ _cal ? 36 8 12 ];
         putv self :_cal %tmp.5;
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc" 38 8 ]
-        symbol [ SR_SENS_NORMAL %tmp.7 38 16 30 ];
-        %tmp.7 = getv ? :SR_SENS_NORMAL;
-        symbol [ _sens ? 38 8 13 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 37 8 ]
+        symbol [ SS_SENS_NORMAL %tmp.7 37 17 31 ];
+        %tmp.7 = getv ? :SS_SENS_NORMAL;
+        symbol [ _sens ? 37 8 13 ];
         putv self :_sens %tmp.7;
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_32_26_39_4_stop:
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_31_26_38_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc"; @line = 41; @symbol_functiondef = [setSensitivity,41,13,27]; @symbol_param<0> = [s,41,28,29]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc"; @line = 40; @symbol_functiondef = [setSensitivity,40,13,27]; @symbol_param<0> = [s,40,28,29]; ]
     function setSensitivity(s) {
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_41_31_41_44_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc" 41 33 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_40_31_40_44_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 40 33 ]
         %tmp.1 = lgetv %s;
-        symbol [ s %tmp.1 41 41 42 ];
-        symbol [ _sens ? 41 33 38 ];
+        symbol [ s %tmp.1 40 41 42 ];
+        symbol [ _sens ? 40 33 38 ];
         putv self :_sens %tmp.1;
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_41_31_41_44_stop:
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_40_31_40_44_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc"; @line = 42; @symbol_functiondef = [recalibrate,42,13,24]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc"; @line = 41; @symbol_functiondef = [isCalibrated,41,13,25]; ]
+    function isCalibrated() {
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_41_31_41_46_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 41 33 ]
+        symbol [ _cal %tmp.2 41 40 44 ];
+        %tmp.2 = getv ? :_cal;
+        ret %tmp.2;
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_41_31_41_46_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc"; @line = 42; @symbol_functiondef = [recalibrate,42,13,24]; ]
     function recalibrate() {
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_42_31_42_47_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc" 42 33 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_42_31_42_47_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 42 33 ]
         %tmp.1 = false;
         symbol [ _cal ? 42 33 37 ];
         putv self :_cal %tmp.1;
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_42_31_42_47_stop:
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_42_31_42_47_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc"; @line = 43; @symbol_functiondef = [isCalibrated,43,13,25]; ]
-    function isCalibrated() {
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_43_31_43_46_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc" 43 33 ]
-        symbol [ _cal %tmp.2 43 40 44 ];
-        %tmp.2 = getv ? :_cal;
-        ret %tmp.2;
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_43_31_43_46_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc"; @line = 46; @symbol_functiondef = [feed,46,13,17]; @symbol_param<0> = [ax,46,18,20]; @symbol_param<1> = [ay,46,22,24]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc"; @line = 45; @symbol_functiondef = [feed,45,13,17]; @symbol_param<0> = [ax,45,18,20]; @symbol_param<1> = [ay,45,22,24]; ]
     function feed(ax, ay) {
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_46_26_64_4_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc" 47 8 ]
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_47_8_47_58_if_stmt:
-        symbol [ _cal %tmp.2 47 13 17 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_45_26_76_4_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 46 8 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_46_8_48_8_if_stmt:
+        symbol [ _cal %tmp.2 46 13 17 ];
         %tmp.2 = getv ? :_cal;
         %tmp.3 = not %tmp.2;
-        bf %tmp.3 @_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_47_8_47_58_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_47_8_47_58_if_true:
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_47_19_47_58_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc" 47 21 ]
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_46_8_48_8_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_46_8_48_8_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_46_19_48_8_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 47 12 ]
         %tmp.4 = lgetv %ax;
-        symbol [ ax %tmp.4 47 29 31 ];
-        symbol [ _calX ? 47 21 26 ];
+        symbol [ ax %tmp.4 47 20 22 ];
+        symbol [ _calX ? 47 12 17 ];
         putv self :_calX %tmp.4;
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc" 47 33 ]
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 47 24 ]
         %tmp.5 = lgetv %ay;
-        symbol [ ay %tmp.5 47 41 43 ];
-        symbol [ _calY ? 47 33 38 ];
+        symbol [ ay %tmp.5 47 32 34 ];
+        symbol [ _calY ? 47 24 29 ];
         putv self :_calY %tmp.5;
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc" 47 45 ]
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 47 36 ]
         %tmp.6 = true;
-        symbol [ _cal ? 47 45 49 ];
+        symbol [ _cal ? 47 36 40 ];
         putv self :_cal %tmp.6;
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_47_19_47_58_stop:
-        goto @_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_47_8_47_58_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_47_8_47_58_if_end:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc" 48 8 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_46_26_64_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_46_26_64_4_stop" ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_46_19_48_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_46_8_48_8_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_46_8_48_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 49 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_45_26_76_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_45_26_76_4_stop" ]
         %sc.1 = local;
-        symbol [ sc %sc.1 48 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc" 49 8 ]
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_49_8_51_56_if_stmt:
-        symbol [ _sens %tmp.8 49 17 22 ];
+        symbol [ sc %sc.1 49 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 50 8 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_50_8_52_56_if_stmt:
+        symbol [ _sens %tmp.8 50 17 22 ];
         %tmp.8 = getv ? :_sens;
-        symbol [ SR_SENS_LOW %tmp.10 49 26 37 ];
-        %tmp.10 = getv ? :SR_SENS_LOW;
+        symbol [ SS_SENS_LOW %tmp.10 50 26 37 ];
+        %tmp.10 = getv ? :SS_SENS_LOW;
         %tmp.11 = eq %tmp.8 %tmp.10;
-        bf %tmp.11 @_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_49_8_51_56_if_false;
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_49_8_51_56_if_true:
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_49_40_49_55_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc" 49 42 ]
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_50_8_52_56_if_false;
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_50_8_52_56_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_50_40_50_55_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 50 42 ]
         %tmp.12 = 0.0024;
         lputv %sc.1 %tmp.12;
-        symbol [ sc %sc.1 49 42 44 ];
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_49_40_49_55_stop:
-        goto @_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_49_8_51_56_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_49_8_51_56_if_false:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc" 50 13 ]
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_50_13_51_56_if_stmt:
-        symbol [ _sens %tmp.14 50 17 22 ];
-        %tmp.14 = getv ? :_sens;
-        symbol [ SR_SENS_HIGH %tmp.16 50 26 38 ];
-        %tmp.16 = getv ? :SR_SENS_HIGH;
-        %tmp.17 = eq %tmp.14 %tmp.16;
-        bf %tmp.17 @_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_50_13_51_56_if_else_false;
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_50_13_51_56_if_true:
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_50_40_50_55_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc" 50 42 ]
-        %tmp.18 = 0.0050;
-        lputv %sc.1 %tmp.18;
         symbol [ sc %sc.1 50 42 44 ];
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_50_40_50_55_stop:
-        goto @_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_50_13_51_56_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_50_13_51_56_if_else_false:
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_51_41_51_56_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc" 51 43 ]
-        %tmp.19 = 0.0036;
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_50_40_50_55_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_50_8_52_56_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_50_8_52_56_if_false:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 51 13 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_51_13_52_56_if_stmt:
+        symbol [ _sens %tmp.14 51 17 22 ];
+        %tmp.14 = getv ? :_sens;
+        symbol [ SS_SENS_HIGH %tmp.16 51 26 38 ];
+        %tmp.16 = getv ? :SS_SENS_HIGH;
+        %tmp.17 = eq %tmp.14 %tmp.16;
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_51_13_52_56_if_else_false;
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_51_13_52_56_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_51_40_51_55_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 51 42 ]
+        %tmp.18 = 0.0058;
+        lputv %sc.1 %tmp.18;
+        symbol [ sc %sc.1 51 42 44 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_51_40_51_55_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_51_13_52_56_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_51_13_52_56_if_else_false:
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_52_41_52_56_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 52 43 ]
+        %tmp.19 = 0.0040;
         lputv %sc.1 %tmp.19;
-        symbol [ sc %sc.1 51 43 45 ];
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_51_41_51_56_stop:
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_50_13_51_56_if_end:
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_49_8_51_56_if_end:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc" 52 8 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_46_26_64_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_46_26_64_4_stop" ]
+        symbol [ sc %sc.1 52 43 45 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_52_41_52_56_stop:
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_51_13_52_56_if_end:
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_50_8_52_56_if_end:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 53 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_45_26_76_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_45_26_76_4_stop" ]
         %dx.2 = local;
-        symbol [ dx %dx.2 52 12 14 ];
+        symbol [ dx %dx.2 53 12 14 ];
         %tmp.20 = lgetv %ax;
-        symbol [ ax %tmp.20 52 17 19 ];
-        symbol [ _calX %tmp.22 52 22 27 ];
+        symbol [ ax %tmp.20 53 17 19 ];
+        symbol [ _calX %tmp.22 53 22 27 ];
         %tmp.22 = getv ? :_calX;
         %tmp.23 = sub %tmp.20 %tmp.22;
         lputv %dx.2 %tmp.23;
-        symbol [ dx %dx.2 52 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc" 53 8 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_46_26_64_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_46_26_64_4_stop" ]
+        symbol [ dx %dx.2 53 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 54 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_45_26_76_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_45_26_76_4_stop" ]
         %dy.3 = local;
-        symbol [ dy %dy.3 53 12 14 ];
+        symbol [ dy %dy.3 54 12 14 ];
         %tmp.24 = lgetv %ay;
-        symbol [ ay %tmp.24 53 17 19 ];
-        symbol [ _calY %tmp.26 53 22 27 ];
+        symbol [ ay %tmp.24 54 17 19 ];
+        symbol [ _calY %tmp.26 54 22 27 ];
         %tmp.26 = getv ? :_calY;
         %tmp.27 = sub %tmp.24 %tmp.26;
         lputv %dy.3 %tmp.27;
-        symbol [ dy %dy.3 53 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc" 54 8 ]
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_54_8_54_43_if_stmt:
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_54_12_54_29_begin:
+        symbol [ dy %dy.3 54 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 56 8 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_56_8_56_43_if_stmt:
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_56_12_56_29_begin:
         %tmp.28 = lgetv %dx.2;
-        symbol [ dx %tmp.28 54 12 14 ];
-        %tmp.29 = -20;
+        symbol [ dx %tmp.28 56 12 14 ];
+        %tmp.29 = -40;
         %tmp.30 = gt %tmp.28 %tmp.29;
-        bf %tmp.30 @_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_54_8_54_43_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_54_24_54_29_true:
+        bf %tmp.30 @_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_56_8_56_43_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_56_24_56_29_true:
         %tmp.31 = lgetv %dx.2;
-        symbol [ dx %tmp.31 54 24 26 ];
-        %tmp.32 = 20;
+        symbol [ dx %tmp.31 56 24 26 ];
+        %tmp.32 = 40;
         %tmp.33 = lt %tmp.31 %tmp.32;
         push %tmp.33;
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_54_24_54_29_end:
-        %tmp.34 = phi [%tmp.30 @_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_54_12_54_29_begin] [%tmp.33 @_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_54_24_54_29_true] [%tmp.34 @_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_54_24_54_29_end];
-        bf %tmp.34 @_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_54_8_54_43_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_54_8_54_43_if_true:
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_54_33_54_43_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc" 54 35 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_56_24_56_29_end:
+        %tmp.34 = phi [%tmp.30 @_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_56_12_56_29_begin] [%tmp.33 @_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_56_24_56_29_true] [%tmp.34 @_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_56_24_56_29_end];
+        bf %tmp.34 @_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_56_8_56_43_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_56_8_56_43_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_56_33_56_43_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 56 35 ]
         %tmp.35 = 0;
         lputv %dx.2 %tmp.35;
-        symbol [ dx %dx.2 54 35 37 ];
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_54_33_54_43_stop:
-        goto @_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_54_8_54_43_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_54_8_54_43_if_end:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc" 55 8 ]
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_55_8_55_43_if_stmt:
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_55_12_55_29_begin:
+        symbol [ dx %dx.2 56 35 37 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_56_33_56_43_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_56_8_56_43_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_56_8_56_43_if_end:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 57 8 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_57_8_57_43_if_stmt:
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_57_12_57_29_begin:
         %tmp.36 = lgetv %dy.3;
-        symbol [ dy %tmp.36 55 12 14 ];
-        %tmp.37 = -20;
+        symbol [ dy %tmp.36 57 12 14 ];
+        %tmp.37 = -40;
         %tmp.38 = gt %tmp.36 %tmp.37;
-        bf %tmp.38 @_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_55_8_55_43_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_55_24_55_29_true:
+        bf %tmp.38 @_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_57_8_57_43_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_57_24_57_29_true:
         %tmp.39 = lgetv %dy.3;
-        symbol [ dy %tmp.39 55 24 26 ];
-        %tmp.40 = 20;
+        symbol [ dy %tmp.39 57 24 26 ];
+        %tmp.40 = 40;
         %tmp.41 = lt %tmp.39 %tmp.40;
         push %tmp.41;
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_55_24_55_29_end:
-        %tmp.42 = phi [%tmp.38 @_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_55_12_55_29_begin] [%tmp.41 @_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_55_24_55_29_true] [%tmp.42 @_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_55_24_55_29_end];
-        bf %tmp.42 @_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_55_8_55_43_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_55_8_55_43_if_true:
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_55_33_55_43_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc" 55 35 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_57_24_57_29_end:
+        %tmp.42 = phi [%tmp.38 @_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_57_12_57_29_begin] [%tmp.41 @_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_57_24_57_29_true] [%tmp.42 @_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_57_24_57_29_end];
+        bf %tmp.42 @_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_57_8_57_43_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_57_8_57_43_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_57_33_57_43_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 57 35 ]
         %tmp.43 = 0;
         lputv %dy.3 %tmp.43;
-        symbol [ dy %dy.3 55 35 37 ];
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_55_33_55_43_stop:
-        goto @_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_55_8_55_43_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_55_8_55_43_if_end:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc" 56 8 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_46_26_64_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_46_26_64_4_stop" ]
-        %tx.4 = local;
-        symbol [ tx %tx.4 56 12 14 ];
+        symbol [ dy %dy.3 57 35 37 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_57_33_57_43_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_57_8_57_43_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_57_8_57_43_if_end:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 58 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_45_26_76_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_45_26_76_4_stop" ]
+        %ty.4 = local;
+        symbol [ ty %ty.4 58 12 14 ];
         %tmp.44 = lgetv %dx.2;
-        symbol [ dx %tmp.44 56 18 20 ];
-        symbol [ toFloat %tmp.45 56 21 28 ];
+        symbol [ dx %tmp.44 58 18 20 ];
+        symbol [ toFloat %tmp.45 58 21 28 ];
         %tmp.45 = getv function %tmp.44 :toFloat;
         %tmp.46 = invoke %tmp.44 %tmp.45();
         %tmp.47 = lgetv %sc.1;
-        symbol [ sc %tmp.47 56 33 35 ];
+        symbol [ sc %tmp.47 58 33 35 ];
         %tmp.48 = mul %tmp.46 %tmp.47;
-        lputv %tx.4 %tmp.48;
-        symbol [ tx %tx.4 56 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc" 57 8 ]
-        [ "_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_46_26_64_4_start" "_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_46_26_64_4_stop" ]
-        %ty.5 = local;
-        symbol [ ty %ty.5 57 12 14 ];
+        lputv %ty.4 %tmp.48;
+        symbol [ ty %ty.4 58 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 59 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_45_26_76_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_45_26_76_4_stop" ]
+        %tp.5 = local;
+        symbol [ tp %tp.5 59 12 14 ];
         %tmp.49 = lgetv %dy.3;
-        symbol [ dy %tmp.49 57 18 20 ];
-        symbol [ toFloat %tmp.50 57 21 28 ];
+        symbol [ dy %tmp.49 59 18 20 ];
+        symbol [ toFloat %tmp.50 59 21 28 ];
         %tmp.50 = getv function %tmp.49 :toFloat;
         %tmp.51 = invoke %tmp.49 %tmp.50();
         %tmp.52 = sub 0 %tmp.51;
         %tmp.53 = lgetv %sc.1;
-        symbol [ sc %tmp.53 57 33 35 ];
+        symbol [ sc %tmp.53 59 33 35 ];
         %tmp.54 = mul %tmp.52 %tmp.53;
-        lputv %ty.5 %tmp.54;
-        symbol [ ty %ty.5 57 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc" 60 8 ]
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_60_8_60_36_if_stmt:
-        %tmp.55 = lgetv %tx.4;
-        symbol [ tx %tmp.55 60 12 14 ];
-        %tmp.56 = 1.2;
+        lputv %tp.5 %tmp.54;
+        symbol [ tp %tp.5 59 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 62 8 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_62_8_62_57_if_stmt:
+        %tmp.55 = lgetv %tp.5;
+        symbol [ tp %tmp.55 62 12 14 ];
+        %tmp.56 = 0.20;
         %tmp.57 = gt %tmp.55 %tmp.56;
-        bf %tmp.57 @_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_60_8_60_36_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_60_8_60_36_if_true:
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_60_23_60_36_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc" 60 25 ]
-        %tmp.58 = 1.2;
-        lputv %tx.4 %tmp.58;
-        symbol [ tx %tx.4 60 25 27 ];
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_60_23_60_36_stop:
-        goto @_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_60_8_60_36_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_60_8_60_36_if_end:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc" 60 38 ]
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_60_38_60_66_if_stmt:
-        %tmp.59 = lgetv %tx.4;
-        symbol [ tx %tmp.59 60 42 44 ];
-        %tmp.60 = -1.2;
-        %tmp.61 = lt %tmp.59 %tmp.60;
-        bf %tmp.61 @_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_60_38_60_66_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_60_38_60_66_if_true:
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_60_53_60_66_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc" 60 55 ]
-        %tmp.62 = -1.2;
-        lputv %tx.4 %tmp.62;
-        symbol [ tx %tx.4 60 55 57 ];
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_60_53_60_66_stop:
-        goto @_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_60_38_60_66_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_60_38_60_66_if_end:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc" 61 8 ]
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_61_8_61_36_if_stmt:
-        %tmp.63 = lgetv %ty.5;
-        symbol [ ty %tmp.63 61 12 14 ];
-        %tmp.64 = 1.2;
-        %tmp.65 = gt %tmp.63 %tmp.64;
-        bf %tmp.65 @_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_61_8_61_36_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_61_8_61_36_if_true:
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_61_23_61_36_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc" 61 25 ]
-        %tmp.66 = 1.2;
-        lputv %ty.5 %tmp.66;
-        symbol [ ty %ty.5 61 25 27 ];
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_61_23_61_36_stop:
-        goto @_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_61_8_61_36_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_61_8_61_36_if_end:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc" 61 38 ]
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_61_38_61_66_if_stmt:
-        %tmp.67 = lgetv %ty.5;
-        symbol [ ty %tmp.67 61 42 44 ];
-        %tmp.68 = -1.2;
-        %tmp.69 = lt %tmp.67 %tmp.68;
-        bf %tmp.69 @_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_61_38_61_66_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_61_38_61_66_if_true:
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_61_53_61_66_start:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc" 61 55 ]
-        %tmp.70 = -1.2;
-        lputv %ty.5 %tmp.70;
-        symbol [ ty %ty.5 61 55 57 ];
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_61_53_61_66_stop:
-        goto @_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_61_38_61_66_if_end;
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_61_38_61_66_if_end:
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc" 62 8 ]
-        %tmp.71 = lgetv %tx.4;
-        symbol [ tx %tmp.71 62 16 18 ];
-        symbol [ tiltX ? 62 8 13 ];
-        putv self :tiltX %tmp.71;
-[ "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc" 63 8 ]
-        %tmp.72 = lgetv %ty.5;
-        symbol [ ty %tmp.72 63 16 18 ];
-        symbol [ tiltY ? 63 8 13 ];
-        putv self :tiltY %tmp.72;
-_Users_kkorolczuk_work_garmin_skyroll_source_GyroInput_mc_46_26_64_4_stop:
+        bf %tmp.57 @_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_62_8_62_57_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_62_8_62_57_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_62_23_62_57_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 62 25 ]
+        %tmp.58 = 0.20;
+        %tmp.59 = lgetv %tp.5;
+        symbol [ tp %tmp.59 62 38 40 ];
+        %tmp.60 = 0.20;
+        %tmp.61 = sub %tmp.59 %tmp.60;
+        %tmp.62 = 1.75;
+        %tmp.63 = mul %tmp.61 %tmp.62;
+        %tmp.64 = add %tmp.58 %tmp.63;
+        lputv %tp.5 %tmp.64;
+        symbol [ tp %tp.5 62 25 27 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_62_23_62_57_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_62_8_62_57_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_62_8_62_57_if_end:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 66 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_45_26_76_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_45_26_76_4_stop" ]
+        %limU.6 = local;
+        symbol [ limU %limU.6 66 12 16 ];
+        symbol [ SS_WORLD_PITCH %tmp.66 66 19 33 ];
+        %tmp.66 = getv ? :SS_WORLD_PITCH;
+        %tmp.67 = 0.75;
+        %tmp.68 = mul %tmp.66 %tmp.67;
+        lputv %limU.6 %tmp.68;
+        symbol [ limU %limU.6 66 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 67 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_45_26_76_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_45_26_76_4_stop" ]
+        %limD.7 = local;
+        symbol [ limD %limD.7 67 12 16 ];
+        symbol [ SS_WORLD_PITCH %tmp.70 67 19 33 ];
+        %tmp.70 = getv ? :SS_WORLD_PITCH;
+        %tmp.71 = 1.10;
+        %tmp.72 = mul %tmp.70 %tmp.71;
+        lputv %limD.7 %tmp.72;
+        symbol [ limD %limD.7 67 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 68 8 ]
+        [ "_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_45_26_76_4_start" "_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_45_26_76_4_stop" ]
+        %limY.8 = local;
+        symbol [ limY %limY.8 68 12 16 ];
+        symbol [ SS_WORLD_YAW %tmp.74 68 19 31 ];
+        %tmp.74 = getv ? :SS_WORLD_YAW;
+        %tmp.75 = 1.00;
+        %tmp.76 = mul %tmp.74 %tmp.75;
+        lputv %limY.8 %tmp.76;
+        symbol [ limY %limY.8 68 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 69 8 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_69_8_69_38_if_stmt:
+        %tmp.77 = lgetv %ty.4;
+        symbol [ ty %tmp.77 69 12 14 ];
+        %tmp.78 = lgetv %limY.8;
+        symbol [ limY %tmp.78 69 18 22 ];
+        %tmp.79 = gt %tmp.77 %tmp.78;
+        bf %tmp.79 @_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_69_8_69_38_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_69_8_69_38_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_69_24_69_38_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 69 26 ]
+        %tmp.80 = lgetv %limY.8;
+        symbol [ limY %tmp.80 69 32 36 ];
+        lputv %ty.4 %tmp.80;
+        symbol [ ty %ty.4 69 26 28 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_69_24_69_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_69_8_69_38_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_69_8_69_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 70 8 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_70_8_70_38_if_stmt:
+        %tmp.81 = lgetv %ty.4;
+        symbol [ ty %tmp.81 70 12 14 ];
+        %tmp.82 = lgetv %limY.8;
+        symbol [ limY %tmp.82 70 18 22 ];
+        %tmp.83 = sub 0 %tmp.82;
+        %tmp.84 = lt %tmp.81 %tmp.83;
+        bf %tmp.84 @_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_70_8_70_38_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_70_8_70_38_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_70_24_70_38_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 70 26 ]
+        %tmp.85 = lgetv %limY.8;
+        symbol [ limY %tmp.85 70 32 36 ];
+        %tmp.86 = sub 0 %tmp.85;
+        lputv %ty.4 %tmp.86;
+        symbol [ ty %ty.4 70 26 28 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_70_24_70_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_70_8_70_38_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_70_8_70_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 71 8 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_71_8_71_38_if_stmt:
+        %tmp.87 = lgetv %tp.5;
+        symbol [ tp %tmp.87 71 12 14 ];
+        %tmp.88 = lgetv %limD.7;
+        symbol [ limD %tmp.88 71 18 22 ];
+        %tmp.89 = gt %tmp.87 %tmp.88;
+        bf %tmp.89 @_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_71_8_71_38_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_71_8_71_38_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_71_24_71_38_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 71 26 ]
+        %tmp.90 = lgetv %limD.7;
+        symbol [ limD %tmp.90 71 32 36 ];
+        lputv %tp.5 %tmp.90;
+        symbol [ tp %tp.5 71 26 28 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_71_24_71_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_71_8_71_38_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_71_8_71_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 72 8 ]
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_72_8_72_38_if_stmt:
+        %tmp.91 = lgetv %tp.5;
+        symbol [ tp %tmp.91 72 12 14 ];
+        %tmp.92 = lgetv %limU.6;
+        symbol [ limU %tmp.92 72 18 22 ];
+        %tmp.93 = sub 0 %tmp.92;
+        %tmp.94 = lt %tmp.91 %tmp.93;
+        bf %tmp.94 @_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_72_8_72_38_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_72_8_72_38_if_true:
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_72_24_72_38_start:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 72 26 ]
+        %tmp.95 = lgetv %limU.6;
+        symbol [ limU %tmp.95 72 32 36 ];
+        %tmp.96 = sub 0 %tmp.95;
+        lputv %tp.5 %tmp.96;
+        symbol [ tp %tp.5 72 26 28 ];
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_72_24_72_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_72_8_72_38_if_end;
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_72_8_72_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 74 8 ]
+        %tmp.97 = lgetv %ty.4;
+        symbol [ ty %tmp.97 74 17 19 ];
+        symbol [ tYaw ? 74 8 12 ];
+        putv self :tYaw %tmp.97;
+[ "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc" 75 8 ]
+        %tmp.98 = lgetv %tp.5;
+        symbol [ tp %tmp.98 75 17 19 ];
+        symbol [ tPitch ? 75 8 14 ];
+        putv self :tPitch %tmp.98;
+_Users_kkorolczuk_work_garmin_sniperscope_source_GyroInput_mc_45_26_76_4_stop:
     }
 }
-[ @file = "/Users/kkorolczuk/work/garmin/skyroll/source/GyroInput.mc"; @line = 22; ]
+[ @file = "/Users/kkorolczuk/work/garmin/sniperscope/source/GyroInput.mc"; @line = 18; ]
 <init> {
 }

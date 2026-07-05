@@ -13,15 +13,57 @@ class BilliardView extends WatchUi.View {
     var _timer;  // 33 ms game loop timer
     var _tick;   // frame counter for animations
 
+    // Cached static table background (felt/rails/pockets/spots — none of
+    // which ever change once the viewport is laid out). Redrawing all of
+    // that from scratch every 33 ms tick was pure waste: it's ~20 draw
+    // calls that are IDENTICAL every single frame during play. We render
+    // it once into an offscreen bitmap and blit it with a single
+    // drawBitmap() call per frame instead — a big constant-factor win on
+    // the hottest code path (every tick, in every game state except the
+    // menu/game-over screens which already draw their own background).
+    hidden var _bgBmp;
+    hidden var _bgBmpW;
+    hidden var _bgBmpH;
+
+    // Per-ball cumulative roll rotation (radians) — drives a small dark
+    // fleck that visibly spins around a moving ball's centre, selling the
+    // "rolling on felt" feel with almost zero extra render cost.
+    hidden var _ballRot;
+
     function initialize() {
         View.initialize();
         _game = new BilliardGame();
         _tick = 0;
         _timer = null;
+        _bgBmp = null;
+        _bgBmpW = 0;
+        _bgBmpH = 0;
+        _ballRot = new [MAX_BALLS];
+        for (var i = 0; i < MAX_BALLS; i++) { _ballRot[i] = 0.0; }
     }
 
     function onLayout(dc) {
         _game.setScreenSize(dc.getWidth(), dc.getHeight());
+    }
+
+    // Build (or rebuild, if the screen size ever changes) the cached table
+    // background. Guarded with a try/catch — if bitmap creation isn't
+    // available/fails for any reason we just keep drawing the table live
+    // every frame like before, so this can never make things worse.
+    hidden function _ensureBgBmp(g) {
+        if (_bgBmp != null && _bgBmpW == g.sw && _bgBmpH == g.sh) { return; }
+        _bgBmpW = g.sw; _bgBmpH = g.sh;
+        _bgBmp = null;
+        try {
+            var ref = Graphics.createBufferedBitmap({ :width => g.sw, :height => g.sh });
+            var bmp = (ref has :get) ? ref.get() : ref;
+            if (bmp != null) {
+                _drawTable(bmp.getDc(), g);
+                _bgBmp = bmp;
+            }
+        } catch (e) {
+            _bgBmp = null;
+        }
     }
 
     // Run the 33 ms game loop only while the view is on screen. Stop it
@@ -43,6 +85,13 @@ class BilliardView extends WatchUi.View {
         if (_game.lbRequested) {
             _game.lbRequested = false;
             openLeaderboard();
+        }
+        // Advance the rolling-mark rotation for every moving ball —
+        // rotation speed ∝ linear speed / radius (rolling without slip).
+        for (var i = 0; i < MAX_BALLS; i++) {
+            if (!_game.bAlive[i]) { continue; }
+            var sp2 = _game.bvx[i]*_game.bvx[i] + _game.bvy[i]*_game.bvy[i];
+            if (sp2 > 0.02) { _ballRot[i] += Math.sqrt(sp2) / BALL_R.toFloat(); }
         }
         WatchUi.requestUpdate();
     }
@@ -66,7 +115,9 @@ class BilliardView extends WatchUi.View {
         var g = _game;
         if (g.gs == BS_MENU)     { _drawMenu(dc, g);     return; }
         if (g.gs == BS_GAMEOVER) { _drawGameOver(dc, g); return; }
-        _drawTable(dc, g);
+        _ensureBgBmp(g);
+        if (_bgBmp != null) { dc.drawBitmap(0, 0, _bgBmp); } else { _drawTable(dc, g); }
+        _drawBounceFx(dc, g);
         _drawBalls(dc, g);
         if (g.turn == TURN_PLAYER && (g.gs == BS_AIM || g.gs == BS_POWER)) {
             _drawAimLine(dc, g);
@@ -107,10 +158,11 @@ class BilliardView extends WatchUi.View {
         _drawMenuRack(dc, g, tx1, ty1, tx2, ty2);
 
         // Mode rules hint — always visible, tied to the current game type.
-        var rules = (g.gameType == GT_3BALL)   ? "race - 3 balls"
-                  : (g.gameType == GT_8BALL)   ? "groups - pot 8 to win"
-                  : (g.gameType == GT_SNOOKER) ? "reds 1pt - black 7pt"
-                                               : "lowest first - pot 9 wins";
+        var rules = (g.gameType == GT_3BALL)      ? "race - 3 balls"
+                  : (g.gameType == GT_8BALL)      ? "groups - pot 8 to win"
+                  : (g.gameType == GT_SNOOKER)    ? "reds 1pt - black 7pt"
+                  : (g.gameType == GT_TIMEATTACK) ? "solo - beat the clock!"
+                                                  : "lowest first - pot 9 wins";
         dc.setColor(0x6E9A6E, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w/2, h*30/100, Graphics.FONT_XTINY, rules, Graphics.TEXT_JUSTIFY_CENTER);
 
@@ -130,16 +182,37 @@ class BilliardView extends WatchUi.View {
         _menuRow(dc, g, 0, top + 0*pitch, rowH, barX, barW,
                  g.gameTypeLabel(), 0xFFFFFF);
 
-        // Row 1 — VS MODE
-        _menuRow(dc, g, 1, top + 1*pitch, rowH, barX, barW,
-                 (g.pvpMode ? "P vs P" : "P vs AI"), 0xFFFFFF);
+        // Row 1 — VS MODE (irrelevant/greyed for solo TIME ATTACK)
+        var isSolo = (g.gameType == GT_TIMEATTACK);
+        var sel1 = (g.menuSel == 1);
+        _menuBar(dc, sel1, top + 1*pitch, rowH, barX, barW);
+        if (isSolo) {
+            dc.setColor(sel1 ? 0x9FB39F : 0x4E664E, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w/2, top + 1*pitch + rowH/2, Graphics.FONT_XTINY, "SOLO",
+                        Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+        } else {
+            dc.setColor(sel1 ? 0xFFFFFF : _dim(0xFFFFFF), Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w/2, top + 1*pitch + rowH/2, Graphics.FONT_XTINY,
+                        (g.pvpMode ? "P vs P" : "P vs AI"),
+                        Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+        }
 
-        // Row 2 — DIFFICULTY (greyed when P vs P — the AI is unused)
+        // Row 2 — DIFFICULTY. Greyed when P vs P (AI unused); repurposed
+        // as the TIME LIMIT selector in TIME ATTACK (same diff variable
+        // and button, different meaning: EASY = most forgiving = longest
+        // clock).
         var sel2 = (g.menuSel == 2);
         var r2y  = top + 2*pitch;
         _menuBar(dc, sel2, r2y, rowH, barX, barW);
         var r2mid = r2y + rowH/2;
-        if (g.pvpMode) {
+        if (isSolo) {
+            dc.setColor(sel2 ? 0xFFFFFF : 0xAFC6D6, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w/2 - 4, r2mid, Graphics.FONT_XTINY, "Time: ",
+                        Graphics.TEXT_JUSTIFY_RIGHT | Graphics.TEXT_JUSTIFY_VCENTER);
+            dc.setColor(dColors[g.diff], Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w/2 - 4, r2mid, Graphics.FONT_XTINY, g.timeAttackLimitSecs() + "s",
+                        Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER);
+        } else if (g.pvpMode) {
             dc.setColor(sel2 ? 0x9FB39F : 0x4E664E, Graphics.COLOR_TRANSPARENT);
             dc.drawText(w/2, r2mid, Graphics.FONT_XTINY, "Diff: —",
                         Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
@@ -217,7 +290,7 @@ class BilliardView extends WatchUi.View {
                        [-1, -1, 2], [-1, 1, 3],
                        [0, -2, 4], [0, 0, 5], [0, 2, 6],
                        [2, 0, 7]];
-        } else if (g.gameType == GT_8BALL) {
+        } else if (g.gameType == GT_8BALL || g.gameType == GT_TIMEATTACK) {
             step = 7;
             // Cue + condensed 5-row triangle (15 numbered).
             posList = [[-7, 0, 0],
@@ -302,12 +375,49 @@ class BilliardView extends WatchUi.View {
         }
     }
 
+    // ── CUSHION-IMPACT FLASH ───────────────────────────────────
+    // Small expanding, fading ring at each recent hard rail bounce —
+    // cheap (outline circle only) and only drawn while a slot is alive.
+    hidden function _drawBounceFx(dc, g) {
+        for (var f = 0; f < BOUNCE_FX_MAX; f++) {
+            var life = g.bounceFxLife[f];
+            if (life <= 0) { continue; }
+            var fsx = g.csx(g.bounceFxX[f]); var fsy = g.csy(g.bounceFxY[f]);
+            var age = BOUNCE_FX_LIFE - life;              // 0 (new) .. LIFE-1 (old)
+            var r = g.csr(BALL_R) * (6 + age * 3) / 10;    // ring grows outward
+            var shade = 0xFF - (age * 255 / BOUNCE_FX_LIFE);
+            if (shade < 0) { shade = 0; }
+            var clr = (shade << 16) | (shade << 8) | shade;
+            dc.setColor(clr, Graphics.COLOR_TRANSPARENT);
+            dc.drawCircle(fsx, fsy, r);
+        }
+    }
+
     // ── BALLS ─────────────────────────────────────────────────
     hidden function _drawBalls(dc, g) {
         var br = g.csr(BALL_R); if (br < 4) { br = 4; }
         for (var i = 0; i < g.numBalls; i++) {
             if (!g.bAlive[i]) { continue; }
             var bsx = g.csx(g.bx[i]); var bsy = g.csy(g.by[i]);
+            var v2 = g.bvx[i]*g.bvx[i] + g.bvy[i]*g.bvy[i];
+
+            // Motion trail — a short comet-tail of shrinking dots behind
+            // fast-moving balls, in the ball's own colour. Drawn first so
+            // the crisp ball always renders on top of its own trail.
+            if (v2 > 16.0) {
+                var spd = Math.sqrt(v2);
+                var dxn = g.bvx[i] / spd; var dyn = g.bvy[i] / spd;
+                var trailClr = g.isStripe(i) ? 0xF2F2F2 : g.bCol[i];
+                for (var tI = 3; tI >= 1; tI--) {
+                    var td = tI * (br * 0.85 + 1);
+                    var tx = bsx - (dxn * td).toNumber();
+                    var ty = bsy - (dyn * td).toNumber();
+                    var trR = (br * (4 - tI)) / 6; if (trR < 1) { trR = 1; }
+                    dc.setColor(trailClr, Graphics.COLOR_TRANSPARENT);
+                    dc.fillCircle(tx, ty, trR);
+                }
+            }
+
             // Drop shadow
             dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
             dc.fillCircle(bsx+1, bsy+1, br);
@@ -344,6 +454,18 @@ class BilliardView extends WatchUi.View {
             // Gloss highlight (always)
             dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
             dc.fillCircle(bsx - br*2/5, bsy - br*2/5, br/4 + 1);
+            // Rolling-spin mark — a small dark fleck orbiting the centre
+            // as the ball rolls (rotation ∝ distance travelled). Purely
+            // cosmetic; makes movement read as genuine rolling instead of
+            // a flat disc sliding across the felt.
+            if (v2 > 4.0) {
+                var mAng = _ballRot[i];
+                var mx = bsx + (Math.cos(mAng) * br * 0.55).toNumber();
+                var my = bsy + (Math.sin(mAng) * br * 0.55).toNumber();
+                var mr = br / 6; if (mr < 1) { mr = 1; }
+                dc.setColor(0x222222, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(mx, my, mr);
+            }
             // Cue-ball rim
             if (i == 0) {
                 dc.setColor(0xDDDDDD, Graphics.COLOR_TRANSPARENT);
@@ -493,6 +615,33 @@ class BilliardView extends WatchUi.View {
     // ── HUD ───────────────────────────────────────────────────
     hidden function _drawHUD(dc, g) {
         var w = g.sw; var h = g.sh;
+        // TIME ATTACK — bespoke solo HUD: score on the left, big countdown
+        // on the right (flashes red under 10s), mode label centred.
+        if (g.gameType == GT_TIMEATTACK) {
+            dc.setColor(0x050D05, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(0, 0, w, g.vpY);
+            dc.setColor(0x44CCFF, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(4, 1, Graphics.FONT_XTINY, "SCORE:" + g.playerScore,
+                        Graphics.TEXT_JUSTIFY_LEFT);
+            dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w/2, 1, Graphics.FONT_XTINY, "TIME ATTACK",
+                        Graphics.TEXT_JUSTIFY_CENTER);
+            var secsLeft = (g.arcadeTicks + 29) / 30; if (secsLeft < 0) { secsLeft = 0; }
+            var urgent = (secsLeft <= 10) && (_tick % 10 < 5);
+            dc.setColor(urgent ? 0xFF4444 : 0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w-4, 1, Graphics.FONT_XTINY, secsLeft + "s",
+                        Graphics.TEXT_JUSTIFY_RIGHT);
+            if (g.gs == BS_AIM) {
+                dc.setColor(0xCCDDAA, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(w/2, h - h*15/100, Graphics.FONT_XTINY, "pot ANY ball!",
+                            Graphics.TEXT_JUSTIFY_CENTER);
+                dc.setColor(0x3D7755, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(w/2, h - h*9/100, Graphics.FONT_XTINY,
+                            "UP/DN=aim  O=charge",
+                            Graphics.TEXT_JUSTIFY_CENTER);
+            }
+            return;
+        }
         var pvp = g.pvpMode;
         var p1Label = pvp ? "P1" : "YOU";
         var p2Label = pvp ? "P2" : "AI";
@@ -604,6 +753,27 @@ class BilliardView extends WatchUi.View {
         dc.setColor(0x030A03, 0x030A03); dc.clear();
         dc.setColor(0x0C3012, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(0, 0, w, h);
+
+        // TIME ATTACK gets its own compact solo results screen — no
+        // opponent to compare against, just the final score.
+        if (g.gameType == GT_TIMEATTACK) {
+            var taTitle = (g.winReason == 6) ? "TABLE CLEARED!" : "TIME'S UP!";
+            var taClr   = (g.winReason == 6) ? 0x44FF88 : 0xFFCC44;
+            dc.setColor(taClr, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w/2, h*14/100, Graphics.FONT_MEDIUM, taTitle, Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w/2, h*34/100, Graphics.FONT_NUMBER_MEDIUM, g.playerScore.format("%d"),
+                        Graphics.TEXT_JUSTIFY_CENTER);
+            dc.setColor(0x778877, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w/2, h*52/100, Graphics.FONT_XTINY,
+                        "balls potted - " + g.timeAttackLimitSecs() + "s clock",
+                        Graphics.TEXT_JUSTIFY_CENTER);
+            var taBright = (_tick % 14 < 7);
+            dc.setColor(taBright ? 0x44FF88 : 0x226633, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(w/2, h*76/100, Graphics.FONT_XTINY, "Tap for menu",
+                        Graphics.TEXT_JUSTIFY_CENTER);
+            return;
+        }
 
         // Winner from winReason (set by rules engine); fallback to score.
         var winner; var wClr; var sub = null;

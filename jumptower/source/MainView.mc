@@ -57,14 +57,29 @@ class MainView extends WatchUi.View {
         if (_ctrl.deathShake > 0) { shx = (Math.rand() % 7) - 3; }
 
         _drawPlatforms(dc, shx);
+        if (_ctrl.jetpackT > 0) { _drawJetpackFlame(dc, shx); }
         // Player at its current screen-y.
         _ctrl.player.draw(dc, (_ctrl.player.x + shx).toNumber(),
                               _ctrl.player.y.toNumber());
         _drawHUD(dc);
 
         if (_ctrl.lastSpringFlash > 0) { _drawSpringFx(dc); }
+        if (_ctrl.jetpackFlash    > 0) { _drawJetpackFx(dc); }
+        if (_ctrl.coinFlash       > 0) { _drawCoinFx(dc); }
+        if (_ctrl.zoneFlashT      > 0) { _drawZoneBanner(dc); }
         if (_ctrl.state == GS_READY)   { _drawReady(dc); }
         if (_ctrl.state == GS_OVER)    { _drawOver(dc); }
+    }
+
+    // Little flickering flame under the frog while the jetpack burns.
+    hidden function _drawJetpackFlame(dc, shx) {
+        var sx = (_ctrl.player.x + shx).toNumber();
+        var sy = _ctrl.player.y.toNumber() + _ctrl.player.h;
+        var flick = (_bgFrame % 3);
+        dc.setColor(0xFFAA00, Graphics.COLOR_TRANSPARENT);
+        dc.fillPolygon([[sx - 4, sy], [sx + 4, sy], [sx, sy + 8 + flick * 2]]);
+        dc.setColor(0xFFEE88, Graphics.COLOR_TRANSPARENT);
+        dc.fillPolygon([[sx - 2, sy], [sx + 2, sy], [sx, sy + 4 + flick]]);
     }
 
     // Background. Previously a saturated purple brick wall with bold
@@ -75,7 +90,21 @@ class MainView extends WatchUi.View {
     // hint (low-contrast horizontal lines only), and a handful of
     // small white snow specks for life. Platforms now have a strong
     // dark outline (see _drawPlatforms) so they pop against this.
+    //
+    // The palette now shifts by altitude ZONE (see GameController.zone)
+    // so the world visibly changes the higher you climb — ground wall,
+    // then daylight sky with clouds, then a starry stratosphere, then
+    // deep space. It's the single biggest "just a bit further" hook:
+    // players keep climbing to see what the next zone looks like.
     hidden function _drawBackground(dc) {
+        var z = _ctrl.zone;
+        if      (z == 1) { _bgSky(dc);   }
+        else if (z == 2) { _bgStrato(dc);}
+        else if (z == 3) { _bgSpace(dc); }
+        else              { _bgGround(dc);}
+    }
+
+    hidden function _bgGround(dc) {
         var W = _ctrl.screenW; var H = _ctrl.screenH;
 
         // Base colour — calm dark slate-blue. Low chroma so it never
@@ -95,11 +124,7 @@ class MainView extends WatchUi.View {
         // enough texture to read as "a wall" but quiet enough to let
         // the platforms own the foreground.
         var brickH = 14;
-        // _ctrl.score is a Float (accumulates physics dy). Coerce to
-        // Number before the modulo — `Float % Int` raises an
-        // UnexpectedTypeException on real watches even though the
-        // simulator tolerates it.
-        var scrollY = (_ctrl.score / 4).toNumber();
+        var scrollY = _bgScrollY();
         dc.setColor(0x1A2236, Graphics.COLOR_TRANSPARENT);
         var ly = -(scrollY % brickH);
         while (ly < H) {
@@ -115,6 +140,77 @@ class MainView extends WatchUi.View {
             var driftY = (i * 4099 + _bgFrame * 2 / 5) % (H + 6);
             dc.fillRectangle(sx, driftY, 1, 1);
         }
+    }
+
+    // Zone 1 — bright daytime sky with drifting clouds.
+    hidden function _bgSky(dc) {
+        var W = _ctrl.screenW; var H = _ctrl.screenH;
+        dc.setColor(0x3E86D8, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, 0, W, H);
+        dc.setColor(0x62A6EE, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, 0, W, H / 4);
+
+        var scrollY = _bgScrollY();
+        dc.setColor(0xEAF5FF, Graphics.COLOR_TRANSPARENT);
+        for (var i = 0; i < 4; i++) {
+            var cx = (i * 5303 + W / 2) % W;
+            var cy = (i * 3701 + scrollY / 2) % (H + 20) - 10;
+            var r  = 7 + (i % 3) * 2;
+            dc.fillCircle(cx - r, cy, r);
+            dc.fillCircle(cx + r, cy, r);
+            dc.fillCircle(cx, cy - r / 2, r + 2);
+        }
+    }
+
+    // Zone 2 — thin, cold upper atmosphere; sky darkens, first stars.
+    hidden function _bgStrato(dc) {
+        var W = _ctrl.screenW; var H = _ctrl.screenH;
+        dc.setColor(0x16214A, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, 0, W, H);
+        dc.setColor(0x223066, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, 0, W, H / 3);
+
+        var scrollY = _bgScrollY();
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+        for (var i = 0; i < 10; i++) {
+            var sx = (i * 4231) % W;
+            var sy = (i * 6841 + scrollY / 3) % (H + 10);
+            dc.fillRectangle(sx, sy, 1, 1);
+        }
+        // A thin violet haze band hints at the curvature of the sky.
+        dc.setColor(0x4A3B7A, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, (H * 78) / 100, W, 2);
+    }
+
+    // Zone 3 — outer space: near-black, dense stars, a drifting moon.
+    hidden function _bgSpace(dc) {
+        var W = _ctrl.screenW; var H = _ctrl.screenH;
+        dc.setColor(0x03040C, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, 0, W, H);
+
+        var scrollY = _bgScrollY();
+        dc.setColor(0xCCCCEE, Graphics.COLOR_TRANSPARENT);
+        for (var i = 0; i < 16; i++) {
+            var sx = (i * 3719) % W;
+            var sy = (i * 5477 + scrollY / 4) % (H + 10);
+            dc.fillRectangle(sx, sy, 1, 1);
+        }
+        // Drifting planet — a soft grey circle with one crater dimple.
+        var mx = (W / 2 + (scrollY / 6) % (W + 60)) % (W + 60) - 30;
+        var my = (H * 22) / 100;
+        var mr = (W * 8) / 100; if (mr < 10) { mr = 10; }
+        dc.setColor(0x8892A6, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(mx, my, mr);
+        dc.setColor(0x6B7590, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(mx - mr / 3, my - mr / 4, mr / 4);
+    }
+
+    // _ctrl.score is a Float (accumulates physics dy). Coerce to
+    // Number before the modulo — `Float % Int` raises an
+    // UnexpectedTypeException on real watches even though the
+    // simulator tolerates it.
+    hidden function _bgScrollY() {
+        return (_ctrl.score / 4).toNumber();
     }
 
     hidden function _drawPlatforms(dc, shx) {
@@ -139,6 +235,8 @@ class MainView extends WatchUi.View {
                 col = 0xB03050; top = 0xE25075;
             } else if (p.type == PT_SPRING) {
                 col = 0x2A82C8; top = 0x4FB0EF; snow2 = 0xC8F0FF;
+            } else if (p.type == PT_JETPACK) {
+                col = 0x707880; top = 0xC8D0D8; snow2 = 0xFFD27A;
             }
 
             // ── Dark outline — drawn first as a 1-px rect 1 px larger
@@ -207,8 +305,37 @@ class MainView extends WatchUi.View {
                                     [x + 1, capY + capH / 2],
                                     [x + 6, capY + capH - 1]]);
                 }
+            } else if (p.type == PT_JETPACK) {
+                // A little rocket sitting on the platform — unmissable.
+                var rx = x + p.w / 2;
+                var ry = capY - 5;
+                dc.setColor(0xE04030, Graphics.COLOR_TRANSPARENT);
+                dc.fillPolygon([[rx - 3, ry + 6], [rx + 3, ry + 6],
+                                [rx,     ry - 6]]);
+                dc.setColor(0xFFD27A, Graphics.COLOR_TRANSPARENT);
+                dc.fillPolygon([[rx - 4, ry + 8], [rx + 4, ry + 8],
+                                [rx,     ry + 3]]);
+                dc.setColor(0xCCEEFF, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(rx, ry, 2);
             }
+
+            if (p.coinAlive) { _drawCoin(dc, p.coinX + shx, p.coinY); }
         }
+    }
+
+    // Small spinning-looking gold coin — a slim vertical highlight
+    // that widens/narrows with _bgFrame gives a cheap "flip" illusion
+    // without any per-frame allocation.
+    hidden function _drawCoin(dc, cx, cy) {
+        var r = _ctrl.platforms.coinR;
+        dc.setColor(0x8A6200, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(cx, cy, r + 1);
+        dc.setColor(0xFFD400, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(cx, cy, r);
+        var flip = (_bgFrame / 6) % 4;
+        var hw = (flip == 0 || flip == 2) ? r : ((flip == 1) ? r / 2 : 1);
+        dc.setColor(0xFFF3B0, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(cx - hw / 2, cy - r + 1, (hw < 1) ? 1 : hw, (r * 2) - 2);
     }
 
     hidden function _drawHUD(dc) {
@@ -228,6 +355,14 @@ class MainView extends WatchUi.View {
                         "B " + (_ctrl.hi / 6).format("%d") + "m",
                         Graphics.TEXT_JUSTIFY_RIGHT);
         }
+        // Coin tally, top-left — small gold coin icon + count.
+        dc.setColor(0xFFD400, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(11, 9, 5);
+        dc.setColor(0x8A6200, Graphics.COLOR_TRANSPARENT);
+        dc.drawCircle(11, 9, 5);
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(20, 3, Graphics.FONT_XTINY,
+                    _ctrl.coinsRun.format("%d"), Graphics.TEXT_JUSTIFY_LEFT);
     }
 
     hidden function _drawSpringFx(dc) {
@@ -235,6 +370,35 @@ class MainView extends WatchUi.View {
         dc.setColor(0x44AAFF, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, _ctrl.screenH - 24, Graphics.FONT_XTINY,
                     "BOING!", Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    hidden function _drawJetpackFx(dc) {
+        var cx = _ctrl.screenW / 2;
+        dc.setColor(0xFF8800, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, _ctrl.screenH - 24, Graphics.FONT_SMALL,
+                    "JETPACK!", Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    hidden function _drawCoinFx(dc) {
+        var sy = _ctrl.player.y.toNumber() - _ctrl.player.h - 10
+                 - (14 - _ctrl.coinFlash);
+        dc.setColor(0xFFD400, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_ctrl.player.x.toNumber(), sy, Graphics.FONT_XTINY,
+                    "+1", Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
+    hidden function _drawZoneBanner(dc) {
+        var cx = _ctrl.screenW / 2;
+        var cy = _ctrl.screenH * 38 / 100;
+        var bw = _ctrl.screenW * 90 / 100;
+        var bh = 20;
+        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(cx - bw / 2, cy - bh / 2, bw, bh, 6);
+        dc.setColor(0xFFEE66, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(cx - bw / 2, cy - bh / 2, bw, bh, 6);
+        dc.setColor(0xFFEE66, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, cy - 7, Graphics.FONT_XTINY,
+                    _ctrl.zoneMsg, Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function _drawReady(dc) {
@@ -300,18 +464,29 @@ class MainView extends WatchUi.View {
         dc.drawText(cx, H * 28 / 100, Graphics.FONT_XTINY,
                     "by Bitochi", Graphics.TEXT_JUSTIFY_CENTER);
 
-        // Decorative frog (moved up to leave room for two rows)
+        // Decorative frog (moved up to leave room for two rows) — shows
+        // off whatever skin tier the player has unlocked with lifetime
+        // coins, so the menu itself sells the progression hook.
         var fr = (H * 5) / 100; if (fr < 8) { fr = 8; }
         var pl = new Player();
         pl.reset(cx, H * 41 / 100, fr, fr + 2);
         pl.vy = -2.0;
+        pl.skin = _ctrl.skinTier();
         pl.draw(dc, cx, (H * 41) / 100);
 
-        if (_ctrl.hi > 0) {
+        // BEST height + lifetime coins share one line — the menu is too
+        // tight (two chess rows below) to afford a second row of text.
+        var statLine = "";
+        if (_ctrl.hi > 0)        { statLine = "BEST " + (_ctrl.hi / 6).format("%d") + "m"; }
+        if (_ctrl.lifeCoins > 0) {
+            statLine = (statLine.length() > 0)
+                ? (statLine + "  " + _ctrl.lifeCoins.format("%d") + "co")
+                : (_ctrl.lifeCoins.format("%d") + " coins");
+        }
+        if (statLine.length() > 0) {
             dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
             dc.drawText(cx, H * 50 / 100, Graphics.FONT_XTINY,
-                        "BEST " + (_ctrl.hi / 6).format("%d") + "m",
-                        Graphics.TEXT_JUSTIFY_CENTER);
+                        statLine, Graphics.TEXT_JUSTIFY_CENTER);
         }
 
         // Two chess-style rows: START + LEADERBOARD.
@@ -354,31 +529,48 @@ class MainView extends WatchUi.View {
     }
 
     hidden function _drawOver(dc) {
-        var bw = _ctrl.screenW * 70 / 100; if (bw < 160) { bw = 160; }
-        var bh = _ctrl.screenH * 40 / 100; if (bh < 120) { bh = 120; }
+        var bw = _ctrl.screenW * 74 / 100; if (bw < 168) { bw = 168; }
+        var bh = _ctrl.screenH * 48 / 100; if (bh < 148) { bh = 148; }
         var bx = (_ctrl.screenW - bw) / 2;
         var by = (_ctrl.screenH - bh) / 2;
+        var borderC = _ctrl.hasNewCoinsRecord() ? 0xFFCC22 : 0xFF4466;
         dc.setColor(0x0A0A14, Graphics.COLOR_TRANSPARENT);
         dc.fillRoundedRectangle(bx, by, bw, bh, 9);
-        dc.setColor(0xFF4466, Graphics.COLOR_TRANSPARENT);
+        dc.setColor(borderC, Graphics.COLOR_TRANSPARENT);
         dc.drawRoundedRectangle(bx, by, bw, bh, 9);
         var cx = _ctrl.screenW / 2;
         dc.setColor(0xFF4466, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + 6, Graphics.FONT_SMALL,
+        dc.drawText(cx, by + 5, Graphics.FONT_SMALL,
                     "SPLAT!", Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, by + 30, Graphics.FONT_XTINY,
+        dc.drawText(cx, by + 27, Graphics.FONT_XTINY,
                     "Height " + _ctrl.heightMetres().format("%d") + "m",
                     Graphics.TEXT_JUSTIFY_CENTER);
         if (_ctrl.score > 0 && _ctrl.score == _ctrl.hi) {
             dc.setColor(0x44FFAA, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, by + 48, Graphics.FONT_XTINY,
+            dc.drawText(cx, by + 43, Graphics.FONT_XTINY,
                         "NEW BEST!", Graphics.TEXT_JUSTIFY_CENTER);
         } else if (_ctrl.hi > 0) {
             dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, by + 48, Graphics.FONT_XTINY,
+            dc.drawText(cx, by + 43, Graphics.FONT_XTINY,
                         "Best " + (_ctrl.hi / 6).format("%d") + "m",
                         Graphics.TEXT_JUSTIFY_CENTER);
+        }
+        // Coins collected this run + lifetime total.
+        dc.setColor(0xFFD400, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(cx - 44, by + 62, 5);
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx - 36, by + 56, Graphics.FONT_XTINY,
+                    _ctrl.coinsRun.format("%d") + " coins this run",
+                    Graphics.TEXT_JUSTIFY_LEFT);
+        dc.setColor(0x99AABB, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, by + 76, Graphics.FONT_XTINY,
+                    _ctrl.lifeCoins.format("%d") + " lifetime",
+                    Graphics.TEXT_JUSTIFY_CENTER);
+        if (_ctrl.hasNewCoinsRecord()) {
+            dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, by + 92, Graphics.FONT_XTINY,
+                        "*** BEST HAUL EVER! ***", Graphics.TEXT_JUSTIFY_CENTER);
         }
         dc.setColor(0xAACCEE, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, by + bh - 14, Graphics.FONT_XTINY,

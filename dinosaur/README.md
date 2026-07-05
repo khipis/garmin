@@ -26,6 +26,41 @@ Speed ramps continuously from **5** to **16 px/tick** and the score number shift
 
 ---
 
+## Coins & combo
+
+Golden coins float in from the right on their own independent spawn timer
+(never placed on top of an active obstacle), at one of two jump-reachable
+heights. Grab one for a points bonus that **grows with your combo**:
+
+| Combo | Bonus per coin |
+|-------|-----------------|
+| 1st coin | +20 |
+| 2nd coin in a row | +25 |
+| 3rd coin in a row | +30 |
+| ... capped at | +60 (9th+ in a row) |
+
+Letting a coin scroll off-screen uncollected breaks the combo back to zero —
+so once you're on a streak, every coin becomes a small risk/reward decision.
+A `COMBO x N` counter appears above the HUD once you hit 2 in a row, growing
+brighter (amber → orange) the higher it climbs, and every 3rd consecutive
+coin triggers a bright gold border flash across the whole screen.
+
+---
+
+## Day / Sunset / Night / Dawn
+
+The backdrop now cycles through **four** stages instead of two, roughly every
+15 seconds of play, so a long run keeps looking fresh:
+
+| Stage | Sky | Background |
+|-------|-----|------------|
+| Day | neutral dark | grey clouds |
+| Sunset | warm brown-orange | orange-tinted clouds + a low sun disc, horizon glow |
+| Night | cool dark blue | twinkling stars |
+| Dawn | violet | twinkling stars (violet tint), horizon glow |
+
+---
+
 ## Controls
 
 | Input | Action |
@@ -54,6 +89,16 @@ A second `UP` press while airborne fires a weaker second jump (velocity –11 vs
 
 ---
 
+## Visual polish
+
+- **Landing dust puff** — a small burst of dust appears at the dino's feet
+  every time it lands from a jump.
+- **Coin sparkle** — a golden burst + floating "+N" plays on every collect.
+- **Combo flash** — a bright pulsing gold border on every 3rd consecutive
+  coin, for an unmissable payoff.
+
+---
+
 ## Dino expressions
 
 The dinosaur reacts to what's happening:
@@ -70,7 +115,9 @@ The tiny arms are exactly as functional as a real T-Rex's.
 
 ## Scoring
 
-Score increments by 1 each game tick (≈30/sec). Reaching **00300** and **01500** triggers phase unlocks. High score persists until the app is closed.
+Score increments by 1 each game tick (≈30/sec), plus the near-miss and coin
+bonuses described above. Reaching **00300** and **01500** triggers phase
+unlocks. High score persists until the app is closed.
 
 The score display shifts colour as speed increases:
 
@@ -81,6 +128,12 @@ The score display shifts colour as speed increases:
 | 16 px/tick | red |
 
 ---
+
+## Leaderboard
+
+Besides the main survival score, total coins collected and the best combo
+reached during the run are mirrored to `coins` and `combo` leaderboard
+variants, viewable on the web leaderboard's variant chips for "dinosaur".
 
 ## Technical notes
 

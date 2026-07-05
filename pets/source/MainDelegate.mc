@@ -13,6 +13,7 @@ class MainDelegate extends WatchUi.BehaviorDelegate {
     }
 
     function onPreviousPage() {
+        if (!_pet.isAlive) { _view.openLifespanLeaderboard(); return true; }
         if (_view.confirmReset) { _view.confirmReset = false; WatchUi.requestUpdate(); return true; }
         if (_pet.dilemmaType > 0) { _pet.resolveDilemma(1); WatchUi.requestUpdate(); return true; }
         _view.cycleAction(-1);
@@ -21,6 +22,7 @@ class MainDelegate extends WatchUi.BehaviorDelegate {
     }
 
     function onNextPage() {
+        if (!_pet.isAlive) { _view.openLifespanLeaderboard(); return true; }
         if (_view.confirmReset) { _view.confirmReset = false; WatchUi.requestUpdate(); return true; }
         if (_pet.dilemmaType > 0) { _pet.resolveDilemma(2); WatchUi.requestUpdate(); return true; }
         _view.cycleAction(1);
@@ -55,7 +57,7 @@ class MainDelegate extends WatchUi.BehaviorDelegate {
             _pet.feed();
         }
         else if (idx == 1) {
-            var gt = Math.rand().abs() % 5;
+            var gt = Math.rand().abs() % 7;
             if (gt == 0) {
                 var gv = new MiniGameView(_pet);
                 WatchUi.pushView(gv, new MiniGameDelegate(gv), WatchUi.SLIDE_UP);
@@ -68,9 +70,15 @@ class MainDelegate extends WatchUi.BehaviorDelegate {
             } else if (gt == 3) {
                 var gv = new DodgeGameView(_pet);
                 WatchUi.pushView(gv, new DodgeGameDelegate(gv), WatchUi.SLIDE_UP);
-            } else {
+            } else if (gt == 4) {
                 var gv = new MemoryGameView(_pet);
                 WatchUi.pushView(gv, new MemoryGameDelegate(gv), WatchUi.SLIDE_UP);
+            } else if (gt == 5) {
+                var gv = new StarCatchGameView(_pet);
+                WatchUi.pushView(gv, new StarCatchGameDelegate(gv), WatchUi.SLIDE_UP);
+            } else {
+                var gv = new PeekabooGameView(_pet);
+                WatchUi.pushView(gv, new PeekabooGameDelegate(gv), WatchUi.SLIDE_UP);
             }
             return true;
         }
@@ -89,6 +97,10 @@ class MainDelegate extends WatchUi.BehaviorDelegate {
         }
         else if (idx == 9) {
             _view.openLeaderboard();
+            return true;
+        }
+        else if (idx == 10) {
+            _view.openAlignLeaderboard();
             return true;
         }
         // DEBUG ONLY — do not enable in production:

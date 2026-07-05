@@ -73,6 +73,31 @@ MENU = cycle period · HOLD = rename · BACK = exit.
 
 ---
 
+## 🎣 Graphical trophy entries (`meta` blob) — new
+
+The `scores` table always had a nullable `meta TEXT` (JSON) column that nothing
+used. It's now wired end-to-end for games that want a richer leaderboard entry
+than a plain number:
+
+- **Watch:** `Leaderboard.submitScoreWithMeta(game, score, variant, metaDict)` —
+  same fire-and-forget submitter as `submitScore()`, plus a small
+  `Lang.Dictionary` (keep it tiny; the backend truncates the serialised JSON at
+  512 chars). `submitScore()` itself is unchanged and still sends `meta: null`.
+- **Backend:** `POST /score` already stored `meta` as-is; `GET /leaderboard` now
+  also returns it as `m` on every `top`/`near` row (via the same SQLite
+  bare-column trick already used for `country`).
+- **Web:** `bitochi.com` parses `row.m` per game/variant and can render custom
+  markup instead of the default rank/user/score row.
+
+First consumer: **Fish** — `biggest-fish` variant, `meta = { t: fishType,
+n: speciesName, r: rarity 0-3 }`. Submitted the instant a catch beats the
+player's lifetime record (not just at game over). The web board renders a
+colour-coded inline-SVG fish avatar sized by rarity, with GIANT (rarity 3)
+catches getting a golden glow. Any other game can adopt the same pattern for
+its own "trophy" stat.
+
+---
+
 ## 🆕 Arcade / board expansion (15 more games integrated)
 
 Same shared library + recipe, metric chosen per game. All build clean (`-l 2` PROD + STORE):
@@ -116,16 +141,18 @@ Win-streak games (hex_mini, makao_lite, dots_boxes, morris_classic) only submit 
 | twentyfortyeight | `twentyfortyeight` | score | — | DESC |
 | flappypidgeon | `flappypidgeon` | pillars | — | DESC |
 | jumptower | `jumptower` | height | — | DESC |
-| gemmatch | `gemmatch` | timed score | — | DESC |
-| dinosaur | `dinosaur` | survival score | — | DESC |
+| gemmatch | `gemmatch` | score (mode-aware) | — / `chain`, `bombs` | DESC |
+| dinosaur | `dinosaur` | survival score | — / `coins`, `combo` | DESC |
+| drwal | `drwal` | score (chops + combo bonus) | difficulty | DESC |
 | shadowclonerunner | `shadowclonerunner` | distance | — | DESC |
 | edgesurvivor | `edgesurvivor` | survival score | — | DESC |
 | serpent | `serpent` | combo score | — | DESC |
 | run (Monster Escape) | `run` | progress | — | DESC |
-| blobs | `blobs` | eliminations | — | DESC |
+| blobs | `blobs` | eliminations | — / `damage` | DESC |
+| bomb | `bomb` | score | — / `damage` | DESC |
 | manpac | `manpac` | points | — | DESC |
 | pixelinvaders | `pixelinvaders` | points | difficulty | DESC |
-| catapult | `catapult` | 16-round points | — | DESC |
+| catapult | `catapult` | 16-round points | — / `damage`, `shots` | DESC |
 | pinballpro | `pinballpro` | points | table | DESC |
 | skijump | `skijump` | jump points | jumper | DESC |
 | pongpro | `pongpro` | match score | AI difficulty | DESC |
@@ -144,8 +171,8 @@ Win-streak games (hex_mini, makao_lite, dots_boxes, morris_classic) only submit 
 | solitare | `solitaire` | solve time (s) | — | **ASC** |
 | lightsout | `lightsout` | move count | board size | **ASC** |
 | hangman | `hangman` | win streak | category-difficulty | DESC |
-| minigolf | `minigolf` | total strokes | course | **ASC** |
-| fish | `fish` | session catch value | — | DESC |
+| minigolf | `minigolf` | points | difficulty / `aces` | DESC |
+| fish | `fish` | session catch value | — / `biggest-fish` | DESC |
 | bricks | `bricks` | points | — | DESC |
 | moon | `moon` | composite landing | — | DESC |
 | jazzball | `jazzball` | accumulated % | — | DESC |
@@ -201,10 +228,14 @@ Win-streak games (hex_mini, makao_lite, dots_boxes, morris_classic) only submit 
 ---
 
 ### 🎮 Gem Match ✅
-- **Metryka:** punkty za 90 sekund (`score`)
-- **Wariant:** brak (jeden tryb czasowy)
-- **Co wysłać:** `{ game:"gemmatch", score:N }`
-- **Co dodać:** POST /score po upływie czasu
+- **Metryka:** punkty za rundę (`score`, mode-aware: Time Attack / Zen / Moves)
+- **Warianty:** `chain` (najdłuższy łańcuch reakcji w rundzie), `bombs` (liczba
+  zdetonowanych bomb w rundzie) — wysyłane tylko gdy > 0
+- **Co wysłać:** `{ game:"gemmatch", score:N }` + `{ ..., variant:"chain" }` +
+  `{ ..., variant:"bombs" }`
+- **Mechanika:** dopasowanie 4+ tworzy gem-bombę; wyczyszczenie bomby (dopasowaniem,
+  wymianą lub odłamkiem sąsiedniej bomby) detonuje obszar 3×3 — prawdziwe reakcje
+  łańcuchowe z animowanym opadaniem klejnotów między każdym krokiem kaskady
 
 ---
 
@@ -221,6 +252,17 @@ Win-streak games (hex_mini, makao_lite, dots_boxes, morris_classic) only submit 
 - **Wariant:** brak
 - **Co wysłać:** `{ game:"dinosaur", score:N }`
 - **Co dodać:** POST /score przy death
+
+---
+
+### 🎮 Drwal ✅
+- **Metryka:** score = chopy (+1 każdy) + bonus za combo (szybkie kolejne chopy)
+- **Wariant:** `difficulty` (`Easy` / `Normal` / `Hard`, wybierana w chess-style menu)
+- **Co wysłać:** `{ game:"drwal", score:N, variant:"Normal" }`
+- **Mechanika:** Timberman-clone — drzewo przewija się w dół, gracz tapem/UP-DOWN
+  przełącza stronę i jednocześnie rąbie; trafienie w gałąź lub wyczerpanie paska
+  energii (odświeżanego każdym udanym cięciem) kończy rundę; trudność i gęstość
+  gałęzi rosną płynnie wraz z wynikiem, zawsze pozostawiając bezpieczną stronę
 
 ---
 

@@ -57,10 +57,32 @@ class GameController {
     var roundTimer;     // ticks remaining before auto-miss
 
     // ── Spectacular-shot stats (persistent across missions) ──
-    // bestDistance — furthest hostile ever taken down in metres
+    // bestDistance  — furthest hostile ever taken down in metres
     // lifetimeKills — total hostiles killed across all sessions
+    // bestShotPts   — highest single-shot point value ever scored
+    //                 (zone + difficulty + distance + streak bonus,
+    //                 all from ONE trigger pull) — the "best shot"
+    //                 leaderboard category.
     var bestDistance;
     var lifetimeKills;
+    var bestShotPts;
+
+    // ── This-mission "new record" flags (drive recap banner +
+    // which extra leaderboard variants get submitted at mission end) ──
+    hidden var _newDistFlag;
+    hidden var _newShotFlag;
+    hidden var _newHeadFlag;
+
+    // ── Headshot streak (combo) ───────────────────────────────
+    var headStreak;      // consecutive headshots, resets on any non-head result
+    var streakMsg;        // callout text for the RESULT screen ("" = none)
+    var streakBonus;      // bonus points awarded on the qualifying shot
+
+    // ── Rotating mission scenery (SS_SCENE_*) ─────────────────
+    var scene;
+
+    // ── Muzzle flash (fire feedback) ──────────────────────────
+    var muzzleFlashT;
 
     // ── Last shot result (for the RESULT screen) ─────────────
     var lastZone;       // SS_ZONE_*
@@ -105,6 +127,15 @@ class GameController {
         roundTimer    = 0;
         bestDistance  = 0;
         lifetimeKills = 0;
+        bestShotPts   = 0;
+        _newDistFlag  = false;
+        _newShotFlag  = false;
+        _newHeadFlag  = false;
+        headStreak    = 0;
+        streakMsg     = "";
+        streakBonus   = 0;
+        scene         = SS_SCENE_FIELD;
+        muzzleFlashT  = 0;
 
         lastZone        = SS_ZONE_MISS;
         lastWasPrimary  = false;
@@ -143,6 +174,7 @@ class GameController {
         bestHeadshots = _li(SS_K_HS, 0);
         bestDistance  = _li(SS_K_DIST, 0);
         lifetimeKills = _li(SS_K_KILL, 0);
+        bestShotPts   = _li(SS_K_SHOT, 0);
     }
     function savePrefs() {
         _sv(SS_K_SENS, sens);
@@ -151,6 +183,14 @@ class GameController {
         _sv(SS_K_HS,   bestHeadshots);
         _sv(SS_K_DIST, bestDistance);
         _sv(SS_K_KILL, lifetimeKills);
+        _sv(SS_K_SHOT, bestShotPts);
+    }
+
+    // Human-readable name for the current mission's scenery.
+    function sceneName() {
+        if (scene == SS_SCENE_URBAN)   { return "URBAN"; }
+        if (scene == SS_SCENE_ROOFTOP) { return "ROOFTOP"; }
+        return "FIELD";
     }
 
     // ── Menu ─────────────────────────────────────────────────
@@ -191,13 +231,18 @@ class GameController {
         round     = 0;
         score     = 0;
         headshots = 0;
-        resultT = 0; recoilT = 0; shakeT = 0; slowmoT = 0;
+        headStreak = 0; streakMsg = ""; streakBonus = 0;
+        _newDistFlag = false; _newShotFlag = false; _newHeadFlag = false;
+        resultT = 0; recoilT = 0; shakeT = 0; slowmoT = 0; muzzleFlashT = 0;
         aim.reset();
         breath.reset();
         gyro.recalibrate();
         _spawnSeed = (_spawnSeed * 1664525 + 1013904223) & 0x7FFFFFFF;
         targets.setSeed(_spawnSeed + 7);
         wind.setSeed(_spawnSeed + 13);
+        // Rotate the map each mission — genuinely different sky/ground/
+        // silhouette treatment per scene, not just a recolour.
+        scene = (_spawnSeed / 97) % SS_SCENE_COUNT;
         _beginRound();
         state = SS_PLAY;
     }
@@ -224,15 +269,25 @@ class GameController {
     }
     hidden function _endMission() {
         if (score > bestScore)         { bestScore = score; }
-        if (headshots > bestHeadshots) { bestHeadshots = headshots; }
+        if (headshots > bestHeadshots) { bestHeadshots = headshots; _newHeadFlag = true; }
         savePrefs();
         // Submit the session's final score to the global leaderboard,
         // split by difficulty variant.  Long-range headshots already
         // feed `score` via the per-shot distance bonus.
         Leaderboard.submitScore(SS_LB_GAME_ID, score, diffName());
         Leaderboard.showPostGame(SS_LB_GAME_ID, diffName(), "SNIPER");
+        // Spectacular-shot leaderboards — only submitted when THIS
+        // mission actually set a new personal best, so each board
+        // fills up with genuine records instead of repeat noise.
+        if (_newDistFlag) { Leaderboard.submitScore(SS_LB_GAME_ID, bestDistance, "longest-shot"); }
+        if (_newShotFlag) { Leaderboard.submitScore(SS_LB_GAME_ID, bestShotPts,  "best-shot"); }
+        if (_newHeadFlag) { Leaderboard.submitScore(SS_LB_GAME_ID, bestHeadshots, "headshots"); }
         state = SS_OVER;
     }
+
+    // True if this mission set at least one new all-time record —
+    // drives the "NEW RECORD!" banner on the recap screen.
+    function hasNewRecord() { return _newDistFlag || _newShotFlag || _newHeadFlag; }
     function restart() { _startMission(); }
     function nextRoundOrFinish() {
         round++;
@@ -279,6 +334,7 @@ class GameController {
         bullet.fire(ay, ap, zRef, bestI);
         recoilT = SS_RECOIL_TICKS;
         shakeT  = 2;
+        muzzleFlashT = 3;
         state   = SS_FIRED;
     }
 
@@ -289,6 +345,7 @@ class GameController {
         if (recoilT > 0) { recoilT--; }
         if (shakeT  > 0) { shakeT--;  }
         if (slowmoT > 0) { slowmoT--; }
+        if (muzzleFlashT > 0) { muzzleFlashT--; }
 
         if (state != SS_PLAY && state != SS_FIRED) { return; }
 
@@ -404,14 +461,41 @@ class GameController {
         // Distance bonus — explicitly rewards taking the harder shot.
         // 1 pt per metre at far range adds ~480 to a far-distance kill.
         pts = pts + distanceM;
+
+        // ── Headshot streak (combo) ──────────────────────────
+        // Only headshots build/extend the streak; any other hit
+        // zone breaks it (handled below) same as a miss/decoy.
+        streakMsg = ""; streakBonus = 0;
+        if (zone == SS_ZONE_HEAD) {
+            headStreak = headStreak + 1;
+            if (headStreak >= 2) {
+                streakBonus = SS_STREAK_BONUS * (headStreak - 1);
+                pts = pts + streakBonus;
+                if      (headStreak == 2) { streakMsg = "DOUBLE HEADSHOT!"; }
+                else if (headStreak == 3) { streakMsg = "TRIPLE HEADSHOT!"; }
+                else if (headStreak == 4) { streakMsg = "RAMPAGE!"; }
+                else                       { streakMsg = "UNSTOPPABLE!"; }
+            }
+        } else {
+            headStreak = 0;
+        }
+
         score = score + pts;
 
         // Persistent spectacular-shot stats.
         lifetimeKills = lifetimeKills + 1;
+        var flush = false;
         if (distanceM > bestDistance) {
             bestDistance = distanceM;
-            savePrefs();
-        } else if ((lifetimeKills & 7) == 0) {
+            _newDistFlag = true;
+            flush = true;
+        }
+        if (pts > bestShotPts) {
+            bestShotPts = pts;
+            _newShotFlag = true;
+            flush = true;
+        }
+        if (flush || (lifetimeKills & 7) == 0) {
             // Periodically flush so the kill count doesn't get
             // lost if the player quits mid-mission.
             savePrefs();
@@ -420,12 +504,14 @@ class GameController {
     hidden function _registerDecoyHit() {
         score = score - 100;
         if (score < 0) { score = 0; }
+        headStreak = 0; streakMsg = ""; streakBonus = 0;
     }
     hidden function _registerMiss(timeout) {
         if (timeout) {
             lastZone = SS_ZONE_MISS;
             lastWasPrimary = false;
         }
+        headStreak = 0; streakMsg = ""; streakBonus = 0;
         state   = SS_RESULT;
         resultT = SS_RESULT_TICKS;
     }

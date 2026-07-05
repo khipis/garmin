@@ -106,9 +106,36 @@ class BitochiMinigolfView extends WatchUi.View {
     // Water hazards ([cx,cy,r] in 0-1000 space)
     hidden var _water;
 
+    // Sand traps ([cx,cy,r] in 0-1000 space) — heavy extra friction while the
+    // ball's centre is inside, no reset (unlike water). Pure additive hazard.
+    hidden var _sand;
+
+    // Boost pads ([cx,cy,r,dirDeg] in 0-1000 space) — conveyor-style constant
+    // push while the ball's centre is inside, direction in degrees.
+    hidden var _boost;
+
     // Post-hole state
     hidden var _holeMsg;
     hidden var _holeWait;
+
+    // Ball trail — short fading history of recent positions while rolling.
+    const MG_TRAIL_LEN = 8;
+    hidden var _trailX; hidden var _trailY; hidden var _trailN;
+
+    // Hole-in-one tracking (this run) — mirrored to a secondary "aces"
+    // leaderboard variant, and a screen-shake celebration.
+    hidden var _aceCount;
+    hidden var _shakeT;
+
+    // True if the run finished all 20 holes without ever losing a life —
+    // shown + bonus-scored on the game-over screen.
+    hidden var _flawless;
+
+    // Static course background cache (fairway, border, water, sand, boost
+    // pads, walls, tee, cup) — rebuilt only when the hole or screen size
+    // changes, since none of these elements move frame-to-frame. Animated
+    // obstacles (windmill/pendulum) and the ball/aim/HUD stay live on top.
+    hidden var _courseBmp; hidden var _courseBmpW; hidden var _courseBmpH; hidden var _courseBmpHole;
 
     // Score display per hole: [strokes] for holes 0-8
     hidden var _scoreCard;
@@ -139,9 +166,15 @@ class BitochiMinigolfView extends WatchUi.View {
         _scoreCard = new [MG_HOLES];
         for (var i = 0; i < MG_HOLES; i++) { _scoreCard[i] = -1; }
         _walls = new [0]; _obstacles = new [0]; _water = new [0];
+        _sand = new [0]; _boost = new [0];
         _holeMsg = ""; _holeWait = 0; _animPhase = 0;
         _brownWalls = false;
         _timer = null;
+
+        _trailX = new [MG_TRAIL_LEN]; _trailY = new [MG_TRAIL_LEN]; _trailN = 0;
+        for (var i = 0; i < MG_TRAIL_LEN; i++) { _trailX[i] = 0; _trailY[i] = 0; }
+        _aceCount = 0; _shakeT = 0; _flawless = false;
+        _courseBmp = null; _courseBmpW = 0; _courseBmpH = 0; _courseBmpHole = -1;
     }
 
     function onLayout(dc) {
@@ -185,7 +218,18 @@ class BitochiMinigolfView extends WatchUi.View {
         }
         // Refresh animated obstacles for the current hole (windmill, sliders…)
         updateAnimated();
-        if (_gs == MG_ROLLING) { stepPhysics(); }
+        if (_gs == MG_ROLLING) {
+            // Push current position into the fading trail before stepping.
+            for (var i = MG_TRAIL_LEN - 1; i > 0; i--) {
+                _trailX[i] = _trailX[i-1]; _trailY[i] = _trailY[i-1];
+            }
+            _trailX[0] = _bx; _trailY[0] = _by;
+            if (_trailN < MG_TRAIL_LEN) { _trailN++; }
+            stepPhysics();
+        } else if (_trailN > 0) {
+            _trailN--;
+        }
+        if (_shakeT > 0) { _shakeT--; }
         if (_gs == MG_HOLED && _holeWait > 0) { _holeWait--; }
         WatchUi.requestUpdate();
     }
@@ -256,6 +300,30 @@ class BitochiMinigolfView extends WatchUi.View {
                     _vx = 0; _vy = 0;
                     _strokes++; // splash penalty
                     settleAfterShot(); return;
+                }
+            }
+
+            // Sand trap — heavy extra drag while the ball's centre is inside;
+            // the ball keeps rolling, it just bleeds speed much faster.
+            for (var i = 0; i < _sand.size(); i++) {
+                var sd = _sand[i];
+                var sdx = _bx/10 - sd[0]; var sdy = _by/10 - sd[1];
+                if (sdx*sdx + sdy*sdy < sd[2]*sd[2]) {
+                    _vx = _vx * 82 / 100; _vy = _vy * 82 / 100;
+                    break;
+                }
+            }
+
+            // Boost pad — conveyor-style constant push in a fixed direction
+            // while the ball's centre is inside.
+            for (var i = 0; i < _boost.size(); i++) {
+                var bp = _boost[i];
+                var bdx = _bx/10 - bp[0]; var bdy = _by/10 - bp[1];
+                if (bdx*bdx + bdy*bdy < bp[2]*bp[2]) {
+                    var brad = bp[3] * Math.PI / 180;
+                    _vx += (Math.cos(brad) * 55).toNumber();
+                    _vy += (Math.sin(brad) * 55).toNumber();
+                    break;
                 }
             }
 
@@ -529,14 +597,29 @@ class BitochiMinigolfView extends WatchUi.View {
         if (leftover < 0) { leftover = 0; }
         _score += MG_HOLE_POINTS + leftover * 100;
 
-        var diff = _strokes - _par[_holeIdx];
-        if (diff <= -2)     { _holeMsg = "Eagle! **"; }
-        else if (diff == -1){ _holeMsg = "Birdie! *"; }
-        else if (diff == 0) { _holeMsg = "Par!"; }
-        else if (diff == 1) { _holeMsg = "Bogey"; }
-        else                { _holeMsg = "+" + diff; }
+        if (_strokes == 1) {
+            // HOLE IN ONE — a big bonus plus a screen-shake celebration.
+            _aceCount++;
+            _score += 750;
+            _holeMsg = "HOLE IN ONE!!!";
+            _shakeT = 14;
+            doVibe(90, 300);
+        } else {
+            var diff = _strokes - _par[_holeIdx];
+            if (diff <= -2)     { _holeMsg = "Eagle! **"; }
+            else if (diff == -1){ _holeMsg = "Birdie! *"; }
+            else if (diff == 0) { _holeMsg = "Par!"; }
+            else if (diff == 1) { _holeMsg = "Bogey"; }
+            else                { _holeMsg = "+" + diff; }
+        }
         _holeWait = 12;
         _gs = MG_HOLED;
+    }
+
+    hidden function doVibe(intensity, duration) {
+        if (Toybox has :Attention) { if (Toybox.Attention has :vibrate) {
+            Toybox.Attention.vibrate([new Toybox.Attention.VibeProfile(intensity, duration)]);
+        } }
     }
 
     // Called whenever the ball comes to rest in play without sinking. If the
@@ -706,6 +789,7 @@ class BitochiMinigolfView extends WatchUi.View {
     hidden function startGame() {
         _holeIdx = 0; _totalStrokes = 0; _strokes = 0;
         _lives = MG_START_LIVES; _score = 0; _holesSunk = 0; _outOfLives = false;
+        _aceCount = 0; _flawless = false; _trailN = 0;
         for (var i = 0; i < MG_HOLES; i++) { _scoreCard[i] = -1; }
         loadHole(_holeIdx);
         _gs = MG_AIM;
@@ -732,8 +816,14 @@ class BitochiMinigolfView extends WatchUi.View {
     // Submit the points total (HIGHER is better) for this difficulty and show
     // the post-game leaderboard.
     hidden function endRun() {
+        // Flawless Round — finished every hole without ever losing a life.
+        if (!_outOfLives && _lives == MG_START_LIVES) {
+            _flawless = true;
+            _score += 1000;
+        }
         var variant = _diffVariant();
         Leaderboard.submitScore(LB_GAME_ID, _score, variant);
+        if (_aceCount > 0) { Leaderboard.submitScore(LB_GAME_ID, _aceCount, "aces"); }
         Leaderboard.showPostGame(LB_GAME_ID, variant, "MINIGOLF");
         _gs = MG_GAMEOVER;
     }
@@ -747,7 +837,9 @@ class BitochiMinigolfView extends WatchUi.View {
     hidden function loadHole(idx) {
         _vx = 0; _vy = 0;
         _walls = new [0]; _obstacles = new [0]; _water = new [0];
+        _sand = new [0]; _boost = new [0];
         _brownWalls = false;
+        _trailN = 0;
 
         if (idx == 0) {
             // 1. Straight corridor — easy intro with two angled deflectors
@@ -807,6 +899,9 @@ class BitochiMinigolfView extends WatchUi.View {
                 [600,400, 600,700],     // bridge left wall
                 [100,700, 600,700]      // bottom divider (gap at x=600..900)
             ];
+            // Sand patch on the bridge — punishes a too-hard power shot
+            // through the narrow vertical passage.
+            _sand = [[750, 550, 65]];
         } else if (idx == 4) {
             // 5. Island Green — water lake, two channels around it (top & bottom)
             _tx=140; _ty=500; _hx=860; _hy=500;
@@ -902,6 +997,9 @@ class BitochiMinigolfView extends WatchUi.View {
                 [100,820, 100,180]      // left tee wall
             ];
             _obstacles = [[600,400, 8,40], [600,600, 8,40]];
+            // Boost pad in the throat — a satisfying kick straight toward
+            // the pocket once you've threaded the narrow gap.
+            _boost = [[750, 500, 55, 0]];
         } else if (idx == 10) {
             // 11. Slalom — alternating pegs, shorter so there is room to thread through.
             _tx=140; _ty=500; _hx=860; _hy=500;
@@ -1034,6 +1132,9 @@ class BitochiMinigolfView extends WatchUi.View {
                 [500,140, 120,860]      // left slope
             ];
             _obstacles = [[500,580, 32,80]];
+            // Sand along the base — punishes a lazy straight shot instead of
+            // arcing around the central block.
+            _sand = [[330, 760, 55]];
         } else if (idx == 18) {
             // 19. Spiral — concentric rings with offset gaps lead inward to centre.
             // Tee starts in the outermost corridor, must thread three openings
@@ -1077,6 +1178,12 @@ class BitochiMinigolfView extends WatchUi.View {
                 [700,300, 28,28]
             ];
             _water = [[500,500, 60], [200,800, 50], [800,200, 50]];
+            // Finale flourish: a sand trap to punish a sloppy approach near
+            // the top obstacle, and a boost pad in the LEFT passage (clear
+            // of the centre water pond) that kicks the ball down toward
+            // the bottom half once threaded.
+            _sand = [[350, 250, 50]];
+            _boost = [[150, 500, 35, 90]];
         }
 
         _bx = _tx * 10; _by = _ty * 10;
@@ -1106,12 +1213,36 @@ class BitochiMinigolfView extends WatchUi.View {
         if (_gs == MG_MENU)     { drawMenu(dc); return; }
         // Handle GAMEOVER before drawHUD — _holeIdx is 9 at this point (out of _par bounds)
         if (_gs == MG_GAMEOVER) { drawGameOver(dc); return; }
-        drawCourse(dc);
+
+        var ox = 0; var oy = 0;
+        if (_shakeT > 0) {
+            ox = (Math.rand().abs() % 5) - 2;
+            oy = (Math.rand().abs() % 5) - 2;
+        }
+
+        _drawCourseCached(dc, ox, oy);
+        drawObstacles(dc);
+        drawTrail(dc);
         drawBall(dc);
         drawAimArrow(dc);
         drawHUD(dc);
         if (_gs == MG_POWER) { drawPowerBar(dc); }
         if (_gs == MG_HOLED) { drawHoledOverlay(dc); }
+    }
+
+    // Fading trail of small dots behind the ball while it rolls — cheap
+    // visual polish, purely additive on top of the cached background.
+    hidden function drawTrail(dc) {
+        for (var i = 0; i < _trailN; i++) {
+            var tsx = cToS_X(_trailX[i] / 10); var tsy = cToS_Y(_trailY[i] / 10);
+            var age = i.toFloat() / MG_TRAIL_LEN.toFloat();
+            var shade = (0xFF - (age * 0xB0).toNumber());
+            var col = (shade << 16) | (shade << 8) | shade;
+            dc.setColor(col, Graphics.COLOR_TRANSPARENT);
+            var r = 2 - (i / 4);
+            if (r < 1) { r = 1; }
+            dc.fillCircle(tsx, tsy, r);
+        }
     }
 
     // ── Menu ─────────────────────────────────────────────────────────────────
@@ -1162,7 +1293,12 @@ class BitochiMinigolfView extends WatchUi.View {
     }
 
     // ── Course ────────────────────────────────────────────────────────────────
-    hidden function drawCourse(dc) {
+    // Renders every course element that never changes frame-to-frame for a
+    // given hole (fairway, border, water, sand, boost pads, walls, tee, cup).
+    // Obstacles are drawn separately (see drawObstacles) since a couple of
+    // holes animate them every tick — everything here is safe to cache into
+    // a bitmap and blit instead of redrawn from scratch every frame.
+    hidden function drawCourseStatic(dc) {
         dc.setColor(0x060E05, 0x060E05); dc.clear();
 
         // Green fairway fill — flood fill approximated by drawing a rect
@@ -1186,41 +1322,51 @@ class BitochiMinigolfView extends WatchUi.View {
             dc.setColor(0x1144AA, Graphics.COLOR_TRANSPARENT);
         }
 
-        // Obstacles. Roughly-square obstacles render as round bumper pegs (with
-        // inner highlight) for that pinball look; rectangular ones stay as
-        // wooden planks.
-        for (var i = 0; i < _obstacles.size(); i++) {
-            var ob = _obstacles[i];
-            var minSide = ob[2] < ob[3] ? ob[2] : ob[3];
-            if (minSide < 1) { minSide = 1; }
-            var maxSide = ob[2] > ob[3] ? ob[2] : ob[3];
-            var ratio = maxSide * 100 / minSide;
-            if (ratio <= 130) {
-                var cxp = cToS_X(ob[0]); var cyp = cToS_Y(ob[1]);
-                var rp  = cToS_R((ob[2] + ob[3]) / 2 + 1);
-                if (rp < 4) { rp = 4; }
-                // Outer ring
-                dc.setColor(0x442211, Graphics.COLOR_TRANSPARENT);
-                dc.fillCircle(cxp, cyp, rp + 1);
-                // Brown body
-                dc.setColor(0x884422, Graphics.COLOR_TRANSPARENT);
-                dc.fillCircle(cxp, cyp, rp);
-                // Highlight (top-left)
-                dc.setColor(0xCC8855, Graphics.COLOR_TRANSPARENT);
-                dc.fillCircle(cxp - rp/3, cyp - rp/3, rp/3 + 1);
-                // Centre spark
-                dc.setColor(0xFFCC88, Graphics.COLOR_TRANSPARENT);
-                dc.fillCircle(cxp - rp/3, cyp - rp/3, rp/6);
-            } else {
-                var sx = cToS_X(ob[0] - ob[2]); var sy = cToS_Y(ob[1] - ob[3]);
-                var sw = cToS_R(ob[2] * 2 + 1); var sh = cToS_R(ob[3] * 2 + 1);
-                if (sw < 4) { sw = 4; } if (sh < 4) { sh = 4; }
-                dc.setColor(0x442211, Graphics.COLOR_TRANSPARENT);
-                dc.fillRoundedRectangle(sx - 1, sy - 1, sw + 2, sh + 2, 2);
-                dc.setColor(0x664422, Graphics.COLOR_TRANSPARENT);
-                dc.fillRoundedRectangle(sx, sy, sw, sh, 2);
-                dc.setColor(0xAA7744, Graphics.COLOR_TRANSPARENT);
-                dc.drawRoundedRectangle(sx, sy, sw, sh, 2);
+        // Sand traps — khaki fill with speckled texture dots
+        for (var i = 0; i < _sand.size(); i++) {
+            var sd = _sand[i];
+            var ssx = cToS_X(sd[0]); var ssy = cToS_Y(sd[1]);
+            var ssr = cToS_R(sd[2]);
+            dc.setColor(0xC7A85A, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(ssx, ssy, ssr);
+            dc.setColor(0x9A8040, Graphics.COLOR_TRANSPARENT);
+            dc.drawCircle(ssx, ssy, ssr);
+            dc.setColor(0xAA8F48, Graphics.COLOR_TRANSPARENT);
+            for (var sp = 0; sp < 7; sp++) {
+                var pa = (sp * 51 + i * 23) * Math.PI / 180;
+                var pr = ssr * (0.3 + (sp % 3).toFloat() * 0.2);
+                dc.fillCircle(ssx + (Math.cos(pa) * pr).toNumber(),
+                              ssy + (Math.sin(pa) * pr).toNumber(), 1);
+            }
+        }
+
+        // Boost pads — glowing pad with a chevron arrow pointing in its
+        // push direction, plus a second faint chevron behind it for motion feel.
+        for (var i = 0; i < _boost.size(); i++) {
+            var bp = _boost[i];
+            var bsx = cToS_X(bp[0]); var bsy = cToS_Y(bp[1]);
+            var bsr = cToS_R(bp[2]);
+            dc.setColor(0x113344, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(bsx, bsy, bsr);
+            dc.setColor(0x2288CC, Graphics.COLOR_TRANSPARENT);
+            dc.drawCircle(bsx, bsy, bsr);
+            var brad = bp[3] * Math.PI / 180;
+            var fx = Math.cos(brad); var fy = Math.sin(brad);
+            var px = -fy; var py = fx;   // perpendicular unit vector
+            for (var ch = 0; ch < 2; ch++) {
+                var tipOff = (bsr.toFloat() * (0.55 - ch.toFloat() * 0.4));
+                var backOff = (bsr.toFloat() * (0.05 - ch.toFloat() * 0.4));
+                var tipX = bsx + (fx * tipOff).toNumber();
+                var tipY = bsy + (fy * tipOff).toNumber();
+                var wingX = bsx + (fx * backOff).toNumber();
+                var wingY = bsy + (fy * backOff).toNumber();
+                var spread = bsr.toFloat() * 0.4;
+                dc.setColor(ch == 0 ? 0x88FFFF : 0x2288AA, Graphics.COLOR_TRANSPARENT);
+                dc.fillPolygon([
+                    [tipX, tipY],
+                    [wingX + (px * spread).toNumber(), wingY + (py * spread).toNumber()],
+                    [wingX - (px * spread).toNumber(), wingY - (py * spread).toNumber()]
+                ]);
             }
         }
 
@@ -1297,6 +1443,83 @@ class BitochiMinigolfView extends WatchUi.View {
         dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
         dc.drawText(hsx + hsr + 2, hsy - hsr * 4 - 4, Graphics.FONT_XTINY,
             "" + (_holeIdx + 1), Graphics.TEXT_JUSTIFY_LEFT);
+    }
+
+    // Obstacles are drawn live every frame (not cached) since a couple of
+    // holes rebuild them each tick via updateAnimated() (windmill/pendulum).
+    // Roughly-square obstacles render as round bumper pegs (with inner
+    // highlight) for that pinball look; rectangular ones stay as wooden planks.
+    hidden function drawObstacles(dc) {
+        for (var i = 0; i < _obstacles.size(); i++) {
+            var ob = _obstacles[i];
+            var minSide = ob[2] < ob[3] ? ob[2] : ob[3];
+            if (minSide < 1) { minSide = 1; }
+            var maxSide = ob[2] > ob[3] ? ob[2] : ob[3];
+            var ratio = maxSide * 100 / minSide;
+            if (ratio <= 130) {
+                var cxp = cToS_X(ob[0]); var cyp = cToS_Y(ob[1]);
+                var rp  = cToS_R((ob[2] + ob[3]) / 2 + 1);
+                if (rp < 4) { rp = 4; }
+                // Outer ring
+                dc.setColor(0x442211, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(cxp, cyp, rp + 1);
+                // Brown body
+                dc.setColor(0x884422, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(cxp, cyp, rp);
+                // Highlight (top-left)
+                dc.setColor(0xCC8855, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(cxp - rp/3, cyp - rp/3, rp/3 + 1);
+                // Centre spark
+                dc.setColor(0xFFCC88, Graphics.COLOR_TRANSPARENT);
+                dc.fillCircle(cxp - rp/3, cyp - rp/3, rp/6);
+            } else {
+                var sx = cToS_X(ob[0] - ob[2]); var sy = cToS_Y(ob[1] - ob[3]);
+                var sw = cToS_R(ob[2] * 2 + 1); var sh = cToS_R(ob[3] * 2 + 1);
+                if (sw < 4) { sw = 4; } if (sh < 4) { sh = 4; }
+                dc.setColor(0x442211, Graphics.COLOR_TRANSPARENT);
+                dc.fillRoundedRectangle(sx - 1, sy - 1, sw + 2, sh + 2, 2);
+                dc.setColor(0x664422, Graphics.COLOR_TRANSPARENT);
+                dc.fillRoundedRectangle(sx, sy, sw, sh, 2);
+                dc.setColor(0xAA7744, Graphics.COLOR_TRANSPARENT);
+                dc.drawRoundedRectangle(sx, sy, sw, sh, 2);
+            }
+        }
+    }
+
+    // Blit the cached static course bitmap, rebuilding it only when the hole
+    // or screen dimensions change — cuts the per-frame draw-call count
+    // (walls, water, sand, boost, tee, cup) down to a single drawBitmap on
+    // every tick where nothing about the course itself has changed.
+    hidden function _drawCourseCached(dc, ox, oy) {
+        var sizeChanged = (_courseBmp == null || _courseBmpW != _w || _courseBmpH != _h);
+        var needRepaint = sizeChanged || (_courseBmpHole != _holeIdx);
+
+        if (needRepaint) {
+            if (sizeChanged) {
+                _courseBmp = null;
+                try {
+                    var ref = Graphics.createBufferedBitmap({ :width => _w, :height => _h });
+                    _courseBmp = (ref has :get) ? ref.get() : ref;
+                } catch (e) {
+                    _courseBmp = null;
+                }
+                _courseBmpW = _w; _courseBmpH = _h;
+            }
+            if (_courseBmp != null) {
+                drawCourseStatic(_courseBmp.getDc());
+                _courseBmpHole = _holeIdx;
+            }
+        }
+
+        if (_courseBmp != null) {
+            // Shake is applied purely as a blit-position shift so the cached
+            // bitmap itself never needs to be redrawn just to wobble it.
+            dc.drawBitmap(ox, oy, _courseBmp);
+        } else {
+            // BufferedBitmap unavailable on this CIQ version/device — fall
+            // back to drawing straight to the screen every frame (no shake).
+            drawCourseStatic(dc);
+        }
     }
 
     // ── Ball ─────────────────────────────────────────────────────────────────
@@ -1463,8 +1686,16 @@ class BitochiMinigolfView extends WatchUi.View {
             _holesSunk + "/" + MG_HOLES + " holed · " + _diffVariant(),
             Graphics.TEXT_JUSTIFY_CENTER);
 
+        if (_flawless || _aceCount > 0) {
+            var badge = "";
+            if (_flawless) { badge = "FLAWLESS ROUND! "; }
+            if (_aceCount > 0) { badge = badge + "Aces: " + _aceCount; }
+            dc.setColor((_tick % 10 < 5) ? 0xFFDD44 : 0xFF8822, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_w/2, _h * 31 / 100, Graphics.FONT_XTINY, badge, Graphics.TEXT_JUSTIFY_CENTER);
+        }
+
         // Two columns × 10 rows
-        var topY  = _h * 31 / 100;
+        var topY  = _h * 37 / 100;
         var botY  = _h * 82 / 100;
         var rowsH = botY - topY;
         var rowH  = rowsH / 10;

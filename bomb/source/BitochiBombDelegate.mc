@@ -46,13 +46,13 @@ class BitochiBombDelegate extends WatchUi.BehaviorDelegate {
     }
 
     function onPreviousPage() {
-        _view.doAction();
+        _view.navigate(-1);
         WatchUi.requestUpdate();
         return true;
     }
 
     function onNextPage() {
-        _view.doAction();
+        _view.navigate(1);
         WatchUi.requestUpdate();
         return true;
     }

@@ -22,14 +22,16 @@ class MainView extends WatchUi.View {
     hidden var _flashType;
     hidden var _flashTimer;
     hidden var _lbIdx;
+    hidden var _alignIdx;
 
     function initialize(pet) {
         View.initialize();
         _pet = pet;
         actionIdx = 0;
         confirmReset = false;
-        _actions = ["Feed", "Play", "Clean", "Heal", "Nap", "Hug", "Punish", "Reset", "Vibe", "LB"];
-        _lbIdx = _actions.size() - 1;
+        _actions = ["Feed", "Play", "Clean", "Heal", "Nap", "Hug", "Punish", "Reset", "Vibe", "LB", "Align"];
+        _lbIdx = _actions.size() - 2;
+        _alignIdx = _actions.size() - 1;
         _bounceTable = [0, -1, -2, -2, -1, 0, 0, 0];
         _celebType = 0;
         _celebTimer = 0;
@@ -106,6 +108,13 @@ class MainView extends WatchUi.View {
 
     function getActionName() {
         if (actionIdx == 8) { return _pet.vibeEnabled ? "Vibe:ON" : "Vibe:OFF"; }
+        if (actionIdx == _alignIdx) {
+            var g = _pet.getKarmaGood();
+            var e = _pet.getKarmaEvil();
+            if (g > e && g > 0) { return "Align:GOOD"; }
+            if (e > g && e > 0) { return "Align:EVIL"; }
+            return "Align";
+        }
         return _actions[actionIdx];
     }
 
@@ -783,6 +792,16 @@ class MainView extends WatchUi.View {
 
     // --- Action bar ---
 
+    // Per-species "longest life" board for a pet that just died — the score
+    // is the frozen lifespan (days lived), variant = species, so different
+    // creature types don't get lumped into the same ranking.
+    function openLifespanLeaderboard() {
+        var variant = _pet.getTypeName(_pet.petType).toLower();
+        var title = _pet.getTypeName(_pet.petType).toUpper() + " LIFESPAN";
+        var v = new LbScoresView(LB_GAME_ID, variant, title);
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
+    }
+
     function openLeaderboard() {
         // Refresh the player's standing right before they look at it.
         if (_pet != null) {
@@ -790,6 +809,19 @@ class MainView extends WatchUi.View {
             if (q > 0) { Leaderboard.submitScore(LB_GAME_ID, q, ""); }
         }
         var v = new LbScoresView(LB_GAME_ID, "", "PIXEL PETS");
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
+    }
+
+    // MOST GOOD / MOST EVIL split — jumps straight to whichever board the
+    // player is currently leaning towards (see Pet.reportKarma()).
+    function openAlignLeaderboard() {
+        var g = _pet.getKarmaGood();
+        var e = _pet.getKarmaEvil();
+        if (e > g) { if (e > 0) { Leaderboard.submitScore(LB_GAME_ID, e, "evil"); } }
+        else { if (g > 0) { Leaderboard.submitScore(LB_GAME_ID, g, "good"); } }
+        var v;
+        if (e > g) { v = new LbScoresView(LB_GAME_ID, "evil", "MOST EVIL"); }
+        else { v = new LbScoresView(LB_GAME_ID, "good", "MOST GOOD"); }
         WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
@@ -819,6 +851,11 @@ class MainView extends WatchUi.View {
         if (actionIdx == 6) { nameColor = 0xFF8844; }
         if (actionIdx == 7) { nameColor = 0xFF6666; }
         if (actionIdx == 8) { nameColor = 0x88AAFF; }
+        if (actionIdx == _alignIdx) {
+            var g = _pet.getKarmaGood();
+            var e = _pet.getKarmaEvil();
+            nameColor = (e > g) ? 0xCC66FF : 0xFFDD66;
+        }
         dc.setColor(nameColor, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w / 2, y, Graphics.FONT_SMALL, name, Graphics.TEXT_JUSTIFY_CENTER);
     }
@@ -1109,5 +1146,6 @@ class MainView extends WatchUi.View {
 
         dc.setColor(0x666688, Graphics.COLOR_TRANSPARENT);
         dc.drawText(w / 2, h * 80 / 100, Graphics.FONT_XTINY, "SELECT: New Pet", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.drawText(w / 2, h * 88 / 100, Graphics.FONT_XTINY, "UP/DOWN: Leaderboard", Graphics.TEXT_JUSTIFY_CENTER);
     }
 }

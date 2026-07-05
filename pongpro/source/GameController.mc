@@ -47,6 +47,20 @@ class GameController {
     var lastWinner;    // -1 = nobody yet, 0 = player, 1 = cpu (drives serve dir)
     var hiPlayerWins;  // total player match wins, persisted
 
+    // ── power-ups / multiball ────────────────────────────────────────────
+    var powerUp;
+    var ball2;
+    var ball2Active;
+    var puSpawnTimer;
+    var puLifeTimer;
+    var puFlashT;       // "POWER UP!" banner countdown
+    var puFlashKind;
+    var lastHitSide;    // -1 none, 0 = player, 1 = cpu — who touched the ball last
+    var growSide;        // -1 none, 0/1 = side with an enlarged paddle
+    var growTimer;
+    var shrinkSide;       // -1 none, 0/1 = side with a shrunk paddle
+    var shrinkTimer;
+
     // Layout
     var screenW;
     var screenH;
@@ -81,7 +95,23 @@ class GameController {
         difficulty = DIFF_MEDIUM;
         baseBallSpeed = 3.6;
         _holdUp = false; _holdDown = false;
+
+        powerUp      = new PowerUp();
+        ball2        = new Ball();
+        ball2Active  = false;
+        puSpawnTimer = _randSpawnGap();
+        puLifeTimer  = 0;
+        puFlashT     = 0;
+        puFlashKind  = 0;
+        lastHitSide  = -1;
+        growSide     = -1; growTimer   = 0;
+        shrinkSide   = -1; shrinkTimer = 0;
+
         _loadSettings();
+    }
+
+    hidden function _randSpawnGap() {
+        return PU_COOLDOWN_MIN + (Math.rand() % (PU_COOLDOWN_MAX - PU_COOLDOWN_MIN));
     }
 
     hidden function _loadStat() {
@@ -153,6 +183,15 @@ class GameController {
         _saveDifficulty();
     }
 
+    // Text for the big power-up flash banner (kind is snapshotted at the
+    // moment of activation into puFlashKind, independent of whatever the
+    // NEXT pickup ends up being).
+    function powerUpLabel(kind) {
+        if (kind == PU_MULTIBALL) { return "MULTIBALL!"; }
+        if (kind == PU_GROW)      { return "PADDLE UP!"; }
+        return "SHRINK RAY!";
+    }
+
     // Difficulty name used as the leaderboard variant (split per level).
     function diffName() {
         if (difficulty == DIFF_EASY) { return "Easy"; }
@@ -164,6 +203,11 @@ class GameController {
         scoreP = 0; scoreCpu = 0;
         lastWinner = -1;
         setDifficulty(difficulty);  // reapply
+        growSide = -1; growTimer = 0;
+        shrinkSide = -1; shrinkTimer = 0;
+        lastHitSide = -1;
+        _applyPaddleSizes();
+        puSpawnTimer = _randSpawnGap();
         _serve();
     }
 
@@ -203,9 +247,14 @@ class GameController {
             serveCounter = serveCounter - 1;
             if (serveCounter <= 0) {
                 var toLeft = (lastWinner == 0);    // server hits toward loser
+                // Serves get a little faster as the match progresses (on
+                // top of the per-hit boost already applied mid-rally), so
+                // later points feel meaningfully more intense.
+                var spd = baseBallSpeed + (scoreP + scoreCpu) * 0.12;
+                if (spd > ball.maxSpeed) { spd = ball.maxSpeed; }
                 ball.reset((playX0 + playX1) / 2,
                            (playY0 + playY1) / 2,
-                           baseBallSpeed, toLeft);
+                           spd, toLeft);
                 state = GS_PLAY;
             }
             // Paddles still respond to player input even during serve.
@@ -214,25 +263,132 @@ class GameController {
         }
         // GS_PLAY
         pPlayer.step();
-        ai.step(pCpu, ball, playX0, playY0, playX1, playY1);
+        var aiTarget = (ball2Active && _ball2MoreUrgent()) ? ball2 : ball;
+        ai.step(pCpu, aiTarget, playX0, playY0, playX1, playY1);
         pCpu.step();
 
-        var res = ball.step(playX0, playY0, playX1, playY1);
+        _stepPowerUp();
 
-        // Paddle collisions
-        ball.tryPaddleBounce(pPlayer.x, pPlayer.y, pPlayer.w, pPlayer.h, -1);
-        ball.tryPaddleBounce(pCpu.x,    pCpu.y,    pCpu.w,    pCpu.h,    +1);
+        var scored = _advanceBall(ball);
+        if (ball2Active) {
+            var scored2 = _advanceBall(ball2);
+            if (scored == 0) { scored = scored2; }
+            if (scored2 != 0) { ball2Active = false; }
+        }
 
-        if (res == -1) {
+        if (scored == -1) {
             // ball passed left wall — CPU scored
             scoreCpu = scoreCpu + 1;
             lastWinner = 1;
             _afterPoint();
-        } else if (res == 1) {
+        } else if (scored == 1) {
             scoreP = scoreP + 1;
             lastWinner = 0;
             _afterPoint();
         }
+    }
+
+    // Advance one ball: physics + paddle collisions + power-up pickup.
+    // Returns the same -1/0/1 scoring signal as Ball.step().
+    hidden function _advanceBall(b) {
+        var res = b.step(playX0, playY0, playX1, playY1);
+
+        if (b.tryPaddleBounce(pPlayer.x, pPlayer.y, pPlayer.w, pPlayer.h, -1)) {
+            lastHitSide = 0;
+        }
+        if (b.tryPaddleBounce(pCpu.x, pCpu.y, pCpu.w, pCpu.h, +1)) {
+            lastHitSide = 1;
+        }
+
+        if (powerUp.active) {
+            var bb = b.bbox();
+            if (powerUp.hits(bb[0], bb[1], bb[2], bb[3])) {
+                _activatePowerUp(powerUp.kind);
+                powerUp.clear();
+            }
+        }
+        return res;
+    }
+
+    // While multiball is active, point the AI at whichever ball is the
+    // more immediate threat (closest to its paddle while heading that way)
+    // instead of always tracking the original ball.
+    hidden function _ball2MoreUrgent() {
+        var d1 = (ball.vx > 0)  ? (pCpu.x - ball.x)  : 999999;
+        var d2 = (ball2.vx > 0) ? (pCpu.x - ball2.x) : 999999;
+        return d2 < d1;
+    }
+
+    // ── power-ups ─────────────────────────────────────────────────────────
+    hidden function _stepPowerUp() {
+        if (powerUp.active) {
+            powerUp.step();
+            puLifeTimer = puLifeTimer - 1;
+            if (puLifeTimer <= 0) {
+                powerUp.clear();
+                puSpawnTimer = _randSpawnGap();
+            }
+        } else {
+            puSpawnTimer = puSpawnTimer - 1;
+            if (puSpawnTimer <= 0) { _trySpawnPowerUp(); }
+        }
+
+        if (growTimer > 0) {
+            growTimer = growTimer - 1;
+            if (growTimer <= 0) { growSide = -1; _applyPaddleSizes(); }
+        }
+        if (shrinkTimer > 0) {
+            shrinkTimer = shrinkTimer - 1;
+            if (shrinkTimer <= 0) { shrinkSide = -1; _applyPaddleSizes(); }
+        }
+        if (puFlashT > 0) { puFlashT = puFlashT - 1; }
+    }
+
+    hidden function _trySpawnPowerUp() {
+        var margin = (playY1 - playY0) / 5;
+        var rangeH = (playY1 - playY0) - margin * 2;
+        if (rangeH < 4) { rangeH = 4; }
+        var y = playY0 + margin + (Math.rand() % rangeH);
+        var x = (playX0 + playX1) / 2;
+        var kind = Math.rand() % PU_TYPES;
+        powerUp.spawn(x, y, kind);
+        puLifeTimer = PU_LIFE_TICKS;
+    }
+
+    hidden function _activatePowerUp(kind) {
+        var side = (lastHitSide < 0) ? 0 : lastHitSide;
+        if (kind == PU_MULTIBALL) {
+            if (!ball2Active) {
+                ball2.cloneFrom(ball);
+                ball2Active = true;
+            }
+        } else if (kind == PU_GROW) {
+            growSide = side; growTimer = PU_BUFF_TICKS;
+            _applyPaddleSizes();
+        } else {
+            shrinkSide = 1 - side; shrinkTimer = PU_BUFF_TICKS;
+            _applyPaddleSizes();
+        }
+        puFlashKind = kind;
+        puFlashT = 55;
+    }
+
+    // Recompute both paddles' live heights from the base size + whatever
+    // grow/shrink buffs are currently active, then push them to the paddles
+    // (which internally re-clamp to stay on-screen and keep their centre).
+    hidden function _applyPaddleSizes() {
+        var playerMult = 1.0;
+        var cpuMult    = 1.0;
+        if (growSide   == 0) { playerMult = playerMult * 1.5;  }
+        if (growSide   == 1) { cpuMult    = cpuMult    * 1.5;  }
+        if (shrinkSide == 0) { playerMult = playerMult * 0.65; }
+        if (shrinkSide == 1) { cpuMult    = cpuMult    * 0.65; }
+
+        pPlayer.setHeightPreserveCenter((paddleH * playerMult).toNumber());
+        pCpu.setHeightPreserveCenter((paddleH * cpuMult).toNumber());
+
+        pPlayer.buffState = (growSide == 0) ? 1 : ((shrinkSide == 0) ? -1 : 0);
+        pCpu.buffState    = (growSide == 1) ? 1 : ((shrinkSide == 1) ? -1 : 0);
     }
 
     hidden function _afterPoint() {
@@ -259,6 +415,9 @@ class GameController {
         ball.y  = (playY0 + playY1) / 2;
         ball.vx = 0.0;
         ball.vy = 0.0;
+        // Multiball and any pending pickup don't carry across a serve.
+        ball2Active = false;
+        powerUp.clear();
         // Recentre AI paddle a bit and let it pick a fresh random error.
         ai.onServe(paddleH / 2);
         state = GS_SERVE;

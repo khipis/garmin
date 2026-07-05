@@ -8,10 +8,16 @@ using Toybox.Application;
 
 enum {
     GS_MENU, GS_INTRO, GS_TURN, GS_MOVE,
-    GS_AIM, GS_POWER, GS_FLY, GS_BOOM, GS_WIN, GS_OVER
+    GS_AIM, GS_POWER, GS_FLY, GS_BOOM, GS_WIN, GS_OVER, GS_SHOP
 }
-enum { WPN_ROCKET, WPN_GRENADE, WPN_MEGA, WPN_SNIPER, WPN_MIRV, WPN_QUAKE, WPN_CLUSTER, WPN_PLASMA, WPN_NAPALM, WPN_NUKE, WPN_DRILL }
-const WPN_COUNT = 11;
+enum { WPN_ROCKET, WPN_GRENADE, WPN_MEGA, WPN_SNIPER, WPN_MIRV, WPN_QUAKE, WPN_CLUSTER, WPN_PLASMA, WPN_NAPALM, WPN_NUKE, WPN_DRILL,
+       WPN_BANANA, WPN_CHICKEN, WPN_DISCO }
+const WPN_COUNT = 14;
+// Purchasable "armory" weapons — indices into the shop arrays below, offset
+// from WPN_BANANA. Bought once per run with gold earned from clearing
+// rounds, then permanently unlimited (like ROCKET/GRENADE) for the rest of
+// that run.
+const SHOP_COUNT = 3;
 
 class BitochiBlobsView extends WatchUi.View {
 
@@ -127,6 +133,19 @@ class BitochiBlobsView extends WatchUi.View {
     hidden var _twoPlayer;
     hidden var _menuSel;
 
+    // ── Armory: gold economy + 3 purchasable joke/awesome weapons ──────────
+    hidden var _gold;
+    hidden var _roundGold;
+    hidden var _shopOwned;   // [banana, chicken, disco] — persists across rounds within a run
+    hidden var _shopSel;     // 0..SHOP_COUNT-1 = item row, SHOP_COUNT = "START ROUND"
+    hidden var _shopNames2;
+    hidden var _shopCosts2;
+    hidden var _shopDesc2;
+
+    // Lifetime (whole-run) damage dealt by the human player(s) — mirrored to
+    // a secondary "damage" leaderboard variant so ranking isn't just streak length.
+    hidden var _matchDamage;
+
     function initialize() {
         View.initialize();
         Math.srand(Time.now().value());
@@ -151,18 +170,29 @@ class BitochiBlobsView extends WatchUi.View {
         }
         _blobCount = 3; _activeIdx = 0; _kills = 0;
 
-        _wpnNames  = ["ROCKET", "GRENADE", "MEGA", "SNIPER", "MIRV", "QUAKE", "CLUSTER", "PLASMA", "NAPALM", "NUKE", "DRILL"];
-        _wpnSpd    = [8.5,  7.0,  6.0, 13.0,  7.0, 7.5,  7.0, 14.0,  6.5, 5.0, 12.0];
-        _wpnGrv    = [0.10, 0.12, 0.14, 0.06, 0.11, 0.15, 0.09, 0.03, 0.13, 0.08, 0.04];
-        _wpnRad    = [20,   26,   36,   12,   16,   50,   12,   7,    14,   55,   24];
-        _wpnDmg    = [1,    1,    2,    1,    1,    1,    1,    3,    1,    2,    2];
-        _wpnWind   = [1.0,  1.0,  1.0,  0.2,  1.0,  0.8,  0.9,  0.1,  1.2,  0.5,  0.3];
-        _wpnBounce = [0,    2,    0,    0,    0,    0,    0,    0,    0,    0,    0];
+        _wpnNames  = ["ROCKET", "GRENADE", "MEGA", "SNIPER", "MIRV", "QUAKE", "CLUSTER", "PLASMA", "NAPALM", "NUKE", "DRILL", "BANANA", "CHICKEN", "DISCO"];
+        _wpnSpd    = [8.5,  7.0,  6.0, 13.0,  7.0, 7.5,  7.0, 14.0,  6.5, 5.0, 12.0, 7.5, 9.0, 6.5];
+        _wpnGrv    = [0.10, 0.12, 0.14, 0.06, 0.11, 0.15, 0.09, 0.03, 0.13, 0.08, 0.04, 0.11, 0.13, 0.10];
+        _wpnRad    = [20,   26,   36,   12,   16,   50,   12,   7,    14,   55,   24,   22,   14,   28];
+        _wpnDmg    = [1,    1,    2,    1,    1,    1,    1,    3,    1,    2,    2,    2,    1,    2];
+        _wpnWind   = [1.0,  1.0,  1.0,  0.2,  1.0,  0.8,  0.9,  0.1,  1.2,  0.5,  0.3,  1.0,  0.7,  0.9];
+        _wpnBounce = [0,    2,    0,    0,    0,    0,    0,    0,    0,    0,    0,    1,    5,    0];
         // -1=unlimited (basic): ROCKET,GRENADE,SNIPER,CLUSTER; 1=one use/round (special): MEGA,MIRV,QUAKE,PLASMA,NAPALM,NUKE,DRILL
-        // Per-player ammo: _wpnAmmo[playerIdx][weaponIdx]; -1 = unlimited
-        _wpnAmmo = [[-1, -1, 1, -1, 1, 1, -1, 1, 1, 1, 1],
-                    [-1, -1, 1, -1, 1, 1, -1, 1, 1, 1, 1]];
+        // BANANA/CHICKEN/DISCO start locked (0 = unavailable, same code path
+        // that already skips depleted specials) and flip to -1 (unlimited)
+        // permanently once bought from the armory. Per-player ammo:
+        // _wpnAmmo[playerIdx][weaponIdx]; -1 = unlimited, 0 = unavailable.
+        _wpnAmmo = [[-1, -1, 1, -1, 1, 1, -1, 1, 1, 1, 1, 0, 0, 0],
+                    [-1, -1, 1, -1, 1, 1, -1, 1, 1, 1, 1, 0, 0, 0]];
         _weapon = WPN_ROCKET;
+
+        _gold = 0; _roundGold = 0;
+        _shopOwned = [false, false, false];
+        _shopSel = SHOP_COUNT;
+        _shopNames2 = ["BANANA BOMB", "RUBBER CHICKEN", "DISCO BOMB"];
+        _shopCosts2 = [70, 55, 100];
+        _shopDesc2  = ["Curves hard in flight - aim for the peel!", "Bounces forever, squeaks on every hit", "5-way rainbow party blast"];
+        _matchDamage = 0;
 
         _aimPhase = 0; _aimAnglePhase = 0.0;
         _aimAngle = 45.0; _powerPhase = 0.0; _power = 60.0;
@@ -381,7 +411,13 @@ class BitochiBlobsView extends WatchUi.View {
     }
 
     hidden function startRound() {
+        var isNewGame = (_round == 0);
         _round++;
+        if (isNewGame) {
+            _gold = 0;
+            _shopOwned = [false, false, false];
+            _matchDamage = 0;
+        }
         if (_round <= 2) { _blobCount = 3; }
         else if (_round <= 5) { _blobCount = 4; }
         else { _blobCount = 5; }
@@ -407,10 +443,16 @@ class BitochiBlobsView extends WatchUi.View {
         }
         _activeIdx = 0;
         _weapon = WPN_ROCKET;
-        // Reset per-player special weapon ammo each round
+        // Reset per-player special weapon ammo each round. Armory weapons
+        // (BANANA/CHICKEN/DISCO) are the exception: once bought they stay
+        // unlimited (-1) forever this run; unbought ones stay locked (0).
         for (var p = 0; p < 2; p++) {
             for (var i = 0; i < WPN_COUNT; i++) {
-                if (_wpnAmmo[p][i] != -1) { _wpnAmmo[p][i] = 1; }
+                if (i == WPN_BANANA || i == WPN_CHICKEN || i == WPN_DISCO) {
+                    _wpnAmmo[p][i] = _shopOwned[i - WPN_BANANA] ? -1 : 0;
+                } else if (_wpnAmmo[p][i] != -1) {
+                    _wpnAmmo[p][i] = 1;
+                }
             }
         }
         _aimAngle = 45.0; _aimPhase = 0; _aimAnglePhase = 0.0; _powerPhase = 0.0;
@@ -570,6 +612,9 @@ class BitochiBlobsView extends WatchUi.View {
         var wf = _wpnWind[_projWeapon];
         _projVy += grav;
         _projVx += _wind * 0.004 * wf;
+        // BANANA — constant sideways curve every tick regardless of aim, so
+        // it always arcs the same way in flight (classic banana-shot gag).
+        if (_projWeapon == WPN_BANANA) { _projVx += 0.05; }
         _projX += _projVx;
         _projY += _projVy;
 
@@ -641,7 +686,10 @@ class BitochiBlobsView extends WatchUi.View {
                 var hdist = (_bX[i] - hx).abs();
                 if (hdist < _boomMaxR.toFloat()) {
                     _bHp[i] -= dmg; if (_bHp[i] < 0) { _bHp[i] = 0; }
-                    if (i != _activeIdx) { _hitMsg = "QUAKE HIT!"; _hitMsgTick = 35; }
+                    if (i != _activeIdx) {
+                        _hitMsg = "QUAKE HIT!"; _hitMsgTick = 35;
+                        if (isHumanTurn()) { _matchDamage += dmg; }
+                    }
                 }
             }
             _shakeT = 18; doVibe(100, 300);
@@ -687,6 +735,18 @@ class BitochiBlobsView extends WatchUi.View {
             spawnBoom(hx.toNumber(), hy.toNumber());
             applyDmgAt(hx, hy, _boomMaxR.toFloat(), dmg);
             _shakeT = 6; doVibe(80, 140);
+        } else if (_projWeapon == WPN_DISCO) {
+            // Five-way rainbow party blast — same spread pattern as
+            // NAPALM/CLUSTER, purely cosmetic (colour) difference in spawnBoom.
+            _boomCount = 5;
+            for (var e = 0; e < 5; e++) {
+                _boomXs[e] = hx + ((e - 2) * 26).toFloat();
+                _boomYs[e] = terrYAtWorld(_boomXs[e]).toFloat();
+                carveCrater(_boomXs[e], _boomMaxR);
+                spawnBoom(_boomXs[e].toNumber(), _boomYs[e].toNumber());
+                applyDmgAt(_boomXs[e], _boomYs[e], _boomMaxR.toFloat(), dmg);
+            }
+            _shakeT = 14; doVibe(70, 220);
         } else {
             _boomCount = 1;
             _boomXs[0] = hx; _boomYs[0] = hy;
@@ -695,6 +755,13 @@ class BitochiBlobsView extends WatchUi.View {
             applyDmgAt(hx, hy, _boomMaxR.toFloat(), dmg);
             if (_projWeapon == WPN_MEGA) { _shakeT = 16; doVibe(100, 260); }
             else { _shakeT = 8; doVibe(60, 120); }
+        }
+
+        // Rubber Chicken flavour — reflavour a plain hit as a comedic squawk
+        // without touching the shared hit-message logic in applyDmgAt.
+        if (_projWeapon == WPN_CHICKEN && _hitMsgTick > 0 &&
+            (_hitMsg.equals("HIT!") || _hitMsg.equals("DIRECT HIT!"))) {
+            _hitMsg = "BAWK BAWK!";
         }
 
         applyAllBlobGravity();
@@ -719,6 +786,7 @@ class BitochiBlobsView extends WatchUi.View {
                     _hitMsgTick = 35;
                     _dmgFloatX = _bX[i]; _dmgFloatY = _bY[i] - 22.0;
                     _dmgFloatV = actualDmg; _dmgFloatT = 30;
+                    if (isHumanTurn()) { _matchDamage += actualDmg; }
                 } else {
                     if (!anyHit) { _hitMsg = "SELF HIT!"; _hitMsgTick = 30; }
                 }
@@ -737,6 +805,8 @@ class BitochiBlobsView extends WatchUi.View {
         else if (_projWeapon == WPN_DRILL) { depth = 1.8; }
         else if (_projWeapon == WPN_QUAKE) { depth = 0.3; }
         else if (_projWeapon == WPN_NAPALM){ depth = 0.7; }
+        else if (_projWeapon == WPN_DISCO) { depth = 0.55; }
+        else if (_projWeapon == WPN_CHICKEN) { depth = 0.4; }
         else { depth = 0.9; }
 
         // Main crater
@@ -791,6 +861,7 @@ class BitochiBlobsView extends WatchUi.View {
                     _winnerPlayer = lastAlive;
                     gameState = GS_WIN; _resultTick = 0;
                     if (_round > _bestStreak) { _bestStreak = _round; _newBest = true; Application.Storage.setValue("blobBest", _bestStreak); }
+                    _roundGold = 30 + _round * 8 + _kills * 12; _gold += _roundGold;
                     doVibe(80, 200); spawnVictory();
                 } else {
                     // All player blobs eliminated (or everyone dead)
@@ -798,6 +869,7 @@ class BitochiBlobsView extends WatchUi.View {
                     var s = _round - 1; if (s < 0) { s = 0; }
                     if (s > _bestStreak) { _bestStreak = s; _newBest = true; Application.Storage.setValue("blobBest", _bestStreak); }
                     Leaderboard.submitScore("blobs", s, "");
+                    if (_matchDamage > 0) { Leaderboard.submitScore("blobs", _matchDamage, "damage"); }
                     Leaderboard.showPostGame("blobs", "", "BLOBS");
                     doVibe(100, 300);
                 }
@@ -809,6 +881,7 @@ class BitochiBlobsView extends WatchUi.View {
                 var s2 = _round - 1; if (s2 < 0) { s2 = 0; }
                 if (s2 > _bestStreak) { _bestStreak = s2; _newBest = true; Application.Storage.setValue("blobBest", _bestStreak); }
                 Leaderboard.submitScore("blobs", s2, "");
+                if (_matchDamage > 0) { Leaderboard.submitScore("blobs", _matchDamage, "damage"); }
                 Leaderboard.showPostGame("blobs", "", "BLOBS");
                 doVibe(100, 300); return;
             }
@@ -821,6 +894,7 @@ class BitochiBlobsView extends WatchUi.View {
                 _winnerPlayer = 0;
                 gameState = GS_WIN; _resultTick = 0;
                 if (_round > _bestStreak) { _bestStreak = _round; _newBest = true; Application.Storage.setValue("blobBest", _bestStreak); }
+                _roundGold = 30 + _round * 8 + _kills * 12; _gold += _roundGold;
                 doVibe(80, 200); spawnVictory(); return;
             }
             if (!_bAlive[0]) {
@@ -828,6 +902,7 @@ class BitochiBlobsView extends WatchUi.View {
                 var streak = _round - 1; if (streak < 0) { streak = 0; }
                 if (streak > _bestStreak) { _bestStreak = streak; _newBest = true; Application.Storage.setValue("blobBest", _bestStreak); }
                 Leaderboard.submitScore("blobs", streak, "");
+                if (_matchDamage > 0) { Leaderboard.submitScore("blobs", _matchDamage, "damage"); }
                 Leaderboard.showPostGame("blobs", "", "BLOBS");
                 doVibe(100, 300); return;
             }
@@ -838,12 +913,14 @@ class BitochiBlobsView extends WatchUi.View {
     hidden function spawnBoom(ex, ey) {
         var isNapalm = (_boomWeapon == WPN_NAPALM);
         var isNuke   = (_boomWeapon == WPN_NUKE);
+        var isDisco  = (_boomWeapon == WPN_DISCO);
         var colors;
         if (isNapalm) { colors = [0xFF6600, 0xFF8800, 0xFFCC00, 0xFF4400, 0xFFAA00]; }
         else if (isNuke) { colors = [0xFFFFAA, 0xFFFF44, 0xFF8822, 0xFF4411, 0xFFFFFF]; }
+        else if (isDisco) { colors = [0xFF33FF, 0x33FFFF, 0xFFFF33, 0xFF3388, 0x33FF88, 0x8833FF]; }
         else { colors = [0xFF4422, 0xFFAA22, 0xFFDD44, 0xFF6622, 0xFFFFAA, 0xFF2211]; }
         var nColors = (isNapalm || isNuke) ? 5 : 6;
-        var nSpawn = isNuke ? 16 : 12;
+        var nSpawn = isNuke ? 16 : (isDisco ? 14 : 12);
         var spawned = 0;
         for (var i = 0; i < MAX_PARTS; i++) {
             if (spawned >= nSpawn) { break; }
@@ -930,13 +1007,38 @@ class BitochiBlobsView extends WatchUi.View {
             var apIdx = (_twoPlayer && _activeIdx == 1) ? 1 : 0;
             if (_wpnAmmo[apIdx][_weapon] != 0) { fireShot(); }
         }
-        else if (gameState == GS_WIN) { if (_resultTick > 30) { startRound(); } }
+        else if (gameState == GS_WIN) {
+            if (_resultTick > 30) {
+                if (_shopOwned[0] && _shopOwned[1] && _shopOwned[2]) { startRound(); }
+                else { gameState = GS_SHOP; _shopSel = SHOP_COUNT; _resultTick = 0; }
+            }
+        }
+        else if (gameState == GS_SHOP) {
+            if (_shopSel >= SHOP_COUNT) { startRound(); }
+            else if (!_shopOwned[_shopSel]) {
+                var cost = _shopCosts2[_shopSel];
+                if (_gold >= cost) {
+                    _gold -= cost;
+                    _shopOwned[_shopSel] = true;
+                    var wIdx = WPN_BANANA + _shopSel;
+                    _wpnAmmo[0][wIdx] = -1; _wpnAmmo[1][wIdx] = -1;
+                    doVibe(40, 90);
+                } else {
+                    doVibe(20, 30);
+                }
+            }
+        }
         else if (gameState == GS_OVER) { if (_resultTick > 30) { _round = 0; _newBest = false; startRound(); } }
     }
 
     function doWeapon(dir) {
         if (gameState == GS_MENU) {
             _menuSel = (_menuSel + dir + 3) % 3;
+            doVibe(15, 30);
+            return;
+        }
+        if (gameState == GS_SHOP) {
+            _shopSel = (_shopSel + dir + (SHOP_COUNT + 1)) % (SHOP_COUNT + 1);
             doVibe(15, 30);
             return;
         }
@@ -958,6 +1060,7 @@ class BitochiBlobsView extends WatchUi.View {
         _w = dc.getWidth();
         _h = dc.getHeight();
         if (gameState == GS_MENU) { drawMenu(dc); return; }
+        if (gameState == GS_SHOP) { drawShop(dc); return; }
         drawGame(dc);
     }
 
@@ -1141,6 +1244,27 @@ class BitochiBlobsView extends WatchUi.View {
             dc.setColor(0xCCCCCC, Graphics.COLOR_TRANSPARENT); dc.fillCircle(px, py, 3);
             dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillCircle(px + (_projVx > 0 ? 4 : -4), py, 2);
             if (_tick % 2 == 0) { dc.setColor(0xFFAA44, Graphics.COLOR_TRANSPARENT); dc.fillCircle(px - (_projVx > 0 ? 2 : -2), py, 1); }
+        } else if (_projWeapon == WPN_BANANA) {
+            // Yellow crescent — a spinning banana silhouette
+            var spin = (_tick % 8);
+            dc.setColor(0xFFDD22, Graphics.COLOR_TRANSPARENT); dc.fillCircle(px, py, 4);
+            dc.setColor((spin < 4) ? 0x1A1A1A : 0xFFDD22, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(px + ((spin < 4) ? 2 : -2), py - 1, 2);
+            dc.setColor(0x886600, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(px - 1, py - 4, 2, 2);
+        } else if (_projWeapon == WPN_CHICKEN) {
+            // Squeaky rubber chicken: white body, red comb, orange beak
+            dc.setColor(0xFFFFEE, Graphics.COLOR_TRANSPARENT); dc.fillCircle(px, py, 4);
+            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillCircle(px - (_projVx > 0.0 ? -3 : 3), py, 2);
+            dc.setColor(0xFF6622, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(px + (_projVx > 0.0 ? -5 : 3), py - 1, 2, 2);
+            dc.setColor(0xFF2222, Graphics.COLOR_TRANSPARENT); dc.fillCircle(px, py - 4, 1);
+        } else if (_projWeapon == WPN_DISCO) {
+            // Spinning mirrorball with shifting rainbow facets
+            var pal = [0xFF33FF, 0x33FFFF, 0xFFFF33, 0x33FF88];
+            dc.setColor(0xCCCCCC, Graphics.COLOR_TRANSPARENT); dc.fillCircle(px, py, 5);
+            dc.setColor(pal[_tick % 4], Graphics.COLOR_TRANSPARENT); dc.fillRectangle(px - 2, py - 2, 2, 2);
+            dc.setColor(pal[(_tick + 1) % 4], Graphics.COLOR_TRANSPARENT); dc.fillRectangle(px + 1, py - 2, 2, 2);
+            dc.setColor(pal[(_tick + 2) % 4], Graphics.COLOR_TRANSPARENT); dc.fillRectangle(px - 2, py + 1, 2, 2);
+            dc.setColor(pal[(_tick + 3) % 4], Graphics.COLOR_TRANSPARENT); dc.fillRectangle(px + 1, py + 1, 2, 2);
         } else {
             dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillCircle(px, py, 3);
             dc.setColor(0xFF4422, Graphics.COLOR_TRANSPARENT); dc.fillCircle(px, py, 2);
@@ -1170,6 +1294,32 @@ class BitochiBlobsView extends WatchUi.View {
             dc.setColor(0xFFFF88, Graphics.COLOR_TRANSPARENT); dc.fillCircle(ex, ey, r / 2);
             // Upward dirt geyser
             for (var gu = 1; gu <= 3; gu++) { dc.setColor(0x7A5A2A, Graphics.COLOR_TRANSPARENT); dc.fillCircle(ex + (gu - 2) * 5, ey - r * gu / 2, 3); }
+        } else if (_boomWeapon == WPN_DISCO) {
+            // Rainbow party burst — rotating multi-colour rings, no fire/smoke
+            var discoPal = [0xFF33FF, 0x33FFFF, 0xFFFF33, 0xFF3388, 0x33FF88, 0x8833FF];
+            dc.setColor(discoPal[eTick % 6], Graphics.COLOR_TRANSPARENT); dc.fillCircle(ex, ey, r);
+            dc.setColor(discoPal[(eTick + 2) % 6], Graphics.COLOR_TRANSPARENT); dc.fillCircle(ex, ey, r * 3 / 4);
+            dc.setColor(discoPal[(eTick + 4) % 6], Graphics.COLOR_TRANSPARENT); dc.fillCircle(ex, ey, r / 2);
+            if (eTick < 14) {
+                for (var sp = 0; sp < 5; sp++) {
+                    var sa = (sp * 72 + eTick * 20).toFloat() * 3.14159 / 180.0;
+                    var sr = (r + eTick * 2).toFloat();
+                    dc.setColor(discoPal[sp % 6], Graphics.COLOR_TRANSPARENT);
+                    dc.fillCircle(ex + (sr * Math.cos(sa)).toNumber(), ey + (sr * Math.sin(sa) * 0.5).toNumber(), 2);
+                }
+            }
+        } else if (_boomWeapon == WPN_CHICKEN) {
+            // Feathers puff instead of fire — comedic, non-violent explosion
+            dc.setColor(0xFFFFEE, Graphics.COLOR_TRANSPARENT); dc.fillCircle(ex, ey, r * 3 / 4);
+            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillCircle(ex, ey, r / 2);
+            if (eTick < 12) {
+                for (var f = 0; f < 6; f++) {
+                    var fa = (f * 60 + eTick * 15).toFloat() * 3.14159 / 180.0;
+                    var fr = (r * 0.9 + eTick.toFloat() * 1.5);
+                    dc.setColor((f % 2 == 0) ? 0xFFFFEE : 0xFFDD88, Graphics.COLOR_TRANSPARENT);
+                    dc.fillCircle(ex + (fr * Math.cos(fa)).toNumber(), ey + (fr * Math.sin(fa) * 0.6).toNumber(), 2);
+                }
+            }
         } else {
             dc.setColor(0xFF4422, Graphics.COLOR_TRANSPARENT); dc.fillCircle(ex, ey, r);
             dc.setColor(0xFFAA22, Graphics.COLOR_TRANSPARENT); dc.fillCircle(ex, ey, r * 3 / 4);
@@ -1336,7 +1486,10 @@ class BitochiBlobsView extends WatchUi.View {
             else if (_weapon == WPN_PLASMA)  { wpnC = 0x22CCFF; }
             else if (_weapon == WPN_NAPALM)  { wpnC = 0xFF6600; }
             else if (_weapon == WPN_NUKE)    { wpnC = 0xFF4444; }
-            else { wpnC = 0xCCCCCC; }  // DRILL
+            else if (_weapon == WPN_DRILL)   { wpnC = 0xCCCCCC; }
+            else if (_weapon == WPN_BANANA)  { wpnC = 0xFFDD22; }
+            else if (_weapon == WPN_CHICKEN) { wpnC = 0xFFEEBB; }
+            else { wpnC = 0xFF33FF; }  // DISCO
             var hudPIdx = (_twoPlayer && _activeIdx == 1) ? 1 : 0;
             var wpnLabel;
             if (_wpnAmmo[hudPIdx][_weapon] == -1) {
@@ -1425,8 +1578,78 @@ class BitochiBlobsView extends WatchUi.View {
         dc.drawText(_w / 2, by + 4, Graphics.FONT_MEDIUM, victoryLine, Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xFFCC44, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, by + bh * 35 / 100, Graphics.FONT_XTINY, "Streak: " + _round + "  Kills: " + _kills, Graphics.TEXT_JUSTIFY_CENTER);
         dc.setColor(0xAABBCC, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, by + bh * 48 / 100, Graphics.FONT_XTINY, "Best: " + _bestStreak, Graphics.TEXT_JUSTIFY_CENTER);
-        if (_newBest) { dc.setColor((_resultTick % 4 < 2) ? 0xFFDD44 : 0xFF8822, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, by + bh * 60 / 100, Graphics.FONT_XTINY, "NEW BEST!", Graphics.TEXT_JUSTIFY_CENTER); }
-        if (_resultTick > 30) { dc.setColor((_resultTick % 10 < 5) ? 0xFFAA44 : 0xDD8833, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, by + bh * 78 / 100, Graphics.FONT_XTINY, "Tap for next round", Graphics.TEXT_JUSTIFY_CENTER); }
+        if (_roundGold > 0) { dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, by + bh * 60 / 100, Graphics.FONT_XTINY, "+" + _roundGold + " gold", Graphics.TEXT_JUSTIFY_CENTER); }
+        if (_newBest) { dc.setColor((_resultTick % 4 < 2) ? 0xFFDD44 : 0xFF8822, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, by + bh * 70 / 100, Graphics.FONT_XTINY, "NEW BEST!", Graphics.TEXT_JUSTIFY_CENTER); }
+        if (_resultTick > 30) {
+            var canShop = !(_shopOwned[0] && _shopOwned[1] && _shopOwned[2]);
+            var hint = canShop ? "Tap to visit ARMORY" : "Tap for next round";
+            dc.setColor((_resultTick % 10 < 5) ? 0xFFAA44 : 0xDD8833, Graphics.COLOR_TRANSPARENT); dc.drawText(_w / 2, by + bh * 82 / 100, Graphics.FONT_XTINY, hint, Graphics.TEXT_JUSTIFY_CENTER);
+        }
+    }
+
+    // ARMORY — shown after clearing a round (if anything is still unowned).
+    // Simple 4-row list: 3 joke/awesome weapons to buy once, then a sentinel
+    // row to head into the next round. Up/Down cycles, tap buys/continues.
+    hidden function drawShop(dc) {
+        dc.setColor(0x120A1E, 0x120A1E); dc.clear();
+        var cx = _w / 2;
+
+        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx + 1, _h * 5 / 100 + 1, Graphics.FONT_MEDIUM, "ARMORY", Graphics.TEXT_JUSTIFY_CENTER);
+        dc.setColor((_tick % 14 < 7) ? 0xFF44FF : 0xCC22CC, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, _h * 5 / 100, Graphics.FONT_MEDIUM, "ARMORY", Graphics.TEXT_JUSTIFY_CENTER);
+
+        dc.setColor(0xFFDD44, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, _h * 17 / 100, Graphics.FONT_SMALL, "GOLD: " + _gold, Graphics.TEXT_JUSTIFY_CENTER);
+
+        var rowH = _h * 12 / 100; if (rowH < 20) { rowH = 20; } if (rowH > 26) { rowH = 26; }
+        var rowW = _w * 84 / 100; if (rowW < 130) { rowW = 130; }
+        var rowX = (_w - rowW) / 2;
+        var gap = 3;
+        var rowY0 = _h * 26 / 100;
+
+        for (var i = 0; i < SHOP_COUNT; i++) {
+            var ry = rowY0 + i * (rowH + gap);
+            var sel = (i == _shopSel);
+            var owned = _shopOwned[i];
+            var afford = _gold >= _shopCosts2[i];
+
+            var bg; var bd; var fg;
+            if (owned) { bg = 0x0A2A14; bd = 0x22AA55; fg = 0x66FF99; }
+            else if (sel) { bg = afford ? 0x3A1A44 : 0x2A1414; bd = afford ? 0xFF44FF : 0x884444; fg = afford ? 0xFFEEFF : 0xFF8888; }
+            else { bg = 0x160E22; bd = 0x332244; fg = afford ? 0xBBAACC : 0x665566; }
+
+            dc.setColor(bg, Graphics.COLOR_TRANSPARENT); dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);
+            dc.setColor(bd, Graphics.COLOR_TRANSPARENT); dc.drawRoundedRectangle(rowX, ry, rowW, rowH, 5);
+            if (sel && !owned) {
+                var ay = ry + rowH / 2;
+                dc.fillPolygon([[rowX + 5, ay - 4], [rowX + 5, ay + 4], [rowX + 11, ay]]);
+            }
+
+            var label = owned ? (_shopNames2[i] + "  OWNED") : (_shopNames2[i] + "  " + _shopCosts2[i] + "g");
+            dc.setColor(fg, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, ry + 3, Graphics.FONT_XTINY, label, Graphics.TEXT_JUSTIFY_CENTER);
+            if (sel && !owned) {
+                dc.setColor(0x9977BB, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(cx, ry + rowH - 12, Graphics.FONT_XTINY, _shopDesc2[i], Graphics.TEXT_JUSTIFY_CENTER);
+            }
+        }
+
+        var sentY = rowY0 + SHOP_COUNT * (rowH + gap) + 4;
+        var sentSel = (_shopSel >= SHOP_COUNT);
+        dc.setColor(sentSel ? 0x0A3320 : 0x101820, Graphics.COLOR_TRANSPARENT);
+        dc.fillRoundedRectangle(rowX, sentY, rowW, rowH, 5);
+        dc.setColor(sentSel ? 0x44FF88 : 0x223344, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(rowX, sentY, rowW, rowH, 5);
+        if (sentSel) {
+            var say = sentY + rowH / 2;
+            dc.fillPolygon([[rowX + 5, say - 4], [rowX + 5, say + 4], [rowX + 11, say]]);
+        }
+        dc.setColor(sentSel ? 0xCCFFDD : 0x5577AA, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, sentY + (rowH - 14) / 2, Graphics.FONT_XTINY, "NEXT ROUND", Graphics.TEXT_JUSTIFY_CENTER);
+
+        dc.setColor((_tick % 10 < 5) ? 0xFF88FF : 0xCC66CC, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(cx, _h - 14, Graphics.FONT_XTINY, "Up/Dn sel · tap buy/go", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     hidden function drawGameOver(dc) {

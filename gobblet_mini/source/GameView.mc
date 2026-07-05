@@ -2,6 +2,8 @@ using Toybox.WatchUi;
 using Toybox.Graphics;
 using Toybox.Timer;
 using Toybox.Math;
+using Toybox.Application;
+using Toybox.Lang;
 
 // ── Gobblet Mini ──────────────────────────────────────────────────────────
 //
@@ -41,6 +43,9 @@ const DIFF_EASY = 0;
 const DIFF_MED  = 1;
 const DIFF_HARD = 2;
 
+const LB_GAME_ID    = "gobblet_mini";
+const LB_STREAK_KEY = "gobblet_streak";
+
 // ── GameView ──────────────────────────────────────────────────────────────
 class GameView extends WatchUi.View {
 
@@ -77,6 +82,7 @@ class GameView extends WatchUi.View {
     // ── Session ───────────────────────────────────────────────────────────
     hidden var _overWho;
     hidden var _sP, _sAI;
+    hidden var _lbHandled;
 
     // ── Timer ─────────────────────────────────────────────────────────────
     hidden var _timer;
@@ -166,8 +172,8 @@ class GameView extends WatchUi.View {
     //      3=onNextPage     → row DOWN  (wrapping)
     function navigate(dir) {
         if (_state == GS_MENU) {
-            if (dir == 0 || dir == 2) { _menuSel = (_menuSel + 3) % 4; }
-            else if (dir == 1 || dir == 3) { _menuSel = (_menuSel + 1) % 4; }
+            if (dir == 0 || dir == 2) { _menuSel = (_menuSel + 4) % 5; }
+            else if (dir == 1 || dir == 3) { _menuSel = (_menuSel + 1) % 5; }
             WatchUi.requestUpdate();
             return;
         }
@@ -190,7 +196,8 @@ class GameView extends WatchUi.View {
             if (_menuSel == 0) { _mode = (_mode + 1) % 3; }
             else if (_menuSel == 1 && _mode != MODE_PVP) { _diff = (_diff + 1) % 3; }
             else if (_menuSel == 2) { if (_mode == MODE_PVAI) { _playerFirst = !_playerFirst; } }
-            else if (_menuSel == 3) { _startGame(); }
+            else if (_menuSel == 3) { _openLeaderboard(); return; }
+            else if (_menuSel == 4) { _startGame(); }
             WatchUi.requestUpdate();
             return;
         }
@@ -218,9 +225,9 @@ class GameView extends WatchUi.View {
         if (_state == GMS_AI) {
             _aiDoMoveFor(2);
             if (_checkWin(2)) {
-                _overWho = GOM_AIWIN; _sAI = _sAI + 1; _state = GMS_OVER;
+                _overWho = GOM_AIWIN; _sAI = _sAI + 1; _state = GMS_OVER; _reportResult();
             } else if (_checkWin(1)) {
-                _overWho = GOM_PWIN; _sP = _sP + 1; _state = GMS_OVER;
+                _overWho = GOM_PWIN; _sP = _sP + 1; _state = GMS_OVER; _reportResult();
             } else {
                 _state = GMS_P_SEL; _activePlayer = 1;
             }
@@ -228,9 +235,9 @@ class GameView extends WatchUi.View {
         } else if (_mode == MODE_AIAI && _state == GMS_P_SEL) {
             _aiDoMoveFor(1);
             if (_checkWin(1)) {
-                _overWho = GOM_PWIN; _sP = _sP + 1; _state = GMS_OVER;
+                _overWho = GOM_PWIN; _sP = _sP + 1; _state = GMS_OVER; _reportResult();
             } else if (_checkWin(2)) {
-                _overWho = GOM_AIWIN; _sAI = _sAI + 1; _state = GMS_OVER;
+                _overWho = GOM_AIWIN; _sAI = _sAI + 1; _state = GMS_OVER; _reportResult();
             } else {
                 _state = GMS_AI;
             }
@@ -252,6 +259,7 @@ class GameView extends WatchUi.View {
         _selCell  = -1;
         _sizePick = 1;
         _overWho  = 0;
+        _lbHandled = false;
         _activePlayer = 1;
         if (_mode == MODE_AIAI) {
             _state = GMS_AI;
@@ -397,9 +405,9 @@ class GameView extends WatchUi.View {
         }
         _selFrom = -1;
         if (_checkWin(1)) {
-            _overWho = GOM_PWIN; _sP = _sP + 1; _state = GMS_OVER;
+            _overWho = GOM_PWIN; _sP = _sP + 1; _state = GMS_OVER; _reportResult();
         } else if (_checkWin(2)) {
-            _overWho = GOM_AIWIN; _sAI = _sAI + 1; _state = GMS_OVER;
+            _overWho = GOM_AIWIN; _sAI = _sAI + 1; _state = GMS_OVER; _reportResult();
         } else if (_mode == MODE_PVP) {
             _activePlayer = (_activePlayer == 1) ? 2 : 1;
             _state = GMS_P_SEL;
@@ -449,6 +457,45 @@ class GameView extends WatchUi.View {
     // Fast win check for Phase B (board moves): board changed at 'a' and 'b'.
     hidden function _checkWinAt2(who, a, b) {
         return _checkWinAt(who, a) || _checkWinAt(who, b);
+    }
+
+    // ── Leaderboard: win-streak vs AI ─────────────────────────────────────
+    // Variant = AI difficulty so each difficulty has its own streak ranking.
+    hidden function _lbVariant() {
+        if (_diff == DIFF_EASY) { return "easy"; }
+        if (_diff == DIFF_HARD) { return "hard"; }
+        return "med";
+    }
+
+    hidden function _lbLoadStreak() {
+        var v = Application.Storage.getValue(LB_STREAK_KEY);
+        if (v instanceof Lang.Number) { return v; }
+        return 0;
+    }
+
+    hidden function _lbSaveStreak(n) {
+        try { Application.Storage.setValue(LB_STREAK_KEY, n); } catch (e) {}
+    }
+
+    // Called once when the game reaches GMS_OVER. Win streak counts consecutive
+    // human wins vs the AI; P-vs-P and AI-vs-AI matches are never submitted.
+    hidden function _reportResult() {
+        if (_lbHandled) { return; }
+        _lbHandled = true;
+        if (_mode != MODE_PVAI) { return; }   // only human-vs-AI counts
+        if (_overWho == GOM_PWIN) {
+            var s = _lbLoadStreak() + 1;
+            _lbSaveStreak(s);
+            Leaderboard.submitScore(LB_GAME_ID, s, _lbVariant());
+            Leaderboard.showPostGame(LB_GAME_ID, _lbVariant(), "GOBBLET");
+        } else {
+            _lbSaveStreak(0);
+        }
+    }
+
+    hidden function _openLeaderboard() {
+        var v = new LbScoresView(LB_GAME_ID, _lbVariant(), "GOBBLET");
+        WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_LEFT);
     }
 
     // ── AI ────────────────────────────────────────────────────────────────
@@ -986,6 +1033,20 @@ class GameView extends WatchUi.View {
                     "SELECT = menu", Graphics.TEXT_JUSTIFY_CENTER);
     }
 
+    // Shared row geometry for the pre-game menu — used by both _drawMenu()
+    // and doTap() so the hit-test always matches what's drawn.
+    // Returns [rowH, rowW, rowX, rowY0, gap, nR].
+    hidden function _menuGeom() {
+        var nR   = 5;
+        var rowH = _sh * 8 / 100; if (rowH < 16) { rowH = 16; } if (rowH > 23) { rowH = 23; }
+        var rowW = _sw * 59 / 100;
+        var rowX = (_sw - rowW) / 2;
+        var gap  = 5;
+        var tot  = nR * rowH + (nR - 1) * gap;
+        var rowY0 = (_sh - tot) / 2 + rowH;
+        return [rowH, rowW, rowX, rowY0, gap, nR];
+    }
+
     // ── Pre-game menu ─────────────────────────────────────────────────────
     hidden function _drawMenu(dc) {
         dc.setColor(0x080808, 0x080808); dc.clear();
@@ -997,14 +1058,18 @@ class GameView extends WatchUi.View {
         var modeStr = (_mode == MODE_PVAI) ? "P vs AI" : ((_mode == MODE_PVP) ? "P vs P" : "AI vs AI");
         var diffStr = (_diff == DIFF_EASY) ? "Easy" : ((_diff == DIFF_MED) ? "Med" : "Hard");
         var sideStr = _playerFirst ? "Side: Lt" : "Side: Dk";
-        var rows = ["Mode: " + modeStr, "Diff: " + diffStr, sideStr, "START"];
-        var nR = 4;
-        var rowH = _sh * 10 / 100; if (rowH < 20) { rowH = 20; } if (rowH > 29) { rowH = 29; }
-        var rowW = _sw * 59 / 100; var rowX = (_sw - rowW) / 2;
-        var gap = 5; var tot = nR * rowH + (nR - 1) * gap; var rowY0 = (_sh - tot) / 2 + rowH;
+        var rows = ["Mode: " + modeStr, "Diff: " + diffStr, sideStr, "", "START"];
+        var g = _menuGeom();
+        var rowH = g[0]; var rowW = g[1]; var rowX = g[2]; var rowY0 = g[3]; var gap = g[4]; var nR = g[5];
         var i = 0;
         while (i < nR) {
-            var ry = rowY0 + i * (rowH + gap); var sel = (i == _menuSel); var isStart = (i == nR - 1);
+            var ry = rowY0 + i * (rowH + gap); var sel = (i == _menuSel);
+            if (i == 3) {   // shared gold LEADERBOARD badge row
+                LbBadge.drawRow(dc, rowX, ry, rowW, rowH, sel);
+                i++;
+                continue;
+            }
+            var isStart = (i == nR - 1);
             dc.setColor(sel ? (isStart ? 0x2A1A00 : 0x0A2040) : 0x0A0A0A, Graphics.COLOR_TRANSPARENT);
             dc.fillRoundedRectangle(rowX, ry, rowW, rowH, 5);
             dc.setColor(sel ? (isStart ? 0xFFAA00 : 0x4499FF) : 0x1A1A2A, Graphics.COLOR_TRANSPARENT);
@@ -1025,10 +1090,8 @@ class GameView extends WatchUi.View {
 
     function doTap(tx, ty) {
         if (_state == GS_MENU) {
-            var nR = 4;
-            var rowH = _sh * 10 / 100; if (rowH < 20) { rowH = 20; } if (rowH > 29) { rowH = 29; }
-            var rowW = _sw * 59 / 100; var rowX = (_sw - rowW) / 2;
-            var gap = 5; var tot = nR * rowH + (nR - 1) * gap; var rowY0 = (_sh - tot) / 2 + rowH;
+            var g = _menuGeom();
+            var rowH = g[0]; var rowW = g[1]; var rowX = g[2]; var rowY0 = g[3]; var gap = g[4]; var nR = g[5];
             for (var i = 0; i < nR; i++) {
                 var ry = rowY0 + i * (rowH + gap);
                 if (tx >= rowX && tx < rowX + rowW && ty >= ry && ty < ry + rowH) {

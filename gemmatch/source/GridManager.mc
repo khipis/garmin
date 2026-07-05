@@ -115,6 +115,50 @@ class GridManager {
         }
     }
 
+    // Animated counterpart to applyGravity(): identical result, but also
+    // records, for every surviving gem's NEW position, which row it fell
+    // FROM — so the view layer can tween it from old → new for a real
+    // "gems tumbling down" cascade instead of an instant snap.
+    // `fallFrom` must be an Int[rows*cols] array supplied by the caller;
+    // untouched entries default to their own row (i.e. "didn't move").
+    function applyGravityAnimated(fallFrom) {
+        for (var c = 0; c < cols; c++) {
+            var vals     = new [rows];
+            var origRows = new [rows];
+            var n = 0;
+            for (var r = 0; r < rows; r++) {
+                var v = cells[r * cols + c];
+                if (v != TILE_EMPTY) {
+                    vals[n] = v; origRows[n] = r; n = n + 1;
+                }
+            }
+            var write = rows - 1;
+            for (var i = n - 1; i >= 0; i--) {
+                cells[write * cols + c]    = vals[i];
+                fallFrom[write * cols + c] = origRows[i];
+                write = write - 1;
+            }
+            for (var r = write; r >= 0; r--) { cells[r * cols + c] = TILE_EMPTY; }
+        }
+    }
+
+    // Animated counterpart to refill(): freshly spawned gems get a negative
+    // fallFrom (stacked per column) so they visibly drop in from above the
+    // visible board top rather than popping into existence.
+    function refillAnimated(fallFrom) {
+        for (var c = 0; c < cols; c++) {
+            var above = 1;
+            for (var r = 0; r < rows; r++) {
+                var idx = r * cols + c;
+                if (cells[idx] == TILE_EMPTY) {
+                    cells[idx]    = 1 + (Math.rand() % NUM_TILE_TYPES);
+                    fallFrom[idx] = -above;
+                    above = above + 1;
+                }
+            }
+        }
+    }
+
     // True when at least one valid swap exists that would create a
     // match. Used by the controller to auto-shuffle dead boards so
     // the player is never stuck.

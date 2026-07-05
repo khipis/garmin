@@ -11,8 +11,14 @@ enum {
     TYPE_EMILKA, TYPE_VEXOR, TYPE_CHIKKO, TYPE_DZIKKO,
     TYPE_POLACCO, TYPE_NOSACZ, TYPE_DONUT, TYPE_CACTUSO, TYPE_PIXELBOT, TYPE_OCTAVIO, TYPE_BATSY, TYPE_NUGGET,
     TYPE_FOCZKA, TYPE_RAINBOW, TYPE_DOGGO, TYPE_UNDEAD,
+    TYPE_PHOENIX, TYPE_ANGELO, TYPE_VOIDMOTH,
     TYPE_COUNT
 }
+
+// Karma & minigame unlock goals — kept as named constants so the lock-screen
+// progress text and the unlock checks always agree.
+const ANGELO_KARMA_GOAL = 400;
+const VOIDMOTH_COMET_GOAL = 15;
 
 enum {
     ACT_NONE, ACT_EATING, ACT_PLAYING, ACT_SLEEPING, ACT_CLEANING, ACT_HEALING
@@ -67,6 +73,9 @@ class Pet {
     hidden var _eventTime;
     hidden var _lastUpdate;
     hidden var _birthTime;
+    hidden var _deathTime;
+    hidden var _lifespanReported;
+    hidden var _phoenixRebornUsed;
     hidden var _sickTime;
     hidden var _lastBirthdayDay;
     hidden var _hungerAcc;
@@ -122,6 +131,9 @@ class Pet {
         _eventTime = now;
         _lastUpdate = now;
         _birthTime = now;
+        _deathTime = 0;
+        _lifespanReported = false;
+        _phoenixRebornUsed = false;
         _sickTime = 0;
         _lastBirthdayDay = -1;
         _hungerAcc = 0;
@@ -176,6 +188,9 @@ class Pet {
         while (trait2 == trait1 || traitsIncompatible(trait1, trait2)) { trait2 = Math.rand().abs() % TRAIT_COUNT; }
         var now = Time.now().value();
         _birthTime = now;
+        _deathTime = 0;
+        _lifespanReported = false;
+        _phoenixRebornUsed = false;
         _lastUpdate = now;
         _eventTime = now;
         lastInteraction = now;
@@ -222,6 +237,12 @@ class Pet {
             var p = Application.Storage.getValue("poop");
             poopCount = (p != null) ? p : 0;
             _birthTime = Application.Storage.getValue("birth");
+            var dt = Application.Storage.getValue("death");
+            _deathTime = (dt != null) ? dt : 0;
+            var lr = Application.Storage.getValue("lifespanReported");
+            _lifespanReported = (lr != null) ? lr : false;
+            var pr = Application.Storage.getValue("phoenixReborn");
+            _phoenixRebornUsed = (pr != null) ? pr : false;
             var st = Application.Storage.getValue("sickTime");
             _sickTime = (st != null) ? st : 0;
             var li = Application.Storage.getValue("lastInt");
@@ -277,6 +298,9 @@ class Pet {
         Application.Storage.setValue("sick", isSick);
         Application.Storage.setValue("poop", poopCount);
         Application.Storage.setValue("birth", _birthTime);
+        Application.Storage.setValue("death", _deathTime);
+        Application.Storage.setValue("lifespanReported", _lifespanReported);
+        Application.Storage.setValue("phoenixReborn", _phoenixRebornUsed);
         Application.Storage.setValue("lastUpdate", Time.now().value());
         Application.Storage.setValue("sickTime", _sickTime);
         Application.Storage.setValue("lastInt", lastInteraction);
@@ -765,6 +789,7 @@ class Pet {
         sf++;
         Application.Storage.setValue("statFeed", sf);
         if (sf >= 300) { Application.Storage.setValue("unlockRainbow", true); }
+        addGoodKarma(2);
         var wasHungry = hunger > 60;
 
         if (hunger < 10) {
@@ -909,6 +934,7 @@ class Pet {
         checkReturn();
         lastInteraction = Time.now().value();
         poopCount = 0;
+        addGoodKarma(2);
         var joy = 10;
         if (hasTrait(TRAIT_CHEERFUL)) { joy += 5; }
         happiness += joy;
@@ -925,6 +951,7 @@ class Pet {
         action = ACT_HEALING;
         _actionTime = lastInteraction;
         pendingVibe = 1;
+        addGoodKarma(1);
         if (isSick) {
             isSick = false;
             celebType = 1;
@@ -937,6 +964,7 @@ class Pet {
             clamp();
             eventText = "Feeling better!";
             _eventTime = lastInteraction;
+            addGoodKarma(2);
         }
     }
 
@@ -966,6 +994,7 @@ class Pet {
         sp++;
         Application.Storage.setValue("statPunish", sp);
         if (sp >= 100) { Application.Storage.setValue("unlockVexor", true); }
+        addEvilKarma(4);
         var roll = Math.rand().abs() % 10;
 
         if (petType == TYPE_EMILKA) { roll -= 2; }
@@ -987,6 +1016,9 @@ class Pet {
         else if (petType == TYPE_NUGGET) { roll -= 3; }
         else if (petType == TYPE_FOCZKA) { roll -= 1; }
         else if (petType == TYPE_RAINBOW) { roll -= 2; }
+        else if (petType == TYPE_PHOENIX) { roll += 1; }
+        else if (petType == TYPE_ANGELO) { roll -= 4; }
+        else if (petType == TYPE_VOIDMOTH) { roll -= 2; }
 
         if (hasTrait(TRAIT_HARDY)) { roll += 1; }
         if (hasTrait(TRAIT_FRAGILE)) { roll -= 2; }
@@ -1046,6 +1078,7 @@ class Pet {
         sh++;
         Application.Storage.setValue("statHug", sh);
         if (sh >= 200) { Application.Storage.setValue("unlockOctavio", true); }
+        addGoodKarma(3);
 
         hugStress += getHugStressRate();
         if (hugStress < 0) { hugStress = 0; }
@@ -1797,6 +1830,14 @@ class Pet {
 
     function getAgeDays() { return (Time.now().value() - _birthTime) / 86400; }
     function getAgeHours() { return ((Time.now().value() - _birthTime) % 86400) / 3600; }
+
+    // Lifespan in days: while alive this just tracks current age; once dead
+    // it freezes at the age reached at the moment of death (_deathTime),
+    // instead of drifting upward forever while the corpse sits in storage.
+    function getLifespanDays() {
+        if (isAlive || _deathTime <= 0) { return getAgeDays(); }
+        return (_deathTime - _birthTime) / 86400;
+    }
     function hasTrait(t) { return (trait1 == t || trait2 == t); }
 
     function getWellbeing() {
@@ -1815,6 +1856,73 @@ class Pet {
         var score = getAgeDays() * 100 + careStreak * 25 + getWellbeing();
         if (score < 0) { score = 0; }
         return score;
+    }
+
+    // ===== Karma (good/evil alignment) =====
+    // Lifetime, account-wide totals — like statPunish/statHug they survive
+    // resetPet() so the "kind of owner you are" persists across every pet
+    // you ever raise. Caring actions build good karma, punishing builds evil
+    // karma; the split feeds both the Angelo unlock and the MOST GOOD /
+    // MOST EVIL global leaderboards.
+    hidden function addGoodKarma(amt) {
+        var g = getKarmaGood();
+        g += amt;
+        Application.Storage.setValue("karmaGood", g);
+        if (g >= ANGELO_KARMA_GOAL) { Application.Storage.setValue("unlockAngelo", true); }
+    }
+
+    hidden function addEvilKarma(amt) {
+        var e = getKarmaEvil();
+        e += amt;
+        Application.Storage.setValue("karmaEvil", e);
+    }
+
+    function getKarmaGood() {
+        var g = Application.Storage.getValue("karmaGood");
+        return (g == null) ? 0 : g;
+    }
+
+    function getKarmaEvil() {
+        var e = Application.Storage.getValue("karmaEvil");
+        return (e == null) ? 0 : e;
+    }
+
+    // Called on app exit (same cadence as the quality-score submit). Only
+    // reports to whichever board the player is actually leaning towards, and
+    // only once they've built up a meaningful lead — no spamming a 1-1 tie.
+    function reportKarma() {
+        var g = getKarmaGood();
+        var e = getKarmaEvil();
+        if (g - e >= 30) { Leaderboard.submitScore(LB_GAME_ID, g, "good"); }
+        else if (e - g >= 30) { Leaderboard.submitScore(LB_GAME_ID, e, "evil"); }
+    }
+
+    // Tracks the best-ever "Comet Catch" minigame score (persists across
+    // resets, like the other unlock counters) and unlocks Voidmoth once the
+    // player proves they can handle the night sky.
+    function reportCometScore(score) {
+        var best = Application.Storage.getValue("statCometBest");
+        if (best == null) { best = 0; }
+        if (score > best) {
+            best = score;
+            Application.Storage.setValue("statCometBest", best);
+        }
+        if (best >= VOIDMOTH_COMET_GOAL) { Application.Storage.setValue("unlockVoidmoth", true); }
+    }
+
+    // Lifetime leaderboard: submitted once, the moment the pet dies. Score =
+    // days lived (frozen lifespan); variant = pet species, so each creature
+    // type gets its own "longest life" board — a bit of basic pet data
+    // (what kind of pet was raised) travels along for free via the variant.
+    // Guarded by _lifespanReported so it only ever fires once per pet.
+    function reportLifespan() {
+        if (_lifespanReported) { return; }
+        _lifespanReported = true;
+        var days = getLifespanDays();
+        if (days < 0) { days = 0; }
+        var variant = getTypeName(petType).toLower();
+        Leaderboard.submitScore(LB_GAME_ID, days, variant);
+        Leaderboard.showPostGame(LB_GAME_ID, variant, getTypeName(petType).toUpper() + " LIFESPAN");
     }
 
     function getNeglectLevel() {
@@ -1954,7 +2062,9 @@ class Pet {
     }
 
     function getDeathAgeString() {
-        var totalSec = Time.now().value() - _birthTime;
+        // Freeze at time-of-death so the R.I.P. screen doesn't keep counting
+        // up the longer the corpse sits around before the pet is reset.
+        var totalSec = (_deathTime > 0) ? (_deathTime - _birthTime) : (Time.now().value() - _birthTime);
         var days = totalSec / 86400;
         if (days >= 365) { return petName + " - " + (days / 365) + "yr " + (days % 365) + "d"; }
         if (days > 0) { return petName + " - " + days + " days"; }
@@ -1986,6 +2096,9 @@ class Pet {
         if (t == TYPE_RAINBOW) { return "Rainbow"; }
         if (t == TYPE_DOGGO) { return "Doggo"; }
         if (t == TYPE_UNDEAD) { return "Undead"; }
+        if (t == TYPE_PHOENIX) { return "Phoenix"; }
+        if (t == TYPE_ANGELO) { return "Angelo"; }
+        if (t == TYPE_VOIDMOTH) { return "Voidmoth"; }
         return "???";
     }
 
@@ -2014,6 +2127,9 @@ class Pet {
         if (t == TYPE_RAINBOW) { return "Pure sparkle joy"; }
         if (t == TYPE_DOGGO) { return "Loyal chaos puppy"; }
         if (t == TYPE_UNDEAD) { return "Cannot be killed"; }
+        if (t == TYPE_PHOENIX) { return "Reborn from ashes"; }
+        if (t == TYPE_ANGELO) { return "Radiant & merciful"; }
+        if (t == TYPE_VOIDMOTH) { return "Thrives in darkness"; }
         return "???";
     }
 
@@ -2024,6 +2140,8 @@ class Pet {
         if (type == TYPE_RAINBOW) { var u = Application.Storage.getValue("unlockRainbow"); return (u == null || !u); }
         if (type == TYPE_PIXELBOT) { var u = Application.Storage.getValue("unlockPixelbot"); return (u == null || !u); }
         if (type == TYPE_OCTAVIO) { var u = Application.Storage.getValue("unlockOctavio"); return (u == null || !u); }
+        if (type == TYPE_ANGELO) { var u = Application.Storage.getValue("unlockAngelo"); return (u == null || !u); }
+        if (type == TYPE_VOIDMOTH) { var u = Application.Storage.getValue("unlockVoidmoth"); return (u == null || !u); }
         return false;
     }
 
@@ -2045,6 +2163,17 @@ class Pet {
             var sh = Application.Storage.getValue("statHug");
             if (sh == null) { sh = 0; }
             return "Give 200 hugs (" + sh + "/200)";
+        }
+        if (type == TYPE_ANGELO) {
+            var kg = getKarmaGood();
+            if (kg > ANGELO_KARMA_GOAL) { kg = ANGELO_KARMA_GOAL; }
+            return "Good karma (" + kg + "/" + ANGELO_KARMA_GOAL + ")";
+        }
+        if (type == TYPE_VOIDMOTH) {
+            var cb = Application.Storage.getValue("statCometBest");
+            if (cb == null) { cb = 0; }
+            if (cb > VOIDMOTH_COMET_GOAL) { cb = VOIDMOTH_COMET_GOAL; }
+            return "Comet Catch " + cb + "/" + VOIDMOTH_COMET_GOAL;
         }
         return "";
     }
@@ -2104,6 +2233,10 @@ class Pet {
         else if (petType == TYPE_RAINBOW) { r = r * 6 / 5; }
         else if (petType == TYPE_DOGGO) { r = r * 3 / 4; }
         else if (petType == TYPE_UNDEAD) { r = r * 3; }
+        else if (petType == TYPE_PHOENIX) { r = r; }
+        else if (petType == TYPE_ANGELO) { r = r * 6 / 5; }
+        else if (petType == TYPE_VOIDMOTH) { r = r * 6 / 5; }
+        if (petType == TYPE_VOIDMOTH && isNightTime()) { r = r * 3 / 2; }
         if (isSick) { r = r * 2 / 3; }
         var nl = getNeglectLevel();
         if (nl >= 4) { r = r / 2; }
@@ -2139,7 +2272,11 @@ class Pet {
         else if (petType == TYPE_RAINBOW) { r = r * 3 / 2; }
         else if (petType == TYPE_DOGGO) { r = r * 6 / 5; }
         else if (petType == TYPE_UNDEAD) { r = r * 4; }
+        else if (petType == TYPE_PHOENIX) { r = r * 6 / 5; }
+        else if (petType == TYPE_ANGELO) { r = r * 3 / 2; }
+        else if (petType == TYPE_VOIDMOTH) { r = r; }
         if (petType == TYPE_UNDEAD) { return r; }
+        if (petType == TYPE_VOIDMOTH && isNightTime()) { r = r * 3 / 2; }
         if (isSick) { r = r * 3 / 4; }
         var nl = getNeglectLevel();
         if (nl >= 4) { r = r / 2; }
@@ -2176,6 +2313,10 @@ class Pet {
         else if (petType == TYPE_RAINBOW) { r = r; }
         else if (petType == TYPE_DOGGO) { r = r * 3 / 4; }
         else if (petType == TYPE_UNDEAD) { r = r * 3; }
+        else if (petType == TYPE_PHOENIX) { r = r * 4 / 5; }
+        else if (petType == TYPE_ANGELO) { r = r * 6 / 5; }
+        else if (petType == TYPE_VOIDMOTH) { r = r; }
+        if (petType == TYPE_VOIDMOTH && isNightTime()) { r = r * 3 / 2; }
         if (isSick) { r = r * 2 / 3; }
         var nl = getNeglectLevel();
         if (nl >= 4) { r = r / 2; }
@@ -2194,14 +2335,37 @@ class Pet {
         if (health < 0) { health = 0; }
     }
 
+    // Phoenix gimmick: once per life, a fatal blow instead triggers a fiery
+    // "Rebirth" — stats are restored and the death is cancelled outright.
+    // Age keeps ticking (so lifespan is genuinely extended, not reset), but
+    // the second death is final, same as everyone else.
+    hidden function tryPhoenixRebirth() {
+        if (petType != TYPE_PHOENIX || _phoenixRebornUsed) { return false; }
+        _phoenixRebornUsed = true;
+        health = 100; hunger = 20; happiness = 90; energy = 90;
+        isSick = false; hugStress = 0;
+        eventText = petName + " IS REBORN FROM ASHES!";
+        _eventTime = Time.now().value();
+        celebType = 2;
+        pendingVibe = 2;
+        save();
+        return true;
+    }
+
     hidden function checkDeath() {
         if (petType == TYPE_UNDEAD) {
             if (health < 5) { health = 5; }
             isAlive = true; isSick = false;
             return;
         }
-        if (health <= 0) { eventText = deathCause(:health); isAlive = false; Application.Storage.setValue("unlockUndead", true); save(); pendingVibe = 4; return; }
-        if (hunger >= 100 && happiness <= 0 && energy <= 0) { eventText = deathCause(:starvation); isAlive = false; Application.Storage.setValue("unlockUndead", true); save(); pendingVibe = 4; return; }
+        if (health <= 0) {
+            if (tryPhoenixRebirth()) { return; }
+            eventText = deathCause(:health); isAlive = false; _deathTime = Time.now().value(); Application.Storage.setValue("unlockUndead", true); save(); reportLifespan(); pendingVibe = 4; return;
+        }
+        if (hunger >= 100 && happiness <= 0 && energy <= 0) {
+            if (tryPhoenixRebirth()) { return; }
+            eventText = deathCause(:starvation); isAlive = false; _deathTime = Time.now().value(); Application.Storage.setValue("unlockUndead", true); save(); reportLifespan(); pendingVibe = 4; return;
+        }
     }
 
     hidden function checkAgeDeath() {
@@ -2234,7 +2398,9 @@ class Pet {
         if (hasTrait(TRAIT_FRAGILE)) { deathChance += 3; }
 
         if (deathChance < 1) { deathChance = 0; }
+        if (petType == TYPE_ANGELO) { deathChance -= 5; if (deathChance < 0) { deathChance = 0; } }
         if (deathChance > 0 && Math.rand().abs() % 100 < deathChance) {
+            if (tryPhoenixRebirth()) { return; }
             var cause = :old_age;
             if (happiness <= 5 && neglect >= 3) { cause = :loneliness; }
             else if (hugStress >= 80) { cause = :heartbreak; }
@@ -2242,8 +2408,10 @@ class Pet {
             else if (wellbeing < 20) { cause = :neglect; }
             eventText = deathCause(cause);
             isAlive = false;
+            _deathTime = Time.now().value();
             Application.Storage.setValue("unlockUndead", true);
             save();
+            reportLifespan();
             pendingVibe = 4;
         }
     }
@@ -3594,6 +3762,9 @@ class Pet {
         else if (type == TYPE_FOCZKA) { b = bodyFoczka(); }
         else if (type == TYPE_DOGGO) { b = bodyDoggo(); }
         else if (type == TYPE_UNDEAD) { b = bodyUndead(); }
+        else if (type == TYPE_PHOENIX) { b = bodyPhoenix(); }
+        else if (type == TYPE_ANGELO) { b = bodyAngelo(); }
+        else if (type == TYPE_VOIDMOTH) { b = bodyVoidmoth(); }
         else { b = bodyRainbow(); }
         if (type == petType) { _bodyCache = b; _bodyCacheType = type; }
         return b;
@@ -3625,6 +3796,9 @@ class Pet {
         else if (type == TYPE_RAINBOW) { base = [0xFFFFFF, 0xFF4488, 0x44BBFF, 0xFFDD44]; }
         else if (type == TYPE_DOGGO) { base = [0xC68642, 0xFFDFBA, 0x222222, 0xFF4444]; }
         else if (type == TYPE_UNDEAD) { base = [0x4A7A4A, 0x8FBF8F, 0xFF0000, 0x1A1A1A]; }
+        else if (type == TYPE_PHOENIX) { base = [0x7A1200, 0xFF6600, 0xFFDD55, 0xFF1744]; }
+        else if (type == TYPE_ANGELO) { base = [0xB8860B, 0xFFFFFF, 0xFFF8DC, 0xFFD700]; }
+        else if (type == TYPE_VOIDMOTH) { base = [0x1A0B2E, 0x4A2C6D, 0xB39DDB, 0x76FF03]; }
         else { base = [0x1B5E20, 0x388E3C, 0x66BB6A, 0xA5D6A7]; }
         if (paletteIdx > 0 && type == petType) { base = applyPalette(base, paletteIdx); }
         return base;
@@ -3869,4 +4043,34 @@ class Pet {
         0,1,1,2,2,2,2,2,2,1,1,0, 0,0,1,2,1,1,1,1,2,1,0,0,
         0,0,0,1,1,1,1,1,1,0,0,0, 0,0,3,0,1,1,1,1,0,3,0,0,
         0,0,3,0,0,0,0,0,0,3,0,0, 0,0,0,0,0,0,0,0,0,0,0,0]; }
+
+    // Legendary fire bird — flame crest, spread wings, a fiery tail. Its
+    // "Rebirth" gimmick lives in checkDeath()/checkAgeDeath(), not here.
+    hidden function bodyPhoenix() { return [
+        0,0,4,0,0,0,0,0,0,4,0,0, 0,4,3,4,0,0,0,0,4,3,4,0,
+        0,1,3,3,1,0,0,1,3,3,1,0, 1,3,2,2,2,1,1,2,2,2,3,1,
+        1,2,2,2,2,2,2,2,2,2,2,1, 4,1,2,2,2,2,2,2,2,2,1,4,
+        4,1,2,2,2,3,3,2,2,2,1,4, 1,2,2,2,2,2,2,2,2,2,2,1,
+        1,2,2,2,2,2,2,2,2,2,2,1, 0,1,2,2,2,2,2,2,2,2,1,0,
+        0,0,1,2,3,2,2,3,2,1,0,0, 0,0,0,1,1,3,3,1,1,0,0,0]; }
+
+    // Radiant guardian — soft halo, gentle wing feathers. Rewarded for good
+    // karma, and passively a little kinder to raise (see rate functions).
+    hidden function bodyAngelo() { return [
+        0,0,4,4,4,4,4,4,4,4,0,0, 0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,1,1,1,1,1,1,1,1,0,0, 0,1,3,3,3,3,3,3,3,3,1,0,
+        1,3,2,2,2,2,2,2,2,2,3,1, 1,2,2,2,2,2,2,2,2,2,2,1,
+        4,1,2,2,2,2,2,2,2,2,1,4, 1,2,2,2,4,4,2,2,2,2,2,1,
+        1,2,2,2,2,2,2,2,2,2,2,1, 0,1,3,2,2,2,2,2,2,3,1,0,
+        0,0,1,2,2,2,2,2,2,1,0,0, 0,0,0,1,1,1,1,1,1,0,0,0]; }
+
+    // Moon moth — wide wings with glowing eye-spots, tiny antennae. Only
+    // truly comfortable after dark (see isNightTime() rate bonus).
+    hidden function bodyVoidmoth() { return [
+        0,1,0,0,0,0,0,0,0,0,1,0, 0,0,1,0,0,0,0,0,0,1,0,0,
+        0,0,0,1,1,1,1,1,1,0,0,0, 3,3,1,2,2,2,2,2,2,1,3,3,
+        3,2,2,2,2,2,2,2,2,2,2,3, 3,2,2,4,4,2,2,4,4,2,2,3,
+        3,2,2,4,4,2,2,4,4,2,2,3, 1,2,2,2,2,2,2,2,2,2,2,1,
+        0,1,2,2,2,2,2,2,2,2,1,0, 0,0,1,2,2,2,2,2,2,1,0,0,
+        0,0,0,1,1,1,1,1,1,0,0,0, 0,0,0,0,1,1,1,1,0,0,0,0]; }
 }

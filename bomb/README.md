@@ -31,3 +31,9 @@ Retro bomb dropping arcade game for Garmin smartwatches.
 - Waves of increasingly tough enemies
 - Wind direction and strength vary
 - Score-based progression
+
+## Leaderboard
+
+Besides the main score, total structural damage dealt to buildings across
+the whole run is mirrored to a `damage` leaderboard variant, viewable on the
+web leaderboard's variant chips for "bomb".

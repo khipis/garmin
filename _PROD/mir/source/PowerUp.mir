@@ -1,0 +1,552 @@
+[ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc"; @line = 16; @symbol_usingdef<0> = [Toybox,16,6,12]; @symbol_usingdef<1> = [Graphics,16,13,21]; ]
+using Toybox.Graphics;
+[ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc"; @line = 18; @position = 6; @symbol_constdef = [PU_MULTIBALL,18,6,18]; ]
+const PU_MULTIBALL = 0;
+[ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc"; @line = 19; @position = 6; @symbol_constdef = [PU_GROW,19,6,13]; ]
+const PU_GROW = 1;
+[ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc"; @line = 20; @position = 6; @symbol_constdef = [PU_SHRINK,20,6,15]; ]
+const PU_SHRINK = 2;
+[ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc"; @line = 21; @position = 6; @symbol_constdef = [PU_TYPES,21,6,14]; ]
+const PU_TYPES = 3;
+[ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc"; @line = 25; @position = 6; @symbol_constdef = [PU_BUFF_TICKS,25,6,19]; ]
+const PU_BUFF_TICKS = 320;
+[ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc"; @line = 26; @position = 6; @symbol_constdef = [PU_LIFE_TICKS,26,6,19]; ]
+const PU_LIFE_TICKS = 440;
+[ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc"; @line = 27; @position = 6; @symbol_constdef = [PU_COOLDOWN_MIN,27,6,21]; ]
+const PU_COOLDOWN_MIN = 260;
+[ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc"; @line = 28; @position = 6; @symbol_constdef = [PU_COOLDOWN_MAX,28,6,21]; ]
+const PU_COOLDOWN_MAX = 420;
+[ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc"; @line = 30; @symbol_classdef = [PowerUp,30,6,13]; ]
+class PowerUp {
+    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc"; @line = 30; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc"; @line = 30; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc"; @line = 31; @position = 8; @symbol_vardef = [active,31,8,14]; ]
+    var active;
+    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc"; @line = 32; @position = 8; @symbol_vardef = [x,32,8,9]; ]
+    var x;
+    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc"; @line = 33; @position = 8; @symbol_vardef = [y,33,8,9]; ]
+    var y;
+    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc"; @line = 34; @position = 8; @symbol_vardef = [kind,34,8,12]; ]
+    var kind;
+    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc"; @line = 35; @position = 8; @symbol_vardef = [r,35,8,9]; ]
+    var r;
+    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc"; @line = 36; @position = 15; @symbol_vardef = [_pulse,36,15,21]; ]
+    protected
+    var _pulse;
+    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc"; @line = 38; @symbol_functiondef = [initialize,38,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_38_26_40_4_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 39 8 ]
+        %tmp.1 = false;
+        symbol [ active ? 39 8 14 ];
+        putv self :active %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 39 24 ]
+        %tmp.2 = 0;
+        symbol [ x ? 39 24 25 ];
+        putv self :x %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 39 31 ]
+        %tmp.3 = 0;
+        symbol [ y ? 39 31 32 ];
+        putv self :y %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 39 38 ]
+        %tmp.4 = 0;
+        symbol [ kind ? 39 38 42 ];
+        putv self :kind %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 39 48 ]
+        %tmp.5 = 9;
+        symbol [ r ? 39 48 49 ];
+        putv self :r %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 39 55 ]
+        %tmp.6 = 0;
+        symbol [ _pulse ? 39 55 61 ];
+        putv self :_pulse %tmp.6;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_38_26_40_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc"; @line = 42; @symbol_functiondef = [spawn,42,13,18]; @symbol_param<0> = [px,42,19,21]; @symbol_param<1> = [py,42,23,25]; @symbol_param<2> = [k,42,27,28]; ]
+    function spawn(px, py, k) {
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_42_30_44_4_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 43 8 ]
+        %tmp.1 = lgetv %px;
+        symbol [ px %tmp.1 43 12 14 ];
+        symbol [ x ? 43 8 9 ];
+        putv self :x %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 43 16 ]
+        %tmp.2 = lgetv %py;
+        symbol [ py %tmp.2 43 20 22 ];
+        symbol [ y ? 43 16 17 ];
+        putv self :y %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 43 24 ]
+        %tmp.3 = lgetv %k;
+        symbol [ k %tmp.3 43 31 32 ];
+        symbol [ kind ? 43 24 28 ];
+        putv self :kind %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 43 34 ]
+        %tmp.4 = true;
+        symbol [ active ? 43 34 40 ];
+        putv self :active %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 43 49 ]
+        %tmp.5 = 0;
+        symbol [ _pulse ? 43 49 55 ];
+        putv self :_pulse %tmp.5;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_42_30_44_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc"; @line = 46; @symbol_functiondef = [clear,46,13,18]; ]
+    function clear() {
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_46_21_46_39_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 46 23 ]
+        %tmp.1 = false;
+        symbol [ active ? 46 23 29 ];
+        putv self :active %tmp.1;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_46_21_46_39_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc"; @line = 48; @symbol_functiondef = [step,48,13,17]; ]
+    function step() {
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_48_20_50_4_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 49 8 ]
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_49_8_49_50_if_stmt:
+        symbol [ active %tmp.2 49 12 18 ];
+        %tmp.2 = getv ? :active;
+        bf %tmp.2 @_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_49_8_49_50_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_49_8_49_50_if_true:
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_49_20_49_50_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 49 22 ]
+        symbol [ _pulse %tmp.4 49 32 38 ];
+        %tmp.4 = getv ? :_pulse;
+        %tmp.5 = 1;
+        %tmp.6 = add %tmp.4 %tmp.5;
+        %tmp.7 = 36;
+        %tmp.8 = mod %tmp.6 %tmp.7;
+        symbol [ _pulse ? 49 22 28 ];
+        putv self :_pulse %tmp.8;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_49_20_49_50_stop:
+        goto @_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_49_8_49_50_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_49_8_49_50_if_end:
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_48_20_50_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc"; @line = 53; @symbol_functiondef = [hits,53,13,17]; @symbol_param<0> = [bx0,53,18,21]; @symbol_param<1> = [by0,53,23,26]; @symbol_param<2> = [bx1,53,28,31]; @symbol_param<3> = [by1,53,33,36]; ]
+    function hits(bx0, by0, bx1, by1) {
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_53_38_56_4_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 54 8 ]
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_54_8_54_37_if_stmt:
+        symbol [ active %tmp.2 54 13 19 ];
+        %tmp.2 = getv ? :active;
+        %tmp.3 = not %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_54_8_54_37_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_54_8_54_37_if_true:
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_54_21_54_37_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 54 23 ]
+        %tmp.4 = false;
+        ret %tmp.4;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_54_21_54_37_stop:
+        goto @_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_54_8_54_37_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_54_8_54_37_if_end:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 55 8 ]
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_55_16_55_71_begin:
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_55_16_55_56_begin:
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_55_16_55_41_begin:
+        %tmp.5 = lgetv %bx1;
+        symbol [ bx1 %tmp.5 55 16 19 ];
+        symbol [ x %tmp.7 55 22 23 ];
+        %tmp.7 = getv ? :x;
+        symbol [ r %tmp.9 55 26 27 ];
+        %tmp.9 = getv ? :r;
+        %tmp.10 = sub %tmp.7 %tmp.9;
+        %tmp.11 = gt %tmp.5 %tmp.10;
+        %tmp.12 = dup %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_55_31_55_41_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_55_31_55_41_true:
+        %tmp.13 = lgetv %bx0;
+        symbol [ bx0 %tmp.13 55 31 34 ];
+        symbol [ x %tmp.15 55 37 38 ];
+        %tmp.15 = getv ? :x;
+        symbol [ r %tmp.17 55 41 42 ];
+        %tmp.17 = getv ? :r;
+        %tmp.18 = add %tmp.15 %tmp.17;
+        %tmp.19 = lt %tmp.13 %tmp.18;
+        %tmp.20 = and %tmp.11 %tmp.19;
+        push %tmp.20;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_55_31_55_41_end:
+        %tmp.21 = phi [%tmp.12 @_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_55_16_55_41_begin] [%tmp.20 @_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_55_31_55_41_true] [%tmp.21 @_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_55_31_55_41_end];
+        %tmp.22 = dup %tmp.21;
+        bf %tmp.22 @_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_55_46_55_56_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_55_46_55_56_true:
+        %tmp.23 = lgetv %by1;
+        symbol [ by1 %tmp.23 55 46 49 ];
+        symbol [ y %tmp.25 55 52 53 ];
+        %tmp.25 = getv ? :y;
+        symbol [ r %tmp.27 55 56 57 ];
+        %tmp.27 = getv ? :r;
+        %tmp.28 = sub %tmp.25 %tmp.27;
+        %tmp.29 = gt %tmp.23 %tmp.28;
+        %tmp.30 = and %tmp.21 %tmp.29;
+        push %tmp.30;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_55_46_55_56_end:
+        %tmp.31 = phi [%tmp.22 @_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_55_16_55_56_begin] [%tmp.30 @_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_55_46_55_56_true] [%tmp.31 @_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_55_46_55_56_end];
+        %tmp.32 = dup %tmp.31;
+        bf %tmp.32 @_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_55_61_55_71_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_55_61_55_71_true:
+        %tmp.33 = lgetv %by0;
+        symbol [ by0 %tmp.33 55 61 64 ];
+        symbol [ y %tmp.35 55 67 68 ];
+        %tmp.35 = getv ? :y;
+        symbol [ r %tmp.37 55 71 72 ];
+        %tmp.37 = getv ? :r;
+        %tmp.38 = add %tmp.35 %tmp.37;
+        %tmp.39 = lt %tmp.33 %tmp.38;
+        %tmp.40 = and %tmp.31 %tmp.39;
+        push %tmp.40;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_55_61_55_71_end:
+        %tmp.41 = phi [%tmp.32 @_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_55_16_55_71_begin] [%tmp.40 @_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_55_61_55_71_true] [%tmp.41 @_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_55_61_55_71_end];
+        ret %tmp.41;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_53_38_56_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc"; @line = 58; @symbol_functiondef = [draw,58,13,17]; @symbol_param<0> = [dc,58,18,20]; ]
+    function draw(dc) {
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_58_22_79_4_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 59 8 ]
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_59_8_59_31_if_stmt:
+        symbol [ active %tmp.2 59 13 19 ];
+        %tmp.2 = getv ? :active;
+        %tmp.3 = not %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_59_8_59_31_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_59_8_59_31_if_true:
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_59_21_59_31_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 59 23 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_59_21_59_31_stop:
+        goto @_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_59_8_59_31_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_59_8_59_31_if_end:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 60 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_58_22_79_4_start" "_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_58_22_79_4_stop" ]
+        %pr.1 = local;
+        symbol [ pr %pr.1 60 12 14 ];
+        symbol [ r %tmp.5 60 17 18 ];
+        %tmp.5 = getv ? :r;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_60_22_60_67_begin:
+        symbol [ _pulse %tmp.7 60 23 29 ];
+        %tmp.7 = getv ? :_pulse;
+        %tmp.8 = 18;
+        %tmp.9 = lt %tmp.7 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_60_22_60_67_else_false;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_60_22_60_67_true:
+        symbol [ _pulse %tmp.11 60 38 44 ];
+        %tmp.11 = getv ? :_pulse;
+        %tmp.12 = 4;
+        %tmp.13 = div %tmp.11 %tmp.12;
+        push %tmp.13;
+        goto @_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_60_22_60_67_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_60_22_60_67_else_false:
+        %tmp.14 = 36;
+        symbol [ _pulse %tmp.16 60 57 63 ];
+        %tmp.16 = getv ? :_pulse;
+        %tmp.17 = sub %tmp.14 %tmp.16;
+        %tmp.18 = 4;
+        %tmp.19 = div %tmp.17 %tmp.18;
+        push %tmp.19;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_60_22_60_67_end:
+        %tmp.20 = phi [%tmp.9 @_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_60_22_60_67_begin] [%tmp.13 @_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_60_22_60_67_true] [%tmp.19 @_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_60_22_60_67_else_false] [%tmp.20 @_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_60_22_60_67_end];
+        %tmp.21 = add %tmp.5 %tmp.20;
+        lputv %pr.1 %tmp.21;
+        symbol [ pr %pr.1 60 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 61 8 ]
+        [ "_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_58_22_79_4_start" "_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_58_22_79_4_stop" ]
+        %col.2 = local;
+        symbol [ col %col.2 61 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 62 8 ]
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_62_8_64_58_if_stmt:
+        symbol [ kind %tmp.23 62 17 21 ];
+        %tmp.23 = getv ? :kind;
+        symbol [ PU_MULTIBALL %tmp.25 62 25 37 ];
+        %tmp.25 = getv ? :PU_MULTIBALL;
+        %tmp.26 = eq %tmp.23 %tmp.25;
+        bf %tmp.26 @_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_62_8_64_58_if_false;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_62_8_64_58_if_true:
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_62_39_62_57_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 62 41 ]
+        %tmp.27 = 0x33CCFF;
+        lputv %col.2 %tmp.27;
+        symbol [ col %col.2 62 41 44 ];
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_62_39_62_57_stop:
+        goto @_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_62_8_64_58_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_62_8_64_58_if_false:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 63 13 ]
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_63_13_64_58_if_stmt:
+        symbol [ kind %tmp.29 63 17 21 ];
+        %tmp.29 = getv ? :kind;
+        symbol [ PU_GROW %tmp.31 63 25 32 ];
+        %tmp.31 = getv ? :PU_GROW;
+        %tmp.32 = eq %tmp.29 %tmp.31;
+        bf %tmp.32 @_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_63_13_64_58_if_else_false;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_63_13_64_58_if_true:
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_63_39_63_57_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 63 41 ]
+        %tmp.33 = 0x44FF66;
+        lputv %col.2 %tmp.33;
+        symbol [ col %col.2 63 41 44 ];
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_63_39_63_57_stop:
+        goto @_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_63_13_64_58_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_63_13_64_58_if_else_false:
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_64_40_64_58_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 64 42 ]
+        %tmp.34 = 0xFF4444;
+        lputv %col.2 %tmp.34;
+        symbol [ col %col.2 64 42 45 ];
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_64_40_64_58_stop:
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_63_13_64_58_if_end:
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_62_8_64_58_if_end:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 66 8 ]
+        %tmp.35 = lgetv %dc;
+        symbol [ dc %tmp.35 66 8 10 ];
+        symbol [ setColor %tmp.36 66 11 19 ];
+        %tmp.36 = getv function %tmp.35 :setColor;
+        %tmp.37 = lgetv %col.2;
+        symbol [ col %tmp.37 66 20 23 ];
+        symbol [ Graphics %tmp.38 66 25 33 ];
+        %tmp.38 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.39 66 34 51 ];
+        %tmp.39 = getv %tmp.38 :COLOR_TRANSPARENT;
+        invoke %tmp.35 %tmp.36(%tmp.37, %tmp.39);
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 67 8 ]
+        %tmp.40 = lgetv %dc;
+        symbol [ dc %tmp.40 67 8 10 ];
+        symbol [ drawCircle %tmp.41 67 11 21 ];
+        %tmp.41 = getv function %tmp.40 :drawCircle;
+        symbol [ x %tmp.43 67 22 23 ];
+        %tmp.43 = getv ? :x;
+        symbol [ y %tmp.45 67 25 26 ];
+        %tmp.45 = getv ? :y;
+        %tmp.46 = lgetv %pr.1;
+        symbol [ pr %tmp.46 67 28 30 ];
+        invoke %tmp.40 %tmp.41(%tmp.43, %tmp.45, %tmp.46);
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 68 8 ]
+        %tmp.47 = lgetv %dc;
+        symbol [ dc %tmp.47 68 8 10 ];
+        symbol [ fillCircle %tmp.48 68 11 21 ];
+        %tmp.48 = getv function %tmp.47 :fillCircle;
+        symbol [ x %tmp.50 68 22 23 ];
+        %tmp.50 = getv ? :x;
+        symbol [ y %tmp.52 68 25 26 ];
+        %tmp.52 = getv ? :y;
+        symbol [ r %tmp.54 68 28 29 ];
+        %tmp.54 = getv ? :r;
+        %tmp.55 = 3;
+        %tmp.56 = sub %tmp.54 %tmp.55;
+        invoke %tmp.47 %tmp.48(%tmp.50, %tmp.52, %tmp.56);
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 70 8 ]
+        %tmp.57 = lgetv %dc;
+        symbol [ dc %tmp.57 70 8 10 ];
+        symbol [ setColor %tmp.58 70 11 19 ];
+        %tmp.58 = getv function %tmp.57 :setColor;
+        %tmp.59 = 0x0A0A0A;
+        symbol [ Graphics %tmp.60 70 30 38 ];
+        %tmp.60 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.61 70 39 56 ];
+        %tmp.61 = getv %tmp.60 :COLOR_TRANSPARENT;
+        invoke %tmp.57 %tmp.58(%tmp.59, %tmp.61);
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 71 8 ]
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_71_8_78_8_if_stmt:
+        symbol [ kind %tmp.63 71 12 16 ];
+        %tmp.63 = getv ? :kind;
+        symbol [ PU_MULTIBALL %tmp.65 71 20 32 ];
+        %tmp.65 = getv ? :PU_MULTIBALL;
+        %tmp.66 = eq %tmp.63 %tmp.65;
+        bf %tmp.66 @_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_71_8_78_8_if_false;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_71_8_78_8_if_true:
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_71_34_74_8_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 72 12 ]
+        %tmp.67 = lgetv %dc;
+        symbol [ dc %tmp.67 72 12 14 ];
+        symbol [ fillCircle %tmp.68 72 15 25 ];
+        %tmp.68 = getv function %tmp.67 :fillCircle;
+        symbol [ x %tmp.70 72 26 27 ];
+        %tmp.70 = getv ? :x;
+        %tmp.71 = 3;
+        %tmp.72 = sub %tmp.70 %tmp.71;
+        symbol [ y %tmp.74 72 33 34 ];
+        %tmp.74 = getv ? :y;
+        %tmp.75 = 2;
+        invoke %tmp.67 %tmp.68(%tmp.72, %tmp.74, %tmp.75);
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 73 12 ]
+        %tmp.76 = lgetv %dc;
+        symbol [ dc %tmp.76 73 12 14 ];
+        symbol [ fillCircle %tmp.77 73 15 25 ];
+        %tmp.77 = getv function %tmp.76 :fillCircle;
+        symbol [ x %tmp.79 73 26 27 ];
+        %tmp.79 = getv ? :x;
+        %tmp.80 = 3;
+        %tmp.81 = add %tmp.79 %tmp.80;
+        symbol [ y %tmp.83 73 33 34 ];
+        %tmp.83 = getv ? :y;
+        %tmp.84 = 2;
+        invoke %tmp.76 %tmp.77(%tmp.81, %tmp.83, %tmp.84);
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_71_34_74_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_71_8_78_8_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_71_8_78_8_if_false:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 74 15 ]
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_74_15_78_8_if_stmt:
+        symbol [ kind %tmp.86 74 19 23 ];
+        %tmp.86 = getv ? :kind;
+        symbol [ PU_GROW %tmp.88 74 27 34 ];
+        %tmp.88 = getv ? :PU_GROW;
+        %tmp.89 = eq %tmp.86 %tmp.88;
+        bf %tmp.89 @_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_74_15_78_8_if_else_false;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_74_15_78_8_if_true:
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_74_36_76_8_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 75 12 ]
+        %tmp.90 = lgetv %dc;
+        symbol [ dc %tmp.90 75 12 14 ];
+        symbol [ fillPolygon %tmp.91 75 15 26 ];
+        %tmp.91 = getv function %tmp.90 :fillPolygon;
+        %tmp.92 = newa 3;
+        %tmp.93 = newa 2;
+        symbol [ x %tmp.95 75 29 30 ];
+        %tmp.95 = getv ? :x;
+        %tmp.96 = dup %tmp.93;
+        %tmp.97 = aputv %tmp.96 0 %tmp.95;
+        symbol [ y %tmp.99 75 32 33 ];
+        %tmp.99 = getv ? :y;
+        %tmp.100 = 4;
+        %tmp.101 = sub %tmp.99 %tmp.100;
+        %tmp.102 = dup %tmp.97;
+        %tmp.103 = aputv %tmp.102 1 %tmp.101;
+        %tmp.104 = dup %tmp.92;
+        %tmp.105 = aputv %tmp.104 0 %tmp.103;
+        %tmp.106 = newa 2;
+        symbol [ x %tmp.108 75 41 42 ];
+        %tmp.108 = getv ? :x;
+        %tmp.109 = 4;
+        %tmp.110 = sub %tmp.108 %tmp.109;
+        %tmp.111 = dup %tmp.106;
+        %tmp.112 = aputv %tmp.111 0 %tmp.110;
+        symbol [ y %tmp.114 75 48 49 ];
+        %tmp.114 = getv ? :y;
+        %tmp.115 = 3;
+        %tmp.116 = add %tmp.114 %tmp.115;
+        %tmp.117 = dup %tmp.112;
+        %tmp.118 = aputv %tmp.117 1 %tmp.116;
+        %tmp.119 = dup %tmp.105;
+        %tmp.120 = aputv %tmp.119 1 %tmp.118;
+        %tmp.121 = newa 2;
+        symbol [ x %tmp.123 75 57 58 ];
+        %tmp.123 = getv ? :x;
+        %tmp.124 = 4;
+        %tmp.125 = add %tmp.123 %tmp.124;
+        %tmp.126 = dup %tmp.121;
+        %tmp.127 = aputv %tmp.126 0 %tmp.125;
+        symbol [ y %tmp.129 75 64 65 ];
+        %tmp.129 = getv ? :y;
+        %tmp.130 = 3;
+        %tmp.131 = add %tmp.129 %tmp.130;
+        %tmp.132 = dup %tmp.127;
+        %tmp.133 = aputv %tmp.132 1 %tmp.131;
+        %tmp.134 = dup %tmp.120;
+        %tmp.135 = aputv %tmp.134 2 %tmp.133;
+        invoke %tmp.90 %tmp.91(%tmp.135);
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_74_36_76_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_74_15_78_8_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_74_15_78_8_if_else_false:
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_76_15_78_8_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 77 12 ]
+        %tmp.136 = lgetv %dc;
+        symbol [ dc %tmp.136 77 12 14 ];
+        symbol [ fillPolygon %tmp.137 77 15 26 ];
+        %tmp.137 = getv function %tmp.136 :fillPolygon;
+        %tmp.138 = newa 3;
+        %tmp.139 = newa 2;
+        symbol [ x %tmp.141 77 29 30 ];
+        %tmp.141 = getv ? :x;
+        %tmp.142 = dup %tmp.139;
+        %tmp.143 = aputv %tmp.142 0 %tmp.141;
+        symbol [ y %tmp.145 77 32 33 ];
+        %tmp.145 = getv ? :y;
+        %tmp.146 = 4;
+        %tmp.147 = add %tmp.145 %tmp.146;
+        %tmp.148 = dup %tmp.143;
+        %tmp.149 = aputv %tmp.148 1 %tmp.147;
+        %tmp.150 = dup %tmp.138;
+        %tmp.151 = aputv %tmp.150 0 %tmp.149;
+        %tmp.152 = newa 2;
+        symbol [ x %tmp.154 77 41 42 ];
+        %tmp.154 = getv ? :x;
+        %tmp.155 = 4;
+        %tmp.156 = sub %tmp.154 %tmp.155;
+        %tmp.157 = dup %tmp.152;
+        %tmp.158 = aputv %tmp.157 0 %tmp.156;
+        symbol [ y %tmp.160 77 48 49 ];
+        %tmp.160 = getv ? :y;
+        %tmp.161 = 3;
+        %tmp.162 = sub %tmp.160 %tmp.161;
+        %tmp.163 = dup %tmp.158;
+        %tmp.164 = aputv %tmp.163 1 %tmp.162;
+        %tmp.165 = dup %tmp.151;
+        %tmp.166 = aputv %tmp.165 1 %tmp.164;
+        %tmp.167 = newa 2;
+        symbol [ x %tmp.169 77 57 58 ];
+        %tmp.169 = getv ? :x;
+        %tmp.170 = 4;
+        %tmp.171 = add %tmp.169 %tmp.170;
+        %tmp.172 = dup %tmp.167;
+        %tmp.173 = aputv %tmp.172 0 %tmp.171;
+        symbol [ y %tmp.175 77 64 65 ];
+        %tmp.175 = getv ? :y;
+        %tmp.176 = 3;
+        %tmp.177 = sub %tmp.175 %tmp.176;
+        %tmp.178 = dup %tmp.173;
+        %tmp.179 = aputv %tmp.178 1 %tmp.177;
+        %tmp.180 = dup %tmp.166;
+        %tmp.181 = aputv %tmp.180 2 %tmp.179;
+        invoke %tmp.136 %tmp.137(%tmp.181);
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_76_15_78_8_stop:
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_74_15_78_8_if_end:
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_71_8_78_8_if_end:
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_58_22_79_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc"; @line = 81; @symbol_functiondef = [label,81,13,18]; ]
+    function label() {
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_81_21_85_4_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 82 8 ]
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_82_8_82_57_if_stmt:
+        symbol [ kind %tmp.2 82 12 16 ];
+        %tmp.2 = getv ? :kind;
+        symbol [ PU_MULTIBALL %tmp.4 82 20 32 ];
+        %tmp.4 = getv ? :PU_MULTIBALL;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_82_8_82_57_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_82_8_82_57_if_true:
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_82_34_82_57_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 82 36 ]
+        %tmp.6 = "MULTIBALL!";
+        ret %tmp.6;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_82_34_82_57_stop:
+        goto @_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_82_8_82_57_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_82_8_82_57_if_end:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 83 8 ]
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_83_8_83_57_if_stmt:
+        symbol [ kind %tmp.8 83 12 16 ];
+        %tmp.8 = getv ? :kind;
+        symbol [ PU_GROW %tmp.10 83 20 27 ];
+        %tmp.10 = getv ? :PU_GROW;
+        %tmp.11 = eq %tmp.8 %tmp.10;
+        bf %tmp.11 @_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_83_8_83_57_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_83_8_83_57_if_true:
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_83_34_83_57_start:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 83 36 ]
+        %tmp.12 = "PADDLE UP!";
+        ret %tmp.12;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_83_34_83_57_stop:
+        goto @_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_83_8_83_57_if_end;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_83_8_83_57_if_end:
+[ "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc" 84 8 ]
+        %tmp.13 = "SHRINK RAY!";
+        ret %tmp.13;
+_Users_kkorolczuk_work_garmin_pongpro_source_PowerUp_mc_81_21_85_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/pongpro/source/PowerUp.mc"; @line = 16; ]
+<init> {
+}

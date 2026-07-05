@@ -17,10 +17,17 @@ const OT_PTERO  = 1;
 const OBS_MAX  = 4;
 const CLD_MAX  = 3;
 const STAR_MAX = 12;  // background stars during night phase
+const COIN_MAX = 2;   // concurrent floating coins
 
 // near-miss tolerance — obstacle clears within this many px of dino → +5 bonus
 const NEAR_MISS_PX = 12;
 const NEAR_MISS_BONUS = 5;
+
+// Coins: base points + combo bonus per consecutive collect (capped), and a
+// max combo tier so the numbers don't run away.
+const COIN_BASE = 20;
+const COIN_COMBO_STEP = 5;
+const COIN_COMBO_CAP  = 8;
 
 // Storage keys
 const SK_BEST = "dinoBest";
@@ -110,6 +117,19 @@ class DinosaurView extends WatchUi.View {
     // ── game-over feedback ────────────────────────────────────────────────────
     hidden var _shakeT;         // brief screen shake on death
 
+    // ── coins / combo ─────────────────────────────────────────────────────────
+    hidden var _coinX; hidden var _coinY; hidden var _coinA;
+    hidden var _nextCoin;
+    hidden var _comboCoins;     // consecutive coins collected without a miss
+    hidden var _bestCombo;      // best combo reached this run
+    hidden var _coinsTotal;     // total coins collected this run
+    hidden var _coinSparkT; hidden var _coinSparkX; hidden var _coinSparkY;
+    hidden var _coinTxtT; hidden var _coinTxtX; hidden var _coinTxtY; hidden var _coinTxtV;
+    hidden var _comboFlashT;    // screen-edge flash timer on combo milestones
+
+    // ── landing dust puff ─────────────────────────────────────────────────────
+    hidden var _dustT; hidden var _dustX; hidden var _dustY;
+
     // ── AUTO-AI demo (title screen) ──────────────────────────────────────────
     hidden var _demoIdle;       // ticks player has been idle on title
 
@@ -157,6 +177,13 @@ class DinosaurView extends WatchUi.View {
         for (var i = 0; i < STAR_MAX; i++) {
             _starsX[i] = 0; _starsY[i] = 0; _starsR[i] = 1;
         }
+
+        _coinX = new [COIN_MAX]; _coinY = new [COIN_MAX]; _coinA = new [COIN_MAX];
+        for (var i = 0; i < COIN_MAX; i++) { _coinA[i] = 0; }
+        _nextCoin    = 60;
+        _comboCoins  = 0; _bestCombo = 0; _coinsTotal = 0;
+        _coinSparkT  = 0; _coinTxtT  = 0; _comboFlashT = 0;
+        _dustT       = 0;
     }
 
     function onLayout(dc) {
@@ -210,6 +237,10 @@ class DinosaurView extends WatchUi.View {
         if (_sparkT   > 0) { _sparkT   = _sparkT   - 1; }
         if (_missTxtT > 0) { _missTxtT = _missTxtT - 1; }
         if (_shakeT   > 0) { _shakeT   = _shakeT   - 1; }
+        if (_coinSparkT  > 0) { _coinSparkT  = _coinSparkT  - 1; }
+        if (_coinTxtT    > 0) { _coinTxtT    = _coinTxtT    - 1; }
+        if (_comboFlashT > 0) { _comboFlashT = _comboFlashT - 1; }
+        if (_dustT       > 0) { _dustT       = _dustT       - 1; }
         WatchUi.requestUpdate();
     }
 
@@ -278,6 +309,8 @@ class DinosaurView extends WatchUi.View {
             }
             // Bailing still ends the run — submit the score to the leaderboard.
             Leaderboard.submitScore(LB_GAME_ID, _score, "");
+            if (_coinsTotal > 0) { Leaderboard.submitScore(LB_GAME_ID, _coinsTotal, "coins"); }
+            if (_bestCombo  > 0) { Leaderboard.submitScore(LB_GAME_ID, _bestCombo, "combo"); }
             Leaderboard.showPostGame(LB_GAME_ID, "", "DINOSAUR");
             _state = GS_OVER;
             return true;
@@ -384,6 +417,12 @@ class DinosaurView extends WatchUi.View {
         _lastObsType   = -1;
         _lastObsHeight = 0;
         for (var i = 0; i < OBS_MAX; i++) { _oa[i] = 0; _obsScored[i] = 0; }
+
+        for (var i = 0; i < COIN_MAX; i++) { _coinA[i] = 0; }
+        _nextCoin    = 60;
+        _comboCoins  = 0; _bestCombo = 0; _coinsTotal = 0;
+        _coinSparkT  = 0; _coinTxtT  = 0; _comboFlashT = 0;
+        _dustT       = 0;
     }
 
     hidden function _step() {
@@ -408,8 +447,11 @@ class DinosaurView extends WatchUi.View {
             _dy = floorDy;
             _vy = 0;
             if (_onGrd == 0) {
-                // just landed — restore jumps
+                // just landed — restore jumps + a little dust puff for feedback
                 _jumpsLeft = (_phase >= 1) ? 2 : 1;
+                _dustT = 10;
+                _dustX = _dinoX + _dw / 2;
+                _dustY = _grdY;
             }
             _onGrd = 1;
         }
@@ -428,9 +470,10 @@ class DinosaurView extends WatchUi.View {
             }
         }
 
-        // Day / night cycle — flips every 600 score points (~20s). The night
-        // theme swaps clouds for stars; both are equally AMOLED-friendly.
-        _theme = (_score / 600) % 2;
+        // Day → Sunset → Night → Dawn cycle, ~15s per stage, so the backdrop
+        // keeps shifting throughout a long run instead of just flipping
+        // between two looks. Day/Sunset show clouds, Night/Dawn show stars.
+        _theme = (_score / 450) % 4;
 
         // speed: 5 at start → 15 at score 2000, hard cap to keep physics stable
         _spd = 5 + _score / 200;
@@ -462,8 +505,8 @@ class DinosaurView extends WatchUi.View {
             if (_ox[i] + _ow[i] < 0) { _oa[i] = 0; _obsScored[i] = 0; }
         }
 
-        // parallax clouds (slower) — only when daytime theme is active
-        if (_theme == 0) {
+        // parallax clouds (slower) — only during Day/Sunset (theme 0/1)
+        if (_theme == 0 || _theme == 1) {
             for (var i = 0; i < CLD_MAX; i++) {
                 _cx[i] = _cx[i] - (_spd / 2 + 1);
                 if (_cx[i] + _cw[i] < 0) { _cx[i] = _sw + 12; }
@@ -473,6 +516,11 @@ class DinosaurView extends WatchUi.View {
         // spawn
         _nextObs = _nextObs - 1;
         if (_nextObs <= 0) { _spawnObs(); }
+
+        // coins — independent spawn timer + movement/collection/miss handling
+        _nextCoin = _nextCoin - 1;
+        if (_nextCoin <= 0) { _spawnCoin(); }
+        _updateCoins();
 
         // collision
         if (_collide()) {
@@ -489,6 +537,8 @@ class DinosaurView extends WatchUi.View {
                 }
                 // Submit the finished run to the global leaderboard (once).
                 Leaderboard.submitScore(LB_GAME_ID, _score, "");
+                if (_coinsTotal > 0) { Leaderboard.submitScore(LB_GAME_ID, _coinsTotal, "coins"); }
+                if (_bestCombo  > 0) { Leaderboard.submitScore(LB_GAME_ID, _bestCombo, "combo"); }
                 Leaderboard.showPostGame(LB_GAME_ID, "", "DINOSAUR");
             }
             return;
@@ -558,6 +608,78 @@ class DinosaurView extends WatchUi.View {
         if (gap < minGap) { gap = minGap; }
 
         _nextObs = gap;
+    }
+
+    // Floating coins — spawned on their own timer, independent of obstacles.
+    // Picked at one of two jump-reachable heights so grabbing one always
+    // requires a deliberate (but doable) jump. Skips the spawn if it would
+    // land right on top of an active obstacle, so it never forces an
+    // impossible double-demand on the player.
+    hidden function _spawnCoin() {
+        var slot = -1;
+        for (var i = 0; i < COIN_MAX; i++) {
+            if (_coinA[i] == 0) { slot = i; break; }
+        }
+        if (slot < 0) { _nextCoin = 20; return; }
+
+        var spawnX = _sw + 10;
+        for (var i = 0; i < OBS_MAX; i++) {
+            if (_oa[i] == 0) { continue; }
+            var d = _ox[i] - spawnX;
+            if (d > -40 && d < 40) { _nextCoin = 10; return; }
+        }
+
+        var high = ((Math.rand() & 0x7FFFFFFF) % 2) == 0;
+        _coinX[slot] = spawnX;
+        _coinY[slot] = high ? (_grdY - _dh * 145 / 100) : (_grdY - _dh * 55 / 100);
+        _coinA[slot] = 1;
+
+        _nextCoin = 130 + (Math.rand() & 0x7FFFFFFF) % 90;
+    }
+
+    // Advance coins, collect on overlap with the dino, and break the combo
+    // when a coin scrolls off-screen uncollected.
+    hidden function _updateCoins() {
+        var dx1 = _dinoX + 2;
+        var dx2 = _dinoX + _dw - 2;
+        var dh  = (_crouching == 1 && _onGrd == 1) ? (_dh * 55 / 100) : _dh;
+        var dy1 = _dy;
+        var dy2 = _dy + dh;
+
+        for (var i = 0; i < COIN_MAX; i++) {
+            if (_coinA[i] == 0) { continue; }
+            _coinX[i] = _coinX[i] - _spd;
+
+            if (_coinX[i] > dx1 - 8 && _coinX[i] < dx2 + 8 &&
+                _coinY[i] > dy1 - 8 && _coinY[i] < dy2 + 8) {
+                _collectCoin(i);
+                continue;
+            }
+            if (_coinX[i] < -8) {
+                _coinA[i] = 0;
+                if (_comboCoins > 0) { _comboCoins = 0; }
+            }
+        }
+    }
+
+    hidden function _collectCoin(i) {
+        _coinA[i] = 0;
+        if (_state != GS_RUN) { return; }
+
+        _comboCoins = _comboCoins + 1;
+        if (_comboCoins > _bestCombo) { _bestCombo = _comboCoins; }
+        _coinsTotal = _coinsTotal + 1;
+
+        var step = _comboCoins - 1;
+        if (step > COIN_COMBO_CAP) { step = COIN_COMBO_CAP; }
+        var bonus = COIN_BASE + step * COIN_COMBO_STEP;
+        _score = _score + bonus;
+
+        _coinSparkT = 12; _coinSparkX = _coinX[i]; _coinSparkY = _coinY[i];
+        _coinTxtT = 20; _coinTxtX = _coinX[i]; _coinTxtY = _coinY[i]; _coinTxtV = bonus;
+
+        // Milestone flash every 3rd consecutive coin — a bright, eye-catching payoff.
+        if (_comboCoins % 3 == 0) { _comboFlashT = 16; }
     }
 
     // Hitboxes are intentionally tighter than the rendered sprite so the
@@ -646,19 +768,30 @@ class DinosaurView extends WatchUi.View {
     // ── drawing ───────────────────────────────────────────────────────────────
 
     function onUpdate(dc) {
-        // Background — slightly darker at "night" for variety.
-        var bg = (_theme == 1) ? 0x080810 : 0x0d0d0d;
+        // Background cycles Day → Sunset → Night → Dawn for continuous
+        // visual variety across a long run — each stage gets its own palette
+        // and horizon glow instead of just flipping between two looks.
+        var bg;
+        if      (_theme == 0) { bg = 0x0d0d0d; }        // day
+        else if (_theme == 1) { bg = 0x241208; }        // sunset
+        else if (_theme == 2) { bg = 0x080810; }        // night
+        else                  { bg = 0x160f1e; }        // dawn
         dc.setColor(bg, bg);
         dc.clear();
 
-        if (_theme == 1) { _drawStars(dc); }
-        else             { _drawClouds(dc); }
+        if (_theme == 0 || _theme == 1) { _drawClouds(dc); }
+        else                            { _drawStars(dc); }
+        _drawHorizonGlow(dc);
 
         _drawGround(dc);
         _drawObstacles(dc);
+        _drawCoins(dc);
+        _drawDust(dc);
         _drawDino(dc);
         _drawSparkle(dc);
+        _drawCoinSpark(dc);
         _drawNearMiss(dc);
+        _drawComboFlash(dc);
 
         if (_state == GS_TITLE || _state == GS_DEMO) {
             _drawTitle(dc);
@@ -668,22 +801,39 @@ class DinosaurView extends WatchUi.View {
         } else {
             _drawScore(dc);
             _drawNotify(dc);
+            _drawComboHud(dc);
         }
     }
 
-    // Background stars (night theme). Twinkle by toggling brightness based on
+    // Background stars (Night/Dawn). Twinkle by toggling brightness based on
     // index parity and frame counter — cheap to render, no allocations.
     hidden function _drawStars(dc) {
         var twinkle = (_frame / 12) & 1;
+        var bright1 = (_theme == 3) ? 0x886688 : 0x666688;   // dawn tints violet
+        var bright2 = (_theme == 3) ? 0x442a44 : 0x33334a;
         for (var i = 0; i < STAR_MAX; i++) {
             var bright = ((i + twinkle) & 1) == 0;
-            dc.setColor(bright ? 0x666688 : 0x33334a, Graphics.COLOR_TRANSPARENT);
+            dc.setColor(bright ? bright1 : bright2, Graphics.COLOR_TRANSPARENT);
             if (_starsR[i] >= 2) {
                 dc.fillRectangle(_starsX[i], _starsY[i], 2, 2);
             } else {
                 dc.fillRectangle(_starsX[i], _starsY[i], 1, 1);
             }
         }
+    }
+
+    // Soft horizon-band glow — a couple of stacked translucent-feeling bars
+    // right above the ground line, tinted per biome. Cheap (2 rectangles) but
+    // reads as real atmosphere and makes each biome transition pop.
+    hidden function _drawHorizonGlow(dc) {
+        var c1; var c2;
+        if      (_theme == 1) { c1 = 0x2a1a10; c2 = 0x40200c; }  // sunset
+        else if (_theme == 3) { c1 = 0x201530; c2 = 0x2c1a3c; }  // dawn
+        else { return; }
+        dc.setColor(c1, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, _grdY - 26, _sw, 14);
+        dc.setColor(c2, Graphics.COLOR_TRANSPARENT);
+        dc.fillRectangle(0, _grdY - 12, _sw, 12);
     }
 
     // Floating "+5" pop-up shown on near-miss bonus.
@@ -712,7 +862,8 @@ class DinosaurView extends WatchUi.View {
     }
 
     hidden function _drawClouds(dc) {
-        dc.setColor(0x1c1c1c, Graphics.COLOR_TRANSPARENT);
+        // Sunset tints the clouds warm orange instead of neutral grey.
+        dc.setColor((_theme == 1) ? 0x3a2214 : 0x1c1c1c, Graphics.COLOR_TRANSPARENT);
         for (var i = 0; i < CLD_MAX; i++) {
             var cx = _cx[i];
             var cy = _cy[i];
@@ -720,6 +871,80 @@ class DinosaurView extends WatchUi.View {
             dc.fillRoundedRectangle(cx,          cy + 7,  cw,          9, 5);
             dc.fillRoundedRectangle(cx + cw/5,   cy,      cw * 6 / 10, 14, 7);
         }
+        if (_theme == 1) {
+            // Low sun disc peeking behind the cloud layer.
+            dc.setColor(0x663311, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(_sw * 78 / 100, _sh * 22 / 100, 16);
+        }
+    }
+
+    // ── coins ─────────────────────────────────────────────────────────────────
+
+    hidden function _drawCoins(dc) {
+        var spin = (_frame / 3) % 4;      // cheap rotation illusion
+        for (var i = 0; i < COIN_MAX; i++) {
+            if (_coinA[i] == 0) { continue; }
+            var cx = _coinX[i]; var cy = _coinY[i];
+            var w = (spin == 0 || spin == 2) ? 7 : 4;
+            dc.setColor(0xC98A1E, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - w/2 - 1, cy - 7, w + 2, 14, 3);
+            dc.setColor(0xFFD54A, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(cx - w/2, cy - 6, w, 12, 3);
+            dc.setColor(0xFFF0A8, Graphics.COLOR_TRANSPARENT);
+            dc.fillRectangle(cx - 1, cy - 4, 1, 8);
+        }
+    }
+
+    // Golden burst + floating "+N" when a coin is collected.
+    hidden function _drawCoinSpark(dc) {
+        if (_coinSparkT > 0) {
+            dc.setColor(0xFFD54A, Graphics.COLOR_TRANSPARENT);
+            var r = 12 - _coinSparkT;
+            var sx = _coinSparkX; var sy = _coinSparkY;
+            dc.fillCircle(sx - r,     sy,         2);
+            dc.fillCircle(sx + r,     sy,         2);
+            dc.fillCircle(sx,         sy - r,     2);
+            dc.fillCircle(sx,         sy + r,     2);
+            dc.fillCircle(sx - r*7/10, sy - r*7/10, 2);
+            dc.fillCircle(sx + r*7/10, sy - r*7/10, 2);
+        }
+        if (_coinTxtT > 0) {
+            var lift = 20 - _coinTxtT;
+            dc.setColor(0xFFD54A, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(_coinTxtX, _coinTxtY - lift, Graphics.FONT_XTINY,
+                "+" + _coinTxtV, Graphics.TEXT_JUSTIFY_CENTER);
+        }
+    }
+
+    // Small expanding dust puff at the dino's feet on landing.
+    hidden function _drawDust(dc) {
+        if (_dustT <= 0) { return; }
+        var r = (10 - _dustT) / 2 + 2;
+        dc.setColor(0x3a3a3a, Graphics.COLOR_TRANSPARENT);
+        dc.fillCircle(_dustX - r * 2, _dustY, 2);
+        dc.fillCircle(_dustX + r * 2, _dustY, 2);
+        dc.fillCircle(_dustX - r,     _dustY - 2, 2);
+        dc.fillCircle(_dustX + r,     _dustY - 2, 2);
+    }
+
+    // Bright pulsing border flash on every 3rd consecutive coin — a big,
+    // eye-catching payoff for keeping a combo alive.
+    hidden function _drawComboFlash(dc) {
+        if (_comboFlashT <= 0) { return; }
+        dc.setPenWidth(3);
+        dc.setColor(0xFFD54A, Graphics.COLOR_TRANSPARENT);
+        dc.drawRoundedRectangle(2, 2, _sw - 4, _sh - 4, _sw / 2);
+        dc.setPenWidth(1);
+    }
+
+    // In-run combo counter — only shown once a combo of 2+ is active, grows
+    // brighter/bolder the higher it climbs.
+    hidden function _drawComboHud(dc) {
+        if (_comboCoins < 2) { return; }
+        var col = (_comboCoins >= 6) ? 0xFF6622 : (_comboCoins >= 3 ? 0xFFD54A : 0xCCAA55);
+        dc.setColor(col, Graphics.COLOR_TRANSPARENT);
+        dc.drawText(_sw / 2, _sh * 4 / 100, Graphics.FONT_XTINY,
+            "COMBO x" + _comboCoins, Graphics.TEXT_JUSTIFY_CENTER);
     }
 
     // ── dino ──────────────────────────────────────────────────────────────────
@@ -1034,12 +1259,12 @@ class DinosaurView extends WatchUi.View {
 
     hidden function _drawOver(dc) {
         var cx = _sw / 2;
-        var bw = _sw * 40 / 100;
-        var bh = _sh * 22 / 100;
-        if (bw < 118) { bw = 118; }
-        if (bh < 68)  { bh = 68; }
+        var bw = _sw * 42 / 100;
+        var bh = _sh * 27 / 100;
+        if (bw < 122) { bw = 122; }
+        if (bh < 84)  { bh = 84; }
         var bx = cx - bw / 2;
-        var by = _sh * 34 / 100;
+        var by = _sh * 31 / 100;
 
         dc.setColor(0x111111, Graphics.COLOR_TRANSPARENT);
         dc.fillRoundedRectangle(bx, by, bw, bh, 8);
@@ -1060,8 +1285,14 @@ class DinosaurView extends WatchUi.View {
                 "best " + _hiScore.format("%05d"), Graphics.TEXT_JUSTIFY_CENTER);
         }
 
+        if (_coinsTotal > 0 || _bestCombo > 0) {
+            dc.setColor(0xFFD54A, Graphics.COLOR_TRANSPARENT);
+            dc.drawText(cx, by + 53, Graphics.FONT_XTINY,
+                "coins " + _coinsTotal + " · combo x" + _bestCombo, Graphics.TEXT_JUSTIFY_CENTER);
+        }
+
         // hint toward next phase
-        var hintY = by + 53;
+        var hintY = by + 69;
         if (_phase == 0) {
             dc.setColor(0x30B348, Graphics.COLOR_TRANSPARENT);
             dc.drawText(cx, hintY, Graphics.FONT_XTINY, "reach 300 for x2 jump!", Graphics.TEXT_JUSTIFY_CENTER);
