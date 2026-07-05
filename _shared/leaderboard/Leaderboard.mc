@@ -141,10 +141,14 @@ module Leaderboard {
 
     // Fire-and-forget: pull the resolved message bundle and cache it. Called
     // automatically by logLaunch(); games rarely need to call it directly.
+    // Fully guarded: a failure to fetch NEVER affects the game — it just means
+    // no (new) message is cached.
     function fetchMessages(game as Lang.String) as Void {
         if (!isSupported()) { return; }
-        _msgFetcher = new LbMessageFetcher();
-        _msgFetcher.send(game);
+        try {
+            _msgFetcher = new LbMessageFetcher();
+            _msgFetcher.send(game);
+        } catch (e) {}
     }
 
     function _cachedBundle() {
@@ -165,25 +169,28 @@ module Leaderboard {
     function showMessage(game as Lang.String, placement as Lang.String,
                          fallback as Lang.Dictionary or Null) as Lang.Boolean {
         if (!isSupported()) { return false; }
-        var bundle = _cachedBundle();
-        var msg = null;
-        if (bundle != null) { msg = bundle[placement]; }
-        if (!(msg instanceof Lang.Dictionary)) { msg = fallback; }
-        if (!(msg instanceof Lang.Dictionary)) { return false; }
-
-        var gap = 21600;
-        if (msg["min_gap_s"] instanceof Lang.Number) { gap = msg["min_gap_s"]; }
-        var key = MSG_SHOWN_PRE + placement;
-        var last = 0;
+        // Wrap everything: nothing about messages may ever throw into the game.
         try {
+            var bundle = _cachedBundle();
+            var msg = null;
+            if (bundle != null) { msg = bundle[placement]; }
+            if (!(msg instanceof Lang.Dictionary)) { msg = fallback; }
+            if (!(msg instanceof Lang.Dictionary)) { return false; }
+
+            var gap = 21600;
+            if (msg["min_gap_s"] instanceof Lang.Number) { gap = msg["min_gap_s"]; }
+            var key = MSG_SHOWN_PRE + placement;
+            var last = 0;
             var v = Application.Storage.getValue(key);
             if (v instanceof Lang.Number) { last = v; }
-        } catch (e) {}
-        var now = _nowSec();
-        if (last > 0 && (now - last) < gap) { return false; }
-        try { Application.Storage.setValue(key, now); } catch (e) {}
-        _pushMessage(msg);
-        return true;
+            var now = _nowSec();
+            if (last > 0 && (now - last) < gap) { return false; }
+            Application.Storage.setValue(key, now);
+            _pushMessage(msg);
+            return true;
+        } catch (e) {
+            return false;
+        }
     }
 
     // Show the 'reset' message once, if the leaderboard was wiped since we last
@@ -191,33 +198,39 @@ module Leaderboard {
     // so a first-time player isn't told about a "reset" they never lived through.
     function showResetMessageIfAny(game as Lang.String) as Lang.Boolean {
         if (!isSupported()) { return false; }
-        var bundle = _cachedBundle();
-        if (bundle == null) { return false; }
-        var resetAt = bundle["reset_at"];
-        if (!(resetAt instanceof Lang.Number) && !(resetAt instanceof Lang.Long)) { return false; }
-        if (resetAt == 0) { return false; }
-
-        var ack = 0;
         try {
+            var bundle = _cachedBundle();
+            if (bundle == null) { return false; }
+            var resetAt = bundle["reset_at"];
+            if (!(resetAt instanceof Lang.Number) && !(resetAt instanceof Lang.Long)) { return false; }
+            if (resetAt == 0) { return false; }
+
+            var ack = 0;
             var v = Application.Storage.getValue(MSG_RESET_ACK);
             if (v instanceof Lang.Number || v instanceof Lang.Long) { ack = v; }
-        } catch (e) {}
-        if (resetAt <= ack) { return false; }
-        try { Application.Storage.setValue(MSG_RESET_ACK, resetAt); } catch (e) {}
-        if (ack == 0) { return false; }   // first run → just record the baseline
+            if (resetAt <= ack) { return false; }
+            Application.Storage.setValue(MSG_RESET_ACK, resetAt);
+            if (ack == 0) { return false; }   // first run → just record the baseline
 
-        var msg = bundle["reset"];
-        if (!(msg instanceof Lang.Dictionary)) { return false; }
-        _pushMessage(msg);
-        return true;
+            var msg = bundle["reset"];
+            if (!(msg instanceof Lang.Dictionary)) { return false; }
+            _pushMessage(msg);
+            return true;
+        } catch (e) {
+            return false;
+        }
     }
 
     // Convenience for a game's menu: prefer the (once-only) reset message,
     // otherwise show the throttled launch message. Call this when the main menu
     // becomes visible. `fallback` covers offline/first-run for the launch slot.
     function announce(game as Lang.String, fallback as Lang.Dictionary or Null) as Lang.Boolean {
-        if (showResetMessageIfAny(game)) { return true; }
-        return showMessage(game, MSG_LAUNCH, fallback);
+        try {
+            if (showResetMessageIfAny(game)) { return true; }
+            return showMessage(game, MSG_LAUNCH, fallback);
+        } catch (e) {
+            return false;
+        }
     }
 
     function _pushMessage(msg) {

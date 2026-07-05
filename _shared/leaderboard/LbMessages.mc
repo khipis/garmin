@@ -147,6 +147,15 @@ class LbMessageView extends WatchUi.View {
     }
 
     function onUpdate(dc) {
+        // Bulletproof: a rendering hiccup must never crash the host game.
+        try {
+            _draw(dc);
+        } catch (e) {
+            try { dc.setColor(LB_BG, LB_BG); dc.clear(); } catch (e2) {}
+        }
+    }
+
+    hidden function _draw(dc) {
         _w = dc.getWidth();
         _h = dc.getHeight();
         var cx = _w / 2;
