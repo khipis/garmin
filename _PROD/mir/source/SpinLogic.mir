@@ -1,0 +1,635 @@
+[ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc"; @line = 18; @symbol_moduledef = [SpinLogic,18,7,16]; ]
+module SpinLogic {
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc"; @line = 18; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc"; @line = 25; @symbol_functiondef = [requestStop,25,13,24]; @symbol_param<0> = [reelSys,25,25,32]; @symbol_param<1> = [idx,25,34,37]; ]
+    function requestStop(reelSys, idx) {
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_25_39_49_4_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 26 8 ]
+        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_25_39_49_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_25_39_49_4_stop" ]
+        %r.1 = local;
+        symbol [ r %r.1 26 12 13 ];
+        %tmp.1 = lgetv %reelSys;
+        symbol [ reelSys %tmp.1 26 16 23 ];
+        symbol [ reels %tmp.2 26 24 29 ];
+        %tmp.2 = getv %tmp.1 :reels;
+        %tmp.3 = lgetv %idx;
+        symbol [ idx %tmp.3 26 30 33 ];
+        %tmp.4 = agetv %tmp.2 %tmp.3;
+        lputv %r.1 %tmp.4;
+        symbol [ r %r.1 26 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 27 8 ]
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_27_8_27_48_if_stmt:
+        %tmp.5 = lgetv %r.1;
+        symbol [ r %tmp.5 27 12 13 ];
+        symbol [ state %tmp.6 27 14 19 ];
+        %tmp.6 = getv %tmp.5 :state;
+        symbol [ REEL_SPINNING %tmp.8 27 23 36 ];
+        %tmp.8 = getv ? :REEL_SPINNING;
+        %tmp.9 = ne %tmp.6 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_27_8_27_48_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_27_8_27_48_if_true:
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_27_38_27_48_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 27 40 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_27_38_27_48_stop:
+        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_27_8_27_48_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_27_8_27_48_if_end:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 29 8 ]
+        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_25_39_49_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_25_39_49_4_stop" ]
+        %others.2 = local;
+        symbol [ others %others.2 29 12 18 ];
+        %tmp.10 = newa 0;
+        lputv %others.2 %tmp.10;
+        symbol [ others %others.2 29 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 30 8 ]
+        for @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_30_8_34_8_for_test @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_30_8_34_8_for_incr @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_30_8_34_8_for_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_30_8_34_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_30_8_34_8_for_begin" "_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_30_8_34_8_for_end" ]
+        %i.3 = local;
+        symbol [ i %i.3 30 17 18 ];
+        %tmp.11 = 0;
+        lputv %i.3 %tmp.11;
+        symbol [ i %i.3 30 17 18 ];
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_30_8_34_8_for_test:
+        %tmp.12 = lgetv %i.3;
+        symbol [ i %tmp.12 30 24 25 ];
+        %tmp.13 = 3;
+        %tmp.14 = lt %tmp.12 %tmp.13;
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_30_8_34_8_for_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_30_8_34_8_for_begin:
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_30_36_34_8_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 31 12 ]
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_31_12_33_12_if_stmt:
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_31_16_31_54_begin:
+        %tmp.15 = lgetv %i.3;
+        symbol [ i %tmp.15 31 16 17 ];
+        %tmp.16 = lgetv %idx;
+        symbol [ idx %tmp.16 31 21 24 ];
+        %tmp.17 = ne %tmp.15 %tmp.16;
+        bf %tmp.17 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_31_12_33_12_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_31_28_31_54_true:
+        %tmp.18 = lgetv %reelSys;
+        symbol [ reelSys %tmp.18 31 28 35 ];
+        symbol [ reels %tmp.19 31 36 41 ];
+        %tmp.19 = getv %tmp.18 :reels;
+        %tmp.20 = lgetv %i.3;
+        symbol [ i %tmp.20 31 42 43 ];
+        %tmp.21 = agetv %tmp.19 %tmp.20;
+        symbol [ state %tmp.22 31 45 50 ];
+        %tmp.22 = getv %tmp.21 :state;
+        symbol [ REEL_STOPPED %tmp.24 31 54 66 ];
+        %tmp.24 = getv ? :REEL_STOPPED;
+        %tmp.25 = eq %tmp.22 %tmp.24;
+        push %tmp.25;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_31_28_31_54_end:
+        %tmp.26 = phi [%tmp.17 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_31_16_31_54_begin] [%tmp.25 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_31_28_31_54_true] [%tmp.26 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_31_28_31_54_end];
+        bf %tmp.26 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_31_12_33_12_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_31_12_33_12_if_true:
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_31_68_33_12_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 32 16 ]
+        %tmp.27 = lgetv %others.2;
+        symbol [ others %tmp.27 32 16 22 ];
+        symbol [ add %tmp.28 32 23 26 ];
+        %tmp.28 = getv function %tmp.27 :add;
+        %tmp.29 = lgetv %reelSys;
+        symbol [ reelSys %tmp.29 32 27 34 ];
+        symbol [ reels %tmp.30 32 35 40 ];
+        %tmp.30 = getv %tmp.29 :reels;
+        %tmp.31 = lgetv %i.3;
+        symbol [ i %tmp.31 32 41 42 ];
+        %tmp.32 = agetv %tmp.30 %tmp.31;
+        symbol [ paylineSymbol %tmp.33 32 44 57 ];
+        %tmp.33 = getv function %tmp.32 :paylineSymbol;
+        %tmp.34 = invoke %tmp.32 %tmp.33();
+        invoke %tmp.27 %tmp.28(%tmp.34);
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_31_68_33_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_31_12_33_12_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_31_12_33_12_if_end:
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_30_36_34_8_stop:
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_30_8_34_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 30 ]
+        %tmp.37 = lgetv %i.3;
+        symbol [ i %tmp.37 30 31 32 ];
+        %tmp.38 = add %tmp.37 1;
+        lputv %i.3 %tmp.38;
+        symbol [ i %i.3 30 31 32 ];
+        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_30_8_34_8_for_test;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_30_8_34_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 36 8 ]
+        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_25_39_49_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_25_39_49_4_stop" ]
+        %n.4 = local;
+        symbol [ n %n.4 36 12 13 ];
+        symbol [ SymbolManager %tmp.40 36 16 29 ];
+        %tmp.40 = getv ? :SymbolManager;
+        symbol [ STRIP_LEN %tmp.41 36 30 39 ];
+        %tmp.41 = getv %tmp.40 :STRIP_LEN;
+        lputv %n.4 %tmp.41;
+        symbol [ n %n.4 36 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 37 8 ]
+        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_25_39_49_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_25_39_49_4_stop" ]
+        %base.5 = local;
+        symbol [ base %base.5 37 12 16 ];
+        %tmp.42 = lgetv %r.1;
+        symbol [ r %tmp.42 37 19 20 ];
+        symbol [ position %tmp.43 37 21 29 ];
+        %tmp.43 = getv %tmp.42 :position;
+        symbol [ toNumber %tmp.44 37 30 38 ];
+        %tmp.44 = getv function %tmp.43 :toNumber;
+        %tmp.45 = invoke %tmp.43 %tmp.44();
+        lputv %base.5 %tmp.45;
+        symbol [ base %base.5 37 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 38 8 ]
+        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_25_39_49_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_25_39_49_4_stop" ]
+        %bestOff.6 = local;
+        symbol [ bestOff %bestOff.6 38 12 19 ];
+        %tmp.46 = 0;
+        lputv %bestOff.6 %tmp.46;
+        symbol [ bestOff %bestOff.6 38 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 39 8 ]
+        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_25_39_49_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_25_39_49_4_stop" ]
+        %bestScore.7 = local;
+        symbol [ bestScore %bestScore.7 39 12 21 ];
+        %tmp.47 = -1;
+        lputv %bestScore.7 %tmp.47;
+        symbol [ bestScore %bestScore.7 39 12 21 ];
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 40 8 ]
+        for @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_40_8_47_8_for_test @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_40_8_47_8_for_incr @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_40_8_47_8_for_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_40_8_47_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_40_8_47_8_for_begin" "_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_40_8_47_8_for_end" ]
+        %off.8 = local;
+        symbol [ off %off.8 40 17 20 ];
+        %tmp.48 = 0;
+        lputv %off.8 %tmp.48;
+        symbol [ off %off.8 40 17 20 ];
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_40_8_47_8_for_test:
+        %tmp.49 = lgetv %off.8;
+        symbol [ off %tmp.49 40 26 29 ];
+        symbol [ SLOT_PULLIN_MAX %tmp.51 40 33 48 ];
+        %tmp.51 = getv ? :SLOT_PULLIN_MAX;
+        %tmp.52 = lte %tmp.49 %tmp.51;
+        bf %tmp.52 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_40_8_47_8_for_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_40_8_47_8_for_begin:
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_40_57_47_8_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 41 12 ]
+        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_40_57_47_8_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_40_57_47_8_stop" ]
+        %sym.9 = local;
+        symbol [ sym %sym.9 41 16 19 ];
+        %tmp.53 = lgetv %r.1;
+        symbol [ r %tmp.53 41 22 23 ];
+        symbol [ strip %tmp.54 41 24 29 ];
+        %tmp.54 = getv %tmp.53 :strip;
+        %tmp.55 = lgetv %base.5;
+        symbol [ base %tmp.55 41 31 35 ];
+        %tmp.56 = lgetv %off.8;
+        symbol [ off %tmp.56 41 38 41 ];
+        %tmp.57 = add %tmp.55 %tmp.56;
+        %tmp.58 = lgetv %n.4;
+        symbol [ n %tmp.58 41 45 46 ];
+        %tmp.59 = mod %tmp.57 %tmp.58;
+        %tmp.60 = agetv %tmp.54 %tmp.59;
+        lputv %sym.9 %tmp.60;
+        symbol [ sym %sym.9 41 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 42 12 ]
+        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_40_57_47_8_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_40_57_47_8_stop" ]
+        %score.10 = local;
+        symbol [ score %score.10 42 16 21 ];
+        %tmp.61 = self;
+        symbol [ _scoreCandidate %tmp.62 42 24 39 ];
+        %tmp.62 = getv function %tmp.61 :_scoreCandidate;
+        %tmp.63 = lgetv %sym.9;
+        symbol [ sym %tmp.63 42 40 43 ];
+        %tmp.64 = lgetv %others.2;
+        symbol [ others %tmp.64 42 45 51 ];
+        %tmp.65 = invoke %tmp.61 %tmp.62(%tmp.63, %tmp.64);
+        lputv %score.10 %tmp.65;
+        symbol [ score %score.10 42 16 21 ];
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 43 12 ]
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_43_12_46_12_if_stmt:
+        %tmp.66 = lgetv %score.10;
+        symbol [ score %tmp.66 43 16 21 ];
+        %tmp.67 = lgetv %bestScore.7;
+        symbol [ bestScore %tmp.67 43 24 33 ];
+        %tmp.68 = gt %tmp.66 %tmp.67;
+        bf %tmp.68 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_43_12_46_12_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_43_12_46_12_if_true:
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_43_35_46_12_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 44 16 ]
+        %tmp.69 = lgetv %score.10;
+        symbol [ score %tmp.69 44 28 33 ];
+        lputv %bestScore.7 %tmp.69;
+        symbol [ bestScore %bestScore.7 44 16 25 ];
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 45 16 ]
+        %tmp.70 = lgetv %off.8;
+        symbol [ off %tmp.70 45 28 31 ];
+        lputv %bestOff.6 %tmp.70;
+        symbol [ bestOff %bestOff.6 45 16 23 ];
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_43_35_46_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_43_12_46_12_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_43_12_46_12_if_end:
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_40_57_47_8_stop:
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_40_8_47_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 40 ]
+        %tmp.73 = lgetv %off.8;
+        symbol [ off %tmp.73 40 50 53 ];
+        %tmp.74 = add %tmp.73 1;
+        lputv %off.8 %tmp.74;
+        symbol [ off %off.8 40 50 53 ];
+        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_40_8_47_8_for_test;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_40_8_47_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 48 8 ]
+        %tmp.75 = lgetv %r.1;
+        symbol [ r %tmp.75 48 8 9 ];
+        symbol [ beginStop %tmp.76 48 10 19 ];
+        %tmp.76 = getv function %tmp.75 :beginStop;
+        %tmp.77 = lgetv %bestOff.6;
+        symbol [ bestOff %tmp.77 48 20 27 ];
+        symbol [ SLOT_DECEL_TICKS %tmp.79 48 29 45 ];
+        %tmp.79 = getv ? :SLOT_DECEL_TICKS;
+        invoke %tmp.75 %tmp.76(%tmp.77, %tmp.79);
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_25_39_49_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc"; @line = 53; @symbol_functiondef = [_scoreCandidate,53,13,28]; @symbol_param<0> = [sym,53,29,32]; @symbol_param<1> = [others,53,34,40]; ]
+    function _scoreCandidate(sym, others) {
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_53_42_66_4_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 54 8 ]
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_54_8_59_8_if_stmt:
+        %tmp.1 = lgetv %others;
+        symbol [ others %tmp.1 54 12 18 ];
+        symbol [ size %tmp.2 54 19 23 ];
+        %tmp.2 = getv function %tmp.1 :size;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        %tmp.4 = 2;
+        %tmp.5 = eq %tmp.3 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_54_8_59_8_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_54_8_59_8_if_true:
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_54_32_59_8_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 56 12 ]
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_56_12_56_82_if_stmt:
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_56_16_56_57_begin:
+        %tmp.6 = lgetv %others;
+        symbol [ others %tmp.6 56 16 22 ];
+        %tmp.7 = 0;
+        %tmp.8 = agetv %tmp.6 %tmp.7;
+        %tmp.9 = lgetv %others;
+        symbol [ others %tmp.9 56 29 35 ];
+        %tmp.10 = 1;
+        %tmp.11 = agetv %tmp.9 %tmp.10;
+        %tmp.12 = eq %tmp.8 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_56_12_56_82_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_56_42_56_57_true:
+        %tmp.13 = lgetv %sym;
+        symbol [ sym %tmp.13 56 42 45 ];
+        %tmp.14 = lgetv %others;
+        symbol [ others %tmp.14 56 49 55 ];
+        %tmp.15 = 0;
+        %tmp.16 = agetv %tmp.14 %tmp.15;
+        %tmp.17 = eq %tmp.13 %tmp.16;
+        push %tmp.17;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_56_42_56_57_end:
+        %tmp.18 = phi [%tmp.12 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_56_16_56_57_begin] [%tmp.17 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_56_42_56_57_true] [%tmp.18 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_56_42_56_57_end];
+        bf %tmp.18 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_56_12_56_82_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_56_12_56_82_if_true:
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_56_60_56_82_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 56 62 ]
+        %tmp.19 = 10000;
+        %tmp.20 = lgetv %sym;
+        symbol [ sym %tmp.20 56 77 80 ];
+        %tmp.21 = add %tmp.19 %tmp.20;
+        ret %tmp.21;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_56_60_56_82_stop:
+        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_56_12_56_82_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_56_12_56_82_if_end:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 57 12 ]
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_57_12_57_82_if_stmt:
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_57_16_57_51_begin:
+        %tmp.22 = lgetv %sym;
+        symbol [ sym %tmp.22 57 16 19 ];
+        %tmp.23 = lgetv %others;
+        symbol [ others %tmp.23 57 23 29 ];
+        %tmp.24 = 0;
+        %tmp.25 = agetv %tmp.23 %tmp.24;
+        %tmp.26 = eq %tmp.22 %tmp.25;
+        bt %tmp.26 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_57_12_57_82_if_true;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_57_36_57_51_false:
+        %tmp.27 = lgetv %sym;
+        symbol [ sym %tmp.27 57 36 39 ];
+        %tmp.28 = lgetv %others;
+        symbol [ others %tmp.28 57 43 49 ];
+        %tmp.29 = 1;
+        %tmp.30 = agetv %tmp.28 %tmp.29;
+        %tmp.31 = eq %tmp.27 %tmp.30;
+        push %tmp.31;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_57_36_57_51_end:
+        %tmp.32 = phi [%tmp.26 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_57_16_57_51_begin] [%tmp.31 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_57_36_57_51_false] [%tmp.32 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_57_36_57_51_end];
+        bf %tmp.32 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_57_12_57_82_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_57_12_57_82_if_true:
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_57_60_57_82_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 57 62 ]
+        %tmp.33 = 1000;
+        %tmp.34 = lgetv %sym;
+        symbol [ sym %tmp.34 57 77 80 ];
+        %tmp.35 = add %tmp.33 %tmp.34;
+        ret %tmp.35;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_57_60_57_82_stop:
+        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_57_12_57_82_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_57_12_57_82_if_end:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 58 12 ]
+        %tmp.36 = lgetv %sym;
+        symbol [ sym %tmp.36 58 19 22 ];
+        ret %tmp.36;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_54_32_59_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_54_8_59_8_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_54_8_59_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 60 8 ]
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_60_8_63_8_if_stmt:
+        %tmp.37 = lgetv %others;
+        symbol [ others %tmp.37 60 12 18 ];
+        symbol [ size %tmp.38 60 19 23 ];
+        %tmp.38 = getv function %tmp.37 :size;
+        %tmp.39 = invoke %tmp.37 %tmp.38();
+        %tmp.40 = 1;
+        %tmp.41 = eq %tmp.39 %tmp.40;
+        bf %tmp.41 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_60_8_63_8_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_60_8_63_8_if_true:
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_60_32_63_8_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 61 12 ]
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_61_12_61_55_if_stmt:
+        %tmp.42 = lgetv %sym;
+        symbol [ sym %tmp.42 61 16 19 ];
+        %tmp.43 = lgetv %others;
+        symbol [ others %tmp.43 61 23 29 ];
+        %tmp.44 = 0;
+        %tmp.45 = agetv %tmp.43 %tmp.44;
+        %tmp.46 = eq %tmp.42 %tmp.45;
+        bf %tmp.46 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_61_12_61_55_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_61_12_61_55_if_true:
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_61_34_61_55_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 61 36 ]
+        %tmp.47 = 1000;
+        %tmp.48 = lgetv %sym;
+        symbol [ sym %tmp.48 61 50 53 ];
+        %tmp.49 = add %tmp.47 %tmp.48;
+        ret %tmp.49;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_61_34_61_55_stop:
+        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_61_12_61_55_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_61_12_61_55_if_end:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 62 12 ]
+        %tmp.50 = lgetv %sym;
+        symbol [ sym %tmp.50 62 19 22 ];
+        ret %tmp.50;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_60_32_63_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_60_8_63_8_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_60_8_63_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 65 8 ]
+        %tmp.51 = lgetv %sym;
+        symbol [ sym %tmp.51 65 15 18 ];
+        ret %tmp.51;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_53_42_66_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc"; @line = 71; @symbol_functiondef = [evaluate,71,13,21]; @symbol_param<0> = [symbols,71,22,29]; ]
+    function evaluate(symbols) {
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_71_31_88_4_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 72 8 ]
+        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_71_31_88_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_71_31_88_4_stop" ]
+        %a.1 = local;
+        symbol [ a %a.1 72 12 13 ];
+        %tmp.1 = lgetv %symbols;
+        symbol [ symbols %tmp.1 72 16 23 ];
+        %tmp.2 = 0;
+        %tmp.3 = agetv %tmp.1 %tmp.2;
+        lputv %a.1 %tmp.3;
+        symbol [ a %a.1 72 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 72 28 ]
+        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_71_31_88_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_71_31_88_4_stop" ]
+        %b.2 = local;
+        symbol [ b %b.2 72 32 33 ];
+        %tmp.4 = lgetv %symbols;
+        symbol [ symbols %tmp.4 72 36 43 ];
+        %tmp.5 = 1;
+        %tmp.6 = agetv %tmp.4 %tmp.5;
+        lputv %b.2 %tmp.6;
+        symbol [ b %b.2 72 32 33 ];
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 72 48 ]
+        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_71_31_88_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_71_31_88_4_stop" ]
+        %c.3 = local;
+        symbol [ c %c.3 72 52 53 ];
+        %tmp.7 = lgetv %symbols;
+        symbol [ symbols %tmp.7 72 56 63 ];
+        %tmp.8 = 2;
+        %tmp.9 = agetv %tmp.7 %tmp.8;
+        lputv %c.3 %tmp.9;
+        symbol [ c %c.3 72 52 53 ];
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 74 8 ]
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_74_8_81_8_if_stmt:
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_74_12_74_27_begin:
+        %tmp.10 = lgetv %a.1;
+        symbol [ a %tmp.10 74 12 13 ];
+        %tmp.11 = lgetv %b.2;
+        symbol [ b %tmp.11 74 17 18 ];
+        %tmp.12 = eq %tmp.10 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_74_8_81_8_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_74_22_74_27_true:
+        %tmp.13 = lgetv %b.2;
+        symbol [ b %tmp.13 74 22 23 ];
+        %tmp.14 = lgetv %c.3;
+        symbol [ c %tmp.14 74 27 28 ];
+        %tmp.15 = eq %tmp.13 %tmp.14;
+        push %tmp.15;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_74_22_74_27_end:
+        %tmp.16 = phi [%tmp.12 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_74_12_74_27_begin] [%tmp.15 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_74_22_74_27_true] [%tmp.16 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_74_22_74_27_end];
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_74_8_81_8_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_74_8_81_8_if_true:
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_74_30_81_8_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 75 12 ]
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_75_12_78_12_if_stmt:
+        %tmp.17 = lgetv %a.1;
+        symbol [ a %tmp.17 75 16 17 ];
+        symbol [ SYM_SEVEN %tmp.19 75 21 30 ];
+        %tmp.19 = getv ? :SYM_SEVEN;
+        %tmp.20 = eq %tmp.17 %tmp.19;
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_75_12_78_12_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_75_12_78_12_if_true:
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_75_32_78_12_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 76 16 ]
+        %tmp.21 = newd 4;
+        %tmp.22 = "kind";
+        %tmp.23 = "JACKPOT";
+        %tmp.24 = dup %tmp.21;
+        %tmp.25 = aputv %tmp.24 %tmp.22 %tmp.23;
+        %tmp.26 = "payout";
+        symbol [ SymbolManager %tmp.28 76 58 71 ];
+        %tmp.28 = getv ? :SymbolManager;
+        symbol [ PAYOUT_3 %tmp.29 76 72 80 ];
+        %tmp.29 = getv %tmp.28 :PAYOUT_3;
+        %tmp.30 = lgetv %a.1;
+        symbol [ a %tmp.30 76 81 82 ];
+        %tmp.31 = agetv %tmp.29 %tmp.30;
+        %tmp.32 = dup %tmp.25;
+        %tmp.33 = aputv %tmp.32 %tmp.26 %tmp.31;
+        %tmp.34 = "label";
+        %tmp.35 = "JACKPOT!";
+        %tmp.36 = dup %tmp.33;
+        %tmp.37 = aputv %tmp.36 %tmp.34 %tmp.35;
+        %tmp.38 = "sym";
+        %tmp.39 = lgetv %a.1;
+        symbol [ a %tmp.39 77 57 58 ];
+        %tmp.40 = dup %tmp.37;
+        %tmp.41 = aputv %tmp.40 %tmp.38 %tmp.39;
+        ret %tmp.41;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_75_32_78_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_75_12_78_12_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_75_12_78_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 79 12 ]
+        %tmp.42 = newd 4;
+        %tmp.43 = "kind";
+        %tmp.44 = "TRIPLE";
+        %tmp.45 = dup %tmp.42;
+        %tmp.46 = aputv %tmp.45 %tmp.43 %tmp.44;
+        %tmp.47 = "payout";
+        symbol [ SymbolManager %tmp.49 79 53 66 ];
+        %tmp.49 = getv ? :SymbolManager;
+        symbol [ PAYOUT_3 %tmp.50 79 67 75 ];
+        %tmp.50 = getv %tmp.49 :PAYOUT_3;
+        %tmp.51 = lgetv %a.1;
+        symbol [ a %tmp.51 79 76 77 ];
+        %tmp.52 = agetv %tmp.50 %tmp.51;
+        %tmp.53 = dup %tmp.46;
+        %tmp.54 = aputv %tmp.53 %tmp.47 %tmp.52;
+        %tmp.55 = "label";
+        %tmp.56 = "WIN!";
+        %tmp.57 = dup %tmp.54;
+        %tmp.58 = aputv %tmp.57 %tmp.55 %tmp.56;
+        %tmp.59 = "sym";
+        %tmp.60 = lgetv %a.1;
+        symbol [ a %tmp.60 80 49 50 ];
+        %tmp.61 = dup %tmp.58;
+        %tmp.62 = aputv %tmp.61 %tmp.59 %tmp.60;
+        ret %tmp.62;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_74_30_81_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_74_8_81_8_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_74_8_81_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 82 8 ]
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_82_8_86_8_if_stmt:
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_82_12_82_37_begin:
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_82_12_82_27_begin:
+        %tmp.63 = lgetv %a.1;
+        symbol [ a %tmp.63 82 12 13 ];
+        %tmp.64 = lgetv %b.2;
+        symbol [ b %tmp.64 82 17 18 ];
+        %tmp.65 = eq %tmp.63 %tmp.64;
+        bt %tmp.65 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_82_8_86_8_if_true;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_82_22_82_27_false:
+        %tmp.66 = lgetv %b.2;
+        symbol [ b %tmp.66 82 22 23 ];
+        %tmp.67 = lgetv %c.3;
+        symbol [ c %tmp.67 82 27 28 ];
+        %tmp.68 = eq %tmp.66 %tmp.67;
+        push %tmp.68;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_82_22_82_27_end:
+        %tmp.69 = phi [%tmp.65 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_82_12_82_27_begin] [%tmp.68 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_82_22_82_27_false] [%tmp.69 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_82_22_82_27_end];
+        bt %tmp.69 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_82_8_86_8_if_true;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_82_32_82_37_false:
+        %tmp.70 = lgetv %a.1;
+        symbol [ a %tmp.70 82 32 33 ];
+        %tmp.71 = lgetv %c.3;
+        symbol [ c %tmp.71 82 37 38 ];
+        %tmp.72 = eq %tmp.70 %tmp.71;
+        push %tmp.72;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_82_32_82_37_end:
+        %tmp.73 = phi [%tmp.69 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_82_12_82_37_begin] [%tmp.72 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_82_32_82_37_false] [%tmp.73 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_82_32_82_37_end];
+        bf %tmp.73 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_82_8_86_8_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_82_8_86_8_if_true:
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_82_40_86_8_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 83 12 ]
+        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_82_40_86_8_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_82_40_86_8_stop" ]
+        %sym.4 = local;
+        symbol [ sym %sym.4 83 16 19 ];
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_83_22_83_54_begin:
+        %tmp.74 = lgetv %a.1;
+        symbol [ a %tmp.74 83 23 24 ];
+        %tmp.75 = lgetv %b.2;
+        symbol [ b %tmp.75 83 28 29 ];
+        %tmp.76 = eq %tmp.74 %tmp.75;
+        bf %tmp.76 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_83_22_83_54_else_false;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_83_22_83_54_true:
+        %tmp.77 = lgetv %a.1;
+        symbol [ a %tmp.77 83 33 34 ];
+        push %tmp.77;
+        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_83_22_83_54_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_83_22_83_54_else_false:
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_83_38_83_53_begin:
+        %tmp.78 = lgetv %b.2;
+        symbol [ b %tmp.78 83 39 40 ];
+        %tmp.79 = lgetv %c.3;
+        symbol [ c %tmp.79 83 44 45 ];
+        %tmp.80 = eq %tmp.78 %tmp.79;
+        bf %tmp.80 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_83_38_83_53_else_false;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_83_38_83_53_true:
+        %tmp.81 = lgetv %b.2;
+        symbol [ b %tmp.81 83 49 50 ];
+        push %tmp.81;
+        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_83_38_83_53_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_83_38_83_53_else_false:
+        %tmp.82 = lgetv %a.1;
+        symbol [ a %tmp.82 83 53 54 ];
+        push %tmp.82;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_83_38_83_53_end:
+        %tmp.83 = phi [%tmp.80 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_83_38_83_53_begin] [%tmp.81 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_83_38_83_53_true] [%tmp.82 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_83_38_83_53_else_false] [%tmp.83 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_83_38_83_53_end];
+        push %tmp.83;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_83_22_83_54_end:
+        %tmp.84 = phi [%tmp.76 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_83_22_83_54_begin] [%tmp.77 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_83_22_83_54_true] [%tmp.83 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_83_22_83_54_else_false] [%tmp.84 @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_83_22_83_54_end];
+        lputv %sym.4 %tmp.84;
+        symbol [ sym %sym.4 83 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 84 12 ]
+        %tmp.85 = newd 4;
+        %tmp.86 = "kind";
+        %tmp.87 = "PAIR";
+        %tmp.88 = dup %tmp.85;
+        %tmp.89 = aputv %tmp.88 %tmp.86 %tmp.87;
+        %tmp.90 = "payout";
+        symbol [ SymbolManager %tmp.92 84 51 64 ];
+        %tmp.92 = getv ? :SymbolManager;
+        symbol [ PAYOUT_2 %tmp.93 84 65 73 ];
+        %tmp.93 = getv %tmp.92 :PAYOUT_2;
+        %tmp.94 = dup %tmp.89;
+        %tmp.95 = aputv %tmp.94 %tmp.90 %tmp.93;
+        %tmp.96 = "label";
+        %tmp.97 = "pair!";
+        %tmp.98 = dup %tmp.95;
+        %tmp.99 = aputv %tmp.98 %tmp.96 %tmp.97;
+        %tmp.100 = "sym";
+        %tmp.101 = lgetv %sym.4;
+        symbol [ sym %tmp.101 85 50 53 ];
+        %tmp.102 = dup %tmp.99;
+        %tmp.103 = aputv %tmp.102 %tmp.100 %tmp.101;
+        ret %tmp.103;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_82_40_86_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_82_8_86_8_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_82_8_86_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc" 87 8 ]
+        %tmp.104 = newd 4;
+        %tmp.105 = "kind";
+        %tmp.106 = "NONE";
+        %tmp.107 = dup %tmp.104;
+        %tmp.108 = aputv %tmp.107 %tmp.105 %tmp.106;
+        %tmp.109 = "payout";
+        %tmp.110 = 0;
+        %tmp.111 = dup %tmp.108;
+        %tmp.112 = aputv %tmp.111 %tmp.109 %tmp.110;
+        %tmp.113 = "label";
+        %tmp.114 = "";
+        %tmp.115 = dup %tmp.112;
+        %tmp.116 = aputv %tmp.115 %tmp.113 %tmp.114;
+        %tmp.117 = "sym";
+        %tmp.118 = -1;
+        %tmp.119 = dup %tmp.116;
+        %tmp.120 = aputv %tmp.119 %tmp.117 %tmp.118;
+        ret %tmp.120;
+_Users_kkorolczuk_work_garmin_slotbandit_source_SpinLogic_mc_71_31_88_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/SpinLogic.mc"; @line = 18; ]
+<init> {
+}

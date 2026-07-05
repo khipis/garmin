@@ -664,14 +664,14 @@ class BitochiMinigolfView extends WatchUi.View {
     function doUp() {
         if (_gs == MG_MENU)     { menuNav(-1); return; }
         if (_gs == MG_GAMEOVER) { _gs = MG_MENU; return; }
-        if (_gs == MG_AIM)      { _aimAngle = (_aimAngle + 350) % 360; }  // -10° per step
+        if (_gs == MG_AIM)      { _aimAngle = (_aimAngle + 355) % 360; }  // -5° per step
         if (_gs == MG_POWER)    { commitShot(); }
     }
 
     function doDown() {
         if (_gs == MG_MENU)     { menuNav(1); return; }
         if (_gs == MG_GAMEOVER) { _gs = MG_MENU; return; }
-        if (_gs == MG_AIM)      { _aimAngle = (_aimAngle + 10) % 360; }   // +10° per step
+        if (_gs == MG_AIM)      { _aimAngle = (_aimAngle + 5) % 360; }    // +5° per step
         if (_gs == MG_POWER)    { commitShot(); }
     }
 

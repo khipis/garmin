@@ -22,6 +22,8 @@ using Toybox.Application;
 using Toybox.Communications;
 using Toybox.Lang;
 using Toybox.System;
+using Toybox.Time;
+using Toybox.WatchUi;
 
 module Leaderboard {
 
@@ -120,6 +122,109 @@ module Leaderboard {
         _launchLogged = true;
         _pinger = new LbPinger();
         _pinger.send(game);
+        // Refresh the message bundle for this game (shown from cache next run).
+        fetchMessages(game);
+    }
+
+    // ── Custom messages / announcements ───────────────────────────────────────
+    // See LbMessages.mc for the views + fetcher, and COMMUNICATIONS.md for how
+    // the whole thing is configured. All keys below live in Application.Storage
+    // (per-app), so no game-id qualifier is needed.
+    const MSG_LAUNCH    = "launch";
+    const MSG_POSTGAME  = "postgame";
+    const MSG_CACHE_KEY = "lb_msg_cache";    // last fetched bundle (Dictionary)
+    const MSG_FETCH_KEY = "lb_msg_fetch";    // unix-sec of last successful fetch
+    const MSG_RESET_ACK = "lb_msg_reset_ack";// reset_at (ms) we've already shown
+    const MSG_SHOWN_PRE = "lb_msg_shown_";   // + placement → last shown unix-sec
+
+    var _msgFetcher = null;
+
+    // Fire-and-forget: pull the resolved message bundle and cache it. Called
+    // automatically by logLaunch(); games rarely need to call it directly.
+    function fetchMessages(game as Lang.String) as Void {
+        if (!isSupported()) { return; }
+        _msgFetcher = new LbMessageFetcher();
+        _msgFetcher.send(game);
+    }
+
+    function _cachedBundle() {
+        try {
+            var v = Application.Storage.getValue(MSG_CACHE_KEY);
+            if (v instanceof Lang.Dictionary) { return v; }
+        } catch (e) {}
+        return null;
+    }
+
+    function _nowSec() { return Time.now().value(); }
+
+    // Show the message configured for `placement` if one is cached and the
+    // per-placement throttle (min_gap_s) has elapsed. `fallback` is an optional
+    // Dictionary {title, body, url, url_label} used when nothing is cached yet
+    // (offline / first launch) — great for a guaranteed static invite. Returns
+    // true when a view was pushed.
+    function showMessage(game as Lang.String, placement as Lang.String,
+                         fallback as Lang.Dictionary or Null) as Lang.Boolean {
+        if (!isSupported()) { return false; }
+        var bundle = _cachedBundle();
+        var msg = null;
+        if (bundle != null) { msg = bundle[placement]; }
+        if (!(msg instanceof Lang.Dictionary)) { msg = fallback; }
+        if (!(msg instanceof Lang.Dictionary)) { return false; }
+
+        var gap = 21600;
+        if (msg["min_gap_s"] instanceof Lang.Number) { gap = msg["min_gap_s"]; }
+        var key = MSG_SHOWN_PRE + placement;
+        var last = 0;
+        try {
+            var v = Application.Storage.getValue(key);
+            if (v instanceof Lang.Number) { last = v; }
+        } catch (e) {}
+        var now = _nowSec();
+        if (last > 0 && (now - last) < gap) { return false; }
+        try { Application.Storage.setValue(key, now); } catch (e) {}
+        _pushMessage(msg);
+        return true;
+    }
+
+    // Show the 'reset' message once, if the leaderboard was wiped since we last
+    // acknowledged. Never fires on a fresh install (records a baseline instead),
+    // so a first-time player isn't told about a "reset" they never lived through.
+    function showResetMessageIfAny(game as Lang.String) as Lang.Boolean {
+        if (!isSupported()) { return false; }
+        var bundle = _cachedBundle();
+        if (bundle == null) { return false; }
+        var resetAt = bundle["reset_at"];
+        if (!(resetAt instanceof Lang.Number) && !(resetAt instanceof Lang.Long)) { return false; }
+        if (resetAt == 0) { return false; }
+
+        var ack = 0;
+        try {
+            var v = Application.Storage.getValue(MSG_RESET_ACK);
+            if (v instanceof Lang.Number || v instanceof Lang.Long) { ack = v; }
+        } catch (e) {}
+        if (resetAt <= ack) { return false; }
+        try { Application.Storage.setValue(MSG_RESET_ACK, resetAt); } catch (e) {}
+        if (ack == 0) { return false; }   // first run → just record the baseline
+
+        var msg = bundle["reset"];
+        if (!(msg instanceof Lang.Dictionary)) { return false; }
+        _pushMessage(msg);
+        return true;
+    }
+
+    // Convenience for a game's menu: prefer the (once-only) reset message,
+    // otherwise show the throttled launch message. Call this when the main menu
+    // becomes visible. `fallback` covers offline/first-run for the launch slot.
+    function announce(game as Lang.String, fallback as Lang.Dictionary or Null) as Lang.Boolean {
+        if (showResetMessageIfAny(game)) { return true; }
+        return showMessage(game, MSG_LAUNCH, fallback);
+    }
+
+    function _pushMessage(msg) {
+        try {
+            var v = new LbMessageView(msg);
+            WatchUi.pushView(v, new LbMessageDelegate(v), WatchUi.SLIDE_UP);
+        } catch (e) {}
     }
 
     // ── Post-game leaderboard pop-up ──────────────────────────────────────────

@@ -774,6 +774,13 @@ async function handleReset(req: Request, env: Env): Promise<Response> {
       await env.DB.prepare("DELETE FROM scores").run();
       await env.DB.prepare("DELETE FROM sqlite_sequence WHERE name='scores'").run().catch(() => {/* optional */});
     }
+    // Log the reset so games can detect "the board was wiped since I last
+    // played" and show the configured 'reset' re-engagement message once.
+    // A NULL game means a global reset (affects every game's lookup).
+    try {
+      await env.DB.prepare("INSERT INTO resets (game, at) VALUES (?, ?)")
+        .bind(game ?? null, Date.now()).run();
+    } catch (e) { console.warn("reset log failed:", e); }
     return json({ ok: true, scope: game ?? "all", snapshotId: snapId });
   } catch (e) {
     console.error("reset error:", e);
@@ -915,6 +922,180 @@ async function handleGetVariants(url: URL, env: Env): Promise<Response> {
   return json({ game, variants });
 }
 
+// ── Custom messages / announcements ───────────────────────────────────────────
+// The shared client fetches these on launch and shows them at the right moment
+// (launch / postgame / reset). Owner-configurable from stats.html.
+
+type MsgRow = {
+  id: number; scope: string; game: string | null; placement: string;
+  title: string; body: string; url: string | null; url_label: string | null;
+  weight: number; min_gap_s: number; active: number;
+  starts_at: number | null; ends_at: number | null;
+  created_at: number; updated_at: number;
+};
+
+const MSG_PLACEMENTS = new Set(["launch", "postgame", "reset"]);
+
+// Compact shape the watch client consumes (keeps the payload tiny).
+function slimMsg(m: MsgRow | undefined): unknown {
+  if (!m) return null;
+  return {
+    id:        m.id,
+    title:     m.title,
+    body:      m.body,
+    url:       m.url,
+    url_label: m.url_label,
+    min_gap_s: m.min_gap_s,
+  };
+}
+
+// GET /messages
+//   ?game=X            → resolved bundle for a game: one best message per
+//                        placement (launch/postgame/reset) + reset_at.
+//   ?all=1             → every row, for the stats.html admin editor.
+async function handleGetMessages(url: URL, env: Env): Promise<Response> {
+  if (url.searchParams.get("all") === "1") {
+    try {
+      const rows = await env.DB
+        .prepare("SELECT * FROM messages ORDER BY scope ASC, game ASC, placement ASC, weight DESC, id DESC")
+        .all<MsgRow>();
+      return json({ messages: rows.results ?? [] });
+    } catch (e) {
+      console.error("messages list error:", e);
+      return err("db error", 500);
+    }
+  }
+
+  const gameRaw = (url.searchParams.get("game") ?? "").trim();
+  const game    = sanitizeGame(gameRaw);
+  const now     = Date.now();
+
+  let launch: unknown = null;
+  let postgame: unknown = null;
+  let reset: unknown = null;
+  let reset_at = 0;
+
+  try {
+    // Active messages that apply to this game (global OR this game's own),
+    // within their optional time window. Game-scoped rows sort first so they
+    // win over a global message for the same placement.
+    const rows = await env.DB
+      .prepare(
+        `SELECT * FROM messages
+         WHERE active = 1
+           AND (scope = 'global' OR (scope = 'game' AND game = ?))
+           AND (starts_at IS NULL OR starts_at <= ?)
+           AND (ends_at   IS NULL OR ends_at   >= ?)
+         ORDER BY (scope = 'game') DESC, weight DESC, id DESC`
+      )
+      .bind(game, now, now)
+      .all<MsgRow>();
+
+    const picked: Record<string, MsgRow> = {};
+    for (const r of rows.results ?? []) {
+      if (!picked[r.placement]) picked[r.placement] = r;
+    }
+    launch   = slimMsg(picked["launch"]);
+    postgame = slimMsg(picked["postgame"]);
+    reset    = slimMsg(picked["reset"]);
+
+    // Latest reset that affects this game (its own reset or a global one).
+    const rr = await env.DB
+      .prepare("SELECT MAX(at) AS at FROM resets WHERE game IS NULL OR game = ?")
+      .bind(game)
+      .first<{ at: number | null }>();
+    reset_at = rr?.at ?? 0;
+  } catch (e) {
+    console.error("messages resolve error:", e);
+    return err("db error", 500);
+  }
+
+  return json(
+    { ts: Math.floor(now / 1000), reset_at, launch, postgame, reset },
+    200,
+    { "Cache-Control": "public, max-age=120, stale-while-revalidate=300" }
+  );
+}
+
+// POST /messages — authenticated create/update (upsert by id).
+// Body: { id?, scope, game?, placement, title, body?, url?, url_label?,
+//         weight?, min_gap_s?, active?, starts_at?, ends_at? }
+async function handlePostMessage(req: Request, env: Env): Promise<Response> {
+  const reqKey = req.headers.get("X-LB-Key") ?? "";
+  if (!env.LB_KEY || reqKey !== env.LB_KEY) return err("forbidden", 403);
+
+  let b: Record<string, unknown>;
+  try { b = await req.json() as Record<string, unknown>; } catch { return err("invalid JSON"); }
+
+  const scope = b.scope === "game" ? "game" : "global";
+  const placement = typeof b.placement === "string" ? b.placement.trim() : "";
+  if (!MSG_PLACEMENTS.has(placement)) return err("invalid placement");
+
+  const title = typeof b.title === "string" ? b.title.trim().slice(0, 60) : "";
+  if (!title) return err("missing: title");
+
+  const game = scope === "game"
+    ? sanitizeGame(typeof b.game === "string" ? b.game.trim() : "")
+    : null;
+  if (scope === "game" && !game) return err("missing/invalid: game (required for scope=game)");
+
+  const body      = typeof b.body === "string" ? b.body.slice(0, 200) : "";
+  const urlv      = typeof b.url === "string" && b.url.trim() ? b.url.trim().slice(0, 200) : null;
+  const urlLabel  = typeof b.url_label === "string" && b.url_label.trim() ? b.url_label.trim().slice(0, 40) : null;
+  const weight    = typeof b.weight === "number" ? Math.round(b.weight) : 0;
+  const minGap    = typeof b.min_gap_s === "number" && b.min_gap_s >= 0 ? Math.round(b.min_gap_s) : 21600;
+  const active    = b.active === false || b.active === 0 ? 0 : 1;
+  const startsAt  = typeof b.starts_at === "number" ? Math.round(b.starts_at) : null;
+  const endsAt    = typeof b.ends_at === "number" ? Math.round(b.ends_at) : null;
+  const now       = Date.now();
+
+  try {
+    const id = typeof b.id === "number" ? b.id : (b.id ? parseInt(String(b.id), 10) : NaN);
+    if (!isNaN(id) && id > 0) {
+      await env.DB
+        .prepare(
+          `UPDATE messages SET scope=?, game=?, placement=?, title=?, body=?, url=?,
+             url_label=?, weight=?, min_gap_s=?, active=?, starts_at=?, ends_at=?, updated_at=?
+           WHERE id=?`
+        )
+        .bind(scope, game, placement, title, body, urlv, urlLabel, weight, minGap, active, startsAt, endsAt, now, id)
+        .run();
+      return json({ ok: true, id });
+    }
+    const run = await env.DB
+      .prepare(
+        `INSERT INTO messages (scope, game, placement, title, body, url, url_label,
+           weight, min_gap_s, active, starts_at, ends_at, created_at, updated_at)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`
+      )
+      .bind(scope, game, placement, title, body, urlv, urlLabel, weight, minGap, active, startsAt, endsAt, now, now)
+      .run();
+    return json({ ok: true, id: run.meta?.last_row_id ?? null });
+  } catch (e) {
+    console.error("message upsert error:", e);
+    return err("db error", 500);
+  }
+}
+
+// DELETE /messages — authenticated. Body: { id }
+async function handleDeleteMessage(req: Request, env: Env): Promise<Response> {
+  const reqKey = req.headers.get("X-LB-Key") ?? "";
+  if (!env.LB_KEY || reqKey !== env.LB_KEY) return err("forbidden", 403);
+
+  let b: Record<string, unknown>;
+  try { b = await req.json() as Record<string, unknown>; } catch { return err("invalid JSON"); }
+  const id = typeof b.id === "number" ? b.id : parseInt(String(b.id), 10);
+  if (!id || isNaN(id)) return err("missing/invalid: id");
+
+  try {
+    await env.DB.prepare("DELETE FROM messages WHERE id = ?").bind(id).run();
+    return json({ ok: true });
+  } catch (e) {
+    console.error("message delete error:", e);
+    return err("db error", 500);
+  }
+}
+
 // ── Main entry ────────────────────────────────────────────────────────────────
 
 // ── Error log reader ─────────────────────────────────────────────────────────
@@ -1027,6 +1208,9 @@ export default {
     if (method === "POST"   && path === "/reset")       return handleReset(req, env);
     if (method === "POST"   && path === "/hof")         return handlePostHoF(req, env);
     if (method === "DELETE" && path === "/hof")         return handleDeleteHoF(req, env);
+    if (method === "GET"    && path === "/messages")    return handleGetMessages(url, env);
+    if (method === "POST"   && path === "/messages")    return handlePostMessage(req, env);
+    if (method === "DELETE" && path === "/messages")    return handleDeleteMessage(req, env);
     if (method === "GET"    && path === "/leaderboard") return handleGetLeaderboard(url, env);
     if (method === "GET"    && path === "/recent")      return handleGetRecent(url, env);
     if (method === "GET"    && path === "/games")       return handleGetGames(env);

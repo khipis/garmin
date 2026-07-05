@@ -80,6 +80,7 @@ class BreathTrainingView extends WatchUi.View {
     hidden var _stCoC; hidden var _stO2C; hidden var _stTotT;
     hidden var _exEarly;
     hidden var _actSes;   // ActivityRecording session (null when inactive)
+    hidden var _announced;
 
     function initialize() {
         View.initialize();
@@ -89,6 +90,7 @@ class BreathTrainingView extends WatchUi.View {
         _gs = FT_HOME; _hSel = 0; _mSel = 0;
         _exEarly = false;
         _actSes = null;
+        _announced = false;
 
         var sfa = Application.Storage.getValue("usr_safe_ack");
         if (!(sfa instanceof Toybox.Lang.Boolean) || !sfa) { _gs = FT_SAFE; }
@@ -146,6 +148,20 @@ class BreathTrainingView extends WatchUi.View {
 
     function onShow() {
         if (_timer == null) { _timer = new Timer.Timer(); _timer.start(method(:onTick), 100, true); }
+        // Once per session, when the home screen is up: show the configured
+        // launch message (fallback = invite to the paid Breath Training System).
+        // Uses the previous session's cached bundle; owner can retune/disable it
+        // from stats.html. Throttled server-side via min_gap_s.
+        if (!_announced && _gs == FT_HOME) {
+            _announced = true;
+            Leaderboard.announce("breathtrainingtool", {
+                "title"     => "Go deeper with PRO",
+                "body"      => "Loving this tool? Breath Training System adds a coach, adaptive plans and progression. Find it on the Connect IQ Store.",
+                "url"       => "https://apps.garmin.com/apps/bitochi",
+                "url_label" => "Get the System",
+                "min_gap_s" => 172800
+            });
+        }
     }
 
     function onHide() {}

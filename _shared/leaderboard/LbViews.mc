@@ -783,6 +783,10 @@ class LbPostGame {
         var v = new LbScoresView(_game, _variant, _title);
         v.markPostGame();
         WatchUi.pushView(v, new LbScoresDelegate(v), WatchUi.SLIDE_UP);
+        // If a post-game message is due (throttled), pop it up ON TOP of the
+        // board; dismissing it reveals the leaderboard underneath. Most runs
+        // show only the board — the support/marketing card appears occasionally.
+        Leaderboard.showMessage(_game, Leaderboard.MSG_POSTGAME, null);
     }
 }
 

@@ -1,964 +1,415 @@
-[ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc"; @line = 18; @symbol_usingdef<0> = [Toybox,18,6,12]; @symbol_usingdef<1> = [Graphics,18,13,21]; ]
-using Toybox.Graphics;
-[ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc"; @line = 20; @symbol_classdef = [Player,20,6,12]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc"; @line = 6; @symbol_classdef = [Player,6,6,12]; ]
 class Player {
-    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc"; @line = 20; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc"; @line = 6; ]
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc"; @line = 20; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc"; @line = 6; ]
     static
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc"; @line = 21; @position = 8; @symbol_vardef = [x,21,8,9]; ]
-    var x;
-    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc"; @line = 22; @position = 8; @symbol_vardef = [y,22,8,9]; ]
-    var y;
-    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc"; @line = 23; @position = 8; @symbol_vardef = [vx,23,8,10]; ]
-    var vx;
-    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc"; @line = 24; @position = 8; @symbol_vardef = [vy,24,8,10]; ]
-    var vy;
-    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc"; @line = 25; @position = 8; @symbol_vardef = [w,25,8,9]; ]
-    var w;
-    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc"; @line = 26; @position = 8; @symbol_vardef = [h,26,8,9]; ]
-    var h;
-    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc"; @line = 27; @position = 8; @symbol_vardef = [alive,27,8,13]; ]
-    var alive;
-    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc"; @line = 30; @position = 8; @symbol_vardef = [legPhase,30,8,16]; ]
-    var legPhase;
-    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc"; @line = 34; @position = 8; @symbol_vardef = [skin,34,8,12]; ]
-    var skin;
-    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc"; @line = 38; @position = 8; @symbol_vardef = [holdLeft,38,8,16]; ]
-    var holdLeft;
-    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc"; @line = 39; @position = 8; @symbol_vardef = [holdRight,39,8,17]; ]
-    var holdRight;
-    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc"; @line = 41; @symbol_functiondef = [initialize,41,13,23]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc"; @line = 7; @position = 8; @symbol_vardef = [angle,7,8,13]; ]
+    var angle;
+    [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc"; @line = 8; @position = 8; @symbol_vardef = [vel,8,8,11]; ]
+    var vel;
+    [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc"; @line = 9; @position = 8; @symbol_vardef = [dashCd,9,8,14]; ]
+    var dashCd;
+    [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc"; @line = 10; @position = 8; @symbol_vardef = [isDashing,10,8,17]; ]
+    var isDashing;
+    [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc"; @line = 12; @position = 8; @symbol_vardef = [trailAngle,12,8,18]; ]
+    var trailAngle;
+    [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc"; @line = 14; @symbol_functiondef = [initialize,14,13,23]; ]
     function initialize() as Void {
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_41_26_45_4_start:
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 42 8 ]
-        %tmp.1 = 0;
-        symbol [ x ? 42 8 9 ];
-        putv self :x %tmp.1;
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 42 15 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_14_26_17_4_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 15 8 ]
+        symbol [ TRAIL_LEN %tmp.3 15 26 35 ];
+        %tmp.3 = getv ? :TRAIL_LEN;
+        %tmp.1 = newa %tmp.3;
+        symbol [ trailAngle ? 15 8 18 ];
+        putv self :trailAngle %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 16 8 ]
+        %tmp.4 = self;
+        symbol [ reset %tmp.5 16 8 13 ];
+        %tmp.5 = getv function %tmp.4 :reset;
+        invoke %tmp.4 %tmp.5();
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_14_26_17_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc"; @line = 19; @symbol_functiondef = [reset,19,13,18]; ]
+    function reset() {
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_19_21_25_4_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 20 8 ]
+        %tmp.1 = 270;
+        symbol [ angle ? 20 8 13 ];
+        putv self :angle %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 21 8 ]
         %tmp.2 = 0;
-        symbol [ y ? 42 15 16 ];
-        putv self :y %tmp.2;
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 42 22 ]
-        %tmp.3 = 0.0;
-        symbol [ vx ? 42 22 24 ];
-        putv self :vx %tmp.3;
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 42 32 ]
-        %tmp.4 = 0.0;
-        symbol [ vy ? 42 32 34 ];
-        putv self :vy %tmp.4;
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 42 42 ]
-        %tmp.5 = 8;
-        symbol [ w ? 42 42 43 ];
-        putv self :w %tmp.5;
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 42 49 ]
-        %tmp.6 = 10;
-        symbol [ h ? 42 49 50 ];
-        putv self :h %tmp.6;
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 43 8 ]
-        %tmp.7 = true;
-        symbol [ alive ? 43 8 13 ];
-        putv self :alive %tmp.7;
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 43 22 ]
-        %tmp.8 = 0;
-        symbol [ legPhase ? 43 22 30 ];
-        putv self :legPhase %tmp.8;
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 43 36 ]
-        %tmp.9 = 0;
-        symbol [ skin ? 43 36 40 ];
-        putv self :skin %tmp.9;
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 44 8 ]
-        %tmp.10 = false;
-        symbol [ holdLeft ? 44 8 16 ];
-        putv self :holdLeft %tmp.10;
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 44 26 ]
-        %tmp.11 = false;
-        symbol [ holdRight ? 44 26 35 ];
-        putv self :holdRight %tmp.11;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_41_26_45_4_stop:
+        symbol [ vel ? 21 8 11 ];
+        putv self :vel %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 22 8 ]
+        %tmp.3 = 0;
+        symbol [ dashCd ? 22 8 14 ];
+        putv self :dashCd %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 23 8 ]
+        %tmp.4 = 0;
+        symbol [ isDashing ? 23 8 17 ];
+        putv self :isDashing %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 24 8 ]
+        for @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_24_8_24_67_for_test @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_24_8_24_67_for_incr @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_24_8_24_67_for_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_24_8_24_67_for_init:
+        [ "_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_24_8_24_67_for_begin" "_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_24_8_24_67_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 24 17 18 ];
+        %tmp.5 = 0;
+        lputv %i.1 %tmp.5;
+        symbol [ i %i.1 24 17 18 ];
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_24_8_24_67_for_test:
+        %tmp.6 = lgetv %i.1;
+        symbol [ i %tmp.6 24 24 25 ];
+        symbol [ TRAIL_LEN %tmp.8 24 28 37 ];
+        %tmp.8 = getv ? :TRAIL_LEN;
+        %tmp.9 = lt %tmp.6 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_24_8_24_67_for_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_24_8_24_67_for_begin:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_24_44_24_67_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 24 46 ]
+        symbol [ trailAngle %tmp.10 24 46 56 ];
+        %tmp.10 = getv self :trailAngle;
+        %tmp.11 = 270;
+        %tmp.12 = lgetv %i.1;
+        symbol [ i %tmp.12 24 57 58 ];
+        aputv %tmp.10 %tmp.12 %tmp.11;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_24_44_24_67_stop:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_24_8_24_67_for_incr:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 24 ]
+        %tmp.15 = lgetv %i.1;
+        symbol [ i %tmp.15 24 39 40 ];
+        %tmp.16 = add %tmp.15 1;
+        lputv %i.1 %tmp.16;
+        symbol [ i %i.1 24 39 40 ];
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_24_8_24_67_for_test;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_24_8_24_67_for_end:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_19_21_25_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc"; @line = 47; @symbol_functiondef = [reset,47,13,18]; @symbol_param<0> = [startX,47,19,25]; @symbol_param<1> = [startY,47,27,33]; @symbol_param<2> = [halfW,47,35,40]; @symbol_param<3> = [halfH,47,42,47]; ]
-    function reset(startX, startY, halfW, halfH) {
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_47_49_53_4_start:
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 48 8 ]
-        %tmp.1 = lgetv %startX;
-        symbol [ startX %tmp.1 48 12 18 ];
-        symbol [ x ? 48 8 9 ];
-        putv self :x %tmp.1;
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 48 20 ]
-        %tmp.2 = lgetv %startY;
-        symbol [ startY %tmp.2 48 24 30 ];
-        symbol [ y ? 48 20 21 ];
-        putv self :y %tmp.2;
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 49 8 ]
-        %tmp.3 = 0.0;
-        symbol [ vx ? 49 8 10 ];
-        putv self :vx %tmp.3;
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 49 18 ]
-        %tmp.4 = 0.0;
-        symbol [ vy ? 49 18 20 ];
-        putv self :vy %tmp.4;
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 50 8 ]
-        %tmp.5 = lgetv %halfW;
-        symbol [ halfW %tmp.5 50 13 18 ];
-        symbol [ w ? 50 8 9 ];
-        putv self :w %tmp.5;
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 50 20 ]
-        %tmp.6 = lgetv %halfH;
-        symbol [ halfH %tmp.6 50 24 29 ];
-        symbol [ h ? 50 20 21 ];
-        putv self :h %tmp.6;
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 51 8 ]
-        %tmp.7 = true;
-        symbol [ alive ? 51 8 13 ];
-        putv self :alive %tmp.7;
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 51 22 ]
-        %tmp.8 = 0;
-        symbol [ legPhase ? 51 22 30 ];
-        putv self :legPhase %tmp.8;
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 52 8 ]
-        %tmp.9 = false;
-        symbol [ holdLeft ? 52 8 16 ];
-        putv self :holdLeft %tmp.9;
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 52 26 ]
-        %tmp.10 = false;
-        symbol [ holdRight ? 52 26 35 ];
-        putv self :holdRight %tmp.10;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_47_49_53_4_stop:
+    [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc"; @line = 27; @symbol_functiondef = [update,27,13,19]; @symbol_param<0> = [keyRight,27,20,28]; @symbol_param<1> = [keyLeft,27,30,37]; ]
+    function update(keyRight, keyLeft) {
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_27_39_55_4_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 29 8 ]
+        [ "_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_27_39_55_4_start" "_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_27_39_55_4_stop" ]
+        %t.1 = local;
+        symbol [ t %t.1 29 12 13 ];
+        symbol [ TRAIL_LEN %tmp.2 29 16 25 ];
+        %tmp.2 = getv ? :TRAIL_LEN;
+        %tmp.3 = 1;
+        %tmp.4 = sub %tmp.2 %tmp.3;
+        lputv %t.1 %tmp.4;
+        symbol [ t %t.1 29 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 30 8 ]
+        while @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_30_8_33_8_while_test @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_30_8_33_8_while_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_30_8_33_8_while_test:
+        %tmp.5 = lgetv %t.1;
+        symbol [ t %tmp.5 30 15 16 ];
+        %tmp.6 = 0;
+        %tmp.7 = gt %tmp.5 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_30_8_33_8_while_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_30_8_33_8_while_begin:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_30_22_33_8_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 31 12 ]
+        symbol [ trailAngle %tmp.8 31 12 22 ];
+        %tmp.8 = getv self :trailAngle;
+        symbol [ trailAngle %tmp.10 31 28 38 ];
+        %tmp.10 = getv ? :trailAngle;
+        %tmp.11 = lgetv %t.1;
+        symbol [ t %tmp.11 31 39 40 ];
+        %tmp.12 = 1;
+        %tmp.13 = sub %tmp.11 %tmp.12;
+        %tmp.14 = agetv %tmp.10 %tmp.13;
+        %tmp.15 = lgetv %t.1;
+        symbol [ t %tmp.15 31 23 24 ];
+        aputv %tmp.8 %tmp.15 %tmp.14;
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 32 12 ]
+        %tmp.16 = lgetv %t.1;
+        symbol [ t %tmp.16 32 16 17 ];
+        %tmp.17 = 1;
+        %tmp.18 = sub %tmp.16 %tmp.17;
+        lputv %t.1 %tmp.18;
+        symbol [ t %t.1 32 12 13 ];
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_30_22_33_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_30_8_33_8_while_test;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_30_8_33_8_while_end:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 34 8 ]
+        symbol [ trailAngle %tmp.19 34 8 18 ];
+        %tmp.19 = getv self :trailAngle;
+        symbol [ angle %tmp.21 34 24 29 ];
+        %tmp.21 = getv ? :angle;
+        %tmp.22 = 0;
+        aputv %tmp.19 %tmp.22 %tmp.21;
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 37 8 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_37_8_40_8_if_stmt:
+        %tmp.23 = lgetv %keyRight;
+        symbol [ keyRight %tmp.23 37 12 20 ];
+        %tmp.24 = 1;
+        %tmp.25 = eq %tmp.23 %tmp.24;
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_37_8_40_8_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_37_8_40_8_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_37_27_40_8_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 38 12 ]
+        symbol [ vel %tmp.27 38 18 21 ];
+        %tmp.27 = getv ? :vel;
+        %tmp.28 = 1;
+        %tmp.29 = add %tmp.27 %tmp.28;
+        symbol [ vel ? 38 12 15 ];
+        putv self :vel %tmp.29;
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 39 12 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_39_12_39_62_if_stmt:
+        symbol [ vel %tmp.31 39 16 19 ];
+        %tmp.31 = getv ? :vel;
+        symbol [ PLAYER_MAX_VEL %tmp.33 39 22 36 ];
+        %tmp.33 = getv ? :PLAYER_MAX_VEL;
+        %tmp.34 = gt %tmp.31 %tmp.33;
+        bf %tmp.34 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_39_12_39_62_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_39_12_39_62_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_39_38_39_62_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 39 40 ]
+        symbol [ PLAYER_MAX_VEL %tmp.36 39 46 60 ];
+        %tmp.36 = getv ? :PLAYER_MAX_VEL;
+        symbol [ vel ? 39 40 43 ];
+        putv self :vel %tmp.36;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_39_38_39_62_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_39_12_39_62_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_39_12_39_62_if_end:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_37_27_40_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_37_8_40_8_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_37_8_40_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 41 8 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_41_8_44_8_if_stmt:
+        %tmp.37 = lgetv %keyLeft;
+        symbol [ keyLeft %tmp.37 41 12 19 ];
+        %tmp.38 = 1;
+        %tmp.39 = eq %tmp.37 %tmp.38;
+        bf %tmp.39 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_41_8_44_8_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_41_8_44_8_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_41_26_44_8_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 42 12 ]
+        symbol [ vel %tmp.41 42 18 21 ];
+        %tmp.41 = getv ? :vel;
+        %tmp.42 = 1;
+        %tmp.43 = sub %tmp.41 %tmp.42;
+        symbol [ vel ? 42 12 15 ];
+        putv self :vel %tmp.43;
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 43 12 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_43_12_43_64_if_stmt:
+        symbol [ vel %tmp.45 43 16 19 ];
+        %tmp.45 = getv ? :vel;
+        symbol [ PLAYER_MAX_VEL %tmp.47 43 23 37 ];
+        %tmp.47 = getv ? :PLAYER_MAX_VEL;
+        %tmp.48 = sub 0 %tmp.47;
+        %tmp.49 = lt %tmp.45 %tmp.48;
+        bf %tmp.49 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_43_12_43_64_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_43_12_43_64_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_43_39_43_64_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 43 41 ]
+        symbol [ PLAYER_MAX_VEL %tmp.51 43 48 62 ];
+        %tmp.51 = getv ? :PLAYER_MAX_VEL;
+        %tmp.52 = sub 0 %tmp.51;
+        symbol [ vel ? 43 41 44 ];
+        putv self :vel %tmp.52;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_43_39_43_64_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_43_12_43_64_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_43_12_43_64_if_end:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_41_26_44_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_41_8_44_8_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_41_8_44_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 45 8 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_45_8_49_8_if_stmt:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_45_12_45_40_begin:
+        %tmp.53 = lgetv %keyRight;
+        symbol [ keyRight %tmp.53 45 12 20 ];
+        %tmp.54 = 0;
+        %tmp.55 = eq %tmp.53 %tmp.54;
+        bf %tmp.55 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_45_8_49_8_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_45_29_45_40_true:
+        %tmp.56 = lgetv %keyLeft;
+        symbol [ keyLeft %tmp.56 45 29 36 ];
+        %tmp.57 = 0;
+        %tmp.58 = eq %tmp.56 %tmp.57;
+        push %tmp.58;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_45_29_45_40_end:
+        %tmp.59 = phi [%tmp.55 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_45_12_45_40_begin] [%tmp.58 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_45_29_45_40_true] [%tmp.59 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_45_29_45_40_end];
+        bf %tmp.59 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_45_8_49_8_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_45_8_49_8_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_45_43_49_8_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 47 12 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_47_12_48_47_if_stmt:
+        symbol [ vel %tmp.61 47 16 19 ];
+        %tmp.61 = getv ? :vel;
+        %tmp.62 = 0;
+        %tmp.63 = gt %tmp.61 %tmp.62;
+        bf %tmp.63 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_47_12_48_47_if_false;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_47_12_48_47_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_47_25_47_42_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 47 27 ]
+        symbol [ vel %tmp.65 47 33 36 ];
+        %tmp.65 = getv ? :vel;
+        %tmp.66 = 1;
+        %tmp.67 = sub %tmp.65 %tmp.66;
+        symbol [ vel ? 47 27 30 ];
+        putv self :vel %tmp.67;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_47_25_47_42_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_47_12_48_47_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_47_12_48_47_if_false:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 48 17 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_48_17_48_47_if_stmt:
+        symbol [ vel %tmp.69 48 21 24 ];
+        %tmp.69 = getv ? :vel;
+        %tmp.70 = 0;
+        %tmp.71 = lt %tmp.69 %tmp.70;
+        bf %tmp.71 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_48_17_48_47_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_48_17_48_47_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_48_30_48_47_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 48 32 ]
+        symbol [ vel %tmp.73 48 38 41 ];
+        %tmp.73 = getv ? :vel;
+        %tmp.74 = 1;
+        %tmp.75 = add %tmp.73 %tmp.74;
+        symbol [ vel ? 48 32 35 ];
+        putv self :vel %tmp.75;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_48_30_48_47_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_48_17_48_47_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_48_17_48_47_if_end:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_47_12_48_47_if_end:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_45_43_49_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_45_8_49_8_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_45_8_49_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 51 8 ]
+        symbol [ angle %tmp.77 51 17 22 ];
+        %tmp.77 = getv ? :angle;
+        symbol [ vel %tmp.79 51 25 28 ];
+        %tmp.79 = getv ? :vel;
+        %tmp.80 = add %tmp.77 %tmp.79;
+        %tmp.81 = 360;
+        %tmp.82 = add %tmp.80 %tmp.81;
+        %tmp.83 = 360;
+        %tmp.84 = mod %tmp.82 %tmp.83;
+        symbol [ angle ? 51 8 13 ];
+        putv self :angle %tmp.84;
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 53 8 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_53_8_53_53_if_stmt:
+        symbol [ dashCd %tmp.86 53 12 18 ];
+        %tmp.86 = getv ? :dashCd;
+        %tmp.87 = 0;
+        %tmp.88 = gt %tmp.86 %tmp.87;
+        bf %tmp.88 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_53_8_53_53_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_53_8_53_53_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_53_26_53_53_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 53 28 ]
+        symbol [ dashCd %tmp.90 53 39 45 ];
+        %tmp.90 = getv ? :dashCd;
+        %tmp.91 = 1;
+        %tmp.92 = sub %tmp.90 %tmp.91;
+        symbol [ dashCd ? 53 28 34 ];
+        putv self :dashCd %tmp.92;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_53_26_53_53_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_53_8_53_53_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_53_8_53_53_if_end:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 54 8 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_54_8_54_56_if_stmt:
+        symbol [ isDashing %tmp.94 54 12 21 ];
+        %tmp.94 = getv ? :isDashing;
+        %tmp.95 = 0;
+        %tmp.96 = gt %tmp.94 %tmp.95;
+        bf %tmp.96 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_54_8_54_56_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_54_8_54_56_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_54_27_54_56_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 54 29 ]
+        symbol [ isDashing %tmp.98 54 41 50 ];
+        %tmp.98 = getv ? :isDashing;
+        %tmp.99 = 1;
+        %tmp.100 = sub %tmp.98 %tmp.99;
+        symbol [ isDashing ? 54 29 38 ];
+        putv self :isDashing %tmp.100;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_54_27_54_56_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_54_8_54_56_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_54_8_54_56_if_end:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_27_39_55_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc"; @line = 55; @symbol_functiondef = [bounce,55,13,19]; ]
-    function bounce() {
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_55_22_59_4_start:
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 56 8 ]
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_56_8_56_30_if_stmt:
-        symbol [ alive %tmp.2 56 13 18 ];
-        %tmp.2 = getv ? :alive;
-        %tmp.3 = not %tmp.2;
-        bf %tmp.3 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_56_8_56_30_if_end;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_56_8_56_30_if_true:
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_56_20_56_30_start:
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 56 22 ]
+    [ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc"; @line = 57; @symbol_functiondef = [doDash,57,13,19]; ]
+    function doDash() {
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_57_22_64_4_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 58 8 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_58_8_58_34_if_stmt:
+        symbol [ dashCd %tmp.2 58 12 18 ];
+        %tmp.2 = getv ? :dashCd;
+        %tmp.3 = 0;
+        %tmp.4 = gt %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_58_8_58_34_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_58_8_58_34_if_true:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_58_24_58_34_start:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 58 26 ]
         ret ?;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_56_20_56_30_stop:
-        goto @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_56_8_56_30_if_end;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_56_8_56_30_if_end:
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 57 8 ]
-        symbol [ Physics %tmp.5 57 13 20 ];
-        %tmp.5 = getv ? :Physics;
-        symbol [ JUMP_VY %tmp.6 57 21 28 ];
-        %tmp.6 = getv %tmp.5 :JUMP_VY;
-        symbol [ vy ? 57 8 10 ];
-        putv self :vy %tmp.6;
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 58 8 ]
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_58_24_58_34_stop:
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_58_8_58_34_if_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_58_8_58_34_if_end:
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 60 8 ]
+        [ "_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_57_22_64_4_start" "_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_57_22_64_4_stop" ]
+        %dir.1 = local;
+        symbol [ dir %dir.1 60 12 15 ];
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_18_60_53_begin:
+        symbol [ vel %tmp.6 60 19 22 ];
+        %tmp.6 = getv ? :vel;
         %tmp.7 = 0;
-        symbol [ legPhase ? 58 8 16 ];
-        putv self :legPhase %tmp.7;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_55_22_59_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc"; @line = 62; @symbol_functiondef = [tapImpulse,62,13,23]; @symbol_param<0> = [dir,62,24,27]; ]
-    function tapImpulse(dir) {
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_62_29_65_4_start:
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 63 8 ]
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_63_8_63_30_if_stmt:
-        symbol [ alive %tmp.2 63 13 18 ];
-        %tmp.2 = getv ? :alive;
-        %tmp.3 = not %tmp.2;
-        bf %tmp.3 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_63_8_63_30_if_end;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_63_8_63_30_if_true:
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_63_20_63_30_start:
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 63 22 ]
-        ret ?;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_63_20_63_30_stop:
-        goto @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_63_8_63_30_if_end;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_63_8_63_30_if_end:
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 64 8 ]
-        %tmp.4 = lgetv %dir;
-        symbol [ dir %tmp.4 64 13 16 ];
-        symbol [ Physics %tmp.6 64 20 27 ];
-        %tmp.6 = getv ? :Physics;
-        symbol [ MOVE_VX %tmp.7 64 28 35 ];
-        %tmp.7 = getv %tmp.6 :MOVE_VX;
-        %tmp.8 = 1.0;
-        %tmp.9 = add %tmp.7 %tmp.8;
-        %tmp.10 = mul %tmp.4 %tmp.9;
-        symbol [ vx ? 64 8 10 ];
-        putv self :vx %tmp.10;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_62_29_65_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc"; @line = 67; @symbol_functiondef = [step,67,13,17]; @symbol_param<0> = [screenW,67,18,25]; ]
-    function step(screenW) {
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_67_27_88_4_start:
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 69 8 ]
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_69_8_76_8_if_stmt:
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_69_12_69_25_begin:
-        symbol [ holdLeft %tmp.2 69 12 20 ];
-        %tmp.2 = getv ? :holdLeft;
-        bf %tmp.2 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_69_8_76_8_if_false;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_69_24_69_25_true:
-        symbol [ holdRight %tmp.4 69 25 34 ];
-        %tmp.4 = getv ? :holdRight;
-        %tmp.5 = not %tmp.4;
-        push %tmp.5;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_69_24_69_25_end:
-        %tmp.6 = phi [%tmp.2 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_69_12_69_25_begin] [%tmp.5 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_69_24_69_25_true] [%tmp.6 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_69_24_69_25_end];
-        bf %tmp.6 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_69_8_76_8_if_false;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_69_8_76_8_if_true:
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_69_36_71_8_start:
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 70 12 ]
-        symbol [ Physics %tmp.8 70 18 25 ];
-        %tmp.8 = getv ? :Physics;
-        symbol [ MOVE_VX %tmp.9 70 26 33 ];
-        %tmp.9 = getv %tmp.8 :MOVE_VX;
-        %tmp.10 = sub 0 %tmp.9;
-        symbol [ vx ? 70 12 14 ];
-        putv self :vx %tmp.10;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_69_36_71_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_69_8_76_8_if_end;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_69_8_76_8_if_false:
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 71 15 ]
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_71_15_76_8_if_stmt:
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_71_19_71_33_begin:
-        symbol [ holdRight %tmp.12 71 19 28 ];
-        %tmp.12 = getv ? :holdRight;
-        bf %tmp.12 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_71_15_76_8_if_else_false;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_71_32_71_33_true:
-        symbol [ holdLeft %tmp.14 71 33 41 ];
-        %tmp.14 = getv ? :holdLeft;
-        %tmp.15 = not %tmp.14;
+        %tmp.8 = gt %tmp.6 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_18_60_53_else_false;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_18_60_53_true:
+        %tmp.9 = 1;
+        push %tmp.9;
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_18_60_53_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_18_60_53_else_false:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_35_60_52_begin:
+        symbol [ vel %tmp.11 60 36 39 ];
+        %tmp.11 = getv ? :vel;
+        %tmp.12 = 0;
+        %tmp.13 = lt %tmp.11 %tmp.12;
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_35_60_52_else_false;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_35_60_52_true:
+        %tmp.14 = -1;
+        push %tmp.14;
+        goto @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_35_60_52_end;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_35_60_52_else_false:
+        %tmp.15 = 1;
         push %tmp.15;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_71_32_71_33_end:
-        %tmp.16 = phi [%tmp.12 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_71_19_71_33_begin] [%tmp.15 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_71_32_71_33_true] [%tmp.16 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_71_32_71_33_end];
-        bf %tmp.16 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_71_15_76_8_if_else_false;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_71_15_76_8_if_true:
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_71_43_73_8_start:
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 72 12 ]
-        symbol [ Physics %tmp.18 72 18 25 ];
-        %tmp.18 = getv ? :Physics;
-        symbol [ MOVE_VX %tmp.19 72 26 33 ];
-        %tmp.19 = getv %tmp.18 :MOVE_VX;
-        symbol [ vx ? 72 12 14 ];
-        putv self :vx %tmp.19;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_71_43_73_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_71_15_76_8_if_end;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_71_15_76_8_if_else_false:
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_73_15_76_8_start:
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 74 12 ]
-        symbol [ vx %tmp.21 74 17 19 ];
-        %tmp.21 = getv ? :vx;
-        symbol [ Physics %tmp.23 74 22 29 ];
-        %tmp.23 = getv ? :Physics;
-        symbol [ FRICTION %tmp.24 74 30 38 ];
-        %tmp.24 = getv %tmp.23 :FRICTION;
-        %tmp.25 = mul %tmp.21 %tmp.24;
-        symbol [ vx ? 74 12 14 ];
-        putv self :vx %tmp.25;
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 75 12 ]
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_75_12_75_53_if_stmt:
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_75_16_75_35_begin:
-        symbol [ vx %tmp.27 75 16 18 ];
-        %tmp.27 = getv ? :vx;
-        %tmp.28 = -0.05;
-        %tmp.29 = gt %tmp.27 %tmp.28;
-        bf %tmp.29 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_75_12_75_53_if_end;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_75_30_75_35_true:
-        symbol [ vx %tmp.31 75 30 32 ];
-        %tmp.31 = getv ? :vx;
-        %tmp.32 = 0.05;
-        %tmp.33 = lt %tmp.31 %tmp.32;
-        push %tmp.33;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_75_30_75_35_end:
-        %tmp.34 = phi [%tmp.29 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_75_16_75_35_begin] [%tmp.33 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_75_30_75_35_true] [%tmp.34 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_75_30_75_35_end];
-        bf %tmp.34 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_75_12_75_53_if_end;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_75_12_75_53_if_true:
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_75_41_75_53_start:
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 75 43 ]
-        %tmp.35 = 0.0;
-        symbol [ vx ? 75 43 45 ];
-        putv self :vx %tmp.35;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_75_41_75_53_stop:
-        goto @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_75_12_75_53_if_end;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_75_12_75_53_if_end:
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_73_15_76_8_stop:
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_71_15_76_8_if_end:
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_69_8_76_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 77 8 ]
-        symbol [ x %tmp.37 77 12 13 ];
-        %tmp.37 = getv ? :x;
-        symbol [ vx %tmp.39 77 16 18 ];
-        %tmp.39 = getv ? :vx;
-        %tmp.40 = add %tmp.37 %tmp.39;
-        symbol [ x ? 77 8 9 ];
-        putv self :x %tmp.40;
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 79 8 ]
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_79_8_79_56_if_stmt:
-        symbol [ x %tmp.42 79 12 13 ];
-        %tmp.42 = getv ? :x;
-        symbol [ w %tmp.44 79 17 18 ];
-        %tmp.44 = getv ? :w;
-        %tmp.45 = sub 0 %tmp.44;
-        %tmp.46 = lt %tmp.42 %tmp.45;
-        bf %tmp.46 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_79_8_79_56_if_end;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_79_8_79_56_if_true:
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_79_33_79_56_start:
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 79 35 ]
-        %tmp.47 = lgetv %screenW;
-        symbol [ screenW %tmp.47 79 39 46 ];
-        symbol [ w %tmp.49 79 49 50 ];
-        %tmp.49 = getv ? :w;
-        %tmp.50 = add %tmp.47 %tmp.49;
-        %tmp.51 = 1;
-        %tmp.52 = sub %tmp.50 %tmp.51;
-        symbol [ x ? 79 35 36 ];
-        putv self :x %tmp.52;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_79_33_79_56_stop:
-        goto @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_79_8_79_56_if_end;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_79_8_79_56_if_end:
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 80 8 ]
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_80_8_80_56_if_stmt:
-        symbol [ x %tmp.54 80 12 13 ];
-        %tmp.54 = getv ? :x;
-        %tmp.55 = lgetv %screenW;
-        symbol [ screenW %tmp.55 80 16 23 ];
-        symbol [ w %tmp.57 80 26 27 ];
-        %tmp.57 = getv ? :w;
-        %tmp.58 = add %tmp.55 %tmp.57;
-        %tmp.59 = 1;
-        %tmp.60 = sub %tmp.58 %tmp.59;
-        %tmp.61 = gt %tmp.54 %tmp.60;
-        bf %tmp.61 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_80_8_80_56_if_end;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_80_8_80_56_if_true:
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_80_33_80_56_start:
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 80 35 ]
-        symbol [ w %tmp.63 80 40 41 ];
-        %tmp.63 = getv ? :w;
-        %tmp.64 = sub 0 %tmp.63;
-        %tmp.65 = 1;
-        %tmp.66 = add %tmp.64 %tmp.65;
-        symbol [ x ? 80 35 36 ];
-        putv self :x %tmp.66;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_80_33_80_56_stop:
-        goto @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_80_8_80_56_if_end;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_80_8_80_56_if_end:
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 84 8 ]
-        symbol [ Physics %tmp.68 84 13 20 ];
-        %tmp.68 = getv ? :Physics;
-        symbol [ applyGravity %tmp.69 84 21 33 ];
-        %tmp.69 = getv function %tmp.68 :applyGravity;
-        symbol [ vy %tmp.71 84 34 36 ];
-        %tmp.71 = getv ? :vy;
-        %tmp.72 = invoke %tmp.68 %tmp.69(%tmp.71);
-        symbol [ vy ? 84 8 10 ];
-        putv self :vy %tmp.72;
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 85 8 ]
-        symbol [ y %tmp.74 85 13 14 ];
-        %tmp.74 = getv ? :y;
-        symbol [ vy %tmp.76 85 17 19 ];
-        %tmp.76 = getv ? :vy;
-        %tmp.77 = add %tmp.74 %tmp.76;
-        symbol [ y ? 85 8 9 ];
-        putv self :y %tmp.77;
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 87 8 ]
-        symbol [ legPhase %tmp.79 87 20 28 ];
-        %tmp.79 = getv ? :legPhase;
-        %tmp.80 = 1;
-        %tmp.81 = add %tmp.79 %tmp.80;
-        %tmp.82 = 8;
-        %tmp.83 = mod %tmp.81 %tmp.82;
-        symbol [ legPhase ? 87 8 16 ];
-        putv self :legPhase %tmp.83;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_67_27_88_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc"; @line = 91; @symbol_functiondef = [bbox,91,13,17]; ]
-    function bbox() {
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_91_20_93_4_start:
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 92 8 ]
-        %tmp.1 = newa 4;
-        symbol [ x %tmp.3 92 16 17 ];
-        %tmp.3 = getv ? :x;
-        symbol [ w %tmp.5 92 20 21 ];
-        %tmp.5 = getv ? :w;
-        %tmp.6 = sub %tmp.3 %tmp.5;
-        %tmp.7 = dup %tmp.1;
-        %tmp.8 = aputv %tmp.7 0 %tmp.6;
-        symbol [ y %tmp.10 92 23 24 ];
-        %tmp.10 = getv ? :y;
-        symbol [ h %tmp.12 92 27 28 ];
-        %tmp.12 = getv ? :h;
-        %tmp.13 = sub %tmp.10 %tmp.12;
-        %tmp.14 = dup %tmp.8;
-        %tmp.15 = aputv %tmp.14 1 %tmp.13;
-        symbol [ x %tmp.17 92 30 31 ];
-        %tmp.17 = getv ? :x;
-        symbol [ w %tmp.19 92 34 35 ];
-        %tmp.19 = getv ? :w;
-        %tmp.20 = add %tmp.17 %tmp.19;
-        %tmp.21 = dup %tmp.15;
-        %tmp.22 = aputv %tmp.21 2 %tmp.20;
-        symbol [ y %tmp.24 92 37 38 ];
-        %tmp.24 = getv ? :y;
-        symbol [ h %tmp.26 92 41 42 ];
-        %tmp.26 = getv ? :h;
-        %tmp.27 = add %tmp.24 %tmp.26;
-        %tmp.28 = dup %tmp.22;
-        %tmp.29 = aputv %tmp.28 3 %tmp.27;
-        ret %tmp.29;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_91_20_93_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc"; @line = 97; @symbol_functiondef = [draw,97,13,17]; @symbol_param<0> = [dc,97,18,20]; @symbol_param<1> = [sx,97,22,24]; @symbol_param<2> = [sy,97,26,28]; ]
-    function draw(dc, sx, sy) {
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_97_30_142_4_start:
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 101 8 ]
-        [ "_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_97_30_142_4_start" "_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_97_30_142_4_stop" ]
-        %bodyC.1 = local;
-        symbol [ bodyC %bodyC.1 101 12 17 ];
-        %tmp.1 = 0x44CC44;
-        lputv %bodyC.1 %tmp.1;
-        symbol [ bodyC %bodyC.1 101 12 17 ];
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 101 30 ]
-        [ "_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_97_30_142_4_start" "_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_97_30_142_4_stop" ]
-        %bellyC.2 = local;
-        symbol [ bellyC %bellyC.2 101 34 40 ];
-        %tmp.2 = 0xCCFFCC;
-        lputv %bellyC.2 %tmp.2;
-        symbol [ bellyC %bellyC.2 101 34 40 ];
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 101 53 ]
-        [ "_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_97_30_142_4_start" "_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_97_30_142_4_stop" ]
-        %legC.3 = local;
-        symbol [ legC %legC.3 101 57 61 ];
-        %tmp.3 = 0x33AA33;
-        lputv %legC.3 %tmp.3;
-        symbol [ legC %legC.3 101 57 61 ];
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 102 8 ]
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_102_8_108_8_if_stmt:
-        symbol [ skin %tmp.5 102 12 16 ];
-        %tmp.5 = getv ? :skin;
-        %tmp.6 = 1;
-        %tmp.7 = eq %tmp.5 %tmp.6;
-        bf %tmp.7 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_102_8_108_8_if_false;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_102_8_108_8_if_true:
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_102_23_104_8_start:
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 103 12 ]
-        %tmp.8 = 0x55CCEE;
-        lputv %bodyC.1 %tmp.8;
-        symbol [ bodyC %bodyC.1 103 12 17 ];
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 103 30 ]
-        %tmp.9 = 0xEAFBFF;
-        lputv %bellyC.2 %tmp.9;
-        symbol [ bellyC %bellyC.2 103 30 36 ];
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 103 49 ]
-        %tmp.10 = 0x2E9BC0;
-        lputv %legC.3 %tmp.10;
-        symbol [ legC %legC.3 103 49 53 ];
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_102_23_104_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_102_8_108_8_if_end;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_102_8_108_8_if_false:
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 104 15 ]
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_104_15_108_8_if_stmt:
-        symbol [ skin %tmp.12 104 19 23 ];
-        %tmp.12 = getv ? :skin;
-        %tmp.13 = 2;
-        %tmp.14 = eq %tmp.12 %tmp.13;
-        bf %tmp.14 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_104_15_108_8_if_false;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_104_15_108_8_if_true:
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_104_30_106_8_start:
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 105 12 ]
-        %tmp.15 = 0xE8B923;
-        lputv %bodyC.1 %tmp.15;
-        symbol [ bodyC %bodyC.1 105 12 17 ];
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 105 30 ]
-        %tmp.16 = 0xFFF3C4;
-        lputv %bellyC.2 %tmp.16;
-        symbol [ bellyC %bellyC.2 105 30 36 ];
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 105 49 ]
-        %tmp.17 = 0xB4880F;
-        lputv %legC.3 %tmp.17;
-        symbol [ legC %legC.3 105 49 53 ];
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_104_30_106_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_104_15_108_8_if_end;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_104_15_108_8_if_false:
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 106 15 ]
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_106_15_108_8_if_stmt:
-        symbol [ skin %tmp.19 106 19 23 ];
-        %tmp.19 = getv ? :skin;
-        %tmp.20 = 3;
-        %tmp.21 = gte %tmp.19 %tmp.20;
-        bf %tmp.21 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_106_15_108_8_if_end;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_106_15_108_8_if_true:
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_106_30_108_8_start:
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 107 12 ]
-        %tmp.22 = 0xB06CFF;
-        lputv %bodyC.1 %tmp.22;
-        symbol [ bodyC %bodyC.1 107 12 17 ];
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 107 30 ]
-        %tmp.23 = 0xE9D6FF;
-        lputv %bellyC.2 %tmp.23;
-        symbol [ bellyC %bellyC.2 107 30 36 ];
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 107 49 ]
-        %tmp.24 = 0x7A3FCC;
-        lputv %legC.3 %tmp.24;
-        symbol [ legC %legC.3 107 49 53 ];
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_106_30_108_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_106_15_108_8_if_end;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_106_15_108_8_if_end:
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_104_15_108_8_if_end:
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_102_8_108_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 111 8 ]
-        %tmp.25 = lgetv %dc;
-        symbol [ dc %tmp.25 111 8 10 ];
-        symbol [ setColor %tmp.26 111 11 19 ];
-        %tmp.26 = getv function %tmp.25 :setColor;
-        %tmp.27 = lgetv %bodyC.1;
-        symbol [ bodyC %tmp.27 111 20 25 ];
-        symbol [ Graphics %tmp.28 111 27 35 ];
-        %tmp.28 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.29 111 36 53 ];
-        %tmp.29 = getv %tmp.28 :COLOR_TRANSPARENT;
-        invoke %tmp.25 %tmp.26(%tmp.27, %tmp.29);
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 112 8 ]
-        %tmp.30 = lgetv %dc;
-        symbol [ dc %tmp.30 112 8 10 ];
-        symbol [ fillCircle %tmp.31 112 11 21 ];
-        %tmp.31 = getv function %tmp.30 :fillCircle;
-        %tmp.32 = lgetv %sx;
-        symbol [ sx %tmp.32 112 22 24 ];
-        %tmp.33 = lgetv %sy;
-        symbol [ sy %tmp.33 112 26 28 ];
-        symbol [ w %tmp.35 112 30 31 ];
-        %tmp.35 = getv ? :w;
-        invoke %tmp.30 %tmp.31(%tmp.32, %tmp.33, %tmp.35);
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 113 8 ]
-        %tmp.36 = lgetv %dc;
-        symbol [ dc %tmp.36 113 8 10 ];
-        symbol [ fillRectangle %tmp.37 113 11 24 ];
-        %tmp.37 = getv function %tmp.36 :fillRectangle;
-        %tmp.38 = lgetv %sx;
-        symbol [ sx %tmp.38 113 25 27 ];
-        symbol [ w %tmp.40 113 30 31 ];
-        %tmp.40 = getv ? :w;
-        %tmp.41 = sub %tmp.38 %tmp.40;
-        %tmp.42 = lgetv %sy;
-        symbol [ sy %tmp.42 113 33 35 ];
-        %tmp.43 = 2;
-        %tmp.44 = sub %tmp.42 %tmp.43;
-        symbol [ w %tmp.46 113 41 42 ];
-        %tmp.46 = getv ? :w;
-        %tmp.47 = 2;
-        %tmp.48 = mul %tmp.46 %tmp.47;
-        %tmp.49 = 4;
-        invoke %tmp.36 %tmp.37(%tmp.41, %tmp.44, %tmp.48, %tmp.49);
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 115 8 ]
-        %tmp.50 = lgetv %dc;
-        symbol [ dc %tmp.50 115 8 10 ];
-        symbol [ setColor %tmp.51 115 11 19 ];
-        %tmp.51 = getv function %tmp.50 :setColor;
-        %tmp.52 = lgetv %bellyC.2;
-        symbol [ bellyC %tmp.52 115 20 26 ];
-        symbol [ Graphics %tmp.53 115 28 36 ];
-        %tmp.53 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.54 115 37 54 ];
-        %tmp.54 = getv %tmp.53 :COLOR_TRANSPARENT;
-        invoke %tmp.50 %tmp.51(%tmp.52, %tmp.54);
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 116 8 ]
-        %tmp.55 = lgetv %dc;
-        symbol [ dc %tmp.55 116 8 10 ];
-        symbol [ fillCircle %tmp.56 116 11 21 ];
-        %tmp.56 = getv function %tmp.55 :fillCircle;
-        %tmp.57 = lgetv %sx;
-        symbol [ sx %tmp.57 116 22 24 ];
-        %tmp.58 = lgetv %sy;
-        symbol [ sy %tmp.58 116 26 28 ];
-        %tmp.59 = 2;
-        %tmp.60 = add %tmp.58 %tmp.59;
-        symbol [ w %tmp.62 116 35 36 ];
-        %tmp.62 = getv ? :w;
-        %tmp.63 = 2;
-        %tmp.64 = mul %tmp.62 %tmp.63;
-        %tmp.65 = 3;
-        %tmp.66 = div %tmp.64 %tmp.65;
-        invoke %tmp.55 %tmp.56(%tmp.57, %tmp.60, %tmp.66);
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 118 8 ]
-        [ "_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_97_30_142_4_start" "_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_97_30_142_4_stop" ]
-        %eyeR.4 = local;
-        symbol [ eyeR %eyeR.4 118 12 16 ];
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_118_19_118_41_begin:
-        symbol [ w %tmp.68 118 20 21 ];
-        %tmp.68 = getv ? :w;
-        %tmp.69 = 3;
-        %tmp.70 = div %tmp.68 %tmp.69;
-        %tmp.71 = 2;
-        %tmp.72 = lt %tmp.70 %tmp.71;
-        bf %tmp.72 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_118_19_118_41_else_false;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_118_19_118_41_true:
-        %tmp.73 = 2;
-        push %tmp.73;
-        goto @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_118_19_118_41_end;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_118_19_118_41_else_false:
-        symbol [ w %tmp.75 118 37 38 ];
-        %tmp.75 = getv ? :w;
-        %tmp.76 = 3;
-        %tmp.77 = div %tmp.75 %tmp.76;
-        push %tmp.77;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_118_19_118_41_end:
-        %tmp.78 = phi [%tmp.72 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_118_19_118_41_begin] [%tmp.73 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_118_19_118_41_true] [%tmp.77 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_118_19_118_41_else_false] [%tmp.78 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_118_19_118_41_end];
-        lputv %eyeR.4 %tmp.78;
-        symbol [ eyeR %eyeR.4 118 12 16 ];
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 119 8 ]
-        %tmp.79 = lgetv %dc;
-        symbol [ dc %tmp.79 119 8 10 ];
-        symbol [ setColor %tmp.80 119 11 19 ];
-        %tmp.80 = getv function %tmp.79 :setColor;
-        %tmp.81 = 0xFFFFFF;
-        symbol [ Graphics %tmp.82 119 30 38 ];
-        %tmp.82 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.83 119 39 56 ];
-        %tmp.83 = getv %tmp.82 :COLOR_TRANSPARENT;
-        invoke %tmp.79 %tmp.80(%tmp.81, %tmp.83);
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 120 8 ]
-        %tmp.84 = lgetv %dc;
-        symbol [ dc %tmp.84 120 8 10 ];
-        symbol [ fillCircle %tmp.85 120 11 21 ];
-        %tmp.85 = getv function %tmp.84 :fillCircle;
-        %tmp.86 = lgetv %sx;
-        symbol [ sx %tmp.86 120 22 24 ];
-        symbol [ w %tmp.88 120 27 28 ];
-        %tmp.88 = getv ? :w;
-        %tmp.89 = 2;
-        %tmp.90 = div %tmp.88 %tmp.89;
-        %tmp.91 = sub %tmp.86 %tmp.90;
-        %tmp.92 = lgetv %sy;
-        symbol [ sy %tmp.92 120 34 36 ];
-        symbol [ h %tmp.94 120 39 40 ];
-        %tmp.94 = getv ? :h;
-        %tmp.95 = 2;
-        %tmp.96 = div %tmp.94 %tmp.95;
-        %tmp.97 = sub %tmp.92 %tmp.96;
-        %tmp.98 = lgetv %eyeR.4;
-        symbol [ eyeR %tmp.98 120 46 50 ];
-        invoke %tmp.84 %tmp.85(%tmp.91, %tmp.97, %tmp.98);
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 121 8 ]
-        %tmp.99 = lgetv %dc;
-        symbol [ dc %tmp.99 121 8 10 ];
-        symbol [ fillCircle %tmp.100 121 11 21 ];
-        %tmp.100 = getv function %tmp.99 :fillCircle;
-        %tmp.101 = lgetv %sx;
-        symbol [ sx %tmp.101 121 22 24 ];
-        symbol [ w %tmp.103 121 27 28 ];
-        %tmp.103 = getv ? :w;
-        %tmp.104 = 2;
-        %tmp.105 = div %tmp.103 %tmp.104;
-        %tmp.106 = add %tmp.101 %tmp.105;
-        %tmp.107 = lgetv %sy;
-        symbol [ sy %tmp.107 121 34 36 ];
-        symbol [ h %tmp.109 121 39 40 ];
-        %tmp.109 = getv ? :h;
-        %tmp.110 = 2;
-        %tmp.111 = div %tmp.109 %tmp.110;
-        %tmp.112 = sub %tmp.107 %tmp.111;
-        %tmp.113 = lgetv %eyeR.4;
-        symbol [ eyeR %tmp.113 121 46 50 ];
-        invoke %tmp.99 %tmp.100(%tmp.106, %tmp.112, %tmp.113);
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 123 8 ]
-        [ "_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_97_30_142_4_start" "_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_97_30_142_4_stop" ]
-        %pupOff.5 = local;
-        symbol [ pupOff %pupOff.5 123 12 18 ];
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_123_21_123_59_begin:
-        symbol [ vx %tmp.115 123 22 24 ];
-        %tmp.115 = getv ? :vx;
-        %tmp.116 = 0.5;
-        %tmp.117 = gt %tmp.115 %tmp.116;
-        bf %tmp.117 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_123_21_123_59_else_false;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_123_21_123_59_true:
-        %tmp.118 = 1;
-        push %tmp.118;
-        goto @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_123_21_123_59_end;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_123_21_123_59_else_false:
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_123_39_123_58_begin:
-        symbol [ vx %tmp.120 123 40 42 ];
-        %tmp.120 = getv ? :vx;
-        %tmp.121 = -0.5;
-        %tmp.122 = lt %tmp.120 %tmp.121;
-        bf %tmp.122 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_123_39_123_58_else_false;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_123_39_123_58_true:
-        %tmp.123 = -1;
-        push %tmp.123;
-        goto @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_123_39_123_58_end;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_123_39_123_58_else_false:
-        %tmp.124 = 0;
-        push %tmp.124;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_123_39_123_58_end:
-        %tmp.125 = phi [%tmp.122 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_123_39_123_58_begin] [%tmp.123 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_123_39_123_58_true] [%tmp.124 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_123_39_123_58_else_false] [%tmp.125 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_123_39_123_58_end];
-        push %tmp.125;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_123_21_123_59_end:
-        %tmp.126 = phi [%tmp.117 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_123_21_123_59_begin] [%tmp.118 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_123_21_123_59_true] [%tmp.125 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_123_21_123_59_else_false] [%tmp.126 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_123_21_123_59_end];
-        lputv %pupOff.5 %tmp.126;
-        symbol [ pupOff %pupOff.5 123 12 18 ];
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 124 8 ]
-        %tmp.127 = lgetv %dc;
-        symbol [ dc %tmp.127 124 8 10 ];
-        symbol [ setColor %tmp.128 124 11 19 ];
-        %tmp.128 = getv function %tmp.127 :setColor;
-        %tmp.129 = 0x000000;
-        symbol [ Graphics %tmp.130 124 30 38 ];
-        %tmp.130 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.131 124 39 56 ];
-        %tmp.131 = getv %tmp.130 :COLOR_TRANSPARENT;
-        invoke %tmp.127 %tmp.128(%tmp.129, %tmp.131);
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 125 8 ]
-        %tmp.132 = lgetv %dc;
-        symbol [ dc %tmp.132 125 8 10 ];
-        symbol [ fillCircle %tmp.133 125 11 21 ];
-        %tmp.133 = getv function %tmp.132 :fillCircle;
-        %tmp.134 = lgetv %sx;
-        symbol [ sx %tmp.134 125 22 24 ];
-        symbol [ w %tmp.136 125 27 28 ];
-        %tmp.136 = getv ? :w;
-        %tmp.137 = 2;
-        %tmp.138 = div %tmp.136 %tmp.137;
-        %tmp.139 = sub %tmp.134 %tmp.138;
-        %tmp.140 = lgetv %pupOff.5;
-        symbol [ pupOff %tmp.140 125 35 41 ];
-        %tmp.141 = add %tmp.139 %tmp.140;
-        %tmp.142 = lgetv %sy;
-        symbol [ sy %tmp.142 125 43 45 ];
-        symbol [ h %tmp.144 125 48 49 ];
-        %tmp.144 = getv ? :h;
-        %tmp.145 = 2;
-        %tmp.146 = div %tmp.144 %tmp.145;
-        %tmp.147 = sub %tmp.142 %tmp.146;
-        %tmp.148 = lgetv %eyeR.4;
-        symbol [ eyeR %tmp.148 125 55 59 ];
-        %tmp.149 = 2;
-        %tmp.150 = div %tmp.148 %tmp.149;
-        invoke %tmp.132 %tmp.133(%tmp.141, %tmp.147, %tmp.150);
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 126 8 ]
-        %tmp.151 = lgetv %dc;
-        symbol [ dc %tmp.151 126 8 10 ];
-        symbol [ fillCircle %tmp.152 126 11 21 ];
-        %tmp.152 = getv function %tmp.151 :fillCircle;
-        %tmp.153 = lgetv %sx;
-        symbol [ sx %tmp.153 126 22 24 ];
-        symbol [ w %tmp.155 126 27 28 ];
-        %tmp.155 = getv ? :w;
-        %tmp.156 = 2;
-        %tmp.157 = div %tmp.155 %tmp.156;
-        %tmp.158 = add %tmp.153 %tmp.157;
-        %tmp.159 = lgetv %pupOff.5;
-        symbol [ pupOff %tmp.159 126 35 41 ];
-        %tmp.160 = add %tmp.158 %tmp.159;
-        %tmp.161 = lgetv %sy;
-        symbol [ sy %tmp.161 126 43 45 ];
-        symbol [ h %tmp.163 126 48 49 ];
-        %tmp.163 = getv ? :h;
-        %tmp.164 = 2;
-        %tmp.165 = div %tmp.163 %tmp.164;
-        %tmp.166 = sub %tmp.161 %tmp.165;
-        %tmp.167 = lgetv %eyeR.4;
-        symbol [ eyeR %tmp.167 126 55 59 ];
-        %tmp.168 = 2;
-        %tmp.169 = div %tmp.167 %tmp.168;
-        invoke %tmp.151 %tmp.152(%tmp.160, %tmp.166, %tmp.169);
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 128 8 ]
-        [ "_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_97_30_142_4_start" "_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_97_30_142_4_stop" ]
-        %legY.6 = local;
-        symbol [ legY %legY.6 128 12 16 ];
-        %tmp.170 = lgetv %sy;
-        symbol [ sy %tmp.170 128 19 21 ];
-        symbol [ h %tmp.172 128 24 25 ];
-        %tmp.172 = getv ? :h;
-        %tmp.173 = add %tmp.170 %tmp.172;
-        %tmp.174 = 1;
-        %tmp.175 = sub %tmp.173 %tmp.174;
-        lputv %legY.6 %tmp.175;
-        symbol [ legY %legY.6 128 12 16 ];
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 129 8 ]
-        %tmp.176 = lgetv %dc;
-        symbol [ dc %tmp.176 129 8 10 ];
-        symbol [ setColor %tmp.177 129 11 19 ];
-        %tmp.177 = getv function %tmp.176 :setColor;
-        %tmp.178 = lgetv %legC.3;
-        symbol [ legC %tmp.178 129 20 24 ];
-        symbol [ Graphics %tmp.179 129 26 34 ];
-        %tmp.179 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.180 129 35 52 ];
-        %tmp.180 = getv %tmp.179 :COLOR_TRANSPARENT;
-        invoke %tmp.176 %tmp.177(%tmp.178, %tmp.180);
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 130 8 ]
-        [ "_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_97_30_142_4_start" "_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_97_30_142_4_stop" ]
-        %spread.7 = local;
-        symbol [ spread %spread.7 130 12 18 ];
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_130_21_130_48_begin:
-        symbol [ vy %tmp.182 130 22 24 ];
-        %tmp.182 = getv ? :vy;
-        %tmp.183 = 0;
-        %tmp.184 = gt %tmp.182 %tmp.183;
-        bf %tmp.184 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_130_21_130_48_else_false;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_130_21_130_48_true:
-        symbol [ w %tmp.186 130 33 34 ];
-        %tmp.186 = getv ? :w;
-        %tmp.187 = 2;
-        %tmp.188 = sub %tmp.186 %tmp.187;
-        push %tmp.188;
-        goto @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_130_21_130_48_end;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_130_21_130_48_else_false:
-        symbol [ w %tmp.190 130 43 44 ];
-        %tmp.190 = getv ? :w;
-        %tmp.191 = 2;
-        %tmp.192 = div %tmp.190 %tmp.191;
-        push %tmp.192;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_130_21_130_48_end:
-        %tmp.193 = phi [%tmp.184 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_130_21_130_48_begin] [%tmp.188 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_130_21_130_48_true] [%tmp.192 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_130_21_130_48_else_false] [%tmp.193 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_130_21_130_48_end];
-        lputv %spread.7 %tmp.193;
-        symbol [ spread %spread.7 130 12 18 ];
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 131 8 ]
-        %tmp.194 = lgetv %dc;
-        symbol [ dc %tmp.194 131 8 10 ];
-        symbol [ fillPolygon %tmp.195 131 11 22 ];
-        %tmp.195 = getv function %tmp.194 :fillPolygon;
-        %tmp.196 = newa 3;
-        %tmp.197 = newa 2;
-        %tmp.198 = lgetv %sx;
-        symbol [ sx %tmp.198 131 25 27 ];
-        %tmp.199 = lgetv %spread.7;
-        symbol [ spread %tmp.199 131 30 36 ];
-        %tmp.200 = sub %tmp.198 %tmp.199;
-        %tmp.201 = dup %tmp.197;
-        %tmp.202 = aputv %tmp.201 0 %tmp.200;
-        %tmp.203 = lgetv %legY.6;
-        symbol [ legY %tmp.203 131 38 42 ];
-        %tmp.204 = dup %tmp.202;
-        %tmp.205 = aputv %tmp.204 1 %tmp.203;
-        %tmp.206 = dup %tmp.196;
-        %tmp.207 = aputv %tmp.206 0 %tmp.205;
-        %tmp.208 = newa 2;
-        %tmp.209 = lgetv %sx;
-        symbol [ sx %tmp.209 132 25 27 ];
-        %tmp.210 = 1;
-        %tmp.211 = sub %tmp.209 %tmp.210;
-        %tmp.212 = dup %tmp.208;
-        %tmp.213 = aputv %tmp.212 0 %tmp.211;
-        %tmp.214 = lgetv %legY.6;
-        symbol [ legY %tmp.214 132 38 42 ];
-        %tmp.215 = 3;
-        %tmp.216 = sub %tmp.214 %tmp.215;
-        %tmp.217 = dup %tmp.213;
-        %tmp.218 = aputv %tmp.217 1 %tmp.216;
-        %tmp.219 = dup %tmp.207;
-        %tmp.220 = aputv %tmp.219 1 %tmp.218;
-        %tmp.221 = newa 2;
-        %tmp.222 = lgetv %sx;
-        symbol [ sx %tmp.222 133 25 27 ];
-        %tmp.223 = 1;
-        %tmp.224 = sub %tmp.222 %tmp.223;
-        %tmp.225 = dup %tmp.221;
-        %tmp.226 = aputv %tmp.225 0 %tmp.224;
-        %tmp.227 = lgetv %legY.6;
-        symbol [ legY %tmp.227 133 38 42 ];
-        %tmp.228 = dup %tmp.226;
-        %tmp.229 = aputv %tmp.228 1 %tmp.227;
-        %tmp.230 = dup %tmp.220;
-        %tmp.231 = aputv %tmp.230 2 %tmp.229;
-        invoke %tmp.194 %tmp.195(%tmp.231);
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 134 8 ]
-        %tmp.232 = lgetv %dc;
-        symbol [ dc %tmp.232 134 8 10 ];
-        symbol [ fillPolygon %tmp.233 134 11 22 ];
-        %tmp.233 = getv function %tmp.232 :fillPolygon;
-        %tmp.234 = newa 3;
-        %tmp.235 = newa 2;
-        %tmp.236 = lgetv %sx;
-        symbol [ sx %tmp.236 134 25 27 ];
-        %tmp.237 = lgetv %spread.7;
-        symbol [ spread %tmp.237 134 30 36 ];
-        %tmp.238 = add %tmp.236 %tmp.237;
-        %tmp.239 = dup %tmp.235;
-        %tmp.240 = aputv %tmp.239 0 %tmp.238;
-        %tmp.241 = lgetv %legY.6;
-        symbol [ legY %tmp.241 134 38 42 ];
-        %tmp.242 = dup %tmp.240;
-        %tmp.243 = aputv %tmp.242 1 %tmp.241;
-        %tmp.244 = dup %tmp.234;
-        %tmp.245 = aputv %tmp.244 0 %tmp.243;
-        %tmp.246 = newa 2;
-        %tmp.247 = lgetv %sx;
-        symbol [ sx %tmp.247 135 25 27 ];
-        %tmp.248 = 1;
-        %tmp.249 = add %tmp.247 %tmp.248;
-        %tmp.250 = dup %tmp.246;
-        %tmp.251 = aputv %tmp.250 0 %tmp.249;
-        %tmp.252 = lgetv %legY.6;
-        symbol [ legY %tmp.252 135 38 42 ];
-        %tmp.253 = 3;
-        %tmp.254 = sub %tmp.252 %tmp.253;
-        %tmp.255 = dup %tmp.251;
-        %tmp.256 = aputv %tmp.255 1 %tmp.254;
-        %tmp.257 = dup %tmp.245;
-        %tmp.258 = aputv %tmp.257 1 %tmp.256;
-        %tmp.259 = newa 2;
-        %tmp.260 = lgetv %sx;
-        symbol [ sx %tmp.260 136 25 27 ];
-        %tmp.261 = 1;
-        %tmp.262 = add %tmp.260 %tmp.261;
-        %tmp.263 = dup %tmp.259;
-        %tmp.264 = aputv %tmp.263 0 %tmp.262;
-        %tmp.265 = lgetv %legY.6;
-        symbol [ legY %tmp.265 136 38 42 ];
-        %tmp.266 = dup %tmp.264;
-        %tmp.267 = aputv %tmp.266 1 %tmp.265;
-        %tmp.268 = dup %tmp.258;
-        %tmp.269 = aputv %tmp.268 2 %tmp.267;
-        invoke %tmp.232 %tmp.233(%tmp.269);
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 138 8 ]
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_138_8_141_8_if_stmt:
-        symbol [ skin %tmp.271 138 12 16 ];
-        %tmp.271 = getv ? :skin;
-        %tmp.272 = 3;
-        %tmp.273 = gte %tmp.271 %tmp.272;
-        bf %tmp.273 @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_138_8_141_8_if_end;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_138_8_141_8_if_true:
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_138_23_141_8_start:
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 139 12 ]
-        %tmp.274 = lgetv %dc;
-        symbol [ dc %tmp.274 139 12 14 ];
-        symbol [ setColor %tmp.275 139 15 23 ];
-        %tmp.275 = getv function %tmp.274 :setColor;
-        %tmp.276 = 0xFFFFFF;
-        symbol [ Graphics %tmp.277 139 34 42 ];
-        %tmp.277 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.278 139 43 60 ];
-        %tmp.278 = getv %tmp.277 :COLOR_TRANSPARENT;
-        invoke %tmp.274 %tmp.275(%tmp.276, %tmp.278);
-[ "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc" 140 12 ]
-        %tmp.279 = lgetv %dc;
-        symbol [ dc %tmp.279 140 12 14 ];
-        symbol [ fillCircle %tmp.280 140 15 25 ];
-        %tmp.280 = getv function %tmp.279 :fillCircle;
-        %tmp.281 = lgetv %sx;
-        symbol [ sx %tmp.281 140 26 28 ];
-        symbol [ w %tmp.283 140 31 32 ];
-        %tmp.283 = getv ? :w;
-        %tmp.284 = 4;
-        %tmp.285 = div %tmp.283 %tmp.284;
-        %tmp.286 = sub %tmp.281 %tmp.285;
-        %tmp.287 = lgetv %sy;
-        symbol [ sy %tmp.287 140 38 40 ];
-        symbol [ h %tmp.289 140 43 44 ];
-        %tmp.289 = getv ? :h;
-        %tmp.290 = 2;
-        %tmp.291 = div %tmp.289 %tmp.290;
-        %tmp.292 = sub %tmp.287 %tmp.291;
-        %tmp.293 = 2;
-        %tmp.294 = sub %tmp.292 %tmp.293;
-        %tmp.295 = 1;
-        invoke %tmp.279 %tmp.280(%tmp.286, %tmp.294, %tmp.295);
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_138_23_141_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_138_8_141_8_if_end;
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_138_8_141_8_if_end:
-_Users_kkorolczuk_work_garmin_jumptower_source_Player_mc_97_30_142_4_stop:
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_35_60_52_end:
+        %tmp.16 = phi [%tmp.13 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_35_60_52_begin] [%tmp.14 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_35_60_52_true] [%tmp.15 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_35_60_52_else_false] [%tmp.16 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_35_60_52_end];
+        push %tmp.16;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_18_60_53_end:
+        %tmp.17 = phi [%tmp.8 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_18_60_53_begin] [%tmp.9 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_18_60_53_true] [%tmp.16 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_18_60_53_else_false] [%tmp.17 @_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_60_18_60_53_end];
+        lputv %dir.1 %tmp.17;
+        symbol [ dir %dir.1 60 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 61 8 ]
+        symbol [ angle %tmp.19 61 20 25 ];
+        %tmp.19 = getv ? :angle;
+        %tmp.20 = lgetv %dir.1;
+        symbol [ dir %tmp.20 61 28 31 ];
+        symbol [ DASH_DEGREES %tmp.22 61 34 46 ];
+        %tmp.22 = getv ? :DASH_DEGREES;
+        %tmp.23 = mul %tmp.20 %tmp.22;
+        %tmp.24 = add %tmp.19 %tmp.23;
+        %tmp.25 = 360;
+        %tmp.26 = add %tmp.24 %tmp.25;
+        %tmp.27 = 360;
+        %tmp.28 = mod %tmp.26 %tmp.27;
+        symbol [ angle ? 61 8 13 ];
+        putv self :angle %tmp.28;
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 62 8 ]
+        symbol [ DASH_COOLDOWN %tmp.30 62 19 32 ];
+        %tmp.30 = getv ? :DASH_COOLDOWN;
+        symbol [ dashCd ? 62 8 14 ];
+        putv self :dashCd %tmp.30;
+[ "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc" 63 8 ]
+        %tmp.31 = 10;
+        symbol [ isDashing ? 63 8 17 ];
+        putv self :isDashing %tmp.31;
+_Users_kkorolczuk_work_garmin_edgesurvivor_source_Player_mc_57_22_64_4_stop:
     }
 }
-[ @file = "/Users/kkorolczuk/work/garmin/jumptower/source/Player.mc"; @line = 18; ]
+[ @file = "/Users/kkorolczuk/work/garmin/edgesurvivor/source/Player.mc"; @line = 6; ]
 <init> {
 }

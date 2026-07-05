@@ -1,320 +1,314 @@
-[ @file = "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc"; @line = 4; @symbol_usingdef<0> = [Toybox,4,6,12]; @symbol_usingdef<1> = [Application,4,13,24]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc"; @line = 5; @symbol_usingdef<0> = [Toybox,5,6,12]; @symbol_usingdef<1> = [Application,5,13,24]; ]
 using Toybox.Application;
-[ @file = "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc"; @line = 6; @symbol_classdef = [ScoreSystem,6,6,17]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc"; @line = 7; @symbol_classdef = [ScoreSystem,7,6,17]; ]
 class ScoreSystem {
-    [ @file = "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc"; @line = 6; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc"; @line = 7; ]
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc"; @line = 6; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc"; @line = 7; ]
     static
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc"; @line = 7; @position = 8; @symbol_vardef = [score,7,8,13]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc"; @line = 8; @position = 8; @symbol_vardef = [score,8,8,13]; ]
     var score;
-    [ @file = "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc"; @line = 8; @position = 8; @symbol_vardef = [hi,8,8,10]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc"; @line = 9; @position = 8; @symbol_vardef = [spinsUsed,9,8,17]; ]
+    var spinsUsed;
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc"; @line = 10; @position = 8; @symbol_vardef = [spinsTotal,10,8,18]; ]
+    var spinsTotal;
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc"; @line = 11; @position = 8; @symbol_vardef = [jackpots,11,8,16]; ]
+    var jackpots;
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc"; @line = 12; @position = 8; @symbol_vardef = [hi,12,8,10]; ]
     var hi;
-    [ @file = "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc"; @line = 9; @position = 8; @symbol_vardef = [combo,9,8,13]; ]
-    var combo;
-    [ @file = "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc"; @line = 10; @position = 15; @symbol_vardef = [_lastChopMs,10,15,26]; ]
-    protected
-    var _lastChopMs;
-    [ @file = "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc"; @line = 12; @symbol_functiondef = [initialize,12,13,23]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc"; @line = 14; @symbol_functiondef = [initialize,14,13,23]; ]
     function initialize() as Void {
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_12_26_15_4_start:
-[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 13 8 ]
-        %tmp.1 = self;
-        symbol [ _load %tmp.2 13 13 18 ];
-        %tmp.2 = getv function %tmp.1 :_load;
-        %tmp.3 = invoke %tmp.1 %tmp.2();
-        symbol [ hi ? 13 8 10 ];
-        putv self :hi %tmp.3;
-[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 14 8 ]
-        %tmp.4 = self;
-        symbol [ reset %tmp.5 14 8 13 ];
-        %tmp.5 = getv function %tmp.4 :reset;
-        invoke %tmp.4 %tmp.5();
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_12_26_15_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc"; @line = 17; @symbol_functiondef = [reset,17,13,18]; ]
-    function reset() {
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_17_21_21_4_start:
-[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 18 8 ]
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_14_26_17_4_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc" 15 8 ]
         %tmp.1 = 0;
-        symbol [ score ? 18 8 13 ];
-        putv self :score %tmp.1;
-[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 19 8 ]
+        symbol [ hi ? 15 8 10 ];
+        putv self :hi %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc" 16 8 ]
         %tmp.2 = 0;
-        symbol [ combo ? 19 8 13 ];
-        putv self :combo %tmp.2;
-[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 20 8 ]
-        %tmp.3 = -1000000;
-        symbol [ _lastChopMs ? 20 8 19 ];
-        putv self :_lastChopMs %tmp.3;
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_17_21_21_4_stop:
+        symbol [ score ? 16 8 13 ];
+        putv self :score %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc" 16 19 ]
+        %tmp.3 = 0;
+        symbol [ spinsUsed ? 16 19 28 ];
+        putv self :spinsUsed %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc" 16 34 ]
+        %tmp.4 = 10;
+        symbol [ spinsTotal ? 16 34 44 ];
+        putv self :spinsTotal %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc" 16 51 ]
+        %tmp.5 = 0;
+        symbol [ jackpots ? 16 51 59 ];
+        putv self :jackpots %tmp.5;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_14_26_17_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc"; @line = 23; @symbol_functiondef = [_load,23,20,25]; ]
-    protected
-    function _load() {
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_23_28_29_4_start:
-[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 24 8 ]
-        try @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_8_27_22_beginTry @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_8_27_22_endTry @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_8_27_22_catch @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_8_27_22_finally;
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_8_27_22_beginTry:
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_12_27_8_start:
-[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 25 12 ]
-        [ "_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_12_27_8_start" "_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_12_27_8_stop" ]
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc"; @line = 19; @symbol_functiondef = [reset,19,13,18]; @symbol_param<0> = [totalSpins,19,19,29]; ]
+    function reset(totalSpins) {
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_19_31_24_4_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc" 20 8 ]
+        %tmp.1 = 0;
+        symbol [ score ? 20 8 13 ];
+        putv self :score %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc" 21 8 ]
+        %tmp.2 = 0;
+        symbol [ spinsUsed ? 21 8 17 ];
+        putv self :spinsUsed %tmp.2;
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc" 22 8 ]
+        %tmp.3 = lgetv %totalSpins;
+        symbol [ totalSpins %tmp.3 22 21 31 ];
+        symbol [ spinsTotal ? 22 8 18 ];
+        putv self :spinsTotal %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc" 23 8 ]
+        %tmp.4 = 0;
+        symbol [ jackpots ? 23 8 16 ];
+        putv self :jackpots %tmp.4;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_19_31_24_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc"; @line = 26; @symbol_functiondef = [loadHi,26,13,19]; @symbol_param<0> = [key,26,20,23]; ]
+    function loadHi(key) {
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_26_25_32_4_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc" 27 8 ]
+        try @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_27_8_30_22_beginTry @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_27_8_30_22_endTry @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_27_8_30_22_catch @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_27_8_30_22_finally;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_27_8_30_22_beginTry:
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_27_12_30_8_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc" 28 12 ]
+        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_27_12_30_8_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_27_12_30_8_stop" ]
         %v.1 = local;
-        symbol [ v %v.1 25 16 17 ];
-        symbol [ Application %tmp.1 25 20 31 ];
+        symbol [ v %v.1 28 16 17 ];
+        symbol [ Application %tmp.1 28 20 31 ];
         %tmp.1 = getm $.Toybox.Application;
-        symbol [ Storage %tmp.2 25 32 39 ];
+        symbol [ Storage %tmp.2 28 32 39 ];
         %tmp.2 = getv %tmp.1 :Storage;
-        symbol [ getValue %tmp.3 25 40 48 ];
+        symbol [ getValue %tmp.3 28 40 48 ];
         %tmp.3 = getv function %tmp.2 :getValue;
-        symbol [ DR_HI_KEY %tmp.5 25 49 58 ];
-        %tmp.5 = getv ? :DR_HI_KEY;
-        %tmp.6 = invoke %tmp.2 %tmp.3(%tmp.5);
-        lputv %v.1 %tmp.6;
-        symbol [ v %v.1 25 16 17 ];
-[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 26 12 ]
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_12_26_71_if_stmt:
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_16_26_56_begin:
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_16_26_42_begin:
-        %tmp.7 = lgetv %v.1;
-        symbol [ v %tmp.7 26 16 17 ];
-        %tmp.8 = null;
-        %tmp.9 = ne %tmp.7 %tmp.8;
-        bf %tmp.9 @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_12_26_71_if_end;
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_29_26_42_true:
-        %tmp.10 = lgetv %v.1;
-        symbol [ v %tmp.10 26 29 30 ];
-        %tmp.11 = as %tmp.10 { (!Null) };
-        symbol [ Number %tmp.13 26 42 48 ];
-        %tmp.13 = getv ? :Number;
-        %tmp.14 = isa %tmp.11 %tmp.13;
-        push %tmp.14;
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_29_26_42_end:
-        %tmp.15 = phi [%tmp.9 @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_16_26_42_begin] [%tmp.14 @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_29_26_42_true] [%tmp.15 @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_29_26_42_end];
-        bf %tmp.15 @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_12_26_71_if_end;
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_52_26_56_true:
-        %tmp.16 = lgetv %v.1;
-        symbol [ v %tmp.16 26 52 53 ];
-        %tmp.17 = as %tmp.16 { (Number) && (!Null) };
-        %tmp.18 = 0;
-        %tmp.19 = gt %tmp.17 %tmp.18;
-        push %tmp.19;
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_52_26_56_end:
-        %tmp.20 = phi [%tmp.15 @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_16_26_56_begin] [%tmp.19 @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_52_26_56_true] [%tmp.20 @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_52_26_56_end];
-        bf %tmp.20 @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_12_26_71_if_end;
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_12_26_71_if_true:
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_59_26_71_start:
-[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 26 61 ]
-        %tmp.21 = lgetv %v.1;
-        symbol [ v %tmp.21 26 68 69 ];
-        %tmp.22 = as %tmp.21 { (Number) && (!Null) };
-        jsr @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_8_27_22_finally;
-        ret %tmp.22;
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_59_26_71_stop:
-        goto @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_12_26_71_if_end;
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_26_12_26_71_if_end:
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_12_27_8_stop:
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_8_27_22_endTry:
-        jsr @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_8_27_22_finally;
-        goto @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_8_27_22_end;
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_8_27_22_catch:
-        %tmp.23 = exception;
-        push %tmp.23;
-[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 27 10 ]
-        [ "_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_8_27_22_catch" "_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_27_10_27_22_end" ]
+        %tmp.4 = lgetv %key;
+        symbol [ key %tmp.4 28 49 52 ];
+        %tmp.5 = invoke %tmp.2 %tmp.3(%tmp.4);
+        lputv %v.1 %tmp.5;
+        symbol [ v %v.1 28 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc" 29 12 ]
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_29_12_29_78_if_stmt:
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_29_16_29_57_begin:
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_29_16_29_42_begin:
+        %tmp.6 = lgetv %v.1;
+        symbol [ v %tmp.6 29 16 17 ];
+        %tmp.7 = null;
+        %tmp.8 = ne %tmp.6 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_29_12_29_78_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_29_29_29_42_true:
+        %tmp.9 = lgetv %v.1;
+        symbol [ v %tmp.9 29 29 30 ];
+        %tmp.10 = as %tmp.9 { (!Null) };
+        symbol [ Number %tmp.12 29 42 48 ];
+        %tmp.12 = getv ? :Number;
+        %tmp.13 = isa %tmp.10 %tmp.12;
+        push %tmp.13;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_29_29_29_42_end:
+        %tmp.14 = phi [%tmp.8 @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_29_16_29_42_begin] [%tmp.13 @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_29_29_29_42_true] [%tmp.14 @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_29_29_29_42_end];
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_29_12_29_78_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_29_52_29_57_true:
+        %tmp.15 = lgetv %v.1;
+        symbol [ v %tmp.15 29 52 53 ];
+        %tmp.16 = as %tmp.15 { (Number) && (!Null) };
+        %tmp.17 = 0;
+        %tmp.18 = gte %tmp.16 %tmp.17;
+        push %tmp.18;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_29_52_29_57_end:
+        %tmp.19 = phi [%tmp.14 @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_29_16_29_57_begin] [%tmp.18 @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_29_52_29_57_true] [%tmp.19 @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_29_52_29_57_end];
+        bf %tmp.19 @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_29_12_29_78_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_29_12_29_78_if_true:
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_29_60_29_78_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc" 29 62 ]
+        %tmp.20 = lgetv %v.1;
+        symbol [ v %tmp.20 29 67 68 ];
+        %tmp.21 = as %tmp.20 { (Number) && (!Null) };
+        symbol [ hi ? 29 62 64 ];
+        putv self :hi %tmp.21;
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc" 29 70 ]
+        jsr @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_27_8_30_22_finally;
+        ret ?;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_29_60_29_78_stop:
+        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_29_12_29_78_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_29_12_29_78_if_end:
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_27_12_30_8_stop:
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_27_8_30_22_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_27_8_30_22_finally;
+        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_27_8_30_22_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_27_8_30_22_catch:
+        %tmp.22 = exception;
+        push %tmp.22;
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc" 30 10 ]
+        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_27_8_30_22_catch" "_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_30_10_30_22_end" ]
         %e.2 = local;
-        symbol [ e %e.2 27 17 18 ];
-        %tmp.24 = dup %tmp.23;
-        lputv %e.2 %tmp.24;
-        symbol [ e %e.2 27 17 18 ];
-        jsr @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_8_27_22_finally;
+        symbol [ e %e.2 30 17 18 ];
+        %tmp.23 = dup %tmp.22;
+        lputv %e.2 %tmp.23;
+        symbol [ e %e.2 30 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_27_8_30_22_finally;
         pop;
-        goto @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_8_27_22_end;
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_27_10_27_22_end:
-        try @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_8_27_22_catch @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_27_10_27_22_end @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_27_10_27_22_end @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_8_27_22_finally;
-        jsr @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_8_27_22_finally;
-        throw %tmp.23;
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_8_27_22_finally:
+        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_27_8_30_22_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_30_10_30_22_end:
+        try @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_27_8_30_22_catch @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_30_10_30_22_end @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_30_10_30_22_end @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_27_8_30_22_finally;
+        jsr @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_27_8_30_22_finally;
+        throw %tmp.22;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_27_8_30_22_finally:
         jsrret;
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_24_8_27_22_end:
-[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 28 8 ]
-        %tmp.25 = 0;
-        ret %tmp.25;
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_23_28_29_4_stop:
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_27_8_30_22_end:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc" 31 8 ]
+        %tmp.24 = 0;
+        symbol [ hi ? 31 8 10 ];
+        putv self :hi %tmp.24;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_26_25_32_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc"; @line = 30; @symbol_functiondef = [saveHi,30,13,19]; ]
-    function saveHi() {
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_30_22_32_4_start:
-[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 31 8 ]
-        try @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_8_31_73_beginTry @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_8_31_73_endTry @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_8_31_73_catch @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_8_31_73_finally;
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_8_31_73_beginTry:
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_12_31_59_start:
-[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 31 14 ]
-        symbol [ Application %tmp.1 31 14 25 ];
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc"; @line = 33; @symbol_functiondef = [saveHi,33,13,19]; @symbol_param<0> = [key,33,20,23]; ]
+    function saveHi(key) {
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_33_25_35_4_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc" 34 8 ]
+        try @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_34_8_34_67_beginTry @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_34_8_34_67_endTry @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_34_8_34_67_catch @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_34_8_34_67_finally;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_34_8_34_67_beginTry:
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_34_12_34_53_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc" 34 14 ]
+        symbol [ Application %tmp.1 34 14 25 ];
         %tmp.1 = getm $.Toybox.Application;
-        symbol [ Storage %tmp.2 31 26 33 ];
+        symbol [ Storage %tmp.2 34 26 33 ];
         %tmp.2 = getv %tmp.1 :Storage;
-        symbol [ setValue %tmp.3 31 34 42 ];
+        symbol [ setValue %tmp.3 34 34 42 ];
         %tmp.3 = getv function %tmp.2 :setValue;
-        symbol [ DR_HI_KEY %tmp.5 31 43 52 ];
-        %tmp.5 = getv ? :DR_HI_KEY;
-        symbol [ hi %tmp.7 31 54 56 ];
-        %tmp.7 = getv ? :hi;
-        invoke %tmp.2 %tmp.3(%tmp.5, %tmp.7);
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_12_31_59_stop:
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_8_31_73_endTry:
-        jsr @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_8_31_73_finally;
-        goto @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_8_31_73_end;
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_8_31_73_catch:
-        %tmp.8 = exception;
-        push %tmp.8;
-[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 31 61 ]
-        [ "_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_8_31_73_catch" "_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_61_31_73_end" ]
+        %tmp.4 = lgetv %key;
+        symbol [ key %tmp.4 34 43 46 ];
+        symbol [ hi %tmp.6 34 48 50 ];
+        %tmp.6 = getv ? :hi;
+        invoke %tmp.2 %tmp.3(%tmp.4, %tmp.6);
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_34_12_34_53_stop:
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_34_8_34_67_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_34_8_34_67_finally;
+        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_34_8_34_67_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_34_8_34_67_catch:
+        %tmp.7 = exception;
+        push %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc" 34 55 ]
+        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_34_8_34_67_catch" "_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_34_55_34_67_end" ]
         %e.1 = local;
-        symbol [ e %e.1 31 68 69 ];
-        %tmp.9 = dup %tmp.8;
-        lputv %e.1 %tmp.9;
-        symbol [ e %e.1 31 68 69 ];
-        jsr @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_8_31_73_finally;
+        symbol [ e %e.1 34 62 63 ];
+        %tmp.8 = dup %tmp.7;
+        lputv %e.1 %tmp.8;
+        symbol [ e %e.1 34 62 63 ];
+        jsr @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_34_8_34_67_finally;
         pop;
-        goto @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_8_31_73_end;
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_61_31_73_end:
-        try @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_8_31_73_catch @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_61_31_73_end @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_61_31_73_end @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_8_31_73_finally;
-        jsr @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_8_31_73_finally;
-        throw %tmp.8;
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_8_31_73_finally:
+        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_34_8_34_67_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_34_55_34_67_end:
+        try @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_34_8_34_67_catch @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_34_55_34_67_end @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_34_55_34_67_end @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_34_8_34_67_finally;
+        jsr @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_34_8_34_67_finally;
+        throw %tmp.7;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_34_8_34_67_finally:
         jsrret;
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_31_8_31_73_end:
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_30_22_32_4_stop:
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_34_8_34_67_end:
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_33_25_35_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc"; @line = 38; @symbol_functiondef = [registerChop,38,13,25]; @symbol_param<0> = [nowMs,38,26,31]; ]
-    function registerChop(nowMs) {
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_38_33_53_4_start:
-[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 39 8 ]
-        [ "_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_38_33_53_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_38_33_53_4_stop" ]
-        %dt.1 = local;
-        symbol [ dt %dt.1 39 12 14 ];
-        %tmp.1 = lgetv %nowMs;
-        symbol [ nowMs %tmp.1 39 17 22 ];
-        symbol [ _lastChopMs %tmp.3 39 25 36 ];
-        %tmp.3 = getv ? :_lastChopMs;
-        %tmp.4 = sub %tmp.1 %tmp.3;
-        lputv %dt.1 %tmp.4;
-        symbol [ dt %dt.1 39 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 40 8 ]
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_40_8_44_8_if_stmt:
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_40_12_40_28_begin:
-        %tmp.5 = lgetv %dt.1;
-        symbol [ dt %tmp.5 40 12 14 ];
-        %tmp.6 = 0;
-        %tmp.7 = gte %tmp.5 %tmp.6;
-        bf %tmp.7 @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_40_8_44_8_if_else_false;
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_40_23_40_28_true:
-        %tmp.8 = lgetv %dt.1;
-        symbol [ dt %tmp.8 40 23 25 ];
-        symbol [ COMBO_WINDOW_MS %tmp.10 40 28 43 ];
-        %tmp.10 = getv ? :COMBO_WINDOW_MS;
-        %tmp.11 = lt %tmp.8 %tmp.10;
-        push %tmp.11;
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_40_23_40_28_end:
-        %tmp.12 = phi [%tmp.7 @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_40_12_40_28_begin] [%tmp.11 @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_40_23_40_28_true] [%tmp.12 @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_40_23_40_28_end];
-        bf %tmp.12 @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_40_8_44_8_if_else_false;
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_40_8_44_8_if_true:
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_40_45_42_8_start:
-[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 41 12 ]
-        symbol [ combo %tmp.14 41 20 25 ];
-        %tmp.14 = getv ? :combo;
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc"; @line = 38; @symbol_functiondef = [registerResult,38,13,27]; @symbol_param<0> = [result,38,28,34]; ]
+    function registerResult(result) {
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_38_36_44_4_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc" 39 8 ]
+        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_38_36_44_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_38_36_44_4_stop" ]
+        %pts.1 = local;
+        symbol [ pts %pts.1 39 12 15 ];
+        %tmp.1 = lgetv %result;
+        symbol [ result %tmp.1 39 18 24 ];
+        %tmp.2 = "payout";
+        %tmp.3 = agetv %tmp.1 %tmp.2;
+        lputv %pts.1 %tmp.3;
+        symbol [ pts %pts.1 39 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc" 40 8 ]
+        symbol [ score %tmp.5 40 16 21 ];
+        %tmp.5 = getv ? :score;
+        %tmp.6 = lgetv %pts.1;
+        symbol [ pts %tmp.6 40 24 27 ];
+        %tmp.7 = add %tmp.5 %tmp.6;
+        symbol [ score ? 40 8 13 ];
+        putv self :score %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc" 41 8 ]
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_41_8_41_68_if_stmt:
+        %tmp.8 = lgetv %result;
+        symbol [ result %tmp.8 41 12 18 ];
+        %tmp.9 = "kind";
+        %tmp.10 = agetv %tmp.8 %tmp.9;
+        %tmp.11 = "JACKPOT";
+        %tmp.12 = eq %tmp.10 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_41_8_41_68_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_41_8_41_68_if_true:
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_41_41_41_68_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc" 41 43 ]
+        symbol [ jackpots %tmp.14 41 54 62 ];
+        %tmp.14 = getv ? :jackpots;
         %tmp.15 = 1;
         %tmp.16 = add %tmp.14 %tmp.15;
-        symbol [ combo ? 41 12 17 ];
-        putv self :combo %tmp.16;
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_40_45_42_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_40_8_44_8_if_end;
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_40_8_44_8_if_else_false:
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_42_15_44_8_start:
-[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 43 12 ]
-        %tmp.17 = 0;
-        symbol [ combo ? 43 12 17 ];
-        putv self :combo %tmp.17;
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_42_15_44_8_stop:
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_40_8_44_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 45 8 ]
-        %tmp.18 = lgetv %nowMs;
-        symbol [ nowMs %tmp.18 45 22 27 ];
-        symbol [ _lastChopMs ? 45 8 19 ];
-        putv self :_lastChopMs %tmp.18;
-[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 47 8 ]
-        [ "_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_38_33_53_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_38_33_53_4_stop" ]
-        %bonus.2 = local;
-        symbol [ bonus %bonus.2 47 12 17 ];
-        symbol [ combo %tmp.20 47 20 25 ];
-        %tmp.20 = getv ? :combo;
-        lputv %bonus.2 %tmp.20;
-        symbol [ bonus %bonus.2 47 12 17 ];
-[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 48 8 ]
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_48_8_48_52_if_stmt:
-        %tmp.21 = lgetv %bonus.2;
-        symbol [ bonus %tmp.21 48 12 17 ];
-        symbol [ COMBO_CAP %tmp.23 48 20 29 ];
-        %tmp.23 = getv ? :COMBO_CAP;
-        %tmp.24 = gt %tmp.21 %tmp.23;
-        bf %tmp.24 @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_48_8_48_52_if_end;
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_48_8_48_52_if_true:
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_48_31_48_52_start:
-[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 48 33 ]
-        symbol [ COMBO_CAP %tmp.26 48 41 50 ];
-        %tmp.26 = getv ? :COMBO_CAP;
-        lputv %bonus.2 %tmp.26;
-        symbol [ bonus %bonus.2 48 33 38 ];
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_48_31_48_52_stop:
-        goto @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_48_8_48_52_if_end;
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_48_8_48_52_if_end:
-[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 49 8 ]
-        [ "_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_38_33_53_4_start" "_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_38_33_53_4_stop" ]
-        %pts.3 = local;
-        symbol [ pts %pts.3 49 12 15 ];
-        %tmp.27 = 1;
-        %tmp.28 = lgetv %bonus.2;
-        symbol [ bonus %tmp.28 49 22 27 ];
-        %tmp.29 = add %tmp.27 %tmp.28;
-        lputv %pts.3 %tmp.29;
-        symbol [ pts %pts.3 49 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 50 8 ]
-        symbol [ score %tmp.31 50 16 21 ];
-        %tmp.31 = getv ? :score;
-        %tmp.32 = lgetv %pts.3;
-        symbol [ pts %tmp.32 50 24 27 ];
-        %tmp.33 = add %tmp.31 %tmp.32;
-        symbol [ score ? 50 8 13 ];
-        putv self :score %tmp.33;
-[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 51 8 ]
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_51_8_51_38_if_stmt:
-        symbol [ score %tmp.35 51 12 17 ];
-        %tmp.35 = getv ? :score;
-        symbol [ hi %tmp.37 51 20 22 ];
-        %tmp.37 = getv ? :hi;
-        %tmp.38 = gt %tmp.35 %tmp.37;
-        bf %tmp.38 @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_51_8_51_38_if_end;
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_51_8_51_38_if_true:
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_51_24_51_38_start:
-[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 51 26 ]
-        symbol [ score %tmp.40 51 31 36 ];
-        %tmp.40 = getv ? :score;
-        symbol [ hi ? 51 26 28 ];
-        putv self :hi %tmp.40;
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_51_24_51_38_stop:
-        goto @_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_51_8_51_38_if_end;
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_51_8_51_38_if_end:
-[ "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc" 52 8 ]
-        %tmp.41 = lgetv %pts.3;
-        symbol [ pts %tmp.41 52 15 18 ];
-        ret %tmp.41;
-_Users_kkorolczuk_work_garmin_drwal_source_ScoreSystem_mc_38_33_53_4_stop:
+        symbol [ jackpots ? 41 43 51 ];
+        putv self :jackpots %tmp.16;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_41_41_41_68_stop:
+        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_41_8_41_68_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_41_8_41_68_if_end:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc" 42 8 ]
+        symbol [ spinsUsed %tmp.18 42 20 29 ];
+        %tmp.18 = getv ? :spinsUsed;
+        %tmp.19 = 1;
+        %tmp.20 = add %tmp.18 %tmp.19;
+        symbol [ spinsUsed ? 42 8 17 ];
+        putv self :spinsUsed %tmp.20;
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc" 43 8 ]
+        %tmp.21 = lgetv %pts.1;
+        symbol [ pts %tmp.21 43 15 18 ];
+        ret %tmp.21;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_38_36_44_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc"; @line = 46; @symbol_functiondef = [spinsLeft,46,13,22]; ]
+    function spinsLeft() {
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_46_25_49_4_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc" 47 8 ]
+        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_46_25_49_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_46_25_49_4_stop" ]
+        %left.1 = local;
+        symbol [ left %left.1 47 12 16 ];
+        symbol [ spinsTotal %tmp.2 47 19 29 ];
+        %tmp.2 = getv ? :spinsTotal;
+        symbol [ spinsUsed %tmp.4 47 32 41 ];
+        %tmp.4 = getv ? :spinsUsed;
+        %tmp.5 = sub %tmp.2 %tmp.4;
+        lputv %left.1 %tmp.5;
+        symbol [ left %left.1 47 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc" 48 8 ]
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_48_15_48_32_begin:
+        %tmp.6 = lgetv %left.1;
+        symbol [ left %tmp.6 48 16 20 ];
+        %tmp.7 = 0;
+        %tmp.8 = lt %tmp.6 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_48_15_48_32_else_false;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_48_15_48_32_true:
+        %tmp.9 = 0;
+        push %tmp.9;
+        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_48_15_48_32_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_48_15_48_32_else_false:
+        %tmp.10 = lgetv %left.1;
+        symbol [ left %tmp.10 48 32 36 ];
+        push %tmp.10;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_48_15_48_32_end:
+        %tmp.11 = phi [%tmp.8 @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_48_15_48_32_begin] [%tmp.9 @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_48_15_48_32_true] [%tmp.10 @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_48_15_48_32_else_false] [%tmp.11 @_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_48_15_48_32_end];
+        ret %tmp.11;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_46_25_49_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc"; @line = 50; @symbol_functiondef = [roundOver,50,13,22]; ]
+    function roundOver() {
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_50_25_50_59_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc" 50 27 ]
+        symbol [ spinsUsed %tmp.2 50 34 43 ];
+        %tmp.2 = getv ? :spinsUsed;
+        symbol [ spinsTotal %tmp.4 50 47 57 ];
+        %tmp.4 = getv ? :spinsTotal;
+        %tmp.5 = gte %tmp.2 %tmp.4;
+        ret %tmp.5;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ScoreSystem_mc_50_25_50_59_stop:
     }
 }
-[ @file = "/Users/kkorolczuk/work/garmin/drwal/source/ScoreSystem.mc"; @line = 4; ]
+[ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ScoreSystem.mc"; @line = 5; ]
 <init> {
 }

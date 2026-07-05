@@ -1,0 +1,713 @@
+[ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc"; @line = 9; @symbol_usingdef<0> = [Toybox,9,6,12]; @symbol_usingdef<1> = [Math,9,13,17]; ]
+using Toybox.Math;
+[ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc"; @line = 11; @position = 6; @symbol_constdef = [REEL_IDLE,11,6,15]; ]
+const REEL_IDLE = 0;
+[ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc"; @line = 12; @position = 6; @symbol_constdef = [REEL_SPINNING,12,6,19]; ]
+const REEL_SPINNING = 1;
+[ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc"; @line = 13; @position = 6; @symbol_constdef = [REEL_DECEL,13,6,16]; ]
+const REEL_DECEL = 2;
+[ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc"; @line = 14; @position = 6; @symbol_constdef = [REEL_STOPPED,14,6,18]; ]
+const REEL_STOPPED = 3;
+[ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc"; @line = 19; @symbol_classdef = [Reel,19,6,10]; ]
+class Reel {
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc"; @line = 19; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc"; @line = 19; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc"; @line = 20; @position = 8; @symbol_vardef = [strip,20,8,13]; ]
+    var strip;
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc"; @line = 21; @position = 8; @symbol_vardef = [position,21,8,16]; ]
+    var position;
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc"; @line = 22; @position = 8; @symbol_vardef = [state,22,8,13]; ]
+    var state;
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc"; @line = 23; @position = 15; @symbol_vardef = [_decelFrom,23,15,25]; ]
+    protected
+    var _decelFrom;
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc"; @line = 24; @position = 15; @symbol_vardef = [_decelTo,24,15,23]; ]
+    protected
+    var _decelTo;
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc"; @line = 25; @position = 15; @symbol_vardef = [_decelT,25,15,22]; ]
+    protected
+    var _decelT;
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc"; @line = 27; @symbol_functiondef = [initialize,27,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_27_26_32_4_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 28 8 ]
+        symbol [ SymbolManager %tmp.2 28 19 32 ];
+        %tmp.2 = getv ? :SymbolManager;
+        symbol [ buildStrip %tmp.3 28 33 43 ];
+        %tmp.3 = getv function %tmp.2 :buildStrip;
+        %tmp.4 = invoke %tmp.2 %tmp.3();
+        symbol [ strip ? 28 8 13 ];
+        putv self :strip %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 29 8 ]
+        %tmp.5 = 0.0;
+        symbol [ position ? 29 8 16 ];
+        putv self :position %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 30 8 ]
+        symbol [ REEL_IDLE %tmp.7 30 19 28 ];
+        %tmp.7 = getv ? :REEL_IDLE;
+        symbol [ state ? 30 8 13 ];
+        putv self :state %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 31 8 ]
+        %tmp.8 = 0.0;
+        symbol [ _decelFrom ? 31 8 18 ];
+        putv self :_decelFrom %tmp.8;
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 31 26 ]
+        %tmp.9 = 0.0;
+        symbol [ _decelTo ? 31 26 34 ];
+        putv self :_decelTo %tmp.9;
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 31 42 ]
+        %tmp.10 = 0;
+        symbol [ _decelT ? 31 42 49 ];
+        putv self :_decelT %tmp.10;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_27_26_32_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc"; @line = 34; @symbol_functiondef = [reset,34,13,18]; ]
+    function reset() {
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_34_21_38_4_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 35 8 ]
+        symbol [ SymbolManager %tmp.2 35 19 32 ];
+        %tmp.2 = getv ? :SymbolManager;
+        symbol [ buildStrip %tmp.3 35 33 43 ];
+        %tmp.3 = getv function %tmp.2 :buildStrip;
+        %tmp.4 = invoke %tmp.2 %tmp.3();
+        symbol [ strip ? 35 8 13 ];
+        putv self :strip %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 36 8 ]
+        symbol [ Math %tmp.5 36 20 24 ];
+        %tmp.5 = getm $.Toybox.Math;
+        symbol [ rand %tmp.6 36 25 29 ];
+        %tmp.6 = getv function %tmp.5 :rand;
+        %tmp.7 = invoke %tmp.5 %tmp.6();
+        symbol [ SymbolManager %tmp.9 36 34 47 ];
+        %tmp.9 = getv ? :SymbolManager;
+        symbol [ STRIP_LEN %tmp.10 36 48 57 ];
+        %tmp.10 = getv %tmp.9 :STRIP_LEN;
+        %tmp.11 = mod %tmp.7 %tmp.10;
+        symbol [ toFloat %tmp.12 36 59 66 ];
+        %tmp.12 = getv function %tmp.11 :toFloat;
+        %tmp.13 = invoke %tmp.11 %tmp.12();
+        symbol [ position ? 36 8 16 ];
+        putv self :position %tmp.13;
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 37 8 ]
+        symbol [ REEL_IDLE %tmp.15 37 19 28 ];
+        %tmp.15 = getv ? :REEL_IDLE;
+        symbol [ state ? 37 8 13 ];
+        putv self :state %tmp.15;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_34_21_38_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc"; @line = 40; @symbol_functiondef = [spin,40,13,17]; ]
+    function spin() {
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_40_20_40_45_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 40 22 ]
+        symbol [ REEL_SPINNING %tmp.2 40 30 43 ];
+        %tmp.2 = getv ? :REEL_SPINNING;
+        symbol [ state ? 40 22 27 ];
+        putv self :state %tmp.2;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_40_20_40_45_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc"; @line = 44; @symbol_functiondef = [symbolAt,44,13,21]; @symbol_param<0> = [rowOffset,44,22,31]; ]
+    function symbolAt(rowOffset) {
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_44_33_49_4_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 45 8 ]
+        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_44_33_49_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_44_33_49_4_stop" ]
+        %n.1 = local;
+        symbol [ n %n.1 45 12 13 ];
+        symbol [ SymbolManager %tmp.2 45 16 29 ];
+        %tmp.2 = getv ? :SymbolManager;
+        symbol [ STRIP_LEN %tmp.3 45 30 39 ];
+        %tmp.3 = getv %tmp.2 :STRIP_LEN;
+        lputv %n.1 %tmp.3;
+        symbol [ n %n.1 45 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 46 8 ]
+        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_44_33_49_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_44_33_49_4_stop" ]
+        %idx.2 = local;
+        symbol [ idx %idx.2 46 12 15 ];
+        symbol [ position %tmp.5 46 19 27 ];
+        %tmp.5 = getv ? :position;
+        symbol [ toNumber %tmp.6 46 28 36 ];
+        %tmp.6 = getv function %tmp.5 :toNumber;
+        %tmp.7 = invoke %tmp.5 %tmp.6();
+        %tmp.8 = lgetv %rowOffset;
+        symbol [ rowOffset %tmp.8 46 41 50 ];
+        %tmp.9 = add %tmp.7 %tmp.8;
+        %tmp.10 = lgetv %n.1;
+        symbol [ n %tmp.10 46 54 55 ];
+        %tmp.11 = mod %tmp.9 %tmp.10;
+        lputv %idx.2 %tmp.11;
+        symbol [ idx %idx.2 46 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 47 8 ]
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_47_8_47_38_if_stmt:
+        %tmp.12 = lgetv %idx.2;
+        symbol [ idx %tmp.12 47 12 15 ];
+        %tmp.13 = 0;
+        %tmp.14 = lt %tmp.12 %tmp.13;
+        bf %tmp.14 @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_47_8_47_38_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_47_8_47_38_if_true:
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_47_21_47_38_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 47 23 ]
+        %tmp.15 = lgetv %idx.2;
+        symbol [ idx %tmp.15 47 29 32 ];
+        %tmp.16 = lgetv %n.1;
+        symbol [ n %tmp.16 47 35 36 ];
+        %tmp.17 = add %tmp.15 %tmp.16;
+        lputv %idx.2 %tmp.17;
+        symbol [ idx %idx.2 47 23 26 ];
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_47_21_47_38_stop:
+        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_47_8_47_38_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_47_8_47_38_if_end:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 48 8 ]
+        symbol [ strip %tmp.19 48 15 20 ];
+        %tmp.19 = getv ? :strip;
+        %tmp.20 = lgetv %idx.2;
+        symbol [ idx %tmp.20 48 21 24 ];
+        %tmp.21 = agetv %tmp.19 %tmp.20;
+        ret %tmp.21;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_44_33_49_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc"; @line = 52; @symbol_functiondef = [scrollFrac,52,13,23]; ]
+    function scrollFrac() {
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_52_26_52_67_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 52 28 ]
+        symbol [ position %tmp.2 52 35 43 ];
+        %tmp.2 = getv ? :position;
+        symbol [ position %tmp.4 52 46 54 ];
+        %tmp.4 = getv ? :position;
+        symbol [ toNumber %tmp.5 52 55 63 ];
+        %tmp.5 = getv function %tmp.4 :toNumber;
+        %tmp.6 = invoke %tmp.4 %tmp.5();
+        %tmp.7 = sub %tmp.2 %tmp.6;
+        ret %tmp.7;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_52_26_52_67_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc"; @line = 54; @symbol_functiondef = [paylineSymbol,54,13,26]; ]
+    function paylineSymbol() {
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_54_29_54_51_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 54 31 ]
+        %tmp.1 = self;
+        symbol [ symbolAt %tmp.2 54 38 46 ];
+        %tmp.2 = getv function %tmp.1 :symbolAt;
+        %tmp.3 = 0;
+        %tmp.4 = invoke %tmp.1 %tmp.2(%tmp.3);
+        ret %tmp.4;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_54_29_54_51_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc"; @line = 59; @symbol_functiondef = [beginStop,59,13,22]; @symbol_param<0> = [forwardSteps,59,23,35]; @symbol_param<1> = [decelTicks,59,37,47]; ]
+    function beginStop(forwardSteps, decelTicks) {
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_59_49_66_4_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 60 8 ]
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_60_8_60_46_if_stmt:
+        symbol [ state %tmp.2 60 12 17 ];
+        %tmp.2 = getv ? :state;
+        symbol [ REEL_SPINNING %tmp.4 60 21 34 ];
+        %tmp.4 = getv ? :REEL_SPINNING;
+        %tmp.5 = ne %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_60_8_60_46_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_60_8_60_46_if_true:
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_60_36_60_46_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 60 38 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_60_36_60_46_stop:
+        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_60_8_60_46_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_60_8_60_46_if_end:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 61 8 ]
+        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_59_49_66_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_59_49_66_4_stop" ]
+        %base.1 = local;
+        symbol [ base %base.1 61 12 16 ];
+        symbol [ position %tmp.7 61 19 27 ];
+        %tmp.7 = getv ? :position;
+        symbol [ toNumber %tmp.8 61 28 36 ];
+        %tmp.8 = getv function %tmp.7 :toNumber;
+        %tmp.9 = invoke %tmp.7 %tmp.8();
+        lputv %base.1 %tmp.9;
+        symbol [ base %base.1 61 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 62 8 ]
+        symbol [ position %tmp.11 62 21 29 ];
+        %tmp.11 = getv ? :position;
+        symbol [ _decelFrom ? 62 8 18 ];
+        putv self :_decelFrom %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 63 8 ]
+        %tmp.12 = lgetv %base.1;
+        symbol [ base %tmp.12 63 22 26 ];
+        %tmp.13 = lgetv %forwardSteps;
+        symbol [ forwardSteps %tmp.13 63 29 41 ];
+        %tmp.14 = add %tmp.12 %tmp.13;
+        symbol [ toFloat %tmp.15 63 43 50 ];
+        %tmp.15 = getv function %tmp.14 :toFloat;
+        %tmp.16 = invoke %tmp.14 %tmp.15();
+        symbol [ _decelTo ? 63 8 16 ];
+        putv self :_decelTo %tmp.16;
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 64 8 ]
+        %tmp.17 = lgetv %decelTicks;
+        symbol [ decelTicks %tmp.17 64 21 31 ];
+        symbol [ _decelT ? 64 8 15 ];
+        putv self :_decelT %tmp.17;
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 65 8 ]
+        symbol [ REEL_DECEL %tmp.19 65 21 31 ];
+        %tmp.19 = getv ? :REEL_DECEL;
+        symbol [ state ? 65 8 13 ];
+        putv self :state %tmp.19;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_59_49_66_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc"; @line = 68; @symbol_functiondef = [step,68,13,17]; @symbol_param<0> = [spinSpeed,68,18,27]; ]
+    function step(spinSpeed) {
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_68_29_85_4_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 69 8 ]
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_69_8_73_8_if_stmt:
+        symbol [ state %tmp.2 69 12 17 ];
+        %tmp.2 = getv ? :state;
+        symbol [ REEL_SPINNING %tmp.4 69 21 34 ];
+        %tmp.4 = getv ? :REEL_SPINNING;
+        %tmp.5 = eq %tmp.2 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_69_8_73_8_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_69_8_73_8_if_true:
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_69_36_73_8_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 70 12 ]
+        symbol [ position %tmp.7 70 23 31 ];
+        %tmp.7 = getv ? :position;
+        %tmp.8 = lgetv %spinSpeed;
+        symbol [ spinSpeed %tmp.8 70 34 43 ];
+        %tmp.9 = add %tmp.7 %tmp.8;
+        symbol [ position ? 70 12 20 ];
+        putv self :position %tmp.9;
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 71 12 ]
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_71_12_71_67_if_stmt:
+        symbol [ position %tmp.11 71 16 24 ];
+        %tmp.11 = getv ? :position;
+        %tmp.12 = 100000;
+        %tmp.13 = gt %tmp.11 %tmp.12;
+        bf %tmp.13 @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_71_12_71_67_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_71_12_71_67_if_true:
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_71_35_71_67_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 71 37 ]
+        symbol [ position %tmp.15 71 48 56 ];
+        %tmp.15 = getv ? :position;
+        %tmp.16 = 100000;
+        %tmp.17 = sub %tmp.15 %tmp.16;
+        symbol [ position ? 71 37 45 ];
+        putv self :position %tmp.17;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_71_35_71_67_stop:
+        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_71_12_71_67_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_71_12_71_67_if_end:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 72 12 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_69_36_73_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_69_8_73_8_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_69_8_73_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 74 8 ]
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_74_8_84_8_if_stmt:
+        symbol [ state %tmp.19 74 12 17 ];
+        %tmp.19 = getv ? :state;
+        symbol [ REEL_DECEL %tmp.21 74 21 31 ];
+        %tmp.21 = getv ? :REEL_DECEL;
+        %tmp.22 = eq %tmp.19 %tmp.21;
+        bf %tmp.22 @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_74_8_84_8_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_74_8_84_8_if_true:
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_74_33_84_8_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 75 12 ]
+        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_74_33_84_8_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_74_33_84_8_stop" ]
+        %total.1 = local;
+        symbol [ total %total.1 75 16 21 ];
+        symbol [ SLOT_DECEL_TICKS %tmp.24 75 24 40 ];
+        %tmp.24 = getv ? :SLOT_DECEL_TICKS;
+        lputv %total.1 %tmp.24;
+        symbol [ total %total.1 75 16 21 ];
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 76 12 ]
+        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_74_33_84_8_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_74_33_84_8_stop" ]
+        %t.2 = local;
+        symbol [ t %t.2 76 16 17 ];
+        %tmp.25 = lgetv %total.1;
+        symbol [ total %tmp.25 76 21 26 ];
+        symbol [ _decelT %tmp.27 76 29 36 ];
+        %tmp.27 = getv ? :_decelT;
+        %tmp.28 = sub %tmp.25 %tmp.27;
+        symbol [ toFloat %tmp.29 76 38 45 ];
+        %tmp.29 = getv function %tmp.28 :toFloat;
+        %tmp.30 = invoke %tmp.28 %tmp.29();
+        %tmp.31 = lgetv %total.1;
+        symbol [ total %tmp.31 76 50 55 ];
+        %tmp.32 = div %tmp.30 %tmp.31;
+        lputv %t.2 %tmp.32;
+        symbol [ t %t.2 76 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 77 12 ]
+        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_74_33_84_8_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_74_33_84_8_stop" ]
+        %eased.3 = local;
+        symbol [ eased %eased.3 77 16 21 ];
+        %tmp.33 = 1.0;
+        %tmp.34 = 1.0;
+        %tmp.35 = lgetv %t.2;
+        symbol [ t %tmp.35 77 37 38 ];
+        %tmp.36 = sub %tmp.34 %tmp.35;
+        %tmp.37 = 1.0;
+        %tmp.38 = lgetv %t.2;
+        symbol [ t %tmp.38 77 49 50 ];
+        %tmp.39 = sub %tmp.37 %tmp.38;
+        %tmp.40 = mul %tmp.36 %tmp.39;
+        %tmp.41 = sub %tmp.33 %tmp.40;
+        lputv %eased.3 %tmp.41;
+        symbol [ eased %eased.3 77 16 21 ];
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 78 12 ]
+        symbol [ _decelFrom %tmp.43 78 23 33 ];
+        %tmp.43 = getv ? :_decelFrom;
+        symbol [ _decelTo %tmp.45 78 37 45 ];
+        %tmp.45 = getv ? :_decelTo;
+        symbol [ _decelFrom %tmp.47 78 48 58 ];
+        %tmp.47 = getv ? :_decelFrom;
+        %tmp.48 = sub %tmp.45 %tmp.47;
+        %tmp.49 = lgetv %eased.3;
+        symbol [ eased %tmp.49 78 62 67 ];
+        %tmp.50 = mul %tmp.48 %tmp.49;
+        %tmp.51 = add %tmp.43 %tmp.50;
+        symbol [ position ? 78 12 20 ];
+        putv self :position %tmp.51;
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 79 12 ]
+        symbol [ _decelT %tmp.53 79 22 29 ];
+        %tmp.53 = getv ? :_decelT;
+        %tmp.54 = 1;
+        %tmp.55 = sub %tmp.53 %tmp.54;
+        symbol [ _decelT ? 79 12 19 ];
+        putv self :_decelT %tmp.55;
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 80 12 ]
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_80_12_83_12_if_stmt:
+        symbol [ _decelT %tmp.57 80 16 23 ];
+        %tmp.57 = getv ? :_decelT;
+        %tmp.58 = 0;
+        %tmp.59 = lte %tmp.57 %tmp.58;
+        bf %tmp.59 @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_80_12_83_12_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_80_12_83_12_if_true:
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_80_30_83_12_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 81 16 ]
+        symbol [ _decelTo %tmp.61 81 27 35 ];
+        %tmp.61 = getv ? :_decelTo;
+        symbol [ position ? 81 16 24 ];
+        putv self :position %tmp.61;
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 82 16 ]
+        symbol [ REEL_STOPPED %tmp.63 82 24 36 ];
+        %tmp.63 = getv ? :REEL_STOPPED;
+        symbol [ state ? 82 16 21 ];
+        putv self :state %tmp.63;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_80_30_83_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_80_12_83_12_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_80_12_83_12_if_end:
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_74_33_84_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_74_8_84_8_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_74_8_84_8_if_end:
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_68_29_85_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc"; @line = 89; @symbol_classdef = [ReelSystem,89,6,16]; ]
+class ReelSystem {
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc"; @line = 89; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc"; @line = 89; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc"; @line = 90; @position = 8; @symbol_vardef = [reels,90,8,13]; ]
+    var reels;
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc"; @line = 92; @symbol_functiondef = [initialize,92,13,23]; ]
+    function initialize() as Void {
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_92_26_94_4_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 93 8 ]
+        %tmp.1 = newa 3;
+        symbol [ Reel %tmp.5 93 21 25 ];
+        %tmp.5 = getv ? :Reel;
+        %tmp.2 = newc %tmp.5 ();
+        %tmp.6 = dup %tmp.1;
+        %tmp.7 = aputv %tmp.6 0 %tmp.2;
+        symbol [ Reel %tmp.11 93 33 37 ];
+        %tmp.11 = getv ? :Reel;
+        %tmp.8 = newc %tmp.11 ();
+        %tmp.12 = dup %tmp.7;
+        %tmp.13 = aputv %tmp.12 1 %tmp.8;
+        symbol [ Reel %tmp.17 93 45 49 ];
+        %tmp.17 = getv ? :Reel;
+        %tmp.14 = newc %tmp.17 ();
+        %tmp.18 = dup %tmp.13;
+        %tmp.19 = aputv %tmp.18 2 %tmp.14;
+        symbol [ reels ? 93 8 13 ];
+        putv self :reels %tmp.19;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_92_26_94_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc"; @line = 96; @symbol_functiondef = [reset,96,13,18]; ]
+    function reset() {
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_96_21_98_4_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 97 8 ]
+        for @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_97_8_97_56_for_test @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_97_8_97_56_for_incr @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_97_8_97_56_for_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_97_8_97_56_for_init:
+        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_97_8_97_56_for_begin" "_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_97_8_97_56_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 97 17 18 ];
+        %tmp.1 = 0;
+        lputv %i.1 %tmp.1;
+        symbol [ i %i.1 97 17 18 ];
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_97_8_97_56_for_test:
+        %tmp.2 = lgetv %i.1;
+        symbol [ i %tmp.2 97 24 25 ];
+        %tmp.3 = 3;
+        %tmp.4 = lt %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_97_8_97_56_for_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_97_8_97_56_for_begin:
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_97_36_97_56_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 97 38 ]
+        symbol [ reels %tmp.6 97 38 43 ];
+        %tmp.6 = getv ? :reels;
+        %tmp.7 = lgetv %i.1;
+        symbol [ i %tmp.7 97 44 45 ];
+        %tmp.8 = agetv %tmp.6 %tmp.7;
+        symbol [ reset %tmp.9 97 47 52 ];
+        %tmp.9 = getv function %tmp.8 :reset;
+        invoke %tmp.8 %tmp.9();
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_97_36_97_56_stop:
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_97_8_97_56_for_incr:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 97 ]
+        %tmp.12 = lgetv %i.1;
+        symbol [ i %tmp.12 97 31 32 ];
+        %tmp.13 = add %tmp.12 1;
+        lputv %i.1 %tmp.13;
+        symbol [ i %i.1 97 31 32 ];
+        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_97_8_97_56_for_test;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_97_8_97_56_for_end:
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_96_21_98_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc"; @line = 100; @symbol_functiondef = [spinAll,100,13,20]; ]
+    function spinAll() {
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_100_23_102_4_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 101 8 ]
+        for @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_101_8_101_55_for_test @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_101_8_101_55_for_incr @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_101_8_101_55_for_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_101_8_101_55_for_init:
+        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_101_8_101_55_for_begin" "_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_101_8_101_55_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 101 17 18 ];
+        %tmp.1 = 0;
+        lputv %i.1 %tmp.1;
+        symbol [ i %i.1 101 17 18 ];
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_101_8_101_55_for_test:
+        %tmp.2 = lgetv %i.1;
+        symbol [ i %tmp.2 101 24 25 ];
+        %tmp.3 = 3;
+        %tmp.4 = lt %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_101_8_101_55_for_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_101_8_101_55_for_begin:
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_101_36_101_55_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 101 38 ]
+        symbol [ reels %tmp.6 101 38 43 ];
+        %tmp.6 = getv ? :reels;
+        %tmp.7 = lgetv %i.1;
+        symbol [ i %tmp.7 101 44 45 ];
+        %tmp.8 = agetv %tmp.6 %tmp.7;
+        symbol [ spin %tmp.9 101 47 51 ];
+        %tmp.9 = getv function %tmp.8 :spin;
+        invoke %tmp.8 %tmp.9();
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_101_36_101_55_stop:
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_101_8_101_55_for_incr:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 101 ]
+        %tmp.12 = lgetv %i.1;
+        symbol [ i %tmp.12 101 31 32 ];
+        %tmp.13 = add %tmp.12 1;
+        lputv %i.1 %tmp.13;
+        symbol [ i %i.1 101 31 32 ];
+        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_101_8_101_55_for_test;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_101_8_101_55_for_end:
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_100_23_102_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc"; @line = 104; @symbol_functiondef = [step,104,13,17]; ]
+    function step() {
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_104_20_106_4_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 105 8 ]
+        for @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_105_8_105_70_for_test @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_105_8_105_70_for_incr @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_105_8_105_70_for_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_105_8_105_70_for_init:
+        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_105_8_105_70_for_begin" "_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_105_8_105_70_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 105 17 18 ];
+        %tmp.1 = 0;
+        lputv %i.1 %tmp.1;
+        symbol [ i %i.1 105 17 18 ];
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_105_8_105_70_for_test:
+        %tmp.2 = lgetv %i.1;
+        symbol [ i %tmp.2 105 24 25 ];
+        %tmp.3 = 3;
+        %tmp.4 = lt %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_105_8_105_70_for_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_105_8_105_70_for_begin:
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_105_36_105_70_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 105 38 ]
+        symbol [ reels %tmp.6 105 38 43 ];
+        %tmp.6 = getv ? :reels;
+        %tmp.7 = lgetv %i.1;
+        symbol [ i %tmp.7 105 44 45 ];
+        %tmp.8 = agetv %tmp.6 %tmp.7;
+        symbol [ step %tmp.9 105 47 51 ];
+        %tmp.9 = getv function %tmp.8 :step;
+        symbol [ SLOT_SPIN_SPEED %tmp.11 105 52 67 ];
+        %tmp.11 = getv ? :SLOT_SPIN_SPEED;
+        invoke %tmp.8 %tmp.9(%tmp.11);
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_105_36_105_70_stop:
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_105_8_105_70_for_incr:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 105 ]
+        %tmp.14 = lgetv %i.1;
+        symbol [ i %tmp.14 105 31 32 ];
+        %tmp.15 = add %tmp.14 1;
+        lputv %i.1 %tmp.15;
+        symbol [ i %i.1 105 31 32 ];
+        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_105_8_105_70_for_test;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_105_8_105_70_for_end:
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_104_20_106_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc"; @line = 108; @symbol_functiondef = [allStopped,108,13,23]; ]
+    function allStopped() {
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_108_26_113_4_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 109 8 ]
+        for @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_109_8_111_8_for_test @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_109_8_111_8_for_incr @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_109_8_111_8_for_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_109_8_111_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_109_8_111_8_for_begin" "_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_109_8_111_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 109 17 18 ];
+        %tmp.1 = 0;
+        lputv %i.1 %tmp.1;
+        symbol [ i %i.1 109 17 18 ];
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_109_8_111_8_for_test:
+        %tmp.2 = lgetv %i.1;
+        symbol [ i %tmp.2 109 24 25 ];
+        %tmp.3 = 3;
+        %tmp.4 = lt %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_109_8_111_8_for_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_109_8_111_8_for_begin:
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_109_36_111_8_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 110 12 ]
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_110_12_110_64_if_stmt:
+        symbol [ reels %tmp.6 110 16 21 ];
+        %tmp.6 = getv ? :reels;
+        %tmp.7 = lgetv %i.1;
+        symbol [ i %tmp.7 110 22 23 ];
+        %tmp.8 = agetv %tmp.6 %tmp.7;
+        symbol [ state %tmp.9 110 25 30 ];
+        %tmp.9 = getv %tmp.8 :state;
+        symbol [ REEL_STOPPED %tmp.11 110 34 46 ];
+        %tmp.11 = getv ? :REEL_STOPPED;
+        %tmp.12 = ne %tmp.9 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_110_12_110_64_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_110_12_110_64_if_true:
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_110_48_110_64_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 110 50 ]
+        %tmp.13 = false;
+        ret %tmp.13;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_110_48_110_64_stop:
+        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_110_12_110_64_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_110_12_110_64_if_end:
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_109_36_111_8_stop:
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_109_8_111_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 109 ]
+        %tmp.16 = lgetv %i.1;
+        symbol [ i %tmp.16 109 31 32 ];
+        %tmp.17 = add %tmp.16 1;
+        lputv %i.1 %tmp.17;
+        symbol [ i %i.1 109 31 32 ];
+        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_109_8_111_8_for_test;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_109_8_111_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 112 8 ]
+        %tmp.18 = true;
+        ret %tmp.18;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_108_26_113_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc"; @line = 117; @symbol_functiondef = [nextSpinningIndex,117,13,30]; ]
+    function nextSpinningIndex() {
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_117_33_122_4_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 118 8 ]
+        for @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_118_8_120_8_for_test @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_118_8_120_8_for_incr @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_118_8_120_8_for_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_118_8_120_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_118_8_120_8_for_begin" "_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_118_8_120_8_for_end" ]
+        %i.1 = local;
+        symbol [ i %i.1 118 17 18 ];
+        %tmp.1 = 0;
+        lputv %i.1 %tmp.1;
+        symbol [ i %i.1 118 17 18 ];
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_118_8_120_8_for_test:
+        %tmp.2 = lgetv %i.1;
+        symbol [ i %tmp.2 118 24 25 ];
+        %tmp.3 = 3;
+        %tmp.4 = lt %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_118_8_120_8_for_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_118_8_120_8_for_begin:
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_118_36_120_8_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 119 12 ]
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_119_12_119_61_if_stmt:
+        symbol [ reels %tmp.6 119 16 21 ];
+        %tmp.6 = getv ? :reels;
+        %tmp.7 = lgetv %i.1;
+        symbol [ i %tmp.7 119 22 23 ];
+        %tmp.8 = agetv %tmp.6 %tmp.7;
+        symbol [ state %tmp.9 119 25 30 ];
+        %tmp.9 = getv %tmp.8 :state;
+        symbol [ REEL_SPINNING %tmp.11 119 34 47 ];
+        %tmp.11 = getv ? :REEL_SPINNING;
+        %tmp.12 = eq %tmp.9 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_119_12_119_61_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_119_12_119_61_if_true:
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_119_49_119_61_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 119 51 ]
+        %tmp.13 = lgetv %i.1;
+        symbol [ i %tmp.13 119 58 59 ];
+        ret %tmp.13;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_119_49_119_61_stop:
+        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_119_12_119_61_if_end;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_119_12_119_61_if_end:
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_118_36_120_8_stop:
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_118_8_120_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 118 ]
+        %tmp.16 = lgetv %i.1;
+        symbol [ i %tmp.16 118 31 32 ];
+        %tmp.17 = add %tmp.16 1;
+        lputv %i.1 %tmp.17;
+        symbol [ i %i.1 118 31 32 ];
+        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_118_8_120_8_for_test;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_118_8_120_8_for_end:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 121 8 ]
+        %tmp.18 = -1;
+        ret %tmp.18;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_117_33_122_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc"; @line = 124; @symbol_functiondef = [paylineSymbols,124,13,27]; ]
+    function paylineSymbols() {
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_124_30_126_4_start:
+[ "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc" 125 8 ]
+        %tmp.1 = newa 3;
+        symbol [ reels %tmp.3 125 16 21 ];
+        %tmp.3 = getv ? :reels;
+        %tmp.4 = 0;
+        %tmp.5 = agetv %tmp.3 %tmp.4;
+        symbol [ paylineSymbol %tmp.6 125 25 38 ];
+        %tmp.6 = getv function %tmp.5 :paylineSymbol;
+        %tmp.7 = invoke %tmp.5 %tmp.6();
+        %tmp.8 = dup %tmp.1;
+        %tmp.9 = aputv %tmp.8 0 %tmp.7;
+        symbol [ reels %tmp.11 125 42 47 ];
+        %tmp.11 = getv ? :reels;
+        %tmp.12 = 1;
+        %tmp.13 = agetv %tmp.11 %tmp.12;
+        symbol [ paylineSymbol %tmp.14 125 51 64 ];
+        %tmp.14 = getv function %tmp.13 :paylineSymbol;
+        %tmp.15 = invoke %tmp.13 %tmp.14();
+        %tmp.16 = dup %tmp.9;
+        %tmp.17 = aputv %tmp.16 1 %tmp.15;
+        symbol [ reels %tmp.19 125 68 73 ];
+        %tmp.19 = getv ? :reels;
+        %tmp.20 = 2;
+        %tmp.21 = agetv %tmp.19 %tmp.20;
+        symbol [ paylineSymbol %tmp.22 125 77 90 ];
+        %tmp.22 = getv function %tmp.21 :paylineSymbol;
+        %tmp.23 = invoke %tmp.21 %tmp.22();
+        %tmp.24 = dup %tmp.17;
+        %tmp.25 = aputv %tmp.24 2 %tmp.23;
+        ret %tmp.25;
+_Users_kkorolczuk_work_garmin_slotbandit_source_ReelSystem_mc_124_30_126_4_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/ReelSystem.mc"; @line = 9; ]
+<init> {
+}

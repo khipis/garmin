@@ -123,3 +123,53 @@ CREATE TABLE IF NOT EXISTS hall_of_fame (
 );
 
 CREATE INDEX IF NOT EXISTS idx_hof_game ON hall_of_fame (game, variant, added_at DESC);
+
+-- ── Custom messages / announcements ───────────────────────────────────────────
+-- Configurable in-app messages the games fetch on launch and show at defined
+-- moments (pre-game / post-game / after a leaderboard reset). Owner-editable
+-- from stats.html, no app rebuild needed.
+--   scope     'global' (all games) | 'game' (only the given game id)
+--   placement 'launch' | 'postgame' | 'reset'  — when the client shows it
+--   weight    higher wins when several messages match the same placement
+--             (a game-scoped message always beats a global one for that game)
+--   min_gap_s client-side throttle: don't re-show sooner than this many seconds
+--   active    0 disables without deleting
+--   starts_at / ends_at  optional unix-ms window (NULL = always)
+-- Migration (run once on existing DB): the CREATE TABLE below is idempotent.
+CREATE TABLE IF NOT EXISTS messages (
+  id         INTEGER PRIMARY KEY AUTOINCREMENT,
+  scope      TEXT    NOT NULL DEFAULT 'global',   -- 'global' | 'game'
+  game       TEXT,                                -- NULL for global scope
+  placement  TEXT    NOT NULL DEFAULT 'postgame', -- 'launch' | 'postgame' | 'reset'
+  title      TEXT    NOT NULL,
+  body       TEXT    NOT NULL DEFAULT '',
+  url        TEXT,                                -- optional link opened on the phone
+  url_label  TEXT,                                -- e.g. "Buy me a coffee"
+  weight     INTEGER NOT NULL DEFAULT 0,
+  min_gap_s  INTEGER NOT NULL DEFAULT 21600,      -- 6 h default throttle
+  active     INTEGER NOT NULL DEFAULT 1,
+  starts_at  INTEGER,                             -- unix ms, optional
+  ends_at    INTEGER,                             -- unix ms, optional
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_messages_lookup
+  ON messages (active, placement, scope, game);
+
+-- ── Reset log ─────────────────────────────────────────────────────────────────
+-- One row per leaderboard reset (written by POST /reset). Games compare the
+-- latest applicable reset timestamp against a locally-stored "acknowledged"
+-- value to detect "the board was wiped since I last played" and show the
+-- configured 'reset' re-engagement message once.
+--   game NULL = a global (all-games) reset; otherwise a single-game reset.
+-- Migration (run once on existing DB):
+--   CREATE TABLE IF NOT EXISTS resets (id INTEGER PRIMARY KEY AUTOINCREMENT, game TEXT, at INTEGER NOT NULL);
+--   CREATE INDEX IF NOT EXISTS idx_resets_game ON resets (game, at DESC);
+CREATE TABLE IF NOT EXISTS resets (
+  id   INTEGER PRIMARY KEY AUTOINCREMENT,
+  game TEXT,                -- NULL = global reset (affects every game)
+  at   INTEGER NOT NULL     -- unix ms
+);
+
+CREATE INDEX IF NOT EXISTS idx_resets_game ON resets (game, at DESC);

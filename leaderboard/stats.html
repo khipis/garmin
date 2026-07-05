@@ -47,6 +47,22 @@
     cursor: pointer; max-width: 180px;
   }
   .hsel:hover, .hsel:focus { border-color: var(--accent); outline: none; }
+  /* ── Message editor form ─────────────────────────────────────────────────── */
+  .mform { background: var(--card); border: 1px solid var(--border);
+           border-radius: 10px; padding: 14px; margin-bottom: 18px; }
+  .mgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 14px; }
+  .mgrid label { display: flex; flex-direction: column; gap: 4px;
+                 font-size: .68rem; color: var(--muted); text-transform: uppercase;
+                 letter-spacing: .04em; }
+  .mgrid label .muted { text-transform: none; letter-spacing: 0; }
+  .mspan2 { grid-column: 1 / span 2; }
+  .mcheck { flex-direction: row !important; align-items: center; gap: 8px !important;
+            text-transform: none; color: var(--text); font-size: .8rem; }
+  .minput { background: var(--bg); border: 1px solid var(--border); color: var(--text);
+            border-radius: 7px; padding: 6px 8px; font-size: .8rem; font-family: inherit; }
+  .minput:focus { border-color: var(--accent); outline: none; }
+  textarea.minput { resize: vertical; }
+  @media (max-width: 620px) { .mgrid { grid-template-columns: 1fr; } .mspan2 { grid-column: 1; } }
 
   /* ── Layout ─────────────────────────────────────────────────────────────── */
   .layout { display: flex; height: calc(100vh - 54px); }
@@ -372,6 +388,66 @@
         </button>
       </div>
       <div id="hof-admin-list"><div class="state"><div class="spinner"></div>Loading…</div></div>
+
+      <div class="sh"><span class="sh-title">✉️ Messages — in-app announcements</span><span class="sh-line"></span>
+        <select class="hsel" id="msg-filter" onchange="renderMessages()" style="display:none"></select>
+        <button class="hbtn" onclick="loadMessages()" style="margin-left:8px;font-size:.7rem;padding:3px 8px">↺</button>
+        <button class="hbtn" onclick="showMsgForm()" id="msg-add-btn"
+          style="margin-left:6px;font-size:.7rem;padding:3px 8px;background:#0a1a2a;border-color:var(--accent);color:var(--accent)">
+          ➕ Add message
+        </button>
+      </div>
+
+      <!-- Add / edit form (hidden until "Add" or "Edit") -->
+      <div id="msg-form" class="mform" style="display:none">
+        <input type="hidden" id="mf-id">
+        <div class="mgrid">
+          <label>Scope
+            <select class="minput" id="mf-scope" onchange="msgFormScopeChanged()">
+              <option value="global">Global (all games)</option>
+              <option value="game">Single game</option>
+            </select>
+          </label>
+          <label>Game id <span class="muted" id="mf-game-req" style="display:none">*</span>
+            <input class="minput" id="mf-game" placeholder="e.g. slotbandit" autocomplete="off">
+          </label>
+          <label>Placement
+            <select class="minput" id="mf-placement">
+              <option value="postgame">Post-game (after a run)</option>
+              <option value="launch">Launch (menu / pre-game)</option>
+              <option value="reset">Reset (after a wipe)</option>
+            </select>
+          </label>
+          <label>Weight <span class="muted">(higher wins)</span>
+            <input class="minput" id="mf-weight" type="number" value="0">
+          </label>
+          <label>Title <span class="muted">(max 60)</span>
+            <input class="minput" id="mf-title" maxlength="60" placeholder="Enjoying Bitochi?">
+          </label>
+          <label>Min gap <span class="muted">(hours between shows)</span>
+            <input class="minput" id="mf-gap" type="number" value="12" step="0.5">
+          </label>
+          <label class="mspan2">Body <span class="muted">(max 200)</span>
+            <textarea class="minput" id="mf-body" maxlength="200" rows="2"
+              placeholder="Short, friendly message shown on the watch…"></textarea>
+          </label>
+          <label>Link URL <span class="muted">(optional, opens on phone)</span>
+            <input class="minput" id="mf-url" placeholder="https://buymeacoffee.com/bitochi">
+          </label>
+          <label>Link label <span class="muted">(optional)</span>
+            <input class="minput" id="mf-urllabel" maxlength="40" placeholder="Buy me a coffee">
+          </label>
+          <label class="mcheck"><input type="checkbox" id="mf-active" checked> Active</label>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button class="hbtn" id="mf-save" onclick="saveMessage()"
+            style="background:#0d2a1a;border-color:var(--green);color:var(--green)">💾 Save</button>
+          <button class="hbtn" onclick="hideMsgForm()">Cancel</button>
+          <span id="mf-status" class="muted" style="align-self:center"></span>
+        </div>
+      </div>
+
+      <div id="msg-list"><div class="state"><div class="spinner"></div>Loading…</div></div>
     </div>
 
     <!-- Leaderboard panel (per game) -->
@@ -683,6 +759,7 @@ loadLaunches();
 loadErrors();
 loadSnapshots();
 loadHofAdmin();
+loadMessages();
 
 // ── Game launches (independent of the scores table) ────────────────────────────
 async function loadLaunches() {
@@ -1093,6 +1170,173 @@ async function promoteAllToHoF() {
     }
   } catch(e) { btn.textContent = '❌ Network error'; }
   setTimeout(() => { btn.textContent = '👑 Promote all leaders'; btn.disabled = false; }, 4000);
+}
+
+// ── Messages / announcements admin ──────────────────────────────────────────
+// Fetches every configured message (GET /messages?all=1), lists them filtered
+// by scope, and drives an inline add/edit form. LB_KEY is cached in
+// sessionStorage after the first prompt so a batch of edits isn't re-prompted.
+let msgEntries = [];
+const PLACEMENT_LABEL = { launch: 'Launch', postgame: 'Post-game', reset: 'Reset' };
+
+function lbKey(reason) {
+  let k = sessionStorage.getItem('lb_key');
+  if (k) return k;
+  k = prompt(reason || 'Enter LB_KEY:');
+  if (k) sessionStorage.setItem('lb_key', k);
+  return k;
+}
+
+async function loadMessages() {
+  const el  = document.getElementById('msg-list');
+  const sel = document.getElementById('msg-filter');
+  const prev = sel.value;
+  el.innerHTML = '<div class="state"><div class="spinner"></div>Loading…</div>';
+  sel.style.display = 'none';
+  try {
+    const d = await fetch(API + '/messages?all=1', { cache: 'no-store' }).then(r => r.json());
+    msgEntries = d.messages || [];
+    if (!msgEntries.length) {
+      el.innerHTML = '<div class="state">No messages configured yet. Use "➕ Add message" (or run seed-messages.sql).</div>';
+      return;
+    }
+    sel.style.display = '';
+    sel.innerHTML = `<option value="">All (${msgEntries.length})</option>` +
+      `<option value="global">Global only</option>` +
+      `<option value="game">Per-game only</option>`;
+    if (prev) sel.value = prev;
+    renderMessages();
+  } catch(e) {
+    el.innerHTML = `<div class="state">⚠️ ${esc(String(e))}</div>`;
+  }
+}
+
+function renderMessages() {
+  const el  = document.getElementById('msg-list');
+  const flt = document.getElementById('msg-filter').value;
+  let rows = msgEntries;
+  if (flt) rows = rows.filter(m => m.scope === flt);
+
+  el.innerHTML = `<div style="overflow-x:auto"><table>
+    <thead><tr>
+      <th>Scope</th><th>Placement</th><th>Title</th><th>Link</th>
+      <th>Wt</th><th>Gap</th><th>On</th><th></th>
+    </tr></thead>
+    <tbody>${rows.map(m => {
+      const scope = m.scope === 'game'
+        ? `<b>${esc(m.game || '?')}</b>`
+        : `<span class="muted">global</span>`;
+      const gapH = m.min_gap_s ? (m.min_gap_s / 3600) : 0;
+      const gap  = m.placement === 'reset' ? '—' : (gapH % 1 ? gapH.toFixed(1) : gapH) + 'h';
+      const link = m.url ? `<span class="muted" title="${esc(m.url)}">${esc(m.url_label || 'link')}</span>` : '<span class="muted">—</span>';
+      return `<tr style="${m.active ? '' : 'opacity:.45'}">
+        <td>${scope}</td>
+        <td class="muted">${PLACEMENT_LABEL[m.placement] || m.placement}</td>
+        <td>${esc(m.title)}<div class="muted" style="font-size:.7rem">${esc(m.body || '')}</div></td>
+        <td>${link}</td>
+        <td class="muted">${m.weight || 0}</td>
+        <td class="muted">${gap}</td>
+        <td>${m.active ? '✅' : '⏸'}</td>
+        <td style="white-space:nowrap">
+          <button class="hbtn" style="padding:2px 8px;font-size:.68rem" onclick="editMessage(${m.id})">✎</button>
+          <button class="hbtn" style="padding:2px 8px;font-size:.68rem;color:#f87171;border-color:#f87171" onclick="deleteMessage(${m.id})">✕</button>
+        </td>
+      </tr>`;
+    }).join('')}</tbody>
+  </table></div>`;
+}
+
+function msgFormScopeChanged() {
+  const isGame = document.getElementById('mf-scope').value === 'game';
+  document.getElementById('mf-game-req').style.display = isGame ? '' : 'none';
+  document.getElementById('mf-game').disabled = !isGame;
+}
+
+function showMsgForm(m) {
+  const f = document.getElementById('msg-form');
+  f.style.display = '';
+  document.getElementById('mf-status').textContent = '';
+  document.getElementById('mf-id').value        = m ? m.id : '';
+  document.getElementById('mf-scope').value      = m ? m.scope : 'global';
+  document.getElementById('mf-game').value       = m ? (m.game || '') : '';
+  document.getElementById('mf-placement').value  = m ? m.placement : 'postgame';
+  document.getElementById('mf-weight').value     = m ? (m.weight || 0) : 0;
+  document.getElementById('mf-title').value      = m ? m.title : '';
+  document.getElementById('mf-gap').value        = m ? ((m.min_gap_s || 0) / 3600) : 12;
+  document.getElementById('mf-body').value       = m ? (m.body || '') : '';
+  document.getElementById('mf-url').value        = m ? (m.url || '') : '';
+  document.getElementById('mf-urllabel').value   = m ? (m.url_label || '') : '';
+  document.getElementById('mf-active').checked   = m ? !!m.active : true;
+  msgFormScopeChanged();
+  f.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function hideMsgForm() { document.getElementById('msg-form').style.display = 'none'; }
+
+function editMessage(id) {
+  const m = msgEntries.find(x => x.id === id);
+  if (m) showMsgForm(m);
+}
+
+async function saveMessage() {
+  const scope = document.getElementById('mf-scope').value;
+  const game  = document.getElementById('mf-game').value.trim();
+  const title = document.getElementById('mf-title').value.trim();
+  const status = document.getElementById('mf-status');
+  if (!title) { status.textContent = '⚠️ Title required'; return; }
+  if (scope === 'game' && !game) { status.textContent = '⚠️ Game id required'; return; }
+
+  const gapH = parseFloat(document.getElementById('mf-gap').value);
+  const body = {
+    scope,
+    game: scope === 'game' ? game : null,
+    placement: document.getElementById('mf-placement').value,
+    title,
+    body: document.getElementById('mf-body').value,
+    url: document.getElementById('mf-url').value.trim() || null,
+    url_label: document.getElementById('mf-urllabel').value.trim() || null,
+    weight: parseInt(document.getElementById('mf-weight').value, 10) || 0,
+    min_gap_s: Math.round((isNaN(gapH) ? 12 : gapH) * 3600),
+    active: document.getElementById('mf-active').checked,
+  };
+  const idVal = document.getElementById('mf-id').value;
+  if (idVal) body.id = parseInt(idVal, 10);
+
+  const key = lbKey('Enter LB_KEY to save the message:');
+  if (!key) return;
+  status.textContent = '⏳ Saving…';
+  try {
+    const r = await fetch(API + '/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-LB-Key': key },
+      body: JSON.stringify(body),
+    });
+    const d = await r.json();
+    if (d.ok) { status.textContent = '✅ Saved'; hideMsgForm(); loadMessages(); }
+    else {
+      status.textContent = '❌ ' + (d.error || 'Error');
+      if (r.status === 403) sessionStorage.removeItem('lb_key');
+    }
+  } catch(e) { status.textContent = '❌ Network error'; }
+}
+
+async function deleteMessage(id) {
+  if (!confirm(`Delete message #${id}?`)) return;
+  const key = lbKey('Enter LB_KEY to delete the message:');
+  if (!key) return;
+  try {
+    const r = await fetch(API + '/messages', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json', 'X-LB-Key': key },
+      body: JSON.stringify({ id }),
+    });
+    const d = await r.json();
+    if (d.ok) loadMessages();
+    else {
+      alert('Error: ' + (d.error || 'unknown'));
+      if (r.status === 403) sessionStorage.removeItem('lb_key');
+    }
+  } catch(e) { alert('Network error: ' + e); }
 }
 </script>
 </body>

@@ -890,40 +890,6 @@ class GameView extends WatchUi.View {
         }
     }
 
-    // Full negamax with alpha-beta for 3×3 boards only.
-    // Positive score = good for 'mark'. Called after placing mark on board.
-    // Safe: max tree depth 7 (8 cells remain), alpha-beta prunes heavily.
-    hidden function _negamax3(mark, opp, alpha, beta) {
-        var move = _findThreat(mark);
-        if (move >= 0) {
-            _cells[move] = mark; _moveCount = _moveCount + 1;
-            _cells[move] = MARK_NONE; _moveCount = _moveCount - 1;
-            return 900;  // opponent already won last move? shouldn't reach here
-        }
-        if (_moveCount == _gridN * _gridN) { return 0; }
-        var best = -9999; var i = 0;
-        while (i < 9) {
-            if (_cells[i] == MARK_NONE) {
-                var ix = i % _gridN; var iy = i / _gridN;
-                _cells[i] = mark; _moveCount = _moveCount + 1;
-                var sc;
-                if (_checkWinAt(mark, ix, iy)) {
-                    sc = 900 - _moveCount;
-                } else if (_moveCount == 9) {
-                    sc = 0;
-                } else {
-                    sc = -_negamax3(opp, mark, -beta, -alpha);
-                }
-                _cells[i] = MARK_NONE; _moveCount = _moveCount - 1;
-                if (sc > best)  { best  = sc; }
-                if (sc > alpha) { alpha = sc; }
-                if (alpha >= beta) { break; }
-            }
-            i = i + 1;
-        }
-        return best;
-    }
-
     // Separate tick: heuristic scored move after fork phases complete.
     hidden function _aiScoreTick() {
         var move = _bestScoredMove(_aiForkAiMk);

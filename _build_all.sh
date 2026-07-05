@@ -95,6 +95,7 @@ APPS=(
   skyroll
   memo
   drwal
+  slotbandit
 )
 
 FILTER=""
