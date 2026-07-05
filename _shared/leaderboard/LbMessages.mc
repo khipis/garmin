@@ -174,12 +174,14 @@ class LbMessageView extends WatchUi.View {
 
         dc.setColor(LB_BG, LB_BG); dc.clear();
 
-        // Round screens clip the corners hard: keep a generous inset so the top
-        // title and the bottom hint stay fully on-glass, and wrap text narrow.
+        // Round screens clip the corners hard: keep an inset so the top title and
+        // the bottom hint stay on-glass, but not so large that the body has to be
+        // truncated. Body text sits in the vertical middle where a round screen is
+        // widest, so we can wrap fairly wide there.
         var isRound = (_w == _h);
-        var pad  = isRound ? (_h * 15) / 100 : (_h * 9) / 100;
+        var pad  = isRound ? (_h * 10) / 100 : (_h * 7) / 100;
         if (pad < fh) { pad = fh; }
-        var maxW = isRound ? (_w * 72) / 100 : (_w * 86) / 100;
+        var maxW = isRound ? (_w * 78) / 100 : (_w * 88) / 100;
 
         // Title (fall back to XTINY if the SMALL title would be too wide).
         var titleFont = Graphics.FONT_SMALL;
@@ -195,9 +197,10 @@ class LbMessageView extends WatchUi.View {
         dc.drawText(cx, footerCY, Graphics.FONT_XTINY, "press any key", VC);
 
         // Bottom of the area the body may use. Reserve space for the footer plus,
-        // when present, the link block — each separated by a clear blank-line gap
-        // so nothing ever collides.
-        var contentBottom = footerCY - lineH;
+        // when present, the link block — each separated by a half-line gap so
+        // nothing collides while still leaving the body plenty of room.
+        var gap = fh / 2 + 2;
+        var contentBottom = footerCY - fh / 2 - gap;
 
         // Full URL as plain, link-styled text (colour + underline). Not tappable.
         if (hasUrl()) {
@@ -216,8 +219,8 @@ class LbMessageView extends WatchUi.View {
                 dc.drawLine(cx - tw / 2, uy + 1, cx + tw / 2, uy + 1);
                 ly = ly + lineH;
             }
-            // Full blank line of separation between body and the link.
-            contentBottom = linkTop - lineH;
+            // Clear separation between the body and the link.
+            contentBottom = linkTop - gap;
         }
 
         // Word-wrapped body, vertically centred in the remaining space. Lines that
