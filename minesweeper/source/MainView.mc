@@ -14,12 +14,14 @@ class MainView extends WatchUi.View {
     hidden var _cellPx;
     hidden var _bx;
     hidden var _by;
+    hidden var _flagMode;
 
     function initialize() {
         View.initialize();
         _ctrl = new GameController();
         _timer = null;
         _sw = 0; _sh = 0; _cellPx = 0; _bx = 0; _by = 0;
+        _flagMode = false;
     }
 
     function onShow() {
@@ -89,9 +91,17 @@ class MainView extends WatchUi.View {
     hidden function _drawHUD(dc) {
         var cx = _sw / 2;
         var ty = (_sh * 3) / 100; if (ty < 3) { ty = 3; }
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+        // Mine counter — red background pill when flag-mode is ON to
+        // make the active mode obvious at a glance.
+        if (_flagMode) {
+            dc.setColor(0xCC2222, Graphics.COLOR_TRANSPARENT);
+            dc.fillRoundedRectangle(0, ty - 1, 50, 14, 4);
+            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+        } else {
+            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+        }
         dc.drawText(8, ty, Graphics.FONT_XTINY,
-                    "F " + _ctrl.minesLeft().format("%d"),
+                    (_flagMode ? "FLAG " : "F ") + _ctrl.minesLeft().format("%d"),
                     Graphics.TEXT_JUSTIFY_LEFT);
         dc.setColor(0xFFCC22, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, ty, Graphics.FONT_XTINY,
@@ -103,7 +113,11 @@ class MainView extends WatchUi.View {
     hidden function _drawFooter(dc) {
         var hint;
         if (_ctrl.state == GS_PLAY) {
-            hint = "btn=cursor  SEL=open  hold=flag  tap=open";
+            if (_flagMode) {
+                hint = "TAP=flag  hold=reveal  tap F to exit flag mode";
+            } else {
+                hint = "btn=move  SEL=open  hold=flag  tap F=flag mode";
+            }
         } else {
             hint = "tap = menu";
         }
@@ -261,9 +275,12 @@ class MainView extends WatchUi.View {
     function navReveal() {
         if (_ctrl.state == GS_MENU) {
             if (_ctrl.menuRow == MENU_LEADER) { openLeaderboard(); return; }
-            _ctrl.menuActivate(); return;
+            _ctrl.menuActivate();
+            _flagMode = false;
+            return;
         }
         if (_ctrl.state == GS_WIN || _ctrl.state == GS_LOSE) {
+            _flagMode = false;
             _ctrl.gotoMenu(); return;
         }
         _ctrl.revealCursor();
@@ -275,12 +292,13 @@ class MainView extends WatchUi.View {
     function navBack() {
         if (_ctrl.state == GS_PLAY || _ctrl.state == GS_WIN
                 || _ctrl.state == GS_LOSE) {
+            _flagMode = false;
             _ctrl.gotoMenu(); return true;
         }
         return false;
     }
 
-    // Tap → in menu: activate tapped row; in play: reveal tapped cell.
+    // Tap → in menu: activate tapped row; in play: reveal or flag tapped cell.
     function handleTap(x, y) {
         if (_ctrl.state == GS_MENU) {
             var rg   = _menuRowGeom();
@@ -297,14 +315,27 @@ class MainView extends WatchUi.View {
             return;
         }
         if (_ctrl.state == GS_WIN || _ctrl.state == GS_LOSE) {
+            _flagMode = false;
             _ctrl.gotoMenu(); return;
         }
+
+        // Tap on the mine-counter area (top-left strip) toggles flag mode.
+        var ty_ = (_sh * 3) / 100; if (ty_ < 3) { ty_ = 3; }
+        if (x < _sw / 3 && y < ty_ + 18) {
+            _flagMode = !_flagMode;
+            return;
+        }
+
         if (_cellPx <= 0 || x < _bx || y < _by) { return; }
         var n  = _ctrl.grid.n;
         var dc = (x - _bx) / _cellPx;
         var dr = (y - _by) / _cellPx;
         if (dc < 0 || dc >= n || dr < 0 || dr >= n) { return; }
         if (!_ctrl.grid.inBounds(dr, dc)) { return; }
-        _ctrl.revealAt(dr, dc);
+        if (_flagMode) {
+            _ctrl.flagAt(dr, dc);
+        } else {
+            _ctrl.revealAt(dr, dc);
+        }
     }
 }

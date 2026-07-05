@@ -139,9 +139,15 @@ class GameController {
         // Win is checked in floodTick() once the BFS drains
     }
     function revealCursor() { revealAt(curR, curC); }
-    function flagCursor()   {
-        if (state == GS_PLAY) { grid.toggleFlag(curR, curC); }
+
+    // Toggle flag at (r,c) and immediately check for flag-based win.
+    function flagAt(r, c) {
+        if (state != GS_PLAY) { return; }
+        if (startMs == 0) { startMs = System.getTimer(); }
+        grid.toggleFlag(r, c);
+        if (grid.isWon()) { _win(); }
     }
+    function flagCursor() { flagAt(curR, curC); }
 
     // ── Flood tick (called every timer tick from MainView) ────────
     // Continues the BFS one chunk at a time and checks win after

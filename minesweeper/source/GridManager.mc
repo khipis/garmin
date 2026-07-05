@@ -207,7 +207,22 @@ class GridManager {
     function getNumber (r, c) { return numbers[idx(r,c)]; }
     function isMine    (r, c) { return mines[idx(r,c)] == 1; }
     function inBounds  (r, c) { return r >= 0 && r < n && c >= 0 && c < n; }
-    function isWon     ()     { return revealedCount == total - mineCount; }
+
+    // Win condition A: all safe cells revealed.
+    // Win condition B: all mines correctly flagged (flagCount == mineCount
+    //                  AND every flagged cell is a mine, no wrong flags).
+    //                  Guards against false-win before mines are placed.
+    function isWon() {
+        if (!minesPlaced) { return false; }
+        if (revealedCount == total - mineCount) { return true; }
+        if (flagCount == mineCount) {
+            for (var i = 0; i < total; i++) {
+                if ((state[i] & ST_FLAGGED) != 0 && mines[i] != 1) { return false; }
+            }
+            return true;
+        }
+        return false;
+    }
 
     function revealAllMines() {
         for (var i = 0; i < total; i++) {
