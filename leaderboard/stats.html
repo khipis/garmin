@@ -41,6 +41,12 @@
     padding: 5px 12px; border-radius: 8px; cursor: pointer; font-size: .74rem;
   }
   .hbtn:hover { border-color: var(--accent); color: var(--accent); }
+  .hsel {
+    background: var(--card); border: 1px solid var(--border); color: var(--text);
+    font-size: .72rem; padding: 4px 8px; border-radius: 8px; margin-left: 8px;
+    cursor: pointer; max-width: 180px;
+  }
+  .hsel:hover, .hsel:focus { border-color: var(--accent); outline: none; }
 
   /* ── Layout ─────────────────────────────────────────────────────────────── */
   .layout { display: flex; height: calc(100vh - 54px); }
@@ -308,17 +314,39 @@
       <div class="sh"><span class="sh-title">📊 Engagement</span><span class="sh-line"></span></div>
       <div class="cards" id="engagement-cards"></div>
 
-      <div class="sh"><span class="sh-title">Per game</span><span class="sh-line"></span></div>
+      <div class="sh"><span class="sh-title">Per game</span><span class="sh-line"></span>
+        <select class="hsel" id="pergame-limit" onchange="renderPerGameTable()">
+          <option value="8">Top 8</option>
+          <option value="20" selected>Top 20</option>
+          <option value="9999">Show all</option>
+        </select>
+      </div>
       <div id="per-game"><div class="state"><div class="spinner"></div>Loading…</div></div>
 
-      <div class="sh"><span class="sh-title">Per country</span><span class="sh-line"></span></div>
+      <div class="sh"><span class="sh-title">Per country</span><span class="sh-line"></span>
+        <select class="hsel" id="percountry-limit" onchange="renderPerCountryTable()">
+          <option value="8" selected>Top 8</option>
+          <option value="9999">Show all</option>
+        </select>
+      </div>
       <div id="per-country"></div>
 
       <div class="sh"><span class="sh-title">🎮 Game launches — all plays (incl. no-leaderboard)</span><span class="sh-line"></span><button class="hbtn" onclick="loadLaunches()" style="margin-left:8px;font-size:.7rem;padding:3px 8px">↺</button></div>
       <div class="cards" id="launch-cards"></div>
-      <div class="sh"><span class="sh-title">Launches by game</span><span class="sh-line"></span></div>
+      <div class="sh"><span class="sh-title">Launches by game</span><span class="sh-line"></span>
+        <select class="hsel" id="launchgame-limit" onchange="renderLaunchByGameTable()">
+          <option value="8">Top 8</option>
+          <option value="20" selected>Top 20</option>
+          <option value="9999">Show all</option>
+        </select>
+      </div>
       <div id="launch-by-game"><div class="state"><div class="spinner"></div>Loading…</div></div>
-      <div class="sh"><span class="sh-title">Launches by country</span><span class="sh-line"></span></div>
+      <div class="sh"><span class="sh-title">Launches by country</span><span class="sh-line"></span>
+        <select class="hsel" id="launchcountry-limit" onchange="renderLaunchByCountryTable()">
+          <option value="8" selected>Top 8</option>
+          <option value="9999">Show all</option>
+        </select>
+      </div>
       <div id="launch-by-country"></div>
 
       <div class="sh"><span class="sh-title">🚨 Error monitoring — last 24 h</span><span class="sh-line"></span><button class="hbtn" onclick="loadErrors()" style="margin-left:8px;font-size:.7rem;padding:3px 8px">↺</button></div>
@@ -328,6 +356,7 @@
       <div id="error-log"><div class="state"><div class="spinner"></div>Loading…</div></div>
 
       <div class="sh"><span class="sh-title">📅 Season history</span><span class="sh-line"></span>
+        <select class="hsel" id="snap-select" onchange="renderSelectedSnapshot()" style="display:none"></select>
         <button class="hbtn" onclick="loadSnapshots()" style="margin-left:8px;font-size:.7rem;padding:3px 8px">↺</button>
         <button class="hbtn" onclick="takeSnapshot()" id="snap-btn" style="margin-left:6px;font-size:.7rem;padding:3px 8px;background:#0d2a1a;border-color:var(--green);color:var(--green)">📸 Snapshot now</button>
         <button class="hbtn" onclick="resetStats()" id="reset-btn" style="margin-left:6px;font-size:.7rem;padding:3px 8px;background:#2a0808;border-color:#f87171;color:#f87171">🗑️ Reset scores</button>
@@ -335,6 +364,7 @@
       <div id="snapshot-list"><div class="state"><div class="spinner"></div>Loading…</div></div>
 
       <div class="sh"><span class="sh-title">🏆 Hall of Fame — management</span><span class="sh-line"></span>
+        <select class="hsel" id="hof-game-filter" onchange="renderHofTable()" style="display:none"></select>
         <button class="hbtn" onclick="loadHofAdmin()" style="margin-left:8px;font-size:.7rem;padding:3px 8px">↺</button>
         <button class="hbtn" onclick="promoteAllToHoF()" id="hof-promote-btn"
           style="margin-left:6px;font-size:.7rem;padding:3px 8px;background:#1a2a0a;border-color:#f59e0b;color:#f59e0b">
@@ -403,6 +433,10 @@ let statsData   = null;
 let currentGame = null;
 let currentVariants = [];
 let currentVariant  = '';
+let lastPerGameRows      = [];
+let lastPerCountryRows   = [];
+let lastLaunchGameRows   = [];
+let lastLaunchCountryRows = [];
 
 // ── Overview ──────────────────────────────────────────────────────────────────
 function showOverview() {
@@ -472,9 +506,10 @@ function renderStats() {
 
   // Per-game table + sidebar
   const rows = d.perGame || [];
-  const maxP = Math.max(...rows.map(g => g.players||0), 1);
+  lastPerGameRows = rows;
 
-  // Sidebar
+  // Sidebar (always shows every game — it scrolls internally, doesn't
+  // lengthen the page — so no limit select needed here).
   const sbEl = document.getElementById('sb-games');
   sbEl.innerHTML = rows.map(g => `
     <div class="sb-item" id="sb-${g.game}" onclick="openGame('${esc(g.game)}')">
@@ -483,47 +518,65 @@ function renderStats() {
       <span class="sb-cnt">${g.players||0}</span>
     </div>`).join('');
 
-  // Main table
-  if (!rows.length) {
-    document.getElementById('per-game').innerHTML = '<div class="state">No real scores yet.</div>';
-  } else {
-    document.getElementById('per-game').innerHTML = `
-      <table>
-        <thead><tr><th>Game</th><th>Players</th><th>IPs</th><th>Scores</th><th class="bar-cell"></th></tr></thead>
-        <tbody>${rows.map(g => {
-          const pct = Math.round(((g.players||0)/maxP)*100);
-          return `<tr style="cursor:pointer" onclick="openGame('${esc(g.game)}')">
-            <td><b>${esc(g.game)}</b></td>
-            <td><b>${(g.players||0).toLocaleString()}</b></td>
-            <td class="muted">${(g.devices||0).toLocaleString()}</td>
-            <td class="muted">${(g.scores||0).toLocaleString()}</td>
-            <td class="bar-cell"><div class="bar-wrap"><div class="bar" style="width:${pct}%"></div></div></td>
-          </tr>`;
-        }).join('')}</tbody>
-      </table>`;
-  }
+  renderPerGameTable();
 
   // Per-country
-  const ctrs = d.perCountry || [];
-  if (ctrs.length) {
-    const maxP2 = Math.max(...ctrs.map(c => c.players||0), 1);
-    document.getElementById('per-country').innerHTML = `
-      <table>
-        <thead><tr><th>Country</th><th>Players</th><th>Scores</th><th class="bar-cell"></th></tr></thead>
-        <tbody>${ctrs.map(c => {
-          const code = c.country || '??';
-          const flag = c.country ? codeToFlag(c.country) : '🌐';
-          const name = COUNTRY_NAMES[code] || code;
-          const pct  = Math.round(((c.players||0)/maxP2)*100);
-          return `<tr>
-            <td><span class="flag-name">${flag} ${esc(name)}</span></td>
-            <td><b>${(c.players||0).toLocaleString()}</b></td>
-            <td class="muted">${(c.scores||0).toLocaleString()}</td>
-            <td class="bar-cell"><div class="bar-wrap"><div class="bar" style="width:${pct}%"></div></div></td>
-          </tr>`;
-        }).join('')}</tbody>
-      </table>`;
-  }
+  lastPerCountryRows = d.perCountry || [];
+  renderPerCountryTable();
+}
+
+function renderPerGameTable() {
+  const rows = lastPerGameRows;
+  const el = document.getElementById('per-game');
+  if (!rows.length) { el.innerHTML = '<div class="state">No real scores yet.</div>'; return; }
+
+  const limit = parseInt(document.getElementById('pergame-limit').value, 10);
+  const shown = rows.slice(0, limit);
+  const maxP  = Math.max(...rows.map(g => g.players||0), 1);
+
+  el.innerHTML = `
+    <table>
+      <thead><tr><th>Game</th><th>Players</th><th>IPs</th><th>Scores</th><th class="bar-cell"></th></tr></thead>
+      <tbody>${shown.map(g => {
+        const pct = Math.round(((g.players||0)/maxP)*100);
+        return `<tr style="cursor:pointer" onclick="openGame('${esc(g.game)}')">
+          <td><b>${esc(g.game)}</b></td>
+          <td><b>${(g.players||0).toLocaleString()}</b></td>
+          <td class="muted">${(g.devices||0).toLocaleString()}</td>
+          <td class="muted">${(g.scores||0).toLocaleString()}</td>
+          <td class="bar-cell"><div class="bar-wrap"><div class="bar" style="width:${pct}%"></div></div></td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table>
+    ${rows.length > shown.length ? `<div class="muted" style="padding:6px 4px">Showing ${shown.length} of ${rows.length} — pick "Show all" above to see the rest.</div>` : ''}`;
+}
+
+function renderPerCountryTable() {
+  const ctrs = lastPerCountryRows;
+  const el = document.getElementById('per-country');
+  if (!ctrs.length) { el.innerHTML = ''; return; }
+
+  const limit = parseInt(document.getElementById('percountry-limit').value, 10);
+  const shown = ctrs.slice(0, limit);
+  const maxP2 = Math.max(...ctrs.map(c => c.players||0), 1);
+
+  el.innerHTML = `
+    <table>
+      <thead><tr><th>Country</th><th>Players</th><th>Scores</th><th class="bar-cell"></th></tr></thead>
+      <tbody>${shown.map(c => {
+        const code = c.country || '??';
+        const flag = c.country ? codeToFlag(c.country) : '🌐';
+        const name = COUNTRY_NAMES[code] || code;
+        const pct  = Math.round(((c.players||0)/maxP2)*100);
+        return `<tr>
+          <td><span class="flag-name">${flag} ${esc(name)}</span></td>
+          <td><b>${(c.players||0).toLocaleString()}</b></td>
+          <td class="muted">${(c.scores||0).toLocaleString()}</td>
+          <td class="bar-cell"><div class="bar-wrap"><div class="bar" style="width:${pct}%"></div></div></td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table>
+    ${ctrs.length > shown.length ? `<div class="muted" style="padding:6px 4px">Showing ${shown.length} of ${ctrs.length} — pick "Show all" above to see the rest.</div>` : ''}`;
 }
 
 // ── Per-game leaderboard ───────────────────────────────────────────────────────
@@ -650,50 +703,64 @@ async function loadLaunches() {
 
     // By game — flags games that are played but produce no scores would need
     // cross-referencing; here we just show raw play activity per game.
-    const games = d.byGame || [];
-    if (!games.length) {
-      gameEl.innerHTML = '<div class="state">No launches recorded yet.</div>';
-    } else {
-      const maxL = Math.max(...games.map(g => g.launches||0), 1);
-      gameEl.innerHTML = `<table>
-        <thead><tr><th>Game</th><th>Launches</th><th>Devices</th><th class="bar-cell"></th></tr></thead>
-        <tbody>${games.map(g => {
-          const pct = Math.round(((g.launches||0)/maxL)*100);
-          return `<tr>
-            <td><b>${esc(g.game)}</b></td>
-            <td><b>${(g.launches||0).toLocaleString()}</b></td>
-            <td class="muted">${(g.players||0).toLocaleString()}</td>
-            <td class="bar-cell"><div class="bar-wrap"><div class="bar" style="width:${pct}%"></div></div></td>
-          </tr>`;
-        }).join('')}</tbody>
-      </table>`;
-    }
-
-    // By country
-    const ctrs = d.byCountry || [];
-    if (!ctrs.length) {
-      ctryEl.innerHTML = '';
-    } else {
-      const maxC = Math.max(...ctrs.map(c => c.launches||0), 1);
-      ctryEl.innerHTML = `<table>
-        <thead><tr><th>Country</th><th>Launches</th><th>Devices</th><th class="bar-cell"></th></tr></thead>
-        <tbody>${ctrs.map(c => {
-          const code = c.country || '??';
-          const flag = c.country ? codeToFlag(c.country) : '🌐';
-          const name = COUNTRY_NAMES[code] || code;
-          const pct  = Math.round(((c.launches||0)/maxC)*100);
-          return `<tr>
-            <td><span class="flag-name">${flag} ${esc(name)}</span></td>
-            <td><b>${(c.launches||0).toLocaleString()}</b></td>
-            <td class="muted">${(c.players||0).toLocaleString()}</td>
-            <td class="bar-cell"><div class="bar-wrap"><div class="bar" style="width:${pct}%"></div></div></td>
-          </tr>`;
-        }).join('')}</tbody>
-      </table>`;
-    }
+    lastLaunchGameRows    = d.byGame    || [];
+    lastLaunchCountryRows = d.byCountry || [];
+    renderLaunchByGameTable();
+    renderLaunchByCountryTable();
   } catch(e) {
     gameEl.innerHTML = `<div class="state">⚠️ ${esc(String(e))}</div>`;
   }
+}
+
+function renderLaunchByGameTable() {
+  const games = lastLaunchGameRows;
+  const el = document.getElementById('launch-by-game');
+  if (!games.length) { el.innerHTML = '<div class="state">No launches recorded yet.</div>'; return; }
+
+  const limit = parseInt(document.getElementById('launchgame-limit').value, 10);
+  const shown = games.slice(0, limit);
+  const maxL  = Math.max(...games.map(g => g.launches||0), 1);
+
+  el.innerHTML = `<table>
+    <thead><tr><th>Game</th><th>Launches</th><th>Devices</th><th class="bar-cell"></th></tr></thead>
+    <tbody>${shown.map(g => {
+      const pct = Math.round(((g.launches||0)/maxL)*100);
+      return `<tr>
+        <td><b>${esc(g.game)}</b></td>
+        <td><b>${(g.launches||0).toLocaleString()}</b></td>
+        <td class="muted">${(g.players||0).toLocaleString()}</td>
+        <td class="bar-cell"><div class="bar-wrap"><div class="bar" style="width:${pct}%"></div></div></td>
+      </tr>`;
+    }).join('')}</tbody>
+  </table>
+  ${games.length > shown.length ? `<div class="muted" style="padding:6px 4px">Showing ${shown.length} of ${games.length} — pick "Show all" above to see the rest.</div>` : ''}`;
+}
+
+function renderLaunchByCountryTable() {
+  const ctrs = lastLaunchCountryRows;
+  const el = document.getElementById('launch-by-country');
+  if (!ctrs.length) { el.innerHTML = ''; return; }
+
+  const limit = parseInt(document.getElementById('launchcountry-limit').value, 10);
+  const shown = ctrs.slice(0, limit);
+  const maxC  = Math.max(...ctrs.map(c => c.launches||0), 1);
+
+  el.innerHTML = `<table>
+    <thead><tr><th>Country</th><th>Launches</th><th>Devices</th><th class="bar-cell"></th></tr></thead>
+    <tbody>${shown.map(c => {
+      const code = c.country || '??';
+      const flag = c.country ? codeToFlag(c.country) : '🌐';
+      const name = COUNTRY_NAMES[code] || code;
+      const pct  = Math.round(((c.launches||0)/maxC)*100);
+      return `<tr>
+        <td><span class="flag-name">${flag} ${esc(name)}</span></td>
+        <td><b>${(c.launches||0).toLocaleString()}</b></td>
+        <td class="muted">${(c.players||0).toLocaleString()}</td>
+        <td class="bar-cell"><div class="bar-wrap"><div class="bar" style="width:${pct}%"></div></div></td>
+      </tr>`;
+    }).join('')}</tbody>
+  </table>
+  ${ctrs.length > shown.length ? `<div class="muted" style="padding:6px 4px">Showing ${shown.length} of ${ctrs.length} — pick "Show all" above to see the rest.</div>` : ''}`;
 }
 
 async function loadErrors() {
@@ -793,48 +860,71 @@ async function loadErrors() {
 }
 
 // ── Season snapshots ──────────────────────────────────────────────────────────
+// Rendered ONE at a time via a <select> instead of stacking every snapshot as
+// a tall card — keeps the page short even with dozens of saved snapshots.
+let snapshotsData = [];
+
 async function loadSnapshots() {
-  const el = document.getElementById('snapshot-list');
+  const el  = document.getElementById('snapshot-list');
+  const sel = document.getElementById('snap-select');
   el.innerHTML = '<div class="state"><div class="spinner"></div>Loading…</div>';
+  sel.style.display = 'none';
   try {
     const d = await fetch(API + '/snapshots').then(r => r.json());
-    const snaps = d.snapshots || [];
-    if (!snaps.length) {
+    snapshotsData = d.snapshots || [];
+    if (!snapshotsData.length) {
       el.innerHTML = '<div class="state">No snapshots yet. The next leaderboard reset will create the first one automatically.</div>';
       return;
     }
-    el.innerHTML = snaps.map(s => {
+    sel.style.display = '';
+    sel.innerHTML = snapshotsData.map((s, i) => {
       const dt  = new Date(s.taken_at);
-      const dtStr = dt.toLocaleDateString([], {year:'numeric',month:'short',day:'numeric'})
-                  + ' ' + dt.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
-      const t   = s.data?.totals || {};
-      const top = (s.data?.topGames || []).slice(0, 8);
+      const dtStr = dt.toLocaleDateString([], {year:'numeric',month:'short',day:'numeric'});
       const lbl = s.label || `Snapshot #${s.id}`;
-      const pct2 = t.players > 0 ? Math.round((t.returning||0)/t.players*100) : 0;
-      const pct7 = t.players > 0 ? Math.round((t.loyal||0)/t.players*100)     : 0;
-      return `<div class="snap-card">
-        <div class="snap-header">
-          <span class="snap-label">📅 ${esc(lbl)}</span>
-          <span class="snap-date">${dtStr}</span>
-        </div>
-        <div class="snap-totals">
-          <div class="snap-pill"><span class="snum">${(t.players||0).toLocaleString()}</span><span class="slbl">Players</span></div>
-          <div class="snap-pill"><span class="snum">${(t.devices||0).toLocaleString()}</span><span class="slbl">IPs</span></div>
-          <div class="snap-pill"><span class="snum">${(t.scores||0).toLocaleString()}</span><span class="slbl">Scores</span></div>
-          <div class="snap-pill"><span class="snum">${(t.games||0).toLocaleString()}</span><span class="slbl">Games</span></div>
-          <div class="snap-pill"><span class="snum">${(t.returning||0).toLocaleString()}<span style="font-size:.65rem;font-weight:400;color:var(--muted)"> ${pct2}%</span></span><span class="slbl">2+ days</span></div>
-          <div class="snap-pill"><span class="snum">${(t.ret3||0).toLocaleString()}</span><span class="slbl">3+ days</span></div>
-          <div class="snap-pill"><span class="snum">${(t.ret4||0).toLocaleString()}</span><span class="slbl">4+ days</span></div>
-          <div class="snap-pill"><span class="snum">${(t.ret5||0).toLocaleString()}</span><span class="slbl">5+ days</span></div>
-          <div class="snap-pill"><span class="snum">${(t.ret6||0).toLocaleString()}</span><span class="slbl">6+ days</span></div>
-          <div class="snap-pill"><span class="snum">${(t.loyal||0).toLocaleString()}<span style="font-size:.65rem;font-weight:400;color:var(--muted)"> ${pct7}%</span></span><span class="slbl">7+ days</span></div>
-        </div>
-        ${top.length ? `<div class="snap-games">${top.map(g => `<span class="snap-game-tag"><b>${esc(g.game)}</b> ${g.players}p</span>`).join('')}</div>` : ''}
-      </div>`;
+      return `<option value="${i}">${esc(lbl)} — ${dtStr}</option>`;
     }).join('');
+    sel.selectedIndex = 0;
+    renderSelectedSnapshot();
   } catch(e) {
     el.innerHTML = `<div class="state">⚠️ ${esc(String(e))}</div>`;
   }
+}
+
+function renderSelectedSnapshot() {
+  const el  = document.getElementById('snapshot-list');
+  const sel = document.getElementById('snap-select');
+  const s = snapshotsData[parseInt(sel.value, 10) || 0];
+  if (!s) { el.innerHTML = '<div class="state">No snapshot selected.</div>'; return; }
+
+  const dt  = new Date(s.taken_at);
+  const dtStr = dt.toLocaleDateString([], {year:'numeric',month:'short',day:'numeric'})
+              + ' ' + dt.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+  const t   = s.data?.totals || {};
+  const top = (s.data?.topGames || []).slice(0, 8);
+  const lbl = s.label || `Snapshot #${s.id}`;
+  const pct2 = t.players > 0 ? Math.round((t.returning||0)/t.players*100) : 0;
+  const pct7 = t.players > 0 ? Math.round((t.loyal||0)/t.players*100)     : 0;
+
+  el.innerHTML = `<div class="snap-card">
+    <div class="snap-header">
+      <span class="snap-label">📅 ${esc(lbl)}</span>
+      <span class="snap-date">${dtStr}</span>
+    </div>
+    <div class="snap-totals">
+      <div class="snap-pill"><span class="snum">${(t.players||0).toLocaleString()}</span><span class="slbl">Players</span></div>
+      <div class="snap-pill"><span class="snum">${(t.devices||0).toLocaleString()}</span><span class="slbl">IPs</span></div>
+      <div class="snap-pill"><span class="snum">${(t.scores||0).toLocaleString()}</span><span class="slbl">Scores</span></div>
+      <div class="snap-pill"><span class="snum">${(t.games||0).toLocaleString()}</span><span class="slbl">Games</span></div>
+      <div class="snap-pill"><span class="snum">${(t.returning||0).toLocaleString()}<span style="font-size:.65rem;font-weight:400;color:var(--muted)"> ${pct2}%</span></span><span class="slbl">2+ days</span></div>
+      <div class="snap-pill"><span class="snum">${(t.ret3||0).toLocaleString()}</span><span class="slbl">3+ days</span></div>
+      <div class="snap-pill"><span class="snum">${(t.ret4||0).toLocaleString()}</span><span class="slbl">4+ days</span></div>
+      <div class="snap-pill"><span class="snum">${(t.ret5||0).toLocaleString()}</span><span class="slbl">5+ days</span></div>
+      <div class="snap-pill"><span class="snum">${(t.ret6||0).toLocaleString()}</span><span class="slbl">6+ days</span></div>
+      <div class="snap-pill"><span class="snum">${(t.loyal||0).toLocaleString()}<span style="font-size:.65rem;font-weight:400;color:var(--muted)"> ${pct7}%</span></span><span class="slbl">7+ days</span></div>
+    </div>
+    ${top.length ? `<div class="snap-games">${top.map(g => `<span class="snap-game-tag"><b>${esc(g.game)}</b> ${g.players}p</span>`).join('')}</div>` : ''}
+  </div>
+  <div class="muted" style="padding:4px 4px 0">${snapshotsData.length} snapshot${snapshotsData.length!==1?'s':''} total — use the dropdown above to browse.</div>`;
 }
 
 async function takeSnapshot() {
@@ -860,38 +950,64 @@ async function takeSnapshot() {
 }
 
 // ── Hall of Fame admin ────────────────────────────────────────────────────────
+// Filtered by a <select> (one game at a time, or "All games" capped to a
+// reasonable count) instead of always dumping every entry from every game.
+let hofEntries = [];
+const HOF_ALL_CAP = 20;
+
 async function loadHofAdmin() {
-  const el = document.getElementById('hof-admin-list');
+  const el  = document.getElementById('hof-admin-list');
+  const sel = document.getElementById('hof-game-filter');
+  const prevFilter = sel.value;
   el.innerHTML = '<div class="state"><div class="spinner"></div>Loading…</div>';
+  sel.style.display = 'none';
   try {
     const d = await fetch(API + '/hof').then(r => r.json());
-    const entries = d.entries || [];
-    if (!entries.length) {
+    hofEntries = d.entries || [];
+    if (!hofEntries.length) {
       el.innerHTML = '<div class="state">Hall of Fame is empty. Use "👑 Promote all leaders" to populate it.</div>';
       return;
     }
-    el.innerHTML = `<div style="overflow-x:auto"><table>
-      <thead><tr>
-        <th>Game</th><th>Variant</th><th>Player</th><th>Score</th><th>Country</th><th>Note</th><th>Added</th><th></th>
-      </tr></thead>
-      <tbody>${entries.map(e => {
-        const dt = new Date(e.added_at).toLocaleDateString([], {year:'numeric',month:'short',day:'numeric'});
-        return `<tr>
-          <td><b>${esc(e.game)}</b></td>
-          <td class="muted">${esc(e.variant || '—')}</td>
-          <td>${esc(e.user)}</td>
-          <td class="muted">${e.score.toLocaleString()}</td>
-          <td class="muted">${e.country || '—'}</td>
-          <td class="muted" style="font-style:italic">${esc(e.note || '')}</td>
-          <td class="muted">${dt}</td>
-          <td><button class="hbtn" style="color:#f87171;border-color:#f87171;padding:2px 8px;font-size:.68rem"
-              onclick="deleteHoF(${e.id})">✕</button></td>
-        </tr>`;
-      }).join('')}</tbody>
-    </table></div>`;
+    const games = [...new Set(hofEntries.map(e => e.game))].sort();
+    sel.style.display = '';
+    sel.innerHTML = `<option value="">All games (${hofEntries.length})</option>` +
+      games.map(g => `<option value="${esc(g)}">${esc(g)}</option>`).join('');
+    if (games.includes(prevFilter)) { sel.value = prevFilter; }
+    renderHofTable();
   } catch(e) {
     el.innerHTML = `<div class="state">⚠️ ${esc(String(e))}</div>`;
   }
+}
+
+function renderHofTable() {
+  const el  = document.getElementById('hof-admin-list');
+  const sel = document.getElementById('hof-game-filter');
+  const filterGame = sel.value;
+
+  let entries = filterGame ? hofEntries.filter(e => e.game === filterGame) : hofEntries;
+  const capped = !filterGame && entries.length > HOF_ALL_CAP;
+  const shown  = capped ? entries.slice(0, HOF_ALL_CAP) : entries;
+
+  el.innerHTML = `<div style="overflow-x:auto"><table>
+    <thead><tr>
+      <th>Game</th><th>Variant</th><th>Player</th><th>Score</th><th>Country</th><th>Note</th><th>Added</th><th></th>
+    </tr></thead>
+    <tbody>${shown.map(e => {
+      const dt = new Date(e.added_at).toLocaleDateString([], {year:'numeric',month:'short',day:'numeric'});
+      return `<tr>
+        <td><b>${esc(e.game)}</b></td>
+        <td class="muted">${esc(e.variant || '—')}</td>
+        <td>${esc(e.user)}</td>
+        <td class="muted">${e.score.toLocaleString()}</td>
+        <td class="muted">${e.country || '—'}</td>
+        <td class="muted" style="font-style:italic">${esc(e.note || '')}</td>
+        <td class="muted">${dt}</td>
+        <td><button class="hbtn" style="color:#f87171;border-color:#f87171;padding:2px 8px;font-size:.68rem"
+            onclick="deleteHoF(${e.id})">✕</button></td>
+      </tr>`;
+    }).join('')}</tbody>
+  </table></div>
+  ${capped ? `<div class="muted" style="padding:6px 4px">Showing ${shown.length} of ${entries.length} — pick a game above to see the rest.</div>` : ''}`;
 }
 
 async function deleteHoF(id) {
