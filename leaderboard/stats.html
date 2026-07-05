@@ -225,23 +225,35 @@
   @keyframes spin { to { transform: rotate(360deg); } }
 
   /* ── Error monitoring ────────────────────────────────────────────────────── */
-  .err-summary {
-    display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;
-  }
-  .err-badge {
-    background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.3);
-    border-radius: 8px; padding: 8px 14px; font-size: .78rem;
-  }
-  .err-badge .eb-game { font-weight: 700; color: #f87171; }
-  .err-badge .eb-code { color: var(--muted); font-size: .7rem; margin-left: 4px; }
-  .err-badge .eb-cnt  { font-weight: 800; font-size: 1rem; color: #fca5a5; }
   .err-none { color: var(--muted); font-size: .82rem; padding: 8px 0; }
+
+  /* Rate-limit group cards */
+  .rl-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 10px; margin-bottom: 4px;
+  }
+  .rl-card {
+    background: rgba(139,92,246,.08); border: 1px solid rgba(139,92,246,.25);
+    border-radius: 10px; padding: 12px 14px;
+  }
+  .rl-game { font-weight: 700; font-size: .82rem; color: #c4b5fd;
+             margin-bottom: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .rl-count { font-size: 1.5rem; font-weight: 900; color: #a78bfa; line-height: 1; }
+  .rl-count-lbl { font-size: .6rem; color: var(--muted); text-transform: uppercase;
+                  letter-spacing: .07em; margin-bottom: 8px; }
+  .rl-hours { display: flex; align-items: flex-end; gap: 2px; height: 24px; margin-top: 6px; }
+  .rl-hour-bar { flex: 1; background: rgba(139,92,246,.5); border-radius: 2px 2px 0 0;
+                 min-height: 2px; transition: background .15s; }
+  .rl-hour-bar:hover { background: #a78bfa; }
+  .rl-last { font-size: .62rem; color: var(--muted); margin-top: 4px; }
+
+  /* Real errors table */
   .err-table { width: 100%; border-collapse: collapse; font-size: .78rem; }
-  .err-table th { text-align: left; padding: 6px 10px; color: var(--muted); font-weight: 600; border-bottom: 1px solid var(--border); }
+  .err-table th { text-align: left; padding: 6px 10px; color: var(--muted);
+                  font-weight: 600; border-bottom: 1px solid var(--border); }
   .err-table td { padding: 5px 10px; border-bottom: 1px solid rgba(255,255,255,.04); vertical-align: top; }
   .err-table tr:hover td { background: rgba(255,255,255,.02); }
   .err-code-400 { color: #fbbf24; font-weight: 700; }
-  .err-code-429 { color: #a78bfa; font-weight: 700; }
   .err-code-500 { color: #f87171; font-weight: 700; }
   .err-time { color: var(--muted); white-space: nowrap; }
   .err-game { color: var(--accent); font-weight: 600; }
@@ -310,8 +322,9 @@
       <div id="launch-by-country"></div>
 
       <div class="sh"><span class="sh-title">🚨 Error monitoring — last 24 h</span><span class="sh-line"></span><button class="hbtn" onclick="loadErrors()" style="margin-left:8px;font-size:.7rem;padding:3px 8px">↺</button></div>
+      <div id="error-rl"></div>
       <div id="error-summary"></div>
-      <div class="sh"><span class="sh-title">Recent errors (last 100)</span><span class="sh-line"></span></div>
+      <div class="sh" id="sh-real-errors" style="display:none"><span class="sh-title">Real errors (4xx / 5xx)</span><span class="sh-line"></span></div>
       <div id="error-log"><div class="state"><div class="spinner"></div>Loading…</div></div>
 
       <div class="sh"><span class="sh-title">📅 Season history</span><span class="sh-line"></span>
@@ -683,54 +696,98 @@ async function loadLaunches() {
 }
 
 async function loadErrors() {
+  const rlEl      = document.getElementById('error-rl');
   const summaryEl = document.getElementById('error-summary');
   const logEl     = document.getElementById('error-log');
-  summaryEl.innerHTML = '<div class="state"><div class="spinner"></div></div>';
-  logEl.innerHTML     = '<div class="state"><div class="spinner"></div>Loading…</div>';
+  const shReal    = document.getElementById('sh-real-errors');
+  rlEl.innerHTML      = '<div class="state"><div class="spinner"></div></div>';
+  summaryEl.innerHTML = '';
+  logEl.innerHTML     = '';
+  shReal.style.display = 'none';
   try {
-    const r = await fetch(`${API}/errors?limit=100`, { cache: 'no-store' });
+    const r = await fetch(`${API}/errors?limit=200`, { cache: 'no-store' });
     if (!r.ok) throw new Error(`HTTP ${r.status}`);
     const d = await r.json();
-
-    // ── Summary badges ────────────────────────────────────────────────────────
-    const summary = d.summary || [];
-    if (summary.length === 0) {
-      summaryEl.innerHTML = '<div class="err-none">✅ No errors in the last 24 h</div>';
-    } else {
-      summaryEl.innerHTML = `<div class="err-summary">${
-        summary.map(s => `
-          <div class="err-badge">
-            <span class="eb-game">${esc(s.game || '—')}</span>
-            <span class="eb-code">[${s.error_code}]</span>
-            <span class="eb-cnt"> ×${s.cnt}</span>
-          </div>`).join('')
-      }</div>`;
-    }
-
-    // ── Recent log table ──────────────────────────────────────────────────────
     const rows = d.recent || [];
-    if (rows.length === 0) {
-      logEl.innerHTML = '<div class="state">No errors recorded yet.</div>';
+
+    if (!rows.length) {
+      rlEl.innerHTML = '<div class="err-none">✅ No errors in the last 24 h</div>';
       return;
     }
-    const codeClass = c => c >= 500 ? 'err-code-500' : c === 429 ? 'err-code-429' : 'err-code-400';
+
+    // ── Split: rate limits vs real errors ──────────────────────────────────
+    const rl429  = rows.filter(r => r.error_code === 429);
+    const real   = rows.filter(r => r.error_code !== 429);
+
+    // ── Rate-limit grouped cards ────────────────────────────────────────────
+    if (rl429.length) {
+      // Group by game
+      const byGame = new Map();
+      for (const e of rl429) {
+        const g = e.game || '(no game)';
+        if (!byGame.has(g)) byGame.set(g, []);
+        byGame.get(g).push(e.timestamp);
+      }
+      // Sort by count desc
+      const games = [...byGame.entries()].sort((a,b) => b[1].length - a[1].length);
+      const now   = Date.now();
+
+      rlEl.innerHTML = `
+        <div style="font-size:.72rem;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:.07em">
+          🚫 Rate limits (429) — ${rl429.length} hits · grouped by game
+        </div>
+        <div class="rl-grid">${games.map(([game, ts]) => {
+          // 24 hourly buckets
+          const buckets = new Array(24).fill(0);
+          ts.forEach(t => {
+            const h = Math.floor((now - t) / 3600000);
+            if (h >= 0 && h < 24) buckets[23 - h]++;
+          });
+          const maxB = Math.max(...buckets, 1);
+          const lastTs = Math.max(...ts);
+          const minsAgo = Math.round((now - lastTs) / 60000);
+          const lastStr = minsAgo < 60
+            ? `${minsAgo}m ago`
+            : `${Math.round(minsAgo/60)}h ago`;
+          const bars = buckets.map(b =>
+            `<div class="rl-hour-bar" style="height:${Math.round((b/maxB)*100)}%" title="${b} hits"></div>`
+          ).join('');
+          return `<div class="rl-card">
+            <div class="rl-game">${esc(game)}</div>
+            <div class="rl-count">${ts.length}</div>
+            <div class="rl-count-lbl">hits / 24h</div>
+            <div class="rl-hours">${bars}</div>
+            <div class="rl-last">last: ${lastStr}</div>
+          </div>`;
+        }).join('')}</div>`;
+    } else {
+      rlEl.innerHTML = '<div class="err-none">✅ No rate-limit hits in the last 24 h</div>';
+    }
+
+    // ── Real errors table ───────────────────────────────────────────────────
+    if (!real.length) {
+      summaryEl.innerHTML = '<div class="err-none" style="margin-bottom:12px">✅ No 4xx/5xx errors in the last 24 h</div>';
+      return;
+    }
+    shReal.style.display = '';
+    const codeClass = c => c >= 500 ? 'err-code-500' : 'err-code-400';
     logEl.innerHTML = `<div style="overflow-x:auto"><table class="err-table">
       <thead><tr>
         <th>Time</th><th>Code</th><th>Game</th><th>Message</th>
       </tr></thead>
-      <tbody>${rows.map(r => {
-        const dt = new Date(r.timestamp).toISOString().replace('T',' ').slice(0,19);
+      <tbody>${real.map(e => {
+        const dt = new Date(e.timestamp).toISOString().replace('T',' ').slice(0,19);
         return `<tr>
           <td class="err-time">${esc(dt)}</td>
-          <td class="${codeClass(r.error_code)}">${r.error_code}</td>
-          <td class="err-game">${esc(r.game || '—')}</td>
-          <td class="err-msg">${esc(r.error_msg || '')}</td>
+          <td class="${codeClass(e.error_code)}">${e.error_code}</td>
+          <td class="err-game">${esc(e.game || '—')}</td>
+          <td class="err-msg">${esc(e.error_msg || '')}</td>
         </tr>`;
       }).join('')}</tbody>
     </table></div>`;
+
   } catch(e) {
-    summaryEl.innerHTML = '';
-    logEl.innerHTML = `<div class="state">⚠️ ${esc(String(e))}</div>`;
+    rlEl.innerHTML = `<div class="state">⚠️ ${esc(String(e))}</div>`;
   }
 }
 
