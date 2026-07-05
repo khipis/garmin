@@ -614,8 +614,8 @@ class GameView extends WatchUi.View {
             if (move >= 0) { _aiFinish(move, mark); }
             return;
         }
-        // Med/Hard: for 3×3 perfect minimax runs in one tick (at most 60 leaf nodes).
-        // For larger grids: 2-ply threat-aware search spread across ticks.
+        // Med/Hard: 2-ply threat-aware search spread across ticks (batch=3).
+        // Works for all grid sizes including 3×3 — avoids watchdog from deep recursion.
         _aiForkAiMk  = mark;
         _aiForkI     = 0;
         _aiForkResult = -1;
@@ -810,23 +810,24 @@ class GameView extends WatchUi.View {
         }
     }
 
-    // Processes outer iterations per tick (2-ply threat-aware search for N>3).
+    // Processes outer iterations per tick (2-ply threat-aware search).
     //
     // Watchdog budget analysis (N=7, winLen=4):
     //   _scoreCell (outer) : 8 × _axisPotential(~100)     ≈   800 ops
     //   inner loop         : N²×(_checkWinAt(~72)+center(~8)) ≈ 49×80 = 3920 ops
     //   per tick (batch=3) : 3 × (800 + 3920)             ≈ 14 160 ops — safe
     //
-    //   Old design (batch=9, inner _scoreCell): 9×(800+49×800) = ~353K ops — watchdog!
+    // NOTE: 3×3 used to run full negamax (recursive _negamax3) in one tick,
+    // but on the first move that's ~1M ops (deep recursion × _findThreat overhead)
+    // which trips the watchdog. Using the same batch=3 / 2-ply path as larger grids
+    // fixes the crash; the AI still plays well on 3×3 with 2-ply.
     hidden function _aiForkStep() {
         // 3D Hard runs via _ai3D_HardStep (one candidate per tick).
         if (_is3D) { _ai3D_HardStep(); return; }
         var mark  = _aiForkAiMk;
         var opp   = (mark == MARK_X) ? MARK_O : MARK_X;
         var total = _gridN * _gridN;
-        var is3   = (_gridN == 3);
-        // batch=total for 3×3 (full negamax in ≤2 ticks); 3 for larger grids.
-        var batch = is3 ? total : 3;
+        var batch = 3;
         var mid   = _gridN / 2;
         var done  = 0;
         while (_aiForkI < total && done < batch) {
@@ -843,9 +844,6 @@ class GameView extends WatchUi.View {
                     return;
                 } else if (_moveCount == total) {
                     sc = 0;  // draw
-                } else if (is3) {
-                    // Full minimax for 3×3 — never watchdogs (≤60 leaf nodes)
-                    sc = -_negamax3(opp, mark, -1000, 1000);
                 } else {
                     // 2-ply: score own move with full heuristic; check opp wins and
                     // use cheap center score for opp reply (avoids watchdog on 7×7).
