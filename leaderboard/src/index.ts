@@ -1096,6 +1096,105 @@ async function handleDeleteMessage(req: Request, env: Env): Promise<Response> {
   }
 }
 
+// ── Redirect links / short URLs ───────────────────────────────────────────────
+// Branded, trackable redirects. Messages link to bitochi.com/<slug> (a static
+// page that forwards to /go/<slug>); this handler 302s to the configured
+// destination and counts the click, so the target can be changed in one place
+// (D1 / stats.html) without editing messages or rebuilding any app.
+
+const LINK_FALLBACK = "https://bitochi.com";
+
+function sanitizeSlug(raw: string): string {
+  return raw.toLowerCase().replace(/[^a-z0-9_-]/g, "").slice(0, 40);
+}
+
+// GET /go/<slug>
+async function handleGo(slugRaw: string, env: Env): Promise<Response> {
+  const slug = sanitizeSlug(slugRaw);
+  if (!slug) return Response.redirect(LINK_FALLBACK, 302);
+  try {
+    const row = await env.DB
+      .prepare("SELECT url FROM links WHERE slug = ?")
+      .bind(slug)
+      .first<{ url: string }>();
+    if (!row || !row.url) return Response.redirect(LINK_FALLBACK, 302);
+    // Count the click (small, fast — worth awaiting so it isn't dropped after
+    // the response is returned).
+    try {
+      await env.DB
+        .prepare("UPDATE links SET clicks = clicks + 1, updated_at = ? WHERE slug = ?")
+        .bind(Date.now(), slug)
+        .run();
+    } catch (_) { /* never block the redirect on a stats write */ }
+    return Response.redirect(row.url, 302);
+  } catch (e) {
+    console.error("go redirect error:", e);
+    return Response.redirect(LINK_FALLBACK, 302);
+  }
+}
+
+// GET /links — all redirects (public; used by stats.html and harmless to expose).
+async function handleGetLinks(env: Env): Promise<Response> {
+  try {
+    const rows = await env.DB
+      .prepare("SELECT slug, url, clicks, updated_at FROM links ORDER BY clicks DESC, slug ASC")
+      .all<{ slug: string; url: string; clicks: number; updated_at: number }>();
+    return json({ links: rows.results ?? [] });
+  } catch (e) {
+    console.error("links list error:", e);
+    return err("db error", 500);
+  }
+}
+
+// POST /links — authenticated upsert. Body: { slug, url }
+async function handlePostLink(req: Request, env: Env): Promise<Response> {
+  const reqKey = req.headers.get("X-LB-Key") ?? "";
+  if (!env.LB_KEY || reqKey !== env.LB_KEY) return err("forbidden", 403);
+
+  let b: Record<string, unknown>;
+  try { b = await req.json() as Record<string, unknown>; } catch { return err("invalid JSON"); }
+
+  const slug = sanitizeSlug(typeof b.slug === "string" ? b.slug.trim() : "");
+  if (!slug) return err("missing/invalid: slug");
+  const url = typeof b.url === "string" ? b.url.trim().slice(0, 400) : "";
+  if (!/^https?:\/\//i.test(url)) return err("url must start with http(s)://");
+
+  const now = Date.now();
+  try {
+    await env.DB
+      .prepare(
+        `INSERT INTO links (slug, url, clicks, created_at, updated_at)
+         VALUES (?, ?, 0, ?, ?)
+         ON CONFLICT(slug) DO UPDATE SET url = excluded.url, updated_at = excluded.updated_at`
+      )
+      .bind(slug, url, now, now)
+      .run();
+    return json({ ok: true, slug });
+  } catch (e) {
+    console.error("link upsert error:", e);
+    return err("db error", 500);
+  }
+}
+
+// DELETE /links — authenticated. Body: { slug }
+async function handleDeleteLink(req: Request, env: Env): Promise<Response> {
+  const reqKey = req.headers.get("X-LB-Key") ?? "";
+  if (!env.LB_KEY || reqKey !== env.LB_KEY) return err("forbidden", 403);
+
+  let b: Record<string, unknown>;
+  try { b = await req.json() as Record<string, unknown>; } catch { return err("invalid JSON"); }
+  const slug = sanitizeSlug(typeof b.slug === "string" ? b.slug.trim() : "");
+  if (!slug) return err("missing/invalid: slug");
+
+  try {
+    await env.DB.prepare("DELETE FROM links WHERE slug = ?").bind(slug).run();
+    return json({ ok: true });
+  } catch (e) {
+    console.error("link delete error:", e);
+    return err("db error", 500);
+  }
+}
+
 // ── Main entry ────────────────────────────────────────────────────────────────
 
 // ── Error log reader ─────────────────────────────────────────────────────────
@@ -1211,6 +1310,10 @@ export default {
     if (method === "GET"    && path === "/messages")    return handleGetMessages(url, env);
     if (method === "POST"   && path === "/messages")    return handlePostMessage(req, env);
     if (method === "DELETE" && path === "/messages")    return handleDeleteMessage(req, env);
+    if (method === "GET"    && path.startsWith("/go/")) return handleGo(path.slice(4), env);
+    if (method === "GET"    && path === "/links")       return handleGetLinks(env);
+    if (method === "POST"   && path === "/links")       return handlePostLink(req, env);
+    if (method === "DELETE" && path === "/links")       return handleDeleteLink(req, env);
     if (method === "GET"    && path === "/leaderboard") return handleGetLeaderboard(url, env);
     if (method === "GET"    && path === "/recent")      return handleGetRecent(url, env);
     if (method === "GET"    && path === "/games")       return handleGetGames(env);

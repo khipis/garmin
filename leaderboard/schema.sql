@@ -173,3 +173,17 @@ CREATE TABLE IF NOT EXISTS resets (
 );
 
 CREATE INDEX IF NOT EXISTS idx_resets_game ON resets (game, at DESC);
+
+-- ── Redirect links / short URLs ───────────────────────────────────────────────
+-- Branded, trackable redirects: GET /go/<slug> 302s to `url` and bumps `clicks`.
+-- Messages point at bitochi.com/coffee (a static page that forwards to
+-- /go/coffee) so the destination can be changed here without touching any app,
+-- and clicks are counted for the stats page. Owner-editable from stats.html.
+-- Migration (run once on existing DB): the CREATE TABLE below is idempotent.
+CREATE TABLE IF NOT EXISTS links (
+  slug       TEXT PRIMARY KEY,     -- e.g. "coffee", "games", "pro"
+  url        TEXT NOT NULL,        -- absolute destination
+  clicks     INTEGER NOT NULL DEFAULT 0,
+  created_at INTEGER NOT NULL,
+  updated_at INTEGER NOT NULL
+);

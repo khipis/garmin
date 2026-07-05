@@ -8,12 +8,25 @@
 --
 -- Edit / add more later from the "Messages" panel in stats.html (no rebuild).
 
--- 1) GLOBAL · POST-GAME · "Support Bitochi" (Buy Me a Coffee)
+-- Branded, trackable redirects (GET /go/<slug>). Messages link to the pretty
+-- bitochi.com/<slug> alias, which forwards to /go/<slug>. Change destinations
+-- here (or in stats.html) without editing messages or rebuilding apps.
+INSERT INTO links (slug, url, clicks, created_at, updated_at)
+SELECT 'coffee', 'https://buymeacoffee.com/bitochi', 0, strftime('%s','now')*1000, strftime('%s','now')*1000
+WHERE NOT EXISTS (SELECT 1 FROM links WHERE slug='coffee');
+INSERT INTO links (slug, url, clicks, created_at, updated_at)
+SELECT 'games', 'https://bitochi.com', 0, strftime('%s','now')*1000, strftime('%s','now')*1000
+WHERE NOT EXISTS (SELECT 1 FROM links WHERE slug='games');
+INSERT INTO links (slug, url, clicks, created_at, updated_at)
+SELECT 'pro', 'https://apps.garmin.com/apps/bitochi', 0, strftime('%s','now')*1000, strftime('%s','now')*1000
+WHERE NOT EXISTS (SELECT 1 FROM links WHERE slug='pro');
+
+-- 1) GLOBAL · POST-GAME · "Support Bitochi" (via bitochi.com/coffee redirect)
 INSERT INTO messages (scope, game, placement, title, body, url, url_label, weight, min_gap_s, active, created_at, updated_at)
 SELECT 'global', NULL, 'postgame',
        'Enjoying Bitochi?',
        'Every game here is free and ad-free. If they put a smile on your face, a small tip keeps new ones coming. Thank you!',
-       'https://buymeacoffee.com/bitochi', 'Buy me a coffee',
+       'https://bitochi.com/coffee', 'Buy me a coffee',
        0, 43200, 1, strftime('%s','now')*1000, strftime('%s','now')*1000
 WHERE NOT EXISTS (SELECT 1 FROM messages WHERE scope='global' AND game IS NULL AND placement='postgame' AND title='Enjoying Bitochi?');
 

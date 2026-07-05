@@ -254,3 +254,36 @@ and players see the message once on their next launch.
 **Time-limited banner.**
 Any message with `starts_at` / `ends_at` set (unix ms) only serves within that
 window — handy for a weekend event.
+
+---
+
+## 8. Trackable links / redirects
+
+Message links don't point at the final URL directly — they use a **branded,
+trackable redirect** so you can change the destination in one place and count
+clicks.
+
+Flow: `bitochi.com/coffee` → `api.bitochi.com/go/coffee` → the real URL.
+
+- `bitochi.com/coffee` is a tiny static page (`leaderboard/coffee/index.html`)
+  that forwards to the worker. GitHub Pages has no server-side redirects, hence
+  the static forward page.
+- `GET /go/<slug>` (worker) looks up the slug in the D1 **`links`** table, bumps
+  its `clicks` counter, and `302`s to `url`. Unknown slugs fall back to
+  `bitochi.com`.
+
+**Why bother instead of a raw `buymeacoffee.com` link:**
+
+- Change the destination (BMC → Ko-fi / Patreon / PayPal) with **no app rebuild
+  and no message edit** — just update the link's `url`.
+- Short, on-brand, trustworthy URL.
+- Click counts per slug, surfaced in `stats.html`.
+
+**Endpoints:** `GET /links` (list), `POST /links` `{slug,url}` (auth, upsert),
+`DELETE /links` `{slug}` (auth).
+
+**Manage** from the **🔗 Links** panel in `stats.html`. Seeded slugs: `coffee`
+(→ Buy Me a Coffee), `games` (→ bitochi.com), `pro` (→ Connect IQ Store). To add
+a new pretty alias `bitochi.com/<slug>`, create `leaderboard/<slug>/index.html`
+forwarding to `/go/<slug>` (copy the `coffee` page) and add the slug via the
+panel.

@@ -448,6 +448,31 @@
       </div>
 
       <div id="msg-list"><div class="state"><div class="spinner"></div>Loading…</div></div>
+
+      <div class="sh"><span class="sh-title">🔗 Links — trackable redirects (bitochi.com/&lt;slug&gt; → /go/&lt;slug&gt;)</span><span class="sh-line"></span>
+        <button class="hbtn" onclick="loadLinks()" style="margin-left:8px;font-size:.7rem;padding:3px 8px">↺</button>
+        <button class="hbtn" onclick="showLinkForm()" id="link-add-btn"
+          style="margin-left:6px;font-size:.7rem;padding:3px 8px;background:#0a1a2a;border-color:var(--accent);color:var(--accent)">
+          ➕ Add link
+        </button>
+      </div>
+      <div id="link-form" class="mform" style="display:none">
+        <div class="mgrid">
+          <label>Slug <span class="muted">(a-z 0-9 - _)</span>
+            <input class="minput" id="lf-slug" placeholder="coffee" autocomplete="off">
+          </label>
+          <label>Destination URL
+            <input class="minput" id="lf-url" placeholder="https://buymeacoffee.com/bitochi">
+          </label>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <button class="hbtn" onclick="saveLink()"
+            style="background:#0d2a1a;border-color:var(--green);color:var(--green)">💾 Save</button>
+          <button class="hbtn" onclick="document.getElementById('link-form').style.display='none'">Cancel</button>
+          <span id="lf-status" class="muted" style="align-self:center"></span>
+        </div>
+      </div>
+      <div id="link-list"><div class="state"><div class="spinner"></div>Loading…</div></div>
     </div>
 
     <!-- Leaderboard panel (per game) -->
@@ -760,6 +785,7 @@ loadErrors();
 loadSnapshots();
 loadHofAdmin();
 loadMessages();
+loadLinks();
 
 // ── Game launches (independent of the scores table) ────────────────────────────
 async function loadLaunches() {
@@ -1332,6 +1358,88 @@ async function deleteMessage(id) {
     });
     const d = await r.json();
     if (d.ok) loadMessages();
+    else {
+      alert('Error: ' + (d.error || 'unknown'));
+      if (r.status === 403) sessionStorage.removeItem('lb_key');
+    }
+  } catch(e) { alert('Network error: ' + e); }
+}
+
+// ── Links / redirects admin ─────────────────────────────────────────────────
+async function loadLinks() {
+  const el = document.getElementById('link-list');
+  el.innerHTML = '<div class="state"><div class="spinner"></div>Loading…</div>';
+  try {
+    const d = await fetch(API + '/links', { cache: 'no-store' }).then(r => r.json());
+    const links = d.links || [];
+    if (!links.length) {
+      el.innerHTML = '<div class="state">No links yet. Add one (e.g. slug "coffee" → your Buy Me a Coffee URL).</div>';
+      return;
+    }
+    el.innerHTML = `<div style="overflow-x:auto"><table>
+      <thead><tr><th>Pretty URL</th><th>→ Destination</th><th>Clicks</th><th></th></tr></thead>
+      <tbody>${links.map(l => `<tr>
+        <td><b>bitochi.com/${esc(l.slug)}</b></td>
+        <td class="muted" style="word-break:break-all">${esc(l.url)}</td>
+        <td><b>${(l.clicks||0).toLocaleString()}</b></td>
+        <td style="white-space:nowrap">
+          <button class="hbtn" style="padding:2px 8px;font-size:.68rem" onclick="editLink('${esc(l.slug)}','${esc(l.url)}')">✎</button>
+          <button class="hbtn" style="padding:2px 8px;font-size:.68rem;color:#f87171;border-color:#f87171" onclick="deleteLink('${esc(l.slug)}')">✕</button>
+        </td>
+      </tr>`).join('')}</tbody>
+    </table></div>
+    <div class="muted" style="padding:4px 4px 0">Tip: create a bitochi.com/&lt;slug&gt;/index.html forwarding to /go/&lt;slug&gt; for each pretty alias (coffee already exists).</div>`;
+  } catch(e) {
+    el.innerHTML = `<div class="state">⚠️ ${esc(String(e))}</div>`;
+  }
+}
+
+function showLinkForm(slug, url) {
+  const f = document.getElementById('link-form');
+  f.style.display = '';
+  document.getElementById('lf-status').textContent = '';
+  document.getElementById('lf-slug').value = slug || '';
+  document.getElementById('lf-url').value  = url || '';
+  f.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+function editLink(slug, url) { showLinkForm(slug, url); }
+
+async function saveLink() {
+  const slug = document.getElementById('lf-slug').value.trim();
+  const url  = document.getElementById('lf-url').value.trim();
+  const status = document.getElementById('lf-status');
+  if (!slug) { status.textContent = '⚠️ Slug required'; return; }
+  if (!/^https?:\/\//i.test(url)) { status.textContent = '⚠️ URL must start with http(s)://'; return; }
+  const key = lbKey('Enter LB_KEY to save the link:');
+  if (!key) return;
+  status.textContent = '⏳ Saving…';
+  try {
+    const r = await fetch(API + '/links', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-LB-Key': key },
+      body: JSON.stringify({ slug, url }),
+    });
+    const d = await r.json();
+    if (d.ok) { status.textContent = '✅ Saved'; document.getElementById('link-form').style.display='none'; loadLinks(); }
+    else {
+      status.textContent = '❌ ' + (d.error || 'Error');
+      if (r.status === 403) sessionStorage.removeItem('lb_key');
+    }
+  } catch(e) { status.textContent = '❌ Network error'; }
+}
+
+async function deleteLink(slug) {
+  if (!confirm(`Delete link "${slug}"?`)) return;
+  const key = lbKey('Enter LB_KEY to delete the link:');
+  if (!key) return;
+  try {
+    const r = await fetch(API + '/links', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json', 'X-LB-Key': key },
+      body: JSON.stringify({ slug }),
+    });
+    const d = await r.json();
+    if (d.ok) loadLinks();
     else {
       alert('Error: ' + (d.error || 'unknown'));
       if (r.status === 403) sessionStorage.removeItem('lb_key');
