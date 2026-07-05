@@ -6045,7 +6045,7 @@ _Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_778_26_781_4_stop:
     }
     [ @file = "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc"; @line = 782; @symbol_functiondef = [_fire,782,13,18]; ]
     function _fire() as Void {
-_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_782_29_791_4_start:
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_782_29_799_4_start:
 [ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 783 8 ]
 _Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_783_8_783_48_if_stmt:
         symbol [ _t %tmp.2 783 12 14 ];
@@ -6069,301 +6069,619 @@ _Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_783_24_783_48_start
 _Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_783_24_783_48_stop:
         goto @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_783_8_783_48_if_end;
 _Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_783_8_783_48_if_end:
-[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 784 8 ]
-        [ "_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_782_29_791_4_start" "_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_782_29_791_4_stop" ]
-        %v.1 = local;
-        symbol [ v %v.1 784 12 13 ];
-        symbol [ LbScoresView %tmp.13 784 20 32 ];
-        %tmp.13 = getv ? :LbScoresView;
-        symbol [ _game %tmp.15 784 33 38 ];
-        %tmp.15 = getv ? :_game;
-        symbol [ _variant %tmp.17 784 40 48 ];
-        %tmp.17 = getv ? :_variant;
-        symbol [ _title %tmp.19 784 50 56 ];
-        %tmp.19 = getv ? :_title;
-        %tmp.10 = newc %tmp.13 (%tmp.15, %tmp.17, %tmp.19);
-        lputv %v.1 %tmp.10;
-        symbol [ v %v.1 784 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 785 8 ]
-        %tmp.20 = lgetv %v.1;
-        symbol [ v %tmp.20 785 8 9 ];
-        symbol [ markPostGame %tmp.21 785 10 22 ];
-        %tmp.21 = getv function %tmp.20 :markPostGame;
-        invoke %tmp.20 %tmp.21();
-[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 786 8 ]
-        symbol [ WatchUi %tmp.22 786 8 15 ];
-        %tmp.22 = getm $.Toybox.WatchUi;
-        symbol [ pushView %tmp.23 786 16 24 ];
-        %tmp.23 = getv function %tmp.22 :pushView;
-        %tmp.24 = lgetv %v.1;
-        symbol [ v %tmp.24 786 25 26 ];
-        symbol [ LbScoresDelegate %tmp.28 786 32 48 ];
-        %tmp.28 = getv ? :LbScoresDelegate;
-        %tmp.29 = lgetv %v.1;
-        symbol [ v %tmp.29 786 49 50 ];
-        %tmp.25 = newc %tmp.28 (%tmp.29);
-        symbol [ WatchUi %tmp.30 786 53 60 ];
-        %tmp.30 = getm $.Toybox.WatchUi;
-        symbol [ SLIDE_UP %tmp.31 786 61 69 ];
-        %tmp.31 = getv %tmp.30 :SLIDE_UP;
-        invoke %tmp.22 %tmp.23(%tmp.24, %tmp.25, %tmp.31);
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 789 8 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_782_29_799_4_start" "_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_782_29_799_4_stop" ]
+        %msg.1 = local;
+        symbol [ msg %msg.1 789 12 15 ];
+        symbol [ Leaderboard %tmp.11 789 18 29 ];
+        %tmp.11 = getv ? :Leaderboard;
+        symbol [ duePostGameMessage %tmp.12 789 30 48 ];
+        %tmp.12 = getv function %tmp.11 :duePostGameMessage;
+        %tmp.13 = invoke %tmp.11 %tmp.12();
+        lputv %msg.1 %tmp.13;
+        symbol [ msg %msg.1 789 12 15 ];
 [ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 790 8 ]
-        symbol [ Leaderboard %tmp.33 790 8 19 ];
-        %tmp.33 = getv ? :Leaderboard;
-        symbol [ showMessage %tmp.34 790 20 31 ];
-        %tmp.34 = getv function %tmp.33 :showMessage;
-        symbol [ _game %tmp.36 790 32 37 ];
-        %tmp.36 = getv ? :_game;
-        symbol [ Leaderboard %tmp.38 790 39 50 ];
-        %tmp.38 = getv ? :Leaderboard;
-        symbol [ MSG_POSTGAME %tmp.39 790 51 63 ];
-        %tmp.39 = getv %tmp.38 :MSG_POSTGAME;
-        %tmp.40 = null;
-        invoke %tmp.33 %tmp.34(%tmp.36, %tmp.39, %tmp.40);
-_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_782_29_791_4_stop:
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_790_8_797_8_if_stmt:
+        %tmp.14 = lgetv %msg.1;
+        symbol [ msg %tmp.14 790 12 15 ];
+        %tmp.15 = null;
+        %tmp.16 = ne %tmp.14 %tmp.15;
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_790_8_797_8_if_end;
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_790_8_797_8_if_true:
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_790_25_797_8_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 791 12 ]
+        try @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_791_12_796_25_beginTry @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_791_12_796_25_endTry @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_791_12_796_25_catch @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_791_12_796_25_finally;
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_791_12_796_25_beginTry:
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_791_16_796_12_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 792 16 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_791_16_796_12_start" "_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_791_16_796_12_stop" ]
+        %mv.2 = local;
+        symbol [ mv %mv.2 792 20 22 ];
+        symbol [ LbMessageView %tmp.20 792 29 42 ];
+        %tmp.20 = getv ? :LbMessageView;
+        %tmp.21 = lgetv %msg.1;
+        symbol [ msg %tmp.21 792 43 46 ];
+        %tmp.22 = as %tmp.21 { (!Null) };
+        %tmp.17 = newc %tmp.20 (%tmp.22);
+        lputv %mv.2 %tmp.17;
+        symbol [ mv %mv.2 792 20 22 ];
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 793 16 ]
+        symbol [ WatchUi %tmp.23 793 16 23 ];
+        %tmp.23 = getm $.Toybox.WatchUi;
+        symbol [ pushView %tmp.24 793 24 32 ];
+        %tmp.24 = getv function %tmp.23 :pushView;
+        %tmp.25 = lgetv %mv.2;
+        symbol [ mv %tmp.25 793 33 35 ];
+        symbol [ LbMsgThenBoardDelegate %tmp.29 793 41 63 ];
+        %tmp.29 = getv ? :LbMsgThenBoardDelegate;
+        %tmp.30 = lgetv %mv.2;
+        symbol [ mv %tmp.30 793 64 66 ];
+        symbol [ _game %tmp.32 793 68 73 ];
+        %tmp.32 = getv ? :_game;
+        symbol [ _variant %tmp.34 793 75 83 ];
+        %tmp.34 = getv ? :_variant;
+        symbol [ _title %tmp.36 793 85 91 ];
+        %tmp.36 = getv ? :_title;
+        %tmp.26 = newc %tmp.29 (%tmp.30, %tmp.32, %tmp.34, %tmp.36);
+        symbol [ WatchUi %tmp.37 794 33 40 ];
+        %tmp.37 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_UP %tmp.38 794 41 49 ];
+        %tmp.38 = getv %tmp.37 :SLIDE_UP;
+        invoke %tmp.23 %tmp.24(%tmp.25, %tmp.26, %tmp.38);
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 795 16 ]
+        jsr @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_791_12_796_25_finally;
+        ret ?;
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_791_16_796_12_stop:
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_791_12_796_25_endTry:
+        jsr @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_791_12_796_25_finally;
+        goto @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_791_12_796_25_end;
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_791_12_796_25_catch:
+        %tmp.39 = exception;
+        push %tmp.39;
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 796 14 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_791_12_796_25_catch" "_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_796_14_796_25_end" ]
+        %e.3 = local;
+        symbol [ e %e.3 796 21 22 ];
+        %tmp.40 = dup %tmp.39;
+        lputv %e.3 %tmp.40;
+        symbol [ e %e.3 796 21 22 ];
+        jsr @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_791_12_796_25_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_791_12_796_25_end;
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_796_14_796_25_end:
+        try @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_791_12_796_25_catch @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_796_14_796_25_end @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_796_14_796_25_end @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_791_12_796_25_finally;
+        jsr @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_791_12_796_25_finally;
+        throw %tmp.39;
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_791_12_796_25_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_791_12_796_25_end:
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_790_25_797_8_stop:
+        goto @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_790_8_797_8_if_end;
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_790_8_797_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 798 8 ]
+        %tmp.41 = self;
+        symbol [ _openBoard %tmp.42 798 8 18 ];
+        %tmp.42 = getv function %tmp.41 :_openBoard;
+        invoke %tmp.41 %tmp.42();
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_782_29_799_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc"; @line = 801; @symbol_functiondef = [_openBoard,801,13,23]; ]
+    function _openBoard() as Void {
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_801_34_807_4_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 802 8 ]
+        try @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_802_8_806_21_beginTry @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_802_8_806_21_endTry @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_802_8_806_21_catch @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_802_8_806_21_finally;
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_802_8_806_21_beginTry:
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_802_12_806_8_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 803 12 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_802_12_806_8_start" "_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_802_12_806_8_stop" ]
+        %v.1 = local;
+        symbol [ v %v.1 803 16 17 ];
+        symbol [ LbScoresView %tmp.4 803 24 36 ];
+        %tmp.4 = getv ? :LbScoresView;
+        symbol [ _game %tmp.6 803 37 42 ];
+        %tmp.6 = getv ? :_game;
+        symbol [ _variant %tmp.8 803 44 52 ];
+        %tmp.8 = getv ? :_variant;
+        symbol [ _title %tmp.10 803 54 60 ];
+        %tmp.10 = getv ? :_title;
+        %tmp.1 = newc %tmp.4 (%tmp.6, %tmp.8, %tmp.10);
+        lputv %v.1 %tmp.1;
+        symbol [ v %v.1 803 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 804 12 ]
+        %tmp.11 = lgetv %v.1;
+        symbol [ v %tmp.11 804 12 13 ];
+        symbol [ markPostGame %tmp.12 804 14 26 ];
+        %tmp.12 = getv function %tmp.11 :markPostGame;
+        invoke %tmp.11 %tmp.12();
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 805 12 ]
+        symbol [ WatchUi %tmp.13 805 12 19 ];
+        %tmp.13 = getm $.Toybox.WatchUi;
+        symbol [ pushView %tmp.14 805 20 28 ];
+        %tmp.14 = getv function %tmp.13 :pushView;
+        %tmp.15 = lgetv %v.1;
+        symbol [ v %tmp.15 805 29 30 ];
+        symbol [ LbScoresDelegate %tmp.19 805 36 52 ];
+        %tmp.19 = getv ? :LbScoresDelegate;
+        %tmp.20 = lgetv %v.1;
+        symbol [ v %tmp.20 805 53 54 ];
+        %tmp.16 = newc %tmp.19 (%tmp.20);
+        symbol [ WatchUi %tmp.21 805 57 64 ];
+        %tmp.21 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_UP %tmp.22 805 65 73 ];
+        %tmp.22 = getv %tmp.21 :SLIDE_UP;
+        invoke %tmp.13 %tmp.14(%tmp.15, %tmp.16, %tmp.22);
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_802_12_806_8_stop:
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_802_8_806_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_802_8_806_21_finally;
+        goto @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_802_8_806_21_end;
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_802_8_806_21_catch:
+        %tmp.23 = exception;
+        push %tmp.23;
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 806 10 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_802_8_806_21_catch" "_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_806_10_806_21_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 806 17 18 ];
+        %tmp.24 = dup %tmp.23;
+        lputv %e.2 %tmp.24;
+        symbol [ e %e.2 806 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_802_8_806_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_802_8_806_21_end;
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_806_10_806_21_end:
+        try @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_802_8_806_21_catch @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_806_10_806_21_end @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_806_10_806_21_end @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_802_8_806_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_802_8_806_21_finally;
+        throw %tmp.23;
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_802_8_806_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_802_8_806_21_end:
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_801_34_807_4_stop:
     }
 }
-[ @file = "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc"; @line = 798; @symbol_moduledef = [LbBadge,798,7,14]; ]
-module LbBadge {
-    [ @file = "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc"; @line = 798; ]
+[ @file = "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc"; @line = 812; @symbol_classdef = [LbMsgThenBoardDelegate,812,6,28]; @symbol_extends<0> = [WatchUi,812,37,44]; @symbol_extends<1> = [BehaviorDelegate,812,45,61]; ]
+class LbMsgThenBoardDelegate extends WatchUi.BehaviorDelegate {
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc"; @line = 812; ]
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc"; @line = 801; @symbol_functiondef = [isActive,801,13,21]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc"; @line = 812; ]
+    static
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc"; @line = 813; @position = 15; @symbol_vardef = [_v,813,15,17]; ]
+    protected
+    var _v;
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc"; @line = 814; @position = 15; @symbol_vardef = [_game,814,15,20]; ]
+    protected
+    var _game;
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc"; @line = 815; @position = 15; @symbol_vardef = [_variant,815,15,23]; ]
+    protected
+    var _variant;
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc"; @line = 816; @position = 15; @symbol_vardef = [_title,816,15,21]; ]
+    protected
+    var _title;
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc"; @line = 818; @symbol_functiondef = [initialize,818,13,23]; @symbol_param<0> = [v,818,24,25]; @symbol_param<1> = [game,818,27,31]; @symbol_param<2> = [variant,818,33,40]; @symbol_param<3> = [title,818,42,47]; ]
+    function initialize(v, game, variant, title) as Void {
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_818_49_821_4_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 819 8 ]
+        symbol [ BehaviorDelegate %tmp.2 819 8 24 ];
+        %tmp.2 = getv ? :BehaviorDelegate;
+        symbol [ initialize %tmp.3 819 25 35 ];
+        %tmp.3 = getv function %tmp.2 :initialize;
+        invoke %tmp.2 %tmp.3();
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 820 8 ]
+        %tmp.4 = lgetv %v;
+        symbol [ v %tmp.4 820 13 14 ];
+        symbol [ _v ? 820 8 10 ];
+        putv self :_v %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 820 16 ]
+        %tmp.5 = lgetv %game;
+        symbol [ game %tmp.5 820 24 28 ];
+        symbol [ _game ? 820 16 21 ];
+        putv self :_game %tmp.5;
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 820 30 ]
+        %tmp.6 = lgetv %variant;
+        symbol [ variant %tmp.6 820 41 48 ];
+        symbol [ _variant ? 820 30 38 ];
+        putv self :_variant %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 820 50 ]
+        %tmp.7 = lgetv %title;
+        symbol [ title %tmp.7 820 59 64 ];
+        symbol [ _title ? 820 50 56 ];
+        putv self :_title %tmp.7;
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_818_49_821_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc"; @line = 823; @symbol_functiondef = [_close,823,20,26]; ]
+    protected
+    function _close() {
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_823_29_831_4_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 824 8 ]
+        symbol [ WatchUi %tmp.1 824 8 15 ];
+        %tmp.1 = getm $.Toybox.WatchUi;
+        symbol [ popView %tmp.2 824 16 23 ];
+        %tmp.2 = getv function %tmp.1 :popView;
+        symbol [ WatchUi %tmp.3 824 24 31 ];
+        %tmp.3 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_DOWN %tmp.4 824 32 42 ];
+        %tmp.4 = getv %tmp.3 :SLIDE_DOWN;
+        invoke %tmp.1 %tmp.2(%tmp.4);
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 825 8 ]
+        try @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_825_8_829_21_beginTry @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_825_8_829_21_endTry @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_825_8_829_21_catch @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_825_8_829_21_finally;
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_825_8_829_21_beginTry:
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_825_12_829_8_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 826 12 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_825_12_829_8_start" "_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_825_12_829_8_stop" ]
+        %b.1 = local;
+        symbol [ b %b.1 826 16 17 ];
+        symbol [ LbScoresView %tmp.8 826 24 36 ];
+        %tmp.8 = getv ? :LbScoresView;
+        symbol [ _game %tmp.10 826 37 42 ];
+        %tmp.10 = getv ? :_game;
+        symbol [ _variant %tmp.12 826 44 52 ];
+        %tmp.12 = getv ? :_variant;
+        symbol [ _title %tmp.14 826 54 60 ];
+        %tmp.14 = getv ? :_title;
+        %tmp.5 = newc %tmp.8 (%tmp.10, %tmp.12, %tmp.14);
+        lputv %b.1 %tmp.5;
+        symbol [ b %b.1 826 16 17 ];
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 827 12 ]
+        %tmp.15 = lgetv %b.1;
+        symbol [ b %tmp.15 827 12 13 ];
+        symbol [ markPostGame %tmp.16 827 14 26 ];
+        %tmp.16 = getv function %tmp.15 :markPostGame;
+        invoke %tmp.15 %tmp.16();
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 828 12 ]
+        symbol [ WatchUi %tmp.17 828 12 19 ];
+        %tmp.17 = getm $.Toybox.WatchUi;
+        symbol [ pushView %tmp.18 828 20 28 ];
+        %tmp.18 = getv function %tmp.17 :pushView;
+        %tmp.19 = lgetv %b.1;
+        symbol [ b %tmp.19 828 29 30 ];
+        symbol [ LbScoresDelegate %tmp.23 828 36 52 ];
+        %tmp.23 = getv ? :LbScoresDelegate;
+        %tmp.24 = lgetv %b.1;
+        symbol [ b %tmp.24 828 53 54 ];
+        %tmp.20 = newc %tmp.23 (%tmp.24);
+        symbol [ WatchUi %tmp.25 828 57 64 ];
+        %tmp.25 = getm $.Toybox.WatchUi;
+        symbol [ SLIDE_UP %tmp.26 828 65 73 ];
+        %tmp.26 = getv %tmp.25 :SLIDE_UP;
+        invoke %tmp.17 %tmp.18(%tmp.19, %tmp.20, %tmp.26);
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_825_12_829_8_stop:
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_825_8_829_21_endTry:
+        jsr @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_825_8_829_21_finally;
+        goto @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_825_8_829_21_end;
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_825_8_829_21_catch:
+        %tmp.27 = exception;
+        push %tmp.27;
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 829 10 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_825_8_829_21_catch" "_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_829_10_829_21_end" ]
+        %e.2 = local;
+        symbol [ e %e.2 829 17 18 ];
+        %tmp.28 = dup %tmp.27;
+        lputv %e.2 %tmp.28;
+        symbol [ e %e.2 829 17 18 ];
+        jsr @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_825_8_829_21_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_825_8_829_21_end;
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_829_10_829_21_end:
+        try @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_825_8_829_21_catch @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_829_10_829_21_end @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_829_10_829_21_end @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_825_8_829_21_finally;
+        jsr @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_825_8_829_21_finally;
+        throw %tmp.27;
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_825_8_829_21_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_825_8_829_21_end:
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 830 8 ]
+        %tmp.29 = true;
+        ret %tmp.29;
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_823_29_831_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc"; @line = 833; @symbol_functiondef = [onSelect,833,13,21]; ]
+    function onSelect() {
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_833_30_833_49_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 833 32 ]
+        %tmp.1 = self;
+        symbol [ _close %tmp.2 833 39 45 ];
+        %tmp.2 = getv function %tmp.1 :_close;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        ret %tmp.3;
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_833_30_833_49_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc"; @line = 834; @symbol_functiondef = [onBack,834,13,19]; ]
+    function onBack() {
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_834_30_834_49_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 834 32 ]
+        %tmp.1 = self;
+        symbol [ _close %tmp.2 834 39 45 ];
+        %tmp.2 = getv function %tmp.1 :_close;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        ret %tmp.3;
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_834_30_834_49_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc"; @line = 835; @symbol_functiondef = [onKey,835,13,18]; @symbol_param<0> = [evt,835,19,22]; ]
+    function onKey(evt) {
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_835_30_835_49_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 835 32 ]
+        %tmp.1 = self;
+        symbol [ _close %tmp.2 835 39 45 ];
+        %tmp.2 = getv function %tmp.1 :_close;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        ret %tmp.3;
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_835_30_835_49_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc"; @line = 836; @symbol_functiondef = [onTap,836,13,18]; @symbol_param<0> = [evt,836,19,22]; ]
+    function onTap(evt) {
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_836_30_836_49_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 836 32 ]
+        %tmp.1 = self;
+        symbol [ _close %tmp.2 836 39 45 ];
+        %tmp.2 = getv function %tmp.1 :_close;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        ret %tmp.3;
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_836_30_836_49_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc"; @line = 837; @symbol_functiondef = [onNextPage,837,13,23]; ]
+    function onNextPage() {
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_837_30_837_49_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 837 32 ]
+        %tmp.1 = self;
+        symbol [ _close %tmp.2 837 39 45 ];
+        %tmp.2 = getv function %tmp.1 :_close;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        ret %tmp.3;
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_837_30_837_49_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc"; @line = 838; @symbol_functiondef = [onPreviousPage,838,13,27]; ]
+    function onPreviousPage() {
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_838_30_838_49_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 838 32 ]
+        %tmp.1 = self;
+        symbol [ _close %tmp.2 838 39 45 ];
+        %tmp.2 = getv function %tmp.1 :_close;
+        %tmp.3 = invoke %tmp.1 %tmp.2();
+        ret %tmp.3;
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_838_30_838_49_stop:
+    }
+}
+[ @file = "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc"; @line = 845; @symbol_moduledef = [LbBadge,845,7,14]; ]
+module LbBadge {
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc"; @line = 845; ]
+    <init> {
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc"; @line = 848; @symbol_functiondef = [isActive,848,13,21]; ]
     function isActive() {
-_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_801_24_803_4_start:
-[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 802 8 ]
-        symbol [ Leaderboard %tmp.2 802 15 26 ];
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_848_24_850_4_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 849 8 ]
+        symbol [ Leaderboard %tmp.2 849 15 26 ];
         %tmp.2 = getv ? :Leaderboard;
-        symbol [ isSupported %tmp.3 802 27 38 ];
+        symbol [ isSupported %tmp.3 849 27 38 ];
         %tmp.3 = getv function %tmp.2 :isSupported;
         %tmp.4 = invoke %tmp.2 %tmp.3();
         ret %tmp.4;
-_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_801_24_803_4_stop:
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_848_24_850_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc"; @line = 805; @symbol_functiondef = [drawRow,805,13,20]; @symbol_param<0> = [dc,805,21,23]; @symbol_param<1> = [x,805,25,26]; @symbol_param<2> = [y,805,28,29]; @symbol_param<3> = [w,805,31,32]; @symbol_param<4> = [rowH,805,34,38]; @symbol_param<5> = [selected,805,40,48]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc"; @line = 852; @symbol_functiondef = [drawRow,852,13,20]; @symbol_param<0> = [dc,852,21,23]; @symbol_param<1> = [x,852,25,26]; @symbol_param<2> = [y,852,28,29]; @symbol_param<3> = [w,852,31,32]; @symbol_param<4> = [rowH,852,34,38]; @symbol_param<5> = [selected,852,40,48]; ]
     function drawRow(dc, x, y, w, rowH, selected) {
-_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_805_50_839_4_start:
-[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 807 8 ]
-_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_807_8_816_8_if_stmt:
-        symbol [ Leaderboard %tmp.2 807 13 24 ];
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_852_50_886_4_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 854 8 ]
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_854_8_863_8_if_stmt:
+        symbol [ Leaderboard %tmp.2 854 13 24 ];
         %tmp.2 = getv ? :Leaderboard;
-        symbol [ isSupported %tmp.3 807 25 36 ];
+        symbol [ isSupported %tmp.3 854 25 36 ];
         %tmp.3 = getv function %tmp.2 :isSupported;
         %tmp.4 = invoke %tmp.2 %tmp.3();
         %tmp.5 = not %tmp.4;
-        bf %tmp.5 @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_807_8_816_8_if_end;
-_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_807_8_816_8_if_true:
-_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_807_40_816_8_start:
-[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 808 12 ]
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_854_8_863_8_if_end;
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_854_8_863_8_if_true:
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_854_40_863_8_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 855 12 ]
         %tmp.6 = lgetv %dc;
-        symbol [ dc %tmp.6 808 12 14 ];
-        symbol [ setColor %tmp.7 808 15 23 ];
+        symbol [ dc %tmp.6 855 12 14 ];
+        symbol [ setColor %tmp.7 855 15 23 ];
         %tmp.7 = getv function %tmp.6 :setColor;
         %tmp.8 = 0x161616;
-        symbol [ Graphics %tmp.9 808 34 42 ];
+        symbol [ Graphics %tmp.9 855 34 42 ];
         %tmp.9 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.10 808 43 60 ];
+        symbol [ COLOR_TRANSPARENT %tmp.10 855 43 60 ];
         %tmp.10 = getv %tmp.9 :COLOR_TRANSPARENT;
         invoke %tmp.6 %tmp.7(%tmp.8, %tmp.10);
-[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 809 12 ]
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 856 12 ]
         %tmp.11 = lgetv %dc;
-        symbol [ dc %tmp.11 809 12 14 ];
-        symbol [ fillRoundedRectangle %tmp.12 809 15 35 ];
+        symbol [ dc %tmp.11 856 12 14 ];
+        symbol [ fillRoundedRectangle %tmp.12 856 15 35 ];
         %tmp.12 = getv function %tmp.11 :fillRoundedRectangle;
         %tmp.13 = lgetv %x;
-        symbol [ x %tmp.13 809 36 37 ];
+        symbol [ x %tmp.13 856 36 37 ];
         %tmp.14 = lgetv %y;
-        symbol [ y %tmp.14 809 39 40 ];
+        symbol [ y %tmp.14 856 39 40 ];
         %tmp.15 = lgetv %w;
-        symbol [ w %tmp.15 809 42 43 ];
+        symbol [ w %tmp.15 856 42 43 ];
         %tmp.16 = lgetv %rowH;
-        symbol [ rowH %tmp.16 809 45 49 ];
+        symbol [ rowH %tmp.16 856 45 49 ];
         %tmp.17 = 5;
         invoke %tmp.11 %tmp.12(%tmp.13, %tmp.14, %tmp.15, %tmp.16, %tmp.17);
-[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 810 12 ]
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 857 12 ]
         %tmp.18 = lgetv %dc;
-        symbol [ dc %tmp.18 810 12 14 ];
-        symbol [ setColor %tmp.19 810 15 23 ];
+        symbol [ dc %tmp.18 857 12 14 ];
+        symbol [ setColor %tmp.19 857 15 23 ];
         %tmp.19 = getv function %tmp.18 :setColor;
         %tmp.20 = 0x333333;
-        symbol [ Graphics %tmp.21 810 34 42 ];
+        symbol [ Graphics %tmp.21 857 34 42 ];
         %tmp.21 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.22 810 43 60 ];
+        symbol [ COLOR_TRANSPARENT %tmp.22 857 43 60 ];
         %tmp.22 = getv %tmp.21 :COLOR_TRANSPARENT;
         invoke %tmp.18 %tmp.19(%tmp.20, %tmp.22);
-[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 811 12 ]
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 858 12 ]
         %tmp.23 = lgetv %dc;
-        symbol [ dc %tmp.23 811 12 14 ];
-        symbol [ drawRoundedRectangle %tmp.24 811 15 35 ];
+        symbol [ dc %tmp.23 858 12 14 ];
+        symbol [ drawRoundedRectangle %tmp.24 858 15 35 ];
         %tmp.24 = getv function %tmp.23 :drawRoundedRectangle;
         %tmp.25 = lgetv %x;
-        symbol [ x %tmp.25 811 36 37 ];
+        symbol [ x %tmp.25 858 36 37 ];
         %tmp.26 = lgetv %y;
-        symbol [ y %tmp.26 811 39 40 ];
+        symbol [ y %tmp.26 858 39 40 ];
         %tmp.27 = lgetv %w;
-        symbol [ w %tmp.27 811 42 43 ];
+        symbol [ w %tmp.27 858 42 43 ];
         %tmp.28 = lgetv %rowH;
-        symbol [ rowH %tmp.28 811 45 49 ];
+        symbol [ rowH %tmp.28 858 45 49 ];
         %tmp.29 = 5;
         invoke %tmp.23 %tmp.24(%tmp.25, %tmp.26, %tmp.27, %tmp.28, %tmp.29);
-[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 812 12 ]
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 859 12 ]
         %tmp.30 = lgetv %dc;
-        symbol [ dc %tmp.30 812 12 14 ];
-        symbol [ setColor %tmp.31 812 15 23 ];
+        symbol [ dc %tmp.30 859 12 14 ];
+        symbol [ setColor %tmp.31 859 15 23 ];
         %tmp.31 = getv function %tmp.30 :setColor;
         %tmp.32 = 0x555555;
-        symbol [ Graphics %tmp.33 812 34 42 ];
+        symbol [ Graphics %tmp.33 859 34 42 ];
         %tmp.33 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.34 812 43 60 ];
+        symbol [ COLOR_TRANSPARENT %tmp.34 859 43 60 ];
         %tmp.34 = getv %tmp.33 :COLOR_TRANSPARENT;
         invoke %tmp.30 %tmp.31(%tmp.32, %tmp.34);
-[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 813 12 ]
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 860 12 ]
         %tmp.35 = lgetv %dc;
-        symbol [ dc %tmp.35 813 12 14 ];
-        symbol [ drawText %tmp.36 813 15 23 ];
+        symbol [ dc %tmp.35 860 12 14 ];
+        symbol [ drawText %tmp.36 860 15 23 ];
         %tmp.36 = getv function %tmp.35 :drawText;
         %tmp.37 = lgetv %x;
-        symbol [ x %tmp.37 813 24 25 ];
+        symbol [ x %tmp.37 860 24 25 ];
         %tmp.38 = lgetv %w;
-        symbol [ w %tmp.38 813 28 29 ];
+        symbol [ w %tmp.38 860 28 29 ];
         %tmp.39 = 2;
         %tmp.40 = div %tmp.38 %tmp.39;
         %tmp.41 = add %tmp.37 %tmp.40;
         %tmp.42 = lgetv %y;
-        symbol [ y %tmp.42 813 35 36 ];
+        symbol [ y %tmp.42 860 35 36 ];
         %tmp.43 = lgetv %rowH;
-        symbol [ rowH %tmp.43 813 40 44 ];
+        symbol [ rowH %tmp.43 860 40 44 ];
         %tmp.44 = 14;
         %tmp.45 = sub %tmp.43 %tmp.44;
         %tmp.46 = 2;
         %tmp.47 = div %tmp.45 %tmp.46;
         %tmp.48 = add %tmp.42 %tmp.47;
-        symbol [ Graphics %tmp.49 813 56 64 ];
+        symbol [ Graphics %tmp.49 860 56 64 ];
         %tmp.49 = getm $.Toybox.Graphics;
-        symbol [ FONT_XTINY %tmp.50 813 65 75 ];
+        symbol [ FONT_XTINY %tmp.50 860 65 75 ];
         %tmp.50 = getv %tmp.49 :FONT_XTINY;
         %tmp.51 = "LEADERBOARD N/A";
-        symbol [ Graphics %tmp.52 814 43 51 ];
+        symbol [ Graphics %tmp.52 861 43 51 ];
         %tmp.52 = getm $.Toybox.Graphics;
-        symbol [ TEXT_JUSTIFY_CENTER %tmp.53 814 52 71 ];
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.53 861 52 71 ];
         %tmp.53 = getv %tmp.52 :TEXT_JUSTIFY_CENTER;
         invoke %tmp.35 %tmp.36(%tmp.41, %tmp.48, %tmp.50, %tmp.51, %tmp.53);
-[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 815 12 ]
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 862 12 ]
         ret ?;
-_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_807_40_816_8_stop:
-        goto @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_807_8_816_8_if_end;
-_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_807_8_816_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 818 8 ]
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_854_40_863_8_stop:
+        goto @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_854_8_863_8_if_end;
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_854_8_863_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 865 8 ]
         %tmp.54 = lgetv %dc;
-        symbol [ dc %tmp.54 818 8 10 ];
-        symbol [ setColor %tmp.55 818 11 19 ];
+        symbol [ dc %tmp.54 865 8 10 ];
+        symbol [ setColor %tmp.55 865 11 19 ];
         %tmp.55 = getv function %tmp.54 :setColor;
-_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_818_20_818_42_begin:
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_865_20_865_42_begin:
         %tmp.56 = lgetv %selected;
-        symbol [ selected %tmp.56 818 20 28 ];
-        bf %tmp.56 @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_818_20_818_42_else_false;
-_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_818_20_818_42_true:
+        symbol [ selected %tmp.56 865 20 28 ];
+        bf %tmp.56 @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_865_20_865_42_else_false;
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_865_20_865_42_true:
         %tmp.57 = 0x4A3A10;
         push %tmp.57;
-        goto @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_818_20_818_42_end;
-_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_818_20_818_42_else_false:
+        goto @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_865_20_865_42_end;
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_865_20_865_42_else_false:
         %tmp.58 = 0x2A2410;
         push %tmp.58;
-_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_818_20_818_42_end:
-        %tmp.59 = phi [%tmp.56 @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_818_20_818_42_begin] [%tmp.57 @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_818_20_818_42_true] [%tmp.58 @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_818_20_818_42_else_false] [%tmp.59 @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_818_20_818_42_end];
-        symbol [ Graphics %tmp.60 818 52 60 ];
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_865_20_865_42_end:
+        %tmp.59 = phi [%tmp.56 @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_865_20_865_42_begin] [%tmp.57 @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_865_20_865_42_true] [%tmp.58 @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_865_20_865_42_else_false] [%tmp.59 @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_865_20_865_42_end];
+        symbol [ Graphics %tmp.60 865 52 60 ];
         %tmp.60 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.61 818 61 78 ];
+        symbol [ COLOR_TRANSPARENT %tmp.61 865 61 78 ];
         %tmp.61 = getv %tmp.60 :COLOR_TRANSPARENT;
         invoke %tmp.54 %tmp.55(%tmp.59, %tmp.61);
-[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 819 8 ]
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 866 8 ]
         %tmp.62 = lgetv %dc;
-        symbol [ dc %tmp.62 819 8 10 ];
-        symbol [ fillRoundedRectangle %tmp.63 819 11 31 ];
+        symbol [ dc %tmp.62 866 8 10 ];
+        symbol [ fillRoundedRectangle %tmp.63 866 11 31 ];
         %tmp.63 = getv function %tmp.62 :fillRoundedRectangle;
         %tmp.64 = lgetv %x;
-        symbol [ x %tmp.64 819 32 33 ];
+        symbol [ x %tmp.64 866 32 33 ];
         %tmp.65 = lgetv %y;
-        symbol [ y %tmp.65 819 35 36 ];
+        symbol [ y %tmp.65 866 35 36 ];
         %tmp.66 = lgetv %w;
-        symbol [ w %tmp.66 819 38 39 ];
+        symbol [ w %tmp.66 866 38 39 ];
         %tmp.67 = lgetv %rowH;
-        symbol [ rowH %tmp.67 819 41 45 ];
+        symbol [ rowH %tmp.67 866 41 45 ];
         %tmp.68 = 5;
         invoke %tmp.62 %tmp.63(%tmp.64, %tmp.65, %tmp.66, %tmp.67, %tmp.68);
-[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 820 8 ]
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 867 8 ]
         %tmp.69 = lgetv %dc;
-        symbol [ dc %tmp.69 820 8 10 ];
-        symbol [ setColor %tmp.70 820 11 19 ];
+        symbol [ dc %tmp.69 867 8 10 ];
+        symbol [ setColor %tmp.70 867 11 19 ];
         %tmp.70 = getv function %tmp.69 :setColor;
-_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_820_20_820_42_begin:
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_867_20_867_42_begin:
         %tmp.71 = lgetv %selected;
-        symbol [ selected %tmp.71 820 20 28 ];
-        bf %tmp.71 @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_820_20_820_42_else_false;
-_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_820_20_820_42_true:
+        symbol [ selected %tmp.71 867 20 28 ];
+        bf %tmp.71 @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_867_20_867_42_else_false;
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_867_20_867_42_true:
         %tmp.72 = 0xFFD24A;
         push %tmp.72;
-        goto @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_820_20_820_42_end;
-_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_820_20_820_42_else_false:
+        goto @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_867_20_867_42_end;
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_867_20_867_42_else_false:
         %tmp.73 = 0xBB8A1A;
         push %tmp.73;
-_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_820_20_820_42_end:
-        %tmp.74 = phi [%tmp.71 @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_820_20_820_42_begin] [%tmp.72 @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_820_20_820_42_true] [%tmp.73 @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_820_20_820_42_else_false] [%tmp.74 @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_820_20_820_42_end];
-        symbol [ Graphics %tmp.75 820 52 60 ];
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_867_20_867_42_end:
+        %tmp.74 = phi [%tmp.71 @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_867_20_867_42_begin] [%tmp.72 @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_867_20_867_42_true] [%tmp.73 @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_867_20_867_42_else_false] [%tmp.74 @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_867_20_867_42_end];
+        symbol [ Graphics %tmp.75 867 52 60 ];
         %tmp.75 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.76 820 61 78 ];
+        symbol [ COLOR_TRANSPARENT %tmp.76 867 61 78 ];
         %tmp.76 = getv %tmp.75 :COLOR_TRANSPARENT;
         invoke %tmp.69 %tmp.70(%tmp.74, %tmp.76);
-[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 821 8 ]
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 868 8 ]
         %tmp.77 = lgetv %dc;
-        symbol [ dc %tmp.77 821 8 10 ];
-        symbol [ drawRoundedRectangle %tmp.78 821 11 31 ];
+        symbol [ dc %tmp.77 868 8 10 ];
+        symbol [ drawRoundedRectangle %tmp.78 868 11 31 ];
         %tmp.78 = getv function %tmp.77 :drawRoundedRectangle;
         %tmp.79 = lgetv %x;
-        symbol [ x %tmp.79 821 32 33 ];
+        symbol [ x %tmp.79 868 32 33 ];
         %tmp.80 = lgetv %y;
-        symbol [ y %tmp.80 821 35 36 ];
+        symbol [ y %tmp.80 868 35 36 ];
         %tmp.81 = lgetv %w;
-        symbol [ w %tmp.81 821 38 39 ];
+        symbol [ w %tmp.81 868 38 39 ];
         %tmp.82 = lgetv %rowH;
-        symbol [ rowH %tmp.82 821 41 45 ];
+        symbol [ rowH %tmp.82 868 41 45 ];
         %tmp.83 = 5;
         invoke %tmp.77 %tmp.78(%tmp.79, %tmp.80, %tmp.81, %tmp.82, %tmp.83);
-[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 823 8 ]
-_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_823_8_826_8_if_stmt:
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 870 8 ]
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_870_8_873_8_if_stmt:
         %tmp.84 = lgetv %selected;
-        symbol [ selected %tmp.84 823 12 20 ];
-        bf %tmp.84 @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_823_8_826_8_if_end;
-_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_823_8_826_8_if_true:
-_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_823_22_826_8_start:
-[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 824 12 ]
-        [ "_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_823_22_826_8_start" "_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_823_22_826_8_stop" ]
+        symbol [ selected %tmp.84 870 12 20 ];
+        bf %tmp.84 @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_870_8_873_8_if_end;
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_870_8_873_8_if_true:
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_870_22_873_8_start:
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 871 12 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_870_22_873_8_start" "_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_870_22_873_8_stop" ]
         %ay.1 = local;
-        symbol [ ay %ay.1 824 16 18 ];
+        symbol [ ay %ay.1 871 16 18 ];
         %tmp.85 = lgetv %y;
-        symbol [ y %tmp.85 824 21 22 ];
+        symbol [ y %tmp.85 871 21 22 ];
         %tmp.86 = lgetv %rowH;
-        symbol [ rowH %tmp.86 824 25 29 ];
+        symbol [ rowH %tmp.86 871 25 29 ];
         %tmp.87 = 2;
         %tmp.88 = div %tmp.86 %tmp.87;
         %tmp.89 = add %tmp.85 %tmp.88;
         lputv %ay.1 %tmp.89;
-        symbol [ ay %ay.1 824 16 18 ];
-[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 825 12 ]
+        symbol [ ay %ay.1 871 16 18 ];
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 872 12 ]
         %tmp.90 = lgetv %dc;
-        symbol [ dc %tmp.90 825 12 14 ];
-        symbol [ fillPolygon %tmp.91 825 15 26 ];
+        symbol [ dc %tmp.90 872 12 14 ];
+        symbol [ fillPolygon %tmp.91 872 15 26 ];
         %tmp.91 = getv function %tmp.90 :fillPolygon;
         %tmp.92 = newa 3;
         %tmp.93 = newa 2;
         %tmp.94 = lgetv %x;
-        symbol [ x %tmp.94 825 29 30 ];
+        symbol [ x %tmp.94 872 29 30 ];
         %tmp.95 = 5;
         %tmp.96 = add %tmp.94 %tmp.95;
         %tmp.97 = dup %tmp.93;
         %tmp.98 = aputv %tmp.97 0 %tmp.96;
         %tmp.99 = lgetv %ay.1;
-        symbol [ ay %tmp.99 825 36 38 ];
+        symbol [ ay %tmp.99 872 36 38 ];
         %tmp.100 = 4;
         %tmp.101 = sub %tmp.99 %tmp.100;
         %tmp.102 = dup %tmp.98;
@@ -6372,13 +6690,13 @@ _Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_823_22_826_8_start:
         %tmp.105 = aputv %tmp.104 0 %tmp.103;
         %tmp.106 = newa 2;
         %tmp.107 = lgetv %x;
-        symbol [ x %tmp.107 825 46 47 ];
+        symbol [ x %tmp.107 872 46 47 ];
         %tmp.108 = 5;
         %tmp.109 = add %tmp.107 %tmp.108;
         %tmp.110 = dup %tmp.106;
         %tmp.111 = aputv %tmp.110 0 %tmp.109;
         %tmp.112 = lgetv %ay.1;
-        symbol [ ay %tmp.112 825 53 55 ];
+        symbol [ ay %tmp.112 872 53 55 ];
         %tmp.113 = 4;
         %tmp.114 = add %tmp.112 %tmp.113;
         %tmp.115 = dup %tmp.111;
@@ -6387,166 +6705,166 @@ _Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_823_22_826_8_start:
         %tmp.118 = aputv %tmp.117 1 %tmp.116;
         %tmp.119 = newa 2;
         %tmp.120 = lgetv %x;
-        symbol [ x %tmp.120 825 63 64 ];
+        symbol [ x %tmp.120 872 63 64 ];
         %tmp.121 = 11;
         %tmp.122 = add %tmp.120 %tmp.121;
         %tmp.123 = dup %tmp.119;
         %tmp.124 = aputv %tmp.123 0 %tmp.122;
         %tmp.125 = lgetv %ay.1;
-        symbol [ ay %tmp.125 825 71 73 ];
+        symbol [ ay %tmp.125 872 71 73 ];
         %tmp.126 = dup %tmp.124;
         %tmp.127 = aputv %tmp.126 1 %tmp.125;
         %tmp.128 = dup %tmp.118;
         %tmp.129 = aputv %tmp.128 2 %tmp.127;
         invoke %tmp.90 %tmp.91(%tmp.129);
-_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_823_22_826_8_stop:
-        goto @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_823_8_826_8_if_end;
-_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_823_8_826_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 828 8 ]
-        [ "_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_805_50_839_4_start" "_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_805_50_839_4_stop" ]
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_870_22_873_8_stop:
+        goto @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_870_8_873_8_if_end;
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_870_8_873_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 875 8 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_852_50_886_4_start" "_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_852_50_886_4_stop" ]
         %tx.2 = local;
-        symbol [ tx %tx.2 828 12 14 ];
+        symbol [ tx %tx.2 875 12 14 ];
         %tmp.130 = lgetv %x;
-        symbol [ x %tmp.130 828 17 18 ];
+        symbol [ x %tmp.130 875 17 18 ];
         %tmp.131 = 16;
         %tmp.132 = add %tmp.130 %tmp.131;
         lputv %tx.2 %tmp.132;
-        symbol [ tx %tx.2 828 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 829 8 ]
-        [ "_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_805_50_839_4_start" "_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_805_50_839_4_stop" ]
+        symbol [ tx %tx.2 875 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 876 8 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_852_50_886_4_start" "_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_852_50_886_4_stop" ]
         %tyc.3 = local;
-        symbol [ tyc %tyc.3 829 12 15 ];
+        symbol [ tyc %tyc.3 876 12 15 ];
         %tmp.133 = lgetv %y;
-        symbol [ y %tmp.133 829 18 19 ];
+        symbol [ y %tmp.133 876 18 19 ];
         %tmp.134 = lgetv %rowH;
-        symbol [ rowH %tmp.134 829 22 26 ];
+        symbol [ rowH %tmp.134 876 22 26 ];
         %tmp.135 = 2;
         %tmp.136 = div %tmp.134 %tmp.135;
         %tmp.137 = add %tmp.133 %tmp.136;
         lputv %tyc.3 %tmp.137;
-        symbol [ tyc %tyc.3 829 12 15 ];
-[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 830 8 ]
+        symbol [ tyc %tyc.3 876 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 877 8 ]
         %tmp.138 = lgetv %dc;
-        symbol [ dc %tmp.138 830 8 10 ];
-        symbol [ setColor %tmp.139 830 11 19 ];
+        symbol [ dc %tmp.138 877 8 10 ];
+        symbol [ setColor %tmp.139 877 11 19 ];
         %tmp.139 = getv function %tmp.138 :setColor;
         %tmp.140 = 0xFFD24A;
-        symbol [ Graphics %tmp.141 830 30 38 ];
+        symbol [ Graphics %tmp.141 877 30 38 ];
         %tmp.141 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.142 830 39 56 ];
+        symbol [ COLOR_TRANSPARENT %tmp.142 877 39 56 ];
         %tmp.142 = getv %tmp.141 :COLOR_TRANSPARENT;
         invoke %tmp.138 %tmp.139(%tmp.140, %tmp.142);
-[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 831 8 ]
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 878 8 ]
         %tmp.143 = lgetv %dc;
-        symbol [ dc %tmp.143 831 8 10 ];
-        symbol [ fillRectangle %tmp.144 831 11 24 ];
+        symbol [ dc %tmp.143 878 8 10 ];
+        symbol [ fillRectangle %tmp.144 878 11 24 ];
         %tmp.144 = getv function %tmp.143 :fillRectangle;
         %tmp.145 = lgetv %tx.2;
-        symbol [ tx %tmp.145 831 25 27 ];
+        symbol [ tx %tmp.145 878 25 27 ];
         %tmp.146 = 4;
         %tmp.147 = sub %tmp.145 %tmp.146;
         %tmp.148 = lgetv %tyc.3;
-        symbol [ tyc %tmp.148 831 33 36 ];
+        symbol [ tyc %tmp.148 878 33 36 ];
         %tmp.149 = 5;
         %tmp.150 = sub %tmp.148 %tmp.149;
         %tmp.151 = 8;
         %tmp.152 = 5;
         invoke %tmp.143 %tmp.144(%tmp.147, %tmp.150, %tmp.151, %tmp.152);
-[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 832 8 ]
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 879 8 ]
         %tmp.153 = lgetv %dc;
-        symbol [ dc %tmp.153 832 8 10 ];
-        symbol [ fillRectangle %tmp.154 832 11 24 ];
+        symbol [ dc %tmp.153 879 8 10 ];
+        symbol [ fillRectangle %tmp.154 879 11 24 ];
         %tmp.154 = getv function %tmp.153 :fillRectangle;
         %tmp.155 = lgetv %tx.2;
-        symbol [ tx %tmp.155 832 25 27 ];
+        symbol [ tx %tmp.155 879 25 27 ];
         %tmp.156 = 1;
         %tmp.157 = sub %tmp.155 %tmp.156;
         %tmp.158 = lgetv %tyc.3;
-        symbol [ tyc %tmp.158 832 33 36 ];
+        symbol [ tyc %tmp.158 879 33 36 ];
         %tmp.159 = 2;
         %tmp.160 = 4;
         invoke %tmp.153 %tmp.154(%tmp.157, %tmp.158, %tmp.159, %tmp.160);
-[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 833 8 ]
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 880 8 ]
         %tmp.161 = lgetv %dc;
-        symbol [ dc %tmp.161 833 8 10 ];
-        symbol [ fillRectangle %tmp.162 833 11 24 ];
+        symbol [ dc %tmp.161 880 8 10 ];
+        symbol [ fillRectangle %tmp.162 880 11 24 ];
         %tmp.162 = getv function %tmp.161 :fillRectangle;
         %tmp.163 = lgetv %tx.2;
-        symbol [ tx %tmp.163 833 25 27 ];
+        symbol [ tx %tmp.163 880 25 27 ];
         %tmp.164 = 4;
         %tmp.165 = sub %tmp.163 %tmp.164;
         %tmp.166 = lgetv %tyc.3;
-        symbol [ tyc %tmp.166 833 33 36 ];
+        symbol [ tyc %tmp.166 880 33 36 ];
         %tmp.167 = 4;
         %tmp.168 = add %tmp.166 %tmp.167;
         %tmp.169 = 8;
         %tmp.170 = 2;
         invoke %tmp.161 %tmp.162(%tmp.165, %tmp.168, %tmp.169, %tmp.170);
-[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 835 8 ]
-        [ "_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_805_50_839_4_start" "_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_805_50_839_4_stop" ]
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 882 8 ]
+        [ "_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_852_50_886_4_start" "_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_852_50_886_4_stop" ]
         %cx.4 = local;
-        symbol [ cx %cx.4 835 12 14 ];
+        symbol [ cx %cx.4 882 12 14 ];
         %tmp.171 = lgetv %x;
-        symbol [ x %tmp.171 835 17 18 ];
+        symbol [ x %tmp.171 882 17 18 ];
         %tmp.172 = lgetv %w;
-        symbol [ w %tmp.172 835 21 22 ];
+        symbol [ w %tmp.172 882 21 22 ];
         %tmp.173 = 2;
         %tmp.174 = div %tmp.172 %tmp.173;
         %tmp.175 = add %tmp.171 %tmp.174;
         %tmp.176 = 6;
         %tmp.177 = add %tmp.175 %tmp.176;
         lputv %cx.4 %tmp.177;
-        symbol [ cx %cx.4 835 12 14 ];
-[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 836 8 ]
+        symbol [ cx %cx.4 882 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 883 8 ]
         %tmp.178 = lgetv %dc;
-        symbol [ dc %tmp.178 836 8 10 ];
-        symbol [ setColor %tmp.179 836 11 19 ];
+        symbol [ dc %tmp.178 883 8 10 ];
+        symbol [ setColor %tmp.179 883 11 19 ];
         %tmp.179 = getv function %tmp.178 :setColor;
-_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_836_20_836_42_begin:
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_883_20_883_42_begin:
         %tmp.180 = lgetv %selected;
-        symbol [ selected %tmp.180 836 20 28 ];
-        bf %tmp.180 @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_836_20_836_42_else_false;
-_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_836_20_836_42_true:
+        symbol [ selected %tmp.180 883 20 28 ];
+        bf %tmp.180 @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_883_20_883_42_else_false;
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_883_20_883_42_true:
         %tmp.181 = 0xFFE49A;
         push %tmp.181;
-        goto @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_836_20_836_42_end;
-_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_836_20_836_42_else_false:
+        goto @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_883_20_883_42_end;
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_883_20_883_42_else_false:
         %tmp.182 = 0xE0B84A;
         push %tmp.182;
-_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_836_20_836_42_end:
-        %tmp.183 = phi [%tmp.180 @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_836_20_836_42_begin] [%tmp.181 @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_836_20_836_42_true] [%tmp.182 @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_836_20_836_42_else_false] [%tmp.183 @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_836_20_836_42_end];
-        symbol [ Graphics %tmp.184 836 52 60 ];
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_883_20_883_42_end:
+        %tmp.183 = phi [%tmp.180 @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_883_20_883_42_begin] [%tmp.181 @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_883_20_883_42_true] [%tmp.182 @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_883_20_883_42_else_false] [%tmp.183 @_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_883_20_883_42_end];
+        symbol [ Graphics %tmp.184 883 52 60 ];
         %tmp.184 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.185 836 61 78 ];
+        symbol [ COLOR_TRANSPARENT %tmp.185 883 61 78 ];
         %tmp.185 = getv %tmp.184 :COLOR_TRANSPARENT;
         invoke %tmp.178 %tmp.179(%tmp.183, %tmp.185);
-[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 837 8 ]
+[ "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc" 884 8 ]
         %tmp.186 = lgetv %dc;
-        symbol [ dc %tmp.186 837 8 10 ];
-        symbol [ drawText %tmp.187 837 11 19 ];
+        symbol [ dc %tmp.186 884 8 10 ];
+        symbol [ drawText %tmp.187 884 11 19 ];
         %tmp.187 = getv function %tmp.186 :drawText;
         %tmp.188 = lgetv %cx.4;
-        symbol [ cx %tmp.188 837 20 22 ];
+        symbol [ cx %tmp.188 884 20 22 ];
         %tmp.189 = lgetv %y;
-        symbol [ y %tmp.189 837 24 25 ];
+        symbol [ y %tmp.189 884 24 25 ];
         %tmp.190 = lgetv %rowH;
-        symbol [ rowH %tmp.190 837 29 33 ];
+        symbol [ rowH %tmp.190 884 29 33 ];
         %tmp.191 = 14;
         %tmp.192 = sub %tmp.190 %tmp.191;
         %tmp.193 = 2;
         %tmp.194 = div %tmp.192 %tmp.193;
         %tmp.195 = add %tmp.189 %tmp.194;
-        symbol [ Graphics %tmp.196 837 45 53 ];
+        symbol [ Graphics %tmp.196 884 45 53 ];
         %tmp.196 = getm $.Toybox.Graphics;
-        symbol [ FONT_XTINY %tmp.197 837 54 64 ];
+        symbol [ FONT_XTINY %tmp.197 884 54 64 ];
         %tmp.197 = getv %tmp.196 :FONT_XTINY;
         %tmp.198 = "LEADERBOARD";
-        symbol [ Graphics %tmp.199 838 35 43 ];
+        symbol [ Graphics %tmp.199 885 35 43 ];
         %tmp.199 = getm $.Toybox.Graphics;
-        symbol [ TEXT_JUSTIFY_CENTER %tmp.200 838 44 63 ];
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.200 885 44 63 ];
         %tmp.200 = getv %tmp.199 :TEXT_JUSTIFY_CENTER;
         invoke %tmp.186 %tmp.187(%tmp.188, %tmp.195, %tmp.197, %tmp.198, %tmp.200);
-_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_805_50_839_4_stop:
+_Users_kkorolczuk_work_garmin__shared_leaderboard_LbViews_mc_852_50_886_4_stop:
     }
 }
 [ @file = "/Users/kkorolczuk/work/garmin/_shared/leaderboard/LbViews.mc"; @line = 14; ]
