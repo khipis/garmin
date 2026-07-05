@@ -156,7 +156,7 @@ class BreathTrainingView extends WatchUi.View {
             _announced = true;
             Leaderboard.announce("breathtrainingtool", {
                 "title"     => "Go deeper with PRO",
-                "body"      => "Loving this tool? Breath Training System adds a coach, adaptive plans and progression. Find it on the Connect IQ Store.",
+                "body"      => "Love this tool? Breath Training System adds a coach & adaptive plans on Connect IQ.",
                 "url"       => "https://apps.garmin.com/apps/bitochi",
                 "url_label" => "Get the System",
                 "min_gap_s" => 172800
