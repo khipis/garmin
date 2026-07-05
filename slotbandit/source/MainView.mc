@@ -82,23 +82,25 @@ class MainView extends WatchUi.View {
     }
 
     hidden function _doLayout() {
-        _hudTop  = _sh * 5 / 100; if (_hudTop < 4) { _hudTop = 4; }
-        _bottomY = _sh - (_sh * 12 / 100);
+        // Bigger top/bottom insets so the HUD chips and the bottom hint/result
+        // text never fall into the clipped chords of a round screen.
+        _hudTop  = _sh * 12 / 100; if (_hudTop < 8) { _hudTop = 8; }
+        _bottomY = _sh - (_sh * 20 / 100);
 
-        // Cabinet shrunk ~10% vs. the original layout, leaving more breathing
-        // room around the reel window on every screen size.
+        // Cabinet shrunk further, leaving more breathing room around the reel
+        // window on every screen size.
         _gap  = 4;
-        _cabW = _sw * 60 / 100; if (_cabW < 126) { _cabW = 126; } if (_cabW > _sw - 52) { _cabW = _sw - 52; }
+        _cabW = _sw * 56 / 100; if (_cabW < 118) { _cabW = 118; } if (_cabW > _sw - 60) { _cabW = _sw - 60; }
         _colW = (_cabW - _gap * 2) / 3;
         _cabW = _colW * 3 + _gap * 2;
         _cabX = (_sw - _cabW) / 2;
 
         var topOfCab = _hudTop + 34;
-        var botOfCab = _bottomY - 16;
+        var botOfCab = _bottomY - 14;
         var winH = botOfCab - topOfCab;
         _rowH = winH / 3;
-        if (_rowH < 18) { _rowH = 18; }
-        if (_rowH > 41) { _rowH = 41; }
+        if (_rowH < 17) { _rowH = 17; }
+        if (_rowH > 36) { _rowH = 36; }
         _cabH = _rowH * 3;
         _cabY = topOfCab + (winH - _cabH) / 2;
         if (_cabY < topOfCab) { _cabY = topOfCab; }

@@ -22,12 +22,12 @@ class UIManager {
         dc.drawText(cx, hudTop + 1, Graphics.FONT_NUMBER_MILD,
                     ctrl.scoreSys.score.format("%d"), Graphics.TEXT_JUSTIFY_CENTER);
 
-        // spins-left chip (left)
-        _chip(dc, 6, hudTop + 4, "SPINS", (ctrl.scoreSys.spinsTotal - ctrl.scoreSys.spinsUsed).format("%d"),
+        // spins-left chip (left) — pulled well inward off the clipped round corners
+        _chip(dc, sw * 20 / 100, hudTop + 4, "SPINS", (ctrl.scoreSys.spinsTotal - ctrl.scoreSys.spinsUsed).format("%d"),
               0x66CCFF, Graphics.TEXT_JUSTIFY_LEFT, sw);
         // best chip (right)
         if (ctrl.scoreSys.hi > 0) {
-            _chip(dc, sw - 6, hudTop + 4, "BEST", ctrl.scoreSys.hi.format("%d"),
+            _chip(dc, sw - sw * 20 / 100, hudTop + 4, "BEST", ctrl.scoreSys.hi.format("%d"),
                   0xFFCC33, Graphics.TEXT_JUSTIFY_RIGHT, sw);
         }
 
