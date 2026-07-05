@@ -29,20 +29,37 @@ const LB_MUTED    = 0x4A6278;
 const LB_TEXT     = 0xD6E4F0;
 
 // ═══════════════════════════════════════════════════════════════════════════
-// Score submitter — POST /score (fire-and-forget). Instance lives in
-// Leaderboard._sender until the response arrives.
+// Score submitter — POST /score with exponential backoff (max 3 retries).
+// Retries on network errors (responseCode < 0) and 5xx server errors.
+// 4xx are not retried (client/auth error — retrying won't help).
+// Instance lives in Leaderboard._sender until the last attempt settles;
+// from the calling game's perspective this is still fire-and-forget.
 // ═══════════════════════════════════════════════════════════════════════════
 class LbSubmitter {
-    function initialize() {}
+    hidden var _game;
+    hidden var _user;
+    hidden var _score;
+    hidden var _variant;
+    hidden var _attempt;
+    hidden var _timer;
+
+    function initialize() { _attempt = 0; _timer = null; }
 
     function send(game, user, score, variant) {
+        _game = game; _user = user; _score = score; _variant = variant;
+        _attempt = 0;
+        _doSend();
+    }
+
+    // Called directly on first attempt and via Timer on retries.
+    function _doSend() {
         var body = {
-            "game"  => game,
-            "user"  => user,
-            "score" => score
+            "game"  => _game,
+            "user"  => _user,
+            "score" => _score
         };
-        if (variant != null && variant.length() > 0) {
-            body["variant"] = variant;
+        if (_variant != null && _variant.length() > 0) {
+            body["variant"] = _variant;
         }
         var opts = {
             :method       => Communications.HTTP_REQUEST_METHOD_POST,
@@ -60,20 +77,35 @@ class LbSubmitter {
 
     function _onDone(responseCode as Lang.Number,
                      data as Null or Lang.Dictionary or Lang.String or PersistedContent.Iterator) as Void {
-        // Silent — never block or interrupt the player on a network result.
+        if (responseCode == 200 || responseCode == 201) { return; }
+        if (responseCode >= 400 && responseCode < 500) { return; }  // 4xx — don't retry
+        if (_attempt >= 3) { return; }                              // exhausted
+        var delay = [2000, 4000, 8000][_attempt];
+        _attempt = _attempt + 1;
+        if (_timer == null) { _timer = new Timer.Timer(); }
+        try { _timer.start(method(:_doSend), delay, false); } catch (e) {}
     }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
-// Launch pinger — POST /launch (fire-and-forget). Records that a game was
-// opened, so we can see play activity even when no score is ever submitted.
-// Instance lives in Leaderboard._pinger until the response arrives.
+// Launch pinger — POST /launch with exponential backoff (max 3 retries).
+// Same retry policy as LbSubmitter. Instance lives in Leaderboard._pinger.
 // ═══════════════════════════════════════════════════════════════════════════
 class LbPinger {
-    function initialize() {}
+    hidden var _game;
+    hidden var _attempt;
+    hidden var _timer;
+
+    function initialize() { _attempt = 0; _timer = null; }
 
     function send(game) {
-        var body = { "game" => game };
+        _game = game;
+        _attempt = 0;
+        _doSend();
+    }
+
+    function _doSend() {
+        var body = { "game" => _game };
         var opts = {
             :method       => Communications.HTTP_REQUEST_METHOD_POST,
             :headers      => {
@@ -90,7 +122,13 @@ class LbPinger {
 
     function _onDone(responseCode as Lang.Number,
                      data as Null or Lang.Dictionary or Lang.String or PersistedContent.Iterator) as Void {
-        // Silent — launch logging must never affect gameplay.
+        if (responseCode == 200 || responseCode == 201) { return; }
+        if (responseCode >= 400 && responseCode < 500) { return; }
+        if (_attempt >= 3) { return; }
+        var delay = [2000, 4000, 8000][_attempt];
+        _attempt = _attempt + 1;
+        if (_timer == null) { _timer = new Timer.Timer(); }
+        try { _timer.start(method(:_doSend), delay, false); } catch (e) {}
     }
 }
 
