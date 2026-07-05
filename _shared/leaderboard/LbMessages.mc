@@ -183,11 +183,15 @@ class LbMessageView extends WatchUi.View {
         if (pad < fh) { pad = fh; }
         var maxW = isRound ? (_w * 78) / 100 : (_w * 88) / 100;
 
-        // Title (fall back to XTINY if the SMALL title would be too wide).
+        // Title — extra side margin (so it clears the round bezel) and, on round
+        // screens, nudged down into the wider part of the circle. Falls back to
+        // XTINY if the SMALL title would still be too wide for its narrower band.
+        var titleMaxW = isRound ? (_w * 66) / 100 : maxW;
         var titleFont = Graphics.FONT_SMALL;
-        if (dc.getTextWidthInPixels(_title, titleFont) > maxW) { titleFont = Graphics.FONT_XTINY; }
+        if (dc.getTextWidthInPixels(_title, titleFont) > titleMaxW) { titleFont = Graphics.FONT_XTINY; }
         var titleH  = dc.getFontHeight(titleFont);
         var titleCY = pad + titleH / 2;
+        if (isRound) { titleCY += fh; }
         dc.setColor(LB_GOLD, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, titleCY, titleFont, _title, VC);
 
