@@ -13,9 +13,10 @@ Typical uses:
 - **Paid-version invite** for tools without a leaderboard (e.g. `breathtrainingtool`
   → *Breath Training System*).
 
-The player's rank engagement ("YOU #12 / 4,300 · +40 to next") is **already** shown
-by the post-game leaderboard pop-up (`LbScoresView`) and is *not* part of this
-message system — the two complement each other.
+The player's rank engagement is shown by a dedicated **standing card**
+(`LbStandingView`) that pops up after **every** run, before the leaderboard board —
+see [§9](#9-standing-card-rank--gaps). It is data-driven (not configurable) and
+complements this message system.
 
 ---
 
@@ -290,3 +291,40 @@ Flow: `bitochi.com/coffee` → `api.bitochi.com/go/coffee` → the real URL.
 a new pretty alias `bitochi.com/<slug>`, create `leaderboard/<slug>/index.html`
 forwarding to `/go/<slug>` (copy the `coffee` page) and add the slug via the
 panel.
+
+---
+
+## 9. Standing card (rank & gaps)
+
+After **every** run (once the player has a name), a dedicated engagement card
+pops up **before** the leaderboard board:
+
+```
+        YOUR STANDING
+             #12
+        of 340 players
+             PRO
+   HALL OF FAME   +850 to #1
+   TODAY          #3 · 120 to #1
+   WEEK           #1 - you lead!
+         press any key
+```
+
+It shows the player's **all-time rank**, tier, and the **gap to #1** across three
+windows — **Hall of Fame** (all-time), **today**, and **this week** — so players
+always see how close they are to glory. Pressing any key / tapping / back
+dismisses it and chains to the (occasional, throttled) support message and then
+the board.
+
+**Data:** one request to `GET /standing?game&variant&user`, which returns, for
+each of the three periods, `{ top1, count, myBest, myRank }` (best-score-per-user
+aware, `asc`-aware for time-based games). The card computes each gap as
+`|top1 − myBest|`; rank 1 (or a zero gap) shows "you lead!".
+
+**Robustness:** the card fetches with a short retry loop (the just-submitted
+score may not be committed yet). Any network / parse / render failure silently
+falls through — first to a friendly "You're on the board!" nudge, and on
+dismiss to the leaderboard board. It can **never** crash the host game.
+
+**Code:** `_shared/leaderboard/LbStanding.mc` (`LbStandingFetch`,
+`LbStandingView`, `LbStandingDelegate`); wired from `LbPostGame._fire`.

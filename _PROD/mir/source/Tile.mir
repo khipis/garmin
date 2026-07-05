@@ -1,1175 +1,609 @@
-[ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc"; @line = 17; @symbol_usingdef<0> = [Toybox,17,6,12]; @symbol_usingdef<1> = [Graphics,17,13,21]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc"; @line = 20; @symbol_usingdef<0> = [Toybox,20,6,12]; @symbol_usingdef<1> = [Graphics,20,13,21]; ]
 using Toybox.Graphics;
-[ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc"; @line = 18; @symbol_usingdef<0> = [Toybox,18,6,12]; @symbol_usingdef<1> = [System,18,13,19]; ]
-using Toybox.System;
-[ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc"; @line = 20; @position = 6; @symbol_constdef = [TILE_EMPTY,20,6,16]; ]
-const TILE_EMPTY = 0;
-[ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc"; @line = 21; @position = 6; @symbol_constdef = [TILE_RED,21,6,14]; ]
-const TILE_RED = 1;
-[ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc"; @line = 22; @position = 6; @symbol_constdef = [TILE_BLUE,22,6,15]; ]
-const TILE_BLUE = 2;
-[ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc"; @line = 23; @position = 6; @symbol_constdef = [TILE_GREEN,23,6,16]; ]
-const TILE_GREEN = 3;
-[ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc"; @line = 24; @position = 6; @symbol_constdef = [TILE_YELLOW,24,6,17]; ]
-const TILE_YELLOW = 4;
-[ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc"; @line = 25; @position = 6; @symbol_constdef = [TILE_PURPLE,25,6,17]; ]
-const TILE_PURPLE = 5;
-[ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc"; @line = 26; @position = 6; @symbol_constdef = [NUM_TILE_TYPES,26,6,20]; ]
-const NUM_TILE_TYPES = 5;
-[ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc"; @line = 33; @position = 6; @symbol_constdef = [TILE_BOMB,33,6,15]; ]
-const TILE_BOMB = 6;
-[ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc"; @line = 35; @symbol_classdef = [Tile,35,6,10]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc"; @line = 22; @position = 6; @symbol_constdef = [GRID_SIZE,22,6,15]; ]
+const GRID_SIZE = 4;
+[ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc"; @line = 23; @position = 6; @symbol_constdef = [GRID_CELLS,23,6,16]; ]
+const GRID_CELLS = 16;
+[ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc"; @line = 24; @position = 6; @symbol_constdef = [WIN_EXP,24,6,13]; ]
+const WIN_EXP = 11;
+[ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc"; @line = 26; @symbol_classdef = [Tile,26,6,10]; ]
 class Tile {
-    [ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc"; @line = 35; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc"; @line = 26; ]
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc"; @line = 35; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc"; @line = 26; ]
     static
     <init> {
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 37 15 ]
-        %tmp.1 = newa 6;
-        %tmp.2 = 0x000000;
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 29 15 ]
+        %tmp.1 = newa 17;
+        %tmp.2 = 0xCDC1B4;
         %tmp.3 = dup %tmp.1;
         %tmp.4 = aputv %tmp.3 0 %tmp.2;
-        %tmp.5 = 0xFF3333;
+        %tmp.5 = 0xEEE4DA;
         %tmp.6 = dup %tmp.4;
         %tmp.7 = aputv %tmp.6 1 %tmp.5;
-        %tmp.8 = 0x3388FF;
+        %tmp.8 = 0xEDE0C8;
         %tmp.9 = dup %tmp.7;
         %tmp.10 = aputv %tmp.9 2 %tmp.8;
-        %tmp.11 = 0x33CC44;
+        %tmp.11 = 0xF2B179;
         %tmp.12 = dup %tmp.10;
         %tmp.13 = aputv %tmp.12 3 %tmp.11;
-        %tmp.14 = 0xFFCC22;
+        %tmp.14 = 0xF59563;
         %tmp.15 = dup %tmp.13;
         %tmp.16 = aputv %tmp.15 4 %tmp.14;
-        %tmp.17 = 0xBB55EE;
+        %tmp.17 = 0xF67C5F;
         %tmp.18 = dup %tmp.16;
         %tmp.19 = aputv %tmp.18 5 %tmp.17;
-        putv self :COLORS %tmp.19;
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc"; @line = 37; @position = 15; @symbol_vardef = [COLORS,37,15,21]; ]
-    static
-    var COLORS;
-    [ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc"; @line = 42; @symbol_functiondef = [draw,42,20,24]; @symbol_param<0> = [dc,42,25,27]; @symbol_param<1> = [type,42,29,33]; @symbol_param<2> = [cx,42,35,37]; @symbol_param<3> = [cy,42,39,41]; @symbol_param<4> = [size,42,43,47]; @symbol_param<5> = [selected,42,49,57]; ]
-    static
-    function draw(dc, type, cx, cy, size, selected) {
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_42_59_71_4_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 43 8 ]
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_43_8_43_42_if_stmt:
-        %tmp.1 = lgetv %type;
-        symbol [ type %tmp.1 43 12 16 ];
-        symbol [ TILE_EMPTY %tmp.3 43 20 30 ];
-        %tmp.3 = getv ? :TILE_EMPTY;
-        %tmp.4 = eq %tmp.1 %tmp.3;
-        bf %tmp.4 @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_43_8_43_42_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_43_8_43_42_if_true:
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_43_32_43_42_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 43 34 ]
-        ret ?;
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_43_32_43_42_stop:
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_43_8_43_42_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_43_8_43_42_if_end:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 46 8 ]
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_42_59_71_4_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_42_59_71_4_stop" ]
-        %r.1 = local;
-        symbol [ r %r.1 46 12 13 ];
-        %tmp.5 = lgetv %size;
-        symbol [ size %tmp.5 46 17 21 ];
-        %tmp.6 = 38;
-        %tmp.7 = mul %tmp.5 %tmp.6;
-        %tmp.8 = 100;
-        %tmp.9 = div %tmp.7 %tmp.8;
-        lputv %r.1 %tmp.9;
-        symbol [ r %r.1 46 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 47 8 ]
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_47_8_47_28_if_stmt:
-        %tmp.10 = lgetv %r.1;
-        symbol [ r %tmp.10 47 12 13 ];
-        %tmp.11 = 3;
-        %tmp.12 = lt %tmp.10 %tmp.11;
-        bf %tmp.12 @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_47_8_47_28_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_47_8_47_28_if_true:
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_47_19_47_28_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 47 21 ]
-        %tmp.13 = 3;
-        lputv %r.1 %tmp.13;
-        symbol [ r %r.1 47 21 22 ];
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_47_19_47_28_stop:
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_47_8_47_28_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_47_8_47_28_if_end:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 49 8 ]
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_49_8_63_8_if_stmt:
-        %tmp.14 = lgetv %type;
-        symbol [ type %tmp.14 49 12 16 ];
-        symbol [ TILE_BOMB %tmp.16 49 20 29 ];
-        %tmp.16 = getv ? :TILE_BOMB;
-        %tmp.17 = eq %tmp.14 %tmp.16;
-        bf %tmp.17 @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_49_8_63_8_if_else_false;
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_49_8_63_8_if_true:
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_49_31_51_8_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 50 12 ]
-        %tmp.18 = self;
-        symbol [ _drawBomb %tmp.19 50 12 21 ];
-        %tmp.19 = getv function %tmp.18 :_drawBomb;
-        %tmp.20 = lgetv %dc;
-        symbol [ dc %tmp.20 50 22 24 ];
-        %tmp.21 = lgetv %cx;
-        symbol [ cx %tmp.21 50 26 28 ];
-        %tmp.22 = lgetv %cy;
-        symbol [ cy %tmp.22 50 30 32 ];
-        %tmp.23 = lgetv %r.1;
-        symbol [ r %tmp.23 50 34 35 ];
-        invoke %tmp.18 %tmp.19(%tmp.20, %tmp.21, %tmp.22, %tmp.23);
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_49_31_51_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_49_8_63_8_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_49_8_63_8_if_else_false:
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_51_15_63_8_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 52 12 ]
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_51_15_63_8_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_51_15_63_8_stop" ]
-        %col.2 = local;
-        symbol [ col %col.2 52 16 19 ];
-        symbol [ COLORS %tmp.25 52 22 28 ];
-        %tmp.25 = getv ? :COLORS;
-        %tmp.26 = lgetv %type;
-        symbol [ type %tmp.26 52 29 33 ];
-        %tmp.27 = agetv %tmp.25 %tmp.26;
-        lputv %col.2 %tmp.27;
-        symbol [ col %col.2 52 16 19 ];
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 54 12 ]
-        %tmp.28 = self;
-        symbol [ _shape %tmp.29 54 12 18 ];
-        %tmp.29 = getv function %tmp.28 :_shape;
-        %tmp.30 = lgetv %dc;
-        symbol [ dc %tmp.30 54 19 21 ];
-        %tmp.31 = lgetv %type;
-        symbol [ type %tmp.31 54 23 27 ];
-        %tmp.32 = lgetv %cx;
-        symbol [ cx %tmp.32 54 29 31 ];
-        %tmp.33 = 1;
-        %tmp.34 = add %tmp.32 %tmp.33;
-        %tmp.35 = lgetv %cy;
-        symbol [ cy %tmp.35 54 37 39 ];
-        %tmp.36 = 2;
-        %tmp.37 = add %tmp.35 %tmp.36;
-        %tmp.38 = lgetv %r.1;
-        symbol [ r %tmp.38 54 45 46 ];
-        %tmp.39 = 0x000000;
-        invoke %tmp.28 %tmp.29(%tmp.30, %tmp.31, %tmp.34, %tmp.37, %tmp.38, %tmp.39);
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 55 12 ]
-        %tmp.40 = self;
-        symbol [ _shape %tmp.41 55 12 18 ];
-        %tmp.41 = getv function %tmp.40 :_shape;
-        %tmp.42 = lgetv %dc;
-        symbol [ dc %tmp.42 55 19 21 ];
-        %tmp.43 = lgetv %type;
-        symbol [ type %tmp.43 55 23 27 ];
-        %tmp.44 = lgetv %cx;
-        symbol [ cx %tmp.44 55 29 31 ];
-        %tmp.45 = lgetv %cy;
-        symbol [ cy %tmp.45 55 33 35 ];
-        %tmp.46 = lgetv %r.1;
-        symbol [ r %tmp.46 55 37 38 ];
-        %tmp.47 = lgetv %col.2;
-        symbol [ col %tmp.47 55 40 43 ];
-        invoke %tmp.40 %tmp.41(%tmp.42, %tmp.43, %tmp.44, %tmp.45, %tmp.46, %tmp.47);
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 56 12 ]
-        %tmp.48 = self;
-        symbol [ _shape %tmp.49 56 12 18 ];
-        %tmp.49 = getv function %tmp.48 :_shape;
-        %tmp.50 = lgetv %dc;
-        symbol [ dc %tmp.50 56 19 21 ];
-        %tmp.51 = lgetv %type;
-        symbol [ type %tmp.51 56 23 27 ];
-        %tmp.52 = lgetv %cx;
-        symbol [ cx %tmp.52 56 29 31 ];
-        %tmp.53 = lgetv %r.1;
-        symbol [ r %tmp.53 56 34 35 ];
-        %tmp.54 = 6;
-        %tmp.55 = div %tmp.53 %tmp.54;
-        %tmp.56 = sub %tmp.52 %tmp.55;
-        %tmp.57 = lgetv %cy;
-        symbol [ cy %tmp.57 56 41 43 ];
-        %tmp.58 = lgetv %r.1;
-        symbol [ r %tmp.58 56 46 47 ];
-        %tmp.59 = 6;
-        %tmp.60 = div %tmp.58 %tmp.59;
-        %tmp.61 = sub %tmp.57 %tmp.60;
-        %tmp.62 = lgetv %r.1;
-        symbol [ r %tmp.62 56 54 55 ];
-        %tmp.63 = 55;
-        %tmp.64 = mul %tmp.62 %tmp.63;
-        %tmp.65 = 100;
-        %tmp.66 = div %tmp.64 %tmp.65;
-        %tmp.67 = self;
-        symbol [ _lighten %tmp.68 56 69 77 ];
-        %tmp.68 = getv function %tmp.67 :_lighten;
-        %tmp.69 = lgetv %col.2;
-        symbol [ col %tmp.69 56 78 81 ];
-        %tmp.70 = invoke %tmp.67 %tmp.68(%tmp.69);
-        invoke %tmp.48 %tmp.49(%tmp.50, %tmp.51, %tmp.56, %tmp.61, %tmp.66, %tmp.70);
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 59 12 ]
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_59_12_62_12_if_stmt:
-        %tmp.71 = lgetv %r.1;
-        symbol [ r %tmp.71 59 16 17 ];
-        %tmp.72 = 5;
-        %tmp.73 = gte %tmp.71 %tmp.72;
-        bf %tmp.73 @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_59_12_62_12_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_59_12_62_12_if_true:
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_59_24_62_12_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 60 16 ]
-        %tmp.74 = lgetv %dc;
-        symbol [ dc %tmp.74 60 16 18 ];
-        symbol [ setColor %tmp.75 60 19 27 ];
-        %tmp.75 = getv function %tmp.74 :setColor;
-        %tmp.76 = 0xFFFFFF;
-        symbol [ Graphics %tmp.77 60 38 46 ];
-        %tmp.77 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.78 60 47 64 ];
-        %tmp.78 = getv %tmp.77 :COLOR_TRANSPARENT;
-        invoke %tmp.74 %tmp.75(%tmp.76, %tmp.78);
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 61 16 ]
-        %tmp.79 = lgetv %dc;
-        symbol [ dc %tmp.79 61 16 18 ];
-        symbol [ fillCircle %tmp.80 61 19 29 ];
-        %tmp.80 = getv function %tmp.79 :fillCircle;
-        %tmp.81 = lgetv %cx;
-        symbol [ cx %tmp.81 61 30 32 ];
-        %tmp.82 = lgetv %r.1;
-        symbol [ r %tmp.82 61 35 36 ];
-        %tmp.83 = 3;
-        %tmp.84 = div %tmp.82 %tmp.83;
-        %tmp.85 = sub %tmp.81 %tmp.84;
-        %tmp.86 = lgetv %cy;
-        symbol [ cy %tmp.86 61 40 42 ];
-        %tmp.87 = lgetv %r.1;
-        symbol [ r %tmp.87 61 45 46 ];
-        %tmp.88 = 3;
-        %tmp.89 = div %tmp.87 %tmp.88;
-        %tmp.90 = sub %tmp.86 %tmp.89;
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_61_50_61_68_begin:
-        %tmp.91 = lgetv %r.1;
-        symbol [ r %tmp.91 61 51 52 ];
-        %tmp.92 = 5;
-        %tmp.93 = div %tmp.91 %tmp.92;
-        %tmp.94 = 1;
-        %tmp.95 = lt %tmp.93 %tmp.94;
-        bf %tmp.95 @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_61_50_61_68_else_false;
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_61_50_61_68_true:
-        %tmp.96 = 1;
-        push %tmp.96;
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_61_50_61_68_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_61_50_61_68_else_false:
-        %tmp.97 = lgetv %r.1;
-        symbol [ r %tmp.97 61 66 67 ];
-        %tmp.98 = 5;
-        %tmp.99 = div %tmp.97 %tmp.98;
-        push %tmp.99;
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_61_50_61_68_end:
-        %tmp.100 = phi [%tmp.95 @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_61_50_61_68_begin] [%tmp.96 @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_61_50_61_68_true] [%tmp.99 @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_61_50_61_68_else_false] [%tmp.100 @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_61_50_61_68_end];
-        invoke %tmp.79 %tmp.80(%tmp.85, %tmp.90, %tmp.100);
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_59_24_62_12_stop:
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_59_12_62_12_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_59_12_62_12_if_end:
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_51_15_63_8_stop:
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_49_8_63_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 65 8 ]
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_65_8_70_8_if_stmt:
-        %tmp.101 = lgetv %selected;
-        symbol [ selected %tmp.101 65 12 20 ];
-        bf %tmp.101 @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_65_8_70_8_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_65_8_70_8_if_true:
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_65_22_70_8_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 66 12 ]
-        %tmp.102 = lgetv %dc;
-        symbol [ dc %tmp.102 66 12 14 ];
-        symbol [ setColor %tmp.103 66 15 23 ];
-        %tmp.103 = getv function %tmp.102 :setColor;
-        %tmp.104 = 0xFFFF44;
-        symbol [ Graphics %tmp.105 66 34 42 ];
-        %tmp.105 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.106 66 43 60 ];
-        %tmp.106 = getv %tmp.105 :COLOR_TRANSPARENT;
-        invoke %tmp.102 %tmp.103(%tmp.104, %tmp.106);
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 67 12 ]
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_65_22_70_8_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_65_22_70_8_stop" ]
-        %s.3 = local;
-        symbol [ s %s.3 67 16 17 ];
-        %tmp.107 = lgetv %size;
-        symbol [ size %tmp.107 67 20 24 ];
-        %tmp.108 = 2;
-        %tmp.109 = div %tmp.107 %tmp.108;
-        %tmp.110 = 1;
-        %tmp.111 = sub %tmp.109 %tmp.110;
-        lputv %s.3 %tmp.111;
-        symbol [ s %s.3 67 16 17 ];
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 68 12 ]
-        %tmp.112 = lgetv %dc;
-        symbol [ dc %tmp.112 68 12 14 ];
-        symbol [ drawRoundedRectangle %tmp.113 68 15 35 ];
-        %tmp.113 = getv function %tmp.112 :drawRoundedRectangle;
-        %tmp.114 = lgetv %cx;
-        symbol [ cx %tmp.114 68 36 38 ];
-        %tmp.115 = lgetv %s.3;
-        symbol [ s %tmp.115 68 41 42 ];
-        %tmp.116 = sub %tmp.114 %tmp.115;
-        %tmp.117 = lgetv %cy;
-        symbol [ cy %tmp.117 68 44 46 ];
-        %tmp.118 = lgetv %s.3;
-        symbol [ s %tmp.118 68 49 50 ];
-        %tmp.119 = sub %tmp.117 %tmp.118;
-        %tmp.120 = lgetv %s.3;
-        symbol [ s %tmp.120 68 52 53 ];
-        %tmp.121 = 2;
-        %tmp.122 = mul %tmp.120 %tmp.121;
-        %tmp.123 = lgetv %s.3;
-        symbol [ s %tmp.123 68 59 60 ];
-        %tmp.124 = 2;
-        %tmp.125 = mul %tmp.123 %tmp.124;
-        %tmp.126 = 4;
-        invoke %tmp.112 %tmp.113(%tmp.116, %tmp.119, %tmp.122, %tmp.125, %tmp.126);
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 69 12 ]
-        %tmp.127 = lgetv %dc;
-        symbol [ dc %tmp.127 69 12 14 ];
-        symbol [ drawRoundedRectangle %tmp.128 69 15 35 ];
-        %tmp.128 = getv function %tmp.127 :drawRoundedRectangle;
-        %tmp.129 = lgetv %cx;
-        symbol [ cx %tmp.129 69 36 38 ];
-        %tmp.130 = lgetv %s.3;
-        symbol [ s %tmp.130 69 41 42 ];
-        %tmp.131 = sub %tmp.129 %tmp.130;
-        %tmp.132 = 1;
-        %tmp.133 = add %tmp.131 %tmp.132;
-        %tmp.134 = lgetv %cy;
-        symbol [ cy %tmp.134 69 48 50 ];
-        %tmp.135 = lgetv %s.3;
-        symbol [ s %tmp.135 69 53 54 ];
-        %tmp.136 = sub %tmp.134 %tmp.135;
-        %tmp.137 = 1;
-        %tmp.138 = add %tmp.136 %tmp.137;
-        %tmp.139 = lgetv %s.3;
-        symbol [ s %tmp.139 69 60 61 ];
-        %tmp.140 = 2;
-        %tmp.141 = mul %tmp.139 %tmp.140;
-        %tmp.142 = 2;
-        %tmp.143 = sub %tmp.141 %tmp.142;
-        %tmp.144 = lgetv %s.3;
-        symbol [ s %tmp.144 69 71 72 ];
-        %tmp.145 = 2;
-        %tmp.146 = mul %tmp.144 %tmp.145;
-        %tmp.147 = 2;
-        %tmp.148 = sub %tmp.146 %tmp.147;
-        %tmp.149 = 3;
-        invoke %tmp.127 %tmp.128(%tmp.133, %tmp.138, %tmp.143, %tmp.148, %tmp.149);
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_65_22_70_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_65_8_70_8_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_65_8_70_8_if_end:
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_42_59_71_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc"; @line = 75; @symbol_functiondef = [_shape,75,27,33]; @symbol_param<0> = [dc,75,34,36]; @symbol_param<1> = [type,75,38,42]; @symbol_param<2> = [cx,75,44,46]; @symbol_param<3> = [cy,75,48,50]; @symbol_param<4> = [r,75,52,53]; @symbol_param<5> = [col,75,55,58]; ]
-    protected static
-    function _shape(dc, type, cx, cy, r, col) {
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_75_60_98_4_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 76 8 ]
-        %tmp.1 = lgetv %dc;
-        symbol [ dc %tmp.1 76 8 10 ];
-        symbol [ setColor %tmp.2 76 11 19 ];
-        %tmp.2 = getv function %tmp.1 :setColor;
-        %tmp.3 = lgetv %col;
-        symbol [ col %tmp.3 76 20 23 ];
-        symbol [ Graphics %tmp.4 76 25 33 ];
-        %tmp.4 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.5 76 34 51 ];
-        %tmp.5 = getv %tmp.4 :COLOR_TRANSPARENT;
-        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.5);
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 77 8 ]
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_77_8_97_8_if_stmt:
-        %tmp.6 = lgetv %type;
-        symbol [ type %tmp.6 77 12 16 ];
-        symbol [ TILE_RED %tmp.8 77 20 28 ];
-        %tmp.8 = getv ? :TILE_RED;
-        %tmp.9 = eq %tmp.6 %tmp.8;
-        bf %tmp.9 @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_77_8_97_8_if_false;
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_77_8_97_8_if_true:
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_77_30_79_8_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 78 12 ]
-        %tmp.10 = lgetv %dc;
-        symbol [ dc %tmp.10 78 12 14 ];
-        symbol [ fillCircle %tmp.11 78 15 25 ];
-        %tmp.11 = getv function %tmp.10 :fillCircle;
-        %tmp.12 = lgetv %cx;
-        symbol [ cx %tmp.12 78 26 28 ];
-        %tmp.13 = lgetv %cy;
-        symbol [ cy %tmp.13 78 30 32 ];
-        %tmp.14 = lgetv %r;
-        symbol [ r %tmp.14 78 34 35 ];
-        invoke %tmp.10 %tmp.11(%tmp.12, %tmp.13, %tmp.14);
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_77_30_79_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_77_8_97_8_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_77_8_97_8_if_false:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 79 15 ]
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_79_15_97_8_if_stmt:
-        %tmp.15 = lgetv %type;
-        symbol [ type %tmp.15 79 19 23 ];
-        symbol [ TILE_BLUE %tmp.17 79 27 36 ];
-        %tmp.17 = getv ? :TILE_BLUE;
-        %tmp.18 = eq %tmp.15 %tmp.17;
-        bf %tmp.18 @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_79_15_97_8_if_false;
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_79_15_97_8_if_true:
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_79_38_81_8_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 80 12 ]
-        %tmp.19 = lgetv %dc;
-        symbol [ dc %tmp.19 80 12 14 ];
-        symbol [ fillRoundedRectangle %tmp.20 80 15 35 ];
-        %tmp.20 = getv function %tmp.19 :fillRoundedRectangle;
-        %tmp.21 = lgetv %cx;
-        symbol [ cx %tmp.21 80 36 38 ];
-        %tmp.22 = lgetv %r;
-        symbol [ r %tmp.22 80 41 42 ];
-        %tmp.23 = sub %tmp.21 %tmp.22;
-        %tmp.24 = lgetv %cy;
-        symbol [ cy %tmp.24 80 44 46 ];
-        %tmp.25 = lgetv %r;
-        symbol [ r %tmp.25 80 49 50 ];
-        %tmp.26 = sub %tmp.24 %tmp.25;
-        %tmp.27 = lgetv %r;
-        symbol [ r %tmp.27 80 52 53 ];
-        %tmp.28 = 2;
-        %tmp.29 = mul %tmp.27 %tmp.28;
-        %tmp.30 = lgetv %r;
-        symbol [ r %tmp.30 80 59 60 ];
-        %tmp.31 = 2;
-        %tmp.32 = mul %tmp.30 %tmp.31;
-        %tmp.33 = 3;
-        invoke %tmp.19 %tmp.20(%tmp.23, %tmp.26, %tmp.29, %tmp.32, %tmp.33);
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_79_38_81_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_79_15_97_8_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_79_15_97_8_if_false:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 81 15 ]
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_81_15_97_8_if_stmt:
-        %tmp.34 = lgetv %type;
-        symbol [ type %tmp.34 81 19 23 ];
-        symbol [ TILE_GREEN %tmp.36 81 27 37 ];
-        %tmp.36 = getv ? :TILE_GREEN;
-        %tmp.37 = eq %tmp.34 %tmp.36;
-        bf %tmp.37 @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_81_15_97_8_if_false;
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_81_15_97_8_if_true:
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_81_39_86_8_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 82 12 ]
-        %tmp.38 = lgetv %dc;
-        symbol [ dc %tmp.38 82 12 14 ];
-        symbol [ fillPolygon %tmp.39 82 15 26 ];
-        %tmp.39 = getv function %tmp.38 :fillPolygon;
-        %tmp.40 = newa 4;
-        %tmp.41 = newa 2;
-        %tmp.42 = lgetv %cx;
-        symbol [ cx %tmp.42 82 29 31 ];
-        %tmp.43 = dup %tmp.41;
-        %tmp.44 = aputv %tmp.43 0 %tmp.42;
-        %tmp.45 = lgetv %cy;
-        symbol [ cy %tmp.45 82 33 35 ];
-        %tmp.46 = lgetv %r;
-        symbol [ r %tmp.46 82 38 39 ];
-        %tmp.47 = sub %tmp.45 %tmp.46;
-        %tmp.48 = dup %tmp.44;
-        %tmp.49 = aputv %tmp.48 1 %tmp.47;
-        %tmp.50 = dup %tmp.40;
-        %tmp.51 = aputv %tmp.50 0 %tmp.49;
-        %tmp.52 = newa 2;
-        %tmp.53 = lgetv %cx;
-        symbol [ cx %tmp.53 83 29 31 ];
-        %tmp.54 = lgetv %r;
-        symbol [ r %tmp.54 83 34 35 ];
-        %tmp.55 = add %tmp.53 %tmp.54;
-        %tmp.56 = dup %tmp.52;
-        %tmp.57 = aputv %tmp.56 0 %tmp.55;
-        %tmp.58 = lgetv %cy;
-        symbol [ cy %tmp.58 83 37 39 ];
-        %tmp.59 = dup %tmp.57;
-        %tmp.60 = aputv %tmp.59 1 %tmp.58;
-        %tmp.61 = dup %tmp.51;
-        %tmp.62 = aputv %tmp.61 1 %tmp.60;
-        %tmp.63 = newa 2;
-        %tmp.64 = lgetv %cx;
-        symbol [ cx %tmp.64 84 29 31 ];
-        %tmp.65 = dup %tmp.63;
-        %tmp.66 = aputv %tmp.65 0 %tmp.64;
-        %tmp.67 = lgetv %cy;
-        symbol [ cy %tmp.67 84 33 35 ];
-        %tmp.68 = lgetv %r;
-        symbol [ r %tmp.68 84 38 39 ];
-        %tmp.69 = add %tmp.67 %tmp.68;
-        %tmp.70 = dup %tmp.66;
-        %tmp.71 = aputv %tmp.70 1 %tmp.69;
-        %tmp.72 = dup %tmp.62;
-        %tmp.73 = aputv %tmp.72 2 %tmp.71;
-        %tmp.74 = newa 2;
-        %tmp.75 = lgetv %cx;
-        symbol [ cx %tmp.75 85 29 31 ];
-        %tmp.76 = lgetv %r;
-        symbol [ r %tmp.76 85 34 35 ];
-        %tmp.77 = sub %tmp.75 %tmp.76;
-        %tmp.78 = dup %tmp.74;
-        %tmp.79 = aputv %tmp.78 0 %tmp.77;
-        %tmp.80 = lgetv %cy;
-        symbol [ cy %tmp.80 85 37 39 ];
-        %tmp.81 = dup %tmp.79;
-        %tmp.82 = aputv %tmp.81 1 %tmp.80;
-        %tmp.83 = dup %tmp.73;
-        %tmp.84 = aputv %tmp.83 3 %tmp.82;
-        invoke %tmp.38 %tmp.39(%tmp.84);
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_81_39_86_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_81_15_97_8_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_81_15_97_8_if_false:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 86 15 ]
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_86_15_97_8_if_stmt:
-        %tmp.85 = lgetv %type;
-        symbol [ type %tmp.85 86 19 23 ];
-        symbol [ TILE_YELLOW %tmp.87 86 27 38 ];
-        %tmp.87 = getv ? :TILE_YELLOW;
-        %tmp.88 = eq %tmp.85 %tmp.87;
-        bf %tmp.88 @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_86_15_97_8_if_false;
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_86_15_97_8_if_true:
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_86_40_90_8_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 87 12 ]
-        %tmp.89 = lgetv %dc;
-        symbol [ dc %tmp.89 87 12 14 ];
-        symbol [ fillPolygon %tmp.90 87 15 26 ];
-        %tmp.90 = getv function %tmp.89 :fillPolygon;
-        %tmp.91 = newa 3;
-        %tmp.92 = newa 2;
-        %tmp.93 = lgetv %cx;
-        symbol [ cx %tmp.93 87 29 31 ];
+        %tmp.20 = 0xF65E3B;
+        %tmp.21 = dup %tmp.19;
+        %tmp.22 = aputv %tmp.21 6 %tmp.20;
+        %tmp.23 = 0xEDCF72;
+        %tmp.24 = dup %tmp.22;
+        %tmp.25 = aputv %tmp.24 7 %tmp.23;
+        %tmp.26 = 0xEDCC61;
+        %tmp.27 = dup %tmp.25;
+        %tmp.28 = aputv %tmp.27 8 %tmp.26;
+        %tmp.29 = 0xEDC850;
+        %tmp.30 = dup %tmp.28;
+        %tmp.31 = aputv %tmp.30 9 %tmp.29;
+        %tmp.32 = 0xEDC53F;
+        %tmp.33 = dup %tmp.31;
+        %tmp.34 = aputv %tmp.33 10 %tmp.32;
+        %tmp.35 = 0xEDC22E;
+        %tmp.36 = dup %tmp.34;
+        %tmp.37 = aputv %tmp.36 11 %tmp.35;
+        %tmp.38 = 0x3C3A32;
+        %tmp.39 = dup %tmp.37;
+        %tmp.40 = aputv %tmp.39 12 %tmp.38;
+        %tmp.41 = 0x3C3A32;
+        %tmp.42 = dup %tmp.40;
+        %tmp.43 = aputv %tmp.42 13 %tmp.41;
+        %tmp.44 = 0x3C3A32;
+        %tmp.45 = dup %tmp.43;
+        %tmp.46 = aputv %tmp.45 14 %tmp.44;
+        %tmp.47 = 0x3C3A32;
+        %tmp.48 = dup %tmp.46;
+        %tmp.49 = aputv %tmp.48 15 %tmp.47;
+        %tmp.50 = 0x3C3A32;
+        %tmp.51 = dup %tmp.49;
+        %tmp.52 = aputv %tmp.51 16 %tmp.50;
+        putv self :_BG %tmp.52;
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 50 15 ]
+        %tmp.53 = newa 17;
+        %tmp.54 = 0xBBADA0;
+        %tmp.55 = dup %tmp.53;
+        %tmp.56 = aputv %tmp.55 0 %tmp.54;
+        %tmp.57 = 0x776E65;
+        %tmp.58 = dup %tmp.56;
+        %tmp.59 = aputv %tmp.58 1 %tmp.57;
+        %tmp.60 = 0x776E65;
+        %tmp.61 = dup %tmp.59;
+        %tmp.62 = aputv %tmp.61 2 %tmp.60;
+        %tmp.63 = 0xF9F6F2;
+        %tmp.64 = dup %tmp.62;
+        %tmp.65 = aputv %tmp.64 3 %tmp.63;
+        %tmp.66 = 0xF9F6F2;
+        %tmp.67 = dup %tmp.65;
+        %tmp.68 = aputv %tmp.67 4 %tmp.66;
+        %tmp.69 = 0xF9F6F2;
+        %tmp.70 = dup %tmp.68;
+        %tmp.71 = aputv %tmp.70 5 %tmp.69;
+        %tmp.72 = 0xF9F6F2;
+        %tmp.73 = dup %tmp.71;
+        %tmp.74 = aputv %tmp.73 6 %tmp.72;
+        %tmp.75 = 0xF9F6F2;
+        %tmp.76 = dup %tmp.74;
+        %tmp.77 = aputv %tmp.76 7 %tmp.75;
+        %tmp.78 = 0xF9F6F2;
+        %tmp.79 = dup %tmp.77;
+        %tmp.80 = aputv %tmp.79 8 %tmp.78;
+        %tmp.81 = 0xF9F6F2;
+        %tmp.82 = dup %tmp.80;
+        %tmp.83 = aputv %tmp.82 9 %tmp.81;
+        %tmp.84 = 0xF9F6F2;
+        %tmp.85 = dup %tmp.83;
+        %tmp.86 = aputv %tmp.85 10 %tmp.84;
+        %tmp.87 = 0xF9F6F2;
+        %tmp.88 = dup %tmp.86;
+        %tmp.89 = aputv %tmp.88 11 %tmp.87;
+        %tmp.90 = 0xF9F6F2;
+        %tmp.91 = dup %tmp.89;
+        %tmp.92 = aputv %tmp.91 12 %tmp.90;
+        %tmp.93 = 0xF9F6F2;
         %tmp.94 = dup %tmp.92;
-        %tmp.95 = aputv %tmp.94 0 %tmp.93;
-        %tmp.96 = lgetv %cy;
-        symbol [ cy %tmp.96 87 37 39 ];
-        %tmp.97 = lgetv %r;
-        symbol [ r %tmp.97 87 42 43 ];
-        %tmp.98 = sub %tmp.96 %tmp.97;
-        %tmp.99 = dup %tmp.95;
-        %tmp.100 = aputv %tmp.99 1 %tmp.98;
-        %tmp.101 = dup %tmp.91;
-        %tmp.102 = aputv %tmp.101 0 %tmp.100;
-        %tmp.103 = newa 2;
-        %tmp.104 = lgetv %cx;
-        symbol [ cx %tmp.104 88 29 31 ];
-        %tmp.105 = lgetv %r;
-        symbol [ r %tmp.105 88 34 35 ];
-        %tmp.106 = add %tmp.104 %tmp.105;
-        %tmp.107 = dup %tmp.103;
-        %tmp.108 = aputv %tmp.107 0 %tmp.106;
-        %tmp.109 = lgetv %cy;
-        symbol [ cy %tmp.109 88 37 39 ];
-        %tmp.110 = lgetv %r;
-        symbol [ r %tmp.110 88 42 43 ];
-        %tmp.111 = add %tmp.109 %tmp.110;
-        %tmp.112 = 1;
-        %tmp.113 = sub %tmp.111 %tmp.112;
-        %tmp.114 = dup %tmp.108;
-        %tmp.115 = aputv %tmp.114 1 %tmp.113;
-        %tmp.116 = dup %tmp.102;
-        %tmp.117 = aputv %tmp.116 1 %tmp.115;
-        %tmp.118 = newa 2;
-        %tmp.119 = lgetv %cx;
-        symbol [ cx %tmp.119 89 29 31 ];
-        %tmp.120 = lgetv %r;
-        symbol [ r %tmp.120 89 34 35 ];
-        %tmp.121 = sub %tmp.119 %tmp.120;
-        %tmp.122 = dup %tmp.118;
-        %tmp.123 = aputv %tmp.122 0 %tmp.121;
-        %tmp.124 = lgetv %cy;
-        symbol [ cy %tmp.124 89 37 39 ];
-        %tmp.125 = lgetv %r;
-        symbol [ r %tmp.125 89 42 43 ];
-        %tmp.126 = add %tmp.124 %tmp.125;
-        %tmp.127 = 1;
-        %tmp.128 = sub %tmp.126 %tmp.127;
-        %tmp.129 = dup %tmp.123;
-        %tmp.130 = aputv %tmp.129 1 %tmp.128;
-        %tmp.131 = dup %tmp.117;
-        %tmp.132 = aputv %tmp.131 2 %tmp.130;
-        invoke %tmp.89 %tmp.90(%tmp.132);
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_86_40_90_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_86_15_97_8_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_86_15_97_8_if_false:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 90 15 ]
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_90_15_97_8_if_stmt:
-        %tmp.133 = lgetv %type;
-        symbol [ type %tmp.133 90 19 23 ];
-        symbol [ TILE_PURPLE %tmp.135 90 27 38 ];
-        %tmp.135 = getv ? :TILE_PURPLE;
-        %tmp.136 = eq %tmp.133 %tmp.135;
-        bf %tmp.136 @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_90_15_97_8_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_90_15_97_8_if_true:
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_90_40_97_8_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 91 12 ]
-        %tmp.137 = lgetv %dc;
-        symbol [ dc %tmp.137 91 12 14 ];
-        symbol [ fillPolygon %tmp.138 91 15 26 ];
-        %tmp.138 = getv function %tmp.137 :fillPolygon;
-        %tmp.139 = newa 3;
-        %tmp.140 = newa 2;
-        %tmp.141 = lgetv %cx;
-        symbol [ cx %tmp.141 91 29 31 ];
-        %tmp.142 = dup %tmp.140;
-        %tmp.143 = aputv %tmp.142 0 %tmp.141;
-        %tmp.144 = lgetv %cy;
-        symbol [ cy %tmp.144 91 37 39 ];
-        %tmp.145 = lgetv %r;
-        symbol [ r %tmp.145 91 42 43 ];
-        %tmp.146 = sub %tmp.144 %tmp.145;
-        %tmp.147 = dup %tmp.143;
-        %tmp.148 = aputv %tmp.147 1 %tmp.146;
-        %tmp.149 = dup %tmp.139;
-        %tmp.150 = aputv %tmp.149 0 %tmp.148;
-        %tmp.151 = newa 2;
-        %tmp.152 = lgetv %cx;
-        symbol [ cx %tmp.152 92 29 31 ];
-        %tmp.153 = lgetv %r;
-        symbol [ r %tmp.153 92 34 35 ];
-        %tmp.154 = add %tmp.152 %tmp.153;
-        %tmp.155 = dup %tmp.151;
-        %tmp.156 = aputv %tmp.155 0 %tmp.154;
-        %tmp.157 = lgetv %cy;
-        symbol [ cy %tmp.157 92 37 39 ];
-        %tmp.158 = lgetv %r;
-        symbol [ r %tmp.158 92 42 43 ];
-        %tmp.159 = 2;
-        %tmp.160 = div %tmp.158 %tmp.159;
-        %tmp.161 = add %tmp.157 %tmp.160;
-        %tmp.162 = dup %tmp.156;
-        %tmp.163 = aputv %tmp.162 1 %tmp.161;
-        %tmp.164 = dup %tmp.150;
-        %tmp.165 = aputv %tmp.164 1 %tmp.163;
-        %tmp.166 = newa 2;
-        %tmp.167 = lgetv %cx;
-        symbol [ cx %tmp.167 93 29 31 ];
-        %tmp.168 = lgetv %r;
-        symbol [ r %tmp.168 93 34 35 ];
-        %tmp.169 = sub %tmp.167 %tmp.168;
-        %tmp.170 = dup %tmp.166;
-        %tmp.171 = aputv %tmp.170 0 %tmp.169;
-        %tmp.172 = lgetv %cy;
-        symbol [ cy %tmp.172 93 37 39 ];
-        %tmp.173 = lgetv %r;
-        symbol [ r %tmp.173 93 42 43 ];
-        %tmp.174 = 2;
-        %tmp.175 = div %tmp.173 %tmp.174;
-        %tmp.176 = add %tmp.172 %tmp.175;
-        %tmp.177 = dup %tmp.171;
-        %tmp.178 = aputv %tmp.177 1 %tmp.176;
-        %tmp.179 = dup %tmp.165;
-        %tmp.180 = aputv %tmp.179 2 %tmp.178;
-        invoke %tmp.137 %tmp.138(%tmp.180);
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 94 12 ]
-        %tmp.181 = lgetv %dc;
-        symbol [ dc %tmp.181 94 12 14 ];
-        symbol [ fillPolygon %tmp.182 94 15 26 ];
-        %tmp.182 = getv function %tmp.181 :fillPolygon;
-        %tmp.183 = newa 3;
-        %tmp.184 = newa 2;
-        %tmp.185 = lgetv %cx;
-        symbol [ cx %tmp.185 94 29 31 ];
-        %tmp.186 = dup %tmp.184;
-        %tmp.187 = aputv %tmp.186 0 %tmp.185;
-        %tmp.188 = lgetv %cy;
-        symbol [ cy %tmp.188 94 37 39 ];
-        %tmp.189 = lgetv %r;
-        symbol [ r %tmp.189 94 42 43 ];
-        %tmp.190 = add %tmp.188 %tmp.189;
-        %tmp.191 = dup %tmp.187;
-        %tmp.192 = aputv %tmp.191 1 %tmp.190;
-        %tmp.193 = dup %tmp.183;
-        %tmp.194 = aputv %tmp.193 0 %tmp.192;
-        %tmp.195 = newa 2;
-        %tmp.196 = lgetv %cx;
-        symbol [ cx %tmp.196 95 29 31 ];
-        %tmp.197 = lgetv %r;
-        symbol [ r %tmp.197 95 34 35 ];
-        %tmp.198 = add %tmp.196 %tmp.197;
-        %tmp.199 = dup %tmp.195;
-        %tmp.200 = aputv %tmp.199 0 %tmp.198;
-        %tmp.201 = lgetv %cy;
-        symbol [ cy %tmp.201 95 37 39 ];
-        %tmp.202 = lgetv %r;
-        symbol [ r %tmp.202 95 42 43 ];
-        %tmp.203 = 2;
-        %tmp.204 = div %tmp.202 %tmp.203;
-        %tmp.205 = sub %tmp.201 %tmp.204;
-        %tmp.206 = dup %tmp.200;
-        %tmp.207 = aputv %tmp.206 1 %tmp.205;
-        %tmp.208 = dup %tmp.194;
-        %tmp.209 = aputv %tmp.208 1 %tmp.207;
-        %tmp.210 = newa 2;
-        %tmp.211 = lgetv %cx;
-        symbol [ cx %tmp.211 96 29 31 ];
-        %tmp.212 = lgetv %r;
-        symbol [ r %tmp.212 96 34 35 ];
-        %tmp.213 = sub %tmp.211 %tmp.212;
-        %tmp.214 = dup %tmp.210;
-        %tmp.215 = aputv %tmp.214 0 %tmp.213;
-        %tmp.216 = lgetv %cy;
-        symbol [ cy %tmp.216 96 37 39 ];
-        %tmp.217 = lgetv %r;
-        symbol [ r %tmp.217 96 42 43 ];
-        %tmp.218 = 2;
-        %tmp.219 = div %tmp.217 %tmp.218;
-        %tmp.220 = sub %tmp.216 %tmp.219;
-        %tmp.221 = dup %tmp.215;
-        %tmp.222 = aputv %tmp.221 1 %tmp.220;
-        %tmp.223 = dup %tmp.209;
-        %tmp.224 = aputv %tmp.223 2 %tmp.222;
-        invoke %tmp.181 %tmp.182(%tmp.224);
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_90_40_97_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_90_15_97_8_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_90_15_97_8_if_end:
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_86_15_97_8_if_end:
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_81_15_97_8_if_end:
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_79_15_97_8_if_end:
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_77_8_97_8_if_end:
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_75_60_98_4_stop:
+        %tmp.95 = aputv %tmp.94 13 %tmp.93;
+        %tmp.96 = 0xF9F6F2;
+        %tmp.97 = dup %tmp.95;
+        %tmp.98 = aputv %tmp.97 14 %tmp.96;
+        %tmp.99 = 0xF9F6F2;
+        %tmp.100 = dup %tmp.98;
+        %tmp.101 = aputv %tmp.100 15 %tmp.99;
+        %tmp.102 = 0xF9F6F2;
+        %tmp.103 = dup %tmp.101;
+        %tmp.104 = aputv %tmp.103 16 %tmp.102;
+        putv self :_FG %tmp.104;
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc"; @line = 102; @symbol_functiondef = [_drawBomb,102,27,36]; @symbol_param<0> = [dc,102,37,39]; @symbol_param<1> = [cx,102,41,43]; @symbol_param<2> = [cy,102,45,47]; @symbol_param<3> = [r,102,49,50]; ]
-    protected static
-    function _drawBomb(dc, cx, cy, r) {
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_102_52_117_4_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 103 8 ]
-        %tmp.1 = lgetv %dc;
-        symbol [ dc %tmp.1 103 8 10 ];
-        symbol [ setColor %tmp.2 103 11 19 ];
-        %tmp.2 = getv function %tmp.1 :setColor;
-        %tmp.3 = 0x161616;
-        symbol [ Graphics %tmp.4 103 30 38 ];
-        %tmp.4 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.5 103 39 56 ];
-        %tmp.5 = getv %tmp.4 :COLOR_TRANSPARENT;
-        invoke %tmp.1 %tmp.2(%tmp.3, %tmp.5);
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 104 8 ]
-        %tmp.6 = lgetv %dc;
-        symbol [ dc %tmp.6 104 8 10 ];
-        symbol [ fillCircle %tmp.7 104 11 21 ];
-        %tmp.7 = getv function %tmp.6 :fillCircle;
-        %tmp.8 = lgetv %cx;
-        symbol [ cx %tmp.8 104 22 24 ];
-        %tmp.9 = 1;
-        %tmp.10 = add %tmp.8 %tmp.9;
-        %tmp.11 = lgetv %cy;
-        symbol [ cy %tmp.11 104 30 32 ];
-        %tmp.12 = 2;
-        %tmp.13 = add %tmp.11 %tmp.12;
-        %tmp.14 = lgetv %r;
-        symbol [ r %tmp.14 104 38 39 ];
-        invoke %tmp.6 %tmp.7(%tmp.10, %tmp.13, %tmp.14);
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 105 8 ]
-        %tmp.15 = lgetv %dc;
-        symbol [ dc %tmp.15 105 8 10 ];
-        symbol [ setColor %tmp.16 105 11 19 ];
-        %tmp.16 = getv function %tmp.15 :setColor;
-        %tmp.17 = 0x2A2A2A;
-        symbol [ Graphics %tmp.18 105 30 38 ];
-        %tmp.18 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.19 105 39 56 ];
-        %tmp.19 = getv %tmp.18 :COLOR_TRANSPARENT;
-        invoke %tmp.15 %tmp.16(%tmp.17, %tmp.19);
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 106 8 ]
-        %tmp.20 = lgetv %dc;
-        symbol [ dc %tmp.20 106 8 10 ];
-        symbol [ fillCircle %tmp.21 106 11 21 ];
-        %tmp.21 = getv function %tmp.20 :fillCircle;
-        %tmp.22 = lgetv %cx;
-        symbol [ cx %tmp.22 106 22 24 ];
-        %tmp.23 = lgetv %cy;
-        symbol [ cy %tmp.23 106 26 28 ];
-        %tmp.24 = lgetv %r;
-        symbol [ r %tmp.24 106 30 31 ];
-        invoke %tmp.20 %tmp.21(%tmp.22, %tmp.23, %tmp.24);
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 107 8 ]
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_102_52_117_4_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_102_52_117_4_stop" ]
-        %pulse.1 = local;
-        symbol [ pulse %pulse.1 107 12 17 ];
-        symbol [ System %tmp.25 107 21 27 ];
-        %tmp.25 = getm $.Toybox.System;
-        symbol [ getTimer %tmp.26 107 28 36 ];
-        %tmp.26 = getv function %tmp.25 :getTimer;
-        %tmp.27 = invoke %tmp.25 %tmp.26();
-        %tmp.28 = 120;
-        %tmp.29 = div %tmp.27 %tmp.28;
-        %tmp.30 = 2;
-        %tmp.31 = mod %tmp.29 %tmp.30;
-        lputv %pulse.1 %tmp.31;
-        symbol [ pulse %pulse.1 107 12 17 ];
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 108 8 ]
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_102_52_117_4_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_102_52_117_4_stop" ]
-        %core.2 = local;
-        symbol [ core %core.2 108 12 16 ];
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_108_20_108_46_begin:
-        %tmp.32 = lgetv %pulse.1;
-        symbol [ pulse %tmp.32 108 21 26 ];
-        %tmp.33 = 0;
-        %tmp.34 = eq %tmp.32 %tmp.33;
-        bf %tmp.34 @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_108_20_108_46_else_false;
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_108_20_108_46_true:
-        %tmp.35 = 0xFF6600;
-        push %tmp.35;
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_108_20_108_46_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_108_20_108_46_else_false:
-        %tmp.36 = 0xFF2200;
-        push %tmp.36;
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_108_20_108_46_end:
-        %tmp.37 = phi [%tmp.34 @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_108_20_108_46_begin] [%tmp.35 @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_108_20_108_46_true] [%tmp.36 @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_108_20_108_46_else_false] [%tmp.37 @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_108_20_108_46_end];
-        lputv %core.2 %tmp.37;
-        symbol [ core %core.2 108 12 16 ];
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 109 8 ]
-        %tmp.38 = lgetv %dc;
-        symbol [ dc %tmp.38 109 8 10 ];
-        symbol [ setColor %tmp.39 109 11 19 ];
-        %tmp.39 = getv function %tmp.38 :setColor;
-        %tmp.40 = lgetv %core.2;
-        symbol [ core %tmp.40 109 20 24 ];
-        symbol [ Graphics %tmp.41 109 26 34 ];
-        %tmp.41 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.42 109 35 52 ];
-        %tmp.42 = getv %tmp.41 :COLOR_TRANSPARENT;
-        invoke %tmp.38 %tmp.39(%tmp.40, %tmp.42);
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 110 8 ]
-        %tmp.43 = lgetv %dc;
-        symbol [ dc %tmp.43 110 8 10 ];
-        symbol [ fillCircle %tmp.44 110 11 21 ];
-        %tmp.44 = getv function %tmp.43 :fillCircle;
-        %tmp.45 = lgetv %cx;
-        symbol [ cx %tmp.45 110 22 24 ];
-        %tmp.46 = lgetv %cy;
-        symbol [ cy %tmp.46 110 26 28 ];
-        %tmp.47 = lgetv %r;
-        symbol [ r %tmp.47 110 31 32 ];
-        %tmp.48 = 55;
-        %tmp.49 = mul %tmp.47 %tmp.48;
-        %tmp.50 = 100;
-        %tmp.51 = div %tmp.49 %tmp.50;
-        invoke %tmp.43 %tmp.44(%tmp.45, %tmp.46, %tmp.51);
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 111 8 ]
-        %tmp.52 = lgetv %dc;
-        symbol [ dc %tmp.52 111 8 10 ];
-        symbol [ setColor %tmp.53 111 11 19 ];
-        %tmp.53 = getv function %tmp.52 :setColor;
-        %tmp.54 = 0xFFDD66;
-        symbol [ Graphics %tmp.55 111 30 38 ];
-        %tmp.55 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.56 111 39 56 ];
-        %tmp.56 = getv %tmp.55 :COLOR_TRANSPARENT;
-        invoke %tmp.52 %tmp.53(%tmp.54, %tmp.56);
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 112 8 ]
-        %tmp.57 = lgetv %dc;
-        symbol [ dc %tmp.57 112 8 10 ];
-        symbol [ drawCircle %tmp.58 112 11 21 ];
-        %tmp.58 = getv function %tmp.57 :drawCircle;
-        %tmp.59 = lgetv %cx;
-        symbol [ cx %tmp.59 112 22 24 ];
-        %tmp.60 = lgetv %cy;
-        symbol [ cy %tmp.60 112 26 28 ];
-        %tmp.61 = lgetv %r;
-        symbol [ r %tmp.61 112 30 31 ];
-        invoke %tmp.57 %tmp.58(%tmp.59, %tmp.60, %tmp.61);
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 114 8 ]
-        %tmp.62 = lgetv %dc;
-        symbol [ dc %tmp.62 114 8 10 ];
-        symbol [ setColor %tmp.63 114 11 19 ];
-        %tmp.63 = getv function %tmp.62 :setColor;
-        %tmp.64 = 0xFFEE99;
-        symbol [ Graphics %tmp.65 114 30 38 ];
-        %tmp.65 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.66 114 39 56 ];
-        %tmp.66 = getv %tmp.65 :COLOR_TRANSPARENT;
-        invoke %tmp.62 %tmp.63(%tmp.64, %tmp.66);
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 115 8 ]
-        %tmp.67 = lgetv %dc;
-        symbol [ dc %tmp.67 115 8 10 ];
-        symbol [ drawLine %tmp.68 115 11 19 ];
-        %tmp.68 = getv function %tmp.67 :drawLine;
-        %tmp.69 = lgetv %cx;
-        symbol [ cx %tmp.69 115 20 22 ];
-        %tmp.70 = lgetv %r;
-        symbol [ r %tmp.70 115 25 26 ];
-        %tmp.71 = sub %tmp.69 %tmp.70;
-        %tmp.72 = lgetv %cy;
-        symbol [ cy %tmp.72 115 28 30 ];
-        %tmp.73 = lgetv %cx;
-        symbol [ cx %tmp.73 115 32 34 ];
-        %tmp.74 = lgetv %r;
-        symbol [ r %tmp.74 115 37 38 ];
-        %tmp.75 = add %tmp.73 %tmp.74;
-        %tmp.76 = lgetv %cy;
-        symbol [ cy %tmp.76 115 40 42 ];
-        invoke %tmp.67 %tmp.68(%tmp.71, %tmp.72, %tmp.75, %tmp.76);
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 116 8 ]
-        %tmp.77 = lgetv %dc;
-        symbol [ dc %tmp.77 116 8 10 ];
-        symbol [ drawLine %tmp.78 116 11 19 ];
-        %tmp.78 = getv function %tmp.77 :drawLine;
-        %tmp.79 = lgetv %cx;
-        symbol [ cx %tmp.79 116 20 22 ];
-        %tmp.80 = lgetv %cy;
-        symbol [ cy %tmp.80 116 24 26 ];
-        %tmp.81 = lgetv %r;
-        symbol [ r %tmp.81 116 29 30 ];
-        %tmp.82 = sub %tmp.80 %tmp.81;
-        %tmp.83 = lgetv %cx;
-        symbol [ cx %tmp.83 116 32 34 ];
-        %tmp.84 = lgetv %cy;
-        symbol [ cy %tmp.84 116 36 38 ];
-        %tmp.85 = lgetv %r;
-        symbol [ r %tmp.85 116 41 42 ];
-        %tmp.86 = add %tmp.84 %tmp.85;
-        invoke %tmp.77 %tmp.78(%tmp.79, %tmp.82, %tmp.83, %tmp.86);
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_102_52_117_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc"; @line = 121; @symbol_functiondef = [_lighten,121,27,35]; @symbol_param<0> = [col,121,36,39]; ]
-    protected static
-    function _lighten(col) {
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_121_41_129_4_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 122 8 ]
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_121_41_129_4_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_121_41_129_4_stop" ]
-        %r.1 = local;
-        symbol [ r %r.1 122 12 13 ];
-        %tmp.1 = lgetv %col;
-        symbol [ col %tmp.1 122 17 20 ];
-        %tmp.2 = 16;
-        %tmp.3 = shr %tmp.1 %tmp.2;
-        %tmp.4 = 0xFF;
-        %tmp.5 = bitand %tmp.3 %tmp.4;
-        lputv %r.1 %tmp.5;
-        symbol [ r %r.1 122 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 123 8 ]
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_121_41_129_4_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_121_41_129_4_stop" ]
-        %g.2 = local;
-        symbol [ g %g.2 123 12 13 ];
-        %tmp.6 = lgetv %col;
-        symbol [ col %tmp.6 123 17 20 ];
-        %tmp.7 = 8;
-        %tmp.8 = shr %tmp.6 %tmp.7;
-        %tmp.9 = 0xFF;
-        %tmp.10 = bitand %tmp.8 %tmp.9;
-        lputv %g.2 %tmp.10;
-        symbol [ g %g.2 123 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 124 8 ]
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_121_41_129_4_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_121_41_129_4_stop" ]
-        %b.3 = local;
-        symbol [ b %b.3 124 12 13 ];
-        %tmp.11 = lgetv %col;
-        symbol [ col %tmp.11 124 17 20 ];
-        %tmp.12 = 0xFF;
-        %tmp.13 = bitand %tmp.11 %tmp.12;
-        lputv %b.3 %tmp.13;
-        symbol [ b %b.3 124 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 125 8 ]
-        %tmp.14 = lgetv %r.1;
-        symbol [ r %tmp.14 125 13 14 ];
-        %tmp.15 = 255;
-        %tmp.16 = lgetv %r.1;
-        symbol [ r %tmp.16 125 25 26 ];
-        %tmp.17 = sub %tmp.15 %tmp.16;
-        %tmp.18 = 45;
-        %tmp.19 = mul %tmp.17 %tmp.18;
-        %tmp.20 = 100;
-        %tmp.21 = div %tmp.19 %tmp.20;
-        %tmp.22 = add %tmp.14 %tmp.21;
-        symbol [ toNumber %tmp.23 125 41 49 ];
-        %tmp.23 = getv function %tmp.22 :toNumber;
-        %tmp.24 = invoke %tmp.22 %tmp.23();
-        lputv %r.1 %tmp.24;
-        symbol [ r %r.1 125 8 9 ];
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 126 8 ]
-        %tmp.25 = lgetv %g.2;
-        symbol [ g %tmp.25 126 13 14 ];
-        %tmp.26 = 255;
-        %tmp.27 = lgetv %g.2;
-        symbol [ g %tmp.27 126 25 26 ];
-        %tmp.28 = sub %tmp.26 %tmp.27;
-        %tmp.29 = 45;
-        %tmp.30 = mul %tmp.28 %tmp.29;
-        %tmp.31 = 100;
-        %tmp.32 = div %tmp.30 %tmp.31;
-        %tmp.33 = add %tmp.25 %tmp.32;
-        symbol [ toNumber %tmp.34 126 41 49 ];
-        %tmp.34 = getv function %tmp.33 :toNumber;
-        %tmp.35 = invoke %tmp.33 %tmp.34();
-        lputv %g.2 %tmp.35;
-        symbol [ g %g.2 126 8 9 ];
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 127 8 ]
-        %tmp.36 = lgetv %b.3;
-        symbol [ b %tmp.36 127 13 14 ];
-        %tmp.37 = 255;
-        %tmp.38 = lgetv %b.3;
-        symbol [ b %tmp.38 127 25 26 ];
-        %tmp.39 = sub %tmp.37 %tmp.38;
-        %tmp.40 = 45;
-        %tmp.41 = mul %tmp.39 %tmp.40;
-        %tmp.42 = 100;
-        %tmp.43 = div %tmp.41 %tmp.42;
-        %tmp.44 = add %tmp.36 %tmp.43;
-        symbol [ toNumber %tmp.45 127 41 49 ];
-        %tmp.45 = getv function %tmp.44 :toNumber;
-        %tmp.46 = invoke %tmp.44 %tmp.45();
-        lputv %b.3 %tmp.46;
-        symbol [ b %b.3 127 8 9 ];
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 128 8 ]
-        %tmp.47 = lgetv %r.1;
-        symbol [ r %tmp.47 128 16 17 ];
-        %tmp.48 = 16;
-        %tmp.49 = shl %tmp.47 %tmp.48;
-        %tmp.50 = lgetv %g.2;
-        symbol [ g %tmp.50 128 28 29 ];
-        %tmp.51 = 8;
-        %tmp.52 = shl %tmp.50 %tmp.51;
-        %tmp.53 = bitor %tmp.49 %tmp.52;
-        %tmp.54 = lgetv %b.3;
-        symbol [ b %tmp.54 128 38 39 ];
-        %tmp.55 = bitor %tmp.53 %tmp.54;
-        ret %tmp.55;
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_121_41_129_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc"; @line = 134; @symbol_functiondef = [drawFlash,134,20,29]; @symbol_param<0> = [dc,134,30,32]; @symbol_param<1> = [type,134,34,38]; @symbol_param<2> = [cx,134,40,42]; @symbol_param<3> = [cy,134,44,46]; @symbol_param<4> = [size,134,48,52]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc"; @line = 29; @position = 15; @symbol_vardef = [_BG,29,15,18]; ]
     static
-    function drawFlash(dc, type, cx, cy, size) {
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_134_54_145_4_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 135 8 ]
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_135_8_135_42_if_stmt:
-        %tmp.1 = lgetv %type;
-        symbol [ type %tmp.1 135 12 16 ];
-        symbol [ TILE_EMPTY %tmp.3 135 20 30 ];
-        %tmp.3 = getv ? :TILE_EMPTY;
-        %tmp.4 = eq %tmp.1 %tmp.3;
-        bf %tmp.4 @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_135_8_135_42_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_135_8_135_42_if_true:
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_135_32_135_42_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 135 34 ]
-        ret ?;
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_135_32_135_42_stop:
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_135_8_135_42_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_135_8_135_42_if_end:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 136 8 ]
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_134_54_145_4_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_134_54_145_4_stop" ]
-        %r.1 = local;
-        symbol [ r %r.1 136 12 13 ];
-        %tmp.5 = lgetv %size;
-        symbol [ size %tmp.5 136 17 21 ];
-        %tmp.6 = 46;
-        %tmp.7 = mul %tmp.5 %tmp.6;
-        %tmp.8 = 100;
-        %tmp.9 = div %tmp.7 %tmp.8;
-        lputv %r.1 %tmp.9;
-        symbol [ r %r.1 136 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 137 8 ]
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_137_8_137_28_if_stmt:
-        %tmp.10 = lgetv %r.1;
-        symbol [ r %tmp.10 137 12 13 ];
-        %tmp.11 = 4;
-        %tmp.12 = lt %tmp.10 %tmp.11;
-        bf %tmp.12 @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_137_8_137_28_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_137_8_137_28_if_true:
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_137_19_137_28_start:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 137 21 ]
+    var _BG;
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc"; @line = 50; @position = 15; @symbol_vardef = [_FG,50,15,18]; ]
+    static
+    var _FG;
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc"; @line = 71; @symbol_functiondef = [valueOf,71,20,27]; @symbol_param<0> = [e,71,28,29]; ]
+    static
+    function valueOf(e) {
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_71_31_75_4_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 72 8 ]
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_72_8_72_32_if_stmt:
+        %tmp.1 = lgetv %e;
+        symbol [ e %tmp.1 72 12 13 ];
+        %tmp.2 = 0;
+        %tmp.3 = lte %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_72_8_72_32_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_72_8_72_32_if_true:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_72_20_72_32_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 72 22 ]
+        %tmp.4 = 0;
+        ret %tmp.4;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_72_20_72_32_stop:
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_72_8_72_32_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_72_8_72_32_if_end:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 73 8 ]
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_73_8_73_30_if_stmt:
+        %tmp.5 = lgetv %e;
+        symbol [ e %tmp.5 73 12 13 ];
+        %tmp.6 = 16;
+        %tmp.7 = gt %tmp.5 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_73_8_73_30_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_73_8_73_30_if_true:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_73_20_73_30_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 73 22 ]
+        %tmp.8 = 16;
+        lputv %e %tmp.8;
+        symbol [ e %e 73 22 23 ];
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_73_20_73_30_stop:
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_73_8_73_30_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_73_8_73_30_if_end:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 74 8 ]
+        %tmp.9 = 1;
+        %tmp.10 = lgetv %e;
+        symbol [ e %tmp.10 74 20 21 ];
+        %tmp.11 = shl %tmp.9 %tmp.10;
+        ret %tmp.11;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_71_31_75_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc"; @line = 77; @symbol_functiondef = [bg,77,20,22]; @symbol_param<0> = [e,77,23,24]; ]
+    static
+    function bg(e) {
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_77_26_81_4_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 78 8 ]
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_78_8_78_29_if_stmt:
+        %tmp.1 = lgetv %e;
+        symbol [ e %tmp.1 78 12 13 ];
+        %tmp.2 = 0;
+        %tmp.3 = lt %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_78_8_78_29_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_78_8_78_29_if_true:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_78_20_78_29_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 78 22 ]
+        %tmp.4 = 0;
+        lputv %e %tmp.4;
+        symbol [ e %e 78 22 23 ];
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_78_20_78_29_stop:
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_78_8_78_29_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_78_8_78_29_if_end:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 79 8 ]
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_79_8_79_30_if_stmt:
+        %tmp.5 = lgetv %e;
+        symbol [ e %tmp.5 79 12 13 ];
+        %tmp.6 = 16;
+        %tmp.7 = gt %tmp.5 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_79_8_79_30_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_79_8_79_30_if_true:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_79_20_79_30_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 79 22 ]
+        %tmp.8 = 16;
+        lputv %e %tmp.8;
+        symbol [ e %e 79 22 23 ];
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_79_20_79_30_stop:
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_79_8_79_30_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_79_8_79_30_if_end:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 80 8 ]
+        symbol [ _BG %tmp.10 80 15 18 ];
+        %tmp.10 = getv ? :_BG;
+        %tmp.11 = lgetv %e;
+        symbol [ e %tmp.11 80 19 20 ];
+        %tmp.12 = agetv %tmp.10 %tmp.11;
+        ret %tmp.12;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_77_26_81_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc"; @line = 83; @symbol_functiondef = [fg,83,20,22]; @symbol_param<0> = [e,83,23,24]; ]
+    static
+    function fg(e) {
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_83_26_87_4_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 84 8 ]
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_84_8_84_29_if_stmt:
+        %tmp.1 = lgetv %e;
+        symbol [ e %tmp.1 84 12 13 ];
+        %tmp.2 = 0;
+        %tmp.3 = lt %tmp.1 %tmp.2;
+        bf %tmp.3 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_84_8_84_29_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_84_8_84_29_if_true:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_84_20_84_29_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 84 22 ]
+        %tmp.4 = 0;
+        lputv %e %tmp.4;
+        symbol [ e %e 84 22 23 ];
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_84_20_84_29_stop:
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_84_8_84_29_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_84_8_84_29_if_end:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 85 8 ]
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_85_8_85_30_if_stmt:
+        %tmp.5 = lgetv %e;
+        symbol [ e %tmp.5 85 12 13 ];
+        %tmp.6 = 16;
+        %tmp.7 = gt %tmp.5 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_85_8_85_30_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_85_8_85_30_if_true:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_85_20_85_30_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 85 22 ]
+        %tmp.8 = 16;
+        lputv %e %tmp.8;
+        symbol [ e %e 85 22 23 ];
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_85_20_85_30_stop:
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_85_8_85_30_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_85_8_85_30_if_end:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 86 8 ]
+        symbol [ _FG %tmp.10 86 15 18 ];
+        %tmp.10 = getv ? :_FG;
+        %tmp.11 = lgetv %e;
+        symbol [ e %tmp.11 86 19 20 ];
+        %tmp.12 = agetv %tmp.10 %tmp.11;
+        ret %tmp.12;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_83_26_87_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc"; @line = 91; @symbol_functiondef = [fontFor,91,20,27]; @symbol_param<0> = [e,91,28,29]; @symbol_param<1> = [s,91,31,32]; ]
+    static
+    function fontFor(e, s) {
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_91_34_101_4_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 92 8 ]
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_91_34_101_4_start" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_91_34_101_4_stop" ]
+        %digits.1 = local;
+        symbol [ digits %digits.1 92 12 18 ];
+        %tmp.1 = 1;
+        lputv %digits.1 %tmp.1;
+        symbol [ digits %digits.1 92 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 93 8 ]
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_93_8_93_35_if_stmt:
+        %tmp.2 = lgetv %e;
+        symbol [ e %tmp.2 93 12 13 ];
+        %tmp.3 = 4;
+        %tmp.4 = gte %tmp.2 %tmp.3;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_93_8_93_35_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_93_8_93_35_if_true:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_93_21_93_35_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 93 23 ]
+        %tmp.5 = 2;
+        lputv %digits.1 %tmp.5;
+        symbol [ digits %digits.1 93 23 29 ];
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_93_21_93_35_stop:
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_93_8_93_35_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_93_8_93_35_if_end:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 94 8 ]
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_94_8_94_35_if_stmt:
+        %tmp.6 = lgetv %e;
+        symbol [ e %tmp.6 94 12 13 ];
+        %tmp.7 = 7;
+        %tmp.8 = gte %tmp.6 %tmp.7;
+        bf %tmp.8 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_94_8_94_35_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_94_8_94_35_if_true:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_94_21_94_35_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 94 23 ]
+        %tmp.9 = 3;
+        lputv %digits.1 %tmp.9;
+        symbol [ digits %digits.1 94 23 29 ];
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_94_21_94_35_stop:
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_94_8_94_35_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_94_8_94_35_if_end:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 95 8 ]
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_95_8_95_35_if_stmt:
+        %tmp.10 = lgetv %e;
+        symbol [ e %tmp.10 95 12 13 ];
+        %tmp.11 = 10;
+        %tmp.12 = gte %tmp.10 %tmp.11;
+        bf %tmp.12 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_95_8_95_35_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_95_8_95_35_if_true:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_95_21_95_35_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 95 23 ]
         %tmp.13 = 4;
-        lputv %r.1 %tmp.13;
-        symbol [ r %r.1 137 21 22 ];
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_137_19_137_28_stop:
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_137_8_137_28_if_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_137_8_137_28_if_end:
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 138 8 ]
-        [ "_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_134_54_145_4_start" "_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_134_54_145_4_stop" ]
-        %glowCol.2 = local;
-        symbol [ glowCol %glowCol.2 138 12 19 ];
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_138_22_138_66_begin:
-        %tmp.14 = lgetv %type;
-        symbol [ type %tmp.14 138 23 27 ];
-        symbol [ TILE_BOMB %tmp.16 138 31 40 ];
-        %tmp.16 = getv ? :TILE_BOMB;
-        %tmp.17 = eq %tmp.14 %tmp.16;
-        bf %tmp.17 @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_138_22_138_66_else_false;
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_138_22_138_66_true:
-        %tmp.18 = 0xFF6600;
-        push %tmp.18;
-        goto @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_138_22_138_66_end;
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_138_22_138_66_else_false:
-        symbol [ COLORS %tmp.20 138 55 61 ];
-        %tmp.20 = getv ? :COLORS;
-        %tmp.21 = lgetv %type;
-        symbol [ type %tmp.21 138 62 66 ];
-        %tmp.22 = agetv %tmp.20 %tmp.21;
-        push %tmp.22;
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_138_22_138_66_end:
-        %tmp.23 = phi [%tmp.17 @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_138_22_138_66_begin] [%tmp.18 @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_138_22_138_66_true] [%tmp.22 @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_138_22_138_66_else_false] [%tmp.23 @_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_138_22_138_66_end];
-        lputv %glowCol.2 %tmp.23;
-        symbol [ glowCol %glowCol.2 138 12 19 ];
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 140 8 ]
-        %tmp.24 = lgetv %dc;
-        symbol [ dc %tmp.24 140 8 10 ];
-        symbol [ setColor %tmp.25 140 11 19 ];
-        %tmp.25 = getv function %tmp.24 :setColor;
-        %tmp.26 = lgetv %glowCol.2;
-        symbol [ glowCol %tmp.26 140 20 27 ];
-        symbol [ Graphics %tmp.27 140 29 37 ];
-        %tmp.27 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.28 140 38 55 ];
-        %tmp.28 = getv %tmp.27 :COLOR_TRANSPARENT;
-        invoke %tmp.24 %tmp.25(%tmp.26, %tmp.28);
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 141 8 ]
-        %tmp.29 = lgetv %dc;
-        symbol [ dc %tmp.29 141 8 10 ];
-        symbol [ fillCircle %tmp.30 141 11 21 ];
-        %tmp.30 = getv function %tmp.29 :fillCircle;
-        %tmp.31 = lgetv %cx;
-        symbol [ cx %tmp.31 141 22 24 ];
-        %tmp.32 = lgetv %cy;
-        symbol [ cy %tmp.32 141 26 28 ];
-        %tmp.33 = lgetv %r.1;
-        symbol [ r %tmp.33 141 30 31 ];
-        %tmp.34 = 2;
-        %tmp.35 = add %tmp.33 %tmp.34;
-        invoke %tmp.29 %tmp.30(%tmp.31, %tmp.32, %tmp.35);
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 142 8 ]
-        %tmp.36 = lgetv %dc;
-        symbol [ dc %tmp.36 142 8 10 ];
-        symbol [ setColor %tmp.37 142 11 19 ];
-        %tmp.37 = getv function %tmp.36 :setColor;
-        %tmp.38 = 0xFFFFFF;
-        symbol [ Graphics %tmp.39 142 30 38 ];
-        %tmp.39 = getm $.Toybox.Graphics;
-        symbol [ COLOR_TRANSPARENT %tmp.40 142 39 56 ];
-        %tmp.40 = getv %tmp.39 :COLOR_TRANSPARENT;
-        invoke %tmp.36 %tmp.37(%tmp.38, %tmp.40);
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 143 8 ]
-        %tmp.41 = lgetv %dc;
-        symbol [ dc %tmp.41 143 8 10 ];
-        symbol [ fillCircle %tmp.42 143 11 21 ];
-        %tmp.42 = getv function %tmp.41 :fillCircle;
-        %tmp.43 = lgetv %cx;
-        symbol [ cx %tmp.43 143 22 24 ];
-        %tmp.44 = lgetv %cy;
-        symbol [ cy %tmp.44 143 26 28 ];
-        %tmp.45 = lgetv %r.1;
-        symbol [ r %tmp.45 143 30 31 ];
-        invoke %tmp.41 %tmp.42(%tmp.43, %tmp.44, %tmp.45);
-[ "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc" 144 8 ]
-        %tmp.46 = self;
-        symbol [ draw %tmp.47 144 8 12 ];
-        %tmp.47 = getv function %tmp.46 :draw;
-        %tmp.48 = lgetv %dc;
-        symbol [ dc %tmp.48 144 13 15 ];
-        %tmp.49 = lgetv %type;
-        symbol [ type %tmp.49 144 17 21 ];
-        %tmp.50 = lgetv %cx;
-        symbol [ cx %tmp.50 144 23 25 ];
-        %tmp.51 = lgetv %cy;
-        symbol [ cy %tmp.51 144 27 29 ];
-        %tmp.52 = lgetv %size;
-        symbol [ size %tmp.52 144 31 35 ];
-        %tmp.53 = false;
-        invoke %tmp.46 %tmp.47(%tmp.48, %tmp.49, %tmp.50, %tmp.51, %tmp.52, %tmp.53);
-_Users_kkorolczuk_work_garmin_gemmatch_source_Tile_mc_134_54_145_4_stop:
+        lputv %digits.1 %tmp.13;
+        symbol [ digits %digits.1 95 23 29 ];
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_95_21_95_35_stop:
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_95_8_95_35_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_95_8_95_35_if_end:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 97 8 ]
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_97_8_97_67_if_stmt:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_97_12_97_33_begin:
+        %tmp.14 = lgetv %s;
+        symbol [ s %tmp.14 97 12 13 ];
+        %tmp.15 = 56;
+        %tmp.16 = gte %tmp.14 %tmp.15;
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_97_8_97_67_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_97_23_97_33_true:
+        %tmp.17 = lgetv %digits.1;
+        symbol [ digits %tmp.17 97 23 29 ];
+        %tmp.18 = 2;
+        %tmp.19 = lte %tmp.17 %tmp.18;
+        push %tmp.19;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_97_23_97_33_end:
+        %tmp.20 = phi [%tmp.16 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_97_12_97_33_begin] [%tmp.19 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_97_23_97_33_true] [%tmp.20 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_97_23_97_33_end];
+        bf %tmp.20 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_97_8_97_67_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_97_8_97_67_if_true:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_97_36_97_67_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 97 38 ]
+        symbol [ Graphics %tmp.21 97 45 53 ];
+        %tmp.21 = getm $.Toybox.Graphics;
+        symbol [ FONT_MEDIUM %tmp.22 97 54 65 ];
+        %tmp.22 = getv %tmp.21 :FONT_MEDIUM;
+        ret %tmp.22;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_97_36_97_67_stop:
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_97_8_97_67_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_97_8_97_67_if_end:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 98 8 ]
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_98_8_98_67_if_stmt:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_98_12_98_33_begin:
+        %tmp.23 = lgetv %s;
+        symbol [ s %tmp.23 98 12 13 ];
+        %tmp.24 = 44;
+        %tmp.25 = gte %tmp.23 %tmp.24;
+        bf %tmp.25 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_98_8_98_67_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_98_23_98_33_true:
+        %tmp.26 = lgetv %digits.1;
+        symbol [ digits %tmp.26 98 23 29 ];
+        %tmp.27 = 3;
+        %tmp.28 = lte %tmp.26 %tmp.27;
+        push %tmp.28;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_98_23_98_33_end:
+        %tmp.29 = phi [%tmp.25 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_98_12_98_33_begin] [%tmp.28 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_98_23_98_33_true] [%tmp.29 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_98_23_98_33_end];
+        bf %tmp.29 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_98_8_98_67_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_98_8_98_67_if_true:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_98_36_98_67_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 98 38 ]
+        symbol [ Graphics %tmp.30 98 45 53 ];
+        %tmp.30 = getm $.Toybox.Graphics;
+        symbol [ FONT_SMALL %tmp.31 98 54 64 ];
+        %tmp.31 = getv %tmp.30 :FONT_SMALL;
+        ret %tmp.31;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_98_36_98_67_stop:
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_98_8_98_67_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_98_8_98_67_if_end:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 99 8 ]
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_99_8_99_67_if_stmt:
+        %tmp.32 = lgetv %s;
+        symbol [ s %tmp.32 99 12 13 ];
+        %tmp.33 = 32;
+        %tmp.34 = gte %tmp.32 %tmp.33;
+        bf %tmp.34 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_99_8_99_67_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_99_8_99_67_if_true:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_99_36_99_67_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 99 38 ]
+        symbol [ Graphics %tmp.35 99 45 53 ];
+        %tmp.35 = getm $.Toybox.Graphics;
+        symbol [ FONT_TINY %tmp.36 99 54 63 ];
+        %tmp.36 = getv %tmp.35 :FONT_TINY;
+        ret %tmp.36;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_99_36_99_67_stop:
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_99_8_99_67_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_99_8_99_67_if_end:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 100 8 ]
+        symbol [ Graphics %tmp.37 100 15 23 ];
+        %tmp.37 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.38 100 24 34 ];
+        %tmp.38 = getv %tmp.37 :FONT_XTINY;
+        ret %tmp.38;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_91_34_101_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc"; @line = 106; @symbol_functiondef = [draw,106,20,24]; @symbol_param<0> = [dc,106,25,27]; @symbol_param<1> = [x,106,29,30]; @symbol_param<2> = [y,106,32,33]; @symbol_param<3> = [s,106,35,36]; @symbol_param<4> = [e,106,38,39]; @symbol_param<5> = [merged,106,41,47]; ]
+    static
+    function draw(dc, x, y, s, e, merged) {
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_106_49_124_4_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 107 8 ]
+        %tmp.1 = lgetv %dc;
+        symbol [ dc %tmp.1 107 8 10 ];
+        symbol [ setColor %tmp.2 107 11 19 ];
+        %tmp.2 = getv function %tmp.1 :setColor;
+        %tmp.3 = self;
+        symbol [ bg %tmp.4 107 20 22 ];
+        %tmp.4 = getv function %tmp.3 :bg;
+        %tmp.5 = lgetv %e;
+        symbol [ e %tmp.5 107 23 24 ];
+        %tmp.6 = invoke %tmp.3 %tmp.4(%tmp.5);
+        symbol [ Graphics %tmp.7 107 27 35 ];
+        %tmp.7 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.8 107 36 53 ];
+        %tmp.8 = getv %tmp.7 :COLOR_TRANSPARENT;
+        invoke %tmp.1 %tmp.2(%tmp.6, %tmp.8);
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 108 8 ]
+        %tmp.9 = lgetv %dc;
+        symbol [ dc %tmp.9 108 8 10 ];
+        symbol [ fillRoundedRectangle %tmp.10 108 11 31 ];
+        %tmp.10 = getv function %tmp.9 :fillRoundedRectangle;
+        %tmp.11 = lgetv %x;
+        symbol [ x %tmp.11 108 32 33 ];
+        %tmp.12 = lgetv %y;
+        symbol [ y %tmp.12 108 35 36 ];
+        %tmp.13 = lgetv %s;
+        symbol [ s %tmp.13 108 38 39 ];
+        %tmp.14 = lgetv %s;
+        symbol [ s %tmp.14 108 41 42 ];
+        %tmp.15 = 4;
+        invoke %tmp.9 %tmp.10(%tmp.11, %tmp.12, %tmp.13, %tmp.14, %tmp.15);
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 109 8 ]
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_109_8_109_30_if_stmt:
+        %tmp.16 = lgetv %e;
+        symbol [ e %tmp.16 109 12 13 ];
+        %tmp.17 = 0;
+        %tmp.18 = lte %tmp.16 %tmp.17;
+        bf %tmp.18 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_109_8_109_30_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_109_8_109_30_if_true:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_109_20_109_30_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 109 22 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_109_20_109_30_stop:
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_109_8_109_30_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_109_8_109_30_if_end:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 110 8 ]
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_106_49_124_4_start" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_106_49_124_4_stop" ]
+        %label.1 = local;
+        symbol [ label %label.1 110 12 17 ];
+        %tmp.19 = self;
+        symbol [ valueOf %tmp.20 110 20 27 ];
+        %tmp.20 = getv function %tmp.19 :valueOf;
+        %tmp.21 = lgetv %e;
+        symbol [ e %tmp.21 110 28 29 ];
+        %tmp.22 = invoke %tmp.19 %tmp.20(%tmp.21);
+        symbol [ toString %tmp.23 110 31 39 ];
+        %tmp.23 = getv function %tmp.22 :toString;
+        %tmp.24 = invoke %tmp.22 %tmp.23();
+        lputv %label.1 %tmp.24;
+        symbol [ label %label.1 110 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 111 8 ]
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_106_49_124_4_start" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_106_49_124_4_stop" ]
+        %font.2 = local;
+        symbol [ font %font.2 111 12 16 ];
+        %tmp.25 = self;
+        symbol [ fontFor %tmp.26 111 20 27 ];
+        %tmp.26 = getv function %tmp.25 :fontFor;
+        %tmp.27 = lgetv %e;
+        symbol [ e %tmp.27 111 28 29 ];
+        %tmp.28 = lgetv %s;
+        symbol [ s %tmp.28 111 31 32 ];
+        %tmp.29 = invoke %tmp.25 %tmp.26(%tmp.27, %tmp.28);
+        lputv %font.2 %tmp.29;
+        symbol [ font %font.2 111 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 112 8 ]
+        %tmp.30 = lgetv %dc;
+        symbol [ dc %tmp.30 112 8 10 ];
+        symbol [ setColor %tmp.31 112 11 19 ];
+        %tmp.31 = getv function %tmp.30 :setColor;
+        %tmp.32 = self;
+        symbol [ fg %tmp.33 112 20 22 ];
+        %tmp.33 = getv function %tmp.32 :fg;
+        %tmp.34 = lgetv %e;
+        symbol [ e %tmp.34 112 23 24 ];
+        %tmp.35 = invoke %tmp.32 %tmp.33(%tmp.34);
+        symbol [ Graphics %tmp.36 112 27 35 ];
+        %tmp.36 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.37 112 36 53 ];
+        %tmp.37 = getv %tmp.36 :COLOR_TRANSPARENT;
+        invoke %tmp.30 %tmp.31(%tmp.35, %tmp.37);
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 115 8 ]
+        [ "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_106_49_124_4_start" "_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_106_49_124_4_stop" ]
+        %th.3 = local;
+        symbol [ th %th.3 115 12 14 ];
+        %tmp.38 = lgetv %dc;
+        symbol [ dc %tmp.38 115 17 19 ];
+        symbol [ getFontHeight %tmp.39 115 20 33 ];
+        %tmp.39 = getv function %tmp.38 :getFontHeight;
+        %tmp.40 = lgetv %font.2;
+        symbol [ font %tmp.40 115 34 38 ];
+        %tmp.41 = invoke %tmp.38 %tmp.39(%tmp.40);
+        lputv %th.3 %tmp.41;
+        symbol [ th %th.3 115 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 116 8 ]
+        %tmp.42 = lgetv %dc;
+        symbol [ dc %tmp.42 116 8 10 ];
+        symbol [ drawText %tmp.43 116 11 19 ];
+        %tmp.43 = getv function %tmp.42 :drawText;
+        %tmp.44 = lgetv %x;
+        symbol [ x %tmp.44 116 20 21 ];
+        %tmp.45 = lgetv %s;
+        symbol [ s %tmp.45 116 24 25 ];
+        %tmp.46 = 2;
+        %tmp.47 = div %tmp.45 %tmp.46;
+        %tmp.48 = add %tmp.44 %tmp.47;
+        %tmp.49 = lgetv %y;
+        symbol [ y %tmp.49 116 31 32 ];
+        %tmp.50 = lgetv %s;
+        symbol [ s %tmp.50 116 35 36 ];
+        %tmp.51 = 2;
+        %tmp.52 = div %tmp.50 %tmp.51;
+        %tmp.53 = add %tmp.49 %tmp.52;
+        %tmp.54 = lgetv %th.3;
+        symbol [ th %tmp.54 116 43 45 ];
+        %tmp.55 = 2;
+        %tmp.56 = div %tmp.54 %tmp.55;
+        %tmp.57 = sub %tmp.53 %tmp.56;
+        %tmp.58 = lgetv %font.2;
+        symbol [ font %tmp.58 116 51 55 ];
+        %tmp.59 = lgetv %label.1;
+        symbol [ label %tmp.59 117 20 25 ];
+        symbol [ Graphics %tmp.60 117 27 35 ];
+        %tmp.60 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.61 117 36 55 ];
+        %tmp.61 = getv %tmp.60 :TEXT_JUSTIFY_CENTER;
+        invoke %tmp.42 %tmp.43(%tmp.48, %tmp.57, %tmp.58, %tmp.59, %tmp.61);
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 118 8 ]
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_118_8_123_8_if_stmt:
+        %tmp.62 = lgetv %merged;
+        symbol [ merged %tmp.62 118 12 18 ];
+        bf %tmp.62 @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_118_8_123_8_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_118_8_123_8_if_true:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_118_20_123_8_start:
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 119 12 ]
+        %tmp.63 = lgetv %dc;
+        symbol [ dc %tmp.63 119 12 14 ];
+        symbol [ setPenWidth %tmp.64 119 15 26 ];
+        %tmp.64 = getv function %tmp.63 :setPenWidth;
+        %tmp.65 = 2;
+        invoke %tmp.63 %tmp.64(%tmp.65);
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 120 12 ]
+        %tmp.66 = lgetv %dc;
+        symbol [ dc %tmp.66 120 12 14 ];
+        symbol [ setColor %tmp.67 120 15 23 ];
+        %tmp.67 = getv function %tmp.66 :setColor;
+        %tmp.68 = 0xFFFFFF;
+        symbol [ Graphics %tmp.69 120 34 42 ];
+        %tmp.69 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.70 120 43 60 ];
+        %tmp.70 = getv %tmp.69 :COLOR_TRANSPARENT;
+        invoke %tmp.66 %tmp.67(%tmp.68, %tmp.70);
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 121 12 ]
+        %tmp.71 = lgetv %dc;
+        symbol [ dc %tmp.71 121 12 14 ];
+        symbol [ drawRoundedRectangle %tmp.72 121 15 35 ];
+        %tmp.72 = getv function %tmp.71 :drawRoundedRectangle;
+        %tmp.73 = lgetv %x;
+        symbol [ x %tmp.73 121 36 37 ];
+        %tmp.74 = 1;
+        %tmp.75 = add %tmp.73 %tmp.74;
+        %tmp.76 = lgetv %y;
+        symbol [ y %tmp.76 121 43 44 ];
+        %tmp.77 = 1;
+        %tmp.78 = add %tmp.76 %tmp.77;
+        %tmp.79 = lgetv %s;
+        symbol [ s %tmp.79 121 50 51 ];
+        %tmp.80 = 2;
+        %tmp.81 = sub %tmp.79 %tmp.80;
+        %tmp.82 = lgetv %s;
+        symbol [ s %tmp.82 121 57 58 ];
+        %tmp.83 = 2;
+        %tmp.84 = sub %tmp.82 %tmp.83;
+        %tmp.85 = 4;
+        invoke %tmp.71 %tmp.72(%tmp.75, %tmp.78, %tmp.81, %tmp.84, %tmp.85);
+[ "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc" 122 12 ]
+        %tmp.86 = lgetv %dc;
+        symbol [ dc %tmp.86 122 12 14 ];
+        symbol [ setPenWidth %tmp.87 122 15 26 ];
+        %tmp.87 = getv function %tmp.86 :setPenWidth;
+        %tmp.88 = 1;
+        invoke %tmp.86 %tmp.87(%tmp.88);
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_118_20_123_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_118_8_123_8_if_end;
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_118_8_123_8_if_end:
+_Users_kkorolczuk_work_garmin_twentyfortyeight_source_Tile_mc_106_49_124_4_stop:
     }
 }
-[ @file = "/Users/kkorolczuk/work/garmin/gemmatch/source/Tile.mc"; @line = 17; ]
+[ @file = "/Users/kkorolczuk/work/garmin/twentyfortyeight/source/Tile.mc"; @line = 20; ]
 <init> {
 }

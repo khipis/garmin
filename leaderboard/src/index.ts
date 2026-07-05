@@ -314,6 +314,87 @@ async function handleGetLeaderboard(url: URL, env: Env): Promise<Response> {
   );
 }
 
+// Compact "standing" for the in-game engagement card: the player's rank and how
+// far they are from the current #1 across all-time (Hall of Fame), today and this
+// week — all in one request. Everything is best-score-per-user aware.
+//
+// Query: game, variant?, user (required for gaps)
+async function handleGetStanding(url: URL, env: Env): Promise<Response> {
+  const gameRaw    = (url.searchParams.get("game")    ?? "").trim();
+  const variantRaw = (url.searchParams.get("variant") ?? "").trim();
+  const userRaw    = (url.searchParams.get("user")    ?? "").trim();
+
+  if (!gameRaw) return err("missing: game");
+  const game = sanitizeGame(gameRaw);
+  if (!game)   return err("invalid game name");
+
+  const variant = sanitizeVariant(variantRaw);
+  const user    = userRaw ? sanitizeUser(userRaw) : "";
+
+  const asc    = ASC_GAMES.has(game);
+  const order  = asc ? "ASC" : "DESC";
+  const better = asc ? "<" : ">";
+  const bestFn = asc ? "MIN(score)" : "MAX(score)";
+
+  async function periodStanding(period: string) {
+    const cutoff = periodCutoff(period);
+    const where  = cutoff != null
+      ? `game = ? AND variant = ? AND timestamp >= ?`
+      : `game = ? AND variant = ?`;
+    const wbind  = cutoff != null ? [game, variant, cutoff] : [game, variant];
+
+    const top1Res = await env.DB
+      .prepare(`SELECT ${bestFn} AS s FROM scores WHERE ${where}`)
+      .bind(...wbind)
+      .first<{ s: number | null }>();
+    const top1 = top1Res?.s ?? null;
+
+    const cntRes = await env.DB
+      .prepare(`SELECT COUNT(DISTINCT user) AS c FROM scores WHERE ${where}`)
+      .bind(...wbind)
+      .first<{ c: number }>();
+    const count = cntRes?.c ?? 0;
+
+    let myBest: number | null = null;
+    let myRank: number | null = null;
+    if (user) {
+      const meRes = await env.DB
+        .prepare(`SELECT ${bestFn} AS s FROM scores WHERE ${where} AND user = ?`)
+        .bind(...wbind, user)
+        .first<{ s: number | null }>();
+      if (meRes && meRes.s != null) {
+        myBest = meRes.s;
+        const rankRes = await env.DB
+          .prepare(
+            `SELECT COUNT(*) AS c FROM (
+               SELECT user, ${bestFn} AS b FROM scores WHERE ${where} GROUP BY user
+             ) WHERE b ${better} ?`
+          )
+          .bind(...wbind, myBest)
+          .first<{ c: number }>();
+        myRank = (rankRes?.c ?? 0) + 1;
+      }
+    }
+    return { top1, count, myBest, myRank };
+  }
+
+  try {
+    const [all, day, week] = await Promise.all([
+      periodStanding("all"),
+      periodStanding("day"),
+      periodStanding("week"),
+    ]);
+    return json(
+      { game, variant, asc, all, day, week, updated: Math.floor(Date.now() / 1000) },
+      200,
+      { "Cache-Control": "public, max-age=15, stale-while-revalidate=60" }
+    );
+  } catch (e) {
+    console.error("standing query error:", e);
+    return err("db error", 500);
+  }
+}
+
 // Recent submissions (raw, newest first) — makes the board feel alive.
 async function handleGetRecent(url: URL, env: Env): Promise<Response> {
   const gameRaw    = (url.searchParams.get("game")    ?? "").trim();
@@ -1315,6 +1396,7 @@ export default {
     if (method === "POST"   && path === "/links")       return handlePostLink(req, env);
     if (method === "DELETE" && path === "/links")       return handleDeleteLink(req, env);
     if (method === "GET"    && path === "/leaderboard") return handleGetLeaderboard(url, env);
+    if (method === "GET"    && path === "/standing")    return handleGetStanding(url, env);
     if (method === "GET"    && path === "/recent")      return handleGetRecent(url, env);
     if (method === "GET"    && path === "/games")       return handleGetGames(env);
     if (method === "GET"    && path === "/stats")       return handleGetStats(url, env);

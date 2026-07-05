@@ -28,6 +28,7 @@ const LB_BRONZE   = 0xCD7C3A;
 const LB_MUTED    = 0x4A6278;
 const LB_TEXT     = 0xD6E4F0;
 const LB_LINK     = 0x00D4FF;
+const LB_GREEN    = 0x34D399;
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Score submitter — POST /score with exponential backoff (max 3 retries).
@@ -781,6 +782,19 @@ class LbPostGame {
     }
     function _fire() as Void {
         if (_t != null) { _t.stop(); _t = null; }
+        // Engagement card FIRST (only once the player has a name, so we have a
+        // real rank to show): "you're #12 / 340, +85 to the Hall of Fame, ..."
+        // Dismissing it chains to the (occasional) support message, then the
+        // board. Unnamed players skip straight to the message/board flow, where
+        // the board prompts for a name (so name entry is never swallowed).
+        if (Leaderboard.hasUser()) {
+            try {
+                var sv = new LbStandingView(_game, _variant, _title);
+                WatchUi.pushView(sv, new LbStandingDelegate(_game, _variant, _title),
+                                 WatchUi.SLIDE_UP);
+                return;
+            } catch (e) {}
+        }
         // Message BEFORE the board: if a post-game message is due (throttled),
         // show it as the single active view first; dismissing it opens the
         // leaderboard. Otherwise open the board directly. Stacking two pushView
