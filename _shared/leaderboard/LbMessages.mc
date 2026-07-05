@@ -76,23 +76,24 @@ class LbMessageFetcher {
 }
 
 // ── Message card view ────────────────────────────────────────────────────────
-// A full-screen card: title, word-wrapped body, an optional link "button" that
-// opens the URL on the paired phone (Communications.openWebPage), and footer
-// hints. SELECT opens the link (if any); BACK closes.
+// A full-screen card: title, word-wrapped body, and — when a URL is set — the
+// full URL printed as plain text with link styling (colour + underline).
+//
+// NB: this is a watch, not a browser. The URL is NOT tappable/openable; it is
+// simply written out so the user can type it on their phone. Any key/tap closes
+// the card.
 class LbMessageView extends WatchUi.View {
     hidden var _title;
     hidden var _body;
-    hidden var _url;
-    hidden var _urlLabel;
+    hidden var _url;      // display form (scheme stripped), e.g. "bitochi.com/coffee"
     hidden var _w;
     hidden var _h;
 
     function initialize(msg) {
         View.initialize();
-        _title    = _str(msg, "title", "");
-        _body     = _str(msg, "body", "");
-        _url      = _str(msg, "url", null);
-        _urlLabel = _str(msg, "url_label", "Open link");
+        _title = _str(msg, "title", "");
+        _body  = _str(msg, "body", "");
+        _url   = _displayUrl(_str(msg, "url", null));
         _w = 0; _h = 0;
     }
 
@@ -103,14 +104,22 @@ class LbMessageView extends WatchUi.View {
         return def;
     }
 
-    function hasUrl() { return _url != null && _url.length() > 0; }
-
-    function openUrl() {
-        if (!hasUrl()) { return; }
-        if (Communications has :openWebPage) {
-            try { Communications.openWebPage(_url, {}, {}); } catch (e) {}
+    // Strip the scheme + a trailing slash so the URL reads cleanly on-glass:
+    // "https://bitochi.com/coffee/" → "bitochi.com/coffee".
+    hidden function _displayUrl(u) {
+        if (u == null || u.length() == 0) { return null; }
+        if (u.length() >= 8 && u.substring(0, 8).equals("https://")) {
+            u = u.substring(8, u.length());
+        } else if (u.length() >= 7 && u.substring(0, 7).equals("http://")) {
+            u = u.substring(7, u.length());
         }
+        while (u.length() > 1 && u.substring(u.length() - 1, u.length()).equals("/")) {
+            u = u.substring(0, u.length() - 1);
+        }
+        return u;
     }
+
+    function hasUrl() { return _url != null && _url.length() > 0; }
 
     // Split on single spaces (Monkey C has no String.split).
     hidden function _words(s) {
@@ -161,89 +170,82 @@ class LbMessageView extends WatchUi.View {
         var cx = _w / 2;
         var VC = Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER;
         var fh = dc.getFontHeight(Graphics.FONT_XTINY);
+        var lineH = fh + 2;
 
         dc.setColor(LB_BG, LB_BG); dc.clear();
 
-        var pad = (_h * 8) / 100; if (pad < fh / 2) { pad = fh / 2; }
-        var maxW = _w * 82 / 100;
+        // Round screens clip the corners hard: keep a generous inset so the top
+        // title and the bottom hint stay fully on-glass, and wrap text narrow.
+        var isRound = (_w == _h);
+        var pad  = isRound ? (_h * 15) / 100 : (_h * 9) / 100;
+        if (pad < fh) { pad = fh; }
+        var maxW = isRound ? (_w * 72) / 100 : (_w * 86) / 100;
 
         // Title (fall back to XTINY if the SMALL title would be too wide).
         var titleFont = Graphics.FONT_SMALL;
         if (dc.getTextWidthInPixels(_title, titleFont) > maxW) { titleFont = Graphics.FONT_XTINY; }
-        var titleH = dc.getFontHeight(titleFont);
+        var titleH  = dc.getFontHeight(titleFont);
         var titleCY = pad + titleH / 2;
         dc.setColor(LB_GOLD, Graphics.COLOR_TRANSPARENT);
         dc.drawText(cx, titleCY, titleFont, _title, VC);
 
-        // Footer.
+        // Bottom hint (always: tells the user any press dismisses the card).
         var footerCY = _h - pad - fh / 2;
         dc.setColor(LB_MUTED, Graphics.COLOR_TRANSPARENT);
-        dc.drawText(cx, footerCY, Graphics.FONT_XTINY, "bitochi.com", VC);
+        dc.drawText(cx, footerCY, Graphics.FONT_XTINY, "press any key", VC);
 
-        // Optional link button just above the footer.
         var contentBottom = footerCY - fh;
-        if (hasUrl()) {
-            var btnH = fh + 8;
-            var btnW = _w * 66 / 100;
-            var btnX = (_w - btnW) / 2;
-            var btnY = footerCY - fh / 2 - fh - btnH;
-            if (btnY < titleCY + titleH) { btnY = titleCY + titleH; }
-            dc.setColor(0x4A3A10, Graphics.COLOR_TRANSPARENT);
-            dc.fillRoundedRectangle(btnX, btnY, btnW, btnH, 6);
-            dc.setColor(LB_GOLD, Graphics.COLOR_TRANSPARENT);
-            dc.drawRoundedRectangle(btnX, btnY, btnW, btnH, 6);
-            dc.setColor(0xFFE49A, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, btnY + btnH / 2, Graphics.FONT_XTINY, _urlLabel, VC);
 
-            var hintY = btnY - fh / 2 - 1;
-            dc.setColor(LB_MUTED, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, hintY, Graphics.FONT_XTINY, "SELECT = open on phone", VC);
-            contentBottom = hintY - fh / 2;
-        } else {
-            dc.setColor(LB_MUTED, Graphics.COLOR_TRANSPARENT);
-            dc.drawText(cx, contentBottom, Graphics.FONT_XTINY, "BACK = close", VC);
-            contentBottom = contentBottom - fh;
+        // Full URL as plain, link-styled text (colour + underline). Not tappable.
+        if (hasUrl()) {
+            var linkFont = Graphics.FONT_XTINY;
+            var linkLines = _wrap(dc, _url, linkFont, maxW);
+            var linkBlockH = linkLines.size() * lineH;
+            var linkTop = contentBottom - linkBlockH;
+            var ly = linkTop + lineH / 2;
+            for (var i = 0; i < linkLines.size(); i++) {
+                var seg = linkLines[i];
+                dc.setColor(LB_LINK, Graphics.COLOR_TRANSPARENT);
+                dc.drawText(cx, ly, linkFont, seg, VC);
+                var tw = dc.getTextWidthInPixels(seg, linkFont);
+                var uy = ly + fh / 2 - 1;
+                dc.drawLine(cx - tw / 2, uy, cx + tw / 2, uy);
+                ly = ly + lineH;
+            }
+            contentBottom = linkTop - lineH / 2;
         }
 
         // Word-wrapped body, vertically centred in the remaining space.
         var lines = _wrap(dc, _body, Graphics.FONT_XTINY, maxW);
-        var lineH = fh + 2;
         var areaTop = titleCY + titleH / 2 + 2;
         var areaBot = contentBottom;
         var blockH = lines.size() * lineH;
         var y = areaTop + ((areaBot - areaTop) - blockH) / 2 + lineH / 2;
         if (y < areaTop + lineH / 2) { y = areaTop + lineH / 2; }
         dc.setColor(LB_TEXT, Graphics.COLOR_TRANSPARENT);
-        for (var i = 0; i < lines.size(); i++) {
-            dc.drawText(cx, y, Graphics.FONT_XTINY, lines[i], VC);
+        for (var j = 0; j < lines.size(); j++) {
+            dc.drawText(cx, y, Graphics.FONT_XTINY, lines[j], VC);
             y = y + lineH;
         }
     }
 }
 
+// The URL is display-only text, so there is nothing to "open" — any interaction
+// simply dismisses the card.
 class LbMessageDelegate extends WatchUi.BehaviorDelegate {
     hidden var _v;
 
     function initialize(v) { BehaviorDelegate.initialize(); _v = v; }
 
-    function onSelect() {
-        if (_v.hasUrl()) { _v.openUrl(); }
+    hidden function _close() {
         WatchUi.popView(WatchUi.SLIDE_DOWN);
         return true;
     }
-    function onKey(evt) {
-        var k = evt.getKey();
-        if (k == WatchUi.KEY_ENTER) { return onSelect(); }
-        if (k == WatchUi.KEY_ESC)   { return onBack(); }
-        return false;
-    }
-    function onTap(evt) {
-        if (_v.hasUrl()) { _v.openUrl(); }
-        WatchUi.popView(WatchUi.SLIDE_DOWN);
-        return true;
-    }
-    function onBack() {
-        WatchUi.popView(WatchUi.SLIDE_DOWN);
-        return true;
-    }
+
+    function onSelect()   { return _close(); }
+    function onBack()     { return _close(); }
+    function onNextPage() { return _close(); }
+    function onPreviousPage() { return _close(); }
+    function onKey(evt)   { return _close(); }
+    function onTap(evt)   { return _close(); }
 }

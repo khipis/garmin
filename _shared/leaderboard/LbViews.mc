@@ -27,6 +27,7 @@ const LB_SILVER   = 0x94A3B8;
 const LB_BRONZE   = 0xCD7C3A;
 const LB_MUTED    = 0x4A6278;
 const LB_TEXT     = 0xD6E4F0;
+const LB_LINK     = 0x00D4FF;
 
 // ═══════════════════════════════════════════════════════════════════════════
 // Score submitter — POST /score with exponential backoff (max 3 retries).

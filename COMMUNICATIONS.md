@@ -168,9 +168,12 @@ Leaderboard.showResetMessageIfAny(game);
 Leaderboard.announce(game, fallback);
 ```
 
-The message card view opens `url` on the paired phone via
-`Communications.openWebPage` when the player presses **SELECT** (falls back to
-doing nothing on watches that lack it); **BACK** closes it.
+The message card view renders `url` as **plain, non-tappable text** with link
+styling (link colour + underline), scheme stripped for readability
+(`https://bitochi.com/coffee` → `bitochi.com/coffee`). A watch has no browser, so
+the URL is written out for the user to type on their phone rather than opened.
+Any key or tap dismisses the card. `url_label` is currently ignored (the URL
+itself is shown); it is kept in the schema for possible future use.
 
 ---
 
