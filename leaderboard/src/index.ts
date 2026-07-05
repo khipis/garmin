@@ -235,22 +235,28 @@ async function handleGetLeaderboard(url: URL, env: Env): Promise<Response> {
     : `game = ? AND variant = ?${botClause}`;
   const wbind  = cutoff != null ? [game, variant, cutoff] : [game, variant];
 
-  type Row = { user: string; s: number; c: string | null };
-  let top: { r: number; u: string; s: number; c: string | null }[] = [];
+  // `meta` (m) rides along via SQLite's documented bare-column behaviour: when
+  // a query has exactly one MIN()/MAX() aggregate, any other non-aggregated,
+  // non-GROUP-BY column is taken from the row that produced that min/max —
+  // same trick already used here for `country`. Lets per-score extras (fish
+  // species/rarity, ...) surface on the enriched leaderboard without a
+  // separate lookup.
+  type Row = { user: string; s: number; c: string | null; m: string | null };
+  let top: { r: number; u: string; s: number; c: string | null; m: string | null }[] = [];
   let count = 0;
   let me: { r: number; s: number } | null = null;
-  let near: { r: number; u: string; s: number; c: string | null }[] = [];
+  let near: { r: number; u: string; s: number; c: string | null; m: string | null }[] = [];
 
   try {
     const topRes = await env.DB
       .prepare(
-        `SELECT user, ${bestFn} AS s, country AS c
+        `SELECT user, ${bestFn} AS s, country AS c, meta AS m
          FROM scores WHERE ${where}
          GROUP BY user ORDER BY s ${order} LIMIT 10`
       )
       .bind(...wbind)
       .all<Row>();
-    top = (topRes.results ?? []).map((r, i) => ({ r: i + 1, u: r.user, s: r.s, c: r.c }));
+    top = (topRes.results ?? []).map((r, i) => ({ r: i + 1, u: r.user, s: r.s, c: r.c, m: r.m }));
 
     const cntRes = await env.DB
       .prepare(`SELECT COUNT(DISTINCT user) AS c FROM scores WHERE ${where}`)
@@ -280,13 +286,13 @@ async function handleGetLeaderboard(url: URL, env: Env): Promise<Response> {
         const off = Math.max(0, myRank - 6);
         const nearRes = await env.DB
           .prepare(
-            `SELECT user, ${bestFn} AS s, country AS c
+            `SELECT user, ${bestFn} AS s, country AS c, meta AS m
              FROM scores WHERE ${where}
              GROUP BY user ORDER BY s ${order} LIMIT 11 OFFSET ?`
           )
           .bind(...wbind, off)
           .all<Row>();
-        near = (nearRes.results ?? []).map((r, i) => ({ r: off + i + 1, u: r.user, s: r.s, c: r.c }));
+        near = (nearRes.results ?? []).map((r, i) => ({ r: off + i + 1, u: r.user, s: r.s, c: r.c, m: r.m }));
       }
     }
   } catch (e) {

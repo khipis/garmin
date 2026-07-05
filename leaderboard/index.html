@@ -338,6 +338,18 @@
     background: var(--border); border-radius: 2px; overflow: hidden;
     grid-column: 2 / 4;
   }
+
+  /* ── Fish trophy board (game=fish, variant=biggest-fish) ─────────── */
+  .lb-row.fish-row { grid-template-columns: 52px 46px 1fr auto; }
+  .lb-fish-ic {
+    display: flex; align-items: center; justify-content: center;
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,.35));
+  }
+  .lb-fish-caption {
+    font-size: .72rem; color: var(--muted); font-weight: 600;
+    letter-spacing: .02em; margin-top: 2px;
+  }
+  .lb-row.fish-row.rank-1 .lb-fish-caption { color: var(--gold); }
   .lb-bar {
     height: 100%; border-radius: 2px;
     background: linear-gradient(90deg, var(--accent), var(--accent2));
@@ -1057,6 +1069,56 @@ function codeToFlag(cc) {
   return String.fromCodePoint(A + cc.charCodeAt(0) - base, A + cc.charCodeAt(1) - base);
 }
 
+// ── "Biggest Fish" trophy board — graphical fish avatar ──────────────────────
+// The fish game submits its "biggest-fish" variant with a small `meta` blob
+// {t: type 0-9, n: species name, r: rarity 0-3}. Colours mirror the on-watch
+// palette (BitochiFishView.mc) so the same fish looks the same on the wrist
+// and on the web.
+const FISH_VARIANT      = 'biggest-fish';
+const FISH_BODY_COLORS  = ['#88BB88','#FFBB99','#44CC55','#33AA44','#DD9966','#7788AA','#EE8855','#4466CC','#997744','#FF6644'];
+const FISH_BELLY_COLORS = ['#AADDAA','#FFCCBB','#88EE99','#55BB66','#EEBB99','#AABBCC','#FFAA88','#77AADD','#BBAA77','#FF9977'];
+const FISH_RARITY_LABEL = ['Runt', '', 'Big', 'GIANT'];
+const FISH_RARITY_GLOW  = ['none', 'none', 'drop-shadow(0 0 4px rgba(255,255,255,.35))', 'drop-shadow(0 0 8px rgba(255,215,0,.9))'];
+
+function prettyVariant(v) {
+  if (v === FISH_VARIANT) return '🐟 Biggest Fish';
+  return v;
+}
+
+function parseMeta(raw) {
+  if (!raw) return null;
+  try { const m = JSON.parse(raw); return (m && typeof m === 'object') ? m : null; } catch { return null; }
+}
+
+function fmtWeight(grams) {
+  const g = Math.max(0, Math.round(Number(grams) || 0));
+  if (g >= 1000) {
+    let s = (g / 1000).toFixed(2).replace(/0+$/, '').replace(/\.$/, '');
+    return s + ' kg';
+  }
+  return g + ' g';
+}
+
+// Simple side-profile cartoon fish (tail + body + belly + eye) matching the
+// watch app's fillCircle-based silhouette, rendered as inline SVG so it's
+// crisp at any size with zero extra network requests.
+function fishIconSvg(meta, px) {
+  const t = Math.max(0, Math.min(9, Number(meta && meta.t) || 0));
+  const rarity = Math.max(0, Math.min(3, Number(meta && meta.r) || 0));
+  const golden = rarity >= 3;
+  const body  = golden ? '#FFD700' : FISH_BODY_COLORS[t];
+  const belly = golden ? '#FFF3B0' : FISH_BELLY_COLORS[t];
+  const h = Math.round(px * 0.72);
+  return `<svg width="${px}" height="${h}" viewBox="0 0 40 28" xmlns="http://www.w3.org/2000/svg" style="filter:${FISH_RARITY_GLOW[rarity]}">
+    <polygon points="2,14 11,5 11,23" fill="${body}"/>
+    <ellipse cx="25" cy="14" rx="15" ry="10.5" fill="${body}"/>
+    <ellipse cx="26" cy="18" rx="8" ry="4.5" fill="${belly}"/>
+    <circle cx="35" cy="11" r="2.6" fill="#fff"/>
+    <circle cx="35.6" cy="11" r="1.3" fill="#111"/>
+    ${golden ? '<circle cx="17" cy="7" r="1.3" fill="#fffde0"/><circle cx="30" cy="6" r="0.9" fill="#fffde0"/>' : ''}
+  </svg>`;
+}
+
 
 // ISO-3166 alpha-2 → country name map (common names only).
 const COUNTRY_NAMES = {
@@ -1222,7 +1284,7 @@ function buildVariantChips(variants) {
     const btn = document.createElement('button');
     btn.className   = 'variant-chip';
     btn.dataset.v   = v;
-    btn.textContent = v;
+    btn.textContent = prettyVariant(v);
     btn.onclick     = () => selectVariant(v);
     variantScroll.appendChild(btn);
   });
@@ -1231,7 +1293,7 @@ function buildVariantChips(variants) {
 function updateVariantChips() {
   document.querySelectorAll('.variant-chip').forEach(c =>
     c.classList.toggle('active', c.dataset.v === currentVariant));
-  lbTitle.textContent = currentVariant ? currentVariant : 'Top 10';
+  lbTitle.textContent = currentVariant ? prettyVariant(currentVariant) : 'Top 10';
 }
 
 // ── Select variant ───────────────────────────────────────────────────────────
@@ -1330,9 +1392,13 @@ function renderLeaderboard(data, game) {
   lbHeaderEl.style.display = '';
   lbWrap.style.display = '';
   lbTitle.textContent = isNear ? 'Near you'
-                      : (currentVariant ? currentVariant : 'Top 10');
+                      : (currentVariant ? prettyVariant(currentVariant) : 'Top 10');
 
   if (data.updated) updateTag.textContent = 'updated ' + fmtAgo(data.updated);
+
+  // The fish game's "biggest-fish" board gets a graphical fish avatar per row
+  // instead of a plain number, sized/coloured by the catch's rarity.
+  const isFishTrophy = (game === 'fish' && currentVariant === FISH_VARIANT);
 
   const maxScore = Math.max.apply(null, rows.map(r => Math.abs(r.s))) || 1;
   let prevRank = null;
@@ -1345,10 +1411,30 @@ function renderLeaderboard(data, game) {
     prevRank = row.r;
     const rank = row.r;
     const top3 = rank <= 3;
-    const cls  = (top3 ? `rank-${rank}` : '') + (row.u === meName ? ' me' : '');
+    const cls  = (top3 ? `rank-${rank}` : '') + (row.u === meName ? ' me' : '') + (isFishTrophy ? ' fish-row' : '');
     const icon = top3 ? RANK_ICONS[rank - 1] : rank;
     const pct  = Math.round((Math.abs(row.s) / maxScore) * 100);
     const flag = row.c ? `<span class="flag">${codeToFlag(row.c)}</span>` : '';
+
+    if (isFishTrophy) {
+      const meta   = parseMeta(row.m);
+      const rarity = Math.max(0, Math.min(3, Number(meta && meta.r) || 0));
+      const label  = FISH_RARITY_LABEL[rarity];
+      const species = (meta && meta.n) ? escHtml(meta.n) : 'Fish';
+      const caption = label ? `${label} ${species}` : species;
+      html += `
+        <div class="lb-row ${cls}" style="animation-delay:${.02 + i * .03}s">
+          <div class="lb-rank"><span class="lb-rank-ic">${icon}</span>${flag}</div>
+          <div class="lb-fish-ic">${fishIconSvg(meta, 24 + rarity * 5)}</div>
+          <div class="lb-user">${escHtml(row.u || 'anon')}<div class="lb-fish-caption">${caption}</div></div>
+          <div class="lb-score">${fmtWeight(row.s)}</div>
+          <div class="lb-bar-wrap" style="grid-column:3/5">
+            <div class="lb-bar" style="width:${pct}%"></div>
+          </div>
+        </div>`;
+      return;
+    }
+
     html += `
       <div class="lb-row ${cls}" style="animation-delay:${.02 + i * .03}s">
         <div class="lb-rank"><span class="lb-rank-ic">${icon}</span>${flag}</div>
@@ -1662,8 +1748,31 @@ function setPeriodUI() {
   } catch (_) {}
 })();
 
+// Landing on bitochi.com with no explicit ?game= picks a random game out of
+// the top 5 most-played (by distinct players, season stats) instead of
+// always the same alphabetically-first one — so the front page showcases a
+// genuinely popular game, and repeat visits see some variety.
+async function pickFeaturedGame() {
+  try {
+    const ctrl    = new AbortController();
+    const timeout = setTimeout(() => ctrl.abort(), 1500);
+    const r = await fetch(`${API_BASE}/stats`, { cache: 'no-store', signal: ctrl.signal });
+    clearTimeout(timeout);
+    if (!r.ok) return null;
+    const d = await r.json();
+    const top5 = (d.perGame || [])
+      .map(row => LB_MAP[row.game])
+      .filter(Boolean)
+      .slice(0, 5);
+    if (!top5.length) return null;
+    return top5[Math.floor(Math.random() * top5.length)];
+  } catch (_) {
+    return null;
+  }
+}
+
 // ── Init: list every game; games without rankings just show their description ─
-function init() {
+async function init() {
   buildGameChips(GAMES);
 
   const params  = new URL(location.href).searchParams;
@@ -1675,8 +1784,9 @@ function init() {
 
   const initId  = params.get('game');
   const wanted  = initId && GAMES.find(g => g.id === initId);
+  const featured = wanted ? null : await pickFeaturedGame();
   // variant is set after fetchVariantsThenLoad resolves
-  selectGame(wanted || GAMES[0], !wanted);
+  selectGame(wanted || featured || GAMES[0], !wanted);
 }
 init();
 
