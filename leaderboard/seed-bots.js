@@ -199,6 +199,26 @@ const GAMES = [
   { game: 'battleship', asc: true,
     variants: ['easy','medium','hard'],
     scores: [55, 80] },
+
+  // ── Activity Board (real watch stats, higher-is-better) ──────────────────
+  // Scores are purposely modest / easy-to-beat so real active users land
+  // above them quickly. Units match what the watch submits:
+  //   flex    — weighted composite (steps + floors*250 + vig*180 + …)
+  //   steps   — steps today
+  //   dist    — metres today
+  //   vig     — vigorous intensity minutes this week
+  //   elev    — metres climbed today
+  //   floors  — floors climbed today
+  //   kcal    — calories burned today
+  //   active  — total active minutes this week
+  { game: 'activityboard', variants: ['flex'],   scores: [8000,  22000], bots: 8 },
+  { game: 'activityboard', variants: ['steps'],  scores: [3500,  7500],  bots: 8 },
+  { game: 'activityboard', variants: ['dist'],   scores: [2800,  7200],  bots: 8 },
+  { game: 'activityboard', variants: ['vig'],    scores: [20,    70],    bots: 8 },
+  { game: 'activityboard', variants: ['elev'],   scores: [40,    180],   bots: 8 },
+  { game: 'activityboard', variants: ['floors'], scores: [4,     14],    bots: 8 },
+  { game: 'activityboard', variants: ['kcal'],   scores: [1200,  2200],  bots: 8 },
+  { game: 'activityboard', variants: ['active'], scores: [50,    130],   bots: 8 },
 ];
 
 // ── Submission logic ─────────────────────────────────────────────────────────
@@ -229,8 +249,8 @@ async function run() {
     if (ONLY && g.game !== ONLY) continue;
 
     for (const variant of g.variants) {
-      // Pick 6 distinct bots per variant (shuffle first)
-      const bots = [...BOTS].sort(() => Math.random() - 0.5).slice(0, 6);
+      // Pick N distinct bots per variant (g.bots overrides default of 6)
+      const bots = [...BOTS].sort(() => Math.random() - 0.5).slice(0, g.bots || 6);
 
       for (const bot of bots) {
         const score = rnd(g.scores[0], g.scores[1]);
