@@ -802,8 +802,52 @@ async function handleSnapshot(req: Request, env: Env): Promise<Response> {
 //   snapshot — if true, saves a named snapshot before wiping.
 //   note     — label for the snapshot (optional).
 // Requires X-LB-Key authentication.
-async function handleReset(req: Request, env: Env): Promise<Response> {
+// ── Bot traffic management ────────────────────────────────────────────────────
+// GET  /bots?game=xxx   — count of bot rows (all games or one game)
+// DELETE /bots?game=xxx — delete bot rows (auth required)
+
+async function handleGetBots(url: URL, env: Env): Promise<Response> {
+  const game = url.searchParams.get("game") || null;
+  try {
+    if (game) {
+      const row = await env.DB.prepare(
+        "SELECT COUNT(*) AS n FROM scores WHERE is_bot=1 AND game=?"
+      ).bind(game).first<{ n: number }>();
+      return json({ game, count: row?.n ?? 0 });
+    }
+    const rows = await env.DB.prepare(
+      "SELECT game, COUNT(*) AS n FROM scores WHERE is_bot=1 GROUP BY game ORDER BY game ASC"
+    ).all<{ game: string; n: number }>();
+    const total = (rows.results ?? []).reduce((s, r) => s + r.n, 0);
+    return json({ total, games: rows.results ?? [] });
+  } catch (e) {
+    console.error("get bots error:", e);
+    return err("db error", 500);
+  }
+}
+
+async function handleDeleteBots(req: Request, env: Env): Promise<Response> {
   const reqKey = req.headers.get("X-LB-Key") ?? "";
+  if (!env.LB_KEY || reqKey !== env.LB_KEY) return err("forbidden", 403);
+  let game: string | null = null;
+  try {
+    const b = await req.json() as Record<string, unknown>;
+    game = typeof b.game === "string" && b.game.trim() ? b.game.trim() : null;
+  } catch { /* body optional */ }
+  try {
+    if (game) {
+      const r = await env.DB.prepare("DELETE FROM scores WHERE is_bot=1 AND game=?").bind(game).run();
+      return json({ ok: true, game, deleted: r.meta?.changes ?? 0 });
+    }
+    const r = await env.DB.prepare("DELETE FROM scores WHERE is_bot=1").run();
+    return json({ ok: true, game: "all", deleted: r.meta?.changes ?? 0 });
+  } catch (e) {
+    console.error("delete bots error:", e);
+    return err("db error", 500);
+  }
+}
+
+async function handleReset(req: Request, env: Env): Promise<Response> {  const reqKey = req.headers.get("X-LB-Key") ?? "";
   if (!env.LB_KEY || reqKey !== env.LB_KEY) return err("forbidden", 403);
 
   let body: Record<string, unknown> = {};
@@ -1396,6 +1440,8 @@ export default {
     if (method === "POST"   && path === "/launch")      return handleLaunch(req, env);
     if (method === "POST"   && path === "/snapshot")    return handleSnapshot(req, env);
     if (method === "POST"   && path === "/reset")       return handleReset(req, env);
+    if (method === "GET"    && path === "/bots")        return handleGetBots(url, env);
+    if (method === "DELETE" && path === "/bots")        return handleDeleteBots(req, env);
     if (method === "POST"   && path === "/hof")         return handlePostHoF(req, env);
     if (method === "DELETE" && path === "/hof")         return handleDeleteHoF(req, env);
     if (method === "GET"    && path === "/messages")    return handleGetMessages(url, env);

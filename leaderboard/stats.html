@@ -389,8 +389,22 @@
       </div>
       <div id="hof-admin-list"><div class="state"><div class="spinner"></div>Loading…</div></div>
 
-      <div class="sh"><span class="sh-title">✉️ Messages — in-app announcements</span><span class="sh-line"></span>
-        <select class="hsel" id="msg-filter" onchange="renderMessages()" style="display:none"></select>
+      <!-- ── Bot traffic ──────────────────────────────────────────────────── -->
+      <div class="sh"><span class="sh-title">🤖 Bot traffic — synthetic leaderboard entries</span><span class="sh-line"></span>
+        <button class="hbtn" onclick="loadBots()" style="margin-left:8px;font-size:.7rem;padding:3px 8px">↺</button>
+        <button class="hbtn" onclick="deleteAllBots()" id="bots-del-btn"
+          style="margin-left:6px;font-size:.7rem;padding:3px 8px;background:#2a0808;border-color:#f87171;color:#f87171">
+          🗑️ Delete ALL bots
+        </button>
+        <button class="hbtn" onclick="reseedAllBots()" id="bots-seed-btn"
+          style="margin-left:6px;font-size:.7rem;padding:3px 8px;background:#0d2a1a;border-color:var(--green);color:var(--green)">
+          🌱 Reseed ALL bots
+        </button>
+      </div>
+      <div id="bots-status" style="display:none;padding:6px 0 10px;font-size:.76rem"></div>
+      <div id="bots-list"><div class="state"><div class="spinner"></div>Loading…</div></div>
+
+      <div class="sh"><span class="sh-title">✉️ Messages — in-app announcements</span><span class="sh-line"></span>        <select class="hsel" id="msg-filter" onchange="renderMessages()" style="display:none"></select>
         <button class="hbtn" onclick="loadMessages()" style="margin-left:8px;font-size:.7rem;padding:3px 8px">↺</button>
         <button class="hbtn" onclick="showMsgForm()" id="msg-add-btn"
           style="margin-left:6px;font-size:.7rem;padding:3px 8px;background:#0a1a2a;border-color:var(--accent);color:var(--accent)">
@@ -787,6 +801,7 @@ loadSnapshots();
 loadHofAdmin();
 loadMessages();
 loadLinks();
+loadBots();
 
 // ── Game launches (independent of the scores table) ────────────────────────────
 async function loadLaunches() {
@@ -1477,6 +1492,238 @@ async function deleteLink(slug) {
       if (r.status === 403) sessionStorage.removeItem('lb_key');
     }
   } catch(e) { alert('Network error: ' + e); }
+}
+
+// ── Bot traffic ───────────────────────────────────────────────────────────────
+
+async function loadBots() {
+  const el = document.getElementById('bots-list');
+  el.innerHTML = '<div class="state"><div class="spinner"></div>Loading…</div>';
+  try {
+    const r = await fetch(`${API}/bots`, { cache: 'no-store' });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const d = await r.json();
+    renderBots(d);
+  } catch(e) { el.innerHTML = `<div class="state">Error: ${esc(String(e))}</div>`; }
+}
+
+function renderBots(d) {
+  const el = document.getElementById('bots-list');
+  const games = d.games || [];
+  if (!games.length) { el.innerHTML = '<div class="state muted">No bot entries.</div>'; return; }
+  let html = `<table style="width:100%;border-collapse:collapse;font-size:.78rem">
+    <thead><tr style="color:var(--muted);text-align:left">
+      <th style="padding:4px 8px">Game</th>
+      <th style="padding:4px 8px;text-align:right">Bots</th>
+      <th style="padding:4px 8px"></th>
+    </tr></thead><tbody>`;
+  for (const g of games) {
+    html += `<tr style="border-top:1px solid var(--border)">
+      <td style="padding:5px 8px;font-family:monospace">${esc(g.game)}</td>
+      <td style="padding:5px 8px;text-align:right;color:var(--muted)">${g.n}</td>
+      <td style="padding:5px 8px;text-align:right;white-space:nowrap">
+        <button class="hbtn" style="font-size:.68rem;padding:2px 7px;border-color:#f87171;color:#f87171"
+          onclick="deleteBotsForGame('${esc(g.game)}')">🗑️ Delete</button>
+        <button class="hbtn" style="font-size:.68rem;padding:2px 7px;border-color:var(--green);color:var(--green);margin-left:4px"
+          onclick="reseedBotsForGame('${esc(g.game)}')">🌱 Reseed</button>
+      </td>
+    </tr>`;
+  }
+  html += `</tbody><tfoot><tr style="border-top:2px solid var(--border)">
+    <td style="padding:5px 8px;color:var(--muted)">Total</td>
+    <td style="padding:5px 8px;text-align:right;font-weight:700">${d.total}</td>
+    <td></td>
+  </tr></tfoot></table>`;
+  el.innerHTML = html;
+}
+
+async function deleteAllBots() {
+  if (!confirm('Delete ALL bot entries from every game?')) return;
+  const key = lbKey('Enter LB_KEY:');
+  if (!key) return;
+  const st = document.getElementById('bots-status');
+  st.style.display = ''; st.style.color = 'var(--muted)'; st.textContent = 'Deleting…';
+  try {
+    const r = await fetch(`${API}/bots`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json', 'X-LB-Key': key },
+      body: JSON.stringify({}),
+    });
+    const d = await r.json();
+    if (d.ok) { st.style.color='var(--green)'; st.textContent = `✅ Deleted ${d.deleted} rows.`; loadBots(); }
+    else { st.style.color='#f87171'; st.textContent = '❌ ' + (d.error||'unknown'); if (r.status===403) sessionStorage.removeItem('lb_key'); }
+  } catch(e) { st.style.color='#f87171'; st.textContent = '❌ ' + e; }
+}
+
+async function deleteBotsForGame(game) {
+  if (!confirm(`Delete bot entries for "${game}"?`)) return;
+  const key = lbKey('Enter LB_KEY:');
+  if (!key) return;
+  const st = document.getElementById('bots-status');
+  st.style.display = ''; st.style.color = 'var(--muted)'; st.textContent = `Deleting bots for ${game}…`;
+  try {
+    const r = await fetch(`${API}/bots`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json', 'X-LB-Key': key },
+      body: JSON.stringify({ game }),
+    });
+    const d = await r.json();
+    if (d.ok) { st.style.color='var(--green)'; st.textContent = `✅ Deleted ${d.deleted} rows for ${game}.`; loadBots(); }
+    else { st.style.color='#f87171'; st.textContent = '❌ ' + (d.error||'unknown'); if (r.status===403) sessionStorage.removeItem('lb_key'); }
+  } catch(e) { st.style.color='#f87171'; st.textContent = '❌ ' + e; }
+}
+
+// ── Bot catalog (mirrors seed-bots.js — keep in sync) ────────────────────────
+const BOT_BOTS = [
+  { user: 'Marco', country: 'IT' }, { user: 'Lukas', country: 'DE' },
+  { user: 'Pawel', country: 'PL' }, { user: 'Anna',  country: 'FI' },
+  { user: 'Tomasz',country: 'PL' }, { user: 'Elena', country: 'ES' },
+  { user: 'Nils',  country: 'NO' }, { user: 'Hana',  country: 'CZ' },
+  { user: 'Radu',  country: 'RO' }, { user: 'Sven',  country: 'SE' },
+  { user: 'Kira',  country: 'FR' }, { user: 'Jakub', country: 'SK' },
+  { user: 'Marta', country: 'HR' }, { user: 'Mikkel',country: 'DK' },
+  { user: 'Olivia',country: 'GB' }, { user: 'Diego', country: 'BR' },
+  { user: 'Yuki',  country: 'JP' }, { user: 'Igor',  country: 'UA' },
+  { user: 'Clara', country: 'NL' }, { user: 'Felix', country: 'AT' },
+];
+const BOT_GAMES = [
+  { game:'flappypidgeon',    variants:[''],                   scores:[4,12]    },
+  { game:'dinosaur',         variants:[''],                   scores:[80,250]  },
+  { game:'shadowclonerunner',variants:[''],                   scores:[80,220]  },
+  { game:'edgesurvivor',     variants:[''],                   scores:[40,130]  },
+  { game:'serpent',          variants:[''],                   scores:[30,120]  },
+  { game:'run',              variants:[''],                   scores:[40,150]  },
+  { game:'skyroll',          variants:['Easy','Norm','Hard'], scores:[80,280]  },
+  { game:'jumptower',        variants:[''],                   scores:[80,200]  },
+  { game:'stacktower',       variants:['Slow','Norm','Fast'], scores:[6,14]    },
+  { game:'gemmatch',         variants:[''],                   scores:[180,450] },
+  { game:'twentyfortyeight', variants:[''],                   scores:[400,1800]},
+  { game:'hologrid',         variants:[''],                   scores:[50,200]  },
+  { game:'blocks',           variants:[''],                   scores:[100,500] },
+  { game:'bricks',           variants:[''],                   scores:[100,500] },
+  { game:'jazzball',         variants:[''],                   scores:[8,25]    },
+  { game:'gyromaze',         variants:['Easy','Med','Hard'],  scores:[1,4]     },
+  { game:'billiards',        variants:['3-ball','8-ball','9-ball','snooker'], scores:[2,6] },
+  { game:'sudoku',     asc:true, variants:['4x4-easy','4x4-medium','4x4-hard','9x9-easy','9x9-medium','9x9-hard'], scores:[280,600] },
+  { game:'minesweeper',asc:true, variants:['8x8','10x10','12x12','16x16','24x24','32x32'], scores:[180,420] },
+  { game:'solitaire',  asc:true, variants:[''],               scores:[420,900] },
+  { game:'lightsout',  asc:true, variants:['3x3','4x4','5x5'],scores:[40,90]   },
+  { game:'akari',      asc:true, variants:['6x6','7x7'],      scores:[250,540] },
+  { game:'memo',       asc:true, variants:['Easy','Normal','Hard'], scores:[40,90] },
+  { game:'minigolf',   variants:['easy','normal','hard'],      scores:[1500,4500]},
+  { game:'arcade',     variants:[''],                          scores:[3,10]    },
+  { game:'catapult',   variants:[''],                          scores:[40,130]  },
+  { game:'bomb',       variants:[''],                          scores:[40,130]  },
+  { game:'manpac',     variants:[''],                          scores:[80,280]  },
+  { game:'blobs',      variants:[''],                          scores:[4,14]    },
+  { game:'parachute',  variants:[''],                          scores:[40,140]  },
+  { game:'moon',       variants:[''],                          scores:[80,250]  },
+  { game:'pinballpro', variants:['CLASSIC','NOVA','DERBY','STINGER','ECLIPSE'], scores:[800,4000] },
+  { game:'pongpro',    variants:['Easy','Medium','Hard'],      scores:[1,3]     },
+  { game:'pixelinvaders',variants:['Easy','Normal','Hard'],    scores:[100,450] },
+  { game:'starcombat', variants:['Easy','Norm','Hard'],        scores:[80,280]  },
+  { game:'voidrocks',  variants:['Easy','Normal','Hard'],      scores:[80,400]  },
+  { game:'starswarm',  variants:['Easy','Normal','Hard'],      scores:[150,480] },
+  { game:'sniperscope',variants:['Easy','Norm','Hard'],        scores:[40,180]  },
+  { game:'fish',       variants:[''],                          scores:[40,160]  },
+  { game:'blackjack',  variants:[''],                          scores:[120,280] },
+  { game:'poker',      variants:[''],                          scores:[250,700] },
+  { game:'diceroyale', variants:['classic','quick','daily'],   scores:[100,220] },
+  { game:'makao_lite', variants:['Easy','Med','Hard'],         scores:[1,3]     },
+  { game:'checkers',   variants:['easy','medium','hard'],      scores:[1,3]     },
+  { game:'chess',      variants:['easy','medium','hard'],      scores:[1,2]     },
+  { game:'othello',    variants:[''],                          scores:[8,20]    },
+  { game:'tictacpro',  variants:['Easy','Med','Hard'],         scores:[1,3]     },
+  { game:'connectfour',variants:['Easy','Med','Hard'],         scores:[1,3]     },
+  { game:'hex_mini',   variants:['EASY','MED','HARD'],         scores:[1,3]     },
+  { game:'dots_boxes', variants:['easy','med','hard'],         scores:[1,3]     },
+  { game:'morris_classic',variants:['easy','med','hard'],      scores:[1,3]     },
+  { game:'hangman',    variants:['animals-easy','animals-medium','animals-hard','food-easy','food-medium','food-hard','technology-easy','technology-medium','technology-hard','sports-easy','sports-medium','sports-hard'], scores:[1,3] },
+  { game:'boxing',     variants:[''],                          scores:[30,120]  },
+  { game:'archery',    variants:['Easy','Norm','Hard'],        scores:[40,140]  },
+  { game:'skijump',    variants:['Zakopane','Innsbruck','Oberstdorf','Vikersund'], scores:[45,85] },
+  { game:'battleship', asc:true, variants:['easy','medium','hard'], scores:[55,80] },
+  { game:'activityboard', variants:['flex'],   scores:[8000, 22000], bots:8 },
+  { game:'activityboard', variants:['steps'],  scores:[3500, 7500],  bots:8 },
+  { game:'activityboard', variants:['dist'],   scores:[2800, 7200],  bots:8 },
+  { game:'activityboard', variants:['vig'],    scores:[20,   70],    bots:8 },
+  { game:'activityboard', variants:['elev'],   scores:[40,   180],   bots:8 },
+  { game:'activityboard', variants:['floors'], scores:[4,    14],    bots:8 },
+  { game:'activityboard', variants:['kcal'],   scores:[1200, 2200],  bots:8 },
+  { game:'activityboard', variants:['active'], scores:[50,   130],   bots:8 },
+];
+
+function botRnd(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+function botPick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+// Build the flat list of bot entries for a set of game configs.
+function buildBotEntries(gameFilter) {
+  const entries = [];
+  for (const g of BOT_GAMES) {
+    if (gameFilter && g.game !== gameFilter) continue;
+    for (const variant of g.variants) {
+      const pool = [...BOT_BOTS].sort(() => Math.random() - 0.5).slice(0, g.bots || 6);
+      for (const bot of pool) {
+        entries.push({
+          game: g.game,
+          user: bot.user,
+          score: botRnd(g.scores[0], g.scores[1]),
+          variant,
+          country: bot.country,
+          is_bot: true,
+        });
+      }
+    }
+  }
+  return entries;
+}
+
+let _botSeedAbort = false;
+
+async function reseedAllBots() {
+  await _runBotSeed(null);
+}
+async function reseedBotsForGame(game) {
+  await _runBotSeed(game);
+}
+
+async function _runBotSeed(gameFilter) {
+  const label = gameFilter ? `"${gameFilter}"` : 'ALL games';
+  if (!confirm(`Reseed bots for ${label}? This does NOT delete existing bots first.`)) return;
+  const key = lbKey('Enter LB_KEY:');
+  if (!key) return;
+
+  const entries = buildBotEntries(gameFilter);
+  const st = document.getElementById('bots-status');
+  const seedBtn = document.getElementById('bots-seed-btn');
+  if (seedBtn) seedBtn.disabled = true;
+  _botSeedAbort = false;
+  st.style.display = ''; st.style.color = 'var(--muted)';
+
+  let ok = 0, fail = 0;
+  for (let i = 0; i < entries.length; i++) {
+    if (_botSeedAbort) { st.textContent = `⛔ Aborted after ${ok} OK / ${fail} fail.`; break; }
+    const e = entries[i];
+    st.textContent = `[${i+1}/${entries.length}] ${e.game} / ${e.variant} / ${e.user}…`;
+    try {
+      const r = await fetch(`${API}/score`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-LB-Key': key },
+        body: JSON.stringify(e),
+      });
+      if (r.ok) ok++; else { fail++; console.warn('bot seed warn', r.status, e); }
+      if (r.status === 403) { sessionStorage.removeItem('lb_key'); st.style.color='#f87171'; st.textContent='❌ Wrong key (403). Aborted.'; break; }
+    } catch(err) { fail++; console.warn('bot seed error', err, e); }
+    // 600 ms between entries — comfortably under the 20 req/10s rate limit.
+    await new Promise(res => setTimeout(res, 600));
+  }
+
+  if (seedBtn) seedBtn.disabled = false;
+  if (!_botSeedAbort) {
+    st.style.color = fail ? 'var(--amber)' : 'var(--green)';
+    st.textContent = `✅ Done: ${ok} seeded, ${fail} failed.`;
+    loadBots();
+  }
 }
 </script>
 </body>
