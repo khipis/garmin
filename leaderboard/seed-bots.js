@@ -200,6 +200,21 @@ const GAMES = [
     variants: ['easy','medium','hard'],
     scores: [55, 80] },
 
+  // ── Slot Bandit (higher score = better) ──────────────────────────────────
+  { game: 'slotbandit',
+    variants: ['Quick','Normal','Marathon','jackpots'],
+    scores: [80, 320] },
+
+  // ── Chicken Cross (higher score = better) ────────────────────────────────
+  { game: 'chickencross',
+    variants: [''],
+    scores: [40, 160] },
+
+  // ── Drwal / Lumberjack (higher = better) ─────────────────────────────────
+  { game: 'drwal',
+    variants: ['Easy','Normal','Hard'],
+    scores: [40, 150] },
+
   // ── Activity Board (real watch stats, higher-is-better) ──────────────────
   // Scores are purposely modest / easy-to-beat so real active users land
   // above them quickly. Units match what the watch submits:
