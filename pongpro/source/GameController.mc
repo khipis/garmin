@@ -27,9 +27,10 @@ const MATCH_POINTS = 7;
 
 // Chess-style menu rows
 const MI_DIFFICULTY = 0;
-const MI_START      = 1;
-const MI_LEADERBOARD = 2;   // global; AI difficulty is used as the variant
-const MI_ITEMS      = 3;
+const MI_TILT       = 1;    // gyro/tilt paddle control on/off
+const MI_START      = 2;
+const MI_LEADERBOARD = 3;   // global; AI difficulty is used as the variant
+const MI_ITEMS      = 4;
 
 // Global leaderboard game id (matches _LOGOS / web id).
 const LB_GAME_ID = "pongpro";
@@ -78,6 +79,12 @@ class GameController {
     var difficulty;
     var baseBallSpeed; // initial speed per serve (scales with diff)
 
+    // ── Tilt (gyro) control ──────────────────────────────────────────────
+    var tiltEnabled;   // player toggle in the menu
+    var gyro;          // accelerometer reader
+    hidden var _tiltSmoothY;  // EMA of the calibrated Y tilt (noise filter)
+    hidden var _tiltCenter;   // smoothed paddle centre target (Float, anti-jump)
+
     function initialize() {
         state    = GS_MENU;
         menuRow  = MI_START;
@@ -95,6 +102,11 @@ class GameController {
         difficulty = DIFF_MEDIUM;
         baseBallSpeed = 3.6;
         _holdUp = false; _holdDown = false;
+
+        tiltEnabled  = false;
+        gyro         = new GyroInput();
+        _tiltSmoothY = 0.0;
+        _tiltCenter  = 120.0;
 
         powerUp      = new PowerUp();
         ball2        = new Ball();
@@ -129,10 +141,27 @@ class GameController {
             var d = Application.Storage.getValue("pp_diff");
             if (d instanceof Number && d >= DIFF_EASY && d <= DIFF_HARD) { setDifficulty(d); }
         } catch (e) {}
+        try {
+            var t = Application.Storage.getValue("pp_tilt");
+            if (t instanceof Boolean) { tiltEnabled = t; }
+        } catch (e) {}
     }
     hidden function _saveDifficulty() {
         try { Application.Storage.setValue("pp_diff", difficulty); } catch (e) {}
     }
+    hidden function _saveTilt() {
+        try { Application.Storage.setValue("pp_tilt", tiltEnabled); } catch (e) {}
+    }
+
+    // Toggle tilt steering from the menu. Recalibrate on enable so the
+    // wrist's current angle becomes the new neutral.
+    function toggleTilt() {
+        tiltEnabled = !tiltEnabled;
+        if (tiltEnabled) { gyro.calibrate(); }
+        _saveTilt();
+    }
+
+    function tiltLabel() { return tiltEnabled ? "ON" : "OFF"; }
 
     function setScreen(w, h) {
         screenW = w; screenH = h;
@@ -208,6 +237,10 @@ class GameController {
         lastHitSide = -1;
         _applyPaddleSizes();
         puSpawnTimer = _randSpawnGap();
+        // Seat tilt control at the current wrist angle + centre the paddle.
+        gyro.calibrate();
+        _tiltSmoothY = 0.0;
+        _tiltCenter  = ((playY0 + playY1) / 2).toFloat();
         _serve();
     }
 
@@ -224,6 +257,45 @@ class GameController {
         if (_holdUp && !_holdDown)      { pPlayer.vy = -PLAYER_SPEED; }
         else if (_holdDown && !_holdUp) { pPlayer.vy =  PLAYER_SPEED; }
         else                             { pPlayer.vy =  0.0; }
+    }
+
+    // Tilt-steer the player's paddle. Two-stage smoothing keeps it gentle
+    // and jitter-free:
+    //   1. EMA low-pass on the raw accelerometer Y kills sensor noise.
+    //   2. The paddle centre eases toward the mapped target (lerp), so it
+    //      glides rather than snapping — no jumpiness even on fast tilts.
+    // A small deadzone around neutral stops the paddle drifting when the
+    // wrist is held still. `_tiltCenter` is kept as a Float so the ease
+    // converges smoothly regardless of pixel rounding.
+    hidden function _applyTilt() {
+        var ay = gyro.readY();
+
+        // Deadzone around the calibrated resting angle.
+        if (ay > -TILT_DEADZONE && ay < TILT_DEADZONE) { ay = 0; }
+        else if (ay > 0) { ay = ay - TILT_DEADZONE; }
+        else             { ay = ay + TILT_DEADZONE; }
+
+        // 1) Noise filter.
+        _tiltSmoothY = _tiltSmoothY + (ay - _tiltSmoothY) * TILT_SMOOTH;
+
+        // Map tilt → normalised [-1 .. 1] across the usable range.
+        var norm = _tiltSmoothY / TILT_RANGE;
+        if (norm >  1.0) { norm =  1.0; }
+        if (norm < -1.0) { norm = -1.0; }
+
+        // Target paddle centre. Screen Y grows downward and sensor Y grows
+        // toward the top of the watch, so we subtract to make "tilt up"
+        // move the paddle up.
+        var midY = ((playY0 + playY1) / 2).toFloat();
+        var span = (((playY1 - playY0) - pPlayer.h) / 2).toFloat();
+        if (span < 0.0) { span = 0.0; }
+        var target = midY - norm * span;
+
+        // 2) Ease toward the target.
+        _tiltCenter = _tiltCenter + (target - _tiltCenter) * TILT_FOLLOW;
+
+        pPlayer.setCenterY(_tiltCenter.toNumber());
+        pPlayer.vy = 0.0;   // tilt owns the paddle — ignore stale button holds
     }
 
     // One-shot impulse from tap / swipe — moves paddle a chunk.
@@ -258,10 +330,12 @@ class GameController {
                 state = GS_PLAY;
             }
             // Paddles still respond to player input even during serve.
+            if (tiltEnabled) { _applyTilt(); }
             pPlayer.step();
             return;
         }
         // GS_PLAY
+        if (tiltEnabled) { _applyTilt(); }
         pPlayer.step();
         var aiTarget = (ball2Active && _ball2MoreUrgent()) ? ball2 : ball;
         ai.step(pCpu, aiTarget, playX0, playY0, playX1, playY1);
@@ -427,3 +501,16 @@ class GameController {
 // Player paddle movement speed — defined at module scope so both
 // GameController (computing vy) and tests can reference it.
 const PLAYER_SPEED = 4.4;
+
+// ── Tilt-steer tuning (25 ms / ~40 Hz tick) ──────────────────────────
+// TILT_RANGE   — milli-g of tilt that drives the paddle fully to an edge.
+//                ~320 mg ≈ a gentle ~18° wrist tilt, so small movements
+//                are enough and the control never feels twitchy.
+// TILT_SMOOTH  — EMA weight on the raw accel reading (higher = snappier).
+// TILT_FOLLOW  — how fast the paddle eases toward the tilt target per tick
+//                (lower = smoother/softer, higher = more immediate).
+// TILT_DEADZONE— milli-g ignored around neutral so a steady wrist is still.
+const TILT_RANGE    = 320.0;
+const TILT_SMOOTH   = 0.30;
+const TILT_FOLLOW   = 0.18;
+const TILT_DEADZONE = 35;

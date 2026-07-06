@@ -23,16 +23,20 @@ module Metrics {
     const V_FLOORS = "floors";
     const V_DIST   = "dist";
     const V_KCAL   = "kcal";
+    const V_VIG    = "vig";    // vigorous intensity minutes (week) — the "sport/run effort" board
+    const V_ELEV   = "elev";   // metres climbed today — hiking / trail / stairs
 
     // Order used for the dashboard rows and the flex menu (flex is the headline,
-    // shown separately). Each entry: [variant, label].
+    // shown separately). Sport-forward ordering. Each entry: [variant, label].
     function catalog() as Lang.Array {
         return [
             [V_STEPS,  "Steps"],
-            [V_ACTIVE, "Active wk"],
-            [V_FLOORS, "Floors"],
             [V_DIST,   "Distance"],
-            [V_KCAL,   "Calories"]
+            [V_VIG,    "Cardio"],
+            [V_ELEV,   "Climb"],
+            [V_FLOORS, "Floors"],
+            [V_KCAL,   "Calories"],
+            [V_ACTIVE, "Active wk"]
         ];
     }
 
@@ -50,6 +54,7 @@ module Metrics {
     function snapshot() as Lang.Dictionary {
         var d = {
             "steps" => 0, "active" => 0, "floors" => 0, "distM" => 0, "kcal" => 0,
+            "vig" => 0, "elevM" => 0,
             "stepGoal" => 0, "floorGoal" => 0, "activeGoal" => 0
         };
         try {
@@ -64,9 +69,13 @@ module Metrics {
             if (info has :distance && info.distance != null) { d["distM"] = (_n(info.distance) / 100); }
             if (info has :floorsClimbed && info.floorsClimbed != null) { d["floors"] = _n(info.floorsClimbed); }
             if (info has :floorsClimbedGoal && info.floorsClimbedGoal != null) { d["floorGoal"] = _n(info.floorsClimbedGoal); }
+            // Metres climbed today (elevation gained) — trail / hiking / stairs.
+            if (info has :metersClimbed && info.metersClimbed != null) { d["elevM"] = _n(info.metersClimbed); }
             if (info has :activeMinutesWeek && info.activeMinutesWeek != null) {
                 var am = info.activeMinutesWeek;
                 if (am has :total && am.total != null) { d["active"] = _n(am.total); }
+                // Vigorous intensity minutes — hard cardio / running effort.
+                if (am has :vigorous && am.vigorous != null) { d["vig"] = _n(am.vigorous); }
             }
             if (info has :activeMinutesWeekGoal && info.activeMinutesWeekGoal != null) { d["activeGoal"] = _n(info.activeMinutesWeekGoal); }
         } catch (e) {}
@@ -75,13 +84,18 @@ module Metrics {
 
     // The signature FLEX SCORE: one big, satisfying number that rewards being
     // an all-round mover. Transparent and derived purely from real data:
-    //   steps + floors*250 + activeMin(week)*120 + metres/4 + kcal*3
+    //   steps + floors*250 + activeMin(week)*120 + vigMin*180 + metres/4
+    //   + elevMetres*8 + kcal*3
+    // Vigorous minutes and climbing are weighted hardest — real athletic effort
+    // moves the needle most, so runners / climbers top the all-round flex board.
     function flexScore(s as Lang.Dictionary) as Lang.Number {
         var f = 0;
         f += _n(s["steps"]);
         f += _n(s["floors"]) * 250;
         f += _n(s["active"]) * 120;
+        f += _n(s["vig"]) * 180;
         f += (_n(s["distM"]) / 4);
+        f += _n(s["elevM"]) * 8;
         f += _n(s["kcal"]) * 3;
         if (f < 0) { f = 0; }
         return f;
@@ -94,6 +108,8 @@ module Metrics {
         if (v.equals(V_FLOORS)) { return _n(s["floors"]); }
         if (v.equals(V_DIST))   { return _n(s["distM"]); }
         if (v.equals(V_KCAL))   { return _n(s["kcal"]); }
+        if (v.equals(V_VIG))    { return _n(s["vig"]); }
+        if (v.equals(V_ELEV))   { return _n(s["elevM"]); }
         return flexScore(s);
     }
 
@@ -109,6 +125,8 @@ module Metrics {
     function display(v as Lang.String, val as Lang.Number) as Lang.String {
         if (v.equals(V_DIST))   { return kmStr(val); }
         if (v.equals(V_ACTIVE)) { return val.toString() + " min"; }
+        if (v.equals(V_VIG))    { return val.toString() + " min"; }
+        if (v.equals(V_ELEV))   { return groupNum(val) + " m"; }
         if (v.equals(V_FLOORS)) { return val.toString(); }
         if (v.equals(V_KCAL))   { return val.toString() + " kcal"; }
         return groupNum(val);   // steps / flex — grouped big number

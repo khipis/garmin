@@ -733,6 +733,80 @@
   .country-bar-wrap { width: 100%; height: 3px; background: var(--border); border-radius: 2px; margin-top: 4px; }
   .country-bar { height: 3px; border-radius: 2px; background: linear-gradient(90deg, var(--accent), #7c3aed); }
 
+  /* ══ Activity Board — "flex hype" over-the-top mode ══════════════════ */
+  #ab-confetti {
+    position: fixed; inset: 0; pointer-events: none; z-index: 300;
+    overflow: hidden; display: none;
+  }
+  body.ab-mode #ab-confetti { display: block; }
+  @keyframes ab-fall {
+    0%   { transform: translate3d(0, -12vh, 0) rotate(0deg); opacity: 0; }
+    8%   { opacity: 1; }
+    100% { transform: translate3d(var(--abx, 0px), 112vh, 0) rotate(var(--abr, 720deg)); opacity: 0; }
+  }
+  .ab-piece {
+    position: absolute; top: 0; width: 9px; height: 15px; border-radius: 2px;
+    will-change: transform, opacity;
+    animation: ab-fall var(--abd, 2.8s) cubic-bezier(.18,.55,.35,1) forwards;
+  }
+
+  @keyframes ab-pulse { 0%,100%{ transform: scale(1) } 50%{ transform: scale(1.06) } }
+  @keyframes ab-shine { 0%{ background-position: -200% 0 } 100%{ background-position: 200% 0 } }
+  @keyframes ab-float { 0%,100%{ transform: translateY(0) } 50%{ transform: translateY(-5px) } }
+
+  .ab-hype {
+    display: none;
+    margin: 2px 0 16px; padding: 16px 16px 15px; border-radius: 18px;
+    text-align: center; position: relative; overflow: hidden;
+    background:
+      radial-gradient(130% 150% at 50% -25%, rgba(0,212,255,.22), transparent 62%),
+      linear-gradient(135deg, rgba(251,191,36,.16), rgba(124,58,237,.16));
+    border: 1px solid rgba(251,191,36,.38);
+    box-shadow: 0 0 30px rgba(0,212,255,.16), inset 0 0 34px rgba(251,191,36,.07);
+  }
+  body.ab-mode .ab-hype { display: block; }
+  .ab-hype::after {
+    content: ''; position: absolute; inset: 0; pointer-events: none;
+    background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,.10) 50%, transparent 70%);
+    background-size: 220% 100%; animation: ab-shine 4.5s linear infinite;
+  }
+  .ab-hype .ab-whale { font-size: 2.1rem; line-height: 1; display: inline-block; animation: ab-float 2.4s ease-in-out infinite; }
+  .ab-hype .ab-title {
+    font-size: 1.22rem; font-weight: 900; letter-spacing: .04em; margin-top: 5px;
+    background: linear-gradient(90deg,#fbbf24,#00d4ff,#a855f7,#fbbf24);
+    background-size: 220% auto; -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent; color: transparent;
+    animation: ab-shine 3s linear infinite;
+  }
+  .ab-hype .ab-sub { font-size: .8rem; color: var(--muted); margin-top: 6px; letter-spacing: .02em; }
+
+  /* Board rows get gold shimmer + glow in ab-mode */
+  body.ab-mode #lb-wrap .lb-row.rank-1 {
+    background: linear-gradient(90deg, rgba(251,191,36,.18), rgba(251,191,36,.03) 60%, transparent);
+    box-shadow: inset 0 0 22px rgba(251,191,36,.12);
+  }
+  body.ab-mode #lb-wrap .lb-row.rank-1 .lb-score { color:#fbbf24; text-shadow: 0 0 12px rgba(251,191,36,.65); }
+  body.ab-mode #lb-wrap .lb-row.rank-2 .lb-score { color:#cbd5e1; }
+  body.ab-mode #lb-wrap .lb-row.rank-3 .lb-score { color:#e0a06a; }
+  body.ab-mode #lb-wrap .lb-row.rank-1 .lb-rank-ic { animation: ab-pulse 1.5s ease-in-out infinite; }
+  body.ab-mode #lb-wrap .lb-bar {
+    background: linear-gradient(90deg,#00d4ff,#a855f7,#fbbf24);
+    background-size: 220% auto; animation: ab-shine 2.6s linear infinite;
+  }
+  body.ab-mode #me-card {
+    border-color: rgba(251,191,36,.4);
+    box-shadow: 0 0 26px rgba(0,212,255,.14);
+  }
+  @keyframes ab-flame { 0%,100%{ transform: translateY(0) scale(1) } 50%{ transform: translateY(-2px) scale(1.2) } }
+  .ab-flair { margin-left: 6px; display: inline-block; animation: ab-flame 1.2s ease-in-out infinite; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .ab-piece, .ab-hype .ab-title, .ab-hype::after, .ab-hype .ab-whale,
+    body.ab-mode #lb-wrap .lb-bar, body.ab-mode #lb-wrap .lb-row.rank-1 .lb-rank-ic,
+    .ab-flair { animation: none !important; }
+    #ab-confetti { display: none !important; }
+  }
+
   /* ── Responsive ───────────────────────────────────────────────────── */
   @media (max-width: 480px) {
     header { padding: 0 14px; }
@@ -740,6 +814,7 @@
     .lb-row { padding: 12px 14px; }
     .stats-cards { grid-template-columns: repeat(2, 1fr); }
     .stat-card .num { font-size: 1.4rem; }
+    .ab-hype .ab-title { font-size: 1.05rem; }
   }
 </style>
 </head>
@@ -845,6 +920,11 @@
 
 <!-- ── Leaderboard ─────────────────────────────────────────────────────────── -->
 <main>
+  <div class="ab-hype" id="ab-hype">
+    <div class="ab-whale">🐋💦</div>
+    <div class="ab-title">FLEX YOUR REAL STATS</div>
+    <div class="ab-sub">Every step, climb &amp; hard-earned minute is 100% real — straight off your watch.<br>Grab your spot and make the whole world chase you. 🌊🔥</div>
+  </div>
   <div id="target-badge" style="display:none"></div>
   <div class="section-header" id="lb-header">
     <span class="section-title" id="lb-title">Top 10</span>
@@ -920,7 +1000,7 @@ const CIQ_STORE   = 'https://apps.garmin.com/apps/';
 // ── Game descriptions (from README files) ───────────────────────────────────
 const GAME_DESCS = {
   '8ball':             'Shake your wrist to consult the Magic 8-Ball and receive a mystical answer to any yes/no question. Perfect for quick decisions on the go.',
-  'activityboard':     'Turn your REAL watch stats into bragging rights. Activity Board reads your genuine steps, active minutes, floors, distance and calories, rolls them into one signature FLEX SCORE, and drops any of them onto this global leaderboard. Pick your tag and race the world live — today, this week, all-time. No fake numbers, just pure flex.',
+  'activityboard':     'Turn your REAL watch stats into bragging rights. Activity Board reads your genuine steps, distance, vigorous cardio minutes, climb (elevation), floors, calories and active minutes — then rolls them into one signature FLEX SCORE and drops any of them onto this global leaderboard. Pick your tag and race the world live — today, this week, all-time. No fake numbers, just pure flex.',
   'akari':             'Akari (Light Up) logic puzzle — place bulbs so every white cell is lit, with no two bulbs shining on each other and every numbered wall satisfied. Global leaderboard ranks the fastest solve times — lower is better.',
   'arcade':            'Knife-hit style arcade game — throw axes at a spinning log and try not to hit the ones already lodged in it. Pure reflex challenge.',
   'battleship':        'Classic Sea Battle on a 10×10 grid. Place your fleet, hunt the enemy ships, and sink everything before the AI sinks you.',
@@ -1124,10 +1204,12 @@ const FISH_RARITY_GLOW  = ['none', 'none', 'drop-shadow(0 0 4px rgba(255,255,255
 const ACTIVITY_VARIANTS = {
   flex:   { label: '🔥 Flex Score',    unit: ''     },
   steps:  { label: '👟 Steps',         unit: ''     },
-  active: { label: '⚡ Active (week)',  unit: 'min'  },
+  dist:   { label: '🏃 Distance',      unit: 'km'   },  // stored in metres
+  vig:    { label: '💥 Cardio',        unit: 'min'  },  // vigorous intensity minutes (week)
+  elev:   { label: '⛰️ Climb',         unit: 'm'    },  // metres climbed today
   floors: { label: '🪜 Floors',        unit: ''     },
-  dist:   { label: '📏 Distance',      unit: 'km'   },  // stored in metres
   kcal:   { label: '🔥 Calories',      unit: 'kcal' },
+  active: { label: '⚡ Active (week)',  unit: 'min'  },
 };
 
 function isActivityBoard() { return currentLbKey === 'activityboard'; }
@@ -1151,6 +1233,39 @@ function prettyVariant(v) {
   if (v === FISH_VARIANT) return '🐟 Biggest Fish';
   if (isActivityBoard() && ACTIVITY_VARIANTS[v]) return ACTIVITY_VARIANTS[v].label;
   return v;
+}
+
+// ── Activity Board "flex hype" — confetti burst + top-rank flair ──────────────
+let _abLastBurst = 0;
+function abConfetti(n = 46) {
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const now = Date.now();
+  if (now - _abLastBurst < 1200) return;   // throttle rapid re-renders
+  _abLastBurst = now;
+  let box = document.getElementById('ab-confetti');
+  if (!box) { box = document.createElement('div'); box.id = 'ab-confetti'; document.body.appendChild(box); }
+  const colors = ['#fbbf24', '#00d4ff', '#a855f7', '#34d399', '#f472b6', '#ffffff'];
+  const frag = document.createDocumentFragment();
+  for (let i = 0; i < n; i++) {
+    const p = document.createElement('div');
+    p.className = 'ab-piece';
+    p.style.left = (Math.random() * 100) + 'vw';
+    p.style.background = colors[i % colors.length];
+    p.style.setProperty('--abx', (Math.random() * 160 - 80) + 'px');
+    p.style.setProperty('--abr', (Math.random() * 900 + 360) + 'deg');
+    p.style.setProperty('--abd', (Math.random() * 1.6 + 2.2) + 's');
+    p.style.animationDelay = (Math.random() * 0.5) + 's';
+    if (i % 3 === 0) { p.style.width = '7px'; p.style.height = '7px'; p.style.borderRadius = '50%'; }
+    frag.appendChild(p);
+  }
+  box.appendChild(frag);
+  setTimeout(() => { if (box) box.innerHTML = ''; }, 4200);
+}
+
+const AB_FLAIR = ['🔥', '⚡', '💪'];
+function abFlair(rank) {
+  if (!isActivityBoard() || rank > 3) return '';
+  return `<span class="ab-flair">${AB_FLAIR[rank - 1]}</span>`;
 }
 
 function parseMeta(raw) {
@@ -1269,6 +1384,9 @@ function selectGame(g, pushState = true) {
   currentGame    = g.id;
   currentLbKey   = lbKeyOf(g);
   currentVariant = '';
+
+  // "Flex hype" mode — over-the-top celebratory styling for Activity Board.
+  document.body.classList.toggle('ab-mode', g.id === 'activityboard');
 
   if (pushState) {
     const u = new URL(location.href);
@@ -1506,7 +1624,7 @@ function renderLeaderboard(data, game) {
     html += `
       <div class="lb-row ${cls}" style="animation-delay:${.02 + i * .03}s">
         <div class="lb-rank"><span class="lb-rank-ic">${icon}</span>${flag}</div>
-        <div class="lb-user">${escHtml(row.u || 'anon')}</div>
+        <div class="lb-user">${escHtml(row.u || 'anon')}${abFlair(rank)}</div>
         <div class="lb-score">${fmtScore(row.s)}</div>
         <div class="lb-bar-wrap" style="grid-column:2/4">
           <div class="lb-bar" style="width:${pct}%"></div>
@@ -1514,6 +1632,9 @@ function renderLeaderboard(data, game) {
       </div>`;
   });
   lbWrap.innerHTML = html;
+
+  // Over-the-top celebration for the Activity Board board.
+  if (isActivityBoard()) abConfetti();
 
   renderGameInfo(game, false);  // below leaderboard
 }

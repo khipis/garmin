@@ -137,9 +137,10 @@ class MainView extends WatchUi.View {
                     _ctrl.scoreCpu.format("%02d"),
                     Graphics.TEXT_JUSTIFY_LEFT);
 
-        // Difficulty badge bottom-centre
+        // Difficulty badge bottom-centre (+ tilt marker when steering)
         dc.setColor(0x888899, Graphics.COLOR_TRANSPARENT);
         var diffLabel = _diffLabel(_ctrl.difficulty);
+        if (_ctrl.tiltEnabled) { diffLabel = diffLabel + " \u00B7 TILT"; }
         dc.drawText(midX, _ctrl.screenH - 16, Graphics.FONT_XTINY,
                     diffLabel, Graphics.TEXT_JUSTIFY_CENTER);
     }
@@ -183,10 +184,11 @@ class MainView extends WatchUi.View {
         dc.setColor(0x00EEFF, Graphics.COLOR_TRANSPARENT);
         dc.fillRectangle(cx - 2, H * 47 / 100, 4, 4);
 
-        // Three chess-style rows: Difficulty + START + LEADERBOARD.
+        // Chess-style rows: Difficulty + Tilt + START + LEADERBOARD.
         var diffNames = ["EASY", "MED", "HARD"];
         var labels = [
             "Diff: " + diffNames[_ctrl.difficulty],
+            "Tilt: " + _ctrl.tiltLabel(),
             "START",
             ""
         ];
@@ -313,6 +315,10 @@ class MainView extends WatchUi.View {
     function menuStart() {
         if (_ctrl.menuRow == MI_DIFFICULTY) {
             _ctrl.cycleDifficulty();
+            return;
+        }
+        if (_ctrl.menuRow == MI_TILT) {
+            _ctrl.toggleTilt();
             return;
         }
         if (_ctrl.menuRow == MI_LEADERBOARD) {
