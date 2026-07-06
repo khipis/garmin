@@ -173,8 +173,8 @@ class BitochiBlobsView extends WatchUi.View {
         _wpnNames  = ["ROCKET", "GRENADE", "MEGA", "SNIPER", "MIRV", "QUAKE", "CLUSTER", "PLASMA", "NAPALM", "NUKE", "DRILL", "BANANA", "CHICKEN", "DISCO"];
         _wpnSpd    = [8.5,  7.0,  6.0, 13.0,  7.0, 7.5,  7.0, 14.0,  6.5, 5.0, 12.0, 7.5, 9.0, 6.5];
         _wpnGrv    = [0.10, 0.12, 0.14, 0.06, 0.11, 0.15, 0.09, 0.03, 0.13, 0.08, 0.04, 0.11, 0.13, 0.10];
-        _wpnRad    = [20,   26,   36,   12,   16,   50,   12,   7,    14,   55,   24,   22,   14,   28];
-        _wpnDmg    = [1,    1,    2,    1,    1,    1,    1,    3,    1,    2,    2,    2,    1,    2];
+        _wpnRad    = [20,   26,   36,   12,   16,   50,   12,   7,    14,   70,   24,   22,   14,   28];
+        _wpnDmg    = [1,    1,    2,    1,    1,    1,    1,    3,    1,    3,    2,    2,    1,    2];
         _wpnWind   = [1.0,  1.0,  1.0,  0.2,  1.0,  0.8,  0.9,  0.1,  1.2,  0.5,  0.3,  1.0,  0.7,  0.9];
         _wpnBounce = [0,    2,    0,    0,    0,    0,    0,    0,    0,    0,    0,    1,    5,    0];
         // -1=unlimited (basic): ROCKET,GRENADE,SNIPER,CLUSTER; 1=one use/round (special): MEGA,MIRV,QUAKE,PLASMA,NAPALM,NUKE,DRILL
@@ -719,8 +719,9 @@ class BitochiBlobsView extends WatchUi.View {
             carveCrater(hx, _boomMaxR);
             spawnBoom(hx.toNumber(), hy.toNumber());
             applyDmgAt(hx, hy, _boomMaxR.toFloat(), dmg);
-            applyDmgAt(hx, hy, (_boomMaxR * 1.5).toFloat(), 1);
-            _shakeT = 24; doVibe(100, 400);
+            applyDmgAt(hx, hy, (_boomMaxR * 1.8).toFloat(), 2);
+            applyDmgAt(hx, hy, (_boomMaxR * 2.4).toFloat(), 1);
+            _shakeT = 34; doVibe(100, 600);
         } else if (_projWeapon == WPN_DRILL) {
             _boomCount = 1;
             _boomXs[0] = hx; _boomYs[0] = hy;
@@ -800,7 +801,7 @@ class BitochiBlobsView extends WatchUi.View {
 
         // Depth based on weapon type
         var depth;
-        if (_projWeapon == WPN_NUKE)    { depth = 2.4; }
+        if (_projWeapon == WPN_NUKE)    { depth = 3.2; }
         else if (_projWeapon == WPN_MEGA)  { depth = 1.6; }
         else if (_projWeapon == WPN_DRILL) { depth = 1.8; }
         else if (_projWeapon == WPN_QUAKE) { depth = 0.3; }
@@ -1169,35 +1170,42 @@ class BitochiBlobsView extends WatchUi.View {
     hidden function drawBlob(dc, bx, by, hp, maxHp, col, darkCol, isActive) {
         if (bx < -_w || bx > _w * 2) { return; }
         var r = (hp > 0) ? 8 : 6;
-        var d = r * 2;
-        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.drawRectangle(bx - r, by - d, d, d);
-        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bx - r + 1, by - d + 1, d, d);
-        dc.setColor(col, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bx - r, by - d, d, d);
-        dc.setColor(darkCol, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bx - r + 2, by - d + 2, d - 4, d - 4);
-        dc.setColor(col, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bx - r - 1, by - d - 2, r / 2 + 1, r / 2 + 1);
+        var cy = by - r;  // circle centre
+
+        // White outline ring, dark shadow offset, main coloured body, inner shading
+        dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillCircle(bx, cy, r + 1);
+        dc.setColor(0x000000, Graphics.COLOR_TRANSPARENT); dc.fillCircle(bx + 1, cy + 1, r);
+        dc.setColor(col, Graphics.COLOR_TRANSPARENT);      dc.fillCircle(bx, cy, r);
+        dc.setColor(darkCol, Graphics.COLOR_TRANSPARENT);  dc.fillCircle(bx + 1, cy + 1, r - 2);
+        // Top-left specular highlight
+        dc.setColor(col, Graphics.COLOR_TRANSPARENT); dc.fillCircle(bx - r / 3, cy - r / 3, r / 5 + 1);
 
         if (hp <= 0) {
+            // X eyes for dead blobs
             dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
-            dc.drawLine(bx - 4, by - r - 2, bx - 2, by - r); dc.drawLine(bx - 2, by - r - 2, bx - 4, by - r);
-            dc.drawLine(bx + 2, by - r - 2, bx + 4, by - r); dc.drawLine(bx + 4, by - r - 2, bx + 2, by - r);
+            dc.drawLine(bx - 4, cy - 2, bx - 2, cy); dc.drawLine(bx - 2, cy - 2, bx - 4, cy);
+            dc.drawLine(bx + 2, cy - 2, bx + 4, cy); dc.drawLine(bx + 4, cy - 2, bx + 2, cy);
         } else {
-            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bx - 5, by - r - 3, 4, 4); dc.fillRectangle(bx + 1, by - r - 3, 4, 4);
-            dc.setColor(0x111111, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bx - 4, by - r - 2, 2, 2); dc.fillRectangle(bx + 2, by - r - 2, 2, 2);
-            if (hp == 1) { dc.setColor(0x66BBFF, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bx + 4, by - r - 5, 4, 4); }
-            if (hp >= 2) { dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bx - 2, by - r + 3, 4, 1); }
+            // Round eyes: white sclera + dark pupil
+            dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(bx - 3, cy - 1, 2); dc.fillCircle(bx + 3, cy - 1, 2);
+            dc.setColor(0x111111, Graphics.COLOR_TRANSPARENT);
+            dc.fillCircle(bx - 3, cy - 1, 1); dc.fillCircle(bx + 3, cy - 1, 1);
+            if (hp == 1) { dc.setColor(0x66BBFF, Graphics.COLOR_TRANSPARENT); dc.fillCircle(bx + 5, cy - 4, 2); }
+            if (hp >= 2) { dc.setColor(0xFFFFFF, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bx - 2, cy + 3, 4, 1); }
         }
         if (isActive && (gameState == GS_MOVE || gameState == GS_AIM || gameState == GS_POWER || gameState == GS_TURN)) {
             var ac = (_tick % 8 < 4) ? 0xFFFFFF : 0xFFCC44;
             dc.setColor(ac, Graphics.COLOR_TRANSPARENT);
-            dc.fillRectangle(bx - 1, by - r * 2 - 10, 2, 4);
-            dc.fillRectangle(bx - 2, by - r * 2 - 9, 4, 2);
+            dc.fillRectangle(bx - 1, cy - r - 8, 2, 4);
+            dc.fillRectangle(bx - 2, cy - r - 7, 4, 2);
         }
         if (maxHp < 1) { maxHp = 1; }
-        var bW = 18; var bxBar = bx - bW / 2; var bY = by - r * 2 - 5;
-        dc.setColor(0x111111, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bxBar - 1, bY - 1, bW + 2, 4);
+        var bW = 18; var bxBar = bx - bW / 2; var bYbar = cy - r - 5;
+        dc.setColor(0x111111, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bxBar - 1, bYbar - 1, bW + 2, 4);
         var fill = hp * bW / maxHp; if (fill > bW) { fill = bW; } if (fill < 0) { fill = 0; }
         var bc = (hp > 2) ? 0x44FF44 : ((hp > 1) ? 0xFFCC44 : 0xFF4444);
-        dc.setColor(bc, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bxBar, bY, fill, 2);
+        dc.setColor(bc, Graphics.COLOR_TRANSPARENT); dc.fillRectangle(bxBar, bYbar, fill, 2);
     }
 
     hidden function drawProjectile(dc, ox, oy) {
