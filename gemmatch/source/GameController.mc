@@ -566,12 +566,21 @@ class GameController {
         }
     }
 
+    // Direct cursor placement — used by drag-to-cursor input.
+    // Does not interact with the selection state; just repositions the
+    // highlight so the player can see where their finger is.
+    function setCursor(r, c) {
+        if (state != GS_PLAY) { return; }
+        if (r >= 0 && r < grid.rows && c >= 0 && c < grid.cols) {
+            curR = r; curC = c;
+        }
+    }
+
     // Tap a cell — moves cursor there (no implicit pick).
     // Exception: if a gem is already selected and the tapped cell
     // is adjacent, immediately attempt the swap (tap-pick-then-tap
     // workflow still works naturally via SELECT-then-tap).
-    function tapCell(r, c) {
-        if (state != GS_PLAY || animState != ANIM_NONE) { return; }
+    function tapCell(r, c) {        if (state != GS_PLAY || animState != ANIM_NONE) { return; }
         if (selR >= 0) {
             if (selR == r && selC == c) {
                 selR = -1; selC = -1; return;   // deselect

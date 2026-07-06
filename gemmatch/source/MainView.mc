@@ -411,9 +411,9 @@ class MainView extends WatchUi.View {
             dc.setColor(0x445566, Graphics.COLOR_TRANSPARENT);
             var hint;
             if (_ctrl.selR < 0) {
-                hint = "swipe=swap  tap=cursor";
+                hint = "drag=cursor  swipe=swap";
             } else {
-                hint = "tap adj=swap  SEL=cancel";
+                hint = "swipe=swap  tap adj=swap";
             }
             dc.drawText(cx, _sh - 16, Graphics.FONT_XTINY,
                         hint, Graphics.TEXT_JUSTIFY_CENTER);
@@ -548,9 +548,23 @@ class MainView extends WatchUi.View {
         return false;
     }
 
+    // cellAt: converts screen pixel (x, y) → [row, col] on the board,
+    // or null if the point is outside the grid. Used by drag-to-cursor.
+    function cellAt(x, y) {
+        if (_cellPx <= 0) { return null; }
+        if (x < _bx || y < _by) { return null; }
+        var col = (x - _bx) / _cellPx;
+        var row = (y - _by) / _cellPx;
+        if (col < 0 || col >= _ctrl.grid.cols) { return null; }
+        if (row < 0 || row >= _ctrl.grid.rows) { return null; }
+        return [row, col];
+    }
+
+    // setCursor: thin wrapper used by the input handler during live drag.
+    function setCursor(r, c) { _ctrl.setCursor(r, c); }
+
     // handleTap: menu hit-tests rows; play moves cursor to tapped cell.
-    function handleTap(x, y) {
-        if (_ctrl.state == GS_MENU) {
+    function handleTap(x, y) {        if (_ctrl.state == GS_MENU) {
             var rowGeom = _menuRowGeom();
             var rowH  = rowGeom[0];
             var rowW  = rowGeom[1];
