@@ -20,6 +20,10 @@ WHERE NOT EXISTS (SELECT 1 FROM links WHERE slug='games');
 INSERT INTO links (slug, url, clicks, created_at, updated_at)
 SELECT 'pro', 'https://apps.garmin.com/apps/bitochi', 0, strftime('%s','now')*1000, strftime('%s','now')*1000
 WHERE NOT EXISTS (SELECT 1 FROM links WHERE slug='pro');
+-- bitochi.com/ab → the fully-hyped Activity Board world leaderboard.
+INSERT INTO links (slug, url, clicks, created_at, updated_at)
+SELECT 'ab', 'https://bitochi.com/?game=activityboard', 0, strftime('%s','now')*1000, strftime('%s','now')*1000
+WHERE NOT EXISTS (SELECT 1 FROM links WHERE slug='ab');
 
 -- 1) GLOBAL · POST-GAME · "Support Bitochi" (via bitochi.com/coffee redirect)
 INSERT INTO messages (scope, game, placement, title, body, url, url_label, weight, min_gap_s, active, created_at, updated_at)
@@ -66,6 +70,24 @@ SELECT 'global', NULL, 'once',
        'https://bitochi.com/coffee', 'Buy me a coffee',
        0, 0, 1, strftime('%s','now')*1000, strftime('%s','now')*1000
 WHERE NOT EXISTS (SELECT 1 FROM messages WHERE scope='global' AND game IS NULL AND placement='once' AND title='Keep Bitochi free');
+
+-- 7) activityboard · LAUNCH · send players to the hyped world board (bitochi.com/ab)
+INSERT INTO messages (scope, game, placement, title, body, url, url_label, weight, min_gap_s, active, created_at, updated_at)
+SELECT 'game', 'activityboard', 'launch',
+       'Your flex is LIVE 🐋',
+       'Your REAL stats — steps, cardio, climb, distance & more — are ranked live against the whole world on a fully-hyped board. See where you stand: open bitochi.com/ab on your phone.',
+       'https://bitochi.com/ab', 'Open the board',
+       10, 43200, 1, strftime('%s','now')*1000, strftime('%s','now')*1000
+WHERE NOT EXISTS (SELECT 1 FROM messages WHERE scope='game' AND game='activityboard' AND placement='launch' AND title='Your flex is LIVE 🐋');
+
+-- 8) activityboard · POSTGAME · after a flex, nudge them to admire the board
+INSERT INTO messages (scope, game, placement, title, body, url, url_label, weight, min_gap_s, active, created_at, updated_at)
+SELECT 'game', 'activityboard', 'postgame',
+       'See your world rank',
+       'That stat is now live on the global Activity Board. Watch yourself climb the real, hyped leaderboard at bitochi.com/ab.',
+       'https://bitochi.com/ab', 'Open the board',
+       10, 21600, 1, strftime('%s','now')*1000, strftime('%s','now')*1000
+WHERE NOT EXISTS (SELECT 1 FROM messages WHERE scope='game' AND game='activityboard' AND placement='postgame' AND title='See your world rank');
 
 -- 4) breathtrainingtool · LAUNCH · invite to the paid "System" version
 INSERT INTO messages (scope, game, placement, title, body, url, url_label, weight, min_gap_s, active, created_at, updated_at)
