@@ -46,6 +46,21 @@ class MainView extends WatchUi.View {
     function onShow() {
         _timer = new Timer.Timer();
         _timer.start(method(:onTimer), 250, true);
+        // Offer the Bitochi support message once at the start (server-configured
+        // per-game "launch" message, with a coffee fallback for first run). Wrapped
+        // and guarded so it can never disturb gameplay or fire more than once.
+        if (!gPetsAnnounced) {
+            gPetsAnnounced = true;
+            try {
+                Leaderboard.announce(LB_GAME_ID, {
+                    "title"     => "Enjoying Pixel Pets?",
+                    "body"      => "Every Bitochi game is free and ad-free. If it made you smile, a small tip keeps new ones coming. Thank you!",
+                    "url"       => "https://bitochi.com/coffee",
+                    "url_label" => "Buy me a coffee",
+                    "min_gap_s" => 43200
+                });
+            } catch (e) {}
+        }
     }
 
     function onHide() {

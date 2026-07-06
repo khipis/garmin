@@ -906,7 +906,7 @@
 
 <footer>
   <div style="margin-bottom:8px">🗓 Daily &amp; weekly boards reset automatically · 🏆 monthly seasons coming soon</div>
-  Powered by <a href="https://github.com/khipis/garmin" target="_blank">Bitochi Games</a>
+  Powered by <span style="color:#fff;font-weight:600">Bitochi Games</span>
   &nbsp;·&nbsp; Garmin Connect IQ
   &nbsp;·&nbsp; <a href="https://buymeacoffee.com/bitochi" target="_blank" rel="noopener">☕ Buy me a coffee</a>
 </footer>
@@ -914,12 +914,13 @@
 <script>
 // ── Config ──────────────────────────────────────────────────────────────────
 const API_BASE    = 'https://api.bitochi.com';
-const GITHUB_RAW  = 'https://raw.githubusercontent.com/khipis/garmin/main/_LOGOS';
+const HERO_BASE   = 'heroes';
 const CIQ_STORE   = 'https://apps.garmin.com/apps/';
 
 // ── Game descriptions (from README files) ───────────────────────────────────
 const GAME_DESCS = {
   '8ball':             'Shake your wrist to consult the Magic 8-Ball and receive a mystical answer to any yes/no question. Perfect for quick decisions on the go.',
+  'activityboard':     'Turn your REAL watch stats into bragging rights. Activity Board reads your genuine steps, active minutes, floors, distance and calories, rolls them into one signature FLEX SCORE, and drops any of them onto this global leaderboard. Pick your tag and race the world live — today, this week, all-time. No fake numbers, just pure flex.',
   'akari':             'Akari (Light Up) logic puzzle — place bulbs so every white cell is lit, with no two bulbs shining on each other and every numbered wall satisfied. Global leaderboard ranks the fastest solve times — lower is better.',
   'arcade':            'Knife-hit style arcade game — throw axes at a spinning log and try not to hit the ones already lodged in it. Pure reflex challenge.',
   'battleship':        'Classic Sea Battle on a 10×10 grid. Place your fleet, hunt the enemy ships, and sink everything before the AI sinks you.',
@@ -994,6 +995,7 @@ const GAME_DESCS = {
 
 const GAMES = [
   { id: '8ball', label: '8 Ball', ciq: '3ab4f48a-232c-4324-b054-523eade54462' },
+  { id: 'activityboard', label: 'Activity Board', ciq: '' },
   { id: 'akari', label: 'Akari', ciq: 'fe720177-0321-41ef-9bef-f8d72f073950' },
   { id: 'arcade', label: 'Arcade', ciq: 'd60d32f2-28e0-4273-b109-789f1b082a6c' },
   { id: 'archery', label: 'Archery', ciq: '39adb32f-f24c-4ff0-8ef9-b9f91f25a77f' },
@@ -1115,8 +1117,39 @@ const FISH_BELLY_COLORS = ['#AADDAA','#FFCCBB','#88EE99','#55BB66','#EEBB99','#A
 const FISH_RARITY_LABEL = ['Runt', '', 'Big', 'GIANT'];
 const FISH_RARITY_GLOW  = ['none', 'none', 'drop-shadow(0 0 4px rgba(255,255,255,.35))', 'drop-shadow(0 0 8px rgba(255,215,0,.9))'];
 
+// ── Activity Board — real-stat variants (game=activityboard) ─────────────────
+// Every board is a real, higher-is-better metric pulled straight off the watch.
+// Values are stored as integers (distance in metres) and formatted for display
+// here so the web board reads exactly like the wrist app.
+const ACTIVITY_VARIANTS = {
+  flex:   { label: '🔥 Flex Score',    unit: ''     },
+  steps:  { label: '👟 Steps',         unit: ''     },
+  active: { label: '⚡ Active (week)',  unit: 'min'  },
+  floors: { label: '🪜 Floors',        unit: ''     },
+  dist:   { label: '📏 Distance',      unit: 'km'   },  // stored in metres
+  kcal:   { label: '🔥 Calories',      unit: 'kcal' },
+};
+
+function isActivityBoard() { return currentLbKey === 'activityboard'; }
+
+// Format an activity value for a given variant (metres → km, add units, group).
+function fmtActivity(v, s) {
+  const n = Number(s) || 0;
+  if (v === 'dist') return (n / 1000).toFixed(1) + ' km';
+  const info = ACTIVITY_VARIANTS[v];
+  const num  = n.toLocaleString();
+  return (info && info.unit) ? `${num} ${info.unit}` : num;
+}
+
+// Score formatter used across the board — activity-aware, else plain grouped.
+function fmtScore(s) {
+  if (isActivityBoard()) return fmtActivity(currentVariant || 'flex', s);
+  return Number(s).toLocaleString();
+}
+
 function prettyVariant(v) {
   if (v === FISH_VARIANT) return '🐟 Biggest Fish';
+  if (isActivityBoard() && ACTIVITY_VARIANTS[v]) return ACTIVITY_VARIANTS[v].label;
   return v;
 }
 
@@ -1251,7 +1284,7 @@ function selectGame(g, pushState = true) {
   heroImg.classList.remove('loaded');
   heroImg.onload  = () => heroImg.classList.add('loaded');
   heroImg.onerror = () => { heroImg.src = ''; };
-  heroImg.src = `${GITHUB_RAW}/${g.id}_hero.png`;
+  heroImg.src = `${HERO_BASE}/${g.id}_hero.png`;
   heroName.textContent = g.label.toUpperCase();
 
   if (g.ciq) {
@@ -1474,7 +1507,7 @@ function renderLeaderboard(data, game) {
       <div class="lb-row ${cls}" style="animation-delay:${.02 + i * .03}s">
         <div class="lb-rank"><span class="lb-rank-ic">${icon}</span>${flag}</div>
         <div class="lb-user">${escHtml(row.u || 'anon')}</div>
-        <div class="lb-score">${Number(row.s).toLocaleString()}</div>
+        <div class="lb-score">${fmtScore(row.s)}</div>
         <div class="lb-bar-wrap" style="grid-column:2/4">
           <div class="lb-bar" style="width:${pct}%"></div>
         </div>
@@ -1506,8 +1539,8 @@ function renderMeCard(data) {
     if (idx > 0) {
       const above = data.near[idx - 1];
       const diff = Math.abs(above.s - data.me.s);
-      nextHtml = `<div class="me-next">Next: <b>${escHtml(above.u)}</b> ${Number(above.s).toLocaleString()}
-        <span class="gap">(${data.asc ? '−' : '+'}${diff.toLocaleString()} to pass)</span></div>`;
+      nextHtml = `<div class="me-next">Next: <b>${escHtml(above.u)}</b> ${fmtScore(above.s)}
+        <span class="gap">(${data.asc ? '−' : '+'}${fmtScore(diff)} to pass)</span></div>`;
     } else if (idx === 0) {
       nextHtml = `<div class="me-next">👑 You're <b>#1</b> ${PERIOD_WORD[currentPeriod]} — defend your throne!</div>`;
     }
@@ -1534,7 +1567,7 @@ function renderTargetBadge(data) {
   if (data.target == null || !(data.top || []).length) { targetBadge.style.display = 'none'; return; }
   const word = currentPeriod === 'day' ? "today's" : currentPeriod === 'week' ? "this week's" : 'the';
   targetBadge.style.display = '';
-  targetBadge.innerHTML = `🎯 Beat ${word} target: <b>${Number(data.target).toLocaleString()}</b>`;
+  targetBadge.innerHTML = `🎯 Beat ${word} target: <b>${fmtScore(data.target)}</b>`;
 }
 
 // ── Recently played ───────────────────────────────────────────────────────────
@@ -1555,7 +1588,7 @@ async function loadRecent() {
       const mine = r.u === meName ? ' style="color:var(--accent)"' : '';
       return `<div class="recent-row">
         <span class="ru"${mine}>${flag}${escHtml(r.u || 'anon')}</span>
-        <span class="rs">${Number(r.s).toLocaleString()}</span>
+        <span class="rs">${fmtScore(r.s)}</span>
         <span class="rt">${fmtAgo(r.t)}</span>
       </div>`;
     }).join('');
@@ -1582,7 +1615,15 @@ function shareRank() {
   const url = shareUrl();
   const g = GAME_MAP[currentGame];
   const rank = lastData && lastData.me ? `#${lastData.me.r}` : '';
-  const text = `I'm ${rank} on ${g ? g.label : currentGame} 🏆 Bitochi Games leaderboard!`;
+  const count = lastData && lastData.count ? ` of ${lastData.count.toLocaleString()}` : '';
+  let text;
+  if (isActivityBoard() && lastData && lastData.me) {
+    const stat = prettyVariant(currentVariant || 'flex').replace(/^[^\w]+\s*/, '');
+    const val  = fmtScore(lastData.me.s);
+    text = `I'm ${rank}${count} in the world for ${stat} (${val}) on Bitochi Activity Board 🏆 — think you can out-flex me?`;
+  } else {
+    text = `I'm ${rank} on ${g ? g.label : currentGame} 🏆 Bitochi Games leaderboard!`;
+  }
   if (navigator.share) {
     navigator.share({ title: 'Bitochi Games', text, url }).catch(() => {});
   } else {

@@ -75,6 +75,31 @@ class LbMessageFetcher {
     }
 }
 
+// ── One-shot launch timer ────────────────────────────────────────────────────
+// Started from Leaderboard.logLaunch() (which every game calls in onStart). A
+// short delay lets the game's initial view come up first, then we offer the
+// one-shot 'once' call-to-action over it — giving EVERY game the message at
+// start without editing each game. Fires at most once (ack-gated server-side +
+// locally). Fully guarded so it can never disturb the host game.
+class LbOnceTimer {
+    hidden var _t;
+    hidden var _game;
+
+    function initialize(game) { _game = game; _t = null; }
+
+    function start() {
+        try {
+            _t = new Timer.Timer();
+            _t.start(method(:_tick), 1500, false);
+        } catch (e) {}
+    }
+
+    function _tick() as Void {
+        _t = null;
+        try { Leaderboard.showOnceIfDue(_game); } catch (e) {}
+    }
+}
+
 // ── Message card view ────────────────────────────────────────────────────────
 // A full-screen card: title, word-wrapped body, and — when a URL is set — the
 // full URL printed as plain text with link styling (colour + underline).

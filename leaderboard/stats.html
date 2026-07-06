@@ -415,6 +415,7 @@
             <select class="minput" id="mf-placement">
               <option value="postgame">Post-game (after a run)</option>
               <option value="launch">Launch (menu / pre-game)</option>
+              <option value="once">Once (one-shot, at start — re-armable)</option>
               <option value="reset">Reset (after a wipe)</option>
             </select>
           </label>
@@ -1203,7 +1204,7 @@ async function promoteAllToHoF() {
 // by scope, and drives an inline add/edit form. LB_KEY is cached in
 // sessionStorage after the first prompt so a batch of edits isn't re-prompted.
 let msgEntries = [];
-const PLACEMENT_LABEL = { launch: 'Launch', postgame: 'Post-game', reset: 'Reset' };
+const PLACEMENT_LABEL = { launch: 'Launch', postgame: 'Post-game', once: 'Once', reset: 'Reset' };
 
 function lbKey(reason) {
   let k = sessionStorage.getItem('lb_key');
@@ -1253,8 +1254,12 @@ function renderMessages() {
         ? `<b>${esc(m.game || '?')}</b>`
         : `<span class="muted">global</span>`;
       const gapH = m.min_gap_s ? (m.min_gap_s / 3600) : 0;
-      const gap  = m.placement === 'reset' ? '—' : (gapH % 1 ? gapH.toFixed(1) : gapH) + 'h';
+      const noGap = m.placement === 'reset' || m.placement === 'once';
+      const gap  = noGap ? '—' : (gapH % 1 ? gapH.toFixed(1) : gapH) + 'h';
       const link = m.url ? `<span class="muted" title="${esc(m.url)}">${esc(m.url_label || 'link')}</span>` : '<span class="muted">—</span>';
+      const rearm = m.placement === 'once'
+        ? `<button class="hbtn" style="padding:2px 8px;font-size:.68rem;color:var(--green);border-color:var(--green)" title="Show this one-shot message again on every device" onclick="rearmMessage(${m.id})">↻</button>`
+        : '';
       return `<tr style="${m.active ? '' : 'opacity:.45'}">
         <td>${scope}</td>
         <td class="muted">${PLACEMENT_LABEL[m.placement] || m.placement}</td>
@@ -1264,6 +1269,7 @@ function renderMessages() {
         <td class="muted">${gap}</td>
         <td>${m.active ? '✅' : '⏸'}</td>
         <td style="white-space:nowrap">
+          ${rearm}
           <button class="hbtn" style="padding:2px 8px;font-size:.68rem" onclick="editMessage(${m.id})">✎</button>
           <button class="hbtn" style="padding:2px 8px;font-size:.68rem;color:#f87171;border-color:#f87171" onclick="deleteMessage(${m.id})">✕</button>
         </td>
@@ -1344,6 +1350,32 @@ async function saveMessage() {
       if (r.status === 403) sessionStorage.removeItem('lb_key');
     }
   } catch(e) { status.textContent = '❌ Network error'; }
+}
+
+// Re-arm a one-shot 'once' message: re-save it unchanged so its updated_at
+// (the epoch clients compare against) bumps — every device shows it once more.
+async function rearmMessage(id) {
+  const m = msgEntries.find(x => x.id === id);
+  if (!m) return;
+  if (!confirm(`Re-arm "${m.title}"?\nEvery player will see this one-shot message once more.`)) return;
+  const key = lbKey('Enter LB_KEY to re-arm the message:');
+  if (!key) return;
+  const body = {
+    id: m.id, scope: m.scope, game: m.game || null, placement: m.placement,
+    title: m.title, body: m.body || '', url: m.url || null, url_label: m.url_label || null,
+    weight: m.weight || 0, min_gap_s: m.min_gap_s || 0, active: !!m.active,
+    starts_at: m.starts_at ?? null, ends_at: m.ends_at ?? null,
+  };
+  try {
+    const r = await fetch(API + '/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-LB-Key': key },
+      body: JSON.stringify(body),
+    });
+    const d = await r.json();
+    if (d.ok) { alert('✅ Re-armed — players will see it once more on next launch.'); loadMessages(); }
+    else { alert('Error: ' + (d.error || 'unknown')); if (r.status === 403) sessionStorage.removeItem('lb_key'); }
+  } catch(e) { alert('Network error: ' + e); }
 }
 
 async function deleteMessage(id) {

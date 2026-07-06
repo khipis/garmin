@@ -1015,7 +1015,11 @@ type MsgRow = {
   created_at: number; updated_at: number;
 };
 
-const MSG_PLACEMENTS = new Set(["launch", "postgame", "reset"]);
+// `once` = a one-shot message (typically a global payment call-to-action) that
+// each game shows a single time, then never again — until you "re-arm" it from
+// stats.html (which bumps its updated_at; clients compare that epoch to a local
+// ack, exactly like `reset`). See handleGetMessages + Leaderboard.showOnceIfDue.
+const MSG_PLACEMENTS = new Set(["launch", "postgame", "reset", "once"]);
 
 // Compact shape the watch client consumes (keeps the payload tiny).
 function slimMsg(m: MsgRow | undefined): unknown {
@@ -1054,7 +1058,9 @@ async function handleGetMessages(url: URL, env: Env): Promise<Response> {
   let launch: unknown = null;
   let postgame: unknown = null;
   let reset: unknown = null;
+  let once: unknown = null;
   let reset_at = 0;
+  let once_at = 0;
 
   try {
     // Active messages that apply to this game (global OR this game's own),
@@ -1079,6 +1085,10 @@ async function handleGetMessages(url: URL, env: Env): Promise<Response> {
     launch   = slimMsg(picked["launch"]);
     postgame = slimMsg(picked["postgame"]);
     reset    = slimMsg(picked["reset"]);
+    once     = slimMsg(picked["once"]);
+    // The once message's updated_at is its "epoch": editing / re-arming it from
+    // stats.html bumps this, so clients that already showed it show it once more.
+    once_at  = picked["once"]?.updated_at ?? 0;
 
     // Latest reset that affects this game (its own reset or a global one).
     const rr = await env.DB
@@ -1092,7 +1102,7 @@ async function handleGetMessages(url: URL, env: Env): Promise<Response> {
   }
 
   return json(
-    { ts: Math.floor(now / 1000), reset_at, launch, postgame, reset },
+    { ts: Math.floor(now / 1000), reset_at, once_at, launch, postgame, reset, once },
     200,
     { "Cache-Control": "public, max-age=120, stale-while-revalidate=300" }
   );

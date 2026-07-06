@@ -4,6 +4,10 @@ using Toybox.WatchUi;
 // Shared global leaderboard identifier for this game (bitochi.com).
 const LB_GAME_ID = "pets";
 
+// One-shot guard so the launch/support message is offered at most once per app
+// session (MainView.onShow also fires when returning from pushed views).
+var gPetsAnnounced = false;
+
 class BitochiPetsApp extends Application.AppBase {
 
     hidden var _pet;

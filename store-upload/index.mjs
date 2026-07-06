@@ -14,7 +14,7 @@ import fs from "node:fs";
 import path from "node:path";
 import readline from "node:readline";
 import {
-  START_URL, SSO_HOSTS, AUTH_FILE, ARTIFACTS, UPLOAD, VALIDATE_PATH, appEditUrl, REPO_ROOT,
+  START_URL, SSO_HOSTS, AUTH_FILE, ARTIFACTS, UPLOAD, appUpdateUrl, REPO_ROOT, OVERRIDES,
 } from "./config.mjs";
 import {
   log, warn, die, ensureArtifacts, openContext, saveSession, requireAuth,
@@ -66,57 +66,87 @@ async function cmdScan() {
     die("Session expired — run `npm run login` again.");
   }
 
-  // Scrape every anchor that looks like a developer app link.
+  // Scrape anchors (both raw + absolute href) so we can match the portal's
+  // relative routes (/apps/<uuid>, /developer/<uuid>/apps) reliably.
   const found = await page.$$eval("a[href]", (as) =>
-    as.map((a) => ({ href: a.getAttribute("href") || "", text: (a.textContent || "").trim() }))
+    as.map((a) => ({
+      raw: a.getAttribute("href") || "",
+      abs: a.href || "",
+      text: (a.textContent || "").trim(),
+    }))
   );
   await page.screenshot({ path: path.join(ARTIFACTS, "scan.png"), fullPage: true }).catch(() => {});
+  fs.writeFileSync(path.join(ARTIFACTS, "scan-anchors.json"), JSON.stringify(found, null, 2));
 
-  const re = /\/developer\/([^/]+)\/apps\/([^/?#]+)/;
+  const UUID = "[0-9a-fA-F-]{36}";
+  const appRe = new RegExp(`/apps/(${UUID})(?:[/?#]|$)`);
+  const devRe = new RegExp(`/developer/(${UUID})/apps`);
   const seen = new Map();
   let developerId = null;
-  for (const { href, text } of found) {
-    const m = href.match(re);
-    if (!m) continue;
-    developerId = developerId || m[1];
-    const appId = m[2];
-    if (appId === "new" || appId === "create") continue;
-    if (!seen.has(appId) || (text && !seen.get(appId).name)) {
-      seen.set(appId, { appId, name: text });
+  for (const { raw, abs, text } of found) {
+    const dm = raw.match(devRe) || abs.match(devRe);
+    if (dm) developerId = developerId || dm[1];
+    const am = raw.match(appRe) || abs.match(appRe);
+    if (!am) continue;
+    const appId = am[1];
+    const prev = seen.get(appId);
+    // Keep the richest text + a good absolute URL.
+    if (!prev || (text && !prev.name)) {
+      seen.set(appId, { appId, name: text || (prev && prev.name) || "", url: abs || (prev && prev.url) || "" });
     }
   }
   const storeApps = [...seen.values()];
-  log(`Found ${storeApps.length} store app link(s); developerId=${developerId ?? "?"}`);
+  log(`Found ${storeApps.length} store app(s); developerId=${developerId ?? "?"}`);
 
   if (!storeApps.length) {
-    warn(`No app links matched. Inspect ${rel(path.join(ARTIFACTS, "scan.png"))} and the raw dump below, then adjust the selector in scan.`);
-    fs.writeFileSync(path.join(ARTIFACTS, "scan-anchors.json"), JSON.stringify(found, null, 2));
+    warn(`No app links matched. Inspect ${rel(path.join(ARTIFACTS, "scan.png"))} and ${rel(path.join(ARTIFACTS, "scan-anchors.json"))}.`);
     await browser.close();
     die("Nothing to map.");
   }
 
-  // Fuzzy-match store apps to local slugs (by name, then by slug substring).
+  // Match store apps to local slugs. Store names carry marketing suffixes
+  // ("… - Global Leaderboard"), so match the local display name / slug as a
+  // substring of the (normalised) store name.
   const locals = localApps();
+  const byId = new Map(storeApps.map((s) => [s.appId, s]));
   const usedLocal = new Set();
+  const usedStore = new Set();
   const apps = [];
-  const unmatchedStore = [];
-  for (const s of storeApps) {
-    const n = norm(s.name);
-    let hit = locals.find((l) => !usedLocal.has(l.slug) && n && norm(l.name) === n)
-           || locals.find((l) => !usedLocal.has(l.slug) && n && (norm(l.name).includes(n) || n.includes(norm(l.slug))))
-           || null;
-    if (hit) {
-      usedLocal.add(hit.slug);
-      apps.push({ slug: hit.slug, appId: s.appId, storeName: s.name, iq: hit.iq ? path.relative(REPO_ROOT, hit.iq) : null });
-    } else {
-      unmatchedStore.push(s);
-    }
+  const pushMatch = (local, store) => {
+    usedLocal.add(local.slug);
+    usedStore.add(store.appId);
+    apps.push({
+      slug: local.slug, appId: store.appId, storeName: store.name,
+      url: store.url || null,
+      iq: local.iq ? path.relative(REPO_ROOT, local.iq) : null,
+    });
+  };
+
+  // 1) Explicit overrides win.
+  for (const [slug, appId] of Object.entries(OVERRIDES)) {
+    const local = locals.find((l) => l.slug === slug);
+    const store = byId.get(appId);
+    if (local && store && !usedLocal.has(slug) && !usedStore.has(appId)) pushMatch(local, store);
   }
+
+  // 2) Fuzzy name-matching for the rest.
+  for (const s of storeApps) {
+    if (usedStore.has(s.appId)) continue;
+    const n = norm(s.name);
+    const cand = (fn) => locals.find((l) => !usedLocal.has(l.slug) && fn(l, norm(l.name), norm(l.slug)));
+    const hit =
+        cand((l, ln) => ln && ln === n)                          // exact
+     || cand((l, ln) => ln.length >= 4 && n.includes(ln))       // name inside store text
+     || cand((l, ln, ls) => ls.length >= 4 && n.includes(ls))   // slug inside store text
+     || null;
+    if (hit) pushMatch(hit, s);
+  }
+  const unmatchedStore = storeApps.filter((s) => !usedStore.has(s.appId));
   const unmatchedLocal = locals.filter((l) => !usedLocal.has(l.slug)).map((l) => ({ slug: l.slug, name: l.name }));
 
   const cfg = {
     developerId,
-    note: "Edit `appId` mappings if any are wrong. Apps in `_unmatchedLocal` need their store appId filled into `apps` manually.",
+    note: "Check the slug↔appId mapping. Fill appId+url for any _unmatchedLocal by copying from _unmatchedStore.",
     apps: apps.sort((a, b) => a.slug.localeCompare(b.slug)),
     _unmatchedStore: unmatchedStore,
     _unmatchedLocal: unmatchedLocal,
@@ -128,35 +158,63 @@ async function cmdScan() {
 }
 
 // ── record ────────────────────────────────────────────────────────────────────
+// Guided capture of ONE manual "Upload New Version" so we can lock in the exact
+// entry URL, form field ids, button texts and network endpoints. Two ENTER
+// checkpoints: (A) the empty upload form, (B) after submit.
 async function cmdRecord() {
   requireAuth();
   ensureArtifacts();
   const { browser, page } = await openContext({ headed: true });
   const events = [];
+  const navs = [];
   const capture = (kind) => (reqOrRes) => {
     try {
       const url = reqOrRes.url();
-      if (!url.includes("apps.garmin.com")) return;
-      if (!/\/api\/|iqFiles|version|upload|validate/i.test(url)) return;
+      if (!/garmin\.com/i.test(url)) return;
+      if (!/\/api\/|iqFiles|version|upload|validate|apps\/|developerservices/i.test(url)) return;
       const rec = { kind, url, method: reqOrRes.method?.() };
-      if (kind === "request") {
-        rec.postData = safe(() => reqOrRes.postData());
-        rec.headers = safe(() => reqOrRes.headers());
-      } else {
-        rec.status = reqOrRes.status?.();
-      }
+      if (kind === "request") { rec.postData = safe(() => reqOrRes.postData()); }
+      else { rec.status = reqOrRes.status?.(); }
       events.push(rec);
     } catch {}
   };
   page.on("request", capture("request"));
   page.on("response", capture("response"));
+  page.on("framenavigated", (f) => { try { if (f === page.mainFrame()) navs.push(f.url()); } catch {} });
+
+  const snapshot = async (label) => {
+    const dom = await page.evaluate(() => {
+      const btns = [...new Set([...document.querySelectorAll("button, a[role=button], input[type=submit]")]
+        .map((e) => (e.textContent || e.value || "").trim()).filter(Boolean))];
+      const inputs = [...document.querySelectorAll("input, textarea, select")].map((e) => ({
+        tag: e.tagName, type: e.type || null, id: e.id || null, name: e.name || null,
+        accept: e.getAttribute("accept") || null, placeholder: e.placeholder || null,
+      }));
+      const latest = (document.body.innerText.match(/Latest app version:\s*\d+/i) || [null])[0];
+      return { url: location.href, latest, buttons: btns, inputs };
+    }).catch((e) => ({ error: String(e) }));
+    log(`  · [${label}] url=${dom.url || "?"}${dom.latest ? "  (" + dom.latest + ")" : ""}`);
+    return { label, at: Date.now(), ...dom };
+  };
 
   await page.goto(START_URL, { waitUntil: "domcontentloaded" }).catch(() => {});
-  log("Now do ONE manual app-version upload in the browser (upload .iq, submit).");
-  await waitForEnter("When finished, press ENTER to save the captured network flow… ");
+  await dismissCookie(page);
+
+  log("STEP 1 — In the browser, open ONE app and click 'Upload New Version'.");
+  log("        Get to the form that shows 'Choose file' + 'App Version (Latest app version: N)'.");
+  await waitForEnter("        When that form is visible, press ENTER here… ");
+  const formSnap = await snapshot("upload-form");
+  await shot(page, "record", "form");
+
+  log("STEP 2 — Now finish the upload: choose the .iq, set version to N+1, Submit.");
+  await waitForEnter("        When it's fully submitted, press ENTER here… ");
+  const doneSnap = await snapshot("after-submit");
+  await shot(page, "record", "done");
+
   const out = path.join(ARTIFACTS, `recording-${Date.now()}.json`);
-  fs.writeFileSync(out, JSON.stringify(events, null, 2));
-  log(`✔ Saved ${events.length} API events to ${rel(out)}`);
+  fs.writeFileSync(out, JSON.stringify({ navigations: navs, form: formSnap, done: doneSnap, network: events }, null, 2));
+  log(`\n✔ Saved recording to ${rel(out)} (${events.length} net events, ${navs.length} navigations).`);
+  log(`  Screenshots: ${rel(path.join(ARTIFACTS, "record-form.png"))}, record-done.png`);
   await browser.close();
 }
 
@@ -167,59 +225,75 @@ async function cmdUpload() {
   const cfg = loadConfig();
   if (!cfg) die("No apps.config.json — run `npm run scan` first.");
   const { developerId } = cfg;
-  if (!developerId) die("apps.config.json is missing developerId — re-run scan or set it.");
+  if (!developerId) die("apps.config.json is missing developerId — re-run scan.");
 
-  const only = flags.only ? new Set(String(flags.only).split(",").map((s) => s.trim())) : null;
-  const dry  = flags["dry-run"] === true;
+  const only   = flags.only ? new Set(String(flags.only).split(",").map((s) => s.trim())) : null;
+  const dry    = flags["dry-run"] === true;
   const headed = flags.headless === true ? false : true; // default headed so you can watch
+  const version = flags.version != null ? String(flags.version) : null; // override auto-bump
+  const pauseBeforeSubmit = flags["pause-before-submit"] === true;
+  const rmOnSuccess = flags["rm-on-success"] === true; // delete _STORE/<slug>.iq after publish
 
-  let queue = cfg.apps.filter((a) => a.appId && a.iq);
+  let queue = cfg.apps.filter((a) => a.iq && a.appId);
   if (only) queue = queue.filter((a) => only.has(a.slug));
-  const skipped = cfg.apps.filter((a) => !a.appId || !a.iq).map((a) => a.slug);
-  if (skipped.length) warn(`Skipping (missing appId or .iq): ${skipped.join(", ")}`);
+  const noIq = cfg.apps.filter((a) => !a.iq || !a.appId).map((a) => a.slug);
+  if (noIq.length) warn(`Skipping (no built .iq or appId): ${noIq.join(", ")}`);
   if (!queue.length) die("Nothing to upload.");
 
   log(`Uploading ${queue.length} app(s)${dry ? " [DRY RUN]" : ""}…`);
   const { browser, page } = await openContext({ headed });
+  await page.goto(START_URL, { waitUntil: "domcontentloaded" }).catch(() => {});
+  await dismissCookie(page);
   const results = [];
 
   for (const app of queue) {
     const iqAbs = path.isAbsolute(app.iq) ? app.iq : path.join(REPO_ROOT, app.iq);
     log(`\n── ${app.slug} (appId=${app.appId}) ──`);
-    if (!fs.existsSync(iqAbs)) { warn(`missing .iq: ${app.iq}`); results.push({ slug: app.slug, ok: false, reason: "no iq" }); continue; }
+    if (!fs.existsSync(iqAbs)) { warn("  missing .iq"); results.push({ slug: app.slug, ok: false, reason: "no iq" }); continue; }
 
     try {
-      await page.goto(appEditUrl(developerId, app.appId), { waitUntil: "domcontentloaded" });
+      // Go straight to the per-app "Upload New Version" (/update) form.
+      await page.goto(appUpdateUrl(developerId, app.appId), { waitUntil: "domcontentloaded" });
       await page.waitForLoadState("networkidle", { timeout: 20000 }).catch(() => {});
+      await dismissCookie(page);
+      await page.waitForSelector(UPLOAD.fileInput, { state: "attached", timeout: 20000 });
 
-      const fileInput = await page.$(UPLOAD.fileInput);
-      if (!fileInput) throw new Error("file input not found on edit page");
+      // Version: explicit override, or auto-bump "Latest app version: N" → N+1.
+      let ver = app.version || version;
+      if (!ver) {
+        const bodyText = await page.evaluate(() => document.body.innerText);
+        const m = bodyText.match(UPLOAD.latestVersion);
+        if (m) ver = String(parseInt(m[1], 10) + 1);
+      }
+      if (!ver) throw new Error("could not read 'Latest app version' (pass --version)");
+      log(`  version → ${ver}`);
 
-      // Watch for the validate call so we know the .iq was accepted.
-      const validateP = page.waitForResponse(
-        (r) => r.url().includes(VALIDATE_PATH),
-        { timeout: UPLOAD.validateTimeout }
-      ).catch(() => null);
-
-      await fileInput.setInputFiles(iqAbs);
-      const vres = await validateP;
-      const vok  = vres && vres.status() >= 200 && vres.status() < 300;
-      log(`  validate: ${vres ? vres.status() : "no response"}`);
+      // Fill the form: .iq + version.
+      await page.locator(UPLOAD.fileInput).first().setInputFiles(iqAbs);
+      await page.locator(UPLOAD.versionInput).fill(ver);
+      await page.waitForTimeout(800);
 
       if (dry) {
-        await shot(page, app.slug, "dryrun");
-        results.push({ slug: app.slug, ok: !!vok, reason: dry ? "dry-run (not submitted)" : "" });
+        await shot(page, app.slug, "form");
+        results.push({ slug: app.slug, ok: true, reason: "dry-run (form filled, not published)" });
         continue;
       }
+      if (pauseBeforeSubmit) {
+        await shot(page, app.slug, "before-publish");
+        await waitForEnter(`  [${app.slug}] paused before publish — ENTER to publish (Ctrl+C to abort)… `);
+      }
 
-      const clicked = await clickFirst(page, UPLOAD.submitTexts);
-      if (!clicked) throw new Error("no submit button found");
-      await page.waitForLoadState("networkidle", { timeout: 20000 }).catch(() => {});
-      await clickFirst(page, UPLOAD.confirmTexts).catch(() => {});
-      await page.waitForTimeout(1500);
+      // "Upload and publish" → validate + publish; confirm via 2xx publish
+      // response or the redirect off /update.
+      const pub = await publishAndConfirm(page, developerId, app.appId);
+      if (!pub.ok) throw new Error(pub.error || "publish not confirmed");
       await shot(page, app.slug, "done");
-      results.push({ slug: app.slug, ok: true });
-      log("  ✔ submitted");
+      let removed = false;
+      if (rmOnSuccess) {
+        try { fs.unlinkSync(iqAbs); removed = true; } catch (e) { warn(`  (could not remove ${app.iq}: ${e.message})`); }
+      }
+      results.push({ slug: app.slug, ok: true, reason: `v${ver}`, removed });
+      log(`  ✔ published v${ver}${removed ? "  · removed .iq from _STORE" : ""}`);
     } catch (e) {
       await shot(page, app.slug, "error");
       warn(`  ✖ ${app.slug}: ${e.message}`);
@@ -228,26 +302,70 @@ async function cmdUpload() {
   }
 
   await browser.close();
-  const ok = results.filter((r) => r.ok).length;
-  log(`\n=== DONE: ${ok}/${results.length} ok ===`);
-  for (const r of results.filter((x) => !x.ok)) log(`  ✖ ${r.slug}: ${r.reason || "failed"}`);
+  const ok = results.filter((r) => r.ok);
+  const bad = results.filter((r) => !r.ok);
+  log(`\n=== DONE: ${ok.length}/${results.length} ok ===`);
+  if (ok.length) log(`  ✔ published: ${ok.map((r) => `${r.slug}(${r.reason})`).join(", ")}`);
+  if (bad.length) {
+    log(`  ✖ FAILED (kept in _STORE): ${bad.map((r) => r.slug).join(", ")}`);
+    for (const r of bad) log(`      ${r.slug}: ${r.reason || "failed"}`);
+  }
   const summary = path.join(ARTIFACTS, `upload-${Date.now()}.json`);
   fs.writeFileSync(summary, JSON.stringify(results, null, 2));
   log(`Summary: ${rel(summary)} · screenshots in ${rel(ARTIFACTS)}`);
 }
 
 // ── helpers ───────────────────────────────────────────────────────────────────
-async function clickFirst(page, texts) {
-  for (const t of texts) {
-    const btn = page.locator(
-      `button:visible, [role="button"]:visible, input[type="submit"]:visible, a:visible`,
-      { hasText: new RegExp(`^\\s*${escapeRe(t)}\\s*$`, "i") }
-    ).first();
-    if (await btn.count().catch(() => 0)) {
-      try { await btn.click({ timeout: 4000 }); return t; } catch {}
-    }
+async function dismissCookie(page) {
+  try {
+    const b = page.getByRole("button", { name: UPLOAD.cookieDismiss }).first();
+    if (await b.count()) await b.click({ timeout: 3000 }).catch(() => {});
+  } catch {}
+}
+
+// Click a button by text regex, optionally waiting until it's enabled.
+async function clickBtn(page, rx, { waitEnabled = false, timeout = 20000 } = {}) {
+  const btn = page.getByRole("button", { name: rx }).first();
+  if (waitEnabled) {
+    await page.waitForFunction(
+      (src) => {
+        const re = new RegExp(src.replace(/^\/|\/i$/g, ""), "i");
+        const b = [...document.querySelectorAll("button")].find((x) => re.test(x.textContent || ""));
+        return b && !b.disabled;
+      },
+      rx.toString(),
+      { timeout }
+    );
   }
-  return null;
+  await btn.click({ timeout: 8000 });
+}
+
+// Click "Upload and publish" and confirm the new version went live. Success is
+// a 2xx on the publish endpoint (…/developers/{dev}/apps/{appId}) or the portal
+// redirecting off the /update page. Retries once — the portal 400s if the
+// button is clicked before server-side validation of the .iq completes.
+async function publishAndConfirm(page, dev, appId) {
+  const pubFrag = UPLOAD.publishPath + dev + "/apps/" + appId;
+  for (let attempt = 1; attempt <= 2; attempt++) {
+    const respP = page.waitForResponse(
+      (r) => r.url().includes(pubFrag) && ["POST", "PUT"].includes(r.request().method()),
+      { timeout: UPLOAD.validateTimeout }
+    ).catch(() => null);
+    try {
+      await clickBtn(page, UPLOAD.submitText, { waitEnabled: true, timeout: 30000 });
+    } catch (e) {
+      if (attempt === 2) return { ok: false, error: "'Upload and publish' never became clickable" };
+      await page.waitForTimeout(2000);
+      continue;
+    }
+    const resp = await respP;
+    if (resp && resp.status() >= 200 && resp.status() < 300) return { ok: true };
+    await page.waitForTimeout(1500);
+    if (!page.url().includes("/update")) return { ok: true }; // redirected → published
+    await page.waitForTimeout(2500); // 400/no-confirm → let validation settle, retry
+  }
+  if (!page.url().includes("/update")) return { ok: true };
+  return { ok: false, error: "publish not confirmed (still on /update)" };
 }
 
 async function shot(page, slug, tag) {
@@ -273,6 +391,6 @@ function waitForEnter(prompt) {
   return new Promise((res) => rl.question(prompt, () => { rl.close(); res(); }));
 }
 
-const safe = (fn) => { try { return fn(); } catch { return null; } };
-const escapeRe = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-const rel = (p) => path.relative(process.cwd(), p) || p;
+function safe(fn) { try { return fn(); } catch { return null; } }
+function escapeRe(s) { return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); }
+function rel(p) { return path.relative(process.cwd(), p) || p; }

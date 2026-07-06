@@ -11,6 +11,7 @@ OLD_KEY_APPS="solitare intervalbeeper fakenotificationescape"
 
 APPS=(
   8ball
+  activityboard
   adhddecider
   angrypomodoro
   arcade

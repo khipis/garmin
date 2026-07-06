@@ -1,1360 +1,1163 @@
-[ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc"; @line = 6; @symbol_usingdef<0> = [Toybox,6,6,12]; @symbol_usingdef<1> = [WatchUi,6,13,20]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc"; @line = 12; @symbol_usingdef<0> = [Toybox,12,6,12]; @symbol_usingdef<1> = [WatchUi,12,13,20]; ]
 using Toybox.WatchUi;
-[ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc"; @line = 7; @symbol_usingdef<0> = [Toybox,7,6,12]; @symbol_usingdef<1> = [Graphics,7,13,21]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc"; @line = 13; @symbol_usingdef<0> = [Toybox,13,6,12]; @symbol_usingdef<1> = [Graphics,13,13,21]; ]
 using Toybox.Graphics;
-[ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc"; @line = 8; @symbol_usingdef<0> = [Toybox,8,6,12]; @symbol_usingdef<1> = [Timer,8,13,18]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc"; @line = 14; @symbol_usingdef<0> = [Toybox,14,6,12]; @symbol_usingdef<1> = [Lang,14,13,17]; ]
+using Toybox.Lang;
+[ @file = "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc"; @line = 15; @symbol_usingdef<0> = [Toybox,15,6,12]; @symbol_usingdef<1> = [Timer,15,13,18]; ]
 using Toybox.Timer;
-[ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc"; @line = 10; @symbol_classdef = [MainView,10,6,14]; @symbol_extends<0> = [WatchUi,10,23,30]; @symbol_extends<1> = [View,10,31,35]; ]
+[ @file = "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc"; @line = 17; @symbol_classdef = [MainView,17,6,14]; @symbol_extends<0> = [WatchUi,17,23,30]; @symbol_extends<1> = [View,17,31,35]; ]
 class MainView extends WatchUi.View {
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc"; @line = 10; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc"; @line = 17; ]
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc"; @line = 10; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc"; @line = 17; ]
     static
     <init> {
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc"; @line = 11; @position = 15; @symbol_vardef = [_ctrl,11,15,20]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc"; @line = 18; @position = 15; @symbol_vardef = [_snap,18,15,20]; ]
     protected
-    var _ctrl;
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc"; @line = 12; @position = 15; @symbol_vardef = [_timer,12,15,21]; ]
+    var _snap;
+    [ @file = "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc"; @line = 19; @position = 15; @symbol_vardef = [_flex,19,15,20]; ]
     protected
-    var _timer;
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc"; @line = 14; @position = 15; @symbol_vardef = [_sw,14,15,18]; ]
+    var _flex;
+    [ @file = "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc"; @line = 20; @position = 15; @symbol_vardef = [_shown,20,15,21]; ]
     protected
-    var _sw;
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc"; @line = 15; @position = 15; @symbol_vardef = [_sh,15,15,18]; ]
+    var _shown;
+    [ @file = "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc"; @line = 21; @position = 15; @symbol_vardef = [_anim,21,15,20]; ]
     protected
-    var _sh;
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc"; @line = 16; @position = 15; @symbol_vardef = [_laidOut,16,15,23]; ]
-    protected
-    var _laidOut;
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc"; @line = 17; @position = 15; @symbol_vardef = [_announced,17,15,25]; ]
+    var _anim;
+    [ @file = "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc"; @line = 22; @position = 15; @symbol_vardef = [_announced,22,15,25]; ]
     protected
     var _announced;
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc"; @line = 20; @position = 15; @symbol_vardef = [_cabX,20,15,20]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc"; @line = 23; @position = 15; @symbol_vardef = [_w,23,15,17]; ]
     protected
-    var _cabX;
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc"; @line = 21; @position = 15; @symbol_vardef = [_cabY,21,15,20]; ]
+    var _w;
+    [ @file = "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc"; @line = 24; @position = 15; @symbol_vardef = [_h,24,15,17]; ]
     protected
-    var _cabY;
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc"; @line = 22; @position = 15; @symbol_vardef = [_cabW,22,15,20]; ]
-    protected
-    var _cabW;
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc"; @line = 23; @position = 15; @symbol_vardef = [_cabH,23,15,20]; ]
-    protected
-    var _cabH;
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc"; @line = 24; @position = 15; @symbol_vardef = [_colW,24,15,20]; ]
-    protected
-    var _colW;
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc"; @line = 25; @position = 15; @symbol_vardef = [_rowH,25,15,20]; ]
-    protected
-    var _rowH;
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc"; @line = 26; @position = 15; @symbol_vardef = [_gap,26,15,19]; ]
-    protected
-    var _gap;
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc"; @line = 27; @position = 15; @symbol_vardef = [_hudTop,27,15,22]; ]
-    protected
-    var _hudTop;
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc"; @line = 28; @position = 15; @symbol_vardef = [_bottomY,28,15,23]; ]
-    protected
-    var _bottomY;
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc"; @line = 30; @symbol_functiondef = [initialize,30,13,23]; ]
+    var _h;
+    [ @file = "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc"; @line = 26; @symbol_functiondef = [initialize,26,13,23]; ]
     function initialize() as Void {
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_30_26_37_4_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 31 8 ]
-        symbol [ View %tmp.2 31 8 12 ];
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_26_26_34_4_start:
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 27 8 ]
+        symbol [ View %tmp.2 27 8 12 ];
         %tmp.2 = getv ? :View;
-        symbol [ initialize %tmp.3 31 13 23 ];
+        symbol [ initialize %tmp.3 27 13 23 ];
         %tmp.3 = getv function %tmp.2 :initialize;
         invoke %tmp.2 %tmp.3();
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 32 8 ]
-        symbol [ GameController %tmp.7 32 23 37 ];
-        %tmp.7 = getv ? :GameController;
-        %tmp.4 = newc %tmp.7 ();
-        symbol [ _ctrl ? 32 8 13 ];
-        putv self :_ctrl %tmp.4;
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 33 8 ]
-        %tmp.8 = null;
-        symbol [ _timer ? 33 8 14 ];
-        putv self :_timer %tmp.8;
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 34 8 ]
-        %tmp.9 = 0;
-        symbol [ _sw ? 34 8 11 ];
-        putv self :_sw %tmp.9;
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 34 17 ]
-        %tmp.10 = 0;
-        symbol [ _sh ? 34 17 20 ];
-        putv self :_sh %tmp.10;
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 35 8 ]
-        %tmp.11 = false;
-        symbol [ _laidOut ? 35 8 16 ];
-        putv self :_laidOut %tmp.11;
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 36 8 ]
-        %tmp.12 = false;
-        symbol [ _announced ? 36 8 18 ];
-        putv self :_announced %tmp.12;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_30_26_37_4_stop:
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 28 8 ]
+        symbol [ Metrics %tmp.5 28 16 23 ];
+        %tmp.5 = getv ? :Metrics;
+        symbol [ snapshot %tmp.6 28 24 32 ];
+        %tmp.6 = getv function %tmp.5 :snapshot;
+        %tmp.7 = invoke %tmp.5 %tmp.6();
+        symbol [ _snap ? 28 8 13 ];
+        putv self :_snap %tmp.7;
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 29 8 ]
+        symbol [ Metrics %tmp.9 29 16 23 ];
+        %tmp.9 = getv ? :Metrics;
+        symbol [ flexScore %tmp.10 29 24 33 ];
+        %tmp.10 = getv function %tmp.9 :flexScore;
+        symbol [ _snap %tmp.12 29 34 39 ];
+        %tmp.12 = getv ? :_snap;
+        %tmp.13 = invoke %tmp.9 %tmp.10(%tmp.12);
+        symbol [ _flex ? 29 8 13 ];
+        putv self :_flex %tmp.13;
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 30 8 ]
+        %tmp.14 = 0;
+        symbol [ _shown ? 30 8 14 ];
+        putv self :_shown %tmp.14;
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 31 8 ]
+        %tmp.15 = null;
+        symbol [ _anim ? 31 8 13 ];
+        putv self :_anim %tmp.15;
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 32 8 ]
+        %tmp.16 = false;
+        symbol [ _announced ? 32 8 18 ];
+        putv self :_announced %tmp.16;
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 33 8 ]
+        %tmp.17 = 0;
+        symbol [ _w ? 33 8 10 ];
+        putv self :_w %tmp.17;
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 33 16 ]
+        %tmp.18 = 0;
+        symbol [ _h ? 33 16 18 ];
+        putv self :_h %tmp.18;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_26_26_34_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc"; @line = 39; @symbol_functiondef = [onShow,39,13,19]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc"; @line = 36; @symbol_functiondef = [onShow,36,13,19]; ]
     function onShow() {
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_39_22_48_4_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 40 8 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_40_8_40_58_if_stmt:
-        symbol [ _timer %tmp.2 40 12 18 ];
-        %tmp.2 = getv ? :_timer;
-        %tmp.3 = null;
-        %tmp.4 = eq %tmp.2 %tmp.3;
-        bf %tmp.4 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_40_8_40_58_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_40_8_40_58_if_true:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_40_28_40_58_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 40 30 ]
-        symbol [ Timer %tmp.7 40 43 48 ];
-        %tmp.7 = getm $.Toybox.Timer;
-        symbol [ Timer %tmp.8 40 49 54 ];
-        %tmp.8 = getv function ? %tmp.7 :Timer;
-        %tmp.5 = newc %tmp.8 ();
-        symbol [ _timer ? 40 30 36 ];
-        putv self :_timer %tmp.5;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_40_28_40_58_stop:
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_40_8_40_58_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_40_8_40_58_if_end:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 41 8 ]
-        symbol [ _timer %tmp.10 41 8 14 ];
-        %tmp.10 = getv ? :_timer;
-        symbol [ start %tmp.11 41 15 20 ];
-        %tmp.11 = getv function %tmp.10 :start;
-        %tmp.12 = self;
-        symbol [ method %tmp.13 41 21 27 ];
-        %tmp.13 = getv function %tmp.12 :method;
-        %tmp.15 = const :onTick;
-        symbol [ onTick %tmp.15 41 29 35 const ];
-        %tmp.16 = invoke %tmp.12 %tmp.13(%tmp.15);
-        symbol [ TICK_MS %tmp.18 41 38 45 ];
-        %tmp.18 = getv ? :TICK_MS;
-        %tmp.19 = true;
-        invoke %tmp.10 %tmp.11(%tmp.16, %tmp.18, %tmp.19);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 44 8 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_44_8_47_8_if_stmt:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_44_12_44_42_begin:
-        symbol [ _announced %tmp.21 44 13 23 ];
-        %tmp.21 = getv ? :_announced;
-        %tmp.22 = not %tmp.21;
-        bf %tmp.22 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_44_8_47_8_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_44_27_44_42_true:
-        symbol [ _ctrl %tmp.24 44 27 32 ];
-        %tmp.24 = getv ? :_ctrl;
-        symbol [ state %tmp.25 44 33 38 ];
-        %tmp.25 = getv %tmp.24 :state;
-        symbol [ GS_MENU %tmp.27 44 42 49 ];
-        %tmp.27 = getv ? :GS_MENU;
-        %tmp.28 = eq %tmp.25 %tmp.27;
-        push %tmp.28;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_44_27_44_42_end:
-        %tmp.29 = phi [%tmp.22 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_44_12_44_42_begin] [%tmp.28 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_44_27_44_42_true] [%tmp.29 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_44_27_44_42_end];
-        bf %tmp.29 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_44_8_47_8_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_44_8_47_8_if_true:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_44_51_47_8_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 45 12 ]
-        %tmp.30 = true;
-        symbol [ _announced ? 45 12 22 ];
-        putv self :_announced %tmp.30;
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 46 12 ]
-        symbol [ Leaderboard %tmp.32 46 12 23 ];
-        %tmp.32 = getv ? :Leaderboard;
-        symbol [ announce %tmp.33 46 24 32 ];
-        %tmp.33 = getv function %tmp.32 :announce;
-        symbol [ LB_GAME_ID %tmp.35 46 33 43 ];
-        %tmp.35 = getv ? :LB_GAME_ID;
-        %tmp.36 = null;
-        invoke %tmp.32 %tmp.33(%tmp.35, %tmp.36);
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_44_51_47_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_44_8_47_8_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_44_8_47_8_if_end:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_39_22_48_4_stop:
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_36_22_49_4_start:
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 39 8 ]
+        symbol [ Metrics %tmp.2 39 16 23 ];
+        %tmp.2 = getv ? :Metrics;
+        symbol [ snapshot %tmp.3 39 24 32 ];
+        %tmp.3 = getv function %tmp.2 :snapshot;
+        %tmp.4 = invoke %tmp.2 %tmp.3();
+        symbol [ _snap ? 39 8 13 ];
+        putv self :_snap %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 40 8 ]
+        symbol [ Metrics %tmp.6 40 16 23 ];
+        %tmp.6 = getv ? :Metrics;
+        symbol [ flexScore %tmp.7 40 24 33 ];
+        %tmp.7 = getv function %tmp.6 :flexScore;
+        symbol [ _snap %tmp.9 40 34 39 ];
+        %tmp.9 = getv ? :_snap;
+        %tmp.10 = invoke %tmp.6 %tmp.7(%tmp.9);
+        symbol [ _flex ? 40 8 13 ];
+        putv self :_flex %tmp.10;
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 41 8 ]
+        %tmp.11 = self;
+        symbol [ _startCountUp %tmp.12 41 8 21 ];
+        %tmp.12 = getv function %tmp.11 :_startCountUp;
+        invoke %tmp.11 %tmp.12();
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 45 8 ]
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_45_8_48_8_if_stmt:
+        symbol [ _announced %tmp.14 45 13 23 ];
+        %tmp.14 = getv ? :_announced;
+        %tmp.15 = not %tmp.14;
+        bf %tmp.15 @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_45_8_48_8_if_end;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_45_8_48_8_if_true:
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_45_25_48_8_start:
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 46 12 ]
+        %tmp.16 = true;
+        symbol [ _announced ? 46 12 22 ];
+        putv self :_announced %tmp.16;
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 47 12 ]
+        symbol [ Leaderboard %tmp.18 47 12 23 ];
+        %tmp.18 = getv ? :Leaderboard;
+        symbol [ announce %tmp.19 47 24 32 ];
+        %tmp.19 = getv function %tmp.18 :announce;
+        symbol [ LB_GAME_ID %tmp.21 47 33 43 ];
+        %tmp.21 = getv ? :LB_GAME_ID;
+        %tmp.22 = null;
+        invoke %tmp.18 %tmp.19(%tmp.21, %tmp.22);
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_45_25_48_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_45_8_48_8_if_end;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_45_8_48_8_if_end:
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_36_22_49_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc"; @line = 49; @symbol_functiondef = [onHide,49,13,19]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc"; @line = 51; @symbol_functiondef = [onHide,51,13,19]; ]
     function onHide() {
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_49_22_49_63_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 49 24 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_49_24_49_61_if_stmt:
-        symbol [ _timer %tmp.2 49 28 34 ];
-        %tmp.2 = getv ? :_timer;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_51_22_53_4_start:
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 52 8 ]
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_52_8_52_57_if_stmt:
+        symbol [ _anim %tmp.2 52 12 17 ];
+        %tmp.2 = getv ? :_anim;
         %tmp.3 = null;
         %tmp.4 = ne %tmp.2 %tmp.3;
-        bf %tmp.4 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_49_24_49_61_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_49_24_49_61_if_true:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_49_44_49_61_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 49 46 ]
-        symbol [ _timer %tmp.6 49 46 52 ];
-        %tmp.6 = getv ? :_timer;
+        bf %tmp.4 @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_52_8_52_57_if_end;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_52_8_52_57_if_true:
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_52_27_52_57_start:
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 52 29 ]
+        symbol [ _anim %tmp.6 52 29 34 ];
+        %tmp.6 = getv ? :_anim;
         %tmp.7 = as %tmp.6 { (!Null) };
-        symbol [ stop %tmp.8 49 53 57 ];
+        symbol [ stop %tmp.8 52 35 39 ];
         %tmp.8 = getv function %tmp.7 :stop;
         invoke %tmp.7 %tmp.8();
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_49_44_49_61_stop:
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_49_24_49_61_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_49_24_49_61_if_end:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_49_22_49_63_stop:
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 52 43 ]
+        %tmp.9 = null;
+        symbol [ _anim ? 52 43 48 ];
+        putv self :_anim %tmp.9;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_52_27_52_57_stop:
+        goto @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_52_8_52_57_if_end;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_52_8_52_57_if_end:
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_51_22_53_4_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc"; @line = 51; @symbol_functiondef = [onTick,51,13,19]; ]
-    function onTick() {
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_51_22_54_4_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 52 8 ]
-        symbol [ _ctrl %tmp.2 52 8 13 ];
-        %tmp.2 = getv ? :_ctrl;
-        symbol [ step %tmp.3 52 14 18 ];
-        %tmp.3 = getv function %tmp.2 :step;
-        invoke %tmp.2 %tmp.3();
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 53 8 ]
-        symbol [ WatchUi %tmp.4 53 8 15 ];
-        %tmp.4 = getm $.Toybox.WatchUi;
-        symbol [ requestUpdate %tmp.5 53 16 29 ];
-        %tmp.5 = getv function %tmp.4 :requestUpdate;
-        invoke %tmp.4 %tmp.5();
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_51_22_54_4_stop:
+    [ @file = "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc"; @line = 56; @symbol_functiondef = [snap,56,13,17]; ]
+    function snap() {
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_56_20_56_36_start:
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 56 22 ]
+        symbol [ _snap %tmp.2 56 29 34 ];
+        %tmp.2 = getv ? :_snap;
+        ret %tmp.2;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_56_20_56_36_stop:
     }
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc"; @line = 56; @symbol_functiondef = [onUpdate,56,13,21]; @symbol_param<0> = [dc,56,22,24]; ]
+    [ @file = "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc"; @line = 57; @symbol_functiondef = [refresh,57,13,20]; ]
+    function refresh() {
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_57_23_57_87_start:
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 57 25 ]
+        symbol [ Metrics %tmp.2 57 33 40 ];
+        %tmp.2 = getv ? :Metrics;
+        symbol [ snapshot %tmp.3 57 41 49 ];
+        %tmp.3 = getv function %tmp.2 :snapshot;
+        %tmp.4 = invoke %tmp.2 %tmp.3();
+        symbol [ _snap ? 57 25 30 ];
+        putv self :_snap %tmp.4;
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 57 53 ]
+        symbol [ Metrics %tmp.6 57 61 68 ];
+        %tmp.6 = getv ? :Metrics;
+        symbol [ flexScore %tmp.7 57 69 78 ];
+        %tmp.7 = getv function %tmp.6 :flexScore;
+        symbol [ _snap %tmp.9 57 79 84 ];
+        %tmp.9 = getv ? :_snap;
+        %tmp.10 = invoke %tmp.6 %tmp.7(%tmp.9);
+        symbol [ _flex ? 57 53 58 ];
+        putv self :_flex %tmp.10;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_57_23_57_87_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc"; @line = 59; @symbol_functiondef = [_startCountUp,59,20,33]; ]
+    protected
+    function _startCountUp() {
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_59_36_64_4_start:
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 60 8 ]
+        %tmp.1 = 0;
+        symbol [ _shown ? 60 8 14 ];
+        putv self :_shown %tmp.1;
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 61 8 ]
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_61_8_61_34_if_stmt:
+        symbol [ _flex %tmp.3 61 12 17 ];
+        %tmp.3 = getv ? :_flex;
+        %tmp.4 = 0;
+        %tmp.5 = lte %tmp.3 %tmp.4;
+        bf %tmp.5 @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_61_8_61_34_if_end;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_61_8_61_34_if_true:
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_61_24_61_34_start:
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 61 26 ]
+        ret ?;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_61_24_61_34_stop:
+        goto @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_61_8_61_34_if_end;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_61_8_61_34_if_end:
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 62 8 ]
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_62_8_62_56_if_stmt:
+        symbol [ _anim %tmp.7 62 12 17 ];
+        %tmp.7 = getv ? :_anim;
+        %tmp.8 = null;
+        %tmp.9 = eq %tmp.7 %tmp.8;
+        bf %tmp.9 @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_62_8_62_56_if_end;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_62_8_62_56_if_true:
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_62_27_62_56_start:
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 62 29 ]
+        symbol [ Timer %tmp.12 62 41 46 ];
+        %tmp.12 = getm $.Toybox.Timer;
+        symbol [ Timer %tmp.13 62 47 52 ];
+        %tmp.13 = getv function ? %tmp.12 :Timer;
+        %tmp.10 = newc %tmp.13 ();
+        symbol [ _anim ? 62 29 34 ];
+        putv self :_anim %tmp.10;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_62_27_62_56_stop:
+        goto @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_62_8_62_56_if_end;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_62_8_62_56_if_end:
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 63 8 ]
+        try @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_63_8_63_83_beginTry @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_63_8_63_83_endTry @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_63_8_63_83_catch @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_63_8_63_83_finally;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_63_8_63_83_beginTry:
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_63_12_63_53_start:
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 63 14 ]
+        symbol [ _anim %tmp.15 63 14 19 ];
+        %tmp.15 = getv ? :_anim;
+        symbol [ start %tmp.16 63 20 25 ];
+        %tmp.16 = getv function %tmp.15 :start;
+        %tmp.17 = self;
+        symbol [ method %tmp.18 63 26 32 ];
+        %tmp.18 = getv function %tmp.17 :method;
+        %tmp.20 = const :_tick;
+        symbol [ _tick %tmp.20 63 34 39 const ];
+        %tmp.21 = invoke %tmp.17 %tmp.18(%tmp.20);
+        %tmp.22 = 28;
+        %tmp.23 = true;
+        invoke %tmp.15 %tmp.16(%tmp.21, %tmp.22, %tmp.23);
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_63_12_63_53_stop:
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_63_8_63_83_endTry:
+        jsr @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_63_8_63_83_finally;
+        goto @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_63_8_63_83_end;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_63_8_63_83_catch:
+        %tmp.24 = exception;
+        push %tmp.24;
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 63 55 ]
+        [ "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_63_8_63_83_catch" "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_63_55_63_83_end" ]
+        %e.1 = local;
+        symbol [ e %e.1 63 62 63 ];
+        %tmp.25 = dup %tmp.24;
+        lputv %e.1 %tmp.25;
+        symbol [ e %e.1 63 62 63 ];
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_63_65_63_83_start:
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 63 67 ]
+        symbol [ _flex %tmp.27 63 76 81 ];
+        %tmp.27 = getv ? :_flex;
+        symbol [ _shown ? 63 67 73 ];
+        putv self :_shown %tmp.27;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_63_65_63_83_stop:
+        jsr @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_63_8_63_83_finally;
+        pop;
+        goto @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_63_8_63_83_end;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_63_55_63_83_end:
+        try @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_63_8_63_83_catch @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_63_55_63_83_end @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_63_55_63_83_end @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_63_8_63_83_finally;
+        jsr @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_63_8_63_83_finally;
+        throw %tmp.24;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_63_8_63_83_finally:
+        jsrret;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_63_8_63_83_end:
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_59_36_64_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc"; @line = 66; @symbol_functiondef = [_tick,66,13,18]; ]
+    function _tick() as Void {
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_66_29_75_4_start:
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 67 8 ]
+        [ "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_66_29_75_4_start" "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_66_29_75_4_stop" ]
+        %stepInc.1 = local;
+        symbol [ stepInc %stepInc.1 67 12 19 ];
+        symbol [ _flex %tmp.2 67 22 27 ];
+        %tmp.2 = getv ? :_flex;
+        %tmp.3 = 22;
+        %tmp.4 = div %tmp.2 %tmp.3;
+        lputv %stepInc.1 %tmp.4;
+        symbol [ stepInc %stepInc.1 67 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 68 8 ]
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_68_8_68_40_if_stmt:
+        %tmp.5 = lgetv %stepInc.1;
+        symbol [ stepInc %tmp.5 68 12 19 ];
+        %tmp.6 = 1;
+        %tmp.7 = lt %tmp.5 %tmp.6;
+        bf %tmp.7 @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_68_8_68_40_if_end;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_68_8_68_40_if_true:
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_68_25_68_40_start:
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 68 27 ]
+        %tmp.8 = 1;
+        lputv %stepInc.1 %tmp.8;
+        symbol [ stepInc %stepInc.1 68 27 34 ];
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_68_25_68_40_stop:
+        goto @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_68_8_68_40_if_end;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_68_8_68_40_if_end:
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 69 8 ]
+        symbol [ _shown %tmp.9 69 8 14 ];
+        %tmp.9 = getv self :_shown;
+        %tmp.10 = lgetv %stepInc.1;
+        symbol [ stepInc %tmp.10 69 18 25 ];
+        %tmp.11 = add %tmp.9 %tmp.10;
+        symbol [ _shown ? 69 8 14 ];
+        putv self :_shown dup %tmp.11;
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 70 8 ]
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_70_8_73_8_if_stmt:
+        symbol [ _shown %tmp.13 70 12 18 ];
+        %tmp.13 = getv ? :_shown;
+        symbol [ _flex %tmp.15 70 22 27 ];
+        %tmp.15 = getv ? :_flex;
+        %tmp.16 = gte %tmp.13 %tmp.15;
+        bf %tmp.16 @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_70_8_73_8_if_end;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_70_8_73_8_if_true:
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_70_29_73_8_start:
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 71 12 ]
+        symbol [ _flex %tmp.18 71 21 26 ];
+        %tmp.18 = getv ? :_flex;
+        symbol [ _shown ? 71 12 18 ];
+        putv self :_shown %tmp.18;
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 72 12 ]
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_72_12_72_47_if_stmt:
+        symbol [ _anim %tmp.20 72 16 21 ];
+        %tmp.20 = getv ? :_anim;
+        %tmp.21 = null;
+        %tmp.22 = ne %tmp.20 %tmp.21;
+        bf %tmp.22 @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_72_12_72_47_if_end;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_72_12_72_47_if_true:
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_72_31_72_47_start:
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 72 33 ]
+        symbol [ _anim %tmp.24 72 33 38 ];
+        %tmp.24 = getv ? :_anim;
+        %tmp.25 = as %tmp.24 { (!Null) };
+        symbol [ stop %tmp.26 72 39 43 ];
+        %tmp.26 = getv function %tmp.25 :stop;
+        invoke %tmp.25 %tmp.26();
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_72_31_72_47_stop:
+        goto @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_72_12_72_47_if_end;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_72_12_72_47_if_end:
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_70_29_73_8_stop:
+        goto @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_70_8_73_8_if_end;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_70_8_73_8_if_end:
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 74 8 ]
+        symbol [ WatchUi %tmp.27 74 8 15 ];
+        %tmp.27 = getm $.Toybox.WatchUi;
+        symbol [ requestUpdate %tmp.28 74 16 29 ];
+        %tmp.28 = getv function %tmp.27 :requestUpdate;
+        invoke %tmp.27 %tmp.28();
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_66_29_75_4_stop:
+    }
+    [ @file = "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc"; @line = 77; @symbol_functiondef = [onUpdate,77,13,21]; @symbol_param<0> = [dc,77,22,24]; ]
     function onUpdate(dc) {
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_56_26_82_4_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 57 8 ]
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_77_26_148_4_start:
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 78 8 ]
         %tmp.1 = lgetv %dc;
-        symbol [ dc %tmp.1 57 14 16 ];
-        symbol [ getWidth %tmp.2 57 17 25 ];
+        symbol [ dc %tmp.1 78 13 15 ];
+        symbol [ getWidth %tmp.2 78 16 24 ];
         %tmp.2 = getv function %tmp.1 :getWidth;
         %tmp.3 = invoke %tmp.1 %tmp.2();
-        symbol [ _sw ? 57 8 11 ];
-        putv self :_sw %tmp.3;
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 58 8 ]
+        symbol [ _w ? 78 8 10 ];
+        putv self :_w %tmp.3;
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 79 8 ]
         %tmp.4 = lgetv %dc;
-        symbol [ dc %tmp.4 58 14 16 ];
-        symbol [ getHeight %tmp.5 58 17 26 ];
+        symbol [ dc %tmp.4 79 13 15 ];
+        symbol [ getHeight %tmp.5 79 16 25 ];
         %tmp.5 = getv function %tmp.4 :getHeight;
         %tmp.6 = invoke %tmp.4 %tmp.5();
-        symbol [ _sh ? 58 8 11 ];
-        putv self :_sh %tmp.6;
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 59 8 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_59_8_59_55_if_stmt:
-        symbol [ _laidOut %tmp.8 59 13 21 ];
-        %tmp.8 = getv ? :_laidOut;
-        %tmp.9 = not %tmp.8;
-        bf %tmp.9 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_59_8_59_55_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_59_8_59_55_if_true:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_59_23_59_55_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 59 25 ]
-        %tmp.10 = self;
-        symbol [ _doLayout %tmp.11 59 25 34 ];
-        %tmp.11 = getv function %tmp.10 :_doLayout;
-        invoke %tmp.10 %tmp.11();
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 59 38 ]
-        %tmp.12 = true;
-        symbol [ _laidOut ? 59 38 46 ];
-        putv self :_laidOut %tmp.12;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_59_23_59_55_stop:
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_59_8_59_55_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_59_8_59_55_if_end:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 61 8 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_61_8_64_8_if_stmt:
-        symbol [ _ctrl %tmp.14 61 12 17 ];
-        %tmp.14 = getv ? :_ctrl;
-        symbol [ state %tmp.15 61 18 23 ];
-        %tmp.15 = getv %tmp.14 :state;
-        symbol [ GS_MENU %tmp.17 61 27 34 ];
-        %tmp.17 = getv ? :GS_MENU;
-        %tmp.18 = eq %tmp.15 %tmp.17;
-        bf %tmp.18 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_61_8_64_8_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_61_8_64_8_if_true:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_61_36_64_8_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 62 12 ]
-        symbol [ UIManager %tmp.20 62 12 21 ];
-        %tmp.20 = getv ? :UIManager;
-        symbol [ drawMenu %tmp.21 62 22 30 ];
-        %tmp.21 = getv function %tmp.20 :drawMenu;
-        %tmp.22 = lgetv %dc;
-        symbol [ dc %tmp.22 62 31 33 ];
-        symbol [ _ctrl %tmp.24 62 35 40 ];
-        %tmp.24 = getv ? :_ctrl;
-        symbol [ _sw %tmp.26 62 42 45 ];
-        %tmp.26 = getv ? :_sw;
-        symbol [ _sh %tmp.28 62 47 50 ];
-        %tmp.28 = getv ? :_sh;
-        invoke %tmp.20 %tmp.21(%tmp.22, %tmp.24, %tmp.26, %tmp.28);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 63 12 ]
-        ret ?;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_61_36_64_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_61_8_64_8_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_61_8_64_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 66 8 ]
-        %tmp.29 = lgetv %dc;
-        symbol [ dc %tmp.29 66 8 10 ];
-        symbol [ setColor %tmp.30 66 11 19 ];
-        %tmp.30 = getv function %tmp.29 :setColor;
-        %tmp.31 = 0x000000;
-        %tmp.32 = 0x000000;
-        invoke %tmp.29 %tmp.30(%tmp.31, %tmp.32);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 67 8 ]
-        %tmp.33 = lgetv %dc;
-        symbol [ dc %tmp.33 67 8 10 ];
-        symbol [ clear %tmp.34 67 11 16 ];
-        %tmp.34 = getv function %tmp.33 :clear;
-        invoke %tmp.33 %tmp.34();
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 69 8 ]
-        symbol [ RenderSystem %tmp.36 69 8 20 ];
-        %tmp.36 = getv ? :RenderSystem;
-        symbol [ drawPlayBackground %tmp.37 69 21 39 ];
-        %tmp.37 = getv function %tmp.36 :drawPlayBackground;
-        %tmp.38 = lgetv %dc;
-        symbol [ dc %tmp.38 69 40 42 ];
-        symbol [ _sw %tmp.40 69 44 47 ];
-        %tmp.40 = getv ? :_sw;
-        symbol [ _sh %tmp.42 69 49 52 ];
-        %tmp.42 = getv ? :_sh;
-        invoke %tmp.36 %tmp.37(%tmp.38, %tmp.40, %tmp.42);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 70 8 ]
-        symbol [ RenderSystem %tmp.44 70 8 20 ];
-        %tmp.44 = getv ? :RenderSystem;
-        symbol [ drawCabinet %tmp.45 70 21 32 ];
-        %tmp.45 = getv function %tmp.44 :drawCabinet;
-        %tmp.46 = lgetv %dc;
-        symbol [ dc %tmp.46 70 33 35 ];
-        symbol [ _sw %tmp.48 70 37 40 ];
-        %tmp.48 = getv ? :_sw;
-        symbol [ _sh %tmp.50 70 42 45 ];
-        %tmp.50 = getv ? :_sh;
-        symbol [ _cabX %tmp.52 70 47 52 ];
-        %tmp.52 = getv ? :_cabX;
-        symbol [ _cabY %tmp.54 70 54 59 ];
-        %tmp.54 = getv ? :_cabY;
-        symbol [ _cabW %tmp.56 70 61 66 ];
-        %tmp.56 = getv ? :_cabW;
-        symbol [ _cabH %tmp.58 70 68 73 ];
-        %tmp.58 = getv ? :_cabH;
-        invoke %tmp.44 %tmp.45(%tmp.46, %tmp.48, %tmp.50, %tmp.52, %tmp.54, %tmp.56, %tmp.58);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 71 8 ]
-        symbol [ RenderSystem %tmp.60 71 8 20 ];
-        %tmp.60 = getv ? :RenderSystem;
-        symbol [ drawReels %tmp.61 71 21 30 ];
-        %tmp.61 = getv function %tmp.60 :drawReels;
-        %tmp.62 = lgetv %dc;
-        symbol [ dc %tmp.62 71 31 33 ];
-        symbol [ _ctrl %tmp.64 71 35 40 ];
-        %tmp.64 = getv ? :_ctrl;
-        symbol [ _cabX %tmp.66 71 42 47 ];
-        %tmp.66 = getv ? :_cabX;
-        symbol [ _cabY %tmp.68 71 49 54 ];
-        %tmp.68 = getv ? :_cabY;
-        symbol [ _colW %tmp.70 71 56 61 ];
-        %tmp.70 = getv ? :_colW;
-        symbol [ _rowH %tmp.72 71 63 68 ];
-        %tmp.72 = getv ? :_rowH;
-        symbol [ _gap %tmp.74 71 70 74 ];
-        %tmp.74 = getv ? :_gap;
-        invoke %tmp.60 %tmp.61(%tmp.62, %tmp.64, %tmp.66, %tmp.68, %tmp.70, %tmp.72, %tmp.74);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 72 8 ]
-        symbol [ RenderSystem %tmp.76 72 8 20 ];
-        %tmp.76 = getv ? :RenderSystem;
-        symbol [ drawResultFlash %tmp.77 72 21 36 ];
-        %tmp.77 = getv function %tmp.76 :drawResultFlash;
-        %tmp.78 = lgetv %dc;
-        symbol [ dc %tmp.78 72 37 39 ];
-        symbol [ _ctrl %tmp.80 72 41 46 ];
-        %tmp.80 = getv ? :_ctrl;
-        symbol [ _cabX %tmp.82 72 48 53 ];
-        %tmp.82 = getv ? :_cabX;
-        symbol [ _cabY %tmp.84 72 55 60 ];
-        %tmp.84 = getv ? :_cabY;
-        symbol [ _cabW %tmp.86 72 62 67 ];
-        %tmp.86 = getv ? :_cabW;
-        symbol [ _cabH %tmp.88 72 69 74 ];
-        %tmp.88 = getv ? :_cabH;
-        invoke %tmp.76 %tmp.77(%tmp.78, %tmp.80, %tmp.82, %tmp.84, %tmp.86, %tmp.88);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 73 8 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_73_8_75_8_if_stmt:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_73_12_73_53_begin:
-        symbol [ _ctrl %tmp.90 73 12 17 ];
-        %tmp.90 = getv ? :_ctrl;
-        symbol [ spinState %tmp.91 73 18 27 ];
-        %tmp.91 = getv %tmp.90 :spinState;
-        symbol [ SS_SPINNING %tmp.93 73 31 42 ];
-        %tmp.93 = getv ? :SS_SPINNING;
-        %tmp.94 = eq %tmp.91 %tmp.93;
-        bf %tmp.94 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_73_8_75_8_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_73_46_73_53_true:
-        symbol [ _ctrl %tmp.96 73 47 52 ];
-        %tmp.96 = getv ? :_ctrl;
-        symbol [ autoPlay %tmp.97 73 53 61 ];
-        %tmp.97 = getv %tmp.96 :autoPlay;
-        %tmp.98 = not %tmp.97;
-        push %tmp.98;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_73_46_73_53_end:
-        %tmp.99 = phi [%tmp.94 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_73_12_73_53_begin] [%tmp.98 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_73_46_73_53_true] [%tmp.99 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_73_46_73_53_end];
-        bf %tmp.99 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_73_8_75_8_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_73_8_75_8_if_true:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_73_63_75_8_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 74 12 ]
-        symbol [ RenderSystem %tmp.101 74 12 24 ];
-        %tmp.101 = getv ? :RenderSystem;
-        symbol [ drawNextHint %tmp.102 74 25 37 ];
-        %tmp.102 = getv function %tmp.101 :drawNextHint;
-        %tmp.103 = lgetv %dc;
-        symbol [ dc %tmp.103 74 38 40 ];
-        symbol [ _ctrl %tmp.105 74 42 47 ];
-        %tmp.105 = getv ? :_ctrl;
-        symbol [ _cabX %tmp.107 74 49 54 ];
-        %tmp.107 = getv ? :_cabX;
-        symbol [ _cabY %tmp.109 74 56 61 ];
-        %tmp.109 = getv ? :_cabY;
-        symbol [ _colW %tmp.111 74 63 68 ];
-        %tmp.111 = getv ? :_colW;
-        symbol [ _gap %tmp.113 74 70 74 ];
-        %tmp.113 = getv ? :_gap;
-        invoke %tmp.101 %tmp.102(%tmp.103, %tmp.105, %tmp.107, %tmp.109, %tmp.111, %tmp.113);
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_73_63_75_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_73_8_75_8_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_73_8_75_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 76 8 ]
-        symbol [ RenderSystem %tmp.115 76 8 20 ];
-        %tmp.115 = getv ? :RenderSystem;
-        symbol [ drawLever %tmp.116 76 21 30 ];
-        %tmp.116 = getv function %tmp.115 :drawLever;
-        %tmp.117 = lgetv %dc;
-        symbol [ dc %tmp.117 76 31 33 ];
-        symbol [ _ctrl %tmp.119 76 35 40 ];
-        %tmp.119 = getv ? :_ctrl;
-        symbol [ _cabX %tmp.121 76 42 47 ];
-        %tmp.121 = getv ? :_cabX;
-        symbol [ _cabW %tmp.123 76 49 54 ];
-        %tmp.123 = getv ? :_cabW;
-        symbol [ _cabY %tmp.125 76 56 61 ];
-        %tmp.125 = getv ? :_cabY;
-        symbol [ _cabH %tmp.127 76 63 68 ];
-        %tmp.127 = getv ? :_cabH;
-        invoke %tmp.115 %tmp.116(%tmp.117, %tmp.119, %tmp.121, %tmp.123, %tmp.125, %tmp.127);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 78 8 ]
-        symbol [ UIManager %tmp.129 78 8 17 ];
-        %tmp.129 = getv ? :UIManager;
-        symbol [ drawHUD %tmp.130 78 18 25 ];
-        %tmp.130 = getv function %tmp.129 :drawHUD;
-        %tmp.131 = lgetv %dc;
-        symbol [ dc %tmp.131 78 26 28 ];
-        symbol [ _ctrl %tmp.133 78 30 35 ];
-        %tmp.133 = getv ? :_ctrl;
-        symbol [ _sw %tmp.135 78 37 40 ];
-        %tmp.135 = getv ? :_sw;
-        symbol [ _hudTop %tmp.137 78 42 49 ];
-        %tmp.137 = getv ? :_hudTop;
-        invoke %tmp.129 %tmp.130(%tmp.131, %tmp.133, %tmp.135, %tmp.137);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 79 8 ]
-        symbol [ UIManager %tmp.139 79 8 17 ];
-        %tmp.139 = getv ? :UIManager;
-        symbol [ drawBottomBar %tmp.140 79 18 31 ];
-        %tmp.140 = getv function %tmp.139 :drawBottomBar;
-        %tmp.141 = lgetv %dc;
-        symbol [ dc %tmp.141 79 32 34 ];
-        symbol [ _ctrl %tmp.143 79 36 41 ];
-        %tmp.143 = getv ? :_ctrl;
-        symbol [ _sw %tmp.145 79 43 46 ];
-        %tmp.145 = getv ? :_sw;
-        symbol [ _bottomY %tmp.147 79 48 56 ];
-        %tmp.147 = getv ? :_bottomY;
-        invoke %tmp.139 %tmp.140(%tmp.141, %tmp.143, %tmp.145, %tmp.147);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 81 8 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_81_8_81_79_if_stmt:
-        symbol [ _ctrl %tmp.149 81 12 17 ];
-        %tmp.149 = getv ? :_ctrl;
-        symbol [ state %tmp.150 81 18 23 ];
-        %tmp.150 = getv %tmp.149 :state;
-        symbol [ GS_OVER %tmp.152 81 27 34 ];
-        %tmp.152 = getv ? :GS_OVER;
-        %tmp.153 = eq %tmp.150 %tmp.152;
-        bf %tmp.153 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_81_8_81_79_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_81_8_81_79_if_true:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_81_36_81_79_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 81 38 ]
-        symbol [ UIManager %tmp.155 81 38 47 ];
-        %tmp.155 = getv ? :UIManager;
-        symbol [ drawOver %tmp.156 81 48 56 ];
-        %tmp.156 = getv function %tmp.155 :drawOver;
-        %tmp.157 = lgetv %dc;
-        symbol [ dc %tmp.157 81 57 59 ];
-        symbol [ _ctrl %tmp.159 81 61 66 ];
-        %tmp.159 = getv ? :_ctrl;
-        symbol [ _sw %tmp.161 81 68 71 ];
-        %tmp.161 = getv ? :_sw;
-        symbol [ _sh %tmp.163 81 73 76 ];
-        %tmp.163 = getv ? :_sh;
-        invoke %tmp.155 %tmp.156(%tmp.157, %tmp.159, %tmp.161, %tmp.163);
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_81_36_81_79_stop:
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_81_8_81_79_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_81_8_81_79_if_end:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_56_26_82_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc"; @line = 84; @symbol_functiondef = [_doLayout,84,20,29]; ]
-    protected
-    function _doLayout() {
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_84_32_107_4_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 87 8 ]
-        symbol [ _sh %tmp.2 87 19 22 ];
-        %tmp.2 = getv ? :_sh;
-        %tmp.3 = 12;
-        %tmp.4 = mul %tmp.2 %tmp.3;
-        %tmp.5 = 100;
-        %tmp.6 = div %tmp.4 %tmp.5;
-        symbol [ _hudTop ? 87 8 15 ];
-        putv self :_hudTop %tmp.6;
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 87 35 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_87_35_87_67_if_stmt:
-        symbol [ _hudTop %tmp.8 87 39 46 ];
-        %tmp.8 = getv ? :_hudTop;
-        %tmp.9 = 8;
-        %tmp.10 = lt %tmp.8 %tmp.9;
-        bf %tmp.10 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_87_35_87_67_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_87_35_87_67_if_true:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_87_52_87_67_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 87 54 ]
-        %tmp.11 = 8;
-        symbol [ _hudTop ? 87 54 61 ];
-        putv self :_hudTop %tmp.11;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_87_52_87_67_stop:
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_87_35_87_67_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_87_35_87_67_if_end:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 88 8 ]
-        symbol [ _sh %tmp.13 88 19 22 ];
-        %tmp.13 = getv ? :_sh;
-        symbol [ _sh %tmp.15 88 26 29 ];
-        %tmp.15 = getv ? :_sh;
-        %tmp.16 = 20;
-        %tmp.17 = mul %tmp.15 %tmp.16;
-        %tmp.18 = 100;
-        %tmp.19 = div %tmp.17 %tmp.18;
-        %tmp.20 = sub %tmp.13 %tmp.19;
-        symbol [ _bottomY ? 88 8 16 ];
-        putv self :_bottomY %tmp.20;
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 92 8 ]
-        %tmp.21 = 4;
-        symbol [ _gap ? 92 8 12 ];
-        putv self :_gap %tmp.21;
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 93 8 ]
-        symbol [ _sw %tmp.23 93 16 19 ];
-        %tmp.23 = getv ? :_sw;
-        %tmp.24 = 56;
-        %tmp.25 = mul %tmp.23 %tmp.24;
-        %tmp.26 = 100;
-        %tmp.27 = div %tmp.25 %tmp.26;
-        symbol [ _cabW ? 93 8 13 ];
-        putv self :_cabW %tmp.27;
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 93 32 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_93_32_93_64_if_stmt:
-        symbol [ _cabW %tmp.29 93 36 41 ];
-        %tmp.29 = getv ? :_cabW;
-        %tmp.30 = 118;
-        %tmp.31 = lt %tmp.29 %tmp.30;
-        bf %tmp.31 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_93_32_93_64_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_93_32_93_64_if_true:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_93_49_93_64_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 93 51 ]
-        %tmp.32 = 118;
-        symbol [ _cabW ? 93 51 56 ];
-        putv self :_cabW %tmp.32;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_93_49_93_64_stop:
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_93_32_93_64_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_93_32_93_64_if_end:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 93 66 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_93_66_93_108_if_stmt:
-        symbol [ _cabW %tmp.34 93 70 75 ];
-        %tmp.34 = getv ? :_cabW;
-        symbol [ _sw %tmp.36 93 78 81 ];
-        %tmp.36 = getv ? :_sw;
-        %tmp.37 = 60;
-        %tmp.38 = sub %tmp.36 %tmp.37;
-        %tmp.39 = gt %tmp.34 %tmp.38;
-        bf %tmp.39 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_93_66_93_108_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_93_66_93_108_if_true:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_93_88_93_108_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 93 90 ]
-        symbol [ _sw %tmp.41 93 98 101 ];
-        %tmp.41 = getv ? :_sw;
-        %tmp.42 = 60;
-        %tmp.43 = sub %tmp.41 %tmp.42;
-        symbol [ _cabW ? 93 90 95 ];
-        putv self :_cabW %tmp.43;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_93_88_93_108_stop:
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_93_66_93_108_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_93_66_93_108_if_end:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 94 8 ]
-        symbol [ _cabW %tmp.45 94 17 22 ];
-        %tmp.45 = getv ? :_cabW;
-        symbol [ _gap %tmp.47 94 25 29 ];
-        %tmp.47 = getv ? :_gap;
-        %tmp.48 = 2;
-        %tmp.49 = mul %tmp.47 %tmp.48;
-        %tmp.50 = sub %tmp.45 %tmp.49;
-        %tmp.51 = 3;
-        %tmp.52 = div %tmp.50 %tmp.51;
-        symbol [ _colW ? 94 8 13 ];
-        putv self :_colW %tmp.52;
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 95 8 ]
-        symbol [ _colW %tmp.54 95 16 21 ];
-        %tmp.54 = getv ? :_colW;
-        %tmp.55 = 3;
-        %tmp.56 = mul %tmp.54 %tmp.55;
-        symbol [ _gap %tmp.58 95 28 32 ];
-        %tmp.58 = getv ? :_gap;
-        %tmp.59 = 2;
+        symbol [ _h ? 79 8 10 ];
+        putv self :_h %tmp.6;
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 80 8 ]
+        [ "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_77_26_148_4_start" "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_77_26_148_4_stop" ]
+        %cx.1 = local;
+        symbol [ cx %cx.1 80 12 14 ];
+        symbol [ _w %tmp.8 80 17 19 ];
+        %tmp.8 = getv ? :_w;
+        %tmp.9 = 2;
+        %tmp.10 = div %tmp.8 %tmp.9;
+        lputv %cx.1 %tmp.10;
+        symbol [ cx %cx.1 80 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 81 8 ]
+        [ "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_77_26_148_4_start" "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_77_26_148_4_stop" ]
+        %VC.2 = local;
+        symbol [ VC %VC.2 81 12 14 ];
+        symbol [ Graphics %tmp.11 81 17 25 ];
+        %tmp.11 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_CENTER %tmp.12 81 26 45 ];
+        %tmp.12 = getv %tmp.11 :TEXT_JUSTIFY_CENTER;
+        symbol [ Graphics %tmp.13 81 48 56 ];
+        %tmp.13 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_VCENTER %tmp.14 81 57 77 ];
+        %tmp.14 = getv %tmp.13 :TEXT_JUSTIFY_VCENTER;
+        %tmp.15 = bitor %tmp.12 %tmp.14;
+        lputv %VC.2 %tmp.15;
+        symbol [ VC %VC.2 81 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 82 8 ]
+        [ "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_77_26_148_4_start" "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_77_26_148_4_stop" ]
+        %fh.3 = local;
+        symbol [ fh %fh.3 82 12 14 ];
+        %tmp.16 = lgetv %dc;
+        symbol [ dc %tmp.16 82 17 19 ];
+        symbol [ getFontHeight %tmp.17 82 20 33 ];
+        %tmp.17 = getv function %tmp.16 :getFontHeight;
+        symbol [ Graphics %tmp.18 82 34 42 ];
+        %tmp.18 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.19 82 43 53 ];
+        %tmp.19 = getv %tmp.18 :FONT_XTINY;
+        %tmp.20 = invoke %tmp.16 %tmp.17(%tmp.19);
+        lputv %fh.3 %tmp.20;
+        symbol [ fh %fh.3 82 12 14 ];
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 84 8 ]
+        %tmp.21 = lgetv %dc;
+        symbol [ dc %tmp.21 84 8 10 ];
+        symbol [ setColor %tmp.22 84 11 19 ];
+        %tmp.22 = getv function %tmp.21 :setColor;
+        symbol [ LB_BG %tmp.24 84 20 25 ];
+        %tmp.24 = getv ? :LB_BG;
+        symbol [ LB_BG %tmp.26 84 27 32 ];
+        %tmp.26 = getv ? :LB_BG;
+        invoke %tmp.21 %tmp.22(%tmp.24, %tmp.26);
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 85 8 ]
+        %tmp.27 = lgetv %dc;
+        symbol [ dc %tmp.27 85 8 10 ];
+        symbol [ clear %tmp.28 85 11 16 ];
+        %tmp.28 = getv function %tmp.27 :clear;
+        invoke %tmp.27 %tmp.28();
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 87 8 ]
+        [ "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_77_26_148_4_start" "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_77_26_148_4_stop" ]
+        %pad.4 = local;
+        symbol [ pad %pad.4 87 12 15 ];
+        symbol [ _h %tmp.30 87 19 21 ];
+        %tmp.30 = getv ? :_h;
+        %tmp.31 = 6;
+        %tmp.32 = mul %tmp.30 %tmp.31;
+        %tmp.33 = 100;
+        %tmp.34 = div %tmp.32 %tmp.33;
+        lputv %pad.4 %tmp.34;
+        symbol [ pad %pad.4 87 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 88 8 ]
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_88_8_88_32_if_stmt:
+        %tmp.35 = lgetv %pad.4;
+        symbol [ pad %tmp.35 88 12 15 ];
+        %tmp.36 = 4;
+        %tmp.37 = lt %tmp.35 %tmp.36;
+        bf %tmp.37 @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_88_8_88_32_if_end;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_88_8_88_32_if_true:
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_88_21_88_32_start:
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 88 23 ]
+        %tmp.38 = 4;
+        lputv %pad.4 %tmp.38;
+        symbol [ pad %pad.4 88 23 26 ];
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_88_21_88_32_stop:
+        goto @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_88_8_88_32_if_end;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_88_8_88_32_if_end:
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 91 8 ]
+        %tmp.39 = lgetv %dc;
+        symbol [ dc %tmp.39 91 8 10 ];
+        symbol [ setColor %tmp.40 91 11 19 ];
+        %tmp.40 = getv function %tmp.39 :setColor;
+        symbol [ LB_ACCENT %tmp.42 91 20 29 ];
+        %tmp.42 = getv ? :LB_ACCENT;
+        symbol [ Graphics %tmp.43 91 31 39 ];
+        %tmp.43 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.44 91 40 57 ];
+        %tmp.44 = getv %tmp.43 :COLOR_TRANSPARENT;
+        invoke %tmp.39 %tmp.40(%tmp.42, %tmp.44);
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 92 8 ]
+        %tmp.45 = lgetv %dc;
+        symbol [ dc %tmp.45 92 8 10 ];
+        symbol [ drawText %tmp.46 92 11 19 ];
+        %tmp.46 = getv function %tmp.45 :drawText;
+        %tmp.47 = lgetv %cx.1;
+        symbol [ cx %tmp.47 92 20 22 ];
+        %tmp.48 = lgetv %pad.4;
+        symbol [ pad %tmp.48 92 24 27 ];
+        %tmp.49 = lgetv %fh.3;
+        symbol [ fh %tmp.49 92 30 32 ];
+        %tmp.50 = 2;
+        %tmp.51 = div %tmp.49 %tmp.50;
+        %tmp.52 = add %tmp.48 %tmp.51;
+        symbol [ Graphics %tmp.53 92 38 46 ];
+        %tmp.53 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.54 92 47 57 ];
+        %tmp.54 = getv %tmp.53 :FONT_XTINY;
+        %tmp.55 = "ACTIVITY BOARD";
+        %tmp.56 = lgetv %VC.2;
+        symbol [ VC %tmp.56 92 77 79 ];
+        invoke %tmp.45 %tmp.46(%tmp.47, %tmp.52, %tmp.54, %tmp.55, %tmp.56);
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 95 8 ]
+        [ "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_77_26_148_4_start" "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_77_26_148_4_stop" ]
+        %flexCY.5 = local;
+        symbol [ flexCY %flexCY.5 95 12 18 ];
+        symbol [ _h %tmp.58 95 22 24 ];
+        %tmp.58 = getv ? :_h;
+        %tmp.59 = 27;
         %tmp.60 = mul %tmp.58 %tmp.59;
-        %tmp.61 = add %tmp.56 %tmp.60;
-        symbol [ _cabW ? 95 8 13 ];
-        putv self :_cabW %tmp.61;
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 96 8 ]
-        symbol [ _sw %tmp.63 96 17 20 ];
-        %tmp.63 = getv ? :_sw;
-        symbol [ _cabW %tmp.65 96 23 28 ];
-        %tmp.65 = getv ? :_cabW;
-        %tmp.66 = sub %tmp.63 %tmp.65;
-        %tmp.67 = 2;
-        %tmp.68 = div %tmp.66 %tmp.67;
-        symbol [ _cabX ? 96 8 13 ];
-        putv self :_cabX %tmp.68;
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 98 8 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_84_32_107_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_84_32_107_4_stop" ]
-        %topOfCab.1 = local;
-        symbol [ topOfCab %topOfCab.1 98 12 20 ];
-        symbol [ _hudTop %tmp.70 98 23 30 ];
-        %tmp.70 = getv ? :_hudTop;
-        %tmp.71 = 34;
-        %tmp.72 = add %tmp.70 %tmp.71;
-        lputv %topOfCab.1 %tmp.72;
-        symbol [ topOfCab %topOfCab.1 98 12 20 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 99 8 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_84_32_107_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_84_32_107_4_stop" ]
-        %botOfCab.2 = local;
-        symbol [ botOfCab %botOfCab.2 99 12 20 ];
-        symbol [ _bottomY %tmp.74 99 23 31 ];
-        %tmp.74 = getv ? :_bottomY;
-        %tmp.75 = 14;
-        %tmp.76 = sub %tmp.74 %tmp.75;
-        lputv %botOfCab.2 %tmp.76;
-        symbol [ botOfCab %botOfCab.2 99 12 20 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 100 8 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_84_32_107_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_84_32_107_4_stop" ]
-        %winH.3 = local;
-        symbol [ winH %winH.3 100 12 16 ];
-        %tmp.77 = lgetv %botOfCab.2;
-        symbol [ botOfCab %tmp.77 100 19 27 ];
-        %tmp.78 = lgetv %topOfCab.1;
-        symbol [ topOfCab %tmp.78 100 30 38 ];
-        %tmp.79 = sub %tmp.77 %tmp.78;
-        lputv %winH.3 %tmp.79;
-        symbol [ winH %winH.3 100 12 16 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 101 8 ]
-        %tmp.80 = lgetv %winH.3;
-        symbol [ winH %tmp.80 101 16 20 ];
-        %tmp.81 = 3;
-        %tmp.82 = div %tmp.80 %tmp.81;
-        symbol [ _rowH ? 101 8 13 ];
-        putv self :_rowH %tmp.82;
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 102 8 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_102_8_102_38_if_stmt:
-        symbol [ _rowH %tmp.84 102 12 17 ];
-        %tmp.84 = getv ? :_rowH;
-        %tmp.85 = 17;
-        %tmp.86 = lt %tmp.84 %tmp.85;
-        bf %tmp.86 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_102_8_102_38_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_102_8_102_38_if_true:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_102_24_102_38_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 102 26 ]
-        %tmp.87 = 17;
-        symbol [ _rowH ? 102 26 31 ];
-        putv self :_rowH %tmp.87;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_102_24_102_38_stop:
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_102_8_102_38_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_102_8_102_38_if_end:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 103 8 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_103_8_103_38_if_stmt:
-        symbol [ _rowH %tmp.89 103 12 17 ];
-        %tmp.89 = getv ? :_rowH;
-        %tmp.90 = 36;
-        %tmp.91 = gt %tmp.89 %tmp.90;
-        bf %tmp.91 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_103_8_103_38_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_103_8_103_38_if_true:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_103_24_103_38_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 103 26 ]
-        %tmp.92 = 36;
-        symbol [ _rowH ? 103 26 31 ];
-        putv self :_rowH %tmp.92;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_103_24_103_38_stop:
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_103_8_103_38_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_103_8_103_38_if_end:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 104 8 ]
-        symbol [ _rowH %tmp.94 104 16 21 ];
-        %tmp.94 = getv ? :_rowH;
-        %tmp.95 = 3;
-        %tmp.96 = mul %tmp.94 %tmp.95;
-        symbol [ _cabH ? 104 8 13 ];
-        putv self :_cabH %tmp.96;
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 105 8 ]
-        %tmp.97 = lgetv %topOfCab.1;
-        symbol [ topOfCab %tmp.97 105 16 24 ];
-        %tmp.98 = lgetv %winH.3;
-        symbol [ winH %tmp.98 105 28 32 ];
-        symbol [ _cabH %tmp.100 105 35 40 ];
-        %tmp.100 = getv ? :_cabH;
-        %tmp.101 = sub %tmp.98 %tmp.100;
-        %tmp.102 = 2;
-        %tmp.103 = div %tmp.101 %tmp.102;
-        %tmp.104 = add %tmp.97 %tmp.103;
-        symbol [ _cabY ? 105 8 13 ];
-        putv self :_cabY %tmp.104;
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 106 8 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_106_8_106_50_if_stmt:
-        symbol [ _cabY %tmp.106 106 12 17 ];
-        %tmp.106 = getv ? :_cabY;
-        %tmp.107 = lgetv %topOfCab.1;
-        symbol [ topOfCab %tmp.107 106 20 28 ];
-        %tmp.108 = lt %tmp.106 %tmp.107;
-        bf %tmp.108 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_106_8_106_50_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_106_8_106_50_if_true:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_106_30_106_50_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 106 32 ]
-        %tmp.109 = lgetv %topOfCab.1;
-        symbol [ topOfCab %tmp.109 106 40 48 ];
-        symbol [ _cabY ? 106 32 37 ];
-        putv self :_cabY %tmp.109;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_106_30_106_50_stop:
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_106_8_106_50_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_106_8_106_50_if_end:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_84_32_107_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc"; @line = 109; @symbol_functiondef = [openLeaderboard,109,13,28]; ]
-    function openLeaderboard() {
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_109_31_112_4_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 110 8 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_109_31_112_4_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_109_31_112_4_stop" ]
-        %v.1 = local;
-        symbol [ v %v.1 110 12 13 ];
-        symbol [ LbScoresView %tmp.4 110 20 32 ];
-        %tmp.4 = getv ? :LbScoresView;
-        symbol [ LB_GAME_ID %tmp.6 110 33 43 ];
-        %tmp.6 = getv ? :LB_GAME_ID;
-        symbol [ _ctrl %tmp.8 110 45 50 ];
-        %tmp.8 = getv ? :_ctrl;
-        symbol [ roundName %tmp.9 110 51 60 ];
-        %tmp.9 = getv function %tmp.8 :roundName;
-        %tmp.10 = invoke %tmp.8 %tmp.9();
-        %tmp.11 = "SLOT BANDIT";
-        %tmp.1 = newc %tmp.4 (%tmp.6, %tmp.10, %tmp.11);
-        lputv %v.1 %tmp.1;
-        symbol [ v %v.1 110 12 13 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 111 8 ]
-        symbol [ WatchUi %tmp.12 111 8 15 ];
-        %tmp.12 = getm $.Toybox.WatchUi;
-        symbol [ pushView %tmp.13 111 16 24 ];
-        %tmp.13 = getv function %tmp.12 :pushView;
-        %tmp.14 = lgetv %v.1;
-        symbol [ v %tmp.14 111 25 26 ];
-        symbol [ LbScoresDelegate %tmp.18 111 32 48 ];
-        %tmp.18 = getv ? :LbScoresDelegate;
-        %tmp.19 = lgetv %v.1;
-        symbol [ v %tmp.19 111 49 50 ];
-        %tmp.15 = newc %tmp.18 (%tmp.19);
-        symbol [ WatchUi %tmp.20 111 53 60 ];
-        %tmp.20 = getm $.Toybox.WatchUi;
-        symbol [ SLIDE_LEFT %tmp.21 111 61 71 ];
-        %tmp.21 = getv %tmp.20 :SLIDE_LEFT;
-        invoke %tmp.12 %tmp.13(%tmp.14, %tmp.15, %tmp.21);
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_109_31_112_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc"; @line = 115; @symbol_functiondef = [inMenu,115,13,19]; ]
-    function inMenu() {
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_115_30_115_63_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 115 32 ]
-        symbol [ _ctrl %tmp.2 115 39 44 ];
-        %tmp.2 = getv ? :_ctrl;
-        symbol [ state %tmp.3 115 45 50 ];
-        %tmp.3 = getv %tmp.2 :state;
-        symbol [ GS_MENU %tmp.5 115 54 61 ];
-        %tmp.5 = getv ? :GS_MENU;
-        %tmp.6 = eq %tmp.3 %tmp.5;
-        ret %tmp.6;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_115_30_115_63_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc"; @line = 116; @symbol_functiondef = [isPassiveState,116,13,27]; ]
-    function isPassiveState() {
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_116_30_116_89_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 116 32 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_116_39_116_80_begin:
-        symbol [ _ctrl %tmp.2 116 39 44 ];
-        %tmp.2 = getv ? :_ctrl;
-        symbol [ state %tmp.3 116 45 50 ];
-        %tmp.3 = getv %tmp.2 :state;
-        symbol [ GS_MENU %tmp.5 116 54 61 ];
-        %tmp.5 = getv ? :GS_MENU;
-        %tmp.6 = eq %tmp.3 %tmp.5;
-        %tmp.7 = dup %tmp.6;
-        bt %tmp.7 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_116_65_116_80_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_116_65_116_80_false:
-        symbol [ _ctrl %tmp.9 116 65 70 ];
-        %tmp.9 = getv ? :_ctrl;
-        symbol [ state %tmp.10 116 71 76 ];
-        %tmp.10 = getv %tmp.9 :state;
-        symbol [ GS_OVER %tmp.12 116 80 87 ];
-        %tmp.12 = getv ? :GS_OVER;
-        %tmp.13 = eq %tmp.10 %tmp.12;
-        %tmp.14 = or %tmp.6 %tmp.13;
-        push %tmp.14;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_116_65_116_80_end:
-        %tmp.15 = phi [%tmp.7 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_116_39_116_80_begin] [%tmp.14 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_116_65_116_80_false] [%tmp.15 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_116_65_116_80_end];
-        ret %tmp.15;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_116_30_116_89_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc"; @line = 118; @symbol_functiondef = [navUp,118,13,18]; ]
-    function navUp() {
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_118_23_118_75_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 118 25 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_118_25_118_73_if_stmt:
-        symbol [ _ctrl %tmp.2 118 29 34 ];
-        %tmp.2 = getv ? :_ctrl;
-        symbol [ state %tmp.3 118 35 40 ];
-        %tmp.3 = getv %tmp.2 :state;
-        symbol [ GS_MENU %tmp.5 118 44 51 ];
-        %tmp.5 = getv ? :GS_MENU;
-        %tmp.6 = eq %tmp.3 %tmp.5;
-        bf %tmp.6 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_118_25_118_73_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_118_25_118_73_if_true:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_118_53_118_73_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 118 55 ]
-        symbol [ _ctrl %tmp.8 118 55 60 ];
-        %tmp.8 = getv ? :_ctrl;
-        symbol [ menuPrev %tmp.9 118 61 69 ];
-        %tmp.9 = getv function %tmp.8 :menuPrev;
-        invoke %tmp.8 %tmp.9();
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_118_53_118_73_stop:
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_118_25_118_73_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_118_25_118_73_if_end:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_118_23_118_75_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc"; @line = 119; @symbol_functiondef = [navDown,119,13,20]; ]
-    function navDown() {
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_119_23_119_75_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 119 25 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_119_25_119_73_if_stmt:
-        symbol [ _ctrl %tmp.2 119 29 34 ];
-        %tmp.2 = getv ? :_ctrl;
-        symbol [ state %tmp.3 119 35 40 ];
-        %tmp.3 = getv %tmp.2 :state;
-        symbol [ GS_MENU %tmp.5 119 44 51 ];
-        %tmp.5 = getv ? :GS_MENU;
-        %tmp.6 = eq %tmp.3 %tmp.5;
-        bf %tmp.6 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_119_25_119_73_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_119_25_119_73_if_true:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_119_53_119_73_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 119 55 ]
-        symbol [ _ctrl %tmp.8 119 55 60 ];
-        %tmp.8 = getv ? :_ctrl;
-        symbol [ menuNext %tmp.9 119 61 69 ];
-        %tmp.9 = getv function %tmp.8 :menuNext;
-        invoke %tmp.8 %tmp.9();
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_119_53_119_73_stop:
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_119_25_119_73_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_119_25_119_73_if_end:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_119_23_119_75_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc"; @line = 120; @symbol_functiondef = [navSelect,120,13,22]; ]
-    function navSelect() {
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_120_25_127_4_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 121 8 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_121_8_125_8_if_stmt:
-        symbol [ _ctrl %tmp.2 121 12 17 ];
-        %tmp.2 = getv ? :_ctrl;
-        symbol [ state %tmp.3 121 18 23 ];
-        %tmp.3 = getv %tmp.2 :state;
-        symbol [ GS_MENU %tmp.5 121 27 34 ];
-        %tmp.5 = getv ? :GS_MENU;
-        %tmp.6 = eq %tmp.3 %tmp.5;
-        bf %tmp.6 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_121_8_125_8_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_121_8_125_8_if_true:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_121_36_125_8_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 122 12 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_122_12_122_73_if_stmt:
-        symbol [ _ctrl %tmp.8 122 16 21 ];
-        %tmp.8 = getv ? :_ctrl;
-        symbol [ menuRow %tmp.9 122 22 29 ];
-        %tmp.9 = getv %tmp.8 :menuRow;
-        symbol [ SB_ROW_LB %tmp.11 122 33 42 ];
-        %tmp.11 = getv ? :SB_ROW_LB;
-        %tmp.12 = eq %tmp.9 %tmp.11;
-        bf %tmp.12 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_122_12_122_73_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_122_12_122_73_if_true:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_122_44_122_73_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 122 46 ]
-        %tmp.13 = self;
-        symbol [ openLeaderboard %tmp.14 122 46 61 ];
-        %tmp.14 = getv function %tmp.13 :openLeaderboard;
-        invoke %tmp.13 %tmp.14();
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 122 65 ]
-        ret ?;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_122_44_122_73_stop:
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_122_12_122_73_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_122_12_122_73_if_end:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 123 12 ]
-        symbol [ _ctrl %tmp.16 123 12 17 ];
-        %tmp.16 = getv ? :_ctrl;
-        symbol [ menuActivate %tmp.17 123 18 30 ];
-        %tmp.17 = getv function %tmp.16 :menuActivate;
-        invoke %tmp.16 %tmp.17();
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 124 12 ]
-        ret ?;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_121_36_125_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_121_8_125_8_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_121_8_125_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 126 8 ]
-        symbol [ _ctrl %tmp.19 126 8 13 ];
-        %tmp.19 = getv ? :_ctrl;
-        symbol [ primaryAction %tmp.20 126 14 27 ];
-        %tmp.20 = getv function %tmp.19 :primaryAction;
-        invoke %tmp.19 %tmp.20();
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_120_25_127_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc"; @line = 128; @symbol_functiondef = [navLongPress,128,13,25]; ]
-    function navLongPress() {
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_128_28_130_4_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 129 8 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_129_8_129_58_if_stmt:
-        symbol [ _ctrl %tmp.2 129 12 17 ];
-        %tmp.2 = getv ? :_ctrl;
-        symbol [ state %tmp.3 129 18 23 ];
-        %tmp.3 = getv %tmp.2 :state;
-        symbol [ GS_PLAY %tmp.5 129 27 34 ];
-        %tmp.5 = getv ? :GS_PLAY;
-        %tmp.6 = eq %tmp.3 %tmp.5;
-        bf %tmp.6 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_129_8_129_58_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_129_8_129_58_if_true:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_129_36_129_58_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 129 38 ]
-        symbol [ _ctrl %tmp.8 129 38 43 ];
-        %tmp.8 = getv ? :_ctrl;
-        symbol [ toggleAuto %tmp.9 129 44 54 ];
-        %tmp.9 = getv function %tmp.8 :toggleAuto;
-        invoke %tmp.8 %tmp.9();
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_129_36_129_58_stop:
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_129_8_129_58_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_129_8_129_58_if_end:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_128_28_130_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc"; @line = 132; @symbol_functiondef = [handleTap,132,13,22]; @symbol_param<0> = [x,132,23,24]; @symbol_param<1> = [y,132,26,27]; ]
-    function handleTap(x, y) {
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_132_29_158_4_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 133 8 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_133_8_145_8_if_stmt:
-        symbol [ _ctrl %tmp.2 133 12 17 ];
-        %tmp.2 = getv ? :_ctrl;
-        symbol [ state %tmp.3 133 18 23 ];
-        %tmp.3 = getv %tmp.2 :state;
-        symbol [ GS_MENU %tmp.5 133 27 34 ];
-        %tmp.5 = getv ? :GS_MENU;
-        %tmp.6 = eq %tmp.3 %tmp.5;
-        bf %tmp.6 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_133_8_145_8_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_133_8_145_8_if_true:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_133_36_145_8_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 134 12 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_133_36_145_8_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_133_36_145_8_stop" ]
-        %g.1 = local;
-        symbol [ g %g.1 134 16 17 ];
-        symbol [ UIManager %tmp.8 134 20 29 ];
-        %tmp.8 = getv ? :UIManager;
-        symbol [ menuRowGeom %tmp.9 134 30 41 ];
-        %tmp.9 = getv function %tmp.8 :menuRowGeom;
-        symbol [ _sw %tmp.11 134 42 45 ];
-        %tmp.11 = getv ? :_sw;
-        symbol [ _sh %tmp.13 134 47 50 ];
-        %tmp.13 = getv ? :_sh;
-        %tmp.14 = invoke %tmp.8 %tmp.9(%tmp.11, %tmp.13);
-        lputv %g.1 %tmp.14;
-        symbol [ g %g.1 134 16 17 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 135 12 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_133_36_145_8_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_133_36_145_8_stop" ]
-        %rowH.2 = local;
-        symbol [ rowH %rowH.2 135 16 20 ];
-        %tmp.15 = lgetv %g.1;
-        symbol [ g %tmp.15 135 23 24 ];
-        %tmp.16 = 0;
-        %tmp.17 = agetv %tmp.15 %tmp.16;
-        lputv %rowH.2 %tmp.17;
-        symbol [ rowH %rowH.2 135 16 20 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 135 29 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_133_36_145_8_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_133_36_145_8_stop" ]
-        %rowW.3 = local;
-        symbol [ rowW %rowW.3 135 33 37 ];
-        %tmp.18 = lgetv %g.1;
-        symbol [ g %tmp.18 135 40 41 ];
-        %tmp.19 = 1;
-        %tmp.20 = agetv %tmp.18 %tmp.19;
-        lputv %rowW.3 %tmp.20;
-        symbol [ rowW %rowW.3 135 33 37 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 135 46 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_133_36_145_8_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_133_36_145_8_stop" ]
-        %rowX.4 = local;
-        symbol [ rowX %rowX.4 135 50 54 ];
-        %tmp.21 = lgetv %g.1;
-        symbol [ g %tmp.21 135 57 58 ];
-        %tmp.22 = 2;
-        %tmp.23 = agetv %tmp.21 %tmp.22;
-        lputv %rowX.4 %tmp.23;
-        symbol [ rowX %rowX.4 135 50 54 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 135 63 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_133_36_145_8_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_133_36_145_8_stop" ]
-        %rowY0.5 = local;
-        symbol [ rowY0 %rowY0.5 135 67 72 ];
-        %tmp.24 = lgetv %g.1;
-        symbol [ g %tmp.24 135 75 76 ];
-        %tmp.25 = 3;
-        %tmp.26 = agetv %tmp.24 %tmp.25;
-        lputv %rowY0.5 %tmp.26;
-        symbol [ rowY0 %rowY0.5 135 67 72 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 135 81 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_133_36_145_8_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_133_36_145_8_stop" ]
-        %gap.6 = local;
-        symbol [ gap %gap.6 135 85 88 ];
-        %tmp.27 = lgetv %g.1;
-        symbol [ g %tmp.27 135 91 92 ];
-        %tmp.28 = 4;
-        %tmp.29 = agetv %tmp.27 %tmp.28;
-        lputv %gap.6 %tmp.29;
-        symbol [ gap %gap.6 135 85 88 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 136 12 ]
-        for @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_136_12_143_12_for_test @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_136_12_143_12_for_incr @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_136_12_143_12_for_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_136_12_143_12_for_init:
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_136_12_143_12_for_begin" "_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_136_12_143_12_for_end" ]
-        %i.7 = local;
-        symbol [ i %i.7 136 21 22 ];
-        %tmp.30 = 0;
-        lputv %i.7 %tmp.30;
-        symbol [ i %i.7 136 21 22 ];
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_136_12_143_12_for_test:
-        %tmp.31 = lgetv %i.7;
-        symbol [ i %tmp.31 136 28 29 ];
-        symbol [ SB_MENU_ROWS %tmp.33 136 32 44 ];
-        %tmp.33 = getv ? :SB_MENU_ROWS;
-        %tmp.34 = lt %tmp.31 %tmp.33;
-        bf %tmp.34 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_136_12_143_12_for_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_136_12_143_12_for_begin:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_136_51_143_12_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 137 16 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_136_51_143_12_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_136_51_143_12_stop" ]
-        %ry.8 = local;
-        symbol [ ry %ry.8 137 20 22 ];
-        %tmp.35 = lgetv %rowY0.5;
-        symbol [ rowY0 %tmp.35 137 25 30 ];
-        %tmp.36 = lgetv %i.7;
-        symbol [ i %tmp.36 137 33 34 ];
-        %tmp.37 = lgetv %rowH.2;
-        symbol [ rowH %tmp.37 137 38 42 ];
-        %tmp.38 = lgetv %gap.6;
-        symbol [ gap %tmp.38 137 45 48 ];
-        %tmp.39 = add %tmp.37 %tmp.38;
-        %tmp.40 = mul %tmp.36 %tmp.39;
-        %tmp.41 = add %tmp.35 %tmp.40;
-        lputv %ry.8 %tmp.41;
-        symbol [ ry %ry.8 137 20 22 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 138 16 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_138_16_142_16_if_stmt:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_138_20_138_72_begin:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_138_20_138_57_begin:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_138_20_138_44_begin:
-        %tmp.42 = lgetv %x;
-        symbol [ x %tmp.42 138 20 21 ];
-        %tmp.43 = lgetv %rowX.4;
-        symbol [ rowX %tmp.43 138 25 29 ];
-        %tmp.44 = gte %tmp.42 %tmp.43;
-        bf %tmp.44 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_138_16_142_16_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_138_33_138_44_true:
-        %tmp.45 = lgetv %x;
-        symbol [ x %tmp.45 138 33 34 ];
-        %tmp.46 = lgetv %rowX.4;
-        symbol [ rowX %tmp.46 138 37 41 ];
-        %tmp.47 = lgetv %rowW.3;
-        symbol [ rowW %tmp.47 138 44 48 ];
-        %tmp.48 = add %tmp.46 %tmp.47;
-        %tmp.49 = lt %tmp.45 %tmp.48;
-        push %tmp.49;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_138_33_138_44_end:
-        %tmp.50 = phi [%tmp.44 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_138_20_138_44_begin] [%tmp.49 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_138_33_138_44_true] [%tmp.50 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_138_33_138_44_end];
-        bf %tmp.50 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_138_16_142_16_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_138_52_138_57_true:
-        %tmp.51 = lgetv %y;
-        symbol [ y %tmp.51 138 52 53 ];
-        %tmp.52 = lgetv %ry.8;
-        symbol [ ry %tmp.52 138 57 59 ];
-        %tmp.53 = gte %tmp.51 %tmp.52;
-        push %tmp.53;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_138_52_138_57_end:
-        %tmp.54 = phi [%tmp.50 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_138_20_138_57_begin] [%tmp.53 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_138_52_138_57_true] [%tmp.54 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_138_52_138_57_end];
-        bf %tmp.54 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_138_16_142_16_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_138_63_138_72_true:
-        %tmp.55 = lgetv %y;
-        symbol [ y %tmp.55 138 63 64 ];
-        %tmp.56 = lgetv %ry.8;
-        symbol [ ry %tmp.56 138 67 69 ];
-        %tmp.57 = lgetv %rowH.2;
-        symbol [ rowH %tmp.57 138 72 76 ];
-        %tmp.58 = add %tmp.56 %tmp.57;
-        %tmp.59 = lt %tmp.55 %tmp.58;
-        push %tmp.59;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_138_63_138_72_end:
-        %tmp.60 = phi [%tmp.54 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_138_20_138_72_begin] [%tmp.59 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_138_63_138_72_true] [%tmp.60 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_138_63_138_72_end];
-        bf %tmp.60 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_138_16_142_16_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_138_16_142_16_if_true:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_138_78_142_16_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 139 20 ]
-        symbol [ _ctrl %tmp.62 139 20 25 ];
-        %tmp.62 = getv ? :_ctrl;
-        symbol [ setMenuRow %tmp.63 139 26 36 ];
-        %tmp.63 = getv function %tmp.62 :setMenuRow;
-        %tmp.64 = lgetv %i.7;
-        symbol [ i %tmp.64 139 37 38 ];
-        invoke %tmp.62 %tmp.63(%tmp.64);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 140 20 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_140_20_140_92_if_stmt:
-        %tmp.65 = lgetv %i.7;
-        symbol [ i %tmp.65 140 24 25 ];
-        symbol [ SB_ROW_LB %tmp.67 140 29 38 ];
-        %tmp.67 = getv ? :SB_ROW_LB;
-        %tmp.68 = eq %tmp.65 %tmp.67;
-        bf %tmp.68 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_140_20_140_92_if_else_false;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_140_20_140_92_if_true:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_140_40_140_61_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 140 42 ]
-        %tmp.69 = self;
-        symbol [ openLeaderboard %tmp.70 140 42 57 ];
-        %tmp.70 = getv function %tmp.69 :openLeaderboard;
-        invoke %tmp.69 %tmp.70();
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_140_40_140_61_stop:
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_140_20_140_92_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_140_20_140_92_if_else_false:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_140_68_140_92_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 140 70 ]
-        symbol [ _ctrl %tmp.72 140 70 75 ];
-        %tmp.72 = getv ? :_ctrl;
-        symbol [ menuActivate %tmp.73 140 76 88 ];
-        %tmp.73 = getv function %tmp.72 :menuActivate;
-        invoke %tmp.72 %tmp.73();
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_140_68_140_92_stop:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_140_20_140_92_if_end:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 141 20 ]
-        ret ?;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_138_78_142_16_stop:
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_138_16_142_16_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_138_16_142_16_if_end:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_136_51_143_12_stop:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_136_12_143_12_for_incr:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 136 ]
-        %tmp.76 = lgetv %i.7;
-        symbol [ i %tmp.76 136 46 47 ];
-        %tmp.77 = add %tmp.76 1;
-        lputv %i.7 %tmp.77;
-        symbol [ i %i.7 136 46 47 ];
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_136_12_143_12_for_test;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_136_12_143_12_for_end:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 144 12 ]
-        ret ?;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_133_36_145_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_133_8_145_8_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_133_8_145_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 146 8 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_146_8_146_65_if_stmt:
-        symbol [ _ctrl %tmp.79 146 12 17 ];
-        %tmp.79 = getv ? :_ctrl;
-        symbol [ state %tmp.80 146 18 23 ];
-        %tmp.80 = getv %tmp.79 :state;
-        symbol [ GS_OVER %tmp.82 146 27 34 ];
-        %tmp.82 = getv ? :GS_OVER;
-        %tmp.83 = eq %tmp.80 %tmp.82;
-        bf %tmp.83 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_146_8_146_65_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_146_8_146_65_if_true:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_146_36_146_65_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 146 38 ]
-        symbol [ _ctrl %tmp.85 146 38 43 ];
-        %tmp.85 = getv ? :_ctrl;
-        symbol [ startGame %tmp.86 146 44 53 ];
-        %tmp.86 = getv function %tmp.85 :startGame;
-        invoke %tmp.85 %tmp.86();
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 146 57 ]
-        ret ?;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_146_36_146_65_stop:
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_146_8_146_65_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_146_8_146_65_if_end:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 150 8 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_150_8_156_8_if_stmt:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_150_12_151_39_begin:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_150_12_151_17_begin:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_150_12_150_73_begin:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_150_12_150_51_begin:
-        symbol [ _ctrl %tmp.88 150 12 17 ];
-        %tmp.88 = getv ? :_ctrl;
-        symbol [ spinState %tmp.89 150 18 27 ];
-        %tmp.89 = getv %tmp.88 :spinState;
-        symbol [ SS_SPINNING %tmp.91 150 31 42 ];
-        %tmp.91 = getv ? :SS_SPINNING;
-        %tmp.92 = eq %tmp.89 %tmp.91;
-        bf %tmp.92 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_150_8_156_8_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_150_46_150_51_true:
-        %tmp.93 = lgetv %y;
-        symbol [ y %tmp.93 150 46 47 ];
-        symbol [ _cabY %tmp.95 150 51 56 ];
-        %tmp.95 = getv ? :_cabY;
-        %tmp.96 = gte %tmp.93 %tmp.95;
-        push %tmp.96;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_150_46_150_51_end:
-        %tmp.97 = phi [%tmp.92 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_150_12_150_51_begin] [%tmp.96 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_150_46_150_51_true] [%tmp.97 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_150_46_150_51_end];
-        bf %tmp.97 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_150_8_156_8_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_150_60_150_73_true:
-        %tmp.98 = lgetv %y;
-        symbol [ y %tmp.98 150 60 61 ];
-        symbol [ _cabY %tmp.100 150 65 70 ];
-        %tmp.100 = getv ? :_cabY;
-        symbol [ _cabH %tmp.102 150 73 78 ];
-        %tmp.102 = getv ? :_cabH;
-        %tmp.103 = add %tmp.100 %tmp.102;
-        %tmp.104 = lte %tmp.98 %tmp.103;
-        push %tmp.104;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_150_60_150_73_end:
-        %tmp.105 = phi [%tmp.97 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_150_12_150_73_begin] [%tmp.104 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_150_60_150_73_true] [%tmp.105 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_150_60_150_73_end];
-        bf %tmp.105 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_150_8_156_8_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_151_12_151_17_true:
-        %tmp.106 = lgetv %x;
-        symbol [ x %tmp.106 151 12 13 ];
-        symbol [ _cabX %tmp.108 151 17 22 ];
-        %tmp.108 = getv ? :_cabX;
-        %tmp.109 = gte %tmp.106 %tmp.108;
-        push %tmp.109;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_151_12_151_17_end:
-        %tmp.110 = phi [%tmp.105 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_150_12_151_17_begin] [%tmp.109 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_151_12_151_17_true] [%tmp.110 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_151_12_151_17_end];
-        bf %tmp.110 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_150_8_156_8_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_151_26_151_39_true:
-        %tmp.111 = lgetv %x;
-        symbol [ x %tmp.111 151 26 27 ];
-        symbol [ _cabX %tmp.113 151 31 36 ];
-        %tmp.113 = getv ? :_cabX;
-        symbol [ _cabW %tmp.115 151 39 44 ];
-        %tmp.115 = getv ? :_cabW;
-        %tmp.116 = add %tmp.113 %tmp.115;
-        %tmp.117 = lte %tmp.111 %tmp.116;
-        push %tmp.117;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_151_26_151_39_end:
-        %tmp.118 = phi [%tmp.110 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_150_12_151_39_begin] [%tmp.117 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_151_26_151_39_true] [%tmp.118 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_151_26_151_39_end];
-        bf %tmp.118 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_150_8_156_8_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_150_8_156_8_if_true:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_151_46_156_8_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 152 12 ]
-        [ "_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_151_46_156_8_start" "_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_151_46_156_8_stop" ]
-        %idx.9 = local;
-        symbol [ idx %idx.9 152 16 19 ];
-        %tmp.119 = lgetv %x;
-        symbol [ x %tmp.119 152 23 24 ];
-        symbol [ _cabX %tmp.121 152 27 32 ];
-        %tmp.121 = getv ? :_cabX;
-        %tmp.122 = sub %tmp.119 %tmp.121;
-        symbol [ _colW %tmp.124 152 37 42 ];
-        %tmp.124 = getv ? :_colW;
-        symbol [ _gap %tmp.126 152 45 49 ];
-        %tmp.126 = getv ? :_gap;
-        %tmp.127 = add %tmp.124 %tmp.126;
-        %tmp.128 = div %tmp.122 %tmp.127;
-        lputv %idx.9 %tmp.128;
-        symbol [ idx %idx.9 152 16 19 ];
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 153 12 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_153_12_153_36_if_stmt:
-        %tmp.129 = lgetv %idx.9;
-        symbol [ idx %tmp.129 153 16 19 ];
-        %tmp.130 = 2;
-        %tmp.131 = gt %tmp.129 %tmp.130;
-        bf %tmp.131 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_153_12_153_36_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_153_12_153_36_if_true:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_153_25_153_36_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 153 27 ]
-        %tmp.132 = 2;
-        lputv %idx.9 %tmp.132;
-        symbol [ idx %idx.9 153 27 30 ];
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_153_25_153_36_stop:
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_153_12_153_36_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_153_12_153_36_if_end:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 154 12 ]
-        symbol [ _ctrl %tmp.134 154 12 17 ];
-        %tmp.134 = getv ? :_ctrl;
-        symbol [ stopReelAt %tmp.135 154 18 28 ];
-        %tmp.135 = getv function %tmp.134 :stopReelAt;
-        %tmp.136 = lgetv %idx.9;
-        symbol [ idx %tmp.136 154 29 32 ];
-        invoke %tmp.134 %tmp.135(%tmp.136);
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 155 12 ]
-        ret ?;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_151_46_156_8_stop:
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_150_8_156_8_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_150_8_156_8_if_end:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 157 8 ]
-        symbol [ _ctrl %tmp.138 157 8 13 ];
-        %tmp.138 = getv ? :_ctrl;
-        symbol [ primaryAction %tmp.139 157 14 27 ];
-        %tmp.139 = getv function %tmp.138 :primaryAction;
-        invoke %tmp.138 %tmp.139();
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_132_29_158_4_stop:
-    }
-    [ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc"; @line = 160; @symbol_functiondef = [handleBack,160,13,23]; ]
-    function handleBack() {
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_160_26_164_4_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 161 8 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_161_8_161_69_if_stmt:
-        symbol [ _ctrl %tmp.2 161 12 17 ];
-        %tmp.2 = getv ? :_ctrl;
-        symbol [ state %tmp.3 161 18 23 ];
-        %tmp.3 = getv %tmp.2 :state;
-        symbol [ GS_PLAY %tmp.5 161 27 34 ];
-        %tmp.5 = getv ? :GS_PLAY;
-        %tmp.6 = eq %tmp.3 %tmp.5;
-        bf %tmp.6 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_161_8_161_69_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_161_8_161_69_if_true:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_161_36_161_69_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 161 38 ]
-        symbol [ _ctrl %tmp.8 161 38 43 ];
-        %tmp.8 = getv ? :_ctrl;
-        symbol [ gotoMenu %tmp.9 161 44 52 ];
-        %tmp.9 = getv function %tmp.8 :gotoMenu;
-        invoke %tmp.8 %tmp.9();
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 161 56 ]
-        %tmp.10 = true;
-        ret %tmp.10;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_161_36_161_69_stop:
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_161_8_161_69_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_161_8_161_69_if_end:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 162 8 ]
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_162_8_162_69_if_stmt:
-        symbol [ _ctrl %tmp.12 162 12 17 ];
-        %tmp.12 = getv ? :_ctrl;
-        symbol [ state %tmp.13 162 18 23 ];
-        %tmp.13 = getv %tmp.12 :state;
-        symbol [ GS_OVER %tmp.15 162 27 34 ];
-        %tmp.15 = getv ? :GS_OVER;
-        %tmp.16 = eq %tmp.13 %tmp.15;
-        bf %tmp.16 @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_162_8_162_69_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_162_8_162_69_if_true:
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_162_36_162_69_start:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 162 38 ]
-        symbol [ _ctrl %tmp.18 162 38 43 ];
-        %tmp.18 = getv ? :_ctrl;
-        symbol [ gotoMenu %tmp.19 162 44 52 ];
-        %tmp.19 = getv function %tmp.18 :gotoMenu;
-        invoke %tmp.18 %tmp.19();
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 162 56 ]
-        %tmp.20 = true;
-        ret %tmp.20;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_162_36_162_69_stop:
-        goto @_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_162_8_162_69_if_end;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_162_8_162_69_if_end:
-[ "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc" 163 8 ]
-        %tmp.21 = false;
-        ret %tmp.21;
-_Users_kkorolczuk_work_garmin_slotbandit_source_MainView_mc_160_26_164_4_stop:
+        %tmp.61 = 100;
+        %tmp.62 = div %tmp.60 %tmp.61;
+        lputv %flexCY.5 %tmp.62;
+        symbol [ flexCY %flexCY.5 95 12 18 ];
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 96 8 ]
+        [ "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_77_26_148_4_start" "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_77_26_148_4_stop" ]
+        %big.6 = local;
+        symbol [ big %big.6 96 12 15 ];
+        symbol [ Graphics %tmp.63 96 18 26 ];
+        %tmp.63 = getm $.Toybox.Graphics;
+        symbol [ FONT_NUMBER_MEDIUM %tmp.64 96 27 45 ];
+        %tmp.64 = getv %tmp.63 :FONT_NUMBER_MEDIUM;
+        lputv %big.6 %tmp.64;
+        symbol [ big %big.6 96 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 97 8 ]
+        %tmp.65 = lgetv %dc;
+        symbol [ dc %tmp.65 97 8 10 ];
+        symbol [ setColor %tmp.66 97 11 19 ];
+        %tmp.66 = getv function %tmp.65 :setColor;
+        %tmp.67 = 0xFFFFFF;
+        symbol [ Graphics %tmp.68 97 30 38 ];
+        %tmp.68 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.69 97 39 56 ];
+        %tmp.69 = getv %tmp.68 :COLOR_TRANSPARENT;
+        invoke %tmp.65 %tmp.66(%tmp.67, %tmp.69);
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 98 8 ]
+        %tmp.70 = lgetv %dc;
+        symbol [ dc %tmp.70 98 8 10 ];
+        symbol [ drawText %tmp.71 98 11 19 ];
+        %tmp.71 = getv function %tmp.70 :drawText;
+        %tmp.72 = lgetv %cx.1;
+        symbol [ cx %tmp.72 98 20 22 ];
+        %tmp.73 = lgetv %flexCY.5;
+        symbol [ flexCY %tmp.73 98 24 30 ];
+        %tmp.74 = lgetv %big.6;
+        symbol [ big %tmp.74 98 32 35 ];
+        symbol [ Metrics %tmp.76 98 37 44 ];
+        %tmp.76 = getv ? :Metrics;
+        symbol [ groupNum %tmp.77 98 45 53 ];
+        %tmp.77 = getv function %tmp.76 :groupNum;
+        symbol [ _shown %tmp.79 98 54 60 ];
+        %tmp.79 = getv ? :_shown;
+        %tmp.80 = invoke %tmp.76 %tmp.77(%tmp.79);
+        %tmp.81 = lgetv %VC.2;
+        symbol [ VC %tmp.81 98 63 65 ];
+        invoke %tmp.70 %tmp.71(%tmp.72, %tmp.73, %tmp.74, %tmp.80, %tmp.81);
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 99 8 ]
+        [ "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_77_26_148_4_start" "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_77_26_148_4_stop" ]
+        %bigH.7 = local;
+        symbol [ bigH %bigH.7 99 12 16 ];
+        %tmp.82 = lgetv %dc;
+        symbol [ dc %tmp.82 99 19 21 ];
+        symbol [ getFontHeight %tmp.83 99 22 35 ];
+        %tmp.83 = getv function %tmp.82 :getFontHeight;
+        %tmp.84 = lgetv %big.6;
+        symbol [ big %tmp.84 99 36 39 ];
+        %tmp.85 = invoke %tmp.82 %tmp.83(%tmp.84);
+        lputv %bigH.7 %tmp.85;
+        symbol [ bigH %bigH.7 99 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 100 8 ]
+        %tmp.86 = lgetv %dc;
+        symbol [ dc %tmp.86 100 8 10 ];
+        symbol [ setColor %tmp.87 100 11 19 ];
+        %tmp.87 = getv function %tmp.86 :setColor;
+        symbol [ LB_GOLD %tmp.89 100 20 27 ];
+        %tmp.89 = getv ? :LB_GOLD;
+        symbol [ Graphics %tmp.90 100 29 37 ];
+        %tmp.90 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.91 100 38 55 ];
+        %tmp.91 = getv %tmp.90 :COLOR_TRANSPARENT;
+        invoke %tmp.86 %tmp.87(%tmp.89, %tmp.91);
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 101 8 ]
+        %tmp.92 = lgetv %dc;
+        symbol [ dc %tmp.92 101 8 10 ];
+        symbol [ drawText %tmp.93 101 11 19 ];
+        %tmp.93 = getv function %tmp.92 :drawText;
+        %tmp.94 = lgetv %cx.1;
+        symbol [ cx %tmp.94 101 20 22 ];
+        %tmp.95 = lgetv %flexCY.5;
+        symbol [ flexCY %tmp.95 101 24 30 ];
+        %tmp.96 = lgetv %bigH.7;
+        symbol [ bigH %tmp.96 101 33 37 ];
+        %tmp.97 = 2;
+        %tmp.98 = div %tmp.96 %tmp.97;
+        %tmp.99 = add %tmp.95 %tmp.98;
+        %tmp.100 = lgetv %fh.3;
+        symbol [ fh %tmp.100 101 44 46 ];
+        %tmp.101 = 2;
+        %tmp.102 = div %tmp.100 %tmp.101;
+        %tmp.103 = add %tmp.99 %tmp.102;
+        symbol [ Graphics %tmp.104 101 52 60 ];
+        %tmp.104 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.105 101 61 71 ];
+        %tmp.105 = getv %tmp.104 :FONT_XTINY;
+        %tmp.106 = "FLEX SCORE";
+        %tmp.107 = lgetv %VC.2;
+        symbol [ VC %tmp.107 101 87 89 ];
+        invoke %tmp.92 %tmp.93(%tmp.94, %tmp.103, %tmp.105, %tmp.106, %tmp.107);
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 104 8 ]
+        [ "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_77_26_148_4_start" "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_77_26_148_4_stop" ]
+        %footerCY.8 = local;
+        symbol [ footerCY %footerCY.8 104 12 20 ];
+        symbol [ _h %tmp.109 104 23 25 ];
+        %tmp.109 = getv ? :_h;
+        %tmp.110 = lgetv %pad.4;
+        symbol [ pad %tmp.110 104 28 31 ];
+        %tmp.111 = sub %tmp.109 %tmp.110;
+        %tmp.112 = lgetv %fh.3;
+        symbol [ fh %tmp.112 104 34 36 ];
+        %tmp.113 = 2;
+        %tmp.114 = div %tmp.112 %tmp.113;
+        %tmp.115 = sub %tmp.111 %tmp.114;
+        lputv %footerCY.8 %tmp.115;
+        symbol [ footerCY %footerCY.8 104 12 20 ];
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 105 8 ]
+        %tmp.116 = lgetv %dc;
+        symbol [ dc %tmp.116 105 8 10 ];
+        symbol [ setColor %tmp.117 105 11 19 ];
+        %tmp.117 = getv function %tmp.116 :setColor;
+        symbol [ LB_MUTED %tmp.119 105 20 28 ];
+        %tmp.119 = getv ? :LB_MUTED;
+        symbol [ Graphics %tmp.120 105 30 38 ];
+        %tmp.120 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.121 105 39 56 ];
+        %tmp.121 = getv %tmp.120 :COLOR_TRANSPARENT;
+        invoke %tmp.116 %tmp.117(%tmp.119, %tmp.121);
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 106 8 ]
+        %tmp.122 = lgetv %dc;
+        symbol [ dc %tmp.122 106 8 10 ];
+        symbol [ drawText %tmp.123 106 11 19 ];
+        %tmp.123 = getv function %tmp.122 :drawText;
+        %tmp.124 = lgetv %cx.1;
+        symbol [ cx %tmp.124 106 20 22 ];
+        %tmp.125 = lgetv %footerCY.8;
+        symbol [ footerCY %tmp.125 106 24 32 ];
+        symbol [ Graphics %tmp.126 106 34 42 ];
+        %tmp.126 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.127 106 43 53 ];
+        %tmp.127 = getv %tmp.126 :FONT_XTINY;
+        %tmp.128 = "bitochi.com";
+        %tmp.129 = lgetv %VC.2;
+        symbol [ VC %tmp.129 106 70 72 ];
+        invoke %tmp.122 %tmp.123(%tmp.124, %tmp.125, %tmp.127, %tmp.128, %tmp.129);
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 107 8 ]
+        [ "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_77_26_148_4_start" "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_77_26_148_4_stop" ]
+        %ctaCY.9 = local;
+        symbol [ ctaCY %ctaCY.9 107 12 17 ];
+        %tmp.130 = lgetv %footerCY.8;
+        symbol [ footerCY %tmp.130 107 20 28 ];
+        %tmp.131 = lgetv %fh.3;
+        symbol [ fh %tmp.131 107 31 33 ];
+        %tmp.132 = sub %tmp.130 %tmp.131;
+        lputv %ctaCY.9 %tmp.132;
+        symbol [ ctaCY %ctaCY.9 107 12 17 ];
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 108 8 ]
+        %tmp.133 = lgetv %dc;
+        symbol [ dc %tmp.133 108 8 10 ];
+        symbol [ setColor %tmp.134 108 11 19 ];
+        %tmp.134 = getv function %tmp.133 :setColor;
+        symbol [ LB_GOLD %tmp.136 108 20 27 ];
+        %tmp.136 = getv ? :LB_GOLD;
+        symbol [ Graphics %tmp.137 108 29 37 ];
+        %tmp.137 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.138 108 38 55 ];
+        %tmp.138 = getv %tmp.137 :COLOR_TRANSPARENT;
+        invoke %tmp.133 %tmp.134(%tmp.136, %tmp.138);
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 109 8 ]
+        %tmp.139 = lgetv %dc;
+        symbol [ dc %tmp.139 109 8 10 ];
+        symbol [ drawText %tmp.140 109 11 19 ];
+        %tmp.140 = getv function %tmp.139 :drawText;
+        %tmp.141 = lgetv %cx.1;
+        symbol [ cx %tmp.141 109 20 22 ];
+        %tmp.142 = lgetv %ctaCY.9;
+        symbol [ ctaCY %tmp.142 109 24 29 ];
+        symbol [ Graphics %tmp.143 109 31 39 ];
+        %tmp.143 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.144 109 40 50 ];
+        %tmp.144 = getv %tmp.143 :FONT_XTINY;
+        %tmp.145 = "SELECT = FLEX ON WORLD";
+        %tmp.146 = lgetv %VC.2;
+        symbol [ VC %tmp.146 109 78 80 ];
+        invoke %tmp.139 %tmp.140(%tmp.141, %tmp.142, %tmp.144, %tmp.145, %tmp.146);
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 112 8 ]
+        [ "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_77_26_148_4_start" "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_77_26_148_4_stop" ]
+        %rowsTop.10 = local;
+        symbol [ rowsTop %rowsTop.10 112 12 19 ];
+        %tmp.147 = lgetv %flexCY.5;
+        symbol [ flexCY %tmp.147 112 22 28 ];
+        %tmp.148 = lgetv %bigH.7;
+        symbol [ bigH %tmp.148 112 31 35 ];
+        %tmp.149 = 2;
+        %tmp.150 = div %tmp.148 %tmp.149;
+        %tmp.151 = add %tmp.147 %tmp.150;
+        %tmp.152 = lgetv %fh.3;
+        symbol [ fh %tmp.152 112 42 44 ];
+        %tmp.153 = add %tmp.151 %tmp.152;
+        %tmp.154 = lgetv %fh.3;
+        symbol [ fh %tmp.154 112 47 49 ];
+        %tmp.155 = 2;
+        %tmp.156 = div %tmp.154 %tmp.155;
+        %tmp.157 = add %tmp.153 %tmp.156;
+        lputv %rowsTop.10 %tmp.157;
+        symbol [ rowsTop %rowsTop.10 112 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 113 8 ]
+        [ "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_77_26_148_4_start" "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_77_26_148_4_stop" ]
+        %rowsBot.11 = local;
+        symbol [ rowsBot %rowsBot.11 113 12 19 ];
+        %tmp.158 = lgetv %ctaCY.9;
+        symbol [ ctaCY %tmp.158 113 22 27 ];
+        %tmp.159 = lgetv %fh.3;
+        symbol [ fh %tmp.159 113 30 32 ];
+        %tmp.160 = sub %tmp.158 %tmp.159;
+        lputv %rowsBot.11 %tmp.160;
+        symbol [ rowsBot %rowsBot.11 113 12 19 ];
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 114 8 ]
+        [ "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_77_26_148_4_start" "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_77_26_148_4_stop" ]
+        %cat.12 = local;
+        symbol [ cat %cat.12 114 12 15 ];
+        symbol [ Metrics %tmp.162 114 18 25 ];
+        %tmp.162 = getv ? :Metrics;
+        symbol [ catalog %tmp.163 114 26 33 ];
+        %tmp.163 = getv function %tmp.162 :catalog;
+        %tmp.164 = invoke %tmp.162 %tmp.163();
+        lputv %cat.12 %tmp.164;
+        symbol [ cat %cat.12 114 12 15 ];
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 115 8 ]
+        [ "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_77_26_148_4_start" "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_77_26_148_4_stop" ]
+        %n.13 = local;
+        symbol [ n %n.13 115 12 13 ];
+        %tmp.165 = lgetv %cat.12;
+        symbol [ cat %tmp.165 115 16 19 ];
+        symbol [ size %tmp.166 115 20 24 ];
+        %tmp.166 = getv function %tmp.165 :size;
+        %tmp.167 = invoke %tmp.165 %tmp.166();
+        lputv %n.13 %tmp.167;
+        symbol [ n %n.13 115 12 13 ];
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 116 8 ]
+        [ "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_77_26_148_4_start" "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_77_26_148_4_stop" ]
+        %rowH.14 = local;
+        symbol [ rowH %rowH.14 116 12 16 ];
+        %tmp.168 = lgetv %rowsBot.11;
+        symbol [ rowsBot %tmp.168 116 20 27 ];
+        %tmp.169 = lgetv %rowsTop.10;
+        symbol [ rowsTop %tmp.169 116 30 37 ];
+        %tmp.170 = sub %tmp.168 %tmp.169;
+        %tmp.171 = lgetv %n.13;
+        symbol [ n %tmp.171 116 41 42 ];
+        %tmp.172 = div %tmp.170 %tmp.171;
+        lputv %rowH.14 %tmp.172;
+        symbol [ rowH %rowH.14 116 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 117 8 ]
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_117_8_117_44_if_stmt:
+        %tmp.173 = lgetv %rowH.14;
+        symbol [ rowH %tmp.173 117 12 16 ];
+        %tmp.174 = lgetv %fh.3;
+        symbol [ fh %tmp.174 117 19 21 ];
+        %tmp.175 = 2;
+        %tmp.176 = add %tmp.174 %tmp.175;
+        %tmp.177 = lt %tmp.173 %tmp.176;
+        bf %tmp.177 @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_117_8_117_44_if_end;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_117_8_117_44_if_true:
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_117_27_117_44_start:
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 117 29 ]
+        %tmp.178 = lgetv %fh.3;
+        symbol [ fh %tmp.178 117 36 38 ];
+        %tmp.179 = 2;
+        %tmp.180 = add %tmp.178 %tmp.179;
+        lputv %rowH.14 %tmp.180;
+        symbol [ rowH %rowH.14 117 29 33 ];
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_117_27_117_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_117_8_117_44_if_end;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_117_8_117_44_if_end:
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 119 8 ]
+        [ "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_77_26_148_4_start" "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_77_26_148_4_stop" ]
+        %lcol.15 = local;
+        symbol [ lcol %lcol.15 119 12 16 ];
+        symbol [ _w %tmp.182 119 20 22 ];
+        %tmp.182 = getv ? :_w;
+        %tmp.183 = 15;
+        %tmp.184 = mul %tmp.182 %tmp.183;
+        %tmp.185 = 100;
+        %tmp.186 = div %tmp.184 %tmp.185;
+        lputv %lcol.15 %tmp.186;
+        symbol [ lcol %lcol.15 119 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 120 8 ]
+        [ "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_77_26_148_4_start" "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_77_26_148_4_stop" ]
+        %rcol.16 = local;
+        symbol [ rcol %rcol.16 120 12 16 ];
+        symbol [ _w %tmp.188 120 20 22 ];
+        %tmp.188 = getv ? :_w;
+        %tmp.189 = 85;
+        %tmp.190 = mul %tmp.188 %tmp.189;
+        %tmp.191 = 100;
+        %tmp.192 = div %tmp.190 %tmp.191;
+        lputv %rcol.16 %tmp.192;
+        symbol [ rcol %rcol.16 120 12 16 ];
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 122 8 ]
+        for @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_122_8_147_8_for_test @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_122_8_147_8_for_incr @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_122_8_147_8_for_end;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_122_8_147_8_for_init:
+        [ "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_122_8_147_8_for_begin" "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_122_8_147_8_for_end" ]
+        %i.17 = local;
+        symbol [ i %i.17 122 17 18 ];
+        %tmp.193 = 0;
+        lputv %i.17 %tmp.193;
+        symbol [ i %i.17 122 17 18 ];
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_122_8_147_8_for_test:
+        %tmp.194 = lgetv %i.17;
+        symbol [ i %tmp.194 122 24 25 ];
+        %tmp.195 = lgetv %n.13;
+        symbol [ n %tmp.195 122 28 29 ];
+        %tmp.196 = lt %tmp.194 %tmp.195;
+        bf %tmp.196 @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_122_8_147_8_for_end;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_122_8_147_8_for_begin:
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_122_36_147_8_start:
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 123 12 ]
+        [ "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_122_36_147_8_start" "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_122_36_147_8_stop" ]
+        %variant.18 = local;
+        symbol [ variant %variant.18 123 16 23 ];
+        %tmp.197 = lgetv %cat.12;
+        symbol [ cat %tmp.197 123 26 29 ];
+        %tmp.198 = lgetv %i.17;
+        symbol [ i %tmp.198 123 30 31 ];
+        %tmp.199 = agetv %tmp.197 %tmp.198;
+        %tmp.200 = 0;
+        %tmp.201 = agetv %tmp.199 %tmp.200;
+        lputv %variant.18 %tmp.201;
+        symbol [ variant %variant.18 123 16 23 ];
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 124 12 ]
+        [ "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_122_36_147_8_start" "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_122_36_147_8_stop" ]
+        %label.19 = local;
+        symbol [ label %label.19 124 16 21 ];
+        %tmp.202 = lgetv %cat.12;
+        symbol [ cat %tmp.202 124 26 29 ];
+        %tmp.203 = lgetv %i.17;
+        symbol [ i %tmp.203 124 30 31 ];
+        %tmp.204 = agetv %tmp.202 %tmp.203;
+        %tmp.205 = 1;
+        %tmp.206 = agetv %tmp.204 %tmp.205;
+        lputv %label.19 %tmp.206;
+        symbol [ label %label.19 124 16 21 ];
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 125 12 ]
+        [ "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_122_36_147_8_start" "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_122_36_147_8_stop" ]
+        %val.20 = local;
+        symbol [ val %val.20 125 16 19 ];
+        symbol [ Metrics %tmp.208 125 26 33 ];
+        %tmp.208 = getv ? :Metrics;
+        symbol [ valueFor %tmp.209 125 34 42 ];
+        %tmp.209 = getv function %tmp.208 :valueFor;
+        %tmp.210 = lgetv %variant.18;
+        symbol [ variant %tmp.210 125 43 50 ];
+        symbol [ _snap %tmp.212 125 52 57 ];
+        %tmp.212 = getv ? :_snap;
+        %tmp.213 = invoke %tmp.208 %tmp.209(%tmp.210, %tmp.212);
+        lputv %val.20 %tmp.213;
+        symbol [ val %val.20 125 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 126 12 ]
+        [ "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_122_36_147_8_start" "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_122_36_147_8_stop" ]
+        %goal.21 = local;
+        symbol [ goal %goal.21 126 16 20 ];
+        symbol [ Metrics %tmp.215 126 26 33 ];
+        %tmp.215 = getv ? :Metrics;
+        symbol [ goalFor %tmp.216 126 34 41 ];
+        %tmp.216 = getv function %tmp.215 :goalFor;
+        %tmp.217 = lgetv %variant.18;
+        symbol [ variant %tmp.217 126 42 49 ];
+        symbol [ _snap %tmp.219 126 51 56 ];
+        %tmp.219 = getv ? :_snap;
+        %tmp.220 = invoke %tmp.215 %tmp.216(%tmp.217, %tmp.219);
+        lputv %goal.21 %tmp.220;
+        symbol [ goal %goal.21 126 16 20 ];
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 127 12 ]
+        [ "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_122_36_147_8_start" "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_122_36_147_8_stop" ]
+        %rowCY.22 = local;
+        symbol [ rowCY %rowCY.22 127 16 21 ];
+        %tmp.221 = lgetv %rowsTop.10;
+        symbol [ rowsTop %tmp.221 127 26 33 ];
+        %tmp.222 = lgetv %i.17;
+        symbol [ i %tmp.222 127 36 37 ];
+        %tmp.223 = lgetv %rowH.14;
+        symbol [ rowH %tmp.223 127 40 44 ];
+        %tmp.224 = mul %tmp.222 %tmp.223;
+        %tmp.225 = add %tmp.221 %tmp.224;
+        %tmp.226 = lgetv %rowH.14;
+        symbol [ rowH %tmp.226 127 47 51 ];
+        %tmp.227 = 2;
+        %tmp.228 = div %tmp.226 %tmp.227;
+        %tmp.229 = add %tmp.225 %tmp.228;
+        lputv %rowCY.22 %tmp.229;
+        symbol [ rowCY %rowCY.22 127 16 21 ];
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 130 12 ]
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_130_12_138_12_if_stmt:
+        %tmp.230 = lgetv %goal.21;
+        symbol [ goal %tmp.230 130 16 20 ];
+        %tmp.231 = 0;
+        %tmp.232 = gt %tmp.230 %tmp.231;
+        bf %tmp.232 @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_130_12_138_12_if_end;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_130_12_138_12_if_true:
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_130_26_138_12_start:
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 131 16 ]
+        [ "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_130_26_138_12_start" "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_130_26_138_12_stop" ]
+        %pct.23 = local;
+        symbol [ pct %pct.23 131 20 23 ];
+        %tmp.233 = lgetv %val.20;
+        symbol [ val %tmp.233 131 27 30 ];
+        %tmp.234 = 100;
+        %tmp.235 = mul %tmp.233 %tmp.234;
+        %tmp.236 = lgetv %goal.21;
+        symbol [ goal %tmp.236 131 40 44 ];
+        %tmp.237 = div %tmp.235 %tmp.236;
+        lputv %pct.23 %tmp.237;
+        symbol [ pct %pct.23 131 20 23 ];
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 132 16 ]
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_132_16_132_44_if_stmt:
+        %tmp.238 = lgetv %pct.23;
+        symbol [ pct %tmp.238 132 20 23 ];
+        %tmp.239 = 100;
+        %tmp.240 = gt %tmp.238 %tmp.239;
+        bf %tmp.240 @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_132_16_132_44_if_end;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_132_16_132_44_if_true:
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_132_31_132_44_start:
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 132 33 ]
+        %tmp.241 = 100;
+        lputv %pct.23 %tmp.241;
+        symbol [ pct %pct.23 132 33 36 ];
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_132_31_132_44_stop:
+        goto @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_132_16_132_44_if_end;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_132_16_132_44_if_end:
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 133 16 ]
+        [ "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_130_26_138_12_start" "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_130_26_138_12_stop" ]
+        %barW.24 = local;
+        symbol [ barW %barW.24 133 20 24 ];
+        symbol [ _w %tmp.243 133 28 30 ];
+        %tmp.243 = getv ? :_w;
+        %tmp.244 = 74;
+        %tmp.245 = mul %tmp.243 %tmp.244;
+        %tmp.246 = 100;
+        %tmp.247 = div %tmp.245 %tmp.246;
+        %tmp.248 = lgetv %pct.23;
+        symbol [ pct %tmp.248 133 45 48 ];
+        %tmp.249 = mul %tmp.247 %tmp.248;
+        %tmp.250 = 100;
+        %tmp.251 = div %tmp.249 %tmp.250;
+        lputv %barW.24 %tmp.251;
+        symbol [ barW %barW.24 133 20 24 ];
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 134 16 ]
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_134_16_137_16_if_stmt:
+        %tmp.252 = lgetv %barW.24;
+        symbol [ barW %tmp.252 134 20 24 ];
+        %tmp.253 = 0;
+        %tmp.254 = gt %tmp.252 %tmp.253;
+        bf %tmp.254 @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_134_16_137_16_if_end;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_134_16_137_16_if_true:
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_134_30_137_16_start:
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 135 20 ]
+        %tmp.255 = lgetv %dc;
+        symbol [ dc %tmp.255 135 20 22 ];
+        symbol [ setColor %tmp.256 135 23 31 ];
+        %tmp.256 = getv function %tmp.255 :setColor;
+        %tmp.257 = 0x0E2A33;
+        symbol [ Graphics %tmp.258 135 42 50 ];
+        %tmp.258 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.259 135 51 68 ];
+        %tmp.259 = getv %tmp.258 :COLOR_TRANSPARENT;
+        invoke %tmp.255 %tmp.256(%tmp.257, %tmp.259);
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 136 20 ]
+        %tmp.260 = lgetv %dc;
+        symbol [ dc %tmp.260 136 20 22 ];
+        symbol [ fillRectangle %tmp.261 136 23 36 ];
+        %tmp.261 = getv function %tmp.260 :fillRectangle;
+        symbol [ _w %tmp.263 136 38 40 ];
+        %tmp.263 = getv ? :_w;
+        %tmp.264 = 13;
+        %tmp.265 = mul %tmp.263 %tmp.264;
+        %tmp.266 = 100;
+        %tmp.267 = div %tmp.265 %tmp.266;
+        %tmp.268 = lgetv %rowCY.22;
+        symbol [ rowCY %tmp.268 136 54 59 ];
+        %tmp.269 = lgetv %rowH.14;
+        symbol [ rowH %tmp.269 136 62 66 ];
+        %tmp.270 = 2;
+        %tmp.271 = div %tmp.269 %tmp.270;
+        %tmp.272 = sub %tmp.268 %tmp.271;
+        %tmp.273 = 1;
+        %tmp.274 = add %tmp.272 %tmp.273;
+        %tmp.275 = lgetv %barW.24;
+        symbol [ barW %tmp.275 136 76 80 ];
+        %tmp.276 = lgetv %rowH.14;
+        symbol [ rowH %tmp.276 136 82 86 ];
+        %tmp.277 = 2;
+        %tmp.278 = sub %tmp.276 %tmp.277;
+        invoke %tmp.260 %tmp.261(%tmp.267, %tmp.274, %tmp.275, %tmp.278);
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_134_30_137_16_stop:
+        goto @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_134_16_137_16_if_end;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_134_16_137_16_if_end:
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_130_26_138_12_stop:
+        goto @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_130_12_138_12_if_end;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_130_12_138_12_if_end:
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 140 12 ]
+        [ "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_122_36_147_8_start" "_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_122_36_147_8_stop" ]
+        %hit.25 = local;
+        symbol [ hit %hit.25 140 16 19 ];
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_140_23_140_42_begin:
+        %tmp.279 = lgetv %goal.21;
+        symbol [ goal %tmp.279 140 23 27 ];
+        %tmp.280 = 0;
+        %tmp.281 = gt %tmp.279 %tmp.280;
+        %tmp.282 = dup %tmp.281;
+        bf %tmp.282 @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_140_35_140_42_end;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_140_35_140_42_true:
+        %tmp.283 = lgetv %val.20;
+        symbol [ val %tmp.283 140 35 38 ];
+        %tmp.284 = lgetv %goal.21;
+        symbol [ goal %tmp.284 140 42 46 ];
+        %tmp.285 = gte %tmp.283 %tmp.284;
+        %tmp.286 = and %tmp.281 %tmp.285;
+        push %tmp.286;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_140_35_140_42_end:
+        %tmp.287 = phi [%tmp.282 @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_140_23_140_42_begin] [%tmp.286 @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_140_35_140_42_true] [%tmp.287 @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_140_35_140_42_end];
+        lputv %hit.25 %tmp.287;
+        symbol [ hit %hit.25 140 16 19 ];
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 141 12 ]
+        %tmp.288 = lgetv %dc;
+        symbol [ dc %tmp.288 141 12 14 ];
+        symbol [ setColor %tmp.289 141 15 23 ];
+        %tmp.289 = getv function %tmp.288 :setColor;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_141_24_141_41_begin:
+        %tmp.290 = lgetv %hit.25;
+        symbol [ hit %tmp.290 141 24 27 ];
+        bf %tmp.290 @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_141_24_141_41_else_false;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_141_24_141_41_true:
+        symbol [ LB_GREEN %tmp.292 141 30 38 ];
+        %tmp.292 = getv ? :LB_GREEN;
+        push %tmp.292;
+        goto @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_141_24_141_41_end;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_141_24_141_41_else_false:
+        symbol [ LB_TEXT %tmp.294 141 41 48 ];
+        %tmp.294 = getv ? :LB_TEXT;
+        push %tmp.294;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_141_24_141_41_end:
+        %tmp.295 = phi [%tmp.290 @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_141_24_141_41_begin] [%tmp.292 @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_141_24_141_41_true] [%tmp.294 @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_141_24_141_41_else_false] [%tmp.295 @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_141_24_141_41_end];
+        symbol [ Graphics %tmp.296 141 50 58 ];
+        %tmp.296 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.297 141 59 76 ];
+        %tmp.297 = getv %tmp.296 :COLOR_TRANSPARENT;
+        invoke %tmp.288 %tmp.289(%tmp.295, %tmp.297);
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 142 12 ]
+        %tmp.298 = lgetv %dc;
+        symbol [ dc %tmp.298 142 12 14 ];
+        symbol [ drawText %tmp.299 142 15 23 ];
+        %tmp.299 = getv function %tmp.298 :drawText;
+        %tmp.300 = lgetv %lcol.15;
+        symbol [ lcol %tmp.300 142 24 28 ];
+        %tmp.301 = lgetv %rowCY.22;
+        symbol [ rowCY %tmp.301 142 30 35 ];
+        symbol [ Graphics %tmp.302 142 37 45 ];
+        %tmp.302 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.303 142 46 56 ];
+        %tmp.303 = getv %tmp.302 :FONT_XTINY;
+        %tmp.304 = lgetv %label.19;
+        symbol [ label %tmp.304 142 58 63 ];
+        symbol [ Graphics %tmp.305 143 24 32 ];
+        %tmp.305 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_LEFT %tmp.306 143 33 50 ];
+        %tmp.306 = getv %tmp.305 :TEXT_JUSTIFY_LEFT;
+        symbol [ Graphics %tmp.307 143 53 61 ];
+        %tmp.307 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_VCENTER %tmp.308 143 62 82 ];
+        %tmp.308 = getv %tmp.307 :TEXT_JUSTIFY_VCENTER;
+        %tmp.309 = bitor %tmp.306 %tmp.308;
+        invoke %tmp.298 %tmp.299(%tmp.300, %tmp.301, %tmp.303, %tmp.304, %tmp.309);
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 144 12 ]
+        %tmp.310 = lgetv %dc;
+        symbol [ dc %tmp.310 144 12 14 ];
+        symbol [ setColor %tmp.311 144 15 23 ];
+        %tmp.311 = getv function %tmp.310 :setColor;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_144_24_144_41_begin:
+        %tmp.312 = lgetv %hit.25;
+        symbol [ hit %tmp.312 144 24 27 ];
+        bf %tmp.312 @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_144_24_144_41_else_false;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_144_24_144_41_true:
+        symbol [ LB_GREEN %tmp.314 144 30 38 ];
+        %tmp.314 = getv ? :LB_GREEN;
+        push %tmp.314;
+        goto @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_144_24_144_41_end;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_144_24_144_41_else_false:
+        symbol [ LB_ACCENT %tmp.316 144 41 50 ];
+        %tmp.316 = getv ? :LB_ACCENT;
+        push %tmp.316;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_144_24_144_41_end:
+        %tmp.317 = phi [%tmp.312 @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_144_24_144_41_begin] [%tmp.314 @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_144_24_144_41_true] [%tmp.316 @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_144_24_144_41_else_false] [%tmp.317 @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_144_24_144_41_end];
+        symbol [ Graphics %tmp.318 144 52 60 ];
+        %tmp.318 = getm $.Toybox.Graphics;
+        symbol [ COLOR_TRANSPARENT %tmp.319 144 61 78 ];
+        %tmp.319 = getv %tmp.318 :COLOR_TRANSPARENT;
+        invoke %tmp.310 %tmp.311(%tmp.317, %tmp.319);
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 145 12 ]
+        %tmp.320 = lgetv %dc;
+        symbol [ dc %tmp.320 145 12 14 ];
+        symbol [ drawText %tmp.321 145 15 23 ];
+        %tmp.321 = getv function %tmp.320 :drawText;
+        %tmp.322 = lgetv %rcol.16;
+        symbol [ rcol %tmp.322 145 24 28 ];
+        %tmp.323 = lgetv %rowCY.22;
+        symbol [ rowCY %tmp.323 145 30 35 ];
+        symbol [ Graphics %tmp.324 145 37 45 ];
+        %tmp.324 = getm $.Toybox.Graphics;
+        symbol [ FONT_XTINY %tmp.325 145 46 56 ];
+        %tmp.325 = getv %tmp.324 :FONT_XTINY;
+        symbol [ Metrics %tmp.327 145 58 65 ];
+        %tmp.327 = getv ? :Metrics;
+        symbol [ display %tmp.328 145 66 73 ];
+        %tmp.328 = getv function %tmp.327 :display;
+        %tmp.329 = lgetv %variant.18;
+        symbol [ variant %tmp.329 145 74 81 ];
+        %tmp.330 = lgetv %val.20;
+        symbol [ val %tmp.330 145 83 86 ];
+        %tmp.331 = invoke %tmp.327 %tmp.328(%tmp.329, %tmp.330);
+        symbol [ Graphics %tmp.332 146 24 32 ];
+        %tmp.332 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_RIGHT %tmp.333 146 33 51 ];
+        %tmp.333 = getv %tmp.332 :TEXT_JUSTIFY_RIGHT;
+        symbol [ Graphics %tmp.334 146 54 62 ];
+        %tmp.334 = getm $.Toybox.Graphics;
+        symbol [ TEXT_JUSTIFY_VCENTER %tmp.335 146 63 83 ];
+        %tmp.335 = getv %tmp.334 :TEXT_JUSTIFY_VCENTER;
+        %tmp.336 = bitor %tmp.333 %tmp.335;
+        invoke %tmp.320 %tmp.321(%tmp.322, %tmp.323, %tmp.325, %tmp.331, %tmp.336);
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_122_36_147_8_stop:
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_122_8_147_8_for_incr:
+[ "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc" 122 ]
+        %tmp.339 = lgetv %i.17;
+        symbol [ i %tmp.339 122 31 32 ];
+        %tmp.340 = add %tmp.339 1;
+        lputv %i.17 %tmp.340;
+        symbol [ i %i.17 122 31 32 ];
+        goto @_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_122_8_147_8_for_test;
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_122_8_147_8_for_end:
+_Users_kkorolczuk_work_garmin_activityboard_source_MainView_mc_77_26_148_4_stop:
     }
 }
-[ @file = "/Users/kkorolczuk/work/garmin/slotbandit/source/MainView.mc"; @line = 6; ]
+[ @file = "/Users/kkorolczuk/work/garmin/activityboard/source/MainView.mc"; @line = 12; ]
 <init> {
 }

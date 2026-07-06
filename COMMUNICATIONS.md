@@ -28,7 +28,7 @@ Every message has:
 |--------------|---------|
 | `scope`      | `global` (applies to every game) or `game` (only `game`) |
 | `game`       | game id, required when `scope = game` (e.g. `slotbandit`) |
-| `placement`  | **when** it shows: `launch`, `postgame`, or `reset` |
+| `placement`  | **when** it shows: `launch`, `postgame`, `once`, or `reset` |
 | `title`      | short headline (≤ 60 chars) |
 | `body`       | message text, word-wrapped on the watch (≤ 200 chars) |
 | `url`        | optional link, opened on the paired **phone** via Garmin Connect |
@@ -44,6 +44,13 @@ Every message has:
   (throttled by `min_gap_s`). Good for cross-promo and paid-version invites.
 - **`postgame`** — shown after a run ends, layered **on top of** the leaderboard
   pop-up (throttled). Good for the support/tip ask.
+- **`once`** — a **one-shot** card shown a single time, ever, at the **start of
+  every game** (a ~1.5 s deferred push after launch, wired into `logLaunch` so
+  **every** game gets it, not just those that call `announce`). Not throttled by
+  time — it fires exactly once and then never again, until you **re-arm** it from
+  the stats.html Messages panel (the ↻ button), which bumps its epoch so every
+  device shows it one more time. Ideal for a one-time payment call-to-action.
+  Unlike `reset`, it **does** fire on a fresh install. See [once detection](#4-reset-detection).
 - **`reset`** — shown **once** after the player's board was wiped since they last
   played (see [reset detection](#4-reset-detection)). Not throttled by time; it
   fires a single time per reset. Good for "New season!" re-engagement.
@@ -103,9 +110,11 @@ The **client bundle** is deliberately tiny:
 {
   "ts": 1717000000,
   "reset_at": 1716900000000,     // ms of the latest reset affecting this game (0 = none)
+  "once_at":  1783280940000,     // ms epoch (updated_at) of the one-shot 'once' message (0 = none)
   "launch":   { "id":2, "title":"…", "body":"…", "url":null, "url_label":null, "min_gap_s":86400 },
   "postgame": { "id":1, "title":"…", "body":"…", "url":"https://…", "url_label":"Buy me a coffee", "min_gap_s":43200 },
-  "reset":    { "id":3, "title":"New season!", "body":"…", "url":null, "url_label":null, "min_gap_s":0 }
+  "reset":    { "id":3, "title":"New season!", "body":"…", "url":null, "url_label":null, "min_gap_s":0 },
+  "once":     { "id":6, "title":"Keep Bitochi free", "body":"…", "url":"https://bitochi.com/coffee", "url_label":"Buy me a coffee", "min_gap_s":0 }
 }
 ```
 
@@ -124,6 +133,7 @@ Code lives in `_shared/leaderboard/LbMessages.mc` (views + fetcher) and
 | `lb_msg_cache`          | last fetched bundle (a `Dictionary`) |
 | `lb_msg_fetch`          | unix-sec of the last successful fetch |
 | `lb_msg_reset_ack`      | the `reset_at` value already acknowledged |
+| `lb_msg_once_ack`       | the `once_at` epoch already shown (one-shot 'once') |
 | `lb_msg_shown_<place>`  | unix-sec a placement was last shown (throttle) |
 
 ### Fetch-then-show (why messages appear from the *previous* session)
@@ -150,6 +160,22 @@ On show, the client compares the bundle's `reset_at` with the locally stored
 - On a fresh install (`ack == 0`) it records the baseline and stays silent — a
   first-time player is never told about a reset they didn't live through.
 
+### Once (one-shot) detection
+
+The `once` message uses the same epoch trick, keyed on `once_at` vs the local
+`lb_msg_once_ack`:
+
+- If `once_at > ack` → record `ack = once_at` **first** (so a near-simultaneous
+  `announce` + launch-timer can't double-show), then push the card exactly once.
+- Unlike `reset` it **does** fire when `ack == 0`, so every player — including
+  brand-new installs — sees it a single time.
+- **Re-arm** from stats.html (↻ button) re-saves the row, bumping its
+  `updated_at`; the new `once_at` then exceeds every device's stored ack, so it
+  shows once more. This is the "restore the counter" control.
+- Wired universally: `logLaunch()` (called by every game in `onStart`) schedules
+  a ~1.5 s one-shot timer that calls `showOnceIfDue`, so no per-game code is
+  needed. `announce()` also offers it first for games that show a menu card.
+
 ### Public API
 
 ```monkeyc
@@ -164,8 +190,13 @@ Leaderboard.showMessage(game, Leaderboard.MSG_POSTGAME, null);     // "postgame"
 // Show the reset message once if the board was wiped since last time.
 Leaderboard.showResetMessageIfAny(game);
 
-// Convenience: reset message first, else the launch message. Call when the main
-// menu becomes visible.
+// Show the one-shot 'once' call-to-action a single time (until re-armed). Wired
+// automatically for every game via logLaunch()'s launch timer — rarely needed
+// directly.
+Leaderboard.showOnceIfDue(game);
+
+// Convenience: 'once' first, then reset, else the launch message. Call when the
+// main menu becomes visible.
 Leaderboard.announce(game, fallback);
 ```
 

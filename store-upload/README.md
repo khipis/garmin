@@ -56,30 +56,35 @@ npx playwright install chromium
    store listings by name. **Review it** — fix any wrong `appId`, and fill in the
    `appId` for anything listed under `_unmatchedLocal`.
 
-4. *(recommended once)* **Record** the network flow of a single manual upload so
-   the exact endpoints/steps are known — handy if the automatic `upload` needs
-   tuning:
+4. *(only if the portal changes)* **Record** a single manual upload to re-capture
+   the exact page URL, field ids and endpoints. Guided, two ENTER checkpoints:
 
    ```bash
    npm run record
    ```
 
-5. **Upload**. Start with a dry run and a single app to confirm the flow, then go
-   wide:
+5. **Upload**. Each app is published via its per-app **Upload New Version** page
+   (`/developer/<devId>/apps/<appId>/update`): the tool attaches `_STORE/<slug>.iq`,
+   reads *"Latest app version: N"* and sets the version to **N+1**, then clicks
+   **Upload and publish**. Start narrow, then go wide:
 
    ```bash
-   node index.mjs upload --only arcade --dry-run   # validates, does NOT submit
-   node index.mjs upload --only arcade             # one app for real
-   node index.mjs upload                           # all configured apps
+   node index.mjs upload --only chess --dry-run          # fills the form, does NOT publish
+   node index.mjs upload --only chess --pause-before-submit  # stops so you can eyeball, ENTER to publish
+   node index.mjs upload --only chess                    # one app for real
+   node index.mjs upload                                 # all configured apps
    ```
 
    Flags:
    - `--only a,b,c` — restrict to specific slugs
-   - `--dry-run` — upload the `.iq` + validate, but don't submit
-   - `--headless` — run without a visible browser (default is headed so you can watch)
+   - `--dry-run` — navigate + fill the form (file + version) but **don't publish**
+   - `--pause-before-submit` — fill the form, then wait for ENTER before publishing
+   - `--version X` — force a specific version for all queued apps (default: auto N+1)
+   - `--headless` — no visible browser (default is headed so you can watch)
 
-   No changelog is touched (per your choice) — it just swaps the binary / bumps
-   the version. Screenshots + a JSON summary land in `artifacts/`.
+   No changelog / "What's New" is touched — it only swaps the binary and bumps the
+   version. Screenshots + a JSON summary land in `artifacts/`. Garmin still reviews
+   each submitted version before it goes live.
 
 ## Files
 
@@ -98,6 +103,7 @@ npx playwright install chromium
 - **`scan` finds nothing** → check `artifacts/scan.png` and
   `artifacts/scan-anchors.json`; the app-link selector in `index.mjs` may need a
   tweak for the current portal.
-- **`upload` can't find the file input / submit button** → run `npm run record`,
-  inspect the saved flow, and adjust `UPLOAD` selectors / `appEditUrl()` in
-  `config.mjs`. Failure screenshots are in `artifacts/<slug>-error.png`.
+- **`upload` can't find the file input / publish button** → run `npm run record`,
+  inspect the saved flow (`artifacts/recording-*.json`), and adjust `UPLOAD`
+  selectors / `appUpdateUrl()` in `config.mjs`. Failure screenshots are in
+  `artifacts/<slug>-error.png`.

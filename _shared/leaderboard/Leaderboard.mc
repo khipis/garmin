@@ -23,6 +23,7 @@ using Toybox.Communications;
 using Toybox.Lang;
 using Toybox.System;
 using Toybox.Time;
+using Toybox.Timer;
 using Toybox.WatchUi;
 
 module Leaderboard {
@@ -124,6 +125,14 @@ module Leaderboard {
         _pinger.send(game);
         // Refresh the message bundle for this game (shown from cache next run).
         fetchMessages(game);
+        // Universal "at start" hook: every game calls logLaunch() in onStart, so
+        // this guarantees the one-shot 'once' call-to-action is offered once by
+        // EVERY game (not just the few that call announce()). Deferred slightly so
+        // the initial view is up before we push over it. Fully guarded.
+        try {
+            _onceTimer = new LbOnceTimer(game);
+            _onceTimer.start();
+        } catch (e) {}
     }
 
     // ── Custom messages / announcements ───────────────────────────────────────
@@ -135,9 +144,11 @@ module Leaderboard {
     const MSG_CACHE_KEY = "lb_msg_cache";    // last fetched bundle (Dictionary)
     const MSG_FETCH_KEY = "lb_msg_fetch";    // unix-sec of last successful fetch
     const MSG_RESET_ACK = "lb_msg_reset_ack";// reset_at (ms) we've already shown
+    const MSG_ONCE_ACK  = "lb_msg_once_ack"; // once_at (ms) epoch we've already shown
     const MSG_SHOWN_PRE = "lb_msg_shown_";   // + placement → last shown unix-sec
 
     var _msgFetcher = null;
+    var _onceTimer  = null;   // keeps the launch one-shot timer alive (see logLaunch)
 
     // Fire-and-forget: pull the resolved message bundle and cache it. Called
     // automatically by logLaunch(); games rarely need to call it directly.
@@ -254,11 +265,45 @@ module Leaderboard {
         }
     }
 
-    // Convenience for a game's menu: prefer the (once-only) reset message,
-    // otherwise show the throttled launch message. Call this when the main menu
-    // becomes visible. `fallback` covers offline/first-run for the launch slot.
+    // Show the one-shot 'once' message a single time, ever, until it's re-armed
+    // server-side. The bundle's `once_at` is the message's updated_at epoch;
+    // editing / re-arming it from stats.html bumps that value, so a client that
+    // already showed the previous epoch shows the new one once more. Unlike
+    // `reset` this DOES fire on a fresh install (ack starts at 0), so every
+    // player sees the payment call-to-action exactly once. Fully guarded.
+    function showOnceIfDue(game as Lang.String) as Lang.Boolean {
+        if (!isSupported()) { return false; }
+        try {
+            var bundle = _cachedBundle();
+            if (bundle == null) { return false; }
+            var onceAt = bundle["once_at"];
+            if (!(onceAt instanceof Lang.Number) && !(onceAt instanceof Lang.Long)) { return false; }
+            if (onceAt == 0) { return false; }
+
+            var ack = 0;
+            var v = Application.Storage.getValue(MSG_ONCE_ACK);
+            if (v instanceof Lang.Number || v instanceof Lang.Long) { ack = v; }
+            if (onceAt <= ack) { return false; }
+
+            var msg = bundle["once"];
+            if (!(msg instanceof Lang.Dictionary)) { return false; }
+            // Record the epoch BEFORE pushing so a second near-simultaneous call
+            // (e.g. announce + the launch timer) can't double-show it.
+            Application.Storage.setValue(MSG_ONCE_ACK, onceAt);
+            _pushMessage(msg);
+            return true;
+        } catch (e) {
+            return false;
+        }
+    }
+
+    // Convenience for a game's menu: prefer the one-shot 'once' call-to-action,
+    // then the (once-only) reset message, otherwise the throttled launch message.
+    // Call this when the main menu becomes visible. `fallback` covers
+    // offline/first-run for the launch slot.
     function announce(game as Lang.String, fallback as Lang.Dictionary or Null) as Lang.Boolean {
         try {
+            if (showOnceIfDue(game)) { return true; }
             if (showResetMessageIfAny(game)) { return true; }
             return showMessage(game, MSG_LAUNCH, fallback);
         } catch (e) {

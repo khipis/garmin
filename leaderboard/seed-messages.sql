@@ -48,6 +48,25 @@ SELECT 'global', NULL, 'reset',
        0, 0, 1, strftime('%s','now')*1000, strftime('%s','now')*1000
 WHERE NOT EXISTS (SELECT 1 FROM messages WHERE scope='global' AND game IS NULL AND placement='reset' AND title='New season!');
 
+-- 5) pets · LAUNCH · support Bitochi (coffee) shown at the very start
+INSERT INTO messages (scope, game, placement, title, body, url, url_label, weight, min_gap_s, active, created_at, updated_at)
+SELECT 'game', 'pets', 'launch',
+       'Enjoying Pixel Pets?',
+       'Every Bitochi game is free and ad-free. If it made you smile, a small tip keeps new ones coming. Thank you!',
+       'https://bitochi.com/coffee', 'Buy me a coffee',
+       10, 43200, 1, strftime('%s','now')*1000, strftime('%s','now')*1000
+WHERE NOT EXISTS (SELECT 1 FROM messages WHERE scope='game' AND game='pets' AND placement='launch' AND title='Enjoying Pixel Pets?');
+
+-- 6) GLOBAL · ONCE · one-shot support call-to-action (shown once per game at
+--    start, then never again until "re-armed" from the stats.html Messages panel).
+INSERT INTO messages (scope, game, placement, title, body, url, url_label, weight, min_gap_s, active, created_at, updated_at)
+SELECT 'global', NULL, 'once',
+       'Keep Bitochi free',
+       'All 60+ games and tools are free and ad-free. If they are worth a coffee to you, a one-time tip keeps them coming. Open bitochi.com/coffee on your phone. Thank you!',
+       'https://bitochi.com/coffee', 'Buy me a coffee',
+       0, 0, 1, strftime('%s','now')*1000, strftime('%s','now')*1000
+WHERE NOT EXISTS (SELECT 1 FROM messages WHERE scope='global' AND game IS NULL AND placement='once' AND title='Keep Bitochi free');
+
 -- 4) breathtrainingtool · LAUNCH · invite to the paid "System" version
 INSERT INTO messages (scope, game, placement, title, body, url, url_label, weight, min_gap_s, active, created_at, updated_at)
 SELECT 'game', 'breathtrainingtool', 'launch',
