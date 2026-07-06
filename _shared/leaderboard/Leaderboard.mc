@@ -54,6 +54,30 @@ module Leaderboard {
         return Communications has :makeWebRequest;
     }
 
+    // True when the paired phone (or a direct WiFi path) is currently reachable.
+    // Web requests MUST NOT be attempted when this is false: on several Garmin
+    // firmware versions makeWebRequest called while disconnected terminates the
+    // host app instead of returning an error via callback. We gate every
+    // fire-and-forget network call on this check so offline players always get a
+    // clean, crash-free experience with cached data shown instead.
+    function isPhoneConnected() as Lang.Boolean {
+        try {
+            if (!(Toybox.System has :getDeviceSettings)) { return false; }
+            var s = System.getDeviceSettings();
+            if (s == null) { return false; }
+            // phoneConnected covers BT; connectionInfo covers WiFi on newer devices.
+            if (s has :phoneConnected && s.phoneConnected == true) { return true; }
+            if (s has :connectionInfo) {
+                var ci = s.connectionInfo;
+                if (ci instanceof Lang.Dictionary) {
+                    var wifi = ci[:wifiConnected];
+                    if (wifi == true) { return true; }
+                }
+            }
+        } catch (e) {}
+        return false;
+    }
+
     // ── Username persistence ─────────────────────────────────────────────────
     function loadUser() as Lang.String or Null {
         try {
@@ -89,6 +113,7 @@ module Leaderboard {
     function submitScore(game as Lang.String, score as Lang.Number,
                          variant as Lang.String or Null) as Void {
         if (!isSupported()) { return; }
+        if (!isPhoneConnected()) { return; }
         var user = loadUser();
         if (user == null) { user = "anon"; }
         _sender = new LbSubmitter();
@@ -104,6 +129,7 @@ module Leaderboard {
                                  variant as Lang.String or Null,
                                  meta as Lang.Dictionary or Null) as Void {
         if (!isSupported()) { return; }
+        if (!isPhoneConnected()) { return; }
         var user = loadUser();
         if (user == null) { user = "anon"; }
         _sender = new LbSubmitter();
@@ -115,20 +141,27 @@ module Leaderboard {
     // game was opened — even for games/sessions that never submit a score. This
     // powers the "games are being played" view on the admin stats page. Guarded
     // so it only fires once per process, and silent on unsupported watches.
-    var _pinger      = null;
+    //
+    // Network calls are skipped when the phone is not connected: some Garmin
+    // firmware versions crash the app instead of returning an error via callback
+    // when makeWebRequest is called with no BT/WiFi link. The cached message
+    // bundle and the 'once' call-to-action still work offline.
+    var _pinger       = null;
     var _launchLogged = false;
     function logLaunch(game as Lang.String) as Void {
         if (!isSupported()) { return; }
         if (_launchLogged) { return; }
         _launchLogged = true;
-        _pinger = new LbPinger();
-        _pinger.send(game);
-        // Refresh the message bundle for this game (shown from cache next run).
-        fetchMessages(game);
-        // Universal "at start" hook: every game calls logLaunch() in onStart, so
-        // this guarantees the one-shot 'once' call-to-action is offered once by
-        // EVERY game (not just the few that call announce()). Deferred slightly so
-        // the initial view is up before we push over it. Fully guarded.
+        try {
+            if (isPhoneConnected()) {
+                _pinger = new LbPinger();
+                _pinger.send(game);
+                // Refresh the message bundle (shown from cache NEXT run; the
+                // delay also ensures pinger is the only in-flight request now).
+                fetchMessages(game);
+            }
+        } catch (e) {}
+        // The 'once' card reads the cached bundle so it works offline too.
         try {
             _onceTimer = new LbOnceTimer(game);
             _onceTimer.start();
@@ -156,6 +189,7 @@ module Leaderboard {
     // no (new) message is cached.
     function fetchMessages(game as Lang.String) as Void {
         if (!isSupported()) { return; }
+        if (!isPhoneConnected()) { return; }
         try {
             _msgFetcher = new LbMessageFetcher();
             _msgFetcher.send(game);
