@@ -274,22 +274,18 @@ class InputHandler extends WatchUi.BehaviorDelegate {
     }
 
     function onBack() {
-        // The previous "phantom-back guard" used a 500 ms touch-gesture
-        // marker.  That isn't reliable on all Fenix-class devices —
-        // some only fire onBack for a right-edge swipe, never the
-        // paired onSwipe/onDrag, so _lastGestureMs stays at 0 and the
-        // guard fails to trip.  Result: a stray edge-swipe during a
-        // run dumped the player back to the menu.
-        //
-        // Robust fix: during active play (PLAY/READY) ALL onBack
-        // events are silently swallowed.  Physical ESC has its own
-        // path through onKey() above, so the player can still escape
-        // the run via the hardware button.  Touch-only users will
-        // exit on the OVER screen (after a death).
-        if (!_v.isPassiveState()) { return true; }
-        // Passive states (MENU, OVER) still honour the gesture-window
-        // guard so a SINGLE deliberate touch event followed by a
-        // back doesn't kick the player out unexpectedly.
+        // During PLAY / READY we must block touch-triggered back events
+        // (right-edge swipe on Fenix-class produces a spurious onBack that
+        // would dump the player out mid-run).  We do this by checking the
+        // phantom-back guard: if a touch/drag just happened the event is a
+        // ghost and we swallow it; if not, it came from the physical button
+        // and we honour it.
+        if (!_v.isPassiveState()) {
+            if (_isPhantomBack()) { _lastGestureMs = 0; return true; }
+            if (_v.handleBack()) { WatchUi.requestUpdate(); return true; }
+            return true;
+        }
+        // Passive states (MENU, OVER) — same phantom guard, then normal flow.
         if (_isPhantomBack()) { _lastGestureMs = 0; return true; }
         if (_v.handleBack()) {
             WatchUi.requestUpdate();
