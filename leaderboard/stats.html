@@ -281,6 +281,58 @@
   .err-game { color: var(--accent); font-weight: 600; }
   .err-msg  { color: #8fa8bc; }
 
+  /* ── HOT games ───────────────────────────────────────────────────────────── */
+  .hot-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 10px; margin-bottom: 28px;
+  }
+  .hot-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px 12px;
+    cursor: pointer; transition: border-color .15s, background .15s;
+    position: relative; overflow: hidden;
+  }
+  .hot-card:hover { border-color: var(--accent); background: #112030; }
+  .hot-card.trend-up   { border-color: rgba(34,197,94,.4); }
+  .hot-card.trend-fire { border-color: rgba(251,146,60,.55); }
+  .hot-rank {
+    position: absolute; top: 8px; right: 10px;
+    font-size: .65rem; font-weight: 800; color: var(--muted);
+    letter-spacing: .04em;
+  }
+  .hot-rank-1 { color: #ffd700; }
+  .hot-rank-2 { color: #c0c0c0; }
+  .hot-rank-3 { color: #cd7f32; }
+  .hot-game {
+    font-size: .85rem; font-weight: 700;
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    margin-bottom: 8px; padding-right: 24px;
+  }
+  .hot-plays {
+    font-size: 1.45rem; font-weight: 900; line-height: 1;
+    background: linear-gradient(135deg, var(--accent), var(--purple));
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hot-card.trend-fire .hot-plays {
+    background: linear-gradient(135deg, #fb923c, #fbbf24);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hot-sub {
+    font-size: .62rem; color: var(--muted); margin-top: 3px;
+    text-transform: uppercase; letter-spacing: .06em;
+  }
+  .hot-vel {
+    display: inline-flex; align-items: center; gap: 3px;
+    font-size: .68rem; font-weight: 700; margin-top: 6px;
+    padding: 2px 6px; border-radius: 4px;
+  }
+  .vel-up   { background: rgba(34,197,94,.12); color: #22c55e; }
+  .vel-down { background: rgba(248,113,113,.10); color: #f87171; }
+  .vel-new  { background: rgba(4,212,255,.10); color: var(--accent); }
+
   /* ── Activity feed ───────────────────────────────────────────────────────── */
   .feed-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
   .feed-table thead th {
@@ -501,6 +553,20 @@
         </div>
       </div>
       <div id="link-list"><div class="state"><div class="spinner"></div>Loading…</div></div>
+
+      <div class="sh"><span class="sh-title">🔥 Hot right now</span><span class="sh-line"></span>
+        <select class="hsel" id="hot-window" onchange="loadHot()" style="max-width:120px">
+          <option value="24" selected>Last 24 h</option>
+          <option value="48">Last 48 h</option>
+          <option value="168">Last 7 days</option>
+        </select>
+        <select class="hsel" id="hot-limit" onchange="loadHot()" style="max-width:90px">
+          <option value="8" selected>Top 8</option>
+          <option value="16">Top 16</option>
+        </select>
+        <button class="hbtn" onclick="loadHot()" style="margin-left:8px;font-size:.7rem;padding:3px 8px">↺</button>
+      </div>
+      <div id="hot-feed"><div class="state"><div class="spinner"></div>Loading…</div></div>
 
       <div class="sh"><span class="sh-title">🕹️ Last games played</span><span class="sh-line"></span>
         <select class="hsel" id="activity-limit" onchange="loadActivity()" style="max-width:110px">
@@ -825,6 +891,7 @@ loadMessages();
 loadLinks();
 loadBots();
 loadActivity();
+loadHot();
 
 // ── Game launches (independent of the scores table) ────────────────────────────
 async function loadLaunches() {
@@ -1711,6 +1778,55 @@ async function reseedAllBots() {
 }
 async function reseedBotsForGame(game) {
   await _runBotSeed(game);
+}
+
+// ── HOT games — trending by score velocity ────────────────────────────────────
+async function loadHot() {
+  const el     = document.getElementById('hot-feed');
+  const window = document.getElementById('hot-window')?.value || 24;
+  const limit  = document.getElementById('hot-limit')?.value  || 8;
+  el.innerHTML = '<div class="state"><div class="spinner"></div>Loading…</div>';
+  try {
+    const r = await fetch(`${API}/hot?window=${window}&limit=${limit}`, { cache: 'no-store' });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const d = await r.json();
+    const entries = d.entries || [];
+    if (!entries.length) {
+      el.innerHTML = `<div class="state">No activity in the last ${d.window_h}h.</div>`;
+      return;
+    }
+    const rankIcon = i => i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i+1}`;
+    const rankCls  = i => i === 0 ? 'hot-rank-1' : i === 1 ? 'hot-rank-2' : i === 2 ? 'hot-rank-3' : '';
+    el.innerHTML = `<div class="hot-grid">${entries.map((e, i) => {
+      const isFire = e.vel !== null && e.vel >= 1.5;
+      const isUp   = e.vel !== null && e.vel >= 1.0 && !isFire;
+      const cardCls = isFire ? 'hot-card trend-fire' : isUp ? 'hot-card trend-up' : 'hot-card';
+
+      let velHtml = '';
+      if (e.vel === null) {
+        velHtml = `<div class="hot-vel vel-new">✨ new</div>`;
+      } else if (e.vel >= 1.5) {
+        velHtml = `<div class="hot-vel vel-up">🔥 ×${e.vel.toFixed(1)}</div>`;
+      } else if (e.vel >= 1.0) {
+        velHtml = `<div class="hot-vel vel-up">↑ ×${e.vel.toFixed(1)}</div>`;
+      } else {
+        velHtml = `<div class="hot-vel vel-down">↓ ×${e.vel.toFixed(1)}</div>`;
+      }
+
+      return `<div class="${cardCls}" onclick="openGame('${esc(e.game)}')">
+        <div class="hot-rank ${rankCls(i)}">${rankIcon(i)}</div>
+        <div class="hot-game">${esc(e.game)}</div>
+        <div class="hot-plays">${(e.cur||0).toLocaleString()}</div>
+        <div class="hot-sub">plays · ${(e.players||0)} player${e.players!==1?'s':''}</div>
+        ${velHtml}
+      </div>`;
+    }).join('')}</div>
+    <div class="muted" style="padding:0 2px 8px;font-size:.68rem">
+      Scores submitted in the last ${d.window_h}h · velocity = current vs previous window
+    </div>`;
+  } catch(e) {
+    el.innerHTML = `<div class="state">⚠️ ${esc(String(e))}</div>`;
+  }
 }
 
 // ── Activity feed — last N real score submissions ─────────────────────────────

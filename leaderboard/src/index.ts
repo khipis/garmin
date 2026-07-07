@@ -464,6 +464,58 @@ async function handleGetActivity(url: URL, env: Env): Promise<Response> {
   );
 }
 
+// GET /hot?limit=8&window=24
+// Returns games ranked by score submissions in the last `window` hours,
+// with a velocity ratio (cur vs prev window) for trending indication.
+async function handleGetHot(url: URL, env: Env): Promise<Response> {
+  const limitRaw  = parseInt(url.searchParams.get("limit")  ?? "8",  10);
+  const windowRaw = parseInt(url.searchParams.get("window") ?? "24", 10);
+  const limit     = Math.min(Math.max(limitRaw  || 8,  1), 50);
+  const window_h  = Math.min(Math.max(windowRaw || 24, 1), 168);
+
+  const now     = Math.floor(Date.now() / 1000);
+  const cutoff1 = now - window_h * 3600;
+  const cutoff2 = cutoff1 - window_h * 3600;
+
+  type HotRow = { game: string; cur: number; prev: number; players: number };
+  let rows: HotRow[] = [];
+  try {
+    const res = await env.DB
+      .prepare(
+        `SELECT game,
+                SUM(CASE WHEN timestamp >= ? THEN 1 ELSE 0 END)              AS cur,
+                SUM(CASE WHEN timestamp >= ? AND timestamp < ? THEN 1 ELSE 0 END) AS prev,
+                COUNT(DISTINCT CASE WHEN timestamp >= ? THEN user END)        AS players
+         FROM scores
+         WHERE is_bot = 0 AND timestamp >= ?
+         GROUP BY game
+         HAVING cur > 0
+         ORDER BY cur DESC
+         LIMIT ?`
+      )
+      .bind(cutoff1, cutoff2, cutoff1, cutoff1, cutoff2, limit)
+      .all<HotRow>();
+    rows = res.results ?? [];
+  } catch (e) {
+    console.error("hot query error:", e);
+    return err("db error", 500);
+  }
+
+  const entries = rows.map(r => ({
+    game:    r.game,
+    cur:     r.cur     ?? 0,
+    prev:    r.prev    ?? 0,
+    players: r.players ?? 0,
+    vel: (r.prev ?? 0) > 0 ? Math.round(((r.cur ?? 0) / r.prev) * 100) / 100 : null,
+  }));
+
+  return json(
+    { updated: now, window_h, entries },
+    200,
+    { "Cache-Control": "public, max-age=60, stale-while-revalidate=120" }
+  );
+}
+
 async function handleGetGames(env: Env): Promise<Response> {
   let games: string[] = [];
   try {
@@ -1485,6 +1537,7 @@ export default {
     if (method === "GET"    && path === "/standing")    return handleGetStanding(url, env);
     if (method === "GET"    && path === "/recent")      return handleGetRecent(url, env);
     if (method === "GET"    && path === "/activity")    return handleGetActivity(url, env);
+    if (method === "GET"    && path === "/hot")         return handleGetHot(url, env);
     if (method === "GET"    && path === "/games")       return handleGetGames(env);
     if (method === "GET"    && path === "/stats")       return handleGetStats(url, env);
     if (method === "GET"    && path === "/launches")    return handleGetLaunchStats(url, env);
