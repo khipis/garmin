@@ -281,6 +281,19 @@
   .err-game { color: var(--accent); font-weight: 600; }
   .err-msg  { color: #8fa8bc; }
 
+  /* ── Activity feed ───────────────────────────────────────────────────────── */
+  .feed-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+  .feed-table thead th {
+    padding: 4px 10px 9px; text-align: left; font-size: .6rem; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .08em;
+  }
+  .feed-table thead th:not(:first-child) { text-align: right; }
+  .feed-table tbody tr { background: var(--card); border-bottom: 1px solid var(--border); }
+  .feed-table tbody tr:hover { background: #112030; cursor: pointer; }
+  .feed-table td { padding: 8px 10px; font-size: .82rem; }
+  .feed-table td:not(:first-child) { text-align: right; font-variant-numeric: tabular-nums; }
+  .feed-ago { color: var(--muted); font-size: .72rem; white-space: nowrap; }
+
   /* ── Responsive ─────────────────────────────────────────────────────────── */
   @media (max-width: 640px) {
     .layout { flex-direction: column; height: auto; }
@@ -488,6 +501,15 @@
         </div>
       </div>
       <div id="link-list"><div class="state"><div class="spinner"></div>Loading…</div></div>
+
+      <div class="sh"><span class="sh-title">🕹️ Last games played</span><span class="sh-line"></span>
+        <select class="hsel" id="activity-limit" onchange="loadActivity()" style="max-width:110px">
+          <option value="20" selected>Last 20</option>
+          <option value="50">Last 50</option>
+        </select>
+        <button class="hbtn" onclick="loadActivity()" style="margin-left:8px;font-size:.7rem;padding:3px 8px">↺</button>
+      </div>
+      <div id="activity-feed"><div class="state"><div class="spinner"></div>Loading…</div></div>
     </div>
 
     <!-- Leaderboard panel (per game) -->
@@ -802,6 +824,7 @@ loadHofAdmin();
 loadMessages();
 loadLinks();
 loadBots();
+loadActivity();
 
 // ── Game launches (independent of the scores table) ────────────────────────────
 async function loadLaunches() {
@@ -1688,6 +1711,55 @@ async function reseedAllBots() {
 }
 async function reseedBotsForGame(game) {
   await _runBotSeed(game);
+}
+
+// ── Activity feed — last N real score submissions ─────────────────────────────
+function _timeAgo(ts) {
+  const diff = Math.floor((Date.now() - ts) / 1000);
+  if (diff < 60)   return `${diff}s ago`;
+  if (diff < 3600) return `${Math.floor(diff/60)}m ago`;
+  if (diff < 86400)return `${Math.floor(diff/3600)}h ago`;
+  return `${Math.floor(diff/86400)}d ago`;
+}
+
+async function loadActivity() {
+  const el    = document.getElementById('activity-feed');
+  const limit = document.getElementById('activity-limit')?.value || 20;
+  el.innerHTML = '<div class="state"><div class="spinner"></div>Loading…</div>';
+  try {
+    const r = await fetch(`${API}/activity?limit=${limit}&real=1`, { cache: 'no-store' });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const d = await r.json();
+    const entries = d.entries || [];
+    if (!entries.length) {
+      el.innerHTML = '<div class="state">No recent activity yet.</div>';
+      return;
+    }
+    el.innerHTML = `
+      <div style="overflow-x:auto">
+      <table class="feed-table">
+        <thead><tr>
+          <th>Game</th><th>Variant</th><th>Player</th><th>Country</th><th>Score</th><th>When</th>
+        </tr></thead>
+        <tbody>${entries.map(e => {
+          const flag  = e.c ? codeToFlag(e.c) : '';
+          const cname = e.c ? (COUNTRY_NAMES[e.c] || e.c) : '—';
+          const ago   = _timeAgo(e.t);
+          const vDisp = e.variant ? `<span class="muted">${esc(e.variant)}</span>` : '<span class="muted">—</span>';
+          return `<tr onclick="openGame('${esc(e.game)}')" title="Open ${esc(e.game)} leaderboard">
+            <td><b>${esc(e.game)}</b></td>
+            <td>${vDisp}</td>
+            <td>${esc(e.u)}</td>
+            <td><span style="display:flex;align-items:center;gap:5px;justify-content:flex-end">${flag} <span class="muted">${esc(cname)}</span></span></td>
+            <td><b>${(e.s||0).toLocaleString()}</b></td>
+            <td class="feed-ago">${ago}</td>
+          </tr>`;
+        }).join('')}</tbody>
+      </table>
+      </div>`;
+  } catch(e) {
+    el.innerHTML = `<div class="state">⚠️ ${esc(String(e))}</div>`;
+  }
 }
 
 async function _runBotSeed(gameFilter) {

@@ -434,6 +434,36 @@ async function handleGetRecent(url: URL, env: Env): Promise<Response> {
   );
 }
 
+// GET /activity?limit=20&real=1
+// Global feed of the most recent real score submissions across all games.
+async function handleGetActivity(url: URL, env: Env): Promise<Response> {
+  const realOnly = url.searchParams.get("real") === "1";
+  const limitRaw = parseInt(url.searchParams.get("limit") ?? "20", 10);
+  const limit    = Math.min(Math.max(limitRaw || 20, 1), 50);
+  const w        = realOnly ? "WHERE is_bot = 0" : "";
+
+  type Row = { game: string; variant: string; u: string; s: number; c: string | null; t: number };
+  let rows: Row[] = [];
+  try {
+    const res = await env.DB
+      .prepare(
+        `SELECT game, variant, user AS u, score AS s, country AS c, timestamp AS t
+         FROM scores ${w} ORDER BY timestamp DESC LIMIT ?`
+      )
+      .bind(limit)
+      .all<Row>();
+    rows = res.results ?? [];
+  } catch (e) {
+    console.error("activity query error:", e);
+    return err("db error", 500);
+  }
+  return json(
+    { updated: Math.floor(Date.now() / 1000), entries: rows },
+    200,
+    { "Cache-Control": "public, max-age=15, stale-while-revalidate=30" }
+  );
+}
+
 async function handleGetGames(env: Env): Promise<Response> {
   let games: string[] = [];
   try {
@@ -1454,6 +1484,7 @@ export default {
     if (method === "GET"    && path === "/leaderboard") return handleGetLeaderboard(url, env);
     if (method === "GET"    && path === "/standing")    return handleGetStanding(url, env);
     if (method === "GET"    && path === "/recent")      return handleGetRecent(url, env);
+    if (method === "GET"    && path === "/activity")    return handleGetActivity(url, env);
     if (method === "GET"    && path === "/games")       return handleGetGames(env);
     if (method === "GET"    && path === "/stats")       return handleGetStats(url, env);
     if (method === "GET"    && path === "/launches")    return handleGetLaunchStats(url, env);
